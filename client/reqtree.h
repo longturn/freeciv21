@@ -10,7 +10,8 @@
 **************************************************************************/
 #pragma once
 
-#include "canvas_g.h"
+// forward declaration
+#include "gui-qt/canvas.h"
 
 #include <QRect>
 

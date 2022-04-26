@@ -20,7 +20,7 @@
 /* client/luascript */
 #include "script_client.h"
 // gui-qt
-#include "chatline_g.h"
+#include "chatline.h"
 #include "fc_client.h"
 
 QString qlua_filename;
@@ -35,19 +35,18 @@ void luaconsole_dialog_popup(bool raise)
 /**
    Return true if the lua console is open.
  */
-bool luaconsole_dialog_is_open(void) { return true; }
+bool luaconsole_dialog_is_open() { return true; }
 
 /**
    Update the lua console.
  */
-void real_luaconsole_dialog_update(void) {}
+void real_luaconsole_dialog_update() {}
 
 /**
    Appends the string to the chat output window.  The string should be
    inserted on its own line, although it will have no newline.
  */
-void real_luaconsole_append(const char *astring,
-                            const struct text_tag_list *tags)
+void real_luaconsole_append(const char *astring, const text_tag_list *tags)
 {
   real_output_window_append(astring, tags);
 }
@@ -57,9 +56,7 @@ void real_luaconsole_append(const char *astring,
  */
 void qload_lua_script()
 {
-  QString str;
-
-  str = QString(_("Lua scripts")) + QStringLiteral(" (*.lua)");
+  QString str = QString(_("Lua scripts")) + QStringLiteral(" (*.lua)");
   qlua_filename = QFileDialog::getOpenFileName(
       king()->central_wdg, _("Load lua script"), QDir::homePath(), str);
   if (!qlua_filename.isEmpty()) {

@@ -39,9 +39,8 @@
    Can we attack 'ptile'? At this point, it assumes there are non-allied
    units on the tile.
  */
-static inline bool pf_attack_possible(const struct tile *ptile,
-                                      enum known_type known,
-                                      const struct pf_parameter *param)
+static inline bool pf_attack_possible(const tile *ptile, known_type known,
+                                      const pf_parameter *param)
 {
   bool attack_any;
 
@@ -82,9 +81,8 @@ static inline bool pf_attack_possible(const struct tile *ptile,
 
    FIXME: For diplomat actions, we should take in account action enablers.
  */
-static enum pf_action pf_get_action(const struct tile *ptile,
-                                    enum known_type known,
-                                    const struct pf_parameter *param)
+static pf_action pf_get_action(const tile *ptile, known_type known,
+                               const pf_parameter *param)
 {
   bool non_allied_city =
       (nullptr != is_non_allied_city_tile(ptile, param->owner));
@@ -128,13 +126,11 @@ static enum pf_action pf_get_action(const struct tile *ptile,
    Determines if an action is possible from 'src' to 'dst': attack, diplomat
    action, or caravan action.
  */
-static bool pf_action_possible(const struct tile *src,
-                               enum pf_move_scope src_scope,
-                               const struct tile *dst, enum pf_action action,
-                               const struct pf_parameter *param)
+static bool pf_action_possible([[maybe_unused]] const tile *src,
+                               pf_move_scope src_scope,
+                               [[maybe_unused]] const tile *dst,
+                               pf_action action, const pf_parameter *param)
 {
-  Q_UNUSED(src)
-  Q_UNUSED(dst)
   if (PF_ACTION_ATTACK == action) {
     return (PF_MS_NATIVE & src_scope
             || can_attack_from_non_native(param->utype));
@@ -157,20 +153,19 @@ static bool pf_action_possible(const struct tile *src,
    Special case for reverse maps. Always consider the target tile as
    attackable, notably for transports.
  */
-static enum pf_action pf_reverse_get_action(const struct tile *ptile,
-                                            enum known_type known,
-                                            const struct pf_parameter *param)
+static pf_action pf_reverse_get_action(const tile *ptile,
+                                       [[maybe_unused]] known_type known,
+                                       const pf_parameter *param)
 {
-  Q_UNUSED(known)
   return (ptile == param->data ? PF_ACTION_ATTACK : PF_ACTION_NONE);
 }
 
 /**
    Determine if we could load into 'ptrans' and its parents.
  */
-static inline bool pf_transport_check(const struct pf_parameter *param,
-                                      const struct unit *ptrans,
-                                      const struct unit_type *trans_utype)
+static inline bool pf_transport_check(const pf_parameter *param,
+                                      const unit *ptrans,
+                                      const unit_type *trans_utype)
 {
   if (!pplayers_allied(unit_owner(ptrans), param->owner)
       || unit_has_orders(ptrans) || param->utype == trans_utype
@@ -224,14 +219,14 @@ static inline bool pf_transport_check(const struct pf_parameter *param,
    Determine how it is possible to move from/to 'ptile'. The checks for
    specific move from tile to tile is done in pf_move_possible().
  */
-static enum pf_move_scope
-pf_get_move_scope(const struct tile *ptile, bool *can_disembark,
-                  enum pf_move_scope previous_scope,
-                  const struct pf_parameter *param)
+static pf_move_scope pf_get_move_scope(const tile *ptile,
+                                       bool *can_disembark,
+                                       pf_move_scope previous_scope,
+                                       const pf_parameter *param)
 {
   int scope = PF_MS_NONE;
-  const struct unit_class *uclass = utype_class(param->utype);
-  struct city *pcity = tile_city(ptile);
+  const unit_class *uclass = utype_class(param->utype);
+  city *pcity = tile_city(ptile);
 
   if ((is_native_tile_to_class(uclass, ptile)
        && (!utype_has_flag(param->utype, UTYF_COAST_STRICT)
@@ -256,7 +251,7 @@ pf_get_move_scope(const struct tile *ptile, bool *can_disembark,
     bool allied_city_tile =
         (nullptr != pcity
          && pplayers_allied(param->owner, city_owner(pcity)));
-    const struct unit_type *utype;
+    const unit_type *utype;
 
     *can_disembark = false;
 
@@ -294,10 +289,10 @@ pf_get_move_scope(const struct tile *ptile, bool *can_disembark,
 /**
    A cost function for amphibious movement.
  */
-static enum pf_move_scope
-amphibious_move_scope(const struct tile *ptile, bool *can_disembark,
-                      enum pf_move_scope previous_scope,
-                      const struct pf_parameter *param)
+static pf_move_scope amphibious_move_scope(const tile *ptile,
+                                           bool *can_disembark,
+                                           pf_move_scope previous_scope,
+                                           const pf_parameter *param)
 {
   pft_amphibious *amphibious = static_cast<pft_amphibious *>(param->data);
   int land_scope, sea_scope;
@@ -326,11 +321,9 @@ amphibious_move_scope(const struct tile *ptile, bool *can_disembark,
 
    Does not check if the tile is occupied by non-allied units.
  */
-static inline bool pf_move_possible(const struct tile *src,
-                                    enum pf_move_scope src_scope,
-                                    const struct tile *dst,
-                                    enum pf_move_scope dst_scope,
-                                    const struct pf_parameter *param)
+static inline bool pf_move_possible(const tile *src, pf_move_scope src_scope,
+                                    const tile *dst, pf_move_scope dst_scope,
+                                    const pf_parameter *param)
 {
   fc_assert(PF_MS_NONE != src_scope);
 
@@ -353,9 +346,9 @@ static inline bool pf_move_possible(const struct tile *src,
    Use with a TB callback to prevent passing through occupied tiles.
    Does not permit passing through non-native tiles without transport.
  */
-static int normal_move(const struct tile *src, enum pf_move_scope src_scope,
-                       const struct tile *dst, enum pf_move_scope dst_scope,
-                       const struct pf_parameter *param)
+static int normal_move(const tile *src, pf_move_scope src_scope,
+                       const tile *dst, pf_move_scope dst_scope,
+                       const pf_parameter *param)
 {
   if (pf_move_possible(src, src_scope, dst, dst_scope, param)) {
     return map_move_cost(param->map, param->owner, param->utype, src, dst);
@@ -370,9 +363,9 @@ static int normal_move(const struct tile *src, enum pf_move_scope src_scope,
    Use with a TB callback to prevent passing through occupied tiles.
    Does not permit passing through non-native tiles without transport.
  */
-static int overlap_move(const struct tile *src, enum pf_move_scope src_scope,
-                        const struct tile *dst, enum pf_move_scope dst_scope,
-                        const struct pf_parameter *param)
+static int overlap_move(const tile *src, pf_move_scope src_scope,
+                        const tile *dst, pf_move_scope dst_scope,
+                        const pf_parameter *param)
 {
   if (pf_move_possible(src, src_scope, dst, dst_scope, param)) {
     return map_move_cost(param->map, param->owner, param->utype, src, dst);
@@ -386,11 +379,9 @@ static int overlap_move(const struct tile *src, enum pf_move_scope src_scope,
 /**
    A cost function for amphibious movement.
  */
-static int amphibious_move(const struct tile *ptile,
-                           enum pf_move_scope src_scope,
-                           const struct tile *ptile1,
-                           enum pf_move_scope dst_scope,
-                           const struct pf_parameter *param)
+static int amphibious_move(const tile *ptile, pf_move_scope src_scope,
+                           const tile *ptile1, pf_move_scope dst_scope,
+                           const pf_parameter *param)
 {
   pft_amphibious *amphibious = static_cast<pft_amphibious *>(param->data);
   int cost, scale;
@@ -434,9 +425,8 @@ static int amphibious_move(const struct tile *ptile,
 /**
    Extra cost call back for amphibious movement
  */
-static int amphibious_extra_cost(const struct tile *ptile,
-                                 enum known_type known,
-                                 const struct pf_parameter *param)
+static int amphibious_extra_cost(const tile *ptile, known_type known,
+                                 const pf_parameter *param)
 {
   pft_amphibious *amphibious = static_cast<pft_amphibious *>(param->data);
   const bool ferry_move = is_native_tile(amphibious->sea.utype, ptile);
@@ -471,9 +461,8 @@ static int amphibious_extra_cost(const struct tile *ptile,
    PF callback to prohibit going into the unknown.  Also makes sure we
    don't plan to attack anyone.
  */
-enum tile_behavior no_fights_or_unknown(const struct tile *ptile,
-                                        enum known_type known,
-                                        const struct pf_parameter *param)
+tile_behavior no_fights_or_unknown(const tile *ptile, known_type known,
+                                   const pf_parameter *param)
 {
   if (known == TILE_UNKNOWN || is_non_allied_unit_tile(ptile, param->owner)
       || is_non_allied_city_tile(ptile, param->owner)) {
@@ -486,10 +475,9 @@ enum tile_behavior no_fights_or_unknown(const struct tile *ptile,
 /**
    PF callback to prohibit attacking anyone.
  */
-enum tile_behavior no_fights(const struct tile *ptile, enum known_type known,
-                             const struct pf_parameter *param)
+tile_behavior no_fights(const tile *ptile, [[maybe_unused]] known_type known,
+                        const pf_parameter *param)
 {
-  Q_UNUSED(known)
   if (is_non_allied_unit_tile(ptile, param->owner)
       || is_non_allied_city_tile(ptile, param->owner)) {
     // Can't attack
@@ -501,11 +489,10 @@ enum tile_behavior no_fights(const struct tile *ptile, enum known_type known,
 /**
    PF callback to prohibit attacking anyone, except at the destination.
  */
-enum tile_behavior no_intermediate_fights(const struct tile *ptile,
-                                          enum known_type known,
-                                          const struct pf_parameter *param)
+tile_behavior no_intermediate_fights(const tile *ptile,
+                                     [[maybe_unused]] known_type known,
+                                     const pf_parameter *param)
 {
-  Q_UNUSED(known)
   if (is_non_allied_unit_tile(ptile, param->owner)
       || is_non_allied_city_tile(ptile, param->owner)) {
     return TB_DONT_LEAVE;
@@ -516,9 +503,9 @@ enum tile_behavior no_intermediate_fights(const struct tile *ptile,
 /**
    A callback for amphibious movement
  */
-static enum tile_behavior
-amphibious_behaviour(const struct tile *ptile, enum known_type known,
-                     const struct pf_parameter *param)
+static tile_behavior amphibious_behaviour(const tile *ptile,
+                                          known_type known,
+                                          const pf_parameter *param)
 {
   pft_amphibious *amphibious = static_cast<pft_amphibious *>(param->data);
   const bool ferry_move = is_native_tile(amphibious->sea.utype, ptile);
@@ -537,11 +524,11 @@ amphibious_behaviour(const struct tile *ptile, enum known_type known,
 /**
    Refueling base for air units.
  */
-static bool is_possible_base_fuel(const struct tile *ptile,
-                                  const struct pf_parameter *param)
+static bool is_possible_base_fuel(const tile *ptile,
+                                  const pf_parameter *param)
 {
-  const struct unit_class *uclass;
-  enum known_type tile_known =
+  const unit_class *uclass;
+  known_type tile_known =
       (param->omniscience ? TILE_KNOWN_SEEN
                           : tile_get_known(ptile, param->owner));
 
@@ -576,7 +563,7 @@ static bool is_possible_base_fuel(const struct tile *ptile,
   // Check for carriers
   unit_list_iterate(ptile->units, ptrans)
   {
-    const struct unit_type *trans_utype = unit_type_get(ptrans);
+    const unit_type *trans_utype = unit_type_get(ptrans);
 
     if (pf_transport_check(param, ptrans, trans_utype)
         && (utype_can_freely_load(param->utype, trans_utype)
@@ -592,8 +579,8 @@ static bool is_possible_base_fuel(const struct tile *ptile,
 /**
    Check if there is a safe position to move.
  */
-static int get_closest_safe_tile_distance(const struct tile *src_tile,
-                                          const struct pf_parameter *param,
+static int get_closest_safe_tile_distance(const tile *src_tile,
+                                          const pf_parameter *param,
                                           int max_distance)
 {
   /* This iteration should, according to the documentation in map.h iterate
@@ -619,11 +606,10 @@ static int get_closest_safe_tile_distance(const struct tile *src_tile,
 /**
    Position-dangerous callback for air units.
  */
-static int get_fuel_moves_left_req(const struct tile *ptile,
-                                   enum known_type known,
-                                   const struct pf_parameter *param)
+static int get_fuel_moves_left_req(const tile *ptile,
+                                   [[maybe_unused]] known_type known,
+                                   const pf_parameter *param)
 {
-  Q_UNUSED(known)
   int dist, max;
 
   if (is_possible_base_fuel(ptile, param)) {
@@ -644,9 +630,8 @@ static int get_fuel_moves_left_req(const struct tile *ptile,
 /**
    Position-dangerous callback for amphibious movement.
  */
-static bool amphibious_is_pos_dangerous(const struct tile *ptile,
-                                        enum known_type known,
-                                        const struct pf_parameter *param)
+static bool amphibious_is_pos_dangerous(const tile *ptile, known_type known,
+                                        const pf_parameter *param)
 {
   pft_amphibious *amphibious = static_cast<pft_amphibious *>(param->data);
   const bool ferry_move = is_native_tile(amphibious->sea.utype, ptile);
@@ -665,9 +650,8 @@ static bool amphibious_is_pos_dangerous(const struct tile *ptile,
 /**
    Fill general use parameters to defaults.
  */
-static inline void
-pft_fill_default_parameter(struct pf_parameter *parameter,
-                           const struct unit_type *punittype)
+static inline void pft_fill_default_parameter(pf_parameter *parameter,
+                                              const unit_type *punittype)
 {
   parameter->map = &(wld.map);
   parameter->get_TB = nullptr;
@@ -687,7 +671,7 @@ pft_fill_default_parameter(struct pf_parameter *parameter,
 /**
    Enable default actions.
  */
-static inline void pft_enable_default_actions(struct pf_parameter *parameter)
+static inline void pft_enable_default_actions(pf_parameter *parameter)
 {
   if (!utype_has_flag(parameter->utype, UTYF_CIVILIAN)) {
     parameter->actions =
@@ -718,9 +702,10 @@ static inline void pft_enable_default_actions(struct pf_parameter *parameter)
 /**
    Fill general use parameters to defaults for an unit type.
  */
-static inline void pft_fill_utype_default_parameter(
-    struct pf_parameter *parameter, const struct unit_type *punittype,
-    struct tile *pstart_tile, struct player *powner)
+static inline void
+pft_fill_utype_default_parameter(pf_parameter *parameter,
+                                 const unit_type *punittype,
+                                 tile *pstart_tile, player *powner)
 {
   int veteran_level =
       get_unittype_bonus(powner, pstart_tile, punittype, EFT_VETERAN_BUILD);
@@ -753,12 +738,11 @@ static inline void pft_fill_utype_default_parameter(
 /**
    Fill general use parameters to defaults for an unit.
  */
-static inline void
-pft_fill_unit_default_parameter(struct pf_parameter *parameter,
-                                const struct unit *punit)
+static inline void pft_fill_unit_default_parameter(pf_parameter *parameter,
+                                                   const unit *punit)
 {
-  const struct unit *ptrans = unit_transport_get(punit);
-  const struct unit_type *ptype = unit_type_get(punit);
+  const unit *ptrans = unit_transport_get(punit);
+  const unit_type *ptype = unit_type_get(punit);
 
   pft_fill_default_parameter(parameter, ptype);
 
@@ -789,8 +773,8 @@ pft_fill_unit_default_parameter(struct pf_parameter *parameter,
 /**
    Base function to fill classic parameters.
  */
-static inline void pft_fill_parameter(struct pf_parameter *parameter,
-                                      const struct unit_type *punittype)
+static inline void pft_fill_parameter(pf_parameter *parameter,
+                                      const unit_type *punittype)
 {
   parameter->get_MC = normal_move;
   parameter->ignore_none_scopes = true;
@@ -811,10 +795,9 @@ static inline void pft_fill_parameter(struct pf_parameter *parameter,
 /**
    Fill classic parameters for an unit type.
  */
-void pft_fill_utype_parameter(struct pf_parameter *parameter,
-                              const struct unit_type *punittype,
-                              struct tile *pstart_tile,
-                              struct player *pplayer)
+void pft_fill_utype_parameter(pf_parameter *parameter,
+                              const unit_type *punittype, tile *pstart_tile,
+                              player *pplayer)
 {
   pft_fill_utype_default_parameter(parameter, punittype, pstart_tile,
                                    pplayer);
@@ -824,8 +807,7 @@ void pft_fill_utype_parameter(struct pf_parameter *parameter,
 /**
    Fill classic parameters for an unit.
  */
-void pft_fill_unit_parameter(struct pf_parameter *parameter,
-                             const struct unit *punit)
+void pft_fill_unit_parameter(pf_parameter *parameter, const unit *punit)
 {
   pft_fill_unit_default_parameter(parameter, punit);
   pft_fill_parameter(parameter, unit_type_get(punit));
@@ -837,8 +819,8 @@ void pft_fill_unit_parameter(struct pf_parameter *parameter,
    Switch on one tile overlapping into the non-native terrain.
    For sea/land bombardment and for ferries.
  */
-static void pft_fill_overlap_param(struct pf_parameter *parameter,
-                                   const struct unit_type *punittype)
+static void pft_fill_overlap_param(pf_parameter *parameter,
+                                   const unit_type *punittype)
 {
   parameter->get_MC = overlap_move;
   parameter->ignore_none_scopes = false;
@@ -859,10 +841,9 @@ static void pft_fill_overlap_param(struct pf_parameter *parameter,
    Switch on one tile overlapping into the non-native terrain.
    For sea/land bombardment and for ferry types.
  */
-void pft_fill_utype_overlap_param(struct pf_parameter *parameter,
-                                  const struct unit_type *punittype,
-                                  struct tile *pstart_tile,
-                                  struct player *pplayer)
+void pft_fill_utype_overlap_param(pf_parameter *parameter,
+                                  const unit_type *punittype,
+                                  tile *pstart_tile, player *pplayer)
 {
   pft_fill_utype_default_parameter(parameter, punittype, pstart_tile,
                                    pplayer);
@@ -873,8 +854,7 @@ void pft_fill_utype_overlap_param(struct pf_parameter *parameter,
    Switch on one tile overlapping into the non-native terrain.
    For sea/land bombardment and for ferries.
  */
-void pft_fill_unit_overlap_param(struct pf_parameter *parameter,
-                                 const struct unit *punit)
+void pft_fill_unit_overlap_param(pf_parameter *parameter, const unit *punit)
 {
   pft_fill_unit_default_parameter(parameter, punit);
   pft_fill_overlap_param(parameter, unit_type_get(punit));
@@ -885,8 +865,8 @@ void pft_fill_unit_overlap_param(struct pf_parameter *parameter,
 
    Consider attacking and non-attacking possibilities properly.
  */
-static void pft_fill_attack_param(struct pf_parameter *parameter,
-                                  const struct unit_type *punittype)
+static void pft_fill_attack_param(pf_parameter *parameter,
+                                  const unit_type *punittype)
 {
   parameter->get_MC = normal_move;
   parameter->ignore_none_scopes = true;
@@ -915,10 +895,9 @@ static void pft_fill_attack_param(struct pf_parameter *parameter,
 
    Consider attacking and non-attacking possibilities properly.
  */
-void pft_fill_utype_attack_param(struct pf_parameter *parameter,
-                                 const struct unit_type *punittype,
-                                 struct tile *pstart_tile,
-                                 struct player *pplayer)
+void pft_fill_utype_attack_param(pf_parameter *parameter,
+                                 const unit_type *punittype,
+                                 tile *pstart_tile, player *pplayer)
 {
   pft_fill_utype_default_parameter(parameter, punittype, pstart_tile,
                                    pplayer);
@@ -930,8 +909,7 @@ void pft_fill_utype_attack_param(struct pf_parameter *parameter,
 
    Consider attacking and non-attacking possibilities properly.
  */
-void pft_fill_unit_attack_param(struct pf_parameter *parameter,
-                                const struct unit *punit)
+void pft_fill_unit_attack_param(pf_parameter *parameter, const unit *punit)
 {
   pft_fill_unit_default_parameter(parameter, punit);
   pft_fill_attack_param(parameter, unit_type_get(punit));
@@ -940,8 +918,7 @@ void pft_fill_unit_attack_param(struct pf_parameter *parameter,
 /**
    Fill default parameters for reverse map.
  */
-void pft_fill_reverse_parameter(struct pf_parameter *parameter,
-                                struct tile *target_tile)
+void pft_fill_reverse_parameter(pf_parameter *parameter, tile *target_tile)
 {
   memset(parameter, 0, sizeof(*parameter));
 
@@ -972,7 +949,7 @@ void pft_fill_reverse_parameter(struct pf_parameter *parameter,
  from that at sea. We therefore scale up the movement rates (and the
  corresponding movement consts) to the product of the two rates.
  */
-void pft_fill_amphibious_parameter(struct pft_amphibious *parameter)
+void pft_fill_amphibious_parameter(pft_amphibious *parameter)
 {
   const int move_rate = parameter->land.move_rate * parameter->sea.move_rate;
 

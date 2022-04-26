@@ -920,7 +920,7 @@ bool can_city_build_unit_later(const struct city *pcity,
   }
 
   /* Some units can be built only in certain cities -- for instance,
-     ships may be built only in cities adjacent to ocean. */
+   ships may be built only in cities adjacent to ocean. */
   if (!uclass_has_flag(utype_class(punittype), UCF_BUILD_ANYWHERE)
       && !is_native_near_tile(&(wld.map), utype_class(punittype),
                               pcity->tile)) {
@@ -1576,7 +1576,7 @@ bool city_celebrating(const struct city *pcity)
 bool city_rapture_grow(const struct city *pcity)
 {
   /* .rapture is checked instead of city_celebrating() because this
-     function is called after .was_happy was updated. */
+   function is called after .was_happy was updated. */
   return (pcity->rapture > 0 && pcity->surplus[O_FOOD] > 0
           && (pcity->rapture % game.info.rapturedelay) == 0
           && get_city_bonus(pcity, EFT_RAPTURE_GROW) > 0);
@@ -1880,7 +1880,7 @@ int city_change_production_penalty(const struct city *pcity,
   }
 
   /* Do not put penalty on these. It shouldn't matter whether you disband
-     unit before or after changing production...*/
+   unit before or after changing production...*/
   unpenalized_shields += pcity->disbanded_shields;
 
   /* Caravan shields are penalized (just as if you disbanded the caravan)
@@ -2114,7 +2114,7 @@ static int player_base_citizen_happiness(const struct player *pplayer)
     content--;
     if (step != 0) {
       /* the first penalty is at (basis + 1) cities;
-         the next is at (basis + step + 1), _not_ (basis + step) */
+   the next is at (basis + step + 1), _not_ (basis + step) */
       content -= (cities - basis - 1) / step;
     }
   }
@@ -2483,7 +2483,7 @@ static inline void citizen_content_buildings(struct city *pcity)
   int faces = get_city_bonus(pcity, EFT_MAKE_CONTENT);
 
   /* make people content (but not happy):
-     get rid of angry first, then make unhappy content. */
+   get rid of angry first, then make unhappy content. */
   while (faces > 0 && *angry > 0) {
     (*angry)--;
     (*unhappy)++;

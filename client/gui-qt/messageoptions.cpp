@@ -165,7 +165,7 @@ void message_dlg::cancel_changes() { close(); }
 /**
    Popup a window to let the user edit their message options.
  */
-void popup_messageopt_dialog(void)
+void popup_messageopt_dialog()
 {
   message_dlg *mdlg;
   int i;

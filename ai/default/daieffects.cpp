@@ -503,8 +503,8 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
       if ((place > 0 && adv->threats.continent[place]) || capital
           || (adv->threats.invasions
               /* FIXME: This ignores riverboats on some rulesets.
-                        We should analyze rulesets when game starts
-                        and have relevant checks here. */
+                  We should analyze rulesets when game starts
+                  and have relevant checks here. */
               && is_terrain_class_near_tile(pcity->tile, TC_OCEAN))) {
         if (place > 0 && adv->threats.continent[place]) {
           v += amount * 4 / 5;

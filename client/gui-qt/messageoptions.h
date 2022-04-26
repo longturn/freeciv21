@@ -9,7 +9,6 @@
 **************************************************************************/
 #pragma once
 
-#include "messagedlg_g.h"
 // Qt
 #include <QWidget>
 
@@ -33,4 +32,4 @@ private slots:
   void cancel_changes();
 };
 
-void popup_messageopt_dialog(void);
+void popup_messageopt_dialog();

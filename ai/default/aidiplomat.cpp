@@ -117,9 +117,9 @@ void dai_choose_diplomat_defensive(struct ai_type *ait,
                                    struct adv_choice *choice, int def)
 {
   /* Build a diplomat if our city is threatened by enemy diplomats, and
-     we have other defensive troops, and we don't already have a diplomat
-     to protect us. If we see an enemy diplomat and we don't have diplomat
-     tech... race it! */
+   we have other defensive troops, and we don't already have a diplomat
+   to protect us. If we see an enemy diplomat and we don't have diplomat
+   tech... race it! */
   struct ai_city *city_data = def_ai_city_data(pcity, ait);
 
   if (def != 0 && city_data->diplomat_threat && !city_data->has_diplomat) {
@@ -214,7 +214,7 @@ void dai_choose_diplomat_offensive(struct ai_type *ait,
         && (incite_cost < INCITE_IMPOSSIBLE_COST)
         && (incite_cost < pplayer->economic.gold - expenses)) {
       /* incite gain (FIXME: we should count wonders too but need to
-         cache that somehow to avoid CPU hog -- Per) */
+   cache that somehow to avoid CPU hog -- Per) */
       gain_incite = acity->prod[O_FOOD] * FOOD_WEIGHTING
                     + acity->prod[O_SHIELD] * SHIELD_WEIGHTING
                     + (acity->prod[O_LUXURY] + acity->prod[O_GOLD]

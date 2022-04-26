@@ -217,7 +217,7 @@ void xvote::paintEvent(QPaintEvent *event)
    Refresh all vote related GUI widgets. Called by the voteinfo module when
    the client receives new vote information from the server.
  */
-void voteinfo_gui_update(void)
+void voteinfo_gui_update()
 {
   if (king()->current_page() == PAGE_START) {
     qobject_cast<page_pregame *>(king()->pages[PAGE_START])->update_vote();

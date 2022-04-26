@@ -473,8 +473,8 @@ static int dai_goldequiv_clause(struct ai_type *ait, struct player *pplayer,
       worth = 0;
     } else {
       /* Very silly algorithm 1: Sea map more worth if enemy has more
-         cities. Reasoning is he has more use of seamap for settling
-         new areas the more cities he has already. */
+   cities. Reasoning is he has more use of seamap for settling
+   new areas the more cities he has already. */
       worth -= 15 * city_list_size(aplayer->cities);
       // Don't like him? Don't give him!
       worth = MIN(pplayer->ai_common.love[player_index(aplayer)] * 7, worth);
@@ -493,7 +493,7 @@ static int dai_goldequiv_clause(struct ai_type *ait, struct player *pplayer,
       worth = 0;
     } else {
       /* Very silly algorithm 2: Land map more worth the more cities
-         we have, since we expose all of these to the enemy. */
+   we have, since we expose all of these to the enemy. */
       worth -= 40 * MAX(city_list_size(pplayer->cities), 1);
       // Inflate numbers if not peace
       if (!pplayers_in_peace(pplayer, aplayer)) {

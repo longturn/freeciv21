@@ -22,7 +22,6 @@
 // client
 #include "client_main.h"
 #include "climisc.h"
-#include "helpdlg_g.h"
 #include "reqtree.h"
 #include "sprite.h"
 #include "text.h"
@@ -30,6 +29,7 @@
 #include "canvas.h"
 #include "citydlg.h"
 #include "fc_client.h"
+#include "helpdlg.h"
 #include "page_game.h"
 #include "sciencedlg.h"
 #include "tooltips.h"
@@ -602,7 +602,7 @@ void popdown_science_report()
 /**
    Resize and redraw the requirement tree.
  */
-void science_report_dialog_redraw(void)
+void science_report_dialog_redraw()
 {
   int i;
   science_report *sci_rep;

@@ -49,7 +49,7 @@ struct ai_type {
     void (*module_close)();
 
     /* Called for every AI type when game starts. Game is not necessarily new
-       one, it can also be an old game loaded from a savegame. */
+   one, it can also be an old game loaded from a savegame. */
     void (*game_start)();
 
     // Called for every AI type when game has ended.
@@ -236,7 +236,7 @@ struct ai_type {
                         struct settlermap *state);
 
     /* Called for player AI type for each autosettler still working.
-       Cancelling current work there will result in settler_run() call. */
+   Cancelling current work there will result in settler_run() call. */
     void (*settler_cont)(struct player *pplayer, struct unit *punit,
                          struct settlermap *state);
 

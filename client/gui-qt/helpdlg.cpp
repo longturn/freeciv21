@@ -67,7 +67,7 @@ void popup_help_dialog_string(const char *item)
 
    The string will be translated.
  */
-void popup_help_dialog_typed(const char *item, enum help_page_type htype)
+void popup_help_dialog_typed(const char *item, help_page_type htype)
 {
   int pos;
   const help_item *topic;
@@ -86,7 +86,7 @@ void popup_help_dialog_typed(const char *item, enum help_page_type htype)
 /**
    Close the help dialog.
  */
-void popdown_help_dialog(void)
+void popdown_help_dialog()
 {
   if (help_dlg) {
     help_dlg->setVisible(false);

@@ -13,8 +13,8 @@
 // utility
 #include "fcintl.h"
 // client
+#include "chatline.h"
 #include "chatline_common.h"
-#include "chatline_g.h"
 #include "client_main.h"
 #include "clinet.h"
 #include "connectdlg_common.h"

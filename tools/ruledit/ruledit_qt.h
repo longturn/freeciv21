@@ -108,9 +108,9 @@ public:
 
 signals:
   /********************************************************************/ /**
-     A requirement vector may have been changed.
-     @param vec the requirement vector that was changed.
- */
+   A requirement vector may have been changed.
+   @param vec the requirement vector that was changed.
+*/
   void rec_vec_may_have_changed(const requirement_vector *vec);
 
 private:

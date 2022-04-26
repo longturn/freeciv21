@@ -63,7 +63,7 @@ class fc_client *king() { return freeciv_qt; }
  */
 int main(int argc, char **argv)
 {
-  setup_gui_funcs();
+  // setup_gui_funcs();
   return client_main(argc, argv);
 }
 
@@ -190,7 +190,7 @@ void qtg_remove_net_input() {}
    the icon for the active unit. Or idx in [0..num_units_below-1] for
    secondary (inactive) units on the same tile.
  */
-void qtg_set_unit_icon(int idx, struct unit *punit)
+void qtg_set_unit_icon(int idx, unit *punit)
 { // PORTME
 }
 
@@ -299,7 +299,7 @@ static void apply_help_font(struct option *poption)
 /**
    Applies help font
  */
-static void apply_notify_font(struct option *poption)
+static void apply_notify_font(option *poption)
 {
   if (king()) {
     qtg_gui_update_font(QStringLiteral("notify_label"),
@@ -326,9 +326,7 @@ void qtg_editgui_refresh() {}
 /**
    Stub for editor function
  */
-void qtg_editgui_popup_properties(const struct tile_list *tiles, int objtype)
-{
-}
+void qtg_editgui_popup_properties(const tile_list *tiles, int objtype) {}
 
 /**
    Stub for editor function

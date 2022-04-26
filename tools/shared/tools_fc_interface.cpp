@@ -62,6 +62,6 @@ void fc_interface_init_tool()
   funcs->player_tile_city_id_get = tool_player_tile_city_id_get;
 
   /* Keep this function call at the end. It checks if all required functions
-     are defined. */
+   are defined. */
   fc_interface_init();
 }

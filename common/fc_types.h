@@ -22,9 +22,9 @@
  * directory! */
 
 #define MAX_NUM_PLAYER_SLOTS 512 // Used in the network protocol.
-                                 /* Must be divisable by 32 or iterations
-                                  * in savegame2.c needs to be changed */
-#define MAX_NUM_BARBARIANS 12    // 3, but slots reserved for future use.
+/* Must be divisable by 32 or iterations
+ * in savegame2.c needs to be changed */
+#define MAX_NUM_BARBARIANS 12 // 3, but slots reserved for future use.
 #define MAX_NUM_PLAYERS MAX_NUM_PLAYER_SLOTS - MAX_NUM_BARBARIANS
 // Used in the network protocol.
 #define MAX_NUM_CONNECTIONS (2 * (MAX_NUM_PLAYER_SLOTS))
@@ -570,7 +570,7 @@ typedef union {
   int roadflag;      // enum road_flag_id
   int extraflag;
   int diplrel; /* enum diplstate_type or
-                  enum diplrel_other */
+                enum diplrel_other */
   enum ustate_prop unit_state;
   enum unit_activity activity;
   enum impr_genus_id impr_genus;

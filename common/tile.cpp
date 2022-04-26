@@ -763,7 +763,7 @@ bool tile_apply_activity(struct tile *ptile, Activity_type_id act,
   case ACTIVITY_PATROL_UNUSED:
   case ACTIVITY_LAST:
     /* do nothing - these activities have no effect
-       on terrain type or tile extras */
+   on terrain type or tile extras */
     return false;
   }
   fc_assert(false);

@@ -66,6 +66,9 @@
 #include "repodlgs_common.h"
 #include "tilespec.h"
 
+// forward declaration
+#include "gui-qt/qtg_cxxside.h"
+
 extern void flush_dirty_overview();
 /**
    Remove unit, client end version
@@ -145,7 +148,7 @@ void client_remove_city(struct city *pcity)
   log_debug("client_remove_city() %d, %s", pcity->id, city_name_get(pcity));
 
   /* Explicitly remove all improvements, to properly remove any global
-     effects and to handle the preservation of "destroyed" effects. */
+   effects and to handle the preservation of "destroyed" effects. */
   effect_update = false;
 
   city_built_iterate(pcity, pimprove)
@@ -159,7 +162,7 @@ void client_remove_city(struct city *pcity)
     // nothing yet
   }
 
-  popdown_city_dialog(pcity);
+  qtg_popdown_city_dialog(pcity);
   game_remove_city(&wld, pcity);
   city_report_dialog_update();
   refresh_city_mapcanvas(&old_city, ptile, true, false);

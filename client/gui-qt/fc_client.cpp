@@ -28,8 +28,8 @@
 #include "climisc.h"
 #include "game.h"
 // client
+#include "chatline.h"
 #include "chatline_common.h"
-#include "chatline_g.h"
 #include "client_main.h"
 #include "clinet.h"
 #include "connectdlg_common.h"
@@ -562,7 +562,7 @@ void fc_client::create_cursors()
 /**
    Sets the "page" that the client should show.  See also pages_g.h.
  */
-void qtg_real_set_client_page(enum client_pages page)
+void qtg_real_set_client_page(client_pages page)
 {
   king()->switch_page(page);
 }
@@ -589,7 +589,7 @@ enum client_pages qtg_get_current_client_page()
 /**
    Update the start page.
  */
-void update_start_page(void)
+void update_start_page()
 {
   qobject_cast<page_pregame *>(king()->pages[PAGE_START])
       ->update_start_page();

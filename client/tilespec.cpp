@@ -64,7 +64,6 @@
 #include "citydlg_g.h"
 #include "dialogs_g.h"
 #include "gui_main_g.h"
-#include "helpdlg_g.h"
 #include "mapview_g.h" // for update_map_canvas_visible
 #include "menu_g.h"
 #include "sprite_g.h"
@@ -89,6 +88,9 @@
 #include "themes_common.h"
 
 #include "tilespec.h"
+
+// forward declaration
+#include "gui-qt/helpdlg.h"
 
 #define TILESPEC_CAPSTR                                                     \
   "+Freeciv-tilespec-Devel-2019-Jul-03 duplicates_ok precise-hp-bars "      \
@@ -248,7 +250,7 @@ struct named_sprites {
       struct {
         QPixmap
             /* for extrastyles ESTYLE_ROAD_ALL_SEPARATE and
-               ESTYLE_ROAD_PARITY_COMBINED */
+       ESTYLE_ROAD_PARITY_COMBINED */
             *isolated,
             *corner[8]; /* Indexed by direction; only non-cardinal dirs used.
                          */
@@ -830,7 +832,7 @@ const QVector<QString> *get_tileset_list(const struct option *poption)
 
   if (tilesets[idx] == nullptr) {
     /* Note: this means you must restart the client after installing a new
-       tileset. */
+   tileset. */
     QVector<QString> *list = fileinfolist(get_data_dirs(), TILESPEC_SUFFIX);
 
     tilesets[idx] = new QVector<QString>;
@@ -3421,7 +3423,7 @@ static void tileset_setup_road(struct tileset *t, struct extra_type *pextra,
   int extrastyle = t->sprites.extras[id].extrastyle;
 
   /* Isolated road graphics are used by ESTYLE_ROAD_ALL_SEPARATE and
-     ESTYLE_ROAD_PARITY_COMBINED. */
+   ESTYLE_ROAD_PARITY_COMBINED. */
   if (extrastyle == ESTYLE_ROAD_ALL_SEPARATE
       || extrastyle == ESTYLE_ROAD_PARITY_COMBINED) {
     full_tag_name = QStringLiteral("%1_isolated").arg(tag);
@@ -4092,7 +4094,7 @@ static void fill_road_sprite_array(const struct tileset *t,
   }
 
   /* Draw isolated rail/road separately (ESTYLE_ROAD_ALL_SEPARATE and
-     ESTYLE_ROAD_PARITY_COMBINED only). */
+   ESTYLE_ROAD_PARITY_COMBINED only). */
   if (extrastyle == ESTYLE_ROAD_ALL_SEPARATE
       || extrastyle == ESTYLE_ROAD_PARITY_COMBINED) {
     if (draw_single_road) {

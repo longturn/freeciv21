@@ -10,15 +10,12 @@
 **************************************************************************/
 #pragma once
 
+#include "fc_types.h"
 #include "support.h" // bool type
 
-#include "fc_types.h"
-
-#include "gui_proto_constructor.h"
-
 void city_report_dialog_popup();
-GUI_FUNC_PROTO(void, real_city_report_dialog_update, void *unused)
-GUI_FUNC_PROTO(void, real_city_report_update_city, struct city *pcity)
+void real_city_report_dialog_update(void *unused);
+void real_city_report_update_city(city *pcity);
 
 // Actually defined in update_queue.c
 void city_report_dialog_update_city(struct city *pcity);

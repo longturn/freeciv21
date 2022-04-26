@@ -1675,9 +1675,9 @@ struct adv_choice *military_advisor_choose_build(
   }
 
   /* If we are in severe danger, don't consider attackers. This is probably
-     too general. In many cases we will want to buy attackers to
-     counterattack.
-     -- Per */
+   too general. In many cases we will want to buy attackers to
+   counterattack.
+   -- Per */
   if (choice->want - martial_value > 100 && city_data->grave_danger > 0) {
     CITY_LOG(LOGLEVEL_BUILD, pcity,
              "severe danger (want " ADV_WANT_PRINTF "), force defender",
@@ -1703,7 +1703,7 @@ struct adv_choice *military_advisor_choose_build(
   dai_choose_paratrooper(ait, pplayer, pcity, choice, allow_gold_upkeep);
 
   /* Check if we want a sailing attacker. Have to put sailing first
-     before we mung the seamap */
+   before we mung the seamap */
   punittype = dai_choose_attacker(ait, pcity, TC_OCEAN, allow_gold_upkeep);
   if (punittype) {
     virtualunit = unit_virtual_create(

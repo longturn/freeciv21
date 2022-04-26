@@ -61,17 +61,12 @@
 /* client/include */
 #include "citydlg_g.h"
 #include "cityrep_g.h"
-#include "connectdlg_g.h"
 #include "dialogs_g.h"
-#include "editgui_g.h"
 #include "gui_main_g.h"
-#include "inteldlg_g.h"
 #include "mapctrl_g.h" // popup_newcity_dialog()
 #include "mapview_g.h"
 #include "menu_g.h"
-#include "messagewin_g.h"
 #include "pages_g.h"
-#include "plrdlg_g.h"
 #include "ratesdlg_g.h"
 #include "repodlgs_g.h"
 #include "spaceshipdlg_g.h"
@@ -89,11 +84,12 @@
 #include "editor.h"
 #include "goto.h" // client_goto_init()
 #include "governor.h"
-#include "helpdlg_g.h"
 #include "mapview_common.h"
+#include "messagewin_common.h"
 #include "music.h"
 #include "options.h"
 #include "overview_common.h"
+#include "plrdlg_common.h"
 #include "tilespec.h"
 #include "update_queue.h"
 #include "voteinfo.h"
@@ -102,6 +98,10 @@
 #include "script_client.h"
 
 #include "packhand.h"
+
+// forward declaration
+#include "gui-qt/helpdlg.h"
+#include "gui-qt/qtg_cxxside.h"
 
 /* Define this macro to get additional debug output about the transport
  * status of the units. */
@@ -332,7 +332,7 @@ void handle_server_join_reply(bool you_can_join, const char *message,
   const char *s_capability = client.conn.capability;
 
   conn_set_capability(&client.conn, capability);
-  close_connection_dialog();
+  qtg_close_connection_dialog();
 
   if (you_can_join) {
     struct packet_client_info client_info;
@@ -401,7 +401,7 @@ void handle_city_remove(int city_id)
   need_menus_update = (nullptr != get_focus_unit_on_tile(city_tile(pcity)));
 
   governor::i()->add_city_remove(pcity);
-  editgui_notify_object_changed(OBJTYPE_CITY, pcity->id, true);
+  qtg_editgui_notify_object_changed(OBJTYPE_CITY, pcity->id, true);
   client_remove_city(pcity);
 
   // Update menus if the focus unit is on the tile.
@@ -452,7 +452,7 @@ void handle_unit_remove(int unit_id)
   }
   punit->client.transported_by = -1;
 
-  editgui_notify_object_changed(OBJTYPE_UNIT, punit->id, true);
+  qtg_editgui_notify_object_changed(OBJTYPE_UNIT, punit->id, true);
   client_remove_unit(punit);
 
   if (!client_has_player() || powner == client_player()) {
@@ -496,9 +496,10 @@ void handle_unit_combat_info(const struct packet_unit_combat_info *packet)
   struct unit *punit1 = game_unit_by_number(packet->defender_unit_id);
 
   if (punit0 && punit1) {
-    popup_combat_info(packet->attacker_unit_id, packet->defender_unit_id,
-                      packet->attacker_hp, packet->defender_hp,
-                      packet->make_att_veteran, packet->make_def_veteran);
+    qtg_popup_combat_info(packet->attacker_unit_id, packet->defender_unit_id,
+                          packet->attacker_hp, packet->defender_hp,
+                          packet->make_att_veteran,
+                          packet->make_def_veteran);
     if (tile_visible_mapcanvas(unit_tile(punit0))
         && tile_visible_mapcanvas(unit_tile(punit1))) {
       show_combat = true;
@@ -1002,7 +1003,7 @@ static void city_packet_common(struct city *pcity, struct tile *pcenter,
   if (popup && nullptr != client.conn.playing
       && is_human(client.conn.playing) && can_client_issue_orders()) {
     menus_update();
-    if (!city_dialog_is_open(pcity)) {
+    if (!qtg_city_dialog_is_open(pcity)) {
       popup_city_dialog(pcity);
     }
   }
@@ -1023,7 +1024,7 @@ static void city_packet_common(struct city *pcity, struct tile *pcenter,
               nation_rule_name(nation_of_city(pcity)), city_name_get(pcity));
   }
 
-  editgui_notify_object_changed(OBJTYPE_CITY, pcity->id, false);
+  qtg_editgui_notify_object_changed(OBJTYPE_CITY, pcity->id, false);
 }
 
 /**
@@ -1298,7 +1299,7 @@ void handle_new_year(int year, int fragments, int turn)
   }
 
   if (last_turn != turn) {
-    start_turn();
+    qtg_start_turn();
     last_turn = turn;
   }
 }
@@ -1692,7 +1693,7 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
 
       if (nullptr == client.conn.playing
           || unit_owner(punit) == client.conn.playing) {
-        refresh_unit_city_dialogs(punit);
+        qtg_refresh_unit_city_dialogs(punit);
       }
     } /*** End of Change in activity or activity's target. ***/
 
@@ -1838,7 +1839,7 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
       check_focus = true;
     }
 
-    editgui_notify_object_changed(OBJTYPE_UNIT, punit->id, false);
+    qtg_editgui_notify_object_changed(OBJTYPE_UNIT, punit->id, false);
 
     punit->action_decision_tile = packet_unit->action_decision_tile;
     punit->action_timestamp = packet_unit->action_timestamp;
@@ -2097,12 +2098,12 @@ void handle_game_info(const struct packet_game_info *pinfo)
   }
 
   if (game.info.is_edit_mode != pinfo->is_edit_mode) {
-    popdown_all_city_dialogs();
+    qtg_popdown_all_city_dialogs();
     // Clears the current goto command.
     clear_hover_state();
 
     if (pinfo->is_edit_mode && game.scenario.handmade) {
-      if (!handmade_scenario_warning()) {
+      if (!qtg_handmade_scenario_warning()) {
         // Gui didn't handle this
         output_window_append(
             ftc_client,
@@ -2151,7 +2152,7 @@ void handle_game_info(const struct packet_game_info *pinfo)
     update_info_label();
   }
 
-  editgui_notify_object_changed(OBJTYPE_GAME, 1, false);
+  qtg_editgui_notify_object_changed(OBJTYPE_GAME, 1, false);
 }
 
 /**
@@ -2245,8 +2246,8 @@ void handle_player_remove(int playerno)
   players_dialog_update();
   conn_list_dialog_update();
 
-  editgui_refresh();
-  editgui_notify_object_changed(OBJTYPE_PLAYER, plr_nbr, true);
+  qtg_editgui_refresh();
+  qtg_editgui_notify_object_changed(OBJTYPE_PLAYER, plr_nbr, true);
 }
 
 /**
@@ -2364,7 +2365,7 @@ void handle_player_info(const struct packet_player_info *pinfo)
 
   if (pplayer->economic.infra_points != pinfo->infrapoints) {
     pplayer->economic.infra_points = pinfo->infrapoints;
-    update_infra_dialog();
+    // update_infra_dialog(); // this functions is empty lambda
   }
 
   /* Don't use player_iterate or player_slot_count here, because we ignore
@@ -2479,9 +2480,9 @@ void handle_player_info(const struct packet_player_info *pinfo)
     update_intel_dialog(pplayer);
   }
 
-  editgui_refresh();
-  editgui_notify_object_changed(OBJTYPE_PLAYER, player_number(pplayer),
-                                false);
+  qtg_editgui_refresh();
+  qtg_editgui_notify_object_changed(OBJTYPE_PLAYER, player_number(pplayer),
+                                    false);
 }
 
 /**
@@ -2561,11 +2562,11 @@ void handle_research_info(const struct packet_research_info *packet)
       }
     }
     if (editor_is_active()) {
-      editgui_refresh();
+      qtg_editgui_refresh();
       research_players_iterate(presearch, pplayer)
       {
-        editgui_notify_object_changed(OBJTYPE_PLAYER, player_number(pplayer),
-                                      false);
+        qtg_editgui_notify_object_changed(OBJTYPE_PLAYER,
+                                          player_number(pplayer), false);
       }
       research_players_iterate_end;
     }
@@ -3120,7 +3121,8 @@ void handle_tile_info(const struct packet_tile_info *packet)
   }
 
   if (known_changed || tile_changed) {
-    editgui_notify_object_changed(OBJTYPE_TILE, tile_index(ptile), false);
+    qtg_editgui_notify_object_changed(OBJTYPE_TILE, tile_index(ptile),
+                                      false);
   }
 
   // refresh tiles
@@ -3162,7 +3164,7 @@ void handle_scenario_info(const struct packet_scenario_info *packet)
   game.scenario.handmade = packet->handmade;
   game.scenario.allow_ai_type_fallback = packet->allow_ai_type_fallback;
 
-  editgui_notify_object_changed(OBJTYPE_GAME, 1, false);
+  qtg_editgui_notify_object_changed(OBJTYPE_GAME, 1, false);
 }
 
 /**
@@ -3172,7 +3174,7 @@ void handle_scenario_description(const char *description)
 {
   sz_strlcpy(game.scenario_desc.description, description);
 
-  editgui_notify_object_changed(OBJTYPE_GAME, 1, false);
+  qtg_editgui_notify_object_changed(OBJTYPE_GAME, 1, false);
 }
 
 /**
@@ -5073,7 +5075,7 @@ void handle_player_attribute_chunk(
 
   if (packet->offset + packet->chunk_length == packet->total_length) {
     /* We successful received the last chunk. The attribute block is
-       now complete. */
+   now complete. */
     attribute_restore();
   }
 }
@@ -5185,7 +5187,7 @@ void handle_ruleset_effect(const struct packet_ruleset_effect *packet)
  */
 void handle_edit_object_created(int tag, int id)
 {
-  editgui_notify_object_created(tag, id);
+  qtg_editgui_notify_object_created(tag, id);
 }
 
 /**
@@ -5218,9 +5220,9 @@ void handle_edit_startpos(const struct packet_edit_startpos *packet)
   if (changed && can_client_change_view()) {
     refresh_tile_mapcanvas(ptile, true, false);
     if (packet->removal) {
-      editgui_notify_object_changed(OBJTYPE_STARTPOS, packet->id, true);
+      qtg_editgui_notify_object_changed(OBJTYPE_STARTPOS, packet->id, true);
     } else {
-      editgui_notify_object_created(packet->tag, packet->id);
+      qtg_editgui_notify_object_created(packet->tag, packet->id);
     }
   }
 }
@@ -5251,8 +5253,8 @@ void handle_edit_startpos_full(
   if (startpos_unpack(psp, packet) && can_client_change_view()) {
     // Notify.
     refresh_tile_mapcanvas(ptile, true, false);
-    editgui_notify_object_changed(OBJTYPE_STARTPOS, startpos_number(psp),
-                                  false);
+    qtg_editgui_notify_object_changed(OBJTYPE_STARTPOS, startpos_number(psp),
+                                      false);
   }
 }
 

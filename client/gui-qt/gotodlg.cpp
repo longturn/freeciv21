@@ -341,7 +341,7 @@ void goto_dialog::paintEvent(QPaintEvent *event)
 /*
    Popup a dialog to have the focus unit goto to a city.
  */
-void popup_goto_dialog(void)
+void popup_goto_dialog()
 {
   if (C_S_RUNNING != client_state()) {
     return;

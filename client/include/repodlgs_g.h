@@ -19,20 +19,16 @@
 // client
 #include "repodlgs_common.h"
 
-#include "gui_proto_constructor.h"
-
-GUI_FUNC_PROTO(void, science_report_dialog_popup, bool raise)
-GUI_FUNC_PROTO(void, science_report_dialog_redraw, void)
+void science_report_dialog_popup(bool raise);
+void science_report_dialog_redraw();
 void economy_report_dialog_popup();
-GUI_FUNC_PROTO(void, units_report_dialog_popup, bool raise)
-GUI_FUNC_PROTO(void, endgame_report_dialog_start,
-               const struct packet_endgame_report *packet)
-GUI_FUNC_PROTO(void, endgame_report_dialog_player,
-               const struct packet_endgame_player *packet)
+void units_report_dialog_popup(bool raise);
+void endgame_report_dialog_start(const packet_endgame_report *packet);
+void endgame_report_dialog_player(const packet_endgame_player *packet);
 
-GUI_FUNC_PROTO(void, real_science_report_dialog_update, void *unused)
-GUI_FUNC_PROTO(void, real_economy_report_dialog_update, void *unused)
-GUI_FUNC_PROTO(void, real_units_report_dialog_update, void *unused)
+void real_science_report_dialog_update(void *unused);
+void real_economy_report_dialog_update(void *unused);
+void real_units_report_dialog_update(void *unused);
 
 // Actually defined in update_queue.c
 void science_report_dialog_update();

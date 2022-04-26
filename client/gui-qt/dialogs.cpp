@@ -38,7 +38,6 @@
 #include "chatline_common.h"
 #include "client_main.h"
 #include "control.h"
-#include "helpdlg_g.h"
 #include "mapview_common.h"
 #include "packhand.h"
 #include "text.h"
@@ -46,6 +45,7 @@
 // gui-qt - awesome client
 #include "fc_client.h"
 #include "fonts.h"
+#include "helpdlg.h"
 #include "hudwidget.h"
 #include "icons.h"
 #include "mapview.h"
@@ -952,8 +952,7 @@ void races_dialog::nationset_changed(int index)
    location.
  */
 void popup_notify_goto_dialog(const char *headline, const char *lines,
-                              const struct text_tag_list *tags,
-                              struct tile *ptile)
+                              const text_tag_list *tags, tile *ptile)
 {
   notify_goto *ask =
       new notify_goto(headline, lines, tags, ptile, king()->central_wdg);
@@ -1002,7 +1001,7 @@ void popup_races_dialog(struct player *pplayer)
    Close the nation selection dialog.  This should allow the user to
    (at least) select a unit to activate.
  */
-void popdown_races_dialog(void)
+void popdown_races_dialog()
 {
   if (is_race_dialog_open) {
     race_dialog->close();
@@ -1013,7 +1012,7 @@ void popdown_races_dialog(void)
 /**
    Popup a dialog window to select units on a particular tile.
  */
-void unit_select_dialog_popup(struct tile *ptile)
+void unit_select_dialog_popup(tile *ptile)
 {
   if (ptile != nullptr
       && (unit_list_size(ptile->units) > 1
@@ -1052,7 +1051,7 @@ void races_update_pickable(bool nationset_change)
    In the nation selection dialog, make already-taken nations unavailable.
    This information is contained in the packet_nations_used packet.
  */
-void races_toggles_set_sensitive(void)
+void races_toggles_set_sensitive()
 {
   if (is_race_dialog_open) {
     race_dialog->refresh();
@@ -1690,9 +1689,9 @@ static void diplomat_queue_handle_secondary(int actor_id)
 
    This allows the client to clean up any client specific assumptions.
  */
-void action_selection_no_longer_in_progress_gui_specific(int actor_id)
+void action_selection_no_longer_in_progress_gui_specific(
+    [[maybe_unused]] int actor_id)
 {
-  Q_UNUSED(actor_id)
   // Stop assuming the answer to a follow up question will arrive.
   is_more_user_input_needed = false;
 }
@@ -1701,12 +1700,10 @@ void action_selection_no_longer_in_progress_gui_specific(int actor_id)
    Popup a dialog that allows the player to select what action a unit
    should take.
  */
-void popup_action_selection(struct unit *actor_unit,
-                            struct city *target_city,
-                            struct unit *target_unit,
-                            struct tile *target_tile,
-                            struct extra_type *target_extra,
-                            const struct act_prob *act_probs)
+void popup_action_selection(unit *actor_unit, city *target_city,
+                            unit *target_unit, tile *target_tile,
+                            extra_type *target_extra,
+                            const act_prob *act_probs)
 {
   QString title, text;
   choice_dialog *cd;
@@ -3000,8 +2997,8 @@ static void act_sel_keep_moving(QVariant data1, QVariant data2)
    Popup a window asking a diplomatic unit if it wishes to incite the
    given enemy city.
  */
-void popup_incite_dialog(struct unit *actor, struct city *tcity, int cost,
-                         const struct action *paction)
+void popup_incite_dialog(unit *actor, city *tcity, int cost,
+                         const action *paction)
 {
   QString buf, buf2;
   int diplomat_id = actor->id;
@@ -3060,8 +3057,8 @@ void popup_incite_dialog(struct unit *actor, struct city *tcity, int cost,
    Popup a dialog asking a diplomatic unit if it wishes to bribe the
    given enemy unit.
  */
-void popup_bribe_dialog(struct unit *actor, struct unit *tunit, int cost,
-                        const struct action *paction)
+void popup_bribe_dialog(unit *actor, unit *tunit, int cost,
+                        const action *paction)
 {
   hud_message_box *ask = new hud_message_box(king()->central_wdg);
   QString buf, buf2;
@@ -3254,8 +3251,7 @@ static void spy_sabotage(QVariant data1, QVariant data2)
    Popup a dialog asking a diplomatic unit if it wishes to sabotage the
    given enemy city.
  */
-void popup_sabotage_dialog(struct unit *actor, struct city *tcity,
-                           const struct action *paction)
+void popup_sabotage_dialog(unit *actor, city *tcity, const action *paction)
 {
   QVariant qv1, qv2;
   int diplomat_id = actor->id;
@@ -3312,7 +3308,7 @@ void popup_sabotage_dialog(struct unit *actor, struct city *tcity,
    Popup a dialog asking the unit which improvement they would like to
    pillage.
  */
-void popup_pillage_dialog(struct unit *punit, bv_extras extras)
+void popup_pillage_dialog(unit *punit, bv_extras extras)
 {
   QString str;
   QVariant qv1, qv2;
@@ -3390,7 +3386,7 @@ disband_box::~disband_box() { unit_list_destroy(cpunits); }
 /**
    Pops up a dialog to confirm disband of the unit(s).
  */
-void popup_disband_dialog(struct unit_list *punits)
+void popup_disband_dialog(unit_list *punits)
 {
   disband_box *ask = new disband_box(punits, king()->central_wdg);
   ask->show();
@@ -3400,7 +3396,7 @@ void popup_disband_dialog(struct unit_list *punits)
    Ruleset (modpack) has suggested loading certain tileset. Confirm from
    user and load.
  */
-void popup_tileset_suggestion_dialog(void)
+void popup_tileset_suggestion_dialog()
 {
   hud_message_box *ask = new hud_message_box(king()->central_wdg);
   QString text;
@@ -3431,7 +3427,7 @@ void popup_tileset_suggestion_dialog(void)
    Ruleset (modpack) has suggested loading certain soundset. Confirm from
    user and load.
  */
-void popup_soundset_suggestion_dialog(void)
+void popup_soundset_suggestion_dialog()
 {
   hud_message_box *ask = new hud_message_box(king()->central_wdg);
   QString text;
@@ -3456,7 +3452,7 @@ void popup_soundset_suggestion_dialog(void)
    Ruleset (modpack) has suggested loading certain musicset. Confirm from
    user and load.
  */
-void popup_musicset_suggestion_dialog(void)
+void popup_musicset_suggestion_dialog()
 {
   hud_message_box *ask = new hud_message_box(king()->central_wdg);
   QString text;
@@ -3481,9 +3477,8 @@ void popup_musicset_suggestion_dialog(void)
    Tileset (modpack) has suggested loading certain theme. Confirm from
    user and load.
  */
-bool popup_theme_suggestion_dialog(const char *theme_name)
+bool popup_theme_suggestion_dialog([[maybe_unused]] const char *theme_name)
 {
-  Q_UNUSED(theme_name)
   return false;
 }
 
@@ -3491,7 +3486,7 @@ bool popup_theme_suggestion_dialog(const char *theme_name)
    This function is called when the client disconnects or the game is
    over.  It should close all dialog windows for that game.
  */
-void popdown_all_game_dialogs(void)
+void popdown_all_game_dialogs()
 {
   int i;
   QList<choice_dialog *> cd_list;
@@ -3523,15 +3518,10 @@ void popdown_all_game_dialogs(void)
    dialog when the action selection dialog is open.
    Returns IDENTITY_NUMBER_ZERO if no action selection dialog is open.
  */
-int action_selection_actor_unit(void)
+int action_selection_actor_unit()
 {
   choice_dialog *cd = king()->get_diplo_dialog();
-
-  if (cd != nullptr) {
-    return cd->unit_id;
-  } else {
-    return IDENTITY_NUMBER_ZERO;
-  }
+  return cd ? cd->unit_id : IDENTITY_NUMBER_ZERO;
 }
 
 /**
@@ -3540,15 +3530,10 @@ int action_selection_actor_unit(void)
    city target. Returns IDENTITY_NUMBER_ZERO if no action selection dialog
    is open or no city target is present in the action selection dialog.
  */
-int action_selection_target_city(void)
+int action_selection_target_city()
 {
   choice_dialog *cd = king()->get_diplo_dialog();
-
-  if (cd != nullptr) {
-    return cd->target_id[ATK_CITY];
-  } else {
-    return IDENTITY_NUMBER_ZERO;
-  }
+  return cd ? cd->target_id[ATK_CITY] : IDENTITY_NUMBER_ZERO;
 }
 
 /**
@@ -3557,15 +3542,10 @@ int action_selection_target_city(void)
    tile target. Returns TILE_INDEX_NONE if no action selection dialog is
    open.
  */
-int action_selection_target_tile(void)
+int action_selection_target_tile()
 {
   choice_dialog *cd = king()->get_diplo_dialog();
-
-  if (cd != nullptr) {
-    return cd->target_id[ATK_TILE];
-  } else {
-    return TILE_INDEX_NONE;
-  }
+  return cd ? cd->target_id[ATK_TILE] : TILE_INDEX_NONE;
 }
 
 /**
@@ -3574,15 +3554,10 @@ int action_selection_target_tile(void)
    extra target. Returns EXTRA_NONE if no action selection dialog is open
    or no extra target is present in the action selection dialog.
  */
-int action_selection_target_extra(void)
+int action_selection_target_extra()
 {
   choice_dialog *cd = king()->get_diplo_dialog();
-
-  if (cd != nullptr) {
-    return cd->sub_target_id[ASTK_EXTRA];
-  } else {
-    return EXTRA_NONE;
-  }
+  return cd ? cd->sub_target_id[ASTK_EXTRA] : EXTRA_NONE;
 }
 
 /**
@@ -3591,26 +3566,19 @@ int action_selection_target_extra(void)
    unit target. Returns IDENTITY_NUMBER_ZERO if no action selection dialog
    is open or no unit target is present in the action selection dialog.
  */
-int action_selection_target_unit(void)
+int action_selection_target_unit()
 {
   choice_dialog *cd = king()->get_diplo_dialog();
-
-  if (cd != nullptr) {
-    return cd->target_id[ATK_UNIT];
-  } else {
-    return IDENTITY_NUMBER_ZERO;
-  }
+  return cd ? cd->target_id[ATK_UNIT] : IDENTITY_NUMBER_ZERO;
 }
 
 /**
    Updates the action selection dialog with new information.
  */
-void action_selection_refresh(struct unit *actor_unit,
-                              struct city *target_city,
-                              struct unit *target_unit,
-                              struct tile *target_tile,
-                              struct extra_type *target_extra,
-                              const struct act_prob *act_probs)
+void action_selection_refresh(unit *actor_unit, city *target_city,
+                              unit *target_unit, tile *target_tile,
+                              extra_type *target_extra,
+                              const act_prob *act_probs)
 {
   Q_UNUSED(target_extra)
   choice_dialog *asd;
@@ -3735,12 +3703,10 @@ void action_selection_refresh(struct unit *actor_unit,
 /**
    Closes the action selection dialog
  */
-void action_selection_close(void)
+void action_selection_close()
 {
-  choice_dialog *cd;
-
-  cd = king()->get_diplo_dialog();
-  if (cd != nullptr) {
+  choice_dialog *cd = king()->get_diplo_dialog();
+  if (cd) {
     did_not_decide = true;
     cd->close();
   }
@@ -3749,24 +3715,24 @@ void action_selection_close(void)
 /**
    Player has gained a new tech.
  */
-void show_tech_gained_dialog(Tech_type_id tech) { Q_UNUSED(tech) }
+void show_tech_gained_dialog([[maybe_unused]] Tech_type_id tech) {}
 
 /**
    Popup dialog for upgrade units
  */
-void popup_upgrade_dialog(struct unit_list *punits)
+void popup_upgrade_dialog(unit_list *punits)
 {
-  char buf[512];
-  hud_message_box *ask = new hud_message_box(king()->central_wdg);
-  QString title;
-  QVector<int> *punit_ids;
-
   if (!punits || unit_list_size(punits) == 0) {
     return;
   }
 
-  punit_ids = new QVector<int>();
-  unit_list_iterate(punits, punit) { punit_ids->push_back(punit->id); }
+  char buf[512];
+  hud_message_box *ask = new hud_message_box(king()->central_wdg);
+  QString title;
+  QVector<int> unit_ids;
+  unit_ids.resize(unit_list_size(punits));
+
+  unit_list_iterate(punits, punit) { unit_ids.push_back(punit->id); }
   unit_list_iterate_end;
 
   if (!get_units_upgrade_info(buf, sizeof(buf), punits)) {
@@ -3779,18 +3745,15 @@ void popup_upgrade_dialog(struct unit_list *punits)
   }
   ask->set_text_title(buf, title);
   ask->setAttribute(Qt::WA_DeleteOnClose);
-  QObject::connect(ask, &hud_message_box::accepted, [=]() {
-    std::unique_ptr<QVector<int>> uptr(punit_ids);
-    QVector<int> not_ptr = *uptr;
-    struct unit *punit;
-
-    for (int id : not_ptr) {
-      punit = game_unit_by_number(id);
-      if (punit) {
-        request_unit_upgrade(punit);
-      }
-    }
-  });
+  QObject::connect(ask, &hud_message_box::accepted,
+                   [unit_ids = std::move(unit_ids)] {
+                     for (auto id : unit_ids) {
+                       unit *punit = game_unit_by_number(id);
+                       if (punit) {
+                         request_unit_upgrade(punit);
+                       }
+                     }
+                   });
   ask->show();
 }
 
@@ -3820,12 +3783,12 @@ bool qtg_handmade_scenario_warning()
 /**
    Unit wants to get into some transport on given tile.
  */
-bool qtg_request_transport(struct unit *pcargo, struct tile *ptile)
+bool qtg_request_transport(unit *pcargo, tile *ptile)
 {
   int tcount;
   hud_unit_loader *hul;
-  struct unit_list *potential_transports = unit_list_new();
-  struct unit *best_transport = transporter_for_unit_at(pcargo, ptile);
+  unit_list *potential_transports = unit_list_new();
+  unit *best_transport = transporter_for_unit_at(pcargo, ptile);
 
   unit_list_iterate(ptile->units, ptransport)
   {

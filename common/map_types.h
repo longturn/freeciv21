@@ -88,7 +88,7 @@ struct civ_map {
       int riches;
       int huts;
       int huts_absolute; /* For compatibility conversion from pre-2.6
-                            savegames */
+                      savegames */
       int animals;
       int landpercent;
       enum map_generator generator;

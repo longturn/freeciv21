@@ -39,8 +39,10 @@
 #include "tilespec.h"
 
 /* client/include */
-#include "editgui_g.h"
 #include "mapview_g.h"
+
+// forward declaration
+#include "gui-qt/qtg_cxxside.h"
 
 enum selection_modes {
   SELECTION_MODE_NEW = 0,
@@ -482,7 +484,7 @@ static void editor_grab_applied_player(const struct tile *ptile)
 
   if (player_by_number(apno) != nullptr) {
     editor_tool_set_applied_player(editor_get_tool(), apno);
-    editgui_refresh();
+    qtg_editgui_refresh();
   }
 }
 
@@ -617,7 +619,7 @@ static void editor_grab_tool(const struct tile *ptile)
   if (editor_tool_has_value(static_cast<editor_tool_type>(ett))) {
     editor_tool_set_value(static_cast<editor_tool_type>(ett), value);
   }
-  editgui_refresh();
+  qtg_editgui_refresh();
 }
 
 /**
@@ -655,7 +657,7 @@ static void popup_properties(struct tile *ptile)
     }
   }
 
-  editgui_popup_properties(tiles, NUM_OBJTYPES);
+  qtg_editgui_popup_properties(tiles, NUM_OBJTYPES);
 
   tile_list_destroy(tiles);
 }
@@ -948,7 +950,7 @@ void editor_apply_tool(const struct tile *ptile, bool part_of_selection)
       } else {
         edit_buffer_clear(ebuf);
         edit_buffer_copy_square(ebuf, ptile, size);
-        editgui_refresh();
+        qtg_editgui_refresh();
       }
     } else if (etm == ETM_PAINT || etm == ETM_PASTE) {
       edit_buffer_paste(ebuf, ptile);
@@ -1149,7 +1151,7 @@ void editor_apply_tool_to_selection()
   connection_do_unbuffer(&client.conn);
 
   if (editor_tool_get_mode(ett) == ETM_COPY) {
-    editgui_refresh();
+    qtg_editgui_refresh();
   }
 }
 

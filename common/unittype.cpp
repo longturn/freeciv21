@@ -136,10 +136,10 @@ int utype_upkeep_cost(const struct unit_type *ut, struct player *pplayer,
   }
 
   /* switch shield upkeep to gold upkeep if
-     - the effect 'EFT_SHIELD2GOLD_FACTOR' is non-zero (it gives the
-       conversion factor in percent) and
-     - the unit has the corresponding flag set (UTYF_SHIELD2GOLD)
-     FIXME: Should the ai know about this? */
+   - the effect 'EFT_SHIELD2GOLD_FACTOR' is non-zero (it gives the
+     conversion factor in percent) and
+   - the unit has the corresponding flag set (UTYF_SHIELD2GOLD)
+   FIXME: Should the ai know about this? */
   if (utype_has_flag(ut, UTYF_SHIELD2GOLD)
       && (otype == O_GOLD || otype == O_SHIELD)) {
     gold_upkeep_factor = get_player_bonus(pplayer, EFT_SHIELD2GOLD_FACTOR);

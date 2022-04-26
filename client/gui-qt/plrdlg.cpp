@@ -24,7 +24,6 @@
 // client
 #include "chatline_common.h"
 #include "client_main.h"
-#include "inteldlg_g.h"
 // gui-qt
 #include "colors.h"
 #include "fc_client.h"

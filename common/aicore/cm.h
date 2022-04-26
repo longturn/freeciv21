@@ -42,26 +42,23 @@ void cm_init();
 void cm_init_citymap();
 void cm_free();
 
-std::unique_ptr<cm_result> cm_result_new(struct city *pcity);
+std::unique_ptr<cm_result> cm_result_new(city *pcity);
 
 /*
  * Will try to meet the requirements and fill out the result. Caller
  * should test result->found_a_valid. cm_query_result() will not change
  * the actual city setting.
  */
-void cm_query_result(struct city *pcity,
-                     const struct cm_parameter *const parameter,
+void cm_query_result(city *pcity, const cm_parameter *const parameter,
                      std::unique_ptr<cm_result> &result, bool negative_ok);
 
 /***************** utility methods *************************************/
-bool operator==(const struct cm_parameter &p1,
-                const struct cm_parameter &p2);
-void cm_copy_parameter(struct cm_parameter *dest,
-                       const struct cm_parameter *const src);
-void cm_init_parameter(struct cm_parameter *dest);
-void cm_init_emergency_parameter(struct cm_parameter *dest);
+bool operator==(const cm_parameter &p1, const cm_parameter &p2);
+void cm_copy_parameter(cm_parameter *dest, const cm_parameter *const src);
+void cm_init_parameter(cm_parameter *dest);
+void cm_init_emergency_parameter(cm_parameter *dest);
 
-void cm_print_city(const struct city *pcity);
+void cm_print_city(const city *pcity);
 void cm_print_result(const std::unique_ptr<cm_result> &result);
 
 int cm_result_citizens(const std::unique_ptr<cm_result> &result);
@@ -69,4 +66,4 @@ int cm_result_specialists(const std::unique_ptr<cm_result> &result);
 int cm_result_workers(const std::unique_ptr<cm_result> &result);
 
 void cm_result_from_main_map(std::unique_ptr<cm_result> &result,
-                             const struct city *pcity);
+                             const city *pcity);

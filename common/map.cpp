@@ -618,7 +618,7 @@ int real_map_distance(const struct tile *tile0, const struct tile *tile1)
 int sq_map_distance(const struct tile *tile0, const struct tile *tile1)
 {
   /* We assume map_distance_vector gives us the vector with the
-     minimum squared distance. Right now this is true. */
+   minimum squared distance. Right now this is true. */
   int dx, dy;
 
   map_distance_vector(&dx, &dy, tile0, tile1);
@@ -631,7 +631,7 @@ int sq_map_distance(const struct tile *tile0, const struct tile *tile1)
 int map_distance(const struct tile *tile0, const struct tile *tile1)
 {
   /* We assume map_distance_vector gives us the vector with the
-     minimum map distance. Right now this is true. */
+   minimum map distance. Right now this is true. */
   int dx, dy;
 
   map_distance_vector(&dx, &dy, tile0, tile1);

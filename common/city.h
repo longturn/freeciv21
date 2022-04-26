@@ -331,9 +331,9 @@ struct city {
   int shield_stock;
   int pollution;      // not saved
   int illness_trade;  /* not saved; illness due to trade; it is
-                         calculated within the server and send to
-                         the clients as the clients do not have all
-                         information about the trade cities */
+                        calculated within the server and send to
+                        the clients as the clients do not have all
+                        information about the trade cities */
   int turn_plague;    // last turn with an illness in the city
   int city_radius_sq; // current squared city radius
 

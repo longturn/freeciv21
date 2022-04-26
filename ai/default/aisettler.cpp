@@ -245,7 +245,7 @@ static void cityresult_destroy(struct cityresult *result)
   if (result != nullptr) {
     if (result->tdc_hash != nullptr) {
       for (const auto *ptdc : qAsConst(*result->tdc_hash)) {
-        NFCPP_FREE(ptdc);
+        delete[] ptdc;
       }
       delete result->tdc_hash;
     }
@@ -377,7 +377,7 @@ static struct cityresult *cityresult_fill(struct ai_type *ait,
     }
 
     if (result->tdc_hash->contains(cindex)) {
-      NFCPP_FREE(result->tdc_hash->value(cindex));
+      delete[] result->tdc_hash->value(cindex);
     }
     result->tdc_hash->insert(cindex, ptdc);
   }
@@ -1217,7 +1217,7 @@ void dai_auto_settler_free(struct ai_plr *ai)
   fc_assert_ret(ai != nullptr);
 
   if (ai->settler) {
-    NFC_FREE(ai->settler->tdc_hash);
+    delete ai->settler->tdc_hash;
     delete[] ai->settler;
   }
   ai->settler = nullptr;

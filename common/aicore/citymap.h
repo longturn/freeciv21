@@ -10,11 +10,14 @@
 **************************************************************************/
 #pragma once
 
-void citymap_turn_init(struct player *pplayer);
-void citymap_reserve_city_spot(struct tile *ptile, int id);
-void citymap_free_city_spot(struct tile *ptile, int id);
-void citymap_reserve_tile(struct tile *ptile, int id);
-int citymap_read(struct tile *ptile);
-bool citymap_is_reserved(struct tile *ptile);
+// forward declaration
+struct player;
+struct tile;
 
+void citymap_turn_init(player *pplayer);
+void citymap_reserve_city_spot(tile *ptile, int id);
+void citymap_free_city_spot(tile *ptile, int id);
+void citymap_reserve_tile(tile *ptile, int id);
+int citymap_read(tile *ptile);
+bool citymap_is_reserved(tile *ptile);
 void citymap_free();

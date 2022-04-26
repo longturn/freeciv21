@@ -177,7 +177,7 @@ const char *big_int_to_text(unsigned int mantissa, unsigned int exponent)
       cnt = 0;
       if (*grp == CHAR_MAX) {
         /* This test is unlikely to be necessary since we would need at
-           least 421-bit ints to break the 127 digit barrier, but why not. */
+   least 421-bit ints to break the 127 digit barrier, but why not. */
         break;
       }
       ptr -= seplen;
@@ -1130,20 +1130,20 @@ void init_nls()
   (void) textdomain("freeciv21-core");
 
   /* Don't touch the defaults when LC_NUMERIC == "C".
-     This is intended to cater to the common case where:
-       1) The user is from North America. ;-)
-       2) The user has not set the proper environment variables.
-          (Most applications are (unfortunately) US-centric
-          by default, so why bother?)
-     This would result in the "C" locale being used, with grouping ""
-     and thousands_sep "", where we really want "\3" and ",". */
+   This is intended to cater to the common case where:
+     1) The user is from North America. ;-)
+     2) The user has not set the proper environment variables.
+        (Most applications are (unfortunately) US-centric
+        by default, so why bother?)
+   This would result in the "C" locale being used, with grouping ""
+   and thousands_sep "", where we really want "\3" and ",". */
 
   if (strcmp(setlocale(LC_NUMERIC, nullptr), "C") != 0) {
     struct lconv *lc = localeconv();
 
     if (lc->grouping[0] == '\0') {
       // This actually indicates no grouping at all.
-      char *m = new char;
+      char *m = new char[1];
       *m = CHAR_MAX;
       grouping = m;
     } else {
@@ -1359,12 +1359,10 @@ char *interpret_tilde_alloc(const char *filename)
 {
   if (filename[0] == '~' && filename[1] == '/') {
     QString home = QDir::homePath();
-    size_t sz;
-    char *buf;
-
     filename += 2; /* Skip past "~/" */
-    sz = home.length() + qstrlen(filename) + 2;
-    buf = static_cast<char *>(fc_malloc(sz));
+    const size_t sz =
+        static_cast<uint>(home.length()) + qstrlen(filename) + 2;
+    char *buf = new char[sz];
     fc_snprintf(buf, sz, "%s/%s", qUtf8Printable(home), filename);
     return buf;
   } else if (filename[0] == '~' && filename[1] == '\0') {

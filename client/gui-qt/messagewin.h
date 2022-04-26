@@ -9,7 +9,6 @@
 **************************************************************************/
 #pragma once
 
-#include "messagewin_g.h"
 // qt-client is one true king
 #include "widgetdecorations.h"
 
@@ -56,3 +55,5 @@ private:
   move_widget *mw;
   static void scroll_to_bottom(void *);
 };
+
+void real_meswin_dialog_update(void *unused);

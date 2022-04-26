@@ -40,7 +40,6 @@
 #include "clinet.h"
 #include "connectdlg_common.h"
 #include "control.h"
-#include "helpdlg_g.h"
 #include "mapctrl_g.h"
 #include "mapview_common.h"
 #include "ratesdlg_g.h"
@@ -54,6 +53,7 @@
 #include "fonts.h"
 #include "gotodlg.h"
 #include "gui_main.h"
+#include "helpdlg.h"
 #include "hudwidget.h"
 #include "mapview.h"
 #include "messageoptions.h"
@@ -102,7 +102,7 @@ QKeySequence shortcut2key(enum shortcut_id s)
    Initialize menus (sensitivity, name, etc.) based on the
    current state and current ruleset, etc.  Call menus_update().
  */
-void real_menus_init(void)
+void real_menus_init()
 {
   if (!game.client.ruleset_ready) {
     return;
@@ -120,7 +120,7 @@ void real_menus_init(void)
    Update all of the menus (sensitivity, name, etc.) based on the
    current state.
  */
-void real_menus_update(void)
+void real_menus_update()
 {
   if (C_S_RUNNING <= client_state()) {
     king()->menuBar()->setVisible(true);
@@ -535,7 +535,7 @@ struct tile *mr_menu::find_last_unit_pos(unit *punit, int pos)
 
     if (punit == zunit) { // Unit found
       /* Unit was ordered to attack city so it might stay in
-         front of that city */
+   front of that city */
       if (is_non_allied_city_tile(fui->ptile, unit_owner(punit))) {
         ptile = tile_before_end_path(punit, fui->ptile);
         if (ptile == nullptr) {
@@ -1986,7 +1986,7 @@ void mr_menu::slot_build_city()
     /* FIXME: this can provide different actions for different units...
      * not good! */
     /* Enable the button for adding to a city in all cases, so we
-       get an eventual error message from the server if we try. */
+   get an eventual error message from the server if we try. */
     if (unit_can_add_or_build_city(punit)) {
       request_unit_build_city(punit);
     } else if (utype_can_do_action(unit_type_get(punit),

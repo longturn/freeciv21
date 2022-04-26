@@ -25,12 +25,14 @@
 #include "city.h"
 
 // client
-#include "canvas_g.h"
 #include "client_main.h"
 #include "colors_common.h"
 #include "mapview_common.h"
 
 #include "citybar.h"
+
+// forward declaration
+#include "gui-qt/canvas.h"
 
 /// Pointer to the city bar painter currently in use.
 std::unique_ptr<citybar_painter> citybar_painter::s_current = nullptr;

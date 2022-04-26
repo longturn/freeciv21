@@ -66,7 +66,7 @@ struct client_options {
                                    * This affects some migrations, but not all. */
   char default_tileset_name[512]; // pre-2.6 had just this one tileset name
   char default_tileset_overhead_name[512]; /* 2.6 had separate tilesets for
-                                              ... */
+                                            ... */
   char default_tileset_iso_name[512];      // ...overhead and iso topologies.
   bool gui_qt_migrated_from_2_5;
 

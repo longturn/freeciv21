@@ -9,7 +9,3 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 #pragma once
-
-#include "gui_proto_constructor.h"
-
-GUI_FUNC_PROTO(void, popup_messageopt_dialog, void)

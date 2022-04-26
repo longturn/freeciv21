@@ -245,6 +245,13 @@
 // Forward declarations
 class QDebug;
 
+struct tile;
+struct civ_map;
+struct unit_type;
+struct player;
+struct pf_map;
+struct pf_reverse_map;
+
 /* MC for an impossible step. If this value is returned by get_MC it
  * is treated like TB_IGNORE for this step. This won't change the TB
  * for any other step to this tile. */
@@ -311,14 +318,14 @@ struct pf_position {
   int total_MC; // Total MC to reach this point
   int total_EC; // Total EC to reach this point
 
-  enum direction8 dir_to_next_pos; // Used only in 'struct pf_path'.
-  enum direction8 dir_to_here;     // Where did we come from.
+  direction8 dir_to_next_pos; // Used only in 'struct pf_path'.
+  direction8 dir_to_here;     // Where did we come from.
 };
 
 // Full specification of a path.
 struct pf_path {
   int length; // Number of steps in the path
-  struct pf_position *positions;
+  pf_position *positions;
 };
 
 /* Initial data for the path-finding. Normally should use functions
@@ -330,13 +337,13 @@ struct pf_path {
  * Examples of callbacks can be found in "pf_tools.c"
  * NB: It should be safe to struct copy pf_parameter. */
 struct pf_parameter {
-  const struct civ_map *map;
-  struct tile *start_tile; // Initial position
+  const civ_map *map;
+  tile *start_tile; // Initial position
 
   int moves_left_initially;
   int fuel_left_initially; // Ignored for non-air units.
   // Set if the unit is transported.
-  const struct unit_type *transported_by_initially;
+  const unit_type *transported_by_initially;
   // See unit_cargo_depth().
   int cargo_depth;
   // All cargo unit types.
@@ -345,8 +352,8 @@ struct pf_parameter {
   int move_rate; // Move rate of the virtual unit
   int fuel;      // Should be 1 for units without fuel.
 
-  const struct unit_type *utype;
-  const struct player *owner;
+  const unit_type *utype;
+  const player *owner;
 
   bool omniscience; // Do we care if the tile is visible?
 
@@ -354,46 +361,40 @@ struct pf_parameter {
    * direction 'dir'. Note that the callback can calculate 'to_tile' by
    * itself based on 'from_tile' and 'dir'. Excessive information 'to_tile'
    * is provided to ease the implementation of the callback. */
-  int (*get_MC)(const struct tile *from_tile,
-                enum pf_move_scope src_move_scope,
-                const struct tile *to_tile,
-                enum pf_move_scope dst_move_scope,
-                const struct pf_parameter *param);
+  int (*get_MC)(const tile *from_tile, pf_move_scope src_move_scope,
+                const tile *to_tile, pf_move_scope dst_move_scope,
+                const pf_parameter *param);
 
   /* Callback which determines if we can move from/to 'ptile'. */
-  enum pf_move_scope (*get_move_scope)(const struct tile *ptile,
-                                       bool *can_disembark,
-                                       enum pf_move_scope previous_scope,
-                                       const struct pf_parameter *param);
+  pf_move_scope (*get_move_scope)(const tile *ptile, bool *can_disembark,
+                                  pf_move_scope previous_scope,
+                                  const pf_parameter *param);
   bool ignore_none_scopes;
 
   /* Callback which determines the behavior of a tile. If nullptr
    * TB_NORMAL is assumed. It can be assumed that the implementation
    * of "path_finding.h" will cache this value. */
-  enum tile_behavior (*get_TB)(const struct tile *ptile,
-                               enum known_type known,
-                               const struct pf_parameter *param);
+  tile_behavior (*get_TB)(const tile *ptile, known_type known,
+                          const pf_parameter *param);
 
   /* Callback which can be used to provide extra costs depending on the
    * tile. Can be nullptr. It can be assumed that the implementation of
    * "path_finding.h" will cache this value. */
-  int (*get_EC)(const struct tile *ptile, enum known_type known,
-                const struct pf_parameter *param);
+  int (*get_EC)(const tile *ptile, known_type known,
+                const pf_parameter *param);
 
   /* Callback which determines whether an action would be performed at
    * 'ptile' instead of moving to it. */
-  enum pf_action (*get_action)(const struct tile *ptile,
-                               enum known_type known,
-                               const struct pf_parameter *param);
-  enum pf_action_account actions;
+  pf_action (*get_action)(const tile *ptile, known_type known,
+                          const pf_parameter *param);
+  pf_action_account actions;
 
   /* Callback which determines whether the action from 'from_tile' to
    * 'to_tile' is effectively possible. */
-  bool (*is_action_possible)(const struct tile *from_tile,
-                             enum pf_move_scope src_move_scope,
-                             const struct tile *to_tile,
-                             enum pf_action action,
-                             const struct pf_parameter *param);
+  bool (*is_action_possible)(const tile *from_tile,
+                             pf_move_scope src_move_scope,
+                             const tile *to_tile, pf_action action,
+                             const pf_parameter *param);
 
   /* Although the rules governing ZoC are universal, the amount of
    * information available at server and client is different. To
@@ -402,19 +403,19 @@ struct pf_parameter {
    * ZoC for strategic planning purposes (take into account enemy cities
    * but not units for example).
    * If this callback is nullptr, ZoC are ignored. */
-  bool (*get_zoc)(const struct player *pplayer, const struct tile *ptile,
-                  const struct civ_map *zmap);
+  bool (*get_zoc)(const player *pplayer, const tile *ptile,
+                  const civ_map *zmap);
 
   /* If this callback is non-nullptr and returns true this position is
    * dangerous. The unit will never end a turn at a dangerous
    * position. Can be nullptr. */
-  bool (*is_pos_dangerous)(const struct tile *ptile, enum known_type,
-                           const struct pf_parameter *param);
+  bool (*is_pos_dangerous)(const tile *ptile, known_type,
+                           const pf_parameter *param);
 
   /* If this callback is non-nullptr and returns the required moves left to
    * move to this tile and to leave the position safely. Can be nullptr. */
-  int (*get_moves_left_req)(const struct tile *ptile, enum known_type,
-                            const struct pf_parameter *param);
+  int (*get_moves_left_req)(const tile *ptile, known_type,
+                            const pf_parameter *param);
 
   /* This is a jumbo callback which overrides all previous ones.  It takes
    * care of everything (ZOC, known, costs etc).
@@ -435,78 +436,65 @@ struct pf_parameter {
    * - if new costs are better, record them in to_cost/to_extra and return
    *   the cost-of-the-path which is the overall measure of goodness of the
    *   path (less is better) and used to order newly discovered locations. */
-  int (*get_costs)(const struct tile *from_tile, enum direction8 dir,
-                   const struct tile *to_tile, int from_cost, int from_extra,
-                   int *to_cost, int *to_extra,
-                   const struct pf_parameter *param);
+  int (*get_costs)(const tile *from_tile, direction8 dir,
+                   const tile *to_tile, int from_cost, int from_extra,
+                   int *to_cost, int *to_extra, const pf_parameter *param);
 
   /* User provided data. Can be used to attach arbitrary information
    * to the map. */
   void *data;
 };
 
-// The map itself. Opaque type.
-struct pf_map;
-
-// The reverse map strucure. Opaque type.
-struct pf_reverse_map;
-
 // ========================= Public Interface ============================
 
 // Create and free.
-struct pf_map *
-pf_map_new(const struct pf_parameter *parameter) fc__warn_unused_result;
-void pf_map_destroy(struct pf_map *pfm);
+pf_map *pf_map_new(const pf_parameter *parameter) fc__warn_unused_result;
+void pf_map_destroy(pf_map *pfm);
 
 // Method A) functions.
-int pf_map_move_cost(struct pf_map *pfm, struct tile *ptile);
-struct pf_path *pf_map_path(struct pf_map *pfm,
-                            struct tile *ptile) fc__warn_unused_result;
-bool pf_map_position(struct pf_map *pfm, struct tile *ptile,
-                     struct pf_position *pos) fc__warn_unused_result;
+int pf_map_move_cost(pf_map *pfm, tile *ptile);
+pf_path *pf_map_path(pf_map *pfm, tile *ptile) fc__warn_unused_result;
+bool pf_map_position(pf_map *pfm, tile *ptile,
+                     pf_position *pos) fc__warn_unused_result;
 
 // Method B) functions.
-bool pf_map_iterate(struct pf_map *pfm);
-struct tile *pf_map_iter(struct pf_map *pfm);
-int pf_map_iter_move_cost(struct pf_map *pfm);
-struct pf_path *pf_map_iter_path(struct pf_map *pfm) fc__warn_unused_result;
-void pf_map_iter_position(struct pf_map *pfm, struct pf_position *pos);
+bool pf_map_iterate(pf_map *pfm);
+tile *pf_map_iter(pf_map *pfm);
+int pf_map_iter_move_cost(pf_map *pfm);
+pf_path *pf_map_iter_path(pf_map *pfm) fc__warn_unused_result;
+void pf_map_iter_position(pf_map *pfm, pf_position *pos);
 
 // Other related functions.
-const struct pf_parameter *pf_map_parameter(const struct pf_map *pfm);
+const struct pf_parameter *pf_map_parameter(const pf_map *pfm);
 
 // Paths functions.
-void pf_path_destroy(struct pf_path *path);
-struct pf_path *pf_path_concat(struct pf_path *dest_path,
-                               const struct pf_path *src_path);
-bool pf_path_advance(struct pf_path *path, struct tile *ptile);
-bool pf_path_backtrack(struct pf_path *path, struct tile *ptile);
-const struct pf_position *pf_path_last_position(const struct pf_path *path);
+void pf_path_destroy(pf_path *path);
+struct pf_path *pf_path_concat(pf_path *dest_path, const pf_path *src_path);
+bool pf_path_advance(pf_path *path, tile *ptile);
+bool pf_path_backtrack(pf_path *path, tile *ptile);
+const struct pf_position *pf_path_last_position(const pf_path *path);
 
 QDebug &operator<<(QDebug &logger, const pf_path *path);
 
 // Reverse map functions (Costs to go to start tile).
-struct pf_reverse_map *
-pf_reverse_map_new(const struct player *pplayer, struct tile *start_tile,
-                   int max_turns, bool omniscient,
-                   const struct civ_map *map) fc__warn_unused_result;
-struct pf_reverse_map *pf_reverse_map_new_for_city(
-    const struct city *pcity, const struct player *attacker, int max_turns,
-    bool omniscient, const struct civ_map *map) fc__warn_unused_result;
-void pf_reverse_map_destroy(struct pf_reverse_map *prfm);
+pf_reverse_map *
+pf_reverse_map_new(const player *pplayer, tile *start_tile, int max_turns,
+                   bool omniscient,
+                   const civ_map *map) fc__warn_unused_result;
+pf_reverse_map *
+pf_reverse_map_new_for_city(const city *pcity, const player *attacker,
+                            int max_turns, bool omniscient,
+                            const civ_map *map) fc__warn_unused_result;
+void pf_reverse_map_destroy(pf_reverse_map *prfm);
 
-int pf_reverse_map_utype_move_cost(struct pf_reverse_map *pfrm,
-                                   const struct unit_type *punittype,
-                                   struct tile *ptile);
-int pf_reverse_map_unit_move_cost(struct pf_reverse_map *pfrm,
-                                  const struct unit *punit);
-bool pf_reverse_map_utype_position(struct pf_reverse_map *pfrm,
-                                   const struct unit_type *punittype,
-                                   struct tile *ptile,
-                                   struct pf_position *pos);
-bool pf_reverse_map_unit_position(struct pf_reverse_map *pfrm,
-                                  const struct unit *punit,
-                                  struct pf_position *pos);
+int pf_reverse_map_utype_move_cost(pf_reverse_map *pfrm,
+                                   const unit_type *punittype, tile *ptile);
+int pf_reverse_map_unit_move_cost(pf_reverse_map *pfrm, const unit *punit);
+bool pf_reverse_map_utype_position(pf_reverse_map *pfrm,
+                                   const unit_type *punittype, tile *ptile,
+                                   pf_position *pos);
+bool pf_reverse_map_unit_position(pf_reverse_map *pfrm, const unit *punit,
+                                  pf_position *pos);
 
 /* This macro iterates all reachable tiles.
  *
@@ -518,8 +506,8 @@ bool pf_reverse_map_unit_position(struct pf_reverse_map *pfrm,
  *                   not. */
 #define pf_map_tiles_iterate(ARG_pfm, NAME_tile, COND_from_start)           \
   if (COND_from_start || pf_map_iterate((ARG_pfm))) {                       \
-    struct pf_map *_MY_pf_map_ = (ARG_pfm);                                 \
-    struct tile *NAME_tile;                                                 \
+    pf_map *_MY_pf_map_ = (ARG_pfm);                                        \
+    tile *NAME_tile;                                                        \
     do {                                                                    \
       NAME_tile = pf_map_iter(_MY_pf_map_);
 
@@ -542,8 +530,8 @@ bool pf_reverse_map_unit_position(struct pf_reverse_map *pfrm,
 #define pf_map_move_costs_iterate(ARG_pfm, NAME_tile, NAME_cost,            \
                                   COND_from_start)                          \
   if (COND_from_start || pf_map_iterate((ARG_pfm))) {                       \
-    struct pf_map *_MY_pf_map_ = (ARG_pfm);                                 \
-    struct tile *NAME_tile;                                                 \
+    pf_map *_MY_pf_map_ = (ARG_pfm);                                        \
+    tile *NAME_tile;                                                        \
     int NAME_cost;                                                          \
     do {                                                                    \
       NAME_tile = pf_map_iter(_MY_pf_map_);                                 \
@@ -566,8 +554,8 @@ bool pf_reverse_map_unit_position(struct pf_reverse_map *pfrm,
  *                   not. */
 #define pf_map_positions_iterate(ARG_pfm, NAME_pos, COND_from_start)        \
   if (COND_from_start || pf_map_iterate((ARG_pfm))) {                       \
-    struct pf_map *_MY_pf_map_ = (ARG_pfm);                                 \
-    struct pf_position NAME_pos;                                            \
+    pf_map *_MY_pf_map_ = (ARG_pfm);                                        \
+    pf_position NAME_pos;                                                   \
     do {                                                                    \
       pf_map_iter_position(_MY_pf_map_, &NAME_pos);
 
@@ -588,8 +576,8 @@ bool pf_reverse_map_unit_position(struct pf_reverse_map *pfrm,
  *                   not. */
 #define pf_map_paths_iterate(ARG_pfm, NAME_path, COND_from_start)           \
   if (COND_from_start || pf_map_iterate((ARG_pfm))) {                       \
-    struct pf_map *_MY_pf_map_ = (ARG_pfm);                                 \
-    struct pf_path *NAME_path;                                              \
+    pf_map *_MY_pf_map_ = (ARG_pfm);                                        \
+    pf_path *NAME_path;                                                     \
     do {                                                                    \
       NAME_path = pf_map_iter_path(_MY_pf_map_);
 

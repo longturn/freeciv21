@@ -828,11 +828,10 @@ hud_action::hud_action(QWidget *parent, const QIcon &icon,
  */
 void hud_action::paintEvent(QPaintEvent *event)
 {
-  QRect rx, ry, rz;
+  ;
   QPainter p;
-
-  rx = QRect(0, 0, width(), height());
-  rz = QRect(0, 2, width(), height() - 6);
+  QRect rx = QRect(0, 0, width(), height());
+  QRect rz = QRect(0, 2, width(), height() - 6);
   p.begin(this);
   p.setCompositionMode(QPainter::CompositionMode_Source);
   p.setRenderHint(QPainter::SmoothPixmapTransform);

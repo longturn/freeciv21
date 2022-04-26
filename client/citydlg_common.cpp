@@ -125,11 +125,11 @@ bool canvas_to_city_pos(int *city_x, int *city_y, int city_radius_sq,
               H = tileset_tile_height(get_tileset());
 
     /* Shift the tile left so the top corner of the origin tile is at
-       canvas position (0,0). */
+   canvas position (0,0). */
     canvas_x -= W / 2;
 
     /* Perform a pi/4 rotation, with scaling.  See canvas_pos_to_map_pos
-       for a full explanation. */
+   for a full explanation. */
     *city_x = DIVIDE(canvas_x * H + canvas_y * W, W * H);
     *city_y = DIVIDE(canvas_y * W - canvas_x * H, W * H);
   } else {
@@ -1171,8 +1171,8 @@ void city_get_queue(struct city *pcity, struct worklist *pqueue)
   worklist_copy(pqueue, &pcity->worklist);
 
   /* The GUI wants current production to be in the task list, but the
-     worklist API wants it out for reasons unknown. Perhaps someone enjoyed
-     making things more complicated than necessary? So I dance around it. */
+   worklist API wants it out for reasons unknown. Perhaps someone enjoyed
+   making things more complicated than necessary? So I dance around it. */
 
   // We want the current production to be in the queue. Always.
   worklist_remove(pqueue, MAX_LEN_WORKLIST - 1);
@@ -1191,8 +1191,8 @@ bool city_set_queue(struct city *pcity, const struct worklist *pqueue)
   worklist_copy(&copy, pqueue);
 
   /* The GUI wants current production to be in the task list, but the
-     worklist API wants it out for reasons unknown. Perhaps someone enjoyed
-     making things more complicated than necessary? So I dance around it. */
+   worklist API wants it out for reasons unknown. Perhaps someone enjoyed
+   making things more complicated than necessary? So I dance around it. */
   if (worklist_peek(&copy, &target)) {
     if (!city_can_change_build(pcity)
         && !are_universals_equal(&pcity->production, &target)) {

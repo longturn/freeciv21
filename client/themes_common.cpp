@@ -27,6 +27,9 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "options.h"
 #include "themes_common.h"
 
+// forward declaration
+#include "gui-qt/qtg_cxxside.h"
+
 Q_GLOBAL_STATIC(QVector<QString>, themes_list)
 /***************************************************************************
   A theme is a portion of client data, which for following reasons should
@@ -63,7 +66,7 @@ void init_themes()
 
   // get GUI-specific theme directories
   QStringList gui_directories =
-      get_gui_specific_themes_directories(&num_directories);
+      qtg_get_gui_specific_themes_directories(&num_directories);
 
   directories = new theme_directory[num_directories];
 

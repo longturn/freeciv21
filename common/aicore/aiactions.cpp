@@ -22,7 +22,7 @@
    Returns TRUE if the specified unit type is able to perform diplomatic
    actions against cities.
  */
-bool aia_utype_is_considered_spy_vs_city(const struct unit_type *putype)
+bool aia_utype_is_considered_spy_vs_city(const unit_type *putype)
 {
   return (
       utype_can_do_action_result(putype, ACTRES_SPY_POISON)
@@ -46,7 +46,7 @@ bool aia_utype_is_considered_spy_vs_city(const struct unit_type *putype)
    Returns TRUE if the specified unit type is able to perform diplomatic
    actions.
  */
-bool aia_utype_is_considered_spy(const struct unit_type *putype)
+bool aia_utype_is_considered_spy(const unit_type *putype)
 {
   return (aia_utype_is_considered_spy_vs_city(putype)
           || utype_can_do_action_result(putype, ACTRES_SPY_ATTACK)
@@ -58,7 +58,7 @@ bool aia_utype_is_considered_spy(const struct unit_type *putype)
    Returns TRUE if the specified unit type is able to perform trade
    caravan actions.
  */
-bool aia_utype_is_considered_caravan_trade(const struct unit_type *putype)
+bool aia_utype_is_considered_caravan_trade(const unit_type *putype)
 {
   return (utype_can_do_action_result(putype, ACTRES_TRADE_ROUTE)
           || utype_can_do_action_result(putype, ACTRES_MARKETPLACE));
@@ -68,7 +68,7 @@ bool aia_utype_is_considered_caravan_trade(const struct unit_type *putype)
    Returns TRUE if the specified unit type is able to perform caravan
    actions.
  */
-bool aia_utype_is_considered_caravan(const struct unit_type *putype)
+bool aia_utype_is_considered_caravan(const unit_type *putype)
 {
   return (aia_utype_is_considered_caravan_trade(putype)
           || utype_can_do_action_result(putype, ACTRES_HELP_WONDER));
@@ -78,7 +78,7 @@ bool aia_utype_is_considered_caravan(const struct unit_type *putype)
    Returns TRUE if the specified unit type is able to perform worker
    actions.
  */
-bool aia_utype_is_considered_worker(const struct unit_type *putype)
+bool aia_utype_is_considered_worker(const unit_type *putype)
 {
   return (utype_can_do_action_result(putype, ACTRES_TRANSFORM_TERRAIN)
           || utype_can_do_action_result(putype, ACTRES_CULTIVATE)

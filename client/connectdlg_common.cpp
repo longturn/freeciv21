@@ -47,9 +47,11 @@
 #include "climisc.h"
 #include "clinet.h" // connect_to_server()
 #include "connectdlg_common.h"
-#include "connectdlg_g.h"
 #include "packhand_gen.h"
 #include "tilespec.h"
+
+// forward declaration
+#include "gui-qt/qtg_cxxside.h"
 
 #define WAIT_BETWEEN_TRIES 100000 // usecs
 #define NUMBER_OF_TRIES 500
@@ -486,7 +488,8 @@ void handle_ruleset_choices(const struct packet_ruleset_choices *packet)
     }
     rulesets.append(r);
   }
-  set_rulesets(packet->ruleset_count, rulesets);
+
+  qtg_set_rulesets(packet->ruleset_count, rulesets);
 }
 
 /**
