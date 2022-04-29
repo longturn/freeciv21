@@ -18,7 +18,7 @@
 #include "unittype.h"
 
 struct pf_map;
-struct pf_path;
+class PFPath;
 
 struct section_file;
 
@@ -110,12 +110,10 @@ bool find_beachhead(const struct player *pplayer, struct pf_map *ferry_map,
                     struct tile *dest_tile,
                     const struct unit_type *cargo_type,
                     struct tile **ferry_dest, struct tile **beachhead_tile);
-int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
-                           struct unit *punit, struct tile **pdest_tile,
-                           struct pf_path **ppath, struct pf_map **pferrymap,
-                           struct unit **pferryboat,
-                           const struct unit_type **pboattype,
-                           int *pmove_time);
+int find_something_to_kill(ai_type *ait, player *pplayer, unit *punit,
+                           tile **pdest_tile, PFPath *ppath,
+                           pf_map **pferrymap, unit **pferryboat,
+                           const unit_type **pboattype, int *pmove_time);
 
 int build_cost_balanced(const struct unit_type *punittype);
 int unittype_def_rating_squared(const struct unit_type *att_type,

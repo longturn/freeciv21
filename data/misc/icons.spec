@@ -7,12 +7,12 @@ options = "+Freeciv-spec-Devel-2019-Jul-03"
 [info]
 
 artists = "
-    James Blewitt (civicon)
+    James Blewitt, Hugo Flávio, Louis Moureaux (civicon)
     yd (mpicon)
 "
 
 [extra]
-sprites = 
+sprites =
 	{	"tag", "file"
 		"icon.freeciv", "misc/civicon"
 		"icon.citydlg", "misc/cityicon"

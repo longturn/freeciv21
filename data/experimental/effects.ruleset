@@ -14,7 +14,7 @@
 
 [datafile]
 description="Experimental effects data for Freeciv"
-options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct"
+options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct +Vision_Layer"
 format_version=20
 
 ; /* <-- avoid gettext warnings
@@ -111,6 +111,7 @@ type    = "Unit_Vision_Radius_Sq"
 value   = 8
 reqs    =
     { "type", "name", "range"
+      "VisionLayer", "Main", "Local"
       "Extra", "Fortress", "tile"
       "Tech", "Invention", "player"
       "UnitClass", "Land", "Local"
@@ -122,6 +123,7 @@ type    = "Unit_Vision_Radius_Sq"
 value   = 8
 reqs    =
     { "type", "name", "range"
+      "VisionLayer", "Main", "Local"
       "Extra", "Fortress", "tile"
       "Tech", "Invention", "player"
       "UnitClass", "Big Land", "Local"
@@ -2626,7 +2628,7 @@ reqs	=
 type    = "Conquest_Tech_Pct"
 value   = 100
 
-; Base vision range - radius of vision is sqrt(2) = 1.41
+; Base vision range - radius of vision is sqrt(2) = 1.41 for all layers
 [effect_city_vision_0]
 type    = "City_Vision_Radius_Sq"
 value   = 2
@@ -2648,12 +2650,13 @@ reqs    =
       "MinSize", "3", "City"
     }
 
-; City radius 2 - radius of vision is sqrt(2+3) = 2.24
+; City radius 2 - radius of Main vision is sqrt(2+3) = 2.24
 [effect_city_vision_1]
 type    = "City_Vision_Radius_Sq"
 value   = 3
 reqs    =
     { "type", "name", "range"
+      "VisionLayer", "Main", "Local"
       "MinSize", "3", "City"
     }
 
@@ -2676,12 +2679,13 @@ reqs    =
       "Tech", "Railroad", "Player"
     }
 
-; City radius 3 - radius of vision is sqrt(2+3+5) = 3.16
+; City radius 3 - radius of Main vision is sqrt(2+3+5) = 3.16
 [effect_city_vision_2]
 type    = "City_Vision_Radius_Sq"
 value   = 5
 reqs    =
     { "type", "name", "range"
+      "VisionLayer", "Main", "Local"
       "MinSize", "10", "City"
       "Tech", "Railroad", "Player"
     }
@@ -2719,12 +2723,13 @@ reqs    =
       "Building", "Super Highways", "City"
     }
 
-; City radius 4 - radius of vision is sqrt(2+3+5+7) = 4.12
+; City radius 4 - radius of Main vision is sqrt(2+3+5+7) = 4.12
 [effect_city_vision_3]
 type    = "City_Vision_Radius_Sq"
 value   = 8
 reqs    =
     { "type", "name", "range"
+      "VisionLayer", "Main", "Local"
       "MinSize", "30", "City"
       "Tech", "Railroad", "Player"
       "Building", "Mass Transit", "City"

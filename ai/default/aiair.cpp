@@ -48,6 +48,7 @@
 
 #include "aiair.h"
 
+class PFPath;
 /**
    Looks for nearest airbase for punit reachable imediatly.
    Returns nullptr if not found.  The path is stored in the path
@@ -56,7 +57,7 @@
          IMO should be less restrictive than general H_MAP, H_FOG
  */
 static struct tile *find_nearest_airbase(const struct unit *punit,
-                                         struct pf_path **path)
+                                         PFPath *path)
 {
   struct player *pplayer = unit_owner(punit);
   struct pf_parameter parameter;
@@ -74,9 +75,7 @@ static struct tile *find_nearest_airbase(const struct unit *punit,
     }
 
     if (is_airunit_refuel_point(ptile, pplayer, punit)) {
-      if (path) {
-        *path = pf_map_path(pfm, ptile);
-      }
+      *path = pf_map_path(pfm, ptile);
       pf_map_destroy(pfm);
       return ptile;
     }
@@ -202,8 +201,7 @@ static int dai_evaluate_tile_for_air_attack(struct unit *punit,
          IMO should be more restrictive than general H_MAP, H_FOG
  */
 static int find_something_to_bomb(struct ai_type *ait, struct unit *punit,
-                                  struct pf_path **path,
-                                  struct tile **pptile)
+                                  PFPath *path, struct tile **pptile)
 {
   struct player *pplayer = unit_owner(punit);
   struct pf_parameter parameter;
@@ -254,9 +252,8 @@ static int find_something_to_bomb(struct ai_type *ait, struct unit *punit,
     *pptile = best_tile;
   }
   if (path) {
-    *path = best_tile ? pf_map_path(pfm, best_tile) : nullptr;
+    *path = best_tile ? pf_map_path(pfm, best_tile) : PFPath();
   }
-
   pf_map_destroy(pfm);
   return best;
 }
@@ -268,7 +265,7 @@ static int find_something_to_bomb(struct ai_type *ait, struct unit *punit,
  */
 static struct tile *dai_find_strategic_airbase(struct ai_type *ait,
                                                const struct unit *punit,
-                                               struct pf_path **path)
+                                               PFPath *path)
 {
   struct player *pplayer = unit_owner(punit);
   struct pf_parameter parameter;
@@ -320,7 +317,7 @@ static struct tile *dai_find_strategic_airbase(struct ai_type *ait,
 
   if (path) {
     // Stores the path.
-    *path = best_tile ? pf_map_path(pfm, best_tile) : nullptr;
+    *path = best_tile ? pf_map_path(pfm, best_tile) : PFPath();
   }
   pf_map_destroy(pfm);
 
@@ -349,8 +346,7 @@ void dai_manage_airunit(struct ai_type *ait, struct player *pplayer,
   int id = punit->id;
   struct pf_parameter parameter;
   struct pf_map *pfm;
-  struct pf_path *path;
-
+  PFPath path;
   CHECK_UNIT(punit);
   pft_fill_unit_parameter(&parameter, punit);
 
@@ -363,10 +359,8 @@ void dai_manage_airunit(struct ai_type *ait, struct player *pplayer,
         && is_airunit_refuel_point(punit->goto_tile, pplayer, punit)) {
       pfm = pf_map_new(&parameter);
       path = pf_map_path(pfm, punit->goto_tile);
-      if (path) {
+      if (!path.empty()) {
         bool alive = adv_follow_path(punit, path, punit->goto_tile);
-
-        pf_path_destroy(path);
         pf_map_destroy(pfm);
         if (alive && punit->moves_left > 0) {
           // Maybe do something else.
@@ -378,10 +372,8 @@ void dai_manage_airunit(struct ai_type *ait, struct player *pplayer,
     } else if ((dst_tile = find_nearest_airbase(punit, &path))) {
       // Go refuelling
       if (!adv_follow_path(punit, path, dst_tile)) {
-        pf_path_destroy(path);
         return; // The unit died.
       }
-      pf_path_destroy(path);
     } else {
       if (punit->fuel == 1) {
         UNIT_LOG(LOG_DEBUG, punit, "Oops, fallin outta the sky");
@@ -397,12 +389,10 @@ void dai_manage_airunit(struct ai_type *ait, struct player *pplayer,
       /* Found target, coordinates are in punit's goto_dest.
        * TODO: separate attacking into a function, check for the best
        * tile to attack from */
-      fc_assert_ret(path != nullptr && dst_tile != nullptr);
+      fc_assert_ret(!path.empty() && dst_tile != nullptr);
       if (!adv_follow_path(punit, path, dst_tile)) {
-        pf_path_destroy(path);
         return; // The unit died.
       }
-      pf_path_destroy(path);
 
       /* goto would be aborted: "Aborting GOTO for AI attack procedures"
        * now actually need to attack */
@@ -418,10 +408,8 @@ void dai_manage_airunit(struct ai_type *ait, struct player *pplayer,
                                     : "");
       def_ai_unit_data(punit, ait)->done = true; // Wait for next turn
       if (!adv_follow_path(punit, path, dst_tile)) {
-        pf_path_destroy(path);
         return; // The unit died.
       }
-      pf_path_destroy(path);
     } else {
       log_debug("%s cannot find anything to kill and is staying put",
                 unit_rule_name(punit));

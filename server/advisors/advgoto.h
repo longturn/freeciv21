@@ -25,10 +25,10 @@ struct adv_risk_cost {
   double enemy_zoc_cost;
 };
 
-bool adv_follow_path(struct unit *punit, struct pf_path *path,
+bool adv_follow_path(struct unit *punit, const PFPath &path,
                      struct tile *ptile);
 
-bool adv_unit_execute_path(struct unit *punit, struct pf_path *path);
+bool adv_unit_execute_path(struct unit *punit, const PFPath &path);
 
 int adv_could_unit_move_to_tile(struct unit *punit, struct tile *dst_tile);
 

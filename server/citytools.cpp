@@ -3249,7 +3249,10 @@ void city_landlocked_sell_coastal_improvements(struct tile *ptile)
 void city_refresh_vision(struct city *pcity)
 {
   v_radius_t vision_radius_sq = V_RADIUS(
-      (short) get_city_bonus(pcity, EFT_CITY_VISION_RADIUS_SQ), 2, 2);
+      (short) get_city_bonus(pcity, EFT_CITY_VISION_RADIUS_SQ, V_MAIN),
+      (short) get_city_bonus(pcity, EFT_CITY_VISION_RADIUS_SQ, V_INVIS),
+      (short) get_city_bonus(pcity, EFT_CITY_VISION_RADIUS_SQ,
+                             V_SUBSURFACE));
 
   vision_change_sight(pcity->server.vision, vision_radius_sq);
   ASSERT_VISION(pcity->server.vision);

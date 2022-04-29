@@ -77,6 +77,8 @@
  * previously used one. This is important for diplomacy. - Per */
 #define DIPLO_DEFENSE_WANT 3000
 
+class PFPath;
+
 static bool is_city_surrounded_by_our_spies(struct player *pplayer,
                                             struct city *pcity);
 
@@ -649,18 +651,16 @@ static bool dai_diplomat_bribe_nearby(struct ai_type *ait,
     // Found someone!
     {
       struct tile *bribee_tile;
-      struct pf_path *path;
+      PFPath path;
 
       bribee_tile =
           mapstep(&(wld.map), pos.tile,
                   static_cast<direction8>(DIR_REVERSE(pos.dir_to_here)));
       path = pf_map_path(pfm, bribee_tile);
-      if (!path || !adv_unit_execute_path(punit, path)
+      if (path.empty() || !adv_unit_execute_path(punit, path)
           || punit->moves_left <= 0) {
-        pf_path_destroy(path);
         return false;
       }
-      pf_path_destroy(path);
     }
 
     if (action_prob_possible(
@@ -836,10 +836,8 @@ void dai_manage_diplomat(struct ai_type *ait, struct player *pplayer,
 
   // GOTO unless we want to stay
   if (!same_pos(unit_tile(punit), ctarget->tile)) {
-    struct pf_path *path;
-
-    path = pf_map_path(pfm, punit->goto_tile);
-    if (path && adv_unit_execute_path(punit, path)
+    auto path = pf_map_path(pfm, punit->goto_tile);
+    if (!path.empty() && adv_unit_execute_path(punit, path)
         && punit->moves_left > 0) {
       // Check if we can do something with our destination now.
       if (unit_data->task == AIUNIT_ATTACK) {
@@ -854,7 +852,6 @@ void dai_manage_diplomat(struct ai_type *ait, struct player *pplayer,
         }
       }
     }
-    pf_path_destroy(path);
   } else {
     def_ai_unit_data(punit, ait)->done = true;
   }

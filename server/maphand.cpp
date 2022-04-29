@@ -627,7 +627,7 @@ void send_tile_info(struct conn_list *dest, struct tile *ptile,
 static bool unit_is_visible_on_layer(const struct unit *punit,
                                      enum vision_layer vlayer)
 {
-  return XOR(vlayer == V_MAIN, is_hiding_unit(punit));
+  return vlayer == unit_type_get(punit)->vlayer;
 }
 
 /**

@@ -11,7 +11,7 @@
 
 [datafile]
 description="Experimental web-client effects data for Freeciv"
-options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct"
+options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct +Vision_Layer"
 format_version=20
 
 ; /* <-- avoid gettext warnings
@@ -108,6 +108,7 @@ type    = "Unit_Vision_Radius_Sq"
 value   = 8
 reqs    =
     { "type", "name", "range"
+      "VisionLayer", "Main", "Local"
       "Extra", "Fortress", "tile"
       "Tech", "Invention", "player"
       "UnitClass", "Land", "Local"
@@ -199,15 +200,29 @@ reqs    =
 [effect_city_vision]
 type    = "City_Vision_Radius_Sq"
 value   = 5
+reqs    =
+    { "type", "name", "range"
+      "VisionLayer", "Main", "Local"
+    }
+
+; Stealth or Subsurface can only be seen when adjacent
+[effect_city_vision_layers]
+type    = "City_Vision_Radius_Sq"
+value   = 2
+reqs    =
+    { "type", "name", "range", "present"
+      "VisionLayer", "Main", "Local", FALSE
+    }
 
 ; Vision benefit from mountains (for every land unit)
 [effect_mountains_vision]
 type    = "Unit_Vision_Radius_Sq"
 value   = 4
 reqs    =
-    { "type",      "name",      "range"
-      "Terrain",   "Mountains", "Local"
-      "UnitClass", "Land",      "Local"
+    { "type",        "name",      "range"
+      "VisionLayer", "Main",      "Local"
+      "Terrain",     "Mountains", "Local"
+      "UnitClass",   "Land",      "Local"
     }
 
 [effect_trade_routes_base]

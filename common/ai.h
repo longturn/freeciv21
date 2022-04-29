@@ -33,7 +33,7 @@ struct city;
 struct unit;
 struct tile;
 struct settlermap;
-struct pf_path;
+class PFPath;
 struct section_file;
 struct adv_data;
 
@@ -209,7 +209,7 @@ struct ai_type {
 
     // Called for unit owner AI type when advisors goto moves unit.
     void (*unit_move)(struct unit *punit, struct tile *ptile,
-                      struct pf_path *path, int step);
+                      const PFPath &path, int step);
 
     // Called for all AI types when ever unit has moved.
     void (*unit_move_seen)(struct unit *punit);

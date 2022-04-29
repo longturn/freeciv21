@@ -97,6 +97,7 @@ Requirement          Supported ranges
 ``MinMoveFrags``     ``Local``
 ``MinVeteran``       ``Local``
 ``MinHitPoints``     ``Local``
+``VisionLayer``      ``Local``
 ==================== ================
 
 * MinSize is the minimum size of a city required.
@@ -480,8 +481,25 @@ HP_Regen_Min
 City_Vision_Radius_Sq
     Increase city vision radius in squared distance by amount tiles.
 
+    .. note::
+        This effect is added automatically for VisionLayers other than Main,
+        with a value of 2, and a VisionLayer=Main requirement is added to any
+        existing instances of this effect.
+        This behaviour can be turned off by requiring the ``+VisionLayer``
+        option in ``effects.ruleset``, allowing you to use VisionLayer
+        requirements to specify which layer (Main, Stealth or Subsurface)
+        the effect applies to.
+
 Unit_Vision_Radius_Sq
     Increase unit vision radius in squared distance by amount tiles.
+
+    .. note::
+        A VisionLayer=Main requirement is added automatically to any
+        existing instances of this effect.
+        This behaviour can be turned off by requiring the ``+VisionLayer``
+        option in ``effects.ruleset``, allowing you to use VisionLayer
+        requirements to specify which layer (Main, Stealth or Subsurface)
+        the effect applies to.
 
 Defend_Bonus
     Increases defensive bonuses of units. Any unit requirements on this effect will be applied to the

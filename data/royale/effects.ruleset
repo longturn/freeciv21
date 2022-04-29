@@ -11,7 +11,7 @@
 
 [datafile]
 description="Royale effects data for Freeciv"
-options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct"
+options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct +Vision_Layer"
 format_version=20
 
 ; /* <-- avoid gettext warnings
@@ -202,6 +202,7 @@ type    = "Unit_Vision_Radius_Sq"
 value   = 18
 reqs    =
     { "type", "name", "range"
+      "VisionLayer", "Main", "Local"
       "Extra", "Fortress", "Local"
       "Tech", "Astronomy", "Player"
     }
@@ -211,6 +212,7 @@ type    = "Unit_Vision_Radius_Sq"
 value   = 18
 reqs    =
     { "type", "name", "range"
+      "VisionLayer", "Main", "Local"
       "Extra", "Airbase", "Local"
     }
 
@@ -369,7 +371,20 @@ value   = 0
 ; Base vision range - radius of vision is sqrt(5) = 2.24 - this is intentionally smaller than the city working area
 [effect_city_vision]
 type    = "City_Vision_Radius_Sq"
-value   = 18
+value   = 5
+reqs    =
+    { "type", "name", "range"
+      "VisionLayer", "Main", "Local"
+    }
+
+; Stealth or Subsurface can only be seen when adjacent
+[effect_city_vision_layers]
+type    = "City_Vision_Radius_Sq"
+value   = 2
+reqs    =
+    { "type", "name", "range", "present"
+      "VisionLayer", "Main", "Local", FALSE
+    }
 
 ; 5 + 5 = 10
 [effect_city_vision_1]
@@ -377,6 +392,7 @@ type    = "City_Vision_Radius_Sq"
 value   = 15
 reqs    =
     { "type", "name", "range"
+      "VisionLayer", "Main", "Local"
       "Tech", "Electricity", "Player"
     }
 
@@ -386,6 +402,7 @@ type    = "Unit_Vision_Radius_Sq"
 value   = 18
 reqs    =
     { "type", "name", "range", "present"
+      "VisionLayer", "Main", "Local"
       "Terrain", "Mountains", "Local", TRUE
 ;      "UnitClass", "Land", "Local", FALSE
 ;      "UnitClass", "Small Land", "Local", FALSE

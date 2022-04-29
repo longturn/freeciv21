@@ -70,6 +70,7 @@
 
 #include "aitools.h"
 
+class PFPath;
 /**
    Return the (untranslated) rule name of the ai_unit_task.
    You don't have to free the return pointer.
@@ -325,27 +326,23 @@ struct tile *immediate_destination(struct unit *punit,
       && utype_fuel(unit_type_get(punit))) {
     struct pf_parameter parameter;
     struct pf_map *pfm;
-    struct pf_path *path;
     size_t i;
     struct player *pplayer = unit_owner(punit);
 
     pft_fill_unit_parameter(&parameter, punit);
     parameter.omniscience = !has_handicap(pplayer, H_MAP);
     pfm = pf_map_new(&parameter);
-    path = pf_map_path(pfm, punit->goto_tile);
+    auto path = pf_map_path(pfm, punit->goto_tile);
 
-    if (path) {
-      for (i = 1; i < path->length; i++) {
-        if (path->positions[i].tile == path->positions[i - 1].tile) {
+    if (!path.empty()) {
+      for (i = 1; i < path.length(); i++) {
+        if (path[i].tile == path[i - 1].tile) {
           // The path-finding code advices us to wait there to refuel.
-          struct tile *ptile = path->positions[i].tile;
-
-          pf_path_destroy(path);
+          struct tile *ptile = path[i].tile;
           pf_map_destroy(pfm);
           return ptile;
         }
       }
-      pf_path_destroy(path);
       pf_map_destroy(pfm);
       // Seems it's the immediate destination
       return punit->goto_tile;
@@ -367,16 +364,16 @@ struct tile *immediate_destination(struct unit *punit,
 /**
    Log the cost of travelling a path.
  */
-void dai_log_path(struct unit *punit, struct pf_path *path,
+void dai_log_path(struct unit *punit, const PFPath &path,
                   struct pf_parameter *parameter)
 {
-  const struct pf_position *last = pf_path_last_position(path);
-  const int cc = PF_TURN_FACTOR * last->total_MC
-                 + parameter->move_rate * last->total_EC;
+  const struct pf_position last = path[-1];
+  const int cc =
+      PF_TURN_FACTOR * last.total_MC + parameter->move_rate * last.total_EC;
   const int tc = cc / (PF_TURN_FACTOR * parameter->move_rate);
 
   UNIT_LOG(LOG_DEBUG, punit, "path L=%d T=%d(%d) MC=%d EC=%d CC=%d",
-           path->length - 1, last->turn, tc, last->total_MC, last->total_EC,
+           path.length() - 1, last.turn, tc, last.total_MC, last.total_EC,
            cc);
 }
 
@@ -395,7 +392,6 @@ bool dai_unit_goto_constrained(struct ai_type *ait, struct unit *punit,
 {
   bool alive = true;
   struct pf_map *pfm;
-  struct pf_path *path;
 
   UNIT_LOG(LOG_DEBUG, punit, "constrained goto to %d,%d", TILE_XY(ptile));
 
@@ -425,9 +421,9 @@ bool dai_unit_goto_constrained(struct ai_type *ait, struct unit *punit,
   }
 
   pfm = pf_map_new(parameter);
-  path = pf_map_path(pfm, ptile);
+  auto path = pf_map_path(pfm, ptile);
 
-  if (path) {
+  if (!path.empty()) {
     dai_log_path(punit, path, parameter);
     UNIT_LOG(LOG_DEBUG, punit, "constrained goto: following path.");
     alive = adv_follow_path(punit, path, ptile);
@@ -435,7 +431,6 @@ bool dai_unit_goto_constrained(struct ai_type *ait, struct unit *punit,
     UNIT_LOG(LOG_DEBUG, punit, "no path to destination");
   }
 
-  pf_path_destroy(path);
   pf_map_destroy(pfm);
 
   return alive;
@@ -939,10 +934,10 @@ bool dai_unit_attack(struct ai_type *ait, struct unit *punit,
    Ai unit moving function called from AI interface.
  */
 void dai_unit_move_or_attack(struct ai_type *ait, struct unit *punit,
-                             struct tile *ptile, struct pf_path *path,
+                             struct tile *ptile, const PFPath &path,
                              int step)
 {
-  if (step == path->length - 1) {
+  if (step == path.length() - 1) {
     (void) dai_unit_attack(ait, punit, ptile);
   } else {
     (void) dai_unit_move(ait, punit, ptile);

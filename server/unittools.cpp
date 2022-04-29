@@ -539,7 +539,7 @@ void player_restore_units(struct player *pplayer)
             }
 
             if (is_airunit_refuel_point(ptile, pplayer, punit)) {
-              struct pf_path *path;
+              PFPath path;
               int id = punit->id;
 
               /* Client orders may be running for this unit - if so
@@ -579,7 +579,6 @@ void player_restore_units(struct player *pplayer)
                     pplayer, unit_tile(punit), E_UNIT_ORDERS, ftc_server,
                     _("Your %s has returned to refuel."), unit_link(punit));
               }
-              pf_path_destroy(path);
               break;
             }
           }
@@ -1228,6 +1227,28 @@ void bounce_unit(struct unit *punit, bool verbose)
   }
   square_iterate_end;
 
+  if (count == 0) {
+    /* If no place unit can survive try the same with tiles the unit can just
+     * exist inspite of losing health or fuel*/
+    square_iterate(&(wld.map), punit_tile, DIST, ptile)
+    {
+      if (count >= ARRAY_SIZE(tiles)) {
+        break;
+      }
+
+      if (ptile == punit_tile) {
+        continue;
+      }
+
+      if (can_unit_exist_at_tile(&(wld.map), punit, ptile)
+          && !is_non_allied_city_tile(ptile, pplayer)
+          && !is_non_allied_unit_tile(ptile, pplayer)) {
+        tiles[count++] = ptile;
+      }
+    }
+    square_iterate_end;
+  }
+
   if (count > 0) {
     struct tile *ptile = tiles[fc_rand(count)];
 
@@ -1511,6 +1532,16 @@ void transform_unit(struct unit *punit, const struct unit_type *to_unit,
   const struct unit_type *old_type = punit->utype;
   int old_mr = unit_move_rate(punit);
   int old_hp = unit_type_get(punit)->hp;
+  bv_player can_see_unit;
+
+  BV_CLR_ALL(can_see_unit);
+  players_iterate(oplayer)
+  {
+    if (can_player_see_unit(oplayer, punit)) {
+      BV_SET(can_see_unit, player_index(oplayer));
+    }
+  }
+  players_iterate_end;
 
   if (!is_free) {
     pplayer->economic.gold -=
@@ -1559,6 +1590,16 @@ void transform_unit(struct unit *punit, const struct unit_type *to_unit,
   conn_list_do_buffer(pplayer->connections);
 
   unit_refresh_vision(punit);
+
+  // unit may disappear for some players if vlayer changed
+  players_iterate(oplayer)
+  {
+    if (BV_ISSET(can_see_unit, player_index(oplayer))
+        && !can_player_see_unit(oplayer, punit)) {
+      unit_goes_out_of_sight(oplayer, punit);
+    }
+  }
+  players_iterate_end;
 
   CALL_PLR_AI_FUNC(unit_transformed, pplayer, punit, old_type);
   CALL_FUNC_EACH_AI(unit_info, punit);
@@ -4571,16 +4612,16 @@ bool execute_orders(struct unit *punit, const bool fresh)
 int get_unit_vision_at(struct unit *punit, const struct tile *ptile,
                        enum vision_layer vlayer)
 {
-  const int base =
-      (unit_type_get(punit)->vision_radius_sq
-       + get_unittype_bonus(unit_owner(punit), ptile, unit_type_get(punit),
-                            EFT_UNIT_VISION_RADIUS_SQ));
+  const int base = unit_type_get(punit)->vision_radius_sq;
+  const int bonus =
+      get_unittype_bonus(unit_owner(punit), ptile, unit_type_get(punit),
+                         EFT_UNIT_VISION_RADIUS_SQ, vlayer);
   switch (vlayer) {
   case V_MAIN:
-    return MAX(0, base);
+    return MAX(0, base) + MAX(0, bonus);
   case V_INVIS:
   case V_SUBSURFACE:
-    return CLIP(0, base, 2);
+    return CLIP(0, base, 2) + MAX(0, bonus);
   case V_COUNT:
     break;
   }

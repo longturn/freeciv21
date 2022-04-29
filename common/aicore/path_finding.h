@@ -157,7 +157,7 @@
  *
  *    struct pf_parameter parameter;
  *    struct pf_map *pfm;
- *    struct pf_path *path;
+ *    PFPath *path;
  *
  *    // fill parameter (see below)
  *
@@ -318,15 +318,32 @@ struct pf_position {
   int total_MC; // Total MC to reach this point
   int total_EC; // Total EC to reach this point
 
-  direction8 dir_to_next_pos; // Used only in 'struct pf_path'.
-  direction8 dir_to_here;     // Where did we come from.
+  enum direction8 dir_to_next_pos; // Used only in 'PFPath'.
+  enum direction8 dir_to_here;     // Where did we come from.
 };
 
 // Full specification of a path.
-struct pf_path {
-  int length; // Number of steps in the path
-  pf_position *positions;
+class PFPath {
+  std::vector<pf_position> positions;
+
+public:
+  PFPath();
+  PFPath(int size);
+  PFPath(const PFPath &obj);
+  PFPath(const struct pf_parameter *param);
+  int length() const;
+  void add_pos(pf_position pos);
+  virtual ~PFPath();
+  bool empty() const;
+  bool pf_path_advance(struct tile *ptile);
+  bool pf_path_backtrack(struct tile *ptile);
+  pf_position &operator[](int i);
+  const pf_position &operator[](int i) const;
 };
+// Paths functions.
+void pf_path_destroy(PFPath *path);
+PFPath pf_path_concat(PFPath *dest_path, const PFPath &src_path);
+QDebug &operator<<(QDebug &logger, const PFPath &path);
 
 /* Initial data for the path-finding. Normally should use functions
  * from "pf_tools.[ch]" to fill the parameter.
@@ -452,29 +469,21 @@ pf_map *pf_map_new(const pf_parameter *parameter) fc__warn_unused_result;
 void pf_map_destroy(pf_map *pfm);
 
 // Method A) functions.
-int pf_map_move_cost(pf_map *pfm, tile *ptile);
-pf_path *pf_map_path(pf_map *pfm, tile *ptile) fc__warn_unused_result;
-bool pf_map_position(pf_map *pfm, tile *ptile,
-                     pf_position *pos) fc__warn_unused_result;
+int pf_map_move_cost(struct pf_map *pfm, struct tile *ptile);
+PFPath pf_map_path(struct pf_map *pfm,
+                   struct tile *ptile) fc__warn_unused_result;
+bool pf_map_position(struct pf_map *pfm, struct tile *ptile,
+                     struct pf_position *pos) fc__warn_unused_result;
 
 // Method B) functions.
-bool pf_map_iterate(pf_map *pfm);
-tile *pf_map_iter(pf_map *pfm);
-int pf_map_iter_move_cost(pf_map *pfm);
-pf_path *pf_map_iter_path(pf_map *pfm) fc__warn_unused_result;
-void pf_map_iter_position(pf_map *pfm, pf_position *pos);
+bool pf_map_iterate(struct pf_map *pfm);
+struct tile *pf_map_iter(struct pf_map *pfm);
+int pf_map_iter_move_cost(struct pf_map *pfm);
+PFPath pf_map_iter_path(struct pf_map *pfm) fc__warn_unused_result;
+void pf_map_iter_position(struct pf_map *pfm, struct pf_position *pos);
 
 // Other related functions.
 const struct pf_parameter *pf_map_parameter(const pf_map *pfm);
-
-// Paths functions.
-void pf_path_destroy(pf_path *path);
-struct pf_path *pf_path_concat(pf_path *dest_path, const pf_path *src_path);
-bool pf_path_advance(pf_path *path, tile *ptile);
-bool pf_path_backtrack(pf_path *path, tile *ptile);
-const struct pf_position *pf_path_last_position(const pf_path *path);
-
-QDebug &operator<<(QDebug &logger, const pf_path *path);
 
 // Reverse map functions (Costs to go to start tile).
 pf_reverse_map *
@@ -569,15 +578,15 @@ bool pf_reverse_map_unit_position(pf_reverse_map *pfrm, const unit *punit,
  * NB: you need to free the pathes with pf_path_destroy(path_iter).
  *
  * ARG_pfm - A pf_map structure pointer.
- * NAME_path - The name of the iterator to use (type struct pf_path *). This
+ * NAME_path - The name of the iterator to use (type PFPath *). This
  *             is defined inside the macro.
  * COND_from_start - A boolean value (or equivalent, it can be a function)
  *                   which indicate if the start tile should be iterated or
  *                   not. */
 #define pf_map_paths_iterate(ARG_pfm, NAME_path, COND_from_start)           \
   if (COND_from_start || pf_map_iterate((ARG_pfm))) {                       \
-    pf_map *_MY_pf_map_ = (ARG_pfm);                                        \
-    pf_path *NAME_path;                                                     \
+    struct pf_map *_MY_pf_map_ = (ARG_pfm);                                 \
+    PFPath *NAME_path;                                                      \
     do {                                                                    \
       NAME_path = pf_map_iter_path(_MY_pf_map_);
 

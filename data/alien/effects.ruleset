@@ -13,7 +13,7 @@
 
 [datafile]
 description="Alien World effects data for Freeciv"
-options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct"
+options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct +Vision_Layer"
 format_version=20
 
 ; /* <-- avoid gettext warnings
@@ -84,6 +84,19 @@ reqs    =
 [effect_city_vision]
 type    = "City_Vision_Radius_Sq"
 value   = 5
+reqs    =
+    { "type", "name", "range"
+      "VisionLayer", "Main", "Local"
+    }
+
+; Stealth or Subsurface can only be seen when adjacent
+[effect_city_vision_layers]
+type    = "City_Vision_Radius_Sq"
+value   = 2
+reqs    =
+    { "type", "name", "range", "present"
+      "VisionLayer", "Main", "Local", FALSE
+    }
 
 [effect_base_unit_upkeep]
 type    = "Upkeep_Factor"
@@ -665,6 +678,7 @@ value   = 21
 reqs	=
     { "type", "name", "range"
       "Building", "Radar Tower", "City"
+      "VisionLayer", "Main", "Local"
     }
 
 [effect_archive]

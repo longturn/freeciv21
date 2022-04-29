@@ -353,6 +353,12 @@ void universal_value_from_str(struct universal *source, const char *value)
       return;
     }
     break;
+  case VUT_VISIONLAYER:
+    source->value.vlayer = vision_layer_by_name(value, fc_strcasecmp);
+    if (source->value.vlayer != V_COUNT) {
+      return;
+    }
+    break;
   case VUT_COUNT:
     break;
   }
@@ -553,6 +559,9 @@ struct universal universal_by_number(const enum universals_n kind,
   case VUT_CITYSTATUS:
     source.value.citystatus = citystatus_type(value);
     return source;
+  case VUT_VISIONLAYER:
+    source.value.vlayer = vision_layer(value);
+    return source;
   case VUT_COUNT:
     break;
   }
@@ -674,6 +683,8 @@ int universal_number(const struct universal *source)
     return source->value.citytile;
   case VUT_CITYSTATUS:
     return source->value.citystatus;
+  case VUT_VISIONLAYER:
+    return source->value.vlayer;
   case VUT_COUNT:
     break;
   }
@@ -754,6 +765,7 @@ struct requirement req_from_str(const char *type, const char *range,
       case VUT_TERRAINALTER:
       case VUT_CITYTILE:
       case VUT_MAXTILEUNITS:
+      case VUT_VISIONLAYER:
         req.range = REQ_RANGE_LOCAL;
         break;
       case VUT_MINSIZE:
@@ -859,6 +871,7 @@ struct requirement req_from_str(const char *type, const char *range,
     case VUT_OTYPE:
     case VUT_SPECIALIST:
     case VUT_TERRAINALTER: /* XXX could in principle support C/ADJACENT */
+    case VUT_VISIONLAYER:
       invalid = (req.range != REQ_RANGE_LOCAL);
       break;
     case VUT_CITYTILE:
@@ -951,6 +964,7 @@ struct requirement req_from_str(const char *type, const char *range,
     case VUT_DIPLREL:
     case VUT_MAXTILEUNITS:
     case VUT_MINTECHS:
+    case VUT_VISIONLAYER:
       // Most requirements don't support 'survives'.
       invalid = survives;
       break;
@@ -2997,7 +3011,8 @@ bool is_req_active(
     const struct output_type *target_output,
     const struct specialist *target_specialist,
     const struct action *target_action, const struct requirement *req,
-    const enum req_problem_type prob_type)
+    const enum req_problem_type prob_type,
+    const enum vision_layer vision_layer)
 {
   enum fc_tristate eval = TRI_NO;
 
@@ -3334,6 +3349,13 @@ bool is_req_active(
                                     req->source.value.citystatus);
     }
     break;
+  case VUT_VISIONLAYER:
+    if (vision_layer >= V_COUNT) {
+      eval = TRI_MAYBE;
+    } else {
+      eval = BOOL_TO_TRISTATE(vision_layer == req->source.value.vlayer);
+    }
+    break;
   case VUT_COUNT:
     qCritical("is_req_active(): invalid source kind %d.", req->source.kind);
     return false;
@@ -3373,14 +3395,15 @@ bool are_reqs_active(const struct player *target_player,
                      const struct specialist *target_specialist,
                      const struct action *target_action,
                      const struct requirement_vector *reqs,
-                     const enum req_problem_type prob_type)
+                     const enum req_problem_type prob_type,
+                     const enum vision_layer vision_layer)
 {
   requirement_vector_iterate(reqs, preq)
   {
     if (!is_req_active(target_player, other_player, target_city,
                        target_building, target_tile, target_unit,
                        target_unittype, target_output, target_specialist,
-                       target_action, preq, prob_type)) {
+                       target_action, preq, prob_type, vision_layer)) {
       return false;
     }
   }
@@ -3411,6 +3434,7 @@ bool is_req_unchanging(const struct requirement *req)
   case VUT_STYLE:
   case VUT_TOPO:
   case VUT_SERVERSETTING:
+  case VUT_VISIONLAYER:
     return true;
   case VUT_NATION:
   case VUT_NATIONGROUP:
@@ -3859,6 +3883,8 @@ bool are_universals_equal(const struct universal *psource1,
     return psource1->value.citytile == psource2->value.citytile;
   case VUT_CITYSTATUS:
     return psource1->value.citystatus == psource2->value.citystatus;
+  case VUT_VISIONLAYER:
+    return psource1->value.vlayer == psource2->value.vlayer;
   case VUT_COUNT:
     break;
   }
@@ -3993,6 +4019,8 @@ const char *universal_rule_name(const struct universal *psource)
   case VUT_TERRAINALTER:
     return terrain_alteration_name(
         terrain_alteration(psource->value.terrainalter));
+  case VUT_VISIONLAYER:
+    return vision_layer_name(psource->value.vlayer);
   case VUT_COUNT:
     break;
   }
@@ -4290,6 +4318,10 @@ const char *universal_name_translation(const struct universal *psource,
       fc_strlcat(buf, "error", bufsz);
       break;
     }
+    return buf;
+  case VUT_VISIONLAYER:
+    fc_strlcat(buf, vision_layer_translated_name(psource->value.vlayer),
+               bufsz);
     return buf;
   case VUT_COUNT:
     break;

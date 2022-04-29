@@ -1233,6 +1233,7 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
   struct adv_choice *best_choice;
   struct ai_city *city_data = def_ai_city_data(pcity, ait);
   struct ai_city *acity_data;
+  auto path = PFPath();
 
   fc_assert_ret_val(is_military_unit(myunit)
                         && !utype_fuel(unit_type_get(myunit)),
@@ -1249,8 +1250,8 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
   }
 
   best_choice->want =
-      find_something_to_kill(ait, pplayer, myunit, &ptile, nullptr,
-                             &ferry_map, &ferryboat, &boattype, &move_time);
+      find_something_to_kill(ait, pplayer, myunit, &ptile, &path, &ferry_map,
+                             &ferryboat, &boattype, &move_time);
   if (nullptr == ptile || ptile == unit_tile(myunit)
       || !can_unit_attack_tile(myunit, ptile)) {
     goto cleanup;
