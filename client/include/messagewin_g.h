@@ -13,7 +13,3 @@
 #include "packets.h"
 
 #include "messagewin_common.h"
-
-#include "gui_proto_constructor.h"
-
-GUI_FUNC_PROTO(void, real_meswin_dialog_update, void *unused)

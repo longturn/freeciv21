@@ -68,6 +68,9 @@
 
 #include "options.h"
 
+// forward declaration
+#include "gui-qt/qtg_cxxside.h"
+
 typedef QHash<QString, QString> optionsHash;
 typedef QHash<QString, intptr_t> dialOptionsHash;
 struct client_options gui_options = {
@@ -2750,13 +2753,17 @@ static void server_option_free(struct server_option *poption)
     break;
 
   case OT_ENUM:
-    NFCN_FREE(poption->enumerator.support_names);
-    NFCN_FREE(poption->enumerator.pretty_names);
+    delete poption->enumerator.support_names;
+    delete poption->enumerator.pretty_names;
+    poption->enumerator.support_names = nullptr;
+    poption->enumerator.pretty_names = nullptr;
     break;
 
   case OT_BITWISE:
-    NFCN_FREE(poption->bitwise.support_names);
-    NFCN_FREE(poption->bitwise.pretty_names);
+    delete poption->bitwise.support_names;
+    delete poption->bitwise.pretty_names;
+    poption->bitwise.support_names = nullptr;
+    poption->bitwise.pretty_names = nullptr;
     break;
 
   case OT_BOOLEAN:
@@ -4665,7 +4672,7 @@ static void options_init_names(const struct copt_val_name *(*acc)(int),
 void options_init()
 {
   message_options_init();
-  options_extra_init();
+  qtg_options_extra_init();
   global_worklists_init();
 
   client_options_iterate_all(poption)
@@ -4862,7 +4869,7 @@ static void allfont_changed_callback(struct option *poption)
 static void font_changed_callback(struct option *poption)
 {
   fc_assert_ret(OT_FONT == option_type(OPTION(poption)));
-  gui_update_font(option_font_target(poption), option_font_get(poption));
+  qtg_gui_update_font(option_font_target(poption), option_font_get(poption));
 }
 
 /**

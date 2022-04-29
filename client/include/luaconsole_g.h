@@ -10,15 +10,11 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 ***********************************************************************/
 #pragma once
 
+#include "luaconsole_common.h"
 #include "packets.h"
 
-#include "luaconsole_common.h"
+void luaconsole_dialog_popup(bool raise);
+bool luaconsole_dialog_is_open();
+void real_luaconsole_dialog_update();
 
-#include "gui_proto_constructor.h"
-
-GUI_FUNC_PROTO(void, luaconsole_dialog_popup, bool raise)
-GUI_FUNC_PROTO(bool, luaconsole_dialog_is_open, void)
-GUI_FUNC_PROTO(void, real_luaconsole_dialog_update, void)
-
-GUI_FUNC_PROTO(void, real_luaconsole_append, const char *astring,
-               const struct text_tag_list *tags)
+void real_luaconsole_append(const char *astring, const text_tag_list *tags);

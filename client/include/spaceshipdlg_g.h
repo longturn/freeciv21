@@ -12,8 +12,10 @@
 
 #include "fc_types.h"
 
-#include "gui_proto_constructor.h"
+void popup_spaceship_dialog(player *pplayer);
 
-void popup_spaceship_dialog(struct player *pplayer);
-GUI_FUNC_PROTO(void, popdown_spaceship_dialog, struct player *pplayer)
-GUI_FUNC_PROTO(void, refresh_spaceship_dialog, struct player *pplayer)
+void gui_popdown_spaceship_dialog(player *pplayer);
+void popdown_spaceship_dialog(player *pplayer);
+
+void gui_refresh_spaceship_dialog(player *pplayer);
+void refresh_spaceship_dialog(player *pplayer);

@@ -183,7 +183,7 @@ void voteinfo_queue_free()
     return;
   }
 
-  voteinfo_list_iterate(voteinfo_queue, vi) { NFC_FREE(vi); }
+  voteinfo_list_iterate(voteinfo_queue, vi) { delete vi; }
   voteinfo_list_iterate_end;
 
   voteinfo_list_destroy(voteinfo_queue);

@@ -139,3 +139,7 @@ private:
   QPushButton *cb;
   move_widget *mw;
 };
+
+void real_output_window_append(const QString &astring,
+                               const text_tag_list *tags);
+void version_message(const QString &vertext);

@@ -147,10 +147,10 @@ void dai_data_phase_begin(struct ai_type *ait, struct player *pplayer,
   bool caller_closes;
 
   /* Note that this refreshes advisor data if needed. ai_plr_data_get()
-     is expected to refresh advisor data if needed, and ai_plr_data_get()
-     depends on this call
-     ai_plr_data_get()->ai_data_phase_begin()->adv_data_get() to do it.
-     If you change this, you may need to adjust ai_plr_data_get() also. */
+   is expected to refresh advisor data if needed, and ai_plr_data_get()
+   depends on this call
+   ai_plr_data_get()->ai_data_phase_begin()->adv_data_get() to do it.
+   If you change this, you may need to adjust ai_plr_data_get() also. */
   struct adv_data *adv;
 
   if (ai->phase_initialized) {
@@ -162,7 +162,7 @@ void dai_data_phase_begin(struct ai_type *ait, struct player *pplayer,
   adv = adv_data_get(pplayer, &caller_closes);
 
   /* Store current number of known continents and oceans so we can compare
-     against it later in order to see if ai data needs refreshing. */
+   against it later in order to see if ai data needs refreshing. */
   ai->last_num_continents = adv->num_continents;
   ai->last_num_oceans = adv->num_oceans;
 
@@ -314,7 +314,7 @@ struct ai_plr *dai_plr_data_get(struct ai_type *ait, struct player *pplayer,
   fc_assert_ret_val(ai != nullptr, nullptr);
 
   /* This assert really is required. See longer comment
-     in adv_data_get() for equivalent code. */
+   in adv_data_get() for equivalent code. */
 #if defined(FREECIV_DEBUG) || defined(IS_DEVEL_VERSION)
   fc_assert(caller_closes != nullptr || ai->phase_initialized);
 #endif

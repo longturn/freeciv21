@@ -447,7 +447,7 @@ void map_view::find_place(int pos_x, int pos_y, int &w, int &h, int wdth,
    prompt etc).  And it may call update_unit_pix_label() to update the
    icons for units on this tile.
  */
-void update_unit_info_label(struct unit_list *punitlist)
+void update_unit_info_label(unit_list *punitlist)
 {
   if (queen()->unitinfo_wdg->isVisible()) {
     queen()->unitinfo_wdg->update_actions(nullptr);
@@ -458,7 +458,7 @@ void update_unit_info_label(struct unit_list *punitlist)
    Update the mouse cursor. Cursor type depends on what user is doing and
    pointing.
  */
-void update_mouse_cursor(enum cursor_type new_cursor_type)
+void update_mouse_cursor(cursor_type new_cursor_type)
 {
   queen()->mapview_wdg->update_cursor(new_cursor_type);
 }
@@ -521,7 +521,7 @@ void dirty_rect(int canvas_x, int canvas_y, int pixel_width,
 /**
    Mark the entire screen area as "dirty" so that we can flush it later.
  */
-void dirty_all(void)
+void dirty_all()
 {
   if (mapview_is_frozen()) {
     return;
@@ -534,7 +534,7 @@ void dirty_all(void)
    dirty_rect and dirty_all.  This function is generally called after we've
    processed a batch of drawing operations.
  */
-void flush_dirty(void)
+void flush_dirty()
 {
   if (mapview_is_frozen()) {
     return;
@@ -559,18 +559,18 @@ void flush_dirty(void)
    The canvas should have already been flushed to screen via flush_dirty -
    all this function does is make sure the hardware has caught up.
  */
-void gui_flush(void) { queen()->mapview_wdg->update(); }
+void gui_flush() { queen()->mapview_wdg->update(); }
 
 /**
    Update (refresh) the locations of the mapview scrollbars (if it uses
    them).
  */
-void update_map_canvas_scrollbars(void) { queen()->mapview_wdg->update(); }
+void update_map_canvas_scrollbars() { queen()->mapview_wdg->update(); }
 
 /**
    Update (refresh) all city descriptions on the mapview.
  */
-void update_city_descriptions(void) { update_map_canvas_visible(); }
+void update_city_descriptions() { update_map_canvas_visible(); }
 
 /**
    Put overlay tile to pixmap
@@ -588,7 +588,7 @@ void pixmap_put_overlay_tile(int canvas_x, int canvas_y,
 /**
    Draw a cross-hair overlay on a tile.
  */
-void put_cross_overlay_tile(struct tile *ptile)
+void put_cross_overlay_tile(tile *ptile)
 {
   float canvas_x, canvas_y;
 
@@ -609,7 +609,7 @@ void draw_selection_rectangle(int canvas_x, int canvas_y, int w, int h)
 /**
    This function is called when the tileset is changed.
  */
-void tileset_changed(void)
+void tileset_changed()
 {
   int i;
   science_report *sci_rep;
@@ -772,7 +772,11 @@ void info_tile::update_font(const QString &name, const QFont &font)
 /**
    Deletes current instance
  */
-void info_tile::drop() { NFCN_FREE(m_instance); }
+void info_tile::drop()
+{
+  delete m_instance;
+  m_instance = nullptr;
+}
 
 /**
    Returns given instance
@@ -840,7 +844,7 @@ void qtg_start_turn()
    city's tile).
  */
 void show_city_desc(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                    struct city *pcity, int *width, int *height)
+                    city *pcity, int *width, int *height)
 {
   if (is_any_city_dialog_open()) {
     return;

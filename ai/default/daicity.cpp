@@ -803,7 +803,7 @@ static void contemplate_terrain_improvements(struct ai_type *ait,
   // Create a localized "virtual" unit to do operations with.
   virtualunit = unit_virtual_create(pplayer, pcity, utype, 0);
   /* Advisors data space not allocated as it's not needed in the
-     lifetime of the virtualunit. */
+   lifetime of the virtualunit. */
   unit_tile_set(virtualunit, pcenter);
   want = settler_evaluate_improvements(virtualunit, &best_act, &best_target,
                                        &best_tile, nullptr, nullptr);

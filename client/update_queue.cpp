@@ -28,14 +28,12 @@
 #include "player.h"
 
 /* client/include */
-#include "canvas_g.h"
 #include "citydlg_g.h"
 #include "cityrep_g.h"
 #include "dialogs_g.h"
 #include "gui_main_g.h"
 #include "menu_g.h"
 #include "pages_g.h"
-#include "plrdlg_g.h"
 #include "ratesdlg_g.h"
 #include "repodlgs_g.h"
 
@@ -43,9 +41,14 @@
 #include "client_main.h"
 #include "connectdlg_common.h"
 #include "options.h"
+#include "plrdlg_common.h"
 #include "tilespec.h"
 
 #include "update_queue.h"
+
+// forward declaration
+#include "gui-qt/canvas.h"
+#include "gui-qt/qtg_cxxside.h"
 
 update_queue *update_queue::m_instance = nullptr;
 
@@ -57,7 +60,11 @@ update_queue *update_queue::uq()
   return m_instance;
 }
 
-void update_queue::drop() { NFCN_FREE(m_instance); }
+void update_queue::drop()
+{
+  delete m_instance;
+  m_instance = nullptr;
+}
 
 // Extract the update_queue_data from the waiting queue data.
 struct update_queue_data *
@@ -357,11 +364,11 @@ static void set_client_page_callback(void *data)
 {
   enum client_pages page = static_cast<client_pages>(FC_PTR_TO_INT(data));
 
-  real_set_client_page(page);
+  qtg_real_set_client_page(page);
 }
 
 // Set the client page.
-void set_client_page(enum client_pages page)
+void set_client_page(client_pages page)
 {
   log_debug("Requested page: %s.", client_pages_name(page));
 
@@ -369,7 +376,7 @@ void set_client_page(enum client_pages page)
 }
 
 // Start server and then, set the client page.
-void client_start_server_and_set_page(enum client_pages page)
+void client_start_server_and_set_page(client_pages page)
 {
   log_debug("Requested server start + page: %s.", client_pages_name(page));
 
@@ -381,7 +388,7 @@ void client_start_server_and_set_page(enum client_pages page)
 }
 
 // Returns the next client page.
-enum client_pages get_client_page(void)
+client_pages get_client_page()
 {
   const void *data;
 
@@ -389,12 +396,12 @@ enum client_pages get_client_page(void)
                                             nullptr)) {
     return static_cast<client_pages>(FC_PTR_TO_INT(data));
   } else {
-    return get_current_client_page();
+    return qtg_get_current_client_page();
   }
 }
 
 // Returns whether there's page switching already in progress.
-bool update_queue_is_switching_page(void)
+bool update_queue_is_switching_page()
 {
   return update_queue::uq()->has_callback(set_client_page_callback);
 }
@@ -423,7 +430,7 @@ void menus_update(void)
 }
 
 // Update multipliers/policy dialog.
-void multipliers_dialog_update(void)
+void multipliers_dialog_update()
 {
   update_queue::uq()->add(real_multipliers_dialog_update, nullptr);
 }
@@ -456,8 +463,8 @@ static void cities_update_callback(void *data)
     pcity->client.need_updates = CU_NO_UPDATE;
 
     NEED_UPDATE(CU_UPDATE_REPORT, real_city_report_update_city(pcity));
-    NEED_UPDATE(CU_UPDATE_DIALOG, real_city_dialog_refresh(pcity));
-    NEED_UPDATE(CU_POPUP_DIALOG, real_city_dialog_popup(pcity));
+    NEED_UPDATE(CU_UPDATE_DIALOG, qtg_real_city_dialog_refresh(pcity));
+    NEED_UPDATE(CU_POPUP_DIALOG, qtg_real_city_dialog_popup(pcity));
 
 #ifdef FREECIV_DEBUG
     if (CU_NO_UPDATE != need_update) {
@@ -472,7 +479,7 @@ static void cities_update_callback(void *data)
 }
 
 // Request the city dialog to be popped up for the city.
-void popup_city_dialog(struct city *pcity)
+void popup_city_dialog(city *pcity)
 {
   pcity->client.need_updates =
       static_cast<city_updates>(static_cast<int>(pcity->client.need_updates)
@@ -481,7 +488,7 @@ void popup_city_dialog(struct city *pcity)
 }
 
 // Request the city dialog to be updated for the city.
-void refresh_city_dialog(struct city *pcity)
+void refresh_city_dialog(city *pcity)
 {
   pcity->client.need_updates =
       static_cast<city_updates>(static_cast<int>(pcity->client.need_updates)
@@ -501,35 +508,35 @@ void city_report_dialog_update_city(struct city *pcity)
 // Update the connection list in the start page.
 void conn_list_dialog_update(void)
 {
-  update_queue::uq()->add(real_conn_list_dialog_update, nullptr);
+  update_queue::uq()->add(qtg_real_conn_list_dialog_update, nullptr);
 }
 
 // Update the nation report.
-void players_dialog_update(void)
+void players_dialog_update()
 {
   update_queue::uq()->add(real_players_dialog_update, nullptr);
 }
 
 // Update the city report.
-void city_report_dialog_update(void)
+void city_report_dialog_update()
 {
   update_queue::uq()->add(real_city_report_dialog_update, nullptr);
 }
 
 // Update the science report.
-void science_report_dialog_update(void)
+void science_report_dialog_update()
 {
   update_queue::uq()->add(real_science_report_dialog_update, nullptr);
 }
 
 // Update the economy report.
-void economy_report_dialog_update(void)
+void economy_report_dialog_update()
 {
   update_queue::uq()->add(real_economy_report_dialog_update, nullptr);
 }
 
 // Update the units report.
-void units_report_dialog_update(void)
+void units_report_dialog_update()
 {
   update_queue::uq()->add(real_units_report_dialog_update, nullptr);
 }

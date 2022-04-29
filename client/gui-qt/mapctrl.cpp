@@ -77,7 +77,7 @@ void set_turn_done_button_state(bool state)
 /**
    Draw a goto or patrol line at the current mouse position.
  */
-void create_line_at_mouse_pos(void)
+void create_line_at_mouse_pos()
 {
   QPoint global_pos, local_pos;
   int x, y;
@@ -97,7 +97,7 @@ void create_line_at_mouse_pos(void)
    The Area Selection rectangle. Called by center_tile_mapcanvas() and
    when the mouse pointer moves.
  */
-void update_rect_at_mouse_pos(void)
+void update_rect_at_mouse_pos()
 { // PLS DONT PORT IT
 }
 

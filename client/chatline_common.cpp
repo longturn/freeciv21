@@ -29,7 +29,7 @@
 #include "packets.h"
 
 // include
-#include "chatline_g.h"
+#include "gui-qt/chatline.h"
 
 // client
 #include "client_main.h"

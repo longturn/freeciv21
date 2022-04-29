@@ -62,18 +62,13 @@
 
 /* client/include */
 #include "citydlg_g.h"
-#include "connectdlg_g.h"
 #include "dialogs_g.h"
 #include "diplodlg_g.h"
-#include "editgui_g.h"
 #include "gui_main_g.h"
-#include "helpdlg_g.h"
 #include "mapctrl_g.h"
 #include "mapview_g.h"
 #include "menu_g.h"
-#include "messagewin_g.h"
 #include "pages_g.h"
-#include "plrdlg_g.h"
 #include "repodlgs_g.h"
 #include "voteinfo_bar_g.h"
 
@@ -90,10 +85,12 @@
 #include "global_worklist.h"
 #include "governor.h"
 #include "mapview_common.h"
+#include "messagewin_common.h"
 #include "music.h"
 #include "options.h"
 #include "overview_common.h"
 #include "packhand.h"
+#include "plrdlg_common.h"
 #include "themes_common.h"
 #include "tilespec.h"
 #include "update_queue.h"
@@ -105,6 +102,10 @@
 #include "client_main.h"
 
 #include "packhand_gen.h"
+
+// forward declaration
+#include "gui-qt/helpdlg.h"
+#include "gui-qt/qtg_cxxside.h"
 
 static enum known_type mapimg_client_tile_known(const struct tile *ptile,
                                                 const struct player *pplayer,
@@ -260,7 +261,7 @@ static void client_game_init()
  */
 static void client_game_free()
 {
-  editgui_popdown_all();
+  qtg_editgui_popdown_all();
 
   mapimg_free();
   packhand_free();
@@ -275,8 +276,8 @@ static void client_game_free()
   game.client.ruleset_ready = false;
   game_free();
   /* update_queue_init() is correct at this point. The queue is reset to
-     a clean state which is also needed if the client is not connected to
-     the server! */
+   a clean state which is also needed if the client is not connected to
+   the server! */
   update_queue::uq()->init();
 
   client.conn.playing = nullptr;
@@ -289,7 +290,7 @@ static void client_game_free()
  */
 static void client_game_reset()
 {
-  editgui_popdown_all();
+  qtg_editgui_popdown_all();
 
   packhand_free();
   link_marks_free();
@@ -586,7 +587,7 @@ int client_main(int argc, char *argv[])
   }
 
   /* This seed is not saved anywhere; randoms in the client should
-     have cosmetic effects only (eg city name suggestions).  --dwp */
+   have cosmetic effects only (eg city name suggestions).  --dwp */
   fc_srand(time(nullptr));
   boot_help_texts(client_current_nation_set(), tileset_help(tileset));
 
@@ -804,7 +805,7 @@ void set_client_state(enum client_states newstate)
     break;
 
   case C_S_DISCONNECTED:
-    popdown_all_city_dialogs();
+    qtg_popdown_all_city_dialogs();
     close_all_diplomacy_dialogs();
     popdown_all_game_dialogs();
     meswin_clear_older(MESWIN_CLEAR_ALL, 0);
@@ -824,7 +825,7 @@ void set_client_state(enum client_states newstate)
     break;
 
   case C_S_PREPARING:
-    popdown_all_city_dialogs();
+    qtg_popdown_all_city_dialogs();
     close_all_diplomacy_dialogs();
     popdown_all_game_dialogs();
     meswin_clear_older(MESWIN_CLEAR_ALL, 0);
@@ -871,7 +872,7 @@ void set_client_state(enum client_states newstate)
     set_client_page(PAGE_GAME);
     // Find something sensible to display instead of the intro gfx.
     center_on_something();
-    editgui_tileset_changed();
+    qtg_editgui_tileset_changed();
     voteinfo_gui_update();
 
     refresh_overview_canvas();
@@ -898,7 +899,7 @@ void set_client_state(enum client_states newstate)
         }
         city_list_iterate_end;
       }
-      popdown_all_city_dialogs();
+      qtg_popdown_all_city_dialogs();
       close_all_diplomacy_dialogs();
       popdown_all_game_dialogs();
       unit_focus_set(nullptr);
@@ -1054,7 +1055,7 @@ void start_turn_change_wait()
 void stop_turn_change_wait()
 {
   waiting_turn_change = false;
-  update_timeout_label();
+  qtg_update_timeout_label();
 }
 
 /**
@@ -1112,7 +1113,7 @@ double real_timer_callback()
   if (current_turn_timeout() > 0 && turndone_timer) {
     if (turndone_timer->remainingTime() / 1000 < seconds_shown_to_turndone) {
       seconds_shown_to_turndone = turndone_timer->remainingTime() / 1000;
-      update_timeout_label();
+      qtg_update_timeout_label();
     }
 
     time_until_next_call = std::min(time_until_next_call, 1.0);
@@ -1124,7 +1125,7 @@ double real_timer_callback()
 
     if (iseconds < game.tinfo.last_turn_change_time) {
       seconds_shown_to_new_turn = iseconds;
-      update_timeout_label();
+      qtg_update_timeout_label();
     }
   }
 
@@ -1401,7 +1402,7 @@ static void fc_interface_init_client()
   funcs->player_tile_city_id_get = client_plr_tile_city_id_get;
 
   /* Keep this function call at the end. It checks if all required functions
-     are defined. */
+   are defined. */
   fc_interface_init();
 }
 

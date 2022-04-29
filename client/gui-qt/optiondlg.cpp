@@ -61,7 +61,7 @@ QString split_text(const QString &text, bool cut)
       }
       result = result + str.left(i) + '\n';
       /* Skip last space - at (i + 1)
-         unless there there was no space */
+   unless there there was no space */
       if (i != 80) {
         st.remove(0, i + 1);
       } else {

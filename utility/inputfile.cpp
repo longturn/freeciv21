@@ -92,20 +92,20 @@ struct inputfile {
   unsigned int cur_line_pos; // position in current line
   unsigned int line_num;     // line number from file in cur_line
   QString partial;           /* used in accumulating multi-line strings;
-                                used only in get_token_value, but put
-                                here so it gets freed when file closed */
+                                        used only in get_token_value, but put
+                                        here so it gets freed when file closed */
   QString token;             // data returned to user
   datafilename_fn_t datafn;  /* function like datafilename(); use a
-                                function pointer just to keep this
-                                inputfile module "generic" */
+                               function pointer just to keep this
+                               inputfile module "generic" */
   bool in_string;            /* set when reading multi-line strings,
-                                to know not to handle *include at start
-                                of line as include mechanism */
+                                         to know not to handle *include at start
+                                         of line as include mechanism */
   int string_start_line;     /* when in_string is true, this is the
-                                start line of current string */
+                                  start line of current string */
   struct inputfile *included_from; /* nullptr for toplevel file, otherwise
-                                      points back to files which this one
-                                      has been included from */
+                                    points back to files which this one
+                                    has been included from */
 };
 
 // A function to get a specific token type:
@@ -412,10 +412,10 @@ static bool check_include(struct inputfile *inf)
   new_inf = inf_from_file(qUtf8Printable(full_name), inf->datafn);
 
   /* Swap things around so that memory pointed to by inf (user pointer,
-     and pointer in calling functions) contains the new inputfile,
-     and newly allocated memory for new_inf contains the old inputfile.
-     This is pretty scary, lets hope it works...
-  */
+   and pointer in calling functions) contains the new inputfile,
+   and newly allocated memory for new_inf contains the old inputfile.
+   This is pretty scary, lets hope it works...
+*/
   temp = *new_inf;
   *new_inf = *inf;
   *inf = temp;
@@ -847,17 +847,17 @@ static QString get_token_value(struct inputfile *inf)
   }
 
   /* From here, we know we have a string, we just have to find the
-     trailing (un-escaped) double-quote.  We read in extra lines if
-     necessary to find it.  If we _don't_ find the end-of-string
-     (that is, we come to end-of-file), we return nullptr, but we
-     leave the file in at_eof, and don't try to back-up to the
-     current point.  (That would be more difficult, and probably
-     not necessary: at that point we probably have a malformed
-     string/file.)
+   trailing (un-escaped) double-quote.  We read in extra lines if
+   necessary to find it.  If we _don't_ find the end-of-string
+   (that is, we come to end-of-file), we return nullptr, but we
+   leave the file in at_eof, and don't try to back-up to the
+   current point.  (That would be more difficult, and probably
+   not necessary: at that point we probably have a malformed
+   string/file.)
 
-     As we read extra lines, the string value from previous
-     lines is placed in partial.
-  */
+   As we read extra lines, the string value from previous
+   lines is placed in partial.
+*/
 
   // prepare for possibly multi-line string:
   inf->string_start_line = inf->line_num;

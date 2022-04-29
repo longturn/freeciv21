@@ -34,8 +34,6 @@
 #include "text.h"
 
 /* client/include */
-#include "plrdlg_g.h"
-
 #include "plrdlg_common.h"
 
 /**
@@ -132,7 +130,7 @@ static QString col_diplstate(const struct player *player)
 static int diplstate_value(const struct player *plr)
 {
   /* these values are scaled so that adding/subtracting
-     the number of turns left makes sense */
+   the number of turns left makes sense */
 
   static int diplstate_cmp_lookup[DS_LAST];
   diplstate_cmp_lookup[DS_TEAM] = 1 << 16;
@@ -148,7 +146,7 @@ static int diplstate_value(const struct player *plr)
 
   if (nullptr == client.conn.playing || plr == client.conn.playing) {
     /* current global player is as close as players get
-       -> return value smaller than for DS_TEAM */
+   -> return value smaller than for DS_TEAM */
     return 0;
   }
 

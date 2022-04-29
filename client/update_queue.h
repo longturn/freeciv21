@@ -87,4 +87,6 @@ private:
                       void *data, uq_free_fn_t free_fn);
 };
 
-bool update_queue_is_switching_page(void);
+bool update_queue_is_switching_page();
+void players_dialog_update();
+;

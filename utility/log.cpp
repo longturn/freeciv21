@@ -193,9 +193,7 @@ void log_set_file(const QString &path)
   }
 
   // Unset the old one
-  if (log_file != nullptr) {
-    delete log_file;
-  }
+  delete log_file;
   log_file = new_file;
 }
 
@@ -213,7 +211,8 @@ void log_close()
 {
   QMutexLocker locker(&mutex);
 
-  NFCN_FREE(log_file);
+  delete log_file;
+  log_file = nullptr;
   // Reinstall the old handler
   qInstallMessageHandler(original_handler);
 }

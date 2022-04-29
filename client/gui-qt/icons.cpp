@@ -42,7 +42,11 @@ fcIcons *fcIcons::instance()
 /**
    Deletes fc_icons instance
  */
-void fcIcons::drop() { NFCN_FREE(m_instance); }
+void fcIcons::drop()
+{
+  delete m_instance;
+  m_instance = nullptr;
+}
 
 namespace {
 
@@ -198,7 +202,11 @@ hIcon *hIcon::i()
   return m_instance;
 }
 
-void hIcon::drop() { NFCN_FREE(m_instance); }
+void hIcon::drop()
+{
+  delete m_instance;
+  m_instance = nullptr;
+}
 
 void hIcon::createIcons()
 {

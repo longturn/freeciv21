@@ -107,7 +107,7 @@ progress_bar::progress_bar(QWidget *parent) : QProgressBar(parent)
  */
 progress_bar::~progress_bar()
 {
-  NFC_FREE(pix);
+  delete pix;
   delete sfont;
 }
 
@@ -137,7 +137,7 @@ void progress_bar::set_pixmap(struct universal *target)
   } else {
     sprite = get_building_sprite(tileset, target->value.building);
   }
-  NFC_FREE(pix);
+  delete pix;
   if (sprite == nullptr) {
     pix = nullptr;
     return;
@@ -160,7 +160,7 @@ void progress_bar::set_pixmap(int n)
   if (valid_advance_by_number(n)) {
     sprite = get_tech_sprite(tileset, n);
   }
-  NFC_FREE(pix);
+  delete pix;
   if (sprite == nullptr) {
     pix = nullptr;
     return;
@@ -1054,7 +1054,7 @@ void city_info::update_labels(struct city *pcity, cityIconInfoLabel *ciil)
     fc_snprintf(buf[GROWTH], sizeof(buf[GROWTH]), _("never"));
   } else {
     /* A negative value means we'll have famine in that many turns.
-       But that's handled down below. */
+   But that's handled down below. */
     // TRANS: city growth turns.  Keep short.
     fc_snprintf(buf[GROWTH], sizeof(buf[GROWTH]),
                 PL_("%d turn", "%d turns", abs(granaryturns)),
@@ -1522,7 +1522,7 @@ void city_dialog::update_prod_buttons()
  */
 city_dialog::~city_dialog()
 {
-  NFC_FREE(citizen_pixmap);
+  delete citizen_pixmap;
   removeEventFilter(this);
 }
 
@@ -2844,7 +2844,7 @@ void city_dialog::update_title()
    Pop up (or bring to the front) a dialog for the given city.  It may or
    may not be modal.
  */
-void qtg_real_city_dialog_popup(struct city *pcity)
+void qtg_real_city_dialog_popup(city *pcity)
 {
   auto *widget = queen()->city_overlay;
   if (!queen()->city_overlay->isVisible()) {
@@ -2872,7 +2872,7 @@ void destroy_city_dialog()
 /**
    Close the dialog for the given city.
  */
-void qtg_popdown_city_dialog(struct city *pcity)
+void qtg_popdown_city_dialog(city *pcity)
 {
   Q_UNUSED(pcity)
 
@@ -2887,7 +2887,7 @@ void qtg_popdown_all_city_dialogs() { queen()->city_overlay->hide(); }
 /**
    Refresh (update) all data for the given city's dialog.
  */
-void qtg_real_city_dialog_refresh(struct city *pcity)
+void qtg_real_city_dialog_refresh(city *pcity)
 {
   if (qtg_city_dialog_is_open(pcity)) {
     queen()->city_overlay->refresh();
@@ -2917,7 +2917,7 @@ void city_font_update()
    typically means updating both the unit's home city (if any) and the
    city in which it is present (if any).
  */
-void qtg_refresh_unit_city_dialogs(struct unit *punit)
+void qtg_refresh_unit_city_dialogs(unit *punit)
 {
   struct city *pcity_sup, *pcity_pre;
 
@@ -2928,7 +2928,7 @@ void qtg_refresh_unit_city_dialogs(struct unit *punit)
   qtg_real_city_dialog_refresh(pcity_pre);
 }
 
-struct city *is_any_city_dialog_open()
+city *is_any_city_dialog_open()
 {
   // some checks not to iterate cities
   if (!queen()->city_overlay->isVisible()) {
@@ -2951,7 +2951,7 @@ struct city *is_any_city_dialog_open()
 /**
    Return whether the dialog for the given city is open.
  */
-bool qtg_city_dialog_is_open(struct city *pcity)
+bool qtg_city_dialog_is_open(city *pcity)
 {
   return queen()->city_overlay->pcity == pcity
          && queen()->city_overlay->isVisible();
@@ -3148,7 +3148,7 @@ production_item::production_item(struct universal *ptarget, QObject *parent)
 production_item::~production_item()
 {
   // allocated as renegade in model
-  NFC_FREE(target);
+  delete target;
 }
 
 /**

@@ -78,9 +78,9 @@ void free_help_texts()
     return;
   }
   for (const auto *ptmp : qAsConst(*help_nodes)) {
-    NFCPP_FREE(ptmp->topic);
-    NFCPP_FREE(ptmp->text);
-    NFC_FREE(ptmp);
+    delete[] ptmp->topic;
+    delete[] ptmp->text;
+    delete ptmp;
   }
   FC_FREE(help_nodes);
 }
@@ -761,9 +761,9 @@ void boot_help_texts(const nation_set *nations_to_show,
 
         {
           /* Note these should really fill in pitem->text from auto-gen
-             data instead of doing it later on the fly, but I don't want
-             to change that now.  --dwp
-          */
+   data instead of doing it later on the fly, but I don't want
+   to change that now.  --dwp
+*/
           char name[2048];
           helpList category_nodes;
 

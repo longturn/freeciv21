@@ -69,7 +69,8 @@ static void tai_module_close(void)
 {
   TAI_AIT;
 
-  FC_FREE(ait->private);
+  delete ait->private;
+  ait->private = nullptr;
 }
 
 /**********************************************************************/ /**
@@ -573,8 +574,8 @@ bool fc_ai_threaded_setup(struct ai_type *ai)
 
   qstrncpy(ai->name, "threaded", sizeof(ai->name));
 
-private
-  = fc_malloc(sizeof(struct dai_private_data));
+  private
+  = new dai_private_data{};
 private
   ->contemplace_workers = true;
   ai->private = private;

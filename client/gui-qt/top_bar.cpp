@@ -36,6 +36,7 @@
 #include "fonts.h"
 #include "mapview.h"
 #include "page_game.h"
+#include "qtg_cxxside.h"
 #include "sciencedlg.h"
 #include "sprite.h"
 #include "top_bar.h"
@@ -393,7 +394,7 @@ void top_bar::addWidget(QWidget *fsw)
  */
 void top_bar_show_map()
 {
-  popdown_all_city_dialogs();
+  qtg_popdown_all_city_dialogs();
   queen()->game_tab_widget->setCurrentIndex(0);
 }
 

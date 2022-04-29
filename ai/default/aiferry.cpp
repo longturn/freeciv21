@@ -91,12 +91,12 @@
 void aiferry_init_stats(struct ai_type *ait, struct player *pplayer)
 {
   /* def_ai_player_data() instead of dai_plr_data_get() is deliberate.
-     We are only initializing player data structures and dai_plr_data_get()
-     would try to use it uninitialized. We are only setting values to
-     data structure, not reading them, so we have no need for extra
-     arrangements dai_plr_data_get() would do compared to
-     def_ai_player_data()
-  */
+   We are only initializing player data structures and dai_plr_data_get()
+   would try to use it uninitialized. We are only setting values to
+   data structure, not reading them, so we have no need for extra
+   arrangements dai_plr_data_get() would do compared to
+   def_ai_player_data()
+*/
   struct ai_plr *ai = def_ai_player_data(pplayer, ait);
 
   ai->stats.passengers = 0;

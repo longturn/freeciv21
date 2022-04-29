@@ -358,10 +358,10 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
         goto END;
       }
       /* Check if we already have a section with this name.
-         (Could ignore this and have a duplicate sections internally,
-         but then secfile_get_secnames_prefix would return duplicates.)
-         Duplicate section in input are likely to be useful for includes.
-      */
+   (Could ignore this and have a duplicate sections internally,
+   but then secfile_get_secnames_prefix would return duplicates.)
+   Duplicate section in input are likely to be useful for includes.
+*/
       psection = secfile_section_by_name(secfile, tok);
       if (!psection) {
         if (section.isEmpty() || tok == section) {
@@ -3180,7 +3180,7 @@ void entry_destroy(struct entry *pentry)
 
   // Common free.
   delete[] pentry->name;
-  NFCPP_FREE(pentry->comment);
+  delete[] pentry->comment;
   delete pentry;
 }
 

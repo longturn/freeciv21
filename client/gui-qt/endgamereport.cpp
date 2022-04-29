@@ -111,10 +111,9 @@ void endgame_report::update_report(
 /**
    Show a dialog with player statistics at endgame.
  */
-void endgame_report_dialog_start(const struct packet_endgame_report *packet)
+void endgame_report_dialog_start(const packet_endgame_report *packet)
 {
-  endgame_report *end_rep;
-  end_rep = new endgame_report(packet);
+  endgame_report *end_rep = new endgame_report(packet);
   end_rep->init();
 }
 
@@ -146,17 +145,13 @@ void popup_endgame_report()
 /**
    Received endgame report information about single player.
  */
-void endgame_report_dialog_player(const struct packet_endgame_player *packet)
+void endgame_report_dialog_player(const packet_endgame_player *packet)
 {
-  int i;
-  endgame_report *end_rep;
-  QWidget *w;
-
   if (queen()->isRepoDlgOpen(QStringLiteral("END"))) {
-    i = queen()->gimmeIndexOf(QStringLiteral("END"));
+    int i = queen()->gimmeIndexOf(QStringLiteral("END"));
     fc_assert(i != -1);
-    w = queen()->game_tab_widget->widget(i);
-    end_rep = reinterpret_cast<endgame_report *>(w);
+    QWidget *w = queen()->game_tab_widget->widget(i);
+    endgame_report *end_rep = reinterpret_cast<endgame_report *>(w);
     end_rep->update_report(packet);
   }
 }

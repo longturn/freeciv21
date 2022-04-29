@@ -10,13 +10,10 @@
 **************************************************************************/
 #pragma once
 
-#include "gui_proto_constructor.h"
-
 struct option;
 struct option_set;
 
-GUI_FUNC_PROTO(void, option_dialog_popup, const char *name,
-               const struct option_set *poptset)
-GUI_FUNC_PROTO(void, option_dialog_popdown, const struct option_set *poptset)
+void option_dialog_popup(const char *name, const option_set *poptset);
+void option_dialog_popdown(const option_set *poptset);
 
-GUI_FUNC_PROTO(void, option_gui_update, struct option *poption)
+void option_gui_update(option *poption);

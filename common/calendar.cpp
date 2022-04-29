@@ -40,8 +40,8 @@ void game_next_year(struct packet_game_info *info)
   }
 
   /* !McFred:
-     - want year += 1 for spaceship.
-  */
+   - want year += 1 for spaceship.
+*/
 
   /* test game with 7 normal AI's, gen 4 map, foodbox 10, foodbase 0:
    * Gunpowder about 0 AD

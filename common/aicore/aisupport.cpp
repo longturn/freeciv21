@@ -33,11 +33,11 @@
 /**
    Find who is leading the space race. Returns nullptr if nobody is.
  */
-struct player *player_leading_spacerace()
+player *player_leading_spacerace()
 {
-  struct player *best = nullptr;
+  player *best = nullptr;
   int best_arrival = FC_INFINITY;
-  enum spaceship_state best_state = SSHIP_NONE;
+  spaceship_state best_state = SSHIP_NONE;
 
   if (!victory_enabled(VC_SPACERACE)) {
     return nullptr;
@@ -45,7 +45,7 @@ struct player *player_leading_spacerace()
 
   players_iterate_alive(pplayer)
   {
-    struct player_spaceship *ship = &pplayer->spaceship;
+    player_spaceship *ship = &pplayer->spaceship;
     int arrival = static_cast<int>(ship->travel_time) + ship->launch_year;
 
     if (is_barbarian(pplayer) || ship->state == SSHIP_NONE) {
@@ -70,7 +70,7 @@ struct player *player_leading_spacerace()
    Calculate average distances to other players. We calculate the
    average distance from all of our cities to the closest enemy city.
  */
-int player_distance_to_player(struct player *pplayer, struct player *target)
+int player_distance_to_player(player *pplayer, player *target)
 {
   int cities = 0;
   int dists = 0;
@@ -106,11 +106,11 @@ int player_distance_to_player(struct player *pplayer, struct player *target)
 /**
    Rough calculation of the worth of pcity in gold.
  */
-int city_gold_worth(struct city *pcity)
+int city_gold_worth(city *pcity)
 {
-  struct player *pplayer = city_owner(pcity);
+  player *pplayer = city_owner(pcity);
   int worth = 0, i;
-  struct unit_type *u = nullptr;
+  unit_type *u = nullptr;
 
   if (!game.scenario.prevent_new_cities) {
     u = best_role_unit_for_player(city_owner(pcity),
@@ -128,7 +128,7 @@ int city_gold_worth(struct city *pcity)
   unit_list_iterate(pcity->units_supported, punit)
   {
     if (same_pos(unit_tile(punit), pcity->tile)) {
-      const struct unit_type *punittype = unit_type_get(punit)->obsoleted_by;
+      const unit_type *punittype = unit_type_get(punit)->obsoleted_by;
 
       if (punittype && can_city_build_unit_direct(pcity, punittype)) {
         // obsolete, candidate for disbanding

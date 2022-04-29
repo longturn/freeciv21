@@ -274,7 +274,7 @@ static const char *cr_entry_attack(const struct city *pcity,
     attack_best[3] = unit_type_get(punit)->attack_strength;
 
     /* Now that the element is appended to the end of the list, we simply
-       do an insertion sort. */
+   do an insertion sort. */
     for (i = 2; i >= 0 && attack_best[i] < attack_best[i + 1]; i--) {
       int tmp = attack_best[i];
       attack_best[i] = attack_best[i + 1];
@@ -313,7 +313,7 @@ static const char *cr_entry_defense(const struct city *pcity,
     defense_best[3] = unit_type_get(punit)->defense_strength;
 
     /* Now that the element is appended to the end of the list, we simply
-       do an insertion sort. */
+   do an insertion sort. */
     for (i = 2; i >= 0 && defense_best[i] < defense_best[i + 1]; i--) {
       int tmp = defense_best[i];
 
@@ -785,7 +785,7 @@ static const struct city_report_spec base_city_report_specs[] = {
      nullptr, FUNC_TAG(build_slots)},
     {true, 9, 1, N_("Production"), N_("Turns/Buy"),
      /*N_("Turns or gold to complete production"), future menu needs
-        translation */
+     translation */
      N_("Production"), nullptr, FUNC_TAG(build_cost)},
     {true, 0, 1, N_("Currently Building"), N_("?Stock/Target:(Have/Need)"),
      N_("Currently Building"), nullptr, FUNC_TAG(building)}};
@@ -1000,7 +1000,7 @@ static int data_compare(const struct datum_vector *a,
   }
 
   /* The first n fields match; whoever has more fields goes last.
-     If they have equal numbers, the two really are equal. */
+   If they have equal numbers, the two really are equal. */
   return a->size - b->size;
 }
 
@@ -1024,7 +1024,7 @@ static void split_string(struct datum_vector *data, const char *str)
       str++;
     } else {
       /* that was a number, so stop the string we were parsing, add
-         it (unless it's empty), then add the number we just parsed */
+   it (unless it's empty), then add the number we just parsed */
       struct datum d;
 
       if (str != string_start) {

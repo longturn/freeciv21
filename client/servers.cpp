@@ -22,6 +22,7 @@
 #include <QEventLoop>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QUdpSocket>
 #include <QUrlQuery>
 
 // dependencies
@@ -36,8 +37,10 @@
 #include "version.h"
 
 // client
-#include "chatline_g.h"
 #include "client_main.h"
+
+// forward declaration
+#include "gui-qt/chatline.h"
 
 struct server_scan {
   enum server_scan_type type;
@@ -101,7 +104,11 @@ void fcUdpScan::sockError(QAbstractSocket::SocketError socketError)
 /**************************************************************************
   deletes fcUdpScan
 **************************************************************************/
-void fcUdpScan::drop() { NFCN_FREE(m_instance); }
+void fcUdpScan::drop()
+{
+  delete m_instance;
+  m_instance = nullptr;
+}
 
 /**
    Broadcast an UDP package to all servers on LAN, requesting information

@@ -36,24 +36,24 @@
 // client
 #include "attribute.h"
 #include "chatline_common.h"
-#include "chatline_g.h"
 #include "client_main.h"
 #include "climisc.h"
 #include "connectdlg_common.h"
-#include "connectdlg_g.h"
 #include "dialogs_g.h" // popdown_races_dialog()
 #include "governor.h"
 #include "gui_main_g.h"     // add_net_input(), remove_net_input()
 #include "mapview_common.h" // unqueue_mapview_update
 #include "menu_g.h"
-#include "messagewin_g.h"
 #include "options.h"
 #include "packhand.h"
 #include "pages_g.h"
-#include "plrdlg_g.h"
+#include "plrdlg_common.h"
 #include "repodlgs_g.h"
 
 #include "clinet.h"
+
+// forward declaration
+#include "gui-qt/qtg_cxxside.h"
 
 // In autoconnect mode, try to connect to once a second
 #define AUTOCONNECT_INTERVAL 500
@@ -68,9 +68,9 @@
 static void close_socket_nomessage(struct connection *pc)
 {
   connection_common_close(pc);
-  remove_net_input();
+  qtg_remove_net_input();
   popdown_races_dialog();
-  close_connection_dialog();
+  qtg_close_connection_dialog();
 
   set_client_state(C_S_DISCONNECTED);
 }
@@ -193,7 +193,7 @@ void make_connection(QTcpSocket *sock, const QString &username)
   client.conn.outgoing_packet_notify = notify_about_outgoing_packet;
 
   // call gui-dependent stuff in gui_main.c
-  add_net_input(client.conn.sock);
+  qtg_add_net_input(client.conn.sock);
 
   // now send join_request package
 

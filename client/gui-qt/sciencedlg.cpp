@@ -22,7 +22,6 @@
 // client
 #include "client_main.h"
 #include "climisc.h"
-#include "helpdlg_g.h"
 #include "reqtree.h"
 #include "sprite.h"
 #include "text.h"
@@ -30,6 +29,7 @@
 #include "canvas.h"
 #include "citydlg.h"
 #include "fc_client.h"
+#include "helpdlg.h"
 #include "page_game.h"
 #include "sciencedlg.h"
 #include "tooltips.h"
@@ -65,8 +65,10 @@ research_diagram::research_diagram(QWidget *parent) : QWidget(parent)
  */
 research_diagram::~research_diagram()
 {
-  NFCN_FREE(tt_help);
+  delete tt_help;
   delete pcanvas;
+  tt_help = nullptr;
+  pcanvas = nullptr;
   destroy_reqtree(req);
 }
 
@@ -76,7 +78,7 @@ research_diagram::~research_diagram()
 void research_diagram::update_reqtree()
 {
   reset();
-  NFCN_FREE(tt_help);
+  delete tt_help;
   tt_help = draw_reqtree(req, pcanvas, 0, 0, 0, 0, width, height);
   update();
 }
@@ -90,9 +92,8 @@ void research_diagram::reset()
   if (req != nullptr) {
     destroy_reqtree(req);
   }
-  if (pcanvas != nullptr) {
-    delete pcanvas;
-  }
+
+  delete pcanvas;
   req = create_reqtree(client_player(), true);
   get_reqtree_dimensions(req, &width, &height);
   pcanvas = new QPixmap(width, height);
@@ -307,8 +308,8 @@ science_report::science_report() : QWidget()
  */
 science_report::~science_report()
 {
-  NFC_FREE(curr_list);
-  NFC_FREE(goal_list);
+  delete curr_list;
+  delete goal_list;
   queen()->removeRepoDlg(QStringLiteral("SCI"));
 }
 
@@ -358,8 +359,8 @@ void science_report::update_report()
 
   fc_assert_ret(nullptr != research);
 
-  NFC_FREE(curr_list);
-  NFC_FREE(goal_list);
+  delete curr_list;
+  delete goal_list;
 
   if (research->researching != A_UNSET) {
     total = research->client.researching_cost;
@@ -602,7 +603,7 @@ void popdown_science_report()
 /**
    Resize and redraw the requirement tree.
  */
-void science_report_dialog_redraw(void)
+void science_report_dialog_redraw()
 {
   int i;
   science_report *sci_rep;

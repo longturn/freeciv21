@@ -104,7 +104,8 @@ static inline SPECVEC_TYPE *
 static inline void SPECVEC_FOO(_vector_copy)(SPECVEC_VECTOR *to,
                                              const SPECVEC_VECTOR *from)
 {
-  SPECVEC_FOO(_vector_reserve)(to, from->size);
+  SPECVEC_FOO(_vector_reserve)
+  (to, from->size);
   if (from->size > 0) {
     memcpy(to->p, from->p, from->size * sizeof(*to->p));
   }
@@ -115,13 +116,15 @@ static inline void SPECVEC_FOO(_vector_free)(SPECVEC_VECTOR *tthis)
   if (tthis->p) {
     free(tthis->p);
   }
-  SPECVEC_FOO(_vector_init)(tthis);
+  SPECVEC_FOO(_vector_init)
+  (tthis);
 }
 
 static inline void SPECVEC_FOO(_vector_append)(SPECVEC_VECTOR *tthis,
                                                SPECVEC_TYPE const &pfoo)
 {
-  SPECVEC_FOO(_vector_reserve)(tthis, tthis->size + 1);
+  SPECVEC_FOO(_vector_reserve)
+  (tthis, tthis->size + 1);
   tthis->p[tthis->size - 1] = pfoo;
 }
 
@@ -146,7 +149,8 @@ static inline void SPECVEC_FOO(_vector_remove)(SPECVEC_VECTOR *tthis,
     tthis->p[i] = tthis->p[i + 1];
   }
 
-  SPECVEC_FOO(_vector_reserve)(tthis, SPECVEC_FOO(_vector_size)(tthis) - 1);
+  SPECVEC_FOO(_vector_reserve)
+  (tthis, SPECVEC_FOO(_vector_size)(tthis) - 1);
 }
 
 #define TYPED_VECTOR_ITERATE(atype, vector, var)                            \

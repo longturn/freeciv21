@@ -106,7 +106,7 @@ struct player_ai {
   int fuzzy;                 // chance in 1000 to mis-decide
   int expand;                // percentage factor to value new cities
   int science_cost;          /* Cost in bulbs to get new tech, relative
-                                to non-AI players (100: Equal cost) */
+                                       to non-AI players (100: Equal cost) */
   int warmth, frost;         /* threat of global warming / nuclear winter */
   enum barbarian_type barbarian_type;
 
@@ -338,7 +338,7 @@ struct player {
       /* Only used at the client (the server is omniscient; ./client/). */
 
       /* Corresponds to the result of
-         (player:server:private_map[tile_index]:seen_count[vlayer] != 0). */
+   (player:server:private_map[tile_index]:seen_count[vlayer] != 0). */
       QBitArray *tile_vision[V_COUNT];
       enum mood_type mood;
 

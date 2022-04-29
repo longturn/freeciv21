@@ -1887,7 +1887,7 @@ static void dai_military_attack(struct ai_type *ait, struct player *pplayer,
     };
   } else {
     /* You can still have some moves left here, but barbarians should
-       not sit helplessly, but advance towards nearest known enemy city */
+   not sit helplessly, but advance towards nearest known enemy city */
     UNIT_LOG(LOG_DEBUG, punit, "attack: barbarian");
     dai_military_attack_barbarian(ait, pplayer, punit);
   }
@@ -2371,7 +2371,7 @@ static void dai_manage_hitpoint_recovery(struct ai_type *ait,
 
   if (pcity) {
     /* rest in city until the hitpoints are recovered, but attempt
-       to protect city from attack (and be opportunistic too)*/
+   to protect city from attack (and be opportunistic too)*/
     if (dai_military_rampage(punit, RAMPAGE_ANYTHING,
                              RAMPAGE_FREE_CITY_OR_BETTER)) {
       UNIT_LOG(LOGLEVEL_RECOVERY, punit, "recovering hit points.");
@@ -2445,7 +2445,7 @@ void dai_manage_military(struct ai_type *ait, struct player *pplayer,
   }
 
   /* Since military units re-evaluate their actions every turn,
-     we must make sure that previously reserved ferry is freed. */
+   we must make sure that previously reserved ferry is freed. */
   aiferry_clear_boat(ait, punit);
 
   TIMING_LOG(AIT_HUNTER, TIMER_START);
@@ -2648,7 +2648,7 @@ void dai_manage_unit(struct ai_type *ait, struct player *pplayer,
     /* TODO: We can try using air-unit code for helicopters, just
      * pretend they have fuel = HP / 3 or something. */
     unit_data->done = true; /* we did our best, which was ...
-                                             nothing */
+                                         nothing */
     return;
   } else if (is_military_unit(punit)) {
     TIMING_LOG(AIT_MILITARY, TIMER_START);

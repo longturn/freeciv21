@@ -18,10 +18,10 @@
 
 class QTcpSocket;
 
-void setup_gui_funcs();
+// void setup_gui_funcs();
 
-void qtg_set_rulesets(int num_rulesets, QStringList rulesets);
 void qtg_options_extra_init();
+void qtg_set_rulesets(int num_rulesets, QStringList rulesets);
 void qtg_add_net_input(QTcpSocket *sock);
 void qtg_remove_net_input();
 void qtg_real_conn_list_dialog_update(void *unused);
@@ -29,13 +29,13 @@ void qtg_close_connection_dialog();
 void qtg_add_idle_callback(void(callback)(void *), void *data);
 void qtg_sound_bell();
 
-void qtg_real_set_client_page(enum client_pages page);
-enum client_pages qtg_get_current_client_page();
+void qtg_real_set_client_page(client_pages page);
+client_pages qtg_get_current_client_page();
 
 void qtg_popup_combat_info(int attacker_unit_id, int defender_unit_id,
                            int attacker_hp, int defender_hp,
                            bool make_att_veteran, bool make_def_veteran);
-void qtg_set_unit_icon(int idx, struct unit *punit);
+void qtg_set_unit_icon(int idx, unit *punit);
 void qtg_set_unit_icons_more_arrow(bool onoff);
 void qtg_real_focus_units_changed();
 void qtg_gui_update_font(const QString &font_name,
@@ -45,8 +45,7 @@ void qtg_editgui_refresh();
 void qtg_editgui_notify_object_created(int tag, int id);
 void qtg_editgui_notify_object_changed(int objtype, int object_id,
                                        bool removal);
-void qtg_editgui_popup_properties(const struct tile_list *tiles,
-                                  int objtype);
+void qtg_editgui_popup_properties(const tile_list *tiles, int objtype);
 void qtg_editgui_tileset_changed();
 void qtg_editgui_popdown_all();
 
@@ -62,7 +61,7 @@ bool qtg_city_dialog_is_open(struct city *pcity);
 
 bool qtg_request_transport(struct unit *pcargo, struct tile *ptile);
 
-void qtg_update_infra_dialog();
+// void qtg_update_infra_dialog();
 
 void qtg_gui_clear_theme();
 QStringList qtg_get_gui_specific_themes_directories(int *count);

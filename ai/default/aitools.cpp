@@ -755,7 +755,7 @@ void dai_unit_new_task(struct ai_type *ait, struct unit *punit,
   }
 
   /* Map ai tasks to advisor tasks. For most ai tasks there is
-     no advisor, so AUT_NONE is set. */
+   no advisor, so AUT_NONE is set. */
   switch (unit_data->task) {
   case AIUNIT_AUTO_SETTLER:
     punit->server.adv->task = AUT_AUTO_SETTLER;
@@ -783,8 +783,8 @@ bool dai_unit_make_homecity(struct unit *punit, struct city *pcity)
      * so it would be stupid to give it one. There can also be good reasons
      * why it doesn't have a homecity. */
     /* However, until we can do something more useful with them, we
-       will assign explorers to a city so that they can be disbanded for
-       the greater good -- Per */
+   will assign explorers to a city so that they can be disbanded for
+   the greater good -- Per */
     return false;
   }
   if (pcity->surplus[O_SHIELD] >= unit_type_get(punit)->upkeep[O_SHIELD]

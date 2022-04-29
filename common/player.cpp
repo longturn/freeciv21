@@ -603,9 +603,9 @@ static void player_defaults(struct player *pplayer)
 
   pplayer->tile_known = new QBitArray();
   /* pplayer->server is initialised in
-      ./server/plrhand.c:server_player_init()
-     and pplayer->client in
-      ./client/climisc.c:client_player_init() */
+    ./server/plrhand.c:server_player_init()
+   and pplayer->client in
+    ./client/climisc.c:client_player_init() */
 }
 
 /**
@@ -1283,8 +1283,8 @@ const char *love_text(const int love)
 {
   if (love <= -MAX_AI_LOVE * 90 / 100) {
     /* TRANS: These words should be adjectives which can fit in the sentence
-       "The x are y towards us"
-       "The Babylonians are respectful towards us" */
+   "The x are y towards us"
+   "The Babylonians are respectful towards us" */
     return Q_("?attitude:Genocidal");
   } else if (love <= -MAX_AI_LOVE * 70 / 100) {
     return Q_("?attitude:Belligerent");
@@ -1375,7 +1375,7 @@ bool players_non_invade(const struct player *pplayer1,
   }
 
   /* Movement during armistice is allowed so that player can withdraw
-     units deeper inside opponent territory. */
+   units deeper inside opponent territory. */
 
   return player_diplstate_get(pplayer1, pplayer2)->type == DS_PEACE;
 }

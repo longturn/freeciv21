@@ -463,7 +463,11 @@ units_reports *units_reports::instance()
 /**
    Deletes units_reports instance
  */
-void units_reports::drop() { NFCN_FREE(m_instance); }
+void units_reports::drop()
+{
+  delete m_instance;
+  m_instance = nullptr;
+}
 
 /**
    Called when close button was pressed

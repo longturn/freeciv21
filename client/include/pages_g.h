@@ -22,13 +22,11 @@
 #define SPECENUM_VALUE5 PAGE_GAME     // In game page.
 #include "specenum_gen.h"
 
-#include "gui_proto_constructor.h"
-
-GUI_FUNC_PROTO(void, real_set_client_page, enum client_pages page)
-GUI_FUNC_PROTO(enum client_pages, get_current_client_page, void)
-GUI_FUNC_PROTO(void, update_start_page, void)
+// void real_set_client_page(client_pages page);
+// client_pages get_current_client_page();
+void update_start_page();
 
 // Actually defined in update_queue.c
-void set_client_page(enum client_pages page);
-void client_start_server_and_set_page(enum client_pages page);
-enum client_pages get_client_page();
+void set_client_page(client_pages page);
+void client_start_server_and_set_page(client_pages page);
+client_pages get_client_page();

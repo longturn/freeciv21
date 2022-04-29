@@ -171,7 +171,7 @@ struct civ_game {
       int save_frequency;
       unsigned
           autosaves; /* FIXME: char would be enough, but current settings.c
-                        code wants to write sizeof(unsigned) bytes */
+                  code wants to write sizeof(unsigned) bytes */
       bool savepalace;
       bool homecaughtunits;
       char start_units[MAX_LEN_STARTUNIT];

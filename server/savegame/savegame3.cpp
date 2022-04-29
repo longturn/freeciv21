@@ -598,17 +598,17 @@ static struct loaddata *loaddata_new(struct section_file *file)
  */
 static void loaddata_destroy(struct loaddata *loading)
 {
-  NFCPP_FREE(loading->improvement.order);
-  NFCPP_FREE(loading->technology.order);
-  NFCPP_FREE(loading->activities.order);
-  NFCPP_FREE(loading->trait.order);
-  NFCPP_FREE(loading->extra.order);
-  NFCPP_FREE(loading->multiplier.order);
-  NFCPP_FREE(loading->specialist.order);
-  NFCPP_FREE(loading->action.order);
-  NFCPP_FREE(loading->act_dec.order);
-  NFCPP_FREE(loading->ssa.order);
-  NFCPP_FREE(loading->worked_tiles);
+  delete[] loading->improvement.order;
+  delete[] loading->technology.order;
+  delete[] loading->activities.order;
+  delete[] loading->trait.order;
+  delete[] loading->extra.order;
+  delete[] loading->multiplier.order;
+  delete[] loading->specialist.order;
+  delete[] loading->action.order;
+  delete[] loading->act_dec.order;
+  delete[] loading->ssa.order;
+  delete[] loading->worked_tiles;
   delete[] loading;
 }
 
@@ -7123,7 +7123,7 @@ static void sg_load_researches(struct loaddata *loading)
         presearch->inventions[o].bulbs_researched_saved = vlist_research[o];
       }
       advance_index_iterate_end;
-      NFCPP_FREE(vlist_research);
+      delete[] vlist_research;
     }
   }
 
@@ -7170,7 +7170,7 @@ static void sg_save_researches(struct savedata *saving)
         secfile_insert_int_vec(saving->file, vlist_research,
                                game.control.num_tech_types,
                                "research.r%d.vbs", i);
-        NFCPP_FREE(vlist_research);
+        delete[] vlist_research;
       }
       technology_save(saving->file, "research.r%d.saved", i,
                       presearch->researching_saved);

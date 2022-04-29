@@ -119,7 +119,7 @@ static bool sdl_audio_play(const QString &tag, const QString &fullpath,
     }
 
     /* play sound sample on first available channel, returns -1 if no
-       channel found */
+   channel found */
     int i = Mix_PlayChannel(-1, wave, 0);
     if (i < 0) {
       qDebug("No available sound channel to play %s.", qUtf8Printable(tag));
@@ -128,7 +128,7 @@ static bool sdl_audio_play(const QString &tag, const QString &fullpath,
     }
     qDebug("Playing file \"%s\" on channel %d", qUtf8Printable(fullpath), i);
     /* free previous sample on this channel. it will by definition no
-       longer be playing by the time we get here */
+   longer be playing by the time we get here */
     if (samples[i].wave) {
       Mix_FreeChunk(samples[i].wave);
       samples[i].wave = nullptr;

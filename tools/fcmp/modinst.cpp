@@ -84,7 +84,7 @@ void fcmp_init()
   init_character_encodings(FC_DEFAULT_DATA_ENCODING, false);
 
   fc_srand(time(nullptr)); /* Needed at least for Windows version of
-                           netfile_get_section_file() */
+                         netfile_get_section_file() */
 }
 
 /**

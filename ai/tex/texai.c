@@ -70,7 +70,8 @@ static void texai_module_close(void)
 {
   TEXAI_AIT;
 
-  FC_FREE(ait->private);
+  delete ait->private;
+  ait->private = nullptr;
 }
 
 /**********************************************************************/ /**
@@ -579,7 +580,7 @@ bool fc_ai_tex_setup(struct ai_type *ai)
   qstrncpy(ai->name, "tex", sizeof(ai->name));
 
 private
-  = fc_malloc(sizeof(struct dai_private_data));
+  = new dai_private_data{};
 private
   ->contemplace_workers =
       false; /* We use custom code to set worker want and type */

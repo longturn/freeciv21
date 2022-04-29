@@ -10,11 +10,8 @@
 **************************************************************************/
 #pragma once
 
-#include "shared.h"
-
 #include "diptreaty.h"
-
-#include "gui_proto_constructor.h"
+#include "shared.h"
 
 void handle_diplomacy_init_meeting(int counterpart, int initiated_from);
 void handle_diplomacy_cancel_meeting(int counterpart, int initiated_from);

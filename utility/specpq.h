@@ -181,7 +181,8 @@ static inline void SPECPQ_FOO(_pq_replace)(SPECPQ_PQ *_pq,
 
   if (i == 0) {
     // Not found, insert.
-    SPECPQ_FOO(_pq_insert)(_pq, data, priority);
+    SPECPQ_FOO(_pq_insert)
+    (_pq, data, priority);
   } else if (pq->cells[i].priority < priority) {
     // Found, percolate-up.
     while ((j = i / 2) && pq->cells[j].priority < priority) {

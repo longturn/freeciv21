@@ -18,7 +18,7 @@
 #include "map_types.h"
 
 struct world {
-  struct civ_map map;
-  QHash<int, const struct city *> *cities;
-  QHash<int, const struct unit *> *units;
+  civ_map map;
+  QHash<int, const city *> *cities;
+  QHash<int, const unit *> *units;
 };

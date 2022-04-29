@@ -28,7 +28,7 @@
 
 #include "texaiworld.h"
 
-static struct world texai_world;
+static world texai_world;
 
 struct texai_tile_info_msg {
   int index;

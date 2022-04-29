@@ -50,7 +50,7 @@ minimap_view::minimap_view(QWidget *parent) : fcwidget()
 /**
    Minimap_view destructor
  */
-minimap_view::~minimap_view() { NFC_FREE(pix); }
+minimap_view::~minimap_view() { delete pix; }
 
 /**
    Paint event for minimap

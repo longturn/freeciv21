@@ -635,4 +635,4 @@ bool pageGame::isRepoDlgOpen(const QString &str)
    of their civilization.  This function is called when the label is
    changed.
  */
-void update_info_label(void) { queen()->updateInfoLabel(); }
+void update_info_label() { queen()->updateInfoLabel(); }

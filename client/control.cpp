@@ -35,7 +35,6 @@
 /* common/aicore */
 #include "path_finding.h"
 /* client/include */
-#include "chatline_g.h"
 #include "citydlg_g.h"
 #include "dialogs_g.h"
 #include "gui_main_g.h"
@@ -57,6 +56,10 @@
 #include "update_queue.h"
 
 #include "control.h"
+
+// forward declaration
+#include "gui-qt/chatline.h"
+#include "gui-qt/qtg_cxxside.h"
 
 struct client_disband_unit_data {
   int unit_id;
@@ -218,7 +221,7 @@ static void focus_units_changed()
   update_unit_info_label(get_units_in_focus());
   menus_update();
   // Notify the GUI
-  real_focus_units_changed();
+  qtg_real_focus_units_changed();
 }
 
 /**
@@ -478,7 +481,7 @@ void clear_unit_orders(struct unit *punit)
   if (punit->activity != ACTIVITY_IDLE
       || punit->ssa_controller != SSA_NONE) {
     punit->ssa_controller = SSA_NONE;
-    refresh_unit_city_dialogs(punit);
+    qtg_refresh_unit_city_dialogs(punit);
     request_new_unit_activity(punit, ACTIVITY_IDLE);
   } else if (unit_has_orders(punit)) {
     // Clear the focus unit's orders.
@@ -852,11 +855,11 @@ unit *find_visible_unit(const ::tile *ptile)
   }
 
   /* Iterate through the units to find the best one we prioritize this way:
-       1: owned transporter.
-       2: any owned unit
-       3: any transporter
-       4: any unit
-     (always return first in stack). */
+     1: owned transporter.
+     2: any owned unit
+     3: any transporter
+     4: any unit
+   (always return first in stack). */
   unit_list_iterate(ptile->units, punit)
   {
     if (unit_owner(punit) == client.conn.playing) {
@@ -991,14 +994,14 @@ void update_unit_pix_label(struct unit_list *punitlist)
      * time. */
     struct unit *punit = unit_list_get(punitlist, 0);
 
-    set_unit_icon(-1, punit);
+    qtg_set_unit_icon(-1, punit);
 
     i = 0; // index into unit_below_canvas
     unit_list_iterate(unit_tile(punit)->units, aunit)
     {
       if (aunit != punit) {
         if (i < num_units_below) {
-          set_unit_icon(i, aunit);
+          qtg_set_unit_icon(i, aunit);
         }
         i++;
       }
@@ -1006,18 +1009,18 @@ void update_unit_pix_label(struct unit_list *punitlist)
     unit_list_iterate_end;
 
     if (i > num_units_below) {
-      set_unit_icons_more_arrow(true);
+      qtg_set_unit_icons_more_arrow(true);
     } else {
-      set_unit_icons_more_arrow(false);
+      qtg_set_unit_icons_more_arrow(false);
       for (; i < num_units_below; i++) {
-        set_unit_icon(i, nullptr);
+        qtg_set_unit_icon(i, nullptr);
       }
     }
   } else {
     for (i = -1; i < num_units_below; i++) {
-      set_unit_icon(i, nullptr);
+      qtg_set_unit_icon(i, nullptr);
     }
-    set_unit_icons_more_arrow(false);
+    qtg_set_unit_icons_more_arrow(false);
   }
 }
 
@@ -1805,7 +1808,7 @@ void request_move_unit_direction(struct unit *punit, int dir)
   }
 
   if (!can_unit_exist_at_tile(&(wld.map), punit, dest_tile)) {
-    if (request_transport(punit, dest_tile)) {
+    if (qtg_request_transport(punit, dest_tile)) {
       return;
     }
   }
@@ -3600,37 +3603,37 @@ void key_unit_assign_battlegroup(int battlegroup, bool append)
   // sveinung error: ordered comparison between pointer and zero ('struct
   // unit_list **' and 'int')
   /* if (nullptr != client.conn.playing && can_client_issue_orders()
-       && battlegroups >= 0 && battlegroup < MAX_NUM_BATTLEGROUPS) {
-     if (!append) {
-       unit_list_iterate_safe(battlegroups[battlegroup], punit) {
-         if (!unit_is_in_focus(punit)) {
-           punit->battlegroup = BATTLEGROUP_NONE;
-           dsend_packet_unit_sscs_set(&client.conn, punit->id,
-                                      USSDT_BATTLE_GROUP,
-                                      BATTLEGROUP_NONE);
-           refresh_unit_mapcanvas(punit, unit_tile(punit), TRUE, false);
-           unit_list_remove(battlegroups[battlegroup], punit);
-         }
-       } unit_list_iterate_safe_end;
-     }
-     unit_list_iterate(get_units_in_focus(), punit) {
-       if (punit->battlegroup != battlegroup) {
-         if (punit->battlegroup >= 0
-             && punit->battlegroup < MAX_NUM_BATTLEGROUPS) {
-           unit_list_remove(battlegroups[punit->battlegroup], punit);
-         }
-         punit->battlegroup = battlegroup;
+     && battlegroups >= 0 && battlegroup < MAX_NUM_BATTLEGROUPS) {
+   if (!append) {
+     unit_list_iterate_safe(battlegroups[battlegroup], punit) {
+       if (!unit_is_in_focus(punit)) {
+         punit->battlegroup = BATTLEGROUP_NONE;
          dsend_packet_unit_sscs_set(&client.conn, punit->id,
                                     USSDT_BATTLE_GROUP,
-                                    battlegroup);
-         unit_list_append(battlegroups[battlegroup], punit);
+                                    BATTLEGROUP_NONE);
          refresh_unit_mapcanvas(punit, unit_tile(punit), TRUE, false);
+         unit_list_remove(battlegroups[battlegroup], punit);
        }
-     } unit_list_iterate_end;
-     unit_list_iterate(battlegroups[battlegroup], punit) {
-       unit_focus_add(punit);
-     } unit_list_iterate_end;
-   }*/
+     } unit_list_iterate_safe_end;
+   }
+   unit_list_iterate(get_units_in_focus(), punit) {
+     if (punit->battlegroup != battlegroup) {
+       if (punit->battlegroup >= 0
+           && punit->battlegroup < MAX_NUM_BATTLEGROUPS) {
+         unit_list_remove(battlegroups[punit->battlegroup], punit);
+       }
+       punit->battlegroup = battlegroup;
+       dsend_packet_unit_sscs_set(&client.conn, punit->id,
+                                  USSDT_BATTLE_GROUP,
+                                  battlegroup);
+       unit_list_append(battlegroups[battlegroup], punit);
+       refresh_unit_mapcanvas(punit, unit_tile(punit), TRUE, false);
+     }
+   } unit_list_iterate_end;
+   unit_list_iterate(battlegroups[battlegroup], punit) {
+     unit_focus_add(punit);
+   } unit_list_iterate_end;
+ }*/
 }
 
 /**
@@ -3639,25 +3642,25 @@ void key_unit_assign_battlegroup(int battlegroup, bool append)
 void key_unit_select_battlegroup(int battlegroup, bool append)
 {
   /*
-  if (nullptr != client.conn.playing && can_client_change_view()
-      && battlegroups >= 0 && battlegroup < MAX_NUM_BATTLEGROUPS) {
-    int i = 0;
+if (nullptr != client.conn.playing && can_client_change_view()
+    && battlegroups >= 0 && battlegroup < MAX_NUM_BATTLEGROUPS) {
+  int i = 0;
 
-    if (unit_list_size(battlegroups[battlegroup]) == 0 && !append) {
-      unit_focus_set(nullptr);
-      return;
-    }
+  if (unit_list_size(battlegroups[battlegroup]) == 0 && !append) {
+    unit_focus_set(nullptr);
+    return;
+  }
 */
   // FIXME: this is very inefficient and can be improved.
   /*
-  unit_list_iterate(battlegroups[battlegroup], punit) {
-    if (i == 0 && !append) {
-      unit_focus_set(punit);
-    } else {
-      unit_focus_add(punit);
-    }
-    i++;
-  } unit_list_iterate_end;
+unit_list_iterate(battlegroups[battlegroup], punit) {
+  if (i == 0 && !append) {
+    unit_focus_set(punit);
+  } else {
+    unit_focus_add(punit);
+  }
+  i++;
+} unit_list_iterate_end;
 }
 */
 }

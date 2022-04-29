@@ -1035,7 +1035,7 @@ void actions_free()
 }
 
 /**
-   Returns TRUE iff the actions are initialized.
+   Returns TRUE if the actions are initialized.
 
    Doesn't care about action enablers.
  */
@@ -1377,7 +1377,8 @@ const char *action_id_rule_name(action_id act_id)
  */
 const QString action_id_name_translation(action_id act_id)
 {
-  return action_prepare_ui_name(gen_action(act_id), "", ACTPROB_NA, nullptr);
+  return action_prepare_ui_name(gen_action(act_id), "", ACTPROB_NA,
+                                QString{});
 }
 
 /**
@@ -1431,7 +1432,7 @@ const QString action_prepare_ui_name(action_id act_id, const char *mnemonic,
                           "Invalid action %d", act_id);
 
     // and no custom text will be inserted
-    fc_assert(custom == nullptr || custom[0] == '\0');
+    fc_assert(custom.isEmpty());
 
     // Make the best of what is known
     str = QString(_("%1%2 (name may be wrong)"))

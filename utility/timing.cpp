@@ -66,7 +66,7 @@ civtimer *timer_renew(civtimer *t, enum timer_timetype type,
 /**
    Deletes timer
  */
-void timer_destroy(civtimer *t) { NFC_FREE(t); }
+void timer_destroy(civtimer *t) { delete t; }
 
 /**
    Return whether timer is in use.

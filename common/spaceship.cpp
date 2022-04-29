@@ -132,10 +132,10 @@ bool next_spaceship_component(struct player *pplayer,
   }
   if (ship->structurals > num_spaceship_structurals_placed(ship)) {
     /* Want to choose which structurals are most important.
-       Else we first want to connect one of each type of module,
-       then all placed components, pairwise, then any remaining
-       modules, or else finally in numerical order.
-    */
+   Else we first want to connect one of each type of module,
+   then all placed components, pairwise, then any remaining
+   modules, or else finally in numerical order.
+*/
     int req = -1;
     int i;
 
@@ -191,9 +191,9 @@ bool next_spaceship_component(struct player *pplayer,
     fc_assert(!BV_ISSET(ship->structure, req));
 
     /* Now we want to find a structural we can build which leads to req.
-       This loop should bottom out, because everything leads back to s0,
-       and we made sure above that we do s0 first.
-     */
+   This loop should bottom out, because everything leads back to s0,
+   and we made sure above that we do s0 first.
+ */
     while (!BV_ISSET(ship->structure, structurals_info[req].required)) {
       req = structurals_info[req].required;
     }

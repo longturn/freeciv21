@@ -618,11 +618,11 @@ bool fc_ai_classic_setup(struct ai_type *ai)
   ai->funcs.city_alloc = cai_city_alloc;
   ai->funcs.city_free = cai_city_free;
   /*
-    ai->funcs.city_created = nullptr;
-    ai->funcs.city_destroyed = nullptr;
-    ai->funcs.city_got = nullptr;
-    ai->funcs.city_lost = nullptr;
-  */
+  ai->funcs.city_created = nullptr;
+  ai->funcs.city_destroyed = nullptr;
+  ai->funcs.city_got = nullptr;
+  ai->funcs.city_lost = nullptr;
+*/
   ai->funcs.city_save = cai_city_save;
   ai->funcs.city_load = cai_city_load;
   ai->funcs.choose_building = cai_build_adv_override;
@@ -636,18 +636,18 @@ bool fc_ai_classic_setup(struct ai_type *ai)
   ai->funcs.units_ruleset_close = cai_units_ruleset_close;
 
   /* FIXME: We should allocate memory only for units owned by
-     default ai in unit_got. We track no data
-     about enemy units.
-     But advisors code still depends on some default ai data (role) to be
-     always allocated. */
+   default ai in unit_got. We track no data
+   about enemy units.
+   But advisors code still depends on some default ai data (role) to be
+   always allocated. */
   /*
-    ai->funcs.unit_alloc = nullptr;
-    ai->funcs.unit_free = nullptr;
-    ai->funcs.unit_created = nullptr;
-    ai->funcs.unit_destroyed = nullptr;
-    ai->funcs.unit_got = dai_unit_init;
-    ai->funcs.unit_lost = dai_unit_close;
-  */
+  ai->funcs.unit_alloc = nullptr;
+  ai->funcs.unit_free = nullptr;
+  ai->funcs.unit_created = nullptr;
+  ai->funcs.unit_destroyed = nullptr;
+  ai->funcs.unit_got = dai_unit_init;
+  ai->funcs.unit_lost = dai_unit_close;
+*/
   ai->funcs.unit_alloc = cai_unit_init;
   ai->funcs.unit_free = cai_unit_close;
   ai->funcs.unit_got = cai_ferry_init_ferry;

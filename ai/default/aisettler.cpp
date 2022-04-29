@@ -245,7 +245,7 @@ static void cityresult_destroy(struct cityresult *result)
   if (result != nullptr) {
     if (result->tdc_hash != nullptr) {
       for (const auto *ptdc : qAsConst(*result->tdc_hash)) {
-        NFCPP_FREE(ptdc);
+        delete[] ptdc;
       }
       delete result->tdc_hash;
     }
@@ -377,7 +377,7 @@ static struct cityresult *cityresult_fill(struct ai_type *ait,
     }
 
     if (result->tdc_hash->contains(cindex)) {
-      NFCPP_FREE(result->tdc_hash->value(cindex));
+      delete[] result->tdc_hash->value(cindex);
     }
     result->tdc_hash->insert(cindex, ptdc);
   }
@@ -538,7 +538,7 @@ static void tdc_plr_set(struct ai_type *ait, struct player *plr, int tindex,
 #endif // FREECIV_DEBUG
 
   if (ai->settler->tdc_hash->contains(tindex)) {
-    NFCPP_FREE(ai->settler->tdc_hash->value(tindex));
+    delete[] ai->settler->tdc_hash->value(tindex);
   }
   ai->settler->tdc_hash->insert(tindex, ptdc);
 }
@@ -1200,7 +1200,7 @@ void dai_auto_settler_reset(struct ai_type *ait, struct player *pplayer)
 #endif // FREECIV_DEBUG
 
   for (const auto *ptdc : qAsConst(*ai->settler->tdc_hash)) {
-    NFCPP_FREE(ptdc);
+    delete[] ptdc;
   }
   ai->settler->tdc_hash->clear();
 
@@ -1217,7 +1217,7 @@ void dai_auto_settler_free(struct ai_plr *ai)
   fc_assert_ret(ai != nullptr);
 
   if (ai->settler) {
-    NFC_FREE(ai->settler->tdc_hash);
+    delete ai->settler->tdc_hash;
     delete[] ai->settler;
   }
   ai->settler = nullptr;

@@ -527,11 +527,11 @@ const QString get_nearest_city_text(struct city *pcity, int sq_dist)
                   ? _("far from %1")
                   : (sq_dist > 0)
                         /* TRANS: on own line immediately following \n, ...
-                           <city> */
+                                   <city> */
                         ? _("near %1")
                         : (sq_dist == 0)
                               /* TRANS: on own line immediately following \n,
-                                 ... <city> */
+                                           ... <city> */
                               ? _("in %1")
                               : "%1")
           .arg(pcity ? city_name_get(pcity) : "");

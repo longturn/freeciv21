@@ -620,7 +620,7 @@ static bool lookup_unit_list(struct section_file *file, const char *prefix,
   slist = secfile_lookup_str_vec(file, &nval, "%s.%s", prefix, entry);
   if (nval == 0) {
     // 'No vector' is considered same as empty vector
-    NFCPP_FREE(slist);
+    delete[] slist;
     return true;
   }
   if (nval > MAX_NUM_UNIT_LIST) {
@@ -1744,11 +1744,11 @@ static bool load_ruleset_veteran(struct section_file *file, const char *path,
 #undef rs_sanity_veteran
   }
 
-  NFCPP_FREE(vlist_name);
-  NFCPP_FREE(vlist_power);
-  NFCPP_FREE(vlist_raise);
-  NFCPP_FREE(vlist_wraise);
-  NFCPP_FREE(vlist_move);
+  delete[] vlist_name;
+  delete[] vlist_power;
+  delete[] vlist_raise;
+  delete[] vlist_wraise;
+  delete[] vlist_move;
 
   return ret;
 }
@@ -2579,7 +2579,7 @@ static bool load_terrain_names(struct section_file *file,
     game.control.terrain_count = nval;
 
     // avoid re-reading files
-    NFCPP_FREE(terrain_sections);
+    delete[] terrain_sections;
     terrain_sections = new char[nval][MAX_SECTION_LABEL]{};
 
     terrain_type_iterate(pterrain)
@@ -2618,7 +2618,7 @@ static bool load_terrain_names(struct section_file *file,
 
     game.control.num_extra_types = nval;
 
-    NFCPP_FREE(extra_sections);
+    delete[] extra_sections;
     extra_sections = new char[nval][MAX_SECTION_LABEL]{};
 
     if (ok) {
@@ -2656,7 +2656,7 @@ static bool load_terrain_names(struct section_file *file,
   if (ok) {
     int idx;
 
-    NFCPP_FREE(base_sections);
+    delete[] base_sections;
     base_sections = new char[nval][MAX_SECTION_LABEL]{};
 
     /* Cannot use base_type_iterate() before bases are added to
@@ -2709,7 +2709,7 @@ static bool load_terrain_names(struct section_file *file,
   if (ok) {
     int idx;
 
-    NFCPP_FREE(road_sections);
+    delete[] road_sections;
     road_sections = new char[nval][MAX_SECTION_LABEL]{};
 
     /* Cannot use extra_type_by_cause_iterate(EC_ROAD) before roads are added
@@ -2762,7 +2762,7 @@ static bool load_terrain_names(struct section_file *file,
   if (ok) {
     int idx;
 
-    NFCPP_FREE(resource_sections);
+    delete[] resource_sections;
     resource_sections = new char[nval][MAX_SECTION_LABEL]{};
 
     /* Cannot use resource_type_iterate() before resource are added to
@@ -4560,7 +4560,7 @@ load_city_name_list(struct section_file *file, struct nation_type *pnation,
       } while (nullptr != p && '\0' != *p);
     }
   }
-  NFCPP_FREE(cities);
+  delete[] cities;
   return ok;
 }
 
@@ -4828,7 +4828,7 @@ static bool load_ruleset_nations(struct section_file *file,
                   nation_rule_name(pnation), vec[j]);
         }
       }
-      NFCPP_FREE(vec);
+      delete[] vec;
       if (nation_set_list_size(pnation->sets) < 1) {
         qCCritical(ruleset_category,
                    "Nation %s is not a member of any nation set",
@@ -4860,7 +4860,7 @@ static bool load_ruleset_nations(struct section_file *file,
                   nation_rule_name(pnation), vec[j]);
         }
       }
-      NFCPP_FREE(vec);
+      delete[] vec;
       if (!ok) {
         break;
       }
@@ -5133,7 +5133,7 @@ static bool load_ruleset_nations(struct section_file *file,
                   nation_rule_name(pnation), vec[j]);
         }
       }
-      NFCPP_FREE(vec);
+      delete[] vec;
       if (!ok) {
         break;
       }
