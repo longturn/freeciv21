@@ -438,8 +438,8 @@ void destroy_reqtree(struct reqtree *tree)
   int i;
 
   for (i = 0; i < tree->num_nodes; i++) {
-    delete[] tree->nodes[i]->require;
-    delete[] tree->nodes[i]->provide;
+    free(tree->nodes[i]->require); // allocated with fc_realloc
+    free(tree->nodes[i]->provide); // allocated with fc_realloc
     delete[] tree->nodes[i];
   }
   delete[] tree->nodes;

@@ -55,7 +55,8 @@ void terrains_free()
 {
   terrain_type_iterate(pterrain)
   {
-    NFCN_FREE(pterrain->helptext);
+    delete pterrain->helptext;
+    pterrain->helptext = nullptr;
     NFCNPP_FREE(pterrain->resources);
     if (pterrain->rgb != nullptr) {
       /* Server allocates this on ruleset loading, client when
@@ -795,13 +796,15 @@ void set_user_terrain_flag_name(enum terrain_flag_id id, const char *name,
 
   fc_assert_ret(id >= TER_USER_1 && id <= TER_USER_LAST);
 
-  NFCN_FREE(user_terrain_flags[tfid].name);
+  delete[] user_terrain_flags[tfid].name;
+  user_terrain_flags[tfid].name = nullptr;
 
   if (name && name[0] != '\0') {
     user_terrain_flags[tfid].name = fc_strdup(name);
   }
 
-  NFCN_FREE(user_terrain_flags[tfid].helptxt);
+  delete[] user_terrain_flags[tfid].helptxt;
+  user_terrain_flags[tfid].helptxt = nullptr;
 
   if (helptxt && helptxt[0] != '\0') {
     user_terrain_flags[tfid].helptxt = fc_strdup(helptxt);

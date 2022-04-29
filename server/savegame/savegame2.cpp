@@ -494,18 +494,18 @@ static struct loaddata *loaddata_new(struct section_file *file)
  */
 static void loaddata_destroy(struct loaddata *loading)
 {
-  NFC_FREE(loading->improvement.order);
-  NFC_FREE(loading->technology.order);
-  NFC_FREE(loading->activities.order);
-  NFC_FREE(loading->trait.order);
-  NFC_FREE(loading->extra.order);
-  NFC_FREE(loading->multiplier.order);
-  NFC_FREE(loading->special.order);
-  NFC_FREE(loading->base.order);
-  NFC_FREE(loading->road.order);
-  NFC_FREE(loading->specialist.order);
-  NFC_FREE(loading->ds_t.order);
-  NFC_FREE(loading->worked_tiles);
+  delete[] loading->improvement.order;
+  delete[] loading->technology.order;
+  delete[] loading->activities.order;
+  delete[] loading->trait.order;
+  delete[] loading->extra.order;
+  delete[] loading->multiplier.order;
+  delete[] loading->special.order;
+  delete[] loading->base.order;
+  delete[] loading->road.order;
+  delete[] loading->specialist.order;
+  delete[] loading->ds_t.order;
+  delete[] loading->worked_tiles;
   free(loading);
 }
 

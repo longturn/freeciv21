@@ -81,9 +81,12 @@ void extras_free()
   resource_types_free();
 
   for (i = 0; i < game.control.num_extra_types; i++) {
-    NFCN_FREE(extras[i].data.base);
-    NFCN_FREE(extras[i].data.road);
-    NFCN_FREE(extras[i].data.resource);
+    delete extras[i].data.base;
+    delete extras[i].data.road;
+    delete extras[i].data.resource;
+    extras[i].data.base = nullptr;
+    extras[i].data.road = nullptr;
+    extras[i].data.resource = nullptr;
   }
 
   for (i = 0; i < EC_LAST; i++) {
@@ -104,7 +107,8 @@ void extras_free()
     requirement_vector_free(&(extras[i].rmreqs));
     requirement_vector_free(&(extras[i].appearance_reqs));
     requirement_vector_free(&(extras[i].disappearance_reqs));
-    NFCN_FREE(extras[i].helptext);
+    delete extras[i].helptext;
+    extras[i].helptext = nullptr;
   }
 
   extra_type_iterate(pextra)
@@ -864,13 +868,16 @@ void set_user_extra_flag_name(enum extra_flag_id id, const char *name,
                               const char *helptxt)
 {
   int efid = id - EF_USER_FLAG_1;
-
   fc_assert_ret(id >= EF_USER_FLAG_1 && id <= EF_LAST_USER_FLAG);
-  NFCN_FREE(user_extra_flags[efid].name);
+
+  delete[] user_extra_flags[efid].name;
+  user_extra_flags[efid].name = nullptr;
   if (name && name[0] != '\0') {
     user_extra_flags[efid].name = fc_strdup(name);
   }
-  NFCNPP_FREE(user_extra_flags[efid].helptxt);
+
+  delete[] user_extra_flags[efid].helptxt;
+  user_extra_flags[efid].helptxt = nullptr;
   if (helptxt && helptxt[0] != '\0') {
     user_extra_flags[efid].helptxt = fc_strdup(helptxt);
   }

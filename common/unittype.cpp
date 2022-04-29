@@ -136,10 +136,10 @@ int utype_upkeep_cost(const struct unit_type *ut, struct player *pplayer,
   }
 
   /* switch shield upkeep to gold upkeep if
-     - the effect 'EFT_SHIELD2GOLD_FACTOR' is non-zero (it gives the
-       conversion factor in percent) and
-     - the unit has the corresponding flag set (UTYF_SHIELD2GOLD)
-     FIXME: Should the ai know about this? */
+   - the effect 'EFT_SHIELD2GOLD_FACTOR' is non-zero (it gives the
+     conversion factor in percent) and
+   - the unit has the corresponding flag set (UTYF_SHIELD2GOLD)
+   FIXME: Should the ai know about this? */
   if (utype_has_flag(ut, UTYF_SHIELD2GOLD)
       && (otype == O_GOLD || otype == O_SHIELD)) {
     gold_upkeep_factor = get_player_bonus(pplayer, EFT_SHIELD2GOLD_FACTOR);
@@ -1556,7 +1556,7 @@ void set_user_unit_class_flag_name(enum unit_class_flag_id id,
   fc_assert_ret(id >= UCF_USER_FLAG_1 && id <= UCF_LAST_USER_FLAG);
 
   if (user_class_flags[ufid].name != nullptr) {
-    FC_FREE(user_class_flags[ufid].name);
+    delete[] user_class_flags[ufid].name;
     user_class_flags[ufid].name = nullptr;
   }
 
@@ -1565,7 +1565,7 @@ void set_user_unit_class_flag_name(enum unit_class_flag_id id,
   }
 
   if (user_class_flags[ufid].helptxt != nullptr) {
-    free(user_class_flags[ufid].helptxt);
+    delete[] user_class_flags[ufid].helptxt;
     user_class_flags[ufid].helptxt = nullptr;
   }
 
@@ -1617,11 +1617,16 @@ void set_user_unit_type_flag_name(enum unit_type_flag_id id,
   int ufid = id - UTYF_USER_FLAG_1;
 
   fc_assert_ret(id >= UTYF_USER_FLAG_1 && id <= UTYF_LAST_USER_FLAG);
-  NFCN_FREE(user_type_flags[ufid].name);
+  delete[] user_type_flags[ufid].name;
+  user_type_flags[ufid].name = nullptr;
+
   if (name && name[0] != '\0') {
     user_type_flags[ufid].name = fc_strdup(name);
   }
-  NFCNPP_FREE(user_type_flags[ufid].helptxt);
+
+  delete[] user_type_flags[ufid].helptxt;
+  user_type_flags[ufid].helptxt = nullptr;
+
   if (helptxt && helptxt[0] != '\0') {
     user_type_flags[ufid].helptxt = fc_strdup(helptxt);
   }
@@ -2267,7 +2272,8 @@ void unit_classes_free()
     if (unit_classes[i].cache.subset_movers != nullptr) {
       unit_class_list_destroy(unit_classes[i].cache.subset_movers);
     }
-    NFCN_FREE(unit_classes[i].helptext);
+    delete unit_classes[i].helptext;
+    unit_classes[i].helptext = nullptr;
   }
 }
 
@@ -2368,7 +2374,7 @@ struct veteran_system *veteran_system_new(int count)
 void veteran_system_destroy(struct veteran_system *vsystem)
 {
   if (vsystem) {
-    NFCPP_FREE(vsystem->definitions);
+    delete[] vsystem->definitions;
     delete[] vsystem;
   }
 }

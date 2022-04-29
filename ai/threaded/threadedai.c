@@ -574,7 +574,7 @@ bool fc_ai_threaded_setup(struct ai_type *ai)
 
   qstrncpy(ai->name, "threaded", sizeof(ai->name));
 
-  private
+private
   = new dai_private_data{};
 private
   ->contemplace_workers = true;
