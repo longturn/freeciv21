@@ -9,7 +9,8 @@ configuration process is smart enough to work out whether your system is suitabl
 
 An operating system that support Qt
     Any modern operating system that supports Qt 5.12+ is required. As of this writing this is Linux, Microsoft
-    Windows\ |reg| and Apple Mac OS X\ |reg|. On Windows MSYS2 (MingW) is required.
+    Windows\ |reg| and Apple Mac OS X\ |reg|. On Windows_ MSYS2 (MingW) is available as well as
+    :doc:`Visual Studio <../Contributing/visual-studio>`.
 
     Linux Distributions:
 
@@ -39,7 +40,8 @@ A C and C++ compiler
     use a "K&R C" compiler. The C++ compiler must support C++ 17.
 
     Development of Freeciv21 is primarily done with :file:`gcc`, the GNU project's excellent C and C++
-    compiler. Microsoft Windows MS Visual C support is under development.
+    compiler. Microsoft Windows is supported with :file:`clang` and :file:`clang++` in
+    :doc:`Visual Studio <../Contributing/visual-studio>`.
 
 The Cmake program
     Freeciv21 developers generally use :file:`cmake`, the Kitware make program. You can check if you have
@@ -278,13 +280,17 @@ When the Ninja command is finished running, you will find an installer in :file:
 Windows
 -------
 
-Msys2 is an available environment for compiling Freeciv21. Microsoft Windows Visual C is under development.
+MSYS2 is an available environment for compiling Freeciv21. Microsoft Windows is supported with :file:`clang`
+in :doc:`Visual Studio <../Contributing/visual-studio>`.
 
-Freeciv21 currently supports building and installing using the Msys2 environment. Build instructions for
-Msys2 versions are documented in :doc:`../Contributing/msys2`. Alternately you can visit
+The Freeciv21 community primarily supports building and installing on Windows using the MSYS2 environment.
+While Microsoft Visual Studio can be used, we do not package binaries via Visual Studio due to licensing
+`constraints <https://www.gnu.org/licenses/gpl-faq.en.html#WindowsRuntimeAndGPL>`_.
+
+Setting up MSYS2 is documented in :doc:`../Contributing/msys2`. Alternately you can visit
 https://github.com/jwrober/freeciv-msys2 for ready made scripts.
 
-Once your Msys2 environment is ready, start with configuring_ above.
+Once your MSYS2 environment is ready, start with configuring_ above.
 
 Instead of installing, use this command to create the Windows Installer package:
 
