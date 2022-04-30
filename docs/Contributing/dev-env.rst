@@ -10,17 +10,19 @@ Workstation
 ===========
 
 Freeciv21 can be developed on Linux, Windows and MacOS. Any current version of these OS's is acceptible. For
-Windows, you will need to setup the Msys2 environment to do development. Refer to :doc:`msys2` for more
-information. :strong:`Linux` is the preferred platform.
+Windows, you will need to setup either the MSYS2 environment or Visual Studio to do development.
+Refer to :doc:`msys2` or :doc:`Visual Stuido <visual-studio>` for more information. It should be generally
+understood that :strong:`Linux` is the preferred development platform.
 
 Technically all you need is a text editor of some kind to edit the files, but most people prefer to use an
 IDE.
 
 All platforms can use `KDevelop <https://www.kdevelop.org/download>`_. However, there are some caveats:
 
-* On Windows, due to the nature of the integration with Msys2, native compilation and debugging is not
-  supported.
-* On MacOS, KDevelop is still considered experimental.
+* On Windows, due to the nature of the integration with MSYS2, native compilation and debugging is not
+  supported. This is resolved with Visual Studio as the IDE.
+* On MacOS, KDevelop is still considered experimental. Many Mac users
+  use `XCode <https://developer.apple.com/xcode/>`_.
 
 For the best results, especially if you are editing game code and not just Longturn game rulesets or
 documentation, you will want :strong:`Linux` to be your workstation OS. Many of the current developers use a
