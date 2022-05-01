@@ -3255,7 +3255,7 @@ void PFPath::add_pos(pf_position pos) { positions.push_back(pos); }
    If tile is not on the path at all, returns FALSE and path is not changed
    at all.
  */
-bool PFPath::pf_path_advance(struct tile *ptile)
+bool PFPath::advance(struct tile *ptile)
 {
   int i;
   int length = positions.size();
@@ -3281,7 +3281,7 @@ bool PFPath::pf_path_advance(struct tile *ptile)
    If tile is not on the path at all, returns FALSE and path is not changed
    at all.
  */
-bool PFPath::pf_path_backtrack(struct tile *ptile)
+bool PFPath::backtrack(struct tile *ptile)
 {
   int i;
   fc_assert_ret_val(positions.size() > 0, false);
@@ -3299,11 +3299,6 @@ bool PFPath::pf_path_backtrack(struct tile *ptile)
     new_positions[i] = positions[i];
   }
   positions.clear();
-  /*
-  memcpy(new_positions, path->positions,
-         path->length * sizeof(*path->positions));
-  delete[] path->positions;
-  */
   positions = new_positions;
 
   return true;
@@ -3352,21 +3347,11 @@ PFPath pf_path_concat(PFPath dest_path, const PFPath &src_path)
   if (src_path.length() == 1) {
     return dest_path;
   }
-
+  /* Be careful to include the first position of src_path, it contains
+   * the direction (it is undefined in the last position of dest_path) */
   for (int i = 0; i < src_path.length(); i++) {
     dest_path.add_pos(src_path[i]);
   }
-  /* Be careful to include the first position of src_path, it contains
-   * the direction (it is undefined in the last position of dest_path) */
-  /*
-   dest_path->length = dest_end + src_path->length;
-   dest_path->positions = static_cast<pf_position *>(
-       fc_realloc(dest_path->positions,
-                  sizeof(*dest_path->positions) * dest_path->length));
-   memcpy(dest_path->positions + dest_end, src_path->positions,
-          sizeof(*dest_path->positions) * src_path->length);
-                  */
-
   return dest_path;
 }
 
