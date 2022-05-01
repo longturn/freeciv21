@@ -1,0 +1,10 @@
+set gamelog 30
+set aifill 4
+set endt 500
+set timeout 1
+set autosave "INTERRUPT" 
+set minp 0
+set gameseed 42
+set mapseed 42
+start
+
