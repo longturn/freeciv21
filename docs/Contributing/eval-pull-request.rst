@@ -64,7 +64,7 @@ probably have to re-download the diff and run another test.
 
 If it is a big change, it might be worthwhile to run an entire game with just AI to make sure it doesnt break anything. 
 You can compile the code, with additional checks such as address sanitizer with :code:`$ cmake . --preset ASan`. Once the code is compiled, 
-you can run the autogame with :code:`./build/freeciv21-server -r test-autogame.serv`. You can also observe the game with 
+you can run the autogame with :code:`./build/freeciv21-server -r ./data/test-autogame.serv`. You can also observe the game with 
 :code:`./build/freeciv21-client -a -p 5556 -s localhost`. ASan by default halts on every error, this is sometimes useful to developers to fix the errors
 sequentially. If you'd rather prefer listing all the errors at once, set the environment variable using :code:`$ export ASAN_OPTIONS="halt_on_error=0"`
 
