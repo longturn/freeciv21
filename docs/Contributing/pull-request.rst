@@ -100,7 +100,8 @@ and/or documentation updates.
 
 
 The first command, :file:`git clang-format`, runs a pre-processor to format any code changes to support the
-Longturn community's code standards.
+Longturn community's code standards. We use clangformat-11 by default, if your system's version of clang-format is
+different, you can use the binaries for clangformat-11 using the command `git clang-format --binary <path-to-clang-format-11>`.
 
 The second command cleans out the :file:`build` directory to start fresh. The third command runs a configure
 process and then sets things up to do the install portion inside the same :file:`build` directory, keeping
