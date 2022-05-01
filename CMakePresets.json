@@ -1,6 +1,6 @@
 
 {
-    "version": 3,
+  "version": 3,
     "cmakeMinimumRequired": {
         "major": 3,
         "minor": 12
@@ -8,7 +8,7 @@
     "configurePresets": [
         {
             "name": "fullrelease",
-            "displayName": "Build Everythign in Release Mode",
+            "displayName": "Build Everything in Release Mode",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build-rel",
             "installDir": "install",
@@ -37,6 +37,22 @@
                 "FREECIV_ENABLE_SERVER" : "ON",
                 "FREECIV_ENABLE_CLIENT" : "ON",
                 "FREECIV_ENABLE_NLS" : "OFF"
+            }
+        },
+        {
+            "name": "ASan",
+            "displayName": "Build Everything in debug mode with ASan and ccache",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_CXX_FLAGS": "-O2 -DGLIBCXX_ASSERTIONS -fsanitize=address -fsanitize=leak -fsanitize=undefined -fsanitize-address-use-after-scope -fsanitize-recover=all",
+                "CMAKE_C_FLAGS": "-D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -fstack-clash-protection -fcf-protection",
+                "CMAKE_CXX_COMPILER_LAUNCHER": "ccache",
+                "FREECIV_ENABLE_TOOLS": "ON",
+                "FREECIV_ENABLE_SERVER" : "ON",
+                "FREECIV_ENABLE_CLIENT" : "ON",
+                "FREECIV_ENABLE_NLS" : "ON"
             }
         },
         {
