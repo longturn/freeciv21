@@ -3229,15 +3229,8 @@ static void pf_position_fill_start_tile(struct pf_position *pos,
 /**
  * MEMBER FUNCTIONS FOR THE CLASS Pf_Class
  */
-// Constructors
-PFPath::PFPath() {}
 // Constructor to just initialize with size
 PFPath::PFPath(int size) : positions(std::vector<pf_position>(size)) {}
-// Copy Constructor
-PFPath::PFPath(const PFPath &obj)
-    : positions(std::vector<pf_position>(obj.positions))
-{
-}
 /**
    Create a path with start tile of a parameter.
  */

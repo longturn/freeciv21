@@ -320,9 +320,10 @@ class PFPath {
   std::vector<pf_position> positions;
 
 public:
-  PFPath();
-  PFPath(int size);
-  PFPath(const PFPath &obj);
+  PFPath() = default;                  // Constructor
+  PFPath(int size);                    // Construct with size
+  PFPath(const PFPath &obj) = default; // Default copy constructor
+  PFPath(PFPath &&obj) = default;      // Default move constructor
   PFPath(const struct pf_parameter *param);
   int length() const;
   void add_pos(pf_position pos);
@@ -332,6 +333,7 @@ public:
   bool pf_path_backtrack(struct tile *ptile);
   pf_position &operator[](int i);
   const pf_position &operator[](int i) const;
+  PFPath &operator=(PFPath &&other) = default; // Default move assignment
 };
 // Paths functions.
 void pf_path_destroy(PFPath *path);
