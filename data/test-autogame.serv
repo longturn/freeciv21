@@ -1,4 +1,3 @@
-set gamelog 30
 set aifill 4
 set endt 500
 set timeout 1
