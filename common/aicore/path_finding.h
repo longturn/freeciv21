@@ -329,14 +329,13 @@ public:
   void add_pos(pf_position pos);
   virtual ~PFPath();
   bool empty() const;
-  bool pf_path_advance(struct tile *ptile);
-  bool pf_path_backtrack(struct tile *ptile);
+  bool advance(struct tile *ptile);
+  bool backtrack(struct tile *ptile);
   pf_position &operator[](int i);
   const pf_position &operator[](int i) const;
   PFPath &operator=(PFPath &&other) = default; // Default move assignment
 };
 // Paths functions.
-void pf_path_destroy(PFPath *path);
 PFPath pf_path_concat(PFPath *dest_path, const PFPath &src_path);
 QDebug &operator<<(QDebug &logger, const PFPath &path);
 
