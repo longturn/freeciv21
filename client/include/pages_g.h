@@ -22,8 +22,6 @@
 #define SPECENUM_VALUE5 PAGE_GAME     // In game page.
 #include "specenum_gen.h"
 
-// void real_set_client_page(client_pages page);
-// client_pages get_current_client_page();
 void update_start_page();
 
 // Actually defined in update_queue.c

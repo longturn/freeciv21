@@ -439,7 +439,6 @@ static PFPath pf_normal_map_construct_path(const struct pf_normal_map *pfnm,
   ptile = dest_tile;
   node = pfnm->lattice + tile_index(ptile);
 
-  direction8 dir_next = direction8_invalid();
   for (; i >= 0; i--) {
     pf_normal_map_fill_position(pfnm, ptile, &path[i]);
     // fill_position doesn't set direction

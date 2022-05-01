@@ -11,10 +11,6 @@ received a copy of the GNU General Public License along with Freeciv21.
 #pragma once
 
 class QString;
-class QStringList;
-
-// void gui_clear_theme();
 
 void gui_load_theme(const QString &directory, const QString &theme_name);
 QStringList get_useable_themes_in_directory(QString &directory);
-// QStringList get_gui_specific_themes_directories(int *count);

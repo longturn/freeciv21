@@ -13,13 +13,6 @@
 #include "citydlg_common.h"
 #include "fc_types.h"
 
-// void real_city_dialog_popup(city *pcity);
-// void popdown_city_dialog(city* pcity);
-// void popdown_all_city_dialogs();
-// void real_city_dialog_refresh(city* pcity);
-// void refresh_unit_city_dialogs(unit* punit);
-// bool city_dialog_is_open(city* pcity);
-
 // Actually defined in update_queue.c
 void popup_city_dialog(city *pcity);
 void refresh_city_dialog(city *pcity);

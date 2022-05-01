@@ -23,6 +23,11 @@ struct cm_parameter {
   int factor[O_LAST];
   int happy_factor;
 
+  /**
+   * @brief Copy assignment operator
+   * @param other Object to be copied
+   * @return Reference to object
+   */
   cm_parameter &operator=(const cm_parameter &other)
   {
     max_growth = other.max_growth;

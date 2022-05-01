@@ -2365,7 +2365,6 @@ void handle_player_info(const struct packet_player_info *pinfo)
 
   if (pplayer->economic.infra_points != pinfo->infrapoints) {
     pplayer->economic.infra_points = pinfo->infrapoints;
-    // update_infra_dialog(); // this functions is empty lambda
   }
 
   /* Don't use player_iterate or player_slot_count here, because we ignore

@@ -37,9 +37,6 @@ void unit_select_dialog_update(); // Defined in update_queue.c.
 void unit_select_dialog_update_real(void *unused);
 void races_toggles_set_sensitive();
 void races_update_pickable(bool nationset_change);
-// void popup_combat_info(int attacker_unit_id, int defender_unit_id,
-//                int attacker_hp, int defender_hp,
-//                bool make_att_veteran, bool make_def_veteran);
 void popup_action_selection(unit *actor_unit, city *target_city,
                             unit *target_unit, tile *target_tile,
                             extra_type *target_extra,
@@ -70,7 +67,4 @@ void popup_soundset_suggestion_dialog();
 void popup_musicset_suggestion_dialog();
 bool popup_theme_suggestion_dialog([[maybe_unused]] const char *theme_name);
 void show_tech_gained_dialog([[maybe_unused]] Tech_type_id tech);
-// bool handmade_scenario_warning();
 void popdown_all_game_dialogs();
-// bool request_transport(unit *pcargo, tile *ptile);
-// void update_infra_dialog(); // defined in gui_interface.cpp

@@ -18,8 +18,6 @@
 
 class QTcpSocket;
 
-// void setup_gui_funcs();
-
 void qtg_options_extra_init();
 void qtg_set_rulesets(int num_rulesets, QStringList rulesets);
 void qtg_add_net_input(QTcpSocket *sock);
@@ -60,8 +58,6 @@ void qtg_refresh_unit_city_dialogs(struct unit *punit);
 bool qtg_city_dialog_is_open(struct city *pcity);
 
 bool qtg_request_transport(struct unit *pcargo, struct tile *ptile);
-
-// void qtg_update_infra_dialog();
 
 void qtg_gui_clear_theme();
 QStringList qtg_get_gui_specific_themes_directories(int *count);

@@ -22,22 +22,7 @@ class QTcpSocket;
 void ui_main();
 void ui_exit();
 
-// void options_extra_init();
-
-// void real_conn_list_dialog_update(void*);
-// void sound_bell();
-// void add_net_input(QTcpSocket *)
-// void remove_net_input();
-
-// void set_unit_icon(int idx, unit *punit);
-// void set_unit_icons_more_arrow(bool onoff);
-// void real_focus_units_changed();
-
-// void add_idle_callback(void(callback)(void *), void *data);
-
 void insert_client_build_info(char *outbuf, size_t outlen);
-
-// void gui_update_font(const QString &font_name, const QString &font_value);
 
 extern const char *client_string;
 

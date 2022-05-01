@@ -61,11 +61,7 @@ class fc_client *king() { return freeciv_qt; }
 /**
    Entry point for whole freeciv client program.
  */
-int main(int argc, char **argv)
-{
-  // setup_gui_funcs();
-  return client_main(argc, argv);
-}
+int main(int argc, char **argv) { return client_main(argc, argv); }
 
 /**
    Migrate Qt client specific options from freeciv-2.5 options

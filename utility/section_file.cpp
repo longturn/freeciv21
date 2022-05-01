@@ -90,13 +90,10 @@ void secfile_destroy(struct section_file *secfile)
   SECFILE_RETURN_IF_FAIL(secfile, nullptr, secfile != nullptr);
 
   delete secfile->hash.sections;
-  /* Mark it nullptr to be sure to don't try to make operations when
-   * deleting the entries. */
-  // secfile->hash.sections = nullptr;
   delete secfile->hash.entries;
-  // secfile->hash.entries = nullptr;
+  secfile->hash.sections = nullptr;
+  secfile->hash.entries = nullptr;
   section_list_destroy(secfile->sections);
-  // secfile->sections = nullptr;
   delete[] secfile->name;
   delete secfile;
   secfile = nullptr;

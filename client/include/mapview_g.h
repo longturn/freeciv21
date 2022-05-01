@@ -25,12 +25,8 @@
 void update_info_label();
 void update_unit_info_label(unit_list *punitlist);
 void update_mouse_cursor(cursor_type new_cursor_type);
-// void update_timeout_label();
 void update_turn_done_button(bool do_restore);
 void update_city_descriptions();
-
-// void start_turn();
-
 void update_minimap();
 
 void dirty_rect(int canvas_x, int canvas_y, int pixel_width,
