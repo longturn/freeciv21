@@ -56,9 +56,8 @@ if(WIN32 OR MSYS OR MINGW)
   get_filename_component(MINGW_PATH ${CMAKE_CXX_COMPILER} PATH)
 endif()
 
-if (NOT ${CMAKE_BUILD_TYPE} STREQUAL "Release")
-  add_compile_definitions(FREECIV_DEBUG)
-endif()
+
+add_compile_definitions(PUBLIC $<$<CONFIG:Debug>:FREECIV_DEBUG>)
 
 # After project() because the list of languages has to be known
 include(FreecivDependencies)

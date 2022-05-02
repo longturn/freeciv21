@@ -1,30 +1,49 @@
 set(CMAKE_AUTOMOC ON)
 
 add_executable(
-  freeciv21-ruledit ${GUI_TYPE} 
+  freeciv21-ruledit ${GUI_TYPE}
   conversion_log.cpp
-  req_edit.cpp
-  req_vec_fix.cpp
-  requirers_dlg.cpp
-  ruledit.cpp
-  tab_enablers.cpp
-  tab_gov.cpp
-  tab_nation.cpp
-  tab_unit.cpp
+  conversion_log.h
   edit_utype.cpp
-  requirers_dlg.cpp
-  ruledit_qt.cpp
-  tab_extras.cpp
-  tab_misc.cpp
-  tab_tech.cpp
+  edit_utype.h
   effect_edit.cpp
+  effect_edit.h
+  req_edit.cpp
+  req_edit.h
   req_vec_fix.cpp
+  req_vec_fix.h
+  requirers_dlg.cpp
+  requirers_dlg.h
+  ruledit_qt.cpp
+  ruledit_qt.h
+  ruledit.cpp
+  ruledit.h
   tab_building.cpp
+  tab_building.h
+  tab_enablers.cpp
+  tab_enablers.h
+  tab_extras.cpp
+  tab_extras.h
   tab_good.cpp
+  tab_good.h
+  tab_gov.cpp
+  tab_gov.h
+  tab_misc.cpp
+  tab_misc.h
   tab_multiplier.cpp
+  tab_multiplier.h
+  tab_nation.cpp
+  tab_nation.h
+  tab_tech.cpp
+  tab_tech.h
   tab_terrains.cpp
+  tab_terrains.h
+  tab_unit.cpp
+  tab_unit.h
   univ_value.cpp
+  univ_value.h
   validity.cpp
+  validity.h
 )
 
 target_link_libraries(freeciv21-ruledit server)
