@@ -8,6 +8,7 @@ Freeciv21 project.
   bugs.rst
   dev-env.rst
   msys2.rst
+  visual-studio.rst
   pull-request.rst
   eval-pull-request.rst
   style-guide.rst

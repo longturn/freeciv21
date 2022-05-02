@@ -51,7 +51,7 @@ This page assumes the user knows how to use :file:`git`, compile Freeciv21 and u
   $ cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
   $ cmake --build build
   $ cmake --build build --target install
-  $ cmake --build build --target package      # MSys2 Only
+  $ cmake --build build --target package      # MSys2 and Debian Linux Only
 
 
 :strong:`Read The Issue's Notes`
