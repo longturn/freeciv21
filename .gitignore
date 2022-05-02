@@ -42,6 +42,8 @@ build.ninja
 
 # Build directories
 /build*
+/x86*
+/x64*
 
 # IDE files
 .cache
