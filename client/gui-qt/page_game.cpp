@@ -227,9 +227,11 @@ void pageGame::updateInfoLabelTimeout()
   if (client.conn.playing != nullptr) {
     sw_economy->set_gold(client.conn.playing->economic.gold);
     sw_economy->set_income(player_get_expected_income(client.conn.playing));
+    sw_economy->setEnabled(true);
   } else {
     sw_economy->set_gold(0);
     sw_economy->set_income(0);
+    sw_economy->setEnabled(false);
   }
 
   sw_indicators->update();
