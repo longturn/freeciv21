@@ -19,6 +19,7 @@
 #include <QScreen>
 #include <QStyle>
 #include <QStyleOptionToolButton>
+#include <QTextStream>
 #include <QTimer>
 
 // common
@@ -360,6 +361,67 @@ void top_bar_widget::someSlot()
     cn_bytes = s.toLocal8Bit();
     send_chat(cn_bytes.data());
   }
+}
+
+/**
+ * Constructor
+ */
+gold_widget::gold_widget()
+    : top_bar_widget("", QStringLiteral("ECO"), economy_report_dialog_popup)
+{
+  setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+  setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+}
+
+/**
+ * Destructor
+ */
+gold_widget::~gold_widget() {}
+
+/**
+ * Updates the displayed text after the gold or income changed.
+ */
+void gold_widget::update_contents()
+{
+  // Get a localized string representing the income, with the sign
+  QString income;
+  QTextStream s(&income);
+  s << forcesign << m_income;
+
+  // TRANS: Top bar: "gold (income)". The income always includes a sign (e.g.
+  //        +123, or -42).
+  setText(QString(_("%1 (%2)")).arg(m_gold).arg(income));
+
+  // This is only a hint for the style, we don't do any painting ourselves.
+  warning new_warning = warning::no_warning;
+  if (m_income < 0 && m_gold + m_income >= 0) {
+    new_warning = warning::losing_money;
+  } else if (m_income < 0) {
+    new_warning = warning::low_on_funds;
+  }
+
+  // Notify
+  if (new_warning != m_warning) {
+    m_warning = new_warning;
+
+    // Allow using the warning state in CSS selectors.
+    style()->unpolish(this);
+    style()->polish(this);
+  }
+}
+
+/**
+ * Renders the tax rates widget
+ */
+void gold_widget::paintEvent(QPaintEvent *event)
+{
+  if (client_is_global_observer()) {
+    // Nothing to show
+    return;
+  }
+
+  // Draw the button
+  QToolButton::paintEvent(event);
 }
 
 /**

@@ -26,6 +26,7 @@ class indicators_widget;
 class chat_widget;
 class message_widget;
 class hud_battle_log;
+class gold_widget;
 class goto_dialog;
 class tax_rates_widget;
 class top_bar;
@@ -92,7 +93,7 @@ private:
   QTimer *update_info_timer;
   top_bar_widget *sw_cities;
   top_bar_widget *sw_cunit;
-  top_bar_widget *sw_economy;
+  gold_widget *sw_economy;
   top_bar_widget *sw_map;
   tax_rates_widget *sw_tax;
 };
