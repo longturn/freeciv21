@@ -102,6 +102,62 @@ private:
   QTimer *timer;
 };
 
+/**
+ * Top bar widget that shows the amount of gold owned by the current player,
+ * and their income.
+ *
+ * The top bar widget displays a warning when the player has negative income
+ * or will go bankrupt.
+ */
+class gold_widget : public top_bar_widget {
+  Q_OBJECT
+  Q_PROPERTY(warning current_warning READ current_warning)
+
+public:
+  /// Types of warnings displayed by gold_widget
+  enum class warning {
+    no_warning = 0,   ///< Used when no warning is shown
+    losing_money = 1, ///< The current player has negative gold income
+    low_on_funds = 2, ///< The current player will soon go bankrupt
+  };
+  Q_ENUM(warning)
+
+  gold_widget();
+  ~gold_widget() override;
+
+  /// Returns the incom as currently shown.
+  int income() const { return m_gold; }
+
+  /// Changes the gold amount shown by the widget.
+  void set_income(int income)
+  {
+    m_income = income;
+    update_contents();
+  }
+
+  /// Returns the gold amount as currently shown.
+  int gold() const { return m_gold; }
+
+  /// Changes the gold amount shown by the widget.
+  void set_gold(int gold)
+  {
+    m_gold = gold;
+    update_contents();
+  }
+
+  /// Retrieves the current warning.
+  warning current_warning() const { return m_warning; }
+
+protected:
+  void paintEvent(QPaintEvent *event) override;
+
+private:
+  void update_contents();
+
+  int m_gold = 0, m_income = 0;
+  warning m_warning = warning::no_warning;
+};
+
 /***************************************************************************
   Freeciv21 top_bar
 ***************************************************************************/

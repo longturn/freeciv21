@@ -97,8 +97,7 @@ pageGame::pageGame(QWidget *parent)
   sw_science->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("research")));
   sw_science->setCheckable(true);
-  sw_economy = new top_bar_widget(_("Economy"), QStringLiteral("ECO"),
-                                  economy_report_dialog_popup);
+  sw_economy = new gold_widget;
   sw_economy->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("economy")));
   sw_economy->setCheckable(true);
@@ -226,23 +225,13 @@ void pageGame::updateInfoLabelTimeout()
   sw_map->update();
 
   if (client.conn.playing != nullptr) {
-    if (player_get_expected_income(client.conn.playing) > 0) {
-      eco_info =
-          QString(_("%1 (+%2)"))
-              .arg(QString::number(client.conn.playing->economic.gold),
-                   QString::number(
-                       player_get_expected_income(client.conn.playing)));
-    } else {
-      eco_info =
-          QString(_("%1 (%2)"))
-              .arg(QString::number(client.conn.playing->economic.gold),
-                   QString::number(
-                       player_get_expected_income(client.conn.playing)));
-    }
-    sw_economy->setCustomLabels(eco_info);
+    sw_economy->set_gold(client.conn.playing->economic.gold);
+    sw_economy->set_income(player_get_expected_income(client.conn.playing));
   } else {
-    sw_economy->setCustomLabels(QLatin1String(""));
+    sw_economy->set_gold(0);
+    sw_economy->set_income(0);
   }
+
   sw_indicators->update();
   sw_tax->update();
   sw_economy->update();
