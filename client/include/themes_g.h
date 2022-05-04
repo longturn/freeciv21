@@ -10,13 +10,8 @@ received a copy of the GNU General Public License along with Freeciv21.
 ***********************************************************************/
 #pragma once
 
-#include "gui_proto_constructor.h"
-
 class QString;
 class QStringList;
 
-GUI_FUNC_PROTO(void, gui_clear_theme, void)
-
 void gui_load_theme(const QString &directory, const QString &theme_name);
 QStringList get_useable_themes_in_directory(QString &directory);
-QStringList get_gui_specific_themes_directories(int *count);

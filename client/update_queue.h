@@ -88,3 +88,4 @@ private:
 };
 
 bool update_queue_is_switching_page(void);
+void players_dialog_update();

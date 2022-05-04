@@ -20,7 +20,7 @@
 /* client/luascript */
 #include "script_client.h"
 // gui-qt
-#include "chatline_g.h"
+#include "chatline.h"
 #include "fc_client.h"
 
 QString qlua_filename;

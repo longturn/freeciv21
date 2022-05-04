@@ -467,7 +467,7 @@ void update_mouse_cursor(enum cursor_type new_cursor_type)
    Update the timeout display.  The timeout is the time until the turn
    ends, in seconds.
  */
-void qtg_update_timeout_label()
+void update_timeout_label()
 {
   queen()->sw_endturn->setCustomLabels(QString(get_timeout_label_text()));
   queen()->sw_endturn->update();
@@ -818,7 +818,7 @@ void popdown_tile_info()
 /**
    New turn callback
  */
-void qtg_start_turn()
+void start_turn()
 {
   show_new_turn_info();
   last_center_enemy = 0;

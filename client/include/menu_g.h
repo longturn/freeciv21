@@ -10,10 +10,8 @@
 **************************************************************************/
 #pragma once
 
-#include "gui_proto_constructor.h"
-
-GUI_FUNC_PROTO(void, real_menus_init, void)
-GUI_FUNC_PROTO(void, real_menus_update, void)
+void real_menus_init(void);
+void real_menus_update(void);
 
 // Actually defined in update_queue.c
 void menus_init();

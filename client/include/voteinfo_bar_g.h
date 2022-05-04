@@ -10,6 +10,4 @@
 **************************************************************************/
 #pragma once
 
-#include "gui_proto_constructor.h"
-
-GUI_FUNC_PROTO(void, voteinfo_gui_update, void)
+void voteinfo_gui_update(void);

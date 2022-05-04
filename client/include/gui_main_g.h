@@ -19,28 +19,10 @@ class QTcpSocket;
 // common
 #include "fc_types.h"
 
-#include "gui_proto_constructor.h"
-
 void ui_main();
 void ui_exit();
 
-GUI_FUNC_PROTO(void, options_extra_init, void)
-
-GUI_FUNC_PROTO(void, real_conn_list_dialog_update, void *)
-GUI_FUNC_PROTO(void, sound_bell, void)
-GUI_FUNC_PROTO(void, add_net_input, QTcpSocket *)
-GUI_FUNC_PROTO(void, remove_net_input, void)
-
-GUI_FUNC_PROTO(void, set_unit_icon, int idx, struct unit *punit)
-GUI_FUNC_PROTO(void, set_unit_icons_more_arrow, bool onoff)
-GUI_FUNC_PROTO(void, real_focus_units_changed, void)
-
-GUI_FUNC_PROTO(void, add_idle_callback, void(callback)(void *), void *data)
-
-GUI_FUNC_PROTO(void, insert_client_build_info, char *outbuf, size_t outlen)
-
-GUI_FUNC_PROTO(void, gui_update_font, const QString &font_name,
-               const QString &font_value)
+void insert_client_build_info(char *outbuf, size_t outlen);
 
 extern const char *client_string;
 

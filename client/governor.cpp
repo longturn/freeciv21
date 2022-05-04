@@ -23,6 +23,7 @@
 #include "specialist.h"
 // client
 #include "attribute.h"
+#include "citydlg_common.h"
 #include "client_main.h"
 #include "climisc.h"
 

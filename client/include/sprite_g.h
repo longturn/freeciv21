@@ -10,13 +10,12 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 ***********************************************************************/
 #pragma once
 
-#include "gui_proto_constructor.h"
 #include "support.h"
 
 class QColor;
 class QPixmap;
 
-GUI_FUNC_PROTO(QPixmap *, load_gfxfile, const char *filename)
+QPixmap *load_gfxfile(const char *filename);
 QPixmap *crop_sprite(const QPixmap *source, int x, int y, int width,
                      int height, const QPixmap *mask, int mask_offset_x,
                      int mask_offset_y);

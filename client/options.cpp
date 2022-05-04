@@ -68,6 +68,9 @@
 
 #include "options.h"
 
+// gui-qt
+#include "gui-qt/qtg_cxxside.h"
+
 typedef QHash<QString, QString> optionsHash;
 typedef QHash<QString, intptr_t> dialOptionsHash;
 struct client_options gui_options = {

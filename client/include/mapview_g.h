@@ -22,35 +22,25 @@
 // client
 #include "mapview_common.h"
 
-/* client/include */
-#include "canvas_g.h"
+void update_info_label(void);
+void update_unit_info_label(struct unit_list *punitlist);
+void update_mouse_cursor(enum cursor_type new_cursor_type);
+void update_turn_done_button(bool do_restore);
+void update_city_descriptions(void);
+void update_minimap(void);
 
-#include "gui_proto_constructor.h"
+void dirty_rect(int canvas_x, int canvas_y, int pixel_width,
+                int pixel_height);
+void dirty_all(void);
+void flush_dirty(void);
+void gui_flush(void);
 
-GUI_FUNC_PROTO(void, update_info_label, void)
-GUI_FUNC_PROTO(void, update_unit_info_label, struct unit_list *punitlist)
-GUI_FUNC_PROTO(void, update_mouse_cursor, enum cursor_type new_cursor_type)
-GUI_FUNC_PROTO(void, update_timeout_label, void)
-GUI_FUNC_PROTO(void, update_turn_done_button, bool do_restore)
-GUI_FUNC_PROTO(void, update_city_descriptions, void)
+void update_map_canvas_scrollbars(void);
 
-GUI_FUNC_PROTO(void, start_turn, void)
+void put_cross_overlay_tile(struct tile *ptile);
 
-GUI_FUNC_PROTO(void, update_minimap, void)
-
-GUI_FUNC_PROTO(void, dirty_rect, int canvas_x, int canvas_y, int pixel_width,
-               int pixel_height)
-GUI_FUNC_PROTO(void, dirty_all, void)
-GUI_FUNC_PROTO(void, flush_dirty, void)
-GUI_FUNC_PROTO(void, gui_flush, void)
-
-GUI_FUNC_PROTO(void, update_map_canvas_scrollbars, void)
-
-GUI_FUNC_PROTO(void, put_cross_overlay_tile, struct tile *ptile)
-
-GUI_FUNC_PROTO(void, draw_selection_rectangle, int canvas_x, int canvas_y,
-               int w, int h)
-GUI_FUNC_PROTO(void, tileset_changed, void)
+void draw_selection_rectangle(int canvas_x, int canvas_y, int w, int h);
+void tileset_changed(void);
 void show_city_desc(QPixmap *pcanvas, int canvas_x, int canvas_y,
                     struct city *pcity, int *width, int *height);
 

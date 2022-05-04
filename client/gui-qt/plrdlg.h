@@ -16,7 +16,6 @@
 #include <QWidget>
 // client
 #include "plrdlg_common.h"
-#include "plrdlg_g.h"
 
 class QHBoxLayout;
 class QItemSelection;

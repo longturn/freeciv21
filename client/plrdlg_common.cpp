@@ -34,8 +34,6 @@
 #include "text.h"
 
 /* client/include */
-#include "plrdlg_g.h"
-
 #include "plrdlg_common.h"
 
 /**

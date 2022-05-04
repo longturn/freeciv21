@@ -39,8 +39,10 @@
 #include "tilespec.h"
 
 /* client/include */
-#include "editgui_g.h"
 #include "mapview_g.h"
+
+// gui-qt
+#include "gui-qt/qtg_cxxside.h"
 
 enum selection_modes {
   SELECTION_MODE_NEW = 0,

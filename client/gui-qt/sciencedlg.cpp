@@ -22,7 +22,7 @@
 // client
 #include "client_main.h"
 #include "climisc.h"
-#include "helpdlg_g.h"
+#include "helpdlg.h"
 #include "reqtree.h"
 #include "sprite.h"
 #include "text.h"

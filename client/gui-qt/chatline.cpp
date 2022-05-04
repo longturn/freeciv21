@@ -22,7 +22,6 @@
 // common
 #include "chat.h"
 #include "chatline_common.h"
-#include "chatline_g.h"
 // client
 #include "audio.h"
 #include "client_main.h"

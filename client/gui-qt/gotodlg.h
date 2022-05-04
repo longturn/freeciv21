@@ -13,8 +13,6 @@
 #include <QWidget>
 // common
 #include "unit.h"
-// client
-#include "gotodlg_g.h"
 
 class QTableWidget;
 class QPushButton;
@@ -59,3 +57,5 @@ private:
   void fill_tab(struct player *pplayer);
   struct tile *original_tile;
 };
+
+void popup_goto_dialog();

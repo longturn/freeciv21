@@ -62,18 +62,13 @@
 
 /* client/include */
 #include "citydlg_g.h"
-#include "connectdlg_g.h"
 #include "dialogs_g.h"
 #include "diplodlg_g.h"
-#include "editgui_g.h"
 #include "gui_main_g.h"
-#include "helpdlg_g.h"
 #include "mapctrl_g.h"
 #include "mapview_g.h"
 #include "menu_g.h"
-#include "messagewin_g.h"
 #include "pages_g.h"
-#include "plrdlg_g.h"
 #include "repodlgs_g.h"
 #include "voteinfo_bar_g.h"
 
@@ -90,14 +85,20 @@
 #include "global_worklist.h"
 #include "governor.h"
 #include "mapview_common.h"
+#include "messagewin_common.h"
 #include "music.h"
 #include "options.h"
 #include "overview_common.h"
 #include "packhand.h"
+#include "plrdlg_common.h"
 #include "themes_common.h"
 #include "tilespec.h"
 #include "update_queue.h"
 #include "voteinfo.h"
+
+// gui-qt
+#include "gui-qt/helpdlg.h"
+#include "gui-qt/qtg_cxxside.h"
 
 /* client/luascript */
 #include "script_client.h"

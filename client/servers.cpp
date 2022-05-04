@@ -22,6 +22,7 @@
 #include <QEventLoop>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QUdpSocket>
 #include <QUrlQuery>
 
 // dependencies
@@ -36,8 +37,10 @@
 #include "version.h"
 
 // client
-#include "chatline_g.h"
 #include "client_main.h"
+
+// gui-qt
+#include "gui-qt/chatline.h"
 
 struct server_scan {
   enum server_scan_type type;

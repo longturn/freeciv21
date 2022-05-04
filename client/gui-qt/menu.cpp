@@ -40,7 +40,7 @@
 #include "clinet.h"
 #include "connectdlg_common.h"
 #include "control.h"
-#include "helpdlg_g.h"
+#include "helpdlg.h"
 #include "mapctrl_g.h"
 #include "mapview_common.h"
 #include "ratesdlg_g.h"
@@ -2389,7 +2389,7 @@ void mr_menu::slot_load()
 {
   unit_list_iterate(get_units_in_focus(), punit)
   {
-    qtg_request_transport(punit, unit_tile(punit));
+    request_transport(punit, unit_tile(punit));
   }
   unit_list_iterate_end;
 }

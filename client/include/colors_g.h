@@ -12,7 +12,5 @@
 
 #include "colors_common.h"
 
-#include "gui_proto_constructor.h"
-
 int color_brightness_score(const QColor &color);
 QColor get_diag_color(int);
