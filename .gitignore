@@ -42,8 +42,6 @@ build.ninja
 
 # Build directories
 /build*
-/x86*
-/x64*
 
 # IDE files
 .cache
@@ -53,6 +51,3 @@ build.ninja
 .vs
 # Project file
 *.kdev4
-*.sln
-*.vcxproj
-*.vcxproj.*
