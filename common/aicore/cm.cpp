@@ -1010,8 +1010,8 @@ static void top_sort_lattice(struct tile_type_vector *lattice)
   int i;
   std::vector<bool> marked;
   std::vector<bool> will_mark;
-  marked.reserve(lattice->size);
-  will_mark.reserve(lattice->size);
+  marked.resize(lattice->size);
+  will_mark.resize(lattice->size);
 
   struct tile_type_vector vectors[2];
   struct tile_type_vector *current, *next;

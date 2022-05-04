@@ -354,7 +354,7 @@ static struct reqtree *create_dummy_reqtree(struct player *pplayer,
   struct reqtree *tree = new reqtree();
   int j;
   std::vector<struct tree_node *> nodes;
-  nodes.reserve(advance_count());
+  nodes.resize(advance_count());
 
   nodes[A_NONE] = nullptr;
   advance_index_iterate(A_FIRST, tech)
@@ -613,7 +613,7 @@ static void set_layers(struct reqtree *tree)
   {
     // Counters for order - order number for the next node in the layer
     std::vector<int> T;
-    T.reserve(num_layers);
+    T.resize(num_layers);
 
     tree->layers = new tree_node **[num_layers];
     tree->layer_size = new int[num_layers];
@@ -692,7 +692,7 @@ static int count_crossings(struct reqtree *tree, int layer)
   int layer1_size = tree->layer_size[layer];
   int layer2_size = tree->layer_size[layer + 1];
   std::vector<int> X;
-  X.reserve(layer2_size);
+  X.resize(layer2_size);
   int i, j, k;
   int sum = 0;
 
@@ -737,7 +737,7 @@ static void swap(struct reqtree *tree, int layer, int order1, int order2)
 static void improve(struct reqtree *tree)
 {
   std::vector<int> crossings;
-  crossings.reserve(tree->num_layers - 1);
+  crossings.resize(tree->num_layers - 1);
   int i, x1, x2, layer;
 
   for (i = 0; i < tree->num_layers - 1; i++) {

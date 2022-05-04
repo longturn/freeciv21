@@ -379,7 +379,7 @@ static int max_tile_trade(const struct city *pcity, const player *seen_as)
   int i, total = 0;
   int radius_sq = city_map_radius_sq_get(pcity);
   std::vector<int> tile_trade;
-  tile_trade.reserve(city_map_tiles(radius_sq));
+  tile_trade.resize(city_map_tiles(radius_sq));
   size_t size = 0;
   bool is_celebrating = base_city_celebrating(pcity);
 

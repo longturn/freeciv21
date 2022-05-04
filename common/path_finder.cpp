@@ -549,7 +549,8 @@ bool path_finder::path_finder_private::run_search(
   // Check if we've already found a path (but keep searching if the tip of
   // the queue is cheaper: we haven't checked every possibility).
   if (auto it = destination.find_best(best_vertices, waypoints.size());
-      it != best_vertices.end() && !(*it->second > queue.top())) {
+      it != best_vertices.end()
+      && !(!queue.empty() && *it->second > queue.top())) {
     return true;
   }
 
