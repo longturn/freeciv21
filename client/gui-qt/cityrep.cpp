@@ -415,7 +415,7 @@ void city_widget::city_view()
   if (gui_options.center_when_popup_city) {
     center_tile_mapcanvas(pcity->tile);
   }
-  qtg_real_city_dialog_popup(pcity);
+  real_city_dialog_popup(pcity);
 }
 
 /**
@@ -1044,7 +1044,7 @@ void city_widget::gen_production_labels(city_widget::menu_labels what,
     num_sel = selected_cities.count();
   }
   std::vector<struct city *> array;
-  array.reserve(num_sel);
+  array.resize(num_sel);
 
   if (global) {
     i = 0;

@@ -34,8 +34,8 @@ void distribute(int number, int groups, int *ratios, int *result)
 {
   int i, sum = 0, max_count, max;
   std::vector<int> rest, max_groups;
-  rest.reserve(groups);
-  max_groups.reserve(groups);
+  rest.resize(groups);
+  max_groups.resize(groups);
 #ifdef FREECIV_DEBUG
   const int original_number = number;
 #endif

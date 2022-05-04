@@ -61,17 +61,12 @@
 /* client/include */
 #include "citydlg_g.h"
 #include "cityrep_g.h"
-#include "connectdlg_g.h"
 #include "dialogs_g.h"
-#include "editgui_g.h"
 #include "gui_main_g.h"
-#include "inteldlg_g.h"
 #include "mapctrl_g.h" // popup_newcity_dialog()
 #include "mapview_g.h"
 #include "menu_g.h"
-#include "messagewin_g.h"
 #include "pages_g.h"
-#include "plrdlg_g.h"
 #include "ratesdlg_g.h"
 #include "repodlgs_g.h"
 #include "spaceshipdlg_g.h"
@@ -81,6 +76,7 @@
 #include "attribute.h"
 #include "audio.h"
 #include "chatline_common.h"
+#include "citydlg_common.h"
 #include "client_main.h"
 #include "climap.h"
 #include "climisc.h"
@@ -89,14 +85,19 @@
 #include "editor.h"
 #include "goto.h" // client_goto_init()
 #include "governor.h"
-#include "helpdlg_g.h"
 #include "mapview_common.h"
+#include "messagewin_common.h"
 #include "music.h"
 #include "options.h"
 #include "overview_common.h"
+#include "plrdlg_common.h"
 #include "tilespec.h"
 #include "update_queue.h"
 #include "voteinfo.h"
+
+// gui-qt
+#include "gui-qt/helpdlg.h"
+#include "gui-qt/qtg_cxxside.h"
 
 /* client/luascript */
 #include "script_client.h"
@@ -2364,7 +2365,6 @@ void handle_player_info(const struct packet_player_info *pinfo)
 
   if (pplayer->economic.infra_points != pinfo->infrapoints) {
     pplayer->economic.infra_points = pinfo->infrapoints;
-    update_infra_dialog();
   }
 
   /* Don't use player_iterate or player_slot_count here, because we ignore
@@ -2493,7 +2493,7 @@ void handle_research_info(const struct packet_research_info *packet)
   bool tech_changed = false;
   bool poptechup = false;
   std::vector<Tech_type_id> gained_techs;
-  gained_techs.reserve(advance_count());
+  gained_techs.resize(advance_count());
   int gained_techs_num = 0, i;
   enum tech_state newstate, oldstate;
 

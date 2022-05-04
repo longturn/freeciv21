@@ -104,7 +104,7 @@ static enum attribute_serial serialize_hash(attributeHash *hash,
   const size_t entries = hash->size();
   int total_length;
   std::vector<int> value_lengths;
-  value_lengths.reserve(entries);
+  value_lengths.resize(entries);
   void *result;
   struct raw_data_out dout;
   int i;
