@@ -11,7 +11,7 @@ Workstation
 
 Freeciv21 can be developed on Linux, Windows and MacOS. Any current version of these OS's is acceptible. For
 Windows, you will need to setup either the MSYS2 environment or Visual Studio to do development.
-Refer to :doc:`msys2` or :doc:`Visual Stuido <visual-studio>` for more information. It should be generally
+Refer to :doc:`msys2` or :doc:`Visual Studio <visual-studio>` for more information. It should be generally
 understood that :strong:`Linux` is the preferred development platform.
 
 Technically all you need is a text editor of some kind to edit the files, but most people prefer to use an
