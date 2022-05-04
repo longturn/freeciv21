@@ -26,14 +26,15 @@
 /* client/include */
 #include "citydlg_g.h"
 #include "mapview_g.h"
-#include "messagewin_g.h"
 
 // client
 #include "client_main.h"
+#include "messagewin_common.h"
 #include "options.h"
 #include "update_queue.h"
 
-#include "messagewin_common.h"
+// gui-qt
+#include "gui-qt/messagewin.h"
 
 static struct message **messages = nullptr;
 static int messages_total = 0;

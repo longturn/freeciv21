@@ -54,6 +54,7 @@
 
 // client
 #include "chatline_common.h"
+#include "citydlg_common.h"
 #include "client_main.h"
 #include "climap.h"
 #include "climisc.h"
@@ -65,6 +66,9 @@
 #include "packhand.h"
 #include "repodlgs_common.h"
 #include "tilespec.h"
+
+// gui-qt
+#include "gui-qt/qtg_cxxside.h"
 
 extern void flush_dirty_overview();
 /**

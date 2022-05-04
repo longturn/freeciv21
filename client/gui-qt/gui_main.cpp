@@ -61,11 +61,7 @@ class fc_client *king() { return freeciv_qt; }
 /**
    Entry point for whole freeciv client program.
  */
-int main(int argc, char **argv)
-{
-  setup_gui_funcs();
-  return client_main(argc, argv);
-}
+int main(int argc, char **argv) { return client_main(argc, argv); }
 
 /**
    Migrate Qt client specific options from freeciv-2.5 options
@@ -100,7 +96,7 @@ void ui_main()
       migrate_options_from_2_5();
     }
     if (!load_theme(gui_options.gui_qt_default_theme_name)) {
-      qtg_gui_clear_theme();
+      gui_clear_theme();
     }
     freeciv_qt = new fc_client();
     freeciv_qt->fc_main(qApp);
@@ -115,7 +111,7 @@ QApplication *current_app() { return qApp; }
 /**
    Extra initializers for client options.
  */
-void qtg_options_extra_init()
+void options_extra_init()
 {
   struct option *poption;
 
@@ -144,10 +140,10 @@ void ui_exit() { delete freeciv_qt; }
 /**
    Update the connected users list at pregame state.
  */
-void qtg_real_conn_list_dialog_update(void *unused)
+void real_conn_list_dialog_update(void *unused)
 {
-  if (qtg_get_current_client_page() == PAGE_NETWORK) {
-    qtg_real_set_client_page(PAGE_START);
+  if (get_current_client_page() == PAGE_NETWORK) {
+    real_set_client_page(PAGE_START);
   }
   qobject_cast<page_pregame *>(king()->pages[PAGE_START])
       ->update_start_page();
@@ -157,7 +153,7 @@ void qtg_real_conn_list_dialog_update(void *unused)
    Make a bell noise (beep).  This provides low-level sound alerts even
    if there is no real sound support.
  */
-void qtg_sound_bell()
+void sound_bell()
 {
   QApplication::beep();
   QApplication::alert(king()->central_wdg);
@@ -170,14 +166,14 @@ void qtg_sound_bell()
    This function is called after the client succesfully has connected
    to the server.
  */
-void qtg_add_net_input(QTcpSocket *sock) { king()->add_server_source(sock); }
+void add_net_input(QTcpSocket *sock) { king()->add_server_source(sock); }
 
 /**
    Stop waiting for any server network data.  See add_net_input().
 
    This function is called if the client disconnects from the server.
  */
-void qtg_remove_net_input() {}
+void remove_net_input() {}
 
 /**
    Set one of the unit icons (specified by idx) in the information area
@@ -190,7 +186,7 @@ void qtg_remove_net_input() {}
    the icon for the active unit. Or idx in [0..num_units_below-1] for
    secondary (inactive) units on the same tile.
  */
-void qtg_set_unit_icon(int idx, struct unit *punit)
+void set_unit_icon(int idx, struct unit *punit)
 { // PORTME
 }
 
@@ -201,7 +197,7 @@ void qtg_set_unit_icon(int idx, struct unit *punit)
 
    Is disabled by default.
  */
-void qtg_set_unit_icons_more_arrow(bool onoff)
+void set_unit_icons_more_arrow(bool onoff)
 { // PORTME
 }
 
@@ -211,7 +207,7 @@ void qtg_set_unit_icons_more_arrow(bool onoff)
  platform- independent code, so some clients will not need to do anything
  here.
  */
-void qtg_real_focus_units_changed()
+void real_focus_units_changed()
 {
   units_select *unit_sel = queen()->unit_selector;
   if (unit_sel != nullptr && unit_sel->isVisible()) {
@@ -224,7 +220,7 @@ void qtg_real_focus_units_changed()
    function should be called sometimes soon, and passed the 'data' pointer
    as its data.
  */
-void qtg_add_idle_callback(void(callback)(void *), void *data)
+void add_idle_callback(void(callback)(void *), void *data)
 {
   call_me_back *cb = new call_me_back; // removed in mr_idler:idling()
 
@@ -302,13 +298,12 @@ static void apply_help_font(struct option *poption)
 static void apply_notify_font(struct option *poption)
 {
   if (king()) {
-    qtg_gui_update_font(QStringLiteral("notify_label"),
-                        option_font_get(poption));
+    gui_update_font(QStringLiteral("notify_label"),
+                    option_font_get(poption));
     restart_notify_reports();
   }
-  if (king() && qtg_get_current_client_page() == PAGE_GAME) {
-    qtg_gui_update_font(QStringLiteral("city_label"),
-                        option_font_get(poption));
+  if (king() && get_current_client_page() == PAGE_GAME) {
+    gui_update_font(QStringLiteral("city_label"), option_font_get(poption));
     city_font_update();
   }
 }
@@ -316,42 +311,39 @@ static void apply_notify_font(struct option *poption)
 /**
    Stub for editor function
  */
-void qtg_editgui_tileset_changed() {}
+void editgui_tileset_changed() {}
 
 /**
    Stub for editor function
  */
-void qtg_editgui_refresh() {}
+void editgui_refresh() {}
 
 /**
    Stub for editor function
  */
-void qtg_editgui_popup_properties(const struct tile_list *tiles, int objtype)
+void editgui_popup_properties(const struct tile_list *tiles, int objtype) {}
+
+/**
+   Stub for editor function
+ */
+void editgui_popdown_all() {}
+
+/**
+   Stub for editor function
+ */
+void editgui_notify_object_changed(int objtype, int object_id, bool removal)
 {
 }
 
 /**
    Stub for editor function
  */
-void qtg_editgui_popdown_all() {}
-
-/**
-   Stub for editor function
- */
-void qtg_editgui_notify_object_changed(int objtype, int object_id,
-                                       bool removal)
-{
-}
-
-/**
-   Stub for editor function
- */
-void qtg_editgui_notify_object_created(int tag, int id) {}
+void editgui_notify_object_created(int tag, int id) {}
 
 /**
    Updates a gui font style.
  */
-void qtg_gui_update_font(const QString &font_name, const QString &font_value)
+void gui_update_font(const QString &font_name, const QString &font_value)
 {
   QString fname;
 

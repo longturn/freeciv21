@@ -18,51 +18,44 @@
 
 class QTcpSocket;
 
-void setup_gui_funcs();
+void options_extra_init();
+void set_rulesets(int num_rulesets, QStringList rulesets);
+void add_net_input(QTcpSocket *sock);
+void remove_net_input();
+void real_conn_list_dialog_update(void *unused);
+void close_connection_dialog();
+void add_idle_callback(void(callback)(void *), void *data);
+void sound_bell();
 
-void qtg_set_rulesets(int num_rulesets, QStringList rulesets);
-void qtg_options_extra_init();
-void qtg_add_net_input(QTcpSocket *sock);
-void qtg_remove_net_input();
-void qtg_real_conn_list_dialog_update(void *unused);
-void qtg_close_connection_dialog();
-void qtg_add_idle_callback(void(callback)(void *), void *data);
-void qtg_sound_bell();
+void real_set_client_page(client_pages page);
+client_pages get_current_client_page();
 
-void qtg_real_set_client_page(enum client_pages page);
-enum client_pages qtg_get_current_client_page();
+void popup_combat_info(int attacker_unit_id, int defender_unit_id,
+                       int attacker_hp, int defender_hp,
+                       bool make_att_veteran, bool make_def_veteran);
+void set_unit_icon(int idx, unit *punit);
+void set_unit_icons_more_arrow(bool onoff);
+void real_focus_units_changed();
+void gui_update_font(const QString &font_name, const QString &font_value);
 
-void qtg_popup_combat_info(int attacker_unit_id, int defender_unit_id,
-                           int attacker_hp, int defender_hp,
-                           bool make_att_veteran, bool make_def_veteran);
-void qtg_set_unit_icon(int idx, struct unit *punit);
-void qtg_set_unit_icons_more_arrow(bool onoff);
-void qtg_real_focus_units_changed();
-void qtg_gui_update_font(const QString &font_name,
-                         const QString &font_value);
+void editgui_refresh();
+void editgui_notify_object_created(int tag, int id);
+void editgui_notify_object_changed(int objtype, int object_id, bool removal);
+void editgui_popup_properties(const tile_list *tiles, int objtype);
+void editgui_tileset_changed();
+void editgui_popdown_all();
 
-void qtg_editgui_refresh();
-void qtg_editgui_notify_object_created(int tag, int id);
-void qtg_editgui_notify_object_changed(int objtype, int object_id,
-                                       bool removal);
-void qtg_editgui_popup_properties(const struct tile_list *tiles,
-                                  int objtype);
-void qtg_editgui_tileset_changed();
-void qtg_editgui_popdown_all();
+void update_timeout_label();
+void start_turn();
+void real_city_dialog_popup(struct city *pcity);
+void real_city_dialog_refresh(struct city *pcity);
+void popdown_city_dialog(struct city *pcity);
+void popdown_all_city_dialogs();
+bool handmade_scenario_warning();
+void refresh_unit_city_dialogs(struct unit *punit);
+bool city_dialog_is_open(struct city *pcity);
 
-void qtg_update_timeout_label();
-void qtg_start_turn();
-void qtg_real_city_dialog_popup(struct city *pcity);
-void qtg_real_city_dialog_refresh(struct city *pcity);
-void qtg_popdown_city_dialog(struct city *pcity);
-void qtg_popdown_all_city_dialogs();
-bool qtg_handmade_scenario_warning();
-void qtg_refresh_unit_city_dialogs(struct unit *punit);
-bool qtg_city_dialog_is_open(struct city *pcity);
+bool request_transport(struct unit *pcargo, struct tile *ptile);
 
-bool qtg_request_transport(struct unit *pcargo, struct tile *ptile);
-
-void qtg_update_infra_dialog();
-
-void qtg_gui_clear_theme();
-QStringList qtg_get_gui_specific_themes_directories(int *count);
+void gui_clear_theme();
+QStringList get_gui_specific_themes_directories(int *count);

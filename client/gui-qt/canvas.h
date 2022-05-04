@@ -10,12 +10,22 @@
 **************************************************************************/
 
 #pragma once
-#include "canvas_g.h"
+#include "support.h"
 // Qt
+#include <QImage>
 #include <QPixmap>
+
+// Text drawing functions
+enum client_font {
+  FONT_CITY_NAME,
+  FONT_CITY_PROD,
+  FONT_REQTREE_TEXT,
+  FONT_COUNT
+};
 
 void pixmap_copy(QPixmap *dest, const QPixmap *src, int src_x, int src_y,
                  int dest_x, int dest_y, int width, int height);
 void image_copy(QImage *dest, const QImage *src, int src_x, int src_y,
                 int dest_x, int dest_y, int width, int height);
 QRect zealous_crop_rect(QImage &p);
+QFont get_font(client_font font);

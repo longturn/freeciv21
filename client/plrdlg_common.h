@@ -40,3 +40,8 @@ void init_player_dlg_common();
 int player_dlg_default_sort_column();
 
 QString player_addr_hack(const struct player *pplayer);
+
+void close_intel_dialog(struct player *pplayer);
+void update_intel_dialog(struct player *pplayer);
+void popup_players_dialog();
+void real_players_dialog_update(void *unused);

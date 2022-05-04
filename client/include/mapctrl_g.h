@@ -19,12 +19,9 @@
 // client
 #include "mapctrl_common.h"
 
-#include "gui_proto_constructor.h"
+void popup_newcity_dialog(struct unit *punit, const char *suggestname);
 
-GUI_FUNC_PROTO(void, popup_newcity_dialog, struct unit *punit,
-               const char *suggestname)
+void set_turn_done_button_state(bool state);
 
-GUI_FUNC_PROTO(void, set_turn_done_button_state, bool state)
-
-GUI_FUNC_PROTO(void, create_line_at_mouse_pos, void)
-GUI_FUNC_PROTO(void, update_rect_at_mouse_pos, void)
+void create_line_at_mouse_pos();
+void update_rect_at_mouse_pos();

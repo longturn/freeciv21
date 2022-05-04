@@ -112,7 +112,7 @@ void gui_load_theme(const QString &directory, const QString &theme_name)
 
   if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
     if (QString(theme_name) != QStringLiteral(FC_QT_DEFAULT_THEME_NAME)) {
-      qtg_gui_clear_theme();
+      gui_clear_theme();
     }
     return;
   }
@@ -149,7 +149,7 @@ void gui_load_theme(const QString &directory, const QString &theme_name)
 /**
    Clears a theme (sets default system theme)
  */
-void qtg_gui_clear_theme()
+void gui_clear_theme()
 {
   if (!load_theme(FC_QT_DEFAULT_THEME_NAME)) {
     // TRANS: No full stop after the URL, could cause confusion.
@@ -166,7 +166,7 @@ void qtg_gui_clear_theme()
    Returns an array containing these strings and sets array size in count.
    The caller is responsible for freeing the array and the paths.
  */
-QStringList qtg_get_gui_specific_themes_directories(int *count)
+QStringList get_gui_specific_themes_directories(int *count)
 {
   auto data_dirs = get_data_dirs();
   QStringList directories;

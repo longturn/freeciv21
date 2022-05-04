@@ -53,10 +53,13 @@
 #include "control.h"
 #include "editor.h"
 #include "goto.h"
+#include "mapview_common.h"
 #include "overview_common.h"
 #include "tilespec.h"
 
-#include "mapview_common.h"
+// gui-qt
+#include "gui-qt/canvas.h"
+#include "gui-qt/qtg_cxxside.h"
 
 Q_LOGGING_CATEGORY(graphics_category, "freeciv.graphics")
 

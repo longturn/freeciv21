@@ -28,8 +28,8 @@
 #include "featured_text.h"
 #include "packets.h"
 
-// include
-#include "chatline_g.h"
+// gui-qt
+#include "gui-qt/chatline.h"
 
 // client
 #include "client_main.h"

@@ -755,7 +755,7 @@ void unit_list_item::disband()
 void unit_list_item::load()
 {
   if (can_issue_orders()) {
-    qtg_request_transport(m_unit, unit_tile(m_unit));
+    request_transport(m_unit, unit_tile(m_unit));
   }
 }
 
@@ -810,7 +810,7 @@ void unit_list_item::activate_and_close_dialog()
   if (can_issue_orders()) {
     unit_focus_set(m_unit);
     queen()->city_overlay->dont_focus = true;
-    qtg_popdown_all_city_dialogs();
+    popdown_all_city_dialogs();
   }
 }
 
@@ -2844,7 +2844,7 @@ void city_dialog::update_title()
    Pop up (or bring to the front) a dialog for the given city.  It may or
    may not be modal.
  */
-void qtg_real_city_dialog_popup(struct city *pcity)
+void real_city_dialog_popup(struct city *pcity)
 {
   auto *widget = queen()->city_overlay;
   if (!queen()->city_overlay->isVisible()) {
@@ -2872,24 +2872,24 @@ void destroy_city_dialog()
 /**
    Close the dialog for the given city.
  */
-void qtg_popdown_city_dialog(struct city *pcity)
+void popdown_city_dialog(struct city *pcity)
 {
   Q_UNUSED(pcity)
 
-  qtg_popdown_all_city_dialogs(); // We only ever have one city dialog
+  popdown_all_city_dialogs(); // We only ever have one city dialog
 }
 
 /**
    Close the dialogs for all cities.
  */
-void qtg_popdown_all_city_dialogs() { queen()->city_overlay->hide(); }
+void popdown_all_city_dialogs() { queen()->city_overlay->hide(); }
 
 /**
    Refresh (update) all data for the given city's dialog.
  */
-void qtg_real_city_dialog_refresh(struct city *pcity)
+void real_city_dialog_refresh(struct city *pcity)
 {
-  if (qtg_city_dialog_is_open(pcity)) {
+  if (city_dialog_is_open(pcity)) {
     queen()->city_overlay->refresh();
   }
 }
@@ -2917,15 +2917,15 @@ void city_font_update()
    typically means updating both the unit's home city (if any) and the
    city in which it is present (if any).
  */
-void qtg_refresh_unit_city_dialogs(struct unit *punit)
+void refresh_unit_city_dialogs(struct unit *punit)
 {
   struct city *pcity_sup, *pcity_pre;
 
   pcity_sup = game_city_by_number(punit->homecity);
   pcity_pre = tile_city(punit->tile);
 
-  qtg_real_city_dialog_refresh(pcity_sup);
-  qtg_real_city_dialog_refresh(pcity_pre);
+  real_city_dialog_refresh(pcity_sup);
+  real_city_dialog_refresh(pcity_pre);
 }
 
 struct city *is_any_city_dialog_open()
@@ -2940,7 +2940,7 @@ struct city *is_any_city_dialog_open()
 
   city_list_iterate(client.conn.playing->cities, pcity)
   {
-    if (qtg_city_dialog_is_open(pcity)) {
+    if (city_dialog_is_open(pcity)) {
       return pcity;
     }
   }
@@ -2951,7 +2951,7 @@ struct city *is_any_city_dialog_open()
 /**
    Return whether the dialog for the given city is open.
  */
-bool qtg_city_dialog_is_open(struct city *pcity)
+bool city_dialog_is_open(struct city *pcity)
 {
   return queen()->city_overlay->pcity == pcity
          && queen()->city_overlay->isVisible();

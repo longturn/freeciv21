@@ -35,7 +35,6 @@
 /* common/aicore */
 #include "path_finding.h"
 /* client/include */
-#include "chatline_g.h"
 #include "citydlg_g.h"
 #include "dialogs_g.h"
 #include "gui_main_g.h"
@@ -57,6 +56,10 @@
 #include "update_queue.h"
 
 #include "control.h"
+
+// gui-qt
+#include "gui-qt/chatline.h"
+#include "gui-qt/qtg_cxxside.h"
 
 struct client_disband_unit_data {
   int unit_id;

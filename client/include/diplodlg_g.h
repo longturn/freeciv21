@@ -14,8 +14,6 @@
 
 #include "diptreaty.h"
 
-#include "gui_proto_constructor.h"
-
 void handle_diplomacy_init_meeting(int counterpart, int initiated_from);
 void handle_diplomacy_cancel_meeting(int counterpart, int initiated_from);
 void handle_diplomacy_create_clause(int counterpart, int giver,

@@ -64,7 +64,6 @@
 #include "citydlg_g.h"
 #include "dialogs_g.h"
 #include "gui_main_g.h"
-#include "helpdlg_g.h"
 #include "mapview_g.h" // for update_map_canvas_visible
 #include "menu_g.h"
 #include "sprite_g.h"
@@ -87,8 +86,10 @@
 #include "layer_terrain.h"
 #include "options.h" // for fill_xxx
 #include "themes_common.h"
-
 #include "tilespec.h"
+
+// gui-qt
+#include "gui-qt/helpdlg.h"
 
 #define TILESPEC_CAPSTR                                                     \
   "+Freeciv-tilespec-Devel-2019-Jul-03 duplicates_ok precise-hp-bars "      \

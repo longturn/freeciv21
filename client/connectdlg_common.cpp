@@ -47,9 +47,11 @@
 #include "climisc.h"
 #include "clinet.h" // connect_to_server()
 #include "connectdlg_common.h"
-#include "connectdlg_g.h"
 #include "packhand_gen.h"
 #include "tilespec.h"
+
+// gui-qt
+#include "gui-qt/qtg_cxxside.h"
 
 #define WAIT_BETWEEN_TRIES 100000 // usecs
 #define NUMBER_OF_TRIES 500

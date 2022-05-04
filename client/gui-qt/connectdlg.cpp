@@ -15,7 +15,6 @@
 #include "packhand_gen.h"
 // gui-qt
 #include "connectdlg.h"
-#include "connectdlg_g.h"
 #include "fc_client.h"
 #include "page_network.h"
 #include "pages_g.h"
@@ -25,10 +24,10 @@
    Close and destroy the dialog. But only if we don't have a local
    server running (that we started).
  */
-void qtg_close_connection_dialog()
+void close_connection_dialog()
 {
   if (king()->current_page() != PAGE_NETWORK) {
-    qtg_real_set_client_page(PAGE_MAIN);
+    real_set_client_page(PAGE_MAIN);
   }
 }
 

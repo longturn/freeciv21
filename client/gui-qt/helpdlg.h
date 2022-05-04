@@ -15,7 +15,7 @@
 // common
 #include "extras.h"
 // client
-#include "helpdlg_g.h"
+#include "helpdata.h"
 // gui-qt
 #include "dialogs.h"
 
@@ -143,3 +143,6 @@ public:
 };
 
 void update_help_fonts();
+void popup_help_dialog_string(const char *item);
+void popup_help_dialog_typed(const char *item, help_page_type htype);
+void popdown_help_dialog();

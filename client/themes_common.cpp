@@ -27,6 +27,9 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "options.h"
 #include "themes_common.h"
 
+// gui-qt
+#include "gui-qt/qtg_cxxside.h"
+
 Q_GLOBAL_STATIC(QVector<QString>, themes_list)
 /***************************************************************************
   A theme is a portion of client data, which for following reasons should

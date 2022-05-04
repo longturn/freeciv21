@@ -28,14 +28,12 @@
 #include "player.h"
 
 /* client/include */
-#include "canvas_g.h"
 #include "citydlg_g.h"
 #include "cityrep_g.h"
 #include "dialogs_g.h"
 #include "gui_main_g.h"
 #include "menu_g.h"
 #include "pages_g.h"
-#include "plrdlg_g.h"
 #include "ratesdlg_g.h"
 #include "repodlgs_g.h"
 
@@ -43,9 +41,13 @@
 #include "client_main.h"
 #include "connectdlg_common.h"
 #include "options.h"
+#include "plrdlg_common.h"
 #include "tilespec.h"
-
 #include "update_queue.h"
+
+// gui-qt
+#include "gui-qt/canvas.h"
+#include "gui-qt/qtg_cxxside.h"
 
 update_queue *update_queue::m_instance = nullptr;
 

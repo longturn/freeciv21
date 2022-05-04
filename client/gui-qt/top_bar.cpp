@@ -36,6 +36,7 @@
 #include "fonts.h"
 #include "mapview.h"
 #include "page_game.h"
+#include "qtg_cxxside.h"
 #include "sciencedlg.h"
 #include "sprite.h"
 #include "top_bar.h"

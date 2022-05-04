@@ -9,7 +9,6 @@
 **************************************************************************/
 #pragma once
 
-#include "messagedlg_g.h"
 // Qt
 #include <QWidget>
 

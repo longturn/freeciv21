@@ -36,24 +36,22 @@
 // client
 #include "attribute.h"
 #include "chatline_common.h"
-#include "chatline_g.h"
 #include "client_main.h"
 #include "climisc.h"
+#include "clinet.h"
 #include "connectdlg_common.h"
-#include "connectdlg_g.h"
 #include "dialogs_g.h" // popdown_races_dialog()
 #include "governor.h"
-#include "gui_main_g.h"     // add_net_input(), remove_net_input()
 #include "mapview_common.h" // unqueue_mapview_update
 #include "menu_g.h"
-#include "messagewin_g.h"
 #include "options.h"
 #include "packhand.h"
 #include "pages_g.h"
-#include "plrdlg_g.h"
+#include "plrdlg_common.h"
 #include "repodlgs_g.h"
 
-#include "clinet.h"
+// gui-qt
+#include "gui-qt/qtg_cxxside.h"
 
 // In autoconnect mode, try to connect to once a second
 #define AUTOCONNECT_INTERVAL 500

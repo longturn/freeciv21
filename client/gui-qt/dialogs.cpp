@@ -38,7 +38,6 @@
 #include "chatline_common.h"
 #include "client_main.h"
 #include "control.h"
-#include "helpdlg_g.h"
 #include "mapview_common.h"
 #include "packhand.h"
 #include "text.h"
@@ -46,6 +45,7 @@
 // gui-qt - awesome client
 #include "fc_client.h"
 #include "fonts.h"
+#include "helpdlg.h"
 #include "hudwidget.h"
 #include "icons.h"
 #include "mapview.h"
@@ -920,7 +920,7 @@ void notify_goto::inspect_city()
 {
   struct city *pcity = tile_city(gtile);
   if (pcity) {
-    qtg_real_city_dialog_popup(pcity);
+    real_city_dialog_popup(pcity);
   }
   close();
 }
@@ -3811,7 +3811,7 @@ choice_dialog *fc_client::get_diplo_dialog() { return opened_dialog; }
    Give a warning when user is about to edit scenario with manually
    set properties.
  */
-bool qtg_handmade_scenario_warning()
+bool handmade_scenario_warning()
 {
   // Just tell the client common code to handle this.
   return false;
@@ -3820,7 +3820,7 @@ bool qtg_handmade_scenario_warning()
 /**
    Unit wants to get into some transport on given tile.
  */
-bool qtg_request_transport(struct unit *pcargo, struct tile *ptile)
+bool request_transport(struct unit *pcargo, struct tile *ptile)
 {
   int tcount;
   hud_unit_loader *hul;
@@ -3864,9 +3864,9 @@ bool qtg_request_transport(struct unit *pcargo, struct tile *ptile)
    Popup detailed information about battle or save information for
    some kind of statistics
  */
-void qtg_popup_combat_info(int attacker_unit_id, int defender_unit_id,
-                           int attacker_hp, int defender_hp,
-                           bool make_att_veteran, bool make_def_veteran)
+void popup_combat_info(int attacker_unit_id, int defender_unit_id,
+                       int attacker_hp, int defender_hp,
+                       bool make_att_veteran, bool make_def_veteran)
 {
   if (king()->qt_settings.show_battle_log) {
     hud_unit_combat *huc = new hud_unit_combat(
