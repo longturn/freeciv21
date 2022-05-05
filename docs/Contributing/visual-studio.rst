@@ -15,46 +15,45 @@ Start by `downloading <https://visualstudio.microsoft.com/vs/community/>`_ the C
 
 Double-click the :file:`VisualStudioSetup.exe` file in your Downloads directory and follow the prompts to
 get the setup process started. At some point you will be prompted to select the type of workload you want to
-install. Select :guilabel:`Desktop development with C++`.  Next click on the Individual components tab and
-select the following options: :guilabel:`git for Windows`, :guilabel:`C++ Clang Compiler for Windows (13.0.0)`
-, and :guilabel:`C++ Clang-cl for v143 build tools (x64/x86)`.
+install. Select :guilabel:`Desktop development with C++` and :guilabel:`Python Development`.  Next click on the
+Individual components tab and select the following options: :guilabel:`Git for Windows`,
+:guilabel:`C++ Clang Compiler for Windows (13.0.0)`, :guilabel:`C++ Clang-cl for v143 build tools (x64/x86)`,
+:guilabel:`Python 3 64-bit (3.9.7)`, and :guilabel:`Python native development tools`.
 
 When ready click :guilabel:`Install`. Depending on your Internet connection speed, this may take awhile.
 
 When the installation process is finished you will be presented with a collection of options. Goto the very
-bottom right and click the link to :strong:`continue without code`.
-
+bottom right and click the link to :strong:`continue without code`. You can now close the Visual Studio
+installer. Leave the main Visual Studio IDE open, but you can minimize it for the next step.
 
 Setup VCPKG
 ===========
 
 :file:`vcpkg` is a library package manager developed by Microsoft. It makes downloading and installing
 third-party libraries much easier. Freeciv21 uses :file:`vcpkg` in this way via the manifest file
-:file:`vcpkg.json`.
+:file:`vcpkg.json`. Documentation is available here: https://github.com/microsoft/vcpkg
 
 First, create a directory on your computer to install :file:`vcpkg` into. For example: :file:`C:\\Tools`.
-The directory can be anywhere, however the author prefers to not install things in the root of the :file:`C:\\`
-drive.
+The directory can be anywhere, however the author prefers to :strong:`not` install things in the root of the
+:file:`C:\\` drive.
 
-Inside Visual Studio click :menuselection:`View --> Terminal`. Then get into the directory you created.
+Open an Administrative elevated PowerShell terminal window. Easiest way to do this is to right-click on the
+Start Menu and select it from the menu: ``Windows PowerShell (Admin)``
 
 .. code-block:: rst
 
-    PS C:\Users\[user]\Source\Repos> cd c:\tools
+    PS C:\Windows\System32> cd c:\tools
     PS C:\Tools>
 
 
-Now follow the directions: https://github.com/microsoft/vcpkg#quick-start-windows. The work should be performed
-in the terminal widget inside Visual Studio.
-
-Here is an abbreviated set of steps:
+Follow these steps to install :file:`vcpkg`. The :file:`setx` command should be altered to be the correct path
+that you installed :file:`vcpkg` into. The forward slashes are correct.
 
 .. code-block:: rst
 
     Tools> git clone https://github.com/microsoft/vcpkg
     Tools> .\vcpkg\bootstrap-vcpkg.bat
-    Tools> .\vcpkg\vcpkg integrate install
-    Tools> .\vcpkg\vcpkg integrate powershell
+    Tools> setx VCPKG_ROOT C:/Tools/vcpkg /M
     Tools> exit
 
 
@@ -86,12 +85,12 @@ browser, click the code button and then select the SSH option as shown in this s
     :alt: GitHub Clone SSH
 
 
-Select :menuselection:`View --> Terminal` to open a terminal in the IDE. Once you have the proper path, here
-is the command to clone the repository:
+Bring up Visual Studio. Select :menuselection:`View --> Terminal` to open a terminal in the IDE (if one is not
+already shown at the bottom. Once you have the proper GitHub path, here is the command to clone the repository:
 
 .. code-block:: rst
 
-  PS C:\Users\[user]\Source\Repos> git clone git@github.com:[username]/freeciv21.git
+    PS C:\Users\[user]\Source\Repos> git clone git@github.com:[username]/freeciv21.git
 
 
 This will clone the forked repository to the :file:`C:\\Users\\[User]\\Source\\Repos\\freeciv21` directory on
@@ -102,66 +101,69 @@ your computer:
 
 .. code-block:: rst
 
-  Repos> cd freeciv21
-  Repos\freeciv21> git remote add upstream https://github.com/longturn/freeciv21.git
+    Repos> cd freeciv21
+    Repos\freeciv21> git remote add upstream https://github.com/longturn/freeciv21.git
+    Repos\freeciv21> git fetch upstream
+    Repos\freeciv21> git fetch upstream master
 
 
 You will also need to set a couple global configuration settings so :code:`git` knows a bit more about you.
 
 .. code-block:: rst
 
-  freeciv21> git config --global user.email [email address associated with GitHub]
-  freeciv21> git config --global user.name [your first and last name]
+    freeciv21> git config --global user.email "[email address associated with GitHub]"
+    freeciv21> git config --global user.name "[your first and last name]"
 
 
 Build Visual Studio Solution
 ============================
 
-Select :menuselection:`Git --> Local Repositories --> Select Local Repository` and then select the
-:file:`freeciv21` folder. Visual Studio will take a minute to parse the source tree.
+Now let's get Visual Studio setup. Select :menuselection:`Git --> Local Repositories --> Open Local Repository`
+and then select the :file:`freeciv21` folder. Visual Studio will take a minute to parse the source tree.
 
-Select :menuselection:`File --> New --> Project from Existing Code`. Select :guilabel:`Visual C++`, Click
-:guilabel:`Next`, and then select the :file:`freeciv21` folder and give it a name. Click :guilabel:`Finish`
-when done. Visual Studio will create a solution file. It can take a few mintues for this to complete. You can
-look at the background tasks widget to see the progress.
+Select :menuselection:`File --> Open --> Folder`. Select the :file:`freeciv21` directory and then Visual Studio
+will parse the files in there. It can take a few mintues for this to complete. When complete, Visual Studio
+will open a :strong:`CMake Overview Pages` tab.
 
-
-Configure the Solution Properties
-=================================
-
-On the right you will see :guilabel:`Solution Explorer` and the solution named :emphasis:`Freeciv21` that was
-created with the last step in the previous section. If you do not see the :guilabel:`Solution Explorer`, then
-you can open with by clicking :menuselection:`View --> Solution Explorer`.
-
-.. image:: ../_static/images/visual-studio/solution-explorer.png
-    :align: center
-    :alt: Solution Explorer
+Microsoft provides documentation on CMake in Visual Studio --
+https://docs.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio?view=msvc-170
 
 
-Right-Click on the ``Freeciv21`` Project and select :guilabel:`Properties`. Select the page shown in the screen
-shot below. Change all the :strong:`bold` settings to match on your setup.
+Final Steps and Notes
+=====================
 
-.. image:: ../_static/images/visual-studio/project-settings-01.png
-    :align: center
-    :alt: General Settings
+As of this writing, there is not a fully integrated setup for configuring, compiling (building) and debugging
+Freeciv21 inside of the Visual Studio user interface. If you open any file (such as :file:`CMakeLists.txt`)
+and make a change, Visual Studio will prompt to :strong:`Generate` updated C++ Intellisense information. If
+selected, Visual Studio will configure using the ``fullrelease`` preset in :file:`CMakePresets.json` using the
+Ninja generator. Ninja only supports MSVC in Visual Studio. However, the Longturn community does not support
+MSVC due to licensing constraints. Instead the Longturn community supports the open source LLVM Clang-Cl
+compiler on Windows in Visual Studio (note that GCC is used in :doc:`MSYS2 <msys2>`). In order to configure,
+compile and debug with Clang-Cl you must do all the work from the command line. You will still want to allow
+Visual Studio to generate Intellisense data as that will aid in development, however understand that compiling
+with MSVC is not supported by the community and will most likely fail.
+
+Until Issue 1003 is resolved, these are the steps to configure, compile (build) and install Freeciv21 using
+Visual Studio:
+
+.. code-block:: rst
+
+  cmake . -B build -G "Visual Studio 17 2022" -DCMAKE_INSTALL_PREFIX=$PWD/build/install
+  cmake --build build
+  cmake --build build --target install
 
 
-Select the page shown in the screen shot below. Change all the :strong:`bold` settings to match on your setup.
-Notice the installed directory path to the :file:`vcpkg`. Ensure to match what you did earlier.
+The first command configures Visual Studio to compile a Debug version of the programs and places the install
+location to be a sub-directory of the :file:`build` directory for use during debugging and testing purposes.
+The second and third commands then "builds" and "installs" the configured code solution. You will need to
+manually start the client and/or server to test.
 
-.. image:: ../_static/images/visual-studio/project-settings-02.png
-    :align: center
-    :alt: vcpkg Settings
-
-Complete
-========
-
-At this point you should have a fully configured Visual Studio and can :strong:`Build` Freeciv21 from the
-:emphasis:`Solution Explorer` or the Build menu.  The very first time you do this Visual Studio will use the
-vcpkg manifest file, :file:`vcpkg.json`, to download and compile all of the library dependencies needed to
-build Freeciv21. This will take a very long time. On a fast computer with a good Internet connection it will
-take at least 3 hours to complete. Everything will be downloaded and compiled into the :file:`C:\\Tools\\vcpkg`
-directory, or wherever you configured :file:`vcpkg` earlier. Binaries for the packages will be copied into the
-:file:`./build/` directory inside of the main Freeciv21 directory and reused for subsequent builds.
+The first time you run the configure command (first line) or ask Visual Studio to generate the C++
+Intellisense data, Visual Studio will invoke the :file:`vcpkg` installation process to download and compile
+all of the project dependencies listed in the manifest file :file:`vcpkg.json`. This will take a very long
+time. On a fast computer with a good Internet connection it will take at least 3 hours to complete. Everything
+will be downloaded and compiled into the :file:`C:\\Tools\\vcpkg` directory, or wherever you configured
+:file:`vcpkg` earlier. Binaries for the packages will be copied into the :file:`./build/` directory inside of
+the main Freeciv21 directory and reused for subsequent builds.
 
 .. |reg|    unicode:: U+000AE .. REGISTERED SIGN
