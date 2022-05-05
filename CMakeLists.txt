@@ -8,10 +8,20 @@ else()
   cmake_minimum_required(VERSION 3.12...3.17 FATAL_ERROR)
 endif()
 
-# set vcpkg if exist
+# Set vcpkg if exists. Used by MacOS and Visual Studio
 if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+  message(STATUS "Microsoft VCPKG detected, setting toolset specific settings.")
   set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
       CACHE STRING "")
+endif()
+
+# Detect MS Visual Studio
+if (CMAKE_GENERATOR MATCHES "Visual Studio")
+  message(STATUS "Microsoft Visual Studio detected, setting toolset specific settings.")
+  set(CMAKE_GENERATOR_TOOLSET "ClangCl")
+  message(STATUS "VS Cmake Generator Toolset: ${CMAKE_GENERATOR_TOOLSET}")
+  set(CMAKE_GENERATOR_PLATFORM "x64")
+  message(STATUS "VS Cmake Generator Platform: ${CMAKE_GENERATOR_PLATFORM}")
 endif()
 
 # Set up cmake search path
