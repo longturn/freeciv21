@@ -1,0 +1,188 @@
+#!/bin/bash
+#---
+# eval-pr
+#
+# Copyright (c) 2022 Freeciv21. This file is part of Freeciv21. Freeciv21 is free software: you can
+# redistribute it and/or modify it under the terms of the GNU General Public License as published by the
+# Free Software Foundation, either version 3 of the  License, or (at your option) any later version. You
+# should have received  a copy of the GNU General Public License along with Freeciv21. If not, see
+# https://www.gnu.org/licenses/.
+#
+# Bash shell script to aid the process of evaluating a pull request
+#--
+
+version="1.0"
+re='^[0-9]+$'
+
+if [[ $2 ]]; then
+  pull_request=$2
+fi
+
+help ()
+{
+  echo "Freeciv21: Evaluate a Pull Request as documented at"
+  echo "  https://longturn.readthedocs.io/en/latest/Contributing/eval-pull-request.html"
+  echo "Version: $version"
+  echo ""
+  echo "Should be executed from the root of the Freeciv21 source directory."
+  echo ""
+  echo "Syntax: ./scripts/eval-pr -h|s|a|c"
+  echo ""
+  echo "-h                Opens this help"
+  echo "-s [PR Number]    Starts a new full evaluation process"
+  echo "-a [PR Number]    Starts a new evaluation process and also run an autogame through ASAN"
+  echo "-c [PR Number]    Cleanup a previously run evaluation process"
+  echo ""
+}
+
+base_setup ()
+{
+  local branch=`git rev-parse --abbrev-ref HEAD`
+  if ! [[ "$branch" == "master" ]]; then
+    echo "-- Stashing changes and checking out master branch."
+    echo ""
+    git stash
+    git checkout master
+    echo ""
+  fi
+
+  echo "-- Fetching upstream master"
+  echo ""
+  git fetch upstream master
+
+  echo ""
+  echo "-- Creating a testing branch for PR $pull_request."
+  echo ""
+  git checkout -b testing/pr_$pull_request upstream/master
+
+  echo ""
+  echo "-- Getting a .diff of PR $pull_request."
+  echo ""
+  wget https://github.com/longturn/freeciv21/pull/$pull_request.diff -O pr$pull_request.diff
+
+  echo ""
+  echo "-- Applying the .diff via patch."
+  echo ""
+  patch -p1 < pr$pull_request.diff
+  rm pr$pull_request.diff
+  rm -Rf build
+}
+
+start ()
+{
+  echo ""
+  echo "-- Starting an Eval Process for PR $pull_request."
+  echo ""
+
+  base_setup
+
+  echo ""
+  echo "-- Building."
+  echo ""
+  cmake -S . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install -DCMAKE_BUILD_TYPE=Debug
+  cmake --build build
+  cmake --build build --target install
+  cmake --build build --target package
+
+  echo ""
+  echo "-- PR $pull_request is ready to be evaluated. Run $0 -c $pull_request to cleanup."
+  echo ""
+}
+
+autogame ()
+{
+  echo ""
+  echo "Starting an ASAN autogame Eval Process for PR# $pull_request"
+
+  base_setup
+
+  echo ""
+  echo "-- Building."
+  echo ""
+  mkdir build
+  cd build
+  cmake --preset ASan -S ..
+  cd ..
+  cmake --build build
+
+  echo ""
+  echo "-- Running Autogame on port 5556."
+  echo "-- If you want to observe the game, open another shell and run this command to open a client"
+  echo "     ./build/freeciv21-client -a -p 5556 -s localhost"
+  export ASAN_OPTIONS="halt_on_error=0"
+  ./build/freeciv21-server -r ./data/test-autogame.serv
+
+  echo ""
+  echo "-- PR $pull_request has completed autogame evaluation. Run $0 -c $pull_request to cleanup."
+  echo ""
+}
+
+cleanup ()
+{
+  echo ""
+  echo "-- Cleanup Eval Process for PR# $pull_request."
+  echo ""
+
+  local branch=`git rev-parse --abbrev-ref HEAD`
+  if ! [[ "$branch" == "testing/pr_$pull_request" ]]; then
+    echo "Error: Attempting cleanup on incorrect pull request number."
+    echo "The current eval is on branch: $branch"
+    echo ""
+    exit -1
+  fi
+
+  echo "-- Stashing Changes and checking out master branch."
+  echo ""
+  git stash
+  git checkout master
+
+  echo ""
+  echo "-- Removing testing branch for PR $pull_request."
+  echo ""
+  git branch -D testing/pr_$pull_request
+
+  if [[ "$ASAN_OPTIONS" ]]; then
+    export ASAN_OPTIONS=
+  fi
+
+  echo ""
+  echo "-- Cleanup complete."
+  echo ""
+}
+
+# If nothing is passed in, then open the help
+if [[ -z "$1" ]]; then
+  help
+fi
+
+# If the second paramter is missing, throw an error
+if [[ "$1" == "-s" || "$1" == "-a" || "$1" == "-c" ]]; then
+  if [[ -z "$2" ]]; then
+    echo "Error: You must pass a pull request number to the script when starting or cleaning up an eval process."
+    echo ""
+    help
+    exit -1
+  fi
+  if ! [[ $2 =~ $re ]] ; then
+    echo "Error: A Pull Request number has to be numeric"
+    echo ""
+    exit -1
+  fi
+fi
+
+while getopts ":hsac:" option; do
+  case $option in
+    h) help
+       exit 0;;
+    s) start
+       exit 0;;
+    a) autogame
+       exit 0;;
+    c) cleanup
+       exit;;
+    \?) echo "Error: Invalid option"
+        echo ""
+        help
+        exit -1;;
+  esac
+done
