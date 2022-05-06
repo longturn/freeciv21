@@ -37,7 +37,7 @@ help ()
 
 base_setup ()
 {
-  local branch=`git rev-parse --abbrev-ref HEAD`
+  local branch=$(git rev-parse --abbrev-ref HEAD)
   if ! [[ "$branch" == "master" ]]; then
     echo "-- Stashing changes and checking out master branch."
     echo ""
@@ -100,9 +100,14 @@ autogame ()
   echo "-- Building."
   echo ""
   mkdir build
-  cd build
-  cmake --preset ASan -S ..
-  cd ..
+  for dir in */
+  do
+    (
+    cd build || exit 255
+    cmake --preset ASan -S ..
+    cd ..
+    )
+  done
   cmake --build build
 
   echo ""
@@ -123,12 +128,12 @@ cleanup ()
   echo "-- Cleanup Eval Process for PR# $pull_request."
   echo ""
 
-  local branch=`git rev-parse --abbrev-ref HEAD`
+  local branch=$(git rev-parse --abbrev-ref HEAD)
   if ! [[ "$branch" == "testing/pr_$pull_request" ]]; then
     echo "Error: Attempting cleanup on incorrect pull request number."
     echo "The current eval is on branch: $branch"
     echo ""
-    exit -1
+    exit 255
   fi
 
   echo "-- Stashing Changes and checking out master branch."
@@ -161,12 +166,12 @@ if [[ "$1" == "-s" || "$1" == "-a" || "$1" == "-c" ]]; then
     echo "Error: You must pass a pull request number to the script when starting or cleaning up an eval process."
     echo ""
     help
-    exit -1
+    exit 255
   fi
   if ! [[ $2 =~ $re ]] ; then
     echo "Error: A Pull Request number has to be numeric"
     echo ""
-    exit -1
+    exit 255
   fi
 fi
 
@@ -179,10 +184,10 @@ while getopts ":hsac:" option; do
     a) autogame
        exit 0;;
     c) cleanup
-       exit;;
+       exit 0;;
     \?) echo "Error: Invalid option"
         echo ""
         help
-        exit -1;;
+        exit 255;;
   esac
 done
