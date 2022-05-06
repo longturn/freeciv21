@@ -100,7 +100,7 @@ autogame ()
   echo "-- Building."
   echo ""
   mkdir build
-  for dir in */
+  for dir in build
   do
     (
     cd build || exit 255
