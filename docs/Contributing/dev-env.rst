@@ -44,10 +44,8 @@ In order to get code pushed to the forked repository to your local workstation, 
 SSH key pair to share with GitHub. Follow these
 `instructions <https://docs.github.com/en/authentication/connecting-to-github-with-ssh>`_.
 
-With that set up, now it's time to clone the forked repository from your personal GitHub account to a local
-copy on your workstation. The typical way to do this is with the :code:`https` protocol. However, this only
-works if you want to download a copy of a repository and not push any changes back up. To do that, you have to
-use the :code:`ssh` protocol instead.
+With SSH set up, now it's time to clone the forked repository from your personal GitHub account to a local
+copy on your workstation.
 
 First make a working directory to place the files in:
 
@@ -58,8 +56,8 @@ First make a working directory to place the files in:
   $ cd $HOME/GitHub
 
 
-Now you want to clone the respository. You can get the appropriate command by going to your forked copy in a
-browser, click the code button and then select the SSH option as shown in this sample screenshot:
+You can get the appropriate path by going to your forked copy in a browser, click the code button and then
+select the SSH option as shown in this sample screenshot:
 
 .. image:: ../_static/images/github_clone_ssh.png
     :align: center

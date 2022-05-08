@@ -9,8 +9,7 @@ configuration process is smart enough to work out whether your system is suitabl
 
 An operating system that support Qt
     Any modern operating system that supports Qt 5.12+ is required. As of this writing this is Linux, Microsoft
-    Windows\ |reg| and Apple Mac OS X\ |reg|. On Windows_ MSYS2 (MingW) is available as well as
-    :doc:`Visual Studio <../Contributing/visual-studio>`.
+    Windows\ |reg| and Apple Mac OS X\ |reg|.
 
     Linux Distributions:
 
@@ -40,8 +39,8 @@ A C and C++ compiler
     use a "K&R C" compiler. The C++ compiler must support C++ 17.
 
     Development of Freeciv21 is primarily done with :file:`gcc`, the GNU project's excellent C and C++
-    compiler. Microsoft Windows is supported with :file:`clang` and :file:`clang++` in
-    :doc:`Visual Studio <../Contributing/visual-studio>`.
+    compiler. For complete cross-platform support the Longturn community uses the LLVM project's :file:`clang-cl`
+    compiler, which is supported on Linux, Windows and Mac OS.
 
 The Cmake program
     Freeciv21 developers generally use :file:`cmake`, the Kitware make program. You can check if you have
@@ -275,31 +274,27 @@ these steps to generate the Debian package:
   $ cmake --build build --target package
 
 
-When the Ninja command is finished running, you will find an installer in :file:`build/Linux-${arch}`
+When the last command is finished running, you will find an installer in :file:`build/Linux-${arch}`
 
-Windows
--------
+Microsoft Windows
+-----------------
 
-MSYS2 is an available environment for compiling Freeciv21. Microsoft Windows is supported with :file:`clang`
-in :doc:`Visual Studio <../Contributing/visual-studio>`.
-
-The Freeciv21 community primarily supports building and installing on Windows using the MSYS2 environment.
-While Microsoft Visual Studio can be used, we do not package binaries via Visual Studio due to licensing
-`constraints <https://www.gnu.org/licenses/gpl-faq.en.html#WindowsRuntimeAndGPL>`_.
+There are two platforms available for installing Freeciv21 on Windows: :doc:`MSYS2 <../Contributing/msys2>` and
+:doc:`Visual Studio <../Contributing/visual-studio>`. The package target is only supported on MSYS2 due to
+licensing `constraints <https://www.gnu.org/licenses/gpl-faq.en.html#WindowsRuntimeAndGPL>`_.
 
 Setting up MSYS2 is documented in :doc:`../Contributing/msys2`. Alternately you can visit
 https://github.com/jwrober/freeciv-msys2 for ready made scripts.
 
-Once your MSYS2 environment is ready, start with configuring_ above.
-
-Instead of installing, use this command to create the Windows Installer package:
+Once your MSYS2 environment is ready, start with configuring_ above. Instead of installing, use this command
+to create the Windows Installer package:
 
 .. code-block:: rst
 
   $ cmake --build build --target package
 
 
-When the Ninja command is finished running, you will find an installer in :file:`build/Windows-${arch}`
+When the command is finished running, you will find an installer in :file:`build/Windows-${arch}`
 
 Documentation Build Notes
 =========================
