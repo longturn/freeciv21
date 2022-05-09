@@ -22,54 +22,28 @@ add_library(
   utility
   STATIC
   astring.cpp
-  astring.h
   bitvector.cpp
-  bitvector.h
   bugs.cpp
-  bugs.h
   capability.cpp
-  capability.h
   deprecations.cpp
-  deprecations.h
   distribute.cpp
-  distribute.h
   fcbacktrace.cpp
-  fcbacktrace.h
   fciconv.cpp
-  fciconv.h
   fcintl.cpp
-  fcintl.h
   fcthread.cpp
-  fcthread.h
   genhash.cpp
-  genhash.h
   genlist.cpp
-  genlist.h
   inputfile.cpp
-  inputfile.h
   iterator.cpp
-  iterator.h
   log.cpp
-  log.h
   netfile.cpp
-  netfile.h
-  net_types.h
   rand.cpp
-  rand.h
   registry.cpp
-  registry.h
   registry_ini.cpp
-  registry_ini.h
   section_file.cpp
-  section_file.h
   shared.cpp
-  shared.h
-  speclist.h
-  specvec.h
   support.cpp
-  support.h
   timing.cpp
-  timing.h
   # Generated
   ${CMAKE_CURRENT_BINARY_DIR}/specenum_gen.h
 )

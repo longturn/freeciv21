@@ -2,9 +2,7 @@ add_library(
   tools_ruleutil
   STATIC
   comments.cpp
-  comments.h
   rulesave.cpp
-  rulesave.h
 )
 
 target_include_directories(tools_ruleutil PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
