@@ -2133,7 +2133,7 @@ bool operator==(const struct cm_parameter &p1, const struct cm_parameter &p2)
 void cm_copy_parameter(struct cm_parameter *dest,
                        const struct cm_parameter *const src)
 {
-  memcpy(dest, src, sizeof(struct cm_parameter));
+  *dest = *src;
 }
 
 /**

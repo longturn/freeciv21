@@ -22,6 +22,13 @@ struct cm_parameter {
 
   int factor[O_LAST];
   int happy_factor;
+
+  /**
+   * @brief Copy assignment operator
+   * @param other Object being copied
+   * @return Reference to *this
+   */
+  cm_parameter &operator=(const cm_parameter &other) = default;
 };
 
 // A result which can examined.
