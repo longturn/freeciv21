@@ -2,11 +2,8 @@ add_library(
   networking
   STATIC
   connection.cpp
-  connection.h
   dataio_raw.cpp
-  dataio_raw.h
   packets.cpp
-  packets.h
 )
 
 target_include_directories(networking PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
