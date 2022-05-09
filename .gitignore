@@ -48,5 +48,6 @@ build.ninja
 .clangd
 # Folder
 .kdev4
+.vs
 # Project file
 *.kdev4

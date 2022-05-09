@@ -10,17 +10,19 @@ Workstation
 ===========
 
 Freeciv21 can be developed on Linux, Windows and MacOS. Any current version of these OS's is acceptible. For
-Windows, you will need to setup the Msys2 environment to do development. Refer to :doc:`msys2` for more
-information. :strong:`Linux` is the preferred platform.
+Windows, you will need to setup either the MSYS2 environment or Visual Studio to do development.
+Refer to :doc:`msys2` or :doc:`Visual Studio <visual-studio>` for more information. It should be generally
+understood that :strong:`Linux` is the preferred development platform.
 
 Technically all you need is a text editor of some kind to edit the files, but most people prefer to use an
 IDE.
 
 All platforms can use `KDevelop <https://www.kdevelop.org/download>`_. However, there are some caveats:
 
-* On Windows, due to the nature of the integration with Msys2, native compilation and debugging is not
-  supported.
-* On MacOS, KDevelop is still considered experimental.
+* On Windows, due to the nature of the integration with MSYS2, native compilation and debugging is not
+  supported. This is resolved with Visual Studio as the IDE.
+* On MacOS, KDevelop is still considered experimental. Many Mac users
+  use `XCode <https://developer.apple.com/xcode/>`_.
 
 For the best results, especially if you are editing game code and not just Longturn game rulesets or
 documentation, you will want :strong:`Linux` to be your workstation OS. Many of the current developers use a
@@ -42,10 +44,8 @@ In order to get code pushed to the forked repository to your local workstation, 
 SSH key pair to share with GitHub. Follow these
 `instructions <https://docs.github.com/en/authentication/connecting-to-github-with-ssh>`_.
 
-With that set up, now it's time to clone the forked repository from your personal GitHub account to a local
-copy on your workstation. The typical way to do this is with the :code:`https` protocol. However, this only
-works if you want to download a copy of a repository and not push any changes back up. To do that, you have to
-use the :code:`ssh` protocol instead.
+With SSH set up, now it's time to clone the forked repository from your personal GitHub account to a local
+copy on your workstation.
 
 First make a working directory to place the files in:
 
@@ -56,8 +56,8 @@ First make a working directory to place the files in:
   $ cd $HOME/GitHub
 
 
-Now you want to clone the respository. You can get the appropriate command by going to your forked copy in a
-browser, click the code button and then select the SSH option as shown in this sample screenshot:
+You can get the appropriate path by going to your forked copy in a browser, click the code button and then
+select the SSH option as shown in this sample screenshot:
 
 .. image:: ../_static/images/github_clone_ssh.png
     :align: center
