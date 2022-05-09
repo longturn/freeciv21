@@ -95,8 +95,22 @@ struct pf_map {
   struct pf_parameter params; // Initial parameters.
 };
 
-// Down-cast macro.
-#define PF_MAP(pfm) ((struct pf_map *) (pfm))
+/**
+ * Casts to `pf_map`
+ *
+ * \fixme Capitalized because this used to be a macro.
+ */
+pf_map *PF_MAP(void *x) { return reinterpret_cast<pf_map *>(x); }
+
+/**
+ * Casts to `pf_map`
+ *
+ * \fixme Capitalized because this used to be a macro.
+ */
+const pf_map *PF_MAP(const void *x)
+{
+  return reinterpret_cast<const pf_map *>(x);
+}
 
 // ========================== Common functions ===========================
 
