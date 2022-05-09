@@ -3008,6 +3008,7 @@ static bool load_ruleset_terrain(struct section_file *file,
             pterrain->cultivate_time = 0;
           }
         } else {
+          qCCritical(ruleset_category, "%s", secfile_error());
           ok = false;
           break;
         }
@@ -3023,6 +3024,7 @@ static bool load_ruleset_terrain(struct section_file *file,
             pterrain->plant_time = 0;
           }
         } else {
+          qCCritical(ruleset_category, "%s", secfile_error());
           ok = false;
           break;
         }
