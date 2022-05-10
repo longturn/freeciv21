@@ -1,0 +1,216 @@
+#!/bin/bash
+#---
+# eval-pr
+#
+# Copyright (c) 2022 Freeciv21. This file is part of Freeciv21. Freeciv21 is free software: you can
+# redistribute it and/or modify it under the terms of the GNU General Public License as published by the
+# Free Software Foundation, either version 3 of the  License, or (at your option) any later version. You
+# should have received a copy of the GNU General Public License along with Freeciv21. If not, see
+# https://www.gnu.org/licenses/.
+#
+# Bash shell script to aid the process of evaluating a pull request
+#---
+
+version="1.0"
+re='^[0-9]+$'
+
+if [[ $2 ]]; then
+  pull_request=$2
+fi
+
+help ()
+{
+  echo ""
+  echo "Freeciv21: Evaluate a Pull Request as documented at"
+  echo "  https://longturn.readthedocs.io/en/latest/Contributing/eval-pull-request.html"
+  echo "$0 Version: $version"
+  echo ""
+  echo "Should be executed from the root of the Freeciv21 source directory."
+  echo ""
+  echo "Syntax: ./scripts/eval-pr -h|s|a|c"
+  echo ""
+  echo "-h                Opens this help"
+  echo "-s [PR Number]    Starts a new full evaluation process"
+  echo "-a [PR Number]    Starts a new evaluation process and also run an autogame through ASAN"
+  echo "-c [PR Number]    Cleanup a previously run evaluation process"
+  echo ""
+}
+
+base_setup ()
+{
+  # Ensure we are on the master branch before starting.
+  local branch=$(git rev-parse --abbrev-ref HEAD)
+  if ! [[ "$branch" == "master" ]]; then
+    echo "-- Error: Ensure you have stashed all work and have checked out the master branch before starting."
+    echo "-- You are on branch: $branch. If this is a testing/pr_# branch, run a cleanup operation first or"
+    echo "-- manually stash work and checkout master to evaluate another pull request."
+    exit 255
+  fi
+
+  # Ensure we are in the root of the freeciv21 source tree before starting.
+  if ! [[ -e CMakePresets.json ]]; then
+    echo "-- Error: Ensure you are at the root of the Freeciv21 source tree before starting."
+    exit 255
+  fi
+
+  echo "-- Fetching upstream"
+  echo ""
+  git fetch upstream || exit 255
+
+
+  echo "-- Creating a testing branch for PR $pull_request."
+  echo ""
+  git checkout -b testing/pr_$pull_request upstream/master
+
+  echo ""
+  echo "-- Getting a .diff of PR $pull_request."
+  echo ""
+  wget https://github.com/longturn/freeciv21/pull/$pull_request.diff -O pr$pull_request.diff
+
+  echo "-- Applying the .diff via patch."
+  echo ""
+  patch -p1 < pr$pull_request.diff
+  rm pr$pull_request.diff
+
+  # Always start with a empty build directory when testing
+  if [[ -e build_$pull_request ]]; then
+    rm -Rf build_$pull_request
+  fi
+}
+
+start ()
+{
+  echo ""
+  echo "-- Starting an Eval Process for PR $pull_request."
+  echo ""
+
+  base_setup
+
+  echo ""
+  echo "-- Building."
+  echo ""
+  # We ask for a debug build in order to run the code through a debugger while evaluating
+  cmake -S . -B build_$pull_request -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install -DCMAKE_BUILD_TYPE=Debug
+  cmake --build build_$pull_request
+  # Always test the installer
+  cmake --build build_$pull_request --target install
+
+  # Only run on Debian based linux or MSYS2
+  if which dpkg &>/dev/null || [[ $MSYSTEM ]]; then
+    cmake --build build_$pull_request --target package
+  fi
+
+  echo ""
+  echo "-- PR $pull_request is ready to be evaluated. Run $0 -c $pull_request to cleanup."
+  echo ""
+}
+
+autogame ()
+{
+  echo ""
+  echo "Starting an ASAN autogame Eval Process for PR# $pull_request"
+  echo ""
+
+  if [[ $MSYSTEM ]]; then
+    echo "-- Error: ASan not supported on MSYS2."
+    exit 255
+  fi
+
+  base_setup
+
+  echo ""
+  echo "-- Building."
+  echo ""
+  if ! [[ -e build_$pull_request ]]; then
+    mkdir build_$pull_request
+    cd build_$pull_request
+    cmake --preset ASan -S ..
+    cd ..
+  fi
+  cmake --build build_$pull_request
+
+  echo "-- Running Autogame on port 5556."
+  echo "-- If you want to observe the game, open another shell and run this command to open a client"
+  echo "     ./build/freeciv21-client -a -p 5556 -s localhost"
+  echo ""
+  export ASAN_OPTIONS="halt_on_error=0"
+  ./build/freeciv21-server -r ./data/test-autogame.serv
+
+  echo ""
+  echo "-- PR $pull_request has completed autogame evaluation. Run $0 -c $pull_request to cleanup."
+  echo ""
+}
+
+cleanup ()
+{
+  echo ""
+  echo "-- Cleanup Eval Process for PR# $pull_request."
+  echo ""
+
+  local branch=$(git rev-parse --abbrev-ref HEAD)
+  if ! [[ "$branch" == "testing/pr_$pull_request" ]]; then
+    echo "Error: Attempting cleanup on incorrect pull request number."
+    echo "The current branch is: $branch" and pull request: $pull_request
+    echo ""
+    exit 255
+  fi
+
+  echo "-- Stashing Changes and checking out master branch."
+  echo ""
+  git stash
+  git checkout master
+
+  echo ""
+  echo "-- Removing testing branch for PR $pull_request."
+  echo ""
+  git branch -D testing/pr_$pull_request
+
+  if [[ "$ASAN_OPTIONS" ]]; then
+    export ASAN_OPTIONS=
+  fi
+
+  if [[ -e build_$pull_request ]]; then
+    rm -Rf build_$pull_request
+  fi
+
+  echo ""
+  echo "-- Cleanup complete."
+  echo ""
+}
+
+# If nothing is passed in, then open the help
+if [[ -z "$1" ]]; then
+  help
+fi
+
+# If the second paramter is missing, throw an error
+if [[ "$1" == "-s" || "$1" == "-a" || "$1" == "-c" ]]; then
+  if [[ -z "$2" ]]; then
+    echo "Error: You must pass a pull request number to the script when starting or cleaning up an eval process."
+    echo ""
+    help
+    exit 255
+  fi
+  if ! [[ $2 =~ $re ]] ; then
+    echo "Error: A Pull Request number has to be numeric"
+    echo ""
+    exit 255
+  fi
+fi
+
+while getopts ":hsac:" option; do
+  case $option in
+    h) help
+       exit 0;;
+    s) start
+       exit 0;;
+    a) autogame
+       exit 0;;
+    c) cleanup
+       exit 0;;
+    \?) echo "Error: Invalid option"
+        echo ""
+        help
+        exit 255;;
+  esac
+done
