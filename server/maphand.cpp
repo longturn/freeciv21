@@ -902,7 +902,8 @@ void map_show_all(struct player *pplayer)
  */
 bool map_is_known(const struct tile *ptile, const struct player *pplayer)
 {
-  return pplayer->tile_known->at(tile_index(ptile));
+  return !pplayer->tile_known->isEmpty()
+         && pplayer->tile_known->at(tile_index(ptile));
 }
 
 /**
