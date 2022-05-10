@@ -16,14 +16,14 @@ The documentation is found on our [documentation website](https://longturn.readt
 
 The WebAssembly build of Freeciv21 is playable at [freecivweb.com](https://freecivweb.com).
 
-Freeciv21 is maintained by folks from [longturn.net](https://longturn.net). We welcome pull requests, bug reports and simple suggestions! Get in touch on [Discord](https://discord.gg/98krqGm).
+Freeciv21 is maintained by folks from [longturn.net](https://longturn.net). We welcome pull requests, bug reports and simple suggestions! Get in touch on [Discord](https://discord.gg/98krqGm). The #General channel is a great place to start.
 
 Installation
 ------------
 
-### Windows
+### Windows and Mac OS
 
-We provide Windows installers in the **Assets** section of every [release](https://github.com/longturn/freeciv21/releases) (make sure to download the **.exe** file). After downloading, run the installer and [follow the usual steps](https://longturn.readthedocs.io/en/latest/General/windows-install.html).
+We provide Windows and Mac OS installers in the **Assets** section of every [release](https://github.com/longturn/freeciv21/releases). Make sure to download the **.exe** or **.dmg** file depending on platform. After downloading, run the installer. The Windows install is [documented here](https://longturn.readthedocs.io/en/latest/General/windows-install.html).
 
 ### Linux
 
@@ -32,7 +32,7 @@ Linux users running on Debian (or one of the many variants such as Ubuntu) can d
 sudo apt install ./freeciv21_*_amd64.deb
 ```
 
-Other Linux users will need to compile the code. Ubuntu 20.04 or higher is supported. See [this link](https://longturn.readthedocs.io/en/latest/General/install.html) for the detailed procedure and a list of supported distributions.
+Other Linux users will need to compile the code. Ubuntu 20.04 or higher is supported. See [this link](https://longturn.readthedocs.io/en/latest/General/install.html) for the detailed procedure and a list of supported distributions. See below for a quick set of instructions for Debian based distributions.
 
 #### Install dependencies
 
