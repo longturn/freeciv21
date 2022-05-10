@@ -100,7 +100,7 @@ your computer:
     Repos> cd freeciv21
     Repos\freeciv21> git remote add upstream https://github.com/longturn/freeciv21.git
     Repos\freeciv21> git fetch upstream
-    Repos\freeciv21> git fetch upstream master
+    Repos\freeciv21> git pull upstream master
 
 
 You will also need to set a couple global configuration settings so :code:`git` knows a bit more about you.
@@ -128,44 +128,55 @@ https://docs.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio?view=
 Final Steps and Notes
 =====================
 
-As of this writing there are some issues with configuring, compiling (building), debugging and installing
-Freeciv21 inside of the Visual Studio user interface:
+At this point Visual Studio is ready for you to configure and compile (build) Freeciv21. However, as of
+this writing there is an issue with installing Freeciv21 inside of the Visual Studio user interface:
 
-* Issue 1003: Support Windows Visual Studio presets in CMakePresets.json
 * Issue 1006: Install target fails on Visual Studio on Windows
 
-With regards to Issue 1003, If you open any file (such as :file:`CMakeLists.txt`) and make a change, Visual
-Studio will prompt to :strong:`Generate` updated C++ Intellisense information. If selected, Visual Studio will
-configure using the ``fullrelease`` preset in :file:`CMakePresets.json` using the Ninja generator. Ninja only
-supports MSVC in Visual Studio. However, the Longturn community does not support the MSVC compiler because the
-code requires proprietary extensions that MSVC doesn't implement. Instead the Longturn community supports the
-open source LLVM Clang-Cl compiler on Windows in Visual Studio as it supports the required proprietary
-extensions (note that GNU GCC is used in :doc:`MSYS2 <msys2>` on Windows). In order to configure, compile and
-debug with Clang-Cl you must do all the work from the command line. You will still want to allow Visual Studio
-to generate Intellisense data as that will aid in development, however understand that compiling with MSVC is
-not supported by the community and will most likely fail.
+To configure Freeciv21 in Visual Studio you first have to select either the :file:`windows-release` or
+:file:`windows-debug` configuration preset as defined in :file:`CMakePresets.json`. On the :guilabel:`Standard`
+toolbar, which is enabled by default, you will click the :guilabel:`Target System` drop down box and pick the
+:strong:`Local Machine` option. Next you will click the :guilabel:`Configuration` drop down box and pick the
+:strong:`windows-release` or :strong:`windows-debug` option. Visual Studio will then automatically populate the
+:guilabel:`Build Preset` drop down box based on what you select for :guilabel:`Configuration`. With these options
+set you will lastly click :menuselection:`Project --> Configure Cache`. When this process is complete you can
+then compile (build) by clicking :menuselection:`Build --> Build All`. Visual Studio will compile all targets
+for Freeciv21 and place the output into the :file:`build-vs` directory.
 
-Until Issue 1003 is resolved, these are the steps to configure and compile (build) Freeciv21 using Visual
-Studio:
+.. note:: The first time you run the Configure Cache command (from :menuselection:`Project --> Configure Cache`)
+  or ask Visual Studio to generate the C++ Intellisense data, Visual Studio will invoke the :file:`vcpkg`
+  installation process to download and compile all of the project dependencies listed in the manifest file:
+  :file:`vcpkg.json`. :strong:`This will take a very long time`. On a fast computer with a good Internet connection
+  it will take at least 3 hours to complete. Everything will be downloaded and compiled into the
+  :file:`C:\\Tools\\vcpkg` directory, or wherever you configured :file:`vcpkg` earlier. Binaries for the packages
+  will be copied into the :file:`./build-vs/` directory inside of the main Freeciv21 directory and reused for
+  subsequent builds.
+
+:strong:`Notes about Clang-Cl vs MSVC`
+
+Freeciv21 has two custom presets specifically for Windows and Visual Studio because Visual Studio defaults to the
+MSVC compiler instead of LLVM's Clang-Cl compiler that we installed earlier. The main reason why we do this is
+because the code requires proprietary extensions that MSVC doesn't implement. Instead the Longturn community supports
+the open source LLVM Clang-Cl compiler on Windows in Visual Studio as it supports the required proprietary
+extensions (note that GNU GCC is used in :doc:`MSYS2 <msys2>` on Windows). If you select any preset and allow
+Visual Studio to configure with the Ninja generator and MSVC compiler you will recieve a great number of errors
+and the build will fail.
+
+If you are interested in configuring and compiling from the command line instead of the GUI, you can use
+these commands:
 
 .. code-block:: rst
 
-  cmake . -B build -G "Visual Studio 17 2022" -DCMAKE_INSTALL_PREFIX=$PWD/build/install
-  cmake --build build
-  cmake --build build --target install     # Not working until Issue 1006 is resolved
+  cmake . -B build-vs -G "Visual Studio 17 2022" -DCMAKE_INSTALL_PREFIX=$PWD/build/install
+  cmake --build build-vs
+  cmake --build build-vs --target install     # Not working until Issue 1006 is resolved
 
 
 The first command configures Visual Studio to compile a Debug version of the programs and places the install
-location to be a sub-directory of the :file:`build` directory for use during debugging and testing purposes.
-The second and third command then "builds" and "installs" the configured code solution. You will need to
-manually start the client and/or server to test.
+location to be a sub-directory of the :file:`build-vs` directory for use during debugging and testing purposes.
+This is the same as selecting the :file:`windows-debug` preset configuration. The second and third command then
+"builds" and "installs" the configured code solution. You will need to manually start the client and/or server to
+test.
 
-.. note:: The first time you run the configure command (first line in the code block above) or ask Visual Studio
-  to generate the C++ Intellisense data, Visual Studio will invoke the :file:`vcpkg` installation process to
-  download and compile all of the project dependencies listed in the manifest file: :file:`vcpkg.json`.
-  :strong:`This will take a very long time`. On a fast computer with a good Internet connection it will take
-  at least 3 hours to complete. Everything will be downloaded and compiled into the :file:`C:\\Tools\\vcpkg`
-  directory, or wherever you configured :file:`vcpkg` earlier. Binaries for the packages will be copied into
-  the :file:`./build/` directory inside of the main Freeciv21 directory and reused for subsequent builds.
 
 .. |reg|    unicode:: U+000AE .. REGISTERED SIGN

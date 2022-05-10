@@ -1,87 +1,146 @@
-
 {
   "version": 3,
-    "cmakeMinimumRequired": {
-        "major": 3,
-        "minor": 12
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 12
+  },
+  "configurePresets": [
+    {
+      "name": "fullrelease",
+      "displayName": "Build Everything in Release Mode",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-rel",
+      "installDir": "${sourceDir}/build-rel/install",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "FREECIV_ENABLE_TOOLS": "ON",
+        "FREECIV_ENABLE_SERVER": "ON",
+        "FREECIV_ENABLE_CLIENT": "ON",
+        "FREECIV_ENABLE_NLS": "ON"
+      }
     },
-    "configurePresets": [
-        {
-            "name": "fullrelease",
-            "displayName": "Build Everything in Release Mode",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build-rel",
-            "installDir": "install",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "FREECIV_ENABLE_TOOLS": "ON",
-                "FREECIV_ENABLE_SERVER" : "ON",
-                "FREECIV_ENABLE_CLIENT" : "ON",
-                "FREECIV_ENABLE_NLS" : "ON"
-            }
-        },
-        {
-            "name": "fullrelease-macos",
-            "displayName": "Build for Mac in Release Mode",
-            "inherits": "fullrelease",
-            "installDir": ".install"
-        },
-        {
-            "name": "debug",
-            "displayName": "Build Server and Client only in Debug Mode",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "FREECIV_ENABLE_TOOLS": "OFF",
-                "FREECIV_ENABLE_SERVER" : "ON",
-                "FREECIV_ENABLE_CLIENT" : "ON",
-                "FREECIV_ENABLE_NLS" : "OFF"
-            }
-        },
-        {
-            "name": "ASan",
-            "displayName": "Build Everything in debug mode with ASan and ccache",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_CXX_FLAGS": "-O2 -DGLIBCXX_ASSERTIONS -fsanitize=address -fsanitize=leak -fsanitize=undefined -fsanitize-address-use-after-scope -fsanitize-recover=all",
-                "CMAKE_C_FLAGS": "-D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -fstack-clash-protection -fcf-protection",
-                "CMAKE_CXX_COMPILER_LAUNCHER": "ccache",
-                "FREECIV_ENABLE_TOOLS": "ON",
-                "FREECIV_ENABLE_SERVER" : "ON",
-                "FREECIV_ENABLE_CLIENT" : "ON",
-                "FREECIV_ENABLE_NLS" : "ON"
-            }
-        },
-        {
-            "name": "clazy",
-            "displayName": "Check for clazy warnings",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build-clazy",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "FREECIV_ENABLE_TOOLS": "ON",
-                "FREECIV_ENABLE_SERVER" : "ON",
-                "FREECIV_ENABLE_CLIENT" : "ON",
-                "FREECIV_ENABLE_NLS" : "OFF"
-            },
-            "environment": {
-                "CXX": "clazy",
-                "CLAZY_CHECKS": "level2,no-qstring-allocations,no-ctor-missing-parent-argument,no-missing-qobject-macro"
-            }
+    {
+      "name": "fullrelease-macos",
+      "displayName": "Build for Mac in Release Mode",
+      "inherits": "fullrelease",
+      "installDir": ".install"
+    },
+    {
+      "name": "debug",
+      "displayName": "Build Server and Client only in Debug Mode",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "FREECIV_ENABLE_TOOLS": "OFF",
+        "FREECIV_ENABLE_SERVER": "ON",
+        "FREECIV_ENABLE_CLIENT": "ON",
+        "FREECIV_ENABLE_NLS": "OFF"
+      }
+    },
+    {
+      "name": "ASan",
+      "displayName": "Build Everything in debug mode with ASan and ccache",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_FLAGS": "-O2 -DGLIBCXX_ASSERTIONS -fsanitize=address -fsanitize=leak -fsanitize=undefined -fsanitize-address-use-after-scope -fsanitize-recover=all",
+        "CMAKE_C_FLAGS": "-D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -fstack-clash-protection -fcf-protection",
+        "CMAKE_CXX_COMPILER_LAUNCHER": "ccache",
+        "FREECIV_ENABLE_TOOLS": "ON",
+        "FREECIV_ENABLE_SERVER": "ON",
+        "FREECIV_ENABLE_CLIENT": "ON",
+        "FREECIV_ENABLE_NLS": "ON"
+      }
+    },
+    {
+      "name": "clazy",
+      "displayName": "Check for clazy warnings",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build-clazy",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "FREECIV_ENABLE_TOOLS": "ON",
+        "FREECIV_ENABLE_SERVER": "ON",
+        "FREECIV_ENABLE_CLIENT": "ON",
+        "FREECIV_ENABLE_NLS": "OFF"
+      },
+      "environment": {
+        "CXX": "clazy",
+        "CLAZY_CHECKS": "level2,no-qstring-allocations,no-ctor-missing-parent-argument,no-missing-qobject-macro"
+      }
+    },
+    {
+      "name": "windows-release",
+      "description": "Target Windows with the Visual Studio development environment (Release)",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "${sourceDir}/build-vs",
+      "installDir": "${sourceDir}/build-vs/install",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "FREECIV_ENABLE_TOOLS": "ON",
+        "FREECIV_ENABLE_SERVER": "ON",
+        "FREECIV_ENABLE_CLIENT": "ON",
+        "FREECIV_ENABLE_NLS": "ON"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "intelliSenseMode": "windows-clang-x64",
+          "enableClangTidyCodeAnalysis": true,
+          "enableMicrosoftCodeAnalysis": true
         }
-    ],
-    "buildPresets": [
-        {
-            "name": "fullrelease",
-            "configurePreset": "fullrelease"
-        },
-        {
-            "name": "fullrelease-macos",
-            "configurePreset": "fullrelease-macos",
-            "targets": "install"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "windows-debug",
+      "description": "Target Windows with the Visual Studio development environment (Debug)",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "${sourceDir}/build-vs",
+      "installDir": "${sourceDir}/build-vs/install",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "FREECIV_ENABLE_TOOLS": "ON",
+        "FREECIV_ENABLE_SERVER": "ON",
+        "FREECIV_ENABLE_CLIENT": "ON",
+        "FREECIV_ENABLE_NLS": "ON"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "intelliSenseMode": "windows-clang-x64",
+          "enableClangTidyCodeAnalysis": true,
+          "enableMicrosoftCodeAnalysis": true
         }
-    ]
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "fullrelease",
+      "configurePreset": "fullrelease"
+    },
+    {
+      "name": "fullrelease-macos",
+      "configurePreset": "fullrelease-macos",
+      "targets": "install"
+    },
+    {
+      "name": "fullrelease-windows",
+      "configurePreset": "windows-release"
+    },
+    {
+      "name": "debug-windows",
+      "configurePreset": "windows-debug"
+    }
+  ]
 }
