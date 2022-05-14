@@ -11,15 +11,20 @@ on:
 jobs:
   ubuntu:
     name: "Ubuntu"
-    runs-on: ubuntu-latest
     needs: clang-format
     strategy:
       matrix:
+        os: [ubuntu-latest]
         compiler: [gcc, clang]
         build_type: ["", Release, Debug, RelWithDebInfo]
+        include:
+          - os: ubuntu-22.04
+            compiler: gcc
+            build_type: Debug
         exclude:
           - compiler: clang
             build_type: RelWithDebInfo
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
         with:
