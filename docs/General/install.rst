@@ -230,7 +230,7 @@ following commands.
      ninja-build \
      python3 \
      python3-pip \
-     qt5-default \
+     qtbase5-dev \
      libqt5svg5-dev \
      libkf5archive-dev \
      liblua5.3-dev \
