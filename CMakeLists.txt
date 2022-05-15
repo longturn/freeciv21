@@ -105,7 +105,7 @@ if(NOT EXISTS "${CMAKE_BINARY_DIR}/utility/fc_version.h")
 endif()
 
 if(NOT EXISTS "${CMAKE_BINARY_DIR}/fc_version")
-configure_file(${CMAKE_SOURCE_DIR}/fc_version.in
+  configure_file(${CMAKE_SOURCE_DIR}/fc_version.in
                 fc_version
                 @ONLY NEWLINE_STYLE UNIX)
 endif()
@@ -226,34 +226,33 @@ if(MSYS OR MINGW)
           list(REMOVE_AT _files 0 1)
       endwhile()
     ]] COMPONENT freeciv21)
-  elseif(WIN32)
-    # The Visual Studio generator places all files and associated DLL libraries
-    #  into a build directory. So we just grab those for install.
-    install(
-      DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/
-      DESTINATION ${CMAKE_INSTALL_BINDIR}
-      COMPONENT freeciv21
-      FILES_MATCHING PATTERN *.dll PATTERN *.pdb)
+elseif(WIN32)
+  # The Visual Studio generator places all files and associated DLL libraries
+  #  into a build directory. So we just grab those for install.
+  install(
+    DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    COMPONENT freeciv21
+    FILES_MATCHING PATTERN *.dll PATTERN *.pdb)
 
-    # QT platform plugin must be only one directory level away from the EXEs
-    #   so we ensure that here. This does create a duplicate file in install
-    #   directory, but since we are not packaging in Visual Studio it isn't
-    #   issue.
-    install(
-      DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/plugins/platforms
-      DESTINATION ${CMAKE_INSTALL_BINDIR}
-      COMPONENT freeciv21
-      FILES_MATCHING PATTERN *.dll)
+  # QT platform plugin must be only one directory level away from the EXEs
+  #   so we ensure that here. This does create a duplicate file in install
+  #   directory, but since we are not packaging in Visual Studio it isn't
+  #   issue.
+  install(
+    DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/plugins/platforms
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    COMPONENT freeciv21
+    FILES_MATCHING PATTERN *.dll)
 
-    # Grab a few files that get missed
-    install(
-      FILES
-      ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/SDL2.dll
-      ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/libcrypto-3-x64.dll
-      ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/libssl-3-x64.dll
-      DESTINATION ${CMAKE_INSTALL_BINDIR}
-      COMPONENT freeciv21
-    )
+  # Grab a few files that get missed
+  install(
+    FILES
+    ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/SDL2.dll
+    ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/libcrypto-3-x64.dll
+    ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/libssl-3-x64.dll
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    COMPONENT freeciv21)
 endif()
 
 # Unix/Linux specific install steps

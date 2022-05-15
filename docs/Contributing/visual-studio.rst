@@ -56,6 +56,10 @@ that you installed :file:`vcpkg` into. The forward slashes are correct.
     Tools> exit
 
 
+.. warning:: The :file:`vcpkg` website/readme will ask for you to run a :file:`vcpkg integrate install` command
+  to fully integrate all the packages installed into Visual Studio. :strong:`Do Not` run this command as it
+  actually breaks Visual Studio's ability to find and use the :file:`clang-cl` compiler, which we need.
+
 GitHub
 ======
 
@@ -129,7 +133,7 @@ https://docs.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio?view=
 Final Steps and Notes
 =====================
 
-At this point Visual Studio is ready for you to configure, compile (build), and insstall Freeciv21. 
+At this point Visual Studio is ready for you to configure, compile (build), and install Freeciv21. 
 
 To configure Freeciv21 in Visual Studio you first have to select either the :file:`windows-release` or
 :file:`windows-debug` configuration preset as defined in :file:`CMakePresets.json`. On the :guilabel:`Standard`
@@ -156,7 +160,7 @@ a fully functional install in the :file:`build-vs/install` directory.
   to build a installable package for Windows. This is only available to the MSYS2 environment. This does not
   mean that you can not test an install using Visual Studio. After going to
   :menuselection:`Build --> install Freeciv21` you can still manually start up the client or a server as needed
-  to debug. To do this you will start up either the client, or the server, or both and then in the Visual Studio
+  to debug. To do this you will start up either the client, the server, or both and then in Visual Studio go to
   :menuselection:`Debug --> Attach to Process`
 
 :strong:`Notes about Clang-Cl vs MSVC`
