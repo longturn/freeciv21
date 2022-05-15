@@ -830,6 +830,20 @@ top_bar QToolButton {
   background: $gradient;
 }
 
+/* Negative income */
+/* TODO Qt6:
+ * https://doc.qt.io/qt-6/widgets-changes-qt6.html#style-sheet-changes
+ */
+gold_widget[current_warning="1"] {
+  color: $redish;
+}
+
+/* Out of gold */
+gold_widget[current_warning="2"] {
+  color: $redish;
+  border-color: $redish;
+}
+
 hud_message_box, hud_input_box {
   /*background-color: transparent;*/
   color: $red-10;
