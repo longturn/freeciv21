@@ -94,6 +94,20 @@ top_bar_widget {
   selection-color: rgba(85, 25, 25, 185);
 }
 
+/* Negative income */
+/* TODO Qt6:
+ * https://doc.qt.io/qt-6/widgets-changes-qt6.html#style-sheet-changes
+ */
+gold_widget[current_warning="1"] {
+  color: red;
+}
+
+/* Out of gold */
+gold_widget[current_warning="2"] {
+  color: red;
+  border-color: red;
+}
+
 hud_unit_combat {
   selection-background-color: rgba(0, 0, 75,165);
   alternate-background-color: #0000AA;

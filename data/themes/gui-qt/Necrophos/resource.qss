@@ -783,6 +783,20 @@ top_bar_widget {
   selection-color: rgba(85, 25, 25, 185);
 }
 
+/* Negative income */
+/* TODO Qt6:
+ * https://doc.qt.io/qt-6/widgets-changes-qt6.html#style-sheet-changes
+ */
+gold_widget[current_warning="1"] {
+  color: #aa0000;
+}
+
+/* Out of gold */
+gold_widget[current_warning="2"] {
+  color: #aa0000;
+  border-color: #aa0000;
+}
+
 hud_message_box QDialogButtonBox QPushButton {
   border-radius: 0px;
   padding: 0px;

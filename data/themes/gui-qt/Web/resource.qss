@@ -636,6 +636,13 @@ chat_widget QCheckBox::indicator:checked:hover {
 top_bar QToolButton {
   background: qlineargradient(x1: 0.0, y1: 0.0, x2: 0.0, y2: 1.0, stop: 0.0 rgba(246, 242, 232, 100%), stop: 1.0 rgba(243, 236, 221, 100%)); }
 
+
+gold_widget[current_warning="1"] {
+  color: hsl(341, 93%, 43%); }
+
+gold_widget[current_warning="2"] {
+  color: hsl(341, 93%, 43%); border-color: hsl(341, 93%, 43%); }
+
 hud_message_box, hud_input_box {
   /*background-color: transparent;*/
   color: #280f0b;
