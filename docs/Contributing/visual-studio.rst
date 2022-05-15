@@ -5,7 +5,7 @@ Freeciv21 can be compiled using Microsoft Visual Studio |reg| and :file:`clang-c
 get version 2022 up and running.
 
 .. warning:: Visual Studio and the corresponding dependencies require a great deal of HDD space on your
-    computer. Be sure to have at least 40GB of available space before starting this process.
+   computer. Be sure to have at least 50GB of available space before starting this process.
 
 
 Base Installation
@@ -15,16 +15,15 @@ Start by `downloading <https://visualstudio.microsoft.com/vs/community/>`_ the C
 
 Double-click the :file:`VisualStudioSetup.exe` file in your Downloads directory and follow the prompts to
 get the setup process started. At some point you will be prompted to select the type of workload you want to
-install. Select :guilabel:`Desktop development with C++` and :guilabel:`Python Development`.  Next click on the
+install. Select :guilabel:`Desktop development with C++` and :guilabel:`Python Development`. Next click on the
 Individual components tab and select the following options: :guilabel:`Git for Windows`,
 :guilabel:`C++ Clang Compiler for Windows (13.0.0)`, :guilabel:`C++ Clang-cl for v143 build tools (x64/x86)`,
-:guilabel:`Python 3 64-bit (3.9.7)`, and :guilabel:`Python native development tools`.
+and :guilabel:`Python 3 64-bit (3.9.7)`.
 
 When ready click :guilabel:`Install`. Depending on your Internet connection speed, this may take a while.
 
-When the installation process is finished you will be presented with a collection of options. Go to the very
-bottom right and click the link to :strong:`continue without code`. You can now close the Visual Studio
-installer. Leave the main Visual Studio IDE open, but you can minimize it for the next step.
+When the installation process is finished you may be presented with a collection of options. You don't need
+Visual Studio right now, so best to close everything at this point.
 
 Set Up VCPKG
 ============
@@ -57,6 +56,10 @@ that you installed :file:`vcpkg` into. The forward slashes are correct.
     Tools> exit
 
 
+.. warning:: The :file:`vcpkg` website/readme will ask for you to run a :file:`vcpkg integrate install` command
+  to fully integrate all the packages installed into Visual Studio. :strong:`Do Not` run this command as it
+  actually breaks Visual Studio's ability to find and use the :file:`clang-cl` compiler, which we need.
+
 GitHub
 ======
 
@@ -81,8 +84,10 @@ the code button and then select the SSH option as shown in this sample screensho
     :alt: GitHub Clone SSH
 
 
-Bring up Visual Studio. Select :menuselection:`View --> Terminal` to open a terminal in the IDE if one is not
-already shown at the bottom. Once you have the proper GitHub path, here is the command to clone the repository:
+Open up Visual Studio. A menu will appear. Go to the very bottom right and click the link to
+:strong:`continue without code`. Select :menuselection:`View --> Terminal` to open a terminal in the IDE if
+one is not already shown at the bottom. Once you have the proper GitHub path, here is the command to clone
+the repository:
 
 .. code-block:: rst
 
@@ -128,10 +133,7 @@ https://docs.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio?view=
 Final Steps and Notes
 =====================
 
-At this point Visual Studio is ready for you to configure and compile (build) Freeciv21. However, as of
-this writing there is an issue with installing Freeciv21 inside of the Visual Studio user interface:
-
-* Issue 1006: Install target fails on Visual Studio on Windows
+At this point Visual Studio is ready for you to configure, compile (build), and install Freeciv21. 
 
 To configure Freeciv21 in Visual Studio you first have to select either the :file:`windows-release` or
 :file:`windows-debug` configuration preset as defined in :file:`CMakePresets.json`. On the :guilabel:`Standard`
@@ -141,7 +143,9 @@ toolbar, which is enabled by default, you will click the :guilabel:`Target Syste
 :guilabel:`Build Preset` drop down box based on what you select for :guilabel:`Configuration`. With these options
 set you will lastly click :menuselection:`Project --> Configure Cache`. When this process is complete you can
 then compile (build) by clicking :menuselection:`Build --> Build All`. Visual Studio will compile all targets
-for Freeciv21 and place the output into the :file:`build-vs` directory.
+for Freeciv21 and place the output into the :file:`build-vs` directory. If you want to install Freeciv21 to test
+any work you are doing, you can go to :menuselection:`Build --> install Freeciv21`. When complete, you should find
+a fully functional install in the :file:`build-vs/install` directory.
 
 .. note:: The first time you run the Configure Cache command (from :menuselection:`Project --> Configure Cache`)
   or ask Visual Studio to generate the C++ Intellisense data, Visual Studio will invoke the :file:`vcpkg`
@@ -151,6 +155,13 @@ for Freeciv21 and place the output into the :file:`build-vs` directory.
   :file:`C:\\Tools\\vcpkg` directory, or wherever you configured :file:`vcpkg` earlier. Binaries for the packages
   will be copied into the :file:`./build-vs/` directory inside of the main Freeciv21 directory and reused for
   subsequent builds.
+
+.. attention:: As documented in :doc:`../General/install`, there is a :file:`--target package` option available
+  to build a installable package for Windows. This is only available to the MSYS2 environment. This does not
+  mean that you can not test an install using Visual Studio. After going to
+  :menuselection:`Build --> install Freeciv21` you can still manually start up the client or a server as needed
+  to debug. To do this you will start up either the client, the server, or both and then in Visual Studio go to
+  :menuselection:`Debug --> Attach to Process`
 
 :strong:`Notes about Clang-Cl vs MSVC`
 
@@ -167,9 +178,9 @@ these commands:
 
 .. code-block:: rst
 
-  cmake . -B build-vs -G "Visual Studio 17 2022" -DCMAKE_INSTALL_PREFIX=$PWD/build/install
+  cmake . -B build-vs -G "Visual Studio 17 2022" -DCMAKE_INSTALL_PREFIX=./build-vs/install
   cmake --build build-vs
-  cmake --build build-vs --target install     # Not working until Issue 1006 is resolved
+  cmake --build build-vs --target install
 
 
 The first command configures Visual Studio to compile a Debug version of the programs and places the install
