@@ -502,7 +502,7 @@ void tai_req_worker_task_rcv(struct tai_req *req)
     struct worker_task *ptask = worker_task_list_get(pcity->task_reqs, 0);
 
     if (ptask == NULL) {
-      ptask = fc_malloc(sizeof(struct worker_task));
+      ptask = new worker_task{};
       worker_task_init(ptask);
       worker_task_list_append(pcity->task_reqs, ptask);
     }

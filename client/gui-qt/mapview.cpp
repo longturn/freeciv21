@@ -772,7 +772,11 @@ void info_tile::update_font(const QString &name, const QFont &font)
 /**
    Deletes current instance
  */
-void info_tile::drop() { NFCN_FREE(m_instance); }
+void info_tile::drop()
+{
+  delete m_instance;
+  m_instance = nullptr;
+}
 
 /**
    Returns given instance

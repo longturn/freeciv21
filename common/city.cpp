@@ -3330,7 +3330,8 @@ void city_styles_free()
     requirement_vector_free(&city_styles[i].reqs);
   }
 
-  FCPP_FREE(city_styles);
+  delete[] city_styles;
+  city_styles = nullptr;
   game.control.styles_count = 0;
 }
 
@@ -3432,7 +3433,8 @@ void destroy_city_virtual(struct city *pcity)
   if (pcity->tile_cache != nullptr) {
     free(pcity->tile_cache); // realloc
   }
-  NFC_FREE(pcity->cm_parameter);
+  delete pcity->cm_parameter;
+  pcity->cm_parameter = nullptr;
   if (!is_server()) {
     unit_list_destroy(pcity->client.info_units_supported);
     unit_list_destroy(pcity->client.info_units_present);
@@ -3447,7 +3449,8 @@ void destroy_city_virtual(struct city *pcity)
   }
 
   memset(pcity, 0, sizeof(*pcity)); // ensure no pointers remain
-  FCPP_FREE(pcity);
+  delete[] pcity;
+  pcity = nullptr;
 }
 
 /**

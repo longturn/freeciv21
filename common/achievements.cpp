@@ -63,8 +63,8 @@ void achievements_free()
   int i;
 
   for (i = 0; i < ARRAY_SIZE(achievements); i++) {
-    NFCPP_FREE(achievements[i].first_msg);
-    NFCPP_FREE(achievements[i].cons_msg);
+    delete[] achievements[i].first_msg;
+    delete[] achievements[i].cons_msg;
   }
 }
 

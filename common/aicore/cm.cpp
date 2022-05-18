@@ -2025,9 +2025,12 @@ static void cm_state_free(struct cm_state *state)
   destroy_partial_solution(&state->best);
   destroy_partial_solution(&state->current);
 
-  FCPP_FREE(state->choice.stack);
-  FCPP_FREE(state->workers_map);
-  FC_FREE(state);
+  delete[] state->choice.stack;
+  delete[] state->workers_map;
+  state->choice.stack = nullptr;
+  state->workers_map = nullptr;
+  delete state;
+  state = nullptr;
 }
 
 /**

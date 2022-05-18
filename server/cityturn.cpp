@@ -645,8 +645,10 @@ void update_city_activities(struct player *pplayer)
             struct trade_route *back;
 
             back = remove_trade_route(pcity, proute, true, false);
-            free(proute);
-            free(back);
+            delete proute;
+            delete back;
+            proute = nullptr;
+            back = nullptr;
           }
         }
       }
@@ -2634,7 +2636,8 @@ static bool city_build_unit(struct player *pplayer, struct city *pcity)
         pcity->rally_point.length = 0;
         pcity->rally_point.persistent = false;
         pcity->rally_point.vigilant = false;
-        FCPP_FREE(pcity->rally_point.orders);
+        delete[] pcity->rally_point.orders;
+        pcity->rally_point.orders = nullptr;
       }
 
       // Done building this unit; time to move on to the next.
@@ -2714,7 +2717,8 @@ static bool sell_random_building(struct player *pplayer,
 
   city_refresh_queue_add(pcityimpr->pcity);
 
-  FC_FREE(pcityimpr);
+  delete pcityimpr;
+  pcityimpr = nullptr;
 
   return true;
 }
@@ -2915,7 +2919,11 @@ player_balance_treasury_units_and_buildings(struct player *pplayer)
   }
 
   // Free remaining entries from list
-  cityimpr_list_iterate(pimprlist, pimpr) { FC_FREE(pimpr); }
+  cityimpr_list_iterate(pimprlist, pimpr)
+  {
+    delete pimpr;
+    pimpr = nullptr;
+  }
   cityimpr_list_iterate_end;
 
   if (pplayer->economic.gold < 0) {
@@ -3006,7 +3014,11 @@ static bool city_balance_treasury_buildings(struct city *pcity)
   }
 
   // Free remaining entries from list
-  cityimpr_list_iterate(pimprlist, pimpr) { FC_FREE(pimpr); }
+  cityimpr_list_iterate(pimprlist, pimpr)
+  {
+    delete pimpr;
+    pimpr = nullptr;
+  }
   cityimpr_list_iterate_end;
 
   cityimpr_list_destroy(pimprlist);

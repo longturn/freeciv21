@@ -205,7 +205,8 @@ rscompat_enabler_add_obligatory_hard_reqs(struct action_enabler *ae)
         ae->disabled = new_enabler->disabled;
         requirement_vector_copy(&ae->actor_reqs, &new_enabler->actor_reqs);
         requirement_vector_copy(&ae->target_reqs, &new_enabler->target_reqs);
-        FC_FREE(new_enabler);
+        delete new_enabler;
+        new_enabler = nullptr;
       } else {
         // Register the new enabler
         action_enabler_add(new_enabler);

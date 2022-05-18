@@ -531,15 +531,19 @@ bool create_start_positions(enum map_startpos mode,
     }
   }
 
-  FCPP_FREE(islands);
-  FCPP_FREE(islands_index);
+  delete[] islands;
+  delete[] islands_index;
+  islands = nullptr;
+  islands_index = nullptr;
 
   if (!is_tmap) {
     destroy_tmap();
   }
 
-  FCPP_FREE(tile_value_aux);
-  FCPP_FREE(tile_value);
+  delete[] tile_value_aux;
+  delete[] tile_value;
+  tile_value_aux = nullptr;
+  tile_value = nullptr;
 
   return !failure;
 }

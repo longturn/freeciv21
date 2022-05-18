@@ -1627,15 +1627,18 @@ void unit_virtual_destroy(struct unit *punit)
   CALL_FUNC_EACH_AI(unit_free, punit);
 
   if (is_server() && punit->server.adv) {
-    FCPP_FREE(punit->server.adv);
+    delete[] punit->server.adv;
+    punit->server.adv = nullptr;
   } else {
     if (punit->client.act_prob_cache) {
-      FCPP_FREE(punit->client.act_prob_cache);
+      delete[] punit->client.act_prob_cache;
+      punit->client.act_prob_cache = nullptr;
     }
   }
 
   if (--punit->refcount <= 0) {
-    FC_FREE(punit);
+    delete punit;
+    punit = nullptr;
   }
 }
 
@@ -1647,7 +1650,8 @@ void free_unit_orders(struct unit *punit)
 {
   if (punit->has_orders) {
     punit->goto_tile = nullptr;
-    FCPP_FREE(punit->orders.list);
+    delete[] punit->orders.list;
+    punit->orders.list = nullptr;
   }
   punit->orders.length = 0;
   punit->has_orders = false;

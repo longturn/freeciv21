@@ -59,7 +59,11 @@ update_queue *update_queue::uq()
   return m_instance;
 }
 
-void update_queue::drop() { NFCN_FREE(m_instance); }
+void update_queue::drop()
+{
+  delete m_instance;
+  m_instance = nullptr;
+}
 
 // Extract the update_queue_data from the waiting queue data.
 struct update_queue_data *

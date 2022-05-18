@@ -455,15 +455,11 @@ static void tile_free(struct tile *ptile)
 {
   unit_list_destroy(ptile->units);
 
-  if (ptile->spec_sprite) {
-    free(ptile->spec_sprite);
-    ptile->spec_sprite = nullptr;
-  }
+  delete[] ptile->spec_sprite;
+  ptile->spec_sprite = nullptr;
 
-  if (ptile->label) {
-    FCPP_FREE(ptile->label);
-    ptile->label = nullptr;
-  }
+  delete[] ptile->label;
+  ptile->label = nullptr;
 }
 
 /**
@@ -488,7 +484,7 @@ void map_allocate(struct civ_map *amap)
     tile_init(ptile);
   }
   whole_map_iterate_end;
-  NFC_FREE(amap->startpos_table);
+  delete amap->startpos_table;
   amap->startpos_table = new QHash<struct tile *, struct startpos *>;
 }
 
@@ -514,16 +510,19 @@ void map_free(struct civ_map *fmap)
     whole_map_iterate(fmap, ptile) { tile_free(ptile); }
     whole_map_iterate_end;
 
-    FCPP_FREE(fmap->tiles);
+    delete[] fmap->tiles;
+    fmap->tiles = nullptr;
 
     if (fmap->startpos_table) {
       for (auto *a : qAsConst(*fmap->startpos_table)) {
         startpos_destroy(a);
       }
-      FC_FREE(fmap->startpos_table);
+      delete fmap->startpos_table;
+      fmap->startpos_table = nullptr;
     }
 
-    FCPP_FREE(fmap->iterate_outwards_indices);
+    delete[] fmap->iterate_outwards_indices;
+    fmap->iterate_outwards_indices = nullptr;
   }
 }
 

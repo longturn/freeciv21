@@ -208,7 +208,7 @@ enum player_debug_types {
 BV_DEFINE(bv_debug, PLAYER_DEBUG_LAST);
 
 struct attribute_block_s {
-  void *data;
+  char *data;
   int length;
 #define MAX_ATTRIBUTE_BLOCK (256 * 1024) // largest attribute block
 };

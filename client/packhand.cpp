@@ -668,7 +668,8 @@ void handle_city_info(const struct packet_city_info *packet)
       struct trade_route *proute = trade_route_list_get(pcity->routes, -1);
 
       trade_route_list_remove(pcity->routes, proute);
-      FC_FREE(proute);
+      delete proute;
+      proute = nullptr;
       trade_routes_changed = true;
     }
 
@@ -1241,7 +1242,8 @@ void handle_worker_task(const struct packet_worker_task *packet)
   } else {
     if (packet->activity == ACTIVITY_LAST) {
       worker_task_list_remove(pcity->task_reqs, ptask);
-      FC_FREE(ptask);
+      delete ptask;
+      ptask = nullptr;
     }
   }
 
@@ -3077,13 +3079,13 @@ void handle_tile_info(const struct packet_tile_info *packet)
   if (packet->spec_sprite[0] != '\0') {
     if (!ptile->spec_sprite
         || strcmp(ptile->spec_sprite, packet->spec_sprite) != 0) {
-      NFC_FREE(ptile->spec_sprite);
+      delete[] ptile->spec_sprite;
       ptile->spec_sprite = fc_strdup(packet->spec_sprite);
       tile_changed = true;
     }
   } else {
     if (ptile->spec_sprite) {
-      delete ptile->spec_sprite;
+      delete[] ptile->spec_sprite;
       ptile->spec_sprite = nullptr;
       tile_changed = true;
     }
@@ -3109,7 +3111,7 @@ void handle_tile_info(const struct packet_tile_info *packet)
 
   if (packet->label[0] == '\0') {
     if (ptile->label != nullptr) {
-      FC_FREE(ptile->label);
+      delete[] ptile->label;
       ptile->label = nullptr;
       tile_changed = true;
     }
@@ -3278,7 +3280,7 @@ void handle_ruleset_summary(const struct packet_ruleset_summary *packet)
 {
   int len;
 
-  NFCPP_FREE(game.ruleset_summary);
+  delete[] game.ruleset_summary;
   len = qstrlen(packet->text);
   game.ruleset_summary = new char[len + 1];
 
@@ -3809,7 +3811,7 @@ void handle_ruleset_terrain(const struct packet_ruleset_terrain *p)
   output_type_iterate(o) { pterrain->output[o] = p->output[o]; }
   output_type_iterate_end;
 
-  NFCPP_FREE(pterrain->resources);
+  delete[] pterrain->resources;
   pterrain->resources = new extra_type *[p->num_resources + 1]();
   for (j = 0; j < p->num_resources; j++) {
     pterrain->resources[j] = extra_by_number(p->resources[j]);

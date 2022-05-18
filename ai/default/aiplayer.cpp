@@ -54,7 +54,8 @@ void dai_player_free(struct ai_type *ait, struct player *pplayer)
 
   if (player_data != nullptr) {
     player_set_ai_data(pplayer, ait, nullptr);
-    FC_FREE(player_data);
+    delete player_data;
+    player_data = nullptr;
   }
 }
 

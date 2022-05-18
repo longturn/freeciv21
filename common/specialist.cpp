@@ -56,7 +56,8 @@ void specialists_free()
     struct specialist *p = &specialists[i];
 
     requirement_vector_free(&p->reqs);
-    NFCN_FREE(p->helptext);
+    delete p->helptext;
+    p->helptext = nullptr;
   }
 }
 

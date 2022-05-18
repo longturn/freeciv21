@@ -1014,7 +1014,8 @@ void actions_free()
 
     action_enabler_list_destroy(action_enablers_by_action[act]);
 
-    FC_FREE(actions[act]);
+    delete actions[act];
+    actions[act] = nullptr;
   }
   action_iterate_end;
 

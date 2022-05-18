@@ -2408,7 +2408,7 @@ void mapdeco_init()
 void mapdeco_free()
 {
   for (auto *a : qAsConst(*mapdeco_gotoline)) {
-    NFCPP_FREE(a);
+    delete a;
     a = nullptr;
   }
 }

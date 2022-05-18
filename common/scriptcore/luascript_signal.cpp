@@ -327,9 +327,9 @@ void luascript_signal_free(struct fc_lua *fcl)
   for (auto *nissan : qAsConst(*fcl->signals_hash)) {
     signal_destroy(nissan);
   }
-  NFC_FREE(fcl->signals_hash);
+  delete fcl->signals_hash;
+  delete fcl->signal_names;
   fcl->signals_hash = nullptr;
-  NFC_FREE(fcl->signal_names);
   fcl->signal_names = nullptr;
 }
 

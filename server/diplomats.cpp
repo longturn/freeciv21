@@ -338,7 +338,8 @@ bool diplomat_investigate(struct player *pplayer, struct unit *pdiplomat,
   traderoute_packet_list_iterate(routes, route_packet)
   {
     lsend_packet_traderoute_info(pplayer->connections, route_packet);
-    FC_FREE(route_packet);
+    delete route_packet;
+    route_packet = nullptr;
   }
   traderoute_packet_list_iterate_end;
   traderoute_packet_list_destroy(routes);

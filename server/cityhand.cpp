@@ -544,7 +544,8 @@ void handle_city_rally_point(struct player *pplayer, int city_id, int length,
     pcity->rally_point.vigilant = false;
     pcity->rally_point.persistent = false;
     if (pcity->rally_point.orders) {
-      FCPP_FREE(pcity->rally_point.orders);
+      delete[] pcity->rally_point.orders;
+      pcity->rally_point.orders = nullptr;
     }
   } else {
     checked_orders = create_unit_orders(length, orders);
@@ -578,7 +579,7 @@ void handle_city_manager(struct player *pplayer, int city_id, bool enabled,
 
   if (!enabled) {
     if (pcity->cm_parameter) {
-      free(pcity->cm_parameter);
+      delete pcity->cm_parameter;
       pcity->cm_parameter = nullptr;
       send_city_info(pplayer, pcity);
     }

@@ -70,7 +70,8 @@ static void texai_module_close(void)
 {
   TEXAI_AIT;
 
-  FC_FREE(ait->private);
+  delete ait->private;
+  ait->private = nullptr;
 }
 
 /**********************************************************************/ /**
@@ -568,8 +569,6 @@ const char *fc_ai_tex_capstr(void) { return FC_AI_MOD_CAPSTR; }
  **************************************************************************/
 bool fc_ai_tex_setup(struct ai_type *ai)
 {
-  struct dai_private_data *private;
-
   if (!has_thread_cond_impl()) {
     qCritical(_("This Freeciv21 compilation has no full threads "
                 "implementation, tex ai cannot be used."));
@@ -578,12 +577,10 @@ bool fc_ai_tex_setup(struct ai_type *ai)
 
   qstrncpy(ai->name, "tex", sizeof(ai->name));
 
-private
-  = fc_malloc(sizeof(struct dai_private_data));
-private
-  ->contemplace_workers =
+  ai->private = new struct dai_private_data {
+  };
+  ai->private->contemplace_workers =
       false; /* We use custom code to set worker want and type */
-  ai->private = private;
 
   texai_init_self(ai);
 

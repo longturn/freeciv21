@@ -107,7 +107,7 @@ progress_bar::progress_bar(QWidget *parent) : QProgressBar(parent)
  */
 progress_bar::~progress_bar()
 {
-  NFC_FREE(pix);
+  delete pix;
   delete sfont;
 }
 
@@ -137,7 +137,7 @@ void progress_bar::set_pixmap(struct universal *target)
   } else {
     sprite = get_building_sprite(tileset, target->value.building);
   }
-  NFC_FREE(pix);
+  delete pix;
   if (sprite == nullptr) {
     pix = nullptr;
     return;
@@ -160,7 +160,7 @@ void progress_bar::set_pixmap(int n)
   if (valid_advance_by_number(n)) {
     sprite = get_tech_sprite(tileset, n);
   }
-  NFC_FREE(pix);
+  delete pix;
   if (sprite == nullptr) {
     pix = nullptr;
     return;
@@ -1522,7 +1522,7 @@ void city_dialog::update_prod_buttons()
  */
 city_dialog::~city_dialog()
 {
-  NFC_FREE(citizen_pixmap);
+  delete citizen_pixmap;
   removeEventFilter(this);
 }
 
@@ -3148,7 +3148,7 @@ production_item::production_item(struct universal *ptarget, QObject *parent)
 production_item::~production_item()
 {
   // allocated as renegade in model
-  NFC_FREE(target);
+  delete target;
 }
 
 /**

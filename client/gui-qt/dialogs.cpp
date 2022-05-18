@@ -829,7 +829,11 @@ qdef_act *qdef_act::action()
 /**
    Deletes qdef_act instance
  */
-void qdef_act::drop() { NFCN_FREE(m_instance); }
+void qdef_act::drop()
+{
+  delete m_instance;
+  m_instance = nullptr;
+}
 
 /**
    Sets default action vs city
@@ -1653,7 +1657,8 @@ static void diplomat_queue_handle_primary(int actor_unit_id)
       fc_assert_action(actor_unit->client.act_prob_cache,
                        client_unit_init_act_prob_cache(actor_unit));
 
-      FC_FREE(actor_unit->client.act_prob_cache);
+      delete[] actor_unit->client.act_prob_cache;
+      actor_unit->client.act_prob_cache = nullptr;
     }
 
     // The action selection process is over, at least for now.

@@ -80,9 +80,7 @@ void edithand_init()
 
   need_continents_reassigned = false;
 
-  if (unfogged_players != nullptr) {
-    free(unfogged_players);
-  }
+  delete[] unfogged_players;
   unfogged_players = new bool[player_slot_count()]();
 }
 
@@ -91,10 +89,8 @@ void edithand_init()
  */
 void edithand_free()
 {
-  if (unfogged_players != nullptr) {
-    delete[] unfogged_players;
-    unfogged_players = nullptr;
-  }
+  delete[] unfogged_players;
+  unfogged_players = nullptr;
 }
 
 /**

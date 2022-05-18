@@ -153,7 +153,8 @@ static enum tai_abort_msg_class tai_check_messages(struct ai_type *ait)
       ret_abort = new_abort;
     }
 
-    FC_FREE(msg);
+    delete msg;
+    msg = nullptr;
 
     thrai.msgs_to.msglist.lock();
   }
@@ -167,7 +168,7 @@ static enum tai_abort_msg_class tai_check_messages(struct ai_type *ait)
  **************************************************************************/
 void tai_player_alloc(struct ai_type *ait, struct player *pplayer)
 {
-  struct tai_plr *player_data = fc_calloc(1, sizeof(struct tai_plr));
+  struct tai_plr *player_data = new tai_plr{};
 
   player_set_ai_data(pplayer, ait, player_data);
 
@@ -187,7 +188,8 @@ void tai_player_free(struct ai_type *ait, struct player *pplayer)
 
   if (player_data != NULL) {
     player_set_ai_data(pplayer, ait, NULL);
-    FC_FREE(player_data);
+    delete player_data;
+    player_data = nullptr;
   }
 }
 
@@ -259,7 +261,8 @@ void tai_refresh(struct ai_type *ait, struct player *pplayer)
         break;
       }
 
-      FC_FREE(req);
+      delete req;
+      req = nullptr;
 
       thrai.reqs_from.reqlist.lock();
     }

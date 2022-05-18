@@ -90,8 +90,9 @@ static bool fcdb_set_option(const char *key, const char *value,
   if (removed) {
     /* Overwritten/removed an existing value */
     fc_assert_ret_val(oldopt != nullptr, false);
-    FC_FREE(oldopt->value);
+    delete[] oldopt->value;
     delete oldopt;
+    oldopt = nullptr;
   }
 
   return true;
@@ -174,8 +175,9 @@ void fcdb_free(void)
 
   for (auto popt : qAsConst(fcdb_config)) {
     // Dangling pointers freed below
-    FC_FREE(popt->value);
+    delete[] popt->value;
     delete popt;
+    popt = nullptr;
   }
   fcdb_config.clear();
 }

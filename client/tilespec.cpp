@@ -922,9 +922,7 @@ static void tileset_free_toplevel(struct tileset *t)
 {
   int i;
 
-  if (t->main_intro_filename) {
-    FCPP_FREE(t->main_intro_filename);
-  }
+  delete[] t->main_intro_filename;
 
   if (t->preferred_themes) {
     for (i = 0; i < t->num_preferred_themes; i++) {
@@ -951,9 +949,12 @@ static void tileset_free_toplevel(struct tileset *t)
     t->color_system = nullptr;
   }
 
-  NFCNPP_FREE(t->summary);
-  NFCNPP_FREE(t->description);
-  NFCNPP_FREE(t->for_ruleset);
+  delete[] t->summary;
+  delete[] t->description;
+  delete[] t->for_ruleset;
+  t->summary = nullptr;
+  t->description = nullptr;
+  t->for_ruleset = nullptr;
 }
 
 /**
@@ -1576,7 +1577,7 @@ static void tileset_stop_read(struct tileset *t, struct section_file *file,
 {
   secfile_destroy(file);
   delete[] fname;
-  NFCPP_FREE(layer_order);
+  delete[] layer_order;
   delete[] t;
   if (nullptr != sections) {
     section_list_destroy(sections);
@@ -1717,7 +1718,8 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     fc_strlcpy(t->summary, tstr, len + 1);
   } else {
     // No summary
-    NFCNPP_FREE(t->summary);
+    delete[] t->summary;
+    t->summary = nullptr;
   }
 
   tstr = secfile_lookup_str_default(file, "", "tilespec.description");
@@ -1731,7 +1733,8 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   } else {
     // No description
     if (t->description != nullptr) {
-      FCPP_FREE(t->description);
+      delete[] t->description;
+      t->description = nullptr;
     }
   }
 
@@ -2200,7 +2203,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   secfile_destroy(file);
   qDebug("finished reading \"%s\".", fname);
   delete[] fname;
-  NFCPP_FREE(layer_order);
+  delete[] layer_order;
 
   return t;
 }

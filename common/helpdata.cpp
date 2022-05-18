@@ -78,11 +78,12 @@ void free_help_texts()
     return;
   }
   for (const auto *ptmp : qAsConst(*help_nodes)) {
-    NFCPP_FREE(ptmp->topic);
-    NFCPP_FREE(ptmp->text);
-    NFC_FREE(ptmp);
+    delete[] ptmp->topic;
+    delete[] ptmp->text;
+    delete ptmp;
   }
-  FC_FREE(help_nodes);
+  delete help_nodes;
+  help_nodes = nullptr;
 }
 
 /**
@@ -840,7 +841,8 @@ void boot_help_texts(const nation_set *nations_to_show,
               category_nodes.append(pitem);
             }
             extra_type_iterate_end;
-            FCPP_FREE(cats);
+            delete[] cats;
+            cats = nullptr;
           } break;
           case HELP_GOODS:
             goods_type_iterate(pgood)
@@ -1086,7 +1088,8 @@ void boot_help_texts(const nation_set *nations_to_show,
           sz_strlcat(long_buffer, "\n\n");
         }
       }
-      FCPP_FREE(paras);
+      delete[] paras;
+      paras = nullptr;
       pitem->text = qstrdup(long_buffer);
       help_nodes->append(pitem);
     }

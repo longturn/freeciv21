@@ -1125,7 +1125,8 @@ static void plrdata_slot_replace(struct plrdata_slot *plrdata,
  */
 static void plrdata_slot_free(struct plrdata_slot *plrdata)
 {
-  NFCN_FREE(plrdata->name);
+  delete[] plrdata->name;
+  plrdata->name = nullptr;
 }
 
 /**
@@ -1296,7 +1297,7 @@ void log_civ_score_init()
   {
     struct plrdata_slot *plrdata =
         score_log->plrdata + player_slot_index(pslot);
-    plrdata->name = nullptr;
+    plrdata_slot_free(plrdata);
   }
   player_slots_iterate_end;
 
@@ -1323,13 +1324,14 @@ void log_civ_score_free()
     {
       struct plrdata_slot *plrdata =
           score_log->plrdata + player_slot_index(pslot);
-      NFC_FREE(plrdata->name);
+      plrdata_slot_free(plrdata);
     }
     player_slots_iterate_end;
-    free(score_log->plrdata);
+    delete[] score_log->plrdata;
+    score_log->plrdata = nullptr;
   }
 
-  free(score_log);
+  delete[] score_log;
   score_log = nullptr;
 }
 

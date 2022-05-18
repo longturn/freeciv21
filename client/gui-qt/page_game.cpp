@@ -246,7 +246,8 @@ void pageGame::updateInfoLabelTimeout()
   sw_indicators->update();
   sw_tax->update();
   sw_economy->update();
-  FC_FREE(update_info_timer);
+  delete update_info_timer;
+  update_info_timer = nullptr;
 }
 
 /**

@@ -301,11 +301,12 @@ void attribute_flush()
   }
 
   if (pplayer->attribute_block.data) {
-    free(pplayer->attribute_block.data);
+    delete[] pplayer->attribute_block.data;
     pplayer->attribute_block.data = nullptr;
   }
 
-  serialize_hash(attribute_hash, &pplayer->attribute_block.data,
+  serialize_hash(attribute_hash,
+                 reinterpret_cast<void **>(&pplayer->attribute_block.data),
                  &pplayer->attribute_block.length);
   send_attribute_block(pplayer, &client.conn);
 }

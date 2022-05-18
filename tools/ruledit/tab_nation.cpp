@@ -82,7 +82,8 @@ void tab_nation::refresh()
  */
 void tab_nation::flush_widgets()
 {
-  FC_FREE(ui->data.nationlist);
+  delete[] ui->data.nationlist;
+  ui->data.nationlist = nullptr;
 
   if (via_include->isChecked()) {
     QByteArray nln_bytes;
@@ -108,7 +109,7 @@ void tab_nation::nationlist_toggle(bool checked)
   } else {
     QByteArray nln_bytes;
 
-    FC_FREE(ui->data.nationlist_saved);
+    delete[] ui->data.nationlist_saved;
     nln_bytes = nationlist->text().toUtf8();
     ui->data.nationlist_saved = fc_strdup(nln_bytes.data());
     ui->data.nationlist = nullptr;

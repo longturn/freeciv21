@@ -1556,7 +1556,7 @@ void set_user_unit_class_flag_name(enum unit_class_flag_id id,
   fc_assert_ret(id >= UCF_USER_FLAG_1 && id <= UCF_LAST_USER_FLAG);
 
   if (user_class_flags[ufid].name != nullptr) {
-    FC_FREE(user_class_flags[ufid].name);
+    delete[] user_class_flags[ufid].name;
     user_class_flags[ufid].name = nullptr;
   }
 
@@ -1565,7 +1565,7 @@ void set_user_unit_class_flag_name(enum unit_class_flag_id id,
   }
 
   if (user_class_flags[ufid].helptxt != nullptr) {
-    free(user_class_flags[ufid].helptxt);
+    delete[] user_class_flags[ufid].helptxt;
     user_class_flags[ufid].helptxt = nullptr;
   }
 
@@ -1617,11 +1617,13 @@ void set_user_unit_type_flag_name(enum unit_type_flag_id id,
   int ufid = id - UTYF_USER_FLAG_1;
 
   fc_assert_ret(id >= UTYF_USER_FLAG_1 && id <= UTYF_LAST_USER_FLAG);
-  NFCN_FREE(user_type_flags[ufid].name);
+  delete[] user_type_flags[ufid].name;
+  user_type_flags[ufid].name = nullptr;
   if (name && name[0] != '\0') {
     user_type_flags[ufid].name = fc_strdup(name);
   }
-  NFCNPP_FREE(user_type_flags[ufid].helptxt);
+  delete[] user_type_flags[ufid].helptxt;
+  user_type_flags[ufid].helptxt = nullptr;
   if (helptxt && helptxt[0] != '\0') {
     user_type_flags[ufid].helptxt = fc_strdup(helptxt);
   }
@@ -2101,7 +2103,11 @@ static void unit_type_free(struct unit_type *punittype)
   }
 
   veteran_system_destroy(punittype->veteran);
-  combat_bonus_list_iterate(punittype->bonuses, pbonus) { FC_FREE(pbonus); }
+  combat_bonus_list_iterate(punittype->bonuses, pbonus)
+  {
+    delete pbonus;
+    pbonus = nullptr;
+  }
   combat_bonus_list_iterate_end;
   combat_bonus_list_destroy(punittype->bonuses);
 }
@@ -2267,7 +2273,8 @@ void unit_classes_free()
     if (unit_classes[i].cache.subset_movers != nullptr) {
       unit_class_list_destroy(unit_classes[i].cache.subset_movers);
     }
-    NFCN_FREE(unit_classes[i].helptext);
+    delete unit_classes[i].helptext;
+    unit_classes[i].helptext = nullptr;
   }
 }
 
@@ -2355,7 +2362,7 @@ struct veteran_system *veteran_system_new(int count)
   // There must be at least one level.
   fc_assert_ret_val(count > 0, nullptr);
 
-  vsystem = new veteran_system[1]();
+  vsystem = new veteran_system{};
   vsystem->levels = count;
   vsystem->definitions = new veteran_level[vsystem->levels]();
 
@@ -2368,8 +2375,9 @@ struct veteran_system *veteran_system_new(int count)
 void veteran_system_destroy(struct veteran_system *vsystem)
 {
   if (vsystem) {
-    NFCPP_FREE(vsystem->definitions);
-    delete[] vsystem;
+    delete[] vsystem->definitions;
+    delete vsystem;
+    vsystem = nullptr;
   }
 }
 

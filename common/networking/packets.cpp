@@ -668,7 +668,7 @@ void generic_handle_player_attribute_chunk(
                  != pplayer->attribute_block_buffer.length)) {
     // wrong attribute data
     if (pplayer->attribute_block_buffer.data) {
-      free(pplayer->attribute_block_buffer.data);
+      delete[] pplayer->attribute_block_buffer.data;
       pplayer->attribute_block_buffer.data = nullptr;
     }
     pplayer->attribute_block_buffer.length = 0;
@@ -678,20 +678,19 @@ void generic_handle_player_attribute_chunk(
   // first one in a row
   if (chunk->offset == 0) {
     if (pplayer->attribute_block_buffer.data) {
-      free(pplayer->attribute_block_buffer.data);
+      delete[] pplayer->attribute_block_buffer.data;
       pplayer->attribute_block_buffer.data = nullptr;
     }
-    pplayer->attribute_block_buffer.data = fc_malloc(chunk->total_length);
+    pplayer->attribute_block_buffer.data = new char[chunk->total_length]{};
     pplayer->attribute_block_buffer.length = chunk->total_length;
   }
-  memcpy(static_cast<char *>(pplayer->attribute_block_buffer.data)
-             + chunk->offset,
-         chunk->data, chunk->chunk_length);
+  memcpy(pplayer->attribute_block_buffer.data + chunk->offset, chunk->data,
+         chunk->chunk_length);
 
   if (chunk->offset + chunk->chunk_length == chunk->total_length) {
     // Received full attribute block
     if (pplayer->attribute_block.data != nullptr) {
-      free(pplayer->attribute_block.data);
+      delete[] pplayer->attribute_block.data;
     }
     pplayer->attribute_block.data = pplayer->attribute_block_buffer.data;
     pplayer->attribute_block.length = pplayer->attribute_block_buffer.length;
@@ -729,9 +728,7 @@ void send_attribute_block(const struct player *pplayer,
     packet.total_length = pplayer->attribute_block.length;
     packet.chunk_length = size_of_current_chunk;
 
-    memcpy(packet.data,
-           static_cast<char *>(pplayer->attribute_block.data)
-               + packet.offset,
+    memcpy(packet.data, pplayer->attribute_block.data + packet.offset,
            packet.chunk_length);
     bytes_left -= packet.chunk_length;
 

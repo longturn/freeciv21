@@ -637,13 +637,14 @@ void player_clear(struct player *pplayer, bool full)
     return;
   }
 
-  NFCNPP_FREE(pplayer->savegame_ai_type_name);
+  delete[] pplayer->savegame_ai_type_name;
+  pplayer->savegame_ai_type_name = nullptr;
 
   // Clears the attribute blocks.
-  VOIDNFCN_FREE(pplayer->attribute_block.data);
+  delete[] pplayer->attribute_block.data;
   pplayer->attribute_block.length = 0;
 
-  VOIDNFCN_FREE(pplayer->attribute_block_buffer.data);
+  delete[] pplayer->attribute_block_buffer.data;
   pplayer->attribute_block_buffer.length = 0;
 
   // Clears units and cities.
@@ -747,6 +748,7 @@ void player_destroy(struct player *pplayer)
   }
 
   delete[] pplayer;
+  pplayer = nullptr;
   pslot->player = nullptr;
   player_slots.used_slots--;
 }
@@ -1706,9 +1708,8 @@ static bv_diplrel_all_reqs *diplrel_mess_get()
  */
 void diplrel_mess_close()
 {
-  if (diplrel_mess != nullptr) {
-    FCPP_FREE(diplrel_mess);
-  }
+  delete[] diplrel_mess;
+  diplrel_mess = nullptr;
 }
 
 /**
