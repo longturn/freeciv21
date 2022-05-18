@@ -389,14 +389,14 @@ void set_user_tech_flag_name(enum tech_flag_id id, const char *name,
 
   fc_assert_ret(id >= TECH_USER_1 && id <= TECH_USER_LAST);
 
-  NFCN_FREE(user_tech_flags[tfid].name);
-
+  delete[] user_tech_flags[tfid].name;
+  user_tech_flags[tfid].name = nullptr;
   if (name && name[0] != '\0') {
     user_tech_flags[tfid].name = fc_strdup(name);
   }
 
-  NFCN_FREE(user_tech_flags[tfid].helptxt);
-
+  delete[] user_tech_flags[tfid].helptxt;
+  user_tech_flags[tfid].helptxt = nullptr;
   if (helptxt && helptxt[0] != '\0') {
     user_tech_flags[tfid].helptxt = fc_strdup(helptxt);
   }
@@ -476,8 +476,10 @@ void techs_init()
 static void tech_free(Tech_type_id tech)
 {
   struct advance *p = &advances[tech];
-  NFCN_FREE(p->helptext);
-  NFCNPP_FREE(p->bonus_message);
+  delete p->helptext;
+  p->helptext = nullptr;
+  delete[] p->bonus_message;
+  p->bonus_message = nullptr;
 }
 
 /**

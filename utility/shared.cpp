@@ -1172,8 +1172,10 @@ void init_nls()
  */
 void free_nls()
 {
-  FCPP_FREE(grouping);
-  FCPP_FREE(grouping_sep);
+  delete[] grouping;
+  delete[] grouping_sep;
+  grouping = nullptr;
+  grouping_sep = nullptr;
 }
 
 /**
@@ -1328,7 +1330,11 @@ char *get_multicast_group(bool ipv6_preferred)
 /**
    Free multicast group resources
  */
-void free_multicast_group() { NFCNPP_FREE(mc_group); }
+void free_multicast_group()
+{
+  delete[] mc_group;
+  mc_group = nullptr;
+}
 
 /**
    Interpret ~/ in filename as home dir

@@ -3260,7 +3260,7 @@ void dai_unit_init(struct ai_type *ait, struct unit *punit)
   /* Make sure that contents of unit_ai structure are correctly initialized,
    * if you ever allocate it by some other mean than new */
 
-  struct unit_ai *unit_data = new unit_ai[1]();
+  struct unit_ai *unit_data = new unit_ai{};
 
   unit_data->done = false;
   unit_data->cur_pos = nullptr;
@@ -3301,7 +3301,8 @@ void dai_unit_close(struct ai_type *ait, struct unit *punit)
 
   if (unit_data != nullptr) {
     unit_set_ai_data(punit, ait, nullptr);
-    FCPP_FREE(unit_data);
+    delete unit_data;
+    unit_data = nullptr;
   }
 }
 

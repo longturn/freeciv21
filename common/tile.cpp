@@ -1153,7 +1153,7 @@ bool tile_set_label(struct tile *ptile, const char *label)
     } else if (strcmp(ptile->label, label)) {
       changed = true;
     }
-    FC_FREE(ptile->label);
+    delete[] ptile->label;
     ptile->label = nullptr;
   } else if (label != nullptr) {
     changed = true;

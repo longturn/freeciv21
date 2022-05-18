@@ -220,7 +220,8 @@ void smooth_int_map(int *int_map, bool zeroes_at_edges)
     target_map = int_map;
   } while (!axe);
 
-  FCPP_FREE(alt_int_map);
+  delete[] alt_int_map;
+  alt_int_map = nullptr;
 }
 
 /* These arrays are indexed by continent number (or negative of the

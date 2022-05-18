@@ -69,7 +69,8 @@ static void tai_module_close(void)
 {
   TAI_AIT;
 
-  FC_FREE(ait->private);
+  delete ait->private;
+  ait->private = nullptr;
 }
 
 /**********************************************************************/ /**
@@ -563,8 +564,6 @@ const char *fc_ai_threaded_capstr(void) { return FC_AI_MOD_CAPSTR; }
  **************************************************************************/
 bool fc_ai_threaded_setup(struct ai_type *ai)
 {
-  struct dai_private_data *private;
-
   if (!has_thread_cond_impl()) {
     qCritical(_("This Freeciv21 compilation has no full threads "
                 "implementation, threaded ai cannot be used."));
@@ -573,11 +572,9 @@ bool fc_ai_threaded_setup(struct ai_type *ai)
 
   qstrncpy(ai->name, "threaded", sizeof(ai->name));
 
-private
-  = fc_malloc(sizeof(struct dai_private_data));
-private
-  ->contemplace_workers = true;
-  ai->private = private;
+  ai->private = new struct dai_private_data {
+  };
+  ai->private->contemplace_workers = true;
 
   tai_init_self(ai);
 

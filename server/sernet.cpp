@@ -86,7 +86,8 @@ static void close_connection(struct connection *pconn)
     while (!pconn->server.ping_timers->isEmpty()) {
       timer_destroy(pconn->server.ping_timers->takeFirst());
     }
-    FC_FREE(pconn->server.ping_timers);
+    delete pconn->server.ping_timers;
+    pconn->server.ping_timers = nullptr;
   }
 
   conn_pattern_list_destroy(pconn->server.ignore_list);

@@ -561,7 +561,7 @@ static void savegame3_save_real(struct section_file *file,
  */
 static struct loaddata *loaddata_new(struct section_file *file)
 {
-  struct loaddata *loading = new loaddata[1]();
+  struct loaddata *loading = new loaddata{};
   loading->file = file;
   loading->secfile_options = nullptr;
 
@@ -598,18 +598,19 @@ static struct loaddata *loaddata_new(struct section_file *file)
  */
 static void loaddata_destroy(struct loaddata *loading)
 {
-  NFCPP_FREE(loading->improvement.order);
-  NFCPP_FREE(loading->technology.order);
-  NFCPP_FREE(loading->activities.order);
-  NFCPP_FREE(loading->trait.order);
-  NFCPP_FREE(loading->extra.order);
-  NFCPP_FREE(loading->multiplier.order);
-  NFCPP_FREE(loading->specialist.order);
-  NFCPP_FREE(loading->action.order);
-  NFCPP_FREE(loading->act_dec.order);
-  NFCPP_FREE(loading->ssa.order);
-  NFCPP_FREE(loading->worked_tiles);
-  delete[] loading;
+  delete[] loading->improvement.order;
+  delete[] loading->technology.order;
+  delete[] loading->activities.order;
+  delete[] loading->trait.order;
+  delete[] loading->extra.order;
+  delete[] loading->multiplier.order;
+  delete[] loading->specialist.order;
+  delete[] loading->action.order;
+  delete[] loading->act_dec.order;
+  delete[] loading->ssa.order;
+  delete[] loading->worked_tiles;
+  delete loading;
+  loading = nullptr;
 }
 
 /**
@@ -5000,7 +5001,8 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
         if (rally_orders[i] == '\0' || rally_dirs[i] == '\0'
             || rally_activities[i] == '\0') {
           log_sg("Invalid rally point.");
-          FCPP_FREE(pcity->rally_point.orders);
+          delete[] pcity->rally_point.orders;
+          pcity->rally_point.orders = nullptr;
           pcity->rally_point.length = 0;
           break;
         }
@@ -5057,7 +5059,7 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
     bool enabled = secfile_lookup_bool_default(loading->file, false,
                                                "%s.cma_enabled", citystr);
     if (enabled) {
-      struct cm_parameter *param = new cm_parameter[1]();
+      struct cm_parameter *param = new cm_parameter();
 
       for (i = 0; i < O_LAST; i++) {
         param->minimal_surplus[i] = secfile_lookup_int_default(
@@ -6000,7 +6002,8 @@ static bool sg_load_player_unit(struct loaddata *loading, struct player *plr,
             || (order->order == ORDER_ACTIVITY
                 && order->activity == ACTIVITY_LAST)) {
           // An invalid order. Just drop the orders for this unit.
-          FCPP_FREE(punit->orders.list);
+          delete[] punit->orders.list;
+          punit->orders.list = nullptr;
           punit->has_orders = false;
           break;
         }
@@ -6083,7 +6086,8 @@ static bool sg_load_player_unit(struct loaddata *loading, struct player *plr,
               && unit_activity_needs_target_from_client(act)
               && order->sub_target == EXTRA_NONE) {
             // Missing required action extra target.
-            FCPP_FREE(punit->orders.list);
+            delete[] punit->orders.list;
+            punit->orders.list = nullptr;
             punit->has_orders = false;
           }
         } else if (order->order != ORDER_PERFORM_ACTION) {
@@ -6431,7 +6435,7 @@ static void sg_load_player_attributes(struct loaddata *loading,
 
   // Toss any existing attribute_block (should not exist)
   if (plr->attribute_block.data) {
-    free(plr->attribute_block.data);
+    delete[] plr->attribute_block.data;
     plr->attribute_block.data = nullptr;
   }
 
@@ -6464,7 +6468,7 @@ static void sg_load_player_attributes(struct loaddata *loading,
 
     quoted = new char[quoted_length + 1];
     quoted[0] = '\0';
-    plr->attribute_block.data = fc_malloc(plr->attribute_block.length);
+    plr->attribute_block.data = new char[plr->attribute_block.length]{};
     for (part_nr = 0; part_nr < parts; part_nr++) {
       const char *current = secfile_lookup_str(
           loading->file, "player%d.attribute_v2_block_data.part%d", plrno,
@@ -7123,7 +7127,8 @@ static void sg_load_researches(struct loaddata *loading)
         presearch->inventions[o].bulbs_researched_saved = vlist_research[o];
       }
       advance_index_iterate_end;
-      NFCPP_FREE(vlist_research);
+      delete[] vlist_research;
+      vlist_research = nullptr;
     }
   }
 
@@ -7170,7 +7175,8 @@ static void sg_save_researches(struct savedata *saving)
         secfile_insert_int_vec(saving->file, vlist_research,
                                game.control.num_tech_types,
                                "research.r%d.vbs", i);
-        NFCPP_FREE(vlist_research);
+        delete[] vlist_research;
+        vlist_research = nullptr;
       }
       technology_save(saving->file, "research.r%d.saved", i,
                       presearch->researching_saved);

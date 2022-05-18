@@ -998,8 +998,10 @@ static void reestablish_city_trade_routes(struct city *pcity)
       trade_route_list_append(pcity->routes, proute);
       trade_route_list_append(partner->routes, back);
     } else {
-      free(proute);
-      free(back);
+      delete proute;
+      delete back;
+      proute = nullptr;
+      back = nullptr;
 
       // Now announce the traderoute removal
       announce_trade_route_removal(pcity, partner, false);
@@ -1835,8 +1837,10 @@ void remove_city(struct city *pcity)
     struct trade_route *pback =
         remove_trade_route(pcity, proute, true, true);
 
-    FC_FREE(proute);
-    FC_FREE(pback);
+    delete proute;
+    delete pback;
+    proute = nullptr;
+    pback = nullptr;
   }
   trade_routes_iterate_safe_end;
 
@@ -2232,7 +2236,8 @@ static void broadcast_city_info(struct city *pcity)
 
   traderoute_packet_list_iterate(routes, route_packet)
   {
-    FC_FREE(route_packet);
+    delete route_packet;
+    route_packet = nullptr;
   }
   traderoute_packet_list_iterate_end;
   traderoute_packet_list_destroy(routes);
@@ -2421,7 +2426,8 @@ void send_city_info_at_tile(struct player *pviewer, struct conn_list *dest,
   if (routes != nullptr) {
     traderoute_packet_list_iterate(routes, route_packet)
     {
-      FC_FREE(route_packet);
+      delete route_packet;
+      route_packet = nullptr;
     }
     traderoute_packet_list_iterate_end;
     traderoute_packet_list_destroy(routes);
@@ -3398,7 +3404,8 @@ void clear_worker_task(struct city *pcity, struct worker_task *ptask)
   packet.tgt = 0;
   packet.want = 0;
 
-  free(ptask);
+  delete ptask;
+  ptask = nullptr;
 
   lsend_packet_worker_task(city_owner(pcity)->connections, &packet);
   lsend_packet_worker_task(game.glob_observers, &packet);

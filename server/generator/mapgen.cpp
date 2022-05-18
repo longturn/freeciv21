@@ -1388,7 +1388,8 @@ bool map_fractal_generate(bool autosize, struct unit_type *initial_unit)
         || MAPGEN_FRACTAL == wld.map.server.generator
         || MAPGEN_FRACTURE == wld.map.server.generator) {
       make_land();
-      FCPP_FREE(height_map);
+      delete[] height_map;
+      height_map = nullptr;
     }
     if (!wld.map.server.tinyisles) {
       remove_tiny_islands();
@@ -1674,9 +1675,8 @@ static struct terrain_select *tersel_new(int weight,
  */
 static void tersel_free(struct terrain_select *ptersel)
 {
-  if (ptersel != nullptr) {
-    FC_FREE(ptersel);
-  }
+  delete ptersel;
+  ptersel = nullptr;
 }
 
 /**
@@ -2335,7 +2335,8 @@ static void mapgenerator2()
 
     // init world created this map, destroy it before abort
     destroy_placed_map();
-    FCPP_FREE(height_map);
+    delete[] height_map;
+    height_map = nullptr;
     return;
   }
 
@@ -2351,7 +2352,8 @@ static void mapgenerator2()
 
   make_plains();
   destroy_placed_map();
-  FCPP_FREE(height_map);
+  delete[] height_map;
+  height_map = nullptr;
 
   if (checkmass > wld.map.xsize + wld.map.ysize + totalweight) {
     qDebug("%ld mass left unplaced", checkmass);
@@ -2449,7 +2451,8 @@ static void mapgenerator3()
 
   make_plains();
   destroy_placed_map();
-  FCPP_FREE(height_map);
+  delete[] height_map;
+  height_map = nullptr;
 
   if (j == 1500) {
     qInfo(_("Generator 3 left %li landmass unplaced."), checkmass);
@@ -2517,7 +2520,8 @@ static void mapgenerator4()
   }
   make_plains();
   destroy_placed_map();
-  FCPP_FREE(height_map);
+  delete[] height_map;
+  height_map = nullptr;
 
   if (checkmass > wld.map.xsize + wld.map.ysize + totalweight) {
     qDebug("%ld mass left unplaced", checkmass);

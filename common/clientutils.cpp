@@ -179,7 +179,8 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
     }
   }
   activity_type_iterate_end;
-  FCPP_FREE(t);
+  delete[] t;
+  t = nullptr;
 }
 
 /**
@@ -212,7 +213,8 @@ int turns_to_activity_done(const struct tile *ptile, Activity_type_id act,
     turns = calc->activity_turns[act];
   }
 
-  FC_FREE(calc);
+  delete calc;
+  calc = nullptr;
   return turns;
 }
 
@@ -294,7 +296,7 @@ QString concat_tile_activity_text(struct tile *ptile)
   }
   activity_type_iterate_end;
 
-  FC_FREE(calc);
-
+  delete calc;
+  calc = nullptr;
   return qUtf8Printable(str);
 }

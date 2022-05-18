@@ -291,6 +291,7 @@ void genhash_destroy(struct genhash *pgenhash)
   genhash_clear(pgenhash);
   delete[] pgenhash->buckets;
   delete pgenhash;
+  pgenhash = nullptr;
 }
 
 /**

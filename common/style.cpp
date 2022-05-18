@@ -46,7 +46,11 @@ void styles_alloc(int count)
 /**
    Free the memory associated with styles
  */
-void styles_free() { FCPP_FREE(styles); }
+void styles_free()
+{
+  delete[] styles;
+  styles = nullptr;
+}
 
 /**
    Return the number of styles.

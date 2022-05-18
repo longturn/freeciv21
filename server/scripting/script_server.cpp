@@ -246,7 +246,8 @@ static void script_server_code_init() { script_server_code = nullptr; }
 static void script_server_code_free()
 {
   if (script_server_code) {
-    FCPP_FREE(script_server_code);
+    delete[] script_server_code;
+    script_server_code = nullptr;
   }
 }
 

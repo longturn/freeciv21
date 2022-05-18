@@ -2744,22 +2744,24 @@ static void server_option_free(struct server_option *poption)
 {
   switch (poption->base_option.type) {
   case OT_STRING:
-    if (nullptr != poption->string.value) {
-      FCPP_FREE(poption->string.value);
-    }
-    if (nullptr != poption->string.def) {
-      FCPP_FREE(poption->string.def);
-    }
+    delete[] poption->string.value;
+    delete[] poption->string.def;
+    poption->string.value = nullptr;
+    poption->string.def = nullptr;
     break;
 
   case OT_ENUM:
-    NFCN_FREE(poption->enumerator.support_names);
-    NFCN_FREE(poption->enumerator.pretty_names);
+    delete poption->enumerator.support_names;
+    delete poption->enumerator.pretty_names;
+    poption->enumerator.support_names = nullptr;
+    poption->enumerator.pretty_names = nullptr;
     break;
 
   case OT_BITWISE:
-    NFCN_FREE(poption->bitwise.support_names);
-    NFCN_FREE(poption->bitwise.pretty_names);
+    delete poption->bitwise.support_names;
+    delete poption->bitwise.pretty_names;
+    poption->bitwise.support_names = nullptr;
+    poption->bitwise.pretty_names = nullptr;
     break;
 
   case OT_BOOLEAN:
@@ -2769,9 +2771,12 @@ static void server_option_free(struct server_option *poption)
     break;
   }
 
-  NFCNPP_FREE(poption->name);
-  NFCNPP_FREE(poption->description);
-  NFCNPP_FREE(poption->help_text);
+  delete[] poption->name;
+  delete[] poption->description;
+  delete[] poption->help_text;
+  poption->name = nullptr;
+  poption->description = nullptr;
+  poption->help_text = nullptr;
 }
 
 /**
@@ -2789,7 +2794,8 @@ void server_options_free()
     for (i = 0; i < server_options_num; i++) {
       server_option_free(server_options + i);
     }
-    FCPP_FREE(server_options);
+    delete[] server_options;
+    server_options = nullptr;
     server_options_num = 0;
   }
 
@@ -2797,10 +2803,12 @@ void server_options_free()
   if (nullptr != server_options_categories) {
     for (i = 0; i < server_options_categories_num; i++) {
       if (nullptr != server_options_categories[i]) {
-        FCPP_FREE(server_options_categories[i]);
+        delete[] server_options_categories[i];
+        server_options_categories[i] = nullptr;
       }
     }
-    FCPP_FREE(server_options_categories);
+    delete[] server_options_categories;
+    server_options_categories = nullptr;
     server_options_categories_num = 0;
   }
 }
@@ -4768,17 +4776,21 @@ void options_free()
     case OT_ENUM:
       fc_assert_action(nullptr != pcoption->u.enumerator.support_names,
                        break);
-      FC_FREE(pcoption->u.enumerator.support_names);
+      delete pcoption->u.enumerator.support_names;
+      pcoption->u.enumerator.support_names = nullptr;
       fc_assert_action(nullptr != pcoption->u.enumerator.pretty_names,
                        break);
-      FC_FREE(pcoption->u.enumerator.pretty_names);
+      delete pcoption->u.enumerator.pretty_names;
+      pcoption->u.enumerator.pretty_names = nullptr;
       break;
 
     case OT_BITWISE:
       fc_assert_action(nullptr != pcoption->u.bitwise.support_names, break);
-      FC_FREE(pcoption->u.bitwise.support_names);
+      delete pcoption->u.bitwise.support_names;
+      pcoption->u.bitwise.support_names = nullptr;
       fc_assert_action(nullptr != pcoption->u.bitwise.pretty_names, break);
-      FC_FREE(pcoption->u.bitwise.pretty_names);
+      delete pcoption->u.bitwise.pretty_names;
+      pcoption->u.bitwise.pretty_names = nullptr;
       break;
 
     case OT_BOOLEAN:

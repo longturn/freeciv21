@@ -408,6 +408,7 @@ static void free_socket_packet_buffer(struct socket_packet_buffer *buf)
       free(buf->data);
     }
     delete buf;
+    buf = nullptr;
   }
 }
 
@@ -518,14 +519,9 @@ void free_compression_queue(struct connection *pc)
  */
 static void init_packet_hashs(struct connection *pc)
 {
-  pc->phs.sent = new genhash *[PACKET_LAST];
-  pc->phs.received = new genhash *[PACKET_LAST];
+  pc->phs.sent = new genhash *[PACKET_LAST] {};
+  pc->phs.received = new genhash *[PACKET_LAST] {};
   pc->phs.handlers = packet_handlers_initial();
-
-  for (int i = 0; i < PACKET_LAST; i++) {
-    pc->phs.sent[i] = nullptr;
-    pc->phs.received[i] = nullptr;
-  }
 }
 
 /**
@@ -541,7 +537,8 @@ static void free_packet_hashes(struct connection *pc)
         genhash_destroy(pc->phs.sent[i]);
       }
     }
-    FCPP_FREE(pc->phs.sent);
+    delete[] pc->phs.sent;
+    pc->phs.sent = nullptr;
   }
 
   if (pc->phs.received) {
@@ -550,7 +547,8 @@ static void free_packet_hashes(struct connection *pc)
         genhash_destroy(pc->phs.received[i]);
       }
     }
-    FCPP_FREE(pc->phs.received);
+    delete[] pc->phs.received;
+    pc->phs.received = nullptr;
   }
 }
 

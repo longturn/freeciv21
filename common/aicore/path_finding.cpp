@@ -1550,7 +1550,8 @@ static bool pf_danger_map_iterate(struct pf_map *pfm)
             node1->extra_cost = extra;
             node1->cost = cost;
             node1->dir_to_here = dir;
-            NFCN_FREE(node1->danger_segment);
+            delete[] node1->danger_segment;
+            node1->danger_segment = nullptr;
             if (node->is_dangerous) {
               /* We came from a dangerous tile. So we need to record the
                * path we came from until the previous safe position is
@@ -1777,9 +1778,10 @@ static void pf_danger_map_destroy(struct pf_map *pfm)
 
   // Need to clean up the dangling danger segments.
   for (i = 0, node = pfdm->lattice; i < MAP_INDEX_SIZE; i++, node++) {
-    NFC_FREE(node->danger_segment);
+    delete[] node->danger_segment;
+    node->danger_segment = nullptr;
   }
-  delete pfdm->lattice;
+  delete[] pfdm->lattice;
   map_index_pq_destroy(pfdm->queue);
   map_index_pq_destroy(pfdm->danger_queue);
   delete pfdm;

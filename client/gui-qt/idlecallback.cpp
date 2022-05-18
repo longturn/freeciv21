@@ -40,7 +40,11 @@ mrIdle::~mrIdle()
 /**
    Deletes current instance
  */
-void mrIdle::drop() { NFCN_FREE(m_instance); }
+void mrIdle::drop()
+{
+  delete m_instance;
+  m_instance = nullptr;
+}
 
 /**
    Returns given instance

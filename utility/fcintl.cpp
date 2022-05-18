@@ -74,7 +74,11 @@ char *capitalized_string(const char *str)
 /**
    Free capitalized string.
  */
-void free_capitalized(char *str) { FC_FREE(str); }
+void free_capitalized(char *str)
+{
+  delete[] str;
+  str = nullptr;
+}
 
 /**
    Translation opts in to automatic capitalization features.

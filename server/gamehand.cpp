@@ -720,7 +720,8 @@ void init_new_game()
         fc_assert(i == config.usable_startpos_num);
       }
 
-      free(config.startpos);
+      delete[] config.startpos;
+      config.startpos = nullptr;
     }
   }
 

@@ -1786,7 +1786,8 @@ static bool save_nation(struct section_file *sfile, struct nation_type *pnat,
     secfile_insert_str_vec(sfile, list_items, set_count, "%s.cities", path);
 
     for (i = 0; i < set_count; i++) {
-      FC_FREE(city_str[i]);
+      delete[] city_str[i];
+      city_str[i] = nullptr;
     }
   }
 

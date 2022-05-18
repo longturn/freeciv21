@@ -294,7 +294,8 @@ void page_network::destroy_server_scans()
   if (meta_scan_timer != nullptr) {
     meta_scan_timer->stop();
     meta_scan_timer->disconnect();
-    FC_FREE(meta_scan_timer);
+    delete meta_scan_timer;
+    meta_scan_timer = nullptr;
   }
 
   if (lan_scan) {
@@ -305,7 +306,8 @@ void page_network::destroy_server_scans()
   if (lan_scan_timer != nullptr) {
     lan_scan_timer->stop();
     lan_scan_timer->disconnect();
-    FC_FREE(lan_scan_timer);
+    delete lan_scan_timer;
+    lan_scan_timer = nullptr;
   }
 #endif
 }

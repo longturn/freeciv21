@@ -454,8 +454,7 @@ void savegame2_load(struct section_file *file)
  */
 static struct loaddata *loaddata_new(struct section_file *file)
 {
-  struct loaddata *loading =
-      static_cast<loaddata *>(calloc(1, sizeof(*loading)));
+  struct loaddata *loading = new loaddata{};
   loading->file = file;
   loading->secfile_options = nullptr;
 
@@ -494,19 +493,20 @@ static struct loaddata *loaddata_new(struct section_file *file)
  */
 static void loaddata_destroy(struct loaddata *loading)
 {
-  NFC_FREE(loading->improvement.order);
-  NFC_FREE(loading->technology.order);
-  NFC_FREE(loading->activities.order);
-  NFC_FREE(loading->trait.order);
-  NFC_FREE(loading->extra.order);
-  NFC_FREE(loading->multiplier.order);
-  NFC_FREE(loading->special.order);
-  NFC_FREE(loading->base.order);
-  NFC_FREE(loading->road.order);
-  NFC_FREE(loading->specialist.order);
-  NFC_FREE(loading->ds_t.order);
-  NFC_FREE(loading->worked_tiles);
-  free(loading);
+  delete[] loading->improvement.order;
+  delete[] loading->technology.order;
+  delete[] loading->activities.order;
+  delete[] loading->trait.order;
+  delete[] loading->extra.order;
+  delete[] loading->multiplier.order;
+  delete[] loading->special.order;
+  delete[] loading->base.order;
+  delete[] loading->road.order;
+  delete[] loading->specialist.order;
+  delete[] loading->ds_t.order;
+  delete[] loading->worked_tiles;
+  delete loading;
+  loading = nullptr;
 }
 
 /* =======================================================================
@@ -2298,7 +2298,8 @@ static void sg_load_map_known(struct loaddata *loading)
     }
     whole_map_iterate_end;
 
-    FCPP_FREE(known);
+    delete[] known;
+    known = nullptr;
   }
 }
 
@@ -4231,7 +4232,8 @@ static bool sg_load_player_unit(struct loaddata *loading, struct player *plr,
             || (order->order == ORDER_ACTIVITY
                 && order->activity == ACTIVITY_LAST)) {
           // An invalid order. Just drop the orders for this unit.
-          FCPP_FREE(punit->orders.list);
+          delete[] punit->orders.list;
+          punit->orders.list = nullptr;
           punit->has_orders = false;
           break;
         }
@@ -4383,7 +4385,7 @@ static void sg_load_player_attributes(struct loaddata *loading,
 
   // Toss any existing attribute_block (should not exist)
   if (plr->attribute_block.data) {
-    free(plr->attribute_block.data);
+    delete[] plr->attribute_block.data;
     plr->attribute_block.data = nullptr;
   }
 
@@ -4416,7 +4418,7 @@ static void sg_load_player_attributes(struct loaddata *loading,
 
     quoted = new char[quoted_length + 1];
     quoted[0] = '\0';
-    plr->attribute_block.data = fc_malloc(plr->attribute_block.length);
+    plr->attribute_block.data = new char[plr->attribute_block.length]{};
     for (part_nr = 0; part_nr < parts; part_nr++) {
       const char *current = secfile_lookup_str(
           loading->file, "player%d.attribute_v2_block_data.part%d", plrno,

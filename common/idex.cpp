@@ -52,8 +52,10 @@ void idex_init(struct world *iworld)
  */
 void idex_free(struct world *iworld)
 {
-  FC_FREE(iworld->cities);
-  FC_FREE(iworld->units);
+  delete iworld->cities;
+  delete iworld->units;
+  iworld->cities = nullptr;
+  iworld->units = nullptr;
 }
 
 /**

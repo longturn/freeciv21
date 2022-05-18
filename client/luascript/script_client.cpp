@@ -138,7 +138,11 @@ static void script_client_code_init() { script_client_code = nullptr; }
 /**
    Free the optional game script code (useful for scenarios).
  */
-static void script_client_code_free() { NFCN_FREE(script_client_code); }
+static void script_client_code_free()
+{
+  delete[] script_client_code;
+  script_client_code = nullptr;
+}
 
 /**
    Load the optional game script code from file (useful for scenarios).

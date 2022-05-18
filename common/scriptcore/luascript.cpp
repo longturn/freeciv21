@@ -281,7 +281,8 @@ struct fc_lua *luascript_new(luascript_log_func_t output_fct,
 
   fcl->state = luaL_newstate();
   if (!fcl->state) {
-    FCPP_FREE(fcl);
+    delete[] fcl;
+    fcl = nullptr;
     return nullptr;
   }
   fcl->output_fct = output_fct;

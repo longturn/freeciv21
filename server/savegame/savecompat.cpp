@@ -406,7 +406,8 @@ static void compat_load_020400(struct loaddata *loading,
              * bogus so we trash them */
             secfile_entry_delete(loading->file, "map.%s", newname);
             entry_set_name(pentry, newname);
-            FCPP_FREE(name2);
+            delete[] name2;
+            name2 = nullptr;
           }
         }
         entry_list_iterate_end;
@@ -1926,7 +1927,8 @@ static void compat_load_dev(struct loaddata *loading)
         if (old_tgt_vec) {
           secfile_insert_int_vec(loading->file, old_tgt_vec, old_tgt_size,
                                  "player%d.u%d.sub_tgt_vec", plrno, unit);
-          free(old_tgt_vec);
+          delete[] old_tgt_vec;
+          old_tgt_vec = nullptr;
         }
       }
     }
@@ -1970,7 +1972,7 @@ static void compat_load_dev(struct loaddata *loading)
               }
             }
           }
-          free(extra_vec);
+          delete[] extra_vec;
         }
       }
     }

@@ -506,7 +506,8 @@ static bool lookup_cbonus_list(struct rscompat_info *compat,
     if (!unit_type_flag_id_is_valid(bonus->flag)) {
       qCritical("\"%s\": unknown flag name \"%s\" in '%s.%s'.", filename,
                 flag, sec, sub);
-      FC_FREE(bonus);
+      delete bonus;
+      bonus = nullptr;
       success = false;
       continue;
     }
@@ -515,7 +516,8 @@ static bool lookup_cbonus_list(struct rscompat_info *compat,
     if (!combat_bonus_type_is_valid(bonus->type)) {
       qCritical("\"%s\": unknown bonus type \"%s\" in '%s.%s'.", filename,
                 type, sec, sub);
-      FC_FREE(bonus);
+      delete bonus;
+      bonus = nullptr;
       success = false;
       continue;
     }
@@ -523,7 +525,8 @@ static bool lookup_cbonus_list(struct rscompat_info *compat,
                             j)) {
       qCritical("\"%s\": failed to get value from '%s.%s%d'.", filename, sec,
                 sub, j);
-      FC_FREE(bonus);
+      delete bonus;
+      bonus = nullptr;
       success = false;
       continue;
     }
@@ -620,7 +623,8 @@ static bool lookup_unit_list(struct section_file *file, const char *prefix,
   slist = secfile_lookup_str_vec(file, &nval, "%s.%s", prefix, entry);
   if (nval == 0) {
     // 'No vector' is considered same as empty vector
-    NFCPP_FREE(slist);
+    delete[] slist;
+    slist = nullptr;
     return true;
   }
   if (nval > MAX_NUM_UNIT_LIST) {
@@ -630,6 +634,7 @@ static bool lookup_unit_list(struct section_file *file, const char *prefix,
     ok = false;
   } else if (nval == 1 && strcmp(slist[0], "") == 0) {
     delete[] slist;
+    slist = nullptr;
     return true;
   }
   if (ok) {
@@ -650,6 +655,7 @@ static bool lookup_unit_list(struct section_file *file, const char *prefix,
     }
   }
   delete[] slist;
+  slist = nullptr;
 
   return ok;
 }
@@ -678,7 +684,8 @@ static bool lookup_tech_list(struct section_file *file, const char *prefix,
   if (slist == nullptr) {
     return true;
   } else if (nval == 0) {
-    FCPP_FREE(slist);
+    delete[] slist;
+    slist = nullptr;
     return true;
   } else if (nval > MAX_NUM_TECH_LIST) {
     qCCritical(ruleset_category,
@@ -689,7 +696,8 @@ static bool lookup_tech_list(struct section_file *file, const char *prefix,
 
   if (ok) {
     if (nval == 1 && strcmp(slist[0], "") == 0) {
-      FCPP_FREE(slist);
+      delete[] slist;
+      slist = nullptr;
       return true;
     }
     for (i = 0; i < nval && ok; i++) {
@@ -715,7 +723,8 @@ static bool lookup_tech_list(struct section_file *file, const char *prefix,
       }
     }
   }
-  FCPP_FREE(slist);
+  delete[] slist;
+  slist = nullptr;
 
   return ok;
 }
@@ -748,7 +757,8 @@ static bool lookup_building_list(struct section_file *file,
     ok = false;
   } else if (nval == 0 || (nval == 1 && strcmp(slist[0], "") == 0)) {
     if (slist != nullptr) {
-      FCPP_FREE(slist);
+      delete[] slist;
+      slist = nullptr;
     }
     return true;
   }
@@ -769,6 +779,7 @@ static bool lookup_building_list(struct section_file *file,
     }
   }
   delete[] slist;
+  slist = nullptr;
 
   return ok;
 }
@@ -886,6 +897,7 @@ static QVector<QString> *lookup_strvec(struct section_file *file,
     strvec_store(dest, vec, dim);
 
     delete[] vec;
+    vec = nullptr;
     return dest;
   }
   return nullptr;
@@ -1363,6 +1375,7 @@ static bool load_ruleset_techs(struct section_file *file,
       }
     }
     delete[] slist;
+    slist = nullptr;
 
     if (!ok) {
       break;
@@ -1744,11 +1757,17 @@ static bool load_ruleset_veteran(struct section_file *file, const char *path,
 #undef rs_sanity_veteran
   }
 
-  NFCPP_FREE(vlist_name);
-  NFCPP_FREE(vlist_power);
-  NFCPP_FREE(vlist_raise);
-  NFCPP_FREE(vlist_wraise);
-  NFCPP_FREE(vlist_move);
+  delete[] vlist_name;
+  delete[] vlist_power;
+  delete[] vlist_raise;
+  delete[] vlist_wraise;
+  delete[] vlist_move;
+
+  vlist_name = nullptr;
+  vlist_power = nullptr;
+  vlist_raise = nullptr;
+  vlist_wraise = nullptr;
+  vlist_move = nullptr;
 
   return ret;
 }
@@ -1850,6 +1869,7 @@ static bool load_ruleset_units(struct section_file *file,
         }
       }
       delete[] slist;
+      slist = nullptr;
 
       uc->helptext = lookup_strvec(file, sec_name, "helptext");
 
@@ -2064,6 +2084,7 @@ static bool load_ruleset_units(struct section_file *file,
         BV_SET(u->cargo, uclass_index(uclass));
       }
       delete[] slist;
+      slist = nullptr;
 
       if (!ok) {
         break;
@@ -2086,6 +2107,7 @@ static bool load_ruleset_units(struct section_file *file,
         BV_SET(u->targets, uclass_index(uclass));
       }
       delete[] slist;
+      slist = nullptr;
 
       if (!ok) {
         break;
@@ -2108,6 +2130,7 @@ static bool load_ruleset_units(struct section_file *file,
         BV_SET(u->embarks, uclass_index(uclass));
       }
       delete[] slist;
+      slist = nullptr;
 
       if (!ok) {
         break;
@@ -2130,6 +2153,7 @@ static bool load_ruleset_units(struct section_file *file,
         BV_SET(u->disembarks, uclass_index(uclass));
       }
       delete[] slist;
+      slist = nullptr;
 
       if (!ok) {
         break;
@@ -2228,6 +2252,7 @@ static bool load_ruleset_units(struct section_file *file,
         }
       }
       delete[] slist;
+      slist = nullptr;
 
       if (!ok) {
         break;
@@ -2264,6 +2289,7 @@ static bool load_ruleset_units(struct section_file *file,
         fc_assert(utype_has_role(u, ival));
       }
       delete[] slist;
+      slist = nullptr;
     }
     unit_type_iterate_end;
   }
@@ -2421,6 +2447,7 @@ static bool load_ruleset_buildings(struct section_file *file,
         }
       }
       delete[] slist;
+      slist = nullptr;
 
       if (!ok) {
         break;
@@ -2579,7 +2606,7 @@ static bool load_terrain_names(struct section_file *file,
     game.control.terrain_count = nval;
 
     // avoid re-reading files
-    NFCPP_FREE(terrain_sections);
+    delete[] terrain_sections;
     terrain_sections = new char[nval][MAX_SECTION_LABEL]{};
 
     terrain_type_iterate(pterrain)
@@ -2618,7 +2645,7 @@ static bool load_terrain_names(struct section_file *file,
 
     game.control.num_extra_types = nval;
 
-    NFCPP_FREE(extra_sections);
+    delete[] extra_sections;
     extra_sections = new char[nval][MAX_SECTION_LABEL]{};
 
     if (ok) {
@@ -2656,7 +2683,7 @@ static bool load_terrain_names(struct section_file *file,
   if (ok) {
     int idx;
 
-    NFCPP_FREE(base_sections);
+    delete[] base_sections;
     base_sections = new char[nval][MAX_SECTION_LABEL]{};
 
     /* Cannot use base_type_iterate() before bases are added to
@@ -2709,7 +2736,7 @@ static bool load_terrain_names(struct section_file *file,
   if (ok) {
     int idx;
 
-    NFCPP_FREE(road_sections);
+    delete[] road_sections;
     road_sections = new char[nval][MAX_SECTION_LABEL]{};
 
     /* Cannot use extra_type_by_cause_iterate(EC_ROAD) before roads are added
@@ -2762,7 +2789,7 @@ static bool load_terrain_names(struct section_file *file,
   if (ok) {
     int idx;
 
-    NFCPP_FREE(resource_sections);
+    delete[] resource_sections;
     resource_sections = new char[nval][MAX_SECTION_LABEL]{};
 
     /* Cannot use resource_type_iterate() before resource are added to
@@ -2947,7 +2974,8 @@ static bool load_ruleset_terrain(struct section_file *file,
         }
       }
       pterrain->resources[nval] = nullptr;
-      FCPP_FREE(res);
+      delete[] res;
+      res = nullptr;
 
       if (!ok) {
         break;
@@ -3092,6 +3120,7 @@ static bool load_ruleset_terrain(struct section_file *file,
         }
       }
       delete[] slist;
+      slist = nullptr;
 
       if (!ok) {
         break;
@@ -3124,6 +3153,7 @@ static bool load_ruleset_terrain(struct section_file *file,
         }
       }
       delete[] slist;
+      slist = nullptr;
 
       if (!ok) {
         break;
@@ -3216,6 +3246,7 @@ static bool load_ruleset_terrain(struct section_file *file,
         }
 
         delete[] slist;
+        slist = nullptr;
 
         slist = secfile_lookup_str_vec(file, &nval, "%s.rmcauses", section);
         pextra->rmcauses = 0;
@@ -3236,6 +3267,7 @@ static bool load_ruleset_terrain(struct section_file *file,
         }
 
         delete[] slist;
+        slist = nullptr;
 
         sz_strlcpy(pextra->activity_gfx,
                    secfile_lookup_str_default(file, "-", "%s.activity_gfx",
@@ -3362,6 +3394,7 @@ static bool load_ruleset_terrain(struct section_file *file,
           }
         }
         delete[] slist;
+        slist = nullptr;
 
         if (!ok) {
           break;
@@ -3385,6 +3418,7 @@ static bool load_ruleset_terrain(struct section_file *file,
           }
         }
         delete[] slist;
+        slist = nullptr;
 
         if (!ok) {
           break;
@@ -3408,6 +3442,7 @@ static bool load_ruleset_terrain(struct section_file *file,
         }
 
         delete[] slist;
+        slist = nullptr;
 
         if (!ok) {
           break;
@@ -3430,6 +3465,7 @@ static bool load_ruleset_terrain(struct section_file *file,
           }
         }
         delete[] slist;
+        slist = nullptr;
 
         if (!ok) {
           break;
@@ -3454,6 +3490,7 @@ static bool load_ruleset_terrain(struct section_file *file,
           }
         }
         delete[] slist;
+        slist = nullptr;
 
         if (!ok) {
           break;
@@ -3637,6 +3674,7 @@ static bool load_ruleset_terrain(struct section_file *file,
       }
 
       delete[] slist;
+      slist = nullptr;
 
       if (!ok) {
         break;
@@ -3696,6 +3734,9 @@ static bool load_ruleset_terrain(struct section_file *file,
             BV_SET(compat_bridged, pextra->id);
           }
         }
+
+        delete[] slist;
+        slist = nullptr;
       }
       extra_type_by_cause_iterate_end;
     }
@@ -3817,6 +3858,7 @@ static bool load_ruleset_terrain(struct section_file *file,
         }
       }
       delete[] slist;
+      slist = nullptr;
 
       if (!ok) {
         break;
@@ -3854,6 +3896,7 @@ static bool load_ruleset_terrain(struct section_file *file,
         }
       }
       delete[] slist;
+      slist = nullptr;
 
       if (!ok) {
         break;
@@ -4562,7 +4605,8 @@ load_city_name_list(struct section_file *file, struct nation_type *pnation,
       } while (nullptr != p && '\0' != *p);
     }
   }
-  NFCPP_FREE(cities);
+  delete[] cities;
+  cities = nullptr;
   return ok;
 }
 
@@ -4603,6 +4647,7 @@ static bool load_ruleset_nations(struct section_file *file,
     }
 
     delete[] vec;
+    vec = nullptr;
   }
 
   game.default_government = nullptr;
@@ -4648,6 +4693,7 @@ static bool load_ruleset_nations(struct section_file *file,
       }
 
       delete[] vec;
+      vec = nullptr;
     }
 
     vec = secfile_lookup_str_vec(file, &game.server.ruledit.at_count,
@@ -4664,6 +4710,7 @@ static bool load_ruleset_nations(struct section_file *file,
       }
 
       delete[] vec;
+      vec = nullptr;
     }
 
     vec = secfile_lookup_str_vec(file, &game.server.ruledit.as_count,
@@ -4680,6 +4727,7 @@ static bool load_ruleset_nations(struct section_file *file,
       }
 
       delete[] vec;
+      vec = nullptr;
     }
 
     sval = secfile_lookup_str_default(file, nullptr,
@@ -4830,7 +4878,8 @@ static bool load_ruleset_nations(struct section_file *file,
                   nation_rule_name(pnation), vec[j]);
         }
       }
-      NFCPP_FREE(vec);
+      delete[] vec;
+      vec = nullptr;
       if (nation_set_list_size(pnation->sets) < 1) {
         qCCritical(ruleset_category,
                    "Nation %s is not a member of any nation set",
@@ -4862,7 +4911,8 @@ static bool load_ruleset_nations(struct section_file *file,
                   nation_rule_name(pnation), vec[j]);
         }
       }
-      NFCPP_FREE(vec);
+      delete[] vec;
+      vec = nullptr;
       if (!ok) {
         break;
       }
@@ -5135,7 +5185,8 @@ static bool load_ruleset_nations(struct section_file *file,
                   nation_rule_name(pnation), vec[j]);
         }
       }
-      NFCPP_FREE(vec);
+      delete[] vec;
+      vec = nullptr;
       if (!ok) {
         break;
       }
@@ -5476,6 +5527,7 @@ static bool load_action_auto_uflag_block(struct section_file *file,
     }
 
     delete[] protecor_flag;
+    protecor_flag = nullptr;
   }
 
   return true;
@@ -5512,6 +5564,7 @@ static bool load_action_auto_actions(struct section_file *file,
     }
 
     delete[] unit_acts;
+    unit_acts = nullptr;
   }
 
   return true;
@@ -6113,7 +6166,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
   } else {
     // No summary
     if (game.ruleset_summary != nullptr) {
-      free(game.ruleset_summary);
+      delete[] game.ruleset_summary;
       game.ruleset_summary = nullptr;
     }
   }
@@ -6130,7 +6183,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
   } else {
     // No description
     if (game.ruleset_description != nullptr) {
-      free(game.ruleset_description);
+      delete[] game.ruleset_description;
       game.ruleset_description = nullptr;
     }
     game.control.desc_length = 0;
@@ -6194,6 +6247,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
       }
     }
     delete[] slist;
+    slist = nullptr;
   }
 
   if (ok) {
@@ -6292,6 +6346,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
       }
     }
     delete[] food_ini;
+    food_ini = nullptr;
   }
 
   if (ok) {
@@ -6438,7 +6493,8 @@ static bool load_ruleset_game(struct section_file *file, bool act,
         }
 
         if (psize) {
-          FCPP_FREE(protecor_flag);
+          delete[] protecor_flag;
+          protecor_flag = nullptr;
         }
       }
     }
@@ -6617,6 +6673,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
         }
 
         delete[] quiet_actions;
+        quiet_actions = nullptr;
       }
     }
 
@@ -6895,6 +6952,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
       team_slot_set_defined_name(team_slot_by_number(i), svec[i]);
     }
     delete[] svec;
+    svec = nullptr;
 
     sec = secfile_sections_by_name_prefix(file, DISASTER_SECTION_PREFIX);
     nval = (nullptr != sec ? section_list_size(sec) : 0);
@@ -6960,6 +7018,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
       }
 
       delete[] svec;
+      svec = nullptr;
 
       if (!ok) {
         break;
@@ -7136,6 +7195,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
         }
       }
       delete[] slist;
+      slist = nullptr;
 
       pgood->helptext = lookup_strvec(file, sec_name, "helptext");
     }
@@ -8626,8 +8686,10 @@ static bool load_rulesetdir(const char *rsdir, bool compat_mode,
   playercolor_init();
   game_ruleset_init();
 
-  NFCNPP_FREE(script_buffer);
-  NFCNPP_FREE(parser_buffer);
+  delete[] script_buffer;
+  delete[] parser_buffer;
+  script_buffer = nullptr;
+  parser_buffer = nullptr;
 
   server.playable_nations = 0;
 
@@ -8737,11 +8799,16 @@ static bool load_rulesetdir(const char *rsdir, bool compat_mode,
   nullcheck_secfile_destroy(effectfile);
   nullcheck_secfile_destroy(gamefile);
 
-  NFCNPP_FREE(extra_sections);
-  NFCNPP_FREE(base_sections);
-  NFCNPP_FREE(road_sections);
-  NFCNPP_FREE(resource_sections);
-  NFCNPP_FREE(terrain_sections);
+  delete[] extra_sections;
+  delete[] base_sections;
+  delete[] road_sections;
+  delete[] resource_sections;
+  delete[] terrain_sections;
+  extra_sections = nullptr;
+  base_sections = nullptr;
+  road_sections = nullptr;
+  resource_sections = nullptr;
+  terrain_sections = nullptr;
 
   if (ok) {
     rscompat_postprocess(&compat_info);

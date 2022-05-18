@@ -1924,8 +1924,9 @@ static void img_destroy(struct img *pimg)
 {
   if (pimg != nullptr) {
     // do not free pimg->def
-    free(pimg->map);
-    free(pimg);
+    delete[] pimg->map;
+    delete pimg;
+    pimg = nullptr;
   }
 }
 

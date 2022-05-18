@@ -86,7 +86,8 @@ static void package_event_full(struct packet_chat_msg *packet,
   }
 
   if (is_capitalization_enabled()) {
-    FCPP_FREE(str);
+    delete[] str;
+    str = nullptr;
   }
 }
 
@@ -870,21 +871,16 @@ void event_cache_load(struct section_file *file, const char *section)
 
       if (!valid && nullptr == players) {
         qDebug("[Event cache %4d] invalid target bitmap: %s", i, p);
-        if (nullptr != players) {
-          FC_FREE(players);
-        }
+        delete players;
+        players = nullptr;
       }
     }
 
     // insert event into the cache
     (void) event_cache_data_new(&packet, timestamp, server_status,
                                 target_type, players);
-
-    if (nullptr != players) {
-      // free the event cache player selection
-      FC_FREE(players);
-    }
-
+    delete players;
+    players = nullptr;
     qDebug("Event %4d loaded.", i);
   }
 }

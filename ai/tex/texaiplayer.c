@@ -251,7 +251,8 @@ static enum texai_abort_msg_class texai_check_messages(struct ai_type *ait)
       ret_abort = new_abort;
     }
 
-    FC_FREE(msg);
+    delete msg;
+    msg = nullptr;
 
     texaimsg_list_allocate_mutex(exthrai.msgs_to.msglist);
   }
@@ -265,7 +266,7 @@ static enum texai_abort_msg_class texai_check_messages(struct ai_type *ait)
  **************************************************************************/
 void texai_player_alloc(struct ai_type *ait, struct player *pplayer)
 {
-  struct texai_plr *player_data = fc_calloc(1, sizeof(struct texai_plr));
+  struct texai_plr *player_data = new texai_plr{};
 
   player_set_ai_data(pplayer, ait, player_data);
 
@@ -288,7 +289,8 @@ void texai_player_free(struct ai_type *ait, struct player *pplayer)
   if (player_data != NULL) {
     player_set_ai_data(pplayer, ait, NULL);
     unit_list_destroy(player_data->units);
-    FC_FREE(player_data);
+    delete player_data;
+    player_data = nullptr;
   }
 }
 
@@ -378,7 +380,8 @@ void texai_refresh(struct ai_type *ait, struct player *pplayer)
         if (pcity != NULL && city_owner(pcity) == req->plr) {
           adv_choice_copy(&(def_ai_city_data(pcity, ait)->choice),
                           &(choice_req->choice));
-          FC_FREE(choice_req);
+          delete choice_req;
+          choice_req = nullptr;
         }
       } break;
       case TEXAI_REQ_TURN_DONE:
@@ -386,7 +389,8 @@ void texai_refresh(struct ai_type *ait, struct player *pplayer)
         break;
       }
 
-      FC_FREE(req);
+      delete req;
+      req = nullptr;
 
       texaireq_list_allocate_mutex(exthrai.reqs_from.reqlist);
     }

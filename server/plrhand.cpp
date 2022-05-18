@@ -1828,8 +1828,10 @@ void server_remove_player(struct player *pplayer)
       struct trade_route *pback =
           remove_trade_route(pcity, proute, true, true);
 
-      FC_FREE(proute);
-      FC_FREE(pback);
+      delete proute;
+      delete pback;
+      proute = nullptr;
+      pback = nullptr;
     }
     trade_routes_iterate_safe_end;
   }

@@ -81,7 +81,7 @@ void units_select::create_pixmap()
   struct unit *punit;
   float isosize;
 
-  NFCN_FREE(pix);
+  delete pix;
   isosize = 0.7;
   if (tileset_hex_height(tileset) > 0 || tileset_hex_width(tileset) > 0) {
     isosize = 0.5;
@@ -97,7 +97,7 @@ void units_select::create_pixmap()
       item_size.setHeight(tileset_unit_width(tileset) * isosize);
     }
     more = false;
-    NFC_FREE(h_pix);
+    delete h_pix;
     h_pix = new QPixmap(item_size.width(), item_size.height());
     h_pix->fill(palette().color(QPalette::HighlightedText));
     if (unit_count < 5) {
@@ -429,6 +429,7 @@ void popdown_unit_sel()
   units_select *unit_sel = queen()->unit_selector;
   if (unit_sel != nullptr) {
     unit_sel->close();
-    FC_FREE(unit_sel);
+    delete unit_sel;
+    unit_sel = nullptr;
   }
 }

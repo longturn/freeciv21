@@ -512,7 +512,8 @@ static void fc__attribute((__format__(__printf__, 5, 6)))
   fc_vsnprintf(buf + qstrlen(buf), bufsz - qstrlen(buf), totalfmt, args);
   va_end(args);
 
-  FC_FREE(sum);
+  delete sum;
+  sum = nullptr;
 }
 
 /**

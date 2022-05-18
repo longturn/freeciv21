@@ -592,8 +592,10 @@ void game_ruleset_free()
     if (game.server.luadata != nullptr) {
       secfile_destroy(game.server.luadata);
     }
-    NFCNPP_FREE(game.server.ruledit.description_file);
-    NFCNPP_FREE(game.server.ruledit.nationlist);
+    delete[] game.server.ruledit.description_file;
+    game.server.ruledit.description_file = nullptr;
+    delete[] game.server.ruledit.nationlist;
+    game.server.ruledit.nationlist = nullptr;
     if (game.server.ruledit.embedded_nations != nullptr) {
       for (i = 0; i < game.server.ruledit.embedded_nations_count; i++) {
         delete[] game.server.ruledit.embedded_nations[i];
@@ -632,9 +634,12 @@ void game_ruleset_free()
     game.calendar.calendar_fragment_name[i][0] = '\0';
   }
 
-  NFCNPP_FREE(game.ruleset_summary);
-  NFCNPP_FREE(game.ruleset_description);
-  NFCNPP_FREE(game.ruleset_capabilities);
+  delete[] game.ruleset_summary;
+  delete[] game.ruleset_description;
+  delete[] game.ruleset_capabilities;
+  game.ruleset_summary = nullptr;
+  game.ruleset_description = nullptr;
+  game.ruleset_capabilities = nullptr;
 }
 
 /**
@@ -797,8 +802,10 @@ void user_flag_init(struct user_flag *flag)
  */
 void user_flag_free(struct user_flag *flag)
 {
-  NFCNPP_FREE(flag->name);
-  NFCNPP_FREE(flag->helptxt);
+  delete[] flag->name;
+  delete[] flag->helptxt;
+  flag->name = nullptr;
+  flag->helptxt = nullptr;
 }
 
 /**

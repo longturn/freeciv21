@@ -561,7 +561,7 @@ void texai_req_worker_task_rcv(struct texai_req *req)
     struct worker_task *ptask = worker_task_list_get(pcity->task_reqs, 0);
 
     if (ptask == NULL) {
-      ptask = fc_malloc(sizeof(struct worker_task));
+      ptask = new worker_task{};
       worker_task_init(ptask);
       worker_task_list_append(pcity->task_reqs, ptask);
     }
@@ -585,7 +585,8 @@ void texai_req_worker_task_rcv(struct texai_req *req)
  **************************************************************************/
 void texai_city_alloc(struct ai_type *ait, struct city *pcity)
 {
-  struct texai_city *city_data = fc_calloc(1, sizeof(struct texai_city));
+  struct texai_city *city_data = new struct texai_city {
+  };
 
   city_data->defai.building_wait = BUILDING_WAIT_MINIMUM;
   adv_init_choice(&(city_data->defai.choice));
@@ -602,7 +603,8 @@ void texai_city_free(struct ai_type *ait, struct city *pcity)
 
   if (city_data != NULL) {
     adv_deinit_choice(&(city_data->defai.choice));
-    city_set_ai_data(pcity, ait, NULL);
-    FC_FREE(city_data);
+    city_set_ai_data(pcity, ait, nullptr);
+    delete city_data;
+    city_data = nullptr;
   }
 }

@@ -581,13 +581,19 @@ void adv_data_phase_done(struct player *pplayer)
     return;
   }
 
-  FCPP_FREE(adv->explore.ocean);
-  FCPP_FREE(adv->explore.continent);
-  FCPP_FREE(adv->threats.continent);
-  FCPP_FREE(adv->threats.ocean);
-  FCPP_FREE(adv->stats.cities);
-  FCPP_FREE(adv->stats.ocean_cities);
+  delete[] adv->explore.ocean;
+  delete[] adv->explore.continent;
+  delete[] adv->threats.continent;
+  delete[] adv->threats.ocean;
+  delete[] adv->stats.cities;
+  delete[] adv->stats.ocean_cities;
 
+  adv->explore.ocean = nullptr;
+  adv->explore.continent = nullptr;
+  adv->threats.continent = nullptr;
+  adv->threats.ocean = nullptr;
+  adv->stats.cities = nullptr;
+  adv->stats.ocean_cities = nullptr;
   adv->num_continents = 0;
   adv->num_oceans = 0;
 
@@ -758,8 +764,8 @@ void adv_data_close(struct player *pplayer)
 
   adv_data_phase_done(pplayer);
 
-  NFCPP_FREE(adv->government_want);
-
+  delete[] adv->government_want;
+  adv->government_want = nullptr;
   if (adv->dipl.adv_dipl_slots != nullptr) {
     players_iterate(aplayer)
     {
@@ -772,7 +778,7 @@ void adv_data_close(struct player *pplayer)
     delete[] adv->dipl.adv_dipl_slots;
   }
 
-  NFC_FREE(adv);
+  delete adv;
 
   pplayer->server.adv = nullptr;
 }
@@ -799,7 +805,7 @@ static void adv_dipl_free(const struct player *plr1,
       plr1->server.adv->dipl.adv_dipl_slots + player_index(plr2);
 
   if (*dip_slot != nullptr) {
-    FC_FREE(*dip_slot);
+    delete *dip_slot;
     *dip_slot = nullptr;
   }
 }
