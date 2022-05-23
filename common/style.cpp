@@ -201,7 +201,7 @@ int style_of_city(const struct city *pcity) { return pcity->style; }
  */
 int basic_city_style_for_style(struct nation_style *pstyle)
 {
-  enum fc_tristate style_style;
+  enum fc_tristate style_style = TRI_MAYBE;
   int i;
 
   for (i = game.control.styles_count - 1; i >= 0; i--) {
