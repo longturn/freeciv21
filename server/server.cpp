@@ -222,9 +222,14 @@ std::pair<QTcpServer *, bool> srv_prepare()
  */
 detail::async_readline_wrapper::async_readline_wrapper(bool interactive,
                                                        QObject *parent)
-    : QThread(parent), m_interactive(interactive)
+    : QThread(parent), m_interactive(interactive), m_stop{}
 {
 }
+
+/**
+ * Set stop flag for thread
+ */
+void detail::async_readline_wrapper::stop() { m_stop = true; }
 
 /**
  * Blocks until a line of input can be read from stdin, then emits
@@ -235,6 +240,10 @@ void detail::async_readline_wrapper::wait_for_input()
   // Loop until we get a non-trivial line
   QString line;
   while (line.isEmpty()) {
+    if (m_stop) {
+      return;
+    }
+
     if (m_interactive) {
       char *buffer = readline("> ");
       if (buffer == nullptr) {
@@ -252,6 +261,7 @@ void detail::async_readline_wrapper::wait_for_input()
       line = QString::fromLocal8Bit(f.readLine());
     }
   }
+
   emit line_available(line);
 }
 
@@ -354,8 +364,11 @@ server::~server()
     auto notifier =
         qobject_cast<detail::async_readline_wrapper *>(m_stdin_notifier);
     if (notifier) {
+      notifier->stop();
+      notifier->quit();
       notifier->wait();
       delete notifier;
+      m_stdin_notifier = nullptr;
     }
   }
 #endif // Q_OS_WIN

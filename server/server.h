@@ -22,6 +22,8 @@
 // Qt
 #include <QObject>
 
+#include <atomic>
+
 #ifdef Q_OS_WIN
 #include <QRecursiveMutex>
 #include <QThread>
@@ -43,6 +45,8 @@ class async_readline_wrapper final : public QThread {
 public:
   async_readline_wrapper(bool interactive, QObject *parent = nullptr);
 
+  void stop();
+
 public slots:
   void wait_for_input();
 
@@ -51,6 +55,7 @@ signals:
 
 private:
   bool m_interactive; // Whether to use readline.
+  std::atomic<bool> m_stop;
 };
 } // namespace detail
 #endif
