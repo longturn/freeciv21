@@ -69,7 +69,7 @@
 #include "options.h"
 
 // gui-qt
-#include "gui-qt/qtg_cxxside.h"
+#include "qtg_cxxside.h"
 
 typedef QHash<QString, QString> optionsHash;
 typedef QHash<QString, intptr_t> dialOptionsHash;

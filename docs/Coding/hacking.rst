@@ -17,7 +17,6 @@ The source code has the following important directories:
 * :file:`common`: data structures and code used by both the client and server.
 * :file:`server`: (duh)
 * :file:`client`: common client code
-* :file:`client/gui-qt` Qt gui implementation of the client.
 * :file:`data`: graphics, rulesets and stuff
 * :file:`translations`: localization files
 * :file:`ai`: the ai, later linked into the server

@@ -40,7 +40,7 @@
 #include "client_main.h"
 
 // gui-qt
-#include "gui-qt/chatline.h"
+#include "chatline.h"
 
 struct server_scan {
   enum server_scan_type type;

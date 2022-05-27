@@ -25,7 +25,7 @@
 #include "city.h"
 
 // gui-qt
-#include "gui-qt/canvas.h"
+#include "canvas.h"
 
 // client
 #include "client_main.h"

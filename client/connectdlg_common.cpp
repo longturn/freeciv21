@@ -51,7 +51,7 @@
 #include "tilespec.h"
 
 // gui-qt
-#include "gui-qt/qtg_cxxside.h"
+#include "qtg_cxxside.h"
 
 #define WAIT_BETWEEN_TRIES 100000 // usecs
 #define NUMBER_OF_TRIES 500
