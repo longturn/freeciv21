@@ -23,7 +23,7 @@
 #include "audio_none.h"
 
 // gui-qt
-#include "gui-qt/qtg_cxxside.h"
+#include "qtg_cxxside.h"
 
 /**
    Clean up

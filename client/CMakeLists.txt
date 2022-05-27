@@ -1,3 +1,6 @@
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+
 # Generate the packet handling code
 add_custom_command(
   OUTPUT
@@ -40,42 +43,92 @@ add_library(
   attribute.cpp
   audio_none.cpp
   audio.cpp
+  canvas.cpp
+  chatline.cpp
   chatline_common.cpp
   citybar.cpp
+  citydlg.cpp
   citydlg_common.cpp
+  cityrep.cpp
   cityrepdata.cpp
+  civstatus.cpp
   client_main.cpp
   climap.cpp
   climisc.cpp
   clinet.cpp
+  colors.cpp
   colors_common.cpp
+  connectdlg.cpp
   connectdlg_common.cpp
   control.cpp
+  dialogs.cpp
+  diplodlg.cpp
+  economyreport.cpp
   editor.cpp
+  endgamereport.cpp
+  fc_client.cpp
+  fonts.cpp
   global_worklist.cpp
   goto.cpp
+  gotodlg.cpp
   governor.cpp
+  gui_main.cpp
+  helpdlg.cpp
+  hudwidget.cpp
+  icons.cpp
+  idlecallback.cpp
   layer_background.cpp
   layer_base_flags.cpp
   layer_darkness.cpp
   layer_special.cpp
   layer_terrain.cpp
   layer.cpp
+  luaconsole.cpp
   luaconsole_common.cpp
+  mapctrl.cpp
   mapctrl_common.cpp
+  mapview.cpp
   mapview_common.cpp
+  menu.cpp
+  messageoptions.cpp
+  messagewin.cpp
   messagewin_common.cpp
+  minimap.cpp
   music.cpp
+  notifyreport.cpp
   options.cpp
+  optiondlg.cpp
   overview_common.cpp
+  page_game.cpp
+  page_load.cpp
+  page_main.cpp
+  page_network.cpp
+  page_pregame.cpp
+  page_scenario.cpp
+  plrdlg.cpp
   plrdlg_common.cpp
+  pregameoptions.cpp
+  ratesdlg.cpp
   repodlgs_common.cpp
   reqtree.cpp
+  sciencedlg.cpp
+  shortcuts.cpp
+  spaceshipdlg.cpp
+  sprite.cpp
   text.cpp
+  themes.cpp
   themes_common.cpp
   tilespec.cpp
+  tileset_debugger.cpp
+  tooltips.cpp
+  top_bar.cpp
+  tradecalculation.cpp
+  unitreport.cpp
+  unitselect.cpp
   update_queue.cpp
   voteinfo.cpp
+  voteinfo_bar.cpp
+  widgetdecorations.cpp
   ${FREECIV_AUDIO}
 )
 if(NOT EMSCRIPTEN)
@@ -99,10 +152,18 @@ target_link_libraries(client PUBLIC client_gen)
 target_link_libraries(client PUBLIC cvercmp)
 target_link_libraries(client PUBLIC luascript)
 
+if(APPLE)
+  target_link_libraries(client PRIVATE "-framework AudioUnit" "-framework CoreAudio" "-framework ForceFeedback" "-framework AudioToolbox")
+  qt5_import_plugins(client INCLUDE Qt5::QCocoaIntegrationPlugin Qt5::QSvgPlugin)
+endif()
+
+if(EMSCRIPTEN)
+  qt5_import_plugins(client INCLUDE Qt5::QWasmIntegrationPlugin)
+endif()
+
 add_compile_definitions(NOMINMAX)
 
 if(FREECIV_ENABLE_CLIENT)
-  add_subdirectory(gui-qt)
   add_executable(freeciv21-client ${GUI_TYPE} packhand.cpp) # packhand.c depends on gui-qt
   if(EMSCRIPTEN)
     target_link_options(freeciv21-client PRIVATE
@@ -135,7 +196,6 @@ if(FREECIV_ENABLE_CLIENT)
     )
   endif()
   target_link_libraries(freeciv21-client client)
-  target_link_libraries(freeciv21-client gui-qt)
   add_dependencies(freeciv21-client freeciv_translations)
   install(TARGETS freeciv21-client
           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

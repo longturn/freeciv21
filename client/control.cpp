@@ -58,8 +58,8 @@
 #include "control.h"
 
 // gui-qt
-#include "gui-qt/chatline.h"
-#include "gui-qt/qtg_cxxside.h"
+#include "chatline.h"
+#include "qtg_cxxside.h"
 
 struct client_disband_unit_data {
   int unit_id;

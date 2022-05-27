@@ -68,7 +68,7 @@
 #include "tilespec.h"
 
 // gui-qt
-#include "gui-qt/qtg_cxxside.h"
+#include "qtg_cxxside.h"
 
 extern void flush_dirty_overview();
 /**

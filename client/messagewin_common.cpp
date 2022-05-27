@@ -34,7 +34,7 @@
 #include "update_queue.h"
 
 // gui-qt
-#include "gui-qt/messagewin.h"
+#include "messagewin.h"
 
 static struct message **messages = nullptr;
 static int messages_total = 0;

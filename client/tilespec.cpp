@@ -89,7 +89,7 @@
 #include "tilespec.h"
 
 // gui-qt
-#include "gui-qt/helpdlg.h"
+#include "helpdlg.h"
 
 #define TILESPEC_CAPSTR                                                     \
   "+Freeciv-tilespec-Devel-2019-Jul-03 duplicates_ok precise-hp-bars "      \

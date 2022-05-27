@@ -42,7 +42,7 @@
 #include "mapview_g.h"
 
 // gui-qt
-#include "gui-qt/qtg_cxxside.h"
+#include "qtg_cxxside.h"
 
 enum selection_modes {
   SELECTION_MODE_NEW = 0,

@@ -58,8 +58,8 @@
 #include "tilespec.h"
 
 // gui-qt
-#include "gui-qt/canvas.h"
-#include "gui-qt/qtg_cxxside.h"
+#include "canvas.h"
+#include "qtg_cxxside.h"
 
 Q_LOGGING_CATEGORY(graphics_category, "freeciv.graphics")
 

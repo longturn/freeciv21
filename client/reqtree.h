@@ -11,7 +11,7 @@
 #pragma once
 
 // gui-qt
-#include "gui-qt/canvas.h"
+#include "canvas.h"
 
 #include <QRect>
 

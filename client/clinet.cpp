@@ -51,7 +51,7 @@
 #include "repodlgs_g.h"
 
 // gui-qt
-#include "gui-qt/qtg_cxxside.h"
+#include "qtg_cxxside.h"
 
 // In autoconnect mode, try to connect to once a second
 #define AUTOCONNECT_INTERVAL 500
