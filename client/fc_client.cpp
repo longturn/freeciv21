@@ -234,6 +234,10 @@ void fc_client::switch_page(int new_pg)
     }
     menuBar()->setVisible(true);
     queen()->mapview_wdg->setFocus();
+    queen()->sw_message->setIcon(
+        fcIcons::instance()->getIcon(QStringLiteral("messages")));
+    queen()->message->hide();
+    queen()->message->clr();
     center_on_something();
     voteinfo_gui_update();
     update_info_label();

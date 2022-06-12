@@ -111,6 +111,34 @@ pageGame::pageGame(QWidget *parent)
   sw_diplo->setRightClick(top_bar_right_click_diplomacy);
   sw_science->setRightClick(top_bar_right_click_science);
 
+  message = new message_widget(mapview_wdg);
+  message->setAttribute(Qt::WA_NoMousePropagation);
+  message->hide();
+  sw_message = new top_bar_widget(
+      _("Messages"), QLatin1String(""), +[] {
+        const auto message = queen()->message;
+        if (message) {
+          message->setVisible(!message->isVisible());
+
+          // change icon to default if icon is notify
+          const auto sw_message = queen()->sw_message;
+          if (sw_message) {
+            queen()->sw_message->setIcon(
+                fcIcons::instance()->getIcon(QStringLiteral("messages")));
+          }
+        }
+      });
+  sw_message->setIcon(
+      fcIcons::instance()->getIcon(QStringLiteral("messages")));
+  connect(
+      message, &message_widget::add_msg, +[] {
+        const auto message = queen()->message;
+        if (message && !message->isVisible()) {
+          queen()->sw_message->setIcon(
+              fcIcons::instance()->getIcon(QStringLiteral("notify")));
+        }
+      });
+
   top_bar_wdg->addWidget(sw_map);
   top_bar_wdg->addWidget(sw_cunit);
   top_bar_wdg->addWidget(sw_cities);
@@ -120,6 +148,7 @@ pageGame::pageGame(QWidget *parent)
   top_bar_wdg->addWidget(sw_tax);
   top_bar_wdg->addWidget(sw_indicators);
   top_bar_wdg->addWidget(sw_endturn);
+  top_bar_wdg->addWidget(sw_message);
 
   civ_status = new civstatus(mapview_wdg);
   civ_status->setAttribute(Qt::WA_NoMousePropagation);
@@ -137,9 +166,6 @@ pageGame::pageGame(QWidget *parent)
   battlelog_wdg = new hud_battle_log(mapview_wdg);
   battlelog_wdg->setAttribute(Qt::WA_NoMousePropagation);
   battlelog_wdg->hide();
-  message = new message_widget(mapview_wdg);
-  message->setAttribute(Qt::WA_NoMousePropagation);
-  message->show();
   chat = new chat_widget(mapview_wdg);
   chat->setAttribute(Qt::WA_NoMousePropagation);
   chat->show();
@@ -187,6 +213,8 @@ void pageGame::reloadSidebarIcons()
       fcIcons::instance()->getIcon(QStringLiteral("economy")));
   sw_endturn->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("endturn")));
+  sw_message->setIcon(
+      fcIcons::instance()->getIcon(QStringLiteral("messages")));
 }
 
 /**
@@ -491,7 +519,7 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
     queen()->message->resize(
         qRound((size.width() * king()->qt_settings.chat_fwidth)),
         qRound((size.height() * king()->qt_settings.chat_fheight)));
-    queen()->message->move(0, 0);
+    queen()->message->move(size.width() - queen()->message->width(), 0);
     queen()->chat->resize(
         qRound((size.width() * king()->qt_settings.chat_fwidth)),
         qRound((size.height() * king()->qt_settings.chat_fheight)));

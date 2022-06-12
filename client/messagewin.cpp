@@ -53,53 +53,10 @@ message_widget::message_widget(QWidget *parent)
   mesg_table->setWordWrap(true);
   layout->addWidget(mesg_table, 1, 0, 1, 3);
 
-  mw = new move_widget(this);
-  layout->addWidget(mw, 0, 0, Qt::AlignLeft | Qt::AlignTop);
-
-  min_max = new QPushButton(this);
-  min_max->setIcon(fcIcons::instance()->getIcon("expand-up"));
-  min_max->setIconSize(QSize(24, 24));
-  min_max->setFixedWidth(25);
-  min_max->setFixedHeight(25);
-  min_max->setCheckable(true);
-  min_max->setChecked(true);
-  layout->addWidget(min_max, 0, 2);
   connect(mesg_table->selectionModel(),
           &QItemSelectionModel::selectionChanged, this,
           &message_widget::item_selected);
-  connect(min_max, &QAbstractButton::toggled, this,
-          &message_widget::set_events_visible);
   setMouseTracking(true);
-}
-
-/**
-   Manages toggling minimization.
- */
-void message_widget::set_events_visible(bool visible)
-{
-  mesg_table->setVisible(visible);
-
-  int h = visible ? qRound(parentWidget()->size().height()
-                           * king()->qt_settings.chat_fheight)
-                  : sizeHint().height();
-
-  // Heuristic that more or less works
-  bool expand_up =
-      (y() > parentWidget()->height() - y() - (visible ? h : height()));
-
-  QString icon_name = (expand_up ^ visible) ? QLatin1String("expand-up")
-                                            : QLatin1String("expand-down");
-  min_max->setIcon(fcIcons::instance()->getIcon(icon_name));
-
-  auto geo = geometry();
-  if (expand_up) {
-    geo.setTop(
-        std::clamp(geo.bottom() - h, 0, parentWidget()->height() - h));
-    geo.setHeight(h);
-  } else {
-    geo.setBottom(std::clamp(geo.top() + h, h, parentWidget()->height()));
-  }
-  setGeometry(geo);
 }
 
 /**
@@ -195,6 +152,7 @@ void message_widget::msg(const struct message *pmsg)
   if (icon != nullptr) {
     item->setIcon(QIcon(*icon));
   }
+  emit add_msg();
 }
 
 /**

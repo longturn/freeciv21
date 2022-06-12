@@ -46,13 +46,14 @@ protected:
   void enterEvent(QEvent *event) override;
   void leaveEvent(QEvent *event) override;
   void paintEvent(QPaintEvent *event) override;
+
 public slots:
   void item_selected(const QItemSelection &sl, const QItemSelection &ds);
-  void set_events_visible(bool visible);
+
+signals:
+  void add_msg();
 
 private:
-  QPushButton *min_max;
-  move_widget *mw;
   static void scroll_to_bottom(void *);
 };
 
