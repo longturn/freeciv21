@@ -36,6 +36,8 @@ public:
                     const city *pcity,
                     const unit_type *putype) const override;
 
+  void reset_ruleset() override;
+
 private:
   std::array<std::unique_ptr<drawn_sprite>, MAX_EXTRA_TYPES> m_sprites;
 };

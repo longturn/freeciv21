@@ -173,6 +173,11 @@ public:
     Q_UNUSED(terrain);
   }
 
+  /**
+   * Resets cached data that depends on the ruleset.
+   */
+  virtual void reset_ruleset() {}
+
   mapview_layer type() const { return m_layer; }
 
 protected:

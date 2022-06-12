@@ -80,4 +80,13 @@ std::vector<drawn_sprite> layer_special::fill_sprite_array(
   return sprites;
 }
 
+void layer_special::reset_ruleset()
+{
+  // The array is indexed by the extra id, which depends on the ruleset.
+  // Clear it.
+  for (auto &sprite : m_sprites) {
+    sprite = nullptr;
+  }
+}
+
 } // namespace freeciv

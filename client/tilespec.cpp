@@ -5799,13 +5799,15 @@ static void tileset_player_free(struct tileset *t, int plrid)
  */
 void tileset_ruleset_reset(struct tileset *t)
 {
-  int i;
-
-  for (i = 0; i < ESTYLE_COUNT; i++) {
+  for (int i = 0; i < ESTYLE_COUNT; i++) {
     if (t->style_lists[i] != nullptr) {
       extra_type_list_destroy(t->style_lists[i]);
       t->style_lists[i] = extra_type_list_new();
     }
+  }
+
+  for (auto &layer : t->layers) {
+    layer->reset_ruleset();
   }
 }
 
