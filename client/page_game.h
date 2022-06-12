@@ -74,6 +74,7 @@ public:
   hud_battle_log *battlelog_wdg;
   hud_units *unitinfo_wdg;
   message_widget *message;
+  top_bar_widget *sw_message;
   chat_widget *chat;
   map_view *mapview_wdg;
   minimap_view *minimapview_wdg;
