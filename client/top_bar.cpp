@@ -486,29 +486,6 @@ void top_bar_center_unit()
 }
 
 /**
-   Disables end turn button if asked
- */
-void top_bar_disable_end_turn(bool do_restore)
-{
-  if (king()->current_page() != PAGE_GAME) {
-    return;
-  }
-  queen()->endturn->setEnabled(do_restore);
-}
-
-/**
-   Changes background of endturn widget if asked
- */
-void top_bar_blink_end_turn(bool do_restore)
-{
-  if (king()->current_page() != PAGE_GAME) {
-    return;
-  }
-  //queen()->endturn->blink = !do_restore;
-  queen()->endturn->update();
-}
-
-/**
    Popups menu on indicators widget
  */
 void top_bar_indicators_menu()

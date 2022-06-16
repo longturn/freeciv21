@@ -9,15 +9,19 @@
 **************************************************************************/
 
 #include "minimap.h"
+
 // Qt
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPixmap>
 #include <QToolTip>
 #include <QWheelEvent>
+
 // client
 #include "client_main.h"
+#include "minimap_panel.h"
 #include "overview_common.h"
+
 // gui-qt
 #include "fc_client.h"
 #include "mapview.h"
@@ -188,6 +192,24 @@ void minimap_view::update_image()
 }
 
 /**
+ * Reimplements QWidget::heightForWidth
+ */
+int minimap_view::heightForWidth(int width) const
+{
+  const auto size = gui_options.overview.map->size();
+  return size.height() * width / size.width();
+}
+
+/**
+ * Reimplements QWidget::sizeHint
+ */
+QSize minimap_view::sizeHint() const
+{
+  // The default size is a bit too small...
+  return 5 * gui_options.overview.map->size();
+}
+
+/**
    Redraws visible map using stored pixmap
  */
 void minimap_view::paint(QPainter *painter, QPaintEvent *event)
@@ -310,4 +332,4 @@ void minimap_view::mouseReleaseEvent(QMouseEvent *event)
 /**
    Return a canvas that is the overview window.
  */
-void update_minimap() { queen()->minimapview_wdg->update_image(); }
+void update_minimap() { queen()->minimap_panel->minimap()->update_image(); }

@@ -59,6 +59,7 @@
 #include "messageoptions.h"
 #include "messagewin.h"
 #include "minimap.h"
+#include "minimap_panel.h"
 #include "page_game.h"
 #include "page_pregame.h"
 #include "plrdlg.h"
@@ -631,8 +632,8 @@ void mr_menu::setup_menus()
   minimap_status->setCheckable(true);
   minimap_status->setShortcut(shortcut2key(SC_MINIMAP));
   minimap_status->setChecked(true);
-  connect(minimap_status, &QAction::triggered, this,
-          &mr_menu::slot_minimap_view);
+  connect(minimap_status, &QAction::triggered,
+          queen()->minimap_panel->minimap(), &QWidget::setVisible);
   osd_status = menu->addAction(_("Show new turn information"));
   osd_status->setCheckable(true);
   osd_status->setChecked(king()->qt_settings.show_new_turn_text);
@@ -2503,18 +2504,6 @@ void mr_menu::slot_fullscreen()
     queen()->game_tab_widget->showNormal();
   }
   gui_options.gui_qt_fullscreen = !gui_options.gui_qt_fullscreen;
-}
-
-/**
-   Action "VIEW/HIDE MINIMAP"
- */
-void mr_menu::slot_minimap_view()
-{
-  if (minimap_status->isChecked()) {
-    ::queen()->minimapview_wdg->show();
-  } else {
-    ::queen()->minimapview_wdg->hide();
-  }
 }
 
 /**

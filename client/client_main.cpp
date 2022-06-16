@@ -86,6 +86,7 @@
 #include "governor.h"
 #include "mapview_common.h"
 #include "messagewin_common.h"
+#include "minimap_panel.h"
 #include "music.h"
 #include "options.h"
 #include "overview_common.h"

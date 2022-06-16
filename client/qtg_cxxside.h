@@ -45,7 +45,6 @@ void editgui_popup_properties(const tile_list *tiles, int objtype);
 void editgui_tileset_changed();
 void editgui_popdown_all();
 
-void update_timeout_label();
 void start_turn();
 void real_city_dialog_popup(struct city *pcity);
 void real_city_dialog_refresh(struct city *pcity);
