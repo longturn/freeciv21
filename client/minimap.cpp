@@ -311,22 +311,3 @@ void minimap_view::mouseReleaseEvent(QMouseEvent *event)
    Return a canvas that is the overview window.
  */
 void update_minimap() { queen()->minimapview_wdg->update_image(); }
-
-/**
-   Called when the map size changes. This may be used to change the
-   size of the GUI element holding the overview canvas. The
-   overview.width and overview.height are updated if this function is
-   called.
-   It's used for first creation of overview only, later overview stays the
-   same size, scaled by qt-specific function.
- */
-void overview_size_changed()
-{
-  queen()->minimapview_wdg->resize(0, 0);
-  queen()->minimapview_wdg->move(
-      king()->qt_settings.minimap_x * mapview.width,
-      king()->qt_settings.minimap_y * mapview.height);
-  queen()->minimapview_wdg->resize(
-      king()->qt_settings.minimap_width * mapview.width,
-      king()->qt_settings.minimap_height * mapview.height);
-}
