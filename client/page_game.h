@@ -16,6 +16,8 @@
 #include <QStackedWidget>
 #include <QWidget>
 
+class QCommandLinkButton;
+
 class city_dialog;
 class fc_client;
 class map_view;
@@ -83,7 +85,7 @@ public:
   civstatus *civ_status;
   top_bar_widget *sw_diplo;
   indicators_widget *sw_indicators;
-  top_bar_widget *sw_endturn;
+  QCommandLinkButton *endturn;
   top_bar_widget *sw_science;
 public slots:
 private slots:
