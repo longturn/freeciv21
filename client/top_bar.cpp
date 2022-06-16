@@ -11,6 +11,7 @@
 // Qt
 #include <QAction>
 #include <QApplication>
+#include <QCommandLinkButton>
 #include <QHBoxLayout>
 #include <QMenu>
 #include <QPaintEvent>
@@ -492,7 +493,7 @@ void top_bar_disable_end_turn(bool do_restore)
   if (king()->current_page() != PAGE_GAME) {
     return;
   }
-  queen()->sw_endturn->setEnabled(do_restore);
+  queen()->endturn->setEnabled(do_restore);
 }
 
 /**
@@ -503,8 +504,8 @@ void top_bar_blink_end_turn(bool do_restore)
   if (king()->current_page() != PAGE_GAME) {
     return;
   }
-  queen()->sw_endturn->blink = !do_restore;
-  queen()->sw_endturn->update();
+  //queen()->endturn->blink = !do_restore;
+  queen()->endturn->update();
 }
 
 /**

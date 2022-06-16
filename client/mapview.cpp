@@ -11,8 +11,10 @@
 #include <memory>
 
 // Qt
+#include <QCommandLinkButton>
 #include <QMouseEvent>
 #include <QPainter>
+
 // utility
 #include "log.h"
 // common
@@ -469,8 +471,7 @@ void update_mouse_cursor(enum cursor_type new_cursor_type)
  */
 void update_timeout_label()
 {
-  queen()->sw_endturn->setCustomLabels(QString(get_timeout_label_text()));
-  queen()->sw_endturn->update();
+  queen()->endturn->setDescription(get_timeout_label_text());
 }
 
 /**

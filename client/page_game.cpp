@@ -13,8 +13,10 @@
 
 #include "page_game.h"
 // Qt
+#include <QCommandLinkButton>
 #include <QGridLayout>
 #include <QResizeEvent>
+
 // utility
 #include "fcintl.h"
 // common
@@ -101,10 +103,6 @@ pageGame::pageGame(QWidget *parent)
   sw_economy->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("economy")));
   sw_economy->setCheckable(true);
-  sw_endturn = new top_bar_widget(_("Turn Done"), QLatin1String(""),
-                                  top_bar_finish_turn);
-  sw_endturn->setIcon(
-      fcIcons::instance()->getIcon(QStringLiteral("endturn")));
   sw_cunit->setRightClick(top_bar_center_unit);
   sw_cunit->setWheelUp(cycle_enemy_units);
   sw_cunit->setWheelDown(key_unit_wait);
@@ -139,6 +137,11 @@ pageGame::pageGame(QWidget *parent)
         }
       });
 
+  endturn = new QCommandLinkButton(_("Turn Done"), QLatin1String(""));
+  connect(endturn, &QAbstractButton::clicked, top_bar_finish_turn);
+  endturn->setIcon(fcIcons::instance()->getIcon(QStringLiteral("endturn")));
+  endturn->setParent(mapview_wdg);
+
   top_bar_wdg->addWidget(sw_map);
   top_bar_wdg->addWidget(sw_cunit);
   top_bar_wdg->addWidget(sw_cities);
@@ -147,7 +150,6 @@ pageGame::pageGame(QWidget *parent)
   top_bar_wdg->addWidget(sw_economy);
   top_bar_wdg->addWidget(sw_tax);
   top_bar_wdg->addWidget(sw_indicators);
-  top_bar_wdg->addWidget(sw_endturn);
   top_bar_wdg->addWidget(sw_message);
 
   civ_status = new civstatus(mapview_wdg);
@@ -211,10 +213,9 @@ void pageGame::reloadSidebarIcons()
       fcIcons::instance()->getIcon(QStringLiteral("research")));
   sw_economy->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("economy")));
-  sw_endturn->setIcon(
-      fcIcons::instance()->getIcon(QStringLiteral("endturn")));
   sw_message->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("messages")));
+  endturn->setIcon(fcIcons::instance()->getIcon(QStringLiteral("endturn")));
 }
 
 /**
@@ -545,7 +546,12 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
     queen()->civ_status->move(
         qRound(king()->qt_settings.civstatus_x * mapview.width),
         qRound(king()->qt_settings.civstatus_y * mapview.height));
-    // It could be resized before mapview, so delayed it a bit
+
+    // QT6: remove the cast (QTBUG-68722)
+    const auto hint = qobject_cast<QWidget *>(queen()->endturn)->sizeHint();
+    const auto location = size - hint;
+    queen()->endturn->move(location.width(), location.height());
+    queen()->endturn->resize(hint);
   }
   event->setAccepted(true);
 }
