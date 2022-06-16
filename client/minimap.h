@@ -62,5 +62,4 @@ private:
   QPixmap *pix;
   QPoint cursor;
   QPoint position;
-  resize_widget *rw;
 };
