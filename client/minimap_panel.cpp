@@ -16,7 +16,7 @@
 /**
  * Constructor.
  */
-minimap_panel::minimap_panel(QWidget *parent) : QWidget(parent)
+minimap_panel::minimap_panel(QWidget *parent) : fcwidget(parent)
 {
   ui.setupUi(this);
   setAttribute(Qt::WA_NoMousePropagation);
