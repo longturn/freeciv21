@@ -42,6 +42,10 @@ public:
   void update_menu() override;
   void update_image();
 
+  bool hasHeightForWidth() const override { return true; }
+  int heightForWidth(int width) const override;
+  QSize sizeHint() const override;
+
 protected:
   void paintEvent(QPaintEvent *event) override;
   void resizeEvent(QResizeEvent *event) override;

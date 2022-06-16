@@ -36,7 +36,6 @@
 #include "shortcuts.h"
 #include "unitselect.h"
 
-extern void top_bar_disable_end_turn(bool do_restore);
 extern void qload_lua_script();
 extern void qreload_lua_script();
 
@@ -63,15 +62,6 @@ void popup_newcity_dialog(struct unit *punit, const char *suggestname)
     }
   });
   ask->show();
-}
-
-/**
-   A turn done button should be provided for the player.  This function
-   is called to toggle it between active/inactive.
- */
-void set_turn_done_button_state(bool state)
-{
-  top_bar_disable_end_turn(state);
 }
 
 /**

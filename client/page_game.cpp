@@ -12,8 +12,8 @@
 ******    '"   **********************************************************/
 
 #include "page_game.h"
+
 // Qt
-#include <QCommandLinkButton>
 #include <QGridLayout>
 #include <QResizeEvent>
 
@@ -41,6 +41,7 @@
 #include "mapview.h"
 #include "messagewin.h"
 #include "minimap.h"
+#include "minimap_panel.h"
 #include "plrdlg.h"
 #include "top_bar.h"
 #include "voteinfo_bar.h"
@@ -137,10 +138,7 @@ pageGame::pageGame(QWidget *parent)
         }
       });
 
-  endturn = new QCommandLinkButton(_("Turn Done"), QLatin1String(""));
-  connect(endturn, &QAbstractButton::clicked, top_bar_finish_turn);
-  endturn->setIcon(fcIcons::instance()->getIcon(QStringLiteral("endturn")));
-  endturn->setParent(mapview_wdg);
+  minimap_panel = new ::minimap_panel(mapview_wdg);
 
   top_bar_wdg->addWidget(sw_map);
   top_bar_wdg->addWidget(sw_cunit);
@@ -160,9 +158,6 @@ pageGame::pageGame(QWidget *parent)
   connect(mapview_wdg, &map_view::scale_changed, city_overlay,
           &city_dialog::refresh);
   city_overlay->hide();
-  minimapview_wdg = new minimap_view(mapview_wdg);
-  minimapview_wdg->setAttribute(Qt::WA_NoMousePropagation);
-  minimapview_wdg->show();
   unitinfo_wdg = new hud_units(mapview_wdg);
   unitinfo_wdg->setAttribute(Qt::WA_NoMousePropagation);
   battlelog_wdg = new hud_battle_log(mapview_wdg);
@@ -215,7 +210,6 @@ void pageGame::reloadSidebarIcons()
       fcIcons::instance()->getIcon(QStringLiteral("economy")));
   sw_message->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("messages")));
-  endturn->setIcon(fcIcons::instance()->getIcon(QStringLiteral("endturn")));
 }
 
 /**
@@ -527,19 +521,14 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
     queen()->chat->move(
         qRound((size.width() * king()->qt_settings.chat_fx_pos)),
         qRound((size.height() * king()->qt_settings.chat_fy_pos)));
-    queen()->minimapview_wdg->move(
-        qRound(king()->qt_settings.minimap_x * mapview.width),
-        qRound(king()->qt_settings.minimap_y * mapview.height));
-    queen()->minimapview_wdg->resize(
-        qRound(king()->qt_settings.minimap_width * mapview.width),
-        qRound(king()->qt_settings.minimap_height * mapview.height));
     queen()->battlelog_wdg->set_scale(king()->qt_settings.battlelog_scale);
     queen()->battlelog_wdg->move(
         qRound(king()->qt_settings.battlelog_x * mapview.width),
         qRound(king()->qt_settings.battlelog_y * mapview.height));
     queen()->x_vote->move(width() / 2 - queen()->x_vote->width() / 2, 0);
     queen()->updateSidebarTooltips();
-    top_bar_disable_end_turn(get_turn_done_button_state());
+    queen()->minimap_panel->turn_done()->setEnabled(
+        get_turn_done_button_state());
     queen()->mapview_wdg->resize(event->size().width(), size.height());
     queen()->city_overlay->resize(queen()->mapview_wdg->size());
     queen()->unitinfo_wdg->update_actions(nullptr);
@@ -547,11 +536,20 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
         qRound(king()->qt_settings.civstatus_x * mapview.width),
         qRound(king()->qt_settings.civstatus_y * mapview.height));
 
-    // QT6: remove the cast (QTBUG-68722)
-    const auto hint = qobject_cast<QWidget *>(queen()->endturn)->sizeHint();
-    const auto location = size - hint;
-    queen()->endturn->move(location.width(), location.height());
-    queen()->endturn->resize(hint);
+    /*
+     * Resize the panel at the bottom right.
+     */
+    const auto max_size = QSize(std::max(300, size.width() / 4),
+                                std::max(200, size.height() / 3));
+    const auto hint = queen()->minimap_panel->sizeHint();
+    // Try to keep aspect ratio
+    const auto width = std::min(max_size.width(), hint.width());
+    const auto height = std::min(
+        max_size.height(), queen()->minimap_panel->heightForWidth(width));
+    const auto panel_size = QSize(width, height);
+    const auto location = size - panel_size;
+    queen()->minimap_panel->move(location.width(), location.height());
+    queen()->minimap_panel->resize(panel_size);
   }
   event->setAccepted(true);
 }

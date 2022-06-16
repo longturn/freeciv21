@@ -268,7 +268,6 @@ private slots:
   /*used by view menu*/
   void slot_set_citybar();
   void slot_center_view();
-  void slot_minimap_view();
   void slot_show_new_turn_text();
   void slot_battlelog();
   void slot_fullscreen();

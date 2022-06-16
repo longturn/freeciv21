@@ -18,9 +18,7 @@ class QPixmap;
 
 typedef void (*pfcn)();
 
-void top_bar_blink_end_turn(bool do_restore);
 void top_bar_center_unit();
-void top_bar_disable_end_turn(bool do_restore);
 void top_bar_finish_turn();
 void top_bar_indicators_menu();
 void top_bar_rates_wdg();

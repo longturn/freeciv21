@@ -31,6 +31,7 @@
 #include "mapctrl_common.h"
 #include "mapview_common.h"
 #include "mapview_g.h"
+#include "minimap_panel.h"
 #include "overview_common.h"
 #include "sprite.h"
 #include "text.h"
@@ -262,7 +263,7 @@ void map_view::hide_debugger()
  */
 void map_view::timer_event()
 {
-  if (queen()->minimapview_wdg->underMouse()
+  if (queen()->minimap_panel->underMouse()
       || queen()->top_bar_wdg->underMouse()) {
     update_cursor(CURSOR_DEFAULT);
     return;
@@ -466,15 +467,6 @@ void update_mouse_cursor(enum cursor_type new_cursor_type)
 }
 
 /**
-   Update the timeout display.  The timeout is the time until the turn
-   ends, in seconds.
- */
-void update_timeout_label()
-{
-  queen()->endturn->setDescription(get_timeout_label_text());
-}
-
-/**
    If do_restore is false it should change the turn button style (to
    draw the user's attention to it).  If called regularly from a timer
    this will give a blinking turn done button.  If do_restore is true
@@ -485,7 +477,7 @@ void update_turn_done_button(bool do_restore)
   if (!get_turn_done_button_state()) {
     return;
   }
-  top_bar_blink_end_turn(do_restore);
+  // queen()->minimap_panel->turn_done()->blink();
 }
 
 /**

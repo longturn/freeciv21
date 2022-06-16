@@ -16,13 +16,11 @@
 #include <QStackedWidget>
 #include <QWidget>
 
-class QCommandLinkButton;
-
 class city_dialog;
 class fc_client;
 class map_view;
 class civstatus;
-class minimap_view;
+class minimap_panel;
 class hud_units;
 class indicators_widget;
 class chat_widget;
@@ -79,13 +77,12 @@ public:
   top_bar_widget *sw_message;
   chat_widget *chat;
   map_view *mapview_wdg;
-  minimap_view *minimapview_wdg;
+  ::minimap_panel *minimap_panel;
   city_dialog *city_overlay;
   xvote *x_vote;
   civstatus *civ_status;
   top_bar_widget *sw_diplo;
   indicators_widget *sw_indicators;
-  QCommandLinkButton *endturn;
   top_bar_widget *sw_science;
 public slots:
 private slots:

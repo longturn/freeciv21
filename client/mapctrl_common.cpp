@@ -36,9 +36,12 @@
 #include "governor.h"
 #include "mapctrl_common.h"
 #include "mapctrl_g.h"
+#include "mapview.h"
 #include "mapview_g.h"
+#include "minimap_panel.h"
 #include "options.h"
 #include "overview_common.h"
+#include "page_game.h"
 #include "tilespec.h"
 
 // Selection Rectangle
@@ -593,9 +596,8 @@ void recenter_button_pressed(int canvas_x, int canvas_y)
  */
 void update_turn_done_button_state()
 {
-  bool turn_done_state = get_turn_done_button_state();
-
-  set_turn_done_button_state(turn_done_state);
+  queen()->minimap_panel->turn_done()->setEnabled(
+      get_turn_done_button_state());
 
   if (can_end_turn()) {
     if (waiting_for_end_turn) {

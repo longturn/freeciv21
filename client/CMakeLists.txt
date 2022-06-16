@@ -94,6 +94,7 @@ add_library(
   messagewin.cpp
   messagewin_common.cpp
   minimap.cpp
+  minimap_panel.cpp
   music.cpp
   notifyreport.cpp
   options.cpp
