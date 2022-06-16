@@ -645,6 +645,3 @@ void top_bar_left_click_science()
     queen()->game_tab_widget->setCurrentWidget(sci_rep);
   }
 }
-
-// Reloads all icons and resize top_bar width to new value
-void gui_update_top_bar() { queen()->reloadSidebarIcons(); }
