@@ -2472,21 +2472,16 @@ void enable_interface(bool enable)
 {
   QList<close_widget *> lc;
   QList<move_widget *> lm;
-  QList<resize_widget *> lr;
   int i;
 
   lc = king()->findChildren<close_widget *>();
   lm = king()->findChildren<move_widget *>();
-  lr = king()->findChildren<resize_widget *>();
 
   for (i = 0; i < lc.size(); ++i) {
     lc.at(i)->setVisible(!enable);
   }
   for (i = 0; i < lm.size(); ++i) {
     lm.at(i)->setVisible(!enable);
-  }
-  for (i = 0; i < lr.size(); ++i) {
-    lr.at(i)->setVisible(!enable);
   }
 }
 

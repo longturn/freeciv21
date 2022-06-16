@@ -124,64 +124,6 @@ void move_widget::mousePressEvent(QMouseEvent *event)
 }
 
 /**
-   Constructor for resize widget
- */
-resize_widget::resize_widget(QWidget *parent) : QLabel()
-{
-  QPixmap *pix;
-
-  setParent(parent);
-  setCursor(Qt::SizeFDiagCursor);
-  pix = fcIcons::instance()->getPixmap(QStringLiteral("resize"));
-  *pix = pix->scaledToHeight(12);
-  setPixmap(*pix);
-  delete pix;
-}
-
-/**
-   Puts resize widget to left top corner
- */
-void resize_widget::put_to_corner()
-{
-  move(parentWidget()->width() - width(),
-       parentWidget()->height() - height());
-}
-
-/**
-   Mouse handler for resize widget (resizes parent widget)
- */
-void resize_widget::mouseMoveEvent(QMouseEvent *event)
-{
-  QPoint qp, np;
-
-  if (king()->interface_locked) {
-    return;
-  }
-  qp = event->globalPos();
-  np.setX(qp.x() - point.x());
-  np.setY(qp.y() - point.y());
-  np.setX(qMax(np.x(), 32));
-  np.setY(qMax(np.y(), 32));
-  parentWidget()->resize(np.x(), np.y());
-}
-
-/**
-   Sets moving point for resize widget;
- */
-void resize_widget::mousePressEvent(QMouseEvent *event)
-{
-  QPoint qp;
-
-  if (king()->interface_locked) {
-    return;
-  }
-  qp = event->globalPos();
-  point.setX(qp.x() - parentWidget()->width());
-  point.setY(qp.y() - parentWidget()->height());
-  update();
-}
-
-/**
    Constructor for close widget
  */
 close_widget::close_widget(QWidget *parent) : QLabel()

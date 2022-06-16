@@ -17,24 +17,6 @@
 #include <QRubberBand>
 
 /**************************************************************************
-  Widget allowing resizing other widgets
-**************************************************************************/
-class resize_widget : public QLabel {
-  Q_OBJECT
-
-public:
-  resize_widget(QWidget *parent);
-  void put_to_corner();
-
-protected:
-  void mouseMoveEvent(QMouseEvent *event) override;
-  void mousePressEvent(QMouseEvent *event) override;
-
-private:
-  QPoint point;
-};
-
-/**************************************************************************
   Widget allowing moving other widgets
 **************************************************************************/
 class move_widget : public QLabel {
