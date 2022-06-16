@@ -46,8 +46,6 @@ minimap_view::minimap_view(QWidget *parent) : fcwidget()
   resize(0, 0);
   background = QBrush(QColor(0, 0, 0));
   setCursor(Qt::CrossCursor);
-  rw = new resize_widget(this);
-  rw->put_to_corner();
   pix = new QPixmap;
 }
 
@@ -220,7 +218,6 @@ void minimap_view::paint(QPainter *painter, QPaintEvent *event)
   painter->setPen(QColor(palette().color(QPalette::HighlightedText)));
   painter->drawRect(0, 0, width() - 1, height() - 1);
   draw_viewport(painter);
-  rw->put_to_corner();
 }
 
 /**
