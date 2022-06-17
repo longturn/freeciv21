@@ -828,8 +828,9 @@ static citizens city_reduce_workers(struct city *pcity, citizens change)
 }
 
 /**
-   Reduce the city size.  Return TRUE if the city survives the population
-   loss.
+ * Reduce the city size.  Return TRUE if the city survives the population
+ * loss. Even if the city has wrong sum of nationalities entering this
+ * function, leaves it with correct citizens
  */
 bool city_reduce_size(struct city *pcity, citizens pop_loss,
                       struct player *destroyer, const char *reason)
@@ -842,10 +843,17 @@ bool city_reduce_size(struct city *pcity, citizens pop_loss,
   }
 
   if (city_size_get(pcity) <= pop_loss) {
+    int id = pcity->id;
+
+    citizens_update(pcity, nullptr); // To avoid warnings during the script
+    // Won't refresh a doomed city, or should we?
     script_server_signal_emit("city_destroyed", pcity, pcity->owner,
                               destroyer);
 
     remove_city(pcity);
+    if (city_exist(id)) {
+      remove_city(pcity);
+    }
     return false;
   }
   old_radius_sq = tile_border_source_radius_sq(pcity->tile);
@@ -2464,23 +2472,34 @@ static bool city_build_building(struct player *pplayer, struct city *pcity)
 }
 
 /**
-   Helper function to create one unit in a city.
-   Doesn't make any announcements.
-   This might destroy the city due to scripts (but not otherwise; in
-   particular, pop_cost is the caller's problem).
-   Returns the new unit (if it survived scripts).
+ * Helper function to create one unit in a city.
+ * Doesn't make any announcements.
+ * This might destroy the city due to scripts (but not otherwise; in
+ * particular, pop_cost is the caller's problem).
+ * If the unit has positive pop_cost and red is not nullptr, sets up
+ * an array of nationalities to be spent on the unit (must have enough size)
+ * Returns the new unit (if it survived scripts).
  */
 static struct unit *city_create_unit(struct city *pcity,
-                                     const struct unit_type *utype)
+                                     const struct unit_type *utype,
+                                     struct citizens_reduction *red)
 {
   struct player *pplayer = city_owner(pcity);
   struct unit *punit;
   int saved_unit_id;
+  int pop_cost = utype_pop_value(utype);
 
   punit = create_unit(pplayer, pcity->tile, utype,
                       city_production_unit_veteran_level(pcity, utype),
                       pcity->id, -1);
   pplayer->score.units_built++;
+  if (pop_cost > 0 && pcity->nationality) {
+    // We don't reduce city size in-place to keep it correct and
+    // existing at all while we call the following callback
+    punit->nationality = citizens_unit_nationality(pcity, pop_cost, red);
+  } else if (red) {
+    red->change = 0;
+  }
   saved_unit_id = punit->id;
 
   // If city has a rally point set, give the unit a move order.
@@ -2511,9 +2530,13 @@ static struct unit *city_create_unit(struct city *pcity,
 }
 
 /**
-   Build city units. Several units can be built in one turn if the effect
-   City_Build_Slots is used.
-   Returns FALSE when the city is removed, TRUE otherwise.
+ * Build city units. Several units can be built in one turn if the effect
+ * City_Build_Slots is used (on certain conditions).
+ * If the unit consumes population, builds it with a dominant nationality
+ * of the citizens (that is always foreign if a foreign nation
+ * equals in number of consumed citizens to city owner). Otherwise,
+ * the unit will be native.
+ * Returns FALSE when the city is removed, TRUE otherwise.
  */
 static bool city_build_unit(struct player *pplayer, struct city *pcity)
 {
@@ -2586,7 +2609,9 @@ static bool city_build_unit(struct player *pplayer, struct city *pcity)
     fc_assert(num_units >= 1);
 
     for (i = 0; i < num_units; i++) {
-      punit = city_create_unit(pcity, utype);
+      struct citizens_reduction natred[MAX_CITY_NATIONALITIES + 1];
+
+      punit = city_create_unit(pcity, utype, natred);
 
       /* Check if the city still exists (script might have removed it).
        * If not, we assume any effects / announcements done below were
@@ -2609,14 +2634,26 @@ static bool city_build_unit(struct player *pplayer, struct city *pcity)
       if (pop_cost > 0) {
         /* This won't disband city due to pop_cost, but script might
          * still destroy city. */
+        citizens_reduction_apply(pcity, natred);
+        /* If the city has changed its nationalities during
+         * "unit_built" signal, we take some other citizens instead */
         if (!city_reduce_size(pcity, pop_cost, nullptr, "unit_built")) {
           break;
         }
       }
 
       // to eliminate micromanagement, we only subtract the unit's cost
-      pcity->before_change_shields -= unit_shield_cost;
-      pcity->shield_stock -= unit_shield_cost;
+      // signals could change the prod stock!
+      if ((pcity->before_change_shields -= unit_shield_cost) < 0) {
+        pcity->before_change_shields = 0;
+      }
+      if ((pcity->shield_stock -= unit_shield_cost) < 0) {
+        qInfo("City %s (%s) has built %s but has no %d shields "
+              "for it, nullifying shield stock",
+              city_name_get(pcity), player_name(pplayer),
+              utype_rule_name(utype), unit_shield_cost);
+        pcity->shield_stock = 0;
+      }
       pcity->bought_shields = 0;
 
       if (pop_cost > 0) {
@@ -3565,7 +3602,7 @@ static bool disband_city(struct city *pcity)
     }
   }
 
-  punit = city_create_unit(pcity, utype);
+  punit = city_create_unit(pcity, utype, nullptr);
 
   /* "unit_built" script handler may have destroyed city. If so, we
    * assume something sensible happened to its units, and that the
@@ -3587,8 +3624,10 @@ static bool disband_city(struct city *pcity)
 
     script_server_signal_emit("city_destroyed", pcity, pcity->owner,
                               nullptr);
-
-    remove_city(pcity);
+    if (city_exist(saved_id)) {
+      // May have been removed during the script.
+      remove_city(pcity);
+    }
 
     /* Since we've removed the city, we don't need to worry about
      * charging for production, disabling rally points, etc. */
