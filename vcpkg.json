@@ -1,7 +1,7 @@
 {
   "name": "freeciv21",
   "version-string": "3.0.0",
-  "builtin-baseline": "a69b65229b3956b7f45abd81671b7330114bcaad",
+  "builtin-baseline": "50fd3d9957195575849a49fa591e645f1d8e7156",
   "dependencies": [
     "qt5-base",
     "qt5-svg",
