@@ -515,7 +515,8 @@ void player_restore_units(struct player *pplayer)
       /* I think this is strongly against the spirit of client goto.
        * The problem is (again) that here we know too much. -- Zamar */
 
-      if (punit->fuel <= 1 && !is_unit_being_refueled(punit)) {
+      if (punit->fuel <= 1 && !is_unit_being_refueled(punit)
+          && !converting_fuel_rescue(punit)) {
         struct unit *carrier;
 
         carrier = transporter_for_unit(punit);
