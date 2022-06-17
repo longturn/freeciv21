@@ -1,20 +1,27 @@
 {
-    "name": "freeciv21",
-    "version-string": "3.0.0",
-    "dependencies": [
-      "qt5-base",
-      "qt5-svg",
-      "lua",
-      {
-        "name": "gettext",
-        "features": ["tools"]
-      },
-      "kf5archive",
-      "sdl2-mixer",
-      "sqlite3",
-      {
-        "name": "readline",
-        "platform": "windows"
-      }
-    ]
-  }
+  "name": "freeciv21",
+  "version-string": "3.0.0",
+  "builtin-baseline": "50fd3d9957195575849a49fa591e645f1d8e7156",
+  "dependencies": [
+    "qt5-base",
+    "qt5-svg",
+    "lua",
+    {
+      "name": "gettext",
+      "features": [ "tools" ]
+    },
+    "kf5archive",
+    "sdl2-mixer",
+    "sqlite3",
+    {
+      "name": "readline",
+      "platform": "windows"
+    }
+  ],
+  "overrides": [
+    {
+      "name": "openssl",
+      "version-string": "1.1.1l"
+    }
+  ]
+}
