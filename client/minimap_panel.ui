@@ -25,7 +25,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QCommandLinkButton" name="turn_done">
+    <widget class="turn_done_button" name="turn_done">
      <property name="text">
       <string>Turn Done</string>
      </property>
@@ -39,6 +39,11 @@
    <extends>QWidget</extends>
    <header>minimap.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>turn_done_button</class>
+   <extends>QPushButton</extends>
+   <header>turn_done_button.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

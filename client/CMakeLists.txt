@@ -124,6 +124,7 @@ add_library(
   tooltips.cpp
   top_bar.cpp
   tradecalculation.cpp
+  turn_done_button.cpp
   unitreport.cpp
   unitselect.cpp
   update_queue.cpp
