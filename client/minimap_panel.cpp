@@ -21,25 +21,7 @@ minimap_panel::minimap_panel(QWidget *parent) : fcwidget(parent)
   ui.setupUi(this);
   setAttribute(Qt::WA_NoMousePropagation);
 
-  ui.turn_done->setIcon(
-      fcIcons::instance()->getIcon(QStringLiteral("endturn")));
   connect(ui.turn_done, &QAbstractButton::clicked, top_bar_finish_turn);
-}
-
-/**
- * See QWidget::changeEvent
- */
-void minimap_panel::changeEvent(QEvent *event)
-{
-  // Detect theme changes and reset the turn done button icon
-  if (event->type() == QEvent::ThemeChange
-      || event->type() == QEvent::PaletteChange
-      || event->type() == QEvent::ApplicationPaletteChange) {
-    // Should eventually move to QStyle::polishWidget?
-    ui.turn_done->setIcon(
-        fcIcons::instance()->getIcon(QStringLiteral("endturn")));
-  }
-  QWidget::changeEvent(event);
 }
 
 /**
