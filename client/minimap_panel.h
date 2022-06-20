@@ -28,9 +28,6 @@ public:
   /// Retrieves the Turn Done button.
   auto turn_done() { return ui.turn_done; }
 
-protected:
-  void changeEvent(QEvent *event) override;
-
 private:
   Ui::minimap_panel ui;
 };
