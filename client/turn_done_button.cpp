@@ -13,8 +13,8 @@
 #include "fcintl.h"
 #include "fonts.h"
 #include "game.h"
-#include "text.h"
 
+#include <QDateTime>
 #include <QShortcut>
 #include <QStyle>
 #include <QStyleOptionButton>
@@ -130,6 +130,51 @@ void turn_done_button::paintEvent(QPaintEvent *event)
 }
 
 namespace {
+
+/**
+ * Format a duration, in seconds, so it comes up in minutes or hours if
+ * that would be more meaningful.
+ */
+const QString format_duration(int duration)
+{
+  QString str;
+
+  if (duration < 0) {
+    duration = 0;
+  }
+  if (duration < 60) {
+    str += QString(Q_("?seconds:%1s")).arg(duration, 2);
+  } else if (duration < 3600) { // < 60 minutes
+    str += QString(Q_("?mins/secs:%1m %2s"))
+               .arg(duration / 60, 2)
+               .arg(duration % 60, 2);
+  } else if (duration < 360000) { // < 100 hours
+    str += QString(Q_("?hrs/mns:%1h %2m"))
+               .arg(duration / 3600, 2)
+               .arg((duration / 60) % 60, 2);
+  } else if (duration < 8640000) { // < 100 days
+    str += QString(Q_("?dys/hrs:%1d %2dh"))
+               .arg(duration / 86400, 2)
+               .arg((duration / 3600) % 24, 2);
+  } else {
+    str += QStringLiteral("%1").arg(Q_("?duration:overflow"));
+  }
+  // Show time if there is more than 1hour left
+  if (duration > 3600) {
+    QDateTime time = QDateTime::currentDateTime();
+    QDateTime tc_time = time.addSecs(duration);
+    QString day_now =
+        QLocale::system().toString(time, QStringLiteral("ddd "));
+    QString day_tc =
+        QLocale::system().toString(tc_time, QStringLiteral("ddd "));
+
+    str += QStringLiteral("\n")
+           + ((day_now != day_tc) ? day_tc : QLatin1String(""))
+           + tc_time.toString(QStringLiteral("hh:mm"));
+  }
+  return str.trimmed();
+}
+
 /**
  * Get the text showing the timeout.  This is generally disaplyed on the info
  * panel.

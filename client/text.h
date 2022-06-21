@@ -38,7 +38,6 @@ bool get_units_upgrade_info(char *buf, size_t bufsz,
 bool get_units_disband_info(char *buf, size_t bufsz,
                             struct unit_list *punits);
 const QString get_spaceship_descr(struct player_spaceship *pship);
-const QString format_duration(int duration);
 QString get_score_text(const struct player *pplayer);
 const QString get_report_title(const char *report_name);
 
