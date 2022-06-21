@@ -29,6 +29,5 @@ minimap_panel::minimap_panel(QWidget *parent) : fcwidget(parent)
  */
 void update_timeout_label()
 {
-  queen()->minimap_panel->turn_done()->setDescription(
-      get_timeout_label_text());
+  queen()->minimap_panel->turn_done()->update_timeout_label();
 }

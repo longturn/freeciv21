@@ -29,6 +29,8 @@ public:
     update();
   }
 
+  void update_timeout_label();
+
   QSize sizeHint() const override;
 
 protected:
