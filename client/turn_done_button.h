@@ -14,10 +14,10 @@ class turn_done_button : public QPushButton {
   Q_OBJECT
 
 public:
-  turn_done_button(QWidget *parent = nullptr);
+  explicit turn_done_button(QWidget *parent = nullptr);
 
   /// Destructor.
-  ~turn_done_button() override = default;
+  virtual ~turn_done_button() = default;
 
   void update_timeout_label();
 
