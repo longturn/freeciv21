@@ -19,16 +19,6 @@ public:
   /// Destructor.
   ~turn_done_button() override = default;
 
-  /// Mimics QCommandLinkButton
-  QString description() const { return m_description; }
-
-  /// Mimics QCommandLinkButton
-  void setDescription(const QString &description)
-  {
-    m_description = description;
-    update();
-  }
-
   void update_timeout_label();
 
   QSize sizeHint() const override;
@@ -37,5 +27,5 @@ protected:
   void paintEvent(QPaintEvent *event) override;
 
 private:
-  QString m_description;
+  QString m_timeout_label;
 };

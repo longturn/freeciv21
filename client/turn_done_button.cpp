@@ -83,7 +83,7 @@ QSize turn_done_button::sizeHint() const
  */
 void turn_done_button::paintEvent(QPaintEvent *event)
 {
-  if (description().isEmpty()) {
+  if (m_timeout_label.isEmpty()) {
     QPushButton::paintEvent(event);
   } else {
     // The code below is adapted from QCommandLinkButton
@@ -123,7 +123,7 @@ void turn_done_button::paintEvent(QPaintEvent *event)
     p.setFont(fcFont::instance()->getFont(fonts::default_font));
     p.drawItemText(
         text_rect, Qt::AlignHCenter | Qt::AlignBottom | Qt::TextSingleLine,
-        option.palette, isEnabled(), description(), QPalette::ButtonText);
+        option.palette, isEnabled(), m_timeout_label, QPalette::ButtonText);
 
     p.restore();
   }
@@ -173,30 +173,24 @@ QString format_duration(int duration)
   // TRANS: Used to indicate a fuzzy duration. "until tomorrow" is never used
   return QString(_("%1 days")).arg(days_left);
 }
-
-/**
- * Get the text showing the timeout.  This is generally disaplyed on the info
- * panel.
- */
-QString get_timeout_label_text()
-{
-  if (is_waiting_turn_change() && game.tinfo.last_turn_change_time >= 1.5) {
-    // TRANS: Processing turn change
-    return QString(_("Processing... %1"))
-        .arg(format_duration(get_seconds_to_new_turn()));
-  } else if (current_turn_timeout() > 0) {
-    return QString(_("Time left: %1"))
-        .arg(format_duration(get_seconds_to_turndone()));
-  }
-
-  return QString();
-}
-}
+} // anonymous namespace
 
 /**
  * Updates the timeout text according to the current state of the game.
  */
 void turn_done_button::update_timeout_label()
 {
-  setDescription(get_timeout_label_text());
+  if (is_waiting_turn_change() && game.tinfo.last_turn_change_time >= 1.5) {
+    // TRANS: Processing turn change
+    m_timeout_label = QString(_("Processing... %1"))
+                          .arg(format_duration(get_seconds_to_new_turn()));
+  } else if (current_turn_timeout() > 0) {
+    m_timeout_label = QString(_("Time left: %1"))
+                          .arg(format_duration(get_seconds_to_turndone()));
+  } else {
+    m_timeout_label = QString();
+  }
+
+  // Redraw
+  update();
 }
