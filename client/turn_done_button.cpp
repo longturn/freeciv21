@@ -147,13 +147,9 @@ const QString get_timeout_label_text()
       str = QStringLiteral("%1: %2").arg(Q_("?timeout:eta"),
                                          format_duration(wt));
     }
-  } else {
-    if (current_turn_timeout() <= 0) {
-      str = QStringLiteral("%1").arg(Q_("?timeout:off"));
-    } else {
-      str = QStringLiteral("%1").arg(
-          format_duration(get_seconds_to_turndone()));
-    }
+  } else if (current_turn_timeout() > 0) {
+    str =
+        QStringLiteral("%1").arg(format_duration(get_seconds_to_turndone()));
   }
 
   return str.trimmed();
