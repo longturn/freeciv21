@@ -141,31 +141,37 @@ QString format_duration(int duration)
     duration = 0;
   }
 
+  const auto now = QDateTime::currentDateTime();
+  const auto turn_change = now.addSecs(duration);
+  const auto days_left = now.daysTo(turn_change);
+
   if (duration < 60) {
     return QString(Q_("?seconds:%1s")).arg(duration, 2);
-  } else if (duration < 3600) { // < 60 minutes
-    return QString(Q_("?mins/secs:%1m %2s"))
+  } else if (duration < 5 * 60) { // < 5 minutes
+    return QString(Q_("?mins/secs:%1min %2s"))
         .arg(duration / 60, 2)
         .arg(duration % 60, 2);
-  } else if (duration < 36000) { // < 10 hours
-    return QString(Q_("?hrs/mns:%1h %2m"))
+  } else if (duration < 3600) { // < one hour
+    // TRANS: Used in "Time left: 10 minutes". Always at least 5 minutes
+    return QString(_("%1 minutes")).arg(duration / 60);
+  } else if (days_left == 0) { // Same day
+    return QString(Q_("?hrs/mns:%1h %2min"))
         .arg(duration / 3600, 2)
         .arg((duration / 60) % 60, 2);
-  } else if (duration < 6 * 24 * 3600) { // < 6 days
-    // If TC is too far in the future, show the date and time
-    QDateTime time = QDateTime::currentDateTime();
-    QDateTime tc_time = time.addSecs(duration);
-    QString day_now =
-        QLocale::system().toString(time, QStringLiteral("ddd "));
-    QString day_tc =
-        QLocale::system().toString(tc_time, QStringLiteral("ddd "));
-
-    return ((day_now != day_tc) ? day_tc : QLatin1String(""))
-           + tc_time.toString(QStringLiteral("hh:mm"));
-  } else {
-    // TRANS: A duration longer than 6 days (used for timeout)
-    return _("over a week");
+  } else if (days_left == 1) { // Tomorrow
+    const auto time =
+        QLocale().toString(turn_change, QStringLiteral("hh:mm"));
+    // TRANS: Used in "Time left: until tomorrow 17:59"
+    return QString(_("until tomorrow %1")).arg(time);
+  } else if (days_left < 7) { // This week
+    const auto time =
+        QLocale().toString(turn_change, QStringLiteral("dddd hh:mm"));
+    // TRANS: Used in "Time left: until Monday 17:59"
+    return QString(_("until %1")).arg(time);
   }
+
+  // TRANS: Used to indicate a fuzzy duration. "until tomorrow" is never used
+  return QString(_("%1 days")).arg(days_left);
 }
 
 /**
@@ -174,23 +180,21 @@ QString format_duration(int duration)
  */
 QString get_timeout_label_text()
 {
-  QString str;
-
   if (is_waiting_turn_change() && game.tinfo.last_turn_change_time >= 1.5) {
     double wt = get_seconds_to_new_turn();
 
     if (wt < 0.01) {
-      str = Q_("?timeout:wait");
+      return Q_("?timeout:wait");
     } else {
-      str = QStringLiteral("%1: %2").arg(Q_("?timeout:eta"),
-                                         format_duration(wt));
+      return QStringLiteral("%1: %2").arg(Q_("?timeout:eta"),
+                                          format_duration(wt));
     }
   } else if (current_turn_timeout() > 0) {
-    str =
-        QStringLiteral("%1").arg(format_duration(get_seconds_to_turndone()));
+    return QStringLiteral("Time left: %1")
+        .arg(format_duration(get_seconds_to_turndone()));
   }
 
-  return str.trimmed();
+  return QString();
 }
 }
 
