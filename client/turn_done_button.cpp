@@ -157,7 +157,7 @@ const QString format_duration(int duration)
                .arg(duration / 86400, 2)
                .arg((duration / 3600) % 24, 2);
   } else {
-    str += QStringLiteral("%1").arg(Q_("?duration:overflow"));
+    str += Q_("?duration:overflow");
   }
   // Show time if there is more than 1hour left
   if (duration > 3600) {
