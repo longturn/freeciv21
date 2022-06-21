@@ -135,32 +135,24 @@ namespace {
  * Format a duration, in seconds, so it comes up in minutes or hours if
  * that would be more meaningful.
  */
-const QString format_duration(int duration)
+QString format_duration(int duration)
 {
-  QString str;
-
   if (duration < 0) {
     duration = 0;
   }
+
   if (duration < 60) {
-    str += QString(Q_("?seconds:%1s")).arg(duration, 2);
+    return QString(Q_("?seconds:%1s")).arg(duration, 2);
   } else if (duration < 3600) { // < 60 minutes
-    str += QString(Q_("?mins/secs:%1m %2s"))
-               .arg(duration / 60, 2)
-               .arg(duration % 60, 2);
-  } else if (duration < 360000) { // < 100 hours
-    str += QString(Q_("?hrs/mns:%1h %2m"))
-               .arg(duration / 3600, 2)
-               .arg((duration / 60) % 60, 2);
-  } else if (duration < 8640000) { // < 100 days
-    str += QString(Q_("?dys/hrs:%1d %2dh"))
-               .arg(duration / 86400, 2)
-               .arg((duration / 3600) % 24, 2);
-  } else {
-    str += Q_("?duration:overflow");
-  }
-  // Show time if there is more than 1hour left
-  if (duration > 3600) {
+    return QString(Q_("?mins/secs:%1m %2s"))
+        .arg(duration / 60, 2)
+        .arg(duration % 60, 2);
+  } else if (duration < 36000) { // < 10 hours
+    return QString(Q_("?hrs/mns:%1h %2m"))
+        .arg(duration / 3600, 2)
+        .arg((duration / 60) % 60, 2);
+  } else if (duration < 6 * 24 * 3600) { // < 6 days
+    // If TC is too far in the future, show the date and time
     QDateTime time = QDateTime::currentDateTime();
     QDateTime tc_time = time.addSecs(duration);
     QString day_now =
@@ -168,18 +160,19 @@ const QString format_duration(int duration)
     QString day_tc =
         QLocale::system().toString(tc_time, QStringLiteral("ddd "));
 
-    str += QStringLiteral("\n")
-           + ((day_now != day_tc) ? day_tc : QLatin1String(""))
+    return ((day_now != day_tc) ? day_tc : QLatin1String(""))
            + tc_time.toString(QStringLiteral("hh:mm"));
+  } else {
+    // TRANS: A duration longer than 6 days (used for timeout)
+    return _("over a week");
   }
-  return str.trimmed();
 }
 
 /**
  * Get the text showing the timeout.  This is generally disaplyed on the info
  * panel.
  */
-const QString get_timeout_label_text()
+QString get_timeout_label_text()
 {
   QString str;
 
