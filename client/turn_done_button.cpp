@@ -181,16 +181,11 @@ QString format_duration(int duration)
 QString get_timeout_label_text()
 {
   if (is_waiting_turn_change() && game.tinfo.last_turn_change_time >= 1.5) {
-    double wt = get_seconds_to_new_turn();
-
-    if (wt < 0.01) {
-      return Q_("?timeout:wait");
-    } else {
-      return QStringLiteral("%1: %2").arg(Q_("?timeout:eta"),
-                                          format_duration(wt));
-    }
+    // TRANS: Processing turn change
+    return QString(_("Processing... %1"))
+        .arg(format_duration(get_seconds_to_new_turn()));
   } else if (current_turn_timeout() > 0) {
-    return QStringLiteral("Time left: %1")
+    return QString(_("Time left: %1"))
         .arg(format_duration(get_seconds_to_turndone()));
   }
 
