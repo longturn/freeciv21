@@ -18,7 +18,7 @@ public:
   explicit minimap_panel(QWidget *parent = nullptr);
 
   /// Destructor.
-  virtual ~minimap_panel() override = default;
+  virtual ~minimap_panel() = default;
 
   void update_menu() override {}
 
