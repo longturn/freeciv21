@@ -1619,35 +1619,6 @@ const QString get_spaceship_descr(struct player_spaceship *pship)
 }
 
 /**
-   Get the text showing the timeout.  This is generally disaplyed on the info
-   panel.
- */
-const QString get_timeout_label_text()
-{
-  QString str;
-
-  if (is_waiting_turn_change() && game.tinfo.last_turn_change_time >= 1.5) {
-    double wt = get_seconds_to_new_turn();
-
-    if (wt < 0.01) {
-      str = Q_("?timeout:wait");
-    } else {
-      str = QStringLiteral("%1: %2").arg(Q_("?timeout:eta"),
-                                         format_duration(wt));
-    }
-  } else {
-    if (current_turn_timeout() <= 0) {
-      str = QStringLiteral("%1").arg(Q_("?timeout:off"));
-    } else {
-      str = QStringLiteral("%1").arg(
-          format_duration(get_seconds_to_turndone()));
-    }
-  }
-
-  return str.trimmed();
-}
-
-/**
    Format a duration, in seconds, so it comes up in minutes or hours if
    that would be more meaningful.
 

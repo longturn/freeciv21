@@ -9,8 +9,11 @@
 
 #include "turn_done_button.h"
 
+#include "client_main.h"
 #include "fcintl.h"
 #include "fonts.h"
+#include "game.h"
+#include "text.h"
 
 #include <QShortcut>
 #include <QStyle>
@@ -18,7 +21,6 @@
 #include <QStylePainter>
 
 #include <cmath>
-#include <qnamespace.h>
 
 namespace {
 /**
@@ -125,4 +127,43 @@ void turn_done_button::paintEvent(QPaintEvent *event)
 
     p.restore();
   }
+}
+
+namespace {
+/**
+ * Get the text showing the timeout.  This is generally disaplyed on the info
+ * panel.
+ */
+const QString get_timeout_label_text()
+{
+  QString str;
+
+  if (is_waiting_turn_change() && game.tinfo.last_turn_change_time >= 1.5) {
+    double wt = get_seconds_to_new_turn();
+
+    if (wt < 0.01) {
+      str = Q_("?timeout:wait");
+    } else {
+      str = QStringLiteral("%1: %2").arg(Q_("?timeout:eta"),
+                                         format_duration(wt));
+    }
+  } else {
+    if (current_turn_timeout() <= 0) {
+      str = QStringLiteral("%1").arg(Q_("?timeout:off"));
+    } else {
+      str = QStringLiteral("%1").arg(
+          format_duration(get_seconds_to_turndone()));
+    }
+  }
+
+  return str.trimmed();
+}
+}
+
+/**
+ * Updates the timeout text according to the current state of the game.
+ */
+void turn_done_button::update_timeout_label()
+{
+  setDescription(get_timeout_label_text());
 }
