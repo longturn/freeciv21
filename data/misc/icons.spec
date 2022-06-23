@@ -15,6 +15,5 @@ artists = "
 sprites =
 	{	"tag", "file"
 		"icon.freeciv", "misc/civicon"
-		"icon.citydlg", "misc/cityicon"
 		; misc/mpicon.png is referenced directly from configure.ac
 	}
