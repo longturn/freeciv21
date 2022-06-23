@@ -74,6 +74,9 @@ signals:
   void scale_changed(double scale) const;
 
 public slots:
+  void zoom_in();
+  void zoom_reset();
+  void zoom_out();
   void set_scale(double scale);
 
   void show_debugger();
