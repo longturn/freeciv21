@@ -138,7 +138,7 @@ pageGame::pageGame(QWidget *parent)
         }
       });
 
-  minimap_panel = new ::minimap_panel(mapview_wdg);
+  minimap_panel = new ::minimap_panel(mapview_wdg, mapview_wdg);
 
   top_bar_wdg->addWidget(sw_map);
   top_bar_wdg->addWidget(sw_cunit);
