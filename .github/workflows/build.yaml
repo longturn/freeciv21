@@ -245,7 +245,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/qt
-          key: qt-wasm-${{ env.QT_VERSION }}-svg-socket
+          key: qt-wasm-${{ env.QT_VERSION }}-svg-socket-v2
       - name: Install build tools
         run: |
           sudo apt-get update
