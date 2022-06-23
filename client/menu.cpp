@@ -652,13 +652,16 @@ void mr_menu::setup_menus()
   menu->addSeparator();
   act = menu->addAction(_("Zoom in"));
   act->setShortcut(shortcut2key(SC_ZOOM_IN));
-  connect(act, &QAction::triggered, this, &mr_menu::zoom_in);
+  connect(act, &QAction::triggered, queen()->mapview_wdg,
+          &map_view::zoom_in);
   act = menu->addAction(_("Zoom default"));
   act->setShortcut(shortcut2key(SC_ZOOM_RESET));
-  connect(act, &QAction::triggered, this, &mr_menu::zoom_reset);
+  connect(act, &QAction::triggered, queen()->mapview_wdg,
+          &map_view::zoom_reset);
   act = menu->addAction(_("Zoom out"));
   act->setShortcut(shortcut2key(SC_ZOOM_OUT));
-  connect(act, &QAction::triggered, this, &mr_menu::zoom_out);
+  connect(act, &QAction::triggered, queen()->mapview_wdg,
+          &map_view::zoom_out);
   scale_fonts_status = menu->addAction(_("Scale fonts"));
   connect(scale_fonts_status, &QAction::triggered, this,
           &mr_menu::zoom_scale_fonts);
@@ -2538,33 +2541,12 @@ void mr_menu::slot_city_buycost() { key_city_buycost_toggle(); }
 void mr_menu::slot_city_growth() { key_city_growth_toggle(); }
 
 /**
-   Action "RELOAD ZOOMED IN TILESET"
- */
-void mr_menu::zoom_in()
-{
-  queen()->mapview_wdg->set_scale(1.2 * queen()->mapview_wdg->scale());
-}
-
-/**
-   Action "RESET ZOOM TO DEFAULT"
- */
-void mr_menu::zoom_reset() { queen()->mapview_wdg->set_scale(1); }
-
-/**
    Action "SCALE FONTS WHEN SCALING MAP"
  */
 void mr_menu::zoom_scale_fonts()
 {
   gui_options.zoom_scale_fonts = scale_fonts_status->isChecked();
   update_city_descriptions();
-}
-
-/**
-   Action "RELOAD ZOOMED OUT TILESET"
- */
-void mr_menu::zoom_out()
-{
-  queen()->mapview_wdg->set_scale(queen()->mapview_wdg->scale() / 1.2);
 }
 
 /**

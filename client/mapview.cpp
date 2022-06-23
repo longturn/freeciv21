@@ -200,6 +200,21 @@ void map_view::show_all_fcwidgets()
 }
 
 /**
+ * Zooms in by 20%.
+ */
+void map_view::zoom_in() { set_scale(1.2 * scale()); }
+
+/**
+ * Resets the zoom level.
+ */
+void map_view::zoom_reset() { set_scale(1); }
+
+/**
+ * Zooms out by 20%.
+ */
+void map_view::zoom_out() { set_scale(scale() / 1.2); }
+
+/**
  * Sets the map scale.
  */
 void map_view::set_scale(double scale)
