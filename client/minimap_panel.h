@@ -8,6 +8,8 @@
 #include "ui_minimap_panel.h"
 #include "widgetdecorations.h"
 
+class map_view;
+
 /**
  * The panel at the bottom right of the game screen, holding the minimap and
  * the Turn Done button.
@@ -15,7 +17,7 @@
 class minimap_panel : public fcwidget {
   Q_OBJECT
 public:
-  explicit minimap_panel(QWidget *parent = nullptr);
+  explicit minimap_panel(map_view *map, QWidget *parent = nullptr);
 
   /// Destructor.
   virtual ~minimap_panel() = default;
