@@ -84,9 +84,7 @@ void ui_main()
   if (true) {
     tileset_init(tileset);
     tileset_load_tiles(tileset);
-    auto qpm = get_icon_sprite(tileset, ICON_FREECIV);
-    auto app_icon = QIcon(*qpm);
-    qApp->setWindowIcon(app_icon);
+    qApp->setWindowIcon(QIcon(*get_icon_sprite(tileset)));
     if (gui_options.first_boot) {
       /* We're using fresh defaults for this version of this client,
        * so prevent any future migrations from other versions */

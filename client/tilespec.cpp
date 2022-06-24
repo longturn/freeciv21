@@ -170,7 +170,7 @@ struct named_sprites {
       *treaty_thumb[2],   // 0=disagree, 1=agree
       *arrow[ARROW_LAST], // 0=right arrow, 1=plus, 2=minus
 
-      *icon[ICON_COUNT],
+      *icon,
 
       *events[E_COUNT],
 
@@ -2674,12 +2674,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     }
   }
 
-  for (i = 0; i < ICON_COUNT; i++) {
-    const char *names[ICON_COUNT] = {"freeciv", "citydlg"};
-
-    buffer = QStringLiteral("icon.%1").arg(names[i]);
-    SET_SPRITE(icon[i], buffer);
-  }
+  SET_SPRITE(icon, QStringLiteral("icon.freeciv"));
 
   for (i = 0; i < E_COUNT; i++) {
     const char *tag = get_event_tag(static_cast<event_type>(i));
@@ -5481,17 +5476,17 @@ const QPixmap *get_cursor_sprite(const struct tileset *t,
 }
 
 /**
-   Return a sprite for the given icon.  Icons are used by the operating
-   system/window manager.  Usually freeciv has to tell the OS what icon to
+   Return a sprite for the Freeciv21 icon.  Icons are used by the operating
+   system/window manager.  Usually Freeciv21 has to tell the OS what icon to
    use.
 
    Note that this function will return nullptr before the sprites are loaded.
    The GUI code must be sure to call tileset_load_tiles before setting the
    top-level icon.
  */
-const QPixmap *get_icon_sprite(const struct tileset *t, enum icon_type icon)
+const QPixmap *get_icon_sprite(const struct tileset *t)
 {
-  return t->sprites.icon[icon];
+  return t->sprites.icon;
 }
 
 /**

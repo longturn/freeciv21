@@ -2226,10 +2226,6 @@ void city_dialog::update_info_label()
  */
 void city_dialog::setup_ui(struct city *qcity)
 {
-  QPixmap q_pix = *get_icon_sprite(tileset, ICON_CITYDLG);
-  QIcon q_icon = ::QIcon(q_pix);
-
-  setWindowIcon(q_icon);
   pcity = qcity;
   ui.production_combo_p->blockSignals(true);
   refresh();
