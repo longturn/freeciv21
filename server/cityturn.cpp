@@ -11,13 +11,7 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <cmath> // exp, sqrt
-#include <cstdio>
-#include <cstdlib>
 #include <cstring>
 
 // utility
@@ -45,7 +39,6 @@
 #include "map.h"
 #include "player.h"
 #include "research.h"
-#include "road.h"
 #include "server_settings.h"
 #include "specialist.h"
 #include "style.h"
@@ -67,15 +60,12 @@
 #include "sanitycheck.h"
 #include "spacerace.h"
 #include "srv_log.h"
-#include "srv_main.h"
 #include "techtools.h"
-#include "unithand.h"
 #include "unittools.h"
 
 /* server/advisors */
 #include "advbuilding.h"
 #include "advdata.h"
-#include "autosettlers.h"
 
 /* server/scripting */
 #include "script_server.h"
@@ -2478,7 +2468,7 @@ static struct unit *city_create_unit(struct city *pcity,
 
   punit = create_unit(pplayer, pcity->tile, utype,
                       city_production_unit_veteran_level(pcity, utype),
-                      pcity->id, 0);
+                      pcity->id, -1);
   pplayer->score.units_built++;
   saved_unit_id = punit->id;
 
