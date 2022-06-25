@@ -205,7 +205,7 @@ static int cmp_love(const struct player *player1,
 }
 
 /**
-   Returns a translated string giving our shared-vision statusbuf.
+   Returns a translated string giving our shared-vision status.
  */
 static QString col_vision(const struct player *player)
 {
@@ -285,14 +285,14 @@ static int cmp_score(const struct player *player1,
   return player1->score.game - player2->score.game;
 }
 
-/************************************************************************/ /**
+/**
     The name of the player's government
-  ****************************************************************************/
+ */
 QString col_government(const struct player *them)
 {
   const struct player *me = client_player();
 
-  /*  'contact' gives the knowledge of other's government */
+  //  'contact' gives the knowledge of other's government
   if (me == them || client_is_global_observer()
       || player_has_embassy(me, them)
       || player_diplstate_get(me, them)->contact_turns_left > 0) {
@@ -302,29 +302,28 @@ QString col_government(const struct player *them)
   }
 }
 
-/************************************************************************/ /**
+/**
     Compare culture of two players in players dialog,
     needed to sort column
-  ****************************************************************************/
+ */
 static int cmp_culture(const struct player *player1,
                        const struct player *player2)
 {
   return player1->client.culture - player2->client.culture;
 }
 
-/************************************************************************/ /**
+/**
     Show others player's culture to me if I am allowed to know it.
-  ****************************************************************************/
+ */
 QString get_culture_info(const struct player *them)
 {
   const struct player *me = client_player();
-  bool gobs = client_is_global_observer();
 
   // FIXME: Try to avoid this code duplication same code repeated in every
   // column
   if (them == nullptr || !them->is_alive) {
     return _("-");
-  } else if (gobs
+  } else if (client_is_global_observer()
              || (me != nullptr
                  && (me == them || player_has_embassy(me, them)))) {
     return QString::number(them->client.culture);
@@ -333,35 +332,34 @@ QString get_culture_info(const struct player *them)
   }
 }
 
-/************************************************************************/ /**
+/**
     Player's culture value
-  ****************************************************************************/
+ */
 QString col_culture(const struct player *pplayer)
 {
   return get_culture_info(pplayer);
 }
 
-/************************************************************************/ /**
+/**
     Compare gold of two players in players dialog,
     needed to sort column
-  ****************************************************************************/
+ */
 static int cmp_gold(const struct player *player1,
                     const struct player *player2)
 {
   return player1->economic.gold - player2->economic.gold;
 }
 
-/************************************************************************/ /**
+/**
     Show player's gold to me if I am allowed to know it
-  ****************************************************************************/
+ */
 QString col_gold(const struct player *them)
 {
   const struct player *me = client_player();
-  bool gobs = client_is_global_observer();
 
   if (them == nullptr || !them->is_alive) {
     return _("-");
-  } else if (gobs
+  } else if (client_is_global_observer()
              || (me != nullptr
                  && (me == them || player_has_embassy(me, them)
                      || player_diplstate_get(me, them)->contact_turns_left
@@ -372,27 +370,26 @@ QString col_gold(const struct player *them)
   }
 }
 
-/************************************************************************/ /**
+/**
     Compare tax of two players in players dialog,
     needed to sort column
-  ****************************************************************************/
+ */
 static int cmp_tax(const struct player *player1,
                    const struct player *player2)
 {
   return player1->economic.tax - player2->economic.tax;
 }
 
-/************************************************************************/ /**
+/**
     Show player's tax to me if I am allowed to know it.
-  ****************************************************************************/
+ */
 QString col_tax(const struct player *them)
 {
   const struct player *me = client_player();
-  bool gobs = client_is_global_observer();
 
   if (them == nullptr || !them->is_alive) {
     return _("-");
-  } else if (gobs
+  } else if (client_is_global_observer()
              || (me != nullptr
                  && (me == them || player_has_embassy(me, them)))) {
     return QString::number(them->economic.tax);
@@ -401,27 +398,26 @@ QString col_tax(const struct player *them)
   }
 }
 
-/************************************************************************/ /**
+/**
     Compare science of two players in players dialog,
     needed to sort column
-  ****************************************************************************/
+ */
 static int cmp_science(const struct player *player1,
                        const struct player *player2)
 {
   return player1->economic.science - player2->economic.science;
 }
 
-/************************************************************************/ /**
+/**
     Show player's science to me if I am allowed to know it
-  ****************************************************************************/
+ */
 QString col_science(const struct player *them)
 {
   const struct player *me = client_player();
-  bool gobs = client_is_global_observer();
 
   if (them == nullptr || !them->is_alive) {
     return _("-");
-  } else if (gobs
+  } else if (client_is_global_observer()
              || (me != nullptr
                  && (me == them || player_has_embassy(me, them)))) {
     return QString::number(them->economic.science);
@@ -430,27 +426,26 @@ QString col_science(const struct player *them)
   }
 }
 
-/************************************************************************/ /**
+/**
     Compare luxury of two players in players dialog,
     needed to sort column
-  ****************************************************************************/
+ */
 static int cmp_luxury(const struct player *player1,
                       const struct player *player2)
 {
   return player1->economic.luxury - player2->economic.luxury;
 }
 
-/************************************************************************/ /**
+/**
     Show player's luxury to me if I am allowed to know it
-  ****************************************************************************/
+ */
 QString col_luxury(const struct player *them)
 {
   const struct player *me = client_player();
-  bool gobs = client_is_global_observer();
 
   if (them == nullptr || !them->is_alive) {
     return _("-");
-  } else if (gobs
+  } else if (client_is_global_observer()
              || (me != nullptr
                  && (me == them || player_has_embassy(me, them)))) {
     return QString::number(them->economic.luxury);
@@ -459,17 +454,16 @@ QString col_luxury(const struct player *them)
   }
 }
 
-/************************************************************************/ /**
+/**
     Show player's research to me if I am allowed to know it
-  ****************************************************************************/
+ */
 QString col_research(const struct player *them)
 {
   const struct player *me = client_player();
-  bool gobs = client_is_global_observer();
 
   if (them == nullptr || !them->is_alive) {
     return _("-");
-  } else if (gobs
+  } else if (client_is_global_observer()
              || (me != nullptr
                  && (me == them || player_has_embassy(me, them)))) {
     struct research *research = research_get(them);
@@ -480,9 +474,9 @@ QString col_research(const struct player *them)
   }
 }
 
-/****************************************************************************
+/**
   ...
-****************************************************************************/
+ */
 struct player_dlg_column player_dlg_columns[] = {
     {true, COL_TEXT, N_("?Player:Name"), col_name, nullptr, cmp_name,
      "name"},
