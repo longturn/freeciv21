@@ -25,6 +25,8 @@ documentation:
 * :strong:`MP`: Move Point - the number of moves a unit has available.
 * :strong:`HP`: Hit Point - the amount of health a unit has avalable. When this goes to zero the unit is killed.
 * :strong:`FP`: Fire Power - The amount of damage an attacking unit can inflict on a defending unit.
+* :strong:`TC`: Turn Change - A period of time when the server processes end of turn events in a specific
+  :doc:`order <../Playing/turn-change>`.
 
 
 Gameplay
@@ -66,51 +68,45 @@ Civilization-style game before you may want to look at help on :title-reference:
 You can continue to change the game settings through the :menuselection:`Game --> Server Options` menu.
 Type :literal:`/help` in the chatline (or server command line) to get more information about server commands.
 
-Detailed explanations of how to play Freeciv21 are also in :doc:`../Playing/how-to-play`, and in the in-game
-help.
+A more detailed explanation of how to play Freeciv21 is available in :doc:`../Playing/how-to-play`, and in the
+in-game help.
 
 Where is the chatline you are talking about, how do I chat?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The chatline is located at the bottom of the messages window. You can activate and enlarge the chat panel by
-double-clicking on the bottom row of text.
+There are two widgets on the main map area: Chatline and Messages. The messages widget can be toggled
+visible/not-visible via a button on the top bar. The chatline is another widget on the game map and is always
+visible.
 
-The chatline can be used for normal chatting between players, or for issuing server commands by typing a
-forward-slash :literal:`/` followed by the server command.
+The chatline can be used for normal chatting between players, for issuing server commands by typing a
+forward-slash :literal:`/` followed by the server command and seeing server output messages.
 
 See the in-game help on :title-reference:`Chatline` for more detail.
-
-Here is a sample screenshot as an additional reference:
-
-.. image:: ../_static/images/gui-elements/chatline.png
-    :align: center
-    :height: 334
-    :alt: Freeciv21 Chatline
-
 
 That sounds complicated and tedious. Isn’t there a better way to do this?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 No, there’s no other better/GUI way. This is a big reason why the LongTurn Community prefers using Discord.
-There are plans to improve this, but it are not implemented yet.
+There are plans to improve this, but it is not implemented yet.
 
 Is there a way to send a message to all your allies?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In the client, there’s a checkbox to the far right of the chatbox. When selected, any messages typed will only
-got to your allies.
+In the client, there’s a checkbox to the far right of the chatline widget. When selected, any messages typed
+will only got to your allies.
 
 .. Note:: This option only shows up if you are playing an online LongTurn Community game with a remote server.
-  If you are playing a local single-player game against AI, this option does not show up.
+  If you are playing a local single-player game against AI, this option does not show up since you cannot
+  chat with the AI.
 
 How do I find out about the available units, improvements, terrain types, and technologies?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-There is extensive help on this in the Help menu, but only once the game has been started. This is because the
-in-game help is generated at run-time based on the server and ruleset settings as configured.
+There is extensive help on this in the :guilabel:`Help` menu, but only once the game has been started. This is
+because the in-game help is generated at run-time based on the server and ruleset settings as configured.
 
 The game comes with an interactive tutorial scenario. To run it, select :guilabel:`Start Scenario Game` from
-the main menu, then load the tutorial scenario.
+the main menu, then load the :strong:`tutorial` scenario.
 
 How can I change the way a Freeciv21 game is ended?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -154,7 +150,7 @@ this changes from the default setting ``spacerace|allied`` victory to disallow a
     /set victories ""
 
 
-You can instead allow space races without them ending the game by instead changing the ``endspaceship`` setting.
+You can instead allow spaceraces without them ending the game by instead changing the ``endspaceship`` setting.
 
 A single-player who defeats all enemies will always win the game. This conquest victory condition cannot be
 changed.
@@ -230,15 +226,17 @@ client related code for it. Feel free to :doc:`contribute <../Contributing/index
 My opponents seem to be able to play two moves at once!
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-They are not; it only seems that way. Freeciv21's multiplayer facilities are asynchronous: during a turn, moves
-from connected clients are processed in the order they are received. Server managed movement is executed in
-between turns. This allows human players to surprise their opponents by clever use of goto or quick fingers.
+They are not; it only seems that way. Freeciv21's multiplayer facilities are asynchronous: during a turn,
+moves from connected clients are processed in the order they are received. Server managed movement is executed
+in between turns (e.g. at TC) This allows human players to surprise their opponents by clever use of goto or
+quick fingers.
 
-A turn in LongTurn typically lasts 23 hours and it's always possible that they managed to log in twice between
-your two consecutive logins. However, firstly, there is a mechanic that slightly limits this (known as unit
-wait time), and secondly, this can't happen every time because now they have already played their move this turn
-and now needs to wait for the Turn Change to make their next move. So, in the next turn, if you log in before
-them, now it was you who made your move twice. If not, they can't :emphasis:`move twice` until you do.
+A turn in a LongTurn game typically lasts 23 hours and it's always possible that they managed to log in twice
+between your two consecutive logins. However, firstly, there is a mechanic that slightly limits this (known as
+unit wait time), and secondly, this can't happen every time because now they have already played their move
+this turn and now need to wait for the Turn Change to make their next move. So, in the next turn, if you log
+in before them, now it was you who made your move twice. If not, they can't :emphasis:`move twice` until you
+do.
 
 The primary server setting to mitigate this problem is ``unitwaittime``, which imposes a minimum time between
 moves of a single unit on successive turns. This setting is used to prevent a varying collection of what the
@@ -248,6 +246,9 @@ capture a city using the road for move benefit. Without ``unitwaittime`` you wou
 :unit:`Worker` back to safety immediately, thereby prevent it from being captured or destroyed. With
 ``unitwaittime`` enabled, you have to wait the requisite amount of time. This makes the game harder, but also
 more fair since not everyone can be online at every Turn Change.
+
+.. Note:: The ``unitwaittime`` setting is really only used in LongTurn multi-player games and is not
+  enabled/used for any of the single-player rulesets shipped with Freeciv21
 
 Why are the AI players so hard on 'novice' or 'easy'?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -299,9 +300,9 @@ unit and in the pop-up window will see the odds of win/loss.
 Where in the client does it say what government you’re currently under?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-On the sidebar near the bottom there is a bank of graphics that show what your economy consists of (Tax, Sci
-, or Lux) as well as what Government you are under, chance for Global Warming, Nuclear Winter and how far
-along you are with research.
+On the topbar near the right side there is a bank of graphics that show what your economy consists of (Tax,
+Sci , or Lux) as well as what Government you are under, chance for Global Warming, Nuclear Winter and how far
+along you are with research. You can hover your mouse over any of these icons to see more details.
 
 What government do you start under?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -333,10 +334,10 @@ You have to declare war first. See the section for `How do I declare war on anot
 How do I declare war on another player?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Go to the :guilabel:`Nations` page, select the player row, then click :guilabel:`Cancel Treaty` at the top.
-This drops you from :emphasis:`cease fire`, :emphasis:`armistice`, or :emphasis:`peace` into :emphasis:`war`.
-If you've already signed a permanent :emphasis:`alliance` treaty with the player, you will have to cancel
-treaties several times to get to :emphasis:`war`.
+Go to the :guilabel:`Nations` page (F3), select the player row, then click :guilabel:`Cancel Treaty` at the
+top. This drops you from :emphasis:`cease fire`, :emphasis:`armistice`, or :emphasis:`peace` into
+:emphasis:`war`. If you've already signed a permanent :emphasis:`alliance` treaty with the player, you will
+have to cancel treaties several times to get to :emphasis:`war`.
 
 See the in-game help on :title-reference:`Diplomacy` for more detail.
 
@@ -347,9 +348,9 @@ See the in-game help on :title-reference:`Diplomacy` for more detail.
 How do I do diplomatic meetings?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Go to the :guilabel:`Nations` page, select the player row, then choose :guilabel:`Meet` at the top. Remember
-that you have to either have contact with the player or an embassy established in one of their cities with a
-:unit:`Diplomat`.
+Go to the :guilabel:`Nations` page (F3), select the player row, then choose :guilabel:`Meet` at the top.
+Remember that you have to either have contact with the player or an embassy established in one of their cities
+with a :unit:`Diplomat`.
 
 How do I trade money with other players?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -365,8 +366,8 @@ With the focus in either input field, press :guilabel:`Enter` to insert the clau
 Is there a way to tell who’s allied with who?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The :guilabel:`Nations` Page shows diplomacy and tech information if you have an embassy with the target nation.
-To see what is going on, select a nation and look at the bottom of the screen.
+The :guilabel:`Nations` Page (F3) shows diplomacy and tech information if you have an embassy with the target
+nation. To see what is going on, select a nation and look at the bottom of the screen.
 
 
 Game Map and Tilesets
@@ -378,10 +379,10 @@ Can one use a regular square tileset for iso-square maps and vice versa?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 While that’s technically possible, hex and iso-hex topologies aren’t directly compatible with each other, so
-the result isn’t playable in a good (visualization) way. In the client you can force the change of ruleset by
-going to :menuselection:`Game --> Load Another Tileset`. If the client can change it will and you will be able
-to experiment a bit. If there is a complete discrepency, the client will throw an error and won't make the
-requested change.
+the result isn’t playable in a good (visualization) way. In the client you can force the change of tileset by
+going to :menuselection:`Game --> Load Another Tileset`. If the client can change, it will and you will be
+able to experiment a bit. If there is a complete discrepency, the client will throw an error and won't make
+the requested change.
 
 How do I play on a hexagonal grid?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -415,9 +416,9 @@ This subsection of the Gameplay section is a discussion around cities and the te
 My irrigated grassland produces only 2 food. Is this a bug?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-No, it is not. It's a feature. Your government is probably Despotism, which has a -1 output whenever a tile
-produces more than 2 units of food/production/trade. You should change your government (See the in-game help
-on :title-reference:`Government` for more detail) to get rid of this penalty.
+No, it's not -- it's a feature. Your government is probably Despotism, which has a -1 output penalty whenever
+a tile produces more than 2 units of food, production, ortrade. You should change your government (See the
+in-game help on :title-reference:`Government` for more detail) to get rid of this penalty.
 
 This feature is also not 100% affected by the form of government. There are some Small and Great Wonders
 in certain rulesets that get rid of the output penalty.
@@ -427,9 +428,9 @@ Can I build land over sea/transform ocean to land?
 
 Yes. You can do that by placing :unit:`Engineer` in a :unit:`Transport` and going to the ocean tile you want
 to build land on. Click the :unit:`Transport` to display a list of the transported :unit:`Engineers` and
-activate them. Then give them the order of transforming this tile to swamp. This will take a very long time
+activate them. Then give them the order of transforming the tile to swamp. This will take a very long time
 though, so you'd better try with 6 or 8 :unit:`Engineers` at a time. There must be 3 adjacent land tiles to
-the ocean tile (e.g. a land corner) you are transforming.
+the ocean tile (e.g. a land corner) you are transforming for this activiy to work.
 
 Is there an enforced minimum distance between cities?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -450,7 +451,7 @@ If your city is going to grow next turn and you rush-buy a Granary, do you still
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Yes. Production is “produced” before growth at turn change. This is true for all rulsets as it is part of the
-standard :doc:`../Playing/turn-change` process.
+standard :doc:`Turn Change <../Playing/turn-change>` process.
 
 How much population do Settlers take to build?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -464,13 +465,13 @@ Do tiles remember terraforming progress?
 
 If you change orders for the unit doing the terraforming and don’t change them back within the same turn, the
 terraforming progress is lost. If you change orders and then change them back, nothing special happens.
-Terraforming is always processed at turn change.
+Terraforming is always processed at Turn Change.
 
 How frequently do natural disasters happen?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This depends on the ruleset. For the LTT ruleset, all natural disasters have a 1% probability to happen each
-turn. The default is 10%. This setting, knowns as ``disasters``, can be set in the server settings before a
+turn. The default is 10%. This setting, known as ``disasters``, can be set in the server settings before a
 local game starts or by changing at the chatline:
 
 .. code-block:: rst
@@ -481,9 +482,9 @@ local game starts or by changing at the chatline:
 Does the city work area change in any way during the game?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This is a ruleset configured option. In LTT the intial value is ``15``, effectively giving 3 tiles "out" from the
-city center in all directions. Varying technologies or buildings can be programmed into the ruleset to change
-the vision radius (e.g. the work area) of a city.
+This is a ruleset configured option. In LTT the intial value is ``15``, effectively giving 3 tiles "out" from
+the city center in all directions. Varying technologies or buildings can be programmed into the ruleset to
+change the vision radius (e.g. the work area) of a city.
 
 Is it worth it to build cities on hills (potentially with rivers), or is the risk of earthquakes and floods too large?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -523,7 +524,8 @@ Is the city tile worked for free?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Yes. This is hardcoded in the server. In all rulesets a size 1 city will always have two tiles being worked
-by the citizens of the city: the city center tile and another one in its vision radius.
+by the citizens of the city: the city center tile and another one in its vision radius that is not being
+worked by an adjacent city.
 
 Do you get free irrigation on the city tile?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -555,14 +557,14 @@ bonus. This is a game engine (server) item and is not driven by a ruleset, such 
 Is there any penalty when changing a city production task?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-There are 3 “categories” of production: Units, City Improvements (e.g. Buildings), and Wonders (Small and
-Great). If you change within a “category” (e.g. :unit:`Phalanx` to :unit:`Horsemen`, or :improvement:`Library`
-to :improvement:`Bank`), there is no penalty. If you change across categories (e.g. :unit:`Archers` to
-:improvement:`Library`, or :wonder:`Leonardo’s Workshop` to :unit:`Frigate`), there’s a 50% penalty. If you
-change back to the same category within the same turn, the penalty is reversed. If you change multiple times,
-the penalty is only applied once, which means that if you change the production target more than once in a
-turn there will be no penalty as long as you land on the same "category" as was active at the beginning of the
-turn.
+There are 4 “categories” of production: Units, City Improvements (e.g. Buildings), Great Wonders, and Small
+Wonders. If you change within a “category” (e.g. :unit:`Phalanx` to :unit:`Horsemen`, or
+:improvement:`Library` to :improvement:`Bank`), there is no penalty. If you change across categories (e.g.
+:unit:`Archers` to :improvement:`Library`, or :wonder:`Leonardo’s Workshop` to :unit:`Frigate`), there’s a 50%
+penalty. If you change back to the same category within the same turn, the penalty is reversed. If you change
+multiple times, the penalty is only applied once, which means that if you change the production target more
+than once in a turn there will be no penalty as long as you land on the same "category" as was active at the
+beginning of the turn.
 
 Is there a way to claim tiles using Diplomats?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -597,7 +599,7 @@ When does the game inform you of enemy movement within your units’ field of vi
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 It depends on the status of the unit. If the unit is fortified or working on another task (e.g. irrigation)
-then you will not be notified. Only the Sentry status will give you a notification.
+then you will not be notified. Only the :strong:`Sentry` status will give you a notification.
 
 If I move a unit onto a mountain, does that change how many movement points the unit has next turn?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -617,18 +619,18 @@ duration is specified in the ruleset files.
 Can workers do all land conversions? Or are most land conversions locked behind engineers?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-All :unit:`Workers` can do land conversions except for land transformations, which are available only with
-:unit:`Engineers`.
+All :unit:`Workers` can do land conversions except for major land transformations, which are available only
+with :unit:`Engineers`.
 
 Does a damaged worker work slower than normal?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-No, Hit points do not factor in a :unit:`Worker's` ability to conduct infrastructure improvements to tiles.
+No, Hit Points do not factor in a :unit:`Worker's` ability to conduct infrastructure improvements to tiles.
 
 When terraforming, does some movement get used on the last turn of terraforming? Does the unit start with less movement points?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Terraforming doesn’t affect a unit's movement points in any way.
+Terraforming doesn’t affect a unit's Movement Points in any way.
 
 Does damage reduce the amount of movement points the unit has?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -642,7 +644,8 @@ Do Caravans give full production?
 The :unit:`Caravan` unit is a special unit that allows a player to move production from one city to another in
 order to increase the speed of constructing Wonders (both Small and Great). This effect only works for Wonders
 and no other city improvement. The :unit:`Caravan` unit acts like any other unit when disbanded in a city: it
-gives back 50% of the shields it took to construct it in the first place.
+gives back 50% of the shields it took to construct it in the first place. In many rulesets the :unit:`Freight`
+becomes available in the late game and obsoletes the :unit:`Caravan`. The :unit:`Freight` works the same way.
 
 How does unit leveling work?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -684,8 +687,8 @@ Is it possible to change a unit’s home city?
 To be clear, a unit's "home city" is the city that produced it.
 
 It is possible when the unit is moved to a city that isn’t its current home city. You then get an option to
-change the home city. With the unit in a city you can either use hotkey “h” or :guilabel:`Unit --> Set Home
-City` to rehome the unit to the city it is inside.
+change the home city. With the unit in a city you can either use hotkey “h” or
+:guilabel:`Unit --> Set Home City` to rehome the unit to the city it is inside.
 
 .. Note:: Some rulsets allow "unhomed" units. These kind of units will never have a home city and you cannot
   change it, even if you wanted to. These units have no upkeep, so they can stay unhomed.
@@ -694,8 +697,8 @@ Are queued goto commands executed before or after units and city improvements ar
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 After. For example, you can beat an enemy attacking unit with a queued goto to your city by rush-buying a
-defensive unit (it will get built first during normal turn change processing), and the attacking unit will
-move after that.
+defensive unit (it will get built first during normal :doc:`turn change processing <../Playing/turn-change>`),
+and the attacking unit will move after that.
 
 
 Units - Military
@@ -708,7 +711,9 @@ My opponent's last city is on a 1x1 island so I cannot conquer it, and they won'
 
 It depends on the ruleset, but often researching Amphibious Warfare will allow you to build a
 :unit:`Marine`. Alternatively research Combined Arms and either move a :unit:`Helicopter` or airdrop a
-:unit:`Paratrooper` there.
+:unit:`Paratrooper` there. When viewing the in-game help text for :title-reference:`Units`, be on the look out
+for ``Can launch attack from non-native tiles``. This is the unit's feature that allows you to attack from
+the ocean or air versus land, which is a native tile.
 
 If you can't build :unit:`Marines` yet, but you do have :unit:`Engineers`, and other land is close-by, you
 can also build a land-bridge to the island (i.e. transform the ocean). If you choose this route, make sure
@@ -725,9 +730,9 @@ How can I tell what final defense a unit will have after applying all bonuses fr
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The client doesn’t show this information, so you’ll have to calculate manually. Math is an important element of
-all Freeciv21 games, and especialy the LTT and LTX multiplayer games the LongTurn Community enjoys playing. As
+all Freeciv21 games, and especialy the LTT and LTX multi-player games the LongTurn Community enjoys playing. As
 in the game of Chess, the "board" does not do the math for you. You much gauge the risk-reward ratios of your
-moves and counter-moves. This is the same in Freeciv. The game will not do the math for you. This table should
+moves and counter-moves. This is the same in Freeciv21. The game will not do the math for you. This table should
 help you in doing the math:
 
 +---------------------------------------+-----------------+------------------+-----------------+----------------------+-----------+-----------+--------------------+-------------------+
@@ -757,8 +762,8 @@ the contributed shields (production).
 
 The :unit:`Phalanx` contributes 7 shields (15 / 2 rounded down). The :unit:`Pikeman` costs 25 shields. The
 remaining 18 shields (25 - 7), is bought with gold using the formula for rush-buying units. For the math folks
-out there, the formula for rush-buying units (in all cases, not just for upgrades) is: ``2 * p + (p * p) /
-20`` where ``p`` is the remaining production (or shields).
+out there, the formula for rush-buying units (in all cases, not just for upgrades) is:
+``2 * p + (p * p) / 20`` where ``p`` is the remaining production (or shields).
 
 Are diplomats used up when investigating an enemy city?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -853,9 +858,9 @@ players, were added later.
 
 This is why Freeciv21 comes with several game configurations (rulesets): the civ1 and civ2 rulesets implement
 game rules, elements and features that bring it as close as possible to Civilization I and Civilization II
-respectively, while other rulesets such as the default classic ruleset tries to reflect the most popular
+respectively, while other rulesets such as the default Classic ruleset tries to reflect the most popular
 settings among Freeciv21 players. Unimplemented Civilization I and II features are mainly those that would
-have little or no benefit in multiplayer mode, and nobody is working on closing this gap.
+have little or no benefit in multi-player mode, and nobody is working on closing this gap.
 
 Little or no work is being done on implementing features from other similar games, such as SMAC, CTP or
 Civilization III+.
@@ -876,9 +881,8 @@ expansion as much as possible. One idea for multiplayer mode is to add AI player
 player further, and you can toy around with them early on without other humans being aware of it. This only
 works after you can beat the AI, of course.
 
-Another idea is to create starting situations in which the players are already fully developed. There is no
-automated support for this, but you can create populated maps with the built-in editor. Refer to the section
-on :strong:`scenarios` in :doc:`../Modding/index`.
+Another idea is to create starting situations in which the players are already fully developed. Refer to the
+section on :strong:`scenarios` in :doc:`../Modding/index`.
 
 
 Non-Gameplay Specific Questions
@@ -889,11 +893,11 @@ This section of the FAQ deals with anything not related to general gameplay aspe
 LongTurn Multiplayer
 --------------------
 
-How do I play multiplayer?
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+How do I play multi-player?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You can either join a network game run by someone else, or host your own. You can also join one of the many
-games offered by the longturn.net community.
+games offered by the LongTurn community.
 
 To join an open network game, choose :guilabel:`Connect to network game` and then
 :guilabel:`Internet servers`. A list of active servers should come up; double-click one to join it.
@@ -901,7 +905,7 @@ To join an open network game, choose :guilabel:`Connect to network game` and the
 To host your own game, we recommend starting a separate server by hand.
 
 To start the server, enter :file:`freeciv21-server` in a terminal or by double-clicking on the executable.
-This will start up a text-based interface.
+This will start up a text-based console interface.
 
 If all players are on the same local area network (LAN), they should launch their clients, choose
 :guilabel:`Connect to Network game` and then look in the :guilabel:`Local servers` section. You should see
@@ -922,8 +926,9 @@ ready, click the :guilabel:`Connect` button at the botton-right, fill in your lo
 Where do I see how much time is left in the current turn?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-On the sidebar near the bottom, where the :guilabel:`Turn Done` button shows for single-player games. For
-LongTurn multi-player games will also add a count-down timer to show when the turn will change.
+On the minimap in the bottom right of the main map, where the :guilabel:`Turn Done` button shows for
+single-player games. For LongTurn multi-player games will also add a count-down timer to show when the turn
+will change.
 
 When connecting to a game, is the username field case-sensitive?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -962,19 +967,21 @@ Where do I go to see the rules for a game? Like how big a victory alliance can b
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 All rules and winning conditions are posted to the `https://forum.longturn.net/index.php <forums>`_ under the
-Games index. Each game has a section for varying posts related to the game.
+Games index. Each game has a section for varying posts related to the game. Winning conditions are also often
+posted on the LongTurn Discord `https://discord.gg/98krqGm <server>`_ in the channel for the game.
 
-Does the “Nations” window show whether the player is idling?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Does the “Nations” page show whether the player is idling?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Yes, you may have to enable the visibility of the column. Right-click the header bar to see what columns are
-enabled.
+enabled. You are looking for the column named ``idle``.
 
 Can you make hideouts in LTT?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Hideouts are a purely FCW thing. There’s no such thing in LTT. Other rulesets could offer this as it is a
-ruleset configurable item. The LongTurn Community does not like them as they are overpowered and easily exploited.
+ruleset configurable item. The LongTurn Community does not like them as they are overpowered and easily
+exploited.
 
 How does research in LTT compare to MP2a/b/c?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -982,7 +989,7 @@ How does research in LTT compare to MP2a/b/c?
 MP2a/b/c and LTT are all different rulesets, so obviously this is a ruleset configured item. In MP2a/b, all
 bulbs carry over to the new research. In MP2c, bulbs researched towards a technology stay with that
 technology. In LTT, bulbs don’t stay with a particular technology. There’s a 10% penalty when switching
-research. This penalty is processed at turn change, so if you change your research again within the same turn,
+research. This penalty is processed at Turn Change, so if you change your research again within the same turn,
 you don’t suffer any additional penalties. If you then change your research back to the original technology
 within the same turn, you don’t suffer the 10% penalty.
 
@@ -1002,8 +1009,9 @@ for celebration. Under other governments, celebration doesn’t provide any bonu
 Are trade routes enabled in LTT?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Techncially yes, they are enabled. However is reality they are not because the city to city distance is 999.
-They are overpowered and cause game balance issues in multi-player games such as LTT.
+Techncially yes, they are enabled. However is reality they are not enabled, because the required city to city
+distance is 999. They are overpowered and would cause game balance issues in the multi-player environments
+targeted by LTT.
 
 
 Client Configuration
@@ -1012,51 +1020,35 @@ Client Configuration
 How do I make the font bigger for help text?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You can change a collection of fonts and font sizes by going to :guilabel:`Game --> Local Client Options` and
-then clicking on the Fonts tab.
-
-How do I make the “Messages” widget bigger?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-You can drag from the top bar to make it taller and from the right side to make it wider. To move it you
-click on the ``+`` in the upper left corner and drag it to where you want it.
+You can change a collection of fonts and font sizes by going to :guilabel:`Game --> Set local options` and
+then clicking on the :guilabel:`Fonts` tab.
 
 Is it possible to save login info in the client so it doesn’t have to be entered each time?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Yes you can set a number of items by going to :guilabel:`Game --> Local Client Options` and then clicking on
-the Network tab. You can set the server, port and username. You cannot save the password as that is a
-security risk.
+Yes, you can set a number of items by going to :guilabel:`Game --> Set local options` and then clicking on
+the :guilabel:`Network` tab. You can set the server, port and username. You cannot save the password as that
+is a security risk.
 
 Where can I turn off “connected / disconnected” messages filling up the chat window?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You can adjust a collection of things by going to :guilabel:`Game --> Messages`. Anything checked in the ``out``
-column will go to the chatline area of the client. Anything in the ``mes`` column will show in the messages
+column will go to the chatline widget of the client. Anything in the ``mes`` column will show in the messages
 widget. Lastly, anything checked in the ``pop`` column will produce a pop-up window message.
 
 Many players actually enable a lot of things that normally show in the messages widget and put them in the
-chatline widget as well. You can copy text from the chatline, but cannot in messages. Being able to copy and
+chatline widget as well. You can copy text from the chatline, but can not in messages. Being able to copy and
 paste text to your allies comes in very handy.
 
-How do I enable/disable sound support?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+How do I enable/disable sound or music support?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The client can be started without sound by supplying the commandline arguments :literal:`-P none`. The
-default sound plugin can also be configured in the client settings.
+default sound plugin can also be configured in the client settings by going to
+:guilabel:`Game --> Set local options` and then clicking on the :guilabel:`Sound` tab.
 
 If the client was compiled with sound support, it will be enabled by default.
-
-Further instructions are in :file:`./doc/README.sound` in the source tarball.
-
-If sound does not work, try:
-
-.. code-block:: rst
-
-    freeciv21-client -d 3 -P SDL -S stdsounds
-
-
-This will help you get some debug information, which might give a clue why the sound does not work.
 
 How do I use a different tileset?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1098,6 +1090,18 @@ don't believe this to be the case.
 Incidentally, there are good reasons to assume that Freeciv21 doesn't harm the sales of any of the
 commercial Civilization games in any way.
 
+How does Freeciv21 relate to other versions of Freeciv?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Freeciv21 is a code fork of Freeciv and is maintained by a community of online players called LongTurn. After
+using legacy Freeciv for many years for our multi-player games, the LongTurn Community decided to fork Freeciv
+because we felt that the development was not going in the right direction for multi-player games. Legacy
+Freeciv is concentrating on single-player games for the most part.
+
+Besides Freeciv21 and legacy Freeciv, there are also communities playing a version running in the browser,
+commonly known as Freeciv Web. This version is less flexible and doesn't fulfill the needs of a diverse
+community like LongTurn.
+
 Where can I ask questions or send improvements?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -1115,7 +1119,8 @@ Technical Stuff
 I've found a bug, what should I do?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-See the article on `Where can I ask questions or send improvements?`_.
+See the article on `Where can I ask questions or send improvements?`_. You might want to start up a
+conversation about it in the LongTurn Discord channels if you are unsure.
 
 I've started a server but the client cannot find it!
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1207,11 +1212,11 @@ What are the system requirements?
 :strong:`Memory`
 
 In a typical game the server takes about 30MB of memory and the client needs about 200MB. These values may
-change with larger maps or tilesets. For a single player game you need to run both the client and the server.
+change with larger maps or tilesets. For a single-player game you need to run both the client and the server.
 
 :strong:`Processor`
 
-We recommend at least a 200MHz processor. The server is almost entirely single-threaded, so more cores will
+We recommend at least a 1GHz processor. The server is almost entirely single-threaded, so more cores will
 not help. If you find your game running too slow, these may be the reasons:
 
 * :strong:`Too little memory`: Swapping memory pages on disc (virtual memory) is really slow. Look at the
