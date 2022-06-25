@@ -37,7 +37,6 @@ extern const int num_player_dlg_columns;
 QString plrdlg_col_state(const struct player *plr);
 
 void init_player_dlg_common();
-int player_dlg_default_sort_column();
 
 QString player_addr_hack(const struct player *pplayer);
 
