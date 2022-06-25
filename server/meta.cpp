@@ -15,12 +15,6 @@
 #include <fc_config.h>
 #endif
 
-#include <cctype>
-#include <cerrno>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-
 // Qt
 #include <QEventLoop>
 #include <QNetworkAccessManager>
@@ -39,9 +33,7 @@
 // common
 #include "capstr.h"
 #include "connection.h"
-#include "dataio.h"
 #include "game.h"
-#include "map.h"
 #include "nation.h"
 #include "version.h"
 

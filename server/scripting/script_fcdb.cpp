@@ -16,10 +16,6 @@
 
 /* dependencies/lua */
 #include "lua.h"
-#include "lualib.h"
-
-/* dependencies/tolua */
-#include "tolua.h"
 
 // utility
 #include "log.h"

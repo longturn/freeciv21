@@ -25,10 +25,6 @@
    so can use pointers to pcity->id etc.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // utility
 #include "log.h"
 

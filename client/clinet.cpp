@@ -22,33 +22,22 @@
 
 // utility
 #include "capstr.h"
-#include "dataio.h"
 #include "fcintl.h"
 #include "log.h"
-#include "registry.h"
-#include "support.h"
 
 // common
-#include "game.h"
 #include "packets.h"
-#include "version.h"
 
 // client
 #include "attribute.h"
 #include "chatline_common.h"
 #include "client_main.h"
-#include "climisc.h"
 #include "clinet.h"
 #include "connectdlg_common.h"
 #include "dialogs_g.h" // popdown_races_dialog()
 #include "governor.h"
-#include "mapview_common.h" // unqueue_mapview_update
-#include "menu_g.h"
 #include "options.h"
 #include "packhand.h"
-#include "pages_g.h"
-#include "plrdlg_common.h"
-#include "repodlgs_g.h"
 
 // gui-qt
 #include "qtg_cxxside.h"

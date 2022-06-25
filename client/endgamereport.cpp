@@ -16,7 +16,6 @@
 // common
 #include "nation.h"
 // client
-#include "repodlgs_common.h"
 #include "sprite.h"
 // gui-qt
 #include "fc_client.h"

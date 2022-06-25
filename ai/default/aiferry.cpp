@@ -9,10 +9,6 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // utility
 #include "log.h"
 
@@ -29,7 +25,6 @@
 /* server/advisors */
 #include "advgoto.h"
 #include "autoexplorer.h"
-#include "autosettlers.h"
 
 // server
 #include "hand_gen.h"

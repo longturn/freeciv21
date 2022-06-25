@@ -9,18 +9,9 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
   :X:              Freeciv21. If not, see https://www.gnu.org/licenses/.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-
 // utility
 #include "fcintl.h"
 #include "log.h"
-#include "registry.h"
 #include "shared.h"
 #include "support.h"
 
@@ -33,9 +24,7 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 
 // server
 #include "connecthand.h"
-#include "fcdb.h"
 #include "notify.h"
-#include "sernet.h"
 #include "srv_main.h"
 
 /* server/scripting */

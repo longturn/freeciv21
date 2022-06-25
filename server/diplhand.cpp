@@ -11,13 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include <cstdio>
-#include <cstdlib>
-
 // utility
 #include "bitvector.h"
 #include "fcintl.h"
@@ -28,12 +21,9 @@
 #include "diptreaty.h"
 #include "events.h"
 #include "game.h"
-#include "map.h"
 #include "packets.h"
 #include "player.h"
 #include "research.h"
-#include "unit.h"
-
 /* common/scriptcore */
 #include "luascript_types.h"
 
@@ -45,9 +35,6 @@
 #include "plrhand.h"
 #include "techtools.h"
 #include "unittools.h"
-
-/* server/advisors */
-#include "autosettlers.h"
 
 /* server/scripting */
 #include "script_server.h"

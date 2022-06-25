@@ -8,10 +8,6 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <cstdlib> // qsort
 
 // utility
@@ -26,16 +22,12 @@
 
 // client
 #include "chatline_common.h"
-#include "cityrep_g.h"
 #include "client_main.h"
 #include "climisc.h"
 #include "control.h"
-#include "editor.h"
-#include "fcintl.h"
 #include "goto.h"
 #include "governor.h"
 #include "mapctrl_common.h"
-#include "mapctrl_g.h"
 #include "mapview.h"
 #include "mapview_g.h"
 #include "minimap_panel.h"

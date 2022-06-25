@@ -11,37 +11,26 @@
                                  If not, see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#include "pregameoptions.h"
 // Qt
+#include "fcintl.h"
 #include <QAction>
 #include <QComboBox>
-#include <QFormLayout>
 #include <QGridLayout>
-#include <QHeaderView>
-#include <QPainter>
 #include <QSpinBox>
 #include <QSplitter>
-#include <QTreeWidget>
-// utility
-#include "fcintl.h"
 // common
 #include "chatline_common.h"
 #include "colors_common.h"
 #include "connectdlg_common.h"
-#include "game.h"
-// client
+// clienchatlint
 #include "client_main.h"
 #include "climisc.h"
 // gui-qt
-#include "canvas.h"
-#include "chatline.h"
-#include "colors.h"
 #include "dialogs.h"
 #include "fc_client.h"
 #include "icons.h"
-#include "page_pregame.h"
-#include "sprite.h"
-#include "voteinfo_bar.h"
+
+#include "pregameoptions.h"
 
 void option_dialog_popup(const char *name, const struct option_set *poptset);
 /**

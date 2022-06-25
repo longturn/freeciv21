@@ -17,10 +17,6 @@
 
 // utility
 #include "log.h"
-// common
-#include "calendar.h"
-#include "game.h"
-#include "map.h"
 // client
 #include "citybar.h"
 #include "citydlg_g.h"
@@ -32,19 +28,16 @@
 #include "mapview_common.h"
 #include "mapview_g.h"
 #include "minimap_panel.h"
-#include "overview_common.h"
 #include "sprite.h"
 #include "text.h"
 #include "tilespec.h"
 // gui-qt
-#include "canvas.h"
 #include "colors.h"
 #include "fc_client.h"
 #include "fonts.h"
 #include "hudwidget.h"
 #include "mapview.h"
 #include "messagewin.h"
-#include "minimap.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
 #include "sciencedlg.h"

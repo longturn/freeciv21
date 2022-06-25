@@ -14,7 +14,6 @@
 #include "chatline_common.h"
 #include "packhand_gen.h"
 // gui-qt
-#include "connectdlg.h"
 #include "fc_client.h"
 #include "page_network.h"
 #include "pages_g.h"

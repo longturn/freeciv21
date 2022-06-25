@@ -17,7 +17,6 @@
 
 #include <QLocale>
 #include <QTextCodec>
-#include <cerrno>
 #include <cstdarg>
 #include <cstdio>
 #include <cstring>
@@ -25,7 +24,6 @@
 // utility
 #include "fciconv.h"
 #include "fcintl.h"
-#include "log.h"
 #include "support.h"
 
 static QTextCodec *localCodec;

@@ -17,7 +17,6 @@
 #include "chatline_common.h"
 #include "client_main.h"
 #include "clinet.h"
-#include "connectdlg_common.h"
 // gui-qt
 #include "dialogs.h"
 #include "fc_client.h"

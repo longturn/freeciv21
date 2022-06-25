@@ -17,7 +17,6 @@
 
 #include <cstdarg>
 #include <cstdio>
-#include <cstring>
 
 // utility
 #include "deprecations.h"
@@ -33,10 +32,8 @@
 #include "game.h"
 
 // server
-#include "notify.h"
-#include "srv_main.h"
-
 #include "console.h"
+#include "notify.h"
 
 static bool console_show_prompt = false;
 static bool console_prompt_is_showing = false;

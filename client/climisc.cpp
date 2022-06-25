@@ -16,18 +16,12 @@
   used throughout the client.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <QBitArray>
 #include <cstdarg>
-#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 
 // utility
-#include "bitvector.h"
 #include "fcintl.h"
 #include "log.h"
 #include "support.h"
@@ -49,7 +43,6 @@
 #include "citydlg_g.h"
 #include "cityrep_g.h"
 #include "dialogs_g.h"
-#include "gui_main_g.h"
 #include "mapview_g.h"
 
 // client
@@ -59,12 +52,10 @@
 #include "climap.h"
 #include "climisc.h"
 #include "control.h"
-#include "mapctrl_common.h"
 #include "mapview_common.h"
 #include "messagewin_common.h"
 #include "options.h"
 #include "packhand.h"
-#include "repodlgs_common.h"
 #include "tilespec.h"
 
 // gui-qt

@@ -11,7 +11,6 @@
 #include "icons.h"
 #include "mapview.h"
 #include "page_game.h"
-#include "text.h"
 #include "top_bar.h"
 
 /**

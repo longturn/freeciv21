@@ -19,21 +19,16 @@
  \_____       _____/
        \     /                                                      *****/
 #include "canvas.h"
-#include <cmath>
 // Qt
 #include <QFontMetrics>
 #include <QPainter>
 #include <QPainterPath>
 
-#include "client_main.h"
-#include "mapview_common.h"
-#include "tilespec.h"
 // qt-client
 #include "colors.h"
 #include "colors_common.h"
 #include "fc_client.h"
 #include "fonts.h"
-#include "qtg_cxxside.h"
 #include "sprite.h"
 
 /**

@@ -10,10 +10,6 @@
                                             https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <QSet>
 #include <climits> // USHRT_MAX
 
@@ -46,7 +42,6 @@
 #include "notify.h"
 #include "plrhand.h"
 #include "sanitycheck.h"
-#include "stdinhand.h"
 #include "techtools.h"
 #include "unittools.h"
 

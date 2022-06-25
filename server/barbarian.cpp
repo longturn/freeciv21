@@ -15,14 +15,6 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
   with more ideas from Falk Hueffner
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-
 // utility
 #include "fcintl.h"
 #include "log.h"
@@ -38,19 +30,15 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "movement.h"
 #include "nation.h"
 #include "research.h"
-#include "tech.h"
 #include "terrain.h"
-#include "unitlist.h"
 
 // server
 #include "aiiface.h"
 #include "citytools.h"
-#include "gamehand.h"
 #include "maphand.h"
 #include "notify.h"
 #include "plrhand.h"
 #include "srv_main.h"
-#include "stdinhand.h"
 #include "techtools.h"
 #include "unithand.h"
 #include "unittools.h"

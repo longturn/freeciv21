@@ -10,12 +10,7 @@
                                             https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // utility
-#include "fcintl.h"
 #include "log.h"
 #include "shared.h"
 

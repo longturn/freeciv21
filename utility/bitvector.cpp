@@ -11,21 +11,11 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <QBitArray>
-#include <cerrno>
-#include <cstdarg>
 #include <cstdio>
-#include <cstdlib>
-#include <cstring>
 
 // utility
-#include "fciconv.h"
 #include "fcintl.h"
-#include "rand.h"
 
 #include "bitvector.h"
 

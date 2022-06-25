@@ -9,10 +9,6 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // utility
 #include "log.h"
 
@@ -26,7 +22,6 @@
 #include "unit.h"
 
 // server
-#include "citytools.h"
 #include "maphand.h"
 #include "srv_log.h"
 #include "unithand.h"
@@ -44,7 +39,6 @@
 #include "aiplayer.h"
 #include "aitools.h"
 #include "aiunit.h"
-#include "daicity.h"
 
 #include "aiair.h"
 

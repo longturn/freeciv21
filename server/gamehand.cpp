@@ -11,18 +11,12 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <cstdio> // for remove()
 
 // utility
-#include "capability.h"
 #include "fcintl.h"
 #include "log.h"
 #include "rand.h"
-#include "registry.h"
 #include "shared.h"
 #include "support.h"
 
@@ -31,7 +25,6 @@
 #include "calendar.h"
 #include "events.h"
 #include "game.h"
-#include "improvement.h"
 #include "movement.h"
 #include "nation.h"
 #include "packets.h"
@@ -41,7 +34,6 @@
 #include "connecthand.h"
 #include "maphand.h"
 #include "notify.h"
-#include "plrhand.h"
 #include "srv_main.h"
 #include "stdinhand.h"
 #include "unittools.h"

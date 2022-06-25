@@ -12,24 +12,15 @@
       \____/        ********************************************************/
 
 #ifdef HAVE_CONFIG_H
-#include <fc_config.h>
 #endif
 
 // Qt
 #include <QApplication>
-#include <QHBoxLayout>
 #include <QHeaderView>
 #include <QLabel>
-#include <QMainWindow>
-#include <QPushButton>
-#include <QTableWidget>
-#include <QVBoxLayout>
 
 // utility
 #include "fcintl.h"
-#include "log.h"
-#include "registry.h"
-
 // modinst
 #include "download.h"
 #include "mpgui_qt.h"

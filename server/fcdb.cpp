@@ -10,12 +10,7 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 ***********************************************************************/
 
 #ifdef HAVE_CONFIG_H
-#include <fc_config.h>
 #endif
-
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
 
 // Qt
 #include <QHash>
@@ -24,18 +19,10 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 // utility
 #include "fcintl.h"
 #include "log.h"
-#include "shared.h"
 #include "support.h"
 
 // common
-#include "connection.h"
 #include "packets.h"
-
-// server
-#include "connecthand.h"
-#include "notify.h"
-#include "sernet.h"
-#include "srv_main.h"
 
 /* server/scripting */
 #include "script_fcdb.h"

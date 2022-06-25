@@ -33,10 +33,6 @@
 
   If the value is 'true' the current signal emission will be stopped.
 *****************************************************************************/
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // utility
 #include "deprecations.h"
 
@@ -91,12 +87,8 @@ static struct signal *signal_new(int nargs, enum api_types *parg_types)
  */
 static void signal_destroy(struct signal *psignal)
 {
-  if (psignal->arg_types) {
-    delete[] psignal->arg_types;
-  }
-  if (psignal->depr_msg) {
-    delete[] psignal->depr_msg;
-  }
+  delete[] psignal->arg_types;
+  delete[] psignal->depr_msg;
   while (!psignal->callbacks->isEmpty()) {
     signal_callback_destroy(psignal->callbacks->takeFirst());
   }

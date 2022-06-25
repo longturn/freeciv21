@@ -11,15 +11,8 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include <cstring>
-
 // utility
 #include "fcintl.h"
-#include "log.h"
 #include "shared.h"
 
 // common
@@ -33,8 +26,6 @@
 // server
 #include "notify.h"
 #include "plrhand.h"
-#include "srv_main.h"
-
 #include "spacerace.h"
 
 /**

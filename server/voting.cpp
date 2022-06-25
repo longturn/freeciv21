@@ -11,10 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <cmath>
 
 // utility
@@ -23,7 +19,6 @@
 #include "support.h"
 
 // common
-#include "capability.h"
 #include "connection.h"
 #include "packets.h"
 #include "player.h"

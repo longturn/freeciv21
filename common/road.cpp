@@ -9,18 +9,11 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
   :X:              Freeciv21. If not, see https://www.gnu.org/licenses/.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // common
 #include "extras.h"
 #include "fc_types.h"
 #include "game.h"
 #include "map.h"
-#include "movement.h"
-#include "name_translation.h"
-#include "unittype.h"
 
 #include "road.h"
 

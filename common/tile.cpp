@@ -11,7 +11,6 @@
 **************************************************************************/
 
 #ifdef HAVE_CONFIG_H
-#include <fc_config.h>
 #endif
 
 #include <QBitArray>
@@ -24,7 +23,6 @@
 #include "fc_interface.h"
 #include "game.h"
 #include "map.h"
-#include "movement.h"
 #include "road.h"
 #include "unit.h"
 #include "unitlist.h"

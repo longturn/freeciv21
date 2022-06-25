@@ -19,24 +19,14 @@
  * data".
  */
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include <climits>
 #include <cmath>
 #include <cstdint>
-#include <cstdio>
-#include <cstdlib>
 #include <cstring>
 
 // Qt
 #include <QtEndian>
 
 // utility
-#include "bitvector.h"
-#include "capability.h"
-#include "log.h"
 #include "support.h"
 
 // common

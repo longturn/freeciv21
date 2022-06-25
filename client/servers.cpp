@@ -18,7 +18,6 @@
 // Qt
 #include <QBuffer>
 #include <QByteArray>
-#include <QDebug>
 #include <QEventLoop>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>

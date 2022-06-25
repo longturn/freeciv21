@@ -11,20 +11,14 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <cstdlib>
 
 // utility
 #include "fcthread.h"
 #include "log.h"
 #include "rand.h"
-#include "shared.h" // array_shuffle
 
 #include "genlist.h"
-
 /**
    Create a new empty genlist.
  */

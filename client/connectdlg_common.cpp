@@ -20,22 +20,15 @@
 #include <QTcpServer>
 #include <QUrl>
 
-#include <cstdio>
 #include <cstring>
-#include <ctime>
-#include <fcntl.h>
 
 #ifdef FREECIV_MSWINDOWS
 #include <windows.h>
 #endif
 
 // utility
-#include "capability.h"
-#include "deprecations.h"
-#include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
-#include "net_types.h"
 #include "rand.h"
 #include "registry.h"
 #include "shared.h"

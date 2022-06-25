@@ -11,15 +11,8 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include <cstdarg>
-
 // utility
 #include "shared.h"
-#include "support.h"
 #include "timing.h"
 
 // common
@@ -32,7 +25,6 @@
 
 // server
 #include "notify.h"
-#include "srv_main.h"
 
 /* server/advisors */
 #include "advdata.h"

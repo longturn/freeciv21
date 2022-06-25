@@ -15,10 +15,6 @@
    Functions for handling the nations.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // utility
 #include "fcintl.h"
 #include "support.h"
@@ -28,7 +24,6 @@
 #include "game.h"
 #include "government.h"
 #include "player.h"
-#include "tech.h"
 #include "traits.h"
 
 #include "nation.h"

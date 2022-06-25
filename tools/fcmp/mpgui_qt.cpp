@@ -27,13 +27,9 @@
 #include <QProgressBar>
 #include <QPushButton>
 #include <QTableWidget>
-#include <QVBoxLayout>
 
 // utility
-#include "fciconv.h"
 #include "fcintl.h"
-#include "log.h"
-
 // common
 #include "version.h"
 

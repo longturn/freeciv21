@@ -20,7 +20,6 @@
 #include "mapview_common.h"
 #include "spaceshipdlg_g.h"
 // gui-qt
-#include "canvas.h"
 #include "fc_client.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"

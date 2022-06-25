@@ -11,13 +11,8 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <cerrno>
 #include <cmath>
-#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 
@@ -31,7 +26,6 @@
 #include "city.h"
 #include "culture.h"
 #include "game.h"
-#include "map.h"
 #include "specialist.h"
 #include "unitlist.h"
 

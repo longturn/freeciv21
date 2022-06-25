@@ -14,10 +14,6 @@
 #endif
 
 #include <QFile>
-#include <cassert>
-#include <csignal>
-#include <cstdarg>
-#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 
@@ -27,7 +23,6 @@
 
 // utility
 #include "astring.h"
-#include "capability.h"
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
@@ -50,19 +45,12 @@
 #include "version.h"
 
 // server
-#include "citytools.h"
 #include "commands.h"
-#include "connecthand.h"
 #include "console.h"
-#include "diplhand.h"
-#include "gamehand.h"
-#include "plrhand.h"
-#include "report.h"
 #include "ruleset.h"
 #include "sernet.h"
 #include "settings.h"
 #include "srv_main.h"
-#include "stdinhand.h"
 
 /* tools/shared */
 #include "tools_fc_interface.h"

@@ -16,7 +16,6 @@
 #include <QHeaderView>
 #include <QMouseEvent>
 #include <QPainter>
-#include <QRadioButton>
 #include <QScreen>
 #include <QScrollArea>
 #include <QScrollBar>
@@ -40,14 +39,10 @@
 #include "governor.h"
 #include "mapctrl_common.h"
 #include "mapview_common.h"
-#include "mapview_g.h"
-#include "sprite.h"
-#include "text.h"
 #include "tilespec.h"
 // gui-qt
 #include "canvas.h"
 #include "cityrep.h" // hIcon
-#include "colors.h"
 #include "fc_client.h"
 #include "fonts.h"
 #include "hudwidget.h"
@@ -55,6 +50,7 @@
 #include "mapview.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
+#include "text.h"
 #include "tooltips.h"
 #include "top_bar.h"
 

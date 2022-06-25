@@ -22,9 +22,7 @@
 #include <QString>
 
 // utility
-#include "fciconv.h"
 #include "fcintl.h"
-#include "log.h"
 
 // common
 #include "version.h"

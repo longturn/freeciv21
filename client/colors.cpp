@@ -9,12 +9,9 @@
 **************************************************************************/
 
 #include <QPainter>
-// utility
-#include "rgbcolor.h"
 // gui-qt
 #include "colors.h"
 #include "colors_g.h"
-#include "qtg_cxxside.h"
 
 research_color *research_color::m_instance = 0;
 

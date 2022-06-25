@@ -63,14 +63,7 @@
 
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <cstdarg>
-#include <cstdio>
-#include <cstring>
-
 // Qt
 #include <QLoggingCategory>
 

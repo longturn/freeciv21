@@ -16,11 +16,8 @@
 #endif
 
 #include <QBitArray>
-#include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <ctime>
-
 // utility
 #include "bitvector.h"
 #include "fcintl.h"

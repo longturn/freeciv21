@@ -11,16 +11,7 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include <cmath>
-#include <cstdio>
-#include <cstring>
-
 // utility
-#include "fcintl.h"
 #include "log.h"
 #include "support.h"
 #include "timing.h"
@@ -45,7 +36,6 @@
 // server
 #include "citytools.h"
 #include "maphand.h"
-#include "plrhand.h"
 #include "srv_log.h"
 #include "unithand.h"
 #include "unittools.h"

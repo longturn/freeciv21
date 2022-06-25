@@ -11,10 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // utility
 #include "bitvector.h"
 #include "log.h"
@@ -34,7 +30,6 @@
 #include "unitlist.h"
 
 // server
-#include "citytools.h"
 #include "cityturn.h" // city_repair_size()
 #include "maphand.h"
 #include "plrhand.h"

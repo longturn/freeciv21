@@ -9,10 +9,6 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // utility
 #include "log.h"
 
@@ -26,7 +22,6 @@
 // ai
 #include "ailog.h"
 #include "aiplayer.h"
-#include "aitools.h"
 #include "aiunit.h"
 
 #include "aiguard.h"

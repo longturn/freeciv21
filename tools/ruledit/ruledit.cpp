@@ -18,8 +18,6 @@
 // ANSI
 #include <cstdlib>
 
-#include <csignal>
-
 #ifdef FREECIV_MSWINDOWS
 #include <windows.h>
 #endif
@@ -32,11 +30,9 @@
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
-#include "registry.h"
 
 // common
 #include "fc_interface.h"
-#include "version.h"
 
 // server
 #include "sernet.h"

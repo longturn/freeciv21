@@ -11,10 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <cstring>
 
 // utility
@@ -34,8 +30,6 @@
 #include "pf_tools.h"
 
 // server
-#include "citytools.h"
-#include "cityturn.h"
 #include "srv_log.h"
 #include "srv_main.h"
 
@@ -44,7 +38,6 @@
 #include "advchoice.h"
 #include "advdata.h"
 #include "advtools.h"
-#include "autosettlers.h"
 #include "infracache.h" // adv_city
 
 // ai
@@ -67,7 +60,6 @@
 #include "aiunit.h"
 #include "daicity.h"
 #include "daieffects.h"
-
 #include "daimilitary.h"
 
 static int assess_danger(struct ai_type *ait, struct city *pcity,

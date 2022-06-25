@@ -10,10 +10,6 @@
                  with Freeciv21. If not, see https://www.gnu.org/licenses/.
                  ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <cstring>
 
 // utility
@@ -21,8 +17,6 @@
 
 // common
 #include "featured_text.h"
-#include "map.h"
-
 /* client/include */
 #include "citydlg_g.h"
 #include "mapview_g.h"

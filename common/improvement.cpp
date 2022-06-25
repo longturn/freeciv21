@@ -11,10 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // utility
 #include "fcintl.h"
 #include "log.h"
@@ -23,8 +19,6 @@
 
 // common
 #include "game.h"
-#include "map.h"
-#include "tech.h"
 #include "victory.h"
 
 #include "improvement.h"

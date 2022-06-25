@@ -8,16 +8,10 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <cstdarg>
-#include <cstdlib>
 #include <ctime>
 
 // Qt
-#include <QFile>
 
 /* dependencies/lua */
 extern "C" {

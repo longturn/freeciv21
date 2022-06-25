@@ -15,7 +15,6 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QToolTip>
-#include <QWheelEvent>
 
 // client
 #include "client_main.h"
@@ -25,7 +24,6 @@
 // gui-qt
 #include "fc_client.h"
 #include "mapview.h"
-#include "menu.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
 

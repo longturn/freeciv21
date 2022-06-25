@@ -42,7 +42,6 @@
 #include "version.h"
 
 // server
-#include "citytools.h"
 #include "plrhand.h"
 #include "score.h"
 #include "srv_main.h"

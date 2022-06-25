@@ -21,8 +21,6 @@
 #include "support.h"
 
 // common
-#include "fc_types.h"
-
 #include "version.h"
 
 #ifdef GITREV

@@ -27,7 +27,6 @@
 #include "sprite.h"
 #include "text.h"
 // gui-qt
-#include "canvas.h"
 #include "citydlg.h"
 #include "fc_client.h"
 #include "page_game.h"

@@ -41,9 +41,6 @@
 #include <fc_config.h>
 #endif
 
-#include <QFile>
-#include <cctype>
-#include <cerrno>
 #include <cmath> // ceil()
 #include <cstdarg>
 #include <cstdio>
@@ -69,7 +66,6 @@
 
 // utility
 #include "fciconv.h"
-#include "fcintl.h"
 #include "log.h"
 
 #include "support.h"

@@ -9,16 +9,9 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
   :X:              Freeciv21. If not, see https://www.gnu.org/licenses/.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <QHash>
-#include <cstdio>
-#include <cstring>
 
 // utility
-#include "log.h"
 #include "support.h"
 #include "timing.h"
 
@@ -27,7 +20,6 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "game.h"
 #include "government.h"
 #include "map.h"
-#include "movement.h"
 #include "packets.h"
 #include "player.h"
 #include "workertask.h"

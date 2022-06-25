@@ -9,10 +9,6 @@ received a copy of the GNU General Public License along with Freeciv21.
                               If not, see https://www.gnu.org/licenses/.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // utility
 #include "log.h"
 
@@ -24,11 +20,7 @@ received a copy of the GNU General Public License along with Freeciv21.
 #include "unit.h"
 #include "unitlist.h"
 
-/* common/aicore */
-#include "pf_tools.h"
-
 // server
-#include "citytools.h"
 #include "maphand.h"
 #include "srv_log.h"
 #include "unithand.h"

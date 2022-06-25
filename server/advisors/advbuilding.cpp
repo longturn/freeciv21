@@ -11,17 +11,9 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-// utility
-#include "rand.h"
-
 // common
 #include "ai.h"
 #include "city.h"
-#include "effects.h"
 #include "game.h"
 #include "movement.h"
 #include "player.h"
@@ -33,12 +25,10 @@
 
 // server
 #include "citytools.h"
-#include "plrhand.h"
 #include "srv_log.h"
 
 /* server/advisors */
 #include "advdata.h"
-#include "advtools.h"
 #include "infracache.h" // adv_city
 
 // ai

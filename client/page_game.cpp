@@ -27,7 +27,6 @@
 // client
 #include "civstatus.h"
 #include "client_main.h"
-#include "climisc.h"
 #include "mapview_common.h"
 #include "text.h"
 // gui-qt - Eye of Storm

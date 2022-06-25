@@ -32,7 +32,6 @@
 #include <QUrl>
 
 // utility
-#include "bitvector.h"
 #include "capstr.h"
 #include "dataio.h"
 #include "deprecations.h"
@@ -41,8 +40,6 @@
 #include "fcintl.h"
 #include "log.h"
 #include "rand.h"
-#include "registry.h"
-#include "support.h"
 
 // common
 #include "ai.h"
@@ -50,9 +47,6 @@
 #include "fc_interface.h"
 #include "game.h"
 #include "helpdata.h" // boot_help_texts()
-#include "idex.h"
-#include "map.h"
-#include "mapimg.h"
 #include "net_types.h"
 #include "packets.h"
 #include "player.h"
@@ -61,7 +55,6 @@
 #include "version.h"
 
 /* client/include */
-#include "citydlg_g.h"
 #include "dialogs_g.h"
 #include "diplodlg_g.h"
 #include "gui_main_g.h"
@@ -69,7 +62,6 @@
 #include "mapview_g.h"
 #include "menu_g.h"
 #include "pages_g.h"
-#include "repodlgs_g.h"
 #include "voteinfo_bar_g.h"
 
 // client

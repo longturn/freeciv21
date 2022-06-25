@@ -9,16 +9,9 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include <cstring>
-
 #include "support.h"
 
 #include "audio.h"
-#include "gui_main_g.h"
 
 #include "audio_none.h"
 

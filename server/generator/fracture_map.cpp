@@ -10,10 +10,6 @@
  L_JJ           \__JJ      GNU General Public License along with Freeciv21.
                                  If not, see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // utility
 #include "rand.h"
 

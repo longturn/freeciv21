@@ -11,15 +11,8 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include <cmath>
-
 // utility
 #include "bitvector.h"
-#include "log.h"
 #include "rand.h"
 #include "registry.h"
 #include "shared.h"
@@ -46,12 +39,9 @@
 // server
 #include "barbarian.h"
 #include "citytools.h"
-#include "cityturn.h"
-#include "diplomats.h"
 #include "maphand.h"
 #include "srv_log.h"
 #include "unithand.h"
-#include "unittools.h"
 
 /* server/advisors */
 #include "advbuilding.h"
@@ -70,7 +60,6 @@
 #include "aidiplomat.h"
 #include "aiferry.h"
 #include "aiguard.h"
-#include "aihand.h"
 #include "aihunt.h"
 #include "ailog.h"
 #include "aiparatrooper.h"

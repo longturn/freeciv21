@@ -11,10 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <QBitArray>
 #include <QString>
 
@@ -38,7 +34,6 @@
 #include "nation.h"
 #include "research.h"
 #include "rgbcolor.h"
-#include "tech.h"
 #include "unit.h"
 #include "unitlist.h"
 #include "vision.h"

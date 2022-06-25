@@ -10,7 +10,6 @@
 **************************************************************************/
 
 #ifdef HAVE_CONFIG_H
-#include <fc_config.h>
 #endif
 
 // utility
@@ -24,7 +23,6 @@
 #include "map.h"
 #include "player.h"
 #include "spaceship.h"
-#include "tech.h"
 #include "unitlist.h"
 #include "victory.h"
 

@@ -11,15 +11,8 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include <cstdio>
-
 // utility
 #include "bitvector.h"
-#include "fcintl.h"
 #include "log.h"
 #include "rand.h"
 
@@ -28,7 +21,6 @@
 #include "combat.h"
 #include "events.h"
 #include "game.h"
-#include "government.h"
 #include "map.h"
 #include "movement.h"
 #include "player.h"

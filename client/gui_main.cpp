@@ -13,11 +13,9 @@
 #endif // AUDIO_SDL
 
 #include "gui_main.h"
-#include <cstdio>
 // Qt
 #include <QApplication>
 // utility
-#include "fciconv.h"
 #include "log.h"
 // client
 #include "client_main.h"

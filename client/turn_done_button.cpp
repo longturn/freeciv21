@@ -20,8 +20,6 @@
 #include <QStyleOptionButton>
 #include <QStylePainter>
 
-#include <cmath>
-
 namespace {
 /**
  * Constants used when drawing the button
