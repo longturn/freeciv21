@@ -14,9 +14,14 @@ jobs:
       - run: git rev-parse --short=5 HEAD > cmake/AutoRevision.txt
       - run: git describe --tags `git rev-list --tags --max-count=1` >> cmake/AutoRevision.txt
       - run: cat cmake/AutoRevision.txt
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4.0.4
         with:
-          commit_message: "Release update of AutoRevision.txt"
+          commit-message: "Release update of AutoRevision.txt"
+          branch: "release/autorevision"
+          title: "Release update of AutoRevision.txt"
+          body: "Automatic changes triggered by a new release"
+          delete-branch: true
   update-archive:
     name: "Update Source Archive"
     runs-on: ubuntu-latest
