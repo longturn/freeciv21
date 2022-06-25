@@ -25,12 +25,14 @@ jobs:
   update-archive:
     name: "Update Source Archive"
     runs-on: ubuntu-latest
-    needs: update-autorevision
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
           ref: master
+      - run: git rev-parse --short=5 HEAD > cmake/AutoRevision.txt
+      - run: git describe --tags `git rev-list --tags --max-count=1` >> cmake/AutoRevision.txt
+      - run: cat cmake/AutoRevision.txt
       - name: Make build directory
         run: mkdir -p -v $PWD/build
       - name: Create tar.gz
