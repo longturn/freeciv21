@@ -151,7 +151,7 @@ void packhand_free()
   }
 
   if (nullptr != invisible.placeholder) {
-    delete[] invisible.placeholder;
+    delete invisible.placeholder;
     invisible.placeholder = nullptr;
   }
 }
@@ -166,8 +166,7 @@ static void packhand_init()
   invisible.cities = city_list_new();
 
   // Can't use player_new() here, as it will register the player.
-  invisible.placeholder = new player[1]();
-  memset(invisible.placeholder, 0, sizeof(*invisible.placeholder));
+  invisible.placeholder = new player();
   // Set some values to prevent bugs ...
   sz_strlcpy(invisible.placeholder->name, ANON_PLAYER_NAME);
   sz_strlcpy(invisible.placeholder->username, _(ANON_USER_NAME));

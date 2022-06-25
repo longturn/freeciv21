@@ -474,7 +474,7 @@ struct player *player_new(struct player_slot *pslot)
 
   // Now create the player.
   log_debug("Create player for slot %d.", player_slot_index(pslot));
-  pplayer = new player[1]();
+  pplayer = new player();
   pplayer->slot = pslot;
   pslot->player = pplayer;
   pplayer->diplstates = new const player_diplstate *[player_slot_count()]();
@@ -747,7 +747,7 @@ void player_destroy(struct player *pplayer)
     rgbcolor_destroy(pplayer->rgb);
   }
 
-  delete[] pplayer;
+  delete pplayer;
   pplayer = nullptr;
   pslot->player = nullptr;
   player_slots.used_slots--;
