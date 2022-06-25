@@ -39,9 +39,6 @@
 #include "timing.h"
 
 // common
-#include "capability.h"
-#include "events.h"
-#include "fc_types.h" // LINE_BREAK
 #include "featured_text.h"
 #include "game.h"
 #include "map.h"
@@ -56,20 +53,15 @@
 
 // server
 #include "aiiface.h"
-#include "citytools.h"
 #include "connecthand.h"
 #include "diplhand.h"
 #include "gamehand.h"
-#include "mapgen.h"
 #include "maphand.h"
 #include "meta.h"
 #include "notify.h"
 #include "plrhand.h"
-#include "report.h"
 #include "ruleset.h"
 #include "sanitycheck.h"
-#include "score.h"
-#include "sernet.h"
 #include "settings.h"
 #include "srv_log.h"
 #include "srv_main.h"
@@ -85,7 +77,6 @@
 
 // ai
 #include "difficulty.h"
-#include "handicaps.h"
 
 #include "stdinhand.h"
 
@@ -3356,20 +3347,15 @@ static bool observe_command(struct connection *caller, char *str, bool check)
 
   /* if the connection is already attached to a player,
    * unattach and cleanup old player (rename, remove, etc) */
-  if (true) {
-    char name[MAX_LEN_NAME];
-
-    if (pplayer) {
-      // if pconn->playing is removed, we'll lose pplayer
-      sz_strlcpy(name, player_name(pplayer));
-    }
-
-    connection_detach(pconn, true);
-
-    if (pplayer) {
-      // find pplayer again, the pointer might have been changed
-      pplayer = player_by_name(name);
-    }
+  char name[MAX_LEN_NAME];
+  if (pplayer) {
+    // if pconn->playing is removed, we'll lose pplayer
+    sz_strlcpy(name, player_name(pplayer));
+  }
+  connection_detach(pconn, true);
+  if (pplayer) {
+    // find pplayer again, the pointer might have been changed
+    pplayer = player_by_name(name);
   }
 
   // attach pconn to new player as an observer or as global observer

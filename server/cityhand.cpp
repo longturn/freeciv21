@@ -11,14 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-
 // utility
 #include "fcintl.h"
 #include "log.h"
@@ -29,7 +21,6 @@
 #include "city.h"
 #include "events.h"
 #include "game.h"
-#include "idex.h"
 #include "map.h"
 #include "player.h"
 #include "specialist.h"

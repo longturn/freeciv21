@@ -15,12 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <cctype>
-#include <cstdio>
-#include <cstdlib>
 #include <cstring>
-#include <ctime>
-
 // Qt
 #include <QCoreApplication>
 #include <QDebug>
@@ -29,12 +24,10 @@
 // utility
 #include "bitvector.h"
 #include "bugs.h"
-#include "capability.h"
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
 #include "rand.h"
-#include "registry.h"
 #include "support.h"
 #include "timing.h"
 
@@ -44,7 +37,6 @@
 // common
 #include "achievements.h"
 #include "calendar.h"
-#include "capstr.h"
 #include "city.h"
 #include "culture.h"
 #include "dataio.h"
@@ -52,7 +44,6 @@
 #include "events.h"
 #include "fc_interface.h"
 #include "game.h"
-#include "government.h"
 #include "map.h"
 #include "mapimg.h"
 #include "multipliers.h"
@@ -80,7 +71,6 @@
 #include "edithand.h"
 #include "fcdb.h"
 #include "gamehand.h"
-#include "handchat.h"
 #include "maphand.h"
 #include "meta.h"
 #include "notify.h"
@@ -95,7 +85,6 @@
 #include "srv_log.h"
 #include "stdinhand.h"
 #include "techtools.h"
-#include "unithand.h"
 #include "unittools.h"
 #include "voting.h"
 
@@ -110,7 +99,6 @@
 #include "savemain.h"
 
 /* server/scripting */
-#include "luascript_types.h"
 #include "script_server.h"
 
 /* server/generator */

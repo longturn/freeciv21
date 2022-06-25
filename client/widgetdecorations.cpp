@@ -19,7 +19,6 @@
 // gui-qt
 #include "fc_client.h"
 #include "icons.h"
-#include "page_game.h"
 
 /****************************************************************************
   Scale widget allowing scaling other widgets, shown in right top corner

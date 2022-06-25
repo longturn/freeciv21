@@ -9,10 +9,6 @@ received a copy of the GNU General Public License along with Freeciv21.
                               If not, see https://www.gnu.org/licenses/.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <cmath> // ceil, floor
 #include <cstdarg>
 
@@ -3159,8 +3155,8 @@ static enum fc_tristate is_action_possible(
       return TRI_MAYBE;
     }
 
-    if (!(target_city->shield_stock
-          < city_production_build_shield_cost(target_city))) {
+    if (target_city->shield_stock
+        >= city_production_build_shield_cost(target_city)) {
       return TRI_NO;
     }
 

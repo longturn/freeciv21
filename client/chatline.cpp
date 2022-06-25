@@ -32,11 +32,9 @@
 #include "game.h"
 #include "mapview_common.h"
 // gui-qt
-#include "colors.h"
 #include "dialogs.h"
 #include "fc_client.h"
 #include "fonts.h"
-#include "gui_main.h"
 #include "icons.h"
 #include "mapview.h"
 #include "messagewin.h"

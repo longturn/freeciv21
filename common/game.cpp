@@ -11,12 +11,7 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // utility
-#include "fcintl.h"
 #include "log.h"
 #include "shared.h"
 #include "support.h"
@@ -29,7 +24,6 @@
 #include "actions.h"
 #include "ai.h"
 #include "city.h"
-#include "connection.h"
 #include "disaster.h"
 #include "extras.h"
 #include "government.h"
@@ -40,15 +34,12 @@
 #include "packets.h"
 #include "player.h"
 #include "research.h"
-#include "spaceship.h"
 #include "specialist.h"
 #include "style.h"
 #include "tech.h"
 #include "terrain.h"
 #include "traderoutes.h"
 #include "unit.h"
-#include "unitlist.h"
-#include "victory.h"
 
 #include "game.h"
 

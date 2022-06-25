@@ -15,14 +15,11 @@
 #include <fc_config.h>
 #endif
 
-#include <QHostAddress>
 #include <QString>
 
 #include <csignal>
 #include <cstdio>
 #include <cstdlib>
-#include <cstring>
-
 #ifdef FREECIV_MSWINDOWS
 #include <windows.h>
 #endif
@@ -47,7 +44,6 @@
 // server
 #include "aiiface.h"
 #include "console.h"
-#include "meta.h"
 #include "sernet.h"
 #include "server.h"
 #include "srv_main.h"

@@ -9,10 +9,6 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // common
 #include "unittype.h"
 

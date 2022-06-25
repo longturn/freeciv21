@@ -15,16 +15,9 @@
 #include <fc_config.h>
 #endif
 
-#include <iostream>
-
-#include <csignal>
-#include <cstdarg>
-#include <cstdio>
-#include <cstring>
 #include <vector>
 
 // Qt
-#include <QDebug>
 #include <QFileInfo>
 #include <QLoggingCategory>
 #include <QMutexLocker>
@@ -36,13 +29,9 @@
 #endif
 
 // utility
-#include "fciconv.h"
 #include "fcintl.h"
-#include "fcthread.h"
 #include "shared.h"
-#include "support.h"
 
-#include "deprecations.h"
 #include "log.h"
 
 Q_LOGGING_CATEGORY(assert_category, "freeciv.assert")

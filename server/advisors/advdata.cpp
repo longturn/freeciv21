@@ -8,10 +8,6 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // utility
 #include "log.h"
 
@@ -31,11 +27,9 @@
 /* common/aicore */
 #include "aisupport.h"
 #include "path_finding.h"
-#include "pf_tools.h"
 
 // server
 #include "cityturn.h"
-#include "diplhand.h"
 #include "maphand.h"
 #include "plrhand.h"
 #include "srv_log.h"
@@ -45,7 +39,6 @@
 #include "advbuilding.h"
 #include "advcity.h"
 #include "advtools.h"
-#include "autosettlers.h"
 
 // ai
 #include "handicaps.h"

@@ -16,7 +16,6 @@
 #endif
 
 // Qt
-#include <QDebug>
 #include <QDir>
 #include <QString>
 

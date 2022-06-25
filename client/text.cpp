@@ -9,16 +9,13 @@
 **************************************************************************/
 
 #ifdef HAVE_CONFIG_H
-#include <fc_config.h>
 #endif
 
 #include <math.h> // ceil
-#include <stdarg.h>
 #include <string.h>
 
 // utility
 #include "astring.h"
-#include "bitvector.h"
 #include "fcintl.h"
 #include "log.h"
 #include "nation.h"

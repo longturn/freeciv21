@@ -17,7 +17,6 @@
 #include "fcintl.h"
 // common
 #include "colors_common.h"
-#include "game.h"
 #include "government.h"
 #include "nation.h"
 #include "research.h"

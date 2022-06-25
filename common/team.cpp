@@ -14,8 +14,6 @@
 #include <fc_config.h>
 #endif
 
-#include <cstdlib>
-
 // utility
 #include "fcintl.h"
 #include "log.h"

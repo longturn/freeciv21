@@ -8,20 +8,14 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // utility
 #include "fcintl.h"
 #include "rand.h"
 
 // common
-#include "map.h"
 #include "movement.h"
 #include "research.h"
 #include "unittype.h"
-
 /* common/scriptcore */
 #include "api_game_find.h"
 #include "luascript.h"
@@ -38,9 +32,6 @@
 #include "stdinhand.h"
 #include "techtools.h"
 #include "unittools.h"
-
-/* server/scripting */
-#include "script_server.h"
 
 /* server/generator */
 #include "mapgen_utils.h"

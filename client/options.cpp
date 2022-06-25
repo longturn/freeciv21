@@ -15,11 +15,8 @@
 #include <fc_config.h>
 #endif
 
-#include <cstdarg>
 #include <cstring>
 #include <sys/stat.h>
-#include <sys/types.h>
-
 // Qt
 #include <QHash>
 #include <QUrl>
@@ -41,7 +38,6 @@
 #include "gui_main_g.h"
 #include "menu_g.h"
 #include "optiondlg_g.h"
-#include "ratesdlg_g.h"
 #include "repodlgs_g.h"
 #include "voteinfo_bar_g.h"
 
@@ -61,8 +57,6 @@
 #include "overview_common.h"
 #include "packhand_gen.h"
 #include "plrdlg_common.h"
-#include "repodlgs_common.h"
-#include "servers.h"
 #include "themes_common.h"
 #include "tilespec.h"
 

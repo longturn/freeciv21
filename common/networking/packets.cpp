@@ -11,13 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include <climits>
-#include <cstdio>
-#include <cstdlib>
 #include <cstring>
 
 // utility
@@ -28,10 +21,7 @@
 
 // commmon
 #include "dataio.h"
-#include "events.h"
 #include "game.h"
-#include "map.h"
-
 #include "packets.h"
 
 #include <QRegularExpression>
@@ -203,50 +193,49 @@ int send_packet_data(struct connection *pc, unsigned char *data, int len,
     pc->outgoing_packet_notify(pc, packet_type, len, result);
   }
 
-  if (true) {
-    int size = len;
+  int size = len;
+  if (conn_compression_frozen(pc)) {
+    size_t old_size;
 
-    if (conn_compression_frozen(pc)) {
-      size_t old_size;
-
-      /* Keep this a decent amount less than MAX_LEN_BUFFER to avoid the
-       * (remote) possibility of trying to dump MAX_LEN_BUFFER to the
-       * network in one go */
+    /* Keep this a decent amount less than MAX_LEN_BUFFER to avoid the
+     * (remote) possibility of trying to dump MAX_LEN_BUFFER to the
+     * network in one go */
 #define MAX_LEN_COMPRESS_QUEUE (MAX_LEN_BUFFER / 2)
-      FC_STATIC_ASSERT(MAX_LEN_COMPRESS_QUEUE < MAX_LEN_BUFFER,
-                       compress_queue_maxlen_too_big);
+    FC_STATIC_ASSERT(MAX_LEN_COMPRESS_QUEUE < MAX_LEN_BUFFER,
+                     compress_queue_maxlen_too_big);
 
-      /* If this packet would cause us to overfill the queue, flush
-       * everything that's in there already before queuing this one */
-      if (MAX_LEN_COMPRESS_QUEUE
-          < byte_vector_size(&pc->compression.queue) + len) {
-        log_compress2(
-            "COMPRESS: huge queue, forcing to flush (%lu/%lu)",
-            (long unsigned) byte_vector_size(&pc->compression.queue),
-            (long unsigned) MAX_LEN_COMPRESS_QUEUE);
-        if (!conn_compression_flush(pc)) {
-          return -1;
-        }
-        byte_vector_reserve(&pc->compression.queue, 0);
+    /* If this packet would cause us to overfill the queue, flush
+     * everything that's in there already before queuing this one */
+    if (MAX_LEN_COMPRESS_QUEUE
+        < byte_vector_size(&pc->compression.queue) + len) {
+      log_compress2("COMPRESS: huge queue, forcing to flush (%lu/%lu)",
+                    (long unsigned) byte_vector_size(&pc->compression.queue),
+                    (long unsigned) MAX_LEN_COMPRESS_QUEUE);
+      if (!conn_compression_flush(pc)) {
+        return -1;
       }
-
-      old_size = byte_vector_size(&pc->compression.queue);
-      byte_vector_reserve(&pc->compression.queue, old_size + len);
-      memcpy(pc->compression.queue.p + old_size, data, len);
-      log_compress2("COMPRESS: putting %s into the queue",
-                    packet_name(packet_type));
-    } else {
-      stat_size_alone += size;
-      log_compress("COMPRESS: sending %s alone (%d bytes total)",
-                   packet_name(packet_type), stat_size_alone);
-      connection_send_data(pc, data, len);
+      byte_vector_reserve(&pc->compression.queue, 0);
     }
 
-    log_compress2("COMPRESS: STATS: alone=%d compression-expand=%d "
-                  "compression (before/after) = %d/%d",
-                  stat_size_alone, stat_size_no_compression,
-                  stat_size_uncompressed, stat_size_compressed);
+    old_size = byte_vector_size(&pc->compression.queue);
+    byte_vector_reserve(&pc->compression.queue, old_size + len);
+    memcpy(pc->compression.queue.p + old_size, data, len);
+    log_compress2("COMPRESS: putting %s into the queue",
+                  packet_name(packet_type));
+  } else {
+    stat_size_alone += size;
+    log_compress("COMPRESS: sending %s alone (%d bytes total)",
+                 packet_name(packet_type), stat_size_alone);
+    connection_send_data(pc, data, len);
   }
+  log_compress2("COMPRESS: STATS: alone=%d compression-expand=%d "
+                "compression (before/after) = %d/%d",
+                stat_size_alone, stat_size_no_compression,
+                stat_size_uncompressed, stat_size_compressed);
+  log_compress2("COMPRESS: STATS: alone=%d compression-expand=%d "
+                "compression (before/after) = %d/%d",
+                stat_size_alone, stat_size_no_compression,
+                stat_size_uncompressed, stat_size_compressed);
 
 #if PACKET_SIZE_STATISTICS
   {

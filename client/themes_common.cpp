@@ -9,15 +9,10 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
   :X:              Freeciv21. If not, see https://www.gnu.org/licenses/.
 ***********************************************************************/
 #ifdef HAVE_CONFIG_H
-#include <fc_config.h>
 #endif
-
-#include <cstring>
-#include <sys/stat.h>
 
 // utility
 #include "log.h"
-#include "shared.h"
 #include "support.h"
 
 /* client/include */

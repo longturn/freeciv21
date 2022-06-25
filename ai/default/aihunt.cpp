@@ -9,10 +9,6 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // utility
 #include "bitvector.h"
 #include "log.h"
@@ -32,7 +28,6 @@
 #include "pf_tools.h"
 
 // server
-#include "citytools.h"
 #include "srv_log.h"
 #include "unithand.h"
 #include "unittools.h"
@@ -41,7 +36,6 @@
 #include "advdata.h"
 #include "advgoto.h"
 #include "advtools.h"
-#include "autosettlers.h"
 
 // ai
 #include "handicaps.h"

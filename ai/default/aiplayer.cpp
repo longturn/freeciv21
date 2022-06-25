@@ -11,16 +11,11 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // common
 #include "ai.h"
 #include "city.h"
 #include "game.h"
 #include "multipliers.h"
-#include "unit.h"
 // server
 #include "citytools.h"
 

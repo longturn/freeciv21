@@ -15,24 +15,16 @@
 #include <fc_config.h>
 #endif
 
-#include <cerrno>
-#include <cstdio>
-#include <cstdlib>
 #include <cstring>
-#include <ctime>
 
 // Qt
 #include <QCoreApplication>
-#include <QHostInfo>
 #include <QNetworkDatagram>
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QUdpSocket>
 
 // utility
-#include "capability.h"
-#include "fciconv.h"
-#include "fcintl.h"
 #include "log.h"
 #include "shared.h"
 #include "support.h"
@@ -49,9 +41,7 @@
 
 // server
 #include "aiiface.h"
-#include "auth.h"
 #include "connecthand.h"
-#include "console.h"
 #include "meta.h"
 #include "plrhand.h"
 #include "srv_main.h"

@@ -18,7 +18,6 @@
 #include <QPushButton>
 #include <QRadioButton>
 #include <QStackedLayout>
-#include <QVBoxLayout>
 
 // ruledit
 #include "ruledit_qt.h"

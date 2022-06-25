@@ -9,10 +9,6 @@ received a copy of the GNU General Public License along with Freeciv21.
                               If not, see https://www.gnu.org/licenses/.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <cstdarg>
 
 #ifdef HAVE_MAPIMG_MAGICKWAND
@@ -27,7 +23,6 @@ received a copy of the GNU General Public License along with Freeciv21.
 
 // common
 #include "calendar.h"
-#include "connection.h"
 #include "fc_types.h"
 #include "game.h"
 #include "map.h"

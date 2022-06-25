@@ -11,11 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 
@@ -49,7 +44,6 @@
 
 // server
 #include "actiontools.h"
-#include "barbarian.h"
 #include "citizenshand.h"
 #include "citytools.h"
 #include "cityturn.h"
@@ -59,12 +53,10 @@
 #include "plrhand.h"
 #include "sanitycheck.h"
 #include "spacerace.h"
-#include "srv_main.h"
 #include "techtools.h"
 #include "unittools.h"
 
 /* server/advisors */
-#include "autoexplorer.h"
 #include "autosettlers.h"
 
 /* server/scripting */
@@ -1208,7 +1200,7 @@ static struct ane_expl *expl_act_not_enabl(struct unit *punit,
              && !utype_can_do_act_when_ustate(unit_type_get(punit), act_id,
                                               USP_TRANSPORTING, true)) {
     explnat->kind = ANEK_IS_TRANSPORTING;
-  } else if (!(0 < get_transporter_occupancy(punit))
+  } else if (0 >= get_transporter_occupancy(punit)
              && !utype_can_do_act_when_ustate(unit_type_get(punit), act_id,
                                               USP_TRANSPORTING, false)) {
     explnat->kind = ANEK_IS_NOT_TRANSPORTING;

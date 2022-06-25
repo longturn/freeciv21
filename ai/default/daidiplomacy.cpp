@@ -10,7 +10,6 @@ received a copy of the GNU General Public License along with Freeciv21.
 ***********************************************************************/
 
 #ifdef HAVE_CONFIG_H
-#include <fc_config.h>
 #endif
 
 #include <cstdarg>
@@ -38,11 +37,9 @@ received a copy of the GNU General Public License along with Freeciv21.
 #include "unitlist.h"
 
 // server
-#include "citytools.h"
 #include "diplhand.h"
 #include "maphand.h"
 #include "notify.h"
-#include "srv_log.h"
 
 /* server/advisors */
 #include "advdata.h"
@@ -59,7 +56,6 @@ received a copy of the GNU General Public License along with Freeciv21.
 #include "aitools.h"
 #include "aiunit.h"
 #include "daicity.h"
-#include "daimilitary.h"
 
 #include "daidiplomacy.h"
 

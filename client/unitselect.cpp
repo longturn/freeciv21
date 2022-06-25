@@ -29,7 +29,6 @@
 #include "fonts.h"
 #include "mapview.h"
 #include "page_game.h"
-#include "qtg_cxxside.h"
 
 /**
    Contructor for units_select

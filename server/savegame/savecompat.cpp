@@ -11,10 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // utility
 #include "capability.h"
 #include "fcintl.h"
@@ -1215,22 +1211,19 @@ static void compat_load_020600(struct loaddata *loading,
 
   // Add diplstate type order.
   secfile_insert_int(loading->file, DS_LAST, "savefile.diplstate_type_size");
-  if (DS_LAST > 0) {
-    const char **modname;
-    int i;
-    int j;
-
-    i = 0;
-    modname = new const char *[DS_LAST]();
-
-    for (j = 0; j < DS_LAST; j++) {
-      modname[i++] = diplstate_type_name(static_cast<diplstate_type>(j));
-    }
-
-    secfile_insert_str_vec(loading->file, modname, DS_LAST,
-                           "savefile.diplstate_type_vector");
-    delete[] modname;
+  const char **modname;
+  int i;
+  int j;
+  i = 0;
+  modname = new const char *[DS_LAST]();
+  for (j = 0; j < DS_LAST; j++) {
+    modname[i++] = diplstate_type_name(static_cast<diplstate_type>(j));
   }
+  secfile_insert_str_vec(loading->file, modname, DS_LAST,
+                         "savefile.diplstate_type_vector");
+  delete[] modname;
+  secfile_insert_str_vec(loading->file, modname, DS_LAST,
+                         "savefile.diplstate_type_vector");
 
   /* Fix save games from legacy freeciv versions with a bug that made it view
    * "Never met" as closer than "Peace" or "Alliance". */
@@ -1439,23 +1432,19 @@ static void insert_server_side_agent(struct loaddata *loading,
   // Add server side agent order.
   secfile_insert_int(loading->file, SSA_COUNT,
                      "savefile.server_side_agent_size");
-  if (SSA_COUNT > 0) {
-    const char **modname;
-    int i;
-    int j;
-
-    i = 0;
-    modname = new const char *[SSA_COUNT]();
-
-    for (j = 0; j < SSA_COUNT; j++) {
-      modname[i++] =
-          server_side_agent_name(static_cast<server_side_agent>(j));
-    }
-
-    secfile_insert_str_vec(loading->file, modname, SSA_COUNT,
-                           "savefile.server_side_agent_list");
-    delete[] modname;
+  const char **modname;
+  int i;
+  int j;
+  i = 0;
+  modname = new const char *[SSA_COUNT]();
+  for (j = 0; j < SSA_COUNT; j++) {
+    modname[i++] = server_side_agent_name(static_cast<server_side_agent>(j));
   }
+  secfile_insert_str_vec(loading->file, modname, SSA_COUNT,
+                         "savefile.server_side_agent_list");
+  delete[] modname;
+  secfile_insert_str_vec(loading->file, modname, SSA_COUNT,
+                         "savefile.server_side_agent_list");
 
   // Insert server_side_agent unit field.
   player_slots_iterate(pslot)

@@ -14,10 +14,8 @@
 #include <QActionGroup>
 #include <QApplication>
 #include <QFileDialog>
-#include <QInputDialog>
 #include <QMainWindow>
 #include <QMessageBox>
-#include <QScrollArea>
 #include <QStandardPaths>
 #include <QVBoxLayout>
 // utility
@@ -47,11 +45,8 @@
 #include "repodlgs_g.h"
 #include "tilespec.h"
 // gui-qt
-#include "canvas.h"
-#include "chatline.h"
 #include "dialogs.h"
 #include "fc_client.h"
-#include "fonts.h"
 #include "gotodlg.h"
 #include "gui_main.h"
 #include "hudwidget.h"

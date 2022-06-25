@@ -23,7 +23,6 @@
 #include <QBitArray>
 #include <QList>
 
-#include <cstdio>
 #include <cstring>
 
 // utility

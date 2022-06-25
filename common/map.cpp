@@ -11,16 +11,11 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#include <stdexcept>
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
 #include <QSet>
 #include <cstring> // qstrlen
+#include <stdexcept>
 
 // utility
-#include "fcintl.h"
 #include "iterator.h"
 #include "log.h"
 #include "rand.h"
@@ -36,7 +31,6 @@
 #include "packets.h"
 #include "road.h"
 #include "unit.h"
-#include "unitlist.h"
 
 #include "map.h"
 

@@ -11,13 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include <cmath> // pow, ceil
-#include <cstring>
-
 // utility
 #include "log.h"
 
@@ -25,7 +18,6 @@
 #include "city.h"
 #include "game.h"
 #include "government.h"
-#include "map.h"
 #include "movement.h"
 #include "traderoutes.h"
 #include "unit.h"
@@ -44,7 +36,6 @@
 #include "advbuilding.h"
 #include "advchoice.h"
 #include "advdata.h"
-#include "autosettlers.h"
 #include "infracache.h" // adv_city
 
 // ai
@@ -57,10 +48,7 @@
 #include "aiplayer.h"
 #include "aitech.h"
 #include "aitools.h"
-#include "aiunit.h"
 #include "daicity.h"
-#include "daimilitary.h"
-
 #include "daidomestic.h"
 
 /**

@@ -8,10 +8,6 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <cstdlib>
 #include <cstring>
 
@@ -19,7 +15,6 @@
 #include <QLoggingCategory>
 
 // utility
-#include "fcintl.h"
 #include "shared.h"
 #include "support.h"
 #include "timing.h"

@@ -11,11 +11,7 @@
 #include "fc_client.h"
 // Qt
 #include <QApplication>
-#include <QComboBox>
-#include <QFormLayout>
-#include <QScrollBar>
 #include <QSettings>
-#include <QSpinBox>
 #include <QStackedLayout>
 #include <QStandardPaths>
 #include <QStatusBar>
@@ -26,7 +22,6 @@
 #include "fcintl.h"
 // common
 #include "climisc.h"
-#include "game.h"
 // client
 #include "chatline.h"
 #include "chatline_common.h"
@@ -49,7 +44,6 @@
 #include "page_pregame.h"
 #include "page_scenario.h"
 #include "sprite.h"
-#include "tileset_debugger.h"
 #include "top_bar.h"
 #include "voteinfo_bar.h"
 

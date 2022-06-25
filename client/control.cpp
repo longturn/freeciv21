@@ -11,33 +11,25 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <QSet>
 #include <QTimer>
 // utility
 #include "bitvector.h"
 #include "fcintl.h"
 #include "log.h"
-#include "timing.h"
 
 // common
 #include "combat.h"
 #include "game.h"
 #include "map.h"
 #include "movement.h"
-#include "path.h"
 #include "path_finder.h"
 #include "unitlist.h"
 
 /* common/aicore */
-#include "path_finding.h"
 /* client/include */
 #include "citydlg_g.h"
 #include "dialogs_g.h"
-#include "gui_main_g.h"
 #include "mapctrl_g.h"
 #include "mapview_g.h"
 #include "menu_g.h"

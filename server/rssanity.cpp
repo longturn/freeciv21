@@ -11,10 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // utility
 #include "deprecations.h"
 #include "fcintl.h"
@@ -25,7 +21,6 @@
 #include "effects.h"
 #include "game.h"
 #include "government.h"
-#include "map.h"
 #include "movement.h"
 #include "multipliers.h"
 #include "nation.h"

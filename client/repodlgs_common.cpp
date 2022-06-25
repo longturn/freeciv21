@@ -11,10 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // utility
 #include "fcintl.h"
 #include "log.h"
@@ -27,15 +23,11 @@
 
 /* client/include */
 #include "citydlg_common.h"
-#include "repodlgs_g.h"
 
 // client
 #include "client_main.h"
-#include "connectdlg_common.h" // is_server_running()
 #include "control.h"
 #include "options.h"
-#include "packhand_gen.h"
-
 #include "repodlgs_common.h"
 
 /**

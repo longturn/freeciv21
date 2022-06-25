@@ -11,16 +11,10 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <cstdarg>
-#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 
-// utility
 #include "bitvector.h"
 #include "deprecations.h"
 #include "fcintl.h"
@@ -33,7 +27,6 @@
 #include "actions.h"
 #include "ai.h"
 #include "base.h"
-#include "capability.h"
 #include "city.h"
 #include "effects.h"
 #include "extras.h"
@@ -55,11 +48,8 @@
 #include "style.h"
 #include "tech.h"
 #include "traderoutes.h"
-#include "unit.h"
-#include "unittype.h"
 
 // server
-#include "citytools.h"
 #include "notify.h"
 #include "plrhand.h"
 #include "rscompat.h"

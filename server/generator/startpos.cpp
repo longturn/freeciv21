@@ -11,10 +11,6 @@
                                  If not, see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <QBitArray>
 #include <cmath> // sqrt, HUGE_VAL
 
@@ -31,7 +27,6 @@
 #include "maphand.h"
 
 /* server/generator */
-#include "mapgen_topology.h"
 #include "mapgen_utils.h"
 #include "startpos.h"
 #include "temperature_map.h"

@@ -11,13 +11,8 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <QDateTime>
 
-#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 
@@ -48,10 +43,6 @@
 #include "unitlist.h"
 #include "unittype.h"
 
-/* common/scriptcore */
-#include "luascript_signal.h"
-#include "luascript_types.h"
-
 // aicore
 #include "path_finding.h"
 #include "pf_tools.h"
@@ -62,15 +53,12 @@
 // server
 #include "actiontools.h"
 #include "aiiface.h"
-#include "barbarian.h"
 #include "citytools.h"
 #include "cityturn.h"
-#include "diplhand.h"
 #include "gamehand.h"
 #include "maphand.h"
 #include "notify.h"
 #include "plrhand.h"
-#include "sanitycheck.h"
 #include "sernet.h"
 #include "srv_main.h"
 #include "techtools.h"

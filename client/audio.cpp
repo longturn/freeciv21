@@ -15,10 +15,7 @@ received a copy of the GNU General Public License along with Freeciv21.
 
 #include <QString>
 #include <QVector>
-#include <cstdio>
 #include <cstdlib>
-#include <cstring>
-
 // utility
 #include "capability.h"
 #include "fcintl.h"
@@ -26,7 +23,6 @@ received a copy of the GNU General Public License along with Freeciv21.
 #include "rand.h"
 #include "registry.h"
 #include "shared.h"
-#include "support.h"
 
 // client
 #include "audio_none.h"

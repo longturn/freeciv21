@@ -19,7 +19,6 @@
 // utility
 #include "bugs.h"
 #include "fcintl.h"
-#include "log.h"
 
 // common
 #include "city.h"

@@ -39,4 +39,4 @@ private slots:
   void close_now();
 };
 
-#endif // FC__REQUIRERS_DIALOG_H
+#endif // FC__REQUIRERS_DLG_H

@@ -11,10 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <ctime>
 
 // utility
@@ -28,7 +24,6 @@
 
 // client
 #include "client_main.h"
-#include "clinet.h"
 #include "options.h"
 
 #include "voteinfo.h"

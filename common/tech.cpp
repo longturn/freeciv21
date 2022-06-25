@@ -11,12 +11,7 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <cmath>
-#include <cstdlib> // exit
 #include <cstring>
 
 // utility
@@ -28,8 +23,6 @@
 
 // common
 #include "game.h"
-#include "research.h"
-
 #include "tech.h"
 
 struct advance_req_iter {

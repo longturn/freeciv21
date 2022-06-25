@@ -9,17 +9,14 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
   :X:              Freeciv21. If not, see https://www.gnu.org/licenses/.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // common
 #include "diptreaty.h"
 #include "game.h"
 #include "map.h"
-#include "metaknowledge.h"
 #include "tile.h"
 #include "traderoutes.h"
+
+#include "metaknowledge.h"
 
 /**
    Returns TRUE iff the target_tile it self and all tiles cardinally

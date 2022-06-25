@@ -9,10 +9,6 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
   :X:              Freeciv21. If not, see https://www.gnu.org/licenses/.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // utility
 #include "log.h"
 #include "rand.h"
@@ -25,9 +21,6 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "player.h"
 
 // server
-#include "cityturn.h"
-#include "sanitycheck.h"
-
 #include "citizenshand.h"
 
 #define log_citizens log_debug

@@ -16,7 +16,6 @@
 #include <QMenu>
 #include <QPaintEvent>
 #include <QPainter>
-#include <QPixmap>
 #include <QScreen>
 #include <QStyle>
 #include <QStyleOptionToolButton>
@@ -29,7 +28,6 @@
 #include "nation.h"
 #include "research.h"
 // client
-#include "citydlg_g.h"
 #include "client_main.h"
 #include "climisc.h"
 #include "ratesdlg_g.h"
@@ -42,8 +40,6 @@
 #include "sciencedlg.h"
 #include "sprite.h"
 #include "top_bar.h"
-
-#include <cmath>
 
 /**
  * Constructor

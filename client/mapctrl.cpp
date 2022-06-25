@@ -10,7 +10,6 @@
 
 // Qt
 #include <QApplication>
-#include <QKeyEvent>
 #include <QMouseEvent>
 // common
 #include "control.h"

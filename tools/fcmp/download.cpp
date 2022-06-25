@@ -30,7 +30,6 @@
 // utility
 #include "capability.h"
 #include "fcintl.h"
-#include "log.h"
 #include "netfile.h"
 #include "registry.h"
 

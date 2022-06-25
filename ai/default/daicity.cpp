@@ -12,10 +12,8 @@
       \____/        ********************************************************/
 
 #ifdef HAVE_CONFIG_H
-#include <fc_config.h>
 #endif
 
-#include <cmath> // pow
 #include <cstring>
 
 // utility
@@ -37,12 +35,9 @@
 #include "plrhand.h"
 #include "srv_log.h"
 #include "unithand.h"
-#include "unittools.h"
-
 /* server/advisors */
 #include "advbuilding.h"
 #include "advdata.h"
-#include "advtools.h"
 #include "autosettlers.h"
 #include "infracache.h"
 
@@ -54,7 +49,6 @@
 /* ai/default */
 #include "aidata.h"
 #include "aihand.h"
-#include "ailog.h"
 #include "aiplayer.h"
 #include "aisettler.h"
 #include "aitools.h"

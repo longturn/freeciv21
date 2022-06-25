@@ -11,10 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // Qt
 #include <QUrl>
 
@@ -24,7 +20,6 @@
 
 // common
 #include "city.h"
-#include "connection.h"
 #include "player.h"
 
 /* client/include */
@@ -40,7 +35,6 @@
 // client
 #include "client_main.h"
 #include "connectdlg_common.h"
-#include "options.h"
 #include "plrdlg_common.h"
 #include "tilespec.h"
 #include "update_queue.h"

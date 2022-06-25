@@ -11,10 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // Qt
 #include <QGridLayout>
 #include <QLineEdit>
@@ -22,11 +18,9 @@
 #include <QMenu>
 #include <QPushButton>
 #include <QRadioButton>
-#include <QToolButton>
 
 // utility
 #include "fcintl.h"
-#include "log.h"
 
 // common
 #include "game.h"

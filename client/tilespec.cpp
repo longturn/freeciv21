@@ -17,10 +17,6 @@
   original author: David Pfitzner <dwp@mso.anu.edu.au>
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <QHash>
 #include <QImageReader>
 #include <QPixmap>
@@ -28,11 +24,9 @@
 #include <QString>
 #include <QVector>
 #include <cstdarg>
-#include <cstdio>
 #include <cstdlib> // exit
 #include <cstring>
 
-// utility
 #include "bitvector.h"
 #include "capability.h"
 #include "deprecations.h"
@@ -46,7 +40,6 @@
 #include "workertask.h"
 
 // common
-#include "base.h"
 #include "effects.h"
 #include "game.h" // game.control.styles_count
 #include "government.h"
@@ -62,13 +55,9 @@
 
 /* client/include */
 #include "citydlg_g.h"
-#include "dialogs_g.h"
-#include "gui_main_g.h"
 #include "mapview_g.h" // for update_map_canvas_visible
 #include "menu_g.h"
 #include "sprite_g.h"
-#include "themes_g.h"
-
 // client
 #include "citybar.h"
 #include "citydlg_common.h" // for generate_citydlg_dimensions()
@@ -85,7 +74,6 @@
 #include "layer_special.h"
 #include "layer_terrain.h"
 #include "options.h" // for fill_xxx
-#include "themes_common.h"
 #include "tilespec.h"
 
 // gui-qt

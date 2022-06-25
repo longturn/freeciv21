@@ -11,10 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <QCoreApplication>
 #include <QElapsedTimer>
 #include <QEventLoop>
@@ -41,24 +37,21 @@
 
 /* client/include */
 #include "citydlg_g.h"
-#include "gui_main_g.h"
 #include "mapctrl_g.h"
 #include "mapview_g.h"
-#include "sprite_g.h"
 
 // client
 #include "citydlg_common.h"
-#include "client_main.h"
 #include "climap.h"
 #include "control.h"
 #include "editor.h"
-#include "goto.h"
 #include "mapview_common.h"
 #include "overview_common.h"
 #include "tilespec.h"
 
 // gui-qt
 #include "canvas.h"
+#include "client_main.h"
 #include "qtg_cxxside.h"
 
 Q_LOGGING_CATEGORY(graphics_category, "freeciv.graphics")
@@ -2522,7 +2515,7 @@ void mapdeco_add_gotoline(const struct tile *ptile, enum direction8 dir,
   const struct tile *ptile_dest;
   bool changed;
 
-  if (!ptile || !(dir <= direction8_max())) {
+  if (!ptile || dir > direction8_max()) {
     return;
   }
   ptile_dest = mapstep(&(wld.map), ptile, dir);
@@ -2562,7 +2555,7 @@ void mapdeco_remove_gotoline(const struct tile *ptile, enum direction8 dir,
   struct gotoline_counter *pglc;
   bool changed = false;
 
-  if (!ptile || !(dir <= direction8_max())) {
+  if (!ptile || dir > direction8_max()) {
     return;
   }
 
@@ -2643,7 +2636,7 @@ bool mapdeco_is_gotoline_set(const struct tile *ptile, enum direction8 dir,
 {
   struct gotoline_counter *pglc;
 
-  if (!ptile || !(dir <= direction8_max())) {
+  if (!ptile || dir > direction8_max()) {
     return false;
   }
 

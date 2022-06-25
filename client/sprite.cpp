@@ -13,11 +13,8 @@
 #include <QPainter>
 // utility
 #include "log.h"
-#include <cmath>
 // gui-qt
-#include "colors.h"
 #include "fc_client.h"
-#include "qtg_cxxside.h"
 #include "sprite.h"
 
 /**

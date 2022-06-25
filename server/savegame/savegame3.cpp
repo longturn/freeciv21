@@ -68,7 +68,6 @@
 
 #include <QBitArray>
 #include <QSet>
-#include <cctype>
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
@@ -77,6 +76,7 @@
 
 // utility
 #include "bitvector.h"
+#include "capability.h"
 #include "fcintl.h"
 #include "idex.h"
 #include "log.h"
@@ -89,8 +89,6 @@
 // common
 #include "achievements.h"
 #include "ai.h"
-#include "bitvector.h"
-#include "capability.h"
 #include "citizens.h"
 #include "city.h"
 #include "game.h"
@@ -109,7 +107,6 @@
 #include "version.h"
 
 // server
-#include "barbarian.h"
 #include "citizenshand.h"
 #include "citytools.h"
 #include "cityturn.h"
@@ -122,11 +119,9 @@
 #include "ruleset.h"
 #include "sanitycheck.h"
 #include "savecompat.h"
-#include "score.h"
 #include "settings.h"
 #include "spacerace.h"
 #include "srv_main.h"
-#include "stdinhand.h"
 #include "techtools.h"
 #include "unittools.h"
 
@@ -136,7 +131,6 @@
 #include "infracache.h"
 
 /* server/generator */
-#include "mapgen.h"
 #include "mapgen_utils.h"
 
 /* server/scripting */

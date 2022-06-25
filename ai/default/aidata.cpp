@@ -8,14 +8,9 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // common
 #include "game.h"
 #include "government.h"
-#include "map.h"
 #include "multipliers.h"
 #include "research.h"
 

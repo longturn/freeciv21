@@ -11,10 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <cstring>
 
 // Qt
@@ -23,9 +19,7 @@
 // common
 #include "game.h"
 #include "map.h"
-#include "movement.h"
 #include "packets.h"
-#include "path.h"
 #include "path_finder.h"
 #include "pf_tools.h"
 #include "road.h"

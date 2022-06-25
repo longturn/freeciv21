@@ -11,10 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <cstdarg>
 
 // utility
@@ -27,17 +23,13 @@
 #include "culture.h"
 #include "game.h"
 #include "specialist.h"
-#include "unitlist.h"
 
 /* client/include */
 #include "citydlg_g.h"
-#include "mapview_g.h"
-
 // client
 #include "citydlg_common.h"
 #include "client_main.h" // for can_client_issue_orders()
 #include "climap.h"
-#include "control.h"
 #include "mapview_common.h"
 #include "options.h"  // for concise_city_production
 #include "tilespec.h" // for tileset_is_isometric(tileset)

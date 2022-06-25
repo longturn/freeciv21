@@ -18,7 +18,6 @@
 #include <QMouseEvent>
 #include <QScrollArea>
 #include <QSettings>
-#include <QVBoxLayout>
 #include <QWidget>
 // client
 #include "options.h"

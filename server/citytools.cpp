@@ -11,17 +11,8 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <QBitArray>
 
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-
-// utility
 #include "bitvector.h"
 #include "fcintl.h"
 #include "log.h"
@@ -31,11 +22,9 @@
 
 // common
 #include "ai.h"
-#include "base.h"
 #include "citizens.h"
 #include "city.h"
 #include "culture.h"
-#include "events.h"
 #include "game.h"
 #include "government.h"
 #include "idex.h"
@@ -78,14 +67,10 @@
 /* server/advisors */
 #include "advbuilding.h"
 #include "advgoto.h"
-#include "autosettlers.h"
 #include "infracache.h"
 
 /* server/scripting */
 #include "script_server.h"
-
-// ai
-#include "handicaps.h"
 
 // ai
 #include "handicaps.h"

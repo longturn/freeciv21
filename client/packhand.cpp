@@ -21,7 +21,6 @@
 
 // utility
 #include "bitvector.h"
-#include "capability.h"
 #include "fcintl.h"
 #include "log.h"
 #include "rand.h"

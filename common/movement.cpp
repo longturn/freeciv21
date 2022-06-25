@@ -9,22 +9,14 @@ received a copy of the GNU General Public License along with Freeciv21.
                               If not, see https://www.gnu.org/licenses/.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <QBitArray>
 
 // utility
 #include "bitvector.h"
-#include "fcintl.h"
 #include "log.h"
 #include "shared.h"
 #include "support.h"
-
 // common
-#include "base.h"
-#include "effects.h"
 #include "fc_types.h"
 #include "game.h"
 #include "map.h"

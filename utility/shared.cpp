@@ -15,14 +15,12 @@
 #include <fc_config.h>
 #endif
 
-#include <cerrno>
 #include <climits>
 #include <clocale>
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
 #include <sys/stat.h>
-#include <sys/types.h>
 
 #ifdef FREECIV_MSWINDOWS
 #define ALWAYS_ROOT
@@ -1407,7 +1405,7 @@ bool make_dir(const char *pathname)
   auto str = QString::fromUtf8(path);
   // We can always create a directory with an empty name -- it's the current
   // folder.
-  auto r = str.isEmpty() ? true : QDir().mkpath(str);
+  auto r = str.isEmpty() || QDir().mkpath(str);
   delete[] path;
   return r;
 }

@@ -25,15 +25,12 @@
 // client
 #include "client_main.h"
 // gui-qt
-#include "canvas.h"
 #include "chatline.h"
-#include "colors.h"
 #include "dialogs.h"
 #include "fc_client.h"
 #include "icons.h"
 #include "pregameoptions.h"
 #include "sprite.h"
-#include "voteinfo_bar.h"
 
 page_pregame::page_pregame(QWidget *parent, fc_client *gui) : QWidget(parent)
 {

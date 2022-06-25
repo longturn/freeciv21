@@ -62,7 +62,6 @@
 
 #include <QBitArray>
 
-#include <cctype>
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
@@ -78,12 +77,9 @@
 #include "registry.h"
 #include "shared.h"
 #include "support.h" // bool type
-#include "timing.h"
-
 // common
 #include "achievements.h"
 #include "ai.h"
-#include "bitvector.h"
 #include "capability.h"
 #include "citizens.h"
 #include "city.h"
@@ -103,7 +99,6 @@
 #include "version.h"
 
 // server
-#include "barbarian.h"
 #include "citizenshand.h"
 #include "citytools.h"
 #include "cityturn.h"
@@ -120,7 +115,6 @@
 #include "settings.h"
 #include "spacerace.h"
 #include "srv_main.h"
-#include "stdinhand.h"
 #include "techtools.h"
 #include "unittools.h"
 
@@ -130,7 +124,6 @@
 #include "infracache.h"
 
 /* server/generator */
-#include "mapgen.h"
 #include "mapgen_utils.h"
 
 /* server/scripting */
@@ -3189,7 +3182,7 @@ static void sg_load_player_main(struct loaddata *loading, struct player *plr)
                        "Undefined value '%c' within '%s.structure'.", st[i],
                        prefix)
 
-            if (!(st[i] == '0'))
+            if (st[i] != '0')
         {
           BV_SET(ship->structure, i);
         }

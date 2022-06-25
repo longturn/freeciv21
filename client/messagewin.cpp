@@ -26,7 +26,6 @@
 
 // gui-qt
 #include "fc_client.h"
-#include "icons.h"
 #include "mapview.h"
 #include "page_game.h"
 #include "sprite.h"

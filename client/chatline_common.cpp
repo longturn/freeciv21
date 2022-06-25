@@ -11,18 +11,12 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <QGlobalStatic>
 #include <cstdarg>
-#include <cstring>
 
 // utility
 #include "fcintl.h"
 #include "fcthread.h"
-#include "log.h"
 
 // common
 #include "featured_text.h"
@@ -33,7 +27,6 @@
 
 // client
 #include "client_main.h"
-#include "options.h"
 
 #include "chatline_common.h"
 

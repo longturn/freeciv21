@@ -11,10 +11,6 @@
                                  If not, see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // common
 #include "ai.h"
 #include "game.h"
@@ -23,7 +19,6 @@
 #include "nation.h"
 #include "player.h"
 #include "research.h"
-#include "tech.h"
 #include "tile.h"
 #include "unittype.h"
 
@@ -31,7 +26,6 @@
 #include "aiiface.h"
 #include "plrhand.h"
 #include "srv_main.h"
-#include "stdinhand.h"
 #include "techtools.h"
 #include "unittools.h"
 

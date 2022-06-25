@@ -11,10 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // Qt
 #include <QGridLayout>
 #include <QLineEdit>
@@ -22,7 +18,6 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QPushButton>
-#include <QRadioButton>
 #include <QToolButton>
 
 // utility
@@ -36,8 +31,6 @@
 // ruledit
 #include "ruledit.h"
 #include "ruledit_qt.h"
-#include "validity.h"
-
 #include "tab_enablers.h"
 
 class fix_enabler_item : public req_vec_fix_item {

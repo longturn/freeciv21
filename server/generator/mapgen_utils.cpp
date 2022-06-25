@@ -8,10 +8,6 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
   :X:      received a copy of the GNU General Public License along with
   :X:              Freeciv21. If not, see https://www.gnu.org/licenses/.
 ***********************************************************************/
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // utility
 #include "fcintl.h"
 #include "log.h"
@@ -20,7 +16,6 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 
 // common
 #include "map.h"
-#include "packets.h"
 #include "terrain.h"
 #include "tile.h"
 
@@ -552,7 +547,7 @@ struct terrain *pick_ocean(int depth, bool frozen)
   {
     if (terrain_type_terrain_class(pterrain) == TC_OCEAN
         && TERRAIN_OCEAN_DEPTH_MINIMUM <= pterrain->property[MG_OCEAN_DEPTH]
-        && !!frozen == terrain_has_flag(pterrain, TER_FROZEN)
+        && frozen == terrain_has_flag(pterrain, TER_FROZEN)
         && !terrain_has_flag(pterrain, TER_NOT_GENERATED)) {
       int match = abs(depth - pterrain->property[MG_OCEAN_DEPTH]);
 

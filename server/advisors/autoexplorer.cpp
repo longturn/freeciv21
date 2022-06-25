@@ -9,14 +9,9 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <cmath> // log
 
 // utility
-#include "bitvector.h"
 #include "log.h"
 
 // common

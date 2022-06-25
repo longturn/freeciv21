@@ -11,15 +11,8 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include <cstdarg>
-
 // utility
 #include "bitvector.h"
-#include "fcintl.h"
 #include "log.h"
 #include "rand.h"
 #include "shared.h"
@@ -31,9 +24,7 @@
 #include "diptreaty.h"
 #include "government.h"
 #include "map.h"
-#include "movement.h"
 #include "multipliers.h"
-#include "nation.h"
 #include "packets.h"
 #include "player.h"
 #include "research.h"
@@ -41,9 +32,6 @@
 #include "style.h"
 #include "tech.h"
 #include "unitlist.h"
-
-/* common/scriptcore */
-#include "luascript_types.h"
 
 // server
 #include "aiiface.h"
@@ -57,7 +45,6 @@
 #include "mood.h"
 #include "notify.h"
 #include "plrhand.h"
-#include "sernet.h"
 #include "spacerace.h"
 #include "spaceship.h"
 #include "srv_main.h"
@@ -68,8 +55,6 @@
 
 /* server/advisors */
 #include "advdata.h"
-#include "autosettlers.h"
-
 /* server/scripting */
 #include "script_server.h"
 

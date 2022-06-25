@@ -11,10 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // Qt
 #include <QGridLayout>
 #include <QLabel>
@@ -32,10 +28,8 @@
 // ruledit
 #include "ruledit.h"
 #include "ruledit_qt.h"
-#include "validity.h"
 
 #include "effect_edit.h"
-
 /**
    Setup effect_edit object
  */
