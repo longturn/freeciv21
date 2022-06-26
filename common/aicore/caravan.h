@@ -40,7 +40,6 @@ struct caravan_result {
 
   double value;
   bool help_wonder;
-  bool required_boat;
 };
 
 struct caravan_parameter {
@@ -113,22 +112,12 @@ struct caravan_parameter {
 void caravan_parameter_init_default(struct caravan_parameter *parameter);
 void caravan_parameter_init_from_unit(struct caravan_parameter *parameter,
                                       const struct unit *caravan);
-bool caravan_parameter_is_legal(const struct caravan_parameter *parameter);
 
 void caravan_result_init_zero(struct caravan_result *result);
 int caravan_result_compare(const struct caravan_result *a,
                            const struct caravan_result *b);
 
-void caravan_evaluate(const struct unit *caravan, const struct city *dest,
-                      const struct caravan_parameter *parameter,
-                      struct caravan_result *result, bool omniscient);
-
 void caravan_find_best_destination(const struct unit *caravan,
                                    const struct caravan_parameter *parameter,
                                    struct caravan_result *result,
                                    bool omniscient);
-
-void caravan_optimize_allpairs(const struct unit *caravan,
-                               const struct caravan_parameter *parameter,
-                               struct caravan_result *result,
-                               bool omniscient);

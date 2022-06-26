@@ -48,10 +48,6 @@ void pft_fill_utype_overlap_param(struct pf_parameter *parameter,
                                   const struct unit_type *punittype,
                                   struct tile *pstart_tile,
                                   struct player *pplayer);
-void pft_fill_utype_attack_param(struct pf_parameter *parameter,
-                                 const struct unit_type *punittype,
-                                 struct tile *pstart_tile,
-                                 struct player *pplayer);
 void pft_fill_reverse_parameter(struct pf_parameter *parameter,
                                 struct tile *target_tile);
 
