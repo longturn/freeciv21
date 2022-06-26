@@ -84,8 +84,6 @@ static void caravan_result_init(struct caravan_result *result,
 
   result->value = 0;
   result->help_wonder = false;
-  if ((src != nullptr) && (dest != nullptr)) {
-  }
 }
 
 /**
