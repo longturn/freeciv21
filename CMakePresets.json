@@ -44,9 +44,9 @@
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
         "CMAKE_CXX_FLAGS": "-O2 -DGLIBCXX_ASSERTIONS -fsanitize=address -fsanitize=leak -fsanitize=undefined -fsanitize-address-use-after-scope -fsanitize-recover=all",
-        "CMAKE_C_FLAGS": "-D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -fstack-clash-protection -fcf-protection",
+        "CMAKE_C_FLAGS": "-O2 -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -fstack-clash-protection -fcf-protection",
         "CMAKE_CXX_COMPILER_LAUNCHER": "ccache",
         "FREECIV_ENABLE_TOOLS": "ON",
         "FREECIV_ENABLE_SERVER": "ON",
