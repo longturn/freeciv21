@@ -254,25 +254,17 @@ void minimap_view::resizeEvent(QResizeEvent *event)
  */
 void minimap_view::mousePressEvent(QMouseEvent *event)
 {
-  int fx, fy;
-  int x, y;
-
-  if (event->button() == Qt::LeftButton) {
-    if (king()->interface_locked) {
-      return;
-    }
-    cursor = event->globalPos() - geometry().topLeft();
-  }
   if (event->button() == Qt::RightButton) {
     cursor = event->pos();
-    fx = event->pos().x();
-    fy = event->pos().y();
+    auto fx = event->pos().x();
+    auto fy = event->pos().y();
     fx = qRound(fx / w_ratio);
     fy = qRound(fy / h_ratio);
     fx = qMax(fx, 1);
     fy = qMax(fy, 1);
     fx = qMin(fx, gui_options.overview.width - 1);
     fy = qMin(fy, gui_options.overview.height - 1);
+    int x, y;
     overview_to_map_pos(&x, &y, fx, fy);
     auto *ptile = map_pos_to_tile(&(wld.map), x, y);
     fc_assert_ret(ptile);
@@ -280,48 +272,6 @@ void minimap_view::mousePressEvent(QMouseEvent *event)
     update_image();
   }
   event->setAccepted(true);
-}
-
-/**
-   Called when mouse button was pressed. Used to moving minimap.
- */
-void minimap_view::mouseMoveEvent(QMouseEvent *event)
-{
-  if (king()->interface_locked) {
-    return;
-  }
-  if (event->buttons() & Qt::LeftButton) {
-    auto location = event->globalPos() - cursor;
-
-    // Make sure we can't be moved out of the screen
-    if (location.x() + width() < always_visible_margin) {
-      location.setX(always_visible_margin - width());
-    } else if (location.x()
-               > parentWidget()->width() - always_visible_margin) {
-      location.setX(parentWidget()->width() - always_visible_margin);
-    }
-    if (location.y() + height() < always_visible_margin) {
-      location.setY(always_visible_margin - height());
-    } else if (location.y()
-               > parentWidget()->height() - always_visible_margin) {
-      location.setY(parentWidget()->height() - always_visible_margin);
-    }
-
-    move(location);
-    setCursor(Qt::SizeAllCursor);
-    king()->qt_settings.minimap_x =
-        static_cast<float>(location.x()) / mapview.width;
-    king()->qt_settings.minimap_y =
-        static_cast<float>(location.y()) / mapview.height;
-  }
-}
-
-/**
-   Called when mouse button unpressed. Restores cursor.
- */
-void minimap_view::mouseReleaseEvent(QMouseEvent *event)
-{
-  setCursor(Qt::CrossCursor);
 }
 
 /**
