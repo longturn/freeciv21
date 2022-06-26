@@ -140,7 +140,6 @@ void adv_data_close(struct player *pplayer);
 
 bool adv_data_phase_init(struct player *pplayer, bool is_new_phase);
 void adv_data_phase_done(struct player *pplayer);
-bool is_adv_data_phase_open(struct player *pplayer);
 
 void adv_data_analyze_rulesets(struct player *pplayer);
 
