@@ -154,7 +154,11 @@ int city_trade_removable(const struct city *pcity,
   do {                                                                      \
     trade_routes_iterate(c, _proute_)                                       \
     {                                                                       \
-      struct city *p = game_city_by_number(_proute_->partner);
+      struct city *p = game_city_by_number(_proute_->partner);              \
+      /* Maybe we haven't yet recieved info about this city */              \
+      if (!p) {                                                             \
+        continue;                                                           \
+      }
 
 #define trade_partners_iterate_end                                          \
   }                                                                         \
