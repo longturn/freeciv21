@@ -3284,35 +3284,6 @@ bool PFPath::advance(struct tile *ptile)
   return true;
 }
 
-/**
-   Remove the part of a path following a given tile.
-   If given tile is on the path more than once then the last occurrence
-   will be the one used.
-   If tile is not on the path at all, returns FALSE and path is not changed
-   at all.
- */
-bool PFPath::backtrack(struct tile *ptile)
-{
-  int i;
-  fc_assert_ret_val(positions.size() > 0, false);
-
-  for (i = positions.size() - 1; positions[i].tile != ptile; i--) {
-    if (i <= 0) {
-      return false;
-    }
-  }
-
-  fc_assert_ret_val(i >= 0, false);
-
-  auto new_positions = std::vector<pf_position>(i + 1);
-  for (i = 0; i < new_positions.size(); i++) {
-    new_positions[i] = positions[i];
-  }
-  positions.clear();
-  positions = new_positions;
-
-  return true;
-}
 pf_position &PFPath::operator[](int i)
 {
   if (i < 0) {
@@ -3333,36 +3304,6 @@ const pf_position &PFPath::operator[](int i) const
   }
   fc_assert_msg((i < positions.size()), "id %d/%zu", i, positions.size());
   return positions[i];
-}
-/**
-   Concatenate two paths together. The additional segment 'src_path'
-   should start where the initial segment 'dest_path' stops. The
-   overlapping position is removed.
-
-   If 'dest_path' == nullptr, we just copy the src_path and nothing else.
- */
-PFPath pf_path_concat(PFPath dest_path, const PFPath &src_path)
-{
-  fc_assert_ret_val(src_path.empty(), PFPath());
-  if (dest_path.empty()) {
-    // Just copy path.
-    dest_path = PFPath(src_path);
-    return dest_path;
-  }
-
-  fc_assert(dest_path[-1].tile == src_path[0].tile);
-  fc_assert(dest_path[-1].moves_left == src_path[0].moves_left);
-  fc_assert(dest_path[-1].fuel_left == src_path[0].fuel_left);
-
-  if (src_path.length() == 1) {
-    return dest_path;
-  }
-  /* Be careful to include the first position of src_path, it contains
-   * the direction (it is undefined in the last position of dest_path) */
-  for (int i = 0; i < src_path.length(); i++) {
-    dest_path.add_pos(src_path[i]);
-  }
-  return dest_path;
 }
 
 /**
@@ -3437,28 +3378,6 @@ inline bool operator==(const pf_parameter &e1, const pf_parameter &e2)
   }
 
   return true;
-}
-
-inline uint qHash(const pf_parameter &key, uint seed)
-{
-  uint result = 0;
-  size_t b, i;
-  static const size_t signifiant_flags_num = ARRAY_SIZE(signifiant_flags);
-  Q_UNUSED(seed)
-
-  for (i = 0, b = sizeof(result) * 8 - 1; i < signifiant_flags_num;
-       i++, b--) {
-    if (utype_has_flag(key.utype, signifiant_flags[i])) {
-      result |= (1u << b);
-    }
-  }
-
-  result += (uclass_number(utype_class(key.utype)) + (key.move_rate << 5)
-             + (tile_index(key.start_tile) << 11));
-  if (!key.omniscience) {
-    result += key.utype->unknown_move_cost << 23;
-  }
-  return result;
 }
 
 // The reverse map structure.
@@ -3642,20 +3561,6 @@ pf_reverse_map_utype_pos(struct pf_reverse_map *pfrm,
 }
 
 /**
-   Get the move costs that a unit type needs to reach the start tile. Returns
-   PF_IMPOSSIBLE_MC if the tile is unreachable.
- */
-int pf_reverse_map_utype_move_cost(struct pf_reverse_map *pfrm,
-                                   const struct unit_type *punittype,
-                                   struct tile *ptile)
-{
-  const struct pf_position *pos =
-      pf_reverse_map_utype_pos(pfrm, punittype, ptile);
-
-  return (pos != nullptr ? pos->total_MC : PF_IMPOSSIBLE_MC);
-}
-
-/**
    Get the move costs that a unit needs to reach the start tile. Returns
    PF_IMPOSSIBLE_MC if the tile is unreachable.
  */
@@ -3665,25 +3570,6 @@ int pf_reverse_map_unit_move_cost(struct pf_reverse_map *pfrm,
   const struct pf_position *pos = pf_reverse_map_unit_pos(pfrm, punit);
 
   return (pos != nullptr ? pos->total_MC : PF_IMPOSSIBLE_MC);
-}
-
-/**
-   Fill the position. Return TRUE if the tile is reachable.
- */
-bool pf_reverse_map_utype_position(struct pf_reverse_map *pfrm,
-                                   const struct unit_type *punittype,
-                                   struct tile *ptile,
-                                   struct pf_position *pos)
-{
-  const struct pf_position *mypos =
-      pf_reverse_map_utype_pos(pfrm, punittype, ptile);
-
-  if (mypos != nullptr) {
-    *pos = *mypos;
-    return true;
-  } else {
-    return false;
-  }
 }
 
 /**

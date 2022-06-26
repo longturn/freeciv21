@@ -330,13 +330,10 @@ public:
   virtual ~PFPath();
   bool empty() const;
   bool advance(struct tile *ptile);
-  bool backtrack(struct tile *ptile);
   pf_position &operator[](int i);
   const pf_position &operator[](int i) const;
   PFPath &operator=(PFPath &&other) = default; // Default move assignment
 };
-// Paths functions.
-PFPath pf_path_concat(PFPath *dest_path, const PFPath &src_path);
 QDebug &operator<<(QDebug &logger, const PFPath &path);
 
 /* Initial data for the path-finding. Normally should use functions
@@ -503,15 +500,8 @@ struct pf_reverse_map *pf_reverse_map_new_for_city(
     bool omniscient, const struct civ_map *map) fc__warn_unused_result;
 void pf_reverse_map_destroy(struct pf_reverse_map *prfm);
 
-int pf_reverse_map_utype_move_cost(struct pf_reverse_map *pfrm,
-                                   const struct unit_type *punittype,
-                                   struct tile *ptile);
 int pf_reverse_map_unit_move_cost(struct pf_reverse_map *pfrm,
                                   const struct unit *punit);
-bool pf_reverse_map_utype_position(struct pf_reverse_map *pfrm,
-                                   const struct unit_type *punittype,
-                                   struct tile *ptile,
-                                   struct pf_position *pos);
 bool pf_reverse_map_unit_position(struct pf_reverse_map *pfrm,
                                   const struct unit *punit,
                                   struct pf_position *pos);
