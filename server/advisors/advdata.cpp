@@ -235,17 +235,6 @@ static void count_my_units(struct player *pplayer)
 }
 
 /**
-   Return whether data phase is currently open. Data phase is open
-   between adv_data_phase_init() and adv_data_phase_done() calls.
- */
-bool is_adv_data_phase_open(struct player *pplayer)
-{
-  struct adv_data *adv = pplayer->server.adv;
-
-  return adv->phase_is_initialized;
-}
-
-/**
    Make and cache lots of calculations needed for other functions.
 
    Returns TRUE if new data was created, FALSE if data existed already.
