@@ -433,7 +433,7 @@ void destroy_reqtree(struct reqtree *tree)
   for (i = 0; i < tree->num_nodes; i++) {
     free(tree->nodes[i]->require);
     free(tree->nodes[i]->provide);
-    delete[] tree->nodes[i];
+    delete tree->nodes[i];
   }
   delete[] tree->nodes;
   if (tree->layers) {
