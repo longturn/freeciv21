@@ -98,7 +98,6 @@ void check_for_full_turn_done();
 bool check_for_game_over();
 bool game_was_started();
 
-void server_gui_color_free(QColor *pcolor);
 int server_plr_tile_city_id_get(const struct tile *ptile,
                                 const struct player *pplayer);
 
