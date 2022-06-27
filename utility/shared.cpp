@@ -381,28 +381,6 @@ void remove_leading_trailing_spaces(char *s)
 }
 
 /**
-   Returns pointer to '\0' at end of string 'str', and decrements
-   *nleft by the length of 'str'.  This is intended to be useful to
-   allow strcat-ing without traversing the whole string each time,
-   while still keeping track of the buffer length.
-   Eg:
-      char buf[128];
-      int n = sizeof(buf);
-      char *p = buf;
-
-      fc_snprintf(p, n, "foo%p", p);
-      p = end_of_strn(p, &n);
-      fc_strlcpy(p, "yyy", n);
- */
-char *end_of_strn(char *str, int *nleft)
-{
-  int len = qstrlen(str);
-  *nleft -= len;
-  fc_assert_ret_val(0 < (*nleft), nullptr); // space for the terminating nul
-  return str + len;
-}
-
-/**
    Check the length of the given string.  If the string is too long,
    log errmsg, which should be a string in printf-format taking up to
    two arguments: the string and the length.
@@ -455,89 +433,6 @@ bool str_to_int(const char *str, int *pint)
 
   return ('\0' == *str
           && (nullptr == pint || 1 == sscanf(start, "%d", pint)));
-}
-
-/**
-   Convert 'str' to it's unsigned int reprentation if possible. 'pint' can be
- nullptr, then it will only test 'str' only contains an unsigned integer
- number.
- */
-bool str_to_uint(const char *str, unsigned int *pint)
-{
-  const char *start;
-
-  fc_assert_ret_val(nullptr != str, false);
-
-  while (QChar::isSpace(*str)) {
-    // Skip leading spaces.
-    str++;
-  }
-
-  start = str;
-  if ('+' == *str) {
-    // Handle sign.
-    str++;
-  }
-  while (QChar::isDigit(*str)) {
-    // Digits.
-    str++;
-  }
-
-  while (QChar::isSpace(*str)) {
-    // Ignore trailing spaces.
-    str++;
-  }
-
-  return ('\0' == *str
-          && (nullptr == pint || 1 == sscanf(start, "%u", pint)));
-}
-
-/**
-   Convert 'str' to it's float reprentation if possible. 'pfloat' can be
- nullptr, then it will only test 'str' only contains a floating point number.
- */
-bool str_to_float(const char *str, float *pfloat)
-{
-  bool dot;
-  const char *start;
-
-  fc_assert_ret_val(nullptr != str, false);
-
-  while (QChar::isSpace(*str)) {
-    // Skip leading spaces.
-    str++;
-  }
-
-  start = str;
-
-  if ('-' == *str || '+' == *str) {
-    // Handle sign.
-    str++;
-  }
-  while (QChar::isDigit(*str)) {
-    // Digits.
-    str++;
-  }
-
-  if (*str == '.') {
-    dot = true;
-    str++;
-
-    while (QChar::isDigit(*str)) {
-      // Digits.
-      str++;
-    }
-  } else {
-    dot = false;
-  }
-
-  while (QChar::isSpace(*str)) {
-    // Ignore trailing spaces.
-    str++;
-  }
-
-  return ('\0' == *str && dot
-          && (nullptr == pfloat || 1 == sscanf(start, "%f", pfloat)));
 }
 
 /**
@@ -1086,25 +981,6 @@ static void autocap_update(void)
 #endif // FREECIV_ENABLE_NLS
 
 /**
-   Switch to specified LANG
- */
-void switch_lang(const char *lang)
-{
-#ifdef FREECIV_ENABLE_NLS
-  qputenv("LANG", lang);
-
-  (void) setlocale(LC_ALL, "");
-  (void) bindtextdomain("freeciv21-core", get_locale_dir());
-
-  autocap_update();
-
-  qInfo("LANG set to %s", lang);
-#else  // FREECIV_ENABLE_NLS
-  fc_assert(false);
-#endif // FREECIV_ENABLE_NLS
-}
-
-/**
    Setup for Native Language Support, if configured to use it.
    (Call this only once, or it may leak memory.)
  */
@@ -1376,23 +1252,6 @@ char *interpret_tilde_alloc(const char *filename)
   } else {
     return fc_strdup(filename);
   }
-}
-
-/**
-   Return a pointer to the start of the file basename in filepath.
-   If the string contains no dir separator, it is returned itself.
- */
-char *skip_to_basename(char *filepath)
-{
-  int j;
-  fc_assert_ret_val(nullptr != filepath, nullptr);
-
-  for (j = qstrlen(filepath); j >= 0; j--) {
-    if (filepath[j] == '/') {
-      return &filepath[j + 1];
-    }
-  }
-  return filepath;
 }
 
 /**
@@ -1866,48 +1725,6 @@ int fc_vsnprintcf(char *buf, size_t buf_len, const char *format,
   }
   *b = '\0';
   return b - buf;
-}
-
-/**
-   Print a string with a custom format. The additional arguments are a suite
-   of cf_*_seq() finished by cf_end(). This return the number of printed
-   characters (excluding the last '\0') or -1 if the buffer is full.
-
-   Example:
-   char buf[256];
-
-   fc_snprintcf(buf, sizeof(buf), "%y %+06y",
-                cf_int_seq('y', 2010), cf_end());
-   // This will print "2010 +02010" into buf.
- */
-int fc_snprintcf(char *buf, size_t buf_len, const char *format, ...)
-{
-  struct cf_sequence sequences[16];
-  size_t sequences_num = 0;
-  va_list args;
-
-  // Collect sequence array.
-  va_start(args, format);
-  do {
-    sequences[sequences_num] = va_arg(args, struct cf_sequence);
-    if (CF_LAST == sequences[sequences_num].type) {
-      break;
-    } else {
-      sequences_num++;
-    }
-  } while (ARRAY_SIZE(sequences) > sequences_num);
-
-  if (ARRAY_SIZE(sequences) <= sequences_num
-      && CF_LAST != va_arg(args, struct cf_sequence).type) {
-    qCritical("Too many custom sequences. Maybe did you forget cf_end() "
-              "at the end of the arguments?");
-    buf[0] = '\0';
-    va_end(args);
-    return -1;
-  }
-  va_end(args);
-
-  return fc_vsnprintcf(buf, buf_len, format, sequences, sequences_num);
 }
 
 /**
