@@ -326,7 +326,6 @@ public:
   PFPath(PFPath &&obj) = default;      // Default move constructor
   PFPath(const struct pf_parameter *param);
   int length() const;
-  void add_pos(pf_position pos);
   virtual ~PFPath();
   bool empty() const;
   bool advance(struct tile *ptile);
