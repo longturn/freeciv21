@@ -3025,11 +3025,6 @@ void handle_player_phase_done(struct player *pplayer, int turn)
 }
 
 /**
-   Return the number of barbarian players.
- */
-int barbarian_count() { return server.nbarbarians; }
-
-/**
    Return the number of non-barbarian players.
  */
 int normal_player_count() { return player_count() - server.nbarbarians; }
