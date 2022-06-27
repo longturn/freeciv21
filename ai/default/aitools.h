@@ -67,8 +67,6 @@ bool dai_unit_move(struct ai_type *ait, struct unit *punit,
 void dai_government_change(struct player *pplayer, struct government *gov);
 int dai_gold_reserve(struct player *pplayer);
 
-void adjust_choice(int value, struct adv_choice *choice);
-
 bool dai_choose_role_unit(struct ai_type *ait, struct player *pplayer,
                           struct city *pcity, struct adv_choice *choice,
                           enum choice_type type, int role, int want,

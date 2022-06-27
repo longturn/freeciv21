@@ -2829,23 +2829,6 @@ utype_needs_improvement(const struct unit_type *putype,
 }
 
 /**
-   Whether unit_type test is on the "upgrade path" of unit_type base,
-   even if we can't upgrade now.
- */
-bool is_on_unit_upgrade_path(const struct unit_type *test,
-                             const struct unit_type *base)
-{
-  // This is the real function:
-  do {
-    base = base->obsoleted_by;
-    if (base == test) {
-      return true;
-    }
-  } while (base);
-  return false;
-}
-
-/**
    Barbarian leader tries to stack with other barbarian units, and if it's
    not possible it runs away. When on coast, it may disappear with 33%
    chance.
