@@ -122,11 +122,7 @@ size_t loud_strlcpy(char *buffer, const char *str, size_t len,
 #define sz_loud_strlcpy(buffer, str, errmsg)                                \
   loud_strlcpy(buffer, str, sizeof(buffer), errmsg)
 
-char *end_of_strn(char *str, int *nleft);
-
 bool str_to_int(const char *str, int *pint);
-bool str_to_uint(const char *str, unsigned int *pint);
-bool str_to_float(const char *str, float *pfloat);
 
 /**************************************************************************
 ...
@@ -159,7 +155,6 @@ QString fileinfoname(const QStringList &dirs, const char *filename);
 void init_nls();
 void free_nls();
 char *setup_langname();
-void switch_lang(const char *lang);
 
 void dont_run_as_root(const char *argv0, const char *fallback);
 
@@ -202,7 +197,6 @@ char *get_multicast_group(bool ipv6_preferred);
 void free_multicast_group();
 void interpret_tilde(char *buf, size_t buf_size, const QString &filename);
 char *interpret_tilde_alloc(const char *filename);
-char *skip_to_basename(char *filepath);
 
 bool make_dir(const char *pathname);
 bool path_is_absolute(const char *filename);
@@ -218,21 +212,12 @@ bool wildcard_fit_string(const char *pattern, const char *test);
 // Custom format strings.
 struct cf_sequence;
 
-int fc_snprintcf(char *buf, size_t buf_len, const char *format, ...)
-    fc__attribute((nonnull(1, 3))); // Not a printf format.
 int fc_vsnprintcf(char *buf, size_t buf_len, const char *format,
                   const struct cf_sequence *sequences, size_t sequences_num)
     fc__attribute((nonnull(1, 3, 4)));
 
-// Tools for fc_snprintcf().
-static inline struct cf_sequence cf_bool_seq(char letter, bool value);
-static inline struct cf_sequence cf_trans_bool_seq(char letter, bool value);
-static inline struct cf_sequence cf_char_seq(char letter, char value);
 static inline void cf_int_seq(char letter, int value,
                               struct cf_sequence *out);
-static inline struct cf_sequence cf_hexa_seq(char letter, int value);
-static inline struct cf_sequence cf_float_seq(char letter, float value);
-static inline struct cf_sequence cf_ptr_seq(char letter, const void *value);
 static inline struct cf_sequence cf_str_seq(char letter, const char *value);
 static inline struct cf_sequence cf_end();
 
@@ -263,49 +248,6 @@ struct cf_sequence {
 };
 
 /****************************************************************************
-  Build an argument for fc_snprintcf() of boolean type.
-****************************************************************************/
-static inline struct cf_sequence cf_bool_seq(char letter, bool value)
-{
-  struct cf_sequence sequence;
-
-  sequence.type = CF_BOOLEAN;
-  sequence.letter = letter;
-  sequence.bool_value = value;
-
-  return sequence;
-}
-
-/****************************************************************************
-  Build an argument for fc_snprintcf() of boolean type (result will be
-  translated).
-****************************************************************************/
-static inline struct cf_sequence cf_trans_bool_seq(char letter, bool value)
-{
-  struct cf_sequence sequence;
-
-  sequence.type = CF_TRANS_BOOLEAN;
-  sequence.letter = letter;
-  sequence.bool_value = value;
-
-  return sequence;
-}
-
-/****************************************************************************
-  Build an argument for fc_snprintcf() of character type (%c).
-****************************************************************************/
-static inline struct cf_sequence cf_char_seq(char letter, char value)
-{
-  struct cf_sequence sequence;
-
-  sequence.type = CF_CHARACTER;
-  sequence.letter = letter;
-  sequence.char_value = value;
-
-  return sequence;
-}
-
-/****************************************************************************
   Build an argument for fc_snprintcf() of integer type (%d).
 ****************************************************************************/
 static inline void cf_int_seq(char letter, int value,
@@ -314,48 +256,6 @@ static inline void cf_int_seq(char letter, int value,
   out->type = CF_INTEGER;
   out->letter = letter;
   out->int_value = value;
-}
-
-/****************************************************************************
-  Build an argument for fc_snprintcf() of hexadecimal type (%x).
-****************************************************************************/
-static inline struct cf_sequence cf_hexa_seq(char letter, int value)
-{
-  struct cf_sequence sequence;
-
-  sequence.type = CF_HEXA;
-  sequence.letter = letter;
-  sequence.int_value = value;
-
-  return sequence;
-}
-
-/****************************************************************************
-  Build an argument for fc_snprintcf() of float type (%f).
-****************************************************************************/
-static inline struct cf_sequence cf_float_seq(char letter, float value)
-{
-  struct cf_sequence sequence;
-
-  sequence.type = CF_FLOAT;
-  sequence.letter = letter;
-  sequence.float_value = value;
-
-  return sequence;
-}
-
-/****************************************************************************
-  Build an argument for fc_snprintcf() of pointer type (%p).
-****************************************************************************/
-static inline struct cf_sequence cf_ptr_seq(char letter, const void *value)
-{
-  struct cf_sequence sequence;
-
-  sequence.type = CF_POINTER;
-  sequence.letter = letter;
-  sequence.ptr_value = value;
-
-  return sequence;
 }
 
 /****************************************************************************
