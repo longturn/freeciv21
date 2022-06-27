@@ -36,9 +36,6 @@
 #include "classicai.h"
 
 class PFPath;
-/* This function is only needed as symbol in module. Nevertheless
-   gcc requires that there is prior prototype. */
-const char *fc_ai_classic_capstr();
 
 static struct ai_type *self = nullptr;
 
@@ -51,11 +48,6 @@ static void classic_ai_set_self(struct ai_type *ai) { self = ai; }
    Get pointer to ai type of the classic ai.
  */
 static struct ai_type *classic_ai_get_self() { return self; }
-
-/**
-   Return module capability string
- */
-const char *fc_ai_classic_capstr() { return FC_AI_MOD_CAPSTR; }
 
 /**
    Free resources allocated by the classic AI module

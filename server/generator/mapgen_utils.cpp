@@ -158,15 +158,6 @@ void adjust_int_map_filtered(int *int_map, int int_map_max, void *data,
 }
 
 /**
-   Is given native position normal position
- */
-bool is_normal_nat_pos(int x, int y)
-{
-  NATIVE_TO_MAP_POS(&x, &y, x, y);
-  return is_normal_map_pos(x, y);
-}
-
-/**
    Apply a Gaussian diffusion filter on the map. The size of the map is
    MAP_INDEX_SIZE and the map is indexed by native_pos_to_index function.
    If zeroes_at_edges is set, any unreal position on diffusion has 0 value

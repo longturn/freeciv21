@@ -10,8 +10,6 @@
 **************************************************************************/
 #pragma once
 
-typedef void (*tile_knowledge_cb)(struct tile *ptile);
-
 #define MG_UNUSED mapgen_terrain_property_invalid()
 
 void generator_free();
@@ -95,8 +93,6 @@ struct terrain *pick_terrain(enum mapgen_terrain_property target,
   }                                                                         \
   whole_map_iterate_end;                                                    \
   }
-
-bool is_normal_nat_pos(int x, int y);
 
 // int maps tools
 void adjust_int_map_filtered(int *int_map, int int_map_max, void *data,
