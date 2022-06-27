@@ -30,9 +30,7 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "fcdb.h"
 
 enum fcdb_option_source {
-  AOS_DEFAULT, // Internal default, currently not used
-  AOS_FILE,    // Read from config file
-  AOS_SET      // Set, currently not used
+  AOS_FILE, // Read from config file
 };
 
 struct fcdb_option {

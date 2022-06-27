@@ -148,8 +148,6 @@ void update_players_after_alliance_breakup(
     const struct unit_list *pplayer_seen_units,
     const struct unit_list *pplayer2_seen_units);
 
-/* Player counts, total player_count() is in common/player.c */
-int barbarian_count();
 int normal_player_count();
 
 void player_status_add(struct player *plr, enum player_status status);
