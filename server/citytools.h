@@ -78,8 +78,6 @@ void building_lost(struct city *pcity, const struct impr_type *pimprove,
                    const char *reason, struct unit *destroyer);
 void city_units_upkeep(const struct city *pcity);
 
-bool is_production_equal(const struct universal *one,
-                         const struct universal *two);
 void change_build_target(struct player *pplayer, struct city *pcity,
                          struct universal *target, enum event_type event);
 

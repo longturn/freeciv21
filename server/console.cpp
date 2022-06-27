@@ -228,15 +228,6 @@ void con_prompt_init()
 }
 
 /**
-   Make sure a prompt is printed, and re-printed after every message.
- */
-void con_prompt_on()
-{
-  console_show_prompt = true;
-  con_update_prompt();
-}
-
-/**
    Do not print a prompt after log messages.
  */
 void con_prompt_off() { console_show_prompt = false; }
@@ -248,13 +239,4 @@ void con_prompt_enter()
 {
   console_prompt_is_showing = false;
   readline_received_enter = true;
-}
-
-/**
-   Clear "user pressed enter" state (used in special cases).
- */
-void con_prompt_enter_clear()
-{
-  console_prompt_is_showing = true;
-  readline_received_enter = false;
 }
