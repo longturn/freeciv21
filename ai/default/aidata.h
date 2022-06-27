@@ -23,8 +23,8 @@
 struct player;
 
 enum winning_strategy {
-  WIN_OPEN,   // still undetermined
-  WIN_WAR,    // we have no other choice than to crush all opposition
+  WIN_OPEN    // still undetermined
+  ,           // we have no other choice than to crush all opposition
   WIN_SPACE,  // we will race for space, peace very important
   WIN_CAPITAL // we cannot win unless we take war_target's capital
 };

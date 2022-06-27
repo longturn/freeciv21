@@ -57,20 +57,6 @@ void dai_player_free(struct ai_type *ait, struct player *pplayer)
 /**
    Store player specific data to savegame
  */
-void dai_player_save(struct ai_type *ait, const char *aitstr,
-                     struct player *pplayer, struct section_file *file,
-                     int plrno)
-{
-  players_iterate(other)
-  {
-    dai_player_save_relations(ait, aitstr, pplayer, other, file, plrno);
-  }
-  players_iterate_end;
-}
-
-/**
-   Store player specific data to savegame
- */
 void dai_player_save_relations(struct ai_type *ait, const char *aitstr,
                                struct player *pplayer, struct player *other,
                                struct section_file *file, int plrno)
@@ -91,20 +77,6 @@ void dai_player_save_relations(struct ai_type *ait, const char *aitstr,
                      buf);
   secfile_insert_int(file, adip->asked_about_ceasefire, "%s.ask_ceasefire",
                      buf);
-}
-
-/**
-   Load player specific data from savegame
- */
-void dai_player_load(struct ai_type *ait, const char *aitstr,
-                     struct player *pplayer, const struct section_file *file,
-                     int plrno)
-{
-  players_iterate(other)
-  {
-    dai_player_load_relations(ait, aitstr, pplayer, other, file, plrno);
-  }
-  players_iterate_end;
 }
 
 /**
