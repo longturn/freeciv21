@@ -3256,8 +3256,6 @@ PFPath::~PFPath() { positions.clear(); }
 bool PFPath::empty() const { return positions.empty(); }
 // Return Length of path
 int PFPath::length() const { return positions.size(); }
-// Add position to end of path
-void PFPath::add_pos(pf_position pos) { positions.push_back(pos); }
 /**
    Remove the part of a path leading up to a given tile.
    If given tile is on the path more than once then the first occurrence
@@ -3530,33 +3528,6 @@ pf_reverse_map_unit_pos(struct pf_reverse_map *pfrm,
    * have its whole move rate. */
   param->moves_left_initially = param->move_rate;
   param->utype = unit_type_get(punit);
-  return pf_reverse_map_pos(pfrm, param);
-}
-
-/**
-   Returns the position for the unit type. Creates it if needed. Returns
-   nullptr if 'target_tile' is unreachable.
- */
-static inline const struct pf_position *
-pf_reverse_map_utype_pos(struct pf_reverse_map *pfrm,
-                         const struct unit_type *punittype,
-                         struct tile *ptile)
-{
-  struct pf_parameter *param = &pfrm->template_params;
-  const struct player *pplayer = param->owner;
-  int veteran_level =
-      get_unittype_bonus(pplayer, ptile, punittype, EFT_VETERAN_BUILD);
-
-  if (veteran_level >= utype_veteran_levels(punittype)) {
-    veteran_level = utype_veteran_levels(punittype) - 1;
-  }
-
-  // Fill parameter.
-  param->start_tile = ptile;
-  param->move_rate = utype_move_rate(punittype, ptile, pplayer,
-                                     veteran_level, punittype->hp);
-  param->moves_left_initially = param->move_rate;
-  param->utype = punittype;
   return pf_reverse_map_pos(pfrm, param);
 }
 
