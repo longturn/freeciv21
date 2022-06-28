@@ -704,7 +704,7 @@ void adv_data_init(struct player *pplayer)
 
   adv->government_want = nullptr;
 
-  adv->dipl.adv_dipl_slots = new adv_dipl *[player_slot_count()]();
+  adv->dipl.adv_dipl_slots = new adv_dipl *[MAX_NUM_PLAYER_SLOTS]();
   player_slots_iterate(pslot)
   {
     struct adv_dipl **dip_slot =

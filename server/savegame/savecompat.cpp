@@ -1124,7 +1124,7 @@ static void compat_load_020600(struct loaddata *loading,
                    {"now_name", ENTRY_STR},   {"got_tech", ENTRY_BOOL},
                    {"done", ENTRY_STR}};
 
-    int researches[MAX(player_slot_count(), team_slot_count())];
+    int researches[MAX(MAX_NUM_PLAYER_SLOTS, team_slot_count())];
     int count = 0;
     int i;
 

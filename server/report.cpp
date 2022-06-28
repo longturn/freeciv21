@@ -1219,7 +1219,7 @@ static bool scan_score_log(char *id)
       log_debug("add player '%s' (from line %d: '%s')", plr_name, line_nr,
                 line);
 
-      if (0 > plr_no || plr_no >= player_slot_count()) {
+      if (0 > plr_no || plr_no >= MAX_NUM_PLAYER_SLOTS) {
         qCritical("[%s:%d] Invalid player number: %d!",
                   game.server.scorefile, line_nr, plr_no);
         return false;
@@ -1243,7 +1243,7 @@ static bool scan_score_log(char *id)
         return false;
       }
 
-      if (!(plr_no >= 0 && plr_no < player_slot_count())) {
+      if (!(plr_no >= 0 && plr_no < MAX_NUM_PLAYER_SLOTS)) {
         qCritical("[%s:%d] Invalid player number: %d!",
                   game.server.scorefile, line_nr, plr_no);
         return false;
@@ -1291,7 +1291,7 @@ void log_civ_score_init()
   score_log = new logging_civ_score[1]();
   score_log->fp = nullptr;
   score_log->last_turn = -1;
-  score_log->plrdata = new plrdata_slot[player_slot_count()]();
+  score_log->plrdata = new plrdata_slot[MAX_NUM_PLAYER_SLOTS]();
   player_slots_iterate(pslot)
   {
     struct plrdata_slot *plrdata =

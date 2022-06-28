@@ -506,7 +506,7 @@ static void package_conn_info(struct connection *pconn,
   packet->established = pconn->established;
   packet->player_num = (nullptr != pconn->playing)
                            ? player_number(pconn->playing)
-                           : player_slot_count();
+                           : MAX_NUM_PLAYER_SLOTS;
   packet->observer = pconn->observer;
   packet->access_level = pconn->access_level;
 

@@ -326,10 +326,10 @@ void player_slots_init()
   int i;
 
   // Init player slots.
-  player_slots.pslots = new player_slot[player_slot_count()]();
+  player_slots.pslots = new player_slot[MAX_NUM_PLAYER_SLOTS]();
   /* Can't use the defined functions as the needed data will be
    * defined here. */
-  for (i = 0; i < player_slot_count(); i++) {
+  for (i = 0; i < MAX_NUM_PLAYER_SLOTS; i++) {
     player_slots.pslots[i].player = nullptr;
   }
   player_slots.used_slots = 0;
@@ -363,16 +363,9 @@ struct player_slot *player_slot_first() { return player_slots.pslots; }
 struct player_slot *player_slot_next(struct player_slot *pslot)
 {
   pslot++;
-  return (pslot < player_slots.pslots + player_slot_count() ? pslot
-                                                            : nullptr);
+  return (pslot < player_slots.pslots + MAX_NUM_PLAYER_SLOTS ? pslot
+                                                             : nullptr);
 }
-
-/**
-   Returns the total number of player slots, i.e. the maximum
-   number of players (including barbarians, etc.) that could ever
-   exist at once.
- */
-int player_slot_count() { return (MAX_NUM_PLAYER_SLOTS); }
 
 /**
    Returns the index of the player slot.
@@ -417,7 +410,7 @@ bool player_slot_is_used(const struct player_slot *pslot)
 struct player_slot *player_slot_by_number(int player_id)
 {
   if (!player_slots_initialised()
-      || !(0 <= player_id && player_id < player_slot_count())) {
+      || !(0 <= player_id && player_id < MAX_NUM_PLAYER_SLOTS)) {
     return nullptr;
   }
 
@@ -472,7 +465,7 @@ struct player *player_new(struct player_slot *pslot)
   pplayer = new player();
   pplayer->slot = pslot;
   pslot->player = pplayer;
-  pplayer->diplstates = new const player_diplstate *[player_slot_count()]();
+  pplayer->diplstates = new const player_diplstate *[MAX_NUM_PLAYER_SLOTS]();
 
   player_slots_iterate(dslot)
   {
@@ -858,7 +851,7 @@ struct player *player_by_name_prefix(const char *name,
 {
   int ind;
 
-  *result = match_prefix(player_name_by_number, player_slot_count(),
+  *result = match_prefix(player_name_by_number, MAX_NUM_PLAYER_SLOTS,
                          MAX_LEN_NAME - 1, fc_strncasequotecmp,
                          effectivestrlenquote, name, &ind);
 

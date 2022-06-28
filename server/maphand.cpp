@@ -1612,7 +1612,7 @@ static void create_vision_dependencies()
  */
 void give_shared_vision(struct player *pfrom, struct player *pto)
 {
-  bv_player save_vision[player_slot_count()];
+  bv_player save_vision[MAX_NUM_PLAYER_SLOTS];
   if (pfrom == pto) {
     return;
   }
@@ -1678,7 +1678,7 @@ void give_shared_vision(struct player *pfrom, struct player *pto)
  */
 void remove_shared_vision(struct player *pfrom, struct player *pto)
 {
-  bv_player save_vision[player_slot_count()];
+  bv_player save_vision[MAX_NUM_PLAYER_SLOTS];
 
   fc_assert_ret(pfrom != pto);
   if (!gives_shared_vision(pfrom, pto)) {

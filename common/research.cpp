@@ -59,7 +59,7 @@ void researches_init()
 
   // Ensure we have enough space for players or teams.
   fc_assert(ARRAY_SIZE(research_array) >= team_slot_count());
-  fc_assert(ARRAY_SIZE(research_array) >= player_slot_count());
+  fc_assert(ARRAY_SIZE(research_array) >= MAX_NUM_PLAYER_SLOTS);
 
   memset(research_array, 0, sizeof(research_array));
   for (i = 0; i < ARRAY_SIZE(research_array); i++) {
