@@ -3499,8 +3499,8 @@ static void sg_load_players_basic(struct loaddata *loading)
   if (secfile_lookup_int_default(loading->file, -1,
                                  "players.shuffled_player_%d", 0)
       >= 0) {
-    int shuffled_players[player_slot_count()];
-    bool shuffled_player_set[player_slot_count()];
+    int shuffled_players[MAX_NUM_PLAYER_SLOTS];
+    bool shuffled_player_set[MAX_NUM_PLAYER_SLOTS];
 
     player_slots_iterate(pslot)
     {
@@ -3543,14 +3543,14 @@ static void sg_load_players_basic(struct loaddata *loading)
       // Insert missing numbers.
       int shuffle_index = player_count();
 
-      for (i = 0; i < player_slot_count(); i++) {
+      for (i = 0; i < MAX_NUM_PLAYER_SLOTS; i++) {
         if (!shuffled_player_set[i]) {
           shuffled_players[shuffle_index] = i;
           shuffle_index++;
         }
         /* shuffle_index must not grow behind the size of shuffled_players.
          */
-        sg_failure_ret(shuffle_index <= player_slot_count(),
+        sg_failure_ret(shuffle_index <= MAX_NUM_PLAYER_SLOTS,
                        "Invalid player shuffle data!");
       }
 

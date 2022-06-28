@@ -854,7 +854,7 @@ enum rfc_status create_command_newcomer(const char *name, const char *ai,
     // remove player and thus free a player slot
     server_remove_player(pplayer);
     pplayer = nullptr;
-  } else if (player_count() == player_slot_count()) {
+  } else if (player_count() == MAX_NUM_PLAYER_SLOTS) {
     // [2] All player slots are used; try to remove a dead player.
     players_iterate(aplayer)
     {
@@ -3129,7 +3129,7 @@ static bool is_allowed_to_take(struct connection *requester,
       return false;
     }
 
-    if (player_count() >= player_slot_count()) {
+    if (player_count() >= MAX_NUM_PLAYER_SLOTS) {
       fc_strlcpy(msg,
                  _("You cannot take a new player because there "
                    "are no free player slots."),
@@ -3490,7 +3490,7 @@ static bool take_command(struct connection *caller, char *str, bool check)
               _("There is no free player slot for %s."), pconn->username);
     return res;
   }
-  fc_assert_action(player_count() <= player_slot_count(), return false);
+  fc_assert_action(player_count() <= MAX_NUM_PLAYER_SLOTS, return false);
 
   res = true;
   if (check) {
@@ -6030,7 +6030,7 @@ bool start_command(struct connection *caller, bool check, bool notify)
         int i;
         struct player *pplayer;
 
-        for (i = player_slot_count() - 1; i >= 0; i--) {
+        for (i = MAX_NUM_PLAYER_SLOTS - 1; i >= 0; i--) {
           pplayer = player_by_number(i);
           if (pplayer) {
             server_remove_player(pplayer);
@@ -7147,7 +7147,7 @@ static const char *playername_accessor(int idx)
  */
 static char *player_generator(const char *text, int state)
 {
-  return generic_generator(text, state, player_slot_count(),
+  return generic_generator(text, state, MAX_NUM_PLAYER_SLOTS,
                            playername_accessor);
 }
 

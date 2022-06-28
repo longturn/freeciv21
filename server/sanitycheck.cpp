@@ -170,7 +170,7 @@ static void check_misc(const char *file, const char *function, int line)
   SANITY_CHECK(nplayers == player_count());
   SANITY_CHECK(nbarbs == server.nbarbarians);
 
-  SANITY_CHECK(player_count() <= player_slot_count());
+  SANITY_CHECK(player_count() <= MAX_NUM_PLAYER_SLOTS);
   SANITY_CHECK(team_count() <= MAX_NUM_TEAM_SLOTS);
   SANITY_CHECK(normal_player_count() <= game.server.max_players);
 }

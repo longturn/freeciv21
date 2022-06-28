@@ -2414,7 +2414,7 @@ const char *aifill(int amount)
   }
 
   if (limit < player_count()) {
-    int removal = player_slot_count() - 1;
+    int removal = MAX_NUM_PLAYER_SLOTS - 1;
 
     while (limit < player_count() && 0 <= removal) {
       struct player *pplayer = player_by_number(removal);

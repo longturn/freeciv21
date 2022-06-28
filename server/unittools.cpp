@@ -2310,15 +2310,15 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
     wipe_unit(punit, ULR_KILLED, pvictor);
   } else { // unitcount > 1
     int i;
-    int num_killed[player_slot_count()];
-    int num_escaped[player_slot_count()];
-    struct unit *other_killed[player_slot_count()];
+    int num_killed[MAX_NUM_PLAYER_SLOTS];
+    int num_escaped[MAX_NUM_PLAYER_SLOTS];
+    struct unit *other_killed[MAX_NUM_PLAYER_SLOTS];
     struct tile *ptile = unit_tile(punit);
 
     fc_assert(unitcount > 1);
 
     // initialize
-    for (i = 0; i < player_slot_count(); i++) {
+    for (i = 0; i < MAX_NUM_PLAYER_SLOTS; i++) {
       num_killed[i] = 0;
       other_killed[i] = nullptr;
       num_escaped[i] = 0;
@@ -2415,7 +2415,7 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
      *
      * Also if a large number of units die you don't find out what type
      * they all are. */
-    for (i = 0; i < player_slot_count(); i++) {
+    for (i = 0; i < MAX_NUM_PLAYER_SLOTS; i++) {
       if (num_killed[i] == 1) {
         if (i == player_index(pvictim)) {
           fc_assert(other_killed[i] == nullptr);
@@ -2478,7 +2478,7 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
     }
 
     // Inform the owner of the units that escaped.
-    for (i = 0; i < player_slot_count(); ++i) {
+    for (i = 0; i < MAX_NUM_PLAYER_SLOTS; ++i) {
       if (0 < num_escaped[i]) {
         notify_player(player_by_number(i), unit_tile(punit), E_UNIT_ESCAPED,
                       ftc_server,

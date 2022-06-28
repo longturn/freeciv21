@@ -57,7 +57,7 @@ void dai_data_init(struct ai_type *ait, struct player *pplayer)
   ai->last_num_oceans = -1;
 
   ai->diplomacy.player_intel_slots =
-      new const ai_dip_intel *[player_slot_count()]();
+      new const ai_dip_intel *[MAX_NUM_PLAYER_SLOTS]();
   player_slots_iterate(pslot)
   {
     const struct ai_dip_intel **player_intel_slot =

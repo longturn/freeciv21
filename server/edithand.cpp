@@ -76,7 +76,7 @@ void edithand_init()
   need_continents_reassigned = false;
 
   delete[] unfogged_players;
-  unfogged_players = new bool[player_slot_count()]();
+  unfogged_players = new bool[MAX_NUM_PLAYER_SLOTS]();
 }
 
 /**
@@ -163,7 +163,7 @@ static void check_leaving_edit_mode()
   players_iterate_end;
 
   // Clear the whole array.
-  memset(unfogged_players, 0, player_slot_count() * sizeof(bool));
+  memset(unfogged_players, 0, MAX_NUM_PLAYER_SLOTS * sizeof(bool));
 
   check_edited_tile_terrains();
   conn_list_do_unbuffer(game.est_connections);
@@ -882,11 +882,11 @@ void handle_edit_player_create(struct connection *pc, int tag)
   struct nation_type *pnation;
   struct research *presearch;
 
-  if (player_count() >= player_slot_count()) {
+  if (player_count() >= MAX_NUM_PLAYER_SLOTS) {
     notify_conn(pc->self, nullptr, E_BAD_COMMAND, ftc_editor,
                 _("No more players can be added because the maximum "
                   "number of players (%d) has been reached."),
-                player_slot_count());
+                MAX_NUM_PLAYER_SLOTS);
     return;
   }
 

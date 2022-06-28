@@ -11,6 +11,7 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
+#include <QtWidgets/QtWidgets>
 #include <cstdio> // for remove()
 
 // utility
@@ -415,8 +416,8 @@ static void do_team_placement(const struct team_placement_config *pconfig,
 void init_new_game()
 {
   struct startpos_list *impossible_list, *targeted_list, *flexible_list;
-  struct tile *player_startpos[player_slot_count()];
-  int placed_units[player_slot_count()];
+  struct tile *player_startpos[MAX_NUM_PLAYER_SLOTS];
+  int placed_units[MAX_NUM_PLAYER_SLOTS];
   int players_to_place = player_count();
   int sulen;
 

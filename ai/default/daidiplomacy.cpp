@@ -1015,7 +1015,7 @@ void dai_diplomacy_begin_new_phase(struct ai_type *ait,
 {
   struct ai_plr *ai = dai_plr_data_get(ait, pplayer, nullptr);
   struct adv_data *adv = adv_data_get(pplayer, nullptr);
-  int war_desire[player_slot_count()];
+  int war_desire[MAX_NUM_PLAYER_SLOTS];
   int best_desire = 0;
   struct player *best_target = nullptr;
 

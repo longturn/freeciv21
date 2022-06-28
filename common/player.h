@@ -359,8 +359,6 @@ void player_slots_free();
 struct player_slot *player_slot_first();
 struct player_slot *player_slot_next(struct player_slot *pslot);
 
-// A player slot contains a possibly uninitialized player.
-int player_slot_count();
 int player_slot_index(const struct player_slot *pslot);
 struct player *player_slot_get_player(const struct player_slot *pslot);
 bool player_slot_is_used(const struct player_slot *pslot);

@@ -424,7 +424,7 @@ void rank_users(bool interrupt)
   FILE *fp;
   int i, t_winner_score = 0;
   enum victory_state { VS_NONE, VS_LOSER, VS_WINNER };
-  enum victory_state plr_state[player_slot_count()];
+  enum victory_state plr_state[MAX_NUM_PLAYER_SLOTS];
   struct player *spacerace_winner = nullptr;
   struct team *t_winner = nullptr;
 
@@ -443,7 +443,7 @@ void rank_users(bool interrupt)
   }
 
   // initialize plr_state
-  for (i = 0; i < player_slot_count(); i++) {
+  for (i = 0; i < MAX_NUM_PLAYER_SLOTS; i++) {
     plr_state[i] = VS_NONE;
   }
 

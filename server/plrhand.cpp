@@ -1126,7 +1126,7 @@ static void package_player_common(struct player *plr,
   packet->is_connected = plr->is_connected;
   packet->flags = plr->flags;
   packet->ai_skill_level = is_ai(plr) ? plr->ai_common.skill_level : 0;
-  for (i = 0; i < player_slot_count(); i++) {
+  for (i = 0; i < MAX_NUM_PLAYER_SLOTS; i++) {
     packet->love[i] = plr->ai_common.love[i];
   }
   packet->barbarian_type = plr->ai_common.barbarian_type;
@@ -2020,7 +2020,7 @@ bool server_player_set_name_full(const struct connection *caller,
     // Try to append a number to 'real_name'.
     char test[MAX_LEN_NAME];
 
-    for (i = 2; i <= player_slot_count(); i++) {
+    for (i = 2; i <= MAX_NUM_PLAYER_SLOTS; i++) {
       fc_snprintf(test, sizeof(test), "%s%d", real_name, i);
       if (server_player_name_is_allowed(caller, pplayer, pnation, test,
                                         error_buf, error_buf_len)) {
@@ -2050,7 +2050,7 @@ bool server_player_set_name_full(const struct connection *caller,
   }
 
   // Try a very default name...
-  for (i = 0; i < player_slot_count(); i++) {
+  for (i = 0; i < MAX_NUM_PLAYER_SLOTS; i++) {
     fc_snprintf(real_name, sizeof(real_name), _("Player no. %d"), i);
     if (server_player_name_is_allowed(caller, pplayer, pnation, real_name,
                                       error_buf, error_buf_len)) {
@@ -2188,7 +2188,7 @@ void maybe_make_contact(struct tile *ptile, struct player *pplayer)
 void shuffle_players()
 {
   // shuffled_order is defined global
-  int n = player_slot_count();
+  int n = MAX_NUM_PLAYER_SLOTS;
   int i;
 
   log_debug("shuffle_players: creating shuffled order");
@@ -2217,7 +2217,7 @@ void set_shuffled_players(int *shuffled_players)
   log_debug("set_shuffled_players: loading shuffled array %p",
             shuffled_players);
 
-  for (i = 0; i < player_slot_count(); i++) {
+  for (i = 0; i < MAX_NUM_PLAYER_SLOTS; i++) {
     shuffled_order[i] = shuffled_players[i];
     log_debug("shuffled_order[%d] = %d", i, shuffled_order[i]);
   }
