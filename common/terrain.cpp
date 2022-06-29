@@ -135,26 +135,6 @@ struct terrain *terrain_by_number(const Terrain_type_id type)
 }
 
 /**
-   Return the terrain type matching the identifier, or T_UNKNOWN if none
-   matches.
- */
-struct terrain *terrain_by_identifier(const char identifier)
-{
-  if (TERRAIN_UNKNOWN_IDENTIFIER == identifier) {
-    return T_UNKNOWN;
-  }
-  terrain_type_iterate(pterrain)
-  {
-    if (pterrain->identifier == identifier) {
-      return pterrain;
-    }
-  }
-  terrain_type_iterate_end;
-
-  return T_UNKNOWN;
-}
-
-/**
    Return the terrain type matching the name, or T_UNKNOWN if none matches.
  */
 struct terrain *terrain_by_rule_name(const char *name)
@@ -186,29 +166,6 @@ struct terrain *terrain_by_translated_name(const char *name)
   terrain_type_iterate_end;
 
   return T_UNKNOWN;
-}
-
-/**
-   Return terrain having the flag. If several terrains have the flag,
-   random one is returned.
- */
-struct terrain *rand_terrain_by_flag(enum terrain_flag_id flag)
-{
-  int num = 0;
-  struct terrain *terr = nullptr;
-
-  terrain_type_iterate(pterr)
-  {
-    if (terrain_has_flag(pterr, flag)) {
-      num++;
-      if (fc_rand(num) == 1) {
-        terr = pterr;
-      }
-    }
-  }
-  terrain_type_iterate_end;
-
-  return terr;
 }
 
 /**
@@ -266,14 +223,6 @@ struct resource_type *resource_type_init(struct extra_type *pextra)
 void resource_types_free()
 {
   // Resource structure itself is freed as part of extras destruction.
-}
-
-/**
-   Return extra that resource is.
- */
-struct extra_type *resource_extra_get(const struct resource_type *presource)
-{
-  return presource->self;
 }
 
 /**
@@ -344,29 +293,6 @@ bool is_terrain_near_tile(const struct tile *ptile,
 }
 
 /**
-   Return the number of adjacent tiles that have the given terrain.
- */
-int count_terrain_near_tile(const struct tile *ptile, bool cardinal_only,
-                            bool percentage, const struct terrain *pterrain)
-{
-  int count = 0, total = 0;
-
-  variable_adjc_iterate(&(wld.map), ptile, adjc_tile, cardinal_only)
-  {
-    if (pterrain && tile_terrain(adjc_tile) == pterrain) {
-      count++;
-    }
-    total++;
-  }
-  variable_adjc_iterate_end;
-
-  if (percentage) {
-    count = count * 100 / std::max(1, total);
-  }
-  return count;
-}
-
-/**
    Return the number of adjacent tiles that have the given terrain property.
  */
 int count_terrain_property_near_tile(const struct tile *ptile,
@@ -390,48 +316,6 @@ int count_terrain_property_near_tile(const struct tile *ptile,
     count = count * 100 / std::max(1, total);
   }
   return count;
-}
-
-/**
-   Returns TRUE iff any cardinally adjacent tile contains the given resource.
- */
-bool is_resource_card_near(const struct tile *ptile,
-                           const struct extra_type *pres, bool check_self)
-{
-  if (!pres) {
-    return false;
-  }
-
-  cardinal_adjc_iterate(&(wld.map), ptile, adjc_tile)
-  {
-    if (tile_resource(adjc_tile) == pres) {
-      return true;
-    }
-  }
-  cardinal_adjc_iterate_end;
-
-  return check_self && tile_resource(ptile) == pres;
-}
-
-/**
-   Returns TRUE iff any adjacent tile contains the given resource.
- */
-bool is_resource_near_tile(const struct tile *ptile,
-                           const struct extra_type *pres, bool check_self)
-{
-  if (!pres) {
-    return false;
-  }
-
-  adjc_iterate(&(wld.map), ptile, adjc_tile)
-  {
-    if (tile_resource(adjc_tile) == pres) {
-      return true;
-    }
-  }
-  adjc_iterate_end;
-
-  return check_self && tile_resource(ptile) == pres;
 }
 
 /**

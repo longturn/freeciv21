@@ -249,10 +249,8 @@ Terrain_type_id terrain_number(const struct terrain *pterrain);
 
 struct terrain *terrain_by_number(const Terrain_type_id type);
 
-struct terrain *terrain_by_identifier(const char identifier);
 struct terrain *terrain_by_rule_name(const char *name);
 struct terrain *terrain_by_translated_name(const char *name);
-struct terrain *rand_terrain_by_flag(enum terrain_flag_id flag);
 
 char terrain_identifier(const struct terrain *pterrain);
 const char *terrain_rule_name(const struct terrain *pterrain);
@@ -288,21 +286,12 @@ bool is_terrain_card_near(const struct tile *ptile,
                           const struct terrain *pterrain, bool check_self);
 bool is_terrain_near_tile(const struct tile *ptile,
                           const struct terrain *pterrain, bool check_self);
-int count_terrain_near_tile(const struct tile *ptile, bool cardinal_only,
-                            bool percentage, const struct terrain *pterrain);
 int count_terrain_property_near_tile(const struct tile *ptile,
                                      bool cardinal_only, bool percentage,
                                      enum mapgen_terrain_property prop);
 
-bool is_resource_card_near(const struct tile *ptile,
-                           const struct extra_type *pres, bool check_self);
-bool is_resource_near_tile(const struct tile *ptile,
-                           const struct extra_type *pres, bool check_self);
-
 struct resource_type *resource_type_init(struct extra_type *pextra);
 void resource_types_free();
-
-struct extra_type *resource_extra_get(const struct resource_type *presource);
 
 // Special helper functions
 const char *get_infrastructure_text(bv_extras extras);
