@@ -86,8 +86,6 @@ struct extra_type *road_extra_get(const struct road_type *proad);
 enum road_compat road_compat_special(const struct road_type *proad);
 struct road_type *road_by_compat_special(enum road_compat compat);
 
-int count_road_near_tile(const struct tile *ptile,
-                         const struct road_type *proad);
 int count_river_near_tile(const struct tile *ptile,
                           const struct extra_type *priver);
 int count_river_type_tile_card(const struct tile *ptile,
@@ -111,9 +109,6 @@ bool can_build_road(struct road_type *proad, const struct unit *punit,
 bool player_can_build_road(const struct road_type *proad,
                            const struct player *pplayer,
                            const struct tile *ptile);
-
-bool is_native_tile_to_road(const struct road_type *proad,
-                            const struct tile *ptile);
 
 bool is_cardinal_only_road(const struct extra_type *pextra);
 
