@@ -1188,8 +1188,6 @@ bool city_has_building(const struct city *pcity,
                        const struct impr_type *pimprove)
 {
   if (nullptr == pimprove) {
-    /* Callers should ensure that any external data is tested with
-     * valid_improvement_by_number() */
     return false;
   }
   return (pcity->built[improvement_index(pimprove)].turn > I_NEVER);

@@ -61,8 +61,6 @@ int get_direction_for_step(const struct civ_map *nmap,
                            const struct tile *src_tile,
                            const struct tile *dst_tile);
 
-// Specific functions for start positions.
-struct startpos *map_startpos_by_number(int id);
 int startpos_number(const struct startpos *psp);
 
 bool startpos_allow(struct startpos *psp, struct nation_type *pnation);
@@ -206,7 +204,6 @@ struct tile *native_pos_to_tile(const struct civ_map *nmap, int nat_x,
                                 int nat_y);
 struct tile *index_to_tile(const struct civ_map *imap, int mindex);
 
-bool is_real_map_pos(const struct civ_map *nmap, int x, int y);
 bool is_normal_map_pos(int x, int y);
 
 bool is_singular_tile(const struct tile *ptile, int dist);
@@ -219,8 +216,6 @@ void map_distance_vector(int *dx, int *dy, const struct tile *ptile0,
 int map_num_tiles();
 #define map_size_checked() MAX(map_num_tiles() / 1000, 1)
 
-struct tile *rand_neighbour(const struct civ_map *nmap,
-                            const struct tile *ptile);
 struct tile *rand_map_pos(const struct civ_map *nmap);
 struct tile *rand_map_pos_filtered(const struct civ_map *nmap, void *data,
                                    bool (*filter)(const struct tile *ptile,

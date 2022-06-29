@@ -905,14 +905,6 @@ bool same_pos(const struct tile *tile1, const struct tile *tile2)
 }
 
 /**
-   Is given position real position
- */
-bool is_real_map_pos(const struct civ_map *nmap, int x, int y)
-{
-  return normalize_map_pos(nmap, &x, &y);
-}
-
-/**
    Returns TRUE iff the map position is normal. "Normal" here means that
    it is both a real/valid coordinate set and that the coordinates are in
    their canonical/proper form. In plain English: the coordinates must be
@@ -1036,42 +1028,6 @@ void map_distance_vector(int *dx, int *dy, const struct tile *tile0,
   index_to_map_pos(&tx0, &ty0, tile_index(tile0));
   index_to_map_pos(&tx1, &ty1, tile_index(tile1));
   base_map_distance_vector(dx, dy, tx0, ty0, tx1, ty1);
-}
-
-/**
-   Random neighbouring square.
- */
-struct tile *rand_neighbour(const struct civ_map *nmap,
-                            const struct tile *ptile)
-{
-  int n;
-  struct tile *tile1;
-
-  /*
-   * list of all 8 directions
-   */
-  enum direction8 dirs[8] = {DIR8_NORTHWEST, DIR8_NORTH,    DIR8_NORTHEAST,
-                             DIR8_WEST,      DIR8_EAST,     DIR8_SOUTHWEST,
-                             DIR8_SOUTH,     DIR8_SOUTHEAST};
-
-  /* This clever loop by Trent Piepho will take no more than
-   * 8 tries to find a valid direction. */
-  for (n = 8; n > 0; n--) {
-    enum direction8 choice = static_cast<enum direction8>(fc_rand(n));
-
-    // this neighbour's OK
-    tile1 = mapstep(nmap, ptile, dirs[choice]);
-    if (tile1) {
-      return tile1;
-    }
-
-    /* Choice was bad, so replace it with the last direction in the list.
-     * On the next iteration, one fewer choices will remain. */
-    dirs[choice] = dirs[n - 1];
-  }
-
-  fc_assert(false); // Are we on a 1x1 map with no wrapping???
-  return nullptr;
 }
 
 /**
@@ -1421,14 +1377,6 @@ static void startpos_destroy(struct startpos *psp)
   fc_assert_ret(nullptr != psp);
   delete psp->nations;
   delete psp;
-}
-
-/**
-   Returns the start position associated to the given ID.
- */
-struct startpos *map_startpos_by_number(int id)
-{
-  return map_startpos_get(index_to_tile(&(wld.map), id));
 }
 
 /**

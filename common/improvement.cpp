@@ -209,17 +209,6 @@ const struct impr_type *valid_improvement(const struct impr_type *pimprove)
 }
 
 /**
-   Returns pointer when the improvement_type "exists" in this game,
-   returns nullptr otherwise.
-
-   In addition to valid_improvement(), tests for id is out of range.
- */
-const struct impr_type *valid_improvement_by_number(const Impr_type_id id)
-{
-  return valid_improvement(improvement_by_number(id));
-}
-
-/**
    Return the (translated) name of the given improvement.
    You don't have to free the return pointer.
  */
@@ -977,17 +966,6 @@ struct player *great_wonder_owner(const struct impr_type *pimprove)
   } else {
     return nullptr;
   }
-}
-
-/**
-   Returns whether the player has built this small wonder.
- */
-bool small_wonder_is_built(const struct player *pplayer,
-                           const struct impr_type *pimprove)
-{
-  fc_assert_ret_val(is_small_wonder(pimprove), false);
-
-  return (nullptr != pplayer && wonder_is_built(pplayer, pimprove));
 }
 
 /**

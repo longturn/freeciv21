@@ -687,13 +687,6 @@ struct act_prob action_speculate_unit_on_city(action_id act_id,
                                               bool omniscient_cheat,
                                               const struct city *target);
 
-struct act_prob action_speculate_unit_on_unit(action_id act_id,
-                                              const struct unit *actor,
-                                              const struct city *actor_home,
-                                              const struct tile *actor_tile,
-                                              bool omniscient_cheat,
-                                              const struct unit *target);
-
 struct act_prob action_speculate_unit_on_units(action_id act_id,
                                                const struct unit *actor,
                                                const struct city *actor_home,
@@ -714,8 +707,6 @@ struct act_prob action_speculate_unit_on_self(action_id act_id,
                                               bool omniscient_cheat);
 
 bool action_prob_possible(const struct act_prob probability);
-
-bool action_prob_certain(const struct act_prob probability);
 
 bool are_action_probabilitys_equal(const struct act_prob *ap1,
                                    const struct act_prob *ap2);

@@ -5240,36 +5240,6 @@ struct act_prob action_speculate_unit_on_city(const action_id act_id,
 
 /**
    Returns a speculation about the actor unit's probability of successfully
-   performing the chosen action on the target unit given the specified
-   game state changes.
- */
-struct act_prob action_speculate_unit_on_unit(action_id act_id,
-                                              const struct unit *actor,
-                                              const struct city *actor_home,
-                                              const struct tile *actor_tile,
-                                              bool omniscient_cheat,
-                                              const struct unit *target)
-{
-  /* FIXME: some unit state requirements still depend on the actor unit's
-   * current position rather than on actor_tile. Maybe this function should
-   * return ACTPROB_NOT_IMPLEMENTED when one of those is detected and no
-   * other requirement makes the action ACTPROB_IMPOSSIBLE? */
-
-  if (omniscient_cheat) {
-    if (is_action_enabled_unit_on_unit_full(act_id, actor, actor_home,
-                                            actor_tile, target)) {
-      return ACTPROB_CERTAIN;
-    } else {
-      return ACTPROB_IMPOSSIBLE;
-    }
-  } else {
-    return action_prob_vs_unit_full(actor, actor_home, actor_tile, act_id,
-                                    target);
-  }
-}
-
-/**
-   Returns a speculation about the actor unit's probability of successfully
    performing the chosen action on the target unit stack given the specified
    game state changes.
  */
@@ -5414,16 +5384,6 @@ bool action_prob_possible(const struct act_prob probability)
 {
   return (ACTPROB_VAL_MIN < probability.max
           || action_prob_not_impl(probability));
-}
-
-/**
-   Returns TRUE iff the given action probability is certain that its action
-   is possible.
- */
-bool action_prob_certain(const struct act_prob probability)
-{
-  return (ACTPROB_VAL_MAX == probability.min
-          && ACTPROB_VAL_MAX == probability.max);
 }
 
 /**
