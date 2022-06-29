@@ -1625,34 +1625,6 @@ struct city *city_list_find_name(struct city_list *This, const char *name)
 }
 
 /**
-   Comparison function for qsort for city _pointers_, sorting by city name.
-   Args are really (struct city**), to sort an array of pointers.
-   (Compare with old_city_name_compare() in game.c, which use city_id's)
- */
-int city_name_compare(const void *p1, const void *p2)
-{
-  return fc_strcasecmp((*(const struct city **) p1)->name,
-                       (*(const struct city **) p2)->name);
-}
-
-/**
-   Returns the city style that has the given (translated) name.
-   Returns -1 if none match.
- */
-int city_style_by_translated_name(const char *s)
-{
-  int i;
-
-  for (i = 0; i < game.control.styles_count; i++) {
-    if (0 == strcmp(city_style_name_translation(i), s)) {
-      return i;
-    }
-  }
-
-  return -1;
-}
-
-/**
    Returns the city style that has the given (untranslated) rule name.
    Returns -1 if none match.
  */

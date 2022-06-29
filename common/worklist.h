@@ -39,6 +39,7 @@ void worklist_remove(struct worklist *pwl, int idx);
 bool worklist_append(struct worklist *pwl, const struct universal *prod);
 bool worklist_insert(struct worklist *pwl, const struct universal *prod,
                      int idx);
+// Used in packets_gen.cpp
 bool are_worklists_equal(const struct worklist *wlist1,
                          const struct worklist *wlist2);
 
