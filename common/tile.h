@@ -98,15 +98,12 @@ void tile_set_terrain(struct tile *ptile, struct terrain *pterrain);
 // struct city *tile_worked(const struct tile *ptile);
 void tile_set_worked(struct tile *ptile, struct city *pcity);
 
-const bv_extras *tile_extras_safe(const struct tile *ptile);
 const bv_extras *tile_extras_null();
 static inline const bv_extras *tile_extras(const struct tile *ptile)
 {
   return &(ptile->extras);
 }
 
-void tile_set_bases(struct tile *ptile, bv_bases bases);
-bool tile_has_base(const struct tile *ptile, const struct base_type *pbase);
 bool tile_has_base_flag(const struct tile *ptile, enum base_flag_id flag);
 bool tile_has_base_flag_for_unit(const struct tile *ptile,
                                  const struct unit_type *punittype,
@@ -136,7 +133,6 @@ bool tile_has_conflicting_extra(const struct tile *ptile,
                                 const struct extra_type *pextra);
 bool tile_has_visible_extra(const struct tile *ptile,
                             const struct extra_type *pextra);
-bool tile_has_cause_extra(const struct tile *ptile, enum extra_cause cause);
 void tile_add_extra(struct tile *ptile, const struct extra_type *pextra);
 void tile_remove_extra(struct tile *ptile, const struct extra_type *pextra);
 bool tile_has_extra_flag(const struct tile *ptile, enum extra_flag_id flag);
