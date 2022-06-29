@@ -527,8 +527,6 @@ should use one of the following functions/macros:
 
 * :code:`is_normal_map_pos()`: return TRUE if the map coordinates exist for the map;
 
-* :code:`is_real_map_pos()`: return TRUE if the map coordinates may exist if we perform normalization.
-
 * :code:`CHECK_MAP_POS()`: assert whether the map coordinates exist for the map.
 
 Map coordinates are quite central in the coordinate system, and they may  be easily converted to any other
