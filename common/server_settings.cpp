@@ -80,18 +80,6 @@ int server_setting_value_int_get(server_setting_id id)
 }
 
 /**
-   Returns the value of the server setting with the specified id.
- */
-unsigned int server_setting_value_bitwise_get(server_setting_id id)
-{
-  fc_assert_ret_val(fc_funcs, false);
-  fc_assert_ret_val(fc_funcs->server_setting_val_bitwise_get, false);
-  fc_assert_ret_val(server_setting_type_get(id) == SST_BITWISE, false);
-
-  return fc_funcs->server_setting_val_bitwise_get(id);
-}
-
-/**
    Returns a server setting - value pair from its setting and value;
  */
 ssetv ssetv_from_values(server_setting_id setting, int value)
@@ -124,18 +112,6 @@ server_setting_id ssetv_setting_get(ssetv enc)
   fc_assert(server_setting_type_get((server_setting_id) enc) == SST_BOOL);
 
   return static_cast<server_setting_id>(enc);
-}
-
-/**
-   Returns the server setting value of the setting - value pair.
- */
-int ssetv_value_get(ssetv enc)
-{
-  /* Only Boolean settings can be supported unless the setting value is
-   * encoded with the setting id. */
-  fc_assert(server_setting_type_get((server_setting_id) enc) == SST_BOOL);
-
-  return true;
 }
 
 /**

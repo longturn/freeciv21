@@ -158,18 +158,6 @@ const bv_extras *tile_extras_null()
 }
 
 /**
-   Returns a bit vector of the extras present at the tile.
- */
-const bv_extras *tile_extras_safe(const struct tile *ptile)
-{
-  if (!ptile) {
-    return tile_extras_null();
-  }
-
-  return &(ptile->extras);
-}
-
-/**
    Check if tile contains base providing effect
  */
 bool tile_has_base_flag(const struct tile *ptile, enum base_flag_id flag)
@@ -874,14 +862,6 @@ const char *tile_get_info_text(const struct tile *ptile,
 }
 
 /**
-   Returns TRUE if the given tile has a base of given type on it.
- */
-bool tile_has_base(const struct tile *ptile, const struct base_type *pbase)
-{
-  return tile_has_extra(ptile, base_extra_get(pbase));
-}
-
-/**
    Returns TRUE if the given tile has a road of given type on it.
  */
 bool tile_has_road(const struct tile *ptile, const struct road_type *proad)
@@ -985,22 +965,6 @@ bool tile_has_visible_extra(const struct tile *ptile,
   extra_type_iterate_end;
 
   return !hidden;
-}
-
-/**
-   Has tile any extras of the specified cause.
- */
-bool tile_has_cause_extra(const struct tile *ptile, enum extra_cause cause)
-{
-  extra_type_by_cause_iterate(cause, pextra)
-  {
-    if (tile_has_extra(ptile, pextra)) {
-      return true;
-    }
-  }
-  extra_type_by_cause_iterate_end;
-
-  return false;
 }
 
 /**
