@@ -438,8 +438,6 @@ enum diplstate_type cancel_pact_result(enum diplstate_type oldstate);
 
 struct player_diplstate *player_diplstate_get(const struct player *plr1,
                                               const struct player *plr2);
-bool are_diplstates_equal(const struct player_diplstate *pds1,
-                          const struct player_diplstate *pds2);
 enum dipl_reason pplayer_can_make_treaty(const struct player *p1,
                                          const struct player *p2,
                                          enum diplstate_type treaty);
@@ -542,7 +540,6 @@ bool is_valid_username(const char *name);
 
 #define ai_level_cmd(_level_) ai_level_name(_level_)
 bool is_settable_ai_level(enum ai_level level);
-int number_of_ai_levels();
 
 void *player_ai_data(const struct player *pplayer, const struct ai_type *ai);
 void player_set_ai_data(struct player *pplayer, const struct ai_type *ai,

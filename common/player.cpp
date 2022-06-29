@@ -1406,17 +1406,6 @@ bool gives_shared_vision(const struct player *me, const struct player *them)
 }
 
 /**
-   Return TRUE iff the two diplstates are equal.
- */
-bool are_diplstates_equal(const struct player_diplstate *pds1,
-                          const struct player_diplstate *pds2)
-{
-  return (pds1->type == pds2->type && pds1->turns_left == pds2->turns_left
-          && pds1->has_reason_to_cancel == pds2->has_reason_to_cancel
-          && pds1->contact_turns_left == pds2->contact_turns_left);
-}
-
-/**
    Return TRUE iff player1 has the diplomatic relation to player2
  */
 bool is_diplrel_between(const struct player *player1,
@@ -1826,14 +1815,6 @@ bool is_settable_ai_level(enum ai_level level)
   }
 
   return true;
-}
-
-/**
-   Return number of AI levels in game
- */
-int number_of_ai_levels()
-{
-  return AI_LEVEL_COUNT - 1; // AI_LEVEL_AWAY is not real AI
 }
 
 /**

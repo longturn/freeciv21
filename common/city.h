@@ -659,14 +659,11 @@ bool city_can_be_built_tile_only(const struct tile *ptile);
 struct city *city_list_find_number(struct city_list *This, int id);
 struct city *city_list_find_name(struct city_list *This, const char *name);
 
-int city_name_compare(const void *p1, const void *p2);
-
 // city style functions
 const char *city_style_rule_name(const int style);
 const char *city_style_name_translation(const int style);
 
 int city_style_by_rule_name(const char *s);
-int city_style_by_translated_name(const char *s);
 
 struct city *is_enemy_city_tile(const struct tile *ptile,
                                 const struct player *pplayer);
