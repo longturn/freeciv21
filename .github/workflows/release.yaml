@@ -49,7 +49,6 @@ jobs:
   i686-windows:
     name: "Create i686 Windows Package"
     runs-on: windows-latest
-    needs: clang-format
     defaults:
       run:
         shell: msys2 {0}
