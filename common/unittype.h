@@ -595,11 +595,6 @@ void set_user_unit_type_flag_name(enum unit_type_flag_id id,
                                   const char *name, const char *helptxt);
 const char *unit_type_flag_helptxt(enum unit_type_flag_id id);
 
-bool utype_can_create_extra(const struct unit_type *putype,
-                            const struct extra_type *pextra);
-bool utype_can_remove_extra(const struct unit_type *putype,
-                            const struct extra_type *pextra);
-
 bool unit_can_take_over(const struct unit *punit);
 bool utype_can_take_over(const struct unit_type *punittype);
 
@@ -671,8 +666,6 @@ typedef bool (*role_unit_callback)(struct unit_type *ptype, void *data);
 void role_unit_precalcs();
 void role_unit_precalcs_free();
 int num_role_units(int role);
-struct unit_type *role_units_iterate(int role, role_unit_callback cb,
-                                     void *data);
 struct unit_type *
 role_units_iterate_backwards(int role, role_unit_callback cb, void *data);
 struct unit_type *get_role_unit(int role, int role_index);

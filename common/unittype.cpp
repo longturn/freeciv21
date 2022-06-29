@@ -198,58 +198,6 @@ bool unit_has_type_role(const struct unit *punit, enum unit_role_id role)
 }
 
 /**
-   Return whether the unit can do an action that creates the specified
-   extra kind.
- */
-bool utype_can_create_extra(const struct unit_type *putype,
-                            const struct extra_type *pextra)
-{
-  action_iterate(act_id)
-  {
-    struct action *paction = action_by_number(act_id);
-
-    if (!utype_can_do_action(putype, act_id)) {
-      // Not relevant.
-      continue;
-    }
-
-    if (action_creates_extra(paction, pextra)) {
-      // Can create
-      return true;
-    }
-  }
-  action_iterate_end;
-
-  return false;
-}
-
-/**
-   Return whether the unit can do an action that removes the specified
-   extra kind.
- */
-bool utype_can_remove_extra(const struct unit_type *putype,
-                            const struct extra_type *pextra)
-{
-  action_iterate(act_id)
-  {
-    struct action *paction = action_by_number(act_id);
-
-    if (!utype_can_do_action(putype, act_id)) {
-      // Not relevant.
-      continue;
-    }
-
-    if (action_removes_extra(paction, pextra)) {
-      // Can remove
-      return true;
-    }
-  }
-  action_iterate_end;
-
-  return false;
-}
-
-/**
    Return whether the unit can take over enemy cities.
  */
 bool unit_can_take_over(const struct unit *punit)
@@ -1925,25 +1873,6 @@ int num_role_units(int role)
                     0);
   fc_assert_ret_val(!first_init, 0);
   return n_with_role[role];
-}
-
-/**
-   Iterate over all the role units and feed them to callback.
-   Once callback returns TRUE, no further units are feeded to it and
-   we return the unit that caused callback to return TRUE
- */
-struct unit_type *role_units_iterate(int role, role_unit_callback cb,
-                                     void *data)
-{
-  int i;
-
-  for (i = 0; i < n_with_role[role]; i++) {
-    if (cb(with_role[role][i], data)) {
-      return with_role[role][i];
-    }
-  }
-
-  return nullptr;
 }
 
 /**

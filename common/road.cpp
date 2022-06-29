@@ -285,30 +285,6 @@ bool can_build_road(struct road_type *proad, const struct unit *punit,
 }
 
 /**
-   Count tiles with specified road near the tile. Can be called with nullptr
-   road.
- */
-int count_road_near_tile(const struct tile *ptile,
-                         const struct road_type *proad)
-{
-  int count = 0;
-
-  if (proad == nullptr) {
-    return 0;
-  }
-
-  adjc_iterate(&(wld.map), ptile, adjc_tile)
-  {
-    if (tile_has_road(adjc_tile, proad)) {
-      count++;
-    }
-  }
-  adjc_iterate_end;
-
-  return count;
-}
-
-/**
    Count tiles with any river near the tile.
  */
 int count_river_near_tile(const struct tile *ptile,
@@ -437,29 +413,6 @@ bool is_road_flag_near_tile(const struct tile *ptile, enum road_flag_id flag)
   extra_type_by_cause_iterate_end;
 
   return false;
-}
-
-/**
-   Is tile native to road?
- */
-bool is_native_tile_to_road(const struct road_type *proad,
-                            const struct tile *ptile)
-{
-  struct extra_type *pextra;
-
-  if (road_has_flag(proad, RF_RIVER)) {
-    if (!terrain_has_flag(tile_terrain(ptile), TER_CAN_HAVE_RIVER)) {
-      return false;
-    }
-  } else if (tile_terrain(ptile)->road_time == 0) {
-    return false;
-  }
-
-  pextra = road_extra_get(proad);
-
-  return are_reqs_active(nullptr, nullptr, nullptr, nullptr, ptile, nullptr,
-                         nullptr, nullptr, nullptr, nullptr, &pextra->reqs,
-                         RPT_POSSIBLE);
 }
 
 /**
