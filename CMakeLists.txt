@@ -164,7 +164,7 @@ endif()
 # MSYS2 and MINGW specific installation
 if(MSYS OR MINGW)
   # Install OpenSSL library, not found with GET_RUNTIME_DEPENDENCIES
-  if($ENV{MSYSTEM} STREQUAL "MINGW32")
+  if("$ENV{MSYSTEM}" STREQUAL "MINGW32")
     install(
       FILES
       ${MINGW_PATH}/libcrypto-1_1.dll
