@@ -164,12 +164,21 @@ endif()
 # MSYS2 and MINGW specific installation
 if(MSYS OR MINGW)
   # Install OpenSSL library, not found with GET_RUNTIME_DEPENDENCIES
-  install(
-    FILES
-    ${MINGW_PATH}/libcrypto-1_1-x64.dll
-    ${MINGW_PATH}/libssl-1_1-x64.dll
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
-    COMPONENT freeciv21)
+  if("$ENV{MSYSTEM}" STREQUAL "MINGW32")
+    install(
+      FILES
+      ${MINGW_PATH}/libcrypto-1_1.dll
+      ${MINGW_PATH}/libssl-1_1.dll
+      DESTINATION ${CMAKE_INSTALL_BINDIR}
+      COMPONENT freeciv21)
+  else()
+    install(
+      FILES
+      ${MINGW_PATH}/libcrypto-1_1-x64.dll
+      ${MINGW_PATH}/libssl-1_1-x64.dll
+      DESTINATION ${CMAKE_INSTALL_BINDIR}
+      COMPONENT freeciv21)
+  endif()
 
   # This allows us to determine the external libraries we need to include at install time
   #   dynamically instead of doing it manually.

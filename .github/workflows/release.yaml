@@ -36,13 +36,65 @@ jobs:
       - name: Make build directory
         run: mkdir -p -v $PWD/build
       - name: Create tar.gz
-        run: git archive --format=tar.gz -o $PWD/build/${{github.ref_name}}.tar.gz HEAD
+        run: git archive --format=tar.gz -o $PWD/build/Freeciv21-${{github.ref_name}}.tar.gz HEAD
       - name: Create zip
-        run: git archive --format=zip -o $PWD/build/${{github.ref_name}}.zip HEAD
+        run: git archive --format=zip -o $PWD/build/Freeciv21-${{github.ref_name}}.zip HEAD
       - name: Upload package
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            build/${{github.ref_name}}.tar.gz
-            build/${{github.ref_name}}.zip
+            build/Freeciv21-${{github.ref_name}}.tar.gz
+            build/Freeciv21-${{github.ref_name}}.zip
+  i686-windows:
+    name: "Create i686 Windows Package"
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: |
+            git
+            mingw-w64-i686-cmake
+            mingw-w64-i686-ninja
+            mingw-w64-i686-nsis
+            mingw-w64-i686-gcc
+            mingw-w64-i686-libunwind
+            mingw-w64-i686-readline
+            mingw-w64-i686-lua
+            mingw-w64-i686-SDL2_mixer
+            mingw-w64-i686-qt5
+            mingw-w64-i686-qt5-svg
+            mingw-w64-i686-karchive-qt5
+      - name: Configure
+        run: |
+          export PATH=/mingw32/bin:${PATH}
+          export MSYSTEM=MINGW32
+          export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/mingw32/lib/pkgconfig:/mingw32/share/pkgconfig
+          export VCPKG_ROOT=
+          cmake . -B build -G Ninja \
+           -DCMAKE_INSTALL_PREFIX=$PWD/build/install \
+           -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: |
+          cmake --build build
+      - name: Install
+        run: |
+          cmake --build build --target install
+      - name: Package
+        run: |
+          cmake --build build --target package
+      - name: Upload package
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            build/Windows-i686/Freeciv21-*-Windows-i686.exe
+            build/Windows-i686/Freeciv21-*-Windows-i686.exe.sha256
