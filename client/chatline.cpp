@@ -255,6 +255,12 @@ chat_widget::chat_widget(QWidget *parent)
 {
   QGridLayout *gl;
   setParent(parent);
+  setMinimumSize(200, 100);
+  setResizable(resizable_flag::top | resizable_flag::topLeft
+               | resizable_flag::topRight | resizable_flag::bottom
+               | resizable_flag::bottomLeft | resizable_flag::bottomRight
+               | resizable_flag::left | resizable_flag::right);
+
   gl = new QGridLayout;
   gl->setVerticalSpacing(0);
   gl->setMargin(0);
@@ -300,6 +306,7 @@ chat_widget::chat_widget(QWidget *parent)
 
   auto title = new QLabel(_("Chat"));
   title->setAlignment(Qt::AlignCenter);
+  title->setMouseTracking(true);
 
   gl->addWidget(mw, 0, 0, Qt::AlignLeft | Qt::AlignTop);
   gl->addWidget(title, 0, 1, 1, 2);
