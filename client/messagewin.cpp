@@ -36,12 +36,16 @@
 message_widget::message_widget(QWidget *parent)
 {
   setParent(parent);
+  setMinimumSize(200, 100);
   layout = new QGridLayout;
-  layout->setMargin(0);
+  layout->setMargin(2);
   setLayout(layout);
+  setResizable(resizable_flag::bottom | resizable_flag::bottomLeft
+               | resizable_flag::left);
 
   auto title = new QLabel(_("Messages"));
   title->setAlignment(Qt::AlignCenter);
+  title->setMouseTracking(true);
   layout->addWidget(title, 0, 1);
   layout->setColumnStretch(1, 100);
 
