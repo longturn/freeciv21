@@ -263,6 +263,15 @@ const QPixmap *get_basic_fog_sprite(const struct tileset *t);
 std::vector<drawn_sprite>
 fill_basic_extra_sprite_array(const struct tileset *t,
                               const struct extra_type *pextra);
+void fill_unit_type_sprite_array(const struct tileset *t,
+                                 std::vector<drawn_sprite> &sprs,
+                                 const struct unit_type *putype,
+                                 enum direction8 facing);
+void fill_unit_sprite_array(const struct tileset *t,
+                            std::vector<drawn_sprite> &sprs,
+                            const tile *ptile, const struct unit *punit,
+                            bool stack, bool backdrop);
+
 bool is_extra_drawing_enabled(struct extra_type *pextra);
 const QPixmap *get_event_sprite(const struct tileset *t,
                                 enum event_type event);

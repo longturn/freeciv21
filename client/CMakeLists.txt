@@ -82,6 +82,7 @@ add_library(
   layer_darkness.cpp
   layer_special.cpp
   layer_terrain.cpp
+  layer_units.cpp
   layer.cpp
   luaconsole.cpp
   luaconsole_common.cpp

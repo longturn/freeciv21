@@ -73,6 +73,7 @@
 #include "layer_darkness.h"
 #include "layer_special.h"
 #include "layer_terrain.h"
+#include "layer_units.h"
 #include "options.h" // for fill_xxx
 #include "tilespec.h"
 
@@ -376,14 +377,6 @@ static bool tileset_update = false;
 static struct tileset *tileset_read_toplevel(const char *tileset_name,
                                              bool verbose, int topology_id);
 
-static void fill_unit_type_sprite_array(const struct tileset *t,
-                                        std::vector<drawn_sprite> &sprs,
-                                        const struct unit_type *putype,
-                                        enum direction8 facing);
-static void fill_unit_sprite_array(const struct tileset *t,
-                                   std::vector<drawn_sprite> &sprs,
-                                   const struct unit *punit, bool stack,
-                                   bool backdrop);
 static bool load_river_sprites(struct tileset *t,
                                struct river_sprites *store,
                                const char *tag_pfx);
@@ -1622,6 +1615,10 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
         t, FULL_TILE_X_OFFSET + t->city_flag_offset_x,
         FULL_TILE_Y_OFFSET + t->city_flag_offset_y);
     t->layers.emplace_back(std::move(l));
+  } break;
+  case LAYER_UNIT:
+  case LAYER_FOCUS_UNIT: {
+    t->layers.emplace_back(std::make_unique<freeciv::layer_units>(t, layer));
   } break;
   default:
     t->layers.push_back(std::make_unique<freeciv::layer>(t, layer));
@@ -3646,10 +3643,10 @@ void build_tile_data(const struct tile *ptile, struct terrain *pterrain,
 /**
    Fill in the sprite array for the unit type.
  */
-static void fill_unit_type_sprite_array(const struct tileset *t,
-                                        std::vector<drawn_sprite> &sprs,
-                                        const struct unit_type *putype,
-                                        enum direction8 facing)
+void fill_unit_type_sprite_array(const struct tileset *t,
+                                 std::vector<drawn_sprite> &sprs,
+                                 const struct unit_type *putype,
+                                 enum direction8 facing)
 {
   auto uspr = get_unittype_sprite(t, putype, facing);
 
@@ -3660,13 +3657,20 @@ static void fill_unit_type_sprite_array(const struct tileset *t,
 /**
    Fill in the sprite array for the unit.
  */
-static void fill_unit_sprite_array(const struct tileset *t,
-                                   std::vector<drawn_sprite> &sprs,
-                                   const struct unit *punit, bool stack,
-                                   bool backdrop)
+void fill_unit_sprite_array(const struct tileset *t,
+                            std::vector<drawn_sprite> &sprs,
+                            const tile *ptile, const struct unit *punit,
+                            bool stack, bool backdrop)
 {
   int ihp;
   const struct unit_type *ptype = unit_type_get(punit);
+
+  if (ptile && unit_is_in_focus(punit) && !t->sprites.unit.select.empty()) {
+    // Special case for drawing the selection rectangle.  The blinking  unit
+    // is handled separately, inside get_drawable_unit().
+    sprs.emplace_back(t, t->sprites.unit.select[focus_unit_state], true,
+                      t->select_offset_x, t->select_offset_y);
+  }
 
   if (backdrop) {
     if (!gui_options.solid_color_behind_units) {
@@ -4811,23 +4815,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
 
   case LAYER_UNIT:
   case LAYER_FOCUS_UNIT:
-    if (do_draw_unit && XOR(layer == LAYER_UNIT, unit_is_in_focus(punit))) {
-      bool stacked = ptile && (unit_list_size(ptile->units) > 1);
-      bool backdrop = !pcity;
-
-      if (ptile && unit_is_in_focus(punit)
-          && !t->sprites.unit.select.empty()) {
-        /* Special case for drawing the selection rectangle.  The blinking
-         * unit is handled separately, inside get_drawable_unit(). */
-        sprs.emplace_back(t, t->sprites.unit.select[focus_unit_state], true,
-                          t->select_offset_x, t->select_offset_y);
-      }
-
-      fill_unit_sprite_array(t, sprs, punit, stacked, backdrop);
-    } else if (putype != nullptr && layer == LAYER_UNIT) {
-      // Only the sprite for the unit type.
-      fill_unit_type_sprite_array(t, sprs, putype, direction8_invalid());
-    }
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_SPECIAL3:
