@@ -256,8 +256,6 @@ bool tile_visible_and_not_on_border_mapcanvas(struct tile *ptile);
 
 void put_unit(const struct unit *punit, QPixmap *pcanvas, int canvas_x,
               int canvas_y);
-void put_unittype(const struct unit_type *putype, QPixmap *pcanvas,
-                  int canvas_x, int canvas_y);
 void put_city(struct city *pcity, QPixmap *pcanvas, int canvas_x,
               int canvas_y);
 void put_terrain(struct tile *ptile, QPixmap *pcanvas, int canvas_x,

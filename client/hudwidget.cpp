@@ -23,6 +23,7 @@
 #include "nation.h"
 #include "research.h"
 #include "tile.h"
+#include "tilespec.h"
 #include "unit.h"
 #include "unitlist.h"
 // client
@@ -1697,24 +1698,22 @@ void hud_unit_combat::init_images(bool redraw)
   QImage crdimg, acrimg, at, dt;
   QRect dr, ar;
   QPainter p;
-  QPixmap *defender_pixmap;
-  QPixmap *attacker_pixmap;
   int w;
 
   focus = false;
   w = 3 * hud_scale * tileset_unit_height(tileset) / 2;
   setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
   setFixedSize(2 * w, w);
-  defender_pixmap =
-      new QPixmap(tileset_unit_width(tileset), tileset_unit_height(tileset));
-  defender_pixmap->fill(Qt::transparent);
+  QPixmap defender_pixmap(tileset_unit_width(tileset),
+                          tileset_unit_height(tileset));
   if (defender != nullptr) {
     if (!redraw) {
-      put_unit(defender, defender_pixmap, 0, 0);
+      put_unit(defender, &defender_pixmap, 0, 0);
     } else {
-      put_unittype(type_defender, defender_pixmap, 0, 0);
+      defender_pixmap =
+          *get_unittype_sprite(tileset, type_defender, direction8_invalid());
     }
-    dimg = defender_pixmap->toImage();
+    dimg = defender_pixmap.toImage();
     dr = zealous_crop_rect(dimg);
     crdimg = dimg.copy(dr);
     dimg = crdimg.scaledToHeight(w, Qt::SmoothTransformation);
@@ -1728,16 +1727,17 @@ void hud_unit_combat::init_images(bool redraw)
     dimg = dt;
   }
   dimg = dimg.scaled(w, w, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-  attacker_pixmap =
-      new QPixmap(tileset_unit_width(tileset), tileset_unit_height(tileset));
-  attacker_pixmap->fill(Qt::transparent);
+  QPixmap attacker_pixmap(tileset_unit_width(tileset),
+                          tileset_unit_height(tileset));
+  attacker_pixmap.fill(Qt::transparent);
   if (attacker != nullptr) {
     if (!redraw) {
-      put_unit(attacker, attacker_pixmap, 0, 0);
+      put_unit(attacker, &attacker_pixmap, 0, 0);
     } else {
-      put_unittype(type_attacker, attacker_pixmap, 0, 0);
+      attacker_pixmap =
+          *get_unittype_sprite(tileset, type_attacker, direction8_invalid());
     }
-    aimg = attacker_pixmap->toImage();
+    aimg = attacker_pixmap.toImage();
     ar = zealous_crop_rect(aimg);
     acrimg = aimg.copy(ar);
     aimg = acrimg.scaledToHeight(w, Qt::SmoothTransformation);
@@ -1751,8 +1751,6 @@ void hud_unit_combat::init_images(bool redraw)
     aimg = at;
   }
   aimg = aimg.scaled(w, w, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-  delete defender_pixmap;
-  delete attacker_pixmap;
 }
 
 /****************************************************************************
