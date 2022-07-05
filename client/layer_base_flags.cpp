@@ -35,13 +35,12 @@ layer_base_flags::layer_base_flags(struct tileset *ts, int offset_x,
 
 std::vector<drawn_sprite> layer_base_flags::fill_sprite_array(
     const tile *ptile, const tile_edge *pedge, const tile_corner *pcorner,
-    const unit *punit, const city *pcity, const unit_type *putype) const
+    const unit *punit, const city *pcity) const
 {
   Q_UNUSED(pedge);
   Q_UNUSED(pcorner);
   Q_UNUSED(punit);
   Q_UNUSED(pcity);
-  Q_UNUSED(putype);
 
   if (ptile == nullptr) {
     return {};

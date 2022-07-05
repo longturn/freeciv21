@@ -147,7 +147,7 @@ public:
   virtual std::vector<drawn_sprite>
   fill_sprite_array(const tile *ptile, const tile_edge *pedge,
                     const tile_corner *pcorner, const unit *punit,
-                    const city *pcity, const unit_type *putype) const;
+                    const city *pcity) const;
 
   /**
    * Initializes data specific to one player. This allows to cache tiles

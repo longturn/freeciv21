@@ -28,13 +28,13 @@ layer_darkness::layer_darkness(struct tileset *ts)
 {
 }
 
-std::vector<drawn_sprite> layer_darkness::fill_sprite_array(
-    const tile *ptile, const tile_edge *pedge, const tile_corner *pcorner,
-    const unit *punit, const city *pcity, const unit_type *putype) const
+std::vector<drawn_sprite>
+layer_darkness::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
+                                  const tile_corner *pcorner,
+                                  const unit *punit, const city *pcity) const
 {
   Q_UNUSED(pedge);
   Q_UNUSED(pcorner);
-  Q_UNUSED(putype);
 
   if (!ptile) {
     return {};

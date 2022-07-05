@@ -689,9 +689,10 @@ void layer_terrain::initialize_blending(const terrain *terrain,
 /**
  * \implements layer::fill_sprite_array
  */
-std::vector<drawn_sprite> layer_terrain::fill_sprite_array(
-    const tile *ptile, const tile_edge *pedge, const tile_corner *pcorner,
-    const unit *punit, const city *pcity, const unit_type *putype) const
+std::vector<drawn_sprite>
+layer_terrain::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
+                                 const tile_corner *pcorner,
+                                 const unit *punit, const city *pcity) const
 {
   if (ptile == nullptr) {
     return {};
