@@ -29,27 +29,20 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 
 #include "fcdb.h"
 
-enum fcdb_option_source {
-  AOS_FILE, // Read from config file
-};
-
 struct fcdb_option {
-  enum fcdb_option_source source;
   char *value;
 };
 
 QHash<QString, fcdb_option *> fcdb_config;
 
-static bool fcdb_set_option(const char *key, const char *value,
-                            enum fcdb_option_source source);
+static bool fcdb_set_option(const char *key, const char *value);
 static bool fcdb_load_config(const char *filename);
 
 /**
    Set one fcdb option (or delete it if value == nullptr).
    Replaces any previous setting.
  */
-static bool fcdb_set_option(const char *key, const char *value,
-                            enum fcdb_option_source source)
+static bool fcdb_set_option(const char *key, const char *value)
 {
   struct fcdb_option *oldopt = nullptr;
   bool removed;
@@ -58,7 +51,6 @@ static bool fcdb_set_option(const char *key, const char *value,
     auto newopt = new fcdb_option;
 
     newopt->value = fc_strdup(value);
-    newopt->source = source;
 
     removed = fcdb_config.contains(key);
     if (removed) {
@@ -108,7 +100,7 @@ static bool fcdb_load_config(const char *filename)
       bool entry_str_get_success = entry_str_get(pentry, &value);
 
       fc_assert(entry_str_get_success);
-      fcdb_set_option(entry_name(pentry), value, AOS_FILE);
+      fcdb_set_option(entry_name(pentry), value);
     } else {
       qCritical("Value for '%s' in '%s' is not of string type, ignoring",
                 entry_name(pentry), filename);
