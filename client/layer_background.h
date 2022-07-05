@@ -30,8 +30,7 @@ public:
   std::vector<drawn_sprite>
   fill_sprite_array(const tile *ptile, const tile_edge *pedge,
                     const tile_corner *pcorner, const unit *punit,
-                    const city *pcity,
-                    const unit_type *putype) const override;
+                    const city *pcity) const override;
 
   void initialize_player(const player *player) override;
   void free_player(int player_id) override;

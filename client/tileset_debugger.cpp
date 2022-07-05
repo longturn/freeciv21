@@ -138,8 +138,8 @@ void tileset_debugger::set_tile(const ::tile *t)
         || (editor_is_active() && editor_tile_is_selected(t))) {
       unit = get_drawable_unit(tileset, t);
     }
-    const auto sprites = layer->fill_sprite_array(t, nullptr, nullptr, unit,
-                                                  tile_city(t), nullptr);
+    const auto sprites =
+        layer->fill_sprite_array(t, nullptr, nullptr, unit, tile_city(t));
 
     if (sprites.empty()) {
       continue;

@@ -150,8 +150,7 @@ std::vector<drawn_sprite>
 fill_sprite_array(struct tileset *t, enum mapview_layer layer,
                   const struct tile *ptile, const struct tile_edge *pedge,
                   const struct tile_corner *pcorner,
-                  const struct unit *punit, const struct city *pcity,
-                  const struct unit_type *putype);
+                  const struct unit *punit, const struct city *pcity);
 std::vector<drawn_sprite>
 fill_basic_terrain_layer_sprite_array(struct tileset *t, int layer,
                                       struct terrain *pterrain);
@@ -263,10 +262,6 @@ const QPixmap *get_basic_fog_sprite(const struct tileset *t);
 std::vector<drawn_sprite>
 fill_basic_extra_sprite_array(const struct tileset *t,
                               const struct extra_type *pextra);
-void fill_unit_type_sprite_array(const struct tileset *t,
-                                 std::vector<drawn_sprite> &sprs,
-                                 const struct unit_type *putype,
-                                 enum direction8 facing);
 void fill_unit_sprite_array(const struct tileset *t,
                             std::vector<drawn_sprite> &sprs,
                             const tile *ptile, const struct unit *punit,

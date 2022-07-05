@@ -3641,20 +3641,6 @@ void build_tile_data(const struct tile *ptile, struct terrain *pterrain,
 }
 
 /**
-   Fill in the sprite array for the unit type.
- */
-void fill_unit_type_sprite_array(const struct tileset *t,
-                                 std::vector<drawn_sprite> &sprs,
-                                 const struct unit_type *putype,
-                                 enum direction8 facing)
-{
-  auto uspr = get_unittype_sprite(t, putype, facing);
-
-  sprs.emplace_back(t, uspr, true, FULL_TILE_X_OFFSET + t->unit_offset_x,
-                    FULL_TILE_Y_OFFSET + t->unit_offset_y);
-}
-
-/**
    Fill in the sprite array for the unit.
  */
 void fill_unit_sprite_array(const struct tileset *t,
@@ -3683,7 +3669,9 @@ void fill_unit_sprite_array(const struct tileset *t,
   }
 
   // Add the sprite for the unit type.
-  fill_unit_type_sprite_array(t, sprs, ptype, punit->facing);
+  const auto uspr = get_unittype_sprite(t, ptype, punit->facing);
+  sprs.emplace_back(t, uspr, true, FULL_TILE_X_OFFSET + t->unit_offset_x,
+                    FULL_TILE_Y_OFFSET + t->unit_offset_y);
 
   if (t->sprites.unit.loaded && unit_transported(punit)) {
     ADD_SPRITE_FULL(t->sprites.unit.loaded);
@@ -4590,8 +4578,7 @@ std::vector<drawn_sprite>
 fill_sprite_array(struct tileset *t, enum mapview_layer layer,
                   const struct tile *ptile, const struct tile_edge *pedge,
                   const struct tile_corner *pcorner,
-                  const struct unit *punit, const struct city *pcity,
-                  const struct unit_type *putype)
+                  const struct unit *punit, const struct city *pcity)
 {
   int tileno, dir;
   bv_extras textras_near[8]{};
@@ -5605,8 +5592,8 @@ fill_basic_terrain_layer_sprite_array(struct tileset *t, int layer,
 
   auto sprs = std::vector<drawn_sprite>();
   for (const auto &layer : t->layers) {
-    const auto lsprs = layer->fill_sprite_array(tile, nullptr, nullptr,
-                                                nullptr, nullptr, nullptr);
+    const auto lsprs =
+        layer->fill_sprite_array(tile, nullptr, nullptr, nullptr, nullptr);
     // Merge by hand because drawn_sprite isn't copyable (but it is
     // copy-constructible)
     for (const auto &sprite : lsprs) {
@@ -5633,8 +5620,8 @@ fill_basic_extra_sprite_array(const struct tileset *t,
 
   auto sprs = std::vector<drawn_sprite>();
   for (const auto &layer : t->layers) {
-    const auto lsprs = layer->fill_sprite_array(tile, nullptr, nullptr,
-                                                nullptr, nullptr, nullptr);
+    const auto lsprs =
+        layer->fill_sprite_array(tile, nullptr, nullptr, nullptr, nullptr);
     // Merge by hand because drawn_sprite isn't copyable (but it is
     // copy-constructible)
     for (const auto &sprite : lsprs) {
