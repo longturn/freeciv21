@@ -38,6 +38,7 @@
 #include "helpdlg.h"
 #include "qtg_cxxside.h"
 #include "sprite.h"
+#include "tilespec.h"
 
 #define MAX_HELP_TEXT_SIZE 8192
 #define REQ_LABEL_NEVER _("(Never)")
@@ -850,7 +851,6 @@ void help_widget::set_topic_unit(const help_item *topic, const char *title)
   char buffer[MAX_HELP_TEXT_SIZE];
   int upkeep, max_upkeep;
   struct advance *tech;
-  QPixmap *canvas;
   const struct unit_type *obsolete;
   struct unit_type *utype, *max_utype;
   QString str;
@@ -866,12 +866,8 @@ void help_widget::set_topic_unit(const help_item *topic, const char *title)
     max_utype = uclass_max_values(utype->uclass);
 
     // Unit icon
-    canvas = new QPixmap(tileset_full_tile_width(tileset),
-                         tileset_full_tile_height(tileset));
-    canvas->fill(Qt::transparent);
-    put_unittype(utype, canvas, 0, 0);
-    add_info_pixmap(canvas);
-    delete canvas;
+    add_info_pixmap(
+        get_unittype_sprite(tileset, utype, direction8_invalid()));
 
     add_info_progress(_("Attack:"), utype->attack_strength, 0,
                       max_utype->attack_strength);

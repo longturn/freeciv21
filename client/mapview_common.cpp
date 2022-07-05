@@ -1031,20 +1031,6 @@ void put_unit(const struct unit *punit, QPixmap *pcanvas, int canvas_x,
 }
 
 /**
-   Draw the given unit onto the canvas store at the given location. The area
-   of drawing is tileset_unit_height(tileset) x tileset_unit_width(tileset).
- */
-void put_unittype(const struct unit_type *putype, QPixmap *pcanvas,
-                  int canvas_x, int canvas_y)
-{
-  canvas_y += (tileset_unit_height(tileset) - tileset_tile_height(tileset));
-  for (const auto &layer : tileset_get_layers(tileset)) {
-    put_one_element(pcanvas, layer, nullptr, nullptr, nullptr, nullptr,
-                    nullptr, canvas_x, canvas_y, putype);
-  }
-}
-
-/**
    Draw the given city onto the canvas store at the given location.  The
    area of drawing is
    tileset_full_tile_height(tileset) x tileset_full_tile_width(tileset).
