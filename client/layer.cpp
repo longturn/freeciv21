@@ -29,11 +29,9 @@ namespace freeciv {
 
 std::vector<drawn_sprite>
 layer::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
-                         const tile_corner *pcorner, const unit *punit,
-                         const city *pcity) const
+                         const tile_corner *pcorner, const unit *punit) const
 {
-  return ::fill_sprite_array(m_ts, m_layer, ptile, pedge, pcorner, punit,
-                             pcity);
+  return ::fill_sprite_array(m_ts, m_layer, ptile, pedge, pcorner, punit);
 }
 
 /**

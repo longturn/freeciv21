@@ -31,7 +31,7 @@ layer_darkness::layer_darkness(struct tileset *ts)
 std::vector<drawn_sprite>
 layer_darkness::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
                                   const tile_corner *pcorner,
-                                  const unit *punit, const city *pcity) const
+                                  const unit *punit) const
 {
   Q_UNUSED(pedge);
   Q_UNUSED(pcorner);
@@ -41,7 +41,7 @@ layer_darkness::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
   }
 
   // Don't draw darkness when the solid background is used
-  if (!solid_background(ptile, punit, pcity)) {
+  if (!solid_background(ptile, punit, tile_city(ptile))) {
     return {};
   }
 

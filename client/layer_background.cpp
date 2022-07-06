@@ -28,8 +28,10 @@ layer_background::layer_background(struct tileset *ts)
 
 std::vector<drawn_sprite> layer_background::fill_sprite_array(
     const tile *ptile, const tile_edge *pedge, const tile_corner *pcorner,
-    const unit *punit, const city *pcity) const
+    const unit *punit) const
 {
+  const auto pcity = tile_city(ptile);
+
   // Set up background color.
   player *owner = nullptr;
   if (gui_options.solid_color_behind_units) {

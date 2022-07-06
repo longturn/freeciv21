@@ -692,7 +692,7 @@ void layer_terrain::initialize_blending(const terrain *terrain,
 std::vector<drawn_sprite>
 layer_terrain::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
                                  const tile_corner *pcorner,
-                                 const unit *punit, const city *pcity) const
+                                 const unit *punit) const
 {
   if (ptile == nullptr) {
     return {};
@@ -704,7 +704,7 @@ layer_terrain::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
   }
 
   // Don't draw terrain when the solid background is used
-  if (solid_background(ptile, punit, pcity)) {
+  if (solid_background(ptile, punit, tile_city(ptile))) {
     return {};
   }
 

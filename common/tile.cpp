@@ -74,6 +74,10 @@ void tile_set_owner(struct tile *ptile, struct player *pplayer,
  */
 struct city *tile_city(const struct tile *ptile)
 {
+  if (!ptile) {
+    return nullptr;
+  }
+
   struct city *pcity = ptile->worked;
 
   if (nullptr != pcity && is_city_center(pcity, ptile)) {

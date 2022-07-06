@@ -4579,13 +4579,16 @@ std::vector<drawn_sprite>
 fill_sprite_array(struct tileset *t, enum mapview_layer layer,
                   const struct tile *ptile, const struct tile_edge *pedge,
                   const struct tile_corner *pcorner,
-                  const struct unit *punit, const struct city *pcity)
+                  const struct unit *punit)
 {
   int tileno, dir;
   bv_extras textras_near[8]{};
   bv_extras textras;
   struct terrain *tterrain_near[8] = {nullptr};
   struct terrain *pterrain = nullptr;
+
+  const auto pcity = tile_city(ptile);
+
   /* Unit drawing is disabled when the view options are turned off,
    * but only where we're drawing on the mapview. */
   bool do_draw_unit =
@@ -5594,7 +5597,7 @@ fill_basic_terrain_layer_sprite_array(struct tileset *t, int layer,
   auto sprs = std::vector<drawn_sprite>();
   for (const auto &layer : t->layers) {
     const auto lsprs =
-        layer->fill_sprite_array(tile, nullptr, nullptr, nullptr, nullptr);
+        layer->fill_sprite_array(tile, nullptr, nullptr, nullptr);
     // Merge by hand because drawn_sprite isn't copyable (but it is
     // copy-constructible)
     for (const auto &sprite : lsprs) {
@@ -5622,7 +5625,7 @@ fill_basic_extra_sprite_array(const struct tileset *t,
   auto sprs = std::vector<drawn_sprite>();
   for (const auto &layer : t->layers) {
     const auto lsprs =
-        layer->fill_sprite_array(tile, nullptr, nullptr, nullptr, nullptr);
+        layer->fill_sprite_array(tile, nullptr, nullptr, nullptr);
     // Merge by hand because drawn_sprite isn't copyable (but it is
     // copy-constructible)
     for (const auto &sprite : lsprs) {
