@@ -30,6 +30,9 @@ layer_units::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
                                const tile_corner *pcorner,
                                const unit *punit) const
 {
+  Q_UNUSED(pedge);
+  Q_UNUSED(pcorner);
+
   // We need to have something to draw
   if (!punit) {
     return {};
