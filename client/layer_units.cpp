@@ -27,8 +27,8 @@ layer_units::layer_units(struct tileset *ts, mapview_layer layer)
 
 std::vector<drawn_sprite>
 layer_units::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
-                               const tile_corner *pcorner, const unit *punit,
-                               const city *pcity) const
+                               const tile_corner *pcorner,
+                               const unit *punit) const
 {
   // We need to have something to draw
   if (!punit) {
@@ -44,7 +44,7 @@ layer_units::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
       || (gui_options.draw_focus_unit && unit_is_in_focus(punit));
 
   if (do_draw_unit && XOR(type() == LAYER_UNIT, unit_is_in_focus(punit))) {
-    const bool backdrop = !pcity;
+    const bool backdrop = !tile_city(ptile);
     fill_unit_sprite_array(tileset(), sprs, ptile, punit, backdrop);
   }
 

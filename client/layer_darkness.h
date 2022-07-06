@@ -68,8 +68,8 @@ public:
 
   std::vector<drawn_sprite>
   fill_sprite_array(const tile *ptile, const tile_edge *pedge,
-                    const tile_corner *pcorner, const unit *punit,
-                    const city *pcity) const override;
+                    const tile_corner *pcorner,
+                    const unit *punit) const override;
 
 private:
   darkness_style m_style;

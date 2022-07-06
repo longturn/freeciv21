@@ -984,14 +984,12 @@ void put_one_element(QPixmap *pcanvas,
                      const std::unique_ptr<freeciv::layer> &layer,
                      const struct tile *ptile, const struct tile_edge *pedge,
                      const struct tile_corner *pcorner,
-                     const struct unit *punit, const struct city *pcity,
-                     int canvas_x, int canvas_y)
+                     const struct unit *punit, int canvas_x, int canvas_y)
 {
   bool city_mode = false;
   bool city_unit = false;
   int dummy_x, dummy_y;
-  auto sprites =
-      layer->fill_sprite_array(ptile, pedge, pcorner, punit, pcity);
+  auto sprites = layer->fill_sprite_array(ptile, pedge, pcorner, punit);
   bool fog = (ptile && gui_options.draw_fog_of_war
               && TILE_KNOWN_UNSEEN == client_tile_get_known(ptile));
   if (ptile) {
@@ -1025,7 +1023,7 @@ void put_unit(const struct unit *punit, QPixmap *pcanvas, int canvas_x,
   canvas_y += (tileset_unit_height(tileset) - tileset_tile_height(tileset));
   for (const auto &layer : tileset_get_layers(tileset)) {
     put_one_element(pcanvas, layer, nullptr, nullptr, nullptr, punit,
-                    nullptr, canvas_x, canvas_y);
+                    canvas_x, canvas_y);
   }
 }
 
@@ -1043,7 +1041,7 @@ void put_terrain(struct tile *ptile, QPixmap *pcanvas, int canvas_x,
       (tileset_full_tile_height(tileset) - tileset_tile_height(tileset));
   for (const auto &layer : tileset_get_layers(tileset)) {
     put_one_element(pcanvas, layer, ptile, nullptr, nullptr, nullptr,
-                    nullptr, canvas_x, canvas_y);
+                    canvas_x, canvas_y);
   }
 }
 
@@ -1171,8 +1169,8 @@ static void put_one_tile(QPixmap *pcanvas,
       || (editor_is_active() && editor_tile_is_selected(ptile))) {
     struct unit *punit = get_drawable_unit(tileset, ptile);
 
-    put_one_element(pcanvas, layer, ptile, nullptr, nullptr, punit,
-                    tile_city(ptile), canvas_x, canvas_y);
+    put_one_element(pcanvas, layer, ptile, nullptr, nullptr, punit, canvas_x,
+                    canvas_y);
   }
 }
 
@@ -1376,10 +1374,10 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
         put_one_tile(mapview.store, layer, ptile, cx, cy);
       } else if (pedge) {
         put_one_element(mapview.store, layer, nullptr, pedge, nullptr,
-                        nullptr, nullptr, cx, cy);
+                        nullptr, cx, cy);
       } else if (pcorner) {
         put_one_element(mapview.store, layer, nullptr, nullptr, pcorner,
-                        nullptr, nullptr, cx, cy);
+                        nullptr, cx, cy);
       } else {
         // This can happen, for instance for unreal tiles.
       }
