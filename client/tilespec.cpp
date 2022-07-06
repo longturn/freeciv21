@@ -3657,7 +3657,8 @@ void fill_unit_sprite_array(const struct tileset *t,
                       t->select_offset_x, t->select_offset_y);
   }
 
-  if (backdrop) {
+  // Flag
+  if (!ptile || !tile_city(ptile)) {
     if (!gui_options.solid_color_behind_units) {
       sprs.emplace_back(t, get_unit_nation_flag_sprite(t, punit), true,
                         FULL_TILE_X_OFFSET + t->unit_flag_offset_x,
