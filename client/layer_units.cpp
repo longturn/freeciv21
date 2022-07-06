@@ -33,23 +33,18 @@ layer_units::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
   Q_UNUSED(pedge);
   Q_UNUSED(pcorner);
 
-  // We need to have something to draw
-  if (!punit) {
+  // Should we draw anything in the first place?
+  if (!do_draw_unit(ptile, punit)) {
+    return {};
+  }
+
+  // Only draw the focused unit on LAYER_FOCUS_UNIT
+  if (type() != LAYER_FOCUS_UNIT && unit_is_in_focus(punit)) {
     return {};
   }
 
   std::vector<drawn_sprite> sprs;
-
-  /* Unit drawing is disabled when the view options are turned off,
-   * but only where we're drawing on the mapview. */
-  bool do_draw_unit =
-      gui_options.draw_units
-      || (gui_options.draw_focus_unit && unit_is_in_focus(punit));
-
-  if (do_draw_unit && XOR(type() == LAYER_UNIT, unit_is_in_focus(punit))) {
-    fill_unit_sprite_array(tileset(), sprs, ptile, punit);
-  }
-
+  fill_unit_sprite_array(tileset(), sprs, ptile, punit);
   return sprs;
 }
 
