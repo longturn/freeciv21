@@ -264,8 +264,7 @@ fill_basic_extra_sprite_array(const struct tileset *t,
                               const struct extra_type *pextra);
 void fill_unit_sprite_array(const struct tileset *t,
                             std::vector<drawn_sprite> &sprs,
-                            const tile *ptile, const struct unit *punit,
-                            bool backdrop);
+                            const tile *ptile, const struct unit *punit);
 
 bool is_extra_drawing_enabled(struct extra_type *pextra);
 const QPixmap *get_event_sprite(const struct tileset *t,

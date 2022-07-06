@@ -3645,8 +3645,7 @@ void build_tile_data(const struct tile *ptile, struct terrain *pterrain,
  */
 void fill_unit_sprite_array(const struct tileset *t,
                             std::vector<drawn_sprite> &sprs,
-                            const tile *ptile, const struct unit *punit,
-                            bool backdrop)
+                            const tile *ptile, const struct unit *punit)
 {
   const struct unit_type *ptype = unit_type_get(punit);
 
