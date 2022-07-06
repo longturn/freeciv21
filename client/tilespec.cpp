@@ -3646,9 +3646,8 @@ void build_tile_data(const struct tile *ptile, struct terrain *pterrain,
 void fill_unit_sprite_array(const struct tileset *t,
                             std::vector<drawn_sprite> &sprs,
                             const tile *ptile, const struct unit *punit,
-                            bool stack, bool backdrop)
+                            bool backdrop)
 {
-  int ihp;
   const struct unit_type *ptype = unit_type_get(punit);
 
   if (ptile && unit_is_in_focus(punit) && !t->sprites.unit.select.empty()) {
@@ -3807,7 +3806,8 @@ void fill_unit_sprite_array(const struct tileset *t,
     ADD_SPRITE_FULL(t->sprites.unit.tired);
   }
 
-  if (stack || punit->client.occupied) {
+  if ((ptile && unit_list_size(ptile->units) > 1)
+      || punit->client.occupied) {
     ADD_SPRITE_FULL(t->sprites.unit.stack);
   }
 
@@ -3815,7 +3815,7 @@ void fill_unit_sprite_array(const struct tileset *t,
     ADD_SPRITE_FULL(t->sprites.unit.vet_lev[punit->veteran]);
   }
 
-  ihp = ((t->sprites.unit.hp_bar.size() - 1) * punit->hp) / ptype->hp;
+  auto ihp = ((t->sprites.unit.hp_bar.size() - 1) * punit->hp) / ptype->hp;
   ihp = CLIP(0, ihp, t->sprites.unit.hp_bar.size() - 1); // Safety
   ADD_SPRITE_FULL(t->sprites.unit.hp_bar[ihp]);
 }
