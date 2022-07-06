@@ -44,8 +44,7 @@ layer_units::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
       || (gui_options.draw_focus_unit && unit_is_in_focus(punit));
 
   if (do_draw_unit && XOR(type() == LAYER_UNIT, unit_is_in_focus(punit))) {
-    const bool backdrop = !tile_city(ptile);
-    fill_unit_sprite_array(tileset(), sprs, ptile, punit, backdrop);
+    fill_unit_sprite_array(tileset(), sprs, ptile, punit);
   }
 
   return sprs;
