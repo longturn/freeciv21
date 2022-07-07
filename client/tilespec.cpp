@@ -3641,6 +3641,72 @@ void build_tile_data(const struct tile *ptile, struct terrain *pterrain,
 }
 
 /**
+ * Returns the sprite used to represent a given activity on the map.
+ */
+const QPixmap *get_activity_sprite(const struct tileset *t,
+                                   enum unit_activity activity,
+                                   extra_type *target)
+{
+  switch (activity) {
+  case ACTIVITY_MINE:
+    if (target == nullptr) {
+      return t->sprites.unit.plant;
+    } else {
+      return t->sprites.extras[extra_index(target)].activity;
+    }
+    break;
+  case ACTIVITY_PLANT:
+    return t->sprites.unit.plant;
+    break;
+  case ACTIVITY_IRRIGATE:
+    if (target == nullptr) {
+      return t->sprites.unit.irrigate;
+    } else {
+      return t->sprites.extras[extra_index(target)].activity;
+    }
+    break;
+  case ACTIVITY_CULTIVATE:
+    return t->sprites.unit.irrigate;
+    break;
+  case ACTIVITY_POLLUTION:
+  case ACTIVITY_FALLOUT:
+    return t->sprites.extras[extra_index(target)].rmact;
+    break;
+  case ACTIVITY_PILLAGE:
+    return t->sprites.unit.pillage;
+    break;
+  case ACTIVITY_EXPLORE:
+    // Drawn below as the server side agent.
+    break;
+  case ACTIVITY_FORTIFIED:
+    return t->sprites.unit.fortified;
+    break;
+  case ACTIVITY_FORTIFYING:
+    return t->sprites.unit.fortifying;
+    break;
+  case ACTIVITY_SENTRY:
+    return t->sprites.unit.sentry;
+    break;
+  case ACTIVITY_GOTO:
+    return t->sprites.unit.go_to;
+    break;
+  case ACTIVITY_TRANSFORM:
+    return t->sprites.unit.transform;
+    break;
+  case ACTIVITY_BASE:
+  case ACTIVITY_GEN_ROAD:
+    return t->sprites.extras[extra_index(target)].activity;
+    break;
+  case ACTIVITY_CONVERT:
+    return t->sprites.unit.convert;
+    break;
+  default:
+    break;
+  }
+  return nullptr;
+}
+
+/**
    Fill in the sprite array for the unit.
  */
 void fill_unit_sprite_array(const struct tileset *t,
@@ -3676,71 +3742,12 @@ void fill_unit_sprite_array(const struct tileset *t,
     ADD_SPRITE_FULL(t->sprites.unit.loaded);
   }
 
-  if (punit->activity != ACTIVITY_IDLE) {
-    QPixmap *s = nullptr;
-
-    switch (punit->activity) {
-    case ACTIVITY_MINE:
-      if (punit->activity_target == nullptr) {
-        s = t->sprites.unit.plant;
-      } else {
-        s = t->sprites.extras[extra_index(punit->activity_target)].activity;
-      }
-      break;
-    case ACTIVITY_PLANT:
-      s = t->sprites.unit.plant;
-      break;
-    case ACTIVITY_IRRIGATE:
-      if (punit->activity_target == nullptr) {
-        s = t->sprites.unit.irrigate;
-      } else {
-        s = t->sprites.extras[extra_index(punit->activity_target)].activity;
-      }
-      break;
-    case ACTIVITY_CULTIVATE:
-      s = t->sprites.unit.irrigate;
-      break;
-    case ACTIVITY_POLLUTION:
-    case ACTIVITY_FALLOUT:
-      s = t->sprites.extras[extra_index(punit->activity_target)].rmact;
-      break;
-    case ACTIVITY_PILLAGE:
-      s = t->sprites.unit.pillage;
-      break;
-    case ACTIVITY_EXPLORE:
-      // Drawn below as the server side agent.
-      break;
-    case ACTIVITY_FORTIFIED:
-      s = t->sprites.unit.fortified;
-      break;
-    case ACTIVITY_FORTIFYING:
-      s = t->sprites.unit.fortifying;
-      break;
-    case ACTIVITY_SENTRY:
-      s = t->sprites.unit.sentry;
-      break;
-    case ACTIVITY_GOTO:
-      s = t->sprites.unit.go_to;
-      break;
-    case ACTIVITY_TRANSFORM:
-      s = t->sprites.unit.transform;
-      break;
-    case ACTIVITY_BASE:
-    case ACTIVITY_GEN_ROAD:
-      s = t->sprites.extras[extra_index(punit->activity_target)].activity;
-      break;
-    case ACTIVITY_CONVERT:
-      s = t->sprites.unit.convert;
-      break;
-    default:
-      break;
-    }
-
-    if (s != nullptr) {
-      sprs.emplace_back(t, s, true,
-                        FULL_TILE_X_OFFSET + t->activity_offset_x,
-                        FULL_TILE_Y_OFFSET + t->activity_offset_y);
-    }
+  // Activity sprite
+  if (auto sprite =
+          get_activity_sprite(t, punit->activity, punit->activity_target)) {
+    sprs.emplace_back(t, sprite, true,
+                      FULL_TILE_X_OFFSET + t->activity_offset_x,
+                      FULL_TILE_Y_OFFSET + t->activity_offset_y);
   }
 
   {

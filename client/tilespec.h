@@ -222,6 +222,9 @@ const QPixmap *get_city_flag_sprite(const struct tileset *t,
 void build_tile_data(const struct tile *ptile, struct terrain *pterrain,
                      struct terrain **tterrain_near,
                      bv_extras *textras_near);
+const QPixmap *get_activity_sprite(const struct tileset *t,
+                                   enum unit_activity activity,
+                                   extra_type *target);
 const QPixmap *get_nation_flag_sprite(const struct tileset *t,
                                       const struct nation_type *nation);
 const QPixmap *get_nation_shield_sprite(const struct tileset *t,
