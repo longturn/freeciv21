@@ -39,7 +39,7 @@ layer_units::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
   }
 
   // Only draw the focused unit on LAYER_FOCUS_UNIT
-  if (type() != LAYER_FOCUS_UNIT && unit_is_in_focus(punit)) {
+  if ((type() == LAYER_FOCUS_UNIT) != unit_is_in_focus(punit)) {
     return {};
   }
 
