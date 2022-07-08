@@ -34,6 +34,7 @@
 #include "log.h"
 #include "rand.h"
 #include "registry.h"
+#include "registry_ini.h"
 #include "shared.h"
 #include "style.h"
 #include "support.h"
@@ -64,6 +65,7 @@
 #include "client_main.h"
 #include "climap.h" // for client_tile_get_known()
 #include "climisc.h"
+#include "colorizer.h"
 #include "colors_common.h"
 #include "control.h" // for fill_xxx
 #include "editor.h"
@@ -176,8 +178,9 @@ struct named_sprites {
   const QPixmap *government[G_LAST];
 
   struct {
-    QPixmap *icon[U_LAST];
-    QPixmap *facing[U_LAST][DIR8_MAGIC_MAX];
+    std::unique_ptr<freeciv::colorizer> icon[U_LAST];
+    std::unique_ptr<freeciv::colorizer> facing[U_LAST][DIR8_MAGIC_MAX];
+    int replaced_hue; // -1 means no replacement
   } units;
 
   struct sprite_vector nation_flag;
@@ -1836,6 +1839,10 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
                                                   "tilespec.unit_width");
   t->unit_tile_height = secfile_lookup_int_default(file, t->full_tile_height,
                                                    "tilespec.unit_height");
+  // Hue to be replaced in unit graphics
+  t->sprites.units.replaced_hue =
+      secfile_lookup_int_default(file, -1, "tilespec.replaced_hue");
+
   if (!secfile_lookup_int(file, &t->small_sprite_width,
                           "tilespec.small_tile_width")
       || !secfile_lookup_int(file, &t->small_sprite_height,
@@ -3173,9 +3180,14 @@ static bool tileset_setup_unit_direction(struct tileset *t, int uidx,
   /* We don't use _alt graphics here, as that could lead to loading
    * real icon gfx, but alternative orientation gfx. Tileset author
    * probably meant icon gfx to be used as fallback for all orientations */
-  t->sprites.units.facing[uidx][dir] = load_sprite(t, buf);
+  auto sprite = load_sprite(t, buf);
+  if (!sprite) {
+    return false;
+  }
 
-  return t->sprites.units.facing[uidx][dir] != nullptr;
+  t->sprites.units.facing[uidx][dir] = std::make_unique<freeciv::colorizer>(
+      *sprite, t->sprites.units.replaced_hue);
+  return true;
 }
 
 /**
@@ -3186,8 +3198,12 @@ static bool tileset_setup_unit_type_from_tag(struct tileset *t, int uidx,
 {
   bool has_icon, facing_sprites = true;
 
-  t->sprites.units.icon[uidx] = load_sprite(t, tag);
-  has_icon = t->sprites.units.icon[uidx] != nullptr;
+  auto icon = load_sprite(t, tag);
+  has_icon = icon != nullptr;
+  if (has_icon) {
+    t->sprites.units.icon[uidx] = std::make_unique<freeciv::colorizer>(
+        *icon, t->sprites.units.replaced_hue);
+  }
 
 #define LOAD_FACING_SPRITE(dir)                                             \
   if (!tileset_setup_unit_direction(t, uidx, tag, dir, has_icon)) {         \
@@ -3734,7 +3750,9 @@ void fill_unit_sprite_array(const struct tileset *t,
   }
 
   // Add the sprite for the unit type.
-  const auto uspr = get_unittype_sprite(t, ptype, punit->facing);
+  const auto rgb = punit->owner ? punit->owner->rgb : nullptr;
+  const auto color = rgb ? QColor(rgb->r, rgb->g, rgb->b) : QColor();
+  const auto uspr = get_unittype_sprite(t, ptype, punit->facing, color);
   sprs.emplace_back(t, uspr, true, FULL_TILE_X_OFFSET + t->unit_offset_x,
                     FULL_TILE_Y_OFFSET + t->unit_offset_y);
 
@@ -5299,7 +5317,8 @@ const QPixmap *get_government_sprite(const struct tileset *t,
  */
 const QPixmap *get_unittype_sprite(const struct tileset *t,
                                    const struct unit_type *punittype,
-                                   enum direction8 facing)
+                                   enum direction8 facing,
+                                   const QColor &replace)
 {
   int uidx = utype_index(punittype);
   bool icon = !direction8_is_valid(facing);
@@ -5315,13 +5334,13 @@ const QPixmap *get_unittype_sprite(const struct tileset *t,
   if (t->sprites.units.icon[uidx]
       && (icon || t->sprites.units.facing[uidx][facing] == nullptr)) {
     // Has icon sprite, and we prefer to (or must) use it
-    return t->sprites.units.icon[uidx];
+    return t->sprites.units.icon[uidx]->pixmap(replace);
   } else {
     /* We should have a valid orientation by now. Failure to have either
      * an icon sprite or default orientation should have been caught at
      * tileset load. */
     fc_assert_ret_val(direction8_is_valid(facing), nullptr);
-    return t->sprites.units.facing[uidx][facing];
+    return t->sprites.units.facing[uidx][facing]->pixmap(replace);
   }
 }
 
