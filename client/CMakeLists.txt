@@ -56,6 +56,7 @@ add_library(
   climap.cpp
   climisc.cpp
   clinet.cpp
+  colorizer.cpp
   colors.cpp
   colors_common.cpp
   connectdlg.cpp
