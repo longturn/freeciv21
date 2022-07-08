@@ -52,6 +52,10 @@ occupied_offset_y = 0
 unit_offset_x = 4
 unit_offset_y = 21
 
+; colors with this (HSL) hue will be replaced by the player color in unit
+; sprites (-1 to disable)
+replaced_hue = -1
+
 ; offset of the normal activity icons
 activity_offset_x = 0
 activity_offset_y = 0
