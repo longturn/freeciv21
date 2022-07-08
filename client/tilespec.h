@@ -20,6 +20,8 @@
 #include "layer.h"
 #include "options.h"
 
+#include <QColor>
+
 struct base_type;
 struct help_item;
 struct resource_type;
@@ -236,7 +238,8 @@ const QPixmap *get_government_sprite(const struct tileset *t,
                                      const struct government *gov);
 const QPixmap *get_unittype_sprite(const struct tileset *t,
                                    const struct unit_type *punittype,
-                                   enum direction8 facing);
+                                   enum direction8 facing,
+                                   const QColor &replace = QColor());
 const QPixmap *get_sample_city_sprite(const struct tileset *t,
                                       int style_idx);
 const QPixmap *get_tax_sprite(const struct tileset *t, Output_type_id otype);
