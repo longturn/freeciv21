@@ -45,7 +45,7 @@ public:
   void init();
 
 protected:
-  void resizeEvent(QResizeEvent *event) override;
+  bool event(QEvent *event) override;
 private slots:
   void current_changed(int index);
 };
