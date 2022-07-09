@@ -170,7 +170,6 @@ struct named_sprites {
   struct {
     std::unique_ptr<freeciv::colorizer> icon[U_LAST];
     std::unique_ptr<freeciv::colorizer> facing[U_LAST][DIR8_MAGIC_MAX];
-    int replaced_hue; // -1 means no replacement
   } units;
 
   struct sprite_vector nation_flag;
@@ -354,6 +353,7 @@ struct tileset {
   QHash<QString, struct small_sprite *> *sprite_hash;
   QHash<QString, int> *estyle_hash;
   struct named_sprites sprites;
+  int replaced_hue; // -1 means no replacement
   struct color_system *color_system;
   struct extra_type_list *style_lists[ESTYLE_COUNT];
 
@@ -1830,7 +1830,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   t->unit_tile_height = secfile_lookup_int_default(file, t->full_tile_height,
                                                    "tilespec.unit_height");
   // Hue to be replaced in unit graphics
-  t->sprites.units.replaced_hue =
+  t->replaced_hue =
       secfile_lookup_int_default(file, -1, "tilespec.replaced_hue");
 
   if (!secfile_lookup_int(file, &t->small_sprite_width,
@@ -2509,8 +2509,8 @@ static styles load_city_thresholds_sprites(struct tileset *t, QString tag,
     const auto buffer = QStringLiteral("%1_%2_%3")
                             .arg(gfx_in_use, tag, QString::number(size));
     if (const auto sprite = load_sprite(t, buffer)) {
-      thresholds.push_back(std::make_unique<freeciv::colorizer>(
-          *sprite, t->sprites.units.replaced_hue));
+      thresholds.push_back(
+          std::make_unique<freeciv::colorizer>(*sprite, t->replaced_hue));
     } else if (size == 0) {
       if (gfx_in_use == graphic) {
         // Try again with graphic_alt.
@@ -3144,8 +3144,8 @@ static bool tileset_setup_unit_direction(struct tileset *t, int uidx,
     return false;
   }
 
-  t->sprites.units.facing[uidx][dir] = std::make_unique<freeciv::colorizer>(
-      *sprite, t->sprites.units.replaced_hue);
+  t->sprites.units.facing[uidx][dir] =
+      std::make_unique<freeciv::colorizer>(*sprite, t->replaced_hue);
   return true;
 }
 
@@ -3160,8 +3160,8 @@ static bool tileset_setup_unit_type_from_tag(struct tileset *t, int uidx,
   auto icon = load_sprite(t, tag);
   has_icon = icon != nullptr;
   if (has_icon) {
-    t->sprites.units.icon[uidx] = std::make_unique<freeciv::colorizer>(
-        *icon, t->sprites.units.replaced_hue);
+    t->sprites.units.icon[uidx] =
+        std::make_unique<freeciv::colorizer>(*icon, t->replaced_hue);
   }
 
 #define LOAD_FACING_SPRITE(dir)                                             \
