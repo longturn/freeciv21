@@ -1128,13 +1128,15 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
 
       // Draw all outgoing edges
       startx = node->node_x + node->node_width;
-      starty = node->node_y + node->node_height / 2;
+      // -1 for pen half-width
+      starty = node->node_y + node->node_height / 2 - 1;
       for (k = 0; k < node->nprovide; k++) {
         struct tree_node *dest_node = node->provide[k];
         p.setPen(QPen(edge_color(node, dest_node), 2));
 
         endx = dest_node->node_x;
-        endy = dest_node->node_y + dest_node->node_height / 2;
+        // -1 for pen half-width
+        endy = dest_node->node_y + dest_node->node_height / 2 - 1;
 
         if (gui_options.reqtree_curved_lines) {
           QPainterPath path;
