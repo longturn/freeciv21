@@ -180,41 +180,6 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
 }
 
 /**
-   How many turns until the activity 'act' on target 'tgt' at 'ptile' would
-   be complete, taking into account existing units and possible contribution
-   from 'pmodunit' if it were also to help with the activity ('pmodunit' may
-   be nullptr to just account for current activities).
- */
-int turns_to_activity_done(const struct tile *ptile, Activity_type_id act,
-                           const struct extra_type *tgt,
-                           const struct unit *pmodunit)
-{
-  auto *calc = new actcalc;
-  int turns;
-
-  // Calculate time for _all_ tile activities
-  // XXX: this is quite expensive
-  calc_activity(calc, ptile, pmodunit, act, tgt);
-
-  // ...and extract just the one we want.
-  if (is_build_activity(act, ptile)) {
-    int tgti = extra_index(tgt);
-
-    turns = calc->extra_turns[tgti][act];
-  } else if (is_clean_activity(act)) {
-    int tgti = extra_index(tgt);
-
-    turns = calc->rmextra_turns[tgti][act];
-  } else {
-    turns = calc->activity_turns[act];
-  }
-
-  delete calc;
-  calc = nullptr;
-  return turns;
-}
-
-/**
    Creates the activity progress text for the given tile.
  */
 QString concat_tile_activity_text(struct tile *ptile)

@@ -14,7 +14,4 @@ struct extra_type;
 struct tile;
 struct unit;
 
-int turns_to_activity_done(const struct tile *ptile, Activity_type_id act,
-                           const struct extra_type *tgt,
-                           const struct unit *pnewunit);
 QString concat_tile_activity_text(struct tile *ptile);

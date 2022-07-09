@@ -396,8 +396,6 @@ int get_unittype_bonus(const struct player *pplayer,
                        enum effect_type effect_type,
                        enum vision_layer vision_layer = V_COUNT);
 int get_unit_bonus(const struct unit *punit, enum effect_type effect_type);
-int get_tile_bonus(const struct tile *ptile, const struct unit *punit,
-                   enum effect_type etype);
 
 // miscellaneous auxiliary effects functions
 struct effect_list *get_req_source_effects(struct universal *psource);

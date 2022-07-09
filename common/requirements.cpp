@@ -3541,21 +3541,6 @@ req_vec_vector_number(const void *parent_item,
 }
 
 /**
-   Returns a writable pointer to the specified requirement vector in the
-   specified requirement vector or nullptr if the parent item doesn't have a
-   requirement vector with that requirement vector number.
-   @param parent_item the item that should have the requirement vector.
-   @param number the item's requirement vector number.
-   @return a pointer to the specified requirement vector.
- */
-struct requirement_vector *req_vec_by_number(const void *parent_item,
-                                             req_vec_num_in_item number)
-{
-  fc_assert_ret_val(number == 0, nullptr);
-  return (struct requirement_vector *) parent_item;
-}
-
-/**
    Returns the specified requirement vector change as a translated string
    ready for use in the user interface.
    N.B.: The returned string is static, so every call to this function
