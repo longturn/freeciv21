@@ -287,16 +287,6 @@ void map_view::timer_event()
 }
 
 /**
-   Updates fonts
- */
-void map_view::update_font(const QString &name, const QFont &font)
-{
-  if (name == fonts::city_names || name == fonts::city_productions) {
-    update_map_canvas_visible();
-  }
-}
-
-/**
    Focus lost event
  */
 void map_view::focusOutEvent(QFocusEvent *event)
@@ -666,25 +656,6 @@ void tileset_changed(void)
 bool mapview_is_frozen() { return (0 < mapview_frozen_level); }
 
 /**
-   Freeze the drawing of the map.
- */
-void mapview_freeze() { mapview_frozen_level++; }
-
-/**
-   Thaw the drawing of the map.
- */
-void mapview_thaw()
-{
-  if (1 < mapview_frozen_level) {
-    mapview_frozen_level--;
-  } else {
-    fc_assert(0 < mapview_frozen_level);
-    mapview_frozen_level = 0;
-    dirty_all();
-  }
-}
-
-/**
    Constructor for info_tile
  */
 info_tile::info_tile(struct tile *ptile, QWidget *parent) : QLabel(parent)
@@ -756,18 +727,6 @@ void info_tile::paintEvent(QPaintEvent *event)
   painter.begin(this);
   paint(&painter, event);
   painter.end();
-}
-
-/**
-   Updates fonts
- */
-void info_tile::update_font(const QString &name, const QFont &font)
-{
-  if (name == fonts::notify_label) {
-    info_font = font;
-    calc_size();
-    update();
-  }
 }
 
 /**

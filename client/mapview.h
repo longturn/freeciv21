@@ -35,7 +35,6 @@ class QPainter;
 class fcwidget;
 
 bool is_point_in_area(int x, int y, int px, int py, int pxe, int pye);
-void unscale_point(double scale_factor, int &x, int &y);
 void draw_calculated_trade_routes(QPainter *painter);
 
 /**************************************************************************
@@ -96,8 +95,6 @@ private slots:
   void timer_event();
 
 private:
-  void update_font(const QString &name, const QFont &font);
-
   bool stored_autocenter;
   int cursor_frame{0};
   int cursor;
@@ -129,15 +126,11 @@ private:
   static info_tile *m_instance;
   QStringList str_list;
   void calc_size();
-  void update_font(const QString &name, const QFont &font);
 };
 
 void popdown_tile_info();
 void popup_tile_info(struct tile *ptile);
-void mapview_freeze();
-void mapview_thaw();
 bool mapview_is_frozen();
-void pixmap_put_overlay_tile(int canvas_x, int canvas_y, QPixmap *ssprite);
 
 void show_city_desc(QPixmap *pcanvas, int canvas_x, int canvas_y,
                     struct city *pcity, int *width, int *height);
