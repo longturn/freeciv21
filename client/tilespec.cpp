@@ -2546,13 +2546,6 @@ static city_sprite load_city_sprite(struct tileset *t, const QString &tag)
 }
 
 /**
-   Frees a city sprite.
-
-   See also get_city_sprite, load_city_sprite.
- */
-static void free_city_sprite(city_sprite &csprite) { csprite.clear(); }
-
-/**
    Initialize 'sprites' structure based on hardwired tags which
    freeciv always requires.
  */
@@ -4967,13 +4960,13 @@ void tileset_setup_city_tiles(struct tileset *t, int style)
     int i;
 
     // Free old sprites
-    free_city_sprite(t->sprites.city.tile);
+    t->sprites.city.tile.clear();
 
     for (i = 0; i < NUM_WALL_TYPES; i++) {
-      free_city_sprite(t->sprites.city.wall[i]);
+      t->sprites.city.wall[i].clear();
     }
-    free_city_sprite(t->sprites.city.single_wall);
-    free_city_sprite(t->sprites.city.occupied);
+    t->sprites.city.single_wall.clear();
+    t->sprites.city.occupied.clear();
 
     t->sprites.city.tile = load_city_sprite(t, QStringLiteral("city"));
 
@@ -5097,14 +5090,14 @@ void tileset_free_tiles(struct tileset *t)
 
   unload_all_sprites(t);
 
-  free_city_sprite(t->sprites.city.tile);
+  t->sprites.city.tile.clear();
 
   for (i = 0; i < NUM_WALL_TYPES; i++) {
-    free_city_sprite(t->sprites.city.wall[i]);
+    t->sprites.city.wall[i].clear();
   }
-  free_city_sprite(t->sprites.city.single_wall);
+  t->sprites.city.single_wall.clear();
 
-  free_city_sprite(t->sprites.city.occupied);
+  t->sprites.city.occupied.clear();
 
   if (t->sprite_hash) {
     delete t->sprite_hash;
