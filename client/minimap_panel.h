@@ -24,6 +24,8 @@ public:
 
   void update_menu() override {}
 
+  void set_minimap_visible(bool visible);
+
   /// Retrieves the minimap widget.
   auto minimap() { return ui.minimap; }
 

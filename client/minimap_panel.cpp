@@ -39,6 +39,27 @@ minimap_panel::minimap_panel(map_view *map, QWidget *parent)
 }
 
 /**
+ * Shows or hides the minimap
+ */
+void minimap_panel::set_minimap_visible(bool visible)
+{
+  ui.minimap->setVisible(visible);
+  ui.zoom_in->setVisible(visible);
+  ui.zoom_reset->setVisible(visible);
+  ui.zoom_out->setVisible(visible);
+  ui.spacer->changeSize(0, 0, QSizePolicy::Minimum,
+                        visible ? QSizePolicy::Expanding
+                                : QSizePolicy::Minimum);
+  // See documentation for QSpacerItem::changeSize
+  ui.verticalLayout->invalidate();
+
+  // This isn't properly propagated by the map view. One day we'll have a
+  // proper QLayout...
+  QApplication::postEvent(queen()->game_tab_widget,
+                          new QEvent(QEvent::LayoutRequest));
+}
+
+/**
  * Update the timeout display.  The timeout is the time until the turn ends.
  */
 void update_timeout_label()

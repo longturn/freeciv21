@@ -504,11 +504,15 @@ void fc_game_tab_widget::init()
 /**
    Resize event for all game tab widgets
  */
-void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
+bool fc_game_tab_widget::event(QEvent *event)
 {
-  QSize size;
-  size = event->size();
-  if (C_S_RUNNING <= client_state()) {
+  if (C_S_RUNNING <= client_state()
+      && (event->type() == QEvent::Resize
+          || event->type() == QEvent::LayoutRequest)) {
+    auto size = event->type() == QEvent::Resize
+                    ? static_cast<QResizeEvent *>(event)->size()
+                    : this->size();
+
     map_canvas_resized(size.width(), size.height());
     queen()->message->resize(
         qRound((size.width() * king()->qt_settings.chat_fwidth)),
@@ -528,7 +532,7 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
     queen()->updateSidebarTooltips();
     queen()->minimap_panel->turn_done()->setEnabled(
         get_turn_done_button_state());
-    queen()->mapview_wdg->resize(event->size().width(), size.height());
+    queen()->mapview_wdg->resize(size.width(), size.height());
     queen()->city_overlay->resize(queen()->mapview_wdg->size());
     queen()->unitinfo_wdg->update_actions(nullptr);
     queen()->civ_status->move(
@@ -540,17 +544,16 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
      */
     const auto max_size = QSize(std::max(300, size.width() / 4),
                                 std::max(200, size.height() / 3));
-    const auto hint = queen()->minimap_panel->sizeHint();
-    // Try to keep aspect ratio
-    const auto width = std::min(max_size.width(), hint.width());
-    const auto height = std::min(
-        max_size.height(), queen()->minimap_panel->heightForWidth(width));
-    const auto panel_size = QSize(width, height);
+    const auto panel_size =
+        QLayout::closestAcceptableSize(queen()->minimap_panel, max_size);
     const auto location = size - panel_size;
     queen()->minimap_panel->move(location.width(), location.height());
     queen()->minimap_panel->resize(panel_size);
+
+    return true;
   }
-  event->setAccepted(true);
+
+  return QWidget::event(event);
 }
 
 /**

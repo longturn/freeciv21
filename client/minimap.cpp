@@ -193,7 +193,12 @@ void minimap_view::update_image()
 int minimap_view::heightForWidth(int width) const
 {
   const auto size = gui_options.overview.map->size();
-  return size.height() * width / size.width();
+  if (tileset_is_isometric(tileset)) {
+    // Traditional iso tilesets have more or less this aspect ratio
+    return size.height() * width / size.width() / 2;
+  } else {
+    return size.height() * width / size.width();
+  }
 }
 
 /**
