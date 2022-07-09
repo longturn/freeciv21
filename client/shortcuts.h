@@ -18,7 +18,7 @@ class QVBoxLayout;
 struct fc_shortcut;
 
 void popup_shortcuts_dialog();
-QString shortcut_to_string(fc_shortcut *sc);
+QString shortcut_to_string(const fc_shortcut *sc);
 void write_shortcuts();
 bool read_shortcuts();
 

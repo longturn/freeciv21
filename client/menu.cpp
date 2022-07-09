@@ -1303,6 +1303,35 @@ void mr_menu::execute_shortcut(int sid)
 }
 
 /**
+ * Updates a shortcut in the menu
+ *
+ * Finds an action with the `old` shorcut in the menu, and replaces it with
+ * the shorcut in `fcs`.
+ */
+void mr_menu::update_shortcut(const fc_shortcut *old, const fc_shortcut *fcs)
+{
+  if (old->mouse != Qt::AllButtons) {
+    // Wasn't in the menu
+    return;
+  }
+
+  const auto old_seq = QKeySequence(shortcut_to_string(old));
+  const auto seq = QKeySequence(shortcut_to_string(fcs));
+
+  for (const QMenu *m : findChildren<QMenu *>()) {
+    auto found = false;
+    for (auto *action : m->actions()) {
+      if (action->shortcut() == old_seq) {
+        action->setShortcut(seq);
+      }
+    }
+    if (found) {
+      break;
+    }
+  }
+}
+
+/**
    Returns string assigned to shortcut or empty string if doesnt exist
  */
 QString mr_menu::shortcut_exist(fc_shortcut *fcs)
