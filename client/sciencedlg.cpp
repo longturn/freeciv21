@@ -199,7 +199,7 @@ void research_diagram::mouseMoveEvent(QMouseEvent *event)
       tooltip_text = tt_text.trimmed();
       tooltip_rect = rttp->rect;
       tooltip_pos = event->globalPos();
-      if (!QToolTip::isVisible() && !timer_active) {
+      if (!timer_active) {
         timer_active = true;
         QTimer::singleShot(500, this, &research_diagram::show_tooltip);
       }
