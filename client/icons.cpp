@@ -68,6 +68,10 @@ public:
     Q_UNUSED(mode)
     Q_UNUSED(state)
 
+    if (rect.width() <= 0 || rect.height() <= 0) {
+      return;
+    }
+
     auto col = QApplication::palette().color(QPalette::ButtonText);
     QString key = path + "-" + QString::number(rect.width()) + "-"
                   + QString::number(rect.height()) + "-" + col.name();
@@ -92,7 +96,7 @@ public:
       }
       QPixmapCache::insert(key, pix);
     }
-    painter->drawPixmap(rect.topLeft(), pix);
+    painter->drawPixmap(rect, pix);
   }
 
   QPixmap pixmap(const QSize &size, QIcon::Mode mode,
