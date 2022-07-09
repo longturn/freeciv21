@@ -158,7 +158,7 @@ fc_shortcut default_shortcuts[] = {
 /**
    Returns shortcut as string (eg. for menu)
  */
-QString shortcut_to_string(fc_shortcut *sc)
+QString shortcut_to_string(const fc_shortcut *sc)
 {
   QString ret, m, bn, k;
 
@@ -229,6 +229,9 @@ void fc_shortcuts::set_shortcut(fc_shortcut *s)
 {
   auto sc = hash.value(s->id, nullptr);
   fc_assert_ret_msg(sc, "shortcut error");
+
+  king()->menu_bar->update_shortcut(sc, s);
+
   sc->key = s->key;
   sc->mod = s->mod;
   sc->mouse = s->mouse;
