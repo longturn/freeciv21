@@ -1135,21 +1135,6 @@ const QVector<QString> *mapimg_get_format_list()
 }
 
 /**
-   Return the default value of the tookit and the image format for the
- client.
- */
-const char *mapimg_get_format_default()
-{
-  static char default_format[64];
-
-  fc_snprintf(default_format, sizeof(default_format), "%s|%s",
-              imagetool_name(MAPIMG_DEFAULT_IMGTOOL),
-              imageformat_name(MAPIMG_DEFAULT_IMGFORMAT));
-
-  return default_format;
-}
-
-/**
    Delete a map image definition.
  */
 bool mapimg_delete(int id)

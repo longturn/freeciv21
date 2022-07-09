@@ -43,7 +43,6 @@ received a copy of the GNU General Public License along with Freeciv21.
                         mapimg_reset() or mapimg_free().
 
     mapimg_get_format_list()      ...
-    mapimg_get_format_default()   ...
 
 ****************************************************************************/
 
@@ -112,4 +111,3 @@ bool mapimg_colortest(const char *savename, const char *path);
 struct mapdef *mapimg_isvalid(int id);
 
 const QVector<QString> *mapimg_get_format_list();
-const char *mapimg_get_format_default();
