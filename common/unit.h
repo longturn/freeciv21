@@ -45,8 +45,6 @@ enum unit_orders {
 
 enum unit_focus_status { FOCUS_AVAIL, FOCUS_WAIT, FOCUS_DONE };
 
-enum goto_route_type { ROUTE_GOTO, ROUTE_PATROL };
-
 enum unit_upgrade_result {
   UU_OK,
   UU_NO_UNITTYPE,
@@ -283,6 +281,7 @@ extern const Activity_type_id tile_changing_activities[];
   activity_type_list_iterate_end                                            \
   }
 
+// Used in send_packet_city_info_100
 bool are_unit_orders_equal(const struct unit_order *order1,
                            const struct unit_order *order2);
 

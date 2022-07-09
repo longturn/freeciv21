@@ -174,8 +174,6 @@ typedef const char *(*requirement_vector_namer)(req_vec_num_in_item number);
 req_vec_num_in_item
 req_vec_vector_number(const void *parent_item,
                       const struct requirement_vector *vec);
-struct requirement_vector *req_vec_by_number(const void *parent_item,
-                                             req_vec_num_in_item number);
 
 /* Interactive friendly requirement vector change suggestions and
  * reasoning. */

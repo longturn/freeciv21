@@ -860,31 +860,6 @@ int get_unit_bonus(const struct unit *punit, enum effect_type effect_type)
 }
 
 /**
-   Returns the effect bonus at a tile
- */
-int get_tile_bonus(const struct tile *ptile, const struct unit *punit,
-                   enum effect_type etype)
-{
-  struct player *pplayer = nullptr;
-  const struct unit_type *utype = nullptr;
-
-  if (!initialized) {
-    return 0;
-  }
-
-  fc_assert_ret_val(ptile != nullptr, 0);
-
-  if (punit != nullptr) {
-    pplayer = unit_owner(punit);
-    utype = unit_type_get(punit);
-  }
-
-  return get_target_bonus_effects(nullptr, pplayer, nullptr,
-                                  tile_city(ptile), nullptr, ptile, punit,
-                                  utype, nullptr, nullptr, nullptr, etype);
-}
-
-/**
    Returns the effect sources of this type _currently active_ at the player.
 
    The returned vector must be freed (building_vector_free) when the caller
