@@ -49,11 +49,6 @@ void styles_free()
 }
 
 /**
-   Return the number of styles.
- */
-int style_count() { return game.control.num_styles; }
-
-/**
    Return the style id.
  */
 int style_number(const struct nation_style *pstyle)
