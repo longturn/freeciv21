@@ -228,8 +228,7 @@ shortcut_id fc_shortcuts::get_id(fc_shortcut *sc) { return hash.key(sc); }
  */
 void fc_shortcuts::set_shortcut(fc_shortcut *s)
 {
-  fc_shortcut *sc;
-  sc = hash.value(s->id, nullptr);
+  auto sc = hash.value(s->id, nullptr);
   fc_assert_ret_msg(sc, "shortcut error");
   sc->key = s->key;
   sc->mod = s->mod;
@@ -374,26 +373,25 @@ void fc_shortcut_popup::closeEvent(QCloseEvent *ev)
  */
 bool fc_shortcut_popup::check_if_exist()
 {
-  QString desc;
-  int id = 0;
-
-  desc = QLatin1String("");
   if (sc != nullptr) {
-    for (auto *fsc : qAsConst(fc_shortcuts::sc()->hash)) {
-      if (id == 0) {
-        id++;
+    QString desc;
+    for (const auto *fsc : qAsConst(fc_shortcuts::sc()->hash)) {
+      if (fsc->id == sc->id) {
+        // Don't check for conflicts with the shortcut we're going to change
         continue;
       }
       if (*sc == *fsc) {
-        desc =
-            fc_shortcuts::sc()->get_desc(static_cast<shortcut_id>(id + 1));
+        // Found a conflict
+        desc = fc_shortcuts::sc()->get_desc(fsc->id);
+        break;
       }
-      id++;
     }
     if (desc.isEmpty()) {
+      // Also check the menu bar for conflicts
       desc = king()->menu_bar->shortcut_exist(sc);
     }
     if (!desc.isEmpty()) {
+      // Bad things happened
       fc_sc_button *fsb;
       fsb = qobject_cast<fc_sc_button *>(parentWidget());
       fsb->show_info(desc);
