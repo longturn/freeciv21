@@ -30,7 +30,6 @@ struct music_style {
 
 void styles_alloc(int count);
 void styles_free();
-int style_count();
 int style_number(const struct nation_style *pstyle);
 int style_index(const struct nation_style *pstyle);
 struct nation_style *style_by_number(int id);

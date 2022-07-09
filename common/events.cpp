@@ -273,48 +273,6 @@ const char *get_event_tag(enum event_type event)
 }
 
 /**
-  If is_city_event is FALSE this event doesn't effect a city even if
-  there is a city at the event location.
- */
-bool is_city_event(enum event_type event)
-{
-  switch (event) {
-  case E_GLOBAL_ECO:
-  case E_CITY_LOST:
-  case E_UNIT_LOST_DEF: /* FIXME: Is this correct.
-                         * I'd like to find now defendeseless city quickly!
-                         */
-  case E_UNIT_LOST_MISC:
-  case E_UNIT_WIN_DEF:
-  case E_ENEMY_DIPLOMAT_FAILED:
-  case E_ENEMY_DIPLOMAT_EMBASSY:
-  case E_ENEMY_DIPLOMAT_POISON:
-  case E_ENEMY_DIPLOMAT_BRIBE:
-  case E_ENEMY_DIPLOMAT_INCITE:
-  case E_ENEMY_DIPLOMAT_SABOTAGE:
-  case E_ENEMY_DIPLOMAT_THEFT:
-  case E_MY_DIPLOMAT_FAILED:
-  case E_MY_DIPLOMAT_EMBASSY:
-  case E_MY_DIPLOMAT_POISON:
-  case E_MY_DIPLOMAT_BRIBE:
-  case E_MY_DIPLOMAT_INCITE:
-  case E_MY_DIPLOMAT_SABOTAGE:
-  case E_MY_DIPLOMAT_THEFT:
-  case E_MY_DIPLOMAT_ESCAPE:
-  case E_UNIT_LOST_ATT:
-  case E_UNIT_WIN_ATT:
-  case E_UPRISING:
-  case E_UNIT_RELOCATED:
-  case E_UNIT_ILLEGAL_ACTION:
-  case E_UNIT_WAKE:
-    return false;
-
-  default:
-    return true;
-  }
-}
-
-/**
    Initialize events.
    Now also initialise sorted_events[].
  */

@@ -769,8 +769,6 @@ bool is_unit_being_refueled(const struct unit *punit)
   return false;
 }
 
-static int move_points_denomlen = 0;
-
 /**
    Call whenever terrain_control.move_fragments / SINGLE_MOVE changes.
  */
@@ -780,7 +778,6 @@ void init_move_fragments()
   /* String length of maximum denominator for fractional representation of
    * movement points, for padding of text representation */
   fc_snprintf(denomstr, sizeof(denomstr), "%d", SINGLE_MOVE);
-  move_points_denomlen = qstrlen(denomstr);
 }
 
 /**

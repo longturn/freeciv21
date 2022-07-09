@@ -56,7 +56,7 @@ Disaster_type_id disaster_number(const struct disaster_type *pdis)
 /**
    Return the disaster index.
 
-   Currently same as disaster_number(), paired with disaster_count()
+   Currently same as disaster_number()
    indicates use as an array index.
  */
 Disaster_type_id disaster_index(const struct disaster_type *pdis)
@@ -65,11 +65,6 @@ Disaster_type_id disaster_index(const struct disaster_type *pdis)
 
   return pdis - disaster_types;
 }
-
-/**
-   Return the number of disaster_types.
- */
-Disaster_type_id disaster_count() { return game.control.num_disaster_types; }
 
 /**
    Return disaster type of given id.
