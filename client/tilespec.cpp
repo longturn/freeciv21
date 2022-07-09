@@ -135,11 +135,7 @@ struct city_style_threshold {
   QPixmap *sprite;
 };
 
-struct styles {
-  int land_num_thresholds;
-  struct city_style_threshold *land_thresholds;
-};
-
+using styles = std::vector<city_style_threshold>;
 using city_sprite = std::vector<styles>;
 
 struct river_sprites {
@@ -2471,14 +2467,12 @@ static QPixmap *get_city_sprite(const city_sprite &city_sprite,
 {
   // get style and match the best tile based on city size
   int style = style_of_city(pcity);
-  int num_thresholds;
-  struct city_style_threshold *thresholds;
   int img_index;
 
   fc_assert_ret_val(style < city_sprite.size(), nullptr);
 
-  num_thresholds = city_sprite[style].land_num_thresholds;
-  thresholds = city_sprite[style].land_thresholds;
+  const auto num_thresholds = city_sprite[style].size();
+  const auto &thresholds = city_sprite[style];
 
   if (num_thresholds == 0) {
     return nullptr;
@@ -2502,28 +2496,17 @@ static QPixmap *get_city_sprite(const city_sprite &city_sprite,
 /**
    Allocates one threshold set for city sprite
  */
-static int
-load_city_thresholds_sprites(struct tileset *t, QString tag, char *graphic,
-                             char *graphic_alt,
-                             struct city_style_threshold **thresholds)
+static styles load_city_thresholds_sprites(struct tileset *t, QString tag,
+                                           char *graphic, char *graphic_alt)
 {
-  QString buffer;
   char *gfx_in_use = graphic;
-  int num_thresholds = 0;
-  QPixmap *sprite;
-  int size;
+  auto thresholds = styles();
 
-  *thresholds = nullptr;
-
-  for (size = 0; size < MAX_CITY_SIZE; size++) {
-    buffer = QStringLiteral("%1_%2_%3")
-                 .arg(gfx_in_use, tag, QString::number(size));
-    if ((sprite = load_sprite(t, buffer))) {
-      num_thresholds++;
-
-      *thresholds = static_cast<city_style_threshold *>(
-          fc_realloc(*thresholds, num_thresholds * sizeof(**thresholds)));
-      (*thresholds)[num_thresholds - 1].sprite = sprite;
+  for (int size = 0; size < MAX_CITY_SIZE; size++) {
+    const auto buffer = QStringLiteral("%1_%2_%3")
+                            .arg(gfx_in_use, tag, QString::number(size));
+    if (const auto sprite = load_sprite(t, buffer)) {
+      thresholds.push_back({sprite});
     } else if (size == 0) {
       if (gfx_in_use == graphic) {
         // Try again with graphic_alt.
@@ -2536,7 +2519,7 @@ load_city_thresholds_sprites(struct tileset *t, QString tag, char *graphic,
     }
   }
 
-  return num_thresholds;
+  return thresholds;
 }
 
 /**
@@ -2551,10 +2534,8 @@ static city_sprite load_city_sprite(struct tileset *t, const QString &tag)
   auto csprite = city_sprite();
 
   for (int i = 0; i < game.control.styles_count; ++i) {
-    csprite.emplace_back();
-    csprite[i].land_num_thresholds = load_city_thresholds_sprites(
-        t, tag, city_styles[i].graphic, city_styles[i].graphic_alt,
-        &csprite[i].land_thresholds);
+    csprite.push_back(load_city_thresholds_sprites(
+        t, tag, city_styles[i].graphic, city_styles[i].graphic_alt));
   }
 
   return csprite;
@@ -2565,16 +2546,7 @@ static city_sprite load_city_sprite(struct tileset *t, const QString &tag)
 
    See also get_city_sprite, load_city_sprite.
  */
-static void free_city_sprite(city_sprite &csprite)
-{
-  for (auto &styles : csprite) {
-    if (styles.land_thresholds) {
-      delete styles.land_thresholds;
-    }
-  }
-
-  csprite.clear();
-}
+static void free_city_sprite(city_sprite &csprite) { csprite.clear(); }
 
 /**
    Initialize 'sprites' structure based on hardwired tags which
@@ -5016,12 +4988,12 @@ void tileset_setup_city_tiles(struct tileset *t, int style)
         load_city_sprite(t, QStringLiteral("occupied"));
 
     for (style = 0; style < game.control.styles_count; style++) {
-      if (t->sprites.city.tile[style].land_num_thresholds == 0) {
+      if (t->sprites.city.tile[style].empty()) {
         tileset_error(t, LOG_FATAL,
                       _("City style \"%s\": no city graphics."),
                       city_style_rule_name(style));
       }
-      if (t->sprites.city.occupied[style].land_num_thresholds == 0) {
+      if (t->sprites.city.occupied[style].empty()) {
         tileset_error(t, LOG_FATAL,
                       _("City style \"%s\": no occupied graphics."),
                       city_style_rule_name(style));
@@ -5311,14 +5283,12 @@ const QPixmap *get_unittype_sprite(const struct tileset *t,
  */
 const QPixmap *get_sample_city_sprite(const struct tileset *t, int style_idx)
 {
-  int num_thresholds = t->sprites.city.tile[style_idx].land_num_thresholds;
+  const auto num_thresholds = t->sprites.city.tile[style_idx].size();
 
   if (num_thresholds == 0) {
     return nullptr;
   } else {
-    return (t->sprites.city.tile[style_idx]
-                .land_thresholds[num_thresholds - 1]
-                .sprite);
+    return (t->sprites.city.tile[style_idx].back().sprite);
   }
 }
 
