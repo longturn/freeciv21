@@ -77,9 +77,6 @@ bool base_has_flag_for_utype(const struct base_type *pbase,
 // Ancillary functions
 bool can_build_base(const struct unit *punit, const struct base_type *pbase,
                     const struct tile *ptile);
-bool player_can_build_base(const struct base_type *pbase,
-                           const struct player *pplayer,
-                           const struct tile *ptile);
 
 struct base_type *get_base_by_gui_type(enum base_gui_type type,
                                        const struct unit *punit,

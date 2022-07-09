@@ -661,7 +661,6 @@ struct city *city_list_find_name(struct city_list *This, const char *name);
 
 // city style functions
 const char *city_style_rule_name(const int style);
-const char *city_style_name_translation(const int style);
 
 int city_style_by_rule_name(const char *s);
 

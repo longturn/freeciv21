@@ -96,26 +96,6 @@ bool base_has_flag_for_utype(const struct base_type *pbase,
 }
 
 /**
-   Tells if player can build base to tile with suitable unit.
- */
-bool player_can_build_base(const struct base_type *pbase,
-                           const struct player *pplayer,
-                           const struct tile *ptile)
-{
-  struct extra_type *pextra;
-
-  if (!can_build_extra_base(base_extra_get(pbase), pplayer, ptile)) {
-    return false;
-  }
-
-  pextra = base_extra_get(pbase);
-
-  return are_reqs_active(pplayer, tile_owner(ptile), nullptr, nullptr, ptile,
-                         nullptr, nullptr, nullptr, nullptr, nullptr,
-                         &pextra->reqs, RPT_POSSIBLE);
-}
-
-/**
    Can unit build base to given tile?
  */
 bool can_build_base(const struct unit *punit, const struct base_type *pbase,

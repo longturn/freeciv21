@@ -1111,26 +1111,6 @@ void boot_help_texts(const nation_set *nations_to_show,
 ****************************************************************************/
 
 /**
-   Return pointer to given help_item.
-   Returns nullptr for 1 past end.
-   Returns nullptr and prints error message for other out-of bounds.
- */
-const struct help_item *get_help_item(int pos)
-{
-  int size;
-
-  size = help_nodes->size();
-  if (pos < 0 || pos > size) {
-    qCritical("Bad index %d to get_help_item (size %d)", pos, size);
-    return nullptr;
-  }
-  if (pos == size) {
-    return nullptr;
-  }
-  return help_nodes->at(pos);
-}
-
-/**
    Find help item by name and type.
    Returns help item, and sets (*pos) to position in list.
    If no item, returns pointer to static internal item with
