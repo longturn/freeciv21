@@ -509,35 +509,37 @@ bool fc_game_tab_widget::event(QEvent *event)
   if (C_S_RUNNING <= client_state()
       && (event->type() == QEvent::Resize
           || event->type() == QEvent::LayoutRequest)) {
-    auto size = event->type() == QEvent::Resize
-                    ? static_cast<QResizeEvent *>(event)->size()
-                    : this->size();
+    const auto size = event->type() == QEvent::Resize
+                          ? static_cast<QResizeEvent *>(event)->size()
+                          : this->size();
+    if (event->type() == QEvent::Resize) {
+      map_canvas_resized(size.width(), size.height());
+      queen()->message->resize(
+          qRound((size.width() * king()->qt_settings.chat_fwidth)),
+          qRound((size.height() * king()->qt_settings.chat_fheight)));
+      queen()->message->move(size.width() - queen()->message->width(), 0);
+      queen()->chat->resize(
+          qRound((size.width() * king()->qt_settings.chat_fwidth)),
+          qRound((size.height() * king()->qt_settings.chat_fheight)));
+      queen()->chat->move(
+          qRound((size.width() * king()->qt_settings.chat_fx_pos)),
+          qRound((size.height() * king()->qt_settings.chat_fy_pos)));
+      queen()->battlelog_wdg->set_scale(king()->qt_settings.battlelog_scale);
+      queen()->battlelog_wdg->move(
+          qRound(king()->qt_settings.battlelog_x * mapview.width),
+          qRound(king()->qt_settings.battlelog_y * mapview.height));
+      queen()->x_vote->move(width() / 2 - queen()->x_vote->width() / 2, 0);
+      queen()->civ_status->move(
+          qRound(king()->qt_settings.civstatus_x * mapview.width),
+          qRound(king()->qt_settings.civstatus_y * mapview.height));
 
-    map_canvas_resized(size.width(), size.height());
-    queen()->message->resize(
-        qRound((size.width() * king()->qt_settings.chat_fwidth)),
-        qRound((size.height() * king()->qt_settings.chat_fheight)));
-    queen()->message->move(size.width() - queen()->message->width(), 0);
-    queen()->chat->resize(
-        qRound((size.width() * king()->qt_settings.chat_fwidth)),
-        qRound((size.height() * king()->qt_settings.chat_fheight)));
-    queen()->chat->move(
-        qRound((size.width() * king()->qt_settings.chat_fx_pos)),
-        qRound((size.height() * king()->qt_settings.chat_fy_pos)));
-    queen()->battlelog_wdg->set_scale(king()->qt_settings.battlelog_scale);
-    queen()->battlelog_wdg->move(
-        qRound(king()->qt_settings.battlelog_x * mapview.width),
-        qRound(king()->qt_settings.battlelog_y * mapview.height));
-    queen()->x_vote->move(width() / 2 - queen()->x_vote->width() / 2, 0);
-    queen()->updateSidebarTooltips();
-    queen()->minimap_panel->turn_done()->setEnabled(
-        get_turn_done_button_state());
-    queen()->mapview_wdg->resize(size.width(), size.height());
-    queen()->city_overlay->resize(queen()->mapview_wdg->size());
-    queen()->unitinfo_wdg->update_actions(nullptr);
-    queen()->civ_status->move(
-        qRound(king()->qt_settings.civstatus_x * mapview.width),
-        qRound(king()->qt_settings.civstatus_y * mapview.height));
+      queen()->updateSidebarTooltips();
+      queen()->minimap_panel->turn_done()->setEnabled(
+          get_turn_done_button_state());
+      queen()->mapview_wdg->resize(size.width(), size.height());
+      queen()->city_overlay->resize(queen()->mapview_wdg->size());
+      queen()->unitinfo_wdg->update_actions(nullptr);
+    }
 
     /*
      * Resize the panel at the bottom right.
