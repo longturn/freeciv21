@@ -77,7 +77,6 @@ void boot_help_texts(const nation_set *nations_to_show,
 void free_help_texts();
 
 struct help_item *new_help_item(help_page_type type);
-const struct help_item *get_help_item(int pos);
 const struct help_item *
 get_help_item_spec(const char *name, enum help_page_type htype, int *pos);
 
