@@ -131,11 +131,7 @@ static const char edge_name[EDGE_COUNT][3] = {"ns", "we", "ud", "lr"};
 
 #define MAX_NUM_LAYERS 3
 
-struct city_style_threshold {
-  QPixmap *sprite;
-};
-
-using styles = std::vector<city_style_threshold>;
+using styles = std::vector<QPixmap *>;
 using city_sprite = std::vector<styles>;
 
 struct river_sprites {
@@ -2490,7 +2486,7 @@ static QPixmap *get_city_sprite(const city_sprite &city_sprite,
   }
   img_index = CLIP(0, img_index, num_thresholds - 1);
 
-  return thresholds[img_index].sprite;
+  return thresholds[img_index];
 }
 
 /**
@@ -5288,7 +5284,7 @@ const QPixmap *get_sample_city_sprite(const struct tileset *t, int style_idx)
   if (num_thresholds == 0) {
     return nullptr;
   } else {
-    return (t->sprites.city.tile[style_idx].back().sprite);
+    return (t->sprites.city.tile[style_idx].back());
   }
 }
 
