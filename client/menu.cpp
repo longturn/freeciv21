@@ -643,7 +643,6 @@ void mr_menu::setup_menus()
   lock_status->setShortcut(shortcut2key(SC_IFACE_LOCK));
   lock_status->setChecked(false);
   connect(lock_status, &QAction::triggered, this, &mr_menu::slot_lock);
-  connect(minimap_status, &QAction::triggered, this, &mr_menu::slot_lock);
   menu->addSeparator();
   act = menu->addAction(_("Zoom in"));
   act->setShortcut(shortcut2key(SC_ZOOM_IN));
