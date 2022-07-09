@@ -140,10 +140,7 @@ struct styles {
   struct city_style_threshold *land_thresholds;
 };
 
-struct city_sprite {
-  struct styles *styles;
-  int num_styles;
-};
+using city_sprite = std::vector<styles>;
 
 struct river_sprites {
   QPixmap *spec[MAX_INDEX_CARDINAL], *outlet[MAX_INDEX_CARDINAL];
@@ -212,7 +209,7 @@ struct named_sprites {
     QPixmap *disorder, *size[NUM_TILES_DIGITS], *size_tens[NUM_TILES_DIGITS],
         *size_hundreds[NUM_TILES_DIGITS];
     std::vector<QPixmap> tile_foodnum, tile_shieldnum, tile_tradenum;
-    struct city_sprite *tile, *single_wall, *wall[NUM_WALL_TYPES], *occupied;
+    city_sprite tile, single_wall, wall[NUM_WALL_TYPES], occupied;
     struct sprite_vector worked_tile_overlay;
     struct sprite_vector unworked_tile_overlay;
   } city;
@@ -2469,7 +2466,7 @@ static void tileset_setup_citizen_types(struct tileset *t)
 
    See also load_city_sprite, free_city_sprite.
  */
-static QPixmap *get_city_sprite(const struct city_sprite *city_sprite,
+static QPixmap *get_city_sprite(const city_sprite &city_sprite,
                                 const struct city *pcity)
 {
   // get style and match the best tile based on city size
@@ -2478,10 +2475,10 @@ static QPixmap *get_city_sprite(const struct city_sprite *city_sprite,
   struct city_style_threshold *thresholds;
   int img_index;
 
-  fc_assert_ret_val(style < city_sprite->num_styles, nullptr);
+  fc_assert_ret_val(style < city_sprite.size(), nullptr);
 
-  num_thresholds = city_sprite->styles[style].land_num_thresholds;
-  thresholds = city_sprite->styles[style].land_thresholds;
+  num_thresholds = city_sprite[style].land_num_thresholds;
+  thresholds = city_sprite[style].land_thresholds;
 
   if (num_thresholds == 0) {
     return nullptr;
@@ -2549,27 +2546,18 @@ load_city_thresholds_sprites(struct tileset *t, QString tag, char *graphic,
 
    See also get_city_sprite, free_city_sprite.
  */
-static struct city_sprite *load_city_sprite(struct tileset *t,
-                                            const QString &tag)
+static city_sprite load_city_sprite(struct tileset *t, const QString &tag)
 {
-  struct city_sprite *city_sprite = new struct city_sprite;
-  int style;
+  auto csprite = city_sprite();
 
-  /* Store number of styles we have allocated memory for.
-   * game.control.styles_count might change if client disconnects from
-   * server and connects new one. */
-  city_sprite->num_styles = game.control.styles_count;
-  city_sprite->styles = new styles[city_sprite->num_styles]();
-
-  for (style = 0; style < city_sprite->num_styles; style++) {
-    city_sprite->styles[style].land_num_thresholds =
-        load_city_thresholds_sprites(
-            t, tag, city_styles[style].graphic,
-            city_styles[style].graphic_alt,
-            &city_sprite->styles[style].land_thresholds);
+  for (int i = 0; i < game.control.styles_count; ++i) {
+    csprite.emplace_back();
+    csprite[i].land_num_thresholds = load_city_thresholds_sprites(
+        t, tag, city_styles[i].graphic, city_styles[i].graphic_alt,
+        &csprite[i].land_thresholds);
   }
 
-  return city_sprite;
+  return csprite;
 }
 
 /**
@@ -2577,20 +2565,15 @@ static struct city_sprite *load_city_sprite(struct tileset *t,
 
    See also get_city_sprite, load_city_sprite.
  */
-static void free_city_sprite(struct city_sprite *city_sprite)
+static void free_city_sprite(city_sprite &csprite)
 {
-  int style;
-
-  if (!city_sprite) {
-    return;
-  }
-  for (style = 0; style < city_sprite->num_styles; style++) {
-    if (city_sprite->styles[style].land_thresholds) {
-      free(city_sprite->styles[style].land_thresholds);
+  for (auto &styles : csprite) {
+    if (styles.land_thresholds) {
+      delete styles.land_thresholds;
     }
   }
-  delete[] city_sprite->styles;
-  delete city_sprite;
+
+  csprite.clear();
 }
 
 /**
@@ -4772,18 +4755,11 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
                           FULL_TILE_Y_OFFSET + t->city_offset_y);
       }
       if (t->type == TS_ISOMETRIC && pcity->client.walls > 0) {
-        struct city_sprite *cspr =
-            t->sprites.city.wall[pcity->client.walls - 1];
-        QPixmap *spr = nullptr;
-
-        if (cspr != nullptr) {
-          spr = get_city_sprite(cspr, pcity);
-        }
+        auto cspr = t->sprites.city.wall[pcity->client.walls - 1];
+        auto spr = get_city_sprite(cspr, pcity);
         if (spr == nullptr) {
           cspr = t->sprites.city.single_wall;
-          if (cspr != nullptr) {
-            spr = get_city_sprite(cspr, pcity);
-          }
+          spr = get_city_sprite(cspr, pcity);
         }
 
         if (spr != nullptr) {
@@ -4800,18 +4776,11 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
                           FULL_TILE_Y_OFFSET + t->occupied_offset_y);
       }
       if (t->type == TS_OVERHEAD && pcity->client.walls > 0) {
-        struct city_sprite *cspr =
-            t->sprites.city.wall[pcity->client.walls - 1];
-        QPixmap *spr = nullptr;
-
-        if (cspr != nullptr) {
-          spr = get_city_sprite(cspr, pcity);
-        }
+        auto cspr = t->sprites.city.wall[pcity->client.walls - 1];
+        QPixmap *spr = get_city_sprite(cspr, pcity);
         if (spr == nullptr) {
           cspr = t->sprites.city.single_wall;
-          if (cspr != nullptr) {
-            spr = get_city_sprite(cspr, pcity);
-          }
+          spr = get_city_sprite(cspr, pcity);
         }
 
         if (spr != nullptr) {
@@ -5028,11 +4997,8 @@ void tileset_setup_city_tiles(struct tileset *t, int style)
 
     for (i = 0; i < NUM_WALL_TYPES; i++) {
       free_city_sprite(t->sprites.city.wall[i]);
-      t->sprites.city.wall[i] = nullptr;
     }
     free_city_sprite(t->sprites.city.single_wall);
-    t->sprites.city.single_wall = nullptr;
-
     free_city_sprite(t->sprites.city.occupied);
 
     t->sprites.city.tile = load_city_sprite(t, QStringLiteral("city"));
@@ -5050,12 +5016,12 @@ void tileset_setup_city_tiles(struct tileset *t, int style)
         load_city_sprite(t, QStringLiteral("occupied"));
 
     for (style = 0; style < game.control.styles_count; style++) {
-      if (t->sprites.city.tile->styles[style].land_num_thresholds == 0) {
+      if (t->sprites.city.tile[style].land_num_thresholds == 0) {
         tileset_error(t, LOG_FATAL,
                       _("City style \"%s\": no city graphics."),
                       city_style_rule_name(style));
       }
-      if (t->sprites.city.occupied->styles[style].land_num_thresholds == 0) {
+      if (t->sprites.city.occupied[style].land_num_thresholds == 0) {
         tileset_error(t, LOG_FATAL,
                       _("City style \"%s\": no occupied graphics."),
                       city_style_rule_name(style));
@@ -5158,17 +5124,13 @@ void tileset_free_tiles(struct tileset *t)
   unload_all_sprites(t);
 
   free_city_sprite(t->sprites.city.tile);
-  t->sprites.city.tile = nullptr;
 
   for (i = 0; i < NUM_WALL_TYPES; i++) {
     free_city_sprite(t->sprites.city.wall[i]);
-    t->sprites.city.wall[i] = nullptr;
   }
   free_city_sprite(t->sprites.city.single_wall);
-  t->sprites.city.single_wall = nullptr;
 
   free_city_sprite(t->sprites.city.occupied);
-  t->sprites.city.occupied = nullptr;
 
   if (t->sprite_hash) {
     delete t->sprite_hash;
@@ -5349,13 +5311,12 @@ const QPixmap *get_unittype_sprite(const struct tileset *t,
  */
 const QPixmap *get_sample_city_sprite(const struct tileset *t, int style_idx)
 {
-  int num_thresholds =
-      t->sprites.city.tile->styles[style_idx].land_num_thresholds;
+  int num_thresholds = t->sprites.city.tile[style_idx].land_num_thresholds;
 
   if (num_thresholds == 0) {
     return nullptr;
   } else {
-    return (t->sprites.city.tile->styles[style_idx]
+    return (t->sprites.city.tile[style_idx]
                 .land_thresholds[num_thresholds - 1]
                 .sprite);
   }
@@ -5571,18 +5532,6 @@ struct color_system *get_color_system(const struct tileset *t)
  */
 void tileset_init(struct tileset *t)
 {
-  int wi;
-
-  // We currently have no city sprites loaded.
-  t->sprites.city.tile = nullptr;
-
-  for (wi = 0; wi < NUM_WALL_TYPES; wi++) {
-    t->sprites.city.wall[wi] = nullptr;
-  }
-  t->sprites.city.single_wall = nullptr;
-
-  t->sprites.city.occupied = nullptr;
-
   player_slots_iterate(pslot)
   {
     int edge, j, id = player_slot_index(pslot);
