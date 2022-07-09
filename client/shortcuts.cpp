@@ -138,10 +138,9 @@ fc_shortcut default_shortcuts[] = {
      Qt::ControlModifier | Qt::ShiftModifier, _("Reload tileset")},
     {SC_SHOW_FULLBAR, Qt::Key_F, Qt::AllButtons, Qt::ControlModifier,
      _("Toggle city full bar visibility")},
-    {SC_ZOOM_IN, Qt::Key_Plus, Qt::AllButtons, Qt::NoModifier,
-     _("Reload zoomed in tileset")},
+    {SC_ZOOM_IN, Qt::Key_Plus, Qt::AllButtons, Qt::NoModifier, _("Zoom in")},
     {SC_ZOOM_OUT, Qt::Key_Minus, Qt::AllButtons, Qt::NoModifier,
-     _("Reload zoomed out tileset")},
+     _("Zoom out")},
     {SC_LOAD_LUA, Qt::Key_J, Qt::AllButtons,
      Qt::ControlModifier | Qt::ShiftModifier, _("Load Lua script")},
     {SC_RELOAD_LUA, Qt::Key_K, Qt::AllButtons,
@@ -357,7 +356,9 @@ void fc_shortcut_popup::closeEvent(QCloseEvent *ev)
   fc_sc_button *scp;
 
   if (sc != nullptr) {
-    if (!check_if_exist()) {
+    // Skip duplication checks if the shortcut wasn't changed
+    if (*sc == *fc_shortcuts::sc()->get_shortcut(sc->id)
+        || !check_if_exist()) {
       scp = reinterpret_cast<fc_sc_button *>(parentWidget());
       scp->setText(shortcut_to_string(scp->sc));
       fc_shortcuts::sc()->set_shortcut(sc);
@@ -376,10 +377,6 @@ bool fc_shortcut_popup::check_if_exist()
   if (sc != nullptr) {
     QString desc;
     for (const auto *fsc : qAsConst(fc_shortcuts::sc()->hash)) {
-      if (fsc->id == sc->id) {
-        // Don't check for conflicts with the shortcut we're going to change
-        continue;
-      }
       if (*sc == *fsc) {
         // Found a conflict
         desc = fc_shortcuts::sc()->get_desc(fsc->id);
