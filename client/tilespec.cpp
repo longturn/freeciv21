@@ -29,6 +29,7 @@
 
 #include "bitvector.h"
 #include "capability.h"
+#include "city.h"
 #include "deprecations.h"
 #include "fcintl.h"
 #include "log.h"
@@ -131,7 +132,7 @@ static const char edge_name[EDGE_COUNT][3] = {"ns", "we", "ud", "lr"};
 
 #define MAX_NUM_LAYERS 3
 
-using styles = std::vector<QPixmap *>;
+using styles = std::vector<std::unique_ptr<freeciv::colorizer>>;
 using city_sprite = std::vector<styles>;
 
 struct river_sprites {
@@ -2458,8 +2459,8 @@ static void tileset_setup_citizen_types(struct tileset *t)
 
    See also load_city_sprite, free_city_sprite.
  */
-static QPixmap *get_city_sprite(const city_sprite &city_sprite,
-                                const struct city *pcity)
+static const QPixmap *get_city_sprite(const city_sprite &city_sprite,
+                                      const struct city *pcity)
 {
   // get style and match the best tile based on city size
   int style = style_of_city(pcity);
@@ -2486,7 +2487,13 @@ static QPixmap *get_city_sprite(const city_sprite &city_sprite,
   }
   img_index = CLIP(0, img_index, num_thresholds - 1);
 
-  return thresholds[img_index];
+  const auto owner =
+      pcity->owner; // city_owner asserts when there is no owner
+  auto color = QColor();
+  if (owner && owner->rgb) {
+    color.setRgb(owner->rgb->r, owner->rgb->g, owner->rgb->b);
+  }
+  return thresholds[img_index]->pixmap(color);
 }
 
 /**
@@ -2502,7 +2509,8 @@ static styles load_city_thresholds_sprites(struct tileset *t, QString tag,
     const auto buffer = QStringLiteral("%1_%2_%3")
                             .arg(gfx_in_use, tag, QString::number(size));
     if (const auto sprite = load_sprite(t, buffer)) {
-      thresholds.push_back({sprite});
+      thresholds.push_back(std::make_unique<freeciv::colorizer>(
+          *sprite, t->sprites.units.replaced_hue));
     } else if (size == 0) {
       if (gfx_in_use == graphic) {
         // Try again with graphic_alt.
@@ -4723,11 +4731,10 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
                           FULL_TILE_Y_OFFSET + t->city_offset_y);
       }
       if (t->type == TS_ISOMETRIC && pcity->client.walls > 0) {
-        auto cspr = t->sprites.city.wall[pcity->client.walls - 1];
-        auto spr = get_city_sprite(cspr, pcity);
+        auto spr = get_city_sprite(
+            t->sprites.city.wall[pcity->client.walls - 1], pcity);
         if (spr == nullptr) {
-          cspr = t->sprites.city.single_wall;
-          spr = get_city_sprite(cspr, pcity);
+          spr = get_city_sprite(t->sprites.city.single_wall, pcity);
         }
 
         if (spr != nullptr) {
@@ -4744,11 +4751,10 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
                           FULL_TILE_Y_OFFSET + t->occupied_offset_y);
       }
       if (t->type == TS_OVERHEAD && pcity->client.walls > 0) {
-        auto cspr = t->sprites.city.wall[pcity->client.walls - 1];
-        QPixmap *spr = get_city_sprite(cspr, pcity);
+        auto spr = get_city_sprite(
+            t->sprites.city.wall[pcity->client.walls - 1], pcity);
         if (spr == nullptr) {
-          cspr = t->sprites.city.single_wall;
-          spr = get_city_sprite(cspr, pcity);
+          spr = get_city_sprite(t->sprites.city.single_wall, pcity);
         }
 
         if (spr != nullptr) {
@@ -5284,7 +5290,7 @@ const QPixmap *get_sample_city_sprite(const struct tileset *t, int style_idx)
   if (num_thresholds == 0) {
     return nullptr;
   } else {
-    return (t->sprites.city.tile[style_idx].back());
+    return t->sprites.city.tile[style_idx].back()->pixmap(QColor());
   }
 }
 
