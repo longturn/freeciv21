@@ -2488,15 +2488,12 @@ void enable_interface(bool enable)
  */
 void mr_menu::slot_fullscreen()
 {
-  if (!gui_options.gui_qt_fullscreen) {
-    king()->showFullScreen();
-    queen()->game_tab_widget->showFullScreen();
-  } else {
-    // FIXME Doesnt return properly, probably something with sidebar
-    king()->showNormal();
-    queen()->game_tab_widget->showNormal();
-  }
   gui_options.gui_qt_fullscreen = !gui_options.gui_qt_fullscreen;
+  if (gui_options.gui_qt_fullscreen) {
+    king()->setWindowState(king()->windowState() | Qt::WindowFullScreen);
+  } else {
+    king()->setWindowState(king()->windowState() & ~Qt::WindowFullScreen);
+  }
 }
 
 /**
