@@ -20,9 +20,7 @@
 #include "cityrepdata.h"
 #include "climisc.h"
 
-#define NEG_VAL(x) ((x) < 0 ? (x) : (-x))
 #define CMA_NONE (10000)
-#define CMA_CUSTOM (10001)
 
 class QHBoxLayout;
 class QItemSelection;

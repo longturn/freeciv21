@@ -305,19 +305,6 @@ bool universal_is_relevant_to_requirement(const struct requirement *req,
   sv_universal_fulfills_requirements(                                       \
       false, (_rqs_),                                                       \
       (struct universal){.value = {.utype = (_ut_)}, .kind = VUT_UTYPE})
-#define requirement_fulfilled_by_extra(_ex_, _rqs_)                         \
-  sv_universal_fulfills_requirements(                                       \
-      false, (_rqs_),                                                       \
-      (struct universal){.value = {.extra = (_ex_)}, .kind = VUT_EXTRA})
-#define requirement_fulfilled_by_output_type(_o_, _rqs_)                    \
-  sv_universal_fulfills_requirements(                                       \
-      false, (_rqs_),                                                       \
-      (struct universal){.value = {.outputtype = (_o_)},                    \
-                         .kind = VUT_OTYPE})
-#define requirement_fulfilled_by_action(_act_, _rqs_)                       \
-  sv_universal_fulfills_requirements(                                       \
-      false, (_rqs_),                                                       \
-      (struct universal){.value = {.action = (_act_)}, .kind = VUT_ACTION})
 
 #define requirement_needs_improvement(_imp_, _rqs_)                         \
   sv_universal_fulfills_requirements(                                       \
