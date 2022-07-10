@@ -530,7 +530,7 @@ void fc_client::write_settings()
   s.setValue(QStringLiteral("new_turn_text"),
              qt_settings.show_new_turn_text);
   s.setValue(QStringLiteral("show_battle_log"), qt_settings.show_battle_log);
-  write_shortcuts();
+  fc_shortcuts::sc()->write();
 }
 
 /**

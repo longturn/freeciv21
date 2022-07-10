@@ -9,6 +9,8 @@
 **************************************************************************/
 #pragma once
 
+#include <map>
+
 #include <QDialog>
 #include <QKeySequence>
 #include <QKeySequenceEdit>
@@ -21,8 +23,6 @@ class QVBoxLayout;
 struct fc_shortcut;
 
 void popup_shortcuts_dialog();
-void write_shortcuts();
-bool read_shortcuts();
 
 // Assing numbers for casting
 enum shortcut_id {
@@ -119,21 +119,31 @@ struct fc_shortcut {
 **************************************************************************/
 class fc_shortcuts {
   Q_DISABLE_COPY(fc_shortcuts);
+
   fc_shortcuts();
-  static fc_shortcuts *m_instance;
 
 public:
   ~fc_shortcuts();
+
+  void init_default(bool read);
+
+  /// Returns all existing shortcuts
+  auto shortcuts() const { return m_shortcuts_by_id; }
+
+  fc_shortcut get_shortcut(shortcut_id id) const;
+  void set_shortcut(const fc_shortcut &sc);
+
+  QString get_desc(shortcut_id id) const;
+
   static fc_shortcuts *sc();
   static void drop();
-  static QMap<shortcut_id, fc_shortcut *> hash;
 
-public:
-  static void init_default(bool read);
-  fc_shortcut *get_shortcut(shortcut_id id);
-  shortcut_id get_id(fc_shortcut *sc);
-  void set_shortcut(fc_shortcut *sc);
-  QString get_desc(shortcut_id id);
+  bool read();
+  void write() const;
+
+private:
+  static fc_shortcuts *m_instance;
+  std::map<shortcut_id, fc_shortcut> m_shortcuts_by_id;
 };
 
 /**************************************************************************
@@ -165,7 +175,7 @@ class fc_shortcuts_dialog : public QDialog {
   QVBoxLayout *main_layout;
   QVBoxLayout *scroll_layout;
   QDialogButtonBox *button_box;
-  void add_option(fc_shortcut *sc);
+  void add_option(const fc_shortcut &sc);
   void init();
   void refresh();
 
