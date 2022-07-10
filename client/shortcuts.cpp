@@ -734,7 +734,7 @@ bool fc_shortcuts::read()
   QSettings s(QSettings::IniFormat, QSettings::UserScope,
               QStringLiteral("freeciv21-client"));
   num = s.beginReadArray(QStringLiteral("ShortcutsV2"));
-  if (num <= SC_LAST_SC - 1) {
+  if (num <= SC_LAST_SC) {
     for (i = 0; i < num; ++i) {
       fc_shortcut sc;
       s.setArrayIndex(i);
@@ -750,7 +750,7 @@ bool fc_shortcuts::read()
       sc.str = default_shortcuts[i].str;
       set_shortcut(sc);
     }
-    for (; i < SC_LAST_SC - 1; ++i) {
+    for (; i < SC_LAST_SC; ++i) {
       // initialize missing shortcuts
       fc_shortcut sc;
       sc.id = default_shortcuts[i].id;
