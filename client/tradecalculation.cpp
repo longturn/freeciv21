@@ -264,10 +264,8 @@ void trade_generator::discard()
 
   for (int i = j; i > -j; i--) {
     while ((tc = find_most_free())) {
-      if (!discard_one(tc)) {
-        if (!discard_any(tc, i)) {
-          break;
-        }
+      if (!discard_any(tc, i)) {
+        break;
       }
     }
   }
@@ -285,32 +283,6 @@ void trade_generator::discard_trade(trade_city *tc, trade_city *ttc)
   tc->over_max--;
   ttc->over_max--;
   check_if_done(tc, ttc);
-}
-
-/**
-   Drops one trade route for given city if possible
- */
-bool trade_generator::discard_one(trade_city *tc)
-{
-  int best = 0;
-  int current_candidate = 0;
-  int best_id;
-  trade_city *ttc;
-
-  for (int i = cities.size() - 1; i >= 0; i--) {
-    ttc = cities.at(i);
-    current_candidate = ttc->over_max;
-    if (current_candidate > best) {
-      best_id = i;
-    }
-  }
-  if (best == 0) {
-    return false;
-  }
-  Q_UNREACHABLE();
-  ttc = cities.at(best_id);
-  discard_trade(tc, ttc);
-  return true;
 }
 
 /**

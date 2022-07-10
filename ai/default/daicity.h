@@ -22,7 +22,7 @@
 struct adv_data;
 struct tech_vector;
 
-struct ai_activity_cache; // defined and only used within aicity.c
+// defined and only used within aicity.c
 
 // Who's coming to kill us, for attack co-ordination
 struct ai_invasion {

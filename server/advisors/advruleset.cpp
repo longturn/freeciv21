@@ -57,7 +57,7 @@ void adv_units_ruleset_init()
 
     if (move_land_enabled && !move_land_disabled) {
       pclass->adv.land_move = MOVE_FULL;
-    } else if (move_land_enabled && move_land_disabled) {
+    } else if (move_land_enabled) {
       pclass->adv.land_move = MOVE_PARTIAL;
     } else {
       fc_assert(!move_land_enabled);
@@ -66,7 +66,7 @@ void adv_units_ruleset_init()
 
     if (move_sea_enabled && !move_sea_disabled) {
       pclass->adv.sea_move = MOVE_FULL;
-    } else if (move_sea_enabled && move_sea_disabled) {
+    } else if (move_sea_enabled) {
       pclass->adv.sea_move = MOVE_PARTIAL;
     } else {
       fc_assert(!move_sea_enabled);
