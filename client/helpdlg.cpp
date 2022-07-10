@@ -51,18 +51,6 @@ QPixmap *terrain_canvas(struct terrain *terrain,
 extern QList<const struct help_item *> *help_nodes;
 
 /**
-   Popup the help dialog to get help on the given string topic.  Note
-   that the topic may appear in multiple sections of the help (it may
-   be both an improvement and a unit, for example).
-
-   The given string should be untranslated.
- */
-void popup_help_dialog_string(const char *item)
-{
-  popup_help_dialog_typed(Q_(item), HELP_ANY);
-}
-
-/**
    Popup the help dialog to display help on the given string topic from
    the given section.
 
