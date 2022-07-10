@@ -292,8 +292,6 @@ static void gui_to_map_pos(const struct tileset *t, int *map_x, int *map_y,
      * The calculation is complicated somewhat because of two things: we
      * only use integer math, and C integer division rounds toward zero
      * instead of rounding down.
-     *
-     * For another example of this math, see canvas_to_city_pos().
      */
     gui_x -= W / 2;
     *map_x = DIVIDE((int) (gui_x * H + gui_y * W), (int) (W * H));
@@ -2508,49 +2506,6 @@ void mapdeco_add_gotoline(const struct tile *ptile, enum direction8 dir,
     refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), false, false);
     refresh_tile_mapcanvas(const_cast<struct tile *>(ptile_dest), false,
                            false);
-  }
-}
-
-/**
-   Removes a goto line from the given tile 'ptile' going in the direction
-   'dir'. If this was the last line there, a mapview update is queued to
-   erase the drawn line.
- */
-void mapdeco_remove_gotoline(const struct tile *ptile, enum direction8 dir,
-                             bool safe)
-{
-  struct gotoline_counter *pglc;
-  bool changed = false;
-
-  if (!ptile || dir > direction8_max()) {
-    return;
-  }
-
-  if (!(pglc = mapdeco_gotoline->value(ptile, nullptr))) {
-    return;
-  }
-
-  if (safe) {
-    pglc->line_count[dir]--;
-    if (pglc->line_count[dir] <= 0) {
-      pglc->line_count[dir] = 0;
-      changed = true;
-    }
-  } else {
-    pglc->line_danger_count[dir]--;
-    if (pglc->line_danger_count[dir] <= 0) {
-      pglc->line_danger_count[dir] = 0;
-      changed = true;
-    }
-  }
-
-  if (changed) {
-    // FIXME: Remove the casts.
-    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), false, false);
-    ptile = mapstep(&(wld.map), ptile, dir);
-    if (ptile != nullptr) {
-      refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), false, false);
-    }
   }
 }
 

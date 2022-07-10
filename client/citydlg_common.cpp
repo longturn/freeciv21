@@ -74,101 +74,6 @@ void generate_citydlg_dimensions()
 }
 
 /**
-   Converts a (cartesian) city position to citymap canvas coordinates.
-   Returns TRUE if the city position is valid.
- */
-bool city_to_canvas_pos(float *canvas_x, float *canvas_y, int city_x,
-                        int city_y, int city_radius_sq)
-{
-  const int width = get_citydlg_canvas_width();
-  const int height = get_citydlg_canvas_height();
-
-  // The citymap is centered over the center of the citydlg canvas.
-  map_to_gui_vector(tileset, canvas_x, canvas_y, CITY_ABS2REL(city_x),
-                    CITY_ABS2REL(city_y));
-  *canvas_x += (width - tileset_tile_width(tileset)) / 2;
-  *canvas_y += (height - tileset_tile_height(tileset)) / 2;
-
-  fc_assert_ret_val(is_valid_city_coords(city_radius_sq, city_x, city_y),
-                    false);
-
-  return true;
-}
-
-/**
-   Converts a citymap canvas position to a (cartesian) city coordinate
-   position.  Returns TRUE iff the city position is valid.
- */
-bool canvas_to_city_pos(int *city_x, int *city_y, int city_radius_sq,
-                        int canvas_x, int canvas_y)
-{
-#ifdef FREECIV_DEBUG
-  int orig_canvas_x = canvas_x, orig_canvas_y = canvas_y;
-#endif
-  const int width = get_citydlg_canvas_width();
-  const int height = get_citydlg_canvas_height();
-
-  // The citymap is centered over the center of the citydlg canvas.
-  canvas_x -= (width - tileset_tile_width(get_tileset())) / 2;
-  canvas_y -= (height - tileset_tile_height(get_tileset())) / 2;
-
-  if (tileset_is_isometric(get_tileset())) {
-    const int W = tileset_tile_width(get_tileset()),
-              H = tileset_tile_height(get_tileset());
-
-    /* Shift the tile left so the top corner of the origin tile is at
-       canvas position (0,0). */
-    canvas_x -= W / 2;
-
-    /* Perform a pi/4 rotation, with scaling.  See canvas_pos_to_map_pos
-       for a full explanation. */
-    *city_x = DIVIDE(canvas_x * H + canvas_y * W, W * H);
-    *city_y = DIVIDE(canvas_y * W - canvas_x * H, W * H);
-  } else {
-    *city_x = DIVIDE(canvas_x, tileset_tile_width(get_tileset()));
-    *city_y = DIVIDE(canvas_y, tileset_tile_height(get_tileset()));
-  }
-
-  /* Add on the offset of the top-left corner to get the final
-   * coordinates (like in canvas_to_map_pos). */
-  *city_x = CITY_REL2ABS(*city_x);
-  *city_y = CITY_REL2ABS(*city_y);
-
-  log_debug("canvas_to_city_pos(pos=(%d,%d))=(%d,%d)@radius=%d",
-            orig_canvas_x, orig_canvas_y, *city_x, *city_y, city_radius_sq);
-
-  return is_valid_city_coords(city_radius_sq, *city_x, *city_y);
-}
-
-/* Iterate over all known tiles in the city.  This iteration follows the
- * painter's algorithm and can be used for drawing. */
-#define citydlg_iterate(pcity, ptile, pedge, pcorner, _x, _y)               \
-  {                                                                         \
-    float _x##_0, _y##_0;                                                   \
-    int _tile_x, _tile_y;                                                   \
-    const int _x##_w = get_citydlg_canvas_width();                          \
-    const int _y##_h = get_citydlg_canvas_height();                         \
-    index_to_map_pos(&_tile_x, &_tile_y, tile_index((pcity)->tile));        \
-                                                                            \
-    map_to_gui_vector(tileset, &_x##_0, &_y##_0, _tile_x, _tile_y);         \
-    _x##_0 -= (_x##_w - tileset_tile_width(tileset)) / 2;                   \
-    _y##_0 -= (_y##_h - tileset_tile_height(tileset)) / 2;                  \
-    log_debug("citydlg: %f,%f + %dx%d", _x##_0, _y##_0, _x##_w, _y##_h);    \
-                                                                            \
-    gui_rect_iterate_coord(_x##_0, _y##_0, _x##_w, _y##_h, ptile, pedge,    \
-                           pcorner, _x##_g, _y##_g)                         \
-    {                                                                       \
-      const int _x = _x##_g - _x##_0;                                       \
-      const int _y = _y##_g - _y##_0;                                       \
-      {
-
-#define citydlg_iterate_end                                                 \
-  }                                                                         \
-  }                                                                         \
-  gui_rect_iterate_coord_end;                                               \
-  }
-
-/**
    Return a string describing the cost for the production of the city
    considerung several build slots for units.
  */
@@ -279,7 +184,7 @@ struct msum {
   double aux;
   // ...and the format string for the net aux value (appended to *desc)
   QString auxfmt;
-} * sums;
+};
 
 struct city_sum {
   QString format;
@@ -1110,19 +1015,6 @@ bool city_queue_insert(struct city *pcity, int position,
 }
 
 /**
-   Clear the queue (all entries except the first one since that can't be
-   cleared).
-
-   Note that the queue DOES include the current production.
- */
-bool city_queue_clear(struct city *pcity)
-{
-  worklist_init(&pcity->worklist);
-
-  return true;
-}
-
-/**
    Insert the worklist into the city's queue at the given position.
 
    Note that the queue DOES include the current production.
@@ -1252,37 +1144,6 @@ int city_change_specialist(struct city *pcity, Specialist_type_id from,
 {
   return dsend_packet_city_change_specialist(&client.conn, pcity->id, from,
                                              to);
-}
-
-/**
-   Toggle a worker<->specialist at the given city tile.  Return the
-   request ID.
- */
-int city_toggle_worker(struct city *pcity, int city_x, int city_y)
-{
-  int city_radius_sq;
-  struct tile *ptile;
-
-  if (city_owner(pcity) != client_player()) {
-    return 0;
-  }
-
-  city_radius_sq = city_map_radius_sq_get(pcity);
-  fc_assert(is_valid_city_coords(city_radius_sq, city_x, city_y));
-  ptile = city_map_to_tile(city_tile(pcity), city_radius_sq, city_x, city_y);
-  if (nullptr == ptile) {
-    return 0;
-  }
-
-  if (nullptr != tile_worked(ptile) && tile_worked(ptile) == pcity) {
-    return dsend_packet_city_make_specialist(&client.conn, pcity->id,
-                                             ptile->index);
-  } else if (city_can_work_tile(pcity, ptile)) {
-    return dsend_packet_city_make_worker(&client.conn, pcity->id,
-                                         ptile->index);
-  } else {
-    return 0;
-  }
 }
 
 /**
