@@ -235,7 +235,6 @@ public:
                 int role = Qt::DisplayRole) const override;
   bool setData(const QModelIndex &index, const QVariant &value,
                int role = Qt::DisplayRole) override;
-  QPoint size_hint();
   void populate();
   QPoint sh;
 
@@ -274,7 +273,6 @@ private:
   struct city *pw_city;
   int when_change;
   int curr_selection;
-  bool sh_units;
   bool buy_it;
   fc_tooltip *fc_tt;
 };
@@ -365,7 +363,6 @@ public:
   bool dont_focus{false};
 
 private:
-  int current_building{0};
   void update_title();
   void update_building();
   void update_info_label();
@@ -384,12 +381,10 @@ private slots:
   void next_city();
   void prev_city();
   void get_city(bool next);
-  void production_changed(int index);
   void show_targets();
   void show_targets_worklist();
   void buy();
   void dbl_click_p(QTableWidgetItem *item);
-  void delete_prod();
   void item_selected(const QItemSelection &sl, const QItemSelection &ds);
   void clear_worklist();
   void save_worklist();
