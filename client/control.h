@@ -113,14 +113,9 @@ void request_unit_wakeup(struct unit *punit);
 enum unit_select_type_mode { SELTYPE_SINGLE, SELTYPE_SAME, SELTYPE_ALL };
 
 enum unit_select_location_mode {
-  SELLOC_UNITS, // Units on tile.
-  SELLOC_TILE,  // Tile.
-  SELLOC_CONT,  // Continent.
-  SELLOC_LAND,  // Move type: land.
-  SELLOC_SEA,   // Move type: sea.
-  SELLOC_BOTH,  // Move type: both.
-  SELLOC_WORLD, // World.
-  SELLOC_COUNT
+  SELLOC_TILE, // Tile.
+  SELLOC_CONT, // Continent.
+  SELLOC_WORLD // World.
 };
 
 void request_unit_select(struct unit_list *punits,
@@ -140,20 +135,6 @@ void request_toggle_city_growth();
 void request_toggle_city_productions();
 void request_toggle_city_buycost();
 void request_toggle_city_trade_routes();
-void request_toggle_coastline();
-void request_toggle_roads_rails();
-void request_toggle_irrigation();
-void request_toggle_mines();
-void request_toggle_bases();
-void request_toggle_resources();
-void request_toggle_huts();
-void request_toggle_pollution();
-void request_toggle_cities();
-void request_toggle_units();
-void request_toggle_unit_solid_bg();
-void request_toggle_unit_shields();
-void request_toggle_focus_unit();
-void request_toggle_fog_of_war();
 
 void wakeup_sentried_units(struct tile *ptile);
 void clear_unit_orders(struct unit *punit);
@@ -167,7 +148,6 @@ int get_num_units_in_focus();
 void unit_focus_set(struct unit *punit);
 void unit_focus_set_and_select(struct unit *punit);
 void unit_focus_add(struct unit *punit);
-void unit_focus_remove(struct unit *punit);
 void unit_focus_urgent(struct unit *punit);
 
 void unit_focus_advance();
@@ -194,20 +174,6 @@ void key_city_growth_toggle();
 void key_city_productions_toggle();
 void key_city_buycost_toggle();
 void key_city_trade_routes_toggle();
-void key_coastline_toggle();
-void key_roads_rails_toggle();
-void key_irrigation_toggle();
-void key_mines_toggle();
-void key_bases_toggle();
-void key_resources_toggle();
-void key_huts_toggle();
-void key_pollution_toggle();
-void key_cities_toggle();
-void key_units_toggle();
-void key_unit_solid_bg_toggle();
-void key_unit_shields_toggle();
-void key_focus_unit_toggle();
-void key_fog_of_war_toggle();
 void key_end_turn();
 void key_city_outlines_toggle();
 void key_city_output_toggle();
@@ -219,8 +185,6 @@ void key_unit_move(enum direction8 gui_dir);
 void key_unit_airbase();
 void key_unit_auto_explore();
 void key_unit_auto_settle();
-void key_unit_build_city();
-void key_unit_build_wonder();
 void key_unit_connect(enum unit_activity activity, struct extra_type *tgt);
 void key_unit_action_select();
 void key_unit_action_select_tgt();
@@ -238,20 +202,11 @@ void key_unit_plant();
 void key_unit_patrol();
 void key_unit_paradrop();
 void key_unit_pillage();
-void key_unit_pollution();
-void key_unit_road();
 void key_unit_sentry();
-void key_unit_trade_route();
 void key_unit_transform();
 void key_unit_unload_all();
 void key_unit_wait();
 void key_unit_wakeup_others();
-void key_unit_assign_battlegroup(int battlegroup, bool append);
-void key_unit_select_battlegroup(int battlegroup, bool append);
-
-void key_editor_toggle();
-void key_editor_recalculate_borders();
-void key_editor_toggle_fogofwar();
 
 void finish_city(struct tile *ptile, const char *name);
 void cancel_city(struct tile *ptile);
