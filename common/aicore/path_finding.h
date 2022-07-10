@@ -216,13 +216,6 @@
  *       // do something
  *     } pf_map_positions_iterate_end;
  *
- *  4) information about the whole path (leading to the next nearest
- *  position):
- *     pf_map_paths_iterate(pfm, path, true) {
- *       // do something
- *       pf_path_destroy(path);
- *     } pf_map_paths_iterate_end;
- *
  * The third argument passed to the iteration macros is a condition that
  * controls if the start tile of the pf_parameter should iterated or not.
  *
@@ -569,28 +562,6 @@ bool pf_reverse_map_unit_position(struct pf_reverse_map *pfrm,
       pf_map_iter_position(_MY_pf_map_, &NAME_pos);
 
 #define pf_map_positions_iterate_end                                        \
-  }                                                                         \
-  while (pf_map_iterate(_MY_pf_map_))                                       \
-    ;                                                                       \
-  }
-
-/* This macro iterates all possible pathes.
- * NB: you need to free the pathes with pf_path_destroy(path_iter).
- *
- * ARG_pfm - A pf_map structure pointer.
- * NAME_path - The name of the iterator to use (type PFPath *). This
- *             is defined inside the macro.
- * COND_from_start - A boolean value (or equivalent, it can be a function)
- *                   which indicate if the start tile should be iterated or
- *                   not. */
-#define pf_map_paths_iterate(ARG_pfm, NAME_path, COND_from_start)           \
-  if (COND_from_start || pf_map_iterate((ARG_pfm))) {                       \
-    struct pf_map *_MY_pf_map_ = (ARG_pfm);                                 \
-    PFPath *NAME_path;                                                      \
-    do {                                                                    \
-      NAME_path = pf_map_iter_path(_MY_pf_map_);
-
-#define pf_map_paths_iterate_end                                            \
   }                                                                         \
   while (pf_map_iterate(_MY_pf_map_))                                       \
     ;                                                                       \
