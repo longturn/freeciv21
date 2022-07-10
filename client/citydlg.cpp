@@ -2229,11 +2229,6 @@ void city_dialog::setup_ui(struct city *qcity)
 }
 
 /**
-   Removes selected item from city worklist
- */
-void city_dialog::delete_prod() { display_worklist_menu(QCursor::pos()); }
-
-/**
    Double clicked item in worklist table in production tab
  */
 void city_dialog::dbl_click_p(QTableWidgetItem *item)
@@ -2630,24 +2625,6 @@ void city_dialog::update_improvements()
   ui.city_buildings->setUpdatesEnabled(true);
 
   ui.curr_impr->setText(QString(_("Improvements - upkeep %1")).arg(upkeep));
-}
-
-/**
-   Slot executed when user changed production in customized table widget
- */
-void city_dialog::production_changed(int index)
-{
-  Q_UNUSED(index)
-  cid id;
-  QVariant qvar;
-
-  if (can_client_issue_orders()) {
-    struct universal univ;
-
-    id = qvar.toInt();
-    univ = cid_production(id);
-    city_change_production(pcity, &univ);
-  }
 }
 
 /**
@@ -3321,7 +3298,6 @@ production_widget::production_widget(QWidget *parent, struct city *pcity,
   horizontalHeader()->setVisible(false);
   setProperty("showGrid", false);
   curr_selection = curr;
-  sh_units = show_units;
   pw_city = pcity;
   buy_it = buy;
   when_change = when;
