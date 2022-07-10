@@ -84,7 +84,6 @@ class help_widget : public QWidget {
   QList<int> splitter_sizes;
 
   void setup_ui();
-  void set_main_widget(QWidget *main_widget);
 
   void do_layout();
   void undo_layout();
@@ -98,7 +97,6 @@ class help_widget : public QWidget {
                                      enum unit_activity act,
                                      const char *label);
   void add_info_separator();
-  void add_info_widget(QWidget *widget);
   void info_panel_done();
 
   void set_bottom_panel(QWidget *widget);
@@ -110,8 +108,6 @@ class help_widget : public QWidget {
 
   void set_topic_other(const help_item *item, const char *title);
 
-  void set_topic_any(const help_item *item, const char *title);
-  void set_topic_text(const help_item *item, const char *title);
   void set_topic_unit(const help_item *item, const char *title);
   void set_topic_building(const help_item *item, const char *title);
   void set_topic_tech(const help_item *item, const char *title);
@@ -143,6 +139,5 @@ public:
 };
 
 void update_help_fonts();
-void popup_help_dialog_string(const char *item);
 void popup_help_dialog_typed(const char *item, help_page_type htype);
 void popdown_help_dialog();
