@@ -24,8 +24,6 @@
 // server
 #include "notify.h"
 
-struct ai_data;
-
 /*
  * Change these and remake to watch logs from a specific
  * part of the AI code.

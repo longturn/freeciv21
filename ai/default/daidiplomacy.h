@@ -17,7 +17,6 @@
 
 struct Treaty;
 struct Clause;
-struct ai_data;
 
 void dai_diplomacy_begin_new_phase(struct ai_type *ait,
                                    struct player *pplayer);

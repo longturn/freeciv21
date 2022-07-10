@@ -36,7 +36,6 @@
 #include "fc_client.h"
 #include "fonts.h"
 #include "helpdlg.h"
-#include "qtg_cxxside.h"
 #include "sprite.h"
 #include "tilespec.h"
 
