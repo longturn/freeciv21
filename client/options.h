@@ -90,13 +90,11 @@ struct client_options {
   bool show_previous_turn_messages;
   bool concise_city_production;
   bool auto_turn_done;
-  bool meta_accelerators;
   bool ask_city_name;
   bool popup_new_cities;
   bool popup_actor_arrival;
   bool popup_attack_actions;
   bool popup_last_move_to_allied;
-  bool update_city_text_in_refresh_tile;
   bool keyboardless_goto;
   bool enable_cursor_changes;
   bool separate_unit_selection;
@@ -208,7 +206,6 @@ struct option *optset_option_by_name(const struct option_set *poptset,
                                      const char *name);
 struct option *optset_option_first(const struct option_set *poptset);
 
-int optset_category_number(const struct option_set *poptset);
 const char *optset_category_name(const struct option_set *poptset,
                                  int category);
 
@@ -220,7 +217,6 @@ const char *option_name(const struct option *poption);
 const char *option_description(const struct option *poption);
 QString option_help_text(const struct option *poption);
 enum option_type option_type(const struct option *poption);
-int option_category(const struct option *poption);
 QString option_category_name(const struct option *poption);
 bool option_is_changeable(const struct option *poption);
 struct option *option_next(const struct option *poption);
@@ -259,12 +255,8 @@ bool option_str_set(struct option *poption, const char *str);
 int option_enum_str_to_int(const struct option *poption, const char *str);
 QString option_enum_int_to_str(const struct option *poption, int val);
 int option_enum_get_int(const struct option *poption);
-QString option_enum_get_str(const struct option *poption);
 int option_enum_def_int(const struct option *poption);
-QString option_enum_def_str(const struct option *poption);
-const QVector<QString> *option_enum_values(const struct option *poption);
 bool option_enum_set_int(struct option *poption, int val);
-bool option_enum_set_str(struct option *poption, const char *str);
 
 // Option type OT_BITWISE functions.
 unsigned option_bitwise_get(const struct option *poption);

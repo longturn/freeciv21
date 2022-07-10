@@ -113,13 +113,11 @@ struct client_options gui_options = {
     true,                           //.show_previous_turn_messages =
     false,                          //.concise_city_production =
     false,                          //.auto_turn_done =
-    true,                           //.meta_accelerators =
     true,                           //.ask_city_name =
     true,                           //.popup_new_cities =
     true,                           //.popup_actor_arrival =
     true,                           //.popup_attack_actions =
     true,                           //.popup_last_move_to_allied =
-    true,                           //.update_city_text_in_refresh_tile =
     true,                           //.keyboardless_goto =
     true,                           //.enable_cursor_changes =
     false,                          //.separate_unit_selection =
@@ -258,16 +256,6 @@ struct option *optset_option_first(const struct option_set *poptset)
   fc_assert_ret_val(nullptr != poptset, nullptr);
 
   return poptset->option_first();
-}
-
-/**
-   Returns the number of categories of this option set.
- */
-int optset_category_number(const struct option_set *poptset)
-{
-  fc_assert_ret_val(nullptr != poptset, 0);
-
-  return poptset->category_number();
 }
 
 /**
@@ -469,16 +457,6 @@ enum option_type option_type(const struct option *poption)
   fc_assert_ret_val(nullptr != poption, static_cast<enum option_type>(0));
 
   return poption->type;
-}
-
-/**
-   Returns the category of the option.
- */
-int option_category(const struct option *poption)
-{
-  fc_assert_ret_val(nullptr != poption, 0);
-
-  return poption->common_vtable->category(poption);
 }
 
 /**
@@ -798,19 +776,6 @@ int option_enum_get_int(const struct option *poption)
 }
 
 /**
-   Returns the current value of this enum option as a user-visible
-   (translatable but not translated) string.
- */
-QString option_enum_get_str(const struct option *poption)
-{
-  fc_assert_ret_val(nullptr != poption, nullptr);
-  fc_assert_ret_val(OT_ENUM == poption->type, nullptr);
-
-  return poption->enum_vtable->values(poption)->at(
-      poption->enum_vtable->get(poption));
-}
-
-/**
    Returns the default value of this enum option (as an integer).
  */
 int option_enum_def_int(const struct option *poption)
@@ -822,31 +787,6 @@ int option_enum_def_int(const struct option *poption)
 }
 
 /**
-   Returns the default value of this enum option as a user-visible
-   (translatable but not translated) string.
- */
-QString option_enum_def_str(const struct option *poption)
-{
-  fc_assert_ret_val(nullptr != poption, nullptr);
-  fc_assert_ret_val(OT_ENUM == poption->type, nullptr);
-
-  return poption->enum_vtable->values(poption)->at(
-      poption->enum_vtable->def(poption));
-}
-
-/**
-   Returns the possible string values of this enum option, as user-visible
-   (translatable but not translated) strings.
- */
-const QVector<QString> *option_enum_values(const struct option *poption)
-{
-  fc_assert_ret_val(nullptr != poption, nullptr);
-  fc_assert_ret_val(OT_ENUM == poption->type, nullptr);
-
-  return poption->enum_vtable->values(poption);
-}
-
-/**
    Sets the value of this enum option. Returns TRUE if the value changed.
  */
 bool option_enum_set_int(struct option *poption, int val)
@@ -855,25 +795,6 @@ bool option_enum_set_int(struct option *poption, int val)
   fc_assert_ret_val(OT_ENUM == poption->type, false);
 
   if (poption->enum_vtable->set(poption, val)) {
-    option_changed(poption);
-    return true;
-  }
-  return false;
-}
-
-/**
-   Sets the value of this enum option from a string, which is matched as a
-   user-visible (translatable but not translated) string. Returns TRUE if the
-   value changed.
- */
-bool option_enum_set_str(struct option *poption, const char *str)
-{
-  fc_assert_ret_val(nullptr != poption, false);
-  fc_assert_ret_val(OT_ENUM == poption->type, false);
-  fc_assert_ret_val(nullptr != str, false);
-
-  if (poption->enum_vtable->set(poption,
-                                option_enum_str_to_int(poption, str))) {
     option_changed(poption);
     return true;
   }
