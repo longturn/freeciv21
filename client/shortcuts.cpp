@@ -224,9 +224,28 @@ fc_shortcut fc_shortcuts::get_shortcut(shortcut_id id) const
  */
 void fc_shortcuts::set_shortcut(const fc_shortcut &s)
 {
-  auto &sc = m_shortcuts_by_id[s.id];
-  king()->menu_bar->update_shortcut(sc, s);
-  sc = s;
+  m_shortcuts_by_id[s.id] = s;
+
+  if (m_actions.count(s.id) > 0) {
+    auto action = m_actions[s.id];
+    if (action) { // Might have been deleted
+      setup_action(s, action);
+    } else {
+      m_actions.erase(s.id);
+    }
+  }
+
+  king()->menu_bar->show(); // Apparently needed for shortcuts to update
+}
+
+/**
+ * Links an action to a shortcut. This will synchronize the action with the
+ * shortcut, and it will be triggered whenever the shortcut is entered.
+ */
+void fc_shortcuts::link_action(shortcut_id id, QAction *action)
+{
+  m_actions[id] = action;
+  setup_action(shortcuts()[id], action);
 }
 
 /**
@@ -271,6 +290,18 @@ void fc_shortcuts::init_default(bool read)
       s.str = default_shortcuts[i].str;
       m_shortcuts_by_id[default_shortcuts[i].id] = s;
     }
+  }
+}
+
+/**
+ * Sets up key bindings for the action.
+ */
+void fc_shortcuts::setup_action(const fc_shortcut &sc, QAction *action)
+{
+  if (sc.type == fc_shortcut::keyboard) {
+    action->setShortcut(sc.keys);
+  } else {
+    action->setShortcut(QKeySequence());
   }
 }
 
