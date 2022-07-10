@@ -264,7 +264,10 @@ void fc_shortcuts::create_no_action_shortcuts(map_view *parent)
   }
 
   // Create new ones
-  for (const auto &[id, shortcut] : shortcuts()) {
+  for (const auto &pair : shortcuts()) {
+    // No structued bindings because of clang, see #1117
+    auto id = pair.first;
+    auto shortcut = pair.second;
     if (shortcut.type == fc_shortcut::keyboard) {
       if (m_actions.count(id) == 0 || m_actions[id] == nullptr) {
         auto qs = new QShortcut(shortcut.keys, parent);
