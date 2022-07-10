@@ -115,7 +115,7 @@ typedef bool (*search_callback)(void *data, const struct city *pcity,
 
 static void caravan_search_from(const struct unit *caravan,
                                 const struct caravan_parameter *param,
-                                struct tile *start_tile, int turns_before,
+                                struct tile *start_tile,
                                 int moves_left_before, bool omniscient,
                                 search_callback callback,
                                 void *callback_data)
@@ -124,7 +124,7 @@ static void caravan_search_from(const struct unit *caravan,
   struct pf_parameter pfparam;
   int end_time;
 
-  end_time = param->horizon - turns_before;
+  end_time = param->horizon;
 
   // Initialize the pf run.
   pft_fill_unit_parameter(&pfparam, const_cast<struct unit *>(caravan));
@@ -148,9 +148,7 @@ static void caravan_search_from(const struct unit *caravan,
     }
 
     pcity = tile_city(pos.tile);
-    if (pcity
-        && callback(callback_data, pcity, turns_before + pos.turn,
-                    pos.moves_left)) {
+    if (pcity && callback(callback_data, pcity, pos.turn, pos.moves_left)) {
       break;
     }
   }
@@ -540,8 +538,8 @@ static bool cfbdw_callback(void *vdata, const struct city *dest,
  */
 static void caravan_find_best_destination_withtransit(
     const struct unit *caravan, const struct caravan_parameter *param,
-    const struct city *src, int turns_before, int moves_left,
-    bool omniscient, struct caravan_result *result)
+    const struct city *src, int moves_left, bool omniscient,
+    struct caravan_result *result)
 {
   Q_UNUSED(moves_left)
   struct tile *start_tile;
@@ -558,9 +556,8 @@ static void caravan_find_best_destination_withtransit(
     start_tile = unit_tile(caravan);
   }
 
-  caravan_search_from(caravan, param, start_tile, turns_before,
-                      caravan->moves_left, omniscient, cfbdw_callback,
-                      &data);
+  caravan_search_from(caravan, param, start_tile, caravan->moves_left,
+                      omniscient, cfbdw_callback, &data);
 }
 
 /**
@@ -581,6 +578,6 @@ void caravan_find_best_destination(const struct unit *caravan,
     fc_assert(src != nullptr);
 
     caravan_find_best_destination_withtransit(
-        caravan, parameter, src, 0, caravan->moves_left, omniscient, result);
+        caravan, parameter, src, caravan->moves_left, omniscient, result);
   }
 }

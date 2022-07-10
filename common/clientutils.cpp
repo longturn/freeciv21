@@ -40,8 +40,7 @@ struct actcalc {
    anything).
  */
 static void calc_activity(struct actcalc *calc, const struct tile *ptile,
-                          Activity_type_id new_act,
-                          const struct extra_type *new_tgt)
+                          Activity_type_id new_act)
 {
   // This temporary working state is a bit big to allocate on the stack
   struct tmp_state {
@@ -156,7 +155,7 @@ QString concat_tile_activity_text(struct tile *ptile)
   int num_activities = 0;
   QString str;
 
-  calc_activity(calc, ptile, ACTIVITY_LAST, nullptr);
+  calc_activity(calc, ptile, ACTIVITY_LAST);
 
   activity_type_iterate(i)
   {
