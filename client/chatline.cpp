@@ -360,15 +360,6 @@ void chat_widget::set_chat_visible(bool visible)
 }
 
 /**
-   Scrolls chat to bottom
- */
-void chat_widget::scroll_to_bottom()
-{
-  chat_output->verticalScrollBar()->setSliderPosition(
-      chat_output->verticalScrollBar()->maximum());
-}
-
-/**
  * Shows the chat and ensures the chat line has focus
  */
 void chat_widget::take_focus()

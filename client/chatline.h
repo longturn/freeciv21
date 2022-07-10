@@ -59,7 +59,6 @@ public:
 
   void send_chat_message(const QString &message);
 
-  int position_in_history() { return position; }
   QString back_in_history();
   QString forward_in_history();
   void reset_history_position();
@@ -117,7 +116,6 @@ public:
   void make_link(struct tile *ptile);
   void update_widgets();
   int default_size(int lines);
-  void scroll_to_bottom();
   void take_focus();
   void update_font();
 private slots:

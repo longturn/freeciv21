@@ -22,11 +22,8 @@ struct nation_set;
 
 typedef int cid;
 
-void client_remove_player(int plrno);
 void client_remove_city(struct city *pcity);
 void client_remove_unit(struct unit *punit);
-
-void client_change_all(struct universal *from, struct universal *to);
 
 const char *get_embassy_status(const struct player *me,
                                const struct player *them);
@@ -84,17 +81,11 @@ int collect_production_targets(struct universal *targets,
                                int num_selected_cities, bool append_units,
                                bool append_wonders, bool change_prod,
                                TestCityFunc test_func);
-int collect_currently_building_targets(struct universal *targets);
-int collect_buildable_targets(struct universal *targets);
 int collect_eventually_buildable_targets(struct universal *targets,
                                          struct city *pcity,
                                          bool advanced_tech);
 int collect_already_built_targets(struct universal *targets,
                                   struct city *pcity);
-
-// the number of units in city
-int num_present_units_in_city(struct city *pcity);
-int num_supported_units_in_city(struct city *pcity);
 
 void handle_event(const char *featured_text, struct tile *ptile,
                   enum event_type event, int turn, int phase, int conn_id);
@@ -112,16 +103,6 @@ bool can_units_do_connect(struct unit_list *punits,
 
 void client_unit_init_act_prob_cache(struct unit *punit);
 
-enum unit_bg_color_type {
-  UNIT_BG_HP_LOSS,
-  UNIT_BG_LAND,
-  UNIT_BG_SEA,
-  UNIT_BG_AMPHIBIOUS,
-  UNIT_BG_FLYING
-};
-
-enum unit_bg_color_type unit_color_type(const struct unit_type *punittype);
-
 void unit_focus_set_status(struct player *pplayer);
 
 void client_player_init(struct player *pplayer);
@@ -129,7 +110,6 @@ void client_player_init(struct player *pplayer);
 void client_player_maps_reset();
 
 bool mapimg_client_define();
-bool mapimg_client_createmap(const char *filename);
 
 struct nation_set *client_current_nation_set();
 

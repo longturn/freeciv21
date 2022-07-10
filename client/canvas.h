@@ -25,7 +25,5 @@ enum client_font {
 
 void pixmap_copy(QPixmap *dest, const QPixmap *src, int src_x, int src_y,
                  int dest_x, int dest_y, int width, int height);
-void image_copy(QImage *dest, const QImage *src, int src_x, int src_y,
-                int dest_x, int dest_y, int width, int height);
 QRect zealous_crop_rect(QImage &p);
 QFont get_font(client_font font);
