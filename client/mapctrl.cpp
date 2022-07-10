@@ -410,7 +410,8 @@ void map_view::shortcut_released(Qt::MouseButton bt)
    Mouse buttons handler for map_view
  */
 void map_view::mousePressEvent(QMouseEvent *event)
-{ /*shortcut_pressed(0);*/
+{
+  fc_shortcuts::sc()->maybe_route_mouse_shortcut(event, this);
 }
 
 /**
