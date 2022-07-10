@@ -717,7 +717,7 @@ void fc_shortcuts::write() const
   for (auto &[id, sc] : shortcuts()) {
     s.setArrayIndex(id);
     s.setValue(QStringLiteral("id"), sc.id);
-    s.setValue(QStringLiteral("type"), int(sc.type));
+    s.setValue(QStringLiteral("type"), sc.type);
     s.setValue(QStringLiteral("keys"), sc.keys);
     s.setValue(QStringLiteral("buttons"), sc.buttons);
     s.setValue(QStringLiteral("modifiers"), QVariant(sc.modifiers));
@@ -750,7 +750,7 @@ bool fc_shortcuts::read()
       sc.str = default_shortcuts[i].str;
       set_shortcut(sc);
     }
-    while (i < SC_LAST_SC - 1) {
+    for (; i < SC_LAST_SC - 1; ++i) {
       // initialize missing shortcuts
       fc_shortcut sc;
       sc.id = default_shortcuts[i].id;
@@ -760,7 +760,6 @@ bool fc_shortcuts::read()
       sc.modifiers = default_shortcuts[i].modifiers;
       sc.str = default_shortcuts[i].str;
       set_shortcut(sc);
-      ++i;
     }
   } else {
     s.endArray();
