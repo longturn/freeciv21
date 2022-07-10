@@ -15,7 +15,6 @@
 // client
 #include "control.h" // quickselect_type
 
-extern bool rbutton_down;
 extern bool rectangle_active;
 extern bool tiles_hilited_cities;
 
