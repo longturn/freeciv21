@@ -67,24 +67,6 @@ static void clipboard_send_production_packet(struct city *pcity);
 static void define_tiles_within_rectangle(bool append);
 
 /**
-   Called when Right Mouse Button is depressed. Record the canvas
-   coordinates of the center of the tile, which may be unreal. This
-   anchor is not the drawing start point, but is used to calculate
-   width, height. Also record the current mapview centering.
- */
-void anchor_selection_rectangle(int canvas_x, int canvas_y)
-{
-  struct tile *ptile = canvas_pos_to_nearest_tile(canvas_x, canvas_y);
-
-  tile_to_canvas_pos(&rec_anchor_x, &rec_anchor_y, ptile);
-  rec_anchor_x += tileset_tile_width(tileset) / 2;
-  rec_anchor_y += tileset_tile_height(tileset) / 2;
-  // FIXME: This may be off-by-one.
-  rec_canvas_center_tile = get_center_tile_mapcanvas();
-  rec_w = rec_h = 0;
-}
-
-/**
    Iterate over the pixel boundaries of the rectangle and pick the tiles
    whose center falls within. Axis pixel incrementation is half tile size to
    accomodate tilesets with varying tile shapes and proportions of X/Y.
@@ -176,93 +158,6 @@ static void define_tiles_within_rectangle(bool append)
 }
 
 /**
-   Called when mouse pointer moves and rectangle is active.
- */
-void update_selection_rectangle(float canvas_x, float canvas_y)
-{
-  const int W = tileset_tile_width(tileset), half_W = W / 2;
-  const int H = tileset_tile_height(tileset), half_H = H / 2;
-  static struct tile *rec_tile = nullptr;
-  int diff_x, diff_y;
-  struct tile *center_tile;
-  struct tile *ptile;
-
-  ptile = canvas_pos_to_nearest_tile(canvas_x, canvas_y);
-
-  /*  Did mouse pointer move beyond the current tile's
-   *  boundaries? Avoid macros; tile may be unreal!
-   */
-  if (ptile == rec_tile) {
-    return;
-  }
-  rec_tile = ptile;
-
-  // Clear previous rectangle.
-  draw_selection_rectangle(rec_corner_x, rec_corner_y, rec_w, rec_h);
-
-  /*  Fix canvas coords to the center of the tile.
-   */
-  tile_to_canvas_pos(&canvas_x, &canvas_y, ptile);
-  canvas_x += half_W;
-  canvas_y += half_H;
-
-  rec_w = rec_anchor_x - canvas_x; // width
-  rec_h = rec_anchor_y - canvas_y; // height
-
-  // FIXME: This may be off-by-one.
-  center_tile = get_center_tile_mapcanvas();
-  map_distance_vector(&diff_x, &diff_y, center_tile, rec_canvas_center_tile);
-
-  /*  Adjust width, height if mapview has recentered.
-   */
-  if (diff_x != 0 || diff_y != 0) {
-    if (tileset_is_isometric(tileset)) {
-      rec_w += (diff_x - diff_y) * half_W;
-      rec_h += (diff_x + diff_y) * half_H;
-
-      // Iso wrapping
-      if (abs(rec_w) > wld.map.xsize * half_W / 2) {
-        int wx = wld.map.xsize * half_W, wy = wld.map.xsize * half_H;
-
-        rec_w > 0 ? (rec_w -= wx, rec_h -= wy) : (rec_w += wx, rec_h += wy);
-      }
-
-    } else {
-      rec_w += diff_x * W;
-      rec_h += diff_y * H;
-
-      // X wrapping
-      if (abs(rec_w) > wld.map.xsize * half_W) {
-        int wx = wld.map.xsize * W;
-
-        rec_w > 0 ? (rec_w -= wx) : (rec_w += wx);
-      }
-    }
-  }
-
-  if (rec_w == 0 && rec_h == 0) {
-    rectangle_active = false;
-    return;
-  }
-
-  // It is currently drawn only to the screen, not backing store
-  rectangle_active = true;
-  draw_selection_rectangle(canvas_x, canvas_y, rec_w, rec_h);
-  rec_corner_x = canvas_x;
-  rec_corner_y = canvas_y;
-}
-
-/**
-   Redraws the selection rectangle after a map flush.
- */
-void redraw_selection_rectangle()
-{
-  if (rectangle_active) {
-    draw_selection_rectangle(rec_corner_x, rec_corner_y, rec_w, rec_h);
-  }
-}
-
-/**
    Redraws the selection rectangle after a map flush.
  */
 void cancel_selection_rectangle()
@@ -274,21 +169,6 @@ void cancel_selection_rectangle()
     // Erase the previously drawn selection rectangle.
     draw_selection_rectangle(rec_corner_x, rec_corner_y, rec_w, rec_h);
   }
-}
-
-/**
-   Action depends on whether the mouse pointer moved
-   a tile between press and release.
- */
-void release_right_button(int canvas_x, int canvas_y, bool shift)
-{
-  if (rectangle_active) {
-    define_tiles_within_rectangle(shift);
-  } else {
-    recenter_button_pressed(canvas_x, canvas_y);
-  }
-  rectangle_active = false;
-  rbutton_down = false;
 }
 
 /**
@@ -492,23 +372,6 @@ bool can_end_turn()
 }
 
 /**
-   Scroll the mapview half a screen in the given direction.  This is a GUI
-   direction; i.e., DIR8_NORTH is "up" on the mapview.
- */
-void scroll_mapview(enum direction8 gui_dir)
-{
-  int gui_x = mapview.gui_x0, gui_y = mapview.gui_y0;
-
-  if (!can_client_change_view()) {
-    return;
-  }
-
-  gui_x += DIR_DX[gui_dir] * mapview.width / 2;
-  gui_y += DIR_DY[gui_dir] * mapview.height / 2;
-  set_mapview_origin(gui_x, gui_y);
-}
-
-/**
    Do some appropriate action when the "main" mouse button (usually
    left-click) is pressed.  For more sophisticated user control use (or
    write) a different xxx_button_pressed function.
@@ -633,41 +496,6 @@ void update_line(int canvas_x, int canvas_y)
 }
 
 /**
-   Update the goto/patrol line to the given overview canvas location.
- */
-void overview_update_line(int overview_x, int overview_y)
-{
-  struct tile *ptile;
-  struct unit_list *punits;
-  int x, y;
-
-  switch (hover_state) {
-  case HOVER_GOTO:
-  case HOVER_PATROL:
-  case HOVER_CONNECT:
-    overview_to_map_pos(&x, &y, overview_x, overview_y);
-    ptile = map_pos_to_tile(&(wld.map), x, y);
-
-    is_valid_goto_draw_line(ptile);
-    break;
-  case HOVER_GOTO_SEL_TGT:
-    overview_to_map_pos(&x, &y, overview_x, overview_y);
-    ptile = map_pos_to_tile(&(wld.map), x, y);
-    punits = get_units_in_focus();
-    fc_assert_ret(ptile);
-    set_hover_state(punits, hover_state, connect_activity, connect_tgt,
-                    ptile->index, goto_last_sub_tgt, goto_last_action,
-                    goto_last_order);
-    break;
-  case HOVER_NONE:
-  case HOVER_PARADROP:
-  case HOVER_ACT_SEL_TGT:
-  case HOVER_DEBUG_TILE:
-    break;
-  };
-}
-
-/**
    We sort according to the following logic:
 
    - Transported units should immediately follow their transporter (note that
@@ -703,23 +531,4 @@ static int unit_list_compare(const void *a, const void *b)
 
     return unit_list_compare(&ptrans1, &ptrans2);
   }
-}
-
-/**
-   Fill and sort the list of units on the tile.
- */
-void fill_tile_unit_list(const struct tile *ptile, struct unit **unit_list)
-{
-  int i = 0;
-
-  // First populate the unit list.
-  unit_list_iterate(ptile->units, punit)
-  {
-    unit_list[i] = punit;
-    i++;
-  }
-  unit_list_iterate_end;
-
-  // Then sort it.
-  qsort(unit_list, i, sizeof(*unit_list), unit_list_compare);
 }
