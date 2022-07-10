@@ -8,8 +8,6 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#include <cstdlib> // qsort
-
 // utility
 #include "fcintl.h"
 #include "log.h"
@@ -32,17 +30,11 @@
 #include "mapview_g.h"
 #include "minimap_panel.h"
 #include "options.h"
-#include "overview_common.h"
 #include "page_game.h"
-#include "tilespec.h"
 
-// Selection Rectangle
-static float rec_anchor_x, rec_anchor_y; // canvas coordinates for anchor
-static struct tile *rec_canvas_center_tile;
 static int rec_corner_x, rec_corner_y; // corner to iterate from
 static int rec_w, rec_h;               // width, heigth in pixels
 
-bool rbutton_down = false;
 bool rectangle_active = false;
 
 /* This changes the behaviour of left mouse
@@ -64,98 +56,6 @@ struct city *city_workers_display = nullptr;
 /*************************************************************************/
 
 static void clipboard_send_production_packet(struct city *pcity);
-static void define_tiles_within_rectangle(bool append);
-
-/**
-   Iterate over the pixel boundaries of the rectangle and pick the tiles
-   whose center falls within. Axis pixel incrementation is half tile size to
-   accomodate tilesets with varying tile shapes and proportions of X/Y.
-
-   These operations are performed on the tiles:
-   -  Make tiles that contain owned cities hilited
-      on the map and hilited in the City List Window.
-
-   Later, I'll want to add unit hiliting for mass orders.       -ali
-
-   NB: At the end of this function the current selection rectangle will be
-   erased (by being redrawn).
- */
-static void define_tiles_within_rectangle(bool append)
-{
-  const int W = tileset_tile_width(tileset), half_W = W / 2;
-  const int H = tileset_tile_height(tileset), half_H = H / 2;
-  const int segments_x = abs(rec_w / half_W);
-  const int segments_y = abs(rec_h / half_H);
-
-  // Iteration direction
-  const int inc_x = (rec_w > 0 ? half_W : -half_W);
-  const int inc_y = (rec_h > 0 ? half_H : -half_H);
-  int x, y, xx, yy;
-  float x2, y2;
-  struct unit_list *units = unit_list_new();
-  const struct city *pcity;
-  bool found_any_cities = false;
-
-  y = rec_corner_y;
-  for (yy = 0; yy <= segments_y; yy++, y += inc_y) {
-    x = rec_corner_x;
-    for (xx = 0; xx <= segments_x; xx++, x += inc_x) {
-      struct tile *ptile;
-
-      /*  For diamond shaped tiles, every other row is indented.
-       */
-      if ((yy % 2 ^ xx % 2) != 0) {
-        continue;
-      }
-
-      ptile = canvas_pos_to_tile(x, y);
-      if (!ptile) {
-        continue;
-      }
-
-      /*  "Half-tile" indentation must match, or we'll process
-       *  some tiles twice in the case of rectangular shape tiles.
-       */
-      tile_to_canvas_pos(&x2, &y2, ptile);
-
-      if ((yy % 2) != 0
-          && ((rec_corner_x % W) ^ abs(static_cast<int>(x2) % W)) != 0) {
-        continue;
-      }
-
-      /*  Tile passed all tests; process it.
-       */
-      pcity = tile_city(ptile);
-      if (pcity != nullptr && city_owner(pcity) == client_player()) {
-        mapdeco_set_highlight(ptile, true);
-        found_any_cities = tiles_hilited_cities = true;
-      }
-      unit_list_iterate(ptile->units, punit)
-      {
-        if (unit_owner(punit) == client.conn.playing) {
-          unit_list_append(units, punit);
-        }
-      }
-      unit_list_iterate_end;
-    }
-  }
-
-  if (!(gui_options.separate_unit_selection && found_any_cities)
-      && unit_list_size(units) > 0) {
-    if (!append) {
-      struct unit *punit = unit_list_get(units, 0);
-
-      unit_focus_set(punit);
-      unit_list_remove(units, punit);
-    }
-    unit_list_iterate(units, punit) { unit_focus_add(punit); }
-    unit_list_iterate_end;
-  }
-  unit_list_destroy(units);
-
-  // Clear previous rectangle.
-  draw_selection_rectangle(rec_corner_x, rec_corner_y, rec_w, rec_h);
-}
 
 /**
    Redraws the selection rectangle after a map flush.
@@ -164,7 +64,6 @@ void cancel_selection_rectangle()
 {
   if (rectangle_active) {
     rectangle_active = false;
-    rbutton_down = false;
 
     // Erase the previously drawn selection rectangle.
     draw_selection_rectangle(rec_corner_x, rec_corner_y, rec_w, rec_h);
