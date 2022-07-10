@@ -205,7 +205,7 @@ int basic_city_style_for_style(struct nation_style *pstyle)
     requirement_vector_iterate(&city_styles[i].reqs, preq)
     {
       if (preq->source.kind == VUT_STYLE
-          && preq->source.value.style == pstyle && style_style != TRI_NO) {
+          && preq->source.value.style == pstyle) {
         style_style = TRI_YES;
       } else {
         /* No any other requirements allowed at the moment.

@@ -22,8 +22,6 @@
 *****************************************************************/
 #define terrain_misc packet_ruleset_terrain_control
 
-// Some types used below.
-struct nation_hash;
 struct nation_type;
 struct packet_edit_startpos_full;
 

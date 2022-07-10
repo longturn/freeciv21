@@ -68,7 +68,6 @@ public:
 
 private:
   bool discard_any(trade_city *tc, int freeroutes);
-  bool discard_one(trade_city *tc);
   int find_over_max(struct city *pcity);
   trade_city *find_most_free();
   void check_if_done(trade_city *tc1, trade_city *tc2);
