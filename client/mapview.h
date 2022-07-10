@@ -18,10 +18,9 @@
 #include <QThread>
 #include <QTimer>
 
-// gui-qt
+// client
+#include "shortcuts.h"
 #include "tileset_debugger.h"
-
-// common
 #include "tilespec.h"
 
 class QEvent;
@@ -48,7 +47,6 @@ class map_view : public QWidget {
   // Ought to be a private slot
   friend void debug_tile(tile *tile);
 
-  void shortcut_pressed(int key);
   void shortcut_released(Qt::MouseButton mb);
 
 public:
@@ -80,6 +78,8 @@ public slots:
 
   void show_debugger();
   void hide_debugger();
+
+  void shortcut_pressed(shortcut_id key);
 
 protected:
   void paintEvent(QPaintEvent *event) override;

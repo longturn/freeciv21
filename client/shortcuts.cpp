@@ -29,6 +29,8 @@
 // gui-qt
 #include "fc_client.h"
 #include "hudwidget.h"
+#include "mapview.h"
+#include "page_game.h"
 
 extern void real_menus_init();
 
@@ -246,6 +248,32 @@ void fc_shortcuts::link_action(shortcut_id id, QAction *action)
 {
   m_actions[id] = action;
   setup_action(shortcuts()[id], action);
+}
+
+/**
+ * Enable key bindings for all shortcuts that have no action associated with
+ * them.
+ */
+void fc_shortcuts::create_no_action_shortcuts(map_view *parent)
+{
+  // Remove old shortcuts
+  for (auto &[_, qs] : m_shortcuts) {
+    if (qs) {
+      qs->deleteLater();
+    }
+  }
+
+  // Create new ones
+  for (const auto &[id, shortcut] : shortcuts()) {
+    if (shortcut.type == fc_shortcut::keyboard) {
+      if (m_actions.count(id) == 0 || m_actions[id] == nullptr) {
+        auto qs = new QShortcut(shortcut.keys, parent);
+        connect(qs, &QShortcut::activated, parent,
+                [parent, id] { parent->shortcut_pressed(id); });
+        m_shortcuts[id] = qs;
+      }
+    }
+  }
 }
 
 /**
