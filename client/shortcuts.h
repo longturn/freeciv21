@@ -10,15 +10,17 @@
 #pragma once
 
 #include <QDialog>
+#include <QKeySequence>
+#include <QKeySequenceEdit>
 #include <QLineEdit>
 #include <QPushButton>
 
 class QDialogButtonBox;
+class QLineEdit;
 class QVBoxLayout;
 struct fc_shortcut;
 
 void popup_shortcuts_dialog();
-QString shortcut_to_string(const fc_shortcut *sc);
 void write_shortcuts();
 bool read_shortcuts();
 
@@ -92,14 +94,23 @@ enum shortcut_id {
   Base shortcut struct
 **************************************************************************/
 struct fc_shortcut {
+  enum type_id { keyboard, mouse };
+
   shortcut_id id;
-  int key;
-  Qt::MouseButton mouse;
-  Qt::KeyboardModifiers mod;
+
+  type_id type;
+  QKeySequence keys;
+  Qt::MouseButton buttons;
+  Qt::KeyboardModifiers modifiers;
+
   QString str;
-  bool operator==(const fc_shortcut &a) const
+
+  QString to_string() const;
+
+  bool conflicts(const fc_shortcut &other) const
   {
-    return ((key == a.key) && (mouse == a.mouse) && (mod == a.mod));
+    return type == other.type && keys == other.keys
+           && buttons == other.buttons && modifiers == other.modifiers;
   }
 };
 
@@ -128,50 +139,22 @@ public:
 /**************************************************************************
   Widget for picking shortcuts
 **************************************************************************/
-class line_edit : public QLineEdit {
+class shortcut_edit : public QKeySequenceEdit {
   Q_OBJECT
 public:
-  line_edit();
-  fc_shortcut shc;
+  shortcut_edit(const fc_shortcut &sc);
+
+  fc_shortcut shortcut() const;
+  void set_shortcut(const fc_shortcut &shortcut);
 
 protected:
-  void mousePressEvent(QMouseEvent *event) override;
-  void keyReleaseEvent(QKeyEvent *event) override;
-};
-
-/**************************************************************************
-  Popup for picking shortcuts
-**************************************************************************/
-class fc_shortcut_popup : public QDialog {
-public:
-  fc_shortcut_popup(QWidget *parent);
-  void run(fc_shortcut *s);
-  fc_shortcut *sc;
-
-protected:
-  void closeEvent(QCloseEvent *) override;
+  bool event(QEvent *event) override;
+  bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
-  bool check_if_exist();
-  line_edit edit;
-};
-
-/**************************************************************************
-  QPushButton holding shortcut
-**************************************************************************/
-class fc_sc_button : public QPushButton {
-  Q_OBJECT
-  QString err_message;
-
-public:
-  fc_sc_button();
-  ~fc_sc_button() override;
-  fc_sc_button(fc_shortcut *s);
-  fc_shortcut *sc;
-  fc_shortcut *sc_orig{nullptr};
-  void show_info(const QString &str);
-private slots:
-  void popup_error();
+  QLineEdit *m_line;
+  fc_shortcut m_shortcut;
+  bool m_ignore_next_mouse_event = false;
 };
 
 /**************************************************************************
@@ -182,7 +165,6 @@ class fc_shortcuts_dialog : public QDialog {
   QVBoxLayout *main_layout;
   QVBoxLayout *scroll_layout;
   QDialogButtonBox *button_box;
-  QMap<shortcut_id, fc_shortcut *> *hashcopy;
   void add_option(fc_shortcut *sc);
   void init();
   void refresh();
@@ -190,6 +172,9 @@ class fc_shortcuts_dialog : public QDialog {
 public:
   fc_shortcuts_dialog(QWidget *parent = 0);
   ~fc_shortcuts_dialog() override;
+
+  bool shortcut_exists(const fc_shortcut &shortcut, QString &where) const;
+
 private slots:
   void apply_option(int response);
   void edit_shortcut();

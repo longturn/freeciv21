@@ -261,6 +261,10 @@ QLineEdit {
   color: rgb( 210, 210, 210);
 }
 
+QLineEdit:focus {
+  border: 1px solid #3399FF;
+}
+
 QSpinBox {
   background: #343434;
   color: #ffffff;
