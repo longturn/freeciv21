@@ -39,9 +39,6 @@
          <property name="toolTip">
           <string>Zoom in</string>
          </property>
-         <property name="shortcut">
-          <string>Ctrl+S</string>
-         </property>
          <property name="autoRaise">
           <bool>true</bool>
          </property>
@@ -52,9 +49,6 @@
          <property name="toolTip">
           <string>Reset zoom</string>
          </property>
-         <property name="shortcut">
-          <string>+</string>
-         </property>
          <property name="autoRaise">
           <bool>true</bool>
          </property>
@@ -64,9 +58,6 @@
         <widget class="QToolButton" name="zoom_out">
          <property name="toolTip">
           <string>Zoom out</string>
-         </property>
-         <property name="shortcut">
-          <string>+</string>
          </property>
          <property name="autoRaise">
           <bool>true</bool>

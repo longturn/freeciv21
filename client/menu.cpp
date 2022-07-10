@@ -90,8 +90,7 @@ void qfc_units_list::clear() { unit_list.clear(); }
 
 QKeySequence shortcut2key(enum shortcut_id s)
 {
-  return QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(s)));
+  return fc_shortcuts::sc()->get_shortcut(s)->keys;
 }
 
 /**
@@ -411,8 +410,7 @@ void go_act_menu::create()
 
 #define ADD_OLD_SHORTCUT(wanted_action_id, sc_id)                           \
   if (act_id == wanted_action_id) {                                         \
-    item->setShortcut(QKeySequence(                                         \
-        shortcut_to_string(fc_shortcuts::sc()->get_shortcut(sc_id))));      \
+    item->setShortcut(fc_shortcuts::sc()->get_shortcut(sc_id)->keys);       \
   }
 
       /* Create and add the menu item. It will be hidden or shown based on
@@ -1278,23 +1276,18 @@ void mr_menu::set_tile_for_order(tile *ptile)
  */
 void mr_menu::execute_shortcut(int sid)
 {
-  QList<QMenu *> menu_list;
-  QKeySequence seq;
-  fc_shortcut *fcs;
-
   if (sid == SC_GOTO) {
     queen()->mapview_wdg->menu_click = true;
     slot_unit_goto();
     return;
   }
-  fcs = fc_shortcuts::sc()->get_shortcut(static_cast<shortcut_id>(sid));
-  seq = QKeySequence(shortcut_to_string(fcs));
 
-  menu_list = findChildren<QMenu *>();
+  auto fcs = fc_shortcuts::sc()->get_shortcut(static_cast<shortcut_id>(sid));
+  auto menu_list = findChildren<QMenu *>();
   for (const QMenu *m : qAsConst(menu_list)) {
     QList<QAction *> actions = m->actions();
     for (QAction *a : qAsConst(actions)) {
-      if (a->shortcut() == seq && a->isEnabled()) {
+      if (a->shortcut() == fcs->keys && a->isEnabled()) {
         a->activate(QAction::Trigger);
         return;
       }
@@ -1308,25 +1301,18 @@ void mr_menu::execute_shortcut(int sid)
  * Finds an action with the `old` shorcut in the menu, and replaces it with
  * the shorcut in `fcs`.
  */
-void mr_menu::update_shortcut(const fc_shortcut *old, const fc_shortcut *fcs)
+void mr_menu::update_shortcut(const fc_shortcut &old, const fc_shortcut &fcs)
 {
-  if (old->mouse != Qt::AllButtons) {
+  if (old.type == fc_shortcut::mouse) {
     // Wasn't in the menu
     return;
   }
 
-  const auto old_seq = QKeySequence(shortcut_to_string(old));
-  const auto seq = QKeySequence(shortcut_to_string(fcs));
-
   for (const QMenu *m : findChildren<QMenu *>()) {
-    auto found = false;
     for (auto *action : m->actions()) {
-      if (action->shortcut() == old_seq) {
-        action->setShortcut(seq);
+      if (action->shortcut() == old.keys) {
+        action->setShortcut(fcs.keys);
       }
-    }
-    if (found) {
-      break;
     }
   }
 }
@@ -1334,23 +1320,27 @@ void mr_menu::update_shortcut(const fc_shortcut *old, const fc_shortcut *fcs)
 /**
    Returns string assigned to shortcut or empty string if doesnt exist
  */
-QString mr_menu::shortcut_exist(fc_shortcut *fcs)
+bool mr_menu::shortcut_exists(const fc_shortcut &fcs, QString &where)
 {
-  QList<QMenu *> menu_list;
-  QKeySequence seq;
+  if (fcs.type == fc_shortcut::mouse) {
+    where = QString();
+    return false;
+  }
 
-  seq = QKeySequence(shortcut_to_string(fcs));
-  menu_list = findChildren<QMenu *>();
+  auto menu_list = findChildren<QMenu *>();
   for (const QMenu *m : qAsConst(menu_list)) {
     QList<QAction *> actions = m->actions();
     for (QAction *a : qAsConst(actions)) {
-      if (a->shortcut() == seq && fcs->mouse == Qt::AllButtons) {
-        return a->text();
+      if (a->shortcut() == fcs.keys) {
+        qWarning("Trying to set a shortcut already used in the menu");
+        where = m->title() + " > " + a->text();
+        return true;
       }
     }
   }
 
-  return QString();
+  where = QString();
+  return false;
 }
 
 /**
@@ -1358,20 +1348,13 @@ QString mr_menu::shortcut_exist(fc_shortcut *fcs)
  */
 QString mr_menu::shortcut_2_menustring(int sid)
 {
-  QList<QMenu *> menu_list;
-  QKeySequence seq;
-  fc_shortcut *fcs;
-
-  fcs = fc_shortcuts::sc()->get_shortcut(static_cast<shortcut_id>(sid));
-  seq = QKeySequence(shortcut_to_string(fcs));
-
-  menu_list = findChildren<QMenu *>();
+  auto fcs = fc_shortcuts::sc()->get_shortcut(static_cast<shortcut_id>(sid));
+  auto menu_list = findChildren<QMenu *>();
   for (const QMenu *m : qAsConst(menu_list)) {
     QList<QAction *> actions = m->actions();
     for (QAction *a : qAsConst(actions)) {
-      if (a->shortcut() == seq) {
-        return (a->text() + " ("
-                + a->shortcut().toString(QKeySequence::NativeText) + ")");
+      if (a->shortcut() == fcs->keys) {
+        return (a->text() + " (" + fcs->to_string() + ")");
       }
     }
   }
