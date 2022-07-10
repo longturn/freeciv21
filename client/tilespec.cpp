@@ -556,20 +556,6 @@ int tileset_unit_with_upkeep_height(const struct tileset *t)
 }
 
 /**
-   Suitable canvas height for a unit icon that includes upkeep sprites,
-   using small space layout.
- */
-int tileset_unit_with_small_upkeep_height(const struct tileset *t)
-{
-  Q_UNUSED(t)
-  int uk_bottom = tileset_unit_layout_small_offset_y(tileset)
-                  + tileset_upkeep_height(tileset);
-  int u_bottom = tileset_unit_height(tileset);
-
-  return MAX(uk_bottom, u_bottom);
-}
-
-/**
    Offset to layout extra unit sprites, such as upkeep.
  */
 int tileset_unit_layout_offset_y(const struct tileset *t)
@@ -622,16 +608,6 @@ int tileset_tilelabel_offset_y(const struct tileset *t)
 int tileset_small_sprite_height(const struct tileset *t)
 {
   return t->small_sprite_height;
-}
-
-/**
-   Return the path within the data directories where the main intro graphics
-   file can be found.  (It is left up to the GUI code to load and unload this
-   file.)
- */
-const char *tileset_main_intro_filename(const struct tileset *t)
-{
-  return t->main_intro_filename;
 }
 
 /**
@@ -5580,50 +5556,6 @@ const std::vector<std::unique_ptr<freeciv::layer>> &
 tileset_get_layers(const struct tileset *t)
 {
   return t->layers;
-}
-
-/**
-   Checks that a layer is within a category.
- */
-bool tileset_layer_in_category(enum mapview_layer layer,
-                               enum layer_category cat)
-{
-  switch (layer) {
-  case LAYER_BACKGROUND:
-  case LAYER_TERRAIN1:
-  case LAYER_DARKNESS:
-  case LAYER_TERRAIN2:
-  case LAYER_TERRAIN3:
-  case LAYER_WATER:
-  case LAYER_ROADS:
-  case LAYER_SPECIAL1:
-  case LAYER_SPECIAL2:
-  case LAYER_SPECIAL3:
-  case LAYER_BASE_FLAGS:
-    return cat == LAYER_CATEGORY_CITY || cat == LAYER_CATEGORY_TILE;
-  case LAYER_CITY1:
-  case LAYER_CITY2:
-    return cat == LAYER_CATEGORY_CITY;
-  case LAYER_UNIT:
-  case LAYER_FOCUS_UNIT:
-    return cat == LAYER_CATEGORY_UNIT;
-  case LAYER_GRID1:
-  case LAYER_FOG:
-  case LAYER_GRID2:
-  case LAYER_OVERLAYS:
-  case LAYER_TILELABEL:
-  case LAYER_CITYBAR:
-  case LAYER_GOTO:
-  case LAYER_WORKERTASK:
-  case LAYER_EDITOR:
-  case LAYER_INFRAWORK:
-    return false;
-  case LAYER_COUNT:
-    break; // and fail below
-  }
-
-  fc_assert_msg(false, "Unknown layer category: %d", cat);
-  return false;
 }
 
 /**

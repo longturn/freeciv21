@@ -403,40 +403,6 @@ size_t attribute_get(int key, int id, int x, int y, size_t max_data_length,
 }
 
 /**
-   Set unit related attribute
- */
-void attr_unit_set(enum attr_unit what, int unit_id, size_t data_length,
-                   const void *const data)
-{
-  attribute_set(what, unit_id, -1, -2, data_length, data);
-}
-
-/**
-   Get unit related attribute
- */
-size_t attr_unit_get(enum attr_unit what, int unit_id,
-                     size_t max_data_length, void *data)
-{
-  return attribute_get(what, unit_id, -1, -2, max_data_length, data);
-}
-
-/**
-   Set unit related integer attribute
- */
-void attr_unit_set_int(enum attr_unit what, int unit_id, int data)
-{
-  attr_unit_set(what, unit_id, sizeof(int), &data);
-}
-
-/**
-   Get unit related integer attribute
- */
-size_t attr_unit_get_int(enum attr_unit what, int unit_id, int *data)
-{
-  return attr_unit_get(what, unit_id, sizeof(int), data);
-}
-
-/**
    Set city related attribute
  */
 void attr_city_set(enum attr_city what, int city_id, size_t data_length,
@@ -452,56 +418,4 @@ size_t attr_city_get(enum attr_city what, int city_id,
                      size_t max_data_length, void *data)
 {
   return attribute_get(what, city_id, -1, -1, max_data_length, data);
-}
-
-/**
-   Set city related integer attribute
- */
-void attr_city_set_int(enum attr_city what, int city_id, int data)
-{
-  attr_city_set(what, city_id, sizeof(int), &data);
-}
-
-/**
-   Get city related integer attribute
- */
-size_t attr_city_get_int(enum attr_city what, int city_id, int *data)
-{
-  return attr_city_get(what, city_id, sizeof(int), data);
-}
-
-/**
-   Set player related attribute
- */
-void attr_player_set(enum attr_player what, int player_id,
-                     size_t data_length, const void *const data)
-{
-  attribute_set(what, player_id, -1, -1, data_length, data);
-}
-
-/**
-   Get player related attribute
- */
-size_t attr_player_get(enum attr_player what, int player_id,
-                       size_t max_data_length, void *data)
-{
-  return attribute_get(what, player_id, -1, -1, max_data_length, data);
-}
-
-/**
-   Set tile related attribute
- */
-void attr_tile_set(enum attr_tile what, int x, int y, size_t data_length,
-                   const void *const data)
-{
-  attribute_set(what, -1, x, y, data_length, data);
-}
-
-/**
-   Get tile related attribute
- */
-size_t attr_tile_get(enum attr_tile what, int x, int y,
-                     size_t max_data_length, void *data)
-{
-  return attribute_get(what, -1, x, y, max_data_length, data);
 }

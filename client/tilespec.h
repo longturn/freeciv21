@@ -129,8 +129,6 @@ void tileset_setup_impr_type(struct tileset *t, struct impr_type *pimprove);
 void tileset_setup_tech_type(struct tileset *t, struct advance *padvance);
 void tileset_setup_tile_type(struct tileset *t,
                              const struct terrain *pterrain);
-void tileset_setup_resource(struct tileset *t,
-                            const struct resource_type *presource);
 void tileset_setup_extra(struct tileset *t, struct extra_type *pextra);
 void tileset_setup_government(struct tileset *t, struct government *gov);
 void tileset_setup_nation_flag(struct tileset *t,
@@ -142,8 +140,6 @@ void tileset_player_init(struct tileset *t, struct player *pplayer);
 // Layer order
 const std::vector<std::unique_ptr<freeciv::layer>> &
 tileset_get_layers(const struct tileset *t);
-bool tileset_layer_in_category(enum mapview_layer layer,
-                               enum layer_category cat);
 
 // Gfx support
 QPixmap *load_sprite(struct tileset *t, const QString &tag_name);
@@ -299,14 +295,12 @@ int tileset_full_tile_height(const struct tileset *t);
 int tileset_unit_width(const struct tileset *t);
 int tileset_unit_height(const struct tileset *t);
 int tileset_unit_with_upkeep_height(const struct tileset *t);
-int tileset_unit_with_small_upkeep_height(const struct tileset *t);
 int tileset_unit_layout_offset_y(const struct tileset *t);
 int tileset_unit_layout_small_offset_y(const struct tileset *t);
 int tileset_small_sprite_width(const struct tileset *t);
 int tileset_small_sprite_height(const struct tileset *t);
 int tileset_citybar_offset_y(const struct tileset *t);
 int tileset_tilelabel_offset_y(const struct tileset *t);
-const char *tileset_main_intro_filename(const struct tileset *t);
 int tileset_num_city_colors(const struct tileset *t);
 bool tileset_use_hard_coded_fog(const struct tileset *t);
 
