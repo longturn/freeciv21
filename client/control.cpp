@@ -448,20 +448,6 @@ static void current_focus_append(struct unit *punit)
 }
 
 /**
-   Remove focus from unit.
- */
-static void current_focus_remove(struct unit *punit)
-{
-  // Close the action selection dialog if the actor unit lose focus.
-  if (action_selection_actor_unit() == punit->id) {
-    action_selection_close();
-  }
-
-  unit_list_remove(current_focus, punit);
-  refresh_unit_mapcanvas(punit, unit_tile(punit), true, false);
-}
-
-/**
    Clear all orders for the given unit.
  */
 void clear_unit_orders(struct unit *punit)
