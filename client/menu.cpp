@@ -1256,6 +1256,8 @@ void mr_menu::setup_menus()
   }
   this->setVisible(false);
   initialized = true;
+
+  shortcuts->create_no_action_shortcuts(queen()->mapview_wdg);
 }
 
 /**

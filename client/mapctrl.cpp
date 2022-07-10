@@ -180,17 +180,15 @@ void map_view::keyPressEvent(QKeyEvent *event)
     default:
       break;
     }
-    shortcut_pressed(event->key());
   }
 }
 
 /**
    Pressed mouse or keyboard
  */
-void map_view::shortcut_pressed(int key)
+void map_view::shortcut_pressed(shortcut_id id)
 {
-  auto md = QApplication::keyboardModifiers();
-  auto bt = QApplication::mouseButtons();
+  // FIXME mouse handling
   auto pos = mapFromGlobal(QCursor::pos()) / scale();
 
   auto ptile = canvas_pos_to_tile(pos.x(), pos.y());
@@ -200,217 +198,177 @@ void map_view::shortcut_pressed(int key)
     pcity = nullptr;
   }
 
-  // Trade Generator - skip
-  auto sc = fc_shortcuts::sc()->get_shortcut(SC_SELECT_BUTTON);
-  if (bt == sc.buttons && md == sc.modifiers
-      && king()->trade_gen.hover_city) {
-    king()->trade_gen.add_tile(ptile);
-    queen()->mapview_wdg->repaint();
-    return;
-  }
-
-  // Rally point - select city - skip
-  if (bt == sc.buttons && md == sc.modifiers && king()->rallies.hover_city) {
-    char text[1024];
-
-    if (ptile && tile_city(ptile)) {
-      king()->rallies.hover_tile = true;
-      king()->rallies.rally_city = tile_city(ptile);
-
-      fc_snprintf(text, sizeof(text),
-                  _("Selected city %s. Now choose rally point."),
-                  city_link(tile_city(ptile)));
-      output_window_append(ftc_client, text);
-    } else {
-      output_window_append(ftc_client, _("No city selected. Aborted"));
-    }
-    return;
-  }
-
-  // Rally point - select tile  - skip
-  if (bt == Qt::LeftButton && king()->rallies.hover_tile
-      && ptile != nullptr) {
-    char text[1024];
-
-    struct city *pcity = king()->rallies.rally_city;
-    fc_assert_ret(pcity != nullptr);
-
-    if (send_rally_tile(pcity, ptile)) {
-      fc_snprintf(text, sizeof(text),
-                  _("Tile %s set as rally point from city %s."),
-                  tile_link(ptile), city_link(pcity));
-      output_window_append(ftc_client, text);
-    } else {
-      fc_snprintf(text, sizeof(text),
-                  _("Could not set rally point for city %s."),
-                  city_link(pcity));
-      output_window_append(ftc_client, text);
-    }
-
-    king()->rallies.rally_city = nullptr;
-    king()->rallies.hover_tile = false;
-    return;
-  }
-
-  if (bt == Qt::LeftButton && king()->menu_bar->delayed_order && ptile) {
-    king()->menu_bar->set_tile_for_order(ptile);
-    clear_hover_state();
-    exit_goto_state();
-    king()->menu_bar->delayed_order = false;
-    return;
-  }
-
-  if (bt == Qt::LeftButton && king()->menu_bar->quick_airlifting && ptile) {
-    if (tile_city(ptile)) {
-      multiairlift(tile_city(ptile), king()->menu_bar->airlift_type_id);
-    } else {
-      output_window_append(ftc_client, "No city selected for airlift");
-    }
-    king()->menu_bar->quick_airlifting = false;
-    return;
-  }
-  // Check configured shortcuts
-  if (!king()->menu_bar->delayed_order) {
-    sc = fc_shortcuts::sc()->get_shortcut(SC_QUICK_SELECT);
-    if ((/* (key && key == sc.keys) || */ bt == sc.buttons)
-        && md == sc.modifiers && pcity != nullptr) {
-      auto pw = new production_widget(this, pcity, false, 0, 0, true);
-      pw->show();
+  switch (id) {
+  case SC_SELECT_BUTTON:
+    // Trade Generator - skip
+    if (king()->trade_gen.hover_city) {
+      king()->trade_gen.add_tile(ptile);
+      queen()->mapview_wdg->repaint();
       return;
     }
 
-    sc = fc_shortcuts::sc()->get_shortcut(SC_SHOW_UNITS);
-    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
-        && md == sc.modifiers && ptile != nullptr
-        && unit_list_size(ptile->units) > 0) {
-      toggle_unit_sel_widget(ptile);
+    // Rally point - select city - skip
+    if (king()->rallies.hover_city) {
+      char text[1024];
+
+      if (ptile && tile_city(ptile)) {
+        king()->rallies.hover_tile = true;
+        king()->rallies.rally_city = tile_city(ptile);
+
+        fc_snprintf(text, sizeof(text),
+                    _("Selected city %s. Now choose rally point."),
+                    city_link(tile_city(ptile)));
+        output_window_append(ftc_client, text);
+      } else {
+        output_window_append(ftc_client, _("No city selected. Aborted"));
+      }
       return;
     }
 
-    sc = fc_shortcuts::sc()->get_shortcut(SC_COPY_PROD);
-    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
-        && md == sc.modifiers && ptile != nullptr) {
-      clipboard_copy_production(ptile);
+    // Rally point - select tile  - skip
+    if (king()->rallies.hover_tile && ptile != nullptr) {
+      char text[1024];
+
+      struct city *pcity = king()->rallies.rally_city;
+      fc_assert_ret(pcity != nullptr);
+
+      if (send_rally_tile(pcity, ptile)) {
+        fc_snprintf(text, sizeof(text),
+                    _("Tile %s set as rally point from city %s."),
+                    tile_link(ptile), city_link(pcity));
+        output_window_append(ftc_client, text);
+      } else {
+        fc_snprintf(text, sizeof(text),
+                    _("Could not set rally point for city %s."),
+                    city_link(pcity));
+        output_window_append(ftc_client, text);
+      }
+
+      king()->rallies.rally_city = nullptr;
+      king()->rallies.hover_tile = false;
       return;
     }
 
-    sc = fc_shortcuts::sc()->get_shortcut(SC_POPUP_COMB_INF);
-    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
-        && md == sc.modifiers && queen()->battlelog_wdg != nullptr) {
-      queen()->battlelog_wdg->show();
+    if (king()->menu_bar->delayed_order && ptile) {
+      king()->menu_bar->set_tile_for_order(ptile);
+      clear_hover_state();
+      exit_goto_state();
+      king()->menu_bar->delayed_order = false;
       return;
     }
 
-    sc = fc_shortcuts::sc()->get_shortcut(SC_PASTE_PROD);
-    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
-        && md == sc.modifiers && pcity != nullptr) {
-      clipboard_paste_production(pcity);
+    if (king()->menu_bar->quick_airlifting && ptile) {
+      if (tile_city(ptile)) {
+        multiairlift(tile_city(ptile), king()->menu_bar->airlift_type_id);
+      } else {
+        output_window_append(ftc_client, "No city selected for airlift");
+      }
+      king()->menu_bar->quick_airlifting = false;
       return;
     }
 
-    sc = fc_shortcuts::sc()->get_shortcut(SC_RELOAD_THEME);
-    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
-        && md == sc.modifiers) {
-      load_theme(gui_options.gui_qt_default_theme_name);
-      return;
-    }
-
-    sc = fc_shortcuts::sc()->get_shortcut(SC_RELOAD_TILESET);
-    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
-        && md == sc.modifiers) {
-      QPixmapCache::clear();
-      tilespec_reread(tileset_basename(tileset), true);
-      return;
-    }
-
-    sc = fc_shortcuts::sc()->get_shortcut(SC_LOAD_LUA);
-    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
-        && md == sc.modifiers) {
-      qload_lua_script();
-      return;
-    }
-
-    sc = fc_shortcuts::sc()->get_shortcut(SC_RELOAD_LUA);
-    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
-        && md == sc.modifiers) {
-      qreload_lua_script();
-      return;
-    }
-
-    sc = fc_shortcuts::sc()->get_shortcut(SC_HIDE_WORKERS);
-    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
-        && md == sc.modifiers) {
-      key_city_overlay(pos.x(), pos.y());
-      return;
-    }
-    sc = fc_shortcuts::sc()->get_shortcut(SC_MAKE_LINK);
-    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
-        && md == sc.modifiers && ptile != nullptr) {
-      queen()->chat->make_link(ptile);
-      return;
-    }
-    sc = fc_shortcuts::sc()->get_shortcut(SC_BUY_MAP);
-    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
-        && md == sc.modifiers && pcity != nullptr) {
-      city_buy_production(pcity);
-      return;
-    }
-    sc = fc_shortcuts::sc()->get_shortcut(SC_QUICK_BUY);
-    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
-        && md == sc.modifiers && pcity != nullptr) {
-      auto pw = new production_widget(this, pcity, false, 0, 0, true, true);
-      pw->show();
-      return;
-    }
-    sc = fc_shortcuts::sc()->get_shortcut(SC_APPEND_FOCUS);
-    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
-        && md == sc.modifiers) {
-      action_button_pressed(pos.x(), pos.y(), SELECT_APPEND);
-      return;
-    }
-    sc = fc_shortcuts::sc()->get_shortcut(SC_ADJUST_WORKERS);
-    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
-        && md == sc.modifiers) {
-      adjust_workers_button_pressed(pos.x(), pos.y());
-      return;
-    }
-  }
-
-  sc = fc_shortcuts::sc()->get_shortcut(SC_SCROLL_MAP);
-  auto sc_sec = fc_shortcuts::sc()->get_shortcut(SC_SELECT_BUTTON);
-  if (((/*(key && key == sc.key)
-        || */
-        (bt == sc.buttons
-         /* check if keyboardless goto active and its shortcut if pressed
-          */
-         || (goto_is_active() && (bt == (sc.buttons | sc_sec.buttons)))))
-       && md == sc.modifiers)) {
-    recenter_button_pressed(pos.x(), pos.y());
-    return;
-  }
-  sc = fc_shortcuts::sc()->get_shortcut(SC_SELECT_BUTTON);
-  if ((/* (key && key == sc.key) || */ bt == sc.buttons)
-      && md == sc.modifiers) {
     if (!goto_is_active()) {
       stored_autocenter = gui_options.auto_center_on_unit;
       gui_options.auto_center_on_unit = false;
       action_button_pressed(pos.x(), pos.y(), SELECT_FOCUS);
+      return;
     }
-    return;
-  }
+    break;
 
-  sc = fc_shortcuts::sc()->get_shortcut(SC_POPUP_INFO);
-  if ((/* (key && key == sc.key) || */ bt == sc.buttons)
-      && md == sc.modifiers && ptile != nullptr) {
-    popup_tile_info(ptile);
-    return;
-  }
+  case SC_QUICK_SELECT:
+    if (!king()->menu_bar->delayed_order) {
+      auto pw = new production_widget(this, pcity, false, 0, 0, true);
+      pw->show();
+    }
+    break;
 
-  sc = fc_shortcuts::sc()->get_shortcut(SC_WAKEUP_SENTRIES);
-  if ((/* (key && key == sc.key) || */ bt == sc.buttons)
-      && md == sc.modifiers) {
+  case SC_SHOW_UNITS:
+    if (ptile != nullptr && unit_list_size(ptile->units) > 0) {
+      toggle_unit_sel_widget(ptile);
+    }
+    break;
+
+  case SC_COPY_PROD:
+    if (ptile != nullptr) {
+      clipboard_copy_production(ptile);
+    }
+    break;
+
+  case SC_POPUP_COMB_INF:
+    if (queen()->battlelog_wdg != nullptr) {
+      queen()->battlelog_wdg->show();
+    }
+    break;
+
+  case SC_PASTE_PROD:
+    if (pcity != nullptr) {
+      clipboard_paste_production(pcity);
+    }
+    break;
+
+  case SC_RELOAD_THEME:
+    load_theme(gui_options.gui_qt_default_theme_name);
+    break;
+
+  case SC_RELOAD_TILESET:
+    QPixmapCache::clear();
+    tilespec_reread(tileset_basename(tileset), true);
+    break;
+
+  case SC_LOAD_LUA:
+    qload_lua_script();
+    break;
+
+  case SC_RELOAD_LUA:
+    qreload_lua_script();
+    break;
+
+  case SC_HIDE_WORKERS:
+    key_city_overlay(pos.x(), pos.y());
+    break;
+
+  case SC_MAKE_LINK:
+    queen()->chat->make_link(ptile);
+    break;
+
+  case SC_BUY_MAP:
+    if (pcity != nullptr) {
+      city_buy_production(pcity);
+    }
+    break;
+
+  case SC_QUICK_BUY:
+    if (pcity != nullptr) {
+      auto pw = new production_widget(this, pcity, false, 0, 0, true, true);
+      pw->show();
+    }
+    break;
+
+  case SC_APPEND_FOCUS:
+    action_button_pressed(pos.x(), pos.y(), SELECT_APPEND);
+    break;
+
+  case SC_ADJUST_WORKERS:
+    adjust_workers_button_pressed(pos.x(), pos.y());
+    break;
+
+  case SC_SCROLL_MAP:
+    recenter_button_pressed(pos.x(), pos.y());
+    break;
+
+  case SC_POPUP_INFO:
+    if (ptile != nullptr) {
+      popup_tile_info(ptile);
+    }
+    break;
+
+  case SC_WAKEUP_SENTRIES:
     wakeup_button_pressed(pos.x(), pos.y());
-    return;
+    break;
+
+  default:
+    // Many actions aren't handled here
+    break;
   }
 }
 
@@ -451,7 +409,9 @@ void map_view::shortcut_released(Qt::MouseButton bt)
 /**
    Mouse buttons handler for map_view
  */
-void map_view::mousePressEvent(QMouseEvent *event) { shortcut_pressed(0); }
+void map_view::mousePressEvent(QMouseEvent *event)
+{ /*shortcut_pressed(0);*/
+}
 
 /**
    Mouse release event for map_view

@@ -17,11 +17,13 @@
 #include <QLineEdit>
 #include <QPointer>
 #include <QPushButton>
+#include <QShortcut>
 
 class QDialogButtonBox;
 class QLineEdit;
 class QVBoxLayout;
 struct fc_shortcut;
+class map_view;
 
 void popup_shortcuts_dialog();
 
@@ -138,6 +140,7 @@ public:
   QString get_desc(shortcut_id id) const;
 
   void link_action(shortcut_id id, QAction *action);
+  void create_no_action_shortcuts(map_view *parent);
 
   static fc_shortcuts *sc();
   static void drop();
@@ -151,6 +154,7 @@ private:
   static fc_shortcuts *m_instance;
 
   std::map<shortcut_id, QPointer<QAction>> m_actions;
+  std::map<shortcut_id, QPointer<QShortcut>> m_shortcuts;
   std::map<shortcut_id, fc_shortcut> m_shortcuts_by_id;
 };
 
