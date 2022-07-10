@@ -40,7 +40,6 @@ struct actcalc {
    anything).
  */
 static void calc_activity(struct actcalc *calc, const struct tile *ptile,
-                          const struct unit *pmodunit,
                           Activity_type_id new_act,
                           const struct extra_type *new_tgt)
 {
@@ -62,7 +61,7 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
   {
     Activity_type_id act = punit->activity;
 
-    if (punit == pmodunit) {
+    if (punit == nullptr) {
       // We'll account for this one later
       continue;
     }
@@ -86,37 +85,6 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
     }
   }
   unit_list_iterate_end;
-
-  /* Hypothetical contribution from pmodunit, if it changed to specified
-   * activity/target */
-  if (pmodunit) {
-    if (is_build_activity(new_act, ptile)) {
-      int eidx = extra_index(new_tgt);
-
-      if (new_act == pmodunit->changed_from
-          && new_tgt == pmodunit->changed_from_target) {
-        t->extra_total[eidx][new_act] += pmodunit->changed_from_count;
-      }
-      t->extra_total[eidx][new_act] += get_activity_rate_this_turn(pmodunit);
-      t->extra_units[eidx][new_act] += get_activity_rate(pmodunit);
-    } else if (is_clean_activity(new_act)) {
-      int eidx = extra_index(new_tgt);
-
-      if (new_act == pmodunit->changed_from
-          && new_tgt == pmodunit->changed_from_target) {
-        t->rmextra_total[eidx][new_act] += pmodunit->changed_from_count;
-      }
-      t->rmextra_total[eidx][new_act] +=
-          get_activity_rate_this_turn(pmodunit);
-      t->rmextra_units[eidx][new_act] += get_activity_rate(pmodunit);
-    } else {
-      if (new_act == pmodunit->changed_from) {
-        t->activity_total[new_act] += pmodunit->changed_from_count;
-      }
-      t->activity_total[new_act] += get_activity_rate_this_turn(pmodunit);
-      t->activity_units[new_act] += get_activity_rate(pmodunit);
-    }
-  }
 
   // Turn activity counts into turn estimates
   activity_type_iterate(act)
@@ -188,7 +156,7 @@ QString concat_tile_activity_text(struct tile *ptile)
   int num_activities = 0;
   QString str;
 
-  calc_activity(calc, ptile, nullptr, ACTIVITY_LAST, nullptr);
+  calc_activity(calc, ptile, ACTIVITY_LAST, nullptr);
 
   activity_type_iterate(i)
   {
