@@ -18,7 +18,6 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "city.h"
 #include "fc_types.h"
 
-struct ai_data;
 struct ai_plr;
 struct tile_data_cache;
 

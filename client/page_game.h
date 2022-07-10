@@ -31,7 +31,6 @@ class goto_dialog;
 class tax_rates_widget;
 class top_bar;
 class top_bar_widget;
-class unitinfo_wdg;
 class units_select;
 class xvote;
 

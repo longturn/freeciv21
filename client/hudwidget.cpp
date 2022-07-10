@@ -39,7 +39,6 @@
 #include "icons.h"
 #include "mapview.h"
 #include "page_game.h"
-#include "qtg_cxxside.h"
 #include "sprite.h"
 #include "widgetdecorations.h"
 

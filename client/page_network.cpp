@@ -20,7 +20,6 @@
 // gui-qt
 #include "dialogs.h"
 #include "fc_client.h"
-#include "qtg_cxxside.h"
 
 static enum connection_state connection_status;
 static struct server_scan *meta_scan, *lan_scan;

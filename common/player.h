@@ -214,7 +214,6 @@ struct attribute_block_s {
 };
 
 struct ai_type;
-struct ai_data;
 
 bool player_has_flag(const struct player *pplayer, enum plr_flag_id flag);
 
