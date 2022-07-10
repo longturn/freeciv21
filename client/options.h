@@ -201,7 +201,6 @@ extern const struct option_set *server_optset;
 
 struct option *optset_option_by_number(const struct option_set *poptset,
                                        int id);
-#define optset_option_by_index optset_option_by_number
 struct option *optset_option_by_name(const struct option_set *poptset,
                                      const char *name);
 struct option *optset_option_first(const struct option_set *poptset);
@@ -212,7 +211,6 @@ const char *optset_category_name(const struct option_set *poptset,
 // Common option functions.
 const struct option_set *option_optset(const struct option *poption);
 int option_number(const struct option *poption);
-#define option_index option_number
 const char *option_name(const struct option *poption);
 const char *option_description(const struct option *poption);
 QString option_help_text(const struct option *poption);

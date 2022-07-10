@@ -22,8 +22,6 @@
 struct adv_data;
 struct tech_vector;
 
-// defined and only used within aicity.c
-
 // Who's coming to kill us, for attack co-ordination
 struct ai_invasion {
   int attack; // Units capable of attacking city

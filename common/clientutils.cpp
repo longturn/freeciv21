@@ -35,9 +35,6 @@ struct actcalc {
 
 /**
    Calculate completion time for all unit activities on tile.
-   If pmodunit is supplied, take into account the effect if it changed to
-   doing new_act on new_tgt instead of whatever it's currently doing (if
-   anything).
  */
 static void calc_activity(struct actcalc *calc, const struct tile *ptile,
                           Activity_type_id new_act)

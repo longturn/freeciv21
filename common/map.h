@@ -136,21 +136,6 @@ bool map_startpos_remove(struct tile *ptile);
                        *(pnat_x) = 2 * (map_x) - *(pnat_y))                 \
                     : (*(pnat_x) = (map_x), *(pnat_y) = (map_y)))
 
-/* Provide a block to convert from map to native coordinates.  This allows
- * you to use a native version of the map position within the block.  Note
- * that the native position is declared as const and can't be changed
- * inside the block. */
-#define do_in_native_pos(nat_x, nat_y, map_x, map_y)                        \
-  {                                                                         \
-    int _nat_x, _nat_y;                                                     \
-    MAP_TO_NATIVE_POS(&_nat_x, &_nat_y, map_x, map_y);                      \
-    {                                                                       \
-      const int nat_x = _nat_x, nat_y = _nat_y;
-
-#define do_in_native_pos_end                                                \
-  }                                                                         \
-  }
-
 /* Provide a block to convert from map to natural coordinates. This allows
  * you to use a natural version of the map position within the block.  Note
  * that the natural position is declared as const and can't be changed
@@ -167,8 +152,6 @@ bool map_startpos_remove(struct tile *ptile);
   }
 
 // Width and height of the map, in native coordinates.
-#define NATIVE_WIDTH wld.map.xsize
-#define NATIVE_HEIGHT wld.map.ysize
 
 // Width and height of the map, in natural coordinates.
 #define NATURAL_WIDTH (MAP_IS_ISOMETRIC ? 2 * wld.map.xsize : wld.map.xsize)

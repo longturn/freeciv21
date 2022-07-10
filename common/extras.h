@@ -170,7 +170,6 @@ struct extra_type *extra_type_by_translated_name(const char *name);
 
 #define extra_base_get(_e_) (_e_)->data.base
 #define extra_road_get(_e_) (_e_)->data.road
-#define extra_resource_get(_e_) (_e_)->data.resource
 
 void extra_to_caused_by_list(struct extra_type *pextra,
                              enum extra_cause cause);

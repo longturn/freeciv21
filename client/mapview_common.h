@@ -46,7 +46,6 @@ extern struct view mapview;
  * reenabled afterwards. */
 extern bool can_slide;
 
-#define BORDER_WIDTH 2
 #define GOTO_WIDTH 2
 
 /*
