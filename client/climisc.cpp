@@ -161,38 +161,6 @@ void client_remove_city(struct city *pcity)
 }
 
 /**
-   Change all cities building X to building Y, if possible.  X and Y
-   could be improvements or units. X and Y are compound ids.
- */
-void client_change_all(struct universal *from, struct universal *to)
-{
-  if (!can_client_issue_orders()) {
-    return;
-  }
-
-  create_event(nullptr, E_CITY_PRODUCTION_CHANGED, ftc_client,
-               _("Changing production of every %s into %s."),
-               VUT_UTYPE == from->kind
-                   ? utype_name_translation(from->value.utype)
-                   : improvement_name_translation(from->value.building),
-               VUT_UTYPE == to->kind
-                   ? utype_name_translation(to->value.utype)
-                   : improvement_name_translation(to->value.building));
-
-  connection_do_buffer(&client.conn);
-  city_list_iterate(client.conn.playing->cities, pcity)
-  {
-    if (are_universals_equal(&pcity->production, from)
-        && can_city_build_now(pcity, to)) {
-      city_change_production(pcity, to);
-    }
-  }
-  city_list_iterate_end;
-
-  connection_do_unbuffer(&client.conn);
-}
-
-/**
    Return a string indicating one nation's embassy status with another
  */
 const char *get_embassy_status(const struct player *me,
@@ -733,76 +701,6 @@ int collect_production_targets(struct universal *targets,
 }
 
 /**
-   Collect the cids of all targets (improvements and units) which are
-   currently built in a city.
-
-   FIXME: this should probably take a pplayer argument.
- */
-int collect_currently_building_targets(struct universal *targets)
-{
-  bool mapping[MAX_NUM_PRODUCTION_TARGETS];
-  int cids_used = 0;
-  cid id;
-
-  if (nullptr == client.conn.playing) {
-    return 0;
-  }
-
-  memset(mapping, 0, sizeof(mapping));
-  city_list_iterate(client.conn.playing->cities, pcity)
-  {
-    mapping[cid_encode_from_city(pcity)] = true;
-  }
-  city_list_iterate_end;
-
-  for (id = 0; id < ARRAY_SIZE(mapping); id++) {
-    if (mapping[id]) {
-      targets[cids_used] = cid_decode(id);
-      cids_used++;
-    }
-  }
-
-  return cids_used;
-}
-
-/**
-   Collect the cids of all targets (improvements and units) which can
-   be build in a city.
-
-   FIXME: this should probably take a pplayer argument.
- */
-int collect_buildable_targets(struct universal *targets)
-{
-  int cids_used = 0;
-
-  if (nullptr == client.conn.playing) {
-    return 0;
-  }
-
-  improvement_iterate(pimprove)
-  {
-    if (can_player_build_improvement_now(client.conn.playing, pimprove)) {
-      targets[cids_used].kind = VUT_IMPROVEMENT;
-      targets[cids_used].value.building = pimprove;
-      cids_used++;
-    }
-  }
-  improvement_iterate_end;
-
-  unit_type_iterate(punittype)
-  {
-    if (can_player_build_unit_now(client.conn.playing, punittype)) {
-      targets[cids_used].kind = VUT_UTYPE;
-      targets[cids_used].value.utype = punittype;
-      cids_used++;
-    }
-  }
-  unit_type_iterate_end
-
-      return cids_used;
-}
-
-/**
    Collect the cids of all targets which can be build by this city or
    in general.
  */
@@ -927,42 +825,6 @@ int collect_already_built_targets(struct universal *targets,
   city_built_iterate_end;
 
   return cids_used;
-}
-
-/**
-   Returns number of units known to be supported by city. This might not real
-   number of units in case of enemy city.
- */
-int num_supported_units_in_city(struct city *pcity)
-{
-  struct unit_list *plist;
-
-  if (can_player_see_city_internals(client.conn.playing, pcity)) {
-    // Other players don't see inside the city (but observers do).
-    plist = pcity->client.info_units_supported;
-  } else {
-    plist = pcity->units_supported;
-  }
-
-  return unit_list_size(plist);
-}
-
-/**
-   Returns number of units known to be in city. This might not real
-   number of units in case of enemy city.
- */
-int num_present_units_in_city(struct city *pcity)
-{
-  struct unit_list *plist;
-
-  if (can_player_see_units_in_city(client.conn.playing, pcity)) {
-    // Other players don't see inside the city (but observers do).
-    plist = pcity->client.info_units_present;
-  } else {
-    plist = pcity->tile->units;
-  }
-
-  return unit_list_size(plist);
 }
 
 /**
@@ -1332,32 +1194,6 @@ bool mapimg_client_define()
   }
 
   return true;
-}
-
-/**
-   Save map image.
- */
-bool mapimg_client_createmap(const char *filename)
-{
-  struct mapdef *pmapdef;
-  char mapimgfile[512];
-
-  if (nullptr == filename || '\0' == filename[0]) {
-    sz_strlcpy(mapimgfile, gui_options.mapimg_filename);
-  } else {
-    sz_strlcpy(mapimgfile, filename);
-  }
-
-  if (!mapimg_client_define()) {
-    return false;
-  }
-
-  pmapdef = mapimg_isvalid(0);
-  if (!pmapdef) {
-    return false;
-  }
-
-  return mapimg_create(pmapdef, true, mapimgfile, nullptr);
 }
 
 /**

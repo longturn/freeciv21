@@ -51,25 +51,6 @@ void pixmap_copy(QPixmap *dest, const QPixmap *src, int src_x, int src_y,
 }
 
 /**
-   Copies an area from the source image to the destination image.
- */
-void image_copy(QImage *dest, const QImage *src, int src_x, int src_y,
-                int dest_x, int dest_y, int width, int height)
-{
-  QRectF source_rect(src_x, src_y, width, height);
-  QRectF dest_rect(dest_x, dest_y, width, height);
-  QPainter p;
-
-  if (!width || !height) {
-    return;
-  }
-
-  p.begin(dest);
-  p.drawImage(dest_rect, *src, source_rect);
-  p.end();
-}
-
-/**
    Returns given font
  */
 QFont get_font(client_font font)
