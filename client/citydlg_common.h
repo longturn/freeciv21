@@ -24,11 +24,6 @@ int get_citydlg_canvas_width();
 int get_citydlg_canvas_height();
 void generate_citydlg_dimensions();
 
-bool city_to_canvas_pos(float *canvas_x, float *canvas_y, int city_x,
-                        int city_y, int city_radius_sq);
-bool canvas_to_city_pos(int *city_x, int *city_y, int city_radius_sq,
-                        int canvas_x, int canvas_y);
-
 char *city_production_cost_str(const struct city *pcity);
 void get_city_dialog_production(struct city *pcity, char *buffer,
                                 size_t buffer_len);
@@ -57,7 +52,6 @@ int city_set_worklist(struct city *pcity, const struct worklist *pworklist);
 
 bool city_queue_insert(struct city *pcity, int position,
                        struct universal *target);
-bool city_queue_clear(struct city *pcity);
 bool city_queue_insert_worklist(struct city *pcity, int position,
                                 const struct worklist *worklist);
 void city_get_queue(struct city *pcity, struct worklist *pqueue);
@@ -67,5 +61,4 @@ int city_sell_improvement(struct city *pcity, Impr_type_id sell_id);
 int city_buy_production(struct city *pcity);
 int city_change_specialist(struct city *pcity, Specialist_type_id from,
                            Specialist_type_id to);
-int city_toggle_worker(struct city *pcity, int city_x, int city_y);
 int city_rename(struct city *pcity, const char *name);

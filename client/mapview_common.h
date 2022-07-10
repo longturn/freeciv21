@@ -18,8 +18,6 @@
 
 #include "tilespec.h"
 
-struct canvas_store; // opaque type, real type is gui-dep
-
 struct view {
   float gui_x0, gui_y0;
   int width, height;           // Size in pixels.
