@@ -20,8 +20,7 @@
 
 struct view {
   float gui_x0, gui_y0;
-  int width, height;           // Size in pixels.
-  int tile_width, tile_height; // Size in tiles. Rounded up.
+  int width, height; // Size in pixels.
   int store_width, store_height;
   bool can_do_cached_drawing; // TRUE if cached drawing is possible.
   QPixmap *store, *tmp_store;
@@ -31,14 +30,12 @@ void mapdeco_init();
 void mapdeco_free();
 void mapdeco_set_highlight(const struct tile *ptile, bool highlight);
 bool mapdeco_is_highlight_set(const struct tile *ptile);
-void mapdeco_clear_highlights();
 void mapdeco_set_crosshair(const struct tile *ptile, bool crosshair);
 bool mapdeco_is_crosshair_set(const struct tile *ptile);
 void mapdeco_clear_crosshairs();
 void mapdeco_set_gotoroute(const struct unit *punit);
 void mapdeco_add_gotoline(const struct tile *ptile, enum direction8 dir,
                           bool safe);
-void mapdeco_remove_gotoline(const struct tile *ptile, enum direction8 dir);
 bool mapdeco_is_gotoline_set(const struct tile *ptile, enum direction8 dir,
                              bool *safe);
 void mapdeco_clear_gotoroutes();
@@ -241,9 +238,7 @@ struct tile *canvas_pos_to_nearest_tile(float canvas_x, float canvas_y);
 
 void get_mapview_scroll_window(float *xmin, float *ymin, float *xmax,
                                float *ymax, int *xsize, int *ysize);
-void get_mapview_scroll_step(int *xstep, int *ystep);
 void get_mapview_scroll_pos(int *scroll_x, int *scroll_y);
-void set_mapview_scroll_pos(int scroll_x, int scroll_y);
 
 void set_mapview_origin(float gui_x0, float gui_y0);
 struct tile *get_center_tile_mapcanvas();
@@ -264,11 +259,6 @@ void toggle_city_color(struct city *pcity);
 void toggle_unit_color(struct unit *punit);
 
 void put_nuke_mushroom_pixmaps(struct tile *ptile);
-
-void put_one_element(QPixmap *pcanvas, enum mapview_layer layer,
-                     const struct tile *ptile, const struct tile_edge *pedge,
-                     const struct tile_corner *pcorner,
-                     const struct unit *punit, int canvas_x, int canvas_y);
 
 void put_drawn_sprites(QPixmap *pcanvas, int canvas_x, int canvas_y,
                        const std::vector<drawn_sprite> &sprites, bool fog,

@@ -790,39 +790,12 @@ void get_mapview_scroll_window(float *xmin, float *ymin, float *xmax,
 }
 
 /**
-   Find the scroll step for the mapview.  This is the amount to scroll (in
-   scroll coordinates) on each "step".  See also get_mapview_scroll_window.
- */
-void get_mapview_scroll_step(int *xstep, int *ystep)
-{
-  *xstep = tileset_tile_width(tileset);
-  *ystep = tileset_tile_height(tileset);
-
-  if (tileset_is_isometric(tileset)) {
-    *xstep /= 2;
-    *ystep /= 2;
-  }
-}
-
-/**
    Find the current scroll position (origin) of the mapview.
  */
 void get_mapview_scroll_pos(int *scroll_x, int *scroll_y)
 {
   *scroll_x = mapview.gui_x0;
   *scroll_y = mapview.gui_y0;
-}
-
-/**
-   Set the scroll position (origin) of the mapview, and update the GUI.
- */
-void set_mapview_scroll_pos(int scroll_x, int scroll_y)
-{
-  int gui_x0 = scroll_x, gui_y0 = scroll_y;
-
-  can_slide = false;
-  set_mapview_origin(gui_x0, gui_y0);
-  can_slide = true;
 }
 
 /**
@@ -2409,18 +2382,6 @@ bool mapdeco_is_highlight_set(const struct tile *ptile)
 }
 
 /**
-   Clears all highlighting. Marks the previously highlighted tiles as
-   needing a mapview update.
- */
-void mapdeco_clear_highlights()
-{
-  for (const auto *ptile : qAsConst(*mapdeco_highlight_set)) {
-    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), true, false);
-  }
-  mapdeco_highlight_set->clear();
-}
-
-/**
    Marks the given tile as having a "crosshair" map decoration.
  */
 void mapdeco_set_crosshair(const struct tile *ptile, bool crosshair)
@@ -2613,8 +2574,6 @@ bool map_canvas_resized(int width, int height)
   /* Since a resize is only triggered when the tile_*** changes, the canvas
    * width and height must include the entire backing store - otherwise
    * small resizings may lead to undrawn tiles. */
-  mapview.tile_width = tile_width;
-  mapview.tile_height = tile_height;
   mapview.width = width;
   mapview.height = height;
   mapview.store_width = full_width;
