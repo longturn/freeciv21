@@ -15,6 +15,7 @@
 #include <QKeySequence>
 #include <QKeySequenceEdit>
 #include <QLineEdit>
+#include <QPointer>
 #include <QPushButton>
 
 class QDialogButtonBox;
@@ -117,13 +118,14 @@ struct fc_shortcut {
 /**************************************************************************
   Class with static members holding all shortcuts
 **************************************************************************/
-class fc_shortcuts {
+class fc_shortcuts : public QObject {
+  Q_OBJECT
   Q_DISABLE_COPY(fc_shortcuts);
 
   fc_shortcuts();
 
 public:
-  ~fc_shortcuts();
+  virtual ~fc_shortcuts();
 
   void init_default(bool read);
 
@@ -135,6 +137,8 @@ public:
 
   QString get_desc(shortcut_id id) const;
 
+  void link_action(shortcut_id id, QAction *action);
+
   static fc_shortcuts *sc();
   static void drop();
 
@@ -142,7 +146,11 @@ public:
   void write() const;
 
 private:
+  void setup_action(const fc_shortcut &sc, QAction *action);
+
   static fc_shortcuts *m_instance;
+
+  std::map<shortcut_id, QPointer<QAction>> m_actions;
   std::map<shortcut_id, fc_shortcut> m_shortcuts_by_id;
 };
 

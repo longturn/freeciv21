@@ -195,7 +195,6 @@ public:
   void update_bases_menu();
   void set_tile_for_order(struct tile *ptile);
   void execute_shortcut(int sid);
-  void update_shortcut(const fc_shortcut &old, const fc_shortcut &fcs);
   bool shortcut_exists(const fc_shortcut &fcs, QString &where);
   QString shortcut_2_menustring(int sid);
   QAction *minimap_status = nullptr;
@@ -323,6 +322,7 @@ private slots:
   void slot_traveler();
 
 private:
+  void clear_menus();
   void nonunit_sensitivity();
   struct tile *find_last_unit_pos(struct unit *punit, int pos);
 };
