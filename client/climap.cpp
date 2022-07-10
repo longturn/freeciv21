@@ -46,8 +46,6 @@ enum known_type client_tile_get_known(const struct tile *ptile)
    underlying map tiles, so that DIR8_NORTH means moving with a vector of
    (0,-1).  Neither necessarily corresponds to "north" on the underlying
    world (once iso-maps are possible).
-
-   See also map_to_gui_dir().
  */
 enum direction8 gui_to_map_dir(enum direction8 gui_dir)
 {
@@ -55,20 +53,6 @@ enum direction8 gui_to_map_dir(enum direction8 gui_dir)
     return dir_ccw(gui_dir);
   } else {
     return gui_dir;
-  }
-}
-
-/**
-   Convert the given GUI direction into a map direction.
-
-   See also gui_to_map_dir().
- */
-enum direction8 map_to_gui_dir(enum direction8 map_dir)
-{
-  if (tileset_is_isometric(tileset)) {
-    return dir_cw(map_dir);
-  } else {
-    return map_dir;
   }
 }
 
