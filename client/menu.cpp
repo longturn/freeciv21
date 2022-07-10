@@ -90,7 +90,7 @@ void qfc_units_list::clear() { unit_list.clear(); }
 
 QKeySequence shortcut2key(enum shortcut_id s)
 {
-  return fc_shortcuts::sc()->get_shortcut(s)->keys;
+  return fc_shortcuts::sc()->get_shortcut(s).keys;
 }
 
 /**
@@ -410,7 +410,7 @@ void go_act_menu::create()
 
 #define ADD_OLD_SHORTCUT(wanted_action_id, sc_id)                           \
   if (act_id == wanted_action_id) {                                         \
-    item->setShortcut(fc_shortcuts::sc()->get_shortcut(sc_id)->keys);       \
+    item->setShortcut(fc_shortcuts::sc()->get_shortcut(sc_id).keys);        \
   }
 
       /* Create and add the menu item. It will be hidden or shown based on
@@ -1287,7 +1287,7 @@ void mr_menu::execute_shortcut(int sid)
   for (const QMenu *m : qAsConst(menu_list)) {
     QList<QAction *> actions = m->actions();
     for (QAction *a : qAsConst(actions)) {
-      if (a->shortcut() == fcs->keys && a->isEnabled()) {
+      if (a->shortcut() == fcs.keys && a->isEnabled()) {
         a->activate(QAction::Trigger);
         return;
       }
@@ -1353,8 +1353,8 @@ QString mr_menu::shortcut_2_menustring(int sid)
   for (const QMenu *m : qAsConst(menu_list)) {
     QList<QAction *> actions = m->actions();
     for (QAction *a : qAsConst(actions)) {
-      if (a->shortcut() == fcs->keys) {
-        return (a->text() + " (" + fcs->to_string() + ")");
+      if (a->shortcut() == fcs.keys) {
+        return (a->text() + " (" + fcs.to_string() + ")");
       }
     }
   }

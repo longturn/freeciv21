@@ -189,29 +189,20 @@ void map_view::keyPressEvent(QKeyEvent *event)
  */
 void map_view::shortcut_pressed(int key)
 {
-  Qt::MouseButtons bt;
-  QPoint pos;
-  fc_shortcut *sc;
-  fc_shortcut *sc_sec;
-  Qt::KeyboardModifiers md;
-  production_widget *pw;
-  struct tile *ptile = nullptr;
-  struct city *pcity = nullptr;
+  auto md = QApplication::keyboardModifiers();
+  auto bt = QApplication::mouseButtons();
+  auto pos = mapFromGlobal(QCursor::pos()) / scale();
 
-  md = QApplication::keyboardModifiers();
-  bt = QApplication::mouseButtons();
-  pos = mapFromGlobal(QCursor::pos()) / scale();
-
-  ptile = canvas_pos_to_tile(pos.x(), pos.y());
-  pcity = ptile ? tile_city(ptile) : nullptr;
+  auto ptile = canvas_pos_to_tile(pos.x(), pos.y());
+  auto pcity = ptile ? tile_city(ptile) : nullptr;
 
   if (pcity && pcity->owner != client_player()) {
     pcity = nullptr;
   }
 
   // Trade Generator - skip
-  sc = fc_shortcuts::sc()->get_shortcut(SC_SELECT_BUTTON);
-  if (bt == sc->buttons && md == sc->modifiers
+  auto sc = fc_shortcuts::sc()->get_shortcut(SC_SELECT_BUTTON);
+  if (bt == sc.buttons && md == sc.modifiers
       && king()->trade_gen.hover_city) {
     king()->trade_gen.add_tile(ptile);
     queen()->mapview_wdg->repaint();
@@ -219,8 +210,7 @@ void map_view::shortcut_pressed(int key)
   }
 
   // Rally point - select city - skip
-  if (bt == sc->buttons && md == sc->modifiers
-      && king()->rallies.hover_city) {
+  if (bt == sc.buttons && md == sc.modifiers && king()->rallies.hover_city) {
     char text[1024];
 
     if (ptile && tile_city(ptile)) {
@@ -282,125 +272,125 @@ void map_view::shortcut_pressed(int key)
   // Check configured shortcuts
   if (!king()->menu_bar->delayed_order) {
     sc = fc_shortcuts::sc()->get_shortcut(SC_QUICK_SELECT);
-    if ((/* (key && key == sc->keys) || */ bt == sc->buttons)
-        && md == sc->modifiers && pcity != nullptr) {
-      pw = new production_widget(this, pcity, false, 0, 0, true);
+    if ((/* (key && key == sc.keys) || */ bt == sc.buttons)
+        && md == sc.modifiers && pcity != nullptr) {
+      auto pw = new production_widget(this, pcity, false, 0, 0, true);
       pw->show();
       return;
     }
 
     sc = fc_shortcuts::sc()->get_shortcut(SC_SHOW_UNITS);
-    if ((/* (key && key == sc->key) || */ bt == sc->buttons)
-        && md == sc->modifiers && ptile != nullptr
+    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
+        && md == sc.modifiers && ptile != nullptr
         && unit_list_size(ptile->units) > 0) {
       toggle_unit_sel_widget(ptile);
       return;
     }
 
     sc = fc_shortcuts::sc()->get_shortcut(SC_COPY_PROD);
-    if ((/* (key && key == sc->key) || */ bt == sc->buttons)
-        && md == sc->modifiers && ptile != nullptr) {
+    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
+        && md == sc.modifiers && ptile != nullptr) {
       clipboard_copy_production(ptile);
       return;
     }
 
     sc = fc_shortcuts::sc()->get_shortcut(SC_POPUP_COMB_INF);
-    if ((/* (key && key == sc->key) || */ bt == sc->buttons)
-        && md == sc->modifiers && queen()->battlelog_wdg != nullptr) {
+    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
+        && md == sc.modifiers && queen()->battlelog_wdg != nullptr) {
       queen()->battlelog_wdg->show();
       return;
     }
 
     sc = fc_shortcuts::sc()->get_shortcut(SC_PASTE_PROD);
-    if ((/* (key && key == sc->key) || */ bt == sc->buttons)
-        && md == sc->modifiers && pcity != nullptr) {
+    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
+        && md == sc.modifiers && pcity != nullptr) {
       clipboard_paste_production(pcity);
       return;
     }
 
     sc = fc_shortcuts::sc()->get_shortcut(SC_RELOAD_THEME);
-    if ((/* (key && key == sc->key) || */ bt == sc->buttons)
-        && md == sc->modifiers) {
+    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
+        && md == sc.modifiers) {
       load_theme(gui_options.gui_qt_default_theme_name);
       return;
     }
 
     sc = fc_shortcuts::sc()->get_shortcut(SC_RELOAD_TILESET);
-    if ((/* (key && key == sc->key) || */ bt == sc->buttons)
-        && md == sc->modifiers) {
+    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
+        && md == sc.modifiers) {
       QPixmapCache::clear();
       tilespec_reread(tileset_basename(tileset), true);
       return;
     }
 
     sc = fc_shortcuts::sc()->get_shortcut(SC_LOAD_LUA);
-    if ((/* (key && key == sc->key) || */ bt == sc->buttons)
-        && md == sc->modifiers) {
+    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
+        && md == sc.modifiers) {
       qload_lua_script();
       return;
     }
 
     sc = fc_shortcuts::sc()->get_shortcut(SC_RELOAD_LUA);
-    if ((/* (key && key == sc->key) || */ bt == sc->buttons)
-        && md == sc->modifiers) {
+    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
+        && md == sc.modifiers) {
       qreload_lua_script();
       return;
     }
 
     sc = fc_shortcuts::sc()->get_shortcut(SC_HIDE_WORKERS);
-    if ((/* (key && key == sc->key) || */ bt == sc->buttons)
-        && md == sc->modifiers) {
+    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
+        && md == sc.modifiers) {
       key_city_overlay(pos.x(), pos.y());
       return;
     }
     sc = fc_shortcuts::sc()->get_shortcut(SC_MAKE_LINK);
-    if ((/* (key && key == sc->key) || */ bt == sc->buttons)
-        && md == sc->modifiers && ptile != nullptr) {
+    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
+        && md == sc.modifiers && ptile != nullptr) {
       queen()->chat->make_link(ptile);
       return;
     }
     sc = fc_shortcuts::sc()->get_shortcut(SC_BUY_MAP);
-    if ((/* (key && key == sc->key) || */ bt == sc->buttons)
-        && md == sc->modifiers && pcity != nullptr) {
+    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
+        && md == sc.modifiers && pcity != nullptr) {
       city_buy_production(pcity);
       return;
     }
     sc = fc_shortcuts::sc()->get_shortcut(SC_QUICK_BUY);
-    if ((/* (key && key == sc->key) || */ bt == sc->buttons)
-        && md == sc->modifiers && pcity != nullptr) {
-      pw = new production_widget(this, pcity, false, 0, 0, true, true);
+    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
+        && md == sc.modifiers && pcity != nullptr) {
+      auto pw = new production_widget(this, pcity, false, 0, 0, true, true);
       pw->show();
       return;
     }
     sc = fc_shortcuts::sc()->get_shortcut(SC_APPEND_FOCUS);
-    if ((/* (key && key == sc->key) || */ bt == sc->buttons)
-        && md == sc->modifiers) {
+    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
+        && md == sc.modifiers) {
       action_button_pressed(pos.x(), pos.y(), SELECT_APPEND);
       return;
     }
     sc = fc_shortcuts::sc()->get_shortcut(SC_ADJUST_WORKERS);
-    if ((/* (key && key == sc->key) || */ bt == sc->buttons)
-        && md == sc->modifiers) {
+    if ((/* (key && key == sc.key) || */ bt == sc.buttons)
+        && md == sc.modifiers) {
       adjust_workers_button_pressed(pos.x(), pos.y());
       return;
     }
   }
 
   sc = fc_shortcuts::sc()->get_shortcut(SC_SCROLL_MAP);
-  sc_sec = fc_shortcuts::sc()->get_shortcut(SC_SELECT_BUTTON);
-  if (((/*(key && key == sc->key)
+  auto sc_sec = fc_shortcuts::sc()->get_shortcut(SC_SELECT_BUTTON);
+  if (((/*(key && key == sc.key)
         || */
-        (bt == sc->buttons
+        (bt == sc.buttons
          /* check if keyboardless goto active and its shortcut if pressed
           */
-         || (goto_is_active() && (bt == (sc->buttons | sc_sec->buttons)))))
-       && md == sc->modifiers)) {
+         || (goto_is_active() && (bt == (sc.buttons | sc_sec.buttons)))))
+       && md == sc.modifiers)) {
     recenter_button_pressed(pos.x(), pos.y());
     return;
   }
   sc = fc_shortcuts::sc()->get_shortcut(SC_SELECT_BUTTON);
-  if ((/* (key && key == sc->key) || */ bt == sc->buttons)
-      && md == sc->modifiers) {
+  if ((/* (key && key == sc.key) || */ bt == sc.buttons)
+      && md == sc.modifiers) {
     if (!goto_is_active()) {
       stored_autocenter = gui_options.auto_center_on_unit;
       gui_options.auto_center_on_unit = false;
@@ -410,15 +400,15 @@ void map_view::shortcut_pressed(int key)
   }
 
   sc = fc_shortcuts::sc()->get_shortcut(SC_POPUP_INFO);
-  if ((/* (key && key == sc->key) || */ bt == sc->buttons)
-      && md == sc->modifiers && ptile != nullptr) {
+  if ((/* (key && key == sc.key) || */ bt == sc.buttons)
+      && md == sc.modifiers && ptile != nullptr) {
     popup_tile_info(ptile);
     return;
   }
 
   sc = fc_shortcuts::sc()->get_shortcut(SC_WAKEUP_SENTRIES);
-  if ((/* (key && key == sc->key) || */ bt == sc->buttons)
-      && md == sc->modifiers) {
+  if ((/* (key && key == sc.key) || */ bt == sc.buttons)
+      && md == sc.modifiers) {
     wakeup_button_pressed(pos.x(), pos.y());
     return;
   }
@@ -429,20 +419,17 @@ void map_view::shortcut_pressed(int key)
  */
 void map_view::shortcut_released(Qt::MouseButton bt)
 {
-  QPoint pos;
-  fc_shortcut *sc;
-  Qt::KeyboardModifiers md;
-  md = QApplication::keyboardModifiers();
-  pos = mapFromGlobal(QCursor::pos()) / scale();
+  auto md = QApplication::keyboardModifiers();
+  auto pos = mapFromGlobal(QCursor::pos()) / scale();
 
-  sc = fc_shortcuts::sc()->get_shortcut(SC_POPUP_INFO);
-  if (bt == sc->buttons && md == sc->modifiers) {
+  auto sc = fc_shortcuts::sc()->get_shortcut(SC_POPUP_INFO);
+  if (bt == sc.buttons && md == sc.modifiers) {
     popdown_tile_info();
     return;
   }
 
   sc = fc_shortcuts::sc()->get_shortcut(SC_SELECT_BUTTON);
-  if (bt == sc->buttons && md == sc->modifiers) {
+  if (bt == sc.buttons && md == sc.modifiers) {
     if (king()->trade_gen.hover_city || king()->rallies.hover_city) {
       king()->trade_gen.hover_city = false;
       king()->rallies.hover_city = false;

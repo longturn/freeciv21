@@ -35,8 +35,6 @@ extern void real_menus_init();
 static QHash<int, const char *> key_map;
 static QString button_name(Qt::MouseButton bt);
 fc_shortcuts *fc_shortcuts::m_instance = nullptr;
-QMap<shortcut_id, fc_shortcut *> fc_shortcuts::hash =
-    QMap<shortcut_id, fc_shortcut *>();
 
 enum {
   RESPONSE_CANCEL,
@@ -203,55 +201,32 @@ fc_shortcuts::fc_shortcuts() { init_default(true); }
 /**
    fc_shortcuts destructor
  */
-fc_shortcuts::~fc_shortcuts()
-{
-  qDeleteAll(hash.begin(), hash.end());
-  hash.clear();
-}
+fc_shortcuts::~fc_shortcuts() { m_shortcuts_by_id.clear(); }
 
 /**
    Returns description for given shortcut
  */
-QString fc_shortcuts::get_desc(shortcut_id id)
+QString fc_shortcuts::get_desc(shortcut_id id) const
 {
-  fc_shortcut *s;
-  s = hash.value(id);
-  if (s) {
-    return s->str;
-  } else {
-    return QString();
-  }
+  return m_shortcuts_by_id.at(id).str;
 }
 
 /**
    Returns shortcut for given id
  */
-fc_shortcut *fc_shortcuts::get_shortcut(shortcut_id id)
+fc_shortcut fc_shortcuts::get_shortcut(shortcut_id id) const
 {
-  fc_shortcut *s;
-  s = hash.value(id);
-  return s;
+  return m_shortcuts_by_id.at(id);
 }
-
-/**
-   Returns id for given shortcut
- */
-shortcut_id fc_shortcuts::get_id(fc_shortcut *sc) { return hash.key(sc); }
 
 /**
    Sets given shortcut
  */
-void fc_shortcuts::set_shortcut(fc_shortcut *s)
+void fc_shortcuts::set_shortcut(const fc_shortcut &s)
 {
-  auto sc = hash.value(s->id, nullptr);
-  fc_assert_ret_msg(sc, "shortcut error");
-
-  king()->menu_bar->update_shortcut(*sc, *s);
-
-  sc->type = s->type;
-  sc->keys = s->keys;
-  sc->modifiers = s->modifiers;
-  sc->buttons = s->buttons;
+  auto &sc = m_shortcuts_by_id[s.id];
+  king()->menu_bar->update_shortcut(sc, s);
+  sc = s;
 }
 
 /**
@@ -279,24 +254,22 @@ fc_shortcuts *fc_shortcuts::sc()
  */
 void fc_shortcuts::init_default(bool read)
 {
-  int i;
-  fc_shortcut *s;
   bool suc = false;
-  hash.clear();
+  m_shortcuts_by_id.clear();
 
   if (read) {
-    suc = read_shortcuts();
+    suc = this->read();
   }
   if (!suc) {
-    for (i = 0; i < SC_LAST_SC - 1; i++) {
-      s = new fc_shortcut();
-      s->id = default_shortcuts[i].id;
-      s->type = default_shortcuts[i].type;
-      s->keys = default_shortcuts[i].keys;
-      s->buttons = default_shortcuts[i].buttons;
-      s->modifiers = default_shortcuts[i].modifiers;
-      s->str = default_shortcuts[i].str;
-      hash.insert(default_shortcuts[i].id, s);
+    for (int i = 0; i < SC_LAST_SC - 1; i++) {
+      fc_shortcut s;
+      s.id = default_shortcuts[i].id;
+      s.type = default_shortcuts[i].type;
+      s.keys = default_shortcuts[i].keys;
+      s.buttons = default_shortcuts[i].buttons;
+      s.modifiers = default_shortcuts[i].modifiers;
+      s.str = default_shortcuts[i].str;
+      m_shortcuts_by_id[default_shortcuts[i].id] = s;
     }
   }
 }
@@ -491,16 +464,13 @@ void fc_shortcuts_dialog::init()
   QScrollArea *scroll;
   QString desc;
   QWidget *widget;
-  shortcut_id id;
 
   widget = new QWidget(this);
   scroll = new QScrollArea(this);
   scroll->setWidgetResizable(true);
   scroll_layout = new QVBoxLayout;
   main_layout = new QVBoxLayout;
-  for (auto *sc : qAsConst(fc_shortcuts::sc()->hash)) {
-    id = fc_shortcuts::sc()->get_id(sc);
-    desc = fc_shortcuts::sc()->get_desc(id);
+  for (const auto &[_, sc] : fc_shortcuts::sc()->shortcuts()) {
     add_option(sc);
   }
   widget->setProperty("shortcuts", true);
@@ -534,12 +504,12 @@ void fc_shortcuts_dialog::init()
 /**
    Adds shortcut option for dialog
  */
-void fc_shortcuts_dialog::add_option(fc_shortcut *sc)
+void fc_shortcuts_dialog::add_option(const fc_shortcut &sc)
 {
-  auto l = new QLabel(sc->str);
+  auto l = new QLabel(sc.str);
   auto hb = new QHBoxLayout();
 
-  auto fb = new shortcut_edit(*sc);
+  auto fb = new shortcut_edit(sc);
   connect(fb, &shortcut_edit::editingFinished, this,
           &fc_shortcuts_dialog::edit_shortcut);
 
@@ -557,11 +527,11 @@ void fc_shortcuts_dialog::edit_shortcut()
 {
   auto edit = qobject_cast<shortcut_edit *>(sender());
   auto shortcut = edit->shortcut();
-  auto old = *fc_shortcuts::sc()->get_shortcut(shortcut.id);
+  auto old = fc_shortcuts::sc()->get_shortcut(shortcut.id);
 
   QString where;
   if (shortcut.conflicts(old) || !shortcut_exists(shortcut, where)) {
-    fc_shortcuts::sc()->set_shortcut(&shortcut);
+    fc_shortcuts::sc()->set_shortcut(shortcut);
   } else {
     // Duplicate shortcut
     edit->set_shortcut(old);
@@ -586,10 +556,10 @@ void fc_shortcuts_dialog::edit_shortcut()
 bool fc_shortcuts_dialog::shortcut_exists(const fc_shortcut &shortcut,
                                           QString &where) const
 {
-  for (const auto *fsc : qAsConst(fc_shortcuts::sc()->hash)) {
-    if (shortcut.conflicts(*fsc)) {
+  for (const auto &[_, fsc] : fc_shortcuts::sc()->shortcuts()) {
+    if (shortcut.conflicts(fsc)) {
       qWarning("Trying to set a shortcut already used elsewhere");
-      where = fc_shortcuts::sc()->get_desc(fsc->id);
+      where = fc_shortcuts::sc()->get_desc(fsc.id);
       return true;
     }
   }
@@ -634,7 +604,7 @@ void fc_shortcuts_dialog::apply_option(int response)
     close();
     break;
   case RESPONSE_SAVE:
-    write_shortcuts();
+    fc_shortcuts::sc()->write();
     break;
   case RESPONSE_RESET:
     fc_shortcuts::sc()->init_default(false);
@@ -655,22 +625,18 @@ void popup_shortcuts_dialog()
 /**
    Writes shortcuts to file
  */
-void write_shortcuts()
+void fc_shortcuts::write() const
 {
-  fc_shortcut *sc;
-  QMap<shortcut_id, fc_shortcut *> h = fc_shortcuts::sc()->hash;
   QSettings s(QSettings::IniFormat, QSettings::UserScope,
               QStringLiteral("freeciv21-client"));
   s.beginWriteArray(QStringLiteral("ShortcutsV2"));
-  for (int i = 0; i < SC_LAST_SC - 1; ++i) {
-    s.setArrayIndex(i);
-    sc = h.value(static_cast<shortcut_id>(i + 1));
-    fc_assert_ret_msg(sc, "shortuct error");
-    s.setValue(QStringLiteral("id"), sc->id);
-    s.setValue(QStringLiteral("type"), int(sc->type));
-    s.setValue(QStringLiteral("keys"), sc->keys);
-    s.setValue(QStringLiteral("buttons"), sc->buttons);
-    s.setValue(QStringLiteral("modifiers"), QVariant(sc->modifiers));
+  for (auto &[id, sc] : shortcuts()) {
+    s.setArrayIndex(id);
+    s.setValue(QStringLiteral("id"), sc.id);
+    s.setValue(QStringLiteral("type"), int(sc.type));
+    s.setValue(QStringLiteral("keys"), sc.keys);
+    s.setValue(QStringLiteral("buttons"), sc.buttons);
+    s.setValue(QStringLiteral("modifiers"), QVariant(sc.modifiers));
   }
   s.endArray();
 }
@@ -678,40 +644,38 @@ void write_shortcuts()
 /**
    Reads shortcuts from file. Returns false if failed.
  */
-bool read_shortcuts()
+bool fc_shortcuts::read()
 {
   int num, i;
-  fc_shortcut *sc;
   QSettings s(QSettings::IniFormat, QSettings::UserScope,
               QStringLiteral("freeciv21-client"));
   num = s.beginReadArray(QStringLiteral("ShortcutsV2"));
   if (num <= SC_LAST_SC - 1) {
     for (i = 0; i < num; ++i) {
-      sc = new fc_shortcut();
+      fc_shortcut sc;
       s.setArrayIndex(i);
-      sc->id =
+      sc.id =
           static_cast<shortcut_id>(s.value(QStringLiteral("id")).toInt());
-      sc->type = static_cast<fc_shortcut::type_id>(
+      sc.type = static_cast<fc_shortcut::type_id>(
           s.value(QStringLiteral("type")).toInt());
-      sc->keys =
-          qvariant_cast<QKeySequence>(s.value(QStringLiteral("keys")));
-      sc->buttons = static_cast<Qt::MouseButton>(
+      sc.keys = qvariant_cast<QKeySequence>(s.value(QStringLiteral("keys")));
+      sc.buttons = static_cast<Qt::MouseButton>(
           s.value(QStringLiteral("buttons")).toInt());
-      sc->modifiers = static_cast<Qt::KeyboardModifiers>(
+      sc.modifiers = static_cast<Qt::KeyboardModifiers>(
           s.value(QStringLiteral("modifiers")).toInt());
-      sc->str = default_shortcuts[i].str;
-      fc_shortcuts::hash.insert(sc->id, sc);
+      sc.str = default_shortcuts[i].str;
+      set_shortcut(sc);
     }
     while (i < SC_LAST_SC - 1) {
       // initialize missing shortcuts
-      sc = new fc_shortcut();
-      sc->id = default_shortcuts[i].id;
-      sc->type = default_shortcuts[i].type;
-      sc->keys = default_shortcuts[i].keys;
-      sc->buttons = default_shortcuts[i].buttons;
-      sc->modifiers = default_shortcuts[i].modifiers;
-      sc->str = default_shortcuts[i].str;
-      fc_shortcuts::hash.insert(default_shortcuts[i].id, sc);
+      fc_shortcut sc;
+      sc.id = default_shortcuts[i].id;
+      sc.type = default_shortcuts[i].type;
+      sc.keys = default_shortcuts[i].keys;
+      sc.buttons = default_shortcuts[i].buttons;
+      sc.modifiers = default_shortcuts[i].modifiers;
+      sc.str = default_shortcuts[i].str;
+      set_shortcut(sc);
       ++i;
     }
   } else {
