@@ -1269,7 +1269,10 @@ void mr_menu::clear_menus()
   menu_list.clear();
   for (const auto menu : king()->findChildren<QMenu *>()) {
     for (const auto action : menu->actions()) {
-      action->deleteLater();
+      // Don't delete submenu actions, they're managed by the submenus
+      if (!action->menu()) {
+        action->deleteLater();
+      }
     }
     menu->deleteLater();
   }
