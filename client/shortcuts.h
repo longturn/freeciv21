@@ -21,7 +21,9 @@
 
 class QDialogButtonBox;
 class QLineEdit;
+class QMouseEvent;
 class QVBoxLayout;
+
 struct fc_shortcut;
 class map_view;
 
@@ -141,6 +143,7 @@ public:
 
   void link_action(shortcut_id id, QAction *action);
   void create_no_action_shortcuts(map_view *parent);
+  void maybe_route_mouse_shortcut(QMouseEvent *event, map_view *mapview);
 
   static fc_shortcuts *sc();
   static void drop();
