@@ -2493,7 +2493,6 @@ static const struct city *blocked_find_target_city(
 
   switch (action_id_get_target_kind(act_id)) {
   case ATK_CITY:
-    Q_UNREACHABLE();
     fc_assert_ret_val(target_city_arg, nullptr);
     return target_city_arg;
   case ATK_UNIT:
