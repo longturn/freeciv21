@@ -4136,8 +4136,7 @@ static void fill_city_overlays_sprite_array(const struct tileset *t,
         sprs.emplace_back(t, t->sprites.city.unworked_tile_overlay.p[idx]);
       }
     } else if (nullptr != pwork && pwork == pcity
-               && (citymode || gui_options.draw_city_output
-                   || pcity->client.city_opened)) {
+               && (citymode || gui_options.draw_city_output)) {
       // Add on the tile output sprites.
       const int ox = t->type == TS_ISOMETRIC ? t->normal_tile_width / 3 : 0;
       const int oy =

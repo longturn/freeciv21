@@ -431,7 +431,6 @@ struct city {
        */
       bool colored;
       int color_index;
-      bool city_opened;
 
       /* info for dipl/spy investigation */
       struct unit_list *info_units_supported;

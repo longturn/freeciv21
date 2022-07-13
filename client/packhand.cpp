@@ -1362,7 +1362,6 @@ void handle_start_phase(int phase)
     city_list_iterate(client.conn.playing->cities, pcity)
     {
       pcity->client.colored = false;
-      pcity->client.city_opened = false;
     }
     city_list_iterate_end;
 

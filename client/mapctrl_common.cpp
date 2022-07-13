@@ -93,7 +93,6 @@ void key_city_overlay(int canvas_x, int canvas_y)
 void key_city_show_open(struct city *pcity)
 {
   if (can_client_change_view() && pcity) {
-    pcity->client.city_opened = true;
     refresh_city_mapcanvas(pcity, pcity->tile, true, false);
   }
 }
@@ -101,7 +100,6 @@ void key_city_show_open(struct city *pcity)
 void key_city_hide_open(struct city *pcity)
 {
   if (can_client_change_view() && pcity) {
-    pcity->client.city_opened = false;
     refresh_city_mapcanvas(pcity, pcity->tile, true, false);
   }
 }
