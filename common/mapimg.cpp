@@ -2628,7 +2628,6 @@ static bv_pixel pixel_border_rect(const struct tile *ptile,
   fc_assert_ret_val(ptile != nullptr, pixel);
 
   if (nullptr == ptile) {
-    Q_UNREACHABLE();
     // no tile
     return pixel;
   }
@@ -2860,7 +2859,6 @@ static bv_pixel pixel_border_hexa(const struct tile *ptile,
 
   if (nullptr == ptile) {
     // no tile
-    Q_UNREACHABLE();
     return pixel;
   }
 
@@ -3104,7 +3102,6 @@ static bv_pixel pixel_border_isohexa(const struct tile *ptile,
   fc_assert_ret_val(ptile != nullptr, pixel);
 
   if (nullptr == ptile) {
-    Q_UNREACHABLE();
     // no tile
     return pixel;
   }
