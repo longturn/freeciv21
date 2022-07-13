@@ -20,7 +20,6 @@ void global_worklists_unbuild();
 
 void global_worklists_load(struct section_file *file);
 void global_worklists_save(struct section_file *file);
-int global_worklists_number();
 
 struct global_worklist *global_worklist_new(const char *name);
 void global_worklist_destroy(struct global_worklist *pgwl);

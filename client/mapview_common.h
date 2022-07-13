@@ -28,7 +28,6 @@ struct view {
 
 void mapdeco_init();
 void mapdeco_free();
-void mapdeco_set_highlight(const struct tile *ptile, bool highlight);
 bool mapdeco_is_highlight_set(const struct tile *ptile);
 void mapdeco_set_crosshair(const struct tile *ptile, bool crosshair);
 bool mapdeco_is_crosshair_set(const struct tile *ptile);
