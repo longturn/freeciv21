@@ -405,7 +405,6 @@ private slots:
 protected:
   void showEvent(QShowEvent *event) override;
   void hideEvent(QHideEvent *event) override;
-  void closeEvent(QCloseEvent *event) override;
   bool eventFilter(QObject *obj, QEvent *event) override;
 };
 
