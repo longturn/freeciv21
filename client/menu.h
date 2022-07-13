@@ -311,7 +311,6 @@ private slots:
 
   /*used by civilization menu */
   void slot_show_map();
-  void calc_trade_routes();
   void slot_popup_tax_rates();
   void slot_popup_mult_rates();
   void slot_show_research_tab();

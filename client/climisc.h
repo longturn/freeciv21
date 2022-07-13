@@ -53,7 +53,6 @@ void center_on_something();
 cid cid_encode(struct universal target);
 cid cid_encode_unit(const struct unit_type *punittype);
 cid cid_encode_building(const struct impr_type *pimprove);
-cid cid_encode_from_city(const struct city *pcity);
 
 struct universal cid_decode(cid cid);
 

@@ -471,14 +471,6 @@ cid cid_encode_building(const struct impr_type *pimprove)
 }
 
 /**
-   Encode a CID for the target city's production.
- */
-cid cid_encode_from_city(const struct city *pcity)
-{
-  return cid_encode(pcity->production);
-}
-
-/**
    Decode the CID into a city_production structure.
  */
 struct universal cid_decode(cid id)

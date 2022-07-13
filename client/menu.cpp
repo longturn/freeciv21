@@ -2752,11 +2752,6 @@ void mr_menu::load_new_tileset()
 }
 
 /**
-   Action "Calculate trade routes"
- */
-void mr_menu::calc_trade_routes() { king()->trade_gen.calculate(); }
-
-/**
    Action "TAX RATES"
  */
 void mr_menu::slot_popup_tax_rates() { popup_rates_dialog(); }

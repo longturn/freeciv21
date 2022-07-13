@@ -2345,32 +2345,6 @@ void mapdeco_free()
 }
 
 /**
-   Set the given tile's map decoration as either highlighted or not,
-   depending on the value of 'highlight'.
- */
-void mapdeco_set_highlight(const struct tile *ptile, bool highlight)
-{
-  bool changed = false;
-
-  if (!ptile) {
-    return;
-  }
-
-  changed = mapdeco_highlight_set->contains(ptile);
-  if (changed) {
-    mapdeco_highlight_set->remove(ptile);
-  }
-  if (highlight) {
-    mapdeco_highlight_set->insert(ptile);
-  }
-
-  if (!changed) {
-    // FIXME: Remove the cast.
-    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), true, false);
-  }
-}
-
-/**
    Return TRUE if the given tile is highlighted.
  */
 bool mapdeco_is_highlight_set(const struct tile *ptile)

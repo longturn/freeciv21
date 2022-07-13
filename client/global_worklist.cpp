@@ -166,20 +166,6 @@ void global_worklists_unbuild()
 }
 
 /**
-   Returns the number of valid global worklists.
-   N.B.: This counts only the valid global worklists.
- */
-int global_worklists_number()
-{
-  int count = 0;
-
-  global_worklists_iterate(pgwl) { count++; }
-  global_worklists_iterate_end;
-
-  return count;
-}
-
-/**
    Returns a new created global worklist structure.
  */
 static struct global_worklist *
