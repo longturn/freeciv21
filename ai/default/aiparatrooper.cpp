@@ -385,7 +385,7 @@ void dai_choose_paratrooper(struct ai_type *ait, struct player *pplayer,
         }
       }
       if (i == num_requirements) {
-        requirements[i++] = tech_req;
+        requirements[num_requirements++] = tech_req;
       }
     }
 
