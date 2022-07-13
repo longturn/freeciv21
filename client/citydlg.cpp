@@ -1529,7 +1529,7 @@ void city_dialog::hideEvent(QHideEvent *event)
 {
   Q_UNUSED(event)
   if (pcity) {
-    key_city_hide_open(pcity);
+    refresh_city_mapcanvas(pcity, pcity->tile, true, false);
     if (!dont_focus) {
       unit_focus_update();
     }
@@ -1546,7 +1546,7 @@ void city_dialog::showEvent(QShowEvent *event)
   Q_UNUSED(event)
   dont_focus = false;
   if (pcity) {
-    key_city_show_open(pcity);
+    refresh_city_mapcanvas(pcity, pcity->tile, true, false);
     unit_focus_set(nullptr);
     redraw_visible_map_now();
   }
@@ -1559,7 +1559,7 @@ void city_dialog::closeEvent(QCloseEvent *event)
 {
   Q_UNUSED(event)
   if (pcity) {
-    key_city_hide_open(pcity);
+    refresh_city_mapcanvas(pcity, pcity->tile, true, false);
   }
 }
 
@@ -2101,11 +2101,11 @@ void city_dialog::refresh()
     update_nation_table();
     update_cma_tab();
     update_disabled();
-    key_city_show_open(pcity);
   } else {
-    key_city_hide_open(pcity);
     destroy_city_dialog();
   }
+
+  refresh_city_mapcanvas(pcity, pcity->tile, true, false);
 
   ui.production_combo_p->blockSignals(false);
   setUpdatesEnabled(true);
@@ -2436,9 +2436,10 @@ void city_dialog::get_city(bool next)
     other_pcity =
         city_list_get(client.conn.playing->cities, (i + k + size) % size);
   }
+  refresh_city_mapcanvas(pcity, pcity->tile, true, false);
   center_tile_mapcanvas(other_pcity->tile);
-  key_city_hide_open(pcity);
   pcity = other_pcity;
+  refresh_city_mapcanvas(pcity, pcity->tile, true, false);
   refresh();
 }
 
