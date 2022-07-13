@@ -25,8 +25,6 @@ extern struct tile *keyboardless_goto_start_tile;
 void cancel_selection_rectangle();
 
 void key_city_overlay(int canvas_x, int canvas_y);
-void key_city_show_open(struct city *pcity);
-void key_city_hide_open(struct city *pcity);
 
 bool clipboard_copy_production(struct tile *ptile);
 void clipboard_paste_production(struct city *pcity);
