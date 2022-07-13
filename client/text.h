@@ -26,20 +26,10 @@ const QString get_science_target_text(double *percent);
 const QString get_science_goal_text(Tech_type_id goal);
 const QString get_info_label_text(bool moreinfo);
 const QString get_info_label_text_popup();
-const QString get_bulb_tooltip();
-const QString get_global_warming_tooltip();
-const QString get_nuclear_winter_tooltip();
-const QString get_government_tooltip();
-const QString get_unit_info_label_text1(struct unit_list *punits);
-const QString get_unit_info_label_text2(struct unit_list *punits,
-                                        int linebreaks);
 bool get_units_upgrade_info(char *buf, size_t bufsz,
-                            struct unit_list *punits);
-bool get_units_disband_info(char *buf, size_t bufsz,
                             struct unit_list *punits);
 const QString get_spaceship_descr(struct player_spaceship *pship);
 QString get_score_text(const struct player *pplayer);
-const QString get_report_title(const char *report_name);
 
 const QString get_act_sel_action_custom_text(struct action *paction,
                                              const struct act_prob prob,
