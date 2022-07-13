@@ -677,27 +677,6 @@ void cma_set_parameter(enum attr_city attr, int city_id,
 }
 
 /**
-   Initialize the presets if there are no presets loaded on startup.
- */
-void cmafec_init()
-{
-  if (preset_list == nullptr) {
-    preset_list = preset_list_new();
-  }
-}
-
-/**
-   Free resources allocated for presets system.
- */
-void cmafec_free()
-{
-  while (cmafec_preset_num() > 0) {
-    cmafec_preset_remove(0);
-  }
-  preset_list_destroy(preset_list);
-}
-
-/**
    Sets the front-end parameter.
  */
 void cmafec_set_fe_parameter(struct city *pcity,

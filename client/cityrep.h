@@ -148,7 +148,6 @@ class city_widget : public QTreeView {
 public:
   city_widget(city_report *ctr);
   ~city_widget() override;
-  city_model *get_model() const;
   QList<city *> selected_cities;
   void update_model();
   void update_city(struct city *pcity);

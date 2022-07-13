@@ -36,8 +36,7 @@ struct actcalc {
 /**
    Calculate completion time for all unit activities on tile.
  */
-static void calc_activity(struct actcalc *calc, const struct tile *ptile,
-                          Activity_type_id new_act)
+static void calc_activity(struct actcalc *calc, const struct tile *ptile)
 {
   // This temporary working state is a bit big to allocate on the stack
   struct tmp_state {
@@ -152,7 +151,7 @@ QString concat_tile_activity_text(struct tile *ptile)
   int num_activities = 0;
   QString str;
 
-  calc_activity(calc, ptile, ACTIVITY_LAST);
+  calc_activity(calc, ptile);
 
   activity_type_iterate(i)
   {
