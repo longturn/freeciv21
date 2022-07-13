@@ -40,8 +40,6 @@ Q_LOGGING_CATEGORY(goto_category, "freeciv.goto")
 
 class PFPath;
 
-static bool goto_warned = false;
-
 // Indexed by unit id
 static auto goto_finders = std::map<int, freeciv::path_finder>();
 
@@ -88,7 +86,6 @@ void free_client_goto()
 {
   goto_finders.clear();
   goto_destination = nullptr;
-  goto_warned = false;
 }
 
 /**
@@ -259,7 +256,6 @@ void enter_goto_state(struct unit_list *punits)
     goto_finders.emplace(punit->id, punit);
   }
   unit_list_iterate_end;
-  goto_warned = false;
 }
 
 /**
@@ -275,7 +271,6 @@ void exit_goto_state()
 
   goto_finders.clear();
   goto_destination = nullptr;
-  goto_warned = false;
 }
 
 /**

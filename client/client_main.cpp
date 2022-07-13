@@ -991,10 +991,6 @@ bool client_is_observer()
   return client.conn.established && client.conn.observer;
 }
 
-/* Seconds_to_turndone is the number of seconds the server has told us
- * are left.  The timer tells exactly how much time has passed since the
- * server gave us that data. */
-static int miliseconds_to_turndone = 0;
 Q_GLOBAL_STATIC(QTimer, turndone_timer)
 
 /* The timer tells how long since server informed us about starting
@@ -1016,7 +1012,6 @@ static int seconds_shown_to_new_turn;
 void set_miliseconds_to_turndone(int miliseconds)
 {
   if (current_turn_timeout() > 0) {
-    miliseconds_to_turndone = miliseconds;
     turndone_timer->setSingleShot(true);
     turndone_timer->start(miliseconds);
 
@@ -1162,17 +1157,6 @@ bool can_meet_with_player(const struct player *pplayer)
   return (can_client_issue_orders()
           // && nullptr != client.conn.playing (above)
           && could_meet_with_player(client.conn.playing, pplayer));
-}
-
-/**
-   Returns TRUE iff the client can get intelligence from another
-   given player.
- */
-bool can_intel_with_player(const struct player *pplayer)
-{
-  return (client_is_observer()
-          || (nullptr != client.conn.playing
-              && could_intel_with_player(client.conn.playing, pplayer)));
 }
 
 /**

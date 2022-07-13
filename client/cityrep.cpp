@@ -1176,11 +1176,6 @@ void city_widget::cities_selected(const QItemSelection &sl,
 }
 
 /**
-   Returns used model
- */
-city_model *city_widget::get_model() const { return list_model; }
-
-/**
    Destructor for city widget
  */
 city_widget::~city_widget()

@@ -564,15 +564,6 @@ int tileset_unit_layout_offset_y(const struct tileset *t)
 }
 
 /**
-   Offset to layout extra unit sprites, such as upkeep, requesting small
-   space layout.
- */
-int tileset_unit_layout_small_offset_y(const struct tileset *t)
-{
-  return t->unit_upkeep_small_offset_y;
-}
-
-/**
    Return the small sprite width of the current tileset.  The small sprites
    are used for various theme graphics (e.g., citymap citizens/specialists
    as well as panel indicator icons).

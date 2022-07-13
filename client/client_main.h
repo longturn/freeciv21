@@ -109,7 +109,6 @@ bool can_client_control();
 bool can_client_issue_orders();
 bool can_client_change_view();
 bool can_meet_with_player(const struct player *pplayer);
-bool can_intel_with_player(const struct player *pplayer);
 
 void client_exit();
 
