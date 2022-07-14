@@ -135,7 +135,7 @@
            <string/>
           </property>
           <property name="shortcut">
-           <string/>
+           <string>Left</string>
           </property>
           <property name="flat">
            <bool>true</bool>
