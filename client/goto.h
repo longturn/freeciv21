@@ -35,7 +35,6 @@ void exit_goto_state();
 void goto_unit_killed(struct unit *punit);
 
 bool goto_is_active();
-bool goto_get_turns(int *min, int *max);
 bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
                      int *turns, bool *waypoint);
 bool goto_add_waypoint();
@@ -45,8 +44,6 @@ bool is_valid_goto_destination(const struct tile *ptile);
 bool is_valid_goto_draw_line(struct tile *dest_tile);
 
 void request_orders_cleared(struct unit *punit);
-void send_goto_path(struct unit *punit, PFPath *path,
-                    struct unit_order *last_order);
 void send_rally_path(city *pcity, unit *punit, const PFPath &path,
                      unit_order *final_order);
 bool send_goto_tile(struct unit *punit, struct tile *ptile);

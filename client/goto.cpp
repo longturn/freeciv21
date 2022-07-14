@@ -297,45 +297,6 @@ void goto_unit_killed(struct unit *punit)
 bool goto_is_active() { return !goto_finders.empty(); }
 
 /**
-   Return the path length (in turns).
-   WARNING: not useful for determining paths of scattered groups.
- */
-bool goto_get_turns(int *min, int *max)
-{
-  fc_assert_ret_val(min != nullptr, false);
-  fc_assert_ret_val(max != nullptr, false);
-
-  *min = FC_INFINITY;
-  *max = -1;
-
-  if (!goto_is_active()) {
-    return false;
-  }
-  if (nullptr == goto_destination) {
-    // Not a valid position.
-    return false;
-  }
-
-  if (hover_state == HOVER_CONNECT) {
-    // FIXME unsupported
-  } else {
-    // In other modes, we want to know the turn number to reach the tile.
-    for (auto &[unit_id, finder] : goto_finders) {
-      auto destination = hover_state == HOVER_PATROL
-                             ? game_unit_by_number(unit_id)->tile
-                             : goto_destination;
-      auto path = finder.find_path(freeciv::tile_destination(destination));
-      if (path) {
-        *min = std::max(*min, path->turns());
-        *max = std::max(*max, path->turns());
-      }
-    }
-  }
-
-  return true;
-}
-
-/**
    Returns the state of 'ptile': turn number to print, and whether 'ptile'
    is a waypoint.
  */
