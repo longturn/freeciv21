@@ -169,18 +169,19 @@ void do_tech_parasite_effect(struct player *pplayer)
     }
 
     num_teams = 0;
-    researches_iterate(other_research)
-    {
-      if (TECH_KNOWN == research_invention_state(other_research, i)) {
-        if (mod <= ++num_teams) {
-          if (0 == fc_rand(++num_techs)) {
-            tech = i;
+    for (auto &it : research_array) {
+      research *other_research = &it;
+      if (team_by_number(research_number(other_research)) != nullptr) {
+        if (TECH_KNOWN == research_invention_state(other_research, i)) {
+          if (mod <= ++num_teams) {
+            if (0 == fc_rand(++num_techs)) {
+              tech = i;
+            }
+            break;
           }
-          break;
         }
       }
-    }
-    researches_iterate_end;
+    };
   }
   advance_index_iterate_end;
 

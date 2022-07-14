@@ -4787,8 +4787,12 @@ static void sg_load_researches(struct loaddata *loading)
   sg_check_ret();
 
   // Initialize all researches.
-  researches_iterate(pinitres) { init_tech(pinitres, false); }
-  researches_iterate_end;
+  for (auto &it : research_array) {
+    research *pinitres = &it;
+    if (team_by_number(research_number(pinitres)) != nullptr) {
+      init_tech(pinitres, false);
+    }
+  };
 
   // May be unsaved (e.g. scenario case).
   count = secfile_lookup_int_default(loading->file, 0, "research.count");
@@ -4851,8 +4855,12 @@ static void sg_load_researches(struct loaddata *loading)
 
   /* In case of tech_leakage, we can update research only after all the
    * researches have been loaded */
-  researches_iterate(pupres) { research_update(pupres); }
-  researches_iterate_end;
+  for (auto &it : research_array) {
+    research *pupres = &it;
+    if (team_by_number(research_number(pupres)) != nullptr) {
+      research_update(pupres);
+    }
+  };
 }
 
 /* =======================================================================
@@ -5124,29 +5132,31 @@ static void sg_load_sanitycheck(struct loaddata *loading)
 #endif // FREECIV_DEBUG
 
   // Check researching technologies and goals.
-  researches_iterate(presearch)
-  {
-    if (presearch->researching != A_UNSET
-        && !is_future_tech(presearch->researching)
-        && (valid_advance_by_number(presearch->researching) == nullptr
-            || (research_invention_state(presearch, presearch->researching)
-                != TECH_PREREQS_KNOWN))) {
-      log_sg(_("%s had invalid researching technology."),
-             research_name_translation(presearch));
-      presearch->researching = A_UNSET;
+  for (auto &it : research_array) {
+    research *presearch = &it;
+    if (team_by_number(research_number(presearch)) != nullptr) {
+      if (presearch->researching != A_UNSET
+          && !is_future_tech(presearch->researching)
+          && (valid_advance_by_number(presearch->researching) == nullptr
+              || (research_invention_state(presearch, presearch->researching)
+                  != TECH_PREREQS_KNOWN))) {
+        log_sg(_("%s had invalid researching technology."),
+               research_name_translation(presearch));
+        presearch->researching = A_UNSET;
+      }
+      if (presearch->tech_goal != A_UNSET
+          && !is_future_tech(presearch->tech_goal)
+          && (valid_advance_by_number(presearch->tech_goal) == nullptr
+              || !research_invention_reachable(presearch,
+                                               presearch->tech_goal)
+              || (research_invention_state(presearch, presearch->tech_goal)
+                  == TECH_KNOWN))) {
+        log_sg(_("%s had invalid technology goal."),
+               research_name_translation(presearch));
+        presearch->tech_goal = A_UNSET;
+      }
     }
-    if (presearch->tech_goal != A_UNSET
-        && !is_future_tech(presearch->tech_goal)
-        && (valid_advance_by_number(presearch->tech_goal) == nullptr
-            || !research_invention_reachable(presearch, presearch->tech_goal)
-            || (research_invention_state(presearch, presearch->tech_goal)
-                == TECH_KNOWN))) {
-      log_sg(_("%s had invalid technology goal."),
-             research_name_translation(presearch));
-      presearch->tech_goal = A_UNSET;
-    }
-  }
-  researches_iterate_end;
+  };
 
   players_iterate(pplayer)
   {
