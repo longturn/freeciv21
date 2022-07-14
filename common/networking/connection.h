@@ -292,7 +292,6 @@ void conn_list_compression_thaw(const struct conn_list *pconn_list);
 
 const char *conn_description(const struct connection *pconn,
                              bool is_private = true);
-const char *conn_addr_public(const struct connection *pconn);
 bool conn_controls_player(const struct connection *pconn);
 bool conn_is_global_observer(const struct connection *pconn);
 enum cmdlevel conn_get_access(const struct connection *pconn);

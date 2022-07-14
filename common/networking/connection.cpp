@@ -422,15 +422,12 @@ static void free_socket_packet_buffer(struct socket_packet_buffer *buf)
 const char *conn_description(const struct connection *pconn, bool is_private)
 {
   static char buffer[MAX_LEN_NAME * 2 + MAX_LEN_ADDR + 128];
-
-  const auto addr = is_private ? pconn->addr : conn_addr_public(pconn);
-
   buffer[0] = '\0';
 
   if (*pconn->username != '\0') {
     if (is_private) {
       fc_snprintf(buffer, sizeof(buffer), _("%s from %s"), pconn->username,
-                  qUtf8Printable(addr));
+                  qUtf8Printable(pconn->addr));
     } else {
       fc_snprintf(buffer, sizeof(buffer), "%s", pconn->username);
     }
@@ -458,16 +455,6 @@ const char *conn_description(const struct connection *pconn, bool is_private)
   }
 
   return buffer;
-}
-
-/**
- * Generate a fake hostname to tell publicly.
- */
-const char *conn_addr_public(const struct connection *pconn)
-{
-  static char buf[256];
-  snprintf(buf, 256, "user-%s-host", pconn->username);
-  return buf;
 }
 
 /**
