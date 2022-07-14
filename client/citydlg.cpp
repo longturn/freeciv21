@@ -1457,31 +1457,15 @@ void city_dialog::change_production(bool next)
  */
 void city_dialog::update_disabled()
 {
-  if (nullptr == client.conn.playing
-      || city_owner(pcity) != client.conn.playing) {
-    ui.prev_city_but->setDisabled(true);
-    ui.next_city_but->setDisabled(true);
-    ui.buy_button->setDisabled(true);
-    ui.cma_enable_but->setDisabled(true);
-    ui.production_combo_p->setDisabled(true);
-    ui.present_units_list->setDisabled(true);
-    ui.supported_units->setDisabled(true);
-  } else {
-    ui.prev_city_but->setEnabled(true);
-    ui.next_city_but->setEnabled(true);
-    ui.buy_button->setEnabled(true);
-    ui.cma_enable_but->setEnabled(true);
-    ui.production_combo_p->setEnabled(true);
-    ui.present_units_list->setEnabled(true);
-    ui.supported_units->setEnabled(true);
-  }
-
-  if (can_client_issue_orders()) {
-    ui.cma_enable_but->setEnabled(true);
-  } else {
-    ui.cma_enable_but->setDisabled(true);
-  }
-
+  const auto can_edit =
+      can_client_issue_orders() && city_owner(pcity) == client.conn.playing;
+  ui.prev_city_but->setEnabled(can_edit);
+  ui.next_city_but->setEnabled(can_edit);
+  ui.buy_button->setEnabled(can_edit);
+  ui.cma_enable_but->setEnabled(can_edit);
+  ui.production_combo_p->setEnabled(can_edit);
+  ui.present_units_list->setEnabled(can_edit);
+  ui.supported_units->setEnabled(can_edit);
   update_prod_buttons();
 }
 
@@ -1490,12 +1474,13 @@ void city_dialog::update_disabled()
  */
 void city_dialog::update_prod_buttons()
 {
-  ui.work_next_but->setDisabled(true);
-  ui.work_prev_but->setDisabled(true);
-  ui.work_add_but->setDisabled(true);
-  ui.work_rem_but->setDisabled(true);
+  ui.work_next_but->setEnabled(false);
+  ui.work_prev_but->setEnabled(false);
+  ui.work_add_but->setEnabled(false);
+  ui.work_rem_but->setEnabled(false);
 
-  if (client.conn.playing && city_owner(pcity) == client.conn.playing) {
+  if (can_client_issue_orders()
+      && city_owner(pcity) == client.conn.playing) {
     ui.work_add_but->setEnabled(true);
 
     if (selected_row_p >= 0 && selected_row_p < ui.p_table_p->rowCount()) {
@@ -1969,7 +1954,7 @@ void city_dialog::update_buy_button()
   QString str;
   int value;
 
-  ui.buy_button->setDisabled(true);
+  ui.buy_button->setEnabled(false);
 
   if (!client_is_observer() && client.conn.playing != nullptr) {
     value = pcity->client.buy_cost;
