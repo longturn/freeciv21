@@ -159,14 +159,9 @@ static bool can_plr_see_all_sym_diplrels_of(const struct player *pplayer,
 static bool is_req_knowable(
     const struct player *pow_player, const struct player *target_player,
     const struct player *other_player, const struct city *target_city,
-    const struct impr_type *target_building, const struct tile *target_tile,
-    const struct unit *target_unit, const struct output_type *target_output,
-    const struct specialist *target_specialist,
+    const struct tile *target_tile, const struct unit *target_unit,
     const struct requirement *req, const enum req_problem_type prob_type)
 {
-  Q_UNUSED(target_output)
-  Q_UNUSED(target_specialist)
-  Q_UNUSED(target_building)
   fc_assert_ret_val_msg(nullptr != pow_player, false, "No point of view");
 
   if (req->source.kind == VUT_UTFLAG || req->source.kind == VUT_UTYPE
@@ -181,7 +176,7 @@ static bool is_req_knowable(
         return prob_type == RPT_CERTAIN;
       }
 
-      return target_unit && can_player_see_unit(pow_player, target_unit);
+      return can_player_see_unit(pow_player, target_unit);
     case REQ_RANGE_CADJACENT:
     case REQ_RANGE_ADJACENT:
     case REQ_RANGE_CONTINENT:
@@ -214,11 +209,11 @@ static bool is_req_knowable(
     case USP_NATIVE_TILE:
     case USP_NATIVE_EXTRA:
       // Known if the unit is seen by the player.
-      return target_unit && can_player_see_unit(pow_player, target_unit);
+      return can_player_see_unit(pow_player, target_unit);
     case USP_HAS_HOME_CITY:
     case USP_MOVED_THIS_TURN:
       // Known to the unit's owner.
-      return target_unit && unit_owner(target_unit) == pow_player;
+      return unit_owner(target_unit) == pow_player;
     case USP_COUNT:
       fc_assert_msg(req->source.value.unit_state != USP_COUNT,
                     "Invalid unit state property.");
@@ -286,7 +281,7 @@ static bool is_req_knowable(
         return prob_type == RPT_CERTAIN;
       }
 
-      if (pow_player == target_player || pow_player == other_player) {
+      if (pow_player == other_player) {
         return true;
       }
 
@@ -642,8 +637,7 @@ enum fc_tristate mke_eval_req(
   const struct unit_type *target_unittype;
 
   if (!is_req_knowable(pow_player, target_player, other_player, target_city,
-                       target_building, target_tile, target_unit,
-                       target_output, target_specialist, req, prob_type)) {
+                       target_tile, target_unit, req, prob_type)) {
     return TRI_MAYBE;
   }
 
