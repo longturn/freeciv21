@@ -617,8 +617,12 @@ void send_all_info(struct conn_list *dest)
 
   // Resend player info because it could have more infos (e.g. embassy).
   send_player_all_c(nullptr, dest);
-  researches_iterate(presearch) { send_research_info(presearch, dest); }
-  researches_iterate_end;
+  for (auto &it : research_array) {
+    research *presearch = &it;
+    if (team_by_number(research_number(presearch)) != nullptr) {
+      send_research_info(presearch, dest);
+    }
+  };
   send_map_info(dest);
   send_all_known_tiles(dest);
   send_all_known_cities(dest);
@@ -1724,8 +1728,12 @@ void end_turn()
   send_player_all_c(nullptr, nullptr);
 
   log_debug("Sendresearchinfo");
-  researches_iterate(presearch) { send_research_info(presearch, nullptr); }
-  researches_iterate_end;
+  for (auto &it : research_array) {
+    research *presearch = &it;
+    if (team_by_number(research_number(presearch)) != nullptr) {
+      send_research_info(presearch, nullptr);
+    }
+  };
 
   log_debug("Sendyeartoclients");
   send_year_to_clients();
@@ -3017,12 +3025,13 @@ void srv_ready()
 
     /* Give initial technologies, as specified in the ruleset and the
      * settings. */
-    researches_iterate(presearch)
-    {
-      init_tech(presearch, true);
-      give_initial_techs(presearch, game.info.tech);
-    }
-    researches_iterate_end;
+    for (auto &it : research_array) {
+      research *presearch = &it;
+      if (team_by_number(research_number(presearch)) != nullptr) {
+        init_tech(presearch, true);
+        give_initial_techs(presearch, game.info.tech);
+      }
+    };
 
     // Set up alliances based on team selections
     players_iterate(pplayer)

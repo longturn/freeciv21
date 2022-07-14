@@ -354,24 +354,6 @@ static bool research_allowed(
 }
 
 /**
-   Returns TRUE iff researching the given tech is allowed according to its
-   research_reqs.
-
-   Helper for research_update().
- */
-#define research_is_allowed(presearch, tech)                                \
-  research_allowed(presearch, tech, are_reqs_active)
-
-/**
-   Returns TRUE iff researching the given tech may become allowed according
-   to its research_reqs.
-
-   Helper for research_get_reachable_rreqs().
- */
-#define research_may_become_allowed(presearch, tech)                        \
-  research_allowed(presearch, tech, reqs_may_activate)
-
-/**
    Returns TRUE iff the given tech is ever reachable by the players sharing
    the research as far as research_reqs are concerned.
 
@@ -396,7 +378,7 @@ static bool research_get_reachable_rreqs(const struct research *presearch,
       continue;
     }
 
-    if (!research_may_become_allowed(presearch, iter_tech)) {
+    if (!research_allowed(presearch, iter_tech, reqs_may_activate)) {
       /* It will always be illegal to start researching this tech because
        * of unchanging requirements. Since it isn't already known and can't
        * be researched it must be unreachable. */
@@ -513,7 +495,7 @@ void research_update(struct research *presearch)
                      && (presearch->inventions[advance_required(i, AR_TWO)]
                              .state
                          == TECH_KNOWN)
-                     && research_is_allowed(presearch, i)
+                     && research_allowed(presearch, i, are_reqs_active)
                  ? TECH_PREREQS_KNOWN
                  : TECH_UNKNOWN);
       }
@@ -667,13 +649,14 @@ bool research_invention_reachable(const struct research *presearch,
   } else if (presearch != nullptr) {
     return presearch->inventions[tech].reachable;
   } else {
-    researches_iterate(research_iter)
-    {
-      if (research_iter->inventions[tech].reachable) {
-        return true;
+    for (auto &it : research_array) {
+      research *research_iter = &it;
+      if (team_by_number(research_number(research_iter)) != nullptr) {
+        if (research_iter->inventions[tech].reachable) {
+          return true;
+        }
       }
-    }
-    researches_iterate_end;
+    };
 
     return false;
   }
@@ -696,15 +679,16 @@ bool research_invention_gettable(const struct research *presearch,
                 ? presearch->inventions[tech].root_reqs_known
                 : presearch->inventions[tech].state == TECH_PREREQS_KNOWN);
   } else {
-    researches_iterate(research_iter)
-    {
-      if (allow_holes ? research_iter->inventions[tech].root_reqs_known
-                      : research_iter->inventions[tech].state
-                            == TECH_PREREQS_KNOWN) {
-        return true;
+    for (auto &it : research_array) {
+      research *research_iter = &it;
+      if (team_by_number(research_number(research_iter)) != nullptr) {
+        if (allow_holes ? research_iter->inventions[tech].root_reqs_known
+                        : research_iter->inventions[tech].state
+                              == TECH_PREREQS_KNOWN) {
+          return true;
+        }
       }
-    }
-    researches_iterate_end;
+    };
 
     return false;
   }

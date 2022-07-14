@@ -141,12 +141,6 @@ int research_total_bulbs_required(const struct research *presearch,
 int player_tech_upkeep(const struct player *pplayer);
 
 // Iterating utilities.
-#define researches_iterate(_presearch)                                      \
-  for (auto &it : research_array) {                                         \
-    research *_presearch = &it;                                             \
-    if (team_by_number(research_number(_presearch)) != nullptr)
-
-#define researches_iterate_end }
 struct research_player_iter;
 
 size_t research_player_iter_sizeof();
