@@ -39,9 +39,6 @@
 #include "sprite.h"
 #include "top_bar.h"
 
-typedef advance *p_advance;
-typedef city *p_city;
-
 /**
    Constructor for diplomacy widget
  */
