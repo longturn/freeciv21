@@ -674,17 +674,16 @@ static void check_teams(const char *file, const char *function, int line)
 static void check_researches(const char *file, const char *function,
                              int line)
 {
-  for (auto &it : research_array) {
-    research *presearch = &it;
-    if (team_by_number(research_number(presearch)) != nullptr) {
+  for (auto &presearch : research_array) {
+    if (team_by_number(research_number(&presearch)) != nullptr) {
       SANITY_CHECK(S_S_RUNNING != server_state()
-                   || A_UNSET == presearch->researching
-                   || is_future_tech(presearch->researching)
-                   || (A_NONE != presearch->researching
-                       && valid_advance_by_number(presearch->researching)));
-      SANITY_CHECK(A_UNSET == presearch->tech_goal
-                   || (A_NONE != presearch->tech_goal
-                       && valid_advance_by_number(presearch->tech_goal)));
+                   || A_UNSET == presearch.researching
+                   || is_future_tech(presearch.researching)
+                   || (A_NONE != presearch.researching
+                       && valid_advance_by_number(presearch.researching)));
+      SANITY_CHECK(A_UNSET == presearch.tech_goal
+                   || (A_NONE != presearch.tech_goal
+                       && valid_advance_by_number(presearch.tech_goal)));
     }
   };
 }

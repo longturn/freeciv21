@@ -617,10 +617,9 @@ void send_all_info(struct conn_list *dest)
 
   // Resend player info because it could have more infos (e.g. embassy).
   send_player_all_c(nullptr, dest);
-  for (auto &it : research_array) {
-    research *presearch = &it;
-    if (team_by_number(research_number(presearch)) != nullptr) {
-      send_research_info(presearch, dest);
+  for (auto &presearch : research_array) {
+    if (team_by_number(research_number(&presearch)) != nullptr) {
+      send_research_info(&presearch, dest);
     }
   };
   send_map_info(dest);
@@ -1728,10 +1727,9 @@ void end_turn()
   send_player_all_c(nullptr, nullptr);
 
   log_debug("Sendresearchinfo");
-  for (auto &it : research_array) {
-    research *presearch = &it;
-    if (team_by_number(research_number(presearch)) != nullptr) {
-      send_research_info(presearch, nullptr);
+  for (auto &presearch : research_array) {
+    if (team_by_number(research_number(&presearch)) != nullptr) {
+      send_research_info(&presearch, nullptr);
     }
   };
 
@@ -3025,11 +3023,10 @@ void srv_ready()
 
     /* Give initial technologies, as specified in the ruleset and the
      * settings. */
-    for (auto &it : research_array) {
-      research *presearch = &it;
-      if (team_by_number(research_number(presearch)) != nullptr) {
-        init_tech(presearch, true);
-        give_initial_techs(presearch, game.info.tech);
+    for (auto &presearch : research_array) {
+      if (team_by_number(research_number(&presearch)) != nullptr) {
+        init_tech(&presearch, true);
+        give_initial_techs(&presearch, game.info.tech);
       }
     };
 
