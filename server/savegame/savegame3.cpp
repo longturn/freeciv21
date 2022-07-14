@@ -7152,7 +7152,7 @@ static void sg_save_researches(struct savedata *saving)
   sg_check_ret();
 
   if (saving->save_players) {
-    for (auto &presearch : research_array) {
+    for (const auto &presearch : research_array) {
       if (team_by_number(research_number(&presearch)) != nullptr) {
         secfile_insert_int(saving->file, research_number(&presearch),
                            "research.r%d.number", i);

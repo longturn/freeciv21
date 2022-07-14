@@ -649,7 +649,7 @@ bool research_invention_reachable(const struct research *presearch,
   } else if (presearch != nullptr) {
     return presearch->inventions[tech].reachable;
   } else {
-    for (auto &research_iter : research_array) {
+    for (const auto &research_iter : research_array) {
       if (team_by_number(research_number(&research_iter)) != nullptr) {
         if (research_iter.inventions[tech].reachable) {
           return true;
@@ -678,7 +678,7 @@ bool research_invention_gettable(const struct research *presearch,
                 ? presearch->inventions[tech].root_reqs_known
                 : presearch->inventions[tech].state == TECH_PREREQS_KNOWN);
   } else {
-    for (auto &research_iter : research_array) {
+    for (const auto &research_iter : research_array) {
       if (team_by_number(research_number(&research_iter)) != nullptr) {
         if (allow_holes ? research_iter.inventions[tech].root_reqs_known
                         : research_iter.inventions[tech].state
