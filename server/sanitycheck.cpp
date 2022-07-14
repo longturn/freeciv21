@@ -674,7 +674,7 @@ static void check_teams(const char *file, const char *function, int line)
 static void check_researches(const char *file, const char *function,
                              int line)
 {
-  for (auto &presearch : research_array) {
+  for (const auto &presearch : research_array) {
     if (team_by_number(research_number(&presearch)) != nullptr) {
       SANITY_CHECK(S_S_RUNNING != server_state()
                    || A_UNSET == presearch.researching

@@ -617,7 +617,7 @@ void send_all_info(struct conn_list *dest)
 
   // Resend player info because it could have more infos (e.g. embassy).
   send_player_all_c(nullptr, dest);
-  for (auto &presearch : research_array) {
+  for (const auto &presearch : research_array) {
     if (team_by_number(research_number(&presearch)) != nullptr) {
       send_research_info(&presearch, dest);
     }
@@ -1727,7 +1727,7 @@ void end_turn()
   send_player_all_c(nullptr, nullptr);
 
   log_debug("Sendresearchinfo");
-  for (auto &presearch : research_array) {
+  for (const auto &presearch : research_array) {
     if (team_by_number(research_number(&presearch)) != nullptr) {
       send_research_info(&presearch, nullptr);
     }
