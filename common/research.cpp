@@ -25,12 +25,8 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "tech.h"
 
 #include "research.h"
-
-struct research_iter {
-  struct iterator vtable;
-  int index;
-};
-#define RESEARCH_ITER(p) ((struct research_iter *) p)
+// FIXME: Dont use extern, move inside some game running class eventually
+extern std::vector<research> research_array(MAX_NUM_PLAYER_SLOTS);
 
 struct research_player_iter {
   struct iterator vtable;
@@ -40,8 +36,6 @@ struct research_player_iter {
   };
 };
 #define RESEARCH_PLAYER_ITER(p) ((struct research_player_iter *) p)
-
-static struct research research_array[MAX_NUM_PLAYER_SLOTS];
 
 static struct name_translation advance_unset_name = NAME_INIT;
 static struct name_translation advance_future_name = NAME_INIT;
@@ -55,22 +49,19 @@ Q_GLOBAL_STATIC(QVector<QString>, future_name_translation);
  */
 void researches_init()
 {
-  int i;
-
   // Ensure we have enough space for players or teams.
-  fc_assert(ARRAY_SIZE(research_array) >= team_slot_count());
-  fc_assert(ARRAY_SIZE(research_array) >= MAX_NUM_PLAYER_SLOTS);
+  fc_assert(research_array.size() >= team_slot_count());
+  fc_assert(research_array.size() >= MAX_NUM_PLAYER_SLOTS);
 
-  memset(research_array, 0, sizeof(research_array));
-  for (i = 0; i < ARRAY_SIZE(research_array); i++) {
-    research_array[i].tech_goal = A_UNSET;
-    research_array[i].researching = A_UNSET;
-    research_array[i].researching_saved = A_UNKNOWN;
-    research_array[i].future_tech = 0;
-    research_array[i].inventions[A_NONE].state = TECH_KNOWN;
+  for (auto &research : research_array) {
+    research.tech_goal = A_UNSET;
+    research.researching = A_UNSET;
+    research.researching_saved = A_UNKNOWN;
+    research.future_tech = 0;
+    research.inventions[A_NONE].state = TECH_KNOWN;
     advance_index_iterate(A_FIRST, j)
     {
-      research_array[i].inventions[j].bulbs_researched_saved = 0;
+      research.inventions[j].bulbs_researched_saved = 0;
     }
     advance_index_iterate_end;
   }
@@ -97,10 +88,10 @@ void researches_free()
 /**
    Returns the index of the research in the array.
  */
-int research_number(const struct research *presearch)
+int research_number(const research *presearch)
 {
   fc_assert_ret_val(nullptr != presearch, 0);
-  return presearch - research_array;
+  return presearch - &research_array[0];
 }
 
 /**
@@ -109,7 +100,7 @@ int research_number(const struct research *presearch)
 struct research *research_by_number(int number)
 {
   fc_assert_ret_val(0 <= number, nullptr);
-  fc_assert_ret_val(ARRAY_SIZE(research_array) > number, nullptr);
+  fc_assert_ret_val(research_array.size() > number, nullptr);
   return &research_array[number];
 }
 
@@ -1131,91 +1122,6 @@ int player_tech_upkeep(const struct player *pplayer)
   log_debug("[%s (%d)] tech upkeep: %d", player_name(pplayer),
             player_number(pplayer), (int) tech_upkeep);
   return static_cast<int>(tech_upkeep);
-}
-
-/**
-   Returns the real size of the player research iterator.
- */
-size_t research_iter_sizeof() { return sizeof(struct research_iter); }
-
-/**
-   Returns the research structure pointed by the iterator.
- */
-static void *research_iter_get(const struct iterator *it)
-{
-  return &research_array[RESEARCH_ITER(it)->index];
-}
-
-/**
-   Jump to next team research structure.
- */
-static void research_iter_team_next(struct iterator *it)
-{
-  struct research_iter *rit = RESEARCH_ITER(it);
-
-  if (team_slots_initialised()) {
-    do {
-      rit->index++;
-    } while (rit->index < ARRAY_SIZE(research_array) && !it->valid(it));
-  }
-}
-
-/**
-   Returns FALSE if there is no valid team at current index.
- */
-static bool research_iter_team_valid(const struct iterator *it)
-{
-  struct research_iter *rit = RESEARCH_ITER(it);
-
-  return (0 <= rit->index && ARRAY_SIZE(research_array) > rit->index
-          && nullptr != team_by_number(rit->index));
-}
-
-/**
-   Jump to next player research structure.
- */
-static void research_iter_player_next(struct iterator *it)
-{
-  struct research_iter *rit = RESEARCH_ITER(it);
-
-  if (player_slots_initialised()) {
-    do {
-      rit->index++;
-    } while (rit->index < ARRAY_SIZE(research_array) && !it->valid(it));
-  }
-}
-
-/**
-   Returns FALSE if there is no valid player at current index.
- */
-static bool research_iter_player_valid(const struct iterator *it)
-{
-  struct research_iter *rit = RESEARCH_ITER(it);
-
-  return (0 <= rit->index && ARRAY_SIZE(research_array) > rit->index
-          && nullptr != player_by_number(rit->index));
-}
-
-/**
-   Initializes a player research iterator.
- */
-struct iterator *research_iter_init(struct research_iter *it)
-{
-  struct iterator *base = ITERATOR(it);
-
-  base->get = research_iter_get;
-  it->index = -1;
-
-  if (game.info.team_pooled_research) {
-    base->next = research_iter_team_next;
-    base->valid = research_iter_team_valid;
-  } else {
-    base->next = research_iter_player_next;
-    base->valid = research_iter_player_valid;
-  }
-
-  base->next(base);
-  return base;
 }
 
 /**

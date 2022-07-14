@@ -46,7 +46,6 @@ const char *const gui_character_encoding = "UTF-8";
 const char *client_string = "gui-qt";
 static fc_client *freeciv_qt;
 
-void reset_unit_table();
 static void apply_help_font(struct option *poption);
 static void apply_notify_font(struct option *poption);
 static void apply_titlebar(struct option *poption);
@@ -354,13 +353,6 @@ void gui_update_allfonts()
 {
   fcFont::instance()->setSizeAll(gui_options.gui_qt_increase_fonts);
   gui_options.gui_qt_increase_fonts = 0;
-}
-
-/**
-   Called when the tileset is changed to reset the unit pixmap table.
- */
-void reset_unit_table()
-{ // FIXME
 }
 
 /**

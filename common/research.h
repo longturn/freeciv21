@@ -94,6 +94,7 @@ struct research {
   };
 };
 
+extern std::vector<research> research_array;
 // Common functions.
 void researches_init();
 void researches_free();
@@ -140,16 +141,12 @@ int research_total_bulbs_required(const struct research *presearch,
 int player_tech_upkeep(const struct player *pplayer);
 
 // Iterating utilities.
-struct research_iter;
-
-size_t research_iter_sizeof();
-struct iterator *research_iter_init(struct research_iter *it);
-
 #define researches_iterate(_presearch)                                      \
-  generic_iterate(struct research_iter, struct research *, _presearch,      \
-                  research_iter_sizeof, research_iter_init)
-#define researches_iterate_end generic_iterate_end
+  for (auto &it : research_array) {                                         \
+    research *_presearch = &it;                                             \
+    if (team_by_number(research_number(_presearch)) != nullptr)
 
+#define researches_iterate_end }
 struct research_player_iter;
 
 size_t research_player_iter_sizeof();
