@@ -1499,8 +1499,6 @@ void end_phase()
  */
 void end_turn()
 {
-  int food = 0, shields = 0, trade = 0, settlers = 0;
-
   QElapsedTimer timer;
   timer.start();
   log_debug("Endturn");
@@ -1525,6 +1523,7 @@ void end_turn()
     if (!is_ai(pplayer) || is_barbarian(pplayer)) {
       continue;
     }
+    int settlers = 0;
     unit_list_iterate(pplayer->units, punit)
     {
       if (unit_is_cityfounder(punit)) {
@@ -1532,6 +1531,7 @@ void end_turn()
       }
     }
     unit_list_iterate_end;
+    int food = 0, shields = 0, trade = 0;
     city_list_iterate(pplayer->cities, pcity)
     {
       shields += pcity->prod[O_SHIELD];
