@@ -50,7 +50,7 @@ static void default_conn_close_callback(struct connection *pconn)
 {
   fc_assert_msg(conn_close_callback != default_conn_close_callback,
                 "Closing a socket (%s) before calling "
-                "close_socket_set_callback().",
+                "connections_set_close_callback().",
                 conn_description(pconn));
 }
 
@@ -428,8 +428,12 @@ const char *conn_description(const struct connection *pconn, bool is_private)
   buffer[0] = '\0';
 
   if (*pconn->username != '\0') {
-    fc_snprintf(buffer, sizeof(buffer), _("%s from %s"), pconn->username,
-                qUtf8Printable(addr));
+    if (is_private) {
+      fc_snprintf(buffer, sizeof(buffer), _("%s from %s"), pconn->username,
+                  qUtf8Printable(addr));
+    } else {
+      fc_snprintf(buffer, sizeof(buffer), "%s", pconn->username);
+    }
   } else {
     sz_strlcpy(buffer, "server");
   }
