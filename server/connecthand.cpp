@@ -477,16 +477,14 @@ bool handle_login_request(struct connection *pconn,
  */
 void lost_connection_to_client(struct connection *pconn)
 {
-  const char *desc = conn_description(pconn);
-
   fc_assert_ret(true == pconn->server.is_closing);
 
-  qInfo(_("Lost connection: %s."), desc);
+  qInfo(_("Lost connection: %s."), conn_description(pconn, true));
 
   // Special color (white on black) for player loss
   notify_conn(game.est_connections, nullptr, E_CONNECTION,
               conn_controls_player(pconn) ? ftc_player_lost : ftc_server,
-              _("Lost connection: %s."), desc);
+              _("Lost connection: %s."), conn_description(pconn, false));
 
   connection_detach(pconn, true);
   send_conn_info_remove(pconn->self, game.est_connections);
