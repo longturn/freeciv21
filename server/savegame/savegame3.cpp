@@ -7051,10 +7051,9 @@ static void sg_load_researches(struct loaddata *loading)
   sg_check_ret();
 
   // Initialize all researches.
-  for (auto &it : research_array) {
-    research *pinitres = &it;
-    if (team_by_number(research_number(pinitres)) != nullptr) {
-      init_tech(pinitres, false);
+  for (auto &pinitres : research_array) {
+    if (team_by_number(research_number(&pinitres)) != nullptr) {
+      init_tech(&pinitres, false);
     }
   };
 
@@ -7132,10 +7131,9 @@ static void sg_load_researches(struct loaddata *loading)
 
   /* In case of tech_leakage, we can update research only after all the
    * researches have been loaded */
-  for (auto &it : research_array) {
-    research *pupres = &it;
-    if (team_by_number(research_number(pupres)) != nullptr) {
-      research_update(pupres);
+  for (auto &pupres : research_array) {
+    if (team_by_number(research_number(&pupres)) != nullptr) {
+      research_update(&pupres);
     }
   };
 }
@@ -7154,25 +7152,24 @@ static void sg_save_researches(struct savedata *saving)
   sg_check_ret();
 
   if (saving->save_players) {
-    for (auto &it : research_array) {
-      research *presearch = &it;
-      if (team_by_number(research_number(presearch)) != nullptr) {
-        secfile_insert_int(saving->file, research_number(presearch),
+    for (auto &presearch : research_array) {
+      if (team_by_number(research_number(&presearch)) != nullptr) {
+        secfile_insert_int(saving->file, research_number(&presearch),
                            "research.r%d.number", i);
         technology_save(saving->file, "research.r%d.goal", i,
-                        presearch->tech_goal);
-        secfile_insert_int(saving->file, presearch->techs_researched,
+                        presearch.tech_goal);
+        secfile_insert_int(saving->file, presearch.techs_researched,
                            "research.r%d.techs", i);
-        secfile_insert_int(saving->file, presearch->future_tech,
+        secfile_insert_int(saving->file, presearch.future_tech,
                            "research.r%d.futuretech", i);
-        secfile_insert_int(saving->file, presearch->bulbs_researching_saved,
+        secfile_insert_int(saving->file, presearch.bulbs_researching_saved,
                            "research.r%d.bulbs_before", i);
         if (game.server.multiresearch) {
           vlist_research = new int[game.control.num_tech_types]();
           advance_index_iterate(A_FIRST, j)
           {
             vlist_research[j] =
-                presearch->inventions[j].bulbs_researched_saved;
+                presearch.inventions[j].bulbs_researched_saved;
           }
           advance_index_iterate_end;
           secfile_insert_int_vec(saving->file, vlist_research,
@@ -7182,19 +7179,19 @@ static void sg_save_researches(struct savedata *saving)
           vlist_research = nullptr;
         }
         technology_save(saving->file, "research.r%d.saved", i,
-                        presearch->researching_saved);
-        secfile_insert_int(saving->file, presearch->bulbs_researched,
+                        presearch.researching_saved);
+        secfile_insert_int(saving->file, presearch.bulbs_researched,
                            "research.r%d.bulbs", i);
         technology_save(saving->file, "research.r%d.now", i,
-                        presearch->researching);
-        secfile_insert_bool(saving->file, presearch->got_tech,
+                        presearch.researching);
+        secfile_insert_bool(saving->file, presearch.got_tech,
                             "research.r%d.got_tech", i);
         /* Save technology lists as bytevector. Note that technology order is
          * saved in savefile.technology.order */
         advance_index_iterate(A_NONE, tech_id)
         {
           invs[tech_id] =
-              (research_invention_state(presearch, tech_id) == TECH_KNOWN
+              (research_invention_state(&presearch, tech_id) == TECH_KNOWN
                    ? '1'
                    : '0');
         }
@@ -7568,28 +7565,27 @@ static void sg_load_sanitycheck(struct loaddata *loading)
 #endif // FREECIV_DEBUG
 
   // Check researching technologies and goals.
-  for (auto &it : research_array) {
-    research *presearch = &it;
-    if (team_by_number(research_number(presearch)) != nullptr) {
-      if (presearch->researching != A_UNSET
-          && !is_future_tech(presearch->researching)
-          && (valid_advance_by_number(presearch->researching) == nullptr
-              || (research_invention_state(presearch, presearch->researching)
+  for (auto &presearch : research_array) {
+    if (team_by_number(research_number(&presearch)) != nullptr) {
+      if (presearch.researching != A_UNSET
+          && !is_future_tech(presearch.researching)
+          && (valid_advance_by_number(presearch.researching) == nullptr
+              || (research_invention_state(&presearch, presearch.researching)
                   != TECH_PREREQS_KNOWN))) {
         log_sg(_("%s had invalid researching technology."),
-               research_name_translation(presearch));
-        presearch->researching = A_UNSET;
+               research_name_translation(&presearch));
+        presearch.researching = A_UNSET;
       }
-      if (presearch->tech_goal != A_UNSET
-          && !is_future_tech(presearch->tech_goal)
-          && (valid_advance_by_number(presearch->tech_goal) == nullptr
-              || !research_invention_reachable(presearch,
-                                               presearch->tech_goal)
-              || (research_invention_state(presearch, presearch->tech_goal)
+      if (presearch.tech_goal != A_UNSET
+          && !is_future_tech(presearch.tech_goal)
+          && (valid_advance_by_number(presearch.tech_goal) == nullptr
+              || !research_invention_reachable(&presearch,
+                                               presearch.tech_goal)
+              || (research_invention_state(&presearch, presearch.tech_goal)
                   == TECH_KNOWN))) {
         log_sg(_("%s had invalid technology goal."),
-               research_name_translation(presearch));
-        presearch->tech_goal = A_UNSET;
+               research_name_translation(&presearch));
+        presearch.tech_goal = A_UNSET;
       }
     }
   };
