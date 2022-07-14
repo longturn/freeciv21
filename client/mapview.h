@@ -101,7 +101,7 @@ private:
   double m_scale = 1;
   std::unique_ptr<QPropertyAnimation> m_scale_animation;
   QPointer<freeciv::tileset_debugger> m_debugger = nullptr;
-  std::vector<fcwidget *> m_hidden_fcwidgets;
+  std::vector<QPointer<fcwidget>> m_hidden_fcwidgets;
 };
 
 /**************************************************************************

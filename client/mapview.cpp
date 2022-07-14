@@ -186,8 +186,10 @@ void map_view::hide_all_fcwidgets()
  */
 void map_view::show_all_fcwidgets()
 {
-  for (auto *widget : m_hidden_fcwidgets) {
-    widget->show();
+  for (auto &widget : m_hidden_fcwidgets) {
+    if (widget) {
+      widget->show();
+    }
   }
   m_hidden_fcwidgets.clear();
 }
