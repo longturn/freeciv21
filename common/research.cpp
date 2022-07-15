@@ -26,7 +26,7 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 
 #include "research.h"
 // FIXME: Dont use extern, move inside some game running class eventually
-extern std::vector<research> research_array(MAX_NUM_PLAYER_SLOTS);
+std::vector<research> research_array(MAX_NUM_PLAYER_SLOTS);
 
 struct research_player_iter {
   struct iterator vtable;
