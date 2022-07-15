@@ -470,60 +470,9 @@ Nation_type_id nation_index(const struct nation_type *pnation)
   return pnation - &nations[0];
 }
 
-/****************************************************************************
-  Nation iterator.
-****************************************************************************/
-struct nation_iter {
-  struct iterator vtable;
-  struct nation_type *p, *end;
-};
-#define NATION_ITER(p) ((struct nation_iter *) (p))
-
-/**
-   Implementation of iterator 'sizeof' function.
- */
-size_t nation_iter_sizeof() { return sizeof(struct nation_iter); }
-
-/**
-   Implementation of iterator 'next' function.
- */
-static void nation_iter_next(struct iterator *iter)
-{
-  NATION_ITER(iter)->p++;
-}
-
-/**
-   Implementation of iterator 'get' function.
- */
-static void *nation_iter_get(const struct iterator *iter)
-{
-  return NATION_ITER(iter)->p;
-}
-
-/**
-   Implementation of iterator 'valid' function.
- */
-static bool nation_iter_valid(const struct iterator *iter)
-{
-  struct nation_iter *it = NATION_ITER(iter);
-  return it->p < it->end;
-}
-
-/**
-   Implementation of iterator 'init' function.
- */
-struct iterator *nation_iter_init(struct nation_iter *it)
-{
-  it->vtable.next = nation_iter_next;
-  it->vtable.get = nation_iter_get;
-  it->vtable.valid = nation_iter_valid;
-  it->p = &nations[0];
-  it->end = &nations[0] + game.control.nation_count;
-  return ITERATOR(it);
-}
-
 /**
    Allocate resources associated with the given nation.
+   Constructor for nation_type
  */
 nation_type::nation_type()
 {
@@ -545,6 +494,7 @@ nation_type::nation_type()
 
 /**
    De-allocate resources associated with the given nation.
+   Destructor for nation_type
  */
 nation_type::~nation_type()
 {
