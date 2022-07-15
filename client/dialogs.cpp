@@ -549,7 +549,6 @@ void races_dialog::refresh()
   QTableWidgetItem *item;
   QHeaderView *header;
   int i;
-  int count;
 
   nation_tabs->clearContents();
   nation_tabs->setRowCount(0);
@@ -564,17 +563,11 @@ void races_dialog::refresh()
     if (is_nation_group_hidden(group)) {
       continue;
     }
-    count = 0;
-    // checking if group is empty
-    for (const auto &pnation : nations) {
-      {
-        if (!is_nation_playable(&pnation) || !is_nation_pickable(&pnation)
-            || !nation_is_in_group(&pnation, group)) {
-          continue;
-        }
-        count++;
-      }
-    };
+    auto count = std::count_if(
+        nations.begin(), nations.end(), [group](nation_type &n) {
+          return is_nation_playable(&n) && is_nation_pickable(&n)
+                 && nation_is_in_group(&n, group);
+        });
     if (count == 0) {
       continue;
     }
