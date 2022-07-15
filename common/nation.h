@@ -300,15 +300,12 @@ void nations_free();
 int nations_match(const struct nation_type *pnation1,
                   const struct nation_type *pnation2, bool ignore_conflicts);
 
-struct nation_iter;
-size_t nation_iter_sizeof();
-struct iterator *nation_iter_init(struct nation_iter *it);
-
 /* Iterate over nations.  This iterates over _all_ nations, including
  * unplayable ones (use is_nation_playable to filter if necessary).
  * This does not take account of the current nationset! -- on the
  * server, use allowed_nations_iterate() for that. */
 #define nations_iterate(NAME_pnation)                                       \
-  generic_iterate(struct nation_iter, struct nation_type *, NAME_pnation,   \
-                  nation_iter_sizeof, nation_iter_init)
-#define nations_iterate_end generic_iterate_end
+  for (auto &temp_nation_pointer : nations) {                               \
+    nation_type *NAME_pnation = &temp_nation_pointer;
+
+#define nations_iterate_end }
