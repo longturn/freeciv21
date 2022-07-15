@@ -54,12 +54,12 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile)
   // Contributions from real units
   unit_list_iterate(ptile->units, punit)
   {
-    Activity_type_id act = punit->activity;
-
     if (punit == nullptr) {
       // We'll account for this one later
       continue;
     }
+
+    Activity_type_id act = punit->activity;
 
     if (is_build_activity(act, ptile)) {
       int eidx = extra_index(punit->activity_target);
