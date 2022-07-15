@@ -2034,8 +2034,7 @@ void request_unit_load(struct unit *pcargo, struct unit *ptrans,
     // Sentry the unit.
     /* FIXME: Should not sentry if above loading fails (transport moved away,
      *        or filled already in server side) */
-    request_new_unit_activity_targeted(game_unit_by_number(pcargo->id),
-                                       ACTIVITY_SENTRY, nullptr);
+    request_new_unit_activity_targeted(pcargo, ACTIVITY_SENTRY, nullptr);
   }
 }
 
@@ -2060,8 +2059,7 @@ void request_unit_unload(struct unit *pcargo)
     if (unit_owner(pcargo) == client.conn.playing
         && pcargo->activity == ACTIVITY_SENTRY) {
       // Activate the unit.
-      request_new_unit_activity_targeted(game_unit_by_number(pcargo->id),
-                                         ACTIVITY_IDLE, nullptr);
+      request_new_unit_activity_targeted(pcargo, ACTIVITY_IDLE, nullptr);
     }
   }
 }
