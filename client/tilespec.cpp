@@ -3506,10 +3506,11 @@ void tileset_setup_nation_flag(struct tileset *t, struct nation_type *nation)
                   nation_rule_name(nation));
   }
 
-  sprite_vector_reserve(&t->sprites.nation_flag, nation_count());
+  sprite_vector_reserve(&t->sprites.nation_flag, game.control.nation_count);
   t->sprites.nation_flag.p[nation_index(nation)] = flag;
 
-  sprite_vector_reserve(&t->sprites.nation_shield, nation_count());
+  sprite_vector_reserve(&t->sprites.nation_shield,
+                        game.control.nation_count);
   t->sprites.nation_shield.p[nation_index(nation)] = shield;
 }
 

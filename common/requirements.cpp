@@ -612,11 +612,11 @@ int universal_number(const struct universal *source)
   case VUT_TERRFLAG:
     return source->value.terrainflag;
   case VUT_NATION:
-    return nation_number(source->value.nation);
+    return nation_index(source->value.nation);
   case VUT_NATIONGROUP:
     return nation_group_number(source->value.nationgroup);
   case VUT_NATIONALITY:
-    return nation_number(source->value.nationality);
+    return nation_index(source->value.nationality);
   case VUT_DIPLREL:
     return source->value.diplrel;
   case VUT_UTYPE:

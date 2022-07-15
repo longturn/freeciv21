@@ -228,7 +228,7 @@ static bool ruler_title_check(const struct ruler_title *pruler_title)
                 "is not a format. It should match \"%%s\"",
                 rule_name_get(&pruler_title->male),
                 nation_rule_name(pruler_title->pnation),
-                nation_number(pruler_title->pnation));
+                nation_index(pruler_title->pnation));
     } else {
       qCritical("\"%s\" male ruler title is not a format. "
                 "It should match \"%%s\"",
@@ -243,7 +243,7 @@ static bool ruler_title_check(const struct ruler_title *pruler_title)
                 "is not a format. It should match \"%%s\"",
                 rule_name_get(&pruler_title->female),
                 nation_rule_name(pruler_title->pnation),
-                nation_number(pruler_title->pnation));
+                nation_index(pruler_title->pnation));
     } else {
       qCritical("\"%s\" female ruler title is not a format. "
                 "It should match \"%%s\"",
@@ -258,7 +258,7 @@ static bool ruler_title_check(const struct ruler_title *pruler_title)
                 "(nb %d) is not a format (\"%s\"). It should match \"%%s\"",
                 rule_name_get(&pruler_title->male),
                 nation_rule_name(pruler_title->pnation),
-                nation_number(pruler_title->pnation),
+                nation_index(pruler_title->pnation),
                 name_translation_get(&pruler_title->male));
     } else {
       qCritical("Translation of \"%s\" male ruler title is not a format "
@@ -275,7 +275,7 @@ static bool ruler_title_check(const struct ruler_title *pruler_title)
                 "(nb %d) is not a format (\"%s\"). It should match \"%%s\"",
                 rule_name_get(&pruler_title->female),
                 nation_rule_name(pruler_title->pnation),
-                nation_number(pruler_title->pnation),
+                nation_index(pruler_title->pnation),
                 name_translation_get(&pruler_title->female));
     } else {
       qCritical("Translation of \"%s\" female ruler title is not a format "
@@ -326,7 +326,7 @@ struct ruler_title *government_ruler_title_new(
       qCritical("Ruler title for government \"%s\" (nb %d) and "
                 "nation \"%s\" (nb %d) was set twice.",
                 government_rule_name(pgovern), government_number(pgovern),
-                nation_rule_name(pnation), nation_number(pnation));
+                nation_rule_name(pnation), nation_index(pnation));
     } else {
       qCritical("Default ruler title for government \"%s\" (nb %d) "
                 "was set twice.",
@@ -386,7 +386,7 @@ const char *ruler_title_for_player(const struct player *pplayer, char *buf,
     qCritical("Missing title for government \"%s\" (nb %d) "
               "nation \"%s\" (nb %d).",
               government_rule_name(pgovern), government_number(pgovern),
-              nation_rule_name(pnation), nation_number(pnation));
+              nation_rule_name(pnation), nation_index(pnation));
     if (pplayer->is_male) {
       fc_snprintf(buf, buf_len, _("Mr. %s"), player_name(pplayer));
     } else {

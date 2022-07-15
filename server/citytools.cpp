@@ -470,15 +470,15 @@ const char *city_name_suggestion(struct player *pplayer, struct tile *ptile)
    * Note that nations aren't removed from the queue after they're processed.
    * New nations are just added onto the end. */
   {
-    struct nation_type *nation_list[nation_count()];
-    bool nations_selected[nation_count()];
+    struct nation_type *nation_list[game.control.nation_count];
+    bool nations_selected[game.control.nation_count];
     int queue_size = 1, i = 0, idx;
 
     memset(nations_selected, 0, sizeof(nations_selected));
     nation_list[0] = pnation;
     nations_selected[nation_index(pnation)] = true;
 
-    while (i < nation_count()) {
+    while (i < game.control.nation_count) {
       for (; i < queue_size; i++) {
         if (0 < i) {
           // Pick a random nation from the queue.
