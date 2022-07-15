@@ -588,19 +588,19 @@ static void hard_code_oblig_hard_reqs_ruleset()
 {
   /* Why this is a hard requirement: the "animal can't conquer a city"
    * rule. Assumed in unit_can_take_over(). */
-  nations_iterate(pnation)
-  {
-    if (nation_barbarian_type(pnation) == ANIMAL_BARBARIAN) {
-      oblig_hard_req_register(req_from_values(VUT_NATION, REQ_RANGE_PLAYER,
-                                              false, true, true,
-                                              nation_index(pnation)),
-                              true,
-                              N_("All action enablers for %s must require"
-                                 " a non animal player actor."),
-                              ACTRES_CONQUER_CITY, ACTRES_NONE);
+  for (const auto &pnation : nations) {
+    {
+      if (nation_barbarian_type(&pnation) == ANIMAL_BARBARIAN) {
+        oblig_hard_req_register(req_from_values(VUT_NATION, REQ_RANGE_PLAYER,
+                                                false, true, true,
+                                                nation_index(&pnation)),
+                                true,
+                                N_("All action enablers for %s must require"
+                                   " a non animal player actor."),
+                                ACTRES_CONQUER_CITY, ACTRES_NONE);
+      }
     }
-  }
-  nations_iterate_end;
+  };
 }
 
 /**

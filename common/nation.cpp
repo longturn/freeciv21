@@ -81,13 +81,13 @@ static bool nation_check(const nation_type *pnation)
  */
 struct nation_type *nation_by_translated_plural(const char *name)
 {
-  nations_iterate(pnation)
-  {
-    if (0 == strcmp(nation_plural_translation(pnation), name)) {
-      return pnation;
+  for (auto &pnation : nations) {
+    {
+      if (0 == strcmp(nation_plural_translation(&pnation), name)) {
+        return &pnation;
+      }
     }
-  }
-  nations_iterate_end;
+  };
 
   return NO_NATION_SELECTED;
 }
@@ -100,13 +100,13 @@ struct nation_type *nation_by_rule_name(const char *name)
 {
   const char *qname = Qn_(name);
 
-  nations_iterate(pnation)
-  {
-    if (0 == fc_strcasecmp(nation_rule_name(pnation), qname)) {
-      return pnation;
+  for (auto &pnation : nations) {
+    {
+      if (0 == fc_strcasecmp(nation_rule_name(&pnation), qname)) {
+        return &pnation;
+      }
     }
-  }
-  nations_iterate_end;
+  };
 
   return NO_NATION_SELECTED;
 }
@@ -1029,7 +1029,7 @@ struct iterator *nation_group_iter_init(struct nation_group_iter *it)
   return ITERATOR(it);
 }
 
-/**
+/*
    Initializes all nation set/group data.
  */
 void nation_sets_groups_init() { num_nation_sets = num_nation_groups = 0; }

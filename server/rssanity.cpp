@@ -55,7 +55,7 @@ static bool sanity_check_metadata()
 /**
    Does nation have tech initially?
  */
-static bool nation_has_initial_tech(struct nation_type *pnation,
+static bool nation_has_initial_tech(const nation_type *pnation,
                                     struct advance *tech)
 {
   int i;
@@ -819,79 +819,81 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   }
 
   // Check that all players can have their initial techs
-  nations_iterate(pnation)
-  {
-    int techi;
+  for (const auto &pnation : nations) {
+    {
+      int techi;
 
-    // Check global initial techs
-    for (techi = 0; techi < MAX_NUM_TECH_LIST
-                    && game.rgame.global_init_techs[techi] != A_LAST;
-         techi++) {
-      Tech_type_id tech = game.rgame.global_init_techs[techi];
-      struct advance *a = valid_advance_by_number(tech);
+      // Check global initial techs
+      for (techi = 0; techi < MAX_NUM_TECH_LIST
+                      && game.rgame.global_init_techs[techi] != A_LAST;
+           techi++) {
+        Tech_type_id tech = game.rgame.global_init_techs[techi];
+        struct advance *a = valid_advance_by_number(tech);
 
-      if (a == nullptr) {
+        if (a == nullptr) {
+          qCCritical(ruleset_category,
+                     "Tech %s does not exist, but is initial "
+                     "tech for everyone.",
+                     advance_rule_name(advance_by_number(tech)));
+          ok = false;
+        } else if (advance_by_number(A_NONE) != a->require[AR_ROOT]
+                   && !nation_has_initial_tech(&pnation,
+                                               a->require[AR_ROOT])) {
+          // Nation has no root_req for tech
+          qCCritical(ruleset_category,
+                     "Tech %s is initial for everyone, but %s has "
+                     "no root_req for it.",
+                     advance_rule_name(a), nation_rule_name(&pnation));
+          ok = false;
+        }
+      }
+
+      // Check national initial techs
+      for (techi = 0;
+           techi < MAX_NUM_TECH_LIST && pnation.init_techs[techi] != A_LAST;
+           techi++) {
+        Tech_type_id tech = pnation.init_techs[techi];
+        struct advance *a = valid_advance_by_number(tech);
+
+        if (a == nullptr) {
+          qCCritical(ruleset_category,
+                     "Tech %s does not exist, but is tech for %s.",
+                     advance_rule_name(advance_by_number(tech)),
+                     nation_rule_name(&pnation));
+          ok = false;
+        } else if (advance_by_number(A_NONE) != a->require[AR_ROOT]
+                   && !nation_has_initial_tech(&pnation,
+                                               a->require[AR_ROOT])) {
+          // Nation has no root_req for tech
+          qCCritical(ruleset_category,
+                     "Tech %s is initial for %s, but they have "
+                     "no root_req for it.",
+                     advance_rule_name(a), nation_rule_name(&pnation));
+          ok = false;
+        }
+      }
+
+      // Check national initial buildings
+      if (nation_barbarian_type(&pnation) != NOT_A_BARBARIAN
+          && pnation.init_buildings[0] != B_LAST) {
         qCCritical(ruleset_category,
-                   "Tech %s does not exist, but is initial "
-                   "tech for everyone.",
-                   advance_rule_name(advance_by_number(tech)));
-        ok = false;
-      } else if (advance_by_number(A_NONE) != a->require[AR_ROOT]
-                 && !nation_has_initial_tech(pnation, a->require[AR_ROOT])) {
-        // Nation has no root_req for tech
+                   "Barbarian nation %s has init_buildings set but will "
+                   "never see them",
+                   nation_rule_name(&pnation));
+      }
+
+      if (!default_gov_failed
+          && pnation.init_government == game.government_during_revolution) {
         qCCritical(ruleset_category,
-                   "Tech %s is initial for everyone, but %s has "
-                   "no root_req for it.",
-                   advance_rule_name(a), nation_rule_name(pnation));
+                   "The government form %s reserved for revolution "
+                   "handling has been set as "
+                   "initial government for %s.",
+                   government_rule_name(game.government_during_revolution),
+                   nation_rule_name(&pnation));
         ok = false;
       }
     }
-
-    // Check national initial techs
-    for (techi = 0;
-         techi < MAX_NUM_TECH_LIST && pnation->init_techs[techi] != A_LAST;
-         techi++) {
-      Tech_type_id tech = pnation->init_techs[techi];
-      struct advance *a = valid_advance_by_number(tech);
-
-      if (a == nullptr) {
-        qCCritical(ruleset_category,
-                   "Tech %s does not exist, but is tech for %s.",
-                   advance_rule_name(advance_by_number(tech)),
-                   nation_rule_name(pnation));
-        ok = false;
-      } else if (advance_by_number(A_NONE) != a->require[AR_ROOT]
-                 && !nation_has_initial_tech(pnation, a->require[AR_ROOT])) {
-        // Nation has no root_req for tech
-        qCCritical(ruleset_category,
-                   "Tech %s is initial for %s, but they have "
-                   "no root_req for it.",
-                   advance_rule_name(a), nation_rule_name(pnation));
-        ok = false;
-      }
-    }
-
-    // Check national initial buildings
-    if (nation_barbarian_type(pnation) != NOT_A_BARBARIAN
-        && pnation->init_buildings[0] != B_LAST) {
-      qCCritical(ruleset_category,
-                 "Barbarian nation %s has init_buildings set but will "
-                 "never see them",
-                 nation_rule_name(pnation));
-    }
-
-    if (!default_gov_failed
-        && pnation->init_government == game.government_during_revolution) {
-      qCCritical(ruleset_category,
-                 "The government form %s reserved for revolution "
-                 "handling has been set as "
-                 "initial government for %s.",
-                 government_rule_name(game.government_during_revolution),
-                 nation_rule_name(pnation));
-      ok = false;
-    }
-  }
-  nations_iterate_end;
+  };
 
   // Check against unit upgrade loops
   num_utypes = game.control.num_unit_types;

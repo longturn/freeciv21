@@ -61,18 +61,6 @@ void count_playable_nations();
 void send_nation_availability(struct conn_list *dest, bool nationset_change);
 void fit_nationset_to_players();
 
-/* Iterate over nations in the currently selected set.
- * Does not filter on playability or anything else. */
-#define allowed_nations_iterate(pnation)                                    \
-  nations_iterate(pnation)                                                  \
-  {                                                                         \
-    if (nation_is_in_current_set(pnation)) {
-
-#define allowed_nations_iterate_end                                         \
-  }                                                                         \
-  }                                                                         \
-  nations_iterate_end
-
 void check_player_max_rates(struct player *pplayer);
 void make_contact(struct player *pplayer1, struct player *pplayer2,
                   struct tile *ptile);

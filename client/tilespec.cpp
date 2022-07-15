@@ -1082,8 +1082,11 @@ bool tilespec_reread(const char *new_tileset_name,
   governments_iterate_end;
   extra_type_iterate(pextra) { tileset_setup_extra(tileset, pextra); }
   extra_type_iterate_end;
-  nations_iterate(pnation) { tileset_setup_nation_flag(tileset, pnation); }
-  nations_iterate_end;
+  for (auto &pnation : nations) {
+    {
+      tileset_setup_nation_flag(tileset, &pnation);
+    }
+  };
   improvement_iterate(pimprove)
   {
     tileset_setup_impr_type(tileset, pimprove);

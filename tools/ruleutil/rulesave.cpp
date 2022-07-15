@@ -1915,8 +1915,11 @@ static bool save_nations_ruleset(const char *filename, const char *name,
     comment_nations(sfile);
 
     sect_idx = 0;
-    nations_iterate(pnat) { save_nation(sfile, pnat, sect_idx++); }
-    nations_iterate_end;
+    for (auto &pnat : nations) {
+      {
+        save_nation(sfile, &pnat, sect_idx++);
+      }
+    };
   }
 
   return save_ruleset_file(sfile, filename);

@@ -621,11 +621,11 @@ static void check_players(const char *file, const char *function, int line)
   }
   players_iterate_end;
 
-  nations_iterate(pnation)
-  {
-    SANITY_CHECK(!pnation->player || pnation->player->nation == pnation);
-  }
-  nations_iterate_end;
+  for (const auto &pnation : nations) {
+    {
+      SANITY_CHECK(!pnation.player || pnation.player->nation == &pnation);
+    }
+  };
 
   teams_iterate(pteam)
   {
