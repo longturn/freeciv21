@@ -34,8 +34,7 @@ struct nation_set {
   char description[MAX_LEN_MSG];
 };
 
-static struct nation_type *nations = nullptr;
-
+std::vector<nation_type> nations;
 static int num_nation_sets;
 static struct nation_set nation_sets[MAX_NUM_NATION_SETS];
 static int num_nation_groups;
@@ -54,7 +53,7 @@ static struct nation_group nation_groups[MAX_NUM_NATION_GROUPS];
  */
 static bool nation_check(const nation_type *pnation)
 {
-  if (0 == nation_count()) {
+  if (0 == game.control.nation_count) {
     qCritical("Function called before nations setup.");
     return false;
   }
@@ -62,10 +61,11 @@ static bool nation_check(const nation_type *pnation)
     qCritical("This function has nullptr nation argument.");
     return false;
   }
-  if (pnation->item_number < 0 || pnation->item_number >= nation_count()
+  if (pnation->item_number < 0
+      || pnation->item_number >= game.control.nation_count
       || &nations[nation_index(pnation)] != pnation) {
     qCritical("This function has bad nation number %d (count %d).",
-              pnation->item_number, nation_count());
+              pnation->item_number, game.control.nation_count);
     return false;
   }
   return true;
@@ -455,34 +455,20 @@ struct nation_type *nation_by_number(const Nation_type_id nation)
   if (nation < 0 || nation >= game.control.nation_count) {
     return nullptr;
   }
-  return nations + nation;
-}
-
-/**
-   Return the nation index.
- */
-Nation_type_id nation_number(const struct nation_type *pnation)
-{
-  fc_assert_ret_val(nullptr != pnation, 0);
-  return pnation->item_number;
+  return &nations[0] + nation;
 }
 
 /**
    Return the nation index.
 
-   Currently same as nation_number(), paired with nation_count()
+   Currently same as nation_index(), paired with nation_count()
    indicates use as an array index.
  */
 Nation_type_id nation_index(const struct nation_type *pnation)
 {
   fc_assert_ret_val(nullptr != pnation, 0);
-  return pnation - nations;
+  return pnation - &nations[0];
 }
-
-/**
-   Return the number of nations.
- */
-Nation_type_id nation_count() { return game.control.nation_count; }
 
 /****************************************************************************
   Nation iterator.
@@ -531,56 +517,51 @@ struct iterator *nation_iter_init(struct nation_iter *it)
   it->vtable.next = nation_iter_next;
   it->vtable.get = nation_iter_get;
   it->vtable.valid = nation_iter_valid;
-  it->p = nations;
-  it->end = nations + nation_count();
+  it->p = &nations[0];
+  it->end = &nations[0] + game.control.nation_count;
   return ITERATOR(it);
 }
 
 /**
    Allocate resources associated with the given nation.
  */
-static void nation_init(struct nation_type *pnation)
+nation_type::nation_type()
 {
-  memset(pnation, 0, sizeof(*pnation));
-
-  pnation->item_number = pnation - nations;
-  pnation->translation_domain = nullptr;
-  pnation->leaders = nation_leader_list_new_full(nation_leader_destroy);
-  pnation->sets = nation_set_list_new();
-  pnation->groups = nation_group_list_new();
+  item_number = 0;
+  translation_domain = nullptr;
+  leaders = nation_leader_list_new_full(nation_leader_destroy);
+  sets = nation_set_list_new();
+  groups = nation_group_list_new();
 
   if (is_server()) {
-    pnation->server.default_cities =
-        nation_city_list_new_full(nation_city_destroy);
-    pnation->server.civilwar_nations = nation_list_new();
-    pnation->server.parent_nations = nation_list_new();
-    pnation->server.conflicts_with = nation_list_new();
+    server.default_cities = nation_city_list_new_full(nation_city_destroy);
+    server.civilwar_nations = nation_list_new();
+    server.parent_nations = nation_list_new();
+    server.conflicts_with = nation_list_new();
     // server.rgb starts out nullptr
-    pnation->server.traits = new trait_limits[TRAIT_COUNT];
+    server.traits = new trait_limits[TRAIT_COUNT];
   }
 }
 
 /**
    De-allocate resources associated with the given nation.
  */
-static void nation_free(struct nation_type *pnation)
+nation_type::~nation_type()
 {
-  delete[] pnation->legend;
-  delete[] pnation->translation_domain;
-  nation_leader_list_destroy(pnation->leaders);
-  nation_set_list_destroy(pnation->sets);
-  nation_group_list_destroy(pnation->groups);
+  delete[] legend;
+  delete[] translation_domain;
+  nation_leader_list_destroy(leaders);
+  nation_set_list_destroy(sets);
+  nation_group_list_destroy(groups);
 
   if (is_server()) {
-    nation_city_list_destroy(pnation->server.default_cities);
-    nation_list_destroy(pnation->server.civilwar_nations);
-    nation_list_destroy(pnation->server.parent_nations);
-    nation_list_destroy(pnation->server.conflicts_with);
-    rgbcolor_destroy(pnation->server.rgb);
-    delete[] pnation->server.traits;
+    nation_city_list_destroy(server.default_cities);
+    nation_list_destroy(server.civilwar_nations);
+    nation_list_destroy(server.parent_nations);
+    nation_list_destroy(server.conflicts_with);
+    rgbcolor_destroy(server.rgb);
+    delete[] server.traits;
   }
-
-  memset(pnation, 0, sizeof(*pnation));
 }
 
 /**
@@ -588,13 +569,11 @@ static void nation_free(struct nation_type *pnation)
  */
 void nations_alloc(int num)
 {
-  int i;
-
-  nations = new nation_type[num];
   game.control.nation_count = num;
-
-  for (i = 0; i < num; i++) {
-    nation_init(nations + i);
+  nations.resize(game.control.nation_count);
+  int i = 0;
+  for (auto &nat : nations) {
+    nat.item_number = i++;
   }
 }
 
@@ -603,18 +582,7 @@ void nations_alloc(int num)
  */
 void nations_free()
 {
-  int i;
-
-  if (nullptr == nations) {
-    return;
-  }
-
-  for (i = 0; i < game.control.nation_count; i++) {
-    nation_free(nations + i);
-  }
-
-  delete[] nations;
-  nations = nullptr;
+  nations.clear();
   game.control.nation_count = 0;
 }
 

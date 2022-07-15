@@ -890,11 +890,11 @@ void handle_edit_player_create(struct connection *pc, int tag)
     return;
   }
 
-  if (player_count() >= nation_count()) {
+  if (player_count() >= game.control.nation_count) {
     notify_conn(pc->self, nullptr, E_BAD_COMMAND, ftc_editor,
                 _("No more players can be added because there are "
                   "no available nations (%d used)."),
-                nation_count());
+                game.control.nation_count);
     return;
   }
 

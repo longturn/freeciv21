@@ -22,6 +22,7 @@
 #define NATION_NONE -1
 #define NATION_ANY -2
 
+extern std::vector<nation_type> nations;
 // Nation city (server only).
 struct nation_city;
 
@@ -139,6 +140,8 @@ struct nation_type {
       bool is_pickable;
     } client;
   };
+  nation_type();
+  ~nation_type();
 };
 
 // Nation group structure.
@@ -158,10 +161,7 @@ struct nation_group {
   };
 };
 
-// General nation accessor functions.
-Nation_type_id nation_count();
 Nation_type_id nation_index(const struct nation_type *pnation);
-Nation_type_id nation_number(const struct nation_type *pnation);
 
 struct nation_type *nation_by_number(const Nation_type_id nation);
 struct nation_type *nation_of_player(const struct player *pplayer);

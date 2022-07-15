@@ -593,7 +593,7 @@ static void hard_code_oblig_hard_reqs_ruleset()
     if (nation_barbarian_type(pnation) == ANIMAL_BARBARIAN) {
       oblig_hard_req_register(req_from_values(VUT_NATION, REQ_RANGE_PLAYER,
                                               false, true, true,
-                                              nation_number(pnation)),
+                                              nation_index(pnation)),
                               true,
                               N_("All action enablers for %s must require"
                                  " a non animal player actor."),

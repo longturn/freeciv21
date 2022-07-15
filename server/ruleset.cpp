@@ -8192,7 +8192,8 @@ static void send_ruleset_governments(struct conn_list *dest)
         const struct nation_type *pnation = ruler_title_nation(pruler_title);
 
         title.gov = government_number(g);
-        title.nation = pnation ? nation_number(pnation) : nation_count();
+        title.nation =
+            pnation ? nation_index(pnation) : game.control.nation_count;
         sz_strlcpy(title.male_title,
                    ruler_title_male_untranslated_name(pruler_title));
         sz_strlcpy(title.female_title,
@@ -8241,7 +8242,7 @@ static void send_ruleset_nations(struct conn_list *dest)
 
   nations_iterate(n)
   {
-    packet.id = nation_number(n);
+    packet.id = nation_index(n);
     if (n->translation_domain == nullptr) {
       packet.translation_domain[0] = '\0';
     } else {

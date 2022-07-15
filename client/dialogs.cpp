@@ -664,7 +664,7 @@ void races_dialog::set_index(int index)
       item->setFont(f);
     }
     item->setData(Qt::DecorationRole, *s);
-    item->setData(Qt::UserRole, nation_number(pnation));
+    item->setData(Qt::UserRole, nation_index(pnation));
     item->setText(nation_adjective_translation(pnation));
     selected_nation_tabs->setItem(i, 0, item);
   }

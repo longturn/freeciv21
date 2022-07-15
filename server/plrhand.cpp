@@ -1101,7 +1101,7 @@ static void package_player_common(struct player *plr,
   sz_strlcpy(packet->name, player_name(plr));
   sz_strlcpy(packet->username, plr->username);
   packet->unassigned_user = plr->unassigned_user;
-  packet->nation = plr->nation ? nation_number(plr->nation) : NATION_NONE;
+  packet->nation = plr->nation ? nation_index(plr->nation) : NATION_NONE;
   packet->is_male = plr->is_male;
   packet->team = plr->team ? team_number(plr->team) : team_count();
   packet->is_ready = plr->is_ready;
@@ -2269,9 +2269,9 @@ struct nation_type *pick_a_nation(const struct nation_list *choices,
     AVAILABLE,
     PREFERRED,
     UNWANTED
-  } nations_used[nation_count()],
+  } nations_used[game.control.nation_count],
       looking_for;
-  int match[nation_count()], pick, idx;
+  int match[game.control.nation_count], pick, idx;
   int num_avail_nations = 0, num_pref_nations = 0;
 
   /* Values of nations_used:
@@ -2309,9 +2309,9 @@ struct nation_type *pick_a_nation(const struct nation_list *choices,
                               ignore_conflicts);
         if (x < 0) {
           log_debug("Nations '%s' (nb %d) and '%s' (nb %d) are in conflict.",
-                    nation_rule_name(pnation), nation_number(pnation),
+                    nation_rule_name(pnation), nation_index(pnation),
                     nation_rule_name(nation_of_player(pplayer)),
-                    nation_number(nation_of_player(pplayer)));
+                    nation_index(nation_of_player(pplayer)));
           nations_used[idx] = UNWANTED;
           match[idx] -= x * 100;
           break;
@@ -2451,7 +2451,7 @@ static void send_nation_availability_real(struct conn_list *dest,
 {
   struct packet_nation_availability packet;
 
-  packet.ncount = nation_count();
+  packet.ncount = game.control.nation_count;
   packet.nationset_change = nationset_change;
   nations_iterate(pnation)
   {

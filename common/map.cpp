@@ -1468,7 +1468,7 @@ bool startpos_pack(const struct startpos *psp,
   BV_CLR_ALL(packet->nations);
 
   for (const auto *pnation : qAsConst(*psp->nations)) {
-    BV_SET(packet->nations, nation_number(pnation));
+    BV_SET(packet->nations, nation_index(pnation));
   }
   return true;
 }
@@ -1491,7 +1491,7 @@ bool startpos_unpack(struct startpos *psp,
   }
   nations_iterate(pnation)
   {
-    if (BV_ISSET(packet->nations, nation_number(pnation))) {
+    if (BV_ISSET(packet->nations, nation_index(pnation))) {
       psp->nations->insert(pnation);
     }
   }
