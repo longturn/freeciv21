@@ -65,7 +65,6 @@ public:
   explicit fcwidget(QWidget *parent = nullptr) : QFrame(parent) {}
 
   virtual void update_menu() = 0;
-  bool was_destroyed;
 };
 
 /**************************************************************************
