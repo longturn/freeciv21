@@ -2196,59 +2196,62 @@ void update_nations_with_startpos()
 {
   if (!game_was_started() && 0 < map_startpos_count()) {
     // Restrict nations to those for which start positions are defined.
-    nations_iterate(pnation)
-    {
-      fc_assert_action_msg(
-          nullptr == pnation->player,
-          if (pnation->player->nation == pnation) {
-            /* At least assignment is consistent. Leave nation assigned,
-             * and make sure that nation is also marked pickable. */
-            pnation->server.no_startpos = false;
-            continue;
-          } else if (nullptr != pnation->player->nation) {
-            /* Not consistent. Just initialize the pointer and hope for the
-             * best. */
-            pnation->player->nation->player = nullptr;
-            pnation->player = nullptr;
-          } else {
-            /* Not consistent. Just initialize the pointer and hope for the
-             * best. */
-            pnation->player = nullptr;
-          },
-          "Player assigned to nation before %s()!", __FUNCTION__);
+    for (auto &pnation : nations) {
+      {
+        fc_assert_action_msg(
+            nullptr == pnation.player,
+            if (pnation.player->nation == &pnation) {
+              /* At least assignment is consistent. Leave nation assigned,
+               * and make sure that nation is also marked pickable. */
+              pnation.server.no_startpos = false;
+              continue;
+            } else if (nullptr != pnation.player->nation) {
+              /* Not consistent. Just initialize the pointer and hope for the
+               * best. */
+              pnation.player->nation->player = nullptr;
+              pnation.player = nullptr;
+            } else {
+              /* Not consistent. Just initialize the pointer and hope for the
+               * best. */
+              pnation.player = nullptr;
+            },
+            "Player assigned to nation before %s()!", __FUNCTION__);
 
-      if (nation_barbarian_type(pnation) != NOT_A_BARBARIAN) {
-        /* Always allow land and sea barbarians regardless of start
-         * positions. */
-        pnation->server.no_startpos = false;
-      } else {
-        /* Restrict the set of nations offered to players, based on
-         * start positions.
-         * If there are no start positions for a nation, remove it from the
-         * available set. */
-        pnation->server.no_startpos = true;
-        for (auto *psp : qAsConst(*wld.map.startpos_table)) {
-          if (psp->exclude) {
-            continue;
-          }
-          if (startpos_nation_allowed(psp, pnation)) {
-            /* There is at least one start position that allows this nation,
-             * so allow it to be picked.
-             * (Depending on what nations players actually pick, it's not
-             * guaranteed that the server can always find a match between
-             * nations in this subset and start positions, in which case the
-             * server may create mismatches.) */
-            pnation->server.no_startpos = false;
-            break;
+        if (nation_barbarian_type(&pnation) != NOT_A_BARBARIAN) {
+          /* Always allow land and sea barbarians regardless of start
+           * positions. */
+          pnation.server.no_startpos = false;
+        } else {
+          /* Restrict the set of nations offered to players, based on
+           * start positions.
+           * If there are no start positions for a nation, remove it from the
+           * available set. */
+          pnation.server.no_startpos = true;
+          for (auto *psp : qAsConst(*wld.map.startpos_table)) {
+            if (psp->exclude) {
+              continue;
+            }
+            if (startpos_nation_allowed(psp, &pnation)) {
+              /* There is at least one start position that allows this
+               * nation, so allow it to be picked. (Depending on what nations
+               * players actually pick, it's not guaranteed that the server
+               * can always find a match between nations in this subset and
+               * start positions, in which case the server may create
+               * mismatches.) */
+              pnation.server.no_startpos = false;
+              break;
+            }
           }
         }
       }
-    }
-    nations_iterate_end;
+    };
   } else {
     // Not restricting nations by start positions.
-    nations_iterate(pnation) { pnation->server.no_startpos = false; }
-    nations_iterate_end;
+    for (auto &pnation : nations) {
+      {
+        pnation.server.no_startpos = false;
+      }
+    };
   }
 }
 
@@ -2576,16 +2579,19 @@ static void generate_players()
       struct nation_list *candidates = nation_list_new();
       int n = 0;
 
-      allowed_nations_iterate(pnation)
-      {
-        if (is_nation_playable(pnation) && client_can_pick_nation(pnation)
-            && nullptr == pnation->player
-            && (nation_leader_by_name(pnation, player_name(pplayer)))) {
-          nation_list_append(candidates, pnation);
-          n++;
+      for (auto &pnation : nations) {
+        if (nation_is_in_current_set(&pnation)) {
+          {
+            if (is_nation_playable(&pnation)
+                && client_can_pick_nation(&pnation)
+                && nullptr == pnation.player
+                && (nation_leader_by_name(&pnation, player_name(pplayer)))) {
+              nation_list_append(candidates, &pnation);
+              n++;
+            }
+          }
         }
-      }
-      allowed_nations_iterate_end;
+      };
       if (n > 0) {
         player_set_nation_full(pplayer,
                                nation_list_get(candidates, fc_rand(n)));
@@ -2650,35 +2656,37 @@ static void generate_players()
       min = max;
       i = 0;
 
-      allowed_nations_iterate(pnation)
-      {
-        if (!is_nation_playable(pnation) || nullptr != pnation->player) {
-          // Not available.
-          continue;
-        }
+      for (auto &pnation : nations) {
+        if (nation_is_in_current_set(&pnation)) {
+          {
+            if (!is_nation_playable(&pnation) || nullptr != pnation.player) {
+              // Not available.
+              continue;
+            }
 
-        it = hash.constBegin();
-        while (it != hash.constEnd()) {
-          if (!startpos_nation_allowed(it.key(), pnation)) {
-            ++it;
-            continue;
-          }
+            it = hash.constBegin();
+            while (it != hash.constEnd()) {
+              if (!startpos_nation_allowed(it.key(), &pnation)) {
+                ++it;
+                continue;
+              }
 
-          if (it.value() < min) {
-            /* Pick this nation, as fewer nations already in the game
-             * can use this start position. */
-            picked = pnation;
-            min = it.value();
-            i = 1;
-          } else if (it.value() == min && 0 == fc_rand(++i)) {
-            /* More than one nation is equally desirable. Pick one at
-             * random. */
-            picked = pnation;
+              if (it.value() < min) {
+                /* Pick this nation, as fewer nations already in the game
+                 * can use this start position. */
+                picked = &pnation;
+                min = it.value();
+                i = 1;
+              } else if (it.value() == min && 0 == fc_rand(++i)) {
+                /* More than one nation is equally desirable. Pick one at
+                 * random. */
+                picked = &pnation;
+              }
+              ++it;
+            }
           }
-          ++it;
         }
-      }
-      allowed_nations_iterate_end;
+      };
 
       if (NO_NATION_SELECTED != picked) {
         player_set_nation_full(pplayer, picked);

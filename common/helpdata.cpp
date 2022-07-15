@@ -692,7 +692,6 @@ void boot_help_texts(const nation_set *nations_to_show,
   struct section_file *sf;
   QString filename;
   struct help_item *pitem;
-  int i;
   struct section_list *sec;
   const char **paras;
   size_t npara;
@@ -734,7 +733,7 @@ void boot_help_texts(const nation_set *nations_to_show,
 
         gen_str += level;
 
-        for (i = 2; help_type_names[i]; i++) {
+        for (int i = 2; help_type_names[i]; i++) {
           if (strcmp(gen_str, help_type_names[i]) == 0) {
             current_type = static_cast<help_page_type>(i);
             break;
@@ -979,19 +978,19 @@ void boot_help_texts(const nation_set *nations_to_show,
             }
           } break;
           case HELP_NATIONS:
-            nations_iterate(pnation)
-            {
-              if (nations_to_show
-                  && nation_is_in_set(pnation, nations_to_show)) {
-                pitem = new_help_item(current_type);
-                fc_snprintf(name, sizeof(name), "%*s%s", level, "",
-                            nation_plural_translation(pnation));
-                pitem->topic = qstrdup(name);
-                pitem->text = qstrdup(empty);
-                category_nodes.append(pitem);
+            for (const auto &pnation : nations) {
+              {
+                if (nations_to_show
+                    && nation_is_in_set(&pnation, nations_to_show)) {
+                  pitem = new_help_item(current_type);
+                  fc_snprintf(name, sizeof(name), "%*s%s", level, "",
+                              nation_plural_translation(&pnation));
+                  pitem->topic = qstrdup(name);
+                  pitem->text = qstrdup(empty);
+                  category_nodes.append(pitem);
+                }
               }
-            }
-            nations_iterate_end;
+            };
             break;
           case HELP_MULTIPLIER:
             multipliers_iterate(pmul)
@@ -1072,7 +1071,7 @@ void boot_help_texts(const nation_set *nations_to_show,
       paras = secfile_lookup_str_vec(sf, &npara, "%s.text", sec_name);
 
       long_buffer[0] = '\0';
-      for (i = 0; i < npara; i++) {
+      for (int i = 0; i < npara; i++) {
         bool inserted;
         const char *para = paras[i];
 
@@ -1562,26 +1561,26 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
 
   /* Assume no-one will set the same building in both global and nation
    * init_buildings... */
-  nations_iterate(pnation)
-  {
-    // Avoid mentioning nations not in current set.
-    if (nations_to_show && !nation_is_in_set(pnation, nations_to_show)) {
-      continue;
-    }
-    for (int n : pnation->init_buildings) {
-      if (n == B_LAST) {
-        break;
-      } else if (improvement_by_number(n) == pimprove) {
-        cat_snprintf(buf, bufsz,
-                     // TRANS: %s is a nation plural
-                     _("* The %s start with this improvement in their "
-                       "first city.\n"),
-                     nation_plural_translation(pnation));
-        break;
+  for (const auto &pnation : nations) {
+    {
+      // Avoid mentioning nations not in current set.
+      if (nations_to_show && !nation_is_in_set(&pnation, nations_to_show)) {
+        continue;
+      }
+      for (int n : pnation.init_buildings) {
+        if (n == B_LAST) {
+          break;
+        } else if (improvement_by_number(n) == pimprove) {
+          cat_snprintf(buf, bufsz,
+                       // TRANS: %s is a nation plural
+                       _("* The %s start with this improvement in their "
+                         "first city.\n"),
+                       nation_plural_translation(&pnation));
+          break;
+        }
       }
     }
-  }
-  nations_iterate_end;
+  };
 
   if (improvement_has_flag(pimprove, IF_SAVE_SMALL_WONDER)) {
     cat_snprintf(buf, bufsz,
@@ -1853,31 +1852,31 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                 "game.\n"));
     }
   }
-  nations_iterate(pnation)
-  {
-    int i, count = 0;
+  for (const auto &pnation : nations) {
+    {
+      int i, count = 0;
 
-    // Avoid mentioning nations not in current set.
-    if (nations_to_show && !nation_is_in_set(pnation, nations_to_show)) {
-      continue;
-    }
-    for (i = 0; i < MAX_NUM_UNIT_LIST; i++) {
-      if (!pnation->init_units[i]) {
-        break;
-      } else if (pnation->init_units[i] == utype) {
-        count++;
+      // Avoid mentioning nations not in current set.
+      if (nations_to_show && !nation_is_in_set(&pnation, nations_to_show)) {
+        continue;
+      }
+      for (i = 0; i < MAX_NUM_UNIT_LIST; i++) {
+        if (!pnation.init_units[i]) {
+          break;
+        } else if (pnation.init_units[i] == utype) {
+          count++;
+        }
+      }
+      if (count > 0) {
+        cat_snprintf(buf, bufsz,
+                     // TRANS: %s is a nation plural
+                     PL_("* The %s start the game with %d of these units.\n",
+                         "* The %s start the game with %d of these units.\n",
+                         count),
+                     nation_plural_translation(&pnation), count);
       }
     }
-    if (count > 0) {
-      cat_snprintf(buf, bufsz,
-                   // TRANS: %s is a nation plural
-                   PL_("* The %s start the game with %d of these units.\n",
-                       "* The %s start the game with %d of these units.\n",
-                       count),
-                   nation_plural_translation(pnation), count);
-    }
-  }
-  nations_iterate_end;
+  };
   {
     QVector<QString> types;
     types.reserve(utype_count());
@@ -2995,28 +2994,26 @@ void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
 
   /* Assume no-one will set the same tech in both global and nation
    * init_tech... */
-  nations_iterate(pnation)
-  {
-    int j;
-
-    // Avoid mentioning nations not in current set.
-    if (nations_to_show && !nation_is_in_set(pnation, nations_to_show)) {
-      continue;
-    }
-    for (j = 0; j < MAX_NUM_TECH_LIST; j++) {
-      if (pnation->init_techs[j] == A_LAST) {
-        break;
-      } else if (pnation->init_techs[j] == i) {
-        cat_snprintf(buf, bufsz,
-                     // TRANS: %s is a nation plural
-                     _("* The %s start the game with knowledge of this "
-                       "technology.\n"),
-                     nation_plural_translation(pnation));
-        break;
+  for (const auto &pnation : nations) {
+    {
+      // Avoid mentioning nations not in current set.
+      if (nations_to_show && !nation_is_in_set(&pnation, nations_to_show)) {
+        continue;
+      }
+      for (int j = 0; j < MAX_NUM_TECH_LIST; j++) {
+        if (pnation.init_techs[j] == A_LAST) {
+          break;
+        } else if (pnation.init_techs[j] == i) {
+          cat_snprintf(buf, bufsz,
+                       // TRANS: %s is a nation plural
+                       _("* The %s start the game with knowledge of this "
+                         "technology.\n"),
+                       nation_plural_translation(&pnation));
+          break;
+        }
       }
     }
-  }
-  nations_iterate_end;
+  };
 
   // Explain the effects of root_reqs.
   {
