@@ -1222,8 +1222,6 @@ static void compat_load_020600(struct loaddata *loading,
   secfile_insert_str_vec(loading->file, modname, DS_LAST,
                          "savefile.diplstate_type_vector");
   delete[] modname;
-  secfile_insert_str_vec(loading->file, modname, DS_LAST,
-                         "savefile.diplstate_type_vector");
 
   /* Fix save games from legacy freeciv versions with a bug that made it view
    * "Never met" as closer than "Peace" or "Alliance". */
