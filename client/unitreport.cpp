@@ -472,11 +472,7 @@ void units_reports::drop()
 /**
    Called when close button was pressed
  */
-void units_reports::update_menu()
-{
-  was_destroyed = true;
-  drop();
-}
+void units_reports::update_menu() { drop(); }
 
 /**
    Initiazlizes layout ( layout needs to be changed after adding units )

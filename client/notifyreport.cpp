@@ -50,7 +50,6 @@ notify_dialog::notify_dialog(const char *caption, const char *headline,
   queen()->mapview_wdg->find_place(queen()->mapview_wdg->width() - x - 4, 4,
                                    x, y, x, y, 0);
   move(x, y);
-  was_destroyed = false;
 }
 
 /**
@@ -129,7 +128,6 @@ void notify_dialog::mousePressEvent(QMouseEvent *event)
 {
   cursor = event->globalPos() - geometry().topLeft();
   if (event->button() == Qt::RightButton) {
-    was_destroyed = true;
     close();
   }
 }
@@ -155,22 +153,12 @@ void notify_dialog::mouseReleaseEvent(QMouseEvent *event)
 /**
    Called when close button was pressed
  */
-void notify_dialog::update_menu()
-{
-  was_destroyed = true;
-  destroy();
-}
+void notify_dialog::update_menu() { destroy(); }
 
 /**
-   Destructor for notify dialog, notice that somehow object is not destroyed
-   immediately, so it can be still visible for parent, check boolean
-   was_destroyed if u suspect it could not be destroyed yet
+   Destructor for notify dialog
  */
-notify_dialog::~notify_dialog()
-{
-  was_destroyed = true;
-  destroy();
-}
+notify_dialog::~notify_dialog() { destroy(); }
 
 /**
    Restarts all notify dialogs
