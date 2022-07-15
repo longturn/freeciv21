@@ -6083,6 +6083,7 @@ static bool sg_load_player_unit(struct loaddata *loading, struct player *plr,
             delete[] punit->orders.list;
             punit->orders.list = nullptr;
             punit->has_orders = false;
+            break;
           }
         } else if (order->order != ORDER_PERFORM_ACTION) {
           if (order_sub_tgt != -1) {
