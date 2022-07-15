@@ -137,31 +137,34 @@ struct ai_settler {
 #endif // FREECIV_DEBUG
 };
 
-struct cityresult {
+struct cityresult final {
+  cityresult(struct tile *tile);
+  ~cityresult();
+
   struct tile *tile;
-  int total;  // total value of position
-  int result; // amortized and adjusted total value
-  int corruption, waste;
-  bool overseas;  // have to use boat to get there
-  bool virt_boat; /* virtual boat was used in search,
-                   * so need to build one */
+  int total = 0;     // total value of position
+  int result = -666; // amortized and adjusted total value
+  int corruption = 0, waste = 0;
+  bool overseas = false;  // have to use boat to get there
+  bool virt_boat = false; /* virtual boat was used in search,
+                           * so need to build one */
 
   struct {
-    struct tile_data_cache *tdc; /* values of city center; link to the data
-                                  * in tdc_hash. */
+    struct tile_data_cache *tdc = nullptr; /* values of city center; link to
+                                            * the data in tdc_hash. */
   } city_center;
 
   struct {
-    struct tile *tile;           // best other tile
-    int cindex;                  // city-relative index for other tile
-    struct tile_data_cache *tdc; /* value of best other tile; link to the
-                                  * data in tdc_hash. */
+    struct tile *tile = nullptr; // best other tile
+    int cindex = false;          // city-relative index for other tile
+    struct tile_data_cache *tdc = nullptr; /* value of best other tile; link
+                                            * to the data in tdc_hash. */
   } best_other;
 
-  int remaining; // value of all other tiles
+  int remaining = 0; // value of all other tiles
 
   // Save the result for print_citymap().
-  QHash<int, const struct tile_data_cache *> *tdc_hash;
+  QHash<int, const struct tile_data_cache *> tdc_hash;
 
   int city_radius_sq; // current squared radius of the city
 };
@@ -171,79 +174,45 @@ tdc_plr_get(struct ai_type *ait, struct player *plr, int tindex);
 static void tdc_plr_set(struct ai_type *ait, struct player *plr, int tindex,
                         const struct tile_data_cache *tdcache);
 
-static struct cityresult *cityresult_new(struct tile *ptile);
-static void cityresult_destroy(struct cityresult *result);
-
-static struct cityresult *cityresult_fill(struct ai_type *ait,
-                                          struct player *pplayer,
-                                          struct tile *center);
-static bool food_starvation(const struct cityresult *result);
-static bool shield_starvation(const struct cityresult *result);
+static std::unique_ptr<cityresult> cityresult_fill(struct ai_type *ait,
+                                                   struct player *pplayer,
+                                                   struct tile *center);
+static bool food_starvation(const std::unique_ptr<cityresult> &result);
+static bool shield_starvation(const std::unique_ptr<cityresult> &result);
 static int result_defense_bonus(struct player *pplayer,
-                                const struct cityresult *result);
-static int naval_bonus(const struct cityresult *result);
+                                const std::unique_ptr<cityresult> &result);
+static int naval_bonus(const std::unique_ptr<cityresult> &result);
 static void print_cityresult(struct player *pplayer,
-                             const struct cityresult *cr);
-struct cityresult *city_desirability(struct ai_type *ait,
-                                     struct player *pplayer,
-                                     struct unit *punit, struct tile *ptile);
-static struct cityresult *settler_map_iterate(struct ai_type *ait,
-                                              struct pf_parameter *parameter,
+                             const std::unique_ptr<cityresult> &cr);
+std::unique_ptr<cityresult> city_desirability(struct ai_type *ait,
+                                              struct player *pplayer,
                                               struct unit *punit,
-                                              int boat_cost);
-static struct cityresult *find_best_city_placement(struct ai_type *ait,
-                                                   struct unit *punit,
-                                                   bool look_for_boat,
-                                                   bool use_virt_boat);
+                                              struct tile *ptile);
+static std::unique_ptr<cityresult>
+settler_map_iterate(struct ai_type *ait, struct pf_parameter *parameter,
+                    struct unit *punit, int boat_cost);
+static std::unique_ptr<cityresult>
+find_best_city_placement(struct ai_type *ait, struct unit *punit,
+                         bool look_for_boat, bool use_virt_boat);
 static bool dai_do_build_city(struct ai_type *ait, struct player *pplayer,
                               struct unit *punit);
 
 /**
    Allocated a city result.
  */
-static struct cityresult *cityresult_new(struct tile *ptile)
+cityresult::cityresult(struct tile *ptile)
+    : tile(ptile), city_radius_sq(game.info.init_city_radius_sq)
 {
-  struct cityresult *result;
-
-  fc_assert_ret_val(ptile != nullptr, nullptr);
-
-  result = new cityresult[1]();
-  result->tile = ptile;
-  result->total = 0;
-  result->result = -666;
-  result->corruption = 0;
-  result->waste = 0;
-  result->overseas = false;
-  result->virt_boat = false;
-
-  // city centre
-  result->city_center.tdc = nullptr;
-
-  // first worked tile
-  result->best_other.tile = nullptr;
-  result->best_other.tdc = nullptr;
-  result->best_other.cindex = 0;
-
-  result->remaining = 0;
-  result->tdc_hash = new QHash<int, const struct tile_data_cache *>;
-  result->city_radius_sq = game.info.init_city_radius_sq;
-
-  return result;
+  fc_assert_action(ptile != nullptr, throw std::bad_alloc());
 }
 
 /**
    Destroy a city result.
  */
-static void cityresult_destroy(struct cityresult *result)
+cityresult::~cityresult()
 {
-  if (result != nullptr) {
-    if (result->tdc_hash != nullptr) {
-      for (const auto *ptdc : qAsConst(*result->tdc_hash)) {
-        delete[] ptdc;
-      }
-      delete result->tdc_hash;
-    }
-    delete[] result;
+  for (const auto &ptdc : qAsConst(tdc_hash)) {
+    delete[] ptdc;
   }
 }
 
@@ -255,9 +224,9 @@ static void cityresult_destroy(struct cityresult *result)
 
    We always return valid other_x and other_y if total > 0.
  */
-static struct cityresult *cityresult_fill(struct ai_type *ait,
-                                          struct player *pplayer,
-                                          struct tile *center)
+static std::unique_ptr<cityresult> cityresult_fill(struct ai_type *ait,
+                                                   struct player *pplayer,
+                                                   struct tile *center)
 {
   struct city *pcity = tile_city(center);
   struct government *curr_govt = government_of_player(pplayer);
@@ -267,7 +236,6 @@ static struct cityresult *cityresult_fill(struct ai_type *ait,
   bool handicap = has_handicap(pplayer, H_MAP);
   struct adv_data *adv = adv_data_get(pplayer, nullptr);
   struct ai_plr *ai = dai_plr_data_get(ait, pplayer, nullptr);
-  struct cityresult *result;
 
   fc_assert_ret_val(ai != nullptr, nullptr);
   fc_assert_ret_val(center != nullptr, nullptr);
@@ -275,7 +243,7 @@ static struct cityresult *cityresult_fill(struct ai_type *ait,
   pplayer->government = adv->goal.govt.gov;
 
   // Create a city result and set default values.
-  result = cityresult_new(center);
+  auto result = std::make_unique<cityresult>(center);
 
   if (!pcity) {
     pcity = create_city_virtual(pplayer, result->tile, "Virtuaville");
@@ -370,10 +338,10 @@ static struct cityresult *cityresult_fill(struct ai_type *ait,
       result->remaining += ptdc->sum / GROWTH_POTENTIAL_DEEMPHASIS;
     }
 
-    if (result->tdc_hash->contains(cindex)) {
-      delete[] result->tdc_hash->value(cindex);
+    if (result->tdc_hash.contains(cindex)) {
+      delete[] result->tdc_hash.value(cindex);
     }
-    result->tdc_hash->insert(cindex, ptdc);
+    result->tdc_hash.insert(cindex, ptdc);
   }
   city_tile_iterate_index_end;
 
@@ -540,7 +508,7 @@ static void tdc_plr_set(struct ai_type *ait, struct player *plr, int tindex,
 /**
    Check if a city on this location would starve.
  */
-static bool food_starvation(const struct cityresult *result)
+static bool food_starvation(const std::unique_ptr<cityresult> &result)
 {
   /* Avoid starvation: We must have enough food to grow.
    *   Note: this does not handle the case of a newly founded city breaking
@@ -555,7 +523,7 @@ static bool food_starvation(const struct cityresult *result)
 /**
    Check if a city on this location would lack shields.
  */
-static bool shield_starvation(const struct cityresult *result)
+static bool shield_starvation(const std::unique_ptr<cityresult> &result)
 {
   // Avoid resource starvation.
   return (result->city_center.tdc->shield
@@ -568,7 +536,7 @@ static bool shield_starvation(const struct cityresult *result)
    given % of the defense bonus %.
  */
 static int result_defense_bonus(struct player *pplayer,
-                                const struct cityresult *result)
+                                const std::unique_ptr<cityresult> &result)
 {
   // Defense modification (as tie breaker mostly)
   int defense_bonus = 10 + tile_terrain(result->tile)->defense_bonus / 10;
@@ -598,7 +566,7 @@ static int result_defense_bonus(struct player *pplayer,
 /**
    Add bonus for coast.
  */
-static int naval_bonus(const struct cityresult *result)
+static int naval_bonus(const std::unique_ptr<cityresult> &result)
 {
   bool ocean_adjacent = is_terrain_class_near_tile(result->tile, TC_OCEAN);
 
@@ -614,12 +582,11 @@ static int naval_bonus(const struct cityresult *result)
    For debugging, print the city result table.
  */
 static void print_cityresult(struct player *pplayer,
-                             const struct cityresult *cr)
+                             const std::unique_ptr<cityresult> &cr)
 {
   int tiles = city_map_tiles(cr->city_radius_sq);
   const struct tile_data_cache *ptdc;
 
-  fc_assert_ret(cr->tdc_hash != nullptr);
   fc_assert_ret(tiles > 0);
 
   QScopedArrayPointer<int> city_map_reserved(new int[tiles]());
@@ -629,7 +596,7 @@ static void print_cityresult(struct player *pplayer,
 
   city_map_iterate(cr->city_radius_sq, cindex, x, y)
   {
-    ptdc = cr->tdc_hash->value(cindex, nullptr);
+    ptdc = cr->tdc_hash.value(cindex, nullptr);
     fc_assert_ret(ptdc);
     city_map_reserved[cindex] = ptdc->reserved;
     city_map_food[cindex] = ptdc->reserved;
@@ -682,13 +649,14 @@ static void print_cityresult(struct player *pplayer,
    ensures that we do not build cities too close to each other. Returns
    nullptr if no place was found.
  */
-struct cityresult *city_desirability(struct ai_type *ait,
-                                     struct player *pplayer,
-                                     struct unit *punit, struct tile *ptile)
+std::unique_ptr<cityresult> city_desirability(struct ai_type *ait,
+                                              struct player *pplayer,
+                                              struct unit *punit,
+                                              struct tile *ptile)
 {
   struct city *pcity = tile_city(ptile);
   struct adv_data *ai = adv_data_get(pplayer, nullptr);
-  struct cityresult *cr = nullptr;
+  std::unique_ptr<cityresult> cr = nullptr;
 
   fc_assert_ret_val(punit, nullptr);
   fc_assert_ret_val(pplayer, nullptr);
@@ -737,7 +705,6 @@ struct cityresult *city_desirability(struct ai_type *ait,
   /*** Alright: Now consider building a new city ***/
 
   if (food_starvation(cr) || shield_starvation(cr)) {
-    cityresult_destroy(cr);
     return nullptr;
   }
 
@@ -763,12 +730,11 @@ struct cityresult *city_desirability(struct ai_type *ait,
 
    TODO: Transparently check if we should add ourselves to an existing city.
  */
-static struct cityresult *settler_map_iterate(struct ai_type *ait,
-                                              struct pf_parameter *parameter,
-                                              struct unit *punit,
-                                              int boat_cost)
+static std::unique_ptr<cityresult>
+settler_map_iterate(struct ai_type *ait, struct pf_parameter *parameter,
+                    struct unit *punit, int boat_cost)
 {
-  struct cityresult *cr = nullptr, *best = nullptr;
+  std::unique_ptr<cityresult> best = nullptr;
   int best_turn = 0; // Which turn we found the best fit
   struct player *pplayer = unit_owner(punit);
   struct pf_map *pfm;
@@ -794,7 +760,7 @@ static struct cityresult *settler_map_iterate(struct ai_type *ait,
     }
 
     // Calculate worth
-    cr = city_desirability(ait, pplayer, punit, ptile);
+    auto cr = city_desirability(ait, pplayer, punit, ptile);
 
     // Check if actually found something
     if (!cr) {
@@ -814,19 +780,13 @@ static struct cityresult *settler_map_iterate(struct ai_type *ait,
 
     // Find best spot
     if ((!best && cr->result > 0) || (best && cr->result > best->result)) {
-      // Destroy the old 'best' value.
-      cityresult_destroy(best);
       // save the new 'best' value.
-      best = cr;
+      best = std::move(cr);
       cr = nullptr;
       best_turn = turns;
 
       log_debug("settler map search (search): (%d,%d) %d",
                 TILE_XY(best->tile), best->result);
-    } else {
-      // Destroy the unused result.
-      cityresult_destroy(cr);
-      cr = nullptr;
     }
 
     /* Can we terminate early? We have a 'good enough' spot, and
@@ -865,15 +825,14 @@ static struct cityresult *settler_map_iterate(struct ai_type *ait,
 
    Returns the better cityresult or nullptr if no result was found.
  */
-static struct cityresult *find_best_city_placement(struct ai_type *ait,
-                                                   struct unit *punit,
-                                                   bool look_for_boat,
-                                                   bool use_virt_boat)
+static std::unique_ptr<cityresult>
+find_best_city_placement(struct ai_type *ait, struct unit *punit,
+                         bool look_for_boat, bool use_virt_boat)
 {
   struct pf_parameter parameter;
   struct player *pplayer = unit_owner(punit);
   struct unit *ferry = nullptr;
-  struct cityresult *cr1 = nullptr, *cr2 = nullptr;
+  std::unique_ptr<cityresult> cr1 = nullptr, cr2 = nullptr;
 
   fc_assert_ret_val(is_ai(pplayer), nullptr);
   // Only virtual units may use virtual boats:
@@ -968,10 +927,8 @@ static struct cityresult *find_best_city_placement(struct ai_type *ait,
   /* We want an overseas city and a city on the current continent - select
    * the best! */
   if (cr1->result > cr2->result) {
-    cityresult_destroy(cr2);
     return cr1;
   } else {
-    cityresult_destroy(cr1);
     return cr2;
   }
 }
@@ -1091,11 +1048,9 @@ BUILD_CITY:
   }
 
   if (unit_is_cityfounder(punit)) {
-    struct cityresult *result;
-
     // may use a boat:
     TIMING_LOG(AIT_SETTLERS, TIMER_START);
-    result = find_best_city_placement(ait, punit, true, false);
+    auto result = find_best_city_placement(ait, punit, true, false);
     TIMING_LOG(AIT_SETTLERS, TIMER_STOP);
     if (result && result->result > best_impr) {
       UNIT_LOG(LOG_DEBUG, punit, "city want %d", result->result);
@@ -1119,8 +1074,6 @@ BUILD_CITY:
       }
       punit->goto_tile = result->tile; // TMP
 
-      cityresult_destroy(result);
-
       /*** Go back to and found a city ***/
       path = PFPath();
       goto BUILD_CITY;
@@ -1128,10 +1081,6 @@ BUILD_CITY:
       UNIT_LOG(LOG_DEBUG, punit, "improves terrain instead of founding");
       /* Terrain improvements follows the old model, and is recalculated
        * each turn. */
-      if (result) {
-        // We had a city result, just worse than best impr
-        cityresult_destroy(result);
-      }
       adv_unit_new_task(punit, AUT_AUTO_SETTLER, best_tile);
     } else {
       UNIT_LOG(LOG_DEBUG, punit, "cannot find work");
@@ -1293,11 +1242,10 @@ void contemplate_new_city(struct ai_type *ait, struct city *pcity)
   unit_tile_set(virtualunit, pcenter);
 
   if (is_ai(pplayer)) {
-    struct cityresult *result;
     bool is_coastal = is_terrain_class_near_tile(pcenter, TC_OCEAN);
     struct ai_city *city_data = def_ai_city_data(pcity, ait);
 
-    result =
+    auto result =
         find_best_city_placement(ait, virtualunit, is_coastal, is_coastal);
 
     if (result) {
@@ -1314,8 +1262,6 @@ void contemplate_new_city(struct ai_type *ait, struct city *pcity)
       city_data->founder_want =
           (result->virt_boat ? -result->result : result->result);
       city_data->founder_boat = result->overseas;
-
-      cityresult_destroy(result);
     } else {
       CITY_LOG(LOG_DEBUG, pcity, "want no city");
       city_data->founder_want = 0;
