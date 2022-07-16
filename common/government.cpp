@@ -13,7 +13,6 @@
 
 // utility
 #include "fcintl.h"
-#include "iterator.h"
 #include "log.h"
 #include "shared.h"
 #include "support.h"
@@ -33,13 +32,11 @@ std::vector<government> governments;
  */
 struct government *government_by_translated_name(const char *name)
 {
-  governments_iterate(gov)
-  {
-    if (0 == strcmp(government_name_translation(gov), name)) {
-      return gov;
+  for (auto &gov : governments) {
+    if (0 == strcmp(government_name_translation(&gov), name)) {
+      return &gov;
     }
   }
-  governments_iterate_end;
 
   return nullptr;
 }
@@ -52,13 +49,11 @@ struct government *government_by_rule_name(const char *name)
 {
   const char *qname = Qn_(name);
 
-  governments_iterate(gov)
-  {
-    if (0 == fc_strcasecmp(government_rule_name(gov), qname)) {
-      return gov;
+  for (auto &gov : governments) {
+    if (0 == fc_strcasecmp(government_rule_name(&gov), qname)) {
+      return &gov;
     }
-  }
-  governments_iterate_end;
+  };
 
   return nullptr;
 }

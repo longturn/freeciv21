@@ -241,11 +241,13 @@ void universal_kind_values(struct universal *univ, univ_kind_values_cb cb,
     advance_re_active_iterate_end;
     break;
   case VUT_GOVERNMENT:
-    governments_re_active_iterate(pgov)
-    {
-      cb(government_rule_name(pgov), univ->value.govern == pgov, data);
+    for (auto &pgov : governments) {
+      if (!pgov.ruledit_disabled) {
+        {
+          cb(government_rule_name(&pgov), univ->value.govern == &pgov, data);
+        }
+      }
     }
-    governments_re_active_iterate_end;
     break;
   case VUT_IMPROVEMENT:
     improvement_re_active_iterate(pimpr)

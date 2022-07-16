@@ -509,7 +509,7 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
    the various cases where additional requirements apply.
  */
 static void insert_allows_single(struct universal *psource,
-                                 struct requirement_vector *psubjreqs,
+                                 const requirement_vector *psubjreqs,
                                  const char *subjstr,
                                  const char *const *strs, char *buf,
                                  size_t bufsz, const char *prefix)
@@ -597,8 +597,7 @@ static void insert_allows(struct universal *psource, char *buf, size_t bufsz,
 {
   buf[0] = '\0';
 
-  governments_iterate(pgov)
-  {
+  for (const auto &pgov : governments) {
     static const char *const govstrs[] = {
         // TRANS: First %s is a government name.
         N_("?gov:Allows %s (with %s but no %s)."),
@@ -610,11 +609,10 @@ static void insert_allows(struct universal *psource, char *buf, size_t bufsz,
         N_("?gov:Allows %s."),
         // TRANS: %s is a government name.
         N_("?gov:Prevents %s.")};
-    insert_allows_single(psource, &pgov->reqs,
-                         government_name_translation(pgov), govstrs, buf,
+    insert_allows_single(psource, &pgov.reqs,
+                         government_name_translation(&pgov), govstrs, buf,
                          bufsz, prefix);
-  }
-  governments_iterate_end;
+  } // governments iterate - gov
 
   improvement_iterate(pimprove)
   {
@@ -869,16 +867,14 @@ void boot_help_texts(const nation_set *nations_to_show,
             specialist_type_iterate_end;
             break;
           case HELP_GOVERNMENT:
-            governments_iterate(gov)
-            {
+            for (const auto &gov : governments) {
               pitem = new_help_item(current_type);
               fc_snprintf(name, sizeof(name), "%*s%s", level, "",
-                          government_name_translation(gov));
+                          government_name_translation(&gov));
               pitem->topic = qstrdup(name);
               pitem->text = qstrdup(empty);
               category_nodes.append(pitem);
-            }
-            governments_iterate_end;
+            };
             break;
           case HELP_IMPROVEMENT:
             improvement_iterate(pimprove)

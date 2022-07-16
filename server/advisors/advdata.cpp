@@ -834,27 +834,26 @@ void adv_best_government(struct player *pplayer)
   if (adv->govt_reeval == 0) {
     const struct research *presearch = research_get(pplayer);
 
-    governments_iterate(gov)
-    {
+    for (auto &gov : governments) {
       adv_want val = 0;
       bool override = false;
 
-      if (gov == game.government_during_revolution) {
+      if (&gov == game.government_during_revolution) {
         continue; // pointless
       }
-      if (gov->ai.better
-          && can_change_to_government(pplayer, gov->ai.better)) {
+      if (gov.ai.better
+          && can_change_to_government(pplayer, gov.ai.better)) {
         continue; // we have better governments available
       }
 
-      CALL_PLR_AI_FUNC(gov_value, pplayer, pplayer, gov, &val, &override);
+      CALL_PLR_AI_FUNC(gov_value, pplayer, pplayer, &gov, &val, &override);
 
       if (!override) {
         int dist;
         adv_want bonus = 0; // in percentage
         int revolution_turns;
 
-        pplayer->government = gov;
+        pplayer->government = &gov;
         /* Ideally we should change tax rates here, but since
          * this is a rather big CPU operation, we'd rather not. */
         check_player_max_rates(pplayer);
@@ -879,7 +878,7 @@ void adv_best_government(struct player *pplayer)
         {
           struct action *paction = action_by_number(act);
 
-          if (!action_immune_government(gov, act)) {
+          if (!action_immune_government(&gov, act)) {
             /* This government doesn't provide immunity againt this
              * action. */
             continue;
@@ -991,7 +990,7 @@ void adv_best_government(struct player *pplayer)
 
         // FIXME: handle reqs other than technologies.
         dist = 0;
-        requirement_vector_iterate(&gov->reqs, preq)
+        requirement_vector_iterate(&gov.reqs, preq)
         {
           if (VUT_ADVANCE == preq->source.kind) {
             dist += MAX(1, research_goal_unknown_techs(
@@ -1003,9 +1002,8 @@ void adv_best_government(struct player *pplayer)
         val = amortize(val, dist);
       }
 
-      adv->government_want[government_index(gov)] = val; // Save want
+      adv->government_want[government_index(&gov)] = val; // Save want
     }
-    governments_iterate_end;
     // Now reset our gov to it's real state.
     pplayer->government = current_gov;
     city_list_iterate(pplayer->cities, acity)
@@ -1022,21 +1020,20 @@ void adv_best_government(struct player *pplayer)
   adv->govt_reeval--;
 
   // Figure out which government is the best for us this turn.
-  governments_iterate(gov)
-  {
-    int gi = government_index(gov);
+  for (auto &gov : governments) {
+    int gi = government_index(&gov);
     if (adv->government_want[gi] > best_val
-        && can_change_to_government(pplayer, gov)) {
+        && can_change_to_government(pplayer, &gov)) {
       best_val = adv->government_want[gi];
-      adv->goal.revolution = gov;
+      adv->goal.revolution = &gov;
     }
     if (adv->government_want[gi] > adv->goal.govt.val) {
-      adv->goal.govt.gov = gov;
+      adv->goal.govt.gov = &gov;
       adv->goal.govt.val = adv->government_want[gi];
 
       // FIXME: handle reqs other than technologies.
       adv->goal.govt.req = A_NONE;
-      requirement_vector_iterate(&gov->reqs, preq)
+      requirement_vector_iterate(&gov.reqs, preq)
       {
         if (VUT_ADVANCE == preq->source.kind) {
           adv->goal.govt.req = advance_number(preq->source.value.advance);
@@ -1045,8 +1042,7 @@ void adv_best_government(struct player *pplayer)
       }
       requirement_vector_iterate_end;
     }
-  }
-  governments_iterate_end;
+  };
   /* Goodness of the ideal gov is calculated relative to the goodness of the
    * best of the available ones. */
   adv->goal.govt.val -= best_val;

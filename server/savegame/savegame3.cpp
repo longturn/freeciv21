@@ -2046,18 +2046,16 @@ static void sg_save_ruledata(struct savedata *saving)
 {
   int set_count = 0;
 
-  governments_iterate(pgov)
-  {
+  for (auto &pgov : governments) {
     char path[256];
 
     fc_snprintf(path, sizeof(path), "ruledata.government%d", set_count++);
 
-    secfile_insert_str(saving->file, government_rule_name(pgov), "%s.name",
+    secfile_insert_str(saving->file, government_rule_name(&pgov), "%s.name",
                        path);
-    secfile_insert_int(saving->file, pgov->changed_to_times, "%s.changes",
+    secfile_insert_int(saving->file, pgov.changed_to_times, "%s.changes",
                        path);
-  }
-  governments_iterate_end;
+  };
 }
 
 /**

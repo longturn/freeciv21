@@ -114,16 +114,14 @@ void tab_gov::refresh()
 {
   gov_list->clear();
 
-  governments_iterate(pgov)
-  {
-    if (!pgov->ruledit_disabled) {
-      QListWidgetItem *item =
-          new QListWidgetItem(QString::fromUtf8(government_rule_name(pgov)));
+  for (auto &pgov : governments) {
+    if (!pgov.ruledit_disabled) {
+      QListWidgetItem *item = new QListWidgetItem(
+          QString::fromUtf8(government_rule_name(&pgov)));
 
-      gov_list->insertItem(government_index(pgov), item);
+      gov_list->insertItem(government_index(&pgov), item);
     }
-  }
-  governments_iterate_end;
+  };
 }
 
 /**
@@ -178,18 +176,16 @@ void tab_gov::name_given()
     QByteArray name_bytes;
     QByteArray rname_bytes;
 
-    governments_iterate(pgov)
-    {
-      if (pgov != selected && !pgov->ruledit_disabled) {
+    for (const auto &pgov : governments) {
+      if (&pgov != selected && !pgov.ruledit_disabled) {
         rname_bytes = rname->text().toUtf8();
-        if (!strcmp(government_rule_name(pgov), rname_bytes.data())) {
+        if (!strcmp(government_rule_name(&pgov), rname_bytes.data())) {
           ui->display_msg(R__("A government with that rule name already "
                               "exists!"));
           return;
         }
       }
     }
-    governments_iterate_end;
 
     if (same_name->isChecked()) {
       name->setText(rname->text());
@@ -245,18 +241,16 @@ void tab_gov::add_now()
   struct government *new_gov;
 
   // Try to reuse freed government slot
-  governments_iterate(pgov)
-  {
-    if (pgov->ruledit_disabled) {
-      if (initialize_new_gov(pgov)) {
-        pgov->ruledit_disabled = false;
-        update_gov_info(pgov);
+  for (auto &pgov : governments) {
+    if (pgov.ruledit_disabled) {
+      if (initialize_new_gov(&pgov)) {
+        pgov.ruledit_disabled = false;
+        update_gov_info(&pgov);
         refresh();
       }
       return;
     }
   }
-  governments_iterate_end;
 
   // Try to add completely new government
   if (game.control.num_goods_types >= MAX_GOODS_TYPES) {
