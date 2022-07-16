@@ -1,0 +1,52 @@
+name: clang-tidy-review
+on: [pull_request]
+
+jobs:
+  build:
+    name: clang-tidy
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        compiler: [gcc]
+        build_type: [Debug]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Set base_dir
+        run: echo "base_dir=$(pwd)" >> $GITHUB_ENV
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Install GCC
+        if: ${{ matrix.compiler == 'gcc' }}
+        run: |
+          sudo apt-get install g++
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install \
+            cmake \
+            ninja-build \
+            python3 \
+            gettext \
+            qtbase5-dev \
+            libqt5svg5-dev \
+            libkf5archive-dev \
+            liblua5.3-dev \
+            libsqlite3-dev \
+            libsdl2-mixer-dev
+      - name: Configure
+        run: |
+          cmake . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=on
+      - name: Build
+        run: |
+          cmake --build build
+      - uses: ZedThree/clang-tidy-review@v0.8.4
+        id: review
+        with:
+          # Tell clang-tidy-review the base directory.
+          # This will get replaced by the new working
+          # directory inside the action
+          base_dir: ${{ matrix.base_dir }}
