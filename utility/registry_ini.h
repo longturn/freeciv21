@@ -390,12 +390,6 @@ int *secfile_lookup_int_vec(const struct section_file *secfile, size_t *dim,
                             const char *path, ...) fc__warn_unused_result
     fc__attribute((__format__(__printf__, 3, 4)));
 
-bool secfile_lookup_float(const struct section_file *secfile, float *fval,
-                          const char *path, ...) fc__warn_unused_result
-    fc__attribute((__format__(__printf__, 3, 4)));
-float secfile_lookup_float_default(const struct section_file *secfile,
-                                   float def, const char *path, ...);
-
 const char *secfile_lookup_str(const struct section_file *secfile,
                                const char *path, ...) fc__warn_unused_result
     fc__attribute((__format__(__printf__, 2, 3)));
@@ -495,12 +489,6 @@ int secfile_lookup_enum_default_data(const struct section_file *secfile,
                                      secfile_data_t data, const char *path,
                                      ...) fc__warn_unused_result
     fc__attribute((__format__(__printf__, 6, 7)));
-int *secfile_lookup_enum_vec_data(const struct section_file *secfile,
-                                  size_t *dim, bool bitwise,
-                                  secfile_enum_name_data_fn_t name_fn,
-                                  secfile_data_t data, const char *path,
-                                  ...) fc__warn_unused_result
-    fc__attribute((__format__(__printf__, 6, 7)));
 
 // Sections functions.
 struct section *secfile_section_by_name(const struct section_file *secfile,
@@ -520,15 +508,10 @@ struct section *secfile_section_new(struct section_file *secfile,
 void section_destroy(struct section *psection);
 void section_clear_all(struct section *psection);
 
-bool section_set_name(struct section *psection, const char *section_name);
-
 // Entry functions.
 const struct entry_list *section_entries(const struct section *psection);
 struct entry *section_entry_by_name(const struct section *psection,
                                     const QString &entry_name);
-struct entry *section_entry_lookup(const struct section *psection,
-                                   const char *path, ...)
-    fc__attribute((__format__(__printf__, 2, 3)));
 struct entry *section_entry_int_new(struct section *psection,
                                     const QString &entry_name, int value);
 struct entry *section_entry_bool_new(struct section *psection,
@@ -573,6 +556,4 @@ bool entry_float_set(struct entry *pentry, float value);
 
 bool entry_str_get(const struct entry *pentry, const char **value);
 bool entry_str_set(struct entry *pentry, const char *value);
-bool entry_str_escaped(const struct entry *pentry);
-bool entry_str_set_escaped(struct entry *pentry, bool escaped);
 bool entry_str_set_gt_marking(struct entry *pentry, bool gt_marking);

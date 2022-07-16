@@ -2001,59 +2001,6 @@ int *secfile_lookup_int_vec(const struct section_file *secfile, size_t *dim,
 }
 
 /**
-   Lookup a floating point value in the secfile.  Returns TRUE on success.
- */
-bool secfile_lookup_float(const struct section_file *secfile, float *fval,
-                          const char *path, ...)
-{
-  char fullpath[MAX_LEN_SECPATH];
-  const struct entry *pentry;
-  va_list args;
-
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, nullptr, nullptr != secfile, false);
-
-  va_start(args, path);
-  fc_vsnprintf(fullpath, sizeof(fullpath), path, args);
-  va_end(args);
-
-  if (!(pentry = secfile_entry_by_path(secfile, fullpath))) {
-    SECFILE_LOG(secfile, nullptr, "\"%s\" entry doesn't exist.", fullpath);
-    return false;
-  }
-
-  return entry_float_get(pentry, fval);
-}
-
-/**
-   Lookup a floating point value in the secfile. On failure, use the default
-   value.
- */
-float secfile_lookup_float_default(const struct section_file *secfile,
-                                   float def, const char *path, ...)
-{
-  char fullpath[MAX_LEN_SECPATH];
-  const struct entry *pentry;
-  float fval;
-  va_list args;
-
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, nullptr, nullptr != secfile, def);
-
-  va_start(args, path);
-  fc_vsnprintf(fullpath, sizeof(fullpath), path, args);
-  va_end(args);
-
-  if (!(pentry = secfile_entry_by_path(secfile, fullpath))) {
-    return def;
-  }
-
-  if (entry_float_get(pentry, &fval)) {
-    return fval;
-  }
-
-  return def;
-}
-
-/**
    Lookup a string value in the secfile.  Returns nullptr on error.
  */
 const char *secfile_lookup_str(const struct section_file *secfile,
@@ -2655,58 +2602,6 @@ int secfile_lookup_enum_default_data(const struct section_file *secfile,
 }
 
 /**
-   Lookup a vector in the secfile.  Returns nullptr on error.  This vector
-   is not owned by the registry module, and should be free by the user.
- */
-int *secfile_lookup_enum_vec_data(const struct section_file *secfile,
-                                  size_t *dim, bool bitwise,
-                                  secfile_enum_name_data_fn_t name_fn,
-                                  secfile_data_t data, const char *path, ...)
-{
-  char fullpath[MAX_LEN_SECPATH];
-  size_t i = 0;
-  int *vec;
-  va_list args;
-
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, nullptr, nullptr != secfile, nullptr);
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, nullptr, nullptr != dim, nullptr);
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, nullptr, nullptr != name_fn, nullptr);
-
-  va_start(args, path);
-  fc_vsnprintf(fullpath, sizeof(fullpath), path, args);
-  va_end(args);
-
-  // Check size.
-  while (nullptr
-         != secfile_entry_lookup(secfile, "%s,%d", fullpath,
-                                 static_cast<int>(i))) {
-    i++;
-  }
-  *dim = i;
-
-  if (0 == i) {
-    // Doesn't exist.
-    SECFILE_LOG(secfile, nullptr, "\"%s\" entry doesn't exist.", fullpath);
-    return nullptr;
-  }
-
-  vec = new int[i];
-  for (i = 0; i < *dim; i++) {
-    if (!secfile_lookup_enum_data(secfile, vec + i, bitwise, name_fn, data,
-                                  "%s,%d", fullpath, static_cast<int>(i))) {
-      SECFILE_LOG(secfile, nullptr,
-                  "An error occurred when looking up to \"%s,%d\" entry.",
-                  fullpath, (int) i);
-      delete[] vec;
-      *dim = 0;
-      return nullptr;
-    }
-  }
-
-  return vec;
-}
-
-/**
    Returns the first section matching the name.
  */
 struct section *secfile_section_by_name(const struct section_file *secfile,
@@ -2877,69 +2772,6 @@ void section_clear_all(struct section *psection)
 }
 
 /**
-   Change the section name.  Returns TRUE on success.
- */
-bool section_set_name(struct section *psection, const char *name)
-{
-  struct section_file *secfile;
-  struct section *pother;
-
-  SECFILE_RETURN_VAL_IF_FAIL(nullptr, psection, nullptr != psection, false);
-  secfile = psection->secfile;
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, psection, nullptr != secfile, false);
-
-  if (nullptr == name || '\0' == name[0]) {
-    SECFILE_LOG(secfile, psection, "No new name for section \"%s\".",
-                psection->name);
-    return false;
-  }
-
-  if (!is_secfile_entry_name_valid(name)) {
-    SECFILE_LOG(secfile, psection,
-                "\"%s\" is not a valid section name for section \"%s\".",
-                name, psection->name);
-    return false;
-  }
-
-  if ((pother = secfile_section_by_name(secfile, name))
-      && pother != psection) {
-    // We cannot duplicate sections in any case!
-    SECFILE_LOG(secfile, psection, "Section \"%s\" already exists.", name);
-    return false;
-  }
-
-  // Remove old references in the hash tables.
-  if (nullptr != secfile->hash.sections) {
-    secfile->hash.sections->remove(psection->name);
-  }
-  if (nullptr != secfile->hash.entries) {
-    entry_list_iterate(psection->entries, pentry)
-    {
-      secfile_hash_delete(secfile, pentry);
-    }
-    entry_list_iterate_end;
-  }
-
-  // Really rename.
-  free(psection->name);
-  psection->name = fc_strdup(name);
-
-  // Reinsert new references into the hash tables.
-  if (nullptr != secfile->hash.sections) {
-    secfile->hash.sections->insert(psection->name, psection);
-  }
-  if (nullptr != secfile->hash.entries) {
-    entry_list_iterate(psection->entries, pentry)
-    {
-      secfile_hash_insert(secfile, pentry);
-    }
-    entry_list_iterate_end;
-  }
-
-  return true;
-}
-
-/**
    Returns a list containing all the entries.  This list is owned by the
    secfile, so don't modify or destroy it.
  */
@@ -2965,37 +2797,6 @@ struct entry *section_entry_by_name(const struct section *psection,
     }
   }
   entry_list_iterate_end;
-
-  return nullptr;
-}
-
-/**
-   Returns the entry matching the path.
- */
-struct entry *section_entry_lookup(const struct section *psection,
-                                   const char *path, ...)
-{
-  char fullpath[MAX_LEN_SECPATH];
-  struct entry *pentry;
-  va_list args;
-
-  SECFILE_RETURN_VAL_IF_FAIL(nullptr, psection, nullptr != psection,
-                             nullptr);
-
-  va_start(args, path);
-  fc_vsnprintf(fullpath, sizeof(fullpath), path, args);
-  va_end(args);
-
-  if ((pentry = section_entry_by_name(psection, fullpath))) {
-    return pentry;
-  }
-
-  // Try with full path.
-  if ((pentry = secfile_entry_by_path(psection->secfile, fullpath))
-      && psection == entry_section(pentry)) {
-    // Unsure this is really owned by this section.
-    return pentry;
-  }
 
   return nullptr;
 }
@@ -3427,31 +3228,6 @@ bool entry_str_set(struct entry *pentry, const char *value)
   old_val = pentry->string.value;
   pentry->string.value = fc_strdup(nullptr != value ? value : "");
   free(old_val);
-  return true;
-}
-
-/**
-   Returns if the string would be escaped.
- */
-bool entry_str_escaped(const struct entry *pentry)
-{
-  SECFILE_RETURN_VAL_IF_FAIL(nullptr, nullptr, nullptr != pentry, false);
-  SECFILE_RETURN_VAL_IF_FAIL(pentry->psection->secfile, pentry->psection,
-                             ENTRY_STR == pentry->type, false);
-
-  return pentry->string.escaped;
-}
-
-/**
-   Sets if the string would be escaped.  Returns TRUE on success.
- */
-bool entry_str_set_escaped(struct entry *pentry, bool escaped)
-{
-  SECFILE_RETURN_VAL_IF_FAIL(nullptr, nullptr, nullptr != pentry, false);
-  SECFILE_RETURN_VAL_IF_FAIL(pentry->psection->secfile, pentry->psection,
-                             ENTRY_STR == pentry->type, false);
-
-  pentry->string.escaped = escaped;
   return true;
 }
 
