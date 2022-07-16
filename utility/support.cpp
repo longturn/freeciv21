@@ -270,25 +270,6 @@ FILE *fc_fopen(const char *filename, const char *opentype)
 }
 
 /**
-   Wrapper function for gzopen() with filename conversion to local
-   encoding on Windows.
- */
-gzFile fc_gzopen(const char *filename, const char *opentype)
-{
-#ifdef FREECIV_MSWINDOWS
-  gzFile result;
-  char *filename_in_local_encoding =
-      internal_to_local_string_malloc(filename);
-
-  result = gzopen(filename_in_local_encoding, opentype);
-  free(filename_in_local_encoding);
-  return result;
-#else  // FREECIV_MSWINDOWS
-  return gzopen(filename, opentype);
-#endif // FREECIV_MSWINDOWS
-}
-
-/**
    Wrapper function for remove() with filename conversion to local
    encoding on Windows.
  */
@@ -368,43 +349,6 @@ const char *fc_strerror(fc_errno err)
    Suspend execution for the specified number of microseconds.
  */
 void fc_usleep(unsigned long usec) { QThread::usleep(usec); }
-
-/**
-   Replace 'search' by 'replace' within 'str'. If needed 'str' is resized
-   using realloc() to fit the modified string. The new pointer to the string
-   is returned.
- */
-char *fc_strrep_resize(char *str, size_t *len, const char *search,
-                       const char *replace)
-{
-  size_t len_max;
-  bool success;
-
-  fc_assert_ret_val(str != nullptr, nullptr);
-  fc_assert_ret_val(len != nullptr, nullptr);
-  if (search == nullptr || replace == nullptr) {
-    return str;
-  }
-
-  len_max = ceil(static_cast<double>(qstrlen(str)) * qstrlen(replace)
-                 / qstrlen(search))
-            + 1;
-  if ((*len) < len_max) {
-    /* replace string is longer than search string; allocated enough memory
-     * for the worst case */
-    (*len) = len_max;
-    str = static_cast<char *>(fc_realloc(str, len_max));
-  }
-
-  success = fc_strrep(str, (*len), search, replace);
-  // should never happen
-  fc_assert_ret_val_msg(success == true, nullptr,
-                        "Can't replace '%s' by '%s' in '%s'. To small "
-                        "size after reallocation: %lu.",
-                        search, replace, str, (long unsigned int) *len);
-
-  return str;
-}
 
 /**
    Replace 'search' by 'replace' within 'str'. sizeof(str) should be large
@@ -720,18 +664,6 @@ int fc_break_lines(char *str, size_t desired_len)
   forsingle-byte 8-bit- or UTF-8 encoded text; in UTF-8, any byte that is
   part of a multibyte sequence is non-ASCII.
 ****************************************************************************/
-
-/**
-   basename() replacement that always takes const parameter.
-   POSIX basename() modifies its parameter, GNU one does not.
-   Ideally we would like to use GNU one, when available, directly
-   without extra string copies.
- */
-const char *fc_basename(const char *path)
-{
-  QFileInfo fi(path);
-  return fc_strdup(fi.fileName().toUtf8().constData());
-}
 
 /**
    Set quick_exit() callback if possible.
