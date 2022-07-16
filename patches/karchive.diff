@@ -1,13 +1,21 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 675ddf4..ff55e03 100644
+index 037b7d1..df1bcce 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -72,8 +72,6 @@ target_include_directories(KF5Archive
+@@ -24,7 +24,6 @@ endif()
+
+ if (LibZstd_FOUND)
+     target_sources(KF5Archive PRIVATE kzstdfilter.cpp)
+-    target_link_libraries(KF5Archive PRIVATE PkgConfig::LibZstd)
+ endif()
+
+
+@@ -72,8 +71,6 @@ target_include_directories(KF5Archive
  target_link_libraries(KF5Archive
      PUBLIC
-         Qt5::Core
+         Qt${QT_MAJOR_VERSION}::Core
 -    PRIVATE
 -        ZLIB::ZLIB
  )
- 
+
  set_target_properties(KF5Archive PROPERTIES
