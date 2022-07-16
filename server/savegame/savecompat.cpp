@@ -1441,8 +1441,6 @@ static void insert_server_side_agent(struct loaddata *loading,
   secfile_insert_str_vec(loading->file, modname, SSA_COUNT,
                          "savefile.server_side_agent_list");
   delete[] modname;
-  secfile_insert_str_vec(loading->file, modname, SSA_COUNT,
-                         "savefile.server_side_agent_list");
 
   // Insert server_side_agent unit field.
   player_slots_iterate(pslot)
