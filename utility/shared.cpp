@@ -71,10 +71,11 @@ static QStringList default_save_path()
 
 static QStringList default_scenario_path()
 {
-  return {QStringLiteral("."), QStringLiteral("data/scenarios"),
-          freeciv_storage_dir()
-              + QStringLiteral("/" DATASUBDIR "/scenarios"),
-          freeciv_storage_dir() + QStringLiteral("/scenarios")};
+  auto paths = default_data_path();
+  for (auto &path : paths) {
+    path += QStringLiteral("/scenarios");
+  }
+  return paths;
 }
 
 /* Both of these are stored in the local encoding.  The grouping_sep must
