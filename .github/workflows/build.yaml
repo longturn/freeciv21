@@ -327,7 +327,7 @@ jobs:
         name: Checkout extra-cmake-modules
         with:
           repository: KDE/extra-cmake-modules
-          ref: v5.89.0
+          ref: v5.96.0
           path: ecm
       - name: Install ecm
         run: |
@@ -338,7 +338,7 @@ jobs:
         name: Checkout karchive
         with:
           repository: KDE/karchive
-          ref: v5.89.0
+          ref: v5.96.0
           path: karchive
       - name: Install karchive
         run: |
