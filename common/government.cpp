@@ -26,8 +26,7 @@
 
 #include "government.h"
 
-struct government *governments = nullptr;
-
+std::vector<government> governments;
 /**
    Returns the government that has the given (translated) name.
    Returns nullptr if none match.
@@ -81,7 +80,7 @@ Government_type_id government_count()
 Government_type_id government_index(const struct government *pgovern)
 {
   fc_assert_ret_val(nullptr != pgovern, 0);
-  return pgovern - governments;
+  return pgovern - &governments[0];
 }
 
 /**
@@ -454,40 +453,37 @@ struct iterator *government_iter_init(struct government_iter *it)
   it->vtable.next = government_iter_next;
   it->vtable.get = government_iter_get;
   it->vtable.valid = government_iter_valid;
-  it->p = governments;
-  it->end = governments + government_count();
+  it->p = &governments[0];
+  it->end = &governments[0] + government_count();
   return ITERATOR(it);
 }
 
 /**
    Allocate resources associated with the given government.
  */
-static inline void government_init(struct government *pgovern)
+government::government()
 {
-  memset(pgovern, 0, sizeof(*pgovern));
-
-  pgovern->item_number = pgovern - governments;
-  pgovern->ruler_titles =
-      new QHash<const struct nation_type *, struct ruler_title *>;
-  requirement_vector_init(&pgovern->reqs);
-  pgovern->changed_to_times = 0;
-  pgovern->ruledit_disabled = false;
+  item_number = 0;
+  ruler_titles = new QHash<const struct nation_type *, struct ruler_title *>;
+  requirement_vector_init(&reqs);
+  changed_to_times = 0;
+  ruledit_disabled = false;
 }
 
 /**
    De-allocate resources associated with the given government.
  */
-static inline void government_free(struct government *pgovern)
+government::~government()
 {
-  for (auto *a : pgovern->ruler_titles->values()) {
+  for (auto *a : ruler_titles->values()) {
     delete a;
   }
-  delete pgovern->ruler_titles;
-  delete pgovern->helptext;
-  pgovern->ruler_titles = nullptr;
-  pgovern->helptext = nullptr;
+  delete ruler_titles;
+  delete helptext;
+  ruler_titles = nullptr;
+  helptext = nullptr;
 
-  requirement_vector_free(&pgovern->reqs);
+  requirement_vector_free(&reqs);
 }
 
 /**
@@ -495,14 +491,13 @@ static inline void government_free(struct government *pgovern)
  */
 void governments_alloc(int num)
 {
-  int i;
-
-  fc_assert(nullptr == governments);
-  governments = new government[num];
+  fc_assert(0 == governments.size());
+  governments.resize(num);
   game.control.government_count = num;
 
-  for (i = 0; i < game.control.government_count; i++) {
-    government_init(governments + i);
+  int i = 0;
+  for (auto &gov : governments) {
+    gov.item_number = i++;
   }
 }
 
@@ -511,17 +506,7 @@ void governments_alloc(int num)
  */
 void governments_free()
 {
-  int i;
-
-  if (nullptr == governments) {
-    return;
-  }
-
-  for (i = 0; i < game.control.government_count; i++) {
-    government_free(governments + i);
-  }
-  delete[] governments;
-  governments = nullptr;
+  governments.clear();
   game.control.government_count = 0;
 }
 

@@ -47,8 +47,11 @@ struct government {
   struct {
     struct government *better; // hint: a better government (or nullptr)
   } ai;
+  government();
+  ~government();
 };
 
+extern std::vector<government> governments;
 // General government accessor functions.
 Government_type_id government_count();
 Government_type_id government_index(const struct government *pgovern);
