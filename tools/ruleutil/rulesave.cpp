@@ -1478,41 +1478,43 @@ static bool save_governments_ruleset(const char *filename, const char *name)
   comment_govs(sfile);
 
   sect_idx = 0;
-  governments_re_active_iterate(pg)
-  {
-    char path[512];
+  for (auto &pg : governments) {
+    if (!pg.ruledit_disabled) {
+      {
+        char path[512];
 
-    fc_snprintf(path, sizeof(path), "government_%d", sect_idx++);
+        fc_snprintf(path, sizeof(path), "government_%d", sect_idx++);
 
-    save_name_translation(sfile, &(pg->name), path);
+        save_name_translation(sfile, &(pg.name), path);
 
-    secfile_insert_str(sfile, pg->graphic_str, "%s.graphic", path);
-    secfile_insert_str(sfile, pg->graphic_alt, "%s.graphic_alt", path);
+        secfile_insert_str(sfile, pg.graphic_str, "%s.graphic", path);
+        secfile_insert_str(sfile, pg.graphic_alt, "%s.graphic_alt", path);
 
-    save_reqs_vector(sfile, &(pg->reqs), path, "reqs");
+        save_reqs_vector(sfile, &pg.reqs, path, "reqs");
 
-    if (pg->ai.better != nullptr) {
-      save_gov_ref(sfile, pg->ai.better, path, "ai_better");
-    }
+        if (pg.ai.better != nullptr) {
+          save_gov_ref(sfile, pg.ai.better, path, "ai_better");
+        }
 
-    const auto prtitle = pg->ruler_titles->value(nullptr);
-    if (prtitle != nullptr) {
-      const char *title;
+        const auto prtitle = pg.ruler_titles->value(nullptr);
+        if (prtitle != nullptr) {
+          const char *title;
 
-      title = ruler_title_male_untranslated_name(prtitle);
-      if (title != nullptr) {
-        secfile_insert_str(sfile, title, "%s.ruler_male_title", path);
+          title = ruler_title_male_untranslated_name(prtitle);
+          if (title != nullptr) {
+            secfile_insert_str(sfile, title, "%s.ruler_male_title", path);
+          }
+
+          title = ruler_title_female_untranslated_name(prtitle);
+          if (title != nullptr) {
+            secfile_insert_str(sfile, title, "%s.ruler_female_title", path);
+          }
+        }
+
+        save_strvec(sfile, pg.helptext, path, "helptext");
       }
-
-      title = ruler_title_female_untranslated_name(prtitle);
-      if (title != nullptr) {
-        secfile_insert_str(sfile, title, "%s.ruler_female_title", path);
-      }
     }
-
-    save_strvec(sfile, pg->helptext, path, "helptext");
-  }
-  governments_re_active_iterate_end;
+  } // iterate governments - pg
 
   comment_policies(sfile);
 
@@ -1677,12 +1679,11 @@ static bool save_nation(struct section_file *sfile, struct nation_type *pnat,
   }
 
   subsect_idx = 0;
-  governments_iterate(pgov)
-  {
+  for (auto &pgov : governments) {
     struct ruler_title *prtitle;
-    prtitle = pgov->ruler_titles->value(pnat);
+    prtitle = pgov.ruler_titles->value(pnat);
     if (prtitle) {
-      secfile_insert_str(sfile, government_rule_name(pgov),
+      secfile_insert_str(sfile, government_rule_name(&pgov),
                          "%s.ruler_titles%d.government", path, subsect_idx);
       secfile_insert_str(sfile, ruler_title_male_untranslated_name(prtitle),
                          "%s.ruler_titles%d.male_title", path, subsect_idx);
@@ -1691,7 +1692,6 @@ static bool save_nation(struct section_file *sfile, struct nation_type *pnat,
           "%s.ruler_titles%d.female_title", path, subsect_idx++);
     }
   }
-  governments_iterate_end;
 
   secfile_insert_str(sfile, style_rule_name(pnat->style), "%s.style", path);
 

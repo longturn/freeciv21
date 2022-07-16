@@ -1005,16 +1005,14 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   improvement_iterate_end;
 
   // Governments
-  governments_iterate(pgov)
-  {
-    if (!sanity_check_req_vec(&pgov->reqs, true, -1,
-                              government_rule_name(pgov))) {
+  for (const auto &pgov : governments) {
+    if (!sanity_check_req_vec(&pgov.reqs, true, -1,
+                              government_rule_name(&pgov))) {
       qCCritical(ruleset_category,
                  "Governments have conflicting or invalid requirements!");
       ok = false;
     }
-  }
-  governments_iterate_end;
+  };
 
   // Specialists
   specialist_type_iterate(sp)

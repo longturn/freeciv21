@@ -1078,8 +1078,9 @@ bool tilespec_reread(const char *new_tileset_name,
     tileset_setup_unit_type(tileset, punittype);
   }
   unit_type_iterate_end;
-  governments_iterate(gov) { tileset_setup_government(tileset, gov); }
-  governments_iterate_end;
+  for (auto &gov : governments) {
+    tileset_setup_government(tileset, &gov);
+  }
   extra_type_iterate(pextra) { tileset_setup_extra(tileset, pextra); }
   extra_type_iterate_end;
   for (auto &pnation : nations) {

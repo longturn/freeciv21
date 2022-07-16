@@ -3967,17 +3967,15 @@ static bool load_government_names(struct section_file *file,
 
     /* Government names are needed early so that get_government_by_name will
      * work. */
-    governments_iterate(gov)
-    {
+    for (auto &gov : governments) {
       const char *sec_name =
-          section_name(section_list_get(sec, government_index(gov)));
+          section_name(section_list_get(sec, government_index(&gov)));
 
-      if (!ruleset_load_names(&gov->name, nullptr, file, sec_name)) {
+      if (!ruleset_load_names(&gov.name, nullptr, file, sec_name)) {
         ok = false;
         break;
       }
-    }
-    governments_iterate_end;
+    };
   }
 
   section_list_destroy(sec);
@@ -4040,12 +4038,11 @@ static bool load_ruleset_governments(struct section_file *file,
         government_number(game.government_during_revolution);
 
     // easy ones:
-    governments_iterate(g)
-    {
-      const int i = government_index(g);
+    for (auto &g : governments) {
+      const int i = government_index(&g);
       const char *sec_name = section_name(section_list_get(sec, i));
       struct requirement_vector *reqs = lookup_req_list(
-          file, compat, sec_name, "reqs", government_rule_name(g));
+          file, compat, sec_name, "reqs", government_rule_name(&g));
 
       if (reqs == nullptr) {
         ok = false;
@@ -4056,32 +4053,30 @@ static bool load_ruleset_governments(struct section_file *file,
         char entry[100];
 
         fc_snprintf(entry, sizeof(entry), "%s.ai_better", sec_name);
-        g->ai.better = lookup_government(file, entry, filename, nullptr);
-        if (g->ai.better == nullptr) {
+        g.ai.better = lookup_government(file, entry, filename, nullptr);
+        if (g.ai.better == nullptr) {
           ok = false;
           break;
         }
       } else {
-        g->ai.better = nullptr;
+        g.ai.better = nullptr;
       }
-      requirement_vector_copy(&g->reqs, reqs);
+      requirement_vector_copy(&g.reqs, reqs);
 
-      sz_strlcpy(g->graphic_str,
+      sz_strlcpy(g.graphic_str,
                  secfile_lookup_str(file, "%s.graphic", sec_name));
-      sz_strlcpy(g->graphic_alt,
+      sz_strlcpy(g.graphic_alt,
                  secfile_lookup_str(file, "%s.graphic_alt", sec_name));
 
-      g->helptext = lookup_strvec(file, sec_name, "helptext");
-    }
-    governments_iterate_end;
+      g.helptext = lookup_strvec(file, sec_name, "helptext");
+    } // iterate governments - g
   }
 
   if (ok) {
     // titles
-    governments_iterate(g)
-    {
+    for (auto &g : governments) {
       const char *sec_name =
-          section_name(section_list_get(sec, government_index(g)));
+          section_name(section_list_get(sec, government_index(&g)));
       const char *male, *female;
 
       if (!(male = secfile_lookup_str(file, "%s.ruler_male_title", sec_name))
@@ -4090,21 +4085,20 @@ static bool load_ruleset_governments(struct section_file *file,
         qCCritical(ruleset_category,
                    "Lack of default ruler titles for "
                    "government \"%s\" (nb %d): %s",
-                   government_rule_name(g), government_number(g),
+                   government_rule_name(&g), government_number(&g),
                    secfile_error());
         ok = false;
         break;
       } else if (nullptr
-                 == government_ruler_title_new(g, nullptr, male, female)) {
+                 == government_ruler_title_new(&g, nullptr, male, female)) {
         qCCritical(ruleset_category,
                    "Lack of default ruler titles for "
                    "government \"%s\" (nb %d).",
-                   government_rule_name(g), government_number(g));
+                   government_rule_name(&g), government_number(&g));
         ok = false;
         break;
       }
-    }
-    governments_iterate_end;
+    } // iterate governments - g
   }
 
   section_list_destroy(sec);
@@ -8159,31 +8153,30 @@ static void send_ruleset_governments(struct conn_list *dest)
   struct packet_ruleset_government_ruler_title title;
   int j;
 
-  governments_iterate(g)
-  {
+  for (auto &g : governments) {
     // send one packet_government
-    gov.id = government_number(g);
+    gov.id = government_number(&g);
 
     j = 0;
-    requirement_vector_iterate(&g->reqs, preq) { gov.reqs[j++] = *preq; }
+    requirement_vector_iterate(&g.reqs, preq) { gov.reqs[j++] = *preq; }
     requirement_vector_iterate_end;
     gov.reqs_count = j;
 
-    sz_strlcpy(gov.name, untranslated_name(&g->name));
-    sz_strlcpy(gov.rule_name, rule_name_get(&g->name));
-    sz_strlcpy(gov.graphic_str, g->graphic_str);
-    sz_strlcpy(gov.graphic_alt, g->graphic_alt);
-    packet_strvec_compute(gov.helptext, g->helptext);
+    sz_strlcpy(gov.name, untranslated_name(&g.name));
+    sz_strlcpy(gov.rule_name, rule_name_get(&g.name));
+    sz_strlcpy(gov.graphic_str, g.graphic_str);
+    sz_strlcpy(gov.graphic_alt, g.graphic_alt);
+    packet_strvec_compute(gov.helptext, g.helptext);
 
     lsend_packet_ruleset_government(dest, &gov);
 
     // Send one packet_government_ruler_title per ruler title.
 
-    for (auto *pruler_title : qAsConst(*government_ruler_titles(g))) {
+    for (auto *pruler_title : qAsConst(*government_ruler_titles(&g))) {
       {
         const struct nation_type *pnation = ruler_title_nation(pruler_title);
 
-        title.gov = government_number(g);
+        title.gov = government_number(&g);
         title.nation =
             pnation ? nation_index(pnation) : game.control.nation_count;
         sz_strlcpy(title.male_title,
@@ -8193,8 +8186,7 @@ static void send_ruleset_governments(struct conn_list *dest)
         lsend_packet_ruleset_government_ruler_title(dest, &title);
       }
     }
-  }
-  governments_iterate_end;
+  } // iterate governments - g
 }
 
 /**

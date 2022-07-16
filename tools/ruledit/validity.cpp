@@ -81,14 +81,12 @@ static bool is_universal_needed(struct universal *uni, requirers_cb cb,
   }
   improvement_iterate_end;
 
-  governments_iterate(pgov)
-  {
-    if (universal_is_mentioned_by_requirements(&pgov->reqs, uni)) {
-      cb(government_rule_name(pgov), data);
+  for (auto &pgov : governments) {
+    if (universal_is_mentioned_by_requirements(&pgov.reqs, uni)) {
+      cb(government_rule_name(&pgov), data);
       needed = true;
     }
   }
-  governments_iterate_end;
 
   specialist_type_iterate(sp)
   {

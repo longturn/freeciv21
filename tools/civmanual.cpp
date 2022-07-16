@@ -543,19 +543,18 @@ static bool manual_command(struct tag_types *tag_info)
       fprintf(doc, _("%sFreeciv21 %s governments help (%s)%s\n\n"),
               tag_info->title_begin, VERSION_STRING, game.control.name,
               tag_info->title_end);
-      governments_iterate(pgov)
-      {
+      for (auto &pgov : governments) {
         char buf[64000];
-        fprintf(doc, tag_info->item_begin, "gov", pgov->item_number);
+        fprintf(doc, tag_info->item_begin, "gov", pgov.item_number);
         fprintf(doc, "%s%s%s\n\n", tag_info->sect_title_begin,
-                government_name_translation(pgov), tag_info->sect_title_end);
+                government_name_translation(&pgov),
+                tag_info->sect_title_end);
         fprintf(doc, tag_info->subitem_begin, "helptext");
-        helptext_government(buf, sizeof(buf), nullptr, nullptr, pgov);
+        helptext_government(buf, sizeof(buf), nullptr, nullptr, &pgov);
         fprintf(doc, "%s\n\n", buf);
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, "%s", tag_info->item_end);
-      }
-      governments_iterate_end;
+      };
       break;
 
     case MANUAL_UNITS:

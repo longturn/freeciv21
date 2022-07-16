@@ -159,20 +159,18 @@ static void node_rectangle_minimum_size(struct tree_node *node, int *width,
       improvement_iterate_end;
 
       // governments
-      governments_iterate(gov)
-      {
-        requirement_vector_iterate(&(gov->reqs), preq)
+      for (const auto &gov : governments) {
+        requirement_vector_iterate(&gov.reqs, preq)
         {
           if (VUT_ADVANCE == preq->source.kind
               && advance_number(preq->source.value.advance) == node->tech) {
-            sprite = get_government_sprite(tileset, gov);
+            sprite = get_government_sprite(tileset, &gov);
             max_icon_height = MAX(max_icon_height, sprite->height());
             icons_width_sum += sprite->width() + 2;
           }
         }
         requirement_vector_iterate_end;
       }
-      governments_iterate_end;
     }
 
     *height += max_icon_height;
@@ -1096,21 +1094,20 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
           }
           improvement_iterate_end;
 
-          governments_iterate(gov)
-          {
-            requirement_vector_iterate(&(gov->reqs), preq)
+          for (auto &gov : governments) {
+            requirement_vector_iterate(&gov.reqs, preq)
             {
               if (VUT_ADVANCE == preq->source.kind
                   && advance_number(preq->source.value.advance)
                          == node->tech) {
-                sprite = get_government_sprite(tileset, gov);
+                sprite = get_government_sprite(tileset, &gov);
                 rttp = new req_tooltip_help();
                 rttp->rect =
                     QRect(icon_startx,
                           starty + text_h + 4
                               + (height - text_h - 4 - sprite->height()) / 2,
                           sprite->width(), sprite->height());
-                rttp->tgov = gov;
+                rttp->tgov = &gov;
                 tt_help->append(rttp);
                 p.drawPixmap(icon_startx,
                              starty + text_h + 4
@@ -1121,8 +1118,7 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
               }
             }
             requirement_vector_iterate_end;
-          }
-          governments_iterate_end;
+          } // government iterate - gov
         }
       }
 

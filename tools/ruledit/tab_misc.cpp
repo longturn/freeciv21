@@ -306,9 +306,9 @@ void tab_misc::refresh_stats()
   specialist_type_re_active_iterate_end;
   stats->item(row++, 4)->setText(QString::number(count));
 
-  count = 0;
-  governments_re_active_iterate(pgov) { count++; }
-  governments_re_active_iterate_end;
+  count = std::count_if(governments.begin(), governments.end(),
+                        [](government &p) { return !p.ruledit_disabled; });
+
   stats->item(row++, 4)->setText(QString::number(count));
 
   stats->item(row++, 4)->setText(

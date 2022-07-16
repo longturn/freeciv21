@@ -380,22 +380,18 @@ void found_new_tech(struct research *presearch, Tech_type_id tech_found,
     had_embassies[i] = get_player_bonus(aplayer, EFT_HAVE_EMBASSIES);
 
     if (presearch != research_get(aplayer)) {
-      governments_iterate(pgov)
-      {
-        could_switch[i][government_index(pgov)] = false;
+      for (const auto &pgov : governments) {
+        could_switch[i][government_index(&pgov)] = false;
       }
-      governments_iterate_end;
       continue;
     }
 
     /* Memorize for the players sharing the research what government
      * they could switch on. */
-    governments_iterate(pgov)
-    {
-      could_switch[i][government_index(pgov)] =
-          can_change_to_government(aplayer, pgov);
+    for (const auto &pgov : governments) {
+      could_switch[i][government_index(&pgov)] =
+          can_change_to_government(aplayer, &pgov);
     }
-    governments_iterate_end;
   }
   players_iterate_end;
 
@@ -457,18 +453,16 @@ void found_new_tech(struct research *presearch, Tech_type_id tech_found,
       unit_list_refresh_vision(aplayer->units);
 
       // Notify a player about new governments available
-      governments_iterate(pgov)
-      {
-        if (!could_switch[i][government_index(pgov)]
-            && can_change_to_government(aplayer, pgov)) {
+      for (const auto &pgov : governments) {
+        if (!could_switch[i][government_index(&pgov)]
+            && can_change_to_government(aplayer, &pgov)) {
           notify_player(aplayer, nullptr, E_NEW_GOVERNMENT, ftc_server,
                         _("Discovery of %s makes the government form %s"
                           " available. You may want to start a revolution."),
                         qUtf8Printable(advance_name),
-                        government_name_translation(pgov));
+                        government_name_translation(&pgov));
         }
       }
-      governments_iterate_end;
     }
 
     // For any player.
@@ -782,13 +776,11 @@ pick_random_government(struct player *pplayer)
   struct government *picked = nullptr;
   int gov_nb = 0;
 
-  governments_iterate(pgov)
-  {
-    if (can_change_to_government(pplayer, pgov) && 0 == fc_rand(++gov_nb)) {
-      picked = pgov;
+  for (auto &pgov : governments) {
+    if (can_change_to_government(pplayer, &pgov) && 0 == fc_rand(++gov_nb)) {
+      picked = &pgov;
     }
-  }
-  governments_iterate_end;
+  };
   fc_assert(nullptr != picked);
   return picked;
 }

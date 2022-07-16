@@ -93,21 +93,4 @@ bool can_change_to_government(struct player *pplayer,
 void governments_alloc(int num);
 void governments_free();
 
-// Iterate over government types.
-#define governments_iterate(NAME_pgov)                                      \
-  for (auto &temp_gov : governments) {                                      \
-    government *NAME_pgov = &temp_gov;
-
-#define governments_iterate_end }
-
-#define governments_re_active_iterate(_p)                                   \
-  governments_iterate(_p)                                                   \
-  {                                                                         \
-    if (!_p->ruledit_disabled) {
-
-#define governments_re_active_iterate_end                                   \
-  }                                                                         \
-  }                                                                         \
-  governments_iterate_end;
-
 bool untargeted_revolution_allowed();

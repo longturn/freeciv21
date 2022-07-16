@@ -1049,16 +1049,15 @@ void help_widget::set_topic_tech(const help_item *topic, const char *title)
         add_info_pixmap(spr);
       }
 
-      governments_iterate(pgov)
-      {
-        requirement_vector_iterate(&pgov->reqs, preq)
+      for (const auto &pgov : governments) {
+        requirement_vector_iterate(&pgov.reqs, preq)
         {
           if (VUT_ADVANCE == preq->source.kind
               && preq->source.value.advance == padvance) {
             tb = set_properties(this);
             str = _("Allows");
             str = "<b>" + str + "</b> "
-                  + link_me(government_name_translation(pgov),
+                  + link_me(government_name_translation(&pgov),
                             HELP_GOVERNMENT);
             tb->setText(str.trimmed());
             connect(tb, &QLabel::linkActivated, this,
@@ -1067,8 +1066,7 @@ void help_widget::set_topic_tech(const help_item *topic, const char *title)
           }
         }
         requirement_vector_iterate_end;
-      }
-      governments_iterate_end;
+      };
 
       improvement_iterate(pimprove)
       {
