@@ -82,12 +82,10 @@ static bool nation_check(const nation_type *pnation)
 struct nation_type *nation_by_translated_plural(const char *name)
 {
   for (auto &pnation : nations) {
-    {
-      if (0 == strcmp(nation_plural_translation(&pnation), name)) {
-        return &pnation;
-      }
+    if (0 == strcmp(nation_plural_translation(&pnation), name)) {
+      return &pnation;
     }
-  };
+  } // iterate over nations - pnation
 
   return NO_NATION_SELECTED;
 }
@@ -101,12 +99,10 @@ struct nation_type *nation_by_rule_name(const char *name)
   const char *qname = Qn_(name);
 
   for (auto &pnation : nations) {
-    {
-      if (0 == fc_strcasecmp(nation_rule_name(&pnation), qname)) {
-        return &pnation;
-      }
+    if (0 == fc_strcasecmp(nation_rule_name(&pnation), qname)) {
+      return &pnation;
     }
-  };
+  } // iterate over nations - pnation
 
   return NO_NATION_SELECTED;
 }
@@ -522,9 +518,9 @@ void nations_alloc(int num)
   game.control.nation_count = num;
   nations.resize(game.control.nation_count);
   int i = 0;
-  for (auto &nat : nations) {
-    nat.item_number = i++;
-  }
+  for (auto &pnation : nations) {
+    pnation.item_number = i++;
+  } // iterate over nations - pnation
 }
 
 /**

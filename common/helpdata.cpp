@@ -979,18 +979,16 @@ void boot_help_texts(const nation_set *nations_to_show,
           } break;
           case HELP_NATIONS:
             for (const auto &pnation : nations) {
-              {
-                if (nations_to_show
-                    && nation_is_in_set(&pnation, nations_to_show)) {
-                  pitem = new_help_item(current_type);
-                  fc_snprintf(name, sizeof(name), "%*s%s", level, "",
-                              nation_plural_translation(&pnation));
-                  pitem->topic = qstrdup(name);
-                  pitem->text = qstrdup(empty);
-                  category_nodes.append(pitem);
-                }
+              if (nations_to_show
+                  && nation_is_in_set(&pnation, nations_to_show)) {
+                pitem = new_help_item(current_type);
+                fc_snprintf(name, sizeof(name), "%*s%s", level, "",
+                            nation_plural_translation(&pnation));
+                pitem->topic = qstrdup(name);
+                pitem->text = qstrdup(empty);
+                category_nodes.append(pitem);
               }
-            };
+            } // iterate over nations - pnation
             break;
           case HELP_MULTIPLIER:
             multipliers_iterate(pmul)
@@ -1562,25 +1560,23 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
   /* Assume no-one will set the same building in both global and nation
    * init_buildings... */
   for (const auto &pnation : nations) {
-    {
-      // Avoid mentioning nations not in current set.
-      if (nations_to_show && !nation_is_in_set(&pnation, nations_to_show)) {
-        continue;
-      }
-      for (int n : pnation.init_buildings) {
-        if (n == B_LAST) {
-          break;
-        } else if (improvement_by_number(n) == pimprove) {
-          cat_snprintf(buf, bufsz,
-                       // TRANS: %s is a nation plural
-                       _("* The %s start with this improvement in their "
-                         "first city.\n"),
-                       nation_plural_translation(&pnation));
-          break;
-        }
+    // Avoid mentioning nations not in current set.
+    if (nations_to_show && !nation_is_in_set(&pnation, nations_to_show)) {
+      continue;
+    }
+    for (int n : pnation.init_buildings) {
+      if (n == B_LAST) {
+        break;
+      } else if (improvement_by_number(n) == pimprove) {
+        cat_snprintf(buf, bufsz,
+                     // TRANS: %s is a nation plural
+                     _("* The %s start with this improvement in their "
+                       "first city.\n"),
+                     nation_plural_translation(&pnation));
+        break;
       }
     }
-  };
+  } // iterate over nations - pnation
 
   if (improvement_has_flag(pimprove, IF_SAVE_SMALL_WONDER)) {
     cat_snprintf(buf, bufsz,
@@ -1853,30 +1849,28 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
     }
   }
   for (const auto &pnation : nations) {
-    {
-      int i, count = 0;
+    int i, count = 0;
 
-      // Avoid mentioning nations not in current set.
-      if (nations_to_show && !nation_is_in_set(&pnation, nations_to_show)) {
-        continue;
-      }
-      for (i = 0; i < MAX_NUM_UNIT_LIST; i++) {
-        if (!pnation.init_units[i]) {
-          break;
-        } else if (pnation.init_units[i] == utype) {
-          count++;
-        }
-      }
-      if (count > 0) {
-        cat_snprintf(buf, bufsz,
-                     // TRANS: %s is a nation plural
-                     PL_("* The %s start the game with %d of these units.\n",
-                         "* The %s start the game with %d of these units.\n",
-                         count),
-                     nation_plural_translation(&pnation), count);
+    // Avoid mentioning nations not in current set.
+    if (nations_to_show && !nation_is_in_set(&pnation, nations_to_show)) {
+      continue;
+    }
+    for (i = 0; i < MAX_NUM_UNIT_LIST; i++) {
+      if (!pnation.init_units[i]) {
+        break;
+      } else if (pnation.init_units[i] == utype) {
+        count++;
       }
     }
-  };
+    if (count > 0) {
+      cat_snprintf(buf, bufsz,
+                   // TRANS: %s is a nation plural
+                   PL_("* The %s start the game with %d of these units.\n",
+                       "* The %s start the game with %d of these units.\n",
+                       count),
+                   nation_plural_translation(&pnation), count);
+    }
+  } // iterate over nations - pnation
   {
     QVector<QString> types;
     types.reserve(utype_count());
@@ -2995,25 +2989,23 @@ void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
   /* Assume no-one will set the same tech in both global and nation
    * init_tech... */
   for (const auto &pnation : nations) {
-    {
-      // Avoid mentioning nations not in current set.
-      if (nations_to_show && !nation_is_in_set(&pnation, nations_to_show)) {
-        continue;
-      }
-      for (int j = 0; j < MAX_NUM_TECH_LIST; j++) {
-        if (pnation.init_techs[j] == A_LAST) {
-          break;
-        } else if (pnation.init_techs[j] == i) {
-          cat_snprintf(buf, bufsz,
-                       // TRANS: %s is a nation plural
-                       _("* The %s start the game with knowledge of this "
-                         "technology.\n"),
-                       nation_plural_translation(&pnation));
-          break;
-        }
+    // Avoid mentioning nations not in current set.
+    if (nations_to_show && !nation_is_in_set(&pnation, nations_to_show)) {
+      continue;
+    }
+    for (int j = 0; j < MAX_NUM_TECH_LIST; j++) {
+      if (pnation.init_techs[j] == A_LAST) {
+        break;
+      } else if (pnation.init_techs[j] == i) {
+        cat_snprintf(buf, bufsz,
+                     // TRANS: %s is a nation plural
+                     _("* The %s start the game with knowledge of this "
+                       "technology.\n"),
+                     nation_plural_translation(&pnation));
+        break;
       }
     }
-  };
+  } // iterate over nations - pnation
 
   // Explain the effects of root_reqs.
   {

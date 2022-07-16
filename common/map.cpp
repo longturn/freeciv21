@@ -1489,12 +1489,10 @@ bool startpos_unpack(struct startpos *psp,
     return true;
   }
   for (const auto &pnation : nations) {
-    {
-      if (BV_ISSET(packet->nations, nation_index(&pnation))) {
-        psp->nations->insert(&pnation);
-      }
+    if (BV_ISSET(packet->nations, nation_index(&pnation))) {
+      psp->nations->insert(&pnation);
     }
-  };
+  } // iterate over nations - pnation
   return true;
 }
 

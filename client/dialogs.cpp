@@ -641,27 +641,25 @@ void races_dialog::set_index(int index)
   group = nation_group_by_number(index);
   i = 0;
   for (const auto &pnation : nations) {
-    {
-      if (!is_nation_playable(&pnation) || !is_nation_pickable(&pnation)) {
-        continue;
-      }
-      if (!nation_is_in_group(&pnation, group) && index != -99) {
-        continue;
-      }
-      item = new QTableWidgetItem;
-      selected_nation_tabs->insertRow(i);
-      auto s = get_nation_flag_sprite(tileset, &pnation);
-      if (pnation.player) {
-        f = item->font();
-        f.setStrikeOut(true);
-        item->setFont(f);
-      }
-      item->setData(Qt::DecorationRole, *s);
-      item->setData(Qt::UserRole, nation_index(&pnation));
-      item->setText(nation_adjective_translation(&pnation));
-      selected_nation_tabs->setItem(i, 0, item);
+    if (!is_nation_playable(&pnation) || !is_nation_pickable(&pnation)) {
+      continue;
     }
-  };
+    if (!nation_is_in_group(&pnation, group) && index != -99) {
+      continue;
+    }
+    item = new QTableWidgetItem;
+    selected_nation_tabs->insertRow(i);
+    auto s = get_nation_flag_sprite(tileset, &pnation);
+    if (pnation.player) {
+      f = item->font();
+      f.setStrikeOut(true);
+      item->setFont(f);
+    }
+    item->setData(Qt::DecorationRole, *s);
+    item->setData(Qt::UserRole, nation_index(&pnation));
+    item->setText(nation_adjective_translation(&pnation));
+    selected_nation_tabs->setItem(i, 0, item);
+  } // iterate over nations - pnation
 
   selected_nation_tabs->sortByColumn(0, Qt::AscendingOrder);
   header = selected_nation_tabs->horizontalHeader();
