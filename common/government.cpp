@@ -406,58 +406,6 @@ const char *ruler_title_for_player(const struct player *pplayer, char *buf,
   return buf;
 }
 
-/**************************************************************************
-  Government iterator.
-**************************************************************************/
-struct government_iter {
-  struct iterator vtable;
-  struct government *p, *end;
-};
-#define GOVERNMENT_ITER(p) ((struct government_iter *) (p))
-
-/**
-   Implementation of iterator 'sizeof' function.
- */
-size_t government_iter_sizeof() { return sizeof(struct government_iter); }
-
-/**
-   Implementation of iterator 'next' function.
- */
-static void government_iter_next(struct iterator *iter)
-{
-  GOVERNMENT_ITER(iter)->p++;
-}
-
-/**
-   Implementation of iterator 'get' function.
- */
-static void *government_iter_get(const struct iterator *iter)
-{
-  return GOVERNMENT_ITER(iter)->p;
-}
-
-/**
-   Implementation of iterator 'valid' function.
- */
-static bool government_iter_valid(const struct iterator *iter)
-{
-  struct government_iter *it = GOVERNMENT_ITER(iter);
-  return it->p < it->end;
-}
-
-/**
-   Implementation of iterator 'init' function.
- */
-struct iterator *government_iter_init(struct government_iter *it)
-{
-  it->vtable.next = government_iter_next;
-  it->vtable.get = government_iter_get;
-  it->vtable.valid = government_iter_valid;
-  it->p = &governments[0];
-  it->end = &governments[0] + government_count();
-  return ITERATOR(it);
-}
-
 /**
    Allocate resources associated with the given government.
  */
