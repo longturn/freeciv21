@@ -125,7 +125,6 @@ int fc_strcoll(const char *str0, const char *str1);
 int fc_stricoll(const char *str0, const char *str1);
 
 FILE *fc_fopen(const char *filename, const char *opentype);
-gzFile fc_gzopen(const char *filename, const char *opentype);
 int fc_remove(const char *filename);
 int fc_stat(const char *filename, struct stat *buf);
 
@@ -135,8 +134,6 @@ void fc_usleep(unsigned long usec);
 
 bool fc_strrep(char *str, size_t len, const char *search,
                const char *replace);
-char *fc_strrep_resize(char *str, size_t *len, const char *search,
-                       const char *replace) fc__warn_unused_result;
 
 size_t fc_strlcpy(char *dest, const char *src, size_t n);
 size_t fc_strlcat(char *dest, const char *src, size_t n);
@@ -159,8 +156,6 @@ int cat_snprintf(char *str, size_t n, const char *format, ...)
 int fc_gethostname(char *buf, size_t len);
 
 int fc_break_lines(char *str, size_t desired_len);
-
-const char *fc_basename(const char *path);
 
 void make_escapes(const char *str, char *buf, size_t buf_len);
 QString remove_escapes(const QString &str, bool full_escapes);
