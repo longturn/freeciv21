@@ -17,11 +17,10 @@ jobs:
         os: [ubuntu-latest]
         compiler: [gcc, clang]
         build_type: ["", Release, Debug, RelWithDebInfo]
-        # See issue #1043
-        #include:
-          #- os: ubuntu-22.04
-            #compiler: gcc
-            #build_type: Debug
+        include:
+          - os: ubuntu-22.04
+            compiler: gcc
+            build_type: Debug
         exclude:
           - compiler: clang
             build_type: RelWithDebInfo
