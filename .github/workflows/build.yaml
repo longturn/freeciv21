@@ -344,8 +344,10 @@ jobs:
           source emsdk/emsdk_env.sh
           cd karchive
           git apply ../patches/karchive.diff
-          emcmake cmake -DECM_DIR=/usr/local/share/ECM/cmake -DBUILD_TESTING=0 \
+          emcmake cmake . \
+            -DECM_DIR=/usr/local/share/ECM/cmake -DBUILD_TESTING=0 \
             -DQt5Core_DIR=$HOME/qt/lib/cmake/Qt5Core \
+            -DKF_IGNORE_PLATFORM_CHECK=1 \
             -DCMAKE_INSTALL_PREFIX=../emsdk/upstream/emscripten/cache/sysroot
           emmake make install
       - name: Build Freeciv
