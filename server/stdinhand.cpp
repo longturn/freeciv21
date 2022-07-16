@@ -6817,13 +6817,10 @@ static void show_nationsets(struct connection *caller)
     const char *description = nation_set_description(pset);
     int num_nations = 0;
     for (auto &pnation : nations) {
-      {
-        if (is_nation_playable(&pnation)
-            && nation_is_in_set(&pnation, pset)) {
-          num_nations++;
-        }
+      if (is_nation_playable(&pnation) && nation_is_in_set(&pnation, pset)) {
+        num_nations++;
       }
-    };
+    }
     cmd_reply(CMD_LIST, caller, C_COMMENT,
               /* TRANS: nation set description; %d refers to number of
                * playable nations in set */

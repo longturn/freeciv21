@@ -1257,13 +1257,11 @@ static bool plrcol_validate(int value, struct connection *caller,
   plrcolor_mode mode = plrcolor_mode(value);
   if (mode == PLRCOL_NATION_ORDER) {
     for (const auto &pnation : nations) {
-      {
-        if (nation_color(&pnation)) {
-          // At least one nation has a color. Allow this mode.
-          return true;
-        }
+      if (nation_color(&pnation)) {
+        // At least one nation has a color. Allow this mode.
+        return true;
       }
-    };
+    }
     settings_snprintf(reject_msg, reject_msg_len,
                       _("No nations in the currently loaded ruleset have "
                         "associated colors."));

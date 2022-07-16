@@ -1916,10 +1916,8 @@ static bool save_nations_ruleset(const char *filename, const char *name,
 
     sect_idx = 0;
     for (auto &pnat : nations) {
-      {
-        save_nation(sfile, &pnat, sect_idx++);
-      }
-    };
+      save_nation(sfile, &pnat, sect_idx++);
+    }
   }
 
   return save_ruleset_file(sfile, filename);

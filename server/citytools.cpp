@@ -528,17 +528,15 @@ const char *city_name_suggestion(struct player *pplayer, struct tile *ptile)
       // Still not found; append all remaining nations.
       for (auto &n : nations) {
         if (nation_is_in_current_set(&n)) {
-          {
-            idx = nation_index(&n);
-            if (!nations_selected[idx]) {
-              nation_list[queue_size] = &n;
-              nations_selected[nation_index(&n)] = true;
-              queue_size++;
-              log_debug("Misc nation %s.", nation_rule_name(&n));
-            }
+          idx = nation_index(&n);
+          if (!nations_selected[idx]) {
+            nation_list[queue_size] = &n;
+            nations_selected[nation_index(&n)] = true;
+            queue_size++;
+            log_debug("Misc nation %s.", nation_rule_name(&n));
           }
         }
-      };
+      } // iterate over nations - n
     }
   }
 
