@@ -93,15 +93,12 @@ bool can_change_to_government(struct player *pplayer,
 void governments_alloc(int num);
 void governments_free();
 
-struct government_iter;
-size_t government_iter_sizeof();
-struct iterator *government_iter_init(struct government_iter *it);
-
 // Iterate over government types.
 #define governments_iterate(NAME_pgov)                                      \
-  generic_iterate(struct government_iter, struct government *, NAME_pgov,   \
-                  government_iter_sizeof, government_iter_init)
-#define governments_iterate_end generic_iterate_end
+  for (auto &temp_gov : governments) {                                      \
+    government *NAME_pgov = &temp_gov;
+
+#define governments_iterate_end }
 
 #define governments_re_active_iterate(_p)                                   \
   governments_iterate(_p)                                                   \
