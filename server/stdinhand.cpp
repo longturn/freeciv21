@@ -6777,27 +6777,21 @@ static void show_rulesets(struct connection *caller)
  */
 static void show_scenarios(struct connection *caller)
 {
-  char buf[MAX_LEN_CONSOLE_LINE];
-  struct fileinfo_list *files;
-
   cmd_reply(CMD_LIST, caller, C_COMMENT, _("List of scenarios available:"));
   cmd_reply(CMD_LIST, caller, C_COMMENT, horiz_line);
 
-  files = fileinfolist_infix(get_scenario_dirs(), ".sav", true);
-
-  fileinfo_list_iterate(files, pfile)
-  {
+  const auto files = find_files_in_path(get_scenario_dirs(),
+                                        QStringLiteral("*.sav*"), true);
+  for (const auto &info : files) {
     struct section_file *sf = secfile_load_section(
-        pfile->fullname, QStringLiteral("scenario"), true);
+        info.absoluteFilePath(), QStringLiteral("scenario"), true);
 
     if (secfile_lookup_bool_default(sf, true, "scenario.is_scenario")) {
-      fc_snprintf(buf, sizeof(buf), "%s", pfile->name);
-      cmd_reply(CMD_LIST, caller, C_COMMENT, "%s", buf);
+      auto buf = info.baseName().toUtf8();
+      cmd_reply(CMD_LIST, caller, C_COMMENT, "%s", buf.data());
     }
     secfile_destroy(sf);
   }
-  fileinfo_list_iterate_end;
-  fileinfo_list_destroy(files);
 
   cmd_reply(CMD_LIST, caller, C_COMMENT, horiz_line);
 }

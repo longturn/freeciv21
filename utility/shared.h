@@ -124,22 +124,6 @@ size_t loud_strlcpy(char *buffer, const char *str, size_t len,
 
 bool str_to_int(const char *str, int *pint);
 
-/**************************************************************************
-...
-**************************************************************************/
-struct fileinfo {
-  char *name;     // descriptive file name string
-  char *fullname; // full absolute filename
-  time_t mtime;   // last modification time
-};
-
-#define SPECLIST_TAG fileinfo
-#define SPECLIST_TYPE struct fileinfo
-#include "speclist.h"
-#define fileinfo_list_iterate(list, pnode)                                  \
-  TYPED_LIST_ITERATE(struct fileinfo, list, pnode)
-#define fileinfo_list_iterate_end LIST_ITERATE_END
-
 char *user_username(char *buf, size_t bufsz);
 QString freeciv_storage_dir();
 
@@ -148,8 +132,8 @@ const QStringList &get_save_dirs();
 const QStringList &get_scenario_dirs();
 
 QVector<QString> *fileinfolist(const QStringList &dirs, const char *suffix);
-struct fileinfo_list *fileinfolist_infix(const QStringList &dirs,
-                                         const char *infix, bool nodups);
+QFileInfoList find_files_in_path(const QStringList &path,
+                                 const QString &pattern, bool nodups);
 QString fileinfoname(const QStringList &dirs, const char *filename);
 
 void init_nls();

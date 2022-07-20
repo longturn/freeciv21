@@ -110,32 +110,26 @@ page_load::~page_load() = default;
  */
 void page_load::update_load_page()
 {
-  struct fileinfo_list *files;
   int row;
 
   row = 0;
-  files = fileinfolist_infix(get_save_dirs(), ".sav", false);
   ui.saves_load->clearContents();
   ui.saves_load->setRowCount(0);
   ui.show_preview->setChecked(gui_options.gui_qt_show_preview);
-  fileinfo_list_iterate(files, pfile)
-  {
-    QTableWidgetItem *item;
-    QDateTime dt;
 
-    item = new QTableWidgetItem();
-    item->setData(Qt::UserRole, pfile->fullname);
+  const auto files =
+      find_files_in_path(get_save_dirs(), QStringLiteral("*.sav*"), false);
+  for (const auto &info : files) {
+    auto item = new QTableWidgetItem();
+    item->setData(Qt::UserRole, info.absoluteFilePath());
     ui.saves_load->insertRow(row);
-    item->setText(pfile->name);
+    item->setText(info.fileName());
     ui.saves_load->setItem(row, 0, item);
     item = new QTableWidgetItem();
-    dt = QDateTime::fromSecsSinceEpoch(pfile->mtime);
-    item->setText(dt.toString(Qt::TextDate));
+    item->setText(info.lastModified().toString(QLocale().dateTimeFormat()));
     ui.saves_load->setItem(row, 1, item);
     row++;
   }
-  fileinfo_list_iterate_end;
-  fileinfo_list_destroy(files);
 }
 
 /**

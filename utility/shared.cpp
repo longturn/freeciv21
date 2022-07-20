@@ -96,9 +96,6 @@ static char *mc_group = nullptr;
 
 Q_GLOBAL_STATIC(QString, realfile);
 
-static int compare_file_mtime_ptrs(const struct fileinfo *const *ppa,
-                                   const struct fileinfo *const *ppb);
-
 /**
    An AND function for fc_tristate.
  */
@@ -729,103 +726,41 @@ QString fileinfoname(const QStringList &dirs, const char *filename)
 }
 
 /**
-   Destroys the file info structure.
+ * Search for file names matching the pattern in the provided list of
+ * directories. "nodups" removes duplicates.
+ * The returned list will be sorted by modification time.
  */
-static void fileinfo_destroy(struct fileinfo *pfile)
+QFileInfoList find_files_in_path(const QStringList &path,
+                                 const QString &pattern, bool nodups)
 {
-  delete[] pfile->name;
-  delete[] pfile->fullname;
-  delete pfile;
-}
-
-/**
-   Compare modification times.
- */
-static int compare_file_mtime_ptrs(const struct fileinfo *const *ppa,
-                                   const struct fileinfo *const *ppb)
-{
-  time_t a = (*ppa)->mtime;
-  time_t b = (*ppb)->mtime;
-
-  return ((a < b) ? 1 : (a > b) ? -1 : 0);
-}
-
-/**
-   Compare names.
- */
-static int compare_file_name_ptrs(const struct fileinfo *const *ppa,
-                                  const struct fileinfo *const *ppb)
-{
-  return fc_strcoll((*ppa)->name, (*ppb)->name);
-}
-
-/**
-   Compare names.
- */
-static bool compare_fileinfo_name(const struct fileinfo *pa,
-                                  const struct fileinfo *pb)
-{
-  return 0 == fc_strcoll(pa->name, pb->name);
-}
-
-/**
-   Search for filenames with the "infix" substring in the "subpath"
-   subdirectory of the data path.
-   "nodups" removes duplicate names.
-   The returned list will be sorted by name first and modification time
-   second.  Returned "name"s will be truncated starting at the "infix"
-   substring.  The returned list must be freed with fileinfo_list_destroy().
- */
-struct fileinfo_list *fileinfolist_infix(const QStringList &dirs,
-                                         const char *infix, bool nodups)
-{
-  struct fileinfo_list *res;
-
-  if (dirs.isEmpty()) {
-    return nullptr;
-  }
-
-  res = fileinfo_list_new_full(fileinfo_destroy);
-
-  auto infix_str = QString::fromUtf8(infix);
-
-  // First assemble a full list of names.
-  for (const auto &dirname : dirs) {
+  // First assemble a full list of files.
+  auto files = QFileInfoList();
+  for (const auto &dirname : path) {
     QDir dir(dirname);
 
     if (!dir.exists()) {
       continue;
     }
 
-    // Get all entries in the directory matching the pattern
-    QStringList name_filters = {QStringLiteral("*") + infix_str
-                                + QStringLiteral("*")};
-    for (const auto &info : dir.entryInfoList(name_filters, QDir::NoFilter,
-                                              QDir::Name | QDir::Time)) {
-      // Clip the infix.
-      auto name = info.baseName();
-
-      // Create the fileinfo structure
-      fileinfo *file = new fileinfo;
-      file->name = fc_strdup(name.toUtf8().data());
-      file->fullname = fc_strdup(info.absoluteFilePath().toUtf8().data());
-      file->mtime = info.lastModified().toSecsSinceEpoch();
-
-      fileinfo_list_append(res, file);
-    }
+    files += dir.entryInfoList({pattern}, QDir::NoFilter);
   }
 
   // Sort the list by name.
-  fileinfo_list_sort(res, compare_file_name_ptrs);
-
   if (nodups) {
-    fileinfo_list_unique_full(res, compare_fileinfo_name);
+    std::sort(files.begin(), files.end(),
+              [](const auto &lhs, const auto &rhs) {
+                return lhs.absoluteFilePath() < rhs.absoluteFilePath();
+              });
+    std::unique(files.begin(), files.end());
   }
 
   // Sort the list by last modification time.
-  fileinfo_list_sort(res, compare_file_mtime_ptrs);
+  std::sort(files.begin(), files.end(),
+            [](const auto &lhs, const auto &rhs) {
+              return lhs.lastModified() < rhs.lastModified();
+            });
 
-  return res;
+  return files;
 }
 
 /**
