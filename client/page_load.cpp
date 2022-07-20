@@ -15,6 +15,7 @@
 // Qt
 #include <QDateTime>
 #include <QFileDialog>
+#include <qpushbutton.h>
 // utility
 #include "fcintl.h"
 // common
@@ -73,23 +74,16 @@ page_load::page_load(QWidget *parent, fc_client *c) : QWidget(parent)
   connect(ui.show_preview, &QCheckBox::stateChanged, this,
           &page_load::state_preview);
 
-  ui.bbrowse->setText(_("Browse..."));
-  ui.bbrowse->setIcon(
-      QApplication::style()->standardIcon(QStyle::SP_DirIcon));
+  auto browse = ui.buttons->button(QDialogButtonBox::Open);
+  browse->setText(_("Browse..."));
+  connect(browse, &QAbstractButton::clicked, this, &page_load::browse_saves);
 
-  connect(ui.bbrowse, &QAbstractButton::clicked, this,
-          &page_load::browse_saves);
+  connect(ui.buttons->button(QDialogButtonBox::Cancel),
+          &QAbstractButton::clicked, gui, &fc_client::slot_disconnect);
 
-  ui.bcancel->setText(_("Cancel"));
-  ui.bcancel->setIcon(
-      QApplication::style()->standardIcon(QStyle::SP_DialogCancelButton));
-  connect(ui.bcancel, &QAbstractButton::clicked, gui,
-          &fc_client::slot_disconnect);
-
-  ui.bload->setText(_("Load"));
-  ui.bload->setIcon(
-      QApplication::style()->standardIcon(QStyle::SP_DialogOkButton));
-  connect(ui.bload, &QAbstractButton::clicked, this,
+  auto load = ui.buttons->button(QDialogButtonBox::Ok);
+  load->setText(_("Load"));
+  connect(load, &QAbstractButton::clicked, this,
           &page_load::start_from_save);
 }
 
