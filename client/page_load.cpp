@@ -174,17 +174,15 @@ void page_load::browse_saves()
 /**
    State of preview has been changed
  */
-void page_load::state_preview(int new_state)
+void page_load::state_preview()
 {
-  Q_UNUSED(new_state)
-  QItemSelection slctn;
-
   gui_options.gui_qt_show_preview =
       ui.show_preview->checkState() != Qt::Unchecked;
-  slctn = ui.saves_load->selectionModel()->selection();
+  auto selection = ui.saves_load->selectionModel()->selection();
   ui.saves_load->selectionModel()->clearSelection();
   ui.saves_load->selectionModel()->select(
-      slctn, QItemSelectionModel::Rows | QItemSelectionModel::SelectCurrent);
+      selection,
+      QItemSelectionModel::Rows | QItemSelectionModel::SelectCurrent);
 }
 
 void page_load::slot_selection_changed(const QItemSelection &selected,

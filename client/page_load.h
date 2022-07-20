@@ -25,7 +25,7 @@ public:
 private slots:
   void slot_selection_changed(const QItemSelection &,
                               const QItemSelection &);
-  void state_preview(int);
+  void state_preview();
   void browse_saves();
 
 private:
