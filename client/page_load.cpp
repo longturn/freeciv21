@@ -50,31 +50,22 @@ static struct terrain *char2terrain(char ch)
 
 page_load::page_load(QWidget *parent, fc_client *c) : QWidget(parent)
 {
-  QHeaderView *header;
-
-  QStringList sav;
   gui = c;
   ui.setupUi(this);
   ui.show_preview->setText(_("Show preview"));
   ui.load_pix->setProperty("themed_border", true);
   ui.load_pix->setFixedSize(0, 0);
-  sav << _("Choose Saved Game to Load") << _("Date");
   ui.load_save_text->setText(QLatin1String(""));
   ui.load_save_text->setTextFormat(Qt::RichText);
   ui.load_save_text->setWordWrap(true);
   ui.show_preview->setChecked(gui_options.gui_qt_show_preview);
-  ui.saves_load->setAlternatingRowColors(true);
   ui.saves_load->setRowCount(0);
+  QStringList sav;
+  sav << _("Choose Saved Game to Load") << _("Date");
   ui.saves_load->setColumnCount(sav.count());
   ui.saves_load->setHorizontalHeaderLabels(sav);
-  ui.saves_load->setProperty("showGrid", "false");
-  ui.saves_load->setProperty("selectionBehavior", "SelectRows");
-  ui.saves_load->setEditTriggers(QAbstractItemView::NoEditTriggers);
-  ui.saves_load->setSelectionMode(QAbstractItemView::SingleSelection);
-  ui.saves_load->verticalHeader()->setVisible(false);
-  header = ui.saves_load->horizontalHeader();
-  header->setSectionResizeMode(0, QHeaderView::Stretch);
-  header->setStretchLastSection(true);
+  ui.saves_load->horizontalHeader()->setSectionResizeMode(
+      0, QHeaderView::Stretch);
 
   connect(ui.saves_load->selectionModel(),
           &QItemSelectionModel::selectionChanged, this,
