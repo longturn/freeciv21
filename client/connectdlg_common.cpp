@@ -130,7 +130,7 @@ bool is_server_running()
   if (server_quitting) {
     return false;
   }
-  return serverProcess::i()->state();
+  return serverProcess::i()->state() > QProcess::NotRunning;
 }
 
 /**
