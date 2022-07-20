@@ -15,6 +15,7 @@
 // Qt
 #include <QDateTime>
 #include <QFileDialog>
+#include <qdatetime.h>
 #include <qpushbutton.h>
 // utility
 #include "fcintl.h"
@@ -110,7 +111,8 @@ void page_load::update_load_page()
     item->setText(info.fileName());
     ui.saves_load->setItem(row, 0, item);
     item = new QTableWidgetItem();
-    item->setText(info.lastModified().toString(QLocale().dateTimeFormat()));
+    item->setText(info.lastModified().toString(
+        QLocale().dateTimeFormat(QLocale::ShortFormat)));
     ui.saves_load->setItem(row, 1, item);
     row++;
   }
