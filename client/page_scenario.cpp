@@ -118,7 +118,6 @@ void page_scenario::start_scenario()
  */
 void page_scenario::update_scenarios_page()
 {
-  struct fileinfo_list *files;
   int row = 0;
 
   ui.scenarios_load->clearContents();
@@ -126,11 +125,11 @@ void page_scenario::update_scenarios_page()
   ui.scenarios_text->setText(QLatin1String(""));
   ui.scenarios_view->setText(QLatin1String(""));
 
-  files = fileinfolist_infix(get_scenario_dirs(), ".sav", false);
-  fileinfo_list_iterate(files, pfile)
-  {
+  const auto files = find_files_in_path(get_scenario_dirs(),
+                                        QStringLiteral("*.sav*"), false);
+  for (const auto &info : files) {
     struct section_file *sf = secfile_load_section(
-        pfile->fullname, QStringLiteral("scenario"), true);
+        info.absoluteFilePath(), QStringLiteral("scenario"), true);
 
     if (sf
         && secfile_lookup_bool_default(sf, true, "scenario.is_scenario")) {
@@ -179,7 +178,7 @@ void page_scenario::update_scenarios_page()
         rows = ui.scenarios_load->rowCount();
         for (i = 0; i < rows; ++i) {
           if (ui.scenarios_load->item(i, 0)
-              && ui.scenarios_load->item(i, 0)->text() == pfile->name) {
+              && ui.scenarios_load->item(i, 0)->text() == info.baseName()) {
             found = true;
             item = ui.scenarios_load->takeItem(i, 0);
             break;
@@ -199,7 +198,7 @@ void page_scenario::update_scenarios_page()
           item = new QTableWidgetItem();
           ui.scenarios_load->insertRow(row);
         }
-        item->setText(QString(pfile->name));
+        item->setText(info.baseName());
         format = QStringLiteral("<br>") + QString(_("Format:")) + " "
                  + version.toHtmlEscaped();
         if (sauthors) {
@@ -210,10 +209,10 @@ void page_scenario::update_scenarios_page()
         }
         sl << "<b>"
                   + QString(sname && qstrlen(sname) ? Q_(sname)
-                                                    : pfile->name)
+                                                    : info.baseName())
                         .toHtmlEscaped()
                   + "</b>"
-           << QString(pfile->fullname).toHtmlEscaped()
+           << info.absoluteFilePath()
            << QString(nullptr != sdescription && '\0' != sdescription[0]
                           ? Q_(sdescription)
                           : "")
@@ -232,8 +231,6 @@ void page_scenario::update_scenarios_page()
     }
     secfile_destroy(sf);
   }
-  fileinfo_list_iterate_end;
-  fileinfo_list_destroy(files);
   ui.scenarios_load->sortItems(0);
   ui.scenarios_load->update();
 }
