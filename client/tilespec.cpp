@@ -367,7 +367,7 @@ int focus_unit_state = 0;
 
 static bool tileset_update = false;
 
-static struct tileset *tileset_read_toplevel(const char *tileset_name,
+static struct tileset *tileset_read_toplevel(const QString &tileset_name,
                                              bool verbose, int topology_id);
 
 static bool load_river_sprites(struct tileset *t,
@@ -923,12 +923,12 @@ void tileset_free(struct tileset *t)
 
    Returns TRUE iff tileset with suggested tileset_name was loaded.
  */
-bool tilespec_try_read(const char *tileset_name, bool verbose, int topo_id,
-                       bool global_default)
+bool tilespec_try_read(const QString &tileset_name, bool verbose,
+                       int topo_id, bool global_default)
 {
   bool original;
 
-  if (tileset_name == nullptr
+  if (tileset_name.isEmpty()
       || !(tileset =
                tileset_read_toplevel(tileset_name, verbose, topo_id))) {
     QVector<QString> *list = fileinfolist(get_data_dirs(), TILESPEC_SUFFIX);
@@ -985,32 +985,27 @@ bool tilespec_try_read(const char *tileset_name, bool verbose, int topo_id,
 
    Returns TRUE iff new tileset has been succesfully loaded.
  */
-bool tilespec_reread(const char *new_tileset_name,
-                     bool game_fully_initialized)
+bool tilespec_reread(const QString &name, bool game_fully_initialized)
 {
   int id;
-  struct tile *center_tile;
   enum client_states state = client_state();
-  const char *name = new_tileset_name ? new_tileset_name : tileset->name;
   bool new_tileset_in_use;
 
-  // Make local copies since these values may be freed down below
-  QString tileset_name = name;
-  QString old_name = tileset->name;
-
-  qInfo(_("Loading tileset \"%s\"."), qUtf8Printable(tileset_name));
+  qInfo(_("Loading tileset \"%s\"."), qUtf8Printable(name));
 
   /* Step 0:  Record old data.
    *
    * We record the current mapcanvas center, etc.
    */
-  center_tile = get_center_tile_mapcanvas();
+  auto center_tile = tileset ? get_center_tile_mapcanvas() : nullptr;
 
   /* Step 1:  Cleanup.
    *
    * Free old tileset.
    */
+  const char *old_name = nullptr;
   if (tileset) {
+    old_name = tileset->name;
     tileset_free(tileset);
   }
 
@@ -1018,14 +1013,14 @@ bool tilespec_reread(const char *new_tileset_name,
    *
    * We read in the new tileset.  This should be pretty straightforward.
    */
-  tileset = tileset_read_toplevel(qUtf8Printable(tileset_name), false, -1);
+  tileset = tileset_read_toplevel(name, false, -1);
   if (tileset != nullptr) {
     new_tileset_in_use = true;
   } else {
     new_tileset_in_use = false;
 
-    if (!(tileset =
-              tileset_read_toplevel(qUtf8Printable(old_name), false, -1))) {
+    if (old_name
+        && !(tileset = tileset_read_toplevel(old_name, false, -1))) {
       // Always fails.
       fc_assert_exit_msg(nullptr != tileset,
                          "Failed to re-read the currently loaded tileset.");
@@ -1160,10 +1155,10 @@ void tilespec_reread_callback(struct option *poption)
 
    See tilespec_reread() for details.
  */
-void tilespec_reread_frozen_refresh(const char *tname)
+void tilespec_reread_frozen_refresh(const QString &name)
 {
   tileset_update = true;
-  tilespec_reread(tname, true);
+  tilespec_reread(name, true);
   tileset_update = false;
   menus_init();
 }
@@ -1594,7 +1589,7 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
    intro files.
    topology_id of -1 means any topology is acceptable.
  */
-static struct tileset *tileset_read_toplevel(const char *tileset_name,
+static struct tileset *tileset_read_toplevel(const QString &tileset_name,
                                              bool verbose, int topology_id)
 {
   struct section_file *file;
@@ -1618,7 +1613,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   fname = tilespec_fullname(tileset_name);
   if (!fname) {
     if (verbose) {
-      qCritical("Can't find tileset \"%s\".", tileset_name);
+      qCritical("Can't find tileset \"%s\".", qUtf8Printable(tileset_name));
     }
     return nullptr;
   }
@@ -1692,7 +1687,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     t->for_ruleset = nullptr;
   }
 
-  sz_strlcpy(t->name, tileset_name);
+  sz_strlcpy(t->name, tileset_name.toUtf8().data());
   if (!secfile_lookup_int(file, &t->priority, "tilespec.priority")
       || !secfile_lookup_bool(file, &is_hex, "tilespec.is_hex")) {
     qCritical("Tileset \"%s\" invalid: %s", t->name, secfile_error());
