@@ -81,32 +81,26 @@ class units_reports : public fcwidget {
   Q_OBJECT
 
   close_widget *cw;
-  explicit units_reports();
   QHBoxLayout *scroll_layout;
   QScrollArea *scroll;
   QWidget scroll_widget;
-  static units_reports *m_instance;
   units_waiting *uw;
 
 public:
+  explicit units_reports(QWidget *parent = nullptr);
   ~units_reports() override;
-  static units_reports *instance();
-  static void drop();
   void clear_layout();
   void init_layout();
   void update_units(bool show = false);
   void add_item(unittype_item *item);
   void update_menu() override;
-  static bool exists();
   QHBoxLayout *layout;
   QList<unittype_item *> unittype_list;
 
 protected:
+  void hideEvent(QHideEvent *event) override;
   void mousePressEvent(QMouseEvent *event) override;
   void paintEvent(QPaintEvent *event) override;
   void resizeEvent(QResizeEvent *event) override;
-  void hideEvent(QHideEvent *event) override;
+  void showEvent(QShowEvent *event) override;
 };
-
-void popdown_units_report();
-void toggle_units_report();
