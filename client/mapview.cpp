@@ -612,7 +612,7 @@ void tileset_changed(void)
   }
 
   update_unit_info_label(get_units_in_focus());
-  destroy_city_dialog();
+  popdown_city_dialog();
   // Update science report if open
   if (queen()->isRepoDlgOpen(QStringLiteral("SCI"))) {
     i = queen()->gimmeIndexOf(QStringLiteral("SCI"));
