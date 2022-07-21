@@ -318,6 +318,5 @@ const char *tileset_name_get(struct tileset *t);
 const char *tileset_version(struct tileset *t);
 const char *tileset_summary(struct tileset *t);
 const char *tileset_description(struct tileset *t);
-char *tileset_what_ruleset(struct tileset *t);
 int tileset_topo_index(struct tileset *t);
 help_item *tileset_help(struct tileset *t);

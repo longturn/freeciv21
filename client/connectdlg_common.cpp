@@ -200,7 +200,7 @@ static int find_next_free_port(int starting_port, int highest_port)
 bool client_start_server(const QString &user_name)
 {
   QStringList arguments;
-  QString trueFcser, ruleset, storage, port_buf, savesdir, scensdir;
+  QString trueFcser, storage, port_buf, savesdir, scensdir;
   char buf[512];
   int connect_tries = 0;
 
@@ -233,8 +233,6 @@ bool client_start_server(const QString &user_name)
     return false;
   }
 
-  ruleset = QString::fromUtf8(tileset_what_ruleset(tileset));
-
   // Set up the command-line parameters.
   port_buf = QString::number(internal_server_port);
   savesdir = QStringLiteral("%1/saves").arg(storage);
@@ -255,9 +253,6 @@ bool client_start_server(const QString &user_name)
   }
   if (savefile.isEmpty()) {
     arguments << QStringLiteral("--file") << savefile;
-  }
-  if (ruleset != nullptr) {
-    arguments << QStringLiteral("--ruleset") << ruleset;
   }
 
   // Look for a server binary
@@ -328,38 +323,6 @@ bool client_start_server(const QString &user_name)
                          _("You'll have to start one manually. Sorry..."));
 
     return false;
-  }
-
-  /* We set the topology to match the view.
-   *
-   * When a typical player launches a game, he wants the map orientation to
-   * match the tileset orientation.  So if you use an isometric tileset you
-   * get an iso-map and for a classic tileset you get a classic map.  In
-   * both cases the map wraps in the X direction by default.
-   *
-   * This works with hex maps too now.  A hex map always has
-   * tileset_is_isometric(tileset) return TRUE.  An iso-hex map has
-   * tileset_hex_height(tileset) != 0, while a non-iso hex map
-   * has tileset_hex_width(tileset) != 0.
-   *
-   * Setting the option here is a bit of a hack, but so long as the client
-   * has sufficient permissions to do so (it doesn't have HACK access yet) it
-   * is safe enough.  Note that if you load a savegame the topology will be
-   * set but then overwritten during the load.
-   *
-   * Don't send it now, it will be sent to the server when receiving the
-   * server setting infos. */
-  {
-    char topobuf[16];
-
-    fc_strlcpy(topobuf, "WRAPX", sizeof(topobuf));
-    if (tileset_is_isometric(tileset) && 0 == tileset_hex_height(tileset)) {
-      fc_strlcat(topobuf, "|ISO", sizeof(topobuf));
-    }
-    if (0 < tileset_hex_width(tileset) || 0 < tileset_hex_height(tileset)) {
-      fc_strlcat(topobuf, "|HEX", sizeof(topobuf));
-    }
-    desired_settable_option_update("topology", topobuf, false);
   }
 
   return true;

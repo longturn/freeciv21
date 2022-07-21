@@ -300,8 +300,6 @@ struct tileset {
 
   std::vector<tileset_log_entry> log;
 
-  char *for_ruleset;
-
   std::vector<std::unique_ptr<freeciv::layer>> layers;
   struct {
     freeciv::layer_special *background, *middleground, *foreground;
@@ -892,10 +890,8 @@ static void tileset_free_toplevel(struct tileset *t)
 
   delete[] t->summary;
   delete[] t->description;
-  delete[] t->for_ruleset;
   t->summary = nullptr;
   t->description = nullptr;
-  t->for_ruleset = nullptr;
 }
 
 /**
@@ -1670,13 +1666,6 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
       delete[] t->description;
       t->description = nullptr;
     }
-  }
-
-  tstr = secfile_lookup_str_default(file, nullptr, "tilespec.for_ruleset");
-  if (tstr != nullptr) {
-    t->for_ruleset = fc_strdup(tstr);
-  } else {
-    t->for_ruleset = nullptr;
   }
 
   sz_strlcpy(t->name, tileset_name.toUtf8().data());
@@ -5668,11 +5657,6 @@ const char *tileset_summary(struct tileset *t) { return t->summary; }
    Return tileset description body
  */
 const char *tileset_description(struct tileset *t) { return t->description; }
-
-/**
-   Return what ruleset this tileset is primarily meant for
- */
-char *tileset_what_ruleset(struct tileset *t) { return t->for_ruleset; }
 
 /**
    Return tileset topology index
