@@ -117,8 +117,7 @@ bool tileset_has_error(const struct tileset *t);
 
 void finish_loading_sprites(struct tileset *t);
 
-bool tilespec_try_read(const QString &name, bool verbose, int topo_id,
-                       bool global_default);
+bool tilespec_try_read(const QString &name, bool verbose, int topo_id);
 bool tilespec_reread(const QString &tileset_name,
                      bool game_fully_initialized);
 void tilespec_reread_callback(struct option *poption);

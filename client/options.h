@@ -62,9 +62,8 @@ struct client_options {
   bool save_options_on_exit;
 
   /** Migrations **/
-  bool first_boot;                /* There was no earlier options saved.
-                                   * This affects some migrations, but not all. */
-  char default_tileset_name[512]; // pre-2.6 had just this one tileset name
+  bool first_boot; /* There was no earlier options saved.
+                    * This affects some migrations, but not all. */
   char default_tileset_overhead_name[512]; /* 2.6 had separate tilesets for
                                               ... */
   char default_tileset_iso_name[512];      // ...overhead and iso topologies.

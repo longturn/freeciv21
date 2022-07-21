@@ -88,7 +88,6 @@ struct client_options gui_options = {
 
     /** Migrations **/
     false, //.first_boot =
-    "\0",  //.default_tileset_name =
     "\0",  //.default_tileset_overhead_name =
     "\0",  //.default_tileset_iso_name =
     false, //.gui_qt_migrated_from_2_5 =
@@ -4418,11 +4417,6 @@ void options_load()
       secfile_lookup_bool_default(sf, gui_options.gui_qt_migrated_from_2_5,
                                   "%s.migration_qt_from_2_5", prefix);
 
-  str =
-      secfile_lookup_str_default(sf, nullptr, "client.default_tileset_name");
-  if (str != nullptr) {
-    sz_strlcpy(gui_options.default_tileset_name, str);
-  }
   str = secfile_lookup_str_default(sf, nullptr,
                                    "client.default_tileset_overhead_name");
   if (str != nullptr) {
@@ -4530,11 +4524,6 @@ void options_save(option_save_log_callback log_cb)
   gui_options.gui_qt_increase_fonts = 0; // gui-enabled options
   client_options_iterate_all(poption) { client_option_save(poption, sf); }
   client_options_iterate_all_end;
-
-  if (gui_options.default_tileset_name[0] != '\0') {
-    secfile_insert_str(sf, gui_options.default_tileset_name,
-                       "client.default_tileset_name");
-  }
 
   message_options_save(sf, "client");
   options_dialogs_save(sf);
@@ -4878,10 +4867,6 @@ const char *tileset_name_for_topology(int topology_id)
     break;
   }
 
-  if (tsn == nullptr) {
-    tsn = gui_options.default_tileset_name;
-  }
-
   return tsn;
 }
 
@@ -4957,15 +4942,15 @@ void fill_topo_ts_default()
                sizeof(gui_options.default_tileset_square_name));
     } else {
       log_debug("Setting tileset for square topologies.");
-      tilespec_try_read(nullptr, false, 0, false);
+      tilespec_try_read(QString(), false, 0);
     }
   }
   if (is_ts_option_unset("default_tileset_hex_name")) {
     log_debug("Setting tileset for hex topology.");
-    tilespec_try_read(nullptr, false, TF_HEX, false);
+    tilespec_try_read(QString(), false, TF_HEX);
   }
   if (is_ts_option_unset("default_tileset_isohex_name")) {
     log_debug("Setting tileset for isohex topology.");
-    tilespec_try_read(nullptr, false, TF_ISO | TF_HEX, false);
+    tilespec_try_read(QString(), false, TF_ISO | TF_HEX);
   }
 }
