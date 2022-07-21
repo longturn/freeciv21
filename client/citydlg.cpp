@@ -806,7 +806,7 @@ void unit_list_item::activate_and_close_dialog()
   if (can_issue_orders()) {
     unit_focus_set(m_unit);
     queen()->city_overlay->dont_focus = true;
-    popdown_all_city_dialogs();
+    popdown_city_dialog();
   }
 }
 
@@ -2074,7 +2074,7 @@ void city_dialog::refresh()
     update_cma_tab();
     update_disabled();
   } else {
-    destroy_city_dialog();
+    popdown_city_dialog();
   }
 
   update_map_canvas_visible();
@@ -2799,30 +2799,14 @@ void real_city_dialog_popup(struct city *pcity)
 }
 
 /**
-   Closes city dialog
+ * Closes the city overlay.
  */
-void destroy_city_dialog()
+void popdown_city_dialog()
 {
-  // Only tyrans destroy cities instead building
-  if (king()->current_page() >= PAGE_GAME) {
+  if (queen()) {
     queen()->city_overlay->hide();
   }
 }
-
-/**
-   Close the dialog for the given city.
- */
-void popdown_city_dialog(struct city *pcity)
-{
-  Q_UNUSED(pcity)
-
-  popdown_all_city_dialogs(); // We only ever have one city dialog
-}
-
-/**
-   Close the dialogs for all cities.
- */
-void popdown_all_city_dialogs() { queen()->city_overlay->hide(); }
 
 /**
    Refresh (update) all data for the given city's dialog.

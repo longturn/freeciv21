@@ -798,7 +798,7 @@ void set_client_state(enum client_states newstate)
     break;
 
   case C_S_DISCONNECTED:
-    popdown_all_city_dialogs();
+    popdown_city_dialog();
     close_all_diplomacy_dialogs();
     popdown_all_game_dialogs();
     meswin_clear_older(MESWIN_CLEAR_ALL, 0);
@@ -818,7 +818,7 @@ void set_client_state(enum client_states newstate)
     break;
 
   case C_S_PREPARING:
-    popdown_all_city_dialogs();
+    popdown_city_dialog();
     close_all_diplomacy_dialogs();
     popdown_all_game_dialogs();
     meswin_clear_older(MESWIN_CLEAR_ALL, 0);
@@ -892,7 +892,7 @@ void set_client_state(enum client_states newstate)
         }
         city_list_iterate_end;
       }
-      popdown_all_city_dialogs();
+      popdown_city_dialog();
       close_all_diplomacy_dialogs();
       popdown_all_game_dialogs();
       unit_focus_set(nullptr);

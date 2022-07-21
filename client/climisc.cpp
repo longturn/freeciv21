@@ -154,7 +154,10 @@ void client_remove_city(struct city *pcity)
     // nothing yet
   }
 
-  popdown_city_dialog(pcity);
+  if (auto dialog = is_any_city_dialog_open();
+      dialog && pcity->id == dialog->id) {
+    popdown_city_dialog();
+  }
   game_remove_city(&wld, pcity);
   city_report_dialog_update();
   refresh_city_mapcanvas(&old_city, ptile, true, false);

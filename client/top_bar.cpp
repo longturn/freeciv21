@@ -453,7 +453,7 @@ void top_bar::addWidget(QWidget *fsw)
  */
 void top_bar_show_map()
 {
-  popdown_all_city_dialogs();
+  popdown_city_dialog();
   queen()->game_tab_widget->setCurrentIndex(0);
 }
 
