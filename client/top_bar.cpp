@@ -236,8 +236,10 @@ void top_bar_widget::setTooltip(const QString &tooltip)
 void top_bar_widget::paintEvent(QPaintEvent *event)
 {
   // HACK Should improve this logic, paintEvent is NOT the right place.
-  int i = queen()->gimmeIndexOf(page);
-  setChecked(i == queen()->game_tab_widget->currentIndex());
+  if (!page.isEmpty()) {
+    int i = queen()->gimmeIndexOf(page);
+    setChecked(i == queen()->game_tab_widget->currentIndex());
+  }
 
   QToolButton::paintEvent(event);
 
@@ -279,12 +281,12 @@ void top_bar_widget::mousePressEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::LeftButton && left_click != nullptr) {
     left_click();
-  }
-  if (event->button() == Qt::RightButton && right_click != nullptr) {
+  } else if (event->button() == Qt::RightButton && right_click != nullptr) {
     right_click();
-  }
-  if (event->button() == Qt::RightButton && right_click == nullptr) {
+  } else if (event->button() == Qt::RightButton && right_click == nullptr) {
     queen()->game_tab_widget->setCurrentIndex(0);
+  } else {
+    QToolButton::mousePressEvent(event);
   }
 }
 

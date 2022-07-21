@@ -43,6 +43,7 @@
 #include "minimap_panel.h"
 #include "plrdlg.h"
 #include "top_bar.h"
+#include "unitreport.h"
 #include "voteinfo_bar.h"
 
 int last_center_capital = 0;
@@ -79,9 +80,13 @@ pageGame::pageGame(QWidget *parent)
   sw_indicators = new indicators_widget();
   connect(sw_indicators, &QAbstractButton::clicked, top_bar_indicators_menu);
 
-  sw_cunit =
-      new top_bar_widget(_("Units"), QLatin1String(""), toggle_units_report);
+  units = new units_reports(mapview_wdg);
+  units->hide();
+  sw_cunit = new top_bar_widget(_("Units"), QLatin1String(""), nullptr);
   sw_cunit->setIcon(fcIcons::instance()->getIcon(QStringLiteral("units")));
+  sw_cunit->setCheckable(true);
+  connect(sw_cunit, &QAbstractButton::toggled, units, &QWidget::setVisible);
+
   sw_cities = new top_bar_widget(_("Cities"), QStringLiteral("CTS"),
                                  city_report_dialog_popup);
   sw_cities->setIcon(fcIcons::instance()->getIcon(QStringLiteral("cities")));
@@ -539,6 +544,7 @@ bool fc_game_tab_widget::event(QEvent *event)
       queen()->mapview_wdg->resize(size.width(), size.height());
       queen()->city_overlay->resize(queen()->mapview_wdg->size());
       queen()->unitinfo_wdg->update_actions(nullptr);
+      queen()->units->update_units(false);
     }
 
     /*

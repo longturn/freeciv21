@@ -64,7 +64,6 @@
 extern void popdown_all_spaceships_dialogs();
 extern void popdown_players_report();
 extern void popdown_economy_report();
-extern void popdown_units_report();
 extern void popdown_science_report();
 extern void popdown_city_report();
 extern void popdown_endgame_report();
@@ -3507,7 +3506,6 @@ void popdown_all_game_dialogs(void)
   popdown_players_report();
   popdown_all_spaceships_dialogs();
   popdown_economy_report();
-  popdown_units_report();
   popdown_science_report();
   popdown_city_report();
   popdown_endgame_report();

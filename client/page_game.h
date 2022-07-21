@@ -31,6 +31,7 @@ class goto_dialog;
 class tax_rates_widget;
 class top_bar;
 class top_bar_widget;
+class units_reports;
 class units_select;
 class xvote;
 
@@ -78,6 +79,8 @@ public:
   map_view *mapview_wdg;
   ::minimap_panel *minimap_panel;
   city_dialog *city_overlay;
+  units_reports *units;
+  top_bar_widget *sw_cunit;
   xvote *x_vote;
   civstatus *civ_status;
   top_bar_widget *sw_diplo;
@@ -91,7 +94,6 @@ private:
   QMap<QString, QWidget *> opened_repo_dlgs;
   QTimer *update_info_timer;
   top_bar_widget *sw_cities;
-  top_bar_widget *sw_cunit;
   gold_widget *sw_economy;
   top_bar_widget *sw_map;
   tax_rates_widget *sw_tax;

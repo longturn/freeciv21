@@ -60,8 +60,6 @@ public:
 
 } // anonymous namespace
 
-units_reports *units_reports::m_instance = nullptr;
-
 units_waiting::units_waiting(QWidget *parent)
 {
   setParent(parent);
@@ -160,10 +158,7 @@ void units_waiting::update_units()
   waiting_units->horizontalHeader()->resizeSections(
       QHeaderView::ResizeToContents);
 
-  if (units_reports::exists() && units_count
-      && units_reports::instance()->isVisible()) {
-    show();
-  } else {
+  if (units_count == 0) {
     hide();
   }
 
@@ -406,22 +401,21 @@ void unittype_item::wheelEvent(QWheelEvent *event)
 /**
    Class representing list of unit types ( unit_items )
  */
-units_reports::units_reports() : fcwidget()
+units_reports::units_reports(QWidget *parent) : fcwidget(parent)
 {
   layout = new QHBoxLayout;
   scroll_layout = new QHBoxLayout(this);
   init_layout();
-  setParent(queen()->mapview_wdg);
   cw = new close_widget(this);
   cw->setFixedSize(12, 12);
   setVisible(false);
-  uw = new units_waiting(queen()->mapview_wdg);
+  uw = new units_waiting(parent); // FIXME move this away!
   uw->setVisible(false);
-  int x, y;
-  x = width();
-  y = height();
-  queen()->mapview_wdg->find_place(0, 4, x, y, x, y, 0, true);
-  move(x, y);
+  if (auto mapview = qobject_cast<map_view *>(parent)) {
+    int x = 0, y = 0;
+    mapview->find_place(0, 4, x, y, 12, 12, 0, true);
+    move(x, y);
+  }
 }
 
 /**
@@ -445,34 +439,9 @@ void units_reports::add_item(unittype_item *item)
 }
 
 /**
-  Check is instance exists
- */
-bool units_reports::exists() { return static_cast<bool>(m_instance); }
-
-/**
-   Returns instance of units_reports
- */
-units_reports *units_reports::instance()
-{
-  if (!m_instance) {
-    m_instance = new units_reports;
-  }
-  return m_instance;
-}
-
-/**
-   Deletes units_reports instance
- */
-void units_reports::drop()
-{
-  delete m_instance;
-  m_instance = nullptr;
-}
-
-/**
    Called when close button was pressed
  */
-void units_reports::update_menu() { drop(); }
+void units_reports::update_menu() { hide(); }
 
 /**
    Initiazlizes layout ( layout needs to be changed after adding units )
@@ -495,6 +464,15 @@ void units_reports::init_layout()
 }
 
 /**
+ * Hide event
+ */
+void units_reports::hideEvent(QHideEvent *event)
+{
+  Q_UNUSED(event);
+  uw->hide();
+}
+
+/**
    Paint event
  */
 void units_reports::paintEvent(QPaintEvent *event)
@@ -512,10 +490,13 @@ void units_reports::resizeEvent(QResizeEvent *event)
   uw->move(pos().x(), height() + pos().y());
 }
 
-void units_reports::hideEvent(QHideEvent *event)
+/**
+ * Show event
+ */
+void units_reports::showEvent(QShowEvent *event)
 {
   Q_UNUSED(event);
-  destroy();
+  uw->show();
 }
 
 /**
@@ -606,24 +587,22 @@ void units_reports::update_units(bool show)
   for (j = 0; j < i; j++) {
     ui = unittype_list[j];
     layout->addWidget(ui, 0, Qt::AlignVCenter);
-    total_len = total_len + ui->sizeHint().width() + 18;
+    total_len += ui->sizeHint().width() + 18;
   }
 
-  total_len =
-      total_len + contentsMargins().left() + contentsMargins().right();
+  total_len += contentsMargins().left() + contentsMargins().right();
   if (show) {
     setVisible(true);
+    uw->setVisible(true);
   }
   setUpdatesEnabled(true);
   setFixedWidth(qMin(total_len, queen()->mapview_wdg->width()));
   if (ui != nullptr) {
-    setFixedHeight(ui->height() + 60);
+    setFixedHeight(ui->sizeHint().height() + 60);
   }
   layout->update();
   updateGeometry();
   delete[] unit_array;
-
-  uw->setVisible(true);
 }
 
 /**
@@ -664,46 +643,12 @@ void units_reports::clear_layout()
 }
 
 /**
-   Closes units report
- */
-void popdown_units_report()
-{
-  if (units_reports::exists()) {
-    units_reports::instance()->drop();
-  }
-}
-
-/**
- * Toggles units report
- */
-void toggle_units_report()
-{
-  if (units_reports::exists()
-      && queen()->game_tab_widget->currentIndex() == 0) {
-    units_reports::instance()->drop();
-  } else {
-    units_report_dialog_popup(true);
-  }
-}
-
-/**
    Update the units report.
  */
 void real_units_report_dialog_update(void *unused)
 {
   Q_UNUSED(unused)
-  if (units_reports::exists()) {
-    units_reports::instance()->update_units();
+  if (queen()) {
+    queen()->units->update_units();
   }
-}
-
-/**
-   Display the units report.  Optionally raise it.
-   Typically triggered by F2.
- */
-void units_report_dialog_popup(bool raise)
-{
-  Q_UNUSED(raise)
-  queen()->game_tab_widget->setCurrentIndex(0);
-  units_reports::instance()->update_units(true);
 }
