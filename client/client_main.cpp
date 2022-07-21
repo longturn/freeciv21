@@ -585,17 +585,15 @@ int client_main(int argc, char *argv[])
   boot_help_texts(client_current_nation_set(), tileset_help(tileset));
 
   fill_topo_ts_default();
-
   if (!forced_tileset_name.isEmpty()) {
-    if (!tilespec_try_read(qUtf8Printable(forced_tileset_name), true, -1,
-                           true)) {
+    if (!tilespec_try_read(forced_tileset_name, true, -1)) {
       qCritical(_("Can't load requested tileset %s!"),
                 qUtf8Printable(forced_tileset_name));
       client_exit();
       return EXIT_FAILURE;
     }
   } else {
-    tilespec_try_read(gui_options.default_tileset_name, false, -1, true);
+    tilespec_try_read(QString(), false, -1);
   }
 
   audio_real_init(sound_set_name, music_set_name, sound_plugin_name);

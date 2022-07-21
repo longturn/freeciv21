@@ -924,7 +924,7 @@ void tileset_free(struct tileset *t)
    Returns TRUE iff tileset with suggested tileset_name was loaded.
  */
 bool tilespec_try_read(const QString &tileset_name, bool verbose,
-                       int topo_id, bool global_default)
+                       int topo_id)
 {
   bool original;
 
@@ -964,10 +964,6 @@ bool tilespec_try_read(const QString &tileset_name, bool verbose,
     original = true;
   }
   option_set_default_ts(tileset);
-
-  if (global_default) {
-    sz_strlcpy(gui_options.default_tileset_name, tileset_basename(tileset));
-  }
 
   return original;
 }
@@ -1137,10 +1133,6 @@ void tilespec_reread_callback(struct option *poption)
   }
 
   tileset_name = option_str_get(poption);
-
-  /* As it's going to be 'current' tileset, make it global default if
-   * options saved. */
-  sz_strlcpy(gui_options.default_tileset_name, tileset_name);
 
   fc_assert_ret(nullptr != tileset_name && tileset_name[0] != '\0');
   tileset_update = true;
