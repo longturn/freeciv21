@@ -537,11 +537,6 @@ void flush_dirty()
 }
 
 /**
-   Update (refresh) all city descriptions on the mapview.
- */
-void update_city_descriptions(void) { update_map_canvas_visible(); }
-
-/**
    Put overlay tile to pixmap
  */
 void pixmap_put_overlay_tile(int canvas_x, int canvas_y,

@@ -1290,7 +1290,7 @@ void handle_new_year(int year, int fragments, int turn)
   }
 #endif
 
-  update_city_descriptions();
+  update_map_canvas_visible();
   link_marks_decrease_turn_counters();
 
   if (gui_options.sound_bell_at_new_turn) {

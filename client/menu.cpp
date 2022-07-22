@@ -2542,7 +2542,7 @@ void mr_menu::slot_city_growth() { key_city_growth_toggle(); }
 void mr_menu::zoom_scale_fonts()
 {
   gui_options.zoom_scale_fonts = scale_fonts_status->isChecked();
-  update_city_descriptions();
+  update_map_canvas_visible();
 }
 
 /**
