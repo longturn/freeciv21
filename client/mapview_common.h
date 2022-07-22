@@ -226,7 +226,6 @@ void refresh_city_mapcanvas(struct city *pcity, struct tile *ptile,
                             bool full_refresh, bool write_to_screen);
 
 void unqueue_mapview_updates(bool write_to_screen);
-void redraw_visible_map_now();
 void map_to_gui_vector(const struct tileset *t, float *gui_dx, float *gui_dy,
                        int map_dx, int map_dy);
 bool tile_to_canvas_pos(float *canvas_x, float *canvas_y, const tile *ptile);
