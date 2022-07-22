@@ -513,7 +513,6 @@ bool fc_game_tab_widget::event(QEvent *event)
                           ? static_cast<QResizeEvent *>(event)->size()
                           : this->size();
     if (event->type() == QEvent::Resize) {
-      map_canvas_resized(size.width(), size.height());
       queen()->message->resize(
           qRound((size.width() * king()->qt_settings.chat_fwidth)),
           qRound((size.height() * king()->qt_settings.chat_fheight)));

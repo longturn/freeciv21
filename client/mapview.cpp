@@ -28,6 +28,7 @@
 #include "mapview_common.h"
 #include "mapview_g.h"
 #include "minimap_panel.h"
+#include "renderer.h"
 #include "sprite.h"
 #include "text.h"
 #include "tilespec.h"
@@ -134,7 +135,7 @@ void draw_calculated_trade_routes(QPainter *painter)
    Constructor for map
  */
 map_view::map_view()
-    : QWidget(),
+    : QWidget(), m_renderer(new freeciv::renderer(this)),
       m_scale_animation(std::make_unique<QPropertyAnimation>(this, "scale"))
 {
   menu_click = false;
@@ -210,6 +211,11 @@ void map_view::zoom_reset() { set_scale(1); }
 void map_view::zoom_out() { set_scale(scale() / 1.2); }
 
 /**
+ * Retrieves the current scale (zoom level) of the map.
+ */
+double map_view::scale() const { return m_renderer->scale(); }
+
+/**
  * Sets the map scale.
  */
 void map_view::set_scale(double scale)
@@ -226,11 +232,7 @@ void map_view::set_scale(double scale)
  */
 void map_view::set_scale_now(double scale)
 {
-  m_scale = scale;
-  // When zoomed in, we pretend that the canvas is smaller than it is. This
-  // makes text look bad, but everything else is drawn correctly.
-  map_canvas_resized(width() / m_scale, height() / m_scale);
-
+  m_renderer->set_scale(scale);
   emit scale_changed(m_scale);
 }
 
@@ -314,26 +316,19 @@ void map_view::paintEvent(QPaintEvent *event)
   QPainter painter;
 
   painter.begin(this);
-  paint(&painter, event);
+  m_renderer->render(painter, event->region());
+  painter.scale(1 / scale(), 1 / scale());
+  draw_calculated_trade_routes(&painter);
   painter.end();
 }
 
 /**
-   Redraws given rectangle on map
+ * The widget has been resized.
  */
-void map_view::paint(QPainter *painter, QPaintEvent *event)
+void map_view::resizeEvent(QResizeEvent *event)
 {
-  if (scale() != 1) {
-    painter->setRenderHint(QPainter::SmoothPixmapTransform);
-  }
-  auto widget_rect = QRectF(event->rect());
-  auto mapview_rect =
-      QRectF(widget_rect.left() / scale(), widget_rect.top() / scale(),
-             widget_rect.width() / scale(), widget_rect.height() / scale());
-  painter->drawPixmap(widget_rect, *mapview.store, mapview_rect);
-
-  painter->scale(1 / scale(), 1 / scale());
-  draw_calculated_trade_routes(painter);
+  m_renderer->set_viewport_size(event->size());
+  event->accept();
 }
 
 /**
