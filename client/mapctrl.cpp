@@ -98,8 +98,6 @@ void map_view::keyPressEvent(QKeyEvent *event)
   Qt::KeyboardModifiers key_mod = QApplication::keyboardModifiers();
   bool is_shift = key_mod.testFlag(Qt::ShiftModifier);
 
-  auto scale = queen()->mapview_wdg->scale();
-
   if (C_S_RUNNING == client_state()) {
     if (is_shift) {
       switch (event->key()) {
@@ -116,8 +114,7 @@ void map_view::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Up:
     case Qt::Key_8:
       if (is_shift) {
-        recenter_button_pressed(queen()->mapview_wdg->width() / 2 / scale,
-                                0);
+        recenter_button_pressed(width() / 2 / scale(), 0);
       } else {
         key_unit_move(DIR8_NORTH);
       }
@@ -125,8 +122,7 @@ void map_view::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Left:
     case Qt::Key_4:
       if (is_shift) {
-        recenter_button_pressed(0,
-                                queen()->mapview_wdg->height() / 2 / scale);
+        recenter_button_pressed(0, height() / 2 / scale());
       } else {
         key_unit_move(DIR8_WEST);
       }
@@ -134,8 +130,7 @@ void map_view::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Right:
     case Qt::Key_6:
       if (is_shift) {
-        recenter_button_pressed(queen()->mapview_wdg->width() / scale,
-                                queen()->mapview_wdg->height() / 2 / scale);
+        recenter_button_pressed(width() / scale(), height() / 2 / scale());
       } else {
         key_unit_move(DIR8_EAST);
       }
@@ -143,8 +138,7 @@ void map_view::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Down:
     case Qt::Key_2:
       if (is_shift) {
-        recenter_button_pressed(queen()->mapview_wdg->width() / 2 / scale,
-                                queen()->mapview_wdg->height() / scale);
+        recenter_button_pressed(width() / 2 / scale(), height() / scale());
       } else {
         key_unit_move(DIR8_SOUTH);
       }
