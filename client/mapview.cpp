@@ -476,18 +476,6 @@ void update_turn_done_button(bool do_restore)
 }
 
 /**
-   Flush the given part of the canvas buffer (if there is one) to the
-   screen.
- */
-static void flush_mapcanvas(int canvas_x, int canvas_y, int pixel_width,
-                            int pixel_height)
-{
-  auto scale = queen()->mapview_wdg->scale();
-  queen()->mapview_wdg->repaint(canvas_x * scale, canvas_y * scale,
-                                pixel_width * scale, pixel_height * scale);
-}
-
-/**
    Mark the rectangular region as "dirty" so that we know to flush it
    later.
  */
@@ -522,21 +510,22 @@ void dirty_all(void)
    dirty_rect and dirty_all.  This function is generally called after we've
    processed a batch of drawing operations.
  */
-void flush_dirty(void)
+void flush_dirty()
 {
   if (mapview_is_frozen()) {
     return;
   }
-  if (num_dirty_rects == MAX_DIRTY_RECTS) {
-    flush_mapcanvas(
-        0, 0, queen()->mapview_wdg->width() / queen()->mapview_wdg->scale(),
-        queen()->mapview_wdg->height() / queen()->mapview_wdg->scale());
-  } else {
-    int i;
 
-    for (i = 0; i < num_dirty_rects; i++) {
-      flush_mapcanvas(dirty_rects[i].x(), dirty_rects[i].y(),
-                      dirty_rects[i].width(), dirty_rects[i].height());
+  auto mapview = queen()->mapview_wdg;
+
+  if (num_dirty_rects >= MAX_DIRTY_RECTS) {
+    mapview->repaint();
+  } else {
+    for (int i = 0; i < num_dirty_rects; i++) {
+      mapview->repaint(dirty_rects[i].x() * mapview->scale(),
+        dirty_rects[i].y() * mapview->scale(),
+                       dirty_rects[i].width() * mapview->scale(),
+                       dirty_rects[i].height() * mapview->scale());
     }
   }
   num_dirty_rects = 0;
