@@ -78,7 +78,6 @@ enum update_type {
   // Masks
   UPDATE_NONE = 0,
   UPDATE_MAP_CANVAS_VISIBLE = 2,
-  UPDATE_TILE_LABELS = 4
 };
 
 /* A tile update has a tile associated with it as well as an area type.
@@ -2120,8 +2119,7 @@ void unqueue_mapview_updates(bool write_to_screen)
   }
 
   if (!map_is_empty()) {
-    if ((needed_updates & UPDATE_MAP_CANVAS_VISIBLE)
-        || (needed_updates & UPDATE_TILE_LABELS)) {
+    if (needed_updates & UPDATE_MAP_CANVAS_VISIBLE) {
       dirty_all();
       update_map_canvas(0, 0, mapview.store_width, mapview.store_height);
       /* Have to update the overview too, since some tiles may have changed.
