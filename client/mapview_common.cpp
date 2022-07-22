@@ -74,12 +74,6 @@ struct tile *center_tile = nullptr;
 static void base_canvas_to_map_pos(int *map_x, int *map_y, float canvas_x,
                                    float canvas_y);
 
-enum update_type {
-  // Masks
-  UPDATE_NONE = 0,
-  UPDATE_MAP_CANVAS_VISIBLE = 2,
-};
-
 /* A tile update has a tile associated with it as well as an area type.
  * See unqueue_mapview_updates for a thorough explanation. */
 enum tile_update_type {
@@ -91,7 +85,7 @@ enum tile_update_type {
   TILE_UPDATE_TILE_LABEL,
   TILE_UPDATE_COUNT
 };
-static void queue_mapview_update(enum update_type update);
+static void queue_mapview_update(bool update_all);
 static void queue_mapview_tile_update(const tile *ptile,
                                       enum tile_update_type type);
 
@@ -138,7 +132,7 @@ void refresh_unit_mapcanvas(struct unit *punit, struct tile *ptile,
                             bool full_refresh, bool write_to_screen)
 {
   if (full_refresh && gui_options.draw_native) {
-    queue_mapview_update(UPDATE_MAP_CANVAS_VISIBLE);
+    queue_mapview_update(true);
   } else if (full_refresh && unit_drawn_with_city_outline(punit, true)) {
     queue_mapview_tile_update(ptile, TILE_UPDATE_CITYMAP);
   } else {
@@ -1393,10 +1387,7 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
 /**
    Update (only) the visible part of the map
  */
-void update_map_canvas_visible()
-{
-  queue_mapview_update(UPDATE_MAP_CANVAS_VISIBLE);
-}
+void update_map_canvas_visible() { queue_mapview_update(true); }
 
 /* The maximum city description width and height.  This gives the dimensions
  * of a rectangle centered directly beneath the tile a city is on, that
@@ -1981,7 +1972,7 @@ void get_city_mapview_trade_routes(const city *pcity,
 }
 
 /***************************************************************************/
-static enum update_type needed_updates = UPDATE_NONE;
+static bool need_full_refresh = false;
 static bool callback_queued = false;
 
 /* These values hold the tiles that need city, unit, or tile updates.
@@ -2032,11 +2023,10 @@ static void queue_add_callback()
    faster too.  But it's a bit of a hack to insert this code into the
    packet-handling code.
  */
-void queue_mapview_update(enum update_type update)
+void queue_mapview_update(bool update_all)
 {
   if (can_client_change_view()) {
-    needed_updates = static_cast<update_type>(
-        static_cast<int>(needed_updates) | static_cast<int>(update));
+    need_full_refresh = update_all;
     queue_add_callback();
   }
 }
@@ -2108,7 +2098,8 @@ void unqueue_mapview_updates(bool write_to_screen)
     return;
   }
 
-  log_debug("unqueue_mapview_update: needed_updates=%d", needed_updates);
+  log_debug("unqueue_mapview_update: need_full_refresh=%d",
+            need_full_refresh);
 
   /* This code "pops" the lists of tile updates off of the static array and
    * stores them locally.  This allows further updates to be queued within
@@ -2119,7 +2110,7 @@ void unqueue_mapview_updates(bool write_to_screen)
   }
 
   if (!map_is_empty()) {
-    if (needed_updates & UPDATE_MAP_CANVAS_VISIBLE) {
+    if (need_full_refresh) {
       dirty_all();
       update_map_canvas(0, 0, mapview.store_width, mapview.store_height);
       /* Have to update the overview too, since some tiles may have changed.
@@ -2171,7 +2162,7 @@ void unqueue_mapview_updates(bool write_to_screen)
       tile_list_destroy(my_tile_updates[i]);
     }
   }
-  needed_updates = UPDATE_NONE;
+  need_full_refresh = false;
 
   if (write_to_screen) {
     flush_dirty();
