@@ -218,7 +218,7 @@ extern bool can_slide;
   }                                                                         \
   gui_rect_iterate_end
 
-void refresh_tile_mapcanvas(struct tile *ptile, bool full_refresh,
+void refresh_tile_mapcanvas(const tile *ptile, bool full_refresh,
                             bool write_to_screen);
 void refresh_unit_mapcanvas(struct unit *punit, struct tile *ptile,
                             bool full_refresh, bool write_to_screen);
@@ -229,8 +229,7 @@ void unqueue_mapview_updates(bool write_to_screen);
 void redraw_visible_map_now();
 void map_to_gui_vector(const struct tileset *t, float *gui_dx, float *gui_dy,
                        int map_dx, int map_dy);
-bool tile_to_canvas_pos(float *canvas_x, float *canvas_y,
-                        struct tile *ptile);
+bool tile_to_canvas_pos(float *canvas_x, float *canvas_y, const tile *ptile);
 struct tile *canvas_pos_to_tile(float canvas_x, float canvas_y);
 struct tile *canvas_pos_to_nearest_tile(float canvas_x, float canvas_y);
 
