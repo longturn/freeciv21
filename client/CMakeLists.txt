@@ -112,6 +112,7 @@ add_library(
   plrdlg_common.cpp
   pregameoptions.cpp
   ratesdlg.cpp
+  renderer.cpp
   repodlgs_common.cpp
   reqtree.cpp
   sciencedlg.cpp

@@ -32,6 +32,9 @@ class QPaintEvent;
 class QPainter;
 
 class fcwidget;
+namespace freeciv {
+class renderer;
+}
 
 bool is_point_in_area(int x, int y, int px, int py, int pxe, int pye);
 void draw_calculated_trade_routes(QPainter *painter);
@@ -51,7 +54,6 @@ class map_view : public QWidget {
 
 public:
   map_view();
-  void paint(QPainter *painter, QPaintEvent *event);
   void find_place(int pos_x, int pos_y, int &w, int &h, int wdth, int hght,
                   int recursive_nr, bool direction = false);
   void resume_searching(int pos_x, int pos_y, int &w, int &h, int wdtht,
@@ -63,7 +65,7 @@ public:
 
   bool menu_click;
 
-  double scale() const { return m_scale; }
+  double scale() const;
 
   freeciv::tileset_debugger *debugger() const { return m_debugger; }
 
@@ -89,6 +91,7 @@ protected:
   void mouseMoveEvent(QMouseEvent *event) override;
   void focusOutEvent(QFocusEvent *event) override;
   void leaveEvent(QEvent *event) override;
+  void resizeEvent(QResizeEvent *event) override;
 
 private slots:
   void set_scale_now(double scale);
@@ -98,6 +101,7 @@ private:
   bool stored_autocenter;
   int cursor_frame{0};
   int cursor;
+  freeciv::renderer *m_renderer;
   double m_scale = 1;
   std::unique_ptr<QPropertyAnimation> m_scale_animation;
   QPointer<freeciv::tileset_debugger> m_debugger = nullptr;
