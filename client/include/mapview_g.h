@@ -34,8 +34,6 @@ void dirty_rect(int canvas_x, int canvas_y, int pixel_width,
 void dirty_all(void);
 void flush_dirty(void);
 
-void update_map_canvas_scrollbars(void);
-
 void put_cross_overlay_tile(struct tile *ptile);
 
 void draw_selection_rectangle(int canvas_x, int canvas_y, int w, int h);
