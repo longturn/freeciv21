@@ -537,12 +537,6 @@ void flush_dirty()
 }
 
 /**
-   Update (refresh) the locations of the mapview scrollbars (if it uses
-   them).
- */
-void update_map_canvas_scrollbars(void) { queen()->mapview_wdg->update(); }
-
-/**
    Update (refresh) all city descriptions on the mapview.
  */
 void update_city_descriptions(void) { update_map_canvas_visible(); }

@@ -679,8 +679,6 @@ void set_mapview_origin(float gui_x0, float gui_y0)
   } else {
     base_set_mapview_origin(gui_x0, gui_y0);
   }
-
-  update_map_canvas_scrollbars();
 }
 
 /**
@@ -2589,12 +2587,6 @@ bool map_canvas_resized(int width, int height)
        * are not yet ready. */
       unqueue_mapview_updates(false);
       redrawn = true;
-    }
-
-    /* If the width/height has changed, update the scrollbars even if
-     * the backing store is not resized. */
-    if (size_changed) {
-      update_map_canvas_scrollbars();
     }
   }
   flush_dirty_overview();
