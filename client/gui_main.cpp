@@ -8,6 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
+#include "mapview_common.h"
 #ifdef AUDIO_SDL
 #include <SDL2/SDL.h>
 #endif // AUDIO_SDL
@@ -264,7 +265,7 @@ void gui_qt_apply_font(struct option *poption)
     f.fromString(s);
     s = option_name(poption);
     fcFont::instance()->setFont(s, f);
-    update_city_descriptions();
+    update_map_canvas_visible();
     queen()->chat->update_font();
     QApplication::setFont(fcFont::instance()->getFont(fonts::default_font));
     real_science_report_dialog_update(nullptr);

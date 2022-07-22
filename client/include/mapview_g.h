@@ -26,7 +26,6 @@ void update_info_label(void);
 void update_unit_info_label(const std::vector<unit *> &unit_list);
 void update_mouse_cursor(enum cursor_type new_cursor_type);
 void update_turn_done_button(bool do_restore);
-void update_city_descriptions(void);
 void update_minimap(void);
 
 void dirty_rect(int canvas_x, int canvas_y, int pixel_width,

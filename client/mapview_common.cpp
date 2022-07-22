@@ -77,7 +77,6 @@ static void base_canvas_to_map_pos(int *map_x, int *map_y, float canvas_x,
 enum update_type {
   // Masks
   UPDATE_NONE = 0,
-  UPDATE_CITY_DESCRIPTIONS = 1,
   UPDATE_MAP_CANVAS_VISIBLE = 2,
   UPDATE_TILE_LABELS = 4
 };
@@ -2122,7 +2121,6 @@ void unqueue_mapview_updates(bool write_to_screen)
 
   if (!map_is_empty()) {
     if ((needed_updates & UPDATE_MAP_CANVAS_VISIBLE)
-        || (needed_updates & UPDATE_CITY_DESCRIPTIONS)
         || (needed_updates & UPDATE_TILE_LABELS)) {
       dirty_all();
       update_map_canvas(0, 0, mapview.store_width, mapview.store_height);
