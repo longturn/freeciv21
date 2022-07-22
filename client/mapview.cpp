@@ -528,20 +528,13 @@ void flush_dirty()
   } else {
     for (int i = 0; i < num_dirty_rects; i++) {
       mapview->repaint(dirty_rects[i].x() * mapview->scale(),
-        dirty_rects[i].y() * mapview->scale(),
+                       dirty_rects[i].y() * mapview->scale(),
                        dirty_rects[i].width() * mapview->scale(),
                        dirty_rects[i].height() * mapview->scale());
     }
   }
   num_dirty_rects = 0;
 }
-
-/**
-   Do any necessary synchronization to make sure the screen is up-to-date.
-   The canvas should have already been flushed to screen via flush_dirty -
-   all this function does is make sure the hardware has caught up.
- */
-void gui_flush(void) { queen()->mapview_wdg->update(); }
 
 /**
    Update (refresh) the locations of the mapview scrollbars (if it uses

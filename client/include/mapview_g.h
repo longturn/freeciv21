@@ -33,7 +33,6 @@ void dirty_rect(int canvas_x, int canvas_y, int pixel_width,
                 int pixel_height);
 void dirty_all(void);
 void flush_dirty(void);
-void gui_flush(void);
 
 void update_map_canvas_scrollbars(void);
 
