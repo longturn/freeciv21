@@ -94,7 +94,7 @@ enum tile_update_type {
   TILE_UPDATE_COUNT
 };
 static void queue_mapview_update(enum update_type update);
-static void queue_mapview_tile_update(struct tile *ptile,
+static void queue_mapview_tile_update(const tile *ptile,
                                       enum tile_update_type type);
 
 // Helper struct for drawing trade routes.
@@ -119,7 +119,7 @@ void anim_delay(int milliseconds)
 /**
    Refreshes a single tile on the map canvas.
  */
-void refresh_tile_mapcanvas(struct tile *ptile, bool full_refresh,
+void refresh_tile_mapcanvas(const tile *ptile, bool full_refresh,
                             bool write_to_screen)
 {
   if (full_refresh) {
@@ -326,7 +326,7 @@ static void gui_to_map_pos(const struct tileset *t, int *map_x, int *map_y,
    parts of the code assume tileset_tile_width(tileset) and
  tileset_tile_height(tileset) to be even numbers.
  */
-bool tile_to_canvas_pos(float *canvas_x, float *canvas_y, struct tile *ptile)
+bool tile_to_canvas_pos(float *canvas_x, float *canvas_y, const tile *ptile)
 {
   int center_map_x, center_map_y, dx, dy, tile_x, tile_y;
 
@@ -1165,11 +1165,8 @@ static int trade_route_to_canvas_lines(const struct tile *ptile1,
   base_map_distance_vector(&dx, &dy, TILE_XY(ptile1), TILE_XY(ptile2));
   map_to_gui_pos(tileset, &lines[0].width, &lines[0].height, dx, dy);
 
-  // FIXME: Remove these casts.
-  tile_to_canvas_pos(&lines[0].x, &lines[0].y,
-                     const_cast<struct tile *>(ptile1));
-  tile_to_canvas_pos(&lines[1].x, &lines[1].y,
-                     const_cast<struct tile *>(ptile2));
+  tile_to_canvas_pos(&lines[0].x, &lines[0].y, ptile1);
+  tile_to_canvas_pos(&lines[1].x, &lines[1].y, ptile2);
 
   if (lines[1].x - lines[0].x == lines[0].width
       && lines[1].y - lines[0].y == lines[0].height) {
@@ -2062,14 +2059,14 @@ void queue_mapview_update(enum update_type update)
    Note this should only be called for tiles.  For cities or units use
    queue_mapview_xxx_update instead.
  */
-void queue_mapview_tile_update(struct tile *ptile,
-                               enum tile_update_type type)
+void queue_mapview_tile_update(const tile *ptile, enum tile_update_type type)
 {
   if (can_client_change_view()) {
     if (!tile_updates[type]) {
       tile_updates[type] = tile_list_new();
     }
-    tile_list_append(tile_updates[type], ptile);
+    // FIXME const-correctness
+    tile_list_append(tile_updates[type], const_cast<tile *>(ptile));
     queue_add_callback();
   }
 }
@@ -2368,8 +2365,7 @@ void mapdeco_set_crosshair(const struct tile *ptile, bool crosshair)
   }
 
   if (!changed) {
-    // FIXME: Remove the cast.
-    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), false, false);
+    refresh_tile_mapcanvas(ptile, false, false);
   }
 }
 
@@ -2391,7 +2387,7 @@ bool mapdeco_is_crosshair_set(const struct tile *ptile)
 void mapdeco_clear_crosshairs()
 {
   for (const auto *ptile : qAsConst(*mapdeco_crosshair_set)) {
-    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), false, false);
+    refresh_tile_mapcanvas(ptile, false, false);
   }
   mapdeco_crosshair_set->clear();
 }
@@ -2430,10 +2426,8 @@ void mapdeco_add_gotoline(const struct tile *ptile, enum direction8 dir,
   }
 
   if (changed) {
-    // FIXME: Remove cast.
-    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), false, false);
-    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile_dest), false,
-                           false);
+    refresh_tile_mapcanvas(ptile, false, false);
+    refresh_tile_mapcanvas(ptile_dest, false, false);
   }
 }
 
@@ -2506,7 +2500,7 @@ void mapdeco_clear_gotoroutes()
 {
   gotohash::const_iterator i = mapdeco_gotoline->constBegin();
   while (i != mapdeco_gotoline->constEnd()) {
-    refresh_tile_mapcanvas(const_cast<struct tile *>(i.key()), false, false);
+    refresh_tile_mapcanvas(i.key(), false, false);
     adjc_dir_iterate(&(wld.map), i.key(), ptile_dest, dir)
     {
       if (i.value()->line_count[dir] > 0
@@ -2534,7 +2528,7 @@ bool map_canvas_resized(int width, int height)
                     / (tileset_tile_height(tileset));
   int full_width = tile_width * tileset_tile_width(tileset);
   int full_height = tile_height * tileset_tile_height(tileset);
-  bool tile_size_changed, size_changed, redrawn = false;
+  bool tile_size_changed, redrawn = false;
 
   // Resized
 
@@ -2548,7 +2542,6 @@ bool map_canvas_resized(int width, int height)
 
   // use that function to clear cache
   tile_size_changed = true;
-  size_changed = true;
   // If the tile size has changed, resize the canvas.
   if (tile_size_changed) {
     if (mapview.store) {
