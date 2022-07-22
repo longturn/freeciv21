@@ -661,7 +661,6 @@ void set_mapview_origin(float gui_x0, float gui_y0)
       base_set_mapview_origin(start_x + diff_x * (mytime / timing_sec),
                               start_y + diff_y * (mytime / timing_sec));
       flush_dirty();
-      gui_flush();
       frames++;
     } while (currtime < timing_sec);
 
@@ -1122,7 +1121,6 @@ void put_nuke_mushroom_pixmaps(struct tile *ptile)
   dirty_rect(canvas_x, canvas_y, mysprite->width(), mysprite->height());
 
   flush_dirty();
-  gui_flush();
 
   fc_usleep(1000000);
 
@@ -1650,7 +1648,6 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
     }
 
     unqueue_mapview_updates(true);
-    gui_flush();
     anim_delay(gui_options.smooth_combat_step_msec);
   }
 
@@ -1683,7 +1680,6 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
                  tileset_tile_height(tileset));
 
       flush_dirty();
-      gui_flush();
       anim_delay(gui_options.smooth_combat_step_msec);
     }
   }
@@ -1769,7 +1765,6 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
 
         // Flush.
         flush_dirty();
-        gui_flush();
 
         // Restore the backup.  It won't take effect until the next flush.
         p.begin(mapview.store);
