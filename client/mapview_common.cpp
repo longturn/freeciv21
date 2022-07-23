@@ -47,6 +47,7 @@
 #include "climap.h"
 #include "control.h"
 #include "editor.h"
+#include "map_updates_handler.h"
 #include "mapview_common.h"
 #include "overview_common.h"
 #include "tilespec.h"
@@ -116,6 +117,9 @@ void anim_delay(int milliseconds)
 void refresh_tile_mapcanvas(const tile *ptile, bool full_refresh,
                             bool write_to_screen)
 {
+  freeciv::map_updates_handler::invoke(
+      qOverload<const tile *, bool>(&freeciv::map_updates_handler::update),
+      ptile, full_refresh);
   if (full_refresh) {
     queue_mapview_tile_update(ptile, TILE_UPDATE_TILE_FULL);
   } else {
@@ -133,6 +137,9 @@ void refresh_tile_mapcanvas(const tile *ptile, bool full_refresh,
 void refresh_unit_mapcanvas(struct unit *punit, struct tile *ptile,
                             bool full_refresh, bool write_to_screen)
 {
+  freeciv::map_updates_handler::invoke(
+      qOverload<const unit *, bool>(&freeciv::map_updates_handler::update),
+      punit, full_refresh);
   if (full_refresh && gui_options.draw_native) {
     update_map_canvas_visible();
   } else if (full_refresh && unit_drawn_with_city_outline(punit, true)) {
@@ -154,7 +161,9 @@ void refresh_unit_mapcanvas(struct unit *punit, struct tile *ptile,
 void refresh_city_mapcanvas(struct city *pcity, struct tile *ptile,
                             bool full_refresh, bool write_to_screen)
 {
-  Q_UNUSED(pcity)
+  freeciv::map_updates_handler::invoke(
+      qOverload<const city *, bool>(&freeciv::map_updates_handler::update),
+      pcity, full_refresh);
   if (full_refresh
       && (gui_options.draw_map_grid || gui_options.draw_borders)) {
     queue_mapview_tile_update(ptile, TILE_UPDATE_CITYMAP);
@@ -1397,6 +1406,8 @@ void update_map_canvas_visible()
    packet-handling code.
   */
   if (can_client_change_view()) {
+    freeciv::map_updates_handler::invoke(
+        &freeciv::map_updates_handler::update_all);
     need_full_refresh = true;
     queue_add_callback();
   }
@@ -1419,6 +1430,8 @@ static int max_label_width = 0, max_label_height = 0;
  */
 void update_city_description(struct city *pcity)
 {
+  freeciv::map_updates_handler::invoke(
+      &freeciv::map_updates_handler::update_city_description, pcity);
   queue_mapview_tile_update(pcity->tile, TILE_UPDATE_CITY_DESC);
 }
 
@@ -1427,6 +1440,8 @@ void update_city_description(struct city *pcity)
  */
 void update_tile_label(struct tile *ptile)
 {
+  freeciv::map_updates_handler::invoke(
+      &freeciv::map_updates_handler::update_tile_label, ptile);
   queue_mapview_tile_update(ptile, TILE_UPDATE_TILE_LABEL);
 }
 
