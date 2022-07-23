@@ -2496,9 +2496,8 @@ void map_canvas_resized(int width, int height)
                     / (tileset_tile_height(tileset));
   int full_width = tile_width * tileset_tile_width(tileset);
   int full_height = tile_height * tileset_tile_height(tileset);
-  bool tile_size_changed;
 
-  // Resized
+  bool cache_resized = width != mapview.width || height != mapview.height;
 
   /* Since a resize is only triggered when the tile_*** changes, the canvas
    * width and height must include the entire backing store - otherwise
@@ -2508,10 +2507,8 @@ void map_canvas_resized(int width, int height)
   mapview.store_width = full_width;
   mapview.store_height = full_height;
 
-  // use that function to clear cache
-  tile_size_changed = true;
-  // If the tile size has changed, resize the canvas.
-  if (tile_size_changed) {
+  // If the cache size has changed, resize the canvas.
+  if (cache_resized) {
     if (mapview.store) {
       delete mapview.store;
       delete mapview.tmp_store;
@@ -2523,7 +2520,7 @@ void map_canvas_resized(int width, int height)
   }
 
   if (!map_is_empty() && can_client_change_view()) {
-    if (tile_size_changed) {
+    if (cache_resized) {
       if (center_tile != nullptr) {
         int x_left, y_top;
         float gui_x, gui_y;
