@@ -27,12 +27,12 @@ public:
    * What kind of update should be performed
    */
   enum class update_type {
-    tile_single,
-    tile_full,
-    unit,
-    city_description,
-    city_map,
-    tile_label,
+    tile_single = 0x01,
+    tile_full = 0x02,
+    unit = 0x04,
+    city_description = 0x08,
+    city_map = 0x10,
+    tile_label = 0x20,
   };
   Q_DECLARE_FLAGS(updates, update_type)
 
