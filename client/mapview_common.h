@@ -294,7 +294,7 @@ void get_city_mapview_trade_routes(const city *pcity,
                                    size_t trade_routes_buffer_len,
                                    enum color_std *trade_routes_color);
 
-bool map_canvas_resized(int width, int height);
+void map_canvas_resized(int width, int height);
 void init_mapcanvas_and_overview();
 void free_mapcanvas_and_overview();
 

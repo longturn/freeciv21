@@ -2495,10 +2495,8 @@ void mapdeco_clear_gotoroutes()
 
 /**
    Called if the map in the GUI is resized.
-
-   Returns TRUE iff the canvas was redrawn.
  */
-bool map_canvas_resized(int width, int height)
+void map_canvas_resized(int width, int height)
 {
   int tile_width = (width + tileset_tile_width(tileset) - 1)
                    / (tileset_tile_width(tileset));
@@ -2506,7 +2504,7 @@ bool map_canvas_resized(int width, int height)
                     / (tileset_tile_height(tileset));
   int full_width = tile_width * tileset_tile_width(tileset);
   int full_height = tile_height * tileset_tile_height(tileset);
-  bool tile_size_changed, redrawn = false;
+  bool tile_size_changed;
 
   // Resized
 
@@ -2557,13 +2555,10 @@ bool map_canvas_resized(int width, int height)
        * when we are only initially setting up the view and some widgets
        * are not yet ready. */
       unqueue_mapview_updates(false);
-      redrawn = true;
     }
   }
   flush_dirty_overview();
   mapview.can_do_cached_drawing = can_do_cached_drawing();
-
-  return redrawn;
 }
 
 /**
