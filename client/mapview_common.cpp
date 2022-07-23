@@ -89,7 +89,6 @@ enum tile_update_type {
 static void queue_mapview_tile_update(const tile *ptile,
                                       enum tile_update_type type);
 
-static bool need_full_refresh = false;
 static void queue_add_callback();
 
 // Helper struct for drawing trade routes.
@@ -1408,7 +1407,6 @@ void update_map_canvas_visible()
   if (can_client_change_view()) {
     freeciv::map_updates_handler::invoke(
         &freeciv::map_updates_handler::update_all);
-    need_full_refresh = true;
     queue_add_callback();
   }
 }
@@ -2111,9 +2109,6 @@ void unqueue_mapview_updates(bool write_to_screen)
     return;
   }
 
-  log_debug("unqueue_mapview_update: need_full_refresh=%d",
-            need_full_refresh);
-
   /* This code "pops" the lists of tile updates off of the static array and
    * stores them locally.  This allows further updates to be queued within
    * the function itself (namely, within update_map_canvas). */
@@ -2124,7 +2119,7 @@ void unqueue_mapview_updates(bool write_to_screen)
   }
 
   if (!map_is_empty()) {
-    if (need_full_refresh) {
+    if (mapview.updates->full()) {
       dirty_all();
       update_map_canvas(0, 0, mapview.store_width, mapview.store_height);
       // Have to update the overview too, since some tiles may have changed.
@@ -2166,7 +2161,7 @@ void unqueue_mapview_updates(bool write_to_screen)
       tile_list_destroy(my_tile_updates[i]);
     }
   }
-  need_full_refresh = false;
+  mapview.updates->clear();
 
   if (write_to_screen) {
     flush_dirty();
