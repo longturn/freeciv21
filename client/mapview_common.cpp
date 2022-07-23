@@ -2113,9 +2113,6 @@ void unqueue_mapview_updates(bool write_to_screen)
   for (int i = 0; i < TILE_UPDATE_COUNT; ++i) {
     area[i] = update_area(static_cast<tile_update_type>(i));
   }
-  struct tile_list *my_tile_updates[TILE_UPDATE_COUNT];
-
-  int i;
 
   if (!can_client_change_view()) {
     /* Double sanity check: make sure we don't unqueue an invalid update
@@ -2129,7 +2126,8 @@ void unqueue_mapview_updates(bool write_to_screen)
   /* This code "pops" the lists of tile updates off of the static array and
    * stores them locally.  This allows further updates to be queued within
    * the function itself (namely, within update_map_canvas). */
-  for (i = 0; i < TILE_UPDATE_COUNT; i++) {
+  struct tile_list *my_tile_updates[TILE_UPDATE_COUNT];
+  for (int i = 0; i < TILE_UPDATE_COUNT; i++) {
     my_tile_updates[i] = tile_updates[i];
     tile_updates[i] = nullptr;
   }
@@ -2143,7 +2141,7 @@ void unqueue_mapview_updates(bool write_to_screen)
     } else {
       QRectF to_update;
 
-      for (i = 0; i < TILE_UPDATE_COUNT; i++) {
+      for (int i = 0; i < TILE_UPDATE_COUNT; i++) {
         if (my_tile_updates[i]) {
           tile_list_iterate(my_tile_updates[i], ptile)
           {
@@ -2172,7 +2170,7 @@ void unqueue_mapview_updates(bool write_to_screen)
     }
   }
 
-  for (i = 0; i < TILE_UPDATE_COUNT; i++) {
+  for (int i = 0; i < TILE_UPDATE_COUNT; i++) {
     if (my_tile_updates[i]) {
       tile_list_destroy(my_tile_updates[i]);
     }
