@@ -85,9 +85,11 @@ enum tile_update_type {
   TILE_UPDATE_TILE_LABEL,
   TILE_UPDATE_COUNT
 };
-static void queue_mapview_update(bool update_all);
 static void queue_mapview_tile_update(const tile *ptile,
                                       enum tile_update_type type);
+
+static bool need_full_refresh = false;
+static void queue_add_callback();
 
 // Helper struct for drawing trade routes.
 struct trade_route_line {
@@ -132,7 +134,7 @@ void refresh_unit_mapcanvas(struct unit *punit, struct tile *ptile,
                             bool full_refresh, bool write_to_screen)
 {
   if (full_refresh && gui_options.draw_native) {
-    queue_mapview_update(true);
+    update_map_canvas_visible();
   } else if (full_refresh && unit_drawn_with_city_outline(punit, true)) {
     queue_mapview_tile_update(ptile, TILE_UPDATE_CITYMAP);
   } else {
@@ -1385,9 +1387,34 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
 }
 
 /**
-   Update (only) the visible part of the map
+ * Schedules an update of (only) the visible part of the map at the next
+ * unqueue_mapview_update().
  */
-void update_map_canvas_visible() { queue_mapview_update(true); }
+void update_map_canvas_visible()
+{
+  // Old comment preserved for posterity
+  /*
+   This function, along with unqueue_mapview_update(), helps in updating
+   the mapview when a packet is received.  Previously, we just called
+   update_map_canvas when (for instance) a city update was received.
+   Not only would this often end up with a lot of duplicated work, but it
+   would also draw over the city descriptions, which would then just
+   "disappear" from the mapview.  The hack is to instead call
+   queue_mapview_update in place of this update, and later (after all
+   packets have been read) call unqueue_mapview_update.  The functions
+   don't track which areas of the screen need updating, rather when the
+   unqueue is done we just update the whole visible mapqueue, and redraw
+   the city descriptions.
+
+   Using these functions, updates are done correctly, and are probably
+   faster too.  But it's a bit of a hack to insert this code into the
+   packet-handling code.
+  */
+  if (can_client_change_view()) {
+    need_full_refresh = true;
+    queue_add_callback();
+  }
+}
 
 /* The maximum city description width and height.  This gives the dimensions
  * of a rectangle centered directly beneath the tile a city is on, that
@@ -1972,7 +1999,6 @@ void get_city_mapview_trade_routes(const city *pcity,
 }
 
 /***************************************************************************/
-static bool need_full_refresh = false;
 static bool callback_queued = false;
 
 /* These values hold the tiles that need city, unit, or tile updates.
@@ -2007,31 +2033,6 @@ static void queue_add_callback()
 }
 
 /**
-   This function, along with unqueue_mapview_update(), helps in updating
-   the mapview when a packet is received.  Previously, we just called
-   update_map_canvas when (for instance) a city update was received.
-   Not only would this often end up with a lot of duplicated work, but it
-   would also draw over the city descriptions, which would then just
-   "disappear" from the mapview.  The hack is to instead call
-   queue_mapview_update in place of this update, and later (after all
-   packets have been read) call unqueue_mapview_update.  The functions
-   don't track which areas of the screen need updating, rather when the
-   unqueue is done we just update the whole visible mapqueue, and redraw
-   the city descriptions.
-
-   Using these functions, updates are done correctly, and are probably
-   faster too.  But it's a bit of a hack to insert this code into the
-   packet-handling code.
- */
-void queue_mapview_update(bool update_all)
-{
-  if (can_client_change_view()) {
-    need_full_refresh = update_all;
-    queue_add_callback();
-  }
-}
-
-/**
    Queue this tile to be refreshed.  The refresh will be done some time
    soon thereafter, and grouped with other needed refreshes.
 
@@ -2051,7 +2052,7 @@ void queue_mapview_tile_update(const tile *ptile, enum tile_update_type type)
 }
 
 /**
-   See comment for queue_mapview_update().
+   See comment in update_map_canvas_visible().
  */
 void unqueue_mapview_updates(bool write_to_screen)
 {
