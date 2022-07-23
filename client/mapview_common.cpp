@@ -11,6 +11,8 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
+#include <array>
+
 #include <QCoreApplication>
 #include <QElapsedTimer>
 #include <QEventLoop>
@@ -2052,43 +2054,65 @@ void queue_mapview_tile_update(const tile *ptile, enum tile_update_type type)
 }
 
 /**
+ * Calculates the area covered by each update type.  The area array gives
+ * the offset from the tile origin as well as the width and height of the
+ * area to be updated.  This is initialized each time when entering the
+ * function from the existing tileset variables.
+ *
+ * A TILE update covers the base tile (width x height) plus a half-tile in
+ * each direction (for edge/corner graphics), making its area
+ * 2 width x 2 height.
+ *
+ * A UNIT update covers a unit_width x unit_height area.  This is centered
+ * horizontally over the tile but extends up above the tile (e.g., units in
+ * iso-view).
+ *
+ * A CITYMAP update covers the whole citymap of a tile.  This includes
+ * the citymap area itself plus an extra half-tile in each direction (for
+ * edge/corner graphics).
+ */
+static QRectF update_area(tile_update_type type)
+{
+  const double width = tileset_tile_width(tileset);
+  const double height = tileset_tile_height(tileset);
+  const double unit_width = tileset_unit_width(tileset);
+  const double unit_height = tileset_unit_height(tileset);
+  const double city_width = get_citydlg_canvas_width() + width;
+  const double city_height = get_citydlg_canvas_height() + height;
+
+  switch (type) {
+  case TILE_UPDATE_TILE_SINGLE:
+    return QRectF(0, 0, width, height);
+  case TILE_UPDATE_TILE_FULL:
+    return QRectF(-width / 2, -height / 2, 2 * width, 2 * height);
+  case TILE_UPDATE_UNIT:
+    return QRectF((width - unit_width) / 2, height - unit_height, unit_width,
+                  unit_height);
+  case TILE_UPDATE_CITY_DESC:
+    return QRectF(-(max_desc_width - width) / 2, height, max_desc_width,
+                  max_desc_height);
+  case TILE_UPDATE_CITYMAP:
+    return QRectF(-(city_width - width) / 2, -(city_height - height) / 2,
+                  city_width, city_height);
+  case TILE_UPDATE_TILE_LABEL:
+    return QRectF(-(max_label_width - width) / 2, height, max_label_width,
+                  max_label_height);
+  case TILE_UPDATE_COUNT:
+    break;
+  }
+
+  return QRectF();
+}
+
+/**
    See comment in update_map_canvas_visible().
  */
 void unqueue_mapview_updates(bool write_to_screen)
 {
-  /* Calculate the area covered by each update type.  The area array gives
-   * the offset from the tile origin as well as the width and height of the
-   * area to be updated.  This is initialized each time when entering the
-   * function from the existing tileset variables.
-   *
-   * A TILE update covers the base tile (W x H) plus a half-tile in each
-   * direction (for edge/corner graphics), making its area 2W x 2H.
-   *
-   * A UNIT update covers a UW x UH area.  This is centered horizontally
-   * over the tile but extends up above the tile (e.g., units in iso-view).
-   *
-   * A CITYMAP update covers the whole citymap of a tile.  This includes
-   * the citymap area itself plus an extra half-tile in each direction (for
-   * edge/corner graphics).
-   */
-  const float W = tileset_tile_width(tileset);
-  const float H = tileset_tile_height(tileset);
-  const float UW = tileset_unit_width(tileset);
-  const float UH = tileset_unit_height(tileset);
-  const float city_width = get_citydlg_canvas_width() + W;
-  const float city_height = get_citydlg_canvas_height() + H;
-  const struct {
-    float dx, dy, w, h;
-  } area[TILE_UPDATE_COUNT] = {
-      {0, 0, W, H},
-      {-W / 2, -H / 2, 2 * W, 2 * H},
-      {(W - UW) / 2, H - UH, UW, UH},
-      {-(max_desc_width - W) / 2, H, static_cast<float>(max_desc_width),
-       static_cast<float>(max_desc_height)},
-      {-(city_width - W) / 2, -(city_height - H) / 2, city_width,
-       city_height},
-      {-(max_label_width - W) / 2, H, static_cast<float>(max_label_width),
-       static_cast<float>(max_label_height)}};
+  std::array<QRectF, TILE_UPDATE_COUNT> area;
+  for (int i = 0; i < TILE_UPDATE_COUNT; ++i) {
+    area[i] = update_area(static_cast<tile_update_type>(i));
+  }
   struct tile_list *my_tile_updates[TILE_UPDATE_COUNT];
 
   int i;
@@ -2114,34 +2138,18 @@ void unqueue_mapview_updates(bool write_to_screen)
     if (need_full_refresh) {
       dirty_all();
       update_map_canvas(0, 0, mapview.store_width, mapview.store_height);
-      /* Have to update the overview too, since some tiles may have changed.
-       */
+      // Have to update the overview too, since some tiles may have changed.
       refresh_overview_canvas();
     } else {
-      int min_x = mapview.width, min_y = mapview.height;
-      int max_x = 0, max_y = 0;
+      QRectF to_update;
 
       for (i = 0; i < TILE_UPDATE_COUNT; i++) {
         if (my_tile_updates[i]) {
           tile_list_iterate(my_tile_updates[i], ptile)
           {
             float xl, yt;
-            int xr, yb;
-
             (void) tile_to_canvas_pos(&xl, &yt, ptile);
-
-            xl += area[i].dx;
-            yt += area[i].dy;
-            xr = xl + area[i].w;
-            yb = yt + area[i].h;
-
-            if (xr > 0 && xl < mapview.width && yb > 0
-                && yt < mapview.height) {
-              min_x = MIN(min_x, xl);
-              min_y = MIN(min_y, yt);
-              max_x = MAX(max_x, xr);
-              max_y = MAX(max_y, yb);
-            }
+            to_update |= area[i].translated(xl, yt);
 
             /* FIXME: These overview updates should be batched as well.
              * Right now they account for as much as 90% of the runtime of
@@ -2152,8 +2160,14 @@ void unqueue_mapview_updates(bool write_to_screen)
         }
       }
 
-      if (min_x < max_x && min_y < max_y) {
-        update_map_canvas(min_x, min_y, max_x - min_x, max_y - min_y);
+      if (to_update.intersects(
+              QRectF(0, 0, mapview.width, mapview.height))) {
+        // The +1 in the width and height is needed when going from double to
+        // int
+        update_map_canvas(std::floor(to_update.x()),
+                          std::floor(to_update.y()),
+                          std::ceil(to_update.width() + 1),
+                          std::ceil(to_update.height() + 1));
       }
     }
   }
