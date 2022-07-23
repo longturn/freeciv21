@@ -16,6 +16,7 @@
 // include
 #include "colors_g.h"
 
+#include "map_updates_handler.h"
 #include "tilespec.h"
 
 struct view {
@@ -24,6 +25,7 @@ struct view {
   int store_width, store_height;
   bool can_do_cached_drawing; // TRUE if cached drawing is possible.
   QPixmap *store, *tmp_store;
+  std::unique_ptr<freeciv::map_updates_handler> updates;
 };
 
 void mapdeco_init();
