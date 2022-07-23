@@ -45,6 +45,9 @@ public:
   /// Allows iteration on the list of pending updates.
   auto end() const { return m_updates.begin(); }
 
+  /// Returns true if the whole map should be updated.
+  bool full() const { return m_full_update; }
+
   void clear();
 
   void update(const city *city, bool full);
