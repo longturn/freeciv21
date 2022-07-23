@@ -2572,6 +2572,7 @@ void init_mapcanvas_and_overview()
 {
   // Create a dummy map to make sure mapview.store is never nullptr.
   map_canvas_resized(1, 1);
+  mapview.updates = std::make_unique<freeciv::map_updates_handler>();
 }
 
 /**
@@ -2581,6 +2582,7 @@ void free_mapcanvas_and_overview()
 {
   delete mapview.store;
   delete mapview.tmp_store;
+  mapview.updates = nullptr;
 }
 
 /****************************************************************************
