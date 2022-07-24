@@ -432,7 +432,7 @@ static void current_focus_append(struct unit *punit)
   get_units_in_focus().push_back(punit);
 
   punit->client.focus_status = FOCUS_AVAIL;
-  refresh_unit_mapcanvas(punit, unit_tile(punit), true, false);
+  refresh_unit_mapcanvas(punit, unit_tile(punit), true);
 
   if (should_ask_server_for_actions(punit) && can_ask_server_for_actions()) {
     ask_server_for_actions(punit);
@@ -500,7 +500,7 @@ void unit_focus_set(struct unit *punit)
   /* Redraw the old focus unit (to fix blinking or remove the selection
    * circle). */
   for (const auto punit_old : get_units_in_focus()) {
-    refresh_unit_mapcanvas(punit_old, unit_tile(punit_old), true, false);
+    refresh_unit_mapcanvas(punit_old, unit_tile(punit_old), true);
   }
   get_units_in_focus().clear();
 
@@ -834,7 +834,7 @@ int blink_active_unit()
         /* We flush to screen directly here.  This is most likely faster
          * since these drawing operations are all small but may be spread
          * out widely. */
-        refresh_unit_mapcanvas(punit, unit_tile(punit), false, true);
+        refresh_unit_mapcanvas(punit, unit_tile(punit), false);
       }
     }
 
@@ -2394,7 +2394,7 @@ void do_move_unit(struct unit *punit, struct unit *target_unit)
 
     /* We have to refresh the tile before moving.  This will draw
      * the tile without the unit (because it was unlinked above). */
-    refresh_unit_mapcanvas(punit, src_tile, true, false);
+    refresh_unit_mapcanvas(punit, src_tile, true);
 
     if (!gui_options.auto_center_on_automated
         && punit->ssa_controller != SSA_NONE) {
@@ -2416,7 +2416,7 @@ void do_move_unit(struct unit *punit, struct unit *target_unit)
     // For find_visible_unit(), see above.
     punit_moving = nullptr;
 
-    refresh_unit_mapcanvas(punit, dst_tile, true, false);
+    refresh_unit_mapcanvas(punit, dst_tile, true);
   }
 
   /* With the "full" city bar we have to update the city bar when units move

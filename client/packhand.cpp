@@ -525,17 +525,17 @@ void handle_unit_combat_info(const struct packet_unit_combat_info *packet)
         punit1->hp = hp1;
 
         set_units_in_combat(nullptr, nullptr);
-        refresh_unit_mapcanvas(punit0, unit_tile(punit0), true, false);
-        refresh_unit_mapcanvas(punit1, unit_tile(punit1), true, false);
+        refresh_unit_mapcanvas(punit0, unit_tile(punit0), true);
+        refresh_unit_mapcanvas(punit1, unit_tile(punit1), true);
       }
     }
     if (packet->make_att_veteran && punit0) {
       punit0->veteran++;
-      refresh_unit_mapcanvas(punit0, unit_tile(punit0), true, false);
+      refresh_unit_mapcanvas(punit0, unit_tile(punit0), true);
     }
     if (packet->make_def_veteran && punit1) {
       punit1->veteran++;
-      refresh_unit_mapcanvas(punit1, unit_tile(punit1), true, false);
+      refresh_unit_mapcanvas(punit1, unit_tile(punit1), true);
     }
   }
 }
@@ -965,7 +965,7 @@ static void city_packet_common(struct city *pcity, struct tile *pcenter,
   }
 
   if (can_client_change_view()) {
-    refresh_city_mapcanvas(pcity, pcenter, false, false);
+    refresh_city_mapcanvas(pcity, pcenter, false);
   }
 
   if (city_workers_display == pcity) {
@@ -1594,7 +1594,7 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
      * repaint being deferred until the unit is updated, so that what's
      * drawn reflects the new status (e.g., no city outline). */
     if (unit_drawn_with_city_outline(punit, true)) {
-      refresh_unit_mapcanvas(punit, unit_tile(punit), true, false);
+      refresh_unit_mapcanvas(punit, unit_tile(punit), true);
     }
 
     ret = true;
@@ -1774,7 +1774,7 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
 
           if (ccity->client.occupied != new_occupied) {
             ccity->client.occupied = new_occupied;
-            refresh_city_mapcanvas(ccity, ccity->tile, false, false);
+            refresh_city_mapcanvas(ccity, ccity->tile, false);
             update_city_description(ccity);
           }
         }
@@ -1791,7 +1791,7 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
           // Unit moved into a city - obviously it's occupied.
           if (!ccity->client.occupied) {
             ccity->client.occupied = true;
-            refresh_city_mapcanvas(ccity, ccity->tile, false, false);
+            refresh_city_mapcanvas(ccity, ccity->tile, false);
             update_city_description(ccity);
           }
         }
@@ -1933,7 +1933,7 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
   }
 
   if (repaint_unit) {
-    refresh_unit_mapcanvas(punit, unit_tile(punit), true, false);
+    refresh_unit_mapcanvas(punit, unit_tile(punit), true);
   }
 
   if ((check_focus || get_num_units_in_focus() == 0)
@@ -3123,7 +3123,7 @@ void handle_tile_info(const struct packet_tile_info *packet)
   if (can_client_change_view()) {
     // the tile itself (including the necessary parts of adjacent tiles)
     if (tile_changed || old_known != new_known) {
-      refresh_tile_mapcanvas(ptile, true, false);
+      refresh_tile_mapcanvas(ptile, true);
     }
   }
 
@@ -5211,7 +5211,7 @@ void handle_edit_startpos(const struct packet_edit_startpos *packet)
 
   // Notify.
   if (changed && can_client_change_view()) {
-    refresh_tile_mapcanvas(ptile, true, false);
+    refresh_tile_mapcanvas(ptile, true);
     if (packet->removal) {
       editgui_notify_object_changed(OBJTYPE_STARTPOS, packet->id, true);
     } else {
@@ -5245,7 +5245,7 @@ void handle_edit_startpos_full(
   // Handle.
   if (startpos_unpack(psp, packet) && can_client_change_view()) {
     // Notify.
-    refresh_tile_mapcanvas(ptile, true, false);
+    refresh_tile_mapcanvas(ptile, true);
     editgui_notify_object_changed(OBJTYPE_STARTPOS, startpos_number(psp),
                                   false);
   }

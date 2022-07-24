@@ -220,12 +220,11 @@ extern bool can_slide;
   }                                                                         \
   gui_rect_iterate_end
 
-void refresh_tile_mapcanvas(const tile *ptile, bool full_refresh,
-                            bool write_to_screen);
+void refresh_tile_mapcanvas(const tile *ptile, bool full_refresh);
 void refresh_unit_mapcanvas(struct unit *punit, struct tile *ptile,
-                            bool full_refresh, bool write_to_screen);
+                            bool full_refresh);
 void refresh_city_mapcanvas(struct city *pcity, struct tile *ptile,
-                            bool full_refresh, bool write_to_screen);
+                            bool full_refresh);
 
 void unqueue_mapview_updates(bool write_to_screen);
 void map_to_gui_vector(const struct tileset *t, float *gui_dx, float *gui_dy,

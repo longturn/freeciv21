@@ -97,30 +97,22 @@ void anim_delay(int milliseconds)
 /**
    Refreshes a single tile on the map canvas.
  */
-void refresh_tile_mapcanvas(const tile *ptile, bool full_refresh,
-                            bool write_to_screen)
+void refresh_tile_mapcanvas(const tile *ptile, bool full_refresh)
 {
   freeciv::map_updates_handler::invoke(
       qOverload<const tile *, bool>(&freeciv::map_updates_handler::update),
       ptile, full_refresh);
-  if (write_to_screen) {
-    unqueue_mapview_updates(true);
-    flush_dirty_overview();
-  }
 }
 
 /**
    Refreshes a single unit on the map canvas.
  */
 void refresh_unit_mapcanvas(struct unit *punit, struct tile *ptile,
-                            bool full_refresh, bool write_to_screen)
+                            bool full_refresh)
 {
   freeciv::map_updates_handler::invoke(
       qOverload<const unit *, bool>(&freeciv::map_updates_handler::update),
       punit, full_refresh);
-  if (write_to_screen) {
-    unqueue_mapview_updates(true);
-  }
 }
 
 /**
@@ -130,15 +122,11 @@ void refresh_unit_mapcanvas(struct unit *punit, struct tile *ptile,
    also be refreshed.  Otherwise only the base city sprite is refreshed.
  */
 void refresh_city_mapcanvas(struct city *pcity, struct tile *ptile,
-                            bool full_refresh, bool write_to_screen)
+                            bool full_refresh)
 {
   freeciv::map_updates_handler::invoke(
       qOverload<const city *, bool>(&freeciv::map_updates_handler::update),
       pcity, full_refresh);
-  if (write_to_screen) {
-    unqueue_mapview_updates(true);
-    flush_dirty_overview();
-  }
 }
 
 /**
@@ -1034,7 +1022,7 @@ void toggle_city_color(struct city *pcity)
     color_index = (color_index + 1) % NUM_CITY_COLORS;
   }
 
-  refresh_city_mapcanvas(pcity, pcity->tile, true, false);
+  refresh_city_mapcanvas(pcity, pcity->tile, true);
 }
 
 /**
@@ -1052,7 +1040,7 @@ void toggle_unit_color(struct unit *punit)
     color_index = (color_index + 1) % NUM_CITY_COLORS;
   }
 
-  refresh_unit_mapcanvas(punit, unit_tile(punit), true, false);
+  refresh_unit_mapcanvas(punit, unit_tile(punit), true);
 }
 
 /**
@@ -1614,10 +1602,10 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
 
     if (fc_rand(diff0 + diff1) < diff0) {
       punit0->hp--;
-      refresh_unit_mapcanvas(punit0, unit_tile(punit0), false, false);
+      refresh_unit_mapcanvas(punit0, unit_tile(punit0), false);
     } else {
       punit1->hp--;
-      refresh_unit_mapcanvas(punit1, unit_tile(punit1), false, false);
+      refresh_unit_mapcanvas(punit1, unit_tile(punit1), false);
     }
 
     unqueue_mapview_updates(true);
@@ -1626,8 +1614,7 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
 
   if (num_tiles_explode_unit > 0
       && tile_to_canvas_pos(&canvas_x, &canvas_y, unit_tile(losing_unit))) {
-    refresh_unit_mapcanvas(losing_unit, unit_tile(losing_unit), false,
-                           false);
+    refresh_unit_mapcanvas(losing_unit, unit_tile(losing_unit), false);
     unqueue_mapview_updates(false);
     QPainter p(mapview.tmp_store);
     p.drawPixmap(canvas_x, canvas_y, *mapview.store, canvas_x, canvas_y,
@@ -1658,8 +1645,8 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
   }
 
   set_units_in_combat(nullptr, nullptr);
-  refresh_unit_mapcanvas(punit0, unit_tile(punit0), true, false);
-  refresh_unit_mapcanvas(punit1, unit_tile(punit1), true, false);
+  refresh_unit_mapcanvas(punit0, unit_tile(punit0), true);
+  refresh_unit_mapcanvas(punit1, unit_tile(punit1), true);
   flush_dirty_overview();
 }
 
@@ -2230,7 +2217,7 @@ void mapdeco_set_crosshair(const struct tile *ptile, bool crosshair)
   }
 
   if (!changed) {
-    refresh_tile_mapcanvas(ptile, false, false);
+    refresh_tile_mapcanvas(ptile, false);
   }
 }
 
@@ -2252,7 +2239,7 @@ bool mapdeco_is_crosshair_set(const struct tile *ptile)
 void mapdeco_clear_crosshairs()
 {
   for (const auto *ptile : qAsConst(*mapdeco_crosshair_set)) {
-    refresh_tile_mapcanvas(ptile, false, false);
+    refresh_tile_mapcanvas(ptile, false);
   }
   mapdeco_crosshair_set->clear();
 }
@@ -2291,8 +2278,8 @@ void mapdeco_add_gotoline(const struct tile *ptile, enum direction8 dir,
   }
 
   if (changed) {
-    refresh_tile_mapcanvas(ptile, false, false);
-    refresh_tile_mapcanvas(ptile_dest, false, false);
+    refresh_tile_mapcanvas(ptile, false);
+    refresh_tile_mapcanvas(ptile_dest, false);
   }
 }
 
@@ -2365,12 +2352,12 @@ void mapdeco_clear_gotoroutes()
 {
   gotohash::const_iterator i = mapdeco_gotoline->constBegin();
   while (i != mapdeco_gotoline->constEnd()) {
-    refresh_tile_mapcanvas(i.key(), false, false);
+    refresh_tile_mapcanvas(i.key(), false);
     adjc_dir_iterate(&(wld.map), i.key(), ptile_dest, dir)
     {
       if (i.value()->line_count[dir] > 0
           || i.value()->line_danger_count[dir] > 0) {
-        refresh_tile_mapcanvas(ptile_dest, false, false);
+        refresh_tile_mapcanvas(ptile_dest, false);
       }
     }
     adjc_dir_iterate_end;
@@ -2690,7 +2677,7 @@ void link_mark_add_new(enum text_link_type type, int id)
   link_mark_list_append(link_marks, pmark);
   ptile = link_mark_tile(pmark);
   if (ptile && tile_visible_mapcanvas(ptile)) {
-    refresh_tile_mapcanvas(ptile, false, false);
+    refresh_tile_mapcanvas(ptile, false);
   }
 }
 
@@ -2710,7 +2697,7 @@ void link_mark_restore(enum text_link_type type, int id)
   link_mark_list_append(link_marks, pmark);
   ptile = link_mark_tile(pmark);
   if (ptile && tile_visible_mapcanvas(ptile)) {
-    refresh_tile_mapcanvas(ptile, false, false);
+    refresh_tile_mapcanvas(ptile, false);
   }
 }
 
