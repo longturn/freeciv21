@@ -75,20 +75,6 @@ bool can_slide = true;
 static void base_canvas_to_map_pos(int *map_x, int *map_y, float canvas_x,
                                    float canvas_y);
 
-/* A tile update has a tile associated with it as well as an area type.
- * See unqueue_mapview_updates for a thorough explanation. */
-enum tile_update_type {
-  TILE_UPDATE_TILE_SINGLE,
-  TILE_UPDATE_TILE_FULL,
-  TILE_UPDATE_UNIT,
-  TILE_UPDATE_CITY_DESC,
-  TILE_UPDATE_CITYMAP,
-  TILE_UPDATE_TILE_LABEL,
-  TILE_UPDATE_COUNT
-};
-static void queue_mapview_tile_update(const tile *ptile,
-                                      enum tile_update_type type);
-
 static void queue_add_callback();
 
 // Helper struct for drawing trade routes.
@@ -119,10 +105,8 @@ void refresh_tile_mapcanvas(const tile *ptile, bool full_refresh,
   freeciv::map_updates_handler::invoke(
       qOverload<const tile *, bool>(&freeciv::map_updates_handler::update),
       ptile, full_refresh);
-  if (full_refresh) {
-    queue_mapview_tile_update(ptile, TILE_UPDATE_TILE_FULL);
-  } else {
-    queue_mapview_tile_update(ptile, TILE_UPDATE_TILE_SINGLE);
+  if (can_client_change_view()) {
+    queue_add_callback();
   }
   if (write_to_screen) {
     unqueue_mapview_updates(true);
@@ -139,12 +123,8 @@ void refresh_unit_mapcanvas(struct unit *punit, struct tile *ptile,
   freeciv::map_updates_handler::invoke(
       qOverload<const unit *, bool>(&freeciv::map_updates_handler::update),
       punit, full_refresh);
-  if (full_refresh && gui_options.draw_native) {
-    update_map_canvas_visible();
-  } else if (full_refresh && unit_drawn_with_city_outline(punit, true)) {
-    queue_mapview_tile_update(ptile, TILE_UPDATE_CITYMAP);
-  } else {
-    queue_mapview_tile_update(ptile, TILE_UPDATE_UNIT);
+  if (can_client_change_view()) {
+    queue_add_callback();
   }
   if (write_to_screen) {
     unqueue_mapview_updates(true);
@@ -163,11 +143,8 @@ void refresh_city_mapcanvas(struct city *pcity, struct tile *ptile,
   freeciv::map_updates_handler::invoke(
       qOverload<const city *, bool>(&freeciv::map_updates_handler::update),
       pcity, full_refresh);
-  if (full_refresh
-      && (gui_options.draw_map_grid || gui_options.draw_borders)) {
-    queue_mapview_tile_update(ptile, TILE_UPDATE_CITYMAP);
-  } else {
-    queue_mapview_tile_update(ptile, TILE_UPDATE_UNIT);
+  if (can_client_change_view()) {
+    queue_add_callback();
   }
   if (write_to_screen) {
     unqueue_mapview_updates(true);
@@ -1430,7 +1407,9 @@ void update_city_description(struct city *pcity)
 {
   freeciv::map_updates_handler::invoke(
       &freeciv::map_updates_handler::update_city_description, pcity);
-  queue_mapview_tile_update(pcity->tile, TILE_UPDATE_CITY_DESC);
+  if (can_client_change_view()) {
+    queue_add_callback();
+  }
 }
 
 /**
@@ -1440,7 +1419,9 @@ void update_tile_label(struct tile *ptile)
 {
   freeciv::map_updates_handler::invoke(
       &freeciv::map_updates_handler::update_tile_label, ptile);
-  queue_mapview_tile_update(ptile, TILE_UPDATE_TILE_LABEL);
+  if (can_client_change_view()) {
+    queue_add_callback();
+  }
 }
 
 /**
@@ -1992,14 +1973,6 @@ void get_city_mapview_trade_routes(const city *pcity,
 /***************************************************************************/
 static bool callback_queued = false;
 
-/* These values hold the tiles that need city, unit, or tile updates.
- * These different types of updates just tell what area need to be updated,
- * not necessarily what's sitting on the tile.  A city update covers the
- * whole citymap area.  A unit update covers just the "full" unit tile
- * area.  A tile update covers the base tile plus half a tile in each
- * direction. */
-struct tile_list *tile_updates[TILE_UPDATE_COUNT];
-
 /**
    This callback is called during an idle moment to unqueue any pending
    mapview updates.
@@ -2024,25 +1997,6 @@ static void queue_add_callback()
 }
 
 /**
-   Queue this tile to be refreshed.  The refresh will be done some time
-   soon thereafter, and grouped with other needed refreshes.
-
-   Note this should only be called for tiles.  For cities or units use
-   queue_mapview_xxx_update instead.
- */
-void queue_mapview_tile_update(const tile *ptile, enum tile_update_type type)
-{
-  if (can_client_change_view()) {
-    if (!tile_updates[type]) {
-      tile_updates[type] = tile_list_new();
-    }
-    // FIXME const-correctness
-    tile_list_append(tile_updates[type], const_cast<tile *>(ptile));
-    queue_add_callback();
-  }
-}
-
-/**
  * Calculates the area covered by each update type.  The area array gives
  * the offset from the tile origin as well as the width and height of the
  * area to be updated.  This is initialized each time when entering the
@@ -2060,7 +2014,7 @@ void queue_mapview_tile_update(const tile *ptile, enum tile_update_type type)
  * the citymap area itself plus an extra half-tile in each direction (for
  * edge/corner graphics).
  */
-static QRectF update_area(tile_update_type type)
+static auto update_rects()
 {
   const double width = tileset_tile_width(tileset);
   const double height = tileset_tile_height(tileset);
@@ -2069,28 +2023,24 @@ static QRectF update_area(tile_update_type type)
   const double city_width = get_citydlg_canvas_width() + width;
   const double city_height = get_citydlg_canvas_height() + height;
 
-  switch (type) {
-  case TILE_UPDATE_TILE_SINGLE:
-    return QRectF(0, 0, width, height);
-  case TILE_UPDATE_TILE_FULL:
-    return QRectF(-width / 2, -height / 2, 2 * width, 2 * height);
-  case TILE_UPDATE_UNIT:
-    return QRectF((width - unit_width) / 2, height - unit_height, unit_width,
-                  unit_height);
-  case TILE_UPDATE_CITY_DESC:
-    return QRectF(-(max_desc_width - width) / 2, height, max_desc_width,
-                  max_desc_height);
-  case TILE_UPDATE_CITYMAP:
-    return QRectF(-(city_width - width) / 2, -(city_height - height) / 2,
-                  city_width, city_height);
-  case TILE_UPDATE_TILE_LABEL:
-    return QRectF(-(max_label_width - width) / 2, height, max_label_width,
-                  max_label_height);
-  case TILE_UPDATE_COUNT:
-    break;
-  }
-
-  return QRectF();
+  using update_type = freeciv::map_updates_handler::update_type;
+  auto rects = std::map<update_type, QRectF>();
+  rects[update_type::tile_single] = QRectF(0, 0, width, height);
+  rects[update_type::tile_full] =
+      QRectF(-width / 2, -height / 2, 2 * width, 2 * height);
+  rects[update_type::unit] =
+      QRectF((width - unit_width) / 2, height - unit_height, unit_width,
+             unit_height);
+  rects[update_type::city_description] =
+      QRectF(-(max_desc_width - width) / 2, height, max_desc_width,
+             max_desc_height);
+  rects[update_type::city_map] =
+      QRectF(-(city_width - width) / 2, -(city_height - height) / 2,
+             city_width, city_height);
+  rects[update_type::tile_label] =
+      QRectF(-(max_label_width - width) / 2, height, max_label_width,
+             max_label_height);
+  return rects;
 }
 
 /**
@@ -2098,28 +2048,24 @@ static QRectF update_area(tile_update_type type)
  */
 void unqueue_mapview_updates(bool write_to_screen)
 {
-  std::array<QRectF, TILE_UPDATE_COUNT> area;
-  for (int i = 0; i < TILE_UPDATE_COUNT; ++i) {
-    area[i] = update_area(static_cast<tile_update_type>(i));
-  }
-
   if (!can_client_change_view()) {
     /* Double sanity check: make sure we don't unqueue an invalid update
      * after we've already detached. */
     return;
   }
 
+  const auto rects = update_rects();
+
   /* This code "pops" the lists of tile updates off of the static array and
    * stores them locally.  This allows further updates to be queued within
    * the function itself (namely, within update_map_canvas). */
-  struct tile_list *my_tile_updates[TILE_UPDATE_COUNT];
-  for (int i = 0; i < TILE_UPDATE_COUNT; i++) {
-    my_tile_updates[i] = tile_updates[i];
-    tile_updates[i] = nullptr;
-  }
+  const auto updates = mapview.updates->list();
+  const auto full = mapview.updates->full();
+
+  mapview.updates->clear();
 
   if (!map_is_empty()) {
-    if (mapview.updates->full()) {
+    if (full) {
       dirty_all();
       update_map_canvas(0, 0, mapview.store_width, mapview.store_height);
       // Have to update the overview too, since some tiles may have changed.
@@ -2127,21 +2073,19 @@ void unqueue_mapview_updates(bool write_to_screen)
     } else {
       QRectF to_update;
 
-      for (int i = 0; i < TILE_UPDATE_COUNT; i++) {
-        if (my_tile_updates[i]) {
-          tile_list_iterate(my_tile_updates[i], ptile)
-          {
+      for (const auto [tile, upd_types] : updates) {
+        for (const auto [type, rect] : rects) {
+          if (upd_types & type) {
             float xl, yt;
-            (void) tile_to_canvas_pos(&xl, &yt, ptile);
-            to_update |= area[i].translated(xl, yt);
-
-            /* FIXME: These overview updates should be batched as well.
-             * Right now they account for as much as 90% of the runtime of
-             * the unqueue. */
-            overview_update_tile(ptile);
+            (void) tile_to_canvas_pos(&xl, &yt, tile);
+            to_update |= rect.translated(xl, yt);
           }
-          tile_list_iterate_end;
         }
+
+        // FIXME: These overview updates should be batched as well.
+        // Right now they account for as much as 90% of the runtime of
+        // the unqueue.
+        overview_update_tile(tile);
       }
 
       if (to_update.intersects(
@@ -2155,13 +2099,6 @@ void unqueue_mapview_updates(bool write_to_screen)
       }
     }
   }
-
-  for (int i = 0; i < TILE_UPDATE_COUNT; i++) {
-    if (my_tile_updates[i]) {
-      tile_list_destroy(my_tile_updates[i]);
-    }
-  }
-  mapview.updates->clear();
 
   if (write_to_screen) {
     flush_dirty();
