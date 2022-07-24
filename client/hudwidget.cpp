@@ -827,7 +827,7 @@ hud_action::hud_action(QWidget *parent, const QIcon &icon,
  */
 void hud_action::paintEvent(QPaintEvent *event)
 {
-  QRect rx, ry, rz;
+  QRect rx, rz;
   QPainter p;
 
   rx = QRect(0, 0, width(), height());
@@ -1853,7 +1853,7 @@ void hud_unit_combat::paintEvent(QPaintEvent *event)
  */
 void hud_unit_combat::mousePressEvent(QMouseEvent *e)
 {
-  center_tile_mapcanvas(center_tile);
+  queen()->mapview_wdg->center_on_tile(center_tile);
 }
 
 /**

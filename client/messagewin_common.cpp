@@ -23,8 +23,10 @@
 
 // client
 #include "client_main.h"
+#include "mapview.h"
 #include "messagewin_common.h"
 #include "options.h"
+#include "page_game.h"
 #include "update_queue.h"
 
 // gui-qt
@@ -177,7 +179,7 @@ void meswin_popup_city(int message_index)
     struct city *pcity = tile_city(ptile);
 
     if (gui_options.center_when_popup_city) {
-      center_tile_mapcanvas(ptile);
+      queen()->mapview_wdg->center_on_tile(ptile);
     }
 
     if (pcity && can_player_see_units_in_city(client.conn.playing, pcity)) {
@@ -201,6 +203,6 @@ void meswin_goto(int message_index)
   fc_assert_ret(0 <= message_index && message_index < messages_total);
 
   if (messages[message_index]->location_ok) {
-    center_tile_mapcanvas(messages[message_index]->tile);
+    queen()->mapview_wdg->center_on_tile(messages[message_index]->tile);
   }
 }

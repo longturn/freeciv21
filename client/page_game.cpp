@@ -346,7 +346,7 @@ void center_next_enemy_city()
         }
         if ((last_center_enemy_city == 0) || center_next) {
           last_center_enemy_city = pcity->id;
-          center_tile_mapcanvas(pcity->tile);
+          queen()->mapview_wdg->center_on_tile(pcity->tile);
           return;
         }
         if (pcity->id == last_center_enemy_city) {
@@ -359,7 +359,7 @@ void center_next_enemy_city()
   players_iterate_end;
 
   if (ptile != nullptr) {
-    center_tile_mapcanvas(ptile);
+    queen()->mapview_wdg->center_on_tile(ptile);
     last_center_enemy_city = first_id;
   }
 }
@@ -386,7 +386,7 @@ void center_next_player_city()
         }
         if ((last_center_player_city == 0) || center_next) {
           last_center_player_city = pcity->id;
-          center_tile_mapcanvas(pcity->tile);
+          queen()->mapview_wdg->center_on_tile(pcity->tile);
           return;
         }
         if (pcity->id == last_center_player_city) {
@@ -399,7 +399,7 @@ void center_next_player_city()
   players_iterate_end;
 
   if (ptile != nullptr) {
-    center_tile_mapcanvas(ptile);
+    queen()->mapview_wdg->center_on_tile(ptile);
     last_center_player_city = first_id;
   }
 }
@@ -429,7 +429,7 @@ void center_next_player_capital()
       }
       if ((last_center_player_city == 0) || center_next) {
         last_center_player_city = capital->id;
-        center_tile_mapcanvas(capital->tile);
+        queen()->mapview_wdg->center_on_tile(capital->tile);
         put_cross_overlay_tile(capital->tile);
         return;
       }
@@ -441,7 +441,7 @@ void center_next_player_capital()
   players_iterate_end;
 
   if (ptile != nullptr) {
-    center_tile_mapcanvas(ptile);
+    queen()->mapview_wdg->center_on_tile(ptile);
     put_cross_overlay_tile(ptile);
     last_center_player_city = first_id;
   }
@@ -469,7 +469,7 @@ void cycle_enemy_units()
         }
         if ((last_center_enemy == 0) || center_next) {
           last_center_enemy = punit->id;
-          center_tile_mapcanvas(punit->tile);
+          queen()->mapview_wdg->center_on_tile(punit->tile);
           return;
         }
         if (punit->id == last_center_enemy) {
@@ -482,7 +482,7 @@ void cycle_enemy_units()
   players_iterate_end;
 
   if (ptile != nullptr) {
-    center_tile_mapcanvas(ptile);
+    queen()->mapview_wdg->center_on_tile(ptile);
     last_center_enemy = first_id;
   }
 }

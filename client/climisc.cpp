@@ -53,10 +53,12 @@
 #include "climap.h"
 #include "climisc.h"
 #include "control.h"
+#include "mapview.h"
 #include "mapview_common.h"
 #include "messagewin_common.h"
 #include "options.h"
 #include "packhand.h"
+#include "page_game.h"
 #include "tilespec.h"
 
 // gui-qt
@@ -399,26 +401,26 @@ void center_on_something()
     return;
   }
 
-  can_slide = false;
   if (get_num_units_in_focus() > 0) {
-    center_tile_mapcanvas(unit_tile(head_of_units_in_focus()));
+    queen()->mapview_wdg->center_on_tile(unit_tile(head_of_units_in_focus()),
+                                         false);
   } else if (client_has_player()
              && nullptr
                     != (pcity = player_primary_capital(client_player()))) {
     // Else focus on the capital.
-    center_tile_mapcanvas(pcity->tile);
+    queen()->mapview_wdg->center_on_tile(pcity->tile, false);
   } else if (nullptr != client.conn.playing
              && 0 < city_list_size(client.conn.playing->cities)) {
     // Just focus on any city.
     pcity = city_list_get(client.conn.playing->cities, 0);
     fc_assert_ret(pcity != nullptr);
-    center_tile_mapcanvas(pcity->tile);
+    queen()->mapview_wdg->center_on_tile(pcity->tile, false);
   } else if (nullptr != client.conn.playing
              && 0 < unit_list_size(client.conn.playing->units)) {
     // Just focus on any unit.
     punit = unit_list_get(client.conn.playing->units, 0);
     fc_assert_ret(punit != nullptr);
-    center_tile_mapcanvas(unit_tile(punit));
+    queen()->mapview_wdg->center_on_tile(unit_tile(punit), false);
   } else {
     struct tile *ctile =
         native_pos_to_tile(&(wld.map), wld.map.xsize / 2, wld.map.ysize / 2);
@@ -437,9 +439,8 @@ void center_on_something()
     }
     iterate_outward_end;
 
-    center_tile_mapcanvas(ctile);
+    queen()->mapview_wdg->center_on_tile(ctile, false);
   }
-  can_slide = true;
 }
 
 /**

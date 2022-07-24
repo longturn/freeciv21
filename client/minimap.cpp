@@ -271,7 +271,7 @@ void minimap_view::mousePressEvent(QMouseEvent *event)
     overview_to_map_pos(&x, &y, fx, fy);
     auto *ptile = map_pos_to_tile(&(wld.map), x, y);
     fc_assert_ret(ptile);
-    center_tile_mapcanvas(ptile);
+    queen()->mapview_wdg->center_on_tile(ptile);
     update_image();
   }
   event->setAccepted(true);

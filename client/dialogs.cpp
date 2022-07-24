@@ -903,7 +903,7 @@ notify_goto::notify_goto(const char *headline, const char *lines,
  */
 void notify_goto::goto_tile()
 {
-  center_tile_mapcanvas(gtile);
+  queen()->mapview_wdg->center_on_tile(gtile);
   close();
 }
 

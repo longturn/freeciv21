@@ -106,7 +106,7 @@ void units_waiting::clicked(int x, int y)
 
   if (punit) {
     unit_focus_set(punit);
-    center_tile_mapcanvas(punit->tile);
+    queen()->mapview_wdg->center_on_tile(punit->tile);
   }
 }
 

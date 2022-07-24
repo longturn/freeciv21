@@ -73,7 +73,7 @@ signals:
   void scale_changed(double scale) const;
 
 public slots:
-  void center_on_tile(tile *tile);
+  void center_on_tile(tile *tile, bool animate = true);
 
   void zoom_in();
   void zoom_reset();

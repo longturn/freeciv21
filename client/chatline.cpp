@@ -434,7 +434,7 @@ void chat_widget::anchor_clicked(const QUrl &link)
     break;
   }
   if (ptile) {
-    center_tile_mapcanvas(ptile);
+    queen()->mapview_wdg->center_on_tile(ptile);
     link_mark_restore(type, id);
   }
 }

@@ -25,6 +25,7 @@
 #include "client_main.h"
 #include "control.h"
 #include "goto.h"
+#include "mapview.h"
 #include "mapview_common.h"
 #include "text.h"
 // gui-qt
@@ -145,7 +146,7 @@ void goto_dialog::item_selected(const QItemSelection &sl,
   item = goto_tab->item(i, 0);
   city_id = item->data(Qt::UserRole).toInt();
   dest = game_city_by_number(city_id);
-  center_tile_mapcanvas(city_tile(dest));
+  queen()->mapview_wdg->center_on_tile(city_tile(dest));
   can_airlift = false;
   for (const auto punit : get_units_in_focus()) {
     if (unit_can_airlift_to(punit, dest)) {
@@ -304,7 +305,7 @@ void goto_dialog::go_to_city()
  */
 void goto_dialog::close_dlg()
 {
-  center_tile_mapcanvas(original_tile);
+  queen()->mapview_wdg->center_on_tile(original_tile);
   hide();
 }
 

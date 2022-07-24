@@ -34,10 +34,8 @@ renderer::renderer(QObject *parent) : QObject(parent) {}
 void renderer::set_origin(const QPointF &origin)
 {
   m_origin = origin;
-  can_slide = false; // The renderer doesn't do any sliding by itself.
   set_mapview_origin(origin.x(), origin.y());
   flush_dirty(); // Request (or rather, force) a new frame
-  can_slide = true;
 }
 
 /**

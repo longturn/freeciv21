@@ -2325,7 +2325,7 @@ void city_dialog::get_city(bool next)
     other_pcity =
         city_list_get(client.conn.playing->cities, (i + k + size) % size);
   }
-  center_tile_mapcanvas(other_pcity->tile);
+  queen()->mapview_wdg->center_on_tile(other_pcity->tile);
   pcity = other_pcity;
   refresh();
 }
@@ -2708,7 +2708,7 @@ void real_city_dialog_popup(struct city *pcity)
     top_bar_show_map();
     queen()->mapview_wdg->hide_all_fcwidgets();
   }
-  center_tile_mapcanvas(pcity->tile);
+  queen()->mapview_wdg->center_on_tile(pcity->tile);
 
   widget->setup_ui(pcity);
   widget->show();

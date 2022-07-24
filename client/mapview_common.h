@@ -74,7 +74,6 @@ void get_mapview_scroll_pos(int *scroll_x, int *scroll_y);
 
 void set_mapview_origin(float gui_x0, float gui_y0);
 struct tile *get_center_tile_mapcanvas();
-[[deprecated]] void center_tile_mapcanvas(struct tile *ptile);
 
 bool tile_visible_mapcanvas(struct tile *ptile);
 bool tile_visible_and_not_on_border_mapcanvas(struct tile *ptile);
