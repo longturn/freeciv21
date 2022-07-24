@@ -322,7 +322,7 @@ void recenter_button_pressed(int canvas_x, int canvas_y)
   struct tile *ptile = canvas_pos_to_nearest_tile(canvas_x, canvas_y);
 
   if (can_client_change_view() && ptile) {
-    center_tile_mapcanvas(ptile);
+    queen()->mapview_wdg->center_on_tile(ptile);
   }
 }
 

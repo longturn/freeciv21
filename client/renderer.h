@@ -8,6 +8,7 @@
 
 #include <QObject>
 #include <QPainter>
+#include <QPointF>
 #include <QRect>
 #include <QRegion>
 #include <QSize>
@@ -16,11 +17,16 @@ namespace freeciv {
 
 class renderer : public QObject {
   Q_OBJECT
+  Q_PROPERTY(QPointF origin READ origin WRITE set_origin);
   Q_PROPERTY(double scale READ scale WRITE set_scale);
 
 public:
   explicit renderer(QObject *parent = nullptr);
   virtual ~renderer() = default;
+
+  /// The origin of the view (the point at the top left corner)
+  QPointF origin() const { return m_origin; }
+  void set_origin(const QPointF &origin);
 
   /// The scale (zoom) at which rendering is performed
   double scale() const { return m_scale; }
@@ -34,6 +40,7 @@ public:
   void render(QPainter &painter, const QRect &area) const;
 
 private:
+  QPointF m_origin;
   double m_scale = 1.0;
   QSize m_viewport_size;
 };

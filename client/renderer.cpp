@@ -7,6 +7,7 @@
 #include "renderer.h"
 
 #include "mapview_common.h"
+#include "mapview_g.h"
 
 namespace freeciv {
 
@@ -19,12 +20,25 @@ namespace freeciv {
  *
  * @property scale By how much the map is scaled before being drawn (a scale
  * of 2 means that everything is 2x bigger)
+ * @property origin The position of the top left corner of the view.
  */
 
 /**
  * Constructor.
  */
 renderer::renderer(QObject *parent) : QObject(parent) {}
+
+/**
+ * Changes the origin of the canvas (the point at the top left of the view).
+ */
+void renderer::set_origin(const QPointF &origin)
+{
+  m_origin = origin;
+  can_slide = false; // The renderer doesn't do any sliding by itself.
+  set_mapview_origin(origin.x(), origin.y());
+  flush_dirty(); // Request (or rather, force) a new frame
+  can_slide = true;
+}
 
 /**
  * Changes the scale of the rendering (zooms in or out).

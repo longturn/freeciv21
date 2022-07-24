@@ -229,9 +229,15 @@ void refresh_city_mapcanvas(struct city *pcity, struct tile *ptile,
 void unqueue_mapview_updates(bool write_to_screen);
 void map_to_gui_vector(const struct tileset *t, float *gui_dx, float *gui_dy,
                        int map_dx, int map_dy);
+void map_to_gui_pos(const struct tileset *t, float *gui_x, float *gui_y,
+                    int map_x, int map_y);
 bool tile_to_canvas_pos(float *canvas_x, float *canvas_y, const tile *ptile);
 struct tile *canvas_pos_to_tile(float canvas_x, float canvas_y);
 struct tile *canvas_pos_to_nearest_tile(float canvas_x, float canvas_y);
+
+void gui_distance_vector(const struct tileset *t, float *gui_dx,
+                         float *gui_dy, float gui_x0, float gui_y0,
+                         float gui_x1, float gui_y1);
 
 void get_mapview_scroll_window(float *xmin, float *ymin, float *xmax,
                                float *ymax, int *xsize, int *ysize);
@@ -239,7 +245,7 @@ void get_mapview_scroll_pos(int *scroll_x, int *scroll_y);
 
 void set_mapview_origin(float gui_x0, float gui_y0);
 struct tile *get_center_tile_mapcanvas();
-void center_tile_mapcanvas(struct tile *ptile);
+[[deprecated]] void center_tile_mapcanvas(struct tile *ptile);
 
 bool tile_visible_mapcanvas(struct tile *ptile);
 bool tile_visible_and_not_on_border_mapcanvas(struct tile *ptile);

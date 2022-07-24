@@ -167,8 +167,8 @@ void map_to_gui_vector(const struct tileset *t, float *gui_dx, float *gui_dy,
    GUI coordinates are comparable to canvas coordinates but extend in all
    directions.  gui(0,0) == map(0,0).
  */
-static void map_to_gui_pos(const struct tileset *t, float *gui_x,
-                           float *gui_y, int map_x, int map_y)
+void map_to_gui_pos(const struct tileset *t, float *gui_x, float *gui_y,
+                    int map_x, int map_y)
 {
   /* Since the GUI origin is the same as the map origin we can just do a
    * vector conversion. */
@@ -401,9 +401,9 @@ static void normalize_gui_pos(const struct tileset *t, float *gui_x,
    Find the vector with minimum "real" distance between two GUI positions.
    This corresponds to map_to_distance_vector but works for GUI coordinates.
  */
-static void gui_distance_vector(const struct tileset *t, float *gui_dx,
-                                float *gui_dy, float gui_x0, float gui_y0,
-                                float gui_x1, float gui_y1)
+void gui_distance_vector(const struct tileset *t, float *gui_dx,
+                         float *gui_dy, float gui_x0, float gui_y0,
+                         float gui_x1, float gui_y1)
 {
   int map_x0, map_y0, map_x1, map_y1;
   float gui_x0_base, gui_y0_base, gui_x1_base, gui_y1_base;
