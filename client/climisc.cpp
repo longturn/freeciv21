@@ -125,7 +125,7 @@ void client_remove_unit(struct unit *punit)
     }
   }
 
-  refresh_unit_mapcanvas(&old_unit, ptile, true, false);
+  refresh_unit_mapcanvas(&old_unit, ptile, true);
   flush_dirty_overview();
 }
 
@@ -161,7 +161,7 @@ void client_remove_city(struct city *pcity)
   }
   game_remove_city(&wld, pcity);
   city_report_dialog_update();
-  refresh_city_mapcanvas(&old_city, ptile, true, false);
+  refresh_city_mapcanvas(&old_city, ptile, true);
 }
 
 /**

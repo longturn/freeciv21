@@ -745,7 +745,7 @@ static void editor_end_selection_rectangle(int canvas_x, int canvas_y)
     }
 
     if (ptile) {
-      refresh_tile_mapcanvas(ptile, true, true);
+      refresh_tile_mapcanvas(ptile, true);
     }
 
     return;
