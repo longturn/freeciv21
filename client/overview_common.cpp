@@ -109,7 +109,7 @@ void gui_to_overview_pos(const struct tileset *t, int *ovr_x, int *ovr_y,
 /**
    Return color for overview map tile.
  */
-static QColor overview_tile_color(struct tile *ptile)
+static QColor overview_tile_color(const tile *ptile)
 {
   if (gui_options.overview.layers[OLAYER_CITIES]) {
     struct city *pcity = tile_city(ptile);
@@ -281,7 +281,7 @@ void refresh_overview_canvas()
    This is just a simple helper function for overview_update_tile, since
    sometimes a tile may cover more than one rectangle.
  */
-static void put_overview_tile_area(QPixmap *pcanvas, struct tile *ptile,
+static void put_overview_tile_area(QPixmap *pcanvas, const tile *ptile,
                                    int x, int y, int w, int h)
 {
   QPainter p(pcanvas);
@@ -296,7 +296,7 @@ static void put_overview_tile_area(QPixmap *pcanvas, struct tile *ptile,
 /**
    Redraw the given map position in the overview canvas.
  */
-void overview_update_tile(struct tile *ptile)
+void overview_update_tile(const tile *ptile)
 {
   int tile_x, tile_y;
 
