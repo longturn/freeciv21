@@ -70,7 +70,6 @@ struct gotoline_counter {
 typedef QHash<const struct tile *, struct gotoline_counter *> gotohash;
 Q_GLOBAL_STATIC(gotohash, mapdeco_gotoline)
 struct view mapview;
-bool can_slide = true;
 
 static void base_canvas_to_map_pos(int *map_x, int *map_y, float canvas_x,
                                    float canvas_y);
@@ -572,66 +571,7 @@ void set_mapview_origin(float gui_x0, float gui_y0)
     return;
   }
 
-  if (can_slide && gui_options.smooth_center_slide_msec > 0) {
-    int start_x = mapview.gui_x0, start_y = mapview.gui_y0;
-    float diff_x, diff_y;
-    double timing_sec =
-        static_cast<double>(gui_options.smooth_center_slide_msec) / 1000.0;
-    double currtime;
-    int frames = 0;
-
-    /* We track the average FPS, which is used to predict how long the
-     * next draw will take.  We start with a 100 FPS estimate - this
-     * value will quickly become irrelevant as the correct value is
-     * calculated, but it's needed to give an estimate of the FPS for
-     * the first draw.
-     *
-     * Note that the initial value shouldn't be larger than the sliding
-     * time, or we'll jump straight to the last frame.  The FPS should
-     * therefore be a "high" estimate. */
-    static double total_frames = 0.01;
-    static double total_time = 0.0001;
-
-    gui_distance_vector(tileset, &diff_x, &diff_y, start_x, start_y, gui_x0,
-                        gui_y0);
-    anim_timer->start();
-
-    unqueue_mapview_updates(true);
-    flush_dirty_overview();
-
-    do {
-      double mytime;
-
-      /* Get the current time, and add on the average 1/FPS, which is the
-       * expected time this frame will take.  This is done so that the
-       * frame's position is calculated from the expected time when the
-       * frame will complete, rather than the time when the frame drawing
-       * is started. */
-      currtime = double(anim_timer->elapsed()) / 1000;
-      currtime += total_time / total_frames;
-
-      mytime = MIN(currtime, timing_sec);
-      base_set_mapview_origin(start_x + diff_x * (mytime / timing_sec),
-                              start_y + diff_y * (mytime / timing_sec));
-      flush_dirty();
-      frames++;
-    } while (currtime < timing_sec);
-
-    currtime = double(anim_timer->elapsed()) / 1000;
-    total_frames += frames;
-    total_time += currtime;
-    qCDebug(graphics_category,
-            "Got %d frames in %f seconds: %f FPS (avg %f).", frames,
-            currtime, (double) frames / currtime, total_frames / total_time);
-
-    /* A very small decay factor to make things more accurate when
-     * something changes (mapview size, tileset change, etc.).  This gives
-     * a half-life of 68 slides. */
-    total_frames *= 0.99;
-    total_time *= 0.99;
-  } else {
-    base_set_mapview_origin(gui_x0, gui_y0);
-  }
+  base_set_mapview_origin(gui_x0, gui_y0);
 }
 
 /**
@@ -754,30 +694,6 @@ void get_mapview_scroll_pos(int *scroll_x, int *scroll_y)
 struct tile *get_center_tile_mapcanvas()
 {
   return canvas_pos_to_nearest_tile(mapview.width / 2, mapview.height / 2);
-}
-
-/**
-   Centers the mapview around (map_x, map_y).
- */
-void center_tile_mapcanvas(struct tile *ptile)
-{
-  float gui_x, gui_y;
-  int tile_x, tile_y;
-  static bool first = true;
-
-  if (first && can_slide) {
-    return;
-  }
-  first = false;
-
-  index_to_map_pos(&tile_x, &tile_y, tile_index(ptile));
-  map_to_gui_pos(tileset, &gui_x, &gui_y, tile_x, tile_y);
-
-  // Put the center pixel of the tile at the exact center of the mapview.
-  gui_x -= (mapview.width - tileset_tile_width(tileset)) / 2;
-  gui_y -= (mapview.height - tileset_tile_height(tileset)) / 2;
-
-  set_mapview_origin(gui_x, gui_y);
 }
 
 /**

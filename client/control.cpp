@@ -52,6 +52,8 @@
 
 // gui-qt
 #include "chatline.h"
+#include "mapview.h"
+#include "page_game.h"
 #include "qtg_cxxside.h"
 
 struct client_disband_unit_data {
@@ -420,7 +422,7 @@ void auto_center_on_focus_unit()
 
   if (ptile && gui_options.auto_center_on_unit
       && !tile_visible_and_not_on_border_mapcanvas(ptile)) {
-    center_tile_mapcanvas(ptile);
+    queen()->mapview_wdg->center_on_tile(ptile);
   }
 }
 
@@ -664,7 +666,7 @@ void unit_focus_advance()
       /* Autocenter on Wakeup, regardless of the local option
        * "auto_center_on_unit". */
       if (!tile_visible_and_not_on_border_mapcanvas(unit_tile(candidate))) {
-        center_tile_mapcanvas(unit_tile(candidate));
+        queen()->mapview_wdg->center_on_tile(unit_tile(candidate));
       }
     }
   }
@@ -2307,7 +2309,7 @@ void request_center_focus_unit()
   struct tile *ptile = find_a_focus_unit_tile_to_center_on();
 
   if (ptile) {
-    center_tile_mapcanvas(ptile);
+    queen()->mapview_wdg->center_on_tile(ptile);
   }
 }
 
@@ -2375,7 +2377,7 @@ void do_move_unit(struct unit *punit, struct unit *target_unit)
            && punit->ssa_controller != SSA_NONE)
           || (punit->ssa_controller == SSA_NONE))
       && !tile_visible_and_not_on_border_mapcanvas(dst_tile)) {
-    center_tile_mapcanvas(dst_tile);
+    queen()->mapview_wdg->center_on_tile(dst_tile);
   }
 
   if (hover_state != HOVER_NONE && in_focus) {
@@ -2799,7 +2801,7 @@ void key_center_capital()
 
   if (capital) {
     // Center on the tile, and pop up the crosshair overlay.
-    center_tile_mapcanvas(capital->tile);
+    queen()->mapview_wdg->center_on_tile(capital->tile);
     put_cross_overlay_tile(capital->tile);
   } else {
     create_event(nullptr, E_BAD_COMMAND, ftc_client,

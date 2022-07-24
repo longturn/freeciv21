@@ -77,7 +77,9 @@
 #include "layer_special.h"
 #include "layer_terrain.h"
 #include "layer_units.h"
+#include "mapview.h"
 #include "options.h" // for fill_xxx
+#include "page_game.h"
 #include "tilespec.h"
 
 // gui-qt
@@ -1101,12 +1103,10 @@ bool tilespec_reread(const QString &name, bool game_fully_initialized)
    */
   generate_citydlg_dimensions();
   tileset_changed();
-  can_slide = false;
-  center_tile_mapcanvas(center_tile);
   /* update_map_canvas_visible forces a full redraw.  Otherwise with fast
    * drawing we might not get one.  Of course this is slower. */
   update_map_canvas_visible();
-  can_slide = true;
+  queen()->mapview_wdg->center_on_tile(center_tile, false);
 
   return new_tileset_in_use;
 }

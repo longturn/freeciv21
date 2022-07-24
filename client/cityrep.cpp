@@ -22,12 +22,12 @@
 #include "cityrep_g.h"
 #include "client_main.h"
 #include "governor.h"
-#include "mapview_common.h"
 // gui-qt
 #include "cityrep.h"
 #include "fc_client.h"
 #include "hudwidget.h"
 #include "icons.h"
+#include "mapview.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
 
@@ -413,7 +413,7 @@ void city_widget::city_view()
 
   Q_ASSERT(pcity != nullptr);
   if (gui_options.center_when_popup_city) {
-    center_tile_mapcanvas(pcity->tile);
+    queen()->mapview_wdg->center_on_tile(pcity->tile);
   }
   real_city_dialog_popup(pcity);
 }
@@ -455,7 +455,7 @@ void city_widget::center()
   }
   pcity = selected_cities[0];
   Q_ASSERT(pcity != nullptr);
-  center_tile_mapcanvas(pcity->tile);
+  queen()->mapview_wdg->center_on_tile(pcity->tile);
   queen()->game_tab_widget->setCurrentIndex(0);
 }
 

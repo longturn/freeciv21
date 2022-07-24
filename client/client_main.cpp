@@ -857,9 +857,7 @@ void set_client_state(enum client_states newstate)
     boot_help_texts(client_current_nation_set(), tileset_help(tileset));
 
     global_worklists_build();
-    can_slide = false;
     unit_focus_update();
-    can_slide = true;
     set_client_page(PAGE_GAME);
     // Find something sensible to display instead of the intro gfx.
     center_on_something();

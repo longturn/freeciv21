@@ -84,11 +84,13 @@
 #include "editor.h"
 #include "goto.h" // client_goto_init()
 #include "governor.h"
+#include "mapview.h"
 #include "mapview_common.h"
 #include "messagewin_common.h"
 #include "music.h"
 #include "options.h"
 #include "overview_common.h"
+#include "page_game.h"
 #include "plrdlg_common.h"
 #include "tilespec.h"
 #include "update_queue.h"
@@ -503,9 +505,9 @@ void handle_unit_combat_info(const struct packet_unit_combat_info *packet)
       show_combat = true;
     } else if (gui_options.auto_center_on_combat) {
       if (unit_owner(punit0) == client.conn.playing) {
-        center_tile_mapcanvas(unit_tile(punit0));
+        queen()->mapview_wdg->center_on_tile(unit_tile(punit0));
       } else {
-        center_tile_mapcanvas(unit_tile(punit1));
+        queen()->mapview_wdg->center_on_tile(unit_tile(punit1));
       }
       show_combat = true;
     }

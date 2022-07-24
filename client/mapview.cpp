@@ -198,7 +198,7 @@ void map_view::show_all_fcwidgets()
 /**
  * Centers the view on a tile.
  */
-void map_view::center_on_tile(tile *tile)
+void map_view::center_on_tile(tile *tile, bool animate)
 {
   int tile_x, tile_y;
   index_to_map_pos(&tile_x, &tile_y, tile_index(tile));
@@ -211,20 +211,24 @@ void map_view::center_on_tile(tile *tile)
   gui_y -= (mapview.height - tileset_tile_height(tileset)) / 2;
 
   m_origin_animation->stop();
-  m_origin_animation->setDuration(gui_options.smooth_center_slide_msec);
-  m_origin_animation->setCurrentTime(0);
+  if (animate) {
+    m_origin_animation->setDuration(gui_options.smooth_center_slide_msec);
+    m_origin_animation->setCurrentTime(0);
 
-  const auto start = QPointF(mapview.gui_x0, mapview.gui_y0);
-  m_origin_animation->setStartValue(start);
+    const auto start = QPointF(mapview.gui_x0, mapview.gui_y0);
+    m_origin_animation->setStartValue(start);
 
-  // To wrap correctly, we first find the direction in which the animation
-  // should go and then choose the end point for Qt's linear interpolation.
-  float diff_x, diff_y;
-  gui_distance_vector(tileset, &diff_x, &diff_y, mapview.gui_x0,
-                      mapview.gui_y0, gui_x, gui_y);
-  m_origin_animation->setEndValue(start + QPointF(diff_x, diff_y));
+    // To wrap correctly, we first find the direction in which the animation
+    // should go and then choose the end point for Qt's linear interpolation.
+    float diff_x, diff_y;
+    gui_distance_vector(tileset, &diff_x, &diff_y, mapview.gui_x0,
+                        mapview.gui_y0, gui_x, gui_y);
+    m_origin_animation->setEndValue(start + QPointF(diff_x, diff_y));
 
-  m_origin_animation->start();
+    m_origin_animation->start();
+  } else {
+    m_renderer->set_origin(QPointF(gui_x, gui_y));
+  }
 }
 
 /**
