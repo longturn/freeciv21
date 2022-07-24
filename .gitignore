@@ -51,3 +51,6 @@ build.ninja
 .vs
 # Project file
 *.kdev4
+
+# In case someone runs Doxygen
+/doc/doxygen
