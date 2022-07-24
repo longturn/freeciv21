@@ -48,6 +48,7 @@ void map_updates_handler::update(const city *city, bool full)
       // Assumption: city sprites are as big as unit sprites
       m_updates[tile] |= update_type::unit;
     }
+    emit repaint_needed();
   }
 }
 
@@ -62,6 +63,7 @@ void map_updates_handler::update(const tile *tile, bool full)
     } else {
       m_updates[tile] |= update_type::tile_single;
     }
+    emit repaint_needed();
   }
 }
 
@@ -76,8 +78,10 @@ void map_updates_handler::update(const unit *unit, bool full)
       update_all();
     } else if (full && unit_drawn_with_city_outline(unit, true)) {
       m_updates[tile] |= update_type::city_map;
+      emit repaint_needed();
     } else {
       m_updates[tile] |= update_type::unit;
+      emit repaint_needed();
     }
   }
 }
@@ -89,6 +93,7 @@ void map_updates_handler::update_all()
 {
   m_updates.clear();
   m_full_update = true;
+  emit repaint_needed();
 }
 
 /**
@@ -99,6 +104,7 @@ void map_updates_handler::update_city_description(const city *city)
 {
   if (!m_full_update) {
     m_updates[city_tile(city)] |= update_type::city_description;
+    emit repaint_needed();
   }
 }
 
@@ -109,6 +115,7 @@ void map_updates_handler::update_tile_label(const tile *tile)
 {
   if (!m_full_update) {
     m_updates[tile] |= update_type::tile_label;
+    emit repaint_needed();
   }
 }
 

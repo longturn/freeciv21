@@ -32,7 +32,6 @@ client/gui_main.cpp
 client/helpdlg.cpp
 client/hudwidget.cpp
 client/icons.cpp
-client/idlecallback.cpp
 client/luaconsole.cpp
 client/luaconsole_common.cpp
 client/mapctrl.cpp

@@ -54,6 +54,9 @@ public:
   void update_city_description(const city *city);
   void update_tile_label(const tile *tile);
 
+signals:
+  void repaint_needed();
+
 private:
   bool m_full_update = false;
   std::map<const tile *, updates> m_updates;

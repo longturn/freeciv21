@@ -22,7 +22,6 @@
 #include "tilespec.h"
 // gui-qt
 #include "chatline.h"
-#include "idlecallback.h"
 #include "menu.h"
 #include "tradecalculation.h"
 

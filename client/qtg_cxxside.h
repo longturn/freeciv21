@@ -24,7 +24,6 @@ void add_net_input(QTcpSocket *sock);
 void remove_net_input();
 void real_conn_list_dialog_update(void *unused);
 void close_connection_dialog();
-void add_idle_callback(void(callback)(void *), void *data);
 void sound_bell();
 
 void real_set_client_page(client_pages page);
