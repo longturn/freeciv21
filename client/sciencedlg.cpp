@@ -14,7 +14,9 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QScrollArea>
+#include <QTimer>
 #include <QToolTip>
+
 // common
 #include "game.h"
 #include "government.h"

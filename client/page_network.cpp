@@ -10,6 +10,9 @@
                                 If not, see https://www.gnu.org/licenses/.
 **************************************************************************/
 #include "page_network.h"
+
+#include <QTimer>
+
 // utility
 #include "fcintl.h"
 // client

@@ -75,8 +75,6 @@ bool can_slide = true;
 static void base_canvas_to_map_pos(int *map_x, int *map_y, float canvas_x,
                                    float canvas_y);
 
-static void queue_add_callback();
-
 // Helper struct for drawing trade routes.
 struct trade_route_line {
   float x, y, width, height;
@@ -105,9 +103,6 @@ void refresh_tile_mapcanvas(const tile *ptile, bool full_refresh,
   freeciv::map_updates_handler::invoke(
       qOverload<const tile *, bool>(&freeciv::map_updates_handler::update),
       ptile, full_refresh);
-  if (can_client_change_view()) {
-    queue_add_callback();
-  }
   if (write_to_screen) {
     unqueue_mapview_updates(true);
     flush_dirty_overview();
@@ -123,9 +118,6 @@ void refresh_unit_mapcanvas(struct unit *punit, struct tile *ptile,
   freeciv::map_updates_handler::invoke(
       qOverload<const unit *, bool>(&freeciv::map_updates_handler::update),
       punit, full_refresh);
-  if (can_client_change_view()) {
-    queue_add_callback();
-  }
   if (write_to_screen) {
     unqueue_mapview_updates(true);
   }
@@ -143,9 +135,6 @@ void refresh_city_mapcanvas(struct city *pcity, struct tile *ptile,
   freeciv::map_updates_handler::invoke(
       qOverload<const city *, bool>(&freeciv::map_updates_handler::update),
       pcity, full_refresh);
-  if (can_client_change_view()) {
-    queue_add_callback();
-  }
   if (write_to_screen) {
     unqueue_mapview_updates(true);
     flush_dirty_overview();
@@ -1384,7 +1373,6 @@ void update_map_canvas_visible()
   if (can_client_change_view()) {
     freeciv::map_updates_handler::invoke(
         &freeciv::map_updates_handler::update_all);
-    queue_add_callback();
   }
 }
 
@@ -1407,9 +1395,6 @@ void update_city_description(struct city *pcity)
 {
   freeciv::map_updates_handler::invoke(
       &freeciv::map_updates_handler::update_city_description, pcity);
-  if (can_client_change_view()) {
-    queue_add_callback();
-  }
 }
 
 /**
@@ -1419,9 +1404,6 @@ void update_tile_label(struct tile *ptile)
 {
   freeciv::map_updates_handler::invoke(
       &freeciv::map_updates_handler::update_tile_label, ptile);
-  if (can_client_change_view()) {
-    queue_add_callback();
-  }
 }
 
 /**
@@ -1971,30 +1953,6 @@ void get_city_mapview_trade_routes(const city *pcity,
 }
 
 /***************************************************************************/
-static bool callback_queued = false;
-
-/**
-   This callback is called during an idle moment to unqueue any pending
-   mapview updates.
- */
-static void queue_callback(void *data)
-{
-  Q_UNUSED(data)
-  callback_queued = false;
-  unqueue_mapview_updates(true);
-}
-
-/**
-   When a mapview update is queued this function should be called to prepare
-   an idle-time callback to unqueue the updates.
- */
-static void queue_add_callback()
-{
-  if (!callback_queued) {
-    callback_queued = true;
-    add_idle_callback(queue_callback, nullptr);
-  }
-}
 
 /**
  * Calculates the area covered by each update type.  The area array gives
@@ -2505,6 +2463,12 @@ void init_mapcanvas_and_overview()
   // Create a dummy map to make sure mapview.store is never nullptr.
   map_canvas_resized(1, 1);
   mapview.updates = std::make_unique<freeciv::map_updates_handler>();
+  // We must use a queued connection here to avoid infinite recursion (for
+  // whatever reason, unqueue_mapview_updates triggers more repaints)
+  mapview.updates->connect(
+      mapview.updates.get(), &freeciv::map_updates_handler::repaint_needed,
+      mapview.updates.get(), [] { unqueue_mapview_updates(true); },
+      Qt::QueuedConnection);
 }
 
 /**

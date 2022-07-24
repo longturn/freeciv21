@@ -77,7 +77,6 @@ add_library(
   helpdlg.cpp
   hudwidget.cpp
   icons.cpp
-  idlecallback.cpp
   layer_background.cpp
   layer_base_flags.cpp
   layer_darkness.cpp

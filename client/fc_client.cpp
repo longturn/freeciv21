@@ -128,7 +128,6 @@ fc_client::~fc_client()
   if (fc_shortcuts::sc()) {
     delete fc_shortcuts::sc();
   }
-  mrIdle::idlecb()->drop();
   delete_cursors();
 }
 

@@ -182,8 +182,6 @@ void minimap_view::update_image()
   if (isHidden()) {
     return;
   }
-  // There might be some map updates lurking around
-  mrIdle::idlecb()->runNow();
   update();
 }
 

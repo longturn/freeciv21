@@ -213,20 +213,6 @@ void real_focus_units_changed()
 }
 
 /**
-   Enqueue a callback to be called during an idle moment.  The 'callback'
-   function should be called sometimes soon, and passed the 'data' pointer
-   as its data.
- */
-void add_idle_callback(void(callback)(void *), void *data)
-{
-  call_me_back *cb = new call_me_back; // removed in mr_idler:idling()
-
-  cb->callback = callback;
-  cb->data = data;
-  mrIdle::idlecb()->addCallback(cb);
-}
-
-/**
    Shows/Hides titlebar
  */
 void apply_titlebar(struct option *poption)
