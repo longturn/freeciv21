@@ -16,12 +16,8 @@ namespace freeciv {
  * @class renderer
  * @brief Renders the map on widgets
  *
- * This class is used to draw the map. It can handle zoom via the @ref scale
- * property.
- *
- * @property scale By how much the map is scaled before being drawn (a scale
- * of 2 means that everything is 2x bigger)
- * @property origin The position of the top left corner of the view.
+ * This class is used to draw the map. The position of the mapview is given
+ * by @ref origin and zoom is set via the @ref scale property.
  */
 
 /**
@@ -45,7 +41,8 @@ void renderer::set_origin(const QPointF &origin)
 }
 
 /**
- * Changes the scale of the rendering (zooms in or out).
+ * Changes the scale of the rendering (zooms in or out). A scale of 2 means
+ * that everything is 2x bigger.
  */
 void renderer::set_scale(double scale)
 {
@@ -71,9 +68,9 @@ void renderer::set_viewport_size(const QSize &size)
 }
 
 /**
- * Renders the specified region of the visible portion of the map on @c
+ * Renders the specified @c region of the visible portion of the map on @c
  * painter.
- * @see @ref render(QPainter&, const QRect&)
+ * @overload
  */
 void renderer::render(QPainter &painter, const QRegion &region) const
 {
@@ -85,8 +82,8 @@ void renderer::render(QPainter &painter, const QRegion &region) const
 /**
  * Renders the specified area of the visible portion of the map on @c
  * painter. This is meant to be used directly from @c paintEvent, so the
- * position of
- * @c area is relative to the @ref viewport.
+ * position of @c area is relative to the viewport.
+ * @overload
  */
 void renderer::render(QPainter &painter, const QRect &area) const
 {
