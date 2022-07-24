@@ -47,10 +47,8 @@
 static int mapview_frozen_level = 0;
 extern void destroy_city_dialog();
 extern QPixmap *canvas;
+static QRegion dirty;
 
-#define MAX_DIRTY_RECTS 20
-static int num_dirty_rects = 0;
-static QRect dirty_rects[MAX_DIRTY_RECTS];
 info_tile *info_tile::m_instance = nullptr;
 extern int last_center_enemy;
 extern int last_center_capital;
@@ -490,13 +488,9 @@ void dirty_rect(int canvas_x, int canvas_y, int pixel_width,
   if (mapview_is_frozen()) {
     return;
   }
-  if (num_dirty_rects < MAX_DIRTY_RECTS) {
-    dirty_rects[num_dirty_rects].setX(canvas_x);
-    dirty_rects[num_dirty_rects].setY(canvas_y);
-    dirty_rects[num_dirty_rects].setWidth(pixel_width);
-    dirty_rects[num_dirty_rects].setHeight(pixel_height);
-    num_dirty_rects++;
-  }
+  auto scale = queen()->mapview_wdg->scale();
+  dirty |= QRect(canvas_x * scale, canvas_y * scale, pixel_width * scale,
+                 pixel_height * scale);
 }
 
 /**
@@ -507,7 +501,7 @@ void dirty_all(void)
   if (mapview_is_frozen()) {
     return;
   }
-  num_dirty_rects = MAX_DIRTY_RECTS;
+  dirty |= QRect(QPoint(), queen()->mapview_wdg->size());
 }
 
 /**
@@ -521,19 +515,8 @@ void flush_dirty()
     return;
   }
 
-  auto mapview = queen()->mapview_wdg;
-
-  if (num_dirty_rects >= MAX_DIRTY_RECTS) {
-    mapview->repaint();
-  } else {
-    for (int i = 0; i < num_dirty_rects; i++) {
-      mapview->repaint(dirty_rects[i].x() * mapview->scale(),
-                       dirty_rects[i].y() * mapview->scale(),
-                       dirty_rects[i].width() * mapview->scale(),
-                       dirty_rects[i].height() * mapview->scale());
-    }
-  }
-  num_dirty_rects = 0;
+  queen()->mapview_wdg->repaint(dirty);
+  dirty = QRegion();
 }
 
 /**
