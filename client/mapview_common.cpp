@@ -71,8 +71,6 @@ Q_GLOBAL_STATIC(gotohash, mapdeco_gotoline)
 struct view mapview;
 bool can_slide = true;
 
-struct tile *center_tile = nullptr;
-
 static void base_canvas_to_map_pos(int *map_x, int *map_y, float canvas_x,
                                    float canvas_y);
 
@@ -818,8 +816,6 @@ void center_tile_mapcanvas(struct tile *ptile)
   gui_y -= (mapview.height - tileset_tile_height(tileset)) / 2;
 
   set_mapview_origin(gui_x, gui_y);
-
-  center_tile = ptile;
 }
 
 /**
@@ -2491,6 +2487,9 @@ void mapdeco_clear_gotoroutes()
  */
 void map_canvas_resized(int width, int height)
 {
+  // Save the current center before we resize
+  const auto center_tile = get_center_tile_mapcanvas();
+
   int tile_width = (width + tileset_tile_width(tileset) - 1)
                    / (tileset_tile_width(tileset));
   int tile_height = (height + tileset_tile_height(tileset) - 1)
