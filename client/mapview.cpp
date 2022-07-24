@@ -257,7 +257,7 @@ double map_view::scale() const { return m_renderer->scale(); }
 void map_view::set_scale(double scale)
 {
   m_scale_animation->stop();
-  m_scale_animation->setDuration(100);
+  m_scale_animation->setDuration(gui_options.smooth_center_slide_msec);
   m_scale_animation->setEndValue(scale);
   m_scale_animation->setCurrentTime(0);
   m_scale_animation->start();
