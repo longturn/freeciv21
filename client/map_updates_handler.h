@@ -39,14 +39,11 @@ public:
   explicit map_updates_handler(QObject *parent = nullptr);
   virtual ~map_updates_handler() = default;
 
-  /// Allows iteration on the list of pending updates.
-  auto begin() const { return m_updates.begin(); }
-
-  /// Allows iteration on the list of pending updates.
-  auto end() const { return m_updates.begin(); }
-
   /// Returns true if the whole map should be updated.
   bool full() const { return m_full_update; }
+
+  /// Returns the list of pending updates.
+  auto list() const { return m_updates; }
 
   void clear();
 
