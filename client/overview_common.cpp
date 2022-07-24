@@ -26,8 +26,10 @@ received a copy of the GNU General Public License along with Freeciv21.
 // Qt
 #include <QPainter>
 #include <QPixmap>
+#include <qnamespace.h>
 
 int OVERVIEW_TILE_SIZE = 2;
+
 #if 0
 struct overview overview = {
   // These are the default values.  All others are zeroed automatically.
@@ -39,11 +41,20 @@ struct overview overview = {
 };
 #endif
 
+namespace /* anonymous */ {
+
 /*
  * Set to TRUE if the backing store is more recent than the version
  * drawn into overview.window.
  */
 static bool overview_dirty = false;
+
+// Tracks map updates for the overview
+static std::unique_ptr<freeciv::map_updates_handler> updates = nullptr;
+
+} // anonymous namespace
+
+static void overview_update_tile(const tile *ptile);
 
 /**
    Translate from gui to natural coordinate systems.  This provides natural
@@ -296,8 +307,12 @@ static void put_overview_tile_area(QPixmap *pcanvas, const tile *ptile,
 /**
    Redraw the given map position in the overview canvas.
  */
-void overview_update_tile(const tile *ptile)
+static void overview_update_tile(const tile *ptile)
 {
+  if (!can_client_change_view()) {
+    return;
+  }
+
   int tile_x, tile_y;
 
   /* Base overview positions are just like natural positions, but scaled to
@@ -393,6 +408,34 @@ void calculate_overview_dimensions()
   recursion--;
 }
 
+namespace /* anonymous */ {
+/**
+ * Unqueues pending updates of the overview.
+ */
+void unqueue_overview_updates()
+{
+  if (updates->full()) {
+    refresh_overview_canvas();
+  } else {
+    for (const auto [tile, _] : updates->list()) {
+      overview_update_tile(tile);
+    }
+  }
+  updates->clear();
+}
+} // anonymous namespace
+
+/**
+ * Allocates overview resources.
+ */
+void overview_init()
+{
+  updates = std::make_unique<freeciv::map_updates_handler>();
+  updates->connect(
+      updates.get(), &freeciv::map_updates_handler::repaint_needed,
+      updates.get(), unqueue_overview_updates, Qt::QueuedConnection);
+}
+
 /**
    Free overview resources.
  */
@@ -404,6 +447,7 @@ void overview_free()
     gui_options.overview.map = nullptr;
     gui_options.overview.window = nullptr;
   }
+  updates = nullptr;
 }
 
 /**

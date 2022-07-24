@@ -22,8 +22,8 @@ void overview_to_map_pos(int *map_x, int *map_y, int overview_x,
                          int overview_y);
 
 void refresh_overview_canvas();
-void overview_update_tile(const tile *ptile);
 void calculate_overview_dimensions();
+void overview_init();
 void overview_free();
 
 void flush_dirty_overview();

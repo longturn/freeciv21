@@ -2026,8 +2026,6 @@ void unqueue_mapview_updates(bool write_to_screen)
     if (full) {
       dirty_all();
       update_map_canvas(0, 0, mapview.store_width, mapview.store_height);
-      // Have to update the overview too, since some tiles may have changed.
-      refresh_overview_canvas();
     } else {
       QRectF to_update;
 
@@ -2039,11 +2037,6 @@ void unqueue_mapview_updates(bool write_to_screen)
             to_update |= rect.translated(xl, yt);
           }
         }
-
-        // FIXME: These overview updates should be batched as well.
-        // Right now they account for as much as 90% of the runtime of
-        // the unqueue.
-        overview_update_tile(tile);
       }
 
       if (to_update.intersects(
@@ -2469,6 +2462,8 @@ void init_mapcanvas_and_overview()
       mapview.updates.get(), &freeciv::map_updates_handler::repaint_needed,
       mapview.updates.get(), [] { unqueue_mapview_updates(true); },
       Qt::QueuedConnection);
+
+  overview_init();
 }
 
 /**
