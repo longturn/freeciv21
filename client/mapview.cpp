@@ -134,6 +134,8 @@ void draw_calculated_trade_routes(QPainter *painter)
  */
 map_view::map_view()
     : QWidget(), m_renderer(new freeciv::renderer(this)),
+      m_origin_animation(
+          std::make_unique<QPropertyAnimation>(m_renderer, "origin")),
       m_scale_animation(std::make_unique<QPropertyAnimation>(this, "scale"))
 {
   menu_click = false;
@@ -194,6 +196,38 @@ void map_view::show_all_fcwidgets()
 }
 
 /**
+ * Centers the view on a tile.
+ */
+void map_view::center_on_tile(tile *tile)
+{
+  int tile_x, tile_y;
+  index_to_map_pos(&tile_x, &tile_y, tile_index(tile));
+
+  float gui_x, gui_y;
+  map_to_gui_pos(tileset, &gui_x, &gui_y, tile_x, tile_y);
+
+  // Put the center pixel of the tile at the exact center of the mapview.
+  gui_x -= (mapview.width - tileset_tile_width(tileset)) / 2;
+  gui_y -= (mapview.height - tileset_tile_height(tileset)) / 2;
+
+  m_origin_animation->stop();
+  m_origin_animation->setDuration(gui_options.smooth_center_slide_msec);
+  m_origin_animation->setCurrentTime(0);
+
+  const auto start = QPointF(mapview.gui_x0, mapview.gui_y0);
+  m_origin_animation->setStartValue(start);
+
+  // To wrap correctly, we first find the direction in which the animation
+  // should go and then choose the end point for Qt's linear interpolation.
+  float diff_x, diff_y;
+  gui_distance_vector(tileset, &diff_x, &diff_y, mapview.gui_x0,
+                      mapview.gui_y0, gui_x, gui_y);
+  m_origin_animation->setEndValue(start + QPointF(diff_x, diff_y));
+
+  m_origin_animation->start();
+}
+
+/**
  * Zooms in by 20%.
  */
 void map_view::zoom_in() { set_scale(1.2 * scale()); }
@@ -231,7 +265,7 @@ void map_view::set_scale(double scale)
 void map_view::set_scale_now(double scale)
 {
   m_renderer->set_scale(scale);
-  emit scale_changed(m_scale);
+  emit scale_changed(scale);
 }
 
 /**

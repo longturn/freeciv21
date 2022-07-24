@@ -73,6 +73,8 @@ signals:
   void scale_changed(double scale) const;
 
 public slots:
+  void center_on_tile(tile *tile);
+
   void zoom_in();
   void zoom_reset();
   void zoom_out();
@@ -103,6 +105,7 @@ private:
   int cursor;
   freeciv::renderer *m_renderer;
   double m_scale = 1;
+  std::unique_ptr<QPropertyAnimation> m_origin_animation;
   std::unique_ptr<QPropertyAnimation> m_scale_animation;
   QPointer<freeciv::tileset_debugger> m_debugger = nullptr;
   std::vector<QPointer<fcwidget>> m_hidden_fcwidgets;
