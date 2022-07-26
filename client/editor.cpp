@@ -10,9 +10,7 @@
                                             https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#endif
-
+#include <QRect>
 #include <QSet>
 
 // utility
@@ -32,6 +30,7 @@
 #include "control.h"
 #include "editor.h"
 #include "mapctrl_common.h"
+#include "mapview_geometry.h"
 #include "tilespec.h"
 
 /* client/include */
@@ -751,21 +750,21 @@ static void editor_end_selection_rectangle(int canvas_x, int canvas_y)
     return;
   }
 
-  gui_rect_iterate(mapview.gui_x0 + editor->selrect_x,
-                   mapview.gui_y0 + editor->selrect_y, editor->selrect_width,
-                   editor->selrect_height, ptile, pedge, pcorner)
-  {
-    if (ptile == nullptr) {
+  const auto rect = QRect(mapview.gui_x0 + editor->selrect_x,
+                          mapview.gui_y0 + editor->selrect_y,
+                          editor->selrect_width, editor->selrect_height);
+  for (auto it = freeciv::gui_rect_iterator(tileset, rect); it.next();) {
+    if (it.current_item() != freeciv::gui_rect_iterator::item_type::tile
+        || !it.tile()) {
       continue;
     }
     if (editor->selection_mode == SELECTION_MODE_NEW
         || editor->selection_mode == SELECTION_MODE_ADD) {
-      editor_selection_add(ptile);
+      editor_selection_add(it.tile());
     } else if (editor->selection_mode == SELECTION_MODE_REMOVE) {
-      editor_selection_remove(ptile);
+      editor_selection_remove(it.tile());
     }
   }
-  gui_rect_iterate_end;
 
   w = tileset_tile_width(tileset);
   h = tileset_tile_height(tileset);
