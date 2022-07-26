@@ -298,10 +298,6 @@ void map_canvas_resized(int width, int height);
 void init_mapcanvas_and_overview();
 void free_mapcanvas_and_overview();
 
-void get_spaceship_dimensions(int *width, int *height);
-void put_spaceship(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                   const struct player *pplayer);
-
 void link_marks_init();
 void link_marks_free();
 
