@@ -15,6 +15,8 @@
 
 namespace freeciv {
 
+class map_updates_handler;
+
 class renderer : public QObject {
   Q_OBJECT
   Q_PROPERTY(QPointF origin READ origin WRITE set_origin);
@@ -39,10 +41,17 @@ public:
   void render(QPainter &painter, const QRegion &region) const;
   void render(QPainter &painter, const QRect &area) const;
 
+signals:
+  void repaint_needed(const QRegion &where);
+
+private slots:
+  void unqueue_updates();
+
 private:
   QPointF m_origin;
   double m_scale = 1.0;
   QSize m_viewport_size;
+  map_updates_handler *m_updates;
 };
 
 } // namespace freeciv

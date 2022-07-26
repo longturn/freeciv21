@@ -25,7 +25,6 @@ struct view {
   int store_width, store_height;
   bool can_do_cached_drawing; // TRUE if cached drawing is possible.
   QPixmap *store, *tmp_store;
-  std::unique_ptr<freeciv::map_updates_handler> updates;
 };
 
 void mapdeco_init();
@@ -55,6 +54,7 @@ void refresh_unit_mapcanvas(struct unit *punit, struct tile *ptile,
 void refresh_city_mapcanvas(struct city *pcity, struct tile *ptile,
                             bool full_refresh);
 
+std::map<freeciv::map_updates_handler::update_type, QRectF> update_rects();
 void unqueue_mapview_updates(bool write_to_screen);
 void map_to_gui_vector(const struct tileset *t, float *gui_dx, float *gui_dy,
                        int map_dx, int map_dy);
