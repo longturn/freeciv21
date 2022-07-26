@@ -1179,7 +1179,6 @@ static void draw_trade_route_line(const struct tile *ptile1,
                                   enum color_std color)
 {
   struct trade_route_line lines[MAX_TRADE_ROUTE_DRAW_LINES];
-  int line_count, i;
 
   if (!ptile1 || !ptile2) {
     return;
@@ -1189,10 +1188,7 @@ static void draw_trade_route_line(const struct tile *ptile1,
    * so that if a line is drawn twice it does not produce
    * ugly effects due to dashes not lining up. */
   if (tile_index(ptile2) > tile_index(ptile1)) {
-    const struct tile *tmp;
-    tmp = ptile1;
-    ptile1 = ptile2;
-    ptile2 = tmp;
+    std::swap(ptile1, ptile2);
   }
 
   QPen pen;
@@ -1203,8 +1199,8 @@ static void draw_trade_route_line(const struct tile *ptile1,
 
   QPainter p(mapview.store);
   p.setPen(pen);
-  line_count = trade_route_to_canvas_lines(ptile1, ptile2, lines);
-  for (i = 0; i < line_count; i++) {
+  auto line_count = trade_route_to_canvas_lines(ptile1, ptile2, lines);
+  for (int i = 0; i < line_count; i++) {
     int x = lines[i].x + tileset_tile_width(tileset) / 2;
     int y = lines[i].y + tileset_tile_height(tileset) / 2;
     p.drawLine(x, y, x + lines[i].width, y + lines[i].height);
