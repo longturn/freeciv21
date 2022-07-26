@@ -1273,7 +1273,6 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
 {
   int gui_x0, gui_y0;
   bool full;
-  QPixmap *tmp;
 
   canvas_x = MAX(canvas_x, 0);
   canvas_y = MAX(canvas_y, 0);
@@ -1293,9 +1292,7 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
    * tmp_canvas then copy *just* the area of update onto the canvas. */
   if (!full) {
     // Swap store and tmp_store.
-    tmp = mapview.store;
-    mapview.store = mapview.tmp_store;
-    mapview.tmp_store = tmp;
+    std::swap(mapview.store, mapview.tmp_store);
   }
 
   /* Clear the area.  This is necessary since some parts of the rectangle
@@ -1371,9 +1368,7 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
 
   if (!full) {
     // Swap store and tmp_store back.
-    tmp = mapview.store;
-    mapview.store = mapview.tmp_store;
-    mapview.tmp_store = tmp;
+    std::swap(mapview.store, mapview.tmp_store);
 
     // And copy store to tmp_store.
     QPainter p(mapview.store);
