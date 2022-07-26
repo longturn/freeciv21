@@ -42,10 +42,6 @@ void mapdeco_clear_gotoroutes();
 
 extern struct view mapview;
 
-/* HACK: Callers can set this to FALSE to disable sliding.  It should be
- * reenabled afterwards. */
-extern bool can_slide;
-
 #define GOTO_WIDTH 2
 
 /*
