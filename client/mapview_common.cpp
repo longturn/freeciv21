@@ -1875,7 +1875,7 @@ void get_city_mapview_trade_routes(const city *pcity,
  * the citymap area itself plus an extra half-tile in each direction (for
  * edge/corner graphics).
  */
-static auto update_rects()
+std::map<freeciv::map_updates_handler::update_type, QRectF> update_rects()
 {
   const double width = tileset_tile_width(tileset);
   const double height = tileset_tile_height(tileset);
@@ -1909,54 +1909,12 @@ static auto update_rects()
  */
 void unqueue_mapview_updates(bool write_to_screen)
 {
-  if (!can_client_change_view()) {
-    /* Double sanity check: make sure we don't unqueue an invalid update
-     * after we've already detached. */
-    return;
-  }
+  Q_UNUSED(write_to_screen);
 
-  const auto rects = update_rects();
-
-  /* This code "pops" the lists of tile updates off of the static array and
-   * stores them locally.  This allows further updates to be queued within
-   * the function itself (namely, within update_map_canvas). */
-  const auto updates = mapview.updates->list();
-  const auto full = mapview.updates->full();
-
-  mapview.updates->clear();
-
-  if (!map_is_empty()) {
-    if (full) {
-      dirty_all();
-      update_map_canvas(0, 0, mapview.store_width, mapview.store_height);
-    } else {
-      QRectF to_update;
-
-      for (const auto [tile, upd_types] : updates) {
-        for (const auto [type, rect] : rects) {
-          if (upd_types & type) {
-            float xl, yt;
-            (void) tile_to_canvas_pos(&xl, &yt, tile);
-            to_update |= rect.translated(xl, yt);
-          }
-        }
-      }
-
-      if (to_update.intersects(
-              QRectF(0, 0, mapview.width, mapview.height))) {
-        // The +1 in the width and height is needed when going from double to
-        // int
-        update_map_canvas(std::floor(to_update.x()),
-                          std::floor(to_update.y()),
-                          std::ceil(to_update.width() + 1),
-                          std::ceil(to_update.height() + 1));
-      }
-    }
-  }
-
-  if (write_to_screen) {
-    flush_dirty();
-  }
+  // Emit the repaint_needed signal of all updates handlers.
+  // Emitting a signal is simply done by calling its function.
+  freeciv::map_updates_handler::invoke(
+      &freeciv::map_updates_handler::repaint_needed);
 }
 
 /**
@@ -2358,14 +2316,6 @@ void init_mapcanvas_and_overview()
 {
   // Create a dummy map to make sure mapview.store is never nullptr.
   map_canvas_resized(1, 1);
-  mapview.updates = std::make_unique<freeciv::map_updates_handler>();
-  // We must use a queued connection here to avoid infinite recursion (for
-  // whatever reason, unqueue_mapview_updates triggers more repaints)
-  mapview.updates->connect(
-      mapview.updates.get(), &freeciv::map_updates_handler::repaint_needed,
-      mapview.updates.get(), [] { unqueue_mapview_updates(true); },
-      Qt::QueuedConnection);
-
   overview_init();
 }
 
@@ -2376,7 +2326,6 @@ void free_mapcanvas_and_overview()
 {
   delete mapview.store;
   delete mapview.tmp_store;
-  mapview.updates = nullptr;
 }
 
 /****************************************************************************
