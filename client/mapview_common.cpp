@@ -1306,23 +1306,24 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
    * Note that a pixel right on the border of a tile may actually contain a
    * goto line from an adjacent tile.  Thus we draw any extra goto lines
    * from adjacent tiles (if they're close enough). */
-  gui_rect_iterate(gui_x0 - GOTO_WIDTH, gui_y0 - GOTO_WIDTH,
-                   width + 2 * GOTO_WIDTH, height + 2 * GOTO_WIDTH, ptile,
-                   pedge, pcorner)
-  {
-    if (!ptile) {
+  const auto goto_rect =
+      QRect(gui_x0 - GOTO_WIDTH, gui_y0 - GOTO_WIDTH, width + 2 * GOTO_WIDTH,
+            height + 2 * GOTO_WIDTH);
+  for (auto it = freeciv::gui_rect_iterator(tileset, goto_rect);
+       it.next();) {
+    if (it.current_item() != freeciv::gui_rect_iterator::item_type::tile
+        || !it.tile()) {
       continue;
     }
-    adjc_dir_base_iterate(&(wld.map), ptile, dir)
+    adjc_dir_base_iterate(&(wld.map), it.tile(), dir)
     {
       bool safe;
-      if (mapdeco_is_gotoline_set(ptile, dir, &safe)) {
-        draw_segment(ptile, dir, safe);
+      if (mapdeco_is_gotoline_set(it.tile(), dir, &safe)) {
+        draw_segment(it.tile(), dir, safe);
       }
     }
     adjc_dir_base_iterate_end;
   }
-  gui_rect_iterate_end;
 
   if (!full) {
     // Swap store and tmp_store back.
@@ -1540,7 +1541,7 @@ void show_tile_labels(int canvas_base_x, int canvas_base_y, int width_base,
    Draw a goto line at the given location and direction.  The line goes from
    the source tile to the adjacent tile in the given direction.
  */
-void draw_segment(struct tile *src_tile, enum direction8 dir, bool safe)
+void draw_segment(const tile *src_tile, enum direction8 dir, bool safe)
 {
   float canvas_x, canvas_y, canvas_dx, canvas_dy;
 
