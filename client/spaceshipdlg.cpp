@@ -11,13 +11,15 @@
 // Qt
 #include <QGridLayout>
 #include <QLabel>
+#include <QPainter>
 #include <QPushButton>
+
 // common
 #include "game.h"
 #include "victory.h"
 // client
 #include "client_main.h"
-#include "mapview_common.h"
+#include "colors_common.h"
 #include "spaceshipdlg_g.h"
 // gui-qt
 #include "fc_client.h"
@@ -27,17 +29,94 @@
 
 class QGridLayout;
 
+namespace /* anonymous */ {
+/**
+ * Return the desired size of the spaceship canvas.
+ */
+QSize get_spaceship_dimensions()
+{
+  return 7 * get_spaceship_sprite(tileset, SPACESHIP_HABITATION)->size();
+}
+
+/**
+ * Draw the spaceship onto the canvas.
+ */
+void put_spaceship(QPixmap *pcanvas, const struct player *pplayer)
+{
+  int i, x, y;
+  const struct player_spaceship *ship = &pplayer->spaceship;
+  const QPixmap *spr;
+  struct tileset *t = tileset;
+
+  spr = get_spaceship_sprite(t, SPACESHIP_HABITATION);
+  const int w = spr->width(), h = spr->height();
+
+  QPainter p(pcanvas);
+  p.fillRect(0, 0, w * 7, h * 7,
+             get_color(tileset, COLOR_SPACESHIP_BACKGROUND));
+
+  for (i = 0; i < NUM_SS_MODULES; i++) {
+    const int j = i / 3;
+    const int k = i % 3;
+
+    if ((k == 0 && j >= ship->habitation)
+        || (k == 1 && j >= ship->life_support)
+        || (k == 2 && j >= ship->solar_panels)) {
+      continue;
+    }
+    x = modules_info[i].x * w / 4 - w / 2;
+    y = modules_info[i].y * h / 4 - h / 2;
+
+    spr = (k == 0   ? get_spaceship_sprite(t, SPACESHIP_HABITATION)
+           : k == 1 ? get_spaceship_sprite(t, SPACESHIP_LIFE_SUPPORT)
+                    : get_spaceship_sprite(t, SPACESHIP_SOLAR_PANEL));
+    p.drawPixmap(x, y, *spr);
+  }
+
+  for (i = 0; i < NUM_SS_COMPONENTS; i++) {
+    const int j = i / 2;
+    const int k = i % 2;
+
+    if ((k == 0 && j >= ship->fuel) || (k == 1 && j >= ship->propulsion)) {
+      continue;
+    }
+    x = components_info[i].x * w / 4 - w / 2;
+    y = components_info[i].y * h / 4 - h / 2;
+
+    spr = ((k == 0) ? get_spaceship_sprite(t, SPACESHIP_FUEL)
+                    : get_spaceship_sprite(t, SPACESHIP_PROPULSION));
+
+    p.drawPixmap(x, y, *spr);
+
+    if (k && ship->state == SSHIP_LAUNCHED) {
+      spr = get_spaceship_sprite(t, SPACESHIP_EXHAUST);
+      p.drawPixmap(x + w, y, *spr);
+    }
+  }
+
+  for (i = 0; i < NUM_SS_STRUCTURALS; i++) {
+    if (!BV_ISSET(ship->structure, i)) {
+      continue;
+    }
+    x = structurals_info[i].x * w / 4 - w / 2;
+    y = structurals_info[i].y * h / 4 - h / 2;
+
+    spr = get_spaceship_sprite(t, SPACESHIP_STRUCTURAL);
+    p.drawPixmap(x, y, *spr);
+  }
+
+  p.end();
+}
+} // anonymous namespace
+
 /**
    Constructor for spaceship report
  */
 ss_report::ss_report(struct player *pplayer)
 {
-  int w, h;
-
   setAttribute(Qt::WA_DeleteOnClose);
   player = pplayer;
-  get_spaceship_dimensions(&w, &h);
-  can = new QPixmap(w, h);
+  can = new QPixmap(get_spaceship_dimensions());
 
   QGridLayout *layout = new QGridLayout;
   ss_pix_label = new QLabel;
@@ -92,7 +171,7 @@ void ss_report::update_report()
   }
   ch = get_spaceship_descr(&player->spaceship);
   ss_label->setText(ch);
-  put_spaceship(can, 0, 0, player);
+  put_spaceship(can, player);
   ss_pix_label->setPixmap(*can);
   update();
 }
