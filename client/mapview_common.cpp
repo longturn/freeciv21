@@ -1392,7 +1392,7 @@ void update_city_description(struct city *pcity)
 /**
    Update the label for the given tile
  */
-void update_tile_label(struct tile *ptile)
+void update_tile_label(const tile *ptile)
 {
   freeciv::map_updates_handler::invoke(
       &freeciv::map_updates_handler::update_tile_label, ptile);
@@ -1409,7 +1409,7 @@ void update_tile_label(struct tile *ptile)
    city's tile).
  */
 static void show_tile_label(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                            struct tile *ptile, int *width, int *height)
+                            const tile *ptile, int *width, int *height)
 {
   const enum client_font FONT_TILE_LABEL = FONT_CITY_NAME; // TODO: new font
 #define COLOR_MAPVIEW_TILELABEL COLOR_MAPVIEW_CITYTEXT
@@ -1458,17 +1458,17 @@ void show_city_descriptions(int canvas_base_x, int canvas_base_y,
    * We must draw H2 extra pixels above and (W2 - W1) / 2 extra pixels
    * to each side of the mapview.
    */
-  gui_rect_iterate_coord(mapview.gui_x0 + canvas_base_x - dx / 2,
-                         mapview.gui_y0 + canvas_base_y - dy,
-                         width_base + dx, height_base + dy - offset_y, ptile,
-                         pedge, pcorner, gui_x, gui_y)
-  {
-    const int canvas_x = gui_x - mapview.gui_x0;
-    const int canvas_y = gui_y - mapview.gui_y0;
+  const auto rect = QRect(mapview.gui_x0 + canvas_base_x - dx / 2,
+                          mapview.gui_y0 + canvas_base_y - dy,
+                          width_base + dx, height_base + dy - offset_y);
+  for (auto it = freeciv::gui_rect_iterator(tileset, rect); it.next();) {
+    const int canvas_x = it.x() - mapview.gui_x0;
+    const int canvas_y = it.y() - mapview.gui_y0;
 
-    if (ptile && tile_city(ptile)) {
+    if (it.current_item() == freeciv::gui_rect_iterator::item_type::tile
+        && it.tile() && tile_city(it.tile())) {
       int width = 0, height = 0;
-      struct city *pcity = tile_city(ptile);
+      struct city *pcity = tile_city(it.tile());
 
       show_city_desc(mapview.store, canvas_x, canvas_y, pcity, &width,
                      &height);
@@ -1486,7 +1486,6 @@ void show_city_descriptions(int canvas_base_x, int canvas_base_y,
       new_max_height = MAX(height, new_max_height);
     }
   }
-  gui_rect_iterate_coord_end;
 
   /* We don't update the new max values until the end, so that the
    * check above to see what cities need redrawing will be complete. */
@@ -1504,34 +1503,32 @@ void show_tile_labels(int canvas_base_x, int canvas_base_y, int width_base,
   const int dy = max_label_height;
   int new_max_width = max_label_width, new_max_height = max_label_height;
 
-  gui_rect_iterate_coord(mapview.gui_x0 + canvas_base_x - dx / 2,
-                         mapview.gui_y0 + canvas_base_y - dy,
-                         width_base + dx, height_base + dy, ptile, pedge,
-                         pcorner, gui_x, gui_y)
-  {
-    const int canvas_x = gui_x - mapview.gui_x0;
-    const int canvas_y = gui_y - mapview.gui_y0;
+  const auto rect = QRect(mapview.gui_x0 + canvas_base_x - dx / 2,
+                          mapview.gui_y0 + canvas_base_y - dy,
+                          width_base + dx, height_base + dy);
+  for (auto it = freeciv::gui_rect_iterator(tileset, rect); it.next();) {
+    const int canvas_x = it.x() - mapview.gui_x0;
+    const int canvas_y = it.y() - mapview.gui_y0;
 
-    if (ptile && ptile->label != nullptr) {
+    if (it.current_item() == freeciv::gui_rect_iterator::item_type::tile
+        && it.tile() && it.tile()->label != nullptr) {
       int width = 0, height = 0;
 
-      show_tile_label(mapview.store, canvas_x, canvas_y, ptile, &width,
+      show_tile_label(mapview.store, canvas_x, canvas_y, it.tile(), &width,
                       &height);
-      log_debug("Drawing label %s.", ptile->label);
+      log_debug("Drawing label %s.", it.tile()->label);
 
       if (width > max_label_width || height > max_label_height) {
         /* The update was incomplete! We queue a new update. Note that
          * this is recursively queueing an update within a dequeuing of an
-         * update. This is allowed specifically because of the code in
-         * unqueue_mapview_updates. See that function for more. */
-        log_debug("Re-queuing tile label %s drawing.", ptile->label);
-        update_tile_label(ptile);
+         * update. This is allowed because we use a queued connection. */
+        log_debug("Re-queuing tile label %s drawing.", it.tile()->label);
+        update_tile_label(it.tile());
       }
       new_max_width = MAX(width, new_max_width);
       new_max_height = MAX(height, new_max_height);
     }
   }
-  gui_rect_iterate_coord_end;
 
   /* We don't update the new max values until the end, so that the
    * check above to see what cities need redrawing will be complete. */
