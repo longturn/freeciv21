@@ -49,6 +49,7 @@
 #include "editor.h"
 #include "map_updates_handler.h"
 #include "mapview_common.h"
+#include "mapview_geometry.h"
 #include "overview_common.h"
 #include "tilespec.h"
 
@@ -1261,6 +1262,11 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
              get_color(tileset, COLOR_MAPVIEW_UNKNOWN));
   p.end();
 
+  const auto rect = QRect(gui_x0, gui_y0, width,
+                          height
+                              + (tileset_is_isometric(tileset)
+                                     ? (tileset_tile_height(tileset) / 2)
+                                     : 0));
   for (const auto &layer : tileset_get_layers(tileset)) {
     if (layer->type() == LAYER_TILELABEL) {
       show_tile_labels(canvas_x, canvas_y, width, height);
@@ -1269,28 +1275,26 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
       show_city_descriptions(canvas_x, canvas_y, width, height);
       continue;
     }
-    gui_rect_iterate_coord(gui_x0, gui_y0, width,
-                           height
-                               + (tileset_is_isometric(tileset)
-                                      ? (tileset_tile_height(tileset) / 2)
-                                      : 0),
-                           ptile, pedge, pcorner, gui_x, gui_y)
-    {
-      const int cx = gui_x - mapview.gui_x0, cy = gui_y - mapview.gui_y0;
+    for (auto it = freeciv::gui_rect_iterator(tileset, rect); it.next();) {
+      const int cx = it.x() - mapview.gui_x0, cy = it.y() - mapview.gui_y0;
 
-      if (ptile) {
-        put_one_tile(mapview.store, layer, ptile, cx, cy);
-      } else if (pedge) {
-        put_one_element(mapview.store, layer, nullptr, pedge, nullptr,
+      switch (it.current_item()) {
+      case freeciv::gui_rect_iterator::item_type::corner:
+        put_one_element(mapview.store, layer, nullptr, nullptr, &it.corner(),
                         nullptr, cx, cy);
-      } else if (pcorner) {
-        put_one_element(mapview.store, layer, nullptr, nullptr, pcorner,
+        break;
+      case freeciv::gui_rect_iterator::item_type::edge:
+        put_one_element(mapview.store, layer, nullptr, &it.edge(), nullptr,
                         nullptr, cx, cy);
-      } else {
-        // This can happen, for instance for unreal tiles.
+        break;
+      case freeciv::gui_rect_iterator::item_type::tile:
+        // Unseen tiles are null
+        if (it.tile()) {
+          put_one_tile(mapview.store, layer, it.tile(), cx, cy);
+        }
+        break;
       }
     }
-    gui_rect_iterate_coord_end;
   }
 
   draw_trade_routes();
