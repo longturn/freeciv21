@@ -207,19 +207,6 @@ extern bool can_slide;
   }                                                                         \
   }
 
-#define gui_rect_iterate_coord(GRI_x0, GRI_y0, GRI_width, GRI_height, _t,   \
-                               _e, _c, _x, _y)                              \
-  gui_rect_iterate(GRI_x0, GRI_y0, GRI_width, GRI_height, _t, _e, _c)       \
-  {                                                                         \
-    int _x, _y;                                                             \
-                                                                            \
-    _x = _t##_xi * _t##_w / _t##_r2 - _t##_w / 2;                           \
-    _y = _t##_yi * _t##_h / _t##_r2 - _t##_h / 2;
-
-#define gui_rect_iterate_coord_end                                          \
-  }                                                                         \
-  gui_rect_iterate_end
-
 void refresh_tile_mapcanvas(const tile *ptile, bool full_refresh);
 void refresh_unit_mapcanvas(struct unit *punit, struct tile *ptile,
                             bool full_refresh);
