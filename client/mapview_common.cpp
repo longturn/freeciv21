@@ -979,7 +979,7 @@ void put_nuke_mushroom_pixmaps(struct tile *ptile)
    * we update everything to the store, but don't write this to screen.
    * Then add the nuke graphic to the store.  Finally flush everything to
    * the screen and wait 1 second. */
-  unqueue_mapview_updates(false);
+  unqueue_mapview_updates();
 
   QPainter p(mapview.store);
   p.drawPixmap(canvas_x, canvas_y, *mysprite);
@@ -1510,7 +1510,7 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
   punit0->hp = MAX(punit0->hp, hp0);
   punit1->hp = MAX(punit1->hp, hp1);
 
-  unqueue_mapview_updates(true);
+  unqueue_mapview_updates();
 
   const struct sprite_vector *anim = get_unit_explode_animation(tileset);
   const int num_tiles_explode_unit = sprite_vector_size(anim);
@@ -1526,14 +1526,14 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
       refresh_unit_mapcanvas(punit1, unit_tile(punit1), false);
     }
 
-    unqueue_mapview_updates(true);
+    unqueue_mapview_updates();
     anim_delay(gui_options.smooth_combat_step_msec);
   }
 
   if (num_tiles_explode_unit > 0
       && tile_to_canvas_pos(&canvas_x, &canvas_y, unit_tile(losing_unit))) {
     refresh_unit_mapcanvas(losing_unit, unit_tile(losing_unit), false);
-    unqueue_mapview_updates(false);
+    unqueue_mapview_updates();
     QPainter p(mapview.tmp_store);
     p.drawPixmap(canvas_x, canvas_y, *mapview.store, canvas_x, canvas_y,
                  tileset_tile_width(tileset), tileset_tile_height(tileset));
@@ -1614,8 +1614,8 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
           (tileset_unit_height(tileset) - tileset_full_tile_height(tileset));
     }
 
-    // Bring the backing store up to date, but don't flush.
-    unqueue_mapview_updates(false);
+    // Bring the backing store up to date.
+    unqueue_mapview_updates();
 
     tuw = tileset_unit_width(tileset);
     tuh = tileset_unit_height(tileset);
@@ -1909,10 +1909,8 @@ std::map<freeciv::map_updates_handler::update_type, QRectF> update_rects()
 /**
    See comment in update_map_canvas_visible().
  */
-void unqueue_mapview_updates(bool write_to_screen)
+void unqueue_mapview_updates()
 {
-  Q_UNUSED(write_to_screen);
-
   // Emit the repaint_needed signal of all updates handlers.
   // Emitting a signal is simply done by calling its function.
   freeciv::map_updates_handler::invoke(
@@ -2304,7 +2302,7 @@ void map_canvas_resized(int width, int height)
       /* Do not draw to the screen here as that could cause problems
        * when we are only initially setting up the view and some widgets
        * are not yet ready. */
-      unqueue_mapview_updates(false);
+      unqueue_mapview_updates();
     }
   }
   flush_dirty_overview();

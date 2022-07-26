@@ -51,7 +51,7 @@ void refresh_city_mapcanvas(struct city *pcity, struct tile *ptile,
                             bool full_refresh);
 
 std::map<freeciv::map_updates_handler::update_type, QRectF> update_rects();
-void unqueue_mapview_updates(bool write_to_screen);
+void unqueue_mapview_updates();
 void map_to_gui_vector(const struct tileset *t, float *gui_dx, float *gui_dy,
                        int map_dx, int map_dy);
 void map_to_gui_pos(const struct tileset *t, float *gui_x, float *gui_y,
