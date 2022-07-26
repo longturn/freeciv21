@@ -1123,7 +1123,7 @@ void put_nuke_mushroom_pixmaps(struct tile *ptile)
  */
 static void put_one_tile(QPixmap *pcanvas,
                          const std::unique_ptr<freeciv::layer> &layer,
-                         struct tile *ptile, int canvas_x, int canvas_y)
+                         const tile *ptile, int canvas_x, int canvas_y)
 {
   if (client_tile_get_known(ptile) != TILE_UNKNOWN
       || (editor_is_active() && editor_tile_is_selected(ptile))) {
