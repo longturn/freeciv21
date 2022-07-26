@@ -90,6 +90,7 @@ add_library(
   mapctrl_common.cpp
   mapview.cpp
   mapview_common.cpp
+  mapview_geometry.cpp
   map_updates_handler.cpp
   menu.cpp
   messageoptions.cpp
