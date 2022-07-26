@@ -523,8 +523,6 @@ static void base_set_mapview_origin(float gui_x0, float gui_y0)
     /* Do a partial redraw only.  This means the area of overlap (a
      * rectangle) is copied.  Then the remaining areas (two rectangles)
      * are updated through update_map_canvas. */
-    QPixmap *target = mapview.tmp_store;
-
     if (old_gui_x0 < gui_x0) {
       update_x0 = MAX(old_gui_x0 + width, gui_x0);
       update_x1 = gui_x0 + width;
@@ -541,13 +539,12 @@ static void base_set_mapview_origin(float gui_x0, float gui_y0)
     }
 
     dirty_all();
-    QPainter p(target);
+    QPainter p(mapview.tmp_store);
     p.drawPixmap(common_x0 - gui_x0, common_y0 - gui_y0, *mapview.store,
                  common_x0 - old_gui_x0, common_y0 - old_gui_y0,
                  common_x1 - common_x0, common_y1 - common_y0);
     p.end();
-    mapview.tmp_store = mapview.store;
-    mapview.store = target;
+    std::swap(mapview.store, mapview.tmp_store);
 
     if (update_y1 > update_y0) {
       update_map_canvas(0, update_y0 - gui_y0, width, update_y1 - update_y0);
