@@ -279,7 +279,6 @@ void move_unit_map_canvas(struct unit *punit, struct tile *ptile, int dx,
 
 struct city *find_city_or_settler_near_tile(const struct tile *ptile,
                                             struct unit **punit);
-struct city *find_city_near_tile(const struct tile *ptile);
 
 void get_city_mapview_production(const city *pcity, char *buf,
                                  size_t buf_len);

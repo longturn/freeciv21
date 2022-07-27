@@ -1894,14 +1894,6 @@ struct city *find_city_or_settler_near_tile(const struct tile *ptile,
 }
 
 /**
-   Find the nearest/best city that owns the tile.
- */
-struct city *find_city_near_tile(const struct tile *ptile)
-{
-  return find_city_or_settler_near_tile(ptile, nullptr);
-}
-
-/**
    Append the buy cost of the current production of the given city to the
    already nullptr-terminated buffer. Does nothing if draw_city_buycost is
    set to FALSE, or if it does not make sense to buy the current production

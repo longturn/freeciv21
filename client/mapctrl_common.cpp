@@ -27,6 +27,7 @@
 #include "governor.h"
 #include "mapctrl_common.h"
 #include "mapview.h"
+#include "mapview_common.h"
 #include "mapview_g.h"
 #include "minimap_panel.h"
 #include "options.h"
@@ -287,7 +288,7 @@ void adjust_workers_button_pressed(int canvas_x, int canvas_y)
   struct tile *ptile = canvas_pos_to_tile(canvas_x, canvas_y);
 
   if (nullptr != ptile && can_client_issue_orders()) {
-    struct city *pcity = find_city_near_tile(ptile);
+    struct city *pcity = find_city_or_settler_near_tile(ptile, nullptr);
 
     if (pcity && !cma_is_city_under_agent(pcity, nullptr)) {
       int city_x, city_y;
