@@ -204,7 +204,6 @@ public:
   ~production_item() override;
   inline int columnCount() const { return 1; }
   QVariant data() const;
-  bool setData();
 
 private:
   struct universal *target;
@@ -233,8 +232,6 @@ public:
   }
   QVariant data(const QModelIndex &index,
                 int role = Qt::DisplayRole) const override;
-  bool setData(const QModelIndex &index, const QVariant &value,
-               int role = Qt::DisplayRole) override;
   void populate();
   QPoint sh;
 
