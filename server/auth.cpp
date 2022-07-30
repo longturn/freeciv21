@@ -35,11 +35,6 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #define GUEST_NAME "guest"
 
 #define MIN_PASSWORD_LEN 6 // minimum length of password
-#define MIN_PASSWORD_CAPS                                                   \
-  0                         /* minimum number of capital letters required   \
-                             */
-#define MIN_PASSWORD_NUMS 0 // minimum number of numbers required
-
 #define MAX_AUTH_TRIES 3
 #define MAX_WAIT_TIME 300 // max time we'll wait on a password
 
@@ -295,8 +290,6 @@ static void get_unique_guest_name(char *name)
  */
 static bool is_good_password(const char *password, char *msg)
 {
-  int i, num_caps = 0, num_nums = 0;
-
   // check password length
   if (strlen(password) < MIN_PASSWORD_LEN) {
     fc_snprintf(msg, MAX_LEN_MSG,
@@ -306,34 +299,14 @@ static bool is_good_password(const char *password, char *msg)
     return false;
   }
 
-  fc_snprintf(msg, MAX_LEN_MSG,
-              _("The password must have at least %d capital letters, %d "
-                "numbers, and be at minimum %d [printable] characters long. "
-                "Try again."),
-              MIN_PASSWORD_CAPS, MIN_PASSWORD_NUMS, MIN_PASSWORD_LEN);
-
-  for (i = 0; i < qstrlen(password); i++) {
-    if (QChar::isUpper(password[i])) {
-      num_caps++;
-    }
-    if (QChar::isDigit(password[i])) {
-      num_nums++;
-    }
-  }
-
-  // check number of capital letters
-  if (num_caps < MIN_PASSWORD_CAPS) {
-    return false;
-  }
-
-  // check number of numbers
-  if (num_nums < MIN_PASSWORD_NUMS) {
-    return false;
-  }
-
   if (!is_ascii_name(password)) {
+    fc_snprintf(msg, MAX_LEN_MSG,
+                _("Your password contains illegal characters. Try again."));
     return false;
   }
+
+  // Make sure the message doesn't contain garbage.
+  msg[0] = '\0';
 
   return true;
 }
