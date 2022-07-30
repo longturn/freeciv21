@@ -322,7 +322,9 @@ void map_view::shortcut_pressed(shortcut_id id)
     break;
 
   case SC_MAKE_LINK:
-    queen()->chat->make_link(ptile);
+    if (ptile != nullptr) {
+      queen()->chat->make_link(ptile);
+    }
     break;
 
   case SC_BUY_MAP:
