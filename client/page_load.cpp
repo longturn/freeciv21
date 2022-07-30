@@ -340,5 +340,14 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
       }
     }
     ui.load_save_text->setText(final_str);
+
+    ui.load_save_text->show();
+    ui.load_pix->show();
+    ui.buttons->button(QDialogButtonBox::Ok)->setEnabled(true);
+  } else {
+    // Couldn't load the save. Clear the preview and prevent loading it.
+    ui.load_save_text->hide();
+    ui.load_pix->hide();
+    ui.buttons->button(QDialogButtonBox::Ok)->setEnabled(false);
   }
 }
