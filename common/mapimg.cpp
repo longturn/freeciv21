@@ -2627,11 +2627,6 @@ static bv_pixel pixel_border_rect(const struct tile *ptile,
 
   fc_assert_ret_val(ptile != nullptr, pixel);
 
-  if (nullptr == ptile) {
-    // no tile
-    return pixel;
-  }
-
   owner = mapimg.mapimg_tile_owner(ptile, pplayer, knowledge);
   if (nullptr == owner) {
     // no border
@@ -2856,11 +2851,6 @@ static bv_pixel pixel_border_hexa(const struct tile *ptile,
   BV_CLR_ALL(pixel);
 
   fc_assert_ret_val(ptile != nullptr, pixel);
-
-  if (nullptr == ptile) {
-    // no tile
-    return pixel;
-  }
 
   owner = mapimg.mapimg_tile_owner(ptile, pplayer, knowledge);
   if (nullptr == owner) {
@@ -3100,11 +3090,6 @@ static bv_pixel pixel_border_isohexa(const struct tile *ptile,
   BV_CLR_ALL(pixel);
 
   fc_assert_ret_val(ptile != nullptr, pixel);
-
-  if (nullptr == ptile) {
-    // no tile
-    return pixel;
-  }
 
   owner = mapimg.mapimg_tile_owner(ptile, pplayer, knowledge);
   if (nullptr == owner) {
