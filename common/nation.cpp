@@ -17,6 +17,7 @@
 
 // utility
 #include "fcintl.h"
+#include "name_translation.h"
 #include "support.h"
 
 // common
@@ -472,8 +473,9 @@ Nation_type_id nation_index(const struct nation_type *pnation)
  */
 nation_type::nation_type()
 {
-  item_number = 0;
-  translation_domain = nullptr;
+  name_init(&adjective);
+  name_init(&noun_plural);
+
   leaders = nation_leader_list_new_full(nation_leader_destroy);
   sets = nation_set_list_new();
   groups = nation_group_list_new();
@@ -485,6 +487,8 @@ nation_type::nation_type()
     server.conflicts_with = nation_list_new();
     // server.rgb starts out nullptr
     server.traits = new trait_limits[TRAIT_COUNT];
+  } else {
+    client.is_pickable = true;
   }
 }
 

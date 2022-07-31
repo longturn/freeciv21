@@ -284,17 +284,20 @@ static bool save_building_list(struct section_file *sfile, int *input,
    Save units vector. Input is nullptr terminated array of units
    to save.
  */
-static bool save_unit_list(struct section_file *sfile,
-                           struct unit_type **input, const char *path,
-                           const char *entry)
+static bool
+save_unit_list(struct section_file *sfile,
+               const std::array<unit_type *, MAX_NUM_UNIT_LIST> &input,
+               const char *path, const char *entry)
 {
   const char *unit_names[MAX_NUM_UNIT_LIST];
   int set_count;
-  int i;
 
   set_count = 0;
-  for (i = 0; i < MAX_NUM_UNIT_LIST && input[i] != nullptr; i++) {
-    unit_names[set_count++] = utype_rule_name(input[i]);
+  for (const auto &utype : input) {
+    if (utype == nullptr) {
+      break;
+    }
+    unit_names[set_count++] = utype_rule_name(utype);
   }
 
   if (set_count > 0) {
