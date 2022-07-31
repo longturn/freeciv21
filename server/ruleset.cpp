@@ -597,24 +597,20 @@ static bool lookup_building(struct section_file *file, const char *prefix,
    items). If the vector is not found and the required parameter is set,
    we report it as an error, otherwise we just punt.
  */
-static bool lookup_unit_list(struct section_file *file, const char *prefix,
-                             const char *entry, struct unit_type **output,
-                             const char *filename)
+static bool lookup_unit_list(
+    struct section_file *file, const char *prefix, const char *entry,
+    std::array<unit_type *, MAX_NUM_UNIT_LIST> &output, const char *filename)
 {
   const char **slist;
   size_t nval;
   int i;
   bool ok = true;
 
-  // pre-fill with nullptr:
-  for (i = 0; i < MAX_NUM_UNIT_LIST; i++) {
-    output[i] = nullptr;
-  }
+  output.fill(nullptr);
   slist = secfile_lookup_str_vec(file, &nval, "%s.%s", prefix, entry);
   if (nval == 0) {
     // 'No vector' is considered same as empty vector
     delete[] slist;
-    slist = nullptr;
     return true;
   }
   if (nval > MAX_NUM_UNIT_LIST) {
@@ -624,7 +620,6 @@ static bool lookup_unit_list(struct section_file *file, const char *prefix,
     ok = false;
   } else if (nval == 1 && strcmp(slist[0], "") == 0) {
     delete[] slist;
-    slist = nullptr;
     return true;
   }
   if (ok) {
@@ -8281,7 +8276,7 @@ static void send_ruleset_nations(struct conn_list *dest)
       }
     }
     packet.init_techs_count = i;
-    fc_assert(ARRAY_SIZE(packet.init_units) == ARRAY_SIZE(n.init_units));
+    fc_assert(ARRAY_SIZE(packet.init_units) == n.init_units.size());
     for (i = 0; i < MAX_NUM_UNIT_LIST; i++) {
       const struct unit_type *t = n.init_units[i];
       if (t) {

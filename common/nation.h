@@ -10,6 +10,8 @@
 **************************************************************************/
 #pragma once
 
+#include <array>
+
 #include "name_translation.h"
 // utility
 #include "iterator.h"
@@ -73,18 +75,18 @@ struct nation_type;
 
 // Pointer values are allocated on load then freed in free_nations().
 struct nation_type {
-  Nation_type_id item_number;
-  char *translation_domain;
+  Nation_type_id item_number = 0;
+  char *translation_domain = nullptr;
   struct name_translation adjective;
   struct name_translation noun_plural;
   char flag_graphic_str[MAX_LEN_NAME];
   char flag_graphic_alt[MAX_LEN_NAME];
-  struct nation_leader_list *leaders;
-  struct nation_style *style;
-  char *legend; // may be empty
+  struct nation_leader_list *leaders = nullptr;
+  struct nation_style *style = nullptr;
+  char *legend = nullptr; // may be empty
 
-  bool is_playable;
-  enum barbarian_type barb_type;
+  bool is_playable = true;
+  enum barbarian_type barb_type = NOT_A_BARBARIAN;
 
   // Sets which this nation is assigned to
   struct nation_set_list *sets;
@@ -92,15 +94,15 @@ struct nation_type {
   // Groups which this nation is assigned to
   struct nation_group_list *groups;
 
-  struct player *player; // Who's using the nation, or nullptr.
+  struct player *player = nullptr; // Who's using the nation, or nullptr.
 
   // Items given to this nation at game start.
   // (Only used in the client for documentation purposes.)
   int init_techs[MAX_NUM_TECH_LIST];
   int init_buildings[MAX_NUM_BUILDING_LIST];
-  struct government
-      *init_government; // use game default_government if nullptr
-  struct unit_type *init_units[MAX_NUM_UNIT_LIST];
+  government *init_government =
+      nullptr; // use game default_government if nullptr
+  std::array<unit_type *, MAX_NUM_UNIT_LIST> init_units = {nullptr};
 
   union {
     struct {
