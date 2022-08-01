@@ -52,6 +52,7 @@ message_widget::message_widget(QWidget *parent)
   mesg_table = new QListWidget;
   mesg_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
   mesg_table->setSelectionMode(QAbstractItemView::SingleSelection);
+  mesg_table->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
   mesg_table->setTextElideMode(Qt::ElideNone);
   mesg_table->setWordWrap(true);
   layout->addWidget(mesg_table, 1, 0, 1, 3);
