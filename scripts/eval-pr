@@ -55,7 +55,7 @@ base_setup ()
 
   echo "-- Fetching upstream"
   echo ""
-  git fetch upstream || exit 255
+  git fetch upstream
 
 
   echo "-- Creating a testing branch for PR $pull_request."
@@ -90,7 +90,7 @@ start ()
   echo "-- Building."
   echo ""
   # We ask for a debug build in order to run the code through a debugger while evaluating
-  cmake -S . -B build_$pull_request -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install -DCMAKE_BUILD_TYPE=Debug
+  cmake -S . -B build_$pull_request -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build_$pull_request/install -DCMAKE_BUILD_TYPE=Debug
   cmake --build build_$pull_request
   # Always test the installer
   cmake --build build_$pull_request --target install
@@ -131,10 +131,10 @@ autogame ()
 
   echo "-- Running Autogame on port 5556."
   echo "-- If you want to observe the game, open another shell and run this command to open a client"
-  echo "     ./build/freeciv21-client -a -p 5556 -s localhost"
+  echo "     $PWD/build_$pull_request/freeciv21-client -a -p 5556 -s localhost"
   echo ""
   export ASAN_OPTIONS="halt_on_error=0"
-  ./build/freeciv21-server -r ./data/test-autogame.serv
+  ./build_$pull_request/freeciv21-server -r ./data/test-autogame.serv -t
 
   echo ""
   echo "-- PR $pull_request has completed autogame evaluation. Run $0 -c $pull_request to cleanup."
