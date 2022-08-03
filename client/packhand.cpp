@@ -583,7 +583,6 @@ void handle_city_info(const struct packet_city_info *packet)
   bool shield_stock_changed = false;
   bool production_changed = false;
   bool trade_routes_changed = false;
-  struct unit_list *pfocus_units = get_units_in_focus();
   struct city *pcity = game_city_by_number(packet->id);
   struct tile_list *worked_tiles = nullptr;
   struct tile *pcenter = index_to_tile(&(wld.map), packet->tile);
@@ -878,14 +877,12 @@ void handle_city_info(const struct packet_city_info *packet)
 
   // Update focus unit info label if necessary.
   if (name_changed) {
-    unit_list_iterate(pfocus_units, pfocus_unit)
-    {
+    for (const auto pfocus_unit : get_units_in_focus()) {
       if (pfocus_unit->homecity == pcity->id) {
-        update_unit_info_label(pfocus_units);
+        update_unit_info_label(get_units_in_focus());
         break;
       }
     }
-    unit_list_iterate_end;
   }
 
   // Update the science dialog if necessary.

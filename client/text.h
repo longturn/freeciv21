@@ -10,6 +10,12 @@
 **************************************************************************/
 #pragma once
 
+#include "fc_types.h"
+
+#include <QString>
+
+#include <vector>
+
 struct player_spaceship;
 
 /****************************************************************************
@@ -19,7 +25,7 @@ const QString get_tile_output_text(const struct tile *ptile);
 const QString popup_info_text(struct tile *ptile);
 const QString get_nearest_city_text(struct city *pcity, int sq_dist);
 const QString unit_description(struct unit *punit);
-const QString get_airlift_text(const struct unit_list *punits,
+const QString get_airlift_text(const std::vector<unit *> &units,
                                const struct city *pdest);
 const QString science_dialog_text();
 const QString get_science_target_text(double *percent);
@@ -27,7 +33,7 @@ const QString get_science_goal_text(Tech_type_id goal);
 const QString get_info_label_text(bool moreinfo);
 const QString get_info_label_text_popup();
 bool get_units_upgrade_info(char *buf, size_t bufsz,
-                            struct unit_list *punits);
+                            const std::vector<unit *> &punits);
 const QString get_spaceship_descr(struct player_spaceship *pship);
 QString get_score_text(const struct player *pplayer);
 

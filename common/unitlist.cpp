@@ -86,16 +86,14 @@ void unit_list_sort_ord_city(struct unit_list *punitlist)
 /**
    Return TRUE if the function returns true for any of the units.
  */
-bool can_units_do(const struct unit_list *punits,
+bool can_units_do(const std::vector<unit *> &units,
                   bool(can_fn)(const struct unit *punit))
 {
-  unit_list_iterate(punits, punit)
-  {
+  for (const auto punit : units) {
     if (can_fn(punit)) {
       return true;
     }
   }
-  unit_list_iterate_end;
 
   return false;
 }
@@ -103,20 +101,18 @@ bool can_units_do(const struct unit_list *punits,
 /**
    Returns TRUE if any of the units can do the activity.
  */
-bool can_units_do_activity(const struct unit_list *punits,
+bool can_units_do_activity(const std::vector<unit *> &units,
                            enum unit_activity activity)
 {
   // Make sure nobody uses these old activities any more
   fc_assert_ret_val(
       activity != ACTIVITY_FORTRESS && activity != ACTIVITY_AIRBASE, false);
 
-  unit_list_iterate(punits, punit)
-  {
+  for (const auto punit : units) {
     if (can_unit_do_activity(punit, activity)) {
       return true;
     }
   }
-  unit_list_iterate_end;
 
   return false;
 }
@@ -124,17 +120,15 @@ bool can_units_do_activity(const struct unit_list *punits,
 /**
    Returns TRUE if any of the units can do the targeted activity.
  */
-bool can_units_do_activity_targeted(const struct unit_list *punits,
+bool can_units_do_activity_targeted(const std::vector<unit *> &units,
                                     enum unit_activity activity,
                                     struct extra_type *pextra)
 {
-  unit_list_iterate(punits, punit)
-  {
+  for (const auto punit : units) {
     if (can_unit_do_activity_targeted(punit, activity, pextra)) {
       return true;
     }
   }
-  unit_list_iterate_end;
 
   return false;
 }
@@ -142,10 +136,9 @@ bool can_units_do_activity_targeted(const struct unit_list *punits,
 /**
    Returns TRUE if any of the units can build any road.
  */
-bool can_units_do_any_road(const struct unit_list *punits)
+bool can_units_do_any_road(const std::vector<unit *> &units)
 {
-  unit_list_iterate(punits, punit)
-  {
+  for (const auto punit : units) {
     extra_type_by_cause_iterate(EC_ROAD, pextra)
     {
       struct road_type *proad = extra_road_get(pextra);
@@ -156,7 +149,6 @@ bool can_units_do_any_road(const struct unit_list *punits)
     }
     extra_type_by_cause_iterate_end;
   }
-  unit_list_iterate_end;
 
   return false;
 }
@@ -164,11 +156,10 @@ bool can_units_do_any_road(const struct unit_list *punits)
 /**
    Returns TRUE if any of the units can build base with given gui_type.
  */
-bool can_units_do_base_gui(const struct unit_list *punits,
+bool can_units_do_base_gui(const std::vector<unit *> &units,
                            enum base_gui_type base_gui)
 {
-  unit_list_iterate(punits, punit)
-  {
+  for (const auto punit : units) {
     struct base_type *pbase =
         get_base_by_gui_type(base_gui, punit, unit_tile(punit));
 
@@ -177,7 +168,6 @@ bool can_units_do_base_gui(const struct unit_list *punits,
       return true;
     }
   }
-  unit_list_iterate_end;
 
   return false;
 }
@@ -188,16 +178,14 @@ bool can_units_do_base_gui(const struct unit_list *punits,
    If has_flag is false, returns true iff any of the units don't have the
    flag.
  */
-bool units_have_type_flag(const struct unit_list *punits,
+bool units_have_type_flag(const std::vector<unit *> &units,
                           enum unit_type_flag_id flag, bool has_flag)
 {
-  unit_list_iterate(punits, punit)
-  {
+  for (const auto punit : units) {
     if (EQ(has_flag, unit_has_type_flag(punit, flag))) {
       return true;
     }
   }
-  unit_list_iterate_end;
 
   return false;
 }
@@ -205,19 +193,17 @@ bool units_have_type_flag(const struct unit_list *punits,
 /**
    Does the list contain any cityfounder units
  */
-bool units_contain_cityfounder(const struct unit_list *punits)
+bool units_contain_cityfounder(const std::vector<unit *> &units)
 {
   if (game.scenario.prevent_new_cities) {
     return false;
   }
 
-  unit_list_iterate(punits, punit)
-  {
+  for (const auto punit : units) {
     if (EQ(true, unit_can_do_action(punit, ACTION_FOUND_CITY))) {
       return true;
     }
   }
-  unit_list_iterate_end;
 
   return false;
 }
@@ -229,16 +215,14 @@ bool units_contain_cityfounder(const struct unit_list *punits)
    If has_flag is false, returns true iff any of the units are unable do
    the specified action.
  */
-bool units_can_do_action(const struct unit_list *punits, action_id act_id,
+bool units_can_do_action(const std::vector<unit *> &units, action_id act_id,
                          bool can_do)
 {
-  unit_list_iterate(punits, punit)
-  {
+  for (const auto punit : units) {
     if (EQ(can_do, unit_can_do_action(punit, act_id))) {
       return true;
     }
   }
-  unit_list_iterate_end;
 
   return false;
 }
@@ -246,15 +230,13 @@ bool units_can_do_action(const struct unit_list *punits, action_id act_id,
 /**
    Return TRUE iff any of the units is a transporter that is occupied.
  */
-bool units_are_occupied(const struct unit_list *punits)
+bool units_are_occupied(const std::vector<unit *> &units)
 {
-  unit_list_iterate(punits, punit)
-  {
+  for (const auto punit : units) {
     if (get_transporter_occupancy(punit) > 0) {
       return true;
     }
   }
-  unit_list_iterate_end;
 
   return false;
 }
@@ -262,15 +244,13 @@ bool units_are_occupied(const struct unit_list *punits)
 /**
    Returns TRUE iff any of these units can load.
  */
-bool units_can_load(const struct unit_list *punits)
+bool units_can_load(const std::vector<unit *> &units)
 {
-  unit_list_iterate(punits, punit)
-  {
+  for (const auto punit : units) {
     if (unit_can_load(punit)) {
       return true;
     }
   }
-  unit_list_iterate_end;
 
   return false;
 }
@@ -278,17 +258,15 @@ bool units_can_load(const struct unit_list *punits)
 /**
    Return TRUE iff any of these units can unload.
  */
-bool units_can_unload(const struct unit_list *punits)
+bool units_can_unload(const std::vector<unit *> &units)
 {
-  unit_list_iterate(punits, punit)
-  {
+  for (const auto punit : units) {
     if (unit_transported(punit)
         && can_unit_unload(punit, unit_transport_get(punit))
         && can_unit_exist_at_tile(&(wld.map), punit, unit_tile(punit))) {
       return true;
     }
   }
-  unit_list_iterate_end;
 
   return false;
 }
@@ -297,16 +275,14 @@ bool units_can_unload(const struct unit_list *punits)
    Return TRUE iff any of the units' tiles have the activity running
    on them.
  */
-bool units_have_activity_on_tile(const struct unit_list *punits,
+bool units_have_activity_on_tile(const std::vector<unit *> &units,
                                  enum unit_activity activity)
 {
-  unit_list_iterate(punits, punit)
-  {
+  for (const auto punit : units) {
     if (is_unit_activity_on_tile(activity, unit_tile(punit))) {
       return true;
     }
   }
-  unit_list_iterate_end;
 
   return false;
 }
@@ -315,15 +291,13 @@ bool units_have_activity_on_tile(const struct unit_list *punits,
    Return TRUE iff any of the units can be upgraded to another unit type
    (for money)
  */
-bool units_can_upgrade(const struct unit_list *punits)
+bool units_can_upgrade(const std::vector<unit *> &units)
 {
-  unit_list_iterate(punits, punit)
-  {
+  for (const auto punit : units) {
     if (UU_OK == unit_upgrade_test(punit, false)) {
       return true;
     }
   }
-  unit_list_iterate_end;
 
   return false;
 }
@@ -331,39 +305,35 @@ bool units_can_upgrade(const struct unit_list *punits)
 /**
    Return TRUE iff any of the units can convert to another unit type
  */
-bool units_can_convert(const struct unit_list *punits)
+bool units_can_convert(const std::vector<unit *> &units)
 {
-  unit_list_iterate(punits, punit)
-  {
+  for (const auto punit : units) {
     if (utype_can_do_action(unit_type_get(punit), ACTION_CONVERT)
         && unit_can_convert(punit)) {
       return true;
     }
   }
-  unit_list_iterate_end;
 
   return false;
 }
 
 // Return TRUE if any of the units is in city
-bool any_unit_in_city(const struct unit_list *punits)
+bool any_unit_in_city(const std::vector<unit *> &units)
 {
-  unit_list_iterate(punits, punit)
-  {
+  for (const auto punit : units) {
     if (tile_city(unit_tile(punit))) {
       return true;
     }
   }
-  unit_list_iterate_end;
+
   return false;
 }
 
-bool units_on_the_same_tile(const struct unit_list *punits)
+bool units_on_the_same_tile(const std::vector<unit *> &units)
 {
   struct tile *ptile = nullptr;
 
-  unit_list_iterate(punits, punit)
-  {
+  for (const auto punit : units) {
     if (!ptile) {
       ptile = punit->tile;
     }
@@ -371,6 +341,6 @@ bool units_on_the_same_tile(const struct unit_list *punits)
       return false;
     }
   }
-  unit_list_iterate_end;
+
   return true;
 }

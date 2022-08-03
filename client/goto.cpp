@@ -241,7 +241,7 @@ static void goto_fill_parameter_base(struct pf_parameter *parameter,
    Enter the goto state: activate, prepare PF-template and add the
    initial part.
  */
-void enter_goto_state(struct unit_list *punits)
+void enter_goto_state(const std::vector<unit *> &units)
 {
   fc_assert_ret(!goto_is_active());
 
@@ -249,13 +249,11 @@ void enter_goto_state(struct unit_list *punits)
   cancel_selection_rectangle();
 
   // Initialize path finders
-  unit_list_iterate(punits, punit)
-  {
+  for (const auto punit : units) {
     // This calls path_finder::path_finder(punit) behind the scenes
     // Need to do this because path_finder isn't copy-assignable
     goto_finders.emplace(punit->id, punit);
   }
-  unit_list_iterate_end;
 }
 
 /**

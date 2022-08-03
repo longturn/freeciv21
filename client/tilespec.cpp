@@ -4238,7 +4238,6 @@ static void fill_grid_sprite_array(const struct tileset *t,
     bool known[NUM_EDGE_TILES], city[NUM_EDGE_TILES];
     bool unit[NUM_EDGE_TILES], worked[NUM_EDGE_TILES];
     int i;
-    struct unit_list *pfocus_units = get_units_in_focus();
 
     for (i = 0; i < NUM_EDGE_TILES; i++) {
       int dummy_x, dummy_y;
@@ -4248,8 +4247,7 @@ static void fill_grid_sprite_array(const struct tileset *t,
       known[i] = tile && client_tile_get_known(tile) != TILE_UNKNOWN;
       unit[i] = false;
       if (tile && !citymode) {
-        unit_list_iterate(pfocus_units, pfocus_unit)
-        {
+        for (const auto pfocus_unit : get_units_in_focus()) {
           if (unit_drawn_with_city_outline(pfocus_unit, false)) {
             struct tile *utile = unit_tile(pfocus_unit);
             int radius = game.info.init_city_radius_sq
@@ -4265,7 +4263,6 @@ static void fill_grid_sprite_array(const struct tileset *t,
             }
           }
         }
-        unit_list_iterate_end;
       }
       worked[i] = false;
 
@@ -4342,16 +4339,12 @@ static void fill_grid_sprite_array(const struct tileset *t,
 
     if (gui_options.draw_native && citymode == nullptr) {
       bool native = true;
-      struct unit_list *pfocus_units = get_units_in_focus();
-
-      unit_list_iterate(pfocus_units, pfocus)
-      {
+      for (const auto pfocus : get_units_in_focus()) {
         if (!is_native_tile(unit_type_get(pfocus), ptile)) {
           native = false;
           break;
         }
       }
-      unit_list_iterate_end;
 
       if (!native) {
         if (t->sprites.grid.nonnative != nullptr) {

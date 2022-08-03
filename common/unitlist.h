@@ -15,6 +15,8 @@
 #include "unit.h"     // for diplomat_actions
 #include "unittype.h" // for unit_type_flag_id
 
+#include <vector>
+
 // get 'struct unit_list' and related functions:
 #define SPECLIST_TAG unit
 #define SPECLIST_TYPE struct unit
@@ -60,28 +62,28 @@ struct unit *unit_list_find(const struct unit_list *punitlist, int unit_id);
 void unit_list_sort_ord_map(struct unit_list *punitlist);
 void unit_list_sort_ord_city(struct unit_list *punitlist);
 
-bool can_units_do(const struct unit_list *punits,
+bool can_units_do(const std::vector<unit *> &units,
                   bool(can_fn)(const struct unit *punit));
-bool can_units_do_activity(const struct unit_list *punits,
+bool can_units_do_activity(const std::vector<unit *> &units,
                            enum unit_activity activity);
-bool can_units_do_activity_targeted(const struct unit_list *punits,
+bool can_units_do_activity_targeted(const std::vector<unit *> &units,
                                     enum unit_activity activity,
                                     struct extra_type *pextra);
-bool can_units_do_any_road(const struct unit_list *punits);
-bool can_units_do_base_gui(const struct unit_list *punits,
+bool can_units_do_any_road(const std::vector<unit *> &units);
+bool can_units_do_base_gui(const std::vector<unit *> &units,
                            enum base_gui_type base_gui);
-bool units_have_type_flag(const struct unit_list *punits,
+bool units_have_type_flag(const std::vector<unit *> &units,
                           enum unit_type_flag_id flag, bool has_flag);
-bool units_contain_cityfounder(const struct unit_list *punits);
-bool units_can_do_action(const struct unit_list *punits, action_id act_id,
+bool units_contain_cityfounder(const std::vector<unit *> &units);
+bool units_can_do_action(const std::vector<unit *> &units, action_id act_id,
                          bool can_do);
-bool units_are_occupied(const struct unit_list *punits);
-bool units_can_load(const struct unit_list *punits);
-bool units_can_unload(const struct unit_list *punits);
-bool units_have_activity_on_tile(const struct unit_list *punits,
+bool units_are_occupied(const std::vector<unit *> &units);
+bool units_can_load(const std::vector<unit *> &units);
+bool units_can_unload(const std::vector<unit *> &units);
+bool units_have_activity_on_tile(const std::vector<unit *> &units,
                                  enum unit_activity activity);
 
-bool units_can_upgrade(const struct unit_list *punits);
-bool units_can_convert(const struct unit_list *punits);
-bool any_unit_in_city(const struct unit_list *punits);
-bool units_on_the_same_tile(const struct unit_list *punits);
+bool units_can_upgrade(const std::vector<unit *> &units);
+bool units_can_convert(const std::vector<unit *> &units);
+bool any_unit_in_city(const std::vector<unit *> &units);
+bool units_on_the_same_tile(const std::vector<unit *> &units);

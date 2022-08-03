@@ -647,8 +647,7 @@ void hud_units::update_actions(unit_list *punits)
                        QString::number(unit_type_get(punit)->hp));
   num = unit_list_size(punit->tile->units);
   snum = QString::number(unit_list_size(punit->tile->units) - 1);
-  if (unit_list_size(get_units_in_focus()) > 1) {
-    int n = unit_list_size(get_units_in_focus());
+  if (const auto n = get_units_in_focus().size(); n > 1) {
     // TRANS: preserve leading space; always at least 2
     text_str =
         text_str

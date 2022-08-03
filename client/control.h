@@ -68,7 +68,8 @@ void do_unit_connect(struct tile *ptile, enum unit_activity activity,
 void do_map_click(struct tile *ptile, enum quickselect_type qtype);
 void control_mouse_cursor(struct tile *ptile);
 
-void set_hover_state(struct unit_list *punits, enum cursor_hover_state state,
+void set_hover_state(const std::vector<unit *> &units,
+                     enum cursor_hover_state state,
                      enum unit_activity connect_activity,
                      struct extra_type *tgt, int last_tgt,
                      int goto_last_sub_tgt, action_id goto_last_action,
@@ -98,7 +99,7 @@ void request_unit_fortify(struct unit *punit);
 void request_unit_goto(enum unit_orders last_order, action_id act_id,
                        int sub_tgt_id);
 void request_unit_move_done();
-void request_unit_paradrop(struct unit_list *punits);
+void request_unit_paradrop(const std::vector<unit *> &units);
 void request_unit_patrol();
 void request_unit_pillage(struct unit *punit);
 void request_unit_sentry(struct unit *punit);
@@ -107,7 +108,7 @@ void request_unit_airlift(struct unit *punit, struct city *pcity);
 void request_units_return();
 void request_unit_upgrade(struct unit *punit);
 void request_unit_convert(struct unit *punit);
-void request_units_wait(struct unit_list *punits);
+void request_units_wait(const std::vector<unit *> &units);
 void request_unit_wakeup(struct unit *punit);
 
 enum unit_select_type_mode { SELTYPE_SINGLE, SELTYPE_SAME, SELTYPE_ALL };
@@ -118,7 +119,7 @@ enum unit_select_location_mode {
   SELLOC_WORLD // World.
 };
 
-void request_unit_select(struct unit_list *punits,
+void request_unit_select(const std::vector<unit *> &punits,
                          enum unit_select_type_mode seltype,
                          enum unit_select_location_mode selloc);
 
@@ -142,7 +143,7 @@ void clear_unit_orders(struct unit *punit);
 bool unit_is_in_focus(const struct unit *punit);
 struct unit *get_focus_unit_on_tile(const struct tile *ptile);
 struct unit *head_of_units_in_focus();
-struct unit_list *get_units_in_focus();
+std::vector<unit *> &get_units_in_focus();
 int get_num_units_in_focus();
 
 void unit_focus_set(struct unit *punit);
@@ -154,7 +155,7 @@ void unit_focus_advance();
 void unit_focus_update();
 
 void auto_center_on_focus_unit();
-void update_unit_pix_label(struct unit_list *punitlist);
+void update_unit_pix_label(const std::vector<unit *> &units);
 
 unit *find_visible_unit(const ::tile *ptile);
 void set_units_in_combat(struct unit *pattacker, struct unit *pdefender);

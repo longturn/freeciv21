@@ -147,14 +147,12 @@ void goto_dialog::item_selected(const QItemSelection &sl,
   dest = game_city_by_number(city_id);
   center_tile_mapcanvas(city_tile(dest));
   can_airlift = false;
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     if (unit_can_airlift_to(punit, dest)) {
       can_airlift = true;
       break;
     }
   }
-  unit_list_iterate_end;
 
   if (can_airlift) {
     airlift_city->setEnabled(true);
@@ -273,13 +271,11 @@ void goto_dialog::airlift_to()
   pdest = game_city_by_number(
       goto_tab->item(goto_tab->currentRow(), 0)->data(Qt::UserRole).toInt());
   if (pdest) {
-    unit_list_iterate(get_units_in_focus(), punit)
-    {
+    for (const auto punit : get_units_in_focus()) {
       if (unit_can_airlift_to(punit, pdest)) {
         request_unit_airlift(punit, pdest);
       }
     }
-    unit_list_iterate_end;
   }
 }
 
@@ -297,11 +293,9 @@ void goto_dialog::go_to_city()
   pdest = game_city_by_number(
       goto_tab->item(goto_tab->currentRow(), 0)->data(Qt::UserRole).toInt());
   if (pdest) {
-    unit_list_iterate(get_units_in_focus(), punit)
-    {
+    for (const auto punit : get_units_in_focus()) {
       send_goto_tile(punit, pdest->tile);
     }
-    unit_list_iterate_end;
   }
 }
 
