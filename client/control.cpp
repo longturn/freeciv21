@@ -13,6 +13,7 @@
 
 #include <QSet>
 #include <QTimer>
+#include <algorithm>
 // utility
 #include "bitvector.h"
 #include "fcintl.h"
@@ -72,7 +73,7 @@ static int disband_unit_alternatives[3] = {
 int num_units_below = MAX_NUM_UNITS_BELOW;
 
 // current_focus points to the current unit(s) in focus
-static struct unit_list *current_focus = nullptr;
+static auto current_focus = std::vector<unit *>();
 
 /* The previously focused unit(s).  Focus can generally be recalled
  * with keypad 5 (or the equivalent). */
@@ -135,7 +136,6 @@ void control_init()
 {
   int i;
 
-  current_focus = unit_list_new();
   previous_focus = unit_list_new();
   urgent_focus_queue = unit_list_new();
 
@@ -152,8 +152,7 @@ void control_free()
 {
   int i;
 
-  unit_list_destroy(current_focus);
-  current_focus = nullptr;
+  current_focus.clear();
   unit_list_destroy(previous_focus);
   previous_focus = nullptr;
   unit_list_destroy(urgent_focus_queue);
@@ -171,15 +170,12 @@ void control_free()
 /**
    Returns list of units currently in focus.
  */
-struct unit_list *get_units_in_focus() { return current_focus; }
+std::vector<unit *> &get_units_in_focus() { return current_focus; }
 
 /**
    Return the number of units currently in focus (0 or more).
  */
-int get_num_units_in_focus()
-{
-  return (nullptr != current_focus ? unit_list_size(current_focus) : 0);
-}
+int get_num_units_in_focus() { return current_focus.size(); }
 
 /**
    Store the focus unit(s).  This is used so that we can return to the
@@ -189,11 +185,9 @@ static void store_previous_focus()
 {
   if (get_num_units_in_focus() > 0) {
     unit_list_clear(previous_focus);
-    unit_list_iterate(get_units_in_focus(), punit)
-    {
+    for (auto punit : get_units_in_focus()) {
       unit_list_append(previous_focus, punit);
     }
-    unit_list_iterate_end;
   }
 }
 
@@ -225,7 +219,8 @@ void control_unit_killed(struct unit *punit)
 
   goto_unit_killed(punit);
 
-  unit_list_remove(get_units_in_focus(), punit);
+  auto &focus = get_units_in_focus();
+  focus.erase(std::find(focus.begin(), focus.end(), punit));
   if (get_num_units_in_focus() < 1) {
     clear_hover_state();
   }
@@ -278,12 +273,13 @@ void unit_register_battlegroup(struct unit *punit)
      activity => The connect activity (ACTIVITY_IRRIGATE, etc.)
      order => The last order (ORDER_PERFORM_ACTION, ORDER_LAST, etc.)
  */
-void set_hover_state(struct unit_list *punits, enum cursor_hover_state state,
+void set_hover_state(const std::vector<unit *> &units,
+                     enum cursor_hover_state state,
                      enum unit_activity activity, struct extra_type *tgt,
                      int last_tgt, int last_sub_tgt, action_id action,
                      enum unit_orders order)
 {
-  fc_assert_ret((punits && unit_list_size(punits) > 0)
+  fc_assert_ret(!units.empty()
                 || (state == HOVER_NONE || state == HOVER_DEBUG_TILE));
   fc_assert_ret(state == HOVER_CONNECT || activity == ACTIVITY_LAST);
   fc_assert_ret((state == HOVER_GOTO || state == HOVER_GOTO_SEL_TGT)
@@ -315,7 +311,7 @@ void set_hover_state(struct unit_list *punits, enum cursor_hover_state state,
  */
 void clear_hover_state()
 {
-  set_hover_state(nullptr, HOVER_NONE, ACTIVITY_LAST, nullptr, NO_TARGET,
+  set_hover_state({}, HOVER_NONE, ACTIVITY_LAST, nullptr, NO_TARGET,
                   NO_TARGET, ACTION_NONE, ORDER_LAST);
 }
 
@@ -371,7 +367,8 @@ static void ask_server_for_actions(struct unit *punit)
  */
 bool unit_is_in_focus(const struct unit *punit)
 {
-  return unit_list_search(get_units_in_focus(), punit) != nullptr;
+  const auto &focus = get_units_in_focus();
+  return std::find(focus.begin(), focus.end(), punit) != focus.end();
 }
 
 /**
@@ -379,13 +376,11 @@ bool unit_is_in_focus(const struct unit *punit)
  */
 struct unit *get_focus_unit_on_tile(const struct tile *ptile)
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     if (unit_tile(punit) == ptile) {
       return punit;
     }
   }
-  unit_list_iterate_end;
 
   return nullptr;
 }
@@ -395,7 +390,8 @@ struct unit *get_focus_unit_on_tile(const struct tile *ptile)
  */
 struct unit *head_of_units_in_focus()
 {
-  return unit_list_get(current_focus, 0);
+  const auto &list = get_units_in_focus();
+  return list.empty() ? nullptr : list.front();
 }
 
 /**
@@ -433,7 +429,7 @@ void auto_center_on_focus_unit()
  */
 static void current_focus_append(struct unit *punit)
 {
-  unit_list_append(current_focus, punit);
+  get_units_in_focus().push_back(punit);
 
   punit->client.focus_status = FOCUS_AVAIL;
   refresh_unit_mapcanvas(punit, unit_tile(punit), true, false);
@@ -495,22 +491,18 @@ void unit_focus_set(struct unit *punit)
   }
 
   // Close the action selection dialog if the actor unit lose focus.
-  unit_list_iterate(current_focus, punit_old)
-  {
+  for (const auto punit_old : get_units_in_focus()) {
     if (action_selection_actor_unit() == punit_old->id) {
       action_selection_close();
     }
   }
-  unit_list_iterate_end;
 
   /* Redraw the old focus unit (to fix blinking or remove the selection
    * circle). */
-  unit_list_iterate(current_focus, punit_old)
-  {
+  for (const auto punit_old : get_units_in_focus()) {
     refresh_unit_mapcanvas(punit_old, unit_tile(punit_old), true, false);
   }
-  unit_list_iterate_end;
-  unit_list_clear(current_focus);
+  get_units_in_focus().clear();
 
   if (!can_client_change_view()) {
     /* This function can be called to set the focus to nullptr when
@@ -631,8 +623,7 @@ void unit_focus_advance()
 
   clear_hover_state();
 
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     /*
      * Is the unit which just lost focus a non-AI unit? If yes this
      * enables the auto end turn.
@@ -642,7 +633,6 @@ void unit_focus_advance()
       break;
     }
   }
-  unit_list_iterate_end;
 
   if (unit_list_size(urgent_focus_queue) > 0) {
     // Try top of the urgent list.
@@ -736,8 +726,7 @@ void unit_focus_update()
 
   /* iterate zero times for no units in focus,
    * otherwise quit for any of the conditions. */
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     if ((punit->activity == ACTIVITY_IDLE || punit->activity == ACTIVITY_GOTO
          || unit_has_orders(punit))
         && punit->moves_left > 0 && !punit->done_moving
@@ -745,7 +734,6 @@ void unit_focus_update()
       return;
     }
   }
-  unit_list_iterate_end;
 
   unit_focus_advance();
 }
@@ -786,13 +774,11 @@ unit *find_visible_unit(const ::tile *ptile)
   }
 
   // If the unit in focus is at this tile, show that on top
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     if (punit != punit_moving && unit_tile(punit) == ptile) {
       return punit;
     }
   }
-  unit_list_iterate_end;
 
   // If a city is here, return nothing (unit hidden by city).
   if (tile_city(ptile)) {
@@ -844,14 +830,12 @@ int blink_active_unit()
 
       blink_timer.start(blink_time);
 
-      unit_list_iterate(get_units_in_focus(), punit)
-      {
+      for (const auto punit : get_units_in_focus()) {
         /* We flush to screen directly here.  This is most likely faster
          * since these drawing operations are all small but may be spread
          * out widely. */
         refresh_unit_mapcanvas(punit, unit_tile(punit), false, true);
       }
-      unit_list_iterate_end;
     }
 
     return blink_time - blink_timer.remainingTime();
@@ -924,20 +908,19 @@ int blink_turn_done_button()
    be enough information to know whether to redraw -- instead redraw every
    time.  (Could store enough info to know, but is it worth it?)
  */
-void update_unit_pix_label(struct unit_list *punitlist)
+void update_unit_pix_label(const std::vector<unit *> &units)
 {
   int i;
 
   /* Check for any change in the unit's state.  This assumes that a unit's
    * orders cannot be changed directly but must be removed and then reset. */
-  if (punitlist && unit_list_size(punitlist) > 0
-      && C_S_OVER != client_state()) {
+  if (!units.empty() && C_S_OVER != client_state()) {
     /* There used to be a complicated and bug-prone check here to see if
      * the unit had actually changed.  This was misguided since the stacked
      * units (below) are redrawn in any case.  Unless we write a general
      * system for unit updates here we might as well just redraw it every
      * time. */
-    struct unit *punit = unit_list_get(punitlist, 0);
+    struct unit *punit = units.front();
 
     set_unit_icon(-1, punit);
 
@@ -1032,14 +1015,12 @@ void action_selection_next_in_focus(const int old_actor_id)
   old = game_unit_by_number(old_actor_id);
 
   // Go to the next unit in focus that needs a decision.
-  unit_list_iterate(get_units_in_focus(), funit)
-  {
-    if (old != funit && should_ask_server_for_actions(funit)) {
-      ask_server_for_actions(funit);
+  for (const auto punit : get_units_in_focus()) {
+    if (old != punit && should_ask_server_for_actions(punit)) {
+      ask_server_for_actions(punit);
       return;
     }
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -1067,11 +1048,11 @@ void action_decision_request(struct unit *actor_unit)
 void request_unit_goto(enum unit_orders last_order, action_id act_id,
                        int sub_tgt_id)
 {
-  struct unit_list *punits = get_units_in_focus();
+  const auto focus = get_units_in_focus();
 
   fc_assert_ret(act_id == ACTION_NONE || last_order == ORDER_PERFORM_ACTION);
 
-  if (unit_list_size(punits) == 0) {
+  if (focus.empty()) {
     return;
   }
 
@@ -1079,8 +1060,7 @@ void request_unit_goto(enum unit_orders last_order, action_id act_id,
     // An action has been specified.
     fc_assert_ret(action_id_exists(act_id));
 
-    unit_list_iterate(punits, punit)
-    {
+    for (const auto punit : focus) {
       if (!unit_can_do_action(punit, act_id)) {
         /* This unit can't perform the action specified in the last
          * order. */
@@ -1104,15 +1084,14 @@ void request_unit_goto(enum unit_orders last_order, action_id act_id,
         return;
       }
     }
-    unit_list_iterate_end;
   }
 
   if (hover_state != HOVER_GOTO && hover_state != HOVER_GOTO_SEL_TGT) {
-    set_hover_state(punits, HOVER_GOTO, ACTIVITY_LAST, nullptr, NO_TARGET,
+    set_hover_state(focus, HOVER_GOTO, ACTIVITY_LAST, nullptr, NO_TARGET,
                     sub_tgt_id, act_id, last_order);
-    enter_goto_state(punits);
+    enter_goto_state(focus);
     create_line_at_mouse_pos();
-    update_unit_info_label(punits);
+    update_unit_info_label(focus);
     control_mouse_cursor(nullptr);
   } else {
     fc_assert_ret(goto_is_active());
@@ -1125,18 +1104,12 @@ void request_unit_goto(enum unit_orders last_order, action_id act_id,
 /**
    Return TRUE if at least one of the units can do an attack at the tile.
  */
-static bool can_units_attack_at(struct unit_list *punits,
+static bool can_units_attack_at(const std::vector<unit *> &units,
                                 const struct tile *ptile)
 {
-  unit_list_iterate(punits, punit)
-  {
-    if (is_attack_unit(punit) && can_unit_attack_tile(punit, ptile)) {
-      return true;
-    }
-  }
-  unit_list_iterate_end;
-
-  return false;
+  return std::any_of(units.begin(), units.end(), [&](const auto *unit) {
+    return is_attack_unit(unit) && can_unit_attack_tile(unit, ptile);
+  });
 }
 
 /**
@@ -1148,7 +1121,7 @@ void control_mouse_cursor(struct tile *ptile)
 {
   struct unit *punit = nullptr;
   struct city *pcity = nullptr;
-  struct unit_list *active_units = get_units_in_focus();
+  const auto &active_units = get_units_in_focus();
   enum cursor_type mouse_cursor_type = CURSOR_DEFAULT;
 
   if (!gui_options.enable_cursor_changes) {
@@ -1418,9 +1391,9 @@ bool can_unit_do_connect(struct unit *punit, enum unit_activity activity,
 void request_unit_connect(enum unit_activity activity,
                           struct extra_type *tgt)
 {
-  struct unit_list *punits = get_units_in_focus();
+  const auto &focus = get_units_in_focus();
 
-  if (!can_units_do_connect(punits, activity, tgt)) {
+  if (!can_units_do_connect(focus, activity, tgt)) {
     return;
   }
 
@@ -1428,11 +1401,11 @@ void request_unit_connect(enum unit_activity activity,
       || (connect_tgt != tgt
           && (activity == ACTIVITY_GEN_ROAD
               || activity == ACTIVITY_IRRIGATE))) {
-    set_hover_state(punits, HOVER_CONNECT, activity, tgt, NO_TARGET,
+    set_hover_state(focus, HOVER_CONNECT, activity, tgt, NO_TARGET,
                     NO_TARGET, ACTION_NONE, ORDER_LAST);
-    enter_goto_state(punits);
+    enter_goto_state(focus);
     create_line_at_mouse_pos();
-    update_unit_info_label(punits);
+    update_unit_info_label(focus);
     control_mouse_cursor(nullptr);
   } else {
     fc_assert_ret(goto_is_active());
@@ -1487,8 +1460,7 @@ void request_unit_airlift(struct unit *punit, struct city *pcity)
  */
 void request_units_return()
 {
-  unit_list_iterate(get_units_in_focus(), unit)
-  {
+  for (const auto unit : get_units_in_focus()) {
     // Find a path to the closest city
     auto finder = freeciv::path_finder(unit);
     if (auto path = finder.find_path(
@@ -1529,7 +1501,6 @@ void request_units_return()
       }
     }
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -1561,22 +1532,21 @@ void request_unit_wakeup(struct unit *punit)
 /**
    Select all units based on the given list of units and the selection modes.
  */
-void request_unit_select(struct unit_list *punits,
+void request_unit_select(const std::vector<unit *> &punits,
                          enum unit_select_type_mode seltype,
                          enum unit_select_location_mode selloc)
 {
   const struct player *pplayer;
   const struct tile *ptile;
-  struct unit *punit_first;
   QSet<const struct tile *> tile_table;
   QSet<const struct unit_type *> type_table;
   QSet<Continent_id> cont_table;
 
-  if (!can_client_change_view() || !punits || unit_list_size(punits) < 1) {
+  if (!can_client_change_view() || punits.empty()) {
     return;
   }
 
-  punit_first = unit_list_get(punits, 0);
+  const auto punit_first = punits.front();
 
   if (seltype == SELTYPE_SINGLE) {
     unit_focus_set(punit_first);
@@ -1585,8 +1555,7 @@ void request_unit_select(struct unit_list *punits,
 
   pplayer = unit_owner(punit_first);
 
-  unit_list_iterate(punits, punit)
-  {
+  for (const auto punit : punits) {
     if (seltype == SELTYPE_SAME) {
       type_table.insert(unit_type_get(punit));
     }
@@ -1598,7 +1567,6 @@ void request_unit_select(struct unit_list *punits,
       cont_table.insert(tile_continent(ptile));
     }
   }
-  unit_list_iterate_end;
 
   if (selloc == SELLOC_TILE) {
     for (const auto *hash_tile : tile_table) {
@@ -2089,16 +2057,15 @@ void request_unit_caravan_action(struct unit *punit, action_id action)
    Have the player select what tile to paradrop to. Once selected a
    paradrop request will be sent to server.
  */
-void request_unit_paradrop(struct unit_list *punits)
+void request_unit_paradrop(const std::vector<unit *> &units)
 {
   bool can = false;
   struct tile *offender = nullptr;
 
-  if (unit_list_size(punits) == 0) {
+  if (units.empty()) {
     return;
   }
-  unit_list_iterate(punits, punit)
-  {
+  for (const auto punit : units) {
     if (can_unit_paradrop(punit)) {
       can = true;
       break;
@@ -2107,16 +2074,14 @@ void request_unit_paradrop(struct unit_list *punits)
       offender = unit_tile(punit);
     }
   }
-  unit_list_iterate_end;
   if (can) {
-    create_event(unit_tile(unit_list_get(punits, 0)), E_BEGINNER_HELP,
-                 ftc_client,
+    create_event(unit_tile(units.front()), E_BEGINNER_HELP, ftc_client,
                  // TRANS: paradrop target tile.
                  _("Click on a tile to paradrop to it."));
 
-    set_hover_state(punits, HOVER_PARADROP, ACTIVITY_LAST, nullptr,
-                    NO_TARGET, NO_TARGET, ACTION_NONE, ORDER_LAST);
-    update_unit_info_label(punits);
+    set_hover_state(units, HOVER_PARADROP, ACTIVITY_LAST, nullptr, NO_TARGET,
+                    NO_TARGET, ACTION_NONE, ORDER_LAST);
+    update_unit_info_label(units);
   } else {
     create_event(offender, E_BAD_COMMAND, ftc_client,
                  _("Only paratrooper units can do this."));
@@ -2128,17 +2093,17 @@ void request_unit_paradrop(struct unit_list *punits)
  */
 void request_unit_patrol()
 {
-  struct unit_list *punits = get_units_in_focus();
+  const auto &focus = get_units_in_focus();
 
-  if (unit_list_size(punits) == 0) {
+  if (focus.empty()) {
     return;
   }
 
   if (hover_state != HOVER_PATROL) {
-    set_hover_state(punits, HOVER_PATROL, ACTIVITY_LAST, nullptr, NO_TARGET,
+    set_hover_state(focus, HOVER_PATROL, ACTIVITY_LAST, nullptr, NO_TARGET,
                     NO_TARGET, ACTION_NONE, ORDER_LAST);
-    update_unit_info_label(punits);
-    enter_goto_state(punits);
+    update_unit_info_label(focus);
+    enter_goto_state(focus);
     create_line_at_mouse_pos();
   } else {
     fc_assert_ret(goto_is_active());
@@ -2347,19 +2312,14 @@ void request_center_focus_unit()
 }
 
 /**
-   Set units in list to waiting focus. If they are current focus units,
-   advance focus.
+   Set units in list to waiting focus and advance focus.
  */
-void request_units_wait(struct unit_list *punits)
+void request_units_wait(const std::vector<unit *> &units)
 {
-  unit_list_iterate(punits, punit)
-  {
+  for (auto punit : units) {
     punit->client.focus_status = FOCUS_WAIT;
   }
-  unit_list_iterate_end;
-  if (punits == get_units_in_focus()) {
-    unit_focus_advance();
-  }
+  unit_focus_advance();
 }
 
 /**
@@ -2369,21 +2329,17 @@ void request_unit_move_done()
 {
   if (get_num_units_in_focus() > 0) {
     enum unit_focus_status new_status = FOCUS_DONE;
-    unit_list_iterate(get_units_in_focus(), punit)
-    {
+    for (const auto punit : get_units_in_focus()) {
       /* If any of the focused units are busy, keep all of them
        * in focus; another tap of the key will dismiss them */
       if (punit->activity != ACTIVITY_IDLE) {
         new_status = FOCUS_WAIT;
       }
     }
-    unit_list_iterate_end;
-    unit_list_iterate(get_units_in_focus(), punit)
-    {
+    for (const auto punit : get_units_in_focus()) {
       clear_unit_orders(punit);
       punit->client.focus_status = new_status;
     }
-    unit_list_iterate_end;
     if (new_status == FOCUS_DONE) {
       unit_focus_advance();
     }
@@ -2489,8 +2445,7 @@ void do_move_unit(struct unit *punit, struct unit *target_unit)
  */
 static void do_unit_act_sel_vs(struct tile *ptile)
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     if (utype_may_act_at_all(unit_type_get(punit))) {
       /* Have the server record that an action decision is wanted for
        * this unit against this tile. */
@@ -2498,7 +2453,6 @@ static void do_unit_act_sel_vs(struct tile *ptile)
                                  tile_index(ptile));
     }
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -2507,7 +2461,7 @@ static void do_unit_act_sel_vs(struct tile *ptile)
 void do_map_click(struct tile *ptile, enum quickselect_type qtype)
 {
   struct city *pcity = tile_city(ptile);
-  struct unit_list *punits = get_units_in_focus();
+  const auto &units = get_units_in_focus();
   bool maybe_goto = false;
 
   if (hover_state != HOVER_NONE) {
@@ -2518,8 +2472,9 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
       do_unit_goto(ptile);
       return;
     case HOVER_PARADROP:
-      unit_list_iterate(punits, punit) { do_unit_paradrop_to(punit, ptile); }
-      unit_list_iterate_end;
+      for (const auto punit : units) {
+        do_unit_paradrop_to(punit, ptile);
+      }
       break;
     case HOVER_CONNECT:
       do_unit_connect(ptile, connect_activity, connect_tgt);
@@ -2804,13 +2759,11 @@ void do_unit_connect(struct tile *ptile, enum unit_activity activity,
  */
 void key_cancel_action()
 {
-  struct unit_list *punits = get_units_in_focus();
-
   switch (hover_state) {
   case HOVER_GOTO_SEL_TGT:
-    set_hover_state(punits, HOVER_GOTO, connect_activity, connect_tgt,
-                    goto_last_tgt, goto_last_sub_tgt, goto_last_action,
-                    goto_last_order);
+    set_hover_state(get_units_in_focus(), HOVER_GOTO, connect_activity,
+                    connect_tgt, goto_last_tgt, goto_last_sub_tgt,
+                    goto_last_action, goto_last_order);
     break;
   case HOVER_GOTO:
   case HOVER_PATROL:
@@ -2887,13 +2840,11 @@ void key_recall_previous_focus_unit()
  */
 void key_unit_move(enum direction8 gui_dir)
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     enum direction8 map_dir = gui_to_map_dir(gui_dir);
 
     request_move_unit_direction(punit, map_dir);
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -2916,8 +2867,7 @@ void key_unit_action_select()
     return;
   }
 
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     ptile = unit_tile(punit);
     if (utype_may_act_at_all(unit_type_get(punit)) && ptile) {
       /* Have the server record that an action decision is wanted for this
@@ -2926,7 +2876,6 @@ void key_unit_action_select()
                                  tile_index(ptile));
     }
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -2938,7 +2887,7 @@ void key_unit_action_select()
  */
 void key_unit_action_select_tgt()
 {
-  struct unit_list *punits = get_units_in_focus();
+  const auto &focus = get_units_in_focus();
 
   if (hover_state == HOVER_ACT_SEL_TGT) {
     /* The 2nd key press means that the actor should target its own
@@ -2947,7 +2896,7 @@ void key_unit_action_select_tgt()
 
     // Target tile selected. Clean up hover state.
     clear_hover_state();
-    update_unit_info_label(punits);
+    update_unit_info_label(focus);
 
     return;
   } else if (hover_state == HOVER_GOTO_SEL_TGT) {
@@ -2959,33 +2908,31 @@ void key_unit_action_select_tgt()
 
     // Target tile selected. Clean up hover state.
     clear_hover_state();
-    update_unit_info_label(punits);
+    update_unit_info_label(focus);
 
     return;
   } else if (hover_state == HOVER_GOTO
              && action_id_exists(goto_last_action)) {
     struct action *paction = action_by_number(goto_last_action);
 
-    create_event(unit_tile(unit_list_get(punits, 0)), E_BEGINNER_HELP,
-                 ftc_client,
+    create_event(unit_tile(focus.front()), E_BEGINNER_HELP, ftc_client,
                  // TRANS: Perform action inside a goto.
                  _("Click on a tile to do %s against it."),
                  qUtf8Printable(action_name_translation(paction)));
 
-    set_hover_state(punits, HOVER_GOTO_SEL_TGT, connect_activity,
-                    connect_tgt, goto_last_tgt, goto_last_sub_tgt,
-                    goto_last_action, goto_last_order);
+    set_hover_state(focus, HOVER_GOTO_SEL_TGT, connect_activity, connect_tgt,
+                    goto_last_tgt, goto_last_sub_tgt, goto_last_action,
+                    goto_last_order);
 
     return;
   }
 
-  create_event(unit_tile(unit_list_get(punits, 0)), E_BEGINNER_HELP,
-               ftc_client,
+  create_event(unit_tile(focus.front()), E_BEGINNER_HELP, ftc_client,
                // TRANS: "Do..." action selection dialog target.
                _("Click on a tile to act against it. "
                  "Press 'd' again to act against own tile."));
 
-  set_hover_state(punits, HOVER_ACT_SEL_TGT, ACTIVITY_LAST, nullptr,
+  set_hover_state(focus, HOVER_ACT_SEL_TGT, ACTIVITY_LAST, nullptr,
                   NO_TARGET, NO_TARGET, ACTION_NONE, ORDER_LAST);
 }
 
@@ -3016,25 +2963,21 @@ void key_unit_unload_all()
 {
   struct unit *pnext_focus = nullptr, *plast;
 
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (auto punit : get_units_in_focus()) {
     plast = request_unit_unload_all(punit);
     if (plast) {
       pnext_focus = plast;
     }
   }
-  unit_list_iterate_end;
 
   if (pnext_focus) {
-    unit_list_iterate(get_units_in_focus(), punit)
-    {
+    for (auto punit : get_units_in_focus()) {
       /* Unfocus the ships, and advance the focus to the last unloaded unit.
        * If there is no unit unloaded (which shouldn't happen, but could if
        * the caller doesn't check if the transporter is loaded), the we
        * don't do anything. */
       punit->client.focus_status = FOCUS_WAIT;
     }
-    unit_list_iterate_end;
     unit_focus_set(pnext_focus);
   }
 }
@@ -3049,11 +2992,9 @@ void key_unit_wait() { request_units_wait(get_units_in_focus()); }
  */
 void key_unit_wakeup_others()
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     request_unit_wakeup(punit);
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -3061,8 +3002,7 @@ void key_unit_wakeup_others()
  */
 void key_unit_airbase()
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     struct base_type *pbase =
         get_base_by_gui_type(BASE_GUI_AIRBASE, punit, unit_tile(punit));
 
@@ -3072,7 +3012,6 @@ void key_unit_airbase()
       request_new_unit_activity_targeted(punit, ACTIVITY_BASE, pextra);
     }
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -3080,13 +3019,11 @@ void key_unit_airbase()
  */
 void key_unit_auto_explore()
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     if (can_unit_do_activity(punit, ACTIVITY_EXPLORE)) {
       request_unit_ssa_set(punit, SSA_AUTOEXPLORE);
     }
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -3095,13 +3032,11 @@ void key_unit_auto_explore()
  */
 void key_unit_auto_settle()
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     if (can_unit_do_autosettlers(punit)) {
       request_unit_autosettlers(punit);
     }
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -3109,11 +3044,9 @@ void key_unit_auto_settle()
  */
 void key_unit_convert()
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     request_unit_convert(punit);
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -3129,13 +3062,11 @@ void key_unit_fallout()
  */
 void key_unit_fortify()
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     if (can_unit_do_activity(punit, ACTIVITY_FORTIFYING)) {
       request_new_unit_activity(punit, ACTIVITY_FORTIFYING);
     }
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -3143,8 +3074,7 @@ void key_unit_fortify()
  */
 void key_unit_fortress()
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     struct base_type *pbase =
         get_base_by_gui_type(BASE_GUI_FORTRESS, punit, unit_tile(punit));
 
@@ -3154,7 +3084,6 @@ void key_unit_fortress()
       request_new_unit_activity_targeted(punit, ACTIVITY_BASE, pextra);
     }
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -3162,11 +3091,9 @@ void key_unit_fortress()
  */
 void key_unit_homecity()
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     request_unit_change_homecity(punit);
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -3174,8 +3101,7 @@ void key_unit_homecity()
  */
 static void key_unit_extra(enum unit_activity act, enum extra_cause cause)
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     struct extra_type *tgt = next_extra_for_tile(unit_tile(punit), cause,
                                                  unit_owner(punit), punit);
 
@@ -3183,7 +3109,6 @@ static void key_unit_extra(enum unit_activity act, enum extra_cause cause)
       request_new_unit_activity_targeted(punit, act, tgt);
     }
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -3192,8 +3117,7 @@ static void key_unit_extra(enum unit_activity act, enum extra_cause cause)
 static void key_unit_clean(enum unit_activity act,
                            enum extra_rmcause rmcause)
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     struct extra_type *tgt = prev_extra_in_tile(unit_tile(punit), rmcause,
                                                 unit_owner(punit), punit);
 
@@ -3201,7 +3125,6 @@ static void key_unit_clean(enum unit_activity act,
       request_new_unit_activity_targeted(punit, act, tgt);
     }
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -3217,13 +3140,11 @@ void key_unit_irrigate()
  */
 void key_unit_cultivate()
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     if (can_unit_do_activity(punit, ACTIVITY_CULTIVATE)) {
       request_new_unit_activity(punit, ACTIVITY_CULTIVATE);
     }
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -3236,13 +3157,11 @@ void key_unit_mine() { key_unit_extra(ACTIVITY_MINE, EC_MINE); }
  */
 void key_unit_plant()
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     if (can_unit_do_activity(punit, ACTIVITY_PLANT)) {
       request_new_unit_activity(punit, ACTIVITY_PLANT);
     }
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -3250,13 +3169,11 @@ void key_unit_plant()
  */
 void key_unit_pillage()
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     if (can_unit_do_activity(punit, ACTIVITY_PILLAGE)) {
       request_unit_pillage(punit);
     }
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -3264,13 +3181,11 @@ void key_unit_pillage()
  */
 void key_unit_sentry()
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     if (can_unit_do_activity(punit, ACTIVITY_SENTRY)) {
       request_new_unit_activity(punit, ACTIVITY_SENTRY);
     }
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -3278,13 +3193,11 @@ void key_unit_sentry()
  */
 void key_unit_transform()
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     if (can_unit_do_activity(punit, ACTIVITY_TRANSFORM)) {
       request_new_unit_activity(punit, ACTIVITY_TRANSFORM);
     }
   }
-  unit_list_iterate_end;
 }
 
 /**

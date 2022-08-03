@@ -916,7 +916,7 @@ void set_client_state(enum client_states newstate)
 
     update_info_label();
     unit_focus_update();
-    update_unit_info_label(nullptr);
+    update_unit_info_label({});
 
     break;
   }

@@ -29,7 +29,7 @@ enum goto_tile_state {
 void init_client_goto();
 void free_client_goto();
 
-void enter_goto_state(struct unit_list *punits);
+void enter_goto_state(const std::vector<unit *> &units);
 void exit_goto_state();
 
 void goto_unit_killed(struct unit *punit);

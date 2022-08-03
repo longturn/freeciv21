@@ -317,8 +317,7 @@ const QString popup_info_text(struct tile *ptile)
              + qendl();
     }
 
-    unit_list_iterate(get_units_in_focus(), pfocus_unit)
-    {
+    for (const auto &pfocus_unit : get_units_in_focus()) {
       struct city *hcity = game_city_by_number(pfocus_unit->homecity);
 
       if (utype_can_do_action(unit_type_get(pfocus_unit), ACTION_TRADE_ROUTE)
@@ -332,7 +331,6 @@ const QString popup_info_text(struct tile *ptile)
                + qendl();
       }
     }
-    unit_list_iterate_end;
   }
   {
     const char *infratext = get_infrastructure_text(ptile->extras);
@@ -437,8 +435,7 @@ const QString popup_info_text(struct tile *ptile)
       }
     }
 
-    unit_list_iterate(get_units_in_focus(), pfocus_unit)
-    {
+    for (const auto pfocus_unit : get_units_in_focus()) {
       int att_chance = FC_INFINITY, def_chance = FC_INFINITY;
       bool found = false;
 
@@ -465,7 +462,6 @@ const QString popup_info_text(struct tile *ptile)
                + qendl();
       }
     }
-    unit_list_iterate_end;
 
     /* TRANS: A is attack power, D is defense power, FP is firepower,
      * HP is hitpoints (current and max). */
@@ -602,7 +598,7 @@ const QString unit_description(struct unit *punit)
    for those that can.
    Returns nullptr if an airlift is not possible for any of the units.
  */
-const QString get_airlift_text(const struct unit_list *punits,
+const QString get_airlift_text(const std::vector<unit *> &units,
                                const struct city *pdest)
 {
   QString str;
@@ -615,8 +611,7 @@ const QString get_airlift_text(const struct unit_list *punits,
   } best = AL_IMPOSSIBLE;
   int cur = 0, max = 0;
 
-  unit_list_iterate(punits, punit)
-  {
+  for (const auto punit : units) {
     enum texttype tthis = AL_IMPOSSIBLE;
     enum unit_airlift_result result;
 
@@ -684,7 +679,6 @@ const QString get_airlift_text(const struct unit_list *punits,
     // Now take the most optimistic view.
     best = MAX(best, tthis);
   }
-  unit_list_iterate_end;
 
   switch (best) {
   case AL_IMPOSSIBLE:
@@ -1115,20 +1109,19 @@ const QString get_info_label_text_popup()
    Returns TRUE iff any units can be upgraded.
  */
 bool get_units_upgrade_info(char *buf, size_t bufsz,
-                            struct unit_list *punits)
+                            const std::vector<unit *> &punits)
 {
-  if (unit_list_size(punits) == 0) {
+  if (punits.empty()) {
     fc_snprintf(buf, bufsz, _("No units to upgrade!"));
     return false;
-  } else if (unit_list_size(punits) == 1) {
-    return (UU_OK == unit_upgrade_info(unit_list_front(punits), buf, bufsz));
+  } else if (punits.size() == 1) {
+    return (UU_OK == unit_upgrade_info(punits.front(), buf, bufsz));
   } else {
     int upgrade_cost = 0;
     int num_upgraded = 0;
     int min_upgrade_cost = FC_INFINITY;
 
-    unit_list_iterate(punits, punit)
-    {
+    for (const auto punit : punits) {
       if (unit_owner(punit) == client_player()
           && UU_OK == unit_upgrade_test(punit, false)) {
         const struct unit_type *from_unittype = unit_type_get(punit);
@@ -1142,7 +1135,6 @@ bool get_units_upgrade_info(char *buf, size_t bufsz,
         min_upgrade_cost = MIN(min_upgrade_cost, cost);
       }
     }
-    unit_list_iterate_end;
     if (num_upgraded == 0) {
       fc_snprintf(buf, bufsz, _("None of these units may be upgraded."));
       return false;

@@ -95,7 +95,7 @@ struct city *get_nearest_city(const struct unit *punit, int *sq_dist);
 
 void cityrep_buy(struct city *pcity);
 
-bool can_units_do_connect(struct unit_list *punits,
+bool can_units_do_connect(const std::vector<unit *> &units,
                           enum unit_activity activity,
                           struct extra_type *tgt);
 

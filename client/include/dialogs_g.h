@@ -65,8 +65,6 @@ void popup_bribe_dialog(struct unit *actor, struct unit *punit, int cost,
 void popup_sabotage_dialog(struct unit *actor, struct city *pcity,
                            const struct action *paction);
 void popup_pillage_dialog(struct unit *punit, bv_extras extras);
-void popup_upgrade_dialog(struct unit_list *punits);
-void popup_disband_dialog(struct unit_list *punits);
 void popup_tileset_suggestion_dialog(void);
 void popup_soundset_suggestion_dialog(void);
 void popup_musicset_suggestion_dialog(void);

@@ -1406,7 +1406,6 @@ void mr_menu::update_airlift_menu()
 void mr_menu::update_roads_menu()
 {
   QAction *act;
-  struct unit_list *punits = nullptr;
   bool enabled = false;
 
   if (!initialized) {
@@ -1423,7 +1422,6 @@ void mr_menu::update_roads_menu()
     return;
   }
 
-  punits = get_units_in_focus();
   extra_type_by_cause_iterate(EC_ROAD, pextra)
   {
     if (pextra->buildable) {
@@ -1435,8 +1433,8 @@ void mr_menu::update_roads_menu()
       act->setData(road_id);
       QObject::connect(act, &QAction::triggered,
                        [this, road_id]() { slot_build_path(road_id); });
-      if (can_units_do_activity_targeted(punits, ACTIVITY_GEN_ROAD,
-                                         pextra)) {
+      if (can_units_do_activity_targeted(get_units_in_focus(),
+                                         ACTIVITY_GEN_ROAD, pextra)) {
         act->setEnabled(true);
         enabled = true;
       } else {
@@ -1457,7 +1455,6 @@ void mr_menu::update_roads_menu()
 void mr_menu::update_bases_menu()
 {
   QAction *act;
-  struct unit_list *punits = nullptr;
   bool enabled = false;
   if (!initialized) {
     return;
@@ -1475,7 +1472,6 @@ void mr_menu::update_bases_menu()
     return;
   }
 
-  punits = get_units_in_focus();
   extra_type_by_cause_iterate(EC_BASE, pextra)
   {
     if (pextra->buildable) {
@@ -1487,7 +1483,8 @@ void mr_menu::update_bases_menu()
       act->setData(base_id);
       QObject::connect(act, &QAction::triggered,
                        [this, base_id]() { slot_build_base(base_id); });
-      if (can_units_do_activity_targeted(punits, ACTIVITY_BASE, pextra)) {
+      if (can_units_do_activity_targeted(get_units_in_focus(), ACTIVITY_BASE,
+                                         pextra)) {
         act->setEnabled(true);
         enabled = true;
       } else {
@@ -1545,21 +1542,19 @@ void mr_menu::nonunit_sensitivity()
   }
 }
 
-static struct extra_type *next_extra(struct unit_list *punits,
+static struct extra_type *next_extra(const std::vector<unit *> &punits,
                                      extra_cause cause)
 {
   struct extra_type *pextra = nullptr;
   /* FIXME: this overloading doesn't work well with multiple focus
    * units. */
-  unit_list_iterate(punits, builder)
-  {
+  for (const auto builder : punits) {
     pextra = next_extra_for_tile(unit_tile(builder), cause,
                                  unit_owner(builder), builder);
     if (pextra != nullptr) {
       break;
     }
   }
-  unit_list_iterate_end;
   return pextra;
 }
 
@@ -1570,7 +1565,6 @@ void mr_menu::menus_sensitive()
 {
   QList<munit> keys;
   QMultiHash<munit, QAction *>::iterator i;
-  struct unit_list *punits = nullptr;
   struct road_type *proad;
   struct extra_type *tgt;
   bool city_on_tile = false;
@@ -1598,7 +1592,7 @@ void mr_menu::menus_sensitive()
     return;
   }
 
-  punits = get_units_in_focus();
+  const auto &punits = get_units_in_focus();
   city_on_tile = any_unit_in_city(punits);
   units_all_same_tile = units_on_the_same_tile(punits);
 
@@ -1647,7 +1641,7 @@ void mr_menu::menus_sensitive()
         }
 
         if (units_all_same_tile) {
-          struct unit *punit = unit_list_get(punits, 0);
+          struct unit *punit = punits.front();
 
           pterrain = tile_terrain(unit_tile(punit));
 
@@ -1673,7 +1667,7 @@ void mr_menu::menus_sensitive()
           i.value()->setEnabled(true);
         }
         if (units_all_same_tile) {
-          struct unit *punit = unit_list_get(punits, 0);
+          struct unit *punit = punits.front();
 
           pterrain = tile_terrain(unit_tile(punit));
 
@@ -1699,7 +1693,7 @@ void mr_menu::menus_sensitive()
           i.value()->setEnabled(true);
         }
         if (units_all_same_tile) {
-          struct unit *punit = unit_list_get(punits, 0);
+          struct unit *punit = punits.front();
 
           pterrain = tile_terrain(unit_tile(punit));
           if (pterrain->irrigation_result != T_NONE
@@ -1722,7 +1716,7 @@ void mr_menu::menus_sensitive()
           i.value()->setEnabled(true);
         }
         if (units_all_same_tile) {
-          struct unit *punit = unit_list_get(punits, 0);
+          struct unit *punit = punits.front();
 
           pterrain = tile_terrain(unit_tile(punit));
           if (pterrain->mining_result != T_NONE
@@ -1747,9 +1741,7 @@ void mr_menu::menus_sensitive()
           break;
         }
         if (units_all_same_tile) {
-          struct unit *punit = unit_list_get(punits, 0);
-          pterrain = tile_terrain(unit_tile(punit));
-          punit = unit_list_get(punits, 0);
+          struct unit *punit = punits.front();
           pterrain = tile_terrain(unit_tile(punit));
           if (pterrain->transform_result != T_NONE
               && pterrain->transform_result != pterrain) {
@@ -1990,8 +1982,7 @@ void mr_menu::slot_show_map()
  */
 void mr_menu::slot_build_city()
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     /* FIXME: this can provide different actions for different units...
      * not good! */
     /* Enable the button for adding to a city in all cases, so we
@@ -2003,7 +1994,6 @@ void mr_menu::slot_build_city()
       request_unit_caravan_action(punit, ACTION_HELP_WONDER);
     }
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -2016,8 +2006,7 @@ void mr_menu::slot_clean_fallout() { key_unit_fallout(); }
  */
 void mr_menu::slot_clean_pollution()
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     /* FIXME: this can provide different actions for different units...
      * not good! */
     struct extra_type *pextra;
@@ -2032,7 +2021,6 @@ void mr_menu::slot_clean_pollution()
       key_unit_paradrop();
     }
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -2116,8 +2104,7 @@ void mr_menu::slot_auto_settler() { key_unit_auto_settle(); }
  */
 void mr_menu::slot_build_road()
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     /* FIXME: this can provide different actions for different units...
      * not good! */
     struct extra_type *tgt = next_extra_for_tile(unit_tile(punit), EC_ROAD,
@@ -2134,7 +2121,6 @@ void mr_menu::slot_build_road()
       request_unit_caravan_action(punit, ACTION_TRADE_ROUTE);
     }
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -2185,8 +2171,7 @@ void mr_menu::slot_rename()
   if (get_num_units_in_focus() != 1) {
     return;
   }
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     auto ask = new hud_input_box(king()->central_wdg);
 
     ask->set_text_title_definput(_("New unit name:"), _("Rename Unit"),
@@ -2204,7 +2189,6 @@ void mr_menu::slot_rename()
     });
     ask->show();
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -2337,25 +2321,23 @@ void mr_menu::slot_delayed_goto()
   delayed_order = true;
   dg = D_GOTO;
 
-  struct unit_list *punits = get_units_in_focus();
-  if (unit_list_size(punits) == 0) {
+  const auto &focus = get_units_in_focus();
+  if (focus.empty()) {
     return;
   }
   if (hover_state != HOVER_GOTO) {
-    set_hover_state(punits, HOVER_GOTO, ACTIVITY_LAST, nullptr, NO_TARGET,
+    set_hover_state(focus, HOVER_GOTO, ACTIVITY_LAST, nullptr, NO_TARGET,
                     NO_TARGET, ACTION_NONE, ORDER_LAST);
-    enter_goto_state(punits);
+    enter_goto_state(focus);
     create_line_at_mouse_pos();
     control_mouse_cursor(nullptr);
   }
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : focus) {
     i++;
     unit_item = new qfc_delayed_unit_item(dg, punit->id);
     units_list.add(unit_item);
     units_list.nr_units = i;
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -2396,11 +2378,9 @@ void mr_menu::slot_execute_orders()
  */
 void mr_menu::slot_load()
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     request_transport(punit, unit_tile(punit));
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -2423,11 +2403,9 @@ void mr_menu::slot_set_home() { key_unit_homecity(); }
  */
 void mr_menu::slot_unload()
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     request_unit_unload(punit);
   }
-  unit_list_iterate_end;
 }
 
 /**
@@ -2784,8 +2762,7 @@ void mr_menu::slot_help(const QString &topic)
 *****************************************************************/
 void mr_menu::slot_build_path(int id)
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     extra_type_by_cause_iterate(EC_ROAD, pextra)
     {
       if (pextra->buildable && pextra->id == id
@@ -2796,7 +2773,6 @@ void mr_menu::slot_build_path(int id)
     }
     extra_type_by_cause_iterate_end;
   }
-  unit_list_iterate_end;
 }
 
 /****************************************************************
@@ -2804,8 +2780,7 @@ void mr_menu::slot_build_path(int id)
 *****************************************************************/
 void mr_menu::slot_build_base(int id)
 {
-  unit_list_iterate(get_units_in_focus(), punit)
-  {
+  for (const auto punit : get_units_in_focus()) {
     extra_type_by_cause_iterate(EC_BASE, pextra)
     {
       if (pextra->buildable && pextra->id == id
@@ -2815,7 +2790,6 @@ void mr_menu::slot_build_base(int id)
     }
     extra_type_by_cause_iterate_end;
   }
-  unit_list_iterate_end;
 }
 
 /**

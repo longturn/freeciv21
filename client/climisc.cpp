@@ -17,6 +17,7 @@
 ***********************************************************************/
 
 #include <QBitArray>
+#include <algorithm>
 #include <cstdarg>
 #include <cstdlib>
 #include <cstring>
@@ -1054,19 +1055,13 @@ void cityrep_buy(struct city *pcity)
 /**
    Returns TRUE if any of the units can do the connect activity.
  */
-bool can_units_do_connect(struct unit_list *punits,
+bool can_units_do_connect(const std::vector<unit *> &units,
                           enum unit_activity activity,
                           struct extra_type *tgt)
 {
-  unit_list_iterate(punits, punit)
-  {
-    if (can_unit_do_connect(punit, activity, tgt)) {
-      return true;
-    }
-  }
-  unit_list_iterate_end;
-
-  return false;
+  return std::any_of(units.begin(), units.end(), [&](const auto unit) {
+    return can_unit_do_connect(unit, activity, tgt);
+  });
 }
 
 /**

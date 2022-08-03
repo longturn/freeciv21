@@ -348,7 +348,6 @@ void update_turn_done_button_state()
 void update_line(int canvas_x, int canvas_y)
 {
   struct tile *ptile;
-  struct unit_list *punits;
 
   switch (hover_state) {
   case HOVER_GOTO:
@@ -360,11 +359,10 @@ void update_line(int canvas_x, int canvas_y)
     break;
   case HOVER_GOTO_SEL_TGT:
     ptile = canvas_pos_to_tile(canvas_x, canvas_y);
-    punits = get_units_in_focus();
     fc_assert_ret(ptile);
-    set_hover_state(punits, hover_state, connect_activity, connect_tgt,
-                    ptile->index, goto_last_sub_tgt, goto_last_action,
-                    goto_last_order);
+    set_hover_state(get_units_in_focus(), hover_state, connect_activity,
+                    connect_tgt, ptile->index, goto_last_sub_tgt,
+                    goto_last_action, goto_last_order);
     break;
   case HOVER_NONE:
   case HOVER_PARADROP:

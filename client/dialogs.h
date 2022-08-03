@@ -88,10 +88,11 @@ protected:
 ***************************************************************************/
 class disband_box : public hud_message_box {
   Q_OBJECT
-  struct unit_list *cpunits;
+  const std::vector<unit *> cpunits;
 
 public:
-  explicit disband_box(struct unit_list *punits, QWidget *parent = 0);
+  explicit disband_box(const std::vector<unit *> &punits,
+                       QWidget *parent = 0);
   ~disband_box() override;
 private slots:
   void disband_clicked();
@@ -219,7 +220,7 @@ private slots:
 
 void popup_revolution_dialog(struct government *government = nullptr);
 void revolution_response(struct government *government);
-void popup_upgrade_dialog(struct unit_list *punits);
-void popup_disband_dialog(struct unit_list *punits);
+void popup_upgrade_dialog(const std::vector<unit *> &punits);
+void popup_disband_dialog(const std::vector<unit *> &punits);
 bool try_default_unit_action(QVariant q1, QVariant q2);
 bool try_default_city_action(QVariant q1, QVariant q2);

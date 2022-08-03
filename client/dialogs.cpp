@@ -1554,12 +1554,7 @@ static void unit_upgrade(QVariant data1, QVariant data2)
 
   if ((punit = game_unit_by_number(actor_id))
       && nullptr != game_city_by_number(tgt_city_id)) {
-    struct unit_list *as_list;
-
-    as_list = unit_list_new();
-    unit_list_append(as_list, punit);
-    popup_upgrade_dialog(as_list);
-    unit_list_destroy(as_list);
+    popup_upgrade_dialog({punit});
   }
 }
 
@@ -3339,22 +3334,19 @@ void popup_pillage_dialog(struct unit *punit, bv_extras extras)
 /**
    Disband Message box contructor
  */
-disband_box::disband_box(struct unit_list *punits, QWidget *parent)
-    : hud_message_box(parent)
+disband_box::disband_box(const std::vector<unit *> &punits, QWidget *parent)
+    : hud_message_box(parent), cpunits(punits)
 {
   QString str;
   QPushButton *pb;
 
   setAttribute(Qt::WA_DeleteOnClose);
   setModal(false);
-  cpunits = unit_list_new();
-  unit_list_iterate(punits, punit) { unit_list_append(cpunits, punit); }
-  unit_list_iterate_end;
 
   str = QString(PL_("Are you sure you want to disband that %1 unit?",
                     "Are you sure you want to disband those %1 units?",
-                    unit_list_size(punits)))
-            .arg(unit_list_size(punits));
+                    punits.size()))
+            .arg(punits.size());
   pb = addButton(_("Yes"), QMessageBox::AcceptRole);
   addButton(_("No"), QMessageBox::RejectRole);
   set_text_title(str, _("Disband units"));
@@ -3368,24 +3360,22 @@ disband_box::disband_box(struct unit_list *punits, QWidget *parent)
  */
 void disband_box::disband_clicked()
 {
-  unit_list_iterate(cpunits, punit)
-  {
+  for (const auto punit : cpunits) {
     if (unit_can_do_action(punit, ACTION_DISBAND_UNIT)) {
       request_unit_disband(punit);
     }
   }
-  unit_list_iterate_end;
 }
 
 /**
    Destructor for disband box
  */
-disband_box::~disband_box() { unit_list_destroy(cpunits); }
+disband_box::~disband_box() = default;
 
 /**
    Pops up a dialog to confirm disband of the unit(s).
  */
-void popup_disband_dialog(struct unit_list *punits)
+void popup_disband_dialog(const std::vector<unit *> &punits)
 {
   disband_box *ask = new disband_box(punits, king()->central_wdg);
   ask->show();
@@ -3748,20 +3738,21 @@ void show_tech_gained_dialog(Tech_type_id tech) { Q_UNUSED(tech) }
 /**
    Popup dialog for upgrade units
  */
-void popup_upgrade_dialog(struct unit_list *punits)
+void popup_upgrade_dialog(const std::vector<unit *> &punits)
 {
   char buf[512];
   hud_message_box *ask = new hud_message_box(king()->central_wdg);
   QString title;
   QVector<int> *punit_ids;
 
-  if (!punits || unit_list_size(punits) == 0) {
+  if (punits.empty()) {
     return;
   }
 
   punit_ids = new QVector<int>();
-  unit_list_iterate(punits, punit) { punit_ids->push_back(punit->id); }
-  unit_list_iterate_end;
+  for (const auto punit : punits) {
+    punit_ids->push_back(punit->id);
+  }
 
   if (!get_units_upgrade_info(buf, sizeof(buf), punits)) {
     title = _("Upgrade Unit!");

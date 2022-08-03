@@ -656,9 +656,6 @@ void unit_list_item::create_menu()
 
   m_menu = new QMenu;
 
-  auto *units = unit_list_new();
-  unit_list_append(units, m_unit);
-
   auto *activate_and_close_action = new QAction(_("Activate unit"), this);
   connect(activate_and_close_action, &QAction::triggered, this,
           &unit_list_item::activate_and_close_dialog);
@@ -693,20 +690,20 @@ void unit_list_item::create_menu()
     m_menu->addAction(change_homecity_action);
   }
 
-  if (units_can_load(units)) {
+  if (units_can_load({m_unit})) {
     auto *load_action = new QAction(_("Load"), this);
     connect(load_action, &QAction::triggered, this, &unit_list_item::load);
     m_menu->addAction(load_action);
   }
 
-  if (units_can_unload(units)) {
+  if (units_can_unload({m_unit})) {
     auto *unload_action = new QAction(_("Unload"), this);
     connect(unload_action, &QAction::triggered, this,
             &unit_list_item::unload);
     m_menu->addAction(unload_action);
   }
 
-  if (units_are_occupied(units)) {
+  if (units_are_occupied({m_unit})) {
     auto *unload_all_action =
         new QAction(_("Unload All From Transporter"), this);
     connect(unload_all_action, &QAction::triggered, this,
@@ -714,14 +711,12 @@ void unit_list_item::create_menu()
     m_menu->addAction(unload_all_action);
   }
 
-  if (units_can_upgrade(units)) {
+  if (units_can_upgrade({m_unit})) {
     auto *upgrade_action = new QAction(_("Upgrade Unit"), this);
     connect(upgrade_action, &QAction::triggered, this,
             &unit_list_item::upgrade);
     m_menu->addAction(upgrade_action);
   }
-
-  unit_list_destroy(units);
 }
 
 /**
@@ -738,10 +733,7 @@ bool unit_list_item::can_issue_orders() const
 void unit_list_item::disband()
 {
   if (can_issue_orders()) {
-    auto *units = unit_list_new();
-    unit_list_append(units, m_unit);
-    popup_disband_dialog(units);
-    unit_list_destroy(units);
+    popup_disband_dialog({m_unit});
   }
 }
 
@@ -781,10 +773,7 @@ void unit_list_item::unload_all()
 void unit_list_item::upgrade()
 {
   if (can_issue_orders()) {
-    auto *units = unit_list_new();
-    unit_list_append(units, m_unit);
-    popup_upgrade_dialog(units);
-    unit_list_destroy(units);
+    popup_upgrade_dialog({m_unit});
   }
 }
 
