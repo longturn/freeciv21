@@ -17,6 +17,7 @@
 
 #include <cstdio>
 #include <cstring>
+#include <math.h>
 
 // utility
 #include "bitvector.h"
@@ -128,6 +129,8 @@ struct city_score_entry {
   int value;
 };
 
+static int get_total_score(const struct player *pplayer);
+static int get_league_score(const struct player *pplayer);
 static int get_population(const struct player *pplayer);
 static int get_landarea(const struct player *pplayer);
 static int get_settledarea(const struct player *pplayer);
@@ -157,6 +160,7 @@ static const char *culture_to_text(int value);
 static const char *citizenunits_to_text(int value);
 static const char *cities_to_text(int value);
 static const char *mil_units_to_text(int value);
+static const char *score_to_text(int value);
 
 #define GOOD_PLAYER(p) ((p)->is_alive && !is_barbarian(p))
 
@@ -170,6 +174,9 @@ static struct dem_row {
   const char *(*to_text)(int);
   bool greater_values_are_better;
 } rowtable[] = {
+    {'s', N_("Score"), get_total_score, score_to_text, true},
+    {'z', N_("League Score"), get_league_score, score_to_text,
+     true}, // z cuz inverted s. B)
     {'N', N_("Population"), get_population, population_to_text, true},
     {'n', N_("Population"), get_pop, citizenunits_to_text, true},
     {'c', N_("Cities"), get_cities, cities_to_text, true},
@@ -815,6 +822,21 @@ static int get_total_score(const struct player *pplayer)
 }
 
 /**
+  League score
+  Score = N_techs^1. 7 + N_units_built +
+  3xN_units_killedx[N_units_killed/(N_units_lost+1)]^0.5
+ */
+static int get_league_score(const struct player *pplayer)
+{
+  return (int) (pow((double) pplayer->score.techs, 1.7)
+                + pplayer->score.units_built
+                + (3 * pplayer->score.units_killed
+                   * pow((double) pplayer->score.units_killed
+                             / (pplayer->score.units_lost + 1),
+                         0.5)));
+}
+
+/**
    Culture score
  */
 static int get_culture(const struct player *pplayer)
@@ -938,6 +960,15 @@ static const char *mil_units_to_text(int value)
 static const char *cities_to_text(int value)
 {
   return value_units(value, PL_(" city", " cities", value));
+}
+
+/**
+  Construct string containing value followed by unit suitable for
+  score stats.
+ */
+static const char *score_to_text(int value)
+{
+  return value_units(value, PL_(" point", " points", value));
 }
 
 /**
