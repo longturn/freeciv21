@@ -129,14 +129,17 @@ struct city_score_entry {
   int value;
 };
 
+static int get_great_wonders(const struct player *pplayer);
 static int get_total_score(const struct player *pplayer);
 static int get_league_score(const struct player *pplayer);
 static int get_population(const struct player *pplayer);
 static int get_landarea(const struct player *pplayer);
 static int get_settledarea(const struct player *pplayer);
 static int get_research(const struct player *pplayer);
+static int get_income(const struct player *pplayer);
 static int get_production(const struct player *pplayer);
 static int get_economics(const struct player *pplayer);
+static int get_agriculture(const struct player *pplayer);
 static int get_pollution(const struct player *pplayer);
 static int get_mil_service(const struct player *pplayer);
 static int get_culture(const struct player *pplayer);
@@ -144,6 +147,8 @@ static int get_pop(
     const struct player
         *pplayer); /* this would better be named get_citizenunits or such */
 static int get_cities(const struct player *pplayer);
+static int get_improvements(const struct player *pplayer);
+static int get_all_wonders(const struct player *pplayer);
 static int get_mil_units(const struct player *pplayer);
 static int get_units_built(const struct player *pplayer);
 static int get_units_killed(const struct player *pplayer);
@@ -153,12 +158,16 @@ static const char *area_to_text(int value);
 static const char *percent_to_text(int value);
 static const char *production_to_text(int value);
 static const char *economics_to_text(int value);
+static const char *agriculture_to_text(int value);
 static const char *science_to_text(int value);
+static const char *income_to_text(int value);
 static const char *mil_service_to_text(int value);
 static const char *pollution_to_text(int value);
 static const char *culture_to_text(int value);
 static const char *citizenunits_to_text(int value);
 static const char *cities_to_text(int value);
+static const char *improvements_to_text(int value);
+static const char *wonders_to_text(int value);
 static const char *mil_units_to_text(int value);
 static const char *score_to_text(int value);
 
@@ -180,13 +189,17 @@ static struct dem_row {
     {'N', N_("Population"), get_population, population_to_text, true},
     {'n', N_("Population"), get_pop, citizenunits_to_text, true},
     {'c', N_("Cities"), get_cities, cities_to_text, true},
+    {'i', N_("Improvements"), get_improvements, improvements_to_text, true},
+    {'w', N_("Wonders"), get_all_wonders, wonders_to_text, true},
     {'A', N_("Land Area"), get_landarea, area_to_text, true},
     {'S', N_("Settled Area"), get_settledarea, area_to_text, true},
-    {'R', N_("Research Speed"), get_research, science_to_text, true},
     // TRANS: How literate people are.
     {'L', N_("?ability:Literacy"), get_literacy, percent_to_text, true},
+    {'a', N_("Agriculture"), get_agriculture, agriculture_to_text, true},
     {'P', N_("Production"), get_production, production_to_text, true},
     {'E', N_("Economics"), get_economics, economics_to_text, true},
+    {'g', N_("Gold Income"), get_income, income_to_text, true},
+    {'R', N_("Research Speed"), get_research, science_to_text, true},
     {'M', N_("Military Service"), get_mil_service, mil_service_to_text,
      false},
     {'m', N_("Military Units"), get_mil_units, mil_units_to_text, true},
@@ -550,6 +563,14 @@ static int get_research(const struct player *pplayer)
 }
 
 /**
+  Gold income
+ */
+static int get_income(const struct player *pplayer)
+{
+  return pplayer->score.goldout;
+}
+
+/**
    Production of player
  */
 static int get_production(const struct player *pplayer)
@@ -563,6 +584,14 @@ static int get_production(const struct player *pplayer)
 static int get_economics(const struct player *pplayer)
 {
   return pplayer->score.bnp;
+}
+
+/**
+  Food output
+ */
+static int get_agriculture(const struct player *pplayer)
+{
+  return pplayer->score.food;
 }
 
 /**
@@ -595,6 +624,22 @@ static int get_mil_units(const struct player *pplayer)
 static int get_cities(const struct player *pplayer)
 {
   return pplayer->score.cities;
+}
+
+/**
+  Number of buildings in cities (not wonders)
+ */
+static int get_improvements(const struct player *pplayer)
+{
+  return pplayer->score.improvements;
+}
+
+/**
+  All wonders, including small wonders
+ */
+static int get_all_wonders(const struct player *pplayer)
+{
+  return pplayer->score.all_wonders;
 }
 
 /**
@@ -646,9 +691,9 @@ static int get_settlers(const struct player *pplayer)
 }
 
 /**
-   Wonder score
+   Great wonders for wonder score
  */
-static int get_wonders(const struct player *pplayer)
+static int get_great_wonders(const struct player *pplayer)
 {
   return pplayer->score.wonders;
 }
@@ -899,12 +944,33 @@ static const char *economics_to_text(int value)
 }
 
 /**
+  Construct string containing value followed by unit suitable for
+  agriculture stats.
+ */
+static const char *agriculture_to_text(int value)
+{
+  /* TRANS: "M bushels" = million bushels, so always plural */
+  // FIXME: value can go negative for food
+
+  return value_units(value, PL_(" M bushels", " M bushels", value));
+}
+
+/**
    Construct string containing value followed by unit suitable for
    science stats.
  */
 static const char *science_to_text(int value)
 {
   return value_units(value, PL_(" bulb", " bulbs", value));
+}
+
+/**
+Construct string containing value followed by unit suitable for
+gold income stats.
+ */
+static const char *income_to_text(int value)
+{
+  return value_units(value, PL_(" gold", " gold", value));
 }
 
 /**
@@ -941,7 +1007,7 @@ static const char *culture_to_text(int value)
  */
 static const char *citizenunits_to_text(int value)
 {
-  return value_units(value, PL_(" citizen unit", " citizen units", value));
+  return value_units(value, PL_(" citizen", " citizens", value));
 }
 
 /**
@@ -969,6 +1035,24 @@ static const char *cities_to_text(int value)
 static const char *score_to_text(int value)
 {
   return value_units(value, PL_(" point", " points", value));
+}
+
+/**
+  Construct string containing value followed by unit suitable for
+  improvement stats.
+ */
+static const char *improvements_to_text(int value)
+{
+  return value_units(value, PL_(" improvement", " improvements", value));
+}
+
+/**
+  Construct string containing value followed by unit suitable for
+  wonders stats.
+ */
+static const char *wonders_to_text(int value)
+{
+  return value_units(value, PL_(" wonder", " wonders", value));
 }
 
 /**
@@ -1440,7 +1524,7 @@ void log_civ_score_now()
       {"munits", get_munits},
       {"settlers", get_settlers}, // "original" tags end here
 
-      {"wonders", get_wonders},
+      {"wonders", get_great_wonders},
       {"techout", get_techout},
       {"landarea", get_landarea},
       {"settledarea", get_settledarea},
@@ -1670,7 +1754,7 @@ void report_final_scores(struct conn_list *dest)
       {N_("Cities\n"), get_cities},
       {N_("Technologies\n"), get_techs},
       {N_("Military Service\n(months)"), get_mil_service},
-      {N_("Wonders\n"), get_wonders},
+      {N_("Wonders\n"), get_great_wonders},
       {N_("Research Speed\n(bulbs)"), get_research},
       // TRANS: "sq. mi." is abbreviation for "square miles"
       {N_("Land Area\n(sq. mi.)"), get_landarea},

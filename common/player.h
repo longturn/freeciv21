@@ -81,15 +81,19 @@ struct player_score {
   int wonders;
   int techs;
   int techout;
+  int goldout;
   int landarea;
   int settledarea;
   int population; // in thousand of citizen
   int cities;
+  int improvements;
+  int all_wonders;
   int units;
   int pollution;
   int literacy;
   int bnp;
   int mfg;
+  int food;
   int spaceship;
   int units_built;  // Number of units this player produced.
   int units_killed; // Number of enemy units killed.
