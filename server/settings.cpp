@@ -2816,6 +2816,8 @@ static struct setting settings[] = {
            "the inclusion of a line of information in the Demographics "
            "report.\n"
            "The characters and their meanings are:\n"
+           "    s = include Score\n"
+           "    z = include League Score\n"
            "    N = include Population\n"
            "    n = include Population in Citizen Units\n"
            "    c = include Cities\n"
