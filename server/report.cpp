@@ -142,6 +142,9 @@ static int get_pop(
         *pplayer); /* this would better be named get_citizenunits or such */
 static int get_cities(const struct player *pplayer);
 static int get_mil_units(const struct player *pplayer);
+static int get_units_built(const struct player *pplayer);
+static int get_units_killed(const struct player *pplayer);
+static int get_units_lost(const struct player *pplayer);
 
 static const char *area_to_text(int value);
 static const char *percent_to_text(int value);
@@ -180,7 +183,10 @@ static struct dem_row {
     {'M', N_("Military Service"), get_mil_service, mil_service_to_text,
      false},
     {'m', N_("Military Units"), get_mil_units, mil_units_to_text, true},
-    {'O', N_("Pollution"), get_pollution, pollution_to_text, false},
+    {'u', N_("Built Units"), get_units_built, mil_units_to_text, true},
+    {'k', N_("Killed Units"), get_units_killed, mil_units_to_text, true},
+    {'l', N_("Lost Units"), get_units_lost, mil_units_to_text, true},
+    {'O', N_("Pollution"), get_pollution, pollution_to_text, true},
     {'C', N_("Culture"), get_culture, culture_to_text, true}};
 
 // Demographics columns.
