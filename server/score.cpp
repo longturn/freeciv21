@@ -268,14 +268,18 @@ void calc_civ_score(struct player *pplayer)
   pplayer->score.wonders = 0;
   pplayer->score.techs = 0;
   pplayer->score.techout = 0;
+  pplayer->score.goldout = 0;
   pplayer->score.landarea = 0;
   pplayer->score.settledarea = 0;
   pplayer->score.population = 0;
   pplayer->score.cities = 0;
+  pplayer->score.improvements = 0;
+  pplayer->score.all_wonders = 0;
   pplayer->score.units = 0;
   pplayer->score.pollution = 0;
   pplayer->score.bnp = 0;
   pplayer->score.mfg = 0;
+  pplayer->score.food = 0;
   pplayer->score.literacy = 0;
   pplayer->score.spaceship = 0;
   pplayer->score.culture = player_culture(pplayer);
@@ -301,8 +305,22 @@ void calc_civ_score(struct player *pplayer)
     pplayer->score.cities++;
     pplayer->score.pollution += pcity->pollution;
     pplayer->score.techout += pcity->prod[O_SCIENCE];
+    /* XXX: BEFORE upkeep paid (consider gold_upkeep_style) */
+    pplayer->score.goldout += pcity->prod[O_GOLD];
     pplayer->score.bnp += pcity->surplus[O_TRADE];
-    pplayer->score.mfg += pcity->surplus[O_SHIELD];
+    pplayer->score.mfg += pcity->surplus[O_SHIELD]; /* after upkeep paid */
+    pplayer->score.food += pcity->surplus[O_FOOD];  /* after upkeep paid */
+
+    city_built_iterate(pcity, impr)
+    {
+      /* Great wonders are also counted separately */
+      if (is_improvement(impr)) {
+        pplayer->score.improvements++;
+      } else if (is_wonder(impr)) {
+        pplayer->score.all_wonders++;
+      }
+    }
+    city_built_iterate_end;
 
     bonus = get_final_city_output_bonus(pcity, O_SCIENCE) - 100;
     bonus = CLIP(0, bonus, 100);
