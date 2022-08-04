@@ -32,13 +32,6 @@ Click :guilabel:`Next` to continue...
     :height: 400
     :alt: Welcome Panel
 
-Check the box to accept the GNU 3.0 License and then click :guilabel:`Next` to continue...
-
-.. image:: ../_static/images/windows-installer/02-License.png
-    :align: center
-    :height: 400
-    :alt: GNU License Acceptenace Panel
-
 By default, the installer only installs the client, server and modpack installer. If you want other
 utilities, you will need to pick them from the list. Click :guilabel:`Next` to continue...
 
@@ -94,13 +87,6 @@ Click :guilabel:`Next` to continue...
     :align: center
     :height: 400
     :alt: Welcome Panel
-
-Check the box to accept the GNU 3.0 License and then click :guilabel:`Next` to continue...
-
-.. image:: ../_static/images/windows-installer/02-License.png
-    :align: center
-    :height: 400
-    :alt: GNU License Acceptenace Panel
 
 By default, the installer only installs the client, server and modpack installer. If you want other
 utilities, you will need to pick them from the list. Click :guilabel:`Next` to continue...
