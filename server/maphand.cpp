@@ -618,15 +618,6 @@ void send_tile_info(struct conn_list *dest, struct tile *ptile,
 }
 
 /**
-   Assumption: Each unit type is visible on only one layer.
- */
-static bool unit_is_visible_on_layer(const struct unit *punit,
-                                     enum vision_layer vlayer)
-{
-  return vlayer == unit_type_get(punit)->vlayer;
-}
-
-/**
    Send basic map information: map size, topology, and is_earth.
  */
 void send_map_info(struct conn_list *dest)
@@ -793,7 +784,7 @@ void map_show_tile(struct player *src_player, struct tile *ptile)
           if (0 < map_get_seen(pplayer, ptile, v)) {
             unit_list_iterate(ptile->units, punit)
             {
-              if (unit_is_visible_on_layer(punit, v)) {
+              if (v == unit_type_get(punit)->vlayer) {
                 send_unit_info(pplayer->connections, punit);
               }
             }
@@ -840,7 +831,7 @@ void map_hide_tile(struct player *src_player, struct tile *ptile)
           if (0 < map_get_seen(pplayer, ptile, v)) {
             unit_list_iterate(ptile->units, punit)
             {
-              if (unit_is_visible_on_layer(punit, v)) {
+              if (v == unit_type_get(punit)->vlayer) {
                 unit_goes_out_of_sight(pplayer, punit);
               }
             }
@@ -961,7 +952,7 @@ void map_change_seen(struct player *pplayer, struct tile *ptile,
 
     unit_list_iterate(ptile->units, punit)
     {
-      if (unit_is_visible_on_layer(punit, V_INVIS)
+      if (V_INVIS == unit_type_get(punit)->vlayer
           && can_player_see_unit(pplayer, punit)) {
         unit_goes_out_of_sight(pplayer, punit);
       }
@@ -975,7 +966,7 @@ void map_change_seen(struct player *pplayer, struct tile *ptile,
 
     unit_list_iterate(ptile->units, punit)
     {
-      if (unit_is_visible_on_layer(punit, V_SUBSURFACE)
+      if (V_SUBSURFACE == unit_type_get(punit)->vlayer
           && can_player_see_unit(pplayer, punit)) {
         unit_goes_out_of_sight(pplayer, punit);
       }
@@ -989,7 +980,7 @@ void map_change_seen(struct player *pplayer, struct tile *ptile,
 
     unit_list_iterate(ptile->units, punit)
     {
-      if (unit_is_visible_on_layer(punit, V_MAIN)
+      if (V_MAIN == unit_type_get(punit)->vlayer
           && can_player_see_unit(pplayer, punit)) {
         unit_goes_out_of_sight(pplayer, punit);
       }
@@ -1062,7 +1053,7 @@ void map_change_seen(struct player *pplayer, struct tile *ptile,
     // Discover units.
     unit_list_iterate(ptile->units, punit)
     {
-      if (unit_is_visible_on_layer(punit, V_MAIN)) {
+      if (V_MAIN == unit_type_get(punit)->vlayer) {
         send_unit_info(pplayer->connections, punit);
       }
     }
@@ -1084,7 +1075,7 @@ void map_change_seen(struct player *pplayer, struct tile *ptile,
     // Discover units.
     unit_list_iterate(ptile->units, punit)
     {
-      if (unit_is_visible_on_layer(punit, V_INVIS)) {
+      if (V_INVIS == unit_type_get(punit)->vlayer) {
         send_unit_info(pplayer->connections, punit);
       }
     }
@@ -1098,7 +1089,7 @@ void map_change_seen(struct player *pplayer, struct tile *ptile,
     // Discover units.
     unit_list_iterate(ptile->units, punit)
     {
-      if (unit_is_visible_on_layer(punit, V_SUBSURFACE)) {
+      if (V_SUBSURFACE == unit_type_get(punit)->vlayer) {
         send_unit_info(pplayer->connections, punit);
       }
     }
