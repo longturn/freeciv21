@@ -3390,11 +3390,13 @@ static void wakeup_neighbor_sentries(struct unit *punit)
           && can_unit_exist_at_tile(&(wld.map), penemy, unit_tile(penemy))) {
         set_unit_activity(penemy, ACTIVITY_IDLE);
         send_unit_info(nullptr, penemy);
-        notify_player(unit_owner(penemy), unit_tile(punit), E_UNIT_ORDERS,
-                      ftc_server, _("Sentried %s saw %s %s moving at %s"),
-                      unit_tile_link(penemy),
-                      nation_rule_name(nation_of_unit(punit)),
-                      unit_link(punit), tile_link(punit->tile));
+        notify_player(
+            unit_owner(penemy), unit_tile(punit), E_UNIT_ORDERS, ftc_server,
+            _("Your sentried %s spotted  a %s v%d %s [id:%d hp:%d] at %s "),
+            unit_link(penemy),
+            nation_adjective_for_player(unit_owner(punit)), punit->veteran,
+            unit_name_translation(punit), punit->id, punit->hp,
+            tile_link(punit->tile));
       }
     }
     unit_list_iterate_end;
