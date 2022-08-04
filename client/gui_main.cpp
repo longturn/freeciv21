@@ -8,7 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#include "mapview_common.h"
+// Keep this first. In particular before any Qt include.
 #ifdef AUDIO_SDL
 #include <SDL2/SDL.h>
 #endif // AUDIO_SDL
@@ -21,6 +21,7 @@
 // client
 #include "client_main.h"
 #include "clinet.h"
+#include "mapview_common.h"
 #include "mapview_g.h"
 #include "options.h"
 #include "sprite.h"
