@@ -411,6 +411,7 @@ government::government()
   requirement_vector_init(&reqs);
   changed_to_times = 0;
   ruledit_disabled = false;
+  ai.better = nullptr;
 }
 
 /**
