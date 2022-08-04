@@ -485,7 +485,7 @@ nation_type::nation_type()
     server.civilwar_nations = nation_list_new();
     server.parent_nations = nation_list_new();
     server.conflicts_with = nation_list_new();
-    // server.rgb starts out nullptr
+    server.rgb = nullptr;
     server.traits = new trait_limits[TRAIT_COUNT];
   } else {
     client.is_pickable = true;
