@@ -1323,7 +1323,8 @@ struct unit *unit_occupies_tile(const struct tile *ptile,
       continue;
     }
 
-    if (uclass_has_flag(unit_class_get(punit), UCF_DOESNT_OCCUPY_TILE)) {
+    if (uclass_has_flag(unit_class_get(punit), UCF_DOESNT_OCCUPY_TILE)
+        || unit_type_get(punit)->vlayer != V_MAIN) {
       continue;
     }
 
