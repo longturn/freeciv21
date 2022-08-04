@@ -22,7 +22,7 @@
   !define VERSION "@CPACK_PACKAGE_VERSION@"
   !define PATCH "@CPACK_PACKAGE_VERSION_PATCH@"
   !define CPU_ARCH "@CPACK_CPU_ARCH@"
-  !define APPID "${APPNAME}-${VERSION}-${CPU_ARCH}"
+  !define APPID "${APPNAME}-${CPU_ARCH}"
   !define INST_DIR "@CPACK_TEMPORARY_DIRECTORY@"
   !define DISPLAYICON "@CPACK_NSIS_INSTALLED_ICON_NAME@"
   !define REGPATH_UNINSTSUBKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPID}"
@@ -37,7 +37,7 @@
   !define MULTIUSER_MUI
   !define MULTIUSER_INSTALLMODE_COMMANDLINE
   !define MULTIUSER_INSTALLMODEPAGE_TEXT_TOP "Select the type of installation you want to perform:"
-  !define MULTIUSER_INSTALLMODE_INSTDIR "${APPNAME}-${VERSION}"
+  !define MULTIUSER_INSTALLMODE_INSTDIR "${APPNAME}"
 
 ;#########################################################
 ; Includes
@@ -134,7 +134,7 @@
 
   ; Installer Pages
   !insertmacro MUI_PAGE_WELCOME
-  !insertmacro MUI_PAGE_LICENSE "@CPACK_RESOURCE_FILE_LICENSE@"
+  ;!insertmacro MUI_PAGE_LICENSE "@CPACK_RESOURCE_FILE_LICENSE@"
   !insertmacro MUI_PAGE_COMPONENTS
   !insertmacro MULTIUSER_PAGE_INSTALLMODE
   !insertmacro MUI_PAGE_DIRECTORY
@@ -192,7 +192,7 @@
   FunctionEnd
 
   Function RunFreeciv21
-    ExecShell "" "$SMPROGRAMS\${APPNAME} v${VERSION}\${APPNAME} Client.lnk"
+    ExecShell "" "$SMPROGRAMS\${APPNAME}\${APPNAME} Client.lnk"
   FunctionEnd
 
 ;#########################################################
@@ -204,7 +204,7 @@
     SetOutPath "$INSTDIR"
 
     ; Store installation folder.
-    WriteRegStr "SHCTX" "SOFTWARE\${APPNAME}\${VERSION}\${CPU_ARCH}" "" "$INSTDIR"
+    WriteRegStr "SHCTX" "SOFTWARE\${APPNAME}\${CPU_ARCH}" "" "$INSTDIR"
 
     ; Create uninstaller.
     WriteUninstaller "$INSTDIR\Uninstall.exe"
@@ -214,13 +214,13 @@
     CreateShortCut "$DESKTOP\${APPNAME} Client.lnk" "$INSTDIR\freeciv21-client.exe" "" "$INSTDIR\client.ico" 0
 
     ; Create Start Menu Entries
-    CreateDirectory "$SMPROGRAMS\${APPNAME} v${VERSION}"
-    CreateShortCut "$SMPROGRAMS\${APPNAME} v${VERSION}\${APPNAME} Client.lnk" "$INSTDIR\freeciv21-client.exe" "" "$INSTDIR\client.ico" 0
-    CreateShortCut "$SMPROGRAMS\${APPNAME} v${VERSION}\${APPNAME} Modpack Installer.lnk" "$INSTDIR\freeciv21-modpack-qt.exe" "" "$INSTDIR\mp.ico" 0
+    CreateDirectory "$SMPROGRAMS\${APPNAME}"
+    CreateShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME} Client.lnk" "$INSTDIR\freeciv21-client.exe" "" "$INSTDIR\client.ico" 0
+    CreateShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME} Modpack Installer.lnk" "$INSTDIR\freeciv21-modpack-qt.exe" "" "$INSTDIR\mp.ico" 0
 
     ; Create entry in Windows "Add/Remove programs" panel.
     Push "DisplayName"
-    Push "${APPNAME} v${VERSION}"
+    Push "${APPNAME}"
     Call ConditionalAddToRegisty
     Push "DisplayVersion"
     Push "${VERSION}"
@@ -267,8 +267,8 @@
 
     ; Remove shortcuts
     Delete "$DESKTOP\${APPNAME} Client.lnk"
-    Delete "$SMPROGRAMS\${APPNAME} v${VERSION}\*.*"
-    RMDir "$SMPROGRAMS\${APPNAME} v${VERSION}"
+    Delete "$SMPROGRAMS\${APPNAME}\*.*"
+    RMDir "$SMPROGRAMS\${APPNAME}"
 
     ; Remove rest of installed files.
     ; Custom files are left intact.
