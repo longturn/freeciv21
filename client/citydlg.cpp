@@ -23,6 +23,7 @@
 #include <QVBoxLayout>
 #include <QWidgetAction>
 // utility
+#include "fc_types.h"
 #include "fcintl.h"
 #include "support.h"
 // common
@@ -1000,8 +1001,8 @@ city_info::city_info(QWidget *parent) : QWidget(parent)
 void city_info::update_labels(struct city *pcity, cityIconInfoLabel *ciil)
 {
   int illness = 0;
-  char buffer[512];
-  char buf[2 * m_labels.size()][512];
+  QString buffer;
+  QString buf[2 * m_labels.size()];
   int granaryturns;
 
   enum {
@@ -1023,86 +1024,70 @@ void city_info::update_labels(struct city *pcity, cityIconInfoLabel *ciil)
   };
 
   // fill the buffers with the necessary info
-  fc_snprintf(buf[FOOD], sizeof(buf[FOOD]), "%3d (%+4d)",
-              pcity->prod[O_FOOD], pcity->surplus[O_FOOD]);
-  fc_snprintf(buf[SHIELD], sizeof(buf[SHIELD]), "%3d (%+4d)",
-              pcity->prod[O_SHIELD] + pcity->waste[O_SHIELD],
-              pcity->surplus[O_SHIELD]);
-  fc_snprintf(buf[TRADE], sizeof(buf[TRADE]), "%3d (%+4d)",
-              pcity->surplus[O_TRADE] + pcity->waste[O_TRADE],
-              pcity->surplus[O_TRADE]);
-  fc_snprintf(buf[GOLD], sizeof(buf[GOLD]), "%3d (%+4d)",
-              pcity->prod[O_GOLD], pcity->surplus[O_GOLD]);
-  fc_snprintf(buf[LUXURY], sizeof(buf[LUXURY]), "%3d",
-              pcity->prod[O_LUXURY]);
-  fc_snprintf(buf[SCIENCE], sizeof(buf[SCIENCE]), "%3d",
-              pcity->prod[O_SCIENCE]);
-  fc_snprintf(buf[GRANARY], sizeof(buf[GRANARY]), "%4d/%-4d",
-              pcity->food_stock, city_granary_size(city_size_get(pcity)));
+  buf[FOOD] = QString::asprintf("%3d (%+4d)", pcity->prod[O_FOOD],
+                                pcity->surplus[O_FOOD]);
+  buf[SHIELD] = QString::asprintf("%3d (%+4d)", pcity->prod[O_SHIELD],
+                                  pcity->surplus[O_SHIELD]);
+  buf[TRADE] = QString::asprintf("%3d (%+4d)", pcity->prod[O_TRADE],
+                                 pcity->surplus[O_TRADE]);
+  buf[GOLD] = QString::asprintf("%3d (%+4d)", pcity->prod[O_GOLD],
+                                pcity->surplus[O_GOLD]);
+  buf[LUXURY] = QString::asprintf("%3d (%+4d)", pcity->prod[O_LUXURY],
+                                  pcity->surplus[O_LUXURY]);
+  buf[SCIENCE] = QString::asprintf("%3d (%+4d)", pcity->prod[O_SCIENCE],
+                                   pcity->surplus[O_SCIENCE]);
+  buf[GRANARY] = QString::asprintf("%4d/%-4d", pcity->food_stock,
+                                   city_granary_size(city_size_get(pcity)));
 
-  get_city_dialog_output_text(pcity, O_FOOD, buf[FOOD + 1],
-                              sizeof(buf[FOOD + 1]));
-  get_city_dialog_output_text(pcity, O_SHIELD, buf[SHIELD + 1],
-                              sizeof(buf[SHIELD + 1]));
-  get_city_dialog_output_text(pcity, O_TRADE, buf[TRADE + 1],
-                              sizeof(buf[TRADE + 1]));
-  get_city_dialog_output_text(pcity, O_GOLD, buf[GOLD + 1],
-                              sizeof(buf[GOLD + 1]));
-  get_city_dialog_output_text(pcity, O_SCIENCE, buf[SCIENCE + 1],
-                              sizeof(buf[SCIENCE + 1]));
-  get_city_dialog_output_text(pcity, O_LUXURY, buf[LUXURY + 1],
-                              sizeof(buf[LUXURY + 1]));
-  get_city_dialog_culture_text(pcity, buf[CULTURE + 1],
-                               sizeof(buf[CULTURE + 1]));
-  get_city_dialog_pollution_text(pcity, buf[POLLUTION + 1],
-                                 sizeof(buf[POLLUTION + 1]));
-  get_city_dialog_illness_text(pcity, buf[ILLNESS + 1],
-                               sizeof(buf[ILLNESS + 1]));
+  buf[FOOD + 1] = get_city_dialog_output_text(pcity, O_FOOD);
+  buf[SHIELD + 1] = get_city_dialog_output_text(pcity, O_SHIELD);
+  buf[TRADE + 1] = get_city_dialog_output_text(pcity, O_TRADE);
+  buf[GOLD + 1] = get_city_dialog_output_text(pcity, O_GOLD);
+  buf[SCIENCE + 1] = get_city_dialog_output_text(pcity, O_SCIENCE);
+  buf[LUXURY + 1] = get_city_dialog_output_text(pcity, O_LUXURY);
+  buf[CULTURE + 1] = get_city_dialog_culture_text(pcity);
+  buf[POLLUTION + 1] = get_city_dialog_pollution_text(pcity);
+  buf[ILLNESS + 1] = get_city_dialog_illness_text(pcity);
 
   granaryturns = city_turns_to_grow(pcity);
 
   if (granaryturns == 0) {
     // TRANS: city growth is blocked.  Keep short.
-    fc_snprintf(buf[GROWTH], sizeof(buf[GROWTH]), _("blocked"));
+    buf[GROWTH] = _("blocked");
   } else if (granaryturns == FC_INFINITY) {
     // TRANS: city is not growing.  Keep short.
-    fc_snprintf(buf[GROWTH], sizeof(buf[GROWTH]), _("never"));
+    buf[GROWTH] = _("never");
   } else {
     /* A negative value means we'll have famine in that many turns.
        But that's handled down below. */
     // TRANS: city growth turns.  Keep short.
-    fc_snprintf(buf[GROWTH], sizeof(buf[GROWTH]),
-                PL_("%d turn", "%d turns", abs(granaryturns)),
-                abs(granaryturns));
+    buf[GROWTH] = QString::asprintf(
+        PL_("%d turn", "%d turns", abs(granaryturns)), abs(granaryturns));
   }
 
-  fc_snprintf(buf[CORRUPTION], sizeof(buf[CORRUPTION]), "%4d",
-              pcity->waste[O_TRADE]);
-  fc_snprintf(buf[WASTE], sizeof(buf[WASTE]), "%4d", pcity->waste[O_SHIELD]);
-  fc_snprintf(buf[CULTURE], sizeof(buf[CULTURE]), "%4d",
-              pcity->client.culture);
-  fc_snprintf(buf[POLLUTION], sizeof(buf[POLLUTION]), "%4d",
-              pcity->pollution);
+  buf[CORRUPTION] = QString::asprintf("%4d", pcity->waste[O_TRADE]);
+  buf[WASTE] = QString::asprintf("%4d", pcity->waste[O_SHIELD]);
+  buf[CULTURE] = QString::asprintf("%4d", pcity->client.culture);
+  buf[POLLUTION] = QString::asprintf("%4d", pcity->pollution);
 
   if (!game.info.illness_on) {
-    fc_snprintf(buf[ILLNESS], sizeof(buf[ILLNESS]), " -.-");
+    buf[ILLNESS] = QStringLiteral(" -.-");
   } else {
     illness = city_illness_calc(pcity, nullptr, nullptr, nullptr, nullptr);
     // illness is in tenth of percent
-    fc_snprintf(buf[ILLNESS], sizeof(buf[ILLNESS]), "%4.1f%%",
-                static_cast<float>(illness) / 10.0);
+    buf[ILLNESS] =
+        QString::asprintf("%4.1f%%", static_cast<float>(illness) / 10.0);
   }
   if (pcity->steal) {
-    fc_snprintf(buf[STEAL], sizeof(buf[STEAL]), _("%d times"), pcity->steal);
+    buf[STEAL] = QString::asprintf(_("%d times"), pcity->steal);
   } else {
-    fc_snprintf(buf[STEAL], sizeof(buf[STEAL]), _("Not stolen"));
+    buf[STEAL] = QString::asprintf(_("Not stolen"));
   }
 
-  get_city_dialog_airlift_value(pcity, buf[AIRLIFT], sizeof(buf[AIRLIFT]));
-  get_city_dialog_airlift_text(pcity, buf[AIRLIFT + 1],
-                               sizeof(buf[AIRLIFT + 1]));
+  buf[AIRLIFT] = get_city_dialog_airlift_value(pcity);
+  buf[AIRLIFT + 1] = get_city_dialog_airlift_text(pcity);
 
-  get_city_dialog_output_text(pcity, O_FOOD, buffer, sizeof(buffer));
+  buffer = get_city_dialog_output_text(pcity, O_FOOD);
 
   for (int i = 0; i < m_labels.size(); i++) {
     int j = 2 * i;
