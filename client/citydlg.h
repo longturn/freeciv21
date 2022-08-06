@@ -73,14 +73,29 @@ public:
   void set_show_upkeep(bool show) { m_show_upkeep = show; }
 
   void set_units(unit_list *units);
+  std::vector<unit *> selected_playable_units() const;
 
-private slots:
-  void context_menu(const QPoint &loc);
+private:
+  void disband();
+  void change_homecity();
+  void activate();
+  void sentry();
+  void fortify();
+  void upgrade();
+  void load();
+  void unload();
+  void unload_all();
+
+  void selectionChanged(const QItemSelection &selected,
+                        const QItemSelection &deselected) override;
   QPixmap create_unit_image(const unit *punit);
 
 private:
   bool m_oneliner = false;
   bool m_show_upkeep = false;
+
+  QAction *m_activate, *m_sentry, *m_fortify, *m_disband, *m_change_homecity,
+      *m_load, *m_unload, *m_unload_all, *m_upgrade;
 };
 
 #define NUM_INFO_FIELDS 15
@@ -124,27 +139,13 @@ class unit_list_item : public QObject, public QListWidgetItem {
   Q_OBJECT
 
 public:
-  unit_list_item(unit *punit);
+  unit_list_item(::unit *punit);
 
-  bool can_issue_orders() const;
-  QMenu *menu() { return m_menu; }
-
-  // Will hopefully become slots in unit class one day
-  void disband();
-  void change_homecity();
-  void activate_and_close_dialog();
-  void sentry();
-  void fortify();
-  void upgrade();
-  void load();
-  void unload();
-  void unload_all();
+  /// Retrieves the unit represented by this item.
+  auto unit() const { return m_unit; }
 
 private:
-  void create_menu();
-
-  QMenu *m_menu = nullptr;
-  struct unit *m_unit;
+  ::unit *m_unit;
 };
 
 /****************************************************************************

@@ -53,6 +53,7 @@
 #include "text.h"
 #include "tooltips.h"
 #include "top_bar.h"
+#include "unitlist.h"
 
 extern QString split_text(const QString &text, bool cut);
 extern QString cut_helptext(const QString &text);
@@ -67,9 +68,50 @@ unit_list_widget::unit_list_widget(QWidget *parent) : QListWidget(parent)
   setWrapping(true);
   setMovement(QListView::Static);
 
-  setContextMenuPolicy(Qt::CustomContextMenu);
-  connect(this, &QWidget::customContextMenuRequested, this,
-          &unit_list_widget::context_menu);
+  connect(this, &QListWidget::itemDoubleClicked, this,
+          &unit_list_widget::activate);
+
+  // Create the context menu
+  setContextMenuPolicy(Qt::ActionsContextMenu);
+
+  m_activate = new QAction(_("Activate unit"), this);
+  connect(m_activate, &QAction::triggered, this,
+          &unit_list_widget::activate);
+  addAction(m_activate);
+
+  m_sentry = new QAction(_("Sentry unit"), this);
+  connect(m_sentry, &QAction::triggered, this, &unit_list_widget::sentry);
+  addAction(m_sentry);
+
+  m_fortify = new QAction(_("Fortify unit"), this);
+  connect(m_fortify, &QAction::triggered, this, &unit_list_widget::fortify);
+  addAction(m_fortify);
+
+  m_disband = new QAction(_("Disband unit"), this);
+  connect(m_disband, &QAction::triggered, this, &unit_list_widget::disband);
+  addAction(m_disband);
+
+  m_change_homecity = new QAction(_("Set homecity"), this);
+  connect(m_change_homecity, &QAction::triggered, this,
+          &unit_list_widget::change_homecity);
+  addAction(m_change_homecity);
+
+  m_load = new QAction(_("Load"), this);
+  connect(m_load, &QAction::triggered, this, &unit_list_widget::load);
+  addAction(m_load);
+
+  m_unload = new QAction(_("Unload"), this);
+  connect(m_unload, &QAction::triggered, this, &unit_list_widget::unload);
+  addAction(m_unload);
+
+  m_unload_all = new QAction(_("Unload Transporter"), this);
+  connect(m_unload_all, &QAction::triggered, this,
+          &unit_list_widget::unload_all);
+  addAction(m_unload_all);
+
+  m_upgrade = new QAction(_("Upgrade Unit"), this);
+  connect(m_upgrade, &QAction::triggered, this, &unit_list_widget::upgrade);
+  addAction(m_upgrade);
 }
 
 /**
@@ -116,19 +158,148 @@ void unit_list_widget::set_units(unit_list *units)
 }
 
 /**
- * Pops up the context menu when an item is clicked.
+ * Finds the list of currently selected units
  */
-void unit_list_widget::context_menu(const QPoint &loc)
+std::vector<unit *> unit_list_widget::selected_playable_units() const
 {
-  auto *item = itemAt(loc);
-  // Maybe there was no unit under the mouse
-  if (auto *unit_item = dynamic_cast<unit_list_item *>(item)) {
-    // Maybe we can't give orders to this unit
-    if (auto *menu = unit_item->menu()) {
-      // OK, show the menu
-      menu->popup(mapToGlobal(loc));
+  if (!can_client_issue_orders()) {
+    return {};
+  }
+
+  auto units = std::vector<unit *>();
+  for (const auto item : selectedItems()) {
+    if (const auto *unit_item = dynamic_cast<unit_list_item *>(item)) {
+      const auto unit = unit_item->unit();
+      if (unit_owner(unit) == client_player()) {
+        units.push_back(unit);
+      }
     }
   }
+  return units;
+}
+
+/**
+ * Popups MessageBox for disbanding unit and disbands it
+ */
+void unit_list_widget::disband()
+{
+  popup_disband_dialog(selected_playable_units());
+}
+
+/**
+ * Loads unit into some transport
+ */
+void unit_list_widget::load()
+{
+  for (const auto unit : selected_playable_units()) {
+    request_transport(unit, unit_tile(unit));
+  }
+}
+
+/**
+ * Unloads unit
+ */
+void unit_list_widget::unload()
+{
+  for (const auto unit : selected_playable_units()) {
+    request_unit_unload(unit);
+  }
+}
+
+/**
+ * Unloads all units from transporter
+ */
+void unit_list_widget::unload_all()
+{
+  for (const auto unit : selected_playable_units()) {
+    request_unit_unload_all(unit);
+  }
+}
+
+/**
+ * Upgrades unit
+ */
+void unit_list_widget::upgrade()
+{
+  popup_upgrade_dialog(selected_playable_units());
+}
+
+/**
+ * Changes home city for given unit
+ */
+void unit_list_widget::change_homecity()
+{
+  for (const auto unit : selected_playable_units()) {
+    request_unit_change_homecity(unit);
+  }
+}
+
+/**
+ * Activates unit and closes city dialog
+ */
+void unit_list_widget::activate()
+{
+  const auto selection = selected_playable_units();
+
+  unit_focus_set(nullptr); // Clear
+  for (const auto unit : selection) {
+    unit_focus_add(unit);
+  }
+
+  if (!selection.empty()) {
+    queen()->city_overlay->dont_focus = true;
+    popdown_city_dialog();
+  }
+}
+
+/**
+ * Fortifies unit in city dialog
+ */
+void unit_list_widget::fortify()
+{
+  for (const auto unit : selected_playable_units()) {
+    request_unit_fortify(unit);
+  }
+}
+
+/**
+ * Sentries unit in city dialog
+ */
+void unit_list_widget::sentry()
+{
+  for (const auto unit : selected_playable_units()) {
+    request_unit_sentry(unit);
+  }
+}
+
+/**
+ * Updates the context menu to match the current selection
+ */
+void unit_list_widget::selectionChanged(const QItemSelection &selected,
+                                        const QItemSelection &deselected)
+{
+  Q_UNUSED(selected);
+  Q_UNUSED(deselected);
+
+  // If we can't do anything, don't pretend we can
+  const auto units = selected_playable_units();
+  if (units.empty()) {
+    for (auto action : actions()) {
+      action->setVisible(false);
+    }
+    return;
+  }
+
+  // Build the menu according to what the selected units can do
+  m_activate->setVisible(true);
+  m_sentry->setVisible(can_units_do_activity(units, ACTIVITY_SENTRY));
+  m_fortify->setVisible(can_units_do_activity(units, ACTIVITY_FORTIFYING));
+  m_disband->setVisible(
+      units_can_do_action(units, ACTION_DISBAND_UNIT, true));
+  m_load->setVisible(units_can_load(units));
+  m_unload->setVisible(units_can_unload(units));
+  m_unload_all->setVisible(units_are_occupied(units));
+  m_upgrade->setVisible(units_can_upgrade(units));
 }
 
 /**
@@ -680,184 +851,9 @@ void impr_item::mouseDoubleClickEvent(QMouseEvent *event)
 /**
    Class representing one unit, manages the context menu
  */
-unit_list_item::unit_list_item(unit *punit) : m_unit(punit)
+unit_list_item::unit_list_item(::unit *punit) : m_unit(punit)
 {
-  create_menu();
   setToolTip(unit_description(m_unit));
-}
-
-/**
-   Initializes context menu
- */
-void unit_list_item::create_menu()
-{
-  if (!can_issue_orders()) {
-    return;
-  }
-
-  m_menu = new QMenu;
-
-  auto *activate_and_close_action = new QAction(_("Activate unit"), this);
-  connect(activate_and_close_action, &QAction::triggered, this,
-          &unit_list_item::activate_and_close_dialog);
-  m_menu->addAction(activate_and_close_action);
-
-  if (can_unit_do_activity(m_unit, ACTIVITY_SENTRY)) {
-    auto *sentry_action = new QAction(_("Sentry unit"), this);
-    connect(sentry_action, &QAction::triggered, this,
-            &unit_list_item::sentry);
-    m_menu->addAction(sentry_action);
-  }
-
-  if (can_unit_do_activity(m_unit, ACTIVITY_FORTIFYING)) {
-    auto *fortify_action = new QAction(_("Fortify unit"), this);
-    connect(fortify_action, &QAction::triggered, this,
-            &unit_list_item::fortify);
-    m_menu->addAction(fortify_action);
-  }
-
-  if (unit_can_do_action(m_unit, ACTION_DISBAND_UNIT)) {
-    auto *disband_action = new QAction(_("Disband unit"), this);
-    connect(disband_action, &QAction::triggered, this,
-            &unit_list_item::disband);
-    m_menu->addAction(disband_action);
-  }
-
-  if (can_unit_change_homecity(m_unit)) {
-    auto *change_homecity_action =
-        new QAction(action_id_name_translation(ACTION_HOME_CITY), this);
-    connect(change_homecity_action, &QAction::triggered, this,
-            &unit_list_item::change_homecity);
-    m_menu->addAction(change_homecity_action);
-  }
-
-  if (units_can_load({m_unit})) {
-    auto *load_action = new QAction(_("Load"), this);
-    connect(load_action, &QAction::triggered, this, &unit_list_item::load);
-    m_menu->addAction(load_action);
-  }
-
-  if (units_can_unload({m_unit})) {
-    auto *unload_action = new QAction(_("Unload"), this);
-    connect(unload_action, &QAction::triggered, this,
-            &unit_list_item::unload);
-    m_menu->addAction(unload_action);
-  }
-
-  if (units_are_occupied({m_unit})) {
-    auto *unload_all_action =
-        new QAction(_("Unload All From Transporter"), this);
-    connect(unload_all_action, &QAction::triggered, this,
-            &unit_list_item::unload_all);
-    m_menu->addAction(unload_all_action);
-  }
-
-  if (units_can_upgrade({m_unit})) {
-    auto *upgrade_action = new QAction(_("Upgrade Unit"), this);
-    connect(upgrade_action, &QAction::triggered, this,
-            &unit_list_item::upgrade);
-    m_menu->addAction(upgrade_action);
-  }
-}
-
-/**
-   Can we give orders to the unit?
- */
-bool unit_list_item::can_issue_orders() const
-{
-  return can_client_issue_orders() && unit_owner(m_unit) == client_player();
-}
-
-/**
-   Popups MessageBox for disbanding unit and disbands it
- */
-void unit_list_item::disband()
-{
-  if (can_issue_orders()) {
-    popup_disband_dialog({m_unit});
-  }
-}
-
-/**
-   Loads unit into some transport
- */
-void unit_list_item::load()
-{
-  if (can_issue_orders()) {
-    request_transport(m_unit, unit_tile(m_unit));
-  }
-}
-
-/**
-   Unloads unit
- */
-void unit_list_item::unload()
-{
-  if (can_issue_orders()) {
-    request_unit_unload(m_unit);
-  }
-}
-
-/**
-   Unloads all units from transporter
- */
-void unit_list_item::unload_all()
-{
-  if (can_issue_orders()) {
-    request_unit_unload_all(m_unit);
-  }
-}
-
-/**
-   Upgrades unit
- */
-void unit_list_item::upgrade()
-{
-  if (can_issue_orders()) {
-    popup_upgrade_dialog({m_unit});
-  }
-}
-
-/**
-   Changes home city for given unit
- */
-void unit_list_item::change_homecity()
-{
-  if (can_issue_orders()) {
-    request_unit_change_homecity(m_unit);
-  }
-}
-
-/**
-   Activates unit and closes city dialog
- */
-void unit_list_item::activate_and_close_dialog()
-{
-  if (can_issue_orders()) {
-    unit_focus_set(m_unit);
-    queen()->city_overlay->dont_focus = true;
-    popdown_city_dialog();
-  }
-}
-
-/**
-   Fortifies unit in city dialog
- */
-void unit_list_item::fortify()
-{
-  if (can_issue_orders()) {
-    request_unit_fortify(m_unit);
-  }
-}
-
-/**
-   Sentries unit in city dialog
- */
-void unit_list_item::sentry()
-{
-  if (can_issue_orders()) {
-    request_unit_sentry(m_unit);
-  }
 }
 
 cityIconInfoLabel::cityIconInfoLabel(QWidget *parent) : QWidget(parent)
@@ -1404,20 +1400,7 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
   ui.tabs_right->setTabText(0, _("General"));
   ui.tabs_right->setTabText(1, _("Citizens"));
 
-  connect(ui.present_units_list, &QListWidget::itemDoubleClicked,
-          [](QListWidgetItem *item) {
-            if (auto *uitem = dynamic_cast<unit_list_item *>(item)) {
-              uitem->activate_and_close_dialog();
-            }
-          });
   ui.present_units_list->set_oneliner(true);
-
-  connect(ui.supported_units, &QListWidget::itemDoubleClicked,
-          [](QListWidgetItem *item) {
-            if (auto *uitem = dynamic_cast<unit_list_item *>(item)) {
-              uitem->activate_and_close_dialog();
-            }
-          });
   ui.supported_units->set_show_upkeep(true);
 
   installEventFilter(this);
