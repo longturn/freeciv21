@@ -790,6 +790,25 @@ QString get_city_dialog_airlift_text(const struct city *pcity)
 }
 
 /**
+ * Return time until next growth
+ */
+QString get_city_dialog_growth_value(const struct city *pcity)
+{
+  auto granaryturns = city_turns_to_grow(pcity);
+  if (granaryturns == 0) {
+    // TRANS: city growth is blocked.  Keep short.
+    return _("blocked");
+  } else if (granaryturns == FC_INFINITY) {
+    // TRANS: city is not growing.  Keep short.
+    return _("never");
+  } else {
+    // TRANS: city growth turns.  Keep short.
+    return QString::asprintf(PL_("%d turn", "%d turns", abs(granaryturns)),
+                             abs(granaryturns));
+  }
+}
+
+/**
    Return airlift capacity.
  */
 QString get_city_dialog_airlift_value(const struct city *pcity)
