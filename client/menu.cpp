@@ -104,7 +104,7 @@ void real_menus_update(void)
       king()->menu_bar->update_bases_menu();
       gov_menu::update_all();
       go_act_menu::update_all();
-      queen()->unitinfo_wdg->update_actions(nullptr);
+      queen()->unitinfo_wdg->update_actions();
     }
   } else {
     king()->menuBar()->setVisible(false);
