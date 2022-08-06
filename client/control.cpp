@@ -220,7 +220,7 @@ void control_unit_killed(struct unit *punit)
   goto_unit_killed(punit);
 
   auto &focus = get_units_in_focus();
-  focus.erase(std::find(focus.begin(), focus.end(), punit));
+  focus.erase(std::remove(focus.begin(), focus.end(), punit), focus.end());
   if (get_num_units_in_focus() < 1) {
     clear_hover_state();
   }
