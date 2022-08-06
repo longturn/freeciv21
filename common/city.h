@@ -538,7 +538,7 @@ citizens player_angry_citizens(const struct player *pplayer);
 int city_population(const struct city *pcity);
 int city_total_impr_gold_upkeep(const struct city *pcity);
 int city_total_unit_gold_upkeep(const struct city *pcity);
-int city_unit_unhappiness(struct unit *punit, int *free_unhappy);
+int city_unit_unhappiness(const unit *punit, int *free_unhappy);
 bool city_happy(
     const struct city *pcity); // generally use celebrating instead
 bool city_unhappy(const struct city *pcity); // anarchy???

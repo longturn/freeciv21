@@ -22,6 +22,7 @@
 #include <QTableWidget>
 #include <QToolTip>
 #include <QtMath>
+#include <qobjectdefs.h>
 // gui-qt
 #include "dialogs.h"
 
@@ -58,11 +59,28 @@ class QPixmap;
 /****************************************************************************
   A list widget that sets its size hint to the size of its contents.
 ****************************************************************************/
-class icon_list : public QListWidget {
+class unit_list_widget : public QListWidget {
+  Q_OBJECT
+
 public:
-  explicit icon_list(QWidget *parent = nullptr);
+  explicit unit_list_widget(QWidget *parent = nullptr);
   QSize viewportSizeHint() const override;
-  bool oneliner;
+
+  /// Sets whether the list should try to use a single line.
+  void set_oneliner(bool oneliner) { m_oneliner = oneliner; }
+
+  /// Sets whether upkeep needs to be shown.
+  void set_show_upkeep(bool show) { m_show_upkeep = show; }
+
+  void set_units(unit_list *units);
+
+private slots:
+  void context_menu(const QPoint &loc);
+  QPixmap create_unit_image(const unit *punit);
+
+private:
+  bool m_oneliner = false;
+  bool m_show_upkeep = false;
 };
 
 #define NUM_INFO_FIELDS 15

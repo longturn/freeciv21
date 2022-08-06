@@ -560,7 +560,7 @@
              </widget>
             </item>
             <item>
-             <widget class="icon_list" name="supported_units">
+             <widget class="unit_list_widget" name="supported_units">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -815,7 +815,7 @@
          </widget>
         </item>
         <item>
-         <widget class="icon_list" name="present_units_list">
+         <widget class="unit_list_widget" name="present_units_list">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -883,7 +883,7 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>icon_list</class>
+   <class>unit_list_widget</class>
    <extends>QListWidget</extends>
    <header>citydlg.h</header>
   </customwidget>
