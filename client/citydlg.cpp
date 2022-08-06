@@ -908,22 +908,33 @@ void cityIconInfoLabel::updateText()
   }
 
   labs[1].setText(QString::number(pcity->surplus[O_FOOD]));
+  labs[0].setToolTip(get_city_dialog_output_text(pcity, O_FOOD));
+  labs[1].setToolTip(get_city_dialog_output_text(pcity, O_FOOD));
+
   labs[3].setText(QString::number(pcity->surplus[O_SHIELD]));
-  labs[9].setText(QString::number(pcity->surplus[O_TRADE]));
+  labs[2].setToolTip(get_city_dialog_output_text(pcity, O_SHIELD));
+  labs[3].setToolTip(get_city_dialog_output_text(pcity, O_SHIELD));
+
   labs[5].setText(QString::number(pcity->surplus[O_GOLD]));
+  labs[4].setToolTip(get_city_dialog_output_text(pcity, O_GOLD));
+  labs[5].setToolTip(get_city_dialog_output_text(pcity, O_GOLD));
+
   labs[7].setText(QString::number(pcity->surplus[O_SCIENCE]));
+  labs[6].setToolTip(get_city_dialog_output_text(pcity, O_SCIENCE));
+  labs[7].setToolTip(get_city_dialog_output_text(pcity, O_SCIENCE));
+
+  labs[9].setText(QString::number(pcity->surplus[O_TRADE]));
+  labs[8].setToolTip(get_city_dialog_output_text(pcity, O_TRADE));
+  labs[9].setToolTip(get_city_dialog_output_text(pcity, O_TRADE));
+
   if (city_turns_to_grow(pcity) < 1000) {
     grow_time = QString::number(city_turns_to_grow(pcity));
   } else {
     grow_time = QStringLiteral("∞");
   }
   labs[11].setText(grow_time);
-}
-
-void cityIconInfoLabel::updateTooltip(int nr, const QString &tooltipText)
-{
-  labs[nr].setToolTip(tooltipText);
-  labs[nr + 1].setToolTip(tooltipText);
+  labs[10].setToolTip(get_city_dialog_growth_value(pcity));
+  labs[11].setToolTip(get_city_dialog_growth_value(pcity));
 }
 
 /**
@@ -970,143 +981,107 @@ void city_label::set_city(city *pciti) { pcity = pciti; }
 
 city_info::city_info(QWidget *parent) : QWidget(parent)
 {
-  QStringList info_list;
-
   QGridLayout *info_grid_layout = new QGridLayout();
-  auto small_font = fcFont::instance()->getFont(fonts::notify_label);
-  info_list << _("Food:") << _("Prod:") << _("Trade:") << _("Gold:")
-            << _("Luxury:") << _("Science:") << _("Granary:")
-            << _("Change in:") << _("Corruption:") << _("Waste:")
-            << _("Culture:") << _("Pollution:") << _("Plague risk:")
-            << _("Tech Stolen:") << _("Airlift:");
-  setFont(small_font);
   info_grid_layout->setSpacing(0);
   info_grid_layout->setContentsMargins(0, 0, 0, 0);
-
-  for (int i = 0; i < info_list.size(); i++) {
-    auto ql = new QLabel(info_list[i], this);
-    ql->setFont(small_font);
-    ql->setProperty(fonts::notify_label, "true");
-    info_grid_layout->addWidget(ql, i, 0);
-
-    ql = new QLabel(this);
-    ql->setFont(small_font);
-    ql->setProperty(fonts::notify_label, "true");
-    info_grid_layout->addWidget(ql, i, 1);
-    m_labels.push_back(ql);
-  }
   setLayout(info_grid_layout);
-}
 
-void city_info::update_labels(struct city *pcity, cityIconInfoLabel *ciil)
-{
-  int illness = 0;
-  QString buffer;
-  QString buf[2 * m_labels.size()];
-  int granaryturns;
+  auto small_font = fcFont::instance()->getFont(fonts::notify_label);
 
-  enum {
-    FOOD = 0,
-    SHIELD = 2,
-    TRADE = 4,
-    GOLD = 6,
-    LUXURY = 8,
-    SCIENCE = 10,
-    GRANARY = 12,
-    GROWTH = 14,
-    CORRUPTION = 16,
-    WASTE = 18,
-    CULTURE = 20,
-    POLLUTION = 22,
-    ILLNESS = 24,
-    STEAL = 26,
-    AIRLIFT = 28,
+  // We use this to shorten the code below, as it would otherwise be very
+  // repetitive. It creates a label for the description and another for the
+  // value, and returns the second.
+  const auto create_labels = [&](const char *title) {
+    auto label = new QLabel(title, this);
+    label->setFont(small_font);
+    label->setProperty(fonts::notify_label, "true");
+    info_grid_layout->addWidget(label, info_grid_layout->rowCount(), 0);
+
+    label = new QLabel(this);
+    label->setFont(small_font);
+    label->setProperty(fonts::notify_label, "true");
+    info_grid_layout->addWidget(label, info_grid_layout->rowCount() - 1, 1);
+    return label;
   };
 
-  // fill the buffers with the necessary info
-  buf[FOOD] = QString::asprintf("%3d (%+4d)", pcity->prod[O_FOOD],
-                                pcity->surplus[O_FOOD]);
-  buf[SHIELD] = QString::asprintf("%3d (%+4d)", pcity->prod[O_SHIELD],
-                                  pcity->surplus[O_SHIELD]);
-  buf[TRADE] = QString::asprintf("%3d (%+4d)", pcity->prod[O_TRADE],
-                                 pcity->surplus[O_TRADE]);
-  buf[GOLD] = QString::asprintf("%3d (%+4d)", pcity->prod[O_GOLD],
-                                pcity->surplus[O_GOLD]);
-  buf[LUXURY] = QString::asprintf("%3d (%+4d)", pcity->prod[O_LUXURY],
-                                  pcity->surplus[O_LUXURY]);
-  buf[SCIENCE] = QString::asprintf("%3d (%+4d)", pcity->prod[O_SCIENCE],
-                                   pcity->surplus[O_SCIENCE]);
-  buf[GRANARY] = QString::asprintf("%4d/%-4d", pcity->food_stock,
-                                   city_granary_size(city_size_get(pcity)));
+  m_food = create_labels(_("Food:"));
+  m_production = create_labels(_("Prod:"));
+  m_trade = create_labels(_("Trade:"));
+  m_gold = create_labels(_("Gold:"));
+  m_luxury = create_labels(_("Luxury:"));
+  m_science = create_labels(_("Science:"));
+  m_granary = create_labels(_("Granary:"));
+  m_growth = create_labels(_("Change in:"));
+  m_corruption = create_labels(_("Corruption:"));
+  m_waste = create_labels(_("Waste:"));
+  m_culture = create_labels(_("Culture:"));
+  m_pollution = create_labels(_("Pollution:"));
+  m_plague = create_labels(_("Plague risk:"));
+  m_stolen = create_labels(_("Tech Stolen:"));
+  m_airlift = create_labels(_("Airlift:"));
+}
 
-  buf[FOOD + 1] = get_city_dialog_output_text(pcity, O_FOOD);
-  buf[SHIELD + 1] = get_city_dialog_output_text(pcity, O_SHIELD);
-  buf[TRADE + 1] = get_city_dialog_output_text(pcity, O_TRADE);
-  buf[GOLD + 1] = get_city_dialog_output_text(pcity, O_GOLD);
-  buf[SCIENCE + 1] = get_city_dialog_output_text(pcity, O_SCIENCE);
-  buf[LUXURY + 1] = get_city_dialog_output_text(pcity, O_LUXURY);
-  buf[CULTURE + 1] = get_city_dialog_culture_text(pcity);
-  buf[POLLUTION + 1] = get_city_dialog_pollution_text(pcity);
-  buf[ILLNESS + 1] = get_city_dialog_illness_text(pcity);
+void city_info::update_labels(struct city *pcity)
+{
+  m_food->setText(QString::asprintf("%3d (%+4d)", pcity->prod[O_FOOD],
+                                    pcity->surplus[O_FOOD]));
+  m_food->setToolTip(get_city_dialog_output_text(pcity, O_FOOD));
 
-  granaryturns = city_turns_to_grow(pcity);
+  m_production->setText(QString::asprintf(
+      "%3d (%+4d)", pcity->prod[O_SHIELD], pcity->surplus[O_SHIELD]));
+  m_production->setToolTip(get_city_dialog_output_text(pcity, O_SHIELD));
 
-  if (granaryturns == 0) {
-    // TRANS: city growth is blocked.  Keep short.
-    buf[GROWTH] = _("blocked");
-  } else if (granaryturns == FC_INFINITY) {
-    // TRANS: city is not growing.  Keep short.
-    buf[GROWTH] = _("never");
-  } else {
-    /* A negative value means we'll have famine in that many turns.
-       But that's handled down below. */
-    // TRANS: city growth turns.  Keep short.
-    buf[GROWTH] = QString::asprintf(
-        PL_("%d turn", "%d turns", abs(granaryturns)), abs(granaryturns));
-  }
+  m_trade->setText(QString::asprintf("%3d (%+4d)", pcity->prod[O_TRADE],
+                                     pcity->surplus[O_TRADE]));
+  m_trade->setToolTip(get_city_dialog_output_text(pcity, O_TRADE));
 
-  buf[CORRUPTION] = QString::asprintf("%4d", pcity->waste[O_TRADE]);
-  buf[WASTE] = QString::asprintf("%4d", pcity->waste[O_SHIELD]);
-  buf[CULTURE] = QString::asprintf("%4d", pcity->client.culture);
-  buf[POLLUTION] = QString::asprintf("%4d", pcity->pollution);
+  m_gold->setText(QString::asprintf("%3d (%+4d)", pcity->prod[O_GOLD],
+                                    pcity->surplus[O_GOLD]));
+  m_gold->setToolTip(get_city_dialog_output_text(pcity, O_GOLD));
+
+  m_luxury->setText(QString::asprintf("%3d (%+4d)", pcity->prod[O_LUXURY],
+                                      pcity->surplus[O_LUXURY]));
+  m_luxury->setToolTip(get_city_dialog_output_text(pcity, O_LUXURY));
+
+  m_science->setText(QString::asprintf("%3d (%+4d)", pcity->prod[O_SCIENCE],
+                                       pcity->surplus[O_SCIENCE]));
+  m_science->setToolTip(get_city_dialog_output_text(pcity, O_SCIENCE));
+
+  m_granary->setText(
+      QString::asprintf("%4d/%-4d", pcity->food_stock,
+                        city_granary_size(city_size_get(pcity))));
+
+  m_growth->setText(get_city_dialog_growth_value(pcity));
+
+  m_corruption->setText(QString::asprintf("%4d", pcity->waste[O_TRADE]));
+
+  m_waste->setText(QString::asprintf("%4d", pcity->waste[O_SHIELD]));
+
+  m_culture->setText(QString::asprintf("%4d", pcity->client.culture));
+  m_culture->setToolTip(get_city_dialog_culture_text(pcity));
+
+  m_pollution->setText(QString::asprintf("%4d", pcity->pollution));
+  m_pollution->setToolTip(get_city_dialog_pollution_text(pcity));
 
   if (!game.info.illness_on) {
-    buf[ILLNESS] = QStringLiteral(" -.-");
+    m_plague->setText(QStringLiteral(" -.-"));
   } else {
-    illness = city_illness_calc(pcity, nullptr, nullptr, nullptr, nullptr);
+    auto illness =
+        city_illness_calc(pcity, nullptr, nullptr, nullptr, nullptr);
     // illness is in tenth of percent
-    buf[ILLNESS] =
-        QString::asprintf("%4.1f%%", static_cast<float>(illness) / 10.0);
+    m_plague->setText(
+        QString::asprintf("%4.1f%%", static_cast<float>(illness) / 10.0));
   }
+  m_plague->setToolTip(get_city_dialog_illness_text(pcity));
+
   if (pcity->steal) {
-    buf[STEAL] = QString::asprintf(_("%d times"), pcity->steal);
+    m_stolen->setText(QString::asprintf(_("%d times"), pcity->steal));
   } else {
-    buf[STEAL] = QString::asprintf(_("Not stolen"));
+    m_stolen->setText(QString::asprintf(_("Not stolen")));
   }
 
-  buf[AIRLIFT] = get_city_dialog_airlift_value(pcity);
-  buf[AIRLIFT + 1] = get_city_dialog_airlift_text(pcity);
-
-  buffer = get_city_dialog_output_text(pcity, O_FOOD);
-
-  for (int i = 0; i < m_labels.size(); i++) {
-    int j = 2 * i;
-
-    m_labels[i]->setText(QString(buf[2 * i]));
-
-    if (j != GROWTH && j != GRANARY && j != WASTE && j != CORRUPTION
-        && j != STEAL) {
-      m_labels[i]->setToolTip(
-          "<pre>" + QString(buf[2 * i + 1]).toHtmlEscaped() + "</pre>");
-    }
-  }
-
-  ciil->updateTooltip(0, buf[FOOD + 1]);
-  ciil->updateTooltip(2, buf[SHIELD + 1]);
-  ciil->updateTooltip(4, buf[GOLD + 1]);
-  ciil->updateTooltip(6, buf[SCIENCE + 1]);
-  ciil->updateTooltip(8, buf[TRADE + 1]);
-  ciil->updateTooltip(10, buf[GROWTH]);
+  m_airlift->setText(get_city_dialog_airlift_value(pcity));
+  m_airlift->setToolTip(get_city_dialog_airlift_text(pcity));
 }
 
 governor_sliders::governor_sliders(QWidget *parent) : QGroupBox(parent)
@@ -2159,7 +2134,7 @@ void city_dialog::update_nation_table()
  */
 void city_dialog::update_info_label()
 {
-  ui.info_wdg->update_labels(pcity, ui.info_icon_label);
+  ui.info_wdg->update_labels(pcity);
   ui.info_icon_label->setCity(pcity);
   ui.info_icon_label->updateText();
 }

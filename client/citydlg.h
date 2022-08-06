@@ -283,7 +283,6 @@ public:
   cityIconInfoLabel(QWidget *parent = 0);
   void setCity(struct city *pcity);
   void updateText();
-  void updateTooltip(int, const QString &);
 
 private:
   void initLayout();
@@ -317,10 +316,12 @@ class city_info : public QWidget {
 
 public:
   city_info(QWidget *parent = 0);
-  void update_labels(struct city *ci_city, cityIconInfoLabel *);
+  void update_labels(struct city *ci_city);
 
 private:
-  std::vector<QLabel *> m_labels;
+  QLabel *m_food, *m_production, *m_trade, *m_gold, *m_luxury, *m_science,
+      *m_granary, *m_growth, *m_corruption, *m_waste, *m_culture,
+      *m_pollution, *m_plague, *m_stolen, *m_airlift;
 };
 
 class governor_sliders : public QGroupBox {
