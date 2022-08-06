@@ -142,7 +142,10 @@ void unit_list_widget::set_units(unit_list *units)
   QSize icon_size;
   unit_list_iterate(units, punit)
   {
-    auto *item = new unit_list_item(punit);
+    auto *item = new QListWidgetItem();
+    item->setToolTip(unit_description(punit));
+    item->setData(Qt::UserRole, punit->id);
+
     auto pixmap = create_unit_image(punit);
     icon_size = icon_size.expandedTo(pixmap.size());
     item->setIcon(QIcon(pixmap));
@@ -168,11 +171,10 @@ std::vector<unit *> unit_list_widget::selected_playable_units() const
 
   auto units = std::vector<unit *>();
   for (const auto item : selectedItems()) {
-    if (const auto *unit_item = dynamic_cast<unit_list_item *>(item)) {
-      const auto unit = unit_item->unit();
-      if (unit_owner(unit) == client_player()) {
-        units.push_back(unit);
-      }
+    auto id = item->data(Qt::UserRole).toInt();
+    const auto unit = game_unit_by_number(id);
+    if (unit && unit_owner(unit) == client_player()) {
+      units.push_back(unit);
     }
   }
   return units;
@@ -846,14 +848,6 @@ void impr_item::mouseDoubleClickEvent(QMouseEvent *event)
     });
     ask->show();
   }
-}
-
-/**
-   Class representing one unit, manages the context menu
- */
-unit_list_item::unit_list_item(::unit *punit) : m_unit(punit)
-{
-  setToolTip(unit_description(m_unit));
 }
 
 cityIconInfoLabel::cityIconInfoLabel(QWidget *parent) : QWidget(parent)

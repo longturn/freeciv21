@@ -135,22 +135,6 @@ private:
 /****************************************************************************
   Single item on unit_info in city dialog representing one unit
 ****************************************************************************/
-class unit_list_item : public QObject, public QListWidgetItem {
-  Q_OBJECT
-
-public:
-  unit_list_item(::unit *punit);
-
-  /// Retrieves the unit represented by this item.
-  auto unit() const { return m_unit; }
-
-private:
-  ::unit *m_unit;
-};
-
-/****************************************************************************
-  Single item on unit_info in city dialog representing one unit
-****************************************************************************/
 class impr_item : public QLabel {
   Q_OBJECT
 
