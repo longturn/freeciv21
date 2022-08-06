@@ -98,7 +98,6 @@ private:
       *m_load, *m_unload, *m_unload_all, *m_upgrade;
 };
 
-#define NUM_INFO_FIELDS 15
 /****************************************************************************
   Custom progressbar with animated progress and right click event
 ****************************************************************************/
@@ -321,7 +320,7 @@ public:
   void update_labels(struct city *ci_city, cityIconInfoLabel *);
 
 private:
-  QLabel *qlt[NUM_INFO_FIELDS];
+  std::vector<QLabel *> m_labels;
 };
 
 class governor_sliders : public QGroupBox {

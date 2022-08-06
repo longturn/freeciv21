@@ -969,8 +969,6 @@ void city_label::set_city(city *pciti) { pcity = pciti; }
 
 city_info::city_info(QWidget *parent) : QWidget(parent)
 {
-  int iter;
-  QLabel *ql;
   QStringList info_list;
 
   QGridLayout *info_grid_layout = new QGridLayout();
@@ -984,16 +982,17 @@ city_info::city_info(QWidget *parent) : QWidget(parent)
   info_grid_layout->setSpacing(0);
   info_grid_layout->setContentsMargins(0, 0, 0, 0);
 
-  fc_assert(info_list.count() == NUM_INFO_FIELDS);
-  for (iter = 0; iter < NUM_INFO_FIELDS; iter++) {
-    ql = new QLabel(info_list[iter], this);
+  for (int i = 0; i < info_list.size(); i++) {
+    auto ql = new QLabel(info_list[i], this);
     ql->setFont(small_font);
     ql->setProperty(fonts::notify_label, "true");
-    info_grid_layout->addWidget(ql, iter, 0);
-    qlt[iter] = new QLabel(this);
-    qlt[iter]->setFont(small_font);
-    qlt[iter]->setProperty(fonts::notify_label, "true");
-    info_grid_layout->addWidget(qlt[iter], iter, 1);
+    info_grid_layout->addWidget(ql, i, 0);
+
+    ql = new QLabel(this);
+    ql->setFont(small_font);
+    ql->setProperty(fonts::notify_label, "true");
+    info_grid_layout->addWidget(ql, i, 1);
+    m_labels.push_back(ql);
   }
   setLayout(info_grid_layout);
 }
@@ -1002,7 +1001,7 @@ void city_info::update_labels(struct city *pcity, cityIconInfoLabel *ciil)
 {
   int illness = 0;
   char buffer[512];
-  char buf[2 * NUM_INFO_FIELDS][512];
+  char buf[2 * m_labels.size()][512];
   int granaryturns;
 
   enum {
@@ -1105,15 +1104,15 @@ void city_info::update_labels(struct city *pcity, cityIconInfoLabel *ciil)
 
   get_city_dialog_output_text(pcity, O_FOOD, buffer, sizeof(buffer));
 
-  for (int i = 0; i < NUM_INFO_FIELDS; i++) {
+  for (int i = 0; i < m_labels.size(); i++) {
     int j = 2 * i;
 
-    qlt[i]->setText(QString(buf[2 * i]));
+    m_labels[i]->setText(QString(buf[2 * i]));
 
     if (j != GROWTH && j != GRANARY && j != WASTE && j != CORRUPTION
         && j != STEAL) {
-      qlt[i]->setToolTip("<pre>" + QString(buf[2 * i + 1]).toHtmlEscaped()
-                         + "</pre>");
+      m_labels[i]->setToolTip(
+          "<pre>" + QString(buf[2 * i + 1]).toHtmlEscaped() + "</pre>");
     }
   }
 
