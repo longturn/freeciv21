@@ -2887,7 +2887,7 @@ void set_city_production(struct city *pcity)
 /**
    Query unhappiness caused by a given unit.
  */
-int city_unit_unhappiness(struct unit *punit, int *free_unhappy)
+int city_unit_unhappiness(const unit *punit, int *free_unhappy)
 {
   struct city *pcity;
   const struct unit_type *ut;

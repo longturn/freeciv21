@@ -60,20 +60,24 @@ extern QString cut_helptext(const QString &text);
 /**
    Constructor
  */
-icon_list::icon_list(QWidget *parent) : QListWidget(parent), oneliner(true)
+unit_list_widget::unit_list_widget(QWidget *parent) : QListWidget(parent)
 {
   // Make sure viewportSizeHint is used
   setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
   setWrapping(true);
   setMovement(QListView::Static);
+
+  setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(this, &QWidget::customContextMenuRequested, this,
+          &unit_list_widget::context_menu);
 }
 
 /**
    Reimplemented virtual method.
  */
-QSize icon_list::viewportSizeHint() const
+QSize unit_list_widget::viewportSizeHint() const
 {
-  if (!oneliner) {
+  if (!m_oneliner) {
     return QSize(1, 5555);
   }
   // Try to put everything on one line
@@ -83,6 +87,100 @@ QSize icon_list::viewportSizeHint() const
   }
   hint.setWidth(hint.width() * count());
   return hint;
+}
+
+/**
+ * Sets the list of units to be displayed.
+ */
+void unit_list_widget::set_units(unit_list *units)
+{
+  setUpdatesEnabled(false);
+  clear();
+
+  QSize icon_size;
+  unit_list_iterate(units, punit)
+  {
+    auto *item = new unit_list_item(punit);
+    auto pixmap = create_unit_image(punit);
+    icon_size = icon_size.expandedTo(pixmap.size());
+    item->setIcon(QIcon(pixmap));
+    addItem(item);
+  }
+  unit_list_iterate_end;
+
+  setGridSize(icon_size);
+  setIconSize(icon_size);
+
+  setUpdatesEnabled(true);
+  updateGeometry();
+}
+
+/**
+ * Pops up the context menu when an item is clicked.
+ */
+void unit_list_widget::context_menu(const QPoint &loc)
+{
+  auto *item = itemAt(loc);
+  // Maybe there was no unit under the mouse
+  if (auto *unit_item = dynamic_cast<unit_list_item *>(item)) {
+    // Maybe we can't give orders to this unit
+    if (auto *menu = unit_item->menu()) {
+      // OK, show the menu
+      menu->popup(mapToGlobal(loc));
+    }
+  }
+}
+
+/**
+ * Creates the image to represent the given unit in the list
+ */
+QPixmap unit_list_widget::create_unit_image(const unit *punit)
+{
+  int happy_cost = 0;
+  if (m_show_upkeep) {
+    if (auto home = game_city_by_number(punit->homecity)) {
+      auto free_unhappy = get_city_bonus(home, EFT_MAKE_CONTENT_MIL);
+      happy_cost = city_unit_unhappiness(punit, &free_unhappy);
+    }
+  }
+
+  double isosize = 0.6;
+  if (tileset_hex_height(tileset) > 0 || tileset_hex_width(tileset) > 0) {
+    isosize = 0.45;
+  }
+
+  auto unit_pixmap = QPixmap();
+  if (punit) {
+    if (m_show_upkeep) {
+      unit_pixmap = QPixmap(tileset_unit_width(get_tileset()),
+                            tileset_unit_with_upkeep_height(get_tileset()));
+    } else {
+      unit_pixmap = QPixmap(tileset_unit_width(get_tileset()),
+                            tileset_unit_height(get_tileset()));
+    }
+
+    unit_pixmap.fill(Qt::transparent);
+    put_unit(punit, &unit_pixmap, 0, 0);
+
+    if (m_show_upkeep) {
+      put_unit_city_overlays(punit, &unit_pixmap, 0,
+                             tileset_unit_layout_offset_y(get_tileset()),
+                             punit->upkeep, happy_cost);
+    }
+  }
+
+  auto img = unit_pixmap.toImage();
+  auto crop_rect = zealous_crop_rect(img);
+  img = img.copy(crop_rect);
+
+  if (tileset_is_isometric(tileset)) {
+    return QPixmap::fromImage(
+        img.scaledToHeight(tileset_unit_width(get_tileset()) * isosize,
+                           Qt::SmoothTransformation));
+  } else {
+    return QPixmap::fromImage(img.scaledToHeight(
+        tileset_unit_width(get_tileset()), Qt::SmoothTransformation));
+  }
 }
 
 /**
@@ -577,63 +675,6 @@ void impr_item::mouseDoubleClickEvent(QMouseEvent *event)
     });
     ask->show();
   }
-}
-
-/**
-   Makes an image to represent some unit in the city dialog.
- */
-static QImage create_unit_image(unit *punit, bool supported, int happy_cost)
-{
-  QImage cropped_img;
-  QImage img;
-  QRect crop;
-  QPixmap *unit_pixmap;
-  float isosize;
-
-  isosize = 0.6;
-  if (tileset_hex_height(tileset) > 0 || tileset_hex_width(tileset) > 0) {
-    isosize = 0.45;
-  }
-
-  if (punit) {
-    if (supported) {
-      unit_pixmap =
-          new QPixmap(tileset_unit_width(get_tileset()),
-                      tileset_unit_with_upkeep_height(get_tileset()));
-    } else {
-      unit_pixmap = new QPixmap(tileset_unit_width(get_tileset()),
-                                tileset_unit_height(get_tileset()));
-    }
-
-    unit_pixmap->fill(Qt::transparent);
-    put_unit(punit, unit_pixmap, 0, 0);
-
-    if (supported) {
-      put_unit_city_overlays(punit, unit_pixmap, 0,
-                             tileset_unit_layout_offset_y(get_tileset()),
-                             punit->upkeep, happy_cost);
-    }
-  } else {
-    unit_pixmap = new QPixmap(10, 10);
-    unit_pixmap->fill(Qt::transparent);
-  }
-
-  img = unit_pixmap->toImage();
-  crop = zealous_crop_rect(img);
-  cropped_img = img.copy(crop);
-
-  QImage unit_img;
-  if (tileset_is_isometric(tileset)) {
-    unit_img = cropped_img.scaledToHeight(tileset_unit_width(get_tileset())
-                                              * isosize,
-                                          Qt::SmoothTransformation);
-  } else {
-    unit_img = cropped_img.scaledToHeight(tileset_unit_width(get_tileset()),
-                                          Qt::SmoothTransformation);
-  }
-  delete unit_pixmap;
-
-  return unit_img;
 }
 
 /**
@@ -1363,27 +1404,13 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
   ui.tabs_right->setTabText(0, _("General"));
   ui.tabs_right->setTabText(1, _("Citizens"));
 
-  const auto show_unit_actions_menu = [this](const QPoint &loc) {
-    auto *item = ui.present_units_list->itemAt(loc);
-    // Maybe there was no unit under the mouse
-    if (auto *unit_item = dynamic_cast<unit_list_item *>(item)) {
-      // Maybe we can't give orders to this unit
-      if (auto *menu = unit_item->menu()) {
-        // OK, show the menu
-        menu->popup(ui.present_units_list->mapToGlobal(loc));
-      }
-    }
-  };
-
   connect(ui.present_units_list, &QListWidget::itemDoubleClicked,
           [](QListWidgetItem *item) {
             if (auto *uitem = dynamic_cast<unit_list_item *>(item)) {
               uitem->activate_and_close_dialog();
             }
           });
-  ui.present_units_list->setContextMenuPolicy(Qt::CustomContextMenu);
-  connect(ui.present_units_list, &QWidget::customContextMenuRequested,
-          show_unit_actions_menu);
+  ui.present_units_list->set_oneliner(true);
 
   connect(ui.supported_units, &QListWidget::itemDoubleClicked,
           [](QListWidgetItem *item) {
@@ -1391,10 +1418,8 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
               uitem->activate_and_close_dialog();
             }
           });
-  ui.supported_units->setContextMenuPolicy(Qt::CustomContextMenu);
-  connect(ui.supported_units, &QWidget::customContextMenuRequested,
-          show_unit_actions_menu);
-  ui.supported_units->oneliner = false;
+  ui.supported_units->set_show_upkeep(true);
+
   installEventFilter(this);
 }
 
@@ -2285,7 +2310,6 @@ void city_dialog::update_units()
   struct unit_list *units;
   char buf[256];
   int n;
-  int free_unhappy = get_city_bonus(pcity, EFT_MAKE_CONTENT_MIL);
   ui.supported_units->setUpdatesEnabled(false);
 
   if (nullptr != client.conn.playing
@@ -2295,29 +2319,10 @@ void city_dialog::update_units()
     units = pcity->units_supported;
   }
 
-  ui.supported_units->clear();
-  if (unit_list_size(units) > 0) {
-    QSize icon_size;
-    unit_list_iterate(units, punit)
-    {
-      auto *item = new unit_list_item(punit);
-
-      auto happy_cost = city_unit_unhappiness(punit, &free_unhappy);
-      auto image = create_unit_image(punit, true, happy_cost);
-      icon_size = icon_size.expandedTo(image.size());
-      item->setIcon(QIcon(QPixmap::fromImage(image)));
-      ui.supported_units->addItem(item);
-    }
-    unit_list_iterate_end;
-    ui.supported_units->setGridSize(icon_size);
-    ui.supported_units->setIconSize(icon_size);
-  }
-
+  ui.supported_units->set_units(units);
   n = unit_list_size(units);
   fc_snprintf(buf, sizeof(buf), _("Supported units %d"), n);
   ui.supp_units->setText(QString(buf));
-  ui.supported_units->setUpdatesEnabled(true);
-  ui.supported_units->updateGeometry();
 
   if (nullptr != client.conn.playing
       && city_owner(pcity) != client.conn.playing) {
@@ -2326,27 +2331,10 @@ void city_dialog::update_units()
     units = pcity->tile->units;
   }
 
-  ui.present_units_list->clear();
+  ui.present_units_list->set_units(units);
   if (unit_list_size(units) == 0) {
     ui.present_units_list->hide();
-  } else {
-    QSize icon_size;
-    unit_list_sort(units, &units_sort);
-    unit_list_iterate(units, punit)
-    {
-      auto *item = new unit_list_item(punit);
-
-      auto image = create_unit_image(punit, false, 0);
-      icon_size = icon_size.expandedTo(image.size());
-      item->setIcon(QIcon(QPixmap::fromImage(image)));
-      ui.present_units_list->addItem(item);
-    }
-    unit_list_iterate_end;
-    ui.present_units_list->show();
-    ui.present_units_list->setGridSize(icon_size);
-    ui.present_units_list->setIconSize(icon_size);
   }
-
   n = unit_list_size(units);
   fc_snprintf(buf, sizeof(buf), _("Present units %d"), n);
   ui.curr_units->setText(QString(buf));

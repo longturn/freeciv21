@@ -248,9 +248,9 @@ void put_unit(const struct unit *punit, QPixmap *pcanvas, int canvas_x,
 void put_terrain(struct tile *ptile, QPixmap *pcanvas, int canvas_x,
                  int canvas_y);
 
-void put_unit_city_overlays(struct unit *punit, QPixmap *pcanvas,
-                            int canvas_x, int canvas_y, int *upkeep_cost,
-                            int happy_cost);
+void put_unit_city_overlays(const unit *punit, QPixmap *pcanvas,
+                            int canvas_x, int canvas_y,
+                            const int *upkeep_cost, int happy_cost);
 void toggle_city_color(struct city *pcity);
 void toggle_unit_color(struct unit *punit);
 

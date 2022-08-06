@@ -1009,9 +1009,9 @@ void put_terrain(struct tile *ptile, QPixmap *pcanvas, int canvas_x,
    (one sprite drawn N times on top of itself), but we just use separate
    sprites (limiting the number of combinations).
  */
-void put_unit_city_overlays(struct unit *punit, QPixmap *pcanvas,
-                            int canvas_x, int canvas_y, int *upkeep_cost,
-                            int happy_cost)
+void put_unit_city_overlays(const unit *punit, QPixmap *pcanvas,
+                            int canvas_x, int canvas_y,
+                            const int *upkeep_cost, int happy_cost)
 {
   QPainter p(pcanvas);
 
