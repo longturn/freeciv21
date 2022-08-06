@@ -166,6 +166,15 @@ void get_city_dialog_production(struct city *pcity, char *buffer,
   }
 }
 
+namespace {
+/**
+ * Embeds the content in an HTML preformatted element
+ */
+QString html_pre(const QString &content)
+{
+  return QStringLiteral("<pre>") + content + QStringLiteral("</pre>");
+}
+
 /**
    Helper structure to accumulate a breakdown of the constributions
    to some numeric city property. Contributions are returned in order,
@@ -198,7 +207,7 @@ struct city_sum {
    (the first item is the numeric value and must have a 'f' conversion
    spec; the second is the description).
  */
-static struct city_sum *city_sum_new(const char *format)
+struct city_sum *city_sum_new(const char *format)
 {
   struct city_sum *sum = new city_sum();
 
@@ -214,10 +223,10 @@ static struct city_sum *city_sum_new(const char *format)
    If 'posdesc'/'negdesc' and other properties match an existing entry,
    'value' is added to the existing entry, else a new one is appended.
  */
-static void city_sum_add_real(struct city_sum *sum, double value,
-                              bool suppress_if_zero, const QString &auxfmt,
-                              double aux, const QString &posdesc,
-                              const QString &negdesc)
+void city_sum_add_real(struct city_sum *sum, double value,
+                       bool suppress_if_zero, const QString &auxfmt,
+                       double aux, const QString &posdesc,
+                       const QString &negdesc)
 {
   size_t i;
 
@@ -256,7 +265,7 @@ static void city_sum_add_real(struct city_sum *sum, double value,
     - Allows control over whether the item will be discarded if its
       net value is zero (suppress_if_zero).
  */
-static void fc__attribute((__format__(__printf__, 6, 8)))
+void fc__attribute((__format__(__printf__, 6, 8)))
     fc__attribute((__format__(__printf__, 7, 8)))
         fc__attribute((nonnull(1, 6, 7)))
             city_sum_add_full(struct city_sum *sum, double value,
@@ -286,7 +295,7 @@ static void fc__attribute((__format__(__printf__, 6, 8)))
     - not suppressed if net value is zero (compare city_sum_add_nonzero())
     - no auxiliary number
  */
-static void fc__attribute((__format__(__printf__, 3, 4)))
+void fc__attribute((__format__(__printf__, 3, 4)))
     fc__attribute((nonnull(1, 3)))
         city_sum_add(struct city_sum *sum, double value, const char *descfmt,
                      ...)
@@ -309,7 +318,7 @@ static void fc__attribute((__format__(__printf__, 3, 4)))
     - suppressed if net value is zero (compare city_sum_add())
     - no auxiliary number
  */
-static void fc__attribute((__format__(__printf__, 3, 4)))
+void fc__attribute((__format__(__printf__, 3, 4)))
     fc__attribute((nonnull(1, 3)))
         city_sum_add_if_nonzero(struct city_sum *sum, double value,
                                 const char *descfmt, ...)
@@ -328,7 +337,7 @@ static void fc__attribute((__format__(__printf__, 3, 4)))
 /**
    Return the net total accumulated in the sum so far.
  */
-static double city_sum_total(struct city_sum *sum)
+double city_sum_total(struct city_sum *sum)
 {
   size_t i;
   double total = 0;
@@ -345,7 +354,7 @@ static double city_sum_total(struct city_sum *sum)
       0: val1 == val2 (approximately)
      +1: val1 >  val2
  */
-static inline int city_sum_compare(double val1, double val2)
+inline int city_sum_compare(double val1, double val2)
 {
   /* Fudgey epsilon -- probably the numbers we're dealing with have at
    * most 1% or 0.1% real difference */
@@ -362,7 +371,7 @@ static inline int city_sum_compare(double val1, double val2)
    account_for_unknown is optional, as not every sum wants it (consider
    pollution's clipping).
  */
-static QString fc__attribute((__format__(__printf__, 3, 4)))
+QString fc__attribute((__format__(__printf__, 3, 4)))
     fc__attribute((nonnull(1, 3)))
         city_sum_print(struct city_sum *sum, bool account_for_unknown,
                        const char *totalfmt, ...)
@@ -411,8 +420,9 @@ static QString fc__attribute((__format__(__printf__, 3, 4)))
   va_end(args);
 
   delete sum;
-  return result;
+  return html_pre(result);
 }
+} // anonymous namespace
 
 /**
    Return text describing the production output.
@@ -816,7 +826,7 @@ QString get_city_dialog_size_text(const struct city *pcity)
   }
   specialist_type_iterate_end;
 
-  return text.trimmed();
+  return html_pre(text.trimmed());
 }
 
 /**
