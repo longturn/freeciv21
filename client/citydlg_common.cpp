@@ -790,6 +790,36 @@ QString get_city_dialog_airlift_text(const struct city *pcity)
 }
 
 /**
+ * Return text describing the city's citizens.
+ */
+QString get_city_dialog_size_text(const struct city *pcity)
+{
+  auto text = QString();
+  // TRANS: Number of happy citizens
+  text += QString(_("Happy: %1\n"))
+              .arg(pcity->feel[CITIZEN_HAPPY][FEELING_FINAL]);
+  // TRANS: Number of content citizens
+  text += QString(_("Content: %1\n"))
+              .arg(pcity->feel[CITIZEN_CONTENT][FEELING_FINAL]);
+  // TRANS: Number of unhappy citizens
+  text += QString(_("Unhappy: %1\n"))
+              .arg(pcity->feel[CITIZEN_UNHAPPY][FEELING_FINAL]);
+  // TRANS: Number of angry citizens
+  text += QString(_("Angry: %1\n"))
+              .arg(pcity->feel[CITIZEN_ANGRY][FEELING_FINAL]);
+
+  specialist_type_iterate(sp)
+  {
+    text += QStringLiteral("%1: %2\n")
+                .arg(specialist_plural_translation(specialist_by_number(sp)))
+                .arg(pcity->specialists[sp]);
+  }
+  specialist_type_iterate_end;
+
+  return text.trimmed();
+}
+
+/**
  * Return time until next growth
  */
 QString get_city_dialog_growth_value(const struct city *pcity)

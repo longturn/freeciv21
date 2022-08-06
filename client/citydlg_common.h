@@ -35,6 +35,7 @@ QString get_city_dialog_pollution_text(const struct city *pcity);
 QString get_city_dialog_culture_text(const struct city *pcity);
 QString get_city_dialog_illness_text(const struct city *pcity);
 QString get_city_dialog_airlift_text(const struct city *pcity);
+QString get_city_dialog_size_text(const struct city *pcity);
 
 QString get_city_dialog_growth_value(const struct city *pcity);
 QString get_city_dialog_airlift_value(const struct city *pcity);
