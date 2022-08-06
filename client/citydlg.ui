@@ -531,7 +531,7 @@
                  <x>0</x>
                  <y>0</y>
                  <width>16</width>
-                 <height>90</height>
+                 <height>83</height>
                 </rect>
                </property>
                <property name="sizePolicy">
@@ -566,6 +566,9 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="selectionMode">
+               <enum>QAbstractItemView::ExtendedSelection</enum>
               </property>
               <property name="flow">
                <enum>QListView::LeftToRight</enum>
@@ -644,8 +647,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>194</width>
-                    <height>197</height>
+                    <width>139</width>
+                    <height>150</height>
                    </rect>
                   </property>
                   <layout class="QFormLayout" name="formLayout_2">
@@ -821,6 +824,9 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::ExtendedSelection</enum>
           </property>
           <property name="flow">
            <enum>QListView::LeftToRight</enum>
