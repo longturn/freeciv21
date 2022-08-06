@@ -945,7 +945,7 @@ int unit_actions::update_actions()
 {
   current_unit = head_of_units_in_focus();
 
-  if (current_unit == nullptr) {
+  if (current_unit == nullptr || client.conn.playing == nullptr) {
     clear_layout();
     hide();
     return 0;
