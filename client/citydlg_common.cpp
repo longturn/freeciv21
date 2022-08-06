@@ -362,10 +362,10 @@ static inline int city_sum_compare(double val1, double val2)
    account_for_unknown is optional, as not every sum wants it (consider
    pollution's clipping).
  */
-static void fc__attribute((__format__(__printf__, 5, 6)))
-    fc__attribute((nonnull(1, 2, 5)))
-        city_sum_print(struct city_sum *sum, char *buf, size_t bufsz,
-                       bool account_for_unknown, const char *totalfmt, ...)
+static QString fc__attribute((__format__(__printf__, 3, 4)))
+    fc__attribute((nonnull(1, 3)))
+        city_sum_print(struct city_sum *sum, bool account_for_unknown,
+                       const char *totalfmt, ...)
 {
   va_list args;
   size_t i;
@@ -390,35 +390,35 @@ static void fc__attribute((__format__(__printf__, 5, 6)))
     }
   }
 
+  QString result;
   for (i = 0; i < sum->n; i++) {
     if (!sum->sums[i].suppress_if_zero
         || city_sum_compare(sum->sums[i].value, 0) != 0) {
-      cat_snprintf(
-          buf, bufsz, qUtf8Printable(sum->format), sum->sums[i].value,
+      result += QString::asprintf(
+          qUtf8Printable(sum->format), sum->sums[i].value,
           (sum->sums[i].value < 0) ? qUtf8Printable(sum->sums[i].negdesc)
                                    : qUtf8Printable(sum->sums[i].posdesc));
       if (!sum->sums[i].auxfmt.isEmpty()) {
-        cat_snprintf(buf, bufsz, qUtf8Printable(sum->sums[i].auxfmt),
-                     sum->sums[i].aux);
+        result += QString::asprintf(qUtf8Printable(sum->sums[i].auxfmt),
+                                    sum->sums[i].aux);
       }
-      cat_snprintf(buf, bufsz, "\n");
+      result += QStringLiteral("\n");
     }
   }
 
   va_start(args, totalfmt);
-  fc_vsnprintf(buf + qstrlen(buf), bufsz - qstrlen(buf), totalfmt, args);
+  result += QString::asprintf(totalfmt, args);
   va_end(args);
 
   delete sum;
-  sum = nullptr;
+  return result;
 }
 
 /**
    Return text describing the production output.
  */
-void get_city_dialog_output_text(const struct city *pcity,
-                                 Output_type_id otype, char *buf,
-                                 size_t bufsz)
+QString get_city_dialog_output_text(const struct city *pcity,
+                                    Output_type_id otype)
 {
   int priority;
   int tax[O_LAST];
@@ -426,8 +426,6 @@ void get_city_dialog_output_text(const struct city *pcity,
   /* TRANS: format string for a row of the city output sum that adds up
    * to "Total surplus" */
   struct city_sum *sum = city_sum_new(Q_("?city_surplus:%+4.0f : %s"));
-
-  buf[0] = '\0';
 
   city_sum_add(sum, pcity->citizen_base[otype],
                Q_("?city_surplus:Citizens"));
@@ -567,28 +565,24 @@ void get_city_dialog_output_text(const struct city *pcity,
     city_sum_add(sum, -pcity->usage[otype], Q_("?city_surplus:Used"));
   }
 
-  city_sum_print(sum, buf, bufsz, true,
-                 Q_("?city_surplus:"
-                    "==== : Adds up to\n"
-                    "%4.0f : Total surplus"),
-                 static_cast<double>(pcity->surplus[otype]));
+  return city_sum_print(sum, true,
+                        Q_("?city_surplus:"
+                           "==== : Adds up to\n"
+                           "%4.0f : Total surplus"),
+                        static_cast<double>(pcity->surplus[otype]));
 }
 
 /**
    Return text describing the chance for a plague.
  */
-void get_city_dialog_illness_text(const struct city *pcity, char *buf,
-                                  size_t bufsz)
+QString get_city_dialog_illness_text(const struct city *pcity)
 {
   int illness, ill_base, ill_size, ill_trade, ill_pollution;
   struct effect_list *plist;
   struct city_sum *sum;
 
-  buf[0] = '\0';
-
   if (!game.info.illness_on) {
-    cat_snprintf(buf, bufsz, _("Illness deactivated in ruleset."));
-    return;
+    return _("Illness deactivated in ruleset.");
   }
 
   sum = city_sum_new(Q_("?city_plague:%+5.1f%% : %s"));
@@ -641,18 +635,17 @@ void get_city_dialog_illness_text(const struct city *pcity, char *buf,
    * add up due to rounding. Making it always add up probably requires
    * arbitrary assignment of 0.1% rounding figures to particular
    * effects with something like distribute(). */
-  city_sum_print(sum, buf, bufsz, false,
-                 Q_("?city_plague:"
-                    "====== : Adds up to\n"
-                    "%5.1f%% : Plague chance per turn"),
-                 (static_cast<double>(illness) / 10.0));
+  return city_sum_print(sum, false,
+                        Q_("?city_plague:"
+                           "====== : Adds up to\n"
+                           "%5.1f%% : Plague chance per turn"),
+                        (static_cast<double>(illness) / 10.0));
 }
 
 /**
    Return text describing the pollution output.
  */
-void get_city_dialog_pollution_text(const struct city *pcity, char *buf,
-                                    size_t bufsz)
+QString get_city_dialog_pollution_text(const struct city *pcity)
 {
   int pollu, prod, pop, mod;
   struct city_sum *sum = city_sum_new(Q_("?city_pollution:%+4.0f : %s"));
@@ -662,28 +655,24 @@ void get_city_dialog_pollution_text(const struct city *pcity, char *buf,
   pollu = city_pollution_types(
       pcity, pcity->prod[O_SHIELD] + pcity->unhappy_penalty[O_SHIELD], &prod,
       &pop, &mod);
-  buf[0] = '\0';
 
   city_sum_add(sum, prod, Q_("?city_pollution:Pollution from shields"));
   city_sum_add(sum, pop, Q_("?city_pollution:Pollution from citizens"));
   city_sum_add(sum, mod, Q_("?city_pollution:Pollution modifier"));
-  city_sum_print(sum, buf, bufsz, false,
-                 Q_("?city_pollution:"
-                    "==== : Adds up to\n"
-                    "%4.0f : Total surplus"),
-                 static_cast<double>(pollu));
+  return city_sum_print(sum, false,
+                        Q_("?city_pollution:"
+                           "==== : Adds up to\n"
+                           "%4.0f : Total surplus"),
+                        static_cast<double>(pollu));
 }
 
 /**
    Return text describing the culture output.
  */
-void get_city_dialog_culture_text(const struct city *pcity, char *buf,
-                                  size_t bufsz)
+QString get_city_dialog_culture_text(const struct city *pcity)
 {
   struct effect_list *plist;
   struct city_sum *sum = city_sum_new(Q_("?city_culture:%4.0f : %s"));
-
-  buf[0] = '\0';
 
   /* XXX: no way to check whether client's idea of gain/turn is accurate */
   city_sum_add(sum, pcity->history, Q_("?city_culture:History (%+d/turn)"),
@@ -720,18 +709,17 @@ void get_city_dialog_culture_text(const struct city *pcity, char *buf,
   effect_list_iterate_end;
   effect_list_destroy(plist);
 
-  city_sum_print(sum, buf, bufsz, true,
-                 Q_("?city_culture:"
-                    "==== : Adds up to\n"
-                    "%4.0f : Total culture"),
-                 static_cast<double>(pcity->client.culture));
+  return city_sum_print(sum, true,
+                        Q_("?city_culture:"
+                           "==== : Adds up to\n"
+                           "%4.0f : Total culture"),
+                        static_cast<double>(pcity->client.culture));
 }
 
 /**
    Return text describing airlift capacity.
  */
-void get_city_dialog_airlift_text(const struct city *pcity, char *buf,
-                                  size_t bufsz)
+QString get_city_dialog_airlift_text(const struct city *pcity)
 {
   char src[512];
   char dest[512];
@@ -783,20 +771,20 @@ void get_city_dialog_airlift_text(const struct city *pcity, char *buf,
   switch (unlimited) {
   case 2:
     // TRANS: airlift take offs and landings
-    fc_snprintf(buf, bufsz, _("unlimited take offs and landings"));
+    return _("unlimited take offs and landings");
     break;
   case 1:
     /* TRANS: airlift take offs and landings. One is unlimited. The first
      * string is the take offs text. The 2nd string is the landings text. */
-    fc_snprintf(buf, bufsz, _("%s and %s"), src, dest);
+    return QString::asprintf(_("%s and %s"), src, dest);
     break;
   default:
-    fc_snprintf(buf, bufsz,
-                /* TRANS: airlift take offs or landings, no unlimited.
-                 * Number is airlift capacity. */
-                PL_("%d take off or landing", "%d take offs or landings",
-                    pcity->airlift),
-                pcity->airlift);
+    return QString::asprintf(
+        /* TRANS: airlift take offs or landings, no unlimited.
+         * Number is airlift capacity. */
+        PL_("%d take off or landing", "%d take offs or landings",
+            pcity->airlift),
+        pcity->airlift);
     break;
   }
 }
@@ -804,8 +792,7 @@ void get_city_dialog_airlift_text(const struct city *pcity, char *buf,
 /**
    Return airlift capacity.
  */
-void get_city_dialog_airlift_value(const struct city *pcity, char *buf,
-                                   size_t bufsz)
+QString get_city_dialog_airlift_value(const struct city *pcity)
 {
   char src[512];
   char dest[512];
@@ -849,16 +836,16 @@ void get_city_dialog_airlift_value(const struct city *pcity, char *buf,
   switch (unlimited) {
   case 2:
     // TRANS: unlimited airlift take offs and landings
-    fc_snprintf(buf, bufsz, _("∞"));
+    return _("∞");
     break;
   case 1:
     /* TRANS: airlift take offs and landings. One is unlimited. The first
      * string is the take offs text. The 2nd string is the landings text. */
-    fc_snprintf(buf, bufsz, _("s: %s d: %s"), src, dest);
+    return QString::asprintf(_("s: %s d: %s"), src, dest);
     break;
   default:
     // TRANS: airlift take offs or landings, no unlimited
-    fc_snprintf(buf, bufsz, _("%s"), src);
+    return QString::asprintf(_("%s"), src);
     break;
   }
 }

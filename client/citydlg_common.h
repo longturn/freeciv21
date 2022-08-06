@@ -17,7 +17,8 @@
 #include "city.h"
 #include "fc_types.h"
 
-class QPixmap;
+#include <QString>
+
 struct worklist;
 
 int get_citydlg_canvas_width();
@@ -28,20 +29,14 @@ char *city_production_cost_str(const struct city *pcity);
 void get_city_dialog_production(struct city *pcity, char *buffer,
                                 size_t buffer_len);
 
-void get_city_dialog_output_text(const struct city *pcity,
-                                 Output_type_id otype, char *buffer,
-                                 size_t bufsz);
-void get_city_dialog_pollution_text(const struct city *pcity, char *buf,
-                                    size_t bufsz);
-void get_city_dialog_culture_text(const struct city *pcity, char *buf,
-                                  size_t bufsz);
-void get_city_dialog_illness_text(const struct city *pcity, char *buf,
-                                  size_t bufsz);
-void get_city_dialog_airlift_text(const struct city *pcity, char *buf,
-                                  size_t bufsz);
+QString get_city_dialog_output_text(const struct city *pcity,
+                                    Output_type_id otype);
+QString get_city_dialog_pollution_text(const struct city *pcity);
+QString get_city_dialog_culture_text(const struct city *pcity);
+QString get_city_dialog_illness_text(const struct city *pcity);
+QString get_city_dialog_airlift_text(const struct city *pcity);
 
-void get_city_dialog_airlift_value(const struct city *pcity, char *buf,
-                                   size_t bufsz);
+QString get_city_dialog_airlift_value(const struct city *pcity);
 
 int get_city_citizen_types(struct city *pcity, enum citizen_feeling index,
                            enum citizen_category *categories);
