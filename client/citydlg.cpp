@@ -973,6 +973,7 @@ city_info::city_info(QWidget *parent) : QWidget(parent)
     return label;
   };
 
+  m_size = create_labels(_("Citizens:"));
   m_food = create_labels(_("Food:"));
   m_production = create_labels(_("Prod:"));
   m_trade = create_labels(_("Trade:"));
@@ -992,6 +993,9 @@ city_info::city_info(QWidget *parent) : QWidget(parent)
 
 void city_info::update_labels(struct city *pcity)
 {
+  m_size->setText(QString::asprintf("%3d", pcity->size));
+  m_size->setToolTip(get_city_dialog_size_text(pcity));
+
   m_food->setText(QString::asprintf("%3d (%+4d)", pcity->prod[O_FOOD],
                                     pcity->surplus[O_FOOD]));
   m_food->setToolTip(get_city_dialog_output_text(pcity, O_FOOD));
