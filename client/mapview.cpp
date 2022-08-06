@@ -446,7 +446,7 @@ void map_view::find_place(int pos_x, int pos_y, int &w, int &h, int wdth,
 void update_unit_info_label(const std::vector<unit *> &unit_list)
 {
   if (queen()->unitinfo_wdg->isVisible()) {
-    queen()->unitinfo_wdg->update_actions(nullptr);
+    queen()->unitinfo_wdg->update_actions();
   }
 }
 

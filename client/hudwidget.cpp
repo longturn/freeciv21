@@ -556,7 +556,7 @@ void hud_units::moveEvent(QMoveEvent *event)
 /**
    Update possible action for given units
  */
-void hud_units::update_actions(unit_list *punits)
+void hud_units::update_actions()
 {
   int num;
   int wwidth;

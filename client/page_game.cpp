@@ -542,7 +542,7 @@ bool fc_game_tab_widget::event(QEvent *event)
           get_turn_done_button_state());
       queen()->mapview_wdg->resize(size.width(), size.height());
       queen()->city_overlay->resize(queen()->mapview_wdg->size());
-      queen()->unitinfo_wdg->update_actions(nullptr);
+      queen()->unitinfo_wdg->update_actions();
       queen()->units->update_units(false);
     }
 

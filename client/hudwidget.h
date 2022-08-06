@@ -211,7 +211,7 @@ class hud_units : public QFrame {
 public:
   hud_units(QWidget *parent);
   ~hud_units() override;
-  void update_actions(unit_list *punits);
+  void update_actions();
 
 protected:
   void moveEvent(QMoveEvent *event) override;
