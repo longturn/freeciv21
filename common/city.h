@@ -532,6 +532,7 @@ void city_size_set(struct city *pcity, citizens size);
 
 citizens city_specialists(const struct city *pcity);
 
+int player_base_citizen_happiness(const struct player *pplayer);
 citizens player_content_citizens(const struct player *pplayer);
 citizens player_angry_citizens(const struct player *pplayer);
 

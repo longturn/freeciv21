@@ -2055,7 +2055,7 @@ int city_granary_size(int city_size)
    A positive number is a number of content citizens. A negative number is
    a number of angry citizens (a city never starts with both).
  */
-static int player_base_citizen_happiness(const struct player *pplayer)
+int player_base_citizen_happiness(const struct player *pplayer)
 {
   int cities = city_list_size(pplayer->cities);
   int content = get_player_bonus(pplayer, EFT_CITY_UNHAPPY_SIZE);
@@ -2069,7 +2069,7 @@ static int player_base_citizen_happiness(const struct player *pplayer)
 
   if (cities > basis) {
     content--;
-    if (step != 0) {
+    if (step > 0) {
       /* the first penalty is at (basis + 1) cities;
          the next is at (basis + step + 1), _not_ (basis + step) */
       content -= (cities - basis - 1) / step;

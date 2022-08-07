@@ -24,6 +24,7 @@
 // common
 #include "calendar.h"
 #include "citizens.h"
+#include "city.h"
 #include "clientutils.h"
 #include "combat.h"
 #include "culture.h"
@@ -1400,128 +1401,256 @@ QString text_happiness_wonders(const struct city *pcity)
   return str.trimmed();
 }
 
+namespace /* anonymous */ {
+
+/**
+ * Describes the rules of city happiness for the given player.
+ */
+QString text_happiness_cities_rules(const player *pplayer, int base_content,
+                                    int basis, int step,
+                                    bool depends_on_empire_size)
+{
+  auto str = QString();
+
+  bool next_citizens_are_angry = false;
+  if (base_content == 0) {
+    str += _("All cities start with all citizens unhappy.");
+    next_citizens_are_angry = game.info.angrycitizen;
+  } else {
+    str += QString(PL_("All cities start with %1 content citizen.",
+                       "All cities start with %1 content citizens.",
+                       base_content))
+               .arg(base_content);
+  }
+  if (depends_on_empire_size) {
+    if (basis > 0) {
+      str += QStringLiteral(" ");
+      if (next_citizens_are_angry) {
+        str += QString(PL_("Once you have more than %1 city, a citizen "
+                           "becomes angry.",
+                           "Once you have more than %1 cities, a citizen "
+                           "becomes angry.",
+                           basis))
+                   .arg(basis);
+      } else if (base_content == 1) {
+        // TRANS: Comes after "All cities start with 1 content citizen."
+        //        "it" is the citizen.
+        str +=
+            QString(
+                PL_("Once you have more than %1 city, it becomes unhappy.",
+                    "Once you have more than %1 cities, it becomes unhappy.",
+                    basis))
+                .arg(basis);
+        next_citizens_are_angry = game.info.angrycitizen;
+      } else if (base_content > 1) {
+        // TRANS: Comes after "All cities start with N content citizens."
+        str += QString(PL_("Once you have more than %1 city, a citizen "
+                           "becomes unhappy.",
+                           "Once you have more than %1 cities, a citizen "
+                           "becomes unhappy.",
+                           basis))
+                   .arg(basis);
+      }
+    }
+
+    if (step > 0) {
+      str += QStringLiteral(" ");
+      if (next_citizens_are_angry) {
+        str += QString(PL_("Afterwards, for every %1 additional city, a "
+                           "citizen becomes angry.",
+                           "Afterwards, for every %1 additional cities, a "
+                           "citizen becomes angry.",
+                           step))
+                   .arg(step);
+      } else {
+        str += QString(PL_("Afterwards, for every %1 additional city, a "
+                           "content citizen becomes unhappy.",
+                           "Afterwards, for every %1 additional cities, a "
+                           "content citizen becomes unhappy.",
+                           step))
+                   .arg(step);
+
+        if (game.info.angrycitizen) {
+          str += QStringLiteral(" ");
+          str += _("If there are no more content citizens, an unhappy "
+                   "citizen becomes angry instead.");
+        }
+      }
+    }
+  }
+  return str;
+}
+
+/**
+ * Describes what the empire size rules imply for an empire of a given size.
+ */
+QString text_happiness_cities_apply_rules(int cities, int max_content)
+{
+  if (max_content > 0) {
+    // TRANS: Pluralized in "%2 content citizens"
+    return QString(PL_("You have %1 cities, resulting in a maximum of %2 "
+                       "content citizen.",
+                       "You have %1 cities, resulting in a maximum of %2 "
+                       "content citizens.",
+                       max_content))
+        .arg(cities)
+        .arg(max_content);
+  } else if (max_content == 0) {
+    return _("You have %1 cities, thus all citizens are unhappy.");
+  } else {
+    // TRANS: Pluralized in "%2 angry citizens"
+    return QString(PL_("You have %1 cities, resulting in a maximum of "
+                       "%2 angry citizen.",
+                       "You have %1 cities, resulting in a maximum of "
+                       "%2 angry citizens.",
+                       max_content))
+        .arg(cities)
+        .arg(-max_content);
+  }
+}
+
+/**
+ * Describes how many citizens are content after empire size rules.
+ */
+QString text_happiness_cities_content(int size, int max_content)
+{
+  if (max_content >= size) {
+    // Very good
+    return QString(_("In this city of size %1, <b>all citizens are "
+                     "content.</b>"))
+        .arg(size);
+  } else if (max_content > 0) {
+    // Good
+    // TRANS: Pluralized in "citizens are content"
+    return QString(
+               PL_("In this city of size %1, <b>%2 citizen is content.</b>",
+                   "In this city of size %1, <b>%2 citizens are "
+                   "content.</b>",
+                   max_content))
+        .arg(size)
+        .arg(max_content);
+  } else if (max_content == 0) {
+    // Still ok
+    return QString(
+               "In this city of size %1, <b>all citizens are unhappy.</b>")
+        .arg(size);
+  } else if (-max_content < size) {
+    // Somewhat bad
+    return QString(
+               PL_(
+                   // TRANS: Pluralized in "citizens are angry"
+                   "In this city of size %1, <b>%2 citizen is angry.</b>",
+                   "In this city of size %1, <b>%2 citizens are angry.</b>",
+                   -max_content))
+        .arg(size)
+        .arg(-max_content);
+  } else {
+    // Very bad
+    return QString(
+               _("In this city of size %1, <b>all citizens are angry.</b>"))
+        .arg(size);
+  }
+}
+
+/**
+ * Describes what would happen to a city's citizens if the empire size would
+ * grow further.
+ */
+QString text_happiness_more_cities(int base_content, int basis, int step,
+                                   int max_content, int size, int cities)
+{
+  // Actual content in this city (negative if there are angry citizens
+  // instead)
+  int content = std::min<int>(max_content, size);
+  if (!game.info.angrycitizen && content < 0) {
+    content = 0;
+  }
+  // How many citizens unhappy about the empire size we'll have when the
+  // next unhappy appears
+  int unhappy_for_next_threshold = base_content - content + 1;
+  // How many cities we'll have when the next unhappy appears
+  int cities_to_next_threshold =
+      basis + (unhappy_for_next_threshold - 1) * step + 1;
+  // ...or how many more we need
+  cities_to_next_threshold -= cities;
+
+  if (cities_to_next_threshold > 0) {
+    if (content > 0) {
+      return QString(PL_("With %1 more city, a content citizen would become "
+                         "unhappy.",
+                         "With %1 more cities, a content citizen would "
+                         "become unhappy.",
+                         cities_to_next_threshold))
+          .arg(QString::number(cities_to_next_threshold));
+    } else if (game.info.angrycitizen) {
+      // We maxed out the number of unhappy citizens, but they can get
+      // angry instead.
+      return QString(
+                 PL_("With %1 more city, a citizen would become angry.",
+                     "With %1 more cities, a citizen would become angry.",
+                     cities_to_next_threshold))
+          .arg(QString::number(cities_to_next_threshold));
+    }
+  }
+  return _("Having more cities would not create more unhappiness.");
+}
+} // anonymous namespace
+
 /**
    Describing city factors that affect happiness.
  */
-const QString text_happiness_cities(const struct city *pcity)
+QString text_happiness_cities(const struct city *pcity)
 {
   struct player *pplayer = city_owner(pcity);
   int cities = city_list_size(pplayer->cities);
-  int content = get_player_bonus(pplayer, EFT_CITY_UNHAPPY_SIZE);
+  int base_content = get_player_bonus(pplayer, EFT_CITY_UNHAPPY_SIZE);
   int basis = get_player_bonus(pplayer, EFT_EMPIRE_SIZE_BASE);
   int step = get_player_bonus(pplayer, EFT_EMPIRE_SIZE_STEP);
-  QString str;
+  bool depends_on_empire_size = (basis + step > 0);
 
-  if (basis + step <= 0) {
-    /* Special case where penalty is disabled; see
-     * player_content_citizens(). */
-    str += QString(PL_("Cities: %1 total, but no penalty for empire size.",
-                       "Cities: %1 total, but no penalty for empire size.",
-                       cities))
-               .arg(QString::number(cities))
-           + qendl();
-    // TRANS: %d is number of citizens
-    str +=
-        QString(PL_("%1 content per city.", "%1 content per city.", content))
-            .arg(QString::number(content))
-        + qendl();
-  } else {
-    // Can have up to and including 'basis' cities without penalty
-    int excess = MAX(cities - basis, 0);
-    int penalty;
-    int unhappy, angry;
-    int last, next;
-
-    if (excess > 0) {
-      if (step > 0) {
-        penalty = 1 + (excess - 1) / step;
-      } else {
-        penalty = 1;
-      }
+  while (depends_on_empire_size && basis <= 0) {
+    // In this case, we get one unhappy immediately when we build the first
+    // city. So it's equivalent to removing one content.
+    base_content--;
+    if (step > 0) {
+      // The first unhappy appears at a different size. Normalize...
+      basis += step;
     } else {
-      penalty = 0;
-    }
-
-    unhappy = MIN(penalty, content);
-    angry = game.info.angrycitizen ? MAX(penalty - content, 0) : 0;
-    if (penalty >= 1) {
-      /* 'last' is when last actual malcontent appeared, will saturate
-       * if no angry citizens */
-      last = basis + (unhappy + angry - 1) * step;
-      if (!game.info.angrycitizen && unhappy == content) {
-        // Maxed out unhappy citizens, so no more penalties
-        next = 0;
-      } else {
-        // Angry citizens can continue appearing indefinitely
-        next = last + step;
-      }
-    } else {
-      last = 0;
-      next = basis;
-    }
-    // TRANS: sentence fragment, will have text appended
-    str += QString(PL_("Cities: %1 total:", "Cities: %1 total:", cities))
-               .arg(QString::number(cities))
-           + qendl();
-    if (excess > 0) {
-      /* TRANS: appended to "Cities: %d total:"; preserve leading
-       * space. Pluralized in "nearest threshold of %d cities". */
-      str += QString(PL_(" %1 over nearest threshold of %2 city.",
-                         " %1 over nearest threshold of %2 cities.", last))
-                 .arg(QString::number(cities - last), QString::number(last));
-      // TRANS: Number of content [citizen(s)] ...
-      str += QString(PL_("%1 content before penalty.",
-                         "%1 content before penalty.", content))
-                 .arg(QString::number(content))
-             + qendl();
-      str += QString(PL_("%1 additional unhappy citizen.",
-                         "%1 additional unhappy citizens.", unhappy))
-                 .arg(QString::number(unhappy))
-             + qendl();
-      if (angry > 0) {
-        str += QString(PL_("%1 angry citizen.", "%1 angry citizens.", angry))
-                   .arg(QString::number(angry))
-               + qendl();
-      }
-    } else {
-      // TRANS: appended to "Cities: %d total:"; preserve leading space.
-      str +=
-          QString(PL_(" not more than %1, so no empire size penalty.",
-                      " not more than %1, so no empire size penalty.", next))
-              .arg(QString::number(next));
-      str += QString(PL_("%1 content per city.", "%1 content per city.",
-                         content))
-                 .arg(QString::number(content))
-             + qendl();
-    }
-    if (next >= cities && penalty < content) {
-      str += QString(PL_("With %1 more city, another citizen will become "
-                         "unhappy.",
-                         "With %1 more cities, another citizen will become "
-                         "unhappy.",
-                         next + 1 - cities))
-                 .arg(QString::number(next + 1 - cities))
-             + qendl();
-    } else if (next >= cities) {
-      /* We maxed out the number of unhappy citizens, but they can get
-       * angry instead. */
-      fc_assert(game.info.angrycitizen);
-      str += QString(PL_("With %1 more city, another citizen will become "
-                         "angry.",
-                         "With %1 more cities, another citizen will become "
-                         "angry.",
-                         next + 1 - cities))
-                 .arg(QString::number(next + 1 - cities))
-             + qendl();
-    } else {
-      /* Either no Empire_Size_Step, or we maxed out on unhappy citizens
-       * and ruleset doesn't allow angry ones. */
-      str += QString(_("More cities will not cause more unhappy citizens."))
-             + qendl();
+      // This was fake! The ruleset author did something strange.
+      depends_on_empire_size = false;
+      break;
     }
   }
 
-  return str.trimmed();
+  // First explain the rules -- see player_base_citizen_happiness
+  auto str = QStringLiteral("<p>");
+  str += text_happiness_cities_rules(pplayer, base_content, basis, step,
+                                     depends_on_empire_size);
+
+  // Now add the status of this city.
+  str += QStringLiteral("</p><p>");
+  auto max_content = player_base_citizen_happiness(city_owner(pcity));
+  if (!game.info.angrycitizen) {
+    // No angry citizens: max_content can't go negative
+    max_content = CLIP(0, max_content, MAX_CITY_SIZE);
+  }
+  // If the penalty is enabled, explain it.
+  if (depends_on_empire_size) {
+    str += text_happiness_cities_apply_rules(cities, max_content);
+  }
+
+  auto size = city_size_get(pcity);
+  str += QStringLiteral(" ");
+  str += text_happiness_cities_content(size, max_content);
+
+  // Finally, add something about building more cities.
+  if (depends_on_empire_size) {
+    str += QStringLiteral(" ");
+    str += text_happiness_more_cities(base_content, basis, step, max_content,
+                                      size, cities);
+  }
+
+  return str + QStringLiteral("</p>");
 }
 
 /**
