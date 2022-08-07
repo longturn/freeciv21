@@ -92,9 +92,43 @@ From upper-left to lower-right, the following user interface elements are availa
 Players List
 ^^^^^^^^^^^^
 
+The :guilabel:`Players list` table shows information about the configured players in the game. The information
+shown in Figure 2 is what a single-player game looks like. A LongTurn multi-player game will look very
+similar, except that all the player's aliases will be shown as setup by the game administrator.
+You can right-click on a player's row to configure details about the specific player:
+
+* :guilabel:`Observe` -- Allows you to connect to a running game and observe that player. This is useful
+  during LongTurn multi-player games when you want to connect and see what a player is doing, but you cannot
+  make any actual moves for the player. This works for LAN games as well. You can also use the server
+  chatline and issue this command: ``/observe <player>``.
+* :guilabel:`Remove player` -- Removes the player from the list.
+* :guilabel:`Take this player` -- Allows you to claim this player as your own and then when you click
+  :guilabel:`Start` you will join the game as that player. This is a required step for LongTurn multi-player
+  games at start of a new game. Subsequent logins to a game when you `Connect to Network Game`_ will not
+  require another take action. You can also use the server chatline and issue this command: ``/take <player>``
+* :guilabel:`Pick nation` -- Allows you to `Pick Nation`_.
+* :guilabel:`Set difficulty` -- Set the difficulty of the AI.
+* :guilabel:`Put on team` -- Combine players into teams.
+* :guilabel:`AI toggle player` -- Toggle if the player is an AI or a human. This is needed before you can use
+  the ``take`` option above as players when added are AI by default.
 
 Nation
 ^^^^^^
+
+Clicking on the button that says :guilabel:`Random` as shown in Figure 2 above, Freeciv21 will bring up a
+dialog box allowing you to pick the nation you want to play as shown in Figure 3 below. Freeciv21 comes with
+tons of available nations to pick from. Each nation has a city graphics style that is automatically selected,
+but you can also change it. You can pick from European, Classical, Tropical, Asian, Babylonian and Celtic. You
+can also change the gender of your empire's leader between male and female as well as eigther use the built-in
+leader names or enter one of your choosing.
+
+.. figure:: ../../_static/images/gui-elements/pick-nation.png
+    :height: 400px
+    :align: center
+    :alt: Freeciv21 Select Nation Dialog
+    :figclass: align-center
+
+    Figure 3: Select Nation Dialog
 
 
 Rules
