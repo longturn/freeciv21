@@ -264,10 +264,49 @@ join the server. Pretty much all LongTurn online multi-player games are connecte
 Load Saved Game
 ---------------
 
+When you click on the :guilabel:`Load Saved Game` button, the a dialog box will appear as in Figure 6 below.
+Find the saved game you want to load and click (select) it in the table.
+
+.. figure:: ../../_static/images/gui-elements/saved-game.png
+    :height: 400px
+    :align: center
+    :alt: Freeciv21 Load Saved Game Dialog
+    :figclass: align-center
+
+    Figure 6: Load Saved Game Dialog
+
+
+Freeciv21 will show you a sample of the game map and some information about the game. If this is not what you
+were looking for, select another save from the table. When you have found the save you want to load, click on
+the :guilabel:`Load` button and you will be placed in the game at the save point.
+
+Alternately, you can click on the :guilabel:`Browse` button to browse your local filesystem to pick a saved
+game that is not in your user profile.
 
 Start Scenario Game
 -------------------
 
+When you click on the :guilabel:`Start Scenario Game` button, a dialog box will appear as in Figure 7 below.
+You can click on a scenario to select it and see information about the selected scenario on the panel to the
+right side. When you have found the scenario you want to run, click on the :guilabel:`Load Scenario` button.
+This will bring up the new game dialog as shown in Figure 2 above. When ready, click :guilabel:`Start` to
+begin the scenario game.
+
+.. figure:: ../../_static/images/gui-elements/scenarios.png
+    :height: 400px
+    :align: center
+    :alt: Freeciv21 Scenarios Dialog
+    :figclass: align-center
+
+    Figure 7: Scenarios Dialog
+
+
+.. Tip:: If you are new to Freeciv21, the ``tutorial`` scenario will walk you through about 100 turns worth
+  of tips on how to get started playing a single-player game.
+
+Clicking on the :guilabel:`Browse` button will bring a filesystem browser that you can use to pick a
+scenario file in an alternate location. Clicking on :guilabel:`Cancel` will bring you back to the
+`Launching the client`_ start screen.
 
 Options
 -------
