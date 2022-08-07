@@ -195,17 +195,27 @@ text file if needed.
 Server chat/command line
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
+The :guilabel:`server chat/command line` is a text box below the server output window. From here you can
+manually enter ``/set`` commands to the server directly if you know what you want to set.
 
 Disconnect
 ^^^^^^^^^^
 
+Clicking this button takes you back to the :guilabel:`Start Screen` as shown in Figure 1 in the
+`Launching the Client`_ section. The local ``freeciv21-server`` instance will be terminated at this time. A
+subsequent click of :guilabel:`Start new game` will spawn a new instance of the server, however any changes
+made previously will be lost and you will have to start over.
 
 Pick Nation
 ^^^^^^^^^^^
 
+This button does the same thing as `Nation`_ above.
 
 Observe
 ^^^^^^^
+
+This button allows you to do a :strong:`global` observe of all players. This is a special server setting and
+is not enabled by default.
 
 Start
 ^^^^^
