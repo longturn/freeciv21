@@ -1362,10 +1362,43 @@ view will tell you what was sold where.
 Tax Rates View
 ^^^^^^^^^^^^^^
 
+The :guilabel:`Tax Rates View` is simply an icon on the `Top Function Bar`_ that shows you what percentage
+Gold, Science and Luxury Goods your nation is set at. Figure 38 is a sample of the icon for
+:guilabel:`Tax Rates View`.
+
+.. figure:: ../../_static/images/gui-elements/top-bar-tax-rates.png
+  :align: center
+  :alt: Freeciv21 Tax Rates View
+  :figclass: align-center
+
+  Figure 38: Tax Rates View Icon
+
+
+Clicking on the :guilabel:`Tax Rates View` icon will bring up the :guilabel:`Tax Rates Dialog` box as shown in
+Figure 17 in the `Civilization Menu`_ section.
 
 National Status View
 ^^^^^^^^^^^^^^^^^^^^
 
+The :guilabel:`National Status View` is simply an icon on the `Top Function Bar`_ with 4 smaller icons inside of
+it. The four icons from left to right are: Research Progress, Global Warming Chance, Nuclear Winter
+Chance and Government. The Research Progress, Global Warming Chance, Nuclear Winter Chance icons will change
+depending on the rate and current status.
+
+.. figure:: ../../_static/images/gui-elements/top-bar-nation-status.png
+  :align: center
+  :alt: Freeciv21 National Status View
+  :figclass: align-center
+
+  Figure 39: National Status View Icon
+
+
+If you hover your mouse over the :guilabel:`National Status View` icon, a pop up widget will appear and give
+you some information about your nation's status. The pop up widget shows: Population, Year, Turn Number, Total
+Gold, Net Income, Tax Rates, Research along with progress, Bulbs per Turn, Culture Score, Global Warming
+Change, Nuclear Winter Chance, Current form of Government. Some of this information is obviously a duplicate
+of what is shown on the `Map View`_, `Tax Rates View`_, and `Research View`_. The values for Nuclear Winter
+and Global Warming chance give a good indication of what the icon looks like.
 
 Messages
 ^^^^^^^^
