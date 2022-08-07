@@ -604,6 +604,52 @@ City Traderoutes
 Select Menu
 ^^^^^^^^^^^
 
+The :guilabel:`Select` is used to select units on the game map in varying degrees.
+
+The :guilabel:`Select` menu has the following options:
+
+Single Unit (Unselect Others)
+    Assuming you have selected multiple units (such as the next menu for :guilabel:`All on Tile`) and you want
+    to quickly undo that. This menu supports that function.
+
+All on Tile
+    Quickly select all of the units on the same tile. This assumes that multiple units of different type are
+    stacked on the same tile.
+
+Same Type on Tile
+    Quickly select all of the units of the same type on the tile. This assumes that multiple units of
+    different types are stacked on the same tile.
+
+Same Type on Continent
+    Works the exact same way as the menu option above (:guilabel:`Same Type on Tile`) but expands the
+    selection to the same island or continent.
+
+Same Type Everywhere
+    Even larger window of unit selection to pick all of the same type, but in all locations across the
+    `Map View`_. This is useful to help you find units placed in allied cities or to conduct a mass
+    airlift.
+
+Wait
+    If you are not ready to move the currently selected unit, you can tell it to :strong:`wait` with this menu
+    option. The rotation of unit selection will bypass this unit and will come back until you either
+    move the unit or tell it your are done.
+
+Done
+    If you have moved the unit, but still have move points left or are simply done working with the unit for
+    you can tell the client you are finished (done) with it with this menu item.
+
+Advanced Unit Selection
+    Opens the :guilabel:`Advanced Unit Selection` dialog box as shown in Figure 16 below. This dialog box
+    gives you options to select a group of units using a more nuanced grouping method other than the other
+    :guilabel:`Select` menu options.
+
+.. figure:: ../../_static/images/gui-elements/advanced-unit-selection.png
+  :align: center
+  :alt: Freeciv21 Advanced Unit Selection Dialog
+  :figclass: align-center
+
+  Figure 16: Advanced Unit Selection Dialog
+
 
 Unit Menu
 ^^^^^^^^^
