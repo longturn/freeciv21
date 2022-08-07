@@ -311,6 +311,51 @@ scenario file in an alternate location. Clicking on :guilabel:`Cancel` will brin
 Options
 -------
 
+When you click on the :guilabel:`Options` button, a dialog box will appear as in Figure 8 below. This dialog
+allows you to set a myriad of options that effect the look at feel of the client when you are playing a game.
+
+The local client options dialog box can also be opened while in a game via the
+:menuselection:`Game --> Local Options` menu.
+
+.. figure:: ../../_static/images/gui-elements/local-options.png
+    :height: 400px
+    :align: center
+    :alt: Freeciv21 Local Options Dialog
+    :figclass: align-center
+
+    Figure 8: Local Options Dialog
+
+
+The local options dialog is broken down into the following tabs:
+
+* :guilabel:`Network`: On this tab you can save your preferred username, server and port information to be
+  used during `Connect to Network Game`_.
+* :guilabel:`Sound`: On this tab you can set everything related to in game sound and music.
+* :guilabel:`Interface`: On this tab you can set anything related to how you interact with the interface of
+  client while playing a game.
+* :guilabel:`Graphics`: On this tab you can change the look and feel with a different theme. NightStalker is
+  the default theme out of the box. You can also set the default tileset to use under different map styles as
+  well as various things you may or may not want the client to paint (draw) on the screen.
+* :guilabel:`Overview`: On this tab you can enable/disable varying layers of the map.
+* :guilabel:`Map Image`: The Freeciv21 client allows you to save images of the map to the filesystem. This
+  tab allows you to configure how you want to do that. Refer to `Game Menu`_ for more information.
+* :guilabel:`Font`: There are a collection of font styles used in the client. This tab allows you to tailor
+  them to your own favorites.
+
+The buttons along the bottom of the dialog box are:
+
+* :guilabel:`Reset`: Clicking this button will reset all the options to the out of box defaults.
+* :guilabel:`Cancel`: Clicking this button will either return you to the `Launching the client`_ start screen
+  or close the dialog and drop you back to the `Map View`_ if requested from the :guilabel:`Game` menu.
+* :guilabel:`Refresh`: If you used the modpack installer to add a new tileset, soundset, or musicset with the
+  local options dialog open, you can use the :guilabel:`Refresh` button to reload the available choices for
+  some of the drop down selection boxes.
+* :guilabel:`Apply`: Apply the settings as set to the client for immediate effect. This button won't do much
+  if local options was called from the `Start New Game`_ dialog box.
+* :guilabel:`Save`: Save the current settings to the freeciv21 client resource (``rc``) file on the local
+  filesystem.
+* :guilabel:`OK`: Apply the settings and close the dialog box. This button does not do a save operation by
+  default.
 
 Main Client Interface
 =====================
