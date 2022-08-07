@@ -1269,6 +1269,50 @@ left-click of the icon will bring up the :guilabel:`Nations View` as shown in Fi
 Research View
 ^^^^^^^^^^^^^
 
+The :guilabel:`Research View` is a separate page showing the technology research tree. This is the page
+where you instruct your scientists to research technologies. When you click the icon for it as shown
+in Figure 34, the client will leave the view you are currently showing and will switch to a listing of your
+research tree.
+
+.. figure:: ../../_static/images/gui-elements/top-bar-research.png
+  :align: center
+  :alt: Freeciv21 Research
+  :figclass: align-center
+
+  Figure 34: Research View Icon
+
+
+If you hover your mouse over the icon, a pop up widget will appear and give you some information about your
+nation's research.
+
+Figure 35 below shows a sample of a :guilabel:`Research Tree`. In this picture the player has actually
+finished all of the available technologies (known as completing the research tree) and is simply researching
+"future" technologies.
+
+.. figure:: ../../_static/images/gui-elements/research-tree.png
+  :align: center
+  :width: 800px
+  :alt: Freeciv21 Research Tree
+  :figclass: align-center
+
+  Figure 35: Research Tree
+
+
+If nothing is being researched, the :guilabel:`Research View` icon will flash to bring attention to it.
+
+On the :guilabel:`Research Tree`, the top-left drop down box is where you can pick from a menu of what
+technology you want your scientists to concentrate on. The bottom-left drop down box is where you can set a
+longer range target. The client will work through the list of technologies as turns progress in order of
+dependency. The progress bar on the right will show you how many bulbs you are producing each turn, how many
+more bulbs you have left to finish the research target and if enabled, how many bulbs are being used for
+technology upkeep.
+
+If you do not want to use the drop down boxes to pick current and target technologies, you can left-click on
+the box for the technology in the :guilabel:`Research Tree` view.
+
+If you hover your mouse over the icons in the :guilabel:`Research Tree`, a pop-up widget will appear giving
+you some information pulled from the in game help. Only so much information is displayed, so you may be
+prompted to go to the in game help for more information.
 
 Economics View
 ^^^^^^^^^^^^^^
