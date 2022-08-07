@@ -1317,6 +1317,47 @@ prompted to go to the in game help for more information.
 Economics View
 ^^^^^^^^^^^^^^
 
+The :guilabel:`Economics View` is a separate page set in a table format. When you click the icon for it as
+shown in Figure 36, the client will leave the view you are currently showing and will switch to a listing of
+your nation's economy. A nations economy is mostly about city improvement and unit support and maintenence (in
+gold).
+
+.. figure:: ../../_static/images/gui-elements/top-bar-economy.png
+  :align: center
+  :alt: Freeciv21 Economy
+  :figclass: align-center
+
+  Figure 36: Economy View Icon
+
+
+If you hover your mouse over the icon, a pop up widget will appear and give you some information about your
+nation's economy.
+
+Figure 37 below shows a sample :guilabel:`Economics View`. Notice that you can see city improvements and units
+in a table format giving you the number produced, how much gold in upkeep per turn each consumes, total
+gold upkeep per turn of all of them and if any are redundant. A redundant improvement is one that has been
+overcome by events; typically by a new technological advancement. You want to sell redundant items as they
+are costing you gold and giving nothing back in return. The :guilabel:`Economics View` will not tell you what
+city the item is redundant in, you will have to go find that yourself. This is a good usecase for the advanced
+select option in the `Cities View`_.
+
+The :guilabel:`Economics View` has a few buttons in the upper-left: :guilabel:`Disband`, :guilabel:`Sell All`,
+and :guilabel:`Sell Redundant`. The button for :guilabel:`Disband` will disband all the units of a type that
+has been selected in the view. The button for :guilabel:`Sell All` does the same for a city improvement that
+has been selected in the view. Lastly, the :guilabel:`Sell Redundant` button will only sell redundant city
+improvements in those cities for the city improvement that has been selected in the view. The `Messages`_
+view will tell you what was sold where.
+
+.. figure:: ../../_static/images/gui-elements/economy.png
+  :align: center
+  :alt: Freeciv21 Economics View
+  :figclass: align-center
+
+  Figure 37: Economics View
+
+
+.. note:: You can only sell one city improvement at at time per turn, so you might not be able to do all the
+  things you want every turn.
 
 Tax Rates View
 ^^^^^^^^^^^^^^
