@@ -45,7 +45,7 @@ const QString act_sel_action_tool_tip(const struct action *paction,
                                       const struct act_prob prob);
 
 QString text_happiness_buildings(const struct city *pcity);
-const QString text_happiness_nationality(const struct city *pcity);
+QString text_happiness_nationality(const struct city *pcity);
 QString text_happiness_cities(const struct city *pcity);
 QString text_happiness_luxuries(const struct city *pcity);
 const QString text_happiness_units(const struct city *pcity);

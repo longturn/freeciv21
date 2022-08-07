@@ -28,6 +28,7 @@
 #include "clientutils.h"
 #include "combat.h"
 #include "culture.h"
+#include "effects.h"
 #include "fc_types.h" // LINE_BREAK
 #include "game.h"
 #include "government.h"
@@ -1388,42 +1389,67 @@ QString text_happiness_buildings(const struct city *pcity)
 }
 
 /**
-   Describing nationality effects that affect happiness.
+ * Describing nationality effects that affect happiness.
  */
-const QString text_happiness_nationality(const struct city *pcity)
+QString text_happiness_nationality(const struct city *pcity)
 {
-  QString str;
-  int enemies = 0;
-
-  str = _("Nationality: ") + qendl();
-
-  if (game.info.citizen_nationality) {
-    if (get_city_bonus(pcity, EFT_ENEMY_CITIZEN_UNHAPPY_PCT) > 0) {
-      struct player *owner = city_owner(pcity);
-
-      citizens_foreign_iterate(pcity, pslot, nationality)
-      {
-        if (pplayers_at_war(owner, player_slot_get_player(pslot))) {
-          enemies += nationality;
-        }
-      }
-      citizens_foreign_iterate_end;
-
-      if (enemies > 0) {
-        str += QString(PL_("%1 enemy nationalist", "%1 enemy nationalists",
-                           enemies))
-                   .arg(QString::number(enemies));
-      }
-    }
-
-    if (enemies == 0) {
-      str += QString(_("None."));
-    }
-  } else {
-    str += QString(_("Disabled."));
+  if (auto effects = get_effects(EFT_ENEMY_CITIZEN_UNHAPPY_PCT);
+      !game.info.citizen_nationality || effect_list_size(effects) == 0) {
+    // Disabled in the ruleset
+    effect_list_destroy(effects);
+    return QString();
   }
 
-  return str.trimmed();
+  auto str = QStringLiteral("<p>");
+  str +=
+      _("The presence of enemy citizens can create additional unhappiness.");
+  str += QStringLiteral(" ");
+
+  int pct = get_city_bonus(pcity, EFT_ENEMY_CITIZEN_UNHAPPY_PCT);
+  if (pct == 0) {
+    str += _("However, it is not the case in this city.");
+    return str + QStringLiteral("</p>");
+  }
+
+  // This is not exactly correct, but gives a first idea.
+  int num = std::ceil(100. / pct);
+  str += QString(PL_("For every %1 citizen of an enemy nation, one citizen "
+                     "becomes unhappy.",
+                     "For every %1 citizens of an enemy nation, one citizen "
+                     "becomes unhappy.",
+                     num))
+             .arg(num);
+  str += QStringLiteral("</p><p>");
+
+  int enemies = 0;
+  const auto owner = city_owner(pcity);
+  citizens_foreign_iterate(pcity, pslot, nationality)
+  {
+    if (pplayers_at_war(owner, player_slot_get_player(pslot))) {
+      enemies += nationality;
+    }
+  }
+  citizens_foreign_iterate_end;
+
+  if (enemies == 0) {
+    str += _("There is <b>no enemy citizen</b> in this city.");
+  } else {
+    auto unhappy = enemies * pct / 100;
+    // TRANS: "There is 1 enemy citizen in this city, resulting in <b>2
+    //        additional unhappy citizens.</b>" (first half)
+    str +=
+        QString(PL_("There is %1 enemy citizen in this city, ",
+                    "There are %1 enemy citizens in this city, ", enemies))
+            .arg(enemies);
+    // TRANS: "There is 1 enemy citizen in this city, resulting in <b>2
+    //        additional unhappy citizens.</b>" (second half)
+    str += QString(PL_("resulting in <b>%1 additional unhappy citizen.</b>",
+                       "resulting in <b>%1 additional unhappy citizens.</b>",
+                       unhappy))
+               .arg(unhappy);
+  }
+
+  return str + QStringLiteral("</p>");
 }
 
 /**
