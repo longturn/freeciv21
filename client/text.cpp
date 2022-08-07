@@ -1318,24 +1318,73 @@ const QString act_sel_action_tool_tip(const struct action *paction,
 }
 
 /**
-   Describing buildings that affect happiness.
+ * Describe buildings that affect happiness (or rather, anything with a
+ * Make_Content effect).
  */
 QString text_happiness_buildings(const struct city *pcity)
 {
-  struct effect_list *plist = effect_list_new();
-  QString effects;
-  QString str;
-
-  get_city_bonus_effects(plist, pcity, nullptr, EFT_MAKE_CONTENT);
-  if (0 < effect_list_size(plist)) {
-    effects = get_effect_list_req_text(plist);
-    str = QString(_("Buildings: %1.")).arg(effects);
-  } else {
-    str = _("Buildings: None.");
+  if (const auto effects = get_effects(EFT_MAKE_CONTENT);
+      effect_list_size(effects) == 0) {
+    effect_list_destroy(effects);
+    return QString(); // Disabled in the ruleset.
   }
-  effect_list_destroy(plist);
 
-  return str.trimmed();
+  auto str = QStringLiteral("<p>");
+  str += _("Infrastructure can have an effect on citizen happiness.");
+  str += QStringLiteral(" ");
+
+  int bonus = get_city_bonus(pcity, EFT_MAKE_CONTENT);
+  if (bonus <= 0) {
+    // TRANS: Comes after "Infrastructure can have an effect on citizen
+    //        happiness"
+    str += _("This city doesn't receive any such bonus.");
+    return str + QStringLiteral("</p>");
+  }
+
+  // TRANS: Comes after "Infrastructure can have an effect on citizen
+  //        happiness"
+  str +=
+      QString(
+          PL_("In this city, it can make up to <b>%1 citizen<b> content.",
+              "In this city, it can make up to <b>%1 citizens<b> content.",
+              bonus))
+          .arg(bonus);
+
+  // Add a list of active effects
+  auto effects = effect_list_new();
+  get_city_bonus_effects(effects, pcity, nullptr, EFT_MAKE_CONTENT);
+
+  str += QStringLiteral("</p><p>");
+  // TRANS: Precedes a list of active effects, pluralized on its length.
+  str += PL_(
+      "The following contribution is active:",
+      "The following contributions are active:", effect_list_size(effects));
+  str += QStringLiteral("<ul>");
+
+  char help_text_buffer[MAX_LEN_PACKET];
+
+  effect_list_iterate(effects, peffect)
+  {
+    str += QStringLiteral("<li>");
+    if (requirement_vector_size(&peffect->reqs) == 0) {
+      // TRANS: Describes an effect without requirements; %1 is its value
+      str += QString(_("%1 by default"))
+                 .arg(effect_type_unit_text(peffect->type, peffect->value));
+    } else {
+      help_text_buffer[0] = '\0';
+      get_effect_req_text(peffect, help_text_buffer,
+                          sizeof(help_text_buffer));
+      // TRANS: Describes an effect; %1 is its value and %2 the requirements
+      str += QString(_("%1 from %2"))
+                 .arg(effect_type_unit_text(peffect->type, peffect->value))
+                 .arg(help_text_buffer);
+    }
+    str += QStringLiteral("</li>");
+  }
+  effect_list_iterate_end;
+  effect_list_destroy(effects);
+
+  return str + QStringLiteral("</ul></p>");
 }
 
 /**
