@@ -493,6 +493,113 @@ Quit
 View Menu
 ^^^^^^^^^
 
+The :guilabel:`View` enables a user to manipulate what is shown on the `Map View`_ as well as varying degrees
+of zooming in and out.
+
+The :guilabel:`View` menu has the following options:
+
+Center View
+    With a unit selected, this menu option will place the unit in the center of the screen.
+
+Fullscreen
+    Sets Freeciv21 to use the whole screen, removing the title bar and operating system Task bar.
+
+Minimap
+    Shows or hides the `Mini Map`_ in the lower right corner.
+
+Show New Turn Information
+    Enables or Disables populating new turn information into the `Messages`_ widget.
+
+Show Detailed Combat Information
+    Enables or Disables populating detailed combat information into the `Messages`_ widget. Detailed combat
+    information looks like this:
+
+.. code-block:: rst
+
+    Your {veteran level} {unit name} [id:{number} D:{defense} HP:{hit points}] lost to an
+    attack by the {enemy nation} {veteran level} {unit name} [id:{number} A:{attack} lost
+    {number} HP, has {number} HP remaining and achieved the rank of {veteran level}].
+
+
+Lock Interface
+    Locks the user interface, preventing the move of objects around such as the server log/chat widget.
+
+Zoom In
+    Each selection of this menu option (or corresponding keyboard shortcut or user interface icon next to the
+    `Mini Map`_) will zoom in on the `Map View`_ one level.
+
+Zoom Default
+    Resets the zoom level to the defaul position at Zoom Level 0.
+
+Zoom Out
+    Each selection of this menu option (or corresponding keyboard shortcut or user interface icon next to the
+    `Mini Map`_) will zoom out on the `Map View`_ one level.
+
+Scale Fonts
+    Enables fonts to scale along with the zoom level.
+
+Citybar Style
+    This menu has a sub-menu of three options: :guilabel:`Simple`, :guilabel:`Traditional`, and
+    :guilabel:`Polished` as shown in Figures 13, 14 and 15 respectfully.
+
+.. figure:: ../../_static/images/gui-elements/citybar-simple.png
+  :align: center
+  :alt: Citybar style - Simple
+  :figclass: align-center
+
+  Figure 13: Citybar style - Simple
+
+
+.. figure:: ../../_static/images/gui-elements/citybar-traditional.png
+  :align: center
+  :alt: Citybar style - Traditional
+  :figclass: align-center
+
+  Figure 14: Citybar style - Traditional
+
+
+.. figure:: ../../_static/images/gui-elements/citybar-polished.png
+  :align: center
+  :alt: Citybar style - Polished
+  :figclass: align-center
+
+  Figure 15: Citybar style - Polished
+
+
+City Outlines
+    Enables or Disables the disply on the `Map View`_ of the city's vision radius or outline.
+
+City Output
+    Enables or Disables the display on the `Map View`_ the city's food, production and trade as shown
+    in the `City Dialog`_ box.
+
+Map Grid
+    Enables or Disables the display on the `Map View`_ the tile grid. This can be useful to help differentiate
+    individual tiles from others.
+
+National Borders
+    Enables or Disables the display on the `Map View`_ the national borders of your neighbors. Each nation is
+    given a color at game start (as seen on the `Nations and Diplomacy View`_).
+
+Native Tiles
+    Enables or Disables the display on the `Map View`_ tiles that are native to the unit selected. Non-native
+    tiles are marked with a red hash. Non-Native means that the unit cannot move there.
+
+City Names
+    Enables or Disables the display on the `Map View`_ the names of cities in the city bar.
+
+City Growth
+    Enables or Disables the display on the `Map View`_ the growth of cities in the city bar.
+
+City Production Levels
+    Enables or Disables the display on the `Map View`_ the production of cities in the city bar.
+
+City Buy Cost
+    Enables or Disables the display on the `Map View`_ the cost to buy the currently constructed item in the
+    city bar.
+
+City Traderoutes
+    Enables or Disables the display on the `Map View`_ trade routes between cities.
 
 Select Menu
 ^^^^^^^^^^^
