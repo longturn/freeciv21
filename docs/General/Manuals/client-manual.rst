@@ -220,10 +220,46 @@ is not enabled by default.
 Start
 ^^^^^
 
+When you are finished with all the setings, clicking :guilabel:`Start` will cause the game to start!
 
 Connect to Network Game
 -----------------------
 
+When you click on the :guilabel:`Connect to Network Game` button, the a dialog box will appear as in Figure 5
+below.
+
+.. figure:: ../../_static/images/gui-elements/connect-to-server.png
+    :height: 400px
+    :align: center
+    :alt: Freeciv21 Server Conect Dialog
+    :figclass: align-center
+
+    Figure 5: Server Connect Dialog
+
+
+There are three ways to connect to a server:
+
+#. :strong:`A Local Server`: If you are hosting a local server on the same IP subnet as the client, then it
+   will show in the :guilabel:`Local server` box at the top.
+#. :strong:`An Internet Server`: If the LongTurn community lists running games on its internet metaserver,
+   games will show here and can be connected to via the :guilabel:`Internet servers` box in the middle.
+#. :strong:`Manually`: If you simply need to connect to a remote server and you know the the
+   :guilabel:`servername` and :guilabel:`port`, then this is your option.
+
+For the first two options you will select the server in the table and ensure that your :guilabel:`username` is
+correct and then click :guilabel:`Connect` to connect to the server. The :guilabel:`password` box will
+activate when you have connected to the server. Type in your password and then click :guilabel:`Connect` a
+second time and you will join the server.
+
+For the last option, enter in the server name or IP address into the :guilabel:`Connect` text box and the
+server port in the corresponding :guilabel:`port` text box. Ensure your username is correct and then
+click :guilabel:`Connect` to connect to the server. The :guilabel:`password` box will activate when you have
+connected to the server. Type in your passowrd and then click :guilabel:`Connect` a second time and you will
+join the server. Pretty much all LongTurn online multi-player games are connected to this way.
+
+.. Note:: If you are hosting your own server and a player has never connected before they may be prompted
+  to confirm the password a second time in the :guilabel:`Confirm password` box before being allowed to
+  connect.
 
 Load Saved Game
 ---------------
