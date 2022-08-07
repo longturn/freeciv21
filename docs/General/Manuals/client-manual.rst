@@ -1111,10 +1111,160 @@ a table below the widget, such as Figure 26, that displays the amount of time un
 Cities View
 ^^^^^^^^^^^
 
+The :guilabel:`Cities View` is a separate page in a table format. When you click the icon for it as shown in
+Figure 27, the client will leave the view you are currently showing and will switch to a listing of your
+cities.
+
+.. figure:: ../../_static/images/gui-elements/top-bar-cities.png
+  :align: center
+  :alt: Freeciv21 Cities
+  :figclass: align-center
+
+  Figure 27: Cities View Icon
+
+
+Figure 28 gives a sample of the :guilabel:`City View` in the client with the default columns displayed. If
+you right-click on the table heading, you will be given a list of other columns you may want to show. If you
+change anything, then be sure to save the settings from the :guilabel:`Game` menu.
+
+.. figure:: ../../_static/images/gui-elements/cities.png
+  :align: center
+  :alt: Freeciv21 Cities
+  :figclass: align-center
+
+  Figure 28: Cities
+
+
+If you double-click on a city row, the game will switch to the `Map View`_ and open the `City Dialog`_. When
+you close the `City Dialog`_, the client will not bring you back to the :guilabel:`City View`. You will need
+to do that yourself. If you right-click on a city's row, a pop-up menu will appear. From this menu you can
+change what the city is producing, set a city govenor, sell a city improvement, conduct an advanced selection
+of cities, buy what is currently being produced, and center the city on the map. If you choose to center the
+city on the map, the client will close the :guilabel:`Cities View` and open the `Map View`_ and place the city
+in the center of the screen.
 
 Nations and Diplomacy View
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+The :guilabel:`Nations and Diplomacy View` is actually two views accessed from the same place on the `Top
+Function Bar`_. When you click the icon for it as shown in Figure 29, the client will leave the view you are
+currently showing and display a list of nations that you are playing against in a table format.
+
+.. figure:: ../../_static/images/gui-elements/top-bar-nations.png
+  :align: center
+  :alt: Freeciv21 Nations
+  :figclass: align-center
+
+  Figure 29: Nations and Diplomacy View Icon
+
+
+Figure 30 gives a sample of the :guilabel:`Nations View` in the client with the all available columns
+displayed. If you right-click on the table heading, you will be given a list of column names that you can
+enable or disable. If you change anything, then be sure to save the settings from the :guilabel:`Game` menu.
+
+.. figure:: ../../_static/images/gui-elements/nations.png
+  :align: center
+  :width: 800px
+  :alt: Freeciv21 Nations View
+  :figclass: align-center
+
+  Figure 30: Nations View
+
+
+If you have an embassy with a nation you will be able to see much more in the table than if you do not have an
+embassy. Also, if you click (select) the row of a nation you have an embassy with, you will be given some
+interesting intelligence at the bottom of the page. Figure 31 gives an example.
+
+.. figure:: ../../_static/images/gui-elements/nations-intel.png
+  :align: center
+  :width: 800px
+  :alt: Freeciv21 Nations Intelligence
+  :figclass: align-center
+
+  Figure 31: Nations Intelligence
+
+
+On the left you will see the name of the Nation; The name (username) of the Ruler; the current form of
+Government; the Capital city; how much Gold they have in the bank; the tax rates, research target; and culture
+score.
+
+.. note:: The Capital City will show as ``unknown`` if you have not seen the city on the `Map View`_. If it is
+  in the unknown or has not been seen by one of your units, then you will not have knowledge of the Capital.
+
+In the center you can see the relationship status of the nation across the game. If you see a half-moon icon
+next to a nation, then the nation selected has given shared vision to that nation. In Figure 30 above, you can
+see that the Aztecs have an alliance with the Iroquois and the Arabs. The Aztecs also have shared vision with
+both of these nations.
+
+On the right, you can see a comparison of technological research between your nation and the nation selected.
+
+The :guilabel:`Nations and Diplomacy View` has a few buttons at the upper-left. From left to right, they are:
+:guilabel:`Meet`, :guilabel:`Cancel Treaty`, :guilabel:`Withdraw Vision`, and :guilabel:`Toggle AI Mode`. This
+is how you access the :guilabel:`Diplomacy` component of the :guilabel:`Nations and Diplomacy View`.
+
+Let's talk about the buttons from right to left as :guilabel:`Meet` takes the longest to describe. Depending
+on the command line level you have in the game (defaul is ``hack`` for single player games), you may be able
+to change a player from an AI to a human after a game has started to allow a human player to come into the
+game. This is what the :guilabel:`Toggle AI Mode` button does. If the button is greyed-out you cannot change
+the AI mode in the game.
+
+If you have previously shared vision via a treaty from the :guilabel:`Diplomacy View`, you can revoke it by
+clicking on the :guilabel:`Withdraw Vision` button. Sharing vision is similar to you allowing another player
+to see all of your territory.
+
+If you have a relationship with a player other than :strong:`War`, you can cancel it with the
+:guilabel:`Cancel Treaty` button. Relationship pacts can be changed with the :guilabel:`Diplomacy View`. Most
+rulesets support :strong:`Cease Fire`, :strong:`Peace`, and :strong:`Alliance`.
+
+.. note:: Some forms of government won't allow you to break a :strong:`Peace` or :strong:`Alliance` treaty
+  without going to into Anarchy.
+
+Lastly, clicking :guilabel:`Meet` will bring up a diplomacy screen where you can interact with a player that
+you have an embassy with. Figure 32, shows a sample screen where the parties are agreeing to a cease fire.
+
+.. figure:: ../../_static/images/gui-elements/diplomacy-meet.png
+  :align: center
+  :height: 400px
+  :alt: Freeciv21 Diplomacy
+  :figclass: align-center
+
+  Figure 32: Diplomacy
+
+
+If you wish to give gold to a player, enter in the amount in the :guilabel:`Gold` box. You can also add
+clauses to the treaty by selecting from the :guilabel:`Add Clause` button. Depending on what is enabled in
+your game, you can swap sea and world maps, trade cities, give advances, share vision, give an embassy, or
+agree to peace or an alliance via a pact. If you are happy with the components of the treaty you can click the
+:guilabel:`Accept Treaty` button. The client will change the thumbs-down icon to the right of your nation to a
+thumbs-up showing agreement. If you don't want to do anything and definitely do not want to accept the treaty,
+then you can click on the :guilabel:`Cancel Meeting` button. This will close the :guilabel:`Diplomacy View`
+and return you to the :guilabel:`Nations View`.
+
+.. note:: The ability to trade maps, cities, or advances is ruleset dependent and may not be enabled for all
+  games. The other clauses such as share vision, give an embassy or change the relationship via a pact are
+  enabled at all times.
+
+.. tip:: You don't have to use the :guilabel:`Diplomacy View` to get an embassy with a player. You can always
+  build a :unit:`Diplomat` unit and have that unit get an embassy by going to a player's city and "walk" into
+  the city. An action dialog will show and you can establish an embassy without asking via diplomacy. See in
+  game help for more information on using units to conduct many gameplay features besides simply establishing
+  an embassy.
+
+Lastly, you can see in Figure 32 above that there are more than one conversations occuring. Your foreign state
+deparment is busy! If you happen to click out of the :guilabel:`Diplomacy View`, for example by clicking on
+the icon for the `Map View`_, the icon for the :guilabel:`Nations and Diplomacy View` will change from what is
+shown in Figure 29 and instead will change to what is shown in Figure 33 below.
+
+.. figure:: ../../_static/images/gui-elements/top-bar-nations-diplomacy.png
+  :align: center
+  :alt: Freeciv21 Nations w/ Diplomacy Open
+  :figclass: align-center
+
+  Figure 33: Nations and Diplomacy View Icon w/ Diplomacy View Open
+
+
+To quickly access the :guilabel:`Diplomacy View`, you can right-click on the icon to bring it up. A normal
+left-click of the icon will bring up the :guilabel:`Nations View` as shown in Figure 30 above.
 
 Research View
 ^^^^^^^^^^^^^
