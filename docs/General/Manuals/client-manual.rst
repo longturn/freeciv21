@@ -1403,10 +1403,53 @@ and Global Warming chance give a good indication of what the icon looks like.
 Messages
 ^^^^^^^^
 
+The :guilabel:`Messages` icon is a button on the `Top Function Bar`_ that is used to show or hide the messages
+dialog window. Figure 40 below shows an example of the :guilabel:`Messages` icon button.
+
+.. figure:: ../../_static/images/gui-elements/top-bar-messages.png
+  :align: center
+  :alt: Freeciv21 Messages
+  :figclass: align-center
+
+  Figure 40: Messages Icon Button
+
+
+Figure 41 below shows as example of the :guilabel:`Messages` dialog box. If you double-click on a message
+for unit movement, city production and a few other message types the client will take you to the city or the
+unit on the `Map View`_.
+
+.. figure:: ../../_static/images/gui-elements/messages.png
+  :align: center
+  :alt: Freeciv21 Messages Dialog
+  :figclass: align-center
+
+  Figure 41: Messages Dialog
 
 Unit Controls
 -------------
 
+When a unit has been selected on the `Map View`_, a control dialog box will appear at the bottom center of the
+screen. The :guilabel:`Unit Controls` dialog will give you some information about the unit, the terrain it is
+on and then some icons corresponding to actions that the unit can take from the `Unit Menu`_, `Combat Menu`_,
+or the `Work Menu`_ respectively.  Figure 42 shows a :unit:`Worker` that has been selected.
+
+.. figure:: ../../_static/images/gui-elements/unit-controls.png
+  :align: center
+  :alt: Freeciv21 Unit Controls Dialog
+  :figclass: align-center
+
+  Figure 42: Unit Controls Dialog
+
+
+You can see that the :unit:`Worker` is selected because he has a white selection ring around his base. Looking
+at the dialog, in the header, you can see that this unit is ID # 111, has 4 3/9 Move Points (MPs) and 10 of 10
+Hit Point (HPs). From left to right you can see an image of the unit with MPs over-laid, the terrain it is on
+with infrastructure improvements shown, and then lastly the actions that this unit can take. In this example
+the actions available are: Plant to Forest/River, Build Road, Go to Tile, Sentry, Auto Worker, Wait and Done.
+
+Depending on the type of unit selected, the available actions will change, but the other information will
+remain the same. If you rename a unit (from the `Unit Menu`_), the name will appear in quotes after the
+Unit ID value.
 
 Mini Map
 --------
