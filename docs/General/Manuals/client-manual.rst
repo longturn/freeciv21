@@ -654,14 +654,199 @@ Advanced Unit Selection
 Unit Menu
 ^^^^^^^^^
 
+The :guilabel:`Unit` menu is used to give units orders.
+
+The :guilabel:`Unit` menu has the following options:
+
+Go to Tile
+    With a unit selected, give the unit orders to go to a selected tile on the map.
+
+Go to and...
+    Similar to :guilabel:`Go to Tile` above, however when the unit reaches the given tile you can give the
+    unit a specific command to do as selected from the sub-menu. This is useful, for example, for
+    :unit:`Settler` units to have them go to a spot and build a city as soon as possible.
+
+Go to Nearest City
+    Instruct the unit to go to the nearest city. Nearest in this context is the one that can be reached in
+    the fewest move points (MPs).
+
+Go to/Airlift to City...
+    If Airlifting is enabled in the game (and assuming you have any required city improvement(s) that are
+    required for Airlifting), you use this menu to tell the unit to transport to a city with the Airlift
+    capability. A dialog box will pop up asking what city you want to Airlift to.
+
+.. tip:: Depending on the setup of the rules, a player could use the :guilabel:`Select` menu to select many
+  units of a similar type and then use this menu item to Airlift a great number of units all in one move
+  very quickly.
+
+Autoexplore
+    Ask the unit to automatically open up the unknown (the area of the map that is black and has not been
+    visited by any of your units).
+
+Patrol
+    Instruct a unit to make a collection of moves in a pattern as part of a patrol route.
+
+Sentry
+    Asks a unit to :strong:`Sentry`. Senty is not the same as :strong:`Fortify` as found in the
+    :guilabel:`Combat` menu. A sentried unit is on lookout and will give notice if another unit from an
+    opponent comes into its field of vision.
+
+.. note:: A sentried unit does not gain a fortification bonus when outside of a city. However, sentried
+  units inside of cities gain a default fortification bonus while in the city.
+
+Unsentry All On Tile
+    Instruct a stacked set of units on a single tile to stop that activity and ask for new orders.
+
+Load
+    Load a unit into a transporter, such as a :unit:`Caravel`, :unit:`Galleon`, or :unit:`Transport` ship.
+
+Unload
+    Unload a unit from a transporter.
+
+Unload All From Transporter
+    If you have many units inside of a transporter and you want all of them to disembark at the same time,
+    then you can use this menu to make that nice and easy.
+
+Set Home City
+    Transfers ownership and management (e.g. support) of a unit to the city that it is currently present in.
+    This menu allows you to shift support of units around to help with the cost of supporting units. Refer to
+    `Economics View`_ for more information on unit support costs.
+
+Upgrade
+    Upgrade a unit from one level to another. For example, :unit:`Phalanx` units are often upgradeable to an
+    improved :unit:`Pikemen` with the discovery of :strong:`Feudalism`. The upgrade will cost gold and the
+    client will tell you what that cost is before you agree to the spend.
+
+Convert
+    Similar to :guilabel:`Upgrade`. The convert option allow you to change a unit from one type to another.
+    This is ruleset dependent and is not available in all rulesets.
+
+Disband
+    Use this menu option to eliminate (kill, destroy, fire) a unit. If done inside of a city, then 50% of
+    the shields used in the production of the unit is given to the city and helps build whatever is currently
+    under construction. If a unit is disanded outside of a city, there is no benefit other than the
+    elimination of shield or gold upkeep depending on your form of government.
+
+Rename
+    Give the unit a unit name. Similar to many Naval vessels in real life, you can name your units with a
+    special name.
 
 Combat Menu
 ^^^^^^^^^^^
 
+The :guilabel:`Combat` menu is used to give combat units orders.
+
+The :guilabel:`Combat` menu has the following options:
+
+Fortify Unit
+    Instruct the unit to :strong:`Fortify` on the tile. An icon will show on the unit signifying
+    fortification. By fortifying, the unit is given a defensive bonus depending on the terrain it is on. See
+    in game help for more specifics of what defense bonuses are given by terrain type. When a unit is
+    fortifying, it is not in :strong:`Sentry` mode and will not inform you of enemy unit movement inside of
+    its vision radius.
+
+Build Fortress/Bouy
+    Some units have the ability to build forts, fortresses, and bouys. They are typically :unit:`Workers` or
+    :unit:`Engineers`. In some rulesets, :unit:`Transports` can build Bouys. Forts, Pre-Forts and Fortresses
+    give a unit increased defensive bonuses in addition to what is provided by the base terrain. See in
+    game help for the specifics. Bouys are used to act as sentries in the oceans around your cities and can
+    give you opponent unit movement information.
+
+Build Airbase
+    Instructs a unit to build an Airbase. This is often a requirement for Airlifting in many rulesets. They
+    also often give the ability to heal an aircraft type unit faster while on the tile.
+
+Build Base
+    This generic menu will include a sub-menu of all of the base type tile improvements that can be built
+    as defined by the current ruleset.
+
+Pillage
+    Tells a unit to remove (pillage) tile infrastructure improvements such as roads, railroad and bases.
+
+Do...
+    A dialog box will pop up here and give you all of the actions that the unit selected can perform.
 
 Work Menu
 ^^^^^^^^^
 
+The :guilabel:`Work` menu is used to give units infrastructure work orders such as building roads, irrigation,
+or mines. Tile infrastructure improvements are mostly done with :unit:`Workers` and :unit:`Engineers`, however
+some rulesets allow other units to perform this type of work. See in game help for details.
+
+The :guilabel:`Work` menu has the following options:
+
+Build City
+    Certain units such as :unit:`Settlers` can found cities. If the unit has sufficient move points available,
+    then giving this command will build a new city where the unit is currently placed on the `Map View`_. The
+    unit will be consumed by the action.
+
+Auto Worker
+    Tell a :unit:`Worker` to use an in game algorithm to improve tiles. The game engine will give the
+    :unit:`Worker` instructions so you don't have to.
+
+Build Road/Railroad/Maglev
+    Tell a :unit:`Worker` to build a road. If sufficient technological knowledge is available, then a railroad
+    and eventually a maglev may be able to be constructed at a later time during the game. The menu will
+    change with the best available option depending on what has been done to improve the tile in the past.
+
+Build Path
+    Provides a sub-menu of all of the pathing options available for the tile. This is mostly road, railroad,
+    and maglev. Other rulesets may other different path types. See in game help for more details.
+
+Build Irrigation/Farmland
+    Tell a :unit:`Worker` to irrigate the tile in order to improve the food output from the tile. If
+    sufficient technological knowledge is available, then a farmland may be added to the tile at a later
+    time during the game. The menu will change with the best available option depending on what has been
+    done to improve the tile in the past.
+
+Cultivate to Plains
+    Cultivation is a multi-step process where a tile is converted from one type to another. Such as converting
+    a swamp to plains. Not all tile terrain types can be cultivated to other types. See in game help for
+    details.
+
+Build Mine
+    Tells a :unit:`Worker` to build a mine on a tile to improve the shield output.
+
+Plant Forest/Swamp
+    If the unit is on a grassland tile, then you can tell the :unit:`Worker` to plant a forest on the tile. If
+    the unit is on a forest tile, then you can tell the :unit:`Worker` to convert the forest to swamp.
+
+Connect with Road
+    Tell a :unit:`Worker` to build a road many times along a given path.
+
+Connect with Railroad/Maglev
+    Tell a :unit:`Worker` to build a railroad or maglev many times along a given path.
+
+Connect with Irrigation
+    Tell a :unit:`Worker` to connect many tiles together with irrigation. This is often done to get
+    irrigation from a source of fresh water over to a city.
+
+Transform to Hills/Swamp/Ocean
+    Tell a :unit:`Engineer` to conduct a major terraforming operation on the tile. Mountains can be cut down
+    to hills, forests and grassland can be converted to swamp and then the swamp can be converted to ocean.
+    In some circumstances, ocean can be converted to swamp and then the swamp can be converted to grassland.
+    In most rulesets, only the :unit:`Engineer` unit can do these major operations.
+
+Clean Pollution
+    Tell a :unit:`Worker` to clean pollution from the tile. Pollution on a tile will eliminate or severely
+    cripple the output of a tile and contributes to global warming.
+
+Clean Nuclear Fallout
+    If a :unit:`Nuclear` unit has been detonated nearby (e.g. attacked a city), then there will be nuclear
+    fallout all over the place. Similar to pollution, nuclear fallout severely cripples the output of a tile
+    and contributes to nuclear winter.
+
+Help Build Wonder
+    Certain units, such as :unit:`Caravan` can be used to move production from one city to another and help
+    build Small and Great Wonders. This menu aids that function. Alternately you can simply "walk the
+    :unit:`Caravan` into a city and a pop up dialog will ask what you want to do.
+
+Establish Trade Route
+    Certain units, such as :unit:`Caravan` can be used to establish a trade route between two cities. This
+    menu aids that function.
+
+As you can see, there are a number of ways that a tile can be altered with infrastructure improvements. Be
+sure to have a close look at the in game help on Terrain for more information.
 
 Multiplayer Menu
 ^^^^^^^^^^^^^^^^
