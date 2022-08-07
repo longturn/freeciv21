@@ -1692,11 +1692,73 @@ const QString text_happiness_units(const struct city *pcity)
 }
 
 /**
-   Describing luxuries that affect happiness.
+ * Describing luxuries that affect happiness.
  */
-const QString text_happiness_luxuries(const struct city *pcity)
+QString text_happiness_luxuries(const struct city *pcity)
 {
-  return QString(_("Luxury: %1 total."))
-             .arg(QString::number(pcity->prod[O_LUXURY]))
-         + qendl();
+  auto str = QStringLiteral("<p>");
+
+  // Explain the rules
+  str += QString(_("For each %1 luxury good produced in a city, a citizen "
+                   "becomes happier."))
+             .arg(game.info.happy_cost);
+  str += QStringLiteral(" ");
+
+  // Give the basis for calculation. Shortcut the rest if there's not enough
+  // to help a single citizen.
+  auto luxuries = pcity->prod[O_LUXURY];
+  if (luxuries == 0) {
+    str += _("This city generates no luxury goods.");
+    return str + QStringLiteral("</p>");
+  } else if (luxuries < game.info.happy_cost) {
+    str += QString(PL_("This city generates a total of %1 luxury good, not "
+                       "enough to have an effect.",
+                       "This city generates a total of %1 luxury goods, not "
+                       "enough to have an effect.",
+                       luxuries))
+               .arg(luxuries);
+    return str + QStringLiteral("</p>");
+  }
+
+  str += QString(PL_("This city generates a total of %1 luxury good.",
+                     "This city generates a total of %1 luxury goods.",
+                     luxuries))
+             .arg(luxuries);
+
+  str += QStringLiteral("</p><p>");
+
+  auto made_happy = pcity->feel[CITIZEN_HAPPY][FEELING_LUXURY]
+                    - pcity->feel[CITIZEN_HAPPY][FEELING_BASE];
+  auto made_content = pcity->feel[CITIZEN_CONTENT][FEELING_LUXURY]
+                      - pcity->feel[CITIZEN_CONTENT][FEELING_BASE];
+  auto made_unhappy = pcity->feel[CITIZEN_UNHAPPY][FEELING_LUXURY]
+                      - pcity->feel[CITIZEN_UNHAPPY][FEELING_BASE];
+  int citizens_affected = std::max(0, made_happy) + std::max(0, made_content)
+                          + std::max(0, made_unhappy);
+  int upgrades = made_happy * 3 + made_content * 2 + made_unhappy * 1;
+  int cost = upgrades * game.info.happy_cost;
+
+  if (cost < luxuries) {
+    str +=
+        QString(PL_("%1 citizen is made happier using %2 luxury good(s).",
+                    "%1 citizens are made happier using %2 luxury good(s).",
+                    citizens_affected))
+            .arg(citizens_affected)
+            .arg(cost);
+    if (luxuries - cost > 0) {
+      str += QStringLiteral(" ");
+      str += QString(PL_("%1 luxury good is not used.",
+                         "%1 luxury goods are not used.", luxuries - cost))
+                 .arg(luxuries - cost);
+    }
+  } else {
+    str += QString(PL_("All available luxury goods are used to make %1 "
+                       "citizen happier.",
+                       "All available luxury goods are used to make %1 "
+                       "citizens happier.",
+                       citizens_affected))
+               .arg(citizens_affected);
+  }
+
+  return str + QStringLiteral("</p>");
 }
