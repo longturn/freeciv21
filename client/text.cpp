@@ -1318,6 +1318,51 @@ const QString act_sel_action_tool_tip(const struct action *paction,
   return action_prob_explain(prob);
 }
 
+namespace /* anonymous */ {
+
+/**
+ * Builds text intended at explaining the value taken by an effect.
+ */
+QString text_happiness_effect_details(const city *pcity, effect_type effect)
+{
+  auto effects = effect_list_new();
+  get_city_bonus_effects(effects, pcity, nullptr, effect);
+
+  // TRANS: Precedes a list of active effects, pluralized on its length.
+  QString str = PL_(
+      "The following contribution is active:",
+      "The following contributions are active:", effect_list_size(effects));
+  str += QStringLiteral("<ul>");
+
+  char help_text_buffer[MAX_LEN_PACKET];
+
+  effect_list_iterate(effects, peffect)
+  {
+    str += QStringLiteral("<li>");
+    if (requirement_vector_size(&peffect->reqs) == 0) {
+      // TRANS: Describes an effect without requirements; %1 is its value
+      str += QString(_("%1 by default"))
+                 .arg(effect_type_unit_text(peffect->type, peffect->value));
+    } else {
+      help_text_buffer[0] = '\0';
+      get_effect_req_text(peffect, help_text_buffer,
+                          sizeof(help_text_buffer));
+      // TRANS: Describes an effect; %1 is its value and %2 the requirements
+      str += QString(_("%1 from %2"))
+                 .arg(effect_type_unit_text(peffect->type, peffect->value))
+                 .arg(help_text_buffer);
+    }
+    str += QStringLiteral("</li>");
+  }
+  effect_list_iterate_end;
+  effect_list_destroy(effects);
+
+  str += QStringLiteral("</ul>");
+
+  return str;
+}
+} // anonymous namespace
+
 /**
  * Describe buildings that affect happiness (or rather, anything with a
  * Make_Content effect).
@@ -1351,38 +1396,8 @@ QString text_happiness_buildings(const struct city *pcity)
           .arg(bonus);
 
   // Add a list of active effects
-  auto effects = effect_list_new();
-  get_city_bonus_effects(effects, pcity, nullptr, EFT_MAKE_CONTENT);
-
   str += QStringLiteral("</p><p>");
-  // TRANS: Precedes a list of active effects, pluralized on its length.
-  str += PL_(
-      "The following contribution is active:",
-      "The following contributions are active:", effect_list_size(effects));
-  str += QStringLiteral("<ul>");
-
-  char help_text_buffer[MAX_LEN_PACKET];
-
-  effect_list_iterate(effects, peffect)
-  {
-    str += QStringLiteral("<li>");
-    if (requirement_vector_size(&peffect->reqs) == 0) {
-      // TRANS: Describes an effect without requirements; %1 is its value
-      str += QString(_("%1 by default"))
-                 .arg(effect_type_unit_text(peffect->type, peffect->value));
-    } else {
-      help_text_buffer[0] = '\0';
-      get_effect_req_text(peffect, help_text_buffer,
-                          sizeof(help_text_buffer));
-      // TRANS: Describes an effect; %1 is its value and %2 the requirements
-      str += QString(_("%1 from %2"))
-                 .arg(effect_type_unit_text(peffect->type, peffect->value))
-                 .arg(help_text_buffer);
-    }
-    str += QStringLiteral("</li>");
-  }
-  effect_list_iterate_end;
-  effect_list_destroy(effects);
+  str += text_happiness_effect_details(pcity, EFT_MAKE_CONTENT);
 
   return str + QStringLiteral("</ul></p>");
 }
@@ -1455,23 +1470,65 @@ QString text_happiness_nationality(const struct city *pcity)
  */
 QString text_happiness_wonders(const struct city *pcity)
 {
-  struct effect_list *plist = effect_list_new();
-  QString str;
-
-  get_city_bonus_effects(plist, pcity, nullptr, EFT_MAKE_HAPPY);
-  get_city_bonus_effects(plist, pcity, nullptr, EFT_FORCE_CONTENT);
-  get_city_bonus_effects(plist, pcity, nullptr, EFT_NO_UNHAPPY);
-  if (0 < effect_list_size(plist)) {
-    QString effects;
-
-    effects = get_effect_list_req_text(plist);
-    str = QString(_("Wonders: %1.")).arg(effects);
-  } else {
-    str = _("Wonders: None.");
+  int effects_count = effect_list_size(get_effects(EFT_MAKE_HAPPY))
+                      + effect_list_size(get_effects(EFT_NO_UNHAPPY))
+                      + effect_list_size(get_effects(EFT_FORCE_CONTENT));
+  if (effects_count == 0) {
+    // Disabled in the ruleset
+    return QString();
   }
-  effect_list_destroy(plist);
 
-  return str.trimmed();
+  auto str = QStringLiteral("<p>");
+  bool wrote_something = false;
+
+  int happy_bonus = get_city_bonus(pcity, EFT_MAKE_HAPPY);
+  if (happy_bonus > 0) {
+    if (happy_bonus == 1) {
+      str += _("Up to one content citizen in this city can be made happy.");
+    } else {
+      str +=
+          QString(
+              PL_("Up to %1 unhappy or content citizen in this city can be "
+                  "made happy (unhappy citizens count double).",
+                  "Up to %1 unhappy or content citizens in this city "
+                  "can be made happy (unhappy citizens count double).",
+                  happy_bonus))
+              .arg(happy_bonus);
+    }
+
+    // Add a list of active effects
+    str += QStringLiteral("</p><p>");
+    str += text_happiness_effect_details(pcity, EFT_MAKE_HAPPY);
+    str += QStringLiteral("</p><p>");
+    wrote_something = true;
+  }
+
+  if (get_city_bonus(pcity, EFT_NO_UNHAPPY) > 0) {
+    str += _("No citizens in this city can ever be unhappy or angry. "
+             "Any unhappy or angry citizen are automatically made content.");
+  } else if (int bonus = get_city_bonus(pcity, EFT_FORCE_CONTENT);
+             bonus > 0) {
+    str += QStringLiteral("</p><p>");
+    str +=
+        QString(PL_("Up to %1 unhappy or angry citizen in this city can be "
+                    "made content.",
+                    "Up to %1 unhappy or angry citizens in this city can be "
+                    "made content.",
+                    bonus))
+            .arg(bonus);
+
+    // Add a list of active effects
+    str += QStringLiteral("</p><p>");
+    str += text_happiness_effect_details(pcity, EFT_FORCE_CONTENT);
+    wrote_something = true;
+  }
+
+  if (!wrote_something) {
+    // Make sure there's always something printed.
+    str += _("Happiness is currently not changed at this stage.");
+  }
+
+  return str + QStringLiteral("</p>");
 }
 
 namespace /* anonymous */ {
