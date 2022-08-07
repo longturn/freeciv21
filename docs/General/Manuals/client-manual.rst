@@ -61,6 +61,33 @@ The following buttons are available on the :guilabel:`Start Screen`:
 Start New Game
 --------------
 
+Clicking :guilabel:`Start new game` will cause the client to spawn a local ``freeciv21-server`` instance in
+the background and then the following dialog will appear.
+
+.. figure:: ../../_static/images/gui-elements/start-new-game.png
+    :height: 400px
+    :align: center
+    :alt: Freeciv21 Start New Game Dialog
+    :figclass: align-center
+
+    Figure 2: Start New Game Dialog
+
+
+From upper-left to lower-right, the following user interface elements are available:
+
+* :guilabel:`Players list`
+* :guilabel:`Nation`
+* :guilabel:`Rules`
+* :guilabel:`Number of Players`
+* :guilabel:`AI Skill Level`
+* :guilabel:`More Game Options`
+* :guilabel:`Client Options`
+* :guilabel:`Server output window`
+* :guilabel:`Server chat/commmand line`
+* :guilabel:`Disconnect`
+* :guilabel:`Pick Nation`
+* :guilabel:`Observe`
+* :guilabel:`Start`
 
 Players List
 ^^^^^^^^^^^^
