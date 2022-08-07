@@ -1480,6 +1480,171 @@ quick way to move around a large map in this manner.
 
   Figure 44: Mini Map Multi Player Widget
 
-
 City Dialog
 -----------
+
+Getting to know the :guilabel:`City Dialog` is a major aspect of playing Freeciv21. As a player you will spend
+a great amount of time using this dialog box. The :guilabel:`City Dialog` is accessed by clicking on a city in
+the `Map View`_ or by double-clicking a city from the table in the `Cities View`_. Figure 45 shows a sample of
+the :guilabel:`City Dialog`. The dialog box is broken up into 5 major segments: city information (top center),
+production and citizen govenor tabs (left), city citizen tile output (center), general and citizens tabs
+(right) and present units (botton center).
+
+.. figure:: ../../_static/images/gui-elements/city-dialog.png
+  :align: center
+  :width: 800px
+  :alt: Freeciv21 City Dialog
+  :figclass: align-center
+
+  Figure 45: City Dialog
+
+
+Let's start at the top center as highlighted in Figure 46. In this segment of the dialog box is some general
+information about the city. The name of the city is in the header at the top center. If you click on the city
+name, a dialog box will appear and allow you to rename the city to something else. On the left side is a left
+arrow icon that if clicked will take you to the previous city in the cities array. In the center, the dialog
+will show how large the city is in size. Each rectangle icon is equivalent to 10,000 population and 1 citizen
+worker. On the right is a right arrow icon that if clicked will take you to the next city in the cities array.
+There is also a large X icon. If clicked the :guilabel:`City Dialog` will close and return you to the `Map
+View`_. At the bottom center of this segment is some information about the city's status. From left to right
+you will see net food, net production, net gold, net science, net trade, and turns to grow to next size. If
+you hover your mouse over any of these icons, the client will show you detailed information on how the
+calculation gets to the net value displayed.
+
+.. figure:: ../../_static/images/gui-elements/city-dialog-top-center.png
+  :align: center
+  :alt: Freeciv21 City Dialog Top Center
+  :figclass: align-center
+
+  Figure 46: City Dialog - Top Center
+
+
+Moving to the center-left segment highlighted in Figure 47. You will see two tabs: :guilabel:`Production` and
+:guilabel:`Governor`. Figure 47 is showing the information on the :guilabel:`Production` tab. You can see how
+much gold it will cost to buy the current item being produced. If you click on the :guilabel:`Buy` button, a
+dialog will pop up asking if you are sure. Clicking :guilabel:`Ok` will execute the buy order and clicking
+:guilabel:`Cancel` will cancel the buy order. In Figure 47's example a :improvement:`Granary` is being
+constructed for a total cost of 30 shields (production). The city has produced net 17 of 30 needed shields and
+at its current rate of net +4 production will take 4 turns to complete. The player for this example has also
+added multiple items to the work list. When the :improvement:`Granary` is finished, the city will start
+production on :improvement:`Barracks`. At this point, the city only needs 13 shields to finish the
+:improvement:`Granary`, but at +4 shields per turn will produce a total of 16 shields in the same 4 turns.
+This means that the surplus shields will transfer to the :improvement:`Barracks` when the
+:improvement:`Granary` is complete.
+
+.. figure:: ../../_static/images/gui-elements/city-dialog-prod.png
+  :align: center
+  :alt: Freeciv21 City Dialog Production
+  :figclass: align-center
+
+  Figure 47: City Dialog - Production
+
+
+At the bottom of the segment are four buttons: :guilabel:`Add`, :guilabel:`Move Up`, :guilabel:`Move Down`,
+and :guilabel:`Delete`. Clicking on :guilabel:`Add`, will open a pop up menu showing all of the items that the
+city can produce. Click on the item and it will be added to the bottom of the work list above. If you wish to
+move this new item or another item in the work list up, click (select) it from the work list and click the
+:guilabel:`Move Up` button. Same action for the :guilabel:`Move Down` button. To remove the item from the work
+list, click (select) an item in the work list and click on :guilabel:`Delete`. You can also double click on an
+item in the work list and it will be removed from the work list.
+
+One more feature of the :guilabel:`Production` tab is the work list editor. You can save work lists for use
+later. To get started, populate the work list with a grouping of things you want to build. This can be a
+collection of city improvements, units and wonders. Once you have the list configured the way you like it,
+right-click on the work list canvas and a pop up menu will show. Start by selecting :guilabel:`Save Worklist`.
+A dialog box will pop up allowing you to give the list a name. If you clear out the work list on the
+:guilabel:`Production` tab and then right-click on the work list canvas, you can pick :guilabel:`Insert
+Worklist` or :guilabel:`Change Worklist` from the sub-menu. :guilabel:`Insert Worklist` will add the items in
+the saved work list to the main work list. :guilabel:`Change Worklist` will clear what is in the main work
+list and replace it with the saved work list.
+
+We will discuss the :guilabel:`Governor` tab in a bit. Moving to the center, we can see the city citizen tile
+output segment and the city's full vision radius highlighted over the main map as highlighted in Figure 48.
+This city is size 3, so this means that 4 tiles can be worked by the citizens. The city center is worked for
+free and then 3 other tiles are being worked. In this example, there is a forest/river+silk tile,
+grassland+irrigation, and a grassland/river tile being worked. You can click on the city center and the client
+will automatically pick the best tiles for net food to aid city growth. You can also click on a tile to remove
+the citizen from the tile and then click another tile to have the citizen work another tile. This is commonly
+referred to a city micromanagement. If you remove a citizen from working a tile, take a look at the top center
+segment. The citizens icon bar will show one entertainer specialist. If you want to change the entertainer to
+a scientist or a taxman, you can click on it in the icon bar to change.
+
+.. figure:: ../../_static/images/gui-elements/city-dialog-center.png
+  :align: center
+  :alt: Freeciv21 City Dialog City Center
+  :figclass: align-center
+
+  Figure 48: City Dialog - City Center
+
+Moving right, we can see the :guilabel:`General` tab on the right most panel as highlighted in Figure 49. This
+tab shows information simiar to what is shown on the top center segment, along with units and city
+improvements that the city has produced and is supporting. Hovering your mouse over many of the items at the
+top of the :guilabel:`General` tab will show detailed calculation information on how the net value is
+produced.
+
+.. figure:: ../../_static/images/gui-elements/city-dialog-general.png
+  :align: center
+  :alt: Freeciv21 City Dialog General
+  :figclass: align-center
+
+  Figure 49: City Dialog - General
+
+
+We will discuss the :guilabel:`Citizens` tab in a bit. Moving to the bottom center, you will see a list of all
+the units that are present in the city as highlighted in Figure 50. There can be units present in a city that
+the city is not supporting, or from your allies. If you right-click on a unit, a pop up box shows some action
+commands that you can give to the unit. If you double-click on a unit, the :guilabel:`City Dialog` will close
+and the unit will be selected. See `Unit Controls`_ for more information on what to do with the unit.
+
+.. figure:: ../../_static/images/gui-elements/city-dialog-units.png
+  :align: center
+  :alt: Freeciv21 City Dialog Units
+  :figclass: align-center
+
+  Figure 50: City Dialog - Present Units
+
+
+Now let's come back and talk about the :guilabel:`Governor` tab on the left side segment and the
+:guilabel:`Citizens` tab on the right side segment.
+
+The :guilabel:`Governor` tab as highlighted in figure 51, gives information on the citizen management agent
+(CMA) for this city. For more information on how to use the CMA refer to :doc:`../../Playing/cma`.
+
+.. figure:: ../../_static/images/gui-elements/city-dialog-governor.png
+  :align: center
+  :alt: Freeciv21 City Dialog Govenor
+  :figclass: align-center
+
+  Figure 51: City Dialog - Govenor
+
+
+On the right side is the :guilabel:`Citizens` tab as highlighted in Figure 52. The :guilabel:`Citizens` tab
+shows you information about the happiness and the nationality of the citizens in the city. Happiness is
+broken down into segments: Cities (Empire Size), Luxuries (Luxury Goods), Buildings, Nationality, Units, and
+Wonders.
+
+.. figure:: ../../_static/images/gui-elements/city-dialog-citizens.png
+  :align: center
+  :alt: Freeciv21 City Dialog Citizens
+  :figclass: align-center
+
+  Figure 52: City Dialog - Citizens
+
+
+Overall happiness of the citizens in your cities depends heavily on all of these factors. Certain forms of
+government have varying degrees of empire size penalties and as your empire grows you will have to deal with
+the negative consequences of managing a large empire and the unhappiness it creates. The amount of Luxury
+Goods you are producing as part of your `Tax Rates View`_ will aid this problem. Certain city improvements can
+improve happiness as well as units in the city (martial law) along with wonders. If units are in the field
+in battle against your enemies, they can cause unhappiness. Hovering your mouse over these items will give you
+some information about it.
+
+Figure 53 shows what it looks like when you have mixed nationality in your cities. Mixed nationality can
+cause unhappiness and occurs when you conquer an opponent's city.
+
+.. figure:: ../../_static/images/gui-elements/city-dialog-citizens-nationality.png
+  :align: center
+  :alt: Freeciv21 City Dialog Citizens Nationality
+  :figclass: align-center
+
+  Figure 53: City Dialog - Citizens Nationality
