@@ -851,9 +851,162 @@ sure to have a close look at the in game help on Terrain for more information.
 Multiplayer Menu
 ^^^^^^^^^^^^^^^^
 
+The :guilabel:`Multiplayer` menu has a collection of functions to aid certain multi-player games. Many of
+the options are specifically tailored to the MP2c and WarCiv rulesets.
+
+The :guilabel:`Multiplayer` menu has the following options:
+
+Delayed GoTo
+    Give a unit orders to move at a specific time in the turn. This assumes that the turn is time based.
+
+Delayed Orders Execute
+    Execute an action by a unit at a specific time in the turn. This assumes that the turn is time based.
+
+Clear Orders
+    Clear any delayed orders from the above two menu items.
+
+Add All Cities to Trade Planning
+    All all current cities in your into an advanced trade planning array. This is used by the WarCiv
+    ruleset.
+
+Calculate Trade Planning
+    Run a trade effectiveness algorithm across all of the cities in the trade plan to determine the best
+    routes. This is used by the WarCiv ruleset.
+
+Add/Remove City
+    Add or remove a city from the trade planning array.
+
+Clear Trade Planning
+    Clear all trade planning to start over.
+
+Automatic Caravan
+    Any :unit:`Caravan` units built by a city will follow the trade planning output for that city. This is
+    used by the WarCiv ruleset.
+
+Set/Unset Rally Point
+    Set or remove a rally point to easily send units, once produced, to a specific spot on the game map.
+
+Quick Airlift
+    Depending on what is selected in the menu below, you can quickly airlift a unit to a destination city.
+
+Unit Type for Quickairlifting
+    Select the type of unit that will be quick airlifted by the menu above.
+
+Default Action vs Unit
+    A sub-menu will show some optional actions that a unit should do by default against another unit.
+    The default is :strong:`Ask`.
+
+Default Action vs City
+    A sub-menu will show some optional actions that a unit should do by default against a city.
+    The default is :strong:`Ask`.
 
 Civilization Menu
 ^^^^^^^^^^^^^^^^^
+
+The :guilabel:`Civilization` menu is used to gain access to many fuctions of your empire. You can load up
+pages for units, cities, nations, etc; change the form of government and see how your are doing compared to
+your opponents with the demographics report.
+
+The :guilabel:`Civilization` menu has the following options:
+
+Tax Rates
+    Selecting this menu item will bring up a dialog box allowing you to set the rate in percentage points for
+    Gold (Taxex), Science (Bulbs), and Luxury (Goods). This is the same as clicking on the `Tax Rates View`_
+    option on the `Top Function Bar`_. Figure 17 below, shows a sample screenshot. In this example, the
+    player's nation is in Democracy and has set gold to 40%, science to 40% and luxury goods to 20%.
+
+.. figure:: ../../_static/images/gui-elements/tax-rates.png
+  :align: center
+  :alt: Freeciv21 Tax Rates Selection Dialog
+  :figclass: align-center
+
+  Figure 17: Tax Rates Selection Dialog
+
+
+Government
+    Depending on your technological progress through the game, you may be able to select a different form
+    of government. The change is achieved from this menu item. This is the same as clicking on the
+    `National Status View`_ option on the `Top Function Bar`_.
+
+View
+    Clicking this menu item will show you the main game map. This is the same as clicking on the
+    `Map View`_ option on the `Top Function Bar`_.
+
+Units
+    Clicking this menu item will show you the units report widget. This is the same as clicking on the
+    `Units View`_ option on the `Top Function Bar`_.
+
+Players
+    Clicking this menu item will show you the nations and diplomacy view. This is the same as clicking on the
+    `Nations and Diplomacy View`_ option on the `Top Function Bar`_.
+
+Cities
+    Clicking this menu item will show you the cities view. This is the same as clicking on the
+    `Cities View`_ option on the `Top Function Bar`_.
+
+Economy
+    Clicking this menu item will show you the Ecomonics view. This is the same as clicking on the
+    `Economics View`_ option on the `Top Function Bar`_.
+
+Research
+    Clicking this menu item will show you the research tree view. This is the same as clicking on the
+    `Research View`_ option on the `Top Function Bar`_.
+
+Wonders of the World
+    Clicking this menu item will show you a traveler's report widget on the `Map View`_. The widget will give
+    information on any cities that have constructed any of the Great Wonders.
+
+.. figure:: ../../_static/images/gui-elements/wonders.png
+  :align: center
+  :alt: Freeciv21 Wonders of the World
+  :figclass: align-center
+
+  Figure 18: Wonders of the World
+
+
+Top Five Cities
+    Clicking this menu item will show you a traveler's report widget on the `Map View`_. The widget will give
+    information on the top five largest cities.
+
+.. figure:: ../../_static/images/gui-elements/top-five-cities.png
+  :align: center
+  :width: 400px
+  :alt: Freeciv21 Top Five Cities
+  :figclass: align-center
+
+  Figure 19: Top Five Cities
+
+
+Demographics
+    Clicking this menu item will show you a demographics report widget on the `Map View`_. The widget will
+    give information about how your nation stacks up against your opponents. If you have an embassy with your
+    opponents in the game, the demographics report will tell you who is #1, if you are not #1.
+
+.. figure:: ../../_static/images/gui-elements/demographics.png
+  :align: center
+  :width: 400px
+  :alt: Freeciv21 Demographics
+  :figclass: align-center
+
+  Figure 20: Demographics
+
+Space Ship
+    Clicking this menu item will show you the space ship view. The space race is a ruleset defined option and
+    is not enabled in all rulesets. Your nation must also be very technologically advanced to build the
+    components needs for a space ship. See in game help for more details.
+
+    The client will automatically place the components for you as you construct them.
+
+Achievements
+    Clicking this menu item will show you an achievements report widget on the main map. Achievements are
+    a ruleset defined option and not enabled by default in many rulesets.
+
+.. figure:: ../../_static/images/gui-elements/achievements.png
+  :align: center
+  :alt: Freeciv21 Achievements
+  :figclass: align-center
+
+  Figure 21: Achievements
 
 
 Help Menu
