@@ -164,14 +164,33 @@ use the `Players list`_ right-click menu.
 More Game Options
 ^^^^^^^^^^^^^^^^^
 
+Clicking on this button will bring up the :guilabel:`server options` dialog box as shown in Figure 4 below.
+From here you can customize other settings for the game before you start it. The ruleset defines many of these
+options, so be sure to have selected the ruleset you want to play before attempting to set other settings. You
+can hover the mouse over the entries to get some help on what the setting does.
+
+.. figure:: ../../_static/images/gui-elements/server-options.png
+    :height: 400px
+    :align: center
+    :alt: Freeciv21 Server Options Dialog
+    :figclass: align-center
+
+    Figure 4: Server Options Dialog
+
 
 Client Options
 ^^^^^^^^^^^^^^
 
+Refer to the section on `Options`_ below.
 
 Server output window
 ^^^^^^^^^^^^^^^^^^^^
 
+When you pick a ruleset, you will often see a bunch of output inside of this window. Also, if you make changes
+to the server in `More Game Options`_, you will see output from those settings in this window as well. This is
+actually a good way to learn what the varying server options are that can be issued via the `Server
+chat/command line`_. This window is read-only, however you can select text from it and copy it to paste in a
+text file if needed.
 
 Server chat/command line
 ^^^^^^^^^^^^^^^^^^^^^^^^
