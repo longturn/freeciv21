@@ -1454,6 +1454,32 @@ Unit ID value.
 Mini Map
 --------
 
+On the `Map View`_, in the lower right corner will be a :guilabel:`Mini Map` widget. Figure 43 below shows a
+sample of what the :guilabel:`Mini Map` looks like for a single-player game. Figure 44 shows an example of
+what a :guilabel:`Mini Map` looks like for a LongTurn multi-player game. The big difference between the two
+is the single-player :guilabel:`Turn Done` button is replaced by a countdown timer. On the right hand side of
+the :guilabel:`Mini Map` are some zoom buttons similar to what you would find in the `View Menu`_. Inside of
+the :guilabel:`Mini Map` you will see a square. This is the portion of the whole `Map View`_ that is displyed
+on the screen. You can right-click with your mouse to move the view window around inside the
+:guilabel:`Mini Map`. This will cause the `Map View`_ to move in concert. The :guilabel:`Mini Map` provides a
+quick way to move around a large map in this manner.
+
+.. figure:: ../../_static/images/gui-elements/mini-map-sp.png
+  :align: center
+  :width: 470px
+  :alt: Freeciv21 Mini Map Single Player Widget
+  :figclass: align-center
+
+  Figure 43: Mini Map Single Player Widget
+
+
+.. figure:: ../../_static/images/gui-elements/mini-map-mp.png
+  :align: center
+  :alt: Freeciv21 Mini Map Milti Player Widget
+  :figclass: align-center
+
+  Figure 44: Mini Map Multi Player Widget
+
 
 City Dialog
 -----------
