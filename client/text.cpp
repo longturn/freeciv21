@@ -1727,41 +1727,138 @@ QString text_happiness_cities(const struct city *pcity)
 }
 
 /**
-   Describing units that affect happiness.
+ * Describe units that affect happiness.
  */
-const QString text_happiness_units(const struct city *pcity)
+QString text_happiness_units(const struct city *pcity)
 {
-  int mlmax = get_city_bonus(pcity, EFT_MARTIAL_LAW_MAX);
-  int uhcfac = get_city_bonus(pcity, EFT_UNHAPPY_FACTOR);
-  QString str;
+  auto str = QString();
 
-  if (mlmax > 0) {
-    int mleach = get_city_bonus(pcity, EFT_MARTIAL_LAW_EACH);
-    if (mlmax == 100) {
-      str = QStringLiteral("%1").arg(_("Unlimited martial law in effect."))
-            + qendl();
+  /*
+   * First part: martial law
+   */
+  int martial_law_max = get_city_bonus(pcity, EFT_MARTIAL_LAW_MAX);
+  int martial_law_each = get_city_bonus(pcity, EFT_MARTIAL_LAW_EACH);
+  if (martial_law_each > 0 && martial_law_max >= 0) {
+    str += QStringLiteral("<p>");
+    // The rules
+    if (martial_law_max == 0) {
+      str += _("Every military unit in the city may impose martial law.");
     } else {
-      str += QString(PL_("%1 military unit may impose martial law.",
-                         "Up to %1 military units may impose martial "
-                         "law.",
-                         mlmax))
-                 .arg(QString::number(mlmax))
-             + qendl();
+      str +=
+          QString(PL_("%1 military unit in the city may impose martial law.",
+                      "Up to %1 military units in the city may impose "
+                      "martial law.",
+                      martial_law_max))
+              .arg(martial_law_max);
     }
-    str += QString(PL_("Each military unit makes %1 "
-                       "unhappy citizen content.",
-                       "Each military unit makes %1 "
-                       "unhappy citizens content.",
-                       mleach))
-               .arg(QString::number(mleach))
-           + qendl();
-  } else if (uhcfac > 0) {
-    str += QString(_("Military units in the field may cause unhappiness. "))
-           + qendl();
-  } else {
-    str += QString(_("Military units have no happiness effect. ")) + qendl();
+
+    str += QStringLiteral(" ");
+    str += QString(PL_("Each of them makes %1 unhappy citizen content.",
+                       "Each of them makes %1 unhappy citizens content.",
+                       martial_law_each))
+               .arg(martial_law_each);
+
+    str += QStringLiteral("</p><p>");
+
+    int count = 0;
+    unit_list_iterate(pcity->tile->units, punit)
+    {
+      if ((count < martial_law_max || martial_law_max == 0)
+          && is_military_unit(punit)
+          && unit_owner(punit) == city_owner(pcity)) {
+        count++;
+      }
+    }
+    unit_list_iterate_end;
+
+    str +=
+        QString(PL_("%1 military unit in this city imposes the martial law.",
+                    "%1 military units in this city impose the martial law.",
+                    count))
+            .arg(count);
+    str += QStringLiteral(" ");
+    str += QString(PL_("<b>%1 citizen</b> is made happier as a result.",
+                       "<b>%1 citizens</b> are made happier as a result.",
+                       count * martial_law_each))
+               .arg(count * martial_law_each);
+
+    str += QStringLiteral("</p>");
   }
-  return str.trimmed();
+
+  /*
+   * Second part: military unhappiness
+   *
+   * Had to say anything here because this is unit dependent (and I don't
+   * want to build a list of unit types or so, this is shown elsewhere).
+   */
+  str += QStringLiteral("<p>");
+
+  auto pplayer = city_owner(pcity);
+  int unhappy_factor = get_player_bonus(pplayer, EFT_UNHAPPY_FACTOR);
+  if (unhappy_factor == 0) {
+    str += _("Military units have no happiness effect.");
+    return str + QStringLiteral("</p>");
+  }
+
+  str += _("Military units in the field may cause unhappiness.");
+
+  // Special rule: ignore the first N military unhappy
+  int made_content = get_city_bonus(pcity, EFT_MAKE_CONTENT_MIL);
+  if (made_content > 0) {
+    str += QStringLiteral(" ");
+    str += QString(PL_("With respect to normal, %1 fewer citizen will be "
+                       "unhappy about military units.",
+                       "With respect to normal, %1 fewer citizens will be "
+                       "unhappy about military units.",
+                       made_content))
+               .arg(made_content);
+  }
+
+  // Special rule: ignore N military unhappy per unit
+  // Let's hope ruleset authors don't combine them too often, the sentences
+  // are very similar.
+  int made_content_each = get_city_bonus(pcity, EFT_MAKE_CONTENT_MIL_PER);
+  if (made_content_each > 0) {
+    str += QStringLiteral(" ");
+    str += QString(PL_("With respect to normal, %1 fewer citizen will be "
+                       "unhappy per each military unit.",
+                       "With respect to normal, %1 fewer citizens will be "
+                       "unhappy per each military unit.",
+                       made_content_each))
+               .arg(made_content_each);
+  }
+
+  // And finally how many unhappy we get in this city
+  int count = 0;
+  unit_list_iterate(pcity->units_supported, punit)
+  {
+    int dummy = 0;
+    if (city_unit_unhappiness(punit, &dummy) > 0) {
+      count++;
+    }
+  }
+  unit_list_iterate_end;
+
+  str += QStringLiteral("</p><p>");
+  if (count > 0) {
+    // TRANS: "This city supports %1 agressive military units, resulting in X
+    //        unhappy citizens." (first part)
+    str += QString(PL_("This city supports %1 agressive military unit, ",
+                       "This city supports %1 agressive military units, ",
+                       count))
+               .arg(count);
+    // TRANS: "This city supports %1 agressive military units, resulting in X
+    //        unhappy citizens." (second part)
+    str += QString(PL_("resulting in <b>%1 additional unhappy citizen.</b>",
+                       "resulting in <b>%1 additional unhappy citizens.</b>",
+                       pcity->unit_happy_upkeep))
+               .arg(pcity->unit_happy_upkeep);
+  } else {
+    str += _("Currently, military units do not cause additional unhappiness "
+             "in this city.");
+  }
+
+  return str + QStringLiteral("</p>");
 }
 
 /**
