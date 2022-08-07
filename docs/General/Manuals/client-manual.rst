@@ -360,10 +360,46 @@ The buttons along the bottom of the dialog box are:
 Main Client Interface
 =====================
 
+Regardless the method you used to get into a game, eventually you will make it to the main client interface as
+shown in Figure 9 below. This is known as the `Map View`_.
+
+.. figure:: ../../../dist/freeciv-screenshot-2048x1112.png
+    :height: 400px
+    :align: center
+    :alt: Freeciv21 Client Overview
+    :figclass: align-center
+
+    Figure 9: Freeciv21 Client Overview
+
+
+The client interface is broken down into a collection of sections. From the top, the sections are:
+
+* :strong:`Menu Bar`: As with most programs, Freeciv21 is no different and has a menu bar at the top. For
+  details see `Menu Bar`_.
+* :strong:`Top Function Bar`: This top bar is a big aspect of playing any Freeciv21 game. More details are
+  available in the `Top Function Bar`_ section.
+* :strong:`The Main Map`: This is the main canvas of the game. This is where your empire will either thrive
+  or be destroyed by your enemies. Refer to `Map View`_ for more information.
+* :strong:`Unit Controls`: Figure 9 shows a :unit:`Battleship` selected and the available unit actions in a
+  bar at the bottom middle of the interface. This is the `Unit Controls`_ bar.
+* :strong:`Mini Map`: In the lower-right corner of the main map interface is a small version of the map known
+  as the `Mini Map`_.
 
 Menu Bar
 --------
 
+Freeciv21 is no different than any other multi-function complex program -- it has a menu bar. The menu
+consists of the following items:
+
+* `Game Menu`_
+* `View Menu`_
+* `Select Menu`_
+* `Unit Menu`_
+* `Combat Menu`_
+* `Work Menu`_
+* `Multiplayer Menu`_
+* `Civilization Menu`_
+* `Help Menu`_
 
 Game Menu
 ^^^^^^^^^
