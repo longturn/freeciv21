@@ -12,3 +12,11 @@ the FAQ and installation instructions go here.
   modpack-installer.rst
   :maxdepth: 1
 
+Manuals
+*******
+
+The manuals category is where a reader will find detailed information on the client, server, rulesets, etc.
+
+.. toctree::
+  Manuals/client-manual.rst
+  :maxdepth: 2
