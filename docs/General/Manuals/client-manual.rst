@@ -1074,6 +1074,39 @@ will appear giving you some information about the unit. Figure 23, gives an exam
 Units View
 ^^^^^^^^^^
 
+The :guilabel:`Units View` is a widget on the `Map View`_ that shows what units you have available and how
+many are being produced. The `Cities View`_ can tell you which cities are producing what unit. Figure 24 shows
+the icon to bring up the widget. Clicking the icon a second time will close the widget.
+
+.. figure:: ../../_static/images/gui-elements/top-bar-units.png
+  :align: center
+  :alt: Freeciv21 Units
+  :figclass: align-center
+
+  Figure 24: Units View Icon
+
+
+The :guilabel:`Units View` has two types. For regular games without the ``unitwaittime`` server setting set,
+you get something simiar to Figure 25. If you are playing a game with ``unitwaittime`` set, then you will see
+a table below the widget, such as Figure 26, that displays the amount of time until the unit can move.
+
+.. figure:: ../../_static/images/gui-elements/units-report.png
+  :align: center
+  :width: 800px
+  :alt: Freeciv21 Units Report
+  :figclass: align-center
+
+  Figure 25: Units View
+
+
+.. figure:: ../../_static/images/gui-elements/units-report-uwt.png
+  :align: center
+  :width: 400px
+  :alt: Freeciv21 Units Report w/ UWT
+  :figclass: align-center
+
+  Figure 26: Units View with UWT
+
 
 Cities View
 ^^^^^^^^^^^
