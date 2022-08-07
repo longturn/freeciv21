@@ -404,6 +404,91 @@ consists of the following items:
 Game Menu
 ^^^^^^^^^
 
+The :guilabel:`Game` menu is used to conduct global level options on the client or the game being played.
+
+The :guilabel:`Game` menu has the following options:
+
+Save Game
+    Saves the game as it is :strong:`right now` to the ``saves`` directory in the user's profile directory.
+    On Linux and Mac OS, the profile directory is inside the User's home directory such as
+    ``~/.local/share/freeciv21``. On Windows the profile directory is inside the User ``AppData`` directory
+    such as ``C:\\Users\\<userName>\\AppData\\Roaming\\freeciv21``.
+
+Save Game As ...
+    Saves the game as it is :strong:`right now` to a location of your choosing.
+
+Save Map to Image
+    Save a ``.png`` image file of the map to the user's profile directory.
+
+Set Local Options
+    Opens the :guilabel:`Local Options` dialog box as described in the `Options`_ section above.
+
+Server Options
+    Opens the :guilabel:`Server Options` dialog as described in the `More Game Options`_ section
+    above.
+
+Messages
+    Opens the :guilabel:`Message Options` dialog as shown in Figure 10 below. The screenshot only shows a few
+    rows of available options, many more will be found in the client. Any item with a check mark in the
+    :guilabel:`Out` column will be shown in the :guilabel:`Server Log/Chat` widget. Any item with a check mark
+    in the :guilabel:`Mes` column will be shown in the :guilabel:`Messages` widget (see `Messages`_). Lastly,
+    any item with a check mark in the :guilabel:`Pop` column will be shown in a Pop-Up Message Box window.
+
+.. figure:: ../../_static/images/gui-elements/message-options.png
+  :height: 400px
+  :align: center
+  :alt: Freeciv21 Message Options Dialog
+  :figclass: align-center
+
+  Figure 10: Message Options Dialog
+
+
+Shortcuts
+    Opens the :guilabel:`Shortcuts` dialog as shown in Figure 11 below. The dialog is used to set the
+    preferred keyboard shortcuts to be used in the game. The screenshot only shows a few rows of available
+    options, many more will be found in the client. To override the default, click your mouse cursor on the
+    box on the right and then "use" the shortcut you want to set the setting to. For example: You want to
+    change the :guilabel:`Scroll Map` option to the :guilabel:`PgUp` key, you would click in the box and then
+    press the :guilabel:`PgUp` key on your keyboard. To reset to defaults, you can click on the
+    :guilabel:`Reset` button. Click :guilabel:`Save` and then :guilabel:`Close` when finished.
+
+.. figure:: ../../_static/images/gui-elements/shortcut-options.png
+  :height: 400px
+  :align: center
+  :alt: Freeciv21 Shortcut Options Dialog
+  :figclass: align-center
+
+  Figure 11: Shortcut Options Dialog
+
+
+Load Another Tileset
+    Opens the :guilabel:`Available Tilesets` dialog as shown in Figure 12 below. You can select any tileset
+    installed by clicking on the name. You may get an error message if the tileset is not compatible with
+    the server map topology configuration.
+
+.. figure:: ../../_static/images/gui-elements/tileset.png
+  :align: center
+  :alt: Freeciv21 Available Tilesets Dialog
+  :figclass: align-center
+
+  Figure 12: Available Tilesets Dialog
+
+
+Tileset Debugger
+    Opens the :guilabel:`Tileset Debugger` dialog. This option is well documented in
+    :doc:`../../Modding/Tilesets/debugger`
+
+Save Options Now
+    Saves the settings set in `Options`_ immeditately.
+
+Save Options on Exit
+    Saves the settings set in `Options`_ when the client is exited.
+
+Leave Game
+    Allows you to leave the game and return to the start screen.
+
+Quit
+    Quits the client after a confirmation dialog box.
 
 View Menu
 ^^^^^^^^^
