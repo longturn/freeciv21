@@ -134,14 +134,32 @@ leader names or enter one of your choosing.
 Rules
 ^^^^^
 
+Freeciv21 comes with a collection of rulesets that define the game parameters. Rulesets control all the
+aspects of playing a game. For more information on rulesets, you can refer to :doc:`../../Modding/index` and
+scroll down to the Rulesets section.
+
+Freeciv21 comes with the following rulesets:
+
+* Alien
+* Civ1
+* Civ2
+* Civ2Civ3
+* Classic (Default)
+* Experimental
+* Multiplayer
+* Royale
 
 Number of Players
 ^^^^^^^^^^^^^^^^^
 
+The spinner can be changed up or down to customize the number of players. The ruleset can also set the number
+of players, so be sure to pick the ruleset before you pick number of players.
 
 AI Skill Level
 ^^^^^^^^^^^^^^
 
+This box will do a mass-change for all the AIs to be the same level. If you want to customize this, then
+use the `Players list`_ right-click menu.
 
 More Game Options
 ^^^^^^^^^^^^^^^^^
