@@ -1012,13 +1012,63 @@ Achievements
 Help Menu
 ^^^^^^^^^
 
+The :guilabel:`Help` menu gives you access to the in-game help.
+
+The :guilabel:`Help` menu has the following options: Overview, Strategy and Tactics, Terrain, Ecomony, Cities,
+City Improvements, Wonders of the World, Units, Combat, Zones of Control, Government, Effects, Diplomacy,
+Technology, Space Race, About Current Ruleset, About Nations, Connecting, Controls, Citizen Governor,
+Chatline, Worklist Editor, Languages, Copying, and About Freeciv21
+
+Each of these options is simply a quick link to the same named section in the game help menu.
 
 Top Function Bar
 ----------------
 
+The :guilabel:`Top Function Bar` is used to get to varying views (pages) in the game without having to us the
+main menu, especially the :guilabel:`Civilization` menu.  The :guilabel:`Top Function Bar` is broken up into 9
+sections, from left to right.
+
+* `Map View`_
+* `Units View`_
+* `Cities View`_
+* `Nations and Diplomacy View`_
+* `Research View`_
+* `Economics View`_
+* `Tax Rates View`_
+* `National Status View`_
+* `Messages`_
 
 Map View
 ^^^^^^^^
+
+This is your primary playing surface. This is the map where you build your civilization. The icon for this is
+shown in Figure 22 below. Figure 9, in the `Main Client Interface`_ section, has a good example of the
+:guilabel:`Map View`.
+
+.. figure:: ../../_static/images/gui-elements/top-bar-map.png
+  :align: center
+  :alt: Freeciv21 Map
+  :figclass: align-center
+
+  Figure 22: Map View Icon
+
+
+If you hover your mouse over the :guilabel:`Map View` icon, a pop up widget will appear and give you some
+information about your nation. The pop up widget shows: Nationality, Total Population, Year (Turn Number),
+Gold (Surplus/Deficit), and Tax Rates.
+
+To move around the map canvas, you can right-click in the main map area and the canvas will move. The further
+from the center of the screen, the faster the map canvas will move per mouse click.
+
+One other feature of the :guilabel:`Map View` is the ability to middle-click on a unit and a pop-up widget
+will appear giving you some information about the unit. Figure 23, gives an example.
+
+.. figure:: ../../_static/images/gui-elements/unit-info.png
+  :align: center
+  :alt: Freeciv21 Unit Information
+  :figclass: align-center
+
+  Figure 23: Map View - Unit Information
 
 
 Units View
