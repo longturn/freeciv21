@@ -1704,6 +1704,7 @@ void hud_unit_combat::init_images(bool redraw)
   setFixedSize(2 * w, w);
   QPixmap defender_pixmap(tileset_unit_width(tileset),
                           tileset_unit_height(tileset));
+  defender_pixmap.fill(Qt::transparent);
   if (defender != nullptr) {
     if (!redraw) {
       put_unit(defender, &defender_pixmap, 0, 0);
