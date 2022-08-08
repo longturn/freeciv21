@@ -1208,9 +1208,9 @@ void mr_menu::setup_menus()
   QObject::connect(act, &QAction::triggered,
                    [this]() { slot_help(HELP_SPACE_RACE_ITEM); });
 
-  act = menu->addAction(Q_(HELP_IMPROVEMENTS_ITEM));
+  act = menu->addAction(Q_(HELP_TILESET_ITEM));
   QObject::connect(act, &QAction::triggered,
-                   [this]() { slot_help(HELP_IMPROVEMENTS_ITEM); });
+                   [this]() { slot_help(HELP_TILESET_ITEM); });
 
   act = menu->addAction(Q_(HELP_RULESET_ITEM));
   QObject::connect(act, &QAction::triggered,
