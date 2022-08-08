@@ -270,7 +270,7 @@ void map_view::shortcut_pressed(shortcut_id id)
     break;
 
   case SC_QUICK_SELECT:
-    if (!king()->menu_bar->delayed_order) {
+    if (pcity != nullptr && !king()->menu_bar->delayed_order) {
       auto pw = new production_widget(this, pcity, false, 0, 0, true);
       pw->show();
     }
