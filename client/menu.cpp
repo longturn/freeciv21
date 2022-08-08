@@ -2687,8 +2687,7 @@ void mr_menu::tileset_custom_load()
   const struct option *poption;
   QStringList sl;
 
-  sl << QStringLiteral("default_tileset_overhead_name")
-     << QStringLiteral("default_tileset_iso_name")
+  sl << QStringLiteral("default_tileset_square_name")
      << QStringLiteral("default_tileset_hex_name")
      << QStringLiteral("default_tileset_isohex_name");
   layout = new QVBoxLayout;
