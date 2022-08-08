@@ -105,18 +105,6 @@ public:
   struct tile *ptile;
 };
 
-/**************************************************************************
-  Class holding unit list for delayed goto
-**************************************************************************/
-class qfc_units_list {
-public:
-  qfc_units_list();
-  void add(qfc_delayed_unit_item *fui);
-  void clear();
-  QList<qfc_delayed_unit_item *> unit_list;
-  int nr_units{0};
-};
-
 /****************************************************************************
   Instantiable government menu.
 ****************************************************************************/
@@ -183,7 +171,7 @@ class mr_menu : public QMenuBar {
   QMenu *action_unit_menu = nullptr;
   QMenu *action_city_menu = nullptr;
   QMultiHash<munit, QAction *> menu_list;
-  qfc_units_list units_list;
+  std::vector<qfc_delayed_unit_item> units_list;
   bool initialized = false;
 
 public:
