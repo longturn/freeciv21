@@ -1326,7 +1326,6 @@ QString text_happiness_buildings(const struct city *pcity)
 {
   if (const auto effects = get_effects(EFT_MAKE_CONTENT);
       effect_list_size(effects) == 0) {
-    effect_list_destroy(effects);
     return QString(); // Disabled in the ruleset.
   }
 
@@ -1396,7 +1395,6 @@ QString text_happiness_nationality(const struct city *pcity)
   if (auto effects = get_effects(EFT_ENEMY_CITIZEN_UNHAPPY_PCT);
       !game.info.citizen_nationality || effect_list_size(effects) == 0) {
     // Disabled in the ruleset
-    effect_list_destroy(effects);
     return QString();
   }
 
