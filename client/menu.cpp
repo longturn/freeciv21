@@ -70,23 +70,6 @@ extern void popup_endgame_report();
 static void enable_interface(bool enable);
 
 void option_dialog_popup(const char *name, const struct option_set *poptset);
-/**
-   Constructor for units used in delayed orders
- */
-qfc_units_list::qfc_units_list() {}
-
-/**
-   Adds givent unit to list
- */
-void qfc_units_list::add(qfc_delayed_unit_item *fui)
-{
-  unit_list.append(fui);
-}
-
-/**
-   Clears list of units
- */
-void qfc_units_list::clear() { unit_list.clear(); }
 
 /**
    Initialize menus (sensitivity, name, etc.) based on the
@@ -511,8 +494,8 @@ struct tile *mr_menu::find_last_unit_pos(unit *punit, int pos)
 
   int i = 0;
   qunit = punit;
-  for (auto *fui : qAsConst(units_list.unit_list)) {
-    zunit = unit_list_find(client_player()->units, fui->id);
+  for (const auto &fui : units_list) {
+    zunit = unit_list_find(client_player()->units, fui.id);
     i++;
     if (i >= pos) {
       punit = qunit;
@@ -525,17 +508,17 @@ struct tile *mr_menu::find_last_unit_pos(unit *punit, int pos)
     if (punit == zunit) { // Unit found
       /* Unit was ordered to attack city so it might stay in
          front of that city */
-      if (is_non_allied_city_tile(fui->ptile, unit_owner(punit))) {
-        ptile = tile_before_end_path(punit, fui->ptile);
+      if (is_non_allied_city_tile(fui.ptile, unit_owner(punit))) {
+        ptile = tile_before_end_path(punit, fui.ptile);
         if (ptile == nullptr) {
-          ptile = fui->ptile;
+          ptile = fui.ptile;
         }
       } else {
-        ptile = fui->ptile;
+        ptile = fui.ptile;
       }
       // unit found in tranporter
     } else if (unit_contained_in(punit, zunit)) {
-      ptile = fui->ptile;
+      ptile = fui.ptile;
     }
   }
   return nullptr;
@@ -1289,9 +1272,8 @@ void mr_menu::clear_menus()
  */
 void mr_menu::set_tile_for_order(tile *ptile)
 {
-  for (int i = 0; i < units_list.nr_units; i++) {
-    units_list.unit_list.at(units_list.unit_list.count() - i - 1)->ptile =
-        ptile;
+  for (auto &fui : units_list) {
+    fui.ptile = ptile;
   }
 }
 
@@ -2314,8 +2296,6 @@ void mr_menu::slot_quickairlift() { quick_airlifting = true; }
  */
 void mr_menu::slot_delayed_goto()
 {
-  qfc_delayed_unit_item *unit_item;
-  int i = 0;
   delay_order dg;
 
   delayed_order = true;
@@ -2333,10 +2313,7 @@ void mr_menu::slot_delayed_goto()
     control_mouse_cursor(nullptr);
   }
   for (const auto punit : focus) {
-    i++;
-    unit_item = new qfc_delayed_unit_item(dg, punit->id);
-    units_list.add(unit_item);
-    units_list.nr_units = i;
+    units_list.emplace_back(dg, punit->id);
   }
 }
 
@@ -2350,9 +2327,9 @@ void mr_menu::slot_execute_orders()
   struct tile *new_tile;
   int i = 0;
 
-  for (auto *fui : qAsConst(units_list.unit_list)) {
+  for (const auto &fui : units_list) {
     i++;
-    punit = unit_list_find(client_player()->units, fui->id);
+    punit = unit_list_find(client_player()->units, fui.id);
     if (punit == nullptr) {
       continue;
     }
@@ -2361,12 +2338,11 @@ void mr_menu::slot_execute_orders()
     if (new_tile != nullptr) {
       punit->tile = new_tile;
     }
-    if (is_tiles_adjacent(punit->tile, fui->ptile)) {
+    if (is_tiles_adjacent(punit->tile, fui.ptile)) {
       request_move_unit_direction(
-          punit,
-          get_direction_for_step(&(wld.map), punit->tile, fui->ptile));
+          punit, get_direction_for_step(&(wld.map), punit->tile, fui.ptile));
     } else {
-      send_attack_tile(punit, fui->ptile);
+      send_attack_tile(punit, fui.ptile);
     }
     punit->tile = last_tile;
   }
