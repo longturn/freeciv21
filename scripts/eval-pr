@@ -11,8 +11,9 @@
 # Bash shell script to aid the process of evaluating a pull request
 #---
 
-version="1.0"
+version="1.1"
 re='^[0-9]+$'
+asan="false"
 
 if [[ $2 ]]; then
   pull_request=$2
@@ -21,8 +22,9 @@ fi
 help ()
 {
   echo ""
-  echo "Freeciv21: Evaluate a Pull Request as documented at"
-  echo "  https://longturn.readthedocs.io/en/latest/Contributing/eval-pull-request.html"
+  echo "Freeciv21: Evaluate a Pull Request as documented at:"
+  echo "    https://longturn.readthedocs.io/en/latest/Contributing/eval-pull-request.html"
+  echo ""
   echo "$0 Version: $version"
   echo ""
   echo "Should be executed from the root of the Freeciv21 source directory."
@@ -30,9 +32,14 @@ help ()
   echo "Syntax: ./scripts/eval-pr -h|s|a|c"
   echo ""
   echo "-h                Opens this help"
-  echo "-s [PR Number]    Starts a new full evaluation process"
-  echo "-a [PR Number]    Starts a new evaluation process and also run an autogame through ASAN"
+  echo "-s [PR Number]    Starts a new evaluation process compiled with Debug"
+  echo "-a [PR Number]    Starts a new evaluation process compiled with the ASan Preset"
   echo "-c [PR Number]    Cleanup a previously run evaluation process"
+  echo ""
+  echo "If you wish to evaluate more than one pull request at a time, you can wrap the script"
+  echo " in a \"for\" loop, such as:"
+  echo ""
+  echo "    for pr in pr#1 pr#2 pr#3; do ./scripts/eval-pr -s \$pr; done"
   echo ""
 }
 
@@ -78,19 +85,62 @@ base_setup ()
   fi
 }
 
-start ()
+close_message ()
+{
+  if [[ "$asan" == "false" ]]; then
+    echo "-- You can open the client with this command in another terminal to test PR $pull_request:"
+    echo "      $PWD/build_$pull_request/freeciv21-client"
+    echo ""
+    echo "-- If you wish to run the client through a debugger, such as gdb, then prefix \"gdb\" in front of"
+    echo "--  the command above."
+    echo ""
+    echo "-- If you wish to run an autogame to test the code in PR $pull_request, then open another terminal"
+    echo "--  and run this command:"
+    echo "      $PWD/build_$pull_request/freeciv21-server -r $PWD/data/test-autogame.serv -t"
+    echo ""
+    echo "-- If you want to observe the autogame, open another terminal and run this command to open a client"
+    echo "      $PWD/build_$pull_request/freeciv21-client -a -p 5556 -s localhost"
+    echo ""
+    echo "-- Lastly, if you wish to run the autogame server or observing client through a debugger, then"
+    echo "    prefix the previous two command lines with \"gdb --args\"."
+    echo ""
+  elif [[ "$asan" == "true" ]]; then
+    echo "-- You can open the client with this command in another terminal to test PR $pull_request:"
+    echo "      $PWD/build_$pull_request/freeciv21-client"
+    echo ""
+    echo "-- If you wish to run an autogame to test code in PR $pull_request, then open another terminal and"
+    echo "--  run this command:"
+    echo ""
+    echo "      export ASAN_OPTIONS=\"halt_on_error=0\" && $PWD/build_$pull_request/freeciv21-server -r $PWD/data/test-autogame.serv -t"
+    echo ""
+    echo "-- If you want to observe the autogame, open another terminal and run this command to open a client"
+    echo ""
+    echo "      $PWD/build_$pull_request/freeciv21-client -a -p 5556 -s localhost"
+    echo ""
+    echo "-- Lastly, The ASan preset compiles with the \"RelWithDebInfo\" configuration instead of the"
+    echo "    \"Debug\" configuration. Running the code through a debugger, such as gdb, can have unintended"
+    echo "   effects. If you wish to run the autogame server or observing client through a debugger, then"
+    echo "    prefix the previous two command lines with \"gdb --args\"."
+    echo ""
+  fi
+}
+
+debug_eval ()
 {
   echo ""
-  echo "-- Starting an Eval Process for PR $pull_request."
+  echo "-- Starting a Debug Eval Process for PR $pull_request."
   echo ""
 
   base_setup
 
   echo ""
-  echo "-- Building."
+  echo "-- Building Debug."
   echo ""
   # We ask for a debug build in order to run the code through a debugger while evaluating
-  cmake -S . -B build_$pull_request -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build_$pull_request/install -DCMAKE_BUILD_TYPE=Debug
+  cmake -S . -B build_$pull_request \
+    -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=$PWD/build_$pull_request/install \
+    -DCMAKE_BUILD_TYPE=Debug
   cmake --build build_$pull_request
   # Always test the installer
   cmake --build build_$pull_request --target install
@@ -103,13 +153,16 @@ start ()
   echo ""
   echo "-- PR $pull_request is ready to be evaluated. Run $0 -c $pull_request to cleanup."
   echo ""
+  close_message
 }
 
-autogame ()
+asan_eval ()
 {
   echo ""
-  echo "Starting an ASAN autogame Eval Process for PR# $pull_request"
+  echo "-- Starting an ASan Eval Process for PR $pull_request."
   echo ""
+
+  asan="true"
 
   if [[ $MSYSTEM ]]; then
     echo "-- Error: ASan not supported on MSYS2."
@@ -119,7 +172,7 @@ autogame ()
   base_setup
 
   echo ""
-  echo "-- Building."
+  echo "-- Building ASan."
   echo ""
   if ! [[ -e build_$pull_request ]]; then
     mkdir build_$pull_request
@@ -129,16 +182,10 @@ autogame ()
   fi
   cmake --build build_$pull_request
 
-  echo "-- Running Autogame on port 5556."
-  echo "-- If you want to observe the game, open another shell and run this command to open a client"
-  echo "     $PWD/build_$pull_request/freeciv21-client -a -p 5556 -s localhost"
   echo ""
-  export ASAN_OPTIONS="halt_on_error=0"
-  ./build_$pull_request/freeciv21-server -r ./data/test-autogame.serv -t
-
+  echo "-- PR $pull_request is ready to be evaluated. Run $0 -c $pull_request to cleanup."
   echo ""
-  echo "-- PR $pull_request has completed autogame evaluation. Run $0 -c $pull_request to cleanup."
-  echo ""
+  close_message
 }
 
 cleanup ()
@@ -149,8 +196,8 @@ cleanup ()
 
   local branch=$(git rev-parse --abbrev-ref HEAD)
   if ! [[ "$branch" == "testing/pr_$pull_request" ]]; then
-    echo "Error: Attempting cleanup on incorrect pull request number."
-    echo "The current branch is: $branch" and pull request: $pull_request
+    echo "-- Error: Attempting cleanup on incorrect pull request number."
+    echo "-- The current branch is: $branch" and pull request: $pull_request
     echo ""
     exit 255
   fi
@@ -186,13 +233,14 @@ fi
 # If the second paramter is missing, throw an error
 if [[ "$1" == "-s" || "$1" == "-a" || "$1" == "-c" ]]; then
   if [[ -z "$2" ]]; then
-    echo "Error: You must pass a pull request number to the script when starting or cleaning up an eval process."
+    echo "-- Error: You must pass a pull request number to the script when starting or cleaning up an eval"
+    echo "--  process."
     echo ""
     help
     exit 255
   fi
   if ! [[ $2 =~ $re ]] ; then
-    echo "Error: A Pull Request number has to be numeric"
+    echo "-- Error: A Pull Request number has to be numeric"
     echo ""
     exit 255
   fi
@@ -202,13 +250,13 @@ while getopts ":hsac:" option; do
   case $option in
     h) help
        exit 0;;
-    s) start
+    s) debug_eval
        exit 0;;
-    a) autogame
+    a) asan_eval
        exit 0;;
     c) cleanup
        exit 0;;
-    \?) echo "Error: Invalid option"
+    \?) echo "-- Error: Invalid option"
         echo ""
         help
         exit 255;;
