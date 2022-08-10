@@ -362,6 +362,52 @@ static bool do_capture_units(struct player *pplayer, struct unit *punit,
 }
 
 /**
+   Occupying move after an action.
+ */
+static void occupy_move(unit *punit, tile *def_tile)
+{
+  /* Hack: make sure the unit has enough moves_left for the move to
+  succeed, and adjust moves_left to afterward (if successful). */
+
+  int old_moves = punit->moves_left;
+  int full_moves = unit_move_rate(punit);
+
+  punit->moves_left = full_moves;
+  auto pcity = tile_city(def_tile);
+  // Post attack occupy move.
+  if ((is_action_enabled_unit_on_city(ACTION_CONQUER_CITY, punit, pcity)
+       && unit_perform_action(unit_owner(punit), punit->id, pcity->id, 0, "",
+                              ACTION_CONQUER_CITY, ACT_REQ_RULES))
+      || (is_action_enabled_unit_on_city(ACTION_CONQUER_CITY2, punit, pcity)
+          && unit_perform_action(unit_owner(punit), punit->id, pcity->id, 0,
+                                 "", ACTION_CONQUER_CITY2, ACT_REQ_RULES))
+      || (unit_transported(punit)
+          && is_action_enabled_unit_on_tile(ACTION_TRANSPORT_DISEMBARK1,
+                                            punit, def_tile, nullptr)
+          && unit_perform_action(unit_owner(punit), punit->id,
+                                 tile_index(def_tile), 0, "",
+                                 ACTION_TRANSPORT_DISEMBARK1, ACT_REQ_RULES))
+      || (unit_transported(punit)
+          && is_action_enabled_unit_on_tile(ACTION_TRANSPORT_DISEMBARK2,
+                                            punit, def_tile, nullptr)
+          && unit_perform_action(unit_owner(punit), punit->id,
+                                 tile_index(def_tile), 0, "",
+                                 ACTION_TRANSPORT_DISEMBARK2, ACT_REQ_RULES))
+      || (unit_move_handling(punit, def_tile, false, true))) {
+    int mcost = MAX(0, full_moves - punit->moves_left - SINGLE_MOVE);
+
+    /* Move cost is bigger of attack (SINGLE_MOVE) and occupying move
+     * costs. Attack SINGLE_COST is already calculated in to old_moves. */
+    punit->moves_left = old_moves - mcost;
+    if (punit->moves_left < 0) {
+      punit->moves_left = 0;
+    }
+  } else {
+    punit->moves_left = old_moves;
+  }
+}
+
+/**
    Expel the target unit to his owner's capital.
 
    Returns TRUE iff action could be done, FALSE if it couldn't. Even if
@@ -4104,48 +4150,7 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
 
   if (pwinner == punit && fc_rand(100) < game.server.occupychance
       && !is_non_allied_unit_tile(def_tile, pplayer)) {
-    /* Hack: make sure the unit has enough moves_left for the move to
-       succeed, and adjust moves_left to afterward (if successful). */
-
-    int old_moves = punit->moves_left;
-    int full_moves = unit_move_rate(punit);
-
-    punit->moves_left = full_moves;
-    // Post attack occupy move.
-    if (((pcity = tile_city(def_tile))
-         && is_action_enabled_unit_on_city(ACTION_CONQUER_CITY, punit, pcity)
-         && unit_perform_action(unit_owner(punit), punit->id, pcity->id, 0,
-                                "", ACTION_CONQUER_CITY, ACT_REQ_RULES))
-        || ((pcity = tile_city(def_tile))
-            && is_action_enabled_unit_on_city(ACTION_CONQUER_CITY2, punit,
-                                              pcity)
-            && unit_perform_action(unit_owner(punit), punit->id, pcity->id,
-                                   0, "", ACTION_CONQUER_CITY2,
-                                   ACT_REQ_RULES))
-        || (unit_transported(punit)
-            && is_action_enabled_unit_on_tile(ACTION_TRANSPORT_DISEMBARK1,
-                                              punit, def_tile, nullptr)
-            && unit_perform_action(
-                unit_owner(punit), punit->id, tile_index(def_tile), 0, "",
-                ACTION_TRANSPORT_DISEMBARK1, ACT_REQ_RULES))
-        || (unit_transported(punit)
-            && is_action_enabled_unit_on_tile(ACTION_TRANSPORT_DISEMBARK2,
-                                              punit, def_tile, nullptr)
-            && unit_perform_action(
-                unit_owner(punit), punit->id, tile_index(def_tile), 0, "",
-                ACTION_TRANSPORT_DISEMBARK2, ACT_REQ_RULES))
-        || (unit_move_handling(punit, def_tile, false, true))) {
-      int mcost = MAX(0, full_moves - punit->moves_left - SINGLE_MOVE);
-
-      /* Move cost is bigger of attack (SINGLE_MOVE) and occupying move
-       * costs. Attack SINGLE_COST is already calculated in to old_moves. */
-      punit->moves_left = old_moves - mcost;
-      if (punit->moves_left < 0) {
-        punit->moves_left = 0;
-      }
-    } else {
-      punit->moves_left = old_moves;
-    }
+    occupy_move(punit, def_tile);
   }
 
   // The attacker may have died for many reasons
