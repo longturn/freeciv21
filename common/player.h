@@ -283,8 +283,8 @@ struct player {
 
   int wonder_build_turn[B_LAST]; /* turn numbers when wonders were built */
 
-  struct attribute_block_s attribute_block;
-  struct attribute_block_s attribute_block_buffer;
+  QByteArray attribute_block;
+  QByteArray attribute_block_buffer;
 
   QBitArray *tile_known;
 

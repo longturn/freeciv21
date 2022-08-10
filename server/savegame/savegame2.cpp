@@ -4376,24 +4376,18 @@ static void sg_load_player_attributes(struct loaddata *loading,
   sg_check_ret();
 
   // Toss any existing attribute_block (should not exist)
-  if (plr->attribute_block.data) {
-    delete[] plr->attribute_block.data;
-    plr->attribute_block.data = nullptr;
-  }
+  plr->attribute_block.clear();
 
   // This is a big heap of opaque data for the client, check everything!
-  plr->attribute_block.length = secfile_lookup_int_default(
+  auto length = secfile_lookup_int_default(
       loading->file, 0, "player%d.attribute_v2_block_length", plrno);
 
-  if (0 > plr->attribute_block.length) {
-    log_sg("player%d.attribute_v2_block_length=%d too small", plrno,
-           plr->attribute_block.length);
-    plr->attribute_block.length = 0;
-  } else if (MAX_ATTRIBUTE_BLOCK < plr->attribute_block.length) {
+  if (length < 0) {
+    log_sg("player%d.attribute_v2_block_length=%d too small", plrno, length);
+  } else if (length >= MAX_ATTRIBUTE_BLOCK) {
     log_sg("player%d.attribute_v2_block_length=%d too big (max %d)", plrno,
-           plr->attribute_block.length, MAX_ATTRIBUTE_BLOCK);
-    plr->attribute_block.length = 0;
-  } else if (0 < plr->attribute_block.length) {
+           length, MAX_ATTRIBUTE_BLOCK);
+  } else if (length > 0) {
     int part_nr, parts;
     size_t actual_length;
     int quoted_length;
@@ -4410,7 +4404,7 @@ static void sg_load_player_attributes(struct loaddata *loading,
 
     quoted = new char[quoted_length + 1];
     quoted[0] = '\0';
-    plr->attribute_block.data = new char[plr->attribute_block.length]{};
+    plr->attribute_block.resize(length);
     for (part_nr = 0; part_nr < parts; part_nr++) {
       const char *current = secfile_lookup_str(
           loading->file, "player%d.attribute_v2_block_data.part%d", plrno,
@@ -4431,9 +4425,9 @@ static void sg_load_player_attributes(struct loaddata *loading,
                   (unsigned long) quoted_length,
                   (unsigned long) qstrlen(quoted));
 
-    actual_length = unquote_block(quoted, plr->attribute_block.data,
-                                  plr->attribute_block.length);
-    fc_assert(actual_length == plr->attribute_block.length);
+    actual_length = unquote_block(quoted, plr->attribute_block.data(),
+                                  plr->attribute_block.size());
+    fc_assert(actual_length == plr->attribute_block.size());
     delete[] quoted;
   }
 }

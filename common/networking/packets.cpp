@@ -654,38 +654,23 @@ void generic_handle_player_attribute_chunk(
       || chunk->offset + chunk->chunk_length > chunk->total_length
       || (chunk->offset != 0
           && chunk->total_length
-                 != pplayer->attribute_block_buffer.length)) {
+                 != pplayer->attribute_block_buffer.size())) {
     // wrong attribute data
-    if (pplayer->attribute_block_buffer.data) {
-      delete[] pplayer->attribute_block_buffer.data;
-      pplayer->attribute_block_buffer.data = nullptr;
-    }
-    pplayer->attribute_block_buffer.length = 0;
+    pplayer->attribute_block_buffer.clear();
     qCritical("Received wrong attribute chunk");
     return;
   }
   // first one in a row
   if (chunk->offset == 0) {
-    if (pplayer->attribute_block_buffer.data) {
-      delete[] pplayer->attribute_block_buffer.data;
-      pplayer->attribute_block_buffer.data = nullptr;
-    }
-    pplayer->attribute_block_buffer.data = new char[chunk->total_length]{};
-    pplayer->attribute_block_buffer.length = chunk->total_length;
+    pplayer->attribute_block_buffer.resize(chunk->total_length);
   }
-  memcpy(pplayer->attribute_block_buffer.data + chunk->offset, chunk->data,
+  memcpy(pplayer->attribute_block_buffer.data() + chunk->offset, chunk->data,
          chunk->chunk_length);
 
   if (chunk->offset + chunk->chunk_length == chunk->total_length) {
     // Received full attribute block
-    if (pplayer->attribute_block.data != nullptr) {
-      delete[] pplayer->attribute_block.data;
-    }
-    pplayer->attribute_block.data = pplayer->attribute_block_buffer.data;
-    pplayer->attribute_block.length = pplayer->attribute_block_buffer.length;
-
-    pplayer->attribute_block_buffer.data = nullptr;
-    pplayer->attribute_block_buffer.length = 0;
+    pplayer->attribute_block = pplayer->attribute_block_buffer;
+    pplayer->attribute_block_buffer.clear();
   }
 }
 
@@ -696,28 +681,27 @@ void send_attribute_block(const struct player *pplayer,
                           struct connection *pconn)
 {
   struct packet_player_attribute_chunk packet;
-  int current_chunk, chunks, bytes_left;
 
-  if (!pplayer || !pplayer->attribute_block.data) {
+  if (!pplayer || pplayer->attribute_block.isEmpty()) {
     return;
   }
 
-  fc_assert_ret(pplayer->attribute_block.length > 0
-                && pplayer->attribute_block.length < MAX_ATTRIBUTE_BLOCK);
+  fc_assert_ret(pplayer->attribute_block.size() < MAX_ATTRIBUTE_BLOCK);
 
-  chunks = (pplayer->attribute_block.length - 1) / ATTRIBUTE_CHUNK_SIZE + 1;
-  bytes_left = pplayer->attribute_block.length;
+  auto chunks =
+      (pplayer->attribute_block.size() - 1) / ATTRIBUTE_CHUNK_SIZE + 1;
+  auto bytes_left = pplayer->attribute_block.size();
 
   connection_do_buffer(pconn);
 
-  for (current_chunk = 0; current_chunk < chunks; current_chunk++) {
+  for (int current_chunk = 0; current_chunk < chunks; current_chunk++) {
     int size_of_current_chunk = MIN(bytes_left, ATTRIBUTE_CHUNK_SIZE - 1);
 
     packet.offset = (ATTRIBUTE_CHUNK_SIZE - 1) * current_chunk;
-    packet.total_length = pplayer->attribute_block.length;
+    packet.total_length = pplayer->attribute_block.size();
     packet.chunk_length = size_of_current_chunk;
 
-    memcpy(packet.data, pplayer->attribute_block.data + packet.offset,
+    memcpy(packet.data, pplayer->attribute_block.data() + packet.offset,
            packet.chunk_length);
     bytes_left -= packet.chunk_length;
 

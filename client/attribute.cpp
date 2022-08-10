@@ -80,7 +80,7 @@ void attribute_free()
    Serialize an attribute hash for network/storage.
  */
 static enum attribute_serial serialize_hash(attributeHash *hash,
-                                            void **pdata, int *pdata_length)
+                                            QByteArray &data)
 {
   /*
    * Layout of version 2:
@@ -101,7 +101,6 @@ static enum attribute_serial serialize_hash(attributeHash *hash,
   int total_length;
   std::vector<int> value_lengths;
   value_lengths.resize(entries);
-  void *result;
   struct raw_data_out dout;
   int i;
 
@@ -129,8 +128,8 @@ static enum attribute_serial serialize_hash(attributeHash *hash,
   /*
    * Step 2: allocate memory.
    */
-  result = new char[total_length];
-  dio_output_init(&dout, result, total_length);
+  data.resize(total_length);
+  dio_output_init(&dout, data.data(), total_length);
 
   /*
    * Step 3: fill out the preamble.
@@ -169,9 +168,7 @@ static enum attribute_serial serialize_hash(attributeHash *hash,
   /*
    * Step 5: return.
    */
-  *pdata = result;
-  *pdata_length = total_length;
-  log_attribute("attribute.c serialize_hash() "
+  log_attribute("attribute.cpp serialize_hash() "
                 "serialized %lu entries in %lu bytes",
                 (long unsigned) entries, (long unsigned) total_length);
   return A_SERIAL_OK;
@@ -183,42 +180,42 @@ static enum attribute_serial serialize_hash(attributeHash *hash,
    opaque data packet back to the client, and now is ready to be restored.
    Check everything!
  */
-static enum attribute_serial
-unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
+static enum attribute_serial unserialize_hash(attributeHash *hash,
+                                              const QByteArray &data)
 {
   int entries, i, dummy;
   struct data_in din;
 
   hash->clear();
 
-  dio_input_init(&din, data, data_length);
+  dio_input_init(&din, data.constData(), data.size());
 
   fc_assert_ret_val(dio_get_uint32_raw(&din, &dummy), A_SERIAL_FAIL);
   if (dummy != 0) {
-    qDebug("attribute.c unserialize_hash() preamble, uint32 %lu != 0",
+    qDebug("attribute.cpp unserialize_hash() preamble, uint32 %lu != 0",
            static_cast<long unsigned>(dummy));
     return A_SERIAL_OLD;
   }
   fc_assert_ret_val(dio_get_uint8_raw(&din, &dummy), A_SERIAL_FAIL);
   if (dummy != 2) {
-    qDebug("attribute.c unserialize_hash() preamble, "
+    qDebug("attribute.cpp unserialize_hash() preamble, "
            "uint8 %lu != 2 version",
            static_cast<long unsigned>(dummy));
     return A_SERIAL_OLD;
   }
   fc_assert_ret_val(dio_get_uint32_raw(&din, &entries), A_SERIAL_FAIL);
   fc_assert_ret_val(dio_get_uint32_raw(&din, &dummy), A_SERIAL_FAIL);
-  if (dummy != data_length) {
-    qDebug("attribute.c unserialize_hash() preamble, "
+  if (dummy != data.size()) {
+    qDebug("attribute.cpp unserialize_hash() preamble, "
            "uint32 %lu != %lu data_length",
            static_cast<long unsigned>(dummy),
-           static_cast<long unsigned>(data_length));
+           static_cast<long unsigned>(data.size()));
     return A_SERIAL_FAIL;
   }
 
-  log_attribute("attribute.c unserialize_hash() "
+  log_attribute("attribute.cpp unserialize_hash() "
                 "uint32 %lu entries, %lu data_length",
-                (long unsigned) entries, (long unsigned) data_length);
+                (long unsigned) entries, (long unsigned) data.size());
 
   for (i = 0; i < entries; i++) {
     attr_key key;
@@ -227,11 +224,11 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
     struct raw_data_out dout;
 
     if (!dio_get_uint32_raw(&din, &value_length)) {
-      qDebug("attribute.c unserialize_hash() "
+      qDebug("attribute.cpp unserialize_hash() "
              "uint32 value_length dio_input_too_short");
       return A_SERIAL_FAIL;
     }
-    log_attribute("attribute.c unserialize_hash() "
+    log_attribute("attribute.cpp unserialize_hash() "
                   "uint32 %lu value_length",
                   (long unsigned) value_length);
 
@@ -240,7 +237,7 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
         || !dio_get_uint32_raw(&din, &key.id)
         || !dio_get_sint16_raw(&din, &key.x)
         || !dio_get_sint16_raw(&din, &key.y)) {
-      qDebug("attribute.c unserialize_hash() "
+      qDebug("attribute.cpp unserialize_hash() "
              "uint32 key dio_input_too_short");
       return A_SERIAL_FAIL;
     }
@@ -249,7 +246,7 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
     dio_output_init(&dout, pvalue, value_length + 4);
     dio_put_uint32_raw(&dout, value_length);
     if (!dio_get_memory_raw(&din, ADD_TO_POINTER(pvalue, 4), value_length)) {
-      qDebug("attribute.c unserialize_hash() "
+      qDebug("attribute.cpp unserialize_hash() "
              "memory dio_input_too_short");
       return A_SERIAL_FAIL;
     }
@@ -272,7 +269,7 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
     /* This is not an error, as old clients sent overlong serialized
      * attributes pre gna bug #21295, and these will be hanging around
      * in savefiles forever. */
-    log_attribute("attribute.c unserialize_hash() "
+    log_attribute("attribute.cpp unserialize_hash() "
                   "ignored %lu trailing octets",
                   (long unsigned) dio_input_remaining(&din));
   }
@@ -296,14 +293,8 @@ void attribute_flush()
     return;
   }
 
-  if (pplayer->attribute_block.data) {
-    delete[] pplayer->attribute_block.data;
-    pplayer->attribute_block.data = nullptr;
-  }
-
-  serialize_hash(attribute_hash,
-                 reinterpret_cast<void **>(&pplayer->attribute_block.data),
-                 &pplayer->attribute_block.length);
+  pplayer->attribute_block.clear();
+  serialize_hash(attribute_hash, pplayer->attribute_block);
   send_attribute_block(pplayer, &client.conn);
 }
 
@@ -321,8 +312,7 @@ void attribute_restore()
 
   fc_assert_ret(attribute_hash != nullptr);
 
-  switch (unserialize_hash(attribute_hash, pplayer->attribute_block.data,
-                           pplayer->attribute_block.length)) {
+  switch (unserialize_hash(attribute_hash, pplayer->attribute_block)) {
   case A_SERIAL_FAIL:
     qCritical(_("There has been a CMA error. "
                 "Your citizen governor settings may be broken."));
