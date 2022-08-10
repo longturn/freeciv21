@@ -578,11 +578,6 @@ static void player_defaults(struct player *pplayer)
     pplayer->wonder_build_turn[i] = -1;
   }
 
-  pplayer->attribute_block.data = nullptr;
-  pplayer->attribute_block.length = 0;
-  pplayer->attribute_block_buffer.data = nullptr;
-  pplayer->attribute_block_buffer.length = 0;
-
   pplayer->rgb = nullptr;
 
   memset(pplayer->multipliers, 0, sizeof(pplayer->multipliers));
@@ -629,11 +624,8 @@ void player_clear(struct player *pplayer, bool full)
   pplayer->savegame_ai_type_name = nullptr;
 
   // Clears the attribute blocks.
-  delete[] pplayer->attribute_block.data;
-  pplayer->attribute_block.length = 0;
-
-  delete[] pplayer->attribute_block_buffer.data;
-  pplayer->attribute_block_buffer.length = 0;
+  pplayer->attribute_block.clear();
+  pplayer->attribute_block_buffer.clear();
 
   // Clears units and cities.
   unit_list_iterate(pplayer->units, punit)
