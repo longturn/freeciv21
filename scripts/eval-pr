@@ -119,7 +119,7 @@ close_message ()
     echo ""
     echo "-- Lastly, The ASan preset compiles with the \"RelWithDebInfo\" configuration instead of the"
     echo "    \"Debug\" configuration. Running the code through a debugger, such as gdb, can have unintended"
-    echo "   effects. If you wish to run the autogame server or observing client through a debugger, then"
+    echo "    effects. If you wish to run the autogame server or observing client through a debugger, then"
     echo "    prefix the previous two command lines with \"gdb --args\"."
     echo ""
   fi
@@ -176,9 +176,7 @@ asan_eval ()
   echo ""
   if ! [[ -e build_$pull_request ]]; then
     mkdir build_$pull_request
-    cd build_$pull_request
-    cmake --preset ASan -S ..
-    cd ..
+    cmake --preset ASan -S . -B build_$pull_request
   fi
   cmake --build build_$pull_request
 
