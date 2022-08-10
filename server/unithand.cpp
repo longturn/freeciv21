@@ -3916,7 +3916,6 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
   char attacker_fp[MAX_LEN_LINK], defender_fp[MAX_LEN_LINK];
   char attacker_tired[MAX_LEN_LINK];
   struct unit *ploser, *pwinner;
-  struct city *pcity;
   int moves_used, def_moves_used;
   int old_unit_vet, old_defender_vet, vet;
   int winner_id;
@@ -4023,9 +4022,6 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
   action_consequence_success(paction, pplayer, unit_owner(pdefender),
                              def_tile, unit_link(pdefender));
 
-  if (pdefender->hp <= 0 && (pcity = tile_city(def_tile))) {
-    unit_attack_civilian_casualties(punit, pcity, paction, "attack");
-  }
   if (punit->hp > 0 && pdefender->hp > 0) {
     // Neither died
     send_combat(punit, pdefender, punit->veteran - old_unit_vet,
@@ -4134,6 +4130,14 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
     punit->moved = true; // We moved
     kill_unit(pwinner, ploser,
               vet && !utype_is_consumed_by_action(paction, punit->utype));
+
+    /* Now that dead defender is certainly no longer listed as unit
+     * supported by the city, we may even remove the city
+     * (if it shrinks from size 1) */
+    auto pcity = tile_city(def_tile);
+    if (pdefender->hp <= 0) {
+      unit_attack_civilian_casualties(punit, pcity, paction, "attack");
+    }
     if (unit_is_alive(winner_id)) {
       if (utype_is_consumed_by_action(paction, pwinner->utype)) {
         return true;
