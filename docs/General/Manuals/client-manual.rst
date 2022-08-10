@@ -167,7 +167,7 @@ More Game Options
 Clicking on this button will bring up the :guilabel:`server options` dialog box as shown in Figure 4 below.
 From here you can customize other settings for the game before you start it. The ruleset defines many of these
 options, so be sure to have selected the ruleset you want to play before attempting to set other settings. You
-can hover the mouse over the entries to get some help on what the setting does.
+can hover the mouse over the entries to get an explanation of what the setting does.
 
 .. figure:: ../../_static/images/gui-elements/server-options.png
     :height: 400px
@@ -257,9 +257,9 @@ click :guilabel:`Connect` to connect to the server. The :guilabel:`password` box
 connected to the server. Type in your passowrd and then click :guilabel:`Connect` a second time and you will
 join the server. Pretty much all LongTurn online multiplayer games are connected to this way.
 
-.. Note:: If you are hosting your own server and a player has never connected before they may be prompted
-  to confirm the password a second time in the :guilabel:`Confirm password` box before being allowed to
-  connect.
+.. Note:: If you are hosting your own server with authenication enabled and a player has never connected
+  before they may be prompted to confirm the password a second time in the :guilabel:`Confirm password` box
+  before being allowed to connect.
 
 Load Saved Game
 ---------------
@@ -311,8 +311,9 @@ scenario file in an alternate location. Clicking on :guilabel:`Cancel` will brin
 Options
 -------
 
-When you click on the :guilabel:`Options` button, a dialog box will appear as in Figure 8 below. This dialog
-allows you to set a myriad of options that affect the look and feel of the client when you are playing a game.
+From the Start Screen, as shown in Figure 1, when you click on the :guilabel:`Options` button, a dialog box
+will appear as in Figure 8 below. This dialog allows you to set a myriad of options that affect the look and
+feel of the client when you are playing a game.
 
 The local options dialog box can also be opened while in a game via the
 :menuselection:`Game --> Local Options` menu.
@@ -336,9 +337,9 @@ The local options dialog is broken down into the following tabs:
 * :guilabel:`Graphics`: On this tab you can change the look and feel with a different theme. NightStalker is
   the default theme out of the box. You can also set the default tileset to use under different map styles as
   well as various things you may or may not want the client to paint (draw) on the screen.
-* :guilabel:`Overview`: On this tab you can enable/disable varying features of the map.
-* :guilabel:`Map Image`: The Freeciv21 client allows you to save images of the map to the filesystem. This
-  tab allows you to configure how you want to do that. Refer to `Game Menu`_ for more information.
+* :guilabel:`Overview`: On this tab turn various features of the minimap on and off.
+* :guilabel:`Map Image`: Freeciv21 can save summary images of the map every turn. This tab allows you to
+  configure how you want to do that. Refer to `Game Menu`_ for more information.
 * :guilabel:`Font`: There are a collection of font styles used in the client. This tab allows you to tailor
   them to your own favorites.
 
@@ -374,8 +375,7 @@ shown in Figure 9 below. This is known as the `Map View`_.
 
 The client interface is broken down into a collection of sections. From the top, the sections are:
 
-* :strong:`Menu Bar`: As with most programs, Freeciv21 is no different and has a menu bar at the top. For
-  details see `Menu Bar`_.
+* :strong:`Menu Bar`: Like many programs, Freeciv21 has a menu bar at the top. For details see `Menu Bar`_.
 * :strong:`Top Function Bar`: This top bar is a big aspect of playing any Freeciv21 game. More details are
   available in the `Top Function Bar`_ section.
 * :strong:`The Main Map`: This is the main canvas of the game. This is where your empire will either thrive
@@ -403,9 +403,8 @@ The Menu Bar consists of the following items:
 Game Menu
 ^^^^^^^^^
 
-The :guilabel:`Game` menu is used to conduct global level options on the client or the game being played.
-
-The :guilabel:`Game` menu has the following options:
+The :guilabel:`Game` menu is used to conduct global level options on the client or the game being played. It
+has the following options:
 
 Save Game
     Saves the game as it is :strong:`right now` to the default save location.
@@ -443,7 +442,7 @@ Shortcuts
     Opens the :guilabel:`Shortcuts` dialog as shown in Figure 11 below. The dialog is used to set the
     preferred keyboard shortcuts to be used in the game. The screenshot only shows a few rows of available
     options, many more will be found in the client. To override the default, click your mouse cursor on the
-    box on the right and then "use" the shortcut you want to set the setting to. For example: You want to
+    box on the right and then type the shortcut you want to set the setting to. For example: You want to
     change the :guilabel:`Scroll Map` option to the :guilabel:`PgUp` key, you would click in the box and then
     press the :guilabel:`PgUp` key on your keyboard. To reset to defaults, you can click on the
     :guilabel:`Reset` button. Click :guilabel:`Save` and then :guilabel:`Close` when finished.
@@ -460,7 +459,7 @@ Shortcuts
 Load Another Tileset
     Opens the :guilabel:`Available Tilesets` dialog as shown in Figure 12 below. You can select any tileset
     installed by clicking on the name. You may get an error message if the tileset is not compatible with
-    the server map topology configuration.
+    the current ruleset (for example, if it lacks a unit).
 
 .. figure:: ../../_static/images/gui-elements/tileset.png
   :align: center
@@ -536,7 +535,7 @@ Scale Fonts
 
 Citybar Style
     This menu has a sub-menu of three options: :guilabel:`Simple`, :guilabel:`Traditional`, and
-    :guilabel:`Polished` as shown in Figures 13, 14 and 15 respectfully.
+    :guilabel:`Polished` as shown in Figures 13, 14, and 15, respectively.
 
 .. figure:: ../../_static/images/gui-elements/citybar-simple.png
   :align: center
@@ -600,9 +599,8 @@ City Traderoutes
 Select Menu
 ^^^^^^^^^^^
 
-The :guilabel:`Select` is used to select units on the game map in varying degrees.
-
-The :guilabel:`Select` menu has the following options:
+The :guilabel:`Select` is used to select units on the game map in varying degrees. It has the following
+options:
 
 Single Unit (Unselect Others)
     Assuming you have selected multiple units (such as the next menu for :guilabel:`All on Tile`) and you want
@@ -636,7 +634,7 @@ Done
 
 Advanced Unit Selection
     Opens the :guilabel:`Advanced Unit Selection` dialog box as shown in Figure 16 below. This dialog box
-    gives you options to select a group of units using a more nuanced grouping method other than the other
+    gives you options to select a group of units using a more nuanced grouping method than the other
     :guilabel:`Select` menu options.
 
 .. figure:: ../../_static/images/gui-elements/advanced-unit-selection.png
@@ -650,9 +648,7 @@ Advanced Unit Selection
 Unit Menu
 ^^^^^^^^^
 
-The :guilabel:`Unit` menu is used to give units orders.
-
-The :guilabel:`Unit` menu has the following options:
+The :guilabel:`Unit` menu is used to give units orders. It has the following options:
 
 Go to Tile
     With a unit selected, give the unit orders to go to a selected tile on the map.
@@ -671,9 +667,8 @@ Go to/Airlift to City...
     required for Airlifting), you use this menu to tell the unit to transport to a city with the Airlift
     capability. A dialog box will pop up asking what city you want to Airlift to.
 
-.. tip:: Depending on the set up of the rules, a player could use the :guilabel:`Select` menu to select many
-  units of a similar type and then use this menu item to Airlift a great number of units all in one move
-  very quickly.
+.. tip:: Depending on the game rules, a player could use the :guilabel:`Select` menu to select many units of a
+  similar type and then use this menu item to Airlift a great number of units all in one move very quickly.
 
 Autoexplore
     Ask the unit to automatically open up the unknown (the area of the map that is black and has not been
@@ -730,9 +725,7 @@ Rename
 Combat Menu
 ^^^^^^^^^^^
 
-The :guilabel:`Combat` menu is used to give combat units orders.
-
-The :guilabel:`Combat` menu has the following options:
+The :guilabel:`Combat` menu is used to give combat units orders. It has the following options:
 
 Fortify Unit
     Instruct the unit to :strong:`Fortify` on the tile. An icon will show on the unit signifying
@@ -741,11 +734,11 @@ Fortify Unit
     fortifying, it is not in :strong:`Sentry` mode and will not inform you of enemy unit movement inside of
     its vision radius.
 
-Build Fortress/Bouy
-    Some units have the ability to build forts, fortresses, and bouys. They are typically :unit:`Workers` or
-    :unit:`Engineers`. In some rulesets, :unit:`Transports` can build Bouys. Forts, Pre-Forts and Fortresses
+Build Fortress/Buoy
+    Some units have the ability to build forts, fortresses, and buoys. They are typically :unit:`Workers` or
+    :unit:`Engineers`. In some rulesets, :unit:`Transports` can build Buoys. Forts, Pre-Forts and Fortresses
     give a unit increased defensive bonuses in addition to what is provided by the base terrain. See in
-    game help for the specifics. Bouys are used to act as sentries in the oceans around your cities and can
+    game help for the specifics. Buoys are used to act as sentries in the oceans around your cities and can
     give you opponent unit movement information.
 
 Build Airbase
@@ -767,9 +760,8 @@ Work Menu
 
 The :guilabel:`Work` menu is used to give units infrastructure work orders such as building roads, irrigation,
 or mines. Tile infrastructure improvements are mostly done with :unit:`Workers` and :unit:`Engineers`, however
-some rulesets allow other units to perform this type of work. See in game help for details.
-
-The :guilabel:`Work` menu has the following options:
+some rulesets allow other units to perform this type of work. See in game help on units for details. It has
+the following options:
 
 Build City
     Certain units such as :unit:`Settlers` can found cities. If the unit has sufficient move points available,
@@ -848,9 +840,7 @@ Multiplayer Menu
 ^^^^^^^^^^^^^^^^
 
 The :guilabel:`Multiplayer` menu has a collection of functions to aid certain multiplayer games. Many of
-the options are specifically tailored to the MP2c and WarCiv rulesets.
-
-The :guilabel:`Multiplayer` menu has the following options:
+the options are specifically tailored to the MP2c and WarCiv rulesets. It has the following options:
 
 Delayed GoTo
     Give a unit orders to move at a specific time in the turn. This assumes that the turn is time based.
@@ -901,9 +891,7 @@ Civilization Menu
 
 The :guilabel:`Civilization` menu is used to gain access to many fuctions of your empire. You can load up
 pages for units, cities, nations, etc; change the form of government and see how your are doing compared to
-your opponents with the demographics report.
-
-The :guilabel:`Civilization` menu has the following options:
+your opponents with the demographics report. It has the following options:
 
 Tax Rates
     Selecting this menu item will bring up a dialog box allowing you to set the rate in percentage points for
@@ -1012,12 +1000,11 @@ Achievements
 Help Menu
 ^^^^^^^^^
 
-The :guilabel:`Help` menu gives you access to the in-game help.
-
-The :guilabel:`Help` menu has the following options: Overview, Strategy and Tactics, Terrain, Ecomony, Cities,
-City Improvements, Wonders of the World, Units, Combat, Zones of Control, Government, Effects, Diplomacy,
-Technology, Space Race, About Current Ruleset, About Nations, Connecting, Controls, Citizen Governor,
-Chatline, Worklist Editor, Languages, Copying, and About Freeciv21
+The :guilabel:`Help` menu gives you access to the in-game help. It has the following options: Overview,
+Strategy and Tactics, Terrain, Ecomony, Cities, City Improvements, Wonders of the World, Units, Combat, Zones
+of Control, Government, Effects, Diplomacy, Technology, Space Race, About Current Tileset, About Current
+Ruleset, About Nations, Connecting, Controls, Citizen Governor, Chatline, Worklist Editor, Languages, Copying,
+and About Freeciv21.
 
 Each of these options is simply a quick link to the same named section in the game help menu.
 
@@ -1102,10 +1089,10 @@ a table below the widget, such as Figure 26, that displays the amount of time un
 .. figure:: ../../_static/images/gui-elements/units-report-uwt.png
   :align: center
   :width: 400px
-  :alt: Freeciv21 Units Report w/ UWT
+  :alt: Freeciv21 Units Report w/ unitwaittime
   :figclass: align-center
 
-  Figure 26: Units View with UWT
+  Figure 26: Units View with ``unitwaittime``
 
 
 Cities View
@@ -1216,7 +1203,7 @@ If you have a relationship with a player other than :strong:`War`, you can cance
 rulesets support :strong:`Cease Fire`, :strong:`Peace`, and :strong:`Alliance`.
 
 .. note:: Some forms of government will not allow you to break a :strong:`Peace` or :strong:`Alliance` treaty
-  without going to into Anarchy.
+  without changing government to Anarchy.
 
 Lastly, clicking :guilabel:`Meet` will bring up a diplomacy screen where you can interact with a player that
 you have an embassy with. Figure 32, shows a sample screen where the parties are agreeing to a cease fire.
@@ -1456,7 +1443,7 @@ example of the :guilabel:`Mini Map` widget for a single player game. Figure 44 s
 player :guilabel:`Turn Done` button is replaced with a countdown timer. On the right hand side of the
 :guilabel:`Mini Map` are zoom buttons similar to what you would find in the `View Menu`_. Inside of the
 :guilabel:`Mini Map` you will see an area inside a white border. This is the portion of the whole `Map View`_
-that is displyed on the screen. Right-clicking inside the :guilabel:`Mini Map` will cause the `Map View`_ to
+that is displayed on the screen. Right-clicking inside the :guilabel:`Mini Map` will cause the `Map View`_ to
 move to that spot. The :guilabel:`Mini Map` provides a quick way to move around a large map in this manner.
 
 .. figure:: ../../_static/images/gui-elements/mini-map-sp.png
@@ -1498,12 +1485,12 @@ Let us start at the top center as highlighted in Figure 46. In this segment of t
 information about the city. The name of the city is in the header at the top center. If you click on the city
 name, a dialog box will appear and allow you to rename the city to something else. On the left and right sides
 is an arrow that when clicked will move you to the previous and next cities in the city array. In the center,
-the dialog will show how large the city is. Each rectangle icon is equivalent to 10,000 population and 1
-citizen worker. There is also a large X button. If clicked the :guilabel:`City Dialog` will close and return
-you to the `Map View`_. At the bottom center of this segment is information about the city's status. From left
-to right you will see net food, net production, net gold, net science, net trade, and turns to grow to next
-size. If you hover your mouse over any of these icons, the client will show you detailed information on the
-calculation for the net value displayed.
+the dialog will show how large the city is. Each rectangle icon is equivalent to 1 citizen worker. There is
+also a large X button. If clicked the :guilabel:`City Dialog` will close and return you to the `Map View`_. At
+the bottom center of this segment is information about the city's status. From left to right you will see net
+food, net production, net gold, net science, net trade, and turns to grow to next size. If you hover your
+mouse over any of these icons, the client will show you detailed information on the calculation for the net
+value displayed.
 
 .. figure:: ../../_static/images/gui-elements/city-dialog-top-center.png
   :align: center
@@ -1552,15 +1539,16 @@ work list. :guilabel:`Change Worklist` will clear what is in the main work list 
 work list.
 
 Moving to the center, we can see the city citizen tile output segment and the city's full vision radius
-highlighted over the main map as highlighted in Figure 48. This city is size 3, which means 4 tiles can be
-worked by the citizens. The city center is worked for free and then 3 other tiles are being worked. In this
-example, there is a forest with a river and silk, grassland with irrigation, and a grassland with a river tile
-being worked. You can click on the city center and the client will automatically pick the best tiles for net
-food to aid city growth. You can also click on a tile to remove the citizen from the tile and then click
-another tile to have the citizen work another tile. This is commonly referred to as city micromanagement. If
-you remove a citizen from working a tile, take a look at the top center segment. The citizens icon bar will
-show one entertainer specialist. If you want to change the entertainer to a scientist or a taxman, you can
-click on it in the icon bar to change.
+highlighted over the main map as highlighted in Figure 48. This city is size 3, which means 3 tiles can be
+managed by the citizens. Each citizen can be assigned to work one tile, extracting food, production and trade
+from it. In addition, the city tile is always worked for free. In this example, there is a forest with a river
+and silk, grassland with irrigation, and a grassland with a river tile being managed by a citizen. You can
+click on the city center and the client will automatically pick the best tiles for net food to aid city
+growth. You can also click on a tile to remove the citizen from the tile and then click another tile to have
+the citizen manage another tile. This is commonly referred to as city micromanagement. If you remove a citizen
+from managing a tile, take a look at the top center segment. The citizens icon bar will show one entertainer
+specialist. If you want to change the entertainer to a scientist or a taxman, you can click on it in the icon
+bar to change.
 
 .. figure:: ../../_static/images/gui-elements/city-dialog-center.png
   :align: center
@@ -1568,6 +1556,9 @@ click on it in the icon bar to change.
   :figclass: align-center
 
   Figure 48: City Dialog - City Center
+
+
+.. note::
 
 Moving right, we can see the :guilabel:`General` tab on the right most panel as highlighted in Figure 49. This
 tab shows information simiar to what is shown on the top center segment, along with units and city
