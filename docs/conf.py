@@ -48,7 +48,13 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.ifconfig',
     'sphinx_rtd_theme',
+    'sphinx_last_updated_by_git',
 ]
+
+# sphinx_last_updated_by_git extension settings
+git_untracked_check_dependencies = False
+git_last_updated_timezone = 'UTC'
+git_last_updated_metatags = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -76,6 +82,9 @@ exclude_patterns = []
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
+
+#Enable the numbering of Figures
+numfig = True
 
 
 # -- Options for HTML output -------------------------------------------------
