@@ -13,7 +13,7 @@ GitHub Repository at https://github.com/longturn/freeciv21/tree/master.
 This manual was last updated on: 07 August 2022 correlating to the ``master`` branch at b1f1881. The
 ``master`` branch is post v3.0-beta.3.
 
-Getting started
+Getting Started
 ===============
 
 If you have not installed Freeciv21, then obviously you need to start :doc:`there <../install>`. Precompiled
@@ -47,11 +47,11 @@ files. Double-clicking ``freeciv21-client`` should start it up.
 
 The following buttons are available on the :guilabel:`Start Screen`:
 
-* :guilabel:`Start new game` -- Start a new single player game. See `Start new game`_ below.
-* :guilabel:`Connect to network game` -- Connect to a LongTurn mutliplayer game or one you host yourself. See
-  `Connect to network game`_ below.
-* :guilabel:`Load saved game` -- Load a previously saved single player game. See `Load saved game`_ below.
-* :guilabel:`Start scenario game` -- Start a single player scenario game. See `Start scenario game`_ below.
+* :guilabel:`Start New Game` -- Start a new single player game. See `Start new game`_ below.
+* :guilabel:`Connect to Network Game` -- Connect to a LongTurn mutliplayer game or one you host yourself. See
+  `Connect to Network Game`_ below.
+* :guilabel:`Load Saved Game` -- Load a previously saved single player game. See `Load Saved Game`_ below.
+* :guilabel:`Start Scenario Game` -- Start a single player scenario game. See `Start Scenario Game`_ below.
 * :guilabel:`Options` -- Set client options. See `Options`_ below.
 * :guilabel:`Quit` -- Quit Freeciv21
 
@@ -61,7 +61,7 @@ The following buttons are available on the :guilabel:`Start Screen`:
 Start New Game
 --------------
 
-Clicking :guilabel:`Start new game` is used to start a new single player game. When clicked the following
+Clicking :guilabel:`Start New Game` is used to start a new single player game. When clicked the following
 dialog will appear.
 
 .. figure:: ../../_static/images/gui-elements/start-new-game.png
@@ -75,15 +75,15 @@ dialog will appear.
 
 From upper left to lower right, the following user interface elements are available:
 
-* :guilabel:`Players list`
+* :guilabel:`Players List`
 * :guilabel:`Nation`
 * :guilabel:`Rules`
 * :guilabel:`Number of Players`
 * :guilabel:`AI Skill Level`
 * :guilabel:`More Game Options`
 * :guilabel:`Client Options`
-* :guilabel:`Server output window`
-* :guilabel:`Server chat/command line`
+* :guilabel:`Server Output Window`
+* :guilabel:`Server Chat/Command Line`
 * :guilabel:`Disconnect`
 * :guilabel:`Pick Nation`
 * :guilabel:`Observe`
@@ -92,7 +92,7 @@ From upper left to lower right, the following user interface elements are availa
 Players List
 ^^^^^^^^^^^^
 
-The :guilabel:`Players list` table shows information about the configured players in the game. The information
+The :guilabel:`Players List` table shows information about the configured players in the game. The information
 shown in Figure 2 is what a single player game looks like. A LongTurn multiplayer game will look very
 similar, except that all the player's aliases will be shown as set up by the game administrator.
 You can right-click on a player's row to configure details about the specific player:
@@ -101,16 +101,16 @@ You can right-click on a player's row to configure details about the specific pl
   during LongTurn multiplayer games when you want to connect and see what a player is doing, but you cannot
   make any actual moves for the player. This works for LAN games as well. You can also use the server
   chat line and issue this command: ``/observe <player>``.
-* :guilabel:`Remove player` -- Removes the player from the list.
-* :guilabel:`Take this player` -- Allows you to claim this player as your own and then when you click
+* :guilabel:`Remove Player` -- Removes the player from the list.
+* :guilabel:`Take This Player` -- Allows you to claim this player as your own and then when you click
   :guilabel:`Start` you will join the game as that player. This is a required step for LongTurn multiplayer
   games at the start of a new game. Subsequent logins to a game when you `Connect to Network Game`_ will not
   require another ``take`` action. You can also use the server chat line and issue this command:
   ``/take <player>``
-* :guilabel:`Pick nation` -- Allows you to choose the Nation of the player. See `Pick Nation`_ below.
-* :guilabel:`Set difficulty` -- Set the difficulty of the AI.
-* :guilabel:`Put on team` -- Combine players into teams.
-* :guilabel:`AI toggle player` -- Toggle if the player is an AI or a human. This is needed before you can use
+* :guilabel:`Pick Nation` -- Allows you to choose the Nation of the player. See `Pick Nation`_ below.
+* :guilabel:`Set Difficulty` -- Set the difficulty of the AI.
+* :guilabel:`Put on Team` -- Combine players into teams.
+* :guilabel:`AI Toggle Player` -- Toggle if the player is an AI or a human. This is needed before you can use
   the ``take`` option above as players when added are AI by default.
 
 Nation
@@ -165,7 +165,7 @@ use the `Players list`_ right-click menu.
 More Game Options
 ^^^^^^^^^^^^^^^^^
 
-Clicking on this button will bring up the :guilabel:`server options` dialog box as shown in Figure 4 below.
+Clicking on this button will bring up the :guilabel:`Server Options` dialog box as shown in Figure 4 below.
 From here you can customize other settings for the game before you start it. The ruleset defines many of these
 options, so be sure to select the ruleset you want to play before attempting to set other settings. You can
 hover the mouse over the entries to get an explanation of what the setting does.
@@ -184,7 +184,7 @@ Client Options
 
 Refer to the section on `Options`_ below.
 
-Server output window
+Server Output Window
 ^^^^^^^^^^^^^^^^^^^^
 
 When you pick a ruleset, you will often see a bunch of output inside of this window. Also, if you make changes
@@ -193,10 +193,10 @@ actually a good way to learn what the varying server options are that can be iss
 chat/command line`_. This window is read-only, however you can select text from it and copy it to paste in a
 text file if needed.
 
-Server chat/command line
+Server Chat/Command Line
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-The :guilabel:`server chat/command line` is a text box below the server output window. From here you can
+The :guilabel:`Server Chat/Command Line` is a text box below the server output window. From here you can
 manually enter ``/set`` commands to the server directly if you know what you want to set.
 
 Disconnect
@@ -204,7 +204,7 @@ Disconnect
 
 Clicking this button takes you back to the :guilabel:`Start Screen` as shown in Figure 1 in the
 `Launching the Client`_ section. The local ``freeciv21-server`` instance will be terminated at this time. A
-subsequent click of :guilabel:`Start new game` will spawn a new instance of the server, however any changes
+subsequent click of :guilabel:`Start New Game` will spawn a new instance of the server, however any changes
 made previously will be lost and you will have to start over.
 
 Pick Nation
@@ -216,7 +216,9 @@ Observe
 ^^^^^^^
 
 This button allows you to do a :strong:`global` observe of all players. This is a special server setting and
-is not enabled by default.
+is not enabled by default, however it is available in single player games. If you are globally observing a
+game, you can right-click on the `Nations and Diplomacy View`_ button in the `Top Function Bar`_ and select
+a particular nation to observe.
 
 Start
 ^^^^^
@@ -241,25 +243,25 @@ below.
 There are three ways to connect to a server:
 
 #. :strong:`A Local Server`: If you are hosting a local server on the same IP subnet as the client, then it
-   will show in the :guilabel:`Local server` box at the top.
+   will show in the :guilabel:`Local Server` box at the top.
 #. :strong:`An Internet Server`: If the LongTurn community lists running games on its internet metaserver,
-   games will show here and can be connected to via the :guilabel:`Internet servers` box in the middle.
+   games will show here and can be connected to via the :guilabel:`Internet Servers` box in the middle.
 #. :strong:`Manually`: If you simply need to connect to a remote server and you know the the
-   :guilabel:`servername` and :guilabel:`port`, then this is your option.
+   :guilabel:`Servername` and :guilabel:`Port`, then this is your option.
 
-For the first two options you will select the server in the table and ensure that your :guilabel:`username` is
-correct and then click :guilabel:`Connect` to connect to the server. The :guilabel:`password` box will
+For the first two options you will select the server in the table and ensure that your :guilabel:`Username` is
+correct and then click :guilabel:`Connect` to connect to the server. The :guilabel:`Password` box will
 activate when you have connected to the server. Type in your password and then click :guilabel:`Connect` a
 second time and you will join the server.
 
 For the last option, enter in the server name or IP address into the :guilabel:`Connect` text box and the
-server port in the corresponding :guilabel:`port` text box. Ensure your username is correct and then
-click :guilabel:`Connect` to connect to the server. The :guilabel:`password` box will activate when you have
+server port in the corresponding :guilabel:`Port` text box. Ensure your username is correct and then
+click :guilabel:`Connect` to connect to the server. The :guilabel:`Password` box will activate when you have
 connected to the server. Type in your password and then click :guilabel:`Connect` a second time and you will
 join the server. Pretty much all LongTurn online multiplayer games are connected this way.
 
 .. Note:: If you are hosting your own server with authentication enabled and a player has never connected
-  before they may be prompted to confirm the password a second time in the :guilabel:`Confirm password` box
+  before they may be prompted to confirm the password a second time in the :guilabel:`Confirm Password` box
   before being allowed to connect.
 
 Load Saved Game
@@ -383,8 +385,8 @@ The client interface is broken down into a collection of sections. From the top,
   or be destroyed by your enemies. Refer to `Map View`_ for more information.
 * :strong:`Unit Controls`: Figure 9 shows a :unit:`Battleship` selected and the available unit actions in a
   bar at the bottom middle of the interface. This is the `Unit Controls`_ bar.
-* :strong:`Mini Map`: In the lower right corner of the main map interface is a small version of the map known
-  as the `Mini Map`_.
+* :strong:`Minimap`: In the lower right corner of the main map interface is a small version of the map known
+  as the `Minimap`_.
 
 Menu Bar
 --------
@@ -428,7 +430,7 @@ Messages
     rows of available options, many more will be found in the client. Any item with a check mark in the
     :guilabel:`Out` column will be shown in the :guilabel:`Server Log/Chat` widget. Any item with a check mark
     in the :guilabel:`Mes` column will be shown in the :guilabel:`Messages` widget (see `Messages`_). Lastly,
-    any item with a check mark in the :guilabel:`Pop` column will be shown in a Pop-Up Message Box window.
+    any item with a check mark in the :guilabel:`Pop` column will be shown in a pop up message box window.
 
 .. figure:: ../../_static/images/gui-elements/message-options.png
   :scale: 65%
@@ -656,7 +658,7 @@ The :guilabel:`Unit` menu is used to give units orders. It has the following opt
 Go to Tile
     With a unit selected, give the unit orders to go to a selected tile on the map.
 
-Go to and...
+Go to and ...
     Similar to :guilabel:`Go to Tile` above, however when the unit reaches the given tile you can give the
     unit a specific command to do as selected from the sub-menu. This is useful, for example, for
     :unit:`Settler` units to have them go to a spot and build a city as soon as possible.
@@ -755,7 +757,7 @@ Build Base
 Pillage
     Tells a unit to remove (pillage) tile infrastructure improvements such as roads, railroad and bases.
 
-Do...
+Do ...
     A dialog box will pop up here and give you all of the actions that the unit selected can perform.
 
 Work Menu
@@ -983,7 +985,7 @@ Demographics
 
   Figure 20: Demographics
 
-Space Ship
+Spaceship
     Clicking this menu item will show you the spaceship view. The space race is a ruleset defined option and
     is not enabled in all rulesets. Your nation must also be very technologically advanced to build the
     components needs for a spaceship. See in game help for more details.
@@ -1115,7 +1117,7 @@ Figure 27, the client will switch to a listing of your cities.
   Figure 27: Cities View Button
 
 
-Figure 28 gives an example of the :guilabel:`City View` in the client with the default columns displayed. If
+Figure 28 gives an example of the :guilabel:`Cities View` in the client with the default columns displayed. If
 you right-click on the table heading, you will be given a list of other columns you may want to show. If you
 change anything, then be sure to save the settings from the :guilabel:`Game` menu.
 
@@ -1129,12 +1131,12 @@ change anything, then be sure to save the settings from the :guilabel:`Game` men
 
 
 If you double-click on a city row, the game will switch to the `Map View`_ and open the `City Dialog`_ for
-that city. When you close the `City Dialog`_, the client will not bring you back to the :guilabel:`City View`.
-If you right-click on a city's row, a pop-up menu will appear. From this menu you can change what the city is
-producing, set a citizen governor, sell a city improvement, conduct an advanced selection of cities, buy what
-is currently being produced, and center the city on the map. If you choose to center the city on the map, the
-client will close the :guilabel:`Cities View` and open the `Map View`_ and place the city in the center of the
-screen.
+that city. When you close the `City Dialog`_, the client will not bring you back to the
+:guilabel:`Cities View`. If you right-click on a city's row, a pop-up menu will appear. From this menu you can
+change what the city is producing, set a citizen governor, sell a city improvement, conduct an advanced
+selection of cities, buy what is currently being produced, and center the city on the map. If you choose to
+center the city on the map, the client will close the :guilabel:`Cities View` and open the `Map View`_ and
+place the city in the center of the screen.
 
 Nations and Diplomacy View
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1443,34 +1445,34 @@ Depending on the type of unit selected, the available actions will change, but t
 remain the same. If you rename a unit (from the `Unit Menu`_), the name will appear in quotes after the
 Unit ID value.
 
-Mini Map
---------
+Minimap
+-------
 
-There is a :guilabel:`Mini Map` widget in the lower right corner of the `Map View`_. Figure 43 below shows an
-example of the :guilabel:`Mini Map` widget for a single player game. Figure 44 shows an example of of the
-:guilabel:`Mini Map` widget for a LongTurn multiplayer game. The difference between the two is the single
+There is a :guilabel:`Minimap` widget in the lower right corner of the `Map View`_. Figure 43 below shows an
+example of the :guilabel:`Minimap` widget for a single player game. Figure 44 shows an example of of the
+:guilabel:`Minimap` widget for a LongTurn multiplayer game. The difference between the two is the single
 player :guilabel:`Turn Done` button is replaced with a countdown timer. On the right hand side of the
-:guilabel:`Mini Map` are zoom buttons similar to what you would find in the `View Menu`_. Inside of the
-:guilabel:`Mini Map` you will see an area inside a white border. This is the portion of the whole `Map View`_
-that is displayed on the screen. Right-clicking inside the :guilabel:`Mini Map` will cause the `Map View`_ to
-move to that spot. The :guilabel:`Mini Map` provides a quick way to move around a large map in this manner.
+:guilabel:`Minimap` are zoom buttons similar to what you would find in the `View Menu`_. Inside of the
+:guilabel:`Minimap` you will see an area inside a white border. This is the portion of the whole `Map View`_
+that is displayed on the screen. Right-clicking inside the :guilabel:`Minimap` will cause the `Map View`_ to
+move to that spot. The :guilabel:`Minimap` provides a quick way to move around a large map in this manner.
 
 .. figure:: ../../_static/images/gui-elements/mini-map-sp.png
   :align: center
   :scale: 65%
-  :alt: Freeciv21 Mini Map Single Player Widget
+  :alt: Freeciv21 Minimap Single Player Widget
   :figclass: align-center
 
-  Figure 43: Mini Map Single Player Widget
+  Figure 43: Minimap Single Player Widget
 
 
 .. figure:: ../../_static/images/gui-elements/mini-map-mp.png
   :align: center
   :scale: 75%
-  :alt: Freeciv21 Mini Map Milti Player Widget
+  :alt: Freeciv21 Minimap Milti Player Widget
   :figclass: align-center
 
-  Figure 44: Mini Map Multiplayer Widget
+  Figure 44: Minimap Multiplayer Widget
 
 City Dialog
 -----------
