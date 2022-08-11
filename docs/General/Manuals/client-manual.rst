@@ -37,7 +37,7 @@ compiled the code yourself, then you will go to the location you asked ``--targe
 files. Double-clicking ``freeciv21-client`` should start it up.
 
 .. figure:: ../../_static/images/gui-elements/start-screen.png
-    :height: 400px
+    :scale: 65%
     :align: center
     :alt: Freeciv21 Start Screen
     :figclass: align-center
@@ -65,7 +65,7 @@ Clicking :guilabel:`Start new game` is used to start a new single player game. W
 dialog will appear.
 
 .. figure:: ../../_static/images/gui-elements/start-new-game.png
-    :height: 400px
+    :scale: 55%
     :align: center
     :alt: Freeciv21 Start New Game Dialog
     :figclass: align-center
@@ -124,7 +124,7 @@ Celtic. You can also change the gender of your empire's leader between male and 
 built-in leader names or enter one of your choosing.
 
 .. figure:: ../../_static/images/gui-elements/pick-nation.png
-    :height: 400px
+    :scale: 65%
     :align: center
     :alt: Freeciv21 Select Nation Dialog
     :figclass: align-center
@@ -171,7 +171,7 @@ options, so be sure to select the ruleset you want to play before attempting to 
 hover the mouse over the entries to get an explanation of what the setting does.
 
 .. figure:: ../../_static/images/gui-elements/server-options.png
-    :height: 400px
+    :scale: 65%
     :align: center
     :alt: Freeciv21 Server Options Dialog
     :figclass: align-center
@@ -230,7 +230,7 @@ When you click on the :guilabel:`Connect to Network Game` button, a dialog box w
 below.
 
 .. figure:: ../../_static/images/gui-elements/connect-to-server.png
-    :height: 400px
+    :scale: 65%
     :align: center
     :alt: Freeciv21 Server Conect Dialog
     :figclass: align-center
@@ -269,7 +269,7 @@ When you click on the :guilabel:`Load Saved Game` button, a dialog box will appe
 Find the saved game you want to load and click (select) it in the table.
 
 .. figure:: ../../_static/images/gui-elements/saved-game.png
-    :height: 400px
+    :scale: 65%
     :align: center
     :alt: Freeciv21 Load Saved Game Dialog
     :figclass: align-center
@@ -294,7 +294,7 @@ This will bring up the new game dialog as shown in Figure 2 above. When ready, c
 begin the scenario game.
 
 .. figure:: ../../_static/images/gui-elements/scenarios.png
-    :height: 400px
+    :scale: 65%
     :align: center
     :alt: Freeciv21 Scenarios Dialog
     :figclass: align-center
@@ -320,7 +320,7 @@ The local options dialog box can also be opened while in a game via the
 :menuselection:`Game --> Local Options` menu.
 
 .. figure:: ../../_static/images/gui-elements/local-options.png
-    :height: 400px
+    :scale: 65%
     :align: center
     :alt: Freeciv21 Local Options Dialog
     :figclass: align-center
@@ -366,7 +366,7 @@ Regardless the method you used to get into a game, eventually you will make it t
 shown in Figure 9 below. This is known as the `Map View`_.
 
 .. figure:: ../../../dist/freeciv-screenshot-2048x1112.png
-    :height: 400px
+    :scale: 40%
     :align: center
     :alt: Freeciv21 Client Overview
     :figclass: align-center
@@ -431,7 +431,7 @@ Messages
     any item with a check mark in the :guilabel:`Pop` column will be shown in a Pop-Up Message Box window.
 
 .. figure:: ../../_static/images/gui-elements/message-options.png
-  :height: 400px
+  :scale: 65%
   :align: center
   :alt: Freeciv21 Message Options Dialog
   :figclass: align-center
@@ -449,7 +449,7 @@ Shortcuts
     :guilabel:`Reset` button. Click :guilabel:`Save` and then :guilabel:`Close` when finished.
 
 .. figure:: ../../_static/images/gui-elements/shortcut-options.png
-  :height: 400px
+  :scale: 65%
   :align: center
   :alt: Freeciv21 Shortcut Options Dialog
   :figclass: align-center
@@ -464,6 +464,7 @@ Load Another Tileset
 
 .. figure:: ../../_static/images/gui-elements/tileset.png
   :align: center
+  :scale: 75%
   :alt: Freeciv21 Available Tilesets Dialog
   :figclass: align-center
 
@@ -640,6 +641,7 @@ Advanced Unit Selection
 
 .. figure:: ../../_static/images/gui-elements/advanced-unit-selection.png
   :align: center
+  :scale: 75%
   :alt: Freeciv21 Advanced Unit Selection Dialog
   :figclass: align-center
 
@@ -901,6 +903,7 @@ Tax Rates
     player's nation is in Democracy, has set Gold to 40%, Science to 40%, and Luxury to 20%.
 
 .. figure:: ../../_static/images/gui-elements/tax-rates.png
+  :scale: 65%
   :align: center
   :alt: Freeciv21 Tax Rates Selection Dialog
   :figclass: align-center
@@ -946,6 +949,7 @@ Wonders of the World
     information on any cities that have constructed any of the Great Wonders.
 
 .. figure:: ../../_static/images/gui-elements/wonders.png
+  :scale: 65%
   :align: center
   :alt: Freeciv21 Wonders of the World
   :figclass: align-center
@@ -959,7 +963,7 @@ Top Five Cities
 
 .. figure:: ../../_static/images/gui-elements/top-five-cities.png
   :align: center
-  :width: 400px
+  :scale: 65%
   :alt: Freeciv21 Top Five Cities
   :figclass: align-center
 
@@ -973,7 +977,7 @@ Demographics
 
 .. figure:: ../../_static/images/gui-elements/demographics.png
   :align: center
-  :width: 400px
+  :scale: 65%
   :alt: Freeciv21 Demographics
   :figclass: align-center
 
@@ -1052,6 +1056,7 @@ One other feature of the :guilabel:`Map View` is the ability to middle-click on 
 will appear giving you some information about the unit. Figure 23, gives an example.
 
 .. figure:: ../../_static/images/gui-elements/unit-info.png
+  :scale: 65%
   :align: center
   :alt: Freeciv21 Unit Information
   :figclass: align-center
@@ -1080,7 +1085,7 @@ a table below the widget, such as Figure 26, that displays the amount of time un
 
 .. figure:: ../../_static/images/gui-elements/units-report.png
   :align: center
-  :width: 800px
+  :scale: 50%
   :alt: Freeciv21 Units Report
   :figclass: align-center
 
@@ -1089,7 +1094,7 @@ a table below the widget, such as Figure 26, that displays the amount of time un
 
 .. figure:: ../../_static/images/gui-elements/units-report-uwt.png
   :align: center
-  :width: 400px
+  :scale: 65%
   :alt: Freeciv21 Units Report w/ unitwaittime
   :figclass: align-center
 
@@ -1116,6 +1121,7 @@ change anything, then be sure to save the settings from the :guilabel:`Game` men
 
 .. figure:: ../../_static/images/gui-elements/cities.png
   :align: center
+  :scale: 65%
   :alt: Freeciv21 Cities
   :figclass: align-center
 
@@ -1151,7 +1157,7 @@ disable. If you change anything, then be sure to save the settings from the :gui
 
 .. figure:: ../../_static/images/gui-elements/nations.png
   :align: center
-  :width: 800px
+  :scale: 65%
   :alt: Freeciv21 Nations View
   :figclass: align-center
 
@@ -1164,7 +1170,7 @@ interesting intelligence at the bottom of the page. Figure 31 gives an example.
 
 .. figure:: ../../_static/images/gui-elements/nations-intel.png
   :align: center
-  :width: 800px
+  :scale: 65%
   :alt: Freeciv21 Nations Intelligence
   :figclass: align-center
 
@@ -1211,7 +1217,7 @@ you have an embassy with. Figure 32, shows a sample screen where the parties are
 
 .. figure:: ../../_static/images/gui-elements/diplomacy-meet.png
   :align: center
-  :height: 400px
+  :scale: 65%
   :alt: Freeciv21 Diplomacy
   :figclass: align-center
 
@@ -1277,7 +1283,7 @@ finished all of the available technologies (known as completing the research tre
 
 .. figure:: ../../_static/images/gui-elements/research-tree.png
   :align: center
-  :width: 800px
+  :scale: 65%
   :alt: Freeciv21 Research Tree
   :figclass: align-center
 
@@ -1335,6 +1341,7 @@ you what was sold where.
 
 .. figure:: ../../_static/images/gui-elements/economy.png
   :align: center
+  :scale: 65%
   :alt: Freeciv21 Economics View
   :figclass: align-center
 
@@ -1404,6 +1411,7 @@ unit on the `Map View`_.
 
 .. figure:: ../../_static/images/gui-elements/messages.png
   :align: center
+  :scale: 65%
   :alt: Freeciv21 Messages Dialog
   :figclass: align-center
 
@@ -1449,7 +1457,7 @@ move to that spot. The :guilabel:`Mini Map` provides a quick way to move around 
 
 .. figure:: ../../_static/images/gui-elements/mini-map-sp.png
   :align: center
-  :width: 470px
+  :scale: 65%
   :alt: Freeciv21 Mini Map Single Player Widget
   :figclass: align-center
 
@@ -1458,6 +1466,7 @@ move to that spot. The :guilabel:`Mini Map` provides a quick way to move around 
 
 .. figure:: ../../_static/images/gui-elements/mini-map-mp.png
   :align: center
+  :scale: 75%
   :alt: Freeciv21 Mini Map Milti Player Widget
   :figclass: align-center
 
@@ -1475,7 +1484,7 @@ production and citizen governor tabs (left), city citizen tile output (center), 
 
 .. figure:: ../../_static/images/gui-elements/city-dialog.png
   :align: center
-  :width: 800px
+  :scale: 65%
   :alt: Freeciv21 City Dialog
   :figclass: align-center
 
@@ -1495,6 +1504,7 @@ value displayed.
 
 .. figure:: ../../_static/images/gui-elements/city-dialog-top-center.png
   :align: center
+  :scale: 50%
   :alt: Freeciv21 City Dialog Top Center
   :figclass: align-center
 
@@ -1515,6 +1525,7 @@ This means that the surplus shields will transfer to the :improvement:`Barracks`
 
 .. figure:: ../../_static/images/gui-elements/city-dialog-prod.png
   :align: center
+  :scale: 65%
   :alt: Freeciv21 City Dialog Production
   :figclass: align-center
 
@@ -1553,21 +1564,22 @@ bar to change.
 
 .. figure:: ../../_static/images/gui-elements/city-dialog-center.png
   :align: center
+  :scale: 65%
   :alt: Freeciv21 City Dialog City Center
   :figclass: align-center
 
   Figure 48: City Dialog - City Center
 
 
-.. note::
-
 Moving right, we can see the :guilabel:`General` tab on the right most panel as highlighted in Figure 49. This
 tab shows information similar to what is shown on the top center segment, along with units and city
 improvements that the city has produced and is supporting. Hovering your mouse over many of the items at the
-top of the :guilabel:`General` tab will show detailed calculation on how the net value is calculated.
+top of the :guilabel:`General` tab will show detailed calculation on how the net value is calculated. Hovering
+your mouse over the citizens value will give you information on the happiness of the city's citizens.
 
 .. figure:: ../../_static/images/gui-elements/city-dialog-general.png
   :align: center
+  :scale: 65%
   :alt: Freeciv21 City Dialog General
   :figclass: align-center
 
@@ -1580,8 +1592,13 @@ right-click on a unit, a pop up box with action commands you can give to the uni
 double-click on a unit, the :guilabel:`City Dialog` will close and the unit will be selected. See `Unit
 Controls`_ for more information on what you can do with units.
 
+If you wish to select more than one unit to give a command to, you can do that by holding the ``ctrl`` key on
+your keyboard and then left-clicking on the units you want to select. When finished, right-click on one of the
+selected units and pick option you want. This is a great way to activate a collection of units all at once.
+
 .. figure:: ../../_static/images/gui-elements/city-dialog-units.png
   :align: center
+  :scale: 65%
   :alt: Freeciv21 City Dialog Units
   :figclass: align-center
 
@@ -1593,6 +1610,7 @@ city. For more information on how to use the Citizen Governor refer to :doc:`../
 
 .. figure:: ../../_static/images/gui-elements/city-dialog-governor.png
   :align: center
+  :scale: 65%
   :alt: Freeciv21 City Dialog Governor
   :figclass: align-center
 
@@ -1605,6 +1623,7 @@ segments: Cities (Empire Size), Luxuries (Luxury Goods), Buildings, Nationality,
 
 .. figure:: ../../_static/images/gui-elements/city-dialog-citizens.png
   :align: center
+  :scale: 65%
   :alt: Freeciv21 City Dialog Citizens
   :figclass: align-center
 
@@ -1624,6 +1643,7 @@ cause unhappiness and occurs when you conquer an opponent's city.
 
 .. figure:: ../../_static/images/gui-elements/city-dialog-citizens-nationality.png
   :align: center
+  :scale: 65%
   :alt: Freeciv21 City Dialog Citizens Nationality
   :figclass: align-center
 
