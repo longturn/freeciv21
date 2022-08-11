@@ -254,12 +254,12 @@ hud_text::hud_text(const QString &s, int time_secs, QWidget *parent)
 }
 
 /**
-   Shows hud text
+   Shows hud text in corner
  */
-void hud_text::show_me()
+void hud_text::show_me(int corner)
 {
   show();
-  position_me(5);
+  position_me(corner);
 }
 
 /**
@@ -1680,7 +1680,7 @@ void show_new_turn_info()
             .arg(client.conn.playing->economic.gold)
             .arg(buf);
   ht = new hud_text(s, 5, queen()->mapview_wdg);
-  ht->show_me();
+  ht->show_me(5);
 }
 
 /**

@@ -84,7 +84,7 @@ class hud_text : public QWidget {
 public:
   hud_text(const QString &s, int time_secs, QWidget *parent);
   ~hud_text() override;
-  void show_me();
+  void show_me(int corner);
 
 protected:
   void paintEvent(QPaintEvent *event) override;
