@@ -91,7 +91,7 @@ protected:
   void timerEvent(QTimerEvent *event) override;
 
 private:
-  void center_me();
+  void position_me(int corner);
   QRect bound_rect;
   int timeout;
   int m_animate_step;

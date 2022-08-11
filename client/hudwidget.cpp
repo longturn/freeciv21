@@ -259,24 +259,52 @@ hud_text::hud_text(const QString &s, int time_secs, QWidget *parent)
 void hud_text::show_me()
 {
   show();
-  center_me();
+  position_me(5);
 }
 
 /**
-   Moves to top center parent widget and sets size new size
+   Moves to position in parent widget and sets size new size
  */
-void hud_text::center_me()
+void hud_text::position_me(int corner)
 {
+  /*
+   *  position pattern
+   *
+   *  |1 ... 2|
+   *  |...5...|
+   *  |.......|
+   *  |3 ... 4|
+   */
   int w;
-  QPoint p;
+  QPoint parent_pos = QPoint(parentWidget()->pos());
+  QPoint offset_pos;
 
   w = width();
   if (!bound_rect.isEmpty()) {
     setFixedSize(bound_rect.width(), bound_rect.height());
   }
-  p = QPoint((parentWidget()->width() - w) / 2,
-             parentWidget()->height() / 20);
-  move(p);
+  switch (corner) {
+  case 1:
+    move(parent_pos);
+    break;
+  case 2:
+    offset_pos = QPoint(w, 0);
+    move(parent_pos - offset_pos);
+    break;
+  case 3:
+    offset_pos = QPoint(0, w);
+    move(parent_pos - offset_pos);
+    break;
+  case 4:
+    offset_pos = QPoint(w, w);
+    move(parent_pos - offset_pos);
+    break;
+  case 5:
+    offset_pos = QPoint((parentWidget()->width() - w) / 2,
+                        parentWidget()->height() / 20);
+    move(parent_pos + offset_pos);
+    break;
+  }
 }
 
 /**
@@ -308,7 +336,7 @@ void hud_text::paintEvent(QPaintEvent *event)
   QColor c2;
   float opacity;
 
-  center_me();
+  position_me(5);
   if (m_timer.elapsed() < timeout * 500) {
     opacity = static_cast<float>(m_timer.elapsed()) / (timeout * 300);
   } else {
