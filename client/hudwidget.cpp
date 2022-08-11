@@ -1597,14 +1597,13 @@ QString popup_terrain_info(struct tile *ptile)
 
   terr = ptile->terrain;
   ret = QString(_("Terrain: %1\n")).arg(tile_get_info_text(ptile, true, 0));
-  ret =
-      ret
-      + QString(_("Food/Prod/Trade: %1\n")).arg(get_tile_output_text(ptile));
+  ret +=
+      QString(_("Food/Prod/Trade: %1\n")).arg(get_tile_output_text(ptile));
   t = get_infrastructure_text(ptile->extras);
   if (t != QLatin1String("")) {
-    ret = ret + QString(_("Infrastructure: %1\n")).arg(t);
+    ret += QString(_("Infrastructure: %1\n")).arg(t);
   }
-  ret = ret + QString(_("Defense bonus: %1%\n")).arg(terr->defense_bonus);
+  ret += QString(_("Defense bonus: %1%\n")).arg(terr->defense_bonus);
   movement_cost = terr->movement_cost;
 
   extra_type_by_cause_iterate(EC_ROAD, pextra)
@@ -1628,6 +1627,15 @@ QString popup_terrain_info(struct tile *ptile)
   }
 
   return ret;
+}
+
+/**
+   Show music info
+ */
+void show_music_info(const QString &tag)
+{
+  hud_text *ht = new hud_text(tag, 5, queen()->mapview_wdg);
+  ht->show_me(3);
 }
 
 /**
@@ -1655,19 +1663,19 @@ void show_new_turn_info()
           .arg(calendar_text())
           .arg(game.info.turn)
       + "\n";
-  s = s + QString(nation_plural_for_player(client_player()));
-  s = s + " - "
-      + QString(_("Population: %1"))
-            .arg(population_to_text(civ_population(client.conn.playing)));
+  s += QString(nation_plural_for_player(client_player()));
+  s += " - "
+       + QString(_("Population: %1"))
+             .arg(population_to_text(civ_population(client.conn.playing)));
   if (research->researching != A_UNKNOWN && research->researching != A_UNSET
       && research->researching != A_NONE) {
-    s = s + "\n"
-        + QString(research_advance_name_translation(research,
-                                                    research->researching))
-        + " (" + QString::number(research->bulbs_researched) + "/"
-        + QString::number(research->client.researching_cost) + ")";
+    s += "\n"
+         + QString(research_advance_name_translation(research,
+                                                     research->researching))
+         + " (" + QString::number(research->bulbs_researched) + "/"
+         + QString::number(research->client.researching_cost) + ")";
   }
-  s = s + "\n" + science_dialog_text() + "\n";
+  s += "\n" + science_dialog_text() + "\n";
 
   /* Can't use QString().sprintf() as msys libintl.h defines sprintf() as a
    * macro */
@@ -1675,10 +1683,9 @@ void show_new_turn_info()
               player_get_expected_income(client.conn.playing));
 
   /* TRANS: current gold, then loss/gain per turn */
-  s = s
-      + QString(_("Gold: %1 (%2)"))
-            .arg(client.conn.playing->economic.gold)
-            .arg(buf);
+  s += QString(_("Gold: %1 (%2)"))
+           .arg(client.conn.playing->economic.gold)
+           .arg(buf);
   ht = new hud_text(s, 5, queen()->mapview_wdg);
   ht->show_me(5);
 }

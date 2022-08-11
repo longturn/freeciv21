@@ -43,6 +43,7 @@ struct unit;
 struct unit_list;
 
 void show_new_turn_info();
+void show_music_info(const QString &tag);
 bool has_player_unit_type(Unit_type_id utype);
 
 /****************************************************************************

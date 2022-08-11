@@ -19,6 +19,7 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "client_main.h"
 #include "options.h"
 
+#include "hudwidget.h"
 #include "music.h"
 
 /**
@@ -62,6 +63,7 @@ void start_style_music()
       if (!tag.isEmpty()) {
         log_debug("Play %s", qUtf8Printable(tag));
         audio_play_music(tag, nullptr, MU_INGAME);
+        show_music_info(tag);
       }
     }
   }
