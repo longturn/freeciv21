@@ -44,8 +44,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: da\n"
-"Report-Msgid-Bugs-To: http://gna.org/projects/freeciv/\n"
-"POT-Creation-Date: 2017-01-01 22:01+0200\n"
+"Report-Msgid-Bugs-To: translations@longturn.net\n"
+"POT-Creation-Date: 2022-02-12 20:49+0100\n"
 "PO-Revision-Date: 2011-01-30 14:56+0100\n"
 "Last-Translator: Ask Hjorth Larsen <asklarsen@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -756,13 +756,6 @@ msgstr "?plural:Albanerne"
 
 #: data/nation/albanian.ruleset:6
 #, fuzzy
-#| msgid ""
-#| "Inhabitants of the Balkan peninsula, the ethnic origins of the Albanians "
-#| "are uncertain, though it has been suggested they descend from the "
-#| "Illyrians of Classical Antiquity. Albania changed hands several times "
-#| "during its  history. It has been an independent state again since 1912. "
-#| "For much of the 20th century Albania was ruled by communist dictator "
-#| "Enver Hoxha."
 msgid ""
 "Inhabitants of the Balkan peninsula, the ethnic origins of the Albanians are "
 "uncertain, though it has been suggested they descend from the Illyrians of "
@@ -1368,12 +1361,6 @@ msgstr "?plural:Argentinerne"
 
 #: data/nation/argentine.ruleset:6
 #, fuzzy
-#| msgid ""
-#| "Argentina is located on the south-eastern coast of South America. Since "
-#| "independence from Spain in 1816, it has been plagued by several internal "
-#| "and external conflicts. In the decades after World War II, the country's "
-#| "politics was dominated by Juan Peron and his charismatic wife Eva \"Evita"
-#| "\" Peron."
 msgid ""
 "Argentina is located on the south-eastern coast of South America. Since "
 "independence from Spain in 1816, it has been plagued by several internal and "
@@ -1470,7 +1457,7 @@ msgstr ""
 #: data/nation/nubian.ruleset:32 data/nation/ostrogothic.ruleset:30
 #: data/nation/palatinate.ruleset:28 data/nation/palmyrene.ruleset:19
 #: data/nation/parthian.ruleset:33 data/nation/pelasgian.ruleset:24
-#: data/nation/phoenician.ruleset:27 data/nation/pictish.ruleset:24
+#: data/nation/phoenician.ruleset:29 data/nation/pictish.ruleset:24
 #: data/nation/pontic.ruleset:33 data/nation/sabine.ruleset:26
 #: data/nation/samnite.ruleset:26 data/nation/seleucid.ruleset:28
 #: data/nation/vandalic.ruleset:29 data/nation/visigothic.ruleset:37
@@ -1490,7 +1477,7 @@ msgstr "Oprører %s"
 #: data/nation/nubian.ruleset:32 data/nation/ostrogothic.ruleset:30
 #: data/nation/palatinate.ruleset:28 data/nation/palmyrene.ruleset:19
 #: data/nation/parthian.ruleset:33 data/nation/pelasgian.ruleset:24
-#: data/nation/phoenician.ruleset:27 data/nation/pictish.ruleset:24
+#: data/nation/phoenician.ruleset:29 data/nation/pictish.ruleset:24
 #: data/nation/pontic.ruleset:33 data/nation/sabine.ruleset:26
 #: data/nation/samnite.ruleset:26 data/nation/seleucid.ruleset:28
 #: data/nation/vandalic.ruleset:29 data/nation/visigothic.ruleset:37
@@ -1977,8 +1964,8 @@ msgid ""
 msgstr ""
 "Baskerne har levet i umindelige tider ved den vestlige fod af Pyrenæerne. "
 "Kongeriget Navarre var den sidste uafhængige baskiske stat, som faldt til "
-"Aragon i det 16. århundrede. I dag ligger Baskerlandet eller \"Euskal Herria"
-"\" i grænselandende mellem Spanien og Frankrig, og er opdelt i syv "
+"Aragon i det 16. århundrede. I dag ligger Baskerlandet eller \"Euskal "
+"Herria\" i grænselandende mellem Spanien og Frankrig, og er opdelt i syv "
 "provinser.  Det baskiske sprog, euskara, har ingen forbinelser til andre "
 "sprog, og dets herkomst er ukendt."
 
@@ -2520,15 +2507,6 @@ msgstr "?plural:Bolivianerne"
 
 #: data/nation/bolivian.ruleset:6
 #, fuzzy
-#| msgid ""
-#| "Bolivia is a landlocked country in South America with a large indigenous "
-#| "heritage. The country is named after Simon Bolivar. Independent since "
-#| "1825, the country was wrecked by instability and lost its Pacific coast "
-#| "to Chile. The 1932-1936 Chaco war against Paraguay led to another "
-#| "humiliating defeat. Discontent with Bolivia's oligarchic regime led to a "
-#| "revolution in 1952. After a series of military coups in the 1970s the "
-#| "country returned to democratic rule in the 1980s. In 2006 Evo Morales "
-#| "became the country's first indigenous president."
 msgid ""
 "Bolivia is a landlocked country in South America with a large indigenous "
 "heritage. The country is named after Simón Bolivar. Independent since 1825, "
@@ -2582,7 +2560,6 @@ msgstr ""
 "Bosnien-herzegovina er et land i det sydøstlige Europa, og hjem for tre "
 "folkeslag: bosniere, serbere og kroatere."
 
-#. TRANS: Ban = Duke
 #: data/nation/bosnia.ruleset:25 data/nation/croatian.ruleset:32
 #: data/nation/slovenian.ruleset:18
 #, c-format
@@ -2967,13 +2944,11 @@ msgstr ""
 # RO
 #: data/nation/burkinabe.ruleset:3
 #, fuzzy
-#| msgid "Burkinabe"
 msgid "Burkinabé"
 msgstr "Burkinsk"
 
 #: data/nation/burkinabe.ruleset:6
 #, fuzzy
-#| msgid "?plural:Burkinabes"
 msgid "?plural:Burkinabés"
 msgstr "?plural:Burkinerne"
 
@@ -3929,17 +3904,6 @@ msgstr "?plural:Congoleserne"
 
 #: data/nation/congolese.ruleset:7
 #, fuzzy
-#| msgid ""
-#| "The Democratic Republic of the Congo is a big country in Central Africa. "
-#| "Despite (or because of) its wealth of natural resources it has been in "
-#| "ruins for most of its modern history. In 1885 Congo was awarded to "
-#| "Leopold II of Belgium as his personal possession, the Congo Free State, "
-#| "which turned the country into a slaughterhouse. At least twenty per cent "
-#| "of the population perished and after an international outcry it became a "
-#| "Belgian colony in 1906. It achieved independence in 1960. The Mobutu "
-#| "dictatorship started a new round of pillaging. When Mobutu was toppled "
-#| "the country sank into a civil war, causing five million deaths, the "
-#| "bloodiest event since World War II."
 msgid ""
 "The Democratic Republic of the Congo is a big country in Central Africa. "
 "Despite (or because of) its wealth of natural resources it has been in ruins "
@@ -4220,7 +4184,7 @@ msgstr "?plural:Canadierne"
 #: data/nation/cuyavian.ruleset:6
 msgid ""
 "Cuyavia is a historical region in Northern-Central Poland, bordered to the "
-"West by Masovia, on the East by Greater Poland and on the North by Pomerania."
+"East by Masovia, on the West by Greater Poland and on the North by Pomerania."
 msgstr ""
 
 #: data/nation/cypriot.ruleset:3
@@ -4421,9 +4385,9 @@ msgstr "?plural:Dominikanerne"
 msgid ""
 "The island of Dominica was first sighted by Europeans, including Christopher "
 "Columbus, in 1493. Legend has it that the island was named so since the day "
-"of its first sighting was a Sunday. Officially the \"Commonwealth of Dominica"
-"\", the country should not be confused with the Dominican Republic, another "
-"Caribbean nation."
+"of its first sighting was a Sunday. Officially the \"Commonwealth of "
+"Dominica\", the country should not be confused with the Dominican Republic, "
+"another Caribbean nation."
 msgstr ""
 "De Dominikanske Øer blev opdaget af europæerne, inklusive Christopher "
 "Columbus, i 1494. Sagnet siger at øerne fik deres navn da dagen for deres "
@@ -5146,7 +5110,6 @@ msgid ""
 "and the Canadian province of Nova Scotia."
 msgstr ""
 
-#. TRANS: Taoiseach = Prime Minister
 #: data/nation/gaelic.ruleset:28 data/nation/irish.ruleset:44
 #, c-format
 msgid "Taoiseach %s"
@@ -5449,7 +5412,6 @@ msgstr ""
 
 #: data/nation/gokturk.ruleset:6
 #, fuzzy
-#| msgid "?plural:Gokturks"
 msgid "?plural:Göktürks"
 msgstr "?plural:Göktyrkerne"
 
@@ -6297,7 +6259,7 @@ msgstr ""
 
 #: data/nation/israeli.ruleset:22
 #, fuzzy, c-format
-msgid "?female:Kibbutznik %s"
+msgid "?female:Kibbutznikit %s"
 msgstr "?female:Encik %s"
 
 #: data/nation/israeli.ruleset:24 data/nation/khazar.ruleset:35
@@ -6380,10 +6342,6 @@ msgstr "?plural:Ivoirianerne"
 
 #: data/nation/ivoirian.ruleset:6
 #, fuzzy
-#| msgid ""
-#| "Ivory Coast or Cote d'Ivoire achieved independence in 1960. It has been "
-#| "relatively stable compared to other West African countries, but in the "
-#| "2000s it lived through a civil war."
 msgid ""
 "Ivory Coast or Côte d'Ivoire achieved independence in 1960. It has been "
 "relatively stable compared to other West African countries, but in the 2000s "
@@ -7929,7 +7887,6 @@ msgstr ""
 # ?
 #: data/nation/metis.ruleset:6
 #, fuzzy
-#| msgid "?plural:Metis"
 msgid "?plural:Métis"
 msgstr "?plural:Metiserne"
 
@@ -8319,10 +8276,6 @@ msgstr "Muskogee"
 msgid "?plural:Muskogee"
 msgstr "?plural:Muskogeerne"
 
-#: data/nation/muskogee.ruleset:5
-msgid "American"
-msgstr "Amerikansk"
-
 #: data/nation/muskogee.ruleset:6
 msgid ""
 "The Muskogee was a confederacy of North American tribes, including the "
@@ -8593,13 +8546,11 @@ msgstr ""
 
 #: data/nation/nimiipuu.ruleset:3
 #, fuzzy
-#| msgid "Nimiipuu"
 msgid "Nimíipuu"
 msgstr "Nimiipuu"
 
 #: data/nation/nimiipuu.ruleset:6
 #, fuzzy
-#| msgid "?plural:Nimiipuu"
 msgid "?plural:Nimíipuu"
 msgstr "?plural:Nimiipuu"
 
@@ -8994,13 +8945,11 @@ msgstr ""
 
 #: data/nation/otomi.ruleset:3
 #, fuzzy
-#| msgid "Otomi"
 msgid "Otomí"
 msgstr "Otomi"
 
 #: data/nation/otomi.ruleset:6
 #, fuzzy
-#| msgid "?plural:Otomies"
 msgid "?plural:Otomíes"
 msgstr "?plural:Otomierne"
 
@@ -9603,13 +9552,11 @@ msgstr ""
 
 #: data/nation/raramuri.ruleset:3
 #, fuzzy
-#| msgid "Raramuri"
 msgid "Rarámuri"
 msgstr "Raramuri"
 
 #: data/nation/raramuri.ruleset:6
 #, fuzzy
-#| msgid "?plural:Raramuris"
 msgid "?plural:Rarámuris"
 msgstr "?plural:Raramurierne"
 
@@ -10972,7 +10919,7 @@ msgstr "?plural:Serberne"
 msgid ""
 "The Suebians were an ancient West Germanic tribal confederation, which may "
 "have been formed by Ariovistus for his expedition to Gaul. The Suebians "
-"included the Germanic tribes from the the Elbe river basin belonging to the "
+"included the Germanic tribes from the Elbe river basin belonging to the "
 "Herminonic language group, such as the Marcomanni and Quadi. Between the "
 "first and fourth centuries CE they were a threat to Rome, often encroaching "
 "on the Danube provinces of the empire. In 405-406 CE the Suebians were "
@@ -11769,12 +11716,6 @@ msgid ""
 "gained independence in 1962."
 msgstr ""
 
-#. TRANS: There are two titles for king, kabaka and
-#. ;    mujaguzo. Kabaka is the material king, while
-#. ;    mujaguzo is the spiritual king, and is represented
-#. ;    by royal drums. These titles come from Buganda, an
-#. ;    ancient kingdom which occupied much of present-day
-#. ;    Uganda.
 #: data/nation/ugandan.ruleset:40
 #, c-format
 msgid "Kabaka %s"
@@ -12485,12 +12426,6 @@ msgstr "?plural:Yucatecanerne"
 
 #: data/nation/yucatecan.ruleset:6
 #, fuzzy
-#| msgid ""
-#| "Yucatan is a peninsula of Mexico, famous for its Maya heritage and its "
-#| "white beaches. Its name is often claimed to mean \"we don't understand you"
-#| "\" in Yucatec Maya. On two occasions in the 19th century Yucatan declared "
-#| "independence from Mexico. Currently it is divided into three states: "
-#| "Yucatan, Campeche and Quintana Roo."
 msgid ""
 "Yucatán is a peninsula of Mexico, famous for its Maya heritage and its white "
 "beaches. Its name is often claimed to mean \"we don't understand you\" in "
@@ -12574,11 +12509,6 @@ msgstr "?plural:Zapotekerne"
 
 #: data/nation/zapotec.ruleset:6
 #, fuzzy
-#| msgid ""
-#| "The Zapotecs or Binniza live in the Mexican state of Oaxaca. They formed "
-#| "one of the oldest and most resilient Mesoamerican civilizations. The most "
-#| "notable Zapotec center, Monte Alban, was built on a razed mountain top. "
-#| "Benito Juarez, Mexico's first indigenous president, was a Zapotec."
 msgid ""
 "The Zapotecs or Binnizá live in the Mexican state of Oaxaca. They formed one "
 "of the oldest and most resilient Mesoamerican civilizations. The most "
@@ -12640,6 +12570,9 @@ msgstr ""
 "hvide mindretalsstyre i 1979. Siden 1980 er landet blevet styret af Robert "
 "Mugabe, som har fået et lige så dårligt internationalt omdømme som det "
 "tidligere styre."
+
+#~ msgid "American"
+#~ msgstr "Amerikansk"
 
 #, fuzzy
 #~ msgid "Canari"

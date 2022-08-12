@@ -14,8 +14,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
-"Report-Msgid-Bugs-To: https://www.hostedredmine.com/projects/freeciv\n"
-"POT-Creation-Date: 2020-01-26 14:00+0000\n"
+"Report-Msgid-Bugs-To: translations@longturn.net\n"
+"POT-Creation-Date: 2022-02-12 20:49+0100\n"
 "PO-Revision-Date: 2020-02-26 23:52+0100\n"
 "Last-Translator: Jordi Negrevernis <jorneg4@gmail.com>\n"
 "Language-Team: Español; Castellano <>\n"
@@ -1473,7 +1473,7 @@ msgstr ""
 #: data/nation/nubian.ruleset:32 data/nation/ostrogothic.ruleset:30
 #: data/nation/palatinate.ruleset:28 data/nation/palmyrene.ruleset:19
 #: data/nation/parthian.ruleset:33 data/nation/pelasgian.ruleset:24
-#: data/nation/phoenician.ruleset:27 data/nation/pictish.ruleset:24
+#: data/nation/phoenician.ruleset:29 data/nation/pictish.ruleset:24
 #: data/nation/pontic.ruleset:33 data/nation/sabine.ruleset:26
 #: data/nation/samnite.ruleset:26 data/nation/seleucid.ruleset:28
 #: data/nation/vandalic.ruleset:29 data/nation/visigothic.ruleset:37
@@ -1493,7 +1493,7 @@ msgstr "Usurpador %s"
 #: data/nation/nubian.ruleset:32 data/nation/ostrogothic.ruleset:30
 #: data/nation/palatinate.ruleset:28 data/nation/palmyrene.ruleset:19
 #: data/nation/parthian.ruleset:33 data/nation/pelasgian.ruleset:24
-#: data/nation/phoenician.ruleset:27 data/nation/pictish.ruleset:24
+#: data/nation/phoenician.ruleset:29 data/nation/pictish.ruleset:24
 #: data/nation/pontic.ruleset:33 data/nation/sabine.ruleset:26
 #: data/nation/samnite.ruleset:26 data/nation/seleucid.ruleset:28
 #: data/nation/vandalic.ruleset:29 data/nation/visigothic.ruleset:37
@@ -2642,7 +2642,6 @@ msgstr ""
 "Bosnia Herzegovina es un país en el sureste de Europa, y la casa de sus tres "
 "gentes constituyentes: Bosnios, Serbios y Croatas."
 
-#. TRANS: Ban = Duke
 #: data/nation/bosnia.ruleset:25 data/nation/croatian.ruleset:32
 #: data/nation/slovenian.ruleset:18
 #, c-format
@@ -4682,9 +4681,9 @@ msgstr "Dominiqueses"
 msgid ""
 "The island of Dominica was first sighted by Europeans, including Christopher "
 "Columbus, in 1493. Legend has it that the island was named so since the day "
-"of its first sighting was a Sunday. Officially the \"Commonwealth of Dominica"
-"\", the country should not be confused with the Dominican Republic, another "
-"Caribbean nation."
+"of its first sighting was a Sunday. Officially the \"Commonwealth of "
+"Dominica\", the country should not be confused with the Dominican Republic, "
+"another Caribbean nation."
 msgstr ""
 "La isla de Dominica fue vista por primera vez por los europeos, incluyendo a "
 "Cristóbal Colón, en 1493. Cuenta la leyenda que la isla se comenzó a llamar "
@@ -5498,7 +5497,6 @@ msgstr ""
 "Isla de Man. Hoy en día, permanecer áreas de lengua gaélica en Irlanda, "
 "Escocia, la Isla de Man y la provincia canadiense de Nueva Escocia."
 
-#. TRANS: Taoiseach = Prime Minister
 #: data/nation/gaelic.ruleset:28 data/nation/irish.ruleset:44
 #, c-format
 msgid "Taoiseach %s"
@@ -5725,8 +5723,8 @@ msgstr ""
 "por ciento de la población de Bélgica. Descuidados durante mucho tiempo, los "
 "belgas de habla alemana ahora disfrutar de los mismos derechos que sus "
 "compatriotas flamencos y francófonos. Como resultado, son apodados a menudo "
-"como \"la minoría mejor protegida de Europa\" y \"los últimos belgas reales"
-"\"."
+"como \"la minoría mejor protegida de Europa\" y \"los últimos belgas "
+"reales\"."
 
 #: data/nation/germanic.ruleset:3
 msgid "Germanic"
@@ -12936,12 +12934,6 @@ msgstr ""
 "la parte sur del país fue parte del reino de Buganda. La moderna Uganda "
 "obtuvo su independencia en 1962."
 
-#. TRANS: There are two titles for king, kabaka and
-#. ;    mujaguzo. Kabaka is the material king, while
-#. ;    mujaguzo is the spiritual king, and is represented
-#. ;    by royal drums. These titles come from Buganda, an
-#. ;    ancient kingdom which occupied much of present-day
-#. ;    Uganda.
 #: data/nation/ugandan.ruleset:40
 #, c-format
 msgid "Kabaka %s"
@@ -13774,10 +13766,10 @@ msgid ""
 "Yucatán, Campeche and Quintana Roo."
 msgstr ""
 "Yucatán es una península de México, famosa por su herencia maya y sus playas "
-"de arena blanca. Su nombre se afirma a menudo que significa \"no te entiendo"
-"\" en maya yucateco. El Yucatán declaró su independencia de México dos veces "
-"en el siglo 19. En la actualidad se divide en tres estados: Yucatán, "
-"Campeche y Quintana Roo."
+"de arena blanca. Su nombre se afirma a menudo que significa \"no te "
+"entiendo\" en maya yucateco. El Yucatán declaró su independencia de México "
+"dos veces en el siglo 19. En la actualidad se divide en tres estados: "
+"Yucatán, Campeche y Quintana Roo."
 
 #: data/nation/yugoslav.ruleset:3
 msgid "Yugoslav"

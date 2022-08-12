@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: fa\n"
-"Report-Msgid-Bugs-To: http://gna.org/projects/freeciv/\n"
-"POT-Creation-Date: 2017-01-01 22:01+0200\n"
+"Report-Msgid-Bugs-To: translations@longturn.net\n"
+"POT-Creation-Date: 2022-02-12 20:49+0100\n"
 "PO-Revision-Date: 2013-09-09 09:58+0300\n"
 "Last-Translator: Arman Ordookhani <arman_o71@Yahoo.com>\n"
 "Language-Team: Farsi(Persian)\n"
@@ -1356,7 +1356,7 @@ msgstr ""
 #: data/nation/nubian.ruleset:32 data/nation/ostrogothic.ruleset:30
 #: data/nation/palatinate.ruleset:28 data/nation/palmyrene.ruleset:19
 #: data/nation/parthian.ruleset:33 data/nation/pelasgian.ruleset:24
-#: data/nation/phoenician.ruleset:27 data/nation/pictish.ruleset:24
+#: data/nation/phoenician.ruleset:29 data/nation/pictish.ruleset:24
 #: data/nation/pontic.ruleset:33 data/nation/sabine.ruleset:26
 #: data/nation/samnite.ruleset:26 data/nation/seleucid.ruleset:28
 #: data/nation/vandalic.ruleset:29 data/nation/visigothic.ruleset:37
@@ -1376,7 +1376,7 @@ msgstr "ناظر: %s"
 #: data/nation/nubian.ruleset:32 data/nation/ostrogothic.ruleset:30
 #: data/nation/palatinate.ruleset:28 data/nation/palmyrene.ruleset:19
 #: data/nation/parthian.ruleset:33 data/nation/pelasgian.ruleset:24
-#: data/nation/phoenician.ruleset:27 data/nation/pictish.ruleset:24
+#: data/nation/phoenician.ruleset:29 data/nation/pictish.ruleset:24
 #: data/nation/pontic.ruleset:33 data/nation/sabine.ruleset:26
 #: data/nation/samnite.ruleset:26 data/nation/seleucid.ruleset:28
 #: data/nation/vandalic.ruleset:29 data/nation/visigothic.ruleset:37
@@ -2417,7 +2417,6 @@ msgid ""
 "three constituent peoples: Bosniaks, Serbs, and Croats."
 msgstr ""
 
-#. TRANS: Ban = Duke
 #: data/nation/bosnia.ruleset:25 data/nation/croatian.ruleset:32
 #: data/nation/slovenian.ruleset:18
 #, fuzzy, c-format
@@ -3941,7 +3940,7 @@ msgstr "کانادایی‌ها"
 #: data/nation/cuyavian.ruleset:6
 msgid ""
 "Cuyavia is a historical region in Northern-Central Poland, bordered to the "
-"West by Masovia, on the East by Greater Poland and on the North by Pomerania."
+"East by Masovia, on the West by Greater Poland and on the North by Pomerania."
 msgstr ""
 
 #: data/nation/cypriot.ruleset:3
@@ -4138,9 +4137,9 @@ msgstr "رومانی‌ها"
 msgid ""
 "The island of Dominica was first sighted by Europeans, including Christopher "
 "Columbus, in 1493. Legend has it that the island was named so since the day "
-"of its first sighting was a Sunday. Officially the \"Commonwealth of Dominica"
-"\", the country should not be confused with the Dominican Republic, another "
-"Caribbean nation."
+"of its first sighting was a Sunday. Officially the \"Commonwealth of "
+"Dominica\", the country should not be confused with the Dominican Republic, "
+"another Caribbean nation."
 msgstr ""
 
 #: data/nation/dryad.ruleset:3
@@ -4832,7 +4831,6 @@ msgid ""
 "and the Canadian province of Nova Scotia."
 msgstr ""
 
-#. TRANS: Taoiseach = Prime Minister
 #: data/nation/gaelic.ruleset:28 data/nation/irish.ruleset:44
 #, fuzzy, c-format
 msgid "Taoiseach %s"
@@ -5886,7 +5884,7 @@ msgstr ""
 
 #: data/nation/israeli.ruleset:22
 #, fuzzy, c-format
-msgid "?female:Kibbutznik %s"
+msgid "?female:Kibbutznikit %s"
 msgstr "انکیک"
 
 #: data/nation/israeli.ruleset:24 data/nation/khazar.ruleset:35
@@ -7824,10 +7822,6 @@ msgstr "تفنگدار"
 #, fuzzy
 msgid "?plural:Muskogee"
 msgstr "برمسی‌ها"
-
-#: data/nation/muskogee.ruleset:5
-msgid "American"
-msgstr "آمریکا"
 
 #: data/nation/muskogee.ruleset:6
 msgid ""
@@ -10332,7 +10326,7 @@ msgstr "صربی‌ها"
 msgid ""
 "The Suebians were an ancient West Germanic tribal confederation, which may "
 "have been formed by Ariovistus for his expedition to Gaul. The Suebians "
-"included the Germanic tribes from the the Elbe river basin belonging to the "
+"included the Germanic tribes from the Elbe river basin belonging to the "
 "Herminonic language group, such as the Marcomanni and Quadi. Between the "
 "first and fourth centuries CE they were a threat to Rome, often encroaching "
 "on the Danube provinces of the empire. In 405-406 CE the Suebians were "
@@ -11049,12 +11043,6 @@ msgid ""
 "gained independence in 1962."
 msgstr ""
 
-#. TRANS: There are two titles for king, kabaka and
-#. ;    mujaguzo. Kabaka is the material king, while
-#. ;    mujaguzo is the spiritual king, and is represented
-#. ;    by royal drums. These titles come from Buganda, an
-#. ;    ancient kingdom which occupied much of present-day
-#. ;    Uganda.
 #: data/nation/ugandan.ruleset:40
 #, c-format
 msgid "Kabaka %s"
@@ -11862,6 +11850,9 @@ msgid ""
 "1980 the country has been governed by Robert Mugabe, who has received an "
 "equally poor reputation internationally as the previous regime."
 msgstr ""
+
+#~ msgid "American"
+#~ msgstr "آمریکا"
 
 #, fuzzy
 #~ msgid "Canari"

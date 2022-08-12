@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: freeciv 2.5.5\n"
-"Report-Msgid-Bugs-To: http://gna.org/projects/freeciv/\n"
-"POT-Creation-Date: 2017-01-01 22:01+0200\n"
+"Report-Msgid-Bugs-To: translations@longturn.net\n"
+"POT-Creation-Date: 2022-02-12 20:49+0100\n"
 "PO-Revision-Date: 2016-11-19 1:27+0300\n"
 "Last-Translator: Swiatoslav Golda <swiatos@gmail.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: data/nation/abkhaz.ruleset:3
 msgid "Abkhaz"
@@ -662,25 +662,16 @@ msgstr "Візир %s"
 
 #: data/nation/alander.ruleset:3
 #, fuzzy
-#| msgid "Alander"
 msgid "Ålander"
 msgstr "Аландці"
 
 #: data/nation/alander.ruleset:6
 #, fuzzy
-#| msgid "?plural:Alanders"
 msgid "?plural:Ålanders"
 msgstr "Аландці"
 
 #: data/nation/alander.ruleset:8
 #, fuzzy
-#| msgid ""
-#| "Aland is an archipelago in the Baltic Sea, located between Sweden and "
-#| "Finland. The islands' inhabitants are Swedish speaking, but Aland is an "
-#| "autonomous province in Finland, a status that was reached in 1921 after a "
-#| "long period in which the islands were contested between Sweden and "
-#| "Finland. Aland's special and demilitarized status is protected by "
-#| "international law."
 msgid ""
 "Åland is an archipelago in the Baltic Sea, located between Sweden and "
 "Finland. The islands' inhabitants are Swedish speaking, but Åland is an "
@@ -728,13 +719,6 @@ msgstr "Албанці"
 
 #: data/nation/albanian.ruleset:6
 #, fuzzy
-#| msgid ""
-#| "Inhabitants of the Balkan peninsula, the ethnic origins of the Albanians "
-#| "are uncertain, though it has been suggested they descend from the "
-#| "Illyrians of Classical Antiquity. Albania changed hands several times "
-#| "during its  history. It has been an independent state again since 1912. "
-#| "For much of the 20th century Albania was ruled by communist dictator "
-#| "Enver Hoxha."
 msgid ""
 "Inhabitants of the Balkan peninsula, the ethnic origins of the Albanians are "
 "uncertain, though it has been suggested they descend from the Illyrians of "
@@ -1325,12 +1309,6 @@ msgstr "Аргентинці"
 
 #: data/nation/argentine.ruleset:6
 #, fuzzy
-#| msgid ""
-#| "Argentina is located on the south-eastern coast of South America. Since "
-#| "independence from Spain in 1816, it has been plagued by several internal "
-#| "and external conflicts. In the decades after World War II, the country's "
-#| "politics was dominated by Juan Peron and his charismatic wife Eva \"Evita"
-#| "\" Peron."
 msgid ""
 "Argentina is located on the south-eastern coast of South America. Since "
 "independence from Spain in 1816, it has been plagued by several internal and "
@@ -1427,7 +1405,7 @@ msgstr ""
 #: data/nation/nubian.ruleset:32 data/nation/ostrogothic.ruleset:30
 #: data/nation/palatinate.ruleset:28 data/nation/palmyrene.ruleset:19
 #: data/nation/parthian.ruleset:33 data/nation/pelasgian.ruleset:24
-#: data/nation/phoenician.ruleset:27 data/nation/pictish.ruleset:24
+#: data/nation/phoenician.ruleset:29 data/nation/pictish.ruleset:24
 #: data/nation/pontic.ruleset:33 data/nation/sabine.ruleset:26
 #: data/nation/samnite.ruleset:26 data/nation/seleucid.ruleset:28
 #: data/nation/vandalic.ruleset:29 data/nation/visigothic.ruleset:37
@@ -1447,7 +1425,7 @@ msgstr "Узурпатор %s"
 #: data/nation/nubian.ruleset:32 data/nation/ostrogothic.ruleset:30
 #: data/nation/palatinate.ruleset:28 data/nation/palmyrene.ruleset:19
 #: data/nation/parthian.ruleset:33 data/nation/pelasgian.ruleset:24
-#: data/nation/phoenician.ruleset:27 data/nation/pictish.ruleset:24
+#: data/nation/phoenician.ruleset:29 data/nation/pictish.ruleset:24
 #: data/nation/pontic.ruleset:33 data/nation/sabine.ruleset:26
 #: data/nation/samnite.ruleset:26 data/nation/seleucid.ruleset:28
 #: data/nation/vandalic.ruleset:29 data/nation/visigothic.ruleset:37
@@ -2483,7 +2461,6 @@ msgstr ""
 "Боснія та Герцеговина - це країна на північному сході Європи, та домівка "
 "трьох народів: боснійців, сербів та хорватів."
 
-#. TRANS: Ban = Duke
 #: data/nation/bosnia.ruleset:25 data/nation/croatian.ruleset:32
 #: data/nation/slovenian.ruleset:18
 #, c-format
@@ -2850,13 +2827,11 @@ msgstr ""
 
 #: data/nation/burkinabe.ruleset:3
 #, fuzzy
-#| msgid "Burkinabe"
 msgid "Burkinabé"
 msgstr "Буркінаби"
 
 #: data/nation/burkinabe.ruleset:6
 #, fuzzy
-#| msgid "?plural:Burkinabes"
 msgid "?plural:Burkinabés"
 msgstr "Буркінаби"
 
@@ -3009,7 +2984,6 @@ msgstr ""
 
 #: data/nation/canari.ruleset:6
 #, fuzzy
-#| msgid "?plural:Canaris"
 msgid "?plural:Cañaris"
 msgstr "Канарці"
 
@@ -3969,7 +3943,7 @@ msgstr "Куяви"
 #: data/nation/cuyavian.ruleset:6
 msgid ""
 "Cuyavia is a historical region in Northern-Central Poland, bordered to the "
-"West by Masovia, on the East by Greater Poland and on the North by Pomerania."
+"East by Masovia, on the West by Greater Poland and on the North by Pomerania."
 msgstr ""
 
 #: data/nation/cypriot.ruleset:3
@@ -4152,9 +4126,9 @@ msgstr "Домініка"
 msgid ""
 "The island of Dominica was first sighted by Europeans, including Christopher "
 "Columbus, in 1493. Legend has it that the island was named so since the day "
-"of its first sighting was a Sunday. Officially the \"Commonwealth of Dominica"
-"\", the country should not be confused with the Dominican Republic, another "
-"Caribbean nation."
+"of its first sighting was a Sunday. Officially the \"Commonwealth of "
+"Dominica\", the country should not be confused with the Dominican Republic, "
+"another Caribbean nation."
 msgstr ""
 "Острів Домініка європейці, на чолі з Христофором Колумбом, побачили у 1493. "
 "Згідно легенди, його так назвали через те, що вперше його побачили в Неділю. "
@@ -4828,7 +4802,6 @@ msgid ""
 "and the Canadian province of Nova Scotia."
 msgstr ""
 
-#. TRANS: Taoiseach = Prime Minister
 #: data/nation/gaelic.ruleset:28 data/nation/irish.ruleset:44
 #, c-format
 msgid "Taoiseach %s"
@@ -5103,7 +5076,6 @@ msgstr ""
 
 #: data/nation/gokturk.ruleset:6
 #, fuzzy
-#| msgid "?plural:Gokturks"
 msgid "?plural:Göktürks"
 msgstr "Ґьоктюрки"
 
@@ -5852,8 +5824,8 @@ msgid "Kibbutznik %s"
 msgstr "Кібуцник %s"
 
 #: data/nation/israeli.ruleset:22
-#, c-format
-msgid "?female:Kibbutznik %s"
+#, fuzzy, c-format
+msgid "?female:Kibbutznikit %s"
 msgstr "Кібуцник %s"
 
 #: data/nation/israeli.ruleset:24 data/nation/khazar.ruleset:35
@@ -7350,7 +7322,6 @@ msgstr ""
 
 #: data/nation/metis.ruleset:6
 #, fuzzy
-#| msgid "?plural:Metis"
 msgid "?plural:Métis"
 msgstr "Метиси"
 
@@ -7713,10 +7684,6 @@ msgstr "Мускогі"
 msgid "?plural:Muskogee"
 msgstr "Мускогі"
 
-#: data/nation/muskogee.ruleset:5
-msgid "American"
-msgstr "Американці"
-
 #: data/nation/muskogee.ruleset:6
 msgid ""
 "The Muskogee was a confederacy of North American tribes, including the "
@@ -7977,7 +7944,6 @@ msgstr ""
 
 #: data/nation/nimiipuu.ruleset:6
 #, fuzzy
-#| msgid "?plural:Chimu"
 msgid "?plural:Nimíipuu"
 msgstr "Чіму"
 
@@ -8329,13 +8295,11 @@ msgstr ""
 
 #: data/nation/otomi.ruleset:3
 #, fuzzy
-#| msgid "Otomi"
 msgid "Otomí"
 msgstr "Отомі"
 
 #: data/nation/otomi.ruleset:6
 #, fuzzy
-#| msgid "?plural:Otomies"
 msgid "?plural:Otomíes"
 msgstr "Отомі"
 
@@ -8893,13 +8857,11 @@ msgstr ""
 
 #: data/nation/raramuri.ruleset:3
 #, fuzzy
-#| msgid "Raramuri"
 msgid "Rarámuri"
 msgstr "Рарамурі"
 
 #: data/nation/raramuri.ruleset:6
 #, fuzzy
-#| msgid "?plural:Raramuris"
 msgid "?plural:Rarámuris"
 msgstr "Рарамурі"
 
@@ -10130,7 +10092,7 @@ msgstr "Свеви"
 msgid ""
 "The Suebians were an ancient West Germanic tribal confederation, which may "
 "have been formed by Ariovistus for his expedition to Gaul. The Suebians "
-"included the Germanic tribes from the the Elbe river basin belonging to the "
+"included the Germanic tribes from the Elbe river basin belonging to the "
 "Herminonic language group, such as the Marcomanni and Quadi. Between the "
 "first and fourth centuries CE they were a threat to Rome, often encroaching "
 "on the Danube provinces of the empire. In 405-406 CE the Suebians were "
@@ -10813,12 +10775,6 @@ msgid ""
 "gained independence in 1962."
 msgstr ""
 
-#. TRANS: There are two titles for king, kabaka and
-#. ;    mujaguzo. Kabaka is the material king, while
-#. ;    mujaguzo is the spiritual king, and is represented
-#. ;    by royal drums. These titles come from Buganda, an
-#. ;    ancient kingdom which occupied much of present-day
-#. ;    Uganda.
 #: data/nation/ugandan.ruleset:40
 #, c-format
 msgid "Kabaka %s"
@@ -11103,14 +11059,6 @@ msgstr "Венесуельці"
 
 #: data/nation/venezuelan.ruleset:6
 #, fuzzy
-#| msgid ""
-#| "Venezuela is the northernmost country in South America. Having been a "
-#| "Spanish colony since the 16th century, the country gained independence on "
-#| "July 5th 1811 under the leadership of El Libertador Simon Bolivar - The "
-#| "Liberator. Venezuela has one of the largest proven oil and gas reserves "
-#| "of the world; during the oil boom of the 1970s it was the wealthiest "
-#| "country of Latin America. The country is known for its varied landscapes "
-#| "and high biodiversity."
 msgid ""
 "Venezuela is the northernmost country in South America. Having been a "
 "Spanish colony since the 16th century, the country gained independence on "
@@ -11219,13 +11167,11 @@ msgstr ""
 
 #: data/nation/volapuk.ruleset:3
 #, fuzzy
-#| msgid "Volapukan"
 msgid "Volapükan"
 msgstr "Волапуки"
 
 #: data/nation/volapuk.ruleset:6
 #, fuzzy
-#| msgid "?plural:Volapukans"
 msgid "?plural:Volapükans"
 msgstr "Волапуки"
 
@@ -11636,6 +11582,9 @@ msgstr ""
 "чорних  з влади. Громадянська війна змусила Сміта правління білої меншості у "
 "1979. З 1980 країною правив Роберт Мугабе, погана репутація якого стала "
 "такою ж як і в попереднього режиму."
+
+#~ msgid "American"
+#~ msgstr "Американці"
 
 #~ msgid "Canari"
 #~ msgstr "Канарці"
