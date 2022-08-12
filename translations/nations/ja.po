@@ -155,8 +155,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Freeciv 2.0.99-devel\n"
-"Report-Msgid-Bugs-To: https://www.hostedredmine.com/projects/freeciv\n"
-"POT-Creation-Date: 2018-06-20 09:23+0100\n"
+"Report-Msgid-Bugs-To: translations@longturn.net\n"
+"POT-Creation-Date: 2022-02-12 20:49+0100\n"
 "PO-Revision-Date: 2018-07-15 21:47+0900\n"
 "Last-Translator: \n"
 "Language-Team: SAWADA Katsuya <ama@petmail.net>\n"
@@ -1156,8 +1156,7 @@ msgstr "代官 %s"
 #: data/nation/bavarian.ruleset:24 data/nation/belgian.ruleset:25
 #: data/nation/belizean.ruleset:26 data/nation/british.ruleset:25
 #: data/nation/burgundian.ruleset:30 data/nation/canadian.ruleset:26
-#: data/nation/chiapanec.ruleset:34
-#: data/nation/congolesebrazzaville.ruleset:28
+#: data/nation/chiapanec.ruleset:34 data/nation/congolesebrazzaville.ruleset:28
 #: data/nation/costarican.ruleset:26 data/nation/croatian.ruleset:33
 #: data/nation/curonian.ruleset:30 data/nation/cuyavian.ruleset:27
 #: data/nation/dominican.ruleset:22 data/nation/easttimorese.ruleset:22
@@ -1177,13 +1176,13 @@ msgstr "代官 %s"
 #: data/nation/panamanian.ruleset:30 data/nation/riograndense.ruleset:21
 #: data/nation/romansh.ruleset:29 data/nation/saintlucian.ruleset:24
 #: data/nation/savoyard.ruleset:32 data/nation/saxon.ruleset:22
-#: data/nation/schleswig-holsteinian.ruleset:27
-#: data/nation/silesian.ruleset:23 data/nation/slovenian.ruleset:19
-#: data/nation/thuringian.ruleset:43 data/nation/transylvanian.ruleset:28
-#: data/nation/uruguayan.ruleset:24 data/nation/venezuelan.ruleset:31
-#: data/nation/vincentian.ruleset:25 data/nation/volgagerman.ruleset:38
-#: data/nation/westindian.ruleset:24 data/nation/wuerttembergian.ruleset:24
-#: data/nation/yucatecan.ruleset:28 data/nation/zimbabwean.ruleset:26
+#: data/nation/schleswig-holsteinian.ruleset:27 data/nation/silesian.ruleset:23
+#: data/nation/slovenian.ruleset:19 data/nation/thuringian.ruleset:43
+#: data/nation/transylvanian.ruleset:28 data/nation/uruguayan.ruleset:24
+#: data/nation/venezuelan.ruleset:31 data/nation/vincentian.ruleset:25
+#: data/nation/volgagerman.ruleset:38 data/nation/westindian.ruleset:24
+#: data/nation/wuerttembergian.ruleset:24 data/nation/yucatecan.ruleset:28
+#: data/nation/zimbabwean.ruleset:26
 #, c-format
 msgid "Bishop %s"
 msgstr " %s司教"
@@ -1665,7 +1664,7 @@ msgstr ""
 #: data/nation/nubian.ruleset:32 data/nation/ostrogothic.ruleset:30
 #: data/nation/palatinate.ruleset:28 data/nation/palmyrene.ruleset:19
 #: data/nation/parthian.ruleset:33 data/nation/pelasgian.ruleset:24
-#: data/nation/phoenician.ruleset:27 data/nation/pictish.ruleset:24
+#: data/nation/phoenician.ruleset:29 data/nation/pictish.ruleset:24
 #: data/nation/pontic.ruleset:33 data/nation/sabine.ruleset:26
 #: data/nation/samnite.ruleset:26 data/nation/seleucid.ruleset:28
 #: data/nation/vandalic.ruleset:29 data/nation/visigothic.ruleset:37
@@ -1685,7 +1684,7 @@ msgstr "簒奪者 %s"
 #: data/nation/nubian.ruleset:32 data/nation/ostrogothic.ruleset:30
 #: data/nation/palatinate.ruleset:28 data/nation/palmyrene.ruleset:19
 #: data/nation/parthian.ruleset:33 data/nation/pelasgian.ruleset:24
-#: data/nation/phoenician.ruleset:27 data/nation/pictish.ruleset:24
+#: data/nation/phoenician.ruleset:29 data/nation/pictish.ruleset:24
 #: data/nation/pontic.ruleset:33 data/nation/sabine.ruleset:26
 #: data/nation/samnite.ruleset:26 data/nation/seleucid.ruleset:28
 #: data/nation/vandalic.ruleset:29 data/nation/visigothic.ruleset:37
@@ -2894,7 +2893,6 @@ msgstr ""
 "ボスニア・ヘルツェゴヴィナは東南ヨーロッパの国で，ここを故地とする3つの集団か"
 "ら構成されています――ボシュニャク人，セルビア人，クロアチア人。"
 
-#. TRANS: Ban = Duke
 #: data/nation/bosnia.ruleset:25 data/nation/croatian.ruleset:32
 #: data/nation/slovenian.ruleset:18
 #, c-format
@@ -4845,9 +4843,9 @@ msgstr "ドミニカ人"
 msgid ""
 "The island of Dominica was first sighted by Europeans, including Christopher "
 "Columbus, in 1493. Legend has it that the island was named so since the day "
-"of its first sighting was a Sunday. Officially the \"Commonwealth of Dominica"
-"\", the country should not be confused with the Dominican Republic, another "
-"Caribbean nation."
+"of its first sighting was a Sunday. Officially the \"Commonwealth of "
+"Dominica\", the country should not be confused with the Dominican Republic, "
+"another Caribbean nation."
 msgstr ""
 "ドミニカ島にクリストファー・コロンブス達ヨーロッパ人が初めて発見したのは1493"
 "年のことです。伝説によると，この島の名前の由来は，発見した日が日曜日(ドミン"
@@ -5645,7 +5643,6 @@ msgstr ""
 "ン島，およびカナダのノバスコシア州に残っています。"
 
 # 「首相」と訳しても面白くもクソもないですね
-#. TRANS: Taoiseach = Prime Minister
 #: data/nation/gaelic.ruleset:28 data/nation/irish.ruleset:44
 #, c-format
 msgid "Taoiseach %s"
@@ -6852,8 +6849,8 @@ msgid "Kibbutznik %s"
 msgstr "キブツニック %s"
 
 #: data/nation/israeli.ruleset:22
-#, c-format
-msgid "?female:Kibbutznik %s"
+#, fuzzy, c-format
+msgid "?female:Kibbutznikit %s"
 msgstr "キブツニック %s"
 
 #: data/nation/israeli.ruleset:24 data/nation/khazar.ruleset:35
@@ -12865,12 +12862,6 @@ msgstr ""
 "す。かつて，この国の南部はブガンダ王国の一部でした。近代ウガンダが独立したの"
 "は1962年のことです。"
 
-#. TRANS: There are two titles for king, kabaka and
-#. ;    mujaguzo. Kabaka is the material king, while
-#. ;    mujaguzo is the spiritual king, and is represented
-#. ;    by royal drums. These titles come from Buganda, an
-#. ;    ancient kingdom which occupied much of present-day
-#. ;    Uganda.
 #: data/nation/ugandan.ruleset:40
 #, c-format
 msgid "Kabaka %s"

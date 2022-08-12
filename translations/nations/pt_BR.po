@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Freeciv 2.1.0-beta3\n"
-"Report-Msgid-Bugs-To: http://gna.org/projects/freeciv/\n"
-"POT-Creation-Date: 2017-01-01 22:01+0200\n"
+"Report-Msgid-Bugs-To: translations@longturn.net\n"
+"POT-Creation-Date: 2022-02-12 20:49+0100\n"
 "PO-Revision-Date: 2011-02-02 11:49-0200\n"
 "Last-Translator: Djavan Fagundes <djavan@comum.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
@@ -1289,12 +1289,6 @@ msgstr "Argentinos"
 
 #: data/nation/argentine.ruleset:6
 #, fuzzy
-#| msgid ""
-#| "Argentina is located on the south-eastern coast of South America. Since "
-#| "independence from Spain in 1816, it has been plagued by several internal "
-#| "and external conflicts. In the decades after World War II, the country's "
-#| "politics was dominated by Juan Peron and his charismatic wife Eva \"Evita"
-#| "\" Peron."
 msgid ""
 "Argentina is located on the south-eastern coast of South America. Since "
 "independence from Spain in 1816, it has been plagued by several internal and "
@@ -1392,7 +1386,7 @@ msgstr ""
 #: data/nation/nubian.ruleset:32 data/nation/ostrogothic.ruleset:30
 #: data/nation/palatinate.ruleset:28 data/nation/palmyrene.ruleset:19
 #: data/nation/parthian.ruleset:33 data/nation/pelasgian.ruleset:24
-#: data/nation/phoenician.ruleset:27 data/nation/pictish.ruleset:24
+#: data/nation/phoenician.ruleset:29 data/nation/pictish.ruleset:24
 #: data/nation/pontic.ruleset:33 data/nation/sabine.ruleset:26
 #: data/nation/samnite.ruleset:26 data/nation/seleucid.ruleset:28
 #: data/nation/vandalic.ruleset:29 data/nation/visigothic.ruleset:37
@@ -1412,7 +1406,7 @@ msgstr "Usurpador"
 #: data/nation/nubian.ruleset:32 data/nation/ostrogothic.ruleset:30
 #: data/nation/palatinate.ruleset:28 data/nation/palmyrene.ruleset:19
 #: data/nation/parthian.ruleset:33 data/nation/pelasgian.ruleset:24
-#: data/nation/phoenician.ruleset:27 data/nation/pictish.ruleset:24
+#: data/nation/phoenician.ruleset:29 data/nation/pictish.ruleset:24
 #: data/nation/pontic.ruleset:33 data/nation/sabine.ruleset:26
 #: data/nation/samnite.ruleset:26 data/nation/seleucid.ruleset:28
 #: data/nation/vandalic.ruleset:29 data/nation/visigothic.ruleset:37
@@ -2491,7 +2485,6 @@ msgstr ""
 "Bósnia e Herzegóvina é um país no sudeste da Europa, e é casa de três povos "
 "que o constituem: bósnios, sérvios e croatas."
 
-#. TRANS: Ban = Duke
 #: data/nation/bosnia.ruleset:25 data/nation/croatian.ruleset:32
 #: data/nation/slovenian.ruleset:18
 #, fuzzy, c-format
@@ -3943,8 +3936,8 @@ msgid ""
 "Labrador, Alberta, Saskatchewan, Ontario and Manitoba."
 msgstr ""
 "Os Cree são o maior grupo nativo no Canadá, com mais de 200.000 membros, que "
-"falam uma língua algonquinos e muitas vezes se chamam \"Iiyiyuu\"ou \"Iinuu"
-"\", que significa \"povo\". Eles originalmente habitavam em Quebec, "
+"falam uma língua algonquinos e muitas vezes se chamam \"Iiyiyuu\"ou "
+"\"Iinuu\", que significa \"povo\". Eles originalmente habitavam em Quebec, "
 "Labrador, Alberta, Saskatchewan, Manitoba e Ontário."
 
 #: data/nation/cretan.ruleset:3
@@ -4077,7 +4070,7 @@ msgstr "Canadenses"
 #: data/nation/cuyavian.ruleset:6
 msgid ""
 "Cuyavia is a historical region in Northern-Central Poland, bordered to the "
-"West by Masovia, on the East by Greater Poland and on the North by Pomerania."
+"East by Masovia, on the West by Greater Poland and on the North by Pomerania."
 msgstr ""
 
 #: data/nation/cypriot.ruleset:3
@@ -4274,9 +4267,9 @@ msgstr "Dominicanos"
 msgid ""
 "The island of Dominica was first sighted by Europeans, including Christopher "
 "Columbus, in 1493. Legend has it that the island was named so since the day "
-"of its first sighting was a Sunday. Officially the \"Commonwealth of Dominica"
-"\", the country should not be confused with the Dominican Republic, another "
-"Caribbean nation."
+"of its first sighting was a Sunday. Officially the \"Commonwealth of "
+"Dominica\", the country should not be confused with the Dominican Republic, "
+"another Caribbean nation."
 msgstr ""
 "A ilha de Dominica foi avistada pela primeira vez pelos europeus, incluindo "
 "Cristóvão Colombo, em 1493. Diz a lenda que a ilha foi chamada assim desde o "
@@ -4985,7 +4978,6 @@ msgid ""
 "and the Canadian province of Nova Scotia."
 msgstr ""
 
-#. TRANS: Taoiseach = Prime Minister
 #: data/nation/gaelic.ruleset:28 data/nation/irish.ruleset:44
 #, fuzzy, c-format
 msgid "Taoiseach %s"
@@ -6091,7 +6083,7 @@ msgstr ""
 
 #: data/nation/israeli.ruleset:22
 #, fuzzy, c-format
-msgid "?female:Kibbutznik %s"
+msgid "?female:Kibbutznikit %s"
 msgstr "Encik"
 
 #: data/nation/israeli.ruleset:24 data/nation/khazar.ruleset:35
@@ -8106,10 +8098,6 @@ msgstr "Muskogee"
 msgid "?plural:Muskogee"
 msgstr "Muskogees"
 
-#: data/nation/muskogee.ruleset:5
-msgid "American"
-msgstr "Americano"
-
 #: data/nation/muskogee.ruleset:6
 msgid ""
 "The Muskogee was a confederacy of North American tribes, including the "
@@ -8424,8 +8412,8 @@ msgstr ""
 "Depois de vários ataques vikings devastador sobre o que é hoje o norte da "
 "França e um cerco de Paris, o rei franco Carlos, o Simples concedido o líder "
 "Viking Rollo um feudo na região. Este feudo evoluiu para o Ducado da "
-"Normandia, dos quais o mais famoso é o duque Guilherme II \"o conquistador"
-"\", que invadiu a Inglaterra em 1066."
+"Normandia, dos quais o mais famoso é o duque Guilherme II \"o "
+"conquistador\", que invadiu a Inglaterra em 1066."
 
 #: data/nation/northkorean.ruleset:3
 msgid "North Korean"
@@ -10564,12 +10552,12 @@ msgstr ""
 "Colonos holandeses começaram a colonizar a África do Sul no século 17. "
 "Depois de muitas guerras entre principalmente Boers (descendentes de colonos "
 "holandeses), as forças britânicas e zulus, a União da África do Sul foi "
-"criado em 1910. O governo Sul-Africano tornou-se notório por seu \"apartheid"
-"\". A política da desigualdade jurídica com base na cor da pele de um "
-"cidadão. Na sequência da aprovação da primeira Constituição do país não-"
-"racista, em 1994, longo tempo prisioneiro político Nelson Mandela se tornou "
-"o primeiro presidente democraticamente eleito verdadeiramente da África do "
-"Sul."
+"criado em 1910. O governo Sul-Africano tornou-se notório por seu "
+"\"apartheid\". A política da desigualdade jurídica com base na cor da pele "
+"de um cidadão. Na sequência da aprovação da primeira Constituição do país "
+"não-racista, em 1994, longo tempo prisioneiro político Nelson Mandela se "
+"tornou o primeiro presidente democraticamente eleito verdadeiramente da "
+"África do Sul."
 
 #: data/nation/southamerican.ruleset:3
 #, fuzzy
@@ -10746,7 +10734,7 @@ msgstr "Sérvios"
 msgid ""
 "The Suebians were an ancient West Germanic tribal confederation, which may "
 "have been formed by Ariovistus for his expedition to Gaul. The Suebians "
-"included the Germanic tribes from the the Elbe river basin belonging to the "
+"included the Germanic tribes from the Elbe river basin belonging to the "
 "Herminonic language group, such as the Marcomanni and Quadi. Between the "
 "first and fourth centuries CE they were a threat to Rome, often encroaching "
 "on the Danube provinces of the empire. In 405-406 CE the Suebians were "
@@ -11501,12 +11489,6 @@ msgid ""
 "gained independence in 1962."
 msgstr ""
 
-#. TRANS: There are two titles for king, kabaka and
-#. ;    mujaguzo. Kabaka is the material king, while
-#. ;    mujaguzo is the spiritual king, and is represented
-#. ;    by royal drums. These titles come from Buganda, an
-#. ;    ancient kingdom which occupied much of present-day
-#. ;    Uganda.
 #: data/nation/ugandan.ruleset:40
 #, c-format
 msgid "Kabaka %s"
@@ -12346,6 +12328,9 @@ msgid ""
 "1980 the country has been governed by Robert Mugabe, who has received an "
 "equally poor reputation internationally as the previous regime."
 msgstr ""
+
+#~ msgid "American"
+#~ msgstr "Americano"
 
 #, fuzzy
 #~ msgid "Canari"
