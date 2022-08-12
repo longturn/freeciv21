@@ -1,0 +1,2 @@
+sphinx_rtd_theme
+sphinx_last_updated_by_git
