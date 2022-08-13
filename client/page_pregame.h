@@ -29,7 +29,6 @@ public:
   void set_rulesets(int num_rulesets, QStringList rulesets);
   void update_vote();
 private slots:
-  void slot_pick_nation();
   void start_page_menu(QPoint pos);
   void send_fake_chat_message(const QString &message);
 
