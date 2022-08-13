@@ -52,10 +52,6 @@ page_pregame::page_pregame(QWidget *parent, fc_client *gui) : QWidget(parent)
   ui.bdisc->setIcon(style()->standardPixmap(QStyle::SP_DialogCancelButton));
   connect(ui.bdisc, &QAbstractButton::clicked, gui,
           &fc_client::slot_disconnect);
-  ui.bpick->setText(_("Pick Nation"));
-  ui.bpick->setIcon(fcIcons::instance()->getIcon(QStringLiteral("flag")));
-  connect(ui.bpick, &QAbstractButton::clicked, this,
-          &page_pregame::slot_pick_nation);
   ui.bops->setText(_("Observe"));
   ui.bops->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("meeting-observer")));
@@ -381,10 +377,6 @@ void page_pregame::update_buttons()
   ui.bstart->setEnabled(sensitive);
   ui.bstart->setText(text);
 
-  // Nation button
-  sensitive = game.info.is_new_game && can_client_control();
-  ui.bpick->setEnabled(sensitive);
-
   sensitive = game.info.is_new_game;
   ui.pr_options->setEnabled(sensitive);
   ui.pr_options->update_buttons();
@@ -626,12 +618,4 @@ void page_pregame::slot_pregame_start()
   } else {
     dsend_packet_player_ready(&client.conn, 0, true);
   }
-}
-
-/**
-   Calls dialg selecting nations
- */
-void page_pregame::slot_pick_nation()
-{
-  popup_races_dialog(client_player());
 }

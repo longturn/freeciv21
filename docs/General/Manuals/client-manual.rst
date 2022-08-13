@@ -85,7 +85,6 @@ From upper left to lower right, the following user interface elements are availa
 * :guilabel:`Server Output Window`
 * :guilabel:`Server Chat/Command Line`
 * :guilabel:`Disconnect`
-* :guilabel:`Pick Nation`
 * :guilabel:`Observe`
 * :guilabel:`Start`
 
@@ -208,11 +207,6 @@ Clicking this button takes you back to the :guilabel:`Start Screen` as shown in 
 local ``freeciv21-server`` instance will terminate at this time. A subsequent click of :guilabel:`Start New
 Game` will spawn a new instance of the server, however any changes made previously will be lost and you will
 have to start over.
-
-Pick Nation
-^^^^^^^^^^^
-
-This button does the same thing as `Nation`_ above.
 
 Observe
 ^^^^^^^
