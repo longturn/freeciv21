@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ca\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2022-08-12 22:37+0200\n"
+"POT-Creation-Date: 2022-08-13 02:30+0200\n"
 "PO-Revision-Date: 2017-08-28 19:04+0100\n"
 "Last-Translator: Joan Creus <joan.creusandreu at gmail dot com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -3005,9 +3005,9 @@ msgstr "Allunyar"
 msgid "Scale fonts"
 msgstr "Escalar Info Unitats"
 
-#: client/menu.cpp:646
+#: client/menu.cpp:646 client/options.cpp:1494
 #, fuzzy
-msgid "Citybar style"
+msgid "City bar style"
 msgstr "_Estil de les ciutats:"
 
 #: client/menu.cpp:659
@@ -3667,11 +3667,6 @@ msgstr ""
 "el joc de caselles actiu actualment, si estàs jugant en aquest tipus de "
 "mapa; en aquest cas és el mateix que fer servir el paràmetre de línia de "
 "comandes -t."
-
-#: client/options.cpp:1494
-#, fuzzy
-msgid "City bar style"
-msgstr "_Estil de les ciutats:"
 
 #: client/options.cpp:1495
 #, fuzzy
@@ -4614,8 +4609,8 @@ msgstr "Canviar a %s"
 
 #: client/options.cpp:1939
 msgid ""
-"Change size of all fonts at once by given percent.That options is not "
-"unsaveable. Hit Apply buttonafter changing this."
+"Change size of all fonts at once by given percent. This option cannot be "
+"saved. Hit the Apply button after changing this."
 msgstr ""
 
 #: client/options.cpp:1943
@@ -25539,7 +25534,7 @@ msgid ""
 "option \"mgr_dist\".\n"
 " - Trade surplus.\n"
 " - Luxury and science output.\n"
-" - The quantity of city improvements (and wonders), measured by build cost.\n"
+" - The total cost of city improvements and wonders in the city.\n"
 " - Depending on the ruleset, a number of other factors such as government "
 "type and city improvements may increase or decrease the desirability of "
 "cities. These are noted in other sections of the help. The classic ruleset "
@@ -25694,9 +25689,9 @@ msgid ""
 "The value can be zero, meaning no attack is possible.\n"
 " - Defense (D): This is the comparative strength of the unit when it is a "
 "defender. The value can be zero, meaning no defense is possible.\n"
-" - Moves (M): This is the number of move points that the unit can move per "
+" - Moves (M): This is the number of move points that the unit can use per "
 "turn. Under certain rulesets, Terrain and Veteran level will impact how "
-"moves are consumed as a unit is moved around the map.\n"
+"moves are consumed as a unit moves around the map.\n"
 " - Hitpoints (H): This is effectively the constitution of the unit. The "
 "higher the value, the more \"hits\" the unit can take before being "
 "destroyed.\n"
@@ -41770,6 +41765,10 @@ msgstr "FALS"
 #, c-format
 msgid "error %ld (failed FormatMessage)"
 msgstr "error %ld (Missatge de format fallat)"
+
+#, fuzzy
+#~ msgid "Citybar style"
+#~ msgstr "_Estil de les ciutats:"
 
 #, c-format
 #~ msgid "%s is selling %s for %d."
