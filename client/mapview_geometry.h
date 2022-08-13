@@ -18,31 +18,24 @@ namespace freeciv {
 
 class gui_rect_iterator {
 public:
-  /// The type of item currently being iterated over.
-  enum class item_type {
-    corner, ///< The meeting point of up to four tiles.
-    edge,   ///< The edge between two tiles.
-    tile,   ///< The center of a tile.
-  };
-
   gui_rect_iterator(const struct tileset *t, const QRect &rect);
 
-  /**
-   * Retrieves the current corner. Only valid if @ref current_item is
-   * @ref item_type::corner "corner".
-   */
+  /// Checks whether the current iteration point has a corner.
+  bool has_corner() const { return m_has_corner; }
+
+  /// Checks whether the current iteration point has an edge.
+  bool has_edge() const { return m_has_edge; }
+
+  /// Checks whether the current iteration point has a non-null tile.
+  bool has_tile() const { return m_has_tile; }
+
+  /// Retrieves the current corner. Only valid if @ref has_corner is @c true.
   const tile_corner &corner() const { return m_corner; }
 
-  /**
-   * Retrieves the current edge. Only valid if @ref current_item is
-   * @ref item_type::edge "edge".
-   */
+  /// Retrieves the current edge. Only valid if @ref has_edge is @c true.
   const tile_edge &edge() const { return m_edge; }
 
-  /**
-   * Retrieves the current tile. Only valid if @ref current_item is
-   * @ref item_type::tile "tile".
-   */
+  /// Retrieves the current tile. Only valid if @ref has_tile is @c true.
   const ::tile *tile() const { return m_tile; }
 
   /// Retrieves the x position of the current item.
@@ -53,9 +46,6 @@ public:
 
   bool next();
 
-  /// Retrieves the type of the current item.
-  item_type current_item() { return m_type; }
-
 private:
   bool m_isometric;
   int m_index, m_count;
@@ -63,10 +53,10 @@ private:
   int m_x0, m_y0, m_x1, m_y1;
   int m_xi, m_yi;
 
-  item_type m_type = item_type::tile; // Just set it to *something* initially
   tile_corner m_corner;
   tile_edge m_edge;
   ::tile *m_tile = nullptr;
+  bool m_has_corner = false, m_has_edge = false, m_has_tile = false;
 };
 
 } // namespace freeciv

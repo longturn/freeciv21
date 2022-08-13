@@ -1194,21 +1194,16 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
     for (auto it = freeciv::gui_rect_iterator(tileset, rect); it.next();) {
       const int cx = it.x() - mapview.gui_x0, cy = it.y() - mapview.gui_y0;
 
-      switch (it.current_item()) {
-      case freeciv::gui_rect_iterator::item_type::corner:
+      if (it.has_corner()) {
         put_one_element(mapview.store, layer, nullptr, nullptr, &it.corner(),
                         nullptr, cx, cy);
-        break;
-      case freeciv::gui_rect_iterator::item_type::edge:
+      }
+      if (it.has_edge()) {
         put_one_element(mapview.store, layer, nullptr, &it.edge(), nullptr,
                         nullptr, cx, cy);
-        break;
-      case freeciv::gui_rect_iterator::item_type::tile:
-        // Unseen tiles are null
-        if (it.tile()) {
-          put_one_tile(mapview.store, layer, it.tile(), cx, cy);
-        }
-        break;
+      }
+      if (it.has_tile()) {
+        put_one_tile(mapview.store, layer, it.tile(), cx, cy);
       }
     }
   }
@@ -1227,8 +1222,7 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
             height + 2 * GOTO_WIDTH);
   for (auto it = freeciv::gui_rect_iterator(tileset, goto_rect);
        it.next();) {
-    if (it.current_item() != freeciv::gui_rect_iterator::item_type::tile
-        || !it.tile()) {
+    if (!it.has_tile()) {
       continue;
     }
     adjc_dir_base_iterate(&(wld.map), it.tile(), dir)
@@ -1382,8 +1376,7 @@ void show_city_descriptions(int canvas_base_x, int canvas_base_y,
     const int canvas_x = it.x() - mapview.gui_x0;
     const int canvas_y = it.y() - mapview.gui_y0;
 
-    if (it.current_item() == freeciv::gui_rect_iterator::item_type::tile
-        && it.tile() && tile_city(it.tile())) {
+    if (it.has_tile() && tile_city(it.tile())) {
       int width = 0, height = 0;
       struct city *pcity = tile_city(it.tile());
 
@@ -1427,8 +1420,7 @@ void show_tile_labels(int canvas_base_x, int canvas_base_y, int width_base,
     const int canvas_x = it.x() - mapview.gui_x0;
     const int canvas_y = it.y() - mapview.gui_y0;
 
-    if (it.current_item() == freeciv::gui_rect_iterator::item_type::tile
-        && it.tile() && it.tile()->label != nullptr) {
+    if (it.has_tile() && it.tile()->label != nullptr) {
       int width = 0, height = 0;
 
       show_tile_label(mapview.store, canvas_x, canvas_y, it.tile(), &width,

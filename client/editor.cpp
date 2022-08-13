@@ -754,8 +754,7 @@ static void editor_end_selection_rectangle(int canvas_x, int canvas_y)
                           mapview.gui_y0 + editor->selrect_y,
                           editor->selrect_width, editor->selrect_height);
   for (auto it = freeciv::gui_rect_iterator(tileset, rect); it.next();) {
-    if (it.current_item() != freeciv::gui_rect_iterator::item_type::tile
-        || !it.tile()) {
+    if (!it.has_tile()) {
       continue;
     }
     if (editor->selection_mode == SELECTION_MODE_NEW
