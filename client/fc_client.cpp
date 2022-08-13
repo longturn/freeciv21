@@ -366,14 +366,15 @@ bool fc_client::eventFilter(QObject *obj, QEvent *event)
   if (page_game && obj == page_game->chat
       && page_game->chat->is_chat_visible()) {
     const auto chat = page_game->chat;
+    const auto mapview = page_game->mapview_wdg;
     if (event->type() == QEvent::Move) {
       const auto xy = QPointF(chat->pos());
-      qt_settings.chat_fx_pos = xy.x() / page_game->width();
-      qt_settings.chat_fy_pos = xy.y() / page_game->height();
+      qt_settings.chat_fx_pos = xy.x() / mapview->width();
+      qt_settings.chat_fy_pos = xy.y() / mapview->height();
     } else if (event->type() == QEvent::Resize) {
       const auto size = QSizeF(chat->size());
-      qt_settings.chat_fwidth = size.width() / page_game->width();
-      qt_settings.chat_fheight = size.height() / page_game->height();
+      qt_settings.chat_fwidth = size.width() / mapview->width();
+      qt_settings.chat_fheight = size.height() / mapview->height();
     }
   }
   return false;
