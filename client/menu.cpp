@@ -643,7 +643,7 @@ void mr_menu::setup_menus()
   scale_fonts_status->setChecked(true);
   menu->addSeparator();
   action_citybar = new QActionGroup(this);
-  citybar_submenu = menu->addMenu(_("Citybar style"));
+  citybar_submenu = menu->addMenu(_("City bar style"));
 
   for (auto a : *citybar_painter::available_vector(nullptr)) {
     act = citybar_submenu->addAction(a);
