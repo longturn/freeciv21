@@ -753,7 +753,7 @@ citizens will never migrate out of a capital city.\n\
 to migrate is controlled by the server option \"mgr_dist\".\n\
  - Trade surplus.\n\
  - Luxury and science output.\n\
- - The quantity of city improvements (and wonders), measured by build cost.\n\
+ - The total cost of city improvements and wonders in the city.\n\
  - Depending on the ruleset, a number of other factors such as government type and city improvements may \
 increase or decrease the desirability of cities. These are noted in other sections of the help. The classic \
 ruleset contains no such effects.\
@@ -823,8 +823,8 @@ their purpose, have five important stats:\
 attack is possible.\n\
  - Defense (D): This is the comparative strength of the unit when it is a defender. The value can be zero, \
 meaning no defense is possible.\n\
- - Moves (M): This is the number of move points that the unit can move per turn. Under certain rulesets, \
-Terrain and Veteran level will impact how moves are consumed as a unit is moved around the map.\n\
+ - Moves (M): This is the number of move points that the unit can use per turn. Under certain rulesets, \
+Terrain and Veteran level will impact how moves are consumed as a unit moves around the map.\n\
  - Hitpoints (H): This is effectively the constitution of the unit. The higher the value, the more \"hits\" \
 the unit can take before being destroyed.\n\
  - Firepower (F): This is a force multiplier for attack. Values greater than 1 multiply the attack value by \
