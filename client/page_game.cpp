@@ -113,6 +113,27 @@ pageGame::pageGame(QWidget *parent)
   sw_diplo->setRightClick(top_bar_right_click_diplomacy);
   sw_science->setRightClick(top_bar_right_click_science);
 
+  minimap_panel = new ::minimap_panel(mapview_wdg, mapview_wdg);
+
+  city_overlay = new city_dialog(mapview_wdg);
+  connect(mapview_wdg, &map_view::scale_changed, city_overlay,
+          &city_dialog::refresh);
+  city_overlay->hide();
+  unitinfo_wdg = new hud_units(mapview_wdg);
+  unitinfo_wdg->setAttribute(Qt::WA_NoMousePropagation);
+  battlelog_wdg = new hud_battle_log(mapview_wdg);
+  battlelog_wdg->setAttribute(Qt::WA_NoMousePropagation);
+  battlelog_wdg->hide();
+  chat = new chat_widget(mapview_wdg);
+  chat->setAttribute(Qt::WA_NoMousePropagation);
+  chat->show();
+  x_vote = new xvote(mapview_wdg);
+  x_vote->setAttribute(Qt::WA_NoMousePropagation);
+  x_vote->hide();
+  gtd = new goto_dialog(mapview_wdg);
+  gtd->setAttribute(Qt::WA_NoMousePropagation);
+  gtd->hide();
+
   message = new message_widget(mapview_wdg);
   message->setAttribute(Qt::WA_NoMousePropagation);
   message->hide();
@@ -141,8 +162,6 @@ pageGame::pageGame(QWidget *parent)
         }
       });
 
-  minimap_panel = new ::minimap_panel(mapview_wdg, mapview_wdg);
-
   top_bar_wdg->addWidget(sw_map);
   top_bar_wdg->addWidget(sw_cunit);
   top_bar_wdg->addWidget(sw_cities);
@@ -152,25 +171,6 @@ pageGame::pageGame(QWidget *parent)
   top_bar_wdg->addWidget(sw_tax);
   top_bar_wdg->addWidget(sw_indicators);
   top_bar_wdg->addWidget(sw_message);
-
-  city_overlay = new city_dialog(mapview_wdg);
-  connect(mapview_wdg, &map_view::scale_changed, city_overlay,
-          &city_dialog::refresh);
-  city_overlay->hide();
-  unitinfo_wdg = new hud_units(mapview_wdg);
-  unitinfo_wdg->setAttribute(Qt::WA_NoMousePropagation);
-  battlelog_wdg = new hud_battle_log(mapview_wdg);
-  battlelog_wdg->setAttribute(Qt::WA_NoMousePropagation);
-  battlelog_wdg->hide();
-  chat = new chat_widget(mapview_wdg);
-  chat->setAttribute(Qt::WA_NoMousePropagation);
-  chat->show();
-  x_vote = new xvote(mapview_wdg);
-  x_vote->setAttribute(Qt::WA_NoMousePropagation);
-  x_vote->hide();
-  gtd = new goto_dialog(mapview_wdg);
-  gtd->setAttribute(Qt::WA_NoMousePropagation);
-  gtd->hide();
 
   game_layout->addWidget(mapview_wdg, 1, 0);
   game_main_widget->setLayout(game_layout);
