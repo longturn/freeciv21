@@ -1,30 +1,31 @@
 # French translations for Freeciv
 # Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold.
+# This file is distributed under the same license as the Freeciv21 package.
+#
+#
 # David Pérez Serrada <dperezs@nexo.es>, 1999.
 # Denis Bodor <dbodor@linuxmag-france.org>, 1999.
 # Anthony Ferrand, 2001-2002.
 # Freeciv french team <freeciv-fr@egroups.fr>, 2000.
 # Freeciv french team <freeciv-fr@yahoogroupes.fr>, 2001-2004.
 # Frederic Rodrigo <f.rodrigo free.fr>, 2005-2007.
-# Pepeto <pepeto69 gmail.com>, 2007-2010
-# Igx, The Dreaming Drummer... <igx31 hotmail.com>, 2010-2020
-# This file is distributed under the same license as the Freeciv package.
-#
-#
+# Pepeto <pepeto69 gmail.com>, 2007-2010.
+# Igx, The Dreaming Drummer... <igx31 hotmail.com>, 2010-2020.
+# Louis Moureaux <m_louis30@yahoo.com>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: Freeciv trunk\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2022-08-12 22:37+0200\n"
-"PO-Revision-Date: 2020-09-03 16:01+0200\n"
-"Last-Translator: Igx <igx31 hotmail.com>\n"
-"Language-Team: French <freeciv-l10n-fr@yahoogroupes.fr>\n"
+"POT-Creation-Date: 2022-08-13 02:30+0200\n"
+"PO-Revision-Date: 2022-08-13 03:33+0200\n"
+"Last-Translator: Louis Moureaux <m_louis30@yahoo.com>\n"
+"Language-Team: French <>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: KBabel 1.11.2\n"
+"X-Generator: Lokalize 22.04.3\n"
 
 #: ai/default/daidiplomacy.cpp:354
 #, c-format
@@ -282,15 +283,15 @@ msgstr ""
 "votre nation mais ne fera que des modifications minimales."
 
 #: ai/difficulty.cpp:242
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "With no arguments, sets all AI players to skill level '%1', and sets the "
 "default level for any new AI players to '%2'. With an argument, sets the "
 "skill level for the specified player only."
 msgstr ""
 "Sans argument, cette commande règle le niveau de compétence de tous les "
-"joueurs IA sur '%s', et positionne le niveau par défaut de tout nouveau "
-"joueur IA à '%s'. Avec un argument, cette commande ne règle le niveau de "
+"joueurs IA sur « %1 », et positionne le niveau par défaut de tout nouveau "
+"joueur IA à « %2 ». Avec un argument, cette commande ne règle le niveau de "
 "compétence que du joueur spécifié."
 
 #: ai/difficulty.cpp:261
@@ -298,9 +299,9 @@ msgid "Has erratic decision-making."
 msgstr "Prend des décisions erratiques"
 
 #: ai/difficulty.cpp:268
-#, fuzzy, qt-format
+#, qt-format
 msgid "Research takes %1 as long as usual."
-msgstr "La recherche prend %d%% du temps habituel."
+msgstr "La recherche prend %1 du temps habituel."
 
 #: ai/difficulty.cpp:272
 msgid "Has reduced appetite for expansion."
@@ -453,6 +454,8 @@ msgstr "Pour obtenir du son vous avez besoin de télécharger un jeu de sons !"
 msgid ""
 "Get sound sets from the Modpack Installer (freeciv21-modpack-qt) program."
 msgstr ""
+"Obtenez des ensembles de sons depuis l'Installateur de modpacks (freeciv21-"
+"modpack-qt)."
 
 #: client/audio.cpp:317
 #, c-format
@@ -490,9 +493,8 @@ msgid "Clear links"
 msgstr "Effacer les liens"
 
 #: client/chatline.cpp:292
-#, fuzzy
 msgid "Show/hide chat"
-msgstr "Monter/cacher les travailleurs"
+msgstr "Monter/cacher la discussion"
 
 #: client/chatline.cpp:307
 msgid "Chat"
@@ -511,13 +513,12 @@ msgid "This unit isn't known!"
 msgstr "Cette unité est inconnue !"
 
 #: client/chatline_common.cpp:162
-#, fuzzy
 msgid ""
 "Freeciv21 is free software and you are welcome to distribute copies of it "
 "under certain conditions;"
 msgstr ""
-"Freeciv est un logiciel libre, sa copie et sa distribution sont les "
-"bienvenus sous certaines conditions ;"
+"Freeciv21 est un logiciel libre, sa copie et sa distribution sont les "
+"bienvenus sous certaines conditions ;"
 
 #: client/chatline_common.cpp:166
 msgid "See the \"Copying\" item on the Help menu."
@@ -548,7 +549,6 @@ msgid "Disband unit"
 msgstr "Congédier l'unité"
 
 #: client/citydlg.cpp:95
-#, fuzzy
 msgid "Set homecity"
 msgstr "Baser ici"
 
@@ -573,9 +573,8 @@ msgid "Sell improvement?"
 msgstr "Vendre l'amélioration ?"
 
 #: client/citydlg.cpp:1007
-#, fuzzy
 msgid "Citizens:"
-msgstr "Citoyens"
+msgstr "Citoyens :"
 
 #: client/citydlg.cpp:1008 client/helpdlg.cpp:1318
 msgid "Food:"
@@ -726,9 +725,8 @@ msgid "Save"
 msgstr "Sauvegarder"
 
 #: client/citydlg.cpp:1331
-#, fuzzy
 msgid "Nationality"
-msgstr "Nationalité :"
+msgstr "Nationalité"
 
 #: client/citydlg.cpp:1332 data/alien/techs.ruleset:413
 msgid "Happiness"
@@ -768,9 +766,8 @@ msgid "Governor"
 msgstr "Gouverneur"
 
 #: client/citydlg.cpp:1357
-#, fuzzy
 msgid "General"
-msgstr "Général %s"
+msgstr "Général"
 
 #: client/citydlg.cpp:1358
 msgid "Citizens"
@@ -987,22 +984,22 @@ msgstr "%s et %s"
 #: client/citydlg_common.cpp:809
 #, qt-format
 msgid "Happy: %1\n"
-msgstr ""
+msgstr "Heureux: %1\n"
 
 #: client/citydlg_common.cpp:812
-#, fuzzy, qt-format
+#, qt-format
 msgid "Content: %1\n"
-msgstr "C"
+msgstr "Contents : %1\n"
 
 #: client/citydlg_common.cpp:815
 #, qt-format
 msgid "Unhappy: %1\n"
-msgstr ""
+msgstr "Malheureux: %1\n"
 
 #: client/citydlg_common.cpp:818
 #, qt-format
 msgid "Angry: %1\n"
-msgstr ""
+msgstr "Fâchés: %1\n"
 
 #: client/citydlg_common.cpp:840
 msgid "blocked"
@@ -1037,9 +1034,9 @@ msgid "%s"
 msgstr "%s"
 
 #: client/cityrep.cpp:489
-#, fuzzy, qt-format
+#, qt-format
 msgid "Buy ( Cost: %1 )"
-msgstr "Acheter (Coût : %d)"
+msgstr "Acheter (Coût : %1)"
 
 #: client/cityrep.cpp:493
 msgid "Center"
@@ -1078,9 +1075,9 @@ msgid "Select"
 msgstr "Sélectionner"
 
 #: client/cityrep.cpp:669
-#, fuzzy, qt-format
+#, qt-format
 msgid "Are you sure you want to sell those %1?"
-msgstr "Êtes-vous sûr de vraiment vouloir vendre ces %s ?"
+msgstr "Êtes-vous sûr de vraiment vouloir vendre ces %1 ?"
 
 #: client/cityrep.cpp:674
 msgid "Sell?"
@@ -1483,9 +1480,8 @@ msgid "Special"
 msgstr "Spécial"
 
 #: client/client_main.cpp:343
-#, fuzzy
 msgid "Announce"
-msgstr "Announce PROTO"
+msgstr "Announce"
 
 #: client/client_main.cpp:345 server/civserver.cpp:165
 msgid "Announce game in LAN using protocol PROTO (IPv4/IPv6/none)"
@@ -1495,7 +1491,7 @@ msgstr ""
 
 #: client/client_main.cpp:346 server/civserver.cpp:167
 msgid "PROTO"
-msgstr ""
+msgstr "PROTO"
 
 #: client/client_main.cpp:348
 msgid "Skip connect dialog"
@@ -1503,25 +1499,22 @@ msgstr "Passer le dialogue de connexion"
 
 #: client/client_main.cpp:349 server/civserver.cpp:177 tools/civmanual.cpp:678
 #: tools/fcmp/mpcmdline.cpp:46
-#, fuzzy
 msgid "debug"
-msgstr "debug NUM"
+msgstr "debug"
 
 #: client/client_main.cpp:352 server/civserver.cpp:180 tools/civmanual.cpp:681
 #: tools/fcmp/mpcmdline.cpp:49
 msgid "Set debug log level (fatal/critical/warning/info/debug)"
-msgstr ""
+msgstr "Change le niveau de verbosité (fatal/critical/warning/info/debug)"
 
 #: client/client_main.cpp:353 server/civserver.cpp:181 tools/civmanual.cpp:682
 #: tools/fcmp/mpcmdline.cpp:50
-#, fuzzy
 msgid "LEVEL"
-msgstr "debug NIVEAU"
+msgstr "NIVEAU"
 
 #: client/client_main.cpp:355
-#, fuzzy
 msgid "Fatal"
-msgstr "Catalan"
+msgstr "Fatal"
 
 #: client/client_main.cpp:355 server/civserver.cpp:185 tools/civmanual.cpp:684
 #: tools/ruleup.cpp:58
@@ -1556,9 +1549,8 @@ msgid "Connect to server port PORT (usually with -a)"
 msgstr "Se connecter au port PORT du serveur (habituellement utilisé avec -a)"
 
 #: client/client_main.cpp:369
-#, fuzzy
 msgid "Plugin"
-msgstr "Plugin PLUGIN"
+msgstr "Plugin"
 
 #: client/client_main.cpp:370
 #, c-format
@@ -1592,23 +1584,21 @@ msgid "Warn about deprecated modpack constructs"
 msgstr "Avertir des constructions obsolètes de modpack"
 
 #: client/client_main.cpp:384
-#, fuzzy
 msgid "url"
-msgstr "Surplus"
+msgstr "url"
 
 #: client/client_main.cpp:384
-#, fuzzy
 msgid "Server information in URL format"
-msgstr "Rapport informatif"
+msgstr "Information sur le serveur au format URL"
 
 #: client/client_main.cpp:384
 msgid "[url]"
-msgstr ""
+msgstr "[url]"
 
 #: client/client_main.cpp:434 server/civserver.cpp:296
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid port number %s"
-msgstr "Numéro d'entrée invalide : %d."
+msgstr "Numéro de port %s invalide"
 
 #: client/client_main.cpp:458 server/civserver.cpp:367
 #, c-format
@@ -1617,11 +1607,11 @@ msgstr "\"%s\" est incorrect pour --Announce"
 
 #: client/client_main.cpp:465 server/civserver.cpp:374
 msgid "The --warnings option is deprecated."
-msgstr ""
+msgstr "L'option --warnings est dépréciée."
 
 #: client/client_main.cpp:481
 msgid "Too many positional arguments."
-msgstr ""
+msgstr "Trop d'arguments de position."
 
 #: client/client_main.cpp:489
 msgid "-f/--file and -a/--autoconnect options are incompatible\n"
@@ -1733,32 +1723,29 @@ msgid "read error"
 msgstr "Erreur de lecture"
 
 #: client/clinet.cpp:335
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to contact server \"%s\" after %d attempts"
-msgstr ""
-"Erreur de connexion au serveur \"%s\" port %d en tant que \"%s\" après %d "
-"essais"
+msgstr "Erreur de connexion au serveur « %s » après %d essais"
 
 #: client/clinet.cpp:346
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Error contacting server \"%s\":\n"
 " %s\n"
 msgstr ""
-"Erreur de contact du server \"%s\" port %d en tant que \"%s\":\n"
+"Erreur de contact du server « %s » :\n"
 " %s\n"
 
 #: client/clinet.cpp:363
-#, fuzzy, c-format
+#, c-format
 msgid "Auto-connecting to \"%s\" every %f second(s) for %d times"
 msgstr ""
-"Autoconnexion au server \"%s\" port %d en tant que \"%s\" chaque %f secondes "
-"pendant %d essais"
+"Connexion automatique au serveur « %s » toutes les %f secondespendant %d "
+"essais"
 
 #: client/connectdlg_common.cpp:79
-#, fuzzy
 msgid "Freeciv21 Server"
-msgstr "Serveur Freeciv :"
+msgstr "Serveur Freeciv21"
 
 #: client/connectdlg_common.cpp:211
 msgid "Starting local server..."
@@ -1775,9 +1762,8 @@ msgstr "Vous devez en démarrer un manuellement. Désolé..."
 
 #: client/connectdlg_common.cpp:230 client/options.cpp:3833
 #: client/options.cpp:3885
-#, fuzzy
 msgid "Cannot find Freeciv21 storage directory"
-msgstr "Répertoire de stockage de Freeciv introuvable"
+msgstr "Répertoire de stockage de Freeciv21 introuvable"
 
 #: client/connectdlg_common.cpp:232
 msgid "You'll have to start server manually. Sorry..."
@@ -1786,7 +1772,7 @@ msgstr "Vous devrez démarrer le serveur manuellement. Désolé..."
 #: client/connectdlg_common.cpp:271
 #, c-format
 msgid "Starting freeciv21-server at %s"
-msgstr ""
+msgstr "Démarrage de freeciv21-server à %s"
 
 #: client/connectdlg_common.cpp:277 client/connectdlg_common.cpp:321
 msgid "We probably couldn't start it from here."
@@ -1945,37 +1931,37 @@ msgid "Revolution!"
 msgstr "Révolution !"
 
 #: client/dialogs.cpp:1749
-#, fuzzy, qt-format
+#, qt-format
 msgid "Choose Your %1's Strategy"
-msgstr "Choisissez la stratégie de votre %s"
+msgstr "Choisissez la stratégie de votre %1"
 
 #: client/dialogs.cpp:1754
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Your %1 from %2 reaches the city of %3.\n"
 "What now?"
 msgstr ""
-"Votre %s de %s a atteint la ville de %s.\n"
+"Votre %1 de %2 a atteint la ville de %3.\n"
 "Et maintenant ?"
 
 #: client/dialogs.cpp:1758
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Your %1 has arrived at %2.\n"
 "What is your command?"
 msgstr ""
-"Votre %s est arrivé à %s.\n"
+"Votre %1 est arrivé à %2.\n"
 "Quels sont vos ordres ?"
 
 #: client/dialogs.cpp:1763
-#, fuzzy, qt-format
+#, qt-format
 msgid "Your %1 is ready to act against %2 %3."
-msgstr "Votre %1$s est prêt à agir contre %3$s %2$s."
+msgstr "Votre %1 est prêt à agir contre %3 %2."
 
 #: client/dialogs.cpp:1771
-#, fuzzy, qt-format
+#, qt-format
 msgid "Your %1 is waiting for your command."
-msgstr "Votre %s attend vos ordres"
+msgstr "Votre %1 attend vos ordres."
 
 #: client/dialogs.cpp:1919
 msgid "Keep moving"
@@ -1998,9 +1984,9 @@ msgid "Steal Technology"
 msgstr "Voler une technologie"
 
 #: client/dialogs.cpp:2559 client/dialogs.cpp:3293
-#, fuzzy, qt-format
+#, qt-format
 msgid "At %1's Discretion"
-msgstr "Au choix du %s"
+msgstr "Au choix du %1"
 
 #: client/dialogs.cpp:3012
 #, c-format
@@ -2196,14 +2182,14 @@ msgid "Sell Redundant"
 msgstr "Vendre les redondants"
 
 #: client/economyreport.cpp:159
-#, fuzzy, qt-format
+#, qt-format
 msgid "Income: %1    Total Costs: %2"
-msgstr "Revenu: %d    Coûts Totaux: %d"
+msgstr "Revenu : %1    Coûts Totaux : %2"
 
 #: client/economyreport.cpp:227
-#, fuzzy, qt-format
+#, qt-format
 msgid "Do you really wish to disband every %1 (%2 total)?"
-msgstr "Voulez-vous réellement congédier tous les %s (%d au total) ?"
+msgstr "Voulez-vous réellement congédier tous les %1 (%2 au total) ?"
 
 #: client/economyreport.cpp:231
 msgid "Disband Units"
@@ -2214,9 +2200,9 @@ msgid "Disband Results"
 msgstr "Résultats du Congédiement"
 
 #: client/economyreport.cpp:266
-#, fuzzy, qt-format
+#, qt-format
 msgid "Do you really wish to sell every %1 (%2 total)?"
-msgstr "Voulez-vous réellement vendre tous les %s (%d au total) ?"
+msgstr "Voulez-vous réellement vendre tous les %1 (%2 au total) ?"
 
 #: client/economyreport.cpp:271 client/economyreport.cpp:313
 msgid "Sell Improvements"
@@ -2432,14 +2418,12 @@ msgid "Score"
 msgstr "Score"
 
 #: client/fc_client.cpp:86
-#, fuzzy
 msgid "Welcome to Freeciv21"
-msgstr "Bienvenue à Freeciv"
+msgstr "Bienvenue dans Freeciv21"
 
 #: client/fc_client.cpp:145
-#, fuzzy
 msgid "This is the client for Freeciv21."
-msgstr "Client Qt pour Freeciv"
+msgstr "Client Qt pour Freeciv21"
 
 #: client/fc_client.cpp:540 client/menu.cpp:566
 msgid "Set local options"
@@ -2540,9 +2524,8 @@ msgid "?tech:None"
 msgstr "Aucune"
 
 #: client/helpdlg.cpp:107
-#, fuzzy
 msgid "Freeciv21 Help Browser"
-msgstr "Navigateur d'aide de Freeciv"
+msgstr "Navigateur d'aide de Freeciv21"
 
 #: client/helpdlg.cpp:140
 msgid "About Qt"
@@ -2627,7 +2610,7 @@ msgstr "Rend obsolète"
 
 #: client/helpdlg.cpp:1251
 msgid "Output becomes: "
-msgstr ""
+msgstr "La production devient:"
 
 #: client/helpdlg.cpp:1320
 msgid "Production:"
@@ -2647,18 +2630,16 @@ msgid "%1%"
 msgstr "%1%"
 
 #: client/helpdlg.cpp:1346
-#, fuzzy
 msgid "Cultivate Rslt/Time:"
-msgstr "Mine Résult./Temps :"
+msgstr "Mine Résultat/Temps :"
 
 #: client/helpdlg.cpp:1362
 msgid "Mine Rslt/Time:"
 msgstr "Mine Résult./Temps :"
 
 #: client/helpdlg.cpp:1378
-#, fuzzy
 msgid "Transform Rslt/Time:"
-msgstr "Transf. Résult./Temps :"
+msgstr "Transformer Résultat/Temps :"
 
 #: client/helpdlg.cpp:1392
 msgid "Build as irrigation"
@@ -2685,22 +2666,22 @@ msgstr ""
 #: client/hudwidget.cpp:606
 #, qt-format
 msgid "%1 #%2"
-msgstr ""
+msgstr "%1 #%2"
 
 #: client/hudwidget.cpp:611
 #, qt-format
 msgid "%1 #%2 (%3)"
-msgstr ""
+msgstr "%1 #%2 (%3)"
 
 #: client/hudwidget.cpp:619
 #, qt-format
 msgid "%1 #%2 \"%3\""
-msgstr ""
+msgstr "%1 #%2 \"%3\""
 
 #: client/hudwidget.cpp:625
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 #%2 \"%3\" (%4)"
-msgstr "Bz2 : \"%s\" (%d)"
+msgstr "%1 #%2 « %3 » (%4)"
 
 #: client/hudwidget.cpp:643
 msgid "MP: "
@@ -2881,9 +2862,8 @@ msgid "Clipboard is empty."
 msgstr "Le presse-papiers est vide."
 
 #: client/mapview.cpp:626
-#, fuzzy
 msgid "Error loading tileset"
-msgstr "Recharger le jeu de tuiles"
+msgstr "Erreur de chargement du jeu de tuiles"
 
 #: client/mapview.cpp:630
 #, qt-format
@@ -2891,10 +2871,12 @@ msgid ""
 "There was an error loading tileset \"%1\". You can still use it, but it "
 "might be incomplete."
 msgstr ""
+"Il y a eu une erreur lors du chargement du jeu de tuiles « %1 ». Vous pouvez"
+" toujours l'utiliser, mais il pourrait être incomplet."
 
 #: client/mapview.cpp:637
 msgid "Open tileset &debugger"
-msgstr ""
+msgstr "Ouvrir le &débogueur de jeu de tuiles"
 
 #: client/menu.cpp:135 client/plrdlg.cpp:512 client/plrdlg_common.cpp:503
 #: data/helpdata.txt:1057
@@ -2942,9 +2924,8 @@ msgid "Load another tileset"
 msgstr "Charger un autre jeu de tuiles"
 
 #: client/menu.cpp:576
-#, fuzzy
 msgid "Tileset debugger"
-msgstr "Erreur de jeu de tuiles"
+msgstr "Débogueur de jeu de tuiles"
 
 #: client/menu.cpp:579
 msgid "Save Options Now"
@@ -3002,10 +2983,9 @@ msgstr "Dézoommer"
 msgid "Scale fonts"
 msgstr "Mettre les polices à l'échelle"
 
-#: client/menu.cpp:646
-#, fuzzy
-msgid "Citybar style"
-msgstr "Styles des villes :"
+#: client/menu.cpp:646 client/options.cpp:1494
+msgid "City bar style"
+msgstr "Style des barres de ville"
 
 #: client/menu.cpp:659
 msgid "City Outlines"
@@ -3385,14 +3365,12 @@ msgid "Auto Worker"
 msgstr "Auto Travailleur"
 
 #: client/menu.cpp:2159
-#, fuzzy
 msgid "New unit name:"
-msgstr "Nouveau vote d'équipe"
+msgstr "Nouveau nom de l'unité :"
 
 #: client/menu.cpp:2159
-#, fuzzy
 msgid "Rename Unit"
-msgstr "Renommer la ville"
+msgstr "Renommer l'unité"
 
 #: client/menu.cpp:2250
 msgid "Didn't find any trade route to establish"
@@ -3585,15 +3563,14 @@ msgid "Sound plugin"
 msgstr "Plugin de son"
 
 #: client/options.cpp:1448
-#, fuzzy
 msgid ""
 "If you have a problem with sound, try changing the sound plugin.  The new "
 "plugin won't take effect until you restart Freeciv21.  Changing this is the "
 "same as using the -P command-line option."
 msgstr ""
 "Si vous avez des problèmes de son, essayez de changer le plugin de son. Le "
-"nouveau plugin prendra effet au prochain démarrage de Freeciv. Changer ceci "
-"revient au même qu'utiliser l'option -P en ligne de commande."
+"nouveau plugin prendra effet au prochain démarrage de Freeciv21. Changer "
+"ceci revient au même qu'utiliser l'option -P en ligne de commande."
 
 #: client/options.cpp:1453
 msgid "The chat log file"
@@ -3656,15 +3633,9 @@ msgstr ""
 "une telle carte, auquel cas ceci revient au même qu'utiliser le paramètre -t "
 "en ligne de commande."
 
-#: client/options.cpp:1494
-#, fuzzy
-msgid "City bar style"
-msgstr "Styles des villes :"
-
 #: client/options.cpp:1495
-#, fuzzy
 msgid "Selects the style of the city bar."
-msgstr "Sélectionnez la couleur du texte"
+msgstr "Sélectionne le style des barres de ville."
 
 #: client/options.cpp:1500
 msgid "Draw city outlines"
@@ -3916,18 +3887,16 @@ msgstr ""
 "sur les nations."
 
 #: client/options.cpp:1614
-#, fuzzy
 msgid "Scale fonts when zooming"
-msgstr "Mettre les polices à l'échelle"
+msgstr "Mettre les polices à l'échelle lors du zoom"
 
 #: client/options.cpp:1615
-#, fuzzy
 msgid ""
 "When this option is set, the fonts and city descriptions will be scaled when "
 "the map is zoomed."
 msgstr ""
-"Si cette option est activée, alors la carte aura automatiquement le focus "
-"dès que la souris passera au-dessus d'elle."
+"Si cette option est activée, les polices et la description des villes seront "
+"mises à l'échelle quand la carte est agrandie."
 
 # AR
 #: client/options.cpp:1620
@@ -4403,13 +4372,12 @@ msgstr ""
 "des pistes pour le menu."
 
 #: client/options.cpp:1837
-#, fuzzy
 msgid "Sound volume"
-msgstr "Plugin de son"
+msgstr "Volume sonore"
 
 #: client/options.cpp:1838
 msgid "Volume scale from 0-100"
-msgstr ""
+msgstr "Échelle de volume de 0 à 100"
 
 #: client/options.cpp:1843
 msgid "Autoaccept soundset suggestions"
@@ -4604,15 +4572,17 @@ msgstr ""
 "boutons minimiser/maximiser/etc. seront placés sur la barre de menu."
 
 #: client/options.cpp:1938
-#, fuzzy
 msgid "Change all fonts size"
-msgstr "Changer en %s"
+msgstr "Modifier la taille de toutes les polices"
 
 #: client/options.cpp:1939
 msgid ""
-"Change size of all fonts at once by given percent.That options is not "
-"unsaveable. Hit Apply buttonafter changing this."
+"Change size of all fonts at once by given percent. This option cannot be "
+"saved. Hit the Apply button after changing this."
 msgstr ""
+"Change la taille de toutes les polices par le pourcentage donné. Cette "
+"option ne peut être sauvegardée. Appuyez sur « Appliquer » après l'avoir "
+"modifiée."
 
 #: client/options.cpp:1943
 msgid "Default font"
@@ -4828,14 +4798,14 @@ msgid "Connect to network game"
 msgstr "Se connecter à une partie en réseau"
 
 #: client/page_main.cpp:47
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1%2, Qt client"
-msgstr "%s%s, client Qt."
+msgstr "%1%2, client Qt."
 
 #: client/page_main.cpp:49
-#, fuzzy, qt-format
+#, qt-format
 msgid "commit: %1"
-msgstr "commit : %s"
+msgstr "commit : %1"
 
 #: client/page_network.cpp:44
 msgid "Server Name"
@@ -5013,14 +4983,12 @@ msgid "(none)"
 msgstr "(aucun)"
 
 #: client/plrdlg.cpp:509
-#, fuzzy
 msgid "Ruler"
-msgstr "Chef :"
+msgstr "Chef :"
 
 #: client/plrdlg.cpp:514
-#, fuzzy
 msgid "Capital"
-msgstr "Capitale :"
+msgstr "Capitale :"
 
 #: client/plrdlg.cpp:518 client/plrdlg_common.cpp:508 server/plrhand.cpp:299
 msgid "Tax"
@@ -5096,7 +5064,7 @@ msgstr "?"
 #: client/plrdlg_common.cpp:391 client/plrdlg_common.cpp:419
 #: client/plrdlg_common.cpp:447 client/plrdlg_common.cpp:465
 msgid "-"
-msgstr ""
+msgstr "-"
 
 #: client/plrdlg_common.cpp:481
 msgid "?Player:Name"
@@ -5194,14 +5162,14 @@ msgid "No %s could be disbanded."
 msgstr "Aucun %s n'a pu être congédié."
 
 #: client/servers.cpp:283
-#, fuzzy, c-format
+#, c-format
 msgid "Latest %s release of Freeciv21 is %s, this is %s."
-msgstr "La dernière version %s de Freeciv est la %s, ceci est la %s."
+msgstr "La dernière version %s de Freeciv21 est la %s, ceci est la %s."
 
 #: client/servers.cpp:289
-#, fuzzy, c-format
+#, c-format
 msgid "There is no newer %s release of Freeciv21 available."
-msgstr "Il n'y a pas de version %s plus récente de Freeciv disponible."
+msgstr "Il n'y a pas de version %s plus récente de Freeciv21 disponible."
 
 #: client/servers.cpp:386
 #, c-format
@@ -5217,9 +5185,9 @@ msgid "Error connecting to metaserver"
 msgstr "Erreur de connexion au méta-serveur"
 
 #: client/servers.cpp:451 server/meta.cpp:232
-#, fuzzy, c-format
+#, c-format
 msgid "Error message: %s"
-msgstr "Message d'erreur de la discussion"
+msgstr "Message d'erreur : %s"
 
 #: client/shortcuts.cpp:57
 msgid "Show minimap"
@@ -5469,14 +5437,13 @@ msgid "Shortcuts options"
 msgstr "Options de raccourcis"
 
 #: client/shortcuts.cpp:626
-#, fuzzy
 msgid "Already in use"
-msgstr "Déjà ici."
+msgstr "Déjà utilisé"
 
 #: client/shortcuts.cpp:628
-#, fuzzy, qt-format
+#, qt-format
 msgid "\"%1\" is already assigned to \"%2\""
-msgstr "%1 est déjà affecté"
+msgstr "« %1 » est déjà affecté à « %2 »"
 
 #: client/spaceshipdlg.cpp:127
 msgid "Launch"
@@ -5493,52 +5460,52 @@ msgid "%s, team %s"
 msgstr "%s, équipe %s"
 
 #: client/text.cpp:161
-#, fuzzy, qt-format
+#, qt-format
 msgid "Location: (%1, %2) [%3]\n"
-msgstr "Lieu : (%d,%d) [%d]"
+msgstr "Emplacement : (%1, %2) [%3]\n"
 
 #: client/text.cpp:165
-#, fuzzy, qt-format
+#, qt-format
 msgid "Native coordinates: (%1, %2)\n"
-msgstr "Coordonnées natives (%d, %d)"
+msgstr "Coordonnées natives : (%1, %2)\n"
 
 #: client/text.cpp:172
-#, fuzzy, qt-format
+#, qt-format
 msgid "Terrain: %1"
-msgstr "Terrain : %1\n"
+msgstr "Terrain : %1"
 
 #: client/text.cpp:174
-#, fuzzy, qt-format
+#, qt-format
 msgid "Food/Prod/Trade: %1"
-msgstr "Nour/Prod/Comm : %1\n"
+msgstr "Nour/Prod/Comm : %1"
 
 #: client/text.cpp:198
 msgid "Our territory"
 msgstr "Notre territoire"
 
 #: client/text.cpp:202
-#, fuzzy, qt-format
+#, qt-format
 msgid "Territory of %1 (%2)"
-msgstr "Territoire des %s (%s)"
+msgstr "Territoire des %1 (%2)"
 
 #: client/text.cpp:230
-#, fuzzy, qt-format
+#, qt-format
 msgid "Territory of %1 (%2 | %3)"
-msgstr "Territoire des %s (%s | %s)"
+msgstr "Territoire des %1 (%2 | %3)"
 
 #: client/text.cpp:235
 msgid "Unclaimed territory"
 msgstr "Territoire non revendiqué"
 
 #: client/text.cpp:250
-#, fuzzy, qt-format
+#, qt-format
 msgid "City: %1 | %2 (%3)"
-msgstr "Ville : %s | %s (%s)"
+msgstr "Ville : %1 | %2 (%3)"
 
 #: client/text.cpp:280
-#, fuzzy, qt-format
+#, qt-format
 msgid "City: %1 | %2 (%3, %4)"
-msgstr "Ville : %s | %s (%s, %s)"
+msgstr "Ville : %1 | %2 (%3, %4)"
 
 #: client/text.cpp:296 client/text.cpp:304
 msgid " | Not occupied."
@@ -5549,99 +5516,98 @@ msgid " | Occupied."
 msgstr " | Occupé."
 
 #: client/text.cpp:318
-#, fuzzy, qt-format
+#, qt-format
 msgid "   with %1."
-msgstr "   avec %s."
+msgstr "   avec %1."
 
 #: client/text.cpp:329
-#, fuzzy, qt-format
+#, qt-format
 msgid "Trade from %1: %2"
-msgstr "Commerce de %s : %d"
+msgstr "Commerce de %1 : %2"
 
 #: client/text.cpp:341
-#, fuzzy, qt-format
+#, qt-format
 msgid "Infrastructure: %1"
-msgstr "Infrastructure : %1\n"
+msgstr "Infrastructure : %1"
 
 #: client/text.cpp:346
-#, fuzzy, qt-format
+#, qt-format
 msgid "Activity: %1"
-msgstr "Activité : %s"
+msgstr "Activité : %1"
 
 #: client/text.cpp:359
-#, fuzzy
 msgid "Can move in "
-msgstr "Changer :"
+msgstr "Peut bouger dans "
 
 #: client/text.cpp:368
-#, fuzzy, qt-format
+#, qt-format
 msgid "Unit: %1 #%2 | %3 (%4)"
-msgstr "Unité: %s | %s (%s)"
+msgstr "Unité : %1 #%2 | %3 (%4)"
 
 #: client/text.cpp:377
-#, fuzzy, qt-format
+#, qt-format
 msgid "Unit: %1 #%2 \"%3\" | %4 (%5)"
-msgstr "Unité: %s | %s (%s)"
+msgstr "Unité : %1 #%2 « %3 » | %4 (%5)"
 
 #: client/text.cpp:391
-#, fuzzy, qt-format
+#, qt-format
 msgid "from %1 | %2 people"
-msgstr "de %s | origine %s"
+msgstr "de %1 | origine %2"
 
 #: client/text.cpp:399 client/text.cpp:575
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 people"
-msgstr "origine %s"
+msgstr "origine %1"
 
 #: client/text.cpp:405 client/text.cpp:567
-#, fuzzy, qt-format
+#, qt-format
 msgid "from %1"
-msgstr "de %s"
+msgstr "de %1"
 
 #: client/text.cpp:433
-#, fuzzy, qt-format
+#, qt-format
 msgid "Unit: %1 | %2 (%3, %4)"
-msgstr "Unité: %s | %s (%s, %s)"
+msgstr "Unité : %1 | %2 (%3, %4)"
 
 #: client/text.cpp:461
-#, fuzzy, qt-format
+#, qt-format
 msgid "Chance to win: A:%1% D:%2%"
-msgstr "Chances de gagner : A:%d%% D:%d%%"
+msgstr "Chances de gagner : A:%1% D:%2%"
 
 #: client/text.cpp:470
-#, fuzzy, qt-format
+#, qt-format
 msgid "A:%1 D:%2 FP:%3 HP:%4/%5"
-msgstr "A:%d D:%d PF:%d PV:%d/%d"
+msgstr "A:%1 D:%2 PF:%3 PV:%4/%5"
 
 #: client/text.cpp:487
-#, fuzzy, qt-format
+#, qt-format
 msgid "Probable bribe cost: %1"
-msgstr "Coût probable de corruption : %d"
+msgstr "Coût probable de corruption : %1"
 
 #: client/text.cpp:493
-#, fuzzy, qt-format
+#, qt-format
 msgid "Estimated bribe cost: > %1"
-msgstr "Coût estimé de la corruption : > %d"
+msgstr "Coût estimé de la corruption : > %1"
 
 #: client/text.cpp:501
-#, fuzzy, qt-format
+#, qt-format
 msgid "  (%1 more)"
-msgstr "  (%d de plus)"
+msgstr "  (%1 de plus)"
 
 #: client/text.cpp:521
-#, fuzzy, qt-format
+#, qt-format
 msgid "far from %1"
-msgstr "loin de %s"
+msgstr "loin de %1"
 
 #: client/text.cpp:525
-#, fuzzy, qt-format
+#, qt-format
 msgid "near %1"
-msgstr "près de %s"
+msgstr "près de %1"
 
 #: client/text.cpp:529
-#, fuzzy, qt-format
+#, qt-format
 msgid "in %1"
-msgstr "à %s"
+msgstr "à %1"
 
 #: client/text.cpp:814 client/text.cpp:818
 msgid "Progress: no research"
@@ -5656,120 +5622,120 @@ msgid "Progress: none"
 msgstr "Avancement : aucun"
 
 #: client/text.cpp:854
-#, fuzzy, qt-format
+#, qt-format
 msgid "Bulbs produced per turn: %1"
-msgstr "Points de recherche produits par tour : %d"
+msgstr "Points de recherche produits par tour : %1"
 
 #: client/text.cpp:859
-#, fuzzy, qt-format
+#, qt-format
 msgid " (needed for technology upkeep: %1)"
-msgstr " (nécessaire pour le maintien de la technologie : %d)"
+msgstr " (nécessaire pour le maintien de la technologie : %1)"
 
 #: client/text.cpp:885
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1/- (never)"
-msgstr "%d/- (jamais)"
+msgstr "%1/- (jamais)"
 
 #: client/text.cpp:907
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1/%2 (never)"
-msgstr "%d/%d (jamais)"
+msgstr "%1/%2 (jamais)"
 
 #: client/text.cpp:971
-#, fuzzy, qt-format
+#, qt-format
 msgid "Year: %1 (T%2)"
-msgstr "Année : %s (T%d)"
+msgstr "Année : %1 (T%2)"
 
 #: client/text.cpp:981
-#, fuzzy, qt-format
+#, qt-format
 msgid "Tax: %1 Lux: %2 Sci: %3"
-msgstr "Tax : %d Lux : %d Sci : %d"
+msgstr "Tax : %1 Lux : %2 Sci : %3"
 
 #: client/text.cpp:989 client/text.cpp:997
 msgid "Moving: Nobody"
 msgstr "Déplacement : Personne"
 
 #: client/text.cpp:991 client/text.cpp:999
-#, fuzzy, qt-format
+#, qt-format
 msgid "Moving: %1"
-msgstr "Déplacement : %s"
+msgstr "Déplacement : %1"
 
 #: client/text.cpp:1006
 msgid "(Click for more info)"
 msgstr "(Cliquez pour plus d'info)"
 
 #: client/text.cpp:1022
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 People"
-msgstr "%s Personnes"
+msgstr "Peuple %1"
 
 #: client/text.cpp:1026
-#, fuzzy, qt-format
+#, qt-format
 msgid "Year: %1"
-msgstr "Année : %s"
+msgstr "Année : %1"
 
 #: client/text.cpp:1028
-#, fuzzy, qt-format
+#, qt-format
 msgid "Turn: %1"
-msgstr "Tour: %d"
+msgstr "Tour : %1"
 
 #: client/text.cpp:1035
-#, fuzzy, qt-format
+#, qt-format
 msgid "Gold: %1"
-msgstr "Or: %d"
+msgstr "Or : %1"
 
 #: client/text.cpp:1038
-#, fuzzy, qt-format
+#, qt-format
 msgid "Net Income: %1"
-msgstr "Revenu brut : %d"
+msgstr "Revenu net : %1"
 
 #: client/text.cpp:1043
-#, fuzzy, qt-format
+#, qt-format
 msgid "Tax rates: Gold:%1% Luxury:%2% Science:%3%"
-msgstr "Taxes : Or:%d%% Luxe:%d%% Science:%d%%"
+msgstr "Taxes : Or:%1% Luxe:%2% Science:%3%"
 
 #: client/text.cpp:1049
-#, fuzzy, qt-format
+#, qt-format
 msgid "Researching %1: %2"
-msgstr "Recherche %s : %s"
+msgstr "Recherche %1 : %2"
 
 #: client/text.cpp:1056
-#, fuzzy, qt-format
+#, qt-format
 msgid "Bulbs per turn: %1 - %2 = %3"
-msgstr "Points de recherche par tour : %d - %d = %d"
+msgstr "Points de recherche par tour : %1 - %2 = %3"
 
 #: client/text.cpp:1062
-#, fuzzy, qt-format
+#, qt-format
 msgid "Bulbs per turn: %1"
-msgstr "Points de recherche par tour : %d"
+msgstr "Points de recherche par tour : %1"
 
 #: client/text.cpp:1072
-#, fuzzy, qt-format
+#, qt-format
 msgid "Culture: %1 (%2/turn)"
-msgstr "Culture : %d (%+d/tour)"
+msgstr "Culture : %1 (%2/tour)"
 
 #: client/text.cpp:1082
-#, fuzzy, qt-format
+#, qt-format
 msgid "Global warming chance: %1% (%2%/turn)"
-msgstr "Risque de réchauffement de la planète : %d%% (%+d%%/tour)"
+msgstr "Risque de réchauffement de la planète : %1% (%2%/tour)"
 
 #: client/text.cpp:1086
 msgid "Global warming deactivated."
 msgstr "Réchauffement de la planète désactivé."
 
 #: client/text.cpp:1092
-#, fuzzy, qt-format
+#, qt-format
 msgid "Nuclear winter chance: %1% (%2%/turn)"
-msgstr "Risque d'un hiver nucléaire : %d%% (%+d%%/tour)"
+msgstr "Risque d'un hiver nucléaire : %1% (%2%/tour)"
 
 #: client/text.cpp:1096
 msgid "Nuclear winter deactivated."
 msgstr "Hiver nucléaire désactivé."
 
 #: client/text.cpp:1100
-#, fuzzy, qt-format
+#, qt-format
 msgid "Government: %1"
-msgstr "Gouvernement: %s"
+msgstr "Gouvernement: %1"
 
 #: client/text.cpp:1117
 msgid "No units to upgrade!"
@@ -5780,58 +5746,58 @@ msgid "None of these units may be upgraded."
 msgstr "Aucune de ces unités ne peut être mise à jour."
 
 #: client/text.cpp:1188
-#, fuzzy, qt-format
+#, qt-format
 msgid "Population:      %1"
-msgstr "Population :      %5d"
+msgstr "Population :      %1"
 
 #: client/text.cpp:1192
-#, fuzzy, qt-format
+#, qt-format
 msgid "Support:         %1 %"
-msgstr "Support :         %5d %%"
+msgstr "Support :         %1 %"
 
 #: client/text.cpp:1198
-#, fuzzy, qt-format
+#, qt-format
 msgid "Energy:          %1 %"
-msgstr "Énergie :         %5d %%"
+msgstr "Énergie :         %1 %"
 
 #: client/text.cpp:1208
-#, fuzzy, qt-format
+#, qt-format
 msgid "Travel time:     %1 years"
-msgstr "Durée du voyage : %5.1f années"
+msgstr "Durée du voyage : %1 ans"
 
 #: client/text.cpp:1214
 msgid "Travel time:        N/A     "
 msgstr "Durée du voyage : ND"
 
 #: client/text.cpp:1218
-#, fuzzy, qt-format
+#, qt-format
 msgid "Success prob.:   %1 %"
-msgstr "Prob. de succès : %5d %%"
+msgstr "Prob. de succès : %1 %"
 
 #: client/text.cpp:1223
-#, fuzzy, qt-format
+#, qt-format
 msgid "Year of arrival: %1"
-msgstr "Année d'arrivée : %8s"
+msgstr "Année d'arrivée : %1"
 
 #: client/text.cpp:1279
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 one time bonus + %2 trade"
-msgstr "%d bonus ponctuel + %d commerce"
+msgstr "%1 bonus ponctuel + %2 commerce"
 
 #: client/text.cpp:1291
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 one time bonus"
-msgstr "%d bonus ponctuel"
+msgstr "%1 bonus ponctuel"
 
 #: client/text.cpp:1299
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 remaining"
-msgstr "%d restants"
+msgstr "%1 restants"
 
 #: client/text.cpp:1344
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 by default"
-msgstr "Zoom par défaut"
+msgstr "%1 par défaut"
 
 #: client/text.cpp:1351
 #, qt-format
@@ -5840,100 +5806,101 @@ msgstr "%1 de %2"
 
 #: client/text.cpp:1378
 msgid "Infrastructure can have an effect on citizen happiness."
-msgstr ""
+msgstr "L'infrastructure peut avoir un effet sur le bonheur des citoyens."
 
 #: client/text.cpp:1385
 msgid "This city doesn't receive any such bonus."
-msgstr ""
+msgstr "Cette ville ne reçoit aucun bonus de ce type."
 
 #: client/text.cpp:1418
 msgid "The presence of enemy citizens can create additional unhappiness."
 msgstr ""
+"La présence de citoyens ennemis peut créer du mécontentement supplémentaire."
 
 #: client/text.cpp:1423
 msgid "However, it is not the case in this city."
-msgstr ""
+msgstr "Ce n'est pas le cas dans cette ville."
 
 #: client/text.cpp:1448
-#, fuzzy
 msgid "There is <b>no enemy citizen</b> in this city."
-msgstr "Nécessite au moins citoyen %s dans la ville."
+msgstr "Il n'y a <b>pas de citoyen ennemi</b> dans cette ville."
 
 #: client/text.cpp:1487
 msgid "Up to one content citizen in this city can be made happy."
-msgstr ""
+msgstr "Jusqu'à un citoyen content dans cette ville peut être rendu heureux."
 
 #: client/text.cpp:1507
 msgid ""
 "No citizens in this city can ever be unhappy or angry. Any unhappy or angry "
 "citizen are automatically made content."
 msgstr ""
+"Aucun citoyen de cette ville ne peut jamais être mécontent ou fâché. Tout "
+"citoyen mécontent ou fâché est automatiquement rendu content."
 
 #: client/text.cpp:1528
 msgid "Happiness is currently not changed at this stage."
-msgstr ""
+msgstr "Le bonheur n'est pas modifié à cette étape pour l'instant."
 
 #: client/text.cpp:1547
 msgid "All cities start with all citizens unhappy."
-msgstr ""
+msgstr "Toute ville débute avec tous les citoyens heureux."
 
 #: client/text.cpp:1605
 msgid ""
 "If there are no more content citizens, an unhappy citizen becomes angry "
 "instead."
 msgstr ""
+"S'il n'y a plus de citoyens contents, un citoyen mécontent devient fâché à "
+"la place."
 
 #: client/text.cpp:1629
 #, qt-format
 msgid "You have %1 cities, thus all citizens are unhappy."
-msgstr ""
+msgstr "Vous avez %1 villes, donc tous les citoyens sont mécontents."
 
 #: client/text.cpp:1649
 #, qt-format
 msgid "In this city of size %1, <b>all citizens are content.</b>"
-msgstr ""
+msgstr "Dans cette ville de taille %1, <b>tous les citoyens sont contents.</b>"
 
 #: client/text.cpp:1680
 #, qt-format
 msgid "In this city of size %1, <b>all citizens are angry.</b>"
-msgstr ""
+msgstr "Dons cette ville de taille %1, <b>tous les citoyens sont fâchés.</b>"
 
 #: client/text.cpp:1725
-#, fuzzy
 msgid "Having more cities would not create more unhappiness."
-msgstr "Plus de villes ne causeront pas plus de citoyens mécontents."
+msgstr "Plus de villes ne causeront pas plus de mécontentement."
 
 #: client/text.cpp:1802
-#, fuzzy
 msgid "Every military unit in the city may impose martial law."
-msgstr "%d unité militaire peut imposer la loi martiale."
+msgstr "Chaque unité militaire dans cette ville peut imposer la loi martiale."
 
 #: client/text.cpp:1856
-#, fuzzy
 msgid "Military units have no happiness effect."
-msgstr "La présence d'unités militaires n'a pas d'effet sur le bonheur. "
+msgstr "Les unités militaires n'ont pas d'effet sur le mécontentement."
 
 #: client/text.cpp:1860
-#, fuzzy
 msgid "Military units in the field may cause unhappiness."
-msgstr "Les unités militaires en campagne peuvent causer du mécontentent. "
+msgstr "Des unités militaires en campagne peuvent causer du mécontentent. "
 
 #: client/text.cpp:1914
-#, fuzzy
 msgid ""
 "Currently, military units do not cause additional unhappiness in this city."
 msgstr ""
-" * Les unités militaires causent %d fois plus de mécontentement que la "
-"normale.\n"
+"En ce moment, les unités militaires ne créent pas de mécontentement "
+"supplémentaire dans cette ville."
 
 #: client/text.cpp:1929
 #, qt-format
 msgid "For each %1 luxury good produced in a city, a citizen becomes happier."
 msgstr ""
+"Pour chaque %1 biens de luxe produits dans une ville, un citoyen est rendu "
+"plus heureux."
 
 #: client/text.cpp:1938
 msgid "This city generates no luxury goods."
-msgstr ""
+msgstr "Cette ville ne génère pas de biens de luxe."
 
 #: client/themes.cpp:156
 #, c-format
@@ -6170,19 +6137,17 @@ msgid "Adding city %1 to trade planning"
 msgstr "Ajout de la ville %1 au planning commercial"
 
 #: client/tradecalculation.cpp:130 client/tradecalculation.cpp:146
-#, fuzzy, qt-format
+#, qt-format
 msgid "Removing city %1 from trade planning"
-msgstr "Suppression de la ville %s du planning commercial"
+msgstr "Suppression de la ville %1 du planning commercial"
 
 #: client/unitreport.cpp:71
-#, fuzzy
 msgid "Mp"
-msgstr "Les cartes"
+msgstr "Mouv."
 
 #: client/unitreport.cpp:71
-#, fuzzy
 msgid "Time left"
-msgstr "Temps"
+msgstr "Temps restant"
 
 #: client/unitselect.cpp:177
 msgid "MP:"
@@ -6432,22 +6397,22 @@ msgstr ""
 #: common/actions.cpp:1399
 #, qt-format
 msgid "[%1% - %2%]"
-msgstr ""
+msgstr "[%1% - %2%]"
 
 #: common/actions.cpp:1432
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1%2 (name may be wrong)"
-msgstr "%s%s (le nom peut être erroné)"
+msgstr "%1%2 (le nom peut être erroné)"
 
 #: common/actions.cpp:1451
 #, qt-format
 msgid " (%1; %2)"
-msgstr ""
+msgstr " (%1; %2)"
 
 #: common/actions.cpp:1461 common/actions.cpp:1471
 #, qt-format
 msgid " (%1)"
-msgstr ""
+msgstr " (%1)"
 
 #: common/actions.cpp:1513
 #, qt-format
@@ -6455,11 +6420,10 @@ msgid "The probability of success is %1%."
 msgstr "La probabilité de succès est de %1%."
 
 #: common/actions.cpp:1524
-#, fuzzy, qt-format
+#, qt-format
 msgid "The probability of success is %1%, %2% or somewhere in between.%3"
 msgstr ""
-"La probabilité de success est de %.1f%%, %.1f%% ou quelque part entre les "
-"deux.%s"
+"La probabilité de succès est de %1%, %2% ou quelque part entre les deux.%3"
 
 #: common/actions.cpp:1532
 msgid ""
@@ -7106,9 +7070,9 @@ msgid "Too many AI modules. Max is %d."
 msgstr "Trop de module d'IA. Le maximum est %d."
 
 #: common/ai.cpp:124
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown AI type %s, using \"classic\" instead"
-msgstr "Type d'unité inconnue \"%s\" dans la liste de travail"
+msgstr "Type IA inconnue « %s », utilisation de « classic » à la place"
 
 #: common/calendar.cpp:122 common/calendar.cpp:126
 #, c-format
@@ -7116,14 +7080,14 @@ msgid "%d %s"
 msgstr "%d %s"
 
 #: common/clientutils.cpp:201
-#, fuzzy, qt-format
+#, qt-format
 msgid "Pillage %1(%2)"
-msgstr "Piller %s (%d)"
+msgstr "Piller %1 (%2)"
 
 #: common/clientutils.cpp:202
-#, fuzzy, qt-format
+#, qt-format
 msgid "Clean %1(%2)"
-msgstr "Nettoyer %s (%d)"
+msgstr "Nettoyer %1 (%2)"
 
 #: common/events.cpp:46
 #, c-format
@@ -7496,9 +7460,8 @@ msgid "Action failed"
 msgstr "Action échouée"
 
 #: common/events.cpp:173
-#, fuzzy
 msgid "Sentried units awaken"
-msgstr "Veiller"
+msgstr "Unités en veilles réveillées"
 
 #: common/events.cpp:175 server/stdinhand.cpp:4460
 msgid "New vote"
@@ -7884,9 +7847,9 @@ msgid "This ruleset has no default veteran levels defined."
 msgstr "Ces règles du jeu n'ont pas de niveaux de vétérans définis par défaut."
 
 #: common/helpdata.cpp:463
-#, fuzzy, c-format
+#, c-format
 msgid "This is %s."
-msgstr "%s est %s"
+msgstr "Ceci est %s."
 
 #: common/helpdata.cpp:466
 #, c-format
@@ -7901,23 +7864,26 @@ msgstr ""
 msgid ""
 "This instance of Freeciv21 searches the following directories for data files:"
 msgstr ""
+"Cette instance de Freeciv21 recherche des fichiers de données dans les "
+"dossiers suivants :"
 
 #: common/helpdata.cpp:478
-#, fuzzy
 msgid "(does not exist)"
-msgstr "L'unité %d n'existe pas."
+msgstr "(n'existe pas)"
 
 #: common/helpdata.cpp:481
 msgid "(user)"
-msgstr ""
+msgstr "(utilisateur)"
 
 #: common/helpdata.cpp:484
 msgid "(system)"
-msgstr ""
+msgstr "(système)"
 
 #: common/helpdata.cpp:489
 msgid "Note that for multiplayer games, the server may use different paths."
 msgstr ""
+"Notez que pour des parties multijoueur, le serveur peut utiliser des chemins "
+"différents."
 
 #: common/helpdata.cpp:603
 #, c-format
@@ -8001,17 +7967,17 @@ msgstr "Les règles du jeu actuelles n'ont pas de résumé."
 
 #: common/helpdata.cpp:1019
 msgid "The following rules contribute to the value of this effect:\n"
-msgstr ""
+msgstr "Les règles suivantes contribuent à la valeur de cet effet:\n"
 
 #: common/helpdata.cpp:1024
 #, qt-format
 msgid "* %1 by default\n"
-msgstr ""
+msgstr "* %1 par défaut\n"
 
 #: common/helpdata.cpp:1031
-#, fuzzy, qt-format
+#, qt-format
 msgid "* %1 with %2\n"
-msgstr "   avec %s."
+msgstr "* %1 avec %2\n"
 
 #: common/helpdata.cpp:1142
 #, c-format
@@ -10965,14 +10931,14 @@ msgid "Prevented by terrain on which alteration %s can be made."
 msgstr "Empêché par un terrain sur lequel l'altération %s est possible."
 
 #: common/reqtext.cpp:2840
-#, fuzzy, c-format
+#, c-format
 msgid "Applies to the \"%s\" vision layer."
-msgstr "S'applique à l'action \"%s\"."
+msgstr "S'applique au type de vision « %s »."
 
 #: common/reqtext.cpp:2845
-#, fuzzy, c-format
+#, c-format
 msgid "Doesn't apply to the \"%s\" vision layer."
-msgstr "Ne s'applique pas à l'action \"%s\"."
+msgstr "Ne s'applique pas au type de vision « %s »."
 
 #: common/requirements.cpp:3569
 msgid "the requirement vector"
@@ -11147,9 +11113,9 @@ msgid "Future Tech. %d"
 msgstr "Techno. Future %d"
 
 #: common/server_settings.cpp:160
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 is %2"
-msgstr "%s est %s"
+msgstr "%1 est %2"
 
 #: common/server_settings.cpp:162 server/settings.cpp:563
 msgid "enabled"
@@ -11166,9 +11132,9 @@ msgid "Team %d"
 msgstr "Équipe %d"
 
 #: common/team.cpp:413 common/team.cpp:416
-#, fuzzy, qt-format
+#, qt-format
 msgid "team %1"
-msgstr "équipe %s"
+msgstr "équipe %1"
 
 #: common/tech.h:74
 msgid "Bonus_Tech"
@@ -11285,14 +11251,14 @@ msgstr ""
 "peut pas transporter."
 
 #: common/unittype.cpp:1350
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 or similar units"
-msgstr "unités %s ou similaires"
+msgstr "%1 ou unités similaires"
 
 #: common/unittype.cpp:1353
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 and similar units"
-msgstr "unités %s et similaires"
+msgstr "%1 et unités similaires"
 
 #: common/unittype.h:50
 msgid "?uclassflag:TerrainSpeed"
@@ -11576,23 +11542,23 @@ msgid "?unitflag:Hunter"
 msgstr "Chasseur"
 
 #: common/version.cpp:38
-#, fuzzy, c-format
+#, c-format
 msgid "Freeciv21 version %s %s"
-msgstr "Freeciv version %s %s"
+msgstr "Freeciv21 version %s %s"
 
 #: common/version.cpp:39
 msgid "(beta version)"
 msgstr "(version bêta)"
 
 #: common/version.cpp:41
-#, fuzzy, c-format
+#, c-format
 msgid "Freeciv21 version %s (%s)"
-msgstr "Freeciv version %s (%s)"
+msgstr "Freeciv21 version %s (%s)"
 
 #: common/version.cpp:44
-#, fuzzy, c-format
+#, c-format
 msgid "Freeciv21 version %s"
-msgstr "Freeciv version %s"
+msgstr "Freeciv21 version %s"
 
 #: common/version.cpp:57
 msgid "betatest version "
@@ -11651,22 +11617,22 @@ msgid "December"
 msgstr "Décembre"
 
 #: common/version.cpp:106
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "THIS IS A BETA VERSION\n"
 "Freeciv21 %s will be released in %s, at %s"
 msgstr ""
 "CECI EST UNE VERSION BÊTA\n"
-"Freeciv %s sortira en %s, sur %s"
+"Freeciv21 %s sortira en %s, sur %s"
 
 #: common/version.cpp:111
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "THIS IS A BETA VERSION\n"
 "Freeciv21 %s will be released at %s"
 msgstr ""
 "CECI EST UNE VERSION BÊTA\n"
-"Freeciv %s sortira sur %s"
+"Freeciv21 %s sortira sur %s"
 
 #: data/alien/buildings.ruleset:66
 msgid "Antigrav Port"
@@ -14141,9 +14107,8 @@ msgstr "Les rochers dans la zone ont une lueur claire inhabituelle."
 #: data/civ2civ3/terrain.ruleset:2131 data/classic/terrain.ruleset:1906
 #: data/multiplayer/terrain.ruleset:1878 data/sandbox/terrain.ruleset:2160
 #: data/sandbox/terrain.ruleset:2171
-#, fuzzy
 msgid "NoAggressive"
-msgstr "Pas d'avancement"
+msgstr "NoAggressive"
 
 #: data/alien/units.ruleset:27 data/civ1/units.ruleset:24
 #: data/civ2/units.ruleset:29 data/civ2civ3/units.ruleset:35
@@ -24164,6 +24129,21 @@ msgid ""
 " - If playing a multi-player game with only humans, victory can be declared "
 "based on diplomatic factors and other pre-set game rules."
 msgstr ""
+" - Comme dans d'autres jeux de conquête et d'expansion, vous êtes déclaré"
+" victorieux par défaut quand la dernière ville et la dernière unité de chaque"
+" autre civilisation sont détruites.\n"
+" - Lorsque le progrès technologique vous a fait rentrer dans l'âge spatial,"
+" vous pouvez lancer un vaisseau spatial vers Alpha du Centaure. La première"
+" civilisation dont le vaisseau atteint le système gagne la partie. NOTE: La"
+" victoire spatiale est définie par les règles du jeu et peut donc ne pas être"
+" activée pour toutes les parties.\n"
+" - En l'absence d'un autre moyen de déterminer la victoire, le jeu se"
+" terminera après 5000 tours is aucun vaisseau spatial n'a encore été lancé."
+" Les civilisations survivantes sont alors notées, et celle qui a le plus haut"
+" score est la gagnante.\n"
+" - Pour les parties multijoueur avec seulement des humains, la victoire peut"
+" être déclarée sur base de facteurs diplomatiques et d'autres règles"
+" prédéfinies."
 
 #: data/helpdata.txt:59
 #, fuzzy
@@ -24229,7 +24209,7 @@ msgstr ""
 
 #: data/helpdata.txt:84
 msgid " 0. Choosing the first city site."
-msgstr ""
+msgstr "0. Choisir le site de la première ville."
 
 #: data/helpdata.txt:86
 #, fuzzy
@@ -24255,7 +24235,7 @@ msgstr ""
 
 #: data/helpdata.txt:92
 msgid " 1. Mapping the countryside."
-msgstr ""
+msgstr "1. Explorer le voisinage. "
 
 #: data/helpdata.txt:94
 #, fuzzy
@@ -24277,9 +24257,8 @@ msgstr ""
 "partie avec un Explorateur, utilisez-le à cet effet !"
 
 #: data/helpdata.txt:99
-#, fuzzy
 msgid " 2. Defending the cities."
-msgstr "Afficher les villes"
+msgstr " 2. Défendre les villes."
 
 #: data/helpdata.txt:101
 #, fuzzy
@@ -24317,7 +24296,7 @@ msgstr ""
 
 #: data/helpdata.txt:111
 msgid " 3. Deciding which units to build first."
-msgstr ""
+msgstr "3. Décider quelles unités construire en premier."
 
 #: data/helpdata.txt:113
 #, fuzzy
@@ -24352,7 +24331,7 @@ msgstr ""
 
 #: data/helpdata.txt:122
 msgid " 4. Improving the land."
-msgstr ""
+msgstr "4. Améliorer le terrain."
 
 #: data/helpdata.txt:124
 #, fuzzy
@@ -24378,7 +24357,7 @@ msgstr ""
 
 #: data/helpdata.txt:130
 msgid " 5. Deciding where to build cities."
-msgstr ""
+msgstr "5. Décider où construire des villes."
 
 #: data/helpdata.txt:132
 #, fuzzy
@@ -24407,7 +24386,7 @@ msgstr ""
 
 #: data/helpdata.txt:141
 msgid " 6. Taking care of the cities."
-msgstr ""
+msgstr "6. Prendre soin des villes."
 
 #: data/helpdata.txt:143
 #, fuzzy
@@ -24461,6 +24440,19 @@ msgid ""
 "farming. This kind of individual city management style is called \"micro-"
 "management\" and is a very powerful mechanism of game play."
 msgstr ""
+"Si vous déplacez tous vos citoyens dans la ville et cliquez sur la tuile "
+"centrale du terrain, les citoyens seront réarrangés pour maximiser la "
+"production de nourriture. Vous pouvez aussi vouloir vérifier la quantité de "
+"nourriture dans le grenier et le surplus qu'une ville produit chaque tour. "
+"La ville perdra la nourriture en excès au changement de tour. Par exemple: "
+"Le grenier dans la ville est rempli à 18/20 (il faut 2 nourriture pour "
+"grandir à la taille suivante). C'est une bonne opportunité pour déplacer les "
+"citoyens pour obtenir un surplus de nourriture de +2. On pourrait y arriver "
+"en retirant un citoyen d'une ville produisant 2 nourriture et en le "
+"transformant en percepteur pendant un tour pour obtenir de l'or. Au tour "
+"suivant, ouvrez la ville et attribuez à nouveau le citoyen à l'agriculture. "
+"Ce type de gestion des villes est appelé « microgestion » et est un "
+"mécanisme de jeu très puissant."
 
 #: data/helpdata.txt:164
 #, fuzzy
@@ -24480,7 +24472,7 @@ msgstr ""
 
 #: data/helpdata.txt:169
 msgid " 7. Interacting with other players (diplomacy)."
-msgstr ""
+msgstr "7. Interagir avec les autres joueurs (diplomatie)."
 
 #: data/helpdata.txt:171
 #, fuzzy
@@ -24597,7 +24589,7 @@ msgstr ""
 
 #: data/helpdata.txt:208
 msgid " 8. Exploring the world."
-msgstr ""
+msgstr "8. Explorer le monde."
 
 #: data/helpdata.txt:210
 #, fuzzy
@@ -24622,7 +24614,7 @@ msgstr ""
 
 #: data/helpdata.txt:216
 msgid " 9. Things to keep in mind."
-msgstr ""
+msgstr "9. À garder en tête."
 
 #: data/helpdata.txt:218
 #, fuzzy
@@ -24645,7 +24637,7 @@ msgstr ""
 
 #: data/helpdata.txt:223
 msgid " 10. Making your own strategy for the game."
-msgstr ""
+msgstr "10. Créer sa propre stratégie pour la partie."
 
 #: data/helpdata.txt:225
 #, fuzzy
@@ -24667,7 +24659,7 @@ msgstr ""
 
 #: data/helpdata.txt:230
 msgid "  https://longturn.readthedocs.io/"
-msgstr ""
+msgstr "  https://longturn.readthedocs.io/"
 
 #: data/helpdata.txt:232
 msgid ""
@@ -24756,6 +24748,14 @@ msgid ""
 "Learn a new form of Government or look for any wonders that get rid of the "
 "penalty."
 msgstr ""
+"Le bénéfice net d'une tuile pour votre ville dépend de votre gouvernement et "
+"des bâtiments, améliorations de terrain, et merveilles présents. NOTE: Si "
+"vous cliquez sur une tuile avec la molette de la souris et voyez une valeur "
+"négative (par exemple: « 3(-1)/1/4(-1) »), cela signifie que vous utilisez "
+"un gouvernement qui ne peut pas exploiter toutes les ressources. C'est "
+"souvent appelé la « pénalité du despotisme ». Recherchez une nouvelle forme "
+"de gouvernement ou tâchez de trouver des merveilles qui suppriment la "
+"pénalité."
 
 #: data/helpdata.txt:265
 msgid ""
@@ -24776,6 +24776,10 @@ msgid ""
 "or trade points. Often when the terrain with a resource on it is improved, "
 "the tile will produce even more of something."
 msgstr ""
+"Les tuiles peuvent avoir des ressources naturelles en plus de leur terrain "
+"de base. Des ressources différentes produisent des résultats différents "
+"comme plus de nourriture, de production ou de commerce. Souvent, quand un "
+"terrain avec une ressource est amélioré, la tuile est encore plus productive."
 
 #: data/helpdata.txt:292
 msgid " Terrain Alterations"
@@ -25440,11 +25444,12 @@ msgid " Goods"
 msgstr " Biens"
 
 #: data/helpdata.txt:523
-#, fuzzy
 msgid ""
 "Goods are carried via trade routes and are generally not shown on the game "
 "map."
-msgstr "Les biens sont transportés par des routes commerciales."
+msgstr ""
+"Les biens sont transportés par des routes commerciales et ne sont en général "
+"pas affichés sur la carte du jeu."
 
 #: data/helpdata.txt:532
 msgid ""
@@ -25558,6 +25563,12 @@ msgid ""
 "  - is usually developed with roads and automatically upgraded to better "
 "transport systems as they are learned."
 msgstr ""
+"Dans les règles classiques, le centre de la ville produit toujours: - au "
+"moins un point de nourriture - un point de production indépendamment du "
+"terrain - gagne tout avantage que le terrain offre avec un système "
+"d'irrigation (les villes ont un système de gestion de l'eau intégré) - est "
+"en général amélioré avec une route et automatiquement amélioré vers de "
+"meilleurs systèmes de transport quand ils sont recherchés."
 
 #: data/helpdata.txt:569
 #, fuzzy
@@ -26086,12 +26097,35 @@ msgid ""
 "option \"mgr_dist\".\n"
 " - Trade surplus.\n"
 " - Luxury and science output.\n"
-" - The quantity of city improvements (and wonders), measured by build cost.\n"
+" - The total cost of city improvements and wonders in the city.\n"
 " - Depending on the ruleset, a number of other factors such as government "
 "type and city improvements may increase or decrease the desirability of "
 "cities. These are noted in other sections of the help. The classic ruleset "
 "contains no such effects."
 msgstr ""
+" - La taille de la ville.\n"
+" - Le nombre de citoyens heureux. De façon moins importante, les citoyens"
+" mécontents et fâchés réduisent l'attractivité d'une ville.\n"
+" - Dans les jeux de règles où la nationalité est activée, les citoyens ont"
+" une forte préférence pour aller dans des villes de leur propre nationalité.\n"
+" - La présence d'une merveille dans une ville augmente grandement son"
+" attractivité. Les merveilles supplémentaires ne contribuent que par l'effet"
+" plus faible de leur coût de construction.\n"
+" - Toutes choses égales par ailleurs, les capitales sont plus attractives que"
+" les autres villes. De plus, les citoyens n'émigrent jamais depuis une"
+" capitale.\n"
+" - Un risque de maladie élevé réduit l'attractivité d'une ville. - Le surplus"
+" de nourriture. Un manque de nourriture réduit l'attractivité d'une ville.\n"
+" - Les villes plus distantes sont moins attractives. La distance maximum"
+" qu'un citoyen peut parcourir pour émigrer est contrôlée par l'option du"
+" serveur « mgr_dist ».\n"
+" - Le surplus de commerce.\n"
+" - La production de luxe et de science.\n"
+" - Le coût total des améliorations et merveilles dans la ville.\n"
+" - Suivant les règles, d'autres facteurs tels que le type de gouvernement et"
+" certains bâtiments peuvent modifier l'attractivité des villes. Ceci est"
+" indiqué dans d'autre sections de l'aide. Les règles classiques ne"
+" contiennent pas d'effets de ce type."
 
 #: data/helpdata.txt:760
 #, fuzzy
@@ -26123,13 +26157,12 @@ msgstr ""
 "restante n'émigrera jamais vers une autre nation."
 
 #: data/helpdata.txt:768
-#, fuzzy
 msgid ""
 "Several of the details of migration can be changed with the \"mgr_*\" server "
 "options."
 msgstr ""
-"Plusieurs des réglages concertant l'émigration peuvent être modifiés avec "
-"les options du serveur 'mgr_*'."
+"Plusieurs des réglages concernant l'émigration peuvent être modifiés avec "
+"les options du serveur « mgr_* »."
 
 # AR
 #: data/helpdata.txt:773
@@ -26223,6 +26256,10 @@ msgid ""
 "Great Wonders in their often empire-wide effect, but are constructed much "
 "like city improvements and can be constructed by each player or AI."
 msgstr ""
+"Certaines règles offrent des petites merveilles. Les petites merveilles "
+"fonctionnent sensiblement comme les grandes merveilles dans leur effet qui "
+"couvre fréquemment l'empire entier, mais sont construites comme des "
+"bâtiments ordinaires et peuvent être construites par chaque joueur ou IA."
 
 #: data/helpdata.txt:816
 #, fuzzy
@@ -26245,15 +26282,30 @@ msgid ""
 "The value can be zero, meaning no attack is possible.\n"
 " - Defense (D): This is the comparative strength of the unit when it is a "
 "defender. The value can be zero, meaning no defense is possible.\n"
-" - Moves (M): This is the number of move points that the unit can move per "
+" - Moves (M): This is the number of move points that the unit can use per "
 "turn. Under certain rulesets, Terrain and Veteran level will impact how "
-"moves are consumed as a unit is moved around the map.\n"
+"moves are consumed as a unit moves around the map.\n"
 " - Hitpoints (H): This is effectively the constitution of the unit. The "
 "higher the value, the more \"hits\" the unit can take before being "
 "destroyed.\n"
 " - Firepower (F): This is a force multiplier for attack. Values greater than "
 "1 multiply the attack value by the firepower value."
 msgstr ""
+" - Attaque (A): Il s'agit de la force relative de l'unité lorsqu'elle "
+"attaque. La valeur peut être zéro, ce qui signifie qu'aucune attaque n'est"
+" possible.\n"
+" - Défense (D): Il s'agit de la force relative de l'unité quand elle "
+"défend. La valeur peut être zéro, ce qui signifie que l'unité ne peut pas se"
+" défendre.\n"
+" - Déplacements (M): C'est le nombre de points de déplacement que "
+"l'unité peut utiliser par tour. Dans certaines règles, le terrain et le "
+"niveau d'expérience affectent la façon dont les points de déplacement sont"
+" consommés quand une unité se déplace sur la carte.\n"
+" - Points de vie (PV): C'est la résilience d'une unité. Les unités avec plus"
+" de points de vie peuvent endurer plus de coups avant d'être détruites.\n"
+" - Puissance de feu (PF): C'est un multiplicateur de force pour les attaques."
+" Une valeur plus grande que 1 multiplie la valeur d'attaque par la puissance"
+" de feu."
 
 #: data/helpdata.txt:832
 #, fuzzy
@@ -26284,7 +26336,6 @@ msgstr ""
 "maintenance."
 
 #: data/helpdata.txt:840
-#, c-format
 msgid ""
 "TIP: If you need or want to disband a unit to eliminate its cost, do so "
 "inside a city. The city will receive 50% of the original production cost and "
@@ -26292,6 +26343,11 @@ msgid ""
 "disbandment. This also works for your units disbanded in an allied player's "
 "city."
 msgstr ""
+"CONSEIL: Si vous avez besoin ou voulez congédier une unité pour économiser "
+"son coût, faites-le dans une ville. La ville reçoit 50% du coût de "
+"production d'origine et l'applique au projet de construction en cours dans "
+"la ville au moment où l'unité est congédiée. Cela fonctionne aussi pour vos "
+"unités congédiées dans une ville alliée."
 
 #: data/helpdata.txt:844
 msgid ""
@@ -26482,11 +26538,16 @@ msgid ""
 " - If the defender is fortified, or is of a type that could fortify and is "
 "inside a city, its strength is multiplied by 1.5. This value is hard-coded."
 msgstr ""
+" - Si le défenseur est un vétéran, alors sa force est multipliée par le bonus"
+" associé avec son niveau d'avancement.\n"
+" - Ensuite, la force du défenseur est multipliée par le facteur de défense du"
+" terrain qu'il occupe, via le drapeau de classe d'unité « TerrainDefense ».\n"
+" - Si le défenseur est fortifié, ou s'il pourrait se fortifier et est dans"
+" une ville, sa force est multipliée par 1,5. Cette valeur est codée en dur."
 
 #: data/helpdata.txt:920
-#, fuzzy
 msgid "Now ruleset-specific bonuses are applied:"
-msgstr " - Des bonus spécifiques au règles du jeu sont appliqués :"
+msgstr "Ensuite, des bonus spécifiques au règles du jeu sont appliqués :"
 
 #: data/helpdata.txt:922
 msgid ""
@@ -26511,6 +26572,27 @@ msgid ""
 " - Finally, if the attacker is a fighter and the defender is a helicopter, "
 "the defender's strength is halved via the \"DefenseDivider\" combat bonus."
 msgstr ""
+" - La force du défenseur est doublée pour les Gardes qui défendent contre des"
+" unités montées, par le bonus de combat « DefenseMultiplier ».\n"
+" - Si le défenseur est un Croiseur EGIDE qui défend contre des unités"
+" aériennes (y compris les missiles et hélicoptères), sa force est quintuplée"
+" par le bonus de combat « DefenseMultiplier ».\n"
+" - La force du défenseur est encore doublée s'il est dans une ville avec une"
+" Batterie SAM et que l'attaquant est une unité aérienne (à part les"
+" Hélicoptères et les missiles), par un effet « Defend_Bonus ».\n"
+" - Une Défense SDI double la force du défenseur contre les attaques de"
+" missiles par un effet « Defend_Bonus ».\n"
+" - Si l'attaquant est une unité maritime et que le défenseur est dans une"
+" ville avec une Défense Côtière, la force du défenseur est doublée par un"
+" effet « Defend_Bonus ».\n"
+" - Contre les unités terrestres (autres que les Obusiers) et les"
+" Hélicoptères, les unités qui défendent une ville avec des Remparts ont leur"
+" force triplée par un effet « Defend_Bonus ».\n"
+" - Si le défenseur est dans une forteresse (mais pas dans une ville), sa"
+" force est doublée.\n"
+" - Finalement, si l'attaquant est un Chasseur et le défenseur un Hélicoptère,"
+" la force du défenseur est diminuée de moitié par un bonus de combat"
+" « DefenseDivider »."
 
 #: data/helpdata.txt:938
 #, fuzzy
@@ -26540,6 +26622,15 @@ msgid ""
 "attacking a land unit on land, the firepower of both is set to 1. This value "
 "is hard-coded."
 msgstr ""
+" - Si le défenseur est un bateau et est dans une ville, la puissance de feu"
+" de l'attaquant est doublée et celle du bateau est fixée à 1 par la propriété"
+" « BadCityDefender » du type d'unité.\n"
+" - Si un Chasseur attaque un Hélicoptère, la puissance de feu de"
+" l'Hélicoptère est fixée à 1 par le bonus de combat « FirePower1 ».\n"
+" - Si aucune des unités ne pourrait se déplacer là où se trouve l'autre,"
+" comme un bateau qui attaque une unité terrestre sur terre, la puissance de"
+" feu des deux est fixée à 1. Cette valeur est codée en "
+"dur."
 
 #: data/helpdata.txt:952
 #, fuzzy
@@ -26791,6 +26882,8 @@ msgstr ""
 #: data/helpdata.txt:1034
 msgid "In the following special cases, units can move regardless of ZOC:"
 msgstr ""
+"Dans les cas particuliers suivants, les unités peuvent se déplacer malgré la "
+"ZDC:"
 
 #: data/helpdata.txt:1036
 #, fuzzy
@@ -26985,11 +27078,11 @@ msgstr ""
 
 #: data/helpdata.txt:1114
 msgid "Effects"
-msgstr ""
+msgstr "Effets"
 
 #: data/helpdata.txt:1115
 msgid "Effects specify what buildings, wonders, etc. do."
-msgstr ""
+msgstr "Les effets spécifient ce que font les bâtiments, les merveilles, etc."
 
 #: data/helpdata.txt:1123
 msgid "Diplomacy"
@@ -27103,6 +27196,7 @@ msgstr ""
 #: data/helpdata.txt:1159
 msgid "There are a few ways to gain advances from other civilizations:"
 msgstr ""
+"Il y a plusieurs façons d'obtenir des technologies d'autres civilisations:"
 
 #: data/helpdata.txt:1161
 #, fuzzy
@@ -27126,6 +27220,10 @@ msgid ""
 "people. Many of the mentioned methods of technology transfer are also "
 "ruleset defined, meaning that they may be disabled."
 msgstr ""
+"Sinon, les technologies doivent être découvertes par les efforts de vos "
+"propres citoyens. Beaucoup des méthodes de transfert de technologie sont "
+"aussi définies par les règles du jeu, ce qui signifie qu'elles peuvent être "
+"désactivées."
 
 #: data/helpdata.txt:1169
 msgid ""
@@ -27342,6 +27440,9 @@ msgid ""
 "appropriate menu listing. They are shown here as a courtesy and may be "
 "inaccurate due to changes in code or local client option settings."
 msgstr ""
+"La grande majorité de ces options est affichée près de la fonction dans un "
+"menu approprié. Elles sont listée ici à titre gracieux et peuvent être "
+"incomplètes suite à des changements dans le code ou aux options du client."
 
 #: data/helpdata.txt:1259
 #, fuzzy
@@ -27508,6 +27609,13 @@ msgid ""
 "  Shift-home: center view on capital\n"
 "  Shift-arrows: scroll map"
 msgstr ""
+"Carte principale (touches) :\n"
+"=============================\n"
+"  Le client supporte le zoom/agrandissement des graphiques de la carte avec"
+" les touches + et -.\n"
+"  c : (c)entrer la vue sur l'unité active\n"
+"  Maj-Début : centrer la vue sur la capitale\n"
+"  Maj-flèches : déplacer la carte"
 
 #: data/helpdata.txt:1335
 #, fuzzy
@@ -27576,6 +27684,12 @@ msgid ""
 "  Ctrl-left-click on tile:       Select a sea unit (prefers transporters)\n"
 "  Ctrl-right-click on tile:      Select a land unit (prefers military)"
 msgstr ""
+"  Sélection rapide d'unités :\n"
+"  ============================\n"
+"  Ctrl-clic gauche sur une tuile : Sélectionner une unité navale (de"
+" préférence un transport)\n"
+"  Ctrl-clic droit sur une tuile :  Sélectionner une unité "
+"navale (de préférence une unité militaire)"
 
 #: data/helpdata.txt:1362
 #, fuzzy
@@ -27668,6 +27782,8 @@ msgid ""
 "These controls allow map elements to be referred to in chat. See the "
 "Chatline help for more details."
 msgstr ""
+"Ces contrôles permettent de faire référence à des éléments depuis la zone de "
+"discussion. Voir l'aide correspondante pour plus de détails."
 
 #: data/helpdata.txt:1395
 #, fuzzy
@@ -27698,6 +27814,17 @@ msgid ""
 "  F11: show Demographics (on Map)\n"
 "  F12: show Spaceship Page"
 msgstr ""
+"Pages :=======  F1 : afficher la carte\n"
+"  F2 : afficher la liste des unités (sur la carte)\n"
+"  F3 : afficher la liste des nations\n"
+"  F4 : afficher la liste des villes\n"
+"  F5 : afficher la page économie\n"
+"  F6 : afficher la page recherche\n"
+"  F7 : afficher la liste des merveilles (sur la carte)\n"
+"  F8 : afficher la liste des plus grandes villes (sur la carte)\n"
+"  F9 : afficher le panneau des messages (sur la carte)\n"
+"  F11 : afficher le rapport démographique (sur la carte)\n"
+"  F12 : afficher la page du vaisseau spatial"
 
 #: data/helpdata.txt:1413
 msgid ""
@@ -27706,10 +27833,13 @@ msgid ""
 "  Ctrl-T: open Tax/Lux/Sci Rates dialog\n"
 "  Shift-Ctrl-R: open Revolution dialog"
 msgstr ""
+"  Ctrl+F : ouvrir le dialogue « Trouver une ville »  Ctrl+L : ouvrir le "
+"dialogue « Listes de travail »  Ctrl+T : ouvrir le dialogue « Taux de taxe/"
+"luxe/science »   Ctrl+Maj+R : ouvrir le dialogue « Révolution »"
 
 #: data/helpdata.txt:1418
 msgid "  Shift-Return: Turn done"
-msgstr ""
+msgstr "  Maj+Retour : Fin du tour"
 
 #: data/helpdata.txt:1420
 #, fuzzy
@@ -27863,6 +27993,21 @@ msgid ""
 "  - Messages starting with '.' will be sent only to all your allies (or, if "
 "you're a global observer, only to other global observers)."
 msgstr ""
+"  - Les message qui commencent par « / » sont interprétés comme des commandes"
+" du serveur et exécutés, si vous avez le niveau de contrôle requis.\n"
+"  - Les message qui commencent par « Paul: » sont des message privés pour"
+" « Paul ». Les noms peuvent être raccourcis ou entourés de guillemets doubles"
+" \" s'ils comprennent des espaces. Le serveur recherche un joueur appelé"
+" « Paul » et, s'il n'en trouve pas, essaie de faire correspondre un nom"
+" d'utilisateur commençant par « Paul » (comme « Pauline »).\n"
+"  - Les messages qui commencent par « Paul:: » sont des messages privés comme"
+" ci-dessus, mais ne correspondront qu'à des utilisateurs (pas des joueurs)"
+" appelés « Paul ». Le nom d'utilisateur « Pauline » correspondra toujours.\n"
+"  - Les messages qui commencent par « : » sont envoyés à tout le monde (même"
+" si votre client est configuré pour n'envoyer qu'aux alliés par défaut).\n"
+"  - Les messages qui commencent par « . » sont envoyés uniquement à tous vos"
+" alliés (ou, si vous êtes un observateur global, uniquement aux autres"
+" observateurs globaux)."
 
 #: data/helpdata.txt:1477
 #, fuzzy
@@ -28096,6 +28241,11 @@ msgid ""
 "over them for some brief help and then click the desired item  to add to the "
 "worklist of projects to build."
 msgstr ""
+"Pour ajouter un élément à la liste de travail, cliquez sur l'icône plus "
+"« + » dans l'onglet Production du dialogue de la ville. Une liste d'éléments "
+"disponibles va apparaître. Vous pouvez les survoler pour une aide rapide et "
+"ensuite cliquer sur l'élément désiré pour l'ajouter à la liste de projets à "
+"construire."
 
 #: data/helpdata.txt:1562
 msgid ""
@@ -28184,11 +28334,11 @@ msgstr ""
 
 #: data/helpdata.txt:2153
 msgid "  https://discord.gg/98krqGm"
-msgstr ""
+msgstr "  https://discord.gg/98krqGm"
 
 #: data/helpdata.txt:2155
 msgid "  Original authors:"
-msgstr ""
+msgstr "  Auteurs d'origine :"
 
 #: data/helpdata.txt:2161
 msgid "  Present administrators: "
@@ -29426,7 +29576,7 @@ msgstr ""
 "écrite et un système monétaire, faisant d'elle l'état le plus avancé "
 "d'Amérique du Nord avant l'arrivée des Européens."
 
-# 	
+#
 #: data/nation/italian.ruleset:5
 msgid "Italian"
 msgstr "Italien"
@@ -30427,9 +30577,8 @@ msgstr ""
 "Carte de l'Amérique du Nord en vue de dessus de 116×100 (projection conique)."
 
 #: data/scenarios/tutorial.sav:5
-#, fuzzy
 msgid "Freeciv21 Tutorial"
-msgstr "Tutoriel"
+msgstr "Tutoriel de Freeciv21"
 
 #: data/scenarios/tutorial.sav:6
 #, fuzzy
@@ -30450,6 +30599,14 @@ msgid ""
 "ready, click the turn done button in the bottom-left and we will walk you "
 "through some more introduction items before you really get going."
 msgstr ""
+"Bienvenue dans Freeciv21. Vous êtes le chef prestigieux d'une civilisation. "
+"Votre tâche est de l'emmener sur le chemin de la puissance et de la gloire ! "
+"Si c'est la première fois que vous jouez à Freeciv21, il serait bon de "
+"prendre un peu de temps pour lire l'aide du jeu. Il y a là beaucoup de "
+"contenu pour vous aider à démarrer, surtout dans les section sur la "
+"stratégie et la tactique. Quand vous êtes prêt, cliquez sur le bouton Fin du "
+"tour en bas à droite et nous vous donnerons quelques astuces de départ avant "
+"que vous ne commenciez vraiment."
 
 #: data/scenarios/tutorial.sav:105
 msgid ""
@@ -31488,9 +31645,9 @@ msgstr ""
 "encore."
 
 #: server/auth.cpp:304
-#, fuzzy
 msgid "Your password contains illegal characters. Try again."
-msgstr "Votre mot de passe est incorrect. Essayez encore."
+msgstr ""
+"Votre mot de passe contient des caractères invalides. Essayez à nouveau."
 
 #: server/barbarian.cpp:187
 #, c-format
@@ -32348,10 +32505,9 @@ msgid "Setting timeout to 0. Autogame will stop."
 msgstr "Limite de temps mise à 0. Le jeu automatique va s'arrêter."
 
 #: server/civserver.cpp:75
-#, fuzzy
 msgid "You must interrupt Freeciv21 twice within one second to make it exit."
 msgstr ""
-"Vous devez interrompre Freeciv deux fois en une seconde pour qu'il se "
+"Vous devez interrompre Freeciv21 deux fois en une seconde pour qu'il se "
 "termine."
 
 #: server/civserver.cpp:117
@@ -32380,9 +32536,8 @@ msgstr "Se connecter au méta-serveur à partir de cette adresse"
 
 #: server/civserver.cpp:172 server/civserver.cpp:176 server/civserver.cpp:193
 #: server/civserver.cpp:203
-#, fuzzy
 msgid "ADDR"
-msgstr "bind ADRESSE"
+msgstr "ADRESSE"
 
 #: server/civserver.cpp:174
 msgid "Listen for clients on ADDR"
@@ -32394,9 +32549,8 @@ msgstr "Quand une partie s'achève, quitter au lieu de redémarrer"
 
 #: server/civserver.cpp:189 server/civserver.cpp:199 server/civserver.cpp:216
 #: server/civserver.cpp:220 server/civserver.cpp:243 tools/civmanual.cpp:688
-#, fuzzy
 msgid "FILE"
-msgstr "log FICHIER"
+msgstr "FICHIER"
 
 #: server/civserver.cpp:191
 msgid "Be known as ADDR at metaserver or LAN client"
@@ -32426,9 +32580,8 @@ msgid "Listen for clients on port PORT"
 msgstr "Écouter les clients sur le port PORT"
 
 #: server/civserver.cpp:208
-#, fuzzy
 msgid "PORT"
-msgstr "port PORT"
+msgstr "PORT"
 
 #: server/civserver.cpp:210
 msgid "Quit if no players for TIME seconds"
@@ -32436,7 +32589,7 @@ msgstr "Quitter s'il n'y a pas de joueurs pendant DUREE secondes"
 
 #: server/civserver.cpp:212
 msgid "TIME"
-msgstr ""
+msgstr "DURÉE"
 
 #: server/civserver.cpp:214
 msgid "Use FILE as ranking logfile"
@@ -32456,36 +32609,33 @@ msgid "ID"
 msgstr "ID"
 
 #: server/civserver.cpp:226
-#, fuzzy
 msgid "Sage games to directory DIR"
-msgstr "Sauvegarder les parties dans le répertoire REPERTOIRE"
+msgstr "Sauvegarder les parties dans le dossier DOSSIER"
 
 #: server/civserver.cpp:228 server/civserver.cpp:237
 #: tools/fcmp/mpcmdline.cpp:63
 msgid "DIR"
-msgstr ""
+msgstr "DOSSIER"
 
 #: server/civserver.cpp:230
 msgid "Prints stats about elapsed time on misc tasks"
-msgstr ""
+msgstr "Affiche des statistiques du temps consacré à certaines tâches"
 
 #: server/civserver.cpp:232
 msgid "Load ruleset RULESET"
 msgstr "Chargement des règles RÈGLES"
 
 #: server/civserver.cpp:234 tools/civmanual.cpp:692 tools/ruleup.cpp:62
-#, fuzzy
 msgid "RULESET"
-msgstr "Mise à jour des RÈGLES"
+msgstr "RÈGLES"
 
 #: server/civserver.cpp:235
 msgid "Save scenarios to directory DIR"
 msgstr "Sauvegarder les scenarii dans le répertoire REPERTOIRE"
 
 #: server/civserver.cpp:239
-#, fuzzy
 msgid "Enable database authentication (requires --Database)."
-msgstr "Active l'authentification serveur (nécessite --Database)."
+msgstr "Active la base de données d'authentification (nécessite --Database)."
 
 #: server/civserver.cpp:241
 msgid "Enable database connection with configuration from FILE."
@@ -32508,19 +32658,18 @@ msgid "Load ai module MODULE. Can appear multiple times"
 msgstr "Charger le module IA MODULE. Peut être présent plusieurs fois."
 
 #: server/civserver.cpp:249
-#, fuzzy
 msgid "MODULE"
-msgstr "LoadAI MODULE"
+msgstr "MODULE"
 
 #: server/civserver.cpp:305
 #, c-format
 msgid "Not a valid IP address: %s"
-msgstr ""
+msgstr "Pas une adresse IP valide: %s"
 
 #: server/civserver.cpp:320
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid number %s"
-msgstr "Numéro d'entrée invalide : %d."
+msgstr "Nombre %s invalide"
 
 #: server/civserver.cpp:380
 #, c-format
@@ -32533,9 +32682,9 @@ msgid "This is the server for %s"
 msgstr "Ceci est le serveur pour %s"
 
 #: server/civserver.cpp:390
-#, fuzzy, c-format
+#, c-format
 msgid "You can learn a lot about Freeciv21 at %s"
-msgstr "Vous pouvez en apprendre davantage sur Freeciv sur %s"
+msgstr "Vous pouvez en apprendre davantage sur Freeciv21 sur %s"
 
 #: server/civserver.cpp:393
 msgid "Requested authentication with --auth, but no --Database given\n"
@@ -33745,14 +33894,14 @@ msgid "You are logged in as '%s' connected to %s."
 msgstr "Vous êtes logué en tant que \"%s\" connecté à %s."
 
 #: server/connecthand.cpp:268
-#, fuzzy, c-format
+#, c-format
 msgid "%s has connected (player %s)."
-msgstr "%s s'est connecté depuis %s (joueur %s)."
+msgstr "%s s'est connecté (joueur %s)."
 
 #: server/connecthand.cpp:272
-#, fuzzy, c-format
+#, c-format
 msgid "%s has connected."
-msgstr "%s n'est pas connecté."
+msgstr "%s s'est connecté."
 
 #: server/connecthand.cpp:290
 #, c-format
@@ -33854,7 +34003,7 @@ msgstr "SVP, rapportez ce bogue à %s"
 #: server/console.cpp:106
 #, c-format, qt-format
 msgid "T%03d: "
-msgstr ""
+msgstr "T%03d:"
 
 #: server/console.cpp:205
 msgid "Ok. RFC-style set."
@@ -35194,7 +35343,7 @@ msgstr "Ban Gu"
 
 #: server/report.cpp:187
 msgid "League Score"
-msgstr ""
+msgstr "Score de la Ligue"
 
 #: server/report.cpp:189 server/report.cpp:190
 msgid "Population"
@@ -35217,14 +35366,12 @@ msgid "?ability:Literacy"
 msgstr "Alphabétisation"
 
 #: server/report.cpp:198
-#, fuzzy
 msgid "Agriculture"
-msgstr "Culture"
+msgstr "Agriculture"
 
 #: server/report.cpp:201
-#, fuzzy
 msgid "Gold Income"
-msgstr "Revenu : "
+msgstr "Rentrées d'or"
 
 # "Rapidité des recherches" trop long
 #: server/report.cpp:202
@@ -35236,24 +35383,20 @@ msgid "Military Service"
 msgstr "Service Militaire"
 
 #: server/report.cpp:205
-#, fuzzy
 msgid "Military Units"
-msgstr "Base militaire"
+msgstr "Unités militaires"
 
 #: server/report.cpp:206
-#, fuzzy
 msgid "Built Units"
-msgstr "Unités construites\n"
+msgstr "Unités construites"
 
 #: server/report.cpp:207
-#, fuzzy
 msgid "Killed Units"
-msgstr "Unités tuées\n"
+msgstr "Unités tuées"
 
 #: server/report.cpp:208
-#, fuzzy
 msgid "Lost Units"
-msgstr "Charger l'unité"
+msgstr "Unités perdues"
 
 #: server/report.cpp:222
 #, c-format, qt-format
@@ -35346,7 +35489,6 @@ msgid "%2d: The %s City of %s of size %d, "
 msgstr "%2d : La ville de %s de %s de taille %d, "
 
 #: server/report.cpp:419
-#, fuzzy
 msgid "with no Great Wonders\n"
 msgstr "sans merveille\n"
 
@@ -35590,10 +35732,14 @@ msgstr ""
 #: server/savegame/savegame2.cpp:1619 server/savegame/savegame3.cpp:2205
 msgid "Cannot load old random generator state. Seeding a new one."
 msgstr ""
+"Impossible de charger l'état de l'ancien générateur de nombres aléatoires. "
+"Création d'un nouveau."
 
 #: server/savegame/savegame2.cpp:1630 server/savegame/savegame3.cpp:2215
 msgid "Cannot load the random generator state. Seeding a new one."
 msgstr ""
+"Impossible de charger l'état du générateur de nombres aléatoires. Création "
+"d'un nouveau."
 
 #: server/savegame/savegame2.cpp:2595 server/savegame/savegame3.cpp:3604
 #: server/srv_main.cpp:2471 server/srv_main.cpp:2477
@@ -35695,7 +35841,7 @@ msgstr "rejeté"
 #: server/sernet.cpp:385
 #, qt-format
 msgid "Server: cannot listen on port %1: %2"
-msgstr ""
+msgstr "Serveur: impossible d'écouter sur le port %1: %2"
 
 #: server/sernet.cpp:596
 msgid "Pregame"
@@ -35719,12 +35865,11 @@ msgstr "Style log² N"
 
 #: server/settings.cpp:215
 msgid "Linear max trade"
-msgstr ""
+msgstr "Commerce maximal, linéaire"
 
 #: server/settings.cpp:216
-#, fuzzy
 msgid "Pure distance"
-msgstr "Forte Résistance"
+msgstr "Distance uniquement"
 
 #: server/settings.cpp:228
 msgid "Number of tiles"
@@ -36050,7 +36195,7 @@ msgstr "Utilisation de xz"
 
 #: server/settings.cpp:550
 msgid "Using Zstandard"
-msgstr ""
+msgstr "Utilisation de Zstandard"
 
 #: server/settings.cpp:584
 #, c-format
@@ -38933,13 +39078,12 @@ msgid "Warning: rejecting old client %s"
 msgstr "Attention : rejet d'un ancien client %s"
 
 #: server/srv_main.cpp:2009
-#, fuzzy
 msgid ""
 "Your client is too old. To use this server, please upgrade your client to a "
 "more recent Freeciv21 release."
 msgstr ""
-"Votre client est trop vieux. Pour utiliser ce serveur veuillez mettre votre "
-"client à jour avec une version Freeciv 2.1 ou ultérieure."
+"Votre client est trop ancien. Pour utiliser ce serveur, veuillez mettre "
+"votre client à jour avec une version de Freeciv21 plus récente."
 
 #: server/srv_main.cpp:2063
 msgid "You are not allowed to edit."
@@ -40284,24 +40428,24 @@ msgid "You aren't allowed to run unsafe Lua code."
 msgstr "Vous n'êtes pas autorisé à exécuter du code Lua risqué (unsafe)."
 
 #: server/stdinhand.cpp:4998
-#, fuzzy, c-format
+#, c-format
 msgid "Freeciv21 script '%s' disallowed for security reasons."
-msgstr "Le script Freeciv '%s' a été bloqué pour des raisons de sécurité."
+msgstr "Le script Freeciv21 « %s » a été bloqué pour des raisons de sécurité."
 
 #: server/stdinhand.cpp:5013
-#, fuzzy, c-format
+#, c-format
 msgid "No Freeciv21 script found by the name '%s'."
-msgstr "Aucun script Freeciv du nom de '%s'."
+msgstr "Aucun script Freeciv21 du nom de « %s »."
 
 #: server/stdinhand.cpp:5036 server/stdinhand.cpp:5051
-#, fuzzy, c-format
+#, c-format
 msgid "Loading Freeciv21 script file '%s'."
-msgstr "Chargement du fichier de script Freeciv '%s'."
+msgstr "Chargement du fichier de script Freeciv21 « %s »."
 
 #: server/stdinhand.cpp:5045 server/stdinhand.cpp:5060
-#, fuzzy, c-format
+#, c-format
 msgid "Cannot read Freeciv21 script '%s'."
-msgstr "Impossible de lire le script Freeciv '%s'."
+msgstr "Impossible de lire le script Freeciv21 « %s »."
 
 #: server/stdinhand.cpp:5107
 msgid "Game not started - cannot delegate yet."
@@ -40465,9 +40609,9 @@ msgid "%s is now connected as %s."
 msgstr "%s est maintenent connecté en tant que %s."
 
 #: server/stdinhand.cpp:5556
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 (observer)"
-msgstr "%s (observateur)"
+msgstr "%1 (observateur)"
 
 #: server/stdinhand.cpp:5561
 msgid "global observer"
@@ -40571,13 +40715,12 @@ msgid "No AI defined for player %s."
 msgstr "Aucune IA définie pour le joueur %s."
 
 #: server/stdinhand.cpp:5919
-#, fuzzy
 msgid ""
 "Freeciv21 database script not activated at server start. See the Freeciv21 "
 "server's --auth command line option."
 msgstr ""
-"Script de base de données de Freeciv non activé au démarrage du serveur. "
-"Voir l'option en ligne de commande --auth du serveur de Freeciv."
+"Script de base de données de Freeciv21 non activé au démarrage du serveur. "
+"Voir l'option en ligne de commande --auth du serveur de Freeciv21."
 
 #: server/stdinhand.cpp:5939
 msgid "Ambiguous fcdb command."
@@ -40801,9 +40944,9 @@ msgid ", difficulty level %s"
 msgstr ", niveau de difficulté %s"
 
 #: server/stdinhand.cpp:6734
-#, fuzzy, c-format
+#, c-format
 msgid "%s from %s (command access level %s), bufsize=%lukb"
-msgstr "%s depuis %s (niveau de commande %s), taille du tampon=%dKo"
+msgstr "%s depuis %s (niveau de commande %s), taille du tampon=%lukb"
 
 #: server/stdinhand.cpp:6741
 msgid " (observer mode)"
@@ -41078,18 +41221,18 @@ msgid "This unit cannot act unless it has a home city."
 msgstr "Cette unité ne peut pas agir sans ville de rattachement."
 
 #: server/unithand.cpp:1575
-#, fuzzy, c-format
+#, c-format
 msgid "You must declare war on %s first.  Try using the Nations report."
 msgstr ""
 "Vous devez d'abord déclarer la guerre à %s. Essayez d'utiliser le dialogue "
-"des nations (F3)."
+"des nations."
 
 #: server/unithand.cpp:1581
-#, fuzzy, c-format
+#, c-format
 msgid "You must break peace with %s first.  Try using the Nations report."
 msgstr ""
 "Vous devez d'abord rompre la paix avec %s. Essayez d'utiliser le dialogue "
-"des nations (F3)."
+"des nations."
 
 #: server/unithand.cpp:1587
 msgid "This unit cannot act against domestic targets."
@@ -41265,13 +41408,13 @@ msgid "Your %s can't do %s while you aren't at war with %s."
 msgstr "Votre %s ne peut faire %s tant que vous n'êtes pas en guerre avec %s."
 
 #: server/unithand.cpp:2172
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Your %s can't do %s while you are at peace with %s. Try using the Nations "
 "report."
 msgstr ""
 "Votre %s ne peut pas faire %s tant que vous êtes en paix avec %s. Essayez "
-"d'utiliser le dialogue des nations (F3)."
+"d'utiliser le dialogue des nations."
 
 #: server/unithand.cpp:2184
 #, c-format
@@ -41435,6 +41578,8 @@ msgid ""
 "Your %s %s [id:%d %sD:%.1f lost %d HP, %d HP remaining] survived the "
 "pathetic %sattack from the %s %s %s [id:%d %sA:%.1f HP:%d]."
 msgstr ""
+"Votre %2s %1s [id:%d %sD:%.1f a perdu %d PV, reste %d PV] a survécu a "
+"l'attaque%s pathétique du %11s %10s %9s [id:%d %sA:%.1f PV:%d]."
 
 #: server/unithand.cpp:4081
 #, c-format
@@ -41442,6 +41587,8 @@ msgid ""
 "Your attacking %s %s [id:%d %sA:%.1f HP:%d] failed against the %s %s %s [id:"
 "%d lost %d HP, %d HP remaining%s]!"
 msgstr ""
+"Votre %2s %1s [id: %d %sA:%.1f PV:%d] a échoué en attaquant le %11s %10s %9s "
+"[id:%d a perdu %d PV, reste %d PV%s]!"
 
 #: server/unithand.cpp:4106
 #, c-format
@@ -41449,6 +41596,8 @@ msgid ""
 "Your %s %s [id:%d %sD:%.1f HP:%d] lost to an attack by the %s %s %s [id:%d "
 "%sA:%.1f lost %d HP, has %d HP remaining%s]."
 msgstr ""
+"Votre %2s %1s [id:%d %sD:%.1f PV:%d] a été perdu lors d'une attaque d'un %9s "
+"%8s %7s [id:%d %sA:%.1f a perdu %d HP, %d PV restant%s]."
 
 #: server/unithand.cpp:4122
 #, c-format
@@ -41456,6 +41605,8 @@ msgid ""
 "Your attacking %s %s [id:%d %s%sA:%.1f lost %d HP, has %d remaining] "
 "succeeded against the %s %s %s [id:%d HP:%d]."
 msgstr ""
+"L'attaque de votre %2s %1s [id:%d %s%sA:%.1f %d PV perdus, reste %d] contre "
+"le %11s %10s %9s [id:%d PV:%d] a réussi."
 
 # AR : problème de a/an
 #: server/unithand.cpp:4204 server/unithand.cpp:4275
@@ -41690,9 +41841,9 @@ msgid "You nuked %s."
 msgstr "Vous avez atomisé %s."
 
 #: server/unittools.cpp:2786
-#, fuzzy, c-format
+#, c-format
 msgid "%s destroyed in nuclear explosion!"
-msgstr "Attaquer avec cette unité engendre une explosion nucléaire !"
+msgstr "%s détruit dans une explosion nucléaire !"
 
 #: server/unittools.cpp:2825
 #, c-format
@@ -41722,7 +41873,7 @@ msgstr "Votre %s a été tué par des unités ennemies au point de parachutage."
 #: server/unittools.cpp:3395
 #, c-format
 msgid "Your sentried %s spotted  a %s v%d %s [id:%d hp:%d] at %s "
-msgstr ""
+msgstr "Votre %s en veille a vu un %4s v%d %2s [id:%d PV:%d] à %s"
 
 #: server/unittools.cpp:3418
 #, c-format
@@ -42067,52 +42218,50 @@ msgstr "Plusieurs règles du jeu demandées. Une seule supportée à la fois.\n"
 
 #: tools/fcmp/download.cpp:73
 msgid "Invalid file"
-msgstr ""
+msgstr "Fichier invalide"
 
 #: tools/fcmp/download.cpp:98
 msgid "Empty path"
-msgstr ""
+msgstr "Chemin vide"
 
 #: tools/fcmp/download.cpp:102
-#, fuzzy, qt-format
+#, qt-format
 msgid "Illegal path \"%1\""
-msgstr "Chemin illégal pour %s"
+msgstr "Chemin illégal « %1 »"
 
 #: tools/fcmp/download.cpp:124
 msgid "Missing \"dest\" field"
-msgstr ""
+msgstr "Champ « dest » manquant"
 
 #: tools/fcmp/download.cpp:135
-#, fuzzy
 msgid "\"url\" field is not a string"
-msgstr "Cette option n'est pas textuelle."
+msgstr "« url » n'est pas un chaîne de caractères"
 
 #: tools/fcmp/download.cpp:157
 msgid "Recursive dependencies too deep"
 msgstr "Dépendances réccursives trop profondes"
 
 #: tools/fcmp/download.cpp:161
-#, fuzzy
 msgid "No valid URL given"
-msgstr "Pas d'URL donnée"
+msgstr "Pas d'URL valide donnée"
 
 #: tools/fcmp/download.cpp:165
 msgid "This does not look like modpack URL"
 msgstr "Cela ne ressemble pas à une URL de modpack"
 
 #: tools/fcmp/download.cpp:168
-#, fuzzy, qt-format
+#, qt-format
 msgid "Installing modpack %1 from %2"
-msgstr "Installation du modpack %s de %s"
+msgstr "Installation du modpack %1 depuis %2"
 
 #: tools/fcmp/download.cpp:173
 msgid "Cannot install to given directory hierarchy"
 msgstr "Impossible d'installer dans l'arboresence donnée"
 
 #: tools/fcmp/download.cpp:178
-#, fuzzy, qt-format
+#, qt-format
 msgid "Downloading \"%1\" control file."
-msgstr "Téléchargement du fichier de contrôle \"%s\"."
+msgstr "Téléchargement du fichier de contrôle « %1 »."
 
 #: tools/fcmp/download.cpp:184 tools/fcmp/download.cpp:425
 msgid "Cannot fetch and parse modpack list"
@@ -42120,36 +42269,31 @@ msgstr "Impossible de récupérer et d'interpréter la liste des modpacks"
 
 #: tools/fcmp/download.cpp:190 tools/fcmp/download.cpp:431
 msgid "\"info\" is not an object"
-msgstr ""
+msgstr "« info » n'est pas un objet"
 
 #: tools/fcmp/download.cpp:196 tools/fcmp/download.cpp:436
-#, fuzzy
 msgid "\"info.options\" is not a string"
-msgstr "Cette option n'est pas textuelle."
+msgstr "« info.options » n'est pas un chaîne de caractères"
 
 #: tools/fcmp/download.cpp:206
 msgid "Modpack control file is incompatible"
 msgstr "Le fichier de contrôle du modpack est incompatible"
 
 #: tools/fcmp/download.cpp:211
-#, fuzzy
 msgid "\"info.name\" is not a string"
-msgstr "Cette option n'est pas textuelle."
+msgstr "« info.name » n'est pas un chaîne de caractères"
 
 #: tools/fcmp/download.cpp:215 tools/fcmp/download.cpp:474
-#, fuzzy
 msgid "Modpack name is empty"
-msgstr "La liste des modpacks est incompatible"
+msgstr "Le nom du modpack est vide"
 
 #: tools/fcmp/download.cpp:220
-#, fuzzy
 msgid "\"info.version\" is not a string"
-msgstr "Cette option n'est pas textuelle."
+msgstr "« info.version » n'est pas un chaîne de caractères"
 
 #: tools/fcmp/download.cpp:226
-#, fuzzy
 msgid "\"info.type\" is not a string"
-msgstr "Cette option n'est pas textuelle."
+msgstr "« info.type » n'est pas un chaîne de caractères"
 
 #: tools/fcmp/download.cpp:231 tools/fcmp/download.cpp:290
 #: tools/fcmp/download.cpp:502
@@ -42157,33 +42301,40 @@ msgid "Illegal modpack type"
 msgstr "Type de modpack illégal"
 
 #: tools/fcmp/download.cpp:236
-#, fuzzy
 msgid "\"info.base_url\" is not a string"
-msgstr "Cette option n'est pas textuelle."
+msgstr "« info.base_url » n'est pas un chaîne de caractères"
 
 #: tools/fcmp/download.cpp:255
 msgid "\"dependencies\" is not an array"
-msgstr ""
+msgstr "« dependencies » n'est pas un tableau"
 
 #: tools/fcmp/download.cpp:261
 msgid "\"dependencies\" contains a non-object"
-msgstr ""
+msgstr "« dependencies » contient un non-objet"
 
 #: tools/fcmp/download.cpp:269
 msgid "Dependency has no \"url\" field or it is not a string"
 msgstr ""
+"La dépendance n'a pas de champ « url », ou ce n'est pas une chaîne de "
+"caractères"
 
 #: tools/fcmp/download.cpp:276
 msgid "Dependency has no \"modpack\" field or it is not a string"
 msgstr ""
+"La dépendance n'a pas de champ « modpack », ou ce n'est pas une chaîne de "
+"caractères"
 
 #: tools/fcmp/download.cpp:282
 msgid "Dependency has no \"type\" field or it is not a string"
 msgstr ""
+"La dépendance n'a pas de champ « type », ou ce n'est pas une chaîne de "
+"caractères"
 
 #: tools/fcmp/download.cpp:296
 msgid "Dependency has no \"version\" field or it is not a string"
 msgstr ""
+"La dépendance n'a pas de champ « version », ou ce n'est pas une chaîne de "
+"caractères"
 
 #: tools/fcmp/download.cpp:308
 msgid "Download dependency modpack"
@@ -42191,31 +42342,31 @@ msgstr "Télécharger le modpack de dépendance"
 
 #: tools/fcmp/download.cpp:335
 msgid "\"files\" is not an array"
-msgstr ""
+msgstr "« files » n'est pas un tableau"
 
 #: tools/fcmp/download.cpp:346
-#, fuzzy, qt-format
+#, qt-format
 msgid "Error parsing modpack control file: file %1:"
-msgstr "Impossible d'obtenir et de parcourir le fichier de contrôle du modpack"
+msgstr ""
+"Erreur lors du décodage du fichier de contrôle du modpack : fichier %1 :"
 
 #: tools/fcmp/download.cpp:352
-#, fuzzy
 msgid "Error parsing modpack control file"
-msgstr "Impossible d'obtenir et de parcourir le fichier de contrôle du modpack"
+msgstr "Erreur lors du décodage du fichier de contrôle du modpack"
 
 #: tools/fcmp/download.cpp:379
 msgid "Cannot create required directories"
 msgstr "Impossible de créer les répertoires nécessaires"
 
 #: tools/fcmp/download.cpp:383
-#, fuzzy, qt-format
+#, qt-format
 msgid "Downloading %1"
-msgstr "Téléchargement de %s"
+msgstr "Téléchargement de %1"
 
 #: tools/fcmp/download.cpp:394
-#, fuzzy, qt-format
+#, qt-format
 msgid "Failed to download %1"
-msgstr "Impossible de télécharger %s"
+msgstr "Impossible de télécharger %1"
 
 #: tools/fcmp/download.cpp:408
 msgid "Some parts of the modpack failed to install."
@@ -42227,51 +42378,54 @@ msgstr "La liste des modpacks est incompatible"
 
 #: tools/fcmp/download.cpp:456
 msgid "\"modpacks\" is not an array"
-msgstr ""
+msgstr "« modpack » n'est pas un tableau"
 
 #: tools/fcmp/download.cpp:463
 msgid "\"modpacks\" contains a non-object"
-msgstr ""
+msgstr "« modpacks » contient un non-objet"
 
 #: tools/fcmp/download.cpp:470
-#, fuzzy
 msgid "Modpack \"name\" is missing or is not a string"
-msgstr "Cette option n'est pas textuelle."
+msgstr ""
+"Le nom (« name ») du modpack est manquant ou n'est pas une chaîne de "
+"caractères"
 
 #: tools/fcmp/download.cpp:480
-#, fuzzy
 msgid "Modpack \"version\" is missing or is not a string"
-msgstr "Cette option n'est pas textuelle."
+msgstr ""
+"La version (« version ») du modpack est manquante ou n'est pas une chaîne de "
+"caractères"
 
 #: tools/fcmp/download.cpp:487
-#, fuzzy
 msgid "Modpack \"license\" is missing or is not a string"
-msgstr "La liste des modpacks n'a pas de chaîne de capacité"
+msgstr ""
+"La licence (« license ») du modpack est manquante ou n'est pas une chaîne de "
+"caractères"
 
 #: tools/fcmp/download.cpp:494
-#, fuzzy
 msgid "Modpack \"type\" is missing or is not a string"
-msgstr "Cette option n'est pas textuelle."
+msgstr ""
+"Le type (« type ») du modpack est manquant ou n'est pas une chaîne de "
+"caractères"
 
 #: tools/fcmp/download.cpp:508
-#, fuzzy
 msgid "Modpack \"subtype\" is not a string"
-msgstr "La liste des modpacks n'a pas de chaîne de capacité"
+msgstr ""
+"Le sous-type (« subtype ») du modpack n'est pas une chaîne de caractères"
 
 #: tools/fcmp/download.cpp:515
-#, fuzzy
 msgid "Modpack \"url\" is missing or is not a string"
-msgstr "Cette option n'est pas textuelle."
+msgstr ""
+"L'URL (« unl ») du modpack est manquante ou n'est pas une chaîne de "
+"caractères"
 
 #: tools/fcmp/download.cpp:521
-#, fuzzy
 msgid "Invalid URL"
-msgstr "install URL"
+msgstr "URL invalide"
 
 #: tools/fcmp/download.cpp:528
-#, fuzzy
 msgid "Modpack \"notes\" is not a string"
-msgstr "La liste des modpacks n'a pas de chaîne de capacité"
+msgstr "Les notes (« notes ») du modpack ne sont pas une chaîne de caractères"
 
 #: tools/fcmp/modinst.h:43
 msgid "Ruleset"
@@ -42299,44 +42453,36 @@ msgid "Not installed"
 msgstr "Pas installé"
 
 #: tools/fcmp/mpcli.cpp:69
-#, fuzzy
 msgid "Name="
-msgstr "Nom"
+msgstr "Nom="
 
 #: tools/fcmp/mpcli.cpp:70
-#, fuzzy
 msgid "Version="
-msgstr "Version"
+msgstr "Version="
 
 #: tools/fcmp/mpcli.cpp:71
-#, fuzzy
 msgid "Installed="
-msgstr "Installé"
+msgstr "Installé="
 
 #: tools/fcmp/mpcli.cpp:72
-#, fuzzy
 msgid "Type="
-msgstr "Type"
+msgstr "Type="
 
 #: tools/fcmp/mpcli.cpp:73
-#, fuzzy
 msgid "License="
-msgstr "Licence"
+msgstr "Licence="
 
 #: tools/fcmp/mpcli.cpp:74
-#, fuzzy
 msgid "URL="
-msgstr "URL=\"%s\""
+msgstr "URL="
 
 #: tools/fcmp/mpcli.cpp:76
-#, fuzzy
 msgid "Comment="
-msgstr "Commentaire"
+msgstr "Commentaire="
 
 #: tools/fcmp/mpcli.cpp:97
-#, fuzzy
 msgid "Freeciv21 modpack installer (command line version)"
-msgstr "Installateur de modpack de Freeciv (version en ligne de commande)"
+msgstr "Installateur de modpack de Freeciv21 (version en ligne de commande)"
 
 #: tools/fcmp/mpcli.cpp:103
 #, c-format
@@ -42391,9 +42537,8 @@ msgid "Failed to insert modpack '%s' information"
 msgstr "Impossible d'insérer l'information du modpack '%s'"
 
 #: tools/fcmp/mpgui_qt.cpp:103
-#, fuzzy
 msgid "Freeciv21 modpack installer (Qt)"
-msgstr "Installateur de modpack de Freeciv (Qt)"
+msgstr "Installateur de modpack de Freeciv21 (Qt)"
 
 #: tools/fcmp/mpgui_qt.cpp:161
 msgid "Modpack URL"
@@ -42449,9 +42594,8 @@ msgid "Create directory DIRECTORY for output"
 msgstr "Créer le répertoire RÉPERTOIRE pour les sorties"
 
 #: tools/ruleup.cpp:66
-#, fuzzy
 msgid "DIRECTORY"
-msgstr "output RÉPERTOIRE"
+msgstr "RÉPERTOIRE"
 
 #: tools/ruleup.cpp:89
 msgid "Multiple output directories given.\n"
@@ -42515,9 +42659,9 @@ msgid "overhead"
 msgstr "vue de dessus"
 
 #: utility/inputfile.cpp:472
-#, fuzzy, qt-format
+#, qt-format
 msgid "Error reading %1: %2"
-msgstr "Erreur lors de la création d'un nouveau joueur IA : %s."
+msgstr "Erreur lors de la lecture de %1 : %2"
 
 #: utility/inputfile.cpp:801
 #, c-format
@@ -42535,38 +42679,39 @@ msgid ""
 "\"%s\" is not a valid log level name (valid names are fatal/critical/warning/"
 "info/debug)"
 msgstr ""
+"« %s » n'est pas un nom de niveau de verbosité valable (les noms valables "
+"sont fatal/critical/warning/info/debug)"
 
 # AR
 #: utility/log.cpp:178
-#, fuzzy, qt-format
+#, qt-format
 msgid "Could not open log file for writing: %1"
-msgstr "Impossible d'ouvrir %s en écriture"
+msgstr "Impossible d'ouvrir le fichier journal en écriture : %1"
 
 #: utility/log.cpp:234
-#, fuzzy, qt-format
+#, qt-format
 msgid "Please report this message at %1"
-msgstr "SVP, rapportez ce bogue à %s"
+msgstr "SVP, rapportez ce message à %1"
 
 #: utility/log.cpp:236
-#, fuzzy
 msgid "Assertion failed"
 msgstr "Action échouée"
 
 #: utility/netfile.cpp:75
-#, fuzzy, qt-format
+#, qt-format
 msgid "Failed to fetch %1: %2"
-msgstr "Impossible d'aller chercher %s : %s"
+msgstr "Impossible d'aller chercher %1 : %2"
 
 #: utility/netfile.cpp:109
 #, qt-format
 msgid "Error parsing JSON: %1"
-msgstr ""
+msgstr "Erreur d'analyse du JSON : %1"
 
 # AR
 #: utility/netfile.cpp:145
-#, fuzzy, qt-format
+#, qt-format
 msgid "Could not open %1 for writing"
-msgstr "Impossible d'ouvrir %s en écriture"
+msgstr "Impossible d'ouvrir %1 en écriture"
 
 # AR
 #: utility/registry_ini.cpp:629
@@ -42575,16 +42720,15 @@ msgid "Could not open %s for writing"
 msgstr "Impossible d'ouvrir %s en écriture"
 
 #: utility/shared.cpp:452
-#, fuzzy
 msgid "Storage dir:"
-msgstr "Le répertoire de stockage est \"%s\"."
+msgstr "Répertoire de stockage :"
 
 #: utility/shared.cpp:532
-#, fuzzy, c-format
+#, c-format
 msgid "\"%s\" is set but empty; using default data directories instead."
 msgstr ""
-"\"%s\" est spécifié mais vide ; les répertoires de données par défaut \"%s\" "
-"seront utilisés à la place."
+"« %s » est spécifié mais vide ; utilisation des répertoires de données par "
+"défaut à la place."
 
 #: utility/shared.cpp:1007
 #, c-format
@@ -42633,6 +42777,9 @@ msgstr "FAUX"
 #, c-format
 msgid "error %ld (failed FormatMessage)"
 msgstr "erreur %ld (échec FormatMessage)"
+
+#~ msgid "Citybar style"
+#~ msgstr "Styles des barres de ville"
 
 #, c-format
 #~ msgid "%s is selling %s for %d."
@@ -45098,7 +45245,7 @@ msgstr "erreur %ld (échec FormatMessage)"
 #~ msgid "Bold"
 #~ msgstr "Gras"
 
-# 	
+#
 #~ msgid "Italic"
 #~ msgstr "Italique"
 
@@ -52346,7 +52493,7 @@ msgstr "erreur %ld (échec FormatMessage)"
 #~ "Nécessite un extra avec l'indicateur \"%s\" sur la case ou sur une case "
 #~ "adjacente cardinalement.\n"
 
-#   
+#
 #~ msgid ""
 #~ "Prevented by an extra with the \"%s\" flag on the tile or any cardinally "
 #~ "adjacent tile.\n"
