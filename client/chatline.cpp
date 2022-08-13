@@ -340,6 +340,9 @@ void chat_widget::set_chat_visible(bool visible)
   // Don't update chat_fheight
   m_chat_visible = false;
 
+  // Save the geometry before setting the minimum size
+  auto geo = geometry();
+
   if (visible) {
     setMinimumSize(200, 100);
     setResizable(Qt::LeftEdge | Qt::RightEdge | Qt::TopEdge
@@ -366,7 +369,6 @@ void chat_widget::set_chat_visible(bool visible)
                                             : QLatin1String("expand-down");
   show_hide->setIcon(fcIcons::instance()->getIcon(icon_name));
 
-  auto geo = geometry();
   if (expand_up) {
     geo.setTop(std::max(geo.bottom() - h, 0));
     geo.setHeight(h);
