@@ -7,7 +7,7 @@ Documentation Style Guide
 .. role:: wonder
 
 The Longturn community uses the Python based Sphinx system to generate the documentation available on this
-website. Sphinx takes plain text files formatted with a superset of markdown called reStructuredText (ReST).
+website. Sphinx takes plain text files formatted with a super set of markdown called reStructuredText (ReST).
 Sphinx reStructuredText is documented here:
 https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html
 
@@ -41,7 +41,7 @@ Heading 2
 
 Heading 3
     Heading 3 is used to break a chapter into sub-chapters in a document. Heading 3 is not shown on the left
-    side table of contents since we specifcally only show 2 levels in the :file:`conf.py` configuration file.
+    side table of contents since we specifically only show 2 levels in the :file:`conf.py` configuration file.
     The dash is used to denote Heading 3 like this:
 
 .. code-block:: rst
@@ -52,7 +52,7 @@ Heading 3
 
 Heading 4
     Heading 4 is used to break a sub-chapter down into a further section. This is useful for large pages, such
-    as the :doc:`../General/Manuals/client-manual`. The carrot is used to denote Heading4 like this:
+    as the :doc:`../General/Manuals/client-manual`. The caret is used to denote Heading 4 like this:
 
 .. code-block:: rst
 
@@ -72,7 +72,7 @@ to alter is placed inside back-ticks.
   system.
 * :literal:`:emphasis:` -- Emphasis is used to :emphasis:`bring attention to something`.
 * :literal:`:file:` -- File is used for file names and paths such as :file:`~/.local/share/freeciv21/saves`.
-* :literal:`:guilabel:` -- GUI Label is used to bring attention to someting on the screen like the
+* :literal:`:guilabel:` -- GUI Label is used to bring attention to something on the screen like the
   :guilabel:`Next` button on the installer wizard.
 * :literal:`:literal:` -- Literal is used when you want to note a text element in its raw form. This is
   equivalent to using two back-ticks: ````text````.
@@ -142,7 +142,7 @@ The Oxford Comma
     The Oxford Comma is the usage of a comma when listing multple things and placing a comma before the "and"
     at the end of the list. For example: You need to follow these steps: Click on :guilabel:`Menu`, then click
     on :guilabel:`Options`, and finally click on :guilabel:`Interface`. Notice the comma usage before the word
-    "and", that is the Oxford command and its usage is expeced in our documentation
+    "and", that is the Oxford command and its usage is expected in our documentation
 
 Capitalization
     For consistent formatting, the following should always use "Title Capitalization" rules:
@@ -152,6 +152,9 @@ Capitalization
     * Anything inside of :literal:`:guilabel:` or :literal:`:menuselection:`
     * The names of Units, City Improvements and Wonders in the :literal:`:unit:`, :literal:`:improvement:` and
       :literal:`:wonder:` tags respectively
+
+    This page provides a good overview of Title Case capitalization rules for US English:
+    https://www.grammarly.com/blog/capitalization-rules/
 
 Language Contractions
     Language Contractions are when two words are combined together with an apostrophe ( ``'`` ). For example,
