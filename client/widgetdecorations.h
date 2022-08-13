@@ -71,18 +71,6 @@ public:
 /**************************************************************************
   Abstract class for widgets that can be resized by dragging the edges.
 **************************************************************************/
-enum class resizable_flag : std::uint8_t {
-  none = 0,
-  top = 1,
-  topLeft = 2,
-  topRight = 4,
-  bottom = 8,
-  bottomLeft = 16,
-  bottomRight = 32,
-  left = 64,
-  right = 128
-};
-
 class resizable_widget : public fcwidget {
   Q_OBJECT
 
@@ -93,31 +81,26 @@ signals:
 
 public:
   // make widget resizable (multiple flags supported)
-  void setResizable(QFlags<resizable_flag> resizeFlags);
+  void setResizable(Qt::Edges edges);
 
   // get resizable flags
-  QFlags<resizable_flag> getResizable() const;
+  Qt::Edges getResizable() const;
 
   // remove resizable for widget
   void removeResizable();
 
-  // check exist a resizable_type
-  bool hasResizable(resizable_flag flag) const;
-
 private:
-  resizable_flag get_in_event_mouse(const QMouseEvent *event) const;
+  Qt::Edges get_in_event_mouse(const QMouseEvent *event) const;
 
   QPoint last_position{};
-  resizable_flag eventFlag{};
-  QFlags<resizable_flag> resizeFlags{};
+  Qt::Edges eventFlags{};
+  Qt::Edges resizeFlags{};
 
 protected:
   void mousePressEvent(QMouseEvent *event) override;
   void mouseMoveEvent(QMouseEvent *event) override;
   void mouseReleaseEvent(QMouseEvent *event) override;
 };
-
-Q_DECLARE_OPERATORS_FOR_FLAGS(QFlags<resizable_flag>)
 
 /**************************************************************************
   Widget allowing closing other widgets
