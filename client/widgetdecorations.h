@@ -90,7 +90,6 @@ public:
 private:
   Qt::Edges get_in_event_mouse(const QMouseEvent *event) const;
 
-  QPoint last_position{};
   Qt::Edges eventFlags{};
   Qt::Edges resizeFlags{};
 
