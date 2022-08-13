@@ -145,6 +145,8 @@ private:
   void read_settings();
 
 protected:
+  bool eventFilter(QObject *obj, QEvent *event) override;
+
   void timerEvent(QTimerEvent *) override;
   void closeEvent(QCloseEvent *event) override;
 

@@ -337,6 +337,9 @@ chat_widget::chat_widget(QWidget *parent)
  */
 void chat_widget::set_chat_visible(bool visible)
 {
+  // Don't update chat_fheight
+  m_chat_visible = false;
+
   if (visible) {
     setMinimumSize(200, 100);
     setResizable(Qt::LeftEdge | Qt::RightEdge | Qt::TopEdge
@@ -375,6 +378,8 @@ void chat_widget::set_chat_visible(bool visible)
     geo.setBottom(std::min(geo.top() + h, parentWidget()->height()));
   }
   setGeometry(geo);
+
+  m_chat_visible = visible;
 }
 
 /**
