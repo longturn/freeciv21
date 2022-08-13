@@ -174,7 +174,24 @@ void close_widget::notify_parent()
 /**
    Set resizable flags
  */
-void resizable_widget::setResizable(Qt::Edges edges) { resizeFlags = edges; }
+void resizable_widget::setResizable(Qt::Edges edges)
+{
+  resizeFlags = edges;
+  auto margins = QMargins();
+  if (edges & Qt::LeftEdge) {
+    margins.setLeft(margin_width);
+  }
+  if (edges & Qt::RightEdge) {
+    margins.setRight(margin_width);
+  }
+  if (edges & Qt::TopEdge) {
+    margins.setTop(margin_width);
+  }
+  if (edges & Qt::BottomEdge) {
+    margins.setBottom(margin_width);
+  }
+  setContentsMargins(margins);
+}
 
 /**
    Get resizable flags of wdiget
