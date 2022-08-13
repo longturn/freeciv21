@@ -7,8 +7,8 @@ Documentation Style Guide
 .. role:: wonder
 
 The Longturn community uses the Python based Sphinx system to generate the documentation available on this
-website and in the :file:`doc` directory in the released tarball. Sphinx takes plain text files formatted
-with a superset of markdown called reStructuredText (ReST). Sphinx reStructuredText is documented here:
+website. Sphinx takes plain text files formatted with a superset of markdown called reStructuredText (ReST).
+Sphinx reStructuredText is documented here:
 https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html
 
 This style guide is mostly meant for documentation authors to ensure that we keep a consistent look and feel
@@ -46,29 +46,41 @@ Heading 3
 
 .. code-block:: rst
 
-    This is heading 3
-    -----------------
+    This is a sub-chapter marker
+    ----------------------------
+
+
+Heading 4
+    Heading 4 is used to break a sub-chapter down into a further section. This is useful for large pages, such
+    as the :doc:`../General/Manuals/client-manual`. The carrot is used to denote Heading4 like this:
+
+.. code-block:: rst
+
+    This is a sub-chapter break
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 Interpreted Text Roles
 ======================
 
 Interpreted text roles are special code blocks that are inserted in line with regular text to create user
-interface markup elements to bring attention to something or make it more obvious to the reader what you
-want to do. Interpreted text roles are simply a code word surrounded by a colon on both sides and the text
-you want to alter is placed inside back-ticks.
+interface markup elements to bring attention to something or make it more obvious to the reader what you want
+to do. Interpreted text roles are simply a code word surrounded by a colon on both sides and the text you want
+to alter is placed inside back-ticks.
 
 * :literal:`:doc:` -- Doc is used to create a hyperlink reference between documents in the documentation
   system.
 * :literal:`:emphasis:` -- Emphasis is used to :emphasis:`bring attention to something`.
-* :literal:`:file:` -- File is used for file names and paths such as :file:`~/.local/share/freeciv21/saves`
+* :literal:`:file:` -- File is used for file names and paths such as :file:`~/.local/share/freeciv21/saves`.
 * :literal:`:guilabel:` -- GUI Label is used to bring attention to someting on the screen like the
-  :guilabel:`Next` button on the installer wizard
-* :literal:`:literal:` -- Literal is used when you want to note a text element in its raw form. This is equivalent to using four back-ticks: ````text````.
+  :guilabel:`Next` button on the installer wizard.
+* :literal:`:literal:` -- Literal is used when you want to note a text element in its raw form. This is
+  equivalent to using two back-ticks: ````text````.
 * :literal:`:menuselection:` -- Menu Selection is used to give the path of menu clicks such as
-  :menuselection:`Game --> Options --> Local Options`. To create the arrow character in between the options
-  you will place a text arrow like this: :literal:`-->` in between the selection items.
-* :literal:`:strong:` -- Strong is used to :strong:`bold some text`.
+  :menuselection:`Game --> Local Options`. To create the arrow character in between the clicks. You will place
+  a text arrow like this: :literal:`-->` in between the selection items.
+* :literal:`:strong:` -- Strong is used to :strong:`bold some text`. A good use of :literal:`:strong:` is to
+  highlight game elements, such as technologies.
 * :literal:`:title-reference:` -- Title Reference is used notate a :title-reference:`title entry` in the
   in-game help or to refer to a page in the documentation without giving an actual hyperlink reference
   (see :literal:`:doc:` above).
@@ -87,9 +99,9 @@ https://docutils.sourceforge.io/docs/ref/rst/directives.html#custom-interpreted-
 Admonition Directives
 =====================
 
-Admonitions are specially marked "topics" that can appear anywhere an ordinary body element can. Typically,
-an admonition is rendered as an offset block in a document, sometimes outlined or shaded, with a title
-matching the admonition type. We use some of the standard admonitions in our documentation as well.
+Admonitions are specially marked "topics" that can appear anywhere an ordinary body element can. Typically, an
+admonition is rendered as an offset block in a document, sometimes outlined or shaded, with a title matching
+the admonition type. We use some of the standard admonitions in our documentation as well.
 
 * :literal:`.. attention::` -- Use attention to bring a very important high profile item to the reader's
   attention.
@@ -103,10 +115,10 @@ matching the admonition type. We use some of the standard admonitions in our doc
 .. todo::
     Come back and fix something later.
 
-* :literal:`.. note::` --  Use the "note" as we way to give more information to the reader on a topic.
+* :literal:`.. note::` --  Use the "note" as the way to give more information to the reader on a topic.
 
 .. note::
-    It's important to note that Freeciv21 is really fun to play with group's of people online.
+    It's important to note that Freeciv21 is really fun to play with groups of people online.
 
 * :literal:`.. code-block:: rst` -- The code block is an excellent way to display actual code or any
   pre-formatted plain text.
@@ -115,3 +127,54 @@ matching the admonition type. We use some of the standard admonitions in our doc
 
     This is a code block showing some pre-formatted text.
 
+
+Language Usage Elements
+=======================
+
+The documentation is written mostly in US English (en_US), however elements of Queen's English (e.g. en_GB)
+are also found in the documentation. The two forms of English are close enough that we don't worry too much
+if one author uses "color" and another uses "colour". Any reader or language translator will be able to figure
+out what the author is trying to say. However, there are some standards that documentation authors do need to
+adhere to, so the documentation is consistently formatted and certain language elements are always used the
+same way.
+
+The Oxford Comma
+    The Oxford Comma is the usage of a comma when listing multple things and placing a comma before the "and"
+    at the end of the list. For example: You need to follow these steps: Click on :guilabel:`Menu`, then click
+    on :guilabel:`Options`, and finally click on :guilabel:`Interface`. Notice the comma usage before the word
+    "and", that is the Oxford command and its usage is expeced in our documentation
+
+Capitalization
+    For consistent formatting, the following should always use "Title Capitalization" rules:
+
+    * Section Headings (e.g. the 4 documented above)
+    * Menu Entries in the client
+    * Anything inside of :literal:`:guilabel:` or :literal:`:menuselection:`
+    * The names of Units, City Improvements and Wonders in the :literal:`:unit:`, :literal:`:improvement:` and
+      :literal:`:wonder:` tags respectively
+
+Language Contractions
+    Language Contractions are when two words are combined together with an apostrophe ( ``'`` ). For example,
+    the word "don't" is a contraction of "do not". Not all language translators, and especially non-native
+    English speakers can get confused if contractions are used. To aid the readability of our documentation,
+    :strong:`the usage of contractions is not acceptable`.
+
+Figure Numbers
+    Diagrams, Screenshots, and Tables are :strong:`expected` to be numbered using the :literal:`numfig`
+    feature of Sphinx. For example see this code block for a figure:
+
+    .. code-block:: rst
+
+        .. _Start Screen:
+        .. figure:: ../../_static/images/gui-elements/start-screen.png
+          :scale: 65%
+          :align: center
+          :alt: Freeciv21 Start Screen
+          :figclass: align-center
+
+          Start Screen with NightStalker Theme
+
+
+    The first line ``.. _Start Screen:`` is a label for the figure. The ``numfig`` feature of Sphinx will
+    automatically give the figure a number in the order they are found in the page. You can then provide a
+    link to the figure in your text with :literal:`:numfig:\`Label\``
