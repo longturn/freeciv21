@@ -1936,8 +1936,8 @@ static struct client_option client_options[] = {
            "menu bar."),
         COC_INTERFACE, true, nullptr),
     GEN_INT_OPTION(gui_qt_increase_fonts, N_("Change all fonts size"),
-                   N_("Change size of all fonts at once by given percent."
-                      "That options is not unsaveable. Hit Apply button"
+                   N_("Change size of all fonts at once by given percent. "
+                      "This option cannot be saved. Hit the Apply button "
                       "after changing this."),
                    COC_FONT, 0, -100, 100, allfont_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_default, "default_font", N_("Default font"),
