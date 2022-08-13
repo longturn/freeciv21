@@ -75,6 +75,7 @@ class resizable_widget : public fcwidget {
   Q_OBJECT
 
   static constexpr int event_width = 25;
+  static constexpr int margin_width = 3;
 
 signals:
   void resized(QRect rect);
