@@ -40,8 +40,97 @@ namespace freeciv {
  * One can also retrieve the canvas position of the current item using the
  * @ref x and @ref y functions.
  *
- * @todo Recover the picture of the grid formerly at
- *       http://article.gmane.org/gmane.games.freeciv.devel/50449.
+ * The order of iteration depends on the map topology. The basic idea is to
+ * operate on a rectangular grid, which works pretty nicely when the topology
+ * is neither isometric nor hexagonal:
+ * ~~~
+ *    |     |     |
+ * t  e  t  e  t  e  t
+ *    |     |     |
+ * e--c--e--c--e--c--e--
+ *    |     |     |
+ * t  e  t  e  t  e  t
+ *    |     |     |
+ * e--c--e--c--e--c--e--
+ *    |     |     |
+ * t  e  t  e  t  e  t
+ *    |     |     |
+ * ~~~
+ *
+ * In the diagram above, "t" stands for @ref tile, "e" for @ref edge, and "c"
+ * for @ref corner. Iteration takes place from left to right and from top to
+ * bottom, i.e. in reading order.
+ *
+ * Things get more complicated for isometric grids, as some points on the
+ * grid don't correspond to anything and need to be skipped. They are
+ * represented with dots in the diagram below:
+ * ~~~
+ * t . c . t . c . t
+ *    / \     / \
+ * . e . e . e . e .
+ *  /     \ /     \
+ * c . t . c . t . c
+ *  \     / \     /
+ * . e . e . e . e .
+ *    \ /     \ /
+ * t . c . t . c . t
+ *    / \     / \
+ * . e . e . e . e .
+ *  /     \ /     \
+ * c . t . c . t . c
+ *  \     / \     /
+ * . e . e . e . e .
+ *    \ /     \ /
+ * t . c . t . c . t
+ * ~~~
+ *
+ * For hexagonal grids, some points are corners and edges at the same time:
+ * ~~~
+ *   . --ce- .   t   . --ce- .
+ *    /     \         /     \
+ *   e   .   e   .   e   .   e
+ *  /         \     /         \
+ * - .   t   . --ce- .   t   . -
+ *  \         /     \         /
+ *   e   .   e   .   e   .   e
+ *    \     /         \     /
+ *   . --ce- .   t   . --ce- .
+ *    /     \         /     \
+ *   e   .   e   .   e   .   e
+ *  /         \     /         \
+ * - .   t   . --ce- .   t   . -
+ *  \         /     \         /
+ *   e   .   e   .   e   .   e
+ *    \     /         \     /
+ *   . --ce-  .  t   . --ce- .
+ * ~~~
+ *
+ *
+ * ~~~
+ * t . c . t . c . t
+ *    / \     / \
+ * . e . e . e . e .
+ *  /     \ /     \
+ * |       |       |
+ * ce. t . ce. t . ce
+ * |       |       |
+ *  \     / \     /
+ * . e . e . e . e .
+ *    \ /     \ /
+ *     |       |
+ * t . ce. t . ce. t
+ *     |       |
+ *    / \     / \
+ * . e . e . e . e .
+ *  /     \ /     \
+ * |       |       |
+ * ce. t . ce. t . ce
+ * |       |       |
+ *  \     / \     /
+ * . e . e . e . e .
+ *    \ /     \ /
+ * t . c . t . c . t
+ * ~~~
  */
 
 /**
