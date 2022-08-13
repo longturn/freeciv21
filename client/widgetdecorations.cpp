@@ -214,7 +214,6 @@ void resizable_widget::mousePressEvent(QMouseEvent *event)
     if (resizeFlags | flags) {
       // Save flag and mouse position for mouse move event
       eventFlags = flags;
-      last_position = event->globalPos();
     }
   }
   event->setAccepted(true);
@@ -257,7 +256,6 @@ void resizable_widget::mouseReleaseEvent(QMouseEvent *event)
   // If the event flag is active, then reset all
   if (eventFlags != Qt::Edges()) {
     eventFlags = Qt::Edges();
-    last_position = QPoint{};
     setCursor(Qt::ArrowCursor);
   }
   emit resized(rect());
@@ -279,25 +277,32 @@ void resizable_widget::mouseMoveEvent(QMouseEvent *event)
     if (eventFlags != Qt::Edges()) {
       auto new_rect = QRect(pos(), size());
 
-      // Calculate diff betwen position and update last position
-      auto diff = event->globalPos() - last_position;
-      last_position = event->globalPos();
+      // The x and y that we should reach, relative to the parent widget
+      const auto target = event->pos() + pos();
 
       // Resizing and moving depending on the type of event
-      if (eventFlags & Qt::TopEdge
-          && height() - diff.y() >= minimumHeight()) {
-        new_rect.setTop(new_rect.top() + diff.y());
-      } else if (eventFlags & Qt::BottomEdge
-                 && height() + diff.y() >= minimumHeight()) {
-        new_rect.setBottom(new_rect.bottom() + diff.y());
+      if (eventFlags & Qt::TopEdge) {
+        new_rect.setTop(target.y());
+        if (new_rect.height() < minimumHeight()) {
+          new_rect.setTop(new_rect.bottom() - minimumHeight());
+        }
+      } else if (eventFlags & Qt::BottomEdge) {
+        new_rect.setBottom(target.y());
+        if (new_rect.height() < minimumHeight()) {
+          new_rect.setBottom(new_rect.top() + minimumHeight());
+        }
       }
 
-      if (eventFlags & Qt::LeftEdge
-          && width() - diff.x() >= minimumWidth()) {
-        new_rect.setLeft(new_rect.left() + diff.x());
-      } else if (eventFlags & Qt::RightEdge
-                 && width() + diff.x() >= minimumWidth()) {
-        new_rect.setRight(new_rect.right() + diff.x());
+      if (eventFlags & Qt::LeftEdge) {
+        new_rect.setLeft(target.x());
+        if (new_rect.width() < minimumWidth()) {
+          new_rect.setLeft(new_rect.right() - minimumWidth());
+        }
+      } else if (eventFlags & Qt::RightEdge) {
+        new_rect.setRight(target.x());
+        if (new_rect.width() < minimumWidth()) {
+          new_rect.setRight(new_rect.left() + minimumWidth());
+        }
       }
 
       // Prevent resizing out of the parent
