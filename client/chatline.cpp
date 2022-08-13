@@ -339,6 +339,17 @@ chat_widget::chat_widget(QWidget *parent)
  */
 void chat_widget::set_chat_visible(bool visible)
 {
+  if (visible) {
+    setMinimumSize(200, 100);
+    setResizable(resizable_flag::top | resizable_flag::topLeft
+                 | resizable_flag::topRight | resizable_flag::bottom
+                 | resizable_flag::bottomLeft | resizable_flag::bottomRight
+                 | resizable_flag::left | resizable_flag::right);
+  } else {
+    setMinimumSize(200, 0);
+    setResizable({});
+  }
+
   chat_line->setVisible(visible);
   chat_output->setVisible(visible);
   cb->setVisible(visible && !is_server_running());
