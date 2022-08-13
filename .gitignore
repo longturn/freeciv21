@@ -12,6 +12,7 @@
 
 # Translations
 *.gmo
+/translations/core/freeciv-core.pot
 /translations/nations/freeciv-nations.pot
 /translations/nations/POTFILES
 
@@ -30,7 +31,7 @@
 manual*.html
 
 # Core dumps
-core
+/core
 
 # CMake files
 CMakeCache.txt
