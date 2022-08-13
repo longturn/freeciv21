@@ -100,8 +100,12 @@ fc_client::fc_client() : QMainWindow(), current_file(QLatin1String(""))
   if (!path.isEmpty()) {
     QSettings::setPath(QSettings::NativeFormat, QSettings::UserScope, path);
   }
+
   init_mapcanvas_and_overview();
-  pages[PAGE_GAME] = new pageGame(central_wdg);
+  auto page_game = new pageGame(central_wdg);
+  page_game->chat->installEventFilter(this); // To save its location
+  pages[PAGE_GAME] = page_game;
+
   pages[PAGE_GAME + 1] = new QWidget(central_wdg);
   create_loading_page();
   pages[PAGE_GAME + 1]->setLayout(pages_layout[PAGE_GAME + 1]);
@@ -351,6 +355,28 @@ void fc_client::delete_cursors()
       delete fc_cursors[cursor][frame];
     }
   }
+}
+
+/**
+ * Used to keep track of the size and location of the chat widget.
+ */
+bool fc_client::eventFilter(QObject *obj, QEvent *event)
+{
+  const auto page_game = qobject_cast<pageGame *>(pages[PAGE_GAME]);
+  if (page_game && obj == page_game->chat
+      && page_game->chat->is_chat_visible()) {
+    const auto chat = page_game->chat;
+    if (event->type() == QEvent::Move) {
+      const auto xy = QPointF(chat->pos());
+      qt_settings.chat_fx_pos = xy.x() / page_game->width();
+      qt_settings.chat_fy_pos = xy.y() / page_game->height();
+    } else if (event->type() == QEvent::Resize) {
+      const auto size = QSizeF(chat->size());
+      qt_settings.chat_fwidth = size.width() / page_game->width();
+      qt_settings.chat_fheight = size.height() / page_game->height();
+    }
+  }
+  return false;
 }
 
 /**

@@ -118,6 +118,10 @@ public:
   int default_size(int lines);
   void take_focus();
   void update_font();
+
+  /// Returns whether the chat widget is currently visible.
+  bool is_chat_visible() const { return m_chat_visible; }
+
 private slots:
   void set_chat_visible(bool visible);
   void update_menu() override {}
@@ -131,6 +135,8 @@ protected:
 private:
   void chat_message_received(const QString &message,
                              const struct text_tag_list *tags) override;
+
+  bool m_chat_visible = true;
   QTextBrowser *chat_output;
   QPushButton *remove_links;
   QPushButton *show_hide;

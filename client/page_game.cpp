@@ -514,15 +514,15 @@ bool fc_game_tab_widget::event(QEvent *event)
                           : this->size();
     if (event->type() == QEvent::Resize) {
       queen()->message->resize(
-          qRound((size.width() * king()->qt_settings.chat_fwidth)),
-          qRound((size.height() * king()->qt_settings.chat_fheight)));
+          qRound(size.width() * king()->qt_settings.chat_fwidth),
+          qRound(size.height() * king()->qt_settings.chat_fheight));
       queen()->message->move(size.width() - queen()->message->width(), 0);
       queen()->chat->resize(
-          qRound((size.width() * king()->qt_settings.chat_fwidth)),
-          qRound((size.height() * king()->qt_settings.chat_fheight)));
+          qRound(size.width() * king()->qt_settings.chat_fwidth),
+          qRound(size.height() * king()->qt_settings.chat_fheight));
       queen()->chat->move(
-          qRound((size.width() * king()->qt_settings.chat_fx_pos)),
-          qRound((size.height() * king()->qt_settings.chat_fy_pos)));
+          qRound(size.width() * king()->qt_settings.chat_fx_pos),
+          qRound(size.height() * king()->qt_settings.chat_fy_pos));
       queen()->battlelog_wdg->set_scale(king()->qt_settings.battlelog_scale);
       queen()->battlelog_wdg->move(
           qRound(king()->qt_settings.battlelog_x * mapview.width),
