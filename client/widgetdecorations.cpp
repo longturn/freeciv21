@@ -277,8 +277,7 @@ void resizable_widget::mouseMoveEvent(QMouseEvent *event)
   if (event->buttons() & Qt::LeftButton) {
     // If the event flag is active
     if (eventFlags != Qt::Edges()) {
-      auto new_size = size();
-      auto new_pos = pos();
+      auto new_rect = QRect(pos(), size());
 
       // Calculate diff betwen position and update last position
       auto diff = event->globalPos() - last_position;
@@ -287,24 +286,25 @@ void resizable_widget::mouseMoveEvent(QMouseEvent *event)
       // Resizing and moving depending on the type of event
       if (eventFlags & Qt::TopEdge
           && height() - diff.y() >= minimumHeight()) {
-        new_size.setHeight(height() - diff.y());
-        new_pos.setY(y() + diff.y());
+        new_rect.setTop(new_rect.top() + diff.y());
       } else if (eventFlags & Qt::BottomEdge
                  && height() + diff.y() >= minimumHeight()) {
-        new_size.setHeight(height() + diff.y());
+        new_rect.setBottom(new_rect.bottom() + diff.y());
       }
 
       if (eventFlags & Qt::LeftEdge
           && width() - diff.x() >= minimumWidth()) {
-        new_size.setWidth(width() - diff.x());
-        new_pos.setX(x() + diff.x());
+        new_rect.setLeft(new_rect.left() + diff.x());
       } else if (eventFlags & Qt::RightEdge
                  && width() + diff.x() >= minimumWidth()) {
-        new_size.setWidth(width() + diff.x());
+        new_rect.setRight(new_rect.right() + diff.x());
       }
 
-      resize(new_size);
-      move(new_pos);
+      // Prevent resizing out of the parent
+      new_rect &= parentWidget()->rect();
+
+      resize(new_rect.size());
+      move(new_rect.topLeft());
     }
   } else {
     // Get flag from mouse position
