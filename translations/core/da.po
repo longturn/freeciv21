@@ -45,7 +45,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: da\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2022-08-12 22:37+0200\n"
+"POT-Creation-Date: 2022-08-13 02:30+0200\n"
 "PO-Revision-Date: 2011-01-30 14:56+0100\n"
 "Last-Translator: Ask Hjorth Larsen <asklarsen@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -3133,9 +3133,9 @@ msgstr "Zoom : %s"
 msgid "Scale fonts"
 msgstr "Skaler enhedsinfo"
 
-#: client/menu.cpp:646
+#: client/menu.cpp:646 client/options.cpp:1494
 #, fuzzy
-msgid "Citybar style"
+msgid "City bar style"
 msgstr "Bystil:"
 
 #: client/menu.cpp:659
@@ -3817,11 +3817,6 @@ msgid ""
 msgstr ""
 "Ved at ændre på dette tilvalg ændrer du det aktive feltsæt. Det svarer til "
 "at anvende kommandolinjeparametren -t."
-
-#: client/options.cpp:1494
-#, fuzzy
-msgid "City bar style"
-msgstr "Bystil:"
 
 #: client/options.cpp:1495
 #, fuzzy
@@ -4737,8 +4732,8 @@ msgstr "Ændr til %s"
 
 #: client/options.cpp:1939
 msgid ""
-"Change size of all fonts at once by given percent.That options is not "
-"unsaveable. Hit Apply buttonafter changing this."
+"Change size of all fonts at once by given percent. This option cannot be "
+"saved. Hit the Apply button after changing this."
 msgstr ""
 
 #: client/options.cpp:1943
@@ -24779,7 +24774,7 @@ msgid ""
 "option \"mgr_dist\".\n"
 " - Trade surplus.\n"
 " - Luxury and science output.\n"
-" - The quantity of city improvements (and wonders), measured by build cost.\n"
+" - The total cost of city improvements and wonders in the city.\n"
 " - Depending on the ruleset, a number of other factors such as government "
 "type and city improvements may increase or decrease the desirability of "
 "cities. These are noted in other sections of the help. The classic ruleset "
@@ -24933,9 +24928,9 @@ msgid ""
 "The value can be zero, meaning no attack is possible.\n"
 " - Defense (D): This is the comparative strength of the unit when it is a "
 "defender. The value can be zero, meaning no defense is possible.\n"
-" - Moves (M): This is the number of move points that the unit can move per "
+" - Moves (M): This is the number of move points that the unit can use per "
 "turn. Under certain rulesets, Terrain and Veteran level will impact how "
-"moves are consumed as a unit is moved around the map.\n"
+"moves are consumed as a unit moves around the map.\n"
 " - Hitpoints (H): This is effectively the constitution of the unit. The "
 "higher the value, the more \"hits\" the unit can take before being "
 "destroyed.\n"
@@ -40527,6 +40522,10 @@ msgstr "FALSK"
 #, c-format
 msgid "error %ld (failed FormatMessage)"
 msgstr "fejl %ld (mislykket FormatMessage)"
+
+#, fuzzy
+#~ msgid "Citybar style"
+#~ msgstr "Bystil:"
 
 #, fuzzy, c-format
 #~| msgid "%s is selling %s (obsolete) for %d."
