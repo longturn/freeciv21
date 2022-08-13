@@ -199,11 +199,6 @@ void resizable_widget::setResizable(Qt::Edges edges)
 Qt::Edges resizable_widget::getResizable() const { return resizeFlags; }
 
 /**
-   Remove all resizable flags
- */
-void resizable_widget::removeResizable() { resizeFlags = {}; }
-
-/**
    Checks if info_tab can be moved
  */
 void resizable_widget::mousePressEvent(QMouseEvent *event)

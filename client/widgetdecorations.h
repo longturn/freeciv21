@@ -87,9 +87,6 @@ public:
   // get resizable flags
   Qt::Edges getResizable() const;
 
-  // remove resizable for widget
-  void removeResizable();
-
 private:
   Qt::Edges get_in_event_mouse(const QMouseEvent *event) const;
 
