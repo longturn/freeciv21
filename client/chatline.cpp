@@ -371,6 +371,10 @@ void chat_widget::set_chat_visible(bool visible)
   if (expand_up) {
     geo.setTop(std::max(geo.bottom() - h, 0));
     geo.setHeight(h);
+    // Prevent it from going out of screen
+    if (geo.bottom() > parentWidget()->height()) {
+      geo.translate(0, parentWidget()->height() - geo.bottom());
+    }
   } else {
     geo.setBottom(std::min(geo.top() + h, parentWidget()->height()));
   }
