@@ -19,6 +19,7 @@
 #include <QPainter>
 #include <QScrollBar>
 #include <QTextBlock>
+#include <qnamespace.h>
 // common
 #include "chat.h"
 #include "chatline_common.h"
@@ -256,10 +257,7 @@ chat_widget::chat_widget(QWidget *parent)
   QGridLayout *gl;
   setParent(parent);
   setMinimumSize(200, 100);
-  setResizable(resizable_flag::top | resizable_flag::topLeft
-               | resizable_flag::topRight | resizable_flag::bottom
-               | resizable_flag::bottomLeft | resizable_flag::bottomRight
-               | resizable_flag::left | resizable_flag::right);
+  setResizable(Qt::LeftEdge | Qt::RightEdge | Qt::TopEdge | Qt::BottomEdge);
 
   gl = new QGridLayout;
   gl->setVerticalSpacing(0);
@@ -341,10 +339,8 @@ void chat_widget::set_chat_visible(bool visible)
 {
   if (visible) {
     setMinimumSize(200, 100);
-    setResizable(resizable_flag::top | resizable_flag::topLeft
-                 | resizable_flag::topRight | resizable_flag::bottom
-                 | resizable_flag::bottomLeft | resizable_flag::bottomRight
-                 | resizable_flag::left | resizable_flag::right);
+    setResizable(Qt::LeftEdge | Qt::RightEdge | Qt::TopEdge
+                 | Qt::BottomEdge);
   } else {
     setMinimumSize(200, 0);
     setResizable({});

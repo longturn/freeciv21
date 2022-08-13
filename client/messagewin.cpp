@@ -40,8 +40,7 @@ message_widget::message_widget(QWidget *parent)
   layout = new QGridLayout;
   layout->setMargin(2);
   setLayout(layout);
-  setResizable(resizable_flag::bottom | resizable_flag::bottomLeft
-               | resizable_flag::left);
+  setResizable(Qt::LeftEdge | Qt::BottomEdge);
 
   auto title = new QLabel(_("Messages"));
   title->setAlignment(Qt::AlignCenter);

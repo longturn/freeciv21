@@ -16,6 +16,7 @@
 // Qt
 #include <QMouseEvent>
 #include <QPainter>
+#include <qnamespace.h>
 // gui-qt
 #include "fc_client.h"
 #include "icons.h"
@@ -173,31 +174,17 @@ void close_widget::notify_parent()
 /**
    Set resizable flags
  */
-void resizable_widget::setResizable(QFlags<resizable_flag> flags)
-{
-  resizeFlags = flags;
-}
+void resizable_widget::setResizable(Qt::Edges edges) { resizeFlags = edges; }
 
 /**
    Get resizable flags of wdiget
  */
-QFlags<resizable_flag> resizable_widget::getResizable() const
-{
-  return resizeFlags;
-}
+Qt::Edges resizable_widget::getResizable() const { return resizeFlags; }
 
 /**
    Remove all resizable flags
  */
 void resizable_widget::removeResizable() { resizeFlags = {}; }
-
-/**
-   Check if resizable flag is active
- */
-bool resizable_widget::hasResizable(resizable_flag flag) const
-{
-  return resizeFlags.testFlag(flag);
-}
 
 /**
    Checks if info_tab can be moved
@@ -209,12 +196,12 @@ void resizable_widget::mousePressEvent(QMouseEvent *event)
   }
   if (event->button() == Qt::LeftButton) {
     // Get flag from mouse position
-    auto flag = get_in_event_mouse(event);
+    auto flags = get_in_event_mouse(event);
 
     // Check the flag and widget for the presence of a flag
-    if (flag != resizable_flag::none && resizeFlags.testFlag(flag)) {
+    if (resizeFlags | flags) {
       // Save flag and mouse position for mouse move event
-      eventFlag = flag;
+      eventFlags = flags;
       last_position = event->globalPos();
     }
   }
@@ -224,54 +211,26 @@ void resizable_widget::mousePressEvent(QMouseEvent *event)
 /**
    Get resizable_flag from mouse position
  */
-resizable_flag
+Qt::Edges
 resizable_widget::get_in_event_mouse(const QMouseEvent *event) const
 {
-  if (event->x() >= width() / 2 - event_width
-      && event->x() <= width() / 2 + event_width && event->y() >= 0
-      && event->y() <= event_width) {
-    return resizable_flag::top;
+  auto flags = Qt::Edges();
+
+  if (std::abs(event->x()) < event_width && event->x() < width() / 2) {
+    flags |= Qt::LeftEdge;
+  } else if (std::abs(event->x() - width()) < event_width
+             && event->x() >= width() / 2) {
+    flags |= Qt::RightEdge;
   }
 
-  if (event->x() >= 0 && event->x() <= event_width && event->y() >= 0
-      && event->y() <= event_width) {
-    return resizable_flag::topLeft;
+  if (std::abs(event->y()) < event_width) {
+    flags |= Qt::TopEdge;
+  } else if (std::abs(event->y() - height()) < event_width
+             && event->y() >= height() / 2) {
+    flags |= Qt::BottomEdge;
   }
 
-  if (event->x() >= width() - event_width && event->x() <= width()
-      && event->y() >= 0 && event->y() <= event_width) {
-    return resizable_flag::topRight;
-  }
-
-  if (event->x() >= width() / 2 - event_width
-      && event->x() <= width() / 2 + event_width
-      && event->y() >= height() - event_width && event->y() <= height()) {
-    return resizable_flag::bottom;
-  }
-
-  if (event->x() >= 0 && event->x() <= event_width
-      && event->y() >= height() - event_width && event->y() <= height()) {
-    return resizable_flag::bottomLeft;
-  }
-
-  if (event->x() >= width() - event_width && event->x() <= width()
-      && event->y() >= height() - event_width && event->y() <= height()) {
-    return resizable_flag::bottomRight;
-  }
-
-  if (event->x() >= 0 && event->x() <= event_width
-      && event->y() >= height() / 2 - event_width
-      && event->y() <= height() / 2 + event_width) {
-    return resizable_flag::left;
-  }
-
-  if (event->x() >= width() - event_width && event->x() <= width()
-      && event->y() >= height() / 2 - event_width
-      && event->y() <= height() / 2 + event_width) {
-    return resizable_flag::right;
-  }
-
-  return resizable_flag::none;
+  return flags;
 }
 
 /**
@@ -284,8 +243,8 @@ void resizable_widget::mouseReleaseEvent(QMouseEvent *event)
   }
 
   // If the event flag is active, then reset all
-  if (eventFlag != resizable_flag::none) {
-    eventFlag = resizable_flag::none;
+  if (eventFlags != Qt::Edges()) {
+    eventFlags = Qt::Edges();
     last_position = QPoint{};
     setCursor(Qt::ArrowCursor);
   }
@@ -305,125 +264,51 @@ void resizable_widget::mouseMoveEvent(QMouseEvent *event)
   // Check left button state
   if (event->buttons() & Qt::LeftButton) {
     // If the event flag is active
-    if (eventFlag != resizable_flag::none) {
-      QSize size{width(), height()};
-      QPoint pos{x(), y()};
+    if (eventFlags != Qt::Edges()) {
+      auto new_size = size();
+      auto new_pos = pos();
 
       // Calculate diff betwen position and update last position
       auto diff = event->globalPos() - last_position;
       last_position = event->globalPos();
 
       // Resizing and moving depending on the type of event
-      switch (eventFlag) {
-      case resizable_flag::top: {
-        if (minimumHeight() < height() - diff.y()) {
-          size.setHeight(height() - diff.y());
-          pos.setY(y() + diff.y());
-        }
-
-        resize(size.width(), size.height());
-        move(pos.x(), pos.y());
-      } break;
-
-      case resizable_flag::topLeft: {
-        if (minimumWidth() < width() - diff.x()) {
-          size.setWidth(width() - diff.x());
-          pos.setX(x() + diff.x());
-        }
-
-        if (minimumHeight() < height() - diff.y()) {
-          size.setHeight(height() - diff.y());
-          pos.setY(y() + diff.y());
-        }
-
-        resize(size.width(), size.height());
-        move(pos.x(), pos.y());
-      } break;
-
-      case resizable_flag::topRight: {
-        if (minimumWidth() < width() + diff.x()) {
-          size.setWidth(width() + diff.x());
-        }
-
-        if (minimumHeight() < height() - diff.y()) {
-          size.setHeight(height() - diff.y());
-          pos.setY(y() + diff.y());
-        }
-
-        resize(size.width(), size.height());
-        move(pos.x(), pos.y());
-      } break;
-
-      case resizable_flag::bottom: {
-        if (minimumHeight() < height() + diff.y()) {
-          size.setHeight(height() + diff.y());
-        }
-
-        resize(size.width(), size.height());
-      } break;
-
-      case resizable_flag::bottomLeft: {
-        if (minimumWidth() < width() - diff.x()) {
-          size.setWidth(width() - diff.x());
-          pos.setX(x() + diff.x());
-        }
-
-        if (minimumHeight() < height() + diff.y()) {
-          size.setHeight(height() + diff.y());
-        }
-
-        resize(size.width(), size.height());
-        move(pos.x(), pos.y());
-      } break;
-
-      case resizable_flag::bottomRight: {
-        if (minimumWidth() < width() + diff.x()) {
-          size.setWidth(width() + diff.x());
-        }
-
-        if (minimumHeight() < height() + diff.y()) {
-          size.setHeight(height() + diff.y());
-        }
-
-        resize(size.width(), size.height());
-      } break;
-
-      case resizable_flag::left: {
-        if (minimumWidth() < width() - diff.x()) {
-          size.setWidth(width() - diff.x());
-          pos.setX(x() + diff.x());
-        }
-
-        resize(size.width(), size.height());
-        move(pos.x(), pos.y());
-      } break;
-
-      case resizable_flag::right: {
-        resize((std::max)(minimumWidth(), width() + diff.x()), height());
-      } break;
-
-      default:
-        break;
+      if (eventFlags & Qt::TopEdge
+          && height() - diff.y() >= minimumHeight()) {
+        new_size.setHeight(height() - diff.y());
+        new_pos.setY(y() + diff.y());
+      } else if (eventFlags & Qt::BottomEdge
+                 && height() + diff.y() >= minimumHeight()) {
+        new_size.setHeight(height() + diff.y());
       }
+
+      if (eventFlags & Qt::LeftEdge
+          && width() - diff.x() >= minimumWidth()) {
+        new_size.setWidth(width() - diff.x());
+        new_pos.setX(x() + diff.x());
+      } else if (eventFlags & Qt::RightEdge
+                 && width() + diff.x() >= minimumWidth()) {
+        new_size.setWidth(width() + diff.x());
+      }
+
+      resize(new_size);
+      move(new_pos);
     }
   } else {
     // Get flag from mouse position
-    auto flag = get_in_event_mouse(event);
+    auto flags = get_in_event_mouse(event) & resizeFlags;
 
     // Change the cursor if the flag is active and the widget has this flag
-    if (flag != resizable_flag::none && resizeFlags.testFlag(flag)) {
-      if (flag == resizable_flag::top || flag == resizable_flag::bottom) {
-        setCursor(Qt::SizeVerCursor);
-      } else if (flag == resizable_flag::topLeft
-                 || flag == resizable_flag::bottomRight) {
-        setCursor(Qt::SizeFDiagCursor);
-      } else if (flag == resizable_flag::topRight
-                 || flag == resizable_flag::bottomLeft) {
-        setCursor(Qt::SizeBDiagCursor);
-      } else if (flag == resizable_flag::left
-                 || flag == resizable_flag::right) {
-        setCursor(Qt::SizeHorCursor);
-      }
+    if (flags == Qt::LeftEdge || flags == Qt::RightEdge) {
+      setCursor(Qt::SizeHorCursor);
+    } else if (flags == Qt::TopEdge || flags == Qt::BottomEdge) {
+      setCursor(Qt::SizeVerCursor);
+    } else if (flags == (Qt::TopEdge | Qt::LeftEdge)
+               || flags == (Qt::BottomEdge | Qt::RightEdge)) {
+      setCursor(Qt::SizeFDiagCursor);
+    } else if (flags == (Qt::TopEdge | Qt::RightEdge)
+               || flags == (Qt::BottomEdge | Qt::LeftEdge)) {
+      setCursor(Qt::SizeBDiagCursor);
     } else {
       // Otherwise change cursor to default
       setCursor(Qt::ArrowCursor);
