@@ -22,15 +22,15 @@ namespace freeciv {
  * The iteration covers not only tiles but tile edges and corners.
  *
  * Iteration is performed by repeatedly calling @ref next and querying the
- * current @ref item_type "item type" with @ref current_item. If the item
- * type matches your needs, you can retrieve the @ref corner, @ref edge, or
- * @ref tile using the corresponding functions.
+ * current available items using @ref has_corner, @ref has_edge, or
+ * @ref has_tile. If the item type matches your needs, you can retrieve the
+ * @ref corner, @ref edge, or @ref tile using the corresponding functions.
  *
  * Typical usage is as follows:
  *
  * ```{.cpp}
  * for (auto it = gui_rect_iterator(tileset, rect); it.next(); ) {
- *   if (it.current_item() == gui_rect_iterator::item_type::tile) {
+ *   if (it.has_tile()) {
  *     auto tile = it.tile();
  *     // Do something
  *   }
@@ -131,6 +131,10 @@ namespace freeciv {
  *    \ /     \ /
  * t . c . t . c . t
  * ~~~
+ *
+ * During iteration, it may happen that some tiles are null because they are
+ * not visible to the current player. In this case, @ref has_tile will return
+ * @c false.
  */
 
 /**
@@ -178,6 +182,9 @@ bool gui_rect_iterator::next()
   }
 
   m_tile = nullptr;
+  m_has_corner = false;
+  m_has_edge = false;
+  m_has_tile = false;
 
   m_xi = m_x0 + (m_index % (m_x1 - m_x0));
   m_yi = m_y0 + (m_index / (m_x1 - m_x0));
@@ -194,11 +201,11 @@ bool gui_rect_iterator::next()
     if (m_xi % 2 == 0 && m_yi % 2 == 0) {
       if ((m_xi + m_yi) % 4 == 0) {
         // Tile
-        m_type = item_type::tile;
         m_tile = map_pos_to_tile(&(wld.map), si / 4 - 1, di / 4);
+        m_has_tile = (m_tile != nullptr);
       } else {
         // Corner
-        m_type = item_type::corner;
+        m_has_corner = true;
         m_corner.tile[0] =
             map_pos_to_tile(&(wld.map), (si - 6) / 4, (di - 2) / 4);
         m_corner.tile[1] =
@@ -208,10 +215,12 @@ bool gui_rect_iterator::next()
         m_corner.tile[3] =
             map_pos_to_tile(&(wld.map), (si - 6) / 4, (di + 2) / 4);
         if (tileset_hex_width(tileset) > 0) {
+          m_has_edge = true;
           m_edge.type = EDGE_UD;
           m_edge.tile[0] = m_corner.tile[0];
           m_edge.tile[1] = m_corner.tile[2];
         } else if (tileset_hex_height(tileset) > 0) {
+          m_has_edge = true;
           m_edge.type = EDGE_LR;
           m_edge.tile[0] = m_corner.tile[1];
           m_edge.tile[1] = m_corner.tile[3];
@@ -219,7 +228,7 @@ bool gui_rect_iterator::next()
       }
     } else {
       // Edge.
-      m_type = item_type::edge;
+      m_has_edge = true;
       if (si % 4 == 0) {
         m_edge.type = EDGE_NS;
         m_edge.tile[0] = map_pos_to_tile(&(wld.map), (si - 4) / 4,
@@ -238,7 +247,7 @@ bool gui_rect_iterator::next()
     if (si % 2 == 0) {
       if (m_xi % 2 == 0) {
         // Corner.
-        m_type = item_type::corner;
+        m_has_corner = true;
         m_corner.tile[0] = map_pos_to_tile(&(wld.map), m_xi / 2 - 1,
                                            m_yi / 2 - 1); // NW
         m_corner.tile[1] = map_pos_to_tile(&(wld.map), m_xi / 2,
@@ -249,12 +258,12 @@ bool gui_rect_iterator::next()
                                            m_yi / 2); // SW
       } else {
         // Tile.
-        m_type = item_type::tile;
         m_tile = map_pos_to_tile(&(wld.map), (m_xi - 1) / 2, (m_yi - 1) / 2);
+        m_has_tile = (m_tile != nullptr);
       }
     } else {
       // Edge.
-      m_type = item_type::edge;
+      m_has_edge = true;
       if (m_yi % 2 == 0) {
         m_edge.type = EDGE_NS;
         m_edge.tile[0] = map_pos_to_tile(&(wld.map), (m_xi - 1) / 2,
