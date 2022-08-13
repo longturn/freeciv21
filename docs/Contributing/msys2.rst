@@ -2,7 +2,7 @@ MSYS2 Windows Installer Build
 *****************************
 
 This document is about building compiling Freeciv21 and building the Windows Installer packages using MSYS2
-from http://msys2.github.io
+from https://www.msys2.org.
 
 
 Setup
@@ -10,78 +10,71 @@ Setup
 
 This chapter is about creating new msys2 build environment.
 
-1. Install MSYS2 following the documentation on their homepage.
+#. Download MSYS2 from their homepage: https://www.msys2.org/#installation
 
-2. Download: https://sourceforge.net/projects/msys2/files/Base/x86_64/msys2-x86_64-20210228.exe for win64 host.
+#. Run the downloaded file to install MSYS2 on you build system. This author recommends that you install the
+   files in a directory off of the root of your ``C:\`` Drive. For example: ``C:\Tools\``
 
-3. Run it to install MSYS2 on build system.
+#. Launch :file:`msys2_shell` from the installation directory. Issue the following command to update the base
+   set of packages.
 
-4. Launch :file:`msys2_shell` to update packages.
+    .. code-block:: rst
 
-.. code-block:: rst
-
-    > pacman -Syu
-
-
-5. Install following packages with :code:`pacman -Su`.
-
-6. Packages needed for building freeciv21. These packages are needed even if you don't plan to make the
-installer, but only build Freeciv21 for local use.
-
-7. Arch independent packages needed for building Freeciv21.
-
-8. Arch independent packages always needed for building Freeciv21. With these packages it's possible to build
-Freeciv21 source tree that has already such generated files present that are created for the release tarball.
-
-* make
-* gettext
-* pkg-config
+        > pacman -Syuu
 
 
-9. Arch independent packages needed for getting and extracting Freeciv21 source tarball
+#. The :file:`msys2_shell` will close when this is complete. Run it again and install following packages with
+   :code:`pacman -Su <package name>`. The packages needed for building Freeciv21 are numerous. These packages
+   are needed even if you don't plan to make the installer, update documentation, but only build Freeciv21 for
+   local use.
 
-* tar
+#. Install these arch independent packages that are needed for building Freeciv21. With these packages it is
+   possible to build a Freeciv21 source tree that was created via release tarball or zip file.
 
+    * pkgconf
+    * tar
+    * git
+    * automake
+    * libtool
+    * autoconf
+    * patch
+    * ed
+    * python3
+    * python-pip
+    * make
 
-10. Arch independent packages needed for building Freeciv21 from repository checkout. These are needed in
-addition to the ones always needed for building Freeciv21.
+#. Install these arch-specific packages for building common parts (i686 or x86_64, but not both). It is
+   recommended that you install the x86_64 packages, unless you think you need a cross-compiler.
 
-* git
+    * mingw-w64-i686-gcc / mingw-w64-x86_64-gcc
+    * mingw-w64-i686-gdb / mingw-w64-x86_64-gdb
+    * mingw-w64-i686-curl / mingw-w64-x86_64-curl
+    * mingw-w64-i686-bzip2 / mingw-w64-x86_64-bzip2
+    * mingw-w64-i686-readline / mingw-w64-x86_64-readline
+    * mingw-w64-i686-lua / mingw-w64-x86_64-lua
+    * mingw-w64-i686-imagemagick / mingw-w64-x86_64-imagemagick
+    * mingw-w64-i686-SDL2_mixer / mingw-w64-x86_64-SDL2_mixer
+    * mingw-w64-i686-cmake / mingw-w64-x86_64-cmake
+    * mingw-w64-i686-ninga / mingw-w64-x86_64-ninja
+    * mingw-w64-i686-libunwind / mingw-w64-x86_64-libunwind
+    * mingw-w64-i686-make / mingw-w64-x86_64-make
+    * mingw-w64-i686-python3 / mingw-w64-x86_64-python3
+    * mingw-w64-i686-python-pip / mingw-w64-x86_64-python-pip
 
+#. Arch-specific optional packages for building common parts (i686 or x86_64, but not both).
 
-11. Arch-specific packages for building common parts (i686 or x86_64, not both)
+    * mingw-w64-i686-drmingw / mingw-w64-x86_64-drmingw
+    * mingw-w64-i686-tolua / mingw-w64-x86_64-tolua
 
-* mingw-w64-i686-gcc / mingw-w64-x86_64-gcc
-* mingw-w64-i686-curl / mingw-w64-x86_64-curl
-* mingw-w64-i686-bzip2 / mingw-w64-x86_64-bzip2
-* mingw-w64-i686-readline / mingw-w64-x86_64-readline
-* mingw-w64-i686-lua / mingw-w64-x86_64-lua
-* mingw-w64-i686-imagemagick / mingw-w64-x86_64-imagemagick
-* mingw-w64-i686-SDL2_mixer / mingw-w64-x86_64-SDL2_mixer
-* mingw-w64-i686-cmake / mingw-w64-x86_64-cmake
-* mingw-w64-i686-ninga / mingw-w64-x86_64-ninja
-* mingw-w64-i686-libunwind / mingw-w64-x86_64-libunwind
+#. Arch-specific packages for building the client and/or Ruledit (i686 or x86_64, but not both).
 
+    * mingw-w64-i686-qt5 / mingw-w64-x86_64-qt5
+    * mingw-w64-i686-qt5-svg / mingw-w64-x86_64-qt5-svg
+    * mingq-w64-i686-karchive-qt5 / mingw-w64-x86_64-karchive-qt5
 
-12. Arch-specific optional packages for building common parts (i686 or x86_64, not both)
+#. Arch-specific package needed for building Windows installer package (i686 or x86_64, but not both).
 
-* mingw-w64-i686-drmingw / mingw-w64-x86_64-drmingw
-* mingw-w64-i686-tolua / mingw-w64-x86_64-tolua
-
-
-13. Arch-specific packages for building the client and/or Ruledit (i686 or x86_64, not both)
-
-* mingw-w64-i686-qt5 / mingw-w64-x86_64-qt5
-* mingw-w64-i686-qt5-svg / mingw-w64-x86_64-qt5-svg
-* mingq-w64-i686-karchive-qt5 / mingw-w64-x86_64-karchive-qt5
-
-
-14. Packages needed for building installer package. These are needed in addition to above ones used in the
-building step already.
-
-15. Arch-specific packages needed for building Windows installer package (i686 or x86_64, not both)
-
-* mingw-w64-i686-nsis / mingw-w64-x86_64-nsis
+    * mingw-w64-i686-nsis / mingw-w64-x86_64-nsis
 
 
 Premade Environment
