@@ -926,6 +926,7 @@ void mr_menu::setup_menus()
   act = multiplayer_menu->addAction(_("Clear Orders"));
   act->setShortcut(QKeySequence(tr("ctrl+shift+c")));
   connect(act, &QAction::triggered, this, &mr_menu::slot_orders_clear);
+  multiplayer_menu->addSeparator();
   act = multiplayer_menu->addAction(_("Add all cities to trade planning"));
   connect(act, &QAction::triggered, this, &mr_menu::slot_trade_add_all);
   act = multiplayer_menu->addAction(_("Calculate trade planning"));
@@ -939,6 +940,7 @@ void mr_menu::setup_menus()
   menu_list.insert(AUTOTRADEROUTE, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_autocaravan);
   act->setShortcut(QKeySequence(tr("ctrl+j")));
+  multiplayer_menu->addSeparator();
   act = multiplayer_menu->addAction(_("Set/Unset rally point"));
   act->setShortcut(QKeySequence(tr("shift+s")));
   connect(act, &QAction::triggered, this, &mr_menu::slot_rally);
