@@ -317,9 +317,9 @@ void pageGame::updateSidebarTooltips()
           text_happiness_cities(player_primary_capital(client_player())));
     }
   } else {
-    sw_science->setTooltip(QLatin1String(""));
+    sw_science->hide();
     sw_map->setTooltip(QLatin1String(""));
-    sw_economy->setTooltip(QLatin1String(""));
+    sw_economy->hide();
   }
   sw_indicators->setToolTip(get_info_label_text_popup());
 }
