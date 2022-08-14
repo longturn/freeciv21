@@ -71,7 +71,10 @@ enum command_id {
 #endif
   CMD_CMDLEVEL,
   CMD_FIRSTLEVEL,
-  CMD_TIMEOUT,
+  CMD_TIMEOUT_SHOW, // not really harmful, info level
+  CMD_TIMEOUT_SET,
+  CMD_TIMEOUT_ADD,
+  CMD_TIMEOUT_INCREASE,
   CMD_CANCELVOTE,
   CMD_IGNORE,
   CMD_UNIGNORE,
