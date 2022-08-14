@@ -77,8 +77,8 @@ to alter is placed inside back-ticks.
 * :literal:`:literal:` -- Literal is used when you want to note a text element in its raw form. This is
   equivalent to using two back-ticks: ````text````.
 * :literal:`:menuselection:` -- Menu Selection is used to give the path of menu clicks such as
-  :menuselection:`Game --> Local Options`. To create the arrow character in between the clicks. You will place
-  a text arrow like this: :literal:`-->` in between the selection items.
+  :menuselection:`Game --> Local Options`. To denote submenus, use a test arrow like this: :literal:`-->`
+  between the selection items.
 * :literal:`:strong:` -- Strong is used to :strong:`bold some text`. A good use of :literal:`:strong:` is to
   highlight game elements, such as technologies.
 * :literal:`:title-reference:` -- Title Reference is used notate a :title-reference:`title entry` in the
@@ -142,10 +142,10 @@ The Oxford Comma
     The Oxford Comma is the usage of a comma when listing multple things and placing a comma before the "and"
     at the end of the list. For example: You need to follow these steps: Click on :guilabel:`Menu`, then click
     on :guilabel:`Options`, and finally click on :guilabel:`Interface`. Notice the comma usage before the word
-    "and", that is the Oxford command and its usage is expected in our documentation
+    "and", that is the Oxford comma and its usage is expected in our documentation.
 
 Capitalization
-    For consistent formatting, the following should always use "Title Capitalization" rules:
+    For consistent formatting, the following should always use "Title Case" rules:
 
     * Section Headings (e.g. the 4 documented above)
     * Menu Entries in the client
@@ -160,7 +160,22 @@ Language Contractions
     Language Contractions are when two words are combined together with an apostrophe ( ``'`` ). For example,
     the word "don't" is a contraction of "do not". Not all language translators, and especially non-native
     English speakers can get confused if contractions are used. To aid the readability of our documentation,
-    :strong:`the usage of contractions is not acceptable`.
+    :strong:`the usage of contractions is not advised` and should be used sparingly.
+
+The Use of Person
+    In English there are three types of person: first, second, and third.  First person is possessive -- "I
+    took a walk down the street". Second person is about speaking to someone -- "You took a walk down the
+    street". Third person is then for all other purposes. In our documentation we use the second person form.
+    We want to be conversational with our readers and speak to them about the game, features, actions, etc.
+
+    This page provides a good overview of the use person for US English:
+    https://www.grammar-monster.com/glossary/person.htm
+
+Double Negatives / Negations
+    To aid the readability of our documentation, we want to stay away from using double negatives. A double
+    negative is where two negative words are combined together that end with a possitive. For example:
+    "The guidelines are not bad". The last two words are negative -- "not bad". It is better to use positive
+    language. For example the first sentence is better written as: "The guidelines are good".
 
 Figure Numbers
     Diagrams, Screenshots, and Tables are :strong:`expected` to be numbered using the :literal:`numfig`
