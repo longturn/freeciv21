@@ -48,7 +48,7 @@ unit_offset_y = 18
 
 ; colors with this (HSL) hue will be replaced by the player color in city and
 ; unit sprites (-1 to disable)
-replaced_hue = -1
+replaced_hue = 300
 
 ; offset of the normal activity icons
 activity_offset_x = 49
