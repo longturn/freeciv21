@@ -1472,6 +1472,7 @@ void city_dialog::hideEvent(QHideEvent *event)
       unit_focus_update();
     }
     update_map_canvas_visible();
+    pcity = nullptr;
   }
   queen()->mapview_wdg->show_all_fcwidgets();
 }

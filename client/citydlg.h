@@ -359,7 +359,7 @@ public:
   void setup_ui(struct city *qcity);
   void refresh();
   void cma_check_agent();
-  struct city *pcity;
+  struct city *pcity = nullptr;
   bool dont_focus{false};
 
 private:
