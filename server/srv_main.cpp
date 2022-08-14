@@ -53,6 +53,7 @@
 #include "research.h"
 #include "style.h"
 #include "tech.h"
+#include "unit.h"
 #include "unitlist.h"
 #include "version.h"
 #include "victory.h"
@@ -1167,6 +1168,15 @@ void begin_turn(bool is_new_turn)
 }
 
 /**
+ * Comparator for sorting unit_waits in chronological order.
+ */
+static int unit_wait_cmp(const struct unit_wait *const *a,
+                         const struct unit_wait *const *b)
+{
+  return (*a)->wake_up > (*b)->wake_up;
+}
+
+/**
    Begin a phase of movement.  This handles all beginning-of-phase actions
    for one or more players.
  */
@@ -1211,6 +1221,8 @@ void begin_phase(bool is_new_phase)
   if (is_new_phase) {
     /* Unit "end of turn" activities - of course these actually go at
      * the start of the turn! */
+    unit_wait_list_clear(server.unit_waits);
+
     whole_map_iterate(&(wld.map), ptile)
     {
       if (ptile->placing != nullptr) {
@@ -1255,6 +1267,18 @@ void begin_phase(bool is_new_phase)
       flush_packets();
     }
     phase_players_iterate_end;
+
+    unit_wait_list_sort(server.unit_waits, unit_wait_cmp);
+    unit_wait_list_link_iterate(server.unit_waits, plink)
+    {
+      struct unit *punit =
+          game_unit_by_number(unit_wait_list_link_data(plink)->id);
+      if (punit) {
+        punit->server.wait = plink;
+      }
+    }
+    unit_wait_list_link_iterate_end;
+
     /* Execute orders after activities have been completed (roads built,
      * pillage done, etc.). */
     phase_players_iterate(pplayer)
@@ -3119,6 +3143,18 @@ void srv_ready()
 }
 
 /**
+ * Free function for unit_wait.
+ */
+static void unit_wait_destroy(struct unit_wait *pwait)
+{
+  struct unit *punit = game_unit_by_number(pwait->id);
+  if (punit) {
+    punit->server.wait = NULL;
+  }
+  free(pwait);
+}
+
+/**
    Initialize game data for the server (corresponds to server_game_free).
  */
 void server_game_init(bool keep_ruleset_value)
@@ -3127,6 +3163,7 @@ void server_game_init(bool keep_ruleset_value)
   server.playable_nations = 0;
   server.nbarbarians = 0;
   server.identity_number = IDENTITY_NUMBER_SKIP;
+  server.unit_waits = unit_wait_list_new_full(unit_wait_destroy);
 
   BV_CLR_ALL(identity_numbers_used);
   identity_number_reserve(IDENTITY_NUMBER_ZERO);
@@ -3187,6 +3224,7 @@ void server_game_free()
   log_civ_score_free();
   playercolor_free();
   citymap_free();
+  unit_wait_list_destroy(server.unit_waits);
   game_free();
 }
 

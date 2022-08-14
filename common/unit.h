@@ -116,6 +116,21 @@ struct unit_order {
 struct unit;
 struct unit_list;
 
+struct unit_wait {
+  int id;
+  time_t wake_up;
+  enum unit_activity activity;
+  int activity_count;
+};
+
+// 'struct unit_wait_list' and related functions.
+#define SPECLIST_TAG unit_wait
+#define SPECLIST_TYPE struct unit_wait
+#include "speclist.h"
+#define unit_wait_list_link_iterate(unit_wait_list, plink)                  \
+  TYPED_LIST_LINK_ITERATE(struct unit_wait_list_link, unit_wait_list, plink)
+#define unit_wait_list_link_iterate_end LIST_LINK_ITERATE_END
+
 struct unit {
   const struct unit_type *utype; // Cannot be nullptr.
   struct tile *tile;
@@ -223,6 +238,7 @@ struct unit {
       int ord_city;
 
       struct vision *vision;
+      struct unit_wait_list_link *wait;
       struct unit_move_data *moving;
 
       // The unit is in the process of dying.

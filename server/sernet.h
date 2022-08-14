@@ -30,6 +30,7 @@ void close_connections_and_socket();
 void really_close_connections();
 void init_connections();
 int server_make_connection(QTcpSocket *new_sock, const QString &client_addr);
+void finish_unit_waits();
 void connection_ping(struct connection *pconn);
 void handle_conn_pong(struct connection *pconn);
 void handle_client_heartbeat(struct connection *pconn);

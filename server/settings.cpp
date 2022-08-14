@@ -565,6 +565,18 @@ static const struct sset_val_name *bool_name(int enable)
   return nullptr;
 }
 
+/**
+ * Unitwaittime style names accessor.
+ */
+static const struct sset_val_name *unitwaittime_name(int bit)
+{
+  switch (1 << bit) {
+    NAME_CASE(UWT_ACTIVITIES, "ACTIVITIES",
+              N_("Wait time applies to activity completion at turn change"));
+  }
+  return NULL;
+}
+
 #undef NAME_CASE
 
 /*
@@ -2743,6 +2755,24 @@ static struct setting settings[] = {
                "limited to a maximum value of 2/3 'timeout'."),
             nullptr, unitwaittime_callback, nullptr, GAME_MIN_UNITWAITTIME,
             GAME_MAX_UNITWAITTIME, GAME_DEFAULT_UNITWAITTIME),
+
+    GEN_BITWISE(
+        "unitwaittime_style", game.server.unitwaittime_style,
+        SSET_RULES_FLEXIBLE, SSET_INTERNAL, SSET_VITAL, ALLOW_NONE,
+        ALLOW_BASIC, N_("Unitwaittime style"),
+        /* TRANS: The strings between double quotes are also translated
+         * separately (they must match!). The strings between single
+         * quotes are setting names and shouldn't be translated. The
+         * strings between parentheses and in uppercase must stay as
+         * untranslated. */
+        N_("This setting affects unitwaittime:\n"
+           "- \"Activities\" (ACTIVITIES): Units moved less than "
+           "'unitwaittime' seconds from turn change will not complete "
+           "activities such as pillaging and building roads during "
+           "turn change, but during the next turn when their wait "
+           "expires."),
+        nullptr, nullptr, unitwaittime_name,
+        GAME_DEFAULT_UNITWAITTIME_STYLE),
 
     /* This setting points to the "stored" value; changing it won't have an
        effect until the next synchronization point (i.e., the start of the
