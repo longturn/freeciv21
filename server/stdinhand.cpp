@@ -6448,9 +6448,9 @@ static void cmd_reply_matches(enum command_id cmd, struct connection *caller,
   cmd_reply(cmd, caller, C_COMMENT, _("Possible matches: %s"), buf);
 }
 
-/**************************************************************************
+/**
   Additional 'help' arguments
-**************************************************************************/
+ */
 #define SPECENUM_NAME help_general_args
 #define SPECENUM_VALUE0 HELP_GENERAL_COMMANDS
 #define SPECENUM_VALUE0NAME "commands"
@@ -6459,12 +6459,12 @@ static void cmd_reply_matches(enum command_id cmd, struct connection *caller,
 #define SPECENUM_COUNT HELP_GENERAL_COUNT
 #include "specenum_gen.h"
 
-/**************************************************************************
+/*
   Unified indices for help arguments:
     CMD_NUM           -  Server commands
     HELP_GENERAL_NUM  -  General help arguments, above
     settings_number() -  Server options
-**************************************************************************/
+ */
 #define HELP_ARG_NUM (CMD_NUM + HELP_GENERAL_COUNT + settings_number())
 
 /**
@@ -6910,9 +6910,9 @@ static void show_colors(struct connection *caller)
   cmd_reply(CMD_LIST, caller, C_COMMENT, horiz_line);
 }
 
-/**************************************************************************
+/**
   '/list' arguments
-**************************************************************************/
+ */
 #define SPECENUM_NAME list_args
 #define SPECENUM_VALUE0 LIST_COLORS
 #define SPECENUM_VALUE0NAME "colors"
@@ -7392,9 +7392,9 @@ static int num_tokens(int start)
   return res;
 }
 
-/**************************************************************************
+/**
   Commands that may be followed by a player name
-**************************************************************************/
+ */
 static const int player_cmd[] = {
     CMD_AITOGGLE,     CMD_HANDICAPPED, CMD_NOVICE,      CMD_EASY,
     CMD_NORMAL,       CMD_HARD,        CMD_CHEATING,
@@ -7421,9 +7421,9 @@ static bool is_player(int start)
   return false;
 }
 
-/**************************************************************************
+/**
   Commands that may be followed by a connection name
-**************************************************************************/
+ */
 static const int connection_cmd[] = {CMD_CUT, CMD_KICK, -1};
 
 /**
@@ -7463,12 +7463,12 @@ static bool is_cmdlevel_arg1(int start)
       start, command_name_by_number(CMD_CMDLEVEL), false);
 }
 
-/**************************************************************************
+/**
   Commands that may be followed by a server option name
 
   CMD_SHOW is handled by option_level_cmd, which is for both option levels
   and server options
-**************************************************************************/
+ */
 static const int server_option_cmd[] = {CMD_EXPLAIN, CMD_SET, CMD_DEFAULT,
                                         -1};
 
@@ -7491,9 +7491,9 @@ static bool is_server_option(int start)
   return false;
 }
 
-/**************************************************************************
+/**
   Commands that may be followed by an option level or server option
-**************************************************************************/
+ */
 static const int option_level_cmd[] = {CMD_SHOW, -1};
 
 /**
@@ -7547,9 +7547,9 @@ static bool is_enum_option_value(int start, int *opt_p)
   return false;
 }
 
-/**************************************************************************
+/**
   Commands that may be followed by a filename
-**************************************************************************/
+ */
 static const int filename_cmd[] = {CMD_LOAD, CMD_SAVE, CMD_READ_SCRIPT,
                                    CMD_WRITE_SCRIPT, -1};
 

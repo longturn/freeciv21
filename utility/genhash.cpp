@@ -11,7 +11,8 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-/****************************************************************************
+/**
+   \file
    A general-purpose generic hash table implementation.
 
    Based on implementation previous included in registry.c, but separated
@@ -53,7 +54,7 @@
    Implementation uses open hashing. Collision resolution is done by
    separate chaining with linked lists. Resize hash table when deemed
    necessary by making and populating a new table.
-****************************************************************************/
+ */
 
 #include <cstring>
 

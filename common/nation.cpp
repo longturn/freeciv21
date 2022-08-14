@@ -11,9 +11,9 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-/**********************************************************************
+/**
    Functions for handling the nations.
-***********************************************************************/
+ */
 
 // utility
 #include "fcintl.h"
@@ -41,9 +41,9 @@ static struct nation_set nation_sets[MAX_NUM_NATION_SETS];
 static int num_nation_groups;
 static struct nation_group nation_groups[MAX_NUM_NATION_GROUPS];
 
-/****************************************************************************
+/**
   Runs action if the nation is not valid.
-****************************************************************************/
+ */
 #ifdef FREECIV_DEBUG
 #define NATION_CHECK(pnation, action)                                       \
   fc_assert_action(nation_check(pnation), action)
@@ -191,9 +191,9 @@ enum barbarian_type nation_barbarian_type(const struct nation_type *nation)
   return nation->barb_type;
 }
 
-/****************************************************************************
+/**
   Nation leader.
-****************************************************************************/
+ */
 struct nation_leader {
   char *name;
   bool is_male;
@@ -282,7 +282,7 @@ const char *nation_legend_translation(const struct nation_type *pnation,
   return DG_(pnation->translation_domain, legend);
 }
 
-/****************************************************************************
+/**
   Nation default cities. The nation_city structure holds information about
   a default choice for the city name. The 'name' field is, of course, just
   the name for the city. The 'river' and 'terrain' fields are entries
@@ -293,7 +293,7 @@ const char *nation_legend_translation(const struct nation_type *pnation,
 
   This is controlled through the nation's ruleset like this:
     cities = "Washington (ocean, river, swamp)", "New York (!mountains)"
-****************************************************************************/
+ */
 struct nation_city {
   char *name;
   enum nation_city_preference river;
@@ -751,9 +751,9 @@ struct nation_set *nation_set_by_setting_value(const char *setting)
   return pset;
 }
 
-/****************************************************************************
+/**
   Nation set iterator.
-****************************************************************************/
+ */
 struct nation_set_iter {
   struct iterator vtable;
   struct nation_set *p, *end;
@@ -974,9 +974,9 @@ bool nation_is_in_group(const struct nation_type *pnation,
   return false;
 }
 
-/****************************************************************************
+/**
   Nation group iterator.
-****************************************************************************/
+ */
 struct nation_group_iter {
   struct iterator vtable;
   struct nation_group *p, *end;

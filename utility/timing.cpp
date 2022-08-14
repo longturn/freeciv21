@@ -37,7 +37,7 @@ civtimer::civtimer(enum timer_timetype ttype, enum timer_use tuse)
 {
 }
 
-/***********************************************************************
+/**
    Allocate a new timer with specified "type" and "use".
  */
 civtimer *timer_new(enum timer_timetype type, enum timer_use use)
@@ -45,7 +45,7 @@ civtimer *timer_new(enum timer_timetype type, enum timer_use use)
   return timer_renew(nullptr, type, use);
 }
 
-/************************************************************************
+/**
    Allocate a new timer, or reuse t, with specified "type" and "use".
  */
 civtimer *timer_renew(civtimer *t, enum timer_timetype type,

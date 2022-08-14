@@ -11,11 +11,11 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-/***********************************************************************
+/**
   Functions for handling the tilespec files which describe
   the files and contents of tilesets.
   original author: David Pfitzner <dwp@mso.anu.edu.au>
-***********************************************************************/
+ */
 
 #include <QHash>
 #include <QImageReader>

@@ -1,4 +1,4 @@
-/**************************************************************************
+/*
  Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
@@ -6,7 +6,7 @@
  License,  or (at your option) any later version. You should have received
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
-**************************************************************************/
+ */
 
 #include <cstdarg>
 #include <ctime>
@@ -42,17 +42,17 @@ extern "C" {
 
 #include "luascript.h"
 
-/*****************************************************************************
+/**
   Configuration for script execution time limits. Checkinterval is the
   number of executed lua instructions between checking. Disabled if 0.
-*****************************************************************************/
+ */
 #define LUASCRIPT_MAX_EXECUTION_TIME_SEC 5.0
 #define LUASCRIPT_CHECKINTERVAL 10000
 
 // The name used for the freeciv lua struct saved in the lua state.
 #define LUASCRIPT_GLOBAL_VAR_NAME "__fcl"
 
-/*****************************************************************************
+/**
   Unsafe Lua builtin symbols that we to remove access to.
 
   If Freeciv's Lua version changes, you have to check how the set of
@@ -66,7 +66,7 @@ extern "C" {
   In general, unsafe is all functionality that gives access to:
   * Reading files and running processes
   * Loading lua files or libraries
-*****************************************************************************/
+ */
 #define LUASCRIPT_SECURE_LUA_VERSION1 503
 #define LUASCRIPT_SECURE_LUA_VERSION2 504
 
@@ -82,10 +82,10 @@ static const char *luascript_unsafe_symbols_permissive[] = {
 #warning "This can be a big security hole!"
 #endif
 
-/*****************************************************************************
+/**
   Lua libraries to load (all default libraries, excluding operating system
   and library loading modules). See linit.c in Lua 5.1 for the default list.
-*****************************************************************************/
+ */
 #if LUA_VERSION_NUM == 503 || LUA_VERSION_NUM == 504
 static luaL_Reg luascript_lualibs_secure[] = {
     // Using default libraries excluding: package, io, os, and bit32
@@ -780,7 +780,7 @@ void luascript_vars_load(struct fc_lua *fcl, struct section_file *file,
 
 /* To avoid the complexity and overheads of creating such objects for
  * 4-bit enums, here is a helper function to return Direction objects. */
-/******
+/**
    Returns a pointer to a given value of enum direction8 (always the same
    address for the same value), or nullptr if the direction is invalid
    on the current map.

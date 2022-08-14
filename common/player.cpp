@@ -1521,10 +1521,10 @@ const char *diplrel_name_translation(int value)
   }
 }
 
-/**************************************************************************
+/**
   Return the Casus Belli range when offender performs paction to tgt_plr
   at tgt_tile and the outcome is outcome.
-**************************************************************************/
+ */
 enum casus_belli_range casus_belli_range_for(const struct player *offender,
                                              const struct player *tgt_plr,
                                              const enum effect_type outcome,

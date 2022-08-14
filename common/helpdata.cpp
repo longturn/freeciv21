@@ -11,10 +11,10 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-/***********************************************************************
+/**
  This module is for generic handling of help data, independent
  of gui considerations.
-***********************************************************************/
+ */
 
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
@@ -1096,12 +1096,12 @@ void boot_help_texts(const nation_set *nations_to_show,
   qDebug("Booted help texts ok");
 }
 
-/****************************************************************************
+/**
   The following few functions are essentially wrappers for the
   help_nodes help_list.  This allows us to avoid exporting the
   help_list, and instead only access it through a controlled
   interface.
-****************************************************************************/
+ */
 
 /**
    Find help item by name and type.
@@ -1155,7 +1155,7 @@ get_help_item_spec(const char *name, enum help_page_type htype, int *pos)
   return pitem;
 }
 
-/****************************************************************************
+/**
   FIXME:
   Also, in principle these could be auto-generated once, inserted
   into pitem->text, and then don't need to keep re-generating them.
@@ -1164,7 +1164,7 @@ get_help_item_spec(const char *name, enum help_page_type htype, int *pos)
   re-boot helptexts anyway).  Eg, genuinely dynamic information
   which could be useful would be if help system said which wonders
   have been built (or are being built and by who/where?)
-****************************************************************************/
+ */
 
 /**
    Write dynamic text for buildings (including wonders).  This includes

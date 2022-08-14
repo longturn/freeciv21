@@ -883,7 +883,7 @@ void init_city_report_game_data()
             == ARRAY_SIZE(base_city_report_specs) + specialist_count() + 1);
 }
 
-/************************************************************************
+/**
   The following several functions allow intelligent sorting city report
   fields by column.  This doesn't necessarily do the right thing, but
   it's better than sorting alphabetically.
@@ -894,7 +894,7 @@ void init_city_report_game_data()
   way, two character fields are compared alphabetically.  Arbitrarily, a
   numeric field is sorted before a character field (for "justification"
   note that numbers are before letters in the ASCII table).
-************************************************************************/
+ */
 
 /* A datum is one short string, or one number.
    A datum_vector represents a long string of alternating strings and

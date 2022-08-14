@@ -11,10 +11,11 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-/*************************************************************************
+/**
+   \file
    The following random number generator is a simple wrapper around the
    C++ standard library.
-*************************************************************************/
+ */
 
 // utility
 #include "log.h"

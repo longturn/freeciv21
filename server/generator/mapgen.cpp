@@ -183,9 +183,9 @@ static int hmap_low_level = 0;
 
 typedef enum { MC_NONE, MC_LOW, MC_NLOW } miscellaneous_c;
 
-/**************************************************************************
+/**
   These functions test for conditions used in rand_map_pos_characteristic
-**************************************************************************/
+ */
 
 /**
    Checks if the given location satisfy some wetness condition
@@ -221,9 +221,9 @@ static bool test_miscellaneous(const struct tile *ptile, miscellaneous_c c)
   return false;
 }
 
-/**************************************************************************
+/**
   Passed as data to rand_map_pos_filtered() by rand_map_pos_characteristic()
-**************************************************************************/
+ */
 struct DataFilter {
   wetness_c wc;
   temperature_type tc;
@@ -2544,9 +2544,9 @@ static void river_types_init()
   extra_type_by_cause_iterate_end;
 }
 
-/****************************************************************************
+/**
   Fair island generator types.
-****************************************************************************/
+ */
 enum fair_tile_flag {
   FTF_NONE = 0,
   FTF_ASSIGNED = 1 << 0,

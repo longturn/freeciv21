@@ -1774,13 +1774,13 @@ bool can_player_build_unit_later(const struct player *p,
   return true;
 }
 
-/**************************************************************************
+/**
   The following functions use static variables so we can quickly look up
   which unit types have given flag or role.
   For these functions flags and roles are considered to be in the same
 "space", and any "role" argument can also be a "flag". Unit order is in terms
 of the order in the units ruleset.
-**************************************************************************/
+ */
 static bool first_init = true;
 static int n_with_role[MAX_UNIT_ROLES];
 static struct unit_type **with_role[MAX_UNIT_ROLES];

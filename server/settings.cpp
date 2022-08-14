@@ -1,4 +1,4 @@
-/**************************************************************************
+/*
  Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
  __    __          part of Freeciv21. Freeciv21 is free software: you can
 / \\..// \    redistribute it and/or modify it under the terms of the GNU
@@ -7,7 +7,7 @@
                       option) any later version. You should have received
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
-**************************************************************************/
+ */
 
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
@@ -187,7 +187,7 @@ int settings_list_cmp(const struct setting *const *pset1,
 
 static bool set_enum_value(struct setting *pset, int val);
 
-/****************************************************************************
+/*
   Enumerator name accessors.
 
   Important note about compatibility:
@@ -196,7 +196,7 @@ static bool set_enum_value(struct setting *pset, int val);
      branch before.
   2) Take care of modifiying the pretty name of an existant value: make sure
   to modify the help texts which are using it.
-****************************************************************************/
+ */
 
 #define NAME_CASE(_val, _support, _pretty)                                  \
   case _val: {                                                              \
@@ -567,9 +567,9 @@ static const struct sset_val_name *bool_name(int enable)
 
 #undef NAME_CASE
 
-/****************************************************************************
-  Help callback functions.
-****************************************************************************/
+/*
+ * Help callback functions.
+ */
 
 /**
    Help about phasemode setting
@@ -612,9 +612,9 @@ static const char *huts_help(const struct setting *pset)
   return pset->extra_help;
 }
 
-/****************************************************************************
-  Action callback functions.
-****************************************************************************/
+/*
+ * Action callback functions.
+ */
 
 /**
    (De)initialze the score log.
@@ -786,9 +786,9 @@ static void metamessage_action(const struct setting *pset)
   }
 }
 
-/****************************************************************************
-  Validation callback functions.
-****************************************************************************/
+/*
+ * Validation callback functions.
+ */
 
 /**
    Verify the selected savename definition.

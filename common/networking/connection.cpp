@@ -33,14 +33,14 @@ static void default_conn_close_callback(struct connection *pconn);
  */
 const char blank_addr_str[] = "---.---.---.---";
 
-/****************************************************************************
+/**
   This callback is used when an error occurs trying to write to the
   connection. The effect of the callback should be to close the connection.
   This is here so that the server and client can take appropriate
   (different) actions: server lost a client, client lost connection to
   server. Never attempt to call this function directly, call
   connection_close() instead.
-****************************************************************************/
+ */
 static conn_close_fn_t conn_close_callback = default_conn_close_callback;
 
 /**
@@ -701,9 +701,9 @@ enum cmdlevel conn_get_access(const struct connection *pconn)
   return pconn->access_level;
 }
 
-/**************************************************************************
+/**
   Connection patterns.
-**************************************************************************/
+ */
 struct conn_pattern {
   enum conn_pattern_type type;
   char *wildcard;

@@ -1,4 +1,4 @@
-/**************************************************************************
+/*
  Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
  __    __          part of Freeciv21. Freeciv21 is free software: you can
 / \\..// \    redistribute it and/or modify it under the terms of the GNU
@@ -7,7 +7,7 @@
                       option) any later version. You should have received
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
-**************************************************************************/
+ */
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
 #endif
@@ -97,7 +97,7 @@ void serverProcess::drop()
   }
 }
 
-/**************************************************************************
+/**
 The general chain of events:
 
 Two distinct paths are taken depending on the choice of mode:
@@ -120,7 +120,7 @@ then:
          not. if not, then we send another load command. if so, then we send
          a series of packet_generic_message packets with commands to start
          the game.
-**************************************************************************/
+ */
 
 /**
    Tests if the client has started the server.

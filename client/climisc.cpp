@@ -11,10 +11,10 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-/***********************************************************************
+/**
   This module contains various general - mostly highlevel - functions
   used throughout the client.
-***********************************************************************/
+ */
 
 #include <QBitArray>
 #include <algorithm>

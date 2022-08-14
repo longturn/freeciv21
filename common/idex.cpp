@@ -11,7 +11,7 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-/***********************************************************************
+/**
    idex = ident index: a lookup table for quick mapping of unit and city
    id values to unit and city pointers.
 
@@ -23,7 +23,7 @@
 
    Note id values should probably be unsigned int: here leave as plain int
    so can use pointers to pcity->id etc.
-***********************************************************************/
+ */
 
 // utility
 #include "log.h"

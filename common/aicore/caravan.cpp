@@ -181,9 +181,9 @@ static double windfall_benefit(const struct unit *caravan,
   }
 }
 
-/****************************************************************************
-  Compute the change in the per-turn trade.
-****************************************************************************/
+/*
+ * Compute the change in the per-turn trade.
+ */
 
 /**
    How much does the city benefit from the new trade route?
@@ -470,9 +470,9 @@ static bool get_discounted_reward(const struct unit *caravan,
   return true;
 }
 
-/****************************************************************************
+/**
   Functions to compute the benefit of moving the caravan to dest.
-****************************************************************************/
+ */
 
 /**
    Find the best destination for the caravan, ignoring transit time.

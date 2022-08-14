@@ -43,9 +43,9 @@ class PFPath;
 // Indexed by unit id
 static auto goto_finders = std::map<int, freeciv::path_finder>();
 
-/****************************************************************************
+/**
   Various stuff for the goto routes
-****************************************************************************/
+ */
 static struct tile *goto_destination = nullptr;
 
 /**

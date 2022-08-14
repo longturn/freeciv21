@@ -11,7 +11,7 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-/***********************************************************************
+/**
   A low-level object for reading a registry-format file.
   original author: David Pfitzner <dwp@mso.anu.edu.au>
 
@@ -61,7 +61,7 @@
           trailing double-quote.  Note this does _not_ translate
           escaped doublequotes etc back to normal.
 
-***********************************************************************/
+ */
 
 #include <cstdarg>
 // Qt

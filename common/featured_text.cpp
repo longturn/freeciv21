@@ -1132,11 +1132,11 @@ const char *unit_tile_link(const struct unit *punit)
   return buf;
 }
 
-/**********************************************************************/ /**
+/**
    Get a text of a unit's vet level.
    N.B.: The returned string is static, so every call to this function
    overwrites the previous.
- **************************************************************************/
+ */
 const char *unit_veteran_level_string(const struct unit *punit)
 {
   static char buf[MAX_LEN_LINK];
@@ -1152,11 +1152,11 @@ const char *unit_veteran_level_string(const struct unit *punit)
   return buf;
 }
 
-/**********************************************************************/ /**
+/**
    Get string of when unit gets upgraded to new veteran level.
    N.B.: The returned string is static, so every call to this function
    overwrites the previous.
- **************************************************************************/
+ */
 const char *unit_achieved_rank_string(const struct unit *punit)
 {
   static char buf[MAX_LEN_LINK];
@@ -1169,11 +1169,11 @@ const char *unit_achieved_rank_string(const struct unit *punit)
   return buf;
 }
 
-/**********************************************************************/ /**
+/**
    Get string of unit's attack would be a tired attack or not.
    N.B.: The returned string is static, so every call to this function
    overwrites the previous.
- **************************************************************************/
+ */
 const char *unit_tired_attack_string(const struct unit *punit)
 {
   static char buf[MAX_LEN_LINK];
@@ -1188,13 +1188,13 @@ const char *unit_tired_attack_string(const struct unit *punit)
   return buf;
 }
 
-/**********************************************************************/ /**
+/**
    Get string of unit's firepower text, i.e. "FP:2 "
    If firepower is equal to one, then an empty string is returned
    so as to shorten the text output.
    N.B.: The returned string is static, so every call to this function
    overwrites the previous.
- **************************************************************************/
+ */
 const char *unit_firepower_if_not_one(int firepower)
 {
   static char buf[MAX_LEN_LINK];

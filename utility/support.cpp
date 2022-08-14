@@ -1,4 +1,4 @@
-/**************************************************************************
+/*
   /\ ___ /\        Copyright (c) 1996-2020 ＦＲＥＥＣＩＶ ２１ and Freeciv
  (  o   o  )                 contributors. This file is part of Freeciv21.
   \  >#<  /           Freeciv21 is free software: you can redistribute it
@@ -9,9 +9,10 @@
   ///  ///   --                     You should have received a copy of the
                           GNU General Public License along with Freeciv21.
                                   If not, see https://www.gnu.org/licenses/.
-**************************************************************************/
+ */
 
-/***********************************************************************
+/**
+  \file
   This module contains replacements for functions which are not
   available on all platforms.  Where the functions are available
   natively, these are (mostly) just wrappers.
@@ -35,7 +36,7 @@
   The main disadvantage is remembering to use these "fc" functions on
   systems which have the functions natively.
 
-***********************************************************************/
+ */
 
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
@@ -652,18 +653,6 @@ int fc_break_lines(char *str, size_t desired_len)
 
   return num_lines;
 }
-
-/****************************************************************************
-  Character function wrappers
-
-  These functions are wrappers for the libc character class functions,
-  without any locale-dependent behavior. The character functions work as
-  documented for ASCII. Bytes outside of the ASCII set will not be reported
-  to belong to any character class, and will be left unchanged by
-  transformations. This behavior is safe but not strictly correct
-  forsingle-byte 8-bit- or UTF-8 encoded text; in UTF-8, any byte that is
-  part of a multibyte sequence is non-ASCII.
-****************************************************************************/
 
 /**
    Set quick_exit() callback if possible.

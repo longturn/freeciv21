@@ -1,4 +1,4 @@
-/***********************************************************************
+/*
 _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
  \  |    This file is part of Freeciv21. Freeciv21 is free software: you
   \_|        can redistribute it and/or modify it under the terms of the
@@ -7,7 +7,7 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
  '/ \'           or (at your option) any later version. You should have
   :X:      received a copy of the GNU General Public License along with
   :X:              Freeciv21. If not, see https://www.gnu.org/licenses/.
-***********************************************************************/
+ */
 #include <cstring>
 
 // utility
@@ -31,7 +31,7 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 
 static bool initialized = false;
 
-/**************************************************************************
+/**
   The code creates a ruleset cache on ruleset load. This constant cache
   is used to speed up effects queries.  After the cache is created it is
   not modified again (though it may later be freed).
@@ -87,12 +87,12 @@ static bool initialized = false;
   No matter which sources caches are present, we should always know where
   to look for a source and so the lookups will always be fast even as the
   number of possible sources increases.
-**************************************************************************/
+ */
 
-/**************************************************************************
+/**
   Ruleset cache. The cache is created during ruleset loading and the data
   is organized to enable fast queries.
-**************************************************************************/
+ */
 static struct {
   // A single list containing every effect.
   struct effect_list *tracker;

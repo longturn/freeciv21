@@ -1,4 +1,4 @@
-/**************************************************************************
+/*
  Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors. This file is
                    part of Freeciv21. Freeciv21 is free software: you can
     ^oo^      redistribute it and/or modify it under the terms of the GNU
@@ -7,7 +7,7 @@
    ()__()             option) any later version. You should have received
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
-**************************************************************************/
+ */
 
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
@@ -74,10 +74,10 @@ fcUdpScan::fcUdpScan(QObject *parent) : QUdpSocket(parent)
       this, &fcUdpScan::sockError);
 }
 
-/**************************************************************************
+/**
   returns fcUdpScan instance, use it to initizalize fcUdpScan
   or for calling methods
-**************************************************************************/
+ */
 fcUdpScan *fcUdpScan::i()
 {
   if (!m_instance) {
@@ -86,9 +86,9 @@ fcUdpScan *fcUdpScan::i()
   return m_instance;
 }
 
-/**************************************************************************
+/**
   Pass errors to main scan
-**************************************************************************/
+ */
 void fcUdpScan::sockError(QAbstractSocket::SocketError socketError)
 {
   Q_UNUSED(socketError)
@@ -100,9 +100,9 @@ void fcUdpScan::sockError(QAbstractSocket::SocketError socketError)
   fcudp_scan->error_func(fcudp_scan, errstr);
 }
 
-/**************************************************************************
+/**
   deletes fcUdpScan
-**************************************************************************/
+ */
 void fcUdpScan::drop()
 {
   delete m_instance;
