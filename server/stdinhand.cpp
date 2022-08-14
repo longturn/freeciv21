@@ -53,6 +53,7 @@
 
 // server
 #include "aiiface.h"
+#include "commands.h"
 #include "connecthand.h"
 #include "diplhand.h"
 #include "gamehand.h"
@@ -1597,6 +1598,116 @@ static const char *olvlname_accessor(int i)
 }
 
 /**
+ * Show the current timeout, time left before TC, etc.
+ */
+static bool timeout_show_command(struct connection *caller, char *str,
+                                 bool check)
+{
+  if (check) {
+    // There's never a syntax error.
+    return true;
+  }
+
+  if (game.info.timeout <= 0) {
+    cmd_reply(CMD_TIMEOUT_SHOW, caller, C_OK,
+              _("The timeout is currently disabled."));
+    return true;
+  }
+
+  char buf[128];
+  format_time_duration(game.info.timeout, buf, 127);
+  cmd_reply(CMD_TIMEOUT_SHOW, caller, C_OK,
+            _("The 'timeout' setting is:          %6d s = %s"),
+            game.info.timeout, buf);
+
+  if (server_state() != S_S_RUNNING) {
+    cmd_reply(CMD_TIMEOUT_SHOW, caller, C_OK,
+              _("The game is currently not running."));
+    return true;
+  }
+
+  int phase_timer = timer_read_seconds(game.server.phase_timer);
+  int end_time = game.tinfo.seconds_to_phasedone;
+
+  format_time_duration(phase_timer, buf, 127);
+  cmd_reply(CMD_TIMEOUT_SHOW, caller, C_OK,
+            _("The current phase has now lasted:  %6d s = %s"), phase_timer,
+            buf);
+
+  format_time_duration(end_time - phase_timer, buf, 127);
+  cmd_reply(CMD_TIMEOUT_SHOW, caller, C_OK,
+            _("Time left:                         %6d s = %s"),
+            end_time - phase_timer, buf);
+
+  return true;
+}
+
+/**
+ * Sets the timeout for the current turn. If "add", add more time; else,
+ * replace the timeout.
+ */
+static bool timeout_set_command(struct connection *caller, char *str,
+                                bool check, command_id self, bool add)
+{
+  if (server_state() != S_S_RUNNING) {
+    cmd_reply(
+        self, caller, C_FAIL,
+        _("Cannot change the turn timeout while the game is not running."));
+    return false;
+  } else if (game.info.timeout <= 0) {
+    // TRANS: Don't translate "/set timeout"
+    cmd_reply(self, caller, C_FAIL,
+              _("The timeout is disabled, use /set timeout."));
+    return false;
+  }
+
+  // Parse the time as [[hours:]minutes:]seconds
+  const auto parts = QString(str).split(':');
+  if (parts.size() > 3) {
+    cmd_reply(self, caller, C_FAIL, _("Invalid time specified."));
+    return false;
+  }
+
+  bool ok[3] = {true, true, true};
+  int h = parts.size() > 2 ? parts.front().toInt(&ok[0]) : 0;
+  int m = parts.size() > 1 ? parts[parts.size() - 2].toInt(&ok[1]) : 0;
+  int s = parts.size() > 0 ? parts.back().toInt(&ok[2]) : 0;
+  if (!ok[0] || !ok[1] || !ok[2]) {
+    cmd_reply(self, caller, C_FAIL, _("Invalid time specified."));
+    return false;
+  }
+
+  int seconds = 3600 * h + 60 * m + s;
+  if (seconds > 86400 * 365) {
+    // More than a year
+    cmd_reply(self, caller, C_FAIL, _("Time too big."));
+    return false;
+  }
+
+  if (check) {
+    // Syntax is ok
+    return true;
+  }
+
+  auto timer_now = timer_read_seconds(game.server.phase_timer);
+
+  if (add) {
+    game.tinfo.seconds_to_phasedone += seconds;
+    cmd_reply(self, caller, C_OK,
+              _("Adding %d seconds to the current timeout"), seconds);
+  } else {
+    game.tinfo.seconds_to_phasedone = timer_now + seconds;
+    cmd_reply(self, caller, C_OK,
+              _("Setting the remaining time to %d seconds"), seconds);
+  }
+
+  // send everyone the updated timeout
+  send_game_info(nullptr);
+
+  return true;
+}
+
+/**
    Set timeout options.
  */
 static bool timeout_command(struct connection *caller, char *str, bool check)
@@ -1617,20 +1728,20 @@ static bool timeout_command(struct connection *caller, char *str, bool check)
 
   for (i = 0; i < arg.count(); i++) {
     if (!str_to_int(qUtf8Printable(arg.at(i)), timeouts[i])) {
-      cmd_reply(CMD_TIMEOUT, caller, C_FAIL, _("Invalid argument %d."),
-                i + 1);
+      cmd_reply(CMD_TIMEOUT_INCREASE, caller, C_FAIL,
+                _("Invalid argument %d."), i + 1);
     }
   }
 
   if (arg.isEmpty()) {
-    cmd_reply(CMD_TIMEOUT, caller, C_SYNTAX, _("Usage:\n%s"),
-              command_synopsis(command_by_number(CMD_TIMEOUT)));
+    cmd_reply(CMD_TIMEOUT_INCREASE, caller, C_SYNTAX, _("Usage:\n%s"),
+              command_synopsis(command_by_number(CMD_TIMEOUT_INCREASE)));
     return false;
   } else if (check) {
     return true;
   }
 
-  cmd_reply(CMD_TIMEOUT, caller, C_OK,
+  cmd_reply(CMD_TIMEOUT_INCREASE, caller, C_OK,
             _("Dynamic timeout set to "
               "%d %d %d %d"),
             game.server.timeoutint, game.server.timeoutintinc,
@@ -4628,7 +4739,13 @@ static bool handle_stdin_input_real(struct connection *caller, char *str,
     return cmdlevel_command(caller, arg, check);
   case CMD_FIRSTLEVEL:
     return firstlevel_command(caller, check);
-  case CMD_TIMEOUT:
+  case CMD_TIMEOUT_SHOW:
+    return timeout_show_command(caller, arg, check);
+  case CMD_TIMEOUT_SET:
+    return timeout_set_command(caller, arg, check, CMD_TIMEOUT_SET, false);
+  case CMD_TIMEOUT_ADD:
+    return timeout_set_command(caller, arg, check, CMD_TIMEOUT_ADD, true);
+  case CMD_TIMEOUT_INCREASE:
     return timeout_command(caller, arg, check);
   case CMD_START_GAME:
     return start_command(caller, check, false);

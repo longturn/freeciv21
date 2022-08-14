@@ -423,6 +423,32 @@ static struct command commands[] = {
      N_("If there is none, become the game organizer with increased "
         "permissions."),
      nullptr, nullptr, CMD_ECHO_ADMINS, VCF_NONE, 50},
+    {"timeoutshow", ALLOW_INFO, SYN_ORIG_("timeoutshow"),
+     N_("Show timeout settings and timers."),
+     N_("Shows information about the timeout for the current turn, for "
+        "instance how much time is left."),
+     nullptr, CMD_ECHO_ALL, VCF_NONE, 0},
+    {"timeoutset", ALLOW_CTRL,
+     // TRANS: translate text between <> only
+     N_("timeoutset <time>"),
+     N_("Changes the timeout for the current turn."),
+     // TRANS: don't translate the format
+     N_("This command changes the remaining time for the current turn. "
+        "Passing a value of 0 ends the turn immediately.\n"
+        "The time is specified as hours, minutes, and seconds using the "
+        "format hh:mm:ss (minutest and hours and are "
+        "optional)."),
+     nullptr, CMD_ECHO_ALL, VCF_NONE, 50},
+    {"timeoutadd", ALLOW_CTRL,
+     // TRANS: translate text between <> only
+     N_("timeoutadd <time>"), N_("Adds more time to the current turn."),
+     // TRANS: don't translate the format
+     N_("This increases the timeout for the current turn, giving players "
+        "more time to finish their actions.\n"
+        "The time is specified as hours, minutes, and seconds using the "
+        "format hh:mm:ss (minutest and hours and are "
+        "optional)."),
+     nullptr, CMD_ECHO_ALL, VCF_NONE, 50},
     {"timeoutincrease", ALLOW_CTRL,
      // TRANS: translate text between <> only
      N_("timeoutincrease <turn> <turninc> <value> <valuemult>"),
