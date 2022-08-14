@@ -46,6 +46,7 @@
 #include "plrhand.h"
 #include "srv_main.h"
 #include "stdinhand.h"
+#include "unittools.h"
 #include "voting.h"
 
 #include "sernet.h"
@@ -472,6 +473,30 @@ static void finish_processing_request(struct connection *pconn)
   send_packet_processing_finished(pconn);
   pconn->server.currently_processed_request_id = 0;
   conn_compression_thaw(pconn);
+}
+
+/**
+ * Process all unit waits that are expired.
+ */
+void finish_unit_waits()
+{
+  time_t now = time(NULL);
+  struct unit *punit;
+  struct unit_wait *head;
+
+  while ((head = unit_wait_list_front(server.unit_waits))
+         && head->wake_up < now) {
+
+    punit = game_unit_by_number(head->id);
+    if (!punit) {
+      /* Unit doesn't exist anymore. */
+      continue;
+    }
+    if (head->activity == punit->activity) {
+      finish_unit_wait(punit, head->activity_count);
+    }
+    unit_wait_list_pop_front(server.unit_waits);
+  }
 }
 
 /**

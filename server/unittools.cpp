@@ -121,7 +121,7 @@ struct autoattack_prob {
 
 static void unit_restore_movepoints(struct player *pplayer,
                                     struct unit *punit);
-static void update_unit_activity(struct unit *punit);
+static void update_unit_activity(struct unit *punit, time_t now);
 static bool try_to_save_unit(struct unit *punit,
                              const struct unit_type *pttype, bool helpless,
                              bool teleporting, const struct city *pexclcity);
@@ -631,9 +631,10 @@ static void unit_restore_movepoints(struct player *pplayer,
  */
 void update_unit_activities(struct player *pplayer)
 {
+  auto now = time(nullptr);
   unit_list_iterate_safe(pplayer->units, punit)
   {
-    update_unit_activity(punit);
+    update_unit_activity(punit, now);
   }
   unit_list_iterate_safe_end;
 }
@@ -783,56 +784,11 @@ void unit_activities_cancel_all_illegal(const struct tile *ptile)
    also move units that is on a goto.
    Restore unit move points (information needed for settler tasks)
  */
-static void update_unit_activity(struct unit *punit)
+static void unit_activity_complete(struct unit *punit)
 {
-  struct player *pplayer = unit_owner(punit);
   bool unit_activity_done = false;
   enum unit_activity activity = punit->activity;
   struct tile *ptile = unit_tile(punit);
-
-  switch (activity) {
-  case ACTIVITY_IDLE:
-  case ACTIVITY_EXPLORE:
-  case ACTIVITY_FORTIFIED:
-  case ACTIVITY_SENTRY:
-  case ACTIVITY_GOTO:
-  case ACTIVITY_PATROL_UNUSED:
-  case ACTIVITY_UNKNOWN:
-  case ACTIVITY_LAST:
-    //  We don't need the activity_count for the above
-    break;
-
-  case ACTIVITY_FORTIFYING:
-  case ACTIVITY_CONVERT:
-    punit->activity_count += get_activity_rate_this_turn(punit);
-    break;
-
-  case ACTIVITY_POLLUTION:
-  case ACTIVITY_MINE:
-  case ACTIVITY_IRRIGATE:
-  case ACTIVITY_PILLAGE:
-  case ACTIVITY_CULTIVATE:
-  case ACTIVITY_PLANT:
-  case ACTIVITY_TRANSFORM:
-  case ACTIVITY_FALLOUT:
-  case ACTIVITY_BASE:
-  case ACTIVITY_GEN_ROAD:
-    punit->activity_count += get_activity_rate_this_turn(punit);
-
-    // settler may become veteran when doing something useful
-    if (maybe_become_veteran_real(punit, true)) {
-      notify_unit_experience(punit);
-    }
-    break;
-  case ACTIVITY_OLD_ROAD:
-  case ACTIVITY_OLD_RAILROAD:
-  case ACTIVITY_FORTRESS:
-  case ACTIVITY_AIRBASE:
-    fc_assert(false);
-    break;
-  };
-
-  unit_restore_movepoints(pplayer, punit);
 
   switch (activity) {
   case ACTIVITY_IDLE:
@@ -1013,12 +969,94 @@ static void update_unit_activity(struct unit *punit)
 }
 
 /**
+ * Progress settlers in their current tasks, and units that are pillaging.
+ * Also move units on a goto.
+ * Restore unit move points (information needed for settler tasks)
+ */
+static void update_unit_activity(struct unit *punit, time_t now)
+{
+  struct player *pplayer = unit_owner(punit);
+  enum unit_activity activity = punit->activity;
+  int activity_rate = get_activity_rate_this_turn(punit);
+  struct unit_wait *wait;
+  time_t wake_up = punit->action_timestamp + game.server.unitwaittime;
+
+  unit_restore_movepoints(pplayer, punit);
+
+  switch (activity) {
+  case ACTIVITY_IDLE:
+  case ACTIVITY_EXPLORE:
+  case ACTIVITY_FORTIFIED:
+  case ACTIVITY_SENTRY:
+  case ACTIVITY_GOTO:
+  case ACTIVITY_PATROL_UNUSED:
+  case ACTIVITY_UNKNOWN:
+  case ACTIVITY_LAST:
+    // These activities do not do anything interesting at turn change.
+    break;
+
+  case ACTIVITY_POLLUTION:
+  case ACTIVITY_MINE:
+  case ACTIVITY_CULTIVATE:
+  case ACTIVITY_IRRIGATE:
+  case ACTIVITY_PILLAGE:
+  case ACTIVITY_PLANT:
+  case ACTIVITY_TRANSFORM:
+  case ACTIVITY_FALLOUT:
+  case ACTIVITY_BASE:
+  case ACTIVITY_GEN_ROAD:
+    // settler may become veteran when doing something useful
+    if (maybe_become_veteran_real(punit, true)) {
+      notify_unit_experience(punit);
+    }
+    // Fallthrough.
+  case ACTIVITY_FORTIFYING:
+  case ACTIVITY_CONVERT:
+    if (game.server.unitwaittime
+        && (game.server.unitwaittime_style & UWT_ACTIVITIES)
+        && wake_up > now) {
+      wait = new unit_wait{};
+      wait->activity_count = activity_rate;
+      wait->activity = activity;
+      wait->id = punit->id;
+      wait->wake_up = wake_up;
+      unit_wait_list_append(server.unit_waits, wait);
+      return;
+    }
+
+    punit->activity_count += activity_rate;
+    break;
+
+  case ACTIVITY_OLD_ROAD:
+  case ACTIVITY_OLD_RAILROAD:
+  case ACTIVITY_FORTRESS:
+  case ACTIVITY_AIRBASE:
+    fc_assert(false);
+    return;
+  }
+
+  unit_activity_complete(punit);
+}
+
+/**
+ * Finish activity of a unit that was deferred by unitwaittime.
+ */
+void finish_unit_wait(struct unit *punit, int activity_count)
+{
+  punit->activity_count += activity_count;
+  unit_activity_complete(punit);
+}
+
+/**
    Forget the unit's last activity so that it can't be resumed. This is
    used for example when the unit moves or attacks.
  */
 void unit_forget_last_activity(struct unit *punit)
 {
   punit->changed_from = ACTIVITY_IDLE;
+  if (punit->server.wait) {
+    unit_wait_list_erase(server.unit_waits, punit->server.wait);
+  }
 }
 
 /**
@@ -1773,6 +1811,11 @@ static void server_remove_unit_full(struct unit *punit, bool transported,
   vision_clear_sight(punit->server.vision);
   vision_free(punit->server.vision);
   punit->server.vision = nullptr;
+
+  // Clear a unit wait if present.
+  if (punit->server.wait) {
+    unit_wait_list_erase(server.unit_waits, punit->server.wait);
+  }
 
   packet.unit_id = punit->id;
   // Send to onlookers.

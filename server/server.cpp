@@ -18,6 +18,7 @@
  */
 
 #include "server.h"
+#include "unittools.h"
 
 // Qt
 #include <QCoreApplication>
@@ -1071,6 +1072,8 @@ void server::pulse()
     }
   }
   conn_list_iterate_end
+
+  finish_unit_waits();
 
   call_ai_refresh();
   script_server_signal_emit("pulse");
