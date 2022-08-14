@@ -724,9 +724,9 @@ static bool save_cities_ruleset(const char *filename, const char *name)
   return save_ruleset_file(sfile, filename);
 }
 
-/**************************************************************************
+/**
   Effect saving callback data structure.
-**************************************************************************/
+ */
 typedef struct {
   int idx;
   struct section_file *sfile;

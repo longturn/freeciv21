@@ -268,10 +268,10 @@ void remove_obsolete_buildings(struct player *pplayer)
   city_list_iterate_end;
 }
 
-/**************************************************************************
+/**
   Rearrange workers according to a cm_result struct.  The caller must make
   sure that the result is valid.
-**************************************************************************/
+ */
 void apply_cmresult_to_city(struct city *pcity,
                             const std::unique_ptr<cm_result> &cmr)
 {
@@ -573,9 +573,9 @@ void send_city_turn_notifications(struct connection *pconn)
   }
 }
 
-/**************************************************************************
+/**
   Save city surplus values for use during city processing.
-**************************************************************************/
+ */
 void city_save_surpluses(struct city *pcity)
 {
   output_type_iterate(o) { pcity->saved_surplus[o] = pcity->surplus[o]; }
@@ -2286,10 +2286,10 @@ static bool city_distribute_surplus_shields(struct player *pplayer,
   return true;
 }
 
-/**************************************************************************
+/**
   Record the build turn of a wonder. Used in city processing to figure
   out which wonders are built on the same turn and not yet effective.
-**************************************************************************/
+ */
 static void wonder_set_build_turn(struct player *pplayer,
                                   const struct impr_type *pimprove)
 {
@@ -3244,7 +3244,7 @@ void nullify_prechange_production(struct city *pcity)
 
 /*  Handle the possibility of plague in city. Return TRUE if plague hit.
   city_populate() checks pcity->turn_plague later to prevent growth.
-**************************************************************************/
+ */
 static bool city_handle_plague_risk(struct city *pcity)
 {
   /* ------------------------------------------------------------------------

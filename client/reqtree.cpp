@@ -1,4 +1,4 @@
-/**************************************************************************
+/*
  Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
  __    __          part of Freeciv21. Freeciv21 is free software: you can
 / \\..// \    redistribute it and/or modify it under the terms of the GNU
@@ -7,7 +7,7 @@
                       option) any later version. You should have received
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
-**************************************************************************/
+ */
 
 // utility
 #include "log.h"
@@ -55,9 +55,9 @@
  * +-------->
  */
 
-/****************************************************************************
+/**
   Edge types for coloring the edges by type in the tree
-****************************************************************************/
+ */
 enum reqtree_edge_type {
   REQTREE_EDGE = 0, // Normal, "unvisited"
   REQTREE_READY_EDGE,

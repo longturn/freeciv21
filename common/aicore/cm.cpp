@@ -1,4 +1,4 @@
-/**************************************************************************
+/*
  Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
@@ -6,7 +6,7 @@
  License,  or (at your option) any later version. You should have received
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
-**************************************************************************/
+ */
 
 #include <cstdlib>
 #include <cstring>
@@ -28,7 +28,9 @@
 
 #include "cm.h"
 
-/*
+/**
+ * \file
+ *
  * Terms used
  * ==========
  *
@@ -60,9 +62,9 @@
  * - computing the weighting for tiles.  Ditto.
  */
 
-/*****************************************************************************
+/*
   Defines, structs, globals, forward declarations
-*****************************************************************************/
+ */
 
 Q_LOGGING_CATEGORY(cm_category, "freeciv.cm")
 
@@ -114,7 +116,7 @@ struct cm_fitness {
 struct cm_tile_type;
 struct cm_tile;
 
-/*
+/**
  * A tile.  Has a pointer to the type, and the x/y coords.
  * Used mostly just for converting to cm_result.
  */
@@ -145,7 +147,7 @@ struct cm_tile {
   VECTOR_ITERATE_END;                                                       \
   }
 
-/*
+/**
  * A tile type.
  * Holds the production (a hill produces 1/0/0);
  * Holds a list of which tiles match this (all the hills and tundra);
@@ -169,7 +171,7 @@ struct cm_tile_type {
   int lattice_depth; // depth = sum(#tiles) over all better types
 };
 
-/*
+/**
  * A partial solution.
  * Has the count of workers assigned to each lattice position, and
  * a count of idle workers yet unassigned.
@@ -183,7 +185,7 @@ struct partial_solution {
   int idle;               // number of idle workers
 };
 
-/*
+/**
  * State of the search.
  * This holds all the information needed to do the search, all in one
  * struct, in order to clean up the function calls.
@@ -331,9 +333,9 @@ std::unique_ptr<cm_result> cm_result_new(struct city *pcity)
   return result;
 }
 
-/****************************************************************************
+/*
   Functions of tile-types.
-****************************************************************************/
+ */
 
 /**
    Set all production to zero and initialize the vectors for this tile type.
@@ -517,9 +519,9 @@ static const struct cm_tile *tile_get(const struct cm_tile_type *ptype,
   return &ptype->tiles.p[j];
 }
 
-/****************************************************************************
+/*
   Functions on the cm_fitness struct.
-****************************************************************************/
+ */
 
 /**
    Return TRUE iff fitness A is strictly better than fitness B.
@@ -580,12 +582,12 @@ compute_fitness(const int surplus[], bool disorder, bool happy,
   return fitness;
 }
 
-/****************************************************************************
+/*
   Handle struct partial_solution.
   - perform a deep copy
   - convert to city
   - convert to cm_result
-****************************************************************************/
+ */
 
 /**
    Allocate and initialize an empty solution.
@@ -631,9 +633,9 @@ static void copy_partial_solution(struct partial_solution *dst,
   dst->idle = src->idle;
 }
 
-/****************************************************************************
+/**
   Evaluating a completed solution.
-****************************************************************************/
+ */
 
 /**
    Apply the solution to state->workers_map.
@@ -782,9 +784,9 @@ static void convert_solution_to_result(struct cm_state *state,
   result->found_a_valid = fitness.sufficient;
 }
 
-/****************************************************************************
+/**
   Compare functions to allow sorting lattice vectors.
-****************************************************************************/
+ */
 
 /**
    All the sorting in this code needs to respect the partial order
@@ -887,9 +889,9 @@ static int compare_tile_type_by_stat(const void *va, const void *vb)
   return compare_tile_type_by_lattice_order(*a, *b);
 }
 
-/****************************************************************************
+/**
   Compute the tile-type lattice.
-****************************************************************************/
+ */
 
 /**
    Compute the production of tile [x,y] and stuff it into the tile type.
@@ -1220,11 +1222,11 @@ static void init_tile_lattice(struct city *pcity,
   print_lattice(LOG_LATTICE, lattice);
 }
 
-/****************************************************************************
+/**
 
                Handling the choice stack for the bb algorithm.
 
-****************************************************************************/
+ */
 
 /**
    Return TRUE iff the stack is empty.

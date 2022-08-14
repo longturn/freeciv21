@@ -1,4 +1,4 @@
-/**************************************************************************
+/*
  Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
@@ -6,7 +6,7 @@
  License,  or (at your option) any later version. You should have received
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
-**************************************************************************/
+ */
 
 #include <cstdarg>
 #include <ctime>
@@ -40,14 +40,14 @@ extern "C" {
 
 #include "script_client.h"
 
-/*****************************************************************************
+/**
   Lua virtual machine state.
-*****************************************************************************/
+ */
 static struct fc_lua *main_fcl = nullptr;
 
-/*****************************************************************************
+/**
   Optional game script code (useful for scenarios).
-*****************************************************************************/
+ */
 static char *script_client_code = nullptr;
 
 static void script_client_vars_init();

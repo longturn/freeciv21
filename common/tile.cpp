@@ -1,4 +1,4 @@
-/**************************************************************************
+/*
     Copyright (c) 1996-2020 Freeciv21 and Freeciv  contributors. This file
                          is part of Freeciv21. Freeciv21 is free software:
 |\_/|,,_____,~~`        you can redistribute it and/or modify it under the
@@ -8,7 +8,7 @@
                         You should have received a copy of the GNU General
                           Public License along with Freeciv21. If not, see
                                             https://www.gnu.org/licenses/.
-**************************************************************************/
+ */
 
 #ifdef HAVE_CONFIG_H
 #endif

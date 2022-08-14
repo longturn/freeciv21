@@ -23,13 +23,13 @@
 
 #include "improvement.h"
 
-/**************************************************************************
+/**
 All the city improvements:
 Use improvement_by_number(id) to access the array.
 The improvement_types array is now setup in:
    server/ruleset.c (for the server)
    client/packhand.c (for the client)
-**************************************************************************/
+ */
 static struct impr_type improvement_types[B_LAST];
 
 /**

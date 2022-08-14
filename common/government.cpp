@@ -175,9 +175,9 @@ bool can_change_to_government(struct player *pplayer,
                          &gov->reqs, RPT_CERTAIN);
 }
 
-/**************************************************************************
+/**
   Ruler titles.
-**************************************************************************/
+ */
 struct ruler_title {
   const struct nation_type *pnation;
   struct name_translation male;

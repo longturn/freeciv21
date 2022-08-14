@@ -1,4 +1,4 @@
-/**************************************************************************
+/*
  Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
  __    __          part of Freeciv21. Freeciv21 is free software: you can
 / \\..// \    redistribute it and/or modify it under the terms of the GNU
@@ -7,7 +7,7 @@
                       option) any later version. You should have received
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
-**************************************************************************/
+ */
 
 #include <cstdio>
 #include <cstring>
@@ -38,10 +38,10 @@
 
 static int get_spaceship_score(const struct player *pplayer);
 
-/**************************************************************************
+/**
   Allocates, fills and returns a land area claim map.
   Call free_landarea_map(&cmap) to free allocated memory.
-**************************************************************************/
+ */
 
 #define USER_AREA_MULT 1000
 
@@ -51,9 +51,9 @@ struct claim_map {
   } player[MAX_NUM_PLAYER_SLOTS];
 };
 
-/**************************************************************************
+/**
   Land Area Debug...
-**************************************************************************/
+ */
 
 #define LAND_AREA_DEBUG 0
 

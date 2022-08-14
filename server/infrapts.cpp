@@ -1,4 +1,4 @@
-/**************************************************************************
+/*
 \^~~~~\   )  (   /~~~~^/ *     _      Copyright (c) 1996-2020 Freeciv21 and
  ) *** \  {**}  / *** (  *  _ {o} _      Freeciv contributors. This file is
   ) *** \_ ^^ _/ *** (   * {o}{o}{o}   part of Freeciv21. Freeciv21 is free
@@ -9,7 +9,7 @@
     (at your option) any later version. You should have received  a copy of
                         the GNU General Public License along with Freeciv21.
                                  If not, see https://www.gnu.org/licenses/.
-**************************************************************************/
+ */
 // common
 #include "map.h"
 

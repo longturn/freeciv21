@@ -20,9 +20,9 @@
 #include "fc_client.h"
 #include "icons.h"
 
-/****************************************************************************
+/**
   Scale widget allowing scaling other widgets, shown in right top corner
-****************************************************************************/
+ */
 scale_widget::scale_widget(QRubberBand::Shape s, QWidget *p)
     : QRubberBand(s, p)
 {
@@ -40,9 +40,9 @@ scale_widget::scale_widget(QRubberBand::Shape s, QWidget *p)
   setAttribute(Qt::WA_TransparentForMouseEvents, false);
 }
 
-/****************************************************************************
+/**
   Draws 2 icons for resizing
-****************************************************************************/
+ */
 void scale_widget::paintEvent(QPaintEvent *event)
 {
   QRubberBand::paintEvent(event);
@@ -53,9 +53,9 @@ void scale_widget::paintEvent(QPaintEvent *event)
   p.end();
 }
 
-/****************************************************************************
+/**
   Mouse press event for scale widget
-****************************************************************************/
+ */
 void scale_widget::mousePressEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::LeftButton) {

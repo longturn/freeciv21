@@ -2320,10 +2320,10 @@ void free_mapcanvas_and_overview()
   delete mapview.tmp_store;
 }
 
-/****************************************************************************
+/**
   Map link mark module: it makes link marks when a link is sent by chating,
   or restore a mark with clicking a link on the chatline.
-****************************************************************************/
+ */
 struct link_mark {
   enum text_link_type type; // The target type.
   int id;                   // The city or unit id, or tile index.

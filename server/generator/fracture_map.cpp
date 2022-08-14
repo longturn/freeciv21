@@ -1,4 +1,4 @@
-/**************************************************************************
+/*
              ____             Copyright (c) 1996-2020 Freeciv21 and Freeciv
             /    \__          contributors. This file is part of Freeciv21.
 |\         /    @   \   Freeciv21 is free software: you can redistribute it
@@ -9,7 +9,7 @@
  /  /__________\  \                 You should have received a copy of the
  L_JJ           \__JJ      GNU General Public License along with Freeciv21.
                                  If not, see https://www.gnu.org/licenses/.
-**************************************************************************/
+ */
 // utility
 #include "rand.h"
 

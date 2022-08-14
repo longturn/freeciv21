@@ -11,15 +11,16 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-/**************************************************************************
+/**
+  \file
   the idea with this file is to create something similar to the ms-windows
   .ini files functions.
   however the interface is nice. ie:
   secfile_lookup_str(file, "player%d.unit%d.name", plrno, unitno);
-***************************************************************************/
 
-/**************************************************************************
-  Description of the file format:
+  Description of the file format
+  ==============================
+
   (This is based on a format by the original authors, with
   various incremental extensions. --dwp)
 
@@ -137,16 +138,16 @@
   Such multi-lines can occur for column headings, vectors, or
   table rows, again with some potential for strange errors...
 
-***************************************************************************/
+  Hashing registry lookups
+  ========================
 
-/**************************************************************************
-  Hashing registry lookups: (by dwp)
+  (by dwp)
   - Have a hash table direct to entries, bypassing sections division.
   - For convenience, store the key (the full section+entry name)
     in the hash table (some memory overhead).
   - The number of entries is fixed when the hash table is built.
   - Now uses hash.c
-**************************************************************************/
+ */
 // KArchive
 #include <KFilterDev>
 

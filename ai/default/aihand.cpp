@@ -58,7 +58,7 @@
 
 #include "aihand.h"
 
-/*****************************************************************************
+/**
   A man builds a city
   With banks and cathedrals
   A man melts the sand so he can
@@ -70,7 +70,7 @@
   And these are the days when our work has come assunder
   And these are the days when we look for something other
   /U2 Lemon.
-*****************************************************************************/
+ */
 
 #define LOGLEVEL_TAX LOG_DEBUG
 
@@ -149,9 +149,9 @@ void dai_calc_data(const struct player *pplayer, int *trade, int *expenses,
   }
 }
 
-/*****************************************************************************
+/**
   Additional data needed for the AI rates calculation
-*****************************************************************************/
+ */
 enum { AI_RATE_SCI = 0, AI_RATE_TAX, AI_RATE_LUX, AI_RATE_COUNT };
 
 enum celebration {

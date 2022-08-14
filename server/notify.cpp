@@ -458,9 +458,9 @@ void notify_research_embassies(const struct research *presearch,
   event_cache_add_for_players(&genmsg, players);
 }
 
-/**************************************************************************
+/**
   Event cache datas.
-**************************************************************************/
+ */
 enum event_cache_target { ECT_ALL, ECT_PLAYERS, ECT_GLOBAL_OBSERVERS };
 
 // Events are saved in that structure.

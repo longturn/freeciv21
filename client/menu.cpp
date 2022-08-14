@@ -1,4 +1,4 @@
-/**************************************************************************
+/*
  Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
@@ -6,7 +6,7 @@
  License,  or (at your option) any later version. You should have received
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
-**************************************************************************/
+ */
 
 #include "menu.h"
 
@@ -228,9 +228,9 @@ void gov_menu::change_gov(int target_gov)
   popup_revolution_dialog(government_by_number(target_gov));
 }
 
-/**************************************************************************
+/**
   Keeps track of all gov_menu instances.
-**************************************************************************/
+ */
 QSet<gov_menu *> gov_menu::instances = QSet<gov_menu *>();
 
 /**
@@ -458,9 +458,9 @@ void go_act_menu::start_go_act(int act_id, int sub_tgt_id)
   request_unit_goto(ORDER_PERFORM_ACTION, act_id, sub_tgt_id);
 }
 
-/**************************************************************************
+/**
   Store all goto and act menu items so they can be updated etc
-**************************************************************************/
+ */
 QSet<go_act_menu *> go_act_menu::instances;
 
 /**
@@ -1384,9 +1384,9 @@ void mr_menu::update_airlift_menu()
   unit_type_iterate_end;
 }
 
-/****************************************************************************
+/**
   Updates "build path" menu
-****************************************************************************/
+ */
 void mr_menu::update_roads_menu()
 {
   QAction *act;
@@ -1433,9 +1433,9 @@ void mr_menu::update_roads_menu()
   }
 }
 
-/****************************************************************************
+/**
   Updates "build bases" menu
-****************************************************************************/
+ */
 void mr_menu::update_bases_menu()
 {
   QAction *act;
@@ -2517,7 +2517,7 @@ void mr_menu::slot_city_names() { key_city_names_toggle(); }
  */
 void mr_menu::slot_city_outlines() { key_city_outlines_toggle(); }
 
-/**************************************************************************
+/**
    Action "Citybar changed"
  */
 void mr_menu::slot_set_citybar()
@@ -2734,9 +2734,9 @@ void mr_menu::slot_help(const QString &topic)
   popup_help_dialog_typed(Q_(topic.toStdString().c_str()), HELP_ANY);
 }
 
-/****************************************************************
+/**
   Actions "BUILD_PATH_*"
-*****************************************************************/
+ */
 void mr_menu::slot_build_path(int id)
 {
   for (const auto punit : get_units_in_focus()) {
@@ -2752,9 +2752,9 @@ void mr_menu::slot_build_path(int id)
   }
 }
 
-/****************************************************************
+/**
   Actions "BUILD_BASE_*"
-*****************************************************************/
+ */
 void mr_menu::slot_build_base(int id)
 {
   for (const auto punit : get_units_in_focus()) {

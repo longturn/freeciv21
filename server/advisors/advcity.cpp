@@ -1,4 +1,4 @@
-/**************************************************************************
+/*
  Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
  __    __          part of Freeciv21. Freeciv21 is free software: you can
 / \\..// \    redistribute it and/or modify it under the terms of the GNU
@@ -7,7 +7,7 @@
                       option) any later version. You should have received
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
-**************************************************************************/
+ */
 
 // common
 #include "city.h"
@@ -18,11 +18,11 @@
 
 #include "advcity.h"
 
-/**************************************************************************
+/**
   This calculates the usefulness of pcity to us. Note that you can pass
   another player's adv_data structure here for evaluation by different
   priorities.
-**************************************************************************/
+ */
 int adv_eval_calc_city(struct city *pcity, struct adv_data *adv)
 {
   int i =

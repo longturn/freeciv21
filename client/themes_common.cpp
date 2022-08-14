@@ -1,4 +1,4 @@
-/***********************************************************************
+/*
 _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
  \  |    This file is part of Freeciv21. Freeciv21 is free software: you
   \_|        can redistribute it and/or modify it under the terms of the
@@ -7,7 +7,7 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
  '/ \'           or (at your option) any later version. You should have
   :X:      received a copy of the GNU General Public License along with
   :X:              Freeciv21. If not, see https://www.gnu.org/licenses/.
-***********************************************************************/
+ */
 #ifdef HAVE_CONFIG_H
 #endif
 
@@ -26,7 +26,9 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "qtg_cxxside.h"
 
 Q_GLOBAL_STATIC(QVector<QString>, themes_list)
-/***************************************************************************
+
+/**
+  \file
   A theme is a portion of client data, which for following reasons should
   be separated from a tileset:
   - Theme is not only graphic related
@@ -38,7 +40,7 @@ Q_GLOBAL_STATIC(QVector<QString>, themes_list)
   Theme is stored in a directory called like the theme. The directory
 contains some data files. Each gui defines its own format in the
   get_useable_themes_in_directory() function.
-****************************************************************************/
+ */
 
 // A directory containing a list of usable themes
 struct theme_directory {

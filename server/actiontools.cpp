@@ -1,4 +1,4 @@
-/**************************************************************************
+/*
  Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
  __    __          part of Freeciv21. Freeciv21 is free software: you can
 / \\..// \    redistribute it and/or modify it under the terms of the GNU
@@ -7,7 +7,7 @@
                       option) any later version. You should have received
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
-**************************************************************************/
+ */
 
 // utility
 #include "rand.h"
@@ -505,12 +505,12 @@ void action_consequence_success(const struct action *paction,
                             EFT_CASUS_BELLI_SUCCESS);
 }
 
-/**************************************************************************
+/**
   Take care of any consequences (like casus belli) of successfully
   completing the given action.
 
   victim_player can be nullptr
-**************************************************************************/
+ */
 void action_consequence_complete(const struct action *paction,
                                  struct player *offender,
                                  struct player *victim_player,

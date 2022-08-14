@@ -1,4 +1,4 @@
-/**************************************************************************
+/*
  Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
@@ -6,7 +6,7 @@
  License,  or (at your option) any later version. You should have received
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
-**************************************************************************/
+ */
 
 // Qt
 #include <QApplication>
@@ -158,9 +158,9 @@ help_dialog::help_dialog(QWidget *parent) : qfc_dialog(parent)
  */
 void help_dialog::update_fonts() { help_wdg->update_fonts(); }
 
-/****************************************************************************
+/**
   Hide event
-****************************************************************************/
+ */
 void help_dialog::hideEvent(QHideEvent *event)
 {
   Q_UNUSED(event)
@@ -168,9 +168,9 @@ void help_dialog::hideEvent(QHideEvent *event)
   king()->qt_settings.help_splitter1 = splitter->saveState();
 }
 
-/****************************************************************************
+/**
   Show event
-****************************************************************************/
+ */
 void help_dialog::showEvent(QShowEvent *event)
 {
   Q_UNUSED(event)
@@ -190,9 +190,9 @@ void help_dialog::showEvent(QShowEvent *event)
   }
 }
 
-/****************************************************************************
+/**
   Close event
-****************************************************************************/
+ */
 void help_dialog::closeEvent(QCloseEvent *event)
 {
   Q_UNUSED(event)
@@ -1217,7 +1217,7 @@ static void make_helppiclabel(QPixmap *spr, const QString &tooltip,
   label->setToolTip(tooltip);
 }
 
-/***************************************************************************
+/**
    Creates a terrain widget with title, terrain image, legend. An optional
    tooltip can be given to explain the legend.
  */

@@ -510,9 +510,9 @@ void report_wonders_of_the_world(struct conn_list *dest)
             buffer);
 }
 
-/**************************************************************************
+/**
  Helper functions which return the value for the given player.
-**************************************************************************/
+ */
 
 /**
    Population of player

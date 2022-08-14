@@ -207,9 +207,9 @@ static bool options_fully_initialized = false;
 static const QVector<QString> *
 get_mapimg_format_list(const struct option *poption);
 
-/****************************************************************************
+/**
   Option set structure.
-****************************************************************************/
+ */
 struct option_set {
   struct option *(*option_by_number)(int);
   struct option *(*option_first)();
@@ -327,9 +327,9 @@ struct option_color_vtable {
   bool (*set)(struct option *, struct ft_color);
 };
 
-/****************************************************************************
+/**
   The base class for options.
-****************************************************************************/
+ */
 struct option {
   // A link to the option set.
   const struct option_set *poptset;
@@ -958,9 +958,9 @@ bool option_color_set(struct option *poption, struct ft_color color)
   return false;
 }
 
-/****************************************************************************
+/**
   Client option set.
-****************************************************************************/
+ */
 static struct option *client_optset_option_by_number(int id);
 static struct option *client_optset_option_first();
 static int client_optset_category_number();
@@ -980,9 +980,9 @@ struct copt_val_name {
                         * users. */
 };
 
-/****************************************************************************
+/**
   Virtuals tables for the client options.
-****************************************************************************/
+ */
 static int client_option_number(const struct option *poption);
 static const char *client_option_name(const struct option *poption);
 static const char *client_option_description(const struct option *poption);
@@ -1066,9 +1066,9 @@ enum client_option_category {
   COC_MAX
 };
 
-/****************************************************************************
+/**
   Derived class client option, inherinting of base class option.
-****************************************************************************/
+ */
 struct client_option {
   struct option base_option; // Base structure, must be the first!
 
@@ -1373,9 +1373,9 @@ struct client_option {
     }                                                                       \
   }
 
-/****************************************************************************
+/**
   Enumerator name accessors.
-****************************************************************************/
+ */
 
 // Some changed callbacks.
 static void reqtree_show_icons_callback(struct option *poption);
@@ -2485,18 +2485,18 @@ static void client_option_save(struct option *poption,
   }
 }
 
-/****************************************************************************
+/**
   Server options variables.
-****************************************************************************/
+ */
 static char **server_options_categories = nullptr;
 static struct server_option *server_options = nullptr;
 
 static int server_options_categories_num = 0;
 static int server_options_num = 0;
 
-/****************************************************************************
+/**
   Server option set.
-****************************************************************************/
+ */
 static struct option *server_optset_option_by_number(int id);
 static struct option *server_optset_option_first();
 static int server_optset_category_number();
@@ -2509,9 +2509,9 @@ static struct option_set server_optset_static = {
     .category_name = server_optset_category_name};
 const struct option_set *server_optset = &server_optset_static;
 
-/****************************************************************************
+/**
   Virtuals tables for the client options.
-****************************************************************************/
+ */
 static int server_option_number(const struct option *poption);
 static const char *server_option_name(const struct option *poption);
 static const char *server_option_description(const struct option *poption);
@@ -2588,9 +2588,9 @@ static const struct option_bitwise_vtable server_option_bitwise_vtable = {
     .values = server_option_bitwise_pretty,
     .set = server_option_bitwise_set};
 
-/****************************************************************************
+/**
   Derived class server option, inheriting from base class option.
-****************************************************************************/
+ */
 struct server_option {
   struct option base_option; // Base structure, must be the first!
 
@@ -2781,9 +2781,9 @@ void handle_server_setting_const(
   psoption->category = packet->category;
 }
 
-/****************************************************************************
+/**
   Common part of handle_server_setting_*() functions. See below.
-****************************************************************************/
+ */
 #define handle_server_setting_common(psoption, packet)                      \
   psoption->is_changeable = packet->is_changeable;                          \
   psoption->setdef = packet->setdef;                                        \
@@ -4748,9 +4748,9 @@ static void manual_turn_done_callback(struct option *poption)
   }
 }
 
-/****************************************************************************
+/**
   Callback for changing music volume
-****************************************************************************/
+ */
 static void sound_volume_callback(struct option *poption)
 {
   Q_UNUSED(poption)

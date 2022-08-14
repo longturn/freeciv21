@@ -1,4 +1,4 @@
-/**************************************************************************
+/*
  Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
@@ -6,7 +6,7 @@
  License,  or (at your option) any later version. You should have received
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
-**************************************************************************/
+ */
 
 #include "hudwidget.h"
 // Qt
@@ -1688,9 +1688,9 @@ hud_unit_combat::hud_unit_combat(int attacker_unit_id, int defender_unit_id,
   init_images();
 }
 
-/****************************************************************************
+/**
   Draws images of units to pixmaps for later use
-****************************************************************************/
+ */
 void hud_unit_combat::init_images(bool redraw)
 {
   QImage crdimg, acrimg, at, dt;
@@ -1752,9 +1752,9 @@ void hud_unit_combat::init_images(bool redraw)
   aimg = aimg.scaled(w, w, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 }
 
-/****************************************************************************
+/**
   Sets scale for images
-****************************************************************************/
+ */
 void hud_unit_combat::set_scale(float scale)
 {
   hud_scale = scale;
@@ -1898,9 +1898,9 @@ hud_battle_log::~hud_battle_log()
   delete mw;
 }
 
-/****************************************************************************
+/**
   Updates size when scale has changed
-****************************************************************************/
+ */
 void hud_battle_log::update_size()
 {
   int w = 3 * tileset_unit_height(tileset) / 2 * scale;
@@ -1922,9 +1922,9 @@ void hud_battle_log::update_size()
   startTimer(50);
 }
 
-/****************************************************************************
+/**
   Set scale
-****************************************************************************/
+ */
 void hud_battle_log::set_scale(float s)
 {
   scale = s;
