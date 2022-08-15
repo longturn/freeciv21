@@ -457,18 +457,6 @@ void fc_client::read_settings()
   } else {
     qt_settings.battlelog_y = 0.0;
   }
-  if (s.contains(QStringLiteral("civstatus_x"))) {
-    qt_settings.civstatus_x =
-        s.value(QStringLiteral("civstatus_x")).toFloat();
-  } else {
-    qt_settings.civstatus_x = 0.0;
-  }
-  if (s.contains(QStringLiteral("civstatus_y"))) {
-    qt_settings.civstatus_y =
-        s.value(QStringLiteral("civstatus_y")).toFloat();
-  } else {
-    qt_settings.civstatus_y = 0.0;
-  }
   qt_settings.player_repo_sort_col = -1;
   qt_settings.city_repo_sort_col = -1;
 
@@ -524,8 +512,6 @@ void fc_client::write_settings()
   s.setValue(QStringLiteral("battlelog_scale"), qt_settings.battlelog_scale);
   s.setValue(QStringLiteral("battlelog_x"), qt_settings.battlelog_x);
   s.setValue(QStringLiteral("battlelog_y"), qt_settings.battlelog_y);
-  s.setValue(QStringLiteral("civstatus_x"), qt_settings.civstatus_x);
-  s.setValue(QStringLiteral("civstatus_y"), qt_settings.civstatus_y);
   s.setValue(QStringLiteral("new_turn_text"),
              qt_settings.show_new_turn_text);
   s.setValue(QStringLiteral("show_battle_log"), qt_settings.show_battle_log);

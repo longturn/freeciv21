@@ -19,7 +19,6 @@
 class city_dialog;
 class fc_client;
 class map_view;
-class civstatus;
 class minimap_panel;
 class hud_units;
 class indicators_widget;
@@ -82,7 +81,6 @@ public:
   units_reports *units;
   top_bar_widget *sw_cunit;
   xvote *x_vote;
-  civstatus *civ_status;
   top_bar_widget *sw_diplo;
   indicators_widget *sw_indicators;
   top_bar_widget *sw_science;

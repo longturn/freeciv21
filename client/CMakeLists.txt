@@ -51,7 +51,6 @@ add_library(
   citydlg_common.cpp
   cityrep.cpp
   cityrepdata.cpp
-  civstatus.cpp
   client_main.cpp
   climap.cpp
   climisc.cpp
