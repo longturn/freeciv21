@@ -25,7 +25,6 @@
 #include "government.h"
 #include "repodlgs_g.h"
 // client
-#include "civstatus.h"
 #include "client_main.h"
 #include "mapview_common.h"
 #include "text.h"
@@ -153,10 +152,6 @@ pageGame::pageGame(QWidget *parent)
   top_bar_wdg->addWidget(sw_tax);
   top_bar_wdg->addWidget(sw_indicators);
   top_bar_wdg->addWidget(sw_message);
-
-  civ_status = new civstatus(mapview_wdg);
-  civ_status->setAttribute(Qt::WA_NoMousePropagation);
-  civ_status->show();
 
   city_overlay = new city_dialog(mapview_wdg);
   connect(mapview_wdg, &map_view::scale_changed, city_overlay,
@@ -533,9 +528,6 @@ bool fc_game_tab_widget::event(QEvent *event)
           qRound(king()->qt_settings.battlelog_x * mapview.width),
           qRound(king()->qt_settings.battlelog_y * mapview.height));
       queen()->x_vote->move(width() / 2 - queen()->x_vote->width() / 2, 0);
-      queen()->civ_status->move(
-          qRound(king()->qt_settings.civstatus_x * mapview.width),
-          qRound(king()->qt_settings.civstatus_y * mapview.height));
 
       queen()->updateSidebarTooltips();
       queen()->minimap_panel->turn_done()->setEnabled(
