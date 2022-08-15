@@ -23,6 +23,7 @@
 #include <QVBoxLayout>
 #include <QWidgetAction>
 // utility
+#include "colors_common.h"
 #include "fc_types.h"
 #include "fcintl.h"
 #include "support.h"
@@ -400,8 +401,9 @@ void progress_bar::set_pixmap(struct universal *target)
   QRect crop;
 
   if (VUT_UTYPE == target->kind) {
+    auto color = get_player_color(tileset, client_player());
     sprite = get_unittype_sprite(get_tileset(), target->value.utype,
-                                 direction8_invalid());
+                                 direction8_invalid(), color);
   } else {
     sprite = get_building_sprite(tileset, target->value.building);
   }
@@ -2456,8 +2458,9 @@ void city_dialog::update_improvements()
       str = utype_values_translation(target.value.utype);
       cost = utype_build_shield_cost(pcity, target.value.utype);
       tooltip = get_tooltip_unit(target.value.utype, true).trimmed();
+      auto color = get_player_color(get_tileset(), city_owner(pcity));
       sprite = get_unittype_sprite(get_tileset(), target.value.utype,
-                                   direction8_invalid());
+                                   direction8_invalid(), color);
     } else if (target.kind == VUT_IMPROVEMENT) {
       str = city_improvement_name_translation(pcity, target.value.building);
       sprite = get_building_sprite(tileset, target.value.building);
@@ -2882,8 +2885,9 @@ void city_production_delegate::paint(QPainter *painter,
       is_flying = true;
     }
 
+    auto color = get_player_color(get_tileset(), client_player());
     sprite = get_unittype_sprite(get_tileset(), target->value.utype,
-                                 direction8_invalid());
+                                 direction8_invalid(), color);
   } else {
     is_unit = false;
     name = improvement_name_translation(target->value.building);

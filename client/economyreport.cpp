@@ -10,6 +10,8 @@
 
 #include "economyreport.h"
 // client
+#include "client_main.h"
+#include "colors_common.h"
 #include "sprite.h"
 // gui-qt
 #include "fc_client.h"
@@ -120,7 +122,9 @@ void eco_report::update_report()
     struct unit_type *putype = pentry->type;
     cid id;
 
-    auto sprite = get_unittype_sprite(tileset, putype, direction8_invalid());
+    auto color = get_player_color(tileset, client_player());
+    auto sprite =
+        get_unittype_sprite(tileset, putype, direction8_invalid(), color);
     id = cid_encode_unit(putype);
 
     ui.eco_widget->insertRow(i + max_row);
