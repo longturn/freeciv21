@@ -203,7 +203,7 @@ embassy, and if you cannot see a city on your map, then you cannot request it. O
 city can still offer it to you, in which case the area around the city is shown on your map before you accept \
 the treaty.\n\
   3. One important thing to note: when a city is transferred, any units in the field and supported by that \
-city are also transferred, but not those sitting in other cities. So make sure the other player isn't \
+city are also transferred, but not those sitting in other cities. So make sure the other player is not \
 getting a better deal than you expect.\
 "), _("\
  8. Exploring the world.\
@@ -237,7 +237,7 @@ You will find more tips for playing, and details of how to contact other players
 name = _("Terrain")
 text = _("\
 Terrain serves three roles: the theater upon which your units battle rival civilizations, the landscape \
-across which your units travel, and the medium which your cities work to produce resources. The different \
+across which your units travel, and the medium which your cities manage to produce resources. The different \
 types of terrain each have different strengths and drawbacks. See the sections on each terrain type for \
 details.\
 "), _("\
@@ -556,7 +556,7 @@ productive.\
 "), _("\
 The section on Terrain describes how the output of each tile is affected by the terrain, the presence of \
 special resources such as game (Pheasant) or minerals (Gold, Coal), and tile improvements built by units. \
-Note that the tile on which the city itself rests -- the \"City Center\" -- gets worked for free, without \
+Note that the tile on which the city itself rests -- the \"City Center\" -- gets managed for free, without \
 being assigned a citizen. Think of this as \"Citizen Zero\". The city's center tile may also receive other
 benefits.\
 "), _("\
@@ -612,7 +612,7 @@ name = _(" Specialists")
 text = _("\
 The first citizens of each city usually manage the land, each toiling to yield up the resources of one \
 terrain tile. However, there may be other specialist roles citizens can assume. In fact, taking another role \
-is the only way they can stop managing a tile. A city may outgrow the land available for it to work, in \
+is the only way they can stop managing a tile. A city may outgrow the land available for it to manage, in \
 which case some citizens must become specialists.\
 "), _("\
 All specialists enjoy enough privilege to remain perpetually content. They do not contribute to unhappiness \
@@ -825,9 +825,9 @@ their purpose, have five important stats:\
 attack is possible.\n\
  - Defense (D): This is the comparative strength of the unit when it is a defender. The value can be zero, \
 meaning no defense is possible.\n\
- - Moves (MP): This is the number of move points that the unit can use per turn. Under certain rulesets, \
+ - Move Points (MP): This is the number of move points that the unit can use per turn. Under certain rulesets, \
 Terrain and Veteran level will impact how moves are consumed as a unit moves around the map.\n\
- - Hitpoints (HP): This is effectively the constitution of the unit. The higher the value, the more \"hits\" \
+ - Hit Points (HP): This is effectively the constitution of the unit. The higher the value, the more \"hits\" \
 the unit can take before being destroyed.\n\
  - Firepower (FP): This is a force multiplier for attack. Values greater than 1 multiply the attack value by \
 the firepower value.\
@@ -836,7 +836,7 @@ Units are usually built in cities using production points. Once built, units are
 built them. They can later be re-homed while visiting a different city and demand support from that city. \
 Unit upkeep will be one of your major expenses. Most units require upkeep such as production points from \
 their home city every turn, although some autocratic styles of government can force cities to support \
-several units for free depnding on the ruleset. If the upkeep of a unit outweighs its benefit, you can \
+several units for free depending on the ruleset. If the upkeep of a unit outweighs its benefit, you can \
 disband it. See the section on Production. A few units, particularly those that you start the game with, \
 have no home city and thus require no upkeep.\
 "), _("\
@@ -958,7 +958,7 @@ hit points equal to the attacker's firepower. Otherwise, the attacker loses hit 
 defender's firepower. The first unit to reach 0 hit points (or negative hit points) loses and is destroyed.\
 "), _("\
 Whichever unit survives the fight has a chance of being promoted a veteran level. In the classic ruleset, if \
-the winner's civilization has the Sun Tzu's War Academy (and if it isn't obsolete), the chance is increased \
+the winner's civilization has the Sun Tzu's War Academy (and if it is not obsolete), the chance is increased \
 by half in case of land units.\
 "), _("\
 If the attacker is a land unit and wins, and the defender is in a city without City Walls, the city is \
@@ -1102,7 +1102,7 @@ may vary upwards from a minimum of 6 depending on the ruleset being played.\
 [help_policies]
 name = _("Policies")
 text = _("\
-Some rulesets define \"policies\". These are empire-wide settings, usually trade-offs similar to tax rates. \
+Some rulesets define \"Policies\". These are empire-wide settings, usually trade-offs similar to tax rates. \
 If the current ruleset defines any policies, they are described in the following sections.\
 "), _("\
 You may change policy values at any time, but any changes only take effect at the next turn.\
@@ -1128,28 +1128,28 @@ is the natural state in the classic rules, while the others can be achieved by s
 "), _("\
 During War, you can freely move your units inside enemy territory and attack their units and cities at will.\
 "), _("\
-When two players decide to end hostilities between them, they can agree on a Cease-fire treaty. This prevents \
+When two players decide to end hostilities between them, they can agree on a cease-fire treaty. This prevents \
 each player from attacking the other, but you can still move your units inside the other player's borders. \
-After a set number of turns, the Cease-fire will lead back to War. Upon first contact with an AI player, it \
-will automatically offer you a Cease-fire treaty.\
+After a set number of turns, the cease-fire will lead back to war. Upon first contact with an AI player, it \
+will automatically offer you a cease-fire treaty.\
 "), _("\
 If you wish for a more permanent peaceful coexistence with another player, you may sign a peace pact. This \
-will enter a transitional Armistice state, which after another set number of turns will turn into a permanent \
-Peace. Breaking an Armistice will drop you directly back to War.\
+will enter a transitional armistice state, which after another set number of turns will turn into a permanent \
+peace. Breaking an armistice will drop you directly back to war.\
 "), _("\
-At the moment two players enter into the diplomatic state of Peace, all military units belonging to either \
-player that happen to be within the other's borders will be automatically disbanded according to the treaty. \
-After this, you may not move military units into the other's territory until you either declare War, or forge \
-an Alliance. Breaking a Peace treaty will drop you directly back to War.\
+At the moment two players enter into the diplomatic state of peace, all military units belonging to either \
+player that happens to be within the other's borders will be automatically disbanded according to the treaty. \
+After this, you may not move military units into the other's territory until you either declare war, or forge \
+an alliance. Breaking a peace treaty will drop you directly back to war.\
 "), _("\
-An Alliance is the ultimate diplomatic relationship between two players. In this state, you may move units \
-into each other's cities and your units may share the same tile; units no longer impose zones of control. \
-However, alliance treaties come with obligations. You won't be able to ally with a player that is at war with \
-a current ally unless you break the first treaty. If one of your allies declares war on another, the \
-alliance with the aggressor is automatically broken. Breaking an Alliance will drop you to an Armistice \
-treaty. An allied AI player will freely give you its world maps and shared vision and will seriously \
-consider trading technologies and cities, but in return will expect you to join its wars against other \
-players.\
+An alliance is the ultimate diplomatic relationship between two players. In this state, you may move units \
+into each other's cities and your units may share the same tile. Allied units no longer impose zones of \
+control. However, alliance treaties come with obligations. You will not be able to ally with a player that \
+is at war with a current ally unless you break the first treaty. If one of your allies declares war on \
+another, the alliance with the aggressor is automatically broken. Breaking an alliance will drop you to an \
+armistice treaty. An allied AI player will freely give you its world maps and shared vision and will \
+seriously consider trading technologies and cities, but in return will expect you to join its wars against \
+other players.\
 ")
 
 [help_technology]
@@ -1158,30 +1158,32 @@ text = _("\
 Research into technology is a necessity for improving the ability of your civilization to develop new \
 military units and city improvements.\
 "), _("\
-There are a few ways to gain advances from other civilizations:\
+There are a few ways to gain advances other than conducting your own research:\
 "), _("\
- - You will sometimes discover enemy technology when you capture a city\n\
- - Your agents can steal advances\n\
- - Wonders can provide you with technology\n\
- - Another player might grant technology in the terms of a pact.\
+ - You will sometimes discover enemy technology when you capture a city.\n\
+ - Your agents can steal advances.\n\
+ - Wonders can provide you with technology.\n\
+ - Another player might grant technology in the terms of a pact.\n\
+ - You may find scrolls of wisdom in a hut.\
 "), _("\
 Otherwise advances must be discovered through the efforts of your own people. Many of the mentioned methods \
 of technology transfer are also ruleset defined, meaning that they may be disabled.\
 "), _("\
-Most technology progress comes from trade (see the Trade section) and, in the classic ruleset, from scientist \
-specialists (see the Specialists section). While it is possible to change which advance you are currently \
-researching, by default all progress is lost by doing so.\
+Most technological progress comes from trade (see the Trade section) and, in the classic ruleset, from \
+scientist specialists (see the Specialists section). While it is possible to change which advance you are \
+currently researching, by default all progress is lost by doing so.\
 "), _("\
-While the majority of the resulting research output (\"bulbs\") usually goes toward advancing technology, in \
+While the majority of the resulting research output (\"Bulbs\") usually goes toward advancing technology, in \
 some rulesets, but not the classic rules, some of it may be diverted to maintain expertise in existing \
 technologies. The quantity required for technology upkeep increases with the total research cost of all \
 advances known to you. The state of advancement at which you start paying this upkeep may depend on factors \
-such as your government type. If research output drops below that required for upkeep, your civilization will \
-forget an advance, requiring it to be researched again.\
+such as your form of government. If research output drops below that required for upkeep, your civilization \
+will forget an advance, requiring it to be researched again.\
 "), _("\
 Technological advances can render units, city improvements, and wonders obsolete. While obsolete units merely \
-become impossible for you to make (leaving the ones you have already made intact), obsolete improvements are \
-immediately sold and obsolete wonders lose their effect. See the relevant sections for more information.\
+become impossible for you to make (leaving the ones you have already made intact), obsolete improvements \
+become redundant and should be sold (see Economy View), while obsolete wonders lose their effect. See the \
+relevant sections for more information.\
 ")
 
 [help_gen_techs]
@@ -1241,13 +1243,13 @@ by default). If the server is started with the -m flag, it will report to the me
 $DefaultMetaserver\
 ", _("\
 The client can fetch this page, too: use the Metaserver button in the connection dialog. If it never shows \
-any results, check whether your WWW browser is using a HTTP proxy; to make the client use the same proxy, \
+any results, check whether your web browser is using a HTTP proxy; to make the client use the same proxy, \
 before starting the client, set the $http_proxy environment variable to:\
 "), "\
   http://proxyhost:proxyportnumber/\
 ", _("\
-When the game has started, everyone can connect as any player who isn't already connected, including AI \
-players. Merely connecting to an AI player doesn't make it human controlled. This is an independent server \
+When the game has started, everyone can connect as any player who is not already connected, including AI \
+players. Merely connecting to an AI player does not make it human controlled. This is an independent server \
 setting. If you lose connection early in the game and reconnect, use the name you chose for your ruler, not \
 your original nickname! If the server is reporting on the metaserver, the player names can be found there.\
 ")
@@ -1260,40 +1262,40 @@ are shown here as a courtesy and may be inaccurate due to changes in code or loc
 "), _("\
 Unit Orders:\n\
 ============\n\
-  a: (a)uto-settler (settler/worker units)\n\
-  b: (b)uild city (settler units)\n\
-  b: help (b)uild wonder (caravan/freight units)\n\
-  B: go to and (B)uild city on target tile (settler units)\n\
+  a: (a)uto-settler (Settler/Worker units)\n\
+  b: (b)uild city (Settler units)\n\
+  b: help (b)uild wonder (Caravan/Freight units)\n\
+  B: go to and (B)uild city on target tile (Settler units)\n\
   d: (d)o an action to the selected tile (press twice to target own tile)\n\
   d: (d)o the action to the selected tile (when in go-to mode)\n\
   D: (D)isband unit\n\
-  E: build airbas(e) (airbase units)\n\
-  f: (f)ortify unit (military units)\n\
-  F: build (f)ortress (settler/worker units)\n\
+  E: build airbas(e) (Airbase units)\n\
+  f: (f)ortify unit (Military units)\n\
+  F: build (f)ortress (Settler/Worker units)\n\
   g: (g)o to tile (then left-click mouse to select target tile)\n\
   g: add a (g)o-to waypoint (when in go-to mode)\n\
   G: return unit to nearest friendly city\n\
   h: set unit's (h)omecity (to city on current tile)\n\
-  i: build (i)rrigation or convert terrain (settler/worker units)\n\
+  i: build (i)rrigation or convert terrain (Settler/Worker units)\n\
   I: change terrain by cultivating\n\
   Ctrl+I: connect current and target tile with (I)rrigation\n\
   Ctrl+I: set an (I)rrigation waypoint (when connecting with irrigation)\n\
   l: (l)oad unit on transporter\n\
   Ctrl+L: connect current and target tile with rai(L)\n\
   Ctrl+L: set a rai(L) waypoint (when connecting with rail)\n\
-  m: build (m)ine or convert terrain (settler/worker units)\n\
+  m: build (m)ine or convert terrain (Settler/Worker units)\n\
   M: change terrain by planting\n\
   n: clean (n)uclear fallout\n\
   N: explode (N)uclear\n\
-  o: transf(o)rm terrain (engineer unit)\n\
+  o: transf(o)rm terrain (Engineer unit)\n\
   O: c(O)nvert to another kind of unit\n\
-  p: clean (p)ollution (settler/worker units)\n\
-  p: drop (p)aratrooper (paratroop units)\n\
+  p: clean (p)ollution (Settler/Worker units)\n\
+  p: drop (p)aratrooper (Paratrooper units)\n\
   P: (P)illage (destroy terrain alteration)\n\
   q: patrol with unit (then left-click mouse to select other endpoint)\n\
   q: add a patrol waypoint (when in patrol mode)\n\
-  r: build (r)oad/railroad (settler/worker units)\n\
-  r: establish trade (r)oute (caravan/freight units)\n\
+  r: build (r)oad/railroad (Settler/Worker units)\n\
+  r: establish trade (r)oute (Caravan/Freight units)\n\
   Ctrl+R: connect current and target tile with (R)oad\n\
   Ctrl+R: set a (R)oad waypoint (when connecting with road)\n\
   s: (s)entry unit\n\
@@ -1384,19 +1386,19 @@ Overview Map (Mouse):\n\
 =====================\n\
   Left-click, Shift-left-click, and Right-click have the same functions as they do on the main map.\
 "), _("\
-Widgets and Pages:\n\
+Widgets and Views:\n\
 ==================\n\
-  F1: show Map Page\n\
-  F2: show Units Widget (on Map)\n\
-  F3: show Nations Page\n\
-  F4: show Cities Page\n\
-  F5: show Economy Page\n\
-  F6: show Research Page\n\
-  F7: show World Wonders Widget (on Map)\n\
-  F8: show Top Five Cities Widget (on Map)\n\
-  F9: show Messages Widget (on Map)\n\
-  F11: show Demographics (on Map)\n\
-  F12: show Spaceship Page\
+  F1: show Map View\n\
+  F2: show Units Widget (on Map View)\n\
+  F3: show Nations View\n\
+  F4: show Cities View\n\
+  F5: show Economy View\n\
+  F6: show Research View\n\
+  F7: show World Wonders Widget (on Map View)\n\
+  F8: show Top Five Cities Widget (on Map View)\n\
+  F9: show Messages Widget (on Map View)\n\
+  F11: show Demographics (on Map View)\n\
+  F12: show Spaceship View\
 "), _("\
   Ctrl-F: open Find City dialog\n\
   Ctrl-L: open Worklists dialog\n\
@@ -1404,11 +1406,6 @@ Widgets and Pages:\n\
   Shift-Ctrl-R: open Revolution dialog\
 "), _("\
   Shift-Return: Turn done\
-"), _("\
-Editing Mode:\n\
-=============\n\
-  Ctrl-E: toggle editing mode\n\
-  Ctrl-M: toggle fog of war in editing mode\
 ")
 
 [help_governor]
@@ -1418,15 +1415,15 @@ The Citizen Governor (formerly called the CMA) helps you manage your cities. It 
 on the free tiles around the city to achieve maximal city output. It also changes workers to specialists, if \
 appropriate. The governor has another ability, whenever possible, it keeps your cities content.\
 "), _("\
-There are various means to tell the governor what kind of output you would like. Open the City dialog and \
+There are various means to tell the governor what kind of output you would like. Open the City Dialog and \
 click on the Governor tab. There are two kinds of sliders: On the left, you can set a Minimal Surplus for \
 each kind of production. For example, Gold = +3 means the city earns 3 gold more than it needs to upkeep its \
 improvements. On the right, the sliders let you define by how much you prefer one kind of production to \
-another. Setting science to 3 means you prefer a single bulb to three shields (or gold, trade,...). You can \
+another. Setting science to 3 means you prefer a single bulb to three shields (or gold, trade, etc.). You can \
 set different factors for each kind of production, according to your needs.\
 "), _("\
-If you set up some minimal murpluses which are impossible to fulfill, the governor can't be activated. \
-Whenever the governor can't fulfill its task in the ongoing game, it passes back control to you. So you'd \
+If you set up some minimal surpluses which are impossible to fulfill, the governor cannot be activated. \
+Whenever the governor cannot fulfill its task in the ongoing game, it passes back control to you. So you \
 better not define too high a surplus! Instead, use factors to achieve your goals.\
 "), _("\
 The Celebrate checkbox lets your city celebrate. This will work only with a high luxury rate. See help about \
@@ -1441,7 +1438,7 @@ control your setting from within the city page, by right-clicking on a city a lo
 Use 'Game' --> 'Save Options Now' to store your presets permanently.\
 "), _("\
 But beware! If you use the governor for some of your cities, you will encounter some difficulties with \
-managing cities nearby, by hand. It's best to manage all cities on an island either by hand or by governor.\
+managing cities nearby, by hand. It is best to manage all cities on an island either by hand or by governor.\
 ")
 
 [help_chatline]
@@ -1459,7 +1456,7 @@ match a username beginning with 'John' (like 'Johnathan').\n\
 named 'John'. A user name 'Johnathan' will still be matched.\n\
   - Messages starting with ':' will be sent to everyone (even if your client is configured to send only to \
 allies by default).\n\
-  - Messages starting with '.' will be sent only to all your allies (or, if you're a global observer, only to \
+  - Messages starting with '.' will be sent only to all your allies (or, if you are a global observer, only to \
 other global observers).\
 "), _("\
 The client has featured text support. This feature allows users to format the chat messages they are sending \
@@ -1504,7 +1501,7 @@ using boldface, italic, colors, links, etc. Such changes are performed using esc
     Abbreviation sequence: '[l tgt=\"city\"] ... [/l]'\n\
     Short cut: Control-Alt-Right-click on a city on the map.\n\
     The 'id' parameter must be set to the id of the city you are pointing.\n\
-    An optional 'name' parameter can be set to bind the city name in the case the destination users don't \
+    An optional 'name' parameter can be set to bind the city name in the case the destination users do not \
 know this city on their map. This expression can also be started and finished within the same pair of \
 brackets, like '[link target=\"city\" id=121 /]' (note the slash at the end).\n\
     Examples: '[l tgt=\"city\" id=65]city[/l]' will make the word 'city' clickable and pointing to the city \
@@ -1526,7 +1523,7 @@ to the tile (17, 3).\
     Abbreviation sequence: '[l tgt=\"unit\"] ... [/l]'\n\
     Short cut: Shift-Control-Alt-Right-click on a unit on the map.\n\
     The 'id' parameter must be set to the id of the unit you are pointing to. An optional 'name' parameter \
-can be set to bind the unit name in the case the destination users don't know this unit on their map.\n\
+can be set to bind the unit name in the case the destination users do not know this unit on their map.\n\
     This expression can also be started and finished within the same pair of brackets, like \
 '[link target=\"unit\" id=109 /]' (note the slash at the end).\n\
     Examples: '[l tgt=\"unit\" id=235]unit[/l]' will make the word 'unit' clickable and pointing to the unit \
@@ -1540,18 +1537,18 @@ Of course, the different escape sequences can be combined in the same sentence, 
 [help_worklist_editor]
 name = _("Worklist Editor")
 text = _("\
-The worklist editor is used to edit both worklists for each city (from the city dialog) and global worklists. \
+The worklist editor is used to edit both worklists for each city (from the City Dialog) and global worklists. \
 Using this editor you can create lists specifying what to build in the turns to come.\
 "), _("\
-To add an item to the worklist, click the plus ( + ) icon on the Production tab in the city dialog. A list of \
-available items will appear. You can hover over them for some brief help and then click the desired item  to \
+To add an item to the worklist, click the plus ( + ) icon on the Production tab in the City Dialog. A list of \
+available items will appear. You can hover over them for some brief help and then click the desired item to \
 add to the worklist of projects to build.\
 "), _("\
-To remove an item from the worklist simply double-click the item to remove. Use the buttons below the \
+To remove an item from the worklist simply double-click the item to remove it. Use the buttons below the \
 worklist to move items up and/or down in the list.\
 "), _("\
-If you want to buy the unit that's first on the list, you can do that from the top of the the Production tab \
-in the city dialog.\
+If you want to buy the project that is first on the list, you can do that from the top of the the Production \
+tab in the City Dialog.\
 ")
 
 [help_languages]
