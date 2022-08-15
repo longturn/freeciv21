@@ -129,20 +129,11 @@ void fcFont::setFont(const QString &name, const QFont &qf)
  */
 void configure_fonts()
 {
-  int max, default_size;
   QStringList sl;
   QString font_name;
-  const QList<QScreen *> screens = QGuiApplication::screens();
-  const QScreen *screen = screens.at(0);
-  qreal logical_dpi = screen->logicalDotsPerInchX();
-  qreal physical_dpi = screen->physicalDotsPerInchX();
-  qreal screen_size = screen->geometry().width() / physical_dpi + 5;
-  qreal scale = (physical_dpi * screen_size / (logical_dpi * 27))
-                / screen->devicePixelRatio();
-  QByteArray fn_bytes;
 
-  max = qRound(scale * 16);
-  default_size = qRound(scale * 14);
+  const int max = 16;
+  const int default_size = 14;
 
   /* default and help label*/
   sl << QStringLiteral("Segoe UI") << QStringLiteral("Cousine")
@@ -153,19 +144,19 @@ void configure_fonts()
      << QStringLiteral("Times New Roman");
   font_name = configure_font(fonts::default_font, sl, max);
   if (!font_name.isEmpty()) {
-    fn_bytes = font_name.toLocal8Bit();
-    fc_strlcpy(gui_options.gui_qt_font_default, fn_bytes.data(), 512);
+    fc_strlcpy(gui_options.gui_qt_font_default, qUtf8Printable(font_name),
+               512);
   }
   font_name = configure_font(fonts::city_names, sl, max, true);
   if (!font_name.isEmpty()) {
-    fn_bytes = font_name.toLocal8Bit();
-    fc_strlcpy(gui_options.gui_qt_font_city_names, fn_bytes.data(), 512);
+    fc_strlcpy(gui_options.gui_qt_font_city_names, qUtf8Printable(font_name),
+               512);
   }
   // default for help text
   font_name = configure_font(fonts::help_text, sl, default_size);
   if (!font_name.isEmpty()) {
-    fn_bytes = font_name.toLocal8Bit();
-    fc_strlcpy(gui_options.gui_qt_font_help_text, fn_bytes.data(), 512);
+    fc_strlcpy(gui_options.gui_qt_font_help_text, qUtf8Printable(font_name),
+               512);
   }
   sl.clear();
 
@@ -177,15 +168,15 @@ void configure_fonts()
      << QStringLiteral("Courier New");
   font_name = configure_font(fonts::notify_label, sl, default_size);
   if (!font_name.isEmpty()) {
-    fn_bytes = font_name.toLocal8Bit();
-    fc_strlcpy(gui_options.gui_qt_font_notify_label, fn_bytes.data(), 512);
+    fc_strlcpy(gui_options.gui_qt_font_notify_label,
+               qUtf8Printable(font_name), 512);
   }
 
   // standard for chat
   font_name = configure_font(fonts::chatline, sl, default_size);
   if (!font_name.isEmpty()) {
-    fn_bytes = font_name.toLocal8Bit();
-    fc_strlcpy(gui_options.gui_qt_font_chatline, fn_bytes.data(), 512);
+    fc_strlcpy(gui_options.gui_qt_font_chatline, qUtf8Printable(font_name),
+               512);
   }
 
   // City production
@@ -197,15 +188,14 @@ void configure_fonts()
   font_name =
       configure_font(fonts::city_productions, sl, default_size, true);
   if (!font_name.isEmpty()) {
-    fn_bytes = font_name.toLocal8Bit();
-    fc_strlcpy(gui_options.gui_qt_font_city_productions, fn_bytes.data(),
-               512);
+    fc_strlcpy(gui_options.gui_qt_font_city_productions,
+               qUtf8Printable(font_name), 512);
   }
   // Reqtree
   font_name = configure_font(fonts::reqtree_text, sl, max, true);
   if (!font_name.isEmpty()) {
-    fn_bytes = font_name.toLocal8Bit();
-    fc_strlcpy(gui_options.gui_qt_font_reqtree_text, fn_bytes.data(), 512);
+    fc_strlcpy(gui_options.gui_qt_font_reqtree_text,
+               qUtf8Printable(font_name), 512);
   }
 }
 
