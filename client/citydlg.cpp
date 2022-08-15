@@ -2272,11 +2272,9 @@ void city_dialog::update_units()
     units = pcity->tile->units;
   }
 
-  ui.present_units_list->set_units(units);
-  if (unit_list_size(units) == 0) {
-    ui.present_units_list->hide();
-  }
   n = unit_list_size(units);
+  ui.present_units_list->set_units(units);
+  ui.present_units_list->setVisible(n > 0);
   fc_snprintf(buf, sizeof(buf), _("Present units %d"), n);
   ui.curr_units->setText(QString(buf));
 }
