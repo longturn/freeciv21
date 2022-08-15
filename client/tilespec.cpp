@@ -2509,7 +2509,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     const char *names[] = {"science_bulb", "warming_sun", "cooling_flake"};
 
     for (i = 0; i < NUM_TILES_PROGRESS; i++) {
-      buffer = QStringLiteral("s.%1_%2").arg(names[j], QString::number(j));
+      buffer = QStringLiteral("s.%1_%2").arg(names[j], QString::number(i));
       SET_SPRITE(indicator[j][i], buffer);
     }
   }
