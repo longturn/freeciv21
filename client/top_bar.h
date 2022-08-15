@@ -76,7 +76,6 @@ public:
   void setLabel(const QString &str);
   void setLeftClick(pfcn func);
   void setRightClick(pfcn func);
-  void setTooltip(const QString &tooltip);
   void setWheelDown(pfcn func);
   void setWheelUp(pfcn func);
 

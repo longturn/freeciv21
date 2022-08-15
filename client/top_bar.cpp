@@ -223,14 +223,6 @@ top_bar_widget::~top_bar_widget() { delete timer; }
 void top_bar_widget::setCustomLabels(const QString &l) { setText(l); }
 
 /**
-   Sets tooltip for sidewidget
- */
-void top_bar_widget::setTooltip(const QString &tooltip)
-{
-  setToolTip(tooltip);
-}
-
-/**
  * Paint event for top bar widget
  */
 void top_bar_widget::paintEvent(QPaintEvent *event)

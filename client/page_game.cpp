@@ -293,10 +293,10 @@ void pageGame::updateSidebarTooltips()
 
   if (client.conn.playing && !client_is_global_observer()
       && C_S_RUNNING == client_state()) {
-    sw_science->setTooltip(science_dialog_text());
+    sw_science->setToolTip(science_dialog_text());
     str = QString(nation_plural_for_player(client_player()));
     str = str + '\n' + get_info_label_text(false);
-    sw_map->setTooltip(str);
+    sw_map->setToolTip(str);
     str = QString(_("Tax: %1% Science: %2% Luxury: %3%\n"))
               .arg(client.conn.playing->economic.tax)
               .arg(client.conn.playing->economic.luxury)
@@ -311,14 +311,14 @@ void pageGame::updateSidebarTooltips()
                             &tax);
     fc_snprintf(buf, sizeof(buf), _("Income: %d    Total Costs: %d"), tax,
                 building_total + unit_total);
-    sw_economy->setTooltip(buf);
+    sw_economy->setToolTip(buf);
     if (player_primary_capital(client_player())) {
-      sw_cities->setTooltip(
+      sw_cities->setToolTip(
           text_happiness_cities(player_primary_capital(client_player())));
     }
   } else {
     sw_science->hide();
-    sw_map->setTooltip(QLatin1String(""));
+    sw_map->setToolTip(QLatin1String(""));
     sw_economy->hide();
   }
   sw_indicators->setToolTip(get_info_label_text_popup());
