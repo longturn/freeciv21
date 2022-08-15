@@ -313,8 +313,8 @@ void pageGame::updateSidebarTooltips()
                 building_total + unit_total);
     sw_economy->setToolTip(buf);
     if (player_primary_capital(client_player())) {
-      sw_cities->setToolTip(
-          text_happiness_cities(player_primary_capital(client_player())));
+      auto cities = city_list_size(client_player()->cities);
+      sw_cities->setToolTip(QString(_("Cities: %1 total")).arg(cities));
     }
   } else {
     sw_science->hide();
