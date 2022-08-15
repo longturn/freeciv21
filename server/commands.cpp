@@ -447,7 +447,7 @@ static struct command commands[] = {
         "more time to finish their actions.\n"
         "The time is specified as hours, minutes, and seconds using the "
         "format hh:mm:ss (minutest and hours and are "
-        "optional)."),
+        "optional). Negative values are allowed."),
      nullptr, CMD_ECHO_ALL, VCF_NONE, 50},
     {"timeoutincrease", ALLOW_CTRL,
      // TRANS: translate text between <> only
