@@ -8,20 +8,13 @@ Freeciv21 Client Manual
 
 The Freeciv21 client (``freeciv21-client``) is the main user interface that allows one to play single player
 and online multiplayer games. This manual will mostly track what is in the ``master`` branch of the Freeciv21
-GitHub Repository at https://github.com/longturn/freeciv21/tree/master. You can see the date that the file was
-last updated at the bottom of this page in the footer.
+GitHub Repository at https://github.com/longturn/freeciv21/tree/master. You can see the date that this file
+was last updated at the bottom of this page in the footer.
 
 Getting Started
 ===============
 
-If you have not installed Freeciv21, then obviously you need to start :doc:`there <../install>`. Precompiled
-binaries are available for tagged releases and can be found on the LongTurn GitHub Repository for Freeciv21 at
-https://github.com/longturn/freeciv21/releases. The LongTurn community provides binary packages for Debian
-based Linux distros (Debian, Ubuntu, Mint, etc.), Windows, and MacOS. If you are an Arch Linux user, you can
-find Freeciv21 in the AUR. If you want to get code that is closer to the ``master`` branch, you will want to
-compile the code yourself. The :doc:`installation <../install>` document is mostly for Linux. However, you can
-also compile on Windows with the :doc:`MSYS2 <../../Contributing/msys2>` environment or Microsoft :doc:`Visual
-Studio <../../Contributing/visual-studio>`.
+If you have not installed Freeciv21, then obviously you need to start :doc:`there <../install>`.
 
 If you are having trouble, come find the LongTurn Community on Discord at https://discord.gg/98krqGm. A good
 place to start is the ``#questions-and-answers`` channel.
@@ -106,7 +99,7 @@ administrator. You can right-click on a player's row to configure details about 
   games at the start of a new game. Subsequent logins to a game when you `Connect to Network Game`_ will not
   require another ``take`` action. You can also use the server chat line and issue this command:
   ``/take <player>``
-* :guilabel:`Pick Nation` -- Allows you to choose the Nation of the player. See `Pick Nation`_ below.
+* :guilabel:`Pick Nation` -- Allows you to choose the Nation of the player. See `Nation`_ below.
 * :guilabel:`Set Difficulty` -- Set the difficulty of the AI.
 * :guilabel:`Put on Team` -- Combine players into teams.
 * :guilabel:`AI Toggle Player` -- Toggle if the player is an AI or a human. This is needed before you can use
