@@ -11,6 +11,7 @@
 // Qt
 #include <QApplication>
 #include <QDir>
+#include <QMetaEnum>
 #include <QPalette>
 #include <QSettings>
 #include <QStyle>
@@ -54,12 +55,6 @@ void load_chat_colors(QSettings &settings)
   settings.endGroup();
 }
 
-const QHash<QString, QPalette::ColorRole> roles = {
-    {"link", QPalette::Link},
-    {"link.visited", QPalette::LinkVisited},
-    {"button.text", QPalette::ButtonText},
-};
-
 /**
    Loads a palette from theme settings.
  */
@@ -68,21 +63,26 @@ QPalette load_palette(QSettings &settings)
   settings.beginGroup("general_colors");
   QPalette pal;
 
-  // Hardcoded defaults.
-  pal.setBrush(QPalette::Link, QColor(92, 170, 229));
-  pal.setBrush(QPalette::LinkVisited, QColor(54, 150, 229));
-  pal.setBrush(QPalette::ButtonText, QColor(128, 128, 128));
+  auto meta = QMetaEnum::fromType<QPalette::ColorRole>();
+  for (int i = 0; i < meta.keyCount(); ++i) {
+    const auto name = meta.key(i);
+    const auto role = static_cast<QPalette::ColorRole>(meta.value(i));
+    if (role == QPalette::NColorRoles || role == QPalette::NoRole) {
+      continue;
+    }
 
-  for (auto k : settings.childKeys()) {
-    if (roles.find(k) == roles.end()) {
+    if (!settings.contains(name)) {
+      qWarning() << "missing color" << name;
       continue;
     }
-    auto val = settings.value(k).toString();
+
+    const auto val = settings.value(name).toString();
     if (!QColor::isValidColor(val)) {
-      qWarning() << "color invalid: " << val;
+      qWarning() << "color invalid:" << val;
       continue;
     }
-    pal.setBrush(roles[k], QColor(val));
+
+    pal.setBrush(role, QColor(val));
   }
 
   settings.endGroup();
@@ -100,7 +100,6 @@ void gui_load_theme(const QString &directory, const QString &theme_name)
   QString data_dir;
   QFile f;
   QString lnb = QStringLiteral("LittleFinger");
-  QPalette pal;
 
   if (def_app_style->isEmpty()) {
     *def_app_style = QApplication::style()->objectName();
@@ -122,7 +121,7 @@ void gui_load_theme(const QString &directory, const QString &theme_name)
   *stylestring = in.readAll();
   stylestring->replace(lnb, fake_dir + "/" + theme_name + "/");
 
-  if (QString(theme_name) == QStringLiteral("System")) {
+  if (theme_name == QStringLiteral("System")) {
     QApplication::setStyle(QStyleFactory::create(*def_app_style));
   } else {
     QStyle *fstyle = QStyleFactory::create(QStringLiteral("Fusion"));
@@ -143,7 +142,10 @@ void gui_load_theme(const QString &directory, const QString &theme_name)
   if (king()) {
     queen()->reloadSidebarIcons();
   }
-  QApplication::setPalette(load_palette(settings));
+  if (theme_name != QStringLiteral("system")) {
+    // FIXME How to reset to the system palette?
+    QApplication::setPalette(load_palette(settings));
+  }
 }
 
 /**
