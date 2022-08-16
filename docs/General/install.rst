@@ -1,21 +1,38 @@
-Compiling and Installing
-************************
+Installing Freeciv21
+********************
 
-General Prerequisites
-=====================
+The developers of Freeciv21 provide pre-compiled binaries and installation packages for tagged releases. They
+can be found on the LongTurn GitHub Repository for Freeciv21 at
+https://github.com/longturn/freeciv21/releases. The LongTurn community provides binary packages for Debian
+based Linux distros (Debian, Ubuntu, Mint, etc.), Microsoft Windows\ |reg| (32 and 64-bit), and Apple MacOS
+X\ |reg|. If you are an Arch Linux user, you can find Freeciv21 in the AUR.
+
+For more information on using the Windows Installer package, you can read about it at :doc:`windows-install`.
+
+To install the Debian package, you will use the ``apt`` with elevated privileges like this:
+
+.. code-block:: rst
+
+  $ sudo apt install ./freeciv21_*_amd64.deb
+
+
+If you want to get code that is closer to the ``master`` branch, you will want to compile the code yourself. Continue reading for instructions.
+
+General Prerequisites to Compile Freeciv21
+==========================================
 
 Freeciv21 has a number of prerequisites.  Note, that apart from the first prerequisite, the Freeciv21
 configuration process is smart enough to work out whether your system is suitable. If in doubt, just try it.
 
 An operating system that support Qt
-    Any modern operating system that supports Qt 5.12+ is required. As of this writing this is Linux, Microsoft
-    Windows\ |reg| and Apple Mac OS X\ |reg|.
+    Any modern operating system that supports Qt 5.12+ is required. As of this writing this is Linux,
+    Microsoft Windows\ |reg| and Apple Mac OS X\ |reg|.
 
     Linux Distributions:
 
     * Arch
     * CentOS 8+
-    * Debian 11+ (Bullseye)
+    * Debian 11+ (Bullseye)\ |reg|
     * Fedora 28+
     * Gentoo
     * KDE Neon
@@ -29,18 +46,25 @@ An operating system that support Qt
 .. note::
   The above list of Linux distributions is, of course, not exhaustive. The Freeciv21 Community has simply
   listed the mainline, well supported, distributions here. The code repository has Continuous Integration
-  enabled and all code commits pass through Ubuntu, Mac OS and Windows for testing. It is assummed that the
+  enabled and all code commits pass through Ubuntu, Mac OS and Windows for testing. It is assumed that the
   user is keeping his/her computer OS up to date. Support by the community for these distributions will be
   better than for some of the others out there, so keep that in mind if you are not an experienced Linux user.
 
+.. note::
+  The following instructions on this page are for Linux, MSYS2 and MacOS X environments. You will need to
+  :doc:`install MSYS2 <../../Contributing/msys2>` first before continuing here if using MSYS2 on Windows.
+  However, you can also compile on Windows with Microsoft
+  :doc:`Visual Studio <../../Contributing/visual-studio>`. The Visual Studio instructions are self contained.
+  No need to return to this page after following the installation instructions.
+
 
 A C and C++ compiler
-    Freeciv21 is written in very portable C and C++. Both 32- and 64-bit machines are supported. You cannot
+    Freeciv21 is written in very portable C and C++. Both 32 and 64-bit machines are supported. You cannot
     use a "K&R C" compiler. The C++ compiler must support C++ 17.
 
     Development of Freeciv21 is primarily done with :file:`gcc`, the GNU project's excellent C and C++
-    compiler. For complete cross-platform support the Longturn community uses the LLVM project's :file:`clang-cl`
-    compiler, which is supported on Linux, Windows and Mac OS.
+    compiler. For complete cross-platform support the LongTurn community uses the LLVM project's
+    :file:`clang-cl` compiler, which is supported on Linux, Windows and Mac OS X.
 
 The Cmake program
     Freeciv21 developers generally use :file:`cmake`, the Kitware make program. You can check if you have
@@ -77,13 +101,13 @@ SQLite
 
 GNU Gettext
     GNU Gettext is used for Internationalization support. Freeciv21 requires version 0.15 or better. The
-    :file:`xgettext` program is required to create the :literal:`*.gmo` files which aren't
+    :file:`xgettext` program is required to create the :literal:`*.gmo` files which are not
     included in the git tree.
 
     https://www.gnu.org/software/gettext/
 
 Lua
-    Lua is a powerful, efficient, lightweight, embeddable scripting language. It supports procedural
+    Lua is a powerful, efficient, lightweight, embedable scripting language. It supports procedural
     programming, object-oriented programming, functional programming, data-driven programming, and data
     description. Exact version 5.3 is preferred.
 
@@ -103,7 +127,7 @@ Python
 Prerequisites for the Client and Tools
 ======================================
 
-The Freeciv21 project maintains a single Qt client.
+The Freeciv21 project maintains a single Qt based client.
 
 C++ compiler.
     The client is written in C++, so you need an appropriate compiler. In Freeciv21 development, :file:`g++`
@@ -113,15 +137,80 @@ QT Libraries
     Freeciv21 uses the Qt libraries, specifically :file:`Qt5Core`, :file:`Qt5Gui`, :file:`Qt5Network`,
     :file:`Qt5Svg`, and :file:`Qt5Widgets` libraries and headers.
 
-    At least version 5.11 is required.
+    At least version 5.12 is required.
+
+Installing Package Dependencies
+===============================
+
+See the `Debian Linux Packages`_ section below on the steps to install the components for Debian Linux and
+its variants.
+
+See the `MacOS X Packages`_ section below on the steps to install the components for Apple MacOS X.
+
+If you are running Windows and want to use the MSYS2 environment and not set it up yet, then
+:doc:`do so now <../../Contributing/msys2>`, before continuing.
+
+Lastly, if you are running Windows and want to use Visual Studio, you can follow the Microsoft
+:doc:`Visual Studio <../../Contributing/visual-studio>` instructions. The Visual Studio instructions are
+self contained. You do not neet to return here in that case.
+
+Debian Linux Packages
+=====================
+Below are all the command line steps needed to start with a fresh install of Debian or its variants (e.g.
+Ubuntu, Linux Mint) to install Freeciv21.
+
+Start with ensuring you have a source repository (:file:`deb-src`) turned on in apt sources and then run the
+following commands:
+
+.. code-block:: rst
+
+  $ sudo apt update
+
+  $ sudo apt install git \
+     cmake \
+     ninja-build \
+     python3 \
+     python3-pip \
+     qtbase5-dev \
+     libqt5svg5-dev \
+     libkf5archive-dev \
+     liblua5.3-dev \
+     libmagickwand-dev \
+     libsdl2-mixer-dev \
+     libunwind-dev \
+     libdw-dev \
+     python3-sphinx \
+     clang-format-11
+
+
+At this point, follow the steps in `Obtaining the Source Code`_ section below.
+
+MacOS X Packages
+================
+
+Below are all the command line steps needed to start with a fresh install of MacOS X.
+
+.. code-block:: rst
+
+  $ brew update
+
+  $ brew install \
+      cmake \
+      ninja \
+      python3 \
+      gettext \
+      vcpkg
+      brew link gettext --force
+
+  $ export VCPKG_ROOT="$HOME/vcpkg"
 
 
 Obtaining the Source Code
 =========================
 
-In order to compile Freeciv21, you need a local copy of the source code. You can download a saved version of
-the code from the project releases page at https://github.com/longturn/freeciv21/releases. Alternately you
-can get the latest from the master branch with the :file:`git` program with this command:
+In order to compile Freeciv21, you need a local copy of the source code. You can download a saved version in
+an archive file (:file:`.tar.gz` or :file:`.zip`) of the code from the project releases page at
+https://github.com/longturn/freeciv21/releases. Alternately you can get the latest from the master branch with the :file:`git` program with this command:
 
 .. code-block:: rst
 
@@ -131,13 +220,29 @@ can get the latest from the master branch with the :file:`git` program with this
 Configuring
 ===========
 
-Configuring Freeciv21 for compilation requires the use of the :file:`cmake` program. To build with defaults
-enter the following commmand from the freeciv21 directory:
+Configuring Freeciv21 for compilation requires the use of the :file:`cmake` program.
+
+On Debian Linux, to build with defaults enter the following command from the freeciv21 directory. Continue
+reading in the `Other CMake Notes`_ section below for more notes about other command line options you can give :file:`cmake`.
 
 .. code-block:: rst
 
   $ cmake . -B build -G Ninja
 
+
+On MacOS X, you need to use a preset that is defined in the :file:`CMakePresets.json` file. When complete
+you can go to the `Compiling/Building`_ section below to continue.
+
+.. code-block:: rst
+
+  $ cmake --preset fullrelease-macos -S . -B build
+
+.. note::
+  The first time you run the this command, :file:`cmake` invoke the :file:`vcpkg` installation process to download and compile all of the project dependencies listed in the manifest file: :file:`vcpkg.json`. :strong:`This will take a very long time`. On a fast computer with a good Internet connection it will take
+  at least 3 hours to complete. Everything will be downloaded and compiled into the :file:`$HOME/vcpkg` directory. Binaries for the packages will be copied into the :file:`./build/` directory inside of the main Freeciv21 directory and reused for subsequent builds.
+
+Other CMake Notes
+-----------------
 
 To customize the compile, :file:`cmake` requires the use of command line parameters. :file:`cmake` calls
 them directives and they start with :literal:`-D`. The defaults are marked with :strong:`bold` text.
@@ -150,7 +255,7 @@ FREECIV_ENABLE_TOOLS={:strong:`ON`/OFF}     Enables all the tools with one param
 FREECIV_ENABLE_SERVER={:strong:`ON`/OFF}    Enables the server. Should typically set to ON to be able
                                             to play AI games
 FREECIV_ENABLE_NLS={:strong:`ON`/OFF}       Enables Native Language Support
-FREECIV_ENABLE_CIVMANUAL={:strong:`ON`/OFF} Enables the Freeciv Manual application
+FREECIV_ENABLE_CIVMANUAL={:strong:`ON`/OFF} Enables the Freeciv21 Manual application
 FREECIV_ENABLE_CLIENT={:strong:`ON`/OFF}    Enables the Qt client. Should typically set to ON unless you
                                             only want the server
 FREECIV_ENABLE_FCMP_CLI={ON/OFF}            Enables the command line version of the Freeciv21 Modpack
@@ -177,6 +282,13 @@ Once the command line directives are determined, the appropriate command looks l
      -DCMAKE_BUILD_TYPE=Release \
      -DFREECIV_ENABLE_NLS=OFF \
      -DCMAKE_INSTALL_PREFIX=$HOME/Install/Freeciv21
+
+
+A very common Debian Linux configuration command looks like this:
+
+.. code-block:: rst
+
+  $ cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
 
 
 Compiling/Building
@@ -206,53 +318,11 @@ Once the compilation is complete, install the game with this command.
     to copy the :literal:`.desktop` files in :file:`$CMAKE_INSTALL_PREFIX/share/applications` to
     :file:`$HOME/.local/share/applications`.
 
-    This is only necessary if you change the installation prefix. If you don't and use elevated
+    This is only necessary if you change the installation prefix. If you do not and use elevated
     privileges, then the files get copied to the system default location.
 
-
-Debian Linux Notes
-==================
-
-Below are all the command line steps needed to start with a fresh install of Debian or its variants (e.g.
-Ubuntu, Linux Mint) to install Freeciv21.
-
-Start with ensuring you have a source repository (:file:`deb-src`) turned on in apt sources and then run the
-following commands.
-
-.. code-block:: rst
-
-  $ sudo apt update
-
-  $ sudo apt build-dep freeciv
-
-  $ sudo apt install git \
-     cmake \
-     ninja-build \
-     python3 \
-     python3-pip \
-     qtbase5-dev \
-     libqt5svg5-dev \
-     libkf5archive-dev \
-     liblua5.3-dev \
-     libmagickwand-dev \
-     libsdl2-mixer-dev \
-     libunwind-dev \
-     libdw-dev \
-     python3-sphinx \
-     clang-format-11
-
-  $ pip install sphinx_rtd_theme
-
-  $ mkdir -p $HOME/GitHub
-
-  $ cd $HOME/GitHub
-
-  $ git clone https://github.com/longturn/freeciv21.git
-
-  $ cd freeciv21
-
-At this point follow the steps in the configuring_ section above.
-
+At this point, the compilation and installation process is complete. The following sections document other
+aspects of the packaging and documentation generation process.
 
 Debian and Windows Package Notes
 ================================
@@ -262,8 +332,8 @@ Operating System native packages can be generated for Debian and Windows based s
 Debian
 ------
 
-Assuming you have obtained the source code and installed the package dependencies in the section above, follow
-these steps to generate the Debian package:
+Assuming you have obtained the source code and installed the package dependencies in the sections above,
+follow these steps to generate the Debian package:
 
 .. code-block:: rst
 
@@ -274,20 +344,18 @@ these steps to generate the Debian package:
   $ cmake --build build --target package
 
 
-When the last command is finished running, you will find an installer in :file:`build/Linux-${arch}`
+When the last command is finished running, you will find a :file:`.deb` installer in
+:file:`build/Linux-${arch}`
 
 Microsoft Windows
 -----------------
 
-There are two platforms available for installing Freeciv21 on Windows: :doc:`MSYS2 <../Contributing/msys2>` and
-:doc:`Visual Studio <../Contributing/visual-studio>`. The package target is only supported on MSYS2 due to
+There are two platforms available for installing Freeciv21 on Windows: :doc:`MSYS2 <../Contributing/msys2>`
+and :doc:`Visual Studio <../Contributing/visual-studio>`. The package target is only supported on MSYS2 due to
 licensing `constraints <https://www.gnu.org/licenses/gpl-faq.en.html#WindowsRuntimeAndGPL>`_.
 
-Setting up MSYS2 is documented in :doc:`../Contributing/msys2`. Alternately you can visit
-https://github.com/jwrober/freeciv-msys2 for ready made scripts.
-
-Once your MSYS2 environment is ready, start with configuring_ above. Instead of installing, use this command
-to create the Windows Installer package:
+Once your MSYS2 environment is ready, start with `Obtaining the Source Code`_ above. Instead of installing,
+use this command to create the Windows Installer package:
 
 .. code-block:: rst
 
@@ -299,9 +367,8 @@ When the command is finished running, you will find an installer in :file:`build
 Documentation Build Notes
 =========================
 
-Freeciv21 uses :file:`python3-sphynx` and https://readthedocs.org/ to generate well formatted HTML
-documentation. To generate a local copy of the documentation from the :file:`docs` directory you need two
-dependencies and a special build target.
+Freeciv21 uses :file:`python3-sphynx` and https://readthedocs.org/ to generate the well formatted HTML
+documentation that you are reading right now. To generate a local copy of the documentation from the :file:`docs` directory you need two dependencies and a special build target.
 
 The Sphinx Build Program
     The :file:`sphinx-build` program is used to generate the documentation from reStructuredText files
@@ -314,8 +381,9 @@ ReadTheDocs Theme
 
     https://sphinx-rtd-theme.readthedocs.io/en/stable/
 
-The documentation is not built by default from the steps in `Compiling/Building`_ above. To generate a local
-copy of the documentation, issue this command:
+If you are running Debian Linux, the base program is installed by the instructions in the
+`Debian Linux Packages`_ section above. The documentation is not built by default from the steps in
+`Compiling/Building`_ above. To generate a local copy of the documentation, issue this command:
 
 .. code-block:: rst
 
