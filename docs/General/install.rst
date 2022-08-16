@@ -210,7 +210,8 @@ Obtaining the Source Code
 
 In order to compile Freeciv21, you need a local copy of the source code. You can download a saved version in
 an archive file (:file:`.tar.gz` or :file:`.zip`) of the code from the project releases page at
-https://github.com/longturn/freeciv21/releases. Alternately you can get the latest from the master branch with the :file:`git` program with this command:
+https://github.com/longturn/freeciv21/releases. Alternately you can get the latest from the master branch with
+the :file:`git` program with this command:
 
 .. code-block:: rst
 
@@ -223,7 +224,8 @@ Configuring
 Configuring Freeciv21 for compilation requires the use of the :file:`cmake` program.
 
 On Debian Linux, to build with defaults enter the following command from the freeciv21 directory. Continue
-reading in the `Other CMake Notes`_ section below for more notes about other command line options you can give :file:`cmake`.
+reading in the `Other CMake Notes`_ section below for more notes about other command line options you can give
+:file:`cmake`.
 
 .. code-block:: rst
 
@@ -238,8 +240,12 @@ you can go to the `Compiling/Building`_ section below to continue.
   $ cmake --preset fullrelease-macos -S . -B build
 
 .. note::
-  The first time you run the this command, :file:`cmake` invoke the :file:`vcpkg` installation process to download and compile all of the project dependencies listed in the manifest file: :file:`vcpkg.json`. :strong:`This will take a very long time`. On a fast computer with a good Internet connection it will take
-  at least 3 hours to complete. Everything will be downloaded and compiled into the :file:`$HOME/vcpkg` directory. Binaries for the packages will be copied into the :file:`./build/` directory inside of the main Freeciv21 directory and reused for subsequent builds.
+  The first time you run the this command, :file:`cmake` invoke the :file:`vcpkg` installation process to
+  download and compile all of the project dependencies listed in the manifest file: :file:`vcpkg.json`.
+  :strong:`This will take a very long time`. On a fast computer with a good Internet connection it will take
+  at least 3 hours to complete. Everything will be downloaded and compiled into the :file:`$HOME/vcpkg`
+  directory. Binaries for the packages will be copied into the :file:`./build/` directory inside of the main
+  Freeciv21 directory and reused for subsequent builds.
 
 Other CMake Notes
 -----------------
@@ -368,7 +374,8 @@ Documentation Build Notes
 =========================
 
 Freeciv21 uses :file:`python3-sphynx` and https://readthedocs.org/ to generate the well formatted HTML
-documentation that you are reading right now. To generate a local copy of the documentation from the :file:`docs` directory you need two dependencies and a special build target.
+documentation that you are reading right now. To generate a local copy of the documentation from the
+:file:`docs` directory you need two dependencies and a special build target.
 
 The Sphinx Build Program
     The :file:`sphinx-build` program is used to generate the documentation from reStructuredText files
