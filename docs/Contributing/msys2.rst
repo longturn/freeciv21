@@ -1,8 +1,8 @@
-MSYS2 Windows Installer Build
-*****************************
+Setting up MSYS2 for Windows
+****************************
 
-This document is about building compiling Freeciv21 and building the Windows Installer packages using MSYS2
-from https://www.msys2.org.
+This document is about building and compiling Freeciv21 with MSYS2 on Windows. MSYS2 is available from
+https://www.msys2.org. The LongTurn Community builds the Windows Installer packages using MSYS2.
 
 
 Setup
@@ -25,7 +25,7 @@ This chapter is about creating new msys2 build environment.
 
 #. The :file:`msys2_shell` will close when this is complete. Run it again and install following packages with
    :code:`pacman -Su <package name>`. The packages needed for building Freeciv21 are numerous. These packages
-   are needed even if you don't plan to make the installer, update documentation, but only build Freeciv21 for
+   are needed even if you do not plan to make the installer, update documentation, but only build Freeciv21 for
    local use.
 
 #. Install these arch independent packages that are needed for building Freeciv21. With these packages it is
@@ -87,4 +87,5 @@ environment. The scripts create an x86_64 environment.
 Build
 =====
 
-Now that you have the environment setup. You can follow the steps in :doc:`../../General/install`
+Now that you have the environment setup. You can follow the steps in :doc:`../../General/install`. MSYS2 in a
+Linux emulation evironment on Windows, so the commands for :file:`git`, :file:`cmake`, etc. work the same.

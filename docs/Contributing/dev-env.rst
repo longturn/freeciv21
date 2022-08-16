@@ -9,10 +9,11 @@ noted, that you typically only have to go through this process once unless you s
 Workstation
 ===========
 
-Freeciv21 can be developed on Linux, Windows and MacOS. Any current version of these OS's is acceptible. For
+Freeciv21 can be developed on Linux, Windows and MacOS X. Any current version of these OS's is acceptible. For
 Windows, you will need to setup either the MSYS2 environment or Visual Studio to do development.
 Refer to :doc:`msys2` or :doc:`Visual Studio <visual-studio>` for more information. It should be generally
-understood that :strong:`Linux` is the preferred development platform.
+understood that :strong:`Linux` is the preferred development platform. For a complete set of installation
+steps, you can refer to :doc:`../../General/install`.
 
 Technically all you need is a text editor of some kind to edit the files, but most people prefer to use an
 IDE.
@@ -21,14 +22,14 @@ All platforms can use `KDevelop <https://www.kdevelop.org/download>`_. However, 
 
 * On Windows, due to the nature of the integration with MSYS2, native compilation and debugging is not
   supported. This is resolved with Visual Studio as the IDE.
-* On MacOS, KDevelop is still considered experimental. Many Mac users
+* On MacOS X, KDevelop is still considered experimental. Many Mac users
   use `XCode <https://developer.apple.com/xcode/>`_.
 
 For the best results, especially if you are editing game code and not just Longturn game rulesets or
 documentation, you will want :strong:`Linux` to be your workstation OS. Many of the current developers use a
 Debain variant such as Ubuntu. Instructions for getting all of the tools needed for Debian Linux can be found
-in :doc:`../General/install`. Refer to the section titled `Debian Linux Notes`. Don't follow the last few
-steps to clone the repository (e.g. the :code:`git clone` command), that will happen in a bit.
+in :doc:`../General/install`. Do not follow the steps to clone the repository (e.g. the :code:`git clone`
+command), that will happen in a bit.
 
 GitHub
 ======
@@ -44,7 +45,7 @@ In order to get code pushed to the forked repository to your local workstation, 
 SSH key pair to share with GitHub. Follow these
 `instructions <https://docs.github.com/en/authentication/connecting-to-github-with-ssh>`_.
 
-With SSH set up, now it's time to clone the forked repository from your personal GitHub account to a local
+With SSH set up, now it is time to clone the forked repository from your personal GitHub account to a local
 copy on your workstation.
 
 First make a working directory to place the files in:
@@ -59,10 +60,13 @@ First make a working directory to place the files in:
 You can get the appropriate path by going to your forked copy in a browser, click the code button and then
 select the SSH option as shown in this sample screenshot:
 
-.. image:: ../_static/images/github_clone_ssh.png
+.. GitHub Clone SSH:
+.. figure:: ../_static/images/github_clone_ssh.png
     :align: center
     :height: 250
     :alt: GitHub Clone SSH
+
+    GitHub Clone SSH
 
 
 Once you have the proper path, here is the command to clone the repository:
