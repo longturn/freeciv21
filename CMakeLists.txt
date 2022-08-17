@@ -114,12 +114,6 @@ if(NOT EXISTS "${CMAKE_BINARY_DIR}/utility/fc_version.h")
                 @ONLY NEWLINE_STYLE UNIX)
 endif()
 
-if(NOT EXISTS "${CMAKE_BINARY_DIR}/fc_version")
-  configure_file(${CMAKE_SOURCE_DIR}/fc_version.in
-                fc_version
-                @ONLY NEWLINE_STYLE UNIX)
-endif()
-
 #############################################
 # Installation configuration only below here.
 #############################################
