@@ -4741,8 +4741,10 @@ static void manual_turn_done_callback(struct option *poption)
 {
   Q_UNUSED(poption)
   update_turn_done_button_state();
-  if (!gui_options.ai_manual_turn_done && is_ai(client.conn.playing)) {
-    if (can_end_turn()) {
+
+  if (!gui_options.ai_manual_turn_done) {
+    const player *pplayer = client_player();
+    if (pplayer != nullptr && is_ai(pplayer) && can_end_turn()) {
       user_ended_turn();
     }
   }
