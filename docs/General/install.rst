@@ -5,11 +5,12 @@ The developers of Freeciv21 provide pre-compiled binaries and installation packa
 can be found on the LongTurn GitHub Repository for Freeciv21 at
 https://github.com/longturn/freeciv21/releases. The LongTurn community provides binary packages for Debian
 based Linux distros (Debian, Ubuntu, Mint, etc.), Microsoft Windows\ |reg| (32 and 64-bit), and Apple MacOS
-X\ |reg|. If you are an Arch Linux user, you can find Freeciv21 in the AUR.
+X\ |reg|. If you are an Arch Linux user, you can find Freeciv21 in the AUR at
+https://aur.archlinux.org/packages/freeciv21.
 
 For more information on using the Windows Installer package, you can read about it at :doc:`windows-install`.
 
-To install the Debian package, you will use the ``apt`` with elevated privileges like this:
+To install the Debian package, you will use the ``apt`` command with elevated privileges like this:
 
 .. code-block:: rst
 
