@@ -142,7 +142,7 @@ void gui_load_theme(const QString &directory, const QString &theme_name)
   if (king()) {
     queen()->reloadSidebarIcons();
   }
-  if (theme_name != QStringLiteral("system")) {
+  if (theme_name != QStringLiteral("System")) {
     // FIXME How to reset to the system palette?
     QApplication::setPalette(load_palette(settings));
   }
