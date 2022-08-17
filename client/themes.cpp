@@ -201,6 +201,12 @@ QStringList get_useable_themes_in_directory(QString &directory)
   name = QString(directory);
 
   for (auto const &str : qAsConst(sl)) {
+#ifdef Q_OS_WIN
+    // "System" creates endless problems on Windows, see #1287 #756
+    if (str == QStringLiteral("System")) {
+      continue;
+    }
+#endif
     f.setFileName(name + "/" + str + "/resource.qss");
     if (!f.exists()) {
       continue;
