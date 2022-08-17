@@ -165,7 +165,7 @@ jobs:
           path: ${{github.workspace}}/build/Debug/freeciv21-client.exe
           if-no-files-found: error
   os_x:
-    name: "Mac OS X"
+    name: "macOS"
     runs-on: macos-latest
     needs: clang-format
     env:
