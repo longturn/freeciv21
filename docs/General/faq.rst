@@ -1257,8 +1257,8 @@ OK, I've downloaded and installed it, how do I run it?
 See the document about :doc:`windows-install`.
 
 
-Mac OS X
---------
+macOS
+-----
 
 Precompiled binaries in a :file:`*.dmg` file can be downloaded from https://github.com/longturn/freeciv21/releases.
 

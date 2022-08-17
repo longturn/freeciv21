@@ -4,8 +4,8 @@ Installing Freeciv21
 The developers of Freeciv21 provide pre-compiled binaries and installation packages for tagged releases. They
 can be found on the LongTurn GitHub Repository for Freeciv21 at
 https://github.com/longturn/freeciv21/releases. The LongTurn community provides binary packages for Debian
-based Linux distros (Debian, Ubuntu, Mint, etc.), Microsoft Windows\ |reg| (32 and 64-bit), and Apple MacOS
-X\ |reg|. If you are an Arch Linux user, you can find Freeciv21 in the AUR at
+based Linux distros (Debian, Ubuntu, Mint, etc.), Microsoft Windows\ |reg| (32 and 64-bit), and Apple
+macOS\ |reg|. If you are an Arch Linux user, you can find Freeciv21 in the AUR at
 https://aur.archlinux.org/packages/freeciv21.
 
 For more information on using the Windows Installer package, you can read about it at :doc:`windows-install`.
@@ -27,7 +27,7 @@ configuration process is smart enough to work out whether your system is suitabl
 
 An operating system that support Qt
     Any modern operating system that supports Qt 5.12+ is required. As of this writing this is Linux,
-    Microsoft Windows\ |reg| and Apple Mac OS X\ |reg|.
+    Microsoft Windows\ |reg| and Apple macOS\ |reg|.
 
     Linux Distributions:
 
@@ -47,12 +47,12 @@ An operating system that support Qt
 .. note::
   The above list of Linux distributions is, of course, not exhaustive. The Freeciv21 Community has simply
   listed the mainline, well supported, distributions here. The code repository has Continuous Integration
-  enabled and all code commits pass through Ubuntu, Mac OS and Windows for testing. It is assumed that the
+  enabled and all code commits pass through Ubuntu, macOS and Windows for testing. It is assumed that the
   user is keeping his/her computer OS up to date. Support by the community for these distributions will be
   better than for some of the others out there, so keep that in mind if you are not an experienced Linux user.
 
 .. note::
-  The following instructions on this page are for Linux, MSYS2 and MacOS X environments. You will need to
+  The following instructions on this page are for Linux, MSYS2 and macOS environments. You will need to
   :doc:`install MSYS2 <../../Contributing/msys2>` first before continuing here if using MSYS2 on Windows.
   However, you can also compile on Windows with Microsoft
   :doc:`Visual Studio <../../Contributing/visual-studio>`. The Visual Studio instructions are self contained.
@@ -65,7 +65,7 @@ A C and C++ compiler
 
     Development of Freeciv21 is primarily done with :file:`gcc`, the GNU project's excellent C and C++
     compiler. For complete cross-platform support the LongTurn community uses the LLVM project's
-    :file:`clang-cl` compiler, which is supported on Linux, Windows and Mac OS X.
+    :file:`clang-cl` compiler, which is supported on Linux, Windows and macOS.
 
 The Cmake program
     Freeciv21 developers generally use :file:`cmake`, the Kitware make program. You can check if you have
@@ -146,7 +146,7 @@ Installing Package Dependencies
 See the `Debian Linux Packages`_ section below on the steps to install the components for Debian Linux and
 its variants.
 
-See the `MacOS X Packages`_ section below on the steps to install the components for Apple MacOS X.
+See the `macOS Packages`_ section below on the steps to install the components for Apple macOS.
 
 If you are running Windows and want to use the MSYS2 environment and not set it up yet, then
 :doc:`do so now <../../Contributing/msys2>`, before continuing.
@@ -186,10 +186,10 @@ following commands:
 
 At this point, follow the steps in `Obtaining the Source Code`_ section below.
 
-MacOS X Packages
-================
+macOS Packages
+==============
 
-Below are all the command line steps needed to start with a fresh install of MacOS X.
+Below are all the command line steps needed to start with a fresh install of macOS.
 
 .. code-block:: rst
 
@@ -233,7 +233,7 @@ reading in the `Other CMake Notes`_ section below for more notes about other com
   $ cmake . -B build -G Ninja
 
 
-On MacOS X, you need to use a preset that is defined in the :file:`CMakePresets.json` file. When complete
+On macOS, you need to use a preset that is defined in the :file:`CMakePresets.json` file. When complete
 you can go to the `Compiling/Building`_ section below to continue.
 
 .. code-block:: rst
