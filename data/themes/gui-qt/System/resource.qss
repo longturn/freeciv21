@@ -6,12 +6,6 @@
   text-align: right;
 }
 
-*[doomchat="true"] {
-  background-color: white;
-  color: black;
-  border: 1px solid #c3b48e;
-}
-
 *[unit_wait_table="true"] {
   background-color: rgba(0,0,0,175);
   color: white;
@@ -24,7 +18,7 @@ chat_widget QTextBrowser
   color: rgb( 240, 240, 240);
 }
 
-chat_widget QLineEdit
+pageGame chat_widget QLineEdit
 {
   background-color: black;
   border: 1px solid #13395f;
@@ -34,14 +28,14 @@ chat_widget QLineEdit
 info_tile, notify_dialog {
   color: #e8ff00;
   border: 1px solid #e8ff00;
-  background-color: rgba(0, 0, 0,175);
+  background-color: rgba(0, 0, 0, 175);
 }
 
-message_widget, chat_widget {
+message_widget, chat_widget, hud_units {
   background-color: rgba(0,0,0,175);
 }
 
-message_widget *, chat_widget * {
+message_widget *, chat_widget *, hud_units * {
   color: white;
 }
 
@@ -117,58 +111,4 @@ research_color {
   selection-background-color: #6779c5 /*box*/;
   color: #96b62e /*lines*/;
   alternate-background-color: white /* box edge */;
-}
-
-QMenuBar {
-  color: black;
-}
-
-QMenu {
-  background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgba(84, 85, 86, 225), stop:1 rgba(55, 55, 54, 255));
-  border:none;
-}
-
-QMenu::item {
-  color: #FFFFFF;
-  padding: 3px 20px 3px 25px;
-  border: 2px solid transparent;
-}
-
-QMenu::item:disabled {
-  color: #999999;
-}
-
-QMenu::item:selected {
-  color: #3399FF;
-  background-color: rgba(55, 55, 54, 255);
-  border: 2px solid grey;
-  border-radius: 9px;
-}
-
-QStatusBar QLabel {
- color: black;
-}
-
-page_main QLabel {
- color: black;
-}
-
-page_pregame QLabel {
- color: black;
-}
-
-page_load QLabel {
- color: black;
-}
-
-page_load QCheckBox {
-  color: black;
-}
-
-page_network QLabel {
- color: black;
-}
-
-page_scenario QLabel {
- color: black;
 }
