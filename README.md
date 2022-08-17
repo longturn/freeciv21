@@ -21,9 +21,9 @@ Freeciv21 is maintained by folks from [longturn.net](https://longturn.net). We w
 Installation
 ------------
 
-### Windows and Mac OS
+### Windows and macOS
 
-We provide Windows and Mac OS installers in the **Assets** section of every [release](https://github.com/longturn/freeciv21/releases). Make sure to download the **.exe** or **.dmg** file depending on platform. After downloading, run the installer. The Windows install is [documented here](https://longturn.readthedocs.io/en/latest/General/windows-install.html).
+We provide Windows and macOS installers in the **Assets** section of every [release](https://github.com/longturn/freeciv21/releases). Make sure to download the **.exe** or **.dmg** file depending on platform. After downloading, run the installer. The Windows install is [documented here](https://longturn.readthedocs.io/en/latest/General/windows-install.html).
 
 ### Linux
 
