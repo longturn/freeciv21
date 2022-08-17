@@ -138,13 +138,14 @@ void gui_load_theme(const QString &directory, const QString &theme_name)
   load_chat_colors(settings);
   current_theme = theme_name;
   QPixmapCache::clear();
+  if (theme_name != QStringLiteral("System")) {
+    // Need to do this *before* changing the stylesheet.
+    // FIXME How to reset to the system palette?
+    QApplication::setPalette(load_palette(settings));
+  }
   current_app()->setStyleSheet(*stylestring);
   if (king()) {
     queen()->reloadSidebarIcons();
-  }
-  if (theme_name != QStringLiteral("System")) {
-    // FIXME How to reset to the system palette?
-    QApplication::setPalette(load_palette(settings));
   }
 }
 
