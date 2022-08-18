@@ -49,7 +49,7 @@ empire, but any of these four items may provide victory over your opponents:\
  - As in other games of conquest and expansion, you are declared the winner by default once the last City \
 and Unit of every other Civilization is destroyed.\n\
  - Once Technological progress has brought you into the space age, you may launch a spaceship destined for \
-Alpha Centauri. The first Civilization whose spaceship reaches the system wins. NOTE: Spacerace Victory is
+Alpha Centauri. The first Civilization whose spaceship reaches the system wins. NOTE: Spacerace Victory is \
 set by the ruleset and thereby may not be not enabled for all games.\n\
  - In the absence of other means to determine victory, the game will end after 5,000 turns if no spaceship \
 have been launched. The surviving Civilizations are then rated, and the one with the highest score is \
@@ -100,7 +100,7 @@ one to explore. If you started the game with an Explorer Unit, use that to explo
  2. Defending the Cities.\
 "), _("\
 At this point, defend your Cities by always leaving a Warrior Unit in them. As your Civilization develops \
-and new Units become available, replace the obsolete Units with new ones to ensure your Cities have
+and new Units become available, replace the obsolete Units with new ones to ensure your Cities have \
 sufficient defense. The Units most often used for defense are (in order of strength): Warrior, Phalanx, \
 Pikemen, Musketeers, Riflemen, and Mechanized Infantry.\
 "), _("\
@@ -133,7 +133,7 @@ Improvements on some Tiles may require Technology.\
 The best location for a City is a matter of taste. A City which is placed near the sea is easier to spot by \
 opponents, but can also serve as a port for seagoing Units. They also usually need a Coastal Defense City \
 Improvement later on for defense against an attacking navy. The best strategy is to build a few of both, but \
-keep in mind that your opponents will find it harder to locate your City if you do not build it by the sea.
+keep in mind that your opponents will find it harder to locate your City if you do not build it by the sea. \
 Another thing to consider is the land around the City in its \"Vision Radius\". The Vision Radius is the the \
 Map Tiles that the City's population can manage as it grows. Many land Tiles will have resources on them \
 (called Specials) that give Food, Production, or Trade bonuses. Use the middle-click on your mouse to see. \
@@ -154,7 +154,7 @@ Entertainer when you take a Citizen off the land.\
 "), _("\
 If you click on the central Tile of the land (the \"City Center\"), the Citizens will be rearranged to \
 maximize Food production. You will also want to look at the level of Food in the Granary and the amount of \
-surplus Food the City is producing each turn. The City will lose excess Food at turn change. For example:
+surplus Food the City is producing each turn. The City will lose excess Food at turn change. For example: \
 The Granary in the City has 18/20 Food (needs two Food to grow to next City size) and the City is currently \
 producing +4 Food surplus each turn. This means that at turn change you will lose 2 Food as waste at turn \
 change. This is a good opportunity to move the Citizens around to get Food to +2 surplus. This could \
@@ -374,7 +374,7 @@ Bases can also extend national Borders. See the help on Terrain Alterations for 
 name = _("Economy")
 text = _("\
 The Products which your Cities extract from the surrounding terrain are the fountain from which your \
-Civilization is watered. There are three types of products: Food, Production, and Trade points. The
+Civilization is watered. There are three types of products: Food, Production, and Trade points. The \
 following sections describe each of these resources along with its properties, uses, and limitations.\
 ")
 
@@ -475,7 +475,7 @@ Luxury Goods, while others invested in Science or Taxes instead, you will instea
 the needs of all your Cities. There are ways to make local adjustments, such as assigning Citizens as \
 Entertainers. See the section on Happiness for more details on the effect of Luxury Goods.\
 "), _("\
-Besides managing terrain gifted with rare commodities, or logistical benefits such as waterways or roads,
+Besides managing terrain gifted with rare commodities, or logistical benefits such as waterways or roads, \
 you can increase Trade by using Units to establish permanent Trade Routes between two Cities, if the ruleset \
 allows it.\
 "), _("\
@@ -557,7 +557,7 @@ to make the Tile less productive.\
 The section on Terrain describes how the output of each Tile is affected by the terrain, the presence of \
 Special resources such as game (Pheasant) or minerals (Gold, Coal), and Tile Improvements built by Units. \
 Note that the Tile on which the City itself rests -- the \"City Center\" -- gets managed for free, without \
-being assigned a Citizen. Think of this as \"Citizen Zero\". The City's center Tile may also receive other
+being assigned a Citizen. Think of this as \"Citizen Zero\". The City's center Tile may also receive other \
 benefits.\
 "), _("\
   In the classic ruleset, the City center always produces:\n\
@@ -950,7 +950,7 @@ of the ship is set to 1 via the \"BadCityDefender\" Unit type flag.\n\
  - If a Fighter is attacking a Helicopter, the firepower of the Helicopter is set to 1 via the \"FirePower1\" \
 combat bonus.\n\
  - If neither Unit could move to where the other is, such as a ship attacking a land Unit on land, the \
-firepower of both is typically set to 1, but can be changed with the \"Fortify_Defense_Bonus\" effect.
+firepower of both is typically set to 1, but can be changed with the \"Fortify_Defense_Bonus\" effect. \
 "), _("\
 After these preliminaries, combat occurs as long as both Units are still alive (i.e. hit points are greater \
 than 0). Each round, a random number between 1 and the sum of the attacker's and defender's strengths \
