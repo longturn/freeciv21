@@ -9,6 +9,7 @@
 -- This file is the Freeciv server`s interface to the database backend
 -- when authentication is enabled. See doc/README.fcdb.
 
+local md5 = require "md5"
 local dbh = nil
 
 -- Machinery for debug logging of options
@@ -77,7 +78,7 @@ local function sqlite_connect()
     dbh:close()
   end
 
-  local sql = ls_sqlite3.sqlite3()
+  local sql = require "luasql.sqlite3".sqlite3()
 
   -- Load the database parameters.
   local database = get_option("database")
@@ -239,7 +240,7 @@ function user_verify(conn, plaintext)
 
   res:close()
 
-  return row.password == md5sum(plaintext)
+  return row.password == md5.sum(plaintext)
 end
 
 -- save a user to the database
@@ -257,7 +258,7 @@ function user_save(conn, password)
   --local now = os.time()
   local query = string.format([[INSERT INTO %s VALUES (NULL, '%s', '%s',
                                 NULL, %s, %s, '%s', '%s', 0)]],
-                              table_user, username, md5sum(password),
+                              table_user, username, md5.sum(password),
                               sql_time(), sql_time(),
                               ipaddr, ipaddr)
   assert(dbh:execute(query))
