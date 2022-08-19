@@ -156,6 +156,113 @@ Capitalization
     This page provides a good overview of Title Case capitalization rules for US English:
     https://www.grammarly.com/blog/capitalization-rules/
 
+    Below is a more exhaustive list of game specific terms that we want to capitalize. The list can be used
+    in a find/replace exercise:
+
+    :strong:`Game Interace`:
+      * Advance (as in Technology Advance)
+      * Airbase
+      * Base
+      * Border
+      * Bulbs
+      * Buoy
+      * Button (a named button)
+      * Chat
+      * Cit(y or ies)
+      * Dialog (a named dialog)
+      * Embass(y or ies)
+      * Fort(ress)
+      * Improvement
+      * Map
+      * Menu (a named menu)
+      * Messages
+      * Minimap
+      * Small Great Wonder (only with Wonders)
+      * Tax(es) Rate(s)
+      * Technolog(y or ical)
+      * Top Controls Bar
+      * Unit
+      * View (a named view)
+      * Vision Radius Shared
+      * Widget (a named widget)
+      * World
+
+    :strong:`City Dialog Items`:
+      * Citizen
+
+        * Angry
+        * Celebrat(e or ion)
+        * Content
+        * Happy
+        * Unhapp(y or iness)
+
+      * Civil (covers Civil War and Civilization)
+      * Corruption
+      * Culture
+      * Gold
+      * Granary
+      * Food
+      * Luxury Goods (always plural)
+      * Plague
+      * Pollution
+      * Prod(uction) (only when discussing Production points)
+      * Science
+      * Trade Route
+      * Waste
+
+    :strong:`Gameplay`:
+      * Migration
+      * Entertain(er)
+      * Taxman
+      * Scientist
+      * Global Warming
+      * Nuclear Winter
+
+    :strong:`Map`:
+      * Buffalo
+      * Coal
+      * Desert
+      * Fish
+      * Forest
+      * Grass(land)
+      * Hill(s)
+      * Jungle
+      * Lake
+      * Mountain
+      * Oasis
+      * Ocean
+      * Pheasant
+      * Plains
+      * River
+      * Shield
+      * Silk
+      * Special (also covers Specialist)
+      * Tile
+      * Tundra
+      * Whale
+      * Wheat
+      * Wine
+
+    :strong:`Diplomacy`:
+      * Alliance
+      * Armistice
+      * Cease-fire
+      * Diplomacy
+      * Peace
+      * War
+
+    :strong:`Governments`:
+      * Anarchy
+      * Democracy
+      * City States
+      * Communism
+      * Despotism
+      * Federation
+      * Fundamentalism
+      * Monarchy
+      * Republic
+      * Tribal
+
 Language Contractions
     Language Contractions are when two words are combined together with an apostrophe ( ``'`` ). For example,
     the word "don't" is a contraction of "do not". Not all language translators, and especially non-native
