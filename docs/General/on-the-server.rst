@@ -90,3 +90,20 @@ are available; please refer to the documentation of ``cmdlevel`` for more inform
     The ``take`` and ``observe`` commands require access level ``info`` only. Their use can be
     restricted using the ``allowtake`` server option or, in more advanced setups, using the
     ``user_take`` :doc:`fcdb </Coding/fcdb>` hook.
+
+Authentication
+==============
+
+By default, Freeciv21 servers are open to anyone without any sort of authentication. It is
+possible to make Freeciv21 ask for a password. There is also a built-in registration procedure
+with which one can create an account and set a password.
+
+Authentication needs vary greatly depending on what you do with your server. If you use passwords
+merely to prevent players from peeking on each other, you may be fine with a very basic setup. If
+you are planning to run a full-scale server allowing registration through a website, you will
+need much more advanced settings. Freeciv21 ought to support all use cases within a unified
+interface. To allow for the necessary flexibility, authentication support is implemented using a
+Lua script.
+
+See the :doc:`fcdb documentation </Coding/fcdb>` for more information about setting up
+authentication.
