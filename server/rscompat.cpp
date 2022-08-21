@@ -1164,6 +1164,13 @@ static void rscompat_optional_capabilities(rscompat_info *info)
     unit_type_iterate_end;
   }
 
+  if (!has_capability(CAP_EFT_WONDER_VISIBLE, info->cap_effects.data())) {
+    // Make Great Wonders visible to everyone
+    auto effect = effect_new(EFT_WONDER_VISIBLE, 1, nullptr);
+    effect_req_append(effect, req_from_str("BuildingGenus", "Local", false,
+                                           true, false, "GreatWonder"));
+  }
+
   if (!has_capability(CAP_VUT_VISIONLAYER, info->cap_effects.data())) {
     // Add vlayer=Main to existing vision effects
     iterate_effect_cache(rscompat_vision_effect_cb, info);

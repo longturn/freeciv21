@@ -708,3 +708,15 @@ Bombard_Limit_Pct
     .. note::
         This effect is added automatically with a value of 1 and no reqs. This behavior can be turned
         off by requiring the ``+Bombard_Limit_Pct`` option in ``effects.ruleset``.
+
+Wonder_Visible
+    If the value of this effect is larger than 0 for a Small Wonder, the wonder will be visible to all
+    players and reported in the intelligence screen. Great Wonders are always visible to everyone through the
+    Wonders Report. When a Small Wonder is lost (for instance, because the city it is in is lost or some of
+    its requirements become invalid), it also becomes visible to everyone (this is a limitation of the
+    server).
+
+    .. note::
+        This effect is added automatically with a value of 1 for Great Wonders (since they are shown in the
+        Wonders Report anyway). This behavior can be turned off by requiring the ``+Wonder_Visible`` option
+        in ``effects.ruleset``.

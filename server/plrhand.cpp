@@ -22,6 +22,7 @@
 #include "citizens.h"
 #include "culture.h"
 #include "diptreaty.h"
+#include "game.h"
 #include "government.h"
 #include "map.h"
 #include "multipliers.h"
@@ -1135,7 +1136,17 @@ static void package_player_common(struct player *plr,
   packet->nturns_idle = plr->nturns_idle;
 
   for (i = 0; i < B_LAST /*improvement_count()*/; i++) {
-    packet->wonders[i] = plr->wonders[i];
+    if (plr->wonders[i] <= 0) {
+      packet->wonders[i] = plr->wonders[i];
+    } else {
+      const auto pimprove = improvement_by_number(i);
+      const auto pcity = game_city_by_number(plr->wonders[i]);
+      if (pimprove && pcity) {
+        if (get_building_bonus(pcity, pimprove, EFT_WONDER_VISIBLE) > 0) {
+          packet->wonders[i] = plr->wonders[i];
+        }
+      }
+    }
   }
   packet->science_cost = plr->ai_common.science_cost;
 }
