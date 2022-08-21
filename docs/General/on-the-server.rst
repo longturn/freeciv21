@@ -1,3 +1,7 @@
+..
+    SPDX-License-Identifier: GPL-3.0-or-later
+    SPDX-FileCopyrightText: 2022 louis94 <m_louis30@yahoo.com>
+
 Freeciv21 on the Server
 ***********************
 
