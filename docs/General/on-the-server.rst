@@ -51,3 +51,42 @@ a custom port number by passing it to the ``-p`` argument:
 A server started with this command can be reached by pointing the game to port 5000 of your domain
 name. We suggest to start the server from within a terminal multiplexer such as ``tmux`` or
 ``screen``, which will let it run independently.
+
+User Permissions
+================
+
+Freeciv21 supports several access levels for players connected to a server, restricting which
+commands they are allowed to run:
+
+``none``
+    The user may not issue any command.
+
+``info``
+    The user may use informational commands only.
+
+``basic``
+    The user may use informational commands as well as commands affecting the game. Commands
+    affecting the game start a vote if more than one user is connected.
+
+``ctrl``
+    Same as ``basic``, but the vote is bypassed for commands affecting the game.
+
+``admin``
+    May use any command, except for ``quit``, ``rfcstyle``, and ``write``. This includes
+    potentially destructive commands such as ``save`` and ``fcdb`` --- use with care.
+
+``hack``
+    May use all commands without restriction.
+
+By default, users connected to your server have access level ``basic``. This can be changed using
+the ``cmdlevel`` command::
+
+    cmdlevel info new
+
+This command would grant access level ``info`` to any newly connecting player. A few more options
+are available; please refer to the documentation of ``cmdlevel`` for more information.
+
+.. note::
+    The ``take`` and ``observe`` commands require access level ``info`` only. Their use can be
+    restricted using the ``allowtake`` server option or, in more advanced setups, using the
+    ``user_take`` :doc:`fcdb </Coding/fcdb>` hook.
