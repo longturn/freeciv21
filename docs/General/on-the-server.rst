@@ -18,3 +18,11 @@ server is the same: you need to run a program called ``freeciv21-server`` for as
 will last. This program will wait for players to connect and handle their moves in the exact same
 way as in a single player game. In fact, Freeciv21 always uses a server, even when there is only
 one player!
+
+Installation
+============
+
+Installing Freeciv21 on a server is done the normal way, as documented in :doc:`/General/install`.
+Because the official packages come with the complete game, they will pull a number of dependencies
+that are normally not used on servers (for instance, a display server). This software is installed
+for packaging reasons, but will not be used.
