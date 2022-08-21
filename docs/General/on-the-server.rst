@@ -26,3 +26,24 @@ Installing Freeciv21 on a server is done the normal way, as documented in :doc:`
 Because the official packages come with the complete game, they will pull a number of dependencies
 that are normally not used on servers (for instance, a display server). This software is installed
 for packaging reasons, but will not be used.
+
+Starting the Server
+===================
+
+Once Freeciv21 is installed, it's immediately ready to run a simple server, which one can do by
+running the following command:
+
+.. code-block:: sh
+
+    freeciv21-server
+
+This starts a server listening on the port traditionally used for Freeciv21, 5556. You can provide
+a custom port number by passing it to the ``-p`` argument:
+
+.. code-block:: sh
+
+    freeciv21-server -p 5000
+
+A server started with this command can be reached by pointing the game to port 5000 of your domain
+name. We suggest to start the server from within a terminal multiplexer such as ``tmux`` or
+``screen``, which will let it run independently.
