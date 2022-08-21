@@ -14,10 +14,14 @@
 #include <QPainter>
 #include <QSortFilterProxyModel>
 // utility
+#include "astring.h"
 #include "fcintl.h"
 // common
+#include "city.h"
 #include "colors_common.h"
+#include "game.h"
 #include "government.h"
+#include "improvement.h"
 #include "nation.h"
 #include "research.h"
 // client
@@ -632,6 +636,38 @@ void plr_widget::nation_selected(const QItemSelection &sl,
       tech_str = tech_str + QStringLiteral("<i>") + res.toHtmlEscaped() + ","
                  + QStringLiteral("</i>") + sp;
     }
+  }
+  // Wonder information
+  auto wonders = QStringList();
+  for (int i = 0; i < improvement_count(); ++i) {
+    if (pplayer->wonders[i] == WONDER_NOT_BUILT) {
+      continue;
+    }
+
+    const auto improve = improvement_by_number(i);
+    const auto name =
+        QString(improvement_name_translation(improve)).toHtmlEscaped();
+    if (pplayer->wonders[i] == WONDER_LOST) {
+      // TRANS: %1 is a wonder name
+      wonders += QString(_("%1 (lost)")).arg(name);
+    } else if (const auto city = game_city_by_number(pplayer->wonders[i])) {
+      // TRANS: %1 is a wonder name, %2 is a city name
+      wonders += QString(_("%1 (in %2)"))
+                     .arg(name)
+                     .arg(QString(city_name_get(city)).toHtmlEscaped());
+    } else {
+      wonders += name;
+    }
+  }
+  if (!tech_str.isEmpty()) {
+    tech_str += nl;
+  }
+  // TRANS: Followed by a list of wonders the player knows another player has
+  tech_str += QString(_("<b>Known Wonders: </b>"));
+  if (wonders.isEmpty()) {
+    tech_str += QString(Q_("?wonder:None"));
+  } else {
+    tech_str += strvec_to_and_list(wonders.toVector());
   }
   plr->update_report(false);
 }
