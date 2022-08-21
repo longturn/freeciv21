@@ -25,6 +25,7 @@
 #include "ai.h"
 #include "city.h"
 #include "disaster.h"
+#include "effects.h"
 #include "extras.h"
 #include "government.h"
 #include "idex.h"
@@ -650,7 +651,9 @@ void initialize_globals()
             game.info.great_wonder_owners[improvement_index(pimprove)] =
                 player_number(pplayer);
           }
-          pplayer->wonders[improvement_index(pimprove)] = pcity->id;
+          if (get_building_bonus(pcity, pimprove, EFT_WONDER_VISIBLE) > 0) {
+            pplayer->wonders[improvement_index(pimprove)] = pcity->id;
+          }
         }
       }
       city_built_iterate_end;
