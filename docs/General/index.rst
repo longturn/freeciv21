@@ -10,6 +10,7 @@ the FAQ and installation instructions go here.
   install.rst
   windows-install.rst
   modpack-installer.rst
+  on-the-server.rst
   :maxdepth: 1
 
 Manuals
