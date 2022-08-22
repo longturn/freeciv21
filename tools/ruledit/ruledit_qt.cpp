@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2022 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -86,7 +86,6 @@ ruledit_gui::ruledit_gui(ruledit_main *main) : QObject(main)
   QLabel *rs_label;
   QLabel *version_label;
   char verbuf[2048];
-  const char *rev_ver;
 
   data.nationlist = nullptr;
   data.nationlist_saved = nullptr;
@@ -94,15 +93,8 @@ ruledit_gui::ruledit_gui(ruledit_main *main) : QObject(main)
   auto *central = new QWidget;
   main->setCentralWidget(central);
 
-  rev_ver = fc_git_revision();
-
-  if (rev_ver == nullptr) {
-    fc_snprintf(verbuf, sizeof(verbuf), "%s%s", word_version(),
+  fc_snprintf(verbuf, sizeof(verbuf), "%s%s", word_version(),
                 VERSION_STRING);
-  } else {
-    fc_snprintf(verbuf, sizeof(verbuf), _("%s%s\ncommit: %s"),
-                word_version(), VERSION_STRING, rev_ver);
-  }
 
   main_layout = new QStackedLayout();
 

@@ -18,7 +18,6 @@
 
 page_main::page_main(QWidget *parent, fc_client *gui) : QWidget(parent)
 {
-  const char *rev_ver;
   QString msgbuf;
   QString beta;
   ui.setupUi(this);
@@ -41,13 +40,9 @@ page_main::page_main(QWidget *parent, fc_client *gui) : QWidget(parent)
   connect(ui.bload, &QPushButton::clicked,
           [gui]() { gui->switch_page(PAGE_LOAD); });
 
-  rev_ver = fc_git_revision();
   // TRANS: "version 2.6.0, Qt client"
   msgbuf =
       QString(_("%1%2, Qt client")).arg(word_version()).arg(VERSION_STRING);
-  if (rev_ver != nullptr) {
-    msgbuf += QString(_("commit: %1")).arg(rev_ver);
-  }
 #if IS_BETA_VERSION
   beta = beta_message();
 #endif // IS_BETA_VERSION

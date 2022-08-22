@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2022 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -167,17 +167,9 @@ void mpgui::setup(QWidget *central, struct fcmp_params *params)
   QLabel *URL_label;
   QLabel *version_label;
   char verbuf[2048];
-  const char *rev_ver;
 
-  rev_ver = fc_git_revision();
-
-  if (rev_ver == nullptr) {
-    fc_snprintf(verbuf, sizeof(verbuf), "%s%s", word_version(),
+  fc_snprintf(verbuf, sizeof(verbuf), "%s%s", word_version(),
                 VERSION_STRING);
-  } else {
-    fc_snprintf(verbuf, sizeof(verbuf), _("%s%s\ncommit: %s"),
-                word_version(), VERSION_STRING, rev_ver);
-  }
 
   version_label = new QLabel(QString::fromUtf8(verbuf));
   version_label->setAlignment(Qt::AlignHCenter);

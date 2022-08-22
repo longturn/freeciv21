@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2022 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -23,10 +23,6 @@
 // common
 #include "version.h"
 
-#ifdef GITREV
-#include "fc_gitrev_gen.h"
-#endif // GITREV
-
 /**
    Return string containing both name of Freeciv21 and version.
  */
@@ -37,9 +33,6 @@ const char *freeciv_name_version()
 #if IS_BETA_VERSION
   fc_snprintf(msgbuf, sizeof(msgbuf), _("Freeciv21 version %s %s"),
               VERSION_STRING, _("(beta version)"));
-#elif defined(GITREV) && !defined(FC_GITREV_OFF)
-  fc_snprintf(msgbuf, sizeof(msgbuf), _("Freeciv21 version %s (%s)"),
-              VERSION_STRING, fc_git_revision());
 #else
   fc_snprintf(msgbuf, sizeof(msgbuf), _("Freeciv21 version %s"),
               VERSION_STRING);
@@ -58,25 +51,6 @@ const char *word_version()
 #else
   return _("version ");
 #endif
-}
-
-/**
-   Returns string with git revision information if it is possible to
-   determine. Can return also some fallback string or even nullptr.
- */
-const char *fc_git_revision()
-{
-#if defined(GITREV) && !defined(FC_GITREV_OFF)
-  static char buf[100];
-  bool translate = FC_GITREV1[0] != '\0';
-
-  fc_snprintf(buf, sizeof(buf), "%s%s",
-              translate ? _(FC_GITREV1) : FC_GITREV1, FC_GITREV2);
-
-  return buf; // Either revision, or modified revision
-#else         // FC_GITREV_OFF
-  return nullptr;
-#endif        // FC_GITREV_OFF
 }
 
 /**
@@ -127,14 +101,7 @@ const char *freeciv_datafile_version()
   static char buf[500] = {'\0'};
 
   if (buf[0] == '\0') {
-    const char *ver_rev;
-
-    ver_rev = fc_git_revision();
-    if (ver_rev != nullptr) {
-      fc_snprintf(buf, sizeof(buf), "%s (%s)", VERSION_STRING, ver_rev);
-    } else {
-      fc_snprintf(buf, sizeof(buf), "%s", VERSION_STRING);
-    }
+    fc_snprintf(buf, sizeof(buf), "%s", VERSION_STRING);
   }
 
   return buf;
