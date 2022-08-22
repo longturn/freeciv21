@@ -1,3 +1,8 @@
+..
+    SPDX-License-Identifier: GPL-3.0-or-later
+    SPDX-FileCopyrightText: 2022 jwrober <jwrober at gmail.com>
+    SPDX-FileCopyrightText: 2022 panch93 <pranav.ppanch@gmail.com>
+
 How to Submit a Pull Request
 ****************************
 
@@ -8,10 +13,12 @@ Before we go much further, let's take a few minutes to describe what happened wh
 define a few terms that will help with further instructions. Starting with a diagram of the setup of the three
 locations where code resides:
 
-.. image:: ../_static/images/github_repos.png
+.. figure:: ../_static/images/github_repos.png
     :align: center
     :height: 300
     :alt: Diagram of GitHub Repositories
+
+    Diagram of GitHub Repositories
 
 As part of the :doc:`../General/install` process, one of the programs installed is :file:`git`. This program
 is used to interact with the varying places that code can reside. The :file:`git` program has a relatively
@@ -41,10 +48,11 @@ With this in mind, submitting a Pull Request generally entails these steps:
 #. Requesting a Pull Request from Origin to Upstream.
 
 
-1. Update Local With The Lastest Updates From Upstream
+1. Update Local with the Lastest Updates from Upstream
 ======================================================
 
-Assuming you are in the appropriate Local directory, issue these commands to get the latest code from Upstream:
+Assuming you are in the appropriate Local directory, issue these commands to get the latest code from
+Upstream:
 
 .. code-block:: rst
 
@@ -52,16 +60,17 @@ Assuming you are in the appropriate Local directory, issue these commands to get
   ~/GitHub/freeciv21$ git pull upstream master --ff-only
 
 
-The first command sets the working branch to master on local. The second command downloads the changes from
-upstream to local.
+The first command sets the working branch to master on Local. The second command downloads the changes from
+Upstream to Local.
 
 .. note::
   If you want :code:`git pull` to always do a "fast-forward" (which is preferred), you can set a local
   repository configuration option with this command: :code:`git config --local pull.ff only`. You only need to
-  do this once. After the config is set, you can drop the :code:`--ff-only` option from the last command above.
+  do this once. After the config is set, you can drop the :code:`--ff-only` option from the last command
+  above.
 
 
-2. Create A Branch From Upstream
+2. Create a Branch from Upstream
 ================================
 
 Now that things are all up to date with the lastest code, let's create a branch to do your work in.
@@ -76,44 +85,38 @@ For example, it could be as easy as :code:`issue_123`, meaning that this branch 
 Issue 123 in the Freeciv21 Issues list.
 
 .. attention::
-  It is recommended to never make changes in the master branch. Best practice is to make changes in a
+  It is recommended to never make changes in the ``master`` branch. Best practice is to make changes in a
   different branch. This makes it much easier to evaluate changes as part of the Pull Request evaluation
   process and keeps things much cleaner from a repository management perspective.
 
 
-3. Edit Files As Needed In Local
+3. Edit Files as Needed in Local
 ================================
 
 This step is as simple as it sounds. Edit the files in the Local area as needed to complete the work you
-want to work on. Depending on what you are doing, there is a high likelyhood that you will want to compile
+want to work on. Depending on what you are doing, there is a high likelihood that you will want to compile
 the code to test your work. Here are some quick steps that you can use to run through quick compiles of code
 and/or documentation updates.
 
 .. code-block:: rst
 
-  ~/GitHub/freeciv21$ git clang-format
   ~/GitHub/freeciv21$ rm -Rf build
-  ~/GitHub/freeciv21$ cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
+  ~/GitHub/freeciv21$ cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install -DCMAKE_BUILD_TYPE=Debug
   ~/GitHub/freeciv21$ cmake --build build
   ~/GitHub/freeciv21$ cmake --build build --target install
   ~/GitHub/freeciv21$ cmake --build build --target docs
 
+The first command cleans out the :file:`build` directory to start with a fresh configuration. The second
+command runs a configure process and then sets things up to do the install portion inside the same
+:file:`build` directory, keeping work in progress all in one place.
 
-The first command, :file:`git clang-format`, runs a pre-processor to format any code changes to support the
-Longturn community's code standards. We use clangformat-11 by default, if your system's version of clang-format is
-different, you can use the binaries for clangformat-11 using the command `git clang-format --binary <path-to-clang-format-11>`.
-
-The second command cleans out the :file:`build` directory to start fresh. The third command runs a configure
-process and then sets things up to do the install portion inside the same :file:`build` directory, keeping
-work in progress all in one place.
-
-The forth and fifth command compile and installs the code. The last command is used to generate the
+The third and forth commands compile and installs the code. The last command is used to generate the
 documentation that you are reading right now. You can open :file:`./build/docs/index.html` to see a locally
 generated copy of the documentation prior to pushing a change up.
 
 .. note::
   You don't have to start from the top of the list of commands every time you want to check on things. If you
-  have already done a full pass to install and then make some more changes. You can go straight to the build
+  have already done a full pass to install and then make some more changes, you can go straight to the build
   and install commands. The :file:`cmake` program is smart enough to determine what changed and only compile
   those files again. It's much faster to do things this way!
 
@@ -124,7 +127,7 @@ there isn't any compiling going on. The Ruleset or Tileset editor is editing fil
 Longturn Games repository is effectively a repository of Rulesets.
 
 
-4. Push The Changes In A Commit To Origin
+4. Push the Changes in a Commit to Origin
 =========================================
 
 Now the moment arrives, you have a fully completed set of changes you want to share! The next step is to
@@ -138,6 +141,8 @@ one commit into a Pull Request then you can read about `git add <https://git-scm
 
   ~/GitHub/freeciv21$ git status
   ~/GitHub/freeciv21$ git add --all
+  ~/GitHub/freeciv21$ git clang-format
+  ~/GitHub/freeciv21$ git add --all
   ~/GitHub/freeciv21$ git commit
 
 
@@ -149,14 +154,22 @@ a change to another file that you didn't intend to actually change. If you find 
 a file, you can use the :file:`git restore <file>` command. This is also shown on the :file:`git status`
 command output.
 
-Once everything looks good from a :file:`git status` perspective, then issue the last two commands. The last
-command, :file:`git commit` will open a text editor (in Debian based systems this is often Nano). Put a message
-at the bottom below all of the hashes ( # ) and then save.
+The :file:`git add --all` command then adds all the changed files into a single commit. The
+:file:`git clang-format` command then runs a pre-processor to format any code changes to support the
+Longturn community's code standards. We use ``clangformat-11`` by default, if your system's version of
+``clang-format`` is different, you can use the binaries for ``clangformat-11`` using the command:
+:file:`git clang-format --binary <path-to-clang-format-11>`. If :file:`git clang-format` modifies any files,
+it will tell you so. If that happens, then you need to run a subsequent :file:`git add --all` command to get
+those files added back into the commit.
 
-At this point you have a commit of changes that you need to push to Origin.
+Once everything looks good from a :file:`git status` perspective, then issue the last two command. The last
+command, :file:`git commit`, will open a text editor (in Debian based systems this is often ``Nano``). Put a
+message at the bottom below all of the hashes ( ``#`` ) and then save.
+
+At this point you now have a commit of changes that you need to push to Origin.
 
 
-5. Requesting A Pull Request From Origin To Upstream
+5. Requesting a Pull Request from Origin to Upstream
 ====================================================
 
 This is the last major step in the process. To push the commit to your fork, issue this command:
@@ -166,7 +179,7 @@ This is the last major step in the process. To push the commit to your fork, iss
   ~/GitHub/freeciv21$ git push origin
 
 
-You will be prompted for your SSH passkey and then the changes in the branch you created in step 3 will be
-pushed to your fork. Once complete, you can open your fork in a web browser and GitHub will notice the
+You will be prompted for your SSH passkey and then the changes in the branch you created in Step 2 will be
+pushed to your Fork. Once complete, you can open your Fork in a web browser and GitHub will notice the
 change and prompt you to open a Pull Request. The complete steps are documented
 `here <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork>`_.
