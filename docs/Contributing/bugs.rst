@@ -1,3 +1,7 @@
+..
+    SPDX-License-Identifier: GPL-3.0-or-later
+    SPDX-FileCopyrightText: 2022 jwrober <jwrober at gmail.com>
+
 Filing Bugs and Enhancement Requests
 ************************************
 
@@ -8,9 +12,11 @@ The project team has implemented GitHub Issue Templates to make the process as e
 have 3 different ones: Bug Report, Documentation Request, and Feature Request. Each template has prompts to
 help you fill in the details. See an example screenshot below.
 
-.. image:: ../_static/images/github_issue_templates.png
+.. figure:: ../_static/images/github_issue_templates.png
     :align: center
     :alt: GitHub Issue Templates
+
+    GitHub Issue Templates
 
 
 Reporting an Issue
@@ -25,11 +31,11 @@ note of the following when thinking of submitting an issue.
 * Check the Freeciv21 Releases page at https://github.com/longturn/freeciv21/releases, to ensure you're
   playing the latest version. We may have already fixed the problem.
 
-* If the first two items don't work, then feel free to submit a new issue. We have implemented GitHub issue
+* If the first two items do not work, then feel free to submit a new issue. We have implemented GitHub issue
   templates so they will walk you through the major aspects of a new issue. It is important to note that the
   more details you can provide, the better. If a screen shot is available, then by all means supply it to us.
 
-  * If you are an advanced hacker, you can also providde a core dump or stack trace to better help the
+  * If you are an advanced hacker, you can also provide a core dump or stack trace to better help the
     developers of Freeciv21 understand the nature of the issue.
 
   * If there is an issue in a translation, please report it. We are still getting organized with
