@@ -26,6 +26,7 @@
 void handle_authentication_req(enum authentication_type type,
                                const char *message)
 {
+  set_client_page(PAGE_NETWORK);
   qobject_cast<page_network *>(king()->pages[PAGE_NETWORK])
       ->handle_authentication_req(type, message);
 }
