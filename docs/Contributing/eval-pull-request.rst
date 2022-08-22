@@ -1,3 +1,9 @@
+..
+    SPDX-License-Identifier: GPL-3.0-or-later
+    SPDX-FileCopyrightText: 2022 jwrober <jwrober at gmail.com>
+    SPDX-FileCopyrightText: 2022 louis94 <m_louis30@yahoo.com>
+    SPDX-FileCopyrightText: 2022 panch93 <pranav.ppanch@gmail.com>
+
 Evaluating a Pull Request
 *************************
 
@@ -7,11 +13,11 @@ an evaluation of a change and either approve or make suggestions for improvement
 master branch.
 
 For each Pull Request, a set of tests are run automatically. When the tests do not pass, the author is
-expected to fix the problems by himself before someone tries to test the code. There is an exception to this
-for simple changes with code formatting issues (as flagged by the automated `clang-format` test): in this
-case, the author of the Pull Request or a maintainer can request automatic reformatting of the code by adding
-a comment that contains the case-sensitive phrase "Auto clang-format". This triggers a script that, if
-successful, fixes the code formatting by adding a new commit to the branch of the Pull Request.
+expected to fix the problems before someone tries to test the code. There is an exception to this for simple
+changes with code formatting issues (as flagged by the automated ``clang-format`` test): in this case, the
+author of the Pull Request or a maintainer can request automatic reformatting of the code by adding a comment
+that contains the case-sensitive phrase "Auto clang-format". This triggers a script that, if successful, fixes
+the code formatting by adding a new commit to the branch of the Pull Request.
 
 This page assumes the user knows how to use :file:`git`, compile Freeciv21 and use GitHub.
 
@@ -62,11 +68,13 @@ probably have to re-download the diff and run another test.
 
 :strong:`Run an autogame`
 
-If it is a big change, it might be worthwhile to run an entire game with just AI to make sure it doesnt break anything. 
-You can compile the code, with additional checks such as address sanitizer with :code:`$ cmake . --preset ASan`. Once the code is compiled, 
-you can run the autogame with :code:`./build/freeciv21-server -r ./data/test-autogame.serv`. You can also observe the game with 
-:code:`./build/freeciv21-client -a -p 5556 -s localhost`. ASan by default halts on every error, this is sometimes useful to developers to fix the errors
-sequentially. If you'd rather prefer listing all the errors at once, set the environment variable using :code:`$ export ASAN_OPTIONS="halt_on_error=0"`
+If it is a big change, it might be worthwhile to run an entire game with just AI to make sure it does not
+break anything. You can compile the code, with additional checks such as address sanitizer with
+:code:`$ cmake . --preset ASan`. Once the code is compiled, you can run the autogame with
+:code:`./build/freeciv21-server -r ./data/test-autogame.serv`. You can also observe the game with
+:code:`./build/freeciv21-client -a -p 5556 -s localhost`. ASan by default halts on every error, this is
+sometimes useful to developers to fix the errors sequentially. If you'd rather prefer listing all the errors
+at once, set the environment variable using :code:`$ export ASAN_OPTIONS="halt_on_error=0"`
 
 :strong:`Cleanup`
 
@@ -76,7 +84,7 @@ sequentially. If you'd rather prefer listing all the errors at once, set the env
 
 * Stash changes: :code:`$ git stash`.
 
-* Checkout Master branch and delete the testing branch:
+* Checkout ``master`` branch and delete the testing branch:
 
 .. code-block:: rst
 
