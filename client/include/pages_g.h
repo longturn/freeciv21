@@ -20,6 +20,8 @@
 #define SPECENUM_VALUE3 PAGE_LOAD     // Load saved game page.
 #define SPECENUM_VALUE4 PAGE_NETWORK  // Connect to network page.
 #define SPECENUM_VALUE5 PAGE_GAME     // In game page.
+#define SPECENUM_VALUE6 PAGE_LOADING  // Loading something.
+#define SPECENUM_COUNT PAGE_COUNT
 #include "specenum_gen.h"
 
 void update_start_page(void);

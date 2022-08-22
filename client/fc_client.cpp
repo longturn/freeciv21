@@ -106,16 +106,16 @@ fc_client::fc_client() : QMainWindow(), current_file(QLatin1String(""))
   page_game->chat->installEventFilter(this); // To save its location
   pages[PAGE_GAME] = page_game;
 
-  pages[PAGE_GAME + 1] = new QWidget(central_wdg);
+  pages[PAGE_LOADING] = new QWidget(central_wdg);
   create_loading_page();
-  pages[PAGE_GAME + 1]->setLayout(pages_layout[PAGE_GAME + 1]);
+  pages[PAGE_LOADING]->setLayout(pages_layout[PAGE_LOADING]);
   central_layout->addWidget(pages[PAGE_MAIN]);
   central_layout->addWidget(pages[PAGE_NETWORK]);
   central_layout->addWidget(pages[PAGE_LOAD]);
   central_layout->addWidget(pages[PAGE_SCENARIO]);
   central_layout->addWidget(pages[PAGE_START]);
   central_layout->addWidget(pages[PAGE_GAME]);
-  central_layout->addWidget(pages[PAGE_GAME + 1]);
+  central_layout->addWidget(pages[PAGE_LOADING]);
   central_wdg->setLayout(central_layout);
   setCentralWidget(central_wdg);
   resize(pages[PAGE_MAIN]->minimumSizeHint());
@@ -179,10 +179,7 @@ void fc_client::closing() { quitting = true; }
  */
 void fc_client::switch_page(int new_pg)
 {
-  enum client_pages new_page;
-  int i_page;
-
-  new_page = static_cast<client_pages>(new_pg);
+  const auto new_page = static_cast<client_pages>(new_pg);
 
   if ((new_page == PAGE_SCENARIO || new_page == PAGE_LOAD)
       && !is_server_running()) {
@@ -202,8 +199,7 @@ void fc_client::switch_page(int new_pg)
   QApplication::alert(king()->central_wdg);
   central_layout->setCurrentWidget(pages[new_pg]);
   page = new_page;
-  i_page = new_page;
-  switch (i_page) {
+  switch (new_page) {
   case PAGE_MAIN:
     break;
   case PAGE_START:
@@ -253,13 +249,8 @@ void fc_client::switch_page(int new_pg)
     qobject_cast<page_network *>(pages[PAGE_NETWORK])
         ->set_connection_state(LOGIN_TYPE);
     break;
-  case (PAGE_GAME + 1):
-    break;
-  default:
-    if (client.conn.used) {
-      disconnect_from_server();
-    }
-    set_client_page(PAGE_MAIN);
+  case PAGE_LOADING:
+  case PAGE_COUNT:
     break;
   }
 
@@ -644,9 +635,8 @@ void fc_client::create_loading_page()
 {
   QLabel *label = new QLabel(_("Loading..."));
 
-  pages_layout[PAGE_GAME + 1] = new QGridLayout;
-  pages_layout[PAGE_GAME + 1]->addWidget(label, 0, 0, 1, 1,
-                                         Qt::AlignHCenter);
+  pages_layout[PAGE_LOADING] = new QGridLayout;
+  pages_layout[PAGE_LOADING]->addWidget(label, 0, 0, 1, 1, Qt::AlignHCenter);
 }
 
 /**

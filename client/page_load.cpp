@@ -136,7 +136,7 @@ void page_load::start_from_save()
 
     c_bytes = current_file.toLocal8Bit();
     send_chat_printf("/load %s", c_bytes.data());
-    gui->switch_page(PAGE_GAME + 1);
+    gui->switch_page(PAGE_LOADING);
   }
 }
 

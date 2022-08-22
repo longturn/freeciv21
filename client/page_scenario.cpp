@@ -109,7 +109,7 @@ void page_scenario::start_scenario()
 
     c_bytes = current_file.toLocal8Bit();
     send_chat_printf("/load %s", c_bytes.data());
-    king->switch_page(PAGE_GAME + 1);
+    king->switch_page(PAGE_LOADING);
   }
 }
 

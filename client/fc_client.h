@@ -93,7 +93,7 @@ class fc_client : public QMainWindow {
   Q_OBJECT
 
   enum client_pages page;
-  QGridLayout *pages_layout[PAGE_GAME + 2];
+  QGridLayout *pages_layout[PAGE_COUNT];
   QLabel *status_bar_label{nullptr};
   QSocketNotifier *server_notifier{nullptr};
   QStackedLayout *central_layout{nullptr};
