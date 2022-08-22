@@ -94,7 +94,7 @@ ruledit_gui::ruledit_gui(ruledit_main *main) : QObject(main)
   main->setCentralWidget(central);
 
   fc_snprintf(verbuf, sizeof(verbuf), "%s%s", word_version(),
-                VERSION_STRING);
+              VERSION_STRING);
 
   main_layout = new QStackedLayout();
 
