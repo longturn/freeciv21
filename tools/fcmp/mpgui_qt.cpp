@@ -169,7 +169,7 @@ void mpgui::setup(QWidget *central, struct fcmp_params *params)
   char verbuf[2048];
 
   fc_snprintf(verbuf, sizeof(verbuf), "%s%s", word_version(),
-                VERSION_STRING);
+              VERSION_STRING);
 
   version_label = new QLabel(QString::fromUtf8(verbuf));
   version_label->setAlignment(Qt::AlignHCenter);
