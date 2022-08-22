@@ -1,14 +1,19 @@
+..
+    SPDX-License-Identifier: GPL-3.0-or-later
+    SPDX-FileCopyrightText: 2022 jwrober <jwrober at gmail.com>
+    SPDX-FileCopyrightText: 2022 zekoz
+
 Setting up MSYS2 for Windows
 ****************************
 
 This document is about building and compiling Freeciv21 with MSYS2 on Windows. MSYS2 is available from
-https://www.msys2.org. The LongTurn Community builds the Windows Installer packages using MSYS2.
+https://www.msys2.org. The Longturn Community builds the Windows Installer packages using MSYS2.
 
 
 Setup
 =====
 
-This chapter is about creating new msys2 build environment.
+This chapter is about creating new MSYS2 build environment.
 
 #. Download MSYS2 from their homepage: https://www.msys2.org/#installation
 
@@ -25,8 +30,8 @@ This chapter is about creating new msys2 build environment.
 
 #. The :file:`msys2_shell` will close when this is complete. Run it again and install following packages with
    :code:`pacman -Su <package name>`. The packages needed for building Freeciv21 are numerous. These packages
-   are needed even if you do not plan to make the installer, update documentation, but only build Freeciv21 for
-   local use.
+   are needed even if you do not plan to make the installer, update documentation, but only build Freeciv21
+   for local use.
 
 #. Install these arch independent packages that are needed for building Freeciv21. With these packages it is
    possible to build a Freeciv21 source tree that was created via release tarball or zip file.
