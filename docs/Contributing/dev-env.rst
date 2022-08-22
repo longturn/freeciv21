@@ -1,7 +1,11 @@
+..
+    SPDX-License-Identifier: GPL-3.0-or-later
+    SPDX-FileCopyrightText: 2022 jwrober <jwrober at gmail.com>
+
 Set up a Development Environment
 ********************************
 
-Contributing code to the Freeciv21 project or contributing to any of the games that the Longturn.net community
+Contributing code to the Freeciv21 project or contributing to any of the games that the Longturn community
 manages requires a bit of setup. This document should get you up and running with the basics. It should be
 noted, that you typically only have to go through this process once unless you setup a new workstation.
 
@@ -34,7 +38,7 @@ command), that will happen in a bit.
 GitHub
 ======
 
-The Longturn.net Community uses the online source code control and revision system known as
+The Longturn Community uses the online source code control and revision system known as
 `GitHub <https://github.com/>`_. To contribute, you will need an account on this platform. There is no cost.
 
 With an account, you can go to the `Longturn <https://github.com/longturn>`_ community repository page and
@@ -108,7 +112,7 @@ Once installed, you can then import the Freeciv21 project into it. Follow these 
 
 #. Open Kdevelop
 #. :menuselection:`Project --> Open/Import Project`
-#. find :file:`freeciv21/CMakeLists.txt`
+#. Find :file:`freeciv21/CMakeLists.txt`
 #. :menuselection:`Session --> Rename Current Session` to Freeciv21
 #. Allow kdevelop to parse all of the code -- this can take awhile. Evenually you will see a full tree of
    the code in the Projects tab on the left.
