@@ -130,6 +130,8 @@ static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
           }
           client.conn.used = false;
         });
+    QObject::connect(client.conn.sock, &QAbstractSocket::disconnected,
+                     [] { client.conn.used = false; });
   }
 
   client.conn.sock->connectToHost(url.host(), url.port());

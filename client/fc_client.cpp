@@ -201,6 +201,9 @@ void fc_client::switch_page(int new_pg)
   page = new_page;
   switch (new_page) {
   case PAGE_MAIN:
+    if (client.conn.used) {
+      disconnect_from_server();
+    }
     break;
   case PAGE_START:
     voteinfo_gui_update();
