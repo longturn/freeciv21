@@ -111,7 +111,7 @@ public:
   inline path_finder &operator=(path_finder &&other);
 
   void push_waypoint(const tile *location);
-  void pop_waypoint();
+  bool pop_waypoint();
 
   void unit_changed(const unit &unit);
 

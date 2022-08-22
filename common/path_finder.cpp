@@ -653,11 +653,11 @@ void path_finder::push_waypoint(const tile *location)
  *
  * \see push_waypoint
  */
-void path_finder::pop_waypoint()
+bool path_finder::pop_waypoint()
 {
   // Nothing to to.
   if (m_d->waypoints.empty()) {
-    return;
+    return false;
   }
 
   m_d->waypoints.pop_back();
@@ -668,6 +668,8 @@ void path_finder::pop_waypoint()
     m_d->queue.pop();
   }
   m_d->insert_initial_vertex();
+
+  return true;
 }
 /**
  * Notifies the path finder that some unit died or changed state. In many
