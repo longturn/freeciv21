@@ -20,17 +20,6 @@
 #include "qtg_cxxside.h"
 
 /**
-   Close and destroy the dialog. But only if we don't have a local
-   server running (that we started).
- */
-void close_connection_dialog()
-{
-  if (king()->current_page() != PAGE_NETWORK) {
-    real_set_client_page(PAGE_MAIN);
-  }
-}
-
-/**
    Configure the dialog depending on what type of authentication request the
    server is making.
  */

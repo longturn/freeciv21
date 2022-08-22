@@ -23,7 +23,6 @@ void set_rulesets(int num_rulesets, QStringList rulesets);
 void add_net_input(QTcpSocket *sock);
 void remove_net_input();
 void real_conn_list_dialog_update(void *unused);
-void close_connection_dialog();
 void sound_bell();
 
 void real_set_client_page(client_pages page);

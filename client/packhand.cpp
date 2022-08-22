@@ -333,7 +333,6 @@ void handle_server_join_reply(bool you_can_join, const char *message,
   const char *s_capability = client.conn.capability;
 
   conn_set_capability(&client.conn, capability);
-  close_connection_dialog();
 
   if (you_can_join) {
     struct packet_client_info client_info;
