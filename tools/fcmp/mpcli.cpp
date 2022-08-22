@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2022 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -90,18 +90,11 @@ int main(int argc, char *argv[])
 
   fcmp_init();
 
-  const char *rev_ver;
-
   load_install_info_lists(&fcmp);
 
   qInfo(_("Freeciv21 modpack installer (command line version)"));
 
   qInfo("%s%s", word_version(), VERSION_STRING);
-
-  rev_ver = fc_git_revision();
-  if (rev_ver != nullptr) {
-    qInfo(_("commit: %s"), rev_ver);
-  }
 
   qInfo("%s", "");
 
