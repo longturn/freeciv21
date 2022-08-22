@@ -122,20 +122,21 @@ void goto_add_waypoint()
  */
 bool goto_pop_waypoint()
 {
+  bool popped = false;
   for (auto &[_, finder] : goto_finders) {
     // Patrol always uses a waypoint
     if (hover_state == HOVER_PATROL) {
       finder.pop_waypoint();
     }
 
-    finder.pop_waypoint();
+    popped |= finder.pop_waypoint();
 
     // Patrol always uses a waypoint
     if (hover_state == HOVER_PATROL) {
       finder.push_waypoint(goto_destination);
     }
   }
-  return true;
+  return popped;
 }
 
 /**
