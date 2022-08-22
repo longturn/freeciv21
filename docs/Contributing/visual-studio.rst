@@ -1,3 +1,7 @@
+..
+    SPDX-License-Identifier: GPL-3.0-or-later
+    SPDX-FileCopyrightText: 2022 jwrober <jwrober at gmail.com>
+
 Setting up Visual Studio for Windows
 ************************************
 
