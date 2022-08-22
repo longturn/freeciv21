@@ -37,7 +37,7 @@ void goto_unit_killed(struct unit *punit);
 bool goto_is_active();
 bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
                      int *turns, bool *waypoint);
-bool goto_add_waypoint();
+void goto_add_waypoint();
 bool goto_pop_waypoint();
 
 bool is_valid_goto_destination(const struct tile *ptile);

@@ -99,7 +99,7 @@ bool is_valid_goto_destination(const struct tile *ptile)
 /**
    Inserts a waypoint at the end of the current goto line.
  */
-bool goto_add_waypoint()
+void goto_add_waypoint()
 {
   for (auto &[_, finder] : goto_finders) {
     // Patrol always uses a waypoint
@@ -114,7 +114,6 @@ bool goto_add_waypoint()
       finder.push_waypoint(goto_destination);
     }
   }
-  return true;
 }
 
 /**
