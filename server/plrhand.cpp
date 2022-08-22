@@ -24,6 +24,7 @@
 #include "diptreaty.h"
 #include "game.h"
 #include "government.h"
+#include "improvement.h"
 #include "map.h"
 #include "multipliers.h"
 #include "packets.h"
@@ -1135,19 +1136,6 @@ static void package_player_common(struct player *plr,
   packet->phase_done = plr->phase_done;
   packet->nturns_idle = plr->nturns_idle;
 
-  for (i = 0; i < B_LAST /*improvement_count()*/; i++) {
-    if (plr->wonders[i] <= 0) {
-      packet->wonders[i] = plr->wonders[i];
-    } else {
-      const auto pimprove = improvement_by_number(i);
-      const auto pcity = game_city_by_number(plr->wonders[i]);
-      if (pimprove && pcity) {
-        if (get_building_bonus(pcity, pimprove, EFT_WONDER_VISIBLE) > 0) {
-          packet->wonders[i] = plr->wonders[i];
-        }
-      }
-    }
-  }
   packet->science_cost = plr->ai_common.science_cost;
 }
 
@@ -1208,6 +1196,26 @@ static void package_player_info(struct player *plr,
     }
   }
   players_iterate_end;
+
+  // Wonder information
+  for (int i = 0; i < B_LAST; ++i) {
+    // Lost, not built or doesn't exist (still need to fill the array)
+    if (plr->wonders[i] <= 0 || i >= improvement_count()) {
+      packet->wonders[i] = plr->wonders[i];
+      continue;
+    }
+
+    const auto pimprove = improvement_by_number(i);
+    const auto pcity = game_city_by_number(plr->wonders[i]);
+    const auto bonus = get_target_bonus_effects(
+        nullptr, city_owner(pcity), receiver, pcity, pimprove, nullptr,
+        nullptr, nullptr, nullptr, nullptr, nullptr, EFT_WONDER_VISIBLE);
+    if (bonus > 0) {
+      packet->wonders[i] = plr->wonders[i];
+    } else {
+      packet->wonders[i] = WONDER_NOT_BUILT;
+    }
+  }
 
   if (plr->rgb != nullptr) {
     packet->color_valid = true;
