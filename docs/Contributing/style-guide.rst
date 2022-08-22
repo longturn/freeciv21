@@ -1,3 +1,7 @@
+..
+    SPDX-License-Identifier: GPL-3.0-or-later
+    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+
 Documentation Style Guide
 *************************
 
@@ -159,8 +163,10 @@ Capitalization
     Below is a more exhaustive list of game specific terms that we want to capitalize. The list can be used
     in a find/replace exercise:
 
-    :strong:`Game Interace`:
-      * Advance (as in Technology Advance)
+    :strong:`Game Interface`:
+
+    .. hlist::
+
       * Airbase
       * Base
       * Border
@@ -168,64 +174,76 @@ Capitalization
       * Buoy
       * Button (a named button)
       * Chat
-      * Cit(y or ies)
+      * City
       * Dialog (a named dialog)
-      * Embass(y or ies)
-      * Fort(ress)
+      * Embassy
+      * Fort / Fortress
       * Improvement
       * Map
       * Menu (a named menu)
-      * Messages
-      * Minimap
+      * Messages (widget)
+      * Minimap (widget)
       * Small Great Wonder (only with Wonders)
-      * Tax(es) Rate(s)
-      * Technolog(y or ical)
+      * Tax Rate
+      * Technology Advance
       * Top Controls Bar
       * Unit
       * View (a named view)
-      * Vision Radius Shared
+      * Vision Radius Shared (only for City Radius, Shared Vision)
       * Widget (a named widget)
       * World
 
     :strong:`City Dialog Items`:
+
+    .. hlist::
+
       * Citizen
-
-        * Angry
-        * Celebrat(e or ion)
-        * Content
-        * Happy
-        * Unhapp(y or iness)
-
-      * Civil (covers Civil War and Civilization)
+      * Angry
+      * Celebrate
+      * Content
+      * Happy
+      * Unhappy
+      * Civil War
+      * Civilization
       * Corruption
       * Culture
       * Gold
       * Granary
       * Food
       * Luxury Goods (always plural)
+      * Nation
+      * Nationality
       * Plague
       * Pollution
-      * Prod(uction) (only when discussing Production points)
+      * Production (only when discussing Production points)
       * Science
       * Trade Route
       * Waste
 
     :strong:`Gameplay`:
+
+    .. hlist::
+
       * Migration
-      * Entertain(er)
+      * Entertainer
       * Taxman
       * Scientist
+      * Specialist
       * Global Warming
+      * National Budget
       * Nuclear Winter
 
     :strong:`Map`:
+
+    .. hlist::
+
       * Buffalo
       * Coal
       * Desert
       * Fish
       * Forest
-      * Grass(land)
-      * Hill(s)
+      * Grassland
+      * Hills
       * Jungle
       * Lake
       * Mountain
@@ -236,7 +254,7 @@ Capitalization
       * River
       * Shield
       * Silk
-      * Special (also covers Specialist)
+      * Special (as in Tile Special)
       * Tile
       * Tundra
       * Whale
@@ -244,6 +262,9 @@ Capitalization
       * Wine
 
     :strong:`Diplomacy`:
+
+    .. hlist::
+
       * Alliance
       * Armistice
       * Cease-fire
@@ -252,9 +273,12 @@ Capitalization
       * War
 
     :strong:`Governments`:
+
+    .. hlist::
+
       * Anarchy
       * Democracy
-      * City States
+      * City-States
       * Communism
       * Despotism
       * Federation
