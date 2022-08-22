@@ -174,10 +174,10 @@ Capitalization
       * Buoy
       * Button (a named button)
       * Chat
-      * City
+      * City / Cities
       * Dialog (a named dialog)
-      * Embassy
-      * Fort / Fortress
+      * Embassy / Embassies
+      * Fort and Fortress
       * Improvement
       * Map
       * Menu (a named menu)
