@@ -154,6 +154,7 @@ target_link_libraries(client PUBLIC Qt5::Svg)
 target_link_libraries(client PUBLIC ${SDL2_MIXER_LIBRARIES} ${SDL2_LIBRARY})
 
 target_link_libraries(client PUBLIC client_gen)
+target_link_libraries(client_gen PUBLIC client) # Needed to link
 target_link_libraries(client PUBLIC cvercmp)
 target_link_libraries(client PUBLIC luascript)
 
