@@ -1,6 +1,6 @@
 ..
     SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022 jwrober <jwrober at gmail.com>
+    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
 
 Set up a Development Environment
 ********************************
@@ -13,7 +13,7 @@ noted, that you typically only have to go through this process once unless you s
 Workstation
 ===========
 
-Freeciv21 can be developed on Linux, Windows and macOS. Any current version of these OS's is acceptible. For
+Freeciv21 can be developed on Linux, Windows, and macOS. Any current version of these OS's is acceptable. For
 Windows, you will need to setup either the MSYS2 environment or Visual Studio to do development.
 Refer to :doc:`msys2` or :doc:`Visual Studio <visual-studio>` for more information. It should be generally
 understood that :strong:`Linux` is the preferred development platform. For a complete set of installation
@@ -114,7 +114,7 @@ Once installed, you can then import the Freeciv21 project into it. Follow these 
 #. :menuselection:`Project --> Open/Import Project`
 #. Find :file:`freeciv21/CMakeLists.txt`
 #. :menuselection:`Session --> Rename Current Session` to Freeciv21
-#. Allow kdevelop to parse all of the code -- this can take awhile. Evenually you will see a full tree of
+#. Allow kdevelop to parse all of the code -- this can take a while. Eventually you will see a full tree of
    the code in the Projects tab on the left.
 
 Here are some useful help/documentation links:

@@ -1,6 +1,6 @@
 ..
     SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022 jwrober <jwrober at gmail.com>
+    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
     SPDX-FileCopyrightText: 2022 zekoz
 
 Setting up MSYS2 for Windows
@@ -13,7 +13,7 @@ https://www.msys2.org. The Longturn Community builds the Windows Installer packa
 Setup
 =====
 
-This chapter is about creating new MSYS2 build environment.
+This chapter is about creating a new MSYS2 build environment.
 
 #. Download MSYS2 from their homepage: https://www.msys2.org/#installation
 

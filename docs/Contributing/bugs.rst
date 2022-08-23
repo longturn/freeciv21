@@ -1,6 +1,6 @@
 ..
     SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022 jwrober <jwrober at gmail.com>
+    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
 
 Filing Bugs and Enhancement Requests
 ************************************
@@ -32,8 +32,9 @@ note of the following when thinking of submitting an issue.
   playing the latest version. We may have already fixed the problem.
 
 * If the first two items do not work, then feel free to submit a new issue. We have implemented GitHub issue
-  templates so they will walk you through the major aspects of a new issue. It is important to note that the
-  more details you can provide, the better. If a screen shot is available, then by all means supply it to us.
+  templates which will walk you through the major aspects of a new issue. It is important to note that the
+  more details you can provide, the better. If a screenshot is available, then by all means add it to the
+  issue.
 
   * If you are an advanced hacker, you can also provide a core dump or stack trace to better help the
     developers of Freeciv21 understand the nature of the issue.

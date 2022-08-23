@@ -1,8 +1,8 @@
 ..
     SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022 jwrober <jwrober at gmail.com>
+    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
     SPDX-FileCopyrightText: 2022 louis94 <m_louis30@yahoo.com>
-    SPDX-FileCopyrightText: 2022 panch93 <pranav.ppanch@gmail.com>
+    SPDX-FileCopyrightText: 2022 Pranav Sampathkumar <pranav.sampathkumar@gmail.com>
 
 Evaluating a Pull Request
 *************************
@@ -84,7 +84,7 @@ at once, set the environment variable using :code:`$ export ASAN_OPTIONS="halt_o
 
 * Stash changes: :code:`$ git stash`.
 
-* Checkout ``master`` branch and delete the testing branch:
+* Checkout the ``master`` branch and delete the testing branch:
 
 .. code-block:: rst
 
