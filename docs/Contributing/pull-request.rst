@@ -1,7 +1,7 @@
 ..
     SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022 jwrober <jwrober at gmail.com>
-    SPDX-FileCopyrightText: 2022 panch93 <pranav.ppanch@gmail.com>
+    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022 Pranav Sampathkumar <pranav.sampathkumar@gmail.com>
 
 How to Submit a Pull Request
 ****************************
@@ -41,14 +41,14 @@ The arrows represent the path that updates (e.g. changes) of files occurs.
 
 With this in mind, submitting a Pull Request generally entails these steps:
 
-#. Update Local with the lastest from Upstream.
+#. Update Local with the latest from Upstream.
 #. Create a branch from Upstream.
 #. Edit files as needed in Local.
 #. Push the changes in a commit to Origin.
 #. Requesting a Pull Request from Origin to Upstream.
 
 
-1. Update Local with the Lastest Updates from Upstream
+1. Update Local with the Latest Updates from Upstream
 ======================================================
 
 Assuming you are in the appropriate Local directory, issue these commands to get the latest code from
@@ -60,8 +60,8 @@ Upstream:
   ~/GitHub/freeciv21$ git pull upstream master --ff-only
 
 
-The first command sets the working branch to master on Local. The second command downloads the changes from
-Upstream to Local.
+The first command sets the working branch to ``master`` on Local. The second command downloads the changes
+from Upstream to Local.
 
 .. note::
   If you want :code:`git pull` to always do a "fast-forward" (which is preferred), you can set a local
@@ -93,10 +93,10 @@ Issue 123 in the Freeciv21 Issues list.
 3. Edit Files as Needed in Local
 ================================
 
-This step is as simple as it sounds. Edit the files in the Local area as needed to complete the work you
-want to work on. Depending on what you are doing, there is a high likelihood that you will want to compile
-the code to test your work. Here are some quick steps that you can use to run through quick compiles of code
-and/or documentation updates.
+This step is as simple as it sounds. Edit the files in the Local area as needed to complete the work you want
+to work on. Depending on what you are doing, it is likely that you will want to compile the code to test your
+work. Here are some quick steps that you can use to run through quick compiles of code and/or documentation
+updates.
 
 .. code-block:: rst
 
@@ -110,7 +110,7 @@ The first command cleans out the :file:`build` directory to start with a fresh c
 command runs a configure process and then sets things up to do the install portion inside the same
 :file:`build` directory, keeping work in progress all in one place.
 
-The third and forth commands compile and installs the code. The last command is used to generate the
+The third and fourth commands compile and install the code. The last command is used to generate the
 documentation that you are reading right now. You can open :file:`./build/docs/index.html` to see a locally
 generated copy of the documentation prior to pushing a change up.
 
@@ -154,19 +154,19 @@ a change to another file that you didn't intend to actually change. If you find 
 a file, you can use the :file:`git restore <file>` command. This is also shown on the :file:`git status`
 command output.
 
-The :file:`git add --all` command then adds all the changed files into a single commit. The
-:file:`git clang-format` command then runs a pre-processor to format any code changes to support the
-Longturn community's code standards. We use ``clangformat-11`` by default, if your system's version of
-``clang-format`` is different, you can use the binaries for ``clangformat-11`` using the command:
+The :file:`git add --all` command then adds all the changed files into a single commit. The :file:`git
+clang-format` command then runs a pre-processor to format any code changes to support the Longturn community's
+code standards. We use ``clang-format-11``. If your system's version of ``clang-format`` is different, you can
+use the binaries for ``clang-format-11`` using the command:
 :file:`git clang-format --binary <path-to-clang-format-11>`. If :file:`git clang-format` modifies any files,
 it will tell you so. If that happens, then you need to run a subsequent :file:`git add --all` command to get
 those files added back into the commit.
 
-Once everything looks good from a :file:`git status` perspective, then issue the last two command. The last
-command, :file:`git commit`, will open a text editor (in Debian based systems this is often ``Nano``). Put a
+Once everything looks good from a :file:`git status` perspective, then issue the last command. The last
+command, :file:`git commit`, will open a text editor (in Debian based systems this is often ``nano``). Put a
 message at the bottom below all of the hashes ( ``#`` ) and then save.
 
-At this point you now have a commit of changes that you need to push to Origin.
+You now have a commit of changes that you need to push to Origin.
 
 
 5. Requesting a Pull Request from Origin to Upstream
@@ -179,7 +179,8 @@ This is the last major step in the process. To push the commit to your fork, iss
   ~/GitHub/freeciv21$ git push origin
 
 
-You will be prompted for your SSH passkey and then the changes in the branch you created in Step 2 will be
-pushed to your Fork. Once complete, you can open your Fork in a web browser and GitHub will notice the
-change and prompt you to open a Pull Request. The complete steps are documented
+You will be prompted for your SSH passkey and then the changes in the branch you created in
+`2. Create a Branch from Upstream`_ will be pushed to your Fork. Once complete, you can open your Fork in a
+web browser and GitHub will notice the change and prompt you to open a Pull Request. The complete steps are
+documented
 `here <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork>`_.
