@@ -269,13 +269,19 @@ void path_finder::path_finder_private::attempt_move(detail::vertex &source)
   // Try moving to adjacent tiles
   adjc_dir_iterate(&(wld.map), source.location, target, dir)
   {
+    bool can_move;
+    int move_cost;
     if (target->terrain == nullptr) {
-      // Can't see this tile
-      continue;
+      // Maybe move into the unknown
+      can_move = unknown_tiles_allowed;
+      move_cost = probe.utype->unknown_move_cost;
+    } else {
+      can_move =
+          unit_can_move_to_tile(&wld.map, &probe, target, false, false);
+      move_cost = map_move_cost_unit(&wld.map, &probe, target);
     }
-    if (unit_can_move_to_tile(&wld.map, &probe, target, false, false)) {
-      auto move_cost = std::min(map_move_cost_unit(&wld.map, &probe, target),
-                                probe.moves_left);
+    if (can_move) {
+      move_cost = std::min(move_cost, probe.moves_left);
 
       // Construct the next vertex
       auto next = source;
@@ -597,6 +603,19 @@ bool path_finder::path_finder_private::run_search(
 }
 
 /**
+ * Resets the state of the path finder. The search will be resumed from the
+ * beginning.
+ */
+void path_finder::path_finder_private::reset()
+{
+  best_vertices.clear();
+  while (!queue.empty()) {
+    queue.pop();
+  }
+  insert_initial_vertex();
+}
+
+/**
  * Constructs a @c path_finder for the given unit. Doesn't start the path
  * finding yet.
  *
@@ -629,6 +648,18 @@ path_finder::~path_finder()
 }
 
 /**
+ * Selects whether paths can use unknown tiles.
+ */
+void path_finder::set_unknown_tiles_allowed(bool allowed)
+{
+  bool changed = (allowed != m_d->unknown_tiles_allowed);
+  m_d->unknown_tiles_allowed = allowed;
+  if (changed) {
+    m_d->reset();
+  }
+}
+
+/**
  * Adds a waypoint to the path finding. Waypoints are tiles that the path
  * must go through (in order) before reaching the destination.
  *
@@ -640,11 +671,7 @@ void path_finder::push_waypoint(const tile *location)
     m_d->waypoints.push_back(location);
 
     // We can try to be smarter later. For now, just invalidate everything.
-    m_d->best_vertices.clear();
-    while (!m_d->queue.empty()) {
-      m_d->queue.pop();
-    }
-    m_d->insert_initial_vertex();
+    m_d->reset();
   }
 }
 
@@ -663,11 +690,7 @@ bool path_finder::pop_waypoint()
   m_d->waypoints.pop_back();
 
   // We can try to be smarter later. For now, just invalidate everything.
-  m_d->best_vertices.clear();
-  while (!m_d->queue.empty()) {
-    m_d->queue.pop();
-  }
-  m_d->insert_initial_vertex();
+  m_d->reset();
 
   return true;
 }

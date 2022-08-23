@@ -252,7 +252,8 @@ void enter_goto_state(const std::vector<unit *> &units)
   for (const auto punit : units) {
     // This calls path_finder::path_finder(punit) behind the scenes
     // Need to do this because path_finder isn't copy-assignable
-    goto_finders.emplace(punit->id, punit);
+    auto [it, _] = goto_finders.emplace(punit->id, punit);
+    it->second.set_unknown_tiles_allowed(gui_options.goto_into_unknown);
   }
 }
 
