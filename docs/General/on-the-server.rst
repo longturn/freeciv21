@@ -7,7 +7,8 @@ Freeciv21 on the Server
 
 In order to play Freeciv21 over the network, one machine needs to act as the *server*: the state of
 the game lives on the server and players can connect to play. There are many ways to operate such a
-server. This page gives an introduction to the topic.
+server. This page gives an introduction to the topic, guided by the experience gathered by running
+the `Longturn <https://longturn.net>`_ website.
 
 In order to run a server, you need a computer that other players can reach over the network. If
 you are planning to play at home, this can usually be any machine connected to your WiFi or local
