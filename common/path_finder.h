@@ -71,6 +71,8 @@ private:
     const detail::vertex
         initial_vertex; ///< The starting point in the search graph.
 
+    bool unknown_tiles_allowed = false;
+
     // Storage for Dijkstra's algorithm.
     // In most cases, a single vertex will be stored for a given tile. There
     // are situations, however, where more vertices are needed. This is for
@@ -101,6 +103,7 @@ private:
     void attempt_action_move(detail::vertex &source);
 
     bool run_search(const destination &destination);
+    void reset();
   };
 
 public:
@@ -109,6 +112,14 @@ public:
   virtual ~path_finder();
 
   inline path_finder &operator=(path_finder &&other);
+
+  /// Returns whether goto into the unkown is allowed.
+  bool are_unknown_tiles_allowed() const
+  {
+    return m_d->unknown_tiles_allowed;
+  }
+
+  void set_unknown_tiles_allowed(bool allowed);
 
   void push_waypoint(const tile *location);
   bool pop_waypoint();
