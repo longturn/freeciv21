@@ -40,11 +40,6 @@ mark_as_advanced(FREECIV_META_URL)
 set(FREECIV_AI_MOD_LAST 2 CACHE STRING "The number of AI modules to build")
 mark_as_advanced(FREECIV_AI_MOD_LAST)
 
-# Do we need the client libraries?
-if (FREECIV_ENABLE_CLIENT OR FREECIV_ENABLE_CIVMANUAL)
-  set(FREECIV_BUILD_LIBCLIENT TRUE)
-endif()
-
 # Do we need the server libraries?
 if (FREECIV_ENABLE_SERVER
     OR FREECIV_ENABLE_CIVMANUAL
