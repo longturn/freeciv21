@@ -517,12 +517,16 @@ bool fc_game_tab_widget::event(QEvent *event)
           qRound(size.width() * king()->qt_settings.chat_fwidth),
           qRound(size.height() * king()->qt_settings.chat_fheight));
       queen()->message->move(size.width() - queen()->message->width(), 0);
-      queen()->chat->resize(
-          qRound(size.width() * king()->qt_settings.chat_fwidth),
-          qRound(size.height() * king()->qt_settings.chat_fheight));
-      queen()->chat->move(
-          qRound(size.width() * king()->qt_settings.chat_fx_pos),
-          qRound(size.height() * king()->qt_settings.chat_fy_pos));
+
+      auto chat = queen()->chat;
+      const bool visible = chat->is_chat_visible(); // Save old state
+      chat->set_chat_visible(true);
+      chat->resize(qRound(size.width() * king()->qt_settings.chat_fwidth),
+                   qRound(size.height() * king()->qt_settings.chat_fheight));
+      chat->move(qRound(size.width() * king()->qt_settings.chat_fx_pos),
+                 qRound(size.height() * king()->qt_settings.chat_fy_pos));
+      chat->set_chat_visible(visible); // Restore state
+
       queen()->battlelog_wdg->set_scale(king()->qt_settings.battlelog_scale);
       queen()->battlelog_wdg->move(
           qRound(king()->qt_settings.battlelog_x * mapview.width),
