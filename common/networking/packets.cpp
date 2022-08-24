@@ -15,6 +15,7 @@
 
 // utility
 #include "capability.h"
+#include "connection.h"
 #include "fcintl.h"
 #include "log.h"
 #include "support.h"
@@ -802,13 +803,17 @@ const struct packet_handlers *packet_handlers_get(const char *capability)
  */
 void packets_deinit() { packet_handlers_free(); }
 
-void packet_strvec_compute(char *str, QVector<QString> *qstrvec)
+void packet_strvec_compute(char str[MAX_LEN_PACKET],
+                           QVector<QString> *qstrvec)
 {
-  if (nullptr != qstrvec) {
-    qstrvec_to_str(qstrvec, PACKET_STRVEC_SEPARATOR, str);
-  } else {
+  if (qstrvec == nullptr) {
     str[0] = '\0';
+    return;
   }
+
+  const auto joined =
+      QStringList::fromVector(*qstrvec).join(PACKET_STRVEC_SEPARATOR);
+  qstrncpy(str, qUtf8Printable(joined), MAX_LEN_PACKET);
 }
 
 QVector<QString> *packet_strvec_extract(const char *str)
@@ -819,23 +824,6 @@ QVector<QString> *packet_strvec_extract(const char *str)
     qstrvec_from_str(qstrvec, PACKET_STRVEC_SEPARATOR, str);
   }
   return qstrvec;
-}
-
-/**
-   Build the string from a string vector.
-
-   This string format is a list of strings separated by 'separator'.
-
-   See also strvec_from_str().
- */
-void qstrvec_to_str(const QVector<QString> *psv, char separator, char *buf)
-{
-  QString s;
-
-  for (const auto &str : *psv) {
-    s = s + str + separator;
-  }
-  qstrncpy(buf, qUtf8Printable(s), s.count());
 }
 
 /**
