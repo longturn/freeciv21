@@ -121,9 +121,9 @@ public:
 
   /// Returns whether the chat widget is currently visible.
   bool is_chat_visible() const { return m_chat_visible; }
+  void set_chat_visible(bool visible);
 
 private slots:
-  void set_chat_visible(bool visible);
   void update_menu() override {}
   void rm_links();
   void anchor_clicked(const QUrl &link);
