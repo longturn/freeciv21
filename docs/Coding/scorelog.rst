@@ -1,9 +1,14 @@
+..
+    SPDX-License-Identifier: GPL-3.0-or-later
+    SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
+    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+
 Format Description of the Scorelog
 **********************************
 
 Empty lines and lines starting with ``#`` are comments. Each non-comment line starts with a command. The
 parameter are supplied on that line and are seperated by a space. Strings which may contain whitespaces
-are always the last parameter and so extend till the end of line.
+are always the last parameter and so extend until the end of line.
 
 The following commands exists:
 
