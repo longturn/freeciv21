@@ -94,7 +94,7 @@ add_subdirectory(utility)
 add_subdirectory(common)
 add_subdirectory(data)
 
-if (FREECIV_BUILD_LIBCLIENT)
+if (FREECIV_ENABLE_CLIENT)
   add_subdirectory(client)
 endif()
 if (FREECIV_BUILD_LIBSERVER)
