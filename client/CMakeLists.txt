@@ -1,6 +1,17 @@
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
+add_compile_definitions(NOMINMAX)
+
+# Generate files
+tolua_generate(
+  INPUT luascript/tolua_client.pkg
+  HEADER tolua_client_gen.h
+  SOURCE tolua_client_gen.cpp
+  PACKAGE_NAME client
+)
+add_compile_definitions(LUA_LIB)
+
 # Generate the packet handling code
 add_custom_command(
   OUTPUT
@@ -21,25 +32,10 @@ add_custom_command(
     ${CMAKE_SOURCE_DIR}/common/networking/packets.def
 )
 
-add_library(
-  client_gen
-  STATIC
-  ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.cpp
-  ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.h
-)
-
-target_include_directories(client_gen PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-target_include_directories(client_gen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-
-target_link_libraries(client_gen PUBLIC common)
-
-if (AUDIO_SDL)
-  set(FREECIV_AUDIO audio_sdl.cpp)
-endif()
-
-add_library(
-  client
-  STATIC
+add_executable(freeciv21-client ${GUI_TYPE})
+target_sources(
+  freeciv21-client
+  PRIVATE
   attribute.cpp
   audio_none.cpp
   audio.cpp
@@ -85,6 +81,8 @@ add_library(
   layer.cpp
   luaconsole.cpp
   luaconsole_common.cpp
+  luascript/api_client_base.cpp
+  luascript/script_client.cpp
   mapctrl.cpp
   mapctrl_common.cpp
   mapview.cpp
@@ -102,6 +100,7 @@ add_library(
   options.cpp
   optiondlg.cpp
   overview_common.cpp
+  packhand.cpp
   page_game.cpp
   page_load.cpp
   page_main.cpp
@@ -134,43 +133,43 @@ add_library(
   voteinfo.cpp
   voteinfo_bar.cpp
   widgetdecorations.cpp
-  ${FREECIV_AUDIO}
+  # Generated
+  ${CMAKE_CURRENT_BINARY_DIR}/tolua_client_gen.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/tolua_client_gen.h
+  ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.h
 )
+
+target_include_directories(freeciv21-client PRIVATE include)
+target_include_directories(freeciv21-client PRIVATE luascript)
+target_include_directories(freeciv21-client PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(freeciv21-client PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+
+target_link_libraries(freeciv21-client PRIVATE common)
+target_link_libraries(freeciv21-client PRIVATE cvercmp)
+target_link_libraries(freeciv21-client PRIVATE tolua)
+
+target_link_libraries(freeciv21-client PRIVATE Qt5::Widgets)
+target_link_libraries(freeciv21-client PRIVATE Qt5::Svg)
+target_link_libraries(freeciv21-client PRIVATE ${SDL2_MIXER_LIBRARIES} ${SDL2_LIBRARY})
+
 if(NOT EMSCRIPTEN)
-  target_sources(client PRIVATE servers.cpp)
+  target_sources(freeciv21-client PRIVATE servers.cpp)
 endif()
 
-target_include_directories(client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-if(NOT EMSCRIPTEN)
-  target_include_directories(client PUBLIC ${SDL2_INCLUDE_DIR})
-  target_include_directories(client PUBLIC ${SDL2_MIXER_INCLUDE_DIR})
+if (AUDIO_SDL)
+  target_sources(freeciv21-client PRIVATE audio_sdl.cpp)
+  target_include_directories(freeciv21-client PRIVATE ${SDL2_INCLUDE_DIR})
+  target_include_directories(freeciv21-client PRIVATE ${SDL2_MIXER_INCLUDE_DIR})
 endif()
-
-add_subdirectory(luascript)
-
-target_link_libraries(client PUBLIC Qt5::Widgets)
-target_link_libraries(client PUBLIC Qt5::Svg)
-target_link_libraries(client PUBLIC ${SDL2_MIXER_LIBRARIES} ${SDL2_LIBRARY})
-
-target_link_libraries(client PUBLIC client_gen)
-target_link_libraries(client_gen PUBLIC client) # Needed to link
-target_link_libraries(client PUBLIC cvercmp)
-target_link_libraries(client PUBLIC luascript)
 
 if(APPLE)
-  target_link_libraries(client PRIVATE "-framework AudioUnit" "-framework CoreAudio" "-framework ForceFeedback" "-framework AudioToolbox")
-  qt5_import_plugins(client INCLUDE Qt5::QCocoaIntegrationPlugin Qt5::QSvgPlugin)
+  target_link_libraries(freeciv21-client PRIVATE "-framework AudioUnit" "-framework CoreAudio" "-framework ForceFeedback" "-framework AudioToolbox")
+  qt5_import_plugins(freeciv21-client INCLUDE Qt5::QCocoaIntegrationPlugin Qt5::QSvgPlugin)
 endif()
 
 if(EMSCRIPTEN)
-  qt5_import_plugins(client INCLUDE Qt5::QWasmIntegrationPlugin)
-endif()
-
-add_compile_definitions(NOMINMAX)
-
-add_executable(freeciv21-client ${GUI_TYPE} packhand.cpp) # packhand.c depends on gui-qt
-if(EMSCRIPTEN)
+  qt5_import_plugins(freeciv21-client INCLUDE Qt5::QWasmIntegrationPlugin)
   target_link_options(freeciv21-client PRIVATE
                       -sASSERTIONS=1
                       -sWEBSOCKET_URL=wss://
@@ -200,7 +199,7 @@ if(EMSCRIPTEN)
                       "--exclude-file=*.svg"
   )
 endif()
-target_link_libraries(freeciv21-client client)
+
 add_dependencies(freeciv21-client freeciv_translations)
 install(TARGETS freeciv21-client
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
