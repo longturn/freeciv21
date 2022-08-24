@@ -511,8 +511,10 @@ bool can_step_taken_wrt_to_zoc(const struct unit_type *punittype,
   if (tile_city(src_tile) || tile_city(dst_tile)) {
     return true;
   }
-  if (terrain_has_flag(tile_terrain(src_tile), TER_NO_ZOC)
-      || terrain_has_flag(tile_terrain(dst_tile), TER_NO_ZOC)) {
+  const auto src_terrain = tile_terrain(src_tile);
+  const auto dst_terrain = tile_terrain(dst_tile);
+  if ((src_terrain && terrain_has_flag(src_terrain, TER_NO_ZOC))
+      || (dst_terrain && terrain_has_flag(dst_terrain, TER_NO_ZOC))) {
     return true;
   }
 
