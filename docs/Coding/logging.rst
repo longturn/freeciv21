@@ -1,8 +1,13 @@
+..
+    SPDX-License-Identifier: GPL-3.0-or-later
+    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022 louis94 <m_louis30@yahoo.com>
+
 Logging
 *******
 
 Freeciv21 has built-in support for printing debugging information at runtime. This is very valuable for
-developers who want to check their code or system administrator to monitor their servers. Five levels are
+developers who want to check their code or a system administrator to monitor their servers. Five levels are
 available:
 
 * ``fatal`` reports errors that cause the application to exit immediately.
