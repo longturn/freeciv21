@@ -6,7 +6,7 @@
 Utilizing Delta for Network Packets
 ***********************************
 
-If delta is enabled for this packet the packet-payload, after the bytes used by the packet-header, is followed
+If delta is enabled for this packet, the packet-payload (after the bytes used by the packet-header) is followed
 by the ``delta-header``. See :doc:`hacking`, in the "Network and Packets" chapter, to learn how to understand
 the packet-header. The ``delta-header`` is a bitvector which represents all non-key fields of the packet. If
 the field has changed the corresponding bit is set and the field value is also included in ``delta-body``. The
@@ -40,7 +40,7 @@ Compression
 ===========
 
 To further reduce the network traffic between the client and the server, the (delta) packets are compressed
-using the ``DEFLATE`` compression algorithm. To get better compression results, multiple packets are grouped
+using the DEFLATE compression algorithm. To get better compression results, multiple packets are grouped
 together and compressed into a chunk. This chunk is then transfered as a normal packet. A chunk packet starts
 with the 2 byte ``length`` field, which every packet has. A chunk packet has no type. A chunk packet is
 identified by having a too large ``length`` field. If the length of the packet is over ``COMPRESSION_BORDER``,
@@ -140,5 +140,5 @@ will find the set of used capabilities for a given packet. Let us say there are 
 Each of these combinations is called a variant. If ``n`` is the number of capabilities used by the packet the
 number of variants is :math:`2^n`.
 
-For each of these variant a seperate send and receive function will be generated. The variant for a packet and
+For each of these variants a seperate send and receive function will be generated. The variant for a packet and
 a connection is calculated once and then saved in the connection struct.
