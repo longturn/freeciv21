@@ -27,7 +27,7 @@ The source code has the following important directories:
 * :file:`dependencies`: code from upstream projects.
 * :file:`utility`: utility functionality that is not freeciv21-specific.
 * :file:`common`: data structures and code used by both the client and server.
-* :file:`server`: (duh)
+* :file:`server`: common server code.
 * :file:`client`: common client code.
 * :file:`data`: graphics, rulesets and stuff.
 * :file:`translations`: localization files.
@@ -187,8 +187,8 @@ following fields (the sizes are defined in :file:`common/packets.cpp`:code:`pack
     uint16 : type   (e.g. PACKET_TILE_INFO)
 
 
-For backward compatibility reasons, packets used for the initial protocol, notably before checking the
-capabilities, have different header fields sizes as defined in
+For backward compatibility reasons, packets used for the initial protocol (notably before checking the
+capabilities) have different header fields sizes as defined in
 :file:`common/packets.c`:code:`packet_header_init()`:
 
 .. code-block:: rst
@@ -200,9 +200,9 @@ capabilities, have different header fields sizes as defined in
 To demonstrate the route for a packet through the system, here is how a Unit disband is performed:
 
 #. A player disbands a Unit.
-#. The client initializes a packet_unit_request structure, and calls the packet layer function
+#. The client initializes a packet_unit_request structure and calls the packet layer function
    :code:`send_packet_unit_request()` with this structure and packet type: :code:`PACKET_UNIT_DISBAND`.
-#. The packet layer serializes the structure, wraps it up in a packet containing the ``packetlength``, type
+#. The packet layer serializes the structure, wraps it up in a packet containing the ``packetlength`` type
    and the serialized data. Finally, the data is sent to the server.
 #. On the server the packet is read. Based on the type, the corresponding de-serialize function is called
    by the :code:`get_packet_from_connection()` function.
@@ -302,7 +302,7 @@ directions. Hills, Mountains, Forests, and Rivers are treated in special cases.
 
 Isometric tilesets are drawn in a similar way to how civ2 draws (that is why civ2 graphics are compatible). For
 each base terrain type there exists one Tile sprite for that terrain. The Tile is blended with nearby Tiles to
-get a nice-looking boundary. This is erronously called "dither" in the code.
+get a nice-looking boundary. This is erroneously called "dither" in the code.
 
 Non-isometric tilesets draw the Tiles in the "original" Freeciv21 way, which is both harder and less pretty.
 There are multiple copies of each Tile, so that a different copy can be drawn depending on the terrain type of
@@ -428,7 +428,7 @@ Originally Freeciv21 supports only a simple rectangular Map. For instance a 5x3 
 
 
 and it looks just like that under "overhead" (non-isometric) view. The arrows represent an east-west
-wrapping.  But under an isometric-view client, the same Map will look like:
+wrapping. But under an isometric-view client, the same Map will look like:
 
 .. code-block:: rst
 
@@ -441,10 +441,10 @@ wrapping.  But under an isometric-view client, the same Map will look like:
     <-     X   ->
 
 
-where "north" is to the upper-right and "south" to the lower-left.  This makes for a mediocre interface.
+where "north" is to the upper-right and "south" to the lower-left. This makes for a mediocre interface.
 
 An isometric-view client will behave better with an isometric Map. This is what Civ2, SMAC, Civ3, etc. all
-use.  A rectangular isometric Map can be conceptualized as
+use. A rectangular isometric Map can be conceptualized as
 
 .. code-block:: rst
 
@@ -457,7 +457,7 @@ use.  A rectangular isometric Map can be conceptualized as
 North is up and it will look just like that under an isometric-view client. Of course under an overhead-view
 client it will again turn out badly.
 
-Both types of Maps can easily wrap in either direction: north-south or east-west.  Thus there are four types
+Both types of Maps can easily wrap in either direction: north-south or east-west. Thus there are four types
 of wrapping: flat-earth, vertical cylinder, horizontal cylinder, and torus. Traditionally Freeciv21 only wraps
 in the east-west direction.
 
@@ -656,8 +656,8 @@ A Map index can tested using the :code:`CHECK_INDEX` macro.
 With a classical rectangular Map, the first three coordinate systems are equivalent. When we introduce
 isometric Maps, the distinction becomes important, as demonstrated above. Many places in the code have
 introduced :code:`map_x/map_y` or :code:`nat_x/nat_y` to help distinguish whether Map or native coordinates
-are being used.  Other places are not yet rigorous in keeping them apart, and will often just name their
-variables :code:`x` and :code:`y`.  The latter can usually be assumed to be Map coordinates.
+are being used. Other places are not yet rigorous in keeping them apart, and will often just name their
+variables :code:`x` and :code:`y`. The latter can usually be assumed to be Map coordinates.
 
 Note that if you don't need to do some abstract geometry exploit, you will mostly use Tile pointers, and give
 to Map tools the ability to perform what you want.
@@ -750,8 +750,8 @@ While :code:`tile_get_known()` returns:
     };
 
 
-The values :code:`TILE_UNKNOWN`, and :code:`TILE_KNOWN_SEEN` are straightforward. :code:`TILE_KNOWN_UNSEEN` is
-a Tile of which the user knows the terrain, but not recent Cities, roads, etc.
+The values :code:`TILE_UNKNOWN` and :code:`TILE_KNOWN_SEEN` are straightforward. :code:`TILE_KNOWN_UNSEEN` is
+a Tile of which the user knows the terrain, but not recent Cities, Roads, etc.
 
 :code:`TILE_UNKNOWN` Tiles never are (nor should be) sent to the client. In the past, :code:`UNKNOWN` Tiles that
 were adjacent to :code:`UNSEEN` or :code:`SEEN` were sent to make the drawing process easier, but this has now
@@ -784,10 +784,10 @@ We only send City and terrain updates to the players who can see the Tile. So a 
 exist in a square that is known and fogged and not be shown on the Map. Likewise, you can see a City in a
 fogged square even if the City does not exist. It will be removed when you see the Tile again. This is done by
 1) only sending info to players who can see a Tile and 2) keeping track of what info has been sent so the game
-can be saved. For the purpose of 2), each player has a Map on the server (consisting of player_tile's and
-dumb_city's) where the relevant information is kept.
+can be saved. For the purpose of 2), each player has a Map on the server (consisting of ``player_tile`` and
+``dumb_city`` fields) where the relevant information is kept.
 
-The case where a player ``p1`` gives Map info to another player ``p2``. This requires some extra information.
+The case where a player ``p1`` gives Map info to another player ``p2`` requires some extra information.
 Imagine a Tile that neither player sees, but which ``p1`` has the most recent information on. In that case the
 age of the players' information should be compared, which is why the player Tile has a ``last_updated`` field.
 This field is not kept up to date as long as the player can see the Tile and it is unfogged, but when the Tile
@@ -803,12 +803,12 @@ National Borders
 ----------------
 
 For the display of national Borders (similar to those used in Sid Meier's Alpha Centauri) each Map Tile also
-has an "owner" field, to identify which nation lays claim to it. If :code:`game.borders` is non-zero, each City
-claims a circle of Tiles :code:`game.borders` in Vision Radius. In the case of neighbouring enemy Cities, Tiles are
-divided equally, with the older City winning any ties. Cities claim all immediately adjacent Tiles, plus any
-other Tiles within the Border radius on the same continent. Land Cities also claim Ocean Tiles if they are
-surrounded by 5 land Tiles on the same continent. This is a crude detection of inland seas or Lakes, which
-should be improved upon.
+has an ``owner`` field, to identify which nation lays claim to it. If :code:`game.borders` is non-zero, each
+City claims a circle of Tiles :code:`game.borders` in Vision Radius. In the case of neighbouring enemy Cities,
+Tiles are divided equally, with the older City winning any ties. Cities claim all immediately adjacent Tiles,
+plus any other Tiles within the Border radius on the same continent. Land Cities also claim Ocean Tiles if
+they are surrounded by 5 land Tiles on the same continent. This is a crude detection of inland seas or Lakes,
+which should be improved upon.
 
 Tile ownership is decided only by the server, and sent to the clients, which draw Border lines between Tiles
 of differing ownership. Owner information is sent for all Tiles that are known by a client, whether or not
@@ -830,7 +830,7 @@ understand for ruleset authors and easy to automatically reason about. Both for 
 help text generation and agents and for third party tools.
 
 Please do not make non-actions into actions because they are similar to actions or because some of the things
-Freeciv21 automatically does for actions would be nice to have. Abstract out the stuff you want in stead. Make
+Freeciv21 automatically does for actions would be nice to have. Abstract out the stuff you want instead. Make
 it apply to both actions and to the thing you wanted.
 
 An action is something a player can order a game entity, the actor, to do. An action does something in the
@@ -849,7 +849,7 @@ modify his client to automatically give the same orders as auto-settlers would h
 orders by hand.
 
 Leaving a destroyed :unit:`Transport` is not an action. The player cannot order a Unit to perform this action.
-Having a Unit destroy his :unit`Transport` and then leave it is an action. Leaving a :unit:`Transport` "mid
+Having a Unit destroy its :unit:`Transport` and then leave it is an action. Leaving a :unit:`Transport` "mid
 flight", no matter if it was destroyed or not, and having a certain probability of surviving to show up
 somewhere else is an action.
 
@@ -869,7 +869,7 @@ This discussion is mostly about connections on the server. The client only has o
 strings).
 
 In the old paradigm, server code would usually send information to a single player, or to all connected
-players, usually represented by destination being a ``NULL`` player pointer.  With multiple connections per
+players, usually represented by destination being a ``NULL`` player pointer. With multiple connections per
 player things become more complicated. Sometimes information should be sent to a single connection, or to all
 connections for a single player, or to all (established) connections, etc. To handle this, "destinations"
 should now be specified as a pointer to a :code:`struct conn_list` (list of connections). For convenience the
@@ -889,11 +889,11 @@ Connections can be classified as follows: (first match applies)
 All following cases exist in game.all_connections.
 
 #. :code:`pconn->established == 0`: TCP connection has been made, but initial Freeciv21 packets have not yet
-   been negotiated (join_game etc.). Exists in :code:`game.all_connections` only. Should not be sent any
-   information except directly as result of :code:`join_game` etc. packets, or server shutdown, or connection
-   close, etc.
+   been negotiated (:code:`join_game` etc.). Exists in :code:`game.all_connections` only. Should not be sent
+   any information except directly as result of :code:`join_game` etc. packets, or server shutdown, or
+   connection close, etc.
 
-All following cases exist in game.est_connections.
+All following cases exist in :code:`game.est_connections`.
 
 #. :code:`pconn->player == NULL`: Connection has been established, but is not yet associated with a player.
    Currently this is not possible, but the plan is to allow this in the future, so clients can connect and

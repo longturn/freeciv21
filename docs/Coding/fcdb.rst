@@ -29,8 +29,8 @@ this setup, the authentication data is stored in a simple file accessed directly
 There is no need for a separate database server process.
 
 To set this up, first create a database configuration file called something like :file:`fc_auth.conf`, with
-the ``database`` key specifying where the database file is to live. It must, of course, be readable and
-writable by the Freeciv21 server:
+the ``database`` key specifying where the database file is to live. It must be readable and writable by the
+Freeciv21 server. Here is an example:
 
 .. code-block:: rst
 
@@ -77,16 +77,16 @@ Command-line Options
 
 The following server command-line options are relevant to authentication:
 
-* :code:`-D`, or :code:`--Database <conffile>`: Specifies a configuration file describing how to connect to
+* :code:`-D` or :code:`--Database <conffile>`: Specifies a configuration file describing how to connect to
   the database. Without this, all authentication will fail.
-* :code:`-a`, or :code:`--auth`: Enable authentication. Without this, anyone will be able to connect without
+* :code:`-a` or :code:`--auth`: Enable authentication. Without this, anyone will be able to connect without
   authentication, and :code:`--Database` has no effect.
-* :code:`-G`, or :code:`--Guests`: Allow guests. These are usernames with names starting "guest". If enabled,
-  any number of guests may connect without accounts in the database. If a guest name is already in use by a
-  connection, a new guest name is generated. Once connected, guests have the same privileges as any other
-  account. If this option is not specified, accounts are required to connect, and guest account names are
-  forbidden.
-* :code:`-N`, or :code:`--Newusers`: Allow Freeciv21 clients to create new user accounts through the Freeciv21
+* :code:`-G` or :code:`--Guests`: Allow guests. These are usernames with names starting with "guest". If
+  enabled, any number of guests may connect without accounts in the database. If a guest name is already in
+  use by a connection, a new guest name is generated. Once connected, guests have the same privileges as any
+  other account. If this option is not specified, accounts are required to connect, and guest account names
+  are forbidden.
+* :code:`-N` or :code:`--Newusers`: Allow Freeciv21 clients to create new user accounts through the Freeciv21
   protocol. Without this, only accounts which already exist in the database can connect. This might be
   desirable if you wants users to register via a web front end, for instance.
 
@@ -97,9 +97,9 @@ This script is responsible for checking usernames, fetching passwords, and savin
 :code:`--Newusers` is enabled). It encapsulates access to the database backend, and hence the details of the
 table layout.
 
-The script lives in :file:`data/database.lua` in the source tree, and is installed to ``CMAKE_INSTALL_PREFIX``;
-depending on the options given to ``cmake`` at build time, this may be a location like
-:file:`/usr/local/etc/freeciv21/database.lua.`
+The script lives in :file:`data/database.lua` in the source tree, and is installed to
+``CMAKE_INSTALL_PREFIX``. Depending on the options given to ``cmake`` at build time, this may be a location
+such as :file:`/usr/local/etc/freeciv21/database.lua.`
 
 The supplied version supports basic authentication against a SQLite database. It supports configuration as
 shown in the following example:
@@ -117,7 +117,7 @@ shown in the following example:
     table_log="loginlog"
 
 
-If that's sufficient for you, it's not necessary to read on.  Freeciv21 expects the following lua functions
+If that's sufficient for you, it's not necessary to read on. Freeciv21 expects the following lua functions
 to be defined in :file:`database.lua`:
 
 * Try to load data for an existing user.
@@ -138,7 +138,8 @@ The return status of all of these functions should be one of:
     fcdb.status.FALSE
 
 
-indicating an error, a positive, or a negative result. The following lua functions are provided by Freeciv21:
+indicating an error, a positive result, or a negative result. The following lua functions are provided by
+Freeciv21:
 
 * Return the client-specified username in function :code:`auth.get_username(conn)`.
 * Return the client IP address (string) in function :code:`auth.get_ipaddr(conn)`.

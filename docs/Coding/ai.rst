@@ -17,11 +17,11 @@ Introduction
 ============
 
 The Freeciv21 AI is widely recognized as being as good as or better military-wise as the AI of certain other
-games it is natural to compare it with.  It is, however, still too easy for experienced players, mostly due
+games it is natural to compare it with. It is, however, still too easy for experienced players, mostly due
 to it being very predictable.
 
 Code that implements the AI is divided between the :file:`ai/` and :file:`server/advisors` code directories.
-The latter is used also by human players for such automatic helpers as auto-settlers and auto-explorers.
+The latter is used also by human players for such automatic helpers such as auto-settlers and auto-explorers.
 
 
 Long-Term AI Development Goals
@@ -68,12 +68,12 @@ answer these questions. To achieve this, it re-scales the future benefit in term
 
 Suppose we have a constant rate of inflation, :code:`x` percent. Then in five years $10 will buy as much
 as :math:`10*(100/(100+x))^5` will buy today. Denoting :math:`100/(100+x)` by :code:`q` we get the general
-formula, :code:`N` dollars, :code:`Y` years from now will be worth :math:`N*q^Y` in today's money. If we will
+formula, :code:`N` dollars, :code:`Y` years from now will be worth :math:`N*q^Y` in today's money. If we
 receive :code:`N` every year starting :code:`Y` years from now, the total amount receivable (in today's money)
-is :math:`N*q^Y / (1-q)`. This is the sum of infinite geometric series. This is exactly the operation that
-amortize performs, the multiplication by some :math:`q < 1` raised to power :code:`Y`. Note that the factor
-:math:`1/(1-q)` does not depend on the parameters :code:`N` and :code:`Y`, and can be ignored. The connection
-between the :math:`MORT` constant and the inflation rate :code:`x` is given by
+is :math:`N*q^Y / (1-q)`. This is the sum of infinite geometric series. This is exactly the operation that the
+:code:`amortize()` function performs, the multiplication by some :math:`q < 1` raised to power :code:`Y`. Note
+that the factor :math:`1/(1-q)` does not depend on the parameters :code:`N` and :code:`Y`, and can be ignored.
+The connection between the :math:`MORT` constant and the inflation rate :code:`x` is given by
 :math:`(MORT - 1) / MORT = q = 100 / (100 + x)`. Thus the current value of :code:`MORT = 24` corresponds to
 the inflation rate, or the rate of expansion of your Civilization of 4.3%
 
@@ -99,14 +99,14 @@ where:
 
 where:
 
-* :code:`Maintenance` : = :code:`Support + Unhappiness_Compensation) * Operation_Time` : Here ``Unhappiness`
-  is from a military Unit being away from home and ``Support`` is the number of Shields spent on supporting
-  this Unit per turn.
+* :code:`Maintenance` : = :code:`(Support + Unhappiness_Compensation) * Operation_Time` : Here
+  ``Unhappiness_Compensation`` is from a military Unit being away from home and ``Support`` is the number of
+  Shields spent on supporting this Unit per turn.
 
 * :code:`Battle_Profit` : =
-  :code:`Shields_Lost_By_Enemy * Probability_To_Win - Shields_Lost_By_Us * Probability_To_Lose` : That is
-  ``Battle_Profit`` is a probabilistic average. It answers the question "how much better off, on average, we
-  would be from attacking this enemy Unit?"
+  :code:`(Shields_Lost_By_Enemy * Probability_To_Win) - (Shields_Lost_By_Us * Probability_To_Lose)` : That is
+  ``Battle_Profit`` is a probabilistic average. It answers the question: "How much better off, on average,
+  would we be from attacking this enemy Unit?"
 
 
 Selecting Military Units
@@ -120,20 +120,20 @@ here: we just build a new attacker or we already have an attacker which was forc
 In the second case it is easy: we calculate how good the existing attacker is and if it is good, we build a
 defender to free it up.
 
-Building a brand new attacker is more complicated. Firstly, the :code:`ai_choose_attacker_*` functions are
-charged to find the first approximation to the best attacker that can be built here. This prototype attacker
+Building a brand new attacker is more complicated. First, the :code:`ai_choose_attacker_*` functions are
+called to find the first approximation to the best attacker that can be built here. This prototype attacker
 is selected using very simple :math:`attack_power * speed` formula. Then, already in the
 :code:`kill_something_with()` function, we search for targets for the prototype attacker using the
 :code:`find_something_to_kill()` function. Having found a target, we do the last refinement by calling the
 :code:`process_attacker_want()` function to look for the best attacker type to take out the target. This type
-will be our attacker choice. Note that the :code:`function process_attacker_want()` function has side-effects
+will be our attacker of choice. Note that the :code:`function process_attacker_want()` function has side-effects
 with regards to the Technology selection.
 
 Here is an example:
 
 First the :code:`ai_choose_attacker_land()` function selects a :unit:`Dragoon` because it is strong and fast.
 Then the :code:`find_something_to_kill()` function finds a victim for the (virtual) :unit:`Dragoon`, an enemy
-:unit:`Riflemen` standing right next to the town. Then the :code:`process_attacker_want()` function figures
+:unit:`Riflemen` standing right next to the City. Then the :code:`process_attacker_want()` function figures
 out that since the enemy is right beside us, it can be taken out easier using an :unit:`Artillery`. It also
 figures that a :unit:`Howitzer` would do this job even better, so bumps up our desire for
 :title-reference:`Robotics`.
@@ -143,14 +143,13 @@ Ferry System
 ============
 
 The ferry (i.e. boats transporting land Units) system of Freeciv21 is probably better described by statistical
-mechanics than by logic. Both ferries and prospective passenger move around in what looks like a random
+mechanics than by logic. Both ferries and prospective passengers move around in what looks like a random
 fashion, trying to get closer to each other. On average, they succeed. This behavior has good reasons behind
-it. It is hell to debug, but means that small bugs do not affect the overall picture visibly, and stay
-unfixed as a result.
+it. It is hell to debug, but means that small bugs do not affect the overall picture visibly.
 
 Each turn both boats and prospective passengers forget all about prior arrangements (unless the passenger is
-actually *in* the boat). Then each will look for the closest partner, exchange cards and head towards it. This
-is done in a loop which goes through all Units in essentially random order.
+actually *in* the boat). Then each will look for the closest partner, exchange cards, and head towards it.
+This is done in a loop which goes through all Units in random order.
 
 Because most Units recalculate their destination every turn, ignoring prior arrangements is the only good
 strategy. It means that a boat will not rely on the prospective passenger to notify it when it is not needed
@@ -174,7 +173,7 @@ When boat-building code stabilizes, it can be seen how many free boats there are
 passenger. If there are more boats than prospective passengers, it makes sense that only prospective
 passengers should look for boats. If boats are few, they should be the ones choosing. This can be done both
 dynamically, where both possibilities are coded and the appropriate is chosen every turn, and statically,
-after much testing only one system remains. Now they exist in parallel, although developed to a different
+after much testing only one system remains. Now they exist in parallel, although each developed to a different
 degree.
 
 
@@ -196,17 +195,15 @@ For people who want to hack at this part of the AI code, please note:
 * The ``pplayers_allied(p1,p2)`` function returns ``TRUE`` if ``p1==p2``
 * The ``pplayer_has_embassy(p1,p2)`` function returns ``TRUE`` if ``p1==p2``
 
-For example, we do not ever consider a player to be at War with himself, we never consider a player to have
-any kind of non-attack treaty with himself, and we always consider a player to have an Alliance with himself.
+For example, we do not ever consider a Nation to be at War with themselves, we never consider a Nation to have
+any kind of non-attack treaty with themselves, and we always consider a Nation to have an Alliance with
+themself.
 
 The introduction of Diplomacy is fraught with many problems. One is that it usually benefits only human
-players and not AI players, since humans are so much smarter, and know how to exploit Diplomacy. While for AIs
-they mostly only add constraints on what it can do. Another is that it can be very difficult to write
-Diplomacy that is useful for and not in the way of modpacks. Which means Diplomacy either has to be optional,
-or have fine-grained controls on who can do what diplomatic deals to whom, which are set from rulesets. The
-latter is not yet well implemented. For more information on modpacks, refer to
-:doc:`/General/modpack-installer`.
-
+players and not AI players, since humans are so much smarter, and know how to exploit Diplomacy. For AIs,
+they mostly only add constraints on what it can do. This means Diplomacy either has to be optional, or have
+fine-grained controls on who can do what Diplomatic deals to whom, which are set from rulesets. The latter is
+not yet well implemented.
 
 Difficulty Levels
 =================
@@ -223,9 +220,9 @@ There are currently seven difficulty levels:
 
 The ``hard`` level is no-holds-barred. ``Cheating`` is the same except that it has ruleset defined extra
 bonuses, while ``normal`` has a number of handicaps. In ``easy``, the AI also does random stupid things
-through the :code:`ai_fuzzy()` function. The ``experimental`` level is only for coding. You can gate new code
-with the ``H_EXPERIMENTAL`` handicap and test ``experimental`` level AIs against ``hard`` level AIs. In
-``novice`` the AI researches slower than normal players.
+through the :code:`ai_fuzzy()` function. In ``novice`` the AI researches slower than normal players. The
+``experimental`` level is only for coding. You can gate new code with the ``H_EXPERIMENTAL`` handicap and test
+``experimental`` level AIs against ``hard`` level AIs.
 
 Other handicaps used are:
 
@@ -255,7 +252,7 @@ Things That Need To Be Fixed
 
 * Cities do not realize Units are on their way to defend it.
 * AI builds Cities without regard to danger at that location.
-* AI will not build cross-country roads outside of the City Vision Radius.
+* AI will not build cross-country Roads outside of the City Vision Radius.
 * ``Locally_zero_minimap`` is not implemented when wilderness Tiles change.
 * If no path to a chosen victim is found, a new victim should be chosen.
 * Emergencies in two Cities at once are not handled properly.

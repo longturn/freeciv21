@@ -14,17 +14,17 @@ got its task description.
 
 Examples of agents:
 
-* An agent which is responsible for moving a certain Unit from Tile A to Tile B
-* An agent which is responsible for maximize the Food Production of a City
-* An agent which is responsible for the production queue of a City
-* An agent which is responsible for defending a City
-* An agent which is responsible for a City
-* An agent which is responsible for all Cities
+* An agent responsible for moving a certain Unit from Tile A to Tile B
+* An agent responsible for maximize the Food Production of a City
+* An agent responsible for the production queue of a City
+* An agent responsible for defending a City
+* An agent responsible for a City
+* An agent responsible for all Cities
 
 An agent may use other agents to accomplish its goal. Such decencies form a hierarchy of agents. The position
 in this hierarchy is denoted by a level. A higher level means more complexity. So an agent of level ``n`` can
 only make use of agents of level (``n-1``) or lower. Level ``0`` defines actions which are carried out at the
-server and are atomic actions (actions which ca not be simulated at the client).
+server and are atomic actions (actions which cannot be simulated at the client).
 
 By such a definition, an agent does not have to be implemented in C++ and also does not have to make use of
 :file:`client/governor.[cpp,h]`.
@@ -38,8 +38,8 @@ An agent should provide a GUI besides the core.
 Implementation
 ==============
 
-The received task description and any decision been made can be saved in attributes. An agent should not
-assume anything. This includes especially, :strong:`no magic numbers`. Everything should be settable by
+The received task description and any decisions made can be saved in attributes. An agent should not
+assume anything. This especially means :strong:`no magic numbers`. Everything should be configurable by
 the user.
 
 Use :file:`client/governor.[cpp,h]` to get informed about certain events. Do not hesitate to add more
