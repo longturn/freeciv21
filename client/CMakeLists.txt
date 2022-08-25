@@ -159,8 +159,11 @@ endif()
 
 if (AUDIO_SDL)
   target_sources(freeciv21-client PRIVATE audio_sdl.cpp)
-  target_include_directories(freeciv21-client PRIVATE ${SDL2_INCLUDE_DIR})
-  target_include_directories(freeciv21-client PRIVATE ${SDL2_MIXER_INCLUDE_DIR})
+  if (NOT EMSCRIPTEN)
+    # SDL comes with the -s option on emscripten
+    target_include_directories(freeciv21-client PRIVATE ${SDL2_INCLUDE_DIR})
+    target_include_directories(freeciv21-client PRIVATE ${SDL2_MIXER_INCLUDE_DIR})
+  endif()
 endif()
 
 if(APPLE)
