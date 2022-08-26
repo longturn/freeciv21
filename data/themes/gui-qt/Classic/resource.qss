@@ -373,6 +373,7 @@ QTabBar::tab:first {
 }
 
 QTabBar::tab::selected {
+  background: #f1deaf;
   border-left: 1px solid #c3b48e;
   border-top: 1px solid #c3b48e;
   border-bottom: 1px solid #c3b48e;
@@ -388,7 +389,7 @@ QTabWidget::tab-bar {
 }
 
 QTabBar::tab:hover {
-/*  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0  #474747, stop: 0.4 #323232, stop: 0.4 #323232, stop: 1.0 #474747); */
+  background: #ffecc1;
 }
 
 QTabBar QToolButton {
