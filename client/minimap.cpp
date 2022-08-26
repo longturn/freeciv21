@@ -99,8 +99,10 @@ void overview_pos_nowrap(const struct tileset *t, int *ovr_x, int *ovr_y,
   gui_to_natural_pos(t, &ntl_x, &ntl_y, gui_x, gui_y);
 
   // Now convert straight to overview coordinates.
-  *ovr_x = floor((ntl_x - gui_options.overview.map_x0) * OVERVIEW_TILE_SIZE);
-  *ovr_y = floor((ntl_y - gui_options.overview.map_y0) * OVERVIEW_TILE_SIZE);
+  *ovr_x =
+      std::round((ntl_x - gui_options.overview.map_x0) * OVERVIEW_TILE_SIZE);
+  *ovr_y =
+      std::round((ntl_y - gui_options.overview.map_y0) * OVERVIEW_TILE_SIZE);
 }
 
 } // namespace
