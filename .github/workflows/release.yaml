@@ -58,7 +58,7 @@ jobs:
           fetch-depth: 0
       - uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW64
+          msystem: MINGW32
           update: true
           install: |
             git
@@ -79,18 +79,18 @@ jobs:
           export MSYSTEM=MINGW32
           export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/mingw32/lib/pkgconfig:/mingw32/share/pkgconfig
           export VCPKG_ROOT=
-          /mingw32/bin/cmake . -B build -G Ninja \
+          cmake . -B build -G Ninja \
            -DCMAKE_INSTALL_PREFIX=$PWD/build/install \
            -DCMAKE_BUILD_TYPE=Release
       - name: Build
         run: |
-          /mingw32/bin/cmake --build build
+          cmake --build build
       - name: Install
         run: |
-          /mingw32/bin/cmake --build build --target install
+          cmake --build build --target install
       - name: Package
         run: |
-          /mingw32/bin/cmake --build build --target package
+          cmake --build build --target package
       - name: Upload package
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
