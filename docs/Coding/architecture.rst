@@ -2,12 +2,17 @@
     SPDX-License-Identifier: GPL-3.0-or-later
     SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
     SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022 Louis Moureaux <m_louis30@yahoo.com>
 
 Architecture
 ************
 
-Freeciv21 is a client/server empire-building, civilization style of game. The client is pretty dumb. Almost
-all calculations are performed on the server.
+Freeciv21 uses a client/server model where two programs interact over a network connection. The *client*
+(``freeciv21-client``) is the program that you see on the screen. It handles user commands and forwards them
+to the second program, that we call the *server* (``freeciv21-server``). The server checks the commands,
+computes their result and sends updates back to the client. The client is capable of managing a server for
+its own needs, which is used for single player games. It can also connect to a server managed externally,
+which is how multiplayer games work.
 
 The source code has the following important directories:
 
