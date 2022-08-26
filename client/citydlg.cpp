@@ -1475,6 +1475,7 @@ void city_dialog::hideEvent(QHideEvent *event)
     pcity = nullptr;
   }
   queen()->mapview_wdg->show_all_fcwidgets();
+  king()->menu_bar->minimap_status->setEnabled(true);
 }
 
 /**
@@ -1487,6 +1488,7 @@ void city_dialog::showEvent(QShowEvent *event)
   if (pcity) {
     unit_focus_set(nullptr);
     update_map_canvas_visible();
+    king()->menu_bar->minimap_status->setEnabled(false);
   }
 }
 
