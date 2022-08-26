@@ -2045,8 +2045,8 @@ static const char *client_optset_category_name(int category)
   case COC_GRAPHICS:
     return _("Graphics");
   case COC_OVERVIEW:
-    // TRANS: Options section for overview map (mini-map)
-    return Q_("?map:Overview");
+    // TRANS: Options section for the minimap
+    return _("Minimap");
   case COC_SOUND:
     return _("Sound");
   case COC_INTERFACE:
