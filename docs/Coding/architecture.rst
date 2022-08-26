@@ -14,6 +14,11 @@ computes their result and sends updates back to the client. The client is capabl
 its own needs, which is used for single player games. It can also connect to a server managed externally,
 which is how multiplayer games work.
 
+The Freeciv21 code is old and evolved from a program written in C. It still bears a lot of this history, but
+this is being worked on. New code is written in C++, using modern constructs when it makes sense and relying
+heavily on the `Qt Framework <https://doc.qt.io>`_ for platform abstraction. This is currently most visible
+in the client, but there are plans are to convert the server as well.
+
 The source code has the following important directories:
 
 * :file:`dependencies`: code from upstream projects.
