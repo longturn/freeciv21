@@ -79,18 +79,18 @@ jobs:
           export MSYSTEM=MINGW32
           export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/mingw32/lib/pkgconfig:/mingw32/share/pkgconfig
           export VCPKG_ROOT=
-          cmake . -B build -G Ninja \
+          /mingw32/bin/cmake . -B build -G Ninja \
            -DCMAKE_INSTALL_PREFIX=$PWD/build/install \
            -DCMAKE_BUILD_TYPE=Release
       - name: Build
         run: |
-          cmake --build build
+          /mingw32/bin/cmake --build build
       - name: Install
         run: |
-          cmake --build build --target install
+          /mingw32/bin/cmake --build build --target install
       - name: Package
         run: |
-          cmake --build build --target package
+          /mingw32/bin/cmake --build build --target package
       - name: Upload package
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
