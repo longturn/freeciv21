@@ -43,6 +43,7 @@ html_title = 'Freeciv21 Manual'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosectionlabel',
     'sphinx.ext.doctest',
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
@@ -50,6 +51,9 @@ extensions = [
     'sphinx_rtd_theme',
     'sphinx_last_updated_by_git',
 ]
+
+# See https://github.com/readthedocs/recommonmark#linking-to-headings-in-other-files
+autosectionlabel_prefix_document = True
 
 # sphinx_last_updated_by_git extension settings
 git_untracked_check_dependencies = False
