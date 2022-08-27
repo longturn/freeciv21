@@ -319,3 +319,12 @@ others. If you are unsure, try to find an example in the Qt documentation.
 Qt provides its own smart pointer for ``QObject``, called `QPointer <https://doc.qt.io/qt/qpointer.html>`_.
 This pointer tracks the lifetime of the pointed-to object and is reset to ``nullptr`` if the object gets
 deleted. This is useful in some situations.
+
+
+.. todo::
+
+    We would like to include some tips about the following topics in the future:
+
+    * Logging
+    * Qt Tips
+    * Translations
