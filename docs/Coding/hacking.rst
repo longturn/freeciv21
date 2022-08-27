@@ -19,22 +19,6 @@ This guide is intended to be a help for developers, wanting to mess with Freeciv
 The Server
 ==========
 
-General:
-
-The server main loop basically looks like:
-
-.. code-block:: rst
-
-    while (server_state == RUN_GAME_STATE) { /* looped once per turn */
-    do_ai_stuff();   /* do the ai controlled players */
-    sniff_packets(); /* get player requests and handle them */
-    end_turn();      /* main turn update */
-    game_next_year();
-
-
-Most time is spend in the :code:`sniff_packets()` function, where a :code:`select()` call waits for packets or
-input on stdin(server-op commands).
-
 Server Autogame Testing
 -----------------------
 
@@ -59,19 +43,13 @@ following:
                             # toggled to AI mode
     start                   # start game
 
-
-.. note::
-    The server prompt is unusable when game with :code:`timeout` set to -1 is running. You can stop such game
-    with single :code:`ctrl+c`, and continue by setting :code:`timeout` to -1 again.
-
-
 The commandline to run server-only games can be typed as variations of:
 
 .. code-block:: rst
 
-    $ while( time server/freeciv21-server -r civ.serv ); do date; done
+    $ while( time build/freeciv21-server -r civ.serv ); do date; done
     ---  or  ---
-    $ server/freeciv21-server -r civ.serv -f buggy1534.sav.gz
+    $ build/freeciv21-server -r civ.serv -f buggy1534.sav.gz
 
 
 To attach one or more clients to an autogame, remove the :code:`start` command, start the server program and
