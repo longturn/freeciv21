@@ -29,7 +29,7 @@ fixed bug, or as a random sequence of games in a while loop overnight.
 To start a server game with all AI players, create a file (below named civ.serv) with lines such as the
 following:
 
-.. code-block:: rst
+.. code-block:: sh
 
     # set gameseed 42       # repeat a particular game (random) sequence
     # set mapseed 42        # repeat a particular map generation sequence
@@ -45,7 +45,7 @@ following:
 
 The commandline to run server-only games can be typed as variations of:
 
-.. code-block:: rst
+.. code-block:: sh
 
     $ while( time build/freeciv21-server -r civ.serv ); do date; done
     ---  or  ---
@@ -120,7 +120,7 @@ structures. These are defined in :file:`common/packets.h`.
 
 For each ``foo`` packet structure, there is one send and one receive function:
 
-.. code-block:: rst
+.. code-block:: cpp
 
     int send_packet_foo(struct connection *pc, struct packet_foo *packet);
     struct packet_foo * receive_packet_foo(struct connection *pc);
@@ -137,7 +137,7 @@ Each structure field in a structure is serialized using architecture independent
 A packet is constituted by a header followed by the serialized structure data. The header contains the
 following fields (the sizes are defined in :file:`common/packets.cpp`:code:`packet_header_set()`):
 
-.. code-block:: rst
+.. code-block:: cpp
 
     uint16 : length (the length of the entire packet)
     uint16 : type   (e.g. PACKET_TILE_INFO)
@@ -147,7 +147,7 @@ For backward compatibility reasons, packets used for the initial protocol (notab
 capabilities) have different header fields sizes as defined in
 :file:`common/packets.c`:code:`packet_header_init()`:
 
-.. code-block:: rst
+.. code-block:: cpp
 
     uint16 : length (the length of the entire packet)
     uint8  : type   (e.g. PACKET_SERVER_JOIN_REQ)
@@ -273,7 +273,7 @@ see the struct in :file:`common/map.h`.
 
 You may iterate tiles, you may use the following methods:
 
-.. code-block:: rst
+.. code-block:: cpp
 
     whole_map_iterate(tile_itr) {
       /* do something */
@@ -282,7 +282,7 @@ You may iterate tiles, you may use the following methods:
 
 for iterating all tiles of the map;
 
-.. code-block:: rst
+.. code-block:: cpp
 
     adjc_iterate(center_tile, tile_itr) {
       /* do something */
@@ -292,7 +292,7 @@ for iterating all tiles of the map;
 for iterating all tiles close to ``center_tile``, in all *valid* directions for the current topology (see
 below);
 
-.. code-block:: rst
+.. code-block:: cpp
 
     cardinal_adjc_iterate(center_tile, tile_itr) {
       /* do something */
@@ -302,7 +302,7 @@ below);
 for iterating all tiles close to ``center_tile``, in all *cardinal* directions for the current topology (see
 below);
 
-.. code-block:: rst
+.. code-block:: cpp
 
     square_iterate(center_tile, radius, tile_itr) {
       /* do something */
@@ -312,7 +312,7 @@ below);
 for iterating all tiles in the radius defined ``radius`` (in real distance, see below), beginning by
 ``center_tile``;
 
-.. code-block:: rst
+.. code-block:: cpp
 
     circle_iterate(center_tile, radius, tile_itr) {
       /* do something */
@@ -322,7 +322,7 @@ for iterating all tiles in the radius defined ``radius`` (in real distance, see 
 for iterating all tiles in the radius defined ``radius`` (in square distance, see below), beginning by
 ``center_tile``;
 
-.. code-block:: rst
+.. code-block:: cpp
 
     iterate_outward(center_tile, real_dist, tile_itr) {
       /* do something */
@@ -336,7 +336,7 @@ possible, the examples above were only included to give people the knowledge of 
 
 Note that the following:
 
-.. code-block:: rst
+.. code-block:: cpp
 
     for (x1 = x-1; x1 <= x+1; x1++) {
       for (y1 = y-1; y1 <= y+1; y1++) {
@@ -641,7 +641,7 @@ Converting from native to map coordinates (a less cumbersome operation) is the o
 
 Note that:
 
-.. code-block:: rst
+.. code-block:: cpp
 
   native_to_map_pos(0, 0) == (0, map.xsize-1)
   native_to_map_pos(map.xsize-1, 0) == (map.xsize-1, 0)
@@ -651,7 +651,7 @@ Note that:
 
 The math then works out to:
 
-.. code-block:: rst
+.. code-block:: cpp
 
   map_x = ceiling(nat_y / 2) + nat_x
   map_y = floor(nat_y / 2) - nat_x + map.xsize - 1
@@ -668,7 +668,7 @@ Unknown Tiles and Fog of War
 
 In :file:`common/player.h`, there are several fields:
 
-.. code-block:: rst
+.. code-block:: cpp
 
     struct player {
       ...
@@ -688,7 +688,7 @@ In :file:`common/player.h`, there are several fields:
 
 While :code:`tile_get_known()` returns:
 
-.. code-block:: rst
+.. code-block:: cpp
 
     /* network, order dependent */
     enum known_type {
