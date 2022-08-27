@@ -192,3 +192,130 @@ Premature Optimization
 It is often useless to try and optimize a function before proving that it is inefficient by profiling the
 execution in an optimized build (``Release`` or ``RelWithDebInfo``). Most functions in Freeciv21 are not
 executed in tight loops. Prefer readable code over fast code.
+
+
+C++ Features
+============
+
+C++ is a very complex language, but fortunately Freeciv21 only needs to use a relatively small subset. Qt,
+our main dependency, manages very well to minimize user exposure to confusing parts. If all you are doing is
+small changes here and there, you will most likely not need to know a lot about C++. As your projects grow in
+scale and complexity, you will likely want to learn more about the language. In addition to your preferred
+learning resources, it is useful to read guidelines written by C++ experts, for instance the
+`C++ Core Guidelines <https://isocpp.github.io/CppCoreGuidelines/>`_ edited by the very founder of C++.
+
+We collect below a list of recommendations that we find useful in the context of Freeciv21.
+
+
+Pass by reference
+-----------------
+
+When writing a function that takes a complex object (anything larger than a ``long long``), use a constant
+reference:
+
+.. code-block:: cpp
+
+    QString foo(const QString &argument);
+    int bar(const std::vector<int> &argument);
+
+
+Use ``const``
+-------------
+
+Variables that are not modified should be declared ``const``. While this is more of a personal preference for
+variables, it is especially important for functions taking references (see above).
+
+Functions that do not modify their argument should make them ``const``. Class methods that do not modify the
+object should also be marked ``const``.
+
+
+Use encapsulation
+-----------------
+
+Classes that are more complicated than C-like ``struct`` should not have any public variable. Getters and
+setters should be provided when needed.
+
+
+Use ``auto``
+------------
+
+The ``auto`` keyword is useful to avoid typing the type of a variable, especially lengthy names used in the
+Standard Library. We recommend to use it whenever possible. Do *not* try to use ``auto`` for function
+arguments.
+
+.. code-block:: cpp
+
+    const auto &unit = tile->units.front();
+
+
+Use STL containers
+------------------
+
+Containers in the Standard Library should be preferred over Qt ones:
+
+.. code-block:: cpp
+
+    std::vector<unit *> foo;
+    std::map<int, int> bar;
+
+One notable exception is ``QStringList``, which should be preferred over other constructs because it
+integrates better with Qt.
+
+Use ``<algorithm>``
+-------------------
+
+The C++ Standard Library provides a set of `basic algorithms <https://en.cppreference.com/w/cpp/algorithm>`_.
+Code using the standard algorithms is often more clear than hand-written loops, if only because experienced
+programmers will recognize the function name immediately.
+
+
+Use range-based ``for``
+-----------------------
+
+Avoid using indices to iterate over containers. Prefer the much simpler range-based ``for``:
+
+.. code-block:: cpp
+
+    for (const auto &city : player->cities) {
+      // ...
+    }
+
+
+Use structured bindings
+-----------------------
+
+Structured bindings are very useful when facing a ``std::pair``, for instance when iterating over a map:
+
+.. code-block:: cpp
+
+    for (const auto &[key, value] : map) {
+
+If you do not wish to use one of the variables, use ``_``:
+
+.. code-block:: cpp
+
+    for (const auto &[key, _] : map) {
+      // Use the key only
+
+
+Use smart pointers
+------------------
+
+Instead of using ``new`` and ``delete``, delegate the task to a smart pointer:
+
+.. code-block:: cpp
+
+    auto result = std::make_unique<cm_result>();
+
+When facing a memory handling bug such as a double free, it is sometimes easier to rewrite the code using
+smart pointers than to understand the issue.
+
+Smart pointers are rarely needed with Qt classes. The
+`parent-child mechanism <https://doc.qt.io/qt/qobject.html#details>`_ is the preferred way of handling
+ownership for classes deriving from ``QObject``. In many other cases, Qt classes are meant to be used
+directly on the stack. This is valid for ``QString``, ``QByteArray``, ``QColor``, ``QPixmap``, and many
+others. If you are unsure, try to find an example in the Qt documentation.
+
+Qt provides its own smart pointer for ``QObject``, called `QPointer <https://doc.qt.io/qt/qpointer.html>`_.
+This pointer tracks the lifetime of the pointed-to object and is reset to ``nullptr`` if the object gets
+deleted. This is useful in some situations.
