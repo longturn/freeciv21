@@ -2798,16 +2798,6 @@ static struct setting settings[] = {
              phasemode_help, nullptr, nullptr, phasemode_name,
              GAME_DEFAULT_PHASE_MODE),
 
-    GEN_INT("nettimeout", game.server.tcptimeout, SSET_META, SSET_NETWORK,
-            SSET_RARE, ALLOW_NONE, ALLOW_BASIC,
-            N_("Seconds to let a client's network connection block"),
-            N_("If a network connection is blocking for a time greater than "
-               "this value, then the connection is closed. Zero means there "
-               "is no timeout (although connections will be automatically "
-               "disconnected eventually)."),
-            nullptr, nullptr, nullptr, GAME_MIN_TCPTIMEOUT,
-            GAME_MAX_TCPTIMEOUT, GAME_DEFAULT_TCPTIMEOUT),
-
     GEN_INT("netwait", game.server.netwait, SSET_META, SSET_NETWORK,
             SSET_RARE, ALLOW_NONE, ALLOW_BASIC,
             N_("Max seconds for network buffers to drain"),

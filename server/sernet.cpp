@@ -197,7 +197,6 @@ void flush_packets()
         }
         // FIXME Handle connections not taking writes
         // They should be cut instead of filling their buffer
-        // cut_lagging_connection(pconn);
       }
     }
   }

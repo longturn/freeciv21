@@ -180,7 +180,6 @@ struct civ_game {
       int techloss_restore;
       int techlost_donor;
       int techlost_recv;
-      int tcptimeout;
       int techpenalty;
       bool turnblock;
       int unitwaittime; // minimal time between two movements of a unit
@@ -582,10 +581,6 @@ extern struct world wld;
 #define GAME_DEFAULT_UNITWAITTIME_STYLE UWT_CLASSICAL
 
 #define GAME_DEFAULT_PHASE_MODE 0
-
-#define GAME_DEFAULT_TCPTIMEOUT 10
-#define GAME_MIN_TCPTIMEOUT 0
-#define GAME_MAX_TCPTIMEOUT 120
 
 #define GAME_DEFAULT_NETWAIT 4
 #define GAME_MIN_NETWAIT 0

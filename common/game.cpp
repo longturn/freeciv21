@@ -394,7 +394,6 @@ static void game_defaults(bool keep_ruleset_value)
     sz_strlcpy(game.server.start_units, GAME_DEFAULT_START_UNITS);
     game.server.spaceship_travel_time = GAME_DEFAULT_SPACESHIP_TRAVEL_TIME;
     game.server.start_year = GAME_START_YEAR;
-    game.server.tcptimeout = GAME_DEFAULT_TCPTIMEOUT;
     game.server.techlost_donor = GAME_DEFAULT_TECHLOST_DONOR;
     game.server.techlost_recv = GAME_DEFAULT_TECHLOST_RECV;
     game.server.techpenalty = GAME_DEFAULT_TECHPENALTY;
