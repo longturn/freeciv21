@@ -793,48 +793,6 @@ tile ownership is decided only by the server, and sent to the clients, which dra
 of differing ownership. Owner information is sent for all tiles that are known by a client, whether or not
 they are fogged.
 
-Generalized Actions
-===================
-
-An action is something a player can do to achieve something in the game. Not all actions are enabler
-controlled yet.
-
-Generalized Action Meaning
---------------------------
-
-A design goal for the action sub-system is to keep the meaning of action game rules clear. To achieve this
-actions should keep having clear semantics. There should not be a bunch of exceptions to how, for example, an
-action enabler is interpreted based on what action it enables. This keeps action related rules easy to
-understand for ruleset authors and easy to automatically reason about. Both for parts of Freeciv21 like menus,
-help text generation and agents and for third party tools.
-
-Please do not make non-actions into actions because they are similar to actions or because some of the things
-Freeciv21 automatically does for actions would be nice to have. Abstract out the stuff you want instead. Make
-it apply to both actions and to the thing you wanted.
-
-An action is something a player can order a game entity, the actor, to do. An action does something in the
-game itself as defined by the game rules. It should not matter if those game rules run on the Freeciv21 server
-or on a human Empire. An action can be controlled by game rules. That control cannot be broken by a patched
-client or by a quick player. An action is at the level where the rules apply. A sequence of actions is not an
-action. Parts of an action is not an action.
-
-Putting a unit in a group so they quickly can select it with the rest of the units in the group and the server
-can save what group a unit belongs to is server side client state, not an action. The rules do not care what
-group a unit belongs to. Adding a unit to an army where the game rules treat units in armies different from
-units outside an army, for example by having them attack as one unit, would be an action.
-
-Putting a unit under the control of the auto-settlers server side agent is not an action. The player could
-modify his client to automatically give the same orders as auto-settlers would have given or even give those
-orders by hand.
-
-Leaving a destroyed :unit:`Transport` is not an action. The player cannot order a unit to perform this action.
-Having a unit destroy its :unit:`Transport` and then leave it is an action. Leaving a :unit:`Transport` "mid
-flight", no matter if it was destroyed or not, and having a certain probability of surviving to show up
-somewhere else is an action.
-
-Please do not add action (result) specific interpretations of requirements in action enablers. If you need a
-custom interpretation define a new actor kind or target kind.
-
 Connections
 ===========
 
