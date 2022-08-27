@@ -793,61 +793,6 @@ tile ownership is decided only by the server, and sent to the clients, which dra
 of differing ownership. Owner information is sent for all tiles that are known by a client, whether or not
 they are fogged.
 
-Connections
-===========
-
-The code is currently transitioning from 1 or 0 connections per player only, to allow multiple connections
-for each player (recall 'player' means a civilization, see above), where each connection may be either an
-"observer" or "controller".
-
-This discussion is mostly about connections on the server. The client only has one real connection
-(:code:`client.conn`) – its connection to the server - though it does use some other connection structures
-(currently :code:`pplayer->conn`) to store information about other connected clients (e.g., capability
-strings).
-
-In the old paradigm, server code would usually send information to a single player, or to all connected
-players, usually represented by destination being a ``NULL`` player pointer. With multiple connections per
-player things become more complicated. Sometimes information should be sent to a single connection, or to all
-connections for a single player, or to all (established) connections, etc. To handle this, "destinations"
-should now be specified as a pointer to a :code:`struct conn_list` (list of connections). For convenience the
-following commonly applicable lists are maintained:
-
-* :code:`game.all_connections`   -  all connections
-* :code:`game.est_connections`   -  established connections
-* :code:`game.game_connections`  -  connections observing and/or involved in game
-* :code:`pplayer->connections`   -  connections for specific player
-* :code:`pconn->self`            -  single connection (as list)
-
-Connections can be classified as follows: (first match applies)
-
-#. :code:`pconn->used == 0`: Not a real connection (closed/unused), should not exist in any list of have any
-   information sent to it.
-
-All following cases exist in game.all_connections.
-
-#. :code:`pconn->established == 0`: TCP connection has been made, but initial Freeciv21 packets have not yet
-   been negotiated (:code:`join_game` etc.). Exists in :code:`game.all_connections` only. Should not be sent
-   any information except directly as result of :code:`join_game` etc. packets, or server shutdown, or
-   connection close, etc.
-
-All following cases exist in :code:`game.est_connections`.
-
-#. :code:`pconn->player == NULL`: Connection has been established, but is not yet associated with a player.
-   Currently this is not possible, but the plan is to allow this in the future, so clients can connect and
-   then see a list of players to choose from, or just control the server, or observe, etc. Two subcases:
-
-   #. :code:`pconn->observer == 0`: Not observing the game. Should receive information about other clients,
-      game status etc., but not map, units, cities, etc.
-
-   All following cases exist in game.game_connections.
-
-   #. :code:`pconn->observer == 1`: Observing the game. Exists in :code:`game.game_connections`. Should
-      receive game information about map, units, cities, etc.
-
-#. :code:`pconn->player != NULL`: Connected to specific player, either as "observer" or "controller". Exists
-   in :code:`game.game_connections`, and in :code:`pconn->player->connections`.
-
-
 Internationalization (I18N)
 ===========================
 
