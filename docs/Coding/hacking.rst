@@ -72,29 +72,30 @@ If you plan to compare results of autogames the following changes can be helpful
 * deactivation of the event cache (:code:`set ec_turns 0`).
 
 
-Data Structures
-===============
+Old Lists
+=========
 
-For variable length list of fx units and cities Freeciv21 uses a :code:`genlist`, which is implemented in
-:file:`utility/genlist.cpp`. By some macro magic type specific macros have been defined, avoiding much trouble.
+For variable length list of units and cities Freeciv21 uses a :code:`genlist`, which is implemented in
+:file:`utility/genlist.cpp`. By some macro magic type specific macros have been defined, creating a lot of
+trouble for C++ programmers. These macro-based lists are being phased out in favor of STL containers; in the
+meantime, we preserve here an explanation of how to use them.
 
-For example a tile struct (the pointer to it we call :code:`ptile`) has a unit list, :code:`ptile->units`; to
-iterate though all the units on the tile you would do the following:
+For example a ``tile`` struct (the pointer to it we call :code:`ptile`) has a ``unit`` list,
+:code:`ptile->units`; to iterate though all the units on the tile you would do the following:
 
-.. code-block:: rst
+.. code-block:: cpp
 
     unit_list_iterate(ptile->units, punit) {
-    /* In here we could do something with punit, which is a pointer to a
-        unit struct */
+      // In here we could do something with punit, which is a pointer to a
+      // unit struct
     } unit_list_iterate_end;
-
 
 Note that the macro itself declares the variable :code:`punit`. Similarly there is a
 
-.. code-block:: rst
+.. code-block:: cpp
 
     city_list_iterate(pplayer->cities, pcity) {
-    /* Do something with pcity, the pointer to a city struct */
+      // Do something with pcity, the pointer to a city struct
     } city_list_iterate_end;
 
 
@@ -108,8 +109,6 @@ somewhere inside the iteration decide to disband a unit. In the server you would
 the way :code:`unit_list_iterate` works, if the removed unit was the following node :code:`unit_list_iterate`
 will already have saved the pointer, and use it in a moment, with a segfault as the result. To avoid this, use
 :code:`unit_list_iterate_safe` instead.
-
-You can also define your own lists with operations like iterating. Read how in :file:`utility/speclist.h`.
 
 Network and Packets
 ===================
