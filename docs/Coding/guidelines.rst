@@ -43,7 +43,7 @@ New code follows the `SPDX standard <https://spdx.dev/ids/>`_:
     // SPDX-License-Identifier: GPL-3.0-or-later
     // SPDX-FileCopyrightText: 2022 Author Name <how-to-contact@example.com>
 
-You do npt need to add your name to the file, but we recommend that you do so. The same information will be
+You do not need to add your name to the file, but we recommend that you do so. The same information will be
 stored in the Git history, but may be lost if someone ends up moving the file.
 
 
@@ -56,7 +56,7 @@ Use ``#pragma once`` to protect headers against multiple inclusion:
 
     #pragma once
 
-This is equivalent to the ancient ``#ifndef``/``#define``/``#endif`` idiom, but also much less error-prone.
+This is equivalent to the ancient ``#ifndef``/``#define``/``#endif`` idiom, but much less error-prone.
 The syntax is supported by all modern compilers.
 
 
@@ -182,7 +182,7 @@ namespace:
 
     } // anonymous namespace
 
-The compiler will generate an arbitrary names for symbols in the anonymous namespace that will not clash with
+The compiler will generate arbitrary names for symbols in the anonymous namespace that will not clash with
 symbols defined elsewhere.
 
 
@@ -232,7 +232,7 @@ object should also be marked ``const``.
 Use encapsulation
 -----------------
 
-Classes that are more complicated than C-like ``struct`` should not have any public variable. Getters and
+Classes that are more complicated than C-like ``struct`` should not have any public variables. Getters and
 setters should be provided when needed.
 
 
