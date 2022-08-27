@@ -9,7 +9,6 @@ architected.
 .. toctree::
   architecture.rst
   hacking.rst
-  agents.rst
   ai.rst
   attributes.rst
   delta.rst
