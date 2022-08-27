@@ -25,19 +25,19 @@ Repository Organization
 The source code is organized in directories at the root of the repository. The client and server share a lot
 of code found in the :file:`common` and :file:`utility` folders. The first one contains code to manage the
 game state, of which both the client and server have a copy, and the second is home to various lower-level
-utilities that don't have an equivalent in Qt or the standard library. Freeciv21 also ships with a couple
+utilities that do not have an equivalent in Qt or the standard library. Freeciv21 also ships with a couple of
 external dependencies under :file:`dependencies`.
 
-The client code is grouped in the :file:`client` folder. The server code is located under :file:`server`,
+The client code is found in the :file:`client` folder. The server code is located under :file:`server`,
 with the exception of the computer ("AI") players which is under :file:`ai`. The code for other programs
 bundled with Freeciv21, such as the :doc:`Modpack Installer </General/modpack-installer>`, is located under
 :file:`tools`.
 
-All the assets used by client and server are grouped under :file:`data`. This includes among
+All the assets used by the client and server are grouped under :file:`data`. This includes among
 others :doc:`rulesets </Modding/Rulesets/overview>` and :ref:`tilesets <Modding/index:Tilesets>`.
-Localization files for languages other than English are located under :file:`translations`.
+Localization files are located under :file:`translations`.
 
-There are a few additional folders that you'll touch less often. The table below describes the complete
+There are a few additional folders that you will touch less often. The table below describes the complete
 structure of the repository:
 
 ==================== ==========
