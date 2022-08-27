@@ -288,13 +288,6 @@ There are multiple copies of each tile, so that a different copy can be drawn de
 the adjacent tiles. It may eventually be worthwhile to convert this to the civ2 system or another one
 altogether.
 
-Diplomacy
-=========
-
-A few words about the Diplomacy system. When a Diplomacy meeting is established, a treaty structure is created
-on both of the clients and on the server. All these structures are updated concurrently as clauses are added
-and removed.
-
 Map Structure
 =============
 
