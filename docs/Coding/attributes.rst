@@ -2,15 +2,16 @@
     SPDX-License-Identifier: GPL-3.0-or-later
     SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
     SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022 Louis Moureaux <m_louis30@yahoo.com>
 
-Client/Server Model
-*******************
+Attribute Blocks
+****************
 
 Each client player has an attribute block and the server also holds such an attribute block for every player.
 All attribute blocks the server holds are included in the save game. The client and server synchronize their
 blocks. The server sends its block to the client at game start or reload. The client sends an updated block at
-each end of turn to the server. Since the maximum packet size is limited to currently 4k and the attribute
-block can have arbitrary size (although limited to 64k in this initial version) the attribute block cannot be
+each end of turn to the server. Since the maximum packet size is limited to currently 4kB and the attribute
+block can have arbitrary size (the limit is currently 256kB), the attribute block cannot be
 transferred in one packet. Therefore, the attribute block is divided into attribute chunks which are
 reassembled at the receiver. No part of the server knows any inner structure of the attribute block. For the
 server an attribute block is just a block of bytes.
@@ -24,5 +25,5 @@ other way around. The key of the hashtable consists of: the (real) ``key``, ``x`
 The (real) ``key`` is an integer, which defines the use and format of this attribute. The values of the
 hashtable can have arbitrary length. The internal structure of a value is opaque to the attribute handling.
 
-For easier access there are wrapper functions for the common types unit, city, player, and Tile. So there are
-easy methods for attaching arbitrary data to a unit, a city, a player (self or other), or a Tile.
+For easier access there are wrapper functions for the common case of city attributes, that are used to store
+:doc:`governor <Playing/cma>` data.
