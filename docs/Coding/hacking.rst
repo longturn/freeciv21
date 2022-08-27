@@ -276,7 +276,7 @@ You may iterate tiles, you may use the following methods:
 .. code-block:: cpp
 
     whole_map_iterate(tile_itr) {
-      /* do something */
+      // do something
     } whole_map_iterate_end;
 
 
@@ -285,7 +285,7 @@ for iterating all tiles of the map;
 .. code-block:: cpp
 
     adjc_iterate(center_tile, tile_itr) {
-      /* do something */
+      // do something
     } adjc_iterate_end;
 
 
@@ -295,7 +295,7 @@ below);
 .. code-block:: cpp
 
     cardinal_adjc_iterate(center_tile, tile_itr) {
-      /* do something */
+      // do something
     } cardinal_adjc_iterate_end;
 
 
@@ -305,7 +305,7 @@ below);
 .. code-block:: cpp
 
     square_iterate(center_tile, radius, tile_itr) {
-      /* do something */
+      // do something
     } square_iterate_end;
 
 
@@ -315,7 +315,7 @@ for iterating all tiles in the radius defined ``radius`` (in real distance, see 
 .. code-block:: cpp
 
     circle_iterate(center_tile, radius, tile_itr) {
-      /* do something */
+      // do something
     } square_iterate_end;
 
 
@@ -325,7 +325,7 @@ for iterating all tiles in the radius defined ``radius`` (in square distance, se
 .. code-block:: cpp
 
     iterate_outward(center_tile, real_dist, tile_itr) {
-      /* do something */
+      // do something
     } iterate_outward_end;
 
 
@@ -340,7 +340,7 @@ Note that the following:
 
     for (x1 = x-1; x1 <= x+1; x1++) {
       for (y1 = y-1; y1 <= y+1; y1++) {
-        /* do something */
+        // do something
       }
     }
 
@@ -690,7 +690,7 @@ While :code:`tile_get_known()` returns:
 
 .. code-block:: cpp
 
-    /* network, order dependent */
+    // network, order dependent
     enum known_type {
     TILE_UNKNOWN = 0,
     TILE_KNOWN_UNSEEN = 1,
