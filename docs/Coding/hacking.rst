@@ -890,33 +890,6 @@ All following cases exist in :code:`game.est_connections`.
    in :code:`game.game_connections`, and in :code:`pconn->player->connections`.
 
 
-Macros and Inline Functions
-===========================
-
-For a long time Freeciv21 had no inline functions, only macros. With the use of other C++ 17 features and some
-new requirements by the code, this has changed. Now both macros and inline functions are used.
-
-This causes problems because one coder may prefer to use a macro while another prefers an inline function. Of
-course, there was always some discretion to the author about whether to use a function or a macro. All we have
-done is add even more choices.
-
-Therefore the following guidelines should be followed:
-
-* Functions should only be put into header files when doing so makes a measurable impact on speed. Functions
-  should not be turned into macros or inlined unless there is a reason to do so.
-
-* Macros that take function-like parameters should evaluate each parameter exactly once. Any macro that
-  does not follow this convention should be named in all upper-case letters as a ``MACRO``.
-
-* Iterator macros should respect "break".
-
-* In header files macros are preferred to inline functions, but inline functions are better than ``MACROS``.
-
-* Functions or macros that are currently in one form do not have to be changed to the other form.
-
-..note:: Many existing macros do not follow these guidelines.
-
-
 Internationalization (I18N)
 ===========================
 
