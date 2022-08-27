@@ -263,8 +263,7 @@ in strategic places in the code calls to a new :code:`flush_packets()` function 
 for some time draining the send buffers. Strategic places include whenever we send the whole map. The maximum
 amount of time spent per :code:`flush_packets()` call is specified by the ``netwait`` variable.
 
-To disconnect unreachable clients we added two other features: the server terminates a client connection if it
-does not accept writes for a period of time (set using the :literal:`tcptimeout` variable). It also pings the
+To disconnect unreachable clients, the server pings the
 client after a certain time elapses (set using the :literal:`pingtimeout` variable). If the client does not
 reply its connection is closed.
 
