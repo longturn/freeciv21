@@ -730,7 +730,7 @@ While :code:`tile_get_known()` returns:
 
 
 The values :code:`TILE_UNKNOWN` and :code:`TILE_KNOWN_SEEN` are straightforward. :code:`TILE_KNOWN_UNSEEN` is
-a tile of which the user knows the terrain, but not recent cities, Roads, etc.
+a tile of which the user knows the terrain, but not recent cities, roads, etc.
 
 :code:`TILE_UNKNOWN` tiles never are (nor should be) sent to the client. In the past, :code:`UNKNOWN` tiles that
 were adjacent to :code:`UNSEEN` or :code:`SEEN` were sent to make the drawing process easier, but this has now
@@ -753,7 +753,7 @@ you get near, and send information about :code:`TILE_UNKNOWN` tiles near that th
 They then send the tiles to the :code:`void send_tile_info(struct player *dest, int x, int y)` function, which
 then sets the correct ``known_type`` and sends the tile to the client.
 
-If you want to just show the terrain and Cities of the square the function :code:`show_area()` does this. The
+If you want to just show the terrain and cities of the square the function :code:`show_area()` does this. The
 tiles remain fogged. If you play without Fog of War all the values of the seen arrays are initialized to 1. So
 you are using the exact same code, you just never get down to 0. As changes in the "fogginess" of the tiles
 are only sent to the client when the value shifts between zero and non-zero, no redundant packages are sent.
@@ -783,9 +783,9 @@ National Borders
 
 For the display of national Borders (similar to those used in Sid Meier's Alpha Centauri) each map tile also
 has an ``owner`` field, to identify which nation lays claim to it. If :code:`game.borders` is non-zero, each
-city claims a circle of tiles :code:`game.borders` in Vision Radius. In the case of neighbouring enemy Cities,
+city claims a circle of tiles :code:`game.borders` in Vision Radius. In the case of neighbouring enemy cities,
 tiles are divided equally, with the older city winning any ties. Cities claim all immediately adjacent tiles,
-plus any other tiles within the border radius on the same continent. Land Cities also claim Ocean tiles if
+plus any other tiles within the border radius on the same continent. Land cities also claim ocean tiles if
 they are surrounded by 5 land tiles on the same continent. This is a crude detection of inland seas or Lakes,
 which should be improved upon.
 
@@ -879,12 +879,12 @@ All following cases exist in :code:`game.est_connections`.
    then see a list of players to choose from, or just control the server, or observe, etc. Two subcases:
 
    #. :code:`pconn->observer == 0`: Not observing the game. Should receive information about other clients,
-      game status etc., but not map, units, Cities, etc.
+      game status etc., but not map, units, cities, etc.
 
    All following cases exist in game.game_connections.
 
    #. :code:`pconn->observer == 1`: Observing the game. Exists in :code:`game.game_connections`. Should
-      receive game information about map, units, Cities, etc.
+      receive game information about map, units, cities, etc.
 
 #. :code:`pconn->player != NULL`: Connected to specific player, either as "observer" or "controller". Exists
    in :code:`game.game_connections`, and in :code:`pconn->player->connections`.
