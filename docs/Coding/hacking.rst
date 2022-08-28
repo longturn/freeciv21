@@ -48,7 +48,7 @@ following:
 .. code-block:: rst
 
     # set gameseed 42       # repeat a particular game (random) sequence
-    # set mapseed 42        # repeat a particular Map generation sequence
+    # set mapseed 42        # repeat a particular map generation sequence
     # set timeout 3         # run a client/server autogame
     set timeout -1          # run a server only autogame
     set minplayers 0        # no human player needed
@@ -260,7 +260,7 @@ There are 3 ways to solve this problem:
 
 We mitigated the problem by increasing the send buffer size on the server and making it dynamic. We also added
 in strategic places in the code calls to a new :code:`flush_packets()` function that makes the server stall
-for some time draining the send buffers. Strategic places include whenever we send the whole Map. The maximum
+for some time draining the send buffers. Strategic places include whenever we send the whole map. The maximum
 amount of time spent per :code:`flush_packets()` call is specified by the ``netwait`` variable.
 
 To disconnect unreachable clients we added two other features: the server terminates a client connection if it
@@ -298,7 +298,7 @@ and removed.
 Map Structure
 =============
 
-The Map is maintained in a pretty straightforward C array, containing X*Y Tiles. You can use the function
+The map is maintained in a pretty straightforward C array, containing X*Y Tiles. You can use the function
 :code:`struct tile *map_pos_to_tile(x, y)` to find a pointer to a specific Tile. A Tile has various fields;
 see the struct in :file:`common/map.h`.
 
@@ -311,7 +311,7 @@ You may iterate Tiles, you may use the following methods:
     } whole_map_iterate_end;
 
 
-for iterating all Tiles of the Map;
+for iterating all Tiles of the map;
 
 .. code-block:: rst
 
@@ -390,14 +390,14 @@ distance between Tiles:
   minimal distance from :code:`ptile0` to :code:`ptile1` using all valid directions for the current topology.
 
 * The :code:`sq_map_distance(ptile0, ptile1)` function returns the *square* distance between Tiles. This is a
-  simple way to make Pythagorean effects for making circles on the Map for example. For non-hexagonal
+  simple way to make Pythagorean effects for making circles on the map for example. For non-hexagonal
   topologies, it would be :code:`(dx * dx + dy * dy)`. Only useless square root is missing.
 
 
 Different Types of Map Topology
 -------------------------------
 
-Originally Freeciv21 supports only a simple rectangular Map. For instance a 5x3 Map would be conceptualized as
+Originally Freeciv21 supports only a simple rectangular map. For instance a 5x3 map would be conceptualized as
 
 .. code-block:: rst
 
@@ -407,7 +407,7 @@ Originally Freeciv21 supports only a simple rectangular Map. For instance a 5x3 
 
 
 and it looks just like that under "overhead" (non-isometric) view. The arrows represent an east-west
-wrapping. But under an isometric-view client, the same Map will look like:
+wrapping. But under an isometric-view client, the same map will look like:
 
 .. code-block:: rst
 
@@ -422,8 +422,8 @@ wrapping. But under an isometric-view client, the same Map will look like:
 
 where "north" is to the upper-right and "south" to the lower-left. This makes for a mediocre interface.
 
-An isometric-view client will behave better with an isometric Map. This is what Civ2, SMAC, Civ3, etc. all
-use. A rectangular isometric Map can be conceptualized as
+An isometric-view client will behave better with an isometric map. This is what Civ2, SMAC, Civ3, etc. all
+use. A rectangular isometric map can be conceptualized as
 
 .. code-block:: rst
 
@@ -436,7 +436,7 @@ use. A rectangular isometric Map can be conceptualized as
 North is up and it will look just like that under an isometric-view client. Of course under an overhead-view
 client it will again turn out badly.
 
-Both types of Maps can easily wrap in either direction: north-south or east-west. Thus there are four types
+Both types of maps can easily wrap in either direction: north-south or east-west. Thus there are four types
 of wrapping: flat-earth, vertical cylinder, horizontal cylinder, and torus. Traditionally Freeciv21 only wraps
 in the east-west direction.
 
@@ -461,7 +461,7 @@ In Freeciv21, we have the general concept of a "position" or "Tile". A Tile can 
 several coordinate systems. The distinction becomes important when we start to use non-standard maps (see
 above).
 
-Here is a diagram of coordinate conversions for a classical Map.
+Here is a diagram of coordinate conversions for a classical map.
 
 .. code-block:: rst
 
@@ -490,8 +490,8 @@ considered as isometric.
 Map (or "Standard") Coordinates
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-All of the code examples above are in Map coordinates. These preserve the local geometry of square Tiles,
-but do not represent the global Map geometry well. In Map coordinates, you are guaranteed, so long as we use
+All of the code examples above are in map coordinates. These preserve the local geometry of square Tiles,
+but do not represent the global map geometry well. In map coordinates, you are guaranteed, so long as we use
 square Tiles, that the Tile adjacency rules
 
 .. code-block:: rst
@@ -501,7 +501,7 @@ square Tiles, that the Tile adjacency rules
     |  (map_x-1, map_y+1)    (map_x, map_y+1)   (map_x+1, map_y+1)
 
 
-are preserved, regardless of what the underlying Map or drawing code looks like. This is the definition of
+are preserved, regardless of what the underlying map or drawing code looks like. This is the definition of
 the system.
 
 With an isometric view, this looks like:
@@ -518,8 +518,8 @@ With an isometric view, this looks like:
 Map coordinates are easiest for local operations (e.g. 'square_iterate' and friends, translations, rotations,
 and any other scalar operation) but unwieldy for global operations.
 
-When performing operations in Map coordinates (like a translation of Tile :code:`(x, y)` by :code:`(dx, dy)`
--> :code:`(x + dx, y + dy)`), the new Map coordinates may be unsuitable for the current Map. In case, you
+When performing operations in map coordinates (like a translation of Tile :code:`(x, y)` by :code:`(dx, dy)`
+-> :code:`(x + dx, y + dy)`), the new map coordinates may be unsuitable for the current map. In case, you
 should use one of the following functions or macros:
 
 * :code:`map_pos_to_tile()`: return ``NULL`` if normalization is not possible;
@@ -527,9 +527,9 @@ should use one of the following functions or macros:
 * :code:`normalize_map_pos()`: return ``TRUE`` if normalization have been done (wrapping X and Y coordinates
   if the current topology allows it);
 
-* :code:`is_normal_map_pos()`: return ``TRUE`` if the Map coordinates exist for the Map;
+* :code:`is_normal_map_pos()`: return ``TRUE`` if the map coordinates exist for the map;
 
-* :code:`CHECK_MAP_POS()`: assert whether the Map coordinates exist for the Map.
+* :code:`CHECK_MAP_POS()`: assert whether the map coordinates exist for the map.
 
 Map coordinates are quite central in the coordinate system, and they may be easily converted to any other
 coordinates: :code:`MAP_TO_NATURAL_POS()`, :code:`MAP_TO_NATIVE_POS()`, or :code:`map_pos_to_index()`
@@ -538,10 +538,10 @@ functions.
 Natural Coordinates
 ^^^^^^^^^^^^^^^^^^^
 
-Natural coordinates preserve the geometry of Map coordinates, but also have the rectangular property of
+Natural coordinates preserve the geometry of map coordinates, but also have the rectangular property of
 native coordinates. They are unwieldy for most operations because of their sparseness. They may not have
-the same scale as Map coordinates and, in the iso case, there are gaps in the natural representation of a
-Map.
+the same scale as map coordinates and, in the iso case, there are gaps in the natural representation of a
+map.
 
 With classical view, this looks like:
 
@@ -591,11 +591,11 @@ With an isometric view, this looks like:
     |                            (nat_x, nat_y+2)
 
 
-Neither is particularly good for a global Map operation such as Map wrapping or conversions to or from Map
-indexes. Something better is needed.
+Neither is particularly good for a global map operation such as map wrapping or conversions to or from map
+indexes. something better is needed.
 
-Native coordinates compress the Map into a continuous rectangle. The dimensions are defined as
-:code:`map.xsize x map.ysize`. For instance, the above iso-rectangular Map is represented in native
+Native coordinates compress the map into a continuous rectangle. The dimensions are defined as
+:code:`map.xsize x map.ysize`. For instance, the above iso-rectangular map is represented in native
 coordinates by compressing the natural representation in the X axis to get the 3x3 iso-rectangle of
 
 .. code-block:: rst
@@ -605,14 +605,14 @@ coordinates by compressing the natural representation in the X axis to get the 3
     GHI       (0,2) (1,2) (3,2)
 
 
-The resulting coordinate system is much easier to use than Map coordinates for some operations. These
+The resulting coordinate system is much easier to use than map coordinates for some operations. These
 include most internal topology operations (e.g., :code:`normalize_map_pos`, or :code:`whole_map_iterate`) as
 well as storage (in ``map.tiles`` and savegames, for instance).
 
-In general, native coordinates can be defined based on this property; the basic Map becomes a continuous
+In general, native coordinates can be defined based on this property; the basic map becomes a continuous
 (gap-free) cardinally-oriented rectangle when expressed in native coordinates.
 
-Native coordinates can be easily converted to Map coordinates using the :code:`NATIVE_TO_MAP_POS()` function,
+Native coordinates can be easily converted to map coordinates using the :code:`NATIVE_TO_MAP_POS()` function,
 to index using the code:`native_pos_to_index()` function and to Tile (shortcut) using the
 :code:`native_pos_to_tile()` function.
 
@@ -622,26 +622,26 @@ After operations, such as the :code:`FC_WRAP(x, map.xsize)` function, the result
 Index Coordinates
 ^^^^^^^^^^^^^^^^^
 
-Index coordinates simply reorder the Map into a continuous (filled-in) one-dimensional system. This
+Index coordinates simply reorder the map into a continuous (filled-in) one-dimensional system. This
 coordinate system is closely tied to the ordering of the Tiles in native coordinates, and is slightly
 easier to use for some operations (like storage) because it is one-dimensional. In general you cannot assume
 anything about the ordering of the positions within the system.
 
 Indexes can be easily converted to native coordinates using the :code:`index_to_native_pos()` function or to
-Map positions (shortcut) using the :code:`index_to_map_pos()` function.
+map positions (shortcut) using the :code:`index_to_map_pos()` function.
 
-A Map index can tested using the :code:`CHECK_INDEX` macro.
+A map index can tested using the :code:`CHECK_INDEX` macro.
 
-With a classical rectangular Map, the first three coordinate systems are equivalent. When we introduce
-isometric Maps, the distinction becomes important, as demonstrated above. Many places in the code have
-introduced :code:`map_x/map_y` or :code:`nat_x/nat_y` to help distinguish whether Map or native coordinates
+With a classical rectangular map, the first three coordinate systems are equivalent. When we introduce
+isometric maps, the distinction becomes important, as demonstrated above. Many places in the code have
+introduced :code:`map_x/map_y` or :code:`nat_x/nat_y` to help distinguish whether map or native coordinates
 are being used. Other places are not yet rigorous in keeping them apart, and will often just name their
-variables :code:`x` and :code:`y`. The latter can usually be assumed to be Map coordinates.
+variables :code:`x` and :code:`y`. The latter can usually be assumed to be map coordinates.
 
 Note that if you don't need to do some abstract geometry exploit, you will mostly use Tile pointers, and give
-to Map tools the ability to perform what you want.
+to map tools the ability to perform what you want.
 
-Note that :code:`map.xsize` and :code:`map.ysize` define the dimension of the Map in :code:`_native_`
+Note that :code:`map.xsize` and :code:`map.ysize` define the dimension of the map in :code:`_native_`
 coordinates.
 
 Of course, if a future topology does not fit these rules for coordinate systems, they will have to be refined.
@@ -649,17 +649,17 @@ Of course, if a future topology does not fit these rules for coordinate systems,
 Native Coordinates on an Isometric Map
 --------------------------------------
 
-An isometric Map is defined by the operation that converts between Map (user) coordinates and native
-(internal) ones. In native coordinates, an isometric Map behaves exactly the same way as a standard one. See
+An isometric map is defined by the operation that converts between map (user) coordinates and native
+(internal) ones. In native coordinates, an isometric map behaves exactly the same way as a standard one. See
 `Native Coordinates`_, above.
 
-Converting from Map to native coordinates involves a :math:`pi/2` rotation (which scales in each dimension by
+Converting from map to native coordinates involves a :math:`pi/2` rotation (which scales in each dimension by
 :math:`sqrt(2)`) followed by a compression in the :code:`X` direction by a factor of 2. Then a translation is
 required since the "normal set" of native coordinates is defined as
-:code:`{(x, y) | x: [0..map.xsize) and y: [0..map.ysize)}` while the normal set of Map coordinates must
+:code:`{(x, y) | x: [0..map.xsize) and y: [0..map.ysize)}` while the normal set of map coordinates must
 satisfy :code:`x >= 0` and :code:`y >= 0`.
 
-Converting from native to Map coordinates (a less cumbersome operation) is the opposite.
+Converting from native to map coordinates (a less cumbersome operation) is the opposite.
 
 .. code-block:: rst
 
@@ -760,13 +760,13 @@ are only sent to the client when the value shifts between zero and non-zero, no 
 You can even switch Fog of War on or off in game just by adding or subtracting 1 to all the Tiles.
 
 We only send city and terrain updates to the players who can see the Tile. So a city, or improvement, can
-exist in a square that is known and fogged and not be shown on the Map. Likewise, you can see a city in a
+exist in a square that is known and fogged and not be shown on the map. Likewise, you can see a city in a
 fogged square even if the city does not exist. It will be removed when you see the Tile again. This is done by
 1) only sending info to players who can see a Tile and 2) keeping track of what info has been sent so the game
-can be saved. For the purpose of 2), each player has a Map on the server (consisting of ``player_tile`` and
+can be saved. For the purpose of 2), each player has a map on the server (consisting of ``player_tile`` and
 ``dumb_city`` fields) where the relevant information is kept.
 
-The case where a player ``p1`` gives Map info to another player ``p2`` requires some extra information.
+The case where a player ``p1`` gives map info to another player ``p2`` requires some extra information.
 Imagine a Tile that neither player sees, but which ``p1`` has the most recent information on. In that case the
 age of the players' information should be compared, which is why the player Tile has a ``last_updated`` field.
 This field is not kept up to date as long as the player can see the Tile and it is unfogged, but when the Tile
@@ -781,7 +781,7 @@ by ``p1's`` really_gives_vision bitvector, where the dependencies will be kept.
 National Borders
 ----------------
 
-For the display of national Borders (similar to those used in Sid Meier's Alpha Centauri) each Map Tile also
+For the display of national Borders (similar to those used in Sid Meier's Alpha Centauri) each map Tile also
 has an ``owner`` field, to identify which nation lays claim to it. If :code:`game.borders` is non-zero, each
 city claims a circle of Tiles :code:`game.borders` in Vision Radius. In the case of neighbouring enemy Cities,
 Tiles are divided equally, with the older city winning any ties. Cities claim all immediately adjacent Tiles,
@@ -879,12 +879,12 @@ All following cases exist in :code:`game.est_connections`.
    then see a list of players to choose from, or just control the server, or observe, etc. Two subcases:
 
    #. :code:`pconn->observer == 0`: Not observing the game. Should receive information about other clients,
-      game status etc., but not Map, Units, Cities, etc.
+      game status etc., but not map, Units, Cities, etc.
 
    All following cases exist in game.game_connections.
 
    #. :code:`pconn->observer == 1`: Observing the game. Exists in :code:`game.game_connections`. Should
-      receive game information about Map, Units, Cities, etc.
+      receive game information about map, Units, Cities, etc.
 
 #. :code:`pconn->player != NULL`: Connected to specific player, either as "observer" or "controller". Exists
    in :code:`game.game_connections`, and in :code:`pconn->player->connections`.
