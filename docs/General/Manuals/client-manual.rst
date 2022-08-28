@@ -919,8 +919,8 @@ Tax Rates
 
 
 .. note:: The phrase "tax rates" can be a bit misleading as there is only one taxable item and that is the
-  rate for gold collection. Think of this feature of the game more like a "National Budget". In Freeciv21,
-  the National Budget is simplified into three segments: gold collection, Scientific output, and luxury goods.
+  rate for gold collection. Think of this feature of the game more like a "national budget". In Freeciv21,
+  the national budget is simplified into three segments: gold collection, scientific output, and luxury goods.
 
 Government
     Depending on your technological progress through the game, you may be able to select a different form
