@@ -249,6 +249,10 @@
     Push "Contact"
     Push "@CPACK_NSIS_CONTACT@"
     Call ConditionalAddToRegisty
+    
+    ; Add fc21:// protocol handler
+    WriteRegStr HKEY_CLASSES_ROOT "fc21" "URL Protocol" ""
+    WriteRegStr HKEY_CLASSES_ROOT "fc21\shell\open\command" "" "$INSTDIR\freeciv21-client.exe %1"
 
   SectionEnd
 
@@ -276,7 +280,9 @@
 
     ; Remove entry from Windows "Add/Remove programs" panel.
     DeleteRegKey "SHCTX" "${REGPATH_UNINSTSUBKEY}"
-    DeleteRegKey "SHCTX" "Software\${APPID}"
+    DeleteRegKey "SHCTX" "Software\${APPNAME}"
+    DeleteRegKey HKEY_LOCAL_MACHINE "Software\${APPNAME}"
+    DeleteRegKey HKEY_CLASSES_ROOT "fc21"
 
   SectionEnd
 
