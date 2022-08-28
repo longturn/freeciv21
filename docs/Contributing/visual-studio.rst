@@ -41,7 +41,7 @@ The directory can be anywhere, however the author prefers to :strong:`not` insta
 :file:`C:\\` drive.
 
 Open an Administrative elevated PowerShell terminal window. The easiest way to do this is to right-click on
-the :guilabel:`Start Menu` and select it from the menu: :guilabel:`Windows PowerShell (Admin)`.
+the Start Menu and select it from the menu: :guilabel:`Windows PowerShell (Admin)`.
 
 .. code-block:: rst
 
