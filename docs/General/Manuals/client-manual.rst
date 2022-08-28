@@ -903,7 +903,7 @@ your opponents with the demographics report. It has the following options:
 
 Tax Rates
     Selecting this menu item will bring up a dialog box allowing you to set the rate in percentage points for
-    Gold (Taxes), Science (Bulbs), and Luxury (Goods). This is the same as clicking on the `Tax Rates View`_
+    Gold (Taxes), Science (bulbs), and Luxury (Goods). This is the same as clicking on the `Tax Rates View`_
     button on the `Top Function Bar`_. :numref:`Tax Rates Selection Dialog` below, shows a sample screenshot.
     In this example, the player's nation is in Democracy, has set Gold to 40%, Science to 40%, and Luxury to
     20%.
