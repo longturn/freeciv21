@@ -1489,9 +1489,9 @@ Unit ID value.
 Minimap
 -------
 
-There is a :guilabel:`Minimap` widget in the lower right corner of the `Map View`_. :numref:`Minimap Single
-Player Widget` below shows an example of the :guilabel:`Minimap` widget for a single player game.
-:numref:`Minimap Multiplayer Widget` shows an example of of the :guilabel:`Minimap` widget for a LongTurn
+There is a :guilabel:`Minimap` widget in the lower right corner of the `Map View`_. :numref:`Minimap single
+player widget` below shows an example of the :guilabel:`Minimap` widget for a single player game.
+:numref:`Minimap multiplayer widget` shows an example of of the :guilabel:`Minimap` widget for a LongTurn
 multiplayer game. The difference between the two is the single player :guilabel:`Turn Done` button is replaced
 with a countdown timer. On the right hand side of the :guilabel:`Minimap` are zoom buttons similar to what you
 would find in the `View Menu`_. Inside of the :guilabel:`Minimap` you will see an area inside a white border.
@@ -1499,24 +1499,24 @@ This is the portion of the whole `Map View`_ that is displayed on the screen. Ri
 :guilabel:`Minimap` will cause the `Map View`_ to move to that spot. The :guilabel:`Minimap` provides a quick
 way to move around a large map in this manner.
 
-.. _Minimap Single Player Widget:
+.. _Minimap single player widget:
 .. figure:: ../../_static/images/gui-elements/mini-map-sp.png
   :align: center
   :scale: 55%
-  :alt: Freeciv21 Minimap Single Player Widget
+  :alt: Freeciv21 minimap single player widget
   :figclass: align-center
 
-  Minimap Single Player Widget
+  Minimap single player widget
 
 
-.. _Minimap Multiplayer Widget:
+.. _Minimap multiplayer widget:
 .. figure:: ../../_static/images/gui-elements/mini-map-mp.png
   :align: center
   :scale: 75%
-  :alt: Freeciv21 Minimap Milti Player Widget
+  :alt: Freeciv21 minimap multiplayer Widget
   :figclass: align-center
 
-  Minimap Multiplayer Widget
+  Minimap multiplayer widget
 
 
 City Dialog
