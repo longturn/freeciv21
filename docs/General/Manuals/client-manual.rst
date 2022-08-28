@@ -1173,7 +1173,7 @@ client will switch to a list of nations that you are playing against in a table 
   Nations and Diplomacy view button
 
 
-:numref:`Nations and Diplomacy view button with Diplomacy View Open` gives a sample of the
+:numref:`Nations and Diplomacy view button with Diplomacy View open` gives a sample of the
 :guilabel:`Nations View` in the client with all available columns displayed. If you right-click on the table
 heading, you will be given a list of column names that you can enable or disable. If you change anything, then
 be sure to save the settings from the :guilabel:`Game` menu.
@@ -1274,20 +1274,20 @@ Lastly, you can see in :numref:`Diplomacy` above that there are more than one co
 foreign state department is busy! If you happen to click out of the :guilabel:`Diplomacy View`, for example by
 clicking on the button for the `Map View`_, the button for the :guilabel:`Nations and Diplomacy View` will
 change from what is shown in :numref:`Nations and Diplomacy view button` and instead will change to what is
-shown in :numref:`Nations and Diplomacy view button with Diplomacy View Open` below.
+shown in :numref:`Nations and Diplomacy view button with Diplomacy View open` below.
 
-.. _Nations and Diplomacy view button with Diplomacy View Open:
+.. _Nations and Diplomacy view button with Diplomacy View open:
 .. figure:: ../../_static/images/gui-elements/top-bar-nations-diplomacy.png
   :align: center
   :alt: Freeciv21 Nations with Diplomacy Open
   :figclass: align-center
 
-  Nations and Diplomacy view button with Diplomacy View Open
+  Nations and Diplomacy view button with Diplomacy View open
 
 
 To quickly access the :guilabel:`Diplomacy View`, you can right-click on the button to bring it up. A normal
 left-click of the button will bring up the :guilabel:`Nations View` as shown in
-:numref:`Nations and Diplomacy view button with Diplomacy View Open` above.
+:numref:`Nations and Diplomacy view button with Diplomacy View open` above.
 
 Research View
 ^^^^^^^^^^^^^
