@@ -785,11 +785,11 @@ For the display of national Borders (similar to those used in Sid Meier's Alpha 
 has an ``owner`` field, to identify which nation lays claim to it. If :code:`game.borders` is non-zero, each
 City claims a circle of Tiles :code:`game.borders` in Vision Radius. In the case of neighbouring enemy Cities,
 Tiles are divided equally, with the older City winning any ties. Cities claim all immediately adjacent Tiles,
-plus any other Tiles within the Border radius on the same continent. Land Cities also claim Ocean Tiles if
+plus any other Tiles within the border radius on the same continent. Land Cities also claim Ocean Tiles if
 they are surrounded by 5 land Tiles on the same continent. This is a crude detection of inland seas or Lakes,
 which should be improved upon.
 
-Tile ownership is decided only by the server, and sent to the clients, which draw Border lines between Tiles
+Tile ownership is decided only by the server, and sent to the clients, which draw border lines between Tiles
 of differing ownership. Owner information is sent for all Tiles that are known by a client, whether or not
 they are fogged.
 
