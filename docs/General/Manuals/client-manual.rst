@@ -1045,16 +1045,16 @@ Map View
 ^^^^^^^^
 
 This is your primary playing surface. This is the map where you build your civilization. The button for this
-is shown in :numref:`Map View Button` below. :numref:`Client Overview` above, has a good example of the
+is shown in :numref:`Map view button` below. :numref:`Client Overview` above, has a good example of the
 :guilabel:`Map View`.
 
-.. _Map View Button:
+.. _Map view button:
 .. figure:: ../../_static/images/gui-elements/top-bar-map.png
   :align: center
   :alt: Freeciv21 Map
   :figclass: align-center
 
-  Map View Button
+  Map view button
 
 
 If you hover your mouse over the :guilabel:`Map View` button, a pop up widget will appear and give you
@@ -1083,15 +1083,15 @@ Units View
 
 The :guilabel:`Units View` is a widget on the `Map View`_ that shows what units you have available and how
 many are being produced. The `Cities View`_ can tell you which cities are producing what unit. :numref:`Units
-View Button` shows the button to bring up the widget. Clicking the button a second time will close the widget.
+view button` shows the button to bring up the widget. Clicking the button a second time will close the widget.
 
-.. _Units View Button:
+.. _Units view button:
 .. figure:: ../../_static/images/gui-elements/top-bar-units.png
   :align: center
   :alt: Freeciv21 Units
   :figclass: align-center
 
-  Units View Button
+  Units view button
 
 
 The :guilabel:`Units View` has two modes. For regular games without the ``unitwaittime`` server setting set,
@@ -1123,15 +1123,15 @@ Cities View
 ^^^^^^^^^^^
 
 The :guilabel:`Cities View` is a separate page in a table format. When you click the button for it as shown in
-:numref:`Cities View Button`, the client will switch to a listing of your cities.
+:numref:`Cities view button`, the client will switch to a listing of your cities.
 
-.. _Cities View Button:
+.. _Cities view button:
 .. figure:: ../../_static/images/gui-elements/top-bar-cities.png
   :align: center
   :alt: Freeciv21 Cities
   :figclass: align-center
 
-  Cities View Button
+  Cities view button
 
 
 :numref:`Cities` gives an example of the :guilabel:`Cities View` in the client with the default columns
@@ -1160,20 +1160,20 @@ Nations and Diplomacy View
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The :guilabel:`Nations and Diplomacy View` is actually two views accessed from the same place on the `Top
-Function Bar`_. When you click the button for it as shown in :numref:`Nations and Diplomacy View Button`, the
+Function Bar`_. When you click the button for it as shown in :numref:`Nations and Diplomacy view button`, the
 client will switch to a list of nations that you are playing against in a table format.
 
-.. _Nations and Diplomacy View Button:
+.. _Nations and Diplomacy view button:
 .. figure:: ../../_static/images/gui-elements/top-bar-nations.png
   :align: center
   :scale: 50%
   :alt: Freeciv21 Nations
   :figclass: align-center
 
-  Nations and Diplomacy View Button
+  Nations and Diplomacy view button
 
 
-:numref:`Nations and Diplomacy View Button with Diplomacy View Open` gives a sample of the
+:numref:`Nations and Diplomacy view button with Diplomacy View Open` gives a sample of the
 :guilabel:`Nations View` in the client with all available columns displayed. If you right-click on the table
 heading, you will be given a list of column names that you can enable or disable. If you change anything, then
 be sure to save the settings from the :guilabel:`Game` menu.
@@ -1273,36 +1273,36 @@ View` and return you to the :guilabel:`Nations View`.
 Lastly, you can see in :numref:`Diplomacy` above that there are more than one conversations occurring. Your
 foreign state department is busy! If you happen to click out of the :guilabel:`Diplomacy View`, for example by
 clicking on the button for the `Map View`_, the button for the :guilabel:`Nations and Diplomacy View` will
-change from what is shown in :numref:`Nations and Diplomacy View Button` and instead will change to what is
-shown in :numref:`Nations and Diplomacy View Button with Diplomacy View Open` below.
+change from what is shown in :numref:`Nations and Diplomacy view button` and instead will change to what is
+shown in :numref:`Nations and Diplomacy view button with Diplomacy View Open` below.
 
-.. _Nations and Diplomacy View Button with Diplomacy View Open:
+.. _Nations and Diplomacy view button with Diplomacy View Open:
 .. figure:: ../../_static/images/gui-elements/top-bar-nations-diplomacy.png
   :align: center
   :alt: Freeciv21 Nations with Diplomacy Open
   :figclass: align-center
 
-  Nations and Diplomacy View Button with Diplomacy View Open
+  Nations and Diplomacy view button with Diplomacy View Open
 
 
 To quickly access the :guilabel:`Diplomacy View`, you can right-click on the button to bring it up. A normal
 left-click of the button will bring up the :guilabel:`Nations View` as shown in
-:numref:`Nations and Diplomacy View Button with Diplomacy View Open` above.
+:numref:`Nations and Diplomacy view button with Diplomacy View Open` above.
 
 Research View
 ^^^^^^^^^^^^^
 
 The :guilabel:`Research View` is a separate page showing the technology research tree. This is the page where
 you instruct your scientists which technologies to research. When you click the button for it as shown in
-:numref:`Research View Button`, the client will switch to your research tree.
+:numref:`Research view button`, the client will switch to your research tree.
 
-.. _Research View Button:
+.. _Research view button:
 .. figure:: ../../_static/images/gui-elements/top-bar-research.png
   :align: center
   :alt: Freeciv21 Research
   :figclass: align-center
 
-  Research View Button
+  Research view button
 
 
 If you hover your mouse over the button, a pop up widget will appear and give you information about your
@@ -1342,16 +1342,16 @@ Economics View
 ^^^^^^^^^^^^^^
 
 The :guilabel:`Economics View` is a separate page set in a table format. When you click the button for it as
-shown in :numref:`Economics View Button`, the client will switch to a listing of your nation's economy. A
+shown in :numref:`Economics view button`, the client will switch to a listing of your nation's economy. A
 nation's economy is mostly about city improvement, unit support, and maintenance.
 
-.. _Economics View Button:
+.. _Economics view button:
 .. figure:: ../../_static/images/gui-elements/top-bar-economy.png
   :align: center
   :alt: Freeciv21 Economics
   :figclass: align-center
 
-  Economics View Button
+  Economics view button
 
 
 If you hover your mouse over the button, a pop up widget will appear and give you information about your
@@ -1389,16 +1389,16 @@ Tax Rates View
 ^^^^^^^^^^^^^^
 
 The :guilabel:`Tax Rates View` on the `Top Function Bar`_ shows what percentage of Gold, Science, and Luxury
-Goods your nation is set at. :numref:`Tax Rates View Button` shows an example of the
+Goods your nation is set at. :numref:`Tax Rates view button` shows an example of the
 :guilabel:`Tax Rates View` button.
 
-.. _Tax Rates View Button:
+.. _Tax Rates view button:
 .. figure:: ../../_static/images/gui-elements/top-bar-tax-rates.png
   :align: center
   :alt: Freeciv21 Tax Rates View
   :figclass: align-center
 
-  Tax Rates View Button
+  Tax Rates view button
 
 
 Clicking on the :guilabel:`Tax Rates View` will bring up the :guilabel:`Tax Rates` dialog as shown in
