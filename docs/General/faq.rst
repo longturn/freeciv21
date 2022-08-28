@@ -573,7 +573,7 @@ No. In Freeciv21 there are generally 4 ways to gain tile ownership:
 
 * Build a city and claim the tiles first.
 * Grow your cities super big and much bigger than your neighbor's cities. National borders can move at Turn
-  Change based on Culture score.
+  Change based on culture score.
 * Build a Fortress and place a Military unit (e.g. a :unit:`Phalanx`) inside the Fortress.
 * Conquer the city and take its tiles for your own.
 
