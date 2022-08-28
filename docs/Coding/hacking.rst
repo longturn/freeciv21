@@ -100,8 +100,8 @@ Data Structures
 For variable length list of fx units and cities Freeciv21 uses a :code:`genlist`, which is implemented in
 :file:`utility/genlist.cpp`. By some macro magic type specific macros have been defined, avoiding much trouble.
 
-For example a Tile struct (the pointer to it we call :code:`ptile`) has a unit list, :code:`ptile->units`; to
-iterate though all the units on the Tile you would do the following:
+For example a tile struct (the pointer to it we call :code:`ptile`) has a unit list, :code:`ptile->units`; to
+iterate though all the units on the tile you would do the following:
 
 .. code-block:: rst
 
@@ -276,16 +276,16 @@ Currently the graphics is stored in the PNG file format.
 If you alter the graphics, then make sure that the background remains transparent. Failing to do this means
 the mask-pixmaps will not be generated properly, which will certainly not give any good results.
 
-Each terrain Tile is drawn in 16 versions, all the combinations with a green border in one of the main
+Each terrain tile is drawn in 16 versions, all the combinations with a green border in one of the main
 directions. Hills, Mountains, Forests, and Rivers are treated in special cases.
 
 Isometric tilesets are drawn in a similar way to how civ2 draws (that is why civ2 graphics are compatible). For
-each base terrain type there exists one Tile sprite for that terrain. The Tile is blended with nearby Tiles to
+each base terrain type there exists one tile sprite for that terrain. The tile is blended with nearby tiles to
 get a nice-looking boundary. This is erroneously called "dither" in the code.
 
-Non-isometric tilesets draw the Tiles in the "original" Freeciv21 way, which is both harder and less pretty.
-There are multiple copies of each Tile, so that a different copy can be drawn depending on the terrain type of
-the adjacent Tiles. It may eventually be worthwhile to convert this to the civ2 system or another one
+Non-isometric tilesets draw the tiles in the "original" Freeciv21 way, which is both harder and less pretty.
+There are multiple copies of each tile, so that a different copy can be drawn depending on the terrain type of
+the adjacent tiles. It may eventually be worthwhile to convert this to the civ2 system or another one
 altogether.
 
 Diplomacy
@@ -298,11 +298,11 @@ and removed.
 Map Structure
 =============
 
-The map is maintained in a pretty straightforward C array, containing X*Y Tiles. You can use the function
-:code:`struct tile *map_pos_to_tile(x, y)` to find a pointer to a specific Tile. A Tile has various fields;
+The map is maintained in a pretty straightforward C array, containing X*Y tiles. You can use the function
+:code:`struct tile *map_pos_to_tile(x, y)` to find a pointer to a specific tile. A tile has various fields;
 see the struct in :file:`common/map.h`.
 
-You may iterate Tiles, you may use the following methods:
+You may iterate tiles, you may use the following methods:
 
 .. code-block:: rst
 
@@ -311,7 +311,7 @@ You may iterate Tiles, you may use the following methods:
     } whole_map_iterate_end;
 
 
-for iterating all Tiles of the map;
+for iterating all tiles of the map;
 
 .. code-block:: rst
 
@@ -320,7 +320,7 @@ for iterating all Tiles of the map;
     } adjc_iterate_end;
 
 
-for iterating all Tiles close to ``center_tile``, in all *valid* directions for the current topology (see
+for iterating all tiles close to ``center_tile``, in all *valid* directions for the current topology (see
 below);
 
 .. code-block:: rst
@@ -330,7 +330,7 @@ below);
     } cardinal_adjc_iterate_end;
 
 
-for iterating all Tiles close to ``center_tile``, in all *cardinal* directions for the current topology (see
+for iterating all tiles close to ``center_tile``, in all *cardinal* directions for the current topology (see
 below);
 
 .. code-block:: rst
@@ -340,7 +340,7 @@ below);
     } square_iterate_end;
 
 
-for iterating all Tiles in the radius defined ``radius`` (in real distance, see below), beginning by
+for iterating all tiles in the radius defined ``radius`` (in real distance, see below), beginning by
 ``center_tile``;
 
 .. code-block:: rst
@@ -350,7 +350,7 @@ for iterating all Tiles in the radius defined ``radius`` (in real distance, see 
     } square_iterate_end;
 
 
-for iterating all Tiles in the radius defined ``radius`` (in square distance, see below), beginning by
+for iterating all tiles in the radius defined ``radius`` (in square distance, see below), beginning by
 ``center_tile``;
 
 .. code-block:: rst
@@ -360,9 +360,9 @@ for iterating all Tiles in the radius defined ``radius`` (in square distance, se
     } iterate_outward_end;
 
 
-for iterating all Tiles in the radius defined ``radius`` (in real distance, see below), beginning by
+for iterating all tiles in the radius defined ``radius`` (in real distance, see below), beginning by
 ``center_tile``. Actually, this is the duplicate of square_iterate, or various tricky ones defined in
-:file:`common/map.h`, which automatically adjust the Tile values. The defined macros should be used whenever
+:file:`common/map.h`, which automatically adjust the tile values. The defined macros should be used whenever
 possible, the examples above were only included to give people the knowledge of how things work.
 
 Note that the following:
@@ -376,20 +376,20 @@ Note that the following:
     }
 
 
-is not a reliable way to iterate all adjacent Tiles for all topologies, so such operations should be avoided.
+is not a reliable way to iterate all adjacent tiles for all topologies, so such operations should be avoided.
 
 
-Also available are the functions calculating distance between Tiles. In Freeciv21, we are using 3 types of
-distance between Tiles:
+Also available are the functions calculating distance between tiles. In Freeciv21, we are using 3 types of
+distance between tiles:
 
-* The :code:`map_distance(ptile0, ptile1)` function returns the *Manhattan* distance between Tiles, i.e. the
+* The :code:`map_distance(ptile0, ptile1)` function returns the *Manhattan* distance between tiles, i.e. the
   distance from :code:`ptile0` to :code:`ptile1`, only using cardinal directions. For example,
   :code:`(abs(dx) + ads(dy))` for non-hexagonal topologies.
 
-* The :code:`real_map_distance(ptile0, ptile1)` function returns the *normal* distance between Tiles, i.e. the
+* The :code:`real_map_distance(ptile0, ptile1)` function returns the *normal* distance between tiles, i.e. the
   minimal distance from :code:`ptile0` to :code:`ptile1` using all valid directions for the current topology.
 
-* The :code:`sq_map_distance(ptile0, ptile1)` function returns the *square* distance between Tiles. This is a
+* The :code:`sq_map_distance(ptile0, ptile1)` function returns the *square* distance between tiles. This is a
   simple way to make Pythagorean effects for making circles on the map for example. For non-hexagonal
   topologies, it would be :code:`(dx * dx + dy * dy)`. Only useless square root is missing.
 
@@ -444,20 +444,20 @@ in the east-west direction.
 Topology, Cardinal Directions and Valid Directions
 --------------------------------------------------
 
-A *cardinal* direction connects Tiles per a *side*. Another *valid* direction connects Tiles per a *corner*.
+A *cardinal* direction connects tiles per a *side*. Another *valid* direction connects tiles per a *corner*.
 
 In non-hexagonal topologies, there are 4 cardinal directions, and 4 other valid directions. In hexagonal
 topologies, there are 6 cardinal directions, which matches exactly the 6 valid directions.
 
 Note that with isometric view, the direction named "North" (``DIR8_NORTH``) is actually not from the top to
 the bottom of the screen view. All directions are turned a step on the left (e.g. :math:`pi/4` rotation with
-square Tiles and :math:`pi/3` rotation for hexagonal Tiles).
+square tiles and :math:`pi/3` rotation for hexagonal tiles).
 
 
 Different Coordinate Systems
 ----------------------------
 
-In Freeciv21, we have the general concept of a "position" or "Tile". A Tile can be referred to in any of
+In Freeciv21, we have the general concept of a "position" or "tile". A tile can be referred to in any of
 several coordinate systems. The distinction becomes important when we start to use non-standard maps (see
 above).
 
@@ -490,9 +490,9 @@ considered as isometric.
 Map (or "Standard") Coordinates
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-All of the code examples above are in map coordinates. These preserve the local geometry of square Tiles,
+All of the code examples above are in map coordinates. These preserve the local geometry of square tiles,
 but do not represent the global map geometry well. In map coordinates, you are guaranteed, so long as we use
-square Tiles, that the Tile adjacency rules
+square tiles, that the tile adjacency rules
 
 .. code-block:: rst
 
@@ -518,7 +518,7 @@ With an isometric view, this looks like:
 Map coordinates are easiest for local operations (e.g. 'square_iterate' and friends, translations, rotations,
 and any other scalar operation) but unwieldy for global operations.
 
-When performing operations in map coordinates (like a translation of Tile :code:`(x, y)` by :code:`(dx, dy)`
+When performing operations in map coordinates (like a translation of tile :code:`(x, y)` by :code:`(dx, dy)`
 -> :code:`(x + dx, y + dy)`), the new map coordinates may be unsuitable for the current map. In case, you
 should use one of the following functions or macros:
 
@@ -613,7 +613,7 @@ In general, native coordinates can be defined based on this property; the basic 
 (gap-free) cardinally-oriented rectangle when expressed in native coordinates.
 
 Native coordinates can be easily converted to map coordinates using the :code:`NATIVE_TO_MAP_POS()` function,
-to index using the code:`native_pos_to_index()` function and to Tile (shortcut) using the
+to index using the code:`native_pos_to_index()` function and to tile (shortcut) using the
 :code:`native_pos_to_tile()` function.
 
 After operations, such as the :code:`FC_WRAP(x, map.xsize)` function, the result may be checked with the
@@ -623,7 +623,7 @@ Index Coordinates
 ^^^^^^^^^^^^^^^^^
 
 Index coordinates simply reorder the map into a continuous (filled-in) one-dimensional system. This
-coordinate system is closely tied to the ordering of the Tiles in native coordinates, and is slightly
+coordinate system is closely tied to the ordering of the tiles in native coordinates, and is slightly
 easier to use for some operations (like storage) because it is one-dimensional. In general you cannot assume
 anything about the ordering of the positions within the system.
 
@@ -638,7 +638,7 @@ introduced :code:`map_x/map_y` or :code:`nat_x/nat_y` to help distinguish whethe
 are being used. Other places are not yet rigorous in keeping them apart, and will often just name their
 variables :code:`x` and :code:`y`. The latter can usually be assumed to be map coordinates.
 
-Note that if you don't need to do some abstract geometry exploit, you will mostly use Tile pointers, and give
+Note that if you don't need to do some abstract geometry exploit, you will mostly use tile pointers, and give
 to map tools the ability to perform what you want.
 
 Note that :code:`map.xsize` and :code:`map.ysize` define the dimension of the map in :code:`_native_`
@@ -730,46 +730,46 @@ While :code:`tile_get_known()` returns:
 
 
 The values :code:`TILE_UNKNOWN` and :code:`TILE_KNOWN_SEEN` are straightforward. :code:`TILE_KNOWN_UNSEEN` is
-a Tile of which the user knows the terrain, but not recent cities, Roads, etc.
+a tile of which the user knows the terrain, but not recent cities, Roads, etc.
 
-:code:`TILE_UNKNOWN` Tiles never are (nor should be) sent to the client. In the past, :code:`UNKNOWN` Tiles that
+:code:`TILE_UNKNOWN` tiles never are (nor should be) sent to the client. In the past, :code:`UNKNOWN` tiles that
 were adjacent to :code:`UNSEEN` or :code:`SEEN` were sent to make the drawing process easier, but this has now
 been removed. This means exploring new land may sometimes change the appearance of existing land (but this is
 not fundamentally different from what might happen when you transform land). Sending the extra info, however,
 not only confused the goto code but allowed cheating.
 
-Fog of War is the fact that even when you have seen a Tile once you are not sent updates unless it is inside
+Fog of War is the fact that even when you have seen a tile once you are not sent updates unless it is inside
 the sight range of one of your units or cities.
 
-We keep track of Fog of War by counting the number of units and cities of each client that can see the Tile.
-This requires a number per player, per Tile, so each :code:`player_tile` has a :code:`short[]`. Every time a
-unit, city, or somthing else can observe a Tile 1 is added to its player's number at the Tile, and when it
+We keep track of Fog of War by counting the number of units and cities of each client that can see the tile.
+This requires a number per player, per tile, so each :code:`player_tile` has a :code:`short[]`. Every time a
+unit, city, or somthing else can observe a tile 1 is added to its player's number at the tile, and when it
 cannot observe any more (killed/moved/pillaged) 1 is subtracted. In addition to the initialization/loading of
 a game this array is manipulated with the :code:`void unfog_area(struct player *pplayer, int x, int y, int
 len)` and :code:`void fog_area(struct player *pplayer, int x, int y, int len)` functions. The :code:`int len`
 variable is the radius of the area that should be fogged/unfogged, i.e. a ``len`` of 1 is a normal unit. In
-addition to keeping track of Fog of War, these functions also make sure to reveal :code:`TILE_UNKNOWN` Tiles
-you get near, and send information about :code:`TILE_UNKNOWN` Tiles near that the client needs for drawing.
-They then send the Tiles to the :code:`void send_tile_info(struct player *dest, int x, int y)` function, which
-then sets the correct ``known_type`` and sends the Tile to the client.
+addition to keeping track of Fog of War, these functions also make sure to reveal :code:`TILE_UNKNOWN` tiles
+you get near, and send information about :code:`TILE_UNKNOWN` tiles near that the client needs for drawing.
+They then send the tiles to the :code:`void send_tile_info(struct player *dest, int x, int y)` function, which
+then sets the correct ``known_type`` and sends the tile to the client.
 
 If you want to just show the terrain and Cities of the square the function :code:`show_area()` does this. The
-Tiles remain fogged. If you play without Fog of War all the values of the seen arrays are initialized to 1. So
-you are using the exact same code, you just never get down to 0. As changes in the "fogginess" of the Tiles
+tiles remain fogged. If you play without Fog of War all the values of the seen arrays are initialized to 1. So
+you are using the exact same code, you just never get down to 0. As changes in the "fogginess" of the tiles
 are only sent to the client when the value shifts between zero and non-zero, no redundant packages are sent.
-You can even switch Fog of War on or off in game just by adding or subtracting 1 to all the Tiles.
+You can even switch Fog of War on or off in game just by adding or subtracting 1 to all the tiles.
 
-We only send city and terrain updates to the players who can see the Tile. So a city, or improvement, can
+We only send city and terrain updates to the players who can see the tile. So a city, or improvement, can
 exist in a square that is known and fogged and not be shown on the map. Likewise, you can see a city in a
-fogged square even if the city does not exist. It will be removed when you see the Tile again. This is done by
-1) only sending info to players who can see a Tile and 2) keeping track of what info has been sent so the game
+fogged square even if the city does not exist. It will be removed when you see the tile again. This is done by
+1) only sending info to players who can see a tile and 2) keeping track of what info has been sent so the game
 can be saved. For the purpose of 2), each player has a map on the server (consisting of ``player_tile`` and
 ``dumb_city`` fields) where the relevant information is kept.
 
 The case where a player ``p1`` gives map info to another player ``p2`` requires some extra information.
-Imagine a Tile that neither player sees, but which ``p1`` has the most recent information on. In that case the
-age of the players' information should be compared, which is why the player Tile has a ``last_updated`` field.
-This field is not kept up to date as long as the player can see the Tile and it is unfogged, but when the Tile
+Imagine a tile that neither player sees, but which ``p1`` has the most recent information on. In that case the
+age of the players' information should be compared, which is why the player tile has a ``last_updated`` field.
+This field is not kept up to date as long as the player can see the tile and it is unfogged, but when the tile
 gets fogged the date is updated.
 
 There is a Shared Vision feature, meaning that if ``p1`` gives Shared Vision to ``p2``, every time a function
@@ -781,16 +781,16 @@ by ``p1's`` really_gives_vision bitvector, where the dependencies will be kept.
 National Borders
 ----------------
 
-For the display of national Borders (similar to those used in Sid Meier's Alpha Centauri) each map Tile also
+For the display of national Borders (similar to those used in Sid Meier's Alpha Centauri) each map tile also
 has an ``owner`` field, to identify which nation lays claim to it. If :code:`game.borders` is non-zero, each
-city claims a circle of Tiles :code:`game.borders` in Vision Radius. In the case of neighbouring enemy Cities,
-Tiles are divided equally, with the older city winning any ties. Cities claim all immediately adjacent Tiles,
-plus any other Tiles within the border radius on the same continent. Land Cities also claim Ocean Tiles if
-they are surrounded by 5 land Tiles on the same continent. This is a crude detection of inland seas or Lakes,
+city claims a circle of tiles :code:`game.borders` in Vision Radius. In the case of neighbouring enemy Cities,
+tiles are divided equally, with the older city winning any ties. Cities claim all immediately adjacent tiles,
+plus any other tiles within the border radius on the same continent. Land Cities also claim Ocean tiles if
+they are surrounded by 5 land tiles on the same continent. This is a crude detection of inland seas or Lakes,
 which should be improved upon.
 
-Tile ownership is decided only by the server, and sent to the clients, which draw border lines between Tiles
-of differing ownership. Owner information is sent for all Tiles that are known by a client, whether or not
+tile ownership is decided only by the server, and sent to the clients, which draw border lines between tiles
+of differing ownership. Owner information is sent for all tiles that are known by a client, whether or not
 they are fogged.
 
 Generalized Actions

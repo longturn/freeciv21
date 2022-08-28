@@ -234,10 +234,10 @@ Variable          Result
 ``H_DEFENSIVE``   Build defensive buildings without calculating need.
 ``H_RATES``       Cannot set its tax rates beyond government limits.
 ``H_TARGETS``     Cannot target anything it does not know exists.
-``H_HUTS``        Does not know which unseen Tiles have Huts on them.
+``H_HUTS``        Does not know which unseen tiles have Huts on them.
 ``H_FOG``         Cannot see through fog of War.
 ``H_NOPLANES``    Does not build air units.
-``H_MAP``         Only knows ``map_is_known`` Tiles.
+``H_MAP``         Only knows ``map_is_known`` tiles.
 ``H_DIPLOMACY``   Not very good at Diplomacy.
 ``H_REVOLUTION``  Cannot skip Anarchy.
 ``H_EXPANSION``   Do not like being much larger than human.
@@ -253,7 +253,7 @@ Things That Need To Be Fixed
 * Cities do not realize units are on their way to defend it.
 * AI builds cities without regard to danger at that location.
 * AI will not build cross-country roads outside of the city vision radius.
-* ``Locally_zero_minimap`` is not implemented when wilderness Tiles change.
+* ``Locally_zero_minimap`` is not implemented when wilderness tiles change.
 * If no path to a chosen victim is found, a new victim should be chosen.
 * Emergencies in two Cities at once are not handled properly.
 * :unit:`Explorers` will not use ferryboats to get to new lands to explore. The AI will also not build units
