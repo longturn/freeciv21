@@ -1463,16 +1463,16 @@ Unit Controls
 When a unit has been selected on the `Map View`_, a control widget will appear at the bottom center of the
 screen. The :guilabel:`Unit Controls` widget will give you some information about the unit, the terrain it is
 on and then some buttons corresponding to actions that the unit can take from the `Unit Menu`_,
-`Combat Menu`_, or the `Work Menu`_ respectively. :numref:`Unit Controls Widget` shows a :unit:`Worker` that
+`Combat Menu`_, or the `Work Menu`_ respectively. :numref:`Unit Controls widget` shows a :unit:`Worker` that
 has been selected.
 
-.. _Unit Controls Widget:
+.. _Unit Controls widget:
 .. figure:: ../../_static/images/gui-elements/unit-controls.png
   :align: center
-  :alt: Freeciv21 Unit Controls Widget
+  :alt: Freeciv21 Unit Controls widget
   :figclass: align-center
 
-  Unit Controls Widget
+  Unit Controls widget
 
 
 You can see that the :unit:`Worker` is selected because it has a white selection ring around its base. Looking
@@ -1513,7 +1513,7 @@ way to move around a large map in this manner.
 .. figure:: ../../_static/images/gui-elements/mini-map-mp.png
   :align: center
   :scale: 75%
-  :alt: Freeciv21 minimap multiplayer Widget
+  :alt: Freeciv21 minimap multiplayer widget
   :figclass: align-center
 
   Minimap multiplayer widget
