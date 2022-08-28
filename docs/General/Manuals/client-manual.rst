@@ -1432,7 +1432,7 @@ Messages
 ^^^^^^^^
 
 The :guilabel:`Messages` button on the `Top Function Bar`_ is used to toggle the message log widget.
-:numref:`Messages Button` below shows an example of the Messages button.
+:numref:`Messages Button` below shows an example of the :guilabel:`Messages` button.
 
 .. _Messages Button:
 .. figure:: ../../_static/images/gui-elements/top-bar-messages.png
@@ -1440,7 +1440,7 @@ The :guilabel:`Messages` button on the `Top Function Bar`_ is used to toggle the
   :alt: Freeciv21 Messages
   :figclass: align-center
 
-  Messages Button
+  Messages button
 
 
 :numref:`Messages Widget` below shows an example of the :guilabel:`Messages` widget. If you double-click on a
