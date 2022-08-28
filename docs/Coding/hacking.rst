@@ -839,7 +839,7 @@ Connections
 ===========
 
 The code is currently transitioning from 1 or 0 connections per player only, to allow multiple connections
-for each player (recall 'player' means a Civilization, see above), where each connection may be either an
+for each player (recall 'player' means a civilization, see above), where each connection may be either an
 "observer" or "controller".
 
 This discussion is mostly about connections on the server. The client only has one real connection

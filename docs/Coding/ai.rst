@@ -75,7 +75,7 @@ is :math:`N*q^Y / (1-q)`. This is the sum of infinite geometric series. This is 
 that the factor :math:`1/(1-q)` does not depend on the parameters :code:`N` and :code:`Y`, and can be ignored.
 The connection between the :math:`MORT` constant and the inflation rate :code:`x` is given by
 :math:`(MORT - 1) / MORT = q = 100 / (100 + x)`. Thus the current value of :code:`MORT = 24` corresponds to
-the inflation rate, or the rate of expansion of your Civilization of 4.3%
+the inflation rate, or the rate of expansion of your civilization of 4.3%
 
 Most likely this explanation is not what the authors of :code:`amortize()` had in mind, but the basic idea is
 correct: the value of the payoff decays exponentially with the delay.
