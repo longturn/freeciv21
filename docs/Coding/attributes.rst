@@ -24,5 +24,5 @@ other way around. The key of the hashtable consists of: the (real) ``key``, ``x`
 The (real) ``key`` is an integer, which defines the use and format of this attribute. The values of the
 hashtable can have arbitrary length. The internal structure of a value is opaque to the attribute handling.
 
-For easier access there are wrapper functions for the common types Unit, city, player, and Tile. So there are
-easy methods for attaching arbitrary data to a Unit, a city, a player (self or other), or a Tile.
+For easier access there are wrapper functions for the common types unit, city, player, and Tile. So there are
+easy methods for attaching arbitrary data to a unit, a city, a player (self or other), or a Tile.

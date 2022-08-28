@@ -8,7 +8,7 @@ Agents
 
 An agent is a piece of code which is responsible for a certain area. An agent will be given a specification by
 the user of the agent and a set of objects which the agent can control (the production queue of a city, a
-city, a Unit, a set of Units or the whole empire). The user can be a human player or another part of the code
+city, a unit, a set of units or the whole empire). The user can be a human player or another part of the code
 including another agent. There is no extra interaction between the user and the agent needed after the agent
 got its task description.
 
