@@ -133,7 +133,7 @@ Here is an example:
 
 First the :code:`ai_choose_attacker_land()` function selects a :unit:`Dragoon` because it is strong and fast.
 Then the :code:`find_something_to_kill()` function finds a victim for the (virtual) :unit:`Dragoon`, an enemy
-:unit:`Riflemen` standing right next to the City. Then the :code:`process_attacker_want()` function figures
+:unit:`Riflemen` standing right next to the city. Then the :code:`process_attacker_want()` function figures
 out that since the enemy is right beside us, it can be taken out easier using an :unit:`Artillery`. It also
 figures that a :unit:`Howitzer` would do this job even better, so bumps up our desire for
 :title-reference:`Robotics`.
@@ -241,7 +241,7 @@ Variable          Result
 ``H_DIPLOMACY``   Not very good at Diplomacy.
 ``H_REVOLUTION``  Cannot skip Anarchy.
 ``H_EXPANSION``   Do not like being much larger than human.
-``H_DANGER``      Always thinks its City is in danger.
+``H_DANGER``      Always thinks its city is in danger.
 ================= =======
 
 For an up-to-date list of all handicaps and their use for each difficulty level see :file:`ai/handicaps.h`.
@@ -251,8 +251,8 @@ Things That Need To Be Fixed
 ============================
 
 * Cities do not realize Units are on their way to defend it.
-* AI builds Cities without regard to danger at that location.
-* AI will not build cross-country Roads outside of the City Vision Radius.
+* AI builds cities without regard to danger at that location.
+* AI will not build cross-country Roads outside of the city Vision Radius.
 * ``Locally_zero_minimap`` is not implemented when wilderness Tiles change.
 * If no path to a chosen victim is found, a new victim should be chosen.
 * Emergencies in two Cities at once are not handled properly.
@@ -268,7 +268,7 @@ Things That Need To Be Fixed
 Idea Space
 ==========
 
-* Friendly Cities can be used as beachheads.
+* Friendly cities can be used as beachheads.
 * The :code:`Assess_danger()` function should acknowledge positive feedback between multiple attackers.
 * It would be nice for a bodyguard and charge to meet en-route more elegantly.
 * The :code:`struct choice` should have a priority indicator in it. This will reduce the number of "special"

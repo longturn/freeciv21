@@ -7,19 +7,19 @@ Agents
 ******
 
 An agent is a piece of code which is responsible for a certain area. An agent will be given a specification by
-the user of the agent and a set of objects which the agent can control (the production queue of a City, a
-City, a Unit, a set of Units or the whole empire). The user can be a human player or another part of the code
+the user of the agent and a set of objects which the agent can control (the production queue of a city, a
+city, a Unit, a set of Units or the whole empire). The user can be a human player or another part of the code
 including another agent. There is no extra interaction between the user and the agent needed after the agent
 got its task description.
 
 Examples of agents:
 
 * An agent responsible for moving a certain Unit from Tile A to Tile B
-* An agent responsible for maximize the Food Production of a City
-* An agent responsible for the production queue of a City
-* An agent responsible for defending a City
-* An agent responsible for a City
-* An agent responsible for all Cities
+* An agent responsible for maximize the Food Production of a city
+* An agent responsible for the production queue of a city
+* An agent responsible for defending a city
+* An agent responsible for a city
+* An agent responsible for all cities
 
 An agent may use other agents to accomplish its goal. Such decencies form a hierarchy of agents. The position
 in this hierarchy is denoted by a level. A higher level means more complexity. So an agent of level ``n`` can

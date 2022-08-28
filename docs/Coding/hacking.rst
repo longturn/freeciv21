@@ -97,7 +97,7 @@ If you plan to compare results of autogames the following changes can be helpful
 Data Structures
 ===============
 
-For variable length list of fx Units and Cities Freeciv21 uses a :code:`genlist`, which is implemented in
+For variable length list of fx Units and cities Freeciv21 uses a :code:`genlist`, which is implemented in
 :file:`utility/genlist.cpp`. By some macro magic type specific macros have been defined, avoiding much trouble.
 
 For example a Tile struct (the pointer to it we call :code:`ptile`) has a Unit list, :code:`ptile->units`; to
@@ -730,7 +730,7 @@ While :code:`tile_get_known()` returns:
 
 
 The values :code:`TILE_UNKNOWN` and :code:`TILE_KNOWN_SEEN` are straightforward. :code:`TILE_KNOWN_UNSEEN` is
-a Tile of which the user knows the terrain, but not recent Cities, Roads, etc.
+a Tile of which the user knows the terrain, but not recent cities, Roads, etc.
 
 :code:`TILE_UNKNOWN` Tiles never are (nor should be) sent to the client. In the past, :code:`UNKNOWN` Tiles that
 were adjacent to :code:`UNSEEN` or :code:`SEEN` were sent to make the drawing process easier, but this has now
@@ -739,11 +739,11 @@ not fundamentally different from what might happen when you transform land). Sen
 not only confused the goto code but allowed cheating.
 
 Fog of War is the fact that even when you have seen a Tile once you are not sent updates unless it is inside
-the sight range of one of your Units or Cities.
+the sight range of one of your Units or cities.
 
-We keep track of Fog of War by counting the number of Units and Cities of each client that can see the Tile.
+We keep track of Fog of War by counting the number of Units and cities of each client that can see the Tile.
 This requires a number per player, per Tile, so each :code:`player_tile` has a :code:`short[]`. Every time a
-Unit, City, or somthing else can observe a Tile 1 is added to its player's number at the Tile, and when it
+Unit, city, or somthing else can observe a Tile 1 is added to its player's number at the Tile, and when it
 cannot observe any more (killed/moved/pillaged) 1 is subtracted. In addition to the initialization/loading of
 a game this array is manipulated with the :code:`void unfog_area(struct player *pplayer, int x, int y, int
 len)` and :code:`void fog_area(struct player *pplayer, int x, int y, int len)` functions. The :code:`int len`
@@ -759,9 +759,9 @@ you are using the exact same code, you just never get down to 0. As changes in t
 are only sent to the client when the value shifts between zero and non-zero, no redundant packages are sent.
 You can even switch Fog of War on or off in game just by adding or subtracting 1 to all the Tiles.
 
-We only send City and terrain updates to the players who can see the Tile. So a City, or Improvement, can
-exist in a square that is known and fogged and not be shown on the Map. Likewise, you can see a City in a
-fogged square even if the City does not exist. It will be removed when you see the Tile again. This is done by
+We only send city and terrain updates to the players who can see the Tile. So a city, or Improvement, can
+exist in a square that is known and fogged and not be shown on the Map. Likewise, you can see a city in a
+fogged square even if the city does not exist. It will be removed when you see the Tile again. This is done by
 1) only sending info to players who can see a Tile and 2) keeping track of what info has been sent so the game
 can be saved. For the purpose of 2), each player has a Map on the server (consisting of ``player_tile`` and
 ``dumb_city`` fields) where the relevant information is kept.
@@ -783,8 +783,8 @@ National Borders
 
 For the display of national Borders (similar to those used in Sid Meier's Alpha Centauri) each Map Tile also
 has an ``owner`` field, to identify which nation lays claim to it. If :code:`game.borders` is non-zero, each
-City claims a circle of Tiles :code:`game.borders` in Vision Radius. In the case of neighbouring enemy Cities,
-Tiles are divided equally, with the older City winning any ties. Cities claim all immediately adjacent Tiles,
+city claims a circle of Tiles :code:`game.borders` in Vision Radius. In the case of neighbouring enemy Cities,
+Tiles are divided equally, with the older city winning any ties. Cities claim all immediately adjacent Tiles,
 plus any other Tiles within the border radius on the same continent. Land Cities also claim Ocean Tiles if
 they are surrounded by 5 land Tiles on the same continent. This is a crude detection of inland seas or Lakes,
 which should be improved upon.
