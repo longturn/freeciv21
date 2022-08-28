@@ -903,9 +903,9 @@ your opponents with the demographics report. It has the following options:
 
 Tax Rates
     Selecting this menu item will bring up a dialog box allowing you to set the rate in percentage points for
-    Gold (taxes), Science (bulbs), and Luxury (Goods). This is the same as clicking on the `Tax Rates View`_
+    gold (taxes), Science (bulbs), and luxury (goods). This is the same as clicking on the `Tax Rates View`_
     button on the `Top Function Bar`_. :numref:`Tax Rates` dialog below, shows a sample screenshot.
-    In this example, the player's nation is in Democracy, has set Gold to 40%, Science to 40%, and Luxury to
+    In this example, the player's nation is in Democracy, has set gold to 40%, Science to 40%, and luxury to
     20%.
 
 .. _Tax Rates dialog:
@@ -919,8 +919,8 @@ Tax Rates
 
 
 .. note:: The phrase "tax rates" can be a bit misleading as there is only one taxable item and that is the
-  rate for Gold collection. Think of this feature of the game more like a "National Budget". In Freeciv21,
-  the National Budget is simplified into three segments: Gold collection, Scientific output, and Luxury goods.
+  rate for gold collection. Think of this feature of the game more like a "National Budget". In Freeciv21,
+  the National Budget is simplified into three segments: gold collection, Scientific output, and luxury goods.
 
 Government
     Depending on your technological progress through the game, you may be able to select a different form
@@ -1059,7 +1059,7 @@ is shown in :numref:`Map view button` below. :numref:`Client Overview` above, ha
 
 If you hover your mouse over the :guilabel:`Map View` button, a pop up widget will appear and give you
 information about your nation. The pop up widget shows: Nationality, Total Population, Year (Turn Number),
-Gold (Surplus/Deficit), and Tax Rates.
+gold (Surplus/Deficit), and Tax Rates.
 
 To move around the map canvas, you can right-click in the main map area and the canvas will move. The further
 from the center of the screen, the faster the map canvas will move per mouse click.
@@ -1203,7 +1203,7 @@ intelligence at the bottom of the page. :numref:`Nations Intelligence` gives an 
 
 
 On the left you will see the name of the Nation, The name (username) of the Ruler, the current form of
-Government, the Capital city, how much Gold they have in the bank, the tax rates, research target, and culture
+Government, the Capital city, how much gold they have in the bank, the tax rates, research target, and culture
 score.
 
 .. note:: The Capital City will show as ``unknown`` if you have not seen the city on the `Map View`_. If it is
@@ -1388,8 +1388,8 @@ you what was sold where.
 Tax Rates View
 ^^^^^^^^^^^^^^
 
-The :guilabel:`Tax Rates View` on the `Top Function Bar`_ shows what percentage of Gold, Science, and Luxury
-Goods your nation is set at. :numref:`Tax Rates view button` shows an example of the
+The :guilabel:`Tax Rates View` on the `Top Function Bar`_ shows what percentage of gold, Science, and luxury
+goods your nation is set at. :numref:`Tax Rates view button` shows an example of the
 :guilabel:`Tax Rates View` button.
 
 .. _Tax Rates view button:
@@ -1677,7 +1677,7 @@ Citizen Governor for this city. For more information on how to use the Citizen G
 
 On the right side is the :guilabel:`Citizens` tab, as highlighted in :numref:`City Dialog Citizens`. The
 :guilabel:`Citizens` tab shows you information about the happiness and nationality of the citizens. Happiness
-is broken down into segments: Cities (Empire Size), Luxuries (Luxury Goods), Buildings, Nationality, Units,
+is broken down into segments: Cities (Empire Size), Luxury Goods, Buildings, Nationality, Units,
 and Wonders.
 
 .. _City Dialog Citizens:
@@ -1692,7 +1692,7 @@ and Wonders.
 
 Overall happiness of the citizens in your cities depends heavily on all of these factors. Certain forms of
 government have varying degrees of empire size penalties and as your empire grows you will have to deal with
-the negative consequences of managing a large empire and the unhappiness it creates. The amount of Luxury
+the negative consequences of managing a large empire and the unhappiness it creates. The amount of luxury
 Goods you are producing as part of your `Tax Rates View`_ will aid this problem. Certain city improvements can
 improve happiness, as well as units in the city (martial law), along with wonders. If units are in the field
 in battle against your enemies, they can cause unhappiness. Hovering your mouse over the appropriate row will
