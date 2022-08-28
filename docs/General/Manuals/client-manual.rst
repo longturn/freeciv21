@@ -834,7 +834,7 @@ Clean Nuclear Fallout
 
 Help Build Wonder
     Certain units, such as :unit:`Caravan` can be used to move production from one city to another and help
-    build Small and Great Wonders. This menu aids that function. Alternately you can simply "walk the
+    build small and great wonders. This menu aids that function. Alternately you can simply "walk the
     :unit:`Caravan` into a city and a pop up dialog will ask what you want to do.
 
 Establish Trade Route
@@ -953,7 +953,7 @@ Research
 
 Wonders of the World
     Clicking this menu item will show you a traveler's report widget on the `Map View`_. The widget will give
-    information on any cities that have constructed any of the Great Wonders.
+    information on any cities that have constructed any of the great wonders.
 
 .. _Wonders of the World:
 .. figure:: ../../_static/images/gui-elements/wonders.png

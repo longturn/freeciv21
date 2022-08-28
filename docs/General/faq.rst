@@ -420,7 +420,7 @@ No, it's not -- it's a feature. Your government is probably Despotism, which has
 a tile produces more than 2 units of food, production, ortrade. You should change your government (See the
 in-game help on :title-reference:`Government` for more detail) to get rid of this penalty.
 
-This feature is also not 100% affected by the form of government. There are some Small and Great Wonders
+This feature is also not 100% affected by the form of government. There are some small and great wonders
 in certain rulesets that get rid of the output penalty.
 
 Can I build land over sea/transform ocean to land?
@@ -557,8 +557,8 @@ bonus. This is a game engine (server) item and is not driven by a ruleset, such 
 Is there any penalty when changing a city production task?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-There are 4 “categories” of production: Units, city improvements (e.g. Buildings), Great Wonders, and Small
-Wonders. If you change within a “category” (e.g. :unit:`Phalanx` to :unit:`Horsemen`, or
+There are 4 “categories” of production: Units, city improvements (e.g. Buildings), great wonders, and small
+wonders. If you change within a “category” (e.g. :unit:`Phalanx` to :unit:`Horsemen`, or
 :improvement:`Library` to :improvement:`Bank`), there is no penalty. If you change across categories (e.g.
 :unit:`Archers` to :improvement:`Library`, or :wonder:`Leonardo’s Workshop` to :unit:`Frigate`), there’s a 50%
 penalty. If you change back to the same category within the same turn, the penalty is reversed. If you change
@@ -642,7 +642,7 @@ Do Caravans give full production?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The :unit:`Caravan` unit is a special unit that allows a player to move production from one city to another in
-order to increase the speed of constructing Wonders (both Small and Great). This effect only works for Wonders
+order to increase the speed of constructing wonders (both small and great). This effect only works for wonders
 and no other city improvement. The :unit:`Caravan` unit acts like any other unit when disbanded in a city: it
 gives back 50% of the shields it took to construct it in the first place. In many rulesets the :unit:`Freight`
 becomes available in the late game and obsoletes the :unit:`Caravan`. The :unit:`Freight` works the same way.
