@@ -903,7 +903,7 @@ your opponents with the demographics report. It has the following options:
 
 Tax Rates
     Selecting this menu item will bring up a dialog box allowing you to set the rate in percentage points for
-    Gold (Taxes), Science (bulbs), and Luxury (Goods). This is the same as clicking on the `Tax Rates View`_
+    Gold (taxes), Science (bulbs), and Luxury (Goods). This is the same as clicking on the `Tax Rates View`_
     button on the `Top Function Bar`_. :numref:`Tax Rates` dialog below, shows a sample screenshot.
     In this example, the player's nation is in Democracy, has set Gold to 40%, Science to 40%, and Luxury to
     20%.
@@ -918,7 +918,7 @@ Tax Rates
   Tax Rates dialog
 
 
-.. note:: The phrase "Tax Rates" can be a bit misleading as there is only one taxable item and that is the
+.. note:: The phrase "tax rates" can be a bit misleading as there is only one taxable item and that is the
   rate for Gold collection. Think of this feature of the game more like a "National Budget". In Freeciv21,
   the National Budget is simplified into three segments: Gold collection, Scientific output, and Luxury goods.
 
