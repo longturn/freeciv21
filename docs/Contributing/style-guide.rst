@@ -155,7 +155,8 @@ Capitalization
 
     * Page and section headings (e.g. the 4 documented above).
     * The names of specific game items such as units, city improvements, technologies, wonders, etc. Some of
-      them even have special text roles (:literal:`:unit:`, :literal:`:improvement:`, and :literal:`:wonder:`). :doc:`See here for a list. <capitalized-terms>`
+      them even have special text roles (:literal:`:unit:`, :literal:`:improvement:`, and :literal:`:wonder:`).
+      :doc:`See here for a list. <capitalized-terms>`
 
       This is particularly useful with words that are used ambiguously in the game, such as "granary" which is
       both the amount of food a city needs before growing and an improvement in many rulesets, or "transport".
