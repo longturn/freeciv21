@@ -64,7 +64,7 @@ Phase Start
   * All players get available info on each other. Without contact or embassy, it's at least dead/alive, and
     great wonders. Add diplomatic states with players you are in contact with.
   * A ``start_phase`` packet is sent to the clients.
-  * FEP: Unit's activities (mining, etc.) are updated for each player's units in their default order: Unit
+  * FEP: Unit's activities (mining, etc.) are updated for each player's units in their default order: unit
     activity rate is calculated (if the unit has at least one movement fragment, the rate is proportional to
     its basic move rate and veteranship power factor) that is added to its activity counter.
   * For performing certain activities, the unit might have a chance to become veteran.
@@ -114,7 +114,7 @@ Phase End
 
   * At this moment, city state updates are stopped due to many things that leave them in intermediate
     out-of-the-game state.
-  * FEP (AI): Unit end turn AI activities (no movement)
+  * FEP (AI): unit end turn AI activities (no movement)
   * FEP:
 
     * Auto-settlers do their move to work terrain.

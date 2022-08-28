@@ -97,11 +97,11 @@ If you plan to compare results of autogames the following changes can be helpful
 Data Structures
 ===============
 
-For variable length list of fx Units and cities Freeciv21 uses a :code:`genlist`, which is implemented in
+For variable length list of fx units and cities Freeciv21 uses a :code:`genlist`, which is implemented in
 :file:`utility/genlist.cpp`. By some macro magic type specific macros have been defined, avoiding much trouble.
 
-For example a Tile struct (the pointer to it we call :code:`ptile`) has a Unit list, :code:`ptile->units`; to
-iterate though all the Units on the Tile you would do the following:
+For example a Tile struct (the pointer to it we call :code:`ptile`) has a unit list, :code:`ptile->units`; to
+iterate though all the units on the Tile you would do the following:
 
 .. code-block:: rst
 
@@ -124,10 +124,10 @@ There are other operations than iterating that can be performed on a list; inser
 etc. See :file:`utility/speclist.h`. Note that the way the :code:`*_list_iterate macro` is implemented means
 you can use "continue" and "break" in the usual manner.
 
-One thing you should keep in the back of your mind. Say you are iterating through a Unit list, and then
-somewhere inside the iteration decide to disband a Unit. In the server you would do this by calling
-:code:`wipe_unit(punit)`, which would then remove the Unit node from all the relevant Unit lists. However, by
-the way :code:`unit_list_iterate` works, if the removed Unit was the following node :code:`unit_list_iterate`
+One thing you should keep in the back of your mind. Say you are iterating through a unit list, and then
+somewhere inside the iteration decide to disband a unit. In the server you would do this by calling
+:code:`wipe_unit(punit)`, which would then remove the unit node from all the relevant unit lists. However, by
+the way :code:`unit_list_iterate` works, if the removed unit was the following node :code:`unit_list_iterate`
 will already have saved the pointer, and use it in a moment, with a segfault as the result. To avoid this, use
 :code:`unit_list_iterate_safe` instead.
 
@@ -176,9 +176,9 @@ capabilities) have different header fields sizes as defined in
     uint8  : type   (e.g. PACKET_SERVER_JOIN_REQ)
 
 
-To demonstrate the route for a packet through the system, here is how a Unit disband is performed:
+To demonstrate the route for a packet through the system, here is how a unit disband is performed:
 
-#. A player disbands a Unit.
+#. A player disbands a unit.
 #. The client initializes a packet_unit_request structure and calls the packet layer function
    :code:`send_packet_unit_request()` with this structure and packet type: :code:`PACKET_UNIT_DISBAND`.
 #. The packet layer serializes the structure, wraps it up in a packet containing the ``packetlength`` type
@@ -190,17 +190,17 @@ To demonstrate the route for a packet through the system, here is how a Unit dis
    client. A request in this context is every packet sent from the client to the server.
 #. Finally the corresponding packet-handler, the :code:`handle_unit_disband()` function, is called with the
    newly constructed structure.
-#. The handler function checks if the disband request is legal (i.e. the sender really the owner of the Unit),
+#. The handler function checks if the disband request is legal (i.e. the sender really the owner of the unit),
    etc.
-#. The Unit is disbanded via the :code:`wipe_unit()` and :code:`send_remove_unit()` functions.
-#. Now an integer, containing the ``id`` of the disbanded Unit is wrapped into a packet along with the type
+#. The unit is disbanded via the :code:`wipe_unit()` and :code:`send_remove_unit()` functions.
+#. Now an integer, containing the ``id`` of the disbanded unit is wrapped into a packet along with the type
    :code:`PACKET_REMOVE_UNIT`: :code:`send_packet_generic_integer()`.
 #. The packet is serialized and sent across the network.
 #. The packet-handler returns and the end of the processing is announced to the client with a
    :code:`PACKET_PROCESSING_FINISHED` packet.
 #. On the client the :code:`PACKET_REMOVE_UNIT` packet is deserialized into a :code:`packet_generic_integer`
    structure.
-#. The corresponding client handler function is now called :code:`handle_remove_unit()`, and finally the Unit
+#. The corresponding client handler function is now called :code:`handle_remove_unit()`, and finally the unit
    is disbanded.
 
 Notice that the two packets (:code:`PACKET_UNIT_DISBAND` and :code:`PACKET_REMOVE_UNIT`) were generic packets.
@@ -249,8 +249,8 @@ the client connection when the buffer is emptied.
 
 We also had, and still have, several problems related to flow control. Basically the problem is the server can
 send packets much faster than the client can process them. This is especially true when in the end of the turn
-the AIs move all their Units. Unit moves in particular take a long time for the client to process since by
-default smooth Unit moves is on.
+the AIs move all their units. Unit moves in particular take a long time for the client to process since by
+default smooth unit moves is on.
 
 There are 3 ways to solve this problem:
 
@@ -739,15 +739,15 @@ not fundamentally different from what might happen when you transform land). Sen
 not only confused the goto code but allowed cheating.
 
 Fog of War is the fact that even when you have seen a Tile once you are not sent updates unless it is inside
-the sight range of one of your Units or cities.
+the sight range of one of your units or cities.
 
-We keep track of Fog of War by counting the number of Units and cities of each client that can see the Tile.
+We keep track of Fog of War by counting the number of units and cities of each client that can see the Tile.
 This requires a number per player, per Tile, so each :code:`player_tile` has a :code:`short[]`. Every time a
-Unit, city, or somthing else can observe a Tile 1 is added to its player's number at the Tile, and when it
+unit, city, or somthing else can observe a Tile 1 is added to its player's number at the Tile, and when it
 cannot observe any more (killed/moved/pillaged) 1 is subtracted. In addition to the initialization/loading of
 a game this array is manipulated with the :code:`void unfog_area(struct player *pplayer, int x, int y, int
 len)` and :code:`void fog_area(struct player *pplayer, int x, int y, int len)` functions. The :code:`int len`
-variable is the radius of the area that should be fogged/unfogged, i.e. a ``len`` of 1 is a normal Unit. In
+variable is the radius of the area that should be fogged/unfogged, i.e. a ``len`` of 1 is a normal unit. In
 addition to keeping track of Fog of War, these functions also make sure to reveal :code:`TILE_UNKNOWN` Tiles
 you get near, and send information about :code:`TILE_UNKNOWN` Tiles near that the client needs for drawing.
 They then send the Tiles to the :code:`void send_tile_info(struct player *dest, int x, int y)` function, which
@@ -818,17 +818,17 @@ or on a human Empire. An action can be controlled by game rules. That control ca
 client or by a quick player. An action is at the level where the rules apply. A sequence of actions is not an
 action. Parts of an action is not an action.
 
-Putting a Unit in a group so they quickly can select it with the rest of the Units in the group and the server
-can save what group a Unit belongs to is server side client state, not an action. The rules do not care what
-group a Unit belongs to. Adding a Unit to an army where the game rules treat Units in armies different from
-Units outside an army, for example by having them attack as one Unit, would be an action.
+Putting a unit in a group so they quickly can select it with the rest of the units in the group and the server
+can save what group a unit belongs to is server side client state, not an action. The rules do not care what
+group a unit belongs to. Adding a unit to an army where the game rules treat units in armies different from
+units outside an army, for example by having them attack as one unit, would be an action.
 
-Putting a Unit under the control of the auto-settlers server side agent is not an action. The player could
+Putting a unit under the control of the auto-settlers server side agent is not an action. The player could
 modify his client to automatically give the same orders as auto-settlers would have given or even give those
 orders by hand.
 
-Leaving a destroyed :unit:`Transport` is not an action. The player cannot order a Unit to perform this action.
-Having a Unit destroy its :unit:`Transport` and then leave it is an action. Leaving a :unit:`Transport` "mid
+Leaving a destroyed :unit:`Transport` is not an action. The player cannot order a unit to perform this action.
+Having a unit destroy its :unit:`Transport` and then leave it is an action. Leaving a :unit:`Transport` "mid
 flight", no matter if it was destroyed or not, and having a certain probability of surviving to show up
 somewhere else is an action.
 
@@ -879,12 +879,12 @@ All following cases exist in :code:`game.est_connections`.
    then see a list of players to choose from, or just control the server, or observe, etc. Two subcases:
 
    #. :code:`pconn->observer == 0`: Not observing the game. Should receive information about other clients,
-      game status etc., but not map, Units, Cities, etc.
+      game status etc., but not map, units, Cities, etc.
 
    All following cases exist in game.game_connections.
 
    #. :code:`pconn->observer == 1`: Observing the game. Exists in :code:`game.game_connections`. Should
-      receive game information about map, Units, Cities, etc.
+      receive game information about map, units, Cities, etc.
 
 #. :code:`pconn->player != NULL`: Connected to specific player, either as "observer" or "controller". Exists
    in :code:`game.game_connections`, and in :code:`pconn->player->connections`.

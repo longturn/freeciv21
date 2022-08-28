@@ -557,7 +557,7 @@ bonus. This is a game engine (server) item and is not driven by a ruleset, such 
 Is there any penalty when changing a city production task?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-There are 4 “categories” of production: Units, city improvements (e.g. Buildings), great wonders, and small
+There are 4 “categories” of production: units, city improvements (e.g. Buildings), great wonders, and small
 wonders. If you change within a “category” (e.g. :unit:`Phalanx` to :unit:`Horsemen`, or
 :improvement:`Library` to :improvement:`Bank`), there is no penalty. If you change across categories (e.g.
 :unit:`Archers` to :improvement:`Library`, or :wonder:`Leonardo’s Workshop` to :unit:`Frigate`), there’s a 50%

@@ -100,22 +100,22 @@ where:
 where:
 
 * :code:`Maintenance` : = :code:`(Support + Unhappiness_Compensation) * Operation_Time` : Here
-  ``Unhappiness_Compensation`` is from a military Unit being away from home and ``Support`` is the number of
-  Shields spent on supporting this Unit per turn.
+  ``Unhappiness_Compensation`` is from a military unit being away from home and ``Support`` is the number of
+  Shields spent on supporting this unit per turn.
 
 * :code:`Battle_Profit` : =
   :code:`(Shields_Lost_By_Enemy * Probability_To_Win) - (Shields_Lost_By_Us * Probability_To_Lose)` : That is
   ``Battle_Profit`` is a probabilistic average. It answers the question: "How much better off, on average,
-  would we be from attacking this enemy Unit?"
+  would we be from attacking this enemy unit?"
 
 
 Selecting Military Units
 ========================
 
-The code dealing with choosing military Units to be built and targets for them is especially messy.
+The code dealing with choosing military units to be built and targets for them is especially messy.
 
-Military Units are requested in the :code:`military_advisor_choose_build()` function. It first considers the
-defensive Units and then ventures into selection of attackers (if home is safe). There are two possibilities
+Military units are requested in the :code:`military_advisor_choose_build()` function. It first considers the
+defensive units and then ventures into selection of attackers (if home is safe). There are two possibilities
 here: we just build a new attacker or we already have an attacker which was forced, for some reason, to defend.
 In the second case it is easy: we calculate how good the existing attacker is and if it is good, we build a
 defender to free it up.
@@ -142,16 +142,16 @@ figures that a :unit:`Howitzer` would do this job even better, so bumps up our d
 Ferry System
 ============
 
-The ferry (i.e. boats transporting land Units) system of Freeciv21 is probably better described by statistical
+The ferry (i.e. boats transporting land units) system of Freeciv21 is probably better described by statistical
 mechanics than by logic. Both ferries and prospective passengers move around in what looks like a random
 fashion, trying to get closer to each other. On average, they succeed. This behavior has good reasons behind
 it. It is hell to debug, but means that small bugs do not affect the overall picture visibly.
 
 Each turn both boats and prospective passengers forget all about prior arrangements (unless the passenger is
 actually *in* the boat). Then each will look for the closest partner, exchange cards, and head towards it.
-This is done in a loop which goes through all Units in random order.
+This is done in a loop which goes through all units in random order.
 
-Because most Units recalculate their destination every turn, ignoring prior arrangements is the only good
+Because most units recalculate their destination every turn, ignoring prior arrangements is the only good
 strategy. It means that a boat will not rely on the prospective passenger to notify it when it is not needed
 anymore. This is not very effective, but can only be changed when the prospective passengers behave more
 responsibly. See the Diplomat code for more responsible behavior. They try to check if the old target is still
@@ -160,14 +160,14 @@ good before trying to find a new one.
 When a boat has a passenger, it is a different story. The boat does not do any calculations, instead one of
 the passengers is given full control and it is the passenger who drives the boat.
 
-Here are the main data fields used by the system. Value of ``ai.ferry`` in the passenger Unit is:
+Here are the main data fields used by the system. Value of ``ai.ferry`` in the passenger unit is:
 
-*  ``FERRY_NONE`` : means that the Unit has no need of a ferry.
-*  ``FERRY_WANTED`` : means that the Unit wants a ``ferry >0 : id`` of its ferry.
+*  ``FERRY_NONE`` : means that the unit has no need of a ferry.
+*  ``FERRY_WANTED`` : means that the unit wants a ``ferry >0 : id`` of its ferry.
 
-Value of ``ai.passenger`` in the ferry Unit can be either of:
+Value of ``ai.passenger`` in the ferry unit can be either of:
 
-* ``FERRY_AVAILABLE`` : means that the Unit is a ferry and is ``available >0 : id`` of its passenger.
+* ``FERRY_AVAILABLE`` : means that the unit is a ferry and is ``available >0 : id`` of its passenger.
 
 When boat-building code stabilizes, it can be seen how many free boats there are, on average, per prospective
 passenger. If there are more boats than prospective passengers, it makes sense that only prospective
@@ -236,7 +236,7 @@ Variable          Result
 ``H_TARGETS``     Cannot target anything it does not know exists.
 ``H_HUTS``        Does not know which unseen Tiles have Huts on them.
 ``H_FOG``         Cannot see through fog of War.
-``H_NOPLANES``    Does not build air Units.
+``H_NOPLANES``    Does not build air units.
 ``H_MAP``         Only knows ``map_is_known`` Tiles.
 ``H_DIPLOMACY``   Not very good at Diplomacy.
 ``H_REVOLUTION``  Cannot skip Anarchy.
@@ -250,19 +250,19 @@ For an up-to-date list of all handicaps and their use for each difficulty level 
 Things That Need To Be Fixed
 ============================
 
-* Cities do not realize Units are on their way to defend it.
+* Cities do not realize units are on their way to defend it.
 * AI builds cities without regard to danger at that location.
 * AI will not build cross-country Roads outside of the city Vision Radius.
 * ``Locally_zero_minimap`` is not implemented when wilderness Tiles change.
 * If no path to a chosen victim is found, a new victim should be chosen.
 * Emergencies in two Cities at once are not handled properly.
-* :unit:`Explorers` will not use ferryboats to get to new lands to explore. The AI will also not build Units
+* :unit:`Explorers` will not use ferryboats to get to new lands to explore. The AI will also not build units
   to explore new islands, leaving Huts alone.
-* AI sometimes believes that wasting a horde of weak military Units to kill one enemy is profitable.
+* AI sometimes believes that wasting a horde of weak military units to kill one enemy is profitable.
 * Stop building shore defense improvements in landlocked Cities with a Lake adjacent.
 * Fix the AI valuation of :improvement:`Supermarket`. It currently never builds it. See the
   :code:`farmland_food()` and :code:`ai_eval_buildings()` functions in :file:`advdomestic.cpp`.
-* Teach the AI to coordinate the Units in an attack.
+* Teach the AI to coordinate the units in an attack.
 
 
 Idea Space
