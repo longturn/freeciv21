@@ -56,14 +56,14 @@ Start New Game
 Clicking :guilabel:`Start New Game` is used to start a new single player game. When clicked the following
 dialog will appear.
 
-.. _Start New Game Dialog:
+.. _Start New Game dialog:
 .. figure:: ../../_static/images/gui-elements/start-new-game.png
     :scale: 55%
     :align: center
-    :alt: Freeciv21 Start New Game Dialog
+    :alt: Freeciv21 Start New Game dialog
     :figclass: align-center
 
-    Start New Game Dialog
+    Start New Game dialog
 
 
 From upper left to lower right, the following user interface elements are available:
@@ -85,7 +85,7 @@ Players List
 ^^^^^^^^^^^^
 
 The :guilabel:`Players List` table shows information about the configured players in the game. The information
-shown in :numref:`Start New Game Dialog` is what a single player game looks like. A LongTurn multiplayer game
+shown in :numref:`Start New Game dialog` is what a single player game looks like. A LongTurn multiplayer game
 will look very similar, except that all the player's aliases will be shown as set up by the game
 administrator. You can right-click on a player's row to configure details about the specific player:
 
@@ -108,21 +108,21 @@ administrator. You can right-click on a player's row to configure details about 
 Nation
 ^^^^^^
 
-Clicking on the button that says :guilabel:`Random` as shown in :numref:`Start New Game Dialog` above,
+Clicking on the button that says :guilabel:`Random` as shown in :numref:`Start New Game dialog` above,
 Freeciv21 will bring up a dialog box allowing you to pick the nation you want to play as shown in
-:numref:`Select Nation Dialog` below. Freeciv21 comes with hundreds of available nations to pick from. Each
+:numref:`Select Nation dialog` below. Freeciv21 comes with hundreds of available nations to pick from. Each
 nation has a city graphics style that is automatically selected, but you can also change it. You can pick from
 European, Classical, Tropical, Asian, Babylonian, and Celtic. You can also change the gender of your empire's
 leader between male and female. Lastly you can use the built-in leader names or enter one of your choosing.
 
-.. _Select Nation Dialog:
+.. _Select Nation dialog:
 .. figure:: ../../_static/images/gui-elements/pick-nation.png
     :scale: 65%
     :align: center
-    :alt: Freeciv21 Select Nation Dialog
+    :alt: Freeciv21 Select Nation dialog
     :figclass: align-center
 
-    Select Nation Dialog
+    Select Nation dialog
 
 
 Rules
@@ -159,18 +159,18 @@ More Game Options
 ^^^^^^^^^^^^^^^^^
 
 Clicking on this button will bring up the :guilabel:`Server Options` dialog box as shown in :numref:`Server
-Options Dialog` below. From here you can customize other settings for the game before you start it. The
+Options dialog` below. From here you can customize other settings for the game before you start it. The
 ruleset defines many of these options, so be sure to select the ruleset you want to play before attempting to
 set other settings. You can hover the mouse over the entries to get an explanation of what the setting does.
 
-.. _Server Options Dialog:
+.. _Server Options dialog:
 .. figure:: ../../_static/images/gui-elements/server-options.png
     :scale: 65%
     :align: center
-    :alt: Freeciv21 Server Options Dialog
+    :alt: Freeciv21 Server Options dialog
     :figclass: align-center
 
-    Server Options Dialog
+    Server Options dialog
 
 
 Client Options
@@ -218,16 +218,16 @@ Connect to Network Game
 -----------------------
 
 When you click on the :guilabel:`Connect to Network Game` button, a dialog box will appear as in
-:numref:`Server Connect Dialog` below.
+:numref:`Server Connect dialog` below.
 
-.. _Server Connect Dialog:
+.. _Server Connect dialog:
 .. figure:: ../../_static/images/gui-elements/connect-to-server.png
     :scale: 65%
     :align: center
-    :alt: Freeciv21 Server Conect Dialog
+    :alt: Freeciv21 Server Conect dialog
     :figclass: align-center
 
-    Server Connect Dialog
+    Server Connect dialog
 
 
 There are three ways to connect to a server:
@@ -258,16 +258,16 @@ Load Saved Game
 ---------------
 
 When you click on the :guilabel:`Load Saved Game` button, a dialog box will appear as in :numref:`Load Saved
-Game Dialog` below. Find the saved game you want to load and click (select) it in the table.
+Game dialog` below. Find the saved game you want to load and click (select) it in the table.
 
-.. _Load Saved Game Dialog:
+.. _Load Saved Game dialog:
 .. figure:: ../../_static/images/gui-elements/saved-game.png
     :scale: 65%
     :align: center
-    :alt: Freeciv21 Load Saved Game Dialog
+    :alt: Freeciv21 Load Saved Game dialog
     :figclass: align-center
 
-    Load Saved Game Dialog
+    Load Saved Game dialog
 
 
 Freeciv21 will show you a sample of the game map and some information about the game. If this is not what you
@@ -281,19 +281,19 @@ Start Scenario Game
 -------------------
 
 When you click on the :guilabel:`Start Scenario Game` button, a dialog box will appear as in
-:numref:`Scenarios Dialog` below. You can click on a scenario to select it and see information about the
+:numref:`Scenarios dialog` below. You can click on a scenario to select it and see information about the
 selected scenario on the panel to the right side. When you have found the scenario you want to run, click on
 the :guilabel:`Load Scenario` button. This will bring up the new game dialog as shown in :numref:`Start New
-Game Dialog` above. When ready, click :guilabel:`Start` to begin the scenario game.
+Game dialog` above. When ready, click :guilabel:`Start` to begin the scenario game.
 
-.. _Scenarios Dialog:
+.. .. _Scenarios dialog:
 .. figure:: ../../_static/images/gui-elements/scenarios.png
     :scale: 65%
     :align: center
-    :alt: Freeciv21 Scenarios Dialog
+    :alt: Freeciv21 Scenarios dialog
     :figclass: align-center
 
-    Scenarios Dialog
+    Scenarios dialog
 
 
 .. Tip:: If you are new to Freeciv21, the ``tutorial`` scenario will walk you through about 100 turns worth
@@ -307,20 +307,20 @@ Options
 -------
 
 From the Start Screen, as shown in :numref:`Start Screen`, when you click on the :guilabel:`Options` button, a
-dialog box will appear as in :numref:`Local Options Dialog` below. This dialog allows you to set a myriad of
+dialog box will appear as in :numref:`Local Options dialog` below. This dialog allows you to set a myriad of
 options that affect the look and feel of the client when you are playing a game.
 
 The local options dialog box can also be opened while in a game via the
 :menuselection:`Game --> Local Options` menu.
 
-.. _Local Options Dialog:
+.. _Local Options dialog:
 .. figure:: ../../_static/images/gui-elements/local-options.png
     :scale: 65%
     :align: center
-    :alt: Freeciv21 Local Options Dialog
+    :alt: Freeciv21 Local Options dialog
     :figclass: align-center
 
-    Local Options Dialog
+    Local Options dialog
 
 
 The local options dialog is broken down into the following tabs:
@@ -420,25 +420,25 @@ Server Options
     above.
 
 Messages
-    Opens the :guilabel:`Message Options` dialog as shown in :numref:`Message Options Dialog` below. The
+    Opens the :guilabel:`Message Options` dialog as shown in :numref:`Message Options dialog` below. The
     screenshot only shows a few rows of available options, many more will be found in the client. Any item
     with a check mark in the :guilabel:`Out` column will be shown in the :guilabel:`Server Log/Chat` widget.
     Any item with a check mark in the :guilabel:`Mes` column will be shown in the :guilabel:`Messages` widget
     (see `Messages`_). Lastly, any item with a check mark in the :guilabel:`Pop` column will be shown in a pop
     up message box window.
 
-.. _Message Options Dialog:
+.. _Message Options dialog:
 .. figure:: ../../_static/images/gui-elements/message-options.png
   :scale: 65%
   :align: center
-  :alt: Freeciv21 Message Options Dialog
+  :alt: Freeciv21 Message Options dialog
   :figclass: align-center
 
-  Message Options Dialog
+  Message Options dialog
 
 
 Shortcuts
-    Opens the :guilabel:`Shortcuts` dialog as shown in :numref:`Shortcut Options Dialog` below. The dialog is
+    Opens the :guilabel:`Shortcuts` dialog as shown in :numref:`Shortcut Options dialog` below. The dialog is
     used to set the preferred keyboard shortcuts to be used in the game. The screenshot only shows a few rows
     of available options, many more will be found in the client. To override the default, click your mouse
     cursor on the box on the right and then type the shortcut you want to set the setting to. For example: You
@@ -446,29 +446,29 @@ Shortcuts
     and then press the :guilabel:`PgUp` key on your keyboard. To reset to defaults, you can click on the
     :guilabel:`Reset` button. Click :guilabel:`Save` and then :guilabel:`Close` when finished.
 
-.. _Shortcut Options Dialog:
+.. _Shortcut Options dialog:
 .. figure:: ../../_static/images/gui-elements/shortcut-options.png
   :scale: 65%
   :align: center
-  :alt: Freeciv21 Shortcut Options Dialog
+  :alt: Freeciv21 Shortcut Options dialog
   :figclass: align-center
 
-  Shortcut Options Dialog
+  Shortcut Options dialog
 
 
 Load Another Tileset
-    Opens the :guilabel:`Available Tilesets` dialog as shown in :numref:`Available Tilesets Dialog` below. You
+    Opens the :guilabel:`Available Tilesets` dialog as shown in :numref:`Available Tilesets dialog` below. You
     can select any tileset installed by clicking on the name. You may get an error message if the tileset is
     not compatible with the current ruleset (for example: if it lacks a unit).
 
-.. _Available Tilesets Dialog:
+.. _Available Tilesets dialog:
 .. figure:: ../../_static/images/gui-elements/tileset.png
   :align: center
   :scale: 75%
-  :alt: Freeciv21 Available Tilesets Dialog
+  :alt: Freeciv21 Available Tilesets dialog
   :figclass: align-center
 
-  Available Tilesets Dialog
+  Available Tilesets dialog
 
 
 Tileset Debugger
@@ -572,7 +572,7 @@ City Outlines
 
 City Output
     Enables or Disables the display on the `Map View`_ the city's food, production, and trade as shown
-    in the `City Dialog`_ box.
+    in the `City Dialog`_.
 
 Map Grid
     Enables or Disables the display on the `Map View`_ the tile grid. This can be useful to help differentiate
@@ -640,17 +640,17 @@ Done
 
 Advanced Unit Selection
     Opens the :guilabel:`Advanced Unit Selection` dialog box as shown in
-    :numref:`Advanced Unit Selection Dialog` below. This dialog box gives you options to select a group of
+    :numref:`Advanced Unit Selection dialog` below. This dialog box gives you options to select a group of
     units using a more nuanced grouping method than the other :guilabel:`Select` menu options.
 
-.. _Advanced Unit Selection Dialog:
+.. _Advanced Unit Selection dialog:
 .. figure:: ../../_static/images/gui-elements/advanced-unit-selection.png
   :align: center
   :scale: 75%
-  :alt: Freeciv21 Advanced Unit Selection Dialog
+  :alt: Freeciv21 Advanced Unit Selection dialog
   :figclass: align-center
 
-  Advanced Unit Selection Dialog
+  Advanced Unit Selection dialog
 
 
 Unit Menu
@@ -904,18 +904,18 @@ your opponents with the demographics report. It has the following options:
 Tax Rates
     Selecting this menu item will bring up a dialog box allowing you to set the rate in percentage points for
     Gold (Taxes), Science (bulbs), and Luxury (Goods). This is the same as clicking on the `Tax Rates View`_
-    button on the `Top Function Bar`_. :numref:`Tax Rates Selection Dialog` below, shows a sample screenshot.
+    button on the `Top Function Bar`_. :numref:`Tax Rates` dialog below, shows a sample screenshot.
     In this example, the player's nation is in Democracy, has set Gold to 40%, Science to 40%, and Luxury to
     20%.
 
-.. _Tax Rates Selection Dialog:
+.. _Tax Rates dialog:
 .. figure:: ../../_static/images/gui-elements/tax-rates.png
   :scale: 65%
   :align: center
-  :alt: Freeciv21 Tax Rates Selection Dialog
+  :alt: Freeciv21 Tax Rates dialog
   :figclass: align-center
 
-  Tax Rates Selection Dialog
+  Tax Rates dialog
 
 
 .. note:: The phrase "Tax Rates" can be a bit misleading as there is only one taxable item and that is the
@@ -1401,8 +1401,8 @@ Goods your nation is set at. :numref:`Tax Rates View Button` shows an example of
   Tax Rates View Button
 
 
-Clicking on the :guilabel:`Tax Rates View` will bring up the :guilabel:`Tax Rates Dialog` box as shown in
-:numref:`Tax Rates Selection Dialog` in the `Civilization Menu`_ section.
+Clicking on the :guilabel:`Tax Rates View` will bring up the :guilabel:`Tax Rates` dialog as shown in
+:numref:`Tax Rates dialog` in the `Civilization Menu`_ section.
 
 National Status View
 ^^^^^^^^^^^^^^^^^^^^
@@ -1524,12 +1524,13 @@ City Dialog
 
 Getting to know the :guilabel:`City Dialog` is a major aspect of playing Freeciv21. As a player you will spend
 a great amount of time using this dialog box. The :guilabel:`City Dialog` is accessed by clicking on a city in
-the `Map View`_ or by double-clicking a city from the table in the `Cities View`_. :numref:`City Dialog` shows
+the `Map View`_ or by double-clicking a city from the table in the `Cities View`_.
+:numref:`City Dialog Overview` shows
 a sample of the :guilabel:`City Dialog`. The dialog box is broken up into 5 major segments: city information
 (top center), production and citizen governor tabs (left), city citizen tile output (center), general, and
 citizens tabs (right) and present units (botton center).
 
-.. _City Dialog:
+.. _City Dialog Overview:
 .. figure:: ../../_static/images/gui-elements/city-dialog.png
   :align: center
   :scale: 65%
