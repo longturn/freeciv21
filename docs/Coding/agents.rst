@@ -15,7 +15,7 @@ got its task description.
 Examples of agents:
 
 * An agent responsible for moving a certain Unit from Tile A to Tile B
-* An agent responsible for maximize the Food Production of a city
+* An agent responsible for maximize the food production of a city
 * An agent responsible for the production queue of a city
 * An agent responsible for defending a city
 * An agent responsible for a city
