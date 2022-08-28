@@ -252,7 +252,7 @@ Things That Need To Be Fixed
 
 * Cities do not realize units are on their way to defend it.
 * AI builds cities without regard to danger at that location.
-* AI will not build cross-country Roads outside of the city Vision Radius.
+* AI will not build cross-country roads outside of the city vision radius.
 * ``Locally_zero_minimap`` is not implemented when wilderness Tiles change.
 * If no path to a chosen victim is found, a new victim should be chosen.
 * Emergencies in two Cities at once are not handled properly.

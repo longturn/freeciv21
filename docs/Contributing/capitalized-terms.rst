@@ -108,8 +108,8 @@ Use them with ``:improvement:`` or ``:woncer:``, :improvement:`Granary` and :won
   * Verrocchio's Workshop
   * Women's Suffrage
 
-Diplomatic States
-=================
+Diplomacy
+=========
 
 Only when referring to the in-game diplomatic state. For instance: "establishing an Alliance allows an
 increased level of cooperation", but "one should always be prepared for war".
@@ -121,6 +121,7 @@ increased level of cooperation", but "one should always be prepared for war".
   * Armistice
   * Cease-fire
   * Peace
+  * Shared Vision
   * War
 
 Disasters
