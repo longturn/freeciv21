@@ -158,7 +158,7 @@ Capitalization
       them even have special text roles (:literal:`:unit:`, :literal:`:improvement:`, and :literal:`:wonder:`). :doc:`See here for a list. <capitalized-terms>`
 
       This is particularly useful with words that are used ambiguously in the game, such as "granary" which is
-      both the amount of food a city needs before growing and an improvement in many rulesets or "transport".
+      both the amount of food a city needs before growing and an improvement in many rulesets, or "transport".
 
     When describing elements of the user interface, use the same capitalization as in the game and wrap the
     text inside markup elements with the :literal:`:guilabel:` or :literal:`:menuselection:` roles. They are
