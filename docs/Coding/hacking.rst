@@ -759,7 +759,7 @@ you are using the exact same code, you just never get down to 0. As changes in t
 are only sent to the client when the value shifts between zero and non-zero, no redundant packages are sent.
 You can even switch Fog of War on or off in game just by adding or subtracting 1 to all the Tiles.
 
-We only send city and terrain updates to the players who can see the Tile. So a city, or Improvement, can
+We only send city and terrain updates to the players who can see the Tile. So a city, or improvement, can
 exist in a square that is known and fogged and not be shown on the Map. Likewise, you can see a city in a
 fogged square even if the city does not exist. It will be removed when you see the Tile again. This is done by
 1) only sending info to players who can see a Tile and 2) keeping track of what info has been sent so the game
