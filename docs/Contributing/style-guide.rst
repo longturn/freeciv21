@@ -1,6 +1,7 @@
 ..
     SPDX-License-Identifier: GPL-3.0-or-later
     SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022 Louis Moureaux <m_louis30@yahoo.com>
 
 Documentation Style Guide
 *************************
@@ -149,143 +150,26 @@ The Oxford Comma
     "and", that is the Oxford comma and its usage is expected in our documentation.
 
 Capitalization
-    For consistent formatting, the following should always use "Title Case" rules:
+    For consistent formatting, the following should always use
+    `"Title Case" rules <https://www.grammarly.com/blog/capitalization-rules/>`_:
 
-    * Section Headings (e.g. the 4 documented above)
-    * Menu Entries in the client
-    * Anything inside of :literal:`:guilabel:` or :literal:`:menuselection:`
-    * The names of Units, City Improvements and Wonders in the :literal:`:unit:`, :literal:`:improvement:` and
-      :literal:`:wonder:` tags respectively
+    * Page and section headings (e.g. the 4 documented above).
+    * The names of specific game items such as units, city improvements, technologies, wonders, etc. Some of
+      them even have special text roles (:literal:`:unit:`, :literal:`:improvement:`, and :literal:`:wonder:`). :doc:`See here for a list. <capitalized-terms>`
 
-    This page provides a good overview of Title Case capitalization rules for US English:
-    https://www.grammarly.com/blog/capitalization-rules/
+      This is particularly useful with words that are used ambiguously in the game, such as "granary" which is
+      both the amount of food a city needs before growing and an improvement in many rulesets or "transport".
 
-    Below is a more exhaustive list of game specific terms that we want to capitalize. The list can be used
-    in a find/replace exercise:
+    When describing elements of the user interface, use the same capitalization as in the game and wrap the
+    text inside markup elements with the :literal:`:guilabel:` or :literal:`:menuselection:` roles. They are
+    rendered as follows: "the :guilabel:`Turn Done` button", "select :menuselection:`Help --> Overview` in
+    the menu".
 
-    :strong:`Game Interface`:
+    .. Get rid of the "WARNING: document isn't included in any toctree"
+    .. toctree::
+      :hidden:
 
-    .. hlist::
-
-      * Airbase
-      * Base
-      * Border
-      * Bulbs
-      * Buoy
-      * Button (a named button)
-      * Chat
-      * City / Cities
-      * Dialog (a named dialog)
-      * Embassy / Embassies
-      * Fort and Fortress
-      * Improvement
-      * Map
-      * Menu (a named menu)
-      * Messages (widget)
-      * Minimap (widget)
-      * Small Great Wonder (only with Wonders)
-      * Tax Rate
-      * Technology Advance
-      * Top Controls Bar
-      * Unit
-      * View (a named view)
-      * Vision Radius Shared (only for City Radius, Shared Vision)
-      * Widget (a named widget)
-      * World
-
-    :strong:`City Dialog Items`:
-
-    .. hlist::
-
-      * Citizen
-      * Angry
-      * Celebrate
-      * Content
-      * Happy
-      * Unhappy
-      * Civil War
-      * Civilization
-      * Corruption
-      * Culture
-      * Gold
-      * Granary
-      * Food
-      * Luxury Goods (always plural)
-      * Nation
-      * Nationality
-      * Plague
-      * Pollution
-      * Production (only when discussing Production points)
-      * Science
-      * Trade Route
-      * Waste
-
-    :strong:`Gameplay`:
-
-    .. hlist::
-
-      * Migration
-      * Entertainer
-      * Taxman
-      * Scientist
-      * Specialist
-      * Global Warming
-      * National Budget
-      * Nuclear Winter
-
-    :strong:`Map`:
-
-    .. hlist::
-
-      * Buffalo
-      * Coal
-      * Desert
-      * Fish
-      * Forest
-      * Grassland
-      * Hills
-      * Jungle
-      * Lake
-      * Mountain
-      * Oasis
-      * Ocean
-      * Pheasant
-      * Plains
-      * River
-      * Shield
-      * Silk
-      * Special (as in Tile Special)
-      * Tile
-      * Tundra
-      * Whale
-      * Wheat
-      * Wine
-
-    :strong:`Diplomacy`:
-
-    .. hlist::
-
-      * Alliance
-      * Armistice
-      * Cease-fire
-      * Diplomacy
-      * Peace
-      * War
-
-    :strong:`Governments`:
-
-    .. hlist::
-
-      * Anarchy
-      * Democracy
-      * City-States
-      * Communism
-      * Despotism
-      * Federation
-      * Fundamentalism
-      * Monarchy
-      * Republic
-      * Tribal
+      capitalized-terms
 
 Language Contractions
     Language Contractions are when two words are combined together with an apostrophe ( ``'`` ). For example,
