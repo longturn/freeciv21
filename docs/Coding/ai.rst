@@ -185,7 +185,7 @@ The AI's diplomatic behaviour is current only regulated by the ``diplomacy`` ser
 AI proposes Cease-fire on first contact.
 
 AI is not very trusting for NEUTRAL and PEACE modes, but once it hits ALLIANCE, this changes completely, and
-it will happily hand over any Technology Advance and Maps it has to you. The only thing that will make the AI
+it will happily hand over any Technology Advance and maps it has to you. The only thing that will make the AI
 attack you then is if you build a Spaceship.
 
 For people who want to hack at this part of the AI code, please note:
