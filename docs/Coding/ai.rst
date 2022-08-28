@@ -259,7 +259,7 @@ Things That Need To Be Fixed
 * :unit:`Explorers` will not use ferryboats to get to new lands to explore. The AI will also not build Units
   to explore new islands, leaving Huts alone.
 * AI sometimes believes that wasting a horde of weak military Units to kill one enemy is profitable.
-* Stop building shore defense Improvements in landlocked Cities with a Lake adjacent.
+* Stop building shore defense improvements in landlocked Cities with a Lake adjacent.
 * Fix the AI valuation of :improvement:`Supermarket`. It currently never builds it. See the
   :code:`farmland_food()` and :code:`ai_eval_buildings()` functions in :file:`advdomestic.cpp`.
 * Teach the AI to coordinate the Units in an attack.
