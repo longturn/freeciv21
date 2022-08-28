@@ -255,11 +255,11 @@ Things That Need To Be Fixed
 * AI will not build cross-country roads outside of the city vision radius.
 * ``Locally_zero_minimap`` is not implemented when wilderness tiles change.
 * If no path to a chosen victim is found, a new victim should be chosen.
-* Emergencies in two Cities at once are not handled properly.
+* Emergencies in two cities at once are not handled properly.
 * :unit:`Explorers` will not use ferryboats to get to new lands to explore. The AI will also not build units
   to explore new islands, leaving Huts alone.
 * AI sometimes believes that wasting a horde of weak military units to kill one enemy is profitable.
-* Stop building shore defense improvements in landlocked Cities with a Lake adjacent.
+* Stop building shore defense improvements in landlocked cities with a Lake adjacent.
 * Fix the AI valuation of :improvement:`Supermarket`. It currently never builds it. See the
   :code:`farmland_food()` and :code:`ai_eval_buildings()` functions in :file:`advdomestic.cpp`.
 * Teach the AI to coordinate the units in an attack.
