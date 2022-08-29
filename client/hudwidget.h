@@ -327,6 +327,8 @@ private:
   float fading = 0.0f;
   float hud_scale;
   QImage dimg, aimg;
+  bool att_win = false;
+  bool def_win = false;
 };
 
 /****************************************************************************
