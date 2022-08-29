@@ -1794,8 +1794,8 @@ void hud_unit_combat::paintEvent(QPaintEvent *event)
   QFont f = fcFont::instance()->getFont(fonts::default_font);
   QString ahploss, dhploss;
 
-  // TRANS: HP - Hit Points
   if (att_hp_loss > 0) {
+    // TRANS: HP - Hit Points
     ahploss = QString(_("-%1 HP")).arg(att_hp_loss);
   } else {
     ahploss = QString(_("%1 HP")).arg(att_hp_loss);
