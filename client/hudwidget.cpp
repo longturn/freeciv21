@@ -1794,16 +1794,16 @@ void hud_unit_combat::paintEvent(QPaintEvent *event)
   QFont f = fcFont::instance()->getFont(fonts::default_font);
   QString ahploss, dhploss;
 
-  // TRANS: HP is Hip Point
+  // TRANS: HP - Hit Points
   if (att_hp_loss > 0) {
-    ahploss = "-" + QString::number(att_hp_loss) + " HP";
+    ahploss = QString(_("-%1 HP")).arg(att_hp_loss);
   } else {
-    ahploss = QStringLiteral("0") + " HP";
+    ahploss = QString(_("%1 HP")).arg(att_hp_loss);
   }
   if (def_hp_loss > 0) {
-    dhploss = "-" + QString::number(def_hp_loss) + " HP";
+    dhploss = QString(_("-%1 HP")).arg(def_hp_loss);
   } else {
-    dhploss = QStringLiteral("0") + " HP";
+    dhploss = QString(_("%1 HP")).arg(def_hp_loss);
   }
   f.setBold(true);
 
@@ -1838,22 +1838,22 @@ void hud_unit_combat::paintEvent(QPaintEvent *event)
   p.setPen(QColor(Qt::white));
   if (def_veteran) {
     p.drawText(right, Qt::AlignBottom | Qt::AlignRight | Qt::AlignAbsolute,
-               QStringLiteral("*Vet*"));
+               _("*Vet*"));
   }
   if (att_veteran) {
     p.drawText(left, Qt::AlignBottom | Qt::AlignRight | Qt::AlignAbsolute,
-               QStringLiteral("*Vet*"));
+               _("*Vet*"));
   }
   p.drawText(left, Qt::AlignHorizontal_Mask, ahploss);
   p.drawImage(right, dimg);
   p.drawText(right, Qt::AlignHorizontal_Mask, dhploss);
   if (def_win) {
     p.drawText(right, Qt::AlignBottom | Qt::AlignLeft | Qt::AlignAbsolute,
-               QStringLiteral("Win"));
+               _("Win"));
   }
   if (att_win) {
     p.drawText(left, Qt::AlignBottom | Qt::AlignLeft | Qt::AlignAbsolute,
-               QStringLiteral("Win"));
+               _("Win"));
   }
   p.end();
 }
