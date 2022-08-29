@@ -1682,8 +1682,10 @@ hud_unit_combat::hud_unit_combat(int attacker_unit_id, int defender_unit_id,
   def_hp_loss = defender->hp - def_hp;
   if (defender_hp <= 0) {
     center_tile = attacker->tile;
+    att_win = true;
   } else {
     center_tile = defender->tile;
+    def_win = true;
   }
   init_images();
 }
@@ -1792,15 +1794,16 @@ void hud_unit_combat::paintEvent(QPaintEvent *event)
   QFont f = fcFont::instance()->getFont(fonts::default_font);
   QString ahploss, dhploss;
 
+  // TRANS: HP is Hip Point
   if (att_hp_loss > 0) {
-    ahploss = "-" + QString::number(att_hp_loss);
+    ahploss = "-" + QString::number(att_hp_loss) + " HP";
   } else {
-    ahploss = QStringLiteral("0");
+    ahploss = QStringLiteral("0") + " HP";
   }
   if (def_hp_loss > 0) {
-    dhploss = "-" + QString::number(def_hp_loss);
+    dhploss = "-" + QString::number(def_hp_loss) + " HP";
   } else {
-    dhploss = QStringLiteral("0");
+    dhploss = QStringLiteral("0") + " HP";
   }
   f.setBold(true);
 
@@ -1834,17 +1837,24 @@ void hud_unit_combat::paintEvent(QPaintEvent *event)
   p.setFont(f);
   p.setPen(QColor(Qt::white));
   if (def_veteran) {
-    p.drawText(right,
-               Qt::AlignHCenter | Qt::AlignJustify | Qt::AlignAbsolute,
-               QStringLiteral("*"));
+    p.drawText(right, Qt::AlignBottom | Qt::AlignRight | Qt::AlignAbsolute,
+               QStringLiteral("*Vet*"));
   }
   if (att_veteran) {
-    p.drawText(left, Qt::AlignHCenter | Qt::AlignJustify | Qt::AlignAbsolute,
-               QStringLiteral("*"));
+    p.drawText(left, Qt::AlignBottom | Qt::AlignRight | Qt::AlignAbsolute,
+               QStringLiteral("*Vet*"));
   }
   p.drawText(left, Qt::AlignHorizontal_Mask, ahploss);
   p.drawImage(right, dimg);
   p.drawText(right, Qt::AlignHorizontal_Mask, dhploss);
+  if (def_win) {
+    p.drawText(right, Qt::AlignBottom | Qt::AlignLeft | Qt::AlignAbsolute,
+               QStringLiteral("Win"));
+  }
+  if (att_win) {
+    p.drawText(left, Qt::AlignBottom | Qt::AlignLeft | Qt::AlignAbsolute,
+               QStringLiteral("Win"));
+  }
   p.end();
 }
 
