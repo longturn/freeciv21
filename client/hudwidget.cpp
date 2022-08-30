@@ -1794,17 +1794,10 @@ void hud_unit_combat::paintEvent(QPaintEvent *event)
   QFont f = fcFont::instance()->getFont(fonts::default_font);
   QString ahploss, dhploss;
 
-  if (att_hp_loss > 0) {
-    // TRANS: HP - Hit Points
-    ahploss = QString(_("-%1 HP")).arg(att_hp_loss);
-  } else {
-    ahploss = QString(_("%1 HP")).arg(att_hp_loss);
-  }
-  if (def_hp_loss > 0) {
-    dhploss = QString(_("-%1 HP")).arg(def_hp_loss);
-  } else {
-    dhploss = QString(_("%1 HP")).arg(def_hp_loss);
-  }
+  // TRANS: HP - Hit Points
+  ahploss = QString(_("%1 HP")).arg(-att_hp_loss);
+  // TRANS: HP - Hit Points
+  dhploss = QString(_("%1 HP")).arg(-def_hp_loss);
   f.setBold(true);
 
   if (def_hp == 0) {
@@ -1837,23 +1830,29 @@ void hud_unit_combat::paintEvent(QPaintEvent *event)
   p.setFont(f);
   p.setPen(QColor(Qt::white));
   if (def_veteran) {
-    p.drawText(right, Qt::AlignBottom | Qt::AlignRight | Qt::AlignAbsolute,
-               _("*Vet*"));
+    // Gold for Veteran
+    p.setPen(QColor(255, 215, 0, 255));
+    p.drawText(right, Qt::AlignRight | Qt::AlignBottom | Qt::AlignAbsolute,
+               _("V"));
+    p.setPen(QColor(Qt::white));
   }
   if (att_veteran) {
-    p.drawText(left, Qt::AlignBottom | Qt::AlignRight | Qt::AlignAbsolute,
-               _("*Vet*"));
+    // Gold for Veteran
+    p.setPen(QColor(255, 215, 0, 255));
+    p.drawText(left, Qt::AlignRight | Qt::AlignBottom | Qt::AlignAbsolute,
+               _("V"));
+    p.setPen(QColor(Qt::white));
   }
   p.drawText(left, Qt::AlignHorizontal_Mask, ahploss);
   p.drawImage(right, dimg);
   p.drawText(right, Qt::AlignHorizontal_Mask, dhploss);
   if (def_win) {
     p.drawText(right, Qt::AlignBottom | Qt::AlignLeft | Qt::AlignAbsolute,
-               _("Win"));
+               _("Winner"));
   }
   if (att_win) {
     p.drawText(left, Qt::AlignBottom | Qt::AlignLeft | Qt::AlignAbsolute,
-               _("Win"));
+               _("Winner"));
   }
   p.end();
 }
