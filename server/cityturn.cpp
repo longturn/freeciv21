@@ -2222,7 +2222,6 @@ static bool city_distribute_surplus_shields(struct player *pplayer,
     unit_list_iterate_safe(pcity->units_supported, punit)
     {
       /* Should we look at punit->upkeep[O_SHIELD] here, instead of the
-      && pcity->surplus[O_SHIELD] < 0
        * upkeep for the unit type? That's what the gold upkeep calculations
        * do. The difference is with units that happened to get free upkeep
        * from EFT_UNIT_UPKEEP_FREE_PER_CITY.
@@ -2241,9 +2240,9 @@ static bool city_distribute_surplus_shields(struct player *pplayer,
           notify_player(pplayer, city_tile(pcity), E_UNIT_LOST_MISC,
                         ftc_server, _("%s can't upkeep %s, unit disbanded."),
                         city_link(pcity), punit_link);
+          surplus += upkeep;
+          // pcity->surplus[O_SHIELD] automatically updated
         }
-
-        surplus += upkeep;
       }
     }
     unit_list_iterate_safe_end;
@@ -2271,6 +2270,7 @@ static bool city_distribute_surplus_shields(struct player *pplayer,
 
         // No upkeep for the unit this turn.
         surplus += upkeep;
+        pcity->surplus[O_SHIELD] += upkeep;
       }
     }
     unit_list_iterate_safe_end;
