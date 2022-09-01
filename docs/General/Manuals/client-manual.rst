@@ -438,7 +438,7 @@ Messages
 
 
 Shortcuts
-    Opens the :guilabel:`Shortcuts` dialog as shown in :numref:`Shortcut Options dialog` below. The dialog is
+    Opens the :guilabel:`Shortcuts` dialog as shown in :numref:`Shortcut Options Dialog` below. The dialog is
     used to set the preferred keyboard shortcuts to be used in the game. The screenshot only shows a few rows
     of available options, many more will be found in the client. To override the default, click your mouse
     cursor on the box on the right and then type the shortcut you want to set the setting to. For example: You
@@ -446,14 +446,14 @@ Shortcuts
     and then press the :guilabel:`PgUp` key on your keyboard. To reset to defaults, you can click on the
     :guilabel:`Reset` button. Click :guilabel:`Save` and then :guilabel:`Close` when finished.
 
-.. _Shortcut Options dialog:
+.. _Shortcut Options Dialog:
 .. figure:: ../../_static/images/gui-elements/shortcut-options.png
   :scale: 65%
   :align: center
   :alt: Freeciv21 Shortcut Options dialog
   :figclass: align-center
 
-  Shortcut Options dialog
+  Shortcut Options Dialog
 
 
 Load Another Tileset
@@ -904,7 +904,7 @@ your opponents with the demographics report. It has the following options:
 Tax Rates
     Selecting this menu item will bring up a dialog box allowing you to set the rate in percentage points for
     gold (taxes), science (bulbs), and luxury (goods). This is the same as clicking on the `Tax Rates View`_
-    button on the `Top Function Bar`_. :numref:`Tax Rates` dialog below, shows a sample screenshot.
+    button on the `Top Function Bar`_. :numref:`Tax Rates Dialog` dialog below, shows a sample screenshot.
     In this example, the player's nation is in Democracy, has set gold to 40%, science to 40%, and luxury to
     20%.
 
@@ -1045,7 +1045,7 @@ Map View
 ^^^^^^^^
 
 This is your primary playing surface. This is the map where you build your civilization. The button for this
-is shown in :numref:`Map view button` below. :numref:`Client Overview` above, has a good example of the
+is shown in :numref:`Map View Button` below. :numref:`Client Overview` above, has a good example of the
 :guilabel:`Map View`.
 
 .. _Map View Button:
@@ -1173,7 +1173,7 @@ client will switch to a list of nations that you are playing against in a table 
   Nations and Diplomacy View Button
 
 
-:numref:`Nations and Diplomacy view button with Diplomacy View open` gives a sample of the
+:numref:`Nations and Diplomacy View Button with Diplomacy View Open` gives a sample of the
 :guilabel:`Nations View` in the client with all available columns displayed. If you right-click on the table
 heading, you will be given a list of column names that you can enable or disable. If you change anything, then
 be sure to save the settings from the :guilabel:`Game` menu.
@@ -1274,15 +1274,15 @@ Lastly, you can see in :numref:`Diplomacy` above that there are more than one co
 foreign state department is busy! If you happen to click out of the :guilabel:`Diplomacy View`, for example by
 clicking on the button for the `Map View`_, the button for the :guilabel:`Nations and Diplomacy View` will
 change from what is shown in :numref:`Nations and Diplomacy View Button` and instead will change to what is
-shown in :numref:`Nations and Diplomacy View Button with Diplomacy View open` below.
+shown in :numref:`Nations and Diplomacy View Button with Diplomacy View Open` below.
 
-.. _Nations and Diplomacy View Button with Diplomacy View open:
+.. _Nations and Diplomacy View Button with Diplomacy View Open:
 .. figure:: ../../_static/images/gui-elements/top-bar-nations-diplomacy.png
   :align: center
   :alt: Freeciv21 nations with diplomacy open
   :figclass: align-center
 
-  Nations and Diplomacy View Button with Diplomacy View open
+  Nations and Diplomacy View Button with Diplomacy View Open
 
 
 To quickly access the :guilabel:`Diplomacy View`, you can right-click on the button to bring it up. A normal
@@ -1454,7 +1454,7 @@ or the unit on the `Map View`_.
   :alt: Freeciv21 Messages widget
   :figclass: align-center
 
-  Messages widget
+  Messages Widget
 
 
 Unit Controls
