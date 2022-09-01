@@ -4,6 +4,7 @@
     SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
     SPDX-FileCopyrightText: 2022 Pranav Sampathkumar <pranav.sampathkumar@gmail.com>
     SPDX-FileCopyrightText: 2022 NIKEA-SOFT
+    SPDX-FileCopyrightText: 2022 Louis Moureaux <m_louis30@yahoo.com>
 
 Freeciv21 Hacker's Guide
 ************************
