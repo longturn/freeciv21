@@ -62,13 +62,9 @@ player that connects. Finally, type :code:`start` when you are ready to watch th
     update loads near the end of the game.
 
 
-The autogame mode with :code:`timeout -1` is only available in ``DEBUG`` versions and should not be used with
-clients as it removes virtually all the server gating controls.
-
 If you plan to compare results of autogames the following changes can be helpful:
 
 * :code:`define __FC_LINE__` to a constant value in :file:`./utility/log.h`.
-* :code:`undef LOG_TIMERS` in :file:`./utility/timing.h`.
 * deactivation of the event cache (:code:`set ec_turns 0`).
 
 
