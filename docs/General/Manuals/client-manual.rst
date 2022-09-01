@@ -31,7 +31,7 @@ files. Double-clicking ``freeciv21-client`` should start it up.
 .. figure:: ../../_static/images/gui-elements/start-screen.png
     :scale: 65%
     :align: center
-    :alt: Freeciv21 Start Screen
+    :alt: Freeciv21 start screen
     :figclass: align-center
 
     Start Screen with NightStalker Theme
@@ -56,14 +56,14 @@ Start New Game
 Clicking :guilabel:`Start New Game` is used to start a new single player game. When clicked the following
 dialog will appear.
 
-.. _Start New Game dialog:
+.. _Start New Game Dialog:
 .. figure:: ../../_static/images/gui-elements/start-new-game.png
     :scale: 55%
     :align: center
     :alt: Freeciv21 Start New Game dialog
     :figclass: align-center
 
-    Start New Game dialog
+    Start New Game Dialog
 
 
 From upper left to lower right, the following user interface elements are available:
@@ -108,9 +108,9 @@ administrator. You can right-click on a player's row to configure details about 
 Nation
 ^^^^^^
 
-Clicking on the button that says :guilabel:`Random` as shown in :numref:`Start New Game dialog` above,
+Clicking on the button that says :guilabel:`Random` as shown in :numref:`Start New Game Dialog` above,
 Freeciv21 will bring up a dialog box allowing you to pick the nation you want to play as shown in
-:numref:`Select Nation dialog` below. Freeciv21 comes with hundreds of available nations to pick from. Each
+:numref:`Select Nation Dialog` below. Freeciv21 comes with hundreds of available nations to pick from. Each
 nation has a city graphics style that is automatically selected, but you can also change it. You can pick from
 European, Classical, Tropical, Asian, Babylonian, and Celtic. You can also change the gender of your empire's
 leader between male and female. Lastly you can use the built-in leader names or enter one of your choosing.
@@ -122,7 +122,7 @@ leader between male and female. Lastly you can use the built-in leader names or 
     :alt: Freeciv21 Select Nation dialog
     :figclass: align-center
 
-    Select Nation dialog
+    Select Nation Dialog
 
 
 Rules
@@ -159,18 +159,18 @@ More Game Options
 ^^^^^^^^^^^^^^^^^
 
 Clicking on this button will bring up the :guilabel:`Server Options` dialog box as shown in :numref:`Server
-Options dialog` below. From here you can customize other settings for the game before you start it. The
+Options Dialog` below. From here you can customize other settings for the game before you start it. The
 ruleset defines many of these options, so be sure to select the ruleset you want to play before attempting to
 set other settings. You can hover the mouse over the entries to get an explanation of what the setting does.
 
-.. _Server Options dialog:
+.. _Server Options Dialog:
 .. figure:: ../../_static/images/gui-elements/server-options.png
     :scale: 65%
     :align: center
     :alt: Freeciv21 Server Options dialog
     :figclass: align-center
 
-    Server Options dialog
+    Server Options Dialog
 
 
 Client Options
@@ -220,14 +220,14 @@ Connect to Network Game
 When you click on the :guilabel:`Connect to Network Game` button, a dialog box will appear as in
 :numref:`Server Connect dialog` below.
 
-.. _Server Connect dialog:
+.. _Server Connect Dialog:
 .. figure:: ../../_static/images/gui-elements/connect-to-server.png
     :scale: 65%
     :align: center
-    :alt: Freeciv21 Server Conect dialog
+    :alt: Freeciv21 Server Connect dialog
     :figclass: align-center
 
-    Server Connect dialog
+    Server Connect Dialog
 
 
 There are three ways to connect to a server:
@@ -258,16 +258,16 @@ Load Saved Game
 ---------------
 
 When you click on the :guilabel:`Load Saved Game` button, a dialog box will appear as in :numref:`Load Saved
-Game dialog` below. Find the saved game you want to load and click (select) it in the table.
+Game Dialog` below. Find the saved game you want to load and click (select) it in the table.
 
-.. _Load Saved Game dialog:
+.. _Load Saved Game Dialog:
 .. figure:: ../../_static/images/gui-elements/saved-game.png
     :scale: 65%
     :align: center
     :alt: Freeciv21 Load Saved Game dialog
     :figclass: align-center
 
-    Load Saved Game dialog
+    Load Saved Game Dialog
 
 
 Freeciv21 will show you a sample of the game map and some information about the game. If this is not what you
@@ -281,19 +281,19 @@ Start Scenario Game
 -------------------
 
 When you click on the :guilabel:`Start Scenario Game` button, a dialog box will appear as in
-:numref:`Scenarios dialog` below. You can click on a scenario to select it and see information about the
+:numref:`Scenarios Dialog` below. You can click on a scenario to select it and see information about the
 selected scenario on the panel to the right side. When you have found the scenario you want to run, click on
 the :guilabel:`Load Scenario` button. This will bring up the new game dialog as shown in :numref:`Start New
-Game dialog` above. When ready, click :guilabel:`Start` to begin the scenario game.
+Game Dialog` above. When ready, click :guilabel:`Start` to begin the scenario game.
 
-.. .. _Scenarios dialog:
+.. _Scenarios Dialog:
 .. figure:: ../../_static/images/gui-elements/scenarios.png
     :scale: 65%
     :align: center
-    :alt: Freeciv21 Scenarios dialog
+    :alt: Freeciv21 scenarios dialog
     :figclass: align-center
 
-    Scenarios dialog
+    Scenarios Dialog
 
 
 .. Tip:: If you are new to Freeciv21, the ``tutorial`` scenario will walk you through about 100 turns worth
@@ -307,20 +307,20 @@ Options
 -------
 
 From the Start Screen, as shown in :numref:`Start Screen`, when you click on the :guilabel:`Options` button, a
-dialog box will appear as in :numref:`Local Options dialog` below. This dialog allows you to set a myriad of
+dialog box will appear as in :numref:`Local Options Dialog` below. This dialog allows you to set a myriad of
 options that affect the look and feel of the client when you are playing a game.
 
 The local options dialog box can also be opened while in a game via the
 :menuselection:`Game --> Local Options` menu.
 
-.. _Local Options dialog:
+.. _Local Options Dialog:
 .. figure:: ../../_static/images/gui-elements/local-options.png
     :scale: 65%
     :align: center
-    :alt: Freeciv21 Local Options dialog
+    :alt: Freeciv21 local options dialog
     :figclass: align-center
 
-    Local Options dialog
+    Local Options Dialog
 
 
 The local options dialog is broken down into the following tabs:
@@ -364,7 +364,7 @@ shown in :numref:`Client Overview` below. This is known as the `Map View`_.
 .. figure:: ../../../dist/freeciv-screenshot-2048x1112.png
     :scale: 40%
     :align: center
-    :alt: Freeciv21 Client Overview
+    :alt: Freeciv21 client overview
     :figclass: align-center
 
     Freeciv21 Client Overview
@@ -420,21 +420,21 @@ Server Options
     above.
 
 Messages
-    Opens the :guilabel:`Message Options` dialog as shown in :numref:`Message Options dialog` below. The
+    Opens the :guilabel:`Message Options` dialog as shown in :numref:`Message Options Dialog` below. The
     screenshot only shows a few rows of available options, many more will be found in the client. Any item
     with a check mark in the :guilabel:`Out` column will be shown in the :guilabel:`Server Log/Chat` widget.
     Any item with a check mark in the :guilabel:`Mes` column will be shown in the :guilabel:`Messages` widget
     (see `Messages`_). Lastly, any item with a check mark in the :guilabel:`Pop` column will be shown in a pop
     up message box window.
 
-.. _Message Options dialog:
+.. _Message Options Dialog:
 .. figure:: ../../_static/images/gui-elements/message-options.png
   :scale: 65%
   :align: center
   :alt: Freeciv21 Message Options dialog
   :figclass: align-center
 
-  Message Options dialog
+  Message Options Dialog
 
 
 Shortcuts
@@ -457,18 +457,18 @@ Shortcuts
 
 
 Load Another Tileset
-    Opens the :guilabel:`Available Tilesets` dialog as shown in :numref:`Available Tilesets dialog` below. You
+    Opens the :guilabel:`Available Tilesets` dialog as shown in :numref:`Available Tilesets Dialog` below. You
     can select any tileset installed by clicking on the name. You may get an error message if the tileset is
     not compatible with the current ruleset (for example: if it lacks a unit).
 
-.. _Available Tilesets dialog:
+.. _Available Tilesets Dialog:
 .. figure:: ../../_static/images/gui-elements/tileset.png
   :align: center
   :scale: 75%
   :alt: Freeciv21 Available Tilesets dialog
   :figclass: align-center
 
-  Available Tilesets dialog
+  Available Tilesets Dialog
 
 
 Tileset Debugger
@@ -537,7 +537,7 @@ Scale Fonts
 
 Citybar Style
     This menu has a sub-menu of three options: :guilabel:`Simple`, :guilabel:`Traditional`, and
-    :guilabel:`Polished` as shown in :numref:`Citybar Style Simple`, :numref:`Citybar Sytle Traditional`,
+    :guilabel:`Polished` as shown in :numref:`Citybar Style Simple`, :numref:`Citybar Style Traditional`,
     and, :numref:`Citybar Style Polished`, respectively.
 
 .. _Citybar Style Simple:
@@ -546,7 +546,7 @@ Citybar Style
   :alt: Citybar style - Simple
   :figclass: align-center
 
-  Citybar style - Simple
+  Citybar Style - Simple
 
 
 .. _Citybar Sytle Traditional:
@@ -555,7 +555,7 @@ Citybar Style
   :alt: Citybar style - Traditional
   :figclass: align-center
 
-  Citybar style - Traditional
+  Citybar Style - Traditional
 
 
 .. _Citybar Style Polished:
@@ -564,7 +564,7 @@ Citybar Style
   :alt: Citybar style - Polished
   :figclass: align-center
 
-  Citybar style - Polished
+  Citybar Style - Polished
 
 
 City Outlines
@@ -640,17 +640,17 @@ Done
 
 Advanced Unit Selection
     Opens the :guilabel:`Advanced Unit Selection` dialog box as shown in
-    :numref:`Advanced Unit Selection dialog` below. This dialog box gives you options to select a group of
+    :numref:`Advanced Unit Selection Dialog` below. This dialog box gives you options to select a group of
     units using a more nuanced grouping method than the other :guilabel:`Select` menu options.
 
-.. _Advanced Unit Selection dialog:
+.. _Advanced Unit Selection Dialog:
 .. figure:: ../../_static/images/gui-elements/advanced-unit-selection.png
   :align: center
   :scale: 75%
   :alt: Freeciv21 Advanced Unit Selection dialog
   :figclass: align-center
 
-  Advanced Unit Selection dialog
+  Advanced Unit Selection Dialog
 
 
 Unit Menu
@@ -908,14 +908,14 @@ Tax Rates
     In this example, the player's nation is in Democracy, has set gold to 40%, science to 40%, and luxury to
     20%.
 
-.. _Tax Rates dialog:
+.. _Tax Rates Dialog:
 .. figure:: ../../_static/images/gui-elements/tax-rates.png
   :scale: 65%
   :align: center
   :alt: Freeciv21 Tax Rates dialog
   :figclass: align-center
 
-  Tax Rates dialog
+  Tax Rates Dialog
 
 
 .. note:: The phrase "tax rates" can be a bit misleading as there is only one taxable item and that is the
@@ -1048,13 +1048,13 @@ This is your primary playing surface. This is the map where you build your civil
 is shown in :numref:`Map view button` below. :numref:`Client Overview` above, has a good example of the
 :guilabel:`Map View`.
 
-.. _Map view button:
+.. _Map View Button:
 .. figure:: ../../_static/images/gui-elements/top-bar-map.png
   :align: center
-  :alt: Freeciv21 Map
+  :alt: Freeciv21 map
   :figclass: align-center
 
-  Map view button
+  Map View Button
 
 
 If you hover your mouse over the :guilabel:`Map View` button, a pop up widget will appear and give you
@@ -1083,15 +1083,15 @@ Units View
 
 The :guilabel:`Units View` is a widget on the `Map View`_ that shows what units you have available and how
 many are being produced. The `Cities View`_ can tell you which cities are producing what unit. :numref:`Units
-view button` shows the button to bring up the widget. Clicking the button a second time will close the widget.
+View Button` shows the button to bring up the widget. Clicking the button a second time will close the widget.
 
-.. _Units view button:
+.. _Units View Button:
 .. figure:: ../../_static/images/gui-elements/top-bar-units.png
   :align: center
-  :alt: Freeciv21 Units
+  :alt: Freeciv21 units
   :figclass: align-center
 
-  Units view button
+  Units View Button
 
 
 The :guilabel:`Units View` has two modes. For regular games without the ``unitwaittime`` server setting set,
@@ -1123,15 +1123,15 @@ Cities View
 ^^^^^^^^^^^
 
 The :guilabel:`Cities View` is a separate page in a table format. When you click the button for it as shown in
-:numref:`Cities view button`, the client will switch to a listing of your cities.
+:numref:`Cities View Button`, the client will switch to a listing of your cities.
 
-.. _Cities view button:
+.. _Cities View Button:
 .. figure:: ../../_static/images/gui-elements/top-bar-cities.png
   :align: center
   :alt: Freeciv21 Cities
   :figclass: align-center
 
-  Cities view button
+  Cities View Button
 
 
 :numref:`Cities` gives an example of the :guilabel:`Cities View` in the client with the default columns
@@ -1142,7 +1142,7 @@ show. If you change anything, then be sure to save the settings from the :guilab
 .. figure:: ../../_static/images/gui-elements/cities.png
   :align: center
   :scale: 65%
-  :alt: Freeciv21 Cities
+  :alt: Freeciv21 cities
   :figclass: align-center
 
   Cities
@@ -1160,17 +1160,17 @@ Nations and Diplomacy View
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The :guilabel:`Nations and Diplomacy View` is actually two views accessed from the same place on the `Top
-Function Bar`_. When you click the button for it as shown in :numref:`Nations and Diplomacy view button`, the
+Function Bar`_. When you click the button for it as shown in :numref:`Nations and Diplomacy View Button`, the
 client will switch to a list of nations that you are playing against in a table format.
 
-.. _Nations and Diplomacy view button:
+.. _Nations and Diplomacy View Button:
 .. figure:: ../../_static/images/gui-elements/top-bar-nations.png
   :align: center
   :scale: 50%
-  :alt: Freeciv21 Nations
+  :alt: Freeciv21 nations
   :figclass: align-center
 
-  Nations and Diplomacy view button
+  Nations and Diplomacy View Button
 
 
 :numref:`Nations and Diplomacy view button with Diplomacy View open` gives a sample of the
@@ -1196,7 +1196,7 @@ intelligence at the bottom of the page. :numref:`Nations Intelligence` gives an 
 .. figure:: ../../_static/images/gui-elements/nations-intel.png
   :align: center
   :scale: 65%
-  :alt: Freeciv21 Nations Intelligence
+  :alt: Freeciv21 nations intelligence
   :figclass: align-center
 
   Nations Intelligence
@@ -1245,7 +1245,7 @@ fire.
 .. figure:: ../../_static/images/gui-elements/diplomacy-meet.png
   :align: center
   :scale: 65%
-  :alt: Freeciv21 Diplomacy
+  :alt: Freeciv21 diplomacy
   :figclass: align-center
 
   Diplomacy
@@ -1273,36 +1273,36 @@ View` and return you to the :guilabel:`Nations View`.
 Lastly, you can see in :numref:`Diplomacy` above that there are more than one conversations occurring. Your
 foreign state department is busy! If you happen to click out of the :guilabel:`Diplomacy View`, for example by
 clicking on the button for the `Map View`_, the button for the :guilabel:`Nations and Diplomacy View` will
-change from what is shown in :numref:`Nations and Diplomacy view button` and instead will change to what is
-shown in :numref:`Nations and Diplomacy view button with Diplomacy View open` below.
+change from what is shown in :numref:`Nations and Diplomacy View Button` and instead will change to what is
+shown in :numref:`Nations and Diplomacy View Button with Diplomacy View open` below.
 
-.. _Nations and Diplomacy view button with Diplomacy View open:
+.. _Nations and Diplomacy View Button with Diplomacy View open:
 .. figure:: ../../_static/images/gui-elements/top-bar-nations-diplomacy.png
   :align: center
-  :alt: Freeciv21 Nations with Diplomacy Open
+  :alt: Freeciv21 nations with diplomacy open
   :figclass: align-center
 
-  Nations and Diplomacy view button with Diplomacy View open
+  Nations and Diplomacy View Button with Diplomacy View open
 
 
 To quickly access the :guilabel:`Diplomacy View`, you can right-click on the button to bring it up. A normal
 left-click of the button will bring up the :guilabel:`Nations View` as shown in
-:numref:`Nations and Diplomacy view button with Diplomacy View open` above.
+:numref:`Nations and Diplomacy View Button with Diplomacy View open` above.
 
 Research View
 ^^^^^^^^^^^^^
 
 The :guilabel:`Research View` is a separate page showing the technology research tree. This is the page where
 you instruct your scientists which technologies to research. When you click the button for it as shown in
-:numref:`Research view button`, the client will switch to your research tree.
+:numref:`Research View Button`, the client will switch to your research tree.
 
-.. _Research view button:
+.. _Research View Button:
 .. figure:: ../../_static/images/gui-elements/top-bar-research.png
   :align: center
-  :alt: Freeciv21 Research
+  :alt: Freeciv21 research
   :figclass: align-center
 
-  Research view button
+  Research View Button
 
 
 If you hover your mouse over the button, a pop up widget will appear and give you information about your
@@ -1316,7 +1316,7 @@ researching "future" technologies.
 .. figure:: ../../_static/images/gui-elements/research-tree.png
   :align: center
   :scale: 65%
-  :alt: Freeciv21 Research Tree
+  :alt: Freeciv21 research tree
   :figclass: align-center
 
   Research Tree
@@ -1342,16 +1342,16 @@ Economics View
 ^^^^^^^^^^^^^^
 
 The :guilabel:`Economics View` is a separate page set in a table format. When you click the button for it as
-shown in :numref:`Economics view button`, the client will switch to a listing of your nation's economy. A
+shown in :numref:`Economics View Button`, the client will switch to a listing of your nation's economy. A
 nation's economy is mostly about city improvement, unit support, and maintenance.
 
-.. _Economics view button:
+.. _Economics View Button:
 .. figure:: ../../_static/images/gui-elements/top-bar-economy.png
   :align: center
-  :alt: Freeciv21 Economics
+  :alt: Freeciv21 economics
   :figclass: align-center
 
-  Economics view button
+  Economics View Button
 
 
 If you hover your mouse over the button, a pop up widget will appear and give you information about your
@@ -1376,7 +1376,7 @@ you what was sold where.
 .. figure:: ../../_static/images/gui-elements/economy.png
   :align: center
   :scale: 65%
-  :alt: Freeciv21 Economics View
+  :alt: Freeciv21 Economics view
   :figclass: align-center
 
   Economics View
@@ -1389,20 +1389,20 @@ Tax Rates View
 ^^^^^^^^^^^^^^
 
 The :guilabel:`Tax Rates View` on the `Top Function Bar`_ shows what percentage of gold, Science, and luxury
-goods your nation is set at. :numref:`Tax Rates view button` shows an example of the
+goods your nation is set at. :numref:`Tax Rates View Button` shows an example of the
 :guilabel:`Tax Rates View` button.
 
-.. _Tax Rates view button:
+.. _Tax Rates View Button:
 .. figure:: ../../_static/images/gui-elements/top-bar-tax-rates.png
   :align: center
-  :alt: Freeciv21 Tax Rates View
+  :alt: Freeciv21 Tax Rates view
   :figclass: align-center
 
-  Tax Rates view button
+  Tax Rates View Button
 
 
 Clicking on the :guilabel:`Tax Rates View` will bring up the :guilabel:`Tax Rates` dialog as shown in
-:numref:`Tax Rates dialog` in the `Civilization Menu`_ section.
+:numref:`Tax Rates Dialog` in the `Civilization Menu`_ section.
 
 National Status View
 ^^^^^^^^^^^^^^^^^^^^
@@ -1415,7 +1415,7 @@ icons will change depending on the rate and current status.
 .. _National Status View:
 .. figure:: ../../_static/images/gui-elements/top-bar-nation-status.png
   :align: center
-  :alt: Freeciv21 National Status View
+  :alt: Freeciv21 national status view
   :figclass: align-center
 
   National Status View
@@ -1440,7 +1440,7 @@ The :guilabel:`Messages` button on the `Top Function Bar`_ is used to toggle the
   :alt: Freeciv21 Messages
   :figclass: align-center
 
-  Messages button
+  Messages Button
 
 
 :numref:`Messages Widget` below shows an example of the :guilabel:`Messages` widget. If you double-click on a
@@ -1451,10 +1451,10 @@ or the unit on the `Map View`_.
 .. figure:: ../../_static/images/gui-elements/messages.png
   :align: center
   :scale: 65%
-  :alt: Freeciv21 Messages Widget
+  :alt: Freeciv21 Messages widget
   :figclass: align-center
 
-  Messages Widget
+  Messages widget
 
 
 Unit Controls
@@ -1463,16 +1463,16 @@ Unit Controls
 When a unit has been selected on the `Map View`_, a control widget will appear at the bottom center of the
 screen. The :guilabel:`Unit Controls` widget will give you some information about the unit, the terrain it is
 on and then some buttons corresponding to actions that the unit can take from the `Unit Menu`_,
-`Combat Menu`_, or the `Work Menu`_ respectively. :numref:`Unit Controls widget` shows a :unit:`Worker` that
+`Combat Menu`_, or the `Work Menu`_ respectively. :numref:`Unit Controls Widget` shows a :unit:`Worker` that
 has been selected.
 
-.. _Unit Controls widget:
+.. _Unit Controls Widget:
 .. figure:: ../../_static/images/gui-elements/unit-controls.png
   :align: center
   :alt: Freeciv21 Unit Controls widget
   :figclass: align-center
 
-  Unit Controls widget
+  Unit Controls Widget
 
 
 You can see that the :unit:`Worker` is selected because it has a white selection ring around its base. Looking
@@ -1489,9 +1489,9 @@ Unit ID value.
 Minimap
 -------
 
-There is a :guilabel:`Minimap` widget in the lower right corner of the `Map View`_. :numref:`Minimap single
-player widget` below shows an example of the :guilabel:`Minimap` widget for a single player game.
-:numref:`Minimap multiplayer widget` shows an example of of the :guilabel:`Minimap` widget for a LongTurn
+There is a :guilabel:`Minimap` widget in the lower right corner of the `Map View`_. :numref:`Minimap Single
+Player Widget` below shows an example of the :guilabel:`Minimap` widget for a single player game.
+:numref:`Minimap Multiplayer Widget` shows an example of of the :guilabel:`Minimap` widget for a LongTurn
 multiplayer game. The difference between the two is the single player :guilabel:`Turn Done` button is replaced
 with a countdown timer. On the right hand side of the :guilabel:`Minimap` are zoom buttons similar to what you
 would find in the `View Menu`_. Inside of the :guilabel:`Minimap` you will see an area inside a white border.
@@ -1499,24 +1499,24 @@ This is the portion of the whole `Map View`_ that is displayed on the screen. Ri
 :guilabel:`Minimap` will cause the `Map View`_ to move to that spot. The :guilabel:`Minimap` provides a quick
 way to move around a large map in this manner.
 
-.. _Minimap single player widget:
+.. _Minimap Single Player Widget:
 .. figure:: ../../_static/images/gui-elements/mini-map-sp.png
   :align: center
   :scale: 55%
-  :alt: Freeciv21 minimap single player widget
+  :alt: Freeciv21 Minimap in single player mode
   :figclass: align-center
 
-  Minimap single player widget
+  Minimap in Single Player Mode
 
 
-.. _Minimap multiplayer widget:
+.. _Minimap Multiplayer Widget:
 .. figure:: ../../_static/images/gui-elements/mini-map-mp.png
   :align: center
   :scale: 75%
-  :alt: Freeciv21 minimap multiplayer widget
+  :alt: Freeciv21 Minimap in multiplayer mode
   :figclass: align-center
 
-  Minimap multiplayer widget
+  Minimap in Multiplayer Mode
 
 
 City Dialog
@@ -1534,7 +1534,7 @@ citizens tabs (right) and present units (botton center).
 .. figure:: ../../_static/images/gui-elements/city-dialog.png
   :align: center
   :scale: 65%
-  :alt: Freeciv21 City Dialog
+  :alt: Freeciv21 city dialog
   :figclass: align-center
 
   City Dialog
@@ -1555,7 +1555,7 @@ detailed information on the calculation for the net value displayed.
 .. figure:: ../../_static/images/gui-elements/city-dialog-top-center.png
   :align: center
   :scale: 50%
-  :alt: Freeciv21 City Dialog Top Center
+  :alt: Freeciv21 city dialog top center
   :figclass: align-center
 
   City Dialog - Top Center
@@ -1579,7 +1579,7 @@ when the :improvement:`Granary` is complete.
 .. figure:: ../../_static/images/gui-elements/city-dialog-prod.png
   :align: center
   :scale: 65%
-  :alt: Freeciv21 City Dialog Production
+  :alt: Freeciv21 city dialog production
   :figclass: align-center
 
   City Dialog - Production
@@ -1619,7 +1619,7 @@ or a taxman, you can click on it in the icon bar to change.
 .. figure:: ../../_static/images/gui-elements/city-dialog-center.png
   :align: center
   :scale: 65%
-  :alt: Freeciv21 City Dialog City Center
+  :alt: Freeciv21 city dialog city center
   :figclass: align-center
 
   City Dialog - City Center
@@ -1636,7 +1636,7 @@ the city's citizens.
 .. figure:: ../../_static/images/gui-elements/city-dialog-general.png
   :align: center
   :scale: 65%
-  :alt: Freeciv21 City Dialog General
+  :alt: Freeciv21 city dialog general
   :figclass: align-center
 
   City Dialog - General
@@ -1655,7 +1655,7 @@ pick option you want. This is a great way to activate a collection of units all 
 .. figure:: ../../_static/images/gui-elements/city-dialog-units.png
   :align: center
   :scale: 65%
-  :alt: Freeciv21 City Dialog Units
+  :alt: Freeciv21 city dialog units
   :figclass: align-center
 
   City Dialog - Present Units
@@ -1669,7 +1669,7 @@ Citizen Governor for this city. For more information on how to use the Citizen G
 .. figure:: ../../_static/images/gui-elements/city-dialog-governor.png
   :align: center
   :scale: 65%
-  :alt: Freeciv21 City Dialog Governor
+  :alt: Freeciv21 city dialog governor
   :figclass: align-center
 
   City Dialog - Governor
@@ -1684,7 +1684,7 @@ and Wonders.
 .. figure:: ../../_static/images/gui-elements/city-dialog-citizens.png
   :align: center
   :scale: 65%
-  :alt: Freeciv21 City Dialog Citizens
+  :alt: Freeciv21 city dialog citizens
   :figclass: align-center
 
   City Dialog - Citizens
@@ -1705,7 +1705,7 @@ cities. Mixed nationality can cause unhappiness and occurs when you conquer an o
 .. figure:: ../../_static/images/gui-elements/city-dialog-citizens-nationality.png
   :align: center
   :scale: 65%
-  :alt: Freeciv21 City Dialog Citizens Nationality
+  :alt: Freeciv21 city dialog citizens nationality
   :figclass: align-center
 
   City Dialog - Citizens Nationality

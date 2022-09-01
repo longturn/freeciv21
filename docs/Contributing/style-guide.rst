@@ -154,6 +154,7 @@ Capitalization
     `"Title Case" rules <https://www.grammarly.com/blog/capitalization-rules/>`_:
 
     * Page and section headings (e.g. the 4 documented above).
+    * Image captions, when they act as a title to the image.
     * The names of specific game items such as units, city improvements, technologies, wonders, etc. Some of
       them even have special text roles (:literal:`:unit:`, :literal:`:improvement:`, and :literal:`:wonder:`).
       :doc:`See here for a list. <capitalized-terms>`
