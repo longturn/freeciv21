@@ -1059,7 +1059,7 @@ is shown in :numref:`Map view button` below. :numref:`Client Overview` above, ha
 
 If you hover your mouse over the :guilabel:`Map View` button, a pop up widget will appear and give you
 information about your nation. The pop up widget shows: Nationality, Total Population, Year (Turn Number),
-gold (Surplus/Deficit), and Tax Rates.
+Gold (Surplus/Deficit), and Tax Rates.
 
 To move around the map canvas, you can right-click in the main map area and the canvas will move. The further
 from the center of the screen, the faster the map canvas will move per mouse click.
@@ -1388,7 +1388,7 @@ you what was sold where.
 Tax Rates View
 ^^^^^^^^^^^^^^
 
-The :guilabel:`Tax Rates View` on the `Top Function Bar`_ shows what percentage of gold, Science, and luxury
+The :guilabel:`Tax Rates View` on the `Top Function Bar`_ shows what percentage of gold, science, and luxury
 goods your nation is set at. :numref:`Tax Rates View Button` shows an example of the
 :guilabel:`Tax Rates View` button.
 
@@ -1693,7 +1693,7 @@ and Wonders.
 Overall happiness of the citizens in your cities depends heavily on all of these factors. Certain forms of
 government have varying degrees of empire size penalties and as your empire grows you will have to deal with
 the negative consequences of managing a large empire and the unhappiness it creates. The amount of luxury
-Goods you are producing as part of your `Tax Rates View`_ will aid this problem. Certain city improvements can
+goods you are producing as part of your `Tax Rates View`_ will aid this problem. Certain city improvements can
 improve happiness, as well as units in the city (martial law), along with wonders. If units are in the field
 in battle against your enemies, they can cause unhappiness. Hovering your mouse over the appropriate row will
 give you more information about it.
