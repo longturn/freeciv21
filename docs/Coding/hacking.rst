@@ -592,7 +592,7 @@ With an isometric view, this looks like:
 
 
 Neither is particularly good for a global map operation such as map wrapping or conversions to or from map
-indexes. something better is needed.
+indexes. Something better is needed.
 
 Native coordinates compress the map into a continuous rectangle. The dimensions are defined as
 :code:`map.xsize x map.ysize`. For instance, the above iso-rectangular map is represented in native
