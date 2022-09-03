@@ -14,6 +14,7 @@ architected.
   delta.rst
   fcdb.rst
   guidelines.rst
+  internationalization.rst
   logging.rst
   scorelog.rst
   :maxdepth: 1
