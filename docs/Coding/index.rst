@@ -16,5 +16,6 @@ architected.
   guidelines.rst
   internationalization.rst
   logging.rst
+  network-protocol.rst
   scorelog.rst
   :maxdepth: 1
