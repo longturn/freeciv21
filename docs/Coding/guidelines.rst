@@ -43,8 +43,8 @@ New code follows the `SPDX standard <https://spdx.dev/ids/>`_:
     // SPDX-License-Identifier: GPL-3.0-or-later
     // SPDX-FileCopyrightText: 2022 Author Name <how-to-contact@example.com>
 
-You do not need to add your name to the file, but we recommend that you do so. The same information will be
-stored in the Git history, but may be lost if someone ends up moving the file.
+You do not need to add your name to the file, but we recommend that you do so. Even if the same information
+is stored in the Git history, it may be lost if someone ends up moving the file.
 
 
 Header Guards
@@ -57,7 +57,7 @@ Use ``#pragma once`` to protect headers against multiple inclusion:
     #pragma once
 
 This is equivalent to the ancient ``#ifndef``/``#define``/``#endif`` idiom, but much less error-prone.
-The syntax is supported by all modern compilers.
+The syntax is supported by all mainstream compilers.
 
 
 Includes
@@ -157,7 +157,7 @@ The ``freeciv`` Namespace
 
 The ``freeciv`` namespace has been used to group classes created during refactoring efforts. This code is
 expected to follow higher standards than the rest of the code base, such as encapsulation and having minimal
-side-effects.
+side effects.
 
 
 The Anonymous Namespace
@@ -173,7 +173,7 @@ namespace:
     const int IMPORTANT_CONSTANT = 5; ///< Very, very important
 
     /**
-     * Calculates the square of @c x.
+     * Calculates a more important value of @c x.
      */
     int some_internal_function(int x)
     {
@@ -207,7 +207,7 @@ learning resources, it is useful to read guidelines written by C++ experts, for 
 We collect below a list of recommendations that we find useful in the context of Freeciv21.
 
 
-Pass by reference
+Pass by Reference
 -----------------
 
 When writing a function that takes a complex object (anything larger than a ``long long``), use a constant
@@ -229,7 +229,7 @@ Functions that do not modify their argument should make them ``const``. Class me
 object should also be marked ``const``.
 
 
-Use encapsulation
+Use Encapsulation
 -----------------
 
 Classes that are more complicated than C-like ``struct`` should not have any public variables. Getters and
@@ -248,7 +248,7 @@ arguments.
     const auto &unit = tile->units.front();
 
 
-Use STL containers
+Use STL Containers
 ------------------
 
 Containers in the Standard Library should be preferred over Qt ones:
@@ -269,7 +269,7 @@ Code using the standard algorithms is often more clear than hand-written loops, 
 programmers will recognize the function name immediately.
 
 
-Use range-based ``for``
+Use Range-based ``for``
 -----------------------
 
 Avoid using indices to iterate over containers. Prefer the much simpler range-based ``for``:
@@ -281,7 +281,7 @@ Avoid using indices to iterate over containers. Prefer the much simpler range-ba
     }
 
 
-Use structured bindings
+Use Structured Bindings
 -----------------------
 
 Structured bindings are very useful when facing a ``std::pair``, for instance when iterating over a map:
@@ -298,7 +298,7 @@ If you do not wish to use one of the variables, use ``_``:
       // Use the key only
 
 
-Use smart pointers
+Use Smart Pointers
 ------------------
 
 Instead of using ``new`` and ``delete``, delegate the task to a smart pointer:
