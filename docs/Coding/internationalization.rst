@@ -78,6 +78,40 @@ While most text should be translated, there are a few cases where this is not wa
   not have the resources to produce a translation.
 
 
+Helper Comments
+---------------
+
+When translators work on strings, they are provided with a list taken out of context. They can see the
+original text in English and sometimes the source code --- but most translators cannot read code. In some
+cases, the lack of context makes translation very hard. The string "Close", for instance, can have many
+meanings, with the correct one being inferred from context: "near", "closed", "close (a door)", "stop", ...
+Each meaning calls for a different translation. One can add special comments to the code to help translators
+identify the correct variant:
+
+.. code-block:: cpp
+
+    // TRANS: Close the current window
+    close_button->setText(_("Close"));
+
+The comment will be picked up if it is on the line before the translated text. These comments are typically
+very useful when building text from different parts using placeholders (``%1``, ``%2``, ...). In such cases,
+a comment should be added to explain what the final string looks like:
+
+.. code-block:: cpp
+
+    // TRANS: <Unit> (<Home city>)
+    text += QString::format(_("%1 (%2)")).arg(unit_type_name).arg(home_city_name);
+
+    // TRANS: "HP: 5/20 MP: 5/5" in unit description. Keep short
+    text += QString::format(_("HP: %1/%2 MP: %3/%4"))
+                .arg(hp)
+                .arg(max_hp)
+                .arg(mp)
+                .arg(max_mp);
+
+In complex cases, adding an example or a short explanation also makes the code easier to read.
+
+
 Common Difficulties
 -------------------
 
