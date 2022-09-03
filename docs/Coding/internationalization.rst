@@ -2,9 +2,14 @@
     SPDX-License-Identifier: GPL-3.0-or-later
     SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
     SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022 Louis Moureaux <m_louis30@yahoo.com>
 
-Internationalization (I18N)
-***************************
+Internationalization
+********************
+
+Internationalization, or i18n for short, refers to making sure software is ready to be adapted for use in a
+language and country other than the original. Freeciv21 uses American English as the primary target language,
+but can be localized to other regions.
 
 Messages and text in general which are shown in the GUI should be translated by using the :code:`_()` macro.
 In addition :code:`qInfo()` and some :code:`qWarning()` messages should be translated. In most cases, the
