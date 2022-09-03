@@ -1,20 +1,82 @@
+# This action pushes the output of clang-tidy to Codacy
+# See https://github.com/codacy/codacy-clang-tidy
+
 name: clang-tidy-review
-on: [pull_request]
+on:
+  # We need to run on pull_request_target to gain access to secrets (for the
+  # Codacy token).
+  pull_request_target: {}
 
 jobs:
-  build:
-    name: clang-tidy
+  run:
+    # Unprivileged action that runs clang-tidy and produces report.json in
+    # Codacy format.
+    name: Run clang-tidy
+    permissions: {} # Security: run cmake from a fully unprivileged context
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
 
-      - uses: ZedThree/clang-tidy-review@v0.9.0
-        id: review
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install \
+            clang \
+            cmake \
+            ninja-build \
+            python3 \
+            gettext \
+            qtbase5-dev \
+            libqt5svg5-dev \
+            libkf5archive-dev \
+            liblua5.3-dev \
+            libsqlite3-dev \
+            libsdl2-mixer-dev
+          export CC=$(which clang)
+          export CXX=$(which clang++)
+
+      - name: Configure
+        run: |
+          cmake . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Install Codacy Tools
+        run: |
+          wget -O codacy-clang-tidy https://github.com/codacy/codacy-clang-tidy/releases/download/1.3.3/codacy-clang-tidy-linux-1.3.3
+          chmod +x codacy-clang-tidy
+
+      - name: Run clang-tidy
+        run: |
+          run-clang-tidy -p build | ./codacy-clang-tidy >report.json
+
+      - uses: actions/upload-artifact@v3
         with:
-          apt_packages: 'cmake,ninja-build,python3,g++,gettext,qtbase5-dev,libqt5svg5-dev,libkf5archive-dev,liblua5.3-dev,libsqlite3-dev,libsdl2-mixer-dev'
+          name: clang-tidy-report
+          path: report.json
 
-          # Tell clang-tidy-review the build directory, so it finds the
-          # compilation database.
-          build_dir: build
+  upload:
+    # Privileged action to upload to Codacy. Do the strict minimum here to
+    # minimize exposure.
+    name: Upload
+    needs: run
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: clang-tidy-report
+
+      - name: Upload Results
+        env:
+          COMMIT: ${{ github.event.pull_request.head.sha }}
+          PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        run: |
+          curl -XPOST -L -H "project-token: $PROJECT_TOKEN" \
+            -H "Content-type: application/json" -d @- \
+            "https://api.codacy.com/2.0/commit/$COMMIT/issuesRemoteResults" \
+            <report.json
+
+          curl -XPOST -L -H "project-token: $PROJECT_TOKEN" \
+            -H "Content-type: application/json" \
+            "https://api.codacy.com/2.0/commit/$COMMIT/resultsFinal"
