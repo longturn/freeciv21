@@ -66,6 +66,18 @@ used in different places to mean "no technology" and "no wonder". This is handle
 Finally, there is also a macro ``N_()`` that marks a string for translation without doing the translation (it
 returns the original). This is useful in static contexts.
 
+
+Not Translated
+--------------
+
+While most text should be translated, there are a few cases where this is not wanted:
+
+* :strong:`File Formats.` It must be possible to load a saved game independently of the locale that was in
+  use when producing it. The same stands for rulesets, tilesets, and other file formats used by Freeciv21.
+* :strong:`Fatal Error Messages.` If the game encounter such a critical error that it needs to abort, it may
+  not have the resources to produce a translation.
+
+
 Common Difficulties
 -------------------
 
@@ -109,10 +121,6 @@ solution to this problem in Freeciv21, and translators resort to use incorrect g
 
 Writing Strings for Translation
 -------------------------------
-
-In addition :code:`qInfo()` and some :code:`qWarning()` messages should be translated. In most cases, the
-other log levels (:code:`qFatal()`, :code:`qCritical()`, :code:`qDebug()`, :code:`log_debug()`) should NOT be
-localised.
 
 See :file:`utility/fciconv.h` for details of how Freeciv21 handles character sets and encoding. Briefly:
 
