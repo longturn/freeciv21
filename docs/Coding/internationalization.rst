@@ -8,8 +8,8 @@ Internationalization
 ********************
 
 Internationalization, or i18n for short, refers to making sure software is ready to be adapted for use in a
-language and country other than the original. Freeciv21 uses American English as the primary target language,
-but can be localized to other regions.
+language and country other than the original. Freeciv21 uses American English (``en-US``) as the primary
+target language, but can be localized to other regions.
 
 You should keep internationalization in mind when writing code that interacts with the user. Here are a few
 things to take into account:
@@ -29,7 +29,7 @@ Translating Text
 Translating user-facing text is the most work-intensive part of internationalization. As a developer, you
 only need to make sure that strings are marked for translation when appropriate. In Freeciv21, this is done
 using a set of macros based on the `gettext <https://www.gnu.org/software/gettext/manual/gettext.html>`_
-library. The most simple one returns a translated version of a string:
+library (defined in ``utility/fcintl.h``). The most simple one returns a translated version of a string:
 
 .. code-block:: cpp
 
@@ -72,9 +72,9 @@ Not Translated
 
 While most text should be translated, there are a few cases where this is not wanted:
 
-* :strong:`File Formats.` It must be possible to load a saved game independently of the locale that was in
+* :strong:`File Formats:` It must be possible to load a saved game independently of the locale that was in
   use when producing it. The same stands for rulesets, tilesets, and other file formats used by Freeciv21.
-* :strong:`Fatal Error Messages.` If the game encounter such a critical error that it needs to abort, it may
+* :strong:`Fatal Error Messages:` If the game encounter such a critical error that it needs to abort, it may
   not have the resources to produce a translation.
 
 
@@ -82,9 +82,9 @@ Helper Comments
 ---------------
 
 When translators work on strings, they are provided with a list taken out of context. They can see the
-original text in English and sometimes the source code --- but most translators cannot read code. In some
+original text in English and sometimes the source code, but most translators cannot read code. In some
 cases, the lack of context makes translation very hard. The string "Close", for instance, can have many
-meanings, with the correct one being inferred from context: "near", "closed", "close (a door)", "stop", ...
+meanings, with the correct one being inferred from context: "near", "closed", "close (a door)", "stop", etc.
 Each meaning calls for a different translation. One can add special comments to the code to help translators
 identify the correct variant:
 
@@ -94,7 +94,7 @@ identify the correct variant:
     close_button->setText(_("Close"));
 
 The comment will be picked up if it is on the line before the translated text. These comments are typically
-very useful when building text from different parts using placeholders (``%1``, ``%2``, ...). In such cases,
+very useful when building text from different parts using placeholders (``%1``, ``%2``, etc.). In such cases,
 a comment should be added to explain what the final string looks like:
 
 .. code-block:: cpp
@@ -117,12 +117,12 @@ Character Encodings
 
 The way characters are encoded into strings has long been a hot topic of internationalization, and
 language-specific character encodings are still around on some systems. Freeciv21 always uses UTF-8 for data
-files and internal communication (e.g. in the network protocol). ``QString``, the recommended way of storing
-text, uses UTF-16 internally.
+files and internal communication (e.g. in the network protocol).  The recommended way of storing text is with
+Qt's ``QString`` class, which uses UTF-16 internally.
 
 The ``QString`` constructor performs the conversion from UTF-8 automatically when passed a ``char *``
-argument. In the opposite direction, ``qUtf8Printable`` produces a *temporary* ``char *`` encoded in UTF-8,
-which is deleted automatically at the next semicolon.
+argument. In the opposite direction, ``qUtf8Printable()`` takes a ``QString`` and returns a *temporary*
+``char *`` encoded in UTF-8, which is deleted automatically at the next semicolon.
 
 Text can be converted to the system encoding using ``qPrintable`` or ``QString::toLocal8Bit``. This should
 be rarely, if ever, needed.
