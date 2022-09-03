@@ -31,14 +31,7 @@
     This is always UTF-8.
 
   - The internal_encoding is used internally within freeciv.  This is always
-    UTF-8 at the server, but can be configured by the GUI client.  The GTK
-    clients use UTF-8 here but other clients will use whatever their GUI
-    library or platform requires.  By using the GUI encoding internally at
-    the client it allows us to pass any strings directly to the GUI without
-    needing to convert them.  The drawback is that we have to convert them
-    into the data encoding before sending them over the network (a likely
-    source of bugs).  Also, gettext is set up to always return strings in
-    the internal encoding.
+    UTF-8.
 
   - The local_encoding is the one supported on the command line, which is
     generally the value listed in the $LANG environment variable.  This is
@@ -63,20 +56,13 @@
 
   - Everything sent over the network is always in UTF-8.
 
-  - Everything in the client is converted into the client's "internal
-    encoding" when it is received from the server.  Depending on which
-    GUI is used, this may be just about any character set.  Conversely when
-    sending strings from the client to the server they need to be converted
-    into the data encoding.  This should be done internally within the
-    network code.
+  - Everything in the client is also in UTF-8.
 
   - Everything printed to the command line must be converted into the
     "local encoding" which may be anything as defined by the system.  Using
     fc_fprintf is generally the easiest way to print to the command line
     in which case all strings passed to it should be in the internal
     encoding.
-
-  See PR#40028 in the old RT for additional explanation.
 */
 
 #define FC_DEFAULT_DATA_ENCODING "UTF-8"

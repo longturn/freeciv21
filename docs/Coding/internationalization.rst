@@ -112,6 +112,22 @@ a comment should be added to explain what the final string looks like:
 In complex cases, adding an example or a short explanation also makes the code easier to read.
 
 
+Character Encodings
+-------------------
+
+The way characters are encoded into strings has long been a hot topic of internationalization, and
+language-specific character encodings are still around on some systems. Freeciv21 always uses UTF-8 for data
+files and internal communication (e.g. in the network protocol). ``QString``, the recommended way of storing
+text, uses UTF-16 internally.
+
+The ``QString`` constructor performs the conversion from UTF-8 automatically when passed a ``char *``
+argument. In the opposite direction, ``qUtf8Printable`` produces a *temporary* ``char *`` encoded in UTF-8,
+which is deleted automatically at the next semicolon.
+
+Text can be converted to the system encoding using ``qPrintable`` or ``QString::toLocal8Bit``. This should
+be rarely, if ever, needed.
+
+
 Common Difficulties
 -------------------
 
@@ -152,16 +168,3 @@ Musketeer?
 
 The words in bold in the main sentence had to be changed to match the new units. There is currently no real
 solution to this problem in Freeciv21, and translators resort to use incorrect grammar.
-
-Writing Strings for Translation
--------------------------------
-
-See :file:`utility/fciconv.h` for details of how Freeciv21 handles character sets and encoding. Briefly:
-
-* The data_encoding is used in all data files and network transactions. This is UTF-8.
-
-* The internal_encoding is used internally within Freeciv21. This is always UTF-8 at the server, but can be
-  configured by the GUI client. When your charset is the same as your GUI library, GUI writing is easier.
-
-* The local_encoding is the one supported on the command line. This is not under our control, and all output
-  to the command line must be converted.
