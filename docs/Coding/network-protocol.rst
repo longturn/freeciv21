@@ -7,6 +7,12 @@
 Network Protocol
 ****************
 
+All information passed between the client and server must be sent through the network. Freeciv21 uses a
+custom binary protocol. The data flowing between the client and server is segmented in *packets*, each with
+a specific meaning and data contents. In most cases, it is enough to know about the packets themselves.
+Unless you intend to modify the low-level details, you can safely ignore how packets are serialized to binary
+data and transported over the network.
+
 Network and Packets
 ===================
 
