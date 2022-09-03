@@ -327,4 +327,3 @@ deleted. This is useful in some situations.
 
     * Logging
     * Qt Tips
-    * Translations
