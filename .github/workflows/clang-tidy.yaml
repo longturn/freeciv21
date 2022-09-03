@@ -42,6 +42,11 @@ jobs:
         run: |
           cmake . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
 
+      # We need to build to get all the generated files (*.ui, *_gen.h, ...)
+      - name: Build
+        run: |
+          cmake --build build
+
       - name: Install Codacy Tools
         run: |
           wget -O codacy-clang-tidy https://github.com/codacy/codacy-clang-tidy/releases/download/1.3.3/codacy-clang-tidy-linux-1.3.3
