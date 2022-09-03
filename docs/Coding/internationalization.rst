@@ -66,6 +66,47 @@ used in different places to mean "no technology" and "no wonder". This is handle
 Finally, there is also a macro ``N_()`` that marks a string for translation without doing the translation (it
 returns the original). This is useful in static contexts.
 
+Common Difficulties
+-------------------
+
+Every language is different, and there is no reason for the order of words or even sentences to be the same
+as in English. When possible, it is thus preferable to provide the translators with full sentences or
+paragraphs. If you can speak several languages, it is also useful to think about how to translate your text:
+you may find a way to simplify it and facilitate its translation. In this section, we describe a few issues
+that we have encountered.
+
+Freeciv21 cannot handle more than one plural in the same string. Imagine the following text::
+
+    %1 units, %2 buildings, %3 wonders
+
+Since the ``PL_()`` macro takes a single numeric parameter, only one of the words can be pluralized
+correctly. There is currently no fully satisfactory solution to this problem. A slightly better version would
+be an enumeration::
+
+    Units: %1, buildings: %2, wonders: %3
+
+In English and some other languages, this form is correct even if there is only one unit.
+
+Another difficulty shows up when dynamically inserting words in a sentence. This works extremely well in
+English, but in many other languages this leads to incorrect grammar, with genders and declension being
+common culprits. For example, consider the following simplified version of the "unit lost" message:
+
+    Legion lost to an attack by a Greek Catapult.
+
+This message has three dynamic parts: the unit types and the nationality of the attacker. Let us now look at
+the correct French translation:
+
+    Légion perdue dans une attaque d'une Catapulte grecque.
+
+If you look closely enough, you will notice that this is pretty close: "perdue" is "lost" and the order of
+"Greek" and "Catapult" needs to be swapped. But what if the attacker is a Cannon and the defender a
+Musketeer?
+
+    Mousquetaire :strong:`perdu` dans une attaque :strong:`d'un` Canon :strong:`grec`.
+
+The words in bold in the main sentence had to be changed to match the new units. There is currently no real
+solution to this problem in Freeciv21, and translators resort to use incorrect grammar.
+
 Writing Strings for Translation
 -------------------------------
 
