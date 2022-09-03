@@ -11,6 +11,18 @@ Internationalization, or i18n for short, refers to making sure software is ready
 language and country other than the original. Freeciv21 uses American English as the primary target language,
 but can be localized to other regions.
 
+You should keep internationalization in mind when writing code that interacts with the user. Here are a few
+things to take into account:
+
+* Text should be translated to the language of the user. Freeciv21 has facilities to handle this, see below.
+* Widgets should resize automatically to fit the text. In a language like Russian, text is often twice as
+  long as in English.
+* The visual arrangement of items on screen should match the natural direction of the language. Arabic and
+  Hebrew, for instance, write text from right to left. This is in many cases handled automatically by Qt.
+
+Paying attention to these three points is sufficient to get internationalization right in the vast majority
+of the cases.
+
 Messages and text in general which are shown in the GUI should be translated by using the :code:`_()` macro.
 In addition :code:`qInfo()` and some :code:`qWarning()` messages should be translated. In most cases, the
 other log levels (:code:`qFatal()`, :code:`qCritical()`, :code:`qDebug()`, :code:`log_debug()`) should NOT be
