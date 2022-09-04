@@ -4754,7 +4754,17 @@ void unit_did_action(struct unit *punit)
     return;
   }
 
-  punit->action_timestamp = time(nullptr);
+  const auto now = time(nullptr);
+
+  // Units can do UWT-protected actions while under UWT when forced by the game
+  // to do so, for instance when an alliance is broken and the unit gets bounced
+  // off a city or transport. In this case, the original UWT stays in effect.
+  if (punit->action_turn == game.info.turn - 1 &&
+      now < punit->action_timestamp + game.server.unitwaittime) {
+    return;
+  }
+
+  punit->action_timestamp = now;
   punit->action_turn = game.info.turn;
 }
 
