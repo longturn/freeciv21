@@ -13,14 +13,13 @@ a specific meaning and data contents. In most cases, it is enough to know about 
 Unless you intend to modify the low-level details, you can safely ignore how packets are serialized to binary
 data and transported over the network.
 
-Network and Packets
-===================
 
-The basic network code is located in :file:`server/sernet.cpp` and :file:`client/clinet.cpp`.
+Packets
+=======
 
-All information passed between the server and clients, must be sent through the network as serialized packet
-structures. These are defined in :file:`common/packets.h`.
-
+The packets used in the protocol are defined in ``common/networking/packets.def``. Each packet has a type
+identifier (a number) and some fields. The packet definition file is parsed by
+``common/generate_packets.py``, which generates a set of C++ functions to serialize them.
 For each ``foo`` packet structure, there is one send and one receive function:
 
 .. code-block:: cpp
@@ -132,11 +131,12 @@ send packets much faster than the client can process them. This is especially tr
 the AIs move all their units. Unit moves in particular take a long time for the client to process since by
 default smooth unit moves is on.
 
-There are 3 ways to solve this problem:
+There are 4 ways to solve this problem:
 
 #. We wait for the send buffers to drain before continuing processing.
 #. We cut the player's connection and empty the send buffer.
 #. We lose packets (this is similar to 2), but can cause an incoherent state in the client.
+#. We modify the client to deal with a fast server gracefully.
 
 We mitigated the problem by increasing the send buffer size on the server and making it dynamic. We also added
 in strategic places in the code calls to a new :code:`flush_packets()` function that makes the server stall
@@ -147,12 +147,12 @@ To disconnect unreachable clients, the server pings the
 client after a certain time elapses (set using the :literal:`pingtimeout` variable). If the client does not
 reply its connection is closed.
 
-Utilizing Delta for Network Packets
-===================================
+Delta
+=====
 
 If delta is enabled for this packet, the packet-payload (after the bytes used by the packet-header) is followed
-by the ``delta-header``. See :doc:`hacking`, in the "Network and Packets" chapter, to learn how to understand
-the packet-header. The ``delta-header`` is a bitvector which represents all non-key fields of the packet. If
+by the ``delta-header``. The ``delta-header`` is a bitvector which represents all non-key fields of the
+packet. If
 the field has changed the corresponding bit is set and the field value is also included in ``delta-body``. The
 values of the unchanged fields will be filled in from an old version at the receiving side. The old version
 filled in from is the previous packet of the same kind that has the same value in each key field. If the
