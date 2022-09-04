@@ -675,6 +675,13 @@ void mr_menu::setup_menus()
   act->setChecked(gui_options.draw_borders);
   shortcuts->link_action(SC_NAT_BORDERS, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_borders);
+  act = menu->addAction(_("Units"));
+  act->setCheckable(true);
+  act->setChecked(gui_options.draw_units);
+  connect(act, &QAction::toggled, this, [](bool checked) {
+    gui_options.draw_units = checked;
+    update_map_canvas_visible();
+  });
   act = menu->addAction(_("Native Tiles"));
   act->setCheckable(true);
   act->setChecked(gui_options.draw_native);
