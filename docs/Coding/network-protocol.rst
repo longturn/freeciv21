@@ -57,6 +57,10 @@ capabilities) have different header fields sizes as defined in
 
 To demonstrate the route for a packet through the system, here is how a unit disband is performed:
 
+.. note::
+    This example is old and talks about packets that have been removed. The overall logic still stands, but
+    some details have changed.
+
 #. A player disbands a unit.
 #. The client initializes a packet_unit_request structure and calls the packet layer function
    :code:`send_packet_unit_request()` with this structure and packet type: :code:`PACKET_UNIT_DISBAND`.
@@ -86,9 +90,6 @@ Notice that the two packets (:code:`PACKET_UNIT_DISBAND` and :code:`PACKET_REMOV
 That means the packet structures involved, are used by various requests. The :code:`packet_unit_request()`
 function is for example also used for the packets :code:`PACKET_UNIT_BUILD_CITY` and
 :code:`PACKET_UNIT_CHANGE_HOMECITY`.
-
-When adding a new packet type, check to see if you can reuse some of the existing packet types. This saves you
-the trouble of writing new serialize or deserialize functions.
 
 The :code:`PACKET_PROCESSING_STARTED` and :code:`PACKET_PROCESSING_FINISHED` packets from above serve two main
 purposes:
