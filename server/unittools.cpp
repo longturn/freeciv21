@@ -1225,9 +1225,11 @@ bool teleport_unit_to_city(struct unit *punit, struct city *pcity,
  * find a random safe tile within a given distance of the unit's current tile
  * and move the unit there. If no tiles are found, the unit is disbanded. If
  * 'verbose' is true, a message is sent to the unit owner regarding what
- * happened. The maximum distance it 2 by default for backward compatibility.
+ * happened (the exact message depends on 'reason'). The maximum distance it
+ * 2 by default for backward compatibility.
  */
-void bounce_unit(struct unit *punit, bool verbose, int max_distance)
+void bounce_unit(struct unit *punit, bool verbose, bounce_reason reason,
+                 int max_distance)
 {
   struct player *pplayer;
   struct tile *punit_tile;
@@ -1278,9 +1280,18 @@ void bounce_unit(struct unit *punit, bool verbose, int max_distance)
     struct tile *ptile = tiles[fc_rand(tiles.size())];
 
     if (verbose) {
-      notify_player(pplayer, ptile, E_UNIT_RELOCATED, ftc_server,
-                    // TRANS: A unit is moved to resolve stack conflicts.
-                    _("Moved your %s."), unit_link(punit));
+      switch (reason) {
+      case bounce_reason::generic:
+        notify_player(pplayer, ptile, E_UNIT_RELOCATED, ftc_server,
+                      // TRANS: A unit is moved to resolve stack conflicts.
+                      _("Moved your %s."), unit_link(punit));
+        break;
+      case bounce_reason::terrain_change:
+        notify_player(pplayer, ptile, E_UNIT_RELOCATED, ftc_server,
+                      _("Moved your %s due to changing terrain."),
+                      unit_link(punit));
+        break;
+      }
     }
     /* TODO: should a unit be able to bounce to a transport like is done
      * below? What if the unit can't legally enter the transport, say
@@ -1300,9 +1311,16 @@ void bounce_unit(struct unit *punit, bool verbose, int max_distance)
   }
 
   if (verbose) {
-    notify_player(pplayer, punit_tile, E_UNIT_LOST_MISC, ftc_server,
-                  // TRANS: A unit is disbanded to resolve stack conflicts.
-                  _("Disbanded your %s."), unit_tile_link(punit));
+    switch (reason) {
+    case bounce_reason::generic:
+      notify_player(pplayer, punit_tile, E_UNIT_LOST_MISC, ftc_server,
+                    // TRANS: A unit is disbanded to resolve stack conflicts.
+                    _("Disbanded your %s."), unit_tile_link(punit));
+    case bounce_reason::terrain_change:
+      notify_player(pplayer, punit_tile, E_UNIT_LOST_MISC, ftc_server,
+                    _("Disbanded your %s due to changing terrain."),
+                    unit_tile_link(punit));
+    }
   }
   wipe_unit(punit, ULR_STACK_CONFLICT, nullptr);
 }

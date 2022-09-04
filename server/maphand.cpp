@@ -1822,49 +1822,9 @@ static void check_units_single_tile(struct tile *ptile)
 {
   unit_list_iterate_safe(ptile->units, punit)
   {
-    bool unit_alive = true;
-
     if (unit_tile(punit) == ptile && !unit_transported(punit)
         && !can_unit_exist_at_tile(&(wld.map), punit, ptile)) {
-      // look for a nearby safe tile
-      adjc_iterate(&(wld.map), ptile, ptile2)
-      {
-        if (can_unit_exist_at_tile(&(wld.map), punit, ptile2)
-            && !is_non_allied_unit_tile(ptile2, unit_owner(punit))
-            && !is_non_allied_city_tile(ptile2, unit_owner(punit))) {
-          qDebug("Moved %s %s due to changing terrain at (%d,%d).",
-                 nation_rule_name(nation_of_unit(punit)),
-                 unit_rule_name(punit), TILE_XY(unit_tile(punit)));
-          notify_player(unit_owner(punit), unit_tile(punit),
-                        E_UNIT_RELOCATED, ftc_server,
-                        _("Moved your %s due to changing terrain."),
-                        unit_link(punit));
-          /* TODO: should a unit be able to bounce to a transport like is
-           * done below? What if the unit can't legally enter the transport,
-           * say because the transport is Unreachable and the unit doesn't
-           * have it in its embarks field or because "Transport Embark"
-           * isn't enabled? Kept like it was to preserve the old rules for
-           * now. -- Sveinung */
-          unit_alive = unit_move(punit, ptile2, 0, nullptr, true, false);
-          if (unit_alive && punit->activity == ACTIVITY_SENTRY) {
-            unit_activity_handling(punit, ACTIVITY_IDLE);
-          }
-          break;
-        }
-      }
-      adjc_iterate_end;
-      if (unit_alive && unit_tile(punit) == ptile) {
-        // If we get here we could not move punit.
-        qDebug("Disbanded %s %s due to changing land "
-               " to sea at (%d, %d).",
-               nation_rule_name(nation_of_unit(punit)),
-               unit_rule_name(punit), TILE_XY(unit_tile(punit)));
-        notify_player(unit_owner(punit), unit_tile(punit), E_UNIT_LOST_MISC,
-                      ftc_server,
-                      _("Disbanded your %s due to changing terrain."),
-                      unit_tile_link(punit));
-        wipe_unit(punit, ULR_NONNATIVE_TERR, nullptr);
-      }
+      bounce_unit(punit, true, bounce_reason::terrain_change, 1);
     }
   }
   unit_list_iterate_safe_end;
