@@ -1211,23 +1211,17 @@ bool teleport_unit_to_city(struct unit *punit, struct city *pcity,
 }
 
 /**
-   Move or remove a unit due to stack conflicts. This function will try to
-   find a random safe tile within a two tile distance of the unit's current
-   tile and move the unit there. If no tiles are found, the unit is
-   disbanded. If 'verbose' is TRUE, a message is sent to the unit owner
-   regarding what happened.
+ * Move or remove a unit due to stack conflicts. This function will try to
+ * find a random safe tile within a given distance of the unit's current tile
+ * and move the unit there. If no tiles are found, the unit is disbanded. If
+ * 'verbose' is true, a message is sent to the unit owner regarding what
+ * happened. The maximum distance it 2 by default for backward compatibility.
  */
-void bounce_unit(struct unit *punit, bool verbose)
+void bounce_unit(struct unit *punit, bool verbose, int max_distance)
 {
   struct player *pplayer;
   struct tile *punit_tile;
   struct unit_list *pcargo_units;
-  int count = 0;
-
-  /* I assume that there are no topologies that have more than
-   * (2d + 1)^2 tiles in the "square" of "radius" d. */
-  const int DIST = 2;
-  struct tile *tiles[(2 * DIST + 1) * (2 * DIST + 1)];
 
   if (!punit) {
     return;
@@ -1236,12 +1230,10 @@ void bounce_unit(struct unit *punit, bool verbose)
   pplayer = unit_owner(punit);
   punit_tile = unit_tile(punit);
 
-  square_iterate(&(wld.map), punit_tile, DIST, ptile)
-  {
-    if (count >= ARRAY_SIZE(tiles)) {
-      break;
-    }
+  auto tiles = std::vector<tile *>();
 
+  square_iterate(&(wld.map), punit_tile, max_distance, ptile)
+  {
     if (ptile == punit_tile) {
       continue;
     }
@@ -1249,20 +1241,16 @@ void bounce_unit(struct unit *punit, bool verbose)
     if (can_unit_survive_at_tile(&(wld.map), punit, ptile)
         && !is_non_allied_city_tile(ptile, pplayer)
         && !is_non_allied_unit_tile(ptile, pplayer)) {
-      tiles[count++] = ptile;
+      tiles.push_back(ptile);
     }
   }
   square_iterate_end;
 
-  if (count == 0) {
+  if (tiles.empty()) {
     /* If no place unit can survive try the same with tiles the unit can just
      * exist inspite of losing health or fuel*/
-    square_iterate(&(wld.map), punit_tile, DIST, ptile)
+    square_iterate(&(wld.map), punit_tile, max_distance, ptile)
     {
-      if (count >= ARRAY_SIZE(tiles)) {
-        break;
-      }
-
       if (ptile == punit_tile) {
         continue;
       }
@@ -1270,14 +1258,14 @@ void bounce_unit(struct unit *punit, bool verbose)
       if (can_unit_exist_at_tile(&(wld.map), punit, ptile)
           && !is_non_allied_city_tile(ptile, pplayer)
           && !is_non_allied_unit_tile(ptile, pplayer)) {
-        tiles[count++] = ptile;
+        tiles.push_back(ptile);
       }
     }
     square_iterate_end;
   }
 
-  if (count > 0) {
-    struct tile *ptile = tiles[fc_rand(count)];
+  if (!tiles.empty()) {
+    struct tile *ptile = tiles[fc_rand(tiles.size())];
 
     if (verbose) {
       notify_player(pplayer, ptile, E_UNIT_RELOCATED, ftc_server,
@@ -4746,11 +4734,12 @@ void unit_did_action(struct unit *punit)
 
   const auto now = time(nullptr);
 
-  // Units can do UWT-protected actions while under UWT when forced by the game
-  // to do so, for instance when an alliance is broken and the unit gets bounced
-  // off a city or transport. In this case, the original UWT stays in effect.
-  if (punit->action_turn == game.info.turn - 1 &&
-      now < punit->action_timestamp + game.server.unitwaittime) {
+  // Units can do UWT-protected actions while under UWT when forced by the
+  // game to do so, for instance when an alliance is broken and the unit gets
+  // bounced off a city or transport. In this case, the original UWT stays in
+  // effect.
+  if (punit->action_turn == game.info.turn - 1
+      && now < punit->action_timestamp + game.server.unitwaittime) {
     return;
   }
 
