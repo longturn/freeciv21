@@ -223,7 +223,7 @@ creates the generated files.
 For adding and/or removing packets and/or fields you only have to touch the definition file. If you however
 plan to change the generated code (adding more statistics for example) you have to change the generator.
 
-Changing The Definition File
+Changing the Definition File
 ============================
 
 Adding a packet:
