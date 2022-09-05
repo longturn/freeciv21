@@ -253,7 +253,10 @@ void enter_goto_state(const std::vector<unit *> &units)
     // This calls path_finder::path_finder(punit) behind the scenes
     // Need to do this because path_finder isn't copy-assignable
     auto [it, _] = goto_finders.emplace(punit->id, punit);
-    it->second.set_unknown_tiles_allowed(gui_options.goto_into_unknown);
+    if (!gui_options.goto_into_unknown) {
+      it->second.set_constraint(
+          std::make_unique<freeciv::tile_known_constraint>(client_player()));
+    }
   }
 }
 

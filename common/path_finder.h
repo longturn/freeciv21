@@ -73,7 +73,6 @@ private:
         initial_vertex; ///< The starting point in the search graph.
 
     std::unique_ptr<step_constraint> constraint = nullptr;
-    bool unknown_tiles_allowed = false;
 
     // Storage for Dijkstra's algorithm.
     // In most cases, a single vertex will be stored for a given tile. There
@@ -115,14 +114,7 @@ public:
 
   inline path_finder &operator=(path_finder &&other);
 
-  /// Returns whether goto into the unkown is allowed.
-  bool are_unknown_tiles_allowed() const
-  {
-    return m_d->unknown_tiles_allowed;
-  }
-
   void set_constraint(std::unique_ptr<step_constraint> &&constraint);
-  void set_unknown_tiles_allowed(bool allowed);
 
   void push_waypoint(const tile *location);
   bool pop_waypoint();
@@ -271,6 +263,24 @@ public:
    * any turn change calculation is performed.
    */
   virtual bool is_allowed(const path::step &step) const = 0;
+};
+
+/**
+ * \brief A constraint that restricts the search to tiles known by the
+ * player.
+ */
+class tile_known_constraint : public step_constraint {
+public:
+  /// Constructor.
+  explicit tile_known_constraint(const player *player) : m_player(player) {}
+
+  /// Destructor.
+  ~tile_known_constraint() = default;
+
+  bool is_allowed(const path::step &step) const override;
+
+private:
+  const player *m_player;
 };
 
 } // namespace freeciv
