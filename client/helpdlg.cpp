@@ -320,6 +320,7 @@ void help_dialog::set_topic(const help_item *topic)
   for (; i != topics_map.cend(); ++i) {
     if (i.value() == topic) {
       tree_wdg->setCurrentItem(i.key());
+      tree_wdg->expandItem(i.key());
       break;
     }
   }
@@ -331,14 +332,20 @@ void help_dialog::set_topic(const help_item *topic)
 void help_dialog::history_forward()
 {
   QTreeWidgetItem *i;
+  QTreeWidgetItem *j;
 
   update_history = false;
   if (history_pos < item_history.count()) {
     history_pos++;
   }
+  j = item_history.value(history_pos - 1);
+  if (j != nullptr) {
+    tree_wdg->collapseItem(j);
+  }
   i = item_history.value(history_pos);
   if (i != nullptr) {
     tree_wdg->setCurrentItem(i);
+    tree_wdg->expandItem(i);
   }
 }
 
@@ -348,14 +355,20 @@ void help_dialog::history_forward()
 void help_dialog::history_back()
 {
   QTreeWidgetItem *i;
+  QTreeWidgetItem *j;
 
   update_history = false;
   if (history_pos > 0) {
     history_pos--;
   }
+  j = item_history.value(history_pos + 1);
+  if (j != nullptr) {
+    tree_wdg->collapseItem(j);
+  }
   i = item_history.value(history_pos);
   if (i != nullptr) {
     tree_wdg->setCurrentItem(i);
+    tree_wdg->expandItem(i);
   }
 }
 
@@ -394,6 +407,16 @@ void help_dialog::item_changed(QTreeWidgetItem *item, QTreeWidgetItem *prev)
     update_history = true;
   }
   update_buttons();
+
+  if (!item->parent()) {
+    tree_wdg->collapseAll();
+  }
+  if (prev && prev->isExpanded()) {
+    tree_wdg->collapseItem(prev);
+  }
+  if (!item->isExpanded() && item->childCount() != 0) {
+    tree_wdg->expandItem(item);
+  }
 }
 
 /**
