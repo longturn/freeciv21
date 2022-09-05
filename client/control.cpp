@@ -1465,7 +1465,10 @@ void request_units_return()
   for (const auto unit : get_units_in_focus()) {
     // Find a path to the closest city
     auto finder = freeciv::path_finder(unit);
-    finder.set_unknown_tiles_allowed(gui_options.goto_into_unknown);
+    if (!gui_options.goto_into_unknown) {
+      finder.set_constraint(
+          std::make_unique<freeciv::tile_known_constraint>(client_player()));
+    }
     if (auto path = finder.find_path(
             freeciv::allied_city_destination(unit->owner))) {
       auto steps = path->steps();

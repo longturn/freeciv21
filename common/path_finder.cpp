@@ -289,8 +289,8 @@ void path_finder::path_finder_private::attempt_move(detail::vertex &source)
     bool can_move;
     int move_cost;
     if (target->terrain == nullptr) {
-      // Maybe move into the unknown
-      can_move = unknown_tiles_allowed;
+      // Try to move into the unknown
+      can_move = true;
       move_cost = probe.utype->unknown_move_cost;
     } else {
       can_move =
@@ -678,18 +678,6 @@ void path_finder::set_constraint(
 }
 
 /**
- * Selects whether paths can use unknown tiles.
- */
-void path_finder::set_unknown_tiles_allowed(bool allowed)
-{
-  bool changed = (allowed != m_d->unknown_tiles_allowed);
-  m_d->unknown_tiles_allowed = allowed;
-  if (changed) {
-    m_d->reset();
-  }
-}
-
-/**
  * Adds a waypoint to the path finding. Waypoints are tiles that the path
  * must go through (in order) before reaching the destination.
  *
@@ -856,6 +844,14 @@ bool refuel_destination::reached(const detail::vertex &vertex) const
   vertex.fill_probe(probe);
 
   return can_unit_survive_at_tile(&(wld.map), &probe, vertex.location);
+}
+
+/**
+ * \copydoc step_constraint::is_allowed
+ */
+bool tile_known_constraint::is_allowed(const path::step &step) const
+{
+  return tile_get_known(step.location, m_player) != TILE_UNKNOWN;
 }
 
 } // namespace freeciv
