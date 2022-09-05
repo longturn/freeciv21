@@ -45,6 +45,7 @@ struct vertex : public path::step {
 } // namespace detail
 
 class destination;
+class step_constraint;
 
 /**
  * A path is a succession of moves and actions to go from one location to
@@ -71,6 +72,7 @@ private:
     const detail::vertex
         initial_vertex; ///< The starting point in the search graph.
 
+    std::unique_ptr<step_constraint> constraint = nullptr;
     bool unknown_tiles_allowed = false;
 
     // Storage for Dijkstra's algorithm.
@@ -119,6 +121,7 @@ public:
     return m_d->unknown_tiles_allowed;
   }
 
+  void set_constraint(std::unique_ptr<step_constraint> &&constraint);
   void set_unknown_tiles_allowed(bool allowed);
 
   void push_waypoint(const tile *location);
@@ -247,6 +250,27 @@ protected:
 
 private:
   unit m_unit;
+};
+
+/**
+ * \brief Allows one to limit the scope a path finding search.
+ *
+ * This class allows to limit the scope of the search by forbidding some
+ * steps. Subclass from this class and implement \ref is_allowed to create a
+ * constraint with your own critieria.
+ *
+ * \sa path_finder::set_constraint
+ */
+class step_constraint {
+public:
+  /// Destructor.
+  virtual ~step_constraint() = default;
+
+  /**
+   * Whether a step should be used in the search. Steps are checked before
+   * any turn change calculation is performed.
+   */
+  virtual bool is_allowed(const path::step &step) const = 0;
 };
 
 } // namespace freeciv

@@ -151,6 +151,11 @@ void path_finder::path_finder_private::insert_initial_vertex()
 void path_finder::path_finder_private::maybe_insert_vertex(
     const detail::vertex &v)
 {
+  // Handle any constraint.
+  if (constraint && !constraint->is_allowed(v)) {
+    return;
+  }
+
   // Make a copy because it may change before insertion
   auto insert = v;
 
@@ -645,6 +650,19 @@ path_finder::path_finder(const unit *unit, const path::step &init)
 path_finder::~path_finder()
 {
   // Make sure that the destructor of path_finder_private is known.
+}
+
+/**
+ * Sets a constraint to limit the number of steps considered when trying to
+ * find a path. A path_finder can only have one constraint at a time.
+ *
+ * Takes ownership of the constraint.
+ */
+void path_finder::set_constraint(
+    std::unique_ptr<step_constraint> &&constraint)
+{
+  m_d->constraint = std::move(constraint);
+  m_d->reset();
 }
 
 /**
