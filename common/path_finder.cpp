@@ -288,7 +288,7 @@ void path_finder::path_finder_private::attempt_move(detail::vertex &source)
   {
     bool can_move;
     int move_cost;
-    if (target->terrain == nullptr) {
+    if (tile_get_known(target, unit_owner(&probe)) == TILE_UNKNOWN) {
       // Try to move into the unknown
       can_move = true;
       move_cost = probe.utype->unknown_move_cost;
