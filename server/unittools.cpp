@@ -19,7 +19,9 @@
 // utility
 #include "bitvector.h"
 #include "fcintl.h"
+#include "hand_gen.h"
 #include "log.h"
+#include "path_finder.h"
 #include "rand.h"
 #include "shared.h"
 #include "support.h"
@@ -1220,6 +1222,85 @@ bool teleport_unit_to_city(struct unit *punit, struct city *pcity,
   return false;
 }
 
+namespace /* anonymous */ {
+
+/**
+ * The destination of bouncing paths. If @c SAFE is @c true, any tile where
+ * the unit can survive is accepted. Otherwise, any tile is accepted as a
+ * destination.
+ *
+ * The bouncing algorithm first tries to find a safe destination. If it
+ * can't, it falls back to unsafe tiles.
+ */
+template <bool SAFE> class bounce_destination : public freeciv::destination {
+public:
+  /// Constructor.
+  explicit bounce_destination(const unit *unit) : m_unit(unit) {}
+
+  /// Destructor.
+  ~bounce_destination() {}
+
+protected:
+  bool reached(const freeciv::detail::vertex &vertex) const override;
+
+private:
+  const unit *m_unit;
+};
+
+/**
+ * \copydoc freeciv::destination::reached
+ */
+template <bool SAFE>
+bool bounce_destination<SAFE>::reached(
+    const freeciv::detail::vertex &vertex) const
+{
+  if constexpr (SAFE) {
+    return vertex.location != m_unit->tile
+           && can_unit_survive_at_tile(&(wld.map), m_unit, vertex.location);
+  } else {
+    return vertex.location != m_unit->tile
+           && can_unit_exist_at_tile(&(wld.map), m_unit, vertex.location);
+  }
+}
+
+/**
+ * Paths used to bounce units must last less than one turn and be certain
+ * (use known tiles only). Some orders are disallowed (ORDER_FULL_MP and
+ * ORDER_ACTION_MOVE). This class implements the constraint.
+ */
+class bounce_path_constraint : public freeciv::step_constraint {
+public:
+  /// Constructor
+  explicit bounce_path_constraint(const player *player,
+                                  const tile *start_from, int max_distance)
+      : m_player(player), m_distance(max_distance)
+  {
+  }
+
+  /// Destructor
+  virtual ~bounce_path_constraint() = default;
+
+  bool is_allowed(const freeciv::path::step &step) const override;
+
+private:
+  const player *m_player;
+  const tile *m_start;
+  const int m_distance;
+};
+
+/**
+ * \copydoc freeciv::step_constraint::is_allowed
+ */
+bool bounce_path_constraint::is_allowed(
+    const freeciv::path::step &step) const
+{
+  return step.order.order != ORDER_FULL_MP
+         && step.order.order != ORDER_ACTION_MOVE && step.turns < 1
+         && map_distance(m_start, step.location) <= m_distance
+         && tile_get_known(step.location, m_player) != TILE_UNKNOWN;
+}
+} // anonymous namespace
+
 /**
  * Move or remove a unit due to stack conflicts. This function will try to
  * find a random safe tile within a given distance of the unit's current tile
@@ -1231,81 +1312,78 @@ bool teleport_unit_to_city(struct unit *punit, struct city *pcity,
 void bounce_unit(struct unit *punit, bool verbose, bounce_reason reason,
                  int max_distance)
 {
-  struct player *pplayer;
-  struct tile *punit_tile;
-  struct unit_list *pcargo_units;
-
   if (!punit) {
     return;
   }
 
-  pplayer = unit_owner(punit);
-  punit_tile = unit_tile(punit);
+  const auto pplayer = unit_owner(punit);
+  const auto punit_tile = unit_tile(punit);
 
-  auto tiles = std::vector<tile *>();
+  auto finder = freeciv::path_finder(punit);
+  finder.set_constraint(std::make_unique<bounce_path_constraint>(
+      pplayer, punit_tile, max_distance));
 
-  square_iterate(&(wld.map), punit_tile, max_distance, ptile)
-  {
-    if (ptile == punit_tile) {
-      continue;
-    }
-
-    if (can_unit_survive_at_tile(&(wld.map), punit, ptile)
-        && !is_non_allied_city_tile(ptile, pplayer)
-        && !is_non_allied_unit_tile(ptile, pplayer)) {
-      tiles.push_back(ptile);
-    }
-  }
-  square_iterate_end;
-
-  if (tiles.empty()) {
-    /* If no place unit can survive try the same with tiles the unit can just
-     * exist inspite of losing health or fuel*/
-    square_iterate(&(wld.map), punit_tile, max_distance, ptile)
-    {
-      if (ptile == punit_tile) {
-        continue;
-      }
-
-      if (can_unit_exist_at_tile(&(wld.map), punit, ptile)
-          && !is_non_allied_city_tile(ptile, pplayer)
-          && !is_non_allied_unit_tile(ptile, pplayer)) {
-        tiles.push_back(ptile);
-      }
-    }
-    square_iterate_end;
+  // Collect possible reactions for the unit. Bouncing units are pushed out
+  // and need to act on their own, so they pick something at random.
+  auto paths = finder.find_all(bounce_destination<true>(punit));
+  if (paths.empty()) {
+    paths = finder.find_all(bounce_destination<false>(punit));
   }
 
-  if (!tiles.empty()) {
-    struct tile *ptile = tiles[fc_rand(tiles.size())];
+  qDebug() << "Bouncing: found" << paths.size() << "possible paths";
+
+  if (!paths.empty()) {
+    const auto path = paths[fc_rand(paths.size())];
+    const auto steps = path.steps();
+    const auto end_tile = path.steps().back().location;
 
     if (verbose) {
       switch (reason) {
       case bounce_reason::generic:
-        notify_player(pplayer, ptile, E_UNIT_RELOCATED, ftc_server,
+        notify_player(pplayer, end_tile, E_UNIT_RELOCATED, ftc_server,
                       // TRANS: A unit is moved to resolve stack conflicts.
                       _("Moved your %s."), unit_link(punit));
         break;
       case bounce_reason::terrain_change:
-        notify_player(pplayer, ptile, E_UNIT_RELOCATED, ftc_server,
+        notify_player(pplayer, end_tile, E_UNIT_RELOCATED, ftc_server,
                       _("Moved your %s due to changing terrain."),
                       unit_link(punit));
         break;
       }
     }
-    /* TODO: should a unit be able to bounce to a transport like is done
-     * below? What if the unit can't legally enter the transport, say
-     * because the transport is Unreachable and the unit doesn't have it in
-     * its embarks field or because "Transport Embark" isn't enabled? Kept
-     * like it was to preserve the old rules for now. -- Sveinung */
-    unit_move(punit, ptile, 0, nullptr, true, false);
-    return;
+
+    // Execute the orders making up the path. See control.cpp in the client
+    // (FIXME: write a nice function)
+    if (steps.size() < MAX_LEN_ROUTE) {
+      auto packet = packet_unit_orders{};
+      packet.unit_id = punit->id;
+      packet.dest_tile = steps.back().location->index;
+      packet.src_tile = punit->tile->index;
+      packet.repeat = false;
+      packet.vigilant = false;
+
+      packet.length = steps.size();
+
+      for (std::size_t i = 0; i < steps.size(); ++i) {
+        packet.orders[i] = steps[i].order;
+      }
+
+      unit_server_side_agent_set(pplayer, punit, SSA_NONE);
+      handle_unit_orders(pplayer, &packet);
+
+      // Make sure we do something sensible even if the unit fails to move
+      // (below). In principle it should be fine...
+      if (punit->tile != punit_tile) {
+        return;
+      }
+    }
+    fc_assert(punit->tile != punit_tile);
   }
 
   /* Didn't find a place to bounce the unit, going to disband it.
    * Try to bounce transported units. */
   if (0 < get_transporter_occupancy(punit)) {
-    pcargo_units = unit_transport_cargo(punit);
+    const auto pcargo_units = unit_transport_cargo(punit);
     unit_list_iterate(pcargo_units, pcargo) { bounce_unit(pcargo, verbose); }
     unit_list_iterate_end;
   }
