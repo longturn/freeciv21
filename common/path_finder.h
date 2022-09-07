@@ -103,7 +103,7 @@ private:
     void attempt_paradrop(detail::vertex &source);
     void attempt_action_move(detail::vertex &source);
 
-    bool run_search(const destination &destination);
+    bool run_search(const destination &destination, bool full = false);
     void reset();
   };
 
@@ -121,6 +121,7 @@ public:
 
   void unit_changed(const unit &unit);
 
+  std::vector<path> find_all(const destination &destination);
   std::optional<path> find_path(const destination &destination);
 
 private:
