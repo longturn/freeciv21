@@ -1384,10 +1384,12 @@ void bounce_unit(struct unit *punit, bool verbose, bounce_reason reason,
       notify_player(pplayer, punit_tile, E_UNIT_LOST_MISC, ftc_server,
                     // TRANS: A unit is disbanded to resolve stack conflicts.
                     _("Disbanded your %s."), unit_tile_link(punit));
+      break;
     case bounce_reason::terrain_change:
       notify_player(pplayer, punit_tile, E_UNIT_LOST_MISC, ftc_server,
                     _("Disbanded your %s due to changing terrain."),
                     unit_tile_link(punit));
+      break;
     }
   }
   wipe_unit(punit, ULR_STACK_CONFLICT, nullptr);
