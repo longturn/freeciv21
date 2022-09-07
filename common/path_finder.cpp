@@ -564,10 +564,13 @@ void path_finder::path_finder_private::attempt_action_move(
  * destination tile is reached). Checks if the tile has already been reached
  * before proceeding.
  *
+ * If full is true, the algorithm is only stopped once all possibilities have
+ * been found.
+ *
  * \returns true if a path was found.
  */
 bool path_finder::path_finder_private::run_search(
-    const destination &destination)
+    const destination &destination, bool full)
 {
   // Check if we've already found a path (but keep searching if the tip of
   // the queue is cheaper: we haven't checked every possibility).
@@ -585,7 +588,7 @@ bool path_finder::path_finder_private::run_search(
     // Check if we just arrived
     // Keep the node in the queue so adjacent nodes are generated if the
     // search needs to be expanded later.
-    if (is_reached(destination, v)) {
+    if (!full && is_reached(destination, v)) {
       return true;
     }
 
@@ -726,6 +729,46 @@ void path_finder::unit_changed(const ::unit &unit)
     m_d->queue.pop();
   }
   m_d->insert_initial_vertex();
+}
+
+/**
+ * Runs the path finding algorithm, searching for all paths leading to the
+ * destination.
+ * Make sure to set a harsh step constraint before calling this function, or
+ * it will become very slow very quickly.
+ *
+ * \warning Potentially very expensive.
+ */
+std::vector<path> path_finder::find_all(const destination &destination)
+{
+  // Unit frozen by scenario
+  if (m_d->unit.stay) {
+    return {};
+  }
+
+  m_d->run_search(destination, true);
+
+  // Collect results.
+  auto ret = std::vector<path>();
+  ret.reserve(m_d->best_vertices.size());
+
+  for (const auto &[_, end] : m_d->best_vertices) {
+    // Only use vertices at the destination
+    if (!m_d->is_reached(destination, *end)) {
+      continue;
+    }
+
+    // Build a path
+    auto steps = std::vector<path::step>();
+    for (auto vertex = end.get(); vertex->parent != nullptr;
+         vertex = vertex->parent) {
+      steps.push_back(*vertex);
+    }
+
+    ret.emplace_back(std::vector<path::step>(steps.rbegin(), steps.rend()));
+  }
+
+  return ret;
 }
 
 /**
