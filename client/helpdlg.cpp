@@ -411,12 +411,17 @@ void help_dialog::item_changed(QTreeWidgetItem *item, QTreeWidgetItem *prev)
   if (!item->parent()) {
     tree_wdg->collapseAll();
   }
-  if (prev && prev->isExpanded()) {
-    tree_wdg->collapseItem(prev);
-  }
-  if (!item->isExpanded() && item->childCount() != 0) {
+  if (!item->isExpanded() && item->childCount()) {
     tree_wdg->expandItem(item);
   }
+  if (prev && prev->isExpanded() && !item->childCount()) {
+    tree_wdg->setCurrentItem(item);
+  } else if (!item->parent() || !prev->parent()) {
+    tree_wdg->setCurrentItem(item);
+  } else {
+    tree_wdg->collapseItem(prev);
+  }
+  tree_wdg->setCurrentItem(item);
 }
 
 /**
