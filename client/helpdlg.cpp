@@ -119,7 +119,7 @@ help_dialog::help_dialog(QWidget *parent) : qfc_dialog(parent)
 
   help_wdg = new help_widget(splitter);
   connect(tree_wdg, &QTreeWidget::currentItemChanged, this,
-          &help_dialog::item_changed);
+          &help_dialog::item_changed, Qt::QueuedConnection);
   help_wdg->layout()->setContentsMargins(0, 0, 0, 0);
   splitter->addWidget(help_wdg);
 
@@ -408,22 +408,21 @@ void help_dialog::item_changed(QTreeWidgetItem *item, QTreeWidgetItem *prev)
   }
   update_buttons();
 
-  if (!item->parent()) {
-    tree_wdg->collapseAll();
-  }
-  if (!item->isExpanded() && item->childCount()) {
+  // Collapse the subtree of 'prev' not needed to see 'item'
+  if (prev) {
+    auto item_parents = std::set<QTreeWidgetItem *>();
+    for (auto i = item; i != nullptr; i = i->parent()) {
+      item_parents.insert(i);
+    }
+    for (auto i = prev; i != nullptr; i = i->parent()) {
+      if (item_parents.count(i) == 0) {
+        tree_wdg->collapseItem(i);
+      }
+    }
+
     tree_wdg->expandItem(item);
   }
-  if (prev && prev->isExpanded() && !item->childCount()) {
-    tree_wdg->setCurrentItem(item);
-  } else if (!item->parent() || !prev->parent()) {
-    tree_wdg->setCurrentItem(item);
-  } else {
-    tree_wdg->collapseItem(prev);
-  }
-  tree_wdg->setCurrentItem(item);
 }
-
 /**
    Creates a new, empty help widget.
  */
