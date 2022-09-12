@@ -135,7 +135,7 @@ opponents, but can also serve as a port for seagoing units. They also usually ne
 improvement later on for defense against an attacking navy. The best strategy is to build a few of both, but \
 keep in mind that your opponents will find it harder to locate your city if you do not build it by the sea. \
 Another thing to consider is the land around the city in its \"Vision Radius\". The vision radius is the the \
-map tiles that the city's population can manage as it grows. Many land tiles will have Resources on them \
+map tiles that the city's population can manage as it grows. Many land tiles will have resources on them \
 (called Resources) that give food, production, or trade bonuses. Use the middle-click on your mouse to see. \
 The more resources a city can utilize the better.\
 "), _("\
@@ -510,7 +510,7 @@ initial revenue by entering the marketplace and selling trade goods, but it is r
 This limit is enforced only when attempting to establish a new trade route. If you temporarily lose the \
 ability to establish as many trade routes as a city already has, existing ones are not affected.\
 "), _("\
-Beware: in rulesets where Plague is enabled, it can travel along trade routes. See the page on Plague in the \
+Beware: in rulesets where Plague is enabled, it can travel along trade routes. See the Plague page in the \
 Cities section for more details.\
 "), _("\
 To view the current trade routes of a city, hold your mouse over the \"Trade:\" line on the general tab \
