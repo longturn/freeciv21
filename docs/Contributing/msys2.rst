@@ -81,6 +81,15 @@ This chapter is about creating a new MSYS2 build environment.
 
     * mingw-w64-i686-nsis / mingw-w64-x86_64-nsis
 
+#. Add some environment variables to the ``.bash_profile`` file. The code sample assumes x86_64.
+
+.. code-block:: sh
+
+  export PATH=/mingw64/bin:${PATH}
+  export MSYSTEM=MINGW64
+  export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/mingw64/lib/pkgconfig:/mingw64/share/pkgconfig
+  export VCPKG_ROOT=
+
 
 Premade Environment
 ===================
