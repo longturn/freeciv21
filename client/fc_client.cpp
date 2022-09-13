@@ -543,7 +543,7 @@ void fc_client::write_settings()
  */
 void popup_client_options()
 {
-  option_dialog_popup(_("Set local options"), client_optset);
+  option_dialog_popup(_("Interface Options"), client_optset);
 }
 
 /**

@@ -563,17 +563,17 @@ void mr_menu::setup_menus()
   connect(act, &QAction::triggered, this, &mr_menu::save_image);
   menu->addSeparator();
 
-  act = menu->addAction(_("Set local options"));
+  act = menu->addAction(_("Interface Options"));
   connect(act, &QAction::triggered, this, &mr_menu::local_options);
-  act = menu->addAction(_("Server Options"));
+  act = menu->addAction(_("Game Options"));
   connect(act, &QAction::triggered, this, &mr_menu::server_options);
   act = menu->addAction(_("Messages"));
   connect(act, &QAction::triggered, this, &mr_menu::messages_options);
   act = menu->addAction(_("Shortcuts"));
   connect(act, &QAction::triggered, this, &mr_menu::shortcut_options);
-  act = menu->addAction(_("Load another tileset"));
+  act = menu->addAction(_("Load Another tileset"));
   connect(act, &QAction::triggered, this, &mr_menu::tileset_custom_load);
-  act = menu->addAction(_("Tileset debugger"));
+  act = menu->addAction(_("Tileset Debugger"));
   connect(act, &QAction::triggered, queen()->mapview_wdg,
           &map_view::show_debugger);
   act = menu->addAction(_("Save Options Now"));
@@ -584,7 +584,7 @@ void mr_menu::setup_menus()
   act->setChecked(gui_options.save_options_on_exit);
   menu->addSeparator();
 
-  act = menu->addAction(_("Leave game"));
+  act = menu->addAction(_("Leave Game"));
   act->setIcon(style()->standardIcon(QStyle::SP_DialogDiscardButton));
   connect(act, &QAction::triggered, this, &mr_menu::back_to_menu);
   act = menu->addAction(_("Quit"));
@@ -2777,7 +2777,7 @@ void mr_menu::slot_build_base(int id)
 }
 
 /**
-   Invoke dialog with local options
+   Invoke dialog with interface (local) options
  */
 void mr_menu::local_options() { popup_client_options(); }
 
@@ -2791,11 +2791,11 @@ void mr_menu::shortcut_options() { popup_shortcuts_dialog(); }
  */
 void mr_menu::server_options()
 {
-  option_dialog_popup(_("Set server options"), server_optset);
+  option_dialog_popup(_("Game Options"), server_optset);
 }
 
 /**
-   Invoke dialog with server options
+   Invoke dialog with messages options
  */
 void mr_menu::messages_options() { popup_messageopt_dialog(); }
 
