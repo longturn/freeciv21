@@ -44,7 +44,7 @@ pregame_options::pregame_options(QWidget *parent) : QWidget(parent)
   ui.max_players->setRange(1, MAX_NUM_PLAYERS);
   connect(ui.nation, &QPushButton::clicked, this,
           &pregame_options::pick_nation);
-  ui.qclientoptions->setText(_("Client Options"));
+  ui.qclientoptions->setText(_("Interface Options"));
   connect(ui.qclientoptions, &QAbstractButton::clicked,
           [=]() { popup_client_options(); });
   for (level = 0; level < AI_LEVEL_COUNT; level++) {
@@ -64,9 +64,8 @@ pregame_options::pregame_options(QWidget *parent) : QWidget(parent)
   ui.qserveroptions->setText(_("More Game Options"));
   ui.qserveroptions->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("preferences-other")));
-  connect(ui.qserveroptions, &QPushButton::clicked, [=]() {
-    option_dialog_popup(_("Set server options"), server_optset);
-  });
+  connect(ui.qserveroptions, &QPushButton::clicked,
+          [=]() { option_dialog_popup(_("Game Options"), server_optset); });
   ui.lnations->setText(_("Nation:"));
   ui.lrules->setText(_("Rules:"));
   ui.lplayers->setText(_("Players:"));
