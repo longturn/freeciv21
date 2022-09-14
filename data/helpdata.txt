@@ -461,7 +461,7 @@ name = _(" Trade")
 text = _("\
 Trade points reflect wealth generated in each city by external commerce. Some trade points may be lost to \
 corruption, which varies among forms of government, and tends to increase with distance from your center of \
-government. Each city distributes its remaining trade points among three uses: gold, in the form of taxes,
+government. Each city distributes its remaining trade points among three uses: gold, in the form of taxes, \
 goes into your national treasury; luxury goods influence citizen morale; and science points \
 (\"Bulbs\") contribute towards the discovery of new technologies.\
 "), _("\
