@@ -571,7 +571,7 @@ void mr_menu::setup_menus()
   connect(act, &QAction::triggered, this, &mr_menu::messages_options);
   act = menu->addAction(_("Shortcuts"));
   connect(act, &QAction::triggered, this, &mr_menu::shortcut_options);
-  act = menu->addAction(_("Load Another tileset"));
+  act = menu->addAction(_("Load Another Tileset"));
   connect(act, &QAction::triggered, this, &mr_menu::tileset_custom_load);
   act = menu->addAction(_("Tileset Debugger"));
   connect(act, &QAction::triggered, queen()->mapview_wdg,
