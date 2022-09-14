@@ -88,7 +88,6 @@ This chapter is about creating a new MSYS2 build environment.
   export PATH=/mingw64/bin:${PATH}
   export MSYSTEM=MINGW64
   export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/mingw64/lib/pkgconfig:/mingw64/share/pkgconfig
-  export VCPKG_ROOT=
 
 
 Premade Environment
