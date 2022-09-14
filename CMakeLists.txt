@@ -9,8 +9,8 @@ else()
 endif()
 
 # Set vcpkg if exists. Used by MacOS and Visual Studio
-if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-  message(STATUS "Microsoft VCPKG detected, setting toolset specific settings.")
+if(DEFINED ENV{VCPKG_ROOT} AND FREECIV_USE_VCPKG)
+  message(STATUS "Microsoft VCPKG enabled, setting toolset specific settings.")
   set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
       CACHE STRING "")
 endif()

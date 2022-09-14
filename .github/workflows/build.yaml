@@ -111,7 +111,6 @@ jobs:
           export PATH=/mingw64/bin:${PATH}
           export MSYSTEM=MINGW64
           export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/mingw64/lib/pkgconfig:/mingw64/share/pkgconfig
-          export VCPKG_ROOT=
           cmake . -B build -G Ninja \
            -DCMAKE_INSTALL_PREFIX=$PWD/build/install \
            -DCMAKE_BUILD_TYPE=Release
@@ -158,7 +157,7 @@ jobs:
       - name: Configure
         run: cmake -S . -B build -G "Visual Studio 17 2022" \
          -DCMAKE_BUILD_TYPE=Debug -DVCPKG_BUILD_TYPE=debug \
-         -DVCPKG_TARGET_ARCHITECTURE=x64 \
+         -DVCPKG_TARGET_ARCHITECTURE=x64 -DFREECIV_USE_VCPKG=ON \
          -DCMAKE_TOOLCHAIN_FILE="${{env.VCPKG_ROOT}}/scripts/buildsystems/vcpkg.cmake" -A x64 -T ClangCL
       - name: Building
         run: cmake --build build --config Debug

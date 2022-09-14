@@ -23,7 +23,10 @@
       "name": "fullrelease-macos",
       "displayName": "Build for Mac in Release Mode",
       "inherits": "fullrelease",
-      "installDir": ".install"
+      "installDir": ".install",
+      "cacheVariables": {
+        "FREECIV_USE_VCPKG": "ON"
+      }
     },
     {
       "name": "debug",
@@ -82,7 +85,8 @@
         "FREECIV_ENABLE_TOOLS": "ON",
         "FREECIV_ENABLE_SERVER": "ON",
         "FREECIV_ENABLE_CLIENT": "ON",
-        "FREECIV_ENABLE_NLS": "ON"
+        "FREECIV_ENABLE_NLS": "ON",
+        "FREECIV_USE_VCPKG": "ON"
       },
       "vendor": {
         "microsoft.com/VisualStudioSettings/CMake/1.0": {
@@ -108,7 +112,8 @@
         "FREECIV_ENABLE_TOOLS": "ON",
         "FREECIV_ENABLE_SERVER": "ON",
         "FREECIV_ENABLE_CLIENT": "ON",
-        "FREECIV_ENABLE_NLS": "ON"
+        "FREECIV_ENABLE_NLS": "ON",
+        "FREECIV_USE_VCPKG": "ON"
       },
       "vendor": {
         "microsoft.com/VisualStudioSettings/CMake/1.0": {
