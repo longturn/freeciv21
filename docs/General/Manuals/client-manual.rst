@@ -74,7 +74,7 @@ From upper left to lower right, the following user interface elements are availa
 * :guilabel:`Number of Players`
 * :guilabel:`AI Skill Level`
 * :guilabel:`More Game Options`
-* :guilabel:`Client Options`
+* :guilabel:`Interface Options`
 * :guilabel:`Server Output Window`
 * :guilabel:`Server Chat/Command Line`
 * :guilabel:`Disconnect`
@@ -158,23 +158,24 @@ use the `Players list`_ right-click menu.
 More Game Options
 ^^^^^^^^^^^^^^^^^
 
-Clicking on this button will bring up the :guilabel:`Server Options` dialog box as shown in :numref:`Server
-Options Dialog` below. From here you can customize other settings for the game before you start it. The
-ruleset defines many of these options, so be sure to select the ruleset you want to play before attempting to
-set other settings. You can hover the mouse over the entries to get an explanation of what the setting does.
+Clicking on this button will bring up the :guilabel:`Game Options` dialog box as shown in
+:numref:`Game Options dialog` below. From here you can customize other settings for the game before you start
+it. The ruleset defines many of these options, so be sure to select the ruleset you want to play before
+attempting to set other settings. You can hover the mouse over the entries to get an explanation of what the
+setting does.
 
-.. _Server Options Dialog:
-.. figure:: ../../_static/images/gui-elements/server-options.png
+.. _Game Options dialog:
+.. figure:: ../../_static/images/gui-elements/game-options.png
     :scale: 65%
     :align: center
-    :alt: Freeciv21 Server Options dialog
+    :alt: Freeciv21 Game Options dialog
     :figclass: align-center
 
-    Server Options Dialog
+    Game Options dialog
 
 
-Client Options
-^^^^^^^^^^^^^^
+Interface Options
+^^^^^^^^^^^^^^^^^
 
 Refer to the section on `Options`_ below.
 
@@ -182,10 +183,10 @@ Server Output Window
 ^^^^^^^^^^^^^^^^^^^^
 
 When you pick a ruleset, you will often see a bunch of output inside of this window. Also, if you make changes
-to the server in `More Game Options`_, you will see output from those settings in this window as well. This is
-actually a good way to learn what the varying server options are that can be issued via the `Server
-chat/command line`_. This window is read-only, however you can select text from it and copy it to paste in a
-text file if needed.
+to the game in `More Game Options`_, you will see output from those settings in this window as well. This is
+actually a good way to learn what the varying game options are that can be issued via the
+`Server chat/command line`_. This window is read-only, however you can select text from it and copy it to
+paste in a text file if needed.
 
 Server Chat/Command Line
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -197,9 +198,9 @@ Disconnect
 ^^^^^^^^^^
 
 Clicking this button takes you back to the :guilabel:`Start Screen` as shown in :numref:`Start Screen`. The
-local ``freeciv21-server`` instance will terminate at this time. A subsequent click of :guilabel:`Start New
-Game` will spawn a new instance of the server, however any changes made previously will be lost and you will
-have to start over.
+local ``freeciv21-server`` instance will terminate at this time. A subsequent click of
+:guilabel:`Start New Game` will spawn a new instance of the server, however any changes made previously will
+be lost and you will have to start over.
 
 Observe
 ^^^^^^^
@@ -307,28 +308,29 @@ Options
 -------
 
 From the Start Screen, as shown in :numref:`Start Screen`, when you click on the :guilabel:`Options` button, a
-dialog box will appear as in :numref:`Local Options Dialog` below. This dialog allows you to set a myriad of
-options that affect the look and feel of the client when you are playing a game.
+dialog box will appear as in :numref:`Interface Options dialog` below. This dialog allows you to set a myriad
+of options that affect the look and feel of the user interface when you are playing a game.
 
-The local options dialog box can also be opened while in a game via the
-:menuselection:`Game --> Local Options` menu.
+The interface options dialog box can also be opened while in a game via the
+:menuselection:`Game --> Interface Options` menu as well as from the `Start New Game`_ dialog by clicking on
+the :guilabel:`Interface Options` button.
 
-.. _Local Options Dialog:
-.. figure:: ../../_static/images/gui-elements/local-options.png
+.. _Interface Options dialog:
+.. figure:: ../../_static/images/gui-elements/interface-options.png
     :scale: 65%
     :align: center
-    :alt: Freeciv21 local options dialog
+    :alt: Freeciv21 interface options dialog
     :figclass: align-center
 
-    Local Options Dialog
+    Interface Options dialog
 
 
-The local options dialog is broken down into the following tabs:
+The Interface Options dialog is broken down into the following tabs:
 
 * :guilabel:`Network`: On this tab you can save your preferred username, server and port information to be
   used during `Connect to Network Game`_.
 * :guilabel:`Sound`: On this tab you can set everything related to in game sound and music.
-* :guilabel:`Interface`: On this tab you can set anything related to how you interact with the interface of
+* :guilabel:`Interface`: On this tab you can set anything related to how you interact with the interface of the
   client while playing a game.
 * :guilabel:`Graphics`: On this tab you can change the look and feel with a different theme. NightStalker is
   the default theme out of the box. You can also set the default tileset to use under different map styles as
@@ -537,7 +539,7 @@ Scale Fonts
 
 Citybar Style
     This menu has a sub-menu of three options: :guilabel:`Simple`, :guilabel:`Traditional`, and
-    :guilabel:`Polished` as shown in :numref:`Citybar Style Simple`, :numref:`Citybar Style Traditional`,
+    :guilabel:`Polished` as shown in :numref:`Citybar Style Simple`, :numref:`Citybar Sytle Traditional`,
     and, :numref:`Citybar Style Polished`, respectively.
 
 .. _Citybar Style Simple:
