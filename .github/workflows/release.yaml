@@ -78,7 +78,6 @@ jobs:
           export PATH=/mingw32/bin:${PATH}
           export MSYSTEM=MINGW32
           export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/mingw32/lib/pkgconfig:/mingw32/share/pkgconfig
-          export VCPKG_ROOT=
           cmake . -B build -G Ninja \
            -DCMAKE_INSTALL_PREFIX=$PWD/build/install \
            -DCMAKE_BUILD_TYPE=Release

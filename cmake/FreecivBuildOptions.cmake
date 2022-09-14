@@ -47,3 +47,6 @@ if (FREECIV_ENABLE_SERVER
     OR FREECIV_ENABLE_RULEUP)
   set(FREECIV_BUILD_LIBSERVER TRUE)
 endif()
+
+# By default we do not enable VCPKG
+option(FREECIV_USE_VCPKG "Use VCPKG" OFF)
