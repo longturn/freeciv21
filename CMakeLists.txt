@@ -17,7 +17,7 @@ endif()
 
 # Detect MS Visual Studio
 if (CMAKE_GENERATOR MATCHES "Visual Studio")
-  message(STATUS "Microsoft Visual Studio detected, setting toolset specific settings.")
+  message(STATUS "Microsoft Visual Studio enabled, setting toolset specific settings.")
   set(CMAKE_GENERATOR_TOOLSET "ClangCl")
   message(STATUS "VS Cmake Generator Toolset: ${CMAKE_GENERATOR_TOOLSET}")
   set(CMAKE_GENERATOR_PLATFORM "x64")
@@ -341,6 +341,32 @@ if(UNIX AND NOT APPLE)
     )
   endif(FREECIV_ENABLE_RULEDIT)
 endif(UNIX AND NOT APPLE)
+
+# We grab the Libertine Font package online for non-Unix (e.g. Win32, MSYS2, and macOS)
+#  For Linux, we add a dependency to the package.
+if(NOT UNIX)
+  message(STATUS "Downloading Linux Libertine Font Package")
+
+  include(ExternalProject)
+  ExternalProject_Add(Libertine
+    PREFIX ${CMAKE_BINARY_DIR}
+    LOG_DIR ${CMAKE_BINARY_DIR}
+    DOWNLOAD_NO_PROGRESS TRUE
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+    TIMEOUT 30
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND ""
+    URL https://sourceforge.net/projects/linuxlibertine/files/linuxlibertine/5.3.0/LinLibertineOTF_5.3.0_2012_07_02.tgz
+  )
+
+  install(
+    DIRECTORY ${CMAKE_BINARY_DIR}/src/Libertine
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/fonts
+    COMPONENT freeciv21
+    FILES_MATCHING PATTERN *.otf PATTERN *.txt
+  )
+endif(NOT UNIX)
 
 # Packaging (CPack)
 include(CPackConfig)
