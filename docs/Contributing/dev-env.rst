@@ -17,7 +17,7 @@ Freeciv21 can be developed on Linux, Windows, and macOS. Any current version of 
 Windows, you will need to setup either the MSYS2 environment or Visual Studio to do development.
 Refer to :doc:`msys2` or :doc:`Visual Studio <visual-studio>` for more information. It should be generally
 understood that :strong:`Linux` is the preferred development platform. For a complete set of installation
-steps, you can refer to :doc:`../../General/install`.
+steps, you can refer to :doc:`/Getting/install`.
 
 Technically all you need is a text editor of some kind to edit the files, but most people prefer to use an
 IDE.
@@ -32,7 +32,7 @@ All platforms can use `KDevelop <https://www.kdevelop.org/download>`_. However, 
 For the best results, especially if you are editing game code and not just Longturn game rulesets or
 documentation, you will want :strong:`Linux` to be your workstation OS. Many of the current developers use a
 Debain variant such as Ubuntu. Instructions for getting all of the tools needed for Debian Linux can be found
-in :doc:`../General/install`. Do not follow the steps to clone the repository (e.g. the :code:`git clone`
+in :doc:`/Getting/install`. Do not follow the steps to clone the repository (e.g. the :code:`git clone`
 command), that will happen in a bit.
 
 GitHub

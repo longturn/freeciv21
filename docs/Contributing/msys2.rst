@@ -100,5 +100,5 @@ environment. The scripts create an x86_64 environment.
 Build
 =====
 
-Now that you have the environment setup. You can follow the steps in :doc:`../../General/install`. MSYS2 in a
+Now that you have the environment setup. You can follow the steps in :doc:`/Getting/install`. MSYS2 in a
 Linux emulation evironment on Windows, so the commands for :file:`git`, :file:`cmake`, etc. work the same.
