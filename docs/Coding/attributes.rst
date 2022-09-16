@@ -26,4 +26,4 @@ The (real) ``key`` is an integer, which defines the use and format of this attri
 hashtable can have arbitrary length. The internal structure of a value is opaque to the attribute handling.
 
 For easier access there are wrapper functions for the common case of city attributes, that are used to store
-:doc:`governor <Playing/cma>` data.
+:doc:`governor </Playing/cma>` data.
