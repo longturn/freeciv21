@@ -30,7 +30,7 @@ external dependencies under :file:`dependencies`.
 
 The client code is found in the :file:`client` folder. The server code is located under :file:`server`,
 with the exception of the computer ("AI") players which is under :file:`ai`. The code for other programs
-bundled with Freeciv21, such as the :doc:`Modpack Installer </General/modpack-installer>`, is located under
+bundled with Freeciv21, such as the :doc:`Modpack Installer </Getting/Manuals/modpack-installer>`, is located under
 :file:`tools`.
 
 All the assets used by the client and server are grouped under :file:`data`. This includes among
