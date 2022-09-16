@@ -43,7 +43,7 @@ The directory can be anywhere, however the author prefers to :strong:`not` insta
 Open an Administrative elevated PowerShell terminal window. The easiest way to do this is to right-click on
 the Start Menu and select it from the menu: :guilabel:`Windows PowerShell (Admin)`.
 
-.. code-block:: rst
+.. code-block:: sh
 
     PS C:\Windows\System32> cd c:\tools
     PS C:\Tools>
@@ -52,7 +52,7 @@ the Start Menu and select it from the menu: :guilabel:`Windows PowerShell (Admin
 Follow these steps to install :file:`vcpkg`. The :file:`setx` command should be altered to be the correct path
 that you installed :file:`vcpkg` into. The forward slashes are correct.
 
-.. code-block:: rst
+.. code-block:: sh
 
     Tools> git clone https://github.com/microsoft/vcpkg
     Tools> .\vcpkg\bootstrap-vcpkg.bat
@@ -96,7 +96,7 @@ Open up Visual Studio. A menu will appear. Go to the very bottom right and click
 one is not already shown at the bottom. Once you have the proper GitHub path, here is the command to clone
 the repository:
 
-.. code-block:: rst
+.. code-block:: sh
 
     PS C:\Users\[user]\Source\Repos> git clone git@github.com:[username]/freeciv21.git
 
@@ -107,7 +107,7 @@ your computer.
 The final repository setup item is to link the original Longturn project repository to your local area on
 your computer:
 
-.. code-block:: rst
+.. code-block:: sh
 
     Repos> cd freeciv21
     Repos\freeciv21> git remote add upstream https://github.com/longturn/freeciv21.git
@@ -117,7 +117,7 @@ your computer:
 
 You will also need to set a couple global configuration settings so :code:`git` knows a bit more about you.
 
-.. code-block:: rst
+.. code-block:: sh
 
     freeciv21> git config --global user.email "[email address associated with GitHub]"
     freeciv21> git config --global user.name "[your first and last name]"
@@ -164,7 +164,7 @@ install in the :file:`build-vs/install` directory.
   :file:`vcpkg` earlier. Binaries for the packages will be copied into the :file:`./build-vs/` directory
   inside of the main Freeciv21 directory and reused for subsequent builds.
 
-.. attention:: As documented in :doc:`../General/install`, there is a :file:`--target package` option
+.. attention:: As documented in :doc:`/Getting/install`, there is a :file:`--target package` option
   available to build an installable package for Windows. This is only available to the MSYS2 environment. This
   does not mean that you can not test an install using Visual Studio. After going to
   :menuselection:`Build --> install Freeciv21` you can still manually start up the client or a server as
@@ -184,7 +184,7 @@ great number of errors and the build will fail.
 If you are interested in configuring and compiling from the command line instead of the GUI, you can use
 these commands:
 
-.. code-block:: rst
+.. code-block:: sh
 
   cmake . -B build-vs -G "Visual Studio 17 2022" -DCMAKE_INSTALL_PREFIX=./build-vs/install
   cmake --build build-vs

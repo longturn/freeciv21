@@ -20,7 +20,7 @@ locations where code resides:
 
     Diagram of GitHub Repositories
 
-As part of the :doc:`../General/install` process, one of the programs installed is :file:`git`. This program
+As part of the :doc:`/Getting/install` process, one of the programs installed is :file:`git`. This program
 is used to interact with the varying places that code can reside. The :file:`git` program has a relatively
 standard way of referring to things that are in the diagram. If you have not worked with :file:`git` much,
 it is highly recommended you read the first three chapters of the
