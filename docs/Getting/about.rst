@@ -41,5 +41,3 @@ empire, but any of these four items may provide victory over your opponents:
   other pre-set game rules.
 
 .. note:: Spacerace Victory is set by the ruleset and thereby may not be not enabled for all games.
-
-
