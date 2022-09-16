@@ -7,8 +7,8 @@ The Getting category is where you to go learn about Freeciv21 and how to get it 
 .. toctree::
   about.rst
   install.rst
-  compile.rst
   windows-install.rst
+  compile.rst
   :maxdepth: 1
 
 Manuals
