@@ -107,7 +107,7 @@ bool vertex::operator==(const vertex &other) const
   return std::tie(location, loaded, moved, paradropped, is_final, waypoints,
                   turns, moves_left, health, fuel_left)
          == std::tie(other.location, other.loaded, other.moved,
-                     other.is_final, other.paradropped, other.waypoints,
+                     other.paradropped, other.is_final, other.waypoints,
                      other.turns, other.moves_left, other.health,
                      other.fuel_left);
 }
