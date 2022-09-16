@@ -23,7 +23,7 @@ to use, and what those graphics files contain.
 
 If you don't want to use the command line to invoke Freeciv21, you can also load a different Tileset from the
 client menu at :menuselection:`Game --> Load Another Tileset`. The Longturn.net community also provides some
-custom Tilesets accessible from the modpack installer utility; documented in :doc:`../../General/modpack-installer`.
+custom Tilesets accessible from the modpack installer utility; documented in :doc:`/Getting/Manuals/modpack-installer`.
 
 The rest of this file describes, though not fully, the contents of the :file:`.tilespec` file and related files.
 This is intended as developer reference, and for people wanting to create/compile alternative tilesets and
