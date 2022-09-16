@@ -21,7 +21,7 @@ modpacks curated by the Freeciv21 developers and longturn.net community. You can
 :guilabel:`Install modpack`; the tool will download the files for the selected modpack, and any other
 modpacks it depends on, and install them ready for the main Freeciv21 programs to use.
 
-.. image:: ../_static/images/gui-elements/modpack-installer.png
+.. image:: /_static/images/gui-elements/modpack-installer.png
     :align: center
     :alt: Freeciv21 Modpack Installer Qt GUI application
 
@@ -40,7 +40,7 @@ You can also point the installer at modpacks or lists on other servers:
   browse them with the standard Freeciv21 modpack installer build, you need to start the tool with that URL
   on its command line, for instance:
 
-.. code-block:: rst
+.. code-block:: sh
 
     freeciv21-modpack --List https://example.com/3.1/my-modpacks.json
 

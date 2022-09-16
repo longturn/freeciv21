@@ -349,7 +349,7 @@ The buttons along the bottom of the dialog box are:
 * :guilabel:`Refresh`: If you used the modpack installer to add a new tileset, soundset, or musicset with the
   local options dialog open, you can use the :guilabel:`Refresh` button to reload the available choices for
   some of the drop down selection boxes. For more information on the modpack installer, refer to
-  :doc:`../modpack-installer`.
+  :doc:`modpack-installer`.
 * :guilabel:`Apply`: Apply the settings as set to the client for immediate effect. This button will not do
   much if local options was called from the `Start New Game`_ dialog box.
 * :guilabel:`Save`: Save the current settings.

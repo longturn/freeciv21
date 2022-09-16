@@ -1,3 +1,9 @@
+..
+    SPDX-License-Identifier: GPL-3.0-or-later
+    SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
+    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022 louis94 <m_louis30@yahoo.com>
+
 Installing Freeciv21
 ********************
 
@@ -12,12 +18,13 @@ For more information on using the Windows Installer package, you can read about 
 
 To install the Debian package, you will use the ``apt`` command with elevated privileges like this:
 
-.. code-block:: rst
+.. code-block:: sh
 
   $ sudo apt install ./freeciv21_*_amd64.deb
 
 
-If you want to get code that is closer to the ``master`` branch, you will want to compile the code yourself. Continue reading for instructions.
+If you want to get code that is closer to the ``master`` branch, you will want to compile the code yourself.
+Continue reading for instructions.
 
 General Prerequisites to Compile Freeciv21
 ==========================================
@@ -26,22 +33,21 @@ Freeciv21 has a number of prerequisites.  Note, that apart from the first prereq
 configuration process is smart enough to work out whether your system is suitable. If in doubt, just try it.
 
 An operating system that support Qt
-    Any modern operating system that supports Qt 5.12+ is required. As of this writing this is Linux,
+    Any modern operating system that supports Qt 5.15+ is required. As of this writing this is Linux,
     Microsoft Windows\ |reg| and Apple macOS\ |reg|.
 
     Linux Distributions:
 
     * Arch
-    * CentOS 8+
     * Debian 11+ (Bullseye)\ |reg|
-    * Fedora 28+
+    * Fedora 30+
     * Gentoo
     * KDE Neon
     * Manjaro
     * Mint 20+ or Mint Debian Edition (set to Bullseye)
-    * openSUSE 15.2+
+    * openSUSE 15.3+
     * Slackware
-    * Ubuntu 20.04 LTS+
+    * Ubuntu 22.04 LTS+
 
 
 .. note::
@@ -53,9 +59,9 @@ An operating system that support Qt
 
 .. note::
   The following instructions on this page are for Linux, MSYS2 and macOS environments. You will need to
-  :doc:`install MSYS2 <../../Contributing/msys2>` first before continuing here if using MSYS2 on Windows.
+  :doc:`install MSYS2 </Contributing/msys2>` first before continuing here if using MSYS2 on Windows.
   However, you can also compile on Windows with Microsoft
-  :doc:`Visual Studio <../../Contributing/visual-studio>`. The Visual Studio instructions are self contained.
+  :doc:`Visual Studio </Contributing/visual-studio>`. The Visual Studio instructions are self contained.
   No need to return to this page after following the installation instructions.
 
 
@@ -72,7 +78,7 @@ The Cmake program
     :file:`cmake` installed on your system by typing the following command. The output should include
     "Kitware cmake" somewhere and the version should be >=3.12.
 
-.. code-block:: rst
+.. code-block:: sh
 
   $ cmake --version
 
@@ -81,7 +87,7 @@ The Ninja cmake build program
     Freeciv21 uses the :file:`ninja` build tool. You can check if you have :file:`ninja` installed on your
     system by typing the following command. The output should include :file:`ninja` version >=1.10.
 
-.. code-block:: rst
+.. code-block:: sh
 
   $ ninja --version
 
@@ -138,7 +144,7 @@ QT Libraries
     Freeciv21 uses the Qt libraries, specifically :file:`Qt5Core`, :file:`Qt5Gui`, :file:`Qt5Network`,
     :file:`Qt5Svg`, and :file:`Qt5Widgets` libraries and headers.
 
-    At least version 5.12 is required.
+    At least version 5.15 is required.
 
 Installing Package Dependencies
 ===============================
@@ -149,10 +155,10 @@ its variants.
 See the `macOS Packages`_ section below on the steps to install the components for Apple macOS.
 
 If you are running Windows and want to use the MSYS2 environment and not set it up yet, then
-:doc:`do so now <../../Contributing/msys2>`, before continuing.
+:doc:`do so now </Contributing/msys2>`, before continuing.
 
 Lastly, if you are running Windows and want to use Visual Studio, you can follow the Microsoft
-:doc:`Visual Studio <../../Contributing/visual-studio>` instructions. The Visual Studio instructions are
+:doc:`Visual Studio </Contributing/visual-studio>` instructions. The Visual Studio instructions are
 self contained. You do not neet to return here in that case.
 
 Debian Linux Packages
@@ -163,7 +169,7 @@ Ubuntu, Linux Mint) to install Freeciv21.
 Start with ensuring you have a source repository (:file:`deb-src`) turned on in apt sources and then run the
 following commands:
 
-.. code-block:: rst
+.. code-block:: sh
 
   $ sudo apt update
 
@@ -181,7 +187,8 @@ following commands:
      libunwind-dev \
      libdw-dev \
      python3-sphinx \
-     clang-format-11
+     clang-format-11 \
+     fonts-linuxlibertine
 
 
 At this point, follow the steps in `Obtaining the Source Code`_ section below.
@@ -191,7 +198,7 @@ macOS Packages
 
 Below are all the command line steps needed to start with a fresh install of macOS.
 
-.. code-block:: rst
+.. code-block:: sh
 
   $ brew update
 
@@ -214,7 +221,7 @@ an archive file (:file:`.tar.gz` or :file:`.zip`) of the code from the project r
 https://github.com/longturn/freeciv21/releases. Alternately you can get the latest from the master branch with
 the :file:`git` program with this command:
 
-.. code-block:: rst
+.. code-block:: sh
 
   $ git clone https://github.com/longturn/freeciv21.git
 
@@ -228,7 +235,7 @@ On Debian Linux, to build with defaults enter the following command from the fre
 reading in the `Other CMake Notes`_ section below for more notes about other command line options you can give
 :file:`cmake`.
 
-.. code-block:: rst
+.. code-block:: sh
 
   $ cmake . -B build -G Ninja
 
@@ -236,7 +243,7 @@ reading in the `Other CMake Notes`_ section below for more notes about other com
 On macOS, you need to use a preset that is defined in the :file:`CMakePresets.json` file. When complete
 you can go to the `Compiling/Building`_ section below to continue.
 
-.. code-block:: rst
+.. code-block:: sh
 
   $ cmake --preset fullrelease-macos -S . -B build
 
@@ -281,7 +288,7 @@ https://cmake.org/cmake/help/latest/manual/cmake-variables.7.html.
 
 Once the command line directives are determined, the appropriate command looks like this:
 
-.. code-block:: rst
+.. code-block:: sh
 
   $ cmake . -B build -G Ninja \
      -DFREECIV_ENABLE_TOOLS=OFF \
@@ -293,7 +300,7 @@ Once the command line directives are determined, the appropriate command looks l
 
 A very common Debian Linux configuration command looks like this:
 
-.. code-block:: rst
+.. code-block:: sh
 
   $ cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
 
@@ -303,7 +310,7 @@ Compiling/Building
 
 Once the build files have been written, then compile with this command:
 
-.. code-block:: rst
+.. code-block:: sh
 
   $ cmake --build build
 
@@ -313,7 +320,7 @@ Installing
 
 Once the compilation is complete, install the game with this command.
 
-.. code-block:: rst
+.. code-block:: sh
 
   $ cmake --build build --target install
 
@@ -342,7 +349,7 @@ Debian
 Assuming you have obtained the source code and installed the package dependencies in the sections above,
 follow these steps to generate the Debian package:
 
-.. code-block:: rst
+.. code-block:: sh
 
   $ rm -Rf build
 
@@ -364,7 +371,7 @@ licensing `constraints <https://www.gnu.org/licenses/gpl-faq.en.html#WindowsRunt
 Once your MSYS2 environment is ready, start with `Obtaining the Source Code`_ above. Instead of installing,
 use this command to create the Windows Installer package:
 
-.. code-block:: rst
+.. code-block:: sh
 
   $ cmake --build build --target package
 
@@ -393,7 +400,7 @@ If you are running Debian Linux, the base program is installed by the instructio
 `Debian Linux Packages`_ section above. The documentation is not built by default from the steps in
 `Compiling/Building`_ above. To generate a local copy of the documentation, issue this command:
 
-.. code-block:: rst
+.. code-block:: sh
 
   $ cmake --build build --target docs
 
