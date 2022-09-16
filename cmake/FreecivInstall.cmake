@@ -152,6 +152,14 @@ endif()
 
 # Unix/Linux specific install steps
 if(UNIX AND NOT APPLE)
+
+  # Fixes a bug of some sort on Linux where this gets set to /usr/local, but installs to /usr
+  if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set (CMAKE_INSTALL_PREFIX "/usr"
+         CACHE PATH "default install path" FORCE)
+    message(STATUS "CMAKE_INSTALL_PREFIX changed from the default to /usr.")
+  endif()
+
   # Install MetaInfo and Desktop files for the applications asked for at configure
   if(FREECIV_ENABLE_CLIENT)
     install(
