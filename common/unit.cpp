@@ -1602,6 +1602,8 @@ void unit_virtual_destroy(struct unit *punit)
   unit_transport_unload(punit);
   fc_assert(!unit_transported(punit));
 
+  auto unused = unit_transported(punit); // Should trigger clang-tidy
+
   // Check for transported units. Use direct access to the list.
   if (unit_list_size(punit->transporting) != 0) {
     // Unload all units.
