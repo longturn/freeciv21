@@ -6,8 +6,8 @@ How to Play Freeciv21
 .. role:: improvement
 .. role:: wonder
 
-If you're looking for how to install Freeciv21, look in :doc:`../General/install`. If you're looking for
-how to get Freeciv21 running, look in the :doc:`../General/faq`.
+If you're looking for how to install Freeciv21, look in :doc:`/Getting/install`. If you're looking for
+how to get Freeciv21 running, look in the :doc:`faq`.
 
 If you have never played the retail Civilization games, it's easiest to start by reading the legacy Freeciv
 Manual, available separately at: http://www.freeciv.org/wiki/Manual

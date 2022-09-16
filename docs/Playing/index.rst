@@ -6,6 +6,7 @@ Freeciv21 and any of they varying rulesets that the longurn.net community likes 
 
 
 .. toctree::
+  faq.rst
   how-to-play.rst
   cma.rst
   turn-change.rst
