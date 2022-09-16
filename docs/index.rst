@@ -4,13 +4,13 @@ Welcome to the Freeciv21 manual
 Welcome to the documentation of the Freeciv21 project brought to you by the
 `longturn.net <https://longturn.net>`_ community. The documentation is organized in five categories:
 
-:doc:`General <General/index>`
-  The General category is a catch-all for content that does not neatly fit into the other three. Things like
-  the FAQ and installation instructions go here.
+:doc:`Getting <Getting/index>`
+  The Getting category is where you to go learn about Freeciv21 and how to get it installed on your system.
 
 :doc:`Playing <Playing/index>`
   The Playing category is an area for documentation editors to provide tips and tricks on ways to play
-  Freeciv21 and any of they varying rulesets that the longurn.net community likes to play.
+  Freeciv21 and any of they varying rulesets that the longurn.net community likes to play. You will also find
+  the FAQ here.
 
 :doc:`Modding <Modding/index>`
   The Modding category is an area for documentation editors to provide tips and other details on modifying
@@ -28,7 +28,7 @@ Welcome to the documentation of the Freeciv21 project brought to you by the
 
 
 .. toctree::
-  General/index.rst
+  Getting/index.rst
   Playing/index.rst
   Modding/index.rst
   Contributing/index.rst
