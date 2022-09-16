@@ -26,7 +26,7 @@ way as in a single player game. In fact, Freeciv21 uses an internal server for s
 Installation
 ============
 
-Installing Freeciv21 on a server is done the normal way, as documented in :doc:`/General/install`.
+Installing Freeciv21 on a server is done the normal way, as documented in :doc:`/Getting/install`.
 Because the official packages come with the complete game, they will pull a number of dependencies
 that are normally not used on servers (for instance, a display server). This software is installed
 for packaging reasons, but will not be used.

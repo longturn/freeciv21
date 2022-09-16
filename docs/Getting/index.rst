@@ -1,16 +1,13 @@
-General
+Getting
 *******
 
-The General category is a catch-all for content that does not neatly fit into the other three. Things like
-the FAQ and installation instructions go here.
+The Getting category is where you to go learn about Freeciv21 and how to get it installed on your system.
 
 
 .. toctree::
-  faq.rst
+  about.rst
   install.rst
   windows-install.rst
-  modpack-installer.rst
-  on-the-server.rst
   :maxdepth: 1
 
 Manuals
@@ -20,4 +17,6 @@ The manuals category is where a reader will find detailed information on the cli
 
 .. toctree::
   Manuals/client-manual.rst
+  Manuals/modpack-installer.rst
+  Manuals/on-the-server.rst
   :maxdepth: 2
