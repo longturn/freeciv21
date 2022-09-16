@@ -202,7 +202,6 @@ jobs:
           mkdir -p Freeciv21.app/Contents/MacOS Freeciv21.app/Contents/Resources
           cp dist/Info.plist Freeciv21.app/Contents/
           cp -r .install/share/freeciv21/* Freeciv21.app/Contents/Resources
-          cp -r .install/share/fonts/* Freeciv21.app/Contents/Resources
           cp .install/bin/freeciv21-* Freeciv21.app/Contents/MacOS
           mkdir client.iconset
           cp data/icons/16x16/freeciv21-client.png client.iconset/icon_16x16.png
