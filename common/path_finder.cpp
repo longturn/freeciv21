@@ -579,7 +579,7 @@ bool path_finder::path_finder_private::run_search(
     const auto [begin, end] = best_vertices.equal_range(v.location);
     const auto it = std::find_if(
         begin, end, [&v](const auto &pair) { return *pair.second == v; });
-    if (it == best_vertices.end()) {
+    if (it == end) {
       // Not found, we processed something else in the meantime. Since we
       // processed it earlier, that path was at least as short.
       continue;
