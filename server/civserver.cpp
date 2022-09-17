@@ -349,8 +349,7 @@ int main(int argc, char *argv[])
     srvarg.saves_pathname = parser.value(QStringLiteral("saves"));
   }
   if (parser.isSet(QStringLiteral("scenarios"))) {
-    srvarg.scenarios_pathname =
-        parser.value(QStringLiteral("scenarios_pathname"));
+    srvarg.scenarios_pathname = parser.value(QStringLiteral("scenarios"));
   }
   if (parser.isSet(QStringLiteral("ruleset"))) {
     srvarg.ruleset = parser.value(QStringLiteral("ruleset"));

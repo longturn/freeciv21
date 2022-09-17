@@ -11,6 +11,7 @@
 #include "fc_client.h"
 // Qt
 #include <QApplication>
+#include <QDirIterator>
 #include <QSettings>
 #include <QStackedLayout>
 #include <QStandardPaths>
@@ -28,6 +29,7 @@
 #include "client_main.h"
 #include "clinet.h"
 #include "connectdlg_common.h"
+#include "update_queue.h"
 // gui-qt
 #include "colors.h"
 #include "fonts.h"
@@ -639,6 +641,42 @@ void fc_client::create_loading_page()
 
   pages_layout[PAGE_LOADING] = new QGridLayout;
   pages_layout[PAGE_LOADING]->addWidget(label, 0, 0, 1, 1, Qt::AlignHCenter);
+}
+
+/**
+ * start tutorial
+ */
+void fc_client::start_tutorial()
+{
+  const auto il = find_files_in_path(
+      get_scenario_dirs(), QStringLiteral("tutorial.sav.*"), false);
+  if (!il.isEmpty()) {
+    for (const auto &info : qAsConst(il)) {
+      current_file = info.absoluteFilePath();
+      qInfo(_("Path2 \"%s\"."), qUtf8Printable(current_file));
+    }
+  }
+  update_queue::uq()->connect_processing_finished(
+      client.conn.client.last_request_id_used,
+      [current_file](void *) { start_from_file(current_file); }, nullptr);
+}
+
+/**
+ * start from save file
+ */
+void fc_client::start_from_file(const QString &file)
+{
+  if (!is_server_running()) {
+    client_start_server(client_url().userName());
+    send_chat("/detach");
+  }
+  if (is_server_running() && !file.isEmpty()) {
+    QByteArray c_bytes;
+
+    c_bytes = file.toLocal8Bit();
+    send_chat_printf("/load %s", c_bytes.data());
+    switch_page(PAGE_LOADING);
+  }
 }
 
 /**

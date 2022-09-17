@@ -134,6 +134,8 @@ private slots:
 
 public slots:
   void slot_disconnect();
+  void start_tutorial();
+  void start_from_file(const QString &file);
   void start_new_game();
   void switch_page(int i);
   void quit();
