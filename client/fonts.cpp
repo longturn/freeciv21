@@ -141,7 +141,6 @@ bool isFontInstalled(const QString &font_name)
  */
 void load_fonts()
 {
-
   const auto il =
       find_files_in_path(get_data_dirs(), QStringLiteral("fonts"), false);
   if (!il.isEmpty()) {
