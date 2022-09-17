@@ -113,6 +113,10 @@ tech_parasite_allow_holes = TRUE
 ; due to negative bulbs, if techlossforgiveness allows loss
 tech_loss_allow_holes     = TRUE
 
+; The diplomatic state between two nations that meet for the first time
+; One of "War", "Cease-fire", "Armistice", "Peace", "Alliance"
+initial_diplomatic_state = "War"
+
 ; Whether civil war is possible at all
 civil_war_enabled        = TRUE
 
