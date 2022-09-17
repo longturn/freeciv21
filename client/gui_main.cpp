@@ -95,6 +95,9 @@ void ui_main()
     if (!load_theme(gui_options.gui_qt_default_theme_name)) {
       gui_clear_theme();
     }
+    if (!isFontInstalled("Linux Libertine")) {
+      configure_fonts();
+    }
     freeciv_qt = new fc_client();
     freeciv_qt->fc_main(qApp);
   }
