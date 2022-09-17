@@ -653,7 +653,6 @@ void fc_client::start_tutorial()
   if (!il.isEmpty()) {
     for (const auto &info : qAsConst(il)) {
       current_file = info.absoluteFilePath();
-      qInfo(_("Path2 \"%s\"."), qUtf8Printable(current_file));
     }
   }
   update_queue::uq()->connect_processing_finished(
