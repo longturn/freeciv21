@@ -270,6 +270,7 @@ bool client_start_server(const QString &user_name)
   // Start it
   qInfo(_("Starting freeciv21-server at %s"), qUtf8Printable(location));
 
+  serverProcess::i()->setProcessChannelMode(QProcess::ForwardedChannels);
   serverProcess::i()->start(location, arguments);
   if (!serverProcess::i()->waitForStarted(3000)) {
     output_window_append(ftc_client, _("Couldn't start the server."));

@@ -38,7 +38,93 @@
     <property name="verticalSpacing">
      <number>5</number>
     </property>
+    <item row="1" column="0">
+      <widget class="QPushButton" name="btut">
+        <property name="text">
+          <string>Tutorialt</string>
+        </property>
+        <property name="main_pagebt" stdset="0">
+          <bool>true</bool>
+        </property>
+      </widget>
+    </item>
+    <item row="2" column="0">
+      <widget class="QPushButton" name="bstart">
+        <property name="text">
+          <string>Start</string>
+        </property>
+        <property name="main_pagebt" stdset="0">
+          <bool>true</bool>
+        </property>
+      </widget>
+    </item>
+    <item row="3" column="0">
+      <widget class="QPushButton" name="bconnect">
+        <property name="text">
+          <string>Connect</string>
+        </property>
+        <property name="main_pagebt" stdset="0">
+          <bool>true</bool>
+        </property>
+      </widget>
+    </item>
+    <item row="4" column="0">
+      <widget class="QPushButton" name="bload">
+        <property name="text">
+          <string>Load</string>
+        </property>
+        <property name="main_pagebt" stdset="0">
+          <bool>true</bool>
+        </property>
+      </widget>
+    </item>
+    <item row="5" column="0">
+      <widget class="QPushButton" name="bscenario">
+        <property name="text">
+          <string>Scenario</string>
+        </property>
+        <property name="main_pagebt" stdset="0">
+          <bool>true</bool>
+        </property>
+      </widget>
+    </item>
     <item row="6" column="0">
+      <widget class="QPushButton" name="boptions">
+        <property name="text">
+          <string>Options</string>
+        </property>
+        <property name="main_pagebt" stdset="0">
+          <bool>true</bool>
+        </property>
+      </widget>
+    </item>
+    <item row="7" column="1">
+      <spacer name="horizontalSpacer">
+        <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+          <size>
+            <width>40</width>
+            <height>20</height>
+          </size>
+        </property>
+      </spacer>
+    </item>
+    <item row="6" column="0">
+      <spacer name="verticalSpacer">
+        <property name="orientation">
+          <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+          <size>
+            <width>20</width>
+            <height>40</height>
+          </size>
+        </property>
+      </spacer>
+    </item>
+    <item row="7" column="0">
      <widget class="QPushButton" name="bquit">
       <property name="text">
        <string>Quit</string>
@@ -48,7 +134,7 @@
       </property>
      </widget>
     </item>
-    <item row="6" column="2">
+    <item row="7" column="2">
      <widget class="QLabel" name="lversion">
       <property name="text">
        <string>lversion</string>
@@ -57,82 +143,6 @@
        <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
       </property>
      </widget>
-    </item>
-    <item row="3" column="1">
-     <spacer name="horizontalSpacer">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>40</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="0" column="0">
-     <widget class="QPushButton" name="bstart">
-      <property name="text">
-       <string>Start</string>
-      </property>
-      <property name="main_pagebt" stdset="0">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0">
-     <widget class="QPushButton" name="bscenario">
-      <property name="text">
-       <string>Scenario</string>
-      </property>
-      <property name="main_pagebt" stdset="0">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="0">
-     <widget class="QPushButton" name="boptions">
-      <property name="text">
-       <string>Options</string>
-      </property>
-      <property name="main_pagebt" stdset="0">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QPushButton" name="bload">
-      <property name="text">
-       <string>Load</string>
-      </property>
-      <property name="main_pagebt" stdset="0">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QPushButton" name="bconnect">
-      <property name="text">
-       <string>Connect</string>
-      </property>
-      <property name="main_pagebt" stdset="0">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0">
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
     </item>
    </layout>
   </widget>

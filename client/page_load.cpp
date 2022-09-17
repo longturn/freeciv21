@@ -125,20 +125,7 @@ void page_load::update_load_page()
 /**
    Starts game from chosen save - chosen_file (save or scenario)
  */
-void page_load::start_from_save()
-{
-  if (!is_server_running()) {
-    client_start_server(client_url().userName());
-    send_chat("/detach");
-  }
-  if (is_server_running() && !current_file.isEmpty()) {
-    QByteArray c_bytes;
-
-    c_bytes = current_file.toLocal8Bit();
-    send_chat_printf("/load %s", c_bytes.data());
-    gui->switch_page(PAGE_LOADING);
-  }
-}
+void page_load::start_from_save() { king()->start_from_file(current_file); }
 
 /**
    Browse saves directory

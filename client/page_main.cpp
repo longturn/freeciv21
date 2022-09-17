@@ -1,5 +1,5 @@
 /*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2022 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -21,6 +21,7 @@ page_main::page_main(QWidget *parent, fc_client *gui) : QWidget(parent)
   QString msgbuf;
   QString beta;
   ui.setupUi(this);
+  ui.btut->setText(_("Tutorial"));
   ui.bstart->setText(_("Start new game"));
   ui.bscenario->setText(_("Start scenario game"));
   ui.boptions->setText(_("Options"));
@@ -28,6 +29,8 @@ page_main::page_main(QWidget *parent, fc_client *gui) : QWidget(parent)
   ui.bconnect->setText(_("Connect to network game"));
   ui.bquit->setText(_("Quit"));
 
+  connect(ui.btut, &QAbstractButton::clicked, gui,
+          &fc_client::start_tutorial);
   connect(ui.bstart, &QAbstractButton::clicked, gui,
           &fc_client::start_new_game);
   connect(ui.bscenario, &QPushButton::clicked,

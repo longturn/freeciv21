@@ -98,20 +98,7 @@ void page_scenario::browse_scenarios()
 /**
    Starts game from chosen scenario - chosen_file (save or scenario)
  */
-void page_scenario::start_scenario()
-{
-  if (!is_server_running()) {
-    client_start_server(client_url().userName());
-    send_chat("/detach");
-  }
-  if (is_server_running() && !current_file.isEmpty()) {
-    QByteArray c_bytes;
-
-    c_bytes = current_file.toLocal8Bit();
-    send_chat_printf("/load %s", c_bytes.data());
-    king->switch_page(PAGE_LOADING);
-  }
-}
+void page_scenario::start_scenario() { king->start_from_file(current_file); }
 
 /**
    Gets scenarios list and updates it in TableWidget = scenarios_load
