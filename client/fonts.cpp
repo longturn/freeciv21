@@ -1,5 +1,5 @@
 /*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2022 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -10,9 +10,11 @@
 
 #include "fonts.h"
 // Qt
+#include <QDirIterator>
 #include <QFontDatabase>
 #include <QGuiApplication>
 #include <QScreen>
+
 // client
 #include "gui_main.h"
 #include "options.h"
@@ -125,7 +127,37 @@ void fcFont::setFont(const QString &name, const QFont &qf)
 }
 
 /**
-   Tries to choose good fonts for freeciv-qt
+ *   Returns if a font is installed
+ */
+bool isFontInstalled(const QString &font_name)
+{
+  QFontDatabase database;
+
+  return database.families().contains(font_name);
+}
+
+/**
+ * Loads the fonts into the font database.
+ */
+void load_fonts()
+{
+  const auto il =
+      find_files_in_path(get_data_dirs(), QStringLiteral("fonts"), false);
+  if (!il.isEmpty()) {
+    for (const auto &info : qAsConst(il)) {
+      QDirIterator iterator(
+          info.absolutePath(),
+          {QStringLiteral("*.otf"), QStringLiteral("*.ttf")}, QDir::Files,
+          QDirIterator::Subdirectories);
+      while (iterator.hasNext()) {
+        QFontDatabase::addApplicationFont(iterator.next());
+      }
+    }
+  }
+}
+
+/**
+ * Tries to choose good fonts for Freeciv21
  */
 void configure_fonts()
 {
@@ -133,65 +165,74 @@ void configure_fonts()
   QString font_name;
 
   const int max = 16;
-  const int default_size = 14;
+  const int default_size = 12;
 
-  /* default and help label*/
-  sl << QStringLiteral("Segoe UI") << QStringLiteral("Cousine")
+  if (!isFontInstalled("Linux Libertine")) {
+    load_fonts();
+  }
+
+  /* Sans Serif List */
+  sl << QStringLiteral("Linux Biolinum O")
      << QStringLiteral("Liberation Sans") << QStringLiteral("Droid Sans")
      << QStringLiteral("Ubuntu") << QStringLiteral("Noto Sans")
      << QStringLiteral("DejaVu Sans") << QStringLiteral("Luxi Sans")
-     << QStringLiteral("Lucida Sans") << QStringLiteral("Trebuchet MS")
-     << QStringLiteral("Times New Roman");
+     << QStringLiteral("Lucida Sans") << QStringLiteral("Arial");
+
   font_name = configure_font(fonts::default_font, sl, max);
   if (!font_name.isEmpty()) {
     fc_strlcpy(gui_options.gui_qt_font_default, qUtf8Printable(font_name),
                512);
+  }
+  font_name = configure_font(fonts::notify_label, sl, default_size);
+  if (!font_name.isEmpty()) {
+    fc_strlcpy(gui_options.gui_qt_font_notify_label,
+               qUtf8Printable(font_name), 512);
   }
   font_name = configure_font(fonts::city_names, sl, max, true);
   if (!font_name.isEmpty()) {
     fc_strlcpy(gui_options.gui_qt_font_city_names, qUtf8Printable(font_name),
                512);
   }
-  // default for help text
-  font_name = configure_font(fonts::help_text, sl, default_size);
-  if (!font_name.isEmpty()) {
-    fc_strlcpy(gui_options.gui_qt_font_help_text, qUtf8Printable(font_name),
-               512);
-  }
-  sl.clear();
-
-  // notify
-  sl << QStringLiteral("Cousine") << QStringLiteral("Liberation Mono")
-     << QStringLiteral("Source Code Pro")
-     << QStringLiteral("Source Code Pro [ADBO]")
-     << QStringLiteral("Noto Mono") << QStringLiteral("Ubuntu Mono")
-     << QStringLiteral("Courier New");
-  font_name = configure_font(fonts::notify_label, sl, default_size);
-  if (!font_name.isEmpty()) {
-    fc_strlcpy(gui_options.gui_qt_font_notify_label,
-               qUtf8Printable(font_name), 512);
-  }
-
-  // standard for chat
-  font_name = configure_font(fonts::chatline, sl, default_size);
-  if (!font_name.isEmpty()) {
-    fc_strlcpy(gui_options.gui_qt_font_chatline, qUtf8Printable(font_name),
-               512);
-  }
-
-  // City production
-  sl.clear();
-  sl << QStringLiteral("Arimo") << QStringLiteral("Play")
-     << QStringLiteral("Tinos") << QStringLiteral("Ubuntu")
-     << QStringLiteral("Times New Roman") << QStringLiteral("Droid Sans")
-     << QStringLiteral("Noto Sans");
   font_name =
       configure_font(fonts::city_productions, sl, default_size, true);
   if (!font_name.isEmpty()) {
     fc_strlcpy(gui_options.gui_qt_font_city_productions,
                qUtf8Printable(font_name), 512);
   }
-  // Reqtree
+  sl.clear();
+
+  /* Monospace List */
+  sl << QStringLiteral("Linux Libertine Mono O") << QStringLiteral("Cousine")
+     << QStringLiteral("Liberation Mono")
+     << QStringLiteral("Source Code Pro")
+     << QStringLiteral("Source Code Pro [ADBO]")
+     << QStringLiteral("Noto Mono") << QStringLiteral("Ubuntu Mono")
+     << QStringLiteral("Courier New");
+
+  font_name = configure_font(fonts::help_label, sl, default_size);
+  if (!font_name.isEmpty()) {
+    fc_strlcpy(gui_options.gui_qt_font_help_label, qUtf8Printable(font_name),
+               512);
+  }
+  font_name = configure_font(fonts::help_text, sl, default_size);
+  if (!font_name.isEmpty()) {
+    fc_strlcpy(gui_options.gui_qt_font_help_text, qUtf8Printable(font_name),
+               512);
+  }
+  font_name = configure_font(fonts::chatline, sl, default_size);
+  if (!font_name.isEmpty()) {
+    fc_strlcpy(gui_options.gui_qt_font_chatline, qUtf8Printable(font_name),
+               512);
+  }
+  sl.clear();
+
+  /* Serif List */
+  sl << QStringLiteral("Linux Libertine Display O")
+     << QStringLiteral("Arimo") << QStringLiteral("Play")
+     << QStringLiteral("Tinos") << QStringLiteral("Ubuntu")
+     << QStringLiteral("Times New Roman") << QStringLiteral("Droid Sans")
+     << QStringLiteral("Noto Sans");
+
   font_name = configure_font(fonts::reqtree_text, sl, max, true);
   if (!font_name.isEmpty()) {
     fc_strlcpy(gui_options.gui_qt_font_reqtree_text,

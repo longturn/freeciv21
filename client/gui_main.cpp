@@ -92,6 +92,9 @@ void ui_main()
     } else if (!gui_options.gui_qt_migrated_from_2_5) {
       migrate_options_from_2_5();
     }
+    if (!isFontInstalled("Linux Libertine")) {
+      load_fonts();
+    }
     if (!load_theme(gui_options.gui_qt_default_theme_name)) {
       gui_clear_theme();
     }
