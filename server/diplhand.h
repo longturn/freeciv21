@@ -22,6 +22,9 @@ struct connection;
 #define SPECLIST_TYPE struct Treaty
 #include "speclist.h"
 
+// FIXME: Should this be put in a ruleset somewhere?
+const int TURNS_LEFT = 16;
+
 #define treaty_list_iterate(list, p)                                        \
   TYPED_LIST_ITERATE(struct Treaty, list, p)
 #define treaty_list_iterate_end LIST_ITERATE_END

@@ -43,9 +43,6 @@
 
 static struct treaty_list *treaties = nullptr;
 
-// FIXME: Should this be put in a ruleset somewhere?
-#define TURNS_LEFT 16
-
 /**
    Calls treaty_evaluate function if such is set for AI player.
  */

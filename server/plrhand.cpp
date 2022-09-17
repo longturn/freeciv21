@@ -2105,24 +2105,27 @@ void server_player_set_name(struct player *pplayer, const char *name)
 /**
    Returns the default diplomatic state between 2 players.
 
-   Mainly, this returns DS_WAR, but it can also return DS_PEACE if both
-   players are allied with the same third player.
+   Mainly, this returns DS_WAR or whatever the ruleset has configured, but it
+   will always return DS_PEACE or better if both players are allied with the
+   same third player.
  */
 static enum diplstate_type
 get_default_diplstate(const struct player *pplayer1,
                       const struct player *pplayer2)
 {
-  players_iterate_alive(pplayer3)
-  {
-    if (pplayer3 != pplayer1 && pplayer3 != pplayer2
-        && pplayers_allied(pplayer3, pplayer1)
-        && pplayers_allied(pplayer3, pplayer2)) {
-      return DS_PEACE;
+  if (game.server.initial_diplomatic_state < DS_ALLIANCE) {
+    players_iterate_alive(pplayer3)
+    {
+      if (pplayer3 != pplayer1 && pplayer3 != pplayer2
+          && pplayers_allied(pplayer3, pplayer1)
+          && pplayers_allied(pplayer3, pplayer2)) {
+        return DS_PEACE;
+      }
     }
+    players_iterate_alive_end;
   }
-  players_iterate_alive_end;
 
-  return DS_WAR;
+  return game.server.initial_diplomatic_state;
 }
 
 /**
@@ -2148,6 +2151,10 @@ void make_contact(struct player *pplayer1, struct player *pplayer2,
   if (ds_plr1plr2->type == DS_NO_CONTACT) {
     enum diplstate_type new_state =
         get_default_diplstate(pplayer1, pplayer2);
+    if (new_state == DS_CEASEFIRE || new_state == DS_ARMISTICE) {
+      ds_plr1plr2->turns_left = TURNS_LEFT;
+      ds_plr2plr1->turns_left = TURNS_LEFT;
+    }
 
     ds_plr1plr2->type = new_state;
     ds_plr2plr1->type = new_state;

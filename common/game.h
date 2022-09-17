@@ -111,6 +111,7 @@ struct civ_game {
       /* Only used in the server (./ai/ and ./server/). */
 
       // Defined in the ruleset.
+      diplstate_type initial_diplomatic_state;
 
       // Game settings & other data.
 

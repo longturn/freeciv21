@@ -19,6 +19,7 @@
 #include "deprecations.h"
 #include "fcintl.h"
 #include "registry.h"
+#include "registry_ini.h"
 #include "shared.h"
 #include "support.h"
 
@@ -6219,6 +6220,19 @@ static bool load_ruleset_game(struct section_file *file, bool act,
     }
     delete[] slist;
     slist = nullptr;
+  }
+
+  if (ok) {
+    auto str =
+        secfile_lookup_str_default(file, RS_DEFAULT_INITIAL_DIPLOMATIC_STATE,
+                                   "civstyle.initial_diplomatic_state");
+    game.server.initial_diplomatic_state =
+        diplstate_type_by_name(str, fc_strcasecmp);
+    if (!diplstate_type_is_valid(game.server.initial_diplomatic_state)) {
+      qCritical() << "Invalid value for initial_diplomatic_state:"
+                  << QString(str);
+      ok = false;
+    }
   }
 
   if (ok) {
