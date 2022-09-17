@@ -172,11 +172,11 @@ void configure_fonts()
   }
 
   /* Sans Serif List */
-  sl << QStringLiteral("Linux Biolinum O")
-     << QStringLiteral("Liberation Sans") << QStringLiteral("Droid Sans")
-     << QStringLiteral("Ubuntu") << QStringLiteral("Noto Sans")
-     << QStringLiteral("DejaVu Sans") << QStringLiteral("Luxi Sans")
-     << QStringLiteral("Lucida Sans") << QStringLiteral("Arial");
+  sl << QStringLiteral("Linux Biolinum") << QStringLiteral("Liberation Sans")
+     << QStringLiteral("Droid Sans") << QStringLiteral("Ubuntu")
+     << QStringLiteral("Noto Sans") << QStringLiteral("DejaVu Sans")
+     << QStringLiteral("Luxi Sans") << QStringLiteral("Lucida Sans")
+     << QStringLiteral("Arial");
 
   font_name = configure_font(fonts::default_font, sl, max);
   if (!font_name.isEmpty()) {
@@ -202,7 +202,7 @@ void configure_fonts()
   sl.clear();
 
   /* Monospace List */
-  sl << QStringLiteral("Linux Libertine Mono O") << QStringLiteral("Cousine")
+  sl << QStringLiteral("Linux Libertine Mono") << QStringLiteral("Cousine")
      << QStringLiteral("Liberation Mono")
      << QStringLiteral("Source Code Pro")
      << QStringLiteral("Source Code Pro [ADBO]")
@@ -227,11 +227,10 @@ void configure_fonts()
   sl.clear();
 
   /* Serif List */
-  sl << QStringLiteral("Linux Libertine Display O")
-     << QStringLiteral("Arimo") << QStringLiteral("Play")
-     << QStringLiteral("Tinos") << QStringLiteral("Ubuntu")
-     << QStringLiteral("Times New Roman") << QStringLiteral("Droid Sans")
-     << QStringLiteral("Noto Sans");
+  sl << QStringLiteral("Linux Libertine Display") << QStringLiteral("Arimo")
+     << QStringLiteral("Play") << QStringLiteral("Tinos")
+     << QStringLiteral("Ubuntu") << QStringLiteral("Times New Roman")
+     << QStringLiteral("Droid Sans") << QStringLiteral("Noto Sans");
 
   font_name = configure_font(fonts::reqtree_text, sl, max, true);
   if (!font_name.isEmpty()) {
