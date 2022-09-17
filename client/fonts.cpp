@@ -141,31 +141,39 @@ bool isFontInstalled(const QString &font_name)
 }
 
 /**
+   Loads the fonts into the font database.
+ */
+void load_fonts()
+{
+  QFileInfoList il;
+
+  il = find_files_in_path(get_data_dirs(), QStringLiteral("fonts"), false);
+  if (!il.isEmpty()) {
+    for (const auto &info : qAsConst(il)) {
+      QDirIterator iterator(
+          info.absolutePath(),
+          {QStringLiteral("*.otf"), QStringLiteral("*.ttf")}, QDir::Files,
+          QDirIterator::Subdirectories);
+      while (iterator.hasNext()) {
+        QFontDatabase::addApplicationFont(iterator.next());
+      }
+    }
+  }
+}
+
+/**
    Tries to choose good fonts for Freeciv21
  */
 void configure_fonts()
 {
   QStringList sl;
   QString font_name;
-  QFileInfoList il;
-  QFileInfo info;
 
   const int max = 16;
   const int default_size = 12;
 
   if (!isFontInstalled("Linux Libertine")) {
-    il = find_files_in_path(get_data_dirs(), QStringLiteral("fonts"), false);
-    if (!il.isEmpty()) {
-      for (const auto &info : qAsConst(il)) {
-        QDirIterator iterator(
-            info.absolutePath(),
-            {QStringLiteral("*.otf"), QStringLiteral("*.ttf")}, QDir::Files,
-            QDirIterator::Subdirectories);
-        while (iterator.hasNext()) {
-          QFontDatabase::addApplicationFont(iterator.next());
-        }
-      }
-    }
+    load_fonts();
   }
 
   /* Sans Serif List */

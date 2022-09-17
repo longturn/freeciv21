@@ -93,7 +93,7 @@ void ui_main()
       migrate_options_from_2_5();
     }
     if (!isFontInstalled("Linux Libertine")) {
-      configure_fonts();
+      load_fonts();
     }
     if (!load_theme(gui_options.gui_qt_default_theme_name)) {
       gui_clear_theme();
