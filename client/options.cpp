@@ -189,16 +189,16 @@ struct client_options gui_options = {
     true,  //.gui_qt_allied_chat_only =
     0,     // font_increase
     FC_QT_DEFAULT_THEME_NAME,
-    "Linux Biolinum,12,-1,5,50,0,0,0,0,0", //.gui_qt_font_notify_label =
-    "Linux Libertine Mono,12,-1,5,50,0,0,0,0,0", //.gui_qt_font_help_label
-                                                 //=
-    "Linux Libertine Mono,12,-1,5,50,0,0,0,0,0", //.gui_qt_font_help_text =
-    "Linux Libertine Mono,12,-1,5,50,0,0,0,0,0", //.gui_qt_font_chatline =
-    "Linux Biolinum,16,-1,5,50,1,0,0,0,0",       //.gui_qt_font_city_names =
-    "Linux Biolinum,12,-1,5,50,0,0,0,0,0", //.gui_qt_font_city_productions
-                                           //=
-    "Linux Libertine Display,14,-1,5,50,0,0,0,0,0", //.gui_qt_font_reqtree_text
-                                                    //=
+    "Linux Biolinum O,12,-1,5,50,0,0,0,0,0", //.gui_qt_font_notify_label =
+    "Linux Libertine Mono O,12,-1,5,50,0,0,0,0,0", //.gui_qt_font_help_label
+                                                   //=
+    "Linux Libertine Mono O,12,-1,5,50,0,0,0,0,0", //.gui_qt_font_help_text =
+    "Linux Libertine Mono O,12,-1,5,50,0,0,0,0,0", //.gui_qt_font_chatline =
+    "Linux Biolinum O,16,-1,5,50,1,0,0,0,0", //.gui_qt_font_city_names =
+    "Linux Biolinum O,12,-1,5,50,0,0,0,0,0", //.gui_qt_font_city_productions
+                                             //=
+    "Linux Libertine Display O,14,-1,5,50,0,0,0,0,0", //.gui_qt_font_reqtree_text
+                                                      //=
     {true}, //=?
     true,   //.gui_qt_show_titlebar
     {}};
@@ -1945,45 +1945,45 @@ static struct client_option client_options[] = {
                    COC_FONT, 0, -100, 100, allfont_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_default, "default_font", N_("Default font"),
                     N_("This is default font"), COC_FONT,
-                    "Linux Biolinum,12,-1,5,50,0,0,0,0,0",
+                    "Linux Biolinum O,12,-1,5,50,0,0,0,0,0",
                     font_changed_callback),
     GEN_FONT_OPTION(
         gui_qt_font_notify_label, "notify_label", N_("Notify Label"),
         N_("This font is used to display server reports such "
            "as the demographic report or historian publications."),
-        COC_FONT, "Linux Biolinum,12,-1,5,50,0,0,0,0,0",
+        COC_FONT, "Linux Biolinum O,12,-1,5,50,0,0,0,0,0",
         font_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_help_label, "help_label", N_("Help Label"),
                     N_("This font is used to display the help labels in the "
                        "help window."),
-                    COC_FONT, "Linux Libertine Mono,12,-1,5,50,0,0,0,0,0",
+                    COC_FONT, "Linux Libertine Mono O,12,-1,5,50,0,0,0,0,0",
                     font_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_help_text, "help_text", N_("Help Text"),
                     N_("This font is used to display the help body text in "
                        "the help window."),
-                    COC_FONT, "Linux Libertine Mono,12,-1,5,50,0,0,0,0,0",
+                    COC_FONT, "Linux Libertine Mono O,12,-1,5,50,0,0,0,0,0",
                     font_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_chatline, "chatline", N_("Chatline Area"),
                     N_("This font is used to display the text in the "
                        "chatline area."),
-                    COC_FONT, "Linux Libertine Mono,12,-1,5,50,0,0,0,0,0",
+                    COC_FONT, "Linux Libertine Mono O,12,-1,5,50,0,0,0,0,0",
                     font_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_city_names, "city_names", N_("City Names"),
                     N_("This font is used to the display the city names "
                        "on the map."),
-                    COC_FONT, "Linux Biolinum,16,-1,5,50,1,0,0,0,0",
+                    COC_FONT, "Linux Biolinum O,16,-1,5,50,1,0,0,0,0",
                     font_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_city_productions, "city_productions",
                     N_("City Productions"),
                     N_("This font is used to display the city production "
                        "on the map."),
-                    COC_FONT, "Linux Biolinum,12,-1,5,50,0,0,0,0,0",
+                    COC_FONT, "Linux Biolinum O,12,-1,5,50,0,0,0,0,0",
                     font_changed_callback),
     GEN_FONT_OPTION(
         gui_qt_font_reqtree_text, "reqtree_text", N_("Requirement Tree"),
         N_("This font is used to the display the requirement tree "
            "in the Research report."),
-        COC_FONT, "Linux Libertine Display,14,-1,5,50,0,0,0,0,0",
+        COC_FONT, "Linux Libertine Display O,14,-1,5,50,0,0,0,0,0",
         font_changed_callback),
     GEN_BOOL_OPTION(gui_qt_show_preview, N_("Show savegame information"),
                     N_("If this option is set the client will show "
