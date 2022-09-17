@@ -49,10 +49,20 @@ vertex vertex::child_for_action(action_id action, const unit &probe,
   ret.order.action = action;
   ret.order.target = target->index;
   ret.order.dir = DIR8_ORIGIN;
-  ret.moves_left =
-      probe.moves_left
-      - unit_pays_mp_for_action(action_by_number(action), &probe);
+  ret.moves_left = probe.moves_left;
   ret.location = target;
+
+  const auto action_ptr = action_by_number(action);
+  if (utype_is_moved_to_tgt_by_action(action_ptr, probe.utype)) {
+    // We need a second probe because EFT_ACTION_SUCCESS_MOVE_COST is
+    // evaluated after the unit has moved
+    auto moved_probe = probe;
+    moved_probe.tile = target;
+    ret.moves_left -= unit_pays_mp_for_action(action_ptr, &moved_probe);
+  } else {
+    ret.moves_left -= unit_pays_mp_for_action(action_ptr, &probe);
+  }
+
   return ret;
 }
 
