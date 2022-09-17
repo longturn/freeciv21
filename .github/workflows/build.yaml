@@ -276,7 +276,7 @@ jobs:
           source emsdk/emsdk_env.sh
           wget https://www.lua.org/ftp/lua-5.4.3.tar.gz
           tar xf lua-5.4.3.tar.gz
-          cp patches/lua.CMakeLists.txt lua-5.4.3/CMakeLists.txt
+          cp dist/wasm/lua.CMakeLists.txt lua-5.4.3/CMakeLists.txt
           cd lua-5.4.3
           emcmake cmake .
           emmake make install
@@ -346,7 +346,7 @@ jobs:
         run: |
           source emsdk/emsdk_env.sh
           cd karchive
-          git apply ../patches/karchive.diff
+          git apply ../dist/wasm/karchive.diff
           emcmake cmake . \
             -DECM_DIR=/usr/local/share/ECM/cmake -DBUILD_TESTING=0 \
             -DQt5Core_DIR=$HOME/qt/lib/cmake/Qt5Core \
