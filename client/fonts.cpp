@@ -133,21 +133,17 @@ bool isFontInstalled(const QString &font_name)
 {
   QFontDatabase database;
 
-  if (database.families().contains(font_name)) {
-    return true;
-  } else {
-    return false;
-  }
+  return database.families().contains(font_name);
 }
 
 /**
-   Loads the fonts into the font database.
+ * Loads the fonts into the font database.
  */
 void load_fonts()
 {
-  QFileInfoList il;
 
-  il = find_files_in_path(get_data_dirs(), QStringLiteral("fonts"), false);
+  const auto il =
+      find_files_in_path(get_data_dirs(), QStringLiteral("fonts"), false);
   if (!il.isEmpty()) {
     for (const auto &info : qAsConst(il)) {
       QDirIterator iterator(
@@ -162,7 +158,7 @@ void load_fonts()
 }
 
 /**
-   Tries to choose good fonts for Freeciv21
+ * Tries to choose good fonts for Freeciv21
  */
 void configure_fonts()
 {
