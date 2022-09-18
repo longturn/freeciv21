@@ -1,5 +1,5 @@
 /*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2022 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -353,9 +353,11 @@ void popup_quit_dialog()
 {
   hud_message_box *ask = new hud_message_box(king()->central_wdg);
 
-  ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
-  ask->setDefaultButton(QMessageBox::Cancel);
   ask->set_text_title(_("Are you sure you want to quit?"), _("Quit?"));
+  ask->setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+  ask->setDefaultButton(QMessageBox::No);
+  ask->button(QMessageBox::Yes)->setText(_("Yes Quit"));
+  ask->button(QMessageBox::No)->setText(_("Keep Playing"));
   ask->setAttribute(Qt::WA_DeleteOnClose);
   QObject::connect(ask, &hud_message_box::accepted, [=]() {
     start_quitting();

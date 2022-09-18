@@ -1,5 +1,5 @@
 /*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2022 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -2849,7 +2849,7 @@ void mr_menu::save_image()
   map_saved = mapview.store->save(img_name, "png");
   map_canvas_resized(current_width, current_height);
   saved->setStandardButtons(QMessageBox::Ok);
-  saved->setDefaultButton(QMessageBox::Cancel);
+  saved->setDefaultButton(QMessageBox::Ok);
   saved->setAttribute(Qt::WA_DeleteOnClose);
   if (map_saved) {
     saved->set_text_title("Image saved as:\n" + img_name, _("Success"));
@@ -2899,10 +2899,14 @@ void mr_menu::back_to_menu()
 
   if (is_server_running()) {
     ask = new hud_message_box(king()->central_wdg);
-    ask->set_text_title(_("Leaving a local game will end it!"),
-                        QStringLiteral("Leave game"));
-    ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
-    ask->setDefaultButton(QMessageBox::Cancel);
+    ask->set_text_title(
+        _("Do you want to leave the game?\n\n Leaving a single-player game "
+          "will end it. Be sure to save first."),
+        QStringLiteral("Leave Game"));
+    ask->setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+    ask->setDefaultButton(QMessageBox::No);
+    ask->button(QMessageBox::No)->setText(_("Keep Playing"));
+    ask->button(QMessageBox::Yes)->setText(_("Leave"));
     ask->setAttribute(Qt::WA_DeleteOnClose);
 
     connect(ask, &hud_message_box::accepted, [=]() {

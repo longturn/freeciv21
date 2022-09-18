@@ -294,9 +294,10 @@ void unittype_item::upgrade_units()
                         utype_name_translation(utype),
                         utype_name_translation(upgrade), price,
                         b.toUtf8().data());
-  ask->set_text_title(c, _("Upgrade Obsolete Units"));
-  ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
+  ask->set_text_title(c, _("Upgrade Obsolete Units?"));
+  ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
   ask->setDefaultButton(QMessageBox::Cancel);
+  ask->button(QMessageBox::Yes)->setText(_("Yes Upgrade"));
   ask->setAttribute(Qt::WA_DeleteOnClose);
   connect(ask, &hud_message_box::accepted,
           [=]() { dsend_packet_unit_type_upgrade(&client.conn, type); });
