@@ -1,5 +1,5 @@
 /*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2022 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -1063,10 +1063,12 @@ void popup_revolution_dialog(struct government *government)
 
   if (0 > client.conn.playing->revolution_finishes) {
     ask = new hud_message_box(king()->central_wdg);
-    ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
-    ask->setDefaultButton(QMessageBox::Cancel);
-    ask->set_text_title(_("You say you wanna revolution?"),
+    ask->set_text_title(_("Do you want to overthrow the government?"),
                         _("Revolution!"));
+    ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
+    ask->setDefaultButton(QMessageBox::Cancel);
+    ask->button(QMessageBox::Yes)->setText(_("Yes Start a Revolution!"));
+
     ask->setAttribute(Qt::WA_DeleteOnClose);
     QObject::connect(ask, &hud_message_box::accepted, [=]() {
       struct government *government = government_by_number(government_id);
@@ -3021,9 +3023,10 @@ void popup_incite_dialog(struct unit *actor, struct city *tcity, int cost,
     buf2 = QString(PL_("Incite a revolt for %1 gold?\n%2",
                        "Incite a revolt for %1 gold?\n%2", cost))
                .arg(QString::number(cost), buf);
-    ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
-    ask->setDefaultButton(QMessageBox::Cancel);
     ask->set_text_title(buf2, _("Incite a Revolt!"));
+    ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
+    ask->setDefaultButton(QMessageBox::Cancel);
+    ask->button(QMessageBox::Yes)->setText(_("Yes Incite a Revolt!"));
     ask->setAttribute(Qt::WA_DeleteOnClose);
     QObject::connect(ask, &hud_message_box::accepted, [=]() {
       request_do_action(action_id, diplomat_id, diplomat_target_id, 0, "");
@@ -3072,8 +3075,9 @@ void popup_bribe_dialog(struct unit *actor, struct unit *tunit, int cost,
                        "Bribe unit for %1 gold?\n%2", cost))
                .arg(QString::number(cost), buf);
     ask->set_text_title(buf2, _("Bribe Enemy Unit"));
-    ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
+    ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
     ask->setDefaultButton(QMessageBox::Cancel);
+    ask->button(QMessageBox::Yes)->setText(_("Yes Bribe!"));
     ask->setAttribute(Qt::WA_DeleteOnClose);
     QObject::connect(ask, &hud_message_box::accepted, [=]() {
       request_do_action(action_id, diplomat_id, diplomat_target_id, 0, "");
@@ -3759,8 +3763,9 @@ void popup_upgrade_dialog(const std::vector<unit *> &punits)
     ask->setStandardButtons(QMessageBox::Ok);
   } else {
     title = _("Upgrade Obsolete Units");
-    ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
+    ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
     ask->setDefaultButton(QMessageBox::Cancel);
+    ask->button(QMessageBox::Yes)->setText(_("Yes Upgrade"));
   }
   ask->set_text_title(buf, title);
   ask->setAttribute(Qt::WA_DeleteOnClose);

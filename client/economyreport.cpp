@@ -1,5 +1,5 @@
 /*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2022 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -228,9 +228,10 @@ void eco_report::disband_units()
             .arg(utype_name_translation(utype_by_number(utype)),
                  QString::number(counter));
 
-  ask->set_text_title(buf, _("Disband Units"));
-  ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
+  ask->set_text_title(buf, _("Disband Units?"));
+  ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
   ask->setDefaultButton(QMessageBox::Cancel);
+  ask->button(QMessageBox::Yes)->setText(_("Yes Disband"));
   ask->setAttribute(Qt::WA_DeleteOnClose);
   connect(ask, &hud_message_box::accepted, [=]() {
     struct unit_type *putype = utype_by_number(utype);
@@ -268,9 +269,10 @@ void eco_report::sell_buildings()
             .arg(improvement_name_translation(pimprove),
                  QString::number(counter));
 
-  ask->set_text_title(buf, _("Sell Improvements"));
-  ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
+  ask->set_text_title(buf, _("Sell Improvements?"));
+  ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
   ask->setDefaultButton(QMessageBox::Cancel);
+  ask->button(QMessageBox::Yes)->setText(_("Yes Sell"));
   ask->setAttribute(Qt::WA_DeleteOnClose);
   connect(ask, &hud_message_box::accepted, [=]() {
     char buf[1024];
@@ -284,7 +286,7 @@ void eco_report::sell_buildings()
     sell_all_improvements(pimprove, false, buf, sizeof(buf));
 
     result = new hud_message_box(king()->central_wdg);
-    result->set_text_title(buf, _("Sell-Off: Results"));
+    result->set_text_title(buf, _("Sell Results"));
     result->setStandardButtons(QMessageBox::Ok);
     result->setAttribute(Qt::WA_DeleteOnClose);
     result->show();
@@ -310,9 +312,10 @@ void eco_report::sell_redundant()
                             "every redundant %s (%d total)?"),
                           improvement_name_translation(pimprove), counter);
 
-  ask->set_text_title(s, _("Sell Improvements"));
-  ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
+  ask->set_text_title(s, _("Sell Redundant Improvements?"));
+  ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
   ask->setDefaultButton(QMessageBox::Cancel);
+  ask->button(QMessageBox::Yes)->setText(_("Yes Sell"));
   ask->setAttribute(Qt::WA_DeleteOnClose);
   connect(ask, &hud_message_box::accepted, [=]() {
     char buf[1024];
@@ -326,7 +329,7 @@ void eco_report::sell_redundant()
     sell_all_improvements(pimprove, true, buf, sizeof(buf));
 
     result = new hud_message_box(king()->central_wdg);
-    result->set_text_title(buf, _("Sell-Off: Results"));
+    result->set_text_title(buf, _("Sell Redundant Results"));
     result->setStandardButtons(QMessageBox::Ok);
     result->setAttribute(Qt::WA_DeleteOnClose);
     result->show();

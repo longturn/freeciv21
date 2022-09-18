@@ -1,5 +1,5 @@
 /*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2022 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -837,8 +837,10 @@ void impr_item::mouseDoubleClickEvent(QMouseEvent *event)
               .arg(city_improvement_name_translation(pcity, impr),
                    QString::number(price));
 
-    ask->set_text_title(buf, (_("Sell improvement?")));
-    ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
+    ask->set_text_title(buf, (_("Sell Improvement?")));
+    ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
+    ask->setDefaultButton(QMessageBox::Cancel);
+    ask->button(QMessageBox::Yes)->setText(_("Yes Sell"));
     ask->setAttribute(Qt::WA_DeleteOnClose);
     connect(ask, &hud_message_box::accepted, [=]() {
       struct city *pcity = game_city_by_number(city_id);
@@ -1746,8 +1748,8 @@ void city_dialog::cma_remove()
 
   ask = new hud_message_box(this);
   ask->set_text_title(_("Remove this preset?"), cmafec_preset_get_descr(i));
-  ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
-  ask->setDefaultButton(QMessageBox::Cancel);
+  ask->setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+  ask->setDefaultButton(QMessageBox::No);
   ask->setAttribute(Qt::WA_DeleteOnClose);
   connect(ask, &hud_message_box::accepted, this, [=]() {
     cmafec_preset_remove(i);
@@ -2393,8 +2395,9 @@ void city_dialog::buy()
               PL_("Buy %s for %d gold?", "Buy %s for %d gold?", value), name,
               value);
   ask->set_text_title(buf, buf2);
-  ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
+  ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
   ask->setDefaultButton(QMessageBox::Cancel);
+  ask->button(QMessageBox::Yes)->setText(_("Yes Buy"));
   ask->setAttribute(Qt::WA_DeleteOnClose);
   connect(ask, &hud_message_box::accepted, this, [=]() {
     struct city *pcity = game_city_by_number(city_id);

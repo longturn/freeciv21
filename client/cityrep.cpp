@@ -1,5 +1,5 @@
 /*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2022 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -665,12 +665,12 @@ void city_widget::display_list_menu(const QPoint)
           if (sell_ask) {
             hud_message_box *ask = new hud_message_box(king()->central_wdg);
             imprname = improvement_name_translation(building);
-            QString buf =
-                QString(_("Are you sure you want to sell those %1?"))
-                    .arg(imprname);
+            QString buf = QString(_("Are you sure you want to sell the %1?"))
+                              .arg(imprname);
             sell_ask = false;
-            ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
-            ask->setDefaultButton(QMessageBox::Cancel);
+            ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
+            ask->setDefaultButton(QMessageBox::No);
+            ask->button(QMessageBox::Yes)->setText(_("Yes Sell"));
             ask->set_text_title(buf, _("Sell?"));
             ask->setAttribute(Qt::WA_DeleteOnClose);
             city_id = pcity->id;
