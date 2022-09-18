@@ -287,7 +287,8 @@ static bool reqs_may_activate(const struct player *target_player,
                               const struct action *target_action,
                               const struct requirement_vector *reqs,
                               const enum req_problem_type prob_type,
-                              const enum vision_layer vision_layer)
+                              const enum vision_layer vision_layer,
+                              const enum national_intelligence nintel)
 {
   requirement_vector_iterate(reqs, preq)
   {
@@ -295,7 +296,8 @@ static bool reqs_may_activate(const struct player *target_player,
         && !is_req_active(target_player, other_player, target_city,
                           target_building, target_tile, target_unit,
                           target_unittype, target_output, target_specialist,
-                          target_action, preq, prob_type, vision_layer)) {
+                          target_action, preq, prob_type, vision_layer,
+                          nintel)) {
       return false;
     }
   }
@@ -322,7 +324,8 @@ static bool research_allowed(
         const struct unit_type *tutype, const struct output_type *top,
         const struct specialist *tspe, const struct action *tact,
         const struct requirement_vector *reqs,
-        const enum req_problem_type ptype, const enum vision_layer vlayer))
+        const enum req_problem_type ptype, const enum vision_layer vlayer,
+        const enum national_intelligence nintel))
 {
   struct advance *adv;
 
@@ -337,7 +340,7 @@ static bool research_allowed(
   {
     if (reqs_eval(pplayer, nullptr, nullptr, nullptr, nullptr, nullptr,
                   nullptr, nullptr, nullptr, nullptr, &(adv->research_reqs),
-                  RPT_CERTAIN, V_COUNT)) {
+                  RPT_CERTAIN, V_COUNT, NI_COUNT)) {
       /* It is enough that one player that shares research is allowed to
        * research it.
        * Reasoning: Imagine a tech with that requires a nation in the

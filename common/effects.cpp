@@ -628,7 +628,7 @@ int get_target_bonus_effects(
                         target_building, target_tile, target_unit,
                         target_unittype, target_output, target_specialist,
                         target_action, &peffect->reqs, RPT_CERTAIN,
-                        vision_layer)) {
+                        vision_layer, nintel)) {
       /* This code will add value of effect. If there's multiplier for
        * effect and target_player aren't null, then value is multiplied
        * by player's multiplier factor. */
@@ -1216,6 +1216,7 @@ QString effect_type_unit_text(effect_type type, int value)
   case EFT_STEALINGS_IGNORE:
   case EFT_CASUS_BELLI_COMPLETE:
   case EFT_WONDER_VISIBLE:
+  case EFT_NATION_INTELLIGENCE:
   case EFT_COUNT:
     return QStringLiteral("%1").arg(value);
   }

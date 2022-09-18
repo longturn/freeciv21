@@ -520,12 +520,41 @@ typedef int Unit_Class_id;
 // Used in the network protocol.
 #define SPECENUM_NAME vision_layer
 #define SPECENUM_VALUE0 V_MAIN
-#define SPECENUM_VALUE0NAME "Main"
+#define SPECENUM_VALUE0NAME N_("Main")
 #define SPECENUM_VALUE1 V_INVIS
-#define SPECENUM_VALUE1NAME "Stealth"
+#define SPECENUM_VALUE1NAME N_("Stealth")
 #define SPECENUM_VALUE2 V_SUBSURFACE
-#define SPECENUM_VALUE2NAME "Subsurface"
+#define SPECENUM_VALUE2NAME N_("Subsurface")
 #define SPECENUM_COUNT V_COUNT
+#include "specenum_gen.h"
+
+// Used in the network protocol.
+#define SPECENUM_NAME national_intelligence
+#define SPECENUM_VALUE0 NI_MULTIPLIERS
+#define SPECENUM_VALUE0NAME N_("Multipliers")
+#define SPECENUM_VALUE1 NI_WONDERS
+#define SPECENUM_VALUE1NAME N_("Wonders")
+#define SPECENUM_VALUE2 NI_SCORE
+#define SPECENUM_VALUE2NAME N_("Score")
+#define SPECENUM_VALUE3 NI_GOLD
+#define SPECENUM_VALUE3NAME N_("Gold")
+#define SPECENUM_VALUE4 NI_GOVERNMENT
+#define SPECENUM_VALUE4NAME N_("Government")
+#define SPECENUM_VALUE5 NI_DIPLOMACY
+#define SPECENUM_VALUE5NAME N_("Diplomacy")
+#define SPECENUM_VALUE6 NI_TECHS
+#define SPECENUM_VALUE6NAME N_("Techs")
+#define SPECENUM_VALUE7 NI_TAX_RATES
+#define SPECENUM_VALUE7NAME N_("Tax Rates")
+#define SPECENUM_VALUE8 NI_CULTURE
+#define SPECENUM_VALUE8NAME N_("Culture")
+#define SPECENUM_VALUE9 NI_MOOD
+#define SPECENUM_VALUE9NAME N_("Mood")
+#define SPECENUM_VALUE10 NI_HISTORY
+#define SPECENUM_VALUE10NAME N_("History")
+#define SPECENUM_VALUE11 NI_INFRAPOINTS
+#define SPECENUM_VALUE11NAME N_("Infra Points")
+#define SPECENUM_COUNT NI_COUNT
 #include "specenum_gen.h"
 
 // A server setting + its value.
@@ -566,6 +595,7 @@ typedef union {
   enum citytile_type citytile;
   enum citystatus_type citystatus;
   enum vision_layer vlayer;
+  enum national_intelligence nintel;
   int minsize;
   int minculture;
   int minforeignpct;
@@ -699,6 +729,8 @@ typedef union {
 #define SPECENUM_VALUE45NAME "Activity"
 #define SPECENUM_VALUE46 VUT_VISIONLAYER
 #define SPECENUM_VALUE46NAME "VisionLayer"
+#define SPECENUM_VALUE47 VUT_NINTEL
+#define SPECENUM_VALUE47NAME "NationalIntelligence"
 // Keep this last.
 #define SPECENUM_COUNT VUT_COUNT
 #include "specenum_gen.h"

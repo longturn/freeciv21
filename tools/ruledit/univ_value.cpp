@@ -214,6 +214,9 @@ bool universal_value_initial(struct universal *src)
   case VUT_VISIONLAYER:
     src->value.vlayer = V_MAIN;
     return true;
+  case VUT_NINTEL:
+    src->value.nintel = NI_CULTURE; // We like culture
+    return true;
   case VUT_COUNT:
     fc_assert(src->kind != VUT_COUNT);
     return false;
@@ -466,6 +469,12 @@ void universal_kind_values(struct universal *univ, univ_kind_values_cb cb,
   case VUT_VISIONLAYER:
     for (i = 0; i < V_COUNT; i++) {
       cb(vision_layer_name(vision_layer(i)), univ->value.vlayer == i, data);
+    }
+    break;
+  case VUT_NINTEL:
+    for (i = 0; i < NI_COUNT; i++) {
+      cb(national_intelligence_name(static_cast<national_intelligence>(i)),
+         univ->value.nintel == i, data);
     }
     break;
   case VUT_MINSIZE:

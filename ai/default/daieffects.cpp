@@ -575,6 +575,7 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
   case EFT_MAPS_STOLEN_PCT:
   case EFT_UNIT_SHIELD_VALUE_PCT:
   case EFT_WONDER_VISIBLE:
+  case EFT_NATION_INTELLIGENCE:
     break;
     // This has no effect for AI
   case EFT_VISIBLE_WALLS:
@@ -834,6 +835,7 @@ bool dai_can_requirement_be_met_in_city(const struct requirement *preq,
   case VUT_GOOD:
   case VUT_MINCALFRAG:
   case VUT_VISIONLAYER:
+  case VUT_NINTEL:
   case VUT_COUNT:
     // No sensible implementation possible with data available.
     break;

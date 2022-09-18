@@ -108,7 +108,8 @@ bool is_req_active(
     const struct specialist *target_specialist,
     const struct action *target_action, const struct requirement *req,
     const enum req_problem_type prob_type,
-    const enum vision_layer vision_layer = V_COUNT);
+    const enum vision_layer vision_layer = V_COUNT,
+    const enum national_intelligence nintel = NI_COUNT);
 bool are_reqs_active(const struct player *target_player,
                      const struct player *other_player,
                      const struct city *target_city,
@@ -121,7 +122,8 @@ bool are_reqs_active(const struct player *target_player,
                      const struct action *target_action,
                      const struct requirement_vector *reqs,
                      const enum req_problem_type prob_type,
-                     const enum vision_layer vision_layer = V_COUNT);
+                     const enum vision_layer vision_layer = V_COUNT,
+                     const enum national_intelligence nintel = NI_COUNT);
 
 bool is_req_unchanging(const struct requirement *req);
 

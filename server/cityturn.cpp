@@ -1754,6 +1754,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
       case VUT_CITYTILE:
       case VUT_CITYSTATUS:
       case VUT_VISIONLAYER:
+      case VUT_NINTEL:
         // Will only happen with a bogus ruleset.
         qCritical("worklist_change_build_target() has bogus preq");
         break;
