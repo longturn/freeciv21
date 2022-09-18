@@ -355,6 +355,12 @@ void universal_value_from_str(struct universal *source, const char *value)
       return;
     }
     break;
+  case VUT_NINTEL:
+    source->value.nintel =
+        national_intelligence_by_name(value, fc_strcasecmp);
+    if (source->value.nintel != NI_COUNT) {
+      return;
+    }
   case VUT_COUNT:
     break;
   }
@@ -558,6 +564,9 @@ struct universal universal_by_number(const enum universals_n kind,
   case VUT_VISIONLAYER:
     source.value.vlayer = vision_layer(value);
     return source;
+  case VUT_NINTEL:
+    source.value.nintel = static_cast<national_intelligence>(value);
+    return source;
   case VUT_COUNT:
     break;
   }
@@ -681,6 +690,8 @@ int universal_number(const struct universal *source)
     return source->value.citystatus;
   case VUT_VISIONLAYER:
     return source->value.vlayer;
+  case VUT_NINTEL:
+    return source->value.nintel;
   case VUT_COUNT:
     break;
   }
@@ -780,6 +791,7 @@ struct requirement req_from_str(const char *type, const char *range,
       case VUT_NATIONGROUP:
       case VUT_DIPLREL:
       case VUT_AI_LEVEL:
+      case VUT_NINTEL:
         req.range = REQ_RANGE_PLAYER;
         break;
       case VUT_MINYEAR:
@@ -822,6 +834,7 @@ struct requirement req_from_str(const char *type, const char *range,
     case VUT_GOVERNMENT:
     case VUT_AI_LEVEL:
     case VUT_STYLE:
+    case VUT_NINTEL:
       invalid = (req.range != REQ_RANGE_PLAYER);
       break;
     case VUT_MINSIZE:
@@ -961,6 +974,7 @@ struct requirement req_from_str(const char *type, const char *range,
     case VUT_MAXTILEUNITS:
     case VUT_MINTECHS:
     case VUT_VISIONLAYER:
+    case VUT_NINTEL:
       // Most requirements don't support 'survives'.
       invalid = survives;
       break;
@@ -3008,7 +3022,8 @@ bool is_req_active(
     const struct specialist *target_specialist,
     const struct action *target_action, const struct requirement *req,
     const enum req_problem_type prob_type,
-    const enum vision_layer vision_layer)
+    const enum vision_layer vision_layer,
+    const enum national_intelligence nintel)
 {
   enum fc_tristate eval = TRI_NO;
 
@@ -3346,10 +3361,17 @@ bool is_req_active(
     }
     break;
   case VUT_VISIONLAYER:
-    if (vision_layer >= V_COUNT) {
+    if (!vision_layer_is_valid(vision_layer)) {
       eval = TRI_MAYBE;
     } else {
       eval = BOOL_TO_TRISTATE(vision_layer == req->source.value.vlayer);
+    }
+    break;
+  case VUT_NINTEL:
+    if (!national_intelligence_is_valid(nintel)) {
+      eval = TRI_MAYBE;
+    } else {
+      eval = BOOL_TO_TRISTATE(nintel == req->source.value.nintel);
     }
     break;
   case VUT_COUNT:
@@ -3392,14 +3414,16 @@ bool are_reqs_active(const struct player *target_player,
                      const struct action *target_action,
                      const struct requirement_vector *reqs,
                      const enum req_problem_type prob_type,
-                     const enum vision_layer vision_layer)
+                     const enum vision_layer vision_layer,
+                     const enum national_intelligence nintel)
 {
   requirement_vector_iterate(reqs, preq)
   {
     if (!is_req_active(target_player, other_player, target_city,
                        target_building, target_tile, target_unit,
                        target_unittype, target_output, target_specialist,
-                       target_action, preq, prob_type, vision_layer)) {
+                       target_action, preq, prob_type, vision_layer,
+                       nintel)) {
       return false;
     }
   }
@@ -3431,6 +3455,7 @@ bool is_req_unchanging(const struct requirement *req)
   case VUT_TOPO:
   case VUT_SERVERSETTING:
   case VUT_VISIONLAYER:
+  case VUT_NINTEL:
     return true;
   case VUT_NATION:
   case VUT_NATIONGROUP:
@@ -3866,6 +3891,8 @@ bool are_universals_equal(const struct universal *psource1,
     return psource1->value.citystatus == psource2->value.citystatus;
   case VUT_VISIONLAYER:
     return psource1->value.vlayer == psource2->value.vlayer;
+  case VUT_NINTEL:
+    return psource1->value.nintel == psource2->value.nintel;
   case VUT_COUNT:
     break;
   }
@@ -4002,6 +4029,8 @@ const char *universal_rule_name(const struct universal *psource)
         terrain_alteration(psource->value.terrainalter));
   case VUT_VISIONLAYER:
     return vision_layer_name(psource->value.vlayer);
+  case VUT_NINTEL:
+    return national_intelligence_name(psource->value.nintel);
   case VUT_COUNT:
     break;
   }
@@ -4302,6 +4331,11 @@ const char *universal_name_translation(const struct universal *psource,
     return buf;
   case VUT_VISIONLAYER:
     fc_strlcat(buf, vision_layer_translated_name(psource->value.vlayer),
+               bufsz);
+    return buf;
+  case VUT_NINTEL:
+    fc_strlcat(buf,
+               national_intelligence_translated_name(psource->value.nintel),
                bufsz);
     return buf;
   case VUT_COUNT:

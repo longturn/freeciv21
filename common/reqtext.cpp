@@ -2854,6 +2854,22 @@ bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
     }
     break;
 
+  case VUT_NINTEL:
+    fc_strlcat(buf, prefix, bufsz);
+    if (preq->present) {
+      // TRANS: "For Wonders intelligence." Very rare.
+      cat_snprintf(buf, bufsz, _("For %s intelligence."),
+                   qUtf8Printable(national_intelligence_translated_name(
+                       preq->source.value.nintel)));
+    } else {
+      // TRANS: "For intelligence other than Wonders." Very rare.
+      cat_snprintf(buf, bufsz, _("For intelligence other than %s."),
+                   qUtf8Printable(national_intelligence_translated_name(
+                       preq->source.value.nintel)));
+    }
+    return true;
+    break;
+
   case VUT_COUNT:
     break;
   }
