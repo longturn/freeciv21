@@ -7,7 +7,7 @@ issues encountered on multiplayer servers with the classic ruleset.
 It is based on the 'rewonder' ruleset designed by Madeline Book for
 Freeciv 2.1.
 
-This ruleset is also suited for LongTurn and Play-By-Email games.
+This ruleset is also suited for Longturn and Play-By-Email games.
 
 
 1. Changes compared to the classic ruleset
@@ -21,7 +21,7 @@ Gameplay
 --------
 
 Unit movement rates are twice that of the classic ruleset, to
-make this ruleset usable for LongTurn games.
+make this ruleset usable for Longturn games.
 
 Trade routes are disabled. (The Marco Polo's Embassy wonder provides
 an alternative way to increase trade; see below.)

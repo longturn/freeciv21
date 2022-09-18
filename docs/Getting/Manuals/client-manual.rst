@@ -16,7 +16,7 @@ Getting Started
 
 If you have not installed Freeciv21, then obviously you need to start :doc:`there <../install>`.
 
-If you are having trouble, come find the LongTurn Community on Discord at https://discord.gg/98krqGm. A good
+If you are having trouble, come find the Longturn Community on Discord at https://discord.gg/98krqGm. A good
 place to start is the ``#questions-and-answers`` channel.
 
 Launching the Client
@@ -40,7 +40,7 @@ files. Double-clicking ``freeciv21-client`` should start it up.
 The following buttons are available on the :guilabel:`Start Screen`:
 
 * :guilabel:`Start New Game` -- Start a new single player game. See `Start New Game`_ below.
-* :guilabel:`Connect to Network Game` -- Connect to a LongTurn mutliplayer game or one you host yourself. See
+* :guilabel:`Connect to Network Game` -- Connect to a Longturn mutliplayer game or one you host yourself. See
   `Connect to Network Game`_ below.
 * :guilabel:`Load Saved Game` -- Load a previously saved single player game. See `Load Saved Game`_ below.
 * :guilabel:`Start Scenario Game` -- Start a single player scenario game. See `Start Scenario Game`_ below.
@@ -85,17 +85,17 @@ Players List
 ^^^^^^^^^^^^
 
 The :guilabel:`Players List` table shows information about the configured players in the game. The information
-shown in :numref:`Start New Game dialog` is what a single player game looks like. A LongTurn multiplayer game
+shown in :numref:`Start New Game dialog` is what a single player game looks like. A Longturn multiplayer game
 will look very similar, except that all the player's aliases will be shown as set up by the game
 administrator. You can right-click on a player's row to configure details about the specific player:
 
 * :guilabel:`Observe` -- Allows you to connect to a running game and observe that player. This is useful
-  during LongTurn multiplayer games when you want to connect and see what a player is doing, but you cannot
+  during Longturn multiplayer games when you want to connect and see what a player is doing, but you cannot
   make any actual moves for the player. This works for LAN games as well. You can also use the server
   chat line and issue this command: ``/observe <player>``.
 * :guilabel:`Remove Player` -- Removes the player from the list.
 * :guilabel:`Take This Player` -- Allows you to claim this player as your own and then when you click
-  :guilabel:`Start` you will join the game as that player. This is a required step for LongTurn multiplayer
+  :guilabel:`Start` you will join the game as that player. This is a required step for Longturn multiplayer
   games at the start of a new game. Subsequent logins to a game when you `Connect to Network Game`_ will not
   require another ``take`` action. You can also use the server chat line and issue this command:
   ``/take <player>``
@@ -235,7 +235,7 @@ There are three ways to connect to a server:
 
 #. :strong:`A Local Server`: If you are hosting a local server on the same IP subnet as the client, then it
    will show in the :guilabel:`Local Server` box at the top.
-#. :strong:`An Internet Server`: If the LongTurn community lists running games on its internet metaserver,
+#. :strong:`An Internet Server`: If the Longturn community lists running games on its internet metaserver,
    games will show here and can be connected to via the :guilabel:`Internet Servers` box in the middle.
 #. :strong:`Manually`: If you simply need to connect to a remote server and you know the the
    :guilabel:`Servername` and :guilabel:`Port`, then this is your option.
@@ -249,7 +249,7 @@ For the last option, enter in the server name or IP address into the :guilabel:`
 server port in the corresponding :guilabel:`Port` text box. Ensure your username is correct and then
 click :guilabel:`Connect` to connect to the server. The :guilabel:`Password` box will activate when you have
 connected to the server. Type in your password and then click :guilabel:`Connect` a second time and you will
-join the server. Pretty much all LongTurn online multiplayer games are connected this way.
+join the server. Pretty much all Longturn online multiplayer games are connected this way.
 
 .. Note:: If you are hosting your own server with authentication enabled and a player has never connected
   before they may be prompted to confirm the password a second time in the :guilabel:`Confirm Password` box
@@ -1493,7 +1493,7 @@ Minimap
 
 There is a :guilabel:`Minimap` widget in the lower right corner of the `Map View`_. :numref:`Minimap Single
 Player Widget` below shows an example of the :guilabel:`Minimap` widget for a single player game.
-:numref:`Minimap Multiplayer Widget` shows an example of of the :guilabel:`Minimap` widget for a LongTurn
+:numref:`Minimap Multiplayer Widget` shows an example of of the :guilabel:`Minimap` widget for a Longturn
 multiplayer game. The difference between the two is the single player :guilabel:`Turn Done` button is replaced
 with a countdown timer. On the right hand side of the :guilabel:`Minimap` are zoom buttons similar to what you
 would find in the `View Menu`_. Inside of the :guilabel:`Minimap` you will see an area inside a white border.

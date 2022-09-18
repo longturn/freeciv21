@@ -48,7 +48,7 @@ A C and C++ compiler
     use a "K&R C" compiler. The C++ compiler must support C++ 17.
 
     Development of Freeciv21 is primarily done with :file:`gcc`, the GNU project's excellent C and C++
-    compiler. For complete cross-platform support the LongTurn community uses the LLVM project's
+    compiler. For complete cross-platform support the Longturn community uses the LLVM project's
     :file:`clang-cl` compiler, which is supported on Linux, Windows and macOS.
 
 The Cmake program
