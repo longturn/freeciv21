@@ -11,16 +11,16 @@ The following page has a listing of frequenty asked questions with answers about
 Acronymns
 =========
 
-Common acronymns you will find in this FAQ as well as on the LongTurn Community's Discord server and other
+Common acronymns you will find in this FAQ as well as on the Longturn Community's Discord server and other
 documentation:
 
 * :strong:`FC`: Freeciv - Classic legacy Freeciv
 * :strong:`FC21`: Freeciv21 - A new fork of Freeciv v3.0 concentrating on multiplayer games and a single client.
 * :strong:`FCW`: Freeciv Web - a web client and highly customized version of the legacy Freeciv server.
-  Not affiliated directly with Freeciv, Freeciv21 or LongTurn.
-* :strong:`LT`: LongTurn
-* :strong:`LTT`: LongTurn Tradtional Ruleset - LT's standard ruleset
-* :strong:`LTX`: LongTurn Experimental Ruleset - LT's experimental rulset
+  Not affiliated directly with Freeciv, Freeciv21 or Longturn.
+* :strong:`LT`: Longturn
+* :strong:`LTT`: Longturn Tradtional Ruleset - LT's standard ruleset
+* :strong:`LTX`: Longturn Experimental Ruleset - LT's experimental rulset
 * :strong:`MP2`: Multiplayer 2 Ruleset. There are many MP2 rulesets and they are numbered: MP2a, MP2b, MP2c, etc.
 * :strong:`MP`: Move Point - the number of moves a unit has available.
 * :strong:`HP`: Hit Point - the amount of health a unit has avalable. When this goes to zero the unit is killed.
@@ -86,7 +86,7 @@ See the in-game help on :title-reference:`Chatline` for more detail.
 That sounds complicated and tedious. Isn’t there a better way to do this?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-No, there’s no other better/GUI way. This is a big reason why the LongTurn Community prefers using Discord.
+No, there’s no other better/GUI way. This is a big reason why the Longturn Community prefers using Discord.
 There are plans to improve this, but it is not implemented yet.
 
 Is there a way to send a message to all your allies?
@@ -95,7 +95,7 @@ Is there a way to send a message to all your allies?
 In the client, there’s a checkbox to the far right of the chatline widget. When selected, any messages typed
 will only got to your allies.
 
-.. Note:: This option only shows up if you are playing an online LongTurn Community game with a remote server.
+.. Note:: This option only shows up if you are playing an online Longturn Community game with a remote server.
   If you are playing a local single-player game against AI, this option does not show up since you cannot
   chat with the AI.
 
@@ -114,7 +114,7 @@ How can I change the way a Freeciv21 game is ended?
 A standard Freeciv21 game ends when only allied players/teams are left alive; when a player's spaceship
 arrives at Alpha Centauri; or when you reach the ending turn -- whichever comes first.
 
-For LongTurn multi-player games, the winning conditions are announced before the game begins and can vary
+For Longturn multi-player games, the winning conditions are announced before the game begins and can vary
 widely between games.
 
 For local single-player games, you can change the default ending turn by changing the ``endturn`` setting.
@@ -231,7 +231,7 @@ moves from connected clients are processed in the order they are received. Serve
 in between turns (e.g. at TC) This allows human players to surprise their opponents by clever use of goto or
 quick fingers.
 
-A turn in a LongTurn game typically lasts 23 hours and it's always possible that they managed to log in twice
+A turn in a Longturn game typically lasts 23 hours and it's always possible that they managed to log in twice
 between your two consecutive logins. However, firstly, there is a mechanic that slightly limits this (known as
 unit wait time), and secondly, this can't happen every time because now they have already played their move
 this turn and now need to wait for the Turn Change to make their next move. So, in the next turn, if you log
@@ -247,7 +247,7 @@ capture a city using the road for move benefit. Without ``unitwaittime`` you wou
 ``unitwaittime`` enabled, you have to wait the requisite amount of time. This makes the game harder, but also
 more fair since not everyone can be online at every Turn Change.
 
-.. Note:: The ``unitwaittime`` setting is really only used in LongTurn multi-player games and is not
+.. Note:: The ``unitwaittime`` setting is really only used in Longturn multi-player games and is not
   enabled/used for any of the single-player rulesets shipped with Freeciv21
 
 Why are the AI players so hard on 'novice' or 'easy'?
@@ -730,7 +730,7 @@ How can I tell what final defense a unit will have after applying all bonuses fr
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The client doesn’t show this information, so you’ll have to calculate manually. Math is an important element of
-all Freeciv21 games, and especialy the LTT and LTX multi-player games the LongTurn Community enjoys playing. As
+all Freeciv21 games, and especialy the LTT and LTX multi-player games the Longturn Community enjoys playing. As
 in the game of Chess, the "board" does not do the math for you. You much gauge the risk-reward ratios of your
 moves and counter-moves. This is the same in Freeciv21. The game will not do the math for you. This table should
 help you in doing the math:
@@ -793,7 +793,7 @@ can be set in the server settings before a local game starts or by changing at t
     /set restrictinfra FALSE
 
 
-The LTT and LTX rulesets used by the LongTurn Community have this value set to ``TRUE``. This is also the
+The LTT and LTX rulesets used by the Longturn Community have this value set to ``TRUE``. This is also the
 default setting for many of the single-player rulesets shipped with Freeciv21.
 
 Is there a way to see potential battle odds?
@@ -890,14 +890,14 @@ Non-Gameplay Specific Questions
 
 This section of the FAQ deals with anything not related to general gameplay aspects of Freeciv21.
 
-LongTurn Multiplayer
+Longturn Multiplayer
 --------------------
 
 How do I play multi-player?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You can either join a network game run by someone else, or host your own. You can also join one of the many
-games offered by the LongTurn community.
+games offered by the Longturn community.
 
 To join an open network game, choose :guilabel:`Connect to network game` and then
 :guilabel:`Internet servers`. A list of active servers should come up; double-click one to join it.
@@ -927,7 +927,7 @@ Where do I see how much time is left in the current turn?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 On the minimap in the bottom right of the main map, where the :guilabel:`Turn Done` button shows for
-single-player games. For LongTurn multi-player games will also add a count-down timer to show when the turn
+single-player games. For Longturn multi-player games will also add a count-down timer to show when the turn
 will change.
 
 When connecting to a game, is the username field case-sensitive?
@@ -968,7 +968,7 @@ Where do I go to see the rules for a game? Like how big a victory alliance can b
 
 All rules and winning conditions are posted to the `https://forum.longturn.net/index.php <forums>`_ under the
 Games index. Each game has a section for varying posts related to the game. Winning conditions are also often
-posted on the LongTurn Discord `https://discord.gg/98krqGm <server>`_ in the channel for the game.
+posted on the Longturn Discord `https://discord.gg/98krqGm <server>`_ in the channel for the game.
 
 Does the “Nations” page show whether the player is idling?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -980,7 +980,7 @@ Can you make hideouts in LTT?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Hideouts are a purely FCW thing. There’s no such thing in LTT. Other rulesets could offer this as it is a
-ruleset configurable item. The LongTurn Community does not like them as they are overpowered and easily
+ruleset configurable item. The Longturn Community does not like them as they are overpowered and easily
 exploited.
 
 How does research in LTT compare to MP2a/b/c?
@@ -1081,7 +1081,7 @@ There have been debates on this in the past and the honest answer seems to be: W
 
 Freeciv21 doesn't contain any actual material from the commercial Civilization games. (The Freeciv21
 maintainers have always been very strict in ensuring that materials contributed to the Freeciv21
-distribution or LongTurn website do not violate anyone's copyright.) The name of Freeciv21 is probably not a
+distribution or Longturn website do not violate anyone's copyright.) The name of Freeciv21 is probably not a
 trademark infringement. The user interface is similar, but with many (deliberate) differences. The game
 itself can be configured to be practically identical to Civilization I or II, so if the rules of a game are
 patentable, and those of the said games are patented, then Freeciv21 may infringe on that patent, but we
@@ -1093,19 +1093,19 @@ commercial Civilization games in any way.
 How does Freeciv21 relate to other versions of Freeciv?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Freeciv21 is a code fork of Freeciv and is maintained by a community of online players called LongTurn. After
-using legacy Freeciv for many years for our multi-player games, the LongTurn Community decided to fork Freeciv
+Freeciv21 is a code fork of Freeciv and is maintained by a community of online players called Longturn. After
+using legacy Freeciv for many years for our multi-player games, the Longturn Community decided to fork Freeciv
 because we felt that the development was not going in the right direction for multi-player games. Legacy
 Freeciv is concentrating on single-player games for the most part.
 
 Besides Freeciv21 and legacy Freeciv, there are also communities playing a version running in the browser,
 commonly known as Freeciv Web. This version is less flexible and doesn't fulfill the needs of a diverse
-community like LongTurn.
+community like Longturn.
 
 Where can I ask questions or send improvements?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Please ask questions about the game, its installation, or the rest of this site at the LongTurn Discord
+Please ask questions about the game, its installation, or the rest of this site at the Longturn Discord
 Channels at https://discord.gg/98krqGm. The ``#questions-and-answers`` channel is a good start.
 
 Patches and bug reports are best reported to the Freeciv21 bug tracking system at
@@ -1120,7 +1120,7 @@ I've found a bug, what should I do?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 See the article on `Where can I ask questions or send improvements?`_. You might want to start up a
-conversation about it in the LongTurn Discord channels if you are unsure.
+conversation about it in the Longturn Discord channels if you are unsure.
 
 I've started a server but the client cannot find it!
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
