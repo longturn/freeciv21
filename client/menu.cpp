@@ -2900,7 +2900,7 @@ void mr_menu::back_to_menu()
   if (is_server_running()) {
     ask = new hud_message_box(king()->central_wdg);
     ask->set_text_title(
-        _("Do you want to leave the game?\n\n Leaving a single-player game "
+        _("Do you want to leave the game?\n\nLeaving a single-player game "
           "will end it. Be sure to save first."),
         QStringLiteral("Leave Game"));
     ask->setStandardButtons(QMessageBox::No | QMessageBox::Yes);
