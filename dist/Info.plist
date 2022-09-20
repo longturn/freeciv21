@@ -11,4 +11,15 @@
   <key>CFBundleIconFile</key>
   <string>client.icns</string>
 </dict>
+<key>CFBundleURLTypes</key>
+<array>
+    <dict>
+        <key>CFBundleURLName</key>
+        <string>Freeciv21 Handler</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+            <string>fc21</string>
+        </array>
+    </dict>
+</array>
 </plist>
