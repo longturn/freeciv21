@@ -237,7 +237,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: macOS-dmg
-          path: Freeciv21-*.dmg
+          path: *.dmg
 
   wasm:
     name: "WebAssembly"
