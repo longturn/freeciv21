@@ -237,7 +237,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: macOS-dmg
-          path: *.dmg
+          path: merge.dmg
 
   wasm:
     name: "WebAssembly"
