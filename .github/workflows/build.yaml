@@ -224,6 +224,7 @@ jobs:
             --app-drop-link 600 185 \
             "Freeciv21-${{github.ref_name}}.dmg" \
             "staging/"
+            sha256sum --binary *.dmg > Freeciv21-${{github.ref_name}}.sha256
       - name: Debug
         if: failure()
         run: cat CMakeCache.txt
@@ -233,6 +234,7 @@ jobs:
         with:
           files: |
             Freeciv21-*.dmg
+            Freeciv21-*.sha256
       - name: Upload a build
         uses: actions/upload-artifact@v2
         with:
