@@ -616,7 +616,7 @@ int get_target_bonus_effects(
     const struct output_type *target_output,
     const struct specialist *target_specialist,
     const struct action *target_action, enum effect_type effect_type,
-    enum vision_layer vision_layer)
+    enum vision_layer vision_layer, enum national_intelligence nintel)
 {
   int bonus = 0;
 
@@ -771,6 +771,27 @@ int get_player_output_bonus(const struct player *pplayer,
   return get_target_bonus_effects(nullptr, pplayer, nullptr, nullptr,
                                   nullptr, nullptr, nullptr, nullptr,
                                   poutput, nullptr, nullptr, effect_type);
+}
+
+/**
+ * Gets the player effect bonus of a national intelligence.
+ */
+int get_player_intel_bonus(const struct player *pplayer,
+                           const struct player *pother,
+                           enum national_intelligence nintel,
+                           enum effect_type effect_type)
+{
+  if (!initialized) {
+    return 0;
+  }
+
+  fc_assert_ret_val(pplayer != nullptr, 0);
+  fc_assert_ret_val(pother != nullptr, 0);
+  fc_assert_ret_val(national_intelligence_is_valid(nintel), 0);
+  fc_assert_ret_val(effect_type != EFT_COUNT, 0);
+  return get_target_bonus_effects(
+      nullptr, pplayer, pother, nullptr, nullptr, nullptr, nullptr, nullptr,
+      nullptr, nullptr, nullptr, effect_type, V_COUNT, nintel);
 }
 
 /**

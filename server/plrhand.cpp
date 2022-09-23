@@ -77,8 +77,7 @@ package_player_diplstate(struct player *plr1, struct player *plr2,
                          enum plr_info_level min_info_level);
 static void package_player_info(struct player *plr,
                                 struct packet_player_info *packet,
-                                struct player *receiver,
-                                enum plr_info_level min_info_level);
+                                struct player *receiver, bool send_all);
 static enum plr_info_level player_info_level(struct player *plr,
                                              struct player *receiver);
 
@@ -1020,12 +1019,13 @@ static void send_player_info_c_real(struct player *src,
   {
     if (nullptr == pconn->playing && pconn->observer) {
       // Global observer.
-      package_player_info(src, &info, pconn->playing, INFO_FULL);
+      package_player_info(src, &info, nullptr, true);
     } else if (nullptr != pconn->playing) {
       // Players (including regular observers)
-      package_player_info(src, &info, pconn->playing, INFO_MINIMUM);
+      package_player_info(src, &info, pconn->playing, false);
     } else {
-      package_player_info(src, &info, nullptr, INFO_MINIMUM);
+      // Detached
+      package_player_info(src, &info, nullptr, false);
     }
     send_packet_player_info(pconn, &info);
   }
@@ -1150,23 +1150,44 @@ static void package_player_common(struct player *plr,
  */
 static void package_player_info(struct player *plr,
                                 struct packet_player_info *packet,
-                                struct player *receiver,
-                                enum plr_info_level min_info_level)
+                                struct player *receiver, bool send_all)
 {
-  enum plr_info_level info_level;
-  enum plr_info_level highest_team_level;
-  struct government *pgov = nullptr;
+  bool send_none = (server_state() < S_S_RUNNING);
 
-  if (receiver) {
-    info_level = player_info_level(plr, receiver);
-    info_level = MAX(min_info_level, info_level);
-  } else {
-    info_level = min_info_level;
+  // Teamed players always share their information -- it's in their best
+  // interest to communicate anyway.
+  if (players_on_same_team(plr, receiver)) {
+    send_all = true;
   }
+
+  // Should we send intel of the given type?
+  auto visible = [&](national_intelligence nintel) {
+    if (send_none) {
+      return false;
+    }
+    if (send_all) {
+      return true;
+    }
+
+    // Players on a team share the intelligence they gather -- it's in their
+    // best interest to communicate anyway.
+    players_iterate(aplayer)
+    {
+      if (players_on_same_team(receiver, aplayer)
+          && get_player_intel_bonus(aplayer, plr, nintel,
+                                    EFT_NATION_INTELLIGENCE)
+                 > 0) {
+        return true;
+      }
+    }
+    players_iterate_end;
+
+    return false;
+  };
 
   // multipliers
   packet->multip_count = multiplier_count();
-  if (info_level >= INFO_FULL) {
+  if (visible(NI_MULTIPLIERS)) {
     multipliers_iterate(pmul)
     {
       packet->multiplier[multiplier_index(pmul)] =
@@ -1184,39 +1205,33 @@ static void package_player_info(struct player *plr,
     multipliers_iterate_end;
   }
 
-  /* We need to send all tech info for all players on the same
-   * team, even if they are not in contact yet; otherwise we will
-   * overwrite team research or confuse the client. */
-  highest_team_level = info_level;
-  players_iterate(aplayer)
-  {
-    if (players_on_same_team(plr, aplayer) && receiver) {
-      highest_team_level =
-          MAX(highest_team_level, player_info_level(aplayer, receiver));
-    }
-  }
-  players_iterate_end;
-
   // Wonder information
-  for (int i = 0; i < B_LAST; ++i) {
-    // Lost, not built or doesn't exist (still need to fill the array)
-    if (plr->wonders[i] <= 0 || i >= improvement_count()) {
-      packet->wonders[i] = plr->wonders[i];
-      continue;
-    }
+  if (visible(NI_WONDERS)) {
+    for (int i = 0; i < B_LAST; ++i) {
+      // Lost, not built or doesn't exist (still need to fill the array)
+      if (plr->wonders[i] <= 0 || i >= improvement_count()) {
+        packet->wonders[i] = plr->wonders[i];
+        continue;
+      }
 
-    const auto pimprove = improvement_by_number(i);
-    const auto pcity = game_city_by_number(plr->wonders[i]);
-    const auto bonus = get_target_bonus_effects(
-        nullptr, city_owner(pcity), receiver, pcity, pimprove, nullptr,
-        nullptr, nullptr, nullptr, nullptr, nullptr, EFT_WONDER_VISIBLE);
-    if (bonus > 0) {
-      packet->wonders[i] = plr->wonders[i];
-    } else {
+      const auto pimprove = improvement_by_number(i);
+      const auto pcity = game_city_by_number(plr->wonders[i]);
+      const auto bonus = get_target_bonus_effects(
+          nullptr, city_owner(pcity), receiver, pcity, pimprove, nullptr,
+          nullptr, nullptr, nullptr, nullptr, nullptr, EFT_WONDER_VISIBLE);
+      if (bonus > 0) {
+        packet->wonders[i] = plr->wonders[i];
+      } else {
+        packet->wonders[i] = WONDER_NOT_BUILT;
+      }
+    }
+  } else {
+    for (int i = 0; i < B_LAST; ++i) {
       packet->wonders[i] = WONDER_NOT_BUILT;
     }
   }
 
+  // Color is harmless, always send
   if (plr->rgb != nullptr) {
     packet->color_valid = true;
     packet->color_red = plr->rgb->r;
@@ -1243,29 +1258,37 @@ static void package_player_info(struct player *plr,
   packet->color_changeable = player_color_changeable(plr, nullptr);
 
   // Only send score if we have contact
-  if (info_level >= INFO_MEETING) {
+  if (visible(NI_SCORE)) {
     packet->score = plr->score.game;
   } else {
     packet->score = 0;
   }
 
-  if (info_level >= INFO_MEETING) {
+  if (visible(NI_GOLD)) {
     packet->gold = plr->economic.gold;
-    pgov = government_of_player(plr);
   } else {
     packet->gold = 0;
-    pgov = game.government_during_revolution;
   }
-  packet->government = pgov ? government_number(pgov) : government_count();
+
+  {
+    const government *pgov, *ptargetgov;
+    if (visible(NI_GOVERNMENT)) {
+      pgov = government_of_player(plr);
+      ptargetgov = plr->target_government;
+      packet->revolution_finishes = plr->revolution_finishes;
+    } else {
+      pgov = game.government_during_revolution;
+      ptargetgov = pgov;
+      packet->revolution_finishes = -1;
+    }
+    packet->government = pgov ? government_number(pgov) : government_count();
+    packet->target_government =
+        ptargetgov ? government_number(ptargetgov) : government_count();
+  }
 
   /* Send diplomatic status of the player to everyone they are in
    * contact with. */
-  if (info_level >= INFO_EMBASSY
-      || (receiver
-          && player_diplstate_get(receiver, plr)->contact_turns_left > 0)) {
-    packet->target_government =
-        plr->target_government ? government_number(plr->target_government)
-                               : government_count();
+  if (visible(NI_DIPLOMACY)) {
     memset(&packet->real_embassy, 0, sizeof(packet->real_embassy));
     players_iterate(pother)
     {
@@ -1275,7 +1298,6 @@ static void package_player_info(struct player *plr,
     players_iterate_end;
     packet->gives_shared_vision = plr->gives_shared_vision;
   } else {
-    packet->target_government = packet->government;
     memset(&packet->real_embassy, 0, sizeof(packet->real_embassy));
     if (receiver && player_has_real_embassy(plr, receiver)) {
       packet->real_embassy[player_index(receiver)] = true;
@@ -1287,10 +1309,8 @@ static void package_player_info(struct player *plr,
     }
   }
 
-  // Make absolutely sure - in case you lose your embassy!
-  if (info_level >= INFO_EMBASSY
-      || (receiver
-          && player_diplstate_get(plr, receiver)->type == DS_TEAM)) {
+  // Separate from tech because it gives more information
+  if (visible(NI_TECH_UPKEEP)) {
     packet->tech_upkeep = player_tech_upkeep(plr);
   } else {
     packet->tech_upkeep = 0;
@@ -1298,33 +1318,37 @@ static void package_player_info(struct player *plr,
 
   /* Send most civ info about the player only to players who have an
    * embassy. */
-  if (highest_team_level >= INFO_EMBASSY) {
+  if (visible(NI_TAX_RATES)) {
     packet->tax = plr->economic.tax;
     packet->science = plr->economic.science;
     packet->luxury = plr->economic.luxury;
-    packet->revolution_finishes = plr->revolution_finishes;
-    packet->culture = player_culture(plr);
   } else {
     packet->tax = 0;
     packet->science = 0;
     packet->luxury = 0;
-    packet->revolution_finishes = -1;
+  }
+
+  if (visible(NI_CULTURE)) {
+    packet->culture = player_culture(plr);
+  } else {
     packet->culture = 0;
   }
 
-  if (info_level >= INFO_FULL
-      || (receiver
-          && player_diplstate_get(plr, receiver)->type == DS_TEAM)) {
+  if (visible(NI_MOOD)) {
     packet->mood = player_mood(plr);
   } else {
     packet->mood = MOOD_COUNT;
   }
 
-  if (info_level >= INFO_FULL) {
+  if (visible(NI_HISTORY)) {
     packet->history = plr->history;
-    packet->infrapoints = plr->economic.infra_points;
   } else {
     packet->history = 0;
+  }
+
+  if (visible(NI_INFRAPOINTS)) {
+    packet->infrapoints = plr->economic.infra_points;
+  } else {
     packet->infrapoints = 0;
   }
 }
