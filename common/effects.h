@@ -309,6 +309,8 @@
 #define SPECENUM_VALUE131NAME "Trade_Revenue_Exponent"
 #define SPECENUM_VALUE132 EFT_WONDER_VISIBLE
 #define SPECENUM_VALUE132NAME "Wonder_Visible"
+#define SPECENUM_VALUE133 EFT_NATION_INTELLIGENCE
+#define SPECENUM_VALUE133NAME "Nation_Intelligence"
 // keep this last
 #define SPECENUM_COUNT EFT_COUNT
 #include "specenum_gen.h"
@@ -386,6 +388,10 @@ int get_tile_output_bonus(const struct city *pcity, const struct tile *ptile,
 int get_player_output_bonus(const struct player *pplayer,
                             const struct output_type *poutput,
                             enum effect_type effect_type);
+int get_player_intel_bonus(const struct player *pplayer,
+                           const struct player *pother,
+                           enum national_intelligence nintel,
+                           enum effect_type effect_type);
 int get_city_output_bonus(const struct city *pcity,
                           const struct output_type *poutput,
                           enum effect_type effect_type);
@@ -418,7 +424,8 @@ int get_target_bonus_effects(
     const struct output_type *target_output,
     const struct specialist *target_specialist,
     const struct action *target_action, enum effect_type effect_type,
-    enum vision_layer vision_layer = V_COUNT);
+    enum vision_layer vision_layer = V_COUNT,
+    enum national_intelligence nintel = NI_COUNT);
 
 bool building_has_effect(const struct impr_type *pimprove,
                          enum effect_type effect_type);
