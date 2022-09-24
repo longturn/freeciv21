@@ -65,7 +65,7 @@ but may not completely cover rulesets which are very different from the classic 
 [help_strategy_and_tactics]
 name = _("Strategy and Tactics")
 text = _("\
-NOTE: For a well formatted version of this page, see \
+NOTE: For a well formatted HTML version of this page, see \
 https://longturn.readthedocs.io/en/latest/Playing/how-to-play.html \
 "), _("\
 While every game is different, there is a basic strategy which most players follow, especially at the start \
@@ -92,7 +92,7 @@ These steps may vary depending upon the server or ruleset options, but in genera
 "), _("\
 Start the game by wandering around BRIEFLY to find a good place to build the first city. Do not feel \
 tempted to investigate any yellow roofed villages yet, they might contain Barbarian tribes. Build the \
-city close to Resources (fish, wheat, wine, or buffalo) and perhaps close to fresh water (River or Lake). Keep \
+city close to Resources (Fish, Wheat, Wine, or Buffalo) and perhaps close to fresh water (River or Lake). Keep \
 in mind that the first city you build will be your capital! It is advised not to place your capital on the \
 coast. That can open you up to losing it from an attack from the sea. \
 "), _("\
@@ -104,16 +104,12 @@ as possible. You will find that balance becomes a key aspect of playing Freeciv2
 In the Classic ruleset, you start the game with 5 Settlers, 6 Workers, and 2 Explorers. Once you have planted \
 your first city as your capital, you need to find a place for your Settlers as quickly as possible. This \
 initial expansion phase of the game is important to establishing your base cities. Cities are everything in \
-Freeciv21. The more cities you have the more of every type of resource you can produce. Winning in Freeciv21 \
-is a factor of your nation's ability to out produce your opponents.\
+Freeciv21. The more cities you have, the more of every type of resource you can produce. Winning in Freeciv21 \
+is a factor of your nation's ability to out-produce your opponents.\
 "), _("\
-As mentioned in \"1. Choosing the First City Site\" above, you want to try and place your Settlers so they \
-will create cities that have Resources available to them. These tile enhancements give bonuses to help your \
-nation grow. Refer to Terrain --> Resources for more information. Another thing you want to look for is \
-sources of fresh water (River and Lake). Placing a city on or adjacent to sources of fresh water allow you to \
-build a cheap Aqueduct/River or Aqueduct/Lake city improvements. An Aqueduct allows your cities to grow larger \
-than size 8. If you do not have access to fresh water, you will have to learn the Construction advance to \
-build the more expensive Aqueduct.\
+As mentioned in \"1. Choosing the First City Site\" above, you want to try and place your Settlers so you \
+can create cities that have Resources available to them. These tile enhancements give bonuses to help your \
+nation grow. Refer to Terrain --> Resources for more information.\
 "), _("\
  3. Selecting your technological advance.\
 "), _("\
@@ -125,7 +121,7 @@ There are too many scenarios of which technological advance path to take, so mak
 will probably want to learn a new form of government. You start the game in Despotism in the Classic ruleset. \
 Monarchy or The Republic are good early targets. As soon as you have researched a new government type, start \
 a revolution (See the menu Civilization --> Government --> Revolution) and change over to it. Cities operate \
-much better as Republics than they do under Despotism, but note that it is much harder to keep military units \
+much better under Republic than they do under Despotism, but note that it is much harder to keep military units \
 outside of city limits under a Republic. Also, do not forget to recheck your tax rates after you have changed \
 governments, as the maximums vary for each type.\
 "), _("\
@@ -188,7 +184,7 @@ keep in mind that your opponents will find it harder to locate your city if you 
 Another thing to consider is the land around the city in its \"Vision Radius\". The vision radius is the the \
 map tiles that the city's population can manage as it grows. Many land tiles will have resources on them \
 (called Resources) that give food, production, or trade bonuses. Use the middle-click on your mouse to see. \
-The more resources a city can utilize the better.\
+The more Resources a city can utilize the better.\
 "), _("\
 NOTE: The online version of this page at https://longturn.readthedocs.io/en/latest/Playing/how-to-play.html \
 has a lot of images showing different ways to plan city placement.\
@@ -217,8 +213,8 @@ city and restore the citizen to farming. This kind of individual city management
 \"micro-management\" and is a very powerful mechanism of game play.\
 "), _("\
 The golden rule of taking care of a city is that there should be at least as many happy citizens as unhappy \
-citizens. A city where this is not so falls into disorder. Such cities are labeled with a raised fist or a \
-lightning bolt (depending on the tileset). Take care not to let this happen to any of your cities, as cities \
+citizens. A city where this is not the case falls into disorder. Such cities are labeled with a raised fist or \
+a lightning bolt (depending on the tileset). Take care not to let this happen to any of your cities, as cities \
 in disorder produce nothing, and are prone to revolt.\
 "), _("\
  10. Interacting with other players (diplomacy).\
@@ -227,19 +223,19 @@ When one of your units first meets a unit of another nation, or finds one of the
 they find you), a basic contact is established between the two nations. This provides each with basic \
 intelligence about the other, which can be accessed from the 'Nations and Diplomacy' view.\
 "), _("\
-This communication will lapse after a ruleset defined number of turns with no contact. Establishing an \
-embassy will give a more permanent communication channel, as well as more advanced intelligence such as \
-details of technology. Embassies are one-way, the nation hosting the embassy receives no benefit and once \
-established, cannot be revoked.\
+This communication will lapse after a ruleset defined number of turns with no contact, which is one turn for the \
+Classic ruleset. Establishing an embassy will give a more permanent communication channel, as well as more \
+advanced intelligence such as details of technology. Embassies are one-way, the nation hosting the embassy \
+receives no benefit and once established, cannot be revoked.\
 "), _("\
 If you are in contact with another player, then you can arrange a diplomatic meeting. From the 'Nations and \
 Diplomacy' view, this is done by selecting the nation with whom you wish to meet and clicking 'Meet'. If the entry \
 under the embassy column is not blank and the other player is connected (or is a server AI) then a treaty \
 dialog will pop up.\
 "), _("\
-In this dialog you can negotiate an exchange of assets (maps, vision, advances, cities, or gold), Embassies, \
+In this dialog you can negotiate an exchange of assets (maps, vision, advances, cities, or gold), embassies, \
 or relationship pacts such as a Cease-fire or Peace. The list of items that can be traded through diplomacy \
-is ruleset dependent. There is no need to trade like for like; you can trade, say, an advance or city for \
+is ruleset dependent. There is no need to trade like for like. You can trade, say, an advance or city for \
 gold, you can consider this buying and selling. Each player builds a list of offered items. To remove an \
 item from the list, double-click on it. When both players indicate satisfaction, the pact is concluded.\
 "), _("\
