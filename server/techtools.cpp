@@ -291,19 +291,39 @@ void send_research_info(const struct research *presearch,
   {
     pplayer = conn_get_player(pconn);
     if (nullptr != pplayer) {
-      if (presearch == research_get(pplayer)) {
-        // Case research owner.
-        send_packet_research_info(pconn, &full_info);
-      } else {
-        // 'pplayer' may have an embassy for looking to 'presearch'.
+      bool intel = false; // Send intel version?
+      bool full = false;  // Send full version?
+      const auto team = team_members(pplayer->team);
+
+      // Team mates always share what they see.
+      player_list_iterate(team, team_mate)
+      {
+        if (presearch == research_get(pplayer)) {
+          full = true;
+          break;
+        }
+
+        // Maybe there's an embassy?
         research_players_iterate(presearch, powner)
         {
-          if (player_has_embassy(pplayer, powner)) {
-            send_packet_research_info(pconn, &restricted_info);
-            break;
+          if (get_player_intel_bonus(team_mate, powner, NI_TECHS,
+                                     EFT_NATION_INTELLIGENCE)
+              > 0) {
+            intel = true;
           }
         }
         research_players_iterate_end;
+
+        if (intel || full) {
+          break;
+        }
+      }
+      player_list_iterate_end;
+
+      if (full) {
+        send_packet_research_info(pconn, &full_info);
+      } else if (intel) {
+        send_packet_research_info(pconn, &restricted_info);
       }
     } else if (pconn->observer) {
       // Case global observer.
