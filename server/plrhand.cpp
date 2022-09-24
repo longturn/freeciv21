@@ -1156,7 +1156,7 @@ static void package_player_info(struct player *plr,
 
   // Teamed players always share their information -- it's in their best
   // interest to communicate anyway.
-  if (players_on_same_team(plr, receiver)) {
+  if (receiver && players_on_same_team(plr, receiver)) {
     send_all = true;
   }
 
@@ -1171,16 +1171,16 @@ static void package_player_info(struct player *plr,
 
     // Players on a team share the intelligence they gather -- it's in their
     // best interest to communicate anyway.
-    players_iterate(aplayer)
+    const auto team = team_members(plr->team);
+    player_list_iterate(team, team_mate)
     {
-      if (players_on_same_team(receiver, aplayer)
-          && get_player_intel_bonus(aplayer, plr, nintel,
-                                    EFT_NATION_INTELLIGENCE)
-                 > 0) {
+      if (get_player_intel_bonus(team_mate, plr, nintel,
+                                 EFT_NATION_INTELLIGENCE)
+          > 0) {
         return true;
       }
     }
-    players_iterate_end;
+    player_list_iterate_end;
 
     return false;
   };
@@ -1309,8 +1309,7 @@ static void package_player_info(struct player *plr,
     }
   }
 
-  // Separate from tech because it gives more information
-  if (visible(NI_TECH_UPKEEP)) {
+  if (visible(NI_TECHS)) {
     packet->tech_upkeep = player_tech_upkeep(plr);
   } else {
     packet->tech_upkeep = 0;
