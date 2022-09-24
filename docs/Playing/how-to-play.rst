@@ -51,7 +51,7 @@ Choosing the First City Site
 
 Start the game by wandering around :strong:`briefly` to find a good place to build the first city. Do not feel
 tempted to investigate any yellow roofed villages yet, they might contain :unit:`Barbarian` tribes. Build the
-city close to Resources (fish, wheat, wine, or buffalo) and perhaps close to fresh water (River or Lake). Keep
+city close to Resources (Fish, Wheat, Wine, or Buffalo) and perhaps close to fresh water (River or Lake). Keep
 in mind that the first city you build will be your capital! It is advised not to place your capital on the
 coast. That can open you up to losing it from an attack from the sea.
 
@@ -64,19 +64,14 @@ Selecting your First City Locations
 In the Classic ruleset, you start the game with 5 :unit:`Settlers`, 6 :unit:`Workers`, and 2
 :unit:`Explorers`. Once you have planted your first city as your capital, you need to find a place for your
 remaining :unit:`Settlers` as quickly as possible. This initial expansion phase of the game is important to
-establishing your base cities. Cities are everything in Freeciv21. The more cities you have the more of every
-type of resource you can produce. Winning in Freeciv21 is a factor of your nation's ability to out produce
+establishing your base cities. Cities are everything in Freeciv21. The more cities you have, the more of every
+type of resource you can produce. Winning in Freeciv21 is a factor of your nation's ability to out-produce
 your opponents.
 
-As mentioned in `Choosing the First City Site`_ above, you want to try and place your :unit:`Settlers` so they
-will create cities that have Resources available to them. These tile enhancements give bonuses to help your
+As mentioned in `Choosing the First City Site`_ above, you want to try and place your :unit:`Settlers` so you
+can create cities that have Resources available to them. These tile enhancements give bonuses to help your
 nation grow. In the game help under :title-reference:`Terrain --> Resources` you will find more
-information. Another thing you want to look for is sources of fresh water (River and Lake). Placing a city on
-or adjacent to sources of fresh water allow you to build a cheap :improvement:`Aqueduct/River` or
-:improvement:`Aqueduct/Lake` city improvements. An :improvement:`Aqueduct` allows your cities to grow larger
-than size 8. If you do not have access to fresh water, you will have to learn the :strong:`Construction`
-advance to build the more expensive :improvement:`Aqueduct`.
-
+information.
 
 Selecting your Technological Advance
 ------------------------------------
@@ -90,7 +85,7 @@ will probably want to learn a new form of government. You start the game in Desp
 :strong:`Monarchy` or :strong:`The Republic` are good early targets. As soon as you have researched a new
 government type, start a revolution (
 :menuselection:`Civilization --> Government --> Revolution`) and change over to it. Cities operate much better
-as Republics than they do under Despotism, but note that it is much harder to keep military units outside of
+under Republic than they do under Despotism, but note that it is much harder to keep military units outside of
 city limits under a Republic. Also, do not forget to recheck your tax rates after you have changed
 governments, as the maximums vary for each type.
 
@@ -169,18 +164,17 @@ good to discuss here in the early game.
 Let us first talk about two concepts: Vision Radius and Working Radius. Each city has a vision radius and a
 working radius. The vision radius is the tiles that the citizens of a city can see on the map. If an emeny
 unit comes within the vision radius of a city, a sentried unit inside of the city will wake up and alert you.
-Within the vision radius is the smaller working radius. When thinking of city planning, you are most concerned
-with the working radius of a city. These are the tiles that the citizens of your cities manage to extract
-resources (shields, food, and trade). When the working radius of a city overlaps with that of another city,
-only one city at a time can manage that tile. This is another one of those *balance* items in playing
+Within the vision radius is the smaller working radius. When thinking of city planning, you should be most
+concerned with the working radius of a city. These are the tiles that the citizens of your cities manage to
+extract Resources (Shields, Food, and Trade). When the working radius of a city overlaps with that of another
+city, only one city at a time can manage that tile. This is another one of those *balance* items in playing
 Freeciv21.
 
 When you have a :unit:`Settler` selected, it will have a red outline shown on the map. This is the city's
 working radius if you placed the :unit:`Settler` at that spot with the :menuselection:`Work --> Build City`
 command.
 
-Imagine that this image represents a city with its working radius. The bolded hexagon represents the city
-center.
+This image represents a city with its working radius. The bolded hexagon represents the city center.
 
 .. _City Center:
 .. figure:: /_static/images/how-to-play/city-center.png
@@ -271,8 +265,8 @@ city and restore the citizen to farming. This kind of individual city management
 "micro-management" and is a very powerful mechanism of game play.
 
 The golden rule of taking care of a city is that there should be at least as many happy citizens as unhappy
-citizens. A city where this is not so falls into disorder. Such cities are labeled with a raised fist or a
-lightning bolt (depending on the tileset). Take care not to let this happen to any of your cities, as cities
+citizens. A city where this is not the case falls into disorder. Such cities are labeled with a raised fist or
+a lightning bolt (depending on the tileset). Take care not to let this happen to any of your cities, as cities
 in disorder produce nothing, and are prone to revolt.
 
 Interacting with Other Players (Diplomacy)
@@ -283,25 +277,25 @@ they find you), a basic contact is established between the two nations. This pro
 intelligence about the other, which can be accessed from the
 :numref:`Nations and Diplomacy View <Nations and Diplomacy View Button>`.
 
-This communication will lapse after a ruleset defined number of turns with no contact. Establishing an embassy
-will give a more permanent communication channel, as well as more advanced intelligence such as details of
-technology. Embassies are one-way, the nation hosting the embassy receives no benefit and once established,
-cannot be revoked.
+This communication will lapse after a ruleset defined number of turns with no contact, which is one turn for
+the Classic Ruleset. Establishing an embassy will give a more permanent communication channel, as well as more
+advanced intelligence such as details of technology. Embassies are one-way, the nation hosting the embassy
+receives no benefit and once established, cannot be revoked.
 
 If you are in contact with another player, then you can arrange a diplomatic meeting. From the
-:numref:`Nations and Diplomacy View <Nations and Diplomacy View Button>` , this is done by selecting the
+:numref:`Nations and Diplomacy View <Nations and Diplomacy View Button>`, this is done by selecting the
 nation with whom you wish to meet and clicking :guilabel:`Meet`. If the entry under the embassy column is not
 blank and the other player is connected (or is a server AI) then a treaty dialog will pop up.
 
-In this dialog you can negotiate an exchange of assets (maps, vision, advances, cities, or gold), Embassies,
+In this dialog you can negotiate an exchange of assets (maps, vision, advances, cities, or gold), embassies,
 or relationship pacts such as a Cease-fire or Peace. The list of items that can be traded through diplomacy is
-ruleset dependent. There is no need to trade like for like; you can trade, say, an advance or city for gold,
+ruleset dependent. There is no need to trade like for like. You can trade, say, an advance or city for gold,
 you can consider this buying and selling. Each player builds a list of offered items. To remove an item from
 the list, double-click on it. When both players indicate satisfaction, the pact is concluded.
 
 Pacts affect where your units can go and what they can do, and a pact with one nation can affect your
 relations with others. under authoritarian governments such as monarchy you can break a pact at any time, but
-the representative governments (republic and democracy) have a senate which will block the unprovoked
+the representative governments (Republic and Democracy) have a senate which will block the unprovoked
 cancellation of a treaty, unless a foreign diplomat or spy sparks a diplomatic incident. the only way to
 dissolve a pact in this situation is to dissolve your government by going into anarchy. the details of pacts
 are described in the diplomacy section.
