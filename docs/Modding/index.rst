@@ -129,7 +129,7 @@ Installer
 =========
 
 Refer to a document on how to serve your own modpack set. If you are interested in how to use the modpack
-installer, refer to :doc:`/Getting/Manuals/modpack-installer`
+installer, refer to :doc:`/Manuals/modpack-installer`
 
 .. toctree::
   modpack-installer.rst
