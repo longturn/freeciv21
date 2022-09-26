@@ -197,6 +197,11 @@ jobs:
         with:
           configurePreset: 'fullrelease-macos'
           buildPreset: 'fullrelease-macos'
+      - name: Split Branch Name
+        env:
+          BRANCH: ${{github.ref_name}}
+        id: split
+        run: echo "::set-output name=fragment::${BRANCH##*/}"
       - name: Create App Bundle
         run: |
           mkdir -p Freeciv21.app/Contents/MacOS Freeciv21.app/Contents/Resources
@@ -222,12 +227,14 @@ jobs:
             --icon "Freeciv21.app" 200 190 \
             --hide-extension "Freeciv21.app" \
             --app-drop-link 600 185 \
-            "Freeciv21-${{github.ref_name}}.dmg" \
+            "Freeciv21-${{steps.split.outputs.fragment}}.dmg" \
             "staging/"
-          sha256sum --binary *.dmg > Freeciv21-${{github.ref_name}}.sha256
+          sha256sum --binary *.dmg > Freeciv21-${{steps.split.outputs.fragment}}.sha256
       - name: Debug
         if: failure()
-        run: cat CMakeCache.txt
+        run: |
+          cat CMakeCache.txt
+          echo ${{steps.split.outputs.fragment}}
       - name: Upload package
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
