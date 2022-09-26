@@ -229,7 +229,7 @@ jobs:
             --app-drop-link 600 185 \
             "Freeciv21-${{steps.split.outputs.fragment}}.dmg" \
             "staging/"
-          sha256sum --binary *.dmg > Freeciv21-${{steps.split.outputs.fragment}}.sha256
+          shasum -a 256 Freeciv21-${{steps.split.outputs.fragment}}.dmg > Freeciv21-${{steps.split.outputs.fragment}}.dmg.sha256
       - name: Debug
         if: failure()
         run: |
@@ -241,7 +241,7 @@ jobs:
         with:
           files: |
             Freeciv21-*.dmg
-            Freeciv21-*.sha256
+            Freeciv21-*.dmg.sha256
       - name: Upload a build
         uses: actions/upload-artifact@v2
         with:
