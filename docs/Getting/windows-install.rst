@@ -27,6 +27,7 @@ Click :guilabel:`Yes` and the welcome panel will load after an uncompress proces
 
 
 |
+
 Click :guilabel:`Next` to continue...
 
 .. image:: ../_static/images/windows-installer/01-Welcome.png
@@ -36,6 +37,7 @@ Click :guilabel:`Next` to continue...
 
 
 |
+
 By default, the installer only installs the client, server and modpack installer. If you want other
 utilities, you will need to pick them from the list. Click :guilabel:`Next` to continue...
 
@@ -46,6 +48,7 @@ utilities, you will need to pick them from the list. Click :guilabel:`Next` to c
 
 
 |
+
 Select the installation type and then click :guilabel:`Next` to continue...
 
 .. image:: ../_static/images/windows-installer/04-Admin-Multi-User.png
@@ -55,6 +58,7 @@ Select the installation type and then click :guilabel:`Next` to continue...
 
 
 |
+
 By default, the Admin installer will place the files in the :file:`C:\\Program Files` folder. Change if
 you want and click :guilabel:`Next` to continue...
 
@@ -65,6 +69,7 @@ you want and click :guilabel:`Next` to continue...
 
 
 |
+
 This panel shows the files being installed. No action is needed.
 
 .. image:: ../_static/images/windows-installer/06-Copy-Files.png
@@ -74,6 +79,7 @@ This panel shows the files being installed. No action is needed.
 
 
 |
+
 If you want to run Freeciv21 right away, leave the box checked and click :guilabel:`Finish`. Otherwise,
 uncheck the box before clicking :guilabel:`Finish` to complete the installation.
 
@@ -84,8 +90,9 @@ uncheck the box before clicking :guilabel:`Finish` to complete the installation.
 
 
 |
+
 You will find an icon for the client on the Desktop or in the Start Menu at
-:menuselection:`Start Menu --> Freeciv21 [Version] --> Freeciv21 Client`.
+:menuselection:`Start Menu --> Freeciv21 --> Freeciv21 Client`.
 
 .. _non-admin:
 
@@ -104,6 +111,7 @@ Click :guilabel:`Next` to continue...
 
 
 |
+
 By default, the installer only installs the client, server and modpack installer. If you want other
 utilities, you will need to pick them from the list. Click :guilabel:`Next` to continue...
 
@@ -114,6 +122,7 @@ utilities, you will need to pick them from the list. Click :guilabel:`Next` to c
 
 
 |
+
 The Non-Admin Installer places the files in your User Directory by default. Change if you want and click
 :guilabel:`Next` to continue...
 
@@ -124,6 +133,7 @@ The Non-Admin Installer places the files in your User Directory by default. Chan
 
 
 |
+
 This panel shows the files being installed. No action is needed.
 
 .. image:: ../_static/images/windows-installer/06-Copy-Files.png
@@ -133,6 +143,7 @@ This panel shows the files being installed. No action is needed.
 
 
 |
+
 If you want to run Freeciv21 right away, leave the box checked and click :guilabel:`Finish`. Otherwise,
 uncheck the box before clicking :guilabel:`Finish` to complete the installation.
 
@@ -143,7 +154,8 @@ uncheck the box before clicking :guilabel:`Finish` to complete the installation.
 
 
 |
-You will find an icon for the client on the Desktop or in the Start Menu at :menuselection:`Start Menu -->
-Freeciv21 --> Freeciv21 Client`.
+
+You will find an icon for the client on the Desktop or in the Start Menu at
+:menuselection:`Start Menu --> Freeciv21 --> Freeciv21 Client`.
 
 .. |reg|    unicode:: U+000AE .. REGISTERED SIGN
