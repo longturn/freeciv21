@@ -1,3 +1,9 @@
+..
+    SPDX-License-Identifier: GPL-3.0-or-later
+    SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
+    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022 louis94 <m_louis30@yahoo.com>
+
 Welcome to the Freeciv21 manual
 *******************************
 
@@ -11,6 +17,10 @@ Welcome to the documentation of the Freeciv21 project brought to you by the
   The Playing category is an area for documentation editors to provide tips and tricks on ways to play
   Freeciv21 and any of they varying rulesets that the longurn.net community likes to play. You will also find
   the FAQ here.
+
+:doc:`Manuals <Manuals/index>`
+  The Manuals category is where we place all of our varying manuals such as the game manual, advanced user
+  manual and ruleset manuals.
 
 :doc:`Modding <Modding/index>`
   The Modding category is an area for documentation editors to provide tips and other details on modifying
@@ -30,6 +40,7 @@ Welcome to the documentation of the Freeciv21 project brought to you by the
 .. toctree::
   Getting/index.rst
   Playing/index.rst
+  Manuals/index.rst
   Modding/index.rst
   Contributing/index.rst
   Coding/index.rst

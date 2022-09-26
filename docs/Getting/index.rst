@@ -1,3 +1,9 @@
+..
+    SPDX-License-Identifier: GPL-3.0-or-later
+    SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
+    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022 louis94 <m_louis30@yahoo.com>
+
 Getting
 *******
 
@@ -11,13 +17,3 @@ The Getting category is where you to go learn about Freeciv21 and how to get it 
   compile.rst
   :maxdepth: 1
 
-Manuals
-*******
-
-The manuals category is where a reader will find detailed information on the client, server, rulesets, etc.
-
-.. toctree::
-  Manuals/client-manual.rst
-  Manuals/modpack-installer.rst
-  Manuals/on-the-server.rst
-  :maxdepth: 2
