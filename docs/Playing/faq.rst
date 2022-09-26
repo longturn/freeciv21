@@ -1056,7 +1056,7 @@ How do I use a different tileset?
 If the tilesets supplied with Freeciv21 don't do it for you, some popular add-on tilesets are available
 through the modpack installer utility. To install these, just launch the installer from the Start menu, and
 choose the one you want; it should then be automatically downloaded and made available for the current user.
-For more information, refer to :doc:`/Getting/Manuals/modpack-installer`.
+For more information, refer to :doc:`/Manuals/modpack-installer`.
 
 If the tileset you want is not available via the modpack installer, you'll have to install it by hand from
 somewhere. To do that is beyond the scope of this FAQ.
