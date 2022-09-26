@@ -57,7 +57,7 @@ Heading 3
 
 Heading 4
     Heading 4 is used to break a sub-chapter down into a further section. This is useful for large pages, such
-    as the :doc:`/Getting/Manuals/client-manual`. The caret is used to denote Heading 4 like this:
+    as the :doc:`/Manuals/client-manual`. The caret is used to denote Heading 4 like this:
 
 .. code-block:: rst
 
