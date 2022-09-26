@@ -1,3 +1,9 @@
+..
+    SPDX-License-Identifier: GPL-3.0-or-later
+    SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
+    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022 louis94 <m_louis30@yahoo.com>
+
 Using the Modpack Installer Utility
 ***********************************
 
