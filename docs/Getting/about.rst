@@ -19,6 +19,7 @@ About Freeciv21
 
 
 |
+
 Freeciv21 is a turn-based strategy game, in which each player becomes the leader of a civilization. You
 compete against several opponents to build cities, use them to support a military and economy, and finally
 to complete an empire that survives all encounters with its neighbors to emerge victorious. Each opponent
