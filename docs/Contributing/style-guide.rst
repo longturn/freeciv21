@@ -75,6 +75,13 @@ to alter is placed inside back-ticks.
 
 * :literal:`:doc:` -- Doc is used to create a hyperlink reference between documents in the documentation
   system.
+* :literal:`:ref:` -- Create a cross-reference link to an anchor in another document. This is similar to
+  :literal:`:doc:`, except it allows you to go to a specific location within a page, instead of the top of the
+  page. To use :literal:`:ref:`, you add an anchor in a page such as :literal:`.. _My Anchor:` and then refer
+  to it like this: :literal:`:ref:`My Anchor``. Notice that the anchor has an underscore at the beginning.
+  This is required for sphinx to recognize it. Also notice the use of the anchor in :literal:`:ref:` leaves
+  the underscore off.
+* :literal:`:numref:` -- Create a cross-reference to a named figure.
 * :literal:`:emphasis:` -- Emphasis is used to :emphasis:`bring attention to something`.
 * :literal:`:file:` -- File is used for file names and paths such as :file:`~/.local/share/freeciv21/saves`.
 * :literal:`:guilabel:` -- GUI Label is used to bring attention to something on the screen like the
@@ -89,6 +96,7 @@ to alter is placed inside back-ticks.
 * :literal:`:title-reference:` -- Title Reference is used notate a :title-reference:`title entry` in the
   in-game help or to refer to a page in the documentation without giving an actual hyperlink reference
   (see :literal:`:doc:` above).
+
 
 The docutils specification allows for custom Interpreted Text Roles and we use this feature. The docutils
 documentation on this feature is available here:
