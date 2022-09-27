@@ -1158,6 +1158,8 @@ selection of cities, buy what is currently being produced, and center the city o
 center the city on the map, the client will close the :guilabel:`Cities View` and open the `Map View`_ and
 place the city in the center of the screen.
 
+.. _Nations and Diplomacy View:
+
 Nations and Diplomacy View
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
