@@ -160,8 +160,9 @@ following commands:
      libqt5svg5-dev \
      libkf5archive-dev \
      liblua5.3-dev \
-     libmagickwand-dev \
+     libsqlite3-dev \
      libsdl2-mixer-dev \
+     libmagickwand-dev \
      libunwind-dev \
      libdw-dev \
      python3-sphinx \
