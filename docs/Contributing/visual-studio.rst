@@ -140,7 +140,7 @@ Qt Visual Studio Tools
 ======================
 
 There is an available extension called :strong:`Qt Visual Studio Tools`. This extension allows you to use the
-Qt Designer and other Qt tools inside of the Visual Studio IDE. This is especially useful if you want to edit
+Qt Designer and other Qt tools within the Visual Studio IDE. This is especially useful if you want to edit
 any of the client :file:`.ui` files.
 
 Start by `downloading <https://www.qt.io/download-qt-installer>`_ the installer. Double-click the downloaded
@@ -158,13 +158,10 @@ the Start Menu is fine. Click :guilabel:`Next` and :guilabel:`Install` to begin 
   ``UWP*``, and ``Android``. Unless you intend to develop for those platforms, you do not need to download and
   install those components.
 
-Now to install the extension. In Visual Studio, click on
-:menuselection:`Extensions --> Manage Extensions --> Online`. In the upper right of the window, you will see
-a search box. Search for :strong:`Qt Visual Studio Tools`. Select it in the center and click the
-:guilabel:`Install` button. When it is finished downloading, close Visual Studio. A new window will
-come up that installs the extension. When finished re-open Visual Studio.
+To install the extension. In Visual Studio, click on :menuselection:`Extensions --> Manage Extensions --> Online`.
+Search for :strong:`Qt Visual Studio Tools` and install it.
 
-Now we need to set the version of Qt in the extension's options. Click on
+To set the version of Qt in the extension's options. Click on
 :menuselection:`Extensions --> Qt VS Tools --> Qt Versions`. Add version ``5.15`` and in the path enter:
 :file:`C:\\Qt\\5.15.2\\msvc2019_64\\bin`.
 
