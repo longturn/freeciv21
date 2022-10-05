@@ -7,7 +7,8 @@ Setting up MSYS2 for Windows
 ****************************
 
 This document is about building and compiling Freeciv21 with MSYS2 on Windows. MSYS2 is available from
-https://www.msys2.org. The Longturn Community builds the Windows Installer packages using MSYS2.
+https://www.msys2.org. The Longturn Community builds the Windows Installer packages using MSYS2. If you
+are looking for a first class development evironment on Windows, have a look at :doc:`visual-studio`.
 
 
 Setup
@@ -18,12 +19,12 @@ This chapter is about creating a new MSYS2 build environment.
 #. Download MSYS2 from their homepage: https://www.msys2.org/#installation
 
 #. Run the downloaded file to install MSYS2 on you build system. This author recommends that you install the
-   files in a directory off of the root of your ``C:\`` Drive. For example: ``C:\Tools\``
+   files in a directory off of the root of your :file:`C:\\` Drive. For example: :file:`C:\\Tools\\`
 
 #. Launch :file:`msys2_shell` from the installation directory. Issue the following command to update the base
    set of packages.
 
-    .. code-block:: rst
+    .. code-block:: sh
 
         > pacman -Syuu
 

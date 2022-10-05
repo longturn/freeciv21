@@ -2,14 +2,14 @@
     SPDX-License-Identifier: GPL-3.0-or-later
     SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
 
-Setting up Visual Studio for Windows
-************************************
+Visual Studio for Windows
+*************************
 
 Freeciv21 can be compiled using Microsoft Visual Studio\ |reg| and :file:`clang-cl`. This page will help you
 get version 2022 up and running.
 
 .. warning:: Visual Studio and the corresponding dependencies require a great deal of HDD space on your
-   computer. Be sure to have at least 50GB of available space before starting this process.
+   computer. Be sure to have at least 80GB of available space before starting this process.
 
 
 Base Installation
@@ -136,6 +136,37 @@ Studio will open a :strong:`CMake Overview Pages` tab.
 Microsoft provides documentation on CMake in Visual Studio --
 https://docs.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio?view=msvc-170
 
+Qt Visual Studio Tools
+======================
+
+There is an available extension called :strong:`Qt Visual Studio Tools`. This extension allows you to use the
+Qt Designer and other Qt tools inside of the Visual Studio IDE. This is especially useful if you want to edit
+any of the client :file:`.ui` files.
+
+Start by `downloading <https://www.qt.io/download-qt-installer>`_ the installer. Double-click the downloaded
+file and login with your Qt account. If you do not have a Qt account, there should be a link in the installer
+window to create one. Click :guilabel:`Next`, agree to the GNU License and state that you are an individual,
+not a business. Click :guilabel:`Next` and pick to either send or not send usage statistics to Qt.
+Click :guilabel:`Next`. Note that installing to :file:`C:\\Qt` is fine. Ensure :guilabel:`Custom Install`
+is selected and then click :guilabel:`Next`. On the right, uncheck :guilabel:`latest support release` and
+check :guilabel:`LTS`, click :guilabel:`Filter`. Expand :guilabel:`Qt` and check the ``5.15.2`` option. Click
+:guilabel:`Next` and agree to the Microsoft license. Click :guilabel:`Next` and note that :strong:`Qt` for
+the Start Menu is fine. Click :guilabel:`Next` and :guilabel:`Install` to begin the process.
+
+.. note:: You can reduce the size of the Qt Tools install by expanding the ``5.15.2`` option and unchecking
+  ``WebAssembly``, ``MSVC 2015 64-bit``, ``MSVC 2019 32-bit``, ``MinGW 8.1.0 32-bit``, ``MinGW 8.1.0 64-bit``,
+  ``UWP*``, and ``Android``. Unless you intend to develop for those platforms, you do not need to download and
+  install those components.
+
+Now to install the extension. In Visual Studio, click on
+:menuselection:`Extensions --> Manage Extensions --> Online`. In the upper right of the window, you will see
+a search box. Search for :strong:`Qt Visual Studio Tools`. Select it in the center and click the
+:guilabel:`Install` button. When it is finished downloading, close Visual Studio. A new window will
+come up that installs the extension. When finished re-open Visual Studio.
+
+Now we need to set the version of Qt in the extension's options. Click on
+:menuselection:`Extensions --> Qt VS Tools --> Qt Versions`. Add version ``5.15`` and in the path enter:
+:file:`C:\\Qt\\5.15.2\\msvc2019_64\\bin`.
 
 Final Steps and Notes
 =====================
@@ -164,7 +195,7 @@ install in the :file:`build-vs/install` directory.
   :file:`vcpkg` earlier. Binaries for the packages will be copied into the :file:`./build-vs/` directory
   inside of the main Freeciv21 directory and reused for subsequent builds.
 
-.. attention:: As documented in :doc:`/Getting/install`, there is a :file:`--target package` option
+.. attention:: As documented in :doc:`/Getting/compile`, there is a :file:`--target package` option
   available to build an installable package for Windows. This is only available to the MSYS2 environment. This
   does not mean that you can not test an install using Visual Studio. After going to
   :menuselection:`Build --> install Freeciv21` you can still manually start up the client or a server as
@@ -186,7 +217,7 @@ these commands:
 
 .. code-block:: sh
 
-  cmake . -B build-vs -G "Visual Studio 17 2022" -DCMAKE_INSTALL_PREFIX=./build-vs/install
+  cmake . -B build-vs -G "Visual Studio 17 2022" -DFREECIV_USE_VCPKG=ON -DCMAKE_INSTALL_PREFIX=./build-vs/install
   cmake --build build-vs
   cmake --build build-vs --target install
 
@@ -196,6 +227,5 @@ location to be a sub-directory of the :file:`build-vs` directory for use during 
 purposes. This is the same as selecting the :file:`windows-debug` preset configuration. The second and third
 command then "builds" and "installs" the configured code solution. You will need to manually start the client
 and/or server to test.
-
 
 .. |reg|    unicode:: U+000AE .. REGISTERED SIGN
