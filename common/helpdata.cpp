@@ -4265,7 +4265,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
         }
         break;
       case EFT_MAX_RATES:
-        if (playerwide && game.info.changable_tax) {
+        if (playerwide && game.info.changable_budget) {
           if (net_value < 100) {
             cat_snprintf(buf, bufsz,
                          _("* The maximum rate you can set for science,"

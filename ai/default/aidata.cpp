@@ -554,7 +554,7 @@ void dai_gov_value(struct ai_type *ait, struct player *pplayer,
   presearch = research_get(pplayer);
 
   pplayer->government = gov;
-  /* Ideally we should change tax rates here, but since
+  /* Ideally we should change national budget here, but since
    * this is a rather big CPU operation, we'd rather not. */
   check_player_max_rates(pplayer);
   city_list_iterate(pplayer->cities, acity) { auto_arrange_workers(acity); }

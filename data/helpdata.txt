@@ -122,7 +122,7 @@ will probably want to learn a new form of government. You start the game in Desp
 Monarchy or The Republic are good early targets. As soon as you have researched a new government type, start \
 a revolution (See the menu Civilization --> Government --> Revolution) and change over to it. Cities operate \
 much better under Republic than they do under Despotism, but note that it is much harder to keep military units \
-outside of city limits under a Republic. Also, do not forget to recheck your tax rates after you have changed \
+outside of city limits under a Republic. Also, do not forget to recheck your national budget after you have changed \
 governments, as the maximums vary for each type.\
 "), _("\
 Depending on the amount of fresh water you have available, you might need to make a push for Construction so \
@@ -531,7 +531,7 @@ goes into your national treasury; luxury goods influence citizen morale; and sci
 (\"Bulbs\") contribute towards the discovery of new technologies.\
 "), _("\
 You must choose a single ratio for your civilization by which trade points are distributed among these three \
-uses. Though you may alter the tax rates on any turn, you are constrained to multiples of ten percent, and \
+uses. Though you may alter the national budget on any turn, you are constrained to multiples of ten percent, and \
 most forms of government limit their maximum value.\
 "), _("\
 Having this single ratio does not impact gold and science, because gold and technological progress are both \
@@ -1169,7 +1169,7 @@ may vary upwards from a minimum of 6, depending on the ruleset being played.\
 [help_policies]
 name = _("Policies")
 text = _("\
-Some rulesets define \"Policies\". These are empire-wide settings, usually trade-offs similar to tax rates. \
+Some rulesets define \"Policies\". These are empire-wide settings, usually trade-offs similar to national budget. \
 If the current ruleset defines any policies, they are described in the following sections.\
 "), _("\
 You may change policy values at any time, but any changes only take effect at the next turn.\

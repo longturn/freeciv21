@@ -854,7 +854,7 @@ void adv_best_government(struct player *pplayer)
         int revolution_turns;
 
         pplayer->government = &gov;
-        /* Ideally we should change tax rates here, but since
+        /* Ideally we should change national budget here, but since
          * this is a rather big CPU operation, we'd rather not. */
         check_player_max_rates(pplayer);
         city_list_iterate(pplayer->cities, acity)

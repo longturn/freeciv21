@@ -28,7 +28,7 @@ void top_bar_left_click_science();
 void top_bar_show_map();
 
 /**
- * Top bar widget for tax rates.
+ * Top bar widget for national budget.
  */
 class tax_rates_widget : public QToolButton {
   Q_OBJECT

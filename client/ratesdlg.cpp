@@ -37,7 +37,8 @@ static int mult_to_scale(const struct multiplier *pmul, int val);
    Dialog constructor for changing rates with sliders.
    Automatic destructor will clean qobjects, so there is no one
  */
-tax_rates_dialog::tax_rates_dialog(QWidget *parent) : qfc_dialog(parent)
+national_budget_dialog::national_budget_dialog(QWidget *parent)
+    : qfc_dialog(parent)
 {
   QHBoxLayout *some_layout;
   QVBoxLayout *main_layout;
@@ -48,7 +49,7 @@ tax_rates_dialog::tax_rates_dialog(QWidget *parent) : qfc_dialog(parent)
   QString str;
   int max;
 
-  setWindowTitle(_("Tax rates"));
+  setWindowTitle(_("National Budget"));
   main_layout = new QVBoxLayout;
 
   if (client.conn.playing != nullptr) {
@@ -75,11 +76,11 @@ tax_rates_dialog::tax_rates_dialog(QWidget *parent) : qfc_dialog(parent)
   apply_button = new QPushButton(_("Apply"));
   some_layout = new QHBoxLayout;
   connect(cancel_button, &QAbstractButton::pressed, this,
-          &tax_rates_dialog::slot_cancel_button_pressed);
+          &national_budget_dialog::slot_cancel_button_pressed);
   connect(apply_button, &QAbstractButton::pressed, this,
-          &tax_rates_dialog::slot_apply_button_pressed);
+          &national_budget_dialog::slot_apply_button_pressed);
   connect(ok_button, &QAbstractButton::pressed, this,
-          &tax_rates_dialog::slot_ok_button_pressed);
+          &national_budget_dialog::slot_ok_button_pressed);
   some_layout->addWidget(cancel_button);
   some_layout->addWidget(apply_button);
   some_layout->addWidget(ok_button);
@@ -93,12 +94,12 @@ tax_rates_dialog::tax_rates_dialog(QWidget *parent) : qfc_dialog(parent)
 /**
    When cancel in qtpushbutton pressed selfdestruction :D.
  */
-void tax_rates_dialog::slot_cancel_button_pressed() { delete this; }
+void national_budget_dialog::slot_cancel_button_pressed() { delete this; }
 
 /**
    When ok in qpushbutton pressed send info to server and selfdestroy :D.
  */
-void tax_rates_dialog::slot_ok_button_pressed()
+void national_budget_dialog::slot_ok_button_pressed()
 {
   dsend_packet_player_rates(&client.conn, 10 * fcde->current_min,
                             10 * (10 - fcde->current_max),
@@ -107,9 +108,9 @@ void tax_rates_dialog::slot_ok_button_pressed()
 }
 
 /**
-   Pressed "apply" in tax rates dialog.
+   Pressed "apply" in the national budget dialog.
  */
-void tax_rates_dialog::slot_apply_button_pressed()
+void national_budget_dialog::slot_apply_button_pressed()
 {
   dsend_packet_player_rates(&client.conn, 10 * fcde->current_min,
                             10 * (10 - fcde->current_max),
@@ -244,10 +245,10 @@ void popup_rates_dialog()
   QList<QScreen *> screens = QGuiApplication::screens();
   QRect rect = screens[0]->availableGeometry();
   QPoint p;
-  tax_rates_dialog *trd;
+  national_budget_dialog *trd;
 
   p = QCursor::pos();
-  trd = new tax_rates_dialog(king()->central_wdg);
+  trd = new national_budget_dialog(king()->central_wdg);
   p.setY(p.y() - trd->height() / 2);
   if (p.y() < 50) {
     p.setY(50);

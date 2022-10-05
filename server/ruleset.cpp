@@ -5661,8 +5661,8 @@ static bool load_ruleset_cities(struct section_file *file,
     game.info.angrycitizen = secfile_lookup_bool_default(
         file, GAME_DEFAULT_ANGRYCITIZEN, "parameters.angry_citizens");
 
-    game.info.changable_tax = secfile_lookup_bool_default(
-        file, GAME_DEFAULT_CHANGABLE_TAX, "parameters.changable_tax");
+    game.info.changable_budget = secfile_lookup_bool_default(
+        file, GAME_DEFAULT_CHANGABLE_BUDGET, "parameters.changable_budget");
     game.info.forced_science =
         secfile_lookup_int_default(file, 0, "parameters.forced_science");
     game.info.forced_luxury =

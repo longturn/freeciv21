@@ -91,7 +91,7 @@ const char *handicap_desc(enum handicap_type htype, bool *inverted)
              "servers, this level is no different to 'Hard'.");
   case H_RATES:
     *inverted = true;
-    return _("Has no restrictions on tax rates.");
+    return _("Has no restrictions on national budget.");
   case H_TARGETS:
     *inverted = true;
     return _(

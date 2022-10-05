@@ -322,7 +322,7 @@ Government Icons
   governments, the aforementioned list is not static.
 
 Tax Icons
-  One icon for each tax type. These are used to show the tax rates. The sprites are :code:`s.tax_luxury`,
+  One icon for each tax type. These are used to show the national budget. The sprites are :code:`s.tax_luxury`,
   :code:`s.tax_science`, :code:`s.tax_gold`. Commonly the specialist sprites are reused for this.
 
 Right Arrow

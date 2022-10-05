@@ -2081,7 +2081,7 @@ The actions available to Diplomats in a city are:\
 "), _("\
  - \"Establish Embassy\": This action always succeeds, and gives\
  permanent contact with the city's owner, as well as intelligence\
- on their tax rates and technology.\
+ on their national budget and technology.\
 "), _("\
  - \"Investigate City\": Your unit attempts to report detailed\
  information about the city: its status, what buildings and units are\
@@ -2305,7 +2305,7 @@ Explorers are brave individuals that are very useful for\
 "), _("\
 An explorer can be ordered to remain in a foreign city as an ambassador\
  after Writing is discovered. This gives permanent contact with the city's\
- owner, as well as intelligence on their tax rates and technology.\
+ owner, as well as intelligence on their national budget and technology.\
 ")
 
 [unit_leader]

@@ -93,7 +93,7 @@ struct caravan_parameter {
 
   /*
    * The 'effect of trade' can be computed exactly by an expensive
-   * calculation which will take into account buildings, tax rates, etc; or
+   * calculation which will take into account buildings, national budget, etc; or
    * by a cheap calculation that just says that each trade is worth one
    * science or gold.
    */

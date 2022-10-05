@@ -1705,13 +1705,13 @@ static void init_min_production(struct cm_state *state)
 }
 
 /**
-   Get the tax rates, see city.c
+   Get the national budget, see city.c
  */
 static void get_tax_rates(const struct player *pplayer, int rates[])
 {
   const int SCIENCE = 0, TAX = 1, LUXURY = 2;
 
-  if (game.info.changable_tax) {
+  if (game.info.changable_budget) {
     rates[SCIENCE] = pplayer->economic.science;
     rates[LUXURY] = pplayer->economic.luxury;
     rates[TAX] = 100 - rates[SCIENCE] - rates[LUXURY];
@@ -1759,7 +1759,7 @@ static double estimate_fitness(const struct cm_state *state,
 
   get_tax_rates(pplayer, rates);
 
-  /* sci/lux/gold get benefit from the tax rates (in percentage) */
+  /* sci/lux/gold get benefit from the national budget (in percentage) */
   estimates[O_SCIENCE] += rates[SCIENCE] * trade / 100.0;
   estimates[O_LUXURY] += rates[LUXURY] * trade / 100.0;
   estimates[O_GOLD] += rates[TAX] * trade / 100.0;

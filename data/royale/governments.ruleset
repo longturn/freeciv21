@@ -86,7 +86,7 @@ _("\
 * Military units do not cause unhappiness even when deployed aggressively.\n\
 * Military units impose martial law. Up to 3 military units inside a city\
  will each force 1 unhappy citizen to become content.\n\
-* You have no control over tax rates. Half of the trade income is\
+* You have no control over national budget. Half of the trade income is\
  simply lost to your economy (less if you have luxury-promoting buildings),\
  and the remainder all goes to luxuries.\
  Conventional corruption increases with distance from the capital\

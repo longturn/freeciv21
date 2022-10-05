@@ -1071,7 +1071,7 @@ void mr_menu::setup_menus()
 
   // Civilization menu
   menu = this->addMenu(_("Civilization"));
-  act = menu->addAction(_("Tax Rates..."));
+  act = menu->addAction(_("National Budget..."));
   menu_list.insert(NOT_4_OBS, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_popup_tax_rates);
   menu->addSeparator();
@@ -2724,7 +2724,7 @@ void mr_menu::load_new_tileset()
 }
 
 /**
-   Action "TAX RATES"
+   Action "NATIONAL BUDGET"
  */
 void mr_menu::slot_popup_tax_rates() { popup_rates_dialog(); }
 

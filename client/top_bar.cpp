@@ -81,7 +81,7 @@ QSize tax_rates_widget::sizeHint() const
 }
 
 /**
- * Renders the tax rates widget
+ * Renders the national budget widget
  */
 void tax_rates_widget::paintEvent(QPaintEvent *event)
 {
@@ -403,7 +403,7 @@ void gold_widget::update_contents()
 }
 
 /**
- * Renders the tax rates widget
+ * Renders the national budget widget
  */
 void gold_widget::paintEvent(QPaintEvent *event)
 {
