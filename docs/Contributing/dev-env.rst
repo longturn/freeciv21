@@ -17,22 +17,22 @@ Freeciv21 can be developed on Linux, Windows, and macOS. Any current version of 
 Windows, you will need to setup either the MSYS2 environment or Visual Studio to do development.
 Refer to :doc:`msys2` or :doc:`Visual Studio <visual-studio>` for more information. It should be generally
 understood that :strong:`Linux` is the preferred development platform. For a complete set of installation
-steps, you can refer to :doc:`/Getting/install`.
+steps, you can refer to :doc:`/Getting/compile`.
 
 Technically all you need is a text editor of some kind to edit the files, but most people prefer to use an
-IDE.
+integrated development environment (IDE).
 
 All platforms can use `KDevelop <https://www.kdevelop.org/download>`_. However, there are some caveats:
 
 * On Windows, due to the nature of the integration with MSYS2, native compilation and debugging is not
-  supported. This is resolved with Visual Studio as the IDE.
+  supported. This is resolved with :doc:`Visual Studio <visual-studio>` as the IDE.
 * On macOS, KDevelop is still considered experimental. Many Mac users
   use `XCode <https://developer.apple.com/xcode/>`_.
 
 For the best results, especially if you are editing game code and not just Longturn game rulesets or
 documentation, you will want :strong:`Linux` to be your workstation OS. Many of the current developers use a
 Debain variant such as Ubuntu. Instructions for getting all of the tools needed for Debian Linux can be found
-in :doc:`/Getting/install`. Do not follow the steps to clone the repository (e.g. the :code:`git clone`
+in :doc:`/Getting/compile`. Do not follow the steps to clone the repository (e.g. the :code:`git clone`
 command), that will happen in a bit.
 
 GitHub
@@ -54,7 +54,7 @@ copy on your workstation.
 
 First make a working directory to place the files in:
 
-.. code-block:: rst
+.. code-block:: sh
 
   $ mkdir -p $HOME/GitHub
 
@@ -75,7 +75,7 @@ select the SSH option as shown in this sample screenshot:
 
 Once you have the proper path, here is the command to clone the repository:
 
-.. code-block:: rst
+.. code-block:: sh
 
   ~/GitHub$ git clone git@github.com:[username]/freeciv21.git
 
@@ -85,14 +85,14 @@ This will clone the forked repository to the :file:`~/GitHub/freeciv21` director
 The final repository setup item is to link the original Longturn project repository to your local area on
 your computer:
 
-.. code-block:: rst
+.. code-block:: sh
 
   ~/GitHub/freeciv21$ git remote add upstream https://github.com/longturn/freeciv21.git
 
 
 You will also need to set a couple global configuration settings so :code:`git` knows a bit more about you.
 
-.. code-block:: rst
+.. code-block:: sh
 
   ~/GitHub/freeciv21$ git config --global user.email [email address associated with GitHub]
   ~/GitHub/freeciv21$ git config --global user.name [your first and last name]
@@ -103,7 +103,7 @@ KDevelop Project Setup
 
 On Linux, the easiest way to install KDevelop is with a command such as this:
 
-.. code-block:: rst
+.. code-block:: sh
 
     sudo apt install kdevelop
 
@@ -114,7 +114,7 @@ Once installed, you can then import the Freeciv21 project into it. Follow these 
 #. :menuselection:`Project --> Open/Import Project`
 #. Find :file:`freeciv21/CMakeLists.txt`
 #. :menuselection:`Session --> Rename Current Session` to Freeciv21
-#. Allow kdevelop to parse all of the code -- this can take a while. Eventually you will see a full tree of
+#. Allow kdevelop to parse all of the code. This can take a while. Eventually you will see a full tree of
    the code in the Projects tab on the left.
 
 Here are some useful help/documentation links:
@@ -124,3 +124,20 @@ Here are some useful help/documentation links:
 
 Now you are ready to edit some code! When ready, follow the steps to submit a pull request here:
 :doc:`pull-request`.
+
+Qt Creator
+===========
+
+Freeciv21 uses the Qt framework for many things, especially the game client. There are many :file:`.ui` files
+in the :file:`client` directory. If you want to edit those in a user interface (versus editing the raw XML),
+you will want to install Qt Creator. You do so with a command such as this:
+
+.. code-block:: sh
+
+    sudo apt install qtcreator
+
+
+Once installed you will get access to a program called :strong:`Qt Designer`. This tool is a graphical
+interface you can use to edit the :file:`.ui` files. You also gain access to Qt documentation inside of
+KDevelop as well. You can read the Qt Designer Manual for more help here:
+https://doc.qt.io/qt-5/qtdesigner-manual.html
