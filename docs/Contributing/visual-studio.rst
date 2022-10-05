@@ -29,6 +29,33 @@ When ready click :guilabel:`Install`. Depending on your Internet connection spee
 When the installation process is finished you may be presented with a collection of options. You do not need
 Visual Studio right now, so best to close everything at this point.
 
+Add Python to the System Path
+=============================
+
+Freeciv21 development needs access to a Python Interpreter. This is why we installed it in the section above.
+We also need Python for the ``git clang-format`` command used as part of adding a
+:ref:`pull request <pull-Request>` to our GitHub  repository. In Windows Explorer look for Python.
+As of this writing it is found in :file:`C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Python39_64`.
+If not found there, look for it in your user profile. For example:
+:file:`C:\\Users\\[UserID]\\AppData\\Local\\Programs\\Python\\Python39`. Once you know where it is, we can
+add it to the system ``%PATH%``.
+
+Open :guilabel:`Advanced System Settings` from :menuselection:`Start Menu --> Settings --> System --> About`.
+Click the :guilabel:`Environment Variables` button. In the :guilabel:`System variables` section, select ``Path``
+and click :guilabel:`Edit`. Add :file:`C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Python39_64`
+and :file:`C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Python39_64\Scripts`.
+
+Open a PowerShell prompt. You should be able to enter ``python`` at the prompt and the interpreter should
+load. You can type ``quit()`` to exit the interpreter.
+
+.. code-block:: sh
+
+    PS C:\Windows\System32> python
+    Python 3.9.7 (tags/v3.9.7:1016ef3, Aug 30 2021, 20:19:38) [MSC v.1929 64 bit (AMD64)] on win32
+    Type "help", "copyright", "credits" or "license" for more information.
+    >>>
+
+
 Set Up VCPKG
 ============
 

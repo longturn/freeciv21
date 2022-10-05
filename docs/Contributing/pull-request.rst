@@ -13,6 +13,7 @@ Before we go much further, let's take a few minutes to describe what happened wh
 define a few terms that will help with further instructions. Starting with a diagram of the setup of the three
 locations where code resides:
 
+.. _GitHub Repositories:
 .. figure:: ../_static/images/github_repos.png
     :align: center
     :height: 300
@@ -20,7 +21,7 @@ locations where code resides:
 
     Diagram of GitHub Repositories
 
-As part of the :doc:`/Getting/install` process, one of the programs installed is :file:`git`. This program
+As part of the :doc:`/Getting/compile` process, one of the programs installed is :file:`git`. This program
 is used to interact with the varying places that code can reside. The :file:`git` program has a relatively
 standard way of referring to things that are in the diagram. If you have not worked with :file:`git` much,
 it is highly recommended you read the first three chapters of the
@@ -54,7 +55,7 @@ With this in mind, submitting a Pull Request generally entails these steps:
 Assuming you are in the appropriate Local directory, issue these commands to get the latest code from
 Upstream:
 
-.. code-block:: rst
+.. code-block:: sh
 
   ~/GitHub/freeciv21$ git checkout master
   ~/GitHub/freeciv21$ git pull upstream master --ff-only
@@ -75,7 +76,7 @@ from Upstream to Local.
 
 Now that things are all up to date with the lastest code, let's create a branch to do your work in.
 
-.. code-block:: rst
+.. code-block:: sh
 
   ~/GitHub/freeciv21$ git checkout -b [some_feature] upstream/master
 
@@ -98,7 +99,7 @@ to work on. Depending on what you are doing, it is likely that you will want to 
 work. Here are some quick steps that you can use to run through quick compiles of code and/or documentation
 updates.
 
-.. code-block:: rst
+.. code-block:: sh
 
   ~/GitHub/freeciv21$ rm -Rf build
   ~/GitHub/freeciv21$ cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install -DCMAKE_BUILD_TYPE=Debug
@@ -127,6 +128,8 @@ there isn't any compiling going on. The Ruleset or Tileset editor is editing fil
 Longturn Games repository is effectively a repository of Rulesets.
 
 
+.. _pull-request:
+
 4. Push the Changes in a Commit to Origin
 =========================================
 
@@ -137,7 +140,7 @@ that all of your changes are going to be bundled into one commit. If you want to
 one commit into a Pull Request then you can read about `git add <https://git-scm.com/docs/git-add>`_ and
 `git commit <https://git-scm.com/docs/git-commit>`_. Most of the work is handled with :file:`git add`.
 
-.. code-block:: rst
+.. code-block:: sh
 
   ~/GitHub/freeciv21$ git status
   ~/GitHub/freeciv21$ git add --all
@@ -154,10 +157,10 @@ a change to another file that you didn't intend to actually change. If you find 
 a file, you can use the :file:`git restore <file>` command. This is also shown on the :file:`git status`
 command output.
 
-The :file:`git add --all` command then adds all the changed files into a single commit. The :file:`git
-clang-format` command then runs a pre-processor to format any code changes to support the Longturn community's
-code standards. We use ``clang-format-11``. If your system's version of ``clang-format`` is different, you can
-use the binaries for ``clang-format-11`` using the command:
+The :file:`git add --all` command then adds all the changed files into a single commit. The
+:file:`git clang-format` command then runs a pre-processor to format any code changes to support the Longturn
+community's code standards. We use ``clang-format-11``. If your system's version of ``clang-format`` is
+different, you can use the binaries for ``clang-format-11`` using the command:
 :file:`git clang-format --binary <path-to-clang-format-11>`. If :file:`git clang-format` modifies any files,
 it will tell you so. If that happens, then you need to run a subsequent :file:`git add --all` command to get
 those files added back into the commit.
@@ -174,7 +177,7 @@ You now have a commit of changes that you need to push to Origin.
 
 This is the last major step in the process. To push the commit to your fork, issue this command:
 
-.. code-block:: rst
+.. code-block:: sh
 
   ~/GitHub/freeciv21$ git push origin
 
