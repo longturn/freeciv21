@@ -1,5 +1,5 @@
-/*
-   //           Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors.
+/**
+   //           Copyright (c) 1996-2022 Freeciv21 and Freeciv contributors.
  _oo\ This file is  part of Freeciv21. Freeciv21 is free software: you can
 (__/ \  _  _   redistribute it and/or modify it under the terms of the GNU
    \  \/ \/ \    General Public License  as published by the Free Software
@@ -73,8 +73,200 @@ void chat_listener::update_word_list()
     if (pconn->playing) {
       word_list << pconn->playing->name;
       word_list << pconn->playing->username;
+      word_list << "/start";
+      word_list << "/help";
+      word_list << "/list colors";
+      word_list << "/list connections";
+      word_list << "/list delegations";
+      word_list << "/list ignored users";
+      word_list << "/list map image definitions";
+      word_list << "/list players";
+      word_list << "/list rulesets";
+      word_list << "/list scenarios";
+      word_list << "/list nationsets";
+      word_list << "/list teams";
+      word_list << "/list votes";
+      word_list << "/quit";
+      word_list << "/cut <connection-name>";
+      word_list << "/explain <option-name>";
+      word_list << "/show <option-name>";
+      word_list << "/show all";
+      word_list << "/show vital";
+      word_list << "/show situational";
+      word_list << "/show rare";
+      word_list << "/show changed";
+      word_list << "/show locked";
+      word_list << "/show rulesetdir";
+      word_list << "/wall <message>";
+      word_list << "/connectmsg <message>";
+      word_list << "/vote yes|no|abstain [vote number]";
+      word_list << "/debug diplomacy <player>";
+      word_list << "/debug ferries";
+      word_list << "/debug tech <player>";
+      word_list << "/debug city <x> <y>";
+      word_list << "/debug units <x> <y>";
+      word_list << "/debug unit <id>";
+      word_list << "/debug timing";
+      word_list << "/debug info";
+      word_list << "/set <option-name> <value>";
+      word_list << "/team <player> <team>";
+      word_list << "/rulesetdir <directory>";
+      word_list << "/metamessage <meta-line>";
+      word_list << "/metapatches <meta-line>";
+      word_list << "/metaconnection up|down|?";
+      word_list << "/metaserver <address>";
+      word_list << "/aitoggle <player-name>";
+      word_list << "/take <player-name>";
+      word_list << "/observe <player-name>";
+      word_list << "/detach <connection-name>";
+      word_list << "/create <player-name> [ai type]";
+      word_list << "/away";
+      word_list << "/handicapped <player-name>";
+      word_list << "/novice <player-name>";
+      word_list << "/easy <player-name>";
+      word_list << "/normal <player-name>";
+      word_list << "/hard <player-name>";
+      word_list << "/cheating <player-name>";
+      word_list << "/experimental <player-name>";
+      word_list << "/cmdlevel none|info|basic|ctrl|admin|hack";
+      word_list << "/first";
+      word_list << "/timeoutshow";
+      word_list << "/timeoutset <time>";
+      word_list << "/timeoutadd <time>";
+      word_list << "/timeoutincrease <turn> <turninc> <value> <valuemult>";
+      word_list << "/cancelvote <vote number>";
+      word_list << "/ignore [type=]<pattern>";
+      word_list << "/unignore <range>";
+      word_list << "/playercolor <player-name> <color>";
+      word_list << "/playernation <player-name> [nation] [is-male] [leader] "
+                   "[style]";
+      word_list << "/endgame";
+      word_list << "/surrender";
+      word_list << "/remove <player-name>";
+      word_list << "/save <file-name>";
+      word_list << "/scensave <file-name>";
+      word_list << "/load <file-name>";
+      word_list << "/read <file-name>";
+      word_list << "/write <file-name>";
+      word_list << "/reset game|ruleset|script|default";
+      word_list << "/default <option name>";
+      word_list << "/lua cmd <script line>";
+      word_list << "/lua unsafe-cmd <script line>";
+      word_list << "/lua file <script file>";
+      word_list << "/lua unsafe-file <script file>";
+      word_list << "/kick <user>";
+      word_list << "/delegate to <username>";
+      word_list << "/delegate cancel";
+      word_list << "/delegate take <player-name>";
+      word_list << "/delegate restore";
+      word_list << "/delegate show <player-name>";
+      word_list << "/aicmd <player> <command>";
+      word_list << "/fcdb lua <script>";
+      word_list << "/mapimg define <mapdef>";
+      word_list << "/mapimg show <id>|all";
+      word_list << "/mapimg create <id>|all";
+      word_list << "/mapimg delete <id>|all";
+      word_list << "/mapimg colortest";
+      word_list << "/rfcstyle";
+      word_list << "/serverid";
     } else {
       word_list << pconn->username;
+      word_list << "/start";
+      word_list << "/help";
+      word_list << "/list colors";
+      word_list << "/list connections";
+      word_list << "/list delegations";
+      word_list << "/list ignored users";
+      word_list << "/list map image definitions";
+      word_list << "/list players";
+      word_list << "/list rulesets";
+      word_list << "/list scenarios";
+      word_list << "/list nationsets";
+      word_list << "/list teams";
+      word_list << "/list votes";
+      word_list << "/quit";
+      word_list << "/cut <connection-name>";
+      word_list << "/explain <option-name>";
+      word_list << "/show <option-name>";
+      word_list << "/show all";
+      word_list << "/show vital";
+      word_list << "/show situational";
+      word_list << "/show rare";
+      word_list << "/show changed";
+      word_list << "/show locked";
+      word_list << "/show rulesetdir";
+      word_list << "/wall <message>";
+      word_list << "/connectmsg <message>";
+      word_list << "/vote yes|no|abstain [vote number]";
+      word_list << "/debug diplomacy <player>";
+      word_list << "/debug ferries";
+      word_list << "/debug tech <player>";
+      word_list << "/debug city <x> <y>";
+      word_list << "/debug units <x> <y>";
+      word_list << "/debug unit <id>";
+      word_list << "/debug timing";
+      word_list << "/debug info";
+      word_list << "/set <option-name> <value>";
+      word_list << "/team <player> <team>";
+      word_list << "/rulesetdir <directory>";
+      word_list << "/metamessage <meta-line>";
+      word_list << "/metapatches <meta-line>";
+      word_list << "/metaconnection up|down|?";
+      word_list << "/metaserver <address>";
+      word_list << "/aitoggle <player-name>";
+      word_list << "/take <player-name>";
+      word_list << "/observe <player-name>";
+      word_list << "/detach <connection-name>";
+      word_list << "/create <player-name> [ai type]";
+      word_list << "/away";
+      word_list << "/handicapped <player-name>";
+      word_list << "/novice <player-name>";
+      word_list << "/easy <player-name>";
+      word_list << "/normal <player-name>";
+      word_list << "/hard <player-name>";
+      word_list << "/cheating <player-name>";
+      word_list << "/experimental <player-name>";
+      word_list << "/cmdlevel none|info|basic|ctrl|admin|hack";
+      word_list << "/first";
+      word_list << "/timeoutshow";
+      word_list << "/timeoutset <time>";
+      word_list << "/timeoutadd <time>";
+      word_list << "/timeoutincrease <turn> <turninc> <value> <valuemult>";
+      word_list << "/cancelvote <vote number>";
+      word_list << "/ignore [type=]<pattern>";
+      word_list << "/unignore <range>";
+      word_list << "/playercolor <player-name> <color>";
+      word_list << "/playernation <player-name> [nation] [is-male] [leader] "
+                   "[style]";
+      word_list << "/endgame";
+      word_list << "/surrender";
+      word_list << "/remove <player-name>";
+      word_list << "/save <file-name>";
+      word_list << "/scensave <file-name>";
+      word_list << "/load <file-name>";
+      word_list << "/read <file-name>";
+      word_list << "/write <file-name>";
+      word_list << "/reset game|ruleset|script|default";
+      word_list << "/default <option name>";
+      word_list << "/lua cmd <script line>";
+      word_list << "/lua unsafe-cmd <script line>";
+      word_list << "/lua file <script file>";
+      word_list << "/lua unsafe-file <script file>";
+      word_list << "/kick <user>";
+      word_list << "/delegate to <username>";
+      word_list << "/delegate cancel";
+      word_list << "/delegate take <player-name>";
+      word_list << "/delegate restore";
+      word_list << "/delegate show <player-name>";
+      word_list << "/aicmd <player> <command>";
+      word_list << "/fcdb lua <script>";
+      word_list << "/mapimg define <mapdef>";
+      word_list << "/mapimg show <id>|all";
+      word_list << "/mapimg create <id>|all";
+      word_list << "/mapimg delete <id>|all";
+      word_list << "/mapimg colortest";
+      word_list << "/rfcstyle";
+      word_list << "/serverid";
     }
   }
   conn_list_iterate_end;
@@ -385,7 +577,7 @@ void chat_widget::set_chat_visible(bool visible)
 }
 
 /**
- * Shows the chat and ensures the chat line has focus
+   Shows the chat and ensures the chat line has focus
  */
 void chat_widget::take_focus()
 {
