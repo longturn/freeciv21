@@ -370,7 +370,7 @@ void government_change(struct player *pplayer, struct government *gov,
           100 - pplayer->economic.science - pplayer->economic.tax;
 
       notify_player(pplayer, nullptr, E_REVOLT_DONE, ftc_server,
-                    _("The tax rates for the %s are changed from "
+                    _("The national budget for the %s are changed from "
                       "%3d%%/%3d%%/%3d%% (tax/luxury/science) to "
                       "%3d%%/%3d%%/%3d%%."),
                     nation_plural_for_player(pplayer), save_tax, save_luxury,

@@ -73,7 +73,7 @@ pageGame::pageGame(QWidget *parent)
                               top_bar_show_map);
   sw_map->setIcon(fcIcons::instance()->getIcon(QStringLiteral("view")));
 
-  sw_tax = new tax_rates_widget();
+  sw_tax = new national_budget_widget();
   connect(sw_tax, &QAbstractButton::clicked, top_bar_rates_wdg);
 
   sw_indicators = new indicators_widget();

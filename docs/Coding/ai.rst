@@ -235,7 +235,7 @@ Variable          Result
 ``H_DIPLOMAT``    Cannot build offensive :unit:`Diplomats`.
 ``H_LIMITEDHUTS`` Can get only 25 gold and :unit:`Barbarians` from Huts.
 ``H_DEFENSIVE``   Build defensive buildings without calculating need.
-``H_RATES``       Cannot set its tax rates beyond government limits.
+``H_RATES``       Cannot set its national budget rates beyond government limits.
 ``H_TARGETS``     Cannot target anything it does not know exists.
 ``H_HUTS``        Does not know which unseen tiles have Huts on them.
 ``H_FOG``         Cannot see through fog of War.

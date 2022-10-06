@@ -1040,7 +1040,7 @@ const QString get_info_label_text_popup()
                    player_get_expected_income(client.conn.playing)))
            + qendl();
     // TRANS: Gold, luxury, and science rates are in percentage values.
-    str += QString(_("Tax rates: Gold:%1% Luxury:%2% Science:%3%"))
+    str += QString(_("National budget: Gold:%1% Luxury:%2% Science:%3%"))
                .arg(QString::number(client.conn.playing->economic.tax),
                     QString::number(client.conn.playing->economic.luxury),
                     QString::number(client.conn.playing->economic.science))

@@ -903,26 +903,24 @@ The :guilabel:`Civilization` menu is used to gain access to many functions of yo
 pages for units, cities, nations, etc; change the form of government and see how you are doing compared to
 your opponents with the demographics report. It has the following options:
 
-Tax Rates
+National Budget
     Selecting this menu item will bring up a dialog box allowing you to set the rate in percentage points for
-    gold (taxes), science (bulbs), and luxury (goods). This is the same as clicking on the `Tax Rates View`_
-    button on the `Top Function Bar`_. :numref:`Tax Rates Dialog` dialog below, shows a sample screenshot.
+    gold (taxes), science (bulbs), and luxury (goods). This is the same as clicking on the `National Budget View`_
+    button on the `Top Function Bar`_. :numref:`National Budget Dialog` dialog below, shows a sample screenshot.
     In this example, the player's nation is in Democracy, has set gold to 40%, science to 40%, and luxury to
     20%.
 
-.. _Tax Rates Dialog:
+.. _National Budget Dialog:
 .. figure:: /_static/images/gui-elements/tax-rates.png
   :scale: 65%
   :align: center
-  :alt: Freeciv21 Tax Rates dialog
+  :alt: Freeciv21 National Budget dialog
   :figclass: align-center
 
-  Tax Rates Dialog
+  National Budget Dialog
 
 
-.. note:: The phrase "tax rates" can be a bit misleading as there is only one taxable item and that is the
-  rate for gold collection. Think of this feature of the game more like a "national budget". In Freeciv21,
-  the national budget is simplified into three segments: gold collection, scientific output, and luxury goods.
+.. note:: In Freeciv21 the national budget is simplified into three segments: gold collection, scientific output, and luxury goods.
 
 Government
     Depending on your technological progress through the game, you may be able to select a different form
@@ -1039,7 +1037,7 @@ sections, from left to right.
 * `Nations and Diplomacy View`_
 * `Research View`_
 * `Economics View`_
-* `Tax Rates View`_
+* `National Budget View`_
 * `National Status View`_
 * `Messages`_
 
@@ -1061,7 +1059,7 @@ is shown in :numref:`Map View Button` below. :numref:`Client Overview` above, ha
 
 If you hover your mouse over the :guilabel:`Map View` button, a pop up widget will appear and give you
 information about your nation. The pop up widget shows: Nationality, Total Population, Year (Turn Number),
-Gold (Surplus/Deficit), and Tax Rates.
+Gold (Surplus/Deficit), and National Budget.
 
 To move around the map canvas, you can right-click in the main map area and the canvas will move. The further
 from the center of the screen, the faster the map canvas will move per mouse click.
@@ -1207,7 +1205,7 @@ intelligence at the bottom of the page. :numref:`Nations Intelligence` gives an 
 
 
 On the left you will see the name of the Nation, The name (username) of the Ruler, the current form of
-Government, the Capital city, how much gold they have in the bank, the tax rates, research target, and culture
+Government, the Capital city, how much gold they have in the bank, the national budget, research target, and culture
 score.
 
 .. note:: The Capital City will show as ``unknown`` if you have not seen the city on the `Map View`_. If it is
@@ -1389,24 +1387,24 @@ you what was sold where.
 .. note:: You can only sell one city improvement at at time per turn, so you might not be able to do all the
   things you want every turn.
 
-Tax Rates View
-^^^^^^^^^^^^^^
+National Budget View
+^^^^^^^^^^^^^^^
 
-The :guilabel:`Tax Rates View` on the `Top Function Bar`_ shows what percentage of gold, science, and luxury
-goods your nation is set at. :numref:`Tax Rates View Button` shows an example of the
-:guilabel:`Tax Rates View` button.
+The :guilabel:`National Budget View` on the `Top Function Bar`_ shows what percentage of gold, science, and luxury
+goods your nation is set at. :numref:`National Budget View Button` shows an example of the
+:guilabel:`National Budget View` button.
 
-.. _Tax Rates View Button:
+.. _National Budget View Button:
 .. figure:: /_static/images/gui-elements/top-bar-tax-rates.png
   :align: center
-  :alt: Freeciv21 Tax Rates view
+  :alt: Freeciv21 National Budget view
   :figclass: align-center
 
-  Tax Rates View Button
+  National Budget View Button
 
 
-Clicking on the :guilabel:`Tax Rates View` will bring up the :guilabel:`Tax Rates` dialog as shown in
-:numref:`Tax Rates Dialog` in the `Civilization Menu`_ section.
+Clicking on the :guilabel:`National Budget View` will bring up the :guilabel:`National Budget` dialog as shown in
+:numref:`National Budget Dialog` in the `Civilization Menu`_ section.
 
 National Status View
 ^^^^^^^^^^^^^^^^^^^^
@@ -1427,9 +1425,9 @@ icons will change depending on the rate and current status.
 
 If you hover your mouse over the :guilabel:`National Status View`, a pop up widget will appear and give you
 information about your nation's status. The pop up widget shows: Population, Year, Turn Number, Total Gold,
-Net Income, Tax Rates, Research along with progress, Bulbs per Turn, Culture Score, Global Warming Change,
+Net Income, National Budget, Research along with progress, Bulbs per Turn, Culture Score, Global Warming Change,
 Nuclear Winter Chance, Current form of Government. Some of this information is a duplicate of what is shown on
-the `Map View`_, `Tax Rates View`_, and `Research View`_. The values for Nuclear Winter and Global Warming
+the `Map View`_, `National Budget View`_, and `Research View`_. The values for Nuclear Winter and Global Warming
 chance give a good indication of what the icon looks like.
 
 Messages
@@ -1697,7 +1695,7 @@ and Wonders.
 Overall happiness of the citizens in your cities depends heavily on all of these factors. Certain forms of
 government have varying degrees of empire size penalties and as your empire grows you will have to deal with
 the negative consequences of managing a large empire and the unhappiness it creates. The amount of luxury
-goods you are producing as part of your `Tax Rates View`_ will aid this problem. Certain city improvements can
+goods you are producing as part of your `National Budget View`_ will aid this problem. Certain city improvements can
 improve happiness, as well as units in the city (martial law), along with wonders. If units are in the field
 in battle against your enemies, they can cause unhappiness. Hovering your mouse over the appropriate row will
 give you more information about it.

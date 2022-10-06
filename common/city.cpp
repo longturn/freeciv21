@@ -2148,7 +2148,7 @@ void add_tax_income(const struct player *pplayer, int trade, int *output)
   const int SCIENCE = 0, TAX = 1, LUXURY = 2;
   int rates[3], result[3];
 
-  if (game.info.changable_tax) {
+  if (game.info.changable_budget) {
     rates[SCIENCE] = pplayer->economic.science;
     rates[LUXURY] = pplayer->economic.luxury;
     rates[TAX] = 100 - rates[SCIENCE] - rates[LUXURY];

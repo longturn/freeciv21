@@ -114,7 +114,7 @@ unit_hud_selector {
   border: 2px solid #0000AA;
 }
 
-unit_hud_selector, tax_rates_dialog QPushButton {
+unit_hud_selector, national_budget_dialog QPushButton {
   color: #FFFFFF;
   background: black;
   border: 1px solid #6a6a00;
@@ -128,7 +128,7 @@ qfc_dialog::title {
     background-color: black;
 }
 
-unit_hud_selector, tax_rates_dialog QPushButton:hover {
+unit_hud_selector, national_budget_dialog QPushButton:hover {
   color: white;
   background: black;
   border: 2px solid #fbff00;
@@ -931,7 +931,7 @@ hud_unit_combat {
   alternate-background-color: #0000AA;
 }
 
-tax_rates_dialog {
+national_budget_dialog {
   color: white;
   background-color: #282828;
   border: 1px solid #d8d800;

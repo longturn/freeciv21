@@ -2272,7 +2272,7 @@ The actions available to Diplomats in a city are:\
 "), _("\
  - \"Establish Embassy\": This action always succeeds, and gives\
  permanent contact with the city's owner, as well as intelligence\
- on their tax rates and technology. Each player you have an embassy\
+ on their national budget and technology. Each player you have an embassy\
  with that knows a technology reduces that technology's research\
  cost to you.\
 "), _("\
@@ -2499,7 +2499,7 @@ Explorers can also perform some actions in another player's city,\
 "), _("\
  - \"Establish Embassy\": This action always succeeds, and gives\
  permanent contact with the city's owner, as well as intelligence\
- on their tax rates and technology. Each player you have an embassy\
+ on their national budget and technology. Each player you have an embassy\
  with that knows a technology reduces that technology's research\
  cost to you.\
 "), _("\

@@ -2153,7 +2153,7 @@ The actions available to Diplomats in a city are:\
 "), _("\
  - \"Establish Embassy\": This action always succeeds, and gives\
  permanent contact with the city's owner, as well as intelligence\
- on their tax rates and technology.\
+ on their national budget and technology.\
 "), _("\
  - \"Investigate City\": Your unit attempts to report detailed\
  information about the city: its status, what buildings and units are\

@@ -220,14 +220,14 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
 
   struct cm_parameter cmp;
 
-  if (!game.info.changable_tax) {
-    return; // This ruleset does not support changing tax rates.
+  if (!game.info.changable_budget) {
+    return; // This ruleset does not support changing national budget.
   }
 
   maxrate = CLIP(34, maxrate, 100);
 
   if (government_of_player(pplayer) == game.government_during_revolution) {
-    return; // This government does not support changing tax rates.
+    return; // This government does not support changing national budget.
   }
 
   taxtimer = timer_new(TIMER_CPU, TIMER_DEBUG);
@@ -659,7 +659,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
     city_list_iterate(pplayer->cities, pcity)
     {
       /* KLUDGE: Must refresh to restore the original values which
-       * were clobbered in cm_query_result(), after the tax rates
+       * were clobbered in cm_query_result(), after the national budget
        * were changed. */
       city_refresh_from_main_map(pcity, nullptr);
     }

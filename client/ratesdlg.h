@@ -51,13 +51,13 @@ protected:
 };
 
 /**************************************************************************
- * Dialog used to change tax rates
+ * Dialog used to change national budget
  */
-class tax_rates_dialog : public qfc_dialog {
+class national_budget_dialog : public qfc_dialog {
   Q_OBJECT
 
 public:
-  tax_rates_dialog(QWidget *parent = 0);
+  national_budget_dialog(QWidget *parent = 0);
 
 private:
   fc_double_edge *fcde;

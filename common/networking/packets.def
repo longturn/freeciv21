@@ -488,7 +488,7 @@ PACKET_GAME_INFO = 16; sc, is-info
   UINT16 history_interest_pml;
   /* size limit for cities before they can celebrate */
   UINT8 celebratesize;
-  BOOL changable_tax;
+  BOOL changable_budget;
   UINT8 pop_report_zeroes;
   BOOL citizen_nationality;
   UINT16 citizen_convert_speed;

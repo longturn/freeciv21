@@ -86,7 +86,7 @@ will probably want to learn a new form of government. You start the game in Desp
 government type, start a revolution (
 :menuselection:`Civilization --> Government --> Revolution`) and change over to it. Cities operate much better
 under Republic than they do under Despotism, but note that it is much harder to keep military units outside of
-city limits under a Republic. Also, do not forget to recheck your tax rates after you have changed
+city limits under a Republic. Also, do not forget to recheck your national budget after you have changed
 governments, as the maximums vary for each type.
 
 Depending on the amount of fresh water you have available, you might need to make a push for
