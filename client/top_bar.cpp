@@ -44,7 +44,7 @@
 /**
  * Constructor
  */
-national_budget_widget::tax_rates_widget()
+national_budget_widget::national_budget_widget()
 {
   setToolButtonStyle(Qt::ToolButtonIconOnly);
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
