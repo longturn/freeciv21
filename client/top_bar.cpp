@@ -44,7 +44,7 @@
 /**
  * Constructor
  */
-tax_rates_widget::tax_rates_widget()
+national_budget_widget::tax_rates_widget()
 {
   setToolButtonStyle(Qt::ToolButtonIconOnly);
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -53,12 +53,12 @@ tax_rates_widget::tax_rates_widget()
 /**
  * Destructor
  */
-tax_rates_widget::~tax_rates_widget() {}
+national_budget_widget::~national_budget_widget() {}
 
 /**
  * Size hint
  */
-QSize tax_rates_widget::sizeHint() const
+QSize national_budget_widget::sizeHint() const
 {
   if (client_is_global_observer()) {
     // Nothing to show
@@ -83,7 +83,7 @@ QSize tax_rates_widget::sizeHint() const
 /**
  * Renders the national budget widget
  */
-void tax_rates_widget::paintEvent(QPaintEvent *event)
+void national_budget_widget::paintEvent(QPaintEvent *event)
 {
   if (client_is_global_observer()) {
     // Nothing to show
