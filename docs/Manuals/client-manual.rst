@@ -1388,7 +1388,7 @@ you what was sold where.
   things you want every turn.
 
 National Budget View
-^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
 
 The :guilabel:`National Budget View` on the `Top Function Bar`_ shows what percentage of gold, science, and luxury
 goods your nation is set at. :numref:`National Budget View Button` shows an example of the
