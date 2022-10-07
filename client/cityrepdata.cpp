@@ -940,16 +940,16 @@ void init_city_report_game_data()
 }
 
 /**
-   The following several functions allow intelligent sorting city report
-   fields by column.  This doesn't necessarily do the right thing, but
-   it's better than sorting alphabetically.
+  The following several functions allow intelligent sorting city report
+  fields by column.  This doesn't necessarily do the right thing, but
+  it's better than sorting alphabetically.
 
-   The GUI gives us two values to compare (as strings).  We try to split
-   them into an array of numeric and string fields, then we compare
-   lexicographically.  Two numeric fields are compared in the obvious
-   way, two character fields are compared alphabetically.  Arbitrarily, a
-   numeric field is sorted before a character field (for "justification"
-   note that numbers are before letters in the ASCII table).
+  The GUI gives us two values to compare (as strings).  We try to split
+  them into an array of numeric and string fields, then we compare
+  lexicographically.  Two numeric fields are compared in the obvious
+  way, two character fields are compared alphabetically.  Arbitrarily, a
+  numeric field is sorted before a character field (for "justification"
+  note that numbers are before letters in the ASCII table).
  */
 
 /* A datum is one short string, or one number.
