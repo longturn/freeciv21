@@ -103,12 +103,12 @@ if (FREECIV_ENABLE_CLIENT)
 
   # Misc
   install(
-    DIRECTORY buildings
+    DIRECTORY tilesets/buildings
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
     COMPONENT freeciv21
     FILES_MATCHING PATTERN *.png)
   install(
-    DIRECTORY flags
+    DIRECTORY tilesets/flags
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
     COMPONENT freeciv21
     FILES_MATCHING PATTERN *.png)
@@ -128,7 +128,12 @@ if (FREECIV_ENABLE_CLIENT)
     COMPONENT freeciv21
     FILES_MATCHING PATTERN *.jpg PATTERN *.png PATTERN *.qss PATTERN *.svg PATTERN *.license)
   install(
-    DIRECTORY wonders
+    DIRECTORY tilesets/wonders
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
+    COMPONENT freeciv21
+    FILES_MATCHING PATTERN *.png)
+  install(
+    DIRECTORY tilesets/units
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
     COMPONENT freeciv21
     FILES_MATCHING PATTERN *.png)
