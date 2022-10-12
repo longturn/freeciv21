@@ -181,11 +181,11 @@ if(EMSCRIPTEN)
                       "-sEXPORTED_RUNTIME_METHODS=['UTF16ToString','stringToUTF16','callMain','printErr']"
                       --bind
                       -sUSE_SDL_MIXER=2
-                      "--preload-file=${CMAKE_SOURCE_DIR}/data/flags@data/flags"
+                      "--preload-file=${CMAKE_SOURCE_DIR}/data/tilesets/flags@data/tilesets/flags"
                       "--preload-file=${CMAKE_SOURCE_DIR}/data/helpdata.txt@data/helpdata.txt"
                       "--preload-file=${CMAKE_SOURCE_DIR}/data/misc@data/misc"
-                      "--preload-file=${CMAKE_SOURCE_DIR}/data/buildings@data/buildings"
-                      "--preload-file=${CMAKE_SOURCE_DIR}/data/wonders@data/wonders"
+                      "--preload-file=${CMAKE_SOURCE_DIR}/data/tilesets/buildings@data/tilesets/buildings"
+                      "--preload-file=${CMAKE_SOURCE_DIR}/data/tilesets/wonders@data/tilesets/wonders"
                       "--preload-file=${CMAKE_SOURCE_DIR}/data/hexemplio.tilespec@data/hexemplio.tilespec"
                       "--preload-file=${CMAKE_SOURCE_DIR}/data/hexemplio@data/hexemplio"
                       "--preload-file=${CMAKE_SOURCE_DIR}/data/amplio2.tilespec@data/amplio2.tilespec"
