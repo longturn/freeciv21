@@ -101,17 +101,9 @@ if (FREECIV_ENABLE_CLIENT)
   add_tileset(NAME isotrident)
   add_tileset(NAME trident)
 
+  add_subdirectory(tilesets)
+
   # Misc
-  install(
-    DIRECTORY tilesets/buildings
-    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/tilesets"
-    COMPONENT freeciv21
-    FILES_MATCHING PATTERN *.png)
-  install(
-    DIRECTORY tilesets/flags
-    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/tilesets"
-    COMPONENT freeciv21
-    FILES_MATCHING PATTERN *.png)
   install(
     DIRECTORY misc
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
@@ -127,16 +119,6 @@ if (FREECIV_ENABLE_CLIENT)
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/themes"
     COMPONENT freeciv21
     FILES_MATCHING PATTERN *.jpg PATTERN *.png PATTERN *.qss PATTERN *.svg PATTERN *.license)
-  install(
-    DIRECTORY tilesets/wonders
-    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/tilesets"
-    COMPONENT freeciv21
-    FILES_MATCHING PATTERN *.png)
-  install(
-    DIRECTORY tilesets/units
-    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/tilesets"
-    COMPONENT freeciv21
-    FILES_MATCHING PATTERN *.png)
   install(
     FILES stdsounds.soundspec
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
