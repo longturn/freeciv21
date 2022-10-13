@@ -90,7 +90,6 @@ the :code:`[tilespec]` section. Currently options include:
 * :code:`name` : The name of the tileset.
 * :code:`type` : General type of tileset, different types have quite different format. Supported types are
   "overhead" and "isometric".
-* :code:`main_intro_file` : Graphics file for the intro graphics.
 * :code:`unit_default_orientation` : Specifies a direction to use for unit types in worklists etc.
   See "Unit Sprites" below.
 
