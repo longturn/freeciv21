@@ -151,6 +151,7 @@ files =
   "misc/governments.spec",
   "misc/specialists.spec",
   "misc/buildings.spec",
+  "misc/wonders.spec",
   "misc/flags.spec",
   "misc/shields.spec",
   "misc/cursors.spec",

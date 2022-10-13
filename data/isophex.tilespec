@@ -150,6 +150,7 @@ files =
   "misc/governments.spec",
   "misc/specialists.spec",
   "misc/buildings.spec",
+  "misc/wonders.spec",
   "trident/units.spec",
   "trident/extra_units.spec",
   "isotrident/unitextras.spec",
