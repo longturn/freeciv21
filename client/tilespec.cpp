@@ -320,8 +320,6 @@ struct tileset {
 
   int max_upkeep_height;
 
-  char *main_intro_filename;
-
   enum direction8 unit_default_orientation;
 
   enum fog_style fogstyle;
@@ -863,8 +861,6 @@ static void tileset_free_toplevel(struct tileset *t)
 {
   int i;
 
-  delete[] t->main_intro_filename;
-
   if (t->preferred_themes) {
     for (i = 0; i < t->num_preferred_themes; i++) {
       delete[] t->preferred_themes[i];
@@ -1397,36 +1393,6 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
 }
 
 /**
-   Returns the correct name of the gfx file (with path and extension)
-   Must be free'd when no longer used
- */
-static char *tilespec_gfx_filename(struct tileset *t,
-                                   const char *gfx_filename)
-{
-  auto supported = QImageReader::supportedImageFormats();
-  supported.prepend("png");
-  for (auto gfx_current_fileext : supported) {
-    QString real_full_name;
-    QString full_name = QStringLiteral("%1.%2").arg(
-        gfx_filename, gfx_current_fileext.data());
-
-    real_full_name =
-        fileinfoname(get_data_dirs(), qUtf8Printable(full_name));
-
-    if (!real_full_name.isEmpty()) {
-      return fc_strdup(qUtf8Printable(real_full_name));
-    }
-  }
-
-  tileset_error(
-      t, LOG_FATAL,
-      _("Couldn't find a supported gfx file extension for \"%s\"."),
-      gfx_filename);
-
-  return nullptr;
-}
-
-/**
    Determine the sprite_type string.
  */
 static freeciv::layer_terrain::sprite_type
@@ -1835,10 +1801,6 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
       t->unit_default_orientation = dir;
     }
   }
-
-  c = secfile_lookup_str(file, "tilespec.main_intro_file");
-  t->main_intro_filename = tilespec_gfx_filename(t, c);
-  log_debug("intro file %s", t->main_intro_filename);
 
   // Layer order
   num_layers = 0;
