@@ -849,8 +849,6 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
   int i;
   diplo_dlg *dd;
   QPainter p;
-  const QPixmap *pix;
-  QPixmap *pix2, *pix3;
   QWidget *w;
   QWidget *fw;
 
@@ -862,25 +860,6 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
     king()->switch_page(PAGE_GAME);
   }
 
-  pix2 = new QPixmap();
-  pix = get_nation_flag_sprite(
-      tileset, nation_of_player(player_by_number(counterpart)));
-  *pix2 = pix->scaledToWidth(queen()->sw_diplo->width() - 2,
-                             Qt::SmoothTransformation);
-  if (pix2->height() > queen()->sw_diplo->height()) {
-    *pix2 = pix->scaledToHeight(queen()->sw_diplo->height(),
-                                Qt::SmoothTransformation);
-  }
-  pix3 =
-      new QPixmap(queen()->sw_diplo->width(), queen()->sw_diplo->height());
-  pix3->fill(Qt::transparent);
-  p.begin(pix3);
-  int hmid = (queen()->sw_diplo->height() - pix2->height()) / 2;
-  hmid = qMax(1, hmid);
-  p.drawPixmap(1, hmid, *pix2);
-  p.end();
-  delete pix2;
-  delete pix3;
   if (!queen()->isRepoDlgOpen(QStringLiteral("DDI"))) {
     dd = new diplo_dlg(counterpart, initiated_from);
 
