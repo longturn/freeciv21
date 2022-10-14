@@ -1093,6 +1093,56 @@ static bool rscompat_vision_effect_cb(struct effect *peffect, void *data)
 }
 
 /**
+ * Adds effects to reproduce the traditional visibility of intelligence
+ * depending on the diplomatic status (EFT_NATION_INTELLIGENCE).
+ */
+static void rscompat_migrate_eft_nation_intelligence()
+{
+  for (int i = 0; i < NI_COUNT; ++i) {
+    switch (static_cast<national_intelligence>(i)) {
+      // Used to require being on the same team, all info gets shared with
+      // the team now.
+    case NI_HISTORY:
+    case NI_INFRAPOINTS:
+    case NI_MOOD:
+    case NI_COUNT: // Never happens
+      break;
+      // Used to be always visible
+    case NI_WONDERS: {
+      auto effect = effect_new(EFT_NATION_INTELLIGENCE, 1, nullptr);
+      effect_req_append(effect, req_from_values(VUT_NINTEL, REQ_RANGE_PLAYER,
+                                                false, true, false, i));
+    } break;
+      // Used to be visible with simple contact
+    case NI_DIPLOMACY:
+    case NI_GOLD:
+    case NI_GOVERNMENT:
+    case NI_SCORE: {
+      auto effect = effect_new(EFT_NATION_INTELLIGENCE, 1, nullptr);
+      effect_req_append(effect, req_from_values(VUT_NINTEL, REQ_RANGE_PLAYER,
+                                                false, true, false, i));
+      effect_req_append(effect,
+                        req_from_values(VUT_DIPLREL, REQ_RANGE_LOCAL, false,
+                                        true, false, DRO_HAS_CONTACT));
+    }
+      [[fallthrough]]; // Embassy gives contact
+      // Used to require an embassy
+    case NI_CULTURE:
+    case NI_MULTIPLIERS:
+    case NI_TAX_RATES:
+    case NI_TECHS: {
+      auto effect = effect_new(EFT_NATION_INTELLIGENCE, 1, nullptr);
+      effect_req_append(effect, req_from_values(VUT_NINTEL, REQ_RANGE_PLAYER,
+                                                false, true, false, i));
+      effect_req_append(effect,
+                        req_from_values(VUT_DIPLREL, REQ_RANGE_LOCAL, false,
+                                        true, false, DRO_HAS_EMBASSY));
+    } break;
+    }
+  }
+}
+
+/**
  * Handles compatibility with older versions when the new behavior is
  * tied to the presence of an optional ruleset capability.
  */
@@ -1178,6 +1228,11 @@ static void rscompat_optional_capabilities(rscompat_info *info)
     auto effect = effect_new(EFT_CITY_VISION_RADIUS_SQ, 2, nullptr);
     effect_req_append(effect, req_from_str("VisionLayer", "Local", false,
                                            false, false, "Main"));
+  }
+
+  if (!has_capability(CAP_EFT_NATION_INTELLIGENCE,
+                      info->cap_effects.data())) {
+    rscompat_migrate_eft_nation_intelligence();
   }
 }
 
