@@ -136,13 +136,13 @@ knowledge of Construction, and it costs more to build and maintain.\
 name		= _("Aqueduct, Lake")
 genus		= "Improvement"
 reqs	=
-    { 
+    {
 		"type", "name", "range"
     }
 graphic	= "b.aqueduct"
 graphic_alt	= "-"
 obsolete_by	=
-    { 
+    {
 	  "type", "name", "range", "present"
       "Terrain", "Lake", "Adjacent", FALSE
     }
@@ -174,7 +174,7 @@ are cheap to build and maintain.\
 name		= _("Aqueduct, River")
 genus		= "Improvement"
 reqs	=
-    { 
+    {
 		"type", "name", "range", "present"
     }
 graphic	= "b.aqueduct"
@@ -433,8 +433,8 @@ reqs	=
     { "type", "name", "range"
       "Tech", "Construction", "Player"
     }
-graphic	= "b.colosseum"
-graphic_alt	= "-"
+graphic	= "b.amphitheater"
+graphic_alt	= "b.colosseum"
 obsolete_by	=
     { "type", "name", "range"
     }
@@ -545,7 +545,7 @@ reqs	=
 graphic	= "b.harbour"
 graphic_alt	= "-"
 obsolete_by	=
-    { 
+    {
 	  "type", "name", "range", "present"
       "TerrainFlag", "Sea", "City", FALSE
     }
