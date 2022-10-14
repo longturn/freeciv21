@@ -171,12 +171,14 @@ struct player_ai {
 #define SPECENUM_VALUE14NAME N_("Provided Casus Belli")
 #define SPECENUM_VALUE15 DRO_FOREIGN
 #define SPECENUM_VALUE15NAME N_("Foreign")
+#define SPECENUM_VALUE16 DRO_HAS_CONTACT
+#define SPECENUM_VALUE16NAME N_("Has Contact")
 #define SPECENUM_COUNT DRO_LAST
 #include "specenum_gen.h"
 
 BV_DEFINE(bv_diplrel_all_reqs,
           // Reserve a location for each possible DiplRel requirement.
-          ((DRO_LAST - 1) * 2) * REQ_RANGE_COUNT);
+          ((DRO_LAST - 1) * 2) * REQ_RANGE_COUNT + 2);
 
 enum dipl_reason {
   DIPL_OK,
