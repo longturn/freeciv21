@@ -848,7 +848,6 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
 {
   int i;
   diplo_dlg *dd;
-  QPainter p;
   QWidget *w;
   QWidget *fw;
 
