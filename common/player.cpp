@@ -1415,7 +1415,7 @@ bool is_diplrel_between(const struct player *player1,
     return player_diplstate_get(player1, player2)->type == diplrel;
   }
 
-  switch (diplrel) {
+  switch (static_cast<diplrel_other>(diplrel)) {
   case DRO_GIVES_SHARED_VISION:
     return gives_shared_vision(player1, player2);
   case DRO_RECEIVES_SHARED_VISION:
@@ -1434,6 +1434,10 @@ bool is_diplrel_between(const struct player *player1,
     return 0 < player_diplstate_get(player2, player1)->has_reason_to_cancel;
   case DRO_FOREIGN:
     return player1 != player2;
+  case DRO_HAS_CONTACT:
+    return player_diplstate_get(player2, player1)->contact_turns_left > 0;
+  case DRO_LAST:
+    break;
   }
 
   fc_assert_msg(false, "diplrel_between(): invalid diplrel number %d.",
