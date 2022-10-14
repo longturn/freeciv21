@@ -9,6 +9,9 @@
  */
 
 #include "diplodlg.h"
+
+#include <limits>
+
 // Qt
 #include <QApplication>
 #include <QCloseEvent>
@@ -155,12 +158,12 @@ diplo_wdg::diplo_wdg(int counterpart, int initiated_from)
   gold_edit2 = new QSpinBox;
   gold_edit1->setMinimum(0);
   gold_edit2->setMinimum(0);
+  gold_edit1->setMaximum(std::numeric_limits<std::int32_t>::max());
+  gold_edit2->setMaximum(std::numeric_limits<std::int32_t>::max());
   gold_edit1->setFocusPolicy(Qt::ClickFocus);
   gold_edit2->setFocusPolicy(Qt::ClickFocus);
-  if (game.info.trading_gold) {
-    gold_edit2->setMaximum(player_by_number(player1)->economic.gold);
-    gold_edit1->setMaximum(player_by_number(player2)->economic.gold);
-  }
+  gold_edit1->setEnabled(game.info.trading_gold);
+  gold_edit2->setEnabled(game.info.trading_gold);
   connect(gold_edit1, qOverload<int>(&QSpinBox::valueChanged), this,
           &diplo_wdg::gold_changed1);
   connect(gold_edit2, qOverload<int>(&QSpinBox::valueChanged), this,
