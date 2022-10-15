@@ -13,12 +13,23 @@ artists = "
     (WT-en) SONORAMA at English Wikivoyage (Own work) [Public domain],
       via Wikimedia Commons:
       https://commons.wikimedia.org/wiki/File:Tibet_Potala_Palace.JPG
+
+    YD - https://ydstuff.wordpress.com/
+      merchant_tent
+
+    Wahazar
+      b.academy
+      b.amphitheater
+      b.hospital
+      b.workshop
 "
 
 [extra]
 sprites = {
   "tag", "file"
+  "b.academy", "tilesets/buildings/academy-small"
   "b.airport", "tilesets/buildings/airport-small"
+  "b.amphitheater", "tilesets/buildings/amphitheater-small"
   "b.aqueduct", "tilesets/buildings/aqueduct-small"
   "b.bank", "tilesets/buildings/bank-small"
   "b.barracks_i", "tilesets/buildings/barracks_i-small"
@@ -34,9 +45,11 @@ sprites = {
   "b.factory", "tilesets/buildings/factory-small"
   "b.granary", "tilesets/buildings/granary-small"
   "b.harbour", "tilesets/buildings/harbor-small"
+  "b.hospital", "tilesets/buildings/hospital"
   "b.hydro_plant", "tilesets/buildings/hydro_plant-small"
   "b.library", "tilesets/buildings/library-small"
-  "b.marketplace", "tilesets/buildings/marketplace-small"
+  "b.marketplace", "tilesets/buildings/merchant_tent-small"
+  "b.mercantile_exchange", "tilesets/buildings/marketplace-small"
   "b.mass_transit", "tilesets/buildings/mass_transit-small"
   "b.mfg_plant", "tilesets/buildings/mfg_plant-small"
   "b.nuclear_plant", "tilesets/buildings/nuclear_plant-small"
@@ -59,4 +72,5 @@ sprites = {
   "b.supermarket", "tilesets/buildings/supermarket-small"
   "b.temple", "tilesets/buildings/temple-small"
   "b.university", "tilesets/buildings/university-small"
+  "b.workshop", "tilesets/buildings/workshop-small"
 }
