@@ -469,7 +469,7 @@ void plr_widget::nation_selected(const QItemSelection &sl,
     res = _("(Unknown)");
     break;
   case A_UNSET:
-    if (global_observer || player_has_embassy(me, pplayer)) {
+    if (BV_ISSET(pplayer->client.visible, NI_TECHS)) {
       res = _("(none)");
     } else {
       res = _("(Unknown)");
@@ -482,23 +482,28 @@ void plr_widget::nation_selected(const QItemSelection &sl,
           + QString::number(research->client.researching_cost) + ")";
     break;
   }
-  if (global_observer || player_has_embassy(me, pplayer)) {
+  if (BV_ISSET(pplayer->client.visible, NI_TAX_RATES)) {
     etax = QString::number(pplayer->economic.tax) + "%";
     esci = QString::number(pplayer->economic.science) + "%";
     elux = QString::number(pplayer->economic.luxury) + "%";
-    cult = QString::number(pplayer->client.culture);
   } else {
     etax = _("(Unknown)");
     esci = _("(Unknown)");
     elux = _("(Unknown)");
+  }
+  if (BV_ISSET(pplayer->client.visible, NI_CULTURE)) {
+    cult = QString::number(pplayer->client.culture);
+  } else {
     cult = _("(Unknown)");
   }
-  if (global_observer || pplayer == me
-      || could_intel_with_player(me, pplayer)) {
+  if (BV_ISSET(pplayer->client.visible, NI_GOLD)) {
     egold = QString::number(pplayer->economic.gold);
-    egov = QString(government_name_for_player(pplayer));
   } else {
     egold = _("(Unknown)");
+  }
+  if (BV_ISSET(pplayer->client.visible, NI_GOVERNMENT)) {
+    egov = QString(government_name_for_player(pplayer));
+  } else {
     egov = _("(Unknown)");
   }
 
@@ -538,8 +543,7 @@ void plr_widget::nation_selected(const QItemSelection &sl,
         continue;
       }
       state = player_diplstate_get(pplayer, other);
-      if (static_cast<int>(state->type) == i
-          && (global_observer || could_intel_with_player(me, pplayer))) {
+      if (static_cast<int>(state->type) == i) {
         if (!added) {
           ally_str = ally_str + QStringLiteral("<b>")
                      + QString(diplstate_type_translated_name(
@@ -564,61 +568,58 @@ void plr_widget::nation_selected(const QItemSelection &sl,
     }
   }
   my_research = research_get(me);
-  if (!global_observer) {
-    if (player_has_embassy(me, pplayer) && me != pplayer) {
-      a = 0;
-      b = 0;
-      techs_known = QString(_("<b>Techs unknown by %1:</b>"))
-                        .arg(QString(nation_plural_for_player(pplayer))
-                                 .toHtmlEscaped());
-      techs_unknown = QString(_("<b>Techs unknown by you :</b>"));
+  if (!global_observer && BV_ISSET(pplayer->client.visible, NI_TECHS)) {
+    a = 0;
+    b = 0;
+    techs_known =
+        QString(_("<b>Techs unknown by %1:</b>"))
+            .arg(QString(nation_plural_for_player(pplayer)).toHtmlEscaped());
+    techs_unknown = QString(_("<b>Techs unknown by you :</b>"));
 
-      advance_iterate(A_FIRST, padvance)
-      {
-        tech_id = advance_number(padvance);
-        if (research_invention_state(my_research, tech_id) == TECH_KNOWN
-            && (research_invention_state(research, tech_id) != TECH_KNOWN)) {
-          a++;
-          sorted_list_a << research_advance_name_translation(research,
-                                                             tech_id);
-        }
-        if (research_invention_state(my_research, tech_id) != TECH_KNOWN
-            && (research_invention_state(research, tech_id) == TECH_KNOWN)) {
-          b++;
-          sorted_list_b << research_advance_name_translation(research,
-                                                             tech_id);
-        }
+    advance_iterate(A_FIRST, padvance)
+    {
+      tech_id = advance_number(padvance);
+      if (research_invention_state(my_research, tech_id) == TECH_KNOWN
+          && (research_invention_state(research, tech_id) != TECH_KNOWN)) {
+        a++;
+        sorted_list_a << research_advance_name_translation(research,
+                                                           tech_id);
       }
-      advance_iterate_end;
-      sorted_list_a.sort(Qt::CaseInsensitive);
-      sorted_list_b.sort(Qt::CaseInsensitive);
-      for (auto const &res : qAsConst(sorted_list_a)) {
-        techs_known = techs_known + QStringLiteral("<i>")
+      if (research_invention_state(my_research, tech_id) != TECH_KNOWN
+          && (research_invention_state(research, tech_id) == TECH_KNOWN)) {
+        b++;
+        sorted_list_b << research_advance_name_translation(research,
+                                                           tech_id);
+      }
+    }
+    advance_iterate_end;
+    sorted_list_a.sort(Qt::CaseInsensitive);
+    sorted_list_b.sort(Qt::CaseInsensitive);
+    for (auto const &res : qAsConst(sorted_list_a)) {
+      techs_known = techs_known + QStringLiteral("<i>") + res.toHtmlEscaped()
+                    + "," + QStringLiteral("</i>") + sp;
+    }
+    for (auto const &res : qAsConst(sorted_list_b)) {
+      techs_unknown = techs_unknown + QStringLiteral("<i>")
                       + res.toHtmlEscaped() + "," + QStringLiteral("</i>")
                       + sp;
-      }
-      for (auto const &res : qAsConst(sorted_list_b)) {
-        techs_unknown = techs_unknown + QStringLiteral("<i>")
-                        + res.toHtmlEscaped() + "," + QStringLiteral("</i>")
-                        + sp;
-      }
-      if (a == 0) {
-        techs_known = techs_known + QStringLiteral("<i>") + sp
-                      + QString(Q_("?tech:None")) + QStringLiteral("</i>");
-      } else {
-        techs_known.replace(techs_known.lastIndexOf(QLatin1String(",")), 1,
-                            QStringLiteral("."));
-      }
-      if (b == 0) {
-        techs_unknown = techs_unknown + QStringLiteral("<i>") + sp
-                        + QString(Q_("?tech:None")) + QStringLiteral("</i>");
-      } else {
-        techs_unknown.replace(techs_unknown.lastIndexOf(QLatin1String(",")),
-                              1, QStringLiteral("."));
-      }
-      tech_str = techs_known + nl + techs_unknown;
     }
-  } else {
+    if (a == 0) {
+      techs_known = techs_known + QStringLiteral("<i>") + sp
+                    + QString(Q_("?tech:None")) + QStringLiteral("</i>");
+    } else {
+      techs_known.replace(techs_known.lastIndexOf(QLatin1String(",")), 1,
+                          QStringLiteral("."));
+    }
+    if (b == 0) {
+      techs_unknown = techs_unknown + QStringLiteral("<i>") + sp
+                      + QString(Q_("?tech:None")) + QStringLiteral("</i>");
+    } else {
+      techs_unknown.replace(techs_unknown.lastIndexOf(QLatin1String(",")), 1,
+                            QStringLiteral("."));
+    }
+    tech_str = techs_known + nl + techs_unknown;
+  } else if (global_observer) {
     tech_str =
         QString(_("<b>Techs known by %1:</b>"))
             .arg(QString(nation_plural_for_player(pplayer)).toHtmlEscaped());
@@ -638,37 +639,42 @@ void plr_widget::nation_selected(const QItemSelection &sl,
     }
   }
   // Wonder information
-  auto wonders = QStringList();
-  for (int i = 0; i < improvement_count(); ++i) {
-    if (pplayer->wonders[i] == WONDER_NOT_BUILT) {
-      continue;
-    }
+  if (BV_ISSET(pplayer->client.visible, NI_WONDERS)) {
+    auto wonders = QStringList();
+    for (int i = 0; i < improvement_count(); ++i) {
+      if (pplayer->wonders[i] == WONDER_NOT_BUILT) {
+        continue;
+      }
 
-    const auto improve = improvement_by_number(i);
-    const auto name =
-        QString(improvement_name_translation(improve)).toHtmlEscaped();
-    if (pplayer->wonders[i] == WONDER_LOST) {
-      // TRANS: %1 is a wonder name
-      wonders += QString(_("%1 (lost)")).arg(name);
-    } else if (const auto city = game_city_by_number(pplayer->wonders[i])) {
-      // TRANS: %1 is a wonder name, %2 is a city name
-      wonders += QString(_("%1 (in %2)"))
-                     .arg(name)
-                     .arg(QString(city_name_get(city)).toHtmlEscaped());
+      const auto improve = improvement_by_number(i);
+      const auto name =
+          QString(improvement_name_translation(improve)).toHtmlEscaped();
+      if (pplayer->wonders[i] == WONDER_LOST) {
+        // TRANS: %1 is a wonder name
+        wonders += QString(_("%1 (lost)")).arg(name);
+      } else if (const auto city =
+                     game_city_by_number(pplayer->wonders[i])) {
+        // TRANS: %1 is a wonder name, %2 is a city name
+        wonders += QString(_("%1 (in %2)"))
+                       .arg(name)
+                       .arg(QString(city_name_get(city)).toHtmlEscaped());
+      } else {
+        wonders += name;
+      }
+    }
+    if (!tech_str.isEmpty()) {
+      tech_str += nl;
+    }
+    // TRANS: Followed by a list of wonders the player knows another player
+    // has
+    tech_str += QString(_("<b>Known Wonders: </b>"));
+    if (wonders.isEmpty()) {
+      tech_str += QString(Q_("?wonder:None"));
     } else {
-      wonders += name;
+      tech_str += strvec_to_and_list(wonders.toVector());
     }
   }
-  if (!tech_str.isEmpty()) {
-    tech_str += nl;
-  }
-  // TRANS: Followed by a list of wonders the player knows another player has
-  tech_str += QString(_("<b>Known Wonders: </b>"));
-  if (wonders.isEmpty()) {
-    tech_str += QString(Q_("?wonder:None"));
-  } else {
-    tech_str += strvec_to_and_list(wonders.toVector());
-  }
+
   plr->update_report(false);
 }
 
