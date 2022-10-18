@@ -1,2 +1,2 @@
-42ada
-v3.0-beta.4
+bf415
+v3.0-beta.5
