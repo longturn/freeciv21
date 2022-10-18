@@ -1152,42 +1152,36 @@ static void package_player_info(struct player *plr,
                                 struct packet_player_info *packet,
                                 struct player *receiver, bool send_all)
 {
-  bool send_none = (server_state() < S_S_RUNNING);
-
-  // Teamed players always share their information -- it's in their best
-  // interest to communicate anyway.
-  if (receiver && players_on_same_team(plr, receiver)) {
-    send_all = true;
-  }
-
-  // Should we send intel of the given type?
-  auto visible = [&](national_intelligence nintel) {
-    if (send_none) {
-      return false;
-    }
-    if (send_all) {
-      return true;
-    }
+  if (server_state() < S_S_RUNNING || (!send_all && !receiver)) {
+    BV_CLR_ALL(packet->visible);
+  } else if (send_all || players_on_same_team(plr, receiver)) {
+    // Teamed players always share their information -- it's in their best
+    // interest to communicate anyway.
+    BV_SET_ALL(packet->visible);
+  } else {
+    BV_CLR_ALL(packet->visible);
 
     // Players on a team share the intelligence they gather -- it's in their
     // best interest to communicate anyway.
-    const auto team = team_members(plr->team);
-    player_list_iterate(team, team_mate)
-    {
-      if (get_player_intel_bonus(team_mate, plr, nintel,
-                                 EFT_NATION_INTELLIGENCE)
-          > 0) {
-        return true;
+    const auto team = team_members(receiver->team);
+    for (int i = 0; i < NI_COUNT; ++i) {
+      player_list_iterate(team, team_mate)
+      {
+        if (get_player_intel_bonus(team_mate, plr,
+                                   static_cast<national_intelligence>(i),
+                                   EFT_NATION_INTELLIGENCE)
+            > 0) {
+          BV_SET(packet->visible, i);
+          break;
+        }
       }
+      player_list_iterate_end;
     }
-    player_list_iterate_end;
-
-    return false;
-  };
+  }
 
   // multipliers
   packet->multip_count = multiplier_count();
-  if (visible(NI_MULTIPLIERS)) {
+  if (BV_ISSET(packet->visible, NI_MULTIPLIERS)) {
     multipliers_iterate(pmul)
     {
       packet->multiplier[multiplier_index(pmul)] =
@@ -1206,7 +1200,7 @@ static void package_player_info(struct player *plr,
   }
 
   // Wonder information
-  if (visible(NI_WONDERS)) {
+  if (BV_ISSET(packet->visible, NI_WONDERS)) {
     for (int i = 0; i < B_LAST; ++i) {
       // Lost, not built or doesn't exist (still need to fill the array)
       if (plr->wonders[i] <= 0 || i >= improvement_count()) {
@@ -1258,13 +1252,13 @@ static void package_player_info(struct player *plr,
   packet->color_changeable = player_color_changeable(plr, nullptr);
 
   // Only send score if we have contact
-  if (visible(NI_SCORE)) {
+  if (BV_ISSET(packet->visible, NI_SCORE)) {
     packet->score = plr->score.game;
   } else {
     packet->score = 0;
   }
 
-  if (visible(NI_GOLD)) {
+  if (BV_ISSET(packet->visible, NI_GOLD)) {
     packet->gold = plr->economic.gold;
   } else {
     packet->gold = 0;
@@ -1272,7 +1266,7 @@ static void package_player_info(struct player *plr,
 
   {
     const government *pgov, *ptargetgov;
-    if (visible(NI_GOVERNMENT)) {
+    if (BV_ISSET(packet->visible, NI_GOVERNMENT)) {
       pgov = government_of_player(plr);
       ptargetgov = plr->target_government;
       packet->revolution_finishes = plr->revolution_finishes;
@@ -1288,7 +1282,7 @@ static void package_player_info(struct player *plr,
 
   /* Send diplomatic status of the player to everyone they are in
    * contact with. */
-  if (visible(NI_DIPLOMACY)) {
+  if (BV_ISSET(packet->visible, NI_DIPLOMACY)) {
     memset(&packet->real_embassy, 0, sizeof(packet->real_embassy));
     players_iterate(pother)
     {
@@ -1304,12 +1298,12 @@ static void package_player_info(struct player *plr,
     }
 
     BV_CLR_ALL(packet->gives_shared_vision);
-    if (receiver && gives_shared_vision(plr, receiver)) {
-      BV_SET(packet->gives_shared_vision, player_index(receiver));
-    }
+  }
+  if (receiver && gives_shared_vision(plr, receiver)) {
+    BV_SET(packet->gives_shared_vision, player_index(receiver));
   }
 
-  if (visible(NI_TECHS)) {
+  if (BV_ISSET(packet->visible, NI_TECHS)) {
     packet->tech_upkeep = player_tech_upkeep(plr);
   } else {
     packet->tech_upkeep = 0;
@@ -1317,7 +1311,7 @@ static void package_player_info(struct player *plr,
 
   /* Send most civ info about the player only to players who have an
    * embassy. */
-  if (visible(NI_TAX_RATES)) {
+  if (BV_ISSET(packet->visible, NI_TAX_RATES)) {
     packet->tax = plr->economic.tax;
     packet->science = plr->economic.science;
     packet->luxury = plr->economic.luxury;
@@ -1327,25 +1321,25 @@ static void package_player_info(struct player *plr,
     packet->luxury = 0;
   }
 
-  if (visible(NI_CULTURE)) {
+  if (BV_ISSET(packet->visible, NI_CULTURE)) {
     packet->culture = player_culture(plr);
   } else {
     packet->culture = 0;
   }
 
-  if (visible(NI_MOOD)) {
+  if (BV_ISSET(packet->visible, NI_MOOD)) {
     packet->mood = player_mood(plr);
   } else {
     packet->mood = MOOD_COUNT;
   }
 
-  if (visible(NI_HISTORY)) {
+  if (BV_ISSET(packet->visible, NI_HISTORY)) {
     packet->history = plr->history;
   } else {
     packet->history = 0;
   }
 
-  if (visible(NI_INFRAPOINTS)) {
+  if (BV_ISSET(packet->visible, NI_INFRAPOINTS)) {
     packet->infrapoints = plr->economic.infra_points;
   } else {
     packet->infrapoints = 0;

@@ -29,6 +29,7 @@
 // common
 #include "achievements.h"
 #include "actions.h"
+#include "capability.h"
 #include "capstr.h"
 #include "citizens.h"
 #include "events.h"
@@ -2300,6 +2301,14 @@ void handle_player_info(const struct packet_player_info *pinfo)
      * redundant as the values are initialised with 0 due to fc_calloc(). */
     client_player_init(pplayer);
   }
+
+  // Information visibility
+  if (!has_capability("player-intel-visibility", client.conn.capability)) {
+    // Providing full backward compat here would be too much work. Let the
+    // client believe that it knows everything.
+    BV_SET_ALL(pplayer->client.visible);
+  }
+  pplayer->client.visible = pinfo->visible;
 
   // Team.
   tslot = team_slot_by_number(pinfo->team);
