@@ -290,12 +290,9 @@ static int cmp_score(const struct player *player1,
  */
 QString col_government(const struct player *them)
 {
-  const struct player *me = client_player();
-
-  //  'contact' gives the knowledge of other's government
-  if (me == them || client_is_global_observer()
-      || player_has_embassy(me, them)
-      || player_diplstate_get(me, them)->contact_turns_left > 0) {
+  if (!them || !them->is_alive) {
+    return _("-");
+  } else if (BV_ISSET(them->client.visible, NI_GOVERNMENT)) {
     return government_name_for_player(them);
   } else {
     return _("?");
@@ -317,15 +314,9 @@ static int cmp_culture(const struct player *player1,
  */
 QString get_culture_info(const struct player *them)
 {
-  const struct player *me = client_player();
-
-  // FIXME: Try to avoid this code duplication same code repeated in every
-  // column
   if (them == nullptr || !them->is_alive) {
     return _("-");
-  } else if (client_is_global_observer()
-             || (me != nullptr
-                 && (me == them || player_has_embassy(me, them)))) {
+  } else if (BV_ISSET(them->client.visible, NI_CULTURE)) {
     return QString::number(them->client.culture);
   } else {
     return _("?");
@@ -355,15 +346,9 @@ static int cmp_gold(const struct player *player1,
  */
 QString col_gold(const struct player *them)
 {
-  const struct player *me = client_player();
-
   if (them == nullptr || !them->is_alive) {
     return _("-");
-  } else if (client_is_global_observer()
-             || (me != nullptr
-                 && (me == them || player_has_embassy(me, them)
-                     || player_diplstate_get(me, them)->contact_turns_left
-                            > 0))) {
+  } else if (BV_ISSET(them->client.visible, NI_GOLD)) {
     return QString::number(them->economic.gold);
   } else {
     return _("?");
@@ -385,13 +370,9 @@ static int cmp_tax(const struct player *player1,
  */
 QString col_tax(const struct player *them)
 {
-  const struct player *me = client_player();
-
   if (them == nullptr || !them->is_alive) {
     return _("-");
-  } else if (client_is_global_observer()
-             || (me != nullptr
-                 && (me == them || player_has_embassy(me, them)))) {
+  } else if (BV_ISSET(them->client.visible, NI_TAX_RATES)) {
     return QString::number(them->economic.tax);
   } else {
     return _("?");
@@ -413,13 +394,9 @@ static int cmp_science(const struct player *player1,
  */
 QString col_science(const struct player *them)
 {
-  const struct player *me = client_player();
-
   if (them == nullptr || !them->is_alive) {
     return _("-");
-  } else if (client_is_global_observer()
-             || (me != nullptr
-                 && (me == them || player_has_embassy(me, them)))) {
+  } else if (BV_ISSET(them->client.visible, NI_TAX_RATES)) {
     return QString::number(them->economic.science);
   } else {
     return _("?");
@@ -441,13 +418,9 @@ static int cmp_luxury(const struct player *player1,
  */
 QString col_luxury(const struct player *them)
 {
-  const struct player *me = client_player();
-
   if (them == nullptr || !them->is_alive) {
     return _("-");
-  } else if (client_is_global_observer()
-             || (me != nullptr
-                 && (me == them || player_has_embassy(me, them)))) {
+  } else if (BV_ISSET(them->client.visible, NI_TAX_RATES)) {
     return QString::number(them->economic.luxury);
   } else {
     return _("?");
@@ -459,13 +432,9 @@ QString col_luxury(const struct player *them)
  */
 QString col_research(const struct player *them)
 {
-  const struct player *me = client_player();
-
   if (them == nullptr || !them->is_alive) {
     return _("-");
-  } else if (client_is_global_observer()
-             || (me != nullptr
-                 && (me == them || player_has_embassy(me, them)))) {
+  } else if (BV_ISSET(them->client.visible, NI_TECHS)) {
     struct research *research = research_get(them);
     return research_advance_name_translation(research,
                                              research->researching);
