@@ -73,13 +73,10 @@ static void package_player_common(struct player *plr,
 static void
 package_player_diplstate(struct player *plr1, struct player *plr2,
                          struct packet_player_diplstate *packet_ds,
-                         struct player *receiver,
-                         enum plr_info_level min_info_level);
+                         struct player *receiver, bool full);
 static void package_player_info(struct player *plr,
                                 struct packet_player_info *packet,
                                 struct player *receiver, bool send_all);
-static enum plr_info_level player_info_level(struct player *plr,
-                                             struct player *receiver);
 
 static void send_player_remove_info_c(const struct player_slot *pslot,
                                       struct conn_list *dest);
@@ -1074,14 +1071,11 @@ static void send_player_diplstate_c_real(struct player *plr1,
       if (nullptr == pconn->playing && pconn->observer) {
         // Global observer.
         package_player_diplstate(plr1, plr2, &packet_ds, pconn->playing,
-                                 INFO_FULL);
-      } else if (nullptr != pconn->playing) {
+                                 true);
+      } else {
         // Players (including regular observers)
         package_player_diplstate(plr1, plr2, &packet_ds, pconn->playing,
-                                 INFO_MINIMUM);
-      } else {
-        package_player_diplstate(plr1, plr2, &packet_ds, nullptr,
-                                 INFO_MINIMUM);
+                                 false);
       }
       send_packet_player_diplstate(pconn, &packet_ds);
     }
@@ -1358,17 +1352,31 @@ static void package_player_info(struct player *plr,
 static void
 package_player_diplstate(struct player *plr1, struct player *plr2,
                          struct packet_player_diplstate *packet_ds,
-                         struct player *receiver,
-                         enum plr_info_level min_info_level)
+                         struct player *receiver, bool full)
 {
-  enum plr_info_level info_level;
-  struct player_diplstate *ds = player_diplstate_get(plr1, plr2);
+  bool send_info = false;
 
-  if (receiver) {
-    info_level = player_info_level(plr1, receiver);
-    info_level = MAX(min_info_level, info_level);
+  if (server_state() < S_S_RUNNING || (!full && !receiver)) {
+    send_info = false;
+  } else if (full || players_on_same_team(plr1, receiver)
+             || players_on_same_team(plr2, receiver)) {
+    send_info = true;
   } else {
-    info_level = min_info_level;
+    // Teamed players always share their information -- it's in their best
+    // interest to communicate anyway.
+    player_list_iterate(team_members(receiver->team), team_mate)
+    {
+      if (get_player_intel_bonus(team_mate, plr1, NI_DIPLOMACY,
+                                 EFT_NATION_INTELLIGENCE)
+              > 0
+          || get_player_intel_bonus(team_mate, plr2, NI_DIPLOMACY,
+                                    EFT_NATION_INTELLIGENCE)
+                 > 0) {
+        send_info = true;
+        break;
+      }
+    }
+    player_list_iterate_end;
   }
 
   packet_ds->plr1 = player_index(plr1);
@@ -1379,10 +1387,8 @@ package_player_diplstate(struct player *plr1, struct player *plr2,
 
   /* Send diplomatic status of the player to everyone they are in
    * contact with (embassy, remaining contact turns, the receiver). */
-  if (info_level >= INFO_EMBASSY
-      || (receiver
-          && player_diplstate_get(receiver, plr1)->contact_turns_left > 0)
-      || (receiver && receiver == plr2)) {
+  if (send_info) {
+    const auto *ds = player_diplstate_get(plr1, plr2);
     packet_ds->type = ds->type;
     packet_ds->turns_left = ds->turns_left;
     packet_ds->has_reason_to_cancel = ds->has_reason_to_cancel;
@@ -1393,27 +1399,6 @@ package_player_diplstate(struct player *plr1, struct player *plr2,
     packet_ds->has_reason_to_cancel = 0;
     packet_ds->contact_turns_left = 0;
   }
-}
-
-/**
-   Return level of information player should receive about another.
- */
-static enum plr_info_level player_info_level(struct player *plr,
-                                             struct player *receiver)
-{
-  if (S_S_RUNNING > server_state()) {
-    return INFO_MINIMUM;
-  }
-  if (plr == receiver) {
-    return INFO_FULL;
-  }
-  if (receiver && player_has_embassy(receiver, plr)) {
-    return INFO_EMBASSY;
-  }
-  if (receiver && could_intel_with_player(receiver, plr)) {
-    return INFO_MEETING;
-  }
-  return INFO_MINIMUM;
 }
 
 /**
