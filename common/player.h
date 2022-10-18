@@ -352,6 +352,10 @@ struct player {
       bool color_changeable;
 
       int culture;
+
+      /// Which information is actually visible to the client (and can thus
+      /// be trusted)
+      bv_intel_visible visible;
     } client;
   };
 };

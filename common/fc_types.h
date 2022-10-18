@@ -557,6 +557,9 @@ typedef int Unit_Class_id;
 #define SPECENUM_COUNT NI_COUNT
 #include "specenum_gen.h"
 
+// Used in the network protocol.
+BV_DEFINE(bv_intel_visible, NI_COUNT);
+
 // A server setting + its value.
 typedef int ssetv;
 

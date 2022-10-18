@@ -279,6 +279,7 @@ type BV_RMCAUSES        = bitvector(bv_rmcauses)
 type BV_CITY_OPTIONS    = bitvector(bv_city_options)
 type BV_IMPR_FLAGS      = bitvector(bv_impr_flags)
 type BV_IMPRS           = bitvector(bv_imprs)
+type BV_INTEL_VISIBLE   = bitvector(bv_intel_visible)
 type BV_PLAYER          = bitvector(bv_player)
 type BV_SPECIAL         = bitvector(bv_special)
 type BV_STARTPOS_NATIONS= bitvector(bv_startpos_nations)
@@ -937,6 +938,8 @@ PACKET_PLAYER_INFO = 51; sc, is-info
   UINT8  multip_count;
   SINT32 multiplier[MAX_NUM_MULTIPLIERS:multip_count];
   SINT32 multiplier_target[MAX_NUM_MULTIPLIERS:multip_count];
+
+  BV_INTEL_VISIBLE visible; add-cap(player-intel-visibility)
 end
 
 PACKET_PLAYER_PHASE_DONE = 52; cs, dsend

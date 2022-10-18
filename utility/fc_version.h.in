@@ -16,7 +16,8 @@
 # endif
 #endif
 
-#define NETWORK_CAPSTRING "+Freeciv21.21April13 killunhomed-is-game-info"
+#define NETWORK_CAPSTRING                                                   \
+  "+Freeciv21.21April13 killunhomed-is-game-info player-intel-visibility"
 
 #ifndef FOLLOWTAG
 #define FOLLOWTAG "S_HAXXOR"
