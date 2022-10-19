@@ -1,3 +1,8 @@
+..
+    SPDX-License-Identifier: GPL-3.0-or-later
+    SPDX-FileCopyrightText: 2021 louis94 <m_louis30@yahoo.com>
+    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+
 Nation Sets and Flags
 *********************
 
@@ -145,16 +150,16 @@ Flag Specifics
 
 To add a flag you'll have to edit the following files:
 
-* :file:`data/flags/<flagname>.svg`
+* :file:`data/tilesets/flags/<flagname>.svg`
 
 Here is the SVG flag image. This is not used directly by Freeciv21 but is  rendered into PNG files (at various
 resolutions for different tilesets). The SVG file is not used in Freeciv21, but all the other steps for adding
 flags are the same. The :code:`<flagname>` should either be the name of the country that represents the flag,
 or the common name for the actual flag. When in doubt, use the same name as the name of the nation.
 
-* :file:`data/flags/<flagname>.png`
+* :file:`data/tilesets/flags/<flagname>.png`
 
-* :file:`data/flags/<flagname>-shield.png`
+* :file:`data/tilesets/flags/<flagname>-shield.png`
 
 These are the flag images that are used by Freeciv21. They are rendered from the SVG file. Once this file has
 been created it can be used with older versions of Freeciv21 as well. To run the conversion program you will
