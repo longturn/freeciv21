@@ -581,8 +581,8 @@ reqs    =
       "Gov", "Federation", "Player", TRUE
       "OutputType", "Trade", "Local", FALSE
     }
-	
-	
+
+
 ; federation gets 100% boost for science
 [effect_bonus_sci_federation]
 type    = "Output_Bonus_2"
@@ -592,8 +592,8 @@ reqs    =
       "Gov", "Federation", "Player"
       "OutputType", "Science", "Local"
     }
-	
-	
+
+
 ; Corruption and Waste
 ; Note: no autohelptexts for these!
 ;
@@ -917,9 +917,9 @@ reqs   =
 ;      "Gov", "Republic", "Player", FALSE
 ;      "Gov", "Democracy", "Player", FALSE
     }
-	
-	
-; Doubled for city size >= 9 - democracy will not get an extra unit at any size 
+
+
+; Doubled for city size >= 9 - democracy will not get an extra unit at any size
 [effect_upkeep_free_mil_city_1]
 type    = "Make_Content_Mil"
 value   = 1
@@ -936,7 +936,7 @@ reqs    =
 ;      "Gov", "Republic", "Player", FALSE
       "Gov", "Democracy", "Player", FALSE
     }
-	
+
 
 
 ; Govs with 2 free units (exclusive with previous)
@@ -955,8 +955,8 @@ reqs   =
       "Gov", "Republic", "Player", FALSE
       "Gov", "Democracy", "Player", FALSE
     }
-	
-	
+
+
 ; Doubled for city size >= 9
 [effect_upkeep_free_mil_city_2]
 type    = "Make_Content_Mil"
@@ -991,8 +991,8 @@ reqs   =
       "Gov", "Republic", "Player", FALSE
       "Gov", "Democracy", "Player", FALSE
     }
-	
-	
+
+
 
 ; Doubled for city size >= 9
 [effect_upkeep_free_mil_city_3]
@@ -1664,8 +1664,8 @@ reqs    =
     { "type", "name", "range", "quiet"
       "Gov", "Communism", "Player", TRUE
     }
-	
-	
+
+
 [effect_martial_law_max_despotism]
 type    = "Martial_Law_Max"
 value   = 20
@@ -1872,9 +1872,9 @@ reqs    =
     }
 
 [effect_tithes_fundamentalism]
-type    = "Happiness_To_Gold" 
-value   = 1 
-reqs    = 
+type    = "Happiness_To_Gold"
+value   = 1
+reqs    =
     { "type", "name", "range", "quiet"
       "Gov", "Fundamentalism", "Player", TRUE
     }
@@ -2032,7 +2032,7 @@ reqs    =
       "Building", "Bank", "City"
       "OutputType", "Luxury", "Local"
     }
-	
+
 [effect_mercantile_exchange_1]
 type    = "Output_Bonus"
 value   = 30
@@ -2954,8 +2954,8 @@ reqs    =
       "DiplRel", "Foreign", "Local", TRUE
       "DiplRel", "Team", "Local", FALSE
     }
-	
-	
+
+
 [effect_sdi_i_defense_2]
 type    = "Nuke_Proof"
 value   = 70
@@ -2974,8 +2974,8 @@ reqs    =
       "Building", "SDI Defense I", "City"
       "UnitClass", "Missile", "Local"
     }
-	
-	
+
+
 [effect_sdi_i_defense_4]
 type    = "Defend_Bonus"
 value   = 70
@@ -2985,9 +2985,9 @@ reqs    =
 	  "Building", "Palace", "City"
       "UnitClass", "Missile", "Local"
     }
-	
 
-	
+
+
 [effect_sdi_ii_defense_1]
 type    = "Nuke_Proof"
 value   = 30
@@ -2998,7 +2998,7 @@ reqs    =
       "DiplRel", "Foreign", "Local", TRUE
       "DiplRel", "Team", "Local", FALSE
     }
-	
+
 
 [effect_sdi_ii_defense_2]
 type    = "Defend_Bonus"
@@ -3009,8 +3009,8 @@ reqs    =
       "Building", "Palace", "City", FALSE
       "UnitClass", "Missile", "Local", TRUE
     }
-	
-	
+
+
 [effect_sdi_iii_defense_1]
 type    = "Nuke_Proof"
 value   = 30
@@ -3021,7 +3021,7 @@ reqs    =
       "DiplRel", "Foreign", "Local", TRUE
       "DiplRel", "Team", "Local", FALSE
     }
-	
+
 
 [effect_sdi_iii_defense_2]
 type    = "Defend_Bonus"
@@ -3032,7 +3032,7 @@ reqs    =
       "Building", "Palace", "City", FALSE
       "UnitClass", "Missile", "Local", TRUE
     }
-	
+
 
 
 [effect_sewer_system]
@@ -4104,9 +4104,9 @@ reqs	=
     { "type", "name", "range"
       "Building", "United Nations", "City"
     }
-	
-	
-;pow(2, value/1000) -> Base = 50% 
+
+
+;pow(2, value/1000) -> Base = 50%
 [effect_base_trade_revenue_reduce]
 type    = "Trade_Revenue_Bonus"
 value   = -1000
