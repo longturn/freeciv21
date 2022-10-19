@@ -403,8 +403,8 @@ reqs	=
     { "type", "name", "range"
       "Tech", "Construction", "Player"
     }
-graphic	= "b.colosseum"
-graphic_alt	= "-"
+graphic	= "b.amphitheater"
+graphic_alt	= "b.colosseum"
 obsolete_by	=
     { "type", "name", "range"
     }

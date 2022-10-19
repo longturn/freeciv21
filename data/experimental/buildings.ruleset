@@ -439,7 +439,7 @@ reqs	=
     { "type", "name", "range"
       "Tech", "Medicine", "Player"
     }
-graphic	= "-"
+graphic	= "b.hospital"
 graphic_alt	= "-"
 obsolete_by	=
     { "type", "name", "range"
@@ -499,8 +499,8 @@ reqs	=
     { "type", "name", "range"
       "Tech", "Genetic Engineering", "Player"
     }
-graphic	= "-"
-graphic_alt	= "-"
+graphic	= "b.genetic_lab"
+graphic_alt	= "b.research_lab"
 obsolete_by	=
     { "type", "name", "range"
     }
@@ -1818,8 +1818,8 @@ sound_alt	= "w_generic"
 helptext	= _("\
 All your units regain two extra hitpoints per turn.\
 ")
-; NOTE: 
-; This does not match Civ1 or Civ2, but diplomatic effects are 
+; NOTE:
+; This does not match Civ1 or Civ2, but diplomatic effects are
 ; not very effective in multiplayer, and hitpoints effects do not
 ; apply for Civ1.  Note in Civ1 Pyramids have a gov-change effect,
 ; but become obsolete, and the Statue of Liberty does not exist.
