@@ -67,6 +67,7 @@ if (FREECIV_ENABLE_SERVER OR FREECIV_ENABLE_RULEDIT)
     FILES
     default/ai_effects.ruleset
     default/default.lua
+    default/nation_intelligence_effects.ruleset
     default/nationlist.ruleset
     DESTINATION
     "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/default"

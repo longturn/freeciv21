@@ -1,0 +1,122 @@
+; This file contains the Nation_Intelligence effects used in most rulesets.
+; Include it in effects.ruleset with:
+;
+; *include default/nation_intelligence_effects.ruleset
+;
+; You'll also want to add the +Nation_Intelligence option to effects.ruleset.
+
+[effect_ni_multipliers_embassy]
+type  = "Nation_Intelligence"
+value = 1
+reqs  =
+    { "type",                 "name",         "range",  "present"
+      "NationalIntelligence", "Multipliers",  "Player", TRUE
+      "DiplRel",              "Has embassy",  "Local",  TRUE
+    }
+
+[effect_ni_wonders]
+type  = "Nation_Intelligence"
+value = 1
+reqs  =
+    { "type",                 "name",     "range",  "present"
+      "NationalIntelligence", "Wonders",  "Player", TRUE
+    }
+
+[effect_ni_score_contact]
+type  = "Nation_Intelligence"
+value = 1
+reqs  =
+    { "type",                 "name",         "range",  "present"
+      "NationalIntelligence", "Score",        "Player", TRUE
+      "DiplRel",              "Has Contact",  "Local",  TRUE
+    }
+
+[effect_ni_score_embassy]
+type  = "Nation_Intelligence"
+value = 1
+reqs  =
+    { "type",                 "name",         "range",  "present"
+      "NationalIntelligence", "Score",        "Player", TRUE
+      "DiplRel",              "Has embassy",  "Local",  TRUE
+    }
+
+[effect_ni_gold_contact]
+type  = "Nation_Intelligence"
+value = 1
+reqs  =
+    { "type",                 "name",         "range",  "present"
+      "NationalIntelligence", "Gold",         "Player", TRUE
+      "DiplRel",              "Has Contact",  "Local",  TRUE
+    }
+
+[effect_ni_gold_embassy]
+type  = "Nation_Intelligence"
+value = 1
+reqs  =
+    { "type",                 "name",         "range",  "present"
+      "NationalIntelligence", "Gold",         "Player", TRUE
+      "DiplRel",              "Has embassy",  "Local",  TRUE
+    }
+
+[effect_ni_gov_contact]
+type  = "Nation_Intelligence"
+value = 1
+reqs  =
+    { "type",                 "name",         "range",  "present"
+      "NationalIntelligence", "Government",   "Player", TRUE
+      "DiplRel",              "Has Contact",  "Local",  TRUE
+    }
+
+[effect_ni_gov_embassy]
+type  = "Nation_Intelligence"
+value = 1
+reqs  =
+    { "type",                 "name",         "range",  "present"
+      "NationalIntelligence", "Government",   "Player", TRUE
+      "DiplRel",              "Has embassy",  "Local",  TRUE
+    }
+
+[effect_ni_diplomacy_contact]
+type  = "Nation_Intelligence"
+value = 1
+reqs  =
+    { "type",                 "name",         "range",  "present"
+      "NationalIntelligence", "Diplomacy",    "Player", TRUE
+      "DiplRel",              "Has Contact",  "Local",  TRUE
+    }
+
+[effect_ni_diplomacy_embassy]
+type  = "Nation_Intelligence"
+value = 1
+reqs  =
+    { "type",                 "name",         "range",  "present"
+      "NationalIntelligence", "Diplomacy",    "Player", TRUE
+      "DiplRel",              "Has embassy",  "Local",  TRUE
+    }
+
+[effect_ni_techs_embassy]
+type  = "Nation_Intelligence"
+value = 1
+reqs  =
+    { "type",                 "name",         "range",  "present"
+      "NationalIntelligence", "Techs",        "Player", TRUE
+      "DiplRel",              "Has embassy",  "Local",  TRUE
+    }
+
+[effect_ni_tax_embassy]
+type  = "Nation_Intelligence"
+value = 1
+reqs  =
+    { "type",                 "name",         "range",  "present"
+      "NationalIntelligence", "Tax Rates",    "Player", TRUE
+      "DiplRel",              "Has embassy",  "Local",  TRUE
+    }
+
+[effect_ni_culture_embassy]
+type  = "Nation_Intelligence"
+value = 1
+reqs  =
+    { "type",                 "name",         "range",  "present"
+      "NationalIntelligence", "Culture",      "Player", TRUE
+      "DiplRel",              "Has embassy",  "Local",  TRUE
+    }
