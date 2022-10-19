@@ -33,7 +33,7 @@ sprites = {
   "b.hospital", "tilesets/buildings/hospital"
   "b.hydro_plant", "tilesets/buildings/hydro_plant"
   "b.library", "tilesets/buildings/library"
-  "b.marketplace", "tilesets/buildings/marletplace"
+  "b.marketplace", "tilesets/buildings/marketplace"
   "b.mercantile_exchange", "tilesets/buildings/mercantile_exchange"
   "b.merchant_tent", "tilesets/buildings/merchant_tent"
   "b.mass_transit", "tilesets/buildings/mass_transit"

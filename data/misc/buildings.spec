@@ -1,4 +1,4 @@
-c[spec]
+[spec]
 
 ; Format and options of this spec file:
 options = "+Freeciv-spec-Devel-2019-Jul-03"
@@ -32,7 +32,7 @@ sprites = {
   "b.hospital", "tilesets/buildings/hospital-small"
   "b.hydro_plant", "tilesets/buildings/hydro_plant-small"
   "b.library", "tilesets/buildings/library-small"
-  "b.marketplace", "tilesets/buildings/marletplace-small"
+  "b.marketplace", "tilesets/buildings/marketplace-small"
   "b.mercantile_exchange", "tilesets/buildings/mercantile_exchange-small"
   "b.merchant_tent", "tilesets/buildings/merchant_tent-small"
   "b.mass_transit", "tilesets/buildings/mass_transit-small"
