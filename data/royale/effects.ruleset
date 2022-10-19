@@ -4745,4 +4745,25 @@ reqs    =
 ; type    = "Conquest_Tech_Pct"
 ; value   = 0
 
-*include "default/nation_intelligence_effects.ruleset"
+; Having contact with another player lets one see their score.
+[effect_ni_score_contact]
+type  = "Nation_Intelligence"
+value = 1
+reqs  =
+    { "type",                 "name",         "range",  "present"
+      "NationalIntelligence", "Score",        "Player", TRUE
+      "DiplRel",              "Has Contact",  "Local",  TRUE
+    }
+
+; Having an embassy lets one see almost everything. In fact, the things we
+; disable are not even shown in the client.
+[effect_ni_any_embassy]
+type  = "Nation_Intelligence"
+value = 1
+reqs  =
+    { "type",                 "name",         "range",  "present"
+      "NationalIntelligence", "Mood",         "Player", FALSE
+      "NationalIntelligence", "History",      "Player", FALSE
+      "NationalIntelligence", "Infra Points", "Player", FALSE
+      "DiplRel",              "Has embassy",  "Local",  TRUE
+    }
