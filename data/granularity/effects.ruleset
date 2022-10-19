@@ -11,7 +11,7 @@
 
 [datafile]
 description="Granularity effects data for Freeciv"
-options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct +Vision_Layer"
+options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct +Vision_Layer +Nation_Intelligence"
 format_version=20
 
 ; /* <-- avoid gettext warnings
@@ -73,7 +73,7 @@ value   = 1
 [effect_tech_cost_base]
 type    = "Tech_Cost_Factor"
 value   = 1
-  	 
+
 ; Cities can always work tiles
 [effect_tile_workable]
 type    = "Tile_Workable"
@@ -210,3 +210,5 @@ reqs    =
     { "type", "name", "range"
       "Extra", "Irrigation", "Local"
     }
+
+*include "default/nation_intelligence_effects.ruleset"

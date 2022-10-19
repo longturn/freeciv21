@@ -11,7 +11,7 @@
 
 [datafile]
 description="Multiplayer effects data for Freeciv"
-options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct +Vision_Layer"
+options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct +Vision_Layer +Nation_Intelligence"
 format_version=20
 
 ; /* <-- avoid gettext warnings
@@ -2289,11 +2289,11 @@ reqs    =
     }
 
 [effect_tithes_fundamentalism]
-type    = "Happiness_To_Gold" 
-value   = 1 
-reqs    = 
-    { "type", "name", "range" 
-      "Gov", "Fundamentalism", "Player" 
+type    = "Happiness_To_Gold"
+value   = 1
+reqs    =
+    { "type", "name", "range"
+      "Gov", "Fundamentalism", "Player"
     }
 
 [effect_max_rates_fundamentalism]
@@ -2711,3 +2711,5 @@ reqs    =
     { "type",   "name",         "range", "present"
       "Action", "Upgrade Unit", "Local", TRUE
     }
+
+*include "default/nation_intelligence_effects.ruleset"

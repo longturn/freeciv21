@@ -11,7 +11,7 @@
 
 [datafile]
 description="Royale effects data for Freeciv"
-options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct +Vision_Layer"
+options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct +Vision_Layer +Nation_Intelligence"
 format_version=20
 
 ; /* <-- avoid gettext warnings
@@ -4744,3 +4744,5 @@ reqs    =
 ; [effect_conquest_tech]
 ; type    = "Conquest_Tech_Pct"
 ; value   = 0
+
+*include "default/nation_intelligence_effects.ruleset"
