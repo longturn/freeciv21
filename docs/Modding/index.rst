@@ -81,6 +81,7 @@ guides document specific aspects of tileset creation:
   Tilesets/terrain.rst
   Tilesets/debugger.rst
   Tilesets/compatibility.rst
+  Tilesets/ts-breaking-changes.rst
   Rulesets/nations.rst
   :maxdepth: 1
 
