@@ -6,24 +6,7 @@ options = "+Freeciv-spec-Devel-2019-Jul-03"
 
 [info]
 
-artists = "
-    Tim F. Smith <yoohootim@hotmail.com>
-    Frederic Rodrigo <f.rodrigo@tuxfamily.org>
-    Dusan Hukuv <dusan@mirc.cz>
-    Eleazar / J. W. Bjerk <www.jwbjerk.com>
-    (WT-en) SONORAMA at English Wikivoyage (Own work) [Public domain],
-      via Wikimedia Commons:
-      https://commons.wikimedia.org/wiki/File:Tibet_Potala_Palace.JPG
-
-    YD - https://ydstuff.wordpress.com/
-      merchant_tent
-
-    Wahazar
-      b.academy
-      b.amphitheater
-      b.hospital
-      b.workshop
-"
+artists = "See tilesets/buildings/*.license files"
 
 [extra]
 sprites = {
@@ -38,6 +21,7 @@ sprites = {
   "b.barracks_iii", "tilesets/buildings/barracks_iii"
   "b.capitalization", "tilesets/buildings/capitalization"
   "b.cathedral", "tilesets/buildings/cathedral"
+  "b.city_hall", "tilesets/buildings/city_hall"
   "b.city_walls", "tilesets/buildings/city_walls"
   "b.coastal_defense", "tilesets/buildings/coastal_defense"
   "b.colosseum", "tilesets/buildings/colosseum"
@@ -49,8 +33,9 @@ sprites = {
   "b.hospital", "tilesets/buildings/hospital"
   "b.hydro_plant", "tilesets/buildings/hydro_plant"
   "b.library", "tilesets/buildings/library"
-  "b.marketplace", "tilesets/buildings/merchant_tent"
-  "b.mercantile_exchange", "tilesets/buildings/marketplace"
+  "b.marketplace", "tilesets/buildings/marletplace"
+  "b.mercantile_exchange", "tilesets/buildings/mercantile_exchange"
+  "b.merchant_tent", "tilesets/buildings/merchant_tent"
   "b.mass_transit", "tilesets/buildings/mass_transit"
   "b.mfg_plant", "tilesets/buildings/mfg_plant"
   "b.nuclear_plant", "tilesets/buildings/nuclear_plant"
@@ -63,6 +48,8 @@ sprites = {
   "b.research_lab", "tilesets/buildings/research_lab"
   "b.sam_battery", "tilesets/buildings/sam_battery"
   "b.sdi_defense", "tilesets/buildings/sdi_defense"
+  "b.sdi_defense_2", "tilesets/buildings/sdi_defense"
+  "b.sdi_defense_3", "tilesets/buildings/sdi_defense"
   "b.sewer_system", "tilesets/buildings/sewer_system"
   "b.solar_plant", "tilesets/buildings/solar_plant"
   "b.space_component", "tilesets/buildings/space_component"

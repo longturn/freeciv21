@@ -1,28 +1,11 @@
-[spec]
+c[spec]
 
 ; Format and options of this spec file:
 options = "+Freeciv-spec-Devel-2019-Jul-03"
 
 [info]
 
-artists = "
-    Tim F. Smith <yoohootim@hotmail.com>
-    Frederic Rodrigo <f.rodrigo@tuxfamily.org>
-    Dusan Hukuv <dusan@mirc.cz>
-    Eleazar / J. W. Bjerk <www.jwbjerk.com>
-    (WT-en) SONORAMA at English Wikivoyage (Own work) [Public domain],
-      via Wikimedia Commons:
-      https://commons.wikimedia.org/wiki/File:Tibet_Potala_Palace.JPG
-
-    YD - https://ydstuff.wordpress.com/
-      merchant_tent
-
-    Wahazar
-      b.academy
-      b.amphitheater
-      b.hospital
-      b.workshop
-"
+artists = "See tilesets/buildings/*.license files"
 
 [extra]
 sprites = {
@@ -37,6 +20,7 @@ sprites = {
   "b.barracks_iii", "tilesets/buildings/barracks_iii-small"
   "b.capitalization", "tilesets/buildings/capitalization-small"
   "b.cathedral", "tilesets/buildings/cathedral-small"
+  "b.city_hall", "tilesets/buildings/city_hall-small"
   "b.city_walls", "tilesets/buildings/city_walls-small"
   "b.coastal_defense", "tilesets/buildings/coastal_defense-small"
   "b.colosseum", "tilesets/buildings/colosseum-small"
@@ -45,11 +29,12 @@ sprites = {
   "b.factory", "tilesets/buildings/factory-small"
   "b.granary", "tilesets/buildings/granary-small"
   "b.harbour", "tilesets/buildings/harbor-small"
-  "b.hospital", "tilesets/buildings/hospital"
+  "b.hospital", "tilesets/buildings/hospital-small"
   "b.hydro_plant", "tilesets/buildings/hydro_plant-small"
   "b.library", "tilesets/buildings/library-small"
-  "b.marketplace", "tilesets/buildings/merchant_tent-small"
-  "b.mercantile_exchange", "tilesets/buildings/marketplace-small"
+  "b.marketplace", "tilesets/buildings/marletplace-small"
+  "b.mercantile_exchange", "tilesets/buildings/mercantile_exchange-small"
+  "b.merchant_tent", "tilesets/buildings/merchant_tent-small"
   "b.mass_transit", "tilesets/buildings/mass_transit-small"
   "b.mfg_plant", "tilesets/buildings/mfg_plant-small"
   "b.nuclear_plant", "tilesets/buildings/nuclear_plant-small"
@@ -62,6 +47,8 @@ sprites = {
   "b.research_lab", "tilesets/buildings/research_lab-small"
   "b.sam_battery", "tilesets/buildings/sam_battery-small"
   "b.sdi_defense", "tilesets/buildings/sdi_defense-small"
+  "b.sdi_defense_2", "tilesets/buildings/sdi_defense-small"
+  "b.sdi_defense_3", "tilesets/buildings/sdi_defense-small"
   "b.sewer_system", "tilesets/buildings/sewer_system-small"
   "b.solar_plant", "tilesets/buildings/solar_plant-small"
   "b.space_component", "tilesets/buildings/space_component-small"
