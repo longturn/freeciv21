@@ -150,7 +150,7 @@ files =
   "misc/events.spec",
   "misc/governments.spec",
   "misc/specialists.spec",
-  "misc/buildings.spec",
+  "trident/buildings.spec",
   "misc/wonders.spec",
   "misc/flags.spec",
   "misc/shields.spec",
