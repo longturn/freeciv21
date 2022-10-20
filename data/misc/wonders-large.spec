@@ -45,6 +45,7 @@ sprites = {
   "b.sun_tzus_war_academy", "tilesets/wonders/sun_tzus_war_academy"
   "b.terracotta_army", "tilesets/wonders/terracotta_army"
   "b.temple_of_artemis", "tilesets/wonders/temple_of_artemis"
+  "b.theparis", "tilesets/wonders/paris_agreement"
   "b.trade_company", "tilesets/wonders/trade_company"
   "b.united_nations", "tilesets/wonders/united_nations"
   "b.verrocchios_workshop", "tilesets/wonders/verrocchios_workshop"
