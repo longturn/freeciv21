@@ -152,7 +152,7 @@ files =
   "misc/cursors.spec",
   "trident/grid.spec",
   "trident/roads.spec",
-  "misc/buildings.spec",
+  "trident/buildings.spec",
   "misc/wonders.spec",
   "misc/space.spec",
   "misc/techs.spec",
