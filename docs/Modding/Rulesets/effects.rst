@@ -47,58 +47,59 @@ on the game rules.
 Requirement types and supported ranges
 ======================================
 
-==================== ================
-Requirement          Supported ranges
-==================== ================
-``Tech``             ``World``, ``Alliance``, ``Team``, ``Player``
-``TechFlag``         ``World``, ``Alliance``, ``Team``, ``Player``
-``MinTechs``         ``World``, ``Player``
-``Achievement``      ``World``, ``Alliance``, ``Team``, ``Player``
-``Gov``              ``Player``
-``Building``         ``World``, ``Alliance``, ``Team``, ``Player``, ``Continent``, ``Traderoute``, ``City``, ``Local``
-``BuildingGenus``    ``Local``
-``Extra``            ``Local``, ``Adjacent``, ``CAdjacent``, ``Traderoute``, ``City``
-``BaseFlag``         ``Local``, ``Adjacent``, ``CAdjacent``, ``Traderoute``, ``City``
-``RoadFlag``         ``Local``, ``Adjacent``, ``CAdjacent``, ``Traderoute``, ``City``
-``ExtraFlag``        ``Local``, ``Adjacent``, ``CAdjacent``, ``Traderoute``, ``City``
-``Terrain``          ``Local``, ``Adjacent``, ``CAdjacent``, ``Traderoute``, ``City``
-``Good``             ``City``
-``UnitType``         ``Local``
-``UnitFlag``         ``Local``
-``UnitClass``        ``Local``
-``UnitClassFlag``    ``Local``
-``Nation``           ``World``, ``Alliance``, ``Team``, ``Player``
-``NationGroup``      ``World``, ``Alliance``, ``Team``, ``Player``
-``Nationality``      ``Traderoute``, ``City``
-``DiplRel``          ``World``, ``Alliance``, ``Team``, ``Player``, ``Local``
-``Action``           ``Local``
-``OutputType``       ``Local``
-``Specialist``       ``Local``
-``MinYear``          ``World``
-``MinCalFrag``       ``World``
-``Topology``         ``World``
-``ServerSetting``    ``World``
-``Age`` (of unit)    ``Local``
-``Age`` (of city)    ``City``
-``Age`` (of player)  ``Player``
-``MinSize``          ``Traderoute``, ``City``
-``MinCulture``       ``World``, ``Alliance``, ``Team``, ``Player``, ``Traderoute``, ``City``
-``MinForeignPct``    ``Traderoute``, ``City``
-``AI``               ``Player``
-``MaxUnitsOnTile``   ``Local``, ``Adjacent``, ``CAdjacent``
-``TerrainClass``     ``Local``, ``Adjacent``, ``CAdjacent``, ``Traderoute``, ``City``
-``TerrainFlag``      ``Local``, ``Adjacent``, ``CAdjacent``, ``Traderoute``, ``City``
-``TerrainAlter``     ``Local``
-``CityTile``         ``Local``, ``Adjacent``, ``CAdjacent``
-``CityStatus``       ``Traderoute``, ``City``
-``Style``            ``Player``
-``UnitState``        ``Local``
-``Activity``         ``Local``
-``MinMoveFrags``     ``Local``
-``MinVeteran``       ``Local``
-``MinHitPoints``     ``Local``
-``VisionLayer``      ``Local``
-==================== ================
+======================== ================
+Requirement              Supported ranges
+======================== ================
+``Tech``                 ``World``, ``Alliance``, ``Team``, ``Player``
+``TechFlag``             ``World``, ``Alliance``, ``Team``, ``Player``
+``MinTechs``             ``World``, ``Player``
+``Achievement``          ``World``, ``Alliance``, ``Team``, ``Player``
+``Gov``                  ``Player``
+``Building``             ``World``, ``Alliance``, ``Team``, ``Player``, ``Continent``, ``Traderoute``, ``City``, ``Local``
+``BuildingGenus``        ``Local``
+``Extra``                ``Local``, ``Adjacent``, ``CAdjacent``, ``Traderoute``, ``City``
+``BaseFlag``             ``Local``, ``Adjacent``, ``CAdjacent``, ``Traderoute``, ``City``
+``RoadFlag``             ``Local``, ``Adjacent``, ``CAdjacent``, ``Traderoute``, ``City``
+``ExtraFlag``            ``Local``, ``Adjacent``, ``CAdjacent``, ``Traderoute``, ``City``
+``Terrain``              ``Local``, ``Adjacent``, ``CAdjacent``, ``Traderoute``, ``City``
+``Good``                 ``City``
+``UnitType``             ``Local``
+``UnitFlag``             ``Local``
+``UnitClass``            ``Local``
+``UnitClassFlag``        ``Local``
+``Nation``               ``World``, ``Alliance``, ``Team``, ``Player``
+``NationGroup``          ``World``, ``Alliance``, ``Team``, ``Player``
+``Nationality``          ``Traderoute``, ``City``
+``DiplRel``              ``World``, ``Alliance``, ``Team``, ``Player``, ``Local``
+``Action``               ``Local``
+``OutputType``           ``Local``
+``Specialist``           ``Local``
+``MinYear``              ``World``
+``MinCalFrag``           ``World``
+``Topology``             ``World``
+``ServerSetting``        ``World``
+``Age`` (of unit)        ``Local``
+``Age`` (of city)        ``City``
+``Age`` (of player)      ``Player``
+``MinSize``              ``Traderoute``, ``City``
+``MinCulture``           ``World``, ``Alliance``, ``Team``, ``Player``, ``Traderoute``, ``City``
+``MinForeignPct``        ``Traderoute``, ``City``
+``AI``                   ``Player``
+``MaxUnitsOnTile``       ``Local``, ``Adjacent``, ``CAdjacent``
+``TerrainClass``         ``Local``, ``Adjacent``, ``CAdjacent``, ``Traderoute``, ``City``
+``TerrainFlag``          ``Local``, ``Adjacent``, ``CAdjacent``, ``Traderoute``, ``City``
+``TerrainAlter``         ``Local``
+``CityTile``             ``Local``, ``Adjacent``, ``CAdjacent``
+``CityStatus``           ``Traderoute``, ``City``
+``Style``                ``Player``
+``UnitState``            ``Local``
+``Activity``             ``Local``
+``MinMoveFrags``         ``Local``
+``MinVeteran``           ``Local``
+``MinHitPoints``         ``Local``
+``VisionLayer``          ``Local``
+``NationalIntelligence`` ``Local``
+======================== ================
 
 * MinSize is the minimum size of a city required.
 * AI is ai player difficulty level.
@@ -194,6 +195,11 @@ MovedThisTurn
 
 HasHomeCity
     is fulfilled if the unit has a home city.
+
+The NationalIntelligence requirement type
+-----------------------------------------
+
+This is only used with the :doc:`Nation_Intelligence effect <Effects/Nation_Intelligence>`.
 
 Effect types
 ------------
@@ -720,3 +726,12 @@ Wonder_Visible
         This effect is added automatically with a value of 1 for great wonders (since they are shown in the
         wonders report anyway). This behavior can be turned off by requiring the ``+Wonder_Visible`` option
         in ``effects.ruleset``.
+
+Nation_Intelligence
+    Controls the information available in the players report. :doc:`See the
+    detailed description. <Effects/Nation_Intelligence>`
+
+    .. toctree::
+        :hidden:
+
+        Effects/Nation_Intelligence
