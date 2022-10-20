@@ -241,55 +241,6 @@ private:
 };
 
 /****************************************************************************
-  Widget allowing quick select given type of units
-****************************************************************************/
-class unit_hud_selector : public QFrame {
-  Q_OBJECT
-  QVBoxLayout *main_layout;
-  QComboBox *unit_sel_type;
-  QPushButton *select;
-  QPushButton *cancel;
-
-public:
-  unit_hud_selector(QWidget *parent);
-  ~unit_hud_selector() override;
-  void show_me();
-private slots:
-  void select_units(int x = 0);
-  void select_units(bool x);
-  void uhs_select();
-  void uhs_cancel();
-
-protected:
-  void keyPressEvent(QKeyEvent *event) override;
-
-private:
-  bool activity_filter(struct unit *punit);
-  bool hp_filter(struct unit *punit);
-  bool island_filter(struct unit *punit);
-  bool type_filter(struct unit *punit);
-
-  QRadioButton *any_activity;
-  QRadioButton *fortified;
-  QRadioButton *idle;
-  QRadioButton *sentried;
-
-  QRadioButton *any;
-  QRadioButton *full_mp;
-  QRadioButton *full_hp;
-  QRadioButton *full_hp_mp;
-
-  QRadioButton *this_tile;
-  QRadioButton *this_continent;
-  QRadioButton *main_continent;
-  QRadioButton *anywhere;
-
-  QRadioButton *this_type;
-  QRadioButton *any_type;
-  QLabel result_label;
-};
-
-/****************************************************************************
   Widget showing one combat result
 ****************************************************************************/
 class hud_unit_combat : public QWidget {

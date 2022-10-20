@@ -64,6 +64,7 @@
 #include "spaceshipdlg.h"
 #include "sprite.h"
 #include "top_bar.h"
+#include "unithudselector.h"
 #include "unitreport.h"
 
 extern void popup_endgame_report();
