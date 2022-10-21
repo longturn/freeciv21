@@ -94,18 +94,3 @@ private:
   QRadioButton *any_type;
   QLabel result_label;
 };
-
-/***************************************************************************
-  Nonmodal message box for disbanding units
-***************************************************************************/
-class disband_box : public hud_message_box {
-  Q_OBJECT
-  const std::vector<unit *> cpunits;
-
-public:
-  explicit disband_box(const std::vector<unit *> &punits,
-                       QWidget *parent = 0);
-  ~disband_box() override;
-private slots:
-  void disband_clicked();
-};
