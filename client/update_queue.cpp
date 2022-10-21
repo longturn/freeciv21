@@ -223,14 +223,6 @@ void update_queue::add(uq_callback_t callback, void *data)
   push(callback, data_new(data, nullptr));
 }
 
-// Add a callback to the update queue. NB: you can only set a callback
-// once. Setting a callback twice will overwrite the previous.
-void update_queue::add_full(uq_callback_t callback, void *data,
-                            uq_free_fn_t free_data_func)
-{
-  push(callback, data_new(data, free_data_func));
-}
-
 // Returns whether this callback is listed in the update queue.
 bool update_queue::has_callback(uq_callback_t callback)
 {
