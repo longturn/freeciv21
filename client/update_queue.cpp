@@ -205,9 +205,9 @@ void update_queue::push(uq_callback_t callback,
 
 // Add a callback to the update queue. NB: you can only set a callback
 // once. Setting a callback twice will overwrite the previous.
-void update_queue::add(uq_callback_t callback, void *data)
+void update_queue::add(uq_callback_t callback)
 {
-  push(callback, data_new(data, nullptr));
+  push(callback, data_new(nullptr, nullptr));
 }
 
 // Returns whether this callback is listed in the update queue.
@@ -216,27 +216,6 @@ bool update_queue::has_callback(uq_callback_t callback)
   for (auto pair : qAsConst(queue)) {
     if (pair.first == callback)
       return true;
-  }
-  return false;
-}
-
-bool update_queue::has_callback_full(uq_callback_t callback,
-                                     const void **data,
-                                     uq_free_fn_t *free_data_func)
-{
-  struct update_queue_data *uq_data = nullptr;
-  for (auto p : qAsConst(queue)) {
-    if (p.first == callback)
-      uq_data = p.second;
-  }
-  if (uq_data) {
-    if (nullptr != data) {
-      *data = uq_data->data;
-    }
-    if (nullptr != free_data_func) {
-      *free_data_func = uq_data->free_data_func;
-    }
-    return true;
   }
   return false;
 }
@@ -297,7 +276,7 @@ void set_client_page(enum client_pages page)
   log_debug("Requested page: %s.", client_pages_name(page));
 
   next_client_page = page;
-  update_queue::uq()->add(set_client_page_callback, nullptr);
+  update_queue::uq()->add(set_client_page_callback);
 }
 
 // Start server and then, set the client page.
@@ -332,12 +311,10 @@ bool update_queue_is_switching_page(void)
 // Request the menus to be initialized and updated.
 void menus_init(void)
 {
-  update_queue::uq()->add(
-      [](void *) {
-        real_menus_init();
-        real_menus_update();
-      },
-      nullptr);
+  update_queue::uq()->add([](void *) {
+    real_menus_init();
+    real_menus_update();
+  });
 }
 
 // Update the menus.
@@ -347,14 +324,14 @@ static void menus_update_callback(void *) { real_menus_update(); }
 void menus_update(void)
 {
   if (!update_queue::uq()->has_callback(menus_update_callback)) {
-    update_queue::uq()->add(menus_update_callback, nullptr);
+    update_queue::uq()->add(menus_update_callback);
   }
 }
 
 // Update multipliers/policy dialog.
 void multipliers_dialog_update(void)
 {
-  update_queue::uq()->add(real_multipliers_dialog_update, nullptr);
+  update_queue::uq()->add(real_multipliers_dialog_update);
 }
 
 // Update cities gui.
@@ -406,7 +383,7 @@ void popup_city_dialog(struct city *pcity)
   pcity->client.need_updates =
       static_cast<city_updates>(static_cast<int>(pcity->client.need_updates)
                                 | static_cast<int>(CU_POPUP_DIALOG));
-  update_queue::uq()->add(cities_update_callback, nullptr);
+  update_queue::uq()->add(cities_update_callback);
 }
 
 // Request the city dialog to be updated for the city.
@@ -415,7 +392,7 @@ void refresh_city_dialog(struct city *pcity)
   pcity->client.need_updates =
       static_cast<city_updates>(static_cast<int>(pcity->client.need_updates)
                                 | static_cast<int>(CU_UPDATE_DIALOG));
-  update_queue::uq()->add(cities_update_callback, nullptr);
+  update_queue::uq()->add(cities_update_callback);
 }
 
 // Request the city to be updated in the city report.
@@ -424,47 +401,47 @@ void city_report_dialog_update_city(struct city *pcity)
   pcity->client.need_updates =
       static_cast<city_updates>(static_cast<int>(pcity->client.need_updates)
                                 | static_cast<int>(CU_UPDATE_REPORT));
-  update_queue::uq()->add(cities_update_callback, nullptr);
+  update_queue::uq()->add(cities_update_callback);
 }
 
 // Update the connection list in the start page.
 void conn_list_dialog_update(void)
 {
-  update_queue::uq()->add(real_conn_list_dialog_update, nullptr);
+  update_queue::uq()->add(real_conn_list_dialog_update);
 }
 
 // Update the nation report.
 void players_dialog_update(void)
 {
-  update_queue::uq()->add(real_players_dialog_update, nullptr);
+  update_queue::uq()->add(real_players_dialog_update);
 }
 
 // Update the city report.
 void city_report_dialog_update(void)
 {
-  update_queue::uq()->add(real_city_report_dialog_update, nullptr);
+  update_queue::uq()->add(real_city_report_dialog_update);
 }
 
 // Update the science report.
 void science_report_dialog_update(void)
 {
-  update_queue::uq()->add(real_science_report_dialog_update, nullptr);
+  update_queue::uq()->add(real_science_report_dialog_update);
 }
 
 // Update the economy report.
 void economy_report_dialog_update(void)
 {
-  update_queue::uq()->add(real_economy_report_dialog_update, nullptr);
+  update_queue::uq()->add(real_economy_report_dialog_update);
 }
 
 // Update the units report.
 void units_report_dialog_update(void)
 {
-  update_queue::uq()->add(real_units_report_dialog_update, nullptr);
+  update_queue::uq()->add(real_units_report_dialog_update);
 }
 
 // Update the units report.
 void unit_select_dialog_update(void)
 {
-  update_queue::uq()->add(unit_select_dialog_update_real, nullptr);
+  update_queue::uq()->add(unit_select_dialog_update_real);
 }
