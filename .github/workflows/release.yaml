@@ -20,7 +20,10 @@ jobs:
           commit-message: "Release update of AutoRevision.txt"
           branch: "release/autorevision"
           title: "Release update of AutoRevision.txt"
-          body: "Automatic changes triggered by a new release"
+          body: >
+            Automatic changes triggered by a new release.
+
+            Close and reopen this pull request to start the CI.
           delete-branch: true
   update-archive:
     name: "Update Source Archive"
