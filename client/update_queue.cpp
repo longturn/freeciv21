@@ -126,18 +126,11 @@ void update_queue::init()
     data_destroy(pair.second);
   }
 
-  for (auto a : qAsConst(wq_processing_started)) {
+  for (auto a : qAsConst(wq_processing_finished)) {
     for (auto data : qAsConst(*a)) {
       wq_data_destroy(data);
     }
-
-    for (auto a : qAsConst(wq_processing_finished)) {
-      for (auto data : qAsConst(*a)) {
-        wq_data_destroy(data);
-      }
-    }
   }
-  wq_processing_started.clear();
   wq_processing_finished.clear();
 }
 
@@ -162,12 +155,6 @@ void update_queue::data_destroy(struct update_queue_data *uq_data)
     uq_data->free_data_func(uq_data->data);
   }
   delete uq_data;
-}
-
-// Moves the instances waiting to the request_id to the callback queue.
-void update_queue::processing_started(int request_id)
-{
-  wq_run_requests(wq_processing_started, request_id);
 }
 
 // Moves the instances waiting to the request_id to the callback queue.
@@ -254,16 +241,6 @@ bool update_queue::has_callback_full(uq_callback_t callback,
   return false;
 }
 
-// Connects the callback to the start of the processing (in server side) of
-// the request.
-void update_queue::connect_processing_started_full(
-    int request_id, uq_callback_t callback, void *data,
-    uq_free_fn_t free_data_func)
-{
-  wq_add_request(wq_processing_started, request_id, callback, data,
-                 free_data_func);
-}
-
 // Connects the callback to the end of the processing (in server side) of
 // the request.
 void update_queue::connect_processing_finished(int request_id,
@@ -302,15 +279,6 @@ void update_queue::connect_processing_finished_full(
 {
   wq_add_request(wq_processing_finished, request_id, callback, data,
                  free_data_func);
-}
-
-// Connects the callback to the start of the processing (in server side) of
-// the request.
-void update_queue::connect_processing_started(int request_id,
-                                              uq_callback_t callback,
-                                              void *data)
-{
-  wq_add_request(wq_processing_started, request_id, callback, data, nullptr);
 }
 
 // Set the client page.

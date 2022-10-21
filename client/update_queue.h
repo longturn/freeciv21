@@ -39,7 +39,6 @@ typedef QHash<int, waitq_list *> waitingQueue;
 class update_queue {
   static update_queue *m_instance;
   QQueue<updatePair> queue;
-  waitingQueue wq_processing_started;
   waitingQueue wq_processing_finished;
   bool has_idle_cb = {false};
 
@@ -49,19 +48,14 @@ public:
   ~update_queue();
   void init();
   void add(uq_callback_t callback, void *data);
-  void processing_started(int request_id);
   void processing_finished(int request_id);
   bool has_callback(uq_callback_t callback);
   bool has_callback_full(uq_callback_t cb, const void **data,
                          uq_free_fn_t *free_fn);
-  void connect_processing_started(int request_id, uq_callback_t cb,
-                                  void *data);
   void connect_processing_finished(int request_id, uq_callback_t cb,
                                    void *data);
   void connect_processing_finished_unique(int request_id, uq_callback_t cb,
                                           void *data);
-  void connect_processing_started_full(int request_id, uq_callback_t cb,
-                                       void *data, uq_free_fn_t free_fn);
   void connect_processing_finished_full(int request_id, uq_callback_t cb,
                                         void *data, uq_free_fn_t free_func);
 
