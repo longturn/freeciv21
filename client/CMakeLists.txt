@@ -133,6 +133,7 @@ target_sources(
   voteinfo.cpp
   voteinfo_bar.cpp
   widgetdecorations.cpp
+  unithudselector.cpp
   # Generated
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_client_gen.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_client_gen.h

@@ -53,6 +53,7 @@
 #include "page_game.h"
 #include "qtg_cxxside.h"
 #include "sprite.h"
+#include "unithudselector.h"
 #include "unitselect.h"
 
 // Locations for non action enabler controlled buttons.
