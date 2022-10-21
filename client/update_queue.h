@@ -49,7 +49,6 @@ public:
   ~update_queue();
   void init();
   void add(uq_callback_t callback, void *data);
-  void add_full(uq_callback_t cb, void *data, uq_free_fn_t free_fn);
   void processing_started(int request_id);
   void processing_finished(int request_id);
   bool has_callback(uq_callback_t callback);
