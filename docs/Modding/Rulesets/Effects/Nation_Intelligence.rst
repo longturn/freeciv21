@@ -12,7 +12,7 @@ Nation_Intelligence
     Add the ``+Nation_Intelligence`` option to ``effects.ruleset``.
 
 The ``Nation_Intelligence`` effect controls what kind of information about a
-foreign nation is visible in the players report. A value of ``0`` or lower hides
+foreign nation is visible in the Nations View. A value of ``0`` or lower hides
 the information, while it becomes visible when the effect evaluates to ``1`` or
 bigger. For instance, the following effect repurposes the
 :wonder:`United Nations` to reveal everyone's secrets to everone else:
