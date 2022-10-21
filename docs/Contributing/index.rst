@@ -11,5 +11,6 @@ Freeciv21 project.
   visual-studio.rst
   pull-request.rst
   eval-pull-request.rst
+  release.rst
   style-guide.rst
   :maxdepth: 1
