@@ -5093,8 +5093,6 @@ void handle_processing_started()
   fc_assert(client.conn.client.request_id_of_currently_handled_packet == 0);
   client.conn.client.request_id_of_currently_handled_packet =
       get_next_request_id(client.conn.client.last_processed_request_id_seen);
-  update_queue::uq()->processing_started(
-      client.conn.client.request_id_of_currently_handled_packet);
 
   log_debug("start processing packet %d",
             client.conn.client.request_id_of_currently_handled_packet);
