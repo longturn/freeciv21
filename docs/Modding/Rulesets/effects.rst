@@ -728,7 +728,7 @@ Wonder_Visible
         in ``effects.ruleset``.
 
 Nation_Intelligence
-    Controls the information available in the players report. :doc:`See the
+    Controls the information available in the Nations View. :doc:`See the
     detailed description. <Effects/Nation_Intelligence>`
 
     .. toctree::
