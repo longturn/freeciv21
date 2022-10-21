@@ -1,7 +1,7 @@
 ; This file contains the Nation_Intelligence effects used in most rulesets.
 ; Include it in effects.ruleset with:
 ;
-; *include default/nation_intelligence_effects.ruleset
+; *include "default/nation_intelligence_effects.ruleset"
 ;
 ; You'll also want to add the +Nation_Intelligence option to effects.ruleset.
 
