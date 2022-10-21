@@ -648,16 +648,19 @@ void fc_client::create_loading_page()
  */
 void fc_client::start_tutorial()
 {
-  const auto il = find_files_in_path(
-      get_scenario_dirs(), QStringLiteral("tutorial.sav.*"), false);
-  if (!il.isEmpty()) {
-    for (const auto &info : qAsConst(il)) {
-      current_file = info.absoluteFilePath();
-    }
+  const auto il = find_files_in_path(get_scenario_dirs(),
+                                     QStringLiteral("tutorial.sav*"), false);
+  if (il.isEmpty()) {
+    qCritical(_("Could not find the tutorial savegame."));
+    return;
   }
-  update_queue::uq()->connect_processing_finished(
-      client.conn.client.last_request_id_used,
-      [current_file](void *) { start_from_file(current_file); }, nullptr);
+
+  current_file = il.front().absoluteFilePath();
+  if (client_start_server(client_url().userName())) {
+    update_queue::uq()->connect_processing_finished(
+        client.conn.client.last_request_id_used,
+        [](void *) { king()->start_from_file(king()->current_file); }, this);
+  }
 }
 
 /**
