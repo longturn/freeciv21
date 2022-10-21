@@ -38,8 +38,9 @@ These are the general steps to prepare and finalize a release:
    Longturn.net Discord server.
 #. The release manager will download the Windows i686 and x86_64 installer packages and use thier Microsoft
    Account to submit the files for Microsoft SmartScreen analysis. The instructions are `provided here
-   <https://learn.microsoft.com/en-us/windows/security/threat-protection/microsoft-defender-smartscreen/microsoft-defender-smartscreen-overview#submit-files-to-microsoft-defender-smartscreen-for-review>`_. We do this to help our Windows based users have an easier time downloading the
-   game in the Microsoft Edge browser.
+   <https://learn.microsoft.com/en-us/windows/security/threat-protection/microsoft-defender-smartscreen/microsoft-defender-smartscreen-overview#submit-files-to-microsoft-defender-smartscreen-for-review>`_.
+   We do this to help our Windows based users have an easier time downloading the game in the Microsoft Edge
+   browser.
 
 
 Behind the Scenes
