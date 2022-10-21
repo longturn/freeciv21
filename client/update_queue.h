@@ -41,7 +41,6 @@ class update_queue {
   QQueue<updatePair> queue;
   waitingQueue wq_processing_started;
   waitingQueue wq_processing_finished;
-  int frozen_level = {0};
   bool has_idle_cb = {false};
 
 public:
@@ -69,10 +68,6 @@ public:
 
 private:
   update_queue() = default;
-  void freeze();
-  void thaw();
-  void force_thaw();
-  bool is_frozen() const;
   struct update_queue_data *data_new(void *data, uq_free_fn_t free_fn);
   void data_destroy(struct update_queue_data *dt);
   void update_unqueue();
