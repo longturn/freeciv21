@@ -328,26 +328,25 @@ bool update_queue_is_switching_page(void)
   return update_queue::uq()->has_callback(set_client_page_callback);
 }
 
-// Update the menus.
-static void menus_update_callback(void *data)
-{
-  if (FC_PTR_TO_INT(data)) {
-    real_menus_init();
-  }
-  real_menus_update();
-}
-
 // Request the menus to be initialized and updated.
 void menus_init(void)
 {
-  update_queue::uq()->add(menus_update_callback, FC_INT_TO_PTR(true));
+  update_queue::uq()->add(
+      [](void *) {
+        real_menus_init();
+        real_menus_update();
+      },
+      nullptr);
 }
+
+// Update the menus.
+static void menus_update_callback(void *) { real_menus_update(); }
 
 // Request the menus to be updated.
 void menus_update(void)
 {
   if (!update_queue::uq()->has_callback(menus_update_callback)) {
-    update_queue::uq()->add(menus_update_callback, FC_INT_TO_PTR(false));
+    update_queue::uq()->add(menus_update_callback, nullptr);
   }
 }
 
