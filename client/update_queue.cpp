@@ -164,32 +164,6 @@ void update_queue::data_destroy(struct update_queue_data *uq_data)
   delete uq_data;
 }
 
-// Freezes the update queue.
-void update_queue::freeze(void) { frozen_level++; }
-
-// Unfreezes the update queue by 1
-void update_queue::thaw(void)
-{
-  frozen_level--;
-  if (0 == frozen_level && !has_idle_cb && 0 < queue.size()) {
-    has_idle_cb = true;
-    update_unqueue();
-  } else if (0 > frozen_level) {
-    qWarning("update_queue::frozen_level < 0");
-    frozen_level = 0;
-  }
-}
-
-// Unfreeze queue
-void update_queue::force_thaw(void)
-{
-  while (is_frozen()) {
-    thaw();
-  }
-}
-
-bool update_queue::is_frozen(void) const { return (0 < frozen_level); }
-
 // Moves the instances waiting to the request_id to the callback queue.
 void update_queue::processing_started(int request_id)
 {
@@ -206,11 +180,6 @@ void update_queue::processing_finished(int request_id)
 void update_queue::update_unqueue()
 {
   updatePair pair;
-  if (is_frozen() || !tileset_is_fully_loaded()) {
-    // Cannot update now, let's add it again.
-    has_idle_cb = false;
-    return;
-  }
 
   has_idle_cb = false;
 
@@ -241,7 +210,7 @@ void update_queue::push(uq_callback_t callback,
   }
   queue.enqueue(qMakePair(callback, uq_data));
 
-  if (!has_idle_cb && !is_frozen()) {
+  if (!has_idle_cb) {
     has_idle_cb = true;
     update_unqueue();
   }
