@@ -19,26 +19,26 @@
 typedef void (*uq_callback_t)(void *data);
 typedef void (*uq_free_fn_t)(void *data);
 
-// Data type in 'update_queue'.
-struct update_queue_data {
-  void *data;
-  uq_free_fn_t free_data_func;
-};
-
 // Type of data listed in 'wq_processing_started' and
 // 'wq_processing_finished.'
 struct waiting_queue_data {
   uq_callback_t callback;
-  struct update_queue_data *uq_data;
+  void *data;
+  uq_free_fn_t free_data_func;
+
+  bool operator==(const waiting_queue_data &other) const
+  {
+    return callback == other.callback && data == other.data
+           && free_data_func == other.free_data_func;
+  }
 };
 
-typedef QList<struct waiting_queue_data *> waitq_list;
-typedef QPair<uq_callback_t, struct update_queue_data *> updatePair;
-typedef QHash<int, waitq_list *> waitingQueue;
+typedef QList<waiting_queue_data> waitq_list;
+typedef QHash<int, waitq_list> waitingQueue;
 
 class update_queue {
   static update_queue *m_instance;
-  QQueue<updatePair> queue;
+  QQueue<waiting_queue_data> queue;
   waitingQueue wq_processing_finished;
   bool has_idle_cb = {false};
 
@@ -61,16 +61,10 @@ public:
 
 private:
   update_queue() = default;
-  struct update_queue_data *data_new(void *data, uq_free_fn_t free_fn);
-  void data_destroy(struct update_queue_data *dt);
   void update_unqueue();
-  void push(uq_callback_t cb, struct update_queue_data *dt);
-  struct update_queue_data *
-  wq_data_extract(struct waiting_queue_data *wq_data);
+  void push(const waiting_queue_data &wq);
   void wq_run_requests(waitingQueue &hash, int request_id);
-  void wq_data_destroy(struct waiting_queue_data *wq_data);
-  struct waiting_queue_data *wq_data_new(uq_callback_t callback, void *data,
-                                         uq_free_fn_t free_fn);
+  void wq_data_destroy(waiting_queue_data &wq_data);
   void wq_add_request(waitingQueue &hash, int request_id, uq_callback_t cb,
                       void *data, uq_free_fn_t free_fn);
 };
