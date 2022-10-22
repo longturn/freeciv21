@@ -63,10 +63,10 @@ private:
   update_queue() = default;
   void update_unqueue();
   void push(const waiting_queue_data &wq);
-  void wq_run_requests(waitingQueue &hash, int request_id);
+  void wq_run_requests(int request_id);
   void wq_data_destroy(waiting_queue_data &wq_data);
-  void wq_add_request(waitingQueue &hash, int request_id, uq_callback_t cb,
-                      void *data, uq_free_fn_t free_fn);
+  void wq_add_request(int request_id, uq_callback_t cb, void *data,
+                      uq_free_fn_t free_fn);
 };
 
 bool update_queue_is_switching_page(void);
