@@ -60,17 +60,17 @@ void update_queue::drop()
 }
 
 // Moves the instances waiting to the request_id to the callback queue.
-void update_queue::wq_run_requests(waitingQueue &hash, int request_id)
+void update_queue::wq_run_requests(int request_id)
 {
-  if (!hash.contains(request_id)) {
+  if (!wq_processing_finished.contains(request_id)) {
     return;
   }
 
-  auto list = hash.value(request_id);
+  auto list = wq_processing_finished.value(request_id);
   for (const auto &wq_data : qAsConst(list)) {
     queue.push_back(wq_data);
   }
-  hash.remove(request_id);
+  wq_processing_finished.remove(request_id);
 }
 
 // Free a waiting queue data.
@@ -85,11 +85,11 @@ void update_queue::wq_data_destroy(waiting_queue_data &wq_data)
 }
 
 // Connects the callback to a network event.
-void update_queue::wq_add_request(waitingQueue &hash, int request_id,
-                                  uq_callback_t callback, void *data,
-                                  uq_free_fn_t free_data_func)
+void update_queue::wq_add_request(int request_id, uq_callback_t callback,
+                                  void *data, uq_free_fn_t free_data_func)
 {
-  hash[request_id].append({callback, data, free_data_func});
+  wq_processing_finished[request_id].append(
+      {callback, data, free_data_func});
 }
 
 // clears content
@@ -113,7 +113,7 @@ update_queue::~update_queue() { init(); }
 // Moves the instances waiting to the request_id to the callback queue.
 void update_queue::processing_finished(int request_id)
 {
-  wq_run_requests(wq_processing_finished, request_id);
+  wq_run_requests(request_id);
 }
 
 // Unqueue all updates.
@@ -162,8 +162,7 @@ void update_queue::connect_processing_finished(int request_id,
                                                uq_callback_t callback,
                                                void *data)
 {
-  wq_add_request(wq_processing_finished, request_id, callback, data,
-                 nullptr);
+  wq_add_request(request_id, callback, data, nullptr);
 }
 
 /**
@@ -182,8 +181,7 @@ void update_queue::connect_processing_finished_unique(int request_id,
       }
     }
   }
-  wq_add_request(wq_processing_finished, request_id, callback, data,
-                 nullptr);
+  wq_add_request(request_id, callback, data, nullptr);
 }
 
 // Connects the callback to the end of the processing (in server side) of
@@ -192,8 +190,7 @@ void update_queue::connect_processing_finished_full(
     int request_id, uq_callback_t callback, void *data,
     uq_free_fn_t free_data_func)
 {
-  wq_add_request(wq_processing_finished, request_id, callback, data,
-                 free_data_func);
+  wq_add_request(request_id, callback, data, free_data_func);
 }
 
 namespace {
