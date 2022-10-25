@@ -975,6 +975,41 @@ void popup_connect_msg(const char *headline, const char *message)
 void popup_notify_dialog(const char *caption, const char *headline,
                          const char *lines)
 {
+
+  /*
+   Item 1084 Information widgets open multiple times
+   See if there is already a dialog on the screen for the inputted type and
+   if so remove it. There are 2 "Traveler's Report:" captions so must
+   distinquish between the 2 by looking at the headline
+  */
+
+  QList<notify_dialog *> nd_list;
+  notify_dialog *loopnd;
+  QString loopcompare;
+  std::string loopcomparestr;
+  int i;
+  char inputcompare[100];
+  char loopcomparechar[100];
+  bool currentdemographics = true;
+
+  if (strcmp(caption, "Traveler's Report:") == 0) {
+    currentdemographics = false;
+  }
+  strcpy(inputcompare, currentdemographics ? caption : headline);
+
+  nd_list = queen()->game_tab_widget->findChildren<notify_dialog *>();
+  for (i = 0; i < nd_list.count(); i++) {
+    loopnd = nd_list[i];
+    loopcompare = currentdemographics ? loopnd->qcaption : loopnd->qheadline;
+    loopcomparestr = loopcompare.toStdString();
+    strcpy(loopcomparechar, loopcomparestr.c_str());
+
+    if (strcmp(loopcomparechar, inputcompare) == 0) {
+      nd_list[i]->close();
+      break;
+    }
+  }
+
   notify_dialog *nd =
       new notify_dialog(caption, headline, lines, queen()->mapview_wdg);
   nd->show();

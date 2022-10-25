@@ -38,6 +38,8 @@ public:
   void update_menu() override;
   ~notify_dialog() override;
   void restart();
+  QString qcaption;
+  QString qheadline;
 
 protected:
   void mousePressEvent(QMouseEvent *event) override;
@@ -50,8 +52,7 @@ private:
   close_widget *cw;
   QLabel *label;
   QVBoxLayout *layout;
-  QString qcaption;
-  QString qheadline;
+
   QStringList qlist;
   QFont small_font;
   QPoint cursor;
