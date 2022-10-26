@@ -1273,7 +1273,7 @@ public:
   /// Constructor
   explicit bounce_path_constraint(const player *player,
                                   const tile *start_from, int max_distance)
-      : m_player(player), m_distance(max_distance)
+      : m_player(player), m_start(start_from), m_distance(max_distance)
   {
   }
 
