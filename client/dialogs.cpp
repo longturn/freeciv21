@@ -975,7 +975,6 @@ void popup_connect_msg(const char *headline, const char *message)
 void popup_notify_dialog(const char *caption, const char *headline,
                          const char *lines)
 {
-
   /*
    Item 1084 Information widgets open multiple times
    See if there is already a dialog on the screen for the inputted type and
@@ -995,14 +994,16 @@ void popup_notify_dialog(const char *caption, const char *headline,
   if (strcmp(caption, "Traveler's Report:") == 0) {
     currentdemographics = false;
   }
-  strcpy(inputcompare, currentdemographics ? caption : headline);
+  fc_snprintf(inputcompare, sizeof(inputcompare),
+              currentdemographics ? caption : headline);
 
   nd_list = queen()->game_tab_widget->findChildren<notify_dialog *>();
   for (i = 0; i < nd_list.count(); i++) {
     loopnd = nd_list[i];
     loopcompare = currentdemographics ? loopnd->qcaption : loopnd->qheadline;
     loopcomparestr = loopcompare.toStdString();
-    strcpy(loopcomparechar, loopcomparestr.c_str());
+    fc_snprintf(loopcomparechar, sizeof(loopcomparechar),
+                loopcomparestr.c_str());
 
     if (strcmp(loopcomparechar, inputcompare) == 0) {
       nd_list[i]->close();
