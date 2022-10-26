@@ -1371,13 +1371,12 @@ void bounce_unit(struct unit *punit, bool verbose, bounce_reason reason,
       unit_server_side_agent_set(pplayer, punit, SSA_NONE);
       handle_unit_orders(pplayer, &packet);
 
-      // Make sure we do something sensible even if the unit fails to move
-      // (below). In principle it should be fine...
       if (punit->tile != punit_tile) {
         return;
       }
+      // Do something sensible if the unit fails to move (below). This
+      // happens, for instance, if it is out of moves for the turn.
     }
-    fc_assert(punit->tile != punit_tile);
   }
 
   /* Didn't find a place to bounce the unit, going to disband it.
