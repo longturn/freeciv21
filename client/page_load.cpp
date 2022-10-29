@@ -117,6 +117,8 @@ void page_load::update_load_page()
     row++;
   }
 
+  ui.saves_load->sortByColumn(1, Qt::DescendingOrder);
+
   if (!files.isEmpty()) {
     ui.saves_load->setCurrentCell(0, 0); // Select the latest save
   }
