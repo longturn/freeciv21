@@ -111,8 +111,7 @@ void page_load::update_load_page()
     item->setText(info.fileName());
     ui.saves_load->setItem(row, 0, item);
     item = new QTableWidgetItem();
-    item->setText(info.lastModified().toString(
-        QLocale().dateTimeFormat(QLocale::ShortFormat)));
+    item->setData(Qt::DisplayRole, QDateTime(info.lastModified()));
     ui.saves_load->setItem(row, 1, item);
     row++;
   }
