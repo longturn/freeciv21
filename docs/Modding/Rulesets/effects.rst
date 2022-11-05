@@ -666,6 +666,13 @@ Nuke_Improvement_Pct
     Only regular improvements (not wonders) are affected. Improvements protected from Sabotage (Eg: City Walls)
     aren't affected.
 
+Nuke_Infrastructure_Pct
+    Percentage chance that an extra located within a nuclear blast area gets destroyed.
+    Only "Infra" extras such as roads and irrigation are affected, and rmreqs are also checked.
+
+    Note that an `Extra` requirement will match any extra on the tile, not only the one
+    considered for destruction.
+
 Shield2Gold_Factor
     Factor in percent for the conversion of unit shield upkeep to gold upkeep. A value of 200 would transfer
     1 shield upkeep to 2 gold upkeep. The range of this effect must be player or world. Note that only units

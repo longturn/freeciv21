@@ -311,6 +311,8 @@
 #define SPECENUM_VALUE132NAME "Wonder_Visible"
 #define SPECENUM_VALUE133 EFT_NATION_INTELLIGENCE
 #define SPECENUM_VALUE133NAME "Nation_Intelligence"
+#define SPECENUM_VALUE134 EFT_NUKE_INFRASTRUCTURE_PCT
+#define SPECENUM_VALUE134NAME "Nuke_Infrastructure_Pct"
 // keep this last
 #define SPECENUM_COUNT EFT_COUNT
 #include "specenum_gen.h"

@@ -18,6 +18,8 @@
 
 // utility
 #include "bitvector.h"
+#include "effects.h"
+#include "extras.h"
 #include "fcintl.h"
 #include "hand_gen.h"
 #include "log.h"
@@ -2937,6 +2939,36 @@ static void do_nuke_tile(struct player *pplayer, struct tile *ptile)
     city_reduce_size(pcity, pop_loss, pplayer, "nuke");
 
     send_city_info(nullptr, pcity);
+  }
+
+  // Nuke tile extras
+  const auto chance = get_target_bonus_effects(
+      nullptr, pplayer, extra_owner(ptile), pcity, nullptr, nullptr, nullptr,
+      nullptr, nullptr, nullptr, nullptr, EFT_NUKE_INFRASTRUCTURE_PCT);
+  if (chance > 0) {
+    extra_type_iterate(extra)
+    {
+      // Only destroy Infra
+      if (extra->category != ECAT_INFRA) {
+        continue;
+      }
+
+      // Only destroy what the tile has
+      if (!tile_has_extra(ptile, extra)) {
+        continue;
+      }
+
+      // Only destroy if allowed
+      if (!player_can_remove_extra(extra, pplayer, ptile)) {
+        continue;
+      }
+
+      if (fc_rand(100) <= chance) {
+        // Destroy it
+        destroy_extra(ptile, extra);
+      }
+    }
+    extra_type_iterate_end;
   }
 
   if (fc_rand(2) == 1) {
