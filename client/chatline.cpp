@@ -69,6 +69,8 @@ void chat_listener::update_word_list()
   QString str;
   static QStringList server_commands;
 
+  word_list.clear();
+
   // sourced from server/commands.cpp
   server_commands << "/start";
   server_commands << "/help";
@@ -188,9 +190,9 @@ void chat_listener::update_word_list()
       word_list << str;
     }
   }
-  players_iterate_end
+  players_iterate_end;
 
-      invoke(&chat_listener::chat_word_list_changed, word_list);
+  invoke(&chat_listener::chat_word_list_changed, word_list);
 }
 
 /**
