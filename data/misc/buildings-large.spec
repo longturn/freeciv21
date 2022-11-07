@@ -41,7 +41,6 @@ sprites = {
   "b.nuclear_plant", "tilesets/buildings/nuclear_plant"
   "b.occupationgov", "tilesets/buildings/occupationgov"
   "b.offshore_platform", "tilesets/buildings/offshore_platform"
-  "b.palace", "tilesets/buildings/palace"
   "b.police_station", "tilesets/buildings/police_station"
   "b.port_facility", "tilesets/buildings/port_facility"
   "b.power_plant", "tilesets/buildings/power_plant"
