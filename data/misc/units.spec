@@ -117,7 +117,7 @@ sprites = {
   "u.scholar", "tilesets/units/scholar"
   "u.scientist", "tilesets/units/scientist"
   "u.scribe", "tilesets/units/scribe"
-  "u.settlers", "tilesets/units/settler"
+  "u.settlers", "tilesets/units/settlers"
   "u.spy", "tilesets/units/spy"
   "u.srcaravel", "tilesets/units/sq_rig_caravel"
   "u.stealth_bomber", "tilesets/units/stealth_bomber"

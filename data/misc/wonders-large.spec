@@ -37,6 +37,7 @@ sprites = {
   "b.mausoleum", "tilesets/wonders/mausoleum_of_halicarnassus"
   "b.michelangelos_chapel", "tilesets/wonders/michelangelos_chapel"
   "b.oracle", "tilesets/wonders/oracle"
+  "b.palace", "tilesets/wonders/palace"
   "b.pyramids", "tilesets/wonders/pyramids"
   "b.seti_program", "tilesets/wonders/seti_program"
   "b.shakespeares_theatre", "tilesets/wonders/shakespeares_theatre"
