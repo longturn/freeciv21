@@ -1019,7 +1019,9 @@ city_info::city_info(QWidget *parent) : QWidget(parent)
   m_waste = create_labels(_("Waste:"));
   m_culture = create_labels(_("Culture:"));
   m_pollution = create_labels(_("Pollution:"));
-  m_plague = create_labels(_("Plague risk:"));
+  if (game.info.illness_on) {
+    m_plague = create_labels(_("Plague risk:"));
+  }
   m_stolen = create_labels(_("Tech Stolen:"));
   m_airlift = create_labels(_("Airlift:"));
 }
@@ -1069,16 +1071,14 @@ void city_info::update_labels(struct city *pcity)
   m_pollution->setText(QString::asprintf("%4d", pcity->pollution));
   m_pollution->setToolTip(get_city_dialog_pollution_text(pcity));
 
-  if (!game.info.illness_on) {
-    m_plague->setText(QStringLiteral(" -.-"));
-  } else {
+  if (game.info.illness_on) {
     auto illness =
         city_illness_calc(pcity, nullptr, nullptr, nullptr, nullptr);
     // illness is in tenth of percent
     m_plague->setText(
         QString::asprintf("%4.1f%%", static_cast<float>(illness) / 10.0));
+    m_plague->setToolTip(get_city_dialog_illness_text(pcity));
   }
-  m_plague->setToolTip(get_city_dialog_illness_text(pcity));
 
   if (pcity->steal) {
     m_stolen->setText(QString::asprintf(_("%d times"), pcity->steal));
