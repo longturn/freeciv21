@@ -28,7 +28,7 @@ sprites = {
   "b.courthouse", "tilesets/buildings/courthouse"
   "b.factory", "tilesets/buildings/factory"
   "b.granary", "tilesets/buildings/granary"
-  "b.harbour", "tilesets/buildings/harbor"
+  "b.harbour", "tilesets/buildings/harbour"
   "b.hospital", "tilesets/buildings/hospital"
   "b.hydro_plant", "tilesets/buildings/hydro_plant"
   "b.library", "tilesets/buildings/library"
