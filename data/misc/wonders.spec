@@ -17,6 +17,7 @@ sprites = {
   "b.copernicus_observatory", "tilesets/wonders/copernicus_observatory-small"
   "b.cure_for_cancer", "tilesets/wonders/cure_for_cancer-small"
   "b.darwins_voyage", "tilesets/wonders/darwins_voyage-small"
+  "b.ecclesiastical_palace", "tilesets/wonders/ecclesiastical_palace"
   "b.eiffel_tower", "tilesets/wonders/eiffel_tower-small"
   "b.great_library", "tilesets/wonders/great_library-small"
   "b.great_wall", "tilesets/wonders/great_wall-small"
