@@ -23,6 +23,7 @@
 #include "climisc.h"
 #include "mapview_common.h"
 #include "sprite.h"
+#include "top_bar.h";
 // gui-qt
 #include "canvas.h"
 #include "fc_client.h"
@@ -442,7 +443,11 @@ void units_reports::add_item(unittype_item *item)
 /**
    Called when close button was pressed
  */
-void units_reports::update_menu() { hide(); }
+void units_reports::update_menu()
+{
+  queen()->sw_cunit->setChecked(false);
+  hide();
+}
 
 /**
    Initiazlizes layout ( layout needs to be changed after adding units )
@@ -604,17 +609,6 @@ void units_reports::update_units(bool show)
   layout->update();
   updateGeometry();
   delete[] unit_array;
-}
-
-/**
-   Mouse press event -activates unit and closes dialog
- */
-void units_reports::mousePressEvent(QMouseEvent *event)
-{
-  if (event->button() == Qt::RightButton) {
-    event->accept();
-    close();
-  }
 }
 
 /**

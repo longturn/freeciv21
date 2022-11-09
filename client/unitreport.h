@@ -99,7 +99,6 @@ public:
 
 protected:
   void hideEvent(QHideEvent *event) override;
-  void mousePressEvent(QMouseEvent *event) override;
   void paintEvent(QPaintEvent *event) override;
   void resizeEvent(QResizeEvent *event) override;
   void showEvent(QShowEvent *event) override;
