@@ -220,7 +220,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
 
   struct cm_parameter cmp;
 
-  if (!game.info.changable_budget) {
+  if (!game.info.changeable_budget) {
     return; // This ruleset does not support changing national budget.
   }
 

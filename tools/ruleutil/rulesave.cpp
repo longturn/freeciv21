@@ -662,9 +662,9 @@ static bool save_cities_ruleset(const char *filename, const char *name)
     secfile_insert_bool(sfile, game.info.angrycitizen,
                         "parameters.angry_citizens");
   }
-  if (game.info.changable_budget != GAME_DEFAULT_CHANGABLE_BUDGET) {
-    secfile_insert_bool(sfile, game.info.changable_budget,
-                        "parameters.changable_budget");
+  if (game.info.changeable_budget != GAME_DEFAULT_CHANGEABLE_BUDGET) {
+    secfile_insert_bool(sfile, game.info.changeable_budget,
+                        "parameters.changeable_budget");
   }
   if (game.info.forced_science != 0) {
     secfile_insert_int(sfile, game.info.forced_science,

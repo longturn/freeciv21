@@ -57,7 +57,7 @@ char *get_parser_buffer();
 // Default ruleset values that are not settings (in game.h)
 
 #define GAME_DEFAULT_ADDTOSIZE 9
-#define GAME_DEFAULT_CHANGABLE_BUDGET true
+#define GAME_DEFAULT_CHANGEABLE_BUDGET true
 #define GAME_DEFAULT_VISION_REVEAL_TILES false
 #define GAME_DEFAULT_NATIONALITY false
 #define GAME_DEFAULT_CONVERT_SPEED 50

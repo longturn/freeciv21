@@ -5662,8 +5662,16 @@ static bool load_ruleset_cities(struct section_file *file,
     game.info.angrycitizen = secfile_lookup_bool_default(
         file, GAME_DEFAULT_ANGRYCITIZEN, "parameters.angry_citizens");
 
-    game.info.changable_budget = secfile_lookup_bool_default(
-        file, GAME_DEFAULT_CHANGABLE_BUDGET, "parameters.changable_budget");
+    if (!secfile_lookup_bool(file, &game.info.changeable_budget,
+                             "parameters.changeable_budget")) {
+      if (secfile_entry_by_path(file, "parameters.changable_tax")) {
+        qCWarning(ruleset_category,
+                  "parameters.changable_tax is deprecated; use "
+                  "parameters.changeable_budget instead.");
+      }
+      game.info.changeable_budget = secfile_lookup_bool_default(
+          file, GAME_DEFAULT_CHANGEABLE_BUDGET, "parameters.changable_tax");
+    }
     game.info.forced_science =
         secfile_lookup_int_default(file, 0, "parameters.forced_science");
     game.info.forced_luxury =
