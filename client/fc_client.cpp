@@ -669,14 +669,12 @@ void fc_client::start_tutorial()
 void fc_client::start_from_file(const QString &file)
 {
   if (!is_server_running()) {
-    client_start_server(client_url().userName());
-    send_chat("/detach");
+    if (client_start_server(client_url().userName())) {
+      send_chat("/detach");
+    }
   }
   if (is_server_running() && !file.isEmpty()) {
-    QByteArray c_bytes;
-
-    c_bytes = file.toLocal8Bit();
-    send_chat_printf("/load %s", c_bytes.data());
+    send_chat_printf("/load %s", qUtf8Printable(file));
     switch_page(PAGE_LOADING);
   }
 }
