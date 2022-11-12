@@ -19,7 +19,6 @@
 #include <cstdio>
 
 // utility
-#include "deprecations.h"
 #include "fcbacktrace.h"
 #include "fciconv.h"
 #include "fcintl.h"
@@ -109,22 +108,12 @@ static QString log_prefix()
 } // anonymous namespace
 
 /**
-   Deprecation warning callback to send event to clients.
- */
-static void depr_warn_callback(const char *msg)
-{
-  notify_conn(nullptr, nullptr, E_DEPRECATION_WARNING, ftc_warning, "%s",
-              msg);
-}
-
-/**
    Initialize logging via console.
  */
 void con_log_init(const QString &log_filename)
 {
   log_set_file(log_filename);
   backtrace_init();
-  deprecation_warn_cb_set(depr_warn_callback);
 
   // Install our handler last so it gets executed first
   original_handler = qInstallMessageHandler(console_handle_message);

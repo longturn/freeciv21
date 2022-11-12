@@ -17,7 +17,3 @@
 #include <QLoggingCategory>
 
 Q_DECLARE_LOGGING_CATEGORY(deprecations_category)
-
-typedef void (*deprecation_warn_callback)(const char *msg);
-
-void deprecation_warn_cb_set(deprecation_warn_callback new_cb);
