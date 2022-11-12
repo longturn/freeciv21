@@ -14,3 +14,15 @@ manual, modpack installer, and ruleset manuals.
   modpack-installer.rst
   on-the-server.rst
   :maxdepth: 2
+
+
+Common Ruleset Reference Pages
+==============================
+
+.. toctree::
+   Rulesets/Common/building_flags.rst
+   Rulesets/Common/tech_adv_flags.rst
+   Rulesets/Common/unit_class_flags.rst
+   Rulesets/Common/unit_type_flags.rst
+   Rulesets/Common/unit_type_roles.rst
+   :maxdepth: 1
