@@ -23,7 +23,7 @@
 #include "climisc.h"
 #include "mapview_common.h"
 #include "sprite.h"
-#include "top_bar.h";
+#include "top_bar.h"
 // gui-qt
 #include "canvas.h"
 #include "fc_client.h"
