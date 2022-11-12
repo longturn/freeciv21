@@ -6,7 +6,7 @@ description="<modpack> cities data for Freeciv"
 options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
-; /* <-- avoid gettext warnings 
+; /* <-- avoid gettext warnings
 ;
 ; A specialist is a city citizen who is not a tile worker.  Usually the
 ; player can control what specialist each citizen is, so long as the
@@ -52,7 +52,7 @@ add_to_size_limit  = 8		; cities >= this cannot be added to.
 angry_citizens = TRUE           ; set to FALSE to disable angry citizens
 celebrate_size_limit = 3        ; cities >= can celebrate
 
-changable_budget = TRUE            ; set to FALSE to disallow changing of national budget
+changeable_budget = TRUE        ; set to FALSE to disallow changing of national budget
 
 ;forced_science = 0		; set these fields when changeable_tax is turned off
 ;forced_luxury = 100

@@ -1711,7 +1711,7 @@ static void get_tax_rates(const struct player *pplayer, int rates[])
 {
   const int SCIENCE = 0, TAX = 1, LUXURY = 2;
 
-  if (game.info.changable_budget) {
+  if (game.info.changeable_budget) {
     rates[SCIENCE] = pplayer->economic.science;
     rates[LUXURY] = pplayer->economic.luxury;
     rates[TAX] = 100 - rates[SCIENCE] - rates[LUXURY];
