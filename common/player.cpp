@@ -1791,7 +1791,7 @@ bool is_valid_username(const char *name)
     if (ch.isLetterOrNumber()) {
       continue;
     }
-    if (ch == '#') {
+    if (ch == '#' || ch == '_') {
       continue;
     }
     return false;
