@@ -12,11 +12,12 @@
  */
 
 #include "page_load.h"
+
 // Qt
 #include <QDateTime>
 #include <QFileDialog>
-#include <qdatetime.h>
-#include <qpushbutton.h>
+#include <QPushButton>
+
 // utility
 #include "fcintl.h"
 // common
@@ -315,8 +316,8 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
       } else {
         ui.load_pix->setPixmap(*(new QPixmap));
       }
-      ui.load_pix->setFixedSize(ui.load_pix->pixmap()->width(),
-                                ui.load_pix->pixmap()->height());
+      ui.load_pix->setFixedSize(ui.load_pix->pixmap().width(),
+                                ui.load_pix->pixmap().height());
       sf.reset(secfile_load_section(fn_bytes.data(),
                                     QStringLiteral("research"), true));
       if (sf) {
