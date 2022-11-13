@@ -321,7 +321,7 @@ public:
 private:
   QLabel *m_size, *m_food, *m_production, *m_trade, *m_gold, *m_luxury,
       *m_science, *m_granary, *m_growth, *m_corruption, *m_waste, *m_culture,
-      *m_pollution, *m_plague, *m_stolen, *m_airlift;
+      *m_pollution, *m_plague_label, *m_plague, *m_stolen, *m_airlift;
 };
 
 class governor_sliders : public QGroupBox {

@@ -999,31 +999,30 @@ city_info::city_info(QWidget *parent) : QWidget(parent)
     label->setProperty(fonts::notify_label, "true");
     info_grid_layout->addWidget(label, info_grid_layout->rowCount(), 0);
 
-    label = new QLabel(this);
-    label->setFont(small_font);
-    label->setProperty(fonts::notify_label, "true");
-    info_grid_layout->addWidget(label, info_grid_layout->rowCount() - 1, 1);
-    return label;
+    auto value = new QLabel(this);
+    value->setFont(small_font);
+    value->setProperty(fonts::notify_label, "true");
+    info_grid_layout->addWidget(value, info_grid_layout->rowCount() - 1, 1);
+    return std::make_pair(label, value);
   };
 
-  m_size = create_labels(_("Citizens:"));
-  m_food = create_labels(_("Food:"));
-  m_production = create_labels(_("Prod:"));
-  m_trade = create_labels(_("Trade:"));
-  m_gold = create_labels(_("Gold:"));
-  m_luxury = create_labels(_("Luxury:"));
-  m_science = create_labels(_("Science:"));
-  m_granary = create_labels(_("Granary:"));
-  m_growth = create_labels(_("Change in:"));
-  m_corruption = create_labels(_("Corruption:"));
-  m_waste = create_labels(_("Waste:"));
-  m_culture = create_labels(_("Culture:"));
-  m_pollution = create_labels(_("Pollution:"));
-  if (game.info.illness_on) {
-    m_plague = create_labels(_("Plague risk:"));
-  }
-  m_stolen = create_labels(_("Tech Stolen:"));
-  m_airlift = create_labels(_("Airlift:"));
+  QLabel *dummy;
+  std::tie(dummy, m_size) = create_labels(_("Citizens:"));
+  std::tie(dummy, m_food) = create_labels(_("Food:"));
+  std::tie(dummy, m_production) = create_labels(_("Prod:"));
+  std::tie(dummy, m_trade) = create_labels(_("Trade:"));
+  std::tie(dummy, m_gold) = create_labels(_("Gold:"));
+  std::tie(dummy, m_luxury) = create_labels(_("Luxury:"));
+  std::tie(dummy, m_science) = create_labels(_("Science:"));
+  std::tie(dummy, m_granary) = create_labels(_("Granary:"));
+  std::tie(dummy, m_growth) = create_labels(_("Change in:"));
+  std::tie(dummy, m_corruption) = create_labels(_("Corruption:"));
+  std::tie(dummy, m_waste) = create_labels(_("Waste:"));
+  std::tie(dummy, m_culture) = create_labels(_("Culture:"));
+  std::tie(dummy, m_pollution) = create_labels(_("Pollution:"));
+  std::tie(m_plague_label, m_plague) = create_labels(_("Plague risk:"));
+  std::tie(dummy, m_stolen) = create_labels(_("Tech Stolen:"));
+  std::tie(dummy, m_airlift) = create_labels(_("Airlift:"));
 }
 
 void city_info::update_labels(struct city *pcity)
@@ -1079,6 +1078,8 @@ void city_info::update_labels(struct city *pcity)
         QString::asprintf("%4.1f%%", static_cast<float>(illness) / 10.0));
     m_plague->setToolTip(get_city_dialog_illness_text(pcity));
   }
+  m_plague_label->setVisible(game.info.illness_on);
+  m_plague->setVisible(game.info.illness_on);
 
   if (pcity->steal) {
     m_stolen->setText(QString::asprintf(_("%d times"), pcity->steal));
