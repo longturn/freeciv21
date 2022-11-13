@@ -366,7 +366,7 @@ chat_widget::chat_widget(QWidget *parent)
 
   gl = new QGridLayout;
   gl->setVerticalSpacing(0);
-  gl->setMargin(0);
+  gl->setContentsMargins(QMargins());
   setLayout(gl);
 
   cb = new QPushButton();
