@@ -129,8 +129,10 @@ bool vertex::operator==(const vertex &other) const
  */
 bool vertex::operator>(const vertex &other) const
 {
-  return std::tie(turns, other.moves_left, other.health, other.fuel_left)
-         > std::tie(other.turns, moves_left, health, fuel_left);
+  return std::tie(turns, other.moves_left, other.health, paradropped,
+                  other.fuel_left)
+         > std::tie(other.turns, moves_left, health, other.paradropped,
+                    fuel_left);
 }
 
 } // namespace detail
