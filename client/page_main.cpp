@@ -37,7 +37,7 @@ page_main::page_main(QWidget *parent, fc_client *gui) : QWidget(parent)
           [gui]() { gui->switch_page(PAGE_SCENARIO); });
   connect(ui.boptions, &QAbstractButton::clicked,
           [=]() { popup_client_options(); });
-  connect(ui.bquit, &QAbstractButton::clicked, gui, &fc_client::quit);
+  connect(ui.bquit, &QAbstractButton::clicked, qApp, &QApplication::quit);
   connect(ui.bconnect, &QPushButton::clicked,
           [gui]() { gui->switch_page(PAGE_NETWORK); });
   connect(ui.bload, &QPushButton::clicked,

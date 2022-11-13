@@ -104,11 +104,6 @@ void ui_main()
 }
 
 /**
-   Return the running QApplication.
- */
-QApplication *current_app() { return qApp; }
-
-/**
    Extra initializers for client options.
  */
 void options_extra_init()

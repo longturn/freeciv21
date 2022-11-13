@@ -315,18 +315,6 @@ void fc_client::timerEvent(QTimerEvent *event)
 }
 
 /**
-   Quit App
- */
-void fc_client::quit()
-{
-  QApplication *qapp = current_app();
-
-  if (qapp != nullptr) {
-    qapp->quit();
-  }
-}
-
-/**
    Disconnect from server and return to MAIN PAGE
  */
 void fc_client::slot_disconnect()
