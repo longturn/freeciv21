@@ -75,9 +75,8 @@ QSize national_budget_widget::sizeHint() const
   QStyleOptionToolButton opt;
   initStyleOption(&opt);
 
-  return style()
-      ->sizeFromContents(QStyle::CT_ToolButton, &opt, content_size, this)
-      .expandedTo(QApplication::globalStrut());
+  return style()->sizeFromContents(QStyle::CT_ToolButton, &opt, content_size,
+                                   this);
 }
 
 /**
@@ -156,9 +155,8 @@ QSize indicators_widget::sizeHint() const
   QStyleOptionToolButton opt;
   initStyleOption(&opt);
 
-  return style()
-      ->sizeFromContents(QStyle::CT_ToolButton, &opt, content_size, this)
-      .expandedTo(QApplication::globalStrut());
+  return style()->sizeFromContents(QStyle::CT_ToolButton, &opt, content_size,
+                                   this);
 }
 
 /**
@@ -378,7 +376,7 @@ void gold_widget::update_contents()
   // Get a localized string representing the income, with the sign
   QString income;
   QTextStream s(&income);
-  s << forcesign << m_income;
+  s << Qt::forcesign << m_income;
 
   // TRANS: Top bar: "gold (income)". The income always includes a sign (e.g.
   //        +123, or -42).
