@@ -492,10 +492,8 @@ void server::accept_connections()
     if (server_make_connection(socket, remote) == 0) {
       // Success making the connection, connect signals
       connect(socket, &QIODevice::readyRead, this, &server::input_on_socket);
-      connect(socket,
-              QOverload<QAbstractSocket::SocketError>::of(
-                  &QAbstractSocket::error),
-              this, &server::error_on_socket);
+      connect(socket, &QAbstractSocket::errorOccurred, this,
+              &server::error_on_socket);
 
       // Prevents quitidle from firing immediately
       m_someone_ever_connected = true;

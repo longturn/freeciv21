@@ -68,10 +68,8 @@ fcUdpScan::fcUdpScan(QObject *parent) : QUdpSocket(parent)
   fcudp_scan = nullptr;
   connect(this, &QUdpSocket::readyRead, this,
           &fcUdpScan::readPendingDatagrams);
-  connect(
-      this,
-      QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
-      this, &fcUdpScan::sockError);
+  connect(this, &QAbstractSocket::errorOccurred, this,
+          &fcUdpScan::sockError);
 }
 
 /**
