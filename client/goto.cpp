@@ -757,6 +757,9 @@ void send_goto_route()
     request_unit_ssa_set(unit, SSA_NONE);
     send_packet_unit_orders(&client.conn, &packet);
   }
+
+  clear_hover_state();
+  exit_goto_state();
 }
 
 /**
