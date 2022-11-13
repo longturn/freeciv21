@@ -385,7 +385,8 @@ void map_view::wheelEvent(QWheelEvent *event)
     m_renderer->set_origin(m_renderer->origin() - delta);
   } else if (event->modifiers() == Qt::ShiftModifier) {
     // Horizontal scrolling
-    m_renderer->set_origin(m_renderer->origin() - delta.transposed());
+    std::swap(delta.rx(), delta.ry()); // FIXME Qt 6 QPoint::transposed()
+    m_renderer->set_origin(m_renderer->origin() - delta);
   } else if (event->modifiers() == Qt::ControlModifier) {
     // Zooming
     if (delta.y() > 0) {
