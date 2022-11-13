@@ -208,13 +208,7 @@ void resizable_widget::mousePressEvent(QMouseEvent *event)
   }
   if (event->button() == Qt::LeftButton) {
     // Get flag from mouse position
-    auto flags = get_in_event_mouse(event);
-
-    // Check the flag and widget for the presence of a flag
-    if (resizeFlags | flags) {
-      // Save flag and mouse position for mouse move event
-      eventFlags = flags;
-    }
+    eventFlags = resizeFlags & get_in_event_mouse(event);
   }
   event->setAccepted(true);
 }
