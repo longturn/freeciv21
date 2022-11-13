@@ -16,13 +16,9 @@ jobs:
     needs: clang-format
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-22.04]
         compiler: [gcc, clang]
         build_type: ["", Release, Debug, RelWithDebInfo]
-        include:
-          - os: ubuntu-22.04
-            compiler: gcc
-            build_type: Debug
         exclude:
           - compiler: clang
             build_type: RelWithDebInfo
