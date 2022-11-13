@@ -371,6 +371,32 @@ void map_view::resizeEvent(QResizeEvent *event)
 }
 
 /**
+ * The user wants to scroll.
+ */
+void map_view::wheelEvent(QWheelEvent *event)
+{
+  auto delta = event->pixelDelta();
+  if (delta.isNull()) {
+    delta = event->angleDelta();
+  }
+
+  if (event->modifiers() == Qt::NoModifier) {
+    // Scrolling
+    m_renderer->set_origin(m_renderer->origin() - delta);
+  } else if (event->modifiers() == Qt::ShiftModifier) {
+    // Horizontal scrolling
+    m_renderer->set_origin(m_renderer->origin() - delta.transposed());
+  } else if (event->modifiers() == Qt::ControlModifier) {
+    // Zooming
+    if (delta.y() > 0) {
+      zoom_in();
+    } else if (delta.y() < 0) {
+      zoom_out();
+    }
+  }
+}
+
+/**
    Sets new point for new search
  */
 void map_view::resume_searching(int pos_x, int pos_y, int &w, int &h,
