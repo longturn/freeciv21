@@ -38,7 +38,7 @@ message_widget::message_widget(QWidget *parent)
   setParent(parent);
   setMinimumSize(200, 100);
   layout = new QGridLayout;
-  layout->setMargin(2);
+  layout->setContentsMargins(2, 2, 2, 2);
   setLayout(layout);
   setResizable(Qt::LeftEdge | Qt::BottomEdge);
 
