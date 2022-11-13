@@ -184,10 +184,10 @@ struct client_options gui_options = {
     "mapimage filename",
 
     // gui-qt client specific options.
-    false, //.gui_qt_fullscreen =
-    true,  //.gui_qt_show_preview =
-    true,  //.gui_qt_allied_chat_only =
-    0,     // font_increase
+    true, //.gui_qt_fullscreen =
+    true, //.gui_qt_show_preview =
+    true, //.gui_qt_allied_chat_only =
+    0,    // font_increase
     FC_QT_DEFAULT_THEME_NAME,
     "Linux Biolinum O,12,-1,5,50,0,0,0,0,0", //.gui_qt_font_notify_label =
     "Linux Libertine Mono O,12,-1,5,50,0,0,0,0,0", //.gui_qt_font_help_label
@@ -1930,7 +1930,7 @@ static struct client_option client_options[] = {
     GEN_BOOL_OPTION(gui_qt_fullscreen, N_("Fullscreen"),
                     N_("If this option is set the client will use the "
                        "whole screen area for drawing."),
-                    COC_INTERFACE, false, nullptr),
+                    COC_INTERFACE, true, nullptr),
     GEN_BOOL_OPTION(
         gui_qt_show_titlebar, N_("Show titlebar"),
         N_("If this option is set the client will show a titlebar. "
