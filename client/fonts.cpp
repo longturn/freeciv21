@@ -162,101 +162,101 @@ void load_fonts()
 void configure_fonts()
 {
   QStringList sl;
-  QString font_name;
+  QFont font;
 
   const int max = 16;
   const int default_size = 12;
 
-  if (!isFontInstalled("Linux Libertine")) {
+  if (!isFontInstalled(QStringLiteral("Libertinus Sans"))
+      && !isFontInstalled(QStringLiteral("Linux Libertine"))) {
     load_fonts();
   }
 
   /* Sans Serif List */
-  sl << QStringLiteral("Linux Biolinum O")
-     << QStringLiteral("Liberation Sans") << QStringLiteral("Droid Sans")
-     << QStringLiteral("Ubuntu") << QStringLiteral("Noto Sans")
-     << QStringLiteral("DejaVu Sans") << QStringLiteral("Luxi Sans")
-     << QStringLiteral("Lucida Sans") << QStringLiteral("Arial");
+  sl << QStringLiteral("Libertinus Sans")
+     << QStringLiteral("Linux Biolinum O")
+     << QStringLiteral("Linux Biolinum");
 
-  font_name = configure_font(fonts::default_font, sl, max);
-  if (!font_name.isEmpty()) {
-    fc_strlcpy(gui_options.gui_qt_font_default, qUtf8Printable(font_name),
-               512);
+  font = configure_font(fonts::default_font, sl, QFont::SansSerif, max);
+  if (font.exactMatch()) {
+    fc_strlcpy(gui_options.gui_qt_font_default,
+               qUtf8Printable(font.toString()), 512);
   }
-  font_name = configure_font(fonts::notify_label, sl, default_size);
-  if (!font_name.isEmpty()) {
+  font = configure_font(fonts::notify_label, sl, QFont::SansSerif,
+                        default_size);
+  if (font.exactMatch()) {
     fc_strlcpy(gui_options.gui_qt_font_notify_label,
-               qUtf8Printable(font_name), 512);
+               qUtf8Printable(font.toString()), 512);
   }
-  font_name = configure_font(fonts::city_names, sl, max, true);
-  if (!font_name.isEmpty()) {
-    fc_strlcpy(gui_options.gui_qt_font_city_names, qUtf8Printable(font_name),
-               512);
+  font = configure_font(fonts::city_names, sl, QFont::SansSerif, max, true);
+  if (font.exactMatch()) {
+    fc_strlcpy(gui_options.gui_qt_font_city_names,
+               qUtf8Printable(font.toString()), 512);
   }
-  font_name =
-      configure_font(fonts::city_productions, sl, default_size, true);
-  if (!font_name.isEmpty()) {
+  font = configure_font(fonts::city_productions, sl, QFont::SansSerif,
+                        default_size, true);
+  if (font.exactMatch()) {
     fc_strlcpy(gui_options.gui_qt_font_city_productions,
-               qUtf8Printable(font_name), 512);
+               qUtf8Printable(font.toString()), 512);
   }
-  sl.clear();
 
   /* Monospace List */
-  sl << QStringLiteral("Linux Libertine Mono O") << QStringLiteral("Cousine")
-     << QStringLiteral("Liberation Mono")
-     << QStringLiteral("Source Code Pro")
-     << QStringLiteral("Source Code Pro [ADBO]")
-     << QStringLiteral("Noto Mono") << QStringLiteral("Ubuntu Mono")
-     << QStringLiteral("Courier New");
-
-  font_name = configure_font(fonts::help_label, sl, default_size);
-  if (!font_name.isEmpty()) {
-    fc_strlcpy(gui_options.gui_qt_font_help_label, qUtf8Printable(font_name),
-               512);
-  }
-  font_name = configure_font(fonts::help_text, sl, default_size);
-  if (!font_name.isEmpty()) {
-    fc_strlcpy(gui_options.gui_qt_font_help_text, qUtf8Printable(font_name),
-               512);
-  }
-  font_name = configure_font(fonts::chatline, sl, default_size);
-  if (!font_name.isEmpty()) {
-    fc_strlcpy(gui_options.gui_qt_font_chatline, qUtf8Printable(font_name),
-               512);
-  }
   sl.clear();
+  sl << QStringLiteral("Libertinus Mono")
+     << QStringLiteral("Linux Libertine Mono O")
+     << QStringLiteral("Linux Libertine Mono");
+
+  font =
+      configure_font(fonts::help_label, sl, QFont::Monospace, default_size);
+  if (font.exactMatch()) {
+    fc_strlcpy(gui_options.gui_qt_font_help_label,
+               qUtf8Printable(font.toString()), 512);
+  }
+  font =
+      configure_font(fonts::help_text, sl, QFont::Monospace, default_size);
+  if (font.exactMatch()) {
+    fc_strlcpy(gui_options.gui_qt_font_help_text,
+               qUtf8Printable(font.toString()), 512);
+  }
+  font = configure_font(fonts::chatline, sl, QFont::Monospace, default_size);
+  if (font.exactMatch()) {
+    fc_strlcpy(gui_options.gui_qt_font_chatline,
+               qUtf8Printable(font.toString()), 512);
+  }
 
   /* Serif List */
-  sl << QStringLiteral("Linux Libertine Display O")
-     << QStringLiteral("Arimo") << QStringLiteral("Play")
-     << QStringLiteral("Tinos") << QStringLiteral("Ubuntu")
-     << QStringLiteral("Times New Roman") << QStringLiteral("Droid Sans")
-     << QStringLiteral("Noto Sans");
+  sl.clear();
+  sl << QStringLiteral("Libertinus Display")
+     << QStringLiteral("Linux Libertine Display O")
+     << QStringLiteral("Linux Libertine Display");
 
-  font_name = configure_font(fonts::reqtree_text, sl, max, true);
-  if (!font_name.isEmpty()) {
+  font = configure_font(fonts::reqtree_text, sl, QFont::Serif, max, true);
+  if (font.exactMatch()) {
     fc_strlcpy(gui_options.gui_qt_font_reqtree_text,
-               qUtf8Printable(font_name), 512);
+               qUtf8Printable(font.toString()), 512);
   }
 }
 
 /**
    Returns long font name, sets given for for use
  */
-QString configure_font(const QString &font_name, const QStringList &sl,
-                       int size, bool bold)
+QFont configure_font(const QString &font_name, const QStringList &sl,
+                     QFont::StyleHint hint, int size, bool bold)
 {
+  // FIXME Qt 6: Use QFont(QStringList...)
   QFontDatabase database;
 
   for (auto const &str : sl) {
     if (database.families().contains(str)) {
-      auto f = QFont(str, size);
-      if (bold) {
-        f.setBold(true);
-      }
-      fcFont::instance()->setFont(font_name, f);
-      return f.toString();
+      auto font = QFont(str, size, bold ? QFont::Bold : QFont::Normal);
+      font.setStyleHint(hint);
+      fcFont::instance()->setFont(font_name, font);
+      return font;
     }
   }
-  return QString();
+
+  auto font = QFont();
+  font.setStyleHint(hint);
+  fcFont::instance()->setFont(font_name, font);
+  return font;
 }

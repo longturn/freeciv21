@@ -10,10 +10,9 @@
 #pragma once
 
 // Qt
+#include <QFont>
 #include <QMap>
 #include <QStringList>
-
-class QFont;
 
 namespace fonts {
 const char *const default_font = "gui_qt_font_default";
@@ -47,5 +46,5 @@ public:
 bool isFontInstalled(const QString &font_name);
 void load_fonts();
 void configure_fonts();
-QString configure_font(const QString &font_name, const QStringList &sl,
-                       int size, bool bold = false);
+QFont configure_font(const QString &font_name, const QStringList &sl,
+                     QFont::StyleHint hint, int size, bool bold = false);
