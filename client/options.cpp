@@ -1862,7 +1862,7 @@ static struct client_option client_options[] = {
     GEN_BOOL_OPTION(overview.layers[OLAYER_RELIEF],
                     N_("Terrain relief map layer"),
                     N_("The relief layer shows all terrains on the map."),
-                    COC_OVERVIEW, false, overview_redraw_callback),
+                    COC_OVERVIEW, true, overview_redraw_callback),
     GEN_BOOL_OPTION(overview.layers[OLAYER_BORDERS], N_("Borders layer"),
                     N_("The borders layer of the overview shows which tiles "
                        "are owned by each player."),
