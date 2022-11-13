@@ -118,17 +118,14 @@ static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
   // Connect
   if (!client.conn.sock) {
     client.conn.sock = new QTcpSocket;
-    QObject::connect(
-        client.conn.sock,
-        QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
-        [] {
-          if (client.conn.sock != nullptr) {
-            log_debug("%s", qUtf8Printable(client.conn.sock->errorString()));
-            output_window_append(
-                ftc_client, qUtf8Printable(client.conn.sock->errorString()));
-          }
-          client.conn.used = false;
-        });
+    QObject::connect(client.conn.sock, &QAbstractSocket::errorOccurred, [] {
+      if (client.conn.sock != nullptr) {
+        log_debug("%s", qUtf8Printable(client.conn.sock->errorString()));
+        output_window_append(
+            ftc_client, qUtf8Printable(client.conn.sock->errorString()));
+      }
+      client.conn.used = false;
+    });
     QObject::connect(client.conn.sock, &QAbstractSocket::disconnected,
                      [] { client.conn.used = false; });
   }
