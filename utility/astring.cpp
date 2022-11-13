@@ -65,8 +65,7 @@ QString qendl() { return QStringLiteral("\n"); }
 // break line after after n-th char
 QString break_lines(const QString &src, int after)
 {
-  QStringList broken =
-      src.split(QStringLiteral(" "), QString::SkipEmptyParts);
+  QStringList broken = src.split(QStringLiteral(" "), Qt::SkipEmptyParts);
   QString dst;
 
   int clen = 0;
