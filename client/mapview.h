@@ -94,6 +94,7 @@ protected:
   void focusOutEvent(QFocusEvent *event) override;
   void leaveEvent(QEvent *event) override;
   void resizeEvent(QResizeEvent *event) override;
+  void wheelEvent(QWheelEvent *event) override;
 
 private slots:
   void set_scale_now(double scale);
