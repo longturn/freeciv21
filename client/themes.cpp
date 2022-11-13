@@ -27,7 +27,6 @@
 #include "chatline.h"
 #include "fc_client.h"
 
-extern QApplication *current_app();
 extern QString current_theme;
 Q_GLOBAL_STATIC(QString, def_app_style)
 Q_GLOBAL_STATIC(QString, stylestring)
@@ -143,7 +142,7 @@ void gui_load_theme(const QString &directory, const QString &theme_name)
     // FIXME How to reset to the system palette?
     QApplication::setPalette(load_palette(settings));
   }
-  current_app()->setStyleSheet(*stylestring);
+  qApp->setStyleSheet(*stylestring);
   if (king()) {
     queen()->reloadSidebarIcons();
   }
