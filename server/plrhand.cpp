@@ -2174,15 +2174,16 @@ void make_contact(struct player *pplayer1, struct player *pplayer2,
       /* Non-default relation after contact, so send a message
        * Could just modify to send message in any case. */
       /* TRANS: ... the Poles ... Polish territory */
-      char *msg = PL_("You are in armistice with the %s. In %d turn, "
-                      "it will become a peace treaty. Move your "
-                      "military units out of %s territory to avoid them "
-                      "being disbanded.",
-                      "You are in armistice with the %s. In %d turns, "
-                      "it will become a peace treaty. Move any "
-                      "military units out of %s territory to avoid them "
-                      "being disbanded.",
-                      ds_plr1plr2->turns_left);
+      const char *msg =
+          PL_("You are in armistice with the %s. In %d turn, "
+              "it will become a peace treaty. Move your "
+              "military units out of %s territory to avoid them "
+              "being disbanded.",
+              "You are in armistice with the %s. In %d turns, "
+              "it will become a peace treaty. Move any "
+              "military units out of %s territory to avoid them "
+              "being disbanded.",
+              ds_plr1plr2->turns_left);
       notify_player(pplayer1, NULL, E_TREATY_PEACE, ftc_server, msg,
                     nation_plural_for_player(pplayer2),
                     ds_plr1plr2->turns_left,
