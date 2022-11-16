@@ -64,12 +64,6 @@
 #define R__(String) (String)
 #define RQ_(String) skip_intl_qualifier_prefix(String)
 
-#undef textdomain
-#undef bindtextdomain
-
-#define textdomain(Domain)
-#define bindtextdomain(Package, Directory)
-
 #endif // FREECIV_ENABLE_NLS
 
 /* This provides an untranslated version of Q_ that allows the caller to
