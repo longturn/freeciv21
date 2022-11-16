@@ -843,7 +843,7 @@ QString get_city_dialog_growth_value(const struct city *pcity)
     return _("never");
   } else {
     // TRANS: city growth turns.  Keep short.
-    return QString::asprintf(PL_("%d turn", "%d turns", abs(granaryturns)),
+    return QString::asprintf(PL_("%3d turn", "%3d turns", abs(granaryturns)),
                              abs(granaryturns));
   }
 }
