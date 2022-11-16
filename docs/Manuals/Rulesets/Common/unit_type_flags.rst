@@ -10,17 +10,17 @@
 Unit Type Flags
 ***************
 
-Every unit type (e.g. a Unit) in a ruleset can be given zero (``0``) or more flags by ruleset editors. Each
-flag gives additional features to the unit type that has been assigned the flag. A reader can find the flags
-by looking at the :file:`units.ruleset` file in any ruleset directory. The following flags are used in all
-of the rulesets shipped by the Freeciv21 developers: Alien, Civ1, Civ2, Civ2Civ3, Classic, Experimental,
-Granularity, Multiplayer, Royale, and Sandbox.
+Every unit type (e.g. a unit such as a :unit:`Phalanx`) in a ruleset can be given zero or more
+:ref:`flags <Effect Flags>` by ruleset :doc:`modders </Modding/index>`. Each flag gives additional features to
+the unit type that has been assigned the flag. A reader can find the flags by looking at the
+:file:`units.ruleset` file in any ruleset directory. The following flags are used in all of the rulesets
+shipped by the Freeciv21 developers.
 
 :strong:`AirAttacker`
   Very bad at attacking AEGIS.
 
 :strong:`Airbase`
-  This flag does not have a pre-set use. It's available for ruleset modders to add as a condition to an
+  This flag does not have a pre-set use. It is available for ruleset modders to add as a condition to an
   :doc:`action enabler requirements vector </Modding/Rulesets/actions>`.
 
 :strong:`AddToCity`
@@ -81,7 +81,7 @@ Granularity, Multiplayer, Royale, and Sandbox.
   children" with "units with the ``EvacuateFirst`` unit type flag".
 
 :strong:`Fanatic`
-  Can only be built by governments that allow them. Ssee :file:`civ2/governments.ruleset`, Fundamentalism
+  Can only be built by governments that allow them. See :file:`civ2/governments.ruleset`, Fundamentalism
   government for an example.
 
 :strong:`FieldUnit`
