@@ -270,10 +270,7 @@ Once the command line directives are determined, the appropriate command looks l
 .. code-block:: sh
 
   $ cmake . -B build -G Ninja \
-     -DFREECIV_ENABLE_TOOLS=OFF \
-     -DFREECIV_ENABLE_SERVER=ON \
      -DCMAKE_BUILD_TYPE=Release \
-     -DFREECIV_ENABLE_NLS=OFF \
      -DCMAKE_INSTALL_PREFIX=$HOME/Install/Freeciv21
 
 
