@@ -2832,28 +2832,28 @@ void mr_menu::save_image()
     full_size_y = full_size_y / 2;
   }
   map_canvas_resized(full_size_x, full_size_y);
+
   img_name = QStringLiteral("Freeciv21-Turn%1").arg(game.info.turn);
   if (client_has_player()) {
-    img_name =
-        img_name + "-" + QString(nation_plural_for_player(client_player()));
+    img_name += QStringLiteral("-")
+                + QString(nation_plural_for_player(client_player()));
   }
-  storage_path = freeciv_storage_dir();
   path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
-  if (!storage_path.isEmpty() && QDir(storage_path).isReadable()) {
-    img_name = storage_path + "/" + img_name;
-  } else if (!path.isEmpty()) {
-    img_name = path + "/" + img_name;
-  } else {
-    img_name = QStandardPaths::writableLocation(QStandardPaths::HomeLocation)
-               + "/" + img_name;
+  if (path.isEmpty()) {
+    path = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
   }
+  if (path.isEmpty()) {
+    path = freeciv_storage_dir();
+  }
+  img_name = path + QStringLiteral("/") + img_name + QStringLiteral(".png");
+
   map_saved = mapview.store->save(img_name, "png");
   map_canvas_resized(current_width, current_height);
   saved->setStandardButtons(QMessageBox::Ok);
   saved->setDefaultButton(QMessageBox::Ok);
   saved->setAttribute(Qt::WA_DeleteOnClose);
   if (map_saved) {
-    saved->set_text_title("Image saved as:\n" + img_name, _("Success"));
+    saved->set_text_title(_("Image saved as:\n") + img_name, _("Success"));
   } else {
     saved->set_text_title(_("Failed to save image of the map"), _("Error"));
   }
