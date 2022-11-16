@@ -10,11 +10,10 @@
 Unit Type Role Flags
 ********************
 
-Every unit type (e.g. a Unit) in a ruleset can be given zero (``0``) or more roles by ruleset editors. Each
-role gives additional features to the unit type that has been assigned the flag. A reader can find the roles
-by looking at the :file:`units.ruleset` file in any ruleset directory. The following roles are used in all of
-the rulesets shipped by the Freeciv21 developers: Alien, Civ1, Civ2, Civ2Civ3, Classic, Experimental,
-Granularity, Multiplayer, Royale, and Sandbox.
+Every unit type (e.g. a unit such as a :unit:`Phalanx`) in a ruleset can be given zero or more roles by
+ruleset :doc:`modders </Modding/index>`. Each role gives additional features to the unit type that has been
+assigned the flag. A reader can find the roles by looking at the :file:`units.ruleset` file in any ruleset
+directory. The following roles are used in all of the rulesets shipped by the Freeciv21 developers.
 
 :strong:`AttackFastStartUnit`
   Can be designated as an attacking unit at game start.
@@ -44,8 +43,8 @@ Granularity, Multiplayer, Royale, and Sandbox.
   Can be created as a :unit:`Barbarian` that disembarks from a barbarian boat.
 
 :strong:`BarbarianSeaTech`
-  Can be created as a :unit:`Barbarian` that disembarks from a barbarian boatif someone has researched its technology
-  requirements.
+  Can be created as a :unit:`Barbarian` that disembarks from a barbarian boatif someone has researched its
+  technology requirements.
 
 :strong:`BorderPolice`
   Can peacefully expel certain foreign units. See ``Expellable``.

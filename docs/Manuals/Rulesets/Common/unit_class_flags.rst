@@ -10,52 +10,56 @@
 Unit Class Flags
 ****************
 
-Unit Types (e.g. a Unit) are associated or grouped together in a class. Every unit is associated with a single
-class. Each class has a collection of flags that can be associated. Each class can have zero (``0``) or more
-flags associated with it. The flags give additional features to the class that has been assigned the flag. A
-reader can find the flags by looking at the :file:`units.ruleset` file in any ruleset directory. The following
-flags are used in all of the rulesets shipped by the Freeciv21 developers: Alien, Civ1, Civ2, Civ2Civ3,
-Classic, Experimental, Granularity, Multiplayer, Royale, and Sandbox.
+Unit types (e.g. a unit such as a :unit:`Phalanx`) are associated or grouped together in classes. Every
+unit type is associated with a single unit class. Each class can have zero or more :ref:`flags <Effect Flags>`
+assigned to it by ruleset :doc:`modders </Modding/index>`. The flags give additional features to all of the
+unit types associated with the class. A reader can find the unit type flags by looking at the
+:file:`units.ruleset` file in any ruleset directory. The following flags are used in all of the rulesets
+shipped by the Freeciv21 developers.
 
 :strong:`Airliftable`
-  Can be airlifted from a suitable city.
+  Allows a unit to be airlifted from a suitable city. This quite often requires an :improvement:`Airport`.
 
 :strong:`AttackNonNative`
-  Unit can attack units on non-native tiles (e.g. :unit:`Marines` in a :unit:`Transport` attacking a city).
-  The Unit Flag ``Only_Native_Attack`` can override this.
+  Allows a unit to attack another unit on non-native tiles (e.g. :unit:`Marines` in a :unit:`Transport`
+  attacking a city). The Unit Type Flag ``Only_Native_Attack`` can override this.
 
 :strong:`AttFromNonNative`
-  Unit can attack from non-native tile. See ``AttackNonNative``.
+  See ``AttackNonNative``.
 
 :strong:`BuildAnywhere`
-  Unit can be built even in the middle of non-native terrain.
+  Allows a unit to be built even in the middle of non-native terrain.
 
 :strong:`CanFortify`
-  Unit can fortify inside and outside of cities gaining a defense bonus.
+  Allows a Unit to fortify inside and outside of cities, gaining a defense bonus.
 
 :strong:`CanOccupyCity`
-  Can enter a city and take onwership of it.
+  Allows a unit to enter a city and take ownership of it.
 
 :strong:`CanPillage`
-  Can pillage a tile's infrastructure improvements.
+  Allows a unit to pillage a tile's infrastructure improvements. This can be your own tile or that of another
+  nation.
 
 :strong:`CollectRansom`
-  Can collect a ransom from killing a :unit:`Barbarian Leader`.
+  Allows a unit to collect a ransom in gold after killing a :unit:`Barbarian Leader`.
 
 :strong:`DamageSlows`
-  Movement is reduced when damaged.
+  Unit classes with this flag are slowed down (have less than 100% of expected movement points) when damaged.
 
 :strong:`DoesntOccupyTile`
-  Even if this kind of enemy unit is on a tile, cities can still work that tile.
+  These kinds of units do not fully occupy the tile they are on. If the unit is of an enemy nation, your
+  city's citizens can still work that tile. Unit classes without this flag fully occupy the tile and prevent
+  citizen workers from utilizing the tile's capabilities.
 
 :strong:`KillCitizen`
-  When attacking a city will kill citizens.
+  A unit class with this flag will kill city citizens during attack. If too many citizens are killed as part
+  of taking a city, the player may end up with ruins instead of a city.
 
 :strong:`Missile`
-  Acts as a missile.
+  As the flag name implies, these are missiles.
 
 :strong:`TerrainDefense`
-  Units gain defense bonus from terrain.
+  Unit classes with this flag give unit types a defense bonus from certain terrain.
 
 :strong:`TerrainSpeed`
   Units use terrain specific speed.

@@ -1,10 +1,10 @@
 Effects
 *******
 
-The ``effects.ruleset`` file contains all effects in play in a Freeciv21 ruleset. They have the following
+The :file:`effects.ruleset` file contains all effects in play in a Freeciv21 ruleset. They have the following
 form (this is perhaps the most complicated example I could find):
 
-.. code-block:: rst
+.. code-block:: ini
 
     [effect_hydro_plant]
     type  = "Output_Bonus"
@@ -46,6 +46,8 @@ on the game rules.
 
 Requirement types and supported ranges
 ======================================
+
+.. _Effect Flags:
 
 ======================== ================
 Requirement              Supported ranges
