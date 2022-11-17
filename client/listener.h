@@ -148,7 +148,7 @@ template <class _type_> void listener<_type_>::listen()
 ***************************************************************************/
 template <class _type_> listener<_type_>::~listener()
 {
-  instances.erase(reinterpret_cast<type_t *>(this));
+  instances.erase(static_cast<type_t *>(this));
 }
 
 /***************************************************************************
