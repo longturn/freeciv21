@@ -42,6 +42,7 @@
 #include "mapctrl_g.h"
 #include "mapview_common.h"
 #include "ratesdlg_g.h"
+#include "renderer.h"
 #include "repodlgs_g.h"
 #include "tilespec.h"
 // gui-qt
@@ -2815,49 +2816,77 @@ void mr_menu::quit_game() { popup_quit_dialog(); }
  */
 void mr_menu::save_image()
 {
-  int current_width, current_height;
-  int full_size_x, full_size_y;
-  QString path, storage_path;
-  hud_message_box *saved = new hud_message_box(king()->central_wdg);
-  bool map_saved;
-  QString img_name;
+  // Save the size of the map view
+  QSize current = queen()->mapview_wdg->size();
 
-  full_size_x = (wld.map.xsize + 2) * tileset_tile_width(tileset);
-  full_size_y = (wld.map.ysize + 2) * tileset_tile_height(tileset);
-  current_width = queen()->mapview_wdg->width();
-  current_height = queen()->mapview_wdg->height();
+  // The size of the image we want to render
+  QSize full_size((wld.map.xsize + 2) * tileset_tile_width(tileset),
+                  (wld.map.ysize + 2) * tileset_tile_height(tileset));
   if (tileset_hex_width(tileset) > 0) {
-    full_size_y = full_size_y * 11 / 20;
+    full_size.rheight() *= 11;
+    full_size.rheight() /= 20;
   } else if (tileset_is_isometric(tileset)) {
-    full_size_y = full_size_y / 2;
+    full_size.rheight() /= 2;
   }
-  map_canvas_resized(full_size_x, full_size_y);
 
-  img_name = QStringLiteral("Freeciv21-Turn%1").arg(game.info.turn);
-  if (client_has_player()) {
-    img_name += QStringLiteral("-")
-                + QString(nation_plural_for_player(client_player()));
-  }
-  path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
-  if (path.isEmpty()) {
-    path = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
-  }
-  if (path.isEmpty()) {
-    path = freeciv_storage_dir();
-  }
-  img_name = path + QStringLiteral("/") + img_name + QStringLiteral(".png");
+  auto renderer = new freeciv::renderer;
+  renderer->set_viewport_size(full_size);
 
-  map_saved = mapview.store->save(img_name, "png");
-  map_canvas_resized(current_width, current_height);
-  saved->setStandardButtons(QMessageBox::Ok);
-  saved->setDefaultButton(QMessageBox::Ok);
-  saved->setAttribute(Qt::WA_DeleteOnClose);
-  if (map_saved) {
-    saved->set_text_title(_("Image saved as:\n") + img_name, _("Success"));
-  } else {
-    saved->set_text_title(_("Failed to save image of the map"), _("Error"));
-  }
-  saved->show();
+  // Wait for a fullscreen repaint_needed. It will come asynchronously.
+  connect(
+      renderer, &freeciv::renderer::repaint_needed,
+      [=](const QRegion &where) {
+        // Maybe some other update sneaked in -- make sure to ignore it
+        if (where.boundingRect().size() == full_size) {
+          // File path
+          QString img_name =
+              QStringLiteral("Freeciv21-Turn%1").arg(game.info.turn);
+          if (client_has_player()) {
+            img_name += QStringLiteral("-")
+                        + QString(nation_plural_for_player(client_player()));
+          }
+
+          auto path = QStandardPaths::writableLocation(
+              QStandardPaths::PicturesLocation);
+          if (path.isEmpty()) {
+            path = QStandardPaths::writableLocation(
+                QStandardPaths::HomeLocation);
+          }
+          if (path.isEmpty()) {
+            path = freeciv_storage_dir();
+          }
+          img_name =
+              path + QStringLiteral("/") + img_name + QStringLiteral(".png");
+
+          // Render
+          auto pixmap = QPixmap(full_size);
+          pixmap.fill(Qt::black);
+
+          auto painter = QPainter(&pixmap);
+          renderer->render(painter, QRect(pixmap.rect()));
+          renderer->deleteLater();
+
+          // Save
+          bool map_saved = pixmap.save(img_name, "png");
+
+          // Restore the old mapview size
+          map_canvas_resized(current.width(), current.height());
+
+          // Let the user know
+          hud_message_box *saved = new hud_message_box(king()->central_wdg);
+          saved->setStandardButtons(QMessageBox::Ok);
+          saved->setDefaultButton(QMessageBox::Ok);
+          saved->setAttribute(Qt::WA_DeleteOnClose);
+          if (map_saved) {
+            saved->set_text_title(_("Image saved as:\n") + img_name,
+                                  _("Success"));
+          } else {
+            saved->set_text_title(_("Failed to save image of the map"),
+                                  _("Error"));
+          }
+          saved->show();
+        }
+      });
 }
 
 /**
