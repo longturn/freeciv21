@@ -968,8 +968,8 @@ gold_widget[current_warning="2"] {
 }
 
 hud_action {
-  selection-background-color: rgba(25,75,125, 150);
-  color: rgb(5,5,185);
+  selection-background-color: rgba(75, 75, 75, 165);
+  color: white;
 }
 
 hud_units {
