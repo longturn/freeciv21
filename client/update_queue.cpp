@@ -59,29 +59,49 @@ void update_queue::drop()
   m_instance = nullptr;
 }
 
+// Extract the update_queue_data from the waiting queue data.
+struct update_queue_data *
+update_queue::wq_data_extract(struct waiting_queue_data *wq_data)
+{
+  struct update_queue_data *uq_data = wq_data->uq_data;
+  wq_data->uq_data = nullptr;
+  return uq_data;
+}
+
+// Create a new waiting queue data.
+struct waiting_queue_data *
+update_queue::wq_data_new(uq_callback_t callback, void *data,
+                          uq_free_fn_t free_data_func)
+{
+  struct waiting_queue_data *wq_data = new waiting_queue_data;
+  wq_data->callback = callback;
+  wq_data->uq_data = data_new(data, free_data_func);
+  return wq_data;
+}
+
 // Moves the instances waiting to the request_id to the callback queue.
 void update_queue::wq_run_requests(waitingQueue &hash, int request_id)
 {
+  waitq_list *list;
   if (!hash.contains(request_id)) {
     return;
   }
-
-  auto list = hash.value(request_id);
-  for (const auto &wq_data : qAsConst(list)) {
-    queue.push_back(wq_data);
+  list = hash.value(request_id);
+  for (auto wq_data : qAsConst(*list)) {
+    push(wq_data->callback, wq_data_extract(wq_data));
   }
   hash.remove(request_id);
 }
 
 // Free a waiting queue data.
-void update_queue::wq_data_destroy(waiting_queue_data &wq_data)
+void update_queue::wq_data_destroy(struct waiting_queue_data *wq_data)
 {
-  if (wq_data.data && wq_data.free_data_func) {
+  fc_assert_ret(nullptr != wq_data);
+  if (nullptr != wq_data->uq_data) {
     // May be nullptr, see waiting_queue_data_extract().
-    wq_data.free_data_func(wq_data.data);
+    data_destroy(wq_data->uq_data);
   }
-  wq_data.data = nullptr;
-  wq_data.free_data_func = nullptr;
+  delete wq_data;
 }
 
 // Connects the callback to a network event.
@@ -89,19 +109,25 @@ void update_queue::wq_add_request(waitingQueue &hash, int request_id,
                                   uq_callback_t callback, void *data,
                                   uq_free_fn_t free_data_func)
 {
-  hash[request_id].append({callback, data, free_data_func});
+  waitq_list *wqlist;
+  if (!hash.contains(request_id)) {
+    waitq_list *wqlist = new waitq_list;
+    hash.insert(request_id, wqlist);
+  }
+  wqlist = hash.value(request_id);
+  wqlist->append(wq_data_new(callback, data, free_data_func));
 }
 
 // clears content
 void update_queue::init()
 {
   while (!queue.isEmpty()) {
-    auto wq = queue.dequeue();
-    wq_data_destroy(wq);
+    updatePair pair = queue.dequeue();
+    data_destroy(pair.second);
   }
 
   for (auto a : qAsConst(wq_processing_finished)) {
-    for (auto &data : a) {
+    for (auto data : qAsConst(*a)) {
       wq_data_destroy(data);
     }
   }
@@ -109,6 +135,27 @@ void update_queue::init()
 }
 
 update_queue::~update_queue() { init(); }
+
+// Create a new update queue data.
+struct update_queue_data *update_queue::data_new(void *data,
+                                                 uq_free_fn_t free_data_func)
+{
+  struct update_queue_data *uq_data = new update_queue_data();
+
+  uq_data->data = data;
+  uq_data->free_data_func = free_data_func;
+  return uq_data;
+}
+
+//  Free a update queue data.
+void update_queue::data_destroy(struct update_queue_data *uq_data)
+{
+  fc_assert_ret(nullptr != uq_data);
+  if (nullptr != uq_data->free_data_func) {
+    uq_data->free_data_func(uq_data->data);
+  }
+  delete uq_data;
+}
 
 // Moves the instances waiting to the request_id to the callback queue.
 void update_queue::processing_finished(int request_id)
@@ -119,22 +166,36 @@ void update_queue::processing_finished(int request_id)
 // Unqueue all updates.
 void update_queue::update_unqueue()
 {
+  updatePair pair;
+
   has_idle_cb = false;
 
   // Invoke callbacks.
   while (!queue.isEmpty()) {
-    auto wq = queue.dequeue();
-    wq.callback(wq.data);
-    wq_data_destroy(wq);
+    pair = queue.dequeue();
+    auto callback = pair.first;
+    auto uq_data = pair.second;
+    callback(uq_data->data);
+    data_destroy(uq_data);
   }
 }
 
 // Add a callback to the update queue. NB: you can only set a callback
 // once. Setting a callback twice will put new callback at end.
-void update_queue::push(const waiting_queue_data &wq)
+void update_queue::push(uq_callback_t callback,
+                        struct update_queue_data *uq_data)
 {
-  queue.removeAll(wq);
-  queue.enqueue(wq);
+  struct update_queue_data *uqr_data = nullptr;
+  for (auto p : qAsConst(queue)) {
+    if (p.first == callback)
+      uqr_data = p.second;
+  }
+  auto pr = qMakePair(callback, uqr_data);
+  queue.removeAll(pr);
+  if (uqr_data) {
+    data_destroy(uqr_data);
+  }
+  queue.enqueue(qMakePair(callback, uq_data));
 
   if (!has_idle_cb) {
     has_idle_cb = true;
@@ -146,14 +207,17 @@ void update_queue::push(const waiting_queue_data &wq)
 // once. Setting a callback twice will overwrite the previous.
 void update_queue::add(uq_callback_t callback)
 {
-  push({callback, nullptr, nullptr});
+  push(callback, data_new(nullptr, nullptr));
 }
 
 // Returns whether this callback is listed in the update queue.
 bool update_queue::has_callback(uq_callback_t callback)
 {
-  return std::any_of(queue.cbegin(), queue.cend(),
-                     [&](auto &wq) { return wq.callback == callback; });
+  for (auto pair : qAsConst(queue)) {
+    if (pair.first == callback)
+      return true;
+  }
+  return false;
 }
 
 // Connects the callback to the end of the processing (in server side) of
@@ -175,8 +239,8 @@ void update_queue::connect_processing_finished_unique(int request_id,
                                                       void *data)
 {
   if (wq_processing_finished.contains(request_id)) {
-    for (const auto &d : wq_processing_finished[request_id]) {
-      if (d.callback == callback && d.data == data) {
+    for (const auto &d : *wq_processing_finished[request_id]) {
+      if (d->callback == callback && d->uq_data->data == data) {
         // Already present
         return;
       }
