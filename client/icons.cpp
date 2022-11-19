@@ -16,6 +16,8 @@
 #include <QPainter>
 #include <QPalette>
 #include <QSvgRenderer>
+#include <QWidget>
+
 // utility
 #include "shared.h"
 
@@ -73,6 +75,9 @@ public:
     }
 
     auto col = QApplication::palette().color(QPalette::ButtonText);
+    if (auto widget = dynamic_cast<QWidget *>(painter->device()); widget) {
+      col = widget->palette().color(QPalette::ButtonText);
+    }
     QString key = path + "-" + QString::number(rect.width()) + "-"
                   + QString::number(rect.height()) + "-" + col.name();
     QPixmap pix;
