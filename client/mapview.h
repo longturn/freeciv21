@@ -122,6 +122,8 @@ class info_tile : public QLabel {
 public:
   static info_tile *i(struct tile *p = nullptr);
   static void drop();
+  static bool shown();
+
   struct tile *itile;
 
 protected:
