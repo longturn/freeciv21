@@ -119,7 +119,12 @@ if (FREECIV_ENABLE_CLIENT)
     DIRECTORY themes/gui-qt
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/themes"
     COMPONENT freeciv21
-    FILES_MATCHING PATTERN *.jpg PATTERN *.png PATTERN *.qss PATTERN *.svg PATTERN *.license)
+    FILES_MATCHING PATTERN theme.conf
+                   PATTERN *.jpg
+                   PATTERN *.png
+                   PATTERN *.qss
+                   PATTERN *.svg
+                   PATTERN *.license)
   install(
     FILES stdsounds.soundspec
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
