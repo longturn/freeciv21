@@ -887,14 +887,13 @@ unit_hud_selector {
   border: 2px solid #a5a5a5;
 }
 
-
 hud_action {
-  selection-background-color:  rgba(221, 204, 161, 220);
-  color: rgb(5,5,185);
+  selection-background-color: rgba(75, 75, 75, 165);
+  color: white;
 }
 
 hud_units {
-  background: rgba(40, 10, 30, 200);
+  background: rgba(0, 0, 0, 200);
 }
 
 hud_units QLabel {

@@ -827,20 +827,15 @@ hud_action::hud_action(QWidget *parent, const QIcon &icon,
  */
 void hud_action::paintEvent(QPaintEvent *event)
 {
-  QRect rx, rz;
   QPainter p;
 
-  rx = QRect(0, 0, width(), height());
-  rz = QRect(0, 2, width(), height() - 6);
   p.begin(this);
   p.setCompositionMode(QPainter::CompositionMode_Source);
   p.setRenderHint(QPainter::SmoothPixmapTransform);
-  icon.paint(&p, rx);
-  p.setPen(QColor(palette().color(QPalette::Text)));
-  p.drawRect(rz);
+  icon.paint(&p, rect());
   if (focus) {
     p.setCompositionMode(QPainter::CompositionMode_DestinationOver);
-    p.fillRect(rx, QColor(palette().color(QPalette::Highlight)));
+    p.fillRect(rect(), QColor(palette().color(QPalette::Highlight)));
   }
   p.end();
 }
