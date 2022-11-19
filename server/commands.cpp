@@ -436,8 +436,7 @@ static struct command commands[] = {
      N_("This command changes the remaining time for the current turn. "
         "Passing a value of 0 ends the turn immediately.\n"
         "The time is specified as hours, minutes, and seconds using the "
-        "format hh:mm:ss (minutest and hours and are "
-        "optional)."),
+        "format hh:mm:ss (minutes and hours are optional)."),
      nullptr, CMD_ECHO_ALL, VCF_NONE, 50},
     {"timeoutadd", ALLOW_CTRL,
      // TRANS: translate text between <> only
@@ -446,8 +445,8 @@ static struct command commands[] = {
      N_("This increases the timeout for the current turn, giving players "
         "more time to finish their actions.\n"
         "The time is specified as hours, minutes, and seconds using the "
-        "format hh:mm:ss (minutest and hours and are "
-        "optional). Negative values are allowed."),
+        "format hh:mm:ss (minutes and hours are optional). Negative values "
+        "are allowed."),
      nullptr, CMD_ECHO_ALL, VCF_NONE, 50},
     {"timeoutincrease", ALLOW_CTRL,
      // TRANS: translate text between <> only
