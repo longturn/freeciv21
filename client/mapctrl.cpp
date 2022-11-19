@@ -376,13 +376,11 @@ void map_view::shortcut_released(Qt::MouseButton bt)
   auto md = QApplication::keyboardModifiers();
   auto pos = mapFromGlobal(QCursor::pos()) / scale();
 
-  auto sc = fc_shortcuts::sc()->get_shortcut(SC_POPUP_INFO);
-  if (bt == sc.buttons && md == sc.modifiers) {
+  if (info_tile::shown()) {
     popdown_tile_info();
-    return;
   }
 
-  sc = fc_shortcuts::sc()->get_shortcut(SC_SELECT_BUTTON);
+  auto sc = fc_shortcuts::sc()->get_shortcut(SC_SELECT_BUTTON);
   if (bt == sc.buttons && md == sc.modifiers) {
     if (king()->trade_gen.hover_city || king()->rallies.hover_city) {
       king()->trade_gen.hover_city = false;

@@ -758,6 +758,11 @@ void info_tile::drop()
 }
 
 /**
+ * Check if the info tile is currently shown.
+ */
+bool info_tile::shown() { return m_instance && m_instance->isVisible(); }
+
+/**
    Returns given instance
  */
 info_tile *info_tile::i(struct tile *p)
