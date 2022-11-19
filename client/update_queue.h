@@ -47,7 +47,7 @@ public:
   static void drop();
   ~update_queue();
   void init();
-  void add(uq_callback_t callback);
+  void add(uq_callback_t callback, void *data);
   void processing_finished(int request_id);
   bool has_callback(uq_callback_t callback);
   bool has_callback_full(uq_callback_t cb, const void **data,

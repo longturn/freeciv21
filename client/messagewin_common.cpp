@@ -44,7 +44,7 @@ static void meswin_dialog_update()
   if (!can_client_change_view()) {
     return;
   }
-  update_queue::uq()->add(real_meswin_dialog_update);
+  update_queue::uq()->add(real_meswin_dialog_update, nullptr);
 }
 
 /**
