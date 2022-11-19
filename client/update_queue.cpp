@@ -281,14 +281,12 @@ void update_queue::connect_processing_finished_full(
                  free_data_func);
 }
 
-namespace {
-enum client_pages next_client_page = PAGE_MAIN;
-}
-
 // Set the client page.
-static void set_client_page_callback(void *)
+static void set_client_page_callback(void *data)
 {
-  real_set_client_page(next_client_page);
+  enum client_pages page = static_cast<client_pages>(FC_PTR_TO_INT(data));
+
+  real_set_client_page(page);
 }
 
 // Set the client page.
@@ -296,8 +294,7 @@ void set_client_page(enum client_pages page)
 {
   log_debug("Requested page: %s.", client_pages_name(page));
 
-  next_client_page = page;
-  update_queue::uq()->add(set_client_page_callback, nullptr);
+  update_queue::uq()->add(set_client_page_callback, FC_INT_TO_PTR(page));
 }
 
 // Start server and then, set the client page.
@@ -306,18 +303,20 @@ void client_start_server_and_set_page(enum client_pages page)
   log_debug("Requested server start + page: %s.", client_pages_name(page));
 
   if (client_start_server(client_url().userName())) {
-    next_client_page = page;
     update_queue::uq()->connect_processing_finished(
         client.conn.client.last_request_id_used, set_client_page_callback,
-        nullptr);
+        FC_INT_TO_PTR(page));
   }
 }
 
 // Returns the next client page.
 enum client_pages get_client_page(void)
 {
-  if (update_queue::uq()->has_callback(set_client_page_callback)) {
-    return next_client_page;
+  const void *data;
+
+  if (update_queue::uq()->has_callback_full(set_client_page_callback, &data,
+                                            nullptr)) {
+    return static_cast<client_pages>(FC_PTR_TO_INT(data));
   } else {
     return get_current_client_page();
   }
