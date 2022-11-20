@@ -1099,10 +1099,11 @@ void city_info::update_labels(struct city *pcity)
   m_plague_label->setVisible(game.info.illness_on);
   m_plague->setVisible(game.info.illness_on);
 
-  if (pcity->steal) {
-    m_stolen->setText(QString::asprintf(_("%d times"), pcity->steal));
+  if (pcity->steal > 0) {
+    m_stolen->setText(QString::asprintf(
+        PL_("%3d time", "%3d times", pcity->steal), pcity->steal));
   } else {
-    m_stolen->setText(QString::asprintf(_("Not stolen")));
+    m_stolen->setText(_("Not stolen"));
   }
 
   m_airlift->setText(get_city_dialog_airlift_value(pcity));
