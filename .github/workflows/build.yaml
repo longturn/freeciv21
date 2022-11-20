@@ -142,35 +142,36 @@ jobs:
       - name: "Only run on Monday morning"
         if: github.event.schedule == '0 5 * * MON'
         run: echo "Windows Clang only runs on Monday morning."
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: "Create dir: '${{env.VCPKG_DEFAULT_BINARY_CACHE}}'"
-        run: mkdir -p $VCPKG_DEFAULT_BINARY_CACHE
-        shell: bash
-      - name: Restore vcpkg and its artifacts.
-        uses: actions/cache@4a1587e51eefd737551e59c2bcd63e33405c48b3
-        with:
-          path: ${{env.VCPKG_DEFAULT_BINARY_CACHE}}/*
-          key: ${{hashFiles('vcpkg.json')}}
-      - name: Show content of workspace after cache has been restored
-        run: find $RUNNER_WORKSPACE
-        shell: bash
-      - name: Enable Developer Command Prompt
-        uses: ilammy/msvc-dev-cmd@v1.10.0
-      - name: Configure
-        run: cmake -S . -B build -G "Visual Studio 17 2022" \
-         -DCMAKE_BUILD_TYPE=Debug -DVCPKG_BUILD_TYPE=debug \
-         -DVCPKG_TARGET_ARCHITECTURE=x64 -DFREECIV_USE_VCPKG=ON \
-         -DCMAKE_TOOLCHAIN_FILE="${{env.VCPKG_ROOT}}/scripts/buildsystems/vcpkg.cmake" -A x64 -T ClangCL
-      - name: Building
-        run: cmake --build build --config Debug
-      - name: Upload a build
-        uses: actions/upload-artifact@v2
-        with:
-          name: Client (MSVC_Clang x64)
-          path: ${{github.workspace}}/build/Debug/freeciv21-client.exe
-          if-no-files-found: error
+        - uses: actions/checkout@v2
+          with:
+            fetch-depth: 0
+        - name: "Create dir: '${{env.VCPKG_DEFAULT_BINARY_CACHE}}'"
+          run: mkdir -p $VCPKG_DEFAULT_BINARY_CACHE
+          shell: bash
+        - name: Restore vcpkg and its artifacts.
+          uses: actions/cache@4a1587e51eefd737551e59c2bcd63e33405c48b3
+          with:
+            path: ${{env.VCPKG_DEFAULT_BINARY_CACHE}}/*
+            key: ${{hashFiles('vcpkg.json')}}
+        - name: Show content of workspace after cache has been restored
+          run: find $RUNNER_WORKSPACE
+          shell: bash
+        - name: Enable Developer Command Prompt
+          uses: ilammy/msvc-dev-cmd@v1.10.0
+        - name: Configure
+          run: cmake -S . -B build -G "Visual Studio 17 2022" \
+          -DCMAKE_BUILD_TYPE=Debug -DVCPKG_BUILD_TYPE=debug \
+          -DVCPKG_TARGET_ARCHITECTURE=x64 -DFREECIV_USE_VCPKG=ON \
+          -DCMAKE_TOOLCHAIN_FILE="${{env.VCPKG_ROOT}}/scripts/buildsystems/vcpkg.cmake" -A x64 -T ClangCL
+        - name: Building
+          run: cmake --build build --config Debug
+        - name: Upload a build
+          uses: actions/upload-artifact@v2
+          with:
+            name: Client (MSVC_Clang x64)
+            path: ${{github.workspace}}/build/Debug/freeciv21-client.exe
+            if-no-files-found: error
+
   os_x:
     name: "macOS"
     runs-on: macos-latest
