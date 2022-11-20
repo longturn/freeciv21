@@ -867,7 +867,7 @@ QString get_city_dialog_airlift_value(const struct city *pcity)
     /* TRANS: airlift. Possible take offs text. String is a symbol that
      * indicates that terms and conditions apply when landings are limited
      * and empty when they aren't limited. */
-    fc_snprintf(src, sizeof(src), _("∞%s"),
+    fc_snprintf(src, sizeof(src), _(" ∞%s"),
                 game.info.airlifting_style & AIRLIFTING_UNLIMITED_DEST
                     /* TRANS: airlift unlimited take offs may be spent symbol
                      * used above. */
@@ -876,7 +876,7 @@ QString get_city_dialog_airlift_value(const struct city *pcity)
   } else {
     /* TRANS: airlift. Possible take offs text. Number is
      * airlift capacity. */
-    fc_snprintf(src, sizeof(src), _("%d"), pcity->airlift);
+    fc_snprintf(src, sizeof(src), _("%2d"), pcity->airlift);
   }
 
   if (game.info.airlifting_style & AIRLIFTING_UNLIMITED_DEST) {
@@ -886,25 +886,25 @@ QString get_city_dialog_airlift_value(const struct city *pcity)
     unlimited++;
 
     // TRANS: airlift. Possible landings text.
-    fc_snprintf(dest, sizeof(dest), _("∞"));
+    fc_snprintf(dest, sizeof(dest), _(" ∞"));
   } else {
     // TRANS: airlift. Possible landings text.
-    fc_snprintf(dest, sizeof(dest), _("%d"), pcity->airlift);
+    fc_snprintf(dest, sizeof(dest), _("%2d"), pcity->airlift);
   }
 
   switch (unlimited) {
   case 2:
     // TRANS: unlimited airlift take offs and landings
-    return _("∞");
+    return _(" ∞");
     break;
   case 1:
     /* TRANS: airlift take offs and landings. One is unlimited. The first
      * string is the take offs text. The 2nd string is the landings text. */
-    return QString::asprintf(_("s: %s d: %s"), src, dest);
+    return QString::asprintf(_(" s: %s d: %s"), src, dest);
     break;
   default:
     // TRANS: airlift take offs or landings, no unlimited
-    return QString::asprintf(_("%s"), src);
+    return QString::asprintf(_(" %s"), src);
     break;
   }
 }
