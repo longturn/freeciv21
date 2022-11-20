@@ -74,6 +74,7 @@
 #include "connectdlg_common.h" // client_kill_server()
 #include "control.h"
 #include "editor.h"
+#include "fonts.h"
 #include "global_worklist.h"
 #include "governor.h"
 #include "mapview_common.h"
@@ -532,6 +533,7 @@ int client_main(int argc, char *argv[])
   init_themes();
 
   options_init();
+  configure_fonts();
   options_load();
 
   script_client_init();

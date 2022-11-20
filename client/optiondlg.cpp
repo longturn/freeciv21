@@ -254,7 +254,7 @@ void option_dialog::apply_options()
       option_bitwise_set(poption, get_bitwise(poption));
       break;
     case OT_FONT:
-      option_font_set(poption, get_button_font(poption).constData());
+      option_font_set(poption, get_button_font(poption));
       break;
     case OT_COLOR:
       get_color(poption, ba1, ba2);
@@ -307,21 +307,13 @@ void option_dialog::set_int(struct option *poption, int value)
    That function is not executed when user changes font, but when applying or
    resetting options.
  */
-void option_dialog::set_font(struct option *poption, const QString &s)
+void option_dialog::set_font(struct option *poption, const QFont &font)
 {
-  QStringList ql;
-  QPushButton *qp;
-  QFont *fp;
-
-  fp = new QFont();
-  fp->fromString(s);
   qApp->processEvents();
-  qp = reinterpret_cast<QPushButton *>(option_get_gui_data(poption));
-  ql = s.split(QStringLiteral(","));
-  if (!s.isEmpty()) {
-    qp->setText(ql[0] + " " + ql[1]);
-    qp->setFont(*fp);
-  }
+  auto qp = reinterpret_cast<QPushButton *>(option_get_gui_data(poption));
+  qp->setText(
+      QStringLiteral("%1 %2").arg(font.family()).arg(font.pointSize()));
+  qp->setFont(font);
 }
 
 /**
@@ -574,7 +566,6 @@ void option_dialog::add_option(struct option *poption)
   QWidget *lwidget;
   QWidget *twidget;
   QString category_name, description, qstr;
-  QStringList qlist, qlist2;
   const QVector<QString> *values;
   QVBoxLayout *twidget_layout;
   QHBoxLayout *hbox_layout;
@@ -587,7 +578,6 @@ void option_dialog::add_option(struct option *poption)
   QGroupBox *group;
   QCheckBox *check;
   QPushButton *button;
-  QFont qf;
   int min, max, i;
   unsigned int j;
 
@@ -669,18 +659,16 @@ void option_dialog::add_option(struct option *poption)
     widget = group;
     break;
 
-  case OT_FONT:
+  case OT_FONT: {
     button = new QPushButton();
-    qf = get_font(poption);
-    qstr = option_font_get(poption);
-    qstr = qf.toString();
-    qlist = qstr.split(QStringLiteral(","));
-    button->setFont(qf);
-    button->setText(qlist[0] + " " + qlist[1]);
+    auto font = option_font_get(poption);
+    button->setFont(font);
+    button->setText(
+        QStringLiteral("%1 %2").arg(font.family()).arg(font.pointSize()));
     connect(button, &QAbstractButton::clicked, this,
             QOverload<>::of(&option_dialog::set_font));
     widget = button;
-    break;
+  } break;
 
   case OT_COLOR:
     button = new QPushButton();
@@ -761,29 +749,12 @@ void option_dialog::set_font()
 }
 
 /**
-   Get font from option.
- */
-QFont option_dialog::get_font(struct option *poption)
-{
-  QFont f;
-  QString s;
-
-  s = option_font_get(poption);
-  f.fromString(s);
-  return f;
-}
-
-/**
    Get font from pushbutton.
  */
-QByteArray option_dialog::get_button_font(struct option *poption)
+QFont option_dialog::get_button_font(struct option *poption)
 {
-  QPushButton *qp;
-  QFont f;
-
-  qp = reinterpret_cast<QPushButton *>(option_get_gui_data(poption));
-  f = qp->font();
-  return f.toString().toUtf8();
+  return reinterpret_cast<QPushButton *>(option_get_gui_data(poption))
+      ->font();
 }
 
 /**

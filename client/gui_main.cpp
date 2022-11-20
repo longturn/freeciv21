@@ -63,18 +63,6 @@ class fc_client *king() { return freeciv_qt; }
 int main(int argc, char **argv) { return client_main(argc, argv); }
 
 /**
-   Migrate Qt client specific options from freeciv-2.5 options
- */
-static void migrate_options_from_2_5()
-{
-  qInfo(_("Migrating Qt-client options from freeciv-2.5 options."));
-
-  gui_options.gui_qt_fullscreen = gui_options.migrate_fullscreen;
-
-  gui_options.gui_qt_migrated_from_2_5 = true;
-}
-
-/**
    The main loop for the UI.  This is called from main(), and when it
    exits the client will exit.
  */
@@ -85,12 +73,7 @@ void ui_main()
     tileset_load_tiles(tileset);
     qApp->setWindowIcon(QIcon(*get_icon_sprite(tileset)));
     if (gui_options.first_boot) {
-      /* We're using fresh defaults for this version of this client,
-       * so prevent any future migrations from other versions */
-      gui_options.gui_qt_migrated_from_2_5 = true;
       configure_fonts();
-    } else if (!gui_options.gui_qt_migrated_from_2_5) {
-      migrate_options_from_2_5();
     }
     if (!isFontInstalled(QStringLiteral("Libertinus Sans"))
         && !isFontInstalled(QStringLiteral("Linux Libertine"))) {
@@ -246,10 +229,8 @@ void apply_titlebar(struct option *poption)
 void gui_qt_apply_font(struct option *poption)
 {
   if (king()) {
-    auto f = QFont();
-    auto s = option_font_get(poption);
-    f.fromString(s);
-    s = option_name(poption);
+    auto f = option_font_get(poption);
+    auto s = option_name(poption);
     fcFont::instance()->setFont(s, f);
     update_map_canvas_visible();
     queen()->chat->update_font();
@@ -265,11 +246,8 @@ void gui_qt_apply_font(struct option *poption)
 static void apply_help_font(struct option *poption)
 {
   if (king()) {
-    auto f = QFont();
-    auto s = option_font_get(poption);
-    f.fromString(s);
-    s = option_name(poption);
-    fcFont::instance()->setFont(s, f);
+    fcFont::instance()->setFont(option_name(poption),
+                                option_font_get(poption));
     update_help_fonts();
   }
 }
@@ -325,15 +303,11 @@ void editgui_notify_object_created(int tag, int id) {}
 /**
    Updates a gui font style.
  */
-void gui_update_font(const QString &font_name, const QString &font_value)
+void gui_update_font(const QString &font_name, const QFont &font)
 {
-  QString fname;
-
-  fname = "gui_qt_font_" + QString(font_name);
-  auto f = QFont();
-  f.fromString(font_value);
+  auto fname = QStringLiteral("gui_qt_font_") + QString(font_name);
   auto remove_old = fcFont::instance()->getFont(fname);
-  fcFont::instance()->setFont(fname, f);
+  fcFont::instance()->setFont(fname, font);
 }
 
 void gui_update_allfonts()
