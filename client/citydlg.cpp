@@ -2286,7 +2286,7 @@ void city_dialog::update_units()
 
   ui.supported_units->set_units(units);
   n = unit_list_size(units);
-  fc_snprintf(buf, sizeof(buf), _("Supported units %d"), n);
+  fc_snprintf(buf, sizeof(buf), _("Supported units: %d"), n);
   ui.supp_units->setText(QString(buf));
 
   if (nullptr != client.conn.playing
@@ -2536,7 +2536,7 @@ void city_dialog::update_improvements()
   ui.city_buildings->setUpdatesEnabled(true);
   ui.city_buildings->setUpdatesEnabled(true);
 
-  ui.curr_impr->setText(QString(_("Improvements - upkeep %1")).arg(upkeep));
+  ui.curr_impr->setText(QString(_("Improvements: upkeep %1")).arg(upkeep));
 }
 
 /**
