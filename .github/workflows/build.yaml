@@ -130,6 +130,7 @@ jobs:
           files: |
             build/Windows-x86_64/Freeciv21-*-Windows-x86_64.exe
             build/Windows-x86_64/Freeciv21-*-Windows-x86_64.exe.sha256
+
   windows_clang_msvc:
     name: "Windows Clang"
     runs-on: windows-latest
@@ -138,6 +139,9 @@ jobs:
       VCPKG_ROOT: C:/vcpkg
       VCPKG_DEFAULT_BINARY_CACHE: ${{github.workspace}}/vcpkg/bincache
     steps:
+      - name: "Only run on Monday morning"
+        if: github.event.schedule = "0 5 * * MON"
+        run: echo "Windows Clang only runs on Monday morning."
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
