@@ -2792,14 +2792,7 @@ void handle_server_setting_const(
 #define handle_server_setting_common(psoption, packet)                      \
   psoption->is_changeable = packet->is_changeable;                          \
   psoption->setdef = packet->setdef;                                        \
-  if (psoption->is_visible != packet->is_visible) {                         \
-    if (psoption->is_visible) {                                             \
-      need_gui_remove = true;                                               \
-    } else if (packet->is_visible) {                                        \
-      need_gui_add = true;                                                  \
-    }                                                                       \
-    psoption->is_visible = packet->is_visible;                              \
-  }                                                                         \
+  psoption->is_visible = packet->is_visible;                                \
                                                                             \
   if (!psoption->desired_sent && psoption->is_visible                       \
       && psoption->is_changeable && is_server_running()                     \
@@ -2814,11 +2807,7 @@ void handle_server_setting_const(
   }                                                                         \
                                                                             \
   /* Update the GUI. */                                                     \
-  if (need_gui_remove) {                                                    \
-  } else if (need_gui_add) {                                                \
-  } else {                                                                  \
-    option_gui_update(poption);                                             \
-  }
+  option_gui_update(poption);
 
 /**
    Receive a boolean server setting info packet.
@@ -2828,8 +2817,6 @@ void handle_server_setting_bool(
 {
   struct option *poption = server_optset_option_by_number(packet->id);
   struct server_option *psoption = SERVER_OPTION(poption);
-  bool need_gui_remove = false;
-  bool need_gui_add = false;
 
   fc_assert_ret(nullptr != poption);
 
@@ -2863,8 +2850,6 @@ void handle_server_setting_int(
 {
   struct option *poption = server_optset_option_by_number(packet->id);
   struct server_option *psoption = SERVER_OPTION(poption);
-  bool need_gui_remove = false;
-  bool need_gui_add = false;
 
   fc_assert_ret(nullptr != poption);
 
@@ -2900,8 +2885,6 @@ void handle_server_setting_str(
 {
   struct option *poption = server_optset_option_by_number(packet->id);
   struct server_option *psoption = SERVER_OPTION(poption);
-  bool need_gui_remove = false;
-  bool need_gui_add = false;
 
   fc_assert_ret(nullptr != poption);
 
@@ -2945,8 +2928,6 @@ void handle_server_setting_enum(
 {
   struct option *poption = server_optset_option_by_number(packet->id);
   struct server_option *psoption = SERVER_OPTION(poption);
-  bool need_gui_remove = false;
-  bool need_gui_add = false;
 
   fc_assert_ret(nullptr != poption);
 
@@ -2999,8 +2980,6 @@ void handle_server_setting_enum(
         psoption->enumerator.pretty_names->replace(i,
                                                    packet->pretty_names[i]);
       }
-      need_gui_remove = true;
-      need_gui_add = true;
     } else {
       /* Check if a value changed, then we need to reset the list
        * of possible values. */
@@ -3012,8 +2991,6 @@ void handle_server_setting_enum(
           // Store untranslated string from server.
           psoption->enumerator.pretty_names->replace(
               i, packet->pretty_names[i]);
-          need_gui_remove = true;
-          need_gui_add = true;
         }
         /* Support names are not visible, we don't need to check if it
          * has changed. */
@@ -3034,8 +3011,6 @@ void handle_server_setting_bitwise(
 {
   struct option *poption = server_optset_option_by_number(packet->id);
   struct server_option *psoption = SERVER_OPTION(poption);
-  bool need_gui_remove = false;
-  bool need_gui_add = false;
 
   fc_assert_ret(nullptr != poption);
 
@@ -3086,8 +3061,6 @@ void handle_server_setting_bitwise(
         // Store untranslated string from server.
         psoption->bitwise.pretty_names->replace(i, packet->pretty_names[i]);
       }
-      need_gui_remove = true;
-      need_gui_add = true;
     } else {
       /* Check if a value changed, then we need to reset the list
        * of possible values. */
@@ -3095,12 +3068,10 @@ void handle_server_setting_bitwise(
 
       for (i = 0; i < packet->bits_num; i++) {
         str = psoption->bitwise.pretty_names->at(i);
-        if (str.isEmpty() || (str == packet->pretty_names[i])) {
+        if (str.isEmpty() || (str != packet->pretty_names[i])) {
           // Store untranslated string from server.
           psoption->bitwise.pretty_names->replace(i,
                                                   packet->pretty_names[i]);
-          need_gui_remove = true;
-          need_gui_add = true;
         }
         /* Support names are not visible, we don't need to check if it
          * has changed. */
