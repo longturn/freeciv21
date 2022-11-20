@@ -10,6 +10,8 @@
 **************************************************************************/
 #pragma once
 
+#include <QFont>
+
 // common
 #include "events.h"
 #include "featured_text.h" // struct ft_color
@@ -67,7 +69,6 @@ struct client_options {
   char default_tileset_overhead_name[512]; /* 2.6 had separate tilesets for
                                               ... */
   char default_tileset_iso_name[512];      // ...overhead and iso topologies.
-  bool gui_qt_migrated_from_2_5;
 
   bool migrate_fullscreen;
 
@@ -156,14 +157,14 @@ struct client_options {
   bool gui_qt_allied_chat_only;
   int gui_qt_increase_fonts;
   char gui_qt_default_theme_name[512];
-  char gui_qt_font_default[512];
-  char gui_qt_font_notify_label[512];
-  char gui_qt_font_help_label[512];
-  char gui_qt_font_help_text[512];
-  char gui_qt_font_chatline[512];
-  char gui_qt_font_city_names[512];
-  char gui_qt_font_city_productions[512];
-  char gui_qt_font_reqtree_text[512];
+  QFont gui_qt_font_default;
+  QFont gui_qt_font_notify_label;
+  QFont gui_qt_font_help_label;
+  QFont gui_qt_font_help_text;
+  QFont gui_qt_font_chatline;
+  QFont gui_qt_font_city_names;
+  QFont gui_qt_font_city_productions;
+  QFont gui_qt_font_reqtree_text;
   bool gui_qt_show_titlebar;
 
   struct overview overview;
@@ -263,10 +264,12 @@ const QVector<QString> *option_bitwise_values(const struct option *poption);
 bool option_bitwise_set(struct option *poption, unsigned val);
 
 // Option type OT_FONT functions.
-const QString option_font_get(const struct option *poption);
-const QString option_font_def(const struct option *poption);
-const QString option_font_target(const struct option *poption);
-bool option_font_set(struct option *poption, const QString &font);
+QFont option_font_get(const struct option *poption);
+QFont option_font_def(const struct option *poption);
+void option_font_set_default(const struct option *poption,
+                             const QFont &font);
+QString option_font_target(const struct option *poption);
+bool option_font_set(struct option *poption, const QFont &font);
 
 // Option type OT_COLOR functions.
 struct ft_color option_color_get(const struct option *poption);

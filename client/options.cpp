@@ -87,10 +87,9 @@ struct client_options gui_options = {
     true, //.save_options_on_exit =
 
     /** Migrations **/
-    false, //.first_boot =
-    "\0",  //.default_tileset_overhead_name =
-    "\0",  //.default_tileset_iso_name =
-    false, //.gui_qt_migrated_from_2_5 =
+    true, //.first_boot =
+    "\0", //.default_tileset_overhead_name =
+    "\0", //.default_tileset_iso_name =
 
     false, //.migrate_fullscreen =
 
@@ -189,18 +188,15 @@ struct client_options gui_options = {
     true, //.gui_qt_allied_chat_only =
     0,    // font_increase
     FC_QT_DEFAULT_THEME_NAME,
-    "Linux Biolinum O,12,-1,5,50,0,0,0,0,0", //.gui_qt_font_notify_label =
-    "Linux Libertine Mono O,12,-1,5,50,0,0,0,0,0", //.gui_qt_font_help_label
-                                                   //=
-    "Linux Libertine Mono O,12,-1,5,50,0,0,0,0,0", //.gui_qt_font_help_text =
-    "Linux Libertine Mono O,12,-1,5,50,0,0,0,0,0", //.gui_qt_font_chatline =
-    "Linux Biolinum O,16,-1,5,50,1,0,0,0,0", //.gui_qt_font_city_names =
-    "Linux Biolinum O,12,-1,5,50,0,0,0,0,0", //.gui_qt_font_city_productions
-                                             //=
-    "Linux Libertine Display O,14,-1,5,50,0,0,0,0,0", //.gui_qt_font_reqtree_text
-                                                      //=
-    {true}, //=?
-    true,   //.gui_qt_show_titlebar
+    QFont(), //.gui_qt_font_default =
+    QFont(), //.gui_qt_font_notify_label =
+    QFont(), //.gui_qt_font_help_label =
+    QFont(), //.gui_qt_font_help_text =
+    QFont(), //.gui_qt_font_chatline =
+    QFont(), //.gui_qt_font_city_names =
+    QFont(), //.gui_qt_font_city_productions =
+    QFont(), //.gui_qt_font_reqtree_text =
+    true,    //.gui_qt_show_titlebar
     {}};
 
 /* Set to TRUE after the first call to options_init(), to avoid the usage
@@ -318,10 +314,11 @@ struct option_bitwise_vtable {
 };
 // Specific font accessors (OT_FONT == type).
 struct option_font_vtable {
-  const char *(*get)(const struct option *);
-  const char *(*def)(const struct option *);
-  const char *(*target)(const struct option *);
-  bool (*set)(struct option *, const char *);
+  QFont (*get)(const struct option *);
+  QFont (*def)(const struct option *);
+  void (*set_def)(const struct option *, const QFont &font);
+  QString (*target)(const struct option *);
+  bool (*set)(struct option *, const QFont &);
 };
 // Specific color accessors (OT_COLOR == type).
 struct option_color_vtable {
@@ -873,10 +870,10 @@ bool option_bitwise_set(struct option *poption, unsigned val)
 /**
    Returns the current value of this font option.
  */
-const QString option_font_get(const struct option *poption)
+QFont option_font_get(const struct option *poption)
 {
-  fc_assert_ret_val(nullptr != poption, nullptr);
-  fc_assert_ret_val(OT_FONT == poption->type, nullptr);
+  fc_assert_ret_val(nullptr != poption, QFont());
+  fc_assert_ret_val(OT_FONT == poption->type, QFont());
 
   return poption->font_vtable->get(poption);
 }
@@ -884,21 +881,32 @@ const QString option_font_get(const struct option *poption)
 /**
    Returns the default value of this font option.
  */
-const QString option_font_def(const struct option *poption)
+QFont option_font_def(const struct option *poption)
 {
-  fc_assert_ret_val(nullptr != poption, nullptr);
-  fc_assert_ret_val(OT_FONT == poption->type, nullptr);
+  fc_assert_ret_val(nullptr != poption, QFont());
+  fc_assert_ret_val(OT_FONT == poption->type, QFont());
 
   return poption->font_vtable->def(poption);
 }
 
 /**
+   Returns the default value of this font option.
+ */
+void option_font_set_default(const struct option *poption, const QFont &font)
+{
+  fc_assert_ret(nullptr != poption);
+  fc_assert_ret(OT_FONT == poption->type);
+
+  poption->font_vtable->set_def(poption, font);
+}
+
+/**
    Returns the target style name of this font option.
  */
-const QString option_font_target(const struct option *poption)
+QString option_font_target(const struct option *poption)
 {
-  fc_assert_ret_val(nullptr != poption, nullptr);
-  fc_assert_ret_val(OT_FONT == poption->type, nullptr);
+  fc_assert_ret_val(nullptr != poption, QString());
+  fc_assert_ret_val(OT_FONT == poption->type, QString());
 
   return poption->font_vtable->target(poption);
 }
@@ -906,13 +914,12 @@ const QString option_font_target(const struct option *poption)
 /**
    Sets the value of this font option. Returns TRUE if the value changed.
  */
-bool option_font_set(struct option *poption, const QString &font)
+bool option_font_set(struct option *poption, const QFont &font)
 {
   fc_assert_ret_val(nullptr != poption, false);
   fc_assert_ret_val(OT_FONT == poption->type, false);
-  fc_assert_ret_val(nullptr != font, false);
 
-  if (poption->font_vtable->set(poption, qUtf8Printable(font))) {
+  if (poption->font_vtable->set(poption, font)) {
     option_changed(poption);
     return true;
   }
@@ -1037,14 +1044,18 @@ static const struct option_str_vtable client_option_str_vtable = {
     .values = client_option_str_values,
     .set = client_option_str_set};
 
-static const char *client_option_font_get(const struct option *poption);
-static const char *client_option_font_def(const struct option *poption);
-static const char *client_option_font_target(const struct option *poption);
-static bool client_option_font_set(struct option *poption, const char *font);
+static QFont client_option_font_get(const struct option *poption);
+static QFont client_option_font_def(const struct option *poption);
+static void client_option_font_set_def(const struct option *poption,
+                                       const QFont &font);
+static QString client_option_font_target(const struct option *poption);
+static bool client_option_font_set(struct option *poption,
+                                   const QFont &font);
 
 static const struct option_font_vtable client_option_font_vtable = {
     .get = client_option_font_get,
     .def = client_option_font_def,
+    .set_def = client_option_font_set_def,
     .target = client_option_font_target,
     .set = client_option_font_set};
 
@@ -1080,7 +1091,7 @@ struct client_option {
   const char *help_text;   // Paragraph-length help text
   enum client_option_category category;
 
-  union {
+  struct {
     // OT_BOOLEAN type option.
     struct {
       bool *const pvalue;
@@ -1118,10 +1129,9 @@ struct client_option {
     } bitwise;
     // OT_FONT type option.
     struct {
-      char *const pvalue;
-      const size_t size;
-      const char *const def;
-      const char *const target;
+      QFont value;
+      QFont def;
+      QString target;
     } font;
     // OT_COLOR type option.
     struct {
@@ -1330,11 +1340,10 @@ struct client_option {
  * ohelp: The help text for the client option.  Should be used with the N_()
  *        macro.
  * ocat:  The client_option_class of this client option.
- * odef:  The default string for this client option.
  * ocb:   A callback function of type void (*)(struct option *) called when
  *        the option changed.
  */
-#define GEN_FONT_OPTION(oname, otgt, odesc, ohelp, ocat, odef, ocb)         \
+#define GEN_FONT_OPTION(oname, otgt, odesc, ohelp, ocat, ocb)               \
   {                                                                         \
     .base_option = OPTION_FONT_INIT(&client_optset_static,                  \
                                     client_option_common_vtable,            \
@@ -1343,9 +1352,8 @@ struct client_option {
     .category = ocat,                                                       \
     .u =                                                                    \
     {.font = {                                                              \
-         .pvalue = gui_options.oname,                                       \
-         .size = sizeof(gui_options.oname),                                 \
-         .def = odef,                                                       \
+         .value = gui_options.oname,                                        \
+         .def = QFont(),                                                    \
          .target = otgt,                                                    \
      } }                                                                    \
   }
@@ -1945,46 +1953,38 @@ static struct client_option client_options[] = {
                    COC_FONT, 0, -100, 100, allfont_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_default, "default_font", N_("Default font"),
                     N_("This is default font"), COC_FONT,
-                    "Linux Biolinum O,12,-1,5,50,0,0,0,0,0",
                     font_changed_callback),
     GEN_FONT_OPTION(
         gui_qt_font_notify_label, "notify_label", N_("Notify Label"),
         N_("This font is used to display server reports such "
            "as the demographic report or historian publications."),
-        COC_FONT, "Linux Biolinum O,12,-1,5,50,0,0,0,0,0",
-        font_changed_callback),
+        COC_FONT, font_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_help_label, "help_label", N_("Help Label"),
                     N_("This font is used to display the help labels in the "
                        "help window."),
-                    COC_FONT, "Linux Libertine Mono O,12,-1,5,50,0,0,0,0,0",
-                    font_changed_callback),
+                    COC_FONT, font_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_help_text, "help_text", N_("Help Text"),
                     N_("This font is used to display the help body text in "
                        "the help window."),
-                    COC_FONT, "Linux Libertine Mono O,12,-1,5,50,0,0,0,0,0",
-                    font_changed_callback),
+                    COC_FONT, font_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_chatline, "chatline", N_("Chatline Area"),
                     N_("This font is used to display the text in the "
                        "chatline area."),
-                    COC_FONT, "Linux Libertine Mono O,12,-1,5,50,0,0,0,0,0",
-                    font_changed_callback),
+                    COC_FONT, font_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_city_names, "city_names", N_("City Names"),
                     N_("This font is used to the display the city names "
                        "on the map."),
-                    COC_FONT, "Linux Biolinum O,16,-1,5,50,1,0,0,0,0",
-                    font_changed_callback),
+                    COC_FONT, font_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_city_productions, "city_productions",
                     N_("City Productions"),
                     N_("This font is used to display the city production "
                        "on the map."),
-                    COC_FONT, "Linux Biolinum O,12,-1,5,50,0,0,0,0,0",
-                    font_changed_callback),
+                    COC_FONT, font_changed_callback),
     GEN_FONT_OPTION(
         gui_qt_font_reqtree_text, "reqtree_text", N_("Requirement Tree"),
         N_("This font is used to the display the requirement tree "
            "in the Research report."),
-        COC_FONT, "Linux Libertine Display O,14,-1,5,50,0,0,0,0,0",
-        font_changed_callback),
+        COC_FONT, font_changed_callback),
     GEN_BOOL_OPTION(gui_qt_show_preview, N_("Show savegame information"),
                     N_("If this option is set the client will show "
                        "information and map preview of current savegame."),
@@ -2287,23 +2287,32 @@ static const char *client_option_bitwise_secfile_str(secfile_data_t data,
 /**
    Returns the value of this client option of type OT_FONT.
  */
-static const char *client_option_font_get(const struct option *poption)
+static QFont client_option_font_get(const struct option *poption)
 {
-  return CLIENT_OPTION(poption)->u.font.pvalue;
+  return CLIENT_OPTION(poption)->u.font.value;
 }
 
 /**
    Returns the default value of this client option of type OT_FONT.
  */
-static const char *client_option_font_def(const struct option *poption)
+static QFont client_option_font_def(const struct option *poption)
 {
   return CLIENT_OPTION(poption)->u.font.def;
 }
 
 /**
-   Returns the target style name of this client option of type OT_FONT.
+   Returns the default value of this client option of type OT_FONT.
  */
-static const char *client_option_font_target(const struct option *poption)
+static void client_option_font_set_def(const struct option *poption,
+                                       const QFont &font)
+{
+  CLIENT_OPTION(poption)->u.font.def = font;
+}
+
+/**
+   Returns the default value of this client option of type OT_FONT.
+ */
+static QString client_option_font_target(const struct option *poption)
 {
   return CLIENT_OPTION(poption)->u.font.target;
 }
@@ -2312,16 +2321,15 @@ static const char *client_option_font_target(const struct option *poption)
    Set the value of this client option of type OT_FONT.  Returns TRUE if
    the value changed.
  */
-static bool client_option_font_set(struct option *poption, const char *font)
+static bool client_option_font_set(struct option *poption, const QFont &font)
 {
   struct client_option *pcoption = CLIENT_OPTION(poption);
 
-  if (strlen(font) >= pcoption->u.font.size
-      || 0 == strcmp(pcoption->u.font.pvalue, font)) {
+  if (pcoption->u.font.value == font) {
     return false;
   }
 
-  fc_strlcpy(pcoption->u.font.pvalue, font, pcoption->u.font.size);
+  pcoption->u.font.value = font;
   return true;
 }
 
@@ -2424,11 +2432,14 @@ static bool client_option_load(struct option *poption,
             && option_bitwise_set(poption, value));
   }
   case OT_FONT: {
-    const char *string;
+    const char *string =
+        secfile_lookup_str(sf, "client.%s", option_name(poption));
+    if (!string) {
+      return false;
+    }
 
-    return (
-        (string = secfile_lookup_str(sf, "client.%s", option_name(poption)))
-        && option_font_set(poption, string));
+    QFont font;
+    return font.fromString(string) && option_font_set(poption, font);
   }
   case OT_COLOR: {
     struct ft_color color;
@@ -2476,7 +2487,8 @@ static void client_option_save(struct option *poption,
                              "client.%s", option_name(poption));
     break;
   case OT_FONT:
-    secfile_insert_str(sf, qUtf8Printable(option_font_get(poption)),
+    secfile_insert_str(sf,
+                       qUtf8Printable(option_font_get(poption).toString()),
                        "client.%s", option_name(poption));
     break;
   case OT_COLOR: {
@@ -4389,10 +4401,6 @@ void options_load()
   gui_options.migrate_fullscreen = secfile_lookup_bool_default(
       sf, gui_options.migrate_fullscreen, "%s.fullscreen_mode", prefix);
 
-  gui_options.gui_qt_migrated_from_2_5 =
-      secfile_lookup_bool_default(sf, gui_options.gui_qt_migrated_from_2_5,
-                                  "%s.migration_qt_from_2_5", prefix);
-
   str = secfile_lookup_str_default(sf, nullptr,
                                    "client.default_tileset_overhead_name");
   if (str != nullptr) {
@@ -4492,9 +4500,6 @@ void options_save(option_save_log_callback log_cb)
                       "client.save_options_on_exit");
   secfile_insert_bool_comment(sf, gui_options.migrate_fullscreen,
                               "deprecated", "client.fullscreen_mode");
-
-  secfile_insert_bool(sf, gui_options.gui_qt_migrated_from_2_5,
-                      "client.migration_qt_from_2_5");
 
   // prevent saving that option
   gui_options.gui_qt_increase_fonts = 0; // gui-enabled options

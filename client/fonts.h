@@ -46,5 +46,3 @@ public:
 bool isFontInstalled(const QString &font_name);
 void load_fonts();
 void configure_fonts();
-QFont configure_font(const QString &font_name, const QStringList &sl,
-                     QFont::StyleHint hint, int size, bool bold = false);
