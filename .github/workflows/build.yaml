@@ -140,7 +140,7 @@ jobs:
       VCPKG_DEFAULT_BINARY_CACHE: ${{github.workspace}}/vcpkg/bincache
     steps:
       - name: "Only run on Monday morning"
-        if: github.event.schedule = "0 5 * * MON"
+        if: github.event.schedule == "0 5 * * MON"
         run: echo "Windows Clang only runs on Monday morning."
       - uses: actions/checkout@v2
         with:
