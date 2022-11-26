@@ -830,44 +830,48 @@ static QColor node_color(struct tree_node *node)
     struct research *research = research_get(client_player());
 
     if (!research) {
-      return get_diag_color(30);
+      return get_diag_color(COLOR_REQTREE_KNOWN);
     }
 
     if (!research_invention_reachable(research, node->tech)) {
-      return get_diag_color(30);
+      return get_diag_color(COLOR_REQTREE_UNREACHABLE);
     }
 
     if (!research_invention_gettable(research, node->tech, true)) {
       if (research_goal_tech_req(research, research->tech_goal, node->tech)
           || node->tech == research->tech_goal) {
-        return get_diag_color(7);
+        return get_diag_color(COLOR_REQTREE_GOAL_NOT_GETTABLE);
       } else {
-        return get_diag_color(8);
+        return get_diag_color(COLOR_REQTREE_NOT_GETTABLE);
       }
     }
 
     if (research->researching == node->tech) {
-      return get_diag_color(9);
+      return get_diag_color(COLOR_REQTREE_RESEARCHING);
     }
 
-    // tech researched
     if (TECH_KNOWN == research_invention_state(research, node->tech)) {
-      return get_diag_color(8);
+      return get_diag_color(COLOR_REQTREE_KNOWN);
     }
 
     if (research_goal_tech_req(research, research->tech_goal, node->tech)
         || node->tech == research->tech_goal) {
-      return get_diag_color(7);
+      if (TECH_PREREQS_KNOWN
+          == research_invention_state(research, node->tech)) {
+        return get_diag_color(COLOR_REQTREE_GOAL_PREREQS_KNOWN);
+      } else {
+        return get_diag_color(COLOR_REQTREE_GOAL_UNKNOWN);
+      }
     }
 
     if (TECH_PREREQS_KNOWN
         == research_invention_state(research, node->tech)) {
-      return get_diag_color(0);
+      return get_diag_color(COLOR_REQTREE_PREREQS_KNOWN);
     }
 
-    return get_diag_color(0);
+    return get_diag_color(COLOR_REQTREE_UNKNOWN);
   } else {
-    return get_diag_color(0);
+    return Qt::transparent;
   }
 }
 
@@ -952,16 +956,16 @@ static QColor edge_color(struct tree_node *node, struct tree_node *dest_node)
 
   switch (type) {
   case REQTREE_ACTIVE_EDGE:
-    return get_diag_color(27);
+    return get_diag_color(COLOR_REQTREE_RESEARCHING);
   case REQTREE_GOAL_EDGE:
-    return get_diag_color(26);
+    return get_diag_color(COLOR_REQTREE_GOAL_UNKNOWN);
   case REQTREE_KNOWN_EDGE:
     /* using "text" black instead of "known" white/ground/green */
-    return get_diag_color(20);
+    return get_diag_color(COLOR_REQTREE_TEXT);
   case REQTREE_READY_EDGE:
-    return get_diag_color(28);
+    return get_diag_color(COLOR_REQTREE_PREREQS_KNOWN);
   default:
-    return get_diag_color(20);
+    return get_diag_color(COLOR_REQTREE_EDGE);
   };
 }
 
@@ -1006,7 +1010,7 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
 
       if (node->is_dummy) {
         // Use the same layout as lines for dummy nodes
-        p.setPen(QPen(get_diag_color(20), 2));
+        p.setPen(QPen(edge_color(node, nullptr), 2));
         p.drawLine(startx, starty, startx + width, starty);
       } else {
         const QString text = research_advance_name_translation(
@@ -1015,7 +1019,7 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
         int icon_startx;
 
         p.setBrush(node_color(node));
-        p.setPen(QPen(get_diag_color(10), 1));
+        p.setPen(QPen(get_diag_color(COLOR_REQTREE_BACKGROUND), 1));
         p.drawRect(startx, starty, width - 2, height - 2);
         p.setBrush(Qt::NoBrush);
 

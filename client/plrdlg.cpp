@@ -28,7 +28,6 @@
 #include "chatline_common.h"
 #include "client_main.h"
 // gui-qt
-#include "colors.h"
 #include "fc_client.h"
 #include "fonts.h"
 #include "page_game.h"

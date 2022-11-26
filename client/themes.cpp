@@ -17,15 +17,17 @@
 #include <QStyle>
 #include <QStyleFactory>
 #include <QTextStream>
+
 // utility
 #include "shared.h"
+
 // client
+#include "chatline.h"
+#include "colors_common.h"
+#include "fc_client.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
 #include "themes_common.h"
-// gui-qt
-#include "chatline.h"
-#include "fc_client.h"
 
 extern QString current_theme;
 Q_GLOBAL_STATIC(QString, def_app_style)
@@ -51,6 +53,27 @@ void load_chat_colors(QSettings &settings)
   }
 
   set_chat_colors(colors);
+  settings.endGroup();
+}
+
+static std::array<QColor, COLOR_LAST> diag_colors = {};
+
+/**
+ * Loads diagram (tech tree) colors from theme settings
+ */
+void load_diag_colors(QSettings &settings)
+{
+  settings.beginGroup("diagram_colors");
+
+  for (int i = 0; i < COLOR_LAST; ++i) {
+    const auto name = color_std_name(static_cast<color_std>(i));
+    if (settings.contains(name)) {
+      diag_colors[i].setNamedColor(settings.value(name).toString());
+    } else {
+      diag_colors[i] = QColor(); // Invalid, fetch from tileset
+    }
+  }
+
   settings.endGroup();
 }
 
@@ -135,6 +158,8 @@ void gui_load_theme(const QString &directory, const QString &theme_name)
   QSettings settings(data_dir + "/" + theme_name + "/theme.conf",
                      QSettings::IniFormat);
   load_chat_colors(settings);
+  load_diag_colors(settings);
+
   current_theme = theme_name;
   QPixmapCache::clear();
   if (theme_name != QStringLiteral("System")) {
@@ -220,4 +245,13 @@ QStringList get_useable_themes_in_directory(QString &directory)
     theme_list.prepend(qtheme_name);
   }
   return theme_list;
+}
+
+/**
+ * Gets a diagram color. They come from the tileset, but the theme can
+ * override them.
+ */
+QColor get_diag_color(color_std c)
+{
+  return diag_colors[c].isValid() ? diag_colors[c] : get_color(tileset, c);
 }

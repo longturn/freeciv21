@@ -33,7 +33,6 @@
 #include "text.h"
 #include "tilespec.h"
 // gui-qt
-#include "colors.h"
 #include "fc_client.h"
 #include "fonts.h"
 #include "hudwidget.h"

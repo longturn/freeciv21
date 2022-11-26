@@ -25,7 +25,6 @@
 #include <QPainterPath>
 
 // qt-client
-#include "colors.h"
 #include "colors_common.h"
 #include "fc_client.h"
 #include "fonts.h"

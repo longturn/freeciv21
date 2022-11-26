@@ -991,12 +991,6 @@ national_budget_dialog {
   border: 2px solid #0000AA;
 }
 
-research_color {
-  selection-background-color: #6bb6c5 /*box*/;
-  color: #96b62e /*lines*/;
-  alternate-background-color: white /* box edge */;
-}
-
 message_dlg QTableWidget {
   background-color: #525d6e;
   alternate-background-color: #4b5565;
