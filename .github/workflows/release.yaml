@@ -40,11 +40,11 @@ jobs:
         run: mkdir -p -v $PWD/build
       - name: Create tar.gz
         run: |
-          git archive --format=tar.gz -o $PWD/build/Freeciv21-${{github.ref_name}}.tar.gz HEAD
+          git archive --format=tar.gz --prefix=Freeciv21-${{github.ref_name}}/ -o $PWD/build/Freeciv21-${{github.ref_name}}.tar.gz HEAD
           sha256sum --binary $PWD/build/Freeciv21-${{github.ref_name}}.tar.gz > $PWD/build/Freeciv21-${{github.ref_name}}.tar.gz.sha256
       - name: Create zip
         run: |
-          git archive --format=zip -o $PWD/build/Freeciv21-${{github.ref_name}}.zip HEAD
+          git archive --format=zip --prefix=Freeciv21-${{github.ref_name}}/ -o $PWD/build/Freeciv21-${{github.ref_name}}.zip HEAD
           sha256sum --binary $PWD/build/Freeciv21-${{github.ref_name}}.zip > $PWD/build/Freeciv21-${{github.ref_name}}.zip.sha256
       - name: Upload package
         uses: softprops/action-gh-release@v1
