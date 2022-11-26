@@ -13,4 +13,4 @@
 #include "colors_common.h"
 
 int color_brightness_score(const QColor &color);
-QColor get_diag_color(int);
+QColor get_diag_color(color_std color);

@@ -23,7 +23,6 @@
 // client
 #include "client_main.h"
 // gui-qt
-#include "colors.h"
 #include "dialogs.h"
 #include "fc_client.h"
 

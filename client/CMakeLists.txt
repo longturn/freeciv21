@@ -52,7 +52,6 @@ target_sources(
   climisc.cpp
   clinet.cpp
   colorizer.cpp
-  colors.cpp
   colors_common.cpp
   connectdlg.cpp
   connectdlg_common.cpp
