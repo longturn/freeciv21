@@ -315,6 +315,7 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
     if (!pconn->used) {
       connection_common_init(pconn);
       pconn->sock = new_sock;
+      pconn->closing_reason.clear();
       pconn->observer = false;
       pconn->playing = nullptr;
       pconn->capability[0] = '\0';
