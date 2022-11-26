@@ -1,4 +1,4 @@
-QMainWindow {
+QMainWindow, minimap_panel {
   background-image:url(LittleFingerpattern.png);
 }
 
@@ -657,6 +657,12 @@ unittype_item QLabel {
 unittype_item QPushButton {
   color: white;
   border: none;
+}
+
+
+science_report > QScrollArea,
+research_diagram {
+  background-image:url(LittleFingerpattern.png);
 }
 
 
