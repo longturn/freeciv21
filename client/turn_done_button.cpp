@@ -45,7 +45,6 @@ turn_done_button::turn_done_button(QWidget *parent) : QPushButton(parent)
           &QShortcut::activated, this, [this] { animateClick(); });
 
   setText(_("Turn Done"));
-  setToolTip(_("End the current turn"));
 
   // FIXME This should come from the style...
   // Set the font for the title
@@ -56,6 +55,8 @@ turn_done_button::turn_done_button(QWidget *parent) : QPushButton(parent)
 
   setContentsMargins(metrics::contents_margin, metrics::contents_margin,
                      metrics::contents_margin, metrics::contents_margin);
+
+  update_timeout_label();
 }
 
 /**
@@ -130,10 +131,11 @@ void turn_done_button::paintEvent(QPaintEvent *event)
 namespace {
 
 /**
- * Format a duration, in seconds, so it comes up in minutes or hours if
- * that would be more meaningful.
+ * Format the duration until TC, given in seconds, so it comes up in minutes
+ * or hours if that would be more meaningful. If allow_date is true, switches
+ * to displaying the date and time of TC when it's too far in the future.
  */
-QString format_duration(int duration)
+QString format_duration(int duration, bool allow_date)
 {
   if (duration < 0) {
     duration = 0;
@@ -152,7 +154,7 @@ QString format_duration(int duration)
   } else if (duration < 3600) { // < one hour
     // TRANS: Used in "Time left: 10 minutes". Always at least 5 minutes
     return QString(_("%1 minutes")).arg(duration / 60);
-  } else if (days_left == 0) { // Same day
+  } else if (days_left == 0 || !allow_date) { // Same day
     return QString(Q_("?hrs/mns:%1h %2min"))
         .arg(duration / 3600, 2)
         .arg((duration / 60) % 60, 2);
@@ -168,8 +170,8 @@ QString format_duration(int duration)
     return QString(_("until %1")).arg(time);
   }
 
-  // TRANS: Used to indicate a fuzzy duration. "until tomorrow" is never used
-  return QString(_("%1 days")).arg(days_left);
+  // TRANS: Used to indicate a fuzzy duration, always more than 7 days
+  return QString(PL_("%1 day", "%1 days", days_left)).arg(days_left);
 }
 } // anonymous namespace
 
@@ -178,16 +180,27 @@ QString format_duration(int duration)
  */
 void turn_done_button::update_timeout_label()
 {
+  QString tooltip = _("End the current turn");
+
   if (is_waiting_turn_change() && game.tinfo.last_turn_change_time >= 1.5) {
     // TRANS: Processing turn change
-    m_timeout_label = QString(_("Processing... %1"))
-                          .arg(format_duration(get_seconds_to_new_turn()));
+    m_timeout_label =
+        QString(_("Processing... %1"))
+            .arg(format_duration(get_seconds_to_new_turn(), true));
   } else if (current_turn_timeout() > 0) {
-    m_timeout_label = QString(_("Time left: %1"))
-                          .arg(format_duration(get_seconds_to_turndone()));
+    m_timeout_label =
+        QString(_("Time left: %1"))
+            .arg(format_duration(get_seconds_to_turndone(), true));
+    tooltip += QStringLiteral("\n");
+    // TRANS: Time until turn change in the (). %1 is "5s", "4min", or "6h
+    //        7min".
+    tooltip = QString(_("End the current turn (%1 remaining)"))
+                  .arg(format_duration(get_seconds_to_turndone(), false));
   } else {
     m_timeout_label = QString();
   }
+
+  setToolTip(tooltip);
 
   // Redraw
   update();
