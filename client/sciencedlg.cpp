@@ -59,6 +59,7 @@ research_diagram::research_diagram(QWidget *parent) : QWidget(parent)
   req = nullptr;
   reset();
   setMouseTracking(true);
+  setAttribute(Qt::WA_StyledBackground);
 }
 
 /**
@@ -229,9 +230,9 @@ void research_diagram::show_tooltip()
  */
 void research_diagram::paintEvent(QPaintEvent *event)
 {
-  Q_UNUSED(event)
-  QPainter painter;
+  QWidget::paintEvent(event);
 
+  QPainter painter;
   painter.begin(this);
   painter.drawPixmap(0, 0, width, height, *pcanvas);
   painter.end();
