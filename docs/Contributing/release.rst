@@ -27,6 +27,8 @@ These are the general steps to prepare and finalize a release:
 #. When it is time, the release manager will finalize the release notes and ask for an editorial review in the
    ``#releases-project`` channel. Updates are made as per review.
 #. The release manager will add a tag to the release notes page and then click :guilabel:`Publish Release`.
+   The format of the tag is ``v[major version].[minor version]-[pre-release name].[number]``. For example:
+   ``v3.0-beta.6``. :strong:`The format is very important` to the build configuration process.
 #. After a few minutes the continuous integration (CI) will open a PR titled
    ``Release Update of AutoRevision.txt``. The release manager will open the PR, click on the
    :guilabel:`Close pull request` button, and then click :guilabel:`Open pull request` button. This is a
@@ -41,6 +43,8 @@ These are the general steps to prepare and finalize a release:
    <https://learn.microsoft.com/en-us/windows/security/threat-protection/microsoft-defender-smartscreen/microsoft-defender-smartscreen-overview#submit-files-to-microsoft-defender-smartscreen-for-review>`_.
    We do this to help our Windows-based users have an easier time downloading the game in the Microsoft Edge
    browser.
+#. The release manager mentions user @Corbeau on Discord ``#releases-project`` channel giving the new URL to
+   update his blog page once all of the GitHub action runners are complete.
 
 
 Behind the Scenes
