@@ -994,7 +994,7 @@ void popup_notify_dialog(const char *caption, const char *headline,
   if (strcmp(caption, "Traveler's Report:") == 0) {
     currentdemographics = false;
   }
-  fc_snprintf(inputcompare, sizeof(inputcompare),
+  fc_snprintf(inputcompare, sizeof(inputcompare), "%s",
               currentdemographics ? caption : headline);
 
   nd_list = queen()->game_tab_widget->findChildren<notify_dialog *>();
@@ -1002,7 +1002,7 @@ void popup_notify_dialog(const char *caption, const char *headline,
     loopnd = nd_list[i];
     loopcompare = currentdemographics ? loopnd->qcaption : loopnd->qheadline;
     loopcomparestr = loopcompare.toStdString();
-    fc_snprintf(loopcomparechar, sizeof(loopcomparechar),
+    fc_snprintf(loopcomparechar, sizeof(loopcomparechar), "%s",
                 loopcomparestr.c_str());
 
     if (strcmp(loopcomparechar, inputcompare) == 0) {

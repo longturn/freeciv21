@@ -58,6 +58,21 @@
       }
     },
     {
+      "name": "DistroRelease",
+      "displayName": "Build Everything with default flags in major distros ",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "None",
+        "CMAKE_CXX_FLAGS": "-O2 -g -Wp,-DGLIBCXX_ASSERTIONS -O2 -g -Wformat -Wall -Wextra -Werror=format-security -Werror=return-type -fcf-protection -U_FORTIFY_SOURCE -Wp,-D_FORTIFY_SOURCE=3 -fstack-protector-strong -funwind-tables -fasynchronous-unwind-tables -fstack-clash-protection -flto=auto -DNDEBUG -Wno-sign-compare -Warray-bounds -Wdelete-incomplete -Wint-in-bool-context -Wreturn-type -Wsequence-point -Wswitch -Wunused-value -Wmaybe-uninitialized -Wstringop-truncation -fPIC -march=x86-64 -mtune=generic -pipe -fno-plt -fexceptions -Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now -flto=auto",
+        "CMAKE_C_FLAGS": "-O2 -g -O2 -g -Wformat -Wall -Wextra -Werror=format-security -Werror=return-type -fcf-protection -U_FORTIFY_SOURCE -Wp,-D_FORTIFY_SOURCE=3 -fstack-protector-strong -funwind-tables -fasynchronous-unwind-tables -fstack-clash-protection -flto=auto -DNDEBUG -Wno-sign-compare -Warray-bounds -Wdelete-incomplete -Wint-in-bool-context -Wreturn-type -Wsequence-point -Wswitch -Wunused-value -Wmaybe-uninitialized -Wstringop-truncation -fPIC -march=x86-64 -mtune=generic -pipe -fno-plt -fexceptions -Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now -flto=auto",
+        "FREECIV_ENABLE_TOOLS": "ON",
+        "FREECIV_ENABLE_SERVER": "ON",
+        "FREECIV_ENABLE_CLIENT": "ON",
+        "FREECIV_ENABLE_NLS": "ON"
+      }
+    },
+    {
       "name": "clazy",
       "displayName": "Check for clazy warnings",
       "generator": "Unix Makefiles",

@@ -78,6 +78,37 @@ jobs:
             build/Linux-x86_64/freeciv21_*_amd64.deb
             build/Linux-x86_64/freeciv21_*_amd64.deb.sha256
 
+  flagstest:
+    name: "Additional compile flags in Ubuntu"
+    needs: clang-format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Install GCC
+        run: |
+          sudo apt-get install g++
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install \
+            cmake \
+            ninja-build \
+            python3 \
+            gettext \
+            qtbase5-dev \
+            libqt5svg5-dev \
+            libkf5archive-dev \
+            liblua5.3-dev \
+            libsqlite3-dev \
+            libsdl2-mixer-dev
+      - name: Configure
+        run: |
+            cmake . -B build -G Ninja --preset "DistroRelease"
+      - name: Build
+        run: |
+          cmake --build build
   windows:
     name: "Windows MSYS2 (gcc)"
     runs-on: windows-latest
