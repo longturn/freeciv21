@@ -2299,7 +2299,7 @@ void city_dialog::update_units()
   n = unit_list_size(units);
   ui.present_units_list->set_units(units);
   ui.present_units_list->setVisible(n > 0);
-  fc_snprintf(buf, sizeof(buf), _("Present units %d"), n);
+  fc_snprintf(buf, sizeof(buf), _("Present units: %d"), n);
   ui.curr_units->setText(QString(buf));
 }
 
