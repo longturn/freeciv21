@@ -28,6 +28,7 @@
 #include "page_game.h"
 #include "qtg_cxxside.h"
 #include "themes_common.h"
+#include <array>
 
 extern QString current_theme;
 Q_GLOBAL_STATIC(QString, def_app_style)
