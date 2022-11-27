@@ -234,12 +234,12 @@ if(UNIX AND NOT APPLE)
   endif(FREECIV_ENABLE_RULEDIT)
 endif(UNIX AND NOT APPLE)
 
-# We grab the Libertine Font package online for the client
+# We grab the Libertinus Font package online for the client
 if(FREECIV_ENABLE_CLIENT)
-  message(STATUS "Downloading Linux Libertine Font Package")
+  message(STATUS "Downloading Libertinus Font Package")
 
   include(ExternalProject)
-  ExternalProject_Add(Libertine
+  ExternalProject_Add(Libertinus
     PREFIX ${CMAKE_BINARY_DIR}
     LOG_DIR ${CMAKE_BINARY_DIR}
     DOWNLOAD_NO_PROGRESS TRUE
@@ -248,19 +248,19 @@ if(FREECIV_ENABLE_CLIENT)
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
-    URL https://sourceforge.net/projects/linuxlibertine/files/linuxlibertine/5.3.0/LinLibertineOTF_5.3.0_2012_07_02.tgz
+    URL https://github.com/alerque/libertinus/releases/download/v7.040/Libertinus-7.040.zip
   )
 
   if(MSYS OR MINGW OR WIN32)
     install(
-      DIRECTORY ${CMAKE_BINARY_DIR}/src/Libertine
+      DIRECTORY ${CMAKE_BINARY_DIR}/src/Libertinus
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/fonts
       COMPONENT freeciv21
       FILES_MATCHING PATTERN *.otf PATTERN *.txt
     )
   else()
       install(
-      DIRECTORY ${CMAKE_BINARY_DIR}/src/Libertine
+      DIRECTORY ${CMAKE_BINARY_DIR}/src/Libertinus
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/freeciv21/fonts
       COMPONENT freeciv21
       FILES_MATCHING PATTERN *.otf PATTERN *.txt
