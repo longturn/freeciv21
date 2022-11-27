@@ -175,8 +175,6 @@ void configure_fonts()
      << QStringLiteral("Linux Biolinum");
 
   configure_font(fonts::default_font, sl, QFont::SansSerif, default_size);
-
-  configure_font(fonts::notify_label, sl, QFont::SansSerif, default_size);
   configure_font(fonts::city_names, sl, QFont::SansSerif, default_size,
                  true);
   configure_font(fonts::city_productions, sl, QFont::SansSerif,
@@ -188,6 +186,7 @@ void configure_fonts()
      << QStringLiteral("Linux Libertine Mono O")
      << QStringLiteral("Linux Libertine Mono");
 
+  configure_font(fonts::notify_label, sl, QFont::Monospace, default_size);
   configure_font(fonts::help_label, sl, QFont::Monospace, default_size);
   configure_font(fonts::help_text, sl, QFont::Monospace, default_size);
   configure_font(fonts::chatline, sl, QFont::Monospace, default_size);
