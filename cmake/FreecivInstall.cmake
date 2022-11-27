@@ -235,7 +235,7 @@ if(UNIX AND NOT APPLE)
 endif(UNIX AND NOT APPLE)
 
 # We grab the Libertinus Font package online for the client
-if(FREECIV_ENABLE_CLIENT)
+if(FREECIV_ENABLE_CLIENT AND FREECIV_DOWNLOAD_FONTS)
   message(STATUS "Downloading Libertinus Font Package")
 
   include(ExternalProject)
@@ -266,5 +266,5 @@ if(FREECIV_ENABLE_CLIENT)
       FILES_MATCHING PATTERN *.otf PATTERN *.txt
     )
   endif(MSYS OR MINGW OR WIN32)
-endif(FREECIV_ENABLE_CLIENT)
+endif()
 

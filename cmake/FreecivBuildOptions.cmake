@@ -50,3 +50,6 @@ endif()
 
 # By default we do not enable VCPKG
 option(FREECIV_USE_VCPKG "Use VCPKG" OFF)
+
+option(FREECIV_DOWNLOAD_FONTS "Download fonts needed by Freeciv21" ON)
+mark_as_advanced(FREECIV_DOWNLOAD_FONTS)
