@@ -132,12 +132,12 @@ its variants.
 
 See the `macOS Packages`_ section below on the steps to install the components for Apple macOS.
 
-If you are running Windows and want to use the MSYS2 environment and not set it up yet, then
+If you are running Windows and want to use the MSYS2 environment and have not set it up yet, then
 :doc:`do so now </Contributing/msys2>`, before continuing.
 
 Lastly, if you are running Windows and want to use Visual Studio, you can follow the Microsoft
 :doc:`Visual Studio </Contributing/visual-studio>` instructions. The Visual Studio instructions are
-self contained. You do not neet to return here in that case.
+self contained. You do not need to return here in that case.
 
 Debian Linux Packages
 =====================
@@ -166,8 +166,7 @@ following commands:
      libunwind-dev \
      libdw-dev \
      python3-sphinx \
-     clang-format-11 \
-     fonts-linuxlibertine
+     clang-format-11
 
 
 At this point, follow the steps in `Obtaining the Source Code`_ section below.
@@ -203,6 +202,7 @@ the :file:`git` program with this command:
 .. code-block:: sh
 
   $ git clone https://github.com/longturn/freeciv21.git
+  $ cd freeciv21
 
 
 Configuring
@@ -227,58 +227,12 @@ you can go to the `Compiling/Building`_ section below to continue.
   $ cmake --preset fullrelease-macos -S . -B build
 
 .. note::
-  The first time you run the this command, :file:`cmake` invoke the :file:`vcpkg` installation process to
+  The first time you run the this command, :file:`cmake` invokes the :file:`vcpkg` installation process to
   download and compile all of the project dependencies listed in the manifest file: :file:`vcpkg.json`.
   :strong:`This will take a very long time`. On a fast computer with a good Internet connection it will take
   at least 3 hours to complete. Everything will be downloaded and compiled into the :file:`$HOME/vcpkg`
   directory. Binaries for the packages will be copied into the :file:`./build/` directory inside of the main
   Freeciv21 directory and reused for subsequent builds.
-
-Other CMake Notes
------------------
-
-To customize the compile, :file:`cmake` requires the use of command line parameters. :file:`cmake` calls
-them directives and they start with :literal:`-D`. The defaults are marked with :strong:`bold` text.
-
-=========================================== =================
-Directive                                    Description
-=========================================== =================
-FREECIV_ENABLE_TOOLS={:strong:`ON`/OFF}     Enables all the tools with one parameter (Ruledit, FCMP,
-                                            Ruleup, and Manual)
-FREECIV_ENABLE_SERVER={:strong:`ON`/OFF}    Enables the server. Should typically set to ON to be able
-                                            to play AI games
-FREECIV_ENABLE_NLS={:strong:`ON`/OFF}       Enables Native Language Support
-FREECIV_ENABLE_CIVMANUAL={:strong:`ON`/OFF} Enables the Freeciv21 Manual application
-FREECIV_ENABLE_CLIENT={:strong:`ON`/OFF}    Enables the Qt client. Should typically set to ON unless you
-                                            only want the server
-FREECIV_ENABLE_FCMP_CLI={ON/OFF}            Enables the command line version of the Freeciv21 Modpack
-                                            Installer
-FREECIV_ENABLE_FCMP_QT={ON/OFF}             Enables the Qt version of the Freeciv21 Modpack Installer
-                                            (recommended)
-FREECIV_ENABLE_RULEDIT={ON/OFF}             Enables the Ruleset Editor
-FREECIV_ENABLE_RULEUP={ON/OFF}              Enables the Ruleset upgrade tool
-CMAKE_BUILD_TYPE={:strong:`Release`/Debug}  Changes the Build Type. Most people will pick Release
-CMAKE_INSTALL_PREFIX=/some/path             Allows an alternative install path. Default is
-                                            :file:`/usr/local/freeciv21`
-=========================================== =================
-
-For more information on other cmake directives see
-https://cmake.org/cmake/help/latest/manual/cmake-variables.7.html.
-
-Once the command line directives are determined, the appropriate command looks like this:
-
-.. code-block:: sh
-
-  $ cmake . -B build -G Ninja \
-     -DCMAKE_BUILD_TYPE=Release \
-     -DCMAKE_INSTALL_PREFIX=$HOME/Install/Freeciv21
-
-
-A very common Debian Linux configuration command looks like this:
-
-.. code-block:: sh
-
-  $ cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
 
 
 Compiling/Building
@@ -326,10 +280,6 @@ Assuming you have obtained the source code and installed the package dependencie
 follow these steps to generate the Debian package:
 
 .. code-block:: sh
-
-  $ rm -Rf build
-
-  $ cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=/usr
 
   $ cmake --build build --target package
 
@@ -379,6 +329,55 @@ If you are running Debian Linux, the base program is installed by the instructio
 .. code-block:: sh
 
   $ cmake --build build --target docs
+
+
+Other CMake Notes
+=================
+
+To customize the compile, :file:`cmake` requires the use of command line parameters. :file:`cmake` calls
+them directives and they start with :literal:`-D`. The defaults are marked with :strong:`bold` text.
+
+=========================================== =================
+Directive                                    Description
+=========================================== =================
+FREECIV_ENABLE_TOOLS={:strong:`ON`/OFF}     Enables all the tools with one parameter (Ruledit, FCMP,
+                                            Ruleup, and Manual)
+FREECIV_ENABLE_SERVER={:strong:`ON`/OFF}    Enables the server. Should typically set to ON to be able
+                                            to play AI games
+FREECIV_ENABLE_NLS={:strong:`ON`/OFF}       Enables Native Language Support
+FREECIV_ENABLE_CIVMANUAL={:strong:`ON`/OFF} Enables the Freeciv21 Manual application
+FREECIV_ENABLE_CLIENT={:strong:`ON`/OFF}    Enables the Qt client. Should typically set to ON unless you
+                                            only want the server
+FREECIV_ENABLE_FCMP_CLI={ON/OFF}            Enables the command line version of the Freeciv21 Modpack
+                                            Installer
+FREECIV_ENABLE_FCMP_QT={ON/OFF}             Enables the Qt version of the Freeciv21 Modpack Installer
+                                            (recommended)
+FREECIV_ENABLE_RULEDIT={ON/OFF}             Enables the Ruleset Editor
+FREECIV_ENABLE_RULEUP={ON/OFF}              Enables the Ruleset upgrade tool
+FREECIV_USE_VCPKG={ON/:strong:`OFF`}        Enables the use of VCPKG
+FREECIV_DOWNLOAD_FONTS{:strong:`ON`/OFF}    Enables the downloading of Libertinus Fonts
+CMAKE_BUILD_TYPE={:strong:`Release`/Debug}  Changes the Build Type. Most people will pick Release
+CMAKE_INSTALL_PREFIX=/some/path             Allows an alternative install path. Default is
+                                            :file:`/usr/local/freeciv21`
+=========================================== =================
+
+For more information on other cmake directives see
+https://cmake.org/cmake/help/latest/manual/cmake-variables.7.html.
+
+Once the command line directives are determined, the appropriate command looks like this:
+
+.. code-block:: sh
+
+  $ cmake . -B build -G Ninja \
+     -DCMAKE_BUILD_TYPE=Release \
+     -DCMAKE_INSTALL_PREFIX=$HOME/Install/Freeciv21
+
+
+A very common Debian Linux configuration command looks like this:
+
+.. code-block:: sh
+
+  $ cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
 
 
 .. |reg|    unicode:: U+000AE .. REGISTERED SIGN
