@@ -1,11 +1,11 @@
 name: Build
 on:
-  push:
-    paths-ignore:
-      - 'docs/**'
   concurrency:
     group: ${{ github.head_ref || github.run_id }}
     cancel-in-progress: true
+  push:
+    paths-ignore:
+      - 'docs/**'
   pull_request: {}
   schedule:
     - cron: "0 5 * * MON"
