@@ -510,23 +510,23 @@ void plr_widget::nation_selected(const QItemSelection &sl,
   QString line = QStringLiteral("<tr><td><b>%1</b></td><td>%2</td></tr>");
 
   intel_str +=
-      line.arg(_("Nation"))
+      line.arg(_("Nation:"))
           .arg(
               QString(nation_adjective_for_player(pplayer)).toHtmlEscaped());
   intel_str +=
-      line.arg(_("Ruler"))
+      line.arg(_("Ruler:"))
           .arg(QString(ruler_title_for_player(pplayer, tbuf, sizeof(tbuf)))
                    .toHtmlEscaped());
-  intel_str += line.arg(_("Government")).arg(egov.toHtmlEscaped());
+  intel_str += line.arg(_("Government:")).arg(egov.toHtmlEscaped());
   intel_str +=
-      line.arg(_("Capital"))
+      line.arg(_("Capital:"))
           .arg(QString(((!pcity) ? _("(Unknown)") : city_name_get(pcity)))
                    .toHtmlEscaped());
-  intel_str += line.arg(_("Gold")).arg(egold.toHtmlEscaped());
-  intel_str += line.arg(_("Tax")).arg(etax.toHtmlEscaped());
-  intel_str += line.arg(_("Science")).arg(esci.toHtmlEscaped());
-  intel_str += line.arg(_("Luxury")).arg(elux.toHtmlEscaped());
-  intel_str += line.arg(_("Researching")).arg(res.toHtmlEscaped());
+  intel_str += line.arg(_("Gold:")).arg(egold.toHtmlEscaped());
+  intel_str += line.arg(_("Tax:")).arg(etax.toHtmlEscaped());
+  intel_str += line.arg(_("Science:")).arg(esci.toHtmlEscaped());
+  intel_str += line.arg(_("Luxury:")).arg(elux.toHtmlEscaped());
+  intel_str += line.arg(_("Researching:")).arg(res.toHtmlEscaped());
   intel_str += line.arg(_("Culture:")).arg(cult.toHtmlEscaped());
   intel_str += QLatin1String("</table>");
 
@@ -571,9 +571,9 @@ void plr_widget::nation_selected(const QItemSelection &sl,
     a = 0;
     b = 0;
     techs_known =
-        QString(_("<b>Techs unknown by %1:</b>"))
+        QString(_("<b>Techs unknown by %1:</b> "))
             .arg(QString(nation_plural_for_player(pplayer)).toHtmlEscaped());
-    techs_unknown = QString(_("<b>Techs unknown by you :</b>"));
+    techs_unknown = QString(_("<b>Techs unknown by you:</b> "));
 
     advance_iterate(A_FIRST, padvance)
     {
@@ -620,7 +620,7 @@ void plr_widget::nation_selected(const QItemSelection &sl,
     tech_str = techs_known + nl + techs_unknown;
   } else if (global_observer) {
     tech_str =
-        QString(_("<b>Techs known by %1:</b>"))
+        QString(_("<b>Techs known by %1:</b> "))
             .arg(QString(nation_plural_for_player(pplayer)).toHtmlEscaped());
     advance_iterate(A_FIRST, padvance)
     {
@@ -706,6 +706,7 @@ plr_report::plr_report() : QWidget()
   ui.cancel_but->setText(_("Cancel Treaty"));
   ui.withdraw_but->setText(_("Withdraw Vision"));
   ui.toggle_ai_but->setText(_("Toggle AI Mode"));
+  ui.diplo_but->setText(_("Open Diplomacy"));
   connect(ui.meet_but, &QAbstractButton::pressed, this,
           &plr_report::req_meeeting);
   connect(ui.cancel_but, &QAbstractButton::pressed, this,
@@ -714,6 +715,8 @@ plr_report::plr_report() : QWidget()
           &plr_report::plr_withdraw_vision);
   connect(ui.toggle_ai_but, &QAbstractButton::pressed, this,
           &plr_report::toggle_ai_mode);
+  connect(ui.diplo_but, &QAbstractButton::pressed, this,
+          &plr_report::plr_diplomacy);
   setLayout(ui.layout);
   other_player = nullptr;
   index = 0;
@@ -750,12 +753,22 @@ void plr_report::call_meeting()
 }
 
 /**
-   Slot for canceling threaty
+   Slot for canceling treaty
  */
 void plr_report::plr_cancel_threaty()
 {
   dsend_packet_diplomacy_cancel_pact(
       &client.conn, player_number(other_player), CLAUSE_CEASEFIRE);
+}
+
+/**
+   Slot for diplomacy
+ */
+void plr_report::plr_diplomacy()
+{
+  if (can_client_issue_orders()) {
+    this->call_meeting();
+  }
 }
 
 /**
@@ -867,6 +880,7 @@ void plr_report::update_report(bool update_selection)
   ui.cancel_but->setDisabled(true);
   ui.withdraw_but->setDisabled(true);
   ui.toggle_ai_but->setDisabled(true);
+  ui.diplo_but->setDisabled(false);
   ui.plr_label->setText(ui.plr_wdg->intel_str);
   ui.ally_label->setText(ui.plr_wdg->ally_str);
   ui.tech_label->setText(ui.plr_wdg->tech_str);
@@ -892,6 +906,9 @@ void plr_report::update_report(bool update_selection)
   if (can_meet_with_player(other_player)) {
     ui.meet_but->setEnabled(true);
   }
+  // if (player_diplomacy_active(client_player(), other_player)) {
+  //  ui.diplo_but->setEnabled(true);
+  //}
   ui.plr_wdg->restore_selection();
 }
 

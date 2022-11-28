@@ -151,6 +151,7 @@ private slots:
   void plr_cancel_threaty();
   void plr_withdraw_vision();
   void toggle_ai_mode();
+  void plr_diplomacy();
 };
 
 void popdown_players_report();
