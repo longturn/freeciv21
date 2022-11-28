@@ -1197,7 +1197,7 @@ intelligence at the bottom of the page. :numref:`Nations Intelligence` gives an 
 .. _Nations Intelligence:
 .. figure:: /_static/images/gui-elements/nations-intel.png
   :align: center
-  :scale: 65%
+  :scale: 70%
   :alt: Freeciv21 nations intelligence
   :figclass: align-center
 
@@ -1219,14 +1219,18 @@ Arabs. The Aztecs also have shared vision with both of these nations.
 On the right, you can see a comparison of technological research between your nation and the nation selected.
 
 The :guilabel:`Nations and Diplomacy View` has a few buttons at the upper left. From left to right, they are:
-:guilabel:`Meet`, :guilabel:`Cancel Treaty`, :guilabel:`Withdraw Vision`, and :guilabel:`Toggle AI Mode`. This
-is how you access the :guilabel:`Diplomacy` component of the :guilabel:`Nations and Diplomacy View`.
+:guilabel:`Meet`, :guilabel:`Cancel Treaty`, :guilabel:`Withdraw Vision`, :guilabel:`Toggle AI Mode`, and
+:guilabel:`Active Diplomacy`. This is how you access the :guilabel:`Diplomacy` component of the
+:guilabel:`Nations and Diplomacy View`.
 
-Let us talk about the buttons from right to left as :guilabel:`Meet` takes the longest to describe. Depending
-on the command line level you have in the game (default is ``hack`` for single player games), you may be able
-to change a player from an AI to a human after a game has started to allow a human player to come into the
-game. This is what the :guilabel:`Toggle AI Mode` button does. If the button is greyed out you cannot change
-the AI mode in the game.
+Let us talk about the buttons from right to left as :guilabel:`Meet` takes the longest to describe. if you
+have any active treaty negotiations ocurring, you can click on the :guilabel:`Active Diplomacy` button to
+switch to that page.
+
+Depending on the command line level you have in the game (default is ``hack`` for single player games), you
+may be able to change a player from an AI to a human after a game has started to allow a human player to come
+into the game. This is what the :guilabel:`Toggle AI Mode` button does. If the button is greyed out you cannot
+change the AI mode in the game.
 
 If you have previously shared vision via a treaty from the :guilabel:`Diplomacy View`, you can revoke it by
 clicking on the :guilabel:`Withdraw Vision` button. Sharing vision is similar to you allowing another player
@@ -1259,8 +1263,8 @@ your game, you can swap sea and world maps, trade cities, give advances, share v
 agree to peace or an alliance via a pact. If you are happy with the components of the treaty you can click the
 :guilabel:`Accept Treaty` button. The client will change the thumbs-down icon to the right of your nation to a
 thumbs-up showing agreement. If you do not want to do anything and definitely do not want to accept the
-treaty, then you can click on the :guilabel:`Cancel Meeting` button. This will close the :guilabel:`Diplomacy
-View` and return you to the :guilabel:`Nations View`.
+treaty, then you can click on the :guilabel:`Cancel Meeting` button. This will close the
+:guilabel:`Diplomacy View` and return you to the :guilabel:`Nations View`.
 
 .. note:: The ability to trade maps, cities, or advances is ruleset dependent and may not be enabled for all
   games. The other clauses such as share vision, give an embassy or change the relationship via a pact are
@@ -1287,9 +1291,8 @@ shown in :numref:`Nations and Diplomacy View Button with Diplomacy View Open` be
   Nations and Diplomacy View Button with Diplomacy View Open
 
 
-To quickly access the :guilabel:`Diplomacy View`, you can right-click on the button to bring it up. A normal
-left-click of the button will bring up the :guilabel:`Nations View` as shown in
-:numref:`Nations and Diplomacy View Button with Diplomacy View open` above.
+To get back to the :guilabel:`Diplomacy View`, you can click on the :guilabel:`Active Diplomacy` button from
+the :guilabel:`Nations View` described earlier to bring it back up.
 
 Research View
 ^^^^^^^^^^^^^
