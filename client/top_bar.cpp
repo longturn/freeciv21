@@ -527,13 +527,6 @@ void top_bar_right_click_diplomacy()
 
     menu->setAttribute(Qt::WA_DeleteOnClose);
     menu->popup(QCursor::pos());
-  } else {
-    int i;
-    i = queen()->gimmeIndexOf(QStringLiteral("DDI"));
-    if (i < 0) {
-      return;
-    }
-    queen()->game_tab_widget->setCurrentIndex(i);
   }
 }
 

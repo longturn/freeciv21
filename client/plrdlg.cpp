@@ -706,7 +706,8 @@ plr_report::plr_report() : QWidget()
   ui.cancel_but->setText(_("Cancel Treaty"));
   ui.withdraw_but->setText(_("Withdraw Vision"));
   ui.toggle_ai_but->setText(_("Toggle AI Mode"));
-  ui.diplo_but->setText(_("Open Diplomacy"));
+  ui.diplo_but->setText(_("Active Diplomacy"));
+  ui.diplo_but->setEnabled(false);
   connect(ui.meet_but, &QAbstractButton::pressed, this,
           &plr_report::req_meeeting);
   connect(ui.cancel_but, &QAbstractButton::pressed, this,
@@ -723,6 +724,9 @@ plr_report::plr_report() : QWidget()
   if (king()->qt_settings.player_repo_sort_col != -1) {
     ui.plr_wdg->sortByColumn(king()->qt_settings.player_repo_sort_col,
                              king()->qt_settings.player_report_sort);
+  }
+  if (queen()->gimmeIndexOf(QStringLiteral("DDI")) > 0) {
+    ui.diplo_but->setEnabled(true);
   }
   ui.plr_wdg->set_pr_rep(this);
 }
@@ -766,9 +770,12 @@ void plr_report::plr_cancel_threaty()
  */
 void plr_report::plr_diplomacy()
 {
-  if (can_client_issue_orders()) {
-    this->call_meeting();
+  int i;
+  i = queen()->gimmeIndexOf(QStringLiteral("DDI"));
+  if (i < 0) {
+    return;
   }
+  queen()->game_tab_widget->setCurrentIndex(i);
 }
 
 /**
@@ -880,7 +887,6 @@ void plr_report::update_report(bool update_selection)
   ui.cancel_but->setDisabled(true);
   ui.withdraw_but->setDisabled(true);
   ui.toggle_ai_but->setDisabled(true);
-  ui.diplo_but->setDisabled(false);
   ui.plr_label->setText(ui.plr_wdg->intel_str);
   ui.ally_label->setText(ui.plr_wdg->ally_str);
   ui.tech_label->setText(ui.plr_wdg->tech_str);
@@ -906,9 +912,6 @@ void plr_report::update_report(bool update_selection)
   if (can_meet_with_player(other_player)) {
     ui.meet_but->setEnabled(true);
   }
-  // if (player_diplomacy_active(client_player(), other_player)) {
-  //  ui.diplo_but->setEnabled(true);
-  //}
   ui.plr_wdg->restore_selection();
 }
 
