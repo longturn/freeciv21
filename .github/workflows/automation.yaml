@@ -32,7 +32,7 @@ jobs:
               body: `:baby_bottle: **clang-format**
             This branch will be reformatted automatically with \`clang-format\`. Please avoid doing this for complex PRs and use squash merge when it makes sense — the bot :space_invader:`
             })
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Install clang-format-11

@@ -3,6 +3,9 @@
 
 name: clang-tidy-review
 on:
+  concurrency:
+    group: ${{ github.head_ref || github.run_id }}
+    cancel-in-progress: true
   # We need to run on pull_request_target to gain access to secrets (for the
   # Codacy token).
   pull_request_target: {}
@@ -15,7 +18,7 @@ jobs:
     permissions: {} # Security: run cmake from a fully unprivileged context
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}

@@ -3,6 +3,9 @@ on:
   push:
     paths-ignore:
       - 'docs/**'
+  concurrency:
+    group: ${{ github.head_ref || github.run_id }}
+    cancel-in-progress: true
   pull_request: {}
   schedule:
     - cron: "0 5 * * MON"
@@ -26,7 +29,7 @@ jobs:
             build_type: RelWithDebInfo
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Install GCC
@@ -117,7 +120,7 @@ jobs:
       run:
         shell: msys2 {0}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - uses: msys2/setup-msys2@v2
@@ -169,14 +172,14 @@ jobs:
       VCPKG_ROOT: C:/vcpkg
       VCPKG_DEFAULT_BINARY_CACHE: ${{github.workspace}}/vcpkg/bincache
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: "Create dir: '${{env.VCPKG_DEFAULT_BINARY_CACHE}}'"
         run: mkdir -p $VCPKG_DEFAULT_BINARY_CACHE
         shell: bash
       - name: Restore vcpkg and its artifacts.
-        uses: actions/cache@4a1587e51eefd737551e59c2bcd63e33405c48b3
+        uses: actions/cache@v3
         with:
           path: ${{env.VCPKG_DEFAULT_BINARY_CACHE}}/*
           key: ${{hashFiles('vcpkg.json')}}
@@ -184,7 +187,7 @@ jobs:
         run: find $RUNNER_WORKSPACE
         shell: bash
       - name: Enable Developer Command Prompt
-        uses: ilammy/msvc-dev-cmd@v1.10.0
+        uses: ilammy/msvc-dev-cmd@v1
       - name: Configure
         run: cmake -S . -B build -G "Visual Studio 17 2022" \
          -DCMAKE_BUILD_TYPE=Debug -DVCPKG_BUILD_TYPE=debug \
@@ -193,7 +196,7 @@ jobs:
       - name: Building
         run: cmake --build build --config Debug
       - name: Upload a build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Client (MSVC_Clang x64)
           path: ${{github.workspace}}/build/Debug/freeciv21-client.exe
@@ -206,7 +209,7 @@ jobs:
       MACOSX_DEPLOYMENT_TARGET: 10.15
       VCPKG_BUILD_TYPE: release
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Install build tools
@@ -219,7 +222,7 @@ jobs:
             gettext \
             create-dmg
           brew link gettext --force
-      - uses: lukka/run-vcpkg@v10.1
+      - uses: lukka/run-vcpkg@v10
         name: Install dependencies
         with:
           vcpkgGitCommitId: 50fd3d9957195575849a49fa591e645f1d8e7156
@@ -274,7 +277,7 @@ jobs:
             Freeciv21-*.dmg
             Freeciv21-*.dmg.sha256
       - name: Upload a build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: macOS-dmg
           path: Freeciv21-*.dmg
@@ -286,10 +289,10 @@ jobs:
     env:
       QT_VERSION: 5.15.2
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Cache Qt build
         id: qtcache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/qt
           key: qt-wasm-${{ env.QT_VERSION }}-svg-socket-v2
@@ -302,7 +305,7 @@ jobs:
             clang \
             python3 \
             gettext
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         name: Checkout emsdk
         with:
           repository: emscripten-core/emsdk
@@ -325,7 +328,7 @@ jobs:
           cd lua-5.4.3
           emcmake cmake .
           emmake make install
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         if: steps.qtcache.outputs.cache-hit != 'true'
         name: Checkout qtbase
         with:
@@ -343,7 +346,7 @@ jobs:
           git cherry-pick 76d12eea2252c5e537dff15b103bdc1f925cf760
           ./configure -xplatform wasm-emscripten -opensource -confirm-license -prefix ~/qt -nomake examples
           make install
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         if: steps.qtcache.outputs.cache-hit != 'true'
         name: Checkout qtsvg
         with:
@@ -357,7 +360,7 @@ jobs:
           cd qtsvg
           ~/qt/bin/qmake
           make install
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         name: Checkout zstd
         with:
           repository: facebook/zstd
@@ -370,7 +373,7 @@ jobs:
           mkdir bld
           emcmake cmake build/cmake -DZSTD_BUILD_PROGRAMS=0 -DZSTD_BUILD_SHARED=0
           emmake make install
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         name: Checkout extra-cmake-modules
         with:
           repository: KDE/extra-cmake-modules
@@ -381,7 +384,7 @@ jobs:
           cd ecm
           cmake .
           sudo make install
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         name: Checkout karchive
         with:
           repository: KDE/karchive
@@ -426,13 +429,13 @@ jobs:
         run: |
           cat common/networking/CMakeFiles/networking.dir/includes_CXX.rsp
           cat CMakeCache.txt
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: cmakecache
           path: CMakeCache.txt
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: wasm-client
           path: freeciv21-client.*
@@ -441,7 +444,7 @@ jobs:
     name: clang-format Code Formatter
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
     - name: Run clang-format style check for C/C++
