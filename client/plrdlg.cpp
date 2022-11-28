@@ -912,6 +912,9 @@ void plr_report::update_report(bool update_selection)
   if (can_meet_with_player(other_player)) {
     ui.meet_but->setEnabled(true);
   }
+  if (queen()->gimmeIndexOf(QStringLiteral("DDI")) > 0) {
+    ui.diplo_but->setEnabled(true);
+  }
   ui.plr_wdg->restore_selection();
 }
 
