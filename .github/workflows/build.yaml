@@ -1,8 +1,5 @@
 name: Build
 on:
-  concurrency:
-    group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
-    cancel-in-progress: true
   push:
     paths-ignore:
       - 'docs/**'
@@ -11,6 +8,9 @@ on:
     - cron: "0 5 * * MON"
   workflow_dispatch: {}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
 
 jobs:
   ubuntu:
