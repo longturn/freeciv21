@@ -7,6 +7,10 @@ on:
   # Codacy token).
   pull_request_target: {}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   run:
     # Unprivileged action that runs clang-tidy and produces report.json in
