@@ -1,6 +1,7 @@
 /*
  * This file is part of Freeciv21.
  * SPDX-FileCopyrightText: 2022 Louis Moureaux
+ * SPDX-FileCopyrightText: 2022 James Robertson
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -10,18 +11,6 @@
 
 // qt-client is one true king
 #include "widgetdecorations.h"
-
-class QEvent;
-class QGridLayout;
-class QItemSelection;
-class QListWidget;
-class QMouseEvent;
-class QObject;
-class QPaintEvent;
-class QPainter;
-class QPushButton;
-class QPixmap;
-class QResizeEvent;
 
 class map_view;
 
