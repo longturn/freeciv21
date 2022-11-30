@@ -1,23 +1,14 @@
 /*
  * This file is part of Freeciv21.
  * SPDX-FileCopyrightText: 2022 Louis Moureaux
+ * SPDX-FileCopyrightText: 2022 James Robertson
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 #include "minimap_panel.h"
 
-// Qt
-#include <QApplication>
-#include <QGridLayout>
-#include <QHeaderView>
-#include <QListWidget>
-#include <QMouseEvent>
-#include <QPainter>
-#include <QPushButton>
-
 // client
-#include "client_main.h"
 #include "icons.h"
 #include "mapview.h"
 #include "page_game.h"
