@@ -17,11 +17,11 @@
 #include <QPushButton>
 
 // client
+#include "client_main.h"
 #include "icons.h"
 #include "mapview.h"
 #include "page_game.h"
 #include "top_bar.h"
-#include "client_main.h"
 
 /**
  * Constructor.
@@ -33,7 +33,6 @@ minimap_panel::minimap_panel(map_view *map, QWidget *parent)
   setAttribute(Qt::WA_NoMousePropagation);
   setMinimumSize(100, 100);
   setResizable(Qt::LeftEdge | Qt::TopEdge);
-
 
   ui.zoom_in->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("zoom-in")));
@@ -71,7 +70,6 @@ void minimap_panel::set_minimap_visible(bool visible)
   QApplication::postEvent(queen()->game_tab_widget,
                           new QEvent(QEvent::LayoutRequest));
 }
-
 
 /**
  * Update the timeout display.  The timeout is the time until the turn ends.

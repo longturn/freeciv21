@@ -22,7 +22,6 @@ class QPainter;
 class QPushButton;
 class QPixmap;
 class QResizeEvent;
-class chatwdg;
 
 class map_view;
 
