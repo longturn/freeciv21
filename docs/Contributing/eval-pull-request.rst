@@ -12,6 +12,9 @@ It is the policy of the Longturn community that all (100%) Pull Requests have at
 an evaluation of a change and either approve or make suggestions for improvements before a merge into the
 master branch.
 
+Code PRs
+========
+
 For each Pull Request, a set of tests are run automatically. When the tests do not pass, the author is
 expected to fix the problems before someone tries to test the code. There is an exception to this for simple
 changes with code formatting issues (as flagged by the automated ``clang-format`` test): in this case, the
@@ -90,3 +93,29 @@ at once, set the environment variable using :code:`$ export ASAN_OPTIONS="halt_o
 
   $ git checkout master
   $ git branch -d testing/pr_[pr-number]
+
+
+Art PRs
+=======
+
+If a Pull Request includes art (graphics, music, etc), you should check not only the inner quality of the
+art, but also how it fits within what is already there. It is sometimes preferable to use lower quality
+sprites if they fit better with the general style of a tileset.
+
+A recurring issue with graphics and sound assets is their licensing and attribution. Much more than code,
+images and music files get copied over, merged, or renamed, and authorship information is quickly lost. Make
+sure that the author of the PR understands where the files come from and who authored them. If possible, ask
+the original author directly if we can include their art.
+
+We request that all assets file be accompanied with license and copyright information in the form of a
+`license file <https://reuse.software/spec/#comment-headers>`_. You will find many examples in the
+repository. The license should be `compatible with version 3 of the GPL
+<https://www.gnu.org/licenses/license-list.html>`_.
+
+.. warning::
+  Please be extra careful when submitted graphics are present `on Freeciv-Web
+  <https://github.com/Lexxie9952/fcw.org-server>`_, as doubts have been repeatedly raised about the validity
+  of some of the copyright claims made by the main developer of that project. We were also asked not to use
+  their graphics, and we will respect this even if it would be allowed by law. As a rule, we only accept
+  assets present on FCW if we can prove that they were taken from somewhere else --- and in that case, we
+  refer to the original source for licensing information.
