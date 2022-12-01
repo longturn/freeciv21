@@ -7,6 +7,10 @@ on:
   # Codacy token).
   pull_request_target: {}
 
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   run:
     # Unprivileged action that runs clang-tidy and produces report.json in
@@ -15,7 +19,7 @@ jobs:
     permissions: {} # Security: run cmake from a fully unprivileged context
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
