@@ -165,6 +165,12 @@ jobs:
           files: |
             build/Windows-x86_64/Freeciv21-*-Windows-x86_64.exe
             build/Windows-x86_64/Freeciv21-*-Windows-x86_64.exe.sha256
+      - name: Upload a build
+        uses: actions/upload-artifact@v3
+        with:
+          name: Windows-exe
+          path: build/Windows-x86_64/Freeciv21-*.exe
+
   windows_clang_msvc:
     name: "Windows Clang"
     runs-on: windows-latest
@@ -196,12 +202,7 @@ jobs:
          -DCMAKE_TOOLCHAIN_FILE="${{env.VCPKG_ROOT}}/scripts/buildsystems/vcpkg.cmake" -A x64 -T ClangCL
       - name: Building
         run: cmake --build build --config Debug
-      - name: Upload a build
-        uses: actions/upload-artifact@v3
-        with:
-          name: Client (MSVC_Clang x64)
-          path: ${{github.workspace}}/build/Debug/freeciv21-client.exe
-          if-no-files-found: error
+
   os_x:
     name: "macOS"
     runs-on: macos-latest
