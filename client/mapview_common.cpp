@@ -1591,9 +1591,6 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
       || tile_visible_mapcanvas(dest_tile)) {
     float start_x, start_y;
     float canvas_dx, canvas_dy;
-    double timing_sec =
-        static_cast<double>(gui_options.smooth_move_unit_msec) / 1000.0;
-    double mytime;
 
     fc_assert(gui_options.smooth_move_unit_msec > 0);
 
@@ -1615,13 +1612,13 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
     // Start the timer (AFTER the unqueue above).
     anim_timer->start();
 
+    const auto timing_ms = gui_options.smooth_move_unit_msec;
+    auto mytime = 0;
     do {
-      int new_x, new_y;
+      mytime = MIN(anim_timer->elapsed(), timing_ms);
 
-      mytime = MIN(anim_timer->elapsed(), timing_sec);
-
-      new_x = start_x + canvas_dx * (mytime / timing_sec);
-      new_y = start_y + canvas_dy * (mytime / timing_sec);
+      auto new_x = start_x + (canvas_dx * mytime) / timing_ms;
+      auto new_y = start_y + (canvas_dy * mytime) / timing_ms;
 
       if (new_x != prev_x || new_y != prev_y) {
         // Backup the canvas store to the temp store.
@@ -1648,7 +1645,7 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
       } else {
         fc_usleep(500);
       }
-    } while (mytime < timing_sec);
+    } while (mytime < timing_ms);
   }
 }
 
