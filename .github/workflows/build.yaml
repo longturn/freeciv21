@@ -9,7 +9,7 @@ on:
   workflow_dispatch: {}
 
 concurrency:
-  group: ${{ github.repository }}-${{ github.head_ref || github.run_id }}
+  group: ${{ github.repository }}-${{ github.head_ref || github.run_id }}-{{ github.action }}
   cancel-in-progress: true
 
 jobs:
