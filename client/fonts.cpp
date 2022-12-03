@@ -62,7 +62,7 @@ QFont fcFont::getFont(const QString &name, double zoom) const
 
   if (font_map.contains(name)) {
     auto font = font_map.value(name);
-    if (gui_options.zoom_scale_fonts) {
+    if (gui_options->zoom_scale_fonts) {
       font.setPointSizeF(font.pointSizeF() * zoom);
     }
     return font;

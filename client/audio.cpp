@@ -173,7 +173,7 @@ bool audio_select_plugin(const QString &name)
   qDebug("Plugin '%s' is now selected",
          qUtf8Printable(plugins[selected_plugin].name));
 
-  plugins[selected_plugin].set_volume(gui_options.sound_effects_volume
+  plugins[selected_plugin].set_volume(gui_options->sound_effects_volume
                                       / 100.0);
 
   return true;
@@ -384,10 +384,10 @@ static void music_finished_callback()
   bool usage_enabled = true;
   switch (current_usage) {
   case MU_MENU:
-    usage_enabled = gui_options.sound_enable_menu_music;
+    usage_enabled = gui_options->sound_enable_menu_music;
     break;
   case MU_INGAME:
-    usage_enabled = gui_options.sound_enable_game_music;
+    usage_enabled = gui_options->sound_enable_game_music;
     break;
   }
 
@@ -509,7 +509,7 @@ void audio_play_sound(const QString &tag, const QString &alt_tag)
   const QString pretty_alt_tag =
       alt_tag.isEmpty() ? QStringLiteral("(null)") : alt_tag;
 
-  if (gui_options.sound_enable_effects) {
+  if (gui_options->sound_enable_effects) {
     fc_assert_ret(tag != nullptr);
 
     log_debug("audio_play_sound('%s', '%s')", qUtf8Printable(tag),

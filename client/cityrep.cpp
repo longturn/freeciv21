@@ -412,7 +412,7 @@ void city_widget::city_view()
   pcity = selected_cities[0];
 
   Q_ASSERT(pcity != nullptr);
-  if (gui_options.center_when_popup_city) {
+  if (gui_options->center_when_popup_city) {
     queen()->mapview_wdg->center_on_tile(pcity->tile);
   }
   real_city_dialog_popup(pcity);

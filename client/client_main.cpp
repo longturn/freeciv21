@@ -328,8 +328,6 @@ int client_main(int argc, char *argv[])
 #ifdef ENABLE_NLS
   (void) bindtextdomain("freeciv21-nations", get_locale_dir());
 #endif
-
-  audio_init();
   init_character_encodings(gui_character_encoding, gui_use_transliteration);
 #ifdef ENABLE_NLS
   bind_textdomain_codeset("freeciv21-nations", get_internal_encoding());
@@ -500,22 +498,29 @@ int client_main(int argc, char *argv[])
 
   // after log_init:
 
-  (void) user_username(gui_options.default_user_name, MAX_LEN_NAME);
-  if (!is_valid_username(gui_options.default_user_name)) {
-    char buf[sizeof(gui_options.default_user_name)];
+  init_our_capability();
 
-    fc_snprintf(buf, sizeof(buf), "_%s", gui_options.default_user_name);
+  options_init();
+  configure_fonts();
+  options_load();
+
+  audio_init();
+
+  (void) user_username(gui_options->default_user_name, MAX_LEN_NAME);
+  if (!is_valid_username(gui_options->default_user_name)) {
+    char buf[sizeof(gui_options->default_user_name)];
+
+    fc_snprintf(buf, sizeof(buf), "_%s", gui_options->default_user_name);
     if (is_valid_username(buf)) {
-      sz_strlcpy(gui_options.default_user_name, buf);
+      sz_strlcpy(gui_options->default_user_name, buf);
     } else {
-      fc_snprintf(gui_options.default_user_name,
-                  sizeof(gui_options.default_user_name), "player%d",
+      fc_snprintf(gui_options->default_user_name,
+                  sizeof(gui_options->default_user_name), "player%d",
                   (int) fc_rand(10000));
     }
   }
 
   // initialization
-
   game.all_connections = conn_list_new();
   game.est_connections = conn_list_new();
 
@@ -528,32 +533,27 @@ int client_main(int argc, char *argv[])
   atexit(at_exit);
   fc_at_quick_exit(emergency_exit);
 
-  init_our_capability();
   init_player_dlg_common();
   init_themes();
-
-  options_init();
-  configure_fonts();
-  options_load();
 
   script_client_init();
 
   if (sound_set_name.isEmpty()) {
-    sound_set_name = gui_options.default_sound_set_name;
+    sound_set_name = gui_options->default_sound_set_name;
   }
   if (music_set_name.isEmpty()) {
-    music_set_name = gui_options.default_music_set_name;
+    music_set_name = gui_options->default_music_set_name;
   }
   if (sound_plugin_name.isEmpty()) {
-    sound_plugin_name = gui_options.default_sound_plugin_name;
+    sound_plugin_name = gui_options->default_sound_plugin_name;
   }
   if (url.host().isEmpty()) {
-    url.setHost(gui_options.default_server_host);
-  } else if (gui_options.use_prev_server) {
-    sz_strlcpy(gui_options.default_server_host, qUtf8Printable(url.host()));
+    url.setHost(gui_options->default_server_host);
+  } else if (gui_options->use_prev_server) {
+    sz_strlcpy(gui_options->default_server_host, qUtf8Printable(url.host()));
   }
   if (url.userName().isEmpty()) {
-    url.setUserName(gui_options.default_user_name);
+    url.setUserName(gui_options->default_user_name);
   }
   if (cmd_metaserver.isEmpty()) {
     // FIXME: Find a cleaner way to achieve this.
@@ -561,24 +561,24 @@ int client_main(int argc, char *argv[])
      * over one release when meta.freeciv.org was unavailable. */
     const char *oldaddr = "http://www.cazfi.net/freeciv/metaserver/";
 
-    if (0 == strcmp(gui_options.default_metaserver, oldaddr)) {
+    if (0 == strcmp(gui_options->default_metaserver, oldaddr)) {
       qInfo(_("Updating old metaserver address \"%s\"."), oldaddr);
-      sz_strlcpy(gui_options.default_metaserver, DEFAULT_METASERVER_OPTION);
+      sz_strlcpy(gui_options->default_metaserver, DEFAULT_METASERVER_OPTION);
       qInfo(_("Default metaserver has been set to value \"%s\"."),
             DEFAULT_METASERVER_OPTION);
     }
     if (0
-        == strcmp(gui_options.default_metaserver,
+        == strcmp(gui_options->default_metaserver,
                   DEFAULT_METASERVER_OPTION)) {
       cmd_metaserver = FREECIV_META_URL;
     } else {
-      cmd_metaserver = gui_options.default_metaserver;
+      cmd_metaserver = gui_options->default_metaserver;
     }
   }
   if (url.port() <= 0) {
-    url.setPort(gui_options.default_server_port);
-  } else if (gui_options.use_prev_server) {
-    gui_options.default_server_port = url.port();
+    url.setPort(gui_options->default_server_port);
+  } else if (gui_options->use_prev_server) {
+    gui_options->default_server_port = url.port();
   }
 
   /* This seed is not saved anywhere; randoms in the client should
@@ -652,7 +652,7 @@ void client_exit()
     client_remove_all_cli_conn();
   }
 
-  if (gui_options.save_options_on_exit) {
+  if (gui_options->save_options_on_exit) {
     options_save(log_option_save_msg);
   }
 
@@ -872,7 +872,7 @@ void set_client_state(enum client_states newstate)
     unit_focus_update();
     update_unit_info_label(get_units_in_focus());
 
-    if (gui_options.auto_center_each_turn) {
+    if (gui_options->auto_center_each_turn) {
       center_on_something();
     }
     start_style_music();
@@ -1120,7 +1120,7 @@ double real_timer_callback()
 
     counter++;
 
-    if (gui_options.heartbeat_enabled && (counter % (20 * 10) == 0)) {
+    if (gui_options->heartbeat_enabled && (counter % (20 * 10) == 0)) {
       send_packet_client_heartbeat(&client.conn);
     }
   }

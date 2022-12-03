@@ -146,7 +146,7 @@ void get_city_dialog_production(struct city *pcity, char *buffer,
   cost_str = city_production_cost_str(pcity);
 
   if (turns < FC_INFINITY) {
-    if (gui_options.concise_city_production) {
+    if (gui_options->concise_city_production) {
       fc_snprintf(time_str, sizeof(time_str), "%3d", turns);
     } else {
       fc_snprintf(time_str, sizeof(time_str),
@@ -154,10 +154,10 @@ void get_city_dialog_production(struct city *pcity, char *buffer,
     }
   } else {
     fc_snprintf(time_str, sizeof(time_str), "%s",
-                gui_options.concise_city_production ? "-" : _("never"));
+                gui_options->concise_city_production ? "-" : _("never"));
   }
 
-  if (gui_options.concise_city_production) {
+  if (gui_options->concise_city_production) {
     fc_snprintf(buffer, buffer_len, _("%3d/%s:%s"), stock, cost_str,
                 time_str);
   } else {

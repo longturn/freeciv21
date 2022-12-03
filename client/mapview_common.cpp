@@ -826,7 +826,7 @@ void put_one_element(QPixmap *pcanvas,
   bool city_unit = false;
   int dummy_x, dummy_y;
   auto sprites = layer->fill_sprite_array(ptile, pedge, pcorner, punit);
-  bool fog = (ptile && gui_options.draw_fog_of_war
+  bool fog = (ptile && gui_options->draw_fog_of_war
               && TILE_KNOWN_UNSEEN == client_tile_get_known(ptile));
   if (ptile) {
     struct city *xcity = is_any_city_dialog_open();
@@ -1105,7 +1105,7 @@ static void draw_trade_routes_for_city(const struct city *pcity_src)
  */
 static void draw_trade_routes()
 {
-  if (!gui_options.draw_city_trade_routes) {
+  if (!gui_options->draw_city_trade_routes) {
     return;
   }
 
@@ -1519,7 +1519,7 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
     }
 
     unqueue_mapview_updates();
-    anim_delay(gui_options.smooth_combat_step_msec);
+    anim_delay(gui_options->smooth_combat_step_msec);
   }
 
   if (num_tiles_explode_unit > 0
@@ -1550,7 +1550,7 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
                  tileset_tile_height(tileset));
 
       flush_dirty();
-      anim_delay(gui_options.smooth_combat_step_msec);
+      anim_delay(gui_options->smooth_combat_step_msec);
     }
   }
 
@@ -1592,7 +1592,7 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
     float start_x, start_y;
     float canvas_dx, canvas_dy;
 
-    fc_assert(gui_options.smooth_move_unit_msec > 0);
+    fc_assert(gui_options->smooth_move_unit_msec > 0);
 
     map_to_gui_vector(tileset, &canvas_dx, &canvas_dy, dx, dy);
 
@@ -1612,7 +1612,7 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
     // Start the timer (AFTER the unqueue above).
     anim_timer->start();
 
-    const auto timing_ms = gui_options.smooth_move_unit_msec;
+    const auto timing_ms = gui_options->smooth_move_unit_msec;
     auto mytime = 0;
     do {
       mytime = MIN(anim_timer->elapsed(), timing_ms);
@@ -1772,7 +1772,7 @@ static void append_city_buycost_string(const struct city *pcity,
     return;
   }
 
-  if (!gui_options.draw_city_buycost || !city_can_buy(pcity)) {
+  if (!gui_options->draw_city_buycost || !city_can_buy(pcity)) {
     return;
   }
 

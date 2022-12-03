@@ -297,7 +297,7 @@ void citybar_painter::option_changed(option *opt)
 citybar_painter *citybar_painter::current()
 {
   if (!s_current) {
-    set_current(gui_options.default_city_bar_style_name);
+    set_current(gui_options->default_city_bar_style_name);
   }
   return s_current.get();
 }
@@ -363,7 +363,7 @@ QRect simple_citybar_painter::paint(QPainter &painter,
   second.set_text_shadow_brush(dark_color);
 
   // First line
-  if (gui_options.draw_city_names) {
+  if (gui_options->draw_city_names) {
     // City name
     format.setFont(get_font(FONT_CITY_NAME));
     format.setForeground(get_color(tileset, COLOR_MAPVIEW_CITYTEXT));
@@ -372,7 +372,7 @@ QRect simple_citybar_painter::paint(QPainter &painter,
     static const QString en_space = QStringLiteral(" ");
 
     // Growth string (eg "5")
-    if (gui_options.draw_city_growth && can_see_inside) {
+    if (gui_options->draw_city_growth && can_see_inside) {
       // Separator (assuming the em space is wider for the city name)
       first.add_text(en_space, format);
 
@@ -383,7 +383,7 @@ QRect simple_citybar_painter::paint(QPainter &painter,
     }
 
     // Trade routes (eg "3/4")
-    if (gui_options.draw_city_trade_routes && can_see_inside) {
+    if (gui_options->draw_city_trade_routes && can_see_inside) {
       // Separator (can still be the city name format)
       first.add_text(en_space, format);
 
@@ -401,7 +401,7 @@ QRect simple_citybar_painter::paint(QPainter &painter,
   }
 
   // Second line
-  if (gui_options.draw_city_productions && can_see_inside) {
+  if (gui_options->draw_city_productions && can_see_inside) {
     // Get text
     char prod[512];
     get_city_mapview_production(pcity, prod, sizeof(prod));
@@ -447,16 +447,16 @@ QRect traditional_citybar_painter::paint(QPainter &painter,
   const bool can_see_inside =
       (client_is_global_observer() || city_owner(pcity) == client_player());
   const bool should_draw_productions =
-      can_see_inside && gui_options.draw_city_productions;
+      can_see_inside && gui_options->draw_city_productions;
   const bool should_draw_growth =
-      can_see_inside && gui_options.draw_city_growth;
+      can_see_inside && gui_options->draw_city_growth;
   const bool should_draw_trade_routes =
-      can_see_inside && gui_options.draw_city_trade_routes;
+      can_see_inside && gui_options->draw_city_trade_routes;
   const bool should_draw_lower_bar = should_draw_productions
                                      || should_draw_growth
                                      || should_draw_trade_routes;
 
-  if (!gui_options.draw_city_names && !should_draw_lower_bar) {
+  if (!gui_options->draw_city_names && !should_draw_lower_bar) {
     // Nothing to draw.
     return QRect();
   }
@@ -482,7 +482,7 @@ QRect traditional_citybar_painter::paint(QPainter &painter,
   line_of_text first, second;
 
   // First line
-  if (gui_options.draw_city_names) {
+  if (gui_options->draw_city_names) {
     // Flag
     first.add_icon(get_city_flag_sprite(t, pcity));
 
@@ -586,7 +586,7 @@ QRect traditional_citybar_painter::paint(QPainter &painter,
   painter.drawTiledPixmap(bounds, *citybar->background);
   painter.setPen(owner_color);
   painter.drawRect(bounds);
-  if (gui_options.draw_city_names && should_draw_lower_bar) {
+  if (gui_options->draw_city_names && should_draw_lower_bar) {
     painter.drawLine(bounds.topLeft() + QPointF(0, first.height() + 1),
                      bounds.topRight() + QPointF(0, first.height() + 1));
   }
@@ -614,11 +614,11 @@ QRect polished_citybar_painter::paint(QPainter &painter,
   const bool can_see_inside =
       (client_is_global_observer() || city_owner(pcity) == client_player());
   const bool should_draw_productions =
-      can_see_inside && gui_options.draw_city_productions;
+      can_see_inside && gui_options->draw_city_productions;
   const bool should_draw_growth =
-      can_see_inside && gui_options.draw_city_growth;
+      can_see_inside && gui_options->draw_city_growth;
   const bool should_draw_trade_routes =
-      can_see_inside && gui_options.draw_city_trade_routes;
+      can_see_inside && gui_options->draw_city_trade_routes;
 
   // Get the tileset to grab stuff from
   const auto t = get_tileset();
@@ -731,7 +731,7 @@ QRect polished_citybar_painter::paint(QPainter &painter,
   }
 
   // Name
-  if (gui_options.draw_city_names) {
+  if (gui_options->draw_city_names) {
     format.setFont(get_font(FONT_CITY_NAME));
     format.setForeground(text_color);
     line.add_text(name, format, false, text_margins);

@@ -96,8 +96,10 @@ void gui_to_overview_pos(const struct tileset *t, int *ovr_x, int *ovr_y,
   gui_to_natural_pos(t, &ntl_x, &ntl_y, gui_x, gui_y);
 
   // Now convert straight to overview coordinates.
-  *ovr_x = floor((ntl_x - gui_options.overview.map_x0) * OVERVIEW_TILE_SIZE);
-  *ovr_y = floor((ntl_y - gui_options.overview.map_y0) * OVERVIEW_TILE_SIZE);
+  *ovr_x =
+      floor((ntl_x - gui_options->overview.map_x0) * OVERVIEW_TILE_SIZE);
+  *ovr_y =
+      floor((ntl_y - gui_options->overview.map_y0) * OVERVIEW_TILE_SIZE);
 
   // Now do additional adjustments.
   if (current_topo_has_flag(TF_WRAPX)) {
@@ -122,7 +124,7 @@ void gui_to_overview_pos(const struct tileset *t, int *ovr_x, int *ovr_y,
  */
 static QColor overview_tile_color(const tile *ptile)
 {
-  if (gui_options.overview.layers[OLAYER_CITIES]) {
+  if (gui_options->overview.layers[OLAYER_CITIES]) {
     struct city *pcity = tile_city(ptile);
 
     if (pcity) {
@@ -137,7 +139,7 @@ static QColor overview_tile_color(const tile *ptile)
       }
     }
   }
-  if (gui_options.overview.layers[OLAYER_UNITS]) {
+  if (gui_options->overview.layers[OLAYER_UNITS]) {
     struct unit *punit = find_visible_unit(ptile);
 
     if (punit) {
@@ -152,22 +154,22 @@ static QColor overview_tile_color(const tile *ptile)
       }
     }
   }
-  if (gui_options.overview.layers[OLAYER_BORDERS]) {
+  if (gui_options->overview.layers[OLAYER_BORDERS]) {
     struct player *owner = tile_owner(ptile);
 
     if (owner) {
-      if (gui_options.overview.layers[OLAYER_BORDERS_ON_OCEAN]) {
+      if (gui_options->overview.layers[OLAYER_BORDERS_ON_OCEAN]) {
         return get_player_color(tileset, owner);
       } else if (!is_ocean_tile(ptile)) {
         return get_player_color(tileset, owner);
       }
     }
   }
-  if (gui_options.overview.layers[OLAYER_RELIEF]
+  if (gui_options->overview.layers[OLAYER_RELIEF]
       && tile_terrain(ptile) != T_UNKNOWN) {
     return get_terrain_color(tileset, tile_terrain(ptile));
   }
-  if (gui_options.overview.layers[OLAYER_BACKGROUND]
+  if (gui_options->overview.layers[OLAYER_BACKGROUND]
       && tile_terrain(ptile) != T_UNKNOWN) {
     if (terrain_has_flag(tile_terrain(ptile), TER_FROZEN)) {
       return get_color(tileset, COLOR_OVERVIEW_FROZEN);
@@ -191,17 +193,17 @@ static void redraw_overview()
 {
   int i, x[4], y[4];
 
-  if (!gui_options.overview.map) {
+  if (!gui_options->overview.map) {
     return;
   }
 
   {
-    QPixmap *src = gui_options.overview.map;
-    QPixmap *dst = gui_options.overview.window;
-    int x_left = gui_options.overview.map_x0 * OVERVIEW_TILE_SIZE;
-    int y_top = gui_options.overview.map_y0 * OVERVIEW_TILE_SIZE;
-    int ix = gui_options.overview.width - x_left;
-    int iy = gui_options.overview.height - y_top;
+    QPixmap *src = gui_options->overview.map;
+    QPixmap *dst = gui_options->overview.window;
+    int x_left = gui_options->overview.map_x0 * OVERVIEW_TILE_SIZE;
+    int y_top = gui_options->overview.map_y0 * OVERVIEW_TILE_SIZE;
+    int ix = gui_options->overview.width - x_left;
+    int iy = gui_options->overview.height - y_top;
 
     QPainter p(dst);
     p.drawPixmap(ix, iy, *src, 0, 0, x_left, y_top);
@@ -219,7 +221,7 @@ static void redraw_overview()
   gui_to_overview_pos(tileset, &x[3], &y[3], mapview.gui_x0,
                       mapview.gui_y0 + mapview.height);
 
-  QPainter p(gui_options.overview.window);
+  QPainter p(gui_options->overview.window);
   p.setPen(QPen(get_color(tileset, COLOR_OVERVIEW_VIEWRECT), 2));
   for (i = 0; i < 4; i++) {
     int src_x = x[i];
@@ -259,8 +261,8 @@ void flush_dirty_overview()
 void overview_to_map_pos(int *map_x, int *map_y, int overview_x,
                          int overview_y)
 {
-  int ntl_x = overview_x / OVERVIEW_TILE_SIZE + gui_options.overview.map_x0;
-  int ntl_y = overview_y / OVERVIEW_TILE_SIZE + gui_options.overview.map_y0;
+  int ntl_x = overview_x / OVERVIEW_TILE_SIZE + gui_options->overview.map_x0;
+  int ntl_y = overview_y / OVERVIEW_TILE_SIZE + gui_options->overview.map_y0;
 
   if (MAP_IS_ISOMETRIC && !current_topo_has_flag(TF_WRAPX)) {
     // Clip half tile left and right.
@@ -297,7 +299,7 @@ static void put_overview_tile_area(QPixmap *pcanvas, const tile *ptile,
 {
   QPainter p(pcanvas);
   p.fillRect(x, y, w, h, overview_tile_color(ptile));
-  if (gui_options.overview.fog
+  if (gui_options->overview.fog
       && TILE_KNOWN_UNSEEN == client_tile_get_known(ptile)) {
     p.drawPixmap(x, y, w, h, *get_basic_fog_sprite(tileset));
   }
@@ -325,11 +327,11 @@ static void overview_update_tile(const tile *ptile)
 
     if (MAP_IS_ISOMETRIC) {
       if (current_topo_has_flag(TF_WRAPX)) {
-        if (overview_x > gui_options.overview.width - OVERVIEW_TILE_WIDTH) {
+        if (overview_x > gui_options->overview.width - OVERVIEW_TILE_WIDTH) {
           /* This tile is shown half on the left and half on the right
            * side of the overview.  So we have to draw it in two parts. */
-          put_overview_tile_area(gui_options.overview.map, ptile,
-                                 overview_x - gui_options.overview.width,
+          put_overview_tile_area(gui_options->overview.map, ptile,
+                                 overview_x - gui_options->overview.width,
                                  overview_y, OVERVIEW_TILE_WIDTH,
                                  OVERVIEW_TILE_HEIGHT);
         }
@@ -340,7 +342,7 @@ static void overview_update_tile(const tile *ptile)
       }
     }
 
-    put_overview_tile_area(gui_options.overview.map, ptile, overview_x,
+    put_overview_tile_area(gui_options->overview.map, ptile, overview_x,
                            overview_y, OVERVIEW_TILE_WIDTH,
                            OVERVIEW_TILE_HEIGHT);
 
@@ -386,19 +388,20 @@ void calculate_overview_dimensions()
   log_debug("Map size %d,%d - area size %d,%d - scale: %d", wld.map.xsize,
             wld.map.ysize, w, h, OVERVIEW_TILE_SIZE);
 
-  gui_options.overview.width =
+  gui_options->overview.width =
       OVERVIEW_TILE_WIDTH * wld.map.xsize + shift * OVERVIEW_TILE_SIZE;
-  gui_options.overview.height = OVERVIEW_TILE_HEIGHT * wld.map.ysize;
+  gui_options->overview.height = OVERVIEW_TILE_HEIGHT * wld.map.ysize;
 
-  if (gui_options.overview.map) {
-    delete gui_options.overview.map;
-    delete gui_options.overview.window;
+  if (gui_options->overview.map) {
+    delete gui_options->overview.map;
+    delete gui_options->overview.window;
   }
-  gui_options.overview.map =
-      new QPixmap(gui_options.overview.width, gui_options.overview.height);
-  gui_options.overview.window =
-      new QPixmap(gui_options.overview.width, gui_options.overview.height);
-  gui_options.overview.map->fill(get_color(tileset, COLOR_OVERVIEW_UNKNOWN));
+  gui_options->overview.map =
+      new QPixmap(gui_options->overview.width, gui_options->overview.height);
+  gui_options->overview.window =
+      new QPixmap(gui_options->overview.width, gui_options->overview.height);
+  gui_options->overview.map->fill(
+      get_color(tileset, COLOR_OVERVIEW_UNKNOWN));
 
   update_minimap();
   if (can_client_change_view()) {
@@ -441,11 +444,11 @@ void overview_init()
  */
 void overview_free()
 {
-  if (gui_options.overview.map) {
-    delete gui_options.overview.map;
-    delete gui_options.overview.window;
-    gui_options.overview.map = nullptr;
-    gui_options.overview.window = nullptr;
+  if (gui_options->overview.map) {
+    delete gui_options->overview.map;
+    delete gui_options->overview.window;
+    gui_options->overview.map = nullptr;
+    gui_options->overview.window = nullptr;
   }
   updates = nullptr;
 }

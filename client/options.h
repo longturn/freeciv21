@@ -46,117 +46,127 @@ struct overview {
 };
 
 struct client_options {
-  char default_user_name[512];
-  char default_server_host[512];
-  int default_server_port;
-  bool use_prev_server;
-  bool heartbeat_enabled;
-  char default_metaserver[512];
-  char default_tileset_square_name[512];
-  char default_tileset_hex_name[512];
-  char default_tileset_isohex_name[512];
-  char default_city_bar_style_name[512];
-  char default_sound_set_name[512];
-  char default_music_set_name[512];
-  char default_sound_plugin_name[512];
-  char default_chat_logfile[512];
+  char default_user_name[512] = "\0";
+  char default_server_host[512] = "localhost";
+  int default_server_port = DEFAULT_SOCK_PORT;
+  bool use_prev_server = false;
+  bool heartbeat_enabled = false;
+  char default_metaserver[512] = DEFAULT_METASERVER_OPTION;
+  char default_tileset_square_name[512] = "\0";
+  char default_tileset_hex_name[512] = "\0";
+  char default_tileset_isohex_name[512] = "\0";
+  char default_city_bar_style_name[512] = "Simple";
+  char default_sound_set_name[512] = "stdsounds";
+  char default_music_set_name[512] = "stdmusic";
+  char default_sound_plugin_name[512] = "\0";
+  char default_chat_logfile[512] = "freeciv-chat.log";
 
-  bool save_options_on_exit;
+  bool save_options_on_exit = true;
 
   /** Migrations **/
-  bool first_boot; /* There was no earlier options saved.
-                    * This affects some migrations, but not all. */
-  char default_tileset_overhead_name[512]; /* 2.6 had separate tilesets for
-                                              ... */
-  char default_tileset_iso_name[512];      // ...overhead and iso topologies.
+  bool first_boot = true; /* There was no earlier options saved.
+                           * This affects some migrations, but not all. */
+  char default_tileset_overhead_name[512] =
+      "\0"; /* 2.6 had separate tilesets for
+        ... */
+  char default_tileset_iso_name[512] =
+      "\0"; // ...overhead and iso topologies.
 
-  bool migrate_fullscreen;
+  bool migrate_fullscreen = false;
 
   /** Local Options: **/
 
-  bool solid_color_behind_units;
-  bool sound_bell_at_new_turn;
-  int smooth_move_unit_msec;
-  int smooth_center_slide_msec;
-  int smooth_combat_step_msec;
-  bool ai_manual_turn_done;
-  bool auto_center_on_unit;
-  bool auto_center_on_automated;
-  bool auto_center_on_combat;
-  bool auto_center_each_turn;
-  bool wakeup_focus;
-  bool goto_into_unknown;
-  bool center_when_popup_city;
-  bool show_previous_turn_messages;
-  bool concise_city_production;
-  bool auto_turn_done;
-  bool ask_city_name;
-  bool popup_new_cities;
-  bool popup_actor_arrival;
-  bool popup_attack_actions;
-  bool popup_last_move_to_allied;
-  bool keyboardless_goto;
-  bool enable_cursor_changes;
-  bool separate_unit_selection;
-  bool unit_selection_clears_orders;
-  struct ft_color highlight_our_names;
+  bool solid_color_behind_units = false;
+  bool sound_bell_at_new_turn = false;
+  int smooth_move_unit_msec = 30;
+  int smooth_center_slide_msec = 200;
+  int smooth_combat_step_msec = 10;
+  bool ai_manual_turn_done = true;
+  bool auto_center_on_unit = true;
+  bool auto_center_on_automated = true;
+  bool auto_center_on_combat = false;
+  bool auto_center_each_turn = true;
+  bool wakeup_focus = true;
+  bool goto_into_unknown = true;
+  bool center_when_popup_city = true;
+  bool show_previous_turn_messages = true;
+  bool concise_city_production = false;
+  bool auto_turn_done = false;
+  bool ask_city_name = true;
+  bool popup_new_cities = true;
+  bool popup_actor_arrival = true;
+  bool popup_attack_actions = true;
+  bool popup_last_move_to_allied = true;
+  bool keyboardless_goto = false;
+  bool enable_cursor_changes = true;
+  bool separate_unit_selection = false;
+  bool unit_selection_clears_orders = true;
+  struct ft_color highlight_our_names = FT_COLOR("#000000", "#FFFF00");
 
-  bool voteinfo_bar_use;
-  bool voteinfo_bar_always_show;
-  bool voteinfo_bar_hide_when_not_player;
-  bool voteinfo_bar_new_at_front;
+  bool voteinfo_bar_use = true;
+  bool voteinfo_bar_always_show = false;
+  bool voteinfo_bar_hide_when_not_player = false;
+  bool voteinfo_bar_new_at_front = false;
 
-  bool autoaccept_tileset_suggestion;
-  bool autoaccept_soundset_suggestion;
-  bool autoaccept_musicset_suggestion;
+  bool autoaccept_tileset_suggestion = false;
+  bool autoaccept_soundset_suggestion = false;
+  bool autoaccept_musicset_suggestion = false;
 
-  bool sound_enable_effects;
-  bool sound_enable_menu_music;
-  bool sound_enable_game_music;
-  int sound_effects_volume;
+  bool sound_enable_effects = true;
+  bool sound_enable_menu_music = true;
+  bool sound_enable_game_music = true;
+  int sound_effects_volume = 50;
 
-  bool draw_city_outlines;
-  bool draw_city_output;
-  bool draw_map_grid;
-  bool draw_city_names;
-  bool draw_city_growth;
-  bool draw_city_productions;
-  bool draw_city_buycost;
-  bool draw_city_trade_routes;
-  bool draw_coastline;
-  bool draw_roads_rails;
-  bool draw_irrigation;
-  bool draw_mines;
-  bool draw_fortress_airbase;
-  bool draw_specials;
-  bool draw_huts;
-  bool draw_pollution;
-  bool draw_cities;
-  bool draw_units;
-  bool draw_focus_unit;
-  bool draw_fog_of_war;
-  bool draw_borders;
-  bool draw_native;
-  bool draw_unit_shields;
-  bool zoom_scale_fonts;
+  bool draw_city_outlines = true;
+  bool draw_city_output = false;
+  bool draw_map_grid = false;
+  bool draw_city_names = true;
+  bool draw_city_growth = true;
+  bool draw_city_productions = true;
+  bool draw_city_buycost = false;
+  bool draw_city_trade_routes = false;
+  bool draw_coastline = false;
+  bool draw_roads_rails = true;
+  bool draw_irrigation = true;
+  bool draw_mines = true;
+  bool draw_fortress_airbase = true;
+  bool draw_specials = true;
+  bool draw_huts = true;
+  bool draw_pollution = true;
+  bool draw_cities = true;
+  bool draw_units = true;
+  bool draw_focus_unit = false;
+  bool draw_fog_of_war = true;
+  bool draw_borders = true;
+  bool draw_native = false;
+  bool draw_unit_shields = true;
+  bool zoom_scale_fonts = true;
 
-  bool player_dlg_show_dead_players;
-  bool reqtree_show_icons;
-  bool reqtree_curved_lines;
+  bool player_dlg_show_dead_players = true;
+  bool reqtree_show_icons = true;
+  bool reqtree_curved_lines = false;
 
   // options for map images
-  char mapimg_format[64];
-  int mapimg_zoom;
-  bool mapimg_layer[MAPIMG_LAYER_COUNT];
-  char mapimg_filename[512];
+  char mapimg_format[64] = "png";
+  int mapimg_zoom = 2;
+  bool mapimg_layer[MAPIMG_LAYER_COUNT] = {
+      false, // a - MAPIMG_LAYER_AREA
+      true,  // b - MAPIMG_LAYER_BORDERS
+      true,  // c - MAPIMG_LAYER_CITIES
+      true,  // f - MAPIMG_LAYER_FOGOFWAR
+      true,  // k - MAPIMG_LAYER_KNOWLEDGE
+      true,  // t - MAPIMG_LAYER_TERRAIN
+      true   // u - MAPIMG_LAYER_UNITS
+  };
+  char mapimg_filename[512] = "mapimage filename";
 
 // gui-qt client specific options.
 #define FC_QT_DEFAULT_THEME_NAME "NightStalker"
-  bool gui_qt_fullscreen;
-  bool gui_qt_show_preview;
-  bool gui_qt_allied_chat_only;
-  int gui_qt_increase_fonts;
-  char gui_qt_default_theme_name[512];
+  bool gui_qt_fullscreen = true;
+  bool gui_qt_show_preview = true;
+  bool gui_qt_allied_chat_only = true;
+  int gui_qt_increase_fonts = 0;
+  char gui_qt_default_theme_name[512] = "NightStalker";
   QFont gui_qt_font_default;
   QFont gui_qt_font_notify_label;
   QFont gui_qt_font_help_label;
@@ -165,12 +175,12 @@ struct client_options {
   QFont gui_qt_font_city_names;
   QFont gui_qt_font_city_productions;
   QFont gui_qt_font_reqtree_text;
-  bool gui_qt_show_titlebar;
+  bool gui_qt_show_titlebar = true;
 
-  struct overview overview;
+  struct overview overview = {};
 };
 
-extern struct client_options gui_options;
+extern client_options *gui_options;
 
 #define SPECENUM_NAME option_type
 #define SPECENUM_VALUE0 OT_BOOLEAN
@@ -307,7 +317,6 @@ extern int messages_where[]; // OR-ed MW_ values [E_COUNT]
 
 /** Client options **/
 
-#define GUI_DEFAULT_CHAT_LOGFILE "freeciv-chat.log"
 #define GUI_DEFAULT_MAPIMG_FILENAME "freeciv"
 
 struct tileset;

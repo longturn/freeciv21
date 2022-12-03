@@ -55,7 +55,7 @@ void meswin_clear_older(int turn, int phase)
   int i;
   int j = 0;
 
-  if (!gui_options.show_previous_turn_messages) {
+  if (!gui_options->show_previous_turn_messages) {
     turn = MESWIN_CLEAR_ALL;
   }
 
@@ -178,7 +178,7 @@ void meswin_popup_city(int message_index)
     struct tile *ptile = messages[message_index]->tile;
     struct city *pcity = tile_city(ptile);
 
-    if (gui_options.center_when_popup_city) {
+    if (gui_options->center_when_popup_city) {
       queen()->mapview_wdg->center_on_tile(ptile);
     }
 

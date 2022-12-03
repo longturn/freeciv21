@@ -37,7 +37,7 @@ void start_style_music()
     return;
   }
 
-  if (gui_options.sound_enable_game_music) {
+  if (gui_options->sound_enable_game_music) {
     struct music_style *pms;
 
     stop_style_music();
@@ -77,7 +77,7 @@ void stop_style_music() { audio_stop_usage(); }
  */
 void start_menu_music(const QString &tag, const QString &alt_tag)
 {
-  if (gui_options.sound_enable_menu_music) {
+  if (gui_options->sound_enable_menu_music) {
     audio_play_music(tag, alt_tag, MU_MENU);
   }
 }

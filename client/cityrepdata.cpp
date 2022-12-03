@@ -560,7 +560,7 @@ static const char *cr_entry_building(const struct city *pcity,
 {
   static char buf[192];
   const char *from_worklist = worklist_is_empty(&pcity->worklist) ? ""
-                              : gui_options.concise_city_production
+                              : gui_options->concise_city_production
                                   ? "+"
                                   : _("(worklist)");
 

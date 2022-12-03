@@ -130,7 +130,7 @@ void voteinfo_queue_add(int vote_no, const char *user, const char *desc,
   vi->percent_required = percent_required;
   vi->flags = flags;
 
-  if (gui_options.voteinfo_bar_new_at_front) {
+  if (gui_options->voteinfo_bar_new_at_front) {
     voteinfo_list_prepend(voteinfo_queue, vi);
     voteinfo_queue_current_index = 0;
   } else {

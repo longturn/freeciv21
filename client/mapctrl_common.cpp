@@ -230,7 +230,7 @@ bool get_turn_done_button_state()
 {
   return can_end_turn()
          && (is_human(client.conn.playing)
-             || gui_options.ai_manual_turn_done);
+             || gui_options->ai_manual_turn_done);
 }
 
 /**
