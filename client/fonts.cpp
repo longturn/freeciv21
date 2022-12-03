@@ -193,7 +193,7 @@ void configure_fonts()
 
   /* Serif List */
   sl.clear();
-  sl << QStringLiteral("Libertinus Display")
+  sl << QStringLiteral("Libertinus Serif Display")
      << QStringLiteral("Linux Libertine Display O")
      << QStringLiteral("Linux Libertine Display");
 
