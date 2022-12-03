@@ -34,16 +34,16 @@ std::vector<drawn_sprite> layer_background::fill_sprite_array(
 
   // Set up background color.
   player *owner = nullptr;
-  if (gui_options.solid_color_behind_units) {
+  if (gui_options->solid_color_behind_units) {
     /* Unit drawing is disabled when the view options are turned off,
      * but only where we're drawing on the mapview. */
     bool do_draw_unit =
         (punit
-         && (gui_options.draw_units || !ptile
-             || (gui_options.draw_focus_unit && unit_is_in_focus(punit))));
+         && (gui_options->draw_units || !ptile
+             || (gui_options->draw_focus_unit && unit_is_in_focus(punit))));
     if (do_draw_unit) {
       owner = unit_owner(punit);
-    } else if (pcity && gui_options.draw_cities) {
+    } else if (pcity && gui_options->draw_cities) {
       owner = city_owner(pcity);
     }
   }

@@ -239,7 +239,7 @@ QStringList get_useable_themes_in_directory(QString &directory)
     theme_list << str;
   }
 
-  qtheme_name = gui_options.gui_qt_default_theme_name;
+  qtheme_name = gui_options->gui_qt_default_theme_name;
   // move current theme on first position
   if (theme_list.contains(qtheme_name)) {
     theme_list.removeAll(qtheme_name);

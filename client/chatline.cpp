@@ -253,7 +253,7 @@ void chat_listener::send_chat_message(const QString &message)
    * Option to send to allies by default
    */
   if (!message.isEmpty()) {
-    if (client_state() >= C_S_RUNNING && gui_options.gui_qt_allied_chat_only
+    if (client_state() >= C_S_RUNNING && gui_options->gui_qt_allied_chat_only
         && is_plain_public_message(message)) {
       send_chat((QString(CHAT_ALLIES_PREFIX) + " " + message).toLocal8Bit());
     } else {
@@ -424,7 +424,7 @@ chat_widget::chat_widget(QWidget *parent)
     QString icon_name =
         priv ? QLatin1String("public") : QLatin1String("private");
     cb->setIcon(fcIcons::instance()->getIcon(icon_name));
-    gui_options.gui_qt_allied_chat_only = priv;
+    gui_options->gui_qt_allied_chat_only = priv;
   });
   connect(chat_output, &QTextBrowser::anchorClicked, this,
           &chat_widget::anchor_clicked);

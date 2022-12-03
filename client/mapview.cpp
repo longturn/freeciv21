@@ -78,7 +78,7 @@ void draw_calculated_trade_routes(QPainter *painter)
   }
   auto color = get_color(tileset, COLOR_MAPVIEW_TRADE_ROUTES_NO_BUILT);
   // Draw calculated trade routes
-  if (gui_options.draw_city_trade_routes) {
+  if (gui_options->draw_city_trade_routes) {
     for (auto qgilles : qAsConst(king()->trade_gen.lines)) {
       base_map_distance_vector(&dx, &dy, TILE_XY(qgilles.t1),
                                TILE_XY(qgilles.t2));
@@ -148,7 +148,7 @@ map_view::map_view()
   timer->start(200);
   resize(0, 0);
   setMouseTracking(true);
-  stored_autocenter = gui_options.auto_center_on_unit;
+  stored_autocenter = gui_options->auto_center_on_unit;
   setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 }
 
@@ -214,7 +214,7 @@ void map_view::center_on_tile(tile *tile, bool animate)
 
   m_origin_animation->stop();
   if (animate) {
-    m_origin_animation->setDuration(gui_options.smooth_center_slide_msec);
+    m_origin_animation->setDuration(gui_options->smooth_center_slide_msec);
     m_origin_animation->setCurrentTime(0);
 
     const auto start = QPointF(mapview.gui_x0, mapview.gui_y0);
@@ -259,7 +259,7 @@ double map_view::scale() const { return m_renderer->scale(); }
 void map_view::set_scale(double scale)
 {
   m_scale_animation->stop();
-  m_scale_animation->setDuration(gui_options.smooth_center_slide_msec);
+  m_scale_animation->setDuration(gui_options->smooth_center_slide_msec);
   m_scale_animation->setEndValue(scale);
   m_scale_animation->setCurrentTime(0);
   m_scale_animation->start();

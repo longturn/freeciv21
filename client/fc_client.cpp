@@ -76,7 +76,7 @@ fc_client::fc_client() : QMainWindow(), current_file(QLatin1String(""))
 
   menu_bar = new mr_menu();
   corner_wid = new fc_corner(this);
-  if (!gui_options.gui_qt_show_titlebar) {
+  if (!gui_options->gui_qt_show_titlebar) {
     menu_bar->setCornerWidget(corner_wid);
   }
   setMenuBar(menu_bar);
@@ -93,7 +93,7 @@ fc_client::fc_client() : QMainWindow(), current_file(QLatin1String(""))
   pages[PAGE_LOAD] = new page_load(central_wdg, this);
   pages[PAGE_NETWORK] = new page_network(central_wdg, this);
   pages[PAGE_NETWORK]->setVisible(false);
-  gui_options.gui_qt_allied_chat_only = true;
+  gui_options->gui_qt_allied_chat_only = true;
   path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
   if (!path.isEmpty()) {
     QSettings::setPath(QSettings::NativeFormat, QSettings::UserScope, path);
@@ -211,7 +211,7 @@ void fc_client::switch_page(int new_pg)
     break;
   case PAGE_GAME:
     tileset_changed();
-    if (!gui_options.gui_qt_show_titlebar) {
+    if (!gui_options->gui_qt_show_titlebar) {
       setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
     }
     showMaximized();
@@ -222,7 +222,7 @@ void fc_client::switch_page(int new_pg)
     showMaximized();
     queen()->chat->update_widgets();
     status_bar->setVisible(false);
-    if (gui_options.gui_qt_fullscreen) {
+    if (gui_options->gui_qt_fullscreen) {
       king()->showFullScreen();
       queen()->game_tab_widget->showFullScreen();
     }

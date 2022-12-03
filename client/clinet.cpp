@@ -157,9 +157,9 @@ int connect_to_server(const QUrl &url, char *errbuf, int errbufsize)
     return -1;
   }
 
-  if (gui_options.use_prev_server) {
-    sz_strlcpy(gui_options.default_server_host, qUtf8Printable(url.host()));
-    gui_options.default_server_port = url.port(DEFAULT_SOCK_PORT);
+  if (gui_options->use_prev_server) {
+    sz_strlcpy(gui_options->default_server_host, qUtf8Printable(url.host()));
+    gui_options->default_server_port = url.port(DEFAULT_SOCK_PORT);
   }
 
   return 0;
@@ -218,7 +218,7 @@ void disconnect_from_server()
   }
   output_window_append(ftc_client, _("Disconnected from server."));
 
-  if (gui_options.save_options_on_exit) {
+  if (gui_options->save_options_on_exit) {
     options_save(nullptr);
   }
 }

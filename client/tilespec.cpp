@@ -3471,7 +3471,7 @@ static QPixmap *get_unit_nation_flag_sprite(const struct tileset *t,
 {
   struct nation_type *pnation = nation_of_unit(punit);
 
-  if (gui_options.draw_unit_shields) {
+  if (gui_options->draw_unit_shields) {
     return t->sprites.nation_shield.p[nation_index(pnation)];
   } else {
     return t->sprites.nation_flag.p[nation_index(pnation)];
@@ -3600,7 +3600,7 @@ void fill_unit_sprite_array(const struct tileset *t,
 
   // Flag
   if (!ptile || !tile_city(ptile)) {
-    if (!gui_options.solid_color_behind_units) {
+    if (!gui_options->solid_color_behind_units) {
       sprs.emplace_back(t, get_unit_nation_flag_sprite(t, punit), true,
                         FULL_TILE_X_OFFSET + t->unit_flag_offset_x,
                         FULL_TILE_Y_OFFSET + t->unit_flag_offset_y);
@@ -3805,7 +3805,7 @@ static void fill_road_sprite_array(const struct tileset *t,
   }
   extra_type_list_iterate_end;
 
-  draw_single_road = road && (!pcity || !gui_options.draw_cities) && !hider;
+  draw_single_road = road && (!pcity || !gui_options->draw_cities) && !hider;
 
   for (dir = 0; dir < 8; dir++) {
     bool roads_exist;
@@ -4002,7 +4002,7 @@ static void fill_irrigation_sprite_array(const struct tileset *t,
 {
   /* We don't draw the irrigation if there's a city (it just gets overdrawn
    * anyway, and ends up looking bad). */
-  if (!(pcity && gui_options.draw_cities)) {
+  if (!(pcity && gui_options->draw_cities)) {
     extra_type_list_iterate(t->style_lists[ESTYLE_CARDINALS], pextra)
     {
       if (is_extra_drawing_enabled(pextra)) {
@@ -4077,7 +4077,7 @@ static void fill_city_overlays_sprite_array(const struct tileset *t,
         sprs.emplace_back(t, t->sprites.city.unworked_tile_overlay.p[idx]);
       }
     } else if (nullptr != pwork && pwork == pcity
-               && (citymode || gui_options.draw_city_output)) {
+               && (citymode || gui_options->draw_city_output)) {
       // Add on the tile output sprites.
       const int ox = t->type == TS_ISOMETRIC ? t->normal_tile_width / 3 : 0;
       const int oy =
@@ -4126,7 +4126,7 @@ static void fill_fog_sprite_array(const struct tileset *t,
                                   const struct tile_edge *pedge,
                                   const struct tile_corner *pcorner)
 {
-  if (t->fogstyle == FOG_SPRITE && gui_options.draw_fog_of_war
+  if (t->fogstyle == FOG_SPRITE && gui_options->draw_fog_of_war
       && nullptr != ptile
       && TILE_KNOWN_UNSEEN == client_tile_get_known(ptile)) {
     // With FOG_AUTO, fog is done this way.
@@ -4134,7 +4134,7 @@ static void fill_fog_sprite_array(const struct tileset *t,
   }
 
   if (t->darkness_layer->style() == freeciv::DARKNESS_CORNER && pcorner
-      && gui_options.draw_fog_of_war) {
+      && gui_options->draw_fog_of_war) {
     int i, tileno = 0;
 
     for (i = 3; i >= 0; i--) {
@@ -4180,7 +4180,7 @@ bool unit_drawn_with_city_outline(const struct unit *punit, bool check_focus)
    * and on a tile where a city can be built.
    * But suppress the outline if the unit has orders (likely it is in
    * transit to somewhere else and this will just slow down redraws). */
-  return gui_options.draw_city_outlines && unit_is_cityfounder(punit)
+  return gui_options->draw_city_outlines && unit_is_cityfounder(punit)
          && !unit_has_orders(punit)
          && (client_tile_get_known(unit_tile(punit)) != TILE_UNKNOWN
              && city_can_be_built_here(unit_tile(punit), punit))
@@ -4251,7 +4251,7 @@ static void fill_grid_sprite_array(const struct tileset *t,
         || mapdeco_is_highlight_set(pedge->tile[1])) {
       sprs.emplace_back(t, t->sprites.grid.selected[pedge->type]);
     } else {
-      if (gui_options.draw_map_grid) {
+      if (gui_options->draw_map_grid) {
         if (worked[0] || worked[1]) {
           sprs.emplace_back(t, t->sprites.grid.worked[pedge->type]);
         } else if (city[0] || city[1]) {
@@ -4260,7 +4260,7 @@ static void fill_grid_sprite_array(const struct tileset *t,
           sprs.emplace_back(t, t->sprites.grid.main[pedge->type]);
         }
       }
-      if (gui_options.draw_city_outlines) {
+      if (gui_options->draw_city_outlines) {
         if (XOR(city[0], city[1])) {
           sprs.emplace_back(t, t->sprites.grid.city[pedge->type]);
         }
@@ -4270,7 +4270,7 @@ static void fill_grid_sprite_array(const struct tileset *t,
       }
     }
 
-    if (gui_options.draw_borders && BORDERS_DISABLED != game.info.borders
+    if (gui_options->draw_borders && BORDERS_DISABLED != game.info.borders
         && known[0] && known[1]) {
       struct player *owner0 = tile_owner(pedge->tile[0]);
       struct player *owner1 = tile_owner(pedge->tile[1]);
@@ -4299,7 +4299,7 @@ static void fill_grid_sprite_array(const struct tileset *t,
       sprs.emplace_back(t, t->sprites.grid.unavailable);
     }
 
-    if (gui_options.draw_native && citymode == nullptr) {
+    if (gui_options->draw_native && citymode == nullptr) {
       bool native = true;
       for (const auto pfocus : get_units_in_focus()) {
         if (!is_native_tile(unit_type_get(pfocus), ptile)) {
@@ -4392,44 +4392,44 @@ bool is_extra_drawing_enabled(struct extra_type *pextra)
   bool no_disable = true; // Draw if matches no cause
 
   if (is_extra_caused_by(pextra, EC_IRRIGATION)) {
-    if (gui_options.draw_irrigation) {
+    if (gui_options->draw_irrigation) {
       return true;
     }
     no_disable = false;
   }
   if (is_extra_caused_by(pextra, EC_POLLUTION)
       || is_extra_caused_by(pextra, EC_FALLOUT)) {
-    if (gui_options.draw_pollution) {
+    if (gui_options->draw_pollution) {
       return true;
     }
     no_disable = false;
   }
   if (is_extra_caused_by(pextra, EC_MINE)) {
-    if (gui_options.draw_mines) {
+    if (gui_options->draw_mines) {
       return true;
     }
     no_disable = false;
   }
   if (is_extra_caused_by(pextra, EC_RESOURCE)) {
-    if (gui_options.draw_specials) {
+    if (gui_options->draw_specials) {
       return true;
     }
     no_disable = false;
   }
   if (is_extra_removed_by(pextra, ERM_ENTER)) {
-    if (gui_options.draw_huts) {
+    if (gui_options->draw_huts) {
       return true;
     }
     no_disable = false;
   }
   if (is_extra_caused_by(pextra, EC_BASE)) {
-    if (gui_options.draw_fortress_airbase) {
+    if (gui_options->draw_fortress_airbase) {
       return true;
     }
     no_disable = false;
   }
   if (is_extra_caused_by(pextra, EC_ROAD)) {
-    if (gui_options.draw_roads_rails) {
+    if (gui_options->draw_roads_rails) {
       return true;
     }
     no_disable = false;
@@ -4469,10 +4469,10 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
    * but only where we're drawing on the mapview. */
   bool do_draw_unit =
       (punit
-       && (gui_options.draw_units || !ptile
-           || (gui_options.draw_focus_unit && unit_is_in_focus(punit))));
-  bool solid_bg = (gui_options.solid_color_behind_units
-                   && (do_draw_unit || (pcity && gui_options.draw_cities)));
+       && (gui_options->draw_units || !ptile
+           || (gui_options->draw_focus_unit && unit_is_in_focus(punit))));
+  bool solid_bg = (gui_options->solid_color_behind_units
+                   && (do_draw_unit || (pcity && gui_options->draw_cities)));
 
   const city *citymode = is_any_city_dialog_open();
 
@@ -4609,7 +4609,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
 
   case LAYER_CITY1:
     // City.  Some city sprites are drawn later.
-    if (pcity && gui_options.draw_cities) {
+    if (pcity && gui_options->draw_cities) {
       if (!citybar_painter::current()->has_flag()) {
         sprs.emplace_back(t, get_city_flag_sprite(t, pcity), true,
                           FULL_TILE_X_OFFSET + t->city_flag_offset_x,
@@ -4683,7 +4683,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
 
   case LAYER_CITY2:
     // City size.  Drawing this under fog makes it hard to read.
-    if (pcity && gui_options.draw_cities
+    if (pcity && gui_options->draw_cities
         && !citybar_painter::current()->has_size()) {
       bool warn = false;
       unsigned int size = city_size_get(pcity);

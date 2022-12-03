@@ -158,7 +158,7 @@ static enum tile_behavior get_TB_aggr(const struct tile *ptile,
                                       const struct pf_parameter *param)
 {
   if (known == TILE_UNKNOWN) {
-    if (!gui_options.goto_into_unknown) {
+    if (!gui_options->goto_into_unknown) {
       return TB_IGNORE;
     }
   } else if (is_non_allied_unit_tile(ptile, param->owner)
@@ -178,7 +178,7 @@ static enum tile_behavior get_TB_caravan(const struct tile *ptile,
                                          const struct pf_parameter *param)
 {
   if (known == TILE_UNKNOWN) {
-    if (!gui_options.goto_into_unknown) {
+    if (!gui_options->goto_into_unknown) {
       return TB_IGNORE;
     }
   } else if (is_non_allied_city_tile(ptile, param->owner)) {
@@ -203,7 +203,7 @@ static enum tile_behavior
 no_fights_or_unknown_goto(const struct tile *ptile, enum known_type known,
                           const struct pf_parameter *p)
 {
-  if (known == TILE_UNKNOWN && gui_options.goto_into_unknown) {
+  if (known == TILE_UNKNOWN && gui_options->goto_into_unknown) {
     // Special case allowing goto into the unknown.
     return TB_NORMAL;
   }
@@ -253,7 +253,7 @@ void enter_goto_state(const std::vector<unit *> &units)
     // This calls path_finder::path_finder(punit) behind the scenes
     // Need to do this because path_finder isn't copy-assignable
     auto [it, _] = goto_finders.emplace(punit->id, punit);
-    if (!gui_options.goto_into_unknown) {
+    if (!gui_options->goto_into_unknown) {
       it->second.set_constraint(
           std::make_unique<freeciv::tile_known_constraint>(client_player()));
     }

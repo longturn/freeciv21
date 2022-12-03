@@ -262,8 +262,8 @@ void map_view::shortcut_pressed(shortcut_id id)
     }
 
     if (!goto_is_active()) {
-      stored_autocenter = gui_options.auto_center_on_unit;
-      gui_options.auto_center_on_unit = false;
+      stored_autocenter = gui_options->auto_center_on_unit;
+      gui_options->auto_center_on_unit = false;
       action_button_pressed(pos.x(), pos.y(), SELECT_FOCUS);
       return;
     }
@@ -301,7 +301,7 @@ void map_view::shortcut_pressed(shortcut_id id)
     break;
 
   case SC_RELOAD_THEME:
-    load_theme(gui_options.gui_qt_default_theme_name);
+    load_theme(gui_options->gui_qt_default_theme_name);
     break;
 
   case SC_RELOAD_TILESET:
@@ -393,7 +393,7 @@ void map_view::shortcut_released(Qt::MouseButton bt)
     }
     if (!keyboardless_goto_active || goto_is_active()) {
       action_button_pressed(pos.x(), pos.y(), SELECT_POPUP);
-      gui_options.auto_center_on_unit = stored_autocenter;
+      gui_options->auto_center_on_unit = stored_autocenter;
     }
     release_goto_button(pos.x(), pos.y());
     return;

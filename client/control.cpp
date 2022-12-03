@@ -327,7 +327,7 @@ bool should_ask_server_for_actions(const struct unit *punit)
           /* The player is interested in getting a pop up for a mere
            * arrival. */
           || (punit->action_decision_want == ACT_DEC_PASSIVE
-              && gui_options.popup_actor_arrival));
+              && gui_options->popup_actor_arrival));
 }
 
 /**
@@ -420,7 +420,7 @@ void auto_center_on_focus_unit()
 {
   struct tile *ptile = find_a_focus_unit_tile_to_center_on();
 
-  if (ptile && gui_options.auto_center_on_unit
+  if (ptile && gui_options->auto_center_on_unit
       && !tile_visible_and_not_on_border_mapcanvas(ptile)) {
     queen()->mapview_wdg->center_on_tile(ptile);
   }
@@ -440,7 +440,7 @@ static void current_focus_append(struct unit *punit)
     ask_server_for_actions(punit);
   }
 
-  if (gui_options.unit_selection_clears_orders) {
+  if (gui_options->unit_selection_clears_orders) {
     clear_unit_orders(punit);
   }
 }
@@ -700,7 +700,7 @@ void unit_focus_advance()
    * non-AI unit this turn which was focused, then fake a Turn Done
    * keypress.
    */
-  if (gui_options.auto_turn_done && num_units_in_old_focus > 0
+  if (gui_options->auto_turn_done && num_units_in_old_focus > 0
       && get_num_units_in_focus() == 0 && non_ai_unit_focus) {
     key_end_turn();
   }
@@ -1126,7 +1126,7 @@ void control_mouse_cursor(struct tile *ptile)
   const auto &active_units = get_units_in_focus();
   enum cursor_type mouse_cursor_type = CURSOR_DEFAULT;
 
-  if (!gui_options.enable_cursor_changes) {
+  if (!gui_options->enable_cursor_changes) {
     return;
   }
 
@@ -1465,7 +1465,7 @@ void request_units_return()
   for (const auto unit : get_units_in_focus()) {
     // Find a path to the closest city
     auto finder = freeciv::path_finder(unit);
-    if (!gui_options.goto_into_unknown) {
+    if (!gui_options->goto_into_unknown) {
       finder.set_constraint(
           std::make_unique<freeciv::tile_known_constraint>(client_player()));
     }
@@ -1750,8 +1750,8 @@ void request_move_unit_direction(struct unit *punit, int dir)
 
   p.length = 1;
   p.orders[0].order =
-      (gui_options.popup_last_move_to_allied ? ORDER_ACTION_MOVE
-                                             : ORDER_MOVE);
+      (gui_options->popup_last_move_to_allied ? ORDER_ACTION_MOVE
+                                              : ORDER_MOVE);
   p.orders[0].dir = static_cast<direction8>(dir);
   p.orders[0].activity = ACTIVITY_LAST;
   p.orders[0].target = NO_TARGET;
@@ -2184,7 +2184,7 @@ void request_toggle_city_outlines()
     return;
   }
 
-  gui_options.draw_city_outlines = !gui_options.draw_city_outlines;
+  gui_options->draw_city_outlines = !gui_options->draw_city_outlines;
   update_map_canvas_visible();
 }
 
@@ -2197,7 +2197,7 @@ void request_toggle_city_output()
     return;
   }
 
-  gui_options.draw_city_output = !gui_options.draw_city_output;
+  gui_options->draw_city_output = !gui_options->draw_city_output;
   update_map_canvas_visible();
 }
 
@@ -2210,7 +2210,7 @@ void request_toggle_map_grid()
     return;
   }
 
-  gui_options.draw_map_grid ^= 1;
+  gui_options->draw_map_grid ^= 1;
   update_map_canvas_visible();
 }
 
@@ -2223,7 +2223,7 @@ void request_toggle_map_borders()
     return;
   }
 
-  gui_options.draw_borders ^= 1;
+  gui_options->draw_borders ^= 1;
   update_map_canvas_visible();
 }
 
@@ -2236,7 +2236,7 @@ void request_toggle_map_native()
     return;
   }
 
-  gui_options.draw_native ^= 1;
+  gui_options->draw_native ^= 1;
   update_map_canvas_visible();
 }
 
@@ -2249,7 +2249,7 @@ void request_toggle_city_names()
     return;
   }
 
-  gui_options.draw_city_names ^= 1;
+  gui_options->draw_city_names ^= 1;
   update_map_canvas_visible();
 }
 
@@ -2262,7 +2262,7 @@ void request_toggle_city_growth()
     return;
   }
 
-  gui_options.draw_city_growth ^= 1;
+  gui_options->draw_city_growth ^= 1;
   update_map_canvas_visible();
 }
 
@@ -2275,7 +2275,7 @@ void request_toggle_city_productions()
     return;
   }
 
-  gui_options.draw_city_productions ^= 1;
+  gui_options->draw_city_productions ^= 1;
   update_map_canvas_visible();
 }
 
@@ -2288,7 +2288,7 @@ void request_toggle_city_buycost()
     return;
   }
 
-  gui_options.draw_city_buycost ^= 1;
+  gui_options->draw_city_buycost ^= 1;
   update_map_canvas_visible();
 }
 
@@ -2301,7 +2301,7 @@ void request_toggle_city_trade_routes()
     return;
   }
 
-  gui_options.draw_city_trade_routes ^= 1;
+  gui_options->draw_city_trade_routes ^= 1;
   update_map_canvas_visible();
 }
 
@@ -2365,7 +2365,7 @@ void do_move_unit(struct unit *punit, struct unit *target_unit)
   bool in_focus = unit_is_in_focus(punit);
 
   was_teleported = !is_tiles_adjacent(src_tile, dst_tile);
-  do_animation = (!was_teleported && gui_options.smooth_move_unit_msec > 0);
+  do_animation = (!was_teleported && gui_options->smooth_move_unit_msec > 0);
 
   if (!was_teleported && punit->activity != ACTIVITY_SENTRY
       && !unit_transported(punit)) {
@@ -2374,10 +2374,10 @@ void do_move_unit(struct unit *punit, struct unit *target_unit)
   }
 
   if (unit_owner(punit) == client.conn.playing
-      && gui_options.auto_center_on_unit && !unit_has_orders(punit)
+      && gui_options->auto_center_on_unit && !unit_has_orders(punit)
       && punit->activity != ACTIVITY_GOTO
       && punit->activity != ACTIVITY_SENTRY
-      && ((gui_options.auto_center_on_automated
+      && ((gui_options->auto_center_on_automated
            && punit->ssa_controller != SSA_NONE)
           || (punit->ssa_controller == SSA_NONE))
       && !tile_visible_and_not_on_border_mapcanvas(dst_tile)) {
@@ -2402,7 +2402,7 @@ void do_move_unit(struct unit *punit, struct unit *target_unit)
      * the tile without the unit (because it was unlinked above). */
     refresh_unit_mapcanvas(punit, src_tile, true);
 
-    if (!gui_options.auto_center_on_automated
+    if (!gui_options->auto_center_on_automated
         && punit->ssa_controller != SSA_NONE) {
       // Dont animate automatic units
     } else if (do_animation) {
@@ -2532,7 +2532,7 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
 
     if (qunit) {
       unit_focus_set_and_select(qunit);
-      maybe_goto = gui_options.keyboardless_goto;
+      maybe_goto = gui_options->keyboardless_goto;
     }
   } else if (nullptr != pcity
              && can_player_see_city_internals(client.conn.playing, pcity)) {
@@ -2540,14 +2540,14 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
     popup_city_dialog(pcity);
   } else if (!near_pcity && unit_list_size(ptile->units) == 0
              && nullptr == pcity && get_num_units_in_focus() > 0) {
-    maybe_goto = gui_options.keyboardless_goto;
+    maybe_goto = gui_options->keyboardless_goto;
   } else if (!near_pcity && unit_list_size(ptile->units) == 1
              && !get_transporter_occupancy(unit_list_get(ptile->units, 0))) {
     struct unit *punit = unit_list_get(ptile->units, 0);
 
     if (unit_owner(punit) == client.conn.playing) {
       if (can_unit_do_activity(punit, ACTIVITY_IDLE)) {
-        maybe_goto = gui_options.keyboardless_goto;
+        maybe_goto = gui_options->keyboardless_goto;
         if (qtype == SELECT_APPEND) {
           unit_focus_add(punit);
         } else {

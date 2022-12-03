@@ -99,10 +99,10 @@ void overview_pos_nowrap(const struct tileset *t, int *ovr_x, int *ovr_y,
   gui_to_natural_pos(t, &ntl_x, &ntl_y, gui_x, gui_y);
 
   // Now convert straight to overview coordinates.
-  *ovr_x =
-      std::round((ntl_x - gui_options.overview.map_x0) * OVERVIEW_TILE_SIZE);
-  *ovr_y =
-      std::round((ntl_y - gui_options.overview.map_y0) * OVERVIEW_TILE_SIZE);
+  *ovr_x = std::round((ntl_x - gui_options->overview.map_x0)
+                      * OVERVIEW_TILE_SIZE);
+  *ovr_y = std::round((ntl_y - gui_options->overview.map_y0)
+                      * OVERVIEW_TILE_SIZE);
 }
 
 } // namespace
@@ -114,7 +114,7 @@ void minimap_view::draw_viewport(QPainter *painter)
 {
   int x[4], y[4];
 
-  if (!gui_options.overview.map) {
+  if (!gui_options->overview.map) {
     return;
   }
 
@@ -192,7 +192,7 @@ void minimap_view::update_image()
  */
 int minimap_view::heightForWidth(int width) const
 {
-  const auto size = gui_options.overview.map->size();
+  const auto size = gui_options->overview.map->size();
   if (tileset_is_isometric(tileset)) {
     // Traditional iso tilesets have more or less this aspect ratio
     return size.height() * width / size.width() / 2;
@@ -207,7 +207,7 @@ int minimap_view::heightForWidth(int width) const
 QSize minimap_view::sizeHint() const
 {
   // The default size is a bit too small...
-  return 5 * gui_options.overview.map->size();
+  return 5 * gui_options->overview.map->size();
 }
 
 /**
@@ -216,7 +216,7 @@ QSize minimap_view::sizeHint() const
 void minimap_view::paint(QPainter *painter, QPaintEvent *event)
 {
   painter->drawPixmap(1, 1, width() - 1, height() - 1,
-                      *gui_options.overview.map);
+                      *gui_options->overview.map);
 
   painter->setPen(QColor(palette().color(QPalette::HighlightedText)));
   painter->drawRect(0, 0, width() - 1, height() - 1);
@@ -241,8 +241,8 @@ void minimap_view::resizeEvent(QResizeEvent *event)
 
   if (C_S_RUNNING <= client_state() && size.width() > 0
       && size.height() > 0) {
-    w_ratio = static_cast<float>(width()) / gui_options.overview.width;
-    h_ratio = static_cast<float>(height()) / gui_options.overview.height;
+    w_ratio = static_cast<float>(width()) / gui_options->overview.width;
+    h_ratio = static_cast<float>(height()) / gui_options->overview.height;
     king()->qt_settings.minimap_width =
         static_cast<float>(size.width()) / mapview.width;
     king()->qt_settings.minimap_height =
@@ -267,8 +267,8 @@ void minimap_view::mousePressEvent(QMouseEvent *event)
     fy = qRound(fy / h_ratio);
     fx = qMax(fx, 1);
     fy = qMax(fy, 1);
-    fx = qMin(fx, gui_options.overview.width - 1);
-    fy = qMin(fy, gui_options.overview.height - 1);
+    fx = qMin(fx, gui_options->overview.width - 1);
+    fy = qMin(fy, gui_options->overview.height - 1);
     int x, y;
     overview_to_map_pos(&x, &y, fx, fy);
     auto *ptile = map_pos_to_tile(&(wld.map), x, y);

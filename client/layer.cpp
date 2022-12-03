@@ -54,9 +54,9 @@ bool layer::do_draw_unit(const tile *ptile, const unit *punit) const
   }
 
   // Handle options to turn off drawing units.
-  if (gui_options.draw_units) {
+  if (gui_options->draw_units) {
     return true;
-  } else if (gui_options.draw_focus_unit && unit_is_in_focus(punit)) {
+  } else if (gui_options->draw_focus_unit && unit_is_in_focus(punit)) {
     return true;
   } else {
     return false;
@@ -80,12 +80,12 @@ bool layer::do_draw_unit(const tile *ptile, const unit *punit) const
 bool layer::solid_background(const tile *ptile, const unit *punit,
                              const city *pcity) const
 {
-  if (!gui_options.solid_color_behind_units) {
+  if (!gui_options->solid_color_behind_units) {
     // Solid background turned off (the default).
     return false;
   }
 
-  return do_draw_unit(ptile, punit) || (gui_options.draw_cities && pcity);
+  return do_draw_unit(ptile, punit) || (gui_options->draw_cities && pcity);
 }
 
 } // namespace freeciv

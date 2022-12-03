@@ -60,7 +60,7 @@ page_load::page_load(QWidget *parent, fc_client *c) : QWidget(parent)
   ui.load_save_text->setText(QLatin1String(""));
   ui.load_save_text->setTextFormat(Qt::RichText);
   ui.load_save_text->setWordWrap(true);
-  ui.show_preview->setChecked(gui_options.gui_qt_show_preview);
+  ui.show_preview->setChecked(gui_options->gui_qt_show_preview);
   ui.saves_load->setRowCount(0);
   QStringList sav;
   sav << _("Choose Saved Game to Load") << _("Date");
@@ -100,7 +100,7 @@ void page_load::update_load_page()
   row = 0;
   ui.saves_load->clearContents();
   ui.saves_load->setRowCount(0);
-  ui.show_preview->setChecked(gui_options.gui_qt_show_preview);
+  ui.show_preview->setChecked(gui_options->gui_qt_show_preview);
 
   const auto files =
       find_files_in_path(get_save_dirs(), QStringLiteral("*.sav*"), false);
@@ -148,7 +148,7 @@ void page_load::browse_saves()
  */
 void page_load::state_preview()
 {
-  gui_options.gui_qt_show_preview =
+  gui_options->gui_qt_show_preview =
       ui.show_preview->checkState() != Qt::Unchecked;
   auto selection = ui.saves_load->selectionModel()->selection();
   ui.saves_load->selectionModel()->clearSelection();

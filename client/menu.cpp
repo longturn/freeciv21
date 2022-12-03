@@ -583,7 +583,7 @@ void mr_menu::setup_menus()
   connect(act, &QAction::triggered, this, &mr_menu::save_options_now);
   act = menu->addAction(_("Save Options on Exit"));
   act->setCheckable(true);
-  act->setChecked(gui_options.save_options_on_exit);
+  act->setChecked(gui_options->save_options_on_exit);
   menu->addSeparator();
 
   act = menu->addAction(_("Leave Game"));
@@ -602,7 +602,7 @@ void mr_menu::setup_menus()
   act = menu->addAction(_("Fullscreen"));
   shortcuts->link_action(SC_FULLSCREEN, act);
   act->setCheckable(true);
-  act->setChecked(gui_options.gui_qt_fullscreen);
+  act->setChecked(gui_options->gui_qt_fullscreen);
   connect(act, &QAction::triggered, this, &mr_menu::slot_fullscreen);
   menu->addSeparator();
   minimap_status = menu->addAction(_("Minimap"));
@@ -652,7 +652,7 @@ void mr_menu::setup_menus()
     act->setCheckable(true);
     act->setData(a);
     action_citybar->addAction(act);
-    if (a == QString(gui_options.default_city_bar_style_name)) {
+    if (a == QString(gui_options->default_city_bar_style_name)) {
       act->setChecked(true);
     }
     connect(act, &QAction::triggered, this, &mr_menu::slot_set_citybar);
@@ -660,57 +660,57 @@ void mr_menu::setup_menus()
 
   act = menu->addAction(_("City Outlines"));
   act->setCheckable(true);
-  act->setChecked(gui_options.draw_city_outlines);
+  act->setChecked(gui_options->draw_city_outlines);
   connect(act, &QAction::triggered, this, &mr_menu::slot_city_outlines);
   act = menu->addAction(_("City Output"));
   act->setCheckable(true);
-  act->setChecked(gui_options.draw_city_output);
+  act->setChecked(gui_options->draw_city_output);
   shortcuts->link_action(SC_CITY_OUTPUT, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_city_output);
   act = menu->addAction(_("Map Grid"));
   shortcuts->link_action(SC_MAP_GRID, act);
   act->setCheckable(true);
-  act->setChecked(gui_options.draw_map_grid);
+  act->setChecked(gui_options->draw_map_grid);
   connect(act, &QAction::triggered, this, &mr_menu::slot_map_grid);
   act = menu->addAction(_("National Borders"));
   act->setCheckable(true);
-  act->setChecked(gui_options.draw_borders);
+  act->setChecked(gui_options->draw_borders);
   shortcuts->link_action(SC_NAT_BORDERS, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_borders);
   act = menu->addAction(_("Units"));
   act->setCheckable(true);
-  act->setChecked(gui_options.draw_units);
+  act->setChecked(gui_options->draw_units);
   connect(act, &QAction::toggled, this, [](bool checked) {
-    gui_options.draw_units = checked;
+    gui_options->draw_units = checked;
     update_map_canvas_visible();
   });
   act = menu->addAction(_("Native Tiles"));
   act->setCheckable(true);
-  act->setChecked(gui_options.draw_native);
+  act->setChecked(gui_options->draw_native);
   act->setShortcut(QKeySequence(tr("ctrl+shift+n")));
   connect(act, &QAction::triggered, this, &mr_menu::slot_native_tiles);
   act = menu->addAction(_("City Names"));
   act->setCheckable(true);
-  act->setChecked(gui_options.draw_city_names);
+  act->setChecked(gui_options->draw_city_names);
   shortcuts->link_action(SC_CITY_NAMES, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_city_names);
   act = menu->addAction(_("City Growth"));
   act->setCheckable(true);
-  act->setChecked(gui_options.draw_city_growth);
+  act->setChecked(gui_options->draw_city_growth);
   act->setShortcut(QKeySequence(tr("ctrl+o")));
   connect(act, &QAction::triggered, this, &mr_menu::slot_city_growth);
   act = menu->addAction(_("City Production Levels"));
   act->setCheckable(true);
-  act->setChecked(gui_options.draw_city_productions);
+  act->setChecked(gui_options->draw_city_productions);
   shortcuts->link_action(SC_CITY_PROD, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_city_production);
   act = menu->addAction(_("City Buy Cost"));
   act->setCheckable(true);
-  act->setChecked(gui_options.draw_city_buycost);
+  act->setChecked(gui_options->draw_city_buycost);
   connect(act, &QAction::triggered, this, &mr_menu::slot_city_buycost);
   act = menu->addAction(_("City Traderoutes"));
   act->setCheckable(true);
-  act->setChecked(gui_options.draw_city_trade_routes);
+  act->setChecked(gui_options->draw_city_trade_routes);
   shortcuts->link_action(SC_TRADE_ROUTES, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_city_traderoutes);
 
@@ -2463,8 +2463,8 @@ void enable_interface(bool enable)
  */
 void mr_menu::slot_fullscreen()
 {
-  gui_options.gui_qt_fullscreen = !gui_options.gui_qt_fullscreen;
-  if (gui_options.gui_qt_fullscreen) {
+  gui_options->gui_qt_fullscreen = !gui_options->gui_qt_fullscreen;
+  if (gui_options->gui_qt_fullscreen) {
     king()->setWindowState(king()->windowState() | Qt::WindowFullScreen);
   } else {
     king()->setWindowState(king()->windowState() & ~Qt::WindowFullScreen);
@@ -2512,7 +2512,7 @@ void mr_menu::slot_city_growth() { key_city_growth_toggle(); }
  */
 void mr_menu::zoom_scale_fonts()
 {
-  gui_options.zoom_scale_fonts = scale_fonts_status->isChecked();
+  gui_options->zoom_scale_fonts = scale_fonts_status->isChecked();
   update_map_canvas_visible();
 }
 
@@ -2533,9 +2533,9 @@ void mr_menu::slot_set_citybar()
 {
   for (auto *a : action_citybar->actions()) {
     if (a->isChecked()) {
-      fc_strlcpy(gui_options.default_city_bar_style_name,
+      fc_strlcpy(gui_options->default_city_bar_style_name,
                  qUtf8Printable(a->data().toString()),
-                 sizeof(gui_options.default_city_bar_style_name));
+                 sizeof(gui_options->default_city_bar_style_name));
       options_iterate(client_optset, poption)
       {
         if (QString(option_name(poption))

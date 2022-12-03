@@ -42,7 +42,7 @@ void map_updates_handler::update(const city *city, bool full)
 {
   if (!m_full_update) {
     const auto tile = city_tile(city);
-    if (full && (gui_options.draw_map_grid || gui_options.draw_borders)) {
+    if (full && (gui_options->draw_map_grid || gui_options->draw_borders)) {
       m_updates[tile] |= update_type::city_map;
     } else {
       // Assumption: city sprites are as big as unit sprites
@@ -74,7 +74,7 @@ void map_updates_handler::update(const unit *unit, bool full)
 {
   if (!m_full_update) {
     const auto tile = unit_tile(unit);
-    if (full && gui_options.draw_native) {
+    if (full && gui_options->draw_native) {
       update_all();
     } else if (full && unit_drawn_with_city_outline(unit, true)) {
       m_updates[tile] |= update_type::city_map;

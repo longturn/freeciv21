@@ -126,7 +126,7 @@ static void node_rectangle_minimum_size(struct tree_node *node, int *width,
     max_icon_height = 0;
     icons_width_sum = 5;
 
-    if (gui_options.reqtree_show_icons) {
+    if (gui_options->reqtree_show_icons) {
       // units
       unit_type_iterate(unit)
       {
@@ -1043,7 +1043,7 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
 
         icon_startx = startx + 5;
 
-        if (gui_options.reqtree_show_icons) {
+        if (gui_options->reqtree_show_icons) {
           unit_type_iterate(unit)
           {
             if (advance_number(unit->require_advance) != node->tech) {
@@ -1138,7 +1138,7 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
         // -1 for pen half-width
         endy = dest_node->node_y + dest_node->node_height / 2 - 1;
 
-        if (gui_options.reqtree_curved_lines) {
+        if (gui_options->reqtree_curved_lines) {
           QPainterPath path;
           path.moveTo(startx, starty);
           path.cubicTo((startx + endx) / 2., starty, startx,

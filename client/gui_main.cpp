@@ -72,14 +72,14 @@ void ui_main()
     tileset_init(tileset);
     tileset_load_tiles(tileset);
     qApp->setWindowIcon(QIcon(*get_icon_sprite(tileset)));
-    if (gui_options.first_boot) {
+    if (gui_options->first_boot) {
       configure_fonts();
     }
     if (!isFontInstalled(QStringLiteral("Libertinus Sans"))
         && !isFontInstalled(QStringLiteral("Linux Libertine"))) {
       load_fonts();
     }
-    if (!load_theme(gui_options.gui_qt_default_theme_name)) {
+    if (!load_theme(gui_options->gui_qt_default_theme_name)) {
       gui_clear_theme();
     }
     freeciv_qt = new fc_client();
@@ -312,8 +312,8 @@ void gui_update_font(const QString &font_name, const QFont &font)
 
 void gui_update_allfonts()
 {
-  fcFont::instance()->setSizeAll(gui_options.gui_qt_increase_fonts);
-  gui_options.gui_qt_increase_fonts = 0;
+  fcFont::instance()->setSizeAll(gui_options->gui_qt_increase_fonts);
+  gui_options->gui_qt_increase_fonts = 0;
 }
 
 /**
