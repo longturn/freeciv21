@@ -106,6 +106,7 @@ QPushButton:checked, QToolButton:checked {
 }
 
 QPushButton:disabled, QToolButton:disabled {
+  color: #888E93;
   border-image: url(LittleFingerbutton-insensitive.png) 3 3 3 3;
 }
 
