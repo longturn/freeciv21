@@ -293,7 +293,7 @@ static void assign_continent_flood(struct tile *ptile, bool is_land, int nr)
       {
         pterrain = tile_terrain(ptile3);
 
-        /* Check if it is a valid tile for continent / ocean. */
+        // Check if it is a valid tile for continent / ocean.
         if (tile_continent(ptile3) != 0 || T_UNKNOWN == pterrain
             || !XOR(is_land,
                     terrain_type_terrain_class(pterrain) == TC_OCEAN)) {
@@ -439,6 +439,8 @@ void assign_continent_numbers()
   // Initialize
   wld.map.num_continents = 0;
   wld.map.num_oceans = 0;
+  continent_sizes = std::vector<int>(1);
+  ocean_sizes = std::vector<int>(1);
 
   whole_map_iterate(&(wld.map), ptile) { tile_set_continent(ptile, 0); }
   whole_map_iterate_end;
@@ -459,13 +461,11 @@ void assign_continent_numbers()
 
     if (terrain_type_terrain_class(pterrain) != TC_OCEAN) {
       wld.map.num_continents++;
-      continent_sizes = std::vector<int>(wld.map.num_continents + 1);
-      continent_sizes[wld.map.num_continents] = 0;
+      continent_sizes.push_back(0);
       assign_continent_flood(ptile, true, wld.map.num_continents);
     } else {
       wld.map.num_oceans++;
-      ocean_sizes = std::vector<int>(wld.map.num_oceans + 1);
-      ocean_sizes[wld.map.num_oceans] = 0;
+      ocean_sizes.push_back(0);
       assign_continent_flood(ptile, false, -wld.map.num_oceans);
     }
   }
