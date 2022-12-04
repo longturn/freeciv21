@@ -723,7 +723,7 @@ void fc_shortcuts::write() const
     s.setArrayIndex(id);
     s.setValue(QStringLiteral("id"), sc.id);
     s.setValue(QStringLiteral("type"), sc.type);
-    s.setValue(QStringLiteral("keys"), sc.keys);
+    s.setValue(QStringLiteral("keys"), sc.keys.toString());
     s.setValue(QStringLiteral("buttons"), sc.buttons);
     s.setValue(QStringLiteral("modifiers"), QVariant(sc.modifiers));
   }
@@ -747,7 +747,8 @@ bool fc_shortcuts::read()
           static_cast<shortcut_id>(s.value(QStringLiteral("id")).toInt());
       sc.type = static_cast<fc_shortcut::type_id>(
           s.value(QStringLiteral("type")).toInt());
-      sc.keys = qvariant_cast<QKeySequence>(s.value(QStringLiteral("keys")));
+      sc.keys = QKeySequence::fromString(
+          s.value(QStringLiteral("keys")).toString());
       sc.buttons = static_cast<Qt::MouseButton>(
           s.value(QStringLiteral("buttons")).toInt());
       sc.modifiers = static_cast<Qt::KeyboardModifiers>(
