@@ -103,7 +103,6 @@ private:
 ****************************************************************************/
 class progress_bar : public QProgressBar {
   Q_OBJECT
-  QElapsedTimer m_timer;
 signals:
   void clicked();
 
@@ -120,12 +119,10 @@ public:
 
 protected:
   void paintEvent(QPaintEvent *event) override;
-  void timerEvent(QTimerEvent *event) override;
   void resizeEvent(QResizeEvent *event) override;
 
 private:
   void create_region();
-  int m_animate_step;
   QPixmap *pix;
   QRegion reg;
   QFont *sfont;
