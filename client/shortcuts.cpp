@@ -378,6 +378,8 @@ shortcut_edit::shortcut_edit(const fc_shortcut &sc)
   m_line->setContextMenuPolicy(Qt::NoContextMenu);
   m_line->installEventFilter(this);
   m_line->setText(m_shortcut.to_string());
+  // Default size is too small
+  m_line->setMinimumWidth(m_line->sizeHint().width() * 2);
   installEventFilter(this);
 }
 
