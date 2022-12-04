@@ -4246,6 +4246,11 @@ void options_load()
   const char *const prefix = "client";
   const char *str;
 
+  // Ensure all options start with their default value
+  for (auto &option : client_options) {
+    option_reset(OPTION(&option));
+  }
+
   name = get_last_option_file_name(&allow_digital_boolean);
   if (!name) {
     qInfo(_("Didn't find the option file. Creating a new one."));
