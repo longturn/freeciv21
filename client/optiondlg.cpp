@@ -161,6 +161,8 @@ option_dialog::option_dialog(const QString &name, const option_set *options,
   main_layout->addWidget(button_box);
   setLayout(main_layout);
 
+  resize(800, 700);
+
   setAttribute(Qt::WA_DeleteOnClose);
 }
 
