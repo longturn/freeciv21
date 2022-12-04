@@ -162,12 +162,12 @@ pageGame::pageGame(QWidget *parent)
         }
       });
 
-  top_bar_wdg->addWidget(sw_map);
-  top_bar_wdg->addWidget(sw_cunit);
-  top_bar_wdg->addWidget(sw_cities);
-  top_bar_wdg->addWidget(sw_diplo);
-  top_bar_wdg->addWidget(sw_science);
-  top_bar_wdg->addWidget(sw_economy);
+  top_bar_wdg->addWidget(sw_map);     // F1
+  top_bar_wdg->addWidget(sw_cunit);   // F2
+  top_bar_wdg->addWidget(sw_diplo);   // F3
+  top_bar_wdg->addWidget(sw_cities);  // F4
+  top_bar_wdg->addWidget(sw_economy); // F5
+  top_bar_wdg->addWidget(sw_science); // F6
   top_bar_wdg->addWidget(sw_tax);
   top_bar_wdg->addWidget(sw_indicators);
   top_bar_wdg->addWidget(sw_message);
