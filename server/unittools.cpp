@@ -1298,7 +1298,7 @@ bool bounce_path_constraint::is_allowed(
 {
   return step.order.order != ORDER_FULL_MP
          && step.order.order != ORDER_ACTION_MOVE && step.turns < 1
-         && map_distance(m_start, step.location) <= m_distance
+         && real_map_distance(m_start, step.location) <= m_distance
          && tile_get_known(step.location, m_player) != TILE_UNKNOWN;
 }
 } // anonymous namespace
@@ -1320,6 +1320,11 @@ void bounce_unit(struct unit *punit, bool verbose, bounce_reason reason,
 
   const auto pplayer = unit_owner(punit);
   const auto punit_tile = unit_tile(punit);
+
+  // Cancel whatever the unit has been doing. Needed for the path finding
+  // code to work.
+  handle_unit_server_side_agent_set(pplayer, punit->id, SSA_NONE);
+  unit_activity_handling(punit, ACTIVITY_IDLE);
 
   auto finder = freeciv::path_finder(punit);
   finder.set_constraint(std::make_unique<bounce_path_constraint>(
@@ -1370,7 +1375,6 @@ void bounce_unit(struct unit *punit, bool verbose, bounce_reason reason,
         packet.orders[i] = steps[i].order;
       }
 
-      unit_server_side_agent_set(pplayer, punit, SSA_NONE);
       handle_unit_orders(pplayer, &packet);
 
       if (punit->tile != punit_tile) {
