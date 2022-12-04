@@ -363,11 +363,8 @@ QPixmap unit_list_widget::create_unit_image(const unit *punit)
  */
 progress_bar::progress_bar(QWidget *parent) : QProgressBar(parent)
 {
-  m_timer.start();
-  startTimer(50);
   create_region();
   sfont = new QFont;
-  m_animate_step = 0;
   pix = nullptr;
 }
 
@@ -443,19 +440,6 @@ void progress_bar::set_pixmap(int n)
 }
 
 /**
-   Timer event used to animate progress
- */
-void progress_bar::timerEvent(QTimerEvent *event)
-{
-  Q_UNUSED(event)
-  if ((value() != minimum() && value() < maximum())
-      || (0 == minimum() && 0 == maximum())) {
-    m_animate_step = m_timer.elapsed() / 50;
-    update();
-  }
-}
-
-/**
    Paint event for custom progress bar
  */
 void progress_bar::paintEvent(QPaintEvent *event)
@@ -502,7 +486,7 @@ void progress_bar::paintEvent(QPaintEvent *event)
   gx.setColorAt(0.5, QColor(40, 40, 40));
   gx.setColorAt(1, c);
   p.fillRect(r, QBrush(gx));
-  p.setClipRegion(reg.translated(m_animate_step % 32, 0));
+  p.setClipRegion(reg);
 
   g = QLinearGradient(0, 0, width(), height());
   c.setAlphaF(0.1);
