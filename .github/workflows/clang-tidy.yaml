@@ -8,7 +8,7 @@ on:
   pull_request_target: {}
 
 concurrency:
-  group: clang-tidy-${{ github.repository }}-${{ github.head_ref || github.run_id }}
+  group: '${{ github.workflow }} @ ${{ github.repository }}-${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
   cancel-in-progress: true
 
 jobs:
