@@ -336,7 +336,7 @@ void fc_shortcuts::init_default(bool read)
     suc = this->read();
   }
   if (!suc) {
-    for (int i = 0; i < SC_LAST_SC - 1; i++) {
+    for (int i = 0; i < SC_LAST_SC; i++) {
       fc_shortcut s;
       s.id = default_shortcuts[i].id;
       s.type = default_shortcuts[i].type;
