@@ -913,7 +913,7 @@ void handle_event(const char *featured_text, struct tile *ptile,
      * Server operator messages are shown always. */
     if (nullptr == client.conn.playing || is_human(client.conn.playing)
         || event == E_MESSAGE_WALL) {
-      popup_notify_goto_dialog(_("Popup Request"), plain_text, tags, ptile);
+      popup_notify_goto_dialog(_("Message"), plain_text, tags, ptile);
       shown = true;
     } else {
       /* Force to chatline so it will be visible somewhere at least.
