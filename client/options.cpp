@@ -2137,6 +2137,11 @@ static bool client_option_str_set(struct option *poption, const char *str)
     return false;
   }
 
+  const auto allowed_values = client_option_str_values(poption);
+  if (allowed_values && !client_option_str_values(poption)->contains(str)) {
+    return false;
+  }
+
   fc_strlcpy(pcoption->u.string.pvalue, str, pcoption->u.string.size);
   return true;
 }
