@@ -821,6 +821,9 @@ void connection_detach(struct connection *pconn, bool remove_unused_player)
           send_player_info_c(pplayer, nullptr);
 
           reset_all_start_commands(true);
+        } else {
+          // is_connected has changed
+          send_player_info_c(pplayer, nullptr);
         }
       }
     }
