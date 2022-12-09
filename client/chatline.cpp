@@ -373,7 +373,7 @@ chat_widget::chat_widget(QWidget *parent)
   cb->setIconSize(QSize(24, 24));
   cb->setFixedWidth(25);
   cb->setFixedHeight(25);
-  cb->setIcon(fcIcons::instance()->getIcon("private"));
+  cb->setIcon(fcIcons::instance()->getIcon(QStringLiteral("private")));
   cb->setToolTip(_("Allies only"));
   cb->setCheckable(true);
 
@@ -384,11 +384,13 @@ chat_widget::chat_widget(QWidget *parent)
   remove_links->setIconSize(QSize(24, 24));
   remove_links->setFixedWidth(25);
   remove_links->setFixedHeight(25);
-  remove_links->setIcon(fcIcons::instance()->getIcon("erase"));
+  remove_links->setIcon(
+      fcIcons::instance()->getIcon(QStringLiteral("erase")));
   remove_links->setToolTip(_("Clear links"));
 
   show_hide = new QPushButton();
-  show_hide->setIcon(fcIcons::instance()->getIcon("expand-down"));
+  show_hide->setIcon(
+      fcIcons::instance()->getIcon(QStringLiteral("expand-down")));
   show_hide->setIconSize(QSize(24, 24));
   show_hide->setFixedWidth(25);
   show_hide->setFixedHeight(25);
