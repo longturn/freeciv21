@@ -3061,7 +3061,11 @@ void handle_player_phase_done(struct player *pplayer, int turn)
      * previous turn but we didn't receive it until now.  The player
      * probably didn't actually mean to end their turn! */
     return;
+  } else if (game.server.fixedlength) {
+    // Disallow Turn Done if the turn has a fixed length
+    return;
   }
+
   pplayer->phase_done = true;
 
   check_for_full_turn_done();
