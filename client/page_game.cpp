@@ -94,7 +94,7 @@ pageGame::pageGame(QWidget *parent)
   sw_cities->setCheckable(true);
   sw_diplo = new top_bar_widget(_("Nations"), QStringLiteral("PLR"),
                                 popup_players_dialog);
-  sw_diplo->setIcon(fcIcons::instance()->getIcon(QStringLiteral("nations")));
+  sw_diplo->setIcon(fcIcons::instance()->getIcon(QStringLiteral("flag")));
   sw_diplo->setWheelUp(center_next_player_capital);
   sw_diplo->setWheelDown(key_center_capital);
   sw_diplo->setCheckable(true);
