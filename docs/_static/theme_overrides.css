@@ -1,3 +1,45 @@
+/* set a custom font face to match in game standard font */
+@font-face {
+    font-family: Libertinus Sans;
+    src: url(./LibertinusSans-Regular.woff2);
+}
+
+/* set the base body tag font */
+body {
+  font-family: Libertinus Sans, sans;
+  font-size: 18px;
+}
+
+p {
+  font-family: Libertinus Sans, sans;
+  font-size: 18px;
+}
+
+h1 {
+  font-family: Libertinus Sans, sans;
+  font-size: 26px;
+}
+
+h2 {
+  font-family: Libertinus Sans, sans;
+  font-size: 24px;
+}
+
+h3 {
+  font-family: Libertinus Sans, sans;
+  font-size: 22px;
+}
+
+h4 {
+  font-family: Libertinus Sans, sans;
+  font-size: 20px;
+}
+
+/* set the font of the side nav bar header */
+.wy-side-nav-search {
+  font-family: Libertinus Sans, sans;
+}
+
 /* override table width restrictions */
 .wy-table-responsive table td, .wy-table-responsive table th {
     white-space: normal;
@@ -11,13 +53,13 @@
 
 /* format for custom interpretive text roles */
 .unit {
-    border:1px solid #7fbbe3;
-    background:#ffdf80;
+    border: 1px solid #64b9b9;
+    background: #8ff9db;
     font-size:80%;
     font-weight:700;
     border-radius:4px;
-    padding:2.4px 6px;
-    margin:auto 2px 
+    padding:2px 6px;
+    margin:auto 2px
 }
 
 .unit::before {
@@ -25,13 +67,13 @@
 }
 
 .improvement {
-    border:1px solid #7fbbe3;
-    background:#ffdf80;
+    border: 1px solid #aa9f61;
+    background: #f7e68b;
     font-size:80%;
     font-weight:700;
     border-radius:4px;
-    padding:2.4px 6px;
-    margin:auto 2px 
+    padding:2px 6px;
+    margin:auto 2px
 }
 
 .improvement::before {
@@ -39,13 +81,13 @@
 }
 
 .wonder {
-    border:1px solid #7fbbe3;
-    background:#ffdf80;
+    border: 1px solid #a069c6;
+    background: #e2b3f7;
     font-size:80%;
     font-weight:700;
     border-radius:4px;
-    padding:2.4px 6px;
-    margin:auto 2px 
+    padding:2px 6px;
+    margin:auto 2px
 }
 
 .wonder::before {
