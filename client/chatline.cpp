@@ -425,6 +425,11 @@ chat_widget::chat_widget(QWidget *parent)
         priv ? QLatin1String("public") : QLatin1String("private");
     cb->setIcon(fcIcons::instance()->getIcon(icon_name));
     gui_options->gui_qt_allied_chat_only = priv;
+    if (cb->isChecked()) {
+      cb->setToolTip(_("Allies only"));
+    } else {
+      cb->setToolTip(_("Private"));
+    }
   });
   connect(chat_output, &QTextBrowser::anchorClicked, this,
           &chat_widget::anchor_clicked);
