@@ -281,7 +281,8 @@ void establish_new_connection(struct connection *pconn)
   event_cache_add_for_all(&connect_info);
 
   // if need be, tell who we're waiting on to end the game.info.turn
-  if (S_S_RUNNING == server_state() && game.server.turnblock) {
+  if (S_S_RUNNING == server_state() && game.server.turnblock
+      && !game.server.fixedlength) {
     players_iterate_alive(cplayer)
     {
       if (is_human(cplayer) && !cplayer->phase_done
