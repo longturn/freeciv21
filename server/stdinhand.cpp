@@ -1626,18 +1626,16 @@ static bool timeout_show_command(struct connection *caller, char *str,
     return true;
   }
 
-  int phase_timer = timer_read_seconds(game.server.phase_timer);
-  int end_time = game.tinfo.seconds_to_phasedone;
-
-  format_time_duration(phase_timer, buf, 127);
+  const int timer = timer_read_seconds(game.server.phase_timer);
+  const int lasted = timer + game.server.additional_phase_seconds;
+  format_time_duration(lasted, buf, 127);
   cmd_reply(CMD_TIMEOUT_SHOW, caller, C_OK,
-            _("The current phase has now lasted:  %6d s = %s"), phase_timer,
-            buf);
+            _("The current phase has now lasted:  %6d s = %s"), lasted, buf);
 
-  format_time_duration(end_time - phase_timer, buf, 127);
+  const int left = game.tinfo.seconds_to_phasedone - lasted;
+  format_time_duration(left, buf, 127);
   cmd_reply(CMD_TIMEOUT_SHOW, caller, C_OK,
-            _("Time left:                         %6d s = %s"),
-            end_time - phase_timer, buf);
+            _("Time left:                         %6d s = %s"), left, buf);
 
   return true;
 }
