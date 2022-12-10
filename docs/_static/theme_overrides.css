@@ -4,40 +4,63 @@
     src: url(./LibertinusSans-Regular.woff2);
 }
 
+@font-face {
+    font-family: Libertinus Sans;
+    font-style: italic;
+    src: url(./LibertinusSans-Italic.woff2);
+}
+
+@font-face {
+    font-family: Libertinus Math;
+    src: url(./LibertinusMath-Regular.woff2);
+}
+
 /* set the base body tag font */
 body {
-  font-family: Libertinus Sans, sans;
+  font-family: Libertinus Sans, sans-serif;
   font-size: 18px;
 }
 
 p {
-  font-family: Libertinus Sans, sans;
+  font-family: Libertinus Sans, sans-serif;
   font-size: 18px;
 }
 
 h1 {
-  font-family: Libertinus Sans, sans;
+  font-family: Libertinus Sans, sans-serif;
   font-size: 26px;
 }
 
 h2 {
-  font-family: Libertinus Sans, sans;
+  font-family: Libertinus Sans, sans-serif;
   font-size: 24px;
 }
 
 h3 {
-  font-family: Libertinus Sans, sans;
+  font-family: Libertinus Sans, sans-serif;
   font-size: 22px;
 }
 
 h4 {
-  font-family: Libertinus Sans, sans;
+  font-family: Libertinus Sans, sans-serif;
   font-size: 20px;
 }
 
 /* set the font of the side nav bar header */
 .wy-side-nav-search {
-  font-family: Libertinus Sans, sans;
+  font-family: Libertinus Sans, sans-serif;
+}
+
+.pre, code, pre {
+  font-size: 15px;
+}
+
+.rst-content .linenodiv pre, .rst-content div[class^="highlight"] pre, .rst-content pre.literal-block {
+  font-size: 15px;
+}
+
+.rst-content span[class^="math"] {
+  font-family: Libertinus Math;
 }
 
 /* override table width restrictions */
