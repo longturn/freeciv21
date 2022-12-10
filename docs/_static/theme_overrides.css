@@ -61,6 +61,7 @@ h4 {
 
 .rst-content span[class^="math"] {
   font-family: Libertinus Math;
+  font-size: 15px;
 }
 
 /* override table width restrictions */
