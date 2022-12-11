@@ -381,17 +381,23 @@ $
 
 [settings]
 set={"name","value","gamestart"
-"aifill",2,2
+"aifill",4,4
 "dispersion",4,4
 "startunits","cwwxd","cwwxd"
 "mapsize","FULLSIZE","FULLSIZE"
+"size",2,2
+"landmass",50,50
+"specials",300,300
+"foodbox",70,70
+"shieldbox",70,70
+"sciencebox",70,70
 "revolentype","RANDOM","RANDOM"
-"topology","WRAPX|WRAPY|ISO|HEX","WRAPX|WRAPY|ISO|HEX"
+"topology","WRAPX|WRAPY|ISO","WRAPX|WRAPY|ISO"
 "victories","",""
 "start",1,1
 "startpos",4,4
 }
-set_count=6
+set_count=15
 gamestart_valid=TRUE
 
 [ruledata]
