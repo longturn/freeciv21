@@ -830,6 +830,26 @@ QString get_city_dialog_size_text(const struct city *pcity)
 }
 
 /**
+ * Return text describing the city's status: disorder/celebrating/...
+ */
+QString get_city_dialog_status_text(const struct city *pcity)
+{
+  if (city_unhappy(pcity)) {
+    // TRANS: City dialog Status: Disorder
+    return _("Disorder");
+  } else if (city_celebrating(pcity)) {
+    // TRANS: City dialog Status: Celebrating
+    return _("Celebrating");
+  } else if (city_happy(pcity)) {
+    // TRANS: City dialog Status: Happy
+    return _("Happy");
+  } else {
+    // TRANS: City dialog Status: Content
+    return _("Content");
+  }
+}
+
+/**
  * Return time until next growth
  */
 QString get_city_dialog_growth_value(const struct city *pcity)

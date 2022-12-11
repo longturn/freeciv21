@@ -1026,7 +1026,9 @@ city_info::city_info(QWidget *parent) : QWidget(parent)
 
 void city_info::update_labels(struct city *pcity)
 {
-  m_size->setText(QString::asprintf("%3d", pcity->size));
+  m_size->setText(
+      QString::asprintf("%3d (%s)", pcity->size,
+                        qUtf8Printable(get_city_dialog_status_text(pcity))));
   m_size->setToolTip(get_city_dialog_size_text(pcity));
 
   m_food->setText(
