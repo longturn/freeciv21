@@ -1634,12 +1634,8 @@ void city_dialog::cma_double_clicked(int row, int column)
     return;
   }
   param = cmafec_preset_get_parameter(row);
-  if (cma_is_city_under_agent(pcity, nullptr)) {
-    cma_release_city(pcity);
-  }
 
   cma_put_city_under_agent(pcity, param);
-  update_cma_tab();
 }
 
 /**
@@ -1668,7 +1664,6 @@ void city_dialog::cma_selected(const QItemSelection &sl,
   update_sliders();
 
   if (cma_is_city_under_agent(pcity, nullptr)) {
-    cma_release_city(pcity);
     cma_put_city_under_agent(pcity, param);
   }
 }
