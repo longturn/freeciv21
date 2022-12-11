@@ -75,8 +75,9 @@ page_load::page_load(QWidget *parent, fc_client *c) : QWidget(parent)
   connect(ui.show_preview, &QCheckBox::stateChanged, this,
           &page_load::state_preview);
 
-  auto browse = ui.buttons->button(QDialogButtonBox::Open);
-  browse->setText(_("Browse..."));
+  auto browse =
+      ui.buttons->addButton(_("Browse..."), QDialogButtonBox::ActionRole);
+  browse->setIcon(QIcon::fromTheme(QStringLiteral("document-open-folder")));
   connect(browse, &QAbstractButton::clicked, this, &page_load::browse_saves);
 
   connect(ui.buttons->button(QDialogButtonBox::Cancel),
