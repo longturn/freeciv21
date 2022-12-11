@@ -760,10 +760,10 @@ the contributed shields (production).
 
 :strong:`Example`: :unit:`Phalanx` --> :unit:`Pikeman`
 
-The :unit:`Phalanx` contributes 7 shields (15 / 2 rounded down). The :unit:`Pikeman` costs 25 shields. The
-remaining 18 shields (25 - 7), is bought with gold using the formula for rush-buying units. For the math folks
-out there, the formula for rush-buying units (in all cases, not just for upgrades) is:
-``2 * p + (p * p) / 20`` where ``p`` is the remaining production (or shields).
+The :unit:`Phalanx` contributes 7 shields (:math:`15 \div 2` rounded down). The :unit:`Pikeman` costs 25
+shields. The remaining 18 shields (:math:`25 - 7`), is bought with gold using the formula for rush-buying
+units. For the math folks out there, the formula for rush-buying units (in all cases, not just for upgrades)
+is: :math:`2p + \frac{p^2}{20}` where :math:`p` is the remaining production (or shields).
 
 Are diplomats used up when investigating an enemy city?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

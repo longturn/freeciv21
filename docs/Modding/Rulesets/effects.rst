@@ -592,11 +592,11 @@ Not_Tech_Source
     Tech cannot be received from this player by any means.
 
 Trade_Revenue_Bonus
-    One time trade revenue bonus is multiplied by pow(2, amount/1000). The amount value is taken from the
-    caravan's home city.
+    One time trade revenue bonus is multiplied by :math:`2^{(\texttt{amount} \div 1000)}`. The amount value is
+    taken from the caravan's home city.
 
 Trade_Revenue_Exponent
-    One time trade revenue bonus is raised to the (1 + amount/1000) power.
+    One time trade revenue bonus is raised to the :math:`1 + \frac{\texttt{amount}}{1000}` power.
     This is applied before ``Trade_Revenue_Bonus``.
 
 Traderoute_Pct
@@ -619,11 +619,12 @@ Output_Waste
 
 Output_Waste_By_Distance
     For each tile in real distance that a city is from nearest
-    Government Center, it gets amount / 100 of extra waste.
+    Government Center, it gets :math:`\frac{\texttt{amount}}{100}` of extra waste.
 
 Output_Waste_By_Rel_Distance
     City gets extra waste based on distance to nearest Government Center, relative
-    to world size. The amount of this extra waste is (distance * amount / 100 / max_distance)
+    to world size. The amount of this extra waste is
+    :math:`\frac{\texttt{distance}\,\times\,\texttt{amount}}{100\,\times\,\texttt{max_distance}}`
 
 Output_Penalty_Tile
     When a tile yields more output than amount, it gets a penalty of -1.
