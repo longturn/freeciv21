@@ -130,9 +130,9 @@ altogether.
 Map Structure
 =============
 
-The map is maintained in a pretty straightforward C array, containing X*Y tiles. You can use the function
-:code:`struct tile *map_pos_to_tile(x, y)` to find a pointer to a specific tile. A tile has various fields;
-see the struct in :file:`common/map.h`.
+The map is maintained in a pretty straightforward C array, containing :math:`X\times Y` tiles. You can use the
+function :code:`struct tile *map_pos_to_tile(x, y)` to find a pointer to a specific tile. A tile has various
+fields; see the struct in :file:`common/map.h`.
 
 You may iterate tiles, you may use the following methods:
 
@@ -216,14 +216,14 @@ distance between tiles:
 
 * The :code:`map_distance(ptile0, ptile1)` function returns the *Manhattan* distance between tiles, i.e. the
   distance from :code:`ptile0` to :code:`ptile1`, only using cardinal directions. For example,
-  :code:`(abs(dx) + ads(dy))` for non-hexagonal topologies.
+  :math:`|dx| + |dy|` for non-hexagonal topologies.
 
 * The :code:`real_map_distance(ptile0, ptile1)` function returns the *normal* distance between tiles, i.e. the
   minimal distance from :code:`ptile0` to :code:`ptile1` using all valid directions for the current topology.
 
 * The :code:`sq_map_distance(ptile0, ptile1)` function returns the *square* distance between tiles. This is a
   simple way to make Pythagorean effects for making circles on the map for example. For non-hexagonal
-  topologies, it would be :code:`(dx * dx + dy * dy)`. Only useless square root is missing.
+  topologies, it would be :math:`dx^2 + dy^2`. Only useless square root is missing.
 
 
 Different Types of Map Topology
@@ -282,8 +282,8 @@ In non-hexagonal topologies, there are 4 cardinal directions, and 4 other valid 
 topologies, there are 6 cardinal directions, which matches exactly the 6 valid directions.
 
 Note that with isometric view, the direction named "North" (``DIR8_NORTH``) is actually not from the top to
-the bottom of the screen view. All directions are turned a step on the left (e.g. :math:`pi/4` rotation with
-square tiles and :math:`pi/3` rotation for hexagonal tiles).
+the bottom of the screen view. All directions are turned a step on the left (e.g. :math:`\pi \div 4` rotation
+with square tiles and :math:`\pi \div 3` rotation for hexagonal tiles).
 
 
 Different Coordinate Systems
@@ -485,11 +485,11 @@ An isometric map is defined by the operation that converts between map (user) co
 (internal) ones. In native coordinates, an isometric map behaves exactly the same way as a standard one. See
 `Native Coordinates`_, above.
 
-Converting from map to native coordinates involves a :math:`pi/2` rotation (which scales in each dimension by
-:math:`sqrt(2)`) followed by a compression in the :code:`X` direction by a factor of 2. Then a translation is
-required since the "normal set" of native coordinates is defined as
-:code:`{(x, y) | x: [0..map.xsize) and y: [0..map.ysize)}` while the normal set of map coordinates must
-satisfy :code:`x >= 0` and :code:`y >= 0`.
+Converting from map to native coordinates involves a :math:`\pi \div 2` rotation (which scales in each
+dimension by :math:`\sqrt{2}`) followed by a compression in the :code:`X` direction by a factor of 2. Then a
+translation is required since the "normal set" of native coordinates is defined as :math:`(x, y)` where
+:math:`\{x \mid 0\leq x < \texttt{map.xsize}\}` and :math:`\{y \mid 0\leq y < \texttt{map.ysize}\}` while the
+normal set of map coordinates must satisfy :math:`x \geq 0` and :math:`y \geq 0`.
 
 Converting from native to map coordinates (a less cumbersome operation) is the opposite.
 
@@ -514,14 +514,16 @@ Note that:
 
 The math then works out to:
 
-.. code-block:: cpp
+:math:`\begin{align}
+x_\texttt{map} &= \left\lceil \dfrac{y_\texttt{nat}}{2} \right\rceil + x_\texttt{nat} \\
+y_\texttt{map} &= \left\lfloor \dfrac{y_\texttt{nat}}{2} \right\rfloor - x_\texttt{nat} + x_\texttt{size} - 1
+\end{align}`
 
-  map_x = ceiling(nat_y / 2) + nat_x
-  map_y = floor(nat_y / 2) - nat_x + map.xsize - 1
-
-  nat_y = map_x + map_y - map.xsize
-  nat_x = floor(map_x - map_y + map.xsize / 2)
-
+:math:`\begin{align}
+y_\texttt{nat} &= x_\texttt{map} + y_\texttt{map} - x_\texttt{size}
+\\
+x_\texttt{nat} &= \left\lfloor x_\texttt{map} - y_\texttt{map} + \dfrac{x_\texttt{size}}{2} \right\rfloor
+\end{align}`
 
 which leads to the macros :code:`NATIVE_TO_MAP_POS()`, and :code:`MAP_TO_NATIVE_POS()` that are defined in
 :file:`map.h`.

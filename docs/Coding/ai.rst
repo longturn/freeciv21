@@ -63,22 +63,25 @@ Diplomats, in particular, seem to violate these standards.
 Amortize
 ========
 
-Hard fact: :code:`amortize(benefit, delay)` returns :math:`benefit * ((MORT - 1)/MORT)^delay`.
+Hard fact: :code:`amortize(benefit, delay)` returns
+:math:`\texttt{benefit} \times \left(1 - \frac{1}{\texttt{MORT}}\right)^{\texttt{delay}}`.
 
 Speculation: What is better... to receive $10 annually starting in 5 years from now or $5 annually starting
 from this year? How can you take inflation into account? The function :code:`amortize()` is meant to help you
 answer these questions. To achieve this, it re-scales the future benefit in terms of today's money.
 
-Suppose we have a constant rate of inflation, :code:`x` percent. Then in five years $10 will buy as much
-as :math:`10*(100/(100+x))^5` will buy today. Denoting :math:`100/(100+x)` by :code:`q` we get the general
-formula, :code:`N` dollars, :code:`Y` years from now will be worth :math:`N*q^Y` in today's money. If we
-receive :code:`N` every year starting :code:`Y` years from now, the total amount receivable (in today's money)
-is :math:`N*q^Y / (1-q)`. This is the sum of infinite geometric series. This is exactly the operation that the
-:code:`amortize()` function performs, the multiplication by some :math:`q < 1` raised to power :code:`Y`. Note
-that the factor :math:`1/(1-q)` does not depend on the parameters :code:`N` and :code:`Y`, and can be ignored.
-The connection between the :math:`MORT` constant and the inflation rate :code:`x` is given by
-:math:`(MORT - 1) / MORT = q = 100 / (100 + x)`. Thus the current value of :code:`MORT = 24` corresponds to
-the inflation rate, or the rate of expansion of your civilization of 4.3%
+Suppose we have a constant rate of inflation, :math:`x` percent. Then in five years $10 will buy as much
+as :math:`10\left(\frac{100}{100 + x}\right)^5` will buy today. Denoting :math:`\frac{100}{100+x}` by
+:math:`q` we get the general formula, :math:`N` dollars, :math:`Y` years from now will be worth
+:math:`N\times q^Y` in today's money. If we receive :math:`N` every year starting :math:`Y` years from now, the
+total amount receivable (in today's money) is :math:`\frac{\,N\,\times\, q^Y}{1 - q}`. This is the sum of
+infinite geometric series. This is exactly the operation that the :code:`amortize()` function performs, the
+multiplication by some :math:`q < 1` raised to power :math:`Y`. Note that the factor :math:`\frac{1}{1 - q}`
+does not depend on the parameters :math:`N` and :math:`Y`, and can be ignored. The connection between the
+:math:`\texttt{MORT}` constant and the inflation rate :math:`x` is given by
+:math:`\frac{\texttt{MORT} - 1}{\texttt{MORT}} = q = \frac{100}{100 + x}`. Thus the current value of
+:math:`\texttt{MORT} = 24` corresponds to the inflation rate, or the rate of expansion of your civilization of
+4.3%
 
 Most likely this explanation is not what the authors of :code:`amortize()` had in mind, but the basic idea is
 correct: the value of the payoff decays exponentially with the delay.
@@ -92,24 +95,26 @@ Estimation of Profit From a Military Operation
 This estimation is implemented by the :code:`kill_desire()` function, which is not perfect, the
 :code:`multi-victim` part is flawed, plus some corrections. In general:
 
-:code:`Want = Operation_Profit * Amortization_Factor`
+:math:`\texttt{Want} = \texttt{Operation_Profit} \times \texttt{Amortization_Factor}`
 
 where:
 
-* :code:`Amortization_Factor` : is a function of the estimated time length of the operation.
-
-:code:`Operation_Profit = Battle_Profit - Maintenance`
+:math:`\texttt{Amortization_Factor}` is a function of the estimated time length of the operation and
+:math:`\texttt{Operation_Profit} = \texttt{Battle_Profit} - \texttt{Maintenance}`
 
 where:
 
-* :code:`Maintenance` : = :code:`(Support + Unhappiness_Compensation) * Operation_Time` : Here
-  ``Unhappiness_Compensation`` is from a military unit being away from home and ``Support`` is the number of
-  Shields spent on supporting this unit per turn.
+:math:`\texttt{Maintenance} = (\texttt{Support} + \texttt{Unhappiness_Compensation}) \times
+\texttt{Operation_Time}`
 
-* :code:`Battle_Profit` : =
-  :code:`(Shields_Lost_By_Enemy * Probability_To_Win) - (Shields_Lost_By_Us * Probability_To_Lose)` : That is
-  ``Battle_Profit`` is a probabilistic average. It answers the question: "How much better off, on average,
-  would we be from attacking this enemy unit?"
+Here :math:`\texttt{Unhappiness_Compensation}` is from a military unit being away from home and
+:math:`\texttt{Support}` is the number of Shields spent on supporting this unit per turn.
+
+:math:`\texttt{Battle_Profit} = (\texttt{Shields_Lost}_\texttt{enemy} \times \texttt{Probability}_\texttt{win})
+- (\texttt{Shields_Lost}_\texttt{us} \times \texttt{Probability}_\texttt{lose})`
+
+That is :math:`\texttt{Battle_Profit}` is a probabilistic average. It answers the question: "How much better
+off, on average, would we be from attacking this enemy unit?"
 
 
 Selecting Military Units
@@ -125,7 +130,7 @@ defender to free it up.
 
 Building a brand new attacker is more complicated. First, the :code:`ai_choose_attacker_*` functions are
 called to find the first approximation to the best attacker that can be built here. This prototype attacker
-is selected using very simple :math:`attack_power * speed` formula. Then, already in the
+is selected using very simple :math:`\texttt{attack_power}\times\texttt{speed}` formula. Then, already in the
 :code:`kill_something_with()` function, we search for targets for the prototype attacker using the
 :code:`find_something_to_kill()` function. Having found a target, we do the last refinement by calling the
 :code:`process_attacker_want()` function to look for the best attacker type to take out the target. This type
