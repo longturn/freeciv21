@@ -437,10 +437,8 @@ bool cma_yoloswag::is_city_under_agent(const struct city *pcity,
     return false;
   }
 
-  int codacybs = sizeof(struct cm_parameter);
-  if (parameter && sizeof(*parameter) >= codacybs
-      && sizeof(*parameter) == sizeof(my_parameter)) {
-    memcpy(parameter, &my_parameter, codacybs);
+  if (parameter) {
+    *parameter = my_parameter;
   }
   return true;
 }
