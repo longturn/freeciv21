@@ -51,3 +51,4 @@ QString text_happiness_luxuries(const struct city *pcity);
 QString text_happiness_units(const struct city *pcity);
 QString text_happiness_wonders(const struct city *pcity);
 int get_bulbs_per_turn(int *pours, bool *pteam, int *ptheirs);
+int turns_to_research_done(const struct research *presearch, int per_turn);

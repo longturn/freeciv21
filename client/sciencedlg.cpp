@@ -536,7 +536,6 @@ void real_science_report_dialog_update(void *unused)
 {
   Q_UNUSED(unused)
   int i;
-  int percent;
   science_report *sci_rep;
   bool blk = false;
   QWidget *w;
@@ -549,9 +548,25 @@ void real_science_report_dialog_update(void *unused)
     } else if (research->client.researching_cost != 0) {
       str =
           research_advance_name_translation(research, research->researching);
-      percent = 100 * research->bulbs_researched
-                / research->client.researching_cost;
-      str = str + "\n (" + QString::number(percent) + "%)";
+      str += QStringLiteral("\n");
+
+      const int per_turn = get_bulbs_per_turn(nullptr, nullptr, nullptr);
+      const int when = turns_to_research_done(research, per_turn);
+      if (when >= 0) {
+        // TRANS: current(+surplus)/total  (number of turns)
+        str += QString(PL_("%1(+%2)/%3  (%4 turn)", "%1(+%2)/%3  (%4 turns)",
+                           when))
+                   .arg(research->bulbs_researched)
+                   .arg(per_turn)
+                   .arg(research->client.researching_cost)
+                   .arg(when);
+      } else {
+        // TRANS: current(+surplus)/total  (number of turns)
+        str += QString(_("%1(+%2)/%3  (never)"))
+                   .arg(research->bulbs_researched)
+                   .arg(per_turn)
+                   .arg(research->client.researching_cost);
+      }
     }
     if (research->researching == A_UNSET && research->tech_goal == A_UNSET
         && research->techs_researched < game.control.num_tech_types) {
