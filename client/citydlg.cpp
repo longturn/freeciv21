@@ -1636,6 +1636,9 @@ void city_dialog::cma_double_clicked(int row, int column)
   param = cmafec_preset_get_parameter(row);
 
   cma_put_city_under_agent(pcity, param);
+  if (cma_is_city_under_agent(pcity, nullptr)) {
+    update_cma_tab();
+  }
 }
 
 /**
@@ -1661,10 +1664,15 @@ void city_dialog::cma_selected(const QItemSelection &sl,
   }
 
   param = cmafec_preset_get_parameter(ind);
-  update_sliders();
 
   if (cma_is_city_under_agent(pcity, nullptr)) {
     cma_put_city_under_agent(pcity, param);
+  }
+
+  if (cma_is_city_under_agent(pcity, nullptr)) {
+    update_cma_tab();
+  } else {
+    update_sliders();
   }
 }
 
@@ -1676,7 +1684,6 @@ void city_dialog::update_cma_tab()
   QString s;
   QTableWidgetItem *item;
   struct cm_parameter param;
-  QPixmap pix;
   int i;
 
   ui.cma_table->clear();
@@ -1699,22 +1706,17 @@ void city_dialog::update_cma_tab()
   if (cma_is_city_under_agent(pcity, nullptr)) {
     // view->update(); sveinung - update map here ?
     s = QString(cmafec_get_short_descr_of_city(pcity));
-    pix = style()->standardPixmap(QStyle::SP_DialogApplyButton);
-    pix = pix.scaled(2 * pix.width(), 2 * pix.height(),
-                     Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-    ui.cma_result_pix->setPixmap(pix);
+    auto icon = style()->standardIcon(QStyle::SP_DialogApplyButton);
+    ui.cma_result_pix->setPixmap(icon.pixmap(32));
     // TRANS: %1 is custom string chosen by player
     ui.cma_result->setText(QString(_("<h3>Governor Enabled<br>(%1)</h3>"))
                                .arg(s.toHtmlEscaped()));
-    ui.cma_result->setAlignment(Qt::AlignCenter);
   } else {
-    pix = style()->standardPixmap(QStyle::SP_DialogCancelButton);
-    pix = pix.scaled(1.6 * pix.width(), 1.6 * pix.height(),
-                     Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-    ui.cma_result_pix->setPixmap(pix);
+    auto icon = style()->standardIcon(QStyle::SP_DialogCancelButton);
+    ui.cma_result_pix->setPixmap(icon.pixmap(32));
     ui.cma_result->setText(QString(_("<h3>Governor Disabled</h3>")));
-    ui.cma_result->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
   }
+  ui.cma_result->setAlignment(Qt::AlignCenter);
 
   if (cma_is_city_under_agent(pcity, nullptr)) {
     cmafec_get_fe_parameter(pcity, &param);
