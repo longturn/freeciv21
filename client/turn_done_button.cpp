@@ -155,9 +155,10 @@ QString format_duration(int duration, bool allow_date)
     // TRANS: Used in "Time left: 10 minutes". Always at least 5 minutes
     return QString(_("%1 minutes")).arg(duration / 60);
   } else if (days_left == 0 || !allow_date) { // Same day
-    return QString(Q_("?hrs/mns:%1h %2min"))
-        .arg(duration / 3600, 2)
-        .arg((duration / 60) % 60, 2);
+    const auto time =
+        QLocale().toString(turn_change, QStringLiteral("hh:mm"));
+    // TRANS: Used in "Time left: until 17:59", %1 is hours and minutes
+    return QString(_("until %1")).arg(time);
   } else if (days_left == 1) { // Tomorrow
     const auto time =
         QLocale().toString(turn_change, QStringLiteral("hh:mm"));
