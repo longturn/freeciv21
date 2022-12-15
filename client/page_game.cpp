@@ -544,14 +544,26 @@ bool fc_game_tab_widget::event(QEvent *event)
 
     /*
      * Resize the panel at the bottom right.
+     * Keep current size if the widget has been resized.
      */
     const auto max_size = QSize(std::max(300, size.width() / 4),
                                 std::max(200, size.height() / 3));
-    const auto panel_size =
-        QLayout::closestAcceptableSize(queen()->minimap_panel, max_size);
-    const auto location = size - panel_size;
-    queen()->minimap_panel->move(location.width(), location.height());
-    queen()->minimap_panel->resize(panel_size);
+    const auto curr_size = QSize(queen()->minimap_panel->width(),
+                                 queen()->minimap_panel->height());
+    if (curr_size.width() != max_size.width()
+        || curr_size.height() != max_size.height()) {
+      const auto panel_size =
+          QLayout::closestAcceptableSize(queen()->minimap_panel, curr_size);
+      const auto location = size - panel_size;
+      queen()->minimap_panel->move(location.width(), location.height());
+      queen()->minimap_panel->resize(panel_size);
+    } else {
+      const auto panel_size =
+          QLayout::closestAcceptableSize(queen()->minimap_panel, max_size);
+      const auto location = size - panel_size;
+      queen()->minimap_panel->move(location.width(), location.height());
+      queen()->minimap_panel->resize(panel_size);
+    }
 
     return true;
   }
