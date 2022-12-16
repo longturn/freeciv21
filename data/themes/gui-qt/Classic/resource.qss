@@ -110,6 +110,10 @@ QPushButton:disabled, QToolButton:disabled {
   border-image: url(LittleFingerbutton-insensitive.png) 3 3 3 3;
 }
 
+QDialogButtonBox {
+  button-layout: 3;
+}
+
 QLabel {
  color: black;
 }
