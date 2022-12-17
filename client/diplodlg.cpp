@@ -777,7 +777,7 @@ diplo_dlg::~diplo_dlg()
     dw->deleteLater();
   }
   queen()->removeRepoDlg(QStringLiteral("DDI"));
-  queen()->game_tab_widget->setCurrentIndex(0);
+  top_bar_show_map();
 }
 
 /**

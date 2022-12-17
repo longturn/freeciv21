@@ -32,6 +32,7 @@
 #include "fonts.h"
 #include "page_game.h"
 #include "sprite.h"
+#include "top_bar.h"
 
 /**
    Help function to draw checkbox inside delegate
@@ -937,7 +938,7 @@ void popup_players_dialog()
     i = queen()->gimmeIndexOf(QStringLiteral("PLR"));
     w = queen()->game_tab_widget->widget(i);
     if (w->isVisible()) {
-      queen()->game_tab_widget->setCurrentIndex(0);
+      top_bar_show_map();
       return;
     }
     pr = reinterpret_cast<plr_report *>(w);

@@ -40,6 +40,7 @@
 #include "mapview.h"
 #include "page_game.h"
 #include "sprite.h"
+#include "top_bar.h"
 #include "widgetdecorations.h"
 
 static QString popup_terrain_info(struct tile *ptile);
@@ -805,7 +806,7 @@ void click_label::mousePressEvent(QMouseEvent *e)
  */
 void click_label::mouse_clicked()
 {
-  queen()->game_tab_widget->setCurrentIndex(0);
+  top_bar_show_map();
   request_center_focus_unit();
 }
 

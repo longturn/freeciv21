@@ -599,7 +599,7 @@ void top_bar_left_click_science()
     i = queen()->gimmeIndexOf(QStringLiteral("SCI"));
     w = queen()->game_tab_widget->widget(i);
     if (w->isVisible()) {
-      queen()->game_tab_widget->setCurrentIndex(0);
+      top_bar_show_map();
       return;
     }
     sci_rep = reinterpret_cast<science_report *>(w);
