@@ -1965,10 +1965,7 @@ void mr_menu::slot_spaceship()
 /**
    Changes tab to mapview
  */
-void mr_menu::slot_show_map()
-{
-  ::queen()->game_tab_widget->setCurrentIndex(0);
-}
+void mr_menu::slot_show_map() { top_bar_show_map(); }
 
 /**
    Action "BUILD_CITY"

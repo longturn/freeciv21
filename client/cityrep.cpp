@@ -30,6 +30,7 @@
 #include "mapview.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
+#include "top_bar.h"
 
 /**
    Overriden compare for sorting items
@@ -456,7 +457,7 @@ void city_widget::center()
   pcity = selected_cities[0];
   Q_ASSERT(pcity != nullptr);
   queen()->mapview_wdg->center_on_tile(pcity->tile);
-  queen()->game_tab_widget->setCurrentIndex(0);
+  top_bar_show_map();
 }
 
 /**
@@ -1252,7 +1253,7 @@ void city_report_dialog_popup()
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     if (w->isVisible()) {
-      queen()->game_tab_widget->setCurrentIndex(0);
+      top_bar_show_map();
       return;
     }
     cr = reinterpret_cast<city_report *>(w);

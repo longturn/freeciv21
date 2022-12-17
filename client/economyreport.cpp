@@ -15,6 +15,7 @@
 #include "fc_client.h"
 #include "hudwidget.h"
 #include "page_game.h"
+#include "top_bar.h"
 
 /**
    Constructor for economy report
@@ -373,7 +374,7 @@ void economy_report_dialog_popup()
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     if (w->isVisible()) {
-      queen()->game_tab_widget->setCurrentIndex(0);
+      top_bar_show_map();
       return;
     }
     eco_rep = reinterpret_cast<eco_report *>(w);
