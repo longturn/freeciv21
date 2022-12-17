@@ -262,8 +262,7 @@ void map_view::shortcut_pressed(shortcut_id id)
     }
 
     if (!goto_is_active()) {
-      stored_autocenter = gui_options->auto_center_on_unit;
-      gui_options->auto_center_on_unit = false;
+      set_auto_center_enabled(false);
       action_button_pressed(pos.x(), pos.y(), SELECT_FOCUS);
       return;
     }
@@ -393,8 +392,8 @@ void map_view::shortcut_released(Qt::MouseButton bt)
     }
     if (!keyboardless_goto_active || goto_is_active()) {
       action_button_pressed(pos.x(), pos.y(), SELECT_POPUP);
-      gui_options->auto_center_on_unit = stored_autocenter;
     }
+    set_auto_center_enabled(true);
     release_goto_button(pos.x(), pos.y());
     return;
   }

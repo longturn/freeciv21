@@ -101,7 +101,6 @@ private slots:
   void timer_event();
 
 private:
-  bool stored_autocenter;
   int cursor_frame{0};
   int cursor;
   freeciv::renderer *m_renderer;

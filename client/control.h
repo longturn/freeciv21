@@ -154,7 +154,9 @@ void unit_focus_urgent(struct unit *punit);
 void unit_focus_advance();
 void unit_focus_update();
 
+void set_auto_center_enabled(bool enabled);
 void auto_center_on_focus_unit();
+
 void update_unit_pix_label(const std::vector<unit *> &units);
 
 unit *find_visible_unit(const ::tile *ptile);

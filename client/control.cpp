@@ -413,6 +413,15 @@ static struct tile *find_a_focus_unit_tile_to_center_on()
   }
 }
 
+namespace {
+bool auto_center_enabled = true;
+}
+
+/**
+ * Allows disabling automatic map recentering
+ */
+void set_auto_center_enabled(bool enabled) { auto_center_enabled = enabled; }
+
 /**
    Center on the focus unit, if off-screen and auto_center_on_unit is true.
  */
@@ -420,7 +429,7 @@ void auto_center_on_focus_unit()
 {
   struct tile *ptile = find_a_focus_unit_tile_to_center_on();
 
-  if (ptile && gui_options->auto_center_on_unit
+  if (ptile && gui_options->auto_center_on_unit && auto_center_enabled
       && !tile_visible_and_not_on_border_mapcanvas(ptile)) {
     queen()->mapview_wdg->center_on_tile(ptile);
   }
