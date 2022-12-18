@@ -202,7 +202,7 @@ void pageGame::reloadSidebarIcons()
   sw_map->setIcon(fcIcons::instance()->getIcon(QStringLiteral("view")));
   sw_cunit->setIcon(fcIcons::instance()->getIcon(QStringLiteral("units")));
   sw_cities->setIcon(fcIcons::instance()->getIcon(QStringLiteral("cities")));
-  sw_diplo->setIcon(fcIcons::instance()->getIcon(QStringLiteral("nations")));
+  sw_diplo->setIcon(fcIcons::instance()->getIcon(QStringLiteral("flag")));
   sw_science->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("research")));
   sw_economy->setIcon(
