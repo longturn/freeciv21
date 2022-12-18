@@ -39,6 +39,7 @@
 #include "fc_client.h"
 #include "icons.h"
 #include "page_game.h"
+#include "plrdlg.h"
 #include "sprite.h"
 #include "top_bar.h"
 
@@ -831,6 +832,7 @@ void handle_diplomacy_accept_treaty(int counterpart, bool I_accepted,
   QWidget *w;
 
   if (!queen()->isRepoDlgOpen(QStringLiteral("DDI"))) {
+    update_top_bar_diplomacy_status(false);
     return;
   }
   i = queen()->gimmeIndexOf(QStringLiteral("DDI"));
@@ -841,6 +843,11 @@ void handle_diplomacy_accept_treaty(int counterpart, bool I_accepted,
   dw->treaty.accept0 = I_accepted;
   dw->treaty.accept1 = other_accepted;
   dw->update_wdg();
+  if (dd->count() > 0) {
+    update_top_bar_diplomacy_status(true);
+  } else {
+    update_top_bar_diplomacy_status(false);
+  }
 }
 
 /**
@@ -887,6 +894,11 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
   if (player_by_number(initiated_from) == client.conn.playing) {
     queen()->game_tab_widget->setCurrentIndex(i);
   }
+  if (dd->count() > 0) {
+    update_top_bar_diplomacy_status(true);
+  } else {
+    update_top_bar_diplomacy_status(false);
+  }
 }
 
 /**
@@ -901,6 +913,7 @@ void handle_diplomacy_create_clause(int counterpart, int giver,
   QWidget *w;
 
   if (!queen()->isRepoDlgOpen(QStringLiteral("DDI"))) {
+    update_top_bar_diplomacy_status(false);
     return;
   }
   i = queen()->gimmeIndexOf(QStringLiteral("DDI"));
@@ -923,6 +936,7 @@ void handle_diplomacy_cancel_meeting(int counterpart, int initiated_from)
   QWidget *w;
 
   if (!queen()->isRepoDlgOpen(QStringLiteral("DDI"))) {
+    update_top_bar_diplomacy_status(false);
     return;
   }
   i = queen()->gimmeIndexOf(QStringLiteral("DDI"));
@@ -930,6 +944,11 @@ void handle_diplomacy_cancel_meeting(int counterpart, int initiated_from)
   w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);
   dd->close_widget(counterpart);
+  if (dd->count() > 0) {
+    update_top_bar_diplomacy_status(true);
+  } else {
+    update_top_bar_diplomacy_status(false);
+  }
 }
 
 /**
@@ -944,6 +963,7 @@ void handle_diplomacy_remove_clause(int counterpart, int giver,
   QWidget *w;
 
   if (!queen()->isRepoDlgOpen(QStringLiteral("DDI"))) {
+    update_top_bar_diplomacy_status(false);
     return;
   }
   i = queen()->gimmeIndexOf(QStringLiteral("DDI"));
@@ -968,12 +988,14 @@ void close_all_diplomacy_dialogs()
 
   qApp->alert(king()->central_wdg);
   if (!queen()->isRepoDlgOpen(QStringLiteral("DDI"))) {
+    update_top_bar_diplomacy_status(false);
     return;
   }
   i = queen()->gimmeIndexOf(QStringLiteral("DDI"));
   fc_assert(i != -1);
   w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);
+  update_top_bar_diplomacy_status(false);
   dd->close();
   delete dd;
 }

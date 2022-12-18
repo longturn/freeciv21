@@ -32,6 +32,7 @@
 #include "fonts.h"
 #include "page_game.h"
 #include "sprite.h"
+#include "top_bar.h"
 
 /**
    Help function to draw checkbox inside delegate
@@ -727,7 +728,12 @@ plr_report::plr_report() : QWidget()
   }
   if (queen()->gimmeIndexOf(QStringLiteral("DDI")) > 0) {
     ui.diplo_but->setEnabled(true);
+    update_top_bar_diplomacy_status(true);
+  } else {
+    ui.diplo_but->setEnabled(false);
+    update_top_bar_diplomacy_status(false);
   }
+  queen()->updateSidebarTooltips();
   ui.plr_wdg->set_pr_rep(this);
 }
 
@@ -914,6 +920,10 @@ void plr_report::update_report(bool update_selection)
   }
   if (queen()->gimmeIndexOf(QStringLiteral("DDI")) > 0) {
     ui.diplo_but->setEnabled(true);
+    update_top_bar_diplomacy_status(true);
+  } else {
+    ui.diplo_but->setEnabled(false);
+    update_top_bar_diplomacy_status(false);
   }
   ui.plr_wdg->restore_selection();
 }
@@ -944,6 +954,7 @@ void popup_players_dialog()
     queen()->game_tab_widget->setCurrentWidget(pr);
     pr->update_report();
   }
+  queen()->updateSidebarTooltips();
 }
 
 /**
@@ -982,6 +993,7 @@ void popdown_players_report()
     pr = reinterpret_cast<plr_report *>(w);
     pr->deleteLater();
   }
+  queen()->updateSidebarTooltips();
 }
 /**
    Update the intelligence dialog for the given player.  This is called by
@@ -992,3 +1004,23 @@ void update_intel_dialog(struct player *p) { real_players_dialog_update(p); }
    Close an intelligence dialog for the given player.
  */
 void close_intel_dialog(struct player *p) { real_players_dialog_update(p); }
+
+/**
+ * Function to update the top bar button. Blink when there are open
+ * Diplomacy meetings, don't when there are none.
+ */
+void update_top_bar_diplomacy_status(bool blinker)
+{
+
+  if (blinker) {
+    queen()->sw_diplo->keep_blinking = true;
+    queen()->sw_diplo->sblink();
+    queen()->updateSidebarTooltips();
+    queen()->reloadSidebarIcons();
+  } else {
+    queen()->sw_diplo->keep_blinking = false;
+    queen()->sw_diplo->update();
+    queen()->updateSidebarTooltips();
+    queen()->reloadSidebarIcons();
+  }
+}

@@ -155,3 +155,4 @@ private slots:
 };
 
 void popdown_players_report();
+void update_top_bar_diplomacy_status(bool blinker);
