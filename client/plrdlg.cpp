@@ -1011,7 +1011,6 @@ void close_intel_dialog(struct player *p) { real_players_dialog_update(p); }
  */
 void update_top_bar_diplomacy_status(bool blinker)
 {
-
   if (blinker) {
     queen()->sw_diplo->keep_blinking = true;
     queen()->sw_diplo->sblink();
