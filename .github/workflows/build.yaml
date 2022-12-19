@@ -115,6 +115,7 @@ jobs:
       - name: Build
         run: |
           cmake --build build
+
   windows:
     name: "Windows MSYS2 (gcc)"
     runs-on: windows-latest
@@ -222,7 +223,6 @@ jobs:
           brew install \
             cmake \
             ninja \
-            python3 \
             gettext \
             create-dmg
           brew link gettext --force
