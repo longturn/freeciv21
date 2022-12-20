@@ -81,6 +81,7 @@ struct inputfile {
   unsigned int magic;        // memory check
   QString filename;          // filename as passed to fopen
   QIODevice *fp;             // read from this
+  QTextStream *stream;       // handles encoding
   QString cur_line;          // data from current line
   unsigned int cur_line_pos; // position in current line
   unsigned int line_num;     // line number from file in cur_line
@@ -147,6 +148,7 @@ static void init_zeros(struct inputfile *inf)
   inf->magic = INF_MAGIC;
   inf->filename.clear();
   inf->fp = nullptr;
+  inf->stream = nullptr;
   inf->datafn = nullptr;
   inf->included_from = nullptr;
   inf->line_num = inf->cur_line_pos = 0;
@@ -230,6 +232,7 @@ struct inputfile *inf_from_stream(QIODevice *stream,
 
   inf->filename.clear();
   inf->fp = stream;
+  inf->stream = new QTextStream(stream);
   inf->datafn = datafn;
 
   qCDebug(inf_category) << "opened" << inf_filename(inf) << "ok";
@@ -257,6 +260,9 @@ static void inf_close_partial(struct inputfile *inf)
     qCCritical(inf_category) << "Error before closing" << inf_filename(inf)
                              << ":" << inf->fp->errorString();
   }
+  delete inf->stream;
+  inf->stream = nullptr;
+
   delete inf->fp;
   inf->fp = nullptr;
 
@@ -314,7 +320,7 @@ bool inf_at_eof(struct inputfile *inf)
 {
   fc_assert_ret_val(inf_sanity_check(inf), true);
 
-  return inf->included_from == nullptr && inf->fp->atEnd()
+  return inf->included_from == nullptr && inf->stream->atEnd()
          && inf->cur_line_pos >= inf->cur_line.length();
 }
 
@@ -449,25 +455,15 @@ static bool read_a_line(struct inputfile *inf)
   fc_assert_ret_val(inf_sanity_check(inf), false);
 
   // eof
-  if (inf->fp->atEnd() && inf->cur_line_pos >= inf->cur_line.length()) {
+  if (inf->stream->atEnd() && inf->cur_line_pos >= inf->cur_line.length()) {
     return stop_reading(inf);
   }
 
   // Read a full line. Only ASCII line separators are valid.
   // First get the data. Proper error handling makes this terrible...
-  QByteArray line(1, '\0');
-  auto read = 0;
-  auto start = 0;
-  const auto chunk_size =
-      1024; // 1kB should be well enough for a single line
-  do {
-    line.resize(line.size() + chunk_size);
-    read = inf->fp->readLine(line.begin() + start, chunk_size + 1);
-    start += read;
-  } while (read == chunk_size && !line.contains('\n'));
-
-  // Error handling
-  if (read < 0 && !inf->fp->atEnd()) {
+  QString line;
+  const auto ok = inf->stream->readLineInto(&inf->cur_line, 0);
+  if (!ok && !inf->fp->atEnd()) {
     // TRANS: Error reading <file>: <reason>
     qCCritical(inf_category) << QString::fromUtf8(_("Error reading %1: %2"))
                                     .arg(inf->filename)
@@ -476,7 +472,6 @@ static bool read_a_line(struct inputfile *inf)
   }
 
   // Normal behavior
-  inf->cur_line = QString::fromUtf8(line.data());
   inf->cur_line_pos = 0;
   inf->line_num++;
 
