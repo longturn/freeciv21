@@ -14,6 +14,8 @@
 
 #include "fc_types.h"
 
+#include <QString>
+
 // Number of city report columns: have to set this manually now...
 #define NUM_CREPORT_COLS (num_city_report_spec())
 
@@ -25,7 +27,7 @@ struct city_report_spec {
   const char *title2;      // already translated or nullptr
   const char *explanation; // already translated
   void *data;
-  const char *(*func)(const struct city *pcity, const void *data);
+  QString (*func)(const struct city *pcity, const void *data);
   const char *tagname; // for save_options
 };
 

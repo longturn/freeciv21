@@ -42,8 +42,7 @@
    Note the returned string may not be exactly the right length; that
    is handled later.
  */
-static const char *cr_entry_cityname(const struct city *pcity,
-                                     const void *data)
+static QString cr_entry_cityname(const struct city *pcity, const void *data)
 {
   /* We used to truncate the name to 14 bytes.  This should not be needed
    * in any modern GUI library and may give an invalid string if a
@@ -54,8 +53,7 @@ static const char *cr_entry_cityname(const struct city *pcity,
 /**
    Translated name of nation who owns this city.
  */
-static const char *cr_entry_nation(const struct city *pcity,
-                                   const void *data)
+static QString cr_entry_nation(const struct city *pcity, const void *data)
 {
   return nation_adjective_for_player(city_owner(pcity));
 }
@@ -64,7 +62,7 @@ static const char *cr_entry_nation(const struct city *pcity,
    Returns city size written to string. Returned string is statically
    allocated and its contents change when this function is called again.
  */
-static const char *cr_entry_size(const struct city *pcity, const void *data)
+static QString cr_entry_size(const struct city *pcity, const void *data)
 {
   static char buf[8];
 
@@ -77,8 +75,8 @@ static const char *cr_entry_size(const struct city *pcity, const void *data)
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_hstate_concise(const struct city *pcity,
-                                           const void *data)
+static QString cr_entry_hstate_concise(const struct city *pcity,
+                                       const void *data)
 {
   static char buf[4];
   fc_snprintf(
@@ -92,8 +90,8 @@ static const char *cr_entry_hstate_concise(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_hstate_verbose(const struct city *pcity,
-                                           const void *data)
+static QString cr_entry_hstate_verbose(const struct city *pcity,
+                                       const void *data)
 {
   static char buf[32];
 
@@ -110,8 +108,7 @@ static const char *cr_entry_hstate_verbose(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_workers(const struct city *pcity,
-                                    const void *data)
+static QString cr_entry_workers(const struct city *pcity, const void *data)
 {
   static char buf[32];
 
@@ -128,7 +125,7 @@ static const char *cr_entry_workers(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_happy(const struct city *pcity, const void *data)
+static QString cr_entry_happy(const struct city *pcity, const void *data)
 {
   static char buf[8];
   fc_snprintf(buf, sizeof(buf), "%2d",
@@ -139,8 +136,7 @@ static const char *cr_entry_happy(const struct city *pcity, const void *data)
 /**
    Returns city total culture written to string
  */
-static const char *cr_entry_culture(const struct city *pcity,
-                                    const void *data)
+static QString cr_entry_culture(const struct city *pcity, const void *data)
 {
   static char buf[8];
   fc_snprintf(buf, sizeof(buf), "%3d", pcity->client.culture);
@@ -150,8 +146,7 @@ static const char *cr_entry_culture(const struct city *pcity,
 /**
    Returns city history culture value written to string
  */
-static const char *cr_entry_history(const struct city *pcity,
-                                    const void *data)
+static QString cr_entry_history(const struct city *pcity, const void *data)
 {
   static char buf[20];
   int perturn = city_history_gain(pcity);
@@ -167,8 +162,8 @@ static const char *cr_entry_history(const struct city *pcity,
 /**
    Returns city performance culture value written to string
  */
-static const char *cr_entry_performance(const struct city *pcity,
-                                        const void *data)
+static QString cr_entry_performance(const struct city *pcity,
+                                    const void *data)
 {
   static char buf[8];
 
@@ -188,8 +183,7 @@ static const char *cr_entry_performance(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_content(const struct city *pcity,
-                                    const void *data)
+static QString cr_entry_content(const struct city *pcity, const void *data)
 {
   static char buf[8];
   fc_snprintf(buf, sizeof(buf), "%2d",
@@ -202,8 +196,7 @@ static const char *cr_entry_content(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_unhappy(const struct city *pcity,
-                                    const void *data)
+static QString cr_entry_unhappy(const struct city *pcity, const void *data)
 {
   static char buf[8];
   fc_snprintf(buf, sizeof(buf), "%2d",
@@ -216,7 +209,7 @@ static const char *cr_entry_unhappy(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_angry(const struct city *pcity, const void *data)
+static QString cr_entry_angry(const struct city *pcity, const void *data)
 {
   static char buf[8];
   fc_snprintf(buf, sizeof(buf), "%2d",
@@ -229,8 +222,8 @@ static const char *cr_entry_angry(const struct city *pcity, const void *data)
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_specialists(const struct city *pcity,
-                                        const void *data)
+static QString cr_entry_specialists(const struct city *pcity,
+                                    const void *data)
 {
   return specialists_string(pcity->specialists);
 }
@@ -240,8 +233,8 @@ static const char *cr_entry_specialists(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_specialist(const struct city *pcity,
-                                       const void *data)
+static QString cr_entry_specialist(const struct city *pcity,
+                                   const void *data)
 {
   static char buf[8];
   const struct specialist *sp = static_cast<const specialist *>(data);
@@ -256,8 +249,7 @@ static const char *cr_entry_specialist(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_attack(const struct city *pcity,
-                                   const void *data)
+static QString cr_entry_attack(const struct city *pcity, const void *data)
 {
   static char buf[32];
   int attack_best[4] = {-1, -1, -1, -1}, i;
@@ -295,8 +287,7 @@ static const char *cr_entry_attack(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_defense(const struct city *pcity,
-                                    const void *data)
+static QString cr_entry_defense(const struct city *pcity, const void *data)
 {
   static char buf[32];
   int defense_best[4] = {-1, -1, -1, -1}, i;
@@ -335,8 +326,7 @@ static const char *cr_entry_defense(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_supported(const struct city *pcity,
-                                      const void *data)
+static QString cr_entry_supported(const struct city *pcity, const void *data)
 {
   static char buf[8];
   int num_supported = unit_list_size(pcity->units_supported);
@@ -351,8 +341,7 @@ static const char *cr_entry_supported(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_present(const struct city *pcity,
-                                    const void *data)
+static QString cr_entry_present(const struct city *pcity, const void *data)
 {
   static char buf[8];
   int num_present = unit_list_size(pcity->tile->units);
@@ -367,8 +356,7 @@ static const char *cr_entry_present(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_resources(const struct city *pcity,
-                                      const void *data)
+static QString cr_entry_resources(const struct city *pcity, const void *data)
 {
   static char buf[32];
   fc_snprintf(buf, sizeof(buf), "%d/%d/%d", pcity->surplus[O_FOOD],
@@ -381,8 +369,7 @@ static const char *cr_entry_resources(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_foodplus(const struct city *pcity,
-                                     const void *data)
+static QString cr_entry_foodplus(const struct city *pcity, const void *data)
 {
   static char buf[8];
   fc_snprintf(buf, sizeof(buf), "%3d", pcity->surplus[O_FOOD]);
@@ -394,8 +381,7 @@ static const char *cr_entry_foodplus(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_prodplus(const struct city *pcity,
-                                     const void *data)
+static QString cr_entry_prodplus(const struct city *pcity, const void *data)
 {
   static char buf[8];
   fc_snprintf(buf, sizeof(buf), "%3d", pcity->surplus[O_SHIELD]);
@@ -407,8 +393,7 @@ static const char *cr_entry_prodplus(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_tradeplus(const struct city *pcity,
-                                      const void *data)
+static QString cr_entry_tradeplus(const struct city *pcity, const void *data)
 {
   static char buf[8];
   fc_snprintf(buf, sizeof(buf), "%3d", pcity->surplus[O_TRADE]);
@@ -420,8 +405,7 @@ static const char *cr_entry_tradeplus(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_output(const struct city *pcity,
-                                   const void *data)
+static QString cr_entry_output(const struct city *pcity, const void *data)
 {
   static char buf[32];
   int goldie = pcity->surplus[O_GOLD];
@@ -436,7 +420,7 @@ static const char *cr_entry_output(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_gold(const struct city *pcity, const void *data)
+static QString cr_entry_gold(const struct city *pcity, const void *data)
 {
   static char buf[8];
 
@@ -453,8 +437,7 @@ static const char *cr_entry_gold(const struct city *pcity, const void *data)
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_luxury(const struct city *pcity,
-                                   const void *data)
+static QString cr_entry_luxury(const struct city *pcity, const void *data)
 {
   static char buf[8];
   fc_snprintf(buf, sizeof(buf), "%3d", pcity->prod[O_LUXURY]);
@@ -466,8 +449,7 @@ static const char *cr_entry_luxury(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_science(const struct city *pcity,
-                                    const void *data)
+static QString cr_entry_science(const struct city *pcity, const void *data)
 {
   static char buf[8];
   fc_snprintf(buf, sizeof(buf), "%3d", pcity->prod[O_SCIENCE]);
@@ -479,8 +461,7 @@ static const char *cr_entry_science(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_growturns(const struct city *pcity,
-                                      const void *data)
+static QString cr_entry_growturns(const struct city *pcity, const void *data)
 {
   int turns = city_turns_to_grow(pcity);
   char buffer[8];
@@ -503,8 +484,7 @@ static const char *cr_entry_growturns(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_pollution(const struct city *pcity,
-                                      const void *data)
+static QString cr_entry_pollution(const struct city *pcity, const void *data)
 {
   static char buf[8];
   fc_snprintf(buf, sizeof(buf), "%3d", pcity->pollution);
@@ -516,8 +496,8 @@ static const char *cr_entry_pollution(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_trade_routes(const struct city *pcity,
-                                         const void *data)
+static QString cr_entry_trade_routes(const struct city *pcity,
+                                     const void *data)
 {
   static char buf[16];
   int num = 0, value = 0;
@@ -542,8 +522,8 @@ static const char *cr_entry_trade_routes(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_build_slots(const struct city *pcity,
-                                        const void *data)
+static QString cr_entry_build_slots(const struct city *pcity,
+                                    const void *data)
 {
   static char buf[8];
   fc_snprintf(buf, sizeof(buf), "%3d", city_build_slots(pcity));
@@ -555,8 +535,7 @@ static const char *cr_entry_build_slots(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_building(const struct city *pcity,
-                                     const void *data)
+static QString cr_entry_building(const struct city *pcity, const void *data)
 {
   static char buf[192];
   const char *from_worklist = worklist_is_empty(&pcity->worklist) ? ""
@@ -582,8 +561,8 @@ static const char *cr_entry_building(const struct city *pcity,
    written to string. Returned string is statically allocated and its
    contents change when this function is called again.
  */
-static const char *cr_entry_build_cost(const struct city *pcity,
-                                       const void *data)
+static QString cr_entry_build_cost(const struct city *pcity,
+                                   const void *data)
 {
   Q_UNUSED(data)
   char bufone[8];
@@ -618,8 +597,8 @@ static const char *cr_entry_build_cost(const struct city *pcity,
  * Returned string is statically allocated and its contents change
  * when this function is called again.
  */
-static const char *cr_entry_build_cost_gold(const struct city *pcity,
-                                            const void *data)
+static QString cr_entry_build_cost_gold(const struct city *pcity,
+                                        const void *data)
 {
   Q_UNUSED(data)
   char bufone[8];
@@ -646,8 +625,8 @@ static const char *cr_entry_build_cost_gold(const struct city *pcity,
  * Returned string is statically allocated and its contents change
  * when this function is called again.
  */
-static const char *cr_entry_build_cost_turns(const struct city *pcity,
-                                             const void *data)
+static QString cr_entry_build_cost_turns(const struct city *pcity,
+                                         const void *data)
 {
   Q_UNUSED(data)
   char bufone[8];
@@ -670,8 +649,8 @@ static const char *cr_entry_build_cost_turns(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_corruption(const struct city *pcity,
-                                       const void *data)
+static QString cr_entry_corruption(const struct city *pcity,
+                                   const void *data)
 {
   Q_UNUSED(data)
   static char buf[8];
@@ -684,7 +663,7 @@ static const char *cr_entry_corruption(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_waste(const struct city *pcity, const void *data)
+static QString cr_entry_waste(const struct city *pcity, const void *data)
 {
   static char buf[8];
   fc_snprintf(buf, sizeof(buf), "%3d", -(pcity->waste[O_SHIELD]));
@@ -696,8 +675,8 @@ static const char *cr_entry_waste(const struct city *pcity, const void *data)
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_plague_risk(const struct city *pcity,
-                                        const void *data)
+static QString cr_entry_plague_risk(const struct city *pcity,
+                                    const void *data)
 {
   Q_UNUSED(data)
   static char buf[8];
@@ -715,8 +694,7 @@ static const char *cr_entry_plague_risk(const struct city *pcity,
 /**
    Returns number of continent
  */
-static const char *cr_entry_continent(const struct city *pcity,
-                                      const void *data)
+static QString cr_entry_continent(const struct city *pcity, const void *data)
 {
   Q_UNUSED(data)
   static char buf[8];
@@ -729,7 +707,7 @@ static const char *cr_entry_continent(const struct city *pcity,
    Returned string is statically allocated and its contents change when
    this function is called again.
  */
-static const char *cr_entry_cma(const struct city *pcity, const void *data)
+static QString cr_entry_cma(const struct city *pcity, const void *data)
 {
   Q_UNUSED(data)
   return cmafec_get_short_descr_of_city(pcity);
