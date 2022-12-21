@@ -504,11 +504,12 @@ int client_main(int argc, char *argv[])
 
   init_our_capability();
 
+  audio_init();
   options_init();
   configure_fonts();
-  options_load();
+  init_themes();
 
-  audio_init();
+  options_load();
 
   (void) user_username(gui_options->default_user_name, MAX_LEN_NAME);
   if (!is_valid_username(gui_options->default_user_name)) {
@@ -538,8 +539,6 @@ int client_main(int argc, char *argv[])
   fc_at_quick_exit(emergency_exit);
 
   init_player_dlg_common();
-  init_themes();
-
   script_client_init();
 
   if (sound_set_name.isEmpty()) {
