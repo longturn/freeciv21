@@ -1194,7 +1194,7 @@ void hud_unit_loader::show_me()
   }
   unit_list_iterate_end;
 
-  setRowCount(transports.count());
+  setRowCount(transports.count() + 1);
   setColumnCount(max_size + 1);
   for (i = 0; i < transports.count(); i++) {
     auto sprite = get_unittype_sprite(tileset, transports.at(i)->utype,
@@ -1217,6 +1217,11 @@ void hud_unit_loader::show_me()
     }
     unit_list_iterate_end;
   }
+
+  // TRANS: Cancel loading unit into transport
+  new_item =
+      new QTableWidgetItem(QIcon::fromTheme("dialog-cancel"), _("Cancel"));
+  setItem(transports.count(), 0, new_item);
 
   w = verticalHeader()->width() + 4;
   for (i = 0; i < columnCount(); i++) {
@@ -1242,7 +1247,9 @@ void hud_unit_loader::selection_changed(const QItemSelection &s1,
   int curr_row;
 
   curr_row = s1.indexes().at(0).row();
-  request_unit_load(cargo, transports.at(curr_row), qtile);
+  if (curr_row > 0 && curr_row < transports.size()) {
+    request_unit_load(cargo, transports[curr_row], qtile);
+  }
   close();
 }
 
