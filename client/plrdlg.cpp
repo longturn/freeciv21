@@ -726,13 +726,10 @@ plr_report::plr_report() : QWidget()
     ui.plr_wdg->sortByColumn(king()->qt_settings.player_repo_sort_col,
                              king()->qt_settings.player_report_sort);
   }
-  if (queen()->gimmeIndexOf(QStringLiteral("DDI")) > 0) {
-    ui.diplo_but->setEnabled(true);
-    update_top_bar_diplomacy_status(true);
-  } else {
-    ui.diplo_but->setEnabled(false);
-    update_top_bar_diplomacy_status(false);
-  }
+  const bool has_meeting =
+      (queen()->gimmeIndexOf(QStringLiteral("DDI")) > 0);
+  ui.diplo_but->setEnabled(has_meeting);
+  update_top_bar_diplomacy_status(has_meeting);
   queen()->updateSidebarTooltips();
   ui.plr_wdg->set_pr_rep(this);
 }
@@ -918,13 +915,10 @@ void plr_report::update_report(bool update_selection)
   if (can_meet_with_player(other_player)) {
     ui.meet_but->setEnabled(true);
   }
-  if (queen()->gimmeIndexOf(QStringLiteral("DDI")) > 0) {
-    ui.diplo_but->setEnabled(true);
-    update_top_bar_diplomacy_status(true);
-  } else {
-    ui.diplo_but->setEnabled(false);
-    update_top_bar_diplomacy_status(false);
-  }
+  const bool has_meeting =
+      (queen()->gimmeIndexOf(QStringLiteral("DDI")) > 0);
+  ui.diplo_but->setEnabled(has_meeting);
+  update_top_bar_diplomacy_status(has_meeting);
   ui.plr_wdg->restore_selection();
 }
 
@@ -1011,15 +1005,12 @@ void close_intel_dialog(struct player *p) { real_players_dialog_update(p); }
  */
 void update_top_bar_diplomacy_status(bool blinker)
 {
+  queen()->sw_diplo->keep_blinking = blinker;
   if (blinker) {
-    queen()->sw_diplo->keep_blinking = true;
     queen()->sw_diplo->sblink();
-    queen()->updateSidebarTooltips();
-    queen()->reloadSidebarIcons();
   } else {
-    queen()->sw_diplo->keep_blinking = false;
     queen()->sw_diplo->update();
-    queen()->updateSidebarTooltips();
-    queen()->reloadSidebarIcons();
   }
+  queen()->updateSidebarTooltips();
+  queen()->reloadSidebarIcons();
 }
