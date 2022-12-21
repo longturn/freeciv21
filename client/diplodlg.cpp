@@ -843,11 +843,7 @@ void handle_diplomacy_accept_treaty(int counterpart, bool I_accepted,
   dw->treaty.accept0 = I_accepted;
   dw->treaty.accept1 = other_accepted;
   dw->update_wdg();
-  if (dd->count() > 0) {
-    update_top_bar_diplomacy_status(true);
-  } else {
-    update_top_bar_diplomacy_status(false);
-  }
+  update_top_bar_diplomacy_status(dd->count() > 0);
 }
 
 /**
@@ -894,11 +890,7 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
   if (player_by_number(initiated_from) == client.conn.playing) {
     queen()->game_tab_widget->setCurrentIndex(i);
   }
-  if (dd->count() > 0) {
-    update_top_bar_diplomacy_status(true);
-  } else {
-    update_top_bar_diplomacy_status(false);
-  }
+  update_top_bar_diplomacy_status(dd->count() > 0);
 }
 
 /**
@@ -944,11 +936,7 @@ void handle_diplomacy_cancel_meeting(int counterpart, int initiated_from)
   w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);
   dd->close_widget(counterpart);
-  if (dd->count() > 0) {
-    update_top_bar_diplomacy_status(true);
-  } else {
-    update_top_bar_diplomacy_status(false);
-  }
+  update_top_bar_diplomacy_status(dd->count() > 0);
 }
 
 /**
