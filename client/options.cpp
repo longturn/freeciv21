@@ -2138,7 +2138,9 @@ static bool client_option_str_set(struct option *poption, const char *str)
   }
 
   const auto allowed_values = client_option_str_values(poption);
-  if (allowed_values && !client_option_str_values(poption)->contains(str)) {
+  if (allowed_values && !allowed_values->contains(str)) {
+    qWarning() << "Unrecognized value for option" << option_name(poption)
+               << ":" << QString(str);
     return false;
   }
 
