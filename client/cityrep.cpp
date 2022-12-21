@@ -138,17 +138,14 @@ bool city_item::setData(int column, const QVariant &value, int role)
  */
 QVariant city_item::data(int column, int role) const
 {
-  struct city_report_spec spec;
-
   if (role == Qt::UserRole && column == 0) {
     return QVariant::fromValue((void *) i_city);
   }
   if (role != Qt::DisplayRole) {
     return QVariant();
   }
-  spec = city_report_specs[column];
-  QString buf = QStringLiteral("%1").arg(spec.func(i_city, spec.data));
-  return buf.trimmed();
+  const auto spec = city_report_specs[column];
+  return spec.func(i_city, spec.data).trimmed();
 }
 
 /**
