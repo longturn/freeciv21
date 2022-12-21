@@ -78,6 +78,15 @@ static QString cr_entry_size(const struct city *pcity, const void *data)
 static QString cr_entry_hstate_concise(const struct city *pcity,
                                        const void *data)
 {
+  if (city_unhappy(pcity)) {
+    return "X"; // Disorder
+  } else if (city_celebrating(pcity)) {
+    return "*"; // Celebrating
+  } else if (city_happy(pcity)) {
+    return "+"; // Happy
+  } else {
+    return " "; // Content
+  }
   static char buf[4];
   fc_snprintf(
       buf, sizeof(buf), "%s",
@@ -93,14 +102,8 @@ static QString cr_entry_hstate_concise(const struct city *pcity,
 static QString cr_entry_hstate_verbose(const struct city *pcity,
                                        const void *data)
 {
-  static char buf[32];
-
-  fc_snprintf(buf, sizeof(buf), "%s",
-              (city_celebrating(pcity)
-                   ? Q_("?city_state:Celebrating")
-                   : (city_unhappy(pcity) ? Q_("?city_state:Disorder")
-                                          : Q_("?city_state:Peace"))));
-  return buf;
+  Q_UNUSED(data);
+  return get_city_dialog_status_text(pcity);
 }
 
 /**
@@ -729,10 +732,12 @@ static const struct city_report_spec base_city_report_specs[] = {
      FUNC_TAG(nation)},
     {true, 2, 1, nullptr, N_("?size [short]:Sz"), N_("Size"), nullptr,
      FUNC_TAG(size)},
-    {true, -8, 1, nullptr, N_("State"), N_("Celebrating/Peace/Disorder"),
-     nullptr, FUNC_TAG(hstate_verbose)},
-    {false, 1, 1, nullptr, nullptr, N_("Concise *=Celebrating, X=Disorder"),
-     nullptr, FUNC_TAG(hstate_concise)},
+    {true, -8, 1, nullptr, N_("State"),
+     N_("Celebrating/Happy/Peace/Disorder"), nullptr,
+     FUNC_TAG(hstate_verbose)},
+    {false, 1, 1, nullptr, nullptr,
+     N_("Concise *=Celebrating, +=Happy, X=Disorder"), nullptr,
+     FUNC_TAG(hstate_concise)},
 
     {false, 2, 1, nullptr, N_("?Happy workers:H"), N_("Workers: Happy"),
      nullptr, FUNC_TAG(happy)},
