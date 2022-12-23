@@ -40,10 +40,14 @@ setting, you can add a preset name for it. This is not required, but very useful
 change the city's setting from within the city report, if it is given a name. Don't forget to save settings
 (in the :guilabel:`Game` menu), when you've created new presets.
 
-.. image:: ../_static/images/gui-elements/governor.png
+.. _CMA Dialog:
+.. figure:: ../_static/images/gui-elements/city-dialog-governor.png
     :align: center
-    :height: 450
     :alt: Governor Tab in City Dialog
+    :figclass: align-center
+
+    Governor Tab in City Dialog
+
 
 The sliders are of two kinds: the rightmost sliders are factors, which gauges how much one product is worth
 compared to the others (e.g how much shields are worth with respect to everything else). The leftmost
