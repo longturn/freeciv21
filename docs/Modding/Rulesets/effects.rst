@@ -210,7 +210,7 @@ Tech_Parasite
     Gain any advance known already by amount number of other teams, if team_pooled_research is enabled,
     or amount number of other players otherwise.
 
-.. note:: If you have two such effects, they combine into one much worse effect (the number of players
+.. note:: If you have two such effects, they add up (the number of players
     required to gain an advance is increased).
 
 Airlift
