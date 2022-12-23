@@ -6,14 +6,17 @@ groups="American"
 legend=_("Texas, \"the Lone Star State\" is the second largest and second\
  most populous state of the USA, famous for its \"larger than life\"\
  cowboy culture and Spanish heritage. After the famous Battle of the Alamo de Bexar,\
- The Texians defeated the Mexicans at San Jacinto and declared independence.\
+ The \"Texians\" defeated the Mexicans at San Jacinto and declared independence.\
  The Republic of Texas lasted from 1836 to 1846, after which it became the\
  28th state of the United States. Historically, Texas was ruled in full or in\
  part by six nations: France, Spain, Mexico, the Republic of Texas, the\
  Confederacy, and the USA, as expressed in the slogan \"six flags over Texas\".")
 
 leaders = {
- "name",                "sex"
+ "name",                   "sex"
+ "King Ferdinand V",       "Male"
+ "King Louis XIV",         "Male"
+ "Santa Anna",             "Male"
  "Stephen F. Austin",      "Male"
  "Juan N. Seguin",         "Male"
  "Sam Houston",            "Male"
@@ -32,6 +35,7 @@ ruler_titles = {
  "government",      "male_title",      "female_title"
  "Republic",        _("President %s"), _("?female:President %s")
  "Democracy",       _("Governor %s"),  _("?female:Governor %s")
+ "Monarchy",        _("Governor %s"),  _("?female:Governor %s")
  "Despotism",       _("Sheriff %s"),   _("?female:Sheriff %s")
  "Fundamentalism",  _("Preacher %s"),  _("?female:Preacher %s")
 }
