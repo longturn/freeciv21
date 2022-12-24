@@ -408,6 +408,7 @@ government::government()
 {
   item_number = 0;
   ruler_titles = new QHash<const struct nation_type *, struct ruler_title *>;
+  helptext = nullptr;
   requirement_vector_init(&reqs);
   changed_to_times = 0;
   ruledit_disabled = false;
