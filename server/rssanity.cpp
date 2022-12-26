@@ -1228,7 +1228,8 @@ bool sanity_check_ruleset_data(bool ignore_retired)
         problem = action_enabler_suggest_improvement(enabler);
         if (problem != nullptr) {
           // There is a potential for improving this enabler.
-          qCWarning(deprecations_category, "%s", problem->description);
+          qCWarning(deprecations_category, "Enabler for action %s: %s",
+                    action_id_rule_name(act), problem->description);
         }
       }
     }
