@@ -424,7 +424,9 @@ void city_widget::clear_worlist()
   struct worklist empty;
   worklist_init(&empty);
 
-  for (auto *pcity : qAsConst(selected_cities)) {
+  const auto saved_selection =
+      selected_cities; // Copy to avoid invalidations
+  for (auto *pcity : saved_selection) {
     Q_ASSERT(pcity != nullptr);
     city_set_worklist(pcity, &empty);
   }
@@ -435,7 +437,9 @@ void city_widget::clear_worlist()
  */
 void city_widget::buy()
 {
-  for (auto *pcity : qAsConst(selected_cities)) {
+  const auto saved_selection =
+      selected_cities; // Copy to avoid invalidations
+  for (auto *pcity : saved_selection) {
     Q_ASSERT(pcity != nullptr);
     cityrep_buy(pcity);
   }
@@ -642,7 +646,9 @@ void city_widget::display_list_menu(const QPoint)
     }
     city_list_iterate_end;
 
-    for (auto *pcity : qAsConst(selected_cities)) {
+    const auto saved_selection =
+        selected_cities; // Copy to avoid invalidations
+    for (auto *pcity : saved_selection) {
       if (nullptr != pcity) {
         switch (m_state) {
         case CHANGE_PROD_NOW:
@@ -687,13 +693,10 @@ void city_widget::display_list_menu(const QPoint)
           }
           break;
         case CMA:
-          if (nullptr != pcity) {
-            if (CMA_NONE == id) {
-              cma_release_city(pcity);
-            } else {
-              cma_put_city_under_agent(pcity,
-                                       cmafec_preset_get_parameter(id));
-            }
+          if (CMA_NONE == id) {
+            cma_release_city(pcity);
+          } else {
+            cma_put_city_under_agent(pcity, cmafec_preset_get_parameter(id));
           }
 
           break;
