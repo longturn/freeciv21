@@ -20,7 +20,7 @@ sprites = {
   "b.darwins_voyage", "tilesets/wonders/darwins_voyage"
   "b.ecclesiastical_palace", "tilesets/wonders/ecclesiastical_palace-small"
   "b.eiffel_tower", "tilesets/wonders/eiffel_tower"
-  "b.guangzhou_port_facility", "tilesets/wonders/b.guangzhou_port_facility"
+  "b.guangzhou_port_facility", "tilesets/wonders/guangzhou_port_facility"
   "b.great_library", "tilesets/wonders/great_library"
   "b.great_wall", "tilesets/wonders/great_wall"
   "b.hanging_gardens", "tilesets/wonders/hanging_gardens"
