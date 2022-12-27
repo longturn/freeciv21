@@ -7045,7 +7045,7 @@ static void sg_load_researches(struct loaddata *loading)
 
   // Initialize all researches.
   for (auto &pinitres : research_array) {
-    if (team_by_number(research_number(&pinitres)) != nullptr) {
+    if (research_is_valid(pinitres)) {
       init_tech(&pinitres, false);
     }
   };
@@ -7125,7 +7125,7 @@ static void sg_load_researches(struct loaddata *loading)
   /* In case of tech_leakage, we can update research only after all the
    * researches have been loaded */
   for (auto &pupres : research_array) {
-    if (team_by_number(research_number(&pupres)) != nullptr) {
+    if (research_is_valid(pupres)) {
       research_update(&pupres);
     }
   };
@@ -7146,7 +7146,7 @@ static void sg_save_researches(struct savedata *saving)
 
   if (saving->save_players) {
     for (const auto &presearch : research_array) {
-      if (team_by_number(research_number(&presearch)) != nullptr) {
+      if (research_is_valid(presearch)) {
         secfile_insert_int(saving->file, research_number(&presearch),
                            "research.r%d.number", i);
         technology_save(saving->file, "research.r%d.goal", i,
@@ -7559,7 +7559,7 @@ static void sg_load_sanitycheck(struct loaddata *loading)
 
   // Check researching technologies and goals.
   for (auto &presearch : research_array) {
-    if (team_by_number(research_number(&presearch)) != nullptr) {
+    if (research_is_valid(presearch)) {
       if (presearch.researching != A_UNSET
           && !is_future_tech(presearch.researching)
           && (valid_advance_by_number(presearch.researching) == nullptr

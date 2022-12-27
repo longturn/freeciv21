@@ -170,7 +170,7 @@ void do_tech_parasite_effect(struct player *pplayer)
 
     num_teams = 0;
     for (const auto &other_research : research_array) {
-      if (team_by_number(research_number(&other_research)) != nullptr) {
+      if (research_is_valid(other_research)) {
         if (TECH_KNOWN == research_invention_state(&other_research, i)) {
           if (mod <= ++num_teams) {
             if (0 == fc_rand(++num_techs)) {

@@ -120,6 +120,18 @@ struct research *research_get(const struct player *pplayer)
 }
 
 /**
+ * Checks whether the research object is valid in the current game.
+ */
+bool research_is_valid(const struct research &presearch)
+{
+  if (game.info.team_pooled_research) {
+    return research_is_valid(presearch);
+  } else {
+    return player_by_number(research_number(&presearch)) != nullptr;
+  }
+}
+
+/**
    Returns the name of the research owner: a player name or a team name.
  */
 const char *research_rule_name(const struct research *presearch)
@@ -653,7 +665,7 @@ bool research_invention_reachable(const struct research *presearch,
     return presearch->inventions[tech].reachable;
   } else {
     for (const auto &research_iter : research_array) {
-      if (team_by_number(research_number(&research_iter)) != nullptr) {
+      if (research_is_valid(research_iter)) {
         if (research_iter.inventions[tech].reachable) {
           return true;
         }
@@ -682,7 +694,7 @@ bool research_invention_gettable(const struct research *presearch,
                 : presearch->inventions[tech].state == TECH_PREREQS_KNOWN);
   } else {
     for (const auto &research_iter : research_array) {
-      if (team_by_number(research_number(&research_iter)) != nullptr) {
+      if (research_is_valid(research_iter)) {
         if (allow_holes ? research_iter.inventions[tech].root_reqs_known
                         : research_iter.inventions[tech].state
                               == TECH_PREREQS_KNOWN) {
