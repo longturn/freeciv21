@@ -1,1 +1,56 @@
+# don't export these files
 data/graphics/** export-ignore
+
+# text files
+*                text=auto
+*.txt            text
+*.md             text diff=markdown
+*.gitattributes  text
+*.cmake          text
+.gitignore       text
+.editorconfig    text
+.clang-format    text
+AUTHORS          text
+INSTALL          text
+COPYING          text
+
+# source files
+*.c              text diff=cpp
+*.cpp            text diff=cpp
+*.h              text diff=cpp
+*.h.in           text diff=cpp
+*.py             text diff=python
+*.cmd            text eol=crlf
+*.sh             text eol=lf
+*.yaml           text
+*.yml            text
+*.json           text
+*.xml            text
+*.css            text
+*.qss            text
+*.ui             text
+
+# graphics files
+*.png            binary
+*.ico            binary
+*.svg            text
+*.license        text
+
+# font files
+*.ttf            binary
+*.eot            binary
+*.otf            binary
+*.woff           binary
+*.woff2          binary
+
+# other
+*.pkg            binary
+*.ogg            binary
+*.spec           text
+*.tilespec       text
+*.musicspec      text
+*.soundspec      text
+*.serv           text
+*.ruleset        text
+*.lua            text
+*.sav            text
