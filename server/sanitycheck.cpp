@@ -673,7 +673,7 @@ static void check_researches(const char *file, const char *function,
                              int line)
 {
   for (const auto &presearch : research_array) {
-    if (team_by_number(research_number(&presearch)) != nullptr) {
+    if (research_is_valid(presearch)) {
       SANITY_CHECK(S_S_RUNNING != server_state()
                    || A_UNSET == presearch.researching
                    || is_future_tech(presearch.researching)

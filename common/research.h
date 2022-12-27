@@ -107,6 +107,7 @@ int research_pretty_name(const struct research *presearch, char *buf,
 
 struct research *research_by_number(int number);
 struct research *research_get(const struct player *pplayer);
+bool research_is_valid(const struct research &presearch);
 
 QString research_advance_rule_name(const struct research *presearch,
                                    Tech_type_id tech);
