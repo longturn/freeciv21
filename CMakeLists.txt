@@ -44,7 +44,7 @@ include(AutoRevision)
 list(LENGTH FC21_REV_TAG_LIST FC21_REV_TAG_LIST_LENGTH)
 
 # When we tag a stable release we only get 2 of the 4 components populated
-#  So we manually set some of the variables we need for the full version.
+#   So we manually set some of the variables we need for the full version.
 if(${FC21_REV_TAG_LIST_LENGTH} EQUAL 2)
   list(GET FC21_REV_TAG_LIST 0 FC21_MAJOR_VERSION)
   list(GET FC21_REV_TAG_LIST 1 FC21_MINOR_VERSION)
@@ -106,6 +106,19 @@ add_subdirectory(tools)
 
 # Add docs
 add_subdirectory(docs)
+
+# Check to see if the current patch version from git matches the cache version.
+#   If not, then remove the cache fc_version.h so it can be written.
+if(EXISTS "${CMAKE_BINARY_DIR}/utility/fc_version.h")
+  file(STRINGS "${CMAKE_BINARY_DIR}/utility/fc_version.h"
+               FC_VERSION_H REGEX "PATCH_VERSION")
+  string(REPLACE "#define PATCH_VERSION " "" FC_VERSION_H_2 ${FC_VERSION_H})
+  string(COMPARE NOTEQUAL ${FC21_PATCH_VERSION} ${FC_VERSION_H_2} FC_VERSION_DIFF)
+  if(${FC_VERSION_DIFF})
+    message(STATUS "Cache version not current, removing cached fc_version.h")
+    file(REMOVE "${CMAKE_BINARY_DIR}/utility/fc_version.h")
+  endif()
+endif()
 
 # Use Auto Revision variables to convert some templates to real files at build time
 if(NOT EXISTS "${CMAKE_BINARY_DIR}/utility/fc_version.h")
