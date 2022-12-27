@@ -1,11 +1,5 @@
 name: Build
 on:
-  push:
-    paths-ignore:
-      - 'docs/**'
-  pull_request:
-    paths-ignore:
-      - 'docs/**'
   schedule:
     - cron: "0 5 * * MON"
   workflow_dispatch: {}
