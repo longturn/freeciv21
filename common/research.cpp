@@ -125,7 +125,7 @@ struct research *research_get(const struct player *pplayer)
 bool research_is_valid(const struct research &presearch)
 {
   if (game.info.team_pooled_research) {
-    return research_is_valid(presearch);
+    return team_by_number(research_number(&presearch)) != nullptr;
   } else {
     return player_by_number(research_number(&presearch)) != nullptr;
   }
