@@ -3386,8 +3386,6 @@ static void message_options_init()
   int none[] = {E_IMP_BUY,
                 E_IMP_SOLD,
                 E_UNIT_BUY,
-                E_UNIT_LOST_ATT,
-                E_UNIT_WIN_ATT,
                 E_GAME_START,
                 E_CITY_BUILD,
                 E_NEXT_YEAR,
@@ -3395,9 +3393,11 @@ static void message_options_init()
                 E_CITY_MAY_SOON_GROW,
                 E_WORKLIST,
                 E_AI_DEBUG};
-  int out_only[] = {E_NATION_SELECTED, E_CHAT_MSG,      E_CHAT_ERROR,
-                    E_CONNECTION,      E_LOG_ERROR,     E_SETTING,
-                    E_VOTE_NEW,        E_VOTE_RESOLVED, E_VOTE_ABORTED};
+  int out_only[] = {
+      E_NATION_SELECTED, E_CHAT_MSG,      E_CHAT_ERROR,   E_CONNECTION,
+      E_LOG_ERROR,       E_SETTING,       E_VOTE_NEW,     E_VOTE_RESOLVED,
+      E_VOTE_ABORTED,    E_UNIT_LOST_ATT, E_UNIT_WIN_ATT,
+  };
   int all[] = {E_LOG_FATAL, E_SCRIPT, E_DEPRECATION_WARNING, E_MESSAGE_WALL};
   int i;
 
