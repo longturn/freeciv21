@@ -237,23 +237,24 @@ jobs:
           buildPreset: 'fullrelease-macos'
       - name: Package
         run: |
-          cmake --build build --target package
+          cat build-rel/CMakeCache.txt
+          cmake --build build-rel --target package
       - name: Debug
         if: failure()
         run: |
-          cat CMakeCache.txt
+          cat build-rel/CMakeCache.txt
       - name: Upload package
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            build/Freeciv21-*.dmg
-            build/Freeciv21-*.dmg.sha256
+            build-rel/Freeciv21-*.dmg
+            build-rel/Freeciv21-*.dmg.sha256
       - name: Upload a build
         uses: actions/upload-artifact@v3
         with:
           name: macOS-CPack-dmg
-          path: build/Freeciv21-*.dmg
+          path: build-rel/Freeciv21-*.dmg
 
 
   wasm:
