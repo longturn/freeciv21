@@ -235,59 +235,13 @@ jobs:
         with:
           configurePreset: 'fullrelease-macos'
           buildPreset: 'fullrelease-macos'
-      - name: Split Branch Name
-        env:
-          BRANCH: ${{github.ref_name}}
-        id: split
-        run: echo "::set-output name=fragment::${BRANCH##*/}"
-      - name: Create App Bundle
+      - name: Package
         run: |
-          mkdir -p Freeciv21.app/Contents/MacOS Freeciv21.app/Contents/Resources
-          cp dist/Info.plist Freeciv21.app/Contents/
-          cp -r .install/share/freeciv21/* Freeciv21.app/Contents/Resources
-          cp .install/bin/freeciv21-* Freeciv21.app/Contents/MacOS
-          mkdir client.iconset
-          cp data/icons/16x16/freeciv21-client.png client.iconset/icon_16x16.png
-          cp data/icons/32x32/freeciv21-client.png client.iconset/icon_16x16@2x.png
-          cp data/icons/32x32/freeciv21-client.png client.iconset/icon_32x32.png
-          cp data/icons/64x64/freeciv21-client.png client.iconset/icon_32x32@2x.png
-          cp data/icons/128x128/freeciv21-client.png client.iconset/icon_128x128.png
-          iconutil -c icns client.iconset
-          cp client.icns Freeciv21.app/Contents/Resources
-          mkdir staging
-          mv Freeciv21.app staging
-          create-dmg \
-            --volname "Freeciv21 Installer" \
-            --volicon "client.icns" \
-            --window-pos 200 120 \
-            --window-size 800 400 \
-            --icon-size 100 \
-            --icon "Freeciv21.app" 200 190 \
-            --hide-extension "Freeciv21.app" \
-            --app-drop-link 600 185 \
-            "Freeciv21-${{steps.split.outputs.fragment}}.dmg" \
-            "staging/"
-          shasum -a 256 Freeciv21-${{steps.split.outputs.fragment}}.dmg > Freeciv21-${{steps.split.outputs.fragment}}.dmg.sha256
+          cmake --build build --target package
       - name: Debug
         if: failure()
         run: |
           cat CMakeCache.txt
-          echo ${{steps.split.outputs.fragment}}
-      - name: Upload package
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: |
-            Freeciv21-*.dmg
-            Freeciv21-*.dmg.sha256
-      - name: Upload a build
-        uses: actions/upload-artifact@v3
-        with:
-          name: macOS-dmg
-          path: Freeciv21-*.dmg
-      - name: Package
-        run: |
-          cmake --build build --target package
       - name: Upload package
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
