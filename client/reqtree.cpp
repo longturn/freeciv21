@@ -10,6 +10,7 @@
  */
 
 // utility
+#include "colors_common.h"
 #include "log.h"
 
 // common
@@ -133,7 +134,8 @@ static void node_rectangle_minimum_size(struct tree_node *node, int *width,
         if (advance_number(unit->require_advance) != node->tech) {
           continue;
         }
-        sprite = get_unittype_sprite(tileset, unit, direction8_invalid());
+        sprite = get_unittype_sprite(tileset, unit, direction8_invalid(),
+                                     QColor());
         max_icon_height = std::max(max_icon_height, sprite->height());
         icons_width_sum += sprite->width() + 2;
       }
@@ -1049,8 +1051,9 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
             if (advance_number(unit->require_advance) != node->tech) {
               continue;
             }
-            sprite =
-                get_unittype_sprite(tileset, unit, direction8_invalid());
+            auto color = get_player_color(tileset, client_player());
+            sprite = get_unittype_sprite(tileset, unit, direction8_invalid(),
+                                         color);
             rttp = new req_tooltip_help();
             rttp->rect =
                 QRect(icon_startx,

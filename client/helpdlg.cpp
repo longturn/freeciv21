@@ -19,6 +19,7 @@
 #include <QTreeWidget>
 #include <QVBoxLayout>
 // utility
+#include "colors_common.h"
 #include "fcintl.h"
 // common
 #include "government.h"
@@ -289,7 +290,9 @@ void help_dialog::make_tree()
       case HELP_UNIT:
         f_type = unit_type_by_translated_name(s);
         if (f_type) {
-          spite = get_unittype_sprite(tileset, f_type, direction8_invalid());
+          auto color = get_player_color(tileset, client_player());
+          spite = get_unittype_sprite(tileset, f_type, direction8_invalid(),
+                                      color);
         }
         break;
 
@@ -869,8 +872,9 @@ void help_widget::set_topic_unit(const help_item *topic, const char *title)
     max_utype = uclass_max_values(utype->uclass);
 
     // Unit icon
+    auto color = get_player_color(tileset, client_player());
     add_info_pixmap(
-        get_unittype_sprite(tileset, utype, direction8_invalid()));
+        get_unittype_sprite(tileset, utype, direction8_invalid(), color));
 
     add_info_progress(_("Attack:"), utype->attack_strength, 0,
                       max_utype->attack_strength);

@@ -16,6 +16,7 @@
 #include <QPainter>
 #include <QScrollArea>
 // common
+#include "colors_common.h"
 #include "movement.h"
 #include "text.h"
 // client
@@ -266,7 +267,9 @@ unittype_item::~unittype_item() = default;
  */
 void unittype_item::init_img()
 {
-  auto sp = get_unittype_sprite(get_tileset(), utype, direction8_invalid());
+  auto color = get_player_color(get_tileset(), client_player());
+  auto sp =
+      get_unittype_sprite(get_tileset(), utype, direction8_invalid(), color);
   label_pix.setPixmap(*sp);
 }
 

@@ -19,6 +19,7 @@
 #include <QRadioButton>
 #include <QVBoxLayout>
 // common
+#include "colors_common.h"
 #include "movement.h"
 #include "nation.h"
 #include "research.h"
@@ -1198,8 +1199,9 @@ void hud_unit_loader::show_me()
   setRowCount(transports.count() + 1);
   setColumnCount(max_size + 1);
   for (i = 0; i < transports.count(); i++) {
+    auto color = get_player_color(tileset, unit_owner(transports.at(i)));
     auto sprite = get_unittype_sprite(tileset, transports.at(i)->utype,
-                                      direction8_invalid());
+                                      direction8_invalid(), color);
     QString str = utype_rule_name(transports.at(i)->utype);
     // TRANS: MP - just movement points
     str += " ("
@@ -1210,8 +1212,9 @@ void hud_unit_loader::show_me()
     j = 1;
     unit_list_iterate(transports.at(i)->transporting, tunit)
     {
-      sprite =
-          get_unittype_sprite(tileset, tunit->utype, direction8_invalid());
+      color = get_player_color(tileset, unit_owner(tunit));
+      sprite = get_unittype_sprite(tileset, tunit->utype,
+                                   direction8_invalid(), color);
       new_item = new QTableWidgetItem(QIcon(*sprite), QLatin1String(""));
       setItem(i, j, new_item);
       j++;
@@ -1377,6 +1380,8 @@ hud_unit_combat::hud_unit_combat(int attacker_unit_id, int defender_unit_id,
   def_veteran = make_def_veteran;
   att_hp_loss = attacker->hp - att_hp;
   def_hp_loss = defender->hp - def_hp;
+  attacker_color = get_player_color(tileset, unit_owner(attacker));
+  defender_color = get_player_color(tileset, unit_owner(attacker));
   if (defender_hp <= 0) {
     center_tile = attacker->tile;
     att_win = true;
@@ -1408,8 +1413,8 @@ void hud_unit_combat::init_images(bool redraw)
     if (!redraw) {
       put_unit(defender, &defender_pixmap, 0, 0);
     } else {
-      defender_pixmap =
-          *get_unittype_sprite(tileset, type_defender, direction8_invalid());
+      defender_pixmap = *get_unittype_sprite(
+          tileset, type_defender, direction8_invalid(), defender_color);
     }
     dimg = defender_pixmap.toImage();
     dr = zealous_crop_rect(dimg);
@@ -1432,8 +1437,8 @@ void hud_unit_combat::init_images(bool redraw)
     if (!redraw) {
       put_unit(attacker, &attacker_pixmap, 0, 0);
     } else {
-      attacker_pixmap =
-          *get_unittype_sprite(tileset, type_attacker, direction8_invalid());
+      attacker_pixmap = *get_unittype_sprite(
+          tileset, type_attacker, direction8_invalid(), attacker_color);
     }
     aimg = attacker_pixmap.toImage();
     ar = zealous_crop_rect(aimg);

@@ -801,8 +801,8 @@ QRect polished_citybar_painter::paint(QPainter &painter,
     const QPixmap *xsprite = nullptr;
     const auto &target = pcity->production;
     if (can_see_inside && (VUT_UTYPE == target.kind)) {
-      xsprite =
-          get_unittype_sprite(t, target.value.utype, direction8_invalid());
+      xsprite = get_unittype_sprite(t, target.value.utype,
+                                    direction8_invalid(), owner_color);
     } else if (can_see_inside && (target.kind == VUT_IMPROVEMENT)) {
       xsprite = get_building_sprite(t, target.value.building);
     }

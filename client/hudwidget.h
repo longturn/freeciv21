@@ -273,6 +273,7 @@ private:
   struct unit *defender = nullptr;
   const struct unit_type *type_attacker = nullptr;
   const struct unit_type *type_defender = nullptr;
+  QColor attacker_color, defender_color;
   struct tile *center_tile = nullptr;
   bool focus = false;
   float fading = 0.0f;
