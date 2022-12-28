@@ -266,7 +266,7 @@ static QString col_idle(const struct player *plr)
 {
   int idle;
   static char buf[100];
-  //nturns_idle >= 0
+  // nturns_idle >= 0
   if (plr->nturns_idle == 0) {
     idle = 0;
   } else {
