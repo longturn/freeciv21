@@ -285,6 +285,22 @@ jobs:
         with:
           name: macOS-dmg
           path: Freeciv21-*.dmg
+      - name: Package
+        run: |
+          cmake --build build --target package
+      - name: Upload package
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            build/Freeciv21-*.dmg
+            build/Freeciv21-*.dmg.sha256
+      - name: Upload a build
+        uses: actions/upload-artifact@v3
+        with:
+          name: macOS-CPack-dmg
+          path: build/Freeciv21-*.dmg
+
 
   wasm:
     name: "WebAssembly"
