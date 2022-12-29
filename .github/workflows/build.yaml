@@ -238,6 +238,7 @@ jobs:
       - name: Package
         run: |
           cat build-rel/CMakeCache.txt
+          uname
           cmake --build build-rel --target package
       - name: Debug
         if: failure()
