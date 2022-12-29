@@ -266,11 +266,11 @@ static QString col_idle(const struct player *plr)
 {
   int idle;
   static char buf[100];
-
-  if (plr->nturns_idle > 3) {
-    idle = plr->nturns_idle - 1;
-  } else {
+  // nturns_idle >= 0
+  if (plr->nturns_idle == 0) {
     idle = 0;
+  } else {
+    idle = plr->nturns_idle - 1;
   }
   fc_snprintf(buf, sizeof(buf), "%d", idle);
   return buf;
