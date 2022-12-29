@@ -29,8 +29,6 @@
   !define MUI_ICON "@CPACK_NSIS_MUI_ICON@"
   !define MUI_UNICON "@CPACK_NSIS_MUI_UNIICON@"
   !define MUI_UI_COMPONENTSPAGE_SMALLDESC
-  !define MUI_LICENSEPAGE_CHECKBOX
-  !define MUI_LICENSEPAGE_CHECKBOX_TEXT "I agree to the license terms."
 
   ;Multi-User Variables
   !define MULTIUSER_EXECUTIONLEVEL Highest
@@ -55,7 +53,7 @@
 ; General
 ;#########################################################
 
-  Name "${APPNAME} v${VERSION}"
+  Name "${APPNAME} ${VERSION}"
   OutFile "@CPACK_TOPLEVEL_DIRECTORY@/@CPACK_OUTPUT_FILE_NAME@"
   ShowInstDetails show
   ShowUninstDetails show
@@ -134,7 +132,6 @@
 
   ; Installer Pages
   !insertmacro MUI_PAGE_WELCOME
-  ;!insertmacro MUI_PAGE_LICENSE "@CPACK_RESOURCE_FILE_LICENSE@"
   !insertmacro MUI_PAGE_COMPONENTS
   !insertmacro MULTIUSER_PAGE_INSTALLMODE
   !insertmacro MUI_PAGE_DIRECTORY
@@ -168,19 +165,30 @@
     ${EndIf}
   !macroend
 
+  !macro UninstallExisting
+    Call UninstallExisting
+  !macroend
+
 ;#########################################################
 ; Funtions
 ;#########################################################
 
   Function .onInit
     SetShellVarContext All
-	!insertmacro MULTIUSER_INIT
-	;!insertmacro CheckAdminRights
+    !insertmacro MULTIUSER_INIT
+    !insertmacro CheckAdminRights
+
+    ; We lookup to see if there is a previous installation and prompt to remove.
+    ReadRegStr $0 "SHCTX" "${REGPATH_UNINSTSUBKEY}" "UninstallString"
+    ${If} $0 != ""
+    ${AndIf} ${Cmd} `MessageBox MB_YESNO|MB_ICONQUESTION "Previous ${APPNAME} installation found. Do you wish to uninstall the previous version?" /SD IDYES IDYES`
+      !insertmacro UninstallExisting
+    ${EndIf}
   FunctionEnd
 
   Function un.onInit
     SetShellVarContext All
-	!insertmacro MULTIUSER_UNINIT
+    !insertmacro MULTIUSER_UNINIT
   FunctionEnd
 
   Function ConditionalAddToRegisty
@@ -193,6 +201,12 @@
 
   Function RunFreeciv21
     ExecShell "" "$SMPROGRAMS\${APPNAME}\${APPNAME} Client.lnk"
+  FunctionEnd
+
+  Function UninstallExisting
+    ReadRegStr $0 "SHCTX" "${REGPATH_UNINSTSUBKEY}" "UninstallString"
+    ; Call silent uninstall
+    ExecWait '"$0" /S'
   FunctionEnd
 
 ;#########################################################
@@ -281,7 +295,6 @@
     ; Remove entry from Windows "Add/Remove programs" panel.
     DeleteRegKey "SHCTX" "${REGPATH_UNINSTSUBKEY}"
     DeleteRegKey "SHCTX" "Software\${APPNAME}"
-    DeleteRegKey HKEY_LOCAL_MACHINE "Software\${APPNAME}"
     DeleteRegKey HKEY_CLASSES_ROOT "fc21"
 
   SectionEnd
