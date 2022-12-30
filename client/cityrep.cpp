@@ -1117,7 +1117,6 @@ void city_widget::display_header_menu(const QPoint)
   hideshow_column->setAttribute(Qt::WA_DeleteOnClose);
   connect(hideshow_column, &QMenu::triggered, this, [=](QAction *act) {
     int col;
-    struct city_report_spec spec;
     if (!act) {
       return;
     }
@@ -1125,8 +1124,7 @@ void city_widget::display_header_menu(const QPoint)
     col = actions.indexOf(act);
     fc_assert_ret(col >= 0);
     setColumnHidden(col, !isColumnHidden(col));
-    spec = city_report_specs[col];
-    spec.show = !spec.show;
+    city_report_specs[col].show = act->isChecked();
     if (!isColumnHidden(col) && columnWidth(col) <= 5) {
       setColumnWidth(col, 100);
     }
