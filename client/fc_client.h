@@ -58,6 +58,8 @@ struct fc_settings {
   int player_repo_sort_col;
   bool show_new_turn_text;
   bool show_battle_log;
+  bool show_chat;     // Only used when loading
+  bool show_messages; // Only used when loading
   Qt::SortOrder player_report_sort;
   int city_repo_sort_col;
   Qt::SortOrder city_report_sort;

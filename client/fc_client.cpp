@@ -227,10 +227,11 @@ void fc_client::switch_page(int new_pg)
       queen()->game_tab_widget->showFullScreen();
     }
     menuBar()->setVisible(true);
+    queen()->chat->set_chat_visible(qt_settings.show_chat);
     queen()->mapview_wdg->setFocus();
+    queen()->sw_message->setChecked(qt_settings.show_messages);
     queen()->sw_message->setIcon(
         fcIcons::instance()->getIcon(QStringLiteral("messages")));
-    queen()->message->hide();
     queen()->message->clr();
     center_on_something();
     voteinfo_gui_update();
@@ -451,6 +452,12 @@ void fc_client::read_settings()
   } else {
     qt_settings.show_battle_log = false;
   }
+
+  qt_settings.show_chat =
+      s.value(QStringLiteral("show_chat"), true).toBool();
+  qt_settings.show_messages =
+      s.value(QStringLiteral("show_messages"), false).toBool();
+
   if (s.contains(QStringLiteral("battlelog_x"))) {
     qt_settings.battlelog_x =
         s.value(QStringLiteral("battlelog_x")).toFloat();
@@ -521,6 +528,9 @@ void fc_client::write_settings()
   s.setValue(QStringLiteral("new_turn_text"),
              qt_settings.show_new_turn_text);
   s.setValue(QStringLiteral("show_battle_log"), qt_settings.show_battle_log);
+  s.setValue(QStringLiteral("show_chat"), queen()->chat->is_chat_visible());
+  s.setValue(QStringLiteral("show_messages"),
+             queen()->sw_message->isChecked());
   fc_shortcuts::sc()->write();
 }
 
