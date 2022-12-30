@@ -114,6 +114,11 @@ unit_list_widget::unit_list_widget(QWidget *parent) : QListWidget(parent)
   m_upgrade = new QAction(_("Upgrade Unit"), this);
   connect(m_upgrade, &QAction::triggered, this, &unit_list_widget::upgrade);
   addAction(m_upgrade);
+
+  // Initially there is no selection, so the menu is disabled
+  for (auto action : actions()) {
+    action->setVisible(false);
+  }
 }
 
 /**
@@ -287,23 +292,24 @@ void unit_list_widget::selectionChanged(const QItemSelection &selected,
 
   // If we can't do anything, don't pretend we can
   const auto units = selected_playable_units();
+  for (auto action : actions()) {
+    action->setVisible(!units.empty());
+  }
   if (units.empty()) {
-    for (auto action : actions()) {
-      action->setVisible(false);
-    }
     return;
   }
 
   // Build the menu according to what the selected units can do
-  m_activate->setVisible(true);
-  m_sentry->setVisible(can_units_do_activity(units, ACTIVITY_SENTRY));
-  m_fortify->setVisible(can_units_do_activity(units, ACTIVITY_FORTIFYING));
-  m_disband->setVisible(
+  m_sentry->setEnabled(can_units_do_activity(units, ACTIVITY_SENTRY));
+  m_fortify->setEnabled(can_units_do_activity(units, ACTIVITY_FORTIFYING));
+  m_disband->setEnabled(
       units_can_do_action(units, ACTION_DISBAND_UNIT, true));
-  m_load->setVisible(units_can_load(units));
-  m_unload->setVisible(units_can_unload(units));
-  m_unload_all->setVisible(units_are_occupied(units));
-  m_upgrade->setVisible(units_can_upgrade(units));
+  m_change_homecity->setEnabled(
+      units_can_do_action(units, ACTION_HOME_CITY, true));
+  m_load->setEnabled(units_can_load(units));
+  m_unload->setEnabled(units_can_unload(units));
+  m_unload_all->setEnabled(units_are_occupied(units));
+  m_upgrade->setEnabled(units_can_upgrade(units));
 }
 
 /**
