@@ -509,8 +509,7 @@ int client_main(int argc, char *argv[])
   configure_fonts();
   init_themes();
 
-  options_load();
-
+  // Set default username
   (void) user_username(gui_options->default_user_name, MAX_LEN_NAME);
   if (!is_valid_username(gui_options->default_user_name)) {
     char buf[sizeof(gui_options->default_user_name)];
@@ -524,6 +523,8 @@ int client_main(int argc, char *argv[])
                   (int) fc_rand(10000));
     }
   }
+
+  options_load();
 
   // initialization
   game.all_connections = conn_list_new();
