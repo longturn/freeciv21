@@ -137,11 +137,12 @@ pageGame::pageGame(QWidget *parent)
   message = new message_widget(mapview_wdg);
   message->setAttribute(Qt::WA_NoMousePropagation);
   message->hide();
-  sw_message = new top_bar_widget(
-      _("Messages"), QLatin1String(""), +[] {
-        const auto message = queen()->message;
-        if (message) {
-          message->setVisible(!message->isVisible());
+  sw_message = new top_bar_widget(_("Messages"), QLatin1String(""), nullptr);
+  sw_message->setCheckable(true);
+  connect(
+      sw_message, &QToolButton::toggled, +[](bool checked) {
+        if (const auto message = queen()->message; message) {
+          message->setVisible(checked);
 
           // change icon to default if icon is notify
           const auto sw_message = queen()->sw_message;
