@@ -76,6 +76,7 @@
 #include "attribute.h"
 #include "audio.h"
 #include "chatline_common.h"
+#include "citydlg.h"
 #include "citydlg_common.h"
 #include "client_main.h"
 #include "climap.h"
@@ -1940,7 +1941,8 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
 
   if ((check_focus || get_num_units_in_focus() == 0)
       && nullptr != client.conn.playing && is_human(client.conn.playing)
-      && is_player_phase(client.conn.playing, game.info.phase)) {
+      && is_player_phase(client.conn.playing, game.info.phase)
+      && !queen()->city_overlay->isVisible()) {
     unit_focus_update();
   }
 
