@@ -350,7 +350,7 @@ The Interface Options dialog is broken down into the following tabs:
 * :guilabel:`Map Image`: Freeciv21 can save summary images of the map every turn. This tab allows you to
   configure how you want to do that. Refer to `Game Menu`_ for more information.
 * :guilabel:`Font`: There is a collection of font styles used by the client. This tab allows you to tailor
-  them to your own favorites. We ship with the Liberinus font set and it is the default.
+  them to your own favorites. We ship with the Libertinus font set and it is the default.
 
 The buttons along the bottom of the dialog box are:
 
