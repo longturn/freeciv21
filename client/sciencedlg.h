@@ -72,14 +72,12 @@ class science_report : public QWidget {
 
   QComboBox *goal_combo;
   QComboBox *researching_combo;
-  QGridLayout *sci_layout;
   progress_bar *progress;
   QLabel *info_label;
   QLabel *progress_label;
   QList<qlist_item> *curr_list{nullptr};
   QList<qlist_item> *goal_list{nullptr};
   research_diagram *res_diag;
-  QScrollArea *scroll;
 
 public:
   science_report();
