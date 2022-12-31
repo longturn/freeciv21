@@ -312,6 +312,8 @@ void pageGame::updateSidebarTooltips()
       auto cities = city_list_size(client_player()->cities);
       sw_cities->setToolTip(QString(_("Cities: %1 total")).arg(cities));
     }
+    sw_science->show();
+    sw_economy->show();
   } else {
     sw_science->hide();
     sw_map->setToolTip(QLatin1String(""));
