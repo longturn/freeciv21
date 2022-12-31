@@ -17,6 +17,8 @@
 #include <QLoggingCategory>
 
 // common
+#include "actions.h"
+#include "fc_types.h"
 #include "game.h"
 #include "map.h"
 #include "packets.h"
@@ -714,6 +716,107 @@ void send_connect_route(enum unit_activity activity, struct extra_type *tgt)
   // FIXME unsupported
 }
 
+namespace /* anonymous */ {
+
+/**
+ * Returns true if the order must always be performed from an adjacent tile.
+ */
+bool order_requires_adjacent(unit_orders order, action_id action)
+{
+  switch (order) {
+  case ORDER_MOVE:
+  case ORDER_ACTION_MOVE:
+    // A move is always done in a direction.
+    return true;
+  case ORDER_PERFORM_ACTION:
+    // Always illegal to do to a target on the actor's own tile.
+    if (!action_id_distance_accepted(action, 0)) {
+      return true;
+    }
+
+    return false;
+  default:
+    return false;
+  }
+}
+
+/**
+ * Returns true if the order could be performed from an adjacent
+ * tile.
+ */
+bool order_allows_adjacent(unit_orders order, action_id action)
+{
+  // Only ORDER_PERFORM_ACTION has complicated rules
+  if (order != ORDER_PERFORM_ACTION) {
+    return order_requires_adjacent(order, action);
+  }
+
+  // Can never be done from adjacent
+  if (!action_id_distance_accepted(action, 1)) {
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Modifies the last order(s) in the packet to account for goto_last_order.
+ */
+bool edit_last_order(packet_unit_orders &packet, const tile *tgt_tile)
+{
+  // The main complication here is that some actions must be performed from
+  // the target tile and some actions must be performed from an adjacent tile
+  // (or more). We always prefer performing the action from an adjacent tile,
+  // and edit the path accordingly.
+
+  // Is the last step in the path a move? Otherwise we can't assume it is
+  // from an adjacent tile, so we won't generate
+  const bool have_move =
+      (packet.length > 0
+       && (packet.orders[packet.length - 1].order == ORDER_MOVE
+           || packet.orders[packet.length - 1].order == ORDER_ACTION_MOVE));
+
+  // Do we want to start from an adjacent tile?
+  bool adjacent =
+      (have_move
+       && order_allows_adjacent(goto_last_order, goto_last_action));
+
+  // But, do we *need* to start from an adjacent tile?
+  if (order_requires_adjacent(goto_last_order, goto_last_action)) {
+    if (have_move) {
+      // Must be performed from an adjacent tile
+      adjacent = true;
+    } else {
+      // FIXME We could generate a longer path instead
+      return false;
+    }
+  }
+
+  if (!adjacent) {
+    // If the last order was ORDER_ACTION_MOVE, convert it to ORDER_MOVE
+    // Would happen e.g. for a caravan moving to an allied city
+    if (packet.orders[packet.length - 1].order == ORDER_ACTION_MOVE) {
+      packet.orders[packet.length - 1].order = ORDER_MOVE;
+    }
+
+    // Append an order after we reach the destination
+    packet.length++;
+  }
+
+  // Edit the last order (the ORDER_[ACTION_]MOVE if adjacent, the one we
+  // inserted if not)
+  packet.orders[packet.length - 1] = unit_order{
+      goto_last_order,
+      ACTIVITY_LAST,
+      (goto_last_tgt == NO_TARGET ? tgt_tile->index : goto_last_tgt),
+      goto_last_sub_tgt,
+      goto_last_action,
+      DIR8_ORIGIN};
+
+  return true;
+}
+} // anonymous namespace
+
 /**
    Send the current goto route (i.e., the one generated via
    HOVER_STATE) to the server.  The route might involve more than one
@@ -751,6 +854,12 @@ void send_goto_route()
     packet.length = steps.size();
     for (std::size_t i = 0; i < steps.size(); ++i) {
       packet.orders[i] = steps[i].order;
+    }
+
+    if (goto_last_order != ORDER_LAST) {
+      if (!edit_last_order(packet, destination)) {
+        continue;
+      }
     }
 
     // Send
