@@ -266,9 +266,9 @@ science_report::science_report() : QWidget()
   progress = new progress_bar(this);
   progress_label = new QLabel();
   researching_combo = new QComboBox();
-  sci_layout = new QGridLayout();
+  auto sci_layout = new QGridLayout();
   res_diag = new research_diagram();
-  scroll = new QScrollArea();
+  auto scroll = new QScrollArea();
 
   progress->setTextVisible(true);
   progress_label->setSizePolicy(size_fixed_policy);
@@ -349,18 +349,28 @@ void science_report::reset_tree()
  */
 void science_report::update_report()
 {
-  struct research *research = research_get(client_player());
+  delete curr_list;
+  delete goal_list;
+  curr_list = nullptr;
+  goal_list = nullptr;
+
+  auto research = research_get(client_player());
+  if (!research) {
+    // Global observer
+    goal_combo->clear();
+    researching_combo->clear();
+    info_label->setText(QString());
+    progress_label->setText(QString());
+    res_diag->reset();
+    return;
+  }
+
   int total;
   int done = research->bulbs_researched;
   QVariant qvar, qres;
   double not_used;
   QString str;
   qlist_item item;
-
-  fc_assert_ret(nullptr != research);
-
-  delete curr_list;
-  delete goal_list;
 
   if (research->researching != A_UNSET) {
     total = research->client.researching_cost;
