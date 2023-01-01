@@ -731,7 +731,7 @@ static const struct city_report_spec base_city_report_specs[] = {
      FUNC_TAG(cityname)},
     {false, -15, 0, nullptr, N_("Nation"), N_("City: Nation"), nullptr,
      FUNC_TAG(nation)},
-    {false, 3, 1, nullptr, N_("?Continent:C"), N_("City: Continent number"),
+    {false, 3, 1, nullptr, N_("?Continent:Cn"), N_("City: Continent number"),
      nullptr, FUNC_TAG(continent)},
     {true, 2, 1, nullptr, N_("?size [short]:Sz"), N_("City: Size"), nullptr,
      FUNC_TAG(size)},
@@ -740,7 +740,7 @@ static const struct city_report_spec base_city_report_specs[] = {
      N_("?Stock/Target:(Have/Need)"), N_("City: Turns until growth/famine"),
      nullptr, FUNC_TAG(growturns)},
     {true, -8, 1, nullptr, N_("State"),
-     N_("City: Celebrating/Happy/Peace/Disorder"), nullptr,
+     N_("City: State: Celebrating/Happy/Peace/Disorder"), nullptr,
      FUNC_TAG(hstate_verbose)},
     {false, 1, 1, nullptr, nullptr,
      N_("City: Concise state: *=Celebrating, +=Happy, X=Disorder"), nullptr,
@@ -761,7 +761,7 @@ static const struct city_report_spec base_city_report_specs[] = {
      nullptr, FUNC_TAG(angry)},
     {false, 10, 1, N_("?city:Citizens"),
      N_("?happy/content/unhappy/angry:H/C/U/A"),
-     N_("Citizens: Happy, Content, Unhappy, Angry"), nullptr,
+     N_("Citizens: Concise: Happy/Content/Unhappy/Angry"), nullptr,
      FUNC_TAG(workers)},
 
     // UNIT columns
@@ -803,13 +803,13 @@ static const struct city_report_spec base_city_report_specs[] = {
      N_("Production: Pollution"), nullptr, FUNC_TAG(pollution)},
 
     // ECONOMY columns
-    {false, 10, 1, N_("Economy"), N_("?gold/luxury/science:G/L/S"),
-     N_("Economy: Gold, Luxuries, Science"), nullptr, FUNC_TAG(output)},
-    {true, 3, 1, nullptr, N_("?Gold:G"), N_("Economy: Gold"), nullptr,
+    {false, 10, 1, N_("Surplus"), N_("?gold/luxury/science:G/L/S"),
+     N_("Surplus: Gold, Luxuries, Science"), nullptr, FUNC_TAG(output)},
+    {true, 3, 1, nullptr, N_("?Gold:G"), N_("Surplus: Gold"), nullptr,
      FUNC_TAG(gold)},
-    {false, 3, 1, nullptr, N_("?Luxury:L"), N_("Economy: Luxury"), nullptr,
-     FUNC_TAG(luxury)},
-    {true, 3, 1, nullptr, N_("?Science:S"), N_("Economy: Science"), nullptr,
+    {false, 3, 1, nullptr, N_("?Luxury:L"), N_("Surplus: Luxury Goods"),
+     nullptr, FUNC_TAG(luxury)},
+    {true, 3, 1, nullptr, N_("?Science:S"), N_("Surplus: Science"), nullptr,
      FUNC_TAG(science)},
 
     // CULTURE columns
