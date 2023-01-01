@@ -841,9 +841,8 @@ bool city_reduce_size(struct city *pcity, citizens pop_loss,
                     tile_border_source_radius_sq(pcity->tile));
 
   // Cap the food stock at the new granary size.
-  if (pcity->food_stock > city_granary_size(city_size_get(pcity))) {
-    pcity->food_stock = city_granary_size(city_size_get(pcity));
-  }
+  pcity->food_stock =
+      std::min(pcity->food_stock, city_granary_size(city_size_get(pcity)));
 
   // First try to kill off the specialists
   loss_remain = pop_loss - city_reduce_specialists(pcity, pop_loss);
@@ -924,8 +923,11 @@ void city_repair_size(struct city *pcity, int change)
  */
 static int granary_savings(const struct city *pcity)
 {
+  // Do not empty food stock if city is growing by celebrating
+  if (city_rapture_grow(pcity)) {
+    return 100;
+  }
   int savings = get_city_bonus(pcity, EFT_GROWTH_FOOD);
-
   return CLIP(0, savings, 100);
 }
 
@@ -938,8 +940,10 @@ static int granary_savings(const struct city *pcity)
 static void city_reset_foodbox(struct city *pcity, int new_size)
 {
   fc_assert_ret(pcity != nullptr);
-  pcity->food_stock =
-      (city_granary_size(new_size) * granary_savings(pcity)) / 100;
+  const int new_granary_size = city_granary_size(new_size);
+  const int saved_by_granary =
+      (new_granary_size * granary_savings(pcity)) / 100;
+  pcity->food_stock = std::min(saved_by_granary, new_granary_size);
 }
 
 /**
@@ -953,8 +957,6 @@ static bool city_increase_size(struct city *pcity,
   int new_food;
   int savings_pct = granary_savings(pcity);
   bool have_square = false;
-  bool rapture_grow =
-      city_rapture_grow(pcity); // check before size increase!
   struct tile *pcenter = city_tile(pcity);
   struct player *powner = city_owner(pcity);
   const struct impr_type *pimprove = pcity->production.value.building;
@@ -980,19 +982,12 @@ static bool city_increase_size(struct city *pcity,
         (city_granary_size(city_size_get(pcity))
          * (100 * 100 - game.server.aqueductloss * (100 - savings_pct))
          / (100 * 100));
-    pcity->food_stock = MIN(pcity->food_stock, new_food);
+    pcity->food_stock = std::min(pcity->food_stock, new_food);
     return false;
   }
 
+  city_reset_foodbox(pcity, city_size_get(pcity) + 1);
   city_size_add(pcity, 1);
-
-  // Do not empty food stock if city is growing by celebrating
-  if (rapture_grow) {
-    new_food = city_granary_size(city_size_get(pcity));
-  } else {
-    new_food = city_granary_size(city_size_get(pcity)) * savings_pct / 100;
-  }
-  pcity->food_stock = MIN(pcity->food_stock, new_food);
 
   /* If there is enough food, and the city is big enough,
    * make new citizens into scientists or taxmen -- Massimo */
@@ -1117,11 +1112,11 @@ static void city_populate(struct city *pcity, struct player *nationality)
                     _("A recent plague outbreak prevents growth in %s."),
                     city_link(pcity));
       // Lose excess food
-      pcity->food_stock = MIN(pcity->food_stock, granary_size);
+      pcity->food_stock = std::min(pcity->food_stock, granary_size);
     } else {
       bool success;
 
-      success = city_increase_size(pcity, nationality);
+      success = city_increase_size(pcity, nationality); // Handles food_stock
       map_claim_border(pcity->tile, pcity->owner, -1);
 
       if (success) {
