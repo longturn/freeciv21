@@ -80,6 +80,19 @@
          </property>
         </spacer>
        </item>
+       <item>
+        <widget class="QToolButton" name="settings">
+         <property name="toolTip">
+          <string>Configure</string>
+         </property>
+         <property name="popupMode">
+          <enum>QToolButton::InstantPopup</enum>
+         </property>
+         <property name="autoRaise">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
     </layout>

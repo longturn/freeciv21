@@ -12,6 +12,8 @@
 // qt-client is one true king
 #include "widgetdecorations.h"
 
+class QAction;
+
 class map_view;
 
 /**
@@ -37,7 +39,12 @@ public:
   auto turn_done() { return ui.turn_done; }
 
 private:
+  void setup_minimap_menu();
+
   Ui::minimap_panel ui;
+
+  QAction *m_show_relief, *m_show_borders, *m_show_borders_ocean,
+      *m_show_cities, *m_show_units, *m_show_fog;
 };
 
 void update_timeout_label();
