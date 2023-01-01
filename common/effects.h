@@ -313,6 +313,8 @@
 #define SPECENUM_VALUE133NAME "Nation_Intelligence"
 #define SPECENUM_VALUE134 EFT_NUKE_INFRASTRUCTURE_PCT
 #define SPECENUM_VALUE134NAME "Nuke_Infrastructure_Pct"
+#define SPECENUM_VALUE135 EFT_GROWTH_SURPLUS_PCT
+#define SPECENUM_VALUE135NAME "Growth_Surplus_Pct"
 // keep this last
 #define SPECENUM_COUNT EFT_COUNT
 #include "specenum_gen.h"

@@ -925,6 +925,18 @@ static int granary_savings(const struct city *pcity)
 }
 
 /**
+ * Return the percentage of the food surplus that is saved in this city.
+ *
+ * Normally this value is 0% but this can be increased by
+ * EFT_GROWTH_SURPLUS_PCT effects.
+ */
+static int surplus_savings(const struct city *pcity)
+{
+  int savings = get_city_bonus(pcity, EFT_GROWTH_SURPLUS_PCT);
+  return CLIP(0, savings, 100);
+}
+
+/**
    Reset the foodbox, usually when a city grows or shrinks.
    By default it is reset to zero, but this can be increased by Growth_Food
    effects.
@@ -933,10 +945,15 @@ static int granary_savings(const struct city *pcity)
 static void city_reset_foodbox(struct city *pcity, int new_size)
 {
   fc_assert_ret(pcity != nullptr);
+
+  const int surplus_food = std::max(
+      pcity->food_stock - city_granary_size(city_size_get(pcity)), 0);
+  const int saved_surplus = (surplus_food * surplus_savings(pcity)) / 100;
   const int new_granary_size = city_granary_size(new_size);
   const int saved_by_granary =
       (new_granary_size * granary_savings(pcity)) / 100;
-  pcity->food_stock = std::min(saved_by_granary, new_granary_size);
+  pcity->food_stock =
+      std::min(saved_by_granary + saved_surplus, new_granary_size);
 }
 
 /**
