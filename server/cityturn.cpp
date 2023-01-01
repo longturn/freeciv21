@@ -718,13 +718,6 @@ void update_city_activities(struct player *pplayer)
                   ruler_title_for_player(pplayer, buf, sizeof(buf)));
   }
 
-#if 0
-  // Uncomment to unbalance the game, like in civ1 (CLG).
-  if (pplayer->got_tech && pplayer->research->researched > 0) {
-    pplayer->research->researched = 0;
-  }
-#endif
-
   city_refresh_queue_processing();
 }
 
