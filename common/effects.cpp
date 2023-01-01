@@ -1109,6 +1109,7 @@ QString effect_type_unit_text(effect_type type, int value)
   case EFT_UNIT_SHIELD_VALUE_PCT:
   case EFT_BOMBARD_LIMIT_PCT:
   case EFT_NUKE_INFRASTRUCTURE_PCT:
+  case EFT_GROWTH_SURPLUS_PCT:
     // TRANS: per cent
     return QString(PL_("%1%", "%1%", value)).arg(value);
   case EFT_MAX_STOLEN_GOLD_PM:
