@@ -2,11 +2,7 @@
 #   "file(GET_RUNTIME_DEPENDENCIES ..." that is only available at v3.16+
 # On other platforms (*nix, MacOS) we need to support older 3.12+ for the
 #   server and other components
-if(WIN32 OR MSYS OR MINGW)
-  cmake_minimum_required(VERSION 3.16...3.20 FATAL_ERROR)
-else()
-  cmake_minimum_required(VERSION 3.12...3.17 FATAL_ERROR)
-endif()
+cmake_minimum_required(VERSION 3.21...3.22 FATAL_ERROR)
 
 # Set vcpkg if exists. Used by MacOS and Visual Studio
 if(DEFINED ENV{VCPKG_ROOT} AND FREECIV_USE_VCPKG)
@@ -107,25 +103,13 @@ add_subdirectory(tools)
 # Add docs
 add_subdirectory(docs)
 
-# Check to see if the current patch version from git matches the cache version.
-#   If not, then remove the cache fc_version.h so it can be written.
-if(EXISTS "${CMAKE_BINARY_DIR}/utility/fc_version.h")
-  file(STRINGS "${CMAKE_BINARY_DIR}/utility/fc_version.h"
-               FC_VERSION_H REGEX "PATCH_VERSION")
-  string(REPLACE "#define PATCH_VERSION " "" FC_VERSION_H_2 ${FC_VERSION_H})
-  string(COMPARE NOTEQUAL ${FC21_PATCH_VERSION} ${FC_VERSION_H_2} FC_VERSION_DIFF)
-  if(${FC_VERSION_DIFF})
-    message(STATUS "Cache version not current, removing cached fc_version.h")
-    file(REMOVE "${CMAKE_BINARY_DIR}/utility/fc_version.h")
-  endif()
-endif()
-
-# Use Auto Revision variables to convert some templates to real files at build time
-if(NOT EXISTS "${CMAKE_BINARY_DIR}/utility/fc_version.h")
-  configure_file(${CMAKE_SOURCE_DIR}/utility/fc_version.h.in
-                utility/fc_version.h
-                @ONLY NEWLINE_STYLE UNIX)
-endif()
+# Use Auto Revision variables to convert some templates to real files at build
+# time. Avoid overwriting if the version didn't change.
+configure_file("utility/fc_version.h.in" utility/fc_version.h.new
+               @ONLY NEWLINE_STYLE UNIX)
+file(COPY_FILE "${CMAKE_BINARY_DIR}/utility/fc_version.h.new"
+               "${CMAKE_BINARY_DIR}/utility/fc_version.h"
+     ONLY_IF_DIFFERENT)
 
 # Include Installation Commands
 include(FreecivInstall)
