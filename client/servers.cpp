@@ -30,6 +30,9 @@
 // utility
 #include "net_types.h"
 
+// generated
+#include "fc_version.h"
+
 // common
 #include "capstr.h"
 #include "dataio.h"
@@ -430,7 +433,7 @@ static bool begin_metaserver_scan(struct server_scan *scan)
 
   QNetworkRequest request(cmd_metaserver);
   request.setHeader(QNetworkRequest::UserAgentHeader,
-                    QLatin1String("Freeciv21/" VERSION_STRING));
+                    QLatin1String("Freeciv21/") + freeciv21_version());
   request.setHeader(QNetworkRequest::ContentTypeHeader,
                     QLatin1String("application/x-www-form-urlencoded"));
   auto *reply =

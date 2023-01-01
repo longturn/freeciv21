@@ -30,6 +30,9 @@
 #include "support.h"
 #include "timing.h"
 
+// generated
+#include "fc_version.h"
+
 // common
 #include "dataio.h"
 #include "events.h"

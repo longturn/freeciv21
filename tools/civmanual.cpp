@@ -210,7 +210,7 @@ static bool manual_command(struct tag_types *tag_info)
     case MANUAL_SETTINGS:
       // TRANS: markup ... Freeciv21 version ... ruleset name ... markup
       fprintf(doc, _("%sFreeciv21 %s server options (%s)%s\n\n"),
-              tag_info->title_begin, VERSION_STRING, game.control.name,
+              tag_info->title_begin, freeciv21_version(), game.control.name,
               tag_info->title_end);
       settings_iterate(SSET_ALL, pset)
       {
@@ -295,7 +295,8 @@ static bool manual_command(struct tag_types *tag_info)
     case MANUAL_COMMANDS:
       // TRANS: markup ... Freeciv21 version ... markup
       fprintf(doc, _("%sFreeciv21 %s server commands%s\n\n"),
-              tag_info->title_begin, VERSION_STRING, tag_info->title_end);
+              tag_info->title_begin, freeciv21_version(),
+              tag_info->title_end);
       for (i = 0; i < CMD_NUM; i++) {
         const struct command *cmd = command_by_number(i);
 
@@ -331,7 +332,7 @@ static bool manual_command(struct tag_types *tag_info)
     case MANUAL_TERRAIN:
       // TRANS: markup ... Freeciv21 version ... ruleset name ... markup
       fprintf(doc, _("%sFreeciv21 %s terrain help (%s)%s\n\n"),
-              tag_info->title_begin, VERSION_STRING, game.control.name,
+              tag_info->title_begin, freeciv21_version(), game.control.name,
               tag_info->title_end);
       fprintf(doc, "<table><tr bgcolor=#9bc3d1><th colspan=2>%s</th>",
               _("Terrain"));
@@ -468,13 +469,13 @@ static bool manual_command(struct tag_types *tag_info)
       if (manuals == MANUAL_BUILDINGS) {
         // TRANS: markup ... Freeciv21 version ... ruleset name ... markup
         fprintf(doc, _("%sFreeciv21 %s buildings help (%s)%s\n\n"),
-                tag_info->title_begin, VERSION_STRING, game.control.name,
-                tag_info->title_end);
+                tag_info->title_begin, freeciv21_version(),
+                game.control.name, tag_info->title_end);
       } else {
         // TRANS: markup ... Freeciv21 version ... ruleset name ... markup
         fprintf(doc, _("%sFreeciv21 %s wonders help (%s)%s\n\n"),
-                tag_info->title_begin, VERSION_STRING, game.control.name,
-                tag_info->title_end);
+                tag_info->title_begin, freeciv21_version(),
+                game.control.name, tag_info->title_end);
       }
 
       fprintf(doc,
@@ -541,7 +542,7 @@ static bool manual_command(struct tag_types *tag_info)
       // FIXME: this doesn't resemble the wiki manual at all.
       // TRANS: markup ... Freeciv21 version ... ruleset name ... markup
       fprintf(doc, _("%sFreeciv21 %s governments help (%s)%s\n\n"),
-              tag_info->title_begin, VERSION_STRING, game.control.name,
+              tag_info->title_begin, freeciv21_version(), game.control.name,
               tag_info->title_end);
       for (auto &pgov : governments) {
         char buf[64000];
@@ -563,7 +564,7 @@ static bool manual_command(struct tag_types *tag_info)
       // FIXME: this doesn't resemble the wiki manual at all.
       // TRANS: markup ... Freeciv21 version ... ruleset name ... markup
       fprintf(doc, _("%sFreeciv21 %s unit types help (%s)%s\n\n"),
-              tag_info->title_begin, VERSION_STRING, game.control.name,
+              tag_info->title_begin, freeciv21_version(), game.control.name,
               tag_info->title_end);
       unit_type_iterate(putype)
       {
@@ -620,7 +621,7 @@ static bool manual_command(struct tag_types *tag_info)
       // FIXME: this doesn't resemble the wiki manual at all.
       // TRANS: markup ... Freeciv21 version ... ruleset name ... markup
       fprintf(doc, _("%sFreeciv21 %s tech help (%s)%s\n\n"),
-              tag_info->title_begin, VERSION_STRING, game.control.name,
+              tag_info->title_begin, freeciv21_version(), game.control.name,
               tag_info->title_end);
       advance_iterate(A_FIRST, ptech)
       {
@@ -665,7 +666,7 @@ int main(int argc, char **argv)
   struct tag_types *tag_info = &html_tags;
 
   QCoreApplication app(argc, argv);
-  QCoreApplication::setApplicationVersion(VERSION_STRING);
+  QCoreApplication::setApplicationVersion(freeciv21_version());
 
   init_nls();
   init_character_encodings(FC_DEFAULT_DATA_ENCODING, false);

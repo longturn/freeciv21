@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
 #endif // SIGPIPE
 
   QCoreApplication app(argc, argv);
-  QCoreApplication::setApplicationVersion(VERSION_STRING);
+  QCoreApplication::setApplicationVersion(freeciv21_version());
 
   // initialize server
   srv_init();

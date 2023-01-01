@@ -83,7 +83,7 @@ static void setup_modpack_list(const QString &name, const QUrl &url,
 int main(int argc, char *argv[])
 {
   QCoreApplication app(argc, argv);
-  QCoreApplication::setApplicationVersion(VERSION_STRING);
+  QCoreApplication::setApplicationVersion(freeciv21_version());
 
   // Delegate option parsing to the common function.
   fcmp_parse_cmdline(app);
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 
   qInfo(_("Freeciv21 modpack installer (command line version)"));
 
-  qInfo("%s%s", word_version(), VERSION_STRING);
+  qInfo("%s%s", word_version(), freeciv21_version());
 
   qInfo("%s", "");
 

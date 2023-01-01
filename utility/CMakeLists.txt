@@ -44,6 +44,7 @@ add_library(
   shared.cpp
   support.cpp
   timing.cpp
+  version.cpp
   # Generated
   ${CMAKE_CURRENT_BINARY_DIR}/specenum_gen.h
 )

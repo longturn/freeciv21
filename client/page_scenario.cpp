@@ -12,19 +12,24 @@
  */
 
 #include "page_scenario.h"
-// Qt
-#include <QFileDialog>
+
 // utility
 #include "fcintl.h"
+
 // common
 #include "chatline_common.h"
 #include "connectdlg_common.h"
-#include "version.h"
+
+// generated
+#include "fc_version.h"
+
 // client
 #include "client_main.h"
-// gui-qt
 #include "dialogs.h"
 #include "fc_client.h"
+
+// Qt
+#include <QFileDialog>
 
 page_scenario::page_scenario(QWidget *parent, fc_client *gui)
     : QWidget(parent)

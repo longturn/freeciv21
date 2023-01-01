@@ -29,6 +29,9 @@
 #include "shared.h"
 #include "support.h"
 
+// generated
+#include "fc_version.h"
+
 // common
 #include "events.h"
 #include "version.h"
@@ -4270,7 +4273,7 @@ void options_load()
     log_debug("Error loading option file '%s':\n%s", name, secfile_error());
     // try to create the rc file
     sf = secfile_new(true);
-    secfile_insert_str(sf, VERSION_STRING, "client.version");
+    secfile_insert_str(sf, freeciv21_version(), "client.version");
 
     create_default_cma_presets();
     gui_options->first_boot = true;
@@ -4394,7 +4397,7 @@ void options_save(option_save_log_callback log_cb)
   }
 
   sf = secfile_new(true);
-  secfile_insert_str(sf, VERSION_STRING, "client.version");
+  secfile_insert_str(sf, freeciv21_version(), "client.version");
 
   secfile_insert_bool(sf, gui_options->save_options_on_exit,
                       "client.save_options_on_exit");

@@ -311,7 +311,7 @@ int client_main(int argc, char *argv[])
       Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
 #endif
   QApplication app(argc, argv);
-  QCoreApplication::setApplicationVersion(VERSION_STRING);
+  QCoreApplication::setApplicationVersion(freeciv21_version());
 
   i_am_client(); // Tell to libfreeciv that we are client
 

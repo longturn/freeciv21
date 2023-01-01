@@ -217,7 +217,7 @@ static void send_metaserver_post(void *arg)
 
   QNetworkRequest request(QUrl(srvarg.metaserver_addr));
   request.setHeader(QNetworkRequest::UserAgentHeader,
-                    QLatin1String("Freeciv21/" VERSION_STRING));
+                    QLatin1String("Freeciv21/") + freeciv21_version());
   request.setHeader(QNetworkRequest::ContentTypeHeader,
                     QLatin1String("application/x-www-form-urlencoded"));
   auto *reply =
@@ -297,8 +297,7 @@ static bool send_to_metaserver(enum meta_flag flag)
     if (srvtype != nullptr) {
       post->addQueryItem(QStringLiteral("type"), QString::fromUtf8(srvtype));
     }
-    post->addQueryItem(QStringLiteral("version"),
-                       QStringLiteral(VERSION_STRING));
+    post->addQueryItem(QStringLiteral("version"), freeciv21_version());
     post->addQueryItem(QStringLiteral("patches"),
                        QString::fromUtf8(get_meta_patches_string()));
     post->addQueryItem(QStringLiteral("capability"),

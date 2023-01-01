@@ -23,6 +23,9 @@
 #include "log.h"
 #include "support.h"
 
+// generated
+#include "fc_version.h"
+
 // common
 #include "capstr.h"
 #include "events.h"
@@ -397,11 +400,7 @@ bool handle_login_request(struct connection *pconn,
     info.major_version = MAJOR_VERSION;
     info.minor_version = MINOR_VERSION;
     info.patch_version = PATCH_VERSION;
-#ifdef EMERGENCY_VERSION
     info.emerg_version = EMERGENCY_VERSION;
-#else
-    info.emerg_version = 0;
-#endif
     sz_strlcpy(info.version_label, VERSION_LABEL);
     send_packet_server_info(pconn, &info);
   }
