@@ -96,7 +96,6 @@ common/terrain.h
 common/unit.cpp
 common/unittype.cpp
 common/unittype.h
-common/version.cpp
 data/alien/buildings.ruleset
 data/alien/cities.ruleset
 data/alien/game.ruleset
@@ -313,3 +312,4 @@ utility/netfile.cpp
 utility/registry_ini.cpp
 utility/shared.cpp
 utility/support.cpp
+utility/version.cpp

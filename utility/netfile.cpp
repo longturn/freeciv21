@@ -29,6 +29,7 @@
 // utility
 #include "fcintl.h"
 #include "registry.h"
+#include "version.h"
 
 #include "netfile.h"
 
@@ -47,7 +48,7 @@ static bool netfile_download_file_core(const QUrl &url, QIODevice *out,
   // Initiate the request
   auto request = QNetworkRequest(url);
   request.setHeader(QNetworkRequest::UserAgentHeader,
-                    QLatin1String("Freeciv21/" VERSION_STRING));
+                    QLatin1String("Freeciv21/") + freeciv21_version());
   request.setAttribute(QNetworkRequest::RedirectPolicyAttribute,
                        QNetworkRequest::NoLessSafeRedirectPolicy);
 

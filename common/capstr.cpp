@@ -13,11 +13,11 @@
 
 #include <cstdlib> // getenv()
 
-// gen_headers
-#include "fc_version.h"
-
 // utility
 #include "support.h"
+
+// generated
+#include "fc_version.h"
 
 // common
 #include "connection.h" // MAX_LEN_CAPSTR

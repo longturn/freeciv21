@@ -26,6 +26,7 @@
 // utility
 #include "fciconv.h"
 #include "registry.h"
+#include "version.h"
 
 // common
 #include "fc_interface.h"
@@ -105,7 +106,7 @@ static void conv_log(const char *msg) { qInfo("%s", msg); }
 int main(int argc, char **argv)
 {
   QCoreApplication app(argc, argv);
-  QCoreApplication::setApplicationVersion(VERSION_STRING);
+  QCoreApplication::setApplicationVersion(freeciv21_version());
 
   log_init();
 

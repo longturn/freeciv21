@@ -90,7 +90,6 @@ add_library(
   unit_utils.cpp
   unitlist.cpp
   unittype.cpp
-  version.cpp
   victory.cpp
   vision.cpp
   workertask.cpp

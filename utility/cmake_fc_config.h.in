@@ -1,5 +1,3 @@
-#include "fc_version.h"
-
 #define CMAKE_BUILD
 
 #define LOCALEDIR "${CMAKE_INSTALL_FULL_LOCALEDIR}"

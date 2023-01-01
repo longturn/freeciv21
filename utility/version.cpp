@@ -15,13 +15,20 @@
 #include <fc_config.h>
 #endif
 
+#include "version.h"
+
 // utility
 #include "fcintl.h"
 #include "shared.h"
 #include "support.h"
 
-// common
-#include "version.h"
+// generated
+#include "fc_version.h"
+
+/**
+ * Returns the raw version string
+ */
+const char *freeciv21_version() { return VERSION_STRING; }
 
 /**
    Return string containing both name of Freeciv21 and version.
@@ -32,10 +39,10 @@ const char *freeciv_name_version()
 
 #if IS_BETA_VERSION
   fc_snprintf(msgbuf, sizeof(msgbuf), _("Freeciv21 version %s %s"),
-              VERSION_STRING, _("(beta version)"));
+              freeciv21_version(), _("(beta version)"));
 #else
   fc_snprintf(msgbuf, sizeof(msgbuf), _("Freeciv21 version %s"),
-              VERSION_STRING);
+              freeciv21_version());
 #endif
 
   return msgbuf;
@@ -58,7 +65,7 @@ const char *word_version()
    This does not handle git revisions, as there's no way to compare
    which of the two commits is "higher".
  */
-const char *fc_comparable_version() { return VERSION_STRING; }
+const char *fc_comparable_version() { return freeciv21_version(); }
 
 /**
    Return the BETA message.
@@ -101,7 +108,7 @@ const char *freeciv_datafile_version()
   static char buf[500] = {'\0'};
 
   if (buf[0] == '\0') {
-    fc_snprintf(buf, sizeof(buf), "%s", VERSION_STRING);
+    fc_snprintf(buf, sizeof(buf), "%s", freeciv21_version());
   }
 
   return buf;

@@ -1232,7 +1232,7 @@ static void write_init_script(char *script_filename)
   if (QFile::exists(real_filename)
       && (script_file = fc_fopen(real_filename, "w"))) {
     fprintf(script_file, "#FREECIV SERVER COMMAND FILE, version %s\n",
-            VERSION_STRING);
+            freeciv21_version());
     fputs(
         "# These are server options saved from a running freeciv-server.\n",
         script_file);

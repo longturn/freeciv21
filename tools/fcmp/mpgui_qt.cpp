@@ -81,7 +81,7 @@ static void gui_download_modpack(const QString &url);
 int main(int argc, char **argv)
 {
   QApplication app(argc, argv);
-  QCoreApplication::setApplicationVersion(VERSION_STRING);
+  QCoreApplication::setApplicationVersion(freeciv21_version());
 
   // Delegate option parsing to the common function.
   fcmp_parse_cmdline(app);
@@ -169,7 +169,7 @@ void mpgui::setup(QWidget *central, struct fcmp_params *params)
   char verbuf[2048];
 
   fc_snprintf(verbuf, sizeof(verbuf), "%s%s", word_version(),
-              VERSION_STRING);
+              freeciv21_version());
 
   version_label = new QLabel(QString::fromUtf8(verbuf));
   version_label->setAlignment(Qt::AlignHCenter);

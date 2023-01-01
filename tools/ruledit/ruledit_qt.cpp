@@ -30,6 +30,7 @@
 #include "fcintl.h"
 #include "log.h"
 #include "registry.h"
+#include "version.h"
 
 // common
 #include "game.h"
@@ -94,7 +95,7 @@ ruledit_gui::ruledit_gui(ruledit_main *main) : QObject(main)
   main->setCentralWidget(central);
 
   fc_snprintf(verbuf, sizeof(verbuf), "%s%s", word_version(),
-              VERSION_STRING);
+              freeciv21_version());
 
   main_layout = new QStackedLayout();
 

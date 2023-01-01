@@ -86,6 +86,9 @@
 #include "support.h" // bool type
 #include "timing.h"
 
+// generated
+#include "fc_version.h"
+
 // common
 #include "achievements.h"
 #include "ai.h"
@@ -2375,9 +2378,7 @@ static void sg_save_scenario(struct savedata *saving)
 
   game_version =
       MAJOR_VERSION * 1000000 + MINOR_VERSION * 10000 + PATCH_VERSION * 100;
-#ifdef EMERGENCY_VERSION
   game_version += EMERGENCY_VERSION;
-#endif // EMERGENCY_VERSION
   secfile_insert_int(saving->file, game_version, "scenario.game_version");
 
   if (!saving->scenario || !game.scenario.is_scenario) {

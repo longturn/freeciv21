@@ -30,6 +30,7 @@
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
+#include "version.h"
 
 // common
 #include "fc_interface.h"
@@ -57,7 +58,7 @@ struct ruledit_arguments reargs;
 int main(int argc, char **argv)
 {
   QApplication app(argc, argv);
-  QCoreApplication::setApplicationVersion(VERSION_STRING);
+  QCoreApplication::setApplicationVersion(freeciv21_version());
 
   log_init();
 
