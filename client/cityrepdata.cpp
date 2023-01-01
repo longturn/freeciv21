@@ -739,8 +739,8 @@ static const struct city_report_spec base_city_report_specs[] = {
      true, 14, 1, N_("?food (population):Grow"),
      N_("?Stock/Target:(Have/Need)"), N_("City: Turns until growth/famine"),
      nullptr, FUNC_TAG(growturns)},
-    {true, -8, 1, nullptr, N_("City: State"),
-     N_("Celebrating/Happy/Peace/Disorder"), nullptr,
+    {true, -8, 1, nullptr, N_("State"),
+     N_("City: Celebrating/Happy/Peace/Disorder"), nullptr,
      FUNC_TAG(hstate_verbose)},
     {false, 1, 1, nullptr, nullptr,
      N_("City: Concise state: *=Celebrating, +=Happy, X=Disorder"), nullptr,
@@ -750,18 +750,18 @@ static const struct city_report_spec base_city_report_specs[] = {
     {false, 4, 1, N_("?plague risk [short]:Pla"), N_("(%)"),
      N_("City: Plague risk per turn"), nullptr, FUNC_TAG(plague_risk)},
 
-    // WORKERS columns
-    {false, 2, 1, nullptr, N_("?Happy workers:H"), N_("Workers: Happy"),
+    // CITIZEN columns
+    {false, 2, 1, nullptr, N_("?Happy workers:H"), N_("Citizens: Happy"),
      nullptr, FUNC_TAG(happy)},
-    {false, 2, 1, nullptr, N_("?Content workers:C"), N_("Workers: Content"),
+    {false, 2, 1, nullptr, N_("?Content workers:C"), N_("Citizens: Content"),
      nullptr, FUNC_TAG(content)},
-    {false, 2, 1, nullptr, N_("?Unhappy workers:U"), N_("Workers: Unhappy"),
+    {false, 2, 1, nullptr, N_("?Unhappy workers:U"), N_("Citizens: Unhappy"),
      nullptr, FUNC_TAG(unhappy)},
-    {false, 2, 1, nullptr, N_("?Angry workers:A"), N_("Workers: Angry"),
+    {false, 2, 1, nullptr, N_("?Angry workers:A"), N_("Citizens: Angry"),
      nullptr, FUNC_TAG(angry)},
-    {false, 10, 1, N_("?city:Workers"),
+    {false, 10, 1, N_("?city:Citizens"),
      N_("?happy/content/unhappy/angry:H/C/U/A"),
-     N_("Workers: Happy, Content, Unhappy, Angry"), nullptr,
+     N_("Citizens: Happy, Content, Unhappy, Angry"), nullptr,
      FUNC_TAG(workers)},
 
     // UNIT columns
@@ -791,8 +791,6 @@ static const struct city_report_spec base_city_report_specs[] = {
      N_("Resources: Production"), nullptr, FUNC_TAG(prodplus)},
     {false, 3, 1, nullptr, N_("?Production loss (waste) [short]:-P"),
      N_("Resources: Waste (lost production)"), nullptr, FUNC_TAG(waste)},
-    {false, 3, 1, nullptr, N_("?pollution [short]:Pol"),
-     N_("Production: Pollution"), nullptr, FUNC_TAG(pollution)},
     {true, 3, 1, nullptr, N_("?Trade surplus [short]:+T"),
      N_("Resources: Trade"), nullptr, FUNC_TAG(tradeplus)},
     {true, 3, 1, nullptr, N_("?Trade loss (corruption) [short]:-T"),
@@ -801,6 +799,8 @@ static const struct city_report_spec base_city_report_specs[] = {
     {false, 1, 1, N_("?number_trade_routes:n"), N_("?number_trade_routes:R"),
      N_("Resources: Number (and total value) of trade routes"), nullptr,
      FUNC_TAG(trade_routes)},
+    {false, 3, 1, nullptr, N_("?pollution [short]:Pol"),
+     N_("Production: Pollution"), nullptr, FUNC_TAG(pollution)},
 
     // ECONOMY columns
     {false, 10, 1, N_("Economy"), N_("?gold/luxury/science:G/L/S"),
@@ -826,10 +826,10 @@ static const struct city_report_spec base_city_report_specs[] = {
         translation */
      N_("Production: Turns/gold to complete"), nullptr,
      FUNC_TAG(build_cost)},
-    {false, 0, 1, N_("Production"), N_("Buy in Gold"),
-     N_("Production: Buy Cost"), nullptr, FUNC_TAG(build_cost_gold)},
-    {false, 0, 1, N_("Production"), N_("Finish in Turns"),
-     N_("Production: Build Turns"), nullptr, FUNC_TAG(build_cost_turns)},
+    {false, 0, 1, N_("Buy"), N_("(Gold)"), N_("Production: Buy Cost"),
+     nullptr, FUNC_TAG(build_cost_gold)},
+    {false, 0, 1, N_("Finish"), N_("(Turns)"), N_("Production: Build Turns"),
+     nullptr, FUNC_TAG(build_cost_turns)},
     {true, 0, 1, N_("Currently Building"), N_("?Stock/Target:(Have/Need)"),
      N_("Production: Currently Building"), nullptr, FUNC_TAG(building)}};
 
