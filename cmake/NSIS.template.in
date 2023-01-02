@@ -53,7 +53,7 @@
 ; General
 ;#########################################################
 
-  Name "${APPNAME} ${VERSION}"
+  Name "${APPNAME} v${VERSION}"
   OutFile "@CPACK_TOPLEVEL_DIRECTORY@/@CPACK_OUTPUT_FILE_NAME@"
   ShowInstDetails show
   ShowUninstDetails show
