@@ -182,7 +182,6 @@ public:
   void update_roads_menu();
   void update_bases_menu();
   void set_tile_for_order(struct tile *ptile);
-  void execute_shortcut(int sid);
   bool shortcut_exists(const fc_shortcut &fcs, QString &where);
   QString shortcut_2_menustring(int sid);
   QAction *minimap_status = nullptr;
