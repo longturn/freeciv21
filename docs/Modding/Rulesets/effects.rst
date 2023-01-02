@@ -1,3 +1,12 @@
+..
+    SPDX-License-Identifier: GPL-3.0-or-later
+    SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
+    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022-2023 louis94 <m_louis30@yahoo.com>
+
+.. Custom Interpretive Text Roles for longturn.net/Freeciv21
+.. role:: improvement
+
 Effects
 *******
 
@@ -271,8 +280,19 @@ Conquest_Tech_Pct
     Percent chance that a player conquering a city learns a tech from the former owner.
 
 Growth_Food
-    Food left after cities grow or shrink is amount percent of the capacity of he city's foodbox. This also
-    affects the 'aqueductloss' penalty.
+    Saves some food in the granary when a city grows (or shrinks): this effect controls how much food there
+    will be in the city's granary after growing, as a percentage of the foodbox at the new size, provided
+    there was sufficient food before growing. This also reduces the ``aqueductloss`` penalty in the same
+    fraction.
+
+    .. note:: This is traditionally used for the :improvement:`Granary`.
+
+Growth_Surplus_Pct
+    .. versionadded:: 3.1
+
+    How much of the excess food is kept when a city growth, as a percentage. For example, with a value of
+    100, a city with a granary full at 18/20 and generating 5 food would start the next turn with 3 bushels
+    in its granary. With a value of 50, it would have only 1 bushel.
 
 Have_Contact
     If value > 0, gives contact to all the other players.
