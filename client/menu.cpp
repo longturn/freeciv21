@@ -1289,30 +1289,6 @@ void mr_menu::set_tile_for_order(tile *ptile)
 }
 
 /**
-   Finds QAction bounded to given shortcut and triggers it
- */
-void mr_menu::execute_shortcut(int sid)
-{
-  if (sid == SC_GOTO) {
-    queen()->mapview_wdg->menu_click = true;
-    slot_unit_goto();
-    return;
-  }
-
-  auto fcs = fc_shortcuts::sc()->get_shortcut(static_cast<shortcut_id>(sid));
-  auto menu_list = findChildren<QMenu *>();
-  for (const QMenu *m : qAsConst(menu_list)) {
-    QList<QAction *> actions = m->actions();
-    for (QAction *a : qAsConst(actions)) {
-      if (a->shortcut() == fcs.keys && a->isEnabled()) {
-        a->activate(QAction::Trigger);
-        return;
-      }
-    }
-  }
-}
-
-/**
    Returns string assigned to shortcut or empty string if doesnt exist
  */
 bool mr_menu::shortcut_exists(const fc_shortcut &fcs, QString &where)

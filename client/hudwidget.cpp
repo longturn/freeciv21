@@ -22,6 +22,7 @@
 #include "movement.h"
 #include "nation.h"
 #include "research.h"
+#include "shortcuts.h"
 #include "tile.h"
 #include "tilespec.h"
 #include "unit.h"
@@ -897,7 +898,8 @@ void hud_action::mouse_right_clicked() {}
  */
 void hud_action::mouse_clicked()
 {
-  king()->menu_bar->execute_shortcut(action_shortcut);
+  // Only works if there's an action in the menu!
+  fc_shortcuts::sc()->invoke(action_shortcut, nullptr);
 }
 
 /**
