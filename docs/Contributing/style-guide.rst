@@ -96,7 +96,7 @@ to alter is placed inside back-ticks.
 * :literal:`:title-reference:` -- Title Reference is used notate a :title-reference:`title entry` in the
   in-game help or to refer to a page in the documentation without giving an actual hyperlink reference
   (see :literal:`:doc:` above).
-
+* :literal:`.. versionadded::` -- Used at the paragraph level to document the first version in which a feature was added.
 
 The docutils specification allows for custom Interpreted Text Roles and we use this feature. The docutils
 documentation on this feature is available here:
