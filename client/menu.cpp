@@ -390,7 +390,7 @@ void go_act_menu::create()
 
 #define ADD_OLD_SHORTCUT(wanted_action_id, sc_id)                           \
   if (act_id == wanted_action_id) {                                         \
-    item->setShortcut(fc_shortcuts::sc()->get_shortcut(sc_id).keys);        \
+    fc_shortcuts::sc()->link_action(sc_id, item);                           \
   }
 
       /* Create and add the menu item. It will be hidden or shown based on
