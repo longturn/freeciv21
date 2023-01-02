@@ -142,6 +142,7 @@ public:
 
   void link_action(shortcut_id id, QAction *action);
   void create_no_action_shortcuts(map_view *parent);
+  void invoke(shortcut_id id, map_view *mapview);
   void maybe_route_mouse_shortcut(QMouseEvent *event, map_view *mapview);
 
   static fc_shortcuts *sc();

@@ -280,6 +280,20 @@ void fc_shortcuts::create_no_action_shortcuts(map_view *parent)
 }
 
 /**
+ * Invokes the action for a shortcut.
+ */
+void fc_shortcuts::invoke(shortcut_id id, map_view *mapview)
+{
+  if (m_actions.count(id) > 0 && m_actions[id] != nullptr) {
+    m_actions[id]->trigger();
+  } else if (mapview) {
+    // Shortcuts with no action are handled by the mapview directly.
+    // Eventually we should create actions and add them to menus...
+    mapview->shortcut_pressed(id);
+  }
+}
+
+/**
  * If the mouse event corresponds to a registered shortcut, fire the
  * corresponding action.
  */
@@ -292,14 +306,7 @@ void fc_shortcuts::maybe_route_mouse_shortcut(QMouseEvent *event,
   for (const auto &[id, shortcut] : shortcuts()) {
     if (shortcut.type == fc_shortcut::mouse && shortcut.buttons == buttons
         && shortcut.modifiers == modifiers) {
-      // Found a matching shortcut
-      if (m_actions.count(id) > 0 && m_actions[id] != nullptr) {
-        m_actions[id]->trigger();
-      } else {
-        // Shortcuts with no action are handled by the mapview directly.
-        // Eventually we should create actions and add them to menus...
-        mapview->shortcut_pressed(id);
-      }
+      invoke(id, mapview);
     }
   }
 }
