@@ -83,6 +83,8 @@ if (NOT ok)
 endif()
 
 # Manipulate the tag so we can turn it into a list for use later
+string(STRIP "${FC21_REV_TAG}" FC21_REV_TAG)
+string(REPLACE "v" "" FC21_REV_TAG "${FC21_REV_TAG}")
 string(STRIP "${FC21_REV_TAG}" FC21_REV_TAG2)
 string(REPLACE "v" "" FC21_REV_TAG2 "${FC21_REV_TAG2}")
 string(REPLACE "." " " FC21_REV_TAG2 "${FC21_REV_TAG2}")

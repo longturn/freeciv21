@@ -34,7 +34,7 @@ if(WIN32 OR MSYS OR MINGW)
   set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/${CPACK_SYSTEM_NAME}")
   set(CPACK_OUTPUT_FILE_PREFIX ${CPACK_PACKAGE_DIRECTORY})
   # The name of the package exe file
-  set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${FC21_REV_TAG}-${CPACK_SYSTEM_NAME}")
+  set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-v${FC21_REV_TAG}-${CPACK_SYSTEM_NAME}")
 
   ## Component definition
   #  - variable names are UPPER CASE, even if component names are lower case
@@ -99,8 +99,6 @@ if(UNIX AND NOT APPLE)
 
   set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/${CPACK_SYSTEM_NAME}")
   set(CPACK_OUTPUT_FILE_PREFIX ${CPACK_PACKAGE_DIRECTORY})
-  # The name of the package file
-  set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${FC21_REV_TAG}-${CPACK_SYSTEM_NAME}")
 
   # Debian "deb" file generator settings
   set(CPACK_GENERATOR "DEB")
