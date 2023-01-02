@@ -1207,7 +1207,7 @@ static void package_player_info(struct player *plr,
       const auto bonus = get_target_bonus_effects(
           nullptr, city_owner(pcity), receiver, pcity, pimprove, nullptr,
           nullptr, nullptr, nullptr, nullptr, nullptr, EFT_WONDER_VISIBLE);
-      if (bonus > 0) {
+      if (players_on_same_team(plr, receiver) || bonus > 0) {
         packet->wonders[i] = plr->wonders[i];
       } else {
         packet->wonders[i] = WONDER_NOT_BUILT;
