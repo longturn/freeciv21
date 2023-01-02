@@ -178,10 +178,9 @@
     !insertmacro MULTIUSER_INIT
     !insertmacro CheckAdminRights
 
-    ; We lookup to see if there is a previous installation and prompt to remove.
+    ; We lookup to see if there is a previous installation and remove if found
     ReadRegStr $0 "SHCTX" "${REGPATH_UNINSTSUBKEY}" "UninstallString"
     ${If} $0 != ""
-    ${AndIf} ${Cmd} `MessageBox MB_YESNO|MB_ICONQUESTION "Previous ${APPNAME} installation found. Do you wish to uninstall the previous version?" /SD IDYES IDYES`
       !insertmacro UninstallExisting
     ${EndIf}
   FunctionEnd
@@ -217,7 +216,7 @@
 
     SetOutPath "$INSTDIR"
 
-    ; Store installation folder.
+    ; Store installation folder in HKLM
     WriteRegStr "SHCTX" "SOFTWARE\${APPNAME}\${CPU_ARCH}" "" "$INSTDIR"
 
     ; Create uninstaller.
