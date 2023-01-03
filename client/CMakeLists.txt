@@ -133,6 +133,9 @@ target_sources(
   voteinfo_bar.cpp
   widgetdecorations.cpp
   unithudselector.cpp
+
+  widgets/city/upkeep_widget.cpp
+
   # Generated
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_client_gen.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_client_gen.h
