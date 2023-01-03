@@ -886,6 +886,9 @@ void help_widget::set_topic_unit(const help_item *topic, const char *title)
                       utype_build_shield_cost_base(max_utype));
     add_info_progress(_("Firepower:"), utype->firepower, 0,
                       max_utype->firepower);
+    add_info_progress(
+        _("Vision:"), static_cast<int>(std::sqrt(utype->vision_radius_sq)),
+        0, static_cast<int>(std::sqrt(max_utype->vision_radius_sq)));
 
     // Upkeep
     upkeep = utype->upkeep[O_FOOD] + utype->upkeep[O_GOLD]
