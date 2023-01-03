@@ -17,6 +17,7 @@
   original author: David Pfitzner <dwp@mso.anu.edu.au>
  */
 
+#include <QApplication>
 #include <QHash>
 #include <QImageReader>
 #include <QPixmap>
@@ -755,6 +756,21 @@ static int ts_topology_index(int actual_topology)
 }
 
 /**
+ * Initializes the tilespec system.
+ */
+void tilespec_init()
+{
+  const auto type = QEvent::registerEventType();
+  fc_assert(type != -1);
+  TilesetChanged = static_cast<QEvent::Type>(type);
+}
+
+/**
+ * An event type sent to all widgets when the current tileset changes.
+ */
+QEvent::Type TilesetChanged;
+
+/**
    Returns a static list of tilesets available on the system by
    searching all data directories for files matching TILESPEC_SUFFIX.
  */
@@ -1097,12 +1113,22 @@ bool tilespec_reread(const QString &name, bool game_fully_initialized)
    *
    * Do any necessary redraws.
    */
+  // Old style notifications
   generate_citydlg_dimensions();
   tileset_changed();
   /* update_map_canvas_visible forces a full redraw.  Otherwise with fast
    * drawing we might not get one.  Of course this is slower. */
   update_map_canvas_visible();
   queen()->mapview_wdg->center_on_tile(center_tile, false);
+
+  // New style notifications. See QApplication::setStyle for inspiration
+  auto widgets = QApplication::allWidgets();
+  for (auto *w : qAsConst(widgets)) {
+    if (w->windowType() != Qt::Desktop) {
+      QEvent e(TilesetChanged);
+      QApplication::sendEvent(w, &e);
+    }
+  }
 
   return new_tileset_in_use;
 }
