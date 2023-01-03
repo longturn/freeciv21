@@ -21,6 +21,7 @@
 #include "options.h"
 
 #include <QColor>
+#include <QEvent>
 
 struct base_type;
 struct help_item;
@@ -100,7 +101,10 @@ struct tileset;
 
 extern struct tileset *tileset;
 
+void tilespec_init();
 const QVector<QString> *get_tileset_list(const struct option *poption);
+
+extern QEvent::Type TilesetChanged;
 
 void tileset_error(struct tileset *t, QtMsgType level, const char *format,
                    ...);
