@@ -39,7 +39,8 @@ namespace freeciv {
  */
 
 namespace {
-constexpr auto BuildingRole = Qt::UserRole + 1; ///< Data is an improvement id
+constexpr auto BuildingRole =
+    Qt::UserRole + 1;                       ///< Data is an improvement id
 constexpr auto UnitRole = Qt::UserRole + 2; ///< Data is a unit id
 } // namespace
 
