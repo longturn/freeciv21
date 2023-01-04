@@ -1878,8 +1878,10 @@ void city_dialog::refresh()
     update_nation_table();
     update_cma_tab();
     update_disabled();
+    ui.upkeep->set_city(pcity->id);
   } else {
     popdown_city_dialog();
+    ui.upkeep->set_city(-1);
   }
 
   update_map_canvas_visible();
@@ -2361,6 +2363,8 @@ void city_dialog::update_improvements()
   ui.city_buildings->update_buildings();
   ui.city_buildings->setUpdatesEnabled(true);
   ui.city_buildings->setUpdatesEnabled(true);
+
+  ui.upkeep->refresh();
 
   ui.curr_impr->setText(QString(_("Improvements: upkeep %1")).arg(upkeep));
 }
