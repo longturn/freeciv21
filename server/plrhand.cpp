@@ -1196,8 +1196,10 @@ static void package_player_info(struct player *plr,
   // Wonder information
   if (BV_ISSET(packet->visible, NI_WONDERS)) {
     for (int i = 0; i < B_LAST; ++i) {
-      // Lost, not built or doesn't exist (still need to fill the array)
-      if (plr->wonders[i] <= 0 || i >= improvement_count()) {
+      // Lost, not built, doesn't exist (still need to fill the array),
+      // global observers
+      if (plr->wonders[i] <= 0 || i >= improvement_count()
+          || receiver == nullptr) {
         packet->wonders[i] = plr->wonders[i];
         continue;
       }
