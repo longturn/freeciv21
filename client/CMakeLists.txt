@@ -134,6 +134,7 @@ target_sources(
   widgetdecorations.cpp
   unithudselector.cpp
 
+  utils/improvement_seller.cpp
   widgets/city/upkeep_widget.cpp
 
   # Generated

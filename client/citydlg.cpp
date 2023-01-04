@@ -56,6 +56,7 @@
 #include "tooltips.h"
 #include "top_bar.h"
 #include "unitlist.h"
+#include "utils/improvement_seller.h"
 
 extern QString split_text(const QString &text, bool cut);
 extern QString cut_helptext(const QString &text);
@@ -806,41 +807,12 @@ void impr_info::update_buildings()
  */
 void impr_item::mouseDoubleClickEvent(QMouseEvent *event)
 {
-  hud_message_box *ask;
-  QString buf;
-  int price;
   const int impr_id = improvement_number(impr);
   const int city_id = pcity->id;
 
-  if (!can_client_issue_orders()) {
-    return;
-  }
-
   if (event->button() == Qt::LeftButton) {
-    ask = new hud_message_box(queen()->city_overlay);
-    if (test_player_sell_building_now(client.conn.playing, pcity, impr)
-        != TR_SUCCESS) {
-      return;
-    }
-
-    price = impr_sell_gold(impr);
-    buf = QString(PL_("Sell %1 for %2 gold?", "Sell %1 for %2 gold?", price))
-              .arg(city_improvement_name_translation(pcity, impr),
-                   QString::number(price));
-
-    ask->set_text_title(buf, (_("Sell Improvement?")));
-    ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
-    ask->setDefaultButton(QMessageBox::Cancel);
-    ask->button(QMessageBox::Yes)->setText(_("Yes Sell"));
-    ask->setAttribute(Qt::WA_DeleteOnClose);
-    connect(ask, &hud_message_box::accepted, [=]() {
-      struct city *pcity = game_city_by_number(city_id);
-      if (!pcity) {
-        return;
-      }
-      city_sell_improvement(pcity, impr_id);
-    });
-    ask->show();
+    auto seller = freeciv::improvement_seller(window(), city_id, impr_id);
+    seller();
   }
 }
 

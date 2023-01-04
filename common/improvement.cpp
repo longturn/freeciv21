@@ -1006,7 +1006,7 @@ bool can_city_sell_building(const struct city *pcity,
    (this does not check if such building is in this city)
  */
 enum test_result
-test_player_sell_building_now(struct player *pplayer, struct city *pcity,
+test_player_sell_building_now(struct player *pplayer, const city *pcity,
                               const struct impr_type *pimprove)
 {
   // Check if player can sell anything from this city
