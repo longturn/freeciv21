@@ -298,7 +298,7 @@ void send_research_info(const struct research *presearch,
       // Team mates always share what they see.
       player_list_iterate(team, team_mate)
       {
-        if (presearch == research_get(pplayer)) {
+        if (presearch == research_get(team_mate)) {
           full = true;
           break;
         }
