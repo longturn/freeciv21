@@ -7,19 +7,24 @@
 #include "upkeep_widget.h"
 
 // common
+#include "control.h"
 #include "fc_types.h"
 #include "game.h"
 
 // client
+#include "citydlg.h"
 #include "client_main.h"
 #include "climisc.h"
 #include "helpdata.h"
 #include "helpdlg.h"
 #include "mapview_common.h"
+#include "page_game.h"
+#include "qtg_cxxside.h"
 #include "text.h"
 #include "tilespec.h"
 #include "tooltips.h"
 #include "utils/improvement_seller.h"
+#include "utils/unit_quick_menu.h"
 
 #include <QContextMenuEvent>
 #include <QMenu>
@@ -195,7 +200,19 @@ void upkeep_widget::contextMenuEvent(QContextMenuEvent *event)
     });
     menu->popup(event->globalPos());
   } else if (const auto data = item->data(UnitRole); data.isValid()) {
-    // TODO
+    const auto unit = game_unit_by_number(data.toInt());
+    if (!unit) {
+      return;
+    }
+
+    auto menu = new QMenu;
+    menu->setAttribute(Qt::WA_DeleteOnClose);
+    add_quick_unit_actions(menu, {unit});
+    menu->addSeparator();
+    menu->addAction(_("Show in Help"), [=] {
+      popup_help_dialog_typed(unit_name_translation(unit), HELP_UNIT);
+    });
+    menu->popup(event->globalPos());
   }
 }
 
@@ -226,7 +243,15 @@ void upkeep_widget::item_double_clicked(const QModelIndex &index)
     auto seller = improvement_seller(window(), m_city, data.toInt());
     seller();
   } else if (const auto data = item->data(UnitRole); data.isValid()) {
-    // TODO
+    auto unit = game_unit_by_number(data.toInt());
+    if (!unit || unit->owner != client.conn.playing
+        || !can_client_issue_orders()) {
+      return;
+    }
+    unit_focus_set(nullptr);
+    unit_focus_add(unit);
+    queen()->city_overlay->dont_focus = true;
+    popdown_city_dialog();
   }
 }
 
