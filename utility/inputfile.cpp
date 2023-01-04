@@ -233,6 +233,8 @@ struct inputfile *inf_from_stream(QIODevice *stream,
   inf->filename.clear();
   inf->fp = stream;
   inf->stream = new QTextStream(stream);
+  inf->stream->setCodec("UTF-8");
+  inf->stream->setAutoDetectUnicode(true); // Allow UTF-16 and UTF-32
   inf->datafn = datafn;
 
   qCDebug(inf_category) << "opened" << inf_filename(inf) << "ok";
