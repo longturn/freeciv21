@@ -75,27 +75,16 @@ public:
   void set_units(unit_list *units);
   std::vector<unit *> selected_playable_units() const;
 
-private:
-  void disband();
-  void change_homecity();
-  void activate();
-  void sentry();
-  void fortify();
-  void upgrade();
-  void load();
-  void unload();
-  void unload_all();
+protected:
+  void contextMenuEvent(QContextMenuEvent *event) override;
 
-  void selectionChanged(const QItemSelection &selected,
-                        const QItemSelection &deselected) override;
+private:
+  void activate();
   QPixmap create_unit_image(const unit *punit);
 
 private:
   bool m_oneliner = false;
   bool m_show_upkeep = false;
-
-  QAction *m_activate, *m_sentry, *m_fortify, *m_disband, *m_change_homecity,
-      *m_load, *m_unload, *m_unload_all, *m_upgrade;
 };
 
 /****************************************************************************

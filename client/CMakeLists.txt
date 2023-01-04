@@ -135,6 +135,7 @@ target_sources(
   unithudselector.cpp
 
   utils/improvement_seller.cpp
+  utils/unit_quick_menu.cpp
   widgets/city/upkeep_widget.cpp
 
   # Generated

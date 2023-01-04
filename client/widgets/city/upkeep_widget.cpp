@@ -24,7 +24,6 @@
 #include <QContextMenuEvent>
 #include <QMenu>
 #include <QPainter>
-#include <qabstractitemview.h>
 
 namespace freeciv {
 

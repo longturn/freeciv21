@@ -57,6 +57,7 @@
 #include "top_bar.h"
 #include "unitlist.h"
 #include "utils/improvement_seller.h"
+#include "utils/unit_quick_menu.h"
 
 extern QString split_text(const QString &text, bool cut);
 extern QString cut_helptext(const QString &text);
@@ -73,53 +74,6 @@ unit_list_widget::unit_list_widget(QWidget *parent) : QListWidget(parent)
 
   connect(this, &QListWidget::itemDoubleClicked, this,
           &unit_list_widget::activate);
-
-  // Create the context menu
-  setContextMenuPolicy(Qt::ActionsContextMenu);
-
-  m_activate = new QAction(_("Activate unit"), this);
-  connect(m_activate, &QAction::triggered, this,
-          &unit_list_widget::activate);
-  addAction(m_activate);
-
-  m_sentry = new QAction(_("Sentry unit"), this);
-  connect(m_sentry, &QAction::triggered, this, &unit_list_widget::sentry);
-  addAction(m_sentry);
-
-  m_fortify = new QAction(_("Fortify unit"), this);
-  connect(m_fortify, &QAction::triggered, this, &unit_list_widget::fortify);
-  addAction(m_fortify);
-
-  m_disband = new QAction(_("Disband unit"), this);
-  connect(m_disband, &QAction::triggered, this, &unit_list_widget::disband);
-  addAction(m_disband);
-
-  m_change_homecity = new QAction(_("Set homecity"), this);
-  connect(m_change_homecity, &QAction::triggered, this,
-          &unit_list_widget::change_homecity);
-  addAction(m_change_homecity);
-
-  m_load = new QAction(_("Load"), this);
-  connect(m_load, &QAction::triggered, this, &unit_list_widget::load);
-  addAction(m_load);
-
-  m_unload = new QAction(_("Unload"), this);
-  connect(m_unload, &QAction::triggered, this, &unit_list_widget::unload);
-  addAction(m_unload);
-
-  m_unload_all = new QAction(_("Unload Transporter"), this);
-  connect(m_unload_all, &QAction::triggered, this,
-          &unit_list_widget::unload_all);
-  addAction(m_unload_all);
-
-  m_upgrade = new QAction(_("Upgrade Unit"), this);
-  connect(m_upgrade, &QAction::triggered, this, &unit_list_widget::upgrade);
-  addAction(m_upgrade);
-
-  // Initially there is no selection, so the menu is disabled
-  for (auto action : actions()) {
-    action->setVisible(false);
-  }
 }
 
 /**
@@ -189,59 +143,21 @@ std::vector<unit *> unit_list_widget::selected_playable_units() const
 }
 
 /**
- * Popups MessageBox for disbanding unit and disbands it
+ * Reimplemented to provide the unit context menu.
  */
-void unit_list_widget::disband()
+void unit_list_widget::contextMenuEvent(QContextMenuEvent *event)
 {
-  popup_disband_dialog(selected_playable_units());
-}
-
-/**
- * Loads unit into some transport
- */
-void unit_list_widget::load()
-{
-  for (const auto unit : selected_playable_units()) {
-    request_transport(unit, unit_tile(unit));
+  const auto units = selected_playable_units();
+  if (units.empty()) {
+    return;
   }
-}
 
-/**
- * Unloads unit
- */
-void unit_list_widget::unload()
-{
-  for (const auto unit : selected_playable_units()) {
-    request_unit_unload(unit);
-  }
-}
+  auto menu = new QMenu;
+  menu->setAttribute(Qt::WA_DeleteOnClose);
+  freeciv::add_quick_unit_actions(menu, units);
+  menu->popup(event->globalPos());
 
-/**
- * Unloads all units from transporter
- */
-void unit_list_widget::unload_all()
-{
-  for (const auto unit : selected_playable_units()) {
-    request_unit_unload_all(unit);
-  }
-}
-
-/**
- * Upgrades unit
- */
-void unit_list_widget::upgrade()
-{
-  popup_upgrade_dialog(selected_playable_units());
-}
-
-/**
- * Changes home city for given unit
- */
-void unit_list_widget::change_homecity()
-{
-  for (const auto unit : selected_playable_units()) {
-    request_unit_change_homecity(unit);
-  }
+  event->accept();
 }
 
 /**
@@ -260,57 +176,6 @@ void unit_list_widget::activate()
     queen()->city_overlay->dont_focus = true;
     popdown_city_dialog();
   }
-}
-
-/**
- * Fortifies unit in city dialog
- */
-void unit_list_widget::fortify()
-{
-  for (const auto unit : selected_playable_units()) {
-    request_unit_fortify(unit);
-  }
-}
-
-/**
- * Sentries unit in city dialog
- */
-void unit_list_widget::sentry()
-{
-  for (const auto unit : selected_playable_units()) {
-    request_unit_sentry(unit);
-  }
-}
-
-/**
- * Updates the context menu to match the current selection
- */
-void unit_list_widget::selectionChanged(const QItemSelection &selected,
-                                        const QItemSelection &deselected)
-{
-  Q_UNUSED(selected);
-  Q_UNUSED(deselected);
-
-  // If we can't do anything, don't pretend we can
-  const auto units = selected_playable_units();
-  for (auto action : actions()) {
-    action->setVisible(!units.empty());
-  }
-  if (units.empty()) {
-    return;
-  }
-
-  // Build the menu according to what the selected units can do
-  m_sentry->setEnabled(can_units_do_activity(units, ACTIVITY_SENTRY));
-  m_fortify->setEnabled(can_units_do_activity(units, ACTIVITY_FORTIFYING));
-  m_disband->setEnabled(
-      units_can_do_action(units, ACTION_DISBAND_UNIT, true));
-  m_change_homecity->setEnabled(
-      units_can_do_action(units, ACTION_HOME_CITY, true));
-  m_load->setEnabled(units_can_load(units));
-  m_unload->setEnabled(units_can_unload(units));
-  m_unload_all->setEnabled(units_are_occupied(units));
-  m_upgrade->setEnabled(units_can_upgrade(units));
 }
 
 /**
