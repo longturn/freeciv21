@@ -12,12 +12,17 @@
 // client
 #include "client_main.h"
 #include "climisc.h"
+#include "helpdata.h"
+#include "helpdlg.h"
 #include "mapview_common.h"
 #include "text.h"
 #include "tilespec.h"
 #include "tooltips.h"
+#include "utils/improvement_seller.h"
 
+#include <QContextMenuEvent>
 #include <QPainter>
+#include <QMenu>
 
 namespace freeciv {
 
@@ -26,6 +31,11 @@ namespace freeciv {
  *
  * Displays the list of items supported by a city (improvements and units).
  */
+
+namespace {
+constexpr auto BuildingRole = Qt::UserRole + 1; ///< Data is an improvement id
+constexpr auto UnitRole = Qt::UserRole + 2; ///< Data is a unit id
+} // namespace
 
 /**
  * Constructor
@@ -82,6 +92,7 @@ void upkeep_widget::refresh()
 
       auto item = new QStandardItem;
       item->setData(pixmap, Qt::DecorationRole);
+      item->setData(improvement_number(building), BuildingRole);
       item->setEditable(false);
       item->setToolTip(
           get_tooltip_improvement(building, city, true).trimmed());
@@ -111,6 +122,7 @@ void upkeep_widget::refresh()
 
       auto *item = new QStandardItem();
       item->setData(pixmap, Qt::DecorationRole);
+      item->setData(unit->id, Qt::UserRole + 2);
       item->setEditable(false);
       item->setToolTip(unit_description(unit));
       m_model->appendRow(item);
@@ -149,7 +161,42 @@ QSize upkeep_widget::viewportSizeHint() const
 QSize upkeep_widget::minimumSizeHint() const { return QSize(0, 0); }
 
 /**
- * Reimplemented protected function.
+ * Reimplemented to provide the improvement and unit actions.
+ */
+void upkeep_widget::contextMenuEvent(QContextMenuEvent *event)
+{
+  const auto index = indexAt(event->pos());
+  const auto item = m_model->itemFromIndex(index);
+  if (!item) {
+    return;
+  }
+
+  auto city = game_city_by_number(m_city);
+  if (!city) {
+    return;
+  }
+
+  if (const auto data = item->data(BuildingRole); data.isValid()) {
+    const auto building = improvement_by_number(data.toInt());
+    fc_assert_ret(building);
+
+    auto menu = new QMenu;
+    menu->setAttribute(Qt::WA_DeleteOnClose);
+    improvement_seller::add_to_menu(window(), menu, city, data.toInt());
+    menu->addSeparator();
+    menu->addAction(_("Show in Help"), [=] {
+      popup_help_dialog_typed(improvement_name_translation(building),
+                              is_great_wonder(building) ? HELP_WONDER
+                                                        : HELP_IMPROVEMENT);
+    });
+    menu->popup(event->globalPos());
+  } else if (const auto data = item->data(UnitRole); data.isValid()) {
+    // TODO
+  }
+}
+
+/**
+ * Reimplemented to handle tileset changes.
  */
 bool upkeep_widget::event(QEvent *event)
 {
