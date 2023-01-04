@@ -24,6 +24,7 @@ public:
   QSize minimumSizeHint() const override;
 
 protected:
+  void contextMenuEvent(QContextMenuEvent *event) override;
   bool event(QEvent *event) override;
 
 private:
