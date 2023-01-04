@@ -28,6 +28,9 @@ protected:
   bool event(QEvent *event) override;
 
 private:
+  void item_double_clicked(const QModelIndex &index);
+
+private:
   int m_city = -1;
   QStandardItemModel *m_model;
 };

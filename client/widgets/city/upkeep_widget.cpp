@@ -7,6 +7,7 @@
 #include "upkeep_widget.h"
 
 // common
+#include "fc_types.h"
 #include "game.h"
 
 // client
@@ -21,8 +22,9 @@
 #include "utils/improvement_seller.h"
 
 #include <QContextMenuEvent>
-#include <QPainter>
 #include <QMenu>
+#include <QPainter>
+#include <qabstractitemview.h>
 
 namespace freeciv {
 
@@ -51,6 +53,9 @@ upkeep_widget::upkeep_widget(QWidget *parent)
   setSizeAdjustPolicy(AdjustToContents);
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
   setVerticalScrollMode(ScrollPerPixel);
+
+  connect(this, &QAbstractItemView::doubleClicked, this,
+          &upkeep_widget::item_double_clicked);
 }
 
 /**
@@ -205,6 +210,25 @@ bool upkeep_widget::event(QEvent *event)
     return true;
   }
   return QListView::event(event);
+}
+
+/**
+ * Called when an item is double clicked. Sells improvements and activates
+ * units.
+ */
+void upkeep_widget::item_double_clicked(const QModelIndex &index)
+{
+  const auto item = m_model->itemFromIndex(index);
+  if (!item) {
+    return;
+  }
+
+  if (const auto data = item->data(BuildingRole); data.isValid()) {
+    auto seller = improvement_seller(window(), m_city, data.toInt());
+    seller();
+  } else if (const auto data = item->data(UnitRole); data.isValid()) {
+    // TODO
+  }
 }
 
 } // namespace freeciv
