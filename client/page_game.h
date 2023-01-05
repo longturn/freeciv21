@@ -84,6 +84,7 @@ public:
   top_bar_widget *sw_diplo;
   indicators_widget *sw_indicators;
   top_bar_widget *sw_science;
+  bool diplomacy_notify = false;
 public slots:
 private slots:
   void updateInfoLabelTimeout();
