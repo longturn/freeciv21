@@ -16,11 +16,7 @@ Code PRs
 ========
 
 For each Pull Request, a set of tests are run automatically. When the tests do not pass, the author is
-expected to fix the problems before someone tries to test the code. There is an exception to this for simple
-changes with code formatting issues (as flagged by the automated ``clang-format`` test): in this case, the
-author of the Pull Request or a maintainer can request automatic reformatting of the code by adding a comment
-that contains the case-sensitive phrase "Auto clang-format". This triggers a script that, if successful, fixes
-the code formatting by adding a new commit to the branch of the Pull Request.
+expected to fix the problems before someone tries to test the code.
 
 This page assumes the user knows how to use :file:`git`, compile Freeciv21 and use GitHub.
 
