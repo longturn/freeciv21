@@ -5746,6 +5746,18 @@ bool is_action_possible_on_city(action_id act_id,
 }
 
 /**
+ * Checks if there is any hopes that the action is possible against the
+ * target unit (by chacking the target_reqs).
+ */
+bool is_action_possible_on_unit(action_id act_id, const unit *target_unit)
+{
+  return is_target_possible(act_id, nullptr, unit_owner(target_unit),
+                            unit_home(target_unit), nullptr,
+                            unit_tile(target_unit), target_unit,
+                            unit_type_get(target_unit), nullptr, nullptr);
+}
+
+/**
    Returns TRUE if the wanted action (as far as the player knows) can be
    performed right now by the specified actor unit if an approriate target
    is provided.

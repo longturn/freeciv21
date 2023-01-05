@@ -481,8 +481,10 @@ const QString popup_info_text(struct tile *ptile)
     }
     str += qendl();
 
-    if (unit_owner(punit) == client_player()
-        || client_is_global_observer()) {
+    if (!is_action_possible_on_unit(ACTION_SPY_BRIBE_UNIT, punit)) {
+      str += _("Bribing not possible.") + qendl();
+    } else if (unit_owner(punit) == client_player()
+               || client_is_global_observer()) {
       // Show bribe cost for own units.
       str += QString(_("Probable bribe cost: %1"))
                  .arg(QString::number(unit_bribe_cost(punit, nullptr)))
