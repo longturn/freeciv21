@@ -19,10 +19,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_3">
-   <property name="spacing">
-    <number>24</number>
-   </property>
+  <layout class="QGridLayout" name="gridLayout_3">
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -35,10 +32,10 @@
    <property name="bottomMargin">
     <number>24</number>
    </property>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0,1">
+   <item row="2" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,0,1">
      <item>
-      <spacer name="horizontalSpacer_3">
+      <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -51,105 +48,51 @@
       </spacer>
      </item>
      <item>
-      <widget class="QGroupBox" name="groupBox">
-       <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="1">
-         <widget class="QPushButton" name="lcity_name">
+      <widget class="QGroupBox" name="groupBox_3">
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <widget class="QLabel" name="curr_units">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="text">
-           <string>PushButton</string>
-          </property>
-          <property name="flat">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="city_label" name="citizens_label">
-          <property name="minimumSize">
-           <size>
-            <width>200</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>citizens</string>
+           <string>TextLabel</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
-        <item row="0" column="3" rowspan="2">
-         <widget class="QPushButton" name="bclose">
+        <item>
+         <widget class="unit_list_widget" name="present_units_list">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="text">
-           <string/>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::ExtendedSelection</enum>
           </property>
-          <property name="shortcut">
-           <string>Esc</string>
+          <property name="flow">
+           <enum>QListView::LeftToRight</enum>
           </property>
-          <property name="flat">
-           <bool>true</bool>
+          <property name="resizeMode">
+           <enum>QListView::Adjust</enum>
           </property>
-         </widget>
-        </item>
-        <item row="0" column="2" rowspan="2">
-         <widget class="QPushButton" name="next_city_but">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="shortcut">
-           <string>Right</string>
-          </property>
-          <property name="flat">
-           <bool>true</bool>
+          <property name="viewMode">
+           <enum>QListView::IconMode</enum>
           </property>
          </widget>
-        </item>
-        <item row="0" column="0" rowspan="2">
-         <widget class="QPushButton" name="prev_city_but">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="shortcut">
-           <string>Left</string>
-          </property>
-          <property name="flat">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="cityIconInfoLabel" name="info_icon_label" native="true"/>
         </item>
        </layout>
       </widget>
      </item>
      <item>
-      <spacer name="horizontalSpacer_6">
+      <spacer name="horizontalSpacer_4">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -163,11 +106,8 @@
      </item>
     </layout>
    </item>
-   <item>
+   <item row="1" column="1">
     <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <item>
-      <widget class="freeciv::upkeep_widget" name="upkeep"/>
-     </item>
      <item>
       <spacer name="horizontalSpacer_7">
        <property name="orientation">
@@ -566,7 +506,7 @@
                  <x>0</x>
                  <y>0</y>
                  <width>292</width>
-                 <height>824</height>
+                 <height>860</height>
                 </rect>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -872,10 +812,10 @@
      </item>
     </layout>
    </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,0,1">
+   <item row="0" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0,1">
      <item>
-      <spacer name="horizontalSpacer">
+      <spacer name="horizontalSpacer_3">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -888,51 +828,105 @@
       </spacer>
      </item>
      <item>
-      <widget class="QGroupBox" name="groupBox_3">
-       <layout class="QVBoxLayout" name="verticalLayout_5">
-        <item>
-         <widget class="QLabel" name="curr_units">
+      <widget class="QGroupBox" name="groupBox">
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="1">
+         <widget class="QPushButton" name="lcity_name">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="text">
-           <string>TextLabel</string>
+           <string>PushButton</string>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          <property name="flat">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="unit_list_widget" name="present_units_list">
+        <item row="1" column="1">
+         <widget class="city_label" name="citizens_label">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>citizens</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3" rowspan="2">
+         <widget class="QPushButton" name="bclose">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="selectionMode">
-           <enum>QAbstractItemView::ExtendedSelection</enum>
+          <property name="text">
+           <string/>
           </property>
-          <property name="flow">
-           <enum>QListView::LeftToRight</enum>
+          <property name="shortcut">
+           <string>Esc</string>
           </property>
-          <property name="resizeMode">
-           <enum>QListView::Adjust</enum>
-          </property>
-          <property name="viewMode">
-           <enum>QListView::IconMode</enum>
+          <property name="flat">
+           <bool>true</bool>
           </property>
          </widget>
+        </item>
+        <item row="0" column="2" rowspan="2">
+         <widget class="QPushButton" name="next_city_but">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="shortcut">
+           <string>Right</string>
+          </property>
+          <property name="flat">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" rowspan="2">
+         <widget class="QPushButton" name="prev_city_but">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="shortcut">
+           <string>Left</string>
+          </property>
+          <property name="flat">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="cityIconInfoLabel" name="info_icon_label" native="true"/>
         </item>
        </layout>
       </widget>
      </item>
      <item>
-      <spacer name="horizontalSpacer_4">
+      <spacer name="horizontalSpacer_6">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -945,6 +939,12 @@
       </spacer>
      </item>
     </layout>
+   </item>
+   <item row="0" column="0">
+    <widget class="freeciv::city_icon_widget" name="icon" native="true"/>
+   </item>
+   <item row="1" column="0" rowspan="2">
+    <widget class="freeciv::upkeep_widget" name="upkeep"/>
    </item>
   </layout>
  </widget>
@@ -992,6 +992,12 @@
    <class>freeciv::upkeep_widget</class>
    <extends>QListView</extends>
    <header>widgets/city/upkeep_widget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>freeciv::city_icon_widget</class>
+   <extends>QWidget</extends>
+   <header>widgets/city/city_icon_widget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
