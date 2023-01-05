@@ -760,6 +760,8 @@ bool is_action_possible_on_city(action_id act_id,
                                 const struct player *actor_player,
                                 const struct city *target_city);
 
+bool is_action_possible_on_unit(action_id act_id, const unit *target_unit);
+
 bool action_maybe_possible_actor_unit(const action_id wanted_action,
                                       const struct unit *actor_unit);
 
