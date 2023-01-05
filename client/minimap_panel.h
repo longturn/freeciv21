@@ -44,7 +44,7 @@ private:
   Ui::minimap_panel ui;
 
   QAction *m_show_relief, *m_show_borders, *m_show_borders_ocean,
-      *m_show_cities, *m_show_units, *m_show_fog;
+      *m_show_cities, *m_show_fog;
 };
 
 void update_timeout_label();
