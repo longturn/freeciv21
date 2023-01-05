@@ -12,6 +12,8 @@
       \____/        ********************************************************/
 #pragma once
 
+#include "tileset/drawn_sprite.h"
+
 // Forward declarations
 class QPixmap;
 
@@ -43,18 +45,6 @@ struct tile_edge {
 struct tile_corner {
 #define NUM_CORNER_TILES 4
   const struct tile *tile[NUM_CORNER_TILES];
-};
-
-struct drawn_sprite {
-  explicit drawn_sprite(const tileset *ts, const QPixmap *sprite,
-                        bool foggable = true, int offset_x = 0,
-                        int offset_y = 0);
-  drawn_sprite(const drawn_sprite &other) = default;
-  drawn_sprite(drawn_sprite &&other) = default;
-
-  const QPixmap *sprite;
-  bool foggable;          // Set to FALSE for sprites that are never fogged.
-  int offset_x, offset_y; // offset from tile origin
 };
 
 /* Items on the mapview are drawn in layers.  Each entry below represents
