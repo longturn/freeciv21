@@ -1878,9 +1878,11 @@ void city_dialog::refresh()
     update_nation_table();
     update_cma_tab();
     update_disabled();
+    ui.icon->set_city(pcity->id);
     ui.upkeep->set_city(pcity->id);
   } else {
     popdown_city_dialog();
+    ui.icon->set_city(-1);
     ui.upkeep->set_city(-1);
   }
 
