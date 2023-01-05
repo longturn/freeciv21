@@ -21,6 +21,7 @@
 #include "colors_common.h"
 #include "game.h"
 #include "government.h"
+#include "icons.h"
 #include "improvement.h"
 #include "nation.h"
 #include "research.h"
@@ -1000,17 +1001,12 @@ void update_intel_dialog(struct player *p) { real_players_dialog_update(p); }
 void close_intel_dialog(struct player *p) { real_players_dialog_update(p); }
 
 /**
- * Function to update the top bar button. Blink when there are open
+ * Function to update the top bar button. Notify when there are open
  * Diplomacy meetings, don't when there are none.
  */
-void update_top_bar_diplomacy_status(bool blinker)
+void update_top_bar_diplomacy_status(bool notify)
 {
-  queen()->sw_diplo->keep_blinking = blinker;
-  if (blinker) {
-    queen()->sw_diplo->sblink();
-  } else {
-    queen()->sw_diplo->update();
-  }
+  queen()->diplomacy_notify = notify;
   queen()->updateSidebarTooltips();
   queen()->reloadSidebarIcons();
 }
