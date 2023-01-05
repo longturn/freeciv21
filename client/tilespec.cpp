@@ -4641,48 +4641,8 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
                           FULL_TILE_X_OFFSET + t->city_flag_offset_x,
                           FULL_TILE_Y_OFFSET + t->city_flag_offset_y);
       }
-      /* For iso-view the city.wall graphics include the full city, whereas
-       * for non-iso view they are an overlay on top of the base city
-       * graphic. */
-      if (t->type == TS_OVERHEAD || pcity->client.walls <= 0) {
-        sprs.emplace_back(t, get_city_sprite(t->sprites.city.tile, pcity),
-                          true, FULL_TILE_X_OFFSET + t->city_offset_x,
-                          FULL_TILE_Y_OFFSET + t->city_offset_y);
-      }
-      if (t->type == TS_ISOMETRIC && pcity->client.walls > 0) {
-        auto spr = get_city_sprite(
-            t->sprites.city.wall[pcity->client.walls - 1], pcity);
-        if (spr == nullptr) {
-          spr = get_city_sprite(t->sprites.city.single_wall, pcity);
-        }
-
-        if (spr != nullptr) {
-          sprs.emplace_back(t, spr, true,
-                            FULL_TILE_X_OFFSET + t->city_offset_x,
-                            FULL_TILE_Y_OFFSET + t->city_offset_y);
-        }
-      }
-      if (!citybar_painter::current()->has_units()
-          && pcity->client.occupied) {
-        sprs.emplace_back(t,
-                          get_city_sprite(t->sprites.city.occupied, pcity),
-                          true, FULL_TILE_X_OFFSET + t->occupied_offset_x,
-                          FULL_TILE_Y_OFFSET + t->occupied_offset_y);
-      }
-      if (t->type == TS_OVERHEAD && pcity->client.walls > 0) {
-        auto spr = get_city_sprite(
-            t->sprites.city.wall[pcity->client.walls - 1], pcity);
-        if (spr == nullptr) {
-          spr = get_city_sprite(t->sprites.city.single_wall, pcity);
-        }
-
-        if (spr != nullptr) {
-          ADD_SPRITE_FULL(spr);
-        }
-      }
-      if (pcity->client.unhappy) {
-        ADD_SPRITE_FULL(t->sprites.city.disorder);
-      }
+      bool occupied_graphic = !citybar_painter::current()->has_units();
+      fill_basic_city_sprite_array(t, sprs, pcity, occupied_graphic);
     }
     break;
 
@@ -5438,6 +5398,55 @@ void tileset_init(struct tileset *t)
   player_slots_iterate_end;
 
   t->max_upkeep_height = 0;
+}
+
+/**
+ * Fills @c sprs with sprites to draw a city. The flag and city size are not
+ * included. The occupied graphic is optional.
+ */
+void fill_basic_city_sprite_array(const struct tileset *t,
+                                  std::vector<drawn_sprite> &sprs,
+                                  const city *pcity, bool occupied_graphic)
+{
+  /* For iso-view the city.wall graphics include the full city, whereas
+   * for non-iso view they are an overlay on top of the base city
+   * graphic. */
+  if (t->type == TS_OVERHEAD || pcity->client.walls <= 0) {
+    sprs.emplace_back(t, get_city_sprite(t->sprites.city.tile, pcity), true,
+                      FULL_TILE_X_OFFSET + t->city_offset_x,
+                      FULL_TILE_Y_OFFSET + t->city_offset_y);
+  }
+  if (t->type == TS_ISOMETRIC && pcity->client.walls > 0) {
+    auto spr = get_city_sprite(t->sprites.city.wall[pcity->client.walls - 1],
+                               pcity);
+    if (spr == nullptr) {
+      spr = get_city_sprite(t->sprites.city.single_wall, pcity);
+    }
+
+    if (spr != nullptr) {
+      sprs.emplace_back(t, spr, true, FULL_TILE_X_OFFSET + t->city_offset_x,
+                        FULL_TILE_Y_OFFSET + t->city_offset_y);
+    }
+  }
+  if (occupied_graphic && pcity->client.occupied) {
+    sprs.emplace_back(t, get_city_sprite(t->sprites.city.occupied, pcity),
+                      true, FULL_TILE_X_OFFSET + t->occupied_offset_x,
+                      FULL_TILE_Y_OFFSET + t->occupied_offset_y);
+  }
+  if (t->type == TS_OVERHEAD && pcity->client.walls > 0) {
+    auto spr = get_city_sprite(t->sprites.city.wall[pcity->client.walls - 1],
+                               pcity);
+    if (spr == nullptr) {
+      spr = get_city_sprite(t->sprites.city.single_wall, pcity);
+    }
+
+    if (spr != nullptr) {
+      ADD_SPRITE_FULL(spr);
+    }
+  }
+  if (pcity->client.unhappy) {
+    ADD_SPRITE_FULL(t->sprites.city.disorder);
+  }
 }
 
 /**

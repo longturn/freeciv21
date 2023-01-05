@@ -157,6 +157,10 @@ std::vector<drawn_sprite>
 fill_basic_terrain_layer_sprite_array(struct tileset *t, int layer,
                                       struct terrain *pterrain);
 
+void fill_basic_city_sprite_array(const struct tileset *t,
+                                  std::vector<drawn_sprite> &sprs,
+                                  const city *pcity, bool occupied_graphic);
+
 int get_focus_unit_toggle_timeout(const struct tileset *t);
 void reset_focus_unit_state(struct tileset *t);
 void focus_unit_in_combat(struct tileset *t);
