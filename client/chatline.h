@@ -111,6 +111,8 @@ class chat_widget : public resizable_widget, private chat_listener {
 
 public:
   chat_widget(QWidget *parent);
+  virtual ~chat_widget();
+
   void append(const QString &str);
   chat_input *chat_line;
   void make_link(struct tile *ptile);
@@ -140,7 +142,8 @@ private:
   QTextBrowser *chat_output;
   QPushButton *remove_links;
   QPushButton *show_hide;
-  QPushButton *cb;
+  QToolButton *cb;
+  QMenu *cb_menu;
   move_widget *mw;
 };
 
