@@ -11,15 +11,18 @@
 
 #include "chatline.h"
 // Qt
+#include <QActionGroup>
 #include <QApplication>
 #include <QCheckBox>
 #include <QCompleter>
 #include <QGridLayout>
 #include <QHash>
 #include <QPainter>
+#include <QPushButton>
 #include <QScrollBar>
 #include <QTextBlock>
-#include <qnamespace.h>
+#include <QToolButton>
+
 // common
 #include "chat.h"
 #include "chatline_common.h"
@@ -369,13 +372,44 @@ chat_widget::chat_widget(QWidget *parent)
   gl->setContentsMargins(QMargins());
   setLayout(gl);
 
-  cb = new QPushButton();
+  cb = new QToolButton;
+  cb->setFixedSize(QSize(25, 25));
   cb->setIconSize(QSize(24, 24));
-  cb->setFixedWidth(25);
-  cb->setFixedHeight(25);
-  cb->setIcon(fcIcons::instance()->getIcon(QStringLiteral("private")));
-  cb->setToolTip(_("Allies only"));
-  cb->setCheckable(true);
+  cb->setToolTip(_("Set who can see your messages by default."));
+
+  const auto current_icon = [] {
+    return fcIcons::instance()->getIcon(gui_options->gui_qt_allied_chat_only
+                                            ? QStringLiteral("private")
+                                            : QStringLiteral("public"));
+  };
+  cb->setIcon(current_icon());
+
+  cb_menu = new QMenu;
+  cb->setMenu(cb_menu);
+  cb->setPopupMode(QToolButton::InstantPopup);
+
+  // Populate the menu
+  auto group = new QActionGroup(cb_menu);
+  auto action = cb_menu->addAction(
+      fcIcons::instance()->getIcon(QStringLiteral("private")),
+      _("Allies Only"));
+  action->setCheckable(true);
+  action->setChecked(gui_options->gui_qt_allied_chat_only);
+  connect(action, &QAction::triggered, cb, [=] {
+    gui_options->gui_qt_allied_chat_only = true;
+    cb->setIcon(current_icon());
+  });
+  group->addAction(action);
+
+  action = cb_menu->addAction(
+      fcIcons::instance()->getIcon(QStringLiteral("public")), _("Everyone"));
+  action->setCheckable(true);
+  action->setChecked(!gui_options->gui_qt_allied_chat_only);
+  connect(action, &QAction::triggered, cb, [=] {
+    gui_options->gui_qt_allied_chat_only = false;
+    cb->setIcon(current_icon());
+  });
+  group->addAction(action);
 
   chat_line = new chat_input;
   chat_line->installEventFilter(this);
@@ -422,17 +456,6 @@ chat_widget::chat_widget(QWidget *parent)
   gl->addWidget(cb, 2, 2);
   gl->addWidget(remove_links, 2, 3);
 
-  connect(cb, &QAbstractButton::toggled, [=](bool priv) {
-    QString icon_name =
-        priv ? QLatin1String("public") : QLatin1String("private");
-    cb->setIcon(fcIcons::instance()->getIcon(icon_name));
-    gui_options->gui_qt_allied_chat_only = priv;
-    if (cb->isChecked()) {
-      cb->setToolTip(_("Allies only"));
-    } else {
-      cb->setToolTip(_("Private"));
-    }
-  });
   connect(chat_output, &QTextBrowser::anchorClicked, this,
           &chat_widget::anchor_clicked);
   connect(remove_links, &QAbstractButton::clicked, this,
@@ -442,6 +465,15 @@ chat_widget::chat_widget(QWidget *parent)
   setMouseTracking(true);
 
   chat_listener::listen();
+}
+
+/**
+ * Destructor
+ */
+chat_widget::~chat_widget()
+{
+  // Just to be sure.
+  delete cb_menu;
 }
 
 /**
