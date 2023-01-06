@@ -17,8 +17,6 @@
 
 struct connection;
 struct conn_list;
-struct packet_authentication_reply;
-struct packet_login_request;
 struct packet_server_join_req;
 
 void conn_set_access(struct connection *pconn, enum cmdlevel new_level,
