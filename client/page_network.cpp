@@ -415,6 +415,9 @@ void page_network::handle_authentication_req(enum authentication_type type,
 
       sz_strlcpy(reply.password, qUtf8Printable(client_url().password()));
       send_packet_authentication_reply(&client.conn, &reply);
+
+      // Don't store the password
+      client_url().setPassword(QString());
       return;
     } else {
       set_connection_state(ENTER_PASSWORD_TYPE);
