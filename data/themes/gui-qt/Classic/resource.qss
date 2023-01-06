@@ -711,6 +711,11 @@ units_select {
   border: 1px solid black;
 }
 
+chat_widget QLabel
+{
+  color: white;
+}
+
 chat_widget QTextBrowser
 {
   background-color: transparent;
@@ -725,6 +730,12 @@ chat_widget QLineEdit
   color: rgb( 240, 240, 240);
 }
 
+chat_widget QPushButton,
+chat_widget QToolButton
+{
+  background-color: #c3b48e;
+  border-color: #c3b48e;
+}
 
 chat_widget QScrollBar:vertical
 {
@@ -831,23 +842,6 @@ message_widget QScrollBar::add-line:vertical {
 
 message_widget QScrollBar::sub-line:vertical {
   width: 0px;height: 0px;
-}
-
-chat_widget QPushButton {
-  background: transparent;
-  border: none;
-}
-
-chat_widget QCheckBox {
-  background: transparent;
-}
-
-chat_widget QCheckBox::indicator:checked {
-  image: url(LittleFingercheckbox-checked-pressed.png);
-}
-
-chat_widget QCheckBox::indicator:checked:hover {
-  image: url(LittleFingercheckbox-checked-pressed.png);
 }
 
 hud_message_box, hud_input_box {
