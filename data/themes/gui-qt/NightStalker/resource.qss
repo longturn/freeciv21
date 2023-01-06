@@ -379,6 +379,16 @@ QMenu::item:selected {
   border-radius: 9px;
 }
 
+QMenu::icon:checkable {
+  border: 1px solid transparent;
+  border-radius: 7px;
+  padding: 2px;
+  margin-left: 1px;
+}
+QMenu::icon:checked {
+  border-color: #143c63;
+  background-color: rgba(51, 153, 255, 112);
+}
 
 minimap_view
 {
