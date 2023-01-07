@@ -933,8 +933,9 @@ void layer_terrain::fill_terrain_sprite_array(
           // Not matching against this terrain, pretend current terrain
           // continues (it's always at match index 0)
           indices[j] = 0;
+        } else {
+          indices[j] = std::distance(info.matches_with.begin(), it);
         }
-        indices[j] = std::distance(info.matches_with.begin(), it);
       }
 
       // Pick the sprite
