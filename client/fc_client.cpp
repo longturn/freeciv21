@@ -247,9 +247,9 @@ void fc_client::switch_page(int new_pg)
     break;
   case PAGE_NETWORK:
     qobject_cast<page_network *>(pages[PAGE_NETWORK])
-        ->update_network_lists();
-    qobject_cast<page_network *>(pages[PAGE_NETWORK])
         ->set_connection_state(LOGIN_TYPE);
+    qobject_cast<page_network *>(pages[PAGE_NETWORK])
+        ->update_network_lists();
     break;
   case PAGE_LOADING:
   case PAGE_COUNT:
