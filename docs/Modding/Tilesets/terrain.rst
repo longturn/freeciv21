@@ -437,12 +437,14 @@ Each land terrain must be declared within the ``land`` matching group, while sea
     num_layers = 1
     layer0_match_type = "water"
     layer0_match_with = "land", "water"
+    layer0_sprite_type = "hex_corner"
 
     [tile_plains]
     tag = "plains"
     num_layers = 1
     layer0_match_type = "land"
     layer0_match_with = "land", "water"
+    layer0_sprite_type = "hex_corner"
 
     ; etc
 
