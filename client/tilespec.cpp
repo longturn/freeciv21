@@ -2937,6 +2937,7 @@ static bool load_river_sprites(struct tileset *t,
                                struct river_sprites *store,
                                const char *tag_pfx)
 {
+  bool ok = true;
   int i;
   QString buffer;
 
@@ -2945,7 +2946,9 @@ static bool load_river_sprites(struct tileset *t,
         QStringLiteral("%1_s_%2").arg(tag_pfx, cardinal_index_str(t, i));
     store->spec[i] = load_sprite(t, buffer);
     if (store->spec[i] == nullptr) {
-      return false;
+      qCritical("Missing \"%s\" for \"%s\".", qUtf8Printable(buffer),
+                tag_pfx);
+      ok = false;
     }
   }
 
@@ -2957,11 +2960,11 @@ static bool load_river_sprites(struct tileset *t,
     if (store->outlet[i] == nullptr) {
       qCritical("Missing \"%s\" for \"%s\".", qUtf8Printable(buffer),
                 tag_pfx);
-      return false;
+      ok = false;
     }
   }
 
-  return true;
+  return ok;
 }
 
 /**
