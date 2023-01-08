@@ -770,6 +770,29 @@ int layer_terrain::terrain_group(const terrain *pterrain) const
   return m_terrain_info.at(terrain_index(pterrain)).group->number;
 }
 
+namespace /* anonymous */ {
+
+/**
+ * Flattens indices in a N-dimensional hypercubic array.
+ * This function takes N indices [i1, i2, ...], with 0 <= i < size, and
+ * returns an index for item [i1, i2, ...] into a flattened continuous array
+ * of appropriate dimension.
+ * FIXME C++23 std::mdspan
+ */
+template <std::size_t N>
+int flattened_index(int size, const std::array<int, N> &indices,
+                    int seed = 0)
+{
+  int nested = seed;
+  for (auto it = indices.rbegin(); it != indices.rend(); ++it) {
+    nested *= size;
+    nested += *it;
+  }
+  return nested;
+}
+
+} // anonymous namespace
+
 /**
  * Helper function for fill_sprite_array.
  */
@@ -860,20 +883,19 @@ void layer_terrain::fill_terrain_sprite_array(
         break;
       case MATCH_SAME:
         fc_assert_ret(info.matches_with.size() == 2);
-        array_index = array_index * 2 + (m[2] != info.group->number);
-        array_index = array_index * 2 + (m[1] != info.group->number);
-        array_index = array_index * 2 + (m[0] != info.group->number);
+        array_index = flattened_index<3>(2, {(m[0] != info.group->number),
+                                             (m[1] != info.group->number),
+                                             (m[2] != info.group->number)});
         break;
       case MATCH_PAIR: {
         fc_assert_ret(info.matches_with.size() == 2);
         const auto that = info.matches_with.back()->number;
-        array_index = array_index * 2 + (m[2] == that);
-        array_index = array_index * 2 + (m[1] == that);
-        array_index = array_index * 2 + (m[0] == that);
+        array_index = flattened_index<3>(
+            2, {(m[0] == that), (m[1] == that), (m[2] == that)});
       } break;
       case MATCH_FULL:
       default: {
-        int n[3];
+        std::array<int, 3> n;
         for (int j = 0; j < 3; j++) {
           for (int k = 0; k < count; k++) {
             n[j] = k; // default to last entry
@@ -882,9 +904,7 @@ void layer_terrain::fill_terrain_sprite_array(
             }
           }
         }
-        array_index = array_index * count + n[2];
-        array_index = array_index * count + n[1];
-        array_index = array_index * count + n[0];
+        array_index = flattened_index(count, n);
       } break;
       };
       array_index = array_index * NUM_CORNER_DIRS + i;
@@ -939,11 +959,8 @@ void layer_terrain::fill_terrain_sprite_array(
       }
 
       // Pick the sprite
-      int array_index = i;
-      array_index *= info.matches_with.size();
-      array_index += indices[0];
-      array_index *= info.matches_with.size();
-      array_index += indices[1];
+      int array_index = flattened_index<2>(info.matches_with.size(),
+                                           {indices[1], indices[0]}, i);
 
       const auto sprite = info.sprites[array_index];
       if (sprite) {
