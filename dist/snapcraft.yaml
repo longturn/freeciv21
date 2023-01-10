@@ -103,7 +103,7 @@ apps:
     desktop: usr/share/applications/net.longturn.freeciv21.client.desktop
     command: usr/bin/freeciv21-client
     environment:
-        FREECIV_DATA_PATH: "$SNAP/usr/share/freeciv21"
+        FREECIV_DATA_PATH: "$SNAP/usr/share/freeciv21:$HOME/.local/share/freeciv21"
     extensions:
       - kde-neon
     plugs:
@@ -118,7 +118,7 @@ apps:
     common-id: net.longturn.freeciv21.server
     command: usr/bin/freeciv21-server
     environment:
-        FREECIV_DATA_PATH: "$SNAP/usr/share/freeciv21"
+        FREECIV_DATA_PATH: "$SNAP/usr/share/freeciv21:$HOME/.local/share/freeciv21"
     extensions:
       - kde-neon
     plugs:
