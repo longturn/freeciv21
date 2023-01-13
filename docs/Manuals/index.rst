@@ -11,6 +11,8 @@ manual, modpack installer, and ruleset manuals.
 
 .. toctree::
   client-manual.rst
+  Game/message-options.rst
+  Game/shortcut-options.rst
   modpack-installer.rst
   on-the-server.rst
   :maxdepth: 2
