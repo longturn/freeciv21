@@ -14,6 +14,8 @@ All of the Modpacks are written in plain text files, except for Scenarios. The p
 designed saved games that have been edited for a specific purpose. Examples include: Earth Map, Europe 1900,
 Americas Map, etc.
 
+.. _modding-rulesets:
+
 Rulesets
 ========
 
