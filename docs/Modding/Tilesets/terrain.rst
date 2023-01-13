@@ -41,14 +41,15 @@ the corresponding sections.
 | None                           | ``t.l0.grassland1``            | Avoid                          | Avoid                          |
 |                                | (:ref:`doc <single-simple>`)   | (:ref:`doc <corner-simple>`)   |                                |
 +--------------------------------+--------------------------------+--------------------------------+--------------------------------+
-| One, same as ``match_type``    | ``t.l1.hills_n0e1s0w1``        | ``t.l0.floor_cell_u011``       |                                |
+| One, same as ``match_type``    | ``t.l1.hills_n0e1s0w1``        | ``t.l0.floor_cell_u011``       | Not implemented                |
 |                                | (:ref:`doc <single-match>`)    | (:ref:`doc <corner-same>`)     |                                |
 +--------------------------------+--------------------------------+--------------------------------+                                +
-| One, different from            | Not implemented                | ``t.l1.coast_cell_u_g_g_g``    | ``t.l0.hex_cell_right_g_g_g``, |
-| ``match_type``                 |                                | (:ref:`doc <corner-pair>`)     | ``t.l0.hex_cell_left_g_g_g``   |
-+--------------------------------+                                +--------------------------------+ (:ref:`doc <hex_corner>`)      +
-| Two or more                    |                                | ``t.l0.cellgroup_g_g_g_g``     |                                |
-|                                |                                | (:ref:`doc <corner-general>`)  |                                |
+| One, different from            | Not implemented                | ``t.l1.coast_cell_u_g_g_g``    |                                |
+| ``match_type``                 |                                | (:ref:`doc <corner-pair>`)     |                                |
++--------------------------------+                                +--------------------------------+--------------------------------+
+| Two or more                    |                                | ``t.l0.cellgroup_g_g_g_g``     | ``t.l0.hex_cell_right_g_g_g``, |
+|                                |                                | (:ref:`doc <corner-general>`)  | ``t.l0.hex_cell_left_g_g_g``   |
+|                                |                                |                                | (:ref:`doc <hex_corner>`)      |
 +--------------------------------+--------------------------------+--------------------------------+--------------------------------+
 
 
