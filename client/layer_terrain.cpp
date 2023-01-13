@@ -590,19 +590,38 @@ void layer_terrain::initialize_cell_hex_corner(const terrain *terrain,
 
     for (int i = 0; i < info.matches_with.size(); ++i) {
       for (int j = 0; j < info.matches_with.size(); ++j) {
-        std::array<matching_group *, 3> groups = {
-            info.group,           // Center tile
-            info.matches_with[i], // "before"
-            info.matches_with[j], // "after"
-        };
+        auto buffer = QString();
 
-        auto buffer =
-            QStringLiteral("t.l%1.hex_cell_%2_%3_%4_%5")
-                .arg(m_number)
-                .arg(left ? QStringLiteral("left") : QStringLiteral("right"))
-                .arg(groups[indices[idir][0]]->name[0])
-                .arg(groups[indices[idir][1]]->name[0])
-                .arg(groups[indices[idir][2]]->name[0]);
+        if (info.style == MATCH_SAME) {
+          std::array<int, 3> present = {
+              1, // Center tile
+              i, // "before"
+              j, // "after"
+          };
+
+          buffer = QStringLiteral("t.l%1.%2_hex_cell_%3_%4_%5_%6")
+                       .arg(m_number)
+                       .arg(info.sprite_name)
+                       .arg(left ? QStringLiteral("left")
+                                 : QStringLiteral("right"))
+                       .arg(present[indices[idir][0]])
+                       .arg(present[indices[idir][1]])
+                       .arg(present[indices[idir][2]]);
+        } else {
+          std::array<matching_group *, 3> groups = {
+              info.group,           // Center tile
+              info.matches_with[i], // "before"
+              info.matches_with[j], // "after"
+          };
+
+          buffer = QStringLiteral("t.l%1.hex_cell_%2_%3_%4_%5")
+                       .arg(m_number)
+                       .arg(left ? QStringLiteral("left")
+                                 : QStringLiteral("right"))
+                       .arg(groups[indices[idir][0]]->name[0])
+                       .arg(groups[indices[idir][1]]->name[0])
+                       .arg(groups[indices[idir][2]]->name[0]);
+        }
 
         auto sprite = load_sprite(tileset(), buffer);
         if (sprite) {
@@ -937,24 +956,36 @@ void layer_terrain::fill_terrain_sprite_array(
           MATCH(iso_dirs[(i + 5) % 6]), // Direction "before"
           MATCH(iso_dirs[i])};          // Direction "after"
 
-      // Resolve the matching groups as indices in matches_with
       std::array<int, 2> indices;
-      for (int j = 0; j < 2; ++j) {
-        if (matches[j] < 0) {
-          // Unknown tile or edge of the map, pretend current terrain
-          // continues (it's always at match index 0)
-          indices[j] = 0;
-          continue;
-        }
-        auto it = std::find_if(
-            info.matches_with.begin(), info.matches_with.end(),
-            [=](const auto &group) { return group->number == matches[j]; });
-        if (it == info.matches_with.end()) {
-          // Not matching against this terrain, pretend current terrain
-          // continues (it's always at match index 0)
-          indices[j] = 0;
-        } else {
-          indices[j] = std::distance(info.matches_with.begin(), it);
+      switch (info.style) {
+      case MATCH_SAME:
+        fc_assert_ret(info.matches_with.size() == 2);
+        indices = {(matches[0] == info.group->number),
+                   (matches[1] == info.group->number)};
+        break;
+      case MATCH_NONE:
+      case MATCH_PAIR:
+      case MATCH_FULL:
+        // Resolve the matching groups as indices in matches_with
+        for (int j = 0; j < 2; ++j) {
+          if (matches[j] < 0) {
+            // Unknown tile or edge of the map, pretend current terrain
+            // continues (it's always at match index 0)
+            indices[j] = 0;
+            continue;
+          }
+          auto it =
+              std::find_if(info.matches_with.begin(),
+                           info.matches_with.end(), [=](const auto &group) {
+                             return group->number == matches[j];
+                           });
+          if (it == info.matches_with.end()) {
+            // Not matching against this terrain, pretend current terrain
+            // continues (it's always at match index 0)
+            indices[j] = 0;
+          } else {
+            indices[j] = std::distance(info.matches_with.begin(), it);
+          }
         }
       }
 
