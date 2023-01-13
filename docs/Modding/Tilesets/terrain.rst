@@ -1,7 +1,7 @@
 ..
     SPDX-License-Identifier:  GPL-3.0-or-later
     SPDX-FileCopyrightText: 1999-2021 Freeciv and Freeciv21 contributors
-    SPDX-FileCopyrightText: 2022 louis94 <m_louis30@yahoo.com>
+    SPDX-FileCopyrightText: 2022-2023 louis94 <m_louis30@yahoo.com>
 
 Terrain
 *******
@@ -35,22 +35,23 @@ The names used to reference the sprites depend on the chosen cell type and on th
 in the matching. The table below summarizes the naming scheme; available options are discussed in detail in
 the corresponding sections.
 
-+--------------------------------+--------------------------------+--------------------------------+--------------------------------+
-| Matched groups                 | ``single``                     | ``corner``                     | ``hex_corner``                 |
-+================================+================================+================================+================================+
-| None                           | ``t.l0.grassland1``            | Avoid                          | Avoid                          |
-|                                | (:ref:`doc <single-simple>`)   | (:ref:`doc <corner-simple>`)   |                                |
-+--------------------------------+--------------------------------+--------------------------------+--------------------------------+
-| One, same as ``match_type``    | ``t.l1.hills_n0e1s0w1``        | ``t.l0.floor_cell_u011``       | Not implemented                |
-|                                | (:ref:`doc <single-match>`)    | (:ref:`doc <corner-same>`)     |                                |
-+--------------------------------+--------------------------------+--------------------------------+                                +
-| One, different from            | Not implemented                | ``t.l1.coast_cell_u_g_g_g``    |                                |
-| ``match_type``                 |                                | (:ref:`doc <corner-pair>`)     |                                |
-+--------------------------------+                                +--------------------------------+--------------------------------+
-| Two or more                    |                                | ``t.l0.cellgroup_g_g_g_g``     | ``t.l0.hex_cell_right_g_g_g``, |
-|                                |                                | (:ref:`doc <corner-general>`)  | ``t.l0.hex_cell_left_g_g_g``   |
-|                                |                                |                                | (:ref:`doc <hex_corner>`)      |
-+--------------------------------+--------------------------------+--------------------------------+--------------------------------+
++--------------------------------+--------------------------------+--------------------------------+--------------------------------------+
+| Matched groups                 | ``single``                     | ``corner``                     | ``hex_corner``                       |
++================================+================================+================================+======================================+
+| None                           | ``t.l0.grassland1``            | Avoid                          | Avoid                                |
+|                                | (:ref:`doc <single-simple>`)   | (:ref:`doc <corner-simple>`)   |                                      |
++--------------------------------+--------------------------------+--------------------------------+--------------------------------------+
+| One, same as ``match_type``    | ``t.l1.hills_n0e1s0w1``        | ``t.l0.floor_cell_u011``       | ``t.l0.floor_hex_cell_right_0_1_0``, |
+|                                | (:ref:`doc <single-match>`)    | (:ref:`doc <corner-same>`)     | ``t.l0.floor_hex_cell_left_1_0_0``   |
+|                                | (:ref:`doc <single-match>`)    | (:ref:`doc <corner-same>`)     | (:ref:`doc <hex_corner-same>`)       |
++--------------------------------+--------------------------------+--------------------------------+--------------------------------------+
+| One, different from            | Not implemented                | ``t.l1.coast_cell_u_g_g_g``    | Not implemented                      |
+| ``match_type``                 |                                | (:ref:`doc <corner-pair>`)     |                                      |
++--------------------------------+                                +--------------------------------+--------------------------------------+
+| Two or more                    |                                | ``t.l0.cellgroup_g_g_g_g``     | ``t.l0.hex_cell_right_g_g_g``,       |
+|                                |                                | (:ref:`doc <corner-general>`)  | ``t.l0.hex_cell_left_g_g_g``         |
+|                                |                                |                                | (:ref:`doc <hex_corner-general>`)    |
++--------------------------------+--------------------------------+--------------------------------+--------------------------------------+
 
 
 Sprite type ``single``
@@ -380,9 +381,13 @@ from top (referring to the above schema, ``u``, ``r``, ``d``, and ``l``).
 Sprite type ``hex_corner``
 --------------------------
 
-.. versionadded:: 3.0-beta1
+.. versionadded:: 3.0
 
     Use the ``+hex_corner`` option in tilesets requiring this feature.
+
+.. versionadded:: 3.1
+
+    Support for matching against the group the tile is in.
 
 The ``hex_corner`` sprite type provides functionality similar to ``corner``, using a geometry optimized for
 isometric hexagonal tilesets. Hexagonal corner sprites cover one half of the height of the hexagons and are
@@ -397,9 +402,30 @@ complete hexagons.
 
     The geometry of hexagonal corner sprites.
 
-Matching for ``hex_corner`` sprites is always performed based on terrain groups, as in
-:ref:`the general mode for square tilesets <corner-general>`. The naming convention for "left" sprites is as
-follows:
+.. _hex_corner-same:
+
+Matching with the same group
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Similarly to :ref:`the corresponding mode for square tilesets <corner-same>`, this mode is used when
+``matches_with`` only contains ``match_type``. 14 sprites per terrain tag are needed to cover all the
+variations. They are named as follows:
+
+.. code-block:: xml
+
+    t.l<n>.<tag>_hex_cell_left_<01>_<01>_<01>
+
+For "right" sprites, simply replace ``left`` with ``right``.  The value of ``<n>`` gives the layer number, and
+the three ``<01>`` indicate whether the three tiles around the corner are in the specified matching group.
+The order is given by the letters ``a``, ``b``, and ``c`` in the figure above.
+
+.. _hex_corner-general:
+
+Matching with more than one group
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This corresponds to :ref:`the general mode for square tilesets <corner-general>`. The naming convention for
+"left" sprites is as follows:
 
 .. code-block:: xml
 
