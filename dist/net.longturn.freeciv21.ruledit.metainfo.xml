@@ -15,7 +15,7 @@
         </p>
     </description>
     <launchable type="desktop-id">net.longturn.freeciv21.ruledit.desktop</launchable>
-    <icon type="remote">https://raw.githubusercontent.com/longturn/freeciv21/master/data/icons/64x64/freeciv21-client.png</icon>
+    <icon type="remote">https://raw.githubusercontent.com/longturn/freeciv21/master/data/icons/128x128/freeciv21-client.png</icon>
     <url type="homepage">https://longturn.net/</url>
     <url type="bugtracker">https://github.com/longturn/freeciv21/issues</url>
     <screenshots>
