@@ -28,6 +28,21 @@ description: |
 version: '3.0-rc.1'
 grade: stable
 
+license: GPL-3.0-or-later
+website: https://longturn.net
+contact: longturn.net@gmail.com
+issues: https://github.com/longturn/freeciv21/issues/new/choose
+confinement: strict
+compression: lzo
+
+# The base snap is the execution environment for this snap and is based on Ubuntu 20.04
+#  core22 (Ubuntu 22.04) is available, but not all Qt features are ready yet
+base: core20
+
+# Assummes 'snapcraft' is called from a directory above the snap directory
+#  and the file was copied from <source_dir>/data/icons/128x128
+icon: snap/local/freeciv21-client.png
+
 parts:
   freeciv21:
     plugin: cmake
@@ -102,21 +117,6 @@ apps:
       - kde-neon
     plugs:
       - home
-
-license: GPL-3.0-or-later
-website: https://longturn.net
-contact: longturn.net@gmail.com
-issues: https://github.com/longturn/freeciv21/issues/new/choose
-confinement: strict
-compression: lzo
-
-# The base snap is the execution environment for this snap and is based on Ubuntu 20.04
-#  core22 (Ubuntu 22.04) is available, but not all Qt features are ready yet
-base: core20
-
-# Assummes 'snapcraft' is called from a directory above the snap directory
-#  and the file was copied from <source_dir>/data/icons/128x128
-icon: snap/local/freeciv21-client.png
 
 ##########
 # END snapcraft.yaml
