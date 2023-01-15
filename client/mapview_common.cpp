@@ -1289,7 +1289,7 @@ void update_map_canvas_visible()
 static int max_desc_width = 0, max_desc_height = 0;
 
 // Same for tile labels
-static int max_label_width = 0, max_label_height = 0;
+static QSize max_label_size = QSize();
 
 /**
    Update the city description for the given city.
@@ -1411,9 +1411,9 @@ void show_city_descriptions(int canvas_base_x, int canvas_base_y,
 void show_tile_labels(int canvas_base_x, int canvas_base_y, int width_base,
                       int height_base)
 {
-  const int dx = max_label_width - tileset_tile_width(tileset);
-  const int dy = max_label_height;
-  int new_max_width = max_label_width, new_max_height = max_label_height;
+  const int dx = max_label_size.width() - tileset_tile_width(tileset);
+  const int dy = max_label_size.height();
+  auto new_max_size = max_label_size;
 
   const auto rect = QRect(mapview.gui_x0 + canvas_base_x - dx / 2,
                           mapview.gui_y0 + canvas_base_y - dy,
@@ -1427,23 +1427,21 @@ void show_tile_labels(int canvas_base_x, int canvas_base_y, int width_base,
           show_tile_label(mapview.store, canvas_x, canvas_y, it.tile());
       log_debug("Drawing label %s.", it.tile()->label);
 
-      if (size.width() > max_label_width
-          || size.height() > max_label_height) {
+      if (size.width() > max_label_size.width()
+          || size.height() > max_label_size.height()) {
         /* The update was incomplete! We queue a new update. Note that
          * this is recursively queueing an update within a dequeuing of an
          * update. This is allowed because we use a queued connection. */
         log_debug("Re-queuing tile label %s drawing.", it.tile()->label);
         update_tile_label(it.tile());
       }
-      new_max_width = MAX(size.width(), new_max_width);
-      new_max_height = MAX(size.height(), new_max_height);
+      new_max_size = new_max_size.expandedTo(size);
     }
   }
 
   /* We don't update the new max values until the end, so that the
    * check above to see what cities need redrawing will be complete. */
-  max_label_width = MAX(max_label_width, new_max_width);
-  max_label_height = MAX(max_label_height, new_max_height);
+  max_label_size = new_max_size;
 }
 
 /**
@@ -1891,8 +1889,8 @@ std::map<freeciv::map_updates_handler::update_type, QRectF> update_rects()
       QRectF(-(city_width - width) / 2, -(city_height - height) / 2,
              city_width, city_height);
   rects[update_type::tile_label] =
-      QRectF(-(max_label_width - width) / 2, height, max_label_width,
-             max_label_height);
+      QRectF(QPointF(-(max_label_size.width() - width) / 2., height),
+             max_label_size);
   return rects;
 }
 
