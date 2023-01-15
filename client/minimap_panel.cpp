@@ -59,6 +59,7 @@ void minimap_panel::set_minimap_visible(bool visible)
   ui.zoom_in->setVisible(visible);
   ui.zoom_reset->setVisible(visible);
   ui.zoom_out->setVisible(visible);
+  ui.settings->setVisible(visible);
   ui.spacer->changeSize(0, 0, QSizePolicy::Minimum,
                         visible ? QSizePolicy::Expanding
                                 : QSizePolicy::Minimum);
@@ -80,7 +81,7 @@ void minimap_panel::setup_minimap_menu()
 
   m_show_relief = menu->addAction(_("Show Relief"));
   m_show_relief->setCheckable(true);
-  ;
+
   m_show_relief->setChecked(gui_options->overview.layers[OLAYER_RELIEF]);
   QObject::connect(m_show_relief, &QAction::toggled, [](bool checked) {
     gui_options->overview.layers[OLAYER_RELIEF] = checked;
@@ -99,7 +100,7 @@ void minimap_panel::setup_minimap_menu()
 
   m_show_borders_ocean = menu->addAction(_("Show Borders on Oceans"));
   m_show_borders_ocean->setCheckable(true);
-  ;
+
   m_show_borders_ocean->setChecked(
       gui_options->overview.layers[OLAYER_BORDERS_ON_OCEAN]);
   m_show_borders_ocean->setEnabled(
@@ -112,7 +113,7 @@ void minimap_panel::setup_minimap_menu()
 
   m_show_cities = menu->addAction(_("Show Cities"));
   m_show_cities->setCheckable(true);
-  ;
+
   m_show_cities->setChecked(gui_options->overview.layers[OLAYER_CITIES]);
   QObject::connect(m_show_cities, &QAction::toggled, [](bool checked) {
     gui_options->overview.layers[OLAYER_CITIES] = checked;
@@ -121,7 +122,7 @@ void minimap_panel::setup_minimap_menu()
 
   m_show_cities = menu->addAction(_("Show Units"));
   m_show_cities->setCheckable(true);
-  ;
+
   m_show_cities->setChecked(gui_options->overview.layers[OLAYER_UNITS]);
   QObject::connect(m_show_cities, &QAction::toggled, [](bool checked) {
     gui_options->overview.layers[OLAYER_UNITS] = checked;
@@ -130,7 +131,7 @@ void minimap_panel::setup_minimap_menu()
 
   m_show_fog = menu->addAction(_("Show Fog of War"));
   m_show_fog->setCheckable(true);
-  ;
+
   m_show_fog->setChecked(gui_options->overview.fog);
   QObject::connect(m_show_fog, &QAction::toggled, [](bool checked) {
     gui_options->overview.fog = checked;
