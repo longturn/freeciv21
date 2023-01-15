@@ -1193,6 +1193,8 @@ client will switch to a list of nations that you are playing against in a table 
 :numref:`Nations View` gives a sample of the :guilabel:`Nations View` in the client with all available columns
 displayed. If you right-click on the table heading, you will be given a list of column names that you can
 enable or disable. If you change anything, then be sure to save the settings from the :guilabel:`Game` menu.
+If any players have been killed in the game, the table will show `R.I.P.` next to the name of the player that
+has been destroyed.
 
 .. _Nations View:
 .. figure:: /_static/images/gui-elements/nations.png
