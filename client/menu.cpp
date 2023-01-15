@@ -2795,10 +2795,7 @@ void mr_menu::save_image()
   // The size of the image we want to render
   QSize full_size((wld.map.xsize + 2) * tileset_tile_width(tileset),
                   (wld.map.ysize + 2) * tileset_tile_height(tileset));
-  if (tileset_hex_width(tileset) > 0) {
-    full_size.rheight() *= 11;
-    full_size.rheight() /= 20;
-  } else if (tileset_is_isometric(tileset)) {
+  if (tileset_is_isometric(tileset)) {
     full_size.rheight() /= 2;
   }
 
@@ -2810,7 +2807,7 @@ void mr_menu::save_image()
       renderer, &freeciv::renderer::repaint_needed,
       [=](const QRegion &where) {
         // Maybe some other update sneaked in -- make sure to ignore it
-        if (where.boundingRect().size() == full_size) {
+        if (where.boundingRect().contains(QRect(QPoint(), full_size))) {
           // File path
           QString img_name =
               QStringLiteral("Freeciv21-Turn%1").arg(game.info.turn);
