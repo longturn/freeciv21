@@ -1319,8 +1319,8 @@ void update_tile_label(const tile *ptile)
    width and height of the text block (centered directly underneath the
    city's tile).
  */
-static void show_tile_label(QPixmap *pcanvas, int canvas_x, int canvas_y,
-                            const tile *ptile, int *width, int *height)
+static QSize show_tile_label(QPixmap *pcanvas, int canvas_x, int canvas_y,
+                             const tile *ptile)
 {
   const enum client_font FONT_TILE_LABEL = FONT_CITY_NAME; // TODO: new font
 #define COLOR_MAPVIEW_TILELABEL COLOR_MAPVIEW_CITYTEXT
@@ -1337,6 +1337,8 @@ static void show_tile_label(QPixmap *pcanvas, int canvas_x, int canvas_y,
 
   p.drawText((canvas_x - rect.width() / 2), canvas_y + fm.ascent(),
              ptile->label);
+
+  return rect.size();
 #undef COLOR_MAPVIEW_TILELABEL
 }
 
@@ -1421,21 +1423,20 @@ void show_tile_labels(int canvas_base_x, int canvas_base_y, int width_base,
     const int canvas_y = it.y() - mapview.gui_y0;
 
     if (it.has_tile() && it.tile()->label != nullptr) {
-      int width = 0, height = 0;
-
-      show_tile_label(mapview.store, canvas_x, canvas_y, it.tile(), &width,
-                      &height);
+      const auto size =
+          show_tile_label(mapview.store, canvas_x, canvas_y, it.tile());
       log_debug("Drawing label %s.", it.tile()->label);
 
-      if (width > max_label_width || height > max_label_height) {
+      if (size.width() > max_label_width
+          || size.height() > max_label_height) {
         /* The update was incomplete! We queue a new update. Note that
          * this is recursively queueing an update within a dequeuing of an
          * update. This is allowed because we use a queued connection. */
         log_debug("Re-queuing tile label %s drawing.", it.tile()->label);
         update_tile_label(it.tile());
       }
-      new_max_width = MAX(width, new_max_width);
-      new_max_height = MAX(height, new_max_height);
+      new_max_width = MAX(size.width(), new_max_width);
+      new_max_height = MAX(size.height(), new_max_height);
     }
   }
 
