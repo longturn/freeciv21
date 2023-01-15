@@ -9,7 +9,7 @@
 Client Message Options
 **********************
 
-As discussed in the :ref:`Message Options <client-manual-messages>` section of the game manual, there are a
+As discussed in the :ref:`Message Options <client-manual-messages>` section of the game manual, there is a
 large collection of message output options available. This page lists them in detail. Here is a sample of the
 top of the message options dialog.
 
@@ -83,8 +83,8 @@ City: Building Unavailable Item
   * Event Name: ``E_CITY_CANTBUILD``
 
 City: Captured/Destroyed
-  The city named in the message has either been captured by your enemy or has been utterly destroyed and
-  turned into ruins.
+  The city named in the message has either been captured by your enemy or has been destroyed and turned into
+  ruins.
 
   * Default: Mes
   * Event Name: ``E_CITY_LOST``
@@ -157,15 +157,19 @@ City: May Soon Grow
   * Event Name: ``E_CITY_MAY_SOON_GROW``
 
 City: Needs Aqueduct
-  The named city is trying to grow, but cannot due to the lack of an :improvement:`Aqueduct`.
+  The named city is trying to grow, but cannot due to the lack of an improvement. The message option does not
+  distinctly apply to the :improvement:`Aqueduct` as there are often other city improvements needed to allow a
+  city to grow. Many rulesets also include the :improvement:`Sewer System`. This message option applies there
+  as well.
 
   * Default: Mes
   * Event Name: ``E_CITY_AQUEDUCT``
 
 City: Needs Aqueduct Being Built
-  The named city will soon grow and needs an :improvement:`Aqueduct` that is currently being produced. The
+  The named city will soon grow and needs the city improvement that is currently being produced. The
   message may show many turns in advance, giving you ample time to determine if it needs to be rush bought or
-  can finish on its own.
+  can finish on its own. See the message option above to understand that this message can apply to
+  improvements other than the :improvement:`Aqueduct`.
 
   * Default: Mes
   * Event Name: ``E_CITY_AQ_BUILDING``
@@ -230,7 +234,7 @@ Connect/disconnect messages
   * Event Name: ``E_CONNECTION``
 
 Deprecated Modpack syntax warnings
-  An installed Modpack has improper syntax.
+  An installed Modpack uses syntax that may stop working in future versions of the game.
 
   * Default: Mes and Pop
   * Event Name: ``E_DEPRECATION_WARNING``
@@ -296,7 +300,7 @@ Diplomat Action: Sabotage
   * Event Name: ``E_MY_DIPLOMAT_SABOTAGE``
 
 Diplomat Action: Suitcase Nuke
-  Your :unit:`Spy` was successful in deploying a suitcase tactical :unit:`Nuclear` device in a targeted city.
+  Your :unit:`Spy` was successful in deploying a suitcase tactical nuclear device in a targeted city.
 
   * Default: Mes
   * Event Name: ``E_MY_SPY_NUKE``
@@ -363,7 +367,7 @@ Enemy Diplomat: Sabotage
   * Event Name: ``E_ENEMY_DIPLOMAT_SABOTAGE``
 
 Enemy Diplomat: Suitcase Nuke
-  An enemy's :unit:`Spy` was successful in deploying a suitcase tactical :unit:`Nuclear` device in a targeted
+  An enemy's :unit:`Spy` was successful in deploying a suitcase tactical nuclear device in a targeted
   city.
 
   * Default: Mes
@@ -559,21 +563,21 @@ Nation: Learned New Government
   * Event Name: ``E_NEW_GOVERNMENT``
 
 Nation: Low Funds
-  Your national treasury is low in gold. If you do not correct the issue, city improvements will be sold in
-  auction at turn change.
+  Your national treasury is low in gold. If you do not correct the issue, city improvements will be sold at
+  turn change.
 
   * Default: Mes
   * Event Name: ``E_LOW_ON_FUNDS``
 
 Nation: Multiplier changed
-  Celebrating cities and other events in the game can create multipliers. This message occurs when one or more
-  multipliers has changed values.
+  Certain effects in a ruleset can create bonuses (e.g. multipliers). This message occurs when one or more
+  multipliers has changed values. Details are given as part of the message.
 
   * Default: Mes
   * Event Name: ``E_MULTIPLIER``
 
 Nation: Pollution
-  The named city has pollution on a tile in its working radius.
+  The named city's production has caused pollution on a tile in its working radius.
 
   * Default: Mes
   * Event Name: ``E_POLLUTION``
@@ -601,9 +605,7 @@ Nation: Spaceship Events
   * Event Name: ``E_SPACESHIP``
 
 Player Destroyed
-  Either you or another player has completely destroyed another player in the game. The
-  :ref:`Nations View <Nations and Diplomacy View>` will show `R.I.P.` next to the name of the player that has
-  been destroyed.
+  Either you or another player has completely destroyed a player in the game.
 
   * Default: Mes
   * Event Name: ``E_DESTROYED``
@@ -854,7 +856,7 @@ Unit: Sentried units awaken
   * Event Name: ``E_UNIT_WAKE``
 
 Unit: Unit did
-  This message event type has not been implemented in code.
+  Currently unused.
 
   * Default: Mes
   * Event Name: ``E_UNIT_ACTION_TARGET_OTHER``
