@@ -131,11 +131,37 @@ void turn_done_button::paintEvent(QPaintEvent *event)
 namespace {
 
 /**
+ * Formats a duration without switching to "until hh::mm" when more than one
+ * hour in the future.
+ */
+QString format_simple_duration(int seconds)
+{
+  if (seconds < 0) {
+    seconds = 0;
+  }
+
+  if (seconds < 60) {
+    return QString(Q_("?seconds:%1s")).arg(seconds, 2);
+  } else if (seconds < 5 * 60) { // < 5 minutes
+    return QString(Q_("?mins/secs:%1min %2s"))
+        .arg(seconds / 60, 2)
+        .arg(seconds % 60, 2);
+  } else if (seconds < 3600) { // < one hour
+    // TRANS: Used in "Time left: 10 minutes". Always at least 5 minutes
+    return QString(_("%1 minutes")).arg(seconds / 60);
+  } else {
+    // Hours and minutes
+    const auto minutes = seconds / 60;
+    return QString(_("%1h %2min")).arg(minutes / 60).arg(minutes % 60);
+  }
+}
+
+/**
  * Format the duration until TC, given in seconds, so it comes up in minutes
  * or hours if that would be more meaningful. If allow_date is true, switches
  * to displaying the date and time of TC when it's too far in the future.
  */
-QString format_duration(int duration, bool allow_date)
+QString format_duration(int duration)
 {
   if (duration < 0) {
     duration = 0;
@@ -145,16 +171,9 @@ QString format_duration(int duration, bool allow_date)
   const auto turn_change = now.addSecs(duration);
   const auto days_left = now.daysTo(turn_change);
 
-  if (duration < 60) {
-    return QString(Q_("?seconds:%1s")).arg(duration, 2);
-  } else if (duration < 5 * 60) { // < 5 minutes
-    return QString(Q_("?mins/secs:%1min %2s"))
-        .arg(duration / 60, 2)
-        .arg(duration % 60, 2);
-  } else if (duration < 3600) { // < one hour
-    // TRANS: Used in "Time left: 10 minutes". Always at least 5 minutes
-    return QString(_("%1 minutes")).arg(duration / 60);
-  } else if (days_left == 0 || !allow_date) { // Same day
+  if (duration < 3600) { // < one hour
+    return format_simple_duration(duration);
+  } else if (days_left == 0) { // Same day
     const auto time =
         QLocale().toString(turn_change, QStringLiteral("hh:mm"));
     // TRANS: Used in "Time left: until 17:59", %1 is hours and minutes
@@ -185,18 +204,16 @@ void turn_done_button::update_timeout_label()
 
   if (is_waiting_turn_change() && game.tinfo.last_turn_change_time >= 1.5) {
     // TRANS: Processing turn change
-    m_timeout_label =
-        QString(_("Processing... %1"))
-            .arg(format_duration(get_seconds_to_new_turn(), true));
+    m_timeout_label = QString(_("Processing... %1"))
+                          .arg(format_duration(get_seconds_to_new_turn()));
   } else if (current_turn_timeout() > 0) {
-    m_timeout_label =
-        QString(_("Time left: %1"))
-            .arg(format_duration(get_seconds_to_turndone(), true));
+    m_timeout_label = QString(_("Time left: %1"))
+                          .arg(format_duration(get_seconds_to_turndone()));
     tooltip += QStringLiteral("\n");
     // TRANS: Time until turn change in the (). %1 is "5s", "4min", or "6h
     //        7min".
     tooltip = QString(_("End the current turn (%1 remaining)"))
-                  .arg(format_duration(get_seconds_to_turndone(), false));
+                  .arg(format_simple_duration(get_seconds_to_turndone()));
   } else {
     m_timeout_label = QString();
   }
