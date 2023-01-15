@@ -55,15 +55,15 @@ if(MSYS OR MINGW)
   if("$ENV{MSYSTEM}" STREQUAL "MINGW32")
     install(
       FILES
-      ${MINGW_PATH}/libcrypto-1_1.dll
-      ${MINGW_PATH}/libssl-1_1.dll
+      ${MINGW_PATH}/libcrypto-3.dll
+      ${MINGW_PATH}/libssl-3.dll
       DESTINATION ${CMAKE_INSTALL_BINDIR}
       COMPONENT freeciv21)
   else()
     install(
       FILES
-      ${MINGW_PATH}/libcrypto-1_1-x64.dll
-      ${MINGW_PATH}/libssl-1_1-x64.dll
+      ${MINGW_PATH}/libcrypto-3-x64.dll
+      ${MINGW_PATH}/libssl-3-x64.dll
       DESTINATION ${CMAKE_INSTALL_BINDIR}
       COMPONENT freeciv21)
   endif()
