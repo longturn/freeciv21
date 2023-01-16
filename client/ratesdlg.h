@@ -42,6 +42,8 @@ public:
   ~fc_double_edge() override;
   int current_min;
   int current_max;
+
+  void refresh();
   QSize sizeHint() const override;
 
 protected:
@@ -59,12 +61,13 @@ class national_budget_dialog : public qfc_dialog {
 public:
   national_budget_dialog(QWidget *parent = 0);
 
+  void refresh();
+
 private:
   fc_double_edge *fcde;
-private slots:
-  void slot_ok_button_pressed();
-  void slot_cancel_button_pressed();
-  void slot_apply_button_pressed();
+  QLabel *m_info;
+
+  void apply();
 };
 
 /**************************************************************************

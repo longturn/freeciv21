@@ -45,42 +45,30 @@ national_budget_dialog::national_budget_dialog(QWidget *parent)
   QPushButton *cancel_button;
   QPushButton *ok_button;
   QPushButton *apply_button;
-  QLabel *l1, *l2;
+  QLabel *l2;
   QString str;
-  int max;
 
   setWindowTitle(_("National Budget"));
   main_layout = new QVBoxLayout;
 
-  if (client.conn.playing != nullptr) {
-    max = get_player_bonus(client.conn.playing, EFT_MAX_RATES);
-  } else {
-    max = 100;
-  }
-
-  // Trans: Government - max rate (of taxes) x%
-  str = QString(_("%1 - max rate: %2%"))
-            .arg(government_name_for_player(client.conn.playing),
-                 QString::number(max));
-
   l2 = new QLabel(_("Select tax, luxury and science rates"));
-  l1 = new QLabel(str);
-  l1->setAlignment(Qt::AlignHCenter);
   l2->setAlignment(Qt::AlignHCenter);
+  m_info = new QLabel(str);
+  m_info->setAlignment(Qt::AlignHCenter);
   main_layout->addWidget(l2);
-  main_layout->addWidget(l1);
+  main_layout->addWidget(m_info);
   main_layout->addSpacing(20);
 
   cancel_button = new QPushButton(_("Cancel"));
   ok_button = new QPushButton(_("Ok"));
   apply_button = new QPushButton(_("Apply"));
   some_layout = new QHBoxLayout;
-  connect(cancel_button, &QAbstractButton::pressed, this,
-          &national_budget_dialog::slot_cancel_button_pressed);
+  connect(cancel_button, &QAbstractButton::pressed, this, &QWidget::close);
   connect(apply_button, &QAbstractButton::pressed, this,
-          &national_budget_dialog::slot_apply_button_pressed);
+          &national_budget_dialog::apply);
   connect(ok_button, &QAbstractButton::pressed, this,
-          &national_budget_dialog::slot_ok_button_pressed);
+          &national_budget_dialog::apply);
+  connect(ok_button, &QAbstractButton::pressed, this, &QWidget::close);
   some_layout->addWidget(cancel_button);
   some_layout->addWidget(apply_button);
   some_layout->addWidget(ok_button);
@@ -92,25 +80,26 @@ national_budget_dialog::national_budget_dialog(QWidget *parent)
 }
 
 /**
-   When cancel in qtpushbutton pressed selfdestruction :D.
+ * Refreshes tax rate data
  */
-void national_budget_dialog::slot_cancel_button_pressed() { delete this; }
-
-/**
-   When ok in qpushbutton pressed send info to server and selfdestroy :D.
- */
-void national_budget_dialog::slot_ok_button_pressed()
+void national_budget_dialog::refresh()
 {
-  dsend_packet_player_rates(&client.conn, 10 * fcde->current_min,
-                            10 * (10 - fcde->current_max),
-                            10 * (fcde->current_max - fcde->current_min));
-  delete this;
+  const int max = client.conn.playing
+                      ? get_player_bonus(client.conn.playing, EFT_MAX_RATES)
+                      : 100;
+
+  // Trans: Government - max rate (of taxes) x%
+  m_info->setText(QString(_("%1 - max rate: %2%"))
+                      .arg(government_name_for_player(client.conn.playing),
+                           QString::number(max)));
+
+  fcde->refresh();
 }
 
 /**
-   Pressed "apply" in the national budget dialog.
+ * Send info to the server.
  */
-void national_budget_dialog::slot_apply_button_pressed()
+void national_budget_dialog::apply()
 {
   dsend_packet_player_rates(&client.conn, 10 * fcde->current_min,
                             10 * (10 - fcde->current_max),
@@ -238,32 +227,6 @@ int scale_to_mult(const struct multiplier *pmul, int scale)
 }
 
 /**
-   Popup (or raise) the (tax/science/luxury) rates selection dialog.
- */
-void popup_rates_dialog()
-{
-  QList<QScreen *> screens = QGuiApplication::screens();
-  QRect rect = screens[0]->availableGeometry();
-  QPoint p;
-  national_budget_dialog *trd;
-
-  p = QCursor::pos();
-  trd = new national_budget_dialog(king()->central_wdg);
-  p.setY(p.y() - trd->height() / 2);
-  if (p.y() < 50) {
-    p.setY(50);
-  }
-  if (p.y() + trd->height() > rect.bottom()) {
-    p.setY(rect.bottom() - trd->height());
-  }
-  if (p.x() + trd->width() > rect.right()) {
-    p.setX(rect.right() - trd->width());
-  }
-  trd->move(p);
-  trd->show();
-}
-
-/**
    Update multipliers (policies) dialog.
  */
 void real_multipliers_dialog_update(void *unused)
@@ -290,21 +253,18 @@ void popup_multiplier_dialog()
  */
 fc_double_edge::fc_double_edge(QWidget *parent) : QWidget(parent)
 {
-  current_min = client.conn.playing->economic.tax / 10;
-  current_max = 10 - (client.conn.playing->economic.luxury / 10);
   mouse_x = 0.;
   moved = 0;
   on_min = false;
   on_max = false;
   cursor_size = 0;
 
-  if (client.conn.playing != nullptr) {
-    max_rates = get_player_bonus(client.conn.playing, EFT_MAX_RATES) / 10;
-  } else {
-    max_rates = 10;
-  }
   cursor_pix = *fcIcons::instance()->getPixmap(QStringLiteral("control"));
   setMouseTracking(true);
+
+  setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+
+  refresh();
 }
 
 /**
@@ -313,12 +273,28 @@ fc_double_edge::fc_double_edge(QWidget *parent) : QWidget(parent)
 fc_double_edge::~fc_double_edge() = default;
 
 /**
+ * Refreshes tax data
+ */
+void fc_double_edge::refresh()
+{
+  if (client.conn.playing) {
+    current_min = client.conn.playing->economic.tax / 10;
+    current_max = 10 - (client.conn.playing->economic.luxury / 10);
+    max_rates = get_player_bonus(client.conn.playing, EFT_MAX_RATES) / 10;
+  } else {
+    current_min = 0;
+    current_max = 10;
+    max_rates = 10;
+  }
+}
+
+/**
    Default size for double edge slider
  */
 QSize fc_double_edge::sizeHint() const
 {
-  return QSize(30 * get_tax_sprite(tileset, O_LUXURY)->width(),
-               3 * get_tax_sprite(tileset, O_LUXURY)->height());
+  const auto sprite = get_tax_sprite(tileset, O_LUXURY);
+  return QSize(20 * sprite->width(), 2 * sprite->height());
 }
 
 /**
@@ -336,9 +312,6 @@ void fc_double_edge::paintEvent(QPaintEvent *event)
   cursor_pix = cursor_pix.scaled(width() / 20, height());
   cursor_size = cursor_pix.width();
   p.begin(this);
-  p.setRenderHint(QPainter::TextAntialiasing);
-  p.setBrush(Qt::SolidPattern);
-  p.setPen(Qt::SolidLine);
 
   x_min = static_cast<double>(current_min) / 10
               * ((width() - 1) - 2 * cursor_size)

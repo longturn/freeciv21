@@ -456,16 +456,6 @@ void top_bar_show_map()
 void top_bar_finish_turn() { key_end_turn(); }
 
 /**
-   Callback to popup rates dialog
- */
-void top_bar_rates_wdg()
-{
-  if (!client_is_observer()) {
-    popup_rates_dialog();
-  }
-}
-
-/**
    Callback to center on current unit
  */
 void top_bar_center_unit()

@@ -27,6 +27,7 @@ class message_widget;
 class hud_battle_log;
 class gold_widget;
 class goto_dialog;
+class national_budget_dialog;
 class national_budget_widget;
 class top_bar;
 class top_bar_widget;
@@ -65,6 +66,9 @@ public:
   void removeRepoDlg(const QString &str);
   bool isRepoDlgOpen(const QString &str);
   void updateInfoLabel();
+
+  void popup_budget_dialog();
+
   QWidget *game_main_widget;
   fc_game_tab_widget *game_tab_widget;
   top_bar *top_bar_wdg;
@@ -95,6 +99,7 @@ private:
   top_bar_widget *sw_cities;
   gold_widget *sw_economy;
   top_bar_widget *sw_map;
+  national_budget_dialog *budget_dialog;
   national_budget_widget *sw_tax;
 };
 

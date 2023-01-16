@@ -10,7 +10,6 @@
 **************************************************************************/
 #pragma once
 
-void popup_rates_dialog();
 void real_multipliers_dialog_update(void *unused);
 
 // Actually defined in update_queue.c
