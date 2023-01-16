@@ -480,6 +480,7 @@ int client_main(int argc, char *argv[])
         qFatal("%s", qPrintable(url.errorString()));
       }
     }
+    auto_connect = true;
   } else if (!positional.isEmpty()) {
     qFatal(_("Too many positional arguments."));
   } else {
