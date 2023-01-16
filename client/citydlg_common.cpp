@@ -416,7 +416,7 @@ QString fc__attribute((__format__(__printf__, 3, 4)))
   }
 
   va_start(args, totalfmt);
-  result += QString::asprintf(totalfmt, args);
+  result += QString::vasprintf(totalfmt, args);
   va_end(args);
 
   delete sum;
