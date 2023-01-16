@@ -2701,7 +2701,7 @@ void mr_menu::load_new_tileset()
 /**
    Action "NATIONAL BUDGET"
  */
-void mr_menu::slot_popup_tax_rates() { popup_rates_dialog(); }
+void mr_menu::slot_popup_tax_rates() { queen()->popup_budget_dialog(); }
 
 /**
    Action "MULTIPLERS RATES"

@@ -16,6 +16,7 @@
 // Qt
 #include <QGridLayout>
 #include <QResizeEvent>
+#include <QScreen>
 
 // utility
 #include "fcintl.h"
@@ -41,6 +42,7 @@
 #include "minimap.h"
 #include "minimap_panel.h"
 #include "plrdlg.h"
+#include "ratesdlg.h"
 #include "top_bar.h"
 #include "unitreport.h"
 #include "voteinfo_bar.h"
@@ -74,7 +76,8 @@ pageGame::pageGame(QWidget *parent)
   sw_map->setIcon(fcIcons::instance()->getIcon(QStringLiteral("view")));
 
   sw_tax = new national_budget_widget();
-  connect(sw_tax, &QAbstractButton::clicked, top_bar_rates_wdg);
+  connect(sw_tax, &QAbstractButton::clicked, this,
+          &pageGame::popup_budget_dialog);
 
   sw_indicators = new indicators_widget();
   connect(sw_indicators, &QAbstractButton::clicked, top_bar_indicators_menu);
@@ -191,6 +194,8 @@ pageGame::pageGame(QWidget *parent)
   setLayout(page_game_layout);
 
   game_tab_widget->init();
+
+  budget_dialog = new national_budget_dialog(this);
 }
 
 pageGame::~pageGame() = default;
@@ -230,6 +235,31 @@ void pageGame::updateInfoLabel()
     update_info_timer->start(300);
     return;
   }
+}
+
+/**
+ * Popup (or raise) the (tax/science/luxury) rates selection dialog.
+ */
+void pageGame::popup_budget_dialog()
+{
+  if (client_is_observer()) {
+    // Can't change tax rates
+    return;
+  }
+
+  budget_dialog->refresh();
+
+  const auto rect = screen()->geometry();
+  auto p = sw_tax->mapToGlobal(QPoint(0, sw_tax->height()));
+  if (p.y() + budget_dialog->height() > rect.bottom()) {
+    p.setY(rect.bottom() - budget_dialog->height());
+  }
+  if (p.x() + budget_dialog->width() > rect.right()) {
+    p.setX(rect.right() - budget_dialog->width());
+  }
+
+  budget_dialog->move(p);
+  budget_dialog->show();
 }
 
 void pageGame::updateInfoLabelTimeout()

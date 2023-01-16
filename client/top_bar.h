@@ -21,7 +21,6 @@ typedef void (*pfcn)();
 void top_bar_center_unit();
 void top_bar_finish_turn();
 void top_bar_indicators_menu();
-void top_bar_rates_wdg();
 void top_bar_right_click_diplomacy();
 void top_bar_right_click_science();
 void top_bar_left_click_science();
