@@ -80,14 +80,14 @@ chat_widget, message_widget {
 
 *[unit_wait_table="true"] {
   border: 1px solid #1d5994;
-  background-color: rgba(0,0,25,185);
+  background-color: rgb(0,0,25);
 }
 
 *[civstatus="true"] {
   color: white;
 }
 *[civstatus_bg="true"] {
-   background-color: rgba(0,0,0,125);
+   background-color: rgb(0,0,0,125);
 }
 
 
@@ -433,13 +433,13 @@ unit_item, impr_item {
 
 info_tile {
   color: white;
-  background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgba(0, 0, 125,195) stop:1 rgba(25, 25, 95, 225));
+  background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(0, 0, 125) stop:1 rgb(25, 25, 95));
   border: 2px solid #0000AA;
 }
 
 notify_dialog {
   color: white;
-  background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgba(0, 0, 75,195) stop:1 rgba(25, 25, 45, 225));
+  background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(0, 0, 75) stop:1 rgb(25, 25, 45));
   border: 2px solid #0000AA;
 }
 
@@ -740,11 +740,6 @@ city_dialog QTableWidget {
   selection-background-color:  #3399FF;
 }
 
-info_tab {
-  border: 1px solid #1d5994;
-  background-color: rgba(0,0,75,185);
-}
-
 units_reports QScrollArea {
   background: rgba(0,0,0,45);
 }
@@ -928,8 +923,8 @@ xvote QPushButton:hover {
 hud_message_box {
   background-color: transparent;
   color: white;
-  selection-background-color: rgba(50, 150, 250,220);
-  alternate-background-color: rgba(0, 0, 60,220);
+  selection-background-color: rgb(50, 150, 250);
+  alternate-background-color: rgb(0, 0, 60);
   border: 2px solid #3399FF;
 }
 
@@ -937,8 +932,8 @@ hud_message_box {
 hud_input_box {
   background-color: transparent;
   color: white;
-  selection-background-color: rgba(50, 150, 250,220);
-  alternate-background-color: rgba(0, 0, 60,220);
+  selection-background-color: rgb(50, 150, 250);
+  alternate-background-color: rgb(0, 0, 60);
   border: 2px solid #3399FF;
 }
 
@@ -978,12 +973,12 @@ gold_widget[current_warning="2"] {
 }
 
 hud_action {
-  selection-background-color: rgba(75, 75, 75, 165);
+  selection-background-color: rgb(75, 75, 75);
   color: white;
 }
 
 hud_units {
-  background: rgba(0, 0, 0, 185);
+  background: black;
 }
 
 hud_units QLabel {
@@ -991,7 +986,7 @@ hud_units QLabel {
 }
 
 hud_unit_combat {
-  selection-background-color: rgba(0, 0, 75,165);
+  selection-background-color: rgb(0, 0, 75);
   alternate-background-color: #0000AA;
 }
 
