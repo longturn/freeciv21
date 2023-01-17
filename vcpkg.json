@@ -5,6 +5,7 @@
   "dependencies": [
     "qt5-base",
     "qt5-svg",
+    "openssl",
     "lua",
     {
       "name": "gettext",
@@ -16,12 +17,6 @@
     {
       "name": "readline",
       "platform": "windows"
-    }
-  ],
-  "overrides": [
-    {
-      "name": "openssl",
-      "version-string": "1.1.1l"
     }
   ]
 }
