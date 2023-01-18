@@ -1,11 +1,12 @@
 ..
     SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022-2023 James Robertson <jwrober@gmail.com>
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
 .. role:: improvement
 .. role:: wonder
+.. role:: advance
 
 Unit Type Flags
 ***************
@@ -17,14 +18,15 @@ the unit type that has been assigned the flag. A reader can find the flags by lo
 shipped by the Freeciv21 developers.
 
 :strong:`AirAttacker`
-  Very bad at attacking AEGIS.
+  Very bad at attacking :unit:`AEGIS Cruiser`.
 
 :strong:`Airbase`
   This flag does not have a pre-set use. It is available for ruleset modders to add as a condition to an
   :doc:`action enabler requirements vector </Modding/Rulesets/actions>`.
 
 :strong:`AddToCity`
-  Citizen containing units (e.g. Settlers) can add population to a city. Must travel to the target city.
+  Citizen containing units (e.g. :unit:`Settlers`) can add population to a city. The unit must travel to the
+  target city.
 
 :strong:`BadCityDefender`
   If attacked while in a city, firepower is set to ``1`` and firepower of attacker is doubled.
@@ -34,7 +36,7 @@ shipped by the Freeciv21 developers.
   other city building defense.
 
 :strong:`BarbarianOnly`
-  Only barbarians can build this unit.
+  Only :unit:`Barbarians` can build this unit.
 
 :strong:`Bombarder`
   Can bombard cities.
@@ -67,7 +69,7 @@ shipped by the Freeciv21 developers.
   Sea Class only. Can refuel on coast. Set fuel to force unit to regularly end turn on coast.
 
 :strong:`CoastStrict`
-  Sea Class only. Cannot leave the coast.
+  Sea Class only. Cannot leave the coast. :unit:`Trireme` units often have this flag.
 
 :strong:`Consensus`
   Undisbandable when your bureaucracy has a veto.
@@ -97,7 +99,8 @@ shipped by the Freeciv21 developers.
   Defends very badly against :unit:`Fighters`.
 
 :strong:`HelpWonder`
-  Can help to build a wonder. Must travel to target city.
+  Can help to build a wonder. The unit must travel to target city. These are typically :unit:`Caravan` and
+  :unit:`Freight` units.
 
 :strong:`Horse`
   Attack value reduced when attacking :unit:`Pikemen`.

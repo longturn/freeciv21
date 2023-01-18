@@ -1,11 +1,12 @@
 ..
     SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022-2023 James Robertson <jwrober@gmail.com>
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
 .. role:: improvement
 .. role:: wonder
+.. role:: advance
 
 Technology Advance Flags
 ************************
@@ -16,11 +17,11 @@ assigned the flag. A reader can find the flags by looking at the :file:`techs.ru
 directory. The following flags are used in all of the rulesets shipped by the Freeciv21 developers.
 
 :strong:`Bonus_Tech`
-  The player gets extra technology if reach the technology with this flag first.
+  The player gets extra technology when reaching the technology with this flag first.
 
 :strong:`Bridge`
   ``Settler`` unit types can build roads with the ``RequiresBridge`` flag over roads with the
-  ``PreventsOtherRoads`` flag. This is typically on rivers.
+  ``PreventsOtherRoads`` flag. This is typically on Rivers.
 
 :strong:`Build_Airborne`
   This flag is mostly to help the AI (e.g. an AI hint). From now on the player can build air units.
