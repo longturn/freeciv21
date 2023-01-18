@@ -1,11 +1,12 @@
 ..
     SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022-2023 James Robertson <jwrober@gmail.com>
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
 .. role:: improvement
 .. role:: wonder
+.. role:: advance
 
 Unit Class Flags
 ****************
@@ -21,11 +22,12 @@ shipped by the Freeciv21 developers.
   Allows a unit to be airlifted from a suitable city. This quite often requires an :improvement:`Airport`.
 
 :strong:`AttackNonNative`
-  Allows a unit to attack another unit on non-native tiles (e.g. :unit:`Marines` in a :unit:`Transport`
-  attacking a city). The Unit Type Flag ``Only_Native_Attack`` can override this.
+  Allows a native tiled unit to attack a non-native tiled unit (e.g. :unit:`Cannon` attacks a :unit:`Galleon`
+  from inside a city). The Unit Type Flag ``Only_Native_Attack`` can override this.
 
 :strong:`AttFromNonNative`
-  See ``AttackNonNative``.
+  Allows a unit to attack another unit on from non-native tiles (e.g. :unit:`Marines` in a :unit:`Transport`
+  attacking a city). The Unit Type Flag ``Only_Native_Attack`` can override this.
 
 :strong:`BuildAnywhere`
   Allows a unit to be built even in the middle of non-native terrain.

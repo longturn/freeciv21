@@ -1,11 +1,12 @@
 ..
     SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022-2023 James Robertson <jwrober@gmail.com>
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
 .. role:: improvement
 .. role:: wonder
+.. role:: advance
 
 Unit Type Role Flags
 ********************
@@ -86,7 +87,7 @@ directory. The following roles are used in all of the rulesets shipped by the Fr
   First to be built when a city is founded.
 
 :strong:`HeavyWeight`
-  Airliftable from :improvement:`Airport` after you learn `Fusion Power`.
+  Airliftable from :improvement:`Airport` after you learn :advance:`Fusion Power`.
 
 :strong:`Hunter`
   A special type of hunter. See :file:`alien/units.ruleset`.
@@ -104,7 +105,7 @@ directory. The following roles are used in all of the rulesets shipped by the Fr
   Airliftable once you learn `Flight`.
 
 :strong:`MediumWeight`
-  Airliftable from :improvement:`Airport` after you learn `Advanced Flight`.
+  Airliftable from :improvement:`Airport` after you learn :advance:`Advanced Flight`.
 
 :strong:`Settlers`
   Acts as a :unit:`Settler` type unit.
