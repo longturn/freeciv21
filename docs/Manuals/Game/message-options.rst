@@ -5,6 +5,7 @@
 .. role:: unit
 .. role:: improvement
 .. role:: wonder
+.. role:: advance
 
 Client Message Options
 **********************
@@ -557,7 +558,7 @@ Nation: First Contact
 
 Nation: Learned New Government
   Your scientists have learned a new technology advance that also allows for a new form of government. A good
-  example is learning Republic allows you to form a new government of the same name.
+  example is learning :advance:`Republic` allows you to form a new government of the same name.
 
   * Default: Mes
   * Event Name: ``E_NEW_GOVERNMENT``
@@ -829,7 +830,8 @@ Unit: Orders / goto events
 Unit: Production Upgraded
   The named city is producing a unit that has been obsoleted by a technology advance. The newer unit is now
   being constructed. For example: a city is building a :unit:`Phalanx`, however your nation has recently
-  discovered Feudalism. The city will change to producing :unit:`Pikemen` instead of :unit:`Phalanx`.
+  discovered :advance:`Feudalism`. The city will change to producing :unit:`Pikemen` instead of
+  :unit:`Phalanx`.
 
   * Default: Mes
   * Event Name: ``E_UNIT_UPGRADED``

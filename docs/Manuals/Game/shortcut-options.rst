@@ -5,6 +5,7 @@
 .. role:: unit
 .. role:: improvement
 .. role:: wonder
+.. role:: advance
 
 Client Shortcut Options
 ***********************
