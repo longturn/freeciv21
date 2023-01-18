@@ -1,15 +1,16 @@
 ..
     SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022-2023 James Robertson <jwrober@gmail.com>
     SPDX-FileCopyrightText: 2022 Louis Moureaux <m_louis30@yahoo.com>
-
-List of Capitalized Terms
-*************************
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
 .. role:: improvement
 .. role:: wonder
+.. role:: advance
+
+List of Capitalized Terms
+*************************
 
 This page contains a list of terms that should be capitalized when used in the documentation. It is most
 likely incomplete. Please refer to the :doc:`style-guide` page for more information.
@@ -17,7 +18,7 @@ likely incomplete. Please refer to the :doc:`style-guide` page for more informat
 Buildings and Wonders
 =====================
 
-Use them with ``:improvement:`` or ``:woncer:``, :improvement:`Granary` and :wonder:`Pyramids`.
+Use them with ``:improvement:`` or ``:wonder:``, such as :improvement:`Granary` and :wonder:`Pyramids`.
 
 .. hlist::
   :columns: 3
@@ -217,6 +218,8 @@ Terrains
 Technologies
 ============
 
+Use them with ``:advance:``, such as :advance:`Advanced Espionage`.
+
 .. hlist::
   :columns: 4
 
@@ -343,7 +346,7 @@ Terrain Alterations
 Units
 =====
 
-Use them with ``:unit:``, :unit:`Settlers`.
+Use them with ``:unit:``, such as :unit:`Settlers`.
 
 .. hlist::
   :columns: 4
