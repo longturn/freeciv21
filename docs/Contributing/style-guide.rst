@@ -1,15 +1,16 @@
 ..
     SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022-2023 James Robertson <jwrober@gmail.com>
     SPDX-FileCopyrightText: 2022 Louis Moureaux <m_louis30@yahoo.com>
-
-Documentation Style Guide
-*************************
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
 .. role:: improvement
 .. role:: wonder
+.. role:: advance
+
+Documentation Style Guide
+*************************
 
 The Longturn community uses the Python based Sphinx system to generate the documentation available on this
 website. Sphinx takes plain text files formatted with a super set of markdown called reStructuredText (ReST).
@@ -96,7 +97,8 @@ to alter is placed inside back-ticks.
 * :literal:`:title-reference:` -- Title Reference is used notate a :title-reference:`title entry` in the
   in-game help or to refer to a page in the documentation without giving an actual hyperlink reference
   (see :literal:`:doc:` above).
-* :literal:`.. versionadded::` -- Used at the paragraph level to document the first version in which a feature was added.
+* :literal:`.. versionadded::` -- Used at the paragraph level to document the first version in which a feature
+  was added.
 
 The docutils specification allows for custom Interpreted Text Roles and we use this feature. The docutils
 documentation on this feature is available here:
@@ -108,6 +110,8 @@ https://docutils.sourceforge.io/docs/ref/rst/directives.html#custom-interpreted-
   improvement, such as the :improvement:`Granary`.
 * :literal:`:wonder:` -- This provides an opportunity to highlight a Freeciv21 small or great wonder, such as
   the :wonder:`Pyramids`.
+* :literal:`:advance:` -- This provides an opportunity to highlight a Freeciv21 technology advance, such as
+  :advance:`Ceremonial Burial`.
 
 Admonition Directives
 =====================
