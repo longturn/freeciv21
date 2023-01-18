@@ -1,10 +1,18 @@
-Frequently Asked Questions (FAQ)
-********************************
+..
+    SPDX-License-Identifier: GPL-3.0-or-later
+    SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
+    SPDX-FileCopyrightText: 2022-2023 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022 louis94 <m_louis30@yahoo.com>
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
 .. role:: improvement
 .. role:: wonder
+.. role:: advance
+
+Frequently Asked Questions (FAQ)
+********************************
+
 
 The following page has a listing of frequenty asked questions with answers about Freeciv21.
 
@@ -15,15 +23,18 @@ Common acronymns you will find in this FAQ as well as on the Longturn Community'
 documentation:
 
 * :strong:`FC`: Freeciv - Classic legacy Freeciv
-* :strong:`FC21`: Freeciv21 - A new fork of Freeciv v3.0 concentrating on multiplayer games and a single client.
+* :strong:`FC21`: Freeciv21 - A new fork of Freeciv v3.0 concentrating on multiplayer games and a single
+  client.
 * :strong:`FCW`: Freeciv Web - a web client and highly customized version of the legacy Freeciv server.
   Not affiliated directly with Freeciv, Freeciv21 or Longturn.
 * :strong:`LT`: Longturn
 * :strong:`LTT`: Longturn Tradtional Ruleset - LT's standard ruleset
 * :strong:`LTX`: Longturn Experimental Ruleset - LT's experimental rulset
-* :strong:`MP2`: Multiplayer 2 Ruleset. There are many MP2 rulesets and they are numbered: MP2a, MP2b, MP2c, etc.
+* :strong:`MP2`: Multiplayer 2 Ruleset. There are many MP2 rulesets and they are numbered: MP2a, MP2b, MP2c,
+  etc.
 * :strong:`MP`: Move Point - the number of moves a unit has available.
-* :strong:`HP`: Hit Point - the amount of health a unit has avalable. When this goes to zero the unit is killed.
+* :strong:`HP`: Hit Point - the amount of health a unit has avalable. When this goes to zero the unit is
+  killed.
 * :strong:`FP`: Fire Power - The amount of damage an attacking unit can inflict on a defending unit.
 * :strong:`TC`: Turn Change - A period of time when the server processes end of turn events in a specific
   :doc:`order <../Playing/turn-change>`.
@@ -59,7 +70,7 @@ Once the client starts, to begin a single-player game, select :guilabel:`Start n
 game settings (the defaults should be fine for a beginner-level single-player game) and press the
 :guilabel:`Start` button.
 
-Freeciv21 is a client/server system. However, in most cases you don't have to worry about this; the client
+Freeciv21 is a client/server system. However, in most cases you do not have to worry about this; the client
 starts a server automatically for you when you start a new single-player game.
 
 Once the game is started you can find information in the :guilabel:`Help` menu. If you have never played a
@@ -168,7 +179,7 @@ difficulty, directly through the spinbutton.
 .. note:: The number of players here includes human players (an ``aifill`` of ``5`` adds AI players until the
   total number of players becomes 5).
 
-If you are playing on a remote server, you'll have to do this manually. Change the ``aifill`` server option
+If you are playing on a remote server, you will have to do this manually. Change the ``aifill`` server option
 through the :guilabel:`Game --> Server Options` options dialog, or do it on the chatline with something like:
 
 .. code-block:: rst
@@ -202,7 +213,7 @@ You may also use the command-line interface (through the chatline.)
 First of all try the ``/list`` command. This will show you all players created, including human
 players and AI players (both created automatically by aifill or manually with ``/create``).
 
-Now, you're ready to assign players to teams. To do this you use the team command. For example, if there's
+Now, you are ready to assign players to teams. To do this you use the team command. For example, if there is
 one human player and you want two more AI players on the same team, you can do to create two AI players and
 put them on the same team you can do:
 
@@ -215,7 +226,7 @@ put them on the same team you can do:
 
 You may also assign teams for human players, of course. If in doubt use the ``/list`` command again;
 it will show you the name of the team each player is on. Make sure you double-check the teams before
-starting the game; you can't change teams after the game has started.
+starting the game; you cannot change teams after the game has started.
 
 Can I build up the palace or throne room as in the commercial Civilization games?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -231,11 +242,11 @@ moves from connected clients are processed in the order they are received. Serve
 in between turns (e.g. at TC) This allows human players to surprise their opponents by clever use of goto or
 quick fingers.
 
-A turn in a Longturn game typically lasts 23 hours and it's always possible that they managed to log in twice
+A turn in a Longturn game typically lasts 23 hours and it is always possible that they managed to log in twice
 between your two consecutive logins. However, firstly, there is a mechanic that slightly limits this (known as
-unit wait time), and secondly, this can't happen every time because now they have already played their move
+unit wait time), and secondly, this cannot happen every time because now they have already played their move
 this turn and now need to wait for the Turn Change to make their next move. So, in the next turn, if you log
-in before them, now it was you who made your move twice. If not, they can't :emphasis:`move twice` until you
+in before them, now it was you who made your move twice. If not, they cannot :emphasis:`move twice` until you
 do.
 
 The primary server setting to mitigate this problem is ``unitwaittime``, which imposes a minimum time between
@@ -263,7 +274,7 @@ Why are the AI players so easy on 'hard'?
 
 Several reasons. For example, the AI is heavily play tested under and customized to the default ruleset and
 server settings. Although there are several provisions in the code to adapt to changing rules, playing under
-different conditions is quite a handicap for it. Though mostly the AI simply doesn't have a good, all
+different conditions is quite a handicap for it. Though mostly the AI simply does not have a good, all
 encompassing strategy besides :strong:`"eliminate nation x"`.
 
 To make the game harder, you could try putting some or all of the AI into a team. This will ensure that they
@@ -320,8 +331,8 @@ Diplomacy
 
 This subsection of the Gameplay section is a discussion around Diplomacy.
 
-Why can't I attack another player's units?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Why cannot I attack another player's units?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You have to declare war first. See the section for `How do I declare war on another player?`_ below.
 
@@ -336,7 +347,7 @@ How do I declare war on another player?
 
 Go to the :guilabel:`Nations` page (F3), select the player row, then click :guilabel:`Cancel Treaty` at the
 top. This drops you from :emphasis:`cease fire`, :emphasis:`armistice`, or :emphasis:`peace` into
-:emphasis:`war`. If you've already signed a permanent :emphasis:`alliance` treaty with the player, you will
+:emphasis:`war`. If you have already signed a permanent :emphasis:`alliance` treaty with the player, you will
 have to cancel treaties several times to get to :emphasis:`war`.
 
 See the in-game help on :title-reference:`Diplomacy` for more detail.
@@ -381,7 +392,7 @@ Can one use a regular square tileset for iso-square maps and vice versa?
 While that’s technically possible, hex and iso-hex topologies aren’t directly compatible with each other, so
 the result isn’t playable in a good (visualization) way. In the client you can force the change of tileset by
 going to :menuselection:`Game --> Load Another Tileset`. If the client can change, it will and you will be
-able to experiment a bit. If there is a complete discrepency, the client will throw an error and won't make
+able to experiment a bit. If there is a complete discrepency, the client will throw an error and will not make
 the requested change.
 
 How do I play on a hexagonal grid?
@@ -416,7 +427,7 @@ This subsection of the Gameplay section is a discussion around cities and the te
 My irrigated grassland produces only 2 food. Is this a bug?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-No, it's not -- it's a feature. Your government is probably Despotism, which has a -1 output penalty whenever
+No, it is not -- it is a feature. Your government is probably Despotism, which has a -1 output penalty whenever
 a tile produces more than 2 units of food, production, ortrade. You should change your government (See the
 in-game help on :title-reference:`Government` for more detail) to get rid of this penalty.
 
@@ -429,7 +440,7 @@ Can I build land over sea/transform ocean to land?
 Yes. You can do that by placing :unit:`Engineer` in a :unit:`Transport` and going to the ocean tile you want
 to build land on. Click the :unit:`Transport` to display a list of the transported :unit:`Engineers` and
 activate them. Then give them the order of transforming the tile to swamp. This will take a very long time
-though, so you'd better try with 6 or 8 :unit:`Engineers` at a time. There must be 3 adjacent land tiles to
+though, so you had better try with 6 or 8 :unit:`Engineers` at a time. There must be 3 adjacent land tiles to
 the ocean tile (e.g. a land corner) you are transforming for this activiy to work.
 
 Is there an enforced minimum distance between cities?
@@ -502,23 +513,23 @@ Is there a benefit to lake tiles over ocean tiles? What are their differences?
 
 There are at least the following differences:
 
-* Lake tiles allow an adjacent city to build a cheap :improvement:`Aqueduct, Lake` with no upkeep and before the
-  discovery of Construction. This is commonly referred to as the "fresh water" effect.
+* Lake tiles allow an adjacent city to build a cheap :improvement:`Aqueduct, Lake` with no upkeep and before
+  the discovery of :advance:`Construction`. This is commonly referred to as the "fresh water" effect.
 * Lake tiles give more food than ocean tiles, especially with the Fish tile special.
 * Shallow ocean gives +1 production with :improvement:`Offshore Platform`. The :improvement:`Offshore Platform`
-  city improvement often comes with the discovery of Miniturization in most rulesets, but this is a ruleset
-  configurable item.
-* Some ships can’t travel on deep ocean (such as Triremes)
+  city improvement often comes with the discovery of :advance:`Miniturization` in most rulesets, but this is a
+  ruleset configurable item.
+* Some ships can’t travel on deep ocean (such as :unit:`Triremes`)
 * Shallow ocean has a 10% defense bonus.
 * Ocean tiles allow you to build :improvement:`Harbor`, giving +1 food. The :improvement:`Harbor` city
-  improvement often comes with the discovery of Seafaring in most rulsets, but this is a ruleset configurable
-  item.
+  improvement often comes with the discovery of :advance:`Seafaring` in most rulsets, but this is a ruleset
+  configurable item.
 
 Is “Aqueduct, River” identical to “Aqueduct, Lake”?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In most rulesets, yes. It is part of the "fresh water" effect of giving a cheap :improvement:`Aqueduct` that
-has no gold upkeep and does not require the discovery of Construction.
+has no gold upkeep and does not require the discovery of :advance:`Construction`.
 
 Is the city tile worked for free?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -706,8 +717,8 @@ Units - Military
 
 This subsection of the Gameplay section is a discussion around military units specifically.
 
-My opponent's last city is on a 1x1 island so I cannot conquer it, and they won't give up. What can I do?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+My opponent's last city is on a 1x1 island so I cannot conquer it, and they will not give up. What can I do?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 It depends on the ruleset, but often researching Amphibious Warfare will allow you to build a
 :unit:`Marine`. Alternatively research Combined Arms and either move a :unit:`Helicopter` or airdrop a
@@ -715,7 +726,7 @@ It depends on the ruleset, but often researching Amphibious Warfare will allow y
 for ``Can launch attack from non-native tiles``. This is the unit's feature that allows you to attack from
 the ocean or air versus land, which is a native tile.
 
-If you can't build :unit:`Marines` yet, but you do have :unit:`Engineers`, and other land is close-by, you
+If you cannot build :unit:`Marines` yet, but you do have :unit:`Engineers`, and other land is close-by, you
 can also build a land-bridge to the island (i.e. transform the ocean). If you choose this route, make sure
 that your :unit:`Transport` is well defended!
 
@@ -813,7 +824,7 @@ city in the field.
 Other
 -----
 
-This subsection of the Gameplay section is a catchall area for questions don't fit nicely into the other
+This subsection of the Gameplay section is a catchall area for questions do not fit nicely into the other
 subsections.
 
 Can I change settings or rules to get different types of games?
@@ -867,8 +878,8 @@ Civilization III+.
 
 So the goal of compatibility is mainly used as a limiting factor in development. When a new feature is added
 to Freeciv21 that makes gameplay different, it is generally implemented in such a way that the
-:emphasis:`traditional` behaviour remains available as an option. However, we're not aiming for absolute
-100% compatibility; in particular, we're aiming for bug-compatibility.
+:emphasis:`traditional` behaviour remains available as an option. However, we are not aiming for absolute
+100% compatibility; in particular, we are aiming for bug-compatibility.
 
 I want more action.
 ^^^^^^^^^^^^^^^^^^^
@@ -1053,21 +1064,21 @@ If the client was compiled with sound support, it will be enabled by default.
 How do I use a different tileset?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-If the tilesets supplied with Freeciv21 don't do it for you, some popular add-on tilesets are available
+If the tilesets supplied with Freeciv21 do not do it for you, some popular add-on tilesets are available
 through the modpack installer utility. To install these, just launch the installer from the Start menu, and
 choose the one you want; it should then be automatically downloaded and made available for the current user.
 For more information, refer to :doc:`/Manuals/modpack-installer`.
 
-If the tileset you want is not available via the modpack installer, you'll have to install it by hand from
+If the tileset you want is not available via the modpack installer, you will have to install it by hand from
 somewhere. To do that is beyond the scope of this FAQ.
 
 How do I use a different ruleset?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Again, this is easiest if the ruleset is available through the :strong:`Freeciv21 Modpack Installer` utility
-that's shipped with Freeciv21.
+that is shipped with Freeciv21.
 
-If the ruleset you want is not available via the modpack installer, you'll have to install it by hand from
+If the ruleset you want is not available via the modpack installer, you will have to install it by hand from
 somewhere. To do that is beyond the scope of this FAQ.
 
 
@@ -1077,17 +1088,17 @@ Community
 Does Freeciv21 violate any rights of the makers of Civilization I or II?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-There have been debates on this in the past and the honest answer seems to be: We don't know.
+There have been debates on this in the past and the honest answer seems to be: We do not know.
 
-Freeciv21 doesn't contain any actual material from the commercial Civilization games. (The Freeciv21
+Freeciv21 does not contain any actual material from the commercial Civilization games. (The Freeciv21
 maintainers have always been very strict in ensuring that materials contributed to the Freeciv21
 distribution or Longturn website do not violate anyone's copyright.) The name of Freeciv21 is probably not a
 trademark infringement. The user interface is similar, but with many (deliberate) differences. The game
 itself can be configured to be practically identical to Civilization I or II, so if the rules of a game are
 patentable, and those of the said games are patented, then Freeciv21 may infringe on that patent, but we
-don't believe this to be the case.
+do not believe this to be the case.
 
-Incidentally, there are good reasons to assume that Freeciv21 doesn't harm the sales of any of the
+Incidentally, there are good reasons to assume that Freeciv21 does not harm the sales of any of the
 commercial Civilization games in any way.
 
 How does Freeciv21 relate to other versions of Freeciv?
@@ -1099,7 +1110,7 @@ because we felt that the development was not going in the right direction for mu
 Freeciv is concentrating on single-player games for the most part.
 
 Besides Freeciv21 and legacy Freeciv, there are also communities playing a version running in the browser,
-commonly known as Freeciv Web. This version is less flexible and doesn't fulfill the needs of a diverse
+commonly known as Freeciv Web. This version is less flexible and does not fulfill the needs of a diverse
 community like Longturn.
 
 Where can I ask questions or send improvements?
@@ -1116,19 +1127,19 @@ https://github.com/longturn/freeciv21/issues/new/choose. For more information, h
 Technical Stuff
 ---------------
 
-I've found a bug, what should I do?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+I have found a bug, what should I do?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 See the article on `Where can I ask questions or send improvements?`_. You might want to start up a
 conversation about it in the Longturn Discord channels if you are unsure.
 
-I've started a server but the client cannot find it!
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+I have started a server but the client cannot find it!
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 By default, your server will be available on host :literal:`localhost` (your own machine), port
 :literal:`5556`; these are the default values your client uses when asking which game you want to connect to.
 
-So if you don't get a connection with these values, your server isn't running, or you used :literal:`-p` to
+So if you do not get a connection with these values, your server is not running, or you used :literal:`-p` to
 start it on a different port, or your system's network configuration is broken.
 
 To start your local server, run :file:`freeciv21-server`. Then type :literal:`start` at the
@@ -1154,7 +1165,7 @@ server prompt to begin!
 
 If the server is not running, you will :emphasis:`not` be able to connect to your local server.
 
-If you can't connect to any of the other games listed, a firewall in your organization/ISP is probably
+If you cannot connect to any of the other games listed, a firewall in your organization/ISP is probably
 blocking the connection. You might also need to enable port forwarding on your router.
 
 If you are running a personal firewall, make sure that you allow communication for :file:`freeciv21-server`
@@ -1164,7 +1175,7 @@ allow :file:`freeciv21-server` to act as a server on the Internet zone.
 How do I restart a saved game?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-If for some reason you can't use the start-screen interface for loading a game, you can load one directly
+If for some reason you cannot use the start-screen interface for loading a game, you can load one directly
 through the client or server command line. You can start the client, or server, with the :literal:`-f`
 option, for example:
 
@@ -1183,7 +1194,7 @@ In a local game started from the client, the games will be saved into the defaul
 however, any savegames will be stored in the current directory. If the autosaves server setting is set
 appropriately, the server will periodically save the game automatically (which can take a lot of disk space
 in some cases); the frequency is controlled by the :literal:`saveturns` setting. In any case, you should
-check the ownership, permissions, and disk space/quota for the directory or partition you're trying to save
+check the ownership, permissions, and disk space/quota for the directory or partition you are trying to save
 to.
 
 Where are the save games located by default?
@@ -1203,7 +1214,7 @@ command line argument to the server (you would have to run it separately).
 I opened a ruleset file in Notepad and it is very hard to read
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The ruleset files (and other configuration files) are stored with UNIX line endings which Notepad doesn't
+The ruleset files (and other configuration files) are stored with UNIX line endings which Notepad does not
 handle correctly. Please use an alternative editor like WordPad, notepad2, or notepad++ instead.
 
 What are the system requirements?
@@ -1222,11 +1233,11 @@ not help. If you find your game running too slow, these may be the reasons:
 * :strong:`Too little memory`: Swapping memory pages on disc (virtual memory) is really slow. Look at the
   memory requirements above.
 
-* :strong:`Large map`: Larger map doesn't necessary mean a more challenging or enjoyable game. You may try a
+* :strong:`Large map`: Larger map does not necessary mean a more challenging or enjoyable game. You may try a
   smaller map.
 
-* :strong:`Many AI players`: Again, having more players doesn't necessary mean a more challenging or enjoyable
-  game.
+* :strong:`Many AI players`: Again, having more players does not necessary mean a more challenging or
+  enjoyable game.
 
 * :strong:`City Governor (CMA)`: This is a really useful client side agent which helps you to organize our
   citizens. However, it consumes many CPU cycles. For more information on the CMA, refer to
@@ -1251,8 +1262,8 @@ How do I use Freeciv21 under MS Windows?
 Precompiled binaries can be downloaded from https://github.com/longturn/freeciv21/releases. The native
 Windows packages come as self-extracting installers.
 
-OK, I've downloaded and installed it, how do I run it?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OK, I have downloaded and installed it, how do I run it?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 See the document about :doc:`/Getting/windows-install`.
 
