@@ -9,6 +9,7 @@ options = "+Freeciv-spec-Devel-2019-Jul-03"
 artists = "
     Yautja (Pond/River Sources)
     GriffonSpade
+    Jwrober (darker rivers)
 "
 
 [file]
@@ -23,7 +24,7 @@ dy = 64
 pixel_border = 1
 
 tiles = { "row", "column","tag"
-; Rivers (as special type), and whether north, south, east, west 
+; Rivers (as special type), and whether north, south, east, west
 ; also has river or is ocean:
 
  0,  0, "road.river_s_n0e0se0s0w0nw0"
