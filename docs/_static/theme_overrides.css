@@ -33,22 +33,22 @@ p {
 
 h1 {
     font-family: Libertinus Sans, sans-serif;
-    font-size: 26px;
+    font-size: 28px;
 }
 
 h2 {
     font-family: Libertinus Sans, sans-serif;
-    font-size: 24px;
+    font-size: 26px;
 }
 
 h3 {
     font-family: Libertinus Sans, sans-serif;
-    font-size: 22px;
+    font-size: 24px;
 }
 
 h4 {
     font-family: Libertinus Sans, sans-serif;
-    font-size: 20px;
+    font-size: 22px;
 }
 
 /* set the font of the side nav bar header */
@@ -113,6 +113,16 @@ html.writer-html5 .rst-content table.docutils :is(td, th) > p :is(.pre, code, pr
 .wonder {
     border: 1px solid #a069c6;
     background: #e2b3f7;
+    font-size:80%;
+    font-weight:700;
+    border-radius:4px;
+    padding:2px 6px;
+    margin:auto 2px
+}
+
+.advance {
+    border: 1px solid #aa726f;
+    background: #f4bab7;
     font-size:80%;
     font-weight:700;
     border-radius:4px;
