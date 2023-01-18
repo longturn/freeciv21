@@ -1,18 +1,19 @@
 ..
     SPDX-License-Identifier: GPL-3.0-or-later
     SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022-2023 James Robertson <jwrober@gmail.com>
     SPDX-FileCopyrightText: 2022 Pranav Sampathkumar <pranav.sampathkumar@gmail.com>
     SPDX-FileCopyrightText: 2022 NIKEA-SOFT
     SPDX-FileCopyrightText: 2022 Louis Moureaux <m_louis30@yahoo.com>
-
-Freeciv21 Hacker's Guide
-************************
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
 .. role:: improvement
 .. role:: wonder
+.. role:: advance
+
+Freeciv21 Hacker's Guide
+************************
 
 This guide is intended to be a help for developers, wanting to mess with Freeciv21 programming.
 
@@ -27,8 +28,8 @@ Code changes should always be tested before submission for inclusion into the Gi
 useful to run the client and server as autogames to verify either a particular savegame no longer shows a
 fixed bug, or as a random sequence of games in a while loop overnight.
 
-To start a server game with all AI players, create a file (below named civ.serv) with lines such as the
-following:
+To start a server game with all AI players, create a file (below named :file:`civ.serv`) with lines such as
+the following:
 
 .. code-block:: sh
 

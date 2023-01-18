@@ -1,16 +1,18 @@
 ..
     SPDX-License-Identifier: GPL-3.0-or-later
     SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022-2023 James Robertson <jwrober@gmail.com>
     SPDX-FileCopyrightText: 2022 Louis Moureaux <m_louis30@yahoo.com>
-
-Artificial Intelligence (AI)
-****************************
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
 .. role:: improvement
 .. role:: wonder
+.. role:: advance
+
+Artificial Intelligence (AI)
+****************************
+
 
 This document is about Freeciv21's default AI.
 
