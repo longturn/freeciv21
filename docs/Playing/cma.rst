@@ -1,10 +1,11 @@
+..
+    SPDX-License-Identifier: GPL-3.0-or-later
+    SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
+    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022 louis94 <m_louis30@yahoo.com>
+
 Citizen Governor (aka Citizen Management Agent, or CMA)
 *******************************************************
-
-.. Custom Interpretive Text Roles for longturn.net/Freeciv21
-.. role:: unit
-.. role:: improvement
-.. role:: wonder
 
 The Citizen Governor is designed to help you manage your cities, i.e. deploy the workers on the available
 tiles around (or make them scientists, taxmen, or even entertainers), to get the most out of the city. You can

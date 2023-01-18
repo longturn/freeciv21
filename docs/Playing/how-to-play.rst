@@ -1,7 +1,7 @@
 ..
     SPDX-License-Identifier: GPL-3.0-or-later
     SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+    SPDX-FileCopyrightText: 2022-2023 James Robertson <jwrober@gmail.com>
     SPDX-FileCopyrightText: 2022 louis94 <m_louis30@yahoo.com>
     SPDX-FileCopyrightText: 2022 daavko <david.konir@gmail.com>
 
@@ -9,6 +9,7 @@
 .. role:: unit
 .. role:: improvement
 .. role:: wonder
+.. role:: advance
 
 How to Play Freeciv21
 *********************
@@ -90,8 +91,8 @@ city limits under a Republic. Also, do not forget to recheck your national budge
 governments, as the maximums vary for each type.
 
 Depending on the amount of fresh water you have available, you might need to make a push for
-:strong:`Construction` so you can get your cities larger than size 8. If you are on an island (see
-`Mapping the Countryside`_), you might need to expand. Learning :strong:`Map Making` will give you the
+:advance:`Construction` so you can get your cities larger than size 8. If you are on an island (see
+`Mapping the Countryside`_), you might need to expand. Learning :advance:`Map Making` will give you the
 :unit:`Trireme` unit that can set sail to find new lands (see `Exploring the World`_).
 
 Mapping the Countryside
@@ -334,8 +335,8 @@ Production Phase
 At some point you will have a large number of cities and your nation has learned many technologies. As you
 move into the industrial age you can build :improvement:`Factories` and :improvement:`Power Plants` in your
 cities. You want to get as much production as possible out of each city. Pollution becomes a problem. As soon
-as you can, try to research :strong:`Mass Production` for :improvement:`Mass Transits`, and
-:strong:`Recycling` so you can build :improvement:`Recycling Centers`. Once you have got all your cities going
+as you can, try to research :advance:`Mass Production` for :improvement:`Mass Transits`, and
+:advance:`Recycling` so you can build :improvement:`Recycling Centers`. Once you have got all your cities going
 strong, you must build military units.
 
 .. note::
