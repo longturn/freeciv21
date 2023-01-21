@@ -34,7 +34,7 @@ scale_widget::scale_widget(QRubberBand::Shape s, QWidget *p)
   plus = pix->scaledToWidth(size);
   delete pix;
   pix = fcIcons::instance()->getPixmap(QStringLiteral("minus"));
-  minus = plus = pix->scaledToWidth(size);
+  minus = pix->scaledToWidth(size);
   delete pix;
   setFixedSize(2 * size, size);
   scale = 1.0f;
