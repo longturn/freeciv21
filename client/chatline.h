@@ -42,28 +42,20 @@ class chat_listener : public listener<chat_listener> {
   // ...but each has its own position.
   int position;
 
-  // Chat completion word list.
-  static QStringList word_list;
-
 public:
   // Special value meaning "end of history".
   static const int HISTORY_END = -1;
-
-  static void update_word_list();
 
   explicit chat_listener();
 
   virtual void chat_message_received(const QString &,
                                      const struct text_tag_list *);
-  virtual void chat_word_list_changed(const QStringList &);
 
   void send_chat_message(const QString &message);
 
   QString back_in_history();
   QString forward_in_history();
   void reset_history_position();
-
-  QStringList current_word_list() { return word_list; }
 };
 
 /***************************************************************************
@@ -77,12 +69,13 @@ private slots:
 
 public:
   explicit chat_input(QWidget *parent = nullptr);
-  ~chat_input() override;
-  void chat_word_list_changed(const QStringList &) override;
+
+protected:
   bool event(QEvent *event) override;
+  void focusInEvent(QFocusEvent *event) override;
 
 private:
-  QCompleter *cmplt;
+  void update_completion();
 };
 
 /***************************************************************************

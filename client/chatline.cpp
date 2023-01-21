@@ -45,7 +45,6 @@ static bool is_plain_public_message(const QString &s);
 
 FC_CPP_DECLARE_LISTENER(chat_listener)
 QStringList chat_listener::history = QStringList();
-QStringList chat_listener::word_list = QStringList();
 
 namespace {
 
@@ -62,140 +61,6 @@ void set_chat_colors(const QHash<QString, QString> &colors)
 }
 
 /**
- * Updates the chat completion word list.
- */
-void chat_listener::update_word_list()
-{
-  QString str;
-  static QStringList server_commands;
-
-  word_list.clear();
-
-  // sourced from server/commands.cpp
-  server_commands << "/start";
-  server_commands << "/help";
-  server_commands << "/list colors";
-  server_commands << "/list connections";
-  server_commands << "/list delegations";
-  server_commands << "/list ignored users";
-  server_commands << "/list map image definitions";
-  server_commands << "/list players";
-  server_commands << "/list rulesets";
-  server_commands << "/list scenarios";
-  server_commands << "/list nationsets";
-  server_commands << "/list teams";
-  server_commands << "/list votes";
-  server_commands << "/quit";
-  server_commands << "/cut <connection-name>";
-  server_commands << "/explain <option-name>";
-  server_commands << "/show <option-name>";
-  server_commands << "/show all";
-  server_commands << "/show vital";
-  server_commands << "/show situational";
-  server_commands << "/show rare";
-  server_commands << "/show changed";
-  server_commands << "/show locked";
-  server_commands << "/show rulesetdir";
-  server_commands << "/wall <message>";
-  server_commands << "/connectmsg <message>";
-  server_commands << "/vote yes|no|abstain [vote number]";
-  server_commands << "/debug diplomacy <player>";
-  server_commands << "/debug ferries";
-  server_commands << "/debug tech <player>";
-  server_commands << "/debug city <x> <y>";
-  server_commands << "/debug units <x> <y>";
-  server_commands << "/debug unit <id>";
-  server_commands << "/debug timing";
-  server_commands << "/debug info";
-  server_commands << "/set <option-name> <value>";
-  server_commands << "/team <player> <team>";
-  server_commands << "/rulesetdir <directory>";
-  server_commands << "/metamessage <meta-line>";
-  server_commands << "/metapatches <meta-line>";
-  server_commands << "/metaconnection up|down|?";
-  server_commands << "/metaserver <address>";
-  server_commands << "/aitoggle <player-name>";
-  server_commands << "/take <player-name>";
-  server_commands << "/observe <player-name>";
-  server_commands << "/detach <connection-name>";
-  server_commands << "/create <player-name> [ai type]";
-  server_commands << "/away";
-  server_commands << "/handicapped <player-name>";
-  server_commands << "/novice <player-name>";
-  server_commands << "/easy <player-name>";
-  server_commands << "/normal <player-name>";
-  server_commands << "/hard <player-name>";
-  server_commands << "/cheating <player-name>";
-  server_commands << "/experimental <player-name>";
-  server_commands << "/cmdlevel none|info|basic|ctrl|admin|hack";
-  server_commands << "/first";
-  server_commands << "/timeoutshow";
-  server_commands << "/timeoutset <time>";
-  server_commands << "/timeoutadd <time>";
-  server_commands << "/timeoutincrease <turn> <turninc> <value> <valuemult>";
-  server_commands << "/cancelvote <vote number>";
-  server_commands << "/ignore [type=]<pattern>";
-  server_commands << "/unignore <range>";
-  server_commands << "/playercolor <player-name> <color>";
-  server_commands
-      << "/playernation <player-name> [nation] [is-male] [leader] "
-         "[style]";
-  server_commands << "/endgame";
-  server_commands << "/surrender";
-  server_commands << "/remove <player-name>";
-  server_commands << "/save <file-name>";
-  server_commands << "/scensave <file-name>";
-  server_commands << "/load <file-name>";
-  server_commands << "/read <file-name>";
-  server_commands << "/write <file-name>";
-  server_commands << "/reset game|ruleset|script|default";
-  server_commands << "/default <option name>";
-  server_commands << "/lua cmd <script line>";
-  server_commands << "/lua unsafe-cmd <script line>";
-  server_commands << "/lua file <script file>";
-  server_commands << "/lua unsafe-file <script file>";
-  server_commands << "/kick <user>";
-  server_commands << "/delegate to <username>";
-  server_commands << "/delegate cancel";
-  server_commands << "/delegate take <player-name>";
-  server_commands << "/delegate restore";
-  server_commands << "/delegate show <player-name>";
-  server_commands << "/aicmd <player> <command>";
-  server_commands << "/fcdb lua <script>";
-  server_commands << "/mapimg define <mapdef>";
-  server_commands << "/mapimg show <id>|all";
-  server_commands << "/mapimg create <id>|all";
-  server_commands << "/mapimg delete <id>|all";
-  server_commands << "/mapimg colortest";
-  server_commands << "/rfcstyle";
-  server_commands << "/serverid";
-
-  conn_list_iterate(game.est_connections, pconn)
-  {
-    if (pconn->playing) {
-      word_list << pconn->playing->name;
-      word_list << pconn->playing->username;
-      word_list << server_commands;
-    } else {
-      word_list << pconn->username;
-      word_list << server_commands;
-    }
-  }
-  conn_list_iterate_end;
-
-  players_iterate(pplayer)
-  {
-    str = pplayer->name;
-    if (!word_list.contains(str)) {
-      word_list << str;
-    }
-  }
-  players_iterate_end;
-
-  invoke(&chat_listener::chat_word_list_changed, word_list);
-}
-
-/**
  * Constructor.
  */
 chat_listener::chat_listener() : position(HISTORY_END) {}
@@ -208,12 +73,6 @@ void chat_listener::chat_message_received(const QString &,
                                           const struct text_tag_list *)
 {
 }
-
-/**
- * Called whenever the completion word list changes. Default implementation
- * does nothing.
- */
-void chat_listener::chat_word_list_changed(const QStringList &) {}
 
 /**
  * Sends commands to server, but first searches for custom keys, if it finds
@@ -307,11 +166,8 @@ void chat_listener::reset_history_position() { position = HISTORY_END; }
 chat_input::chat_input(QWidget *parent) : QLineEdit(parent)
 {
   connect(this, &QLineEdit::returnPressed, this, &chat_input::send);
-  chat_word_list_changed(current_word_list());
   chat_listener::listen();
 }
-
-chat_input::~chat_input() { delete cmplt; }
 
 /**
  * Sends the content of the input box
@@ -325,11 +181,125 @@ void chat_input::send()
 /**
  * Called whenever the completion word list changes.
  */
-void chat_input::chat_word_list_changed(const QStringList &word_list)
+void chat_input::update_completion()
 {
-  cmplt = completer();
-  delete cmplt;
-  cmplt = new QCompleter(word_list);
+  QStringList word_list;
+
+  // sourced from server/commands.cpp
+  word_list << QStringLiteral("/start");
+  word_list << QStringLiteral("/help");
+  word_list << QStringLiteral("/list colors");
+  word_list << QStringLiteral("/list connections");
+  word_list << QStringLiteral("/list delegations");
+  word_list << QStringLiteral("/list ignored users");
+  word_list << QStringLiteral("/list map image definitions");
+  word_list << QStringLiteral("/list players");
+  word_list << QStringLiteral("/list rulesets");
+  word_list << QStringLiteral("/list scenarios");
+  word_list << QStringLiteral("/list nationsets");
+  word_list << QStringLiteral("/list teams");
+  word_list << QStringLiteral("/list votes");
+  word_list << QStringLiteral("/quit");
+  word_list << _("/cut <connection-name>");
+  word_list << _("/explain <option-name>");
+  word_list << _("/show <option-name>");
+  word_list << QStringLiteral("/show all");
+  word_list << QStringLiteral("/show vital");
+  word_list << QStringLiteral("/show situational");
+  word_list << QStringLiteral("/show rare");
+  word_list << QStringLiteral("/show changed");
+  word_list << QStringLiteral("/show locked");
+  word_list << QStringLiteral("/show rulesetdir");
+  word_list << _("/wall <message>");
+  word_list << _("/connectmsg <message>");
+  word_list << _("/vote yes|no|abstain [vote number]");
+  word_list << _("/debug diplomacy <player>");
+  word_list << _("/debug ferries");
+  word_list << _("/debug tech <player>");
+  word_list << _("/debug city <x> <y>");
+  word_list << _("/debug units <x> <y>");
+  word_list << _("/debug unit <id>");
+  word_list << QStringLiteral("/debug timing");
+  word_list << QStringLiteral("/debug info");
+  word_list << _("/set <option-name> <value>");
+  word_list << _("/team <player> <team>");
+  word_list << _("/rulesetdir <directory>");
+  word_list << _("/metamessage <meta-line>");
+  word_list << _("/metapatches <meta-line>");
+  word_list << QStringLiteral("/metaconnection up|down|?");
+  word_list << _("/metaserver <address>");
+  word_list << _("/aitoggle <player-name>");
+  word_list << _("/take <player-name>");
+  word_list << _("/observe <player-name>");
+  word_list << _("/detach <connection-name>");
+  word_list << _("/create <player-name> [ai type]");
+  word_list << QStringLiteral("/away");
+  word_list << _("/handicapped <player-name>");
+  word_list << _("/novice <player-name>");
+  word_list << _("/easy <player-name>");
+  word_list << _("/normal <player-name>");
+  word_list << _("/hard <player-name>");
+  word_list << _("/cheating <player-name>");
+  word_list << _("/experimental <player-name>");
+  word_list << QStringLiteral("/cmdlevel none|info|basic|ctrl|admin|hack");
+  word_list << QStringLiteral("/first");
+  word_list << QStringLiteral("/timeoutshow");
+  word_list << _("/timeoutset <time>");
+  word_list << _("/timeoutadd <time>");
+  word_list << _("/timeoutincrease <turn> <turninc> <value> <valuemult>");
+  word_list << _("/cancelvote <vote number>");
+  word_list << _("/ignore [type=]<pattern>");
+  word_list << _("/unignore <range>");
+  word_list << _("/playercolor <player-name> <color>");
+  word_list << _("/playernation <player-name> [nation] [is-male] [leader] "
+                 "[style]");
+  word_list << QStringLiteral("/endgame");
+  word_list << QStringLiteral("/surrender");
+  word_list << _("/remove <player-name>");
+  word_list << _("/save <file-name>");
+  word_list << _("/scensave <file-name>");
+  word_list << _("/load <file-name>");
+  word_list << _("/read <file-name>");
+  word_list << _("/write <file-name>");
+  word_list << QStringLiteral("/reset game|ruleset|script|default");
+  word_list << _("/default <option name>");
+  word_list << _("/lua cmd <script line>");
+  word_list << _("/lua unsafe-cmd <script line>");
+  word_list << _("/lua file <script file>");
+  word_list << _("/lua unsafe-file <script file>");
+  word_list << _("/kick <user>");
+  word_list << _("/delegate to <username>");
+  word_list << QStringLiteral("/delegate cancel");
+  word_list << _("/delegate take <player-name>");
+  word_list << QStringLiteral("/delegate restore");
+  word_list << _("/delegate show <player-name>");
+  word_list << _("/aicmd <player> <command>");
+  word_list << _("/fcdb lua <script>");
+  word_list << _("/mapimg define <mapdef>");
+  word_list << _("/mapimg show <id>|all");
+  word_list << _("/mapimg create <id>|all");
+  word_list << _("/mapimg delete <id>|all");
+  word_list << QStringLiteral("/mapimg colortest");
+  word_list << QStringLiteral("/rfcstyle");
+  word_list << QStringLiteral("/serverid");
+
+  conn_list_iterate(game.est_connections, pconn)
+  {
+    if (pconn->playing) {
+      word_list << pconn->playing->name;
+      word_list << pconn->playing->username;
+    } else {
+      word_list << pconn->username;
+    }
+  }
+  conn_list_iterate_end;
+
+  players_iterate(pplayer) { word_list << pplayer->name; }
+  players_iterate_end;
+
+  delete completer();
+
+  auto cmplt = new QCompleter(word_list, this);
   cmplt->setCaseSensitivity(Qt::CaseInsensitive);
   cmplt->setCompletionMode(QCompleter::InlineCompletion);
   setCompleter(cmplt);
@@ -352,6 +322,15 @@ bool chat_input::event(QEvent *event)
     }
   }
   return QLineEdit::event(event);
+}
+
+/**
+ * Event handler for chat_input, used for history
+ */
+void chat_input::focusInEvent(QFocusEvent *event)
+{
+  update_completion();
+  QLineEdit::focusInEvent(event);
 }
 
 /**
@@ -891,7 +870,6 @@ void real_output_window_append(const QString &astring,
     qApp->alert(king()->central_wdg);
   }
 
-  chat_listener::update_word_list();
   chat_listener::invoke(&chat_listener::chat_message_received, astring,
                         tags);
 }
