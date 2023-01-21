@@ -468,15 +468,16 @@ void server::accept_connections()
       {
         // Use TolerantConversion so one connections from the same address on
         // IPv4 and IPv6 are rejected as well.
-        if (socket->peerAddress().isEqual(
+        if (!socket->peerAddress().isEqual(
                 pconn->sock->peerAddress(),
                 QHostAddress::TolerantConversion)) {
           continue;
         }
         if (++count >= game.server.maxconnectionsperhost) {
-          qDebug("Rejecting new connection from %s: maximum number of "
-                 "connections for this address exceeded (%d).",
-                 qUtf8Printable(remote), game.server.maxconnectionsperhost);
+          qWarning("Rejecting new connection from %s: maximum number of "
+                   "connections for this address exceeded (%d).",
+                   qUtf8Printable(remote),
+                   game.server.maxconnectionsperhost);
 
           success = false;
           socket->deleteLater();
