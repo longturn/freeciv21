@@ -1587,14 +1587,13 @@ void hud_unit_combat::enterEvent(QEvent *event)
  */
 hud_battle_log::hud_battle_log(QWidget *parent) : QFrame(parent)
 {
-  setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-  setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
   main_layout = new QVBoxLayout;
   mw = new move_widget(this);
-  clw = new close_widget(this);
 
-  setContentsMargins(0, 0, 0, 0);
-  main_layout->setContentsMargins(0, 0, 0, 0);
+  clw = new close_widget(this);
+  clw->setFixedSize(12, 12);
+
+  setContentsMargins(4, 4, 0, 0);
   sw = new scale_widget(QRubberBand::Rectangle, this);
   sw->show();
   scale = 1.0;
@@ -1625,7 +1624,7 @@ void hud_battle_log::update_size()
     main_layout->addWidget(hudc);
     hudc->set_fading(1.0);
   }
-  setFixedSize(2 * w + 10, lhuc.count() * w + 10);
+  setFixedSize(2 * w + 15, lhuc.count() * w + 15);
   setLayout(main_layout);
 
   update();
@@ -1644,7 +1643,7 @@ void hud_battle_log::set_scale(float s)
 }
 
 /**
-   Adds comabt information to battle log
+   Adds combat information to battle log
  */
 void hud_battle_log::add_combat_info(hud_unit_combat *huc)
 {
@@ -1662,11 +1661,12 @@ void hud_battle_log::add_combat_info(hud_unit_combat *huc)
     main_layout->addWidget(hudc);
     hudc->set_fading(1.0);
   }
-  setFixedSize(2 * w + 10, lhuc.count() * w + 10);
+  setFixedSize(2 * w + 15, lhuc.count() * w + 15);
   setLayout(main_layout);
 
   update();
   show();
+  adjustSize();
   m_timer.restart();
   startTimer(50);
 }
@@ -1682,7 +1682,7 @@ void hud_battle_log::paintEvent(QPaintEvent *event)
   }
   clw->put_to_corner();
   mw->put_to_corner();
-  sw->move(width() - sw->width(), 0);
+  sw->move(width() - sw->width() - 12, 0);
 }
 
 /**
@@ -1705,7 +1705,7 @@ void hud_battle_log::moveEvent(QMoveEvent *event)
  */
 void hud_battle_log::timerEvent(QTimerEvent *event)
 {
-  if (m_timer.elapsed() > 4000 && m_timer.elapsed() < 15000) {
+  if (m_timer.elapsed() > 4000 && m_timer.elapsed() < 20000) {
     for (auto *hudc : qAsConst(lhuc)) {
       if (hudc->get_focus()) {
         m_timer.restart();
@@ -1714,10 +1714,10 @@ void hud_battle_log::timerEvent(QTimerEvent *event)
         }
         return;
       }
-      hudc->set_fading((15000.0 - m_timer.elapsed()) / 1000);
+      hudc->set_fading((20000.0 - m_timer.elapsed()) / 1000);
     }
   }
-  if (m_timer.elapsed() >= 15000) {
+  if (m_timer.elapsed() >= 20000) {
     hide();
   }
 }
