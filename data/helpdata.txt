@@ -374,11 +374,9 @@ this usually takes longer than altering. Converting terrain from one type to ano
 way may destroy existing alterations if the new terrain is unsuitable, and will also remove access to \
 special resources if they were specific to the original terrain type.\
 "), _("\
-The requirements for terrain conversion are set by the ruleset. It can be initiated in several ways:\
-"), _("\
- - By issuing \"Irrigate\" or \"Mine\" orders when on terrain unsuitable for tile alterations.\n\
- - By issuing the special \"Transform\" order. This often causes more radical transformations, such as \
-converting a Desert tile to a Plains tile.\
+The requirements for terrain conversion are set by the ruleset. Three orders unit trigger terrain \
+conversions: \"Cultivate\", \"Plant\", and \"Transform\". Not all conversions may be possible from \
+the game start.\
 "), _("\
 In some rulesets, units can even reclaim land from water tiles, and similarly land can be transformed to \
 water, although such radical transformations may require a certain number of surrounding tiles to already be \
