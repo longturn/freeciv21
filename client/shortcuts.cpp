@@ -208,6 +208,20 @@ QString fc_shortcut::to_string() const
 }
 
 /**
+ * Checks if the shortcut can be used.
+ */
+bool fc_shortcut::is_valid() const
+{
+  switch (type) {
+  case keyboard:
+    return !keys.isEmpty();
+  case mouse:
+    return buttons != Qt::NoButton;
+  }
+  return false;
+}
+
+/**
    fc_shortcuts contructor
  */
 fc_shortcuts::fc_shortcuts() { init_default(true); }

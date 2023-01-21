@@ -1113,8 +1113,16 @@ int unit_actions::update_actions()
       SC_DONE_MOVING));
 
   for (auto *a : qAsConst(actions)) {
-    a->setToolTip(
-        king()->menu_bar->shortcut_2_menustring(a->action_shortcut));
+    const auto shortcut =
+        fc_shortcuts::sc()->get_shortcut(a->action_shortcut);
+    if (shortcut.is_valid()) {
+      // TRANS: Action (shortcut)
+      a->setToolTip(
+          QString(_("%1 (%2)")).arg(shortcut.str).arg(shortcut.to_string()));
+    } else {
+      a->setToolTip(shortcut.str);
+    }
+
     a->setFixedHeight(height());
     a->setFixedWidth(height());
     layout->addWidget(a);
