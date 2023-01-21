@@ -26,7 +26,7 @@ shipped by the Freeciv21 developers.
   from inside a city). The Unit Type Flag ``Only_Native_Attack`` can override this.
 
 :strong:`AttFromNonNative`
-  Allows a unit to attack another unit on from non-native tiles (e.g. :unit:`Marines` in a :unit:`Transport`
+  Allows a unit to attack another unit from non-native tiles (e.g. :unit:`Marines` in a :unit:`Transport`
   attacking a city). The Unit Type Flag ``Only_Native_Attack`` can override this.
 
 :strong:`BuildAnywhere`
