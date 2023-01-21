@@ -46,136 +46,148 @@ enum {
   RESPONSE_SAVE
 };
 
-fc_shortcut default_shortcuts[] = {
-    {SC_SCROLL_MAP, fc_shortcut::mouse, QKeySequence(), Qt::RightButton,
-     Qt::NoModifier, "Scroll map"},
-    {SC_CENTER_VIEW, fc_shortcut::keyboard, Qt::Key_C, Qt::AllButtons,
-     Qt::NoModifier, _("Center View")},
-    {SC_FULLSCREEN, fc_shortcut::keyboard, Qt::Key_Return | Qt::AltModifier,
-     Qt::AllButtons, Qt::NoModifier, _("Fullscreen")},
-    {SC_MINIMAP, fc_shortcut::keyboard, Qt::Key_M | Qt::ControlModifier,
-     Qt::AllButtons, Qt::NoModifier, _("Show minimap")},
-    {SC_CITY_OUTPUT, fc_shortcut::keyboard, Qt::Key_W | Qt::ControlModifier,
-     Qt::AllButtons, Qt::NoModifier, _("City Output")},
-    {SC_MAP_GRID, fc_shortcut::keyboard, Qt::Key_G | Qt::ControlModifier,
-     Qt::AllButtons, Qt::NoModifier, _("Map Grid")},
-    {SC_NAT_BORDERS, fc_shortcut::keyboard, Qt::Key_B | Qt::ControlModifier,
-     Qt::AllButtons, Qt::NoModifier, _("National Borders")},
-    {SC_QUICK_BUY, fc_shortcut::mouse, QKeySequence(), Qt::LeftButton,
-     Qt::ControlModifier | Qt::ShiftModifier, _("Quick buy from map")},
-    {SC_QUICK_SELECT, fc_shortcut::mouse, QKeySequence(), Qt::LeftButton,
-     Qt::ControlModifier, _("Quick production select from map")},
-    {SC_SELECT_BUTTON, fc_shortcut::mouse, QKeySequence(), Qt::LeftButton,
-     Qt::NoModifier, _("Select button")},
-    {SC_ADJUST_WORKERS, fc_shortcut::mouse, QKeySequence(), Qt::LeftButton,
-     Qt::MetaModifier | Qt::ControlModifier, _("Adjust workers")},
-    {SC_APPEND_FOCUS, fc_shortcut::mouse, QKeySequence(), Qt::LeftButton,
-     Qt::ShiftModifier, _("Append focus")},
-    {SC_POPUP_INFO, fc_shortcut::mouse, QKeySequence(), Qt::MiddleButton,
-     Qt::NoModifier, _("Popup tile info")},
-    {SC_WAKEUP_SENTRIES, fc_shortcut::mouse, QKeySequence(),
-     Qt::MiddleButton, Qt::ControlModifier, _("Wakeup sentries")},
-    {SC_MAKE_LINK, fc_shortcut::mouse, QKeySequence(), Qt::RightButton,
-     Qt::ControlModifier | Qt::AltModifier, _("Show link to tile")},
-    {SC_PASTE_PROD, fc_shortcut::mouse, QKeySequence(), Qt::RightButton,
-     Qt::ShiftModifier | Qt::ControlModifier, _("Paste production")},
-    {SC_COPY_PROD, fc_shortcut::mouse, QKeySequence(), Qt::RightButton,
-     Qt::ShiftModifier, _("Copy production")},
-    {SC_HIDE_WORKERS, fc_shortcut::mouse, QKeySequence(), Qt::RightButton,
-     Qt::ShiftModifier | Qt::AltModifier, _("Show/hide workers")},
-    {SC_SHOW_UNITS, fc_shortcut::keyboard,
-     Qt::Key_Space | Qt::ControlModifier, Qt::AllButtons, Qt::NoModifier,
-     _("Units selection (for tile under mouse position)")},
-    {SC_TRADE_ROUTES, fc_shortcut::keyboard, Qt::Key_D | Qt::ControlModifier,
-     Qt::AllButtons, Qt::NoModifier, _("City Traderoutes")},
-    {SC_CITY_PROD, fc_shortcut::keyboard, Qt::Key_P | Qt::ControlModifier,
-     Qt::AllButtons, Qt::NoModifier, _("City Production Levels")},
-    {SC_CITY_NAMES, fc_shortcut::keyboard, Qt::Key_N | Qt::ControlModifier,
-     Qt::AllButtons, Qt::NoModifier, _("City Names")},
-    {SC_DONE_MOVING, fc_shortcut::keyboard, Qt::Key_Space, Qt::AllButtons,
-     Qt::NoModifier, _("Done Moving")},
-    {SC_GOTOAIRLIFT, fc_shortcut::keyboard, Qt::Key_T, Qt::AllButtons,
-     Qt::NoModifier, _("Go to/Airlift to City...")},
-    {SC_AUTOEXPLORE, fc_shortcut::keyboard, Qt::Key_X, Qt::AllButtons,
-     Qt::NoModifier, _("Auto Explore")},
-    {SC_PATROL, fc_shortcut::keyboard, Qt::Key_Q, Qt::AllButtons,
-     Qt::NoModifier, _("Patrol")},
-    {SC_UNSENTRY_TILE, fc_shortcut::keyboard,
-     Qt::Key_D | Qt::ShiftModifier | Qt::ControlModifier, Qt::AllButtons,
-     Qt::NoModifier, _("Unsentry All On Tile")},
-    {SC_DO, fc_shortcut::keyboard, Qt::Key_D, Qt::AllButtons, Qt::NoModifier,
-     _("Do...")},
-    {SC_UPGRADE_UNIT, fc_shortcut::keyboard, Qt::Key_U | Qt::ControlModifier,
-     Qt::AllButtons, Qt::NoModifier, _("Upgrade")},
-    {SC_SETHOME, fc_shortcut::keyboard, Qt::Key_H, Qt::AllButtons,
-     Qt::NoModifier, _("Set Home City")},
-    {SC_BUILDMINE, fc_shortcut::keyboard, Qt::Key_M, Qt::AllButtons,
-     Qt::NoModifier, _("Build Mine")},
-    {SC_PLANT, fc_shortcut::keyboard, Qt::Key_M | Qt::ShiftModifier,
-     Qt::AllButtons, Qt::NoModifier, _("Plant")},
-    {SC_BUILDIRRIGATION, fc_shortcut::keyboard, Qt::Key_I, Qt::AllButtons,
-     Qt::NoModifier, _("Build Irrigation")},
-    {SC_CULTIVATE, fc_shortcut::keyboard, Qt::Key_I | Qt::ShiftModifier,
-     Qt::AllButtons, Qt::NoModifier, _("Cultivate")},
-    {SC_BUILDROAD, fc_shortcut::keyboard, Qt::Key_R, Qt::AllButtons,
-     Qt::NoModifier, _("Build Road")},
-    {SC_BUILDCITY, fc_shortcut::keyboard, Qt::Key_B, Qt::AllButtons,
-     Qt::NoModifier, _("Build City")},
-    {SC_SENTRY, fc_shortcut::keyboard, Qt::Key_S, Qt::AllButtons,
-     Qt::NoModifier, _("Sentry")},
-    {SC_FORTIFY, fc_shortcut::keyboard, Qt::Key_F, Qt::AllButtons,
-     Qt::NoModifier, _("Fortify")},
-    {SC_GOTO, fc_shortcut::keyboard, Qt::Key_G, Qt::AllButtons,
-     Qt::NoModifier, _("Go to Tile")},
-    {SC_WAIT, fc_shortcut::keyboard, Qt::Key_W, Qt::AllButtons,
-     Qt::NoModifier, _("Wait")},
-    {SC_TRANSFORM, fc_shortcut::keyboard, Qt::Key_O, Qt::AllButtons,
-     Qt::NoModifier, _("Transform")},
-    {SC_NUKE, fc_shortcut::keyboard, Qt::Key_N | Qt::ShiftModifier,
-     Qt::AllButtons, Qt::NoModifier, _("Explode Nuclear")},
-    {SC_LOAD, fc_shortcut::keyboard, Qt::Key_L, Qt::AllButtons,
-     Qt::NoModifier, _("Load")},
-    {SC_UNLOAD, fc_shortcut::keyboard, Qt::Key_U, Qt::AllButtons,
-     Qt::NoModifier, _("Unload")},
-    {SC_BUY_MAP, fc_shortcut::mouse, QKeySequence(), Qt::BackButton,
-     Qt::NoModifier, _("Quick buy current production from map")},
-    {SC_IFACE_LOCK, fc_shortcut::keyboard,
-     Qt::Key_L | Qt::ControlModifier | Qt::ShiftModifier, Qt::AllButtons,
-     Qt::NoModifier, _("Lock/unlock interface")},
-    {SC_AUTOMATE, fc_shortcut::keyboard, Qt::Key_A, Qt::AllButtons,
-     Qt::NoModifier, _("Auto worker")},
-    {SC_PARADROP, fc_shortcut::keyboard, Qt::Key_P, Qt::AllButtons,
-     Qt::NoModifier, _("Paradrop/clean pollution")},
-    {SC_POPUP_COMB_INF, fc_shortcut::keyboard,
-     Qt::Key_F1 | Qt::ControlModifier, Qt::AllButtons, Qt::NoModifier,
-     _("Popup combat information")},
-    {SC_RELOAD_THEME, fc_shortcut::keyboard,
-     Qt::Key_F5 | Qt::ControlModifier | Qt::ShiftModifier, Qt::AllButtons,
-     Qt::NoModifier, _("Reload theme")},
-    {SC_RELOAD_TILESET, fc_shortcut::keyboard,
-     Qt::Key_F6 | Qt::ControlModifier | Qt::ShiftModifier, Qt::AllButtons,
-     Qt::NoModifier, _("Reload tileset")},
-    {SC_SHOW_FULLBAR, fc_shortcut::keyboard, Qt::Key_F | Qt::ControlModifier,
-     Qt::AllButtons, Qt::NoModifier, _("Toggle city full bar visibility")},
-    {SC_ZOOM_IN, fc_shortcut::keyboard, Qt::Key_Plus, Qt::AllButtons,
-     Qt::NoModifier, _("Zoom in")},
-    {SC_ZOOM_OUT, fc_shortcut::keyboard, Qt::Key_Minus, Qt::AllButtons,
-     Qt::NoModifier, _("Zoom out")},
-    {SC_LOAD_LUA, fc_shortcut::keyboard,
-     Qt::Key_J | Qt::ControlModifier | Qt::ShiftModifier, Qt::AllButtons,
-     Qt::NoModifier, _("Load Lua script")},
-    {SC_RELOAD_LUA, fc_shortcut::keyboard,
-     Qt::Key_K | Qt::ControlModifier | Qt::ShiftModifier, Qt::AllButtons,
-     Qt::NoModifier, _("Load last loaded Lua script")},
-    {SC_ZOOM_RESET, fc_shortcut::keyboard,
-     Qt::Key_Backspace | Qt::ControlModifier, Qt::AllButtons, Qt::NoModifier,
-     _("Reload tileset with default scale")},
-    {SC_GOBUILDCITY, fc_shortcut::keyboard, Qt::Key_B | Qt::ShiftModifier,
-     Qt::AllButtons, Qt::NoModifier, _("Go And Build City")},
-    {SC_GOJOINCITY, fc_shortcut::keyboard, Qt::Key_J | Qt::ShiftModifier,
-     Qt::AllButtons, Qt::NoModifier, _("Go And Join City")},
-    {SC_PILLAGE, fc_shortcut::keyboard, Qt::Key_P | Qt::ShiftModifier,
-     Qt::AllButtons, Qt::NoModifier, _("Pillage")}};
+/**
+ * Returns the list of default shrotcuts.
+ */
+static std::vector<fc_shortcut> default_shortcuts()
+{
+  return {
+      {SC_SCROLL_MAP, fc_shortcut::mouse, QKeySequence(), Qt::RightButton,
+       Qt::NoModifier, _("Scroll map")},
+      {SC_CENTER_VIEW, fc_shortcut::keyboard, Qt::Key_C, Qt::AllButtons,
+       Qt::NoModifier, _("Center View")},
+      {SC_FULLSCREEN, fc_shortcut::keyboard,
+       Qt::Key_Return | Qt::AltModifier, Qt::AllButtons, Qt::NoModifier,
+       _("Fullscreen")},
+      {SC_MINIMAP, fc_shortcut::keyboard, Qt::Key_M | Qt::ControlModifier,
+       Qt::AllButtons, Qt::NoModifier, _("Show minimap")},
+      {SC_CITY_OUTPUT, fc_shortcut::keyboard,
+       Qt::Key_W | Qt::ControlModifier, Qt::AllButtons, Qt::NoModifier,
+       _("City Output")},
+      {SC_MAP_GRID, fc_shortcut::keyboard, Qt::Key_G | Qt::ControlModifier,
+       Qt::AllButtons, Qt::NoModifier, _("Map Grid")},
+      {SC_NAT_BORDERS, fc_shortcut::keyboard,
+       Qt::Key_B | Qt::ControlModifier, Qt::AllButtons, Qt::NoModifier,
+       _("National Borders")},
+      {SC_QUICK_BUY, fc_shortcut::mouse, QKeySequence(), Qt::LeftButton,
+       Qt::ControlModifier | Qt::ShiftModifier, _("Quick buy from map")},
+      {SC_QUICK_SELECT, fc_shortcut::mouse, QKeySequence(), Qt::LeftButton,
+       Qt::ControlModifier, _("Quick production select from map")},
+      {SC_SELECT_BUTTON, fc_shortcut::mouse, QKeySequence(), Qt::LeftButton,
+       Qt::NoModifier, _("Select button")},
+      {SC_ADJUST_WORKERS, fc_shortcut::mouse, QKeySequence(), Qt::LeftButton,
+       Qt::MetaModifier | Qt::ControlModifier, _("Adjust workers")},
+      {SC_APPEND_FOCUS, fc_shortcut::mouse, QKeySequence(), Qt::LeftButton,
+       Qt::ShiftModifier, _("Append focus")},
+      {SC_POPUP_INFO, fc_shortcut::mouse, QKeySequence(), Qt::MiddleButton,
+       Qt::NoModifier, _("Popup tile info")},
+      {SC_WAKEUP_SENTRIES, fc_shortcut::mouse, QKeySequence(),
+       Qt::MiddleButton, Qt::ControlModifier, _("Wakeup sentries")},
+      {SC_MAKE_LINK, fc_shortcut::mouse, QKeySequence(), Qt::RightButton,
+       Qt::ControlModifier | Qt::AltModifier, _("Show link to tile")},
+      {SC_PASTE_PROD, fc_shortcut::mouse, QKeySequence(), Qt::RightButton,
+       Qt::ShiftModifier | Qt::ControlModifier, _("Paste production")},
+      {SC_COPY_PROD, fc_shortcut::mouse, QKeySequence(), Qt::RightButton,
+       Qt::ShiftModifier, _("Copy production")},
+      {SC_HIDE_WORKERS, fc_shortcut::mouse, QKeySequence(), Qt::RightButton,
+       Qt::ShiftModifier | Qt::AltModifier, _("Show/hide workers")},
+      {SC_SHOW_UNITS, fc_shortcut::keyboard,
+       Qt::Key_Space | Qt::ControlModifier, Qt::AllButtons, Qt::NoModifier,
+       _("Units selection (for tile under mouse position)")},
+      {SC_TRADE_ROUTES, fc_shortcut::keyboard,
+       Qt::Key_D | Qt::ControlModifier, Qt::AllButtons, Qt::NoModifier,
+       _("City Traderoutes")},
+      {SC_CITY_PROD, fc_shortcut::keyboard, Qt::Key_P | Qt::ControlModifier,
+       Qt::AllButtons, Qt::NoModifier, _("City Production Levels")},
+      {SC_CITY_NAMES, fc_shortcut::keyboard, Qt::Key_N | Qt::ControlModifier,
+       Qt::AllButtons, Qt::NoModifier, _("City Names")},
+      {SC_DONE_MOVING, fc_shortcut::keyboard, Qt::Key_Space, Qt::AllButtons,
+       Qt::NoModifier, _("Done Moving")},
+      {SC_GOTOAIRLIFT, fc_shortcut::keyboard, Qt::Key_T, Qt::AllButtons,
+       Qt::NoModifier, _("Go to/Airlift to City...")},
+      {SC_AUTOEXPLORE, fc_shortcut::keyboard, Qt::Key_X, Qt::AllButtons,
+       Qt::NoModifier, _("Auto Explore")},
+      {SC_PATROL, fc_shortcut::keyboard, Qt::Key_Q, Qt::AllButtons,
+       Qt::NoModifier, _("Patrol")},
+      {SC_UNSENTRY_TILE, fc_shortcut::keyboard,
+       Qt::Key_D | Qt::ShiftModifier | Qt::ControlModifier, Qt::AllButtons,
+       Qt::NoModifier, _("Unsentry All On Tile")},
+      {SC_DO, fc_shortcut::keyboard, Qt::Key_D, Qt::AllButtons,
+       Qt::NoModifier, _("Do...")},
+      {SC_UPGRADE_UNIT, fc_shortcut::keyboard,
+       Qt::Key_U | Qt::ControlModifier, Qt::AllButtons, Qt::NoModifier,
+       _("Upgrade")},
+      {SC_SETHOME, fc_shortcut::keyboard, Qt::Key_H, Qt::AllButtons,
+       Qt::NoModifier, _("Set Home City")},
+      {SC_BUILDMINE, fc_shortcut::keyboard, Qt::Key_M, Qt::AllButtons,
+       Qt::NoModifier, _("Build Mine")},
+      {SC_PLANT, fc_shortcut::keyboard, Qt::Key_M | Qt::ShiftModifier,
+       Qt::AllButtons, Qt::NoModifier, _("Plant")},
+      {SC_BUILDIRRIGATION, fc_shortcut::keyboard, Qt::Key_I, Qt::AllButtons,
+       Qt::NoModifier, _("Build Irrigation")},
+      {SC_CULTIVATE, fc_shortcut::keyboard, Qt::Key_I | Qt::ShiftModifier,
+       Qt::AllButtons, Qt::NoModifier, _("Cultivate")},
+      {SC_BUILDROAD, fc_shortcut::keyboard, Qt::Key_R, Qt::AllButtons,
+       Qt::NoModifier, _("Build Road")},
+      {SC_BUILDCITY, fc_shortcut::keyboard, Qt::Key_B, Qt::AllButtons,
+       Qt::NoModifier, _("Build City")},
+      {SC_SENTRY, fc_shortcut::keyboard, Qt::Key_S, Qt::AllButtons,
+       Qt::NoModifier, _("Sentry")},
+      {SC_FORTIFY, fc_shortcut::keyboard, Qt::Key_F, Qt::AllButtons,
+       Qt::NoModifier, _("Fortify")},
+      {SC_GOTO, fc_shortcut::keyboard, Qt::Key_G, Qt::AllButtons,
+       Qt::NoModifier, _("Go to Tile")},
+      {SC_WAIT, fc_shortcut::keyboard, Qt::Key_W, Qt::AllButtons,
+       Qt::NoModifier, _("Wait")},
+      {SC_TRANSFORM, fc_shortcut::keyboard, Qt::Key_O, Qt::AllButtons,
+       Qt::NoModifier, _("Transform")},
+      {SC_NUKE, fc_shortcut::keyboard, Qt::Key_N | Qt::ShiftModifier,
+       Qt::AllButtons, Qt::NoModifier, _("Explode Nuclear")},
+      {SC_LOAD, fc_shortcut::keyboard, Qt::Key_L, Qt::AllButtons,
+       Qt::NoModifier, _("Load")},
+      {SC_UNLOAD, fc_shortcut::keyboard, Qt::Key_U, Qt::AllButtons,
+       Qt::NoModifier, _("Unload")},
+      {SC_BUY_MAP, fc_shortcut::mouse, QKeySequence(), Qt::BackButton,
+       Qt::NoModifier, _("Quick buy current production from map")},
+      {SC_IFACE_LOCK, fc_shortcut::keyboard,
+       Qt::Key_L | Qt::ControlModifier | Qt::ShiftModifier, Qt::AllButtons,
+       Qt::NoModifier, _("Lock/unlock interface")},
+      {SC_AUTOMATE, fc_shortcut::keyboard, Qt::Key_A, Qt::AllButtons,
+       Qt::NoModifier, _("Auto worker")},
+      {SC_PARADROP, fc_shortcut::keyboard, Qt::Key_P, Qt::AllButtons,
+       Qt::NoModifier, _("Paradrop/clean pollution")},
+      {SC_POPUP_COMB_INF, fc_shortcut::keyboard,
+       Qt::Key_F1 | Qt::ControlModifier, Qt::AllButtons, Qt::NoModifier,
+       _("Popup combat information")},
+      {SC_RELOAD_THEME, fc_shortcut::keyboard,
+       Qt::Key_F5 | Qt::ControlModifier | Qt::ShiftModifier, Qt::AllButtons,
+       Qt::NoModifier, _("Reload theme")},
+      {SC_RELOAD_TILESET, fc_shortcut::keyboard,
+       Qt::Key_F6 | Qt::ControlModifier | Qt::ShiftModifier, Qt::AllButtons,
+       Qt::NoModifier, _("Reload tileset")},
+      {SC_SHOW_FULLBAR, fc_shortcut::keyboard,
+       Qt::Key_F | Qt::ControlModifier, Qt::AllButtons, Qt::NoModifier,
+       _("Toggle city full bar visibility")},
+      {SC_ZOOM_IN, fc_shortcut::keyboard, Qt::Key_Plus, Qt::AllButtons,
+       Qt::NoModifier, _("Zoom in")},
+      {SC_ZOOM_OUT, fc_shortcut::keyboard, Qt::Key_Minus, Qt::AllButtons,
+       Qt::NoModifier, _("Zoom out")},
+      {SC_LOAD_LUA, fc_shortcut::keyboard,
+       Qt::Key_J | Qt::ControlModifier | Qt::ShiftModifier, Qt::AllButtons,
+       Qt::NoModifier, _("Load Lua script")},
+      {SC_RELOAD_LUA, fc_shortcut::keyboard,
+       Qt::Key_K | Qt::ControlModifier | Qt::ShiftModifier, Qt::AllButtons,
+       Qt::NoModifier, _("Load last loaded Lua script")},
+      {SC_ZOOM_RESET, fc_shortcut::keyboard,
+       Qt::Key_Backspace | Qt::ControlModifier, Qt::AllButtons,
+       Qt::NoModifier, _("Reload tileset with default scale")},
+      {SC_GOBUILDCITY, fc_shortcut::keyboard, Qt::Key_B | Qt::ShiftModifier,
+       Qt::AllButtons, Qt::NoModifier, _("Go And Build City")},
+      {SC_GOJOINCITY, fc_shortcut::keyboard, Qt::Key_J | Qt::ShiftModifier,
+       Qt::AllButtons, Qt::NoModifier, _("Go And Join City")},
+      {SC_PILLAGE, fc_shortcut::keyboard, Qt::Key_P | Qt::ShiftModifier,
+       Qt::AllButtons, Qt::NoModifier, _("Pillage")}};
+}
 
 /**
    Returns shortcut as string (eg. for menu)
@@ -343,15 +355,9 @@ void fc_shortcuts::init_default(bool read)
     suc = this->read();
   }
   if (!suc) {
-    for (int i = 0; i < SC_LAST_SC; i++) {
-      fc_shortcut s;
-      s.id = default_shortcuts[i].id;
-      s.type = default_shortcuts[i].type;
-      s.keys = default_shortcuts[i].keys;
-      s.buttons = default_shortcuts[i].buttons;
-      s.modifiers = default_shortcuts[i].modifiers;
-      s.str = default_shortcuts[i].str;
-      m_shortcuts_by_id[default_shortcuts[i].id] = s;
+    const auto defaults = default_shortcuts();
+    for (const auto &s : defaults) {
+      m_shortcuts_by_id[s.id] = s;
     }
   }
 }
@@ -743,10 +749,11 @@ void fc_shortcuts::write() const
 bool fc_shortcuts::read()
 {
   int num, i;
+  const auto defaults = default_shortcuts();
   QSettings s(QSettings::IniFormat, QSettings::UserScope,
               QStringLiteral("freeciv21-client"));
   num = s.beginReadArray(QStringLiteral("ShortcutsV2"));
-  if (num <= SC_LAST_SC) {
+  if (num <= defaults.size()) {
     for (i = 0; i < num; ++i) {
       fc_shortcut sc;
       s.setArrayIndex(i);
@@ -760,19 +767,12 @@ bool fc_shortcuts::read()
           s.value(QStringLiteral("buttons")).toInt());
       sc.modifiers = static_cast<Qt::KeyboardModifiers>(
           s.value(QStringLiteral("modifiers")).toInt());
-      sc.str = default_shortcuts[i].str;
+      sc.str = defaults[i].str;
       set_shortcut(sc);
     }
-    for (; i < SC_LAST_SC; ++i) {
+    for (; i < defaults.size(); ++i) {
       // initialize missing shortcuts
-      fc_shortcut sc;
-      sc.id = default_shortcuts[i].id;
-      sc.type = default_shortcuts[i].type;
-      sc.keys = default_shortcuts[i].keys;
-      sc.buttons = default_shortcuts[i].buttons;
-      sc.modifiers = default_shortcuts[i].modifiers;
-      sc.str = default_shortcuts[i].str;
-      set_shortcut(sc);
+      set_shortcut(defaults[i]);
     }
   } else {
     s.endArray();

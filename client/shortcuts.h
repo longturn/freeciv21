@@ -91,7 +91,6 @@ enum shortcut_id {
   SC_GOBUILDCITY = 57,
   SC_GOJOINCITY = 58,
   SC_PILLAGE = 59,
-  SC_LAST_SC = 60 // It must be last, add before it
 };
 
 /**************************************************************************
