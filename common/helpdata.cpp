@@ -143,16 +143,24 @@ static bool insert_veteran_help(char *outbuf, size_t outlen,
   }
 }
 
-static const char *terrtrans2char(struct terrain *result,
-                                  universal &for_terr,
-                                  struct terrain *pterrain,
-                                  enum gen_action act)
+/**
+ * Formats the number of turns to transform between terrains so it can be
+ * included in the terrain alterations table.
+ */
+static void format_change_terrain_string(char *buf, int bufsize,
+                                         enum gen_action act, int time,
+                                         terrain *from, const terrain *to)
 {
-  return (result == pterrain || result == T_NONE
-          || !action_id_univs_not_blocking(act, nullptr, &for_terr))
-             ? ""
-             : terrain_name_translation(result);
+  universal u = {.value = {.terrain = from}, .kind = VUT_TERRAIN};
+  if (from == to || to == T_NONE
+      || !action_id_univs_not_blocking(act, nullptr, &u)) {
+    // Terrain cannot be changed
+    fc_snprintf(buf, bufsize, "  -");
+  } else {
+    fc_snprintf(buf, bufsize, "%3d %s", time, terrain_name_translation(to));
+  }
 }
+
 /**
    Insert generated text for the helpdata "name".
    Returns TRUE if anything was added.
@@ -169,51 +177,41 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
         pillage_time = -1;
     bool terrain_independent_extras = false;
 
+    CATLSTR(outbuf, outlen,
+            /* TRANS: Header for fixed-width terrain alteration table.
+             * TRANS: Translators cannot change column widths :( */
+            _("Terrain           Cultivate        Plant            "
+              "Transform\n"));
     CATLSTR(
         outbuf, outlen,
-        /* TRANS: Header for fixed-width terrain alteration table.
-         * TRANS: Translators cannot change column widths :( */
-        _("Terrain       Irrigation       Mining           Transform\n"));
-    CATLSTR(outbuf, outlen,
-            "---------------------------------------------------------------"
-            "-\n");
+        "-------------------------------------------------------------------"
+        "-\n");
     terrain_type_iterate(pterrain)
     {
       if (0 != qstrlen(terrain_rule_name(pterrain))) {
-        char irrigation_time[4], mining_time[4], transform_time[4];
-        const char *terrain, *irrigation_result, *mining_result,
-            *transform_result;
-        struct universal for_terr = {.value = {.terrain = pterrain},
-                                     .kind = VUT_TERRAIN};
+        char cultivate[MAX_LEN_NAME + 4], plant[MAX_LEN_NAME + 4],
+            transform[MAX_LEN_NAME + 4];
+        format_change_terrain_string(
+            cultivate, sizeof(cultivate), ACTION_CULTIVATE,
+            pterrain->cultivate_time, pterrain, pterrain->irrigation_result);
+        format_change_terrain_string(plant, sizeof(plant), ACTION_PLANT,
+                                     pterrain->plant_time, pterrain,
+                                     pterrain->mining_result);
+        format_change_terrain_string(
+            transform, sizeof(transform), ACTION_TRANSFORM_TERRAIN,
+            pterrain->transform_time, pterrain, pterrain->transform_result);
 
-        fc_snprintf(irrigation_time, sizeof(irrigation_time), "%d",
-                    pterrain->irrigation_time);
-        fc_snprintf(mining_time, sizeof(mining_time), "%d",
-                    pterrain->mining_time);
-        fc_snprintf(transform_time, sizeof(transform_time), "%d",
-                    pterrain->transform_time);
-        terrain = terrain_name_translation(pterrain);
-        irrigation_result =
-            terrtrans2char(pterrain->irrigation_result, for_terr, pterrain,
-                           ACTION_CULTIVATE);
-        mining_result = terrtrans2char(pterrain->mining_result, for_terr,
-                                       pterrain, ACTION_PLANT);
-        transform_result =
-            terrtrans2char(pterrain->transform_result, for_terr, pterrain,
-                           ACTION_TRANSFORM_TERRAIN);
+        auto terrain = terrain_name_translation(pterrain);
+
         /* Use get_internal_string_length() for correct alignment with
          * multibyte character encodings */
         cat_snprintf(
-            outbuf, outlen, "%s%*s %3s %s%*s %3s %s%*s %3s %s\n", terrain,
-            MAX(0, 12 - (int) get_internal_string_length(terrain)), "",
-            (pterrain->irrigation_result == T_NONE) ? "-" : irrigation_time,
-            irrigation_result,
-            MAX(0, 12 - (int) get_internal_string_length(irrigation_result)),
-            "", (pterrain->mining_result == T_NONE) ? "-" : mining_time,
-            mining_result,
-            MAX(0, 12 - (int) get_internal_string_length(mining_result)), "",
-            (pterrain->transform_result == T_NONE) ? "-" : transform_time,
-            transform_result);
+            outbuf, outlen, "%s%*s %s%*s %s%*s %s\n", terrain,
+            MAX(0, 16 - (int) get_internal_string_length(terrain)), "",
+            cultivate,
+            MAX(0, 16 - (int) get_internal_string_length(cultivate)), "",
+            plant, MAX(0, 16 - (int) get_internal_string_length(plant)), "",
+            transform);
 
         if (clean_pollution_time != 0
             && pterrain->clean_pollution_time != 0) {
