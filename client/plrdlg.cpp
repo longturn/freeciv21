@@ -24,6 +24,7 @@
 #include "icons.h"
 #include "improvement.h"
 #include "nation.h"
+#include "plrdlg_common.h"
 #include "research.h"
 // client
 #include "chatline_common.h"
@@ -33,6 +34,7 @@
 #include "fonts.h"
 #include "page_game.h"
 #include "sprite.h"
+#include "tilespec.h"
 #include "top_bar.h"
 
 /**
@@ -59,11 +61,7 @@ check_box_rect(const QStyleOptionViewItem &view_item_style_options)
 QSize plr_item_delegate::sizeHint(const QStyleOptionViewItem &option,
                                   const QModelIndex &index) const
 {
-  QSize r;
-
-  r = QItemDelegate::sizeHint(option, index);
-  r.setHeight(r.height() + 4);
-  return r;
+  return QItemDelegate::sizeHint(option, index);
 }
 
 /**
@@ -106,6 +104,7 @@ void plr_item_delegate::paint(QPainter *painter,
 
     QApplication::style()->drawControl(QStyle::CE_CheckBox, &cbso, painter);
     break;
+  case COL_GOVERNMENT:
   case COL_TEXT:
     QItemDelegate::paint(painter, option, index);
     break;
@@ -153,16 +152,17 @@ bool plr_item::setData(int column, const QVariant &value, int role)
 QVariant plr_item::data(int column, int role) const
 {
   QString str;
-  struct player_dlg_column *pdc;
 
   if (role == Qt::UserRole) {
     return QVariant::fromValue((void *) ipplayer);
   }
-  if (role != Qt::DisplayRole) {
+
+  const auto pdc = &player_dlg_columns[column];
+  if (role != Qt::DisplayRole && pdc->type != COL_GOVERNMENT) {
     return QVariant();
   }
-  pdc = &player_dlg_columns[column];
-  switch (player_dlg_columns[column].type) {
+
+  switch (pdc->type) {
   case COL_FLAG: {
     auto f = fcFont::instance()->getFont(fonts::default_font);
     auto fm = std::make_unique<QFontMetrics>(f);
@@ -174,6 +174,16 @@ QVariant plr_item::data(int column, int role) const
     break;
   case COL_BOOLEAN:
     return pdc->bool_func(ipplayer);
+    break;
+  case COL_GOVERNMENT:
+    if (role == Qt::DisplayRole) {
+      return pdc->func(ipplayer);
+    } else if (role == Qt::DecorationRole
+               && BV_ISSET(ipplayer->client.visible, NI_GOVERNMENT)) {
+      return *get_government_sprite(tileset, ipplayer->government);
+    } else {
+      return QVariant();
+    }
     break;
   case COL_TEXT:
     return pdc->func(ipplayer);
@@ -293,7 +303,7 @@ void plr_model::populate()
 /**
    Constructor for plr_widget
  */
-plr_widget::plr_widget(QWidget *widget) : QTreeView(widget)
+plr_widget::plr_widget(QWidget *widget) : QTableView(widget)
 {
   other_player = nullptr;
   selected_player = nullptr;
@@ -305,16 +315,16 @@ plr_widget::plr_widget(QWidget *widget) : QTreeView(widget)
   filter_model->setSourceModel(list_model);
   filter_model->setFilterRole(Qt::DisplayRole);
   setModel(filter_model);
-  setRootIsDecorated(false);
-  setAllColumnsShowFocus(true);
   setSortingEnabled(true);
   setSelectionMode(QAbstractItemView::SingleSelection);
-  setItemsExpandable(false);
   setAutoScroll(true);
   setAlternatingRowColors(true);
-  header()->setContextMenuPolicy(Qt::CustomContextMenu);
+
+  auto header = horizontalHeader();
+  header->setContextMenuPolicy(Qt::CustomContextMenu);
+  header->setStretchLastSection(true);
   hide_columns();
-  connect(header(), &QWidget::customContextMenuRequested, this,
+  connect(header, &QWidget::customContextMenuRequested, this,
           &plr_widget::display_header_menu);
 
   connect(selectionModel(), &QItemSelectionModel::selectionChanged, this,
@@ -693,8 +703,9 @@ plr_widget::~plr_widget()
   delete list_model;
   delete filter_model;
   king()->qt_settings.player_repo_sort_col =
-      header()->sortIndicatorSection();
-  king()->qt_settings.player_report_sort = header()->sortIndicatorOrder();
+      horizontalHeader()->sortIndicatorSection();
+  king()->qt_settings.player_report_sort =
+      horizontalHeader()->sortIndicatorOrder();
 }
 
 /**
@@ -853,7 +864,7 @@ void plr_widget::mousePressEvent(QMouseEvent *event)
       && can_client_issue_orders()) {
     plr->call_meeting();
   }
-  QTreeView::mousePressEvent(event);
+  QTableView::mousePressEvent(event);
 }
 
 /**
@@ -886,7 +897,10 @@ void plr_report::update_report(bool update_selection)
     ui.plr_wdg->get_model()->populate();
   }
 
-  ui.plr_wdg->header()->resizeSections(QHeaderView::ResizeToContents);
+  auto header = ui.plr_wdg->horizontalHeader();
+  header->resizeSections(QHeaderView::ResizeToContents);
+  header->resizeSection(header->count() - 1, QHeaderView::Stretch);
+
   ui.meet_but->setDisabled(true);
   ui.cancel_but->setDisabled(true);
   ui.withdraw_but->setDisabled(true);

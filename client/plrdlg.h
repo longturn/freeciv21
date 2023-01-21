@@ -12,7 +12,7 @@
 // Qt
 #include <QAbstractListModel>
 #include <QItemDelegate>
-#include <QTreeView>
+#include <QTableView>
 #include <QWidget>
 // client
 #include "plrdlg_common.h"
@@ -99,7 +99,7 @@ private:
 /***************************************************************************
   Player widget to show player/nation model
 ***************************************************************************/
-class plr_widget : public QTreeView {
+class plr_widget : public QTableView {
   Q_OBJECT
   plr_model *list_model;
   QSortFilterProxyModel *filter_model;
