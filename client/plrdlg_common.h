@@ -14,6 +14,7 @@ enum player_dlg_column_type {
   COL_FLAG,
   COL_COLOR,
   COL_BOOLEAN,
+  COL_GOVERNMENT,
   COL_TEXT,
   COL_RIGHT_TEXT // right aligned text
 };
@@ -37,8 +38,6 @@ extern const int num_player_dlg_columns;
 QString plrdlg_col_state(const struct player *plr);
 
 void init_player_dlg_common();
-
-QString player_addr_hack(const struct player *pplayer);
 
 void close_intel_dialog(struct player *pplayer);
 void update_intel_dialog(struct player *pplayer);

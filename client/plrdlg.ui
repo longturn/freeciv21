@@ -76,7 +76,11 @@
      </layout>
     </item>
     <item>
-     <widget class="plr_widget" name="plr_wdg"/>
+     <widget class="plr_widget" name="plr_wdg">
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+      </widget>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
@@ -136,7 +140,7 @@
  <customwidgets>
   <customwidget>
    <class>plr_widget</class>
-   <extends>QTreeView</extends>
+   <extends>QTableView</extends>
    <header>plrdlg.h</header>
   </customwidget>
  </customwidgets>
