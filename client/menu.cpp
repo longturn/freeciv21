@@ -1312,24 +1312,6 @@ bool mr_menu::shortcut_exists(const fc_shortcut &fcs, QString &where)
 }
 
 /**
-   Returns string bounded to given shortcut
- */
-QString mr_menu::shortcut_2_menustring(int sid)
-{
-  auto fcs = fc_shortcuts::sc()->get_shortcut(static_cast<shortcut_id>(sid));
-  auto menu_list = findChildren<QMenu *>();
-  for (const QMenu *m : qAsConst(menu_list)) {
-    QList<QAction *> actions = m->actions();
-    for (QAction *a : qAsConst(actions)) {
-      if (a->shortcut() == fcs.keys) {
-        return (a->text() + " (" + fcs.to_string() + ")");
-      }
-    }
-  }
-  return QString();
-}
-
-/**
    Updates airlift menu
  */
 void mr_menu::update_airlift_menu()

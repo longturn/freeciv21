@@ -183,7 +183,6 @@ public:
   void update_bases_menu();
   void set_tile_for_order(struct tile *ptile);
   bool shortcut_exists(const fc_shortcut &fcs, QString &where);
-  QString shortcut_2_menustring(int sid);
   QAction *minimap_status = nullptr;
   QAction *scale_fonts_status = nullptr;
   QAction *lock_status = nullptr;
