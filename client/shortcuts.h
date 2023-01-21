@@ -115,6 +115,8 @@ struct fc_shortcut {
     return type == other.type && keys == other.keys
            && buttons == other.buttons && modifiers == other.modifiers;
   }
+
+  bool is_valid() const;
 };
 
 /**************************************************************************
