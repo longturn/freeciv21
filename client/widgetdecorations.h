@@ -110,6 +110,6 @@ public:
   void put_to_corner();
 
 protected:
+  void hideEvent(QHideEvent *event) override;
   void mousePressEvent(QMouseEvent *event) override;
-  void notify_parent();
 };

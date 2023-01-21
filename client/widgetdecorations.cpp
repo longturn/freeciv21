@@ -141,10 +141,7 @@ close_widget::close_widget(QWidget *parent) : QLabel()
 /**
    Puts close widget to right top corner
  */
-void close_widget::put_to_corner()
-{
-  move(parentWidget()->width() - width(), 0);
-}
+void close_widget::put_to_corner() { move(parentWidget()->width() - 12, 0); }
 
 /**
    Mouse handler for close widget, hides parent widget
@@ -156,19 +153,18 @@ void close_widget::mousePressEvent(QMouseEvent *event)
   }
   if (event->button() == Qt::LeftButton) {
     parentWidget()->hide();
-    notify_parent();
   }
 }
 
 /**
-   Notifies parent to do custom action, parent is already hidden.
+ * Hide event handler for close widget
  */
-void close_widget::notify_parent()
+void close_widget::hideEvent(QHideEvent *event)
 {
-  fcwidget *fcw;
-
-  fcw = reinterpret_cast<fcwidget *>(parentWidget());
-  fcw->update_menu();
+  Q_UNUSED(event);
+  if (auto fcw = qobject_cast<fcwidget *>(parentWidget()); fcw) {
+    fcw->update_menu();
+  }
 }
 
 /**

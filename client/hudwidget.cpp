@@ -1585,11 +1585,14 @@ void hud_unit_combat::enterEvent(QEvent *event)
 /**
    Hud battle log contructor
  */
-hud_battle_log::hud_battle_log(QWidget *parent) : QWidget(parent)
+hud_battle_log::hud_battle_log(QWidget *parent) : QFrame(parent)
 {
   setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-  main_layout = new QVBoxLayout(this);
+  setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
+  main_layout = new QVBoxLayout;
   mw = new move_widget(this);
+  clw = new close_widget(this);
+
   setContentsMargins(0, 0, 0, 0);
   main_layout->setContentsMargins(0, 0, 0, 0);
   sw = new scale_widget(QRubberBand::Rectangle, this);
@@ -1604,6 +1607,7 @@ hud_battle_log::~hud_battle_log()
 {
   delete sw;
   delete mw;
+  delete clw;
 }
 
 /**
@@ -1676,6 +1680,7 @@ void hud_battle_log::paintEvent(QPaintEvent *event)
     scale = sw->scale;
     update_size();
   }
+  clw->put_to_corner();
   mw->put_to_corner();
   sw->move(width() - sw->width(), 0);
 }
@@ -1700,7 +1705,7 @@ void hud_battle_log::moveEvent(QMoveEvent *event)
  */
 void hud_battle_log::timerEvent(QTimerEvent *event)
 {
-  if (m_timer.elapsed() > 4000 && m_timer.elapsed() < 5000) {
+  if (m_timer.elapsed() > 4000 && m_timer.elapsed() < 15000) {
     for (auto *hudc : qAsConst(lhuc)) {
       if (hudc->get_focus()) {
         m_timer.restart();
@@ -1709,10 +1714,10 @@ void hud_battle_log::timerEvent(QTimerEvent *event)
         }
         return;
       }
-      hudc->set_fading((5000.0 - m_timer.elapsed()) / 1000);
+      hudc->set_fading((15000.0 - m_timer.elapsed()) / 1000);
     }
   }
-  if (m_timer.elapsed() >= 5000) {
+  if (m_timer.elapsed() >= 15000) {
     hide();
   }
 }
