@@ -38,6 +38,8 @@ class QTimerEvent;
 class QVBoxLayout;
 class move_widget;
 class scale_widget;
+class close_widget;
+
 struct tile;
 struct unit;
 struct unit_list;
@@ -285,7 +287,7 @@ private:
 /****************************************************************************
   Widget showing combat log
 ****************************************************************************/
-class hud_battle_log : public QWidget {
+class hud_battle_log : public QFrame {
   Q_OBJECT
   QVBoxLayout *main_layout;
   QList<hud_unit_combat *> lhuc;
@@ -306,6 +308,7 @@ protected:
 private:
   void update_size();
   scale_widget *sw;
+  close_widget *clw;
   move_widget *mw;
   QElapsedTimer m_timer;
 };
