@@ -543,7 +543,14 @@ Show New Turn Information
     Enables or Disables populating new turn information in a widget on the `Map View`_.
 
 Show Detailed Combat Information
-    Enables or Disables populating the middle-click pop-up widget with combat information.
+    Enables or Disables populating the :guilabel:`Battle Log` widget. When enabled you will see a widget
+    appear on the screen (typically in the upper left corner) after a combat occurs in your nation's vision.
+    Your nation's vision is all map tiles that are visible to your nation, either natively or via shared
+    vision treaty with an ally or team mate.
+
+    You can move the widget by click+dragging with your mouse on the plus symbol in the upper left corner.
+    You can also scale the widget larger or smaller with the plus and minus icon buttons in the upper right
+    corner. The :guilabel:`Battle Log` widget will fade from the map automatically after 5 seconds.
 
 Lock Interface
     Locks the user interface, preventing the move of objects around such as the server log/chat widget.
