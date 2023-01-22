@@ -544,7 +544,7 @@ Show New Turn Information
 
 Show Detailed Combat Information
     Enables or Disables populating the :guilabel:`Battle Log` widget. When enabled you will see a widget
-    appear on the screen (typically in the upper left corner) after a combat occurs in your nation's vision.
+    appear on the screen (typically in the upper left corner) after combat occurs in your nation's vision.
     Your nation's vision is all map tiles that are visible to your nation, either natively or via shared
     vision treaty with an ally or team mate.
 
