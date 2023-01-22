@@ -126,8 +126,8 @@ followed by ``0`` (no match) or ``1`` (match). The directions depend on the tile
 * Non-isometric hexagonal tilesets use North-East and South-West instead, for instance ``n0ne0e1s1sw1w0``.
   There are also 64 sprites.
 
-Example
-"""""""
+Matching Example
+""""""""""""""""
 
 In many tilesets, the sprites used for hills and mountains depend on the presence of other hills and mountains
 on adjacent tiles. This is achieved by putting them in a single matching group, usually called ``hills``:
@@ -191,8 +191,8 @@ against. This naming scheme is explained in the next sections.
 
 .. _corner-simple:
 
-Without matching
-^^^^^^^^^^^^^^^^
+Without matching (``single``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. warning::
     Using corner sprites without matching is fully equivalent to a ``single`` sprite, except that performance
@@ -234,8 +234,8 @@ of the tile being rendered (black frame) and green is some other terrain:
     :alt: A diagram illustrating what the u011 corresponds to in terms of adjacent tiles.
     :align: center
 
-Example
-"""""""
+Group Example
+"""""""""""""
 
 Simple coasts can be drawn as follows:
 
@@ -291,8 +291,8 @@ letter of the group in ``matches_with`` is used; otherwise, it is the first lett
 .. warning::
     Extra care is needed when drawing sprites for this mode; see the example for guidance.
 
-Example
-"""""""
+Groups Example
+""""""""""""""
 
 Suppose that you have a tileset where mountains are drawn as solid rock. It would then make sense to draw
 cliffs instead of beaches where the mountains meet water, as below:
@@ -404,8 +404,8 @@ complete hexagons.
 
 .. _hex_corner-same:
 
-Matching with the same group
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Matching with the same group (``corner``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Similarly to :ref:`the corresponding mode for square tilesets <corner-same>`, this mode is used when
 ``matches_with`` only contains ``match_type``. 14 sprites per terrain tag are needed to cover all the
@@ -438,8 +438,8 @@ one of the tile at the bottom left. For "right" sprites, the tile on the left co
 one at the top right and the tile at the bottom right. The order is indicated by the letters ``a``, ``b``, and
 ``c`` in the figure above.
 
-Example
-^^^^^^^
+Multiple Group Example
+^^^^^^^^^^^^^^^^^^^^^^
 
 .. figure:: /_static/images/tileset-reference/example-hex-corners.png
     :alt: Four hexagons, two of which are water and the others land. The coast is highlighted and the
