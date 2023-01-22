@@ -12,5 +12,6 @@ Freeciv21 project.
   pull-request.rst
   eval-pull-request.rst
   release.rst
+  stable-branch.rst
   style-guide.rst
   :maxdepth: 1
