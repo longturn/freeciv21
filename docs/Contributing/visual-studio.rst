@@ -15,7 +15,7 @@ get version 2022 up and running.
 Base Installation
 =================
 
-Start by `downloading <https://visualstudio.microsoft.com/vs/community/>`_ the Community Edition installer.
+Start by downloading the Community Edition installer from https://visualstudio.microsoft.com/vs/community.
 
 Double-click the :file:`VisualStudioSetup.exe` file in your Downloads directory and follow the prompts to
 get the setup process started. At some point you will be prompted to select the type of workload you want to
