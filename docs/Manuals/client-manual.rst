@@ -545,9 +545,9 @@ Show New Turn Information
 
 Show Detailed Combat Information
     Enables or Disables populating the :guilabel:`Battle Log` widget. When enabled you will see a widget
-    appear on the screen (typically in the upper left corner) after a combat occurs in your nation's vision.
+    appear on the screen (typically in the upper left corner) after combat occurs in your nation's vision.
     Your nation's vision is all map tiles that are visible to your nation, either natively or via shared
-    vision treaty with an ally or team mate. The figure below gives an example of 3 events.
+    vision treaty with an ally or team mate. The figure below gives an example of 3 combat events.
 
     .. _Battle Log:
     .. figure:: /_static/images/gui-elements/battle-log.png
@@ -560,9 +560,11 @@ Show Detailed Combat Information
 
     You can move the widget by click+dragging with your mouse on the plus symbol in the upper left corner.
     You can also scale the widget larger or smaller with the plus and minus icon buttons near the upper right
-    corner. Lastly, you can close the widget by clicking on the x symbol in the upper right corner. If you
-    do not do anything with the :guilabel:`Battle Log` widget after combat occurs, it will fade from the map
-    automatically after 20 seconds.
+    corner. You can close the widget by clicking on the ``x`` symbol in the upper right corner. Lastly, if you
+    click on the winning unit icon in a row, the client will move the map to where the combat occurred.
+
+    If you do not do anything with the :guilabel:`Battle Log` widget after combat occurs, it will fade from
+    the map automatically after 20 seconds.
 
 Lock Interface
     Locks the user interface, preventing the move of objects around such as the server log/chat widget.
@@ -1136,9 +1138,12 @@ To move around the map canvas, you can right-click in the main map area and the 
 from the center of the screen, the faster the map canvas will move per mouse click. You can also use
 two-finger gestures on your mouse/trackpad to swipe up, down, left, and right.
 
-One other feature of the :guilabel:`Map View` is the ability to middle-click on a unit and a pop-up widget
-will appear giving you some information about the unit. :numref:`Unit Information`, gives an example of a
-:unit:`Howitzer`.
+One other feature of the :guilabel:`Map View` is the ability to middle-click on a unit (via the
+:ref:`Popup Tile Info Shortcut <shortcut-popup-tile-info>`. After a middle-click a popup widget will appear
+giving you some information about the tile. :numref:`Unit Information`, gives an example of a :unit:`Howitzer`
+on Plains. The popup information widget gives a great deal of information about the coordinates of the tile,
+terrain type, and infrastructure improvements made to the tile. If a unit is on the tile, as in our example,
+you are also given details about the unit.
 
 .. _Unit Information:
 .. figure:: /_static/images/gui-elements/unit-info.png
@@ -1149,6 +1154,10 @@ will appear giving you some information about the unit. :numref:`Unit Informatio
 
   Map View - Unit Information
 
+
+.. tip::
+  The client will give you some basic combat chances if you select one of your units and then use the
+  middle-click popup tile info shortcut on the tile of an enemy unit.
 
 Units View
 ^^^^^^^^^^
@@ -1547,16 +1556,21 @@ has been selected.
   Unit Controls Widget
 
 
-You can see that the :unit:`Workers` is selected because it has a white selection ring around its base. Looking
-at the dialog, in the header, you can see that this unit is ID # 111, has 4 3/9 Move Points (MPs), and 10 of
-10 Hit Points (HPs). From left to right you can see an image of the unit with MPs overlaid, the terrain it is
-on with infrastructure improvements shown, and then lastly the actions that this unit can take. In this
-example the actions available are: Plant to Forest/River, Build Road, Go to Tile, Sentry, Auto Worker, Wait,
-and Done.
+You can see that the :unit:`Workers` is selected because it has a white selection ring around its base.
+Looking at the dialog, in the header, you can see that this unit is ID # 111, has 4 3/9 Move Points (MPs), and
+10 of 10 Hit Points (HPs).
+
+From left to right you can see an image of the unit with MPs overlaid, the terrain it is on with
+infrastructure improvements shown, and then the actions that this unit can take. In this example the actions
+available are: Plant to Forest/River, Build Road, Go to Tile, Sentry, Auto Worker, Wait, and Done.
 
 Depending on the type of unit selected, the available actions will change, but the other information will
 remain the same. If you rename a unit (from the `Unit Menu`_), the name will appear in quotes after the
 Unit ID value.
+
+If the unit selected is not in your field of vision on the map, then you can click on the icon for the unit on
+the left side and the game map will center on the unit for you. As with other widgets in Freeciv21, you can
+click+drag the widget to move it by using the plus symbol in the upper left corner.
 
 Minimap
 -------

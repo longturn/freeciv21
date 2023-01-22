@@ -102,6 +102,8 @@ Append focus
 
    Default: ``Shift`` plus Left mouse button
 
+.. _shortcut-popup-tile-info:
+
 Popup tile info
   Pop up a widget of information about the tile, unit(s) on the tile, and other information related to the
   tile.
