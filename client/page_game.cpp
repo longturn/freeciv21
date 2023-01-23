@@ -15,6 +15,7 @@
 
 // Qt
 #include <QGridLayout>
+#include <QIcon>
 #include <QResizeEvent>
 #include <QScreen>
 
@@ -29,6 +30,8 @@
 #include "client_main.h"
 #include "text.h"
 #include "views/view_map_common.h"
+#include "tileset/tilespec.h"
+
 // gui-qt - Eye of Storm
 #include "chatline.h"
 #include "citydlg.h"
@@ -73,7 +76,13 @@ pageGame::pageGame(QWidget *parent)
   top_bar_wdg = new top_bar();
   sw_map = new top_bar_widget(Q_("?noun:View"), QStringLiteral("MAP"),
                               top_bar_show_map);
-  sw_map->setIcon(fcIcons::instance()->getIcon(QStringLiteral("view")));
+
+  if (client.conn.playing != nullptr) {
+    sw_map->setIcon(QIcon());
+    sw_map->setIcon(QIcon(*get_nation_flag_sprite(
+        tileset, nation_of_player(client.conn.playing))));
+    sw_map->setIconSize(QSize(29, 20)); // small flag size
+  }
 
   sw_tax = new national_budget_widget();
   connect(sw_tax, &QAbstractButton::clicked, this,
@@ -205,7 +214,12 @@ pageGame::~pageGame() = default;
  */
 void pageGame::reloadSidebarIcons()
 {
-  sw_map->setIcon(fcIcons::instance()->getIcon(QStringLiteral("view")));
+  if (client.conn.playing != nullptr) {
+    sw_map->setIcon(QIcon());
+    sw_map->setIcon(QIcon(*get_nation_flag_sprite(
+        tileset, nation_of_player(client.conn.playing))));
+    sw_map->setIconSize(QSize(29, 20)); // small flag size
+  }
   sw_cunit->setIcon(fcIcons::instance()->getIcon(QStringLiteral("units")));
   sw_cities->setIcon(fcIcons::instance()->getIcon(QStringLiteral("cities")));
   sw_diplo->setIcon(fcIcons::instance()->getIcon(
@@ -233,6 +247,7 @@ void pageGame::updateInfoLabel()
     connect(update_info_timer, &QTimer::timeout, this,
             &pageGame::updateInfoLabelTimeout);
     update_info_timer->start(300);
+    reloadSidebarIcons();
     return;
   }
 }
@@ -277,7 +292,7 @@ void pageGame::updateInfoLabelTimeout()
           .arg(calendar_text(), QString::number(game.info.turn));
 
   sw_map->setCustomLabels(s);
-  sw_map->update();
+  reloadSidebarIcons();
 
   if (client.conn.playing != nullptr) {
     sw_economy->set_gold(client.conn.playing->economic.gold);
@@ -325,6 +340,7 @@ void pageGame::updateSidebarTooltips()
     str = QString(nation_plural_for_player(client_player()));
     str = str + '\n' + get_info_label_text(false);
     sw_map->setToolTip(str);
+    reloadSidebarIcons();
     str = QString(_("Tax: %1% Science: %2% Luxury: %3%\n"))
               .arg(client.conn.playing->economic.tax)
               .arg(client.conn.playing->economic.luxury)
