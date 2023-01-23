@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2023 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -436,8 +436,9 @@ QString col_research(const struct player *them)
     return _("-");
   } else if (BV_ISSET(them->client.visible, NI_TECHS)) {
     struct research *research = research_get(them);
-    return research_advance_name_translation(research,
-                                             research->researching);
+    return research_advance_name_translation(research, research->researching)
+           + " " + "(" + QString::number(research->bulbs_researched) + "/"
+           + QString::number(research->client.researching_cost) + ")";
   } else {
     return _("?");
   }
