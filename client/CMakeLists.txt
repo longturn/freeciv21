@@ -37,8 +37,6 @@ target_sources(
   freeciv21-client
   PRIVATE
   attribute.cpp
-  audio/audio.cpp
-  audio/audio_none.cpp
   canvas.cpp
   chatline.cpp
   chatline_common.cpp
@@ -51,7 +49,6 @@ target_sources(
   climap.cpp
   climisc.cpp
   clinet.cpp
-  colorizer.cpp
   colors_common.cpp
   connectdlg.cpp
   connectdlg_common.cpp
@@ -133,7 +130,10 @@ target_sources(
   voteinfo_bar.cpp
   unithudselector.cpp
 
+  audio/audio.cpp
+  audio/audio_none.cpp
   tileset/drawn_sprite.cpp
+  utils/colorizer.cpp
   utils/improvement_seller.cpp
   utils/unit_quick_menu.cpp
   widgets/decorations.cpp

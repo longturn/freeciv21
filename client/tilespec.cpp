@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2023 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -67,7 +67,6 @@
 #include "client_main.h"
 #include "climap.h" // for client_tile_get_known()
 #include "climisc.h"
-#include "colorizer.h"
 #include "colors_common.h"
 #include "control.h" // for fill_xxx
 #include "editor.h"
@@ -82,6 +81,7 @@
 #include "options.h" // for fill_xxx
 #include "page_game.h"
 #include "tilespec.h"
+#include "utils/colorizer.h"
 
 // gui-qt
 #include "helpdlg.h"
