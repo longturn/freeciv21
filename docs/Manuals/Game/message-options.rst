@@ -157,23 +157,20 @@ City: May Soon Grow
   * Default: Off/None
   * Event Name: ``E_CITY_MAY_SOON_GROW``
 
-City: Needs Aqueduct
-  The named city is trying to grow, but cannot due to the lack of an improvement. The message option does not
-  distinctly apply to the :improvement:`Aqueduct` as there are often other city improvements needed to allow a
-  city to grow. Many rulesets also include the :improvement:`Sewer System`. This message option applies there
-  as well.
+City: Needs Improvement to Grow
+  The named city is trying to grow, but cannot due to the lack of an improvement. In many rulesets, the
+  :improvement:`Aqueduct` and :improvement:`Sewer System` are needed for cities to grow beyond certain sizes.
 
   * Default: Mes
-  * Event Name: ``E_CITY_AQUEDUCT``
+  * Event Name: ``E_CITY_IMPROVEMENT``
 
-City: Needs Aqueduct Being Built
+City: Needs Improvement to Grow, Being Built
   The named city will soon grow and needs the city improvement that is currently being produced. The
   message may show many turns in advance, giving you ample time to determine if it needs to be rush bought or
-  can finish on its own. See the message option above to understand that this message can apply to
-  improvements other than the :improvement:`Aqueduct`.
+  can finish on its own.
 
   * Default: Mes
-  * Event Name: ``E_CITY_AQ_BUILDING``
+  * Event Name: ``E_CITY_IMPROVEMENT_BLDG``
 
 City: Normal
   A city that was previously in disorder is now no longer in disorder.
