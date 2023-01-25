@@ -1,5 +1,5 @@
 /**************************************************************************
- Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2023 Freeciv21 and Freeciv contributors. This file is
                    part of Freeciv21. Freeciv21 is free software: you can
     ^oo^      redistribute it and/or modify it under the terms of the GNU
     (..)        General Public License  as published by the Free Software
