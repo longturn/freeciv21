@@ -1,5 +1,5 @@
 /*
- Copyright (c) 1996-2022 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2023 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -874,31 +874,36 @@ void city_info::update_labels(struct city *pcity)
                         qUtf8Printable(get_city_dialog_status_text(pcity))));
   m_size->setToolTip(get_city_dialog_size_text(pcity));
 
-  m_food->setText(
-      QString::asprintf("<B style=\"white-space:pre\">%3d (%+4d)</B>",
-                        pcity->prod[O_FOOD], pcity->surplus[O_FOOD]));
+  m_food->setText(QString::asprintf(
+      "<B style=\"white-space:pre\">%3d (%+4d)</B>",
+      pcity->prod[O_FOOD] + pcity->waste[O_FOOD], pcity->surplus[O_FOOD]));
   m_food->setToolTip(get_city_dialog_output_text(pcity, O_FOOD));
 
   m_production->setText(
       QString::asprintf("<B style=\"white-space:pre\">%3d (%+4d)</B>",
-                        pcity->prod[O_SHIELD], pcity->surplus[O_SHIELD]));
+                        pcity->prod[O_SHIELD] + pcity->waste[O_SHIELD],
+                        pcity->surplus[O_SHIELD]));
   m_production->setToolTip(get_city_dialog_output_text(pcity, O_SHIELD));
 
   m_trade->setText(
       QString::asprintf("<B style=\"white-space:pre\">%3d (%+4d)</B>",
-                        pcity->prod[O_TRADE], pcity->surplus[O_TRADE]));
+                        pcity->prod[O_TRADE] + pcity->waste[O_TRADE],
+                        pcity->surplus[O_TRADE]));
   m_trade->setToolTip(get_city_dialog_output_text(pcity, O_TRADE));
 
-  m_gold->setText(QString::asprintf("%3d (%+4d)", pcity->prod[O_GOLD],
-                                    pcity->surplus[O_GOLD]));
+  m_gold->setText(QString::asprintf(
+      "%3d (%+4d)", pcity->prod[O_GOLD] + pcity->waste[O_GOLD],
+      pcity->surplus[O_GOLD]));
   m_gold->setToolTip(get_city_dialog_output_text(pcity, O_GOLD));
 
-  m_luxury->setText(QString::asprintf("%3d (%+4d)", pcity->prod[O_LUXURY],
-                                      pcity->surplus[O_LUXURY]));
+  m_luxury->setText(QString::asprintf(
+      "%3d (%+4d)", pcity->prod[O_LUXURY] + pcity->waste[O_LUXURY],
+      pcity->surplus[O_LUXURY]));
   m_luxury->setToolTip(get_city_dialog_output_text(pcity, O_LUXURY));
 
-  m_science->setText(QString::asprintf("%3d (%+4d)", pcity->prod[O_SCIENCE],
-                                       pcity->surplus[O_SCIENCE]));
+  m_science->setText(QString::asprintf(
+      "%3d (%+4d)", pcity->prod[O_SCIENCE] + pcity->waste[O_SCIENCE],
+      pcity->surplus[O_SCIENCE]));
   m_science->setToolTip(get_city_dialog_output_text(pcity, O_SCIENCE));
 
   m_granary->setText(

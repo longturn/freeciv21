@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2022 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2023 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -784,15 +784,16 @@ static const struct city_report_spec base_city_report_specs[] = {
 
     // RESOURCE columns
     {false, 10, 1, N_("Surplus"), N_("?food/production/trade:F/P/T"),
-     N_("Resources: Food, Production, Trade"), nullptr, FUNC_TAG(resources)},
+     N_("Resources: Surplus Food, Production, Trade"), nullptr,
+     FUNC_TAG(resources)},
     {true, 3, 1, nullptr, N_("?Food surplus [short]:+F"),
-     N_("Resources: Food"), nullptr, FUNC_TAG(foodplus)},
+     N_("Resources: Surplus Food"), nullptr, FUNC_TAG(foodplus)},
     {true, 3, 1, nullptr, N_("?Production surplus [short]:+P"),
-     N_("Resources: Production"), nullptr, FUNC_TAG(prodplus)},
+     N_("Resources: Surplus Production"), nullptr, FUNC_TAG(prodplus)},
     {false, 3, 1, nullptr, N_("?Production loss (waste) [short]:-P"),
      N_("Resources: Waste (lost production)"), nullptr, FUNC_TAG(waste)},
     {true, 3, 1, nullptr, N_("?Trade surplus [short]:+T"),
-     N_("Resources: Trade"), nullptr, FUNC_TAG(tradeplus)},
+     N_("Resources: Surplus Trade"), nullptr, FUNC_TAG(tradeplus)},
     {true, 3, 1, nullptr, N_("?Trade loss (corruption) [short]:-T"),
      N_("Resources: Corruption (lost trade)"), nullptr,
      FUNC_TAG(corruption)},
