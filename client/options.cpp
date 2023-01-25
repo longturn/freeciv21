@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2022 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2023 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -3448,8 +3448,8 @@ static void message_options_load(struct section_file *file,
                                           E_CITY_FAMINE_FEARED,
                                           E_CITY_GROWTH,
                                           E_CITY_MAY_SOON_GROW,
-                                          E_CITY_AQUEDUCT,
-                                          E_CITY_AQ_BUILDING,
+                                          E_CITY_IMPROVEMENT,
+                                          E_CITY_IMPROVEMENT_BLDG,
                                           E_CITY_NORMAL,
                                           E_CITY_NUKED,
                                           E_CITY_CMA_RELEASE,

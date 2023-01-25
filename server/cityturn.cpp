@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2023 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -978,12 +978,13 @@ static bool city_increase_size(struct city *pcity,
         || get_current_construction_bonus(pcity, EFT_SIZE_UNLIMIT,
                                           RPT_CERTAIN)
                > 0) {
-      notify_player(powner, city_tile(pcity), E_CITY_AQ_BUILDING, ftc_server,
+      notify_player(powner, city_tile(pcity), E_CITY_IMPROVEMENT_BLDG,
+                    ftc_server,
                     _("%s needs %s (being built) to grow beyond size %d."),
                     city_link(pcity), improvement_name_translation(pimprove),
                     city_size_get(pcity));
     } else {
-      notify_player(powner, city_tile(pcity), E_CITY_AQUEDUCT, ftc_server,
+      notify_player(powner, city_tile(pcity), E_CITY_IMPROVEMENT, ftc_server,
                     _("%s needs an improvement to grow beyond size %d."),
                     city_link(pcity), city_size_get(pcity));
     }
