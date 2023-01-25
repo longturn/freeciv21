@@ -5,7 +5,7 @@ ai/default/daidiplomacy.cpp
 ai/difficulty.cpp
 ai/handicaps.cpp
 client/attribute.cpp
-client/audio.cpp
+client/audio/audio.cpp
 client/canvas.cpp
 client/chatline.cpp
 client/chatline_common.cpp

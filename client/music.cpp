@@ -1,5 +1,5 @@
 /*
-_   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
+_   ._       Copyright (c) 1996-2023 Freeciv21 and Freeciv contributors.
  \  |    This file is part of Freeciv21. Freeciv21 is free software: you
   \_|        can redistribute it and/or modify it under the terms of the
  .' '.              GNU General Public License  as published by the Free
@@ -15,7 +15,7 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "nation.h"
 #include "style.h"
 // client
-#include "audio.h"
+#include "audio/audio.h"
 #include "client_main.h"
 #include "options.h"
 

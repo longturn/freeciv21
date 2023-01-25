@@ -1,5 +1,5 @@
 /**
-   //           Copyright (c) 1996-2022 Freeciv21 and Freeciv contributors.
+   //           Copyright (c) 1996-2023 Freeciv21 and Freeciv contributors.
  _oo\ This file is  part of Freeciv21. Freeciv21 is free software: you can
 (__/ \  _  _   redistribute it and/or modify it under the terms of the GNU
    \  \/ \/ \    General Public License  as published by the Free Software
@@ -27,7 +27,7 @@
 #include "chat.h"
 #include "chatline_common.h"
 // client
-#include "audio.h"
+#include "audio/audio.h"
 #include "client_main.h"
 #include "climap.h"
 #include "colors_common.h"

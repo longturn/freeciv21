@@ -37,8 +37,8 @@ target_sources(
   freeciv21-client
   PRIVATE
   attribute.cpp
-  audio_none.cpp
-  audio.cpp
+  audio/audio.cpp
+  audio/audio_none.cpp
   canvas.cpp
   chatline.cpp
   chatline_common.cpp
@@ -165,7 +165,7 @@ if(NOT EMSCRIPTEN)
 endif()
 
 if (AUDIO_SDL)
-  target_sources(freeciv21-client PRIVATE audio_sdl.cpp)
+  target_sources(freeciv21-client PRIVATE audio/audio_sdl.cpp)
   if (NOT EMSCRIPTEN)
     # SDL comes with the -s option on emscripten
     target_include_directories(freeciv21-client PRIVATE ${SDL2_INCLUDE_DIR})
