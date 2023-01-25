@@ -131,12 +131,12 @@ target_sources(
   update_queue.cpp
   voteinfo.cpp
   voteinfo_bar.cpp
-  widgetdecorations.cpp
   unithudselector.cpp
 
   tileset/drawn_sprite.cpp
   utils/improvement_seller.cpp
   utils/unit_quick_menu.cpp
+  widgets/decorations.cpp
   widgets/city/city_icon_widget.cpp
   widgets/city/upkeep_widget.cpp
 

@@ -1,7 +1,7 @@
 /*
  * This file is part of Freeciv21.
  * SPDX-FileCopyrightText: 2022 Louis Moureaux
- * SPDX-FileCopyrightText: 2022 James Robertson
+ * SPDX-FileCopyrightText: 2022-2023 James Robertson
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -10,7 +10,7 @@
 #include "ui_minimap_panel.h"
 
 // qt-client is one true king
-#include "widgetdecorations.h"
+#include "widgets/decorations.h"
 
 class QAction;
 

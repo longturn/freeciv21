@@ -1,5 +1,5 @@
 /***    _     ************************************************************
-      /` '\                 Copyright (c) 1996-2020 Freeciv21 and Freeciv
+      /` '\                 Copyright (c) 1996-2023 Freeciv21 and Freeciv
     /| @   l                 contributors. This file is part of Freeciv21.
     \|      \         Freeciv21 is free software: you can redistribute it
       `\     `\_              and/or modify it under the terms of the GNU
@@ -12,7 +12,17 @@
                     l /        If not, see https://www.gnu.org/licenses/.
                    / /      ********************************************/
 
-#include "widgetdecorations.h"
+/*
+ * This file is used to add "decorations" to custom widgets in the client.
+ *
+ * close_widget - add a close "x" icon to the corner of a widget.
+ * move_widget - add a cross-like symbol to the corner of a widget.
+ * resizable_widget - set the widget to be resizable.
+ * scale_widget - add plus and minus buttons to the top of a widget to allow
+ * for scaling.
+ */
+
+#include "decorations.h"
 // Qt
 #include <QMouseEvent>
 #include <QPainter>

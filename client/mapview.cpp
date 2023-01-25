@@ -1,5 +1,5 @@
 /*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2023 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -42,7 +42,7 @@
 #include "qtg_cxxside.h"
 #include "sciencedlg.h"
 #include "top_bar.h"
-#include "widgetdecorations.h"
+#include "widgets/decorations.h"
 
 static int mapview_frozen_level = 0;
 extern void destroy_city_dialog();

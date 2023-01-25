@@ -1,4 +1,4 @@
-/*  .'       '.  Copyright (c) 1996-2020 Freeciv21 and Freeciv   ********
+/*  .'       '.  Copyright (c) 1996-2023 Freeciv21 and Freeciv   ********
     \\  .  . \ \            contributors. This file is part of Freeciv21.
     \ \ o  o  \ \     Freeciv21 is free software: you can redistribute it
      \ . \/ \/ \ \            and/or modify it under the terms of the GNU
