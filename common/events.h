@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2023 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -22,8 +22,8 @@
 #define SPECENUM_VALUE5 E_CITY_FAMINE_FEARED
 #define SPECENUM_VALUE6 E_CITY_GROWTH
 #define SPECENUM_VALUE7 E_CITY_MAY_SOON_GROW
-#define SPECENUM_VALUE8 E_CITY_AQUEDUCT
-#define SPECENUM_VALUE9 E_CITY_AQ_BUILDING
+#define SPECENUM_VALUE8 E_CITY_IMPROVEMENT
+#define SPECENUM_VALUE9 E_CITY_IMPROVEMENT_BLDG
 #define SPECENUM_VALUE10 E_CITY_NORMAL
 #define SPECENUM_VALUE11 E_CITY_NUKED
 #define SPECENUM_VALUE12 E_CITY_CMA_RELEASE

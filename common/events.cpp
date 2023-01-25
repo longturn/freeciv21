@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2023 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -91,8 +91,9 @@ static struct {
     GEN_EV(E_CITY_FAMINE_FEARED, E_S_CITY, N_("Famine Feared")),
     GEN_EV(E_CITY_GROWTH, E_S_CITY, N_("Growth")),
     GEN_EV(E_CITY_MAY_SOON_GROW, E_S_CITY, N_("May Soon Grow")),
-    GEN_EV(E_CITY_AQUEDUCT, E_S_CITY, N_("Needs Aqueduct")),
-    GEN_EV(E_CITY_AQ_BUILDING, E_S_CITY, N_("Needs Aqueduct Being Built")),
+    GEN_EV(E_CITY_IMPROVEMENT, E_S_CITY, N_("Needs Improvement to Grow")),
+    GEN_EV(E_CITY_IMPROVEMENT_BLDG, E_S_CITY,
+           N_("Needs Improvement to Grow, Being Built")),
     GEN_EV(E_CITY_NORMAL, E_S_CITY, N_("Normal")),
     GEN_EV(E_CITY_NUKED, E_S_CITY, N_("Nuked")),
     GEN_EV(E_CITY_CMA_RELEASE, E_S_CITY,
