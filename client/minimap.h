@@ -1,5 +1,5 @@
 /**************************************************************************
-    Copyright (c) 1996-2020 Freeciv21 and Freeciv  contributors. This file
+    Copyright (c) 1996-2023 Freeciv21 and Freeciv  contributors. This file
                          is part of Freeciv21. Freeciv21 is free software:
 |\_/|,,_____,~~`        you can redistribute it and/or modify it under the
 (.".)~~     )`~}}    terms of the GNU General Public License  as published
@@ -16,7 +16,7 @@
 #include <QFrame>
 #include <QLabel>
 // gui-qt is The One
-#include "widgetdecorations.h"
+#include "widgets/decorations.h"
 class QImage;
 class QMouseEvent;
 class QMoveEvent;

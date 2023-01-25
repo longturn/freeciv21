@@ -66,7 +66,7 @@ client/tradecalculation.cpp
 client/unitreport.cpp
 client/unitselect.cpp
 client/voteinfo_bar.cpp
-client/widgetdecorations.cpp
+client/widgets/decorations.cpp
 common/actions.cpp
 common/actions.h
 common/ai.cpp
