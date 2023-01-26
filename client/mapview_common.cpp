@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2023 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -51,7 +51,7 @@
 #include "mapview_common.h"
 #include "mapview_geometry.h"
 #include "overview_common.h"
-#include "tilespec.h"
+#include "tileset/tilespec.h"
 
 // gui-qt
 #include "canvas.h"

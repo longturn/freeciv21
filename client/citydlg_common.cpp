@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2023 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -32,7 +32,7 @@
 #include "climap.h"
 #include "mapview_common.h"
 #include "options.h"  // for concise_city_production
-#include "tilespec.h" // for tileset_is_isometric(tileset)
+#include "tileset/tilespec.h" // for tileset_is_isometric(tileset)
 
 static int citydlg_map_width, citydlg_map_height;
 

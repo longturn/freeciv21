@@ -1,5 +1,5 @@
 /*
- Copyright (c) 1996-2022 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2023 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -44,7 +44,7 @@
 #include "ratesdlg_g.h"
 #include "renderer.h"
 #include "repodlgs_g.h"
-#include "tilespec.h"
+#include "tileset/tilespec.h"
 // gui-qt
 #include "dialogs.h"
 #include "fc_client.h"
@@ -63,7 +63,7 @@
 #include "ratesdlg.h"
 #include "shortcuts.h"
 #include "spaceshipdlg.h"
-#include "sprite.h"
+#include "tileset/sprite.h"
 #include "top_bar.h"
 #include "unithudselector.h"
 #include "unitreport.h"

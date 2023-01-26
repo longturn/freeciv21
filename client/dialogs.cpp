@@ -41,7 +41,7 @@
 #include "mapview_common.h"
 #include "packhand.h"
 #include "text.h"
-#include "tilespec.h"
+#include "tileset/tilespec.h"
 // gui-qt - awesome client
 #include "fc_client.h"
 #include "fonts.h"
@@ -52,7 +52,7 @@
 #include "notifyreport.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
-#include "sprite.h"
+#include "tileset/sprite.h"
 #include "unithudselector.h"
 #include "unitselect.h"
 

@@ -1,5 +1,5 @@
 /*
-  /\ ___ /\        Copyright (c) 1996-2020 ＦＲＥＥＣＩＶ ２１ and Freeciv
+  /\ ___ /\        Copyright (c) 1996-2023 ＦＲＥＥＣＩＶ ２１ and Freeciv
  (  o   o  )                 contributors. This file is part of Freeciv21.
   \  >#<  /           Freeciv21 is free software: you can redistribute it
   /       \                    and/or modify it under the terms of the GNU
@@ -23,7 +23,7 @@
 #include "client_main.h"
 #include "control.h"
 #include "mapview_common.h"
-#include "tilespec.h"
+#include "tileset/tilespec.h"
 // gui-qt
 #include "canvas.h"
 #include "fonts.h"

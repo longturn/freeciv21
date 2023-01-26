@@ -59,7 +59,7 @@ client/shortcuts.cpp
 client/spaceshipdlg.cpp
 client/text.cpp
 client/themes.cpp
-client/tilespec.cpp
+client/tileset/tilespec.cpp
 client/tooltips.cpp
 client/top_bar.cpp
 client/tradecalculation.cpp

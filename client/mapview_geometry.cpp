@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 1996-2020 Freeciv and Freeciv21 contributors
- * SPDX-FileCopyrightText: 2022 Louis Moureaux <m_louis30@yahoo.com>
+ * SPDX-FileCopyrightText: 2022-2023 Louis Moureaux <m_louis30@yahoo.com>
  *
  * SPDX-License-Identifier: GPLv3-or-later
  */
@@ -9,7 +9,7 @@
 
 #include "game.h"
 #include "map.h"
-#include "tilespec.h"
+#include "tileset/tilespec.h"
 
 namespace freeciv {
 

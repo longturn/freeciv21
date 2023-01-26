@@ -1,6 +1,6 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 2021 Freeciv21 contributors.
-\_   \        /  __/                        This file is part of Freeciv21.
+/   \          /   \         Copyright (c) 2021-2023 Freeciv21 contributors.
+\_   \        /  __/                         This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
      \_       _/          Public License  as published by the Free Software
@@ -15,20 +15,31 @@
 #include "fc_types.h"
 #include "layer.h"
 
+#include <QPixmap>
+
+#include <array>
+#include <memory>
+
 namespace freeciv {
 
-class layer_base_flags : public layer {
+class layer_background : public layer {
 public:
-  explicit layer_base_flags(struct tileset *ts, int offset_x, int offset_y);
-  virtual ~layer_base_flags() = default;
+  explicit layer_background(struct tileset *ts);
+  virtual ~layer_background() = default;
 
   std::vector<drawn_sprite>
   fill_sprite_array(const tile *ptile, const tile_edge *pedge,
                     const tile_corner *pcorner,
                     const unit *punit) const override;
 
+  void initialize_player(const player *player) override;
+  void free_player(int player_id) override;
+
 private:
-  int m_offset_x, m_offset_y;
+  std::unique_ptr<QPixmap> create_player_sprite(const QColor &pcolor) const;
+
+  std::array<std::unique_ptr<QPixmap>, MAX_NUM_PLAYER_SLOTS>
+      m_player_background;
 };
 
 } // namespace freeciv

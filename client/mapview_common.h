@@ -1,5 +1,5 @@
 /**************************************************************************
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2023 Freeciv21 and Freeciv contributors. This file is
  __    __          part of Freeciv21. Freeciv21 is free software: you can
 / \\..// \    redistribute it and/or modify it under the terms of the GNU
   ( oo )        General Public License  as published by the Free Software
@@ -17,7 +17,7 @@
 #include "colors_g.h"
 
 #include "map_updates_handler.h"
-#include "tilespec.h"
+#include "tileset/tilespec.h"
 
 struct view {
   float gui_x0, gui_y0;

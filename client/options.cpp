@@ -61,7 +61,7 @@
 #include "packhand_gen.h"
 #include "plrdlg_common.h"
 #include "themes_common.h"
-#include "tilespec.h"
+#include "tileset/tilespec.h"
 
 #include "options.h"
 

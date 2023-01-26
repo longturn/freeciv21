@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2022 Louis Moureaux <m_louis30@yahoo.com>
+ * SPDX-FileCopyrightText: 2022-2023 Louis Moureaux <m_louis30@yahoo.com>
  *
  * SPDX-License-Identifier: GPLv3-or-later
  */
@@ -8,7 +8,7 @@
 
 #include <QRect>
 
-#include "layer.h"
+#include "tileset/layer.h"
 
 struct edge;
 struct tile;

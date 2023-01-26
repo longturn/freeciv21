@@ -1,7 +1,13 @@
+/*
+ * SPDX-FileCopyrightText: 2022-2023 Louis Moureaux <m_louis30@yahoo.com>
+ *
+ * SPDX-License-Identifier: GPLv3-or-later
+ */
+
 #include "map_updates_handler.h"
 #include "city.h"
 #include "options.h"
-#include "tilespec.h"
+#include "tileset/tilespec.h"
 
 FC_CPP_DECLARE_LISTENER(freeciv::map_updates_handler)
 

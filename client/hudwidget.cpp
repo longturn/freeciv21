@@ -24,7 +24,7 @@
 #include "research.h"
 #include "shortcuts.h"
 #include "tile.h"
-#include "tilespec.h"
+#include "tileset/tilespec.h"
 #include "unit.h"
 #include "unitlist.h"
 // client
@@ -40,7 +40,7 @@
 #include "icons.h"
 #include "mapview.h"
 #include "page_game.h"
-#include "sprite.h"
+#include "tileset/sprite.h"
 #include "top_bar.h"
 #include "widgets/decorations.h"
 
