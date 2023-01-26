@@ -1,5 +1,5 @@
 /*
-             ____             Copyright (c) 1996-2020 Freeciv21 and Freeciv
+             ____             Copyright (c) 1996-2023 Freeciv21 and Freeciv
             /    \__          contributors. This file is part of Freeciv21.
 |\         /    @   \   Freeciv21 is free software: you can redistribute it
 \ \_______|    \  .:|>         and/or modify it under the terms of the GNU
@@ -30,7 +30,7 @@
 #include "fc_client.h"
 #include "icons.h"
 #include "pregameoptions.h"
-#include "sprite.h"
+#include "tileset/sprite.h"
 
 page_pregame::page_pregame(QWidget *parent, fc_client *gui) : QWidget(parent)
 {

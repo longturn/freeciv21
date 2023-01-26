@@ -1,6 +1,6 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 2021 Freeciv21 contributors.
-\_   \        /  __/                        This file is part of Freeciv21.
+/   \          /   \         Copyright (c) 2021-2023 Freeciv21 contributors.
+\_   \        /  __/                         This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
      \_       _/          Public License  as published by the Free Software

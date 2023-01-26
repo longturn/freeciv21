@@ -1,5 +1,5 @@
 /*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2023 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -36,8 +36,8 @@
 #include "fc_client.h"
 #include "fonts.h"
 #include "helpdlg.h"
-#include "sprite.h"
-#include "tilespec.h"
+#include "tileset/sprite.h"
+#include "tileset/tilespec.h"
 
 #define MAX_HELP_TEXT_SIZE 8192
 #define REQ_LABEL_NEVER _("(Never)")

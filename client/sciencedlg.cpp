@@ -1,5 +1,5 @@
 /*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2023 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -26,8 +26,8 @@
 #include "climisc.h"
 #include "helpdlg.h"
 #include "reqtree.h"
-#include "sprite.h"
 #include "text.h"
+#include "tileset/sprite.h"
 // gui-qt
 #include "citydlg.h"
 #include "fc_client.h"

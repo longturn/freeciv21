@@ -45,7 +45,7 @@
 #include "governor.h"
 #include "options.h"
 #include "overview_common.h"
-#include "tilespec.h"
+#include "tileset/tilespec.h"
 #include "update_queue.h"
 
 #include "control.h"

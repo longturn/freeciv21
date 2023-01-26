@@ -1,6 +1,6 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 2021 Freeciv21 contributors.
-\_   \        /  __/                        This file is part of Freeciv21.
+/   \          /   \         Copyright (c) 2021-2023 Freeciv21 contributors.
+\_   \        /  __/                         This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
      \_       _/          Public License  as published by the Free Software
@@ -15,30 +15,20 @@
 #include "fc_types.h"
 #include "layer.h"
 
-#include <QPixmap>
-
-#include <array>
-#include <memory>
-
 namespace freeciv {
 
-class layer_special : public layer {
+class layer_base_flags : public layer {
 public:
-  explicit layer_special(struct tileset *ts, mapview_layer layer);
-  virtual ~layer_special() = default;
-
-  void set_sprite(const extra_type *extra, const QString &tag,
-                  int offset_x = 0, int offset_y = 0);
+  explicit layer_base_flags(struct tileset *ts, int offset_x, int offset_y);
+  virtual ~layer_base_flags() = default;
 
   std::vector<drawn_sprite>
   fill_sprite_array(const tile *ptile, const tile_edge *pedge,
                     const tile_corner *pcorner,
                     const unit *punit) const override;
 
-  void reset_ruleset() override;
-
 private:
-  std::array<std::unique_ptr<drawn_sprite>, MAX_EXTRA_TYPES> m_sprites;
+  int m_offset_x, m_offset_y;
 };
 
 } // namespace freeciv

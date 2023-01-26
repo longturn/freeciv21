@@ -1,5 +1,5 @@
 /*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2023 Freeciv21 and Freeciv contributors. This file is
  __    __          part of Freeciv21. Freeciv21 is free software: you can
 / \\..// \    redistribute it and/or modify it under the terms of the GNU
   ( oo )        General Public License  as published by the Free Software
@@ -41,7 +41,7 @@
 #include "clinet.h" // connect_to_server()
 #include "connectdlg_common.h"
 #include "packhand_gen.h"
-#include "tilespec.h"
+#include "tileset/tilespec.h"
 
 // gui-qt
 #include "qtg_cxxside.h"

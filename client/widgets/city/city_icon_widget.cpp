@@ -8,7 +8,7 @@
 
 // client
 #include "game.h"
-#include "tilespec.h"
+#include "tileset/tilespec.h"
 
 #include <QPainter>
 

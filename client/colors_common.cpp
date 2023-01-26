@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 1996-2020 Freeciv21 and Freeciv  contributors. This file
+    Copyright (c) 1996-2023 Freeciv21 and Freeciv  contributors. This file
                          is part of Freeciv21. Freeciv21 is free software:
 |\_/|,,_____,~~`        you can redistribute it and/or modify it under the
 (.".)~~     )`~}}    terms of the GNU General Public License  as published
@@ -23,7 +23,7 @@
 #include "colors_g.h"
 
 // client
-#include "tilespec.h"
+#include "tileset/tilespec.h"
 
 #include "colors_common.h"
 

@@ -21,7 +21,7 @@
 #include "page_game.h"
 #include "qtg_cxxside.h"
 #include "text.h"
-#include "tilespec.h"
+#include "tileset/tilespec.h"
 #include "tooltips.h"
 #include "utils/improvement_seller.h"
 #include "utils/unit_quick_menu.h"

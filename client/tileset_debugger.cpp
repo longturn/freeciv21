@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2021 Freeciv21 contributors. This file is
+ Copyright (c) 2021-2023 Freeciv21 contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -16,7 +16,7 @@
 // client
 #include "climap.h"
 #include "editor.h"
-#include "tilespec.h"
+#include "tileset/tilespec.h"
 
 // common
 #include "map.h"

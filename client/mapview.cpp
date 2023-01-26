@@ -29,9 +29,9 @@
 #include "mapview_g.h"
 #include "minimap_panel.h"
 #include "renderer.h"
-#include "sprite.h"
 #include "text.h"
-#include "tilespec.h"
+#include "tileset/sprite.h"
+#include "tileset/tilespec.h"
 // gui-qt
 #include "fc_client.h"
 #include "fonts.h"

@@ -68,13 +68,6 @@ target_sources(
   helpdlg.cpp
   hudwidget.cpp
   icons.cpp
-  layer_background.cpp
-  layer_base_flags.cpp
-  layer_darkness.cpp
-  layer_special.cpp
-  layer_terrain.cpp
-  layer_units.cpp
-  layer.cpp
   luaconsole.cpp
   luaconsole_common.cpp
   luascript/api_client_base.cpp
@@ -113,11 +106,9 @@ target_sources(
   sciencedlg.cpp
   shortcuts.cpp
   spaceshipdlg.cpp
-  sprite.cpp
   text.cpp
   themes.cpp
   themes_common.cpp
-  tilespec.cpp
   tileset_debugger.cpp
   tooltips.cpp
   top_bar.cpp
@@ -133,6 +124,15 @@ target_sources(
   audio/audio.cpp
   audio/audio_none.cpp
   tileset/drawn_sprite.cpp
+  tileset/layer_background.cpp
+  tileset/layer_base_flags.cpp
+  tileset/layer_darkness.cpp
+  tileset/layer_special.cpp
+  tileset/layer_terrain.cpp
+  tileset/layer_units.cpp
+  tileset/layer.cpp
+  tileset/sprite.cpp
+  tileset/tilespec.cpp
   utils/colorizer.cpp
   utils/improvement_seller.cpp
   utils/unit_quick_menu.cpp

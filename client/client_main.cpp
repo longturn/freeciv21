@@ -86,7 +86,7 @@
 #include "packhand.h"
 #include "plrdlg_common.h"
 #include "themes_common.h"
-#include "tilespec.h"
+#include "tileset/tilespec.h"
 #include "update_queue.h"
 #include "voteinfo.h"
 

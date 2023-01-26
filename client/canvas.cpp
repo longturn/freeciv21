@@ -1,6 +1,6 @@
 /**  / \                                                        ***********
     / _ \
-   | / \ |                  Copyright (c) 1996-2020 Freeciv21 and
+   | / \ |                  Copyright (c) 1996-2023 Freeciv21 and
    ||   || _______    Freeciv contributors. This file is part of Freeciv21.
    ||   || |\     \    Freeciv21 is free software: you can redistribute it
    ||   || ||\     \               and/or modify it under the terms of the
@@ -28,7 +28,7 @@
 #include "colors_common.h"
 #include "fc_client.h"
 #include "fonts.h"
-#include "sprite.h"
+#include "tileset/sprite.h"
 
 /**
    Copies an area from the source pixmap to the destination pixmap.

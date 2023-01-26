@@ -41,7 +41,7 @@
 #include "governor.h"
 #include "mapctrl_common.h"
 #include "mapview_common.h"
-#include "tilespec.h"
+#include "tileset/tilespec.h"
 // gui-qt
 #include "canvas.h"
 #include "cityrep.h" // hIcon
