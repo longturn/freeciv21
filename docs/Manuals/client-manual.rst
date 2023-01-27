@@ -1139,7 +1139,7 @@ from the center of the screen, the faster the map canvas will move per mouse cli
 two-finger gestures on your mouse/trackpad to swipe up, down, left, and right.
 
 One other feature of the :guilabel:`Map View` is the ability to middle-click on a unit (via the
-:ref:`Popup Tile Info Shortcut <shortcut-popup-tile-info>`. After a middle-click a popup widget will appear
+:ref:`Popup Tile Info Shortcut <shortcut-popup-tile-info>`). After a middle-click a popup widget will appear
 giving you some information about the tile. :numref:`Unit Information`, gives an example of a :unit:`Howitzer`
 on Plains. The popup information widget gives a great deal of information about the coordinates of the tile,
 terrain type, and infrastructure improvements made to the tile. If a unit is on the tile, as in our example,
