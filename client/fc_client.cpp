@@ -207,6 +207,8 @@ void fc_client::switch_page(int new_pg)
     break;
   case PAGE_START:
     voteinfo_gui_update();
+    showNormal();
+    show();
     break;
   case PAGE_LOAD:
     qobject_cast<page_load *>(pages[PAGE_LOAD])->update_load_page();
