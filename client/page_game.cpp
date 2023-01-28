@@ -82,6 +82,10 @@ pageGame::pageGame(QWidget *parent)
     sw_map->setIcon(QIcon(*get_nation_flag_sprite(
         tileset, nation_of_player(client.conn.playing))));
     sw_map->setIconSize(QSize(29, 20)); // small flag size
+  } else {
+    sw_map->setIcon(QIcon());
+    sw_map->setIcon(fcIcons::instance()->getIcon(QStringLiteral("globe")));
+    sw_map->setIconSize(QSize(24, 24));
   }
 
   sw_tax = new national_budget_widget();
@@ -219,7 +223,12 @@ void pageGame::reloadSidebarIcons()
     sw_map->setIcon(QIcon(*get_nation_flag_sprite(
         tileset, nation_of_player(client.conn.playing))));
     sw_map->setIconSize(QSize(29, 20)); // small flag size
+  } else {
+    sw_map->setIcon(QIcon());
+    sw_map->setIcon(fcIcons::instance()->getIcon(QStringLiteral("globe")));
+    sw_map->setIconSize(QSize(24, 24));
   }
+
   sw_cunit->setIcon(fcIcons::instance()->getIcon(QStringLiteral("units")));
   sw_cities->setIcon(fcIcons::instance()->getIcon(QStringLiteral("cities")));
   sw_diplo->setIcon(fcIcons::instance()->getIcon(
