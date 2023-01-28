@@ -68,7 +68,6 @@
 #include "attribute.h"
 #include "audio/audio.h"
 #include "chatline_common.h"
-#include "cityrepdata.h"
 #include "climisc.h"
 #include "clinet.h"
 #include "connectdlg_common.h" // client_kill_server()
@@ -88,6 +87,7 @@
 #include "themes_common.h"
 #include "tileset/tilespec.h"
 #include "update_queue.h"
+#include "views/view_cities_data.h"
 #include "voteinfo.h"
 
 // gui-qt

@@ -48,7 +48,6 @@
 #include "audio/audio.h"
 #include "chatline_common.h"
 #include "citybar.h"
-#include "cityrepdata.h"
 #include "client_main.h"
 #include "climisc.h"
 #include "connectdlg_common.h"
@@ -62,6 +61,7 @@
 #include "plrdlg_common.h"
 #include "themes_common.h"
 #include "tileset/tilespec.h"
+#include "views/view_cities_data.h"
 
 #include "options.h"
 

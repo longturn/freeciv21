@@ -11,6 +11,11 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
+/*
+ * This file contains functions used to gather varying data elements for use
+ * in the city view (formally known as the city report).
+ */
+
 #include <cerrno>
 #include <cmath>
 #include <cstdlib>
@@ -34,7 +39,7 @@
 #include "governor.h"
 #include "options.h"
 
-#include "cityrepdata.h"
+#include "views/view_cities_data.h"
 
 /**
    cr_entry = return an entry (one column for one city) for the city report

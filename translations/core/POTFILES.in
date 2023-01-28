@@ -11,8 +11,8 @@ client/chatline.cpp
 client/chatline_common.cpp
 client/citydlg.cpp
 client/citydlg_common.cpp
-client/cityrep.cpp
-client/cityrepdata.cpp
+client/views/view_cities.cpp
+client/views/view_cities_data.cpp
 client/client_main.cpp
 client/climisc.cpp
 client/clinet.cpp

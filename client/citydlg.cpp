@@ -44,7 +44,6 @@
 #include "tileset/tilespec.h"
 // gui-qt
 #include "canvas.h"
-#include "cityrep.h" // hIcon
 #include "fc_client.h"
 #include "fonts.h"
 #include "hudwidget.h"
@@ -58,6 +57,7 @@
 #include "unitlist.h"
 #include "utils/improvement_seller.h"
 #include "utils/unit_quick_menu.h"
+#include "views/view_cities.h" // hIcon
 
 extern QString split_text(const QString &text, bool cut);
 extern QString cut_helptext(const QString &text);
