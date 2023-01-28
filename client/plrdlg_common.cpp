@@ -438,8 +438,10 @@ QString col_research(const struct player *them)
     struct research *research = research_get(them);
     if (research->client.researching_cost == 0) {
       // Nothing is selected to research
-      return QStringLiteral("%1").arg(research_advance_name_translation(
-          research, research->researching));
+      return QStringLiteral("%1 (%2/-)")
+          .arg(research_advance_name_translation(research,
+                                                 research->researching))
+          .arg(research->bulbs_researched);
     } else {
       // Give the full research string
       return QStringLiteral("%1 (%2/%3)")
