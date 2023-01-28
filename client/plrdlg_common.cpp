@@ -436,13 +436,20 @@ QString col_research(const struct player *them)
     return _("-");
   } else if (BV_ISSET(them->client.visible, NI_TECHS)) {
     struct research *research = research_get(them);
-    return QStringLiteral("%1 (%2/%3)")
-        .arg(research_advance_name_translation(research,
-                                               research->researching))
-        .arg(research->bulbs_researched)
-        .arg(research->client.researching_cost);
-    ;
+    if (research->client.researching_cost == 0) {
+      // Nothing is selected to research
+      return QStringLiteral("%1").arg(research_advance_name_translation(
+          research, research->researching));
+    } else {
+      // Give the full research string
+      return QStringLiteral("%1 (%2/%3)")
+          .arg(research_advance_name_translation(research,
+                                                 research->researching))
+          .arg(research->bulbs_researched)
+          .arg(research->client.researching_cost);
+    };
   } else {
+    // We have no embassy so can't show anything
     return _("?");
   }
 }
