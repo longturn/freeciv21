@@ -53,7 +53,6 @@ target_sources(
   control.cpp
   dialogs.cpp
   diplodlg.cpp
-  economyreport.cpp
   editor.cpp
   endgamereport.cpp
   fc_client.cpp
@@ -136,6 +135,7 @@ target_sources(
   utils/unit_quick_menu.cpp
   views/view_cities.cpp
   views/view_cities_data.cpp
+  views/view_economics.cpp
   widgets/decorations.cpp
   widgets/city/city_icon_widget.cpp
   widgets/city/upkeep_widget.cpp

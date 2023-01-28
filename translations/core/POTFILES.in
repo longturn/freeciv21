@@ -20,7 +20,7 @@ client/connectdlg_common.cpp
 client/control.cpp
 client/dialogs.cpp
 client/diplodlg.cpp
-client/economyreport.cpp
+client/views/view_economics.cpp
 client/editor.cpp
 client/endgamereport.cpp
 client/fc_client.cpp
