@@ -436,14 +436,16 @@ QString col_research(const struct player *them)
     return _("-");
   } else if (BV_ISSET(them->client.visible, NI_TECHS)) {
     struct research *research = research_get(them);
-    return research_advance_name_translation(research, research->researching)
-           + " " + "(" + QString::number(research->bulbs_researched) + "/"
-           + QString::number(research->client.researching_cost) + ")";
+    return QStringLiteral("%1 (%2/%3)")
+        .arg(research_advance_name_translation(research,
+                                               research->researching))
+        .arg(research->bulbs_researched)
+        .arg(research->client.researching_cost);
+    ;
   } else {
     return _("?");
   }
 }
-
 /**
   ...
  */
