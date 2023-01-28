@@ -43,8 +43,6 @@ target_sources(
   citybar.cpp
   citydlg.cpp
   citydlg_common.cpp
-  cityrep.cpp
-  cityrepdata.cpp
   client_main.cpp
   climap.cpp
   climisc.cpp
@@ -136,6 +134,8 @@ target_sources(
   utils/colorizer.cpp
   utils/improvement_seller.cpp
   utils/unit_quick_menu.cpp
+  views/view_cities.cpp
+  views/view_cities_data.cpp
   widgets/decorations.cpp
   widgets/city/city_icon_widget.cpp
   widgets/city/upkeep_widget.cpp
