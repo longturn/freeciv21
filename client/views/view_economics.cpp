@@ -8,7 +8,12 @@
  see https://www.gnu.org/licenses/.
  */
 
-#include "economyreport.h"
+/*
+ * This file contains functions to generate the table based GUI for
+ * the economics view (formally known as the economy report).
+ */
+
+#include "views/view_economics.h"
 // client
 #include "tileset/sprite.h"
 // gui-qt
