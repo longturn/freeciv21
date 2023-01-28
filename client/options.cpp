@@ -3564,6 +3564,22 @@ static void message_options_load(struct section_file *file,
                 _("Deprecated event type E_UNIT_WIN in client options."));
       p = "E_UNIT_WIN_DEF";
     }
+    // Compatibility: Before 3.1 E_CITY_IMPROVEMENT was called
+    // E_CITY_AQUEDUCT
+    if (!fc_strcasecmp("E_CITY_AQUEDUCT", p)) {
+      qCWarning(
+          deprecations_category,
+          _("Deprecated event type E_CITY_AQUEDUCT in client options."));
+      p = "E_CITY_IMPROVEMENT";
+    }
+    // Compatibility: Before 3.1 E_CITY_IMPROVEMENT_BLDG was called
+    // E_CITY_AQ_BUILDING
+    if (!fc_strcasecmp("E_CITY_AQ_BUILDING", p)) {
+      qCWarning(
+          deprecations_category,
+          _("Deprecated event type E_CITY_AQ_BUILDING in client options."));
+      p = "E_CITY_IMPROVEMENT_BLDG";
+    }
     event = event_type_by_name(p, strcmp);
     if (!event_type_is_valid(event)) {
       qCritical("Event not supported: %s", p);
