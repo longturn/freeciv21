@@ -308,7 +308,8 @@ unpackage_short_unit(const struct packet_unit_short_info *packet)
   punit->veteran = packet->veteran;
   punit->hp = packet->hp;
   punit->activity = static_cast<unit_activity>(packet->activity);
-  punit->name = QString::fromUtf8(packet->name, ARRAY_SIZE(packet->name));
+  punit->name =
+      QString::fromUtf8(QByteArray(packet->name, ARRAY_SIZE(packet->name)));
 
   if (packet->activity_tgt == EXTRA_NONE) {
     punit->activity_target = nullptr;
