@@ -152,10 +152,7 @@ path_finder::path_finder_private::path_finder_private(
  */
 void path_finder::path_finder_private::insert_initial_vertex()
 {
-  // Insert the starting vertex
-  queue.push(initial_vertex);
-  best_vertices.emplace(initial_vertex.location,
-                        std::make_unique<detail::vertex>(initial_vertex));
+  maybe_insert_vertex(initial_vertex);
 }
 
 /**
