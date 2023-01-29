@@ -36,10 +36,10 @@
 #include "fonts.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
-#include "sciencedlg.h"
 #include "tileset/sprite.h"
 #include "top_bar.h"
 #include "views/view_map.h"
+#include "views/view_research.h"
 
 /**
  * Constructor

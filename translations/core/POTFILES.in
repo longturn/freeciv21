@@ -53,7 +53,7 @@ client/views/view_nations_data.cpp
 client/pregameoptions.cpp
 client/ratesdlg.cpp
 client/repodlgs_common.cpp
-client/sciencedlg.cpp
+client/views/view_research.cpp
 client/servers.cpp
 client/shortcuts.cpp
 client/spaceshipdlg.cpp

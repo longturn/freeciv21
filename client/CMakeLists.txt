@@ -94,8 +94,6 @@ target_sources(
   ratesdlg.cpp
   renderer.cpp
   repodlgs_common.cpp
-  reqtree.cpp
-  sciencedlg.cpp
   shortcuts.cpp
   spaceshipdlg.cpp
   text.cpp
@@ -136,6 +134,8 @@ target_sources(
   views/view_map_geometry.cpp
   views/view_nations.cpp
   views/view_nations_data.cpp
+  views/view_research.cpp
+  views/view_research_reqtree.cpp
   widgets/decorations.cpp
   widgets/city/city_icon_widget.cpp
   widgets/city/upkeep_widget.cpp
