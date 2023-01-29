@@ -312,7 +312,8 @@ static bool at_eol(struct inputfile *inf)
   fc_assert_ret_val(inf_sanity_check(inf), true);
   fc_assert_ret_val(inf->cur_line_pos <= inf->cur_line.length(), true);
 
-  return inf->cur_line_pos >= inf->cur_line.length();
+  // - 1 because of the trailing newline character.
+  return inf->cur_line_pos >= inf->cur_line.length() - 1;
 }
 
 /**
@@ -474,6 +475,7 @@ static bool read_a_line(struct inputfile *inf)
   }
 
   // Normal behavior
+  inf->cur_line += '\n'; // The parsing code needs a termination character.
   inf->cur_line_pos = 0;
   inf->line_num++;
 
