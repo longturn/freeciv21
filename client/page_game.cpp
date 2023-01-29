@@ -80,12 +80,11 @@ pageGame::pageGame(QWidget *parent)
                               top_bar_show_map);
 
   if (client.conn.playing != nullptr) {
-    sw_map->setIcon(QIcon());
-    sw_map->setIcon(QIcon(*get_nation_flag_sprite(
-        tileset, nation_of_player(client.conn.playing))));
-    sw_map->setIconSize(QSize(29, 20)); // small flag size
+    auto sprite = *get_nation_flag_sprite(
+        tileset, nation_of_player(client.conn.playing));
+    sw_map->setIcon(QIcon(sprite));
+    sw_map->setIconSize(sprite.size());
   } else {
-    sw_map->setIcon(QIcon());
     sw_map->setIcon(fcIcons::instance()->getIcon(QStringLiteral("globe")));
     sw_map->setIconSize(QSize(24, 24));
   }
@@ -221,12 +220,11 @@ pageGame::~pageGame() = default;
 void pageGame::reloadSidebarIcons()
 {
   if (client.conn.playing != nullptr) {
-    sw_map->setIcon(QIcon());
-    sw_map->setIcon(QIcon(*get_nation_flag_sprite(
-        tileset, nation_of_player(client.conn.playing))));
-    sw_map->setIconSize(QSize(29, 20)); // small flag size
+    auto sprite = *get_nation_flag_sprite(
+        tileset, nation_of_player(client.conn.playing));
+    sw_map->setIcon(QIcon(sprite));
+    sw_map->setIconSize(sprite.size());
   } else {
-    sw_map->setIcon(QIcon());
     sw_map->setIcon(fcIcons::instance()->getIcon(QStringLiteral("globe")));
     sw_map->setIconSize(QSize(24, 24));
   }
