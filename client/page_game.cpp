@@ -29,11 +29,9 @@
 // client
 #include "client_main.h"
 #include "text.h"
-<<<<<<< HEAD
-#include "views/view_map_common.h"
-=======
 #include "tileset/tilespec.h"
->>>>>>> 4cae8eccde (Fix location of tileset.h that rebase didn't pick up)
+#include "views/view_map_common.h"
+
 // gui-qt - Eye of Storm
 #include "chatline.h"
 #include "citydlg.h"
