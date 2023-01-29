@@ -17,7 +17,7 @@
 // client
 #include "repodlgs_g.h"
 // gui-qt
-#include "mapview.h"
+#include "views/view_map.h"
 #include "widgets/decorations.h"
 
 class QEvent;

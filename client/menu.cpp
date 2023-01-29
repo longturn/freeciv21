@@ -40,18 +40,17 @@
 #include "control.h"
 #include "helpdlg.h"
 #include "mapctrl_g.h"
-#include "mapview_common.h"
 #include "ratesdlg_g.h"
 #include "renderer.h"
 #include "repodlgs_g.h"
 #include "tileset/tilespec.h"
+#include "views/view_map_common.h"
 // gui-qt
 #include "dialogs.h"
 #include "fc_client.h"
 #include "gotodlg.h"
 #include "gui_main.h"
 #include "hudwidget.h"
-#include "mapview.h"
 #include "messageoptions.h"
 #include "messagewin.h"
 #include "minimap.h"
@@ -66,6 +65,7 @@
 #include "top_bar.h"
 #include "unithudselector.h"
 #include "unitreport.h"
+#include "views/view_map.h"
 #include "views/view_nations.h"
 
 extern void popup_endgame_report();

@@ -26,9 +26,9 @@
 
 // gui-qt
 #include "fc_client.h"
-#include "mapview.h"
 #include "page_game.h"
 #include "tileset/sprite.h"
+#include "views/view_map.h"
 
 /**
    message_widget constructor

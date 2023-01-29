@@ -34,15 +34,15 @@
 #include "connectdlg_common.h"
 #include "control.h"
 #include "game.h"
-#include "mapview_common.h"
+#include "views/view_map_common.h"
 // gui-qt
 #include "dialogs.h"
 #include "fc_client.h"
 #include "fonts.h"
 #include "icons.h"
-#include "mapview.h"
 #include "messagewin.h"
 #include "page_game.h"
+#include "views/view_map.h"
 
 static bool is_plain_public_message(const QString &s);
 

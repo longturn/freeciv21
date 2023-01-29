@@ -40,15 +40,14 @@
 #include "global_worklist.h"
 #include "governor.h"
 #include "mapctrl_common.h"
-#include "mapview_common.h"
 #include "tileset/tilespec.h"
+#include "views/view_map_common.h"
 // gui-qt
 #include "canvas.h"
 #include "fc_client.h"
 #include "fonts.h"
 #include "hudwidget.h"
 #include "icons.h"
-#include "mapview.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
 #include "text.h"
@@ -58,6 +57,7 @@
 #include "utils/improvement_seller.h"
 #include "utils/unit_quick_menu.h"
 #include "views/view_cities.h" // hIcon
+#include "views/view_map.h"
 
 extern QString split_text(const QString &text, bool cut);
 extern QString cut_helptext(const QString &text);

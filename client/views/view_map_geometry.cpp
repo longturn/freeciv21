@@ -5,7 +5,12 @@
  * SPDX-License-Identifier: GPLv3-or-later
  */
 
-#include "mapview_geometry.h"
+/*
+ * This file contains tileset geometry functions to manipulate the GUI for
+ * the the main map view.
+ */
+
+#include "views/view_map_geometry.h"
 
 #include "game.h"
 #include "map.h"

@@ -53,13 +53,13 @@
 #include "climap.h"
 #include "climisc.h"
 #include "control.h"
-#include "mapview.h"
-#include "mapview_common.h"
 #include "messagewin_common.h"
 #include "options.h"
 #include "packhand.h"
 #include "page_game.h"
 #include "tileset/tilespec.h"
+#include "views/view_map.h"
+#include "views/view_map_common.h"
 
 // gui-qt
 #include "qtg_cxxside.h"

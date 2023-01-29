@@ -52,9 +52,9 @@
 
 // gui-qt
 #include "chatline.h"
-#include "mapview.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
+#include "views/view_map.h"
 
 struct client_disband_unit_data {
   int unit_id;

@@ -1,5 +1,5 @@
 /*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2023 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -26,12 +26,12 @@
 #include "goto.h"
 #include "governor.h"
 #include "mapctrl_common.h"
-#include "mapview.h"
-#include "mapview_common.h"
 #include "mapview_g.h"
 #include "minimap_panel.h"
 #include "options.h"
 #include "page_game.h"
+#include "views/view_map.h"
+#include "views/view_map_common.h"
 
 static int rec_corner_x, rec_corner_y; // corner to iterate from
 static int rec_w, rec_h;               // width, heigth in pixels

@@ -1,7 +1,7 @@
 /*
  * This file is part of Freeciv21.
  * SPDX-FileCopyrightText: 2022 Louis Moureaux
- * SPDX-FileCopyrightText: 2022 James Robertson
+ * SPDX-FileCopyrightText: 2022-2023 James Robertson
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -13,11 +13,11 @@
 
 // client
 #include "icons.h"
-#include "mapview.h"
 #include "options.h"
 #include "overview_common.h"
 #include "page_game.h"
 #include "top_bar.h"
+#include "views/view_map.h"
 
 /**
  * Constructor.

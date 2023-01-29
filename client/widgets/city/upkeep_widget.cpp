@@ -17,7 +17,6 @@
 #include "climisc.h"
 #include "helpdata.h"
 #include "helpdlg.h"
-#include "mapview_common.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
 #include "text.h"
@@ -25,6 +24,7 @@
 #include "tooltips.h"
 #include "utils/improvement_seller.h"
 #include "utils/unit_quick_menu.h"
+#include "views/view_map_common.h"
 
 #include <QContextMenuEvent>
 #include <QMenu>

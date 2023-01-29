@@ -30,8 +30,8 @@
 #include "control.h"
 #include "editor.h"
 #include "mapctrl_common.h"
-#include "mapview_geometry.h"
 #include "tileset/tilespec.h"
+#include "views/view_map_geometry.h"
 
 /* client/include */
 #include "mapview_g.h"

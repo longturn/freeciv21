@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2022 Louis Moureaux <m_louis30@yahoo.com>
+ * SPDX-FileCopyrightText: 2022-2023 Louis Moureaux <m_louis30@yahoo.com>
  *
  * SPDX-License-Identifier: GPLv3-or-later
  */
@@ -7,8 +7,8 @@
 #include "renderer.h"
 
 #include "map_updates_handler.h"
-#include "mapview_common.h"
 #include "mapview_g.h"
+#include "views/view_map_common.h"
 
 namespace freeciv {
 

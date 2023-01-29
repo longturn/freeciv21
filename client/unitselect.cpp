@@ -22,13 +22,13 @@
 // client
 #include "client_main.h"
 #include "control.h"
-#include "mapview_common.h"
 #include "tileset/tilespec.h"
+#include "views/view_map_common.h"
 // gui-qt
 #include "canvas.h"
 #include "fonts.h"
-#include "mapview.h"
 #include "page_game.h"
+#include "views/view_map.h"
 
 /**
    Contructor for units_select

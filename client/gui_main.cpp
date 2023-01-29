@@ -21,12 +21,12 @@
 // client
 #include "client_main.h"
 #include "clinet.h"
-#include "mapview_common.h"
 #include "mapview_g.h"
 #include "options.h"
 #include "themes_common.h"
 #include "tileset/sprite.h"
 #include "tileset/tilespec.h"
+#include "views/view_map_common.h"
 // gui-qt
 #include "fc_client.h"
 #include "fonts.h"

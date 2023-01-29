@@ -1,5 +1,5 @@
 /*       ,%%%%%%%,                 ***************************************
-       ,%%/\%%%%/\%,         Copyright (c) 1996-2021 Freeciv21 and Freeciv
+       ,%%/\%%%%/\%,         Copyright (c) 1996-2023 Freeciv21 and Freeciv
       ,%%%\c "" J/%%,        contributors. This file is part of Freeciv21.
       %%%%/ d  b \%%%  Freeciv21 is free software: you can redistribute it
       %%%%    _  |%%% and/or modify it under the terms of the GNU  General
@@ -23,11 +23,11 @@
 
 // client
 #include "client_main.h"
-#include "mapview.h"
 #include "messagewin_common.h"
 #include "options.h"
 #include "page_game.h"
 #include "update_queue.h"
+#include "views/view_map.h"
 
 // gui-qt
 #include "messagewin.h"

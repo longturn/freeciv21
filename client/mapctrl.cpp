@@ -21,19 +21,19 @@
 #include "client_main.h"
 #include "mapctrl.h"
 #include "mapctrl_common.h"
-#include "mapview_common.h"
 #include "themes_common.h"
 #include "tile.h"
 #include "tileset/tilespec.h"
 #include "unit.h"
+#include "views/view_map_common.h"
 // gui-qt
 #include "citydlg.h"
 #include "fc_client.h"
-#include "mapview.h"
 #include "messagewin.h"
 #include "page_game.h"
 #include "shortcuts.h"
 #include "unitselect.h"
+#include "views/view_map.h"
 
 extern void qload_lua_script();
 extern void qreload_lua_script();

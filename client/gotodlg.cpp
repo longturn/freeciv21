@@ -25,9 +25,9 @@
 #include "client_main.h"
 #include "control.h"
 #include "goto.h"
-#include "mapview.h"
-#include "mapview_common.h"
 #include "text.h"
+#include "views/view_map.h"
+#include "views/view_map_common.h"
 // gui-qt
 #include "fc_client.h"
 #include "page_game.h"

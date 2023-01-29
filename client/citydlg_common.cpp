@@ -33,7 +33,7 @@
 // for can_client_issue_orders()
 #include "client_main.h"
 #include "climap.h"
-#include "mapview_common.h"
+#include "views/view_map_common.h"
 
 // for concise_city_production
 #include "options.h"

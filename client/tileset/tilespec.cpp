@@ -77,11 +77,11 @@
 #include "layer_special.h"
 #include "layer_terrain.h"
 #include "layer_units.h"
-#include "mapview.h"
 #include "options.h" // for fill_xxx
 #include "page_game.h"
 #include "tilespec.h"
 #include "utils/colorizer.h"
+#include "views/view_map.h"
 
 // gui-qt
 #include "helpdlg.h"
