@@ -326,15 +326,25 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
     *turns = -1;
 
     for (auto &[unit_id, finder] : goto_finders) {
+      // Initial tile
+      const auto unit = game_unit_by_number(unit_id);
+      int last_turns = 0;
+      if (unit->moves_left == 0) {
+        last_turns = 1;
+        if (ptile == unit->tile) {
+          *state = GTS_TURN_STEP;
+          *turns = 1;
+        }
+      }
+
       // Get a path
-      auto destination = hover_state == HOVER_PATROL
-                             ? game_unit_by_number(unit_id)->tile
-                             : goto_destination;
+      const auto destination =
+          hover_state == HOVER_PATROL ? unit->tile : goto_destination;
       const auto path =
           finder.find_path(freeciv::tile_destination(destination));
       if (path && !path->empty()) {
         const auto steps = path->steps();
-        int last_turns = 0, last_waypoints = 0;
+        int last_waypoints = 0;
         // Find tiles on the path where we end turns
         for (const auto step : steps) {
           if (ptile == step.location) {
