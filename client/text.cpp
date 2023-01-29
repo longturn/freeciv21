@@ -8,9 +8,6 @@
  see https://www.gnu.org/licenses/.
  */
 
-#ifdef HAVE_CONFIG_H
-#endif
-
 #include <math.h> // ceil
 #include <string.h>
 
@@ -359,29 +356,29 @@ const QString popup_info_text(struct tile *ptile)
       str += _("Can move in ") + QString(buf) + qendl();
     }
 
+    auto unit_description = QString();
+    if (punit->name.isEmpty()) {
+      // TRANS: "Unit: <unit type> #<unit id>
+      unit_description = QString(_("%1 #%2"))
+                             .arg(utype_name_translation(ptype))
+                             .arg(punit->id);
+    } else {
+      // TRANS: "Unit: <unit type> #<unit id> "<unit name>"
+      unit_description = QString(_("%1 #%2 \"%3\""))
+                             .arg(utype_name_translation(ptype))
+                             .arg(punit->id)
+                             .arg(punit->name);
+    }
+
     if (!client_player() || owner == client_player()) {
       struct city *hcity = player_city_by_number(owner, punit->homecity);
 
-      if (punit->name.isEmpty()) {
-        // TRANS: "Unit: <unit type> #<unit id> | <username> (<nation +
-        // team>)"
-        str += QString(_("Unit: %1 #%2 | %3 (%4)"))
-                   .arg(utype_name_translation(ptype))
-                   .arg(punit->id)
-                   .arg(username)
-                   .arg(nation)
-               + qendl();
-      } else {
-        // TRANS: "Unit: <unit type> #<unit id> "<unit name>" | <username>
-        // (<nation + team>)"
-        str += QString(_("Unit: %1 #%2 \"%3\" | %4 (%5)"))
-                   .arg(utype_name_translation(ptype))
-                   .arg(punit->id)
-                   .arg(punit->name)
-                   .arg(username)
-                   .arg(nation)
-               + qendl();
-      }
+      str += QString(_("Unit: %1 | %2 (%3)"))
+                 .arg(unit_description)
+                 .arg(username)
+                 .arg(nation)
+             + qendl();
+
       if (game.info.citizen_nationality
           && unit_nationality(punit) != unit_owner(punit)) {
         if (hcity != nullptr) {
@@ -414,7 +411,7 @@ const QString popup_info_text(struct tile *ptile)
          * <number> turn cease-fire)" */
         str += QString(PL_("Unit: %1 | %2 (%3, %4 turn cease-fire)",
                            "Unit: %1 | %2 (%3, %4 turn cease-fire)", turns))
-                   .arg(utype_name_translation(ptype), username, nation,
+                   .arg(unit_description, username, nation,
                         QString::number(turns))
                + qendl();
       } else if (ds->type == DS_ARMISTICE) {
@@ -424,14 +421,14 @@ const QString popup_info_text(struct tile *ptile)
          * <number> turn armistice)" */
         str += QString(PL_("Unit: %1 | %2 (%3, %4 turn armistice)",
                            "Unit: %1 | %2 (%3, %4 turn armistice)", turns))
-                   .arg(utype_name_translation(ptype), username, nation,
+                   .arg(unit_description, username, nation,
                         QString::number(turns))
                + qendl();
       } else {
         /* TRANS: "Unit: <unit type> | <username> (<nation + team>,
          * <diplomatic state>)" */
         str += QString(_("Unit: %1 | %2 (%3, %4)"))
-                   .arg(utype_name_translation(ptype), username, nation,
+                   .arg(unit_description, username, nation,
                         diplo_city_adjectives[ds->type])
                + qendl();
       }
