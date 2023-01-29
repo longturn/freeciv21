@@ -8,6 +8,11 @@
  see https://www.gnu.org/licenses/.
  */
 
+/*
+ * This file contains functions to generate the GUI for the
+ * the main map view.
+ */
+
 #include <memory>
 
 // Qt
@@ -25,23 +30,23 @@
 #include "climisc.h"
 #include "colors_common.h"
 #include "mapctrl_common.h"
-#include "mapview_common.h"
 #include "mapview_g.h"
 #include "minimap_panel.h"
 #include "renderer.h"
 #include "text.h"
 #include "tileset/sprite.h"
 #include "tileset/tilespec.h"
+#include "views/view_map_common.h"
 // gui-qt
 #include "fc_client.h"
 #include "fonts.h"
 #include "hudwidget.h"
-#include "mapview.h"
 #include "messagewin.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
 #include "sciencedlg.h"
 #include "top_bar.h"
+#include "views/view_map.h"
 #include "widgets/decorations.h"
 
 static int mapview_frozen_level = 0;

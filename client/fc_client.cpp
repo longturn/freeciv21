@@ -34,7 +34,6 @@
 #include "fonts.h"
 #include "gui_main.h"
 #include "icons.h"
-#include "mapview.h"
 #include "messagewin.h"
 #include "minimap.h"
 #include "optiondlg.h"
@@ -46,6 +45,7 @@
 #include "page_scenario.h"
 #include "tileset/sprite.h"
 #include "top_bar.h"
+#include "views/view_map.h"
 #include "voteinfo_bar.h"
 
 fcFont *fcFont::m_instance = 0;

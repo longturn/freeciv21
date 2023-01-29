@@ -38,23 +38,23 @@
 #include "chatline_common.h"
 #include "client_main.h"
 #include "control.h"
-#include "mapview_common.h"
 #include "packhand.h"
 #include "text.h"
 #include "tileset/tilespec.h"
+#include "views/view_map_common.h"
 // gui-qt - awesome client
 #include "fc_client.h"
 #include "fonts.h"
 #include "helpdlg.h"
 #include "hudwidget.h"
 #include "icons.h"
-#include "mapview.h"
 #include "notifyreport.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
 #include "tileset/sprite.h"
 #include "unithudselector.h"
 #include "unitselect.h"
+#include "views/view_map.h"
 
 // Locations for non action enabler controlled buttons.
 #define BUTTON_MOVE ACTION_COUNT

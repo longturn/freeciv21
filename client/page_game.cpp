@@ -1,5 +1,5 @@
 /******  ,   ,  **********************************************************
-         \\  \\             Copyright (c) 1996-2020 Freeciv21 and Freeciv
+         \\  \\             Copyright (c) 1996-2023 Freeciv21 and Freeciv
          ) \\ \\    I--      contributors. This file is part of Freeciv21.
          )  )) ))  / * \ Freeciv21 is free software: you can redistribute
          \  || || / /^="   in and/or modify it under the terms of the GNU
@@ -27,8 +27,8 @@
 #include "repodlgs_g.h"
 // client
 #include "client_main.h"
-#include "mapview_common.h"
 #include "text.h"
+#include "views/view_map_common.h"
 // gui-qt - Eye of Storm
 #include "chatline.h"
 #include "citydlg.h"
@@ -37,13 +37,13 @@
 #include "hudwidget.h"
 #include "icons.h"
 #include "mapctrl_common.h"
-#include "mapview.h"
 #include "messagewin.h"
 #include "minimap.h"
 #include "minimap_panel.h"
 #include "ratesdlg.h"
 #include "top_bar.h"
 #include "unitreport.h"
+#include "views/view_map.h"
 #include "views/view_nations.h"
 #include "voteinfo_bar.h"
 

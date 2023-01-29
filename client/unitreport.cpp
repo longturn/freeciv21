@@ -21,9 +21,9 @@
 // client
 #include "client_main.h"
 #include "climisc.h"
-#include "mapview_common.h"
 #include "tileset/sprite.h"
 #include "top_bar.h"
+#include "views/view_map_common.h"
 // gui-qt
 #include "canvas.h"
 #include "fc_client.h"

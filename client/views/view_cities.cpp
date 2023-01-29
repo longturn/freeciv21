@@ -31,11 +31,11 @@
 #include "fc_client.h"
 #include "hudwidget.h"
 #include "icons.h"
-#include "mapview.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
 #include "top_bar.h"
 #include "views/view_cities.h"
+#include "views/view_map.h"
 
 /**
    Overriden compare for sorting items

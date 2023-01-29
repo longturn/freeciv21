@@ -89,8 +89,6 @@
 #include "editor.h"
 #include "goto.h" // client_goto_init()
 #include "governor.h"
-#include "mapview.h"
-#include "mapview_common.h"
 #include "messagewin_common.h"
 #include "music.h"
 #include "options.h"
@@ -98,6 +96,8 @@
 #include "page_game.h"
 #include "tileset/tilespec.h"
 #include "update_queue.h"
+#include "views/view_map.h"
+#include "views/view_map_common.h"
 #include "views/view_nations_data.h"
 #include "voteinfo.h"
 

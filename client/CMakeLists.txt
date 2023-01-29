@@ -71,9 +71,6 @@ target_sources(
   luascript/script_client.cpp
   mapctrl.cpp
   mapctrl_common.cpp
-  mapview.cpp
-  mapview_common.cpp
-  mapview_geometry.cpp
   map_updates_handler.cpp
   menu.cpp
   messageoptions.cpp
@@ -134,6 +131,9 @@ target_sources(
   views/view_cities.cpp
   views/view_cities_data.cpp
   views/view_economics.cpp
+  views/view_map.cpp
+  views/view_map_common.cpp
+  views/view_map_geometry.cpp
   views/view_nations.cpp
   views/view_nations_data.cpp
   widgets/decorations.cpp

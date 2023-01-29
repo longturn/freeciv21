@@ -31,7 +31,7 @@
 #include "canvas.h"
 #include "client_main.h"
 #include "climisc.h"
-#include "mapview_common.h"
+#include "views/view_map_common.h"
 // gui-qt
 #include "fc_client.h"
 #include "fonts.h"

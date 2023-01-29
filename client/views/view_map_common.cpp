@@ -11,6 +11,12 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
+/*
+ * This file contains common functions used to manipulate the GUI for the
+ * the main map view. Reused across many aspects of the client as you
+ * would expect.
+ */
+
 #include <array>
 
 #include <QCoreApplication>
@@ -48,10 +54,10 @@
 #include "control.h"
 #include "editor.h"
 #include "map_updates_handler.h"
-#include "mapview_common.h"
-#include "mapview_geometry.h"
 #include "overview_common.h"
 #include "tileset/tilespec.h"
+#include "views/view_map_common.h"
+#include "views/view_map_geometry.h"
 
 // gui-qt
 #include "canvas.h"

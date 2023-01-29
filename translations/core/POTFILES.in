@@ -36,7 +36,7 @@ client/luaconsole.cpp
 client/luaconsole_common.cpp
 client/mapctrl.cpp
 client/mapctrl_common.cpp
-client/mapview.cpp
+client/views/view_map.cpp
 client/menu.cpp
 client/messageoptions.cpp
 client/messagewin.cpp

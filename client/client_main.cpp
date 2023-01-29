@@ -76,7 +76,6 @@
 #include "fonts.h"
 #include "global_worklist.h"
 #include "governor.h"
-#include "mapview_common.h"
 #include "messagewin_common.h"
 #include "minimap_panel.h"
 #include "music.h"
@@ -87,6 +86,7 @@
 #include "tileset/tilespec.h"
 #include "update_queue.h"
 #include "views/view_cities_data.h"
+#include "views/view_map_common.h"
 #include "views/view_nations_data.h"
 #include "voteinfo.h"
 

@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2023 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -20,7 +20,7 @@
 #include "unitlist.h"
 
 // client
-#include "mapview_common.h"
+#include "views/view_map_common.h"
 
 void update_info_label(void);
 void update_unit_info_label(const std::vector<unit *> &unit_list);
