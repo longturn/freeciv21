@@ -2045,8 +2045,6 @@ void city_dialog::refresh()
     popdown_city_dialog();
   }
 
-  update_map_canvas_visible();
-
   ui.production_combo_p->blockSignals(false);
   setUpdatesEnabled(true);
 
@@ -2162,6 +2160,15 @@ void city_dialog::update_info_label()
  */
 void city_dialog::setup_ui(struct city *qcity)
 {
+  if (pcity != qcity) {
+    if (pcity) {
+      refresh_city_mapcanvas(pcity, pcity->tile, true);
+    }
+    if (qcity) {
+      refresh_city_mapcanvas(qcity, qcity->tile, true);
+    }
+  }
+
   pcity = qcity;
   ui.production_combo_p->blockSignals(true);
   refresh();
