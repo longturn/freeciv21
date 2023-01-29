@@ -1,5 +1,5 @@
 /**************************************************************************
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2023 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -15,7 +15,7 @@
 #include <QTableView>
 #include <QWidget>
 // client
-#include "plrdlg_common.h"
+#include "views/view_nations_data.h"
 
 class QHBoxLayout;
 class QItemSelection;
@@ -128,7 +128,7 @@ private:
   void hide_columns();
 };
 
-#include "ui_plrdlg.h"
+#include "ui_view_nations.h"
 /***************************************************************************
   Widget to show as tab widget in players view.
 ***************************************************************************/

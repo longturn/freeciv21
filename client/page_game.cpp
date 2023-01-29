@@ -41,10 +41,10 @@
 #include "messagewin.h"
 #include "minimap.h"
 #include "minimap_panel.h"
-#include "plrdlg.h"
 #include "ratesdlg.h"
 #include "top_bar.h"
 #include "unitreport.h"
+#include "views/view_nations.h"
 #include "voteinfo_bar.h"
 
 int last_center_capital = 0;

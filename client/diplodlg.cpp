@@ -39,9 +39,9 @@
 #include "fc_client.h"
 #include "icons.h"
 #include "page_game.h"
-#include "plrdlg.h"
 #include "tileset/sprite.h"
 #include "top_bar.h"
+#include "views/view_nations.h"
 
 /**
    Constructor for diplomacy widget

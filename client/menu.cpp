@@ -58,7 +58,6 @@
 #include "minimap_panel.h"
 #include "page_game.h"
 #include "page_pregame.h"
-#include "plrdlg.h"
 #include "qtg_cxxside.h"
 #include "ratesdlg.h"
 #include "shortcuts.h"
@@ -67,6 +66,7 @@
 #include "top_bar.h"
 #include "unithudselector.h"
 #include "unitreport.h"
+#include "views/view_nations.h"
 
 extern void popup_endgame_report();
 static void enable_interface(bool enable);

@@ -141,7 +141,7 @@
   <customwidget>
    <class>plr_widget</class>
    <extends>QTableView</extends>
-   <header>plrdlg.h</header>
+   <header>views/view_nations.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
