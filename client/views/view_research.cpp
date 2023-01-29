@@ -8,6 +8,11 @@
  see https://www.gnu.org/licenses/.
  */
 
+/*
+ * This file contains functions to generate the GUI for the research view
+ * (formally known as the science dialog).
+ */
+
 // Qt
 #include <QComboBox>
 #include <QGridLayout>
@@ -25,16 +30,16 @@
 #include "client_main.h"
 #include "climisc.h"
 #include "helpdlg.h"
-#include "reqtree.h"
 #include "text.h"
 #include "tileset/sprite.h"
+#include "views/view_research_reqtree.h"
 // gui-qt
 #include "citydlg.h"
 #include "fc_client.h"
 #include "page_game.h"
-#include "sciencedlg.h"
 #include "tooltips.h"
 #include "top_bar.h"
+#include "views/view_research.h"
 
 extern QString split_text(const QString &text, bool cut);
 extern QString cut_helptext(const QString &text);

@@ -44,9 +44,9 @@
 #include "messagewin.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
-#include "sciencedlg.h"
 #include "top_bar.h"
 #include "views/view_map.h"
+#include "views/view_research.h"
 #include "widgets/decorations.h"
 
 static int mapview_frozen_level = 0;
