@@ -8,7 +8,12 @@
  see https://www.gnu.org/licenses/.
  */
 
-#include "plrdlg.h"
+/*
+ * This file contains functions to generate the table based GUI for
+ * the nations view (formally known as the plrdlg - player dialog).
+ */
+
+#include "views/view_nations.h"
 // Qt
 #include <QMouseEvent>
 #include <QPainter>
@@ -24,8 +29,8 @@
 #include "icons.h"
 #include "improvement.h"
 #include "nation.h"
-#include "plrdlg_common.h"
 #include "research.h"
+#include "views/view_nations_data.h"
 // client
 #include "chatline_common.h"
 #include "client_main.h"

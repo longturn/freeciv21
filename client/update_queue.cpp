@@ -35,9 +35,9 @@
 // client
 #include "client_main.h"
 #include "connectdlg_common.h"
-#include "plrdlg_common.h"
 #include "tileset/tilespec.h"
 #include "update_queue.h"
+#include "views/view_nations_data.h"
 
 // gui-qt
 #include "canvas.h"

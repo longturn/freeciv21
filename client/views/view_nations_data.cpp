@@ -11,6 +11,11 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
+/*
+ * This file contains functions used to gather varying data elements for use
+ * in the nations view (formally known as the plrdlg - player dialog).
+ */
+
 // utility
 #include "fcintl.h"
 #include "support.h"
@@ -28,7 +33,7 @@
 #include "text.h"
 
 /* client/include */
-#include "plrdlg_common.h"
+#include "views/view_nations_data.h"
 
 /**
    The player-name (aka nation leader) column of the plrdlg.

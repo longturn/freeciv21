@@ -93,8 +93,6 @@ target_sources(
   page_network.cpp
   page_pregame.cpp
   page_scenario.cpp
-  plrdlg.cpp
-  plrdlg_common.cpp
   pregameoptions.cpp
   ratesdlg.cpp
   renderer.cpp
@@ -136,6 +134,8 @@ target_sources(
   views/view_cities.cpp
   views/view_cities_data.cpp
   views/view_economics.cpp
+  views/view_nations.cpp
+  views/view_nations_data.cpp
   widgets/decorations.cpp
   widgets/city/city_icon_widget.cpp
   widgets/city/upkeep_widget.cpp

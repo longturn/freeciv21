@@ -58,10 +58,10 @@
 #include "music.h"
 #include "overview_common.h"
 #include "packhand_gen.h"
-#include "plrdlg_common.h"
 #include "themes_common.h"
 #include "tileset/tilespec.h"
 #include "views/view_cities_data.h"
+#include "views/view_nations_data.h"
 
 #include "options.h"
 

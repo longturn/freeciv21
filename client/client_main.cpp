@@ -83,11 +83,11 @@
 #include "options.h"
 #include "overview_common.h"
 #include "packhand.h"
-#include "plrdlg_common.h"
 #include "themes_common.h"
 #include "tileset/tilespec.h"
 #include "update_queue.h"
 #include "views/view_cities_data.h"
+#include "views/view_nations_data.h"
 #include "voteinfo.h"
 
 // gui-qt

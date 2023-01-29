@@ -48,8 +48,8 @@ client/page_main.cpp
 client/page_network.cpp
 client/page_pregame.cpp
 client/page_scenario.cpp
-client/plrdlg.cpp
-client/plrdlg_common.cpp
+client/views/view_nations.cpp
+client/views/view_nations_data.cpp
 client/pregameoptions.cpp
 client/ratesdlg.cpp
 client/repodlgs_common.cpp

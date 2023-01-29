@@ -96,9 +96,9 @@
 #include "options.h"
 #include "overview_common.h"
 #include "page_game.h"
-#include "plrdlg_common.h"
 #include "tileset/tilespec.h"
 #include "update_queue.h"
+#include "views/view_nations_data.h"
 #include "voteinfo.h"
 
 // gui-qt
