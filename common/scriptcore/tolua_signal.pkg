@@ -17,9 +17,7 @@
   old one running.
 *****************************************************************************/
 
-$#ifdef HAVE_CONFIG_H
 $#include <fc_config.h>
-$#endif
 
 /* common/scriptcore */
 $#include "api_signal_base.h"

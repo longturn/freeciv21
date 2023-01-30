@@ -12,9 +12,7 @@
 #ifndef FC__REQUIRERS_DLG_H
 #define FC__REQUIRERS_DLG_H
 
-#ifdef HAVE_CONFIG_H
 #include <fc_config.h>
-#endif
 
 // Qt
 #include <QDialog>

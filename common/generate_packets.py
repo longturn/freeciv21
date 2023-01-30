@@ -1762,9 +1762,7 @@ void delta_stats_reset(void);
             output_c = fc_open(output_c_name)
 
         output_c.write('''
-#ifdef HAVE_CONFIG_H
 #include <fc_config.h>
-#endif
 
 #include <string.h>
 
@@ -1935,9 +1933,7 @@ bool client_handle_packet(enum packet_type type, const void *packet);
         f = fc_open(sys.argv[6])
         f.write('''
 
-#ifdef HAVE_CONFIG_H
 #include <fc_config.h>
-#endif
 
 /* common */
 #include "packets.h"

@@ -14,9 +14,7 @@
 #ifndef FC__TAB_TECH_H
 #define FC__TAB_TECH_H
 
-#ifdef HAVE_CONFIG_H
 #include <fc_config.h>
-#endif
 
 // Qt
 #include <QWidget>

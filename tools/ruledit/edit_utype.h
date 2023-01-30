@@ -12,9 +12,7 @@
 #ifndef FC__EDIT_UTYPE_H
 #define FC__EDIT_UTYPE_H
 
-#ifdef HAVE_CONFIG_H
 #include <fc_config.h>
-#endif
 
 // Qt
 #include <QDialog>

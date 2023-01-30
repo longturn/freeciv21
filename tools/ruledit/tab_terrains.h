@@ -14,9 +14,7 @@
 #ifndef FC__TAB_TERRAINS_H
 #define FC__TAB_TERRAINS_H
 
-#ifdef HAVE_CONFIG_H
 #include <fc_config.h>
-#endif
 
 // Qt
 #include <QWidget>
