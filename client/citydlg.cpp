@@ -2345,8 +2345,7 @@ void city_dialog::get_city(bool next)
         city_list_get(client.conn.playing->cities, (i + k + size) % size);
   }
   queen()->mapview_wdg->center_on_tile(other_pcity->tile);
-  pcity = other_pcity;
-  refresh();
+  setup_ui(other_pcity);
 }
 
 /**
