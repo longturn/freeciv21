@@ -12,9 +12,7 @@
 #ifndef FC__MPGUI_QT_H
 #define FC__MPGUI_QT_H
 
-#ifdef HAVE_CONFIG_H
 #include <fc_config.h>
-#endif
 
 // Qt
 #include <QMainWindow>

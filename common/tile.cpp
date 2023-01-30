@@ -10,9 +10,6 @@
                                             https://www.gnu.org/licenses/.
  */
 
-#ifdef HAVE_CONFIG_H
-#endif
-
 #include <QBitArray>
 // utility
 #include "bitvector.h"

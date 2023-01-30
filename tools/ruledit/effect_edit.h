@@ -14,9 +14,7 @@
 #ifndef FC__EFFECT_EDIT_H
 #define FC__EFFECT_EDIT_H
 
-#ifdef HAVE_CONFIG_H
 #include <fc_config.h>
-#endif
 
 // Qt
 #include <QDialog>

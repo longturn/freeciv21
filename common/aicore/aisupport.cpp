@@ -9,9 +9,6 @@
                   see https://www.gnu.org/licenses/.
  */
 
-#ifdef HAVE_CONFIG_H
-#endif
-
 // utility
 #include "log.h"
 #include "shared.h"

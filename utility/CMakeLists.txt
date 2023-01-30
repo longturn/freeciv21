@@ -74,9 +74,6 @@ if ((MSYS OR MINGW) AND NOT (FREECIV_DEBUG OR FREECIV_TESTMATIC))
   target_link_libraries(utility PRIVATE imagehlp)
 endif()
 
-# config.h is required, but this definition is still required for it to be used.
-target_compile_definitions(utility PUBLIC HAVE_CONFIG_H)
-
 # Suppress warnings from specenum_gen.h
 freeciv_add_flag_if_supported(
   utility -Wno-tautological-constant-out-of-range-compare)

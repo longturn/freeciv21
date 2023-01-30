@@ -9,9 +9,6 @@ received a copy of the GNU General Public License along with Freeciv21.
                               If not, see https://www.gnu.org/licenses/.
  */
 
-#ifdef HAVE_CONFIG_H
-#endif
-
 #include <cstdarg>
 #include <cstring>
 

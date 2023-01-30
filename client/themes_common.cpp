@@ -8,8 +8,6 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
   :X:      received a copy of the GNU General Public License along with
   :X:              Freeciv21. If not, see https://www.gnu.org/licenses/.
  */
-#ifdef HAVE_CONFIG_H
-#endif
 
 // utility
 #include "log.h"
