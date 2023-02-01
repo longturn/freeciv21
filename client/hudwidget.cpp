@@ -824,11 +824,9 @@ void hud_action::paintEvent(QPaintEvent *event)
   QPainter p;
 
   p.begin(this);
-  p.setCompositionMode(QPainter::CompositionMode_Source);
   p.setRenderHint(QPainter::SmoothPixmapTransform);
   icon.paint(&p, rect());
   if (focus) {
-    p.setCompositionMode(QPainter::CompositionMode_DestinationOver);
     p.fillRect(rect(), QColor(palette().color(QPalette::Highlight)));
   }
   p.end();
