@@ -1286,8 +1286,7 @@ static bool plrcol_validate(int value, struct connection *caller,
   {                                                                         \
     name, sclass, al_read, al_write, short_help, extra_help, nullptr,       \
         SST_BOOL, scateg, slevel,                                           \
-        INIT_BRACE_BEGIN.boolean = {&value, _default, func_validate,        \
-                                    bool_name, false} INIT_BRACE_END,       \
+        {.boolean = {&value, _default, func_validate, bool_name, false}},   \
         func_action, false                                                  \
   }
 
@@ -1297,8 +1296,8 @@ static bool plrcol_validate(int value, struct connection *caller,
   {                                                                         \
     name, sclass, al_read, al_write, short_help, extra_help, func_help,     \
         SST_INT, scateg, slevel,                                            \
-        INIT_BRACE_BEGIN.integer = {(int *) &value, _default, _min, _max,   \
-                                    func_validate,  0} INIT_BRACE_END,      \
+        {.integer = {(int *) &value, _default, _min, _max, func_validate,   \
+                     0}},                                                   \
         func_action, false                                                  \
   }
 
@@ -1308,9 +1307,8 @@ static bool plrcol_validate(int value, struct connection *caller,
   {                                                                         \
     name, sclass, al_read, al_write, short_help, extra_help, nullptr,       \
         SST_STRING, scateg, slevel,                                         \
-        INIT_BRACE_BEGIN.string = {value, _default, sizeof(value),          \
-                                   func_validate,                           \
-                                   (char *) ""} INIT_BRACE_END,             \
+        {.string = {value, _default, sizeof(value), func_validate,          \
+                    (char *) ""}},                                          \
         func_action, false                                                  \
   }
 
@@ -1320,12 +1318,8 @@ static bool plrcol_validate(int value, struct connection *caller,
   {                                                                         \
     name, sclass, al_read, al_write, short_help, extra_help, func_help,     \
         SST_ENUM, scateg, slevel,                                           \
-        INIT_BRACE_BEGIN.enumerator = {&value,                              \
-                                       sizeof(value),                       \
-                                       _default,                            \
-                                       func_validate,                       \
-                                       (val_name_func_t) func_name,         \
-                                       0} INIT_BRACE_END,                   \
+        {.enumerator = {&value, sizeof(value), _default, func_validate,     \
+                        (val_name_func_t) func_name, 0}},                   \
         func_action, false                                                  \
   }
 
@@ -1335,9 +1329,8 @@ static bool plrcol_validate(int value, struct connection *caller,
   {                                                                         \
     name, sclass, al_read, al_write, short_help, extra_help, nullptr,       \
         SST_BITWISE, scateg, slevel,                                        \
-        INIT_BRACE_BEGIN.bitwise = {(unsigned *) (void *) &value, _default, \
-                                    func_validate, func_name,               \
-                                    0} INIT_BRACE_END,                      \
+        {.bitwise = {(unsigned *) (void *) &value, _default, func_validate, \
+                     func_name, 0}},                                        \
         func_action, false                                                  \
   }
 
