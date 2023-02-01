@@ -404,9 +404,8 @@ void progress_bar::paintEvent(QPaintEvent *event)
     }
 
     j = height() - 2 * f_size;
-    p.setCompositionMode(QPainter::CompositionMode_ColorDodge);
-    QFontMetrics fm(*sfont);
 
+    QFontMetrics fm(*sfont);
     if (fm.horizontalAdvance(s1) > rx.width()) {
       s1 = fm.elidedText(s1, Qt::ElideRight, rx.width());
     }
@@ -428,9 +427,8 @@ void progress_bar::paintEvent(QPaintEvent *event)
     int i, j;
     s = text();
     j = height() - f_size;
-    p.setCompositionMode(QPainter::CompositionMode_ColorDodge);
-    QFontMetrics fm(*sfont);
 
+    QFontMetrics fm(*sfont);
     if (fm.horizontalAdvance(s) > rx.width()) {
       s = fm.elidedText(s, Qt::ElideRight, rx.width());
     }
