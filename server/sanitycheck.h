@@ -12,12 +12,11 @@
 
 #include "fc_types.h"
 
-#if (IS_BETA_VERSION || IS_DEVEL_VERSION) || defined(FREECIV_DEBUG)
+#if IS_DEVEL_VERSION || defined(FREECIV_DEBUG)
 #define SANITY_CHECKING
 #endif
 
 #ifdef SANITY_CHECKING
-
 #define sanity_check_city(x)                                                \
   real_sanity_check_city(x, __FILE__, __FUNCTION__, __FC_LINE__)
 void real_sanity_check_city(struct city *pcity, const char *file,

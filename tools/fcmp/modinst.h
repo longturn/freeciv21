@@ -10,8 +10,8 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__MODINST_H
-#define FC__MODINST_H
+
+#pragma once
 
 #include <QString>
 #include <QUrl>
@@ -22,21 +22,10 @@ struct fcmp_params {
   QString autoinstall;
 };
 
-#if IS_DEVEL_VERSION && !IS_FREEZE_VERSION
-#ifndef MODPACK_LIST_URL
 #define MODPACK_LIST_URL                                                    \
   "https://raw.githubusercontent.com/longturn/modpacks/main/index.json"
-#endif
 #define DEFAULT_URL_START                                                   \
   "https://raw.githubusercontent.com/longturn/modpacks/main/mods/"
-#else // IS_DEVEL_VERSION
-#ifndef MODPACK_LIST_URL
-#define MODPACK_LIST_URL                                                    \
-  "https://raw.githubusercontent.com/longturn/modpacks/main/index.json"
-#endif
-#define DEFAULT_URL_START                                                   \
-  "https://raw.githubusercontent.com/longturn/modpacks/main/mods/"
-#endif // IS_DEVEL_VERSION
 
 #define SPECENUM_NAME modpack_type
 #define SPECENUM_VALUE0 MPT_RULESET
@@ -59,5 +48,3 @@ void fcmp_init();
 void fcmp_deinit();
 
 void load_install_info_lists(struct fcmp_params *fcmp);
-
-#endif // FC__MODINST_H
