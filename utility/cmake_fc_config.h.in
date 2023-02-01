@@ -28,7 +28,7 @@
 #endif
 
 /* Release cycle information */
-#cmakedefine IS_DEVEL_VERSION
+#cmakedefine01 IS_DEVEL_VERSION
 
 /* enable audio */
 #cmakedefine AUDIO_SDL
@@ -143,9 +143,6 @@
 
 /* Metaserver URL */
 #cmakedefine FREECIV_META_URL "${FREECIV_META_URL}"
-
-/* Month next version will be released */
-#cmakedefine FREECIV_RELEASE_MONTH
 
 /* Native language support enabled */
 #cmakedefine FREECIV_ENABLE_NLS

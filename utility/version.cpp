@@ -37,13 +37,8 @@ const char *freeciv_name_version()
 {
   static char msgbuf[256];
 
-#if IS_BETA_VERSION
-  fc_snprintf(msgbuf, sizeof(msgbuf), _("Freeciv21 version %s %s"),
-              freeciv21_version(), _("(beta version)"));
-#else
   fc_snprintf(msgbuf, sizeof(msgbuf), _("Freeciv21 version %s"),
               freeciv21_version());
-#endif
 
   return msgbuf;
 }
@@ -51,14 +46,7 @@ const char *freeciv_name_version()
 /**
    Return string describing version type.
  */
-const char *word_version()
-{
-#if IS_BETA_VERSION
-  return _("betatest version ");
-#else
-  return _("version ");
-#endif
-}
+const char *word_version() { return _("version "); }
 
 /**
    Returns version string that can be used to compare two freeciv builds.
@@ -66,38 +54,6 @@ const char *word_version()
    which of the two commits is "higher".
  */
 const char *fc_comparable_version() { return freeciv21_version(); }
-
-/**
-   Return the BETA message.
-   If returns nullptr, not a beta version.
- */
-const char *beta_message()
-{
-#if IS_BETA_VERSION
-  static char msgbuf[500];
-  static const char *month[] = {
-      nullptr,       N_("January"),   N_("February"), N_("March"),
-      N_("April"),   N_("May"),       N_("June"),     N_("July"),
-      N_("August"),  N_("September"), N_("October"),  N_("November"),
-      N_("December")};
-
-  if (FREECIV_RELEASE_MONTH > 0) {
-    fc_snprintf(msgbuf, sizeof(msgbuf),
-                // TRANS: No full stop after the URL, could cause confusion.
-                _("THIS IS A BETA VERSION\n"
-                  "Freeciv21 %s will be released in %s, at %s"),
-                NEXT_STABLE_VERSION, _(NEXT_RELEASE_MONTH), WIKI_URL);
-  } else {
-    fc_snprintf(msgbuf, sizeof(msgbuf),
-                _("THIS IS A BETA VERSION\n"
-                  "Freeciv21 %s will be released at %s"),
-                NEXT_STABLE_VERSION, WIKI_URL);
-  }
-  return msgbuf;
-#else  // IS_BETA_VERSION
-  return nullptr;
-#endif // IS_BETA_VERSION
-}
 
 /**
    Return version string in a format suitable to be written to created

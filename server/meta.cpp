@@ -64,15 +64,11 @@ const char *default_meta_patches_string() { return "none"; }
  */
 const char *default_meta_message_string()
 {
-#if IS_BETA_VERSION
-  return "unstable pre-" NEXT_STABLE_VERSION ": beware";
-#else // IS_BETA_VERSION
 #if IS_DEVEL_VERSION
   return "development version: beware";
 #else  // IS_DEVEL_VERSION
   return "-";
 #endif // IS_DEVEL_VERSION
-#endif // IS_BETA_VERSION
 }
 
 /**

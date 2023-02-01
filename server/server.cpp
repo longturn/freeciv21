@@ -145,12 +145,6 @@ std::pair<QTcpServer *, bool> srv_prepare()
     return std::make_pair(tcp_server, false);
   }
 
-#if IS_BETA_VERSION
-  con_puts(C_COMMENT, "");
-  con_puts(C_COMMENT, beta_message());
-  con_puts(C_COMMENT, "");
-#endif
-
   con_flush();
 
   settings_init(true);

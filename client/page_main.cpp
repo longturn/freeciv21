@@ -47,9 +47,6 @@ page_main::page_main(QWidget *parent, fc_client *gui) : QWidget(parent)
   msgbuf = QString(_("%1%2, Qt client"))
                .arg(word_version())
                .arg(freeciv21_version());
-#if IS_BETA_VERSION
-  beta = beta_message();
-#endif // IS_BETA_VERSION
   ui.lversion->setText(QString(msgbuf) + beta);
   setLayout(ui.gridLayout);
 }

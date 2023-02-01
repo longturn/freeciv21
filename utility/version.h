@@ -14,20 +14,9 @@
 
 #include <QString>
 
-/* This is only used in version.c, and only if IS_BETA_VERSION is true.
- * The month[] array is defined in version.c (index: 1 == Jan, 2 == Feb,
- * ...).
- */
-#ifndef NEXT_RELEASE_MONTH
-#define NEXT_RELEASE_MONTH (month[FREECIV_RELEASE_MONTH])
-#endif
-
 // version informational strings
 const char *freeciv21_version();
 const char *freeciv_name_version();
 const char *word_version();
 const char *fc_comparable_version();
 const char *freeciv_datafile_version();
-
-// If returns nullptr, not a beta version.
-const char *beta_message();

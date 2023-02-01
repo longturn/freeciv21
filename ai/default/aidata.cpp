@@ -310,7 +310,7 @@ struct ai_plr *dai_plr_data_get(struct ai_type *ait, struct player *pplayer,
 
   /* This assert really is required. See longer comment
      in adv_data_get() for equivalent code. */
-#if defined(FREECIV_DEBUG) || defined(IS_DEVEL_VERSION)
+#if defined(FREECIV_DEBUG) || IS_DEVEL_VERSION
   fc_assert(caller_closes != nullptr || ai->phase_initialized);
 #endif
 
