@@ -777,7 +777,7 @@ bool tile_visible_and_not_on_border_mapcanvas(struct tile *ptile)
  */
 void put_drawn_sprites(QPixmap *pcanvas, int canvas_x, int canvas_y,
                        const std::vector<drawn_sprite> &sprites, bool fog,
-                       bool city_dialog, bool city_unit)
+                       bool city_unit)
 {
   QPainter p(pcanvas);
   for (auto s : sprites) {
@@ -785,15 +785,7 @@ void put_drawn_sprites(QPixmap *pcanvas, int canvas_x, int canvas_y,
       // This can happen, although it should probably be avoided.
       continue;
     }
-    if (city_unit) {
-      p.setCompositionMode(QPainter::CompositionMode_SourceOver);
-      p.setOpacity(0.7);
-      p.drawPixmap(canvas_x + s.offset_x, canvas_y + s.offset_y, *s.sprite);
-    } else if (city_dialog) {
-      p.setCompositionMode(QPainter::CompositionMode_Difference);
-      p.setOpacity(0.5);
-      p.drawPixmap(canvas_x + s.offset_x, canvas_y + s.offset_y, *s.sprite);
-    } else if (fog && s.foggable) {
+    if (fog && s.foggable) {
       // FIXME This looks rather expensive
       QPixmap temp(s.sprite->size());
       temp.fill(Qt::transparent);
@@ -828,20 +820,11 @@ void put_one_element(QPixmap *pcanvas,
                      const struct tile_corner *pcorner,
                      const struct unit *punit, int canvas_x, int canvas_y)
 {
-  bool city_mode = false;
   bool city_unit = false;
   int dummy_x, dummy_y;
   auto sprites = layer->fill_sprite_array(ptile, pedge, pcorner, punit);
   bool fog = (ptile && gui_options->draw_fog_of_war
               && TILE_KNOWN_UNSEEN == client_tile_get_known(ptile));
-  if (ptile) {
-    struct city *xcity = is_any_city_dialog_open();
-    if (xcity) {
-      if (!city_base_to_city_map(&dummy_x, &dummy_y, xcity, ptile)) {
-        city_mode = true;
-      }
-    }
-  }
   if (punit) {
     struct city *xcity = is_any_city_dialog_open();
     if (xcity) {
@@ -851,8 +834,7 @@ void put_one_element(QPixmap *pcanvas,
     }
   }
   /*** Draw terrain and specials ***/
-  put_drawn_sprites(pcanvas, canvas_x, canvas_y, sprites, fog, city_mode,
-                    city_unit);
+  put_drawn_sprites(pcanvas, canvas_x, canvas_y, sprites, fog, city_unit);
 }
 
 /**

@@ -89,7 +89,7 @@ void put_nuke_mushroom_pixmaps(struct tile *ptile);
 
 void put_drawn_sprites(QPixmap *pcanvas, int canvas_x, int canvas_y,
                        const std::vector<drawn_sprite> &sprites, bool fog,
-                       bool citydialog = false, bool city_unit = false);
+                       bool city_unit = false);
 
 void update_map_canvas(int canvas_x, int canvas_y, int width, int height);
 void update_map_canvas_visible();
