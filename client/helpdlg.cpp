@@ -1354,7 +1354,6 @@ void help_widget::set_topic_terrain(const help_item *topic,
 
     if (pterrain->irrigation_result != pterrain
         && pterrain->irrigation_result != T_NONE
-        && pterrain->cultivate_time != 0
         && action_id_univs_not_blocking(ACTION_CULTIVATE, nullptr,
                                         &for_terr)) {
       char buffer[1024];
@@ -1371,14 +1370,14 @@ void help_widget::set_topic_terrain(const help_item *topic,
     }
 
     if (pterrain->mining_result != pterrain
-        && pterrain->mining_result != T_NONE && pterrain->plant_time != 0
+        && pterrain->mining_result != T_NONE
         && action_id_univs_not_blocking(ACTION_PLANT, nullptr, &for_terr)) {
       char buffer[1024];
 
       fc_snprintf(buffer, sizeof(buffer),
                   PL_("%d turn", "%d turns", pterrain->plant_time),
                   pterrain->plant_time);
-      str = N_("Mine Rslt/Time:");
+      str = N_("Plant Rslt/Time:");
       str = str
             + link_me(terrain_name_translation(pterrain->mining_result),
                       HELP_TERRAIN)
@@ -1386,7 +1385,7 @@ void help_widget::set_topic_terrain(const help_item *topic,
       make_terrain_lab(str);
     }
 
-    if (pterrain->transform_result != T_NONE && pterrain->transform_time != 0
+    if (pterrain->transform_result != T_NONE
         && action_id_univs_not_blocking(ACTION_TRANSFORM_TERRAIN, nullptr,
                                         &for_terr)) {
       char buffer[1024];
@@ -1403,7 +1402,6 @@ void help_widget::set_topic_terrain(const help_item *topic,
     }
 
     if (pterrain->irrigation_result == pterrain
-        && pterrain->irrigation_time != 0
         && action_id_univs_not_blocking(ACTION_IRRIGATE, nullptr,
                                         &for_terr)) {
       // TRANS: this and similar literal strings interpreted as (Qt) HTML
