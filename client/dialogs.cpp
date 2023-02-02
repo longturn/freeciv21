@@ -3394,6 +3394,7 @@ disband_box::disband_box(const std::vector<unit *> &punits, QWidget *parent)
   setDefaultButton(pb);
   connect(pb, &QAbstractButton::clicked, this,
           &disband_box::disband_clicked);
+  pb->show();
 }
 
 /**

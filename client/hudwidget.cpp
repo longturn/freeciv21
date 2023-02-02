@@ -67,13 +67,12 @@ bool has_player_unit_type(Unit_type_id utype)
  */
 hud_message_box::hud_message_box(QWidget *parent) : QMessageBox(parent)
 {
-  int size;
-  setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Dialog
-                 | Qt::FramelessWindowHint);
+  setWindowFlag(Qt::FramelessWindowHint);
+
   f_text = fcFont::instance()->getFont(fonts::default_font);
   f_title = fcFont::instance()->getFont(fonts::default_font);
 
-  size = f_text.pointSize();
+  auto size = f_text.pointSize();
   if (size > 0) {
     f_text.setPointSize(size * 4 / 3);
     f_title.setPointSize(size * 3 / 2);
@@ -88,7 +87,6 @@ hud_message_box::hud_message_box(QWidget *parent) : QMessageBox(parent)
   fm_title = new QFontMetrics(f_title);
   top = 0;
   m_animate_step = 0;
-  hide();
   mult = 1;
 }
 
@@ -122,7 +120,6 @@ void hud_message_box::set_text_title(const QString &s1, const QString &s2)
   QSpacerItem *spacer;
   QGridLayout *layout;
   int w, w2, h;
-  QPoint p;
 
   if (s1.contains('\n')) {
     int i;
@@ -151,11 +148,6 @@ void hud_message_box::set_text_title(const QString &s1, const QString &s2)
   text = s1;
   title = s2;
 
-  p = QPoint((parentWidget()->width() - w) / 2,
-             (parentWidget()->height() - h) / 2);
-  p = parentWidget()->mapToGlobal(p);
-  move(p);
-  show();
   m_timer.start();
   startTimer(45);
 }

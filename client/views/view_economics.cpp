@@ -253,6 +253,7 @@ void eco_report::disband_units()
       result->show();
     }
   });
+  ask->show();
 }
 
 /**
@@ -297,6 +298,7 @@ void eco_report::sell_buildings()
     result->setAttribute(Qt::WA_DeleteOnClose);
     result->show();
   });
+  ask->show();
 }
 
 /**
@@ -340,6 +342,7 @@ void eco_report::sell_redundant()
     result->setAttribute(Qt::WA_DeleteOnClose);
     result->show();
   });
+  ask->show();
 }
 
 /**
