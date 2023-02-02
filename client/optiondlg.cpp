@@ -111,6 +111,8 @@ option_dialog::option_dialog(const QString &name, const option_set *options,
                              QWidget *parent)
     : qfc_dialog(parent)
 {
+  setWindowFlag(Qt::Tool); // Stays on top without blocking input
+
   QPushButton *but;
 
   curr_options = options;
