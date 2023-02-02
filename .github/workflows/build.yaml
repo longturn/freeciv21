@@ -283,7 +283,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: clang-format
     env:
-      QT_VERSION: 5.15.2
+      QT_VERSION: v5.15.8-lts-lgpl
     steps:
       - uses: actions/checkout@v3
       - name: Cache Qt build
