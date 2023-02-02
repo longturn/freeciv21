@@ -170,6 +170,7 @@ jobs:
     name: "Windows Clang"
     runs-on: windows-latest
     needs: clang-format
+    if: github.event_name == 'schedule'
     env:
       VCPKG_ROOT: C:/vcpkg
       VCPKG_DEFAULT_BINARY_CACHE: ${{github.workspace}}/vcpkg/bincache
