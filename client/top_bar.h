@@ -24,6 +24,7 @@ void top_bar_indicators_menu();
 void top_bar_right_click_diplomacy();
 void top_bar_right_click_science();
 void top_bar_left_click_science();
+void top_bar_units_view();
 void top_bar_show_map();
 
 /**

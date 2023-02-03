@@ -40,6 +40,7 @@
 #include "top_bar.h"
 #include "views/view_map.h"
 #include "views/view_research.h"
+#include "views/view_units.h"
 
 /**
  * Constructor
@@ -592,5 +593,30 @@ void top_bar_left_click_science()
     }
     sci_rep = reinterpret_cast<science_report *>(w);
     queen()->game_tab_widget->setCurrentWidget(sci_rep);
+  }
+}
+
+/**
+   Click for units view, allowing to close/open
+ */
+void top_bar_units_view()
+{
+  units_view *uv;
+  int i;
+  QWidget *w;
+
+  if (!queen()->isRepoDlgOpen(QStringLiteral("UNI"))) {
+    uv = new units_view;
+    uv->init();
+    uv->update_view();
+  } else {
+    i = queen()->gimmeIndexOf(QStringLiteral("UNI"));
+    w = queen()->game_tab_widget->widget(i);
+    if (w->isVisible()) {
+      top_bar_show_map();
+      return;
+    }
+    uv = reinterpret_cast<units_view *>(w);
+    queen()->game_tab_widget->setCurrentWidget(uv);
   }
 }

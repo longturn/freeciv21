@@ -23,6 +23,11 @@ struct unit_entry {
   int count, cost, total_cost;
 };
 
+struct unit_view_entry {
+  struct unit_type *type;
+  int count, total_cost, food_cost, gold_cost, shield_cost;
+};
+
 void get_economy_report_data(struct improvement_entry *entries,
                              int *num_entries_used, int *total_cost,
                              int *total_income);
@@ -34,6 +39,9 @@ void get_economy_report_data(struct improvement_entry *entries,
  * client simultaneously and I simply can't */
 void get_economy_report_units_data(struct unit_entry *entries,
                                    int *num_entries_used, int *total_cost);
+
+void get_units_view_data(struct unit_view_entry *entries,
+                         int *num_entries_used);
 
 void sell_all_improvements(const struct impr_type *pimprove,
                            bool redundant_only, char *message,

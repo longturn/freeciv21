@@ -48,6 +48,8 @@
 #include "unitreport.h"
 #include "views/view_map.h"
 #include "views/view_nations.h"
+#include "views/view_units.h"
+
 #include "voteinfo_bar.h"
 
 int last_center_capital = 0;
@@ -122,7 +124,8 @@ pageGame::pageGame(QWidget *parent)
   sw_economy->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("economy")));
   sw_economy->setCheckable(true);
-  sw_cunit->setRightClick(top_bar_center_unit);
+  // sw_cunit->setRightClick(top_bar_center_unit);
+  sw_cunit->setRightClick(top_bar_units_view);
   sw_cunit->setWheelUp(cycle_enemy_units);
   sw_cunit->setWheelDown(key_unit_wait);
   sw_diplo->setRightClick(top_bar_right_click_diplomacy);
