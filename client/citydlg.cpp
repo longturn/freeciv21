@@ -1103,20 +1103,12 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
   connect(ui.lcity_name, &QAbstractButton::clicked, this,
           &city_dialog::city_rename);
   citizen_pixmap = nullptr;
-  ui.scroll3->setWidgetResizable(true);
-  ui.scroll3->setMaximumHeight(
-      tileset_unit_height(tileset) + 6
-      + ui.scroll3->horizontalScrollBar()->height());
-  ui.scroll3->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  ui.scroll3->setProperty("city_scroll", true);
   ui.bclose->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("city-close")));
-  ui.bclose->setIconSize(QSize(56, 56));
   ui.bclose->setToolTip(_("Close city dialog"));
   connect(ui.bclose, &QAbstractButton::clicked, this, &QWidget::hide);
   ui.next_city_but->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("city-right")));
-  ui.next_city_but->setIconSize(QSize(56, 56));
   ui.next_city_but->setToolTip(_("Show next city"));
   connect(ui.next_city_but, &QAbstractButton::clicked, this,
           &city_dialog::next_city);
@@ -1124,7 +1116,6 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
           &city_dialog::prev_city);
   ui.prev_city_but->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("city-left")));
-  ui.prev_city_but->setIconSize(QSize(56, 56));
   ui.prev_city_but->setToolTip(_("Show previous city"));
   ui.work_next_but->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("go-down")));
@@ -1206,13 +1197,11 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
     lab_table[5]->set_type(x);
   }
 
-  ui.tabWidget->setTabText(0, _("Production"));
-  ui.tabWidget->setTabText(1, _("Governor"));
   ui.tabs_right->setTabText(0, _("General"));
   ui.tabs_right->setTabText(1, _("Citizens"));
+  ui.tabs_right->setTabText(2, _("Governor"));
 
   ui.present_units_list->set_oneliner(true);
-  ui.supported_units->set_show_upkeep(true);
 
   installEventFilter(this);
 }
@@ -1273,7 +1262,6 @@ void city_dialog::update_disabled()
   ui.cma_enable_but->setEnabled(can_edit);
   ui.production_combo_p->setEnabled(can_edit);
   ui.present_units_list->setEnabled(can_edit);
-  ui.supported_units->setEnabled(can_edit);
   update_prod_buttons();
 }
 
@@ -2115,7 +2103,6 @@ void city_dialog::update_units()
   struct unit_list *units;
   char buf[256];
   int n;
-  ui.supported_units->setUpdatesEnabled(false);
 
   if (nullptr != client.conn.playing
       && city_owner(pcity) != client.conn.playing) {
@@ -2124,7 +2111,6 @@ void city_dialog::update_units()
     units = pcity->units_supported;
   }
 
-  ui.supported_units->set_units(units);
   n = unit_list_size(units);
   fc_snprintf(buf, sizeof(buf), _("Supported units: %d"), n);
   ui.supp_units->setText(QString(buf));
@@ -2284,12 +2270,9 @@ void city_dialog::update_improvements()
   struct item items[MAX_NUM_PRODUCTION_TARGETS];
   struct universal targets[MAX_NUM_PRODUCTION_TARGETS];
   struct worklist queue;
-  impr_item *ii;
 
   cost = 0;
   upkeep = 0;
-  ui.city_buildings->setUpdatesEnabled(false);
-  ui.city_buildings->clear_layout();
 
   h = fm.height() + 6;
   targets_used = collect_already_built_targets(targets, pcity);
@@ -2297,11 +2280,6 @@ void city_dialog::update_improvements()
 
   for (item = 0; item < targets_used; item++) {
     struct universal target = items[item].item;
-
-    ii = new impr_item(this, target.value.building, pcity);
-    ii->init_pix();
-    ui.city_buildings->add_item(ii);
-
     fc_assert_action(VUT_IMPROVEMENT == target.kind, continue);
     upkeep += city_improvement_upkeep(pcity, target.value.building);
   }
@@ -2370,10 +2348,6 @@ void city_dialog::update_improvements()
   ui.p_table_p->resizeColumnsToContents();
   ui.p_table_p->resizeRowsToContents();
   ui.p_table_p->horizontalHeader()->setStretchLastSection(true);
-
-  ui.city_buildings->update_buildings();
-  ui.city_buildings->setUpdatesEnabled(true);
-  ui.city_buildings->setUpdatesEnabled(true);
 
   ui.upkeep->refresh();
 
