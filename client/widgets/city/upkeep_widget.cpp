@@ -56,7 +56,7 @@ upkeep_widget::upkeep_widget(QWidget *parent)
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setSelectionMode(NoSelection);
   setSizeAdjustPolicy(AdjustToContents);
-  setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+  setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
   setVerticalScrollMode(ScrollPerPixel);
 
   connect(this, &QAbstractItemView::doubleClicked, this,
