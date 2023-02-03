@@ -151,6 +151,63 @@ void get_economy_report_units_data(struct unit_entry *entries,
 }
 
 /**
+   Returns an array of units data. Number of units in
+   the array is added to num_entries_used.
+ */
+void get_units_view_data(struct unit_view_entry *entries,
+                         int *num_entries_used)
+{
+  int count, gold_cost, food_cost, shield_cost;
+
+  *num_entries_used = 0;
+
+  if (nullptr == client.conn.playing) {
+    return;
+  }
+
+  unit_type_iterate(unittype)
+  {
+    count = 0;
+    gold_cost = 0;
+    food_cost = 0;
+    shield_cost = 0;
+
+    city_list_iterate(client.conn.playing->cities, pcity)
+    {
+      unit_list_iterate(pcity->units_supported, punit)
+      {
+        if (unit_type_get(punit) == unittype) {
+          count++;
+          gold_cost += punit->upkeep[O_GOLD];
+          food_cost += punit->upkeep[O_FOOD];
+          shield_cost += punit->upkeep[O_SHIELD];
+        }
+      }
+      unit_list_iterate_end;
+    }
+    city_list_iterate_end;
+
+    if (count == 0) {
+      continue;
+    }
+
+    entries[*num_entries_used].type = unittype;
+    entries[*num_entries_used].count = count;
+    entries[*num_entries_used].gold_cost = gold_cost;
+    entries[*num_entries_used].food_cost = food_cost;
+    entries[*num_entries_used].shield_cost = shield_cost;
+    (*num_entries_used)++;
+  }
+  unit_type_iterate_end;
+
+  std::sort(entries, entries + *num_entries_used,
+            [](const auto &lhs, const auto &rhs) {
+              return QString(utype_name_translation(lhs.type))
+                     < QString(utype_name_translation(rhs.type));
+            });
+}
+
+/**
    Sell all improvements of the given type in all cities.  If
  "redundant_only" is specified then only those improvements that are replaced
  will be sold.
