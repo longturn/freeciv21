@@ -118,46 +118,6 @@ private:
 };
 
 /****************************************************************************
-  Single item on unit_info in city dialog representing one unit
-****************************************************************************/
-class impr_item : public QLabel {
-  Q_OBJECT
-
-public:
-  impr_item(QWidget *parent, const struct impr_type *building,
-            struct city *pcity);
-  ~impr_item() override;
-  void init_pix();
-
-private:
-  const struct impr_type *impr;
-  QPixmap *impr_pixmap;
-  struct city *pcity;
-
-protected:
-  void mouseDoubleClickEvent(QMouseEvent *event) override;
-  void leaveEvent(QEvent *event) override;
-  void enterEvent(QEvent *event) override;
-};
-
-/****************************************************************************
-  Shows list of improvemrnts
-****************************************************************************/
-class impr_info : public QFrame {
-  Q_OBJECT
-
-public:
-  impr_info();
-  ~impr_info() override;
-  void add_item(impr_item *item);
-  void init_layout();
-  void update_buildings();
-  void clear_layout();
-  QHBoxLayout *layout;
-  QList<impr_item *> impr_list;
-};
-
-/****************************************************************************
   Item delegate for production popup
 ****************************************************************************/
 class city_production_delegate : public QItemDelegate {
