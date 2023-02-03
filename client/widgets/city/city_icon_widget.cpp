@@ -26,7 +26,7 @@ namespace freeciv {
 city_icon_widget::city_icon_widget(QWidget *parent)
 {
   setAutoFillBackground(true);
-  setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+  setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 }
 
 /**
@@ -98,6 +98,7 @@ void city_icon_widget::paintEvent(QPaintEvent *event)
 bool city_icon_widget::event(QEvent *event)
 {
   if (event->type() == TilesetChanged) {
+    updateGeometry();
     update();
     return true;
   }
