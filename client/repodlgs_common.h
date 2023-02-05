@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2023 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -13,19 +13,30 @@
 
 #pragma once
 
+/*
+ * Structure of data for the Economics View. See get_economy_report_data()
+ */
 struct improvement_entry {
   struct impr_type *type;
   int count, redundant, cost, total_cost;
 };
 
+/*
+ * Structure of data for the Economics View. See
+ * get_economy_report_units_data()
+ */
 struct unit_entry {
   struct unit_type *type;
   int count, cost, total_cost;
 };
 
+/*
+ * Structure of data for the Units View. See get_units_view_data()
+ */
 struct unit_view_entry {
   struct unit_type *type;
-  int count, total_cost, food_cost, gold_cost, shield_cost;
+  int count, in_prod, total_cost, food_cost, gold_cost, shield_cost;
+  bool upg;
 };
 
 void get_economy_report_data(struct improvement_entry *entries,
@@ -40,8 +51,8 @@ void get_economy_report_data(struct improvement_entry *entries,
 void get_economy_report_units_data(struct unit_entry *entries,
                                    int *num_entries_used, int *total_cost);
 
-void get_units_view_data(struct unit_view_entry *entries,
-                         int *num_entries_used);
+std::vector<unit_view_entry>
+get_units_view_data(struct unit_view_entry *entries, int *num_entries_used);
 
 void sell_all_improvements(const struct impr_type *pimprove,
                            bool redundant_only, char *message,

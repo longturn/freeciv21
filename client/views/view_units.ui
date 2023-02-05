@@ -138,7 +138,7 @@
        <bool>false</bool>
       </property>
       <property name="sortingEnabled">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <attribute name="horizontalHeaderStretchLastSection">
        <bool>true</bool>
