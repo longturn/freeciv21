@@ -38,11 +38,10 @@ private:
   int counter{0};
   Ui::FormUnitsView ui;
 private slots:
-  // void disband_units();
-  // void find_nearest();
+  void disband_units();
+  void find_nearest();
   // void upgrade_units();
-  // void selection_changed(const QItemSelection &sl, const QItemSelection
-  // &ds);
+  void selection_changed(const QItemSelection &sl, const QItemSelection &ds);
 };
 
 void popdown_units_view();

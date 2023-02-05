@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2023 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -151,48 +151,54 @@ void get_economy_report_units_data(struct unit_entry *entries,
 }
 
 /**
-   Returns an array of units data. Number of units in
-   the array is added to num_entries_used.
+ * Returns an array of units data.
  */
-void get_units_view_data(struct unit_view_entry *entries,
-                         int *num_entries_used)
+std::vector<unit_view_entry>
+get_units_view_data(struct unit_view_entry *entries, int *num_entries_used)
 {
-  int count, gold_cost, food_cost, shield_cost;
+  int count, in_progress, gold_cost, food_cost, shield_cost;
+  bool upgradable = false;
 
   *num_entries_used = 0;
 
   if (nullptr == client.conn.playing) {
-    return;
+    return {};
   }
+
+  count = 0;       // Count of active unit type
+  in_progress = 0; // Count of being produdced
+  gold_cost = 0;   // Gold upkeep
+  food_cost = 0;   // Food upkeep
+  shield_cost = 0; // Shield upkeep
 
   unit_type_iterate(unittype)
   {
-    count = 0;
-    gold_cost = 0;
-    food_cost = 0;
-    shield_cost = 0;
-
-    city_list_iterate(client.conn.playing->cities, pcity)
+    unit_list_iterate(client.conn.playing->units, punit)
     {
-      unit_list_iterate(pcity->units_supported, punit)
-      {
-        if (unit_type_get(punit) == unittype) {
-          count++;
-          gold_cost += punit->upkeep[O_GOLD];
-          food_cost += punit->upkeep[O_FOOD];
-          shield_cost += punit->upkeep[O_SHIELD];
-        }
+      if (unit_type_get(punit) == unittype) {
+        count++;
+        gold_cost += punit->upkeep[O_GOLD];
+        food_cost += punit->upkeep[O_FOOD];
+        shield_cost += punit->upkeep[O_SHIELD];
+        upgradable =
+            client_has_player()
+            && nullptr != can_upgrade_unittype(client_player(), unittype);
       }
-      unit_list_iterate_end;
+    }
+    unit_list_iterate_end;
+
+    city_list_iterate(client.conn.playing->units, pcity)
+    {
+      if (VUT_UTYPE == pcity->production.kind) {
+        in_progress++;
+      }
     }
     city_list_iterate_end;
 
-    if (count == 0) {
-      continue;
-    }
-
     entries[*num_entries_used].type = unittype;
     entries[*num_entries_used].count = count;
+    entries[*num_entries_used].in_prod = in_progress;
+    entries[*num_entries_used].upg = upgradable;
     entries[*num_entries_used].gold_cost = gold_cost;
     entries[*num_entries_used].food_cost = food_cost;
     entries[*num_entries_used].shield_cost = shield_cost;
@@ -202,9 +208,13 @@ void get_units_view_data(struct unit_view_entry *entries,
 
   std::sort(entries, entries + *num_entries_used,
             [](const auto &lhs, const auto &rhs) {
-              return QString(utype_name_translation(lhs.type))
-                     < QString(utype_name_translation(rhs.type));
+              return QString::localeAwareCompare(
+                         utype_name_translation(lhs.type),
+                         utype_name_translation(rhs.type))
+                     < 0;
             });
+
+  return {};
 }
 
 /**
