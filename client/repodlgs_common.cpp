@@ -156,23 +156,21 @@ void get_economy_report_units_data(struct unit_entry *entries,
 std::vector<unit_view_entry>
 get_units_view_data(struct unit_view_entry *entries, int *num_entries_used)
 {
-  int count, in_progress, gold_cost, food_cost, shield_cost;
-  bool upgradable = false;
-
   *num_entries_used = 0;
 
   if (nullptr == client.conn.playing) {
     return {};
   }
 
-  count = 0;       // Count of active unit type
-  in_progress = 0; // Count of being produdced
-  gold_cost = 0;   // Gold upkeep
-  food_cost = 0;   // Food upkeep
-  shield_cost = 0; // Shield upkeep
-
   unit_type_iterate(unittype)
   {
+    int count = 0;           // Count of active unit type
+    int in_progress = 0;     // Count of being produced
+    int gold_cost = 0;       // Gold upkeep
+    int food_cost = 0;       // Food upkeep
+    int shield_cost = 0;     // Shield upkeep
+    bool upgradable = false; // Unit type is upgradable
+
     unit_list_iterate(client.conn.playing->units, punit)
     {
       if (unit_type_get(punit) == unittype) {
@@ -187,13 +185,19 @@ get_units_view_data(struct unit_view_entry *entries, int *num_entries_used)
     }
     unit_list_iterate_end;
 
-    city_list_iterate(client.conn.playing->units, pcity)
+    city_list_iterate(client.conn.playing->cities, pcity)
     {
-      if (VUT_UTYPE == pcity->production.kind) {
+      if (pcity->production.value.utype == unittype
+          && pcity->production.kind == VUT_UTYPE) {
         in_progress++;
       }
     }
     city_list_iterate_end;
+
+    // Skip unused unit types
+    if (count == 0 && in_progress == 0) {
+      continue;
+    }
 
     entries[*num_entries_used].type = unittype;
     entries[*num_entries_used].count = count;
