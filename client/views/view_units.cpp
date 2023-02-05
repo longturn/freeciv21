@@ -8,6 +8,7 @@
  * the units view.
  */
 
+// client
 #include "views/view_units.h"
 #include "client_main.h"
 #include "fc_client.h"
@@ -16,6 +17,11 @@
 #include "repodlgs_common.h"
 #include "tileset/sprite.h"
 #include "top_bar.h"
+
+// common
+#include "goto.h"
+#include "movement.h"
+#include "text.h"
 
 /**
  * Constructor for units view
@@ -28,6 +34,7 @@ units_view::units_view() : QWidget()
   slist << _("Unit Type") << _("Upgradable ★") << _("In Progress ⚒")
         << _("Active ⚔") << _("Shield Upkeep") << _("Food Upkeep")
         << _("Gold Upkeep") << QLatin1String("");
+  ui.units_label->setText(QString(_("Units:")));
   ui.units_widget->setColumnCount(slist.count());
   ui.units_widget->setHorizontalHeaderLabels(slist);
   ui.units_widget->setSortingEnabled(false);
@@ -37,6 +44,14 @@ units_view::units_view() : QWidget()
   ui.find_but->setDisabled(false);
   ui.disband_but->setText(_("Disband All"));
   ui.disband_but->setDisabled(false);
+
+  slist.clear();
+  slist << _("Type") << _("Location") << _("Mp") << _("Time left")
+        << QLatin1String("");
+  ui.uwt_widget->setColumnCount(slist.count());
+  ui.uwt_widget->setHorizontalHeaderLabels(slist);
+  ui.uwt_widget->setSortingEnabled(false);
+  ui.uwt_label->setText("Units Waiting:");
 
   // connect(ui.upg_but, &QAbstractButton::pressed, this,
   //        &units_view::upgrade_units);
@@ -206,9 +221,68 @@ void units_view::update_view()
     ui.units_widget->setItem(max_row, j, item_totals);
   }
 
-  ui.units_label->setText(QString(_("Units:")));
   ui.units_widget->resizeRowsToContents();
   ui.units_widget->resizeColumnsToContents();
+  update_waiting();
+}
+
+/**
+ * Function to load the units waiting table
+ */
+void units_view::update_waiting()
+{
+  int units_count = 0;
+
+  ui.uwt_widget->clearContents();
+
+  if (!client_has_player()) {
+    return;
+  }
+
+  unit_list_iterate(client_player()->units, punit)
+  {
+    if (!can_unit_move_now(punit) && punit->ssa_controller == SSA_NONE) {
+      QTableWidgetItem *item =
+          new QTableWidgetItem(utype_name_translation(punit->utype));
+      item->setData(Qt::UserRole,
+                    QVariant::fromValue(static_cast<void *>(punit)));
+      ui.uwt_widget->setItem(units_count, 0, item);
+
+      int pcity_near_dist;
+      struct city *pcity_near = get_nearest_city(punit, &pcity_near_dist);
+      ui.uwt_widget->setItem(
+          units_count, 1,
+          new QTableWidgetItem(
+              get_nearest_city_text(pcity_near, pcity_near_dist),
+              pcity_near_dist));
+
+      ui.uwt_widget->setItem(
+          units_count, 2,
+          new QTableWidgetItem(move_points_text(punit->moves_left, false),
+                               punit->moves_left));
+
+      time_t dt = time(nullptr) - punit->action_timestamp;
+      if (dt < 0 && !can_unit_move_now(punit)) {
+        char buf[64];
+        format_time_duration(-dt, buf, sizeof(buf));
+        ui.uwt_widget->setItem(units_count, 3,
+                               new QTableWidgetItem(buf, dt));
+      }
+
+      ++units_count;
+    }
+  }
+  unit_list_iterate_end;
+
+  ui.uwt_widget->setRowCount(units_count);
+  ui.uwt_widget->horizontalHeader()->resizeSections(
+      QHeaderView::ResizeToContents);
+
+  // Hide the label and widget if there is no units affected by wait time
+  if (units_count == 0) {
+    ui.uwt_label->setHidden(true);
+    ui.uwt_widget->setHidden(true);
+  }
 }
 
 /**
