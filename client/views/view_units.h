@@ -41,7 +41,7 @@ private:
 private slots:
   void disband_units();
   void find_nearest();
-  // void upgrade_units();
+  void upgrade_units();
   void selection_changed(const QItemSelection &sl, const QItemSelection &ds);
 };
 

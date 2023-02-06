@@ -10,8 +10,10 @@
 
 // client
 #include "views/view_units.h"
+#include "canvas.h"
 #include "client_main.h"
 #include "fc_client.h"
+#include "goto.h"
 #include "hudwidget.h"
 #include "page_game.h"
 #include "repodlgs_common.h"
@@ -19,10 +21,12 @@
 #include "top_bar.h"
 
 // common
-#include "canvas.h"
-#include "goto.h"
 #include "movement.h"
 #include "text.h"
+#include "unittype.h"
+
+// server
+//# include "packets_gen.h"
 
 /**
  * Constructor for units view
@@ -84,8 +88,8 @@ units_view::units_view() : QWidget()
   pix = QPixmap::fromImage(cropped_img);
   ui.units_widget->horizontalHeaderItem(6)->setIcon(pix);
 
-  // connect(ui.upg_but, &QAbstractButton::pressed, this,
-  //        &units_view::upgrade_units);
+  connect(ui.upg_but, &QAbstractButton::pressed, this,
+          &units_view::upgrade_units);
   connect(ui.find_but, &QAbstractButton::pressed, this,
           &units_view::find_nearest);
   connect(ui.disband_but, &QAbstractButton::pressed, this,
@@ -254,6 +258,7 @@ void units_view::update_view()
 
   ui.units_widget->resizeRowsToContents();
   ui.units_widget->resizeColumnsToContents();
+
   update_waiting();
 }
 
@@ -336,7 +341,6 @@ void units_view::selection_changed(const QItemSelection &sl,
     return;
   }
 
-  // TODO: Add code to enable the upgrade units button
   curr_row = sl.indexes().at(0).row();
   if (curr_row >= 0 && curr_row <= max_row) {
     itm = ui.units_widget->item(curr_row, 0);
@@ -403,17 +407,24 @@ void units_view::find_nearest()
 
 /**
  * Upgrade Units
-
+ */
 void units_view::upgrade_units()
 {
   QString b, c;
   hud_message_box *ask = new hud_message_box(king()->central_wdg);
+  struct universal selected;
   int price;
   const struct unit_type *upgrade;
-  const Unit_type_id type = utype_number(utype);
+  const struct unit_type *utype;
+
+  selected = cid_decode(uid);
+  utype = selected.value.utype;
+
+  Unit_type_id type = utype_number(utype);
 
   upgrade = can_upgrade_unittype(client_player(), utype);
   price = unit_upgrade_price(client_player(), utype, upgrade);
+  qCritical() << upgrade << price;
   b = QString::asprintf(PL_("Treasury contains %d gold.",
                             "Treasury contains %d gold.",
                             client_player()->economic.gold),
@@ -434,7 +445,7 @@ void units_view::upgrade_units()
   connect(ask, &hud_message_box::accepted,
           [=]() { dsend_packet_unit_type_upgrade(&client.conn, type); });
   ask->show();
-} */
+}
 
 /**
  * Update the units view.
