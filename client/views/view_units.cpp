@@ -5,7 +5,7 @@
 
 /*
  * \file This file contains functions to generate the table based GUI for
- * the units view.
+ * the units view (F2).
  */
 
 // client
@@ -19,6 +19,7 @@
 #include "top_bar.h"
 
 // common
+#include "canvas.h"
 #include "goto.h"
 #include "movement.h"
 #include "text.h"
@@ -30,9 +31,16 @@ units_view::units_view() : QWidget()
 {
   ui.setupUi(this);
 
+  const QPixmap *spr;
+  QImage img;
+  QRect crop;
+  QImage cropped_img;
+  QPixmap pix;
   QStringList slist;
-  slist << _("Unit Type") << _("Upgradable ★") << _("In Progress ⚒")
-        << _("Active ⚔") << _("Shield Upkeep") << _("Food Upkeep")
+
+  // Configure the units table
+  slist << _("Unit Type") << _("★ Upgradable") << _("⚒ In Progress")
+        << _("⚔ Active") << _("Shield Upkeep") << _("Food Upkeep")
         << _("Gold Upkeep") << QLatin1String("");
   ui.units_label->setText(QString(_("Units:")));
   ui.units_widget->setColumnCount(slist.count());
@@ -45,6 +53,7 @@ units_view::units_view() : QWidget()
   ui.disband_but->setText(_("Disband All"));
   ui.disband_but->setDisabled(false);
 
+  // Configure the unitwaittime table
   slist.clear();
   slist << _("Type") << _("Location") << _("Mp") << _("Time left")
         << QLatin1String("");
@@ -52,6 +61,35 @@ units_view::units_view() : QWidget()
   ui.uwt_widget->setHorizontalHeaderLabels(slist);
   ui.uwt_widget->setSortingEnabled(false);
   ui.uwt_label->setText("Units Waiting:");
+
+  // Add shield icon for shield upkeep column
+  spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "upkeep.shield",
+                                    "citybar.shields", "", "", false);
+  img = spr->toImage();
+  crop = zealous_crop_rect(img);
+  cropped_img = img.copy(crop);
+  pix = QPixmap::fromImage(cropped_img);
+  ui.units_widget->horizontalHeaderItem(4)->setIcon(pix);
+
+  // Add food icon for food upkeep column
+  spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "citybar.food",
+                                    "citybar.food", "", "", false);
+  img = spr->toImage();
+  crop = zealous_crop_rect(img);
+  cropped_img = img.copy(crop);
+  pix = QPixmap::fromImage(cropped_img);
+  ui.units_widget->horizontalHeaderItem(5)->setIcon(pix);
+
+  // Add gold icon for gold upkeep column
+  // FIXME: We don't have a sprite for a gold coin on its own. This looks
+  // better than using get_tax_sprite(tileset, O_GOLD)
+  spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "citybar.trade",
+                                    "citybar.trade", "", "", false);
+  img = spr->toImage();
+  crop = zealous_crop_rect(img);
+  cropped_img = img.copy(crop);
+  pix = QPixmap::fromImage(cropped_img);
+  ui.units_widget->horizontalHeaderItem(6)->setIcon(pix);
 
   // connect(ui.upg_but, &QAbstractButton::pressed, this,
   //        &units_view::upgrade_units);

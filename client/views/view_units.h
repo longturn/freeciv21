@@ -46,22 +46,3 @@ private slots:
 };
 
 void popdown_units_view();
-
-/*
- * Class to build out the units affected by unit wait time (UWT)
-
-class units_waiting : public QWidget {
-  Q_OBJECT
-
-public:
-  units_waiting(QWidget *parent = nullptr);
-  ~units_waiting();
-
-protected:
-  void showEvent(QShowEvent *event) override;
-
-private:
-  void clicked(int x, int y);
-  void update_units();
-  QTableWidget *waiting_units;
-};*/
