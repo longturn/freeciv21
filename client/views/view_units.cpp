@@ -49,9 +49,9 @@ units_view::units_view() : QWidget()
   ui.upg_but->setText(_("Upgrade"));
   ui.upg_but->setDisabled(true);
   ui.find_but->setText(_("Find Nearest"));
-  ui.find_but->setDisabled(false);
+  ui.find_but->setDisabled(true);
   ui.disband_but->setText(_("Disband All"));
-  ui.disband_but->setDisabled(false);
+  ui.disband_but->setDisabled(true);
 
   // Configure the unitwaittime table
   slist.clear();
@@ -329,44 +329,37 @@ void units_view::update_waiting()
 void units_view::selection_changed(const QItemSelection &sl,
                                    const QItemSelection &ds)
 {
-  // QTableWidgetItem *itm;
-  // int i;
+  QTableWidgetItem *itm;
   QVariant qvar;
-  // struct universal selected;
+  struct universal selected;
+  QString upg;
   // const struct unit_view_entry *pentry;
+
   ui.upg_but->setDisabled(true);
-  // These two are always available
-  ui.find_but->setDisabled(false);
-  ui.disband_but->setDisabled(false);
+  ui.disband_but->setDisabled(true);
+  ui.find_but->setDisabled(true);
 
   if (sl.isEmpty()) {
     return;
   }
 
   // TODO: Add code to enable the upgrade units button
-  /*curr_row = sl.indexes().at(0).row();
+  curr_row = sl.indexes().at(0).row();
   if (curr_row >= 0 && curr_row <= max_row) {
     itm = ui.units_widget->item(curr_row, 0);
     qvar = itm->data(Qt::UserRole);
     uid = qvar.toInt();
     selected = cid_decode(uid);
     counter = ui.units_widget->item(curr_row, 3)->text().toInt();
-      if (can_sell_building(pimprove)) {
-        ui.bsell->setEnabled(true);
-      }
-      itm = ui.eco_widget->item(curr_row, 2);
-      i = itm->text().toInt();
-      if (i > 0) {
-        ui.bredun->setEnabled(true);
-      }
-      break;
-    case VUT_UTYPE:
-      counter = ui.eco_widget->item(curr_row, 3)->text().toInt();
-      ui.bdisband->setEnabled(true);
-      break;
-    default:
-      qCritical("Not supported type: %d.", selected.kind);
-    }*/
+    if (counter > 0) {
+      ui.disband_but->setDisabled(false);
+      ui.find_but->setDisabled(false);
+    }
+    upg = ui.units_widget->item(curr_row, 1)->text();
+    if (upg != "-") {
+      ui.upg_but->setDisabled(false);
+    }
+  }
 }
 
 /**
@@ -404,6 +397,7 @@ void units_view::disband_units()
       result->show();
     }
   });
+  ask->show();
 }
 
 /**
