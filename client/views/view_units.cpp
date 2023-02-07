@@ -1,5 +1,6 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: 1996-2022 Freeciv contributors
  * SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
  */
 
@@ -19,14 +20,13 @@
 #include "repodlgs_common.h"
 #include "tileset/sprite.h"
 #include "top_bar.h"
+#include "views/view_map.h"
+#include "views/view_map_common.h"
 
 // common
 #include "movement.h"
 #include "text.h"
 #include "unittype.h"
-
-// server
-//# include "packets_gen.h"
 
 /**
  * Constructor for units view
@@ -331,7 +331,6 @@ void units_view::selection_changed(const QItemSelection &sl,
   QVariant qvar;
   struct universal selected;
   QString upg;
-  // const struct unit_view_entry *pentry;
 
   ui.upg_but->setDisabled(true);
   ui.disband_but->setDisabled(true);
@@ -360,7 +359,7 @@ void units_view::selection_changed(const QItemSelection &sl,
 }
 
 /**
- * Disband pointed units (in units view)
+ * Disband selected units
  */
 void units_view::disband_units()
 {
@@ -397,16 +396,73 @@ void units_view::disband_units()
   ask->show();
 }
 
-/**
- * Find nearest unit
+/*
+ * Function to help us find the nearest unit
  */
-void units_view::find_nearest()
+static struct unit *find_nearest_unit(const struct unit_type *utype,
+                                      struct tile *ptile)
 {
-  // go look at old fc gtk and see how its done there
+  struct unit *best_candidate = NULL;
+  int best_dist = FC_INFINITY, dist;
+
+  players_iterate(pplayer)
+  {
+    if (client_has_player() && pplayer != client_player()) {
+      continue;
+    }
+
+    unit_list_iterate(pplayer->units, punit)
+    {
+      if (utype == unit_type_get(punit)
+          && FOCUS_AVAIL == punit->client.focus_status
+          && 0 < punit->moves_left && !punit->done_moving
+          && punit->ssa_controller == SSA_NONE) {
+        dist = sq_map_distance(unit_tile(punit), ptile);
+        if (dist < best_dist) {
+          best_candidate = punit;
+          best_dist = dist;
+        }
+      }
+    }
+    unit_list_iterate_end;
+  }
+  players_iterate_end;
+
+  return best_candidate;
 }
 
 /**
- * Upgrade Units
+ * Find nearest selected unit, closes units view when button is clicked.
+ */
+void units_view::find_nearest()
+{
+  struct universal selected;
+  struct tile *ptile;
+  struct unit *punit;
+  const struct unit_type *utype;
+
+  selected = cid_decode(uid);
+  utype = selected.value.utype;
+
+  ptile = get_center_tile_mapcanvas();
+  if ((punit = find_nearest_unit(utype, ptile))) {
+    queen()->mapview_wdg->center_on_tile(punit->tile);
+    ;
+    // TODO: Implement the signal
+    // emit request_map_view_centering(unit_tile(punit));
+
+    if (ACTIVITY_IDLE == punit->activity
+        || ACTIVITY_SENTRY == punit->activity) {
+      if (can_unit_do_activity(punit, ACTIVITY_IDLE)) {
+        unit_focus_set_and_select(punit);
+      }
+    }
+  }
+  popdown_units_view();
+}
+
+/**
+ * Upgrade selected units.
  */
 void units_view::upgrade_units()
 {

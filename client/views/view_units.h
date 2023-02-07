@@ -38,11 +38,16 @@ private:
   cid uid{0};
   int counter{0};
   Ui::FormUnitsView ui;
+
 private slots:
   void disband_units();
   void find_nearest();
   void upgrade_units();
   void selection_changed(const QItemSelection &sl, const QItemSelection &ds);
+
+  // TODO: Implement the signal
+  // signals:
+  //  void request_map_view_centering(tile *maptile);
 };
 
 void popdown_units_view();
