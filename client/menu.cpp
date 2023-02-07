@@ -64,9 +64,9 @@
 #include "tileset/sprite.h"
 #include "top_bar.h"
 #include "unithudselector.h"
-#include "unitreport.h"
 #include "views/view_map.h"
 #include "views/view_nations.h"
+#include "views/view_units.h"
 
 extern void popup_endgame_report();
 static void enable_interface(bool enable);
@@ -1091,13 +1091,8 @@ void mr_menu::setup_menus()
   connect(act, &QAction::triggered, this, &mr_menu::slot_show_map);
 
   act = menu->addAction(_("Units"));
-  act->setCheckable(true);
   act->setShortcut(QKeySequence(tr("F2")));
-  connect(act, &QAction::toggled, queen()->units, &QWidget::setVisible);
-  connect(act, &QAction::toggled, queen()->sw_cunit,
-          &QAbstractButton::setChecked);
-  connect(queen()->sw_cunit, &QAbstractButton::toggled, act,
-          &QAction::setChecked);
+  connect(act, &QAction::triggered, this, &top_bar_units_view);
 
   // TRANS: Also menu item, but 'headers' should be good enough.
   act = menu->addAction(Q_("?header:Players"));

@@ -62,11 +62,11 @@ client/tileset/tilespec.cpp
 client/tooltips.cpp
 client/top_bar.cpp
 client/tradecalculation.cpp
-client/unitreport.cpp
 client/unitselect.cpp
 client/voteinfo_bar.cpp
 client/widgets/decorations.cpp
 client/widgets/report_widget.cpp
+client/views/view_units.cpp
 common/actions.cpp
 common/actions.h
 common/ai.cpp

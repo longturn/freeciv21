@@ -31,7 +31,6 @@ class national_budget_dialog;
 class national_budget_widget;
 class top_bar;
 class top_bar_widget;
-class units_reports;
 class units_select;
 class xvote;
 
@@ -82,7 +81,6 @@ public:
   map_view *mapview_wdg;
   ::minimap_panel *minimap_panel;
   city_dialog *city_overlay;
-  units_reports *units;
   top_bar_widget *sw_cunit;
   xvote *x_vote;
   top_bar_widget *sw_diplo;

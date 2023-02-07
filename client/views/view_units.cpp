@@ -447,9 +447,6 @@ void units_view::find_nearest()
   ptile = get_center_tile_mapcanvas();
   if ((punit = find_nearest_unit(utype, ptile))) {
     queen()->mapview_wdg->center_on_tile(punit->tile);
-    ;
-    // TODO: Implement the signal
-    // emit request_map_view_centering(unit_tile(punit));
 
     if (ACTIVITY_IDLE == punit->activity
         || ACTIVITY_SENTRY == punit->activity) {

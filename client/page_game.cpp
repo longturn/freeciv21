@@ -45,7 +45,6 @@
 #include "minimap_panel.h"
 #include "ratesdlg.h"
 #include "top_bar.h"
-#include "unitreport.h"
 #include "views/view_map.h"
 #include "views/view_nations.h"
 #include "views/view_units.h"
@@ -91,19 +90,12 @@ pageGame::pageGame(QWidget *parent)
   }
 
   // Units view (F2)
-  units = new units_reports(mapview_wdg);
-  units->hide();
-  sw_cunit = new top_bar_widget(_("Units"), QLatin1String(""), nullptr);
+  sw_cunit = new top_bar_widget(_("Units"), QStringLiteral("UNI"),
+                                top_bar_units_view);
   sw_cunit->setIcon(fcIcons::instance()->getIcon(QStringLiteral("units")));
-  sw_cunit->setCheckable(true);
-  connect(sw_cunit, &QAbstractButton::toggled, units, &QWidget::setVisible);
-  // TODO: Implement the signal, swap the widget as a right click and the
-  // view as regular left click.
-  // connect(units, &units_view::request_map_view_centering, mapview_wdg,
-  // &map_view::center_on_tile);
-  sw_cunit->setRightClick(top_bar_units_view);
   sw_cunit->setWheelUp(cycle_enemy_units);
   sw_cunit->setWheelDown(key_unit_wait);
+  sw_cunit->setCheckable(true);
 
   // Nations view (F3)
   sw_diplo = new top_bar_widget(_("Nations"), QStringLiteral("PLR"),
@@ -623,7 +615,6 @@ bool fc_game_tab_widget::event(QEvent *event)
       queen()->mapview_wdg->resize(size.width(), size.height());
       queen()->city_overlay->resize(queen()->mapview_wdg->size());
       queen()->unitinfo_wdg->update_actions();
-      queen()->units->update_units(false);
     }
 
     /*
