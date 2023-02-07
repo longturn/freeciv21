@@ -79,6 +79,7 @@ pageGame::pageGame(QWidget *parent)
   sw_map = new top_bar_widget(Q_("?noun:View"), QStringLiteral("MAP"),
                               top_bar_show_map);
 
+  // Show the national flag, unless global observing
   if (client.conn.playing != nullptr) {
     auto sprite = *get_nation_flag_sprite(
         tileset, nation_of_player(client.conn.playing));
@@ -89,69 +90,62 @@ pageGame::pageGame(QWidget *parent)
     sw_map->setIconSize(QSize(24, 24));
   }
 
-  sw_tax = new national_budget_widget();
-  connect(sw_tax, &QAbstractButton::clicked, this,
-          &pageGame::popup_budget_dialog);
-
-  sw_indicators = new indicators_widget();
-  connect(sw_indicators, &QAbstractButton::clicked, top_bar_indicators_menu);
-
+  // Units view (F2)
   units = new units_reports(mapview_wdg);
   units->hide();
   sw_cunit = new top_bar_widget(_("Units"), QLatin1String(""), nullptr);
   sw_cunit->setIcon(fcIcons::instance()->getIcon(QStringLiteral("units")));
   sw_cunit->setCheckable(true);
   connect(sw_cunit, &QAbstractButton::toggled, units, &QWidget::setVisible);
+  // TODO: Implement the signal, swap the widget as a right click and the
+  // view as regular left click.
+  // connect(units, &units_view::request_map_view_centering, mapview_wdg,
+  // &map_view::center_on_tile);
+  sw_cunit->setRightClick(top_bar_units_view);
+  sw_cunit->setWheelUp(cycle_enemy_units);
+  sw_cunit->setWheelDown(key_unit_wait);
 
-  sw_cities = new top_bar_widget(_("Cities"), QStringLiteral("CTS"),
-                                 city_report_dialog_popup);
-  sw_cities->setIcon(fcIcons::instance()->getIcon(QStringLiteral("cities")));
-  sw_cities->setWheelUp(center_next_enemy_city);
-  sw_cities->setWheelDown(center_next_player_city);
-  sw_cities->setCheckable(true);
+  // Nations view (F3)
   sw_diplo = new top_bar_widget(_("Nations"), QStringLiteral("PLR"),
                                 popup_players_dialog);
   sw_diplo->setIcon(fcIcons::instance()->getIcon(QStringLiteral("flag")));
   sw_diplo->setWheelUp(center_next_player_capital);
   sw_diplo->setWheelDown(key_center_capital);
   sw_diplo->setCheckable(true);
+  sw_diplo->setRightClick(top_bar_right_click_diplomacy);
+
+  // Cities view (F4)
+  sw_cities = new top_bar_widget(_("Cities"), QStringLiteral("CTS"),
+                                 city_report_dialog_popup);
+  sw_cities->setIcon(fcIcons::instance()->getIcon(QStringLiteral("cities")));
+  sw_cities->setWheelUp(center_next_enemy_city);
+  sw_cities->setWheelDown(center_next_player_city);
+  sw_cities->setCheckable(true);
+
+  // Economics view (F5)
+  sw_economy = new gold_widget;
+  sw_economy->setIcon(
+      fcIcons::instance()->getIcon(QStringLiteral("economy")));
+  sw_economy->setCheckable(true);
+
+  // Research view (F6)
   sw_science = new top_bar_widget(_("Research"), QStringLiteral("SCI"),
                                   top_bar_left_click_science);
   sw_science->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("research")));
   sw_science->setCheckable(true);
-  sw_economy = new gold_widget;
-  sw_economy->setIcon(
-      fcIcons::instance()->getIcon(QStringLiteral("economy")));
-  sw_economy->setCheckable(true);
-  // sw_cunit->setRightClick(top_bar_center_unit);
-  sw_cunit->setRightClick(top_bar_units_view);
-  sw_cunit->setWheelUp(cycle_enemy_units);
-  sw_cunit->setWheelDown(key_unit_wait);
-  sw_diplo->setRightClick(top_bar_right_click_diplomacy);
   sw_science->setRightClick(top_bar_right_click_science);
 
-  minimap_panel = new ::minimap_panel(mapview_wdg, mapview_wdg);
+  // National budget widget
+  sw_tax = new national_budget_widget();
+  connect(sw_tax, &QAbstractButton::clicked, this,
+          &pageGame::popup_budget_dialog);
 
-  city_overlay = new city_dialog(mapview_wdg);
-  connect(mapview_wdg, &map_view::scale_changed, city_overlay,
-          &city_dialog::refresh);
-  city_overlay->hide();
-  unitinfo_wdg = new hud_units(mapview_wdg);
-  unitinfo_wdg->setAttribute(Qt::WA_NoMousePropagation);
-  battlelog_wdg = new hud_battle_log(mapview_wdg);
-  battlelog_wdg->setAttribute(Qt::WA_NoMousePropagation);
-  battlelog_wdg->hide();
-  chat = new chat_widget(mapview_wdg);
-  chat->setAttribute(Qt::WA_NoMousePropagation);
-  chat->show();
-  x_vote = new xvote(mapview_wdg);
-  x_vote->setAttribute(Qt::WA_NoMousePropagation);
-  x_vote->hide();
-  gtd = new goto_dialog(mapview_wdg);
-  gtd->setAttribute(Qt::WA_NoMousePropagation);
-  gtd->hide();
+  // National status
+  sw_indicators = new indicators_widget();
+  connect(sw_indicators, &QAbstractButton::clicked, top_bar_indicators_menu);
 
+  // Messages widget
   message = new message_widget(mapview_wdg);
   message->setAttribute(Qt::WA_NoMousePropagation);
   message->hide();
@@ -180,6 +174,35 @@ pageGame::pageGame(QWidget *parent)
               fcIcons::instance()->getIcon(QStringLiteral("notify")));
         }
       });
+
+  // The mini-map widget
+  minimap_panel = new ::minimap_panel(mapview_wdg, mapview_wdg);
+  city_overlay = new city_dialog(mapview_wdg);
+  connect(mapview_wdg, &map_view::scale_changed, city_overlay,
+          &city_dialog::refresh);
+  city_overlay->hide();
+
+  // Battle log widget
+  unitinfo_wdg = new hud_units(mapview_wdg);
+  unitinfo_wdg->setAttribute(Qt::WA_NoMousePropagation);
+  battlelog_wdg = new hud_battle_log(mapview_wdg);
+  battlelog_wdg->setAttribute(Qt::WA_NoMousePropagation);
+  battlelog_wdg->hide();
+
+  // Chatline widget
+  chat = new chat_widget(mapview_wdg);
+  chat->setAttribute(Qt::WA_NoMousePropagation);
+  chat->show();
+
+  // Voting bar widget
+  x_vote = new xvote(mapview_wdg);
+  x_vote->setAttribute(Qt::WA_NoMousePropagation);
+  x_vote->hide();
+
+  // Goto visuals
+  gtd = new goto_dialog(mapview_wdg);
+  gtd->setAttribute(Qt::WA_NoMousePropagation);
+  gtd->hide();
 
   top_bar_wdg->addWidget(sw_map);     // F1
   top_bar_wdg->addWidget(sw_cunit);   // F2
