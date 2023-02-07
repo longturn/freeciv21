@@ -38,6 +38,7 @@
 #include "tileset/tilespec.h"
 #include "update_queue.h"
 #include "views/view_nations_data.h"
+#include "views/view_units.h"
 
 // gui-qt
 #include "canvas.h"
@@ -459,7 +460,7 @@ void economy_report_dialog_update(void)
 // Update the units report.
 void units_report_dialog_update(void)
 {
-  update_queue::uq()->add(real_units_report_dialog_update, nullptr);
+  update_queue::uq()->add(units_view_dialog_update, nullptr);
 }
 
 // Update the units report.

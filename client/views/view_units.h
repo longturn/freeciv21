@@ -44,10 +44,7 @@ private slots:
   void find_nearest();
   void upgrade_units();
   void selection_changed(const QItemSelection &sl, const QItemSelection &ds);
-
-  // TODO: Implement the signal
-  // signals:
-  //  void request_map_view_centering(tile *maptile);
 };
 
+void units_view_dialog_update(void *unused);
 void popdown_units_view();

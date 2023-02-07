@@ -103,7 +103,6 @@ target_sources(
   top_bar.cpp
   tradecalculation.cpp
   turn_done_button.cpp
-  unitreport.cpp
   unitselect.cpp
   update_queue.cpp
   voteinfo.cpp
