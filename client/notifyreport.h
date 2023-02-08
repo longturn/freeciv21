@@ -8,20 +8,14 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 #pragma once
-// Qt
-#include <QDialog>
-#include <QMessageBox>
-#include <QVariant>
+
+// common
+#include "events.h"
+
 // client
-#include "dialogs_g.h"
-// gui-qt
 #include "widgets/decorations.h"
 
 class QLabel;
-class QMouseEvent;
-class QObject;
-class QPaintEvent;
-class QVBoxLayout;
 
 void restart_notify_reports();
 
@@ -33,27 +27,26 @@ class notify_dialog : public fcwidget {
   Q_OBJECT
 
 public:
-  notify_dialog(const char *caption, const char *headline, const char *lines,
-                QWidget *parent = 0);
+  notify_dialog(const QString &caption, const QString &headline,
+                const QString &lines, QWidget *parent = nullptr);
+  ~notify_dialog() override = default;
+
+  /// Returns back the caption passed to the constructor
+  QString caption() const { return m_caption; }
+
+  /// Returns back the headline passed to the constructor
+  QString headline() const { return m_headline; }
+
   void update_menu() override;
-  ~notify_dialog() override;
-  void restart();
-  QString qcaption;
-  QString qheadline;
 
 protected:
   void mousePressEvent(QMouseEvent *event) override;
   void mouseMoveEvent(QMouseEvent *event) override;
   void mouseReleaseEvent(QMouseEvent *event) override;
+  bool event(QEvent *event) override;
 
 private:
-  void paintEvent(QPaintEvent *paint_event) override;
-  void calc_size(int &x, int &y);
-  close_widget *cw;
-  QLabel *label;
-  QVBoxLayout *layout;
-
-  QStringList qlist;
-  QFont small_font;
-  QPoint cursor;
+  QString m_caption, m_headline;
+  QPoint m_cursor;
+  QLabel *m_contents;
 };
