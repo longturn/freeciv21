@@ -9,116 +9,52 @@
  */
 
 #include "notifyreport.h"
-// Qt
-#include <QMouseEvent>
-#include <QPainter>
+
 // client
 #include "dialogs_g.h"
-// gui-qt
 #include "fc_client.h"
 #include "fonts.h"
 #include "page_game.h"
 #include "views/view_map.h"
 
+// Qt
+#include <QApplication>
+#include <QGridLayout>
+#include <QMouseEvent>
+
 /**
    Constructor for notify dialog
  */
-notify_dialog::notify_dialog(const char *caption, const char *headline,
-                             const char *lines, QWidget *parent)
-    : fcwidget(), label(nullptr), layout(nullptr)
+notify_dialog::notify_dialog(const QString &caption, const QString &headline,
+                             const QString &lines, QWidget *parent)
+    : fcwidget(), m_caption(caption), m_headline(headline)
 {
-  int x, y;
-  QString qlines;
-
   setAttribute(Qt::WA_DeleteOnClose);
+  setAttribute(Qt::WA_NoMousePropagation);
   setCursor(Qt::ArrowCursor);
   setParent(parent);
   setFrameStyle(QFrame::Box);
-  cw = new close_widget(this);
-  cw->put_to_corner();
 
-  qcaption = QString(caption);
-  qheadline = QString(headline);
-  qlines = QString(lines);
-  qlist = qlines.split(QStringLiteral("\n"));
-  small_font = fcFont::instance()->getFont(
-      QStringLiteral("gui_qt_font_notify_label"));
-  x = 0;
-  y = 0;
-  calc_size(x, y);
-  resize(x, y);
+  auto layout = new QGridLayout;
+  setLayout(layout);
+
+  m_contents =
+      new QLabel(QStringLiteral("%1 %2\n%3").arg(caption, headline, lines));
+  m_contents->setTextInteractionFlags(Qt::TextSelectableByMouse);
+  m_contents->setFont(fcFont::instance()->getFont(
+      QStringLiteral("gui_qt_font_notify_label")));
+  layout->addWidget(m_contents, 0, 0);
+
+  auto cw = new close_widget(this);
+  layout->addWidget(cw, 0, 1, Qt::AlignTop | Qt::AlignRight);
+
+  adjustSize();
+
+  auto x = width();
+  auto y = height();
   queen()->mapview_wdg->find_place(queen()->mapview_wdg->width() - x - 4, 4,
                                    x, y, x, y, 0);
   move(x, y);
-}
-
-/**
-   Starts new copy of notify dialog and closes current one
- */
-void notify_dialog::restart()
-{
-  QString s, q;
-  int i;
-  QByteArray capt_bytes;
-  QByteArray hl_bytes;
-  QByteArray qb_bytes;
-
-  for (i = 0; i < qlist.size(); ++i) {
-    s = qlist.at(i);
-    q = q + s;
-    if (i < qlist.size() - 1) {
-      q = q + QChar('\n');
-    }
-  }
-  capt_bytes = qcaption.toLocal8Bit();
-  hl_bytes = qheadline.toLocal8Bit();
-  qb_bytes = q.toLocal8Bit();
-  popup_notify_dialog(capt_bytes.data(), hl_bytes.data(), qb_bytes.data());
-  close();
-  destroy();
-}
-
-/**
-   Calculates size of notify dialog
- */
-void notify_dialog::calc_size(int &x, int &y)
-{
-  QFontMetrics fm(small_font);
-  int i;
-  QStringList str_list;
-
-  str_list = qlist;
-  str_list << qcaption << qheadline;
-
-  for (i = 0; i < str_list.count(); i++) {
-    x = qMax(x, fm.horizontalAdvance(str_list.at(i)));
-    y = y + 3 + fm.height();
-  }
-  y += fm.height();
-  x = x + 15;
-}
-
-/**
-   Paint Event for notify dialog
- */
-void notify_dialog::paintEvent(QPaintEvent *paint_event)
-{
-  Q_UNUSED(paint_event)
-  QPainter painter(this);
-  QPen pen;
-  QFontMetrics fm(small_font);
-  int i;
-
-  pen.setWidth(1);
-  pen.setColor(palette().color(QPalette::Text));
-  painter.setFont(small_font);
-  painter.setPen(pen);
-  painter.drawText(10, fm.height() + 3, qcaption);
-  painter.drawText(10, 2 * fm.height() + 6, qheadline);
-  for (i = 0; i < qlist.count(); i++) {
-    painter.drawText(10, 3 + (fm.height() + 3) * (i + 3), qlist[i]);
-  }
-  cw->put_to_corner();
 }
 
 /**
@@ -126,10 +62,7 @@ void notify_dialog::paintEvent(QPaintEvent *paint_event)
  */
 void notify_dialog::mousePressEvent(QMouseEvent *event)
 {
-  cursor = event->globalPos() - geometry().topLeft();
-  if (event->button() == Qt::RightButton) {
-    close();
-  }
+  m_cursor = event->globalPos() - geometry().topLeft();
 }
 
 /**
@@ -137,7 +70,7 @@ void notify_dialog::mousePressEvent(QMouseEvent *event)
  */
 void notify_dialog::mouseMoveEvent(QMouseEvent *event)
 {
-  move(event->globalPos() - cursor);
+  move(event->globalPos() - m_cursor);
   setCursor(Qt::SizeAllCursor);
 }
 
@@ -151,26 +84,32 @@ void notify_dialog::mouseReleaseEvent(QMouseEvent *event)
 }
 
 /**
-   Called when close button was pressed
+ * Overridden to handle font changes
  */
-void notify_dialog::update_menu() { destroy(); }
+bool notify_dialog::event(QEvent *event)
+{
+  if (event->type() == QEvent::FontChange) {
+    m_contents->setFont(fcFont::instance()->getFont(
+        QStringLiteral("gui_qt_font_notify_label")));
+    adjustSize();
+    event->accept();
+    return true;
+  }
+  return fcwidget::event(event);
+}
 
 /**
-   Destructor for notify dialog
+   Called when close button was pressed
  */
-notify_dialog::~notify_dialog() { destroy(); }
+void notify_dialog::update_menu() { deleteLater(); }
 
 /**
    Restarts all notify dialogs
  */
 void restart_notify_reports()
 {
-  QList<notify_dialog *> nd_list;
-  int i;
-
-  nd_list = queen()->mapview_wdg->findChildren<notify_dialog *>();
-  for (i = 0; i < nd_list.count(); i++) {
-    nd_list[i]->restart();
-    delete nd_list[i];
+  auto list = queen()->mapview_wdg->findChildren<notify_dialog *>();
+  for (auto nd : list) {
+    QApplication::postEvent(nd, new QEvent(QEvent::FontChange));
   }
 }
