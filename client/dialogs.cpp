@@ -983,15 +983,15 @@ void popup_notify_dialog(const char *caption, const char *headline,
   */
 
   const auto list =
-      queen()->game_tab_widget->findChildren<report_widget *>();
+      queen()->game_tab_widget->findChildren<freeciv::report_widget *>();
   for (auto report : list) {
     if (report->caption() == caption && report->headline() == headline) {
       report->close();
     }
   }
 
-  report_widget *nd =
-      new report_widget(caption, headline, lines, queen()->mapview_wdg);
+  freeciv::report_widget *nd = new freeciv::report_widget(
+      caption, headline, lines, queen()->mapview_wdg);
   nd->show();
 }
 
@@ -3501,14 +3501,15 @@ void popdown_all_game_dialogs(void)
 {
   int i;
   QList<choice_dialog *> cd_list;
-  QList<report_widget *> nd_list;
+  QList<freeciv::report_widget *> nd_list;
 
   QApplication::alert(king()->central_wdg);
   cd_list = queen()->game_tab_widget->findChildren<choice_dialog *>();
   for (i = 0; i < cd_list.count(); i++) {
     cd_list[i]->close();
   }
-  nd_list = queen()->game_tab_widget->findChildren<report_widget *>();
+  nd_list =
+      queen()->game_tab_widget->findChildren<freeciv::report_widget *>();
   for (i = 0; i < nd_list.count(); i++) {
     nd_list[i]->close();
   }

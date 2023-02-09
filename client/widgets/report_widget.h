@@ -15,6 +15,8 @@
 
 class QLabel;
 
+namespace freeciv {
+
 class report_widget : public fcwidget {
   Q_OBJECT
 
@@ -42,3 +44,5 @@ private:
   QPoint m_cursor;
   QLabel *m_contents;
 };
+
+} // namespace freeciv

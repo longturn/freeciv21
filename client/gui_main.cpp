@@ -262,7 +262,8 @@ static void apply_notify_font(struct option *poption)
     gui_update_font(QStringLiteral("notify_label"),
                     option_font_get(poption));
 
-    auto list = page_game->mapview_wdg->findChildren<report_widget *>();
+    auto list =
+        page_game->mapview_wdg->findChildren<freeciv::report_widget *>();
     for (auto report : list) {
       QApplication::postEvent(report, new QEvent(QEvent::FontChange));
     }
