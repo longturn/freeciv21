@@ -45,10 +45,11 @@ notify_dialog::notify_dialog(const QString &caption, const QString &headline,
       QStringLiteral("gui_qt_font_notify_label")));
   layout->addWidget(m_contents, 0, 0);
 
-  auto cw = new close_widget(this);
-  layout->addWidget(cw, 0, 1, Qt::AlignTop | Qt::AlignRight);
-
   adjustSize();
+
+  auto cw = new close_widget(this);
+  cw->setFixedSize(12, 12);
+  cw->put_to_corner();
 
   auto x = width();
   auto y = height();
