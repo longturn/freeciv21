@@ -777,7 +777,7 @@ color: #ffecba;
   background-color: rgba(0, 0, 0);
 }
 
-notify_dialog {
+freeciv--report_widget {
   color: #ffecba;
   border: 1px solid #ffecba;
   background-color: rgba(0, 0, 0);

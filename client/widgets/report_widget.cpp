@@ -22,7 +22,7 @@
 namespace freeciv {
 
 /**
- *\class report_widget
+ * \class report_widget
  * Widget used to display the demographics, top 5 cities, and travelers'
  * reports.
  */
