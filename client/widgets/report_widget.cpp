@@ -19,6 +19,8 @@
 #include <QGridLayout>
 #include <QMouseEvent>
 
+namespace freeciv {
+
 /**
  *\class report_widget
  * Widget used to display the demographics, top 5 cities, and travelers'
@@ -106,3 +108,5 @@ bool report_widget::event(QEvent *event)
  * Called when the close button is pressed
  */
 void report_widget::update_menu() { deleteLater(); }
+
+} // namespace freeciv
