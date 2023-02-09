@@ -40,7 +40,6 @@ client/views/view_map.cpp
 client/menu.cpp
 client/messageoptions.cpp
 client/messagewin.cpp
-client/notifyreport.cpp
 client/optiondlg.cpp
 client/options.cpp
 client/packhand.cpp
@@ -67,6 +66,7 @@ client/unitreport.cpp
 client/unitselect.cpp
 client/voteinfo_bar.cpp
 client/widgets/decorations.cpp
+client/widgets/report_widget.cpp
 common/actions.cpp
 common/actions.h
 common/ai.cpp

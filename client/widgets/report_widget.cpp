@@ -8,7 +8,7 @@
  see https://www.gnu.org/licenses/.
  */
 
-#include "notifyreport.h"
+#include "widgets/report_widget.h"
 
 // client
 #include "dialogs_g.h"
