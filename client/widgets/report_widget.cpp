@@ -106,14 +106,3 @@ bool report_widget::event(QEvent *event)
  * Called when the close button is pressed
  */
 void report_widget::update_menu() { deleteLater(); }
-
-/**
- * Updates the font used by all report widgets on the map view.
- */
-void report_widget::update_fonts()
-{
-  auto list = queen()->mapview_wdg->findChildren<report_widget *>();
-  for (auto nd : list) {
-    QApplication::postEvent(nd, new QEvent(QEvent::FontChange));
-  }
-}

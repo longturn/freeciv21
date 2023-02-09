@@ -37,6 +37,7 @@
 #include "page_pregame.h"
 #include "qtg_cxxside.h"
 #include "unitselect.h"
+#include "views/view_map.h"
 #include "widgets/report_widget.h"
 
 void real_science_report_dialog_update(void *);
@@ -257,10 +258,14 @@ static void apply_help_font(struct option *poption)
  */
 static void apply_notify_font(struct option *poption)
 {
-  if (king()) {
+  if (auto page_game = queen(); page_game) {
     gui_update_font(QStringLiteral("notify_label"),
                     option_font_get(poption));
-    report_widget::update_fonts();
+
+    auto list = page_game->mapview_wdg->findChildren<report_widget *>();
+    for (auto report : list) {
+      QApplication::postEvent(report, new QEvent(QEvent::FontChange));
+    }
   }
   if (king() && get_current_client_page() == PAGE_GAME) {
     gui_update_font(QStringLiteral("city_label"), option_font_get(poption));
