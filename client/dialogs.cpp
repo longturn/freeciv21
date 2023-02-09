@@ -48,13 +48,13 @@
 #include "helpdlg.h"
 #include "hudwidget.h"
 #include "icons.h"
-#include "notifyreport.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
 #include "tileset/sprite.h"
 #include "unithudselector.h"
 #include "unitselect.h"
 #include "views/view_map.h"
+#include "widgets/report_widget.h"
 
 // Locations for non action enabler controlled buttons.
 #define BUTTON_MOVE ACTION_COUNT

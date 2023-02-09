@@ -79,7 +79,6 @@ target_sources(
   minimap.cpp
   minimap_panel.cpp
   music.cpp
-  notifyreport.cpp
   options.cpp
   optiondlg.cpp
   overview_common.cpp
@@ -140,6 +139,7 @@ target_sources(
   widgets/decorations.cpp
   widgets/city/city_icon_widget.cpp
   widgets/city/upkeep_widget.cpp
+  widgets/report_widget.cpp
 
   # Generated
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_client_gen.cpp
