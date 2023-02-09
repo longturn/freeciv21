@@ -31,8 +31,6 @@ public:
 
   void update_menu() override;
 
-  static void update_fonts();
-
 protected:
   void mousePressEvent(QMouseEvent *event) override;
   void mouseMoveEvent(QMouseEvent *event) override;
