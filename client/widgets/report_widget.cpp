@@ -108,9 +108,9 @@ bool report_widget::event(QEvent *event)
 void report_widget::update_menu() { deleteLater(); }
 
 /**
-   Restarts all notify dialogs
+ * Updates the font used by all report widgets on the map view.
  */
-void restart_notify_reports()
+void report_widget::update_fonts()
 {
   auto list = queen()->mapview_wdg->findChildren<report_widget *>();
   for (auto nd : list) {

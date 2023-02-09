@@ -15,8 +15,6 @@
 
 class QLabel;
 
-void restart_notify_reports();
-
 class report_widget : public fcwidget {
   Q_OBJECT
 
@@ -32,6 +30,8 @@ public:
   QString headline() const { return m_headline; }
 
   void update_menu() override;
+
+  static void update_fonts();
 
 protected:
   void mousePressEvent(QMouseEvent *event) override;
