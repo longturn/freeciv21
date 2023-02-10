@@ -31,14 +31,8 @@ units_view::units_view() : QWidget()
 {
   ui.setupUi(this);
 
-  const QPixmap *spr;
-  QImage img;
-  QRect crop;
-  QImage cropped_img;
-  QPixmap pix;
-  QStringList slist;
-
   // Configure the units table
+  QStringList slist;
   slist << _("Unit Type") << _("★ Upgradable") << _("⚒ In Progress")
         << _("⚔ Active") << _("Shield Upkeep") << _("Food Upkeep")
         << _("Gold Upkeep") << QLatin1String("");
@@ -63,16 +57,17 @@ units_view::units_view() : QWidget()
   ui.uwt_label->setText("Units Waiting:");
 
   // Add shield icon for shield upkeep column
-  spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "upkeep.shield",
-                                    "citybar.shields", "", "", false);
-  img = spr->toImage();
-  crop = zealous_crop_rect(img);
-  cropped_img = img.copy(crop);
-  pix = QPixmap::fromImage(cropped_img);
+  const QPixmap *spr =
+      tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "upkeep.shield",
+                                  "citybar.shields", "", "", false);
+  QImage img = spr->toImage();
+  QRect crop = zealous_crop_rect(img);
+  QImage cropped_img = img.copy(crop);
+  QPixmap pix = QPixmap::fromImage(cropped_img);
   ui.units_widget->horizontalHeaderItem(4)->setIcon(pix);
 
   // Add food icon for food upkeep column
-  spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "citybar.food",
+  spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "upkeep.food",
                                     "citybar.food", "", "", false);
   img = spr->toImage();
   crop = zealous_crop_rect(img);
@@ -81,9 +76,7 @@ units_view::units_view() : QWidget()
   ui.units_widget->horizontalHeaderItem(5)->setIcon(pix);
 
   // Add gold icon for gold upkeep column
-  // FIXME: We don't have a sprite for a gold coin on its own. This looks
-  // better than using get_tax_sprite(tileset, O_GOLD)
-  spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "citybar.trade",
+  spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "upkeep.gold",
                                     "citybar.trade", "", "", false);
   img = spr->toImage();
   crop = zealous_crop_rect(img);
