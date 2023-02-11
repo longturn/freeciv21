@@ -58,7 +58,7 @@ main Longturn GitHub repository page and click on the projects tab.
 
 As part of the review process, simply tag the PR to the project and add a ``back-port`` label to aid tracking.
 Once the PR has been merged into ``master``, go get the commit ID(s) and add those to the appropriate column
-in the project. Multiple Commit IDs should be separated by a space instead of a comma.
+in the project. Multiple Commit IDs should be separated by a space.
 
 Maintaining Tracked Back-Port Commit Candidates
 ===============================================
@@ -72,4 +72,4 @@ Follow these steps:
 #. Copy and paste the values of the Commit ID column to a plain text file, such as :file:`commits.txt`
 #. Run ``git cherry-pick -x $(cat commits.txt)``
 #. Push ``stable`` to upstream: ``git push upstream``
-#. Update the project sheet to denote which commits where back-ported.
+#. Update the project sheet to denote which commits were back-ported.
