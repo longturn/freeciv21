@@ -146,7 +146,6 @@ void get_economy_report_units_data(struct unit_entry *entries,
   unit_type_iterate_end;
 }
 
-
 /**
    Sell all improvements of the given type in all cities.  If
  "redundant_only" is specified then only those improvements that are replaced
