@@ -39,6 +39,8 @@
 #include "tileset/sprite.h"
 #include "top_bar.h"
 #include "views/view_map.h"
+#include "views/view_economics.h"
+#include "views/view_nations.h"
 #include "views/view_research.h"
 #include "views/view_units.h"
 
@@ -447,7 +449,11 @@ void top_bar::addWidget(QWidget *fsw)
  */
 void top_bar_show_map()
 {
+  popdown_units_view();
   popdown_city_dialog();
+  popdown_players_report();
+  popdown_economy_report();
+  popdown_science_report();
   queen()->game_tab_widget->setCurrentIndex(0);
 }
 
