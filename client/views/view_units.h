@@ -14,13 +14,59 @@
 
 // client
 #include "climisc.h"
-#include "repodlgs_g.h"
 
 struct unit_type;
 
-/****************************************************************************
-  Tab widget to display units view (F2)
-****************************************************************************/
+/*
+ * Structure of data for the Units View.
+ * See get_units_view_data()
+ */
+struct unit_view_entry {
+  struct unit_type *type;
+  int count, in_prod, total_cost, food_cost, gold_cost, shield_cost;
+  bool upg;
+};
+
+/*
+ * Structure of unit waiting data for the Units View.
+ * See get_units_waiting_data()
+ */
+struct unit_waiting_entry {
+  struct unit_type *type;
+  QString timer, city_name;
+};
+
+/*
+ * Function to pull data on units for the base units widget
+ */
+std::vector<unit_view_entry>
+get_units_view_data(struct unit_view_entry *entries, int *num_entries_used);
+
+/*
+ * Function to pull data on units subject to unitwaittime
+ */
+std::vector<unit_waiting_entry>
+get_units_waiting_data(struct unit_waiting_entry *entries,
+                       int *num_entries_used);
+
+/*
+ * Function used by update_queue
+ */
+void units_view_dialog_update(void *unused);
+
+/*
+ * Full destructor function
+ */
+void popdown_units_view();
+
+/*
+ * Helper function to crop a sprite
+ */
+QPixmap crop_sprite(const QPixmap *sprite);
+
+/*
+ * Table widget to display units view (F2)
+ */
 class units_view : public QWidget {
   Q_OBJECT
 
@@ -45,6 +91,3 @@ private slots:
   void upgrade_units();
   void selection_changed(const QItemSelection &sl, const QItemSelection &ds);
 };
-
-void units_view_dialog_update(void *unused);
-void popdown_units_view();

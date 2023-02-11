@@ -28,6 +28,10 @@
 #include "text.h"
 #include "unittype.h"
 
+/****************************
+ * units_view class functions
+ * **************************/
+
 /**
  * Constructor for units view
  */
@@ -37,13 +41,14 @@ units_view::units_view() : QWidget()
 
   // Configure the units table
   QStringList slist;
-  slist << _("Unit Type") << _("★ Upgradable") << _("⚒ In Progress")
-        << _("⚔ Active") << _("Shield Upkeep") << _("Food Upkeep")
+  slist << _("Unit Type") << _("★  Upgradable") << _("⚒  In Progress")
+        << _("⚔  Active") << _("Shield Upkeep") << _("Food Upkeep")
         << _("Gold Upkeep") << QLatin1String("");
   ui.units_label->setText(QString(_("Units:")));
   ui.units_widget->setColumnCount(slist.count());
   ui.units_widget->setHorizontalHeaderLabels(slist);
   ui.units_widget->setSortingEnabled(false);
+  ui.units_widget->setAlternatingRowColors(true);
   ui.upg_but->setText(_("Upgrade"));
   ui.upg_but->setDisabled(true);
   ui.find_but->setText(_("Find Nearest"));
@@ -53,40 +58,29 @@ units_view::units_view() : QWidget()
 
   // Configure the unitwaittime table
   slist.clear();
-  slist << _("Type") << _("Location") << _("Mp") << _("Time left")
+  slist << _("Unit Type") << _("Near Location") << _("Time left")
         << QLatin1String("");
   ui.uwt_widget->setColumnCount(slist.count());
   ui.uwt_widget->setHorizontalHeaderLabels(slist);
   ui.uwt_widget->setSortingEnabled(false);
+  ui.uwt_widget->setAlternatingRowColors(true);
   ui.uwt_label->setText("Units Waiting:");
 
   // Add shield icon for shield upkeep column
   const QPixmap *spr =
       tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "upkeep.shield",
                                   "citybar.shields", "", "", false);
-  QImage img = spr->toImage();
-  QRect crop = zealous_crop_rect(img);
-  QImage cropped_img = img.copy(crop);
-  QPixmap pix = QPixmap::fromImage(cropped_img);
-  ui.units_widget->horizontalHeaderItem(4)->setIcon(pix);
+  ui.units_widget->horizontalHeaderItem(4)->setIcon(crop_sprite(spr));
 
   // Add food icon for food upkeep column
   spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "upkeep.food",
                                     "citybar.food", "", "", false);
-  img = spr->toImage();
-  crop = zealous_crop_rect(img);
-  cropped_img = img.copy(crop);
-  pix = QPixmap::fromImage(cropped_img);
-  ui.units_widget->horizontalHeaderItem(5)->setIcon(pix);
+  ui.units_widget->horizontalHeaderItem(5)->setIcon(crop_sprite(spr));
 
   // Add gold icon for gold upkeep column
   spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "upkeep.gold",
                                     "citybar.trade", "", "", false);
-  img = spr->toImage();
-  crop = zealous_crop_rect(img);
-  cropped_img = img.copy(crop);
-  pix = QPixmap::fromImage(cropped_img);
-  ui.units_widget->horizontalHeaderItem(6)->setIcon(pix);
+  ui.units_widget->horizontalHeaderItem(6)->setIcon(crop_sprite(spr));
 
   connect(ui.upg_but, &QAbstractButton::pressed, this,
           &units_view::upgrade_units);
@@ -117,27 +111,29 @@ void units_view::init() { queen()->game_tab_widget->setCurrentIndex(index); }
  */
 void units_view::update_view()
 {
-  struct unit_view_entry unit_entries[U_LAST];
-  int entries_used, i, j, h, total_gold, total_shield, total_food,
-      total_count, in_progress, upg_count;
-  QTableWidgetItem *item;
-  QTableWidgetItem *item_totals;
+
   QFont f = QApplication::font();
   QFontMetrics fm(f);
-  h = fm.height() + 10;
+  int h = fm.height() + 10;
 
   ui.units_widget->setRowCount(0);
   ui.units_widget->clearContents();
 
-  total_count = 0;
-  in_progress = 0;
-  total_gold = 0;
-  total_shield = 0;
-  total_food = 0;
-  max_row = 0;
-  upg_count = 0;
+  int entries_used = 0; // Position in the units array
+  struct unit_view_entry unit_entries[U_LAST];
 
   get_units_view_data(unit_entries, &entries_used);
+
+  // Variables for the nested loops
+  int total_count = 0;  // Sum of unit type
+  int upg_count = 0;    // Sum of upgradable
+  int in_progress = 0;  // Sum of in progress by unit type
+  int total_gold = 0;   // Sum of gold upkeep
+  int total_shield = 0; // Sum of shield upkeep
+  int total_food = 0;   // Sum of food upkeep
+  int max_row = 0;      // Max rows in the table widget
+  int i, j;
+
   for (i = 0; i < entries_used; i++) {
     struct unit_view_entry *pentry = unit_entries + i;
     struct unit_type *putype = pentry->type;
@@ -148,7 +144,7 @@ void units_view::update_view()
 
     ui.units_widget->insertRow(max_row);
     for (j = 0; j < 7; j++) {
-      item = new QTableWidgetItem;
+      QTableWidgetItem *item = new QTableWidgetItem;
       switch (j) {
       case 0:
         // Unit type image sprite and name
@@ -219,7 +215,7 @@ void units_view::update_view()
   ui.units_widget->setRowCount(max_row);
   ui.units_widget->insertRow(max_row);
   for (j = 0; j < 7; j++) {
-    item_totals = new QTableWidgetItem;
+    QTableWidgetItem *item_totals = new QTableWidgetItem;
     switch (j) {
     case 0:
       // Unit type
@@ -258,6 +254,8 @@ void units_view::update_view()
 
   ui.units_widget->resizeRowsToContents();
   ui.units_widget->resizeColumnsToContents();
+  ui.units_widget->verticalHeader()->setSectionResizeMode(
+      QHeaderView::ResizeToContents);
 
   update_waiting();
 }
@@ -267,57 +265,67 @@ void units_view::update_view()
  */
 void units_view::update_waiting()
 {
-  int units_count = 0;
 
+  QTableWidgetItem *item;
+  QFont f = QApplication::font();
+  QFontMetrics fm(f);
+  int h = fm.height() + 10;
+
+  ui.uwt_widget->setRowCount(0);
   ui.uwt_widget->clearContents();
 
-  if (!client_has_player()) {
-    return;
-  }
+  struct unit_waiting_entry unit_entries[U_LAST];
+  int entries_used = 0;
 
-  unit_list_iterate(client_player()->units, punit)
-  {
-    if (!can_unit_move_now(punit) && punit->ssa_controller == SSA_NONE) {
-      QTableWidgetItem *item =
-          new QTableWidgetItem(utype_name_translation(punit->utype));
-      item->setData(Qt::UserRole,
-                    QVariant::fromValue(static_cast<void *>(punit)));
-      ui.uwt_widget->setItem(units_count, 0, item);
+  get_units_waiting_data(unit_entries, &entries_used);
 
-      int pcity_near_dist;
-      struct city *pcity_near = get_nearest_city(punit, &pcity_near_dist);
-      ui.uwt_widget->setItem(
-          units_count, 1,
-          new QTableWidgetItem(
-              get_nearest_city_text(pcity_near, pcity_near_dist),
-              pcity_near_dist));
+  max_row = 0;
+  int i, j;
+  for (i = 0; i < entries_used; i++) {
+    struct unit_waiting_entry *pentry = unit_entries + i;
+    struct unit_type *putype = pentry->type;
+    cid id;
 
-      ui.uwt_widget->setItem(
-          units_count, 2,
-          new QTableWidgetItem(move_points_text(punit->moves_left, false),
-                               punit->moves_left));
+    auto sprite = get_unittype_sprite(tileset, putype, direction8_invalid());
+    id = cid_encode_unit(putype);
 
-      time_t dt = time(nullptr) - punit->action_timestamp;
-      if (dt < 0 && !can_unit_move_now(punit)) {
-        char buf[64];
-        format_time_duration(-dt, buf, sizeof(buf));
-        ui.uwt_widget->setItem(units_count, 3,
-                               new QTableWidgetItem(buf, dt));
+    ui.uwt_widget->insertRow(max_row);
+    for (j = 0; j < 3; j++) {
+      item = new QTableWidgetItem;
+      switch (j) {
+      case 0:
+        // Unit type image sprite and name
+        if (sprite != nullptr) {
+          item->setData(Qt::DecorationRole, sprite->scaledToHeight(h));
+        }
+        item->setData(Qt::UserRole, id);
+        item->setTextAlignment(Qt::AlignLeft);
+        item->setText(utype_name_translation(putype));
+        break;
+      case 1:
+        // # Location
+        item->setText(QString(_("%1")).arg(pentry->city_name));
+        break;
+      case 2:
+        // # Time Left
+        item->setText(QString(_("%1")).arg(pentry->timer));
+        break;
       }
-
-      ++units_count;
+      item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
+      ui.uwt_widget->setItem(max_row, j, item);
     }
+    max_row++;
   }
-  unit_list_iterate_end;
 
-  ui.uwt_widget->setRowCount(units_count);
-  ui.uwt_widget->horizontalHeader()->resizeSections(
-      QHeaderView::ResizeToContents);
-
-  // Hide the label and widget if there is no units affected by wait time
-  if (units_count == 0) {
+  if (max_row == 0) {
     ui.uwt_label->setHidden(true);
     ui.uwt_widget->setHidden(true);
+  } else {
+    ui.uwt_widget->setRowCount(max_row);
+    ui.uwt_widget->horizontalHeader()->resizeSections(
+        QHeaderView::ResizeToContents);
+    ui.uwt_widget->verticalHeader()->setSectionResizeMode(
+        QHeaderView::ResizeToContents);
   }
 }
 
@@ -341,6 +349,7 @@ void units_view::selection_changed(const QItemSelection &sl,
   }
 
   curr_row = sl.indexes().at(0).row();
+  max_row = ui.units_widget->rowCount() - 1;
   if (curr_row >= 0 && curr_row <= max_row) {
     itm = ui.units_widget->item(curr_row, 0);
     qvar = itm->data(Qt::UserRole);
@@ -354,6 +363,9 @@ void units_view::selection_changed(const QItemSelection &sl,
     upg = ui.units_widget->item(curr_row, 1)->text();
     if (upg != "-") {
       ui.upg_but->setDisabled(false);
+    }
+    if (curr_row == max_row) {
+      ui.upg_but->setDisabled(true);
     }
   }
 }
@@ -432,33 +444,6 @@ static struct unit *find_nearest_unit(const struct unit_type *utype,
 }
 
 /**
- * Find nearest selected unit, closes units view when button is clicked.
- */
-void units_view::find_nearest()
-{
-  struct universal selected;
-  struct tile *ptile;
-  struct unit *punit;
-  const struct unit_type *utype;
-
-  selected = cid_decode(uid);
-  utype = selected.value.utype;
-
-  ptile = get_center_tile_mapcanvas();
-  if ((punit = find_nearest_unit(utype, ptile))) {
-    queen()->mapview_wdg->center_on_tile(punit->tile);
-
-    if (ACTIVITY_IDLE == punit->activity
-        || ACTIVITY_SENTRY == punit->activity) {
-      if (can_unit_do_activity(punit, ACTIVITY_IDLE)) {
-        unit_focus_set_and_select(punit);
-      }
-    }
-  }
-  popdown_units_view();
-}
-
-/**
  * Upgrade selected units.
  */
 void units_view::upgrade_units()
@@ -499,6 +484,191 @@ void units_view::upgrade_units()
           [=]() { dsend_packet_unit_type_upgrade(&client.conn, type); });
   ask->show();
 }
+
+/****************************************
+ * Helper functions related to units view
+ ****************************************/
+
+/*
+ * Helper function to crop a sprite in the units widget
+ */
+QPixmap crop_sprite(const QPixmap *sprite)
+{
+  QImage img = sprite->toImage();
+  QRect crop = zealous_crop_rect(img);
+  QImage cropped_img = img.copy(crop);
+  QPixmap pix = QPixmap::fromImage(cropped_img);
+
+  return pix;
+}
+
+/**
+ * Find nearest selected unit, closes units view when button is clicked.
+ */
+void units_view::find_nearest()
+{
+  struct universal selected;
+  struct tile *ptile;
+  struct unit *punit;
+  const struct unit_type *utype;
+
+  selected = cid_decode(uid);
+  utype = selected.value.utype;
+
+  ptile = get_center_tile_mapcanvas();
+  if ((punit = find_nearest_unit(utype, ptile))) {
+    queen()->mapview_wdg->center_on_tile(punit->tile);
+
+    if (ACTIVITY_IDLE == punit->activity
+        || ACTIVITY_SENTRY == punit->activity) {
+      if (can_unit_do_activity(punit, ACTIVITY_IDLE)) {
+        unit_focus_set_and_select(punit);
+      }
+    }
+  }
+  popdown_units_view();
+}
+
+/**
+ * Returns an array of units data.
+ */
+std::vector<unit_view_entry>
+get_units_view_data(struct unit_view_entry *entries, int *num_entries_used)
+{
+  *num_entries_used = 0;
+
+  if (nullptr == client.conn.playing) {
+    return {};
+  }
+
+  unit_type_iterate(unittype)
+  {
+    int count = 0;           // Count of active unit type
+    int in_progress = 0;     // Count of being produced
+    int gold_cost = 0;       // Gold upkeep
+    int food_cost = 0;       // Food upkeep
+    int shield_cost = 0;     // Shield upkeep
+    bool upgradable = false; // Unit type is upgradable
+
+    unit_list_iterate(client.conn.playing->units, punit)
+    {
+      if (unit_type_get(punit) == unittype) {
+        count++;
+        upgradable =
+            client_has_player()
+            && nullptr != can_upgrade_unittype(client_player(), unittype);
+
+        // Only units with a home city have upkeep
+        if (punit->homecity != 0) {
+          gold_cost += punit->upkeep[O_GOLD];
+          food_cost += punit->upkeep[O_FOOD];
+          shield_cost += punit->upkeep[O_SHIELD];
+        }
+      }
+    }
+    unit_list_iterate_end;
+
+    city_list_iterate(client.conn.playing->cities, pcity)
+    {
+      if (pcity->production.value.utype == unittype
+          && pcity->production.kind == VUT_UTYPE) {
+        in_progress++;
+      }
+    }
+    city_list_iterate_end;
+
+    // Skip unused unit types
+    if (count == 0 && in_progress == 0) {
+      continue;
+    }
+
+    entries[*num_entries_used].type = unittype;
+    entries[*num_entries_used].count = count;
+    entries[*num_entries_used].in_prod = in_progress;
+    entries[*num_entries_used].upg = upgradable;
+    entries[*num_entries_used].gold_cost = gold_cost;
+    entries[*num_entries_used].food_cost = food_cost;
+    entries[*num_entries_used].shield_cost = shield_cost;
+    (*num_entries_used)++;
+  }
+  unit_type_iterate_end;
+
+  std::sort(entries, entries + *num_entries_used,
+            [](const auto &lhs, const auto &rhs) {
+              return QString::localeAwareCompare(
+                         utype_name_translation(lhs.type),
+                         utype_name_translation(rhs.type))
+                     < 0;
+            });
+
+  return {};
+}
+
+/**
+ * Returns an array of units subject to unitwaittime.
+ */
+std::vector<unit_waiting_entry>
+get_units_waiting_data(struct unit_waiting_entry *entries,
+                       int *num_entries_used)
+{
+  *num_entries_used = 0;
+
+  if (nullptr == client.conn.playing) {
+    return {};
+  }
+
+  unit_type_iterate(unittype)
+  {
+    int count = 0; // Count of active unit type
+    int pcity_near_dist = 0;
+    QString city_name;
+    time_t dt = 0;
+    char buf[64];
+
+    unit_list_iterate(client.conn.playing->units, punit)
+    {
+      struct city *pcity_near = get_nearest_city(punit, &pcity_near_dist);
+
+      if (unit_type_get(punit) == unittype && !can_unit_move_now(punit)
+          && punit->ssa_controller == SSA_NONE) {
+        count++;
+        city_name = get_nearest_city_text(pcity_near, pcity_near_dist);
+        dt = time(nullptr) - punit->action_timestamp;
+
+        if (dt != 0 && !can_unit_move_now(punit)) {
+          format_time_duration(-dt, buf, sizeof(buf));
+        }
+      }
+    }
+    unit_list_iterate_end;
+
+    // Skip unused unit types
+    if (count == 0) {
+      continue;
+    }
+
+    entries[*num_entries_used].type = unittype;
+    entries[*num_entries_used].city_name = city_name;
+    entries[*num_entries_used].timer = buf;
+
+    (*num_entries_used)++;
+  }
+  unit_type_iterate_end;
+
+  std::sort(entries, entries + *num_entries_used,
+            [](const auto &lhs, const auto &rhs) {
+              return QString::localeAwareCompare(
+                         utype_name_translation(lhs.type),
+                         utype_name_translation(rhs.type))
+                     < 0;
+            });
+
+  return {};
+}
+
+/************************************
+ * Functions for connecting to the UI
+ ************************************/
 
 /**
  * Update the units view.
@@ -542,6 +712,7 @@ void units_view_dialog_popup()
       return;
     }
     uv = reinterpret_cast<units_view *>(w);
+    uv->init();
     uv->update_view();
     queen()->game_tab_widget->setCurrentWidget(uv);
   }
