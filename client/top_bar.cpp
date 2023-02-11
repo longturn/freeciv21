@@ -27,10 +27,12 @@
 #include "government.h"
 #include "nation.h"
 #include "research.h"
+
 // client
 #include "client_main.h"
 #include "climisc.h"
 #include "ratesdlg_g.h"
+
 // gui-qt
 #include "fc_client.h"
 #include "fonts.h"
