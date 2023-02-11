@@ -65,6 +65,12 @@ void popdown_units_view();
 QPixmap crop_sprite(const QPixmap *sprite);
 
 /*
+ * Function to help us find the nearest unit
+ */
+struct unit *find_nearest_unit(const struct unit_type *utype,
+                               struct tile *ptile);
+
+/*
  * Table widget to display units view (F2)
  */
 class units_view : public QWidget {

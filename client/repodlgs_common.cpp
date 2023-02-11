@@ -20,10 +20,8 @@
 #include "game.h"
 #include "government.h"
 
-/* client/include */
-#include "citydlg_common.h"
-
 // client
+#include "citydlg_common.h"
 #include "client_main.h"
 #include "control.h"
 #include "repodlgs_common.h"
