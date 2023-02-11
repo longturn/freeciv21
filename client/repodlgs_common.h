@@ -30,15 +30,6 @@ struct unit_entry {
   int count, cost, total_cost;
 };
 
-/*
- * Structure of data for the Units View. See get_units_view_data()
- */
-struct unit_view_entry {
-  struct unit_type *type;
-  int count, in_prod, total_cost, food_cost, gold_cost, shield_cost;
-  bool upg;
-};
-
 void get_economy_report_data(struct improvement_entry *entries,
                              int *num_entries_used, int *total_cost,
                              int *total_income);
@@ -50,9 +41,6 @@ void get_economy_report_data(struct improvement_entry *entries,
  * client simultaneously and I simply can't */
 void get_economy_report_units_data(struct unit_entry *entries,
                                    int *num_entries_used, int *total_cost);
-
-std::vector<unit_view_entry>
-get_units_view_data(struct unit_view_entry *entries, int *num_entries_used);
 
 void sell_all_improvements(const struct impr_type *pimprove,
                            bool redundant_only, char *message,
