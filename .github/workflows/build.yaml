@@ -235,7 +235,7 @@ jobs:
         env:
           BRANCH: ${{github.ref_name}}
         id: split
-        run: echo "::set-output name=fragment::${BRANCH##*/}"
+        run: echo "fragment=${BRANCH##*/}" >> $GITHUB_OUTPUT
       - name: Create App Bundle
         run: |
           mkdir -p Freeciv21.app/Contents/MacOS Freeciv21.app/Contents/Resources
