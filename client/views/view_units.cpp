@@ -1,11 +1,12 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-or-later
- * SPDX-FileCopyrightText: 1996-2022 Freeciv contributors
+ * SPDX-FileCopyrightText: Freeciv21 and Freeciv contributors
  * SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
  */
 
 /*
- * \file This file contains functions to generate the table based GUI for
+ * \class units_view
+ * This file contains functions to generate the table based GUI for
  * the units view (F2).
  */
 
@@ -452,7 +453,6 @@ void units_view::upgrade_units()
 
   upgrade = can_upgrade_unittype(client_player(), utype);
   price = unit_upgrade_price(client_player(), utype, upgrade);
-  qCritical() << upgrade << price;
   b = QString::asprintf(PL_("Treasury contains %d gold.",
                             "Treasury contains %d gold.",
                             client_player()->economic.gold),
