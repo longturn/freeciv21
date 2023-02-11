@@ -111,7 +111,6 @@ void units_view::init() { queen()->game_tab_widget->setCurrentIndex(index); }
  */
 void units_view::update_view()
 {
-
   QFont f = QApplication::font();
   QFontMetrics fm(f);
   int h = fm.height() + 10;
@@ -265,7 +264,6 @@ void units_view::update_view()
  */
 void units_view::update_waiting()
 {
-
   QTableWidgetItem *item;
   QFont f = QApplication::font();
   QFontMetrics fm(f);
