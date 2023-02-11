@@ -1,5 +1,9 @@
 # don't export these files
-data/graphics/** export-ignore
+data/graphics/**    export-ignore
+.coverity/**        export-ignore
+.github/**          export-ignore
+.gitlab-ci.yaml     export-ignore
+.readthedocs.yaml   export-ignore
 
 # text files
 *                text=auto
