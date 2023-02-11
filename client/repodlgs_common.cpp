@@ -19,7 +19,6 @@
 // common
 #include "game.h"
 #include "government.h"
-#include "unitlist.h"
 
 /* client/include */
 #include "citydlg_common.h"
@@ -27,7 +26,6 @@
 // client
 #include "client_main.h"
 #include "control.h"
-#include "options.h"
 #include "repodlgs_common.h"
 
 /**
@@ -150,76 +148,6 @@ void get_economy_report_units_data(struct unit_entry *entries,
   unit_type_iterate_end;
 }
 
-/**
- * Returns an array of units data.
- */
-std::vector<unit_view_entry>
-get_units_view_data(struct unit_view_entry *entries, int *num_entries_used)
-{
-  *num_entries_used = 0;
-
-  if (nullptr == client.conn.playing) {
-    return {};
-  }
-
-  unit_type_iterate(unittype)
-  {
-    int count = 0;           // Count of active unit type
-    int in_progress = 0;     // Count of being produced
-    int gold_cost = 0;       // Gold upkeep
-    int food_cost = 0;       // Food upkeep
-    int shield_cost = 0;     // Shield upkeep
-    bool upgradable = false; // Unit type is upgradable
-
-    unit_list_iterate(client.conn.playing->units, punit)
-    {
-      if (unit_type_get(punit) == unittype) {
-        count++;
-        gold_cost += punit->upkeep[O_GOLD];
-        food_cost += punit->upkeep[O_FOOD];
-        shield_cost += punit->upkeep[O_SHIELD];
-        upgradable =
-            client_has_player()
-            && nullptr != can_upgrade_unittype(client_player(), unittype);
-      }
-    }
-    unit_list_iterate_end;
-
-    city_list_iterate(client.conn.playing->cities, pcity)
-    {
-      if (pcity->production.value.utype == unittype
-          && pcity->production.kind == VUT_UTYPE) {
-        in_progress++;
-      }
-    }
-    city_list_iterate_end;
-
-    // Skip unused unit types
-    if (count == 0 && in_progress == 0) {
-      continue;
-    }
-
-    entries[*num_entries_used].type = unittype;
-    entries[*num_entries_used].count = count;
-    entries[*num_entries_used].in_prod = in_progress;
-    entries[*num_entries_used].upg = upgradable;
-    entries[*num_entries_used].gold_cost = gold_cost;
-    entries[*num_entries_used].food_cost = food_cost;
-    entries[*num_entries_used].shield_cost = shield_cost;
-    (*num_entries_used)++;
-  }
-  unit_type_iterate_end;
-
-  std::sort(entries, entries + *num_entries_used,
-            [](const auto &lhs, const auto &rhs) {
-              return QString::localeAwareCompare(
-                         utype_name_translation(lhs.type),
-                         utype_name_translation(rhs.type))
-                     < 0;
-            });
-
-  return {};
-}
 
 /**
    Sell all improvements of the given type in all cities.  If
