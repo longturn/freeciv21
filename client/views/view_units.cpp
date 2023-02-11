@@ -406,39 +406,31 @@ void units_view::disband_units()
   ask->show();
 }
 
-/*
- * Function to help us find the nearest unit
+/**
+ * Find nearest selected unit, closes units view when button is clicked.
  */
-static struct unit *find_nearest_unit(const struct unit_type *utype,
-                                      struct tile *ptile)
+void units_view::find_nearest()
 {
-  struct unit *best_candidate = NULL;
-  int best_dist = FC_INFINITY, dist;
+  struct universal selected;
+  struct tile *ptile;
+  struct unit *punit;
+  const struct unit_type *utype;
 
-  players_iterate(pplayer)
-  {
-    if (client_has_player() && pplayer != client_player()) {
-      continue;
-    }
+  selected = cid_decode(uid);
+  utype = selected.value.utype;
 
-    unit_list_iterate(pplayer->units, punit)
-    {
-      if (utype == unit_type_get(punit)
-          && FOCUS_AVAIL == punit->client.focus_status
-          && 0 < punit->moves_left && !punit->done_moving
-          && punit->ssa_controller == SSA_NONE) {
-        dist = sq_map_distance(unit_tile(punit), ptile);
-        if (dist < best_dist) {
-          best_candidate = punit;
-          best_dist = dist;
-        }
+  ptile = get_center_tile_mapcanvas();
+  if ((punit = find_nearest_unit(utype, ptile))) {
+    queen()->mapview_wdg->center_on_tile(punit->tile);
+
+    if (ACTIVITY_IDLE == punit->activity
+        || ACTIVITY_SENTRY == punit->activity) {
+      if (can_unit_do_activity(punit, ACTIVITY_IDLE)) {
+        unit_focus_set_and_select(punit);
       }
     }
-    unit_list_iterate_end;
   }
-  players_iterate_end;
-
-  return best_candidate;
+  popdown_units_view();
 }
 
 /**
@@ -500,31 +492,39 @@ QPixmap crop_sprite(const QPixmap *sprite)
   return pix;
 }
 
-/**
- * Find nearest selected unit, closes units view when button is clicked.
+/*
+ * Function to help us find the nearest unit
  */
-void units_view::find_nearest()
+struct unit *find_nearest_unit(const struct unit_type *utype,
+                               struct tile *ptile)
 {
-  struct universal selected;
-  struct tile *ptile;
-  struct unit *punit;
-  const struct unit_type *utype;
+  struct unit *best_candidate = NULL;
+  int best_dist = FC_INFINITY, dist;
 
-  selected = cid_decode(uid);
-  utype = selected.value.utype;
+  players_iterate(pplayer)
+  {
+    if (client_has_player() && pplayer != client_player()) {
+      continue;
+    }
 
-  ptile = get_center_tile_mapcanvas();
-  if ((punit = find_nearest_unit(utype, ptile))) {
-    queen()->mapview_wdg->center_on_tile(punit->tile);
-
-    if (ACTIVITY_IDLE == punit->activity
-        || ACTIVITY_SENTRY == punit->activity) {
-      if (can_unit_do_activity(punit, ACTIVITY_IDLE)) {
-        unit_focus_set_and_select(punit);
+    unit_list_iterate(pplayer->units, punit)
+    {
+      if (utype == unit_type_get(punit)
+          && FOCUS_AVAIL == punit->client.focus_status
+          && 0 < punit->moves_left && !punit->done_moving
+          && punit->ssa_controller == SSA_NONE) {
+        dist = sq_map_distance(unit_tile(punit), ptile);
+        if (dist < best_dist) {
+          best_candidate = punit;
+          best_dist = dist;
+        }
       }
     }
+    unit_list_iterate_end;
   }
-  popdown_units_view();
+  players_iterate_end;
+
+  return best_candidate;
 }
 
 /**
