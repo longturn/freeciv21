@@ -1066,7 +1066,7 @@ Achievements
 Help Menu
 ^^^^^^^^^
 
-The :guilabel:`Help` menu gives you access to the in-game help. It has the following options:
+The :guilabel:`Help` menu gives you access to the in-game help. It has the following chapters:
 
   * Overview
   * Strategy and Tactics
@@ -1162,9 +1162,8 @@ you are also given details about the unit.
 Units View
 ^^^^^^^^^^
 
-The :guilabel:`Units View` is a widget on the `Map View`_ that shows what units you have available and how
-many are being produced. The `Cities View`_ can tell you which cities are producing what unit. :numref:`Units
-View Button` shows the button to bring up the widget. Clicking the button a second time will close the widget.
+The :guilabel:`Units View` is a separate page in a table format. When you click the button for it as shown in
+:numref:`Units View Button`, the client will switch to a listing of your units.
 
 .. _Units View Button:
 .. figure:: /_static/images/gui-elements/top-bar-units.png
@@ -1175,29 +1174,38 @@ View Button` shows the button to bring up the widget. Clicking the button a seco
   Units View Button
 
 
-The :guilabel:`Units View` has two modes. For regular games without the ``unitwaittime`` server setting set,
-you get something similar to :numref:`Units View`. If you are playing a game with ``unitwaittime`` set, then
-you will see a table below the widget, such as :numref:`Units View UWT`, that displays the amount of time
-until the unit can move.
+The :guilabel:`Units View` has two tables. For regular games without the ``unitwaittime`` server setting set,
+you get something similar to :numref:`Units View` below. If you are playing a game with ``unitwaittime`` set,
+then you will see a second table below the table shown in :numref:`Units View`, such as
+:numref:`Units View UWT`, that displays the amount of time until the unit can move.
 
 .. _Units View:
-.. figure:: /_static/images/gui-elements/units-report.png
+.. figure:: /_static/images/gui-elements/units-view.png
   :align: center
-  :scale: 50%
-  :alt: Freeciv21 Units Report
+  :scale: 75%
+  :alt: Freeciv21 Units View
   :figclass: align-center
 
   Units View
 
 
 .. _Units View UWT:
-.. figure:: /_static/images/gui-elements/units-report-uwt.png
+.. figure:: /_static/images/gui-elements/units-view-uwt.png
   :align: center
-  :scale: 65%
-  :alt: Freeciv21 Units Report w/ unitwaittime
+  :scale: 100%
+  :alt: Freeciv21 Units View w/ unitwaittime
   :figclass: align-center
 
   Units View with ``unitwaittime``
+
+
+The :guilabel:`Find Nearest` button can be used to help you find a specific unit type. Select the row for the
+unit type you wish to find on the `Map View`_ and then click the button. The :guilabel:`Units View` page will
+close and the closest unit of that type will be selected and centered on the map. To quickly disband every
+one of a specific unit type, select the row for the unit type and then click :guilabel:`Disband All`. This
+feature is similar to the same button in the `Economics View`_. Lastly, if you have sufficient funds in your
+national treasury, you can upgrade all units of a type that are inside your cities by selecting the row for
+the unit type you wish to upgrade and click the :guilabel:`Upgrade` button.
 
 
 .. _Nations and Diplomacy View:
