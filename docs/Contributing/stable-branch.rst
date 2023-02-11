@@ -1,5 +1,5 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
-.. SPDX-FileCopyrightText: 2023 James Robertson <jwrober@gmail.com>
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 Maintaining the Stable Branch
 *****************************
@@ -40,8 +40,8 @@ Tagging Commits for Back-Port
 
 When a community member authors and publishes a :doc:`Pull Request (PR) <pull-request>`, they can add text to
 the primary comment that the PR is a back-port candidate. If the whole PR is not a candidate, but a specific
-commit within the PR is, then this distinction should be highlighted as part of the comment. The Commit ID is
-the definitive reference point to reduce ambiguity.
+commit within the PR is, then this distinction should be highlighted as part of the comment. The full Commit
+ID is the definitive reference point to reduce ambiguity.
 
 As is customary, all PRs should target the ``master`` branch.
 
@@ -50,18 +50,20 @@ Who Approves a Back-Port Request?
 
 As is our standard, every Pull Request (PR) must have a peer review approval before a merge. The person
 assigned this task has the authority to approve or deny the back-port request. This authority comes with a
-catch; the peer reviewer must add the commit(s) to a back-port tracker sheet that the admins will use to
-keep track of patches that need to be back-ported.
+catch; the peer reviewer must add the commit(s) to a back-port project that the admins will use to keep track
+of patches that need to be back-ported.
 
-The tracker sheet is here: https://docs.google.com/spreadsheets/d/1W7YIv-SN1ZOKQdYfESzltx1nsaEc_qogH-GLEarCxEY/edit?usp=sharing
+The back-port project is here: https://github.com/orgs/longturn/projects/3. You can find it by going to the
+main Longturn GitHub repository page and click on the projects tab.
 
-Editing access is restricted. Ask an admin on the ``#releases-project`` channel on the ``LT.DEV`` section of
-our Discord server. The columns of the tracker sheet are simple enough to follow.
+As part of the review process, simply tag the PR to the project and add a ``back-port`` label to aid tracking.
+Once the PR has been merged into ``master``, go get the commit ID(s) and add those to the appropriate column
+in the project. Multiple Commit IDs should be separated by a space instead of a comma.
 
 Maintaining Tracked Back-Port Commit Candidates
 ===============================================
 
-On a periodic basis, for example every two or three weeks, an administrator will open the sheet and use the
+On a periodic basis, for example every two or three weeks, an administrator will open the project and use the
 information to build a commit cherry-pick file for ``git`` to use.
 
 Follow these steps:
@@ -70,4 +72,4 @@ Follow these steps:
 #. Copy and paste the values of the Commit ID column to a plain text file, such as :file:`commits.txt`
 #. Run ``git cherry-pick -x $(cat commits.txt)``
 #. Push ``stable`` to upstream: ``git push upstream``
-#. Update the tracker sheet to denote which commits where back-ported.
+#. Update the project sheet to denote which commits where back-ported.
