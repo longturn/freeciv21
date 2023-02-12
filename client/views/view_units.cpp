@@ -51,15 +51,22 @@ units_view::units_view() : QWidget()
   ui.units_widget->setSortingEnabled(false);
   ui.units_widget->setAlternatingRowColors(true);
   ui.upg_but->setText(_("Upgrade"));
+  ui.upg_but->setToolTip(_("Upgrade selected unit."));
+  ui.upg_but->setToolTipDuration(5000);
   ui.upg_but->setDisabled(true);
   ui.find_but->setText(_("Find Nearest"));
+  ui.find_but->setToolTip(_("Center the map on the nearest unit in relation "
+                            "to where the map is now."));
+  ui.find_but->setToolTipDuration(10000);
   ui.find_but->setDisabled(true);
   ui.disband_but->setText(_("Disband All"));
+  ui.disband_but->setToolTip(_("Disband all of the selected unit."));
+  ui.disband_but->setToolTipDuration(5000);
   ui.disband_but->setDisabled(true);
 
   // Configure the unitwaittime table
   slist.clear();
-  slist << _("Unit Type") << _("Near Location") << _("Time left")
+  slist << _("Unit Type") << _("Location") << _("Time left")
         << QLatin1String("");
   ui.uwt_widget->setColumnCount(slist.count());
   ui.uwt_widget->setHorizontalHeaderLabels(slist);
@@ -152,8 +159,8 @@ void units_view::update_view()
           item->setData(Qt::DecorationRole, sprite->scaledToHeight(h));
         }
         item->setData(Qt::UserRole, id);
-        item->setTextAlignment(Qt::AlignLeft);
         item->setText(utype_name_translation(putype));
+        item->setTextAlignment(Qt::AlignLeft | Qt::TextAlignmentRole);
         break;
       case 1:
         // # Upgradable
@@ -252,10 +259,20 @@ void units_view::update_view()
     ui.units_widget->setItem(max_row, j, item_totals);
   }
 
-  ui.units_widget->resizeRowsToContents();
-  ui.units_widget->resizeColumnsToContents();
-  ui.units_widget->verticalHeader()->setSectionResizeMode(
-      QHeaderView::ResizeToContents);
+  if (max_row == 0) {
+    ui.units_label->setHidden(true);
+    ui.units_widget->setHidden(true);
+    ui.find_but->setHidden(true);
+    ui.upg_but->setHidden(true);
+    ui.disband_but->setHidden(true);
+  } else {
+    ui.units_widget->resizeRowsToContents();
+    ui.units_widget->resizeColumnsToContents();
+    ui.units_widget->horizontalHeader()->resizeSections(
+        QHeaderView::ResizeToContents);
+    ui.units_widget->verticalHeader()->setSectionResizeMode(
+        QHeaderView::ResizeToContents);
+  }
 
   update_waiting();
 }
@@ -535,7 +552,7 @@ get_units_view_data(struct unit_view_entry *entries, int *num_entries_used)
 {
   *num_entries_used = 0;
 
-  if (nullptr == client.conn.playing) {
+  if (!client_has_player()) {
     return {};
   }
 
@@ -548,7 +565,7 @@ get_units_view_data(struct unit_view_entry *entries, int *num_entries_used)
     int shield_cost = 0;     // Shield upkeep
     bool upgradable = false; // Unit type is upgradable
 
-    unit_list_iterate(client.conn.playing->units, punit)
+    unit_list_iterate(client_player()->units, punit)
     {
       if (unit_type_get(punit) == unittype) {
         count++;
@@ -566,7 +583,7 @@ get_units_view_data(struct unit_view_entry *entries, int *num_entries_used)
     }
     unit_list_iterate_end;
 
-    city_list_iterate(client.conn.playing->cities, pcity)
+    city_list_iterate(client_player()->cities, pcity)
     {
       if (pcity->production.value.utype == unittype
           && pcity->production.kind == VUT_UTYPE) {
