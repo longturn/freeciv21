@@ -34,6 +34,7 @@ jobs:
           body: >
             Automatic changes triggered by a new release.
 
+            This PR updates `${{ steps.branch.outputs.branch }}`.
             Close and reopen this pull request to start the CI.
           delete-branch: true
   update-archive:
