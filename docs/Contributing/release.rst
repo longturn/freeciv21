@@ -11,6 +11,10 @@ use the term "loosely" as there is a large amount of discretion with regard to t
 a release at any time to fix a nasty bug or slow a release down to get in a PR a developer is really close
 to completing and wants it in the next release. However, we do aim to release around 6 to 8 times per year.
 
+Pre-releases are done from the ``master`` branch, while release candidates and stable releases use the
+``stable`` branch, which contains bug fixes backported from master. See
+:doc:`the dedicated page <stable-branch>` for how this is done.
+
 These are the general steps to prepare and finalize a release:
 
 #. A release manager will open a draft release notes page from: https://github.com/longturn/freeciv21/releases.
