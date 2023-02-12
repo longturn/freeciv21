@@ -1,5 +1,6 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+.. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
 Maintaining the Stable Branch
 *****************************
@@ -14,6 +15,8 @@ occasions where we are introducing major breaking changes that take time to reso
 ``stable`` branch. As development occurs on the ``master`` branch, there are going to be times when we want to
 back-port a commit (a single patch) or a Pull Request (a collection of commits) over to the ``stable`` branch.
 
+The ``stable`` branch is created when preparing for the first Release Candidate towards a stable release, see
+:doc:`release`.
 This page documents the rules and procedures for maintaining the ``stable`` branch.
 
 Requirements for a Back-Port

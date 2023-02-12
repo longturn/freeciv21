@@ -1,6 +1,6 @@
-..
-    SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+.. SPDX-License-Identifier: GPL-3.0-or-later
+.. SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+.. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>s
 
 The Release Process
 *******************
@@ -26,6 +26,19 @@ These are the general steps to prepare and finalize a release:
    need to delay in any way or if we are good to proceed as normal.
 #. When it is time, the release manager will finalize the release notes and ask for an editorial review in the
    ``#releases-project`` channel. Updates are made as per review.
+#. If the release will be the :strong:`first release candidate` towards a stable release, the release manager
+   will:
+
+   #. Delete the existing ``stable`` branch on Github's
+      `branches page <https://github.com/longturn/freeciv21/branches>`_.
+   #. From the same page, create a new ``stable`` branch from ``master``.
+   #. Update ``cmake/AutoRevision.txt`` with the hash of the last commit in ``master`` and
+      ``v[major version].[minor version]-dev`` with the version of the :strong:`next stable release`, then
+      open a PR for this change to ``master``. This way, development builds from ``master`` will immediately
+      use the version number of the next stable.
+
+#. If the release is a :strong:`release candidate` or a :strong:`stable release`, the release manager will
+   make sure that the :guilabel:`Target` branch in the release draft is set to ``stable``.
 #. The release manager will add a tag to the release notes page and then click :guilabel:`Publish Release`.
    The format of the tag is ``v[major version].[minor version]-[pre-release name].[number]``. For example:
    ``v3.0-beta.6``. :strong:`The format is very important` to the build configuration process.
