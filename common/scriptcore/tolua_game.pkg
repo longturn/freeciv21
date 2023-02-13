@@ -60,6 +60,7 @@ struct Tile {
   Player *owner;
 
   const int index @ id;
+  const int continent @ continent;
 };
 
 struct Government {
