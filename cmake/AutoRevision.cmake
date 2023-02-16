@@ -70,9 +70,21 @@ endif()
 
 # Manipulate the tag so we can turn it into a list for use later
 string(STRIP "${FC21_REV_TAG}" FC21_REV_TAG)
-string(REPLACE "v" "" FC21_REV_TAG "${FC21_REV_TAG}")
+
+# Expected scheme:
+#  v3.0-dev
+#  v3.0-alpha.1
+#  v3.0-beta.1
+#  v3.0-rc.1
+#  v3.0
+#  v3.0.1
+if (NOT "${FC21_REV_TAG}"
+    MATCHES "^v[0-9]+\.[0-9]+(\.[0-9]+)?(-((((alpha)|(beta)|(rc))\.[0-9]+)|(dev)))?$")
+  message(SEND_ERROR "The version tag '${FC21_REV_TAG}' does not follow the expected format.")
+endif()
+
+string(SUBSTRING "${FC21_REV_TAG}" 1 -1 FC21_REV_TAG) # Remove initial v
 string(STRIP "${FC21_REV_TAG}" FC21_REV_TAG2)
-string(REPLACE "v" "" FC21_REV_TAG2 "${FC21_REV_TAG2}")
 string(REPLACE "." " " FC21_REV_TAG2 "${FC21_REV_TAG2}")
 string(REPLACE "-" " " FC21_REV_TAG2 "${FC21_REV_TAG2}")
 set(FC21_REV_TAG_LIST ${FC21_REV_TAG2})
