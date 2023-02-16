@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: GPLv3-or-later
+# SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+# SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
+
 # This file runs a collection of git commands to help automate the process
 # of generating the build revision. It takes an update to 3 files by hand
 # to do it manually and automates it.
@@ -31,27 +35,9 @@ if (ok)
 endif()
 
 if (ok)
-  # Get a temp value of the full commit hash of the latest tag that is active
-  execute_process(
-    COMMAND ${GIT_EXECUTABLE} --git-dir=${CMAKE_SOURCE_DIR}/.git rev-list --tags --max-count=1
-    OUTPUT_VARIABLE hash
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-    RESULT_VARIABLE STATUS
-    ERROR_QUIET)
-
-  if (STATUS EQUAL 0)
-    message(STATUS "Last tag commit hash: ${hash}")
-  else()
-    # Can't use git
-    message(STATUS "Could not find a git tag")
-    set(ok false)
-  endif()
-endif()
-
-if (ok)
   # Use the temp value to get the latest revision tag
   execute_process(
-    COMMAND ${GIT_EXECUTABLE} --git-dir=${CMAKE_SOURCE_DIR}/.git describe --tags ${hash}
+    COMMAND ${GIT_EXECUTABLE} --git-dir=${CMAKE_SOURCE_DIR}/.git describe --tags --abbrev=0
     OUTPUT_VARIABLE FC21_REV_TAG
     OUTPUT_STRIP_TRAILING_WHITESPACE
     RESULT_VARIABLE STATUS
