@@ -1,20 +1,22 @@
 ..
-    SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022 Louis Moureaux <m_louis30@yahoo.com>
+.. SPDX-License-Identifier: GPL-3.0-or-later
+.. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 Coding Guidelines
 *****************
 
-This page contains a set of guidelines regarding the preferred coding style for new code. Old code had
+This page contains a set of guidelines regarding the preferred coding style for new code. Old code follows
 different standards and should not be modified for the sole purpose of making it follow the guidelines.
 
-In a nutshell, new Freeciv21 code is written in modern C++ (the standard version evolves depending on what
-the targeted compilers support). The coding style strives to achieve a balance between old code originally
-written in C and the new possibilities brought by C++, so that new and old code do not look too different.
+In a nutshell, new or refactored Freeciv21 code is written in modern C++ (the standard version evolves
+depending on what the targeted compilers support). This coding style strives to achieve a balance between old
+code originally written in C and the new possibilities brought by C++, so that new and old code do not look
+too different. At this time we are targetting C++17.
 
 The rules listed on this page are guidelines. They represent the preferred way of writing code for Freeciv21,
-but good code that does not follow the guidelines will not be rejected (though you can expect suggestions for
-changes).
+but good code that does not follow the guidelines will not be rejected directly. However, you should expect
+suggestions for changes.
 
 
 General
@@ -30,18 +32,21 @@ manually. The downside is that the tool is really picky and will sometimes want 
 code. Even the maintainers are sometimes surprised! You will find more information about ``clang-format``
 and detailed instructions in :doc:`/Contributing/pull-request`.
 
-Formatting the code as dictated by ``clang-format`` is mandatory.
+Formatting the code as dictated by ``clang-format`` is :strong:`mandatory`.
 
 
-Copyright Notices
------------------
+Copyright Notice
+----------------
 
 New code follows the `SPDX standard <https://spdx.dev/ids/>`_:
 
 .. code-block:: cpp
 
-    // SPDX-License-Identifier: GPL-3.0-or-later
-    // SPDX-FileCopyrightText: 2022 Author Name <how-to-contact@example.com>
+    /**
+     * SPDX-License-Identifier: GPL-3.0-or-later
+     * SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+     * SPDX-FileCopyrightText: Author Name <how-to-contact@example.com>
+     */
 
 You do not need to add your name to the file, but we recommend that you do so. Even if the same information
 is stored in the Git history, it may be lost if someone ends up moving the file.
@@ -75,9 +80,11 @@ by source directory, then Qt headers, and finally headers from the Standard Libr
     // client
     #include "layer.h"
 
+    // Qt
     #include <QString>
     #include <QWidget>
 
+    // std
     #include <map>
 
 This order forces Freeciv21 headers to include the Qt and Standard Library headers they need, facilitating
@@ -127,6 +134,32 @@ Single-line comments can be used for very simple methods whose implementation is
 definition, as well as for less complex constructs such as enumerations and variables. The use of Doxygen
 `markup commands <https://doxygen.nl/manual/commands.html>`_ to provide more detailed descriptions is
 welcome, but in no way mandatory.
+
+Two highly recommended Doxygen markup commands to include are ``\file`` and ``\class``. When writing code,
+especially a new ``cpp`` file, including a comment with the ``\file`` markup near the top, but below the
+`Copyright Notice`_ gives the reader a better understanding of what the file's purpose is. If the ``cpp`` file
+contains functions related to a class, then using the ``\class`` markup aids the reader in understanding what
+the class is doing.
+
+
+Variable Declaration
+--------------------
+
+Older Freeciv21 code will often have a block of variables defined all at once at the top of a function. The
+problem with this style is it makes it very easy to create variables that never get used or initialized.
+
+When encountering this older style or writing new code, it is best to define the variable and give it an
+initial value right before it is used.
+
+.. code-block:: cpp
+
+    ... some code
+    ... some code
+
+    int i;
+    for (i = 0; i < max_item; i++) {
+      ... do something in the loop
+    }
 
 
 Naming Convention
@@ -260,6 +293,9 @@ Containers in the Standard Library should be preferred over Qt ones:
 
 One notable exception is ``QStringList``, which should be preferred over other constructs because it
 integrates better with Qt.
+
+The main point here is to avoid using function parameters to return values.
+
 
 Use ``<algorithm>``
 -------------------
