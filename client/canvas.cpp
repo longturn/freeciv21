@@ -18,20 +18,22 @@
 \       |_|_|       /
  \_____       _____/
        \     /                                                      *****/
+
 #include "canvas.h"
+
 // Qt
 #include <QFontMetrics>
 #include <QPainter>
 #include <QPainterPath>
 
-// qt-client
+// client
 #include "colors_common.h"
 #include "fc_client.h"
 #include "fonts.h"
 #include "tileset/sprite.h"
 
 /**
-   Copies an area from the source pixmap to the destination pixmap.
+ * Copies an area from the source pixmap to the destination pixmap.
  */
 void pixmap_copy(QPixmap *dest, const QPixmap *src, int src_x, int src_y,
                  int dest_x, int dest_y, int width, int height)
@@ -50,7 +52,7 @@ void pixmap_copy(QPixmap *dest, const QPixmap *src, int src_x, int src_y,
 }
 
 /**
-   Returns given font
+ * Returns given font
  */
 QFont get_font(client_font font)
 {
@@ -74,7 +76,7 @@ QFont get_font(client_font font)
 }
 
 /**
-   Return rectangle containing pure image (crops transparency)
+ * Return rectangle containing pure image (crops transparency)
  */
 QRect zealous_crop_rect(QImage &p)
 {
@@ -105,4 +107,17 @@ QRect zealous_crop_rect(QImage &p)
     }
   }
   return QRect(l, t, qMax(0, r - l + 1), qMax(0, b - t + 1));
+}
+
+/**
+ * Helper function to crop a sprite
+ */
+QPixmap crop_sprite(const QPixmap *sprite)
+{
+  QImage img = sprite->toImage();
+  QRect crop = zealous_crop_rect(img);
+  QImage cropped_img = img.copy(crop);
+  QPixmap pix = QPixmap::fromImage(cropped_img);
+
+  return pix;
 }

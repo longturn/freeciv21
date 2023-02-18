@@ -4,10 +4,8 @@
  * SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
  */
 
-/*
+/**
  * \class units_view
- * This file contains functions to generate the table based GUI for
- * the units view (F2).
  */
 
 // client
@@ -32,7 +30,7 @@
 
 /****************************
  * units_view class functions
- * **************************/
+ ****************************/
 
 /**
  * Constructor for units view
@@ -53,16 +51,13 @@ units_view::units_view() : QWidget()
   ui.units_widget->setAlternatingRowColors(true);
   ui.upg_but->setText(_("Upgrade"));
   ui.upg_but->setToolTip(_("Upgrade selected unit."));
-  ui.upg_but->setToolTipDuration(5000);
   ui.upg_but->setDisabled(true);
   ui.find_but->setText(_("Find Nearest"));
   ui.find_but->setToolTip(_("Center the map on the nearest unit in relation "
                             "to where the map is now."));
-  ui.find_but->setToolTipDuration(10000);
   ui.find_but->setDisabled(true);
   ui.disband_but->setText(_("Disband All"));
   ui.disband_but->setToolTip(_("Disband all of the selected unit."));
-  ui.disband_but->setToolTipDuration(5000);
   ui.disband_but->setDisabled(true);
 
   // Configure the unitwaittime table
@@ -140,9 +135,8 @@ void units_view::update_view()
   int total_shield = 0; // Sum of shield upkeep
   int total_food = 0;   // Sum of food upkeep
   int max_row = 0;      // Max rows in the table widget
-  int i, j;
 
-  for (i = 0; i < entries_used; i++) {
+  for (int i = 0; i < entries_used; i++) {
     struct unit_view_entry *pentry = unit_entries + i;
     struct unit_type *putype = pentry->type;
     cid id;
@@ -151,7 +145,7 @@ void units_view::update_view()
     id = cid_encode_unit(putype);
 
     ui.units_widget->insertRow(max_row);
-    for (j = 0; j < 7; j++) {
+    for (int j = 0; j < 7; j++) {
       QTableWidgetItem *item = new QTableWidgetItem;
       switch (j) {
       case 0:
@@ -222,7 +216,7 @@ void units_view::update_view()
   // Add a "footer" to the table showing the totals.
   ui.units_widget->setRowCount(max_row);
   ui.units_widget->insertRow(max_row);
-  for (j = 0; j < 7; j++) {
+  for (int j = 0; j < 7; j++) {
     QTableWidgetItem *item_totals = new QTableWidgetItem;
     switch (j) {
     case 0:
@@ -287,7 +281,6 @@ void units_view::update_view()
  */
 void units_view::update_waiting()
 {
-  QTableWidgetItem *item;
   QFont f = QApplication::font();
   QFontMetrics fm(f);
   int h = fm.height() + 10;
@@ -296,23 +289,21 @@ void units_view::update_waiting()
   ui.uwt_widget->clearContents();
 
   struct unit_waiting_entry unit_entries[U_LAST];
-  int entries_used = 0;
 
+  int entries_used = 0;
   get_units_waiting_data(unit_entries, &entries_used);
 
   max_row = 0;
-  int i, j;
-  for (i = 0; i < entries_used; i++) {
+  for (int i = 0; i < entries_used; i++) {
     struct unit_waiting_entry *pentry = unit_entries + i;
     struct unit_type *putype = pentry->type;
-    cid id;
 
     auto sprite = get_unittype_sprite(tileset, putype, direction8_invalid());
-    id = cid_encode_unit(putype);
+    cid id = cid_encode_unit(putype);
 
     ui.uwt_widget->insertRow(max_row);
-    for (j = 0; j < 3; j++) {
-      item = new QTableWidgetItem;
+    for (int j = 0; j < 3; j++) {
+      auto item = new QTableWidgetItem;
       switch (j) {
       case 0:
         // Unit type image sprite and name
@@ -431,7 +422,7 @@ void units_view::disband_units()
 }
 
 /**
- * Find nearest selected unit, closes units view when button is clicked.
+ * Find nearest selected unit, closest units view when button is clicked.
  */
 void units_view::find_nearest()
 {
@@ -462,32 +453,27 @@ void units_view::find_nearest()
  */
 void units_view::upgrade_units()
 {
-  QString b, c;
-  hud_message_box *ask = new hud_message_box(king()->central_wdg);
-  struct universal selected;
-  int price;
-  const struct unit_type *upgrade;
-  const struct unit_type *utype;
-
-  selected = cid_decode(uid);
-  utype = selected.value.utype;
-
+  struct universal selected = cid_decode(uid);
+  const struct unit_type *utype = selected.value.utype;
   Unit_type_id type = utype_number(utype);
+  const struct unit_type *upgrade =
+      can_upgrade_unittype(client_player(), utype);
+  int price = unit_upgrade_price(client_player(), utype, upgrade);
 
-  upgrade = can_upgrade_unittype(client_player(), utype);
-  price = unit_upgrade_price(client_player(), utype, upgrade);
-  b = QString::asprintf(PL_("Treasury contains %d gold.",
-                            "Treasury contains %d gold.",
-                            client_player()->economic.gold),
-                        client_player()->economic.gold);
-  c = QString::asprintf(PL_("Upgrade as many %s to %s as possible "
-                            "for %d gold each?\n%s",
-                            "Upgrade as many %s to %s as possible "
-                            "for %d gold each?\n%s",
-                            price),
-                        utype_name_translation(utype),
-                        utype_name_translation(upgrade), price,
-                        b.toUtf8().data());
+  QString b = QString::asprintf(PL_("Treasury contains %d gold.",
+                                    "Treasury contains %d gold.",
+                                    client_player()->economic.gold),
+                                client_player()->economic.gold);
+  QString c = QString::asprintf(PL_("Upgrade as many %s to %s as possible "
+                                    "for %d gold each?\n%s",
+                                    "Upgrade as many %s to %s as possible "
+                                    "for %d gold each?\n%s",
+                                    price),
+                                utype_name_translation(utype),
+                                utype_name_translation(upgrade), price,
+                                b.toUtf8().data());
+
+  hud_message_box *ask = new hud_message_box(king()->central_wdg);
   ask->set_text_title(c, _("Upgrade Obsolete Units?"));
   ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
   ask->setDefaultButton(QMessageBox::Cancel);
@@ -502,20 +488,7 @@ void units_view::upgrade_units()
  * Helper functions related to units view
  ****************************************/
 
-/*
- * Helper function to crop a sprite in the units widget
- */
-QPixmap crop_sprite(const QPixmap *sprite)
-{
-  QImage img = sprite->toImage();
-  QRect crop = zealous_crop_rect(img);
-  QImage cropped_img = img.copy(crop);
-  QPixmap pix = QPixmap::fromImage(cropped_img);
-
-  return pix;
-}
-
-/*
+/**
  * Function to help us find the nearest unit
  */
 struct unit *find_nearest_unit(const struct unit_type *utype,
@@ -553,13 +526,13 @@ struct unit *find_nearest_unit(const struct unit_type *utype,
 /**
  * Returns an array of units data.
  */
-std::vector<unit_view_entry>
-get_units_view_data(struct unit_view_entry *entries, int *num_entries_used)
+void get_units_view_data(struct unit_view_entry *entries,
+                         int *num_entries_used)
 {
   *num_entries_used = 0;
 
   if (!client_has_player()) {
-    return {};
+    return;
   }
 
   unit_type_iterate(unittype)
@@ -621,21 +594,18 @@ get_units_view_data(struct unit_view_entry *entries, int *num_entries_used)
                          utype_name_translation(rhs.type))
                      < 0;
             });
-
-  return {};
 }
 
 /**
  * Returns an array of units subject to unitwaittime.
  */
-std::vector<unit_waiting_entry>
-get_units_waiting_data(struct unit_waiting_entry *entries,
-                       int *num_entries_used)
+void get_units_waiting_data(struct unit_waiting_entry *entries,
+                            int *num_entries_used)
 {
   *num_entries_used = 0;
 
   if (nullptr == client.conn.playing) {
-    return {};
+    return;
   }
 
   unit_type_iterate(unittype)
@@ -678,8 +648,6 @@ get_units_waiting_data(struct unit_waiting_entry *entries,
                          utype_name_translation(rhs.type))
                      < 0;
             });
-
-  return {};
 }
 
 /************************************
