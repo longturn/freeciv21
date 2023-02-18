@@ -42,7 +42,7 @@ New code follows the `SPDX standard <https://spdx.dev/ids/>`_:
 
 .. code-block:: cpp
 
-    /**
+    /*
      * SPDX-License-Identifier: GPL-3.0-or-later
      * SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
      * SPDX-FileCopyrightText: Author Name <how-to-contact@example.com>
@@ -156,8 +156,7 @@ initial value right before it is used.
     ... some code
     ... some code
 
-    int i;
-    for (i = 0; i < max_item; i++) {
+    for (int i = 0; i < max_item; i++) {
       ... do something in the loop
     }
 
@@ -294,7 +293,9 @@ Containers in the Standard Library should be preferred over Qt ones:
 One notable exception is ``QStringList``, which should be preferred over other constructs because it
 integrates better with Qt.
 
-The main point here is to avoid using function parameters to return values.
+This can have consequences on function signatures. For instance, a common C idiom is to pass an output array
+and a size as function parameter, whereas this is achieved in C++ by returning a ``std::vector`` (or, if
+performance is critical, passing a reference to a vector that the function fills).
 
 
 Use ``<algorithm>``
