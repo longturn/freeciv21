@@ -128,8 +128,6 @@ void turn_done_button::paintEvent(QPaintEvent *event)
   }
 }
 
-namespace {
-
 /**
  * Formats a duration without switching to "until hh::mm" when more than one
  * hour in the future.
@@ -193,7 +191,6 @@ QString format_duration(int duration)
   // TRANS: Used to indicate a fuzzy duration, always more than 7 days
   return QString(PL_("%1 day", "%1 days", days_left)).arg(days_left);
 }
-} // anonymous namespace
 
 /**
  * Updates the timeout text according to the current state of the game.
