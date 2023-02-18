@@ -21,6 +21,7 @@
 #include "repodlgs_common.h"
 #include "tileset/sprite.h"
 #include "top_bar.h"
+#include "turn_done_button.h"
 #include "views/view_map.h"
 #include "views/view_map_common.h"
 
@@ -274,6 +275,10 @@ void units_view::update_view()
         QHeaderView::ResizeToContents);
   }
 
+  QTimer *timer = new QTimer(this);
+  connect(timer, &QTimer::timeout, this, &units_view::update_waiting);
+  timer->start(1000);
+
   update_waiting();
 }
 
@@ -324,7 +329,8 @@ void units_view::update_waiting()
         break;
       case 2:
         // # Time Left
-        item->setText(QString(_("%1")).arg(pentry->timer));
+        item->setText(QString(_("%1")).arg(
+            format_simple_duration(abs(pentry->timer))));
         break;
       }
       item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
@@ -636,9 +642,8 @@ get_units_waiting_data(struct unit_waiting_entry *entries,
   {
     int count = 0; // Count of active unit type
     int pcity_near_dist = 0;
-    QString city_name;
+    QString city;
     time_t dt = 0;
-    char buf[64];
 
     unit_list_iterate(client.conn.playing->units, punit)
     {
@@ -647,12 +652,8 @@ get_units_waiting_data(struct unit_waiting_entry *entries,
       if (unit_type_get(punit) == unittype && !can_unit_move_now(punit)
           && punit->ssa_controller == SSA_NONE) {
         count++;
-        city_name = get_nearest_city_text(pcity_near, pcity_near_dist);
+        city = get_nearest_city_text(pcity_near, pcity_near_dist);
         dt = time(nullptr) - punit->action_timestamp;
-
-        if (dt != 0 && !can_unit_move_now(punit)) {
-          format_time_duration(-dt, buf, sizeof(buf));
-        }
       }
     }
     unit_list_iterate_end;
@@ -663,8 +664,8 @@ get_units_waiting_data(struct unit_waiting_entry *entries,
     }
 
     entries[*num_entries_used].type = unittype;
-    entries[*num_entries_used].city_name = city_name;
-    entries[*num_entries_used].timer = buf;
+    entries[*num_entries_used].city_name = city;
+    entries[*num_entries_used].timer = dt;
 
     (*num_entries_used)++;
   }

@@ -29,3 +29,5 @@ protected:
 private:
   QString m_timeout_label;
 };
+
+QString format_simple_duration(int seconds);

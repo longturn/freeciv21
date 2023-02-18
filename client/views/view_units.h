@@ -1,4 +1,4 @@
-/*
+/**
  * SPDX-License-Identifier: GPL-3.0-or-later
  * SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
  */
@@ -33,7 +33,8 @@ struct unit_view_entry {
  */
 struct unit_waiting_entry {
   struct unit_type *type;
-  QString timer, city_name;
+  time_t timer;
+  QString city_name;
 };
 
 /*
