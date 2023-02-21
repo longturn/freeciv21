@@ -201,8 +201,8 @@ struct named_sprites {
     std::vector<QPixmap *> unhappy, output[O_LAST];
   } upkeep;
   struct {
-    QPixmap *disorder, *size[NUM_TILES_DIGITS], *size_tens[NUM_TILES_DIGITS],
-        *size_hundreds[NUM_TILES_DIGITS];
+    QPixmap *disorder, *happy, *size[NUM_TILES_DIGITS],
+        *size_tens[NUM_TILES_DIGITS], *size_hundreds[NUM_TILES_DIGITS];
     std::vector<QPixmap> tile_foodnum, tile_shieldnum, tile_tradenum;
     city_sprite tile, single_wall, wall[NUM_WALL_TYPES], occupied;
     struct sprite_vector worked_tile_overlay;
@@ -2666,6 +2666,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
 #undef SET_EDITOR_SPRITE
 
   SET_SPRITE(city.disorder, "city.disorder");
+  SET_SPRITE_OPT(city.happy, "city.happy");
 
   /* Fallbacks for goto path turn numbers:
    *   path.step_%d, path.exhausted_mp_%d
@@ -5449,6 +5450,8 @@ void fill_basic_city_sprite_array(const struct tileset *t,
   }
   if (pcity->client.unhappy) {
     ADD_SPRITE_FULL(t->sprites.city.disorder);
+  } else if (t->sprites.city.happy != nullptr && pcity->client.happy) {
+    ADD_SPRITE_FULL(t->sprites.city.happy);
   }
 }
 
