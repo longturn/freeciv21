@@ -8,9 +8,6 @@ version: 2
 sphinx:
    configuration: docs/conf.py
 
-formats:
-  - pdf
-
 # Declare the Python requirements required to build your docs
 python:
    install:
