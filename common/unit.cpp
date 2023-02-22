@@ -1102,16 +1102,14 @@ void unit_activity_astr(const struct unit *punit, QString &s)
   switch (punit->activity) {
   case ACTIVITY_IDLE:
     if (utype_fuel(unit_type_get(punit))) {
-      int rate, f;
+      int f;
 
-      rate = unit_type_get(punit)->move_rate;
       f = ((punit->fuel) - 1);
 
       /* Add in two parts as move_points_text() returns ptr to static
        * End result: "Moves: (fuel)moves_left" */
-      s += QStringLiteral("%1: (%2)\n")
-               .arg(_("Moves"),
-                    move_points_text((rate * f) + punit->moves_left, false));
+      s +=
+          QStringLiteral("%1: (%2 T)\n").arg(_("Moves"), QString::number(f));
       s += QStringLiteral("%1").arg(
           move_points_text(punit->moves_left, false));
     } else {
