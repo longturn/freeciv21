@@ -126,6 +126,11 @@ html_css_files = [
 #
 # html_sidebars = {}
 
+mathjax3_config = {
+  'loader': {'load': ['[tex]/textmacros']},
+  'tex': {'packages': {'[+]': ['textmacros']}}
+}
+
 
 # -- Options for HTMLHelp output ---------------------------------------------
 
