@@ -110,8 +110,8 @@ Here :math:`\texttt{Unhappiness\_Compensation}` is from a military unit being aw
 :math:`\texttt{Support}` is the number of Shields spent on supporting this unit per turn.
 
 .. math::
-  \texttt{Battle\_Profit} = (\texttt{Shields\_Lost}_\texttt{enemy} \times \texttt{Probability}_\texttt{win})
-                           - (\texttt{Shields\_Lost}_\texttt{us} \times \texttt{Probability}_\texttt{lose})
+  \texttt{Battle\_Profit} &= \texttt{Shields\_Lost}_\texttt{enemy} \times \texttt{Probability}_\texttt{win} \\
+                          &\qquad {} - \texttt{Shields\_Lost}_\texttt{us} \times \texttt{Probability}_\texttt{lose}
 
 That is :math:`\texttt{Battle\_Profit}` is a probabilistic average. It answers the question: "How much better
 off, on average, would we be from attacking this enemy unit?"
