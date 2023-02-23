@@ -644,7 +644,7 @@ Output_Waste_By_Distance
 Output_Waste_By_Rel_Distance
     City gets extra waste based on distance to nearest Government Center, relative
     to world size. The amount of this extra waste is
-    :math:`\frac{\texttt{distance}\,\times\,\texttt{amount}}{100\,\times\,\texttt{max_distance}}`
+    :math:`\frac{\texttt{distance}\,\times\,\texttt{amount}}{100\,\times\,\texttt{max\_distance}}`
 
 Output_Penalty_Tile
     When a tile yields more output than amount, it gets a penalty of -1.

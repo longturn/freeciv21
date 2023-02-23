@@ -19,7 +19,7 @@ This chapter is about creating a new MSYS2 build environment.
 #. Download MSYS2 from their homepage: https://www.msys2.org/#installation
 
 #. Run the downloaded file to install MSYS2 on you build system. This author recommends that you install the
-   files in a directory off of the root of your :file:`C:\\` Drive. For example: :file:`C:\\Tools\\`
+   files in a directory off of the root of your :file:`C:\\` Drive. For example: :file:`C:\\Tools`
 
 #. Launch :file:`msys2_shell` from the installation directory. Issue the following command to update the base
    set of packages.
