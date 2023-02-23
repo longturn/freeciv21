@@ -89,6 +89,7 @@ to alter is placed inside back-ticks.
   :guilabel:`Next` button on the installer wizard.
 * :literal:`:literal:` -- Literal is used when you want to note a text element in its raw form. This is
   equivalent to using two back-ticks: ````text````.
+* ``math`` and ``.. math::`` -- Used to insert mathematics, see `Formulas`_.
 * :literal:`:menuselection:` -- Menu Selection is used to give the path of menu clicks such as
   :menuselection:`Game --> Local Options`. To denote submenus, use a test arrow like this: :literal:`-->`
   between the selection items.
@@ -225,3 +226,32 @@ Figure Numbers
     The first line ``.. _Start Screen:`` is a label for the figure. The ``numfig`` feature of Sphinx will
     automatically give the figure a number in the order they are found in the page. You can then provide a
     link to the figure in your text with :literal:`:numfig:\`Label\``
+
+
+Formulas
+========
+
+The Freeciv21 documentation supports inserting mathematics. This feature should be used sparingly, ideally
+only on technical pages or in sections that less math-savvy users can skip. Contrary to ordinary math
+textbooks, it is best to avoid single-letter symbols in the documentation. Full-text names should be used
+instead, wrapping them with ``\text{}``:
+
+.. math::
+  \text{happy} \ge \text{unhappy} + 2 \times \text{angry}.
+
+There may be exceptions to this rule on primarily technical pages: quantities that exist as variables in the
+code could be typeset in monospace with ``\texttt{}``, or defining a few symbols may come handy when writing
+a long reasoning. The main guideline for formulas is to take your time to make them as readable as possible.
+
+Formulas use the ``:math:`` role or the ``.. math::`` directive. These blocks support most of the LaTeX
+mathematics syntax, for which you will find many references online. The ``:math:`` role is used for inline
+math in a paragraph. For instance, ``:math:`a+b=1``` becomes :math:`a+b=1`. The directive is used for longer
+or more important formulas that come on their own line:
+
+.. math::
+  a+b=1.
+
+This is rendered using an ``align`` environment, so alignment directives (``&``) can be used.
+
+.. warning::
+  When editing formulas, checking both the HTML and the PDF output is heavily recommended.
