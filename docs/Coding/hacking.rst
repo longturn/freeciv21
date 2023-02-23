@@ -515,16 +515,13 @@ Note that:
 
 The math then works out to:
 
-:math:`\begin{align}
-x_\texttt{map} &= \left\lceil \dfrac{y_\texttt{nat}}{2} \right\rceil + x_\texttt{nat} \\
-y_\texttt{map} &= \left\lfloor \dfrac{y_\texttt{nat}}{2} \right\rfloor - x_\texttt{nat} + x_\texttt{size} - 1
-\end{align}`
+.. math::
+  x_\texttt{map} &= \left\lceil \dfrac{y_\texttt{nat}}{2} \right\rceil + x_\texttt{nat} \\
+  y_\texttt{map} &= \left\lfloor \dfrac{y_\texttt{nat}}{2} \right\rfloor - x_\texttt{nat} + x_\texttt{size} - 1
 
-:math:`\begin{align}
-y_\texttt{nat} &= x_\texttt{map} + y_\texttt{map} - x_\texttt{size}
-\\
-x_\texttt{nat} &= \left\lfloor x_\texttt{map} - y_\texttt{map} + \dfrac{x_\texttt{size}}{2} \right\rfloor
-\end{align}`
+.. math::
+  y_\texttt{nat} &= x_\texttt{map} + y_\texttt{map} - x_\texttt{size} \\
+  x_\texttt{nat} &= \left\lfloor x_\texttt{map} - y_\texttt{map} + \dfrac{x_\texttt{size}}{2} \right\rfloor
 
 which leads to the macros :code:`NATIVE_TO_MAP_POS()`, and :code:`MAP_TO_NATIVE_POS()` that are defined in
 :file:`map.h`.

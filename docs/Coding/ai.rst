@@ -97,25 +97,23 @@ Estimation of Profit From a Military Operation
 This estimation is implemented by the :code:`kill_desire()` function, which is not perfect, the
 :code:`multi-victim` part is flawed, plus some corrections. In general:
 
-:math:`\texttt{Want} = \texttt{Operation_Profit} \times \texttt{Amortization_Factor}`
+.. math::
+  \texttt{Want} = \texttt{Operation\_Profit} \times \texttt{Amortization\_Factor}
 
-where:
+where
+:math:`\texttt{Amortization\_Factor}` is a function of the estimated time length of the operation and
+:math:`\texttt{Operation\_Profit} = \texttt{Battle\_Profit} - \texttt{Maintenance}`, where in turn
+:math:`\texttt{Maintenance} = (\texttt{Support} + \texttt{Unhappiness\_Compensation}) \times
+\texttt{Operation\_Time}`
 
-:math:`\texttt{Amortization_Factor}` is a function of the estimated time length of the operation and
-:math:`\texttt{Operation_Profit} = \texttt{Battle_Profit} - \texttt{Maintenance}`
-
-where:
-
-:math:`\texttt{Maintenance} = (\texttt{Support} + \texttt{Unhappiness_Compensation}) \times
-\texttt{Operation_Time}`
-
-Here :math:`\texttt{Unhappiness_Compensation}` is from a military unit being away from home and
+Here :math:`\texttt{Unhappiness\_Compensation}` is from a military unit being away from home and
 :math:`\texttt{Support}` is the number of Shields spent on supporting this unit per turn.
 
-:math:`\texttt{Battle_Profit} = (\texttt{Shields_Lost}_\texttt{enemy} \times \texttt{Probability}_\texttt{win})
-- (\texttt{Shields_Lost}_\texttt{us} \times \texttt{Probability}_\texttt{lose})`
+.. math::
+  \texttt{Battle\_Profit} = (\texttt{Shields\_Lost}_\texttt{enemy} \times \texttt{Probability}_\texttt{win})
+                           - (\texttt{Shields\_Lost}_\texttt{us} \times \texttt{Probability}_\texttt{lose})
 
-That is :math:`\texttt{Battle_Profit}` is a probabilistic average. It answers the question: "How much better
+That is :math:`\texttt{Battle\_Profit}` is a probabilistic average. It answers the question: "How much better
 off, on average, would we be from attacking this enemy unit?"
 
 
@@ -132,7 +130,7 @@ defender to free it up.
 
 Building a brand new attacker is more complicated. First, the :code:`ai_choose_attacker_*` functions are
 called to find the first approximation to the best attacker that can be built here. This prototype attacker
-is selected using very simple :math:`\texttt{attack_power}\times\texttt{speed}` formula. Then, already in the
+is selected using very simple :math:`\texttt{attack\_power}\times\texttt{speed}` formula. Then, already in the
 :code:`kill_something_with()` function, we search for targets for the prototype attacker using the
 :code:`find_something_to_kill()` function. Having found a target, we do the last refinement by calling the
 :code:`process_attacker_want()` function to look for the best attacker type to take out the target. This type
