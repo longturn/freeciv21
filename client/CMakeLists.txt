@@ -137,6 +137,7 @@ target_sources(
   views/view_units.cpp
   widgets/decorations.cpp
   widgets/city/city_icon_widget.cpp
+  widgets/city/governor_widget.cpp
   widgets/city/upkeep_widget.cpp
   widgets/report_widget.cpp
 

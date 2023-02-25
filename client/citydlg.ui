@@ -834,10 +834,15 @@
                </widget>
               </item>
               <item>
-               <widget class="governor_sliders" name="qsliderbox">
-                <property name="acceptDrops">
-                 <bool>false</bool>
+               <widget class="QGroupBox" name="groupBox">
+                <property name="title">
+                 <string>Settings</string>
                 </property>
+                <layout class="QVBoxLayout" name="verticalLayout_12">
+                 <item>
+                  <widget class="freeciv::governor_widget" name="governor" native="true"/>
+                 </item>
+                </layout>
                </widget>
               </item>
              </layout>
@@ -871,12 +876,6 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>governor_sliders</class>
-   <extends>QGroupBox</extends>
-   <header>citydlg.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>unit_list_widget</class>
    <extends>QListWidget</extends>
    <header>citydlg.h</header>
@@ -896,6 +895,12 @@
    <class>freeciv::city_icon_widget</class>
    <extends>QWidget</extends>
    <header>widgets/city/city_icon_widget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>freeciv::governor_widget</class>
+   <extends>QWidget</extends>
+   <header>widgets/city/governor_widget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
