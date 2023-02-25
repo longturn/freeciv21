@@ -64,7 +64,7 @@ const char *cmafec_get_short_descr_of_city(const struct city *pcity);
 /*
  * Preset handling
  */
-void cmafec_preset_add(const char *descr_name, struct cm_parameter *pparam);
+void cmafec_preset_add(const char *descr_name, const cm_parameter *pparam);
 void cmafec_preset_remove(int idx);
 int cmafec_preset_get_index_of_parameter(
     const struct cm_parameter *const parameter);

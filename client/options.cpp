@@ -3631,13 +3631,16 @@ static void load_cma_preset(struct section_file *file, int i)
         secfile_lookup_int_default(file, 0, "cma.preset%d.factor%d", i, o);
   }
   output_type_iterate_end;
-  parameter.max_growth = false;
+  parameter.max_growth =
+      secfile_lookup_bool_default(file, false, "cma.preset%d.max_growth", i);
   parameter.require_happy =
       secfile_lookup_bool_default(file, false, "cma.preset%d.reqhappy", i);
   parameter.happy_factor =
       secfile_lookup_int_default(file, 0, "cma.preset%d.happyfactor", i);
-  parameter.allow_disorder = false;
-  parameter.allow_specialists = true;
+  parameter.allow_disorder = secfile_lookup_bool_default(
+      file, false, "cma.preset%d.allow_disorder", i);
+  parameter.allow_specialists = secfile_lookup_bool_default(
+      file, true, "cma.preset%d.allow_specialists", i);
 
   cmafec_preset_add(name, &parameter);
 }
@@ -3664,6 +3667,12 @@ static void save_cma_preset(struct section_file *file, int i)
                       i);
   secfile_insert_int(file, pparam->happy_factor, "cma.preset%d.happyfactor",
                      i);
+  secfile_insert_bool(file, pparam->max_growth, "cma.preset%d.max_growth",
+                      i);
+  secfile_insert_bool(file, pparam->allow_disorder,
+                      "cma.preset%d.allow_disorder", i);
+  secfile_insert_bool(file, pparam->allow_specialists,
+                      "cma.preset%d.allow_specialists", i);
 }
 
 /**
