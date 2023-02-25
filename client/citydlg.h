@@ -46,7 +46,6 @@ class QRadioButton;
 class QRect;
 class QResizeEvent;
 class QShowEvent;
-class QSlider;
 class QSplitter;
 class QTableWidget;
 class QTableWidgetItem;
@@ -270,19 +269,6 @@ private:
       *m_pollution, *m_plague_label, *m_plague, *m_stolen, *m_airlift;
 };
 
-class governor_sliders : public QGroupBox {
-  Q_OBJECT
-
-public:
-  governor_sliders(QWidget *parent = 0);
-  void update_sliders(struct cm_parameter &param);
-  QCheckBox *cma_celeb_checkbox{nullptr};
-  QSlider *slider_tab[2 * O_LAST + 2]{nullptr};
-private slots:
-  void cma_slider(int val);
-  void cma_celebrate_changed(int val);
-};
-
 #include "ui_citydlg.h"
 /****************************************************************************
   City dialog
@@ -304,7 +290,6 @@ public:
   ~city_dialog() override;
   void setup_ui(struct city *qcity);
   void refresh();
-  void cma_check_agent();
   struct city *pcity = nullptr;
   bool dont_focus{false};
 
@@ -342,6 +327,7 @@ private slots:
   void cma_remove();
   void cma_enable();
   void cma_changed();
+  void cma_check_agent(const cm_parameter &params);
   void cma_selected(const QItemSelection &sl, const QItemSelection &ds);
   void cma_double_clicked(int row, int column);
   void cma_context_menu(const QPoint p);

@@ -58,6 +58,7 @@
 #include "utils/unit_quick_menu.h"
 #include "views/view_cities.h" // hIcon
 #include "views/view_map.h"
+#include "widgets/city/governor_widget.h"
 
 extern QString split_text(const QString &text, bool cut);
 extern QString cut_helptext(const QString &text);
@@ -742,135 +743,6 @@ void city_info::update_labels(struct city *pcity)
   m_airlift->setToolTip(get_city_dialog_airlift_text(pcity));
 }
 
-governor_sliders::governor_sliders(QWidget *parent) : QGroupBox(parent)
-{
-  QStringList str_list;
-  QSlider *slider;
-  QLabel *some_label;
-  QGridLayout *slider_grid = new QGridLayout;
-
-  str_list << _("Food") << _("Shield") << _("Trade") << _("Gold")
-           << _("Luxury") << _("Science") << _("Celebrate");
-  some_label = new QLabel(_("Minimal Surplus"));
-  some_label->setFont(fcFont::instance()->getFont(fonts::notify_label));
-  some_label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-  slider_grid->addWidget(some_label, 0, 0, 1, 3);
-  some_label = new QLabel(_("Priority"));
-  some_label->setFont(fcFont::instance()->getFont(fonts::notify_label));
-  some_label->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
-  slider_grid->addWidget(some_label, 0, 3, 1, 3);
-
-  for (int i = 0; i < str_list.count(); i++) {
-    some_label = new QLabel(str_list.at(i));
-    slider_grid->addWidget(some_label, i + 1, 0, 1, 1);
-    some_label = new QLabel(QStringLiteral("0"));
-    some_label->setMinimumWidth(25);
-
-    if (i != str_list.count() - 1) {
-      slider = new QSlider(Qt::Horizontal);
-      slider->setPageStep(1);
-      slider->setFocusPolicy(Qt::TabFocus);
-      slider_tab[2 * i] = slider;
-      slider->setRange(-20, 20);
-      slider->setSingleStep(1);
-      slider_grid->addWidget(some_label, i + 1, 1, 1, 1);
-      slider_grid->addWidget(slider, i + 1, 2, 1, 1);
-      slider->setProperty("FC", QVariant::fromValue((void *) some_label));
-
-      connect(slider, &QAbstractSlider::valueChanged, this,
-              &governor_sliders::cma_slider);
-    } else {
-      cma_celeb_checkbox = new QCheckBox;
-      slider_grid->addWidget(cma_celeb_checkbox, i + 1, 2, 1, 1);
-      connect(cma_celeb_checkbox, &QCheckBox::stateChanged, this,
-              &governor_sliders::cma_celebrate_changed);
-    }
-
-    some_label = new QLabel(QStringLiteral("0"));
-    some_label->setMinimumWidth(25);
-    slider = new QSlider(Qt::Horizontal);
-    slider->setFocusPolicy(Qt::TabFocus);
-    slider->setRange(0, 25);
-    slider_tab[2 * i + 1] = slider;
-    slider->setProperty("FC", QVariant::fromValue((void *) some_label));
-    slider_grid->addWidget(some_label, i + 1, 3, 1, 1);
-    slider_grid->addWidget(slider, i + 1, 4, 1, 1);
-    connect(slider, &QAbstractSlider::valueChanged, this,
-            &governor_sliders::cma_slider);
-  }
-  setLayout(slider_grid);
-}
-
-/**
-   CMA options on slider has been changed
- */
-void governor_sliders::cma_slider(int value)
-{
-  QVariant qvar;
-  QSlider *slider;
-  QLabel *label;
-
-  slider = qobject_cast<QSlider *>(sender());
-  qvar = slider->property("FC");
-
-  if (qvar.isNull() || !qvar.isValid()) {
-    return;
-  }
-
-  label = reinterpret_cast<QLabel *>(qvar.value<void *>());
-  label->setText(QString::number(value));
-
-  queen()->city_overlay->cma_check_agent();
-}
-
-/**
-   CMA option 'celebrate' qcheckbox state has been changed
- */
-void governor_sliders::cma_celebrate_changed(int val)
-{
-  Q_UNUSED(val)
-  queen()->city_overlay->cma_check_agent();
-}
-
-/**
-   Updates sliders ( cma params )
- */
-void governor_sliders::update_sliders(struct cm_parameter &param)
-{
-  int output;
-  QVariant qvar;
-  QLabel *label;
-
-  for (output = O_FOOD; output < 2 * O_LAST; output++) {
-    slider_tab[output]->blockSignals(true);
-  }
-
-  for (output = O_FOOD; output < O_LAST; output++) {
-    qvar = slider_tab[2 * output + 1]->property("FC");
-    label = reinterpret_cast<QLabel *>(qvar.value<void *>());
-    label->setText(QString::number(param.factor[output]));
-    slider_tab[2 * output + 1]->setValue(param.factor[output]);
-    qvar = slider_tab[2 * output]->property("FC");
-    label = reinterpret_cast<QLabel *>(qvar.value<void *>());
-    label->setText(QString::number(param.minimal_surplus[output]));
-    slider_tab[2 * output]->setValue(param.minimal_surplus[output]);
-  }
-
-  slider_tab[2 * O_LAST + 1]->blockSignals(true);
-  qvar = slider_tab[2 * O_LAST + 1]->property("FC");
-  label = reinterpret_cast<QLabel *>(qvar.value<void *>());
-  label->setText(QString::number(param.happy_factor));
-  slider_tab[2 * O_LAST + 1]->setValue(param.happy_factor);
-  slider_tab[2 * O_LAST + 1]->blockSignals(false);
-  cma_celeb_checkbox->blockSignals(true);
-  cma_celeb_checkbox->setChecked(param.require_happy);
-  cma_celeb_checkbox->blockSignals(false);
-
-  for (output = O_FOOD; output < 2 * O_LAST; output++) {
-    slider_tab[output]->blockSignals(false);
-  }
-}
-
 /**
    Constructor for city_dialog, sets layouts, policies ...
  */
@@ -951,7 +823,6 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
 
   // governor tab
   ui.qgbox->setTitle(_("Presets:"));
-  ui.qsliderbox->setTitle(_("Governor settings"));
 
   ui.cma_table->horizontalHeader()->setSectionResizeMode(
       QHeaderView::Stretch);
@@ -1000,6 +871,9 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
   ui.tabs_right->setTabText(0, _("General"));
   ui.tabs_right->setTabText(1, _("Citizens"));
   ui.tabs_right->setTabText(2, _("Governor"));
+
+  connect(ui.governor, &freeciv::governor_widget::parameters_changed, this,
+          &city_dialog::cma_check_agent);
 
   ui.present_units_list->set_oneliner(true);
 
@@ -1198,24 +1072,10 @@ void city_dialog::save_cma()
                                _("Name new preset"), _("new preset"));
   ask->setAttribute(Qt::WA_DeleteOnClose);
   connect(ask, &hud_message_box::accepted, this, [=]() {
-    struct cm_parameter param;
-    QByteArray ask_bytes = ask->input_edit.text().toLocal8Bit();
-    QString text = ask_bytes.data();
-    if (!text.isEmpty()) {
-      param.max_growth = false;
-      param.allow_disorder = false;
-      param.allow_specialists = true;
-      param.require_happy = ui.qsliderbox->cma_celeb_checkbox->isChecked();
-      param.happy_factor =
-          ui.qsliderbox->slider_tab[2 * O_LAST + 1]->value();
-
-      for (int i = O_FOOD; i < O_LAST; i++) {
-        param.minimal_surplus[i] = ui.qsliderbox->slider_tab[2 * i]->value();
-        param.factor[i] = ui.qsliderbox->slider_tab[2 * i + 1]->value();
-      }
-
-      ask_bytes = text.toLocal8Bit();
-      cmafec_preset_add(ask_bytes.data(), &param);
+    auto name = ask->input_edit.text();
+    if (!name.isEmpty()) {
+      const auto params = ui.governor->parameters();
+      cmafec_preset_add(qUtf8Printable(name), &params);
       update_cma_tab();
     }
   });
@@ -1241,19 +1101,8 @@ void city_dialog::cma_enable()
  */
 void city_dialog::cma_changed()
 {
-  struct cm_parameter param;
-
-  param.allow_disorder = false;
-  param.allow_specialists = true;
-  param.require_happy = ui.qsliderbox->cma_celeb_checkbox->isChecked();
-  param.happy_factor = ui.qsliderbox->slider_tab[2 * O_LAST + 1]->value();
-
-  for (int i = O_FOOD; i < O_LAST; i++) {
-    param.minimal_surplus[i] = ui.qsliderbox->slider_tab[2 * i]->value();
-    param.factor[i] = ui.qsliderbox->slider_tab[2 * i + 1]->value();
-  }
-
-  cma_put_city_under_agent(pcity, &param);
+  const auto params = ui.governor->parameters();
+  cma_put_city_under_agent(pcity, &params);
 }
 
 /**
@@ -1692,18 +1541,17 @@ void city_dialog::refresh()
 
 void city_dialog::update_sliders()
 {
-  struct cm_parameter param;
-  const struct cm_parameter *cparam;
-
-  if (!cma_is_city_under_agent(pcity, &param)) {
+  cm_parameter params;
+  if (!cma_is_city_under_agent(pcity, &params)) {
     if (ui.cma_table->currentRow() == -1 || cmafec_preset_num() == 0) {
       return;
     }
-    cparam = cmafec_preset_get_parameter(ui.cma_table->currentRow());
-    cm_copy_parameter(&param, cparam);
+    params = *cmafec_preset_get_parameter(ui.cma_table->currentRow());
   }
-  ui.qsliderbox->update_sliders(param);
+
+  ui.governor->set_parameters(params);
 }
+
 /**
    Updates nationality table in happiness tab
  */
@@ -2292,13 +2140,18 @@ void city_dialog::save_worklist()
   ask->show();
 }
 
-void city_dialog::cma_check_agent()
+/**
+ * Triggers a governor update if the parameters changed.
+ */
+void city_dialog::cma_check_agent(const cm_parameter &params)
 {
-  if (cma_is_city_under_agent(pcity, nullptr)) {
+  cm_parameter current;
+  if (cma_is_city_under_agent(pcity, &current) && !(current == params)) {
     cma_changed();
     update_cma_tab();
   }
 }
+
 /**
    Puts city name and people count on title
  */

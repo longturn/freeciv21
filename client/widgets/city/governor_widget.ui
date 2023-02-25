@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>governor_widget</class>
+ <widget class="QWidget" name="governor_widget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>253</height>
+   </rect>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>6</number>
+   </property>
+   <property name="topMargin">
+    <number>6</number>
+   </property>
+   <property name="rightMargin">
+    <number>6</number>
+   </property>
+   <property name="bottomMargin">
+    <number>6</number>
+   </property>
+   <item row="4" column="1">
+    <widget class="QLabel" name="gold_surplus_label">
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="4">
+    <widget class="QSlider" name="luxury_goods_priority">
+     <property name="maximum">
+      <number>25</number>
+     </property>
+     <property name="pageStep">
+      <number>1</number>
+     </property>
+     <property name="sliderPosition">
+      <number>0</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="QLabel" name="food_priority_label">
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="3">
+    <widget class="QLabel" name="luxury_goods_priority_label">
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="4">
+    <widget class="QSlider" name="trade_priority">
+     <property name="maximum">
+      <number>25</number>
+     </property>
+     <property name="pageStep">
+      <number>1</number>
+     </property>
+     <property name="sliderPosition">
+      <number>0</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>&amp;Trade</string>
+     </property>
+     <property name="buddy">
+      <cstring>trade_surplus</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QLabel" name="production_surplus_label">
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="3" colspan="2">
+    <widget class="QLabel" name="label_9">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Priority</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="4">
+    <widget class="QSlider" name="food_priority">
+     <property name="maximum">
+      <number>25</number>
+     </property>
+     <property name="pageStep">
+      <number>1</number>
+     </property>
+     <property name="sliderPosition">
+      <number>0</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3">
+    <widget class="QLabel" name="trade_priority_label">
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QSlider" name="production_surplus">
+     <property name="minimum">
+      <number>-20</number>
+     </property>
+     <property name="maximum">
+      <number>20</number>
+     </property>
+     <property name="pageStep">
+      <number>1</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="4">
+    <widget class="QSlider" name="science_priority">
+     <property name="maximum">
+      <number>25</number>
+     </property>
+     <property name="pageStep">
+      <number>1</number>
+     </property>
+     <property name="sliderPosition">
+      <number>0</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="5">
+    <widget class="QCheckBox" name="optimize_growth">
+     <property name="text">
+      <string>Optimize</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>&amp;Science</string>
+     </property>
+     <property name="buddy">
+      <cstring>science_surplus</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>&amp;Production</string>
+     </property>
+     <property name="buddy">
+      <cstring>production_surplus</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QLabel" name="science_surplus_label">
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="4">
+    <widget class="QSlider" name="production_priority">
+     <property name="maximum">
+      <number>25</number>
+     </property>
+     <property name="pageStep">
+      <number>1</number>
+     </property>
+     <property name="sliderPosition">
+      <number>0</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>&amp;Food</string>
+     </property>
+     <property name="buddy">
+      <cstring>food_surplus</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>&amp;Gold</string>
+     </property>
+     <property name="buddy">
+      <cstring>gold_surplus</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="4">
+    <widget class="QSlider" name="celebrate_priority">
+     <property name="maximum">
+      <number>25</number>
+     </property>
+     <property name="pageStep">
+      <number>1</number>
+     </property>
+     <property name="sliderPosition">
+      <number>0</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1" colspan="2">
+    <widget class="QLabel" name="label_8">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Minimal Surplus</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="4">
+    <widget class="QSlider" name="gold_priority">
+     <property name="maximum">
+      <number>25</number>
+     </property>
+     <property name="pageStep">
+      <number>1</number>
+     </property>
+     <property name="sliderPosition">
+      <number>0</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3">
+    <widget class="QLabel" name="production_priority_label">
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="3">
+    <widget class="QLabel" name="gold_priority_label">
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QSlider" name="trade_surplus">
+     <property name="minimum">
+      <number>-20</number>
+     </property>
+     <property name="maximum">
+      <number>20</number>
+     </property>
+     <property name="pageStep">
+      <number>1</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1" colspan="2">
+    <widget class="QCheckBox" name="celebrate_surplus">
+     <property name="text">
+      <string>&amp;Celebrate</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="2">
+    <widget class="QSlider" name="luxury_goods_surplus">
+     <property name="minimum">
+      <number>-20</number>
+     </property>
+     <property name="maximum">
+      <number>20</number>
+     </property>
+     <property name="pageStep">
+      <number>1</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLabel" name="food_surplus_label">
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>&amp;Luxury Goods</string>
+     </property>
+     <property name="buddy">
+      <cstring>luxury_goods_surplus</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="3">
+    <widget class="QLabel" name="celebrate_priority_label">
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1" colspan="2">
+    <widget class="QCheckBox" name="allow_specialists">
+     <property name="text">
+      <string>Allow Specialists</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLabel" name="trade_surplus_label">
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="3">
+    <widget class="QLabel" name="science_priority_label">
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="3" colspan="2">
+    <widget class="QCheckBox" name="allow_disorder">
+     <property name="text">
+      <string>Allow Disorder</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QLabel" name="luxury_goods_surplus_label">
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0" colspan="6">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="QSlider" name="gold_surplus">
+     <property name="minimum">
+      <number>-20</number>
+     </property>
+     <property name="maximum">
+      <number>20</number>
+     </property>
+     <property name="pageStep">
+      <number>1</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="2">
+    <widget class="QSlider" name="science_surplus">
+     <property name="minimum">
+      <number>-20</number>
+     </property>
+     <property name="maximum">
+      <number>20</number>
+     </property>
+     <property name="pageStep">
+      <number>1</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QSlider" name="food_surplus">
+     <property name="minimum">
+      <number>-20</number>
+     </property>
+     <property name="maximum">
+      <number>20</number>
+     </property>
+     <property name="pageStep">
+      <number>1</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>food_surplus</tabstop>
+  <tabstop>food_priority</tabstop>
+  <tabstop>optimize_growth</tabstop>
+  <tabstop>production_surplus</tabstop>
+  <tabstop>production_priority</tabstop>
+  <tabstop>trade_surplus</tabstop>
+  <tabstop>trade_priority</tabstop>
+  <tabstop>gold_surplus</tabstop>
+  <tabstop>gold_priority</tabstop>
+  <tabstop>luxury_goods_surplus</tabstop>
+  <tabstop>luxury_goods_priority</tabstop>
+  <tabstop>science_surplus</tabstop>
+  <tabstop>science_priority</tabstop>
+  <tabstop>celebrate_surplus</tabstop>
+  <tabstop>celebrate_priority</tabstop>
+  <tabstop>allow_specialists</tabstop>
+  <tabstop>allow_disorder</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>food_surplus</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>food_surplus_label</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>397</x>
+     <y>50</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>104</x>
+     <y>51</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>production_surplus</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>production_surplus_label</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>397</x>
+     <y>77</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>104</x>
+     <y>77</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>trade_surplus</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>trade_surplus_label</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>397</x>
+     <y>103</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>104</x>
+     <y>103</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>gold_surplus</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>gold_surplus_label</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>397</x>
+     <y>129</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>104</x>
+     <y>129</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>luxury_goods_surplus</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>luxury_goods_surplus_label</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>397</x>
+     <y>155</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>104</x>
+     <y>155</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>science_surplus</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>science_surplus_label</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>397</x>
+     <y>181</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>104</x>
+     <y>181</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>food_priority</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>food_priority_label</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>610</x>
+     <y>32</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>411</x>
+     <y>51</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>production_priority</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>production_priority_label</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>588</x>
+     <y>59</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>411</x>
+     <y>77</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>trade_priority</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>trade_priority_label</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>588</x>
+     <y>103</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>411</x>
+     <y>103</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>gold_priority</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>gold_priority_label</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>576</x>
+     <y>119</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>411</x>
+     <y>129</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>luxury_goods_priority</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>luxury_goods_priority_label</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>595</x>
+     <y>153</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>411</x>
+     <y>155</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>science_priority</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>science_priority_label</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>590</x>
+     <y>176</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>411</x>
+     <y>181</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>celebrate_priority</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>celebrate_priority_label</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>578</x>
+     <y>203</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>411</x>
+     <y>209</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
