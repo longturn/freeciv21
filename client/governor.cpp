@@ -42,7 +42,7 @@
 #define SHOW_APPLY_RESULT_ON_SERVER_ERRORS false
 #define ALWAYS_APPLY_AT_SERVER false
 #define MAX_LEN_PRESET_NAME 80
-#define SAVED_PARAMETER_SIZE 29
+#define SAVED_PARAMETER_SIZE 32
 
 #define CMA_NUM_PARAMS 5
 
@@ -451,7 +451,8 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
   int version, dummy;
 
   /* Changing this function is likely to break compatability with old
-   * savegames that store these values. */
+   * savegames that store these values. Always add new parameters at the end.
+   */
 
   len = attr_city_get(attr, city_id, sizeof(buffer), buffer);
   if (len == 0) {
@@ -482,6 +483,11 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
   fc_assert_ret_val(dio_get_bool8_raw(&din, &parameter->require_happy),
                     false);
 
+  // Optional fields
+  dio_get_bool8_raw(&din, &parameter->max_growth);
+  dio_get_bool8_raw(&din, &parameter->allow_disorder);
+  dio_get_bool8_raw(&din, &parameter->allow_specialists);
+
   return true;
 }
 
@@ -508,6 +514,10 @@ void cma_yoloswag::set_parameter(enum attr_city attr, int city_id,
   dio_put_sint16_raw(&dout, parameter->happy_factor);
   dio_put_uint8_raw(&dout, 0); // Dummy value; used to be factor_target.
   dio_put_bool8_raw(&dout, parameter->require_happy);
+
+  dio_put_bool8_raw(&dout, parameter->max_growth);
+  dio_put_bool8_raw(&dout, parameter->allow_disorder);
+  dio_put_bool8_raw(&dout, parameter->allow_specialists);
 
   fc_assert(dio_output_used(&dout) == SAVED_PARAMETER_SIZE);
 
@@ -708,7 +718,7 @@ void cmafec_get_fe_parameter(struct city *pcity, struct cm_parameter *dest)
 /**
    Adds a preset.
  */
-void cmafec_preset_add(const char *descr_name, struct cm_parameter *pparam)
+void cmafec_preset_add(const char *descr_name, const cm_parameter *pparam)
 {
   struct cma_preset *ppreset = new cma_preset;
 
