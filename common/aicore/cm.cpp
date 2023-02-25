@@ -2111,6 +2111,9 @@ bool operator==(const struct cm_parameter &p1, const struct cm_parameter &p2)
     }
   }
   output_type_iterate_end;
+  if (p1.max_growth != p2.max_growth) {
+    return false;
+  }
   if (p1.require_happy != p2.require_happy) {
     return false;
   }
