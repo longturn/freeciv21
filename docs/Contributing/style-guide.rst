@@ -244,7 +244,7 @@ code could be typeset in monospace with ``\texttt{}``, or defining a few symbols
 a long reasoning. The main guideline for formulas is to take your time to make them as readable as possible.
 
 Formulas use the ``:math:`` role or the ``.. math::`` directive. These blocks support most of the LaTeX
-mathematics syntax, for which you will find many references online. The ``:math:`` role is used for inline
+`mathematics syntax <https://en.wikibooks.org/wiki/LaTeX/Mathematics>`_. The ``:math:`` role is used for inline
 math in a paragraph. For instance, ``:math:`a+b=1``` becomes :math:`a+b=1`. The directive is used for longer
 or more important formulas that come on their own line:
 
