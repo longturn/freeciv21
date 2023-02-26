@@ -232,7 +232,9 @@ Formulas
 ========
 
 The Freeciv21 documentation supports inserting mathematics. This feature should be used sparingly, ideally
-only on technical pages or in sections that less math-savvy users can skip. Contrary to ordinary math
+only on technical pages or in sections that less math-savvy users can skip. When math formulas are used on
+non-technical pages (such as any one of the manuals), the reasoning should be relatively simple following
+`elementary algebra <https://en.wikipedia.org/wiki/Elementary_algebra>`_. Contrary to ordinary math
 textbooks, it is best to avoid single-letter symbols in the documentation. Full-text names should be used
 instead, wrapping them with ``\text{}``:
 
