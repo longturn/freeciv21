@@ -1152,8 +1152,8 @@ void unit_actions::clear_layout()
  */
 hud_unit_loader::hud_unit_loader(struct unit *pcargo, struct tile *ptile)
 {
-  setProperty("showGrid", "false");
-  setProperty("selectionBehavior", "SelectRows");
+  setShowGrid(false);
+  setSelectionBehavior(QAbstractItemView::SelectRows);
   setEditTriggers(QAbstractItemView::NoEditTriggers);
   setSelectionMode(QAbstractItemView::SingleSelection);
   verticalHeader()->setVisible(false);
@@ -1245,10 +1245,8 @@ void hud_unit_loader::show_me()
 void hud_unit_loader::selection_changed(const QItemSelection &s1,
                                         const QItemSelection &s2)
 {
-  int curr_row;
-
-  curr_row = s1.indexes().at(0).row();
-  if (curr_row > 0 && curr_row < transports.size()) {
+  auto curr_row = s1.indexes().at(0).row();
+  if (curr_row >= 0 && curr_row < transports.size()) {
     request_unit_load(cargo, transports[curr_row], qtile);
   }
   close();
