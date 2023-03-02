@@ -7,10 +7,11 @@
 .. role:: wonder
 .. role:: advance
 
-Client Shortcut Options
-***********************
 
-As discussed in the :ref:`Shortcut Options <client-manual-shortcuts>` section of the game manual, there is a
+Game Shortcut Options
+*********************
+
+As discussed in the :ref:`Shortcut Options <game-manual-shortcuts>` section of the game manual, there is a
 large collection of keyboard and mouse shortcut options available. This page lists them in detail. Here is a
 sample of the top of the shortcut options dialog.
 
