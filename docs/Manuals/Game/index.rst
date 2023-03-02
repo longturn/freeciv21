@@ -4,10 +4,10 @@
 Game Manual
 ***********
 
-The Freeciv21 Game Client (``freeciv21-client``) is the main user interface that allows one to play single player
-and online multiplayer games. This manual will mostly track what is in the ``master`` branch of the Freeciv21
-GitHub Repository at https://github.com/longturn/freeciv21/tree/master. You can see the date that this file
-was last updated at the bottom of this page in the footer.
+The Freeciv21 Game Client (``freeciv21-client``) is the main user interface that allows one to play single
+player and online multiplayer games. This manual will mostly track what is in the ``master`` branch of the
+Freeciv21 GitHub Repository at https://github.com/longturn/freeciv21/tree/master. You can see the date that
+this file was last updated at the bottom of this page in the footer.
 
 If you have not installed Freeciv21, then obviously you need to start :doc:`there </Getting/install>`.
 

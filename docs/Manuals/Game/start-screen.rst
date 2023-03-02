@@ -227,8 +227,8 @@ Observe
 
 This button allows you to do a :strong:`global` observe of all players. This is a special server setting and
 is not enabled by default, however it is available in single player games. If you are globally observing a
-game, you can right-click on the :ref:`Nations and Diplomacy View <game-manual-nations-and-diplomacy-view>` button in the :doc:`top-bar`, and select
-a particular nation to observe.
+game, you can right-click on the :ref:`Nations and Diplomacy View <game-manual-nations-and-diplomacy-view>`
+button in the :doc:`top-bar`, and select a particular nation to observe.
 
 
 Start
@@ -375,7 +375,8 @@ The buttons along the bottom of the dialog box are:
 
 * :guilabel:`Reset`: Clicking this button will reset all the options to the out of box defaults.
 * :guilabel:`Cancel`: Clicking this button will either return you to the `Starting the Game`_ start screen
-  or close the dialog and drop you back to the :ref:`Map View <game-manual-map-view>` if requested from the :guilabel:`Game` menu.
+  or close the dialog and drop you back to the :ref:`Map View <game-manual-map-view>` if requested from the
+  :guilabel:`Game` menu.
 * :guilabel:`Refresh`: If you used the modpack installer to add a new tileset, soundset, or musicset with the
   local options dialog open, you can use the :guilabel:`Refresh` button to reload the available choices for
   some of the drop down selection boxes. For more information on the modpack installer, refer to

@@ -131,8 +131,8 @@ Nations and Diplomacy View
 ==========================
 
 The :guilabel:`Nations and Diplomacy View` is actually two views accessed from the same place on the
-`Top Function Bar`_. When you click the button for it as shown in :numref:`Nations and Diplomacy View Button`, the
-client will switch to a list of nations that you are playing against in a table format.
+`Top Function Bar`_. When you click the button for it as shown in :numref:`Nations and Diplomacy View Button`,
+the client will switch to a list of nations that you are playing against in a table format.
 
 .. _Nations and Diplomacy View Button:
 .. figure:: /_static/images/gui-elements/top-bar-nations.png
@@ -442,10 +442,10 @@ icons will change depending on the rate and current status.
 
 If you hover your mouse over the :guilabel:`National Status View`, a pop up widget will appear and give you
 information about your nation's status. The pop up widget shows: Population, Year, Turn Number, Total Gold,
-Net Income, National Budget, Research along with progress, Bulbs per Turn, Culture Score, Global Warming Change,
-Nuclear Winter Chance, Current form of Government. Some of this information is a duplicate of what is shown on
-the `Map View`_, `National Budget View`_, and `Research View`_. The values for Nuclear Winter and Global Warming
-chance give a good indication of what the icon looks like.
+Net Income, National Budget, Research along with progress, Bulbs per Turn, Culture Score, Global Warming
+Change, Nuclear Winter Chance, Current form of Government. Some of this information is a duplicate of what is
+shown on the `Map View`_, `National Budget View`_, and `Research View`_. The values for Nuclear Winter and
+Global Warming chance give a good indication of what the icon looks like.
 
 
 .. _game-manual-messages:

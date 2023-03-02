@@ -11,9 +11,9 @@
 Game Message Options
 ********************
 
-As discussed in the :ref:`Message Options <game-manual-message-options>` section of the game manual, there is a
-large collection of message output options available. This page lists them in detail. Here is a sample of the
-top of the message options dialog.
+As discussed in the :ref:`Message Options <game-manual-message-options>` section of the game manual, there is
+a large collection of message output options available. This page lists them in detail. Here is a sample of
+the top of the message options dialog.
 
 .. _Message Options Dialog2:
 .. figure:: /_static/images/gui-elements/message-options.png

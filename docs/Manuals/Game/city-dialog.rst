@@ -13,10 +13,11 @@ City Dialog
 
 Getting to know the :guilabel:`City Dialog` is a major aspect of playing Freeciv21. As a player you will spend
 a great amount of time using this dialog box. The :guilabel:`City Dialog` is accessed by clicking on a city in
-the :ref:`Map View <game-manual-map-view>` or by double-clicking a city from the table in the :ref:`Cities View <game-manual-cities-view>`.
-:numref:`City Dialog Overview` shows a sample of the :guilabel:`City Dialog`. The dialog box is broken up into
-5 major segments: city information (top center), production and citizen governor tabs (left), city citizen
-tile output (center), general, and citizens tabs (right) and present units (bottom center).
+the :ref:`Map View <game-manual-map-view>` or by double-clicking a city from the table in the
+:ref:`Cities View <game-manual-cities-view>`. :numref:`City Dialog Overview` shows a sample of the
+:guilabel:`City Dialog`. The dialog box is broken up into 5 major segments: city information (top center),
+production and citizen governor tabs (left), city citizen tile output (center), general, and citizens tabs
+(right) and present units (bottom center).
 
 .. _City Dialog Overview:
 .. figure:: /_static/images/gui-elements/city-dialog.png
@@ -34,10 +35,10 @@ center. If you click on the city name, a dialog box will appear and allow you to
 else. On the left and right sides is an arrow that when clicked will move you to the previous and next cities
 in the city array. In the center, the dialog will show how large the city is. Each rectangle icon is
 equivalent to 1 citizen. There is also a large X button on the right. If clicked the :guilabel:`City Dialog`
-will close and return you to the :ref:`Map View <game-manual-map-view>`. At the bottom center of this segment is information about the
-city's status. From left to right you will see net food, net production, net gold, net science, net trade, and
-turns to grow to the next city size. If you hover your mouse over any of these icons, the client will show you
-detailed information on the calculation for the net value displayed.
+will close and return you to the :ref:`Map View <game-manual-map-view>`. At the bottom center of this segment
+is information about the city's status. From left to right you will see net food, net production, net gold,
+net science, net trade, and turns to grow to the next city size. If you hover your mouse over any of these
+icons, the client will show you detailed information on the calculation for the net value displayed.
 
 .. _City Dialog Top Center:
 .. figure:: /_static/images/gui-elements/city-dialog-top-center.png
@@ -143,8 +144,8 @@ Moving to the bottom center, you will see a list of the units that are present i
 :numref:`City Dialog Present Units`. There can be units present in a city that the city is not supporting, or
 from your allies. If you right-click on a unit, a pop up box with action commands you can give to the unit
 will be displayed. If you double-click on a unit, the :guilabel:`City Dialog` will close and the unit will be
-selected. See :doc:`unit-controls` for more information on what you can do with units. If you wish to select more
-than one unit to give a command to, you can do that by holding the ``ctrl`` key on your keyboard and then
+selected. See :doc:`unit-controls` for more information on what you can do with units. If you wish to select
+more than one unit to give a command to, you can do that by holding the ``ctrl`` key on your keyboard and then
 left-clicking on the units you want to select. When finished, right-click on one of the selected units and
 pick the option you want. This is a great way to activate a collection of units all at once. Depending on the
 number of units in the city, this widget will expand left and right to the width of the screen.
@@ -191,10 +192,10 @@ and Wonders.
 Overall happiness of the citizens in your cities depends heavily on all of these factors. Certain forms of
 government have varying degrees of empire size penalties and as your empire grows you will have to deal with
 the negative consequences of managing a large empire and the unhappiness it creates. The amount of luxury
-goods you are producing as part of your :ref:`National Budget View <game-manual-national-budget-view>` will aid this problem. Certain city
-improvements can improve happiness, as well as units in the city (martial law), along with wonders. If units
-are in the field in battle against your enemies, they can cause unhappiness. Hovering your mouse over the
-appropriate row will give you more information about it.
+goods you are producing as part of your :ref:`National Budget View <game-manual-national-budget-view>` will
+aid this problem. Certain city improvements can improve happiness, as well as units in the city (martial law),
+along with wonders. If units are in the field in battle against your enemies, they can cause unhappiness.
+Hovering your mouse over the appropriate row will give you more information about it.
 
 :numref:`City Dialog Citizens Nationality` shows what it looks like when you have mixed nationality in your
 cities. Mixed nationality can cause unhappiness and occurs when you conquer an opponent's city.
