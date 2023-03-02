@@ -42,11 +42,12 @@ Save Map to Image
     Save a ``.png`` image file of the map to the user's pictures directory.
 
 Interface Options
-    Opens the :guilabel:`Interface Options` dialog box as described in the :ref:`Options <game-manual-options>` section above.
+    Opens the :guilabel:`Interface Options` dialog box as described in the
+    :ref:`Options <game-manual-options>` section above.
 
 Game Options
-    Opens the :guilabel:`Game Options` dialog as described in the :ref:`More Game Options <game-manual-more-game-options>` section
-    above.
+    Opens the :guilabel:`Game Options` dialog as described in the
+    :ref:`More Game Options <game-manual-more-game-options>` section above.
 
 
 .. _game-manual-message-options:
@@ -56,8 +57,8 @@ Messages
     screenshot only shows a few rows of available options, many more will be found in the client. Any item
     with a check mark in the :guilabel:`Out` column will be shown in the :guilabel:`Server Chat/Command Line`
     widget. Any item with a check mark in the :guilabel:`Mes` column will be shown in the :guilabel:`Messages`
-    widget (see :ref:`Messages <game-manual-messages>`). Lastly, any item with a check mark in the :guilabel:`Pop` column will be shown
-    in a pop up message box window.
+    widget (see :ref:`Messages <game-manual-messages>`). Lastly, any item with a check mark in the
+    :guilabel:`Pop` column will be shown in a pop up message box window.
 
     You can go to the :doc:`message-options` page for a complete list of all available options.
 
@@ -131,8 +132,8 @@ Quit
 View Menu
 =========
 
-The :guilabel:`View` enables a user to manipulate what is shown on the :ref:`Map View <game-manual-map-view>` as well as varying degrees
-of zooming in and out.
+The :guilabel:`View` enables a user to manipulate what is shown on the
+:ref:`Map View <game-manual-map-view>` as well as varying degrees of zooming in and out.
 
 The :guilabel:`View` menu has the following options:
 
@@ -146,7 +147,8 @@ Minimap
     Shows or hides the :doc:`mini-map` in the lower right corner.
 
 Show New Turn Information
-    Enables or Disables populating new turn information in a widget on the :ref:`Map View <game-manual-map-view>`.
+    Enables or Disables populating new turn information in a widget on the
+    :ref:`Map View <game-manual-map-view>`.
 
 Show Detailed Combat Information
     Enables or Disables populating the :guilabel:`Battle Log` widget. When enabled you will see a widget
@@ -221,36 +223,42 @@ Citybar Style
 
 
 City Outlines
-    Enables or Disables the display on the :ref:`Map View <game-manual-map-view>` of the city's vision radius or outline.
+    Enables or Disables the display on the :ref:`Map View <game-manual-map-view>` of the city's vision radius
+    or outline.
 
 City Output
-    Enables or Disables the display on the :ref:`Map View <game-manual-map-view>` the city's food, production, and trade as shown
-    in the :doc:`city-dialog`.
+    Enables or Disables the display on the :ref:`Map View <game-manual-map-view>` the city's food, production,
+    and trade as shown in the :doc:`city-dialog`.
 
 Map Grid
-    Enables or Disables the display on the :ref:`Map View <game-manual-map-view>` the tile grid. This can be useful to help differentiate
-    individual tiles from others.
+    Enables or Disables the display on the :ref:`Map View <game-manual-map-view>` the tile grid. This can be
+    useful to help differentiate individual tiles from others.
 
 National Borders
-    Enables or Disables the display on the :ref:`Map View <game-manual-map-view>` the national borders of your neighbors. Each nation is
-    given a color at game start (as seen on the :ref:`Nations and Diplomacy View <game-manual-nations-and-diplomacy-view>`).
+    Enables or Disables the display on the :ref:`Map View <game-manual-map-view>` the national borders of your
+    neighbors. Each nation is given a color at game start (as seen on the
+    :ref:`Nations and Diplomacy View <game-manual-nations-and-diplomacy-view>`).
 
 Native Tiles
-    Enables or Disables the display on the :ref:`Map View <game-manual-map-view>` tiles that are native to the unit selected. Non-native
-    tiles are marked with a red hash. Non-Native means that the unit cannot move there.
+    Enables or Disables the display on the :ref:`Map View <game-manual-map-view>` tiles that are native to the
+    unit selected. Non-native tiles are marked with a red hash. Non-Native means that the unit cannot move
+    there.
 
 City Names
-    Enables or Disables the display on the :ref:`Map View <game-manual-map-view>` the names of cities in the city bar.
+    Enables or Disables the display on the :ref:`Map View <game-manual-map-view>` the names of cities in the
+    city bar.
 
 City Growth
-    Enables or Disables the display on the :ref:`Map View <game-manual-map-view>` the growth of cities in the city bar.
+    Enables or Disables the display on the :ref:`Map View <game-manual-map-view>` the growth of cities in the
+    city bar.
 
 City Production Levels
-    Enables or Disables the display on the :ref:`Map View <game-manual-map-view>` the production of cities in the city bar.
+    Enables or Disables the display on the :ref:`Map View <game-manual-map-view>` the production of cities in
+    the city bar.
 
 City Buy Cost
-    Enables or Disables the display on the :ref:`Map View <game-manual-map-view>` the cost to buy the currently constructed item in the
-    city bar.
+    Enables or Disables the display on the :ref:`Map View <game-manual-map-view>` the cost to buy the
+    currently constructed item in the city bar.
 
 City Traderoutes
     Enables or Disables the display on the :ref:`Map View <game-manual-map-view>` trade routes between cities.
@@ -280,8 +288,8 @@ Same Type on Continent
 
 Same Type Everywhere
     Even larger window of unit selection to pick all of the same type, but in all locations across the
-    :ref:`Map View <game-manual-map-view>`. This is useful to help you find units placed in allied cities or to conduct a mass
-    airlift.
+    :ref:`Map View <game-manual-map-view>`. This is useful to help you find units placed in allied cities or
+    to conduct a mass airlift.
 
 Wait
     If you are not ready to move the currently selected unit, you can tell it to :strong:`wait` with this menu
@@ -436,9 +444,9 @@ some rulesets allow other units to perform this type of work. See in game help o
 the following options:
 
 Build City
-    Certain units such as :unit:`Settlers` can create cities. If the unit has sufficient move points available,
-    then giving this command will build a new city where the unit is currently placed on the :ref:`Map View <game-manual-map-view>`. The
-    unit will be consumed by the action.
+    Certain units such as :unit:`Settlers` can create cities. If the unit has sufficient move points
+    available, then giving this command will build a new city where the unit is currently placed on the
+    :ref:`Map View <game-manual-map-view>`. The unit will be consumed by the action.
 
 Auto Worker
     Tell a :unit:`Worker` to use an in game algorithm to improve tiles. The game engine will give the
@@ -571,10 +579,10 @@ your opponents with the demographics report. It has the following options:
 
 National Budget
     Selecting this menu item will bring up a dialog box allowing you to set the rate in percentage points for
-    gold (taxes), science (bulbs), and luxury (goods). This is the same as clicking on the :ref:`National Budget View <game-manual-national-budget-view>`
-    button on the :doc:`top-bar`. :numref:`National Budget Dialog` dialog below, shows a sample screenshot.
-    In this example, the player's nation is in Democracy, has set gold to 30%, science to 40%, and luxury to
-    30%.
+    gold (taxes), science (bulbs), and luxury (goods). This is the same as clicking on the
+    :ref:`National Budget View <game-manual-national-budget-view>` button on the :doc:`top-bar`.
+    :numref:`National Budget Dialog` dialog below, shows a sample screenshot. In this example, the player's
+    nation is in Democracy, has set gold to 30%, science to 40%, and luxury to 30%.
 
 .. _National Budget Dialog:
 .. figure:: /_static/images/gui-elements/tax-rates.png
@@ -620,8 +628,9 @@ Research
     :ref:`Research View <game-manual-research-view>` option on the :doc:`top-bar`.
 
 Wonders of the World
-    Clicking this menu item will show you a traveler's report widget on the :ref:`Map View <game-manual-map-view>`. The widget will give
-    information on any cities that have constructed any of the great wonders.
+    Clicking this menu item will show you a traveler's report widget on the
+    :ref:`Map View <game-manual-map-view>`. The widget will give information on any cities that have
+    constructed any of the great wonders.
 
 .. _Wonders of the World:
 .. figure:: /_static/images/gui-elements/wonders.png
@@ -634,8 +643,8 @@ Wonders of the World
 
 
 Top Five Cities
-    Clicking this menu item will show you a traveler's report widget on the :ref:`Map View <game-manual-map-view>`. The widget will give
-    information on the top five largest cities.
+    Clicking this menu item will show you a traveler's report widget on the
+    :ref:`Map View <game-manual-map-view>`. The widget will give information on the top five largest cities.
 
 .. _Top Five Cities:
 .. figure:: /_static/images/gui-elements/top-five-cities.png
@@ -648,9 +657,10 @@ Top Five Cities
 
 
 Demographics
-    Clicking this menu item will show you a demographics report widget on the :ref:`Map View <game-manual-map-view>`. The widget will
-    give information about how your nation stacks up against your opponents. If you have an embassy with your
-    opponents in the game, the demographics report will tell you who is #1, if you are not #1.
+    Clicking this menu item will show you a demographics report widget on the
+    :ref:`Map View <game-manual-map-view>`. The widget will give information about how your nation stacks up
+    against your opponents. If you have an embassy with your opponents in the game, the demographics report
+    will tell you who is #1, if you are not #1.
 
 .. _Demographics:
 .. figure:: /_static/images/gui-elements/demographics.png
