@@ -276,7 +276,7 @@ Interacting with Other Players (Diplomacy)
 When one of your units first meets a unit of another nation, or finds one of their cities (or equally if
 they find you), a basic contact is established between the two nations. This provides each with basic
 intelligence about the other, which can be accessed from the
-:ref:`Nations and Diplomacy View`.
+:ref:`Nations and Diplomacy View <game-manual-nations-and-diplomacy-view>`.
 
 This communication will lapse after a ruleset defined number of turns with no contact, which is one turn for
 the Classic Ruleset. Establishing an embassy will give a more permanent communication channel, as well as more
@@ -284,9 +284,9 @@ advanced intelligence such as details of technology. Embassies are one-way, the 
 receives no benefit and once established, cannot be revoked.
 
 If you are in contact with another player, then you can arrange a diplomatic meeting. From the
-:ref:`Nations and Diplomacy View`, this is done by selecting the nation with whom you wish to meet and
-clicking :guilabel:`Meet`. If the entry under the embassy column is not blank and the other player is
-connected (or is a server AI) then a treaty dialog will pop up.
+:ref:`Nations and Diplomacy View <game-manual-nations-and-diplomacy-view>`, this is done by selecting the
+nation with whom you wish to meet and clicking :guilabel:`Meet`. If the entry under the embassy column is not
+blank and the other player is connected (or is a server AI) then a treaty dialog will pop up.
 
 In this dialog you can negotiate an exchange of assets (maps, vision, advances, cities, or gold), embassies,
 or relationship pacts such as a Cease-fire or Peace. The list of items that can be traded through diplomacy is
