@@ -389,7 +389,7 @@ Convert
 Disband
     Use this menu option to eliminate (kill, destroy, fire) a unit. If performed inside of a city, then 50% of
     the shields used in the production of the unit is given to the city and helps build whatever is currently
-    under construction. If a unit is disanded outside of a city, there is no benefit other than the
+    under construction. If a unit is disbanded outside of a city, there is no benefit other than the
     elimination of shield or gold upkeep depending on your form of government.
 
 Rename
