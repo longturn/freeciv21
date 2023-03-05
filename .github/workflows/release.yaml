@@ -21,7 +21,7 @@ jobs:
         # We're running on a tag so have no direct access to the branch. Find it.
         # Strip the first 3 components (ref/remotes/username)
         run: |
-          git diff branch=$(git branch -r --contains HEAD --format '%(refname:strip=3)')
+          branch=$(git branch -r --contains HEAD --format '%(refname:strip=3)')
           echo Target branch is $branch
           echo branch=$branch >> $GITHUB_OUTPUT
       - name: Create Pull Request
