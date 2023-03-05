@@ -5,7 +5,7 @@
 #cmakedefine BUG_URL "${BUG_URL}"
 #define WIKI_URL "https://longturn.readthedocs.io/en/latest/"
 
-#define DATASUBDIR "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
+#define DATASUBDIR "${PROJECT_VERSION_MAJOR}.0"
 
 #define AI_MOD_DEFAULT "classic"
 
