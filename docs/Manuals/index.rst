@@ -10,8 +10,8 @@ manual, modpack installer, and ruleset manuals.
 
 .. toctree::
   Game/index.rst
+  Advanced/index.rst
   modpack-installer.rst
-  on-the-server.rst
   :maxdepth: 2
 
 
