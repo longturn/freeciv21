@@ -47,6 +47,8 @@ Refer to Ruleset specific documents:
   Rulesets/nations.rst
   :maxdepth: 1
 
+.. _modding-tilesets:
+
 Tilesets
 ========
 
@@ -116,6 +118,8 @@ Have a look at :file:`stdmusic.musicspec` and associated files in :file:`/stdmus
 .. toctree::
   musicsets.rst
   :maxdepth: 1
+
+.. _modding-scenarios:
 
 Scenarios
 =========
