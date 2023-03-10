@@ -11,4 +11,5 @@ looking for more general  or generic gameplay information, it would be best to s
 
 .. toctree::
   on-the-server.rst
+  players.rst
   :maxdepth: 2

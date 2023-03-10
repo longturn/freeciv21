@@ -108,6 +108,8 @@ authentication support is implemented using a Lua script.
 
 See the :doc:`fcdb documentation </Coding/fcdb>` for more information about setting up authentication.
 
+.. _server-settings-file:
+
 Using a Server Settings File
 ============================
 
