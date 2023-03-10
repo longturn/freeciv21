@@ -36,7 +36,7 @@ community discussions.
     Freeciv Web.
 
     A web client and highly customized version of the legacy Freeciv server. Not affiliated
-    directly with Freeciv, Freeciv21 or Longturn.
+    directly with Freeciv, Freeciv21, or Longturn.
 
   FFA
     Free For All
@@ -49,7 +49,7 @@ community discussions.
   FP
     Fire Power
 
-    The amount of damage an attacking unit can inflict on a defending unit.
+    The amount of damage an attacking unit can inflict on a defending unit within a single round of combat.
 
   Goto
     Units that are out of :term:`MP` can be given advanced orders to take an action at the start of the next

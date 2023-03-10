@@ -377,12 +377,12 @@ Two in the :term:`LTT` ruleset. This is a ruleset configurable item. See the in-
 :title-reference:`Units` for more detail to see what the settings is for the ruleset you loaded at game
 start.
 
-Do tiles remember terra-forming progress?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Do tiles remember terraforming progress?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-If you change orders for the unit doing the terra-forming and do not change them back within the same turn,
-the terra-forming progress is lost. If you change orders and then change them back, nothing special happens.
-Terra-forming is always processed at :term:`TC`.
+If you change orders for the unit doing the terraforming and do not change them back within the same turn,
+the terraforming progress is lost. If you change orders and then change them back, nothing special happens.
+Terraforming is always processed at :term:`TC`.
 
 How frequently do natural disasters happen?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -496,7 +496,7 @@ No. In Freeciv21 there are generally 4 ways to gain tile ownership:
 * Build a Fortress and place a Military unit (e.g. a :unit:`Phalanx`) inside the Fortress.
 * Conquer the city and take its tiles for your own.
 
-Is there a way to create a hill other than terra-forming a mountain?
+Is there a way to create a hill other than terraforming a mountain?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You can also terraform a hill from plains with :unit:`Engineers`. In some rulesets, such as :term:`LTT`, this
@@ -531,10 +531,10 @@ All units that end their turn on a mountain start with 1 less :term:`MP` the fol
 this rule are units that ignore terrain movement completely (e.g. :unit:`Explorers`, and :unit:`Alpine
 Troops`). This is known as "ignoring terrain effects".
 
-What is a unit’s terra-forming speed based on?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+What is a unit’s terraforming speed based on?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-It is based on the base amount of :term:`MP`'s for that unit and veteran level bonus. The base terra-forming
+It is based on the base amount of :term:`MP`'s for that unit and veteran level bonus. The base terraforming
 duration is specified in the ruleset files.
 
 .. todo::
@@ -551,10 +551,10 @@ Does a damaged worker work slower than normal?
 
 No, :term:`HP`'s do not factor in a :unit:`Worker's` ability to conduct infrastructure improvements to tiles.
 
-When terra-forming, does some movement get used on the last turn of terra-forming? Does the unit start with less movement points?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+When terraforming, does some movement get used on the last turn of terraforming? Does the unit start with less movement points?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Terra-forming does not affect a unit's :term:`MP`'s in any way.
+Terraforming does not affect a unit's :term:`MP`'s in any way.
 
 Does damage reduce the amount of movement points the unit has?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -740,7 +740,7 @@ aspects of the attack (or defense) include terrain bonus, unit veterancy, etc.
 When a city is captured, all units homed in that city that are currently in another city of yours are re-homed to that city. What happens to the the other units?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Any unit not in a native city (e.g. your own city) are lost. This includes allied cities or outside of any
+Any units not in a native city (e.g. your own city) are lost. This includes allied cities or outside of any
 city in the field.
 
 .. raw:: html
@@ -997,11 +997,11 @@ Refer to :doc:`/Manuals/Game/message-options` for more information.
 How do I enable/disable sound or music support?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The game interface can be started without sound by supplying the command-line arguments :literal:`-P none`.
-The default sound plugin can also be configured in the game interface settings by going to
+The game can be started without sound by supplying the command-line arguments :literal:`-P none`.
+The default sound plugin can also be configured in the game settings by going to
 :guilabel:`Game -->Set local options` and then clicking on the :guilabel:`Sound` tab.
 
-If the game interface was compiled with sound support, it will be enabled by default. All pre-compiled
+If the game was compiled with sound support, it will be enabled by default. All pre-compiled
 packages provided by the Longturn community come with sound support enabled.
 
 How do I use a different tileset?
@@ -1086,11 +1086,11 @@ I have found a bug, what should I do?
 See the article on `Where can I ask questions or send improvements?`_. You might want to start up a
 conversation about it in the Longturn Discord channels if you are unsure.
 
-I have started a server but the game interface cannot find it!
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+I have started a server but the game cannot find it!
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 By default, your server will be available on host :literal:`localhost` (your own machine) and port
-:literal:`5556`. These are the default values your game interface uses when asking which game you want to
+:literal:`5556`. These are the default values your game uses when asking which game you want to
 connect to.
 
 If you do not get a connection with these values, your server is not running, or you used :literal:`-p` to
@@ -1132,7 +1132,7 @@ How do I restart a saved game?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If for some reason you cannot use the start-screen interface for loading a game, you can load one directly
-through the game interface or server command line. You can start the game interface, or server, with the
+through the game or server command line. You can start the game, or server, with the
 :literal:`-f` option, for example:
 
 .. code-block:: sh
@@ -1195,9 +1195,8 @@ not help. If you find your game running too slow, these may be the reasons:
 * :strong:`Many AI players`: Again, having more players does not necessary mean a more challenging or
   enjoyable game.
 
-* :strong:`City Governor (CMA)`: This is a really useful game interface side agent which helps you to organize
-  our citizens. However, it consumes many CPU cycles. For more information on the CMA, refer to
-  :doc:`/Playing/cma`.
+* :strong:`City Governor (CMA)`: This is a really useful agent which helps you to organize your citizens.
+  However, it consumes many CPU cycles. For more information on the CMA, refer to :doc:`/Playing/cma`.
 
 * :strong:`Maps and compression`: Creating map images and/or the compression of saved games for each turn will
   slow down new turns. Consider using no compression.
