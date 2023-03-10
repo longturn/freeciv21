@@ -1,8 +1,14 @@
-..
-    SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
-    SPDX-FileCopyrightText: 2022 louis94 <m_louis30@yahoo.com>
+..  SPDX-License-Identifier: GPL-3.0-or-later
+..  SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+..  SPDX-FileCopyrightText: louis94 <m_louis30@yahoo.com>
+
+.. Custom Interpretive Text Roles for longturn.net/Freeciv21
+.. role:: unit
+.. role:: improvement
+.. role:: wonder
+.. role:: advance
+
 
 Welcome to the Freeciv21 manual
 *******************************
@@ -44,11 +50,6 @@ Welcome to the documentation of the Freeciv21 project brought to you by the
   Modding/index.rst
   Contributing/index.rst
   Coding/index.rst
+  glossary.rst
   :maxdepth: 2
   :hidden:
-
-
-.. Custom Interpretive Text Roles for longturn.net/Freeciv21
-.. role:: unit
-.. role:: improvement
-.. role:: wonder
