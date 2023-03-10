@@ -58,6 +58,7 @@ After clicking :guilabel:`Tutorial` on the start screen, a pregame menu will sho
 :numref:`Start New Game Dialog`, below. All the settings are preconfigured. Simply click :guilabel:`Start`
 to begin the game tutorial.
 
+.. _game-manual-start-new-game:
 
 Start New Game
 ==============
@@ -90,6 +91,8 @@ From upper left to lower right, the following user interface elements are availa
 * :guilabel:`Observe`
 * :guilabel:`Start`
 
+
+.. _game-manual-start-new-game-players:
 
 Players List Table
 ------------------
