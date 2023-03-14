@@ -1,8 +1,7 @@
-..
-    SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
-    SPDX-FileCopyrightText: 2022 Louis Moureaux <m_louis30@yahoo.com>
+..  SPDX-License-Identifier: GPL-3.0-or-later
+..  SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+..  SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
 Network Protocol
 ****************
@@ -173,7 +172,7 @@ denoted by an ``index`` of 255.
 For fields of struct type (or arrays of struct) the following function is used to compare entries, where foo
 stands for the name of the struct:
 
-.. code-block:: rst
+.. code-block:: cpp
 
     bool are_foo_equal(const struct foo *a, const struct foo *b);
 
@@ -230,7 +229,8 @@ Adding a packet:
 
 #. Choose an unused packet number. The generator will make sure that you do not use the same number two times.
 #. Choose a packet name. It should follow the naming style of the other packets:
-   ``PACKET_<group>_<remaining>``. The ``<group>`` may be ``SERVER``, ``CITY``, ``UNIT``, ``PLAYER``, and ``DIPLOMACY``.
+   ``PACKET_<group>_<remaining>``. The ``<group>`` may be ``SERVER``, ``CITY``, ``UNIT``, ``PLAYER``, and
+   ``DIPLOMACY``.
 #. Decide if this packet goes from server to client or client to server.
 #. Choose the field names and types.
 #. Choose packet and field flags.
