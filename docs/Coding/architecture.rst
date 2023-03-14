@@ -1,8 +1,7 @@
-..
-    SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
-    SPDX-FileCopyrightText: 2022 Louis Moureaux <m_louis30@yahoo.com>
+..  SPDX-License-Identifier: GPL-3.0-or-later
+..  SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+..  SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
 Architecture
 ************
@@ -25,16 +24,16 @@ Repository Organization
 The source code is organized in directories at the root of the repository. The client and server share a lot
 of code found in the :file:`common` and :file:`utility` folders. The first one contains code to manage the
 game state, of which both the client and server have a copy, and the second is home to various lower-level
-utilities that do not have an equivalent in Qt or the standard library. Freeciv21 also ships with a couple of
-external dependencies under :file:`dependencies`.
+utilities that do not have an equivalent in Qt or the C standard library. Freeciv21 also ships with a couple
+of external dependencies under :file:`dependencies`.
 
 The client code is found in the :file:`client` folder. The server code is located under :file:`server`,
-with the exception of the computer ("AI") players which is under :file:`ai`. The code for other programs
+with the exception of the computer (:term:`AI`) players which is under :file:`ai`. The code for other programs
 bundled with Freeciv21, such as the :doc:`Modpack Installer </Manuals/modpack-installer>`, is located under
 :file:`tools`.
 
 All the assets used by the client and server are grouped under :file:`data`. This includes among
-others :doc:`rulesets </Modding/Rulesets/overview>` and :ref:`tilesets <Modding/index:Tilesets>`.
+others :doc:`rulesets </Modding/Rulesets/overview>` and :ref:`tilesets <modding-tilesets>`.
 Localization files are located under :file:`translations`.
 
 There are a few additional folders that you will touch less often. The table below describes the complete
