@@ -1,7 +1,6 @@
-..
-    SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
-    SPDX-FileCopyrightText: 2022 louis94 <m_louis30@yahoo.com>
+..  SPDX-License-Identifier: GPL-3.0-or-later
+..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+..  SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
 Logging
 *******
@@ -44,7 +43,7 @@ Name                     Used for
 
 For instance, one could disable stack traces and enable Go To ``debug`` message by setting:
 
-.. code-block:: rst
+.. code-block:: sh
 
     export QT_LOGGING_RULES="freeciv.stacktrace*=false\nfreeciv.goto.debug=true"
 
