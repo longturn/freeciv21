@@ -1,7 +1,6 @@
-..
-    SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+..  SPDX-License-Identifier: GPL-3.0-or-later
+..  SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 Authentication and Database Support (fcdb)
 ******************************************
@@ -44,7 +43,7 @@ is entirely sufficient for a SQLite setup.
 
 Now start the server with:
 
-.. code-block:: rst
+.. code-block:: sh
 
     freeciv21-server --Database fc_auth.conf --auth --Newusers
 
@@ -99,7 +98,8 @@ table layout.
 
 The script lives in :file:`data/database.lua` in the source tree, and is installed to
 ``CMAKE_INSTALL_PREFIX``. Depending on the options given to ``cmake`` at build time, this may be a location
-such as :file:`/usr/local/etc/freeciv21/database.lua.`
+such as :file:`/usr/local/etc/freeciv21/database.lua.` Refer to :doc:`/Getting/compile` for more information
+on ``CMAKE_INSTALL_PREFIX``.
 
 The supplied version supports basic authentication against a SQLite database. It supports configuration as
 shown in the following example:
@@ -117,7 +117,7 @@ shown in the following example:
     table_log="loginlog"
 
 
-If that's sufficient for you, it's not necessary to read on. Freeciv21 expects the following lua functions
+If that is sufficient for you, it is not necessary to read on. Freeciv21 expects the following lua functions
 to be defined in :file:`database.lua`:
 
 * Try to load data for an existing user.
