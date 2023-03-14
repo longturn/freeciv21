@@ -1,10 +1,9 @@
-..
-    SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
-    SPDX-FileCopyrightText: 2022-2023 James Robertson <jwrober@gmail.com>
-    SPDX-FileCopyrightText: 2022 Pranav Sampathkumar <pranav.sampathkumar@gmail.com>
-    SPDX-FileCopyrightText: 2022 NIKEA-SOFT
-    SPDX-FileCopyrightText: 2022 Louis Moureaux <m_louis30@yahoo.com>
+..  SPDX-License-Identifier: GPL-3.0-or-later
+..  SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+..  SPDX-FileCopyrightText: Pranav Sampathkumar <pranav.sampathkumar@gmail.com>
+..  SPDX-FileCopyrightText: NIKEA-SOFT
+..  SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
@@ -24,14 +23,15 @@ The Server
 Server Autogame Testing
 -----------------------
 
-Code changes should always be tested before submission for inclusion into the GitHub source tree. It is
-useful to run the client and server as autogames to verify either a particular savegame no longer shows a
-fixed bug, or as a random sequence of games in a while loop overnight.
+Code changes should always be tested before submission for inclusion into the
+:doc:`GitHub </Contributing/pull-request>` source tree. It is useful to run the client and server as autogames
+to verify either a particular savegame no longer shows a fixed bug, or as a random sequence of games in a
+while loop overnight.
 
-To start a server game with all AI players, create a file (below named :file:`civ.serv`) with lines such as
-the following:
+To start a server game with all :term:`AI` players, create a file (below named :file:`civ.serv`) with lines
+such as the following:
 
-.. code-block:: sh
+.. code-block:: ini
 
     # set gameseed 42       # repeat a particular game (random) sequence
     # set mapseed 42        # repeat a particular map generation sequence
@@ -55,8 +55,8 @@ The commandline to run server-only games can be typed as variations of:
 
 
 To attach one or more clients to an autogame, remove the :code:`start` command, start the server program and
-attach clients to created AI players. Or type :code:`aitoggle <player>` at the server command prompt for each
-player that connects. Finally, type :code:`start` when you are ready to watch the show.
+attach clients to created :term:`AI` players. Or type :code:`aitoggle <player>` at the server command prompt
+for each player that connects. Finally, type :code:`start` when you are ready to watch the show.
 
 .. note::
     The server will eventually flood a client with updates faster than they can be drawn to the screen,
@@ -75,7 +75,7 @@ Old Lists
 
 For variable length list of units and cities Freeciv21 uses a :code:`genlist`, which is implemented in
 :file:`utility/genlist.cpp`. By some macro magic type specific macros have been defined, creating a lot of
-trouble for C++ programmers. These macro-based lists are being phased out in favor of STL containers; in the
+trouble for C++ programmers. These macro-based lists are being phased out in favor of STL containers. In the
 meantime, we preserve here an explanation of how to use them.
 
 For example a ``tile`` struct (the pointer to it we call :code:`ptile`) has a ``unit`` list,
@@ -119,9 +119,9 @@ the mask-pixmaps will not be generated properly, which will certainly not give a
 Each terrain tile is drawn in 16 versions, all the combinations with a green border in one of the main
 directions. Hills, Mountains, Forests, and Rivers are treated in special cases.
 
-Isometric tilesets are drawn in a similar way to how civ2 draws (that is why civ2 graphics are compatible). For
-each base terrain type there exists one tile sprite for that terrain. The tile is blended with nearby tiles to
-get a nice-looking boundary. This is erroneously called "dither" in the code.
+Isometric tilesets are drawn in a similar way to how civ2 draws (that is why civ2 graphics are compatible).
+For each base terrain type there exists one tile sprite for that terrain. The tile is blended with nearby
+tiles to get a nice-looking boundary. This is erroneously called "dither" in the code.
 
 Non-isometric tilesets draw the tiles in the "original" Freeciv21 way, which is both harder and less pretty.
 There are multiple copies of each tile, so that a different copy can be drawn depending on the terrain type of
@@ -471,7 +471,7 @@ introduced :code:`map_x/map_y` or :code:`nat_x/nat_y` to help distinguish whethe
 are being used. Other places are not yet rigorous in keeping them apart, and will often just name their
 variables :code:`x` and :code:`y`. The latter can usually be assumed to be map coordinates.
 
-Note that if you don't need to do some abstract geometry exploit, you will mostly use tile pointers, and give
+Note that if you do not need to do some abstract geometry exploit, you will mostly use tile pointers, and give
 to map tools the ability to perform what you want.
 
 Note that :code:`map.xsize` and :code:`map.ysize` define the dimension of the map in :code:`_native_`
@@ -564,11 +564,11 @@ While :code:`tile_get_known()` returns:
 The values :code:`TILE_UNKNOWN` and :code:`TILE_KNOWN_SEEN` are straightforward. :code:`TILE_KNOWN_UNSEEN` is
 a tile of which the user knows the terrain, but not recent cities, roads, etc.
 
-:code:`TILE_UNKNOWN` tiles never are (nor should be) sent to the client. In the past, :code:`UNKNOWN` tiles that
-were adjacent to :code:`UNSEEN` or :code:`SEEN` were sent to make the drawing process easier, but this has now
-been removed. This means exploring new land may sometimes change the appearance of existing land (but this is
-not fundamentally different from what might happen when you transform land). Sending the extra info, however,
-not only confused the goto code but allowed cheating.
+:code:`TILE_UNKNOWN` tiles never are (nor should be) sent to the client. In the past, :code:`UNKNOWN` tiles
+that were adjacent to :code:`UNSEEN` or :code:`SEEN` were sent to make the drawing process easier, but this
+has now been removed. This means exploring new land may sometimes change the appearance of existing land (but
+this is not fundamentally different from what might happen when you transform land). Sending the extra info,
+however, not only confused the goto code but allowed cheating.
 
 Fog of War is the fact that even when you have seen a tile once you are not sent updates unless it is inside
 the sight range of one of your units or cities.
