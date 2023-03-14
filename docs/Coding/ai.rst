@@ -1,8 +1,7 @@
-..
-    SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
-    SPDX-FileCopyrightText: 2022-2023 James Robertson <jwrober@gmail.com>
-    SPDX-FileCopyrightText: 2022 Louis Moureaux <m_louis30@yahoo.com>
+..  SPDX-License-Identifier: GPL-3.0-or-later
+..  SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+..  SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
@@ -14,7 +13,7 @@ Artificial Intelligence (AI)
 ****************************
 
 
-This document is about Freeciv21's default AI.
+This document is about Freeciv21's default :term:`AI`.
 
 .. warning::
 
@@ -23,27 +22,28 @@ This document is about Freeciv21's default AI.
 Introduction
 ============
 
-The Freeciv21 AI is capable of developing complex nations and provides a challenging opponent for beginners.
-It is, however, still too easy for experienced players, mostly due to it being very predictable.
-Code that implements the AI is divided between the :file:`ai/` and :file:`server/advisors` code directories.
-The latter is used also by human players for automatic helpers such as auto-settlers and auto-explorers.
+The Freeciv21 :term:`AI` is capable of developing complex nations and provides a challenging opponent for
+beginners. It is, however, still too easy for experienced players, mostly due to it being very predictable.
+Code that implements the :term:`AI` is divided between the :file:`ai/` and :file:`server/advisors` code
+directories. The latter is used also by human players for automatic helpers such as auto-settlers and
+auto-explorers.
 
 
 Long-Term AI Development Goals
 ==============================
 
-The long-term goals for Freeciv21 AI development are:
+The long-term goals for Freeciv21 :term:`AI` development are:
 
-* To create a challenging and fun AI for human players to defeat.
-* To create an AI that can handle all the ruleset possibilities that Freeciv21 can offer, no matter how
-  complicated or unique the implementation of the rules.
+* To create a challenging and fun :term:`AI` for human players to defeat.
+* To create an :term:`AI` that can handle all the ruleset possibilities that Freeciv21 can offer, no matter
+  how complicated or unique the implementation of the rules.
 
 
 Want Calculations
 =================
 
 Build calculations are expressed through a structure called :code:`adv_choice`. This has a variable called
-"want", which determines how much the AI wants whatever item is pointed to by :code:`choice->type`.
+"want", which determines how much the :term:`AI` wants whatever item is pointed to by :code:`choice->type`.
 :code:`choice->want` is:
 
 ======== ======
@@ -144,7 +144,7 @@ Then the :code:`find_something_to_kill()` function finds a victim for the (virtu
 :unit:`Riflemen` standing right next to the city. Then the :code:`process_attacker_want()` function figures
 out that since the enemy is right beside us, it can be taken out easier using an :unit:`Artillery`. It also
 figures that a :unit:`Howitzer` would do this job even better, so bumps up our desire for
-:title-reference:`Robotics`.
+:advance:`Robotics`.
 
 
 Ferry System
@@ -188,15 +188,15 @@ degree.
 Diplomacy
 =========
 
-The AI's diplomatic behaviour is current only regulated by the ``diplomacy`` server setting.
+The :term:`AI`'s diplomatic behaviour is current only regulated by the ``diplomacy`` server setting.
 
-AI proposes Cease-fire on first contact.
+:term:`AI` proposes Cease-fire on first contact.
 
-AI is not very trusting for NEUTRAL and PEACE modes, but once it hits ALLIANCE, this changes completely, and
-it will happily hand over any technologies and maps it has to you. The only thing that will make the AI
-attack you then is if you build a Spaceship.
+:term:`AI` is not very trusting for NEUTRAL and PEACE modes, but once it hits ALLIANCE, this changes
+completely, and it will happily hand over any technologies and maps it has to you. The only thing that will
+make the :term:`AI` attack you then is if you build a Spaceship.
 
-For people who want to hack at this part of the AI code, please note:
+For people who want to hack at this part of the :term:`AI` code, please note:
 
 * The ``pplayers_at_war(p1,p2)`` function returns ``FALSE`` if ``p1==p2``
 * The ``pplayers_non_attack(p1,p2)`` function returns ``FALSE`` if ``p1==p2``
@@ -208,10 +208,10 @@ any kind of non-attack treaty with themselves, and we always consider a Nation t
 themself.
 
 The introduction of Diplomacy is fraught with many problems. One is that it usually benefits only human
-players and not AI players, since humans are so much smarter, and know how to exploit Diplomacy. For AIs,
-they mostly only add constraints on what it can do. This means Diplomacy either has to be optional, or have
-fine-grained controls on who can do what Diplomatic deals to whom, which are set from rulesets. The latter is
-not yet well implemented.
+players and not :term:`AI` players, since humans are so much smarter, and know how to exploit Diplomacy. For
+:term:`AI`'s, they mostly only add constraints on what it can do. This means Diplomacy either has to be
+optional, or have fine-grained controls on who can do what Diplomatic deals to whom, which are set from
+rulesets. The latter is not yet well implemented.
 
 Difficulty Levels
 =================
@@ -227,10 +227,10 @@ There are currently seven difficulty levels:
 #. Experimental
 
 The ``hard`` level is no-holds-barred. ``Cheating`` is the same except that it has ruleset defined extra
-bonuses, while ``normal`` has a number of handicaps. In ``easy``, the AI also does random stupid things
-through the :code:`ai_fuzzy()` function. In ``novice`` the AI researches slower than normal players. The
-``experimental`` level is only for coding. You can gate new code with the ``H_EXPERIMENTAL`` handicap and test
-``experimental`` level AIs against ``hard`` level AIs.
+bonuses, while ``normal`` has a number of handicaps. In ``easy``, the :term:`AI` also does random stupid
+things through the :code:`ai_fuzzy()` function. In ``novice`` the :term:`AI` researches slower than normal
+players. The ``experimental`` level is only for coding. You can gate new code with the ``H_EXPERIMENTAL``
+handicap and test ``experimental`` level :term:`AI`'s against ``hard`` level :term:`AI`'s.
 
 Other handicaps used are:
 
@@ -259,18 +259,18 @@ Things That Need To Be Fixed
 ============================
 
 * Cities do not realize units are on their way to defend it.
-* AI builds cities without regard to danger at that location.
-* AI will not build cross-country roads outside of the city vision radius.
+* :term:`AI` builds cities without regard to danger at that location.
+* :term:`AI` will not build cross-country roads outside of the city vision radius.
 * ``Locally_zero_minimap`` is not implemented when wilderness tiles change.
 * If no path to a chosen victim is found, a new victim should be chosen.
 * Emergencies in two cities at once are not handled properly.
-* :unit:`Explorers` will not use ferryboats to get to new lands to explore. The AI will also not build units
-  to explore new islands, leaving Huts alone.
-* AI sometimes believes that wasting a horde of weak military units to kill one enemy is profitable.
+* :unit:`Explorers` will not use ferryboats to get to new lands to explore. The :term:`AI` will also not build
+  units to explore new islands, leaving Huts alone.
+* :term:`AI` sometimes believes that wasting a horde of weak military units to kill one enemy is profitable.
 * Stop building shore defense improvements in landlocked cities with a Lake adjacent.
-* Fix the AI valuation of :improvement:`Supermarket`. It currently never builds it. See the
+* Fix the :term:`AI` valuation of :improvement:`Supermarket`. It currently never builds it. See the
   :code:`farmland_food()` and :code:`ai_eval_buildings()` functions in :file:`advdomestic.cpp`.
-* Teach the AI to coordinate the units in an attack.
+* Teach the :term:`AI` to coordinate the units in an attack.
 
 
 Idea Space
