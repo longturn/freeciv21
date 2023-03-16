@@ -31,7 +31,7 @@ while loop overnight.
 To start a server game with all :term:`AI` players, create a file (below named :file:`civ.serv`) with lines
 such as the following:
 
-.. code-block:: ini
+.. code-block:: sh
 
     # set gameseed 42       # repeat a particular game (random) sequence
     # set mapseed 42        # repeat a particular map generation sequence
