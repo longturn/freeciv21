@@ -1,8 +1,7 @@
-..
-    SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
-    SPDX-FileCopyrightText: 2022 louis94 <m_louis30@yahoo.com>
-    SPDX-FileCopyrightText: 2022 Pranav Sampathkumar <pranav.sampathkumar@gmail.com>
+..  SPDX-License-Identifier: GPL-3.0-or-later
+..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+..  SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
+..  SPDX-FileCopyrightText: Pranav Sampathkumar <pranav.sampathkumar@gmail.com>
 
 Evaluating a Pull Request
 *************************
@@ -22,41 +21,41 @@ This page assumes the user knows how to use :file:`git`, compile Freeciv21 and u
 
 :strong:`Create A Testing Branch`
 
-.. code-block:: rst
+.. code-block:: sh
 
-  $ git fetch upstream master
-  $ git checkout -b testing/pr_[pr-number] upstream/master
+    $ git fetch upstream master
+    $ git checkout -b testing/pr_[pr-number] upstream/master
 
 
 :strong:`Get A Copy Of The Pull Request`
 
-.. code-block:: rst
+.. code-block:: sh
 
-  $ wget https://github.com/longturn/freeciv21/pull/[pr-number].diff -O pr[pr-number].diff
+    $ wget https://github.com/longturn/freeciv21/pull/[pr-number].diff -O pr[pr-number].diff
 
 
 :strong:`Apply The Downloaded Update To Local`
 
-.. code-block:: rst
+.. code-block:: sh
 
-  $ patch -p1 < pr[pr-number].diff
+    $ patch -p1 < pr[pr-number].diff
 
 
 :strong:`Ensure The Build Directory Is Empty`
 
-.. code-block:: rst
+.. code-block:: sh
 
-  $ rm -Rf build
+    $ rm -Rf build
 
 
 :strong:`Configure And Compile The Code`
 
-.. code-block:: rst
+.. code-block:: sh
 
-  $ cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
-  $ cmake --build build
-  $ cmake --build build --target install
-  $ cmake --build build --target package      # MSys2 and Debian Linux Only
+    $ cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
+    $ cmake --build build
+    $ cmake --build build --target install
+    $ cmake --build build --target package      # MSys2 and Debian Linux Only
 
 
 :strong:`Read The Issue's Notes`
@@ -70,8 +69,8 @@ probably have to re-download the diff and run another test.
 If it is a big change, it might be worthwhile to run an entire game with just AI to make sure it does not
 break anything. You can compile the code, with additional checks such as address sanitizer with
 :code:`$ cmake . --preset ASan`. Once the code is compiled, you can run the autogame with
-:code:`./build/freeciv21-server -r ./data/test-autogame.serv`. You can also observe the game with
-:code:`./build/freeciv21-client -a -p 5556 -s localhost`. ASan by default halts on every error, this is
+:code:`$ ./build/freeciv21-server -r ./data/test-autogame.serv`. You can also observe the game with
+:code:`$ ./build/freeciv21-client -a -p 5556 -s localhost`. ASan by default halts on every error, this is
 sometimes useful to developers to fix the errors sequentially. If you'd rather prefer listing all the errors
 at once, set the environment variable using :code:`$ export ASAN_OPTIONS="halt_on_error=0"`
 
@@ -85,10 +84,10 @@ at once, set the environment variable using :code:`$ export ASAN_OPTIONS="halt_o
 
 * Checkout the ``master`` branch and delete the testing branch:
 
-.. code-block:: rst
+.. code-block:: sh
 
-  $ git checkout master
-  $ git branch -d testing/pr_[pr-number]
+    $ git checkout master
+    $ git branch -d testing/pr_[pr-number]
 
 
 Art PRs
