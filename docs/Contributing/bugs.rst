@@ -1,6 +1,6 @@
-..
-    SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+..  SPDX-License-Identifier: GPL-3.0-or-later
+..  SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 Filing Bugs and Enhancement Requests
 ************************************
@@ -28,7 +28,7 @@ note of the following when thinking of submitting an issue.
 * Check that it is not listed as a known issue. For a continuously updated list, see:
   https://github.com/longturn/freeciv21/issues
 
-* Check the Freeciv21 Releases page at https://github.com/longturn/freeciv21/releases, to ensure you're
+* Check the Freeciv21 Releases page at https://github.com/longturn/freeciv21/releases, to ensure you are
   playing the latest version. We may have already fixed the problem.
 
 * If the first two items do not work, then feel free to submit a new issue. We have implemented GitHub issue
@@ -40,4 +40,5 @@ note of the following when thinking of submitting an issue.
     developers of Freeciv21 understand the nature of the issue.
 
   * If there is an issue in a translation, please report it. We are still getting organized with
-    internationalization (i18n) support for the client and server. The more we know the better.
+    :doc:`internationalization </Coding/internationalization>` (i18n) support for the client and server.
+    The more we know the better.
