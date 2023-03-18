@@ -1,7 +1,6 @@
-..
-    SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
-    SPDX-FileCopyrightText: 2022 Pranav Sampathkumar <pranav.sampathkumar@gmail.com>
+..  SPDX-License-Identifier: GPL-3.0-or-later
+..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+..  SPDX-FileCopyrightText: Pranav Sampathkumar <pranav.sampathkumar@gmail.com>
 
 How to Submit a Pull Request
 ****************************
@@ -9,12 +8,12 @@ How to Submit a Pull Request
 A Pull Request (PR), also commonly known as a Merge Request, is a mechanism to "pull" code from one repository
 into another one and merge the change into the source repository.
 
-Before we go much further, let's take a few minutes to describe what happened when you :doc:`dev-env` and to
+Before we go much further, let us take a few minutes to describe what happened when you :doc:`dev-env` and to
 define a few terms that will help with further instructions. Starting with a diagram of the setup of the three
 locations where code resides:
 
 .. _GitHub Repositories:
-.. figure:: ../_static/images/github_repos.png
+.. figure:: /_static/images/github_repos.png
     :align: center
     :height: 300
     :alt: Diagram of GitHub Repositories
@@ -30,11 +29,11 @@ it is highly recommended you read the first three chapters of the
 * :strong:`Upstream`: This refers to the source (original) repository. For us this is the Longturn Freeciv21
   or Games repositories.
 * :strong:`Origin`: This refers to the fork you made in your own personal GitHub account.
-* :strong:`Local`: This isn't a :file:`git` term per se, but is a well understood industry standard way of
+* :strong:`Local`: This is not a :file:`git` term per se, but is a well understood industry standard way of
   referring to the copy of code on a person's computer. This is where the changes are made and eventually
   make it back up to origin and over to upstream via a Pull Request.
 
-The arrows represent the path that updates (e.g. changes) of files occurs.
+The arrows represent the path that updates (e.g. changes) of files occur.
 
 1. File updates from `Upstream` are downloaded (pulled) to `Local`.
 2. After changes are made, file updates from `Local` are uploaded (pushed) to `Origin`.
@@ -57,8 +56,8 @@ Upstream:
 
 .. code-block:: sh
 
-  ~/GitHub/freeciv21$ git checkout master
-  ~/GitHub/freeciv21$ git pull upstream master --ff-only
+    ~/GitHub/freeciv21$ git checkout master
+    ~/GitHub/freeciv21$ git pull upstream master --ff-only
 
 
 The first command sets the working branch to ``master`` on Local. The second command downloads the changes
@@ -78,7 +77,7 @@ Now that things are all up to date with the lastest code, let's create a branch 
 
 .. code-block:: sh
 
-  ~/GitHub/freeciv21$ git checkout -b [some_feature] upstream/master
+    ~/GitHub/freeciv21$ git checkout -b [some_feature] upstream/master
 
 
 The tag :code:`[some_feature]` should be replaced by something that matches what you are planning to work on.
@@ -101,11 +100,11 @@ updates.
 
 .. code-block:: sh
 
-  ~/GitHub/freeciv21$ rm -Rf build
-  ~/GitHub/freeciv21$ cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install -DCMAKE_BUILD_TYPE=Debug
-  ~/GitHub/freeciv21$ cmake --build build
-  ~/GitHub/freeciv21$ cmake --build build --target install
-  ~/GitHub/freeciv21$ cmake --build build --target docs
+    ~/GitHub/freeciv21$ rm -Rf build
+    ~/GitHub/freeciv21$ cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install -DCMAKE_BUILD_TYPE=Debug
+    ~/GitHub/freeciv21$ cmake --build build
+    ~/GitHub/freeciv21$ cmake --build build --target install
+    ~/GitHub/freeciv21$ cmake --build build --target docs
 
 The first command cleans out the :file:`build` directory to start with a fresh configuration. The second
 command runs a configure process and then sets things up to do the install portion inside the same
@@ -116,7 +115,7 @@ documentation that you are reading right now. You can open :file:`./build/docs/i
 generated copy of the documentation prior to pushing a change up.
 
 .. note::
-  You don't have to start from the top of the list of commands every time you want to check on things. If you
+  You do not have to start from the top of the list of commands every time you want to check on things. If you
   have already done a full pass to install and then make some more changes, you can go straight to the build
   and install commands. The :file:`cmake` program is smart enough to determine what changed and only compile
   those files again. It's much faster to do things this way!
@@ -124,7 +123,7 @@ generated copy of the documentation prior to pushing a change up.
 
 One more thing to note here, this section is only talking about making changes to the Freeciv21 repository and
 has not really talked about the Games repository, nor talked about Rulesets or Tilesets. In this scenario,
-there isn't any compiling going on. The Ruleset or Tileset editor is editing files and testing locally. The
+there is not any compiling going on. The Ruleset or Tileset editor is editing files and testing locally. The
 Longturn Games repository is effectively a repository of Rulesets.
 
 
@@ -142,18 +141,18 @@ one commit into a Pull Request then you can read about `git add <https://git-scm
 
 .. code-block:: sh
 
-  ~/GitHub/freeciv21$ git status
-  ~/GitHub/freeciv21$ git add --all
-  ~/GitHub/freeciv21$ git clang-format
-  ~/GitHub/freeciv21$ git add --all
-  ~/GitHub/freeciv21$ git commit
+    ~/GitHub/freeciv21$ git status
+    ~/GitHub/freeciv21$ git add --all
+    ~/GitHub/freeciv21$ git clang-format
+    ~/GitHub/freeciv21$ git add --all
+    ~/GitHub/freeciv21$ git commit
 
 
 The :file:`git status` command is used to list out all the changes that :file:`git` has seen. Changed files,
 new files, moved files, etc. are all listed. This command comes in handy when you want to organize your Pull
 Request into more than one commit. It's also very useful to ensure that what you see as changed follows along
 with what you THINK you have actually changed. Sometimes in the course of editing you may inadvertantly made
-a change to another file that you didn't intend to actually change. If you find that you accidentially changed
+a change to another file that you did not intend to actually change. If you find that you accidentially changed
 a file, you can use the :file:`git restore <file>` command. This is also shown on the :file:`git status`
 command output.
 
@@ -166,8 +165,8 @@ it will tell you so. If that happens, then you need to run a subsequent :file:`g
 those files added back into the commit.
 
 Once everything looks good from a :file:`git status` perspective, then issue the last command. The last
-command, :file:`git commit`, will open a text editor (in Debian based systems this is often ``nano``). Put a
-message at the bottom below all of the hashes ( ``#`` ) and then save.
+command, :file:`git commit`, will open a text editor (in Debian based systems this is often :file:`nano`). Put
+a message at the bottom below all of the hashes ( ``#`` ) and then save.
 
 You now have a commit of changes that you need to push to Origin.
 
@@ -179,7 +178,7 @@ This is the last major step in the process. To push the commit to your fork, iss
 
 .. code-block:: sh
 
-  ~/GitHub/freeciv21$ git push origin
+    ~/GitHub/freeciv21$ git push origin
 
 
 You will be prompted for your SSH passkey and then the changes in the branch you created in
