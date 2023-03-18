@@ -1,6 +1,5 @@
-..
-    SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+..  SPDX-License-Identifier: GPL-3.0-or-later
+..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 Visual Studio for Windows
 *************************
@@ -68,7 +67,7 @@ The directory can be anywhere, however the author prefers to :strong:`not` insta
 :file:`C:\\` drive.
 
 Open an Administrative elevated PowerShell terminal window. The easiest way to do this is to right-click on
-the Start Menu and select it from the menu: :guilabel:`Windows PowerShell (Admin)`.
+the :guilabel:`Start Menu` and select it from the menu: :guilabel:`Windows PowerShell (Admin)`.
 
 .. code-block:: sh
 
@@ -241,9 +240,9 @@ these commands:
 
 .. code-block:: sh
 
-  cmake . -B build-vs -G "Visual Studio 17 2022" -DFREECIV_USE_VCPKG=ON -DCMAKE_INSTALL_PREFIX=./build-vs/install
-  cmake --build build-vs
-  cmake --build build-vs --target install
+    cmake . -B build-vs -G "Visual Studio 17 2022" -DFREECIV_USE_VCPKG=ON -DCMAKE_INSTALL_PREFIX=./build-vs/install
+    cmake --build build-vs
+    cmake --build build-vs --target install
 
 
 The first command configures Visual Studio to compile a Debug version of the programs and places the install
