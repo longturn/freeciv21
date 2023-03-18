@@ -1,6 +1,5 @@
-..
-    SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+..  SPDX-License-Identifier: GPL-3.0-or-later
+..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 Set up a Development Environment
 ********************************
@@ -65,7 +64,7 @@ You can get the appropriate path by going to your forked copy in a browser, clic
 select the SSH option as shown in this sample screenshot:
 
 .. GitHub Clone SSH:
-.. figure:: ../_static/images/github_clone_ssh.png
+.. figure:: /_static/images/github_clone_ssh.png
     :align: center
     :height: 250
     :alt: GitHub Clone SSH
@@ -105,7 +104,7 @@ On Linux, the easiest way to install KDevelop is with a command such as this:
 
 .. code-block:: sh
 
-    sudo apt install kdevelop
+    $ sudo apt install kdevelop
 
 
 Once installed, you can then import the Freeciv21 project into it. Follow these steps:
@@ -114,6 +113,9 @@ Once installed, you can then import the Freeciv21 project into it. Follow these 
 #. :menuselection:`Project --> Open/Import Project`
 #. Find :file:`freeciv21/CMakeLists.txt`
 #. :menuselection:`Session --> Rename Current Session` to Freeciv21
+#. :menuselection:`Project --> Open Configuration --> Language Support`. Click on the
+   :guilabel:`Language Support` tab and ensure that the C++ Profile is `c++17`, the C Profile is `c99`, the
+   OpenCL C Profile is `CL1.1`, the CUDA C Profile is `c++11`, and finall the Compiler for Path is `GCC`.
 #. Allow kdevelop to parse all of the code. This can take a while. Eventually you will see a full tree of
    the code in the Projects tab on the left.
 
@@ -134,7 +136,7 @@ you will want to install Qt Creator. You do so with a command such as this:
 
 .. code-block:: sh
 
-    sudo apt install qtcreator
+    $ sudo apt install qtcreator
 
 
 Once installed you will get access to a program called :strong:`Qt Designer`. This tool is a graphical
