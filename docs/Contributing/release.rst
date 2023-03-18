@@ -1,5 +1,5 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
-.. SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>s
 
 The Release Process
@@ -41,7 +41,7 @@ These are the general steps to prepare and finalize a release:
       open a PR for this change to ``master``. This way, development builds from ``master`` will immediately
       use the version number of the next stable.
 
-#. If the release is a :strong:`release candidate` or a :strong:`stable release`, the release manager will
+#. If the release is a :strong:`release candidate` for a :strong:`stable release`, the release manager will
    make sure that the :guilabel:`Target` branch in the release draft is set to ``stable``.
 #. The release manager will add a tag to the release notes page and then click :guilabel:`Publish Release`.
    The format of the tag is ``v[major version].[minor version]-[pre-release name].[number]``. For example:
@@ -62,6 +62,8 @@ These are the general steps to prepare and finalize a release:
    browser.
 #. The release manager mentions user @Corbeau on Discord ``#releases-project`` channel giving the new URL to
    update his blog page once all of the GitHub action runners are complete.
+#. The release manager mentions user @panch93 on Discord ``#releases-project`` channel so he can update the
+   Arch AUR with the latest release.
 
 
 Behind the Scenes
