@@ -1,7 +1,6 @@
-..
-    SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
-    SPDX-FileCopyrightText: 2022 zekoz
+..  SPDX-License-Identifier: GPL-3.0-or-later
+..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+..  SPDX-FileCopyrightText: zekoz
 
 Setting up MSYS2 for Windows
 ****************************
@@ -65,7 +64,7 @@ This chapter is about creating a new MSYS2 build environment.
     * mingw-w64-i686-libunwind / mingw-w64-x86_64-libunwind
     * mingw-w64-i686-make / mingw-w64-x86_64-make
     * mingw-w64-i686-python3 / mingw-w64-x86_64-python3
-    * mingw-w64-i686-python-pip / mingw-w64-x86_64-python-pip
+    * mingw-w64-i686-python3-pip / mingw-w64-x86_64-python3-pip
 
 #. Arch-specific optional packages for building common parts (i686 or x86_64, but not both).
 
@@ -82,13 +81,13 @@ This chapter is about creating a new MSYS2 build environment.
 
     * mingw-w64-i686-nsis / mingw-w64-x86_64-nsis
 
-#. Add some environment variables to the ``.bash_profile`` file. The code sample assumes x86_64.
+#. Add some environment variables to the :file:`.bash_profile` file. The code sample assumes x86_64.
 
 .. code-block:: sh
 
-  export PATH=/mingw64/bin:${PATH}
-  export MSYSTEM=MINGW64
-  export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/mingw64/lib/pkgconfig:/mingw64/share/pkgconfig
+    export PATH=/mingw64/bin:${PATH}
+    export MSYSTEM=MINGW64
+    export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/mingw64/lib/pkgconfig:/mingw64/share/pkgconfig
 
 
 Premade Environment
