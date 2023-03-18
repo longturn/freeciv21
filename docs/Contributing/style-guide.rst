@@ -1,7 +1,6 @@
-..
-    SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022-2023 James Robertson <jwrober@gmail.com>
-    SPDX-FileCopyrightText: 2022 Louis Moureaux <m_louis30@yahoo.com>
+..  SPDX-License-Identifier: GPL-3.0-or-later
+..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+..  SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
@@ -66,6 +65,34 @@ Heading 4
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
+Attribution
+===========
+
+As with our code, the documentation is written by contributors and proper attribution should always be given.
+We follow the `SPDX <https://spdx.dev/>`_ standard for attribution in all our documentation, music, and art
+files. For documentation files, we can the proper SPDX header to the very top of the page. For music and art
+we add a text license file along with the primary file. For example if we have :file:`art.png`, then there
+should be a corresponding :file:`art.png.license` file to give proper attribution. We use the GPL v3.0 or
+later license. Here is what the SPDX header should look like in all scenarios:
+
+.. code-block:: rst
+
+    ..  SPDX-License-Identifier: GPL-3.0-or-later
+    ..  SPDX-FileCopyrightText: [contributor name or handle] <[contributor email address]>
+
+
+.. note::
+    We do not add the copydate date to our attribution blocks. There is recent commentary that this is not
+    needed and leaving the date off makes keeping header blocks up to date easier.
+
+If the file you are working with came from legacy Freeciv, please add this line to the SPDX header for proper
+attribution:
+
+.. code-block:: rst
+
+    ..  SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+
+
 Interpreted Text Roles
 ======================
 
@@ -94,7 +121,7 @@ to alter is placed inside back-ticks.
   :menuselection:`Game --> Local Options`. To denote submenus, use a test arrow like this: :literal:`-->`
   between the selection items.
 * :literal:`:strong:` -- Strong is used to :strong:`bold some text`. A good use of :literal:`:strong:` is to
-  highlight game elements, such as technologies.
+  highlight game elements.
 * :literal:`:title-reference:` -- Title Reference is used notate a :title-reference:`title entry` in the
   in-game help or to refer to a page in the documentation without giving an actual hyperlink reference
   (see :literal:`:doc:` above).
@@ -121,11 +148,11 @@ Admonitions are specially marked "topics" that can appear anywhere an ordinary b
 admonition is rendered as an offset block in a document, sometimes outlined or shaded, with a title matching
 the admonition type. We use some of the standard admonitions in our documentation as well.
 
-* :literal:`.. attention::` -- Use attention to bring a very important high profile item to the reader's
+* :literal:`.. attention::` -- Use Attention to bring a very important high profile item to the reader's
   attention.
 
 .. attention::
-    This is a really important message! Don't forget to eat breakfast every day.
+    This is a really important message! Do not forget to eat breakfast every day.
 
 * :literal:`.. todo::` -- Use To Do as a reminder for documentation editors to come back and fix things at
   a later date.
@@ -133,13 +160,14 @@ the admonition type. We use some of the standard admonitions in our documentatio
 .. todo::
     Come back and fix something later.
 
-* :literal:`.. note::` --  Use the "note" as the way to give more information to the reader on a topic.
+* :literal:`.. note::` --  Use the Note as the way to give more information to the reader on a topic.
 
 .. note::
-    It's important to note that Freeciv21 is really fun to play with groups of people online.
+    It is important to note that Freeciv21 is really fun to play with groups of people online.
 
 * :literal:`.. code-block:: rst` -- The code block is an excellent way to display actual code or any
-  pre-formatted plain text.
+  pre-formatted plain text. The tag ``rst`` can be replaces by ``sh``, ``cpp``, and ``ini`` as well to give
+  different types of markup for shell commands, C++ code, and ini file formatting.
 
 .. code-block:: rst
 
@@ -150,7 +178,7 @@ Language Usage Elements
 =======================
 
 The documentation is written mostly in US English (en_US), however elements of Queen's English (e.g. en_GB)
-are also found in the documentation. The two forms of English are close enough that we don't worry too much
+are also found in the documentation. The two forms of English are close enough that we do not worry too much
 if one author uses "color" and another uses "colour". Any reader or language translator will be able to figure
 out what the author is trying to say. However, there are some standards that documentation authors do need to
 adhere to, so the documentation is consistently formatted and certain language elements are always used the
@@ -173,7 +201,9 @@ Capitalization
       :doc:`See here for a list. <capitalized-terms>`
 
       This is particularly useful with words that are used ambiguously in the game, such as "granary" which is
-      both the amount of food a city needs before growing and an improvement in many rulesets, or "transport".
+      both the amount of food a city needs before growing and an improvement in many rulesets. Another
+      example is "transport" which covers both the movement of units on a ship and the particular unit type of
+      :unit:`Transport`.
 
     When describing elements of the user interface, use the same capitalization as in the game and wrap the
     text inside markup elements with the :literal:`:guilabel:` or :literal:`:menuselection:` roles. They are
@@ -214,7 +244,7 @@ Figure Numbers
     .. code-block:: rst
 
         .. _Start Screen:
-        .. figure:: ../../_static/images/gui-elements/start-screen.png
+        .. figure:: /_static/images/gui-elements/start-screen.png
           :scale: 65%
           :align: center
           :alt: Freeciv21 Start Screen
@@ -246,9 +276,9 @@ code could be typeset in monospace with ``\texttt{}``, or defining a few symbols
 a long reasoning. The main guideline for formulas is to take your time to make them as readable as possible.
 
 Formulas use the ``:math:`` role or the ``.. math::`` directive. These blocks support most of the LaTeX
-`mathematics syntax <https://en.wikibooks.org/wiki/LaTeX/Mathematics>`_. The ``:math:`` role is used for inline
-math in a paragraph. For instance, ``:math:`a+b=1``` becomes :math:`a+b=1`. The directive is used for longer
-or more important formulas that come on their own line:
+`mathematics syntax <https://en.wikibooks.org/wiki/LaTeX/Mathematics>`_. The ``:math:`` role is used for
+inline math in a paragraph. For instance, ``:math:`a+b=1``` becomes :math:`a+b=1`. The directive is used for
+longer or more important formulas that come on their own line:
 
 .. math::
   a+b=1.
