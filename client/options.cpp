@@ -1605,7 +1605,7 @@ static void init_client_options()
              "by left-clicking and then holding down the mouse "
              "button while dragging the mouse onto a different "
              "tile."),
-          COC_INTERFACE, true, nullptr),
+          COC_INTERFACE, false, nullptr),
       GEN_BOOL_OPTION(
           goto_into_unknown, N_("Allow goto into the unknown"),
           N_("Setting this option will make the game consider "
