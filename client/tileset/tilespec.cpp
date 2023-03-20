@@ -2757,18 +2757,18 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     auto sprite = load_sprite(t, buffer);
     if (sprite) {
       t->sprites.upkeep.output[o].push_back(sprite);
-    }
-    // Start from "upkeep.food2"; there is no "upkeep.food1"
-    for (i = 2;; i++) {
-      buffer =
-          QStringLiteral("upkeep.%1%2")
-              .arg(get_output_identifier(static_cast<Output_type_id>(o)),
-                   QString::number(i + 1));
-      auto sprite = load_sprite(t, buffer);
-      if (!sprite) {
-        break;
+      // Start from "upkeep.food2"; there is no "upkeep.food1"
+      for (i = 2;; i++) {
+        buffer =
+            QStringLiteral("upkeep.%1%2")
+                .arg(get_output_identifier(static_cast<Output_type_id>(o)),
+                     QString::number(i));
+        auto sprite = load_sprite(t, buffer);
+        if (!sprite) {
+          break;
+        }
+        t->sprites.upkeep.output[o].push_back(sprite);
       }
-      t->sprites.upkeep.output[o].push_back(sprite);
     }
   }
   output_type_iterate_end;
