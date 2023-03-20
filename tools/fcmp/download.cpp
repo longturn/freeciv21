@@ -300,25 +300,24 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
       // We have everything
       auto inst_ver =
           mpdb_installed_version(qUtf8Printable(dep_name), dep_type);
-      if (inst_ver != nullptr) {
-        if (!cvercmp_max(qUtf8Printable(dep_version), inst_ver)) {
-          qDebug() << "Dependency modpack" << dep_name << "needed.";
+      if (!inst_ver || !cvercmp_max(qUtf8Printable(dep_version), inst_ver)) {
+        qInfo() << "Dependency modpack" << QString(inst_ver) << dep_version
+                << "needed.";
 
-          if (mcb != nullptr) {
-            mcb(_("Download dependency modpack"));
-          }
+        if (mcb != nullptr) {
+          mcb(_("Download dependency modpack"));
+        }
 
-          auto dep_qurl = QUrl(dep_url);
-          if (dep_qurl.isRelative()) {
-            dep_qurl = url.resolved(dep_qurl);
-          }
+        auto dep_qurl = QUrl(dep_url);
+        if (dep_qurl.isRelative()) {
+          dep_qurl = url.resolved(dep_qurl);
+        }
 
-          auto msg =
-              download_modpack(dep_url, fcmp, mcb, pbcb, recursion + 1);
+        auto msg =
+            download_modpack(dep_qurl, fcmp, mcb, pbcb, recursion + 1);
 
-          if (msg != nullptr) {
-            return msg;
-          }
+        if (msg != nullptr) {
+          return msg;
         }
       }
     }
