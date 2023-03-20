@@ -1882,30 +1882,33 @@ QString text_happiness_units(const struct city *pcity)
   }
 
   // And finally how many unhappy we get in this city
-  int count = 0;
+  int count = 0, happy_upkeep = 0;
   unit_list_iterate(pcity->units_supported, punit)
   {
     int dummy = 0;
-    if (city_unit_unhappiness(punit, &dummy) > 0) {
+    if (auto n = city_unit_unhappiness(punit, &dummy); n > 0) {
       count++;
+      happy_upkeep += n;
     }
   }
   unit_list_iterate_end;
 
   str += QStringLiteral("</p><p>");
   if (count > 0) {
-    // TRANS: "This city supports %1 agressive military units, resulting in X
-    //        unhappy citizens." (first part)
+    // TRANS: "This city supports %1 agressive military units, resulting in
+    //        up to X unhappy citizens." (first part)
     str += QString(PL_("This city supports %1 agressive military unit, ",
                        "This city supports %1 agressive military units, ",
                        count))
                .arg(count);
-    // TRANS: "This city supports %1 agressive military units, resulting in X
-    //        unhappy citizens." (second part)
-    str += QString(PL_("resulting in <b>%1 additional unhappy citizen.</b>",
-                       "resulting in <b>%1 additional unhappy citizens.</b>",
-                       pcity->unit_happy_upkeep))
-               .arg(pcity->unit_happy_upkeep);
+    // TRANS: "This city supports X agressive military units, resulting in up
+    //        to %1 unhappy citizens." (second part)
+    str +=
+        QString(
+            PL_("resulting in up to <b>%1 additional unhappy citizen.</b>",
+                "resulting in up to <b>%1 additional unhappy citizens.</b>",
+                happy_upkeep))
+            .arg(happy_upkeep);
   } else {
     str += _("Currently, military units do not cause additional unhappiness "
              "in this city.");
