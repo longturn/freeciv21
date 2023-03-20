@@ -1,5 +1,5 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
-.. SPDX-FileCopyrightText: 2022-2023 James Robertson <jwrober@gmail.com>
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
@@ -449,7 +449,7 @@ Game Options
 
 .. _client-manual-messages:
 
-Messages
+Message Options
     Opens the :guilabel:`Message Options` dialog as shown in :numref:`Message Options Dialog` below. The
     screenshot only shows a few rows of available options, many more will be found in the client. Any item
     with a check mark in the :guilabel:`Out` column will be shown in the :guilabel:`Server Chat/Command Line`
@@ -470,7 +470,7 @@ Messages
 
 .. _client-manual-shortcuts:
 
-Shortcuts
+Shortcut Options
     Opens the :guilabel:`Shortcuts` dialog as shown in :numref:`Shortcut Options Dialog` below. The dialog is
     used to set the preferred keyboard shortcuts to be used in the game. The screenshot only shows a few rows
     of available options, many more will be found in the client. To override the default, click your mouse
