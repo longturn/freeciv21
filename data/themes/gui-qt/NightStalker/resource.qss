@@ -52,6 +52,7 @@ chat_widget, message_widget {
 *[messagewindow="true"] {
   color: #00002f;
 }
+
 /* color of border only*/
 *[top_bar="true"] {
   color: #000000;
@@ -90,7 +91,6 @@ chat_widget, message_widget {
    background-color: rgb(0,0,0,125);
 }
 
-
 close_widget
 {
   background: #1155BB;
@@ -110,12 +110,12 @@ QPushButton[main_pagebt="true"] {
   border-radius: 0px;
   padding: 0px;
 }
+
 QPushButton:hover[main_pagebt="true"] {
   color: white;
   background: #000330;
   border: 3px solid #3399FF;
 }
-
 
 QPushButton, QToolButton {
   color: #FFFFFF;
@@ -194,8 +194,6 @@ hud_input_box QDialogButtonBox QPushButton:hover {
   border: 2px solid #3399FF;
 }
 
-
-
 hud_message_box QDialogButtonBox QPushButton {
   color: #FFFFFF;
   background: #323843;
@@ -246,7 +244,6 @@ QTableWidget::item:selected {
   padding: 0 0;
   background: #3399FF;
 }
-
 
 QHeaderView::section {
   background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #474747, stop: 1 #323232);
@@ -299,7 +296,6 @@ QComboBox::down-arrow {
   image: url(LittleFingercombo-arrow.png);
 }
 
-
 QSlider::groove:horizontal {
   background: transparent;
   height: 16px;
@@ -321,7 +317,6 @@ QSlider::add-page:horizontal {
 QSlider::sub-page:horizontal {
   background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgba(0,0,0,0) ,stop:0.3 rgba(0,0,0,0), stop:0.4 rgba(50,151,255,255) stop: 0.6 rgba(50,151,255,255) , stop:0.7 rgba(0,0,0,0), stop: 1 rgba(0,0,0,0));
 }
-
 
 QSplitter::handle {
   background: transparent;
@@ -385,6 +380,7 @@ QMenu::icon:checkable {
   padding: 2px;
   margin-left: 1px;
 }
+
 QMenu::icon:checked {
   border-color: #143c63;
   background-color: rgba(51, 153, 255, 112);
@@ -589,7 +585,6 @@ QTabBar QToolButton::left-arrow {
 QTabBar QToolButton::right-arrow {
   image: url(LittleFingerarrow-right);
 }
-
 
 QTreeView {
   alternate-background-color: #475060;
@@ -834,7 +829,6 @@ QScrollBar::handle:horizontal {
   background: #3399FF; min-width: 20px
 }
 
-
 fc_game_tab_widget {
    background-image:url(LittleFingerpattern-game.png);
 }
@@ -888,7 +882,6 @@ chatwdg QLineEdit
   color: rgb( 240, 240, 240);
 }
 
-
 chatwdg QScrollBar:vertical
 {
   background: transparent;
@@ -927,7 +920,6 @@ hud_message_box {
   alternate-background-color: rgb(0, 0, 60);
   border: 2px solid #3399FF;
 }
-
 
 hud_input_box {
   background-color: transparent;
@@ -973,7 +965,7 @@ gold_widget[current_warning="2"] {
 }
 
 hud_action {
-  selection-background-color: rgb(75, 75, 75);
+  selection-background-color: rgba(75, 75, 75, 125);
   color: white;
 }
 
@@ -1000,6 +992,3 @@ message_dlg QTableWidget {
   background-color: #525d6e;
   alternate-background-color: #4b5565;
 }
-
-
-

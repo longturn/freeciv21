@@ -23,6 +23,7 @@ QMainWindow, minimap_panel {
 *[messagewindow="true"] {
   color: #120c06;
 }
+
 /* color of border only*/
 *[top_bar="true"] {
   color: #000000;
@@ -420,7 +421,6 @@ QTabBar QToolButton::right-arrow {
   image: url(LittleFingerarrow-right);
 }
 
-
 QTreeView {
   alternate-background-color: #e0d2b2;
   background-color: #e7d6b0;
@@ -470,7 +470,6 @@ QCheckBox::indicator {
 QCheckBox::indicator:unchecked {
   image: url(LittleFingercheckbox-unchecked.png);
 }
-
 
 QCheckBox::indicator:unchecked:pressed {
   image: url(LittleFingercheckbox-unchecked_pressed.png);
@@ -670,12 +669,10 @@ unittype_item QPushButton {
   border: none;
 }
 
-
 science_report > QScrollArea,
 research_diagram {
   background-image:url(LittleFingerpattern.png);
 }
-
 
 help_widget QTextBrowser
 {
@@ -814,7 +811,6 @@ chat_widget QScrollBar::sub-line:vertical {
   width: 0px;height: 0px;
 }
 
-
 message_widget QScrollBar:vertical {
   background: transparent;
   border: 1px solid #c3b48e;
@@ -899,7 +895,7 @@ unit_hud_selector {
 }
 
 hud_action {
-  selection-background-color: rgb(75, 75, 75);
+  selection-background-color: rgba(75, 75, 75, 125);
   color: white;
 }
 
