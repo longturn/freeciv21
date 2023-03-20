@@ -569,9 +569,9 @@ void mr_menu::setup_menus()
   connect(act, &QAction::triggered, this, &mr_menu::local_options);
   act = menu->addAction(_("Game Options"));
   connect(act, &QAction::triggered, this, &mr_menu::server_options);
-  act = menu->addAction(_("Messages"));
+  act = menu->addAction(_("Message Options"));
   connect(act, &QAction::triggered, this, &mr_menu::messages_options);
-  act = menu->addAction(_("Shortcuts"));
+  act = menu->addAction(_("Shortcut Options"));
   connect(act, &QAction::triggered, this, &mr_menu::shortcut_options);
   act = menu->addAction(_("Load Another Tileset"));
   connect(act, &QAction::triggered, this, &mr_menu::tileset_custom_load);
