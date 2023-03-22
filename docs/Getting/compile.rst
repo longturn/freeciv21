@@ -1,8 +1,8 @@
-..
-    SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
-    SPDX-FileCopyrightText: 2022 louis94 <m_louis30@yahoo.com>
+..  SPDX-License-Identifier: GPL-3.0-or-later
+..  SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+..  SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
+
 
 Compiling Freeciv21
 *******************
@@ -54,7 +54,7 @@ A C and C++ compiler
 The Cmake program
     Freeciv21 developers generally use :file:`cmake`, the Kitware make program. You can check if you have
     :file:`cmake` installed on your system by typing the following command. The output should include
-    "Kitware cmake" somewhere and the version should be >=3.12.
+    "Kitware cmake" somewhere and the version should be >=3.21.
 
 .. code-block:: sh
 
@@ -82,7 +82,7 @@ SQLite
     built into all mobile phones and most computers and comes bundled inside countless other applications
     that people use every day. Freeciv21 requires version 3.
 
-    http://www.sqlite.org/
+    http://www.sqlite.org
 
 GNU Gettext
     GNU Gettext is used for Internationalization support. Freeciv21 requires version 0.15 or better. The
@@ -99,14 +99,20 @@ Lua
     https://www.lua.org/about.html
 
 KF 5 Archive Library
-    KArchive provides classes for easy reading, creation and manipulation of "archive" formats like ZIP
-    and TAR.
+    KDE frameworks KArchive provides classes for easy reading, creation and manipulation of "archive" formats
+    like ZIP and TAR.
+
+    https://invent.kde.org/frameworks/karchive
 
 SDL2_Mixer
     SDL_mixer is a sample multi-channel audio mixer library.
 
+    https://www.libsdl.org
+
 Python
     Freeciv21 requires version 3 of Python
+
+    https://www.python.org
 
 
 Prerequisites for the Client and Tools
@@ -141,6 +147,7 @@ self contained. You do not need to return here in that case.
 
 Debian Linux Packages
 =====================
+
 Below are all the command line steps needed to start with a fresh install of Debian or its variants (e.g.
 Ubuntu, Linux Mint) to install Freeciv21.
 
@@ -258,12 +265,13 @@ Once the compilation is complete, install the game with this command.
 .. note:: If you did not change the default install prefix, you will need to elevate privileges
     with :file:`sudo`.
 
-.. tip:: If you want to enable menu integration for the installed copy of Freeciv21, you will want
-    to copy the :literal:`.desktop` files in :file:`$CMAKE_INSTALL_PREFIX/share/applications` to
+.. tip::
+    If you want to enable menu integration for the installed copy of Freeciv21, you will want to copy the
+    :literal:`.desktop` files in :file:`$CMAKE_INSTALL_PREFIX/share/applications` to
     :file:`$HOME/.local/share/applications`.
 
-    This is only necessary if you change the installation prefix. If you do not and use elevated
-    privileges, then the files get copied to the system default location.
+    This is only necessary if you change the installation prefix. If you do not and use elevated privileges,
+    then the files get copied to the system default location.
 
 At this point, the compilation and installation process is complete. The following sections document other
 aspects of the packaging and documentation generation process.
