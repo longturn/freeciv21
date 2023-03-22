@@ -64,15 +64,15 @@ You can also point the installer at modpacks or lists on other servers:
 Once you have installed a modpack, how you use it depends on the modpack type:
 
 * Scenarios (pre-defined maps) should be listed under :guilabel:`Start scenario game` from the
-:doc:`game start page </Getting/Manuals/start-screen>`, or from the game server prompt via
-:literal:`/list scenarios`.
+  :doc:`game start page </Manuals/Game/start-screen>`, or from the game server prompt via
+  :literal:`/list scenarios`.
 
 .. tip::
   For network play, scenarios need only be installed on the game server.
 
 * Rulesets should appear on the :guilabel:`Ruleset` drop-down from the game's :guilabel:`Start new game`
-  page as shown in :numref:`Start New Game Dialog`. On the game server, you can load a ruleset with
-  :literal:`/read <name>` or failing that perhaps :literal:`/rulesetdir <name>`.
+  page as shown in :numref:`Start New Game Dialog` in the :doc:`/Manuals/Game/index`. On the game server, you
+  can load a ruleset with :literal:`/read <name>` or failing that perhaps :literal:`/rulesetdir <name>`.
 
 * Tilesets should appear for selection in the local interface options, in the appropriate topology-specific
   :guilabel:`Tileset` drop-down under :guilabel:`Graphics`.
