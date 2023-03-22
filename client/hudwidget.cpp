@@ -825,10 +825,10 @@ void hud_action::paintEvent(QPaintEvent *event)
 
   p.begin(this);
   p.setRenderHint(QPainter::SmoothPixmapTransform);
-  icon.paint(&p, rect());
   if (focus) {
     p.fillRect(rect(), QColor(palette().color(QPalette::Highlight)));
   }
+  icon.paint(&p, rect());
   p.end();
 }
 
