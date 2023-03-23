@@ -8,6 +8,7 @@
 .. role:: wonder
 .. role:: advance
 
+
 Documentation Style Guide
 *************************
 
@@ -110,6 +111,10 @@ to alter is placed inside back-ticks.
   This is required for sphinx to recognize it. Also notice the use of the anchor in :literal:`:ref:` leaves
   the underscore off.
 * :literal:`:numref:` -- Create a cross-reference to a named figure.
+* :literal:`:table:` -- Create a named table reference. Place an anchor (e.g. :literal:`.. _My Anchor:`) above
+  to enable :literal:`:numref:`.
+* :literal:`:figure:` -- Create a named figure reference. Place an anchor (e.g. :literal:`.. _My Anchor:`)
+  above to enable :literal:`:numref:`.
 * :literal:`:emphasis:` -- Emphasis is used to :emphasis:`bring attention to something`.
 * :literal:`:file:` -- File is used for file names and paths such as :file:`~/.local/share/freeciv21/saves`.
 * :literal:`:guilabel:` -- GUI Label is used to bring attention to something on the screen like the
