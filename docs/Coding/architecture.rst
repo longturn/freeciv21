@@ -39,24 +39,28 @@ Localization files are located under :file:`translations`.
 There are a few additional folders that you will touch less often. The table below describes the complete
 structure of the repository:
 
-==================== ==========
-Folder               Usage
-==================== ==========
-:file:`ai`           Code for computer opponents.
-:file:`client`       Client code.
-:file:`cmake`        Build system support code.
-:file:`common`       Code dealing with the game state. Shared by the client, server, and tools.
-:file:`data`         Game assets.
-:file:`dependencies` External dependencies not found in package managers.
-:file:`dist`         Files related to distributing Freeciv21 for various operating systems.
-:file:`docs`         This documentation.
-:file:`scripts`      Useful scripts used by the maintainers.
-:file:`server`       Server code.
-:file:`tools`        Small game-related programs.
-:file:`translations` Localization.
-:file:`utility`      Utility classes and functions not found in Qt or other dependencies.
-==================== ==========
+.. _arch-directories:
+.. table:: Freeciv21 Code Repository Organization
+  :widths: auto
+  :align: left
+
+  ==================== ==========
+  Folder               Usage
+  ==================== ==========
+  :file:`ai`           Code for computer opponents.
+  :file:`client`       Client code.
+  :file:`cmake`        Build system support code.
+  :file:`common`       Code dealing with the game state. Shared by the client, server, and tools.
+  :file:`data`         Game assets.
+  :file:`dependencies` External dependencies not found in package managers.
+  :file:`dist`         Files related to distributing Freeciv21 for various operating systems.
+  :file:`docs`         This documentation.
+  :file:`scripts`      Useful scripts used by the maintainers.
+  :file:`server`       Server code.
+  :file:`tools`        Small game-related programs.
+  :file:`translations` Localization.
+  :file:`utility`      Utility classes and functions not found in Qt or other dependencies.
+  ==================== ==========
 
 .. note::
-
     Some folders do not follow this structure. Their contents should eventually be moved.
