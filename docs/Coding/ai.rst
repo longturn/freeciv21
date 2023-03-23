@@ -16,7 +16,6 @@ Artificial Intelligence (AI)
 This document is about Freeciv21's default :term:`AI`.
 
 .. warning::
-
     The contents of this page are over 20 years old and have not been reviewed for correctness.
 
 Introduction
@@ -46,17 +45,22 @@ Build calculations are expressed through a structure called :code:`adv_choice`. 
 "want", which determines how much the :term:`AI` wants whatever item is pointed to by :code:`choice->type`.
 :code:`choice->want` is:
 
-======== ======
-Value    Result
-======== ======
--199     get_a_boat
-< 0      an error
-== 0     no want, nothing to do
-<= 100   normal want
-> 100    critical want, used to requisition emergency needs
-> ???    probably an error (1024 is a reasonable upper bound)
-> 200    Frequently used as a cap. When want exceeds this value, it is reduced to a lower number.
-======== ======
+.. _ai-choice-want:
+.. table:: AI Want Ranges
+  :widths: auto
+  :align: left
+
+  ======== ======
+  Value    Result
+  ======== ======
+  -199     get_a_boat
+  < 0      an error
+  == 0     no want, nothing to do
+  <= 100   normal want
+  > 100    critical want, used to requisition emergency needs
+  > ???    probably an error (1024 is a reasonable upper bound)
+  > 200    Frequently used as a cap. When want exceeds this value, it is reduced to a lower number.
+  ======== ======
 
 These are ideal numbers, your mileage while travelling through the code may vary considerably. Technology and
 Diplomats, in particular, seem to violate these standards.
@@ -234,23 +238,28 @@ handicap and test ``experimental`` level :term:`AI`'s against ``hard`` level :te
 
 Other handicaps used are:
 
-================= =======
-Variable          Result
-================= =======
-``H_DIPLOMAT``    Cannot build offensive :unit:`Diplomats`.
-``H_LIMITEDHUTS`` Can get only 25 gold and :unit:`Barbarians` from Huts.
-``H_DEFENSIVE``   Build defensive buildings without calculating need.
-``H_RATES``       Cannot set its national budget rates beyond government limits.
-``H_TARGETS``     Cannot target anything it does not know exists.
-``H_HUTS``        Does not know which unseen tiles have Huts on them.
-``H_FOG``         Cannot see through fog of War.
-``H_NOPLANES``    Does not build air units.
-``H_MAP``         Only knows ``map_is_known`` tiles.
-``H_DIPLOMACY``   Not very good at Diplomacy.
-``H_REVOLUTION``  Cannot skip Anarchy.
-``H_EXPANSION``   Do not like being much larger than human.
-``H_DANGER``      Always thinks its city is in danger.
-================= =======
+.. _ai-difficulty-levels
+.. table:: AI Difficulty Levels
+  :widths: auto
+  :align: left
+
+  ================= =======
+  Variable          Result
+  ================= =======
+  ``H_DIPLOMAT``    Cannot build offensive :unit:`Diplomats`.
+  ``H_LIMITEDHUTS`` Can get only 25 gold and :unit:`Barbarians` from Huts.
+  ``H_DEFENSIVE``   Build defensive buildings without calculating need.
+  ``H_RATES``       Cannot set its national budget rates beyond government limits.
+  ``H_TARGETS``     Cannot target anything it does not know exists.
+  ``H_HUTS``        Does not know which unseen tiles have Huts on them.
+  ``H_FOG``         Cannot see through fog of War.
+  ``H_NOPLANES``    Does not build air units.
+  ``H_MAP``         Only knows ``map_is_known`` tiles.
+  ``H_DIPLOMACY``   Not very good at Diplomacy.
+  ``H_REVOLUTION``  Cannot skip Anarchy.
+  ``H_EXPANSION``   Do not like being much larger than human.
+  ``H_DANGER``      Always thinks its city is in danger.
+  ================= =======
 
 For an up-to-date list of all handicaps and their use for each difficulty level see :file:`ai/handicaps.h`.
 
