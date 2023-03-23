@@ -26,20 +26,25 @@ system can be tweaked to show only the messages you want at run time, for instan
 `QLoggingCategory <https://doc.qt.io/qt-5/qloggingcategory.html#configuring-categories>`_. The following
 categories are currently defined:
 
-======================== ====================================
-Name                     Used for
-======================== ====================================
-``freeciv.stacktrace``   Stack traces in debug builds.
-``freeciv.assert``       Assertion errors.
-``freeciv.inputfile``    ``spec`` file parser.
-``freeciv.bugs``         When the code finds a bug in itself.
-``freeciv.timers``       Various timers.
-``freeciv.depr``         Deprecation warnings.
-``freeciv.cm``           Citizen manager messages.
-``freeciv.ruleset``      Ruleset issues.
-``freeciv.goto``         Path finding debug messages.
-``freeciv.graphics``     FPS counters.
-======================== ====================================
+.. _logging-parameters:
+.. table:: Logging Parameters
+  :widths: auto
+  :align: left
+
+  ======================== ====================================
+  Name                     Used for
+  ======================== ====================================
+  ``freeciv.stacktrace``   Stack traces in debug builds.
+  ``freeciv.assert``       Assertion errors.
+  ``freeciv.inputfile``    ``spec`` file parser.
+  ``freeciv.bugs``         When the code finds a bug in itself.
+  ``freeciv.timers``       Various timers.
+  ``freeciv.depr``         Deprecation warnings.
+  ``freeciv.cm``           Citizen manager messages.
+  ``freeciv.ruleset``      Ruleset issues.
+  ``freeciv.goto``         Path finding debug messages.
+  ``freeciv.graphics``     FPS counters.
+  ======================== ====================================
 
 For instance, one could disable stack traces and enable Go To ``debug`` message by setting:
 
