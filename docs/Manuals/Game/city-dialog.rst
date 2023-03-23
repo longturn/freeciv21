@@ -29,6 +29,10 @@ production and citizen governor tabs (left), city citizen tile output (center), 
   City Dialog
 
 
+.. todo::
+  When the new city dialog in ``master`` branch gets closer to being completed, we will need to update this
+  page with new screen shots.
+
 Let us start at the top center as highlighted in :numref:`City Dialog Top Center`. In this segment of the
 dialog box is some general information about the city. The name of the city is in the header at the top
 center. If you click on the city name, a dialog box will appear and allow you to rename the city to something
