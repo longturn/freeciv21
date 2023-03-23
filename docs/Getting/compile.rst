@@ -345,29 +345,34 @@ Other CMake Notes
 To customize the compile, :file:`cmake` requires the use of command line parameters. :file:`cmake` calls
 them directives and they start with :literal:`-D`. The defaults are marked with :strong:`bold` text.
 
-=========================================== =================
-Directive                                    Description
-=========================================== =================
-FREECIV_ENABLE_TOOLS={:strong:`ON`/OFF}     Enables all the tools with one parameter (Ruledit, FCMP,
-                                            Ruleup, and Manual)
-FREECIV_ENABLE_SERVER={:strong:`ON`/OFF}    Enables the server. Should typically set to ON to be able
-                                            to play AI games
-FREECIV_ENABLE_NLS={:strong:`ON`/OFF}       Enables Native Language Support
-FREECIV_ENABLE_CIVMANUAL={:strong:`ON`/OFF} Enables the Freeciv21 Manual application
-FREECIV_ENABLE_CLIENT={:strong:`ON`/OFF}    Enables the Qt client. Should typically set to ON unless you
-                                            only want the server
-FREECIV_ENABLE_FCMP_CLI={ON/OFF}            Enables the command line version of the Freeciv21 Modpack
-                                            Installer
-FREECIV_ENABLE_FCMP_QT={ON/OFF}             Enables the Qt version of the Freeciv21 Modpack Installer
-                                            (recommended)
-FREECIV_ENABLE_RULEDIT={ON/OFF}             Enables the Ruleset Editor
-FREECIV_ENABLE_RULEUP={ON/OFF}              Enables the Ruleset upgrade tool
-FREECIV_USE_VCPKG={ON/:strong:`OFF`}        Enables the use of VCPKG
-FREECIV_DOWNLOAD_FONTS{:strong:`ON`/OFF}    Enables the downloading of Libertinus Fonts
-CMAKE_BUILD_TYPE={:strong:`Release`/Debug}  Changes the Build Type. Most people will pick Release
-CMAKE_INSTALL_PREFIX=/some/path             Allows an alternative install path. Default is
-                                            :file:`/usr/local/freeciv21`
-=========================================== =================
+.. _compile-cmake-parms:
+.. table:: Cmake Parameters
+  :widths: auto
+  :align: left
+
+  =========================================== =================
+  Directive                                    Description
+  =========================================== =================
+  FREECIV_ENABLE_TOOLS={:strong:`ON`/OFF}     Enables all the tools with one parameter (Ruledit, FCMP,
+                                              Ruleup, and Manual)
+  FREECIV_ENABLE_SERVER={:strong:`ON`/OFF}    Enables the server. Should typically set to ON to be able
+                                              to play AI games
+  FREECIV_ENABLE_NLS={:strong:`ON`/OFF}       Enables Native Language Support
+  FREECIV_ENABLE_CIVMANUAL={:strong:`ON`/OFF} Enables the Freeciv21 Manual application
+  FREECIV_ENABLE_CLIENT={:strong:`ON`/OFF}    Enables the Qt client. Should typically set to ON unless you
+                                              only want the server
+  FREECIV_ENABLE_FCMP_CLI={ON/OFF}            Enables the command line version of the Freeciv21 Modpack
+                                              Installer
+  FREECIV_ENABLE_FCMP_QT={ON/OFF}             Enables the Qt version of the Freeciv21 Modpack Installer
+                                              (recommended)
+  FREECIV_ENABLE_RULEDIT={ON/OFF}             Enables the Ruleset Editor
+  FREECIV_ENABLE_RULEUP={ON/OFF}              Enables the Ruleset upgrade tool
+  FREECIV_USE_VCPKG={ON/:strong:`OFF`}        Enables the use of VCPKG
+  FREECIV_DOWNLOAD_FONTS{:strong:`ON`/OFF}    Enables the downloading of Libertinus Fonts
+  CMAKE_BUILD_TYPE={:strong:`Release`/Debug}  Changes the Build Type. Most people will pick Release
+  CMAKE_INSTALL_PREFIX=/some/path             Allows an alternative install path. Default is
+                                              :file:`/usr/local/freeciv21`
+  =========================================== =================
 
 For more information on other cmake directives see
 https://cmake.org/cmake/help/latest/manual/cmake-variables.7.html.
