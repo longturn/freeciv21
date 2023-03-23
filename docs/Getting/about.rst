@@ -12,10 +12,14 @@
 About Freeciv21
 ***************
 
-.. image:: ../../dist/freeciv21-screenshot-2048x1112.png
-    :width: 800px
-    :align: center
-    :alt: Freeciv21
+.. _Freeciv21 Overview:
+.. figure:: ../../dist/freeciv21-screenshot-2048x1112.png
+  :width: 800px
+  :align: center
+  :alt: Freeciv21 Overview
+  :figclass: align-center
+
+  Freeciv21 Overview
 
 
 |
