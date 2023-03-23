@@ -238,7 +238,7 @@ handicap and test ``experimental`` level :term:`AI`'s against ``hard`` level :te
 
 Other handicaps used are:
 
-.. _ai-difficulty-levels
+.. _ai-difficulty-levels:
 .. table:: AI Difficulty Levels
   :widths: auto
   :align: left
