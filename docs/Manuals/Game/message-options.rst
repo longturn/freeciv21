@@ -1,5 +1,5 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
-.. SPDX-FileCopyrightText: 2023 James Robertson <jwrober@gmail.com>
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
