@@ -1,10 +1,14 @@
+.. SPDX-License-Identifier: GPL-3.0-or-later
+.. SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+
 Achievements
 ************
 
 Achievements are something a player can gain in game by reaching set goals. Achievements active in the ruleset
 are defined in :file:`game.ruleset`.
 
-Depending on whether achievement is defined unique or not, they are granted only to first player, or all
+Depending on whether achievement is defined unique or not, they are granted only to the first player, or all
 players, to reach the goal for the achievement. Goal is defined by achievement type and another value specific
 to that achievement type.
 
