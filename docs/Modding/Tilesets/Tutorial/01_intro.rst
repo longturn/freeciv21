@@ -1,6 +1,5 @@
-..
-    SPDX-License-Identifier:  GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2021-2022 louis94 <m_louis30@yahoo.com>
+.. SPDX-License-Identifier:  GPL-3.0-or-later
+.. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
 First steps
 ***********
@@ -22,7 +21,7 @@ them will contain a file called ``amplio2.tilespec``.
   documentation, the complete name will always be used.
 
 Once you have found the ``amplio2.tilespec`` file, copy it to another of the Freeciv21 folders (we
-suggest using a folder inside your home directory) and rename it to ``tutorial.tilespec``. That's
+suggest using a folder inside your home directory) and rename it to ``tutorial.tilespec``. That is
 it: your new tileset can now be selected from the menu (you may need to reopen the settings
 window). For now, it is identical to the original ``amplio2``; we will address this in a moment.
 
@@ -50,7 +49,7 @@ tileset in Freeciv21; the default keystroke is :kbd:`Control-Shift-F5`.
   You may find that syntax highlighting gives strange results with Freeciv21 files: when this happens,
   configuring your editor to use syntax highlighting for INI configuration files usually helps.
 
-You may have noticed that we didn't need to copy any image file in order to create the new tileset.
+You may have noticed that we did not need to copy any image file in order to create the new tileset.
 Indeed, if you scroll down in ``tutorial.tilespec``, you will find that it references files from
 ``amplio2``:
 
