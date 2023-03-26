@@ -82,7 +82,7 @@ SQLite
     built into all mobile phones and most computers and comes bundled inside countless other applications
     that people use every day. Freeciv21 requires version 3.
 
-    http://www.sqlite.org
+    https://www.sqlite.org
 
 GNU Gettext
     GNU Gettext is used for Internationalization support. Freeciv21 requires version 0.15 or better. The
