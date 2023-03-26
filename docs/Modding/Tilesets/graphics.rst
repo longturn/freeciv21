@@ -1,3 +1,7 @@
+.. SPDX-License-Identifier: GPL-3.0-or-later
+.. SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+
 Tile Specification Files
 ************************
 
@@ -7,10 +11,10 @@ canvas that Freeciv21 players play upon. Next to Rulesets, creating Tilesets is 
 aspects of a Freeciv21 game.
 
 Using Graphics
----------------
+==============
 
 To use different graphics with Freeciv21, use the :code:`--tiles` argument to the Freeciv21 client. Eg, to use
-the 'engels' graphics, start the client as:
+the 'engels' graphics, start the game as:
 
 .. code-block:: rst
 
@@ -21,38 +25,38 @@ What Freeciv21 actually does in this case is look for a file called :file:`engel
 Freeciv21 data path. That :file:`.tilespec` file contains information telling Freeciv21 which graphics files
 to use, and what those graphics files contain.
 
-If you don't want to use the command line to invoke Freeciv21, you can also load a different Tileset from the
-client menu at :menuselection:`Game --> Load Another Tileset`. The Longturn.net community also provides some
-custom Tilesets accessible from the modpack installer utility; documented in :doc:`/Manuals/modpack-installer`.
+If you do not want to use the command line to invoke Freeciv21, you can also load a different Tileset from the
+menu at :menuselection:`Game --> Load Another Tileset`. The Longturn.net community also provides some custom
+Tilesets accessible from the modpack installer utility; documented in :doc:`/Manuals/modpack-installer`.
 
-The rest of this file describes, though not fully, the contents of the :file:`.tilespec` file and related files.
-This is intended as developer reference, and for people wanting to create/compile alternative tilesets and
-modpacks for Freeciv21.
+The rest of this file describes, though not fully, the contents of the :file:`.tilespec` file and related
+files. This is intended as developer reference, and for people wanting to create/compile alternative tilesets
+and modpacks for Freeciv21.
 
 Overview
---------
+========
 
 The purpose of the :file:`.tilespec` file and related :file:`.spec` files is to allow the detailed layout of
 the graphics within the files to be flexible and not hard-coded into Freeciv21, and to allow add-ons to
 conveniently provide additional graphics. The PNG graphic files are essentially a collection of arranged
-:emphasis:`sprites` combined together into a single PNG file. The :file:`.spec` files then tell Freeciv21
-how to process the sprites and display them in the client. The :file:`.spec` files select which images are
-used for each Freeciv21 graphic, and the :file:`.tilespec` file controls which :file:`.spec` files are used,
-and how the graphics will interact with each other.
+:emphasis:`sprites` combined together into a single PNG file. The :file:`.spec` files then tell Freeciv21 how
+to process the sprites and display them in the game. The :file:`.spec` files select which images are used for
+each Freeciv21 graphic, and the :file:`.tilespec` file controls which :file:`.spec` files are used, and how
+the graphics will interact with each other.
 
 There are two layers to the :file:`.tilespec` files:
 
 * The top-level file is named, for example, :file:`engels.tilespec`. The basename of this file (here,
-  'engels') corresponds to the parameter of the :code:`--tiles` command-line argument for the Freeciv21 client,
+  'engels') corresponds to the parameter of the :code:`--tiles` command-line argument for Freeciv21,
   as described above.
 
 * The top-level :file:`.tilespec` file contains general information on the full tileset, and a list of files
-  which specify information about the individual graphics files. These filenames must be located somewhere in the
-  data path. On Unix like operating systems this is :file:`[install location]/share/freeciv` and on Windows this
-  is :file:`[install location]/data`. Typically the second-level :file:`.spec` and image files are in a
-  sub-directory at the same level as the :file:`.tilespec` file. Note that with this system the number and
-  contents of the referenced :file:`.spec` and image files are completely flexible at this level. Here is an
-  example file and folder view:
+  which specify information about the individual graphics files. These filenames must be located somewhere in
+  the data path. On Unix like operating systems this is :file:`[install location]/share/freeciv21` and on
+  Windows this is :file:`[install location]/data`. Typically the second-level :file:`.spec` and image files
+  are in a sub-directory at the same level as the :file:`.tilespec` file. Note that with this system the
+  number and contents of the referenced :file:`.spec` and image files are completely flexible at this level.
+  Here is an example file and folder view:
 
 .. code-block:: rst
 
@@ -66,17 +70,17 @@ There are two layers to the :file:`.tilespec` files:
 
 
 An exception is that the intro graphics must be in individual files, as listed in the :file:`.tilespec` file,
-because Freeciv21 treats these specially: these graphics are freed after the game starts, and reloaded later as
-necessary.
+because Freeciv21 treats these specially. These graphics are freed after the game starts, and reloaded later
+as necessary.
 
 Graphics Formats
-----------------
+================
 
-The Freeciv21 client currently uses 24 or 32 bit PNGs image files. As noted before, the PNG files are a
-collection of images in a single image file. The smaller images are called :emphasis:`sprites`.
+Freeciv21 currently uses 24 or 32 bit PNGs image files. As noted before, the PNG files are a collection of
+images in a single image file. The smaller images are called :emphasis:`sprites`.
 
 Tileset Options
----------------
+===============
 
 In the top-level :file:`.tilespec` file you can set options for the tileset. Each of these should go within
 the :code:`[tilespec]` section. Currently options include:
@@ -91,16 +95,16 @@ the :code:`[tilespec]` section. Currently options include:
 * :code:`type` : General type of tileset, different types have quite different format. Supported types are
   "overhead" and "isometric".
 * :code:`unit_default_orientation` : Specifies a direction to use for unit types in worklists etc.
-  See "Unit Sprites" below.
+  See `Unit Sprites`_ below.
 
 :strong:`String Vectors`
 
-* :code:`preferred_themes` : List of preferred client themes to use with this tileset.
+* :code:`preferred_themes` : List of preferred game themes to use with this tileset.
 
 :strong:`Integers`
 
-* :code:`priority` : When user does not specify tileset, client automatically loads available compatible tileset
-  with highest priority.
+* :code:`priority` : When user does not specify tileset, the game automatically loads available compatible
+  tileset with highest priority.
 * :code:`normal_tile_width` : The width of terrain tiles.
 * :code:`normal_tile_height` : The height of terrain tiles.
 * :code:`unit_width` : Unit sprite width. Default is always ok, setting is provided just for symmetry with
@@ -108,7 +112,7 @@ the :code:`[tilespec]` section. Currently options include:
 * :code:`unit_height` : Unit sprite height if more than 1.5x terrain tile height in isometric tileset.
 * :code:`small_tile_width` : The width of icon sprites.
 * :code:`small_tile_height` : The height of icon sprites.
-* :code:`fog_style` : Specifies how fog is drawn.
+* :code:`fog_style` : Specifies how fog of war is drawn.
 
   * :code:`Auto` : Code automatically adds fog.
   * :code:`Sprite` :A single fog sprite is drawn on top of all other sprites for fogged tiles. The tx.fog
@@ -151,15 +155,15 @@ the :code:`[tilespec]` section. Currently options include:
     * Upkeep icons overlay lower part of the unit icon, if unit icon is higher than tile height (typical in
       iso tilesets)
 
-* :code:`unit_upkeep_small_offset_y` : Like :code:`unit_upkeep_offset_y`, but to be used in case there's only
-  small space for the overall icon produced. Defaults to :code:`unit_upkeep_offset_y` - not having alternative
-  layout.
+* :code:`unit_upkeep_small_offset_y` : Like :code:`unit_upkeep_offset_y`, but to be used in case there is only
+  small space for the overall icon produced. Defaults to :code:`unit_upkeep_offset_y` --- not having
+  alternative layout.
 * :code:`citybar_offset_y` : Gives an offset from city tile origin at which to draw city bar text.
 * :code:`hex_sid` : When is_hex is specified (see is_hex, below), this value gives the length of the "extra"
   side of the hexagon. This extra side will be on the top/bottom of the tile if is_isometric (below) is given,
   or on the left/right of the tile otherwise. The actual dimensions of the hex tile are determined from the
   normal_tile_width/normal_tile_height of the tileset as well as the hex side. The "normal" dimensions give
-  the X and Y offsets between adjacent tiles in the tileset - this is not the same as the dimensions of the
+  the X and Y offsets between adjacent tiles in the tileset --- this is not the same as the dimensions of the
   tile itself. The dimension of the bounding box of the hexagonal tile will be equal to the "normal" dimension
   minus the hex_side. For instance, "normal" dimensions of 64x32 with a hex_side of 16 for an iso-hex tileset
   will give hexagons of size 48x32.
@@ -168,8 +172,9 @@ the :code:`[tilespec]` section. Currently options include:
 
   Boolena values are either FALSE or TRUE.
 
-* :code:`is_hex` : Set to TRUE for a hexagonal tileset. If :code:`is_isometric` is also specified then you have
-  an iso-hex tileset. Hex tilesets should be used with topologies 8-11 and iso-hex tilesets with topologies 12-15.
+* :code:`is_hex` : Set to TRUE for a hexagonal tileset. If :code:`is_isometric` is also specified then you
+  have an iso-hex tileset. Hex tilesets should be used with topologies 8-11 and iso-hex tilesets with
+  topologies 12-15.
 
 :strong:`String Lists`
 
@@ -178,7 +183,7 @@ the :code:`[tilespec]` section. Currently options include:
 * :code:`files` : A list of :file:`.spec` files to scan for sprites. See "individual spec files", below.
 
 Extra Options
--------------
+=============
 
 Tilespec should define style of extra graphics for each extra type in section :code:`[extras]` like:
 
@@ -194,11 +199,12 @@ Tilespec should define style of extra graphics for each extra type in section :c
         }
 
 
-* :code:`RoadAllSeparate` : A single sprite is drawn for every connection the tile has; only 8 sprites are needed.
+* :code:`RoadAllSeparate` : A single sprite is drawn for every connection the tile has; only 8 sprites are
+  needed.
 * :code:`RoadParityCombined` : A single sprite is drawn for all cardinal connections and a second sprite is
   drawn for all diagonal connections; 32 sprites are needed.
-* :code:`RoadAllCombined` : One sprite is drawn to show roads in all directions. There are thus 256 sprites (64
-  for a hex tileset).
+* :code:`RoadAllCombined` : One sprite is drawn to show roads in all directions. There are thus 256 sprites
+  (64 for a hex tileset).
 * :code:`River` : Cardinal connections are drawn, as well as delta at the coast
 * :code:`Single1` : Single sprite at layer :code:`Special1`.
 * :code:`Single2` : Single sprite at layer :code:`Special2`.
@@ -206,7 +212,7 @@ Tilespec should define style of extra graphics for each extra type in section :c
 * :code:`Cardinals` : Sprite for each cardinal connection.
 
 Individual Spec Files
----------------------
+=====================
 
 Each :file:`.spec` file describes one graphics file as specified in the spec file. The graphics file must be
 in the Freeciv21 data path, but not necessarily in the same location as the :file:`.spec` file. Note you can
@@ -245,17 +251,17 @@ The origin, and rows and columns, are counted as (0,0) = top left.
 
 
 Each individual tile is given a "tag", which is a string which is referenced in the code and/or from ruleset
-files. A grid may be sparse, with some elements unused (simply don't mention their row and column), and a
+files. A grid may be sparse, with some elements unused (simply do not mention their row and column), and a
 single tile may have multiple tags (eg, to use the same graphic for multiple purposes in the game): just
 specify a list of comma-separated strings.
 
 If a given tag appears multiple times in the spec files, the *last* such tag is used. That is, in the order of
-files listed in the tilespec file, and order within each file. This allows selected graphics to be "overridden"
-by listing a replacement spec file near the end of the 'files' list in the top-level tilespec file, without
-having to modify earlier files in the list.
+files listed in the tilespec file, and order within each file. This allows selected graphics to be
+"overridden" by listing a replacement spec file near the end of the 'files' list in the top-level tilespec
+file, without having to modify earlier files in the list.
 
 Tag Prefixes
-------------
+============
 
 To help keep the tags organised, there is a rough prefix system used for standard tags:
 
@@ -278,26 +284,26 @@ To help keep the tags organised, there is a rough prefix system used for standar
 * :code:`user.` : Crosshairs (in general: user interface?).
 
 In general, graphics tags hard-wired into Freeciv21 :strong:`must` be provided by the :file:`.spec` files, or
-the client will refuse to start. Graphics tags provided by ruleset files (at least for the "standard"
-rulesets) should also be provided, but generally the client will continue even if they are not, though the
-results may not be satisfactory for the user. To work properly tags should correspond to appropriately sized
-graphics. The basic size may vary, as specified in the top-level :file:`.tilespec` file, but the individual
-tiles should be consistent with those sizes and/or the usage of those graphics.
+the game will refuse to start. Graphics tags provided by ruleset files (at least for the shipped rulesets)
+should also be provided, but generally the game will continue even if they are not, though the results may not
+be satisfactory for the user. To work properly tags should correspond to appropriately sized graphics. The
+basic size may vary, as specified in the top-level :file:`.tilespec` file, but the individual tiles should be
+consistent with those sizes and/or the usage of those graphics.
 
 Sprites
--------
+=======
 
 Depending on the information given here the tileset must/may contain certain sprites.
 
 Theme Sprites
--------------
+=============
 
 Citizen Sprites
-  This provides citizen graphics. Each citizen has one or more sprites which are shown in the city dialog. The
-  types of citizen are "happy", "content", "unhappy", and "angry". The tag name is :code:`citizen.<type>_<n>`.
-  :code:`<type>` is one of the listed types. :code:`<n>` is the number of the graphic (numbered starting with
-  0, unlike most other graphics) which allows more than one sprite to be used. No more than 6 sprites per
-  citizen may be used.
+  This provides citizen graphics. Each citizen has one or more sprites which are shown in the
+  :doc:`/Manuals/Game/city-dialog`. The types of citizen are "happy", "content", "unhappy", and "angry". The
+  tag name is :code:`citizen.<type>_<n>`. :code:`<type>` is one of the listed types. :code:`<n>` is the number
+  of the graphic (numbered starting with 0, unlike most other graphics) which allows more than one sprite to
+  be used. No more than 6 sprites per citizen may be used.
 
   Currently the citizen and specialist sprites may not have any transparency, as this is ignored in much of
   the drawing. This is considered a bug.
@@ -329,7 +335,7 @@ Right Arrow
 
 
 Terrain Special Sprites
------------------------
+=======================
 
 Farmland/Irrigation
   :code:`tx.farmland` and :code:`tx.irrigation` provide the basic sprites for farmland and irrigation.
@@ -340,23 +346,23 @@ Farmland/Irrigation
   will be used as a fallback.
 
 Unit Sprites
-------------
+============
 
 Units sprites can be either unoriented or oriented, in which case the sprite that is displayed depends on the
 direction the unit is facing (it turns when it moves or fights).
 
 Unoriented sprites are specified as :code:`u.phalanx`. Oriented sprites have a direction suffix:
 :code:`u.phalanx_s`, :code:`u.phalanx_nw` and so on. For each unit type, either an unoriented sprite or a full
-set of the oriented sprites needed for the tileset topology must be provided (you can also provide both, see
-below).
+set of the oriented sprites needed for the tileset topology must be provided. You can also provide both, see
+below.
 
-The game sometimes needs to draw a sprite for a unit type that doesn't correspond to a specific unit, so is
+The game sometimes needs to draw a sprite for a unit type that does not correspond to a specific unit, so is
 not facing a particular direction. There are several options for oriented tilesets:
 
 * If the :code:`unit_default_orientation` is specified for the tileset, the game will by default use that directional
-  sprite. (The direction doesn't have to be a valid one for the tileset.)
+  sprite. The direction does not have to be a valid one for the tileset.
 
 * Specific unit types may override this by providing an unoriented sprite as well as the oriented ones; this
-  doesn't have to be distinct, so it can point to one of the oriented sprites, allowing choice of the best
+  does not have to be distinct, so it can point to one of the oriented sprites, allowing choice of the best
   orientation for each individual unit type. If unit_default_orientation is not specified, an unoriented sprite
   must be specified for *every* unit.
