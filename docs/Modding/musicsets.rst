@@ -1,3 +1,14 @@
+.. SPDX-License-Identifier: GPL-3.0-or-later
+.. SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+
+.. Custom Interpretive Text Roles for longturn.net/Freeciv21
+.. role:: unit
+.. role:: improvement
+.. role:: wonder
+.. role:: advance
+
+
 Musicsets Overview
 ******************
 
@@ -21,16 +32,16 @@ civilization. The current choices are:
 
 The city style is automatically selected for you when you pick your nation, but you can change it if you like.
 
-The discovery of :strong:`University` changes the music for all city styles for the Renaissance Age. All further
-disoveries noted below will change the music for all city styles/nations.
+The discovery of :advance:`University` changes the music for all city styles for the Renaissance Age. All
+further disoveries noted below will change the music for all city styles/nations.
 
-The discovery of :strong:`Railroad` brings in the Industrial Age.
+The discovery of :advance:`Railroad` brings in the Industrial Age.
 
-The discovery of :strong:`Automobile` brings in the Electric Age.
+The discovery of :advance:`Automobile` brings in the Electric Age.
 
-The discovery of :strong:`Rocketry brings` in the Modern Age.
+The discovery of :advance:`Rocketry` brings in the Modern Age.
 
-The discovery of :strong:`Superconductors` brings in the Post-Modern Age soundtrack. This is the final
+The discovery of :advance:`Superconductors` brings in the Post-Modern Age soundtrack. This is the final
 soundtrack of the game.
 
 This is all documented in the :file:`styles.ruleset` file in any ruleset. The ruleset file also establishes
@@ -84,11 +95,13 @@ The :literal:`.musicspec` file is quite simple. Here is a sample:
   music_renaissance_peace_X = "MusicDirectory/RenaissancePeaceSong0.ogg"
   music_renaissance_combat_X = "MusicDirectory/RenaissanceCombatSong0.ogg"
   ;
-  ;Discovery of Railroad brings in the Industrial Age - Much more combat here
+  ;Discovery of Railroad brings in the Industrial Age
+  ;  Much more combat here
   music_industrial_peace_X = "MusicDirectory/IndustrialPeaceSong0.ogg"
   music_industrial_combat_X = "MusicDirectory/IndustrialCombatSong0.ogg"
   ;
-  ;Discovery of Automobile brings in the Electric Age - At ths time, pretty much all combat
+  ;Discovery of Automobile brings in the Electric Age
+  ;  At ths time, pretty much all combat
   music_electricage_peace_X = "MusicDirectory/ElectricPeaceSong0.ogg"
   music_electricage_combat_X = "MusicDirectory/ElectricCombatSong0.ogg"
   ;

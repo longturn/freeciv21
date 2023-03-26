@@ -1,3 +1,8 @@
+.. SPDX-License-Identifier: GPL-3.0-or-later
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+.. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
+
+
 Modding
 *******
 
@@ -56,6 +61,7 @@ Freeciv21 allows full customization of the appearance of the map including terra
 and a few elements of the user interface. Freeciv21 already ships with a variety of presets that can be
 selected from the menu by navigating to :menuselection:`Game --> Load Another Tileset`.
 
+.. _tilesets-example:
 .. figure:: /_static/images/tilesets_demo.png
   :alt: A Freeciv21 map with the ``hexemplio`` and ``isophex`` tilesets.
   :align: center
@@ -76,7 +82,7 @@ break out the varying layers. It will always start with a top-level :literal:`.t
 directory of the same name will have :literal:`.png` graphics files and associated :literal:`.spec` files to
 explain to Freeciv21 what to do when.
 
-Have a look at :file:`amplio.tilespec` and associated files in :file:`/amplio` for an example. The following
+Have a look at :file:`amplio2.tilespec` and associated files in :file:`/amplio2` for an example. The following
 guides document specific aspects of tileset creation:
 
 .. toctree::

@@ -14,7 +14,7 @@ Welcome to the Freeciv21 manual
 *******************************
 
 Welcome to the documentation of the Freeciv21 project brought to you by the
-`longturn.net <https://longturn.net>`_ community. The documentation is organized in five categories:
+`longturn.net <https://longturn.net>`_ community. The documentation is organized in six categories:
 
 :doc:`Getting <Getting/index>`
   The Getting category is where you to go learn about Freeciv21 and how to get it installed on your system.
