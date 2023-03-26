@@ -1,3 +1,7 @@
+.. SPDX-License-Identifier: GPL-3.0-or-later
+.. SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+
 Rulesets Overview
 *****************
 
@@ -5,32 +9,30 @@ Quickstart
 ==========
 
 Rulesets allow modifiable sets of data for units, advances, terrain, improvements, wonders, nations, cities,
-governments and miscellaneous game rules, without requiring recompilation, in a way which is consistent across
-a network and through savegames.
+governments, and miscellaneous game rules, without requiring recompilation, in a way which is consistent
+across a network and through savegames.
 
-* To play Freeciv21 normally: don't do anything special; the new features all have defaults which give the
-  standard Freeciv21 behaviour.
+* To play Freeciv21 normally: do not do anything special. The new features all have defaults which give the
+  standard Freeciv21 behavior.
 
 * To play a game with rules more like Civ1, start the server with:
 
-.. code-block:: rst
+.. code-block:: sh
 
-    ./freeciv21-server -r data/civ1.serv
+    $ freeciv21-server -r data/civ1.serv
 
 
-and any other command-line arguments you normally use; depending on how you have Freeciv21 installed you may
+and any other command-line arguments you normally use, depending on how you have Freeciv21 installed you may
 have to give the installed data directory path instead of :file:`data`.
 
-Start the client normally. The client must be network-compatible (usually meaning the same or similar
-version) but otherwise nothing special is needed. However, some third-party rulesets may potentially require
-special graphics to work properly, in which case the client should have those graphics available and be
-started with an appropriate :code:`--tiles` argument.
+Start the game interface normally. The game must be network-compatible to the server (usually meaning the same
+or similar version), but otherwise nothing special is needed. However, some third-party rulesets may
+potentially require special graphics to work properly, in which case the game should have those graphics
+available and be started with an appropriate :code:`--tiles` argument.
 
-As well as a Civ1 style as above, Freeciv21 now has a Civ2 style similary, although currently it is almost
-identical to standard Freeciv rules.
-
-Note that the Freeciv21 AI might not play as well with rules other than standard Freeciv21. The AI is supposed
-to understand and utilize all sane rules variations, so please report any AI failures so that they can be fixed.
+Note that the Freeciv21 :term:`AI` might not play as well with rules other than standard Freeciv21 `Classic`
+or `Civ2Civ3` rulesets. The :term:`AI` is supposed to understand and utilize all sane rules variations, so
+please report any :term:`AI` failures so that they can be fixed.
 
 The rest of this file contains:
 
@@ -38,7 +40,7 @@ The rest of this file contains:
 
 * Information on implementation, and notes for further development.
 
-Using And Modifying Rulesets
+Using and Modifying Rulesets
 ============================
 
 Rulesets are specified using the server command :code:`rulesetdir`. The command line example given above just
@@ -46,20 +48,20 @@ reads a file which uses this command (as well as a few of the standard server op
 specifies in which directory the ruleset files are to be found.
 
 The ruleset files in the data directory are user-editable, so you can modify them to create modified or custom
-rulesets (without having to recompile Freeciv21). It is suggested that you `don't` edit the existing files in
+rulesets (without having to recompile Freeciv21). It is suggested that you `do not` edit the existing files in
 the "civ2civ3", "classic", "experimental", "multiplayer", "alien", "civ1", or "civ2" directories, but rather
 copy them to another directory and edit the copies. This is so that its clear when you are using modified
 rules and not the standard ones.
 
 The format used in the ruleset files should be fairly self-explanatory. A few points:
 
-* The files are not all independent, since eg, units depend on advances specified in the techs file.
+* The files are not all independent, since e.g., units depend on advances specified in the techs file.
 
 * Units have a field, "roles", which is like "flags", but determines which units are used in various
   circumstances of the game (rather than intrinsic properties of the unit). See comments in
   :file:`common/unit.h`
 
-- Rulesets must be in UTF-8; translatable texts should be American English ASCII.
+* Rulesets must be in UTF-8. Translatable texts should be American English (en_US).
 
 Restrictions and Limitations
 ============================
@@ -85,16 +87,17 @@ Restrictions and Limitations
 
 :strong:`Restrictions`:
 
-* Government used during revolution can't be used as default_government or init_government for any nation
+* Government used during revolution cannot be used as ``default_government`` or ``init_government`` for any
+  nation.
 
 Implementation Details
 ======================
 
-This section and following section will be mainly of interested to developers who are familiar with the
+This section and following section will be mainly of interest to developers who are familiar with the
 Freeciv21 source code.
 
-Rulesets are mainly implemented in the server. The server reads the files, and then sends information to the
-client. Mostly rulesets are used to fill in the basic data tables on units etc, but in some cases some extra
+Rulesets are mainly implemented in the server. The server reads the files and then sends information to the
+game. Rulesets are used to fill in the basic data tables on units etc., but in some cases some extra
 information is required.
 
 For units and advances, all information regarding each unit or advance is now captured in the data tables, and
@@ -103,9 +106,9 @@ these are now "fully customizable", with the old enumeration types completely re
 Game Settings Defined In The Ruleset
 ====================================
 
-Game settings can be defined in the section [settings] of the file :file:`game.ruleset`. The name key is equal
-to the setting name as listed by 'show all'. If the setting should be locked by the ruleset, the last column
-should be set to TRUE.
+Game settings can be defined in the section ``[settings]`` of the file :file:`game.ruleset`. The name key is
+equal to the setting name as listed by 'show all'. If the setting should be locked by the ruleset, the last
+column should be set to TRUE.
 
 .. code-block:: ini
 
