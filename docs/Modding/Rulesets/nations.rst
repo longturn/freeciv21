@@ -1,7 +1,7 @@
-..
-    SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2021 louis94 <m_louis30@yahoo.com>
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+.. SPDX-License-Identifier: GPL-3.0-or-later
+.. SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+.. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 Nation Sets and Flags
 *********************
@@ -10,9 +10,9 @@ This page describes the contents of the nation :file:`.spec` files. This is inte
 and for people wanting to create/compile alternative nation files for Freeciv21. A nation consists of a nation
 file in the rulesets and a flag in the tilesets.
 
-There are already many nations, but of course some of them are missing. We're quite open to new "nations" even
-if they're just part of a larger country, but obscure towns that nobody knows will be rejected. Things like US
-states or German Länder are OK. South African provinces are probably not.
+There are already many nations, but of course some of them are missing. We are quite open to new "nations"
+even if they are just part of a larger country, but obscure towns that nobody knows will be rejected. Things
+like US states or German Länder are OK. South African provinces are probably not.
 
 The following information is required to add a new nation:
 
@@ -26,10 +26,10 @@ The following information is required to add a new nation:
   Jean Casimir-Perier (https://en.wikipedia.org/wiki/Jean_Casimir-Perier).
 * Special names for the ruler in certain governments, if applicable. For instance, when in Despotism the
   Egypian leader is called *Pharaoh*.
-* A flag, preferably something official (if your nation doesn't have an official flag, think twice before
+* A flag, preferably something official (if your nation does not have an official flag, think twice before
   including it). Wikipedia has many of those under free licenses.
-* A few nations that will be preferred by the server when there's a civil war. For instance, the Conferderate
-  are a civil war nation for the Americans.
+* A few nations that will be preferred by the server when there is a civil war. For instance, the
+  *Conferderate* are a civil war nation for the Americans.
 * City names. List each city only once, even if it changed name in the course of history. Try to use names
   from the same epoch.
 
@@ -49,13 +49,14 @@ Local Nation Files
 ==================
 
 Most supplied rulesets nations can be added locally without need to modify Freeciv21 distribution files. This
-section discuss the way the local override files work. Later sections assume that a nation is being added to
-main Freeciv21 distribution, even if only to locally modified copy.
+section discuss the way the local override files work. Later sections assume that a nation is being
+:doc:`added </Contributing/pull-request>` to the main Freeciv21 distribution, even if only to locally modified
+copy.
 
 Freeciv21 searches data files from several directories in priority order. Local nations overrides mechanism
-uses this to include files from user data directory, :file:`~/.local/share/freeciv21/<freeciv21 version>/override/`.
-Freeciv21 distribution has empty versions of those files in a lower priority directory. Once user adds the
-file, it gets used instead of the empty one.
+uses this to include files from user data directory,
+:file:`~/.local/share/freeciv21/<version>/override/`. Freeciv21 distribution has empty versions of
+those files in a lower priority directory. Once user adds the file, it gets used instead of the empty one.
 
 * :file:`~/.local/share/freeciv21/<version>/override/nation.ruleset`
 
@@ -80,7 +81,7 @@ To add a nation of your own, you should look at the following files:
 This is the new nation, which you will have to create. It may help to copy one of the other nation files over
 and edit it. See below for a style guide for nation files.
 
-* The :code:`<nationname>` bit is to be replaced with the nations name (duh). Please don't use whitespaces and
+* The :code:`<nationname>` bit is to be replaced with the nations name. Please do not use whitespaces and
   special characters. Underlines are ok though.
 * The name should be the same as the name of the nation inside the ruleset file.
 * The file must be encoded in UTF-8.
@@ -89,17 +90,16 @@ and edit it. See below for a style guide for nation files.
 
 This lists all nation files. Add your nation (:file:`data/nation/<nationname>.ruleset`) to this list.
 
-data/flags/*
+* :file:`data/flags/*`
 
-  This is the flags directory. You will have to add a flag-file
-  (see below) for your nation to work (see below).
+  This is the flags directory. You will have to add a flag-file (see below) for your nation to work.
 
 * :file:`data/scenarios/*`
 
 You can add starting position for your nation on a scenario map.
 
 Before a nation can be included in the main distribution, the following files will also have to be edited.
-Unless you know what you're doing you shouldn't need to worry about this.
+Unless you know what you're doing you should not need to worry about this.
 
 * :file:`data/nation/CMakeLists.txt`
 
@@ -108,7 +108,7 @@ Another list of nation files - add your nation (:code:`<nationname>.ruleset`) to
 * :file:`translations/nations/POTFILES.in`
 
 Here is yet another list of nations files; again add your nation (:file:`data/nation/<nationname>.ruleset`) to
-it.  Nations part of the "core" group go to :file:`translations/freeciv/POTFILES.in` instead.
+it. Nations part of the "core" group go to :file:`translations/freeciv/POTFILES.in` instead.
 
 
 How to add a Flag
@@ -120,18 +120,18 @@ Overview
 PNG is the preferred form for graphics, and flags should be made exclusively in SVG.
 
 A new nation needs a new flag. All flags are stored in SVG (Scalable Vector Graphics) format. Sodipodi and
-Inkscape are two good SVG editors. If you are creating a real-world nation you can probably find a Free or
+Inkscape are two good SVG editors. If you are creating a real-world nation you can probably find a free or
 public domain flag that can be used. One good place to look is the Open Clip Art Library (OCAL). Remember that
-any flags we add must be licenced under the GPL and should be attributed to their original author, so make a
-note of where you found the flag, what its licence is, and who made it.
+any flags we add must be licenced under the GPL and should be :ref:`attributed <style-attribution>` to their
+original author, so make a note of where you found the flag, what its licence is, and who made it.
 
 We also welcome improvements to existing flags. Most of our existing flags come from the Sodipodi clipart
 collection, and some of them are less than perfect. One common problem is that the colors are wrong. If you
-fix a flag for a real nation be sure to cite your source so we can be sure it's accurate. Good sources for
+fix a flag for a real nation be sure to cite your source so we can be sure it is accurate. Good sources for
 nation flag data are Wikipedia or Flags Of The World.
 
 If you want to improve an imaginary flag, this is also welcome. We recommend you first contact the original
-author of the flag (see the flags/credits file) to discuss your ideas for changes.
+author of the flag to discuss your ideas for changes.
 
 
 Flag Guidelines
@@ -148,13 +148,13 @@ Here are a few guidelines for flags:
 Flag Specifics
 --------------
 
-To add a flag you'll have to edit the following files:
+To add a flag you will have to edit the following files:
 
 * :file:`data/tilesets/flags/<flagname>.svg`
 
-Here is the SVG flag image. This is not used directly by Freeciv21 but is  rendered into PNG files (at various
+Here is the SVG flag image. This is not used directly by Freeciv21 but is rendered into PNG files (at various
 resolutions for different tilesets). The SVG file is not used in Freeciv21, but all the other steps for adding
-flags are the same. The :code:`<flagname>` should either be the name of the country that represents the flag,
+flags are the same. The :file:`<flagname>` should either be the name of the country that represents the flag,
 or the common name for the actual flag. When in doubt, use the same name as the name of the nation.
 
 * :file:`data/tilesets/flags/<flagname>.png`
@@ -192,8 +192,8 @@ What Nations Can Be Added
 
 A nation in Freeciv21 should preferrably be a current independent country or a historical kingdom or realm. A
 nation that is currently governed by or the part of a greater political entity, or in other ways lacks
-complete independence could in most cases be made a Freeciv nation as well, but must never be listed as
-*modern* (see 'Nation grouping' below.)
+complete independence could in most cases be made a Freeciv21 nation as well, but must never be listed as
+*modern* (see `Nation grouping`_ below.)
 
 Copyrighted content may not be added unless full permission is granted by the holder of the copyright. This
 rule effectively disallows the inclusion of nations based on most literary works.
@@ -202,12 +202,12 @@ rule effectively disallows the inclusion of nations based on most literary works
 Nation Grouping
 ---------------
 
-Freeciv21 Supports A Classification Of Nations In An Unlimited Number Of Groups And Every Nation Should Be
-Assigned To At Least One. We Currently Have Ancient, Medieval, Early Modern, Modern, African, American, Asian,
-European, Oceanian And Imaginary Groups. Modern Nations Are Existing And Politically Independent Countries; A
-Nation Listed As Ancient, Medieval Or Early Modern Should Have Had An Independent Dynasty Or State In Ancient
-(Until 500 Ad), Medieval (500 - 1500) Or Early Modern (1500 - 1800) Times Respectively. Finally, An Imaginary
-Nation Is - As The Name Suggests - A Product Of Someone'S Imagination.
+Freeciv21 supports a classification of nations in an unlimited number of groups and every nation should be
+assigned to at least one. We currently have ancient, medieval, early modern, modern, african, american, asian,
+european, oceanian and imaginary groups. Modern nations are existing and politically independent countries. A
+nation listed as ancient, medieval, or early modern should have had an independent dynasty or state in ancient
+(until 500 AD), medieval (500 - 1500), or early modern (1500 - 1800) times respectively. Finally, an imaginary
+nation is - as the name suggests - a product of someone's imagination.
 
 
 Nation Naming
@@ -222,15 +222,14 @@ permitted in nation names.
 Conflicting Nations
 -------------------
 
-To specify one or more nations that the AI shouldn't pick for the same
-game, use this syntax:
+To specify one or more nations that the AI shouldn't pick for the same game, use this syntax:
 
      :code:`conflicts_with="<nationname>", "<nationname>", ...`
 
-You only have to specify this in the nation you're adding, since it works in both directions. Reasons for
-conflicting nations could be either that they represent the same people in different eras (ex: Roman -
-Italian) or that the two nations have too similar flags that they are easily mixed up in the game (ex: Russian
-- Serbian.)
+You only have to specify this in the nation you are adding, since it works in both directions. Reasons for
+conflicting nations could be either that they represent the same people in different eras (example: Roman -
+Italian) or that the two nations have too similar flags that they are easily mixed up in the game (example:
+Russian - Serbian).
 
 
 Civil War Nations
@@ -239,7 +238,7 @@ Civil War Nations
 Specify one or more civil war nations. When a player's capital is captured, that player might suffer a civil
 war where his or her nation is divided and a new player created. The nation for this new player is selected
 from one of the civil war nations specified in the ruleset. A civil war nation should be linguistically,
-geographically and/or historically related to the current nation. A linguistic relation is especially
+geographically, and/or historically related to the current nation. A linguistic relation is especially
 important, since city names after a nation run out of their own city names, are selected from the civil war
 nations' city lists.
 
@@ -296,12 +295,12 @@ As for the list of city names, you should make a clear decision about the type o
 *ancient* or *medieval* nation may list any city that it at some point controlled. However if your nation is
 listed as *modern*, its city list must be restricted to cities within the country's current borders.
 
-The reason for this is, we don't want Freeciv21 to be used as a political vehicle for discussions about
+The reason for this is, we do not want Freeciv21 to be used as a political vehicle for discussions about
 borders or independence of particular nations. Another reason is to avoid overlapping with other nations in
 the game.
 
 A city should appear in its native form, rather than Anglicized or Graeco-Roman forms. For example, the Danish
-capital is "København" rather than "Copenhagen"; and the ancient Persian capital is "Parsa" rather than
+capital is "København" rather than "Copenhagen", and the ancient Persian capital is "Parsa" rather than
 "Persepolis."
 
 City names support any Unicode character, but please keep to Latin letters. When transcribing from a non-Latin
@@ -335,10 +334,9 @@ the system is designed to degrade smoothly so it should work just fine.
 
 .. note::
   A note on scale: it might be tempting to label London as :code:`!ocean`, i.e. not adjacent to an ocean.
-  However, on a reasonably-sized Freeciv21 world map, London will be adjacent to the ocean; labeling it
+  However, on a reasonably-sized Freeciv21 world map, London will be adjacent to the ocean. Labeling it
   :code:`!ocean` will tend to give bad results. This is a limitation of the system, and should be taken into
   account when labelling cities.
 
-At this point, it is useful to put one city per line, only. Finally, don't forget to leave a blank line feed
+At this point, it is useful to put one city per line, only. Finally, do not forget to leave a blank line feed
 in the end of your nation ruleset.
-
