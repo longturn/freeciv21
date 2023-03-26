@@ -1,7 +1,6 @@
-..
-    SPDX-License-Identifier:  GPL-3.0-or-later
-    SPDX-FileCopyrightText: 1999-2021 Freeciv and Freeciv21 contributors
-    SPDX-FileCopyrightText: 2022-2023 louis94 <m_louis30@yahoo.com>
+.. SPDX-License-Identifier:  GPL-3.0-or-later
+.. SPDX-FileCopyrightText: Freeciv21 and Freeciv contributors
+.. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
 Terrain
 *******
@@ -21,9 +20,9 @@ it fails, ``graphic_alt``.
 .. todo::
     Documentation is still missing for:
 
-    * Sprite dimensions, in particular in hexagonal mode where it's counter-intuitive.
-    * Blending
-    * The mask sprite and what happens at the edge of the map
+    * Sprite dimensions, in particular in hexagonal mode where it is counter-intuitive.
+    * Blending.
+    * The mask sprite and what happens at the edge of the map.
     * A general introduction to the structure (``[layer*]`` and ``[tile_*]`` sections). Some of this is
       already there at the bottom of but would need reformatting.
 
@@ -34,6 +33,11 @@ Sprite tags
 The names used to reference the sprites depend on the chosen cell type and on the number of groups included
 in the matching. The table below summarizes the naming scheme; available options are discussed in detail in
 the corresponding sections.
+
+.. _terrain-matching-groups:
+.. table:: Terrain Matching Groups
+  :widths: auto
+  :align: left
 
 +--------------------------------+--------------------------------+--------------------------------+--------------------------------------+
 | Matched groups                 | ``single``                     | ``corner``                     | ``hex_corner``                       |
@@ -53,6 +57,9 @@ the corresponding sections.
 |                                |                                |                                | (:ref:`doc <hex_corner-general>`)    |
 +--------------------------------+--------------------------------+--------------------------------+--------------------------------------+
 
+.. raw:: html
+
+    <p>&nbsp;</p>
 
 Sprite type ``single``
 ----------------------
@@ -67,7 +74,8 @@ the sprite to the right) and ``layerN_offset_y`` (positive values move the sprit
 be used with caution, because pixels drawn outside of the area covered by a "tall" tile will confuse the
 renderer and cause artifacts.
 
-.. note:: ``whole`` is a synonym for ``single``; ``single`` is preferred.
+.. note::
+  ``whole`` is a synonym for ``single``; ``single`` is preferred.
 
 .. _single-simple:
 
@@ -80,6 +88,7 @@ The name of the sprites used by sprite type ``single`` depend on the number of t
 .. code-block:: xml
 
     t.l<n>.<tag><i>
+
 
 The value ``<n>`` is replaced with the layer number, and ``<tag>`` with the terrain tag. The last element,
 ``<i>``, is a number starting from 1: if several sprites are provided with numbers 1, 2, ..., the renderer
@@ -98,6 +107,7 @@ sufficient:
     tag = "desert"
     num_layers = 1
 
+
 The base sprite would have tag ``t.l0.desert1``; additional sprites called ``t.l0.desert2``, ``t.l0.desert3``,
 etc., can also be added, in which case one will be picked at random for every tile.
 
@@ -114,6 +124,7 @@ cannot know whether the other tile is land or water. In this case, the pattern i
 .. code-block:: xml
 
     t.l<n>.<tag>_<directions>
+
 
 Like in the unmatched case, ``<n>`` is replaced with the layer number and ``<tag>`` with the terrain tag. The
 ``<directions>`` part indicated which in which directions a match has been achieved, as a list of directions
@@ -137,6 +148,7 @@ on adjacent tiles. This is achieved by putting them in a single matching group, 
     [layer1]
     match_types = "hills"
 
+
 We use layer 1 in this example because something is typically drawn under the hills for coasts and blending.
 The next step is to put hills and mountains in the group and enable matching:
 
@@ -153,6 +165,7 @@ The next step is to put hills and mountains in the group and enable matching:
     num_layers = 2
     layer1_match_type = "hills"
     layer1_match_with = "hills"
+
 
 With these settings, both hills and mountains will match adjacent tiles if they have hills or mountains.
 
@@ -177,6 +190,7 @@ also be used with other topologies, as shown in the diagram below:
 
     Definition of the corners for the four tileset topologies: square isometric (top left), square (top
     right), hexagonal isometric (bottom left), and hexagonal (bottom right).
+
 
 For square topologies, the corner sprites (colored rectangles) cover a slice of the tile area adjacent to
 three other tiles. Matching takes place with respect to each of them, which enables complicated designs while
@@ -205,6 +219,7 @@ half the size of a normal tile in both dimensions, and use the following naming 
 
     t.l<n>.<tag>_cell_<direction>
 
+
 The value ``<n>`` is replaced with the layer number, and ``<tag>`` with the terrain tag. The last part,
 ``<direction>``, indicates which corner the sprite refers to.
 
@@ -221,6 +236,7 @@ anything but water. 32 sprites are required for each tag, with the following nam
 
     t.l<n>.<tag>_cell_<direction><01><01><01>
 
+
 The value ``<n>`` is replaced with the layer number, and ``<tag>`` with the terrain tag. Sprites must be
 provided for each of the four possible values of ``<direction>``: ``u``, ``d``, ``l``, and ``r``, that
 indicate which corner the sprites are for. The three remaining parts, ``<01>``, each correspond to the
@@ -233,6 +249,7 @@ of the tile being rendered (black frame) and green is some other terrain:
 .. figure:: /_static/images/tileset-reference/example-corner-same-1.png
     :alt: A diagram illustrating what the u011 corresponds to in terms of adjacent tiles.
     :align: center
+
 
 Group Example
 """""""""""""
@@ -265,6 +282,7 @@ Simple coasts can be drawn as follows:
     layer0_match_with = "water"
     layer0_sprite_type = "corner"
 
+
 This requires 96 sprites, 32 for each tile type.
 
 .. _corner-pair:
@@ -281,6 +299,7 @@ following naming convention:
 .. code-block:: xml
 
     t.l<n>.<tag>_cell_<direction>_<g>_<g>_<g>
+
 
 The value ``<n>`` is replaced with the layer number, and ``<tag>`` with the terrain tag. Sprites must be
 provided for each of the four possible values of ``<direction>``: ``u``, ``d``, ``l``, and ``r``, that
@@ -325,6 +344,7 @@ into the sea):
     num_layers = 1
     layer1_match_type = "mountains"
 
+
 The sprite shown above would be called ``t.l1.coast_cell_l_w_w_m`` (left side, water, water, and mountains
 when enumerating clockwise): even though the tile on the left is not water, it is still identified as such
 because it is not in the group given in ``match_with``.
@@ -342,7 +362,6 @@ situations:
 Because of this, sprites need to be designed to work in several cases (the tile at the bottom could also be
 either land or water). In the example above, the cliff vanishes at the corner, which allows it to merge with
 the land and is also a plausible behavior when there is only water around.
-
 
 .. _corner-general:
 
@@ -365,6 +384,7 @@ modes, the terrain tag is not used:
 .. code-block:: xml
 
     t.l<n>.cellgroup_<g>_<g>_<g>_<g>
+
 
 The value ``<n>`` is replaced with the layer number. The four remaining parts, ``<g>``, each correspond to
 the first letter of one of the groups specified in ``matches_with``, specified in clockwise order starting
@@ -415,6 +435,7 @@ variations. They are named as follows:
 
     t.l<n>.<tag>_hex_cell_left_<01>_<01>_<01>
 
+
 For "right" sprites, simply replace ``left`` with ``right``.  The value of ``<n>`` gives the layer number, and
 the three ``<01>`` indicate whether the three tiles around the corner are in the specified matching group.
 The order is given by the letters ``a``, ``b``, and ``c`` in the figure above.
@@ -430,6 +451,7 @@ This corresponds to :ref:`the general mode for square tilesets <corner-general>`
 .. code-block:: xml
 
     t.l<n>.hex_cell_left_<g>_<g>_<g>
+
 
 For "right" sprites, simply replace ``left`` with ``right``. The value of ``<n>`` gives the layer number, and
 the three ``<g>`` each correspond to the first letter of a matching group. For "left" sprites, the first
@@ -455,6 +477,7 @@ To draw coasts using ``hex_corner``, one starts by defining two matching groups 
     [layer0]
     match_types = "land", "water"
 
+
 Each land terrain must be declared within the ``land`` matching group, while seas and lakes go to ``water``:
 
 .. code-block:: ini
@@ -475,9 +498,9 @@ Each land terrain must be declared within the ``land`` matching group, while sea
 
     ; etc
 
+
 With these settings, the two sprites shown in the figure are called ``t.l0.hex_cell_right_w_w_l`` for the one
 above (white), and ``t.l0.hex_cell_left_l_w_l`` for the one below (red).
-
 
 Terrain Options
 ---------------
