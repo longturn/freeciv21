@@ -1,6 +1,5 @@
-..
-    SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2022 James Robertson <jwrober@gmail.com>
+.. SPDX-License-Identifier: GPL-3.0-or-later
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 Tileset Breaking Changes
 ************************
