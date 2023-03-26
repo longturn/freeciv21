@@ -1,6 +1,12 @@
-..
-    SPDX-License-Identifier:  GPL-3.0-or-later
-    SPDX-FileCopyrightText: 2021-2022 louis94 <m_louis30@yahoo.com>
+.. SPDX-License-Identifier:  GPL-3.0-or-later
+.. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
+
+.. Custom Interpretive Text Roles for longturn.net/Freeciv21
+.. role:: unit
+.. role:: improvement
+.. role:: wonder
+.. role:: advance
+
 
 Adding units
 ************
@@ -14,7 +20,7 @@ in the definition of a new unit type, the Alien:
 
 .. code-block:: ini
 
-  [unit_trebuchet]
+  [unit_alien]
   name          = _("?unit:Alien")
   graphic       = "u.alien"
   graphic_alt   = "u.explorer"
@@ -22,11 +28,11 @@ in the definition of a new unit type, the Alien:
 
 The ``graphic`` directive above specifies the name that the unit has from the tileset point of view,
 ``u.alien``. The second directive, ``graphic_alt``, gives another name that can be used in case the
-tileset doesn't support the first one. In this case, it is set to ``u.explorer``, which the author of the
-rules expects to be more widely available than ``u.alien`` --- the Explorer is one of the units used in
-the default rulesets. It is also not completely wrong, since in these rules the aliens are quite peaceful. To
-add support for the Alien unit to our tileset, we thus need to provide the graphics for ``u.alien``. For
-this, we will use the sprites below:
+tileset does not support the first one. In this case, it is set to ``u.explorer``, which the author of the
+rules expects to be more widely available than ``u.alien`` --- the :unit:`Explorer` is one of the units used
+in the default rulesets. It is also not completely wrong, since in these rules the aliens are quite peaceful.
+To add support for the :unit:`Alien` unit to our tileset, we thus need to provide the graphics for
+``u.alien``. For this, we will use the sprites below:
 
 .. figure:: /_static/images/tileset-tutorial/aliens.png
   :alt: A sprite sheet with two alien units, one green and one red.
@@ -43,7 +49,7 @@ To add these sprites to your tileset, create a new folder ``tutorial`` next to t
 you created earlier. Download the following files and move them to the new folder:
 
 * :download:`aliens.png </_static/images/tileset-tutorial/aliens.png>` --- this is the same image as above.
-* :download:`aliens.spec` --- we'll go through it shortly.
+* :download:`aliens.spec` --- we will go through it shortly.
 
 The ``aliens.spec`` file tells Freeciv21 which sprites are in the image, and where in the grid. There is only
 one small change left to make the new sprites available in our tileset: we need to add the image to the
@@ -63,8 +69,8 @@ file). Insert the new ``spec`` file at the top of the list:
     "amplio2/ocean.spec",
     ...
 
-That's it! Your tileset will now display the Alien units for any ruleset that supports them --- or rather,
-for any ruleset that uses the ``u.alien`` tag. Here's what it could look like:
+That is it! Your tileset will now display the :unit:`Alien` units for any ruleset that supports them --- or
+rather, for any ruleset that uses the ``u.alien`` tag. Here is what it could look like:
 
 .. figure:: /_static/images/tileset-tutorial/aliens_game.png
   :alt: A game screenshot with three alien units, two green and one red.
@@ -72,8 +78,8 @@ for any ruleset that uses the ``u.alien`` tag. Here's what it could look like:
 
   Alien invasion.
 
-Let's now go through the newly added ``aliens.spec`` file. It can be opened with your text editor; go back to
-the :doc:`first page <../tutorial>` if you don't know what to use.
+Let us now go through the newly added ``aliens.spec`` file. It can be opened with your text editor; go back to
+the :doc:`first page <../tutorial>` if you do not know what to use.
 
 You will notice that the file contains four sections, each opened by a name between square brackets:
 ``[spec]``, ``[info]``, ``[file]``, and ``[grid_main]``. The first section specifies the version of
