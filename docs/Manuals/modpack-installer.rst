@@ -8,8 +8,7 @@ Using the Modpack Installer Utility
 ***********************************
 
 The modpack installer is a simple tool to download custom Freeciv21 content called :strong:`modpacks` from the
-Internet and automatically install them into the correct location to be used by the Freeciv21 game interface
-and server.
+Internet and automatically install them into the correct location to be used by Freeciv21.
 
 A :strong:`modpack` can consist of one or more of:
 
