@@ -1,9 +1,12 @@
+.. SPDX-License-Identifier: GPL-3.0-or-later
+.. SPDX-FileCopyrightText: David Koníř <david.konir@gmail.com>
+
 Serving Modpacks for the Modpack Installer
 ******************************************
 
 This document discusses how to set up a web server so that users can download modpacks you publish.
 
-To host modpacks, you just need a web server that can host plain static files; you do not need to run any
+To host modpacks, you just need a web server that can host plain static files. You do not need to run any
 custom code or frameworks on that web server, just to publish files with a specific layout, detailed below.
 
 On the modpack server, there are up to three layers of files required:
@@ -18,7 +21,7 @@ Each layer refers to files in the next layer down. References can be with relati
 or set of modpacks can be moved without changing any file contents), or with absolute URLs (so that the
 different layers can be hosted on different web servers).
 
-Almost all of these file formats are specific to one major version of Freeciv21; this document only
+Almost all of these file formats are specific to one major version of Freeciv21. This document only
 describes the formats for the major version of Freeciv21 it is shipped with.
 
 
@@ -33,7 +36,7 @@ The modpack list is a standard :literal:`JSON` file with a specific structure.
 
 Here's an example:
 
-.. code-block:: rst
+.. code-block:: json-object
 
     {
       "info": {
@@ -95,7 +98,7 @@ Again, this is a file in standard :literal:`JSON` format. Its filename must end 
 
 Here is an example of a modpack control file:
 
-.. code-block: rst
+.. code-block:: json-object
 
     {
       "info": {
@@ -109,8 +112,7 @@ Here is an example of a modpack control file:
         "some_ruleset.serv",
         "some_ruleset.tilespec",
         "some_ruleset/nation/german.ruleset",
-        "some_ruleset/nation/indian.ruleset",
-        ...
+        "some_ruleset/nation/indian.ruleset"
       ]
     }
 
@@ -133,14 +135,14 @@ The :literal:`info` section has overall control information:
 "type"
   This must be one of the following:
 
-* :strong:`Ruleset`: :literal:`foo.serv`, :literal:`foo/*.ruleset`, :literal:`foo/*.lua`, etc.
-* :strong:`Tileset`: :literal:`foo.tilespec`, :literal:`foo/*.png`, etc.
-* :strong:`Soundset`: :literal:`foo.soundspec`, :literal:`foo/*.ogg`, etc.
-* :strong:`Musicset`: :literal:`foo.musicspec`, :literal:`foo/*.ogg`, etc.
-* :strong:`Scenario`: :literal:`foo.sav`; installed to a version-independent location.
-* :strong:`Modpack`: Conventionally used for modpacks that contain more than one of the above kinds of material
-* :strong:`Group`: Contains no files but only depends on other modpacks At the moment, only
-  :literal:`Scenario` causes special behavior.
+  * :strong:`Ruleset`: :literal:`foo.serv`, :literal:`foo/*.ruleset`, :literal:`foo/*.lua`, etc.
+  * :strong:`Tileset`: :literal:`foo.tilespec`, :literal:`foo/*.png`, etc.
+  * :strong:`Soundset`: :literal:`foo.soundspec`, :literal:`foo/*.ogg`, etc.
+  * :strong:`Musicset`: :literal:`foo.musicspec`, :literal:`foo/*.ogg`, etc.
+  * :strong:`Scenario`: :literal:`foo.sav`; installed to a version-independent location.
+  * :strong:`Modpack`: Conventionally used for modpacks that contain more than one of the above kinds of material
+  * :strong:`Group`: Contains no files but only depends on other modpacks At the moment, only
+    :literal:`Scenario` causes special behavior.
 
 "base_url"
   URL to prepend to the :literal:`src` filenames in the :literal:`files` list. May be relative to the
@@ -153,7 +155,7 @@ Entries can be strings as shown above, in which case the same file name is used 
 :literal:`info.base_url` and installing relative to the data directory. If the installed name is different
 from the name on the server, the following syntax can be used instead:
 
-.. code-block: rst
+.. code-block:: json-object
 
     {
       "url": "some-remote-file",
@@ -164,7 +166,8 @@ from the name on the server, the following syntax can be used instead:
 The URL can be either relative (to :literal:`info.base_url`) or absolute. The two syntaxes can be mixed in
 the same modpack.
 
-.. note:: Forward slash :literal:`/` (and not backslash :literal:`\\`) should be used to separate directories.
+.. note::
+  Forward slash :literal:`/` (and not backslash :literal:`\\`) should be used to separate directories.
 
 Some advice on the structure of files in modpacks:
 
@@ -196,7 +199,7 @@ can be handled by declaring a dependency with respect to the other modpack. Depe
 optional :literal:`dependencies` list of the :literal:`JSON` file. Each entry in that list must contain the
 following object:
 
-.. code-block: rst
+.. code-block:: json-object
 
     {
       "modpack": "...",
