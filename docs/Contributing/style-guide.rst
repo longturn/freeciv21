@@ -66,6 +66,8 @@ Heading 4
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
+.. _style-attribution:
+
 Attribution
 ===========
 
