@@ -38,6 +38,11 @@ community discussions.
     A web client and highly customized version of the legacy Freeciv server. Not affiliated
     directly with Freeciv, Freeciv21, or Longturn.
 
+  FEP
+    For Each Player
+
+    During :doc:`/Playing/turn-change`, activities occur for each player in a random sequence per turn.
+
   FFA
     Free For All
 
@@ -45,6 +50,12 @@ community discussions.
     game, players may form alliances. However, these alliances are often not formally reported in-game via the
     :ref:`Nations and Diplomacy View <game-manual-nations-and-diplomacy-view>` until necessity requires it.
     This is typically when conflict occurs and allied units need to enter allied cities.
+
+  FOW
+    Fog of War
+
+    If you do not have a unit giving vision on a piece of the game map, your nation will not see border
+    changes until you move a unit giving vision.
 
   FP
     Fire Power
@@ -64,7 +75,7 @@ community discussions.
     Longturn
 
   LTT
-    Longturn Tradtional
+    Longturn Traditional
 
     Longturn's standard :ref:`ruleset <modding-rulesets>`.
 
@@ -86,7 +97,7 @@ community discussions.
   RTS
     Real Time Strategy
 
-    This is a type of game where gameplay occurs all the time. In the Longturn community, this term is also
+    This is a type of game where game play occurs all the time. In the Longturn community, this term is also
     used when players are online at the same time and potentially competing against each other.
 
   TC
