@@ -1,9 +1,8 @@
-..
-    SPDX-License-Identifier: GPL-3.0-or-later
-    SPDX-FileCopyrightText: 1996-2021 Freeciv Contributors
-    SPDX-FileCopyrightText: 2022-2023 James Robertson <jwrober@gmail.com>
-    SPDX-FileCopyrightText: 2022 louis94 <m_louis30@yahoo.com>
-    SPDX-FileCopyrightText: 2022 daavko <david.konir@gmail.com>
+.. SPDX-License-Identifier: GPL-3.0-or-later
+.. SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+.. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
+.. SPDX-FileCopyrightText: David Koníř <david.konir@gmail.com>
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
@@ -14,38 +13,38 @@
 How to Play Freeciv21
 *********************
 
-If you're looking for how to install Freeciv21, look in :doc:`/Getting/install`. If you're looking for
+If you are looking for how to install Freeciv21, look in :doc:`/Getting/install`. If you are looking for
 how to get Freeciv21 running, look in the :doc:`faq`.
 
-If you have never played any of the retail Civilization games, it's easiest to start by reading the legacy
+If you have never played any of the retail Civilization games, it is easiest to start by reading the legacy
 Freeciv Manual, available separately at: http://www.freeciv.org/wiki/Manual
 
-If you're looking for help on playing Freeciv21, then keep reading!
+If you are looking for help on playing Freeciv21, then keep reading!
 
 Basic Strategy
 ==============
 
-First of all, this isn't a *perfect* strategy, but it will get you started playing Freeciv21. Part of the
+First of all, this is not a *perfect* strategy, but it will get you started playing Freeciv21. Part of the
 appeal of Freeciv21 is in developing new strategies as you play more games. This guide is mostly based upon
 the Classic ruleset. There are other rulesets out there that ship with the game, but the base information
 presented here is the same for all rulesets.
 
 The game is divided into several steps or stages:
 
-#. Choosing the first city site.
-#. Selecting your first city locations.
-#. Selecting your technological advance.
-#. Mapping the countryside.
-#. Defending the cities.
-#. Deciding which units to build first.
-#. Improving the land.
-#. Deciding where to build cities.
-#. Taking care of the cities.
-#. Interacting with other players (diplomacy).
-#. Exploring the world.
-#. Things to keep in mind.
-#. Production phase.
-#. Annihilation of your opponents.
+#. `Choosing the first city site`_.
+#. `Selecting your first city locations`_.
+#. `Selecting your technological advance`_.
+#. `Mapping the countryside`_.
+#. `Defending the cities`_.
+#. `Deciding which units to build first`_.
+#. `Improving the land`_.
+#. `Deciding where to build cities`_.
+#. `Taking care of the cities`_.
+#. `Interacting with other players (diplomacy)`_.
+#. `Exploring the world`_.
+#. `Things to keep in mind`_.
+#. `Production phase`_.
+#. `Annihilation of your opponents`_.
 
 Choosing the First City Site
 ----------------------------
@@ -71,8 +70,7 @@ your opponents.
 
 As mentioned in `Choosing the First City Site`_ above, you want to try and place your :unit:`Settlers` so you
 can create cities that have Resources available to them. These tile enhancements give bonuses to help your
-nation grow. In the game help under :title-reference:`Terrain --> Resources` you will find more
-information.
+nation grow.
 
 Selecting your Technological Advance
 ------------------------------------
@@ -83,17 +81,19 @@ wonders become available to build in your cities.
 
 There are too many scenarios of which technological advance path to take, so make your best judgement. You
 will probably want to learn a new form of government. You start the game in Despotism in the Classic ruleset.
-:strong:`Monarchy` or :strong:`The Republic` are good early targets. As soon as you have researched a new
+:advance:`Monarchy` or :advance:`The Republic` are good early targets. As soon as you have researched a new
 government type, start a revolution (
 :menuselection:`Civilization --> Government --> Revolution`) and change over to it. Cities operate much better
 under Republic than they do under Despotism, but note that it is much harder to keep military units outside of
-city limits under a Republic. Also, do not forget to recheck your national budget after you have changed
-governments, as the maximums vary for each type.
+city limits under a Republic. Also, do not forget to recheck your
+:ref:`national budget <game-manual-national-budget-view>` after you have changed governments, as the maximums
+vary for each type.
 
 Depending on the amount of fresh water you have available, you might need to make a push for
-:advance:`Construction` so you can get your cities larger than size 8. If you are on an island (see
-`Mapping the Countryside`_), you might need to expand. Learning :advance:`Map Making` will give you the
-:unit:`Trireme` unit that can set sail to find new lands (see `Exploring the World`_).
+:advance:`Construction` so you can get your cities larger than size 8 by building an :improvement:`Aqueduct`.
+If you are on an island (see `Mapping the Countryside`_), you might need to expand. Learning
+:advance:`Map Making` will give you the :unit:`Trireme` unit that can set sail to find new lands
+(see `Exploring the World`_).
 
 Mapping the Countryside
 -----------------------
@@ -118,8 +118,9 @@ sufficient defense. The units most often used for defense are (in order of stren
 
 Keep in mind that with some types of government, military units inside or outside cities can reduce or create
 unhappiness. Also remember that when a land unit is inside a city, it gets a 50% defensive bonus, as if
-fortified. This happens automatically. When a new city is built, the city starts to build the best available
-defensive unit from the above list by default.
+fortified (:menuselection:`Unit --> Fortify`). This happens automatically so you can tell the unit to "sentry"
+(:menuselection:`Unit --> Sentry` and watch for enemy units that come through your territory. When a new city
+is built, the city starts to build the best available defensive unit from the above list by default.
 
 Deciding Which Units to Build First
 -----------------------------------
@@ -139,10 +140,11 @@ Improving the Land
 
 Each city has an area of land around it that can be used for growing food, producing goods, and generating
 trade. This area is called the *Working Radius*. This output can be increased by using :unit:`Workers` (or
-:unit:`Settlers`) to improve the land close to your cities. The land can be improved with Irrigation
-(increasing food output), Roads (allowing units to move faster and in some cases increasing trade), and Mines
-(increasing production), among other improvements. The ability to do some improvements on some tiles may
-require a technology advance to be learned by your scientists.
+:unit:`Settlers`, and later :unit:`Engineers`) to improve the land close to your cities. The land can be
+improved with Irrigation (increasing food output), Roads (allowing units to move faster and in some cases
+increasing trade), and Mines (increasing production), among other improvements. The ability to do some
+improvements on some tiles may require a technology advance to be learned by your scientists.
+See :title-reference:`Help --> Terrain --> Terrain Alterations` for more information.
 
 Deciding Where to Build Cities
 ------------------------------
@@ -162,8 +164,8 @@ good to discuss here in the early game.
   well. If you are looking at Square tiles, you can change to Hex tiles by going to
   :menuselection:`Game --> Load Another Tileset` and picking ``Hexemplio`` from the list.
 
-Let us first talk about two concepts: Vision Radius and Working Radius. Each city has a vision radius and a
-working radius. The vision radius is the tiles that the citizens of a city can see on the map. If an emeny
+Let us first talk about two concepts: *Vision Radius* and *Working Radius*. Each city has a vision radius and
+a working radius. The vision radius is the tiles that the citizens of a city can see on the map. If an emeny
 unit comes within the vision radius of a city, a sentried unit inside of the city will wake up and alert you.
 Within the vision radius is the smaller working radius. When thinking of city planning, you should be most
 concerned with the working radius of a city. These are the tiles that the citizens of your cities manage to
@@ -245,10 +247,10 @@ Taking Care of the Cities
 -------------------------
 
 Every city has a group of citizens. The number of citizens depends on the city's population. When you click on
-a city, you can see how the land around the city is being managed. You can assign the city's citizens to
-manage the land, or they can be specialists that contribute to your civilization in other ways. Especially at
-the start of the game, care should be taken to ensure that the citizens are employed so that they maximize
-food, trade, and then production.
+a city, the :doc:`/Manuals/Game/city-dialog` will open and show how the land around the city is being
+managed. You can assign the city's citizens to manage the land, or they can be specialists that contribute to
+your civilization in other ways. Especially at the start of the game, care should be taken to ensure that the
+citizens are employed so that they maximize food, trade, and then production.
 
 If too much food is being generated, a citizen can be taken off the land by clicking on the occupied land
 tile. This citizen can then be transferred to a specialist. There are three specialists: Taxmen (collect
@@ -279,7 +281,7 @@ intelligence about the other, which can be accessed from the
 :ref:`Nations and Diplomacy View <game-manual-nations-and-diplomacy-view>`.
 
 This communication will lapse after a ruleset defined number of turns with no contact, which is one turn for
-the Classic Ruleset. Establishing an embassy will give a more permanent communication channel, as well as more
+the Classic ruleset. Establishing an embassy will give a more permanent communication channel, as well as more
 advanced intelligence such as details of technology. Embassies are one-way, the nation hosting the embassy
 receives no benefit and once established, cannot be revoked.
 
@@ -295,11 +297,11 @@ you can consider this buying and selling. Each player builds a list of offered i
 the list, double-click on it. When both players indicate satisfaction, the pact is concluded.
 
 Pacts affect where your units can go and what they can do, and a pact with one nation can affect your
-relations with others. under authoritarian governments such as monarchy you can break a pact at any time, but
+relations with others. Under authoritarian governments such as monarchy you can break a pact at any time, but
 the representative governments (Republic and Democracy) have a senate which will block the unprovoked
-cancellation of a treaty, unless a foreign diplomat or spy sparks a diplomatic incident. the only way to
-dissolve a pact in this situation is to dissolve your government by going into anarchy. the details of pacts
-are described in the diplomacy section.
+cancellation of a treaty, unless a foreign :unit:`Diplomat` or :unit:`Spy` sparks a diplomatic incident. The
+only way to dissolve a pact in this situation is to dissolve your government by going into anarchy. The
+details of pacts are described in the :title-reference:`Help --> Diplomacy` section.
 
 A few notes:
 
@@ -316,15 +318,15 @@ Exploring the World
 -------------------
 
 After you have fortified your cities with troops, build :unit:`Triremes` in the cities near the sea. Use the
-:unit:`Triremes` to map the world in search of your opponents and new lands. If you are on an island, you should
-spend less on military and more on expansion. Or if you are located close to an opponent, it is truly a good
-idea to make a Peace treaty and share the advances you have made. Diplomatic units are very useful here, and
-:strong:`will` pay off later.
+:unit:`Triremes` to map the world in search of your opponents and new lands. If you are on an island, you
+should spend less on military and more on expansion. Or if you are located close to an opponent, it is truly a
+good idea to make a Peace treaty and share the advances you have made. Diplomatic units are very useful here,
+and :strong:`will` pay off later.
 
 Things to Keep in Mind
 ----------------------
 
-* What the next advance you will need is
+* What the next advance you will need is.
 * What your tax, luxury goods and research rates are currently set to.
 * Treaties are often broken, so do not neglect defense!
 * Some wonders can be made obsolete by a new technology.
@@ -336,8 +338,8 @@ At some point you will have a large number of cities and your nation has learned
 move into the industrial age you can build :improvement:`Factories` and :improvement:`Power Plants` in your
 cities. You want to get as much production as possible out of each city. Pollution becomes a problem. As soon
 as you can, try to research :advance:`Mass Production` for :improvement:`Mass Transits`, and
-:advance:`Recycling` so you can build :improvement:`Recycling Centers`. Once you have got all your cities going
-strong, you must build military units.
+:advance:`Recycling` so you can build :improvement:`Recycling Centers`. Once you have got all your cities
+going strong, you must build military units.
 
 .. note::
    If you come into contact with another player, you should immediately build a few attack units, and
