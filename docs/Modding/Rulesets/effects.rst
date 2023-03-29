@@ -157,7 +157,7 @@ A ``DiplRel`` is considered fulfilled for the range:
   build requirement for an extra the first player is the owner of the unit and the second player the owner
   of the terrain the extra is built on.
 
-Only the exact relationship required fulfills it. Example: An Alliance or an Armistice agreement will not
+Only the exact relationship required fulfills it. Example: An "Alliance" or an "Armistice" agreement will not
 fulfill a "Peace" requirement.
 
 It is possible to create a requirement that in some situations will not have a player to check. In those cases
@@ -168,8 +168,8 @@ the player the first player's relationship is to.
 Example: The requirements below are about the relationship to the owner of a tile. The table shows in what
 situations a requirement is fulfilled.
 
-.. _effect-deplrel-example:
-.. table:: DiplRel Exampe
+.. _effect-deprel-example:
+.. table:: DiplRel Example
   :align: left
 
   +---------------------------------------------+----------+-----------+---------+
@@ -189,7 +189,7 @@ situations a requirement is fulfilled.
 The "MaxUnitsOnTile" requirement type
 -------------------------------------
 
-Check the number of units present on a tile. Is TRUE if no more than the specified number of units are
+Check the number of units present on a tile. Is ``TRUE`` if no more than the specified number of units are
 present on a single tile.
 
 .. tip::
@@ -333,7 +333,7 @@ Give_Imm_Tech
 Conquest_Tech_Pct
     Percent chance that a player conquering a city learns a tech from the former owner.
 
-.. _effect-groth-food:
+.. _effect-growth-food:
 
 Growth_Food
     Saves some food in the granary when a city grows (or shrinks). This effect controls how much food there
@@ -756,7 +756,7 @@ Civil_War_Chance
 .. _effect-city-unhappy-size:
 
 City_Unhappy_Size
-    The maximum number of citizens in each city that are naturally content, In larger cities, new citizens
+    The maximum number of citizens in each city that are naturally content. In larger cities, new citizens
     above this limit start out unhappy. Before :ref:`Empire_Size_Base <effect-empire-size-base>` and
     :ref:`Empire_Size_Step <effect-empire-size-step>` are applied.
 
@@ -774,7 +774,7 @@ Empire_Size_Step
     unhappy citizen for each AMOUNT of cities it gets above that. Set to zero to disable. You can use
     ``Empire_Size_Step`` even if  :ref:`Empire_Size_Base <effect-empire-size-base>` is zero.
 
-.. _effect-map-rates:
+.. _effect-max-rates:
 
 Max_Rates
     The maximum setting for each tax rate is AMOUNT.
@@ -1060,7 +1060,7 @@ Wonder_Visible
 .. _effect-nation-intelligence:
 
 Nation_Intelligence
-    Controls the information available in the Nations View.
+    Controls the information available in the :ref:`Nations View <game-manual-nations-and-diplomacy-view>`.
     :doc:`See the detailed description. <Effects/Nation_Intelligence>`
 
     .. toctree::

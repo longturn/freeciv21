@@ -16,9 +16,9 @@ Using Graphics
 To use different graphics with Freeciv21, use the :code:`--tiles` argument to the Freeciv21 client. Eg, to use
 the 'engels' graphics, start the game as:
 
-.. code-block:: rst
+.. code-block:: sh
 
-    freeciv21-client --tiles engels
+    $ freeciv21-client --tiles engels
 
 
 What Freeciv21 actually does in this case is look for a file called :file:`engels.tilespec` somewhere in your
@@ -27,7 +27,7 @@ to use, and what those graphics files contain.
 
 If you do not want to use the command line to invoke Freeciv21, you can also load a different Tileset from the
 menu at :menuselection:`Game --> Load Another Tileset`. The Longturn.net community also provides some custom
-Tilesets accessible from the modpack installer utility; documented in :doc:`/Manuals/modpack-installer`.
+Tilesets accessible from the modpack installer utility, documented in :doc:`/Manuals/modpack-installer`.
 
 The rest of this file describes, though not fully, the contents of the :file:`.tilespec` file and related
 files. This is intended as developer reference, and for people wanting to create/compile alternative tilesets
@@ -199,7 +199,7 @@ Tilespec should define style of extra graphics for each extra type in section :c
         }
 
 
-* :code:`RoadAllSeparate` : A single sprite is drawn for every connection the tile has; only 8 sprites are
+* :code:`RoadAllSeparate` : A single sprite is drawn for every connection the tile has. Only 8 sprites are
   needed.
 * :code:`RoadParityCombined` : A single sprite is drawn for all cardinal connections and a second sprite is
   drawn for all diagonal connections; 32 sprites are needed.
