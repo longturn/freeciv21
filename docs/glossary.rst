@@ -97,7 +97,7 @@ community discussions.
   RTS
     Real Time Strategy
 
-    This is a type of game where game play occurs all the time. In the Longturn community, this term is also
+    This is a type of game where gameplay occurs all the time. In the Longturn community, this term is also
     used when players are online at the same time and potentially competing against each other.
 
   TC
