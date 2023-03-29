@@ -14,7 +14,7 @@ understand how other tilesets work. The debugger window contains two tabs: :guil
 .. attention::
   The Tileset Debugger is still a work in progress. If you have suggestions
   regarding its contents and functionality, you are very welcome to let us know
-  on `Github`_ --- you will get a chance to shape it to your needs.
+  on `GitHub`_ --- you will get a chance to shape it to your needs.
 
 .. versionchanged:: 3.0-beta1
   Added messages.
@@ -31,11 +31,11 @@ future version. They may also help understand what caused an error. Information 
 provide context about the steps involved in loading a ruleset, and can usually be ignored.
 
 .. figure:: /_static/images/gui-elements/tileset-debugger-messages.png
-  :alt: The Tileset Debugger showing a information messages from a successfully loaded tileset.
+  :alt: The Tileset Debugger showing information messages from a successfully loaded tileset.
   :align: center
   :scale: 75%
 
-  The Tileset Debugger showing a information messages from a successfully loaded tileset.
+  The Tileset Debugger showing information messages from a successfully loaded tileset.
 
 Inspector
 ---------
@@ -62,8 +62,8 @@ have sprites: a terrain layer (``Terrain1``), ``Darkness``, and another terrain 
 ``Terrain1``). The first terrain layer is made of five sprites: one for the base texture and four that blend
 it with adjacent tiles. The second terrain layer has only one sprite, used to draw the trees.
 The offsets used to draw the sprites are also shown. The first number corresponds to the horizontal axis and
-runs from left to right; the second to the vertical axis that runs from top to bottom. Depending on the type
-of layer, these values may be computed automatically, so they do not necessarily correspond to a parameters in
-the ``tilespec`` file.
+runs from left to right. The second corresponds to the vertical axis that runs from top to bottom. Depending
+on the type of layer, these values may be computed automatically, so they do not necessarily correspond to
+parameters in the ``tilespec`` file.
 
-.. _Github: https://github.com/longturn/freeciv21/issues/new?assignees=&labels=Untriaged%2C+enhancement&template=feature_request.md&title=
+.. _GitHub: https://github.com/longturn/freeciv21/issues/new?assignees=&labels=Untriaged%2C+enhancement&template=feature_request.md&title=

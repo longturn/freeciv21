@@ -90,7 +90,7 @@ therefore knowledge about its techs) can be added.
 Requirement Vector Rules
 ========================
 
-An action enabler has two requirement vectors that must be TRUE at the same time. This creates some corner
+An action enabler has two requirement vectors that must be ``TRUE`` at the same time. This creates some corner
 cases you will not find with single requirement vectors. The rules below tries to deal with them.
 
 A :code:`DiplRel` requirement with the range :code:`Local` should always be put in the actor requirements.

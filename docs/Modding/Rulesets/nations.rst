@@ -29,7 +29,7 @@ The following information is required to add a new nation:
 * A flag, preferably something official (if your nation does not have an official flag, think twice before
   including it). Wikipedia has many of those under free licenses.
 * A few nations that will be preferred by the server when there is a civil war. For instance, the
-  *Conferderate* are a civil war nation for the Americans.
+  *Confederate* are a civil war nation for the Americans.
 * City names. List each city only once, even if it changed name in the course of history. Try to use names
   from the same epoch.
 
@@ -81,7 +81,7 @@ To add a nation of your own, you should look at the following files:
 This is the new nation, which you will have to create. It may help to copy one of the other nation files over
 and edit it. See below for a style guide for nation files.
 
-* The :code:`<nationname>` bit is to be replaced with the nations name. Please do not use whitespaces and
+* The :code:`<nationname>` bit is to be replaced with the nations name. :strong:`Do not` use whitespaces and
   special characters. Underlines are ok though.
 * The name should be the same as the name of the nation inside the ruleset file.
 * The file must be encoded in UTF-8.

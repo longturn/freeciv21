@@ -25,7 +25,7 @@ across a network and through savegames.
 and any other command-line arguments you normally use, depending on how you have Freeciv21 installed you may
 have to give the installed data directory path instead of :file:`data`.
 
-Start the game interface normally. The game must be network-compatible to the server (usually meaning the same
+Start the game normally. The game must be network-compatible to the server (usually meaning the same
 or similar version), but otherwise nothing special is needed. However, some third-party rulesets may
 potentially require special graphics to work properly, in which case the game should have those graphics
 available and be started with an appropriate :code:`--tiles` argument.
@@ -61,7 +61,7 @@ The format used in the ruleset files should be fairly self-explanatory. A few po
   circumstances of the game (rather than intrinsic properties of the unit). See comments in
   :file:`common/unit.h`
 
-* Rulesets must be in UTF-8. Translatable texts should be American English (en_US).
+* Rulesets must be in UTF-8. Translatable texts should be American English ASCII.
 
 Restrictions and Limitations
 ============================

@@ -6,7 +6,7 @@ Serving Modpacks for the Modpack Installer
 
 This document discusses how to set up a web server so that users can download modpacks you publish.
 
-To host modpacks, you just need a web server that can host plain static files. You do not need to run any
+To host modpacks, you need a web server that can host plain static files. You do not need to run any
 custom code or frameworks on that web server, just to publish files with a specific layout, detailed below.
 
 On the modpack server, there are up to three layers of files required:
