@@ -982,7 +982,10 @@ city_dialog::~city_dialog()
  */
 void city_dialog::hideEvent(QHideEvent *event)
 {
-  Q_UNUSED(event)
+  if (event->spontaneous()) {
+    return;
+  }
+
   if (pcity) {
     if (!dont_focus) {
       unit_focus_update();
@@ -999,7 +1002,10 @@ void city_dialog::hideEvent(QHideEvent *event)
  */
 void city_dialog::showEvent(QShowEvent *event)
 {
-  Q_UNUSED(event)
+  if (event->spontaneous()) {
+    return;
+  }
+
   dont_focus = false;
   if (pcity) {
     unit_focus_set(nullptr);
