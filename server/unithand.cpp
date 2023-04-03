@@ -603,7 +603,7 @@ static bool do_unit_board(struct player *act_player, struct unit *act_unit,
                           const struct action *paction)
 {
   if (unit_transported(act_unit)) {
-    unit_transport_unload(act_unit);
+    unit_transport_unload_send(act_unit);
   }
 
   // Load the unit and send out info to clients.
@@ -673,7 +673,7 @@ static bool do_unit_embark(struct player *act_player, struct unit *act_unit,
 
   if (unit_transported(act_unit)) {
     // Assumed to be legal.
-    unit_transport_unload(act_unit);
+    unit_transport_unload_send(act_unit);
   }
 
   // Do it.
