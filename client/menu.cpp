@@ -847,7 +847,7 @@ void mr_menu::setup_menus()
   menu->addSeparator();
   act = menu->addAction(_("Pillage"));
   menu_list.insert(PILLAGE, act);
-  act->setShortcut(QKeySequence(tr("shift+p")));
+  shortcuts->link_action(SC_PILLAGE, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_pillage);
   // TRANS: Menu item to bring up the action selection dialog.
   act = menu->addAction(_("Do..."));
