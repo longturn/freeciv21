@@ -72,3 +72,10 @@ This will install the files in the directory `$HOME/freeciv21` specified above:
 ```sh
 cmake --build build --target install
 ```
+
+#### Using Nix
+
+Alternatively, Freeciv21 can be used with Nix. For this, enable Nix flakes and run
+```sh
+nix run github:longturn/freeciv21#;
+```
