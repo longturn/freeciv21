@@ -26,6 +26,7 @@ An operating system that support Qt
     * openSUSE 15.3+
     * Slackware
     * Ubuntu 22.04 LTS+
+    * Fedora 37+
 
 
 .. note::
@@ -136,6 +137,8 @@ Installing Package Dependencies
 See the `Debian Linux Packages`_ section below on the steps to install the components for Debian Linux and
 its variants.
 
+See the `Fedora Linux Packages`_ section below on the steps to install the components for Fedora Linux
+
 See the `macOS Packages`_ section below on the steps to install the components for Apple macOS.
 
 If you are running Windows and want to use the MSYS2 environment and have not set it up yet, then
@@ -174,6 +177,35 @@ following commands:
      libdw-dev \
      python3-sphinx \
      clang-format-11
+
+
+At this point, follow the steps in `Obtaining the Source Code`_ section below.
+
+Fedora Linux Packages
+=====================
+
+Below are all the command line steps needed to start with a fresh install of Fedora or its variants (e.g.
+RHEL, CentOS Stream) to install Freeciv21.
+
+.. code-block:: sh
+
+  $ sudo dnf install git \
+    cmake \
+    ninja-build \
+    python \
+    qt5-qtbase-devel \
+    qt5-qtsvg-devel \
+    kf5-karchive-devel \
+    lua-devel \
+    sqlite-devel \
+    SDL2_mixer-devel \
+    readline-devel \
+    zlib-devel \
+    libunwind-devel \
+    elfutils-libs \
+    python-pip \
+    python3-sphinx \
+    patch
 
 
 At this point, follow the steps in `Obtaining the Source Code`_ section below.
