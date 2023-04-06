@@ -221,7 +221,7 @@ int main(int argc, char *argv[])
        // TRANS: Command-line argument
        _("ID")},
       {{"s", "saves"},
-       _("Sage games to directory DIR"),
+       _("Save games to directory DIR"),
        // TRANS: Command-line argument
        _("DIR")},
       {{"t", "timetrack"},
