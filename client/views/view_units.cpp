@@ -296,7 +296,7 @@ void units_view::update_waiting()
   max_row = 0;
   for (int i = 0; i < entries_used; i++) {
     struct unit_waiting_entry *pentry = unit_entries + i;
-    struct unit_type *putype = pentry->type;
+    const struct unit_type *putype = pentry->type;
 
     auto sprite = get_unittype_sprite(tileset, putype, direction8_invalid());
     cid id = cid_encode_unit(putype);
@@ -316,6 +316,7 @@ void units_view::update_waiting()
         break;
       case 1:
         // # Location
+        item->setTextAlignment(Qt::AlignCenter);
         item->setText(QString(_("%1")).arg(pentry->city_name));
         break;
       case 2:
@@ -607,39 +608,33 @@ void get_units_waiting_data(struct unit_waiting_entry *entries,
   if (nullptr == client.conn.playing) {
     return;
   }
+  const struct unit_type *ut; // Init unit_type struct
+  int pcity_near_dist = 0;    // Init distance
+  QString city = "";          // Init city name string
+  time_t dt = 0;              // Init date time
 
-  unit_type_iterate(unittype)
+  unit_list_iterate(client.conn.playing->units, punit)
   {
-    int count = 0; // Count of active unit type
-    int pcity_near_dist = 0;
-    QString city;
-    time_t dt = 0;
+    struct city *pcity_near = get_nearest_city(punit, &pcity_near_dist);
 
-    unit_list_iterate(client.conn.playing->units, punit)
-    {
-      struct city *pcity_near = get_nearest_city(punit, &pcity_near_dist);
+    if (!can_unit_move_now(punit) && punit->ssa_controller == SSA_NONE) {
+      ut = punit->utype;
+      city = get_nearest_city_text(pcity_near, pcity_near_dist);
+      dt = time(nullptr) - punit->action_timestamp;
 
-      if (unit_type_get(punit) == unittype && !can_unit_move_now(punit)
-          && punit->ssa_controller == SSA_NONE) {
-        count++;
-        city = get_nearest_city_text(pcity_near, pcity_near_dist);
-        dt = time(nullptr) - punit->action_timestamp;
-      }
+      entries[*num_entries_used].type = ut;
+      entries[*num_entries_used].city_name = city;
+      entries[*num_entries_used].timer = dt;
+
+      (*num_entries_used)++;
     }
-    unit_list_iterate_end;
 
     // Skip unused unit types
-    if (count == 0) {
+    if (*num_entries_used == 0) {
       continue;
     }
-
-    entries[*num_entries_used].type = unittype;
-    entries[*num_entries_used].city_name = city;
-    entries[*num_entries_used].timer = dt;
-
-    (*num_entries_used)++;
   }
-  unit_type_iterate_end;
+  unit_list_iterate_end;
 
   std::sort(entries, entries + *num_entries_used,
             [](const auto &lhs, const auto &rhs) {

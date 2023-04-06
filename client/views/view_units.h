@@ -32,7 +32,7 @@ struct unit_view_entry {
  * See get_units_waiting_data()
  */
 struct unit_waiting_entry {
-  struct unit_type *type;
+  const struct unit_type *type;
   time_t timer;
   QString city_name;
 };
