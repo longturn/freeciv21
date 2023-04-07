@@ -532,10 +532,6 @@ void get_units_view_data(struct unit_view_entry *entries,
 {
   *num_entries_used = 0;
 
-  // if (!client_has_player()) {
-  //  return;
-  //}
-
   players_iterate(pplayer)
   {
     if (client_has_player() && pplayer != client_player()) {
