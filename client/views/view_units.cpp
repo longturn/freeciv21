@@ -138,7 +138,7 @@ void units_view::update_view()
 
   for (int i = 0; i < entries_used; i++) {
     struct unit_view_entry *pentry = unit_entries + i;
-    struct unit_type *putype = pentry->type;
+    const struct unit_type *putype = pentry->type;
     cid id;
 
     auto sprite = get_unittype_sprite(tileset, putype, direction8_invalid());
@@ -531,61 +531,69 @@ void get_units_view_data(struct unit_view_entry *entries,
 {
   *num_entries_used = 0;
 
-  if (!client_has_player()) {
-    return;
-  }
+  // if (!client_has_player()) {
+  //  return;
+  //}
 
-  unit_type_iterate(unittype)
+  players_iterate(pplayer)
   {
-    int count = 0;           // Count of active unit type
-    int in_progress = 0;     // Count of being produced
-    int gold_cost = 0;       // Gold upkeep
-    int food_cost = 0;       // Food upkeep
-    int shield_cost = 0;     // Shield upkeep
-    bool upgradable = false; // Unit type is upgradable
-
-    unit_list_iterate(client_player()->units, punit)
-    {
-      if (unit_type_get(punit) == unittype) {
-        count++;
-        upgradable =
-            client_has_player()
-            && nullptr != can_upgrade_unittype(client_player(), unittype);
-
-        // Only units with a home city have upkeep
-        if (punit->homecity != 0) {
-          gold_cost += punit->upkeep[O_GOLD];
-          food_cost += punit->upkeep[O_FOOD];
-          shield_cost += punit->upkeep[O_SHIELD];
-        }
-      }
-    }
-    unit_list_iterate_end;
-
-    city_list_iterate(client_player()->cities, pcity)
-    {
-      if (pcity->production.value.utype == unittype
-          && pcity->production.kind == VUT_UTYPE) {
-        in_progress++;
-      }
-    }
-    city_list_iterate_end;
-
-    // Skip unused unit types
-    if (count == 0 && in_progress == 0) {
+    if (client_has_player() && pplayer != client_player()) {
       continue;
     }
 
-    entries[*num_entries_used].type = unittype;
-    entries[*num_entries_used].count = count;
-    entries[*num_entries_used].in_prod = in_progress;
-    entries[*num_entries_used].upg = upgradable;
-    entries[*num_entries_used].gold_cost = gold_cost;
-    entries[*num_entries_used].food_cost = food_cost;
-    entries[*num_entries_used].shield_cost = shield_cost;
-    (*num_entries_used)++;
+    unit_type_iterate(unittype)
+    {
+      int count = 0;           // Count of active unit type
+      int in_progress = 0;     // Count of being produced
+      int gold_cost = 0;       // Gold upkeep
+      int food_cost = 0;       // Food upkeep
+      int shield_cost = 0;     // Shield upkeep
+      bool upgradable = false; // Unit type is upgradable
+
+      unit_list_iterate(pplayer->units, punit)
+      {
+        if (unit_type_get(punit) == unittype) {
+          count++;
+          upgradable =
+              client_has_player()
+              && nullptr != can_upgrade_unittype(client_player(), unittype);
+
+          // Only units with a home city have upkeep
+          if (punit->homecity != 0) {
+            gold_cost += punit->upkeep[O_GOLD];
+            food_cost += punit->upkeep[O_FOOD];
+            shield_cost += punit->upkeep[O_SHIELD];
+          }
+        }
+      }
+      unit_list_iterate_end;
+
+      city_list_iterate(pplayer->cities, pcity)
+      {
+        if (pcity->production.value.utype == unittype
+            && pcity->production.kind == VUT_UTYPE) {
+          in_progress++;
+        }
+      }
+      city_list_iterate_end;
+
+      // Skip unused unit types
+      if (count == 0 && in_progress == 0) {
+        continue;
+      }
+
+      entries[*num_entries_used].type = unittype;
+      entries[*num_entries_used].count = count;
+      entries[*num_entries_used].in_prod = in_progress;
+      entries[*num_entries_used].upg = upgradable;
+      entries[*num_entries_used].gold_cost = gold_cost;
+      entries[*num_entries_used].food_cost = food_cost;
+      entries[*num_entries_used].shield_cost = shield_cost;
+      (*num_entries_used)++;
+    }
+    unit_type_iterate_end;
   }
-  unit_type_iterate_end;
+  players_iterate_end;
 
   std::sort(entries, entries + *num_entries_used,
             [](const auto &lhs, const auto &rhs) {
