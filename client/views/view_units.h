@@ -22,7 +22,7 @@ struct unit_type;
  * See get_units_view_data()
  */
 struct unit_view_entry {
-  struct unit_type *type;
+  const struct unit_type *type;
   int count, in_prod, total_cost, food_cost, gold_cost, shield_cost;
   bool upg;
 };
