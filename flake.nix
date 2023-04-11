@@ -7,7 +7,7 @@
   };
 
   outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
+    flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" ] (system:
       let
         pkgs = import nixpkgs {
           inherit system;
@@ -28,11 +28,11 @@
               # Use the libertinus in nixpkgs opposed to downloading
               libertinus
               libsForQt5.qt5.qtsvg
-              libsForQt5.karchive
               lua5_3_compat
               sqlite.dev
               SDL2_mixer.dev
-            ];
+              # KArchive dep is automatically satisfied in x86_64-darwin
+            ] ++ (if system == "x86_64-darwin" then [ ] else [ libsForQt5.karchive ]);
             buildPhase = ''
               mkdir -p $out/
               cmake . -B build -G Ninja \
@@ -48,6 +48,9 @@
           };
       in
       {
-        defaultPackage = freeciv21;
+        packages = {
+          freeciv21 = freeciv21;
+          default = freeciv21;
+        };
       });
 }
