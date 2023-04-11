@@ -279,6 +279,20 @@ jobs:
           name: macOS-dmg
           path: Freeciv21-*.dmg
 
+  nix:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - uses: cachix/install-nix-action@v19
+      - run: nix flake check
+      # TODO: We can add the build to a cache for others (see cachix.org)
+      # It's free for FOSS.
+      - run: nix build .#freeciv21
+
   wasm:
     name: "WebAssembly"
     runs-on: ubuntu-latest

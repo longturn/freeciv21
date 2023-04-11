@@ -45,6 +45,9 @@ build.ninja
 /build*
 .flatpak-builder
 
+# Nix build artifacts
+result
+
 # IDE files
 .cache
 .clangd
