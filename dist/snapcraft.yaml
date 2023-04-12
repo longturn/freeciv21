@@ -1,0 +1,123 @@
+##########
+# Freeciv21 - snapcraft.yaml
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+#
+# Build Steps:
+#   - (once) sudo snap install snapcraft --classic
+#   - (once) sudo snap install multipass
+#   - mkdir -p <source_dir>/build/snap/local
+#   - cp <source_dir>/dist/snapcraft.yaml <source_dir>/build/snap
+#   - cp <source_dir>/data/icons/128x128/freeciv21-client.png <source_dir>/build/snap/local
+#   - cd <source_dir>/build
+#   - snapcraft
+#   - sudo snap install --devmode ./freeciv21_*.snap
+#
+##########
+
+name: freeciv21
+title: Freeciv21
+summary: Freeciv21 - Freeciv for the 21st Century
+description: |
+  Freeciv21 is a free and open source empire-building strategy game inspired by the history of human civilization. The game commences in prehistory and your mission is to lead your tribe from the Stone Age to the Space Age.
+  This snap package contains everything you need to play local single-player games against the computer as well as connect to online multi-player games against human opponents.
+  Freeciv21 is based on the Qt framework and brought to you by the team at Longturn.net.
+
+# TODO: At some point, will want to integrate into cmake process and configure_file()
+version: '3.0'
+grade: stable
+
+license: GPL-3.0-or-later
+website: https://longturn.net
+contact: longturn.net@gmail.com
+issues: https://github.com/longturn/freeciv21/issues/new/choose
+confinement: strict
+compression: lzo
+
+# The base snap is the execution environment for this snap and is based on Ubuntu 20.04
+#  core22 (Ubuntu 22.04) is available, but not all Qt features are ready yet
+base: core20
+
+# Assummes 'snapcraft' is called from a directory above the snap directory
+#  and the file was copied from <source_dir>/data/icons/128x128
+icon: snap/local/freeciv21-client.png
+
+parts:
+  freeciv21:
+    plugin: cmake
+    source: https://github.com/longturn/freeciv21.git
+    source-type: git
+    # TODO: integrate into cmake process and configure_file()
+    source-branch: stable
+    cmake-generator: Ninja
+    cmake-parameters:
+      - "-DCMAKE_INSTALL_PREFIX=/usr"
+      - "-DCMAKE_BUILD_TYPE=Release"
+    # packages/libraries needed at build time
+    build-snaps:
+      - kde-frameworks-5-99-qt-5-15-7-core20
+    build-packages:
+      - git
+      - cmake
+      - ninja-build
+      - g++
+      - python3
+      - gettext
+      - liblua5.3-dev
+      - libsqlite3-dev
+      - libsdl2-mixer-dev
+    # packages/libraries needed at run time
+    stage-packages:
+      - liblua5.3-0
+      - libsdl2-2.0-0
+      - libsdl2-mixer-2.0-0
+      - libsqlite3-0
+    parse-info:
+      - usr/share/metainfo/net.longturn.freeciv21.client.metainfo.xml
+      - usr/share/metainfo/net.longturn.freeciv21.modpack.metainfo.xml
+      - usr/share/metainfo/net.longturn.freeciv21.ruledit.metainfo.xml
+      - usr/share/metainfo/net.longturn.freeciv21.server.metainfo.xml
+
+apps:
+  freeciv21-client:
+    common-id: net.longturn.freeciv21.client
+    desktop: usr/share/applications/net.longturn.freeciv21.client.desktop
+    command: usr/bin/freeciv21-client
+    extensions:
+      - kde-neon
+    plugs:
+      - home
+      - network
+      - audio-playback
+  freeciv21-server:
+    common-id: net.longturn.freeciv21.server
+    desktop: usr/share/applications/net.longturn.freeciv21.server.desktop
+    command: usr/bin/freeciv21-server
+    extensions:
+      - kde-neon
+    plugs:
+      - home
+      - network
+      - network-bind
+  freeciv21-modpack-qt:
+    common-id: net.longturn.freeciv21.modpack-qt
+    desktop: usr/share/applications/net.longturn.freeciv21.modpack-qt.desktop
+    command: usr/bin/freeciv21-modpack-qt
+    extensions:
+      - kde-neon
+    plugs:
+      - home
+      - network
+  freeciv21-ruledit:
+    common-id: net.longturn.freeciv21.ruledit
+    desktop: usr/share/applications/net.longturn.freeciv21.ruledit.desktop
+    command: usr/bin/freeciv21-ruledit
+    extensions:
+      - kde-neon
+    plugs:
+      - home
+
+##########
+# END snapcraft.yaml
+##########
