@@ -31,9 +31,10 @@ eco_report::eco_report() : QWidget()
 
   QStringList slist;
   slist << _("Type") << Q_("?Building or Unit type:Name") << _("Redundant")
-        << _("Count") << _("Cost") << _("U Total") << QLatin1String("");
+        << _("Count") << _("Cost") << _("Upkeep Total");
   ui.eco_widget->setColumnCount(slist.count());
   ui.eco_widget->setHorizontalHeaderLabels(slist);
+  ui.eco_widget->setAlternatingRowColors(true);
   ui.bdisband->setText(_("Disband"));
   ui.bsell->setText(_("Sell All"));
   ui.bredun->setText(_("Sell Redundant"));
@@ -75,7 +76,7 @@ void eco_report::update_report()
   QFont f = QApplication::font();
   int h;
   QFontMetrics fm(f);
-  h = fm.height() + 6;
+  h = fm.height() + 18;
 
   ui.eco_widget->setRowCount(0);
   ui.eco_widget->clearContents();
@@ -90,32 +91,37 @@ void eco_report::update_report()
     ui.eco_widget->insertRow(i);
     for (j = 0; j < 6; j++) {
       item = new QTableWidgetItem;
+      QLabel *lbl = new QLabel;
       switch (j) {
       case 0: {
-        auto sprite = get_building_sprite(tileset, pimprove);
-        if (sprite != nullptr) {
-          item->setData(Qt::DecorationRole, sprite->scaledToHeight(h));
-        }
+        auto sprite =
+            get_building_sprite(tileset, pimprove)->scaledToHeight(h);
+        lbl->setPixmap(QPixmap(sprite));
+        lbl->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
+        ui.eco_widget->setCellWidget(i, j, lbl);
         item->setData(Qt::UserRole, id);
       } break;
       case 1:
-        item->setTextAlignment(Qt::AlignLeft);
+        item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
         item->setText(improvement_name_translation(pimprove));
         break;
       case 2:
+        item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         item->setData(Qt::DisplayRole, pentry->redundant);
         break;
       case 3:
+        item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         item->setData(Qt::DisplayRole, pentry->count);
         break;
       case 4:
+        item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         item->setData(Qt::DisplayRole, pentry->cost);
         break;
       case 5:
+        item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         item->setData(Qt::DisplayRole, pentry->total_cost);
         break;
       }
-      item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
       ui.eco_widget->setItem(i, j, item);
     }
   }
@@ -124,40 +130,44 @@ void eco_report::update_report()
   for (i = 0; i < entries_used; i++) {
     struct unit_entry *pentry = unit_entries + i;
     struct unit_type *putype = pentry->type;
-    cid id;
 
-    auto sprite = get_unittype_sprite(tileset, putype, direction8_invalid());
-    id = cid_encode_unit(putype);
+    auto sprite = get_unittype_sprite(tileset, putype, direction8_invalid())
+                      ->scaledToHeight(h);
+
+    cid id = cid_encode_unit(putype);
 
     ui.eco_widget->insertRow(i + max_row);
     for (j = 0; j < 6; j++) {
       item = new QTableWidgetItem;
-      item->setTextAlignment(Qt::AlignHCenter);
+      QLabel *lbl = new QLabel;
       switch (j) {
       case 0:
-        if (sprite != nullptr) {
-          item->setData(Qt::DecorationRole, sprite->scaledToHeight(h));
-        }
+        lbl->setPixmap(QPixmap(sprite));
+        lbl->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
+        ui.eco_widget->setCellWidget(max_row + i, j, lbl);
         item->setData(Qt::UserRole, id);
         break;
       case 1:
-        item->setTextAlignment(Qt::AlignLeft);
+        item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
         item->setText(utype_name_translation(putype));
         break;
       case 2:
+        item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         item->setData(Qt::DisplayRole, 0);
         break;
       case 3:
+        item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         item->setData(Qt::DisplayRole, pentry->count);
         break;
       case 4:
+        item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         item->setData(Qt::DisplayRole, pentry->cost);
         break;
       case 5:
+        item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         item->setData(Qt::DisplayRole, pentry->total_cost);
         break;
       }
-      item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
       ui.eco_widget->setItem(max_row + i, j, item);
     }
   }
@@ -166,7 +176,7 @@ void eco_report::update_report()
             .arg(QString::number(tax),
                  QString::number(building_total + unit_total));
   ui.eco_label->setText(buf);
-  // ui.eco_widget->resizeRowsToContents();
+  ui.eco_widget->resizeRowsToContents();
   ui.eco_widget->resizeColumnsToContents();
 }
 
