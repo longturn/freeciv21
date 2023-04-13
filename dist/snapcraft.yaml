@@ -2,11 +2,11 @@
 # Freeciv21 - snapcraft.yaml
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
-# SPDX-FileCopyrightText: 2023 James Robertson <jwrober@gmail.com>
+# SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 #
 # Build Steps:
 #   - (once) sudo snap install snapcraft --classic
-#   - (once) sudo snap install multipass
+#   - (once) sudo snap install lxd
 #   - mkdir -p <source_dir>/build/snap/local
 #   - cp <source_dir>/dist/snapcraft.yaml <source_dir>/build/snap
 #   - cp <source_dir>/data/icons/128x128/freeciv21-client.png <source_dir>/build/snap/local
@@ -25,8 +25,8 @@ description: |
   Freeciv21 is based on the Qt framework and brought to you by the team at Longturn.net.
 
 # TODO: At some point, will want to integrate into cmake process and configure_file()
-version: '3.0-rc.1'
-grade: stable
+version: '3.1-dev'
+grade: devel
 
 license: GPL-3.0-or-later
 website: https://longturn.net
@@ -35,9 +35,9 @@ issues: https://github.com/longturn/freeciv21/issues/new/choose
 confinement: strict
 compression: lzo
 
-# The base snap is the execution environment for this snap and is based on Ubuntu 20.04
-#  core22 (Ubuntu 22.04) is available, but not all Qt features are ready yet
-base: core20
+# The base snap is the execution environment and is based on Ubuntu 22.04 
+#  running in an LXD virtual machine
+base: core22
 
 # Assummes 'snapcraft' is called from a directory above the snap directory
 #  and the file was copied from <source_dir>/data/icons/128x128
@@ -49,14 +49,11 @@ parts:
     source: https://github.com/longturn/freeciv21.git
     source-type: git
     # TODO: integrate into cmake process and configure_file()
-    source-branch: stable
+    source-branch: master
     cmake-generator: Ninja
     cmake-parameters:
       - "-DCMAKE_INSTALL_PREFIX=/usr"
       - "-DCMAKE_BUILD_TYPE=Release"
-    # packages/libraries needed at build time
-    build-snaps:
-      - kde-frameworks-5-qt-5-15-core20-sdk
     build-packages:
       - git
       - cmake
@@ -67,6 +64,10 @@ parts:
       - liblua5.3-dev
       - libsqlite3-dev
       - libsdl2-mixer-dev
+      - qtbase5-dev
+      - libqt5svg5-dev
+      - libkf5archive-dev
+      - libmagickwand-dev
     # packages/libraries needed at run time
     stage-packages:
       - liblua5.3-0
