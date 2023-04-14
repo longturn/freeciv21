@@ -11,7 +11,26 @@
       let
         pkgs = import nixpkgs {
           inherit system;
+          allowUnsupportedSystem = true;
         };
+        # KArchive dep is not bundled in pkgs for x86_64-darwin
+        karchive = (if system == "x86_64-darwin" then
+          pkgs.stdenv.mkDerivation
+            rec {
+              pname = "karchive";
+              version = "5.105";
+              patch = "0";
+              src = pkgs.fetchurl {
+                url = "mirror://kde/stable/frameworks/${version}/karchive-${version}.${patch}.tar.xz";
+                sha256 = "0jcpva3w3zpxg4a1wk8wbip74pm3cisq3pf7c51ffpsj9k7rbvvp";
+                name = "karchive-${version}.${patch}.tar.xz";
+              };
+              nativeBuildInputs = [ pkgs.extra-cmake-modules pkgs.qt5.qttools ];
+              buildInputs = [ pkgs.bzip2 pkgs.xz pkgs.zlib pkgs.zstd ];
+              propagatedBuildInputs = [ pkgs.qt5.qtbase ];
+              outputs = [ "out" "dev" ];
+            }
+        else pkgs.libsForQt5.karchive);
         freeciv21 =
           pkgs.stdenv.mkDerivation {
             name = "freeciv21";
@@ -24,15 +43,16 @@
               python3
               gettext
               readline
-              qt5.qtbase
               # Use the libertinus in nixpkgs opposed to downloading
               libertinus
+
+              qt5.qtbase
               libsForQt5.qt5.qtsvg
               lua5_3_compat
               sqlite.dev
               SDL2_mixer.dev
-              # KArchive dep is automatically satisfied in x86_64-darwin
-            ] ++ (if system == "x86_64-darwin" then [ ] else [ libsForQt5.karchive ]);
+              karchive
+            ];
             buildPhase = ''
               mkdir -p $out/
               cmake . -B build -G Ninja \
