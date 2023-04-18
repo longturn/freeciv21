@@ -43,6 +43,7 @@ build.ninja
 
 # Build directories
 /build*
+.flatpak-builder
 
 # IDE files
 .cache
