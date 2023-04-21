@@ -191,7 +191,8 @@ bool script_fcdb_init(const QString &fcdb_luafile)
         error_list += info.absolutePath() + ": ";
       } else {
         foundit = true;
-        fcdb_luafile_resolved = info.absolutePath() + "/" + SCRIPT_FCDB_LUA_FILE;
+        fcdb_luafile_resolved =
+            info.absolutePath() + "/" + SCRIPT_FCDB_LUA_FILE;
       }
   }
 
