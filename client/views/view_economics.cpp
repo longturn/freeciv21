@@ -29,9 +29,14 @@ eco_report::eco_report() : QWidget()
 {
   ui.setupUi(this);
 
+  QFont font = ui.eco_widget->horizontalHeader()->font();
+  font.setWeight(QFont::Bold);
+  ui.eco_widget->horizontalHeader()->setFont(font);
+
   QStringList slist;
   slist << _("Type") << Q_("?Building or Unit type:Name") << _("Redundant")
-        << _("Count") << _("Cost") << _("Upkeep Total");
+        << _("Count") << _("Cost") << _("Total Upkeep");
+
   ui.eco_widget->setColumnCount(slist.count());
   ui.eco_widget->setHorizontalHeaderLabels(slist);
   ui.eco_widget->setAlternatingRowColors(true);
@@ -91,11 +96,11 @@ void eco_report::update_report()
     ui.eco_widget->insertRow(i);
     for (j = 0; j < 6; j++) {
       item = new QTableWidgetItem;
-      QLabel *lbl = new QLabel;
       switch (j) {
       case 0: {
         auto sprite =
             get_building_sprite(tileset, pimprove)->scaledToHeight(h);
+        QLabel *lbl = new QLabel;
         lbl->setPixmap(QPixmap(sprite));
         lbl->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         ui.eco_widget->setCellWidget(i, j, lbl);
@@ -133,13 +138,12 @@ void eco_report::update_report()
 
     auto sprite = get_unittype_sprite(tileset, putype, direction8_invalid())
                       ->scaledToHeight(h);
-
+    QLabel *lbl = new QLabel;
     cid id = cid_encode_unit(putype);
 
     ui.eco_widget->insertRow(i + max_row);
     for (j = 0; j < 6; j++) {
       item = new QTableWidgetItem;
-      QLabel *lbl = new QLabel;
       switch (j) {
       case 0:
         lbl->setPixmap(QPixmap(sprite));
