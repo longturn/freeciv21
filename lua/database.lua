@@ -1,4 +1,4 @@
--- Copyright (c) 2007-2020 Freeciv21 and Freeciv contributors. This file is
+-- Copyright (c) Freeciv21 and Freeciv contributors. This file is
 --   part of Freeciv21. Freeciv21 is free software: you can redistribute it
 --   and/or modify it under the terms of the GNU General Public License
 --   as published by the Free Software Foundation, either version 3
@@ -6,10 +6,11 @@
 --   You should have received a copy of the GNU General Public License
 --   along with Freeciv21. If not, see https://www.gnu.org/licenses/.
 
--- This file is the Freeciv server`s interface to the database backend
--- when authentication is enabled. See doc/README.fcdb.
+-- This file is Freeciv21 server`s interface to the database backend
+-- when authentication is enabled.
+-- See https://longturn.readthedocs.io/en/latest/Coding/fcdb.html.
 
-local md5 = require "md5"
+local md5 = require("md5")
 local dbh = nil
 
 -- Machinery for debug logging of options
@@ -52,26 +53,6 @@ local function get_option(name, is_sensitive)
   return val
 end
 
--- connect to a MySQL database (or raise an error)
-local function mysql_connect()
-  if dbh then
-    dbh:close()
-  end
-
-  local sql = ls_mysql.mysql()
-
-  log.verbose('MySQL database version is %s.', ls_mysql._MYSQLVERSION)
-
-  -- Load the database parameters.
-  local database = get_option("database")
-  local user     = get_option("user")
-  local password = get_option("password", true)
-  local host     = get_option("host")
-  local port     = get_option("port")
-
-  dbh = assert(sql:connect(database, user, password, host, port))
-end
-
 -- open a SQLite database (or raise an error)
 local function sqlite_connect()
   if dbh then
@@ -92,9 +73,7 @@ end
 -- to this, see <https://www.hostedredmine.com/issues/657141>.)
 function sql_time()
   local backend = get_option("backend")
-  if backend == 'mysql' then
-    return 'UNIX_TIMESTAMP()'
-  elseif backend == 'sqlite' then
+  if backend == 'sqlite' then
     return 'strftime(\'%s\',\'now\')'
   else
     log.error('Don\'t know how to do timestamps for database backend \'%s\'', backend)
@@ -103,9 +82,6 @@ function sql_time()
 end
 
 -- Set up tables for an SQLite database.
--- (Since there`s no concept of user rights, we can do this directly from Lua,
--- without needing a separate script like MySQL. The server operator can do
--- "/fcdb lua sqlite_createdb()" from the server prompt.)
 function sqlite_createdb()
   local query
 
@@ -145,41 +121,6 @@ CREATE TABLE %s (
 );]], table_log)
   assert(dbh:execute(query))
 end
-
--- **************************************************************************
--- For MySQL, the following shapes of tables are expected
--- (scripts/setup_auth_server.sh automates this):
---
--- CREATE TABLE fcdb_auth (
---   id int(11) NOT NULL auto_increment,
---   name varchar(48) default NULL,
---   password varchar(32) default NULL,
---   email varchar(128) default NULL,
---   createtime int(11) default NULL,
---   accesstime int(11) default NULL,
---   address varchar(255) default NULL,
---   createaddress varchar(255) default NULL,
---   logincount int(11) default '0',
---   PRIMARY KEY  (id),
---   UNIQUE KEY name (name)
--- );
---
--- CREATE TABLE fcdb_log (
---   id int(11) NOT NULL auto_increment,
---   name varchar(48) default NULL,
---   logintime int(11) default NULL,
---   address varchar(255) default NULL,
---   succeed enum('S','F') default 'S',
---   PRIMARY KEY  (id)
--- );
---
--- N.B. if the tables are not of this format, then the select, insert,
---      and update syntax in the following functions must be changed.
--- **************************************************************************
-
--- **************************************************************************
--- freeciv user auth functions
--- **************************************************************************
 
 -- Check if user exists.
 function user_exists(conn)
@@ -305,11 +246,6 @@ function database_init()
   options_init()
 
   local backend = get_option("backend")
-
-  if backend == 'mysql' then
-    log.verbose('Opening MySQL database connection...')
-    return mysql_connect()
-  end
 
   if backend == 'sqlite' then
     log.verbose('Opening SQLite database connection...')
