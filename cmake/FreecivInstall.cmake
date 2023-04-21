@@ -195,6 +195,14 @@ if(UNIX AND NOT APPLE)
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
       COMPONENT freeciv21
     )
+
+    # Install database.lua file with the server for FCDB support
+    install(
+      FILES
+      ${CMAKE_SOURCE_DIR}/lua/database.lua
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/freeciv21
+      COMPONENT freeciv21
+    )
   endif(FREECIV_ENABLE_SERVER)
 
   if(FREECIV_ENABLE_FCMP_QT)
