@@ -608,23 +608,20 @@ void get_units_waiting_data(struct unit_waiting_entry *entries,
   if (nullptr == client.conn.playing) {
     return;
   }
-  const struct unit_type *ut; // Init unit_type struct
-  int pcity_near_dist = 0;    // Init distance
-  QString city = "";          // Init city name string
-  time_t dt = 0;              // Init date time
+
+  int pcity_near_dist = 0; // Init distance
 
   unit_list_iterate(client.conn.playing->units, punit)
   {
     struct city *pcity_near = get_nearest_city(punit, &pcity_near_dist);
 
     if (!can_unit_move_now(punit) && punit->ssa_controller == SSA_NONE) {
-      ut = punit->utype;
-      city = get_nearest_city_text(pcity_near, pcity_near_dist);
-      dt = time(nullptr) - punit->action_timestamp;
 
-      entries[*num_entries_used].type = ut;
-      entries[*num_entries_used].city_name = city;
-      entries[*num_entries_used].timer = dt;
+      entries[*num_entries_used].type = punit->utype;
+      entries[*num_entries_used].city_name =
+          get_nearest_city_text(pcity_near, pcity_near_dist);
+      entries[*num_entries_used].timer =
+          time(nullptr) - punit->action_timestamp;
 
       (*num_entries_used)++;
     }
