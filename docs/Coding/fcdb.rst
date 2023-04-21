@@ -5,8 +5,8 @@
 Authentication and Database Support (fcdb)
 ******************************************
 
-The Freeciv21 server allows the authentication of users, although by default it is not enabled, and anyone can
-connect with any username.
+The Freeciv21 server allows the authentication of users, although by default it is not configured, and anyone
+can connect with any username.
 
 In order to support authentication, the Freeciv21 server needs access to a database backend in which to store
 the credentials. To support different database backends, the database access code is written in Lua using
@@ -31,7 +31,7 @@ To set this up, first create a database configuration file called something like
 the ``database`` key specifying where the database file is to live. It must be readable and writable by the
 Freeciv21 server. Here is an example:
 
-.. code-block:: rst
+.. code-block:: ini
 
     [fcdb]
     backend="sqlite"
@@ -40,6 +40,16 @@ Freeciv21 server. Here is an example:
 
 For more information on the format of this file, see below. There are more settings available, but this file
 is entirely sufficient for a SQLite setup.
+
+Now we need some software and Lua scripts installed on the server to support the SQLite database as well as
+storing passwords with MD5 hashes.
+
+.. code-block:: sh
+
+    $ sudo apt install luarocks
+    $ sudo luarocks --lua-version 5.3 install md5
+    $ sudo luarocks --lua-version 5.3 install luasql-sqlite3
+
 
 Now start the server with:
 
@@ -96,15 +106,15 @@ This script is responsible for checking usernames, fetching passwords, and savin
 :code:`--Newusers` is enabled). It encapsulates access to the database backend, and hence the details of the
 table layout.
 
-The script lives in :file:`data/database.lua` in the source tree, and is installed to
+The script lives in :file:`lua/database.lua` in the source tree, and is installed to
 ``CMAKE_INSTALL_PREFIX``. Depending on the options given to ``cmake`` at build time, this may be a location
-such as :file:`/usr/local/etc/freeciv21/database.lua.` Refer to :doc:`/Getting/compile` for more information
+such as :file:`/usr/share/freeciv21/database.lua.` Refer to :doc:`/Getting/compile` for more information
 on ``CMAKE_INSTALL_PREFIX``.
 
 The supplied version supports basic authentication against a SQLite database. It supports configuration as
 shown in the following example:
 
-.. code-block:: rst
+.. code-block:: ini
 
     [fcdb]
     backend="sqllite"
