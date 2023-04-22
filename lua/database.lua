@@ -6,11 +6,11 @@
 --   You should have received a copy of the GNU General Public License
 --   along with Freeciv21. If not, see https://www.gnu.org/licenses/.
 
--- This file is Freeciv21 server`s interface to the database backend
+-- This file is the Freeciv21 server`s interface to the database backend
 -- when authentication is enabled.
 -- See https://longturn.readthedocs.io/en/latest/Coding/fcdb.html.
 
-local md5 = require("md5")
+local md5 = require "md5"
 local dbh = nil
 
 -- Machinery for debug logging of options
@@ -67,14 +67,10 @@ local function sqlite_connect()
   dbh = assert(sql:connect(database))
 end
 
--- DIRTY: return a string to put in a database query which gets the
--- current time (in seconds since the epoch, UTC).
--- (This should be replaced with Lua os.time() once the script has access
--- to this, see <https://www.hostedredmine.com/issues/657141>.)
 function sql_time()
   local backend = get_option("backend")
   if backend == 'sqlite' then
-    return 'strftime(\'%s\',\'now\')'
+    return os.time()
   else
     log.error('Don\'t know how to do timestamps for database backend \'%s\'', backend)
     return 'ERROR'
@@ -196,7 +192,6 @@ function user_save(conn, password)
   local ipaddr = auth.get_ipaddr(conn)
 
   -- insert the user
-  --local now = os.time()
   local query = string.format([[INSERT INTO %s VALUES (NULL, '%s', '%s',
                                 NULL, %s, %s, '%s', '%s', 0)]],
                               table_user, username, md5.sum(password),
@@ -223,7 +218,6 @@ function user_log(conn, success)
   local success_str = success and 'S' or 'F'
 
   -- update user data
-  --local now = os.time()
   query = string.format([[UPDATE %s SET accesstime = %s, address = '%s',
                           logincount = logincount + 1
                           WHERE name = '%s']], table_user, sql_time(),
@@ -238,7 +232,7 @@ function user_log(conn, success)
 end
 
 -- **************************************************************************
--- freeciv database entry functions
+-- freeciv21 database entry functions
 -- **************************************************************************
 
 -- test and initialise the database connection
