@@ -11,25 +11,25 @@ can connect with any username.
 In order to support authentication, the Freeciv21 server needs access to a database backend in which to store
 the credentials. To support different database backends, the database access code is written in Lua using
 luasql. In principle, luasql supports SQLite3, MySQL, and Postgres backends. However, the Freeciv21 server is
-only built with SQLite3.
+only built with SQLite3 and the shipped :file:`database.lua` is also only programmed to support SQLite3.
 
 As well as storing and retrieving usernames and passwords, the supplied database access script logs the time
 and IP address of each attempted login, although this information is not used by the Freeciv21 server itself.
 
 To use the Freeciv21 database and authentication, the server must be installed properly, as it searches for
-:file:`database.lua` in the install location. The server cannot simply be run from a build directory if
-authentication is required.
+:file:`database.lua` in the :file:`$HOME/.config` directory. The server cannot simply be run from a build
+directory if authentication is required.
 
 Quick Setup: SQLite
 ===================
 
-The simplest setup is to use the SQLite backend, and this is probably the best option for new deployments. In
+The simplest setup is to use the SQLite3 backend, and this is probably the best option for new deployments. In
 this setup, the authentication data is stored in a simple file accessed directly by the Freeciv21 server.
 There is no need for a separate database server process.
 
 To set this up, first create a database configuration file called something like :file:`fc_auth.conf`, with
 the ``database`` key specifying where the database file is to live. It must be readable and writable by the
-Freeciv21 server. Here is an example:
+Freeciv21 server. A good default location is the user's :file:`$HOME` directory. Here is an example:
 
 .. code-block:: ini
 
@@ -39,15 +39,16 @@ Freeciv21 server. Here is an example:
 
 
 For more information on the format of this file, see below. There are more settings available, but this file
-is entirely sufficient for a SQLite setup.
+is entirely sufficient for a SQLite3 setup.
 
-Now we need some software and Lua scripts installed on the server to support the SQLite database as well as
+Now we need some software and Lua scripts installed on the server to support the SQLite3 database as well as
 storing passwords with MD5 hashes.
 
 .. code-block:: sh
 
     $ sudo apt install luarocks
     $ sudo luarocks --lua-version 5.3 install md5
+    $ sudo luarocks --lua-version 5.3 install lua-salt
     $ sudo luarocks --lua-version 5.3 install luasql-sqlite3
 
 
@@ -55,7 +56,7 @@ Now start the server with:
 
 .. code-block:: sh
 
-    freeciv21-server --Database fc_auth.conf --auth --Newusers
+    $ /path/to/freeciv21/bin/freeciv21-server --Database fc_auth.conf --auth --Newusers
 
 
 The first time you do this, you need to create the database file and its tables with the following server
@@ -106,12 +107,9 @@ This script is responsible for checking usernames, fetching passwords, and savin
 :code:`--Newusers` is enabled). It encapsulates access to the database backend, and hence the details of the
 table layout.
 
-The script lives in :file:`lua/database.lua` in the source tree, and is installed to
-``CMAKE_INSTALL_PREFIX``. Depending on the options given to ``cmake`` at build time, this may be a location
-such as :file:`/usr/share/freeciv21/database.lua.` Refer to :doc:`/Getting/compile` for more information
-on ``CMAKE_INSTALL_PREFIX``.
+The script lives in :file:`lua/database.lua` in the source tree, and is installed to ``$HOME/.config``.
 
-The supplied version supports basic authentication against a SQLite database. It supports configuration as
+The supplied version supports basic authentication against a SQLite3 database. It supports configuration as
 shown in the following example:
 
 .. code-block:: ini
