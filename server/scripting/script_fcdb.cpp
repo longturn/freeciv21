@@ -181,27 +181,17 @@ bool script_fcdb_init(const QString &fcdb_luafile)
     return true;
   }
 
-  // Find database.lua in the standard data directories
-  QString error_list = "";
-  bool foundit = false;
-  auto fcdb_luafile_resolved = fcdb_luafile;
-  for (const auto &path : qAsConst(get_data_dirs())) {
-    QFileInfo info(path + "/" + SCRIPT_FCDB_LUA_FILE);
-    if (!info.exists()) {
-      error_list += info.absolutePath() + ": ";
-    } else {
-      foundit = true;
-      fcdb_luafile_resolved =
-          info.absolutePath() + "/" + SCRIPT_FCDB_LUA_FILE;
-    }
-  }
-
-  // If database.lua isn't found, we throw an error message and exit the
-  // function.
-  if (!foundit) {
+  auto fcdb_luafile_resolved =
+      fcdb_luafile.isEmpty() ?
+                             // Use default freeciv database lua file.
+          QStandardPaths::locate(QStandardPaths::GenericConfigLocation,
+                                 SCRIPT_FCDB_LUA_FILE)
+                             : fcdb_luafile;
+  if (fcdb_luafile_resolved.isEmpty()) {
     qCritical() << "Could not find " SCRIPT_FCDB_LUA_FILE
                    " in the following directories:"
-                << error_list;
+                << QStandardPaths::standardLocations(
+                       QStandardPaths::GenericConfigLocation);
     return false;
   }
 
