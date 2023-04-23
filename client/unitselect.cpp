@@ -164,10 +164,10 @@ void units_select::create_pixmap()
 
       if (client_is_global_observer()
           || unit_owner(punit) == client.conn.playing) {
-        auto f = ((punit->fuel) - 1);
         auto str = QString(move_points_text(punit->moves_left, false));
         if (utype_fuel(unit_type_get(punit))) {
-          str = str + "(" + QString::number(f) + " T)";
+          // TRANS: T for turns
+          str += " " + QString(_("(%1T)")).arg(punit->fuel - 1);
         }
         // TRANS: MP = Movement points
         str = QString(_("MP:")) + str;

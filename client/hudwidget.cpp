@@ -626,8 +626,8 @@ void hud_units::update_actions()
   text_str = text_str + " ";
   mp = QString(move_points_text(punit->moves_left, false));
   if (utype_fuel(unit_type_get(punit))) {
-    mp = mp + QStringLiteral("(") + QString::number(punit->fuel - 1)
-         + QStringLiteral(" T)");
+    // TRANS: T for turns
+    mp += " " + QString(_("(%1T)")).arg(punit->fuel - 1);
   }
   // TRANS: MP = Movement points
   mp = QString(_("MP: ")) + mp;
