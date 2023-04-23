@@ -11,7 +11,7 @@ can connect with any username.
 In order to support authentication, the Freeciv21 server needs access to a database backend in which to store
 the credentials. To support different database backends, the database access code is written in Lua using
 luasql. In principle, luasql supports SQLite3, MySQL, and Postgres backends. However, the Freeciv21 server is
-only built with SQLite3 and the shipped :file:`database.lua` is also only programmed to support SQLite3.
+only built with SQLite3 and the provided :file:`database.lua` is also only programmed to support SQLite3.
 
 As well as storing and retrieving usernames and passwords, the supplied database access script logs the time
 and IP address of each attempted login, although this information is not used by the Freeciv21 server itself.
@@ -48,15 +48,22 @@ storing passwords with MD5 hashes.
 
     $ sudo apt install luarocks
     $ sudo luarocks --lua-version 5.3 install md5
-    $ sudo luarocks --lua-version 5.3 install lua-salt
     $ sudo luarocks --lua-version 5.3 install luasql-sqlite3
+
+
+Lastly, we need to download the :file:`database.lua` script file.
+
+.. code-block:: sh
+
+    $ cd $HOME/.config
+    $ wget https://raw.githubusercontent.com/longturn/freeciv21/master/lua/database.lua
 
 
 Now start the server with:
 
 .. code-block:: sh
 
-    $ /path/to/freeciv21/bin/freeciv21-server --Database fc_auth.conf --auth --Newusers
+    $ freeciv21-server --Database fc_auth.conf --auth --Newusers
 
 
 The first time you do this, you need to create the database file and its tables with the following server
@@ -107,7 +114,7 @@ This script is responsible for checking usernames, fetching passwords, and savin
 :code:`--Newusers` is enabled). It encapsulates access to the database backend, and hence the details of the
 table layout.
 
-The script lives in :file:`lua/database.lua` in the source tree, and is installed to ``$HOME/.config``.
+The script lives in :file:`lua/database.lua` in the source tree, and is installed to :file:`/etc`.
 
 The supplied version supports basic authentication against a SQLite3 database. It supports configuration as
 shown in the following example:
@@ -115,7 +122,7 @@ shown in the following example:
 .. code-block:: ini
 
     [fcdb]
-    backend="sqllite"
+    backend="sqlite"
     host="localhost"
     user="Freeciv21"
     port="3306"
