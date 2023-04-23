@@ -1297,9 +1297,7 @@ const char *utype_values_string(const struct unit_type *punittype)
               punittype->defense_strength,
               move_points_text(punittype->move_rate, true));
   if (utype_fuel(punittype)) {
-    cat_snprintf(buffer, sizeof(buffer), "(%s)",
-                 move_points_text(
-                     punittype->move_rate * utype_fuel(punittype), true));
+    cat_snprintf(buffer, sizeof(buffer), "(%d)", utype_fuel(punittype));
   }
   return buffer;
 }
