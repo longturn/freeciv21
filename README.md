@@ -8,17 +8,17 @@ Freeciv21
 [![Coverity](https://scan.coverity.com/projects/21964/badge.svg)](https://scan.coverity.com/projects/longturn-freeciv21)
 [![quality badge](https://img.shields.io/static/v1?label=SUPER&message=HOT&color=green)](http://www.emergencykitten.com/)
 
-![Logo](https://github.com/longturn/freeciv21/raw/master/data/freeciv21-client.png)
-
-Freeciv21 is an empire-building strategy game inspired by the history of human civilization. It takes its roots in the well-known FOSS game Freeciv and extends it for more fun, with a revived focus on competitive multiplayer environments.
-
 ![Screenshot](https://github.com/longturn/freeciv21/raw/master/data/screenshot.png)
+
+<div style="float: left">
+  ![Logo](https://github.com/longturn/freeciv21/raw/master/data/freeciv21-client.png)
+</div>
+
+Freeciv21 is an empire-building strategy game inspired by the history of human civilization. The game commences in prehistory and your mission is to lead your tribe from the Stone Age to the Space Age. Freeciv21 takes its roots in the well-known FOSS game Freeciv and extends it for more fun, with a revived focus on **competitive multiplayer environments**. Get started by reviewing our [about page](https://longturn.readthedocs.io/en/latest/Getting/about.html). Freeciv21 is maintained by the team from [Longturn.net](https://longturn.net). We welcome pull requests, bug reports and simple suggestions! Get in touch on [Discord](https://discord.gg/98krqGm). The #General channel is a great place to start.
 
 The documentation is found on our [documentation website](https://longturn.readthedocs.io/).
 
-The WebAssembly build of Freeciv21 is playable at [freecivweb.com](https://freecivweb.com).
-
-Freeciv21 is maintained by folks from [longturn.net](https://longturn.net). We welcome pull requests, bug reports and simple suggestions! Get in touch on [Discord](https://discord.gg/98krqGm). The #General channel is a great place to start.
+The feature preview WebAssembly build of Freeciv21 is playable at [freecivweb.com](https://freecivweb.com).
 
 Installation
 ------------
