@@ -39,15 +39,20 @@ units_view::units_view() : QWidget()
 {
   ui.setupUi(this);
 
+  QFont font = ui.units_widget->horizontalHeader()->font();
+  font.setWeight(QFont::Bold);
+  ui.units_widget->horizontalHeader()->setFont(font);
+  ui.uwt_widget->horizontalHeader()->setFont(font);
+
   // Configure the units table
   QStringList slist;
-  slist << _("Unit Type") << _("★  Upgradable") << _("⚒  In Progress")
-        << _("⚔  Active") << _("Shield Upkeep") << _("Food Upkeep")
-        << _("Gold Upkeep") << QLatin1String("");
+  slist << _("Type") << _("Name") << _("★  Upgradable")
+        << _("⚒  In Progress") << _("⚔  Active") << _("Shield Upkeep")
+        << _("Food Upkeep") << _("Gold Upkeep");
   ui.units_label->setText(QString(_("Units:")));
   ui.units_widget->setColumnCount(slist.count());
   ui.units_widget->setHorizontalHeaderLabels(slist);
-  ui.units_widget->setSortingEnabled(false);
+  ui.units_widget->setSortingEnabled(true);
   ui.units_widget->setAlternatingRowColors(true);
   ui.upg_but->setText(_("Upgrade"));
   ui.upg_but->setToolTip(_("Upgrade selected unit."));
@@ -62,11 +67,10 @@ units_view::units_view() : QWidget()
 
   // Configure the unitwaittime table
   slist.clear();
-  slist << _("Unit Type") << _("Location") << _("Time left")
-        << QLatin1String("");
+  slist << _("Type") << _("Name") << _("Location") << _("Time Left");
   ui.uwt_widget->setColumnCount(slist.count());
   ui.uwt_widget->setHorizontalHeaderLabels(slist);
-  ui.uwt_widget->setSortingEnabled(false);
+  ui.uwt_widget->setSortingEnabled(true);
   ui.uwt_widget->setAlternatingRowColors(true);
   ui.uwt_label->setText("Units Waiting:");
 
@@ -115,9 +119,10 @@ void units_view::init() { queen()->game_tab_widget->setCurrentIndex(index); }
  */
 void units_view::update_view()
 {
+  // used to set the height of the unit sprite
   QFont f = QApplication::font();
   QFontMetrics fm(f);
-  int h = fm.height() + 10;
+  int h = fm.height() + 24;
 
   ui.units_widget->setRowCount(0);
   ui.units_widget->clearContents();
@@ -139,26 +144,33 @@ void units_view::update_view()
   for (int i = 0; i < entries_used; i++) {
     struct unit_view_entry *pentry = unit_entries + i;
     const struct unit_type *putype = pentry->type;
-    cid id;
-
-    auto sprite = get_unittype_sprite(tileset, putype, direction8_invalid());
-    id = cid_encode_unit(putype);
+    cid id = cid_encode_unit(putype);
 
     ui.units_widget->insertRow(max_row);
-    for (int j = 0; j < 7; j++) {
+    for (int j = 0; j < 8; j++) {
       QTableWidgetItem *item = new QTableWidgetItem;
       switch (j) {
       case 0:
-        // Unit type image sprite and name
-        if (sprite != nullptr) {
-          item->setData(Qt::DecorationRole, sprite->scaledToHeight(h));
+        // Unit type image sprite
+        {
+          auto sprite =
+              get_unittype_sprite(tileset, putype, direction8_invalid())
+                  ->scaledToHeight(h);
+          QLabel *lbl = new QLabel;
+          lbl->setPixmap(QPixmap(sprite));
+          lbl->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
+          ui.units_widget->setCellWidget(i, j, lbl);
         }
         item->setData(Qt::UserRole, id);
-        item->setText(utype_name_translation(putype));
-        item->setTextAlignment(Qt::AlignLeft | Qt::TextAlignmentRole);
         break;
       case 1:
-        // # Upgradable
+        // Unit type name
+        item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        item->setText(utype_name_translation(putype));
+        break;
+      case 2:
+        // Is Upgradable
+        item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         if (pentry->upg) {
           item->setData(Qt::DisplayRole, "★");
           upg_count++;
@@ -166,48 +178,49 @@ void units_view::update_view()
           item->setData(Qt::DisplayRole, "-");
         }
         break;
-      case 2:
+      case 3:
         // # In Progress
+        item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         item->setData(Qt::DisplayRole, pentry->in_prod);
         in_progress += pentry->in_prod;
         break;
-      case 3:
+      case 4:
         // # Active
+        item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         item->setData(Qt::DisplayRole, pentry->count);
         total_count += pentry->count;
         break;
-      case 4:
+      case 5:
         // Shield upkeep
+        item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         if (pentry->shield_cost == 0) {
           item->setText("-");
-          item->setTextAlignment(Qt::AlignCenter);
         } else {
           item->setData(Qt::DisplayRole, pentry->shield_cost);
         }
         total_shield += pentry->shield_cost;
         break;
-      case 5:
+      case 6:
         // Food upkeep
+        item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         if (pentry->food_cost == 0) {
           item->setText("-");
-          item->setTextAlignment(Qt::AlignCenter);
         } else {
           item->setData(Qt::DisplayRole, pentry->food_cost);
         }
         total_food += pentry->food_cost;
         break;
-      case 6:
+      case 7:
         // Gold upkeep
+        item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         if (pentry->gold_cost == 0) {
           item->setText("-");
-          item->setTextAlignment(Qt::AlignCenter);
         } else {
           item->setData(Qt::DisplayRole, pentry->gold_cost);
         }
         total_gold += pentry->gold_cost;
         break;
       }
-      item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
       ui.units_widget->setItem(max_row, j, item);
     }
     max_row++;
@@ -216,37 +229,37 @@ void units_view::update_view()
   // Add a "footer" to the table showing the totals.
   ui.units_widget->setRowCount(max_row);
   ui.units_widget->insertRow(max_row);
-  for (int j = 0; j < 7; j++) {
+  for (int j = 0; j < 8; j++) {
     QTableWidgetItem *item_totals = new QTableWidgetItem;
     switch (j) {
-    case 0:
-      // Unit type
+    case 1:
+      // Unit type name
       item_totals->setTextAlignment(Qt::AlignRight);
       item_totals->setText(_("--------------------\nTotals:"));
       break;
-    case 1:
+    case 2:
       // Upgradable
       item_totals->setTextAlignment(Qt::AlignCenter);
       item_totals->setText(QString(_("------\n%1")).arg(upg_count));
       break;
-    case 2:
+    case 3:
       // In Progress
       item_totals->setTextAlignment(Qt::AlignCenter);
       item_totals->setText(QString(_("------\n%1")).arg(in_progress));
       break;
-    case 3:
+    case 4:
       item_totals->setTextAlignment(Qt::AlignCenter);
       item_totals->setText(QString(_("------\n%1")).arg(total_count));
       break;
-    case 4:
+    case 5:
       item_totals->setTextAlignment(Qt::AlignCenter);
       item_totals->setText(QString(_("------\n%1")).arg(total_shield));
       break;
-    case 5:
+    case 6:
       item_totals->setTextAlignment(Qt::AlignCenter);
       item_totals->setText(QString(_("------\n%1")).arg(total_food));
       break;
-    case 6:
+    case 7:
       item_totals->setTextAlignment(Qt::AlignCenter);
       item_totals->setText(QString(_("------\n%1")).arg(total_gold));
       break;
@@ -281,9 +294,10 @@ void units_view::update_view()
  */
 void units_view::update_waiting()
 {
+  // used to set the height of the unit sprite
   QFont f = QApplication::font();
   QFontMetrics fm(f);
-  int h = fm.height() + 10;
+  int h = fm.height() + 24;
 
   ui.uwt_widget->setRowCount(0);
   ui.uwt_widget->clearContents();
@@ -297,35 +311,42 @@ void units_view::update_waiting()
   for (int i = 0; i < entries_used; i++) {
     struct unit_waiting_entry *pentry = unit_entries + i;
     const struct unit_type *putype = pentry->type;
-
-    auto sprite = get_unittype_sprite(tileset, putype, direction8_invalid());
     cid id = cid_encode_unit(putype);
 
     ui.uwt_widget->insertRow(max_row);
-    for (int j = 0; j < 3; j++) {
+    for (int j = 0; j < 4; j++) {
       auto item = new QTableWidgetItem;
       switch (j) {
       case 0:
-        // Unit type image sprite and name
-        if (sprite != nullptr) {
-          item->setData(Qt::DecorationRole, sprite->scaledToHeight(h));
+        // Unit type image sprite
+        {
+          auto sprite =
+              get_unittype_sprite(tileset, putype, direction8_invalid())
+                  ->scaledToHeight(h);
+          QLabel *lbl = new QLabel;
+          lbl->setPixmap(QPixmap(sprite));
+          lbl->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
+          ui.uwt_widget->setCellWidget(i, j, lbl);
         }
         item->setData(Qt::UserRole, id);
-        item->setTextAlignment(Qt::AlignLeft);
-        item->setText(utype_name_translation(putype));
         break;
       case 1:
-        // # Location
-        item->setTextAlignment(Qt::AlignCenter);
-        item->setText(QString(_("%1")).arg(pentry->city_name));
+        // Unit type name
+        item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        item->setText(utype_name_translation(putype));
         break;
       case 2:
+        // # Location
+        item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        item->setText(QString(_("%1")).arg(pentry->city_name));
+        break;
+      case 3:
         // # Time Left
+        item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
         item->setText(QString(_("%1")).arg(
             format_simple_duration(abs(pentry->timer))));
         break;
       }
-      item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
       ui.uwt_widget->setItem(max_row, j, item);
     }
     max_row++;
@@ -336,6 +357,8 @@ void units_view::update_waiting()
     ui.uwt_widget->setHidden(true);
   } else {
     ui.uwt_widget->setRowCount(max_row);
+    ui.uwt_widget->resizeRowsToContents();
+    ui.uwt_widget->resizeColumnsToContents();
     ui.uwt_widget->horizontalHeader()->resizeSections(
         QHeaderView::ResizeToContents);
     ui.uwt_widget->verticalHeader()->setSectionResizeMode(
