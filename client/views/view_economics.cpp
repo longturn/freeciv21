@@ -79,9 +79,8 @@ void eco_report::update_report()
   QString buf;
   QTableWidgetItem *item;
   QFont f = QApplication::font();
-  int h;
   QFontMetrics fm(f);
-  h = fm.height() + 18;
+  int h = fm.height() + 24;
 
   ui.eco_widget->setRowCount(0);
   ui.eco_widget->clearContents();
@@ -90,7 +89,6 @@ void eco_report::update_report()
   for (i = 0; i < entries_used; i++) {
     struct improvement_entry *pentry = building_entries + i;
     struct impr_type *pimprove = pentry->type;
-
     cid id = cid_encode_building(pimprove);
 
     ui.eco_widget->insertRow(i);
@@ -135,20 +133,21 @@ void eco_report::update_report()
   for (i = 0; i < entries_used; i++) {
     struct unit_entry *pentry = unit_entries + i;
     struct unit_type *putype = pentry->type;
-
-    auto sprite = get_unittype_sprite(tileset, putype, direction8_invalid())
-                      ->scaledToHeight(h);
-    QLabel *lbl = new QLabel;
     cid id = cid_encode_unit(putype);
 
     ui.eco_widget->insertRow(i + max_row);
     for (j = 0; j < 6; j++) {
       item = new QTableWidgetItem;
       switch (j) {
-      case 0:
+      case 0: {
+        auto sprite =
+            get_unittype_sprite(tileset, putype, direction8_invalid())
+                ->scaledToHeight(h);
+        QLabel *lbl = new QLabel;
         lbl->setPixmap(QPixmap(sprite));
         lbl->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         ui.eco_widget->setCellWidget(max_row + i, j, lbl);
+      }
         item->setData(Qt::UserRole, id);
         break;
       case 1:
