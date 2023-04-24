@@ -52,7 +52,7 @@ units_view::units_view() : QWidget()
   ui.units_label->setText(QString(_("Units:")));
   ui.units_widget->setColumnCount(slist.count());
   ui.units_widget->setHorizontalHeaderLabels(slist);
-  ui.units_widget->setSortingEnabled(true);
+  ui.units_widget->setSortingEnabled(false);
   ui.units_widget->setAlternatingRowColors(true);
   ui.upg_but->setText(_("Upgrade"));
   ui.upg_but->setToolTip(_("Upgrade selected unit."));
