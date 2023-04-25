@@ -20,8 +20,6 @@ Get started by reviewing our [about page](https://longturn.readthedocs.io/en/lat
 
 The documentation is found on our [documentation website](https://longturn.readthedocs.io/).
 
-The feature preview WebAssembly build of Freeciv21 is playable at [freecivweb.com](https://freecivweb.com).
-
 Installation
 ------------
 
