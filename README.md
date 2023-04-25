@@ -13,8 +13,8 @@ Freeciv21
 ------------
 
 <img src="https://github.com/longturn/freeciv21/raw/master/data/freeciv21-client.png" align="left"/>
-Freeciv21 is an empire-building strategy game inspired by the history of human civilization.<br/><br/>The game commences in prehistory and your mission is to lead your tribe from the Stone<br/><br/>Age to the Space Age. Freeciv21 takes its roots in the well-known FOSS game Freeciv and extends it for more fun, with a revived focus on<br/><br/><strong>competitive multiplayer environments</strong>.
-<br clear="left"/>
+Freeciv21 is an empire-building strategy game inspired by the history of human civilization.<br/>The game commences in prehistory and your mission is to lead your tribe from the Stone<br/>Age to the Space Age. Freeciv21 takes its roots in the well-known FOSS game Freeciv and<br/>extends it for more fun, with a revived focus on<strong>competitive multiplayer environments</strong>.
+<br/><br clear="left"/>
 
 Get started by reviewing our [about page](https://longturn.readthedocs.io/en/latest/Getting/about.html). Freeciv21 is maintained by the team from [Longturn.net](https://longturn.net). We welcome pull requests, bug reports and simple suggestions! Get in touch on [Discord](https://discord.gg/98krqGm). The #General channel is a great place to start.
 
