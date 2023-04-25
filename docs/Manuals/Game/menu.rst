@@ -665,7 +665,7 @@ Demographics
 .. _Demographics:
 .. figure:: /_static/images/gui-elements/demographics.png
   :align: center
-  :scale: 65%
+  :scale: 50%
   :alt: Freeciv21 Demographics
   :figclass: align-center
 

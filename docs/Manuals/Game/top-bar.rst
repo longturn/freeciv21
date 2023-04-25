@@ -152,7 +152,7 @@ has been destroyed.
 .. _Nations View:
 .. figure:: /_static/images/gui-elements/nations.png
   :align: center
-  :scale: 55%
+  :scale: 50%
   :alt: Freeciv21 Nations View
   :figclass: align-center
 
