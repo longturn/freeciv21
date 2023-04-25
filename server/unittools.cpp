@@ -2828,7 +2828,7 @@ void send_unit_info(struct conn_list *dest, struct unit *punit)
 
     // Be careful to consider all cases where pplayer is nullptr...
     if (pplayer == nullptr) {
-      if (pconn->observer) {
+      if (pconn->observer || pplayer->team) {
         send_packet_unit_info(pconn, &info);
       }
     } else if (pplayer == powner) {
