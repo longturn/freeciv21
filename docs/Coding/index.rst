@@ -11,7 +11,6 @@ architected.
   hacking.rst
   ai.rst
   attributes.rst
-  fcdb.rst
   guidelines.rst
   internationalization.rst
   logging.rst
