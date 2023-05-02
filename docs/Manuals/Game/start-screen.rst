@@ -181,7 +181,8 @@ Clicking on this button will bring up the :guilabel:`Game Options` dialog box as
 :numref:`Game Options dialog` below. From here you can customize other settings for the game before you start
 it. The ruleset defines many of these options, so be sure to select the ruleset you want to play before
 attempting to set other settings. You can hover the mouse over the entries to get an explanation of what the
-setting does.
+setting does. If you a curious person and like details, you can also read about all of them in
+:doc:`/Manuals/Server/options`.
 
 .. _Game Options dialog:
 .. figure:: /_static/images/gui-elements/game-options.png
