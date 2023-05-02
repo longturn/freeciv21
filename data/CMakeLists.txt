@@ -93,7 +93,6 @@ endif()
 
 if (FREECIV_ENABLE_CLIENT)
   # Tilesets
-  add_tileset(NAME amplio)
   add_tileset(NAME amplio2)
   add_tileset(NAME cimpletoon)
   add_tileset(NAME hex2t)
