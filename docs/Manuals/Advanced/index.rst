@@ -10,6 +10,5 @@ looking for more general  or generic gameplay information, it would be best to s
 :doc:`/Playing/faq`, or :doc:`/Playing/how-to-play`.
 
 .. toctree::
-  on-the-server.rst
   players.rst
   :maxdepth: 2

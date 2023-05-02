@@ -90,7 +90,7 @@ game start. This is a one-time procedure.
 .. tip::
    You can also create a plain text file named :file:`players.serv`. Inside the file you add all of the user
    creation commands into one file. Then include a ``read players.serv`` command line at the bottom of the
-   :ref:`server settings file <server-settings-file>`.
+   :doc:`Server Settings File </Manuals/Server/server-settings>`.
 
 
 Teams of AI or Human Players
