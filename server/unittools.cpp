@@ -2828,7 +2828,7 @@ void send_unit_info(struct conn_list *dest, struct unit *punit)
 
     // Be careful to consider all cases where pplayer is nullptr...
     if (pplayer == nullptr) {
-      if (pconn->observer || pplayer->team) {
+      if (pconn->observer) {
         send_packet_unit_info(pconn, &info);
       }
     } else if (pplayer == powner) {
@@ -2836,6 +2836,8 @@ void send_unit_info(struct conn_list *dest, struct unit *punit)
       if (pdata != nullptr) {
         BV_SET(pdata->can_see_unit, player_index(pplayer));
       }
+    } else if (pplayer->team == powner->team) {
+      send_packet_unit_info(pconn, &info);
     } else if (can_player_see_unit(pplayer, punit)) {
       send_packet_unit_short_info(pconn, &sinfo, false);
       if (pdata != nullptr) {
