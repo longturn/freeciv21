@@ -105,3 +105,10 @@ community discussions.
 
     A period of time when the server processes end of turn events in a specific
     :doc:`order </Playing/turn-change>`
+
+  UWT
+    Unit Wait Time
+
+    A period of time that must be exhausted before a unit can move between turns. For example, if the UWT for
+    a game is set to 10 hours and a unit moves 1 hour prior to TC. Then the unit cannot move for another 9
+    hours until the UWT counter is completed for that unit.
