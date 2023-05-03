@@ -5,8 +5,8 @@
 Manuals
 *******
 
-The Manuals category is where we place all of our varying manuals such as the game manual, advanced user
-manual, modpack installer, and ruleset manuals.
+The Manuals category is where we place all of our varying manuals such as the game manual, server manual,
+advanced topics, modpack installer, and ruleset manuals.
 
 .. toctree::
   Game/index.rst
