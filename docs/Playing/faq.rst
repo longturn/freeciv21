@@ -844,7 +844,7 @@ You can either join a network game run by someone else, or host your own. You ca
 games offered by the Longturn community.
 
 To host your own game, we recommend starting a separate server by hand. See
-:doc:`/Manuals/Advanced/on-the-server` for more information.
+:doc:`/Manuals/Server/index` for more information.
 
 If all players are on the same local area network (LAN), they should launch their game interfaces, choose
 :guilabel:`Connect to Network game` and then look in the :guilabel:`Internet Servers` section. You should see
@@ -1126,7 +1126,7 @@ If you are running a personal firewall, make sure that you allow communication f
 and the :file:`freeciv21-client` to the trusted zone. If you want to allow others to play on your server,
 allow :file:`freeciv21-server` to act as a server on the Internet zone.
 
-For more information on running your own server refer to :doc:`/Manuals/Advanced/on-the-server`.
+For more information on running your own server refer to :doc:`/Manuals/Server/index`.
 
 How do I restart a saved game?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
