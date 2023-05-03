@@ -24,6 +24,8 @@ command-line.
 ``/list colors``
   List the player colors.
 
+.. _server-command-list-connections:
+
 ``/list connections``
   Gives a list of connections to the server.
 
@@ -34,7 +36,7 @@ command-line.
   List of a player's ignore list.
 
 ``/list map image definitions``
-  List of of defined map images.
+  List of defined map images.
 
 ``/list players``
   The list of the players in the game.
@@ -92,6 +94,10 @@ command-line.
 .. note::
   Voting is not a feature that is used very often, but does come in handy.
 
+``/cancelvote <vote number>``
+  With no arguments this command removes your own vote. If you have an admin access level, you can cancel any
+  vote by vote number, or all votes with the ``all`` argument.
+
 ``/debug diplomacy|ferries|tech|city|units|unit|timing|info``
   Print :term:`AI` debug information about given entity and turn continuous debugging output for this entity
   on or off.
@@ -136,7 +142,7 @@ command-line.
 ``/metapatches <meta-line>``
   Set metaserver patches line. See Note about Freeciv21 metaserver above.
 
-``/metaconnection up|down|?``
+``/metaconnection up|down|persistent|?``
   ``/metaconnection ?`` reports on the status of the connection to the metaserver. ``/metaconnection down`` or
   ``/metac d`` brings the metaserver connection down. ``/metaconnection up`` or ``/metac u`` brings the
   metaserver connection up. ``/metaconnection persistent`` or ``/metac p`` is like 'up', but keeps trying
@@ -153,29 +159,52 @@ command-line.
   Only the console and connections with cmdlevel ``hack`` can force other connections to take over a player.
   If you are not one of these, only the ``<player-name>`` argument is allowed. If ``-`` is given for the
   player name and the connection does not already control a player, one is created and assigned to the
-  connection. The ``/allowtake`` option controls which players may be taken and in what circumstances.
+  connection. The ``/allowtake`` :ref:`option <server-option-allowtake>` controls which players may be taken
+  and in what circumstances.
+
+  For example, if you have cmdlevel ``hack`` and are connected to a server, you can issue
+  ``/take <player-name> -`` to take over any player. If you do not have cmdlevel ``hack``, then the
+  ``/allowtake`` :ref:`option <server-option-allowtake>` must be properly set as well as a proper
+  ``/delegate`` :ref:`command <server-command-delegate>` by the player wishing to delegate is completed first.
+  Then a player can use ``/take`` to take the player while the delegation is in place.
 
 ``/observe <player-name>``
   Only the console and connections with cmdlevel ``hack`` can force other connections to observe a player. If
   you are not one of these, only the ``<player-name>`` argument is allowed. If the console gives no
   player-name or the connection uses no arguments, then the connection is attached to a global observer. The
-  ``/allowtake`` option controls which players may be observed and in what circumstances.
+  ``/allowtake`` :ref:`option <server-option-allowtake>` controls which players may be observed and in what
+  circumstances.
+
+  For example, if you have cmdlevel ``hack`` and are connected to a server, you can issue ``/observe`` with no
+  ``<player-name>`` parameter. The server will change your connection to a global observer, able to view all
+  nations. A global observer can make no changes and can only see information. If a user with cmdlevel
+  ``hack`` issues ``/observer <player-name>``, then they can only observe that particular nation only. To
+  restore to original connection, you issue ``/take <player-name>`` for your own username.
 
 ``/detach <connection-name>``
   Only the console and connections with cmdlevel ``hack`` can force other connections to detach from a player.
+
+  This rarely used command essentially forces a connected client to disconnect from a server. To see the
+  connections, issue a ``/list connections`` command as noted :ref:`above <server-command-list-connections>`.
 
 ``/create <player-name> [ai type]``
   With the ``/create`` command a new player with the given name is created. If ``player-name`` is empty, a
   random name will be assigned when the game begins. Until then the player will be known by a name derived
   from its type. The ``ai type`` parameter can be used to select which :term:`AI` module will be used for the
   created player. This requires that the respective module has been loaded or built in to the server. If the
-  game has already started, the new player will have no units or  cities. Also, if no free player slots are
+  game has already started, the new player will have no units or cities. Also, if no free player slots are
   available, the slot of a dead player can be reused (removing all record of that player from the running
   game).
 
 ``/away``
   Toggles ``away`` mode for your nation. In away mode, the :term:`AI` will govern your nation but make only
   minimal changes.
+
+.. note::
+  The term *minimal changes* is not well understood at this time. The server help does not provide more
+  details. An enterprising enthusiast could read the :term:`AI` code to determine what the term means and
+  provide more details. Any real player is not going to want the AI to run thier nation and will
+  :ref:`delegate <server-command-delegate>` instead.
 
 ``/handicapped <player-name>``
   With no arguments, sets all :term:`AI` players to skill level ``Handicapped``, and sets the default level
@@ -186,7 +215,7 @@ command-line.
   * Does not build offensive diplomatic units.
   * Gets reduced bonuses from huts.
   * Prefers defensive buildings and avoids close diplomatic relations.
-  * Can see through fog of war (:term:`FOW`).
+  * Can see through :term:`FOW`.
   * Does not build air units.
   * Has complete map knowledge, including unexplored territory.
   * Naive at diplomacy.
@@ -195,7 +224,7 @@ command-line.
   * Always offers cease-fire on first contact.
   * Does not bribe worker or city founder units.
   * Has erratic decision-making.
-  * Research takes 250 as long as usual.
+  * Research takes 250% as long as usual.
   * Has reduced appetite for expansion.
 
 ``/novice <player-name>``
@@ -205,7 +234,7 @@ command-line.
   * Does not build offensive diplomatic units.
   * Gets reduced bonuses from huts.
   * Prefers defensive buildings and avoids close diplomatic relations.
-  * Can see through fog of war (:term:`FOW`).
+  * Can see through :term:`FOW`.
   * Does not build air units.
   * Has complete map knowledge, including unexplored territory.
   * Naive at diplomacy.
@@ -214,7 +243,8 @@ command-line.
   * Always offers cease-fire on first contact.
   * Does not bribe worker or city founder units.
   * Has erratic decision-making.
-  * Research takes 250 as long as usual.Has reduced appetite for expansion.
+  * Research takes 250% as long as usual.
+  * Has reduced appetite for expansion.
 
 ``/easy <player-name>``
   With no arguments, sets all :term:`AI` players to skill level ``Easy``, and sets the default level for any
@@ -223,7 +253,7 @@ command-line.
   * Does not build offensive diplomatic units.
   * Gets reduced bonuses from huts.
   * Prefers defensive buildings and avoids close diplomatic relations.
-  * Can see through fog of war (:term:`FOW`).
+  * Can see through :term:`FOW`.
   * Does not build air units.
   * Has complete map knowledge, including unexplored territory.
   * Naive at diplomacy.
@@ -239,7 +269,7 @@ command-line.
   new AI players to ``Normal``. With an argument, sets the skill level for the specified player only.
 
   * Does not build offensive diplomatic units.
-  * Can see through fog of war (:term:`FOW`).
+  * Can see through :term:`FOW`.
   * Has complete map knowledge, including unexplored territory.
   * Can skip anarchy during revolution.
   * Always offers cease-fire on first contact.
@@ -253,7 +283,7 @@ command-line.
   * Has no restrictions on national budget.
   * Can target units and cities in unseen or unexplored territory.
   * Knows the location of huts in unexplored territory.
-  * Can see through fog of war (:term:`FOW`).
+  * Can see through :term:`FOW`.
   * Has complete map knowledge, including unexplored territory.
   * Can skip anarchy during revolution.
   * Can change city production type without penalty.
@@ -264,7 +294,7 @@ command-line.
 
   * Can target units and cities in unseen or unexplored territory.
   * Knows the location of huts in unexplored territory.
-  * Can see through fog of war (:term:`FOW`).
+  * Can see through :term:`FOW`.
   * Has complete map knowledge, including unexplored territory.
   * Can skip anarchy during revolution.
   * Can change city production type without penalty.
@@ -278,7 +308,7 @@ command-line.
   * Has no restrictions on national budget.
   * Can target units and cities in unseen or unexplored territory.
   * Knows the location of huts in unexplored territory.
-  * Can see through fog of war (:term:`FOW`).
+  * Can see through :term:`FOW`.
   * Has complete map knowledge, including unexplored territory.
   * Can skip anarchy during revolution.
   * Can change city production type without penalty.
@@ -323,10 +353,6 @@ command-line.
   multiply ``<value>`` by ``<valuemult>``. Use this command in concert with the option ``/timeout``.
   Defaults are ``0 0 0 1``.
 
-``/cancelvote <vote number>``
-  With no arguments this command removes your own vote. If you have an admin access level, you can cancel any
-  vote by vote number, or all votes with the ``all`` argument.
-
 ``/ignore [type=]<pattern>``
   The given pattern will be added to your ignore list. You will not receive any messages from users matching
   this pattern. The type may be either ``user``, ``host``, or ``ip``. The default type (if omitted) is to
@@ -339,6 +365,8 @@ command-line.
   respective users. The range argument may be a single number or a pair of numbers separated by a dash ``-``.
   If the first number is omitted, it is assumed to be ``1``. If  the last is omitted, it is assumed to be the
   last valid ignore list index. To access your current ignore list, issue ``/list ignore``.
+
+.. _server-command-playercolor:
 
 ``/playercolor <player-name> <color>``
   This command sets the color of a specific player, overriding any color assigned according to the
@@ -353,9 +381,9 @@ command-line.
 
 ``/playernation <player-name> [nation] [is-male] [leader] [style]``
   This command sets the nation, leader name, style, and gender of a specific player. The string "random" can
-  be used to select a random nation. The gender parameter should be ``1`` if male, otherwise ``0``. Omitting
-  any of the player settings will reset the player to defaults. This command may not be used once the game has
-  started.
+  be used to select a random nation. The gender parameter should be ``1`` for male, ``0`` for female.
+  Omitting any of the player settings will reset the player to defaults. This command may not be used once the
+  game has started.
 
 ``/endgame``
   End the game immediately in a draw.
@@ -412,21 +440,25 @@ command-line.
   access to Lua functions that can be used to hack the computer running the Freeciv21 server. Access to it is
   therefore limited to the console and connections with cmdlevel ``hack``.
 
+.. _server-command-kick:
+
 ``/kick <user>``
   The connection given by the ``user`` argument will be cut from the server and not allowed to reconnect. The
   time the user would not be able to reconnect is controlled by the ``kicktime`` setting.
+
+.. _server-command-delegate:
 
 ``/delegate to <username>``
   Delegation allows a user to nominate another user who can temporarily take over control of their player
   while they are away. Variations are:
 
-  * ``/delegate to <username>``: allow ``<username>`` to ``delegate take`` your player.
-  * ``/delegate cancel``: nominated user can no longer take your player.
-  * ``/delegate take <player-name>``: take control of a player who has been delegated to you. (Behaves like
-    ``/take``, except that the ``/allowtake`` restrictions are not enforced.)
-  * ``/delegate restore``: relinquish control of a delegated player (opposite of ``/delegate take``) and
-    restore your previous view, if any. (This also happens automatically if the player's owner reconnects.)
-  * ``/delegate show``: show who control of your player is currently delegated to, if anyone.
+  * ``/delegate to <username>``: Allow ``<username>`` to ``delegate take`` your player.
+  * ``/delegate cancel``: Nominated user can no longer take your player.
+  * ``/delegate take <player-name>``: Take control of a player who has been delegated to you. Behaves like
+    ``/take``, except that the ``/allowtake`` restrictions are not enforced.
+  * ``/delegate restore``: Relinquish control of a delegated player (opposite of ``/delegate take``) and
+    restore your previous view, if any. This also happens automatically if the player's owner reconnects.
+  * ``/delegate show``: Show who control of your player is currently delegated to, if anyone.
 
   The ``[player-name]`` argument can only be used by connections with cmdlevel ``admin`` or above to force the
   corresponding change of the delegation status.
