@@ -5,7 +5,7 @@ Server Command Line Options
 ***************************
 
 The ``freeciv21-server`` program has a collection of command-line options that can be used to control the
-behavior of the server when run.  To get a listing of all the options, you can use the ``--help`` option,
+behavior of the server when run. To get a listing of all the options, you can use the ``--help`` option,
 such as:
 
 .. code-block:: sh
@@ -18,7 +18,7 @@ such as:
   have to remember all the command line options to use every time you run your server.
 
 ``-h, --help``
-  Displays help on commandline options and quits.
+  Displays help on command line options and quits.
 
 ``--help-all``
   Displays help including Qt specific options and quits.
