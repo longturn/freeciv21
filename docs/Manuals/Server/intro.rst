@@ -3,8 +3,8 @@
 ..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 
-Freeciv21 Server Introduction
-*****************************
+Server Introduction
+*******************
 
 In order to play Freeciv21 over a network, one machine needs to act as the *server*: the state of the game
 lives on the server and players can connect to play. There are many ways to operate such a server. This page
