@@ -21,8 +21,8 @@ import sphinx_rtd_theme
 # -- Project information -----------------------------------------------------
 
 project = 'Freeciv21 manual'
-copyright = '1999-2022, Freeciv and Freeciv21 contributors'
-author = 'Freeciv and Freeciv21 contributors'
+copyright = 'GPL-3.0-or-later, Freeciv21 and Freeciv Contributors'
+author = 'Freeciv21 and Freeciv Contributors'
 
 # The short X.Y version
 version = ''
@@ -77,7 +77,7 @@ master_doc = 'index'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = 'en'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
