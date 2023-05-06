@@ -279,6 +279,43 @@ jobs:
           name: macOS-dmg
           path: Freeciv21-*.dmg
 
+  fedora:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    container: fedora:latest
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo dnf install -y \
+            git \
+            cmake \
+            ninja-build \
+            python \
+            gettext \
+            qt5-qtbase-devel \
+            qt5-qtsvg-devel \
+            kf5-karchive-devel \
+            lua-devel \
+            sqlite-devel \
+            SDL2_mixer-devel \
+            readline-devel \
+            zlib-devel \
+            libunwind-devel \
+            elfutils-libs \
+            python3-sphinx
+      - uses: actions/checkout@v3
+      - name: Configure
+        run: |
+          cmake . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_INSTALL_PREFIX=/usr
+      - name: Build
+        run: |
+          cmake --build build
+      - name: Install
+        run: |
+          DESTDIR=$PWD/build/install cmake --build build --target install
+
   nix:
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule'
