@@ -11,6 +11,8 @@ Nation_Intelligence
 
 .. versionadded:: 3.0
     Add the ``+Nation_Intelligence`` option to ``effects.ruleset``.
+.. versionchanged:: 3.1
+    Removed support for ``Infra Points``.
 
 The ``Nation_Intelligence`` effect controls what kind of information about a foreign nation is visible in the
 :ref:`Nations View <game-manual-nations-and-diplomacy-view>`. A value of ``0`` or lower hides the information,
@@ -66,7 +68,6 @@ The possible values for ``NationalIntelligence`` requirements are as follows:
                    the user interface.
   ``Diplomacy``    Diplomatic agreements such as Peace, Alliance, and shared
                    vision.
-  ``Infra Points`` Infrastructure points. Not yet shown in the user interface.
   ``Gold``         The amount of gold in the treasury.
   ``Government``   The other player's government.
   ``History``      The history accumulated by a player. Not yet shown in the user

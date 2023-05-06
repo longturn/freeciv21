@@ -552,8 +552,6 @@ typedef int Unit_Class_id;
 #define SPECENUM_VALUE9NAME N_("Mood")
 #define SPECENUM_VALUE10 NI_HISTORY
 #define SPECENUM_VALUE10NAME N_("History")
-#define SPECENUM_VALUE11 NI_INFRAPOINTS
-#define SPECENUM_VALUE11NAME N_("Infra Points")
 #define SPECENUM_COUNT NI_COUNT
 #include "specenum_gen.h"
 

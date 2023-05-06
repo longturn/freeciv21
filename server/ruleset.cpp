@@ -2862,8 +2862,6 @@ static bool load_ruleset_terrain(struct section_file *file,
                filename);
     ok = false;
   }
-  terrain_control.infrapoints = false; /* This will be updated if we find
-                                        * an placeable extra. */
 
   terrain_control.pythagorean_diagonal =
       secfile_lookup_bool_default(file, RS_DEFAULT_PYTHAGOREAN_DIAGONAL,
@@ -3325,11 +3323,6 @@ static bool load_ruleset_terrain(struct section_file *file,
                     filename, extra_rule_name(pextra), &ok);
         pextra->removal_time_factor = secfile_lookup_int_default(
             file, 1, "%s.removal_time_factor", section);
-        pextra->infracost =
-            secfile_lookup_int_default(file, 0, "%s.infracost", section);
-        if (pextra->infracost > 0) {
-          terrain_control.infrapoints = true;
-        }
 
         pextra->defense_bonus =
             secfile_lookup_int_default(file, 0, "%s.defense_bonus", section);
@@ -7858,7 +7851,7 @@ static void send_ruleset_extras(struct conn_list *dest)
     packet.build_time_factor = e->build_time_factor;
     packet.removal_time = e->removal_time;
     packet.removal_time_factor = e->removal_time_factor;
-    packet.infracost = e->infracost;
+    packet._unused = 0;
     packet.defense_bonus = e->defense_bonus;
     packet.eus = e->eus;
 

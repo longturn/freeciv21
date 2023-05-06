@@ -2369,10 +2369,6 @@ void handle_player_info(const struct packet_player_info *pinfo)
   pplayer->history = pinfo->history;
   pplayer->client.culture = pinfo->culture;
 
-  if (pplayer->economic.infra_points != pinfo->infrapoints) {
-    pplayer->economic.infra_points = pinfo->infrapoints;
-  }
-
   /* Don't use player_iterate or player_slot_count here, because we ignore
    * the real number of players and we want to read all the datas. */
   fc_assert(ARRAY_SIZE(pplayer->ai_common.love) >= ARRAY_SIZE(pinfo->love));
@@ -4017,7 +4013,6 @@ void handle_ruleset_extra(const struct packet_ruleset_extra *p)
   pextra->build_time_factor = p->build_time_factor;
   pextra->removal_time = p->removal_time;
   pextra->removal_time_factor = p->removal_time_factor;
-  pextra->infracost = p->infracost;
   pextra->defense_bonus = p->defense_bonus;
 
   if (pextra->defense_bonus != 0) {

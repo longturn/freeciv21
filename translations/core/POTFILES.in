@@ -269,7 +269,6 @@ server/generator/mapgen.cpp
 server/generator/mapgen_topology.cpp
 server/generator/startpos.cpp
 server/handchat.cpp
-server/infrapts.cpp
 server/maphand.cpp
 server/meta.cpp
 server/plrhand.cpp

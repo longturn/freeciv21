@@ -4764,6 +4764,5 @@ reqs  =
     { "type",                 "name",         "range",  "present"
       "NationalIntelligence", "Mood",         "Player", FALSE
       "NationalIntelligence", "History",      "Player", FALSE
-      "NationalIntelligence", "Infra Points", "Player", FALSE
       "DiplRel",              "Has embassy",  "Local",  TRUE
     }

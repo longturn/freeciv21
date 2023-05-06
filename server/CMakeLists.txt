@@ -26,7 +26,6 @@ add_library(
   # The generated code calls these directly
   cityhand.cpp
   handchat.cpp
-  infrapts.cpp
   # Generated
   ${CMAKE_CURRENT_BINARY_DIR}/hand_gen.cpp
 )

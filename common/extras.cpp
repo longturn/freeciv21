@@ -431,10 +431,6 @@ bool player_can_place_extra(const struct extra_type *pextra,
                             const struct player *pplayer,
                             const struct tile *ptile)
 {
-  if (pextra->infracost == 0) {
-    return false;
-  }
-
   if (ptile->placing != nullptr) {
     // Already placing something
     return false;
