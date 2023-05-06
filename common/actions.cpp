@@ -6175,7 +6175,7 @@ const char *action_ui_name_default(int act)
     return N_("Enter %sMarketplace%s");
   case ACTION_HELP_WONDER:
     // TRANS: Help _build Wonder (100% chance of success).
-    return N_("Help %sbuild Wonder%s");
+    return N_("Help %sBuild Wonder%s");
   case ACTION_CAPTURE_UNITS:
     // TRANS: _Capture Units (100% chance of success).
     return N_("%sCapture Units%s");
