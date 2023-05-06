@@ -280,11 +280,8 @@ jobs:
           path: Freeciv21-*.dmg
 
   nix:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     if: github.event_name == 'schedule'
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest]
     steps:
       - name: checkout
         uses: actions/checkout@v3
