@@ -284,7 +284,7 @@ Style
 A nation must specify a default style. With the supplied rulesets each national style has direct relation to
 equivalent city style. The available city styles depends on the tileset used. Practically every tileset has
 four city styles: "European", "Classical" (Graeco-Roman style), "Asian" (Pagoda style) and "Tropical" (African
-or Polynesian style). In Amplio tileset, "Babylonian" and "Celtic" are also available. If the tileset used by
+or Polynesian style). In Amplio2 tileset, "Babylonian" and "Celtic" are also available. If the tileset used by
 a client does not support a particular city style, a fallback style is used. Selecting a style for your nation
 is not that strict. Just try to keep it somewhat "realistic."
 
