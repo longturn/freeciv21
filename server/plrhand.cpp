@@ -1334,12 +1334,6 @@ static void package_player_info(struct player *plr,
   } else {
     packet->history = 0;
   }
-
-  if (BV_ISSET(packet->visible, NI_INFRAPOINTS)) {
-    packet->infrapoints = plr->economic.infra_points;
-  } else {
-    packet->infrapoints = 0;
-  }
 }
 
 /**

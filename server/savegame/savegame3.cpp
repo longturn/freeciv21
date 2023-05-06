@@ -4056,8 +4056,6 @@ static void sg_load_player_main(struct loaddata *loading, struct player *plr)
   sg_failure_ret(secfile_lookup_int(loading->file, &plr->economic.luxury,
                                     "player%d.rates.luxury", plrno),
                  "%s", secfile_error());
-  plr->economic.infra_points = secfile_lookup_int_default(
-      loading->file, 0, "player%d.infrapts", plrno);
   plr->server.bulbs_last_turn = secfile_lookup_int_default(
       loading->file, 0, "player%d.research.bulbs_last_turn", plrno);
 
@@ -4420,8 +4418,6 @@ static void sg_save_player_main(struct savedata *saving, struct player *plr)
                      "player%d.rates.science", plrno);
   secfile_insert_int(saving->file, plr->economic.luxury,
                      "player%d.rates.luxury", plrno);
-  secfile_insert_int(saving->file, plr->economic.infra_points,
-                     "player%d.infrapts", plrno);
   secfile_insert_int(saving->file, plr->server.bulbs_last_turn,
                      "player%d.research.bulbs_last_turn", plrno);
 

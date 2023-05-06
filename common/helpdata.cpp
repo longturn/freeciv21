@@ -3501,10 +3501,6 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
     }
   }
 
-  if (pextra->infracost > 0) {
-    cat_snprintf(buf, bufsz, _("Cost: %d\n"), pextra->infracost);
-  }
-
   if (buf[group_start] != '\0') {
     CATLSTR(buf, bufsz, "\n"); // group separator
   }

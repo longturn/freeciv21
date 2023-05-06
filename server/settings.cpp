@@ -1843,14 +1843,6 @@ static struct setting settings[] = {
         nullptr, nullptr, nullptr, GAME_MIN_GOLD, GAME_MAX_GOLD,
         GAME_DEFAULT_GOLD),
 
-    GEN_INT("infrapoints", game.info.infrapoints, SSET_GAME_INIT,
-            SSET_ECONOMICS, SSET_VITAL, ALLOW_NONE, ALLOW_BASIC,
-            N_("Starting infrapoints per player"),
-            N_("At the beginning of the game, each player is given this "
-               "many infrapoints."),
-            nullptr, nullptr, nullptr, GAME_MIN_INFRA, GAME_MAX_INFRA,
-            GAME_DEFAULT_INFRA),
-
     GEN_INT("techlevel", game.info.tech, SSET_GAME_INIT, SSET_SCIENCE,
             SSET_VITAL, ALLOW_NONE, ALLOW_BASIC,
             N_("Number of initial techs per player"),

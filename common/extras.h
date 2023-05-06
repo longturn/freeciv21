@@ -103,7 +103,6 @@ struct extra_type {
   int build_time_factor;
   int removal_time;
   int removal_time_factor;
-  int infracost;
 
   int defense_bonus;
   int appearance_chance;

@@ -515,7 +515,7 @@ PACKET_GAME_INFO = 16; sc, is-info
   UINT32 globalwarming;
   GOLD gold;
   GOLD_UPKEEP_STYLE gold_upkeep_style;
-  UINT32 infrapoints;
+  UINT32 _unused;
   REVOLENTYPE revolentype;
   GOVERNMENT default_government_id;
   GOVERNMENT government_during_revolution_id;
@@ -911,7 +911,7 @@ PACKET_PLAYER_INFO = 51; sc, is-info
 
   GOLD gold;
   PERCENT tax, science,luxury;
-  UINT32 infrapoints;
+  UINT32 _unused;
 
   UINT16 tech_upkeep;
   UINT16 science_cost;
@@ -954,10 +954,7 @@ PACKET_PLAYER_CHANGE_GOVERNMENT = 54; cs, dsend
   GOVERNMENT government;
 end
 
-PACKET_PLAYER_PLACE_INFRA = 61; cs, dsend
-  TILE tile;
-  EXTRA extra;
-end
+# Dropped support for unused PACKET_PLAYER_PLACE_INFRA = 61; cs, dsend
 
 PACKET_PLAYER_ATTRIBUTE_BLOCK = 57; cs
 end
@@ -1547,7 +1544,7 @@ PACKET_RULESET_TERRAIN_CONTROL = 146; sc, lsend
   MOVEFRAGS move_fragments;
   MOVEFRAGS igter_cost;
   BOOL pythagorean_diagonal;
-  BOOL infrapoints;
+  BOOL _unused;
   STRING gui_type_base0[MAX_LEN_NAME];
   STRING gui_type_base1[MAX_LEN_NAME];
 end
@@ -1752,7 +1749,7 @@ PACKET_RULESET_EXTRA = 232; sc, lsend
   UINT8 build_time_factor;
   UINT8 removal_time;
   UINT8 removal_time_factor;
-  UINT16 infracost;
+  UINT16 _unused;
   UINT8 defense_bonus;
   EUS eus;
   BV_UNIT_CLASSES native_to;

@@ -1103,7 +1103,6 @@ static void rscompat_migrate_eft_nation_intelligence()
       // Used to require being on the same team, all info gets shared with
       // the team now.
     case NI_HISTORY:
-    case NI_INFRAPOINTS:
     case NI_MOOD:
     case NI_COUNT: // Never happens
       break;
