@@ -17,4 +17,4 @@ Post Beta.4 before Beta.5
 * Removed :file:`data/amplio2/units.spec`. Consolidated all unit sprites into :file:`data/misc/units.spec`.
   Tileset modders utilizing the Amplio2 unit sprites will want to instead use the new ``units.spec`` file. It
   is the new home of the Amplio style units utilized by the Tier 1 tilesets in Freeciv21: Amplio2 and
-  Hexemplio.
+  Hexemplio. Old Amplio is no longer shipped with Freeciv21 and can be downloaded with the modpack installer.
