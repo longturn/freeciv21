@@ -190,7 +190,7 @@ Zoom Out
 Scale Fonts
     Enables fonts to scale along with the zoom level.
 
-Citybar Style
+City Bar Style
     This menu has a sub-menu of three options: :guilabel:`Simple`, :guilabel:`Traditional`, and
     :guilabel:`Polished` as shown in :numref:`Citybar Style Simple`, :numref:`Citybar Sytle Traditional`,
     and, :numref:`Citybar Style Polished`, respectively.
@@ -198,28 +198,28 @@ Citybar Style
 .. _Citybar Style Simple:
 .. figure:: /_static/images/gui-elements/citybar-simple.png
   :align: center
-  :alt: Citybar style - Simple
+  :alt: City Bar Syle - Simple
   :figclass: align-center
 
-  Citybar Style - Simple
+  City Bar Style - Simple
 
 
 .. _Citybar Sytle Traditional:
 .. figure:: /_static/images/gui-elements/citybar-traditional.png
   :align: center
-  :alt: Citybar style - Traditional
+  :alt: City Bar Style - Traditional
   :figclass: align-center
 
-  Citybar Style - Traditional
+  City Bar Style - Traditional
 
 
 .. _Citybar Style Polished:
 .. figure:: /_static/images/gui-elements/citybar-polished.png
   :align: center
-  :alt: Citybar style - Polished
+  :alt: City Bar Style - Polished
   :figclass: align-center
 
-  Citybar Style - Polished
+  City Bar Style - Polished
 
 
 City Outlines
@@ -334,7 +334,7 @@ Go to Nearest City
     Instruct the unit to go to the nearest city. Nearest in this context is the one that can be reached in
     the fewest move points (MPs).
 
-Go to/Airlift to City...
+Go to / Airlift to City...
     If Airlifting is enabled in the game (and assuming you have any required city improvement(s) that are
     required for Airlifting), you use this menu to tell the unit to transport to a city with the Airlift
     capability. A dialog box will pop up asking what city you want to Airlift to.
@@ -377,25 +377,24 @@ Set Home City
     This menu allows you to shift support of units around to help with the cost of supporting units. Refer to
     :ref:`Economics View <game-manual-economics-view>` for more information on unit support costs.
 
-Upgrade
+Upgrade Unit
     Upgrade a unit from one level to another. For example, :unit:`Phalanx` units are often upgradeable to an
     improved :unit:`Pikemen` with the discovery of :strong:`Feudalism`. The upgrade will cost gold and the
     client will tell you what that cost is before you agree to the spend.
 
-Convert
+Convert Unit
     Similar to :guilabel:`Upgrade`. The convert option allows you to change a unit from one type to another.
     This is ruleset dependent and is not available in all rulesets.
 
-Disband
+Disband Unit
     Use this menu option to eliminate (kill, destroy, fire) a unit. If performed inside of a city, then 50% of
     the shields used in the production of the unit is given to the city and helps build whatever is currently
     under construction. If a unit is disbanded outside of a city, there is no benefit other than the
     elimination of shield or gold upkeep depending on your form of government.
 
-Rename
+Rename Unit
     Give the unit a unit name. Similar to many Naval vessels in real life, you can name your units with a
     special name.
-
 
 .. _game-manual-combat-menu:
 
@@ -411,7 +410,7 @@ Fortify Unit
     fortifying, it is not in :strong:`Sentry` mode and will not inform you of enemy unit movement inside of
     its vision radius.
 
-Build Fortress/Buoy
+Build Fortress / Buoy
     Some units have the ability to build forts, fortresses, and buoys. They are typically :unit:`Workers` or
     :unit:`Engineers`. In some rulesets, :unit:`Transports` can build Buoys. Forts, Pre-Forts, and Fortresses
     give a unit increased defensive bonuses in addition to what is provided by the base terrain. See in
@@ -452,7 +451,7 @@ Auto Worker
     Tell a :unit:`Worker` to use an in game algorithm to improve tiles. The game engine will give the
     :unit:`Worker` instructions so you do not have to.
 
-Build Road/Railroad/Maglev
+Build Road / Railroad / Maglev
     Tell a :unit:`Worker` to build a road. If sufficient technological knowledge is available, then a railroad
     and eventually a maglev may be able to be constructed at a later time during the game. The menu will
     change with the best available option depending on what has been done to improve the tile in the past.
@@ -461,7 +460,7 @@ Build Path
     Provides a sub-menu of all of the pathing options available for the tile. This is mostly road, railroad,
     and maglev. Other rulesets may have different path types. See in game help for more details.
 
-Build Irrigation/Farmland
+Build Irrigation / Farmland
     Tell a :unit:`Worker` to irrigate the tile in order to improve the food output from the tile. If
     sufficient technological knowledge is available, then farmland may be added to the tile at a later
     time during the game. The menu will change with the best available option depending on what has been
@@ -475,21 +474,21 @@ Cultivate to Plains
 Build Mine
     Tells a :unit:`Worker` to build a mine on a tile to improve the shield output.
 
-Plant Forest/Swamp
+Plant Forest / Swamp
     If the unit is on a grassland tile, then you can tell the :unit:`Worker` to plant a forest on the tile. If
     the unit is on a forest tile, then you can tell the :unit:`Worker` to convert the forest to swamp.
 
 Connect with Road
     Tell a :unit:`Worker` to build a road many times along a given path.
 
-Connect with Railroad/Maglev
+Connect with Railroad / Maglev
     Tell a :unit:`Worker` to build a railroad or maglev many times along a given path.
 
 Connect with Irrigation
     Tell a :unit:`Worker` to connect many tiles together with irrigation. This is often done to get
     irrigation from a source of fresh water over to a city.
 
-Transform to Hills/Swamp/Ocean
+Transform to Hills / Swamp / Ocean
     Tell an :unit:`Engineer` to conduct a major terraforming operation on the tile. Mountains can be cut down
     to hills, forests, and grassland can be converted to swamp and then the swamp can be converted to ocean.
     In some circumstances, an ocean tile can be converted to swamp and then the swamp can be converted to
@@ -516,14 +515,13 @@ Establish Trade Route
 As you can see, there are a number of ways that a tile can be altered with infrastructure improvements. Be
 sure to have a close look at the in game help on Terrain for more information.
 
-
 Multiplayer Menu
 ================
 
 The :guilabel:`Multiplayer` menu has a collection of functions to aid certain multiplayer games. Many of
 the options are specifically tailored to the MP2c and WarCiv rulesets. It has the following options:
 
-Delayed GoTo
+Delayed Go To
     Give a unit orders to move at a specific time in the turn. This assumes that the turn is time based.
 
 Delayed Orders Execute
@@ -540,7 +538,7 @@ Calculate Trade Planning
     Run a trade effectiveness algorithm across all of the cities in the trade plan to determine the best
     routes. This is used by the WarCiv ruleset.
 
-Add/Remove City
+Add / Remove City
     Add or remove a city from the trade planning array.
 
 Clear Trade Planning
@@ -550,7 +548,7 @@ Automatic Caravan
     Any :unit:`Caravan` units built by a city will follow the trade planning output for that city. This is
     used by the WarCiv ruleset.
 
-Set/Unset Rally Point
+Set / Unset Rally Point
     Set or remove a rally point to easily send units, once produced, to a specific spot on the game map.
 
 Quick Airlift
@@ -567,7 +565,6 @@ Default Action vs City
     A sub-menu will show some optional actions that a unit should do by default against a city.
     The default is :strong:`Ask`.
 
-
 .. _game-manual-civilization-menu:
 
 Civilization Menu
@@ -577,7 +574,7 @@ The :guilabel:`Civilization` menu is used to gain access to many functions of yo
 pages for units, cities, nations, etc; change the form of government and see how you are doing compared to
 your opponents with the demographics report. It has the following options:
 
-National Budget
+National Budget...
     Selecting this menu item will bring up a dialog box allowing you to set the rate in percentage points for
     gold (taxes), science (bulbs), and luxury (goods). This is the same as clicking on the
     :ref:`National Budget View <game-manual-national-budget-view>` button on the :doc:`top-bar`.
@@ -603,31 +600,31 @@ Government
     of government. The change is achieved from this menu item. This is the same as clicking on the
     :ref:`National Status View <game-manual-national-status-view>` option on the :doc:`top-bar`.
 
-View
+Map View
     Clicking this menu item will show you the main game map. This is the same as clicking on the
     :ref:`Map View <game-manual-map-view>` option on the :doc:`top-bar`.
 
-Units
+Units View
     Clicking this menu item will show you the units report widget. This is the same as clicking on the
     :ref:`Units View <game-manual-units-view>` option on the :doc:`top-bar`.
 
-Players
+Nations View
     Clicking this menu item will show you the nations and diplomacy view. This is the same as clicking on the
     :ref:`Nations and Diplomacy View <game-manual-nations-and-diplomacy-view>` option on the :doc:`top-bar`.
 
-Cities
+Cities View
     Clicking this menu item will show you the cities view. This is the same as clicking on the
     :ref:`Cities View <game-manual-cities-view>` option on the :doc:`top-bar`.
 
-Economy
+Economy View
     Clicking this menu item will show you the economics view. This is the same as clicking on the
     :ref:`Economics View <game-manual-economics-view>` option on the :doc:`top-bar`.
 
-Research
+Research View
     Clicking this menu item will show you the research tree view. This is the same as clicking on the
     :ref:`Research View <game-manual-research-view>` option on the :doc:`top-bar`.
 
-Wonders of the World
+Wonders of the World Report
     Clicking this menu item will show you a traveler's report widget on the
     :ref:`Map View <game-manual-map-view>`. The widget will give information on any cities that have
     constructed any of the great wonders.
@@ -642,7 +639,7 @@ Wonders of the World
   Wonders of the World
 
 
-Top Five Cities
+Top Five Cities Report
     Clicking this menu item will show you a traveler's report widget on the
     :ref:`Map View <game-manual-map-view>`. The widget will give information on the top five largest cities.
 
@@ -656,7 +653,7 @@ Top Five Cities
   Top Five Cities
 
 
-Demographics
+Demographics Report
     Clicking this menu item will show you a demographics report widget on the
     :ref:`Map View <game-manual-map-view>`. The widget will give information about how your nation stacks up
     against your opponents. If you have an embassy with your opponents in the game, the demographics report
@@ -671,14 +668,14 @@ Demographics
 
   Demographics
 
-Spaceship
+Spaceship View
     Clicking this menu item will show you the spaceship view. The space race is a ruleset defined option and
     is not enabled in all rulesets. Your nation must also be very technologically advanced to build the
     components needs for a spaceship. See in game help for more details.
 
     The client will automatically place the components for you as you construct them.
 
-Achievements
+Achievements Report
     Clicking this menu item will show you an achievements report widget on the main map. Achievements are
     a ruleset defined option and not enabled by default in many rulesets.
 
