@@ -301,8 +301,7 @@ jobs:
             readline-devel \
             zlib-devel \
             libunwind-devel \
-            elfutils-libs \
-            python3-sphinx
+            elfutils-libs
       - uses: actions/checkout@v3
       - name: Configure
         run: |
