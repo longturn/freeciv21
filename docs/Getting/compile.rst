@@ -165,7 +165,6 @@ following commands:
      cmake \
      ninja-build \
      python3 \
-     python3-pip \
      qtbase5-dev \
      libqt5svg5-dev \
      libkf5archive-dev \
@@ -193,6 +192,7 @@ RHEL, CentOS Stream) to install Freeciv21.
     cmake \
     ninja-build \
     python \
+    gettext \
     qt5-qtbase-devel \
     qt5-qtsvg-devel \
     kf5-karchive-devel \
@@ -203,9 +203,7 @@ RHEL, CentOS Stream) to install Freeciv21.
     zlib-devel \
     libunwind-devel \
     elfutils-libs \
-    python-pip \
-    python3-sphinx \
-    patch
+    python3-sphinx
 
 
 At this point, follow the steps in `Obtaining the Source Code`_ section below.
