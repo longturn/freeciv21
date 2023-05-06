@@ -756,7 +756,7 @@ void mr_menu::setup_menus()
 
   // Unit Menu
   menu = this->addMenu(_("Unit"));
-  act = menu->addAction(_("Goto Tile"));
+  act = menu->addAction(_("Go to Tile"));
   shortcuts->link_action(SC_GOTO, act);
   menu_list.insert(STANDARD, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_unit_goto);
@@ -764,11 +764,11 @@ void mr_menu::setup_menus()
   // The goto and act sub menu is handled as a separate object.
   menu->addMenu(new go_act_menu());
 
-  act = menu->addAction(_("Goto Nearest City"));
+  act = menu->addAction(_("Go to Nearest City"));
   act->setShortcut(QKeySequence(tr("shift+g")));
   menu_list.insert(GOTO_CITY, act);
   connect(act, &QAction::triggered, this, &request_units_return);
-  act = menu->addAction(_("Goto / Airlift to City..."));
+  act = menu->addAction(_("Go to / Airlift to City..."));
   shortcuts->link_action(SC_GOTOAIRLIFT, act);
   menu_list.insert(AIRLIFT, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_airlift);
@@ -926,7 +926,7 @@ void mr_menu::setup_menus()
   connect(act, &QAction::triggered, this, &mr_menu::slot_build_road);
 
   multiplayer_menu = this->addMenu(_("Multiplayer"));
-  act = multiplayer_menu->addAction(_("Delayed Goto"));
+  act = multiplayer_menu->addAction(_("Delayed Go To"));
   act->setShortcut(QKeySequence(tr("z")));
   connect(act, &QAction::triggered, this, &mr_menu::slot_delayed_goto);
   act = multiplayer_menu->addAction(_("Delayed Orders Execute"));
@@ -1086,7 +1086,7 @@ void mr_menu::setup_menus()
   menu->addMenu(new class gov_menu(this));
   menu->addSeparator();
 
-  act = menu->addAction(Q_("?noun:View"));
+  act = menu->addAction(Q_("?noun:Map View"));
   act->setShortcut(QKeySequence(tr("F1")));
   connect(act, &QAction::triggered, this, &mr_menu::slot_show_map);
 
