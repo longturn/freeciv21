@@ -258,7 +258,7 @@ void gov_menu::update_all()
 /**
    Instantiate a new goto and act sub menu.
  */
-go_act_menu::go_act_menu(QWidget *parent) : QMenu(_("Go to and..."), parent)
+go_act_menu::go_act_menu(QWidget *parent) : QMenu(_("Goto And..."), parent)
 {
   // Will need auto updates etc.
   instances << this;
@@ -611,41 +611,41 @@ void mr_menu::setup_menus()
   minimap_status->setChecked(true);
   connect(minimap_status, &QAction::triggered, queen()->minimap_panel,
           &minimap_panel::set_minimap_visible);
-  osd_status = menu->addAction(_("Show new turn information"));
+  osd_status = menu->addAction(_("Show New Turn Information"));
   osd_status->setCheckable(true);
   osd_status->setChecked(king()->qt_settings.show_new_turn_text);
   connect(osd_status, &QAction::triggered, this,
           &mr_menu::slot_show_new_turn_text);
-  btlog_status = menu->addAction(_("Show combat detailed information"));
+  btlog_status = menu->addAction(_("Show Combat Detailed Information"));
   btlog_status->setCheckable(true);
   btlog_status->setChecked(king()->qt_settings.show_battle_log);
   connect(btlog_status, &QAction::triggered, this, &mr_menu::slot_battlelog);
-  lock_status = menu->addAction(_("Lock interface"));
+  lock_status = menu->addAction(_("Lock Interface"));
   lock_status->setCheckable(true);
   shortcuts->link_action(SC_IFACE_LOCK, lock_status);
   lock_status->setChecked(false);
   connect(lock_status, &QAction::triggered, this, &mr_menu::slot_lock);
   menu->addSeparator();
-  act = menu->addAction(_("Zoom in"));
+  act = menu->addAction(_("Zoom In"));
   shortcuts->link_action(SC_ZOOM_IN, act);
   connect(act, &QAction::triggered, queen()->mapview_wdg,
           &map_view::zoom_in);
-  act = menu->addAction(_("Zoom default"));
+  act = menu->addAction(_("Zoom Default"));
   shortcuts->link_action(SC_ZOOM_RESET, act);
   connect(act, &QAction::triggered, queen()->mapview_wdg,
           &map_view::zoom_reset);
-  act = menu->addAction(_("Zoom out"));
+  act = menu->addAction(_("Zoom Out"));
   shortcuts->link_action(SC_ZOOM_OUT, act);
   connect(act, &QAction::triggered, queen()->mapview_wdg,
           &map_view::zoom_out);
-  scale_fonts_status = menu->addAction(_("Scale fonts"));
+  scale_fonts_status = menu->addAction(_("Scale Fonts"));
   connect(scale_fonts_status, &QAction::triggered, this,
           &mr_menu::zoom_scale_fonts);
   scale_fonts_status->setCheckable(true);
   scale_fonts_status->setChecked(true);
   menu->addSeparator();
   action_citybar = new QActionGroup(this);
-  citybar_submenu = menu->addMenu(_("City bar style"));
+  citybar_submenu = menu->addMenu(_("City Bar Style"));
 
   for (auto a : *citybar_painter::available_vector(nullptr)) {
     act = citybar_submenu->addAction(a);
@@ -720,7 +720,7 @@ void mr_menu::setup_menus()
   act->setShortcut(QKeySequence(tr("shift+z")));
   menu_list.insert(STANDARD, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_select_one);
-  act = menu->addAction(_("All On Tile"));
+  act = menu->addAction(_("All on Tile"));
   act->setShortcut(QKeySequence(tr("v")));
   menu_list.insert(STANDARD, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_select_all_tile);
@@ -749,14 +749,14 @@ void mr_menu::setup_menus()
   menu_list.insert(STANDARD, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_done_moving);
 
-  act = menu->addAction(_("Advanced unit selection"));
+  act = menu->addAction(_("Advanced Unit Selection"));
   act->setShortcut(QKeySequence(tr("ctrl+e")));
   menu_list.insert(NOT_4_OBS, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_unit_filter);
 
   // Unit Menu
   menu = this->addMenu(_("Unit"));
-  act = menu->addAction(_("Go to Tile"));
+  act = menu->addAction(_("Goto Tile"));
   shortcuts->link_action(SC_GOTO, act);
   menu_list.insert(STANDARD, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_unit_goto);
@@ -764,11 +764,11 @@ void mr_menu::setup_menus()
   // The goto and act sub menu is handled as a separate object.
   menu->addMenu(new go_act_menu());
 
-  act = menu->addAction(_("Go to Nearest City"));
+  act = menu->addAction(_("Goto Nearest City"));
   act->setShortcut(QKeySequence(tr("shift+g")));
   menu_list.insert(GOTO_CITY, act);
   connect(act, &QAction::triggered, this, &request_units_return);
-  act = menu->addAction(_("Go to/Airlift to City..."));
+  act = menu->addAction(_("Goto / Airlift to City..."));
   shortcuts->link_action(SC_GOTOAIRLIFT, act);
   menu_list.insert(AIRLIFT, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_airlift);
@@ -787,7 +787,7 @@ void mr_menu::setup_menus()
   shortcuts->link_action(SC_SENTRY, act);
   menu_list.insert(SENTRY, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_unit_sentry);
-  act = menu->addAction(_("Unsentry All On Tile"));
+  act = menu->addAction(_("Unsentry All on Tile"));
   shortcuts->link_action(SC_UNSENTRY_TILE, act);
   menu_list.insert(WAKEUP, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_unsentry);
@@ -811,21 +811,21 @@ void mr_menu::setup_menus()
   menu_list.insert(HOMECITY, act);
   shortcuts->link_action(SC_SETHOME, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_set_home);
-  act = menu->addAction(_("Upgrade"));
+  act = menu->addAction(_("Upgrade Unit"));
   shortcuts->link_action(SC_UPGRADE_UNIT, act);
   menu_list.insert(UPGRADE, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_upgrade);
-  act = menu->addAction(_("Convert"));
+  act = menu->addAction(_("Convert Unit"));
   act->setShortcut(QKeySequence(tr("ctrl+o")));
   menu_list.insert(CONVERT, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_convert);
-  act = menu->addAction(_("Disband"));
+  act = menu->addAction(_("Disband Unit"));
   act->setShortcut(QKeySequence(tr("shift+d")));
   menu_list.insert(DISBAND, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_disband);
 
   menu->addSeparator();
-  act = menu->addAction(_("Rename..."));
+  act = menu->addAction(_("Rename Unit"));
   menu_list.insert(RENAME, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_rename);
 
@@ -889,15 +889,15 @@ void mr_menu::setup_menus()
   menu_list.insert(PLANT, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_plant);
   menu->addSeparator();
-  act = menu->addAction(_("Connect With Road"));
+  act = menu->addAction(_("Connect with Road"));
   act->setShortcut(QKeySequence(tr("ctrl+r")));
   menu_list.insert(CONNECT_ROAD, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_conn_road);
-  act = menu->addAction(_("Connect With Railroad"));
+  act = menu->addAction(_("Connect with Railroad"));
   menu_list.insert(CONNECT_RAIL, act);
   act->setShortcut(QKeySequence(tr("ctrl+l")));
   connect(act, &QAction::triggered, this, &mr_menu::slot_conn_rail);
-  act = menu->addAction(_("Connect With Irrigation"));
+  act = menu->addAction(_("Connect with Irrigation"));
   menu_list.insert(CONNECT_IRRIGATION, act);
   act->setShortcut(QKeySequence(tr("ctrl+i")));
   connect(act, &QAction::triggered, this, &mr_menu::slot_conn_irrigation);
@@ -936,21 +936,21 @@ void mr_menu::setup_menus()
   act->setShortcut(QKeySequence(tr("ctrl+shift+c")));
   connect(act, &QAction::triggered, this, &mr_menu::slot_orders_clear);
   multiplayer_menu->addSeparator();
-  act = multiplayer_menu->addAction(_("Add all cities to trade planning"));
+  act = multiplayer_menu->addAction(_("Add All Cities to Trade Planning"));
   connect(act, &QAction::triggered, this, &mr_menu::slot_trade_add_all);
-  act = multiplayer_menu->addAction(_("Calculate trade planning"));
+  act = multiplayer_menu->addAction(_("Calculate Trade Planning"));
   connect(act, &QAction::triggered, this, &mr_menu::slot_calculate);
-  act = multiplayer_menu->addAction(_("Add/Remove City"));
+  act = multiplayer_menu->addAction(_("Add / Remove City"));
   act->setShortcut(QKeySequence(tr("ctrl+t")));
   connect(act, &QAction::triggered, this, &mr_menu::slot_trade_city);
   act = multiplayer_menu->addAction(_("Clear Trade Planning"));
   connect(act, &QAction::triggered, this, &mr_menu::slot_clear_trade);
-  act = multiplayer_menu->addAction(_("Automatic caravan"));
+  act = multiplayer_menu->addAction(_("Automatic Caravan"));
   menu_list.insert(AUTOTRADEROUTE, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_autocaravan);
   act->setShortcut(QKeySequence(tr("ctrl+j")));
   multiplayer_menu->addSeparator();
-  act = multiplayer_menu->addAction(_("Set/Unset rally point"));
+  act = multiplayer_menu->addAction(_("Set / Unset Rally Point"));
   act->setShortcut(QKeySequence(tr("shift+s")));
   connect(act, &QAction::triggered, this, &mr_menu::slot_rally);
   act = multiplayer_menu->addAction(_("Quick Airlift"));
@@ -958,12 +958,12 @@ void mr_menu::setup_menus()
   connect(act, &QAction::triggered, this, &mr_menu::slot_quickairlift);
   airlift_type = new QActionGroup(this);
   airlift_menu =
-      multiplayer_menu->addMenu(_("Unit type for quickairlifting"));
+      multiplayer_menu->addMenu(_("Unit Type for Quickairlifting"));
 
   // Default diplo
   action_vs_city = new QActionGroup(this);
   action_vs_unit = new QActionGroup(this);
-  action_unit_menu = multiplayer_menu->addMenu(_("Default action vs unit"));
+  action_unit_menu = multiplayer_menu->addMenu(_("Default Action vs Unit"));
 
   act = action_unit_menu->addAction(_("Ask"));
   act->setCheckable(true);
@@ -993,7 +993,7 @@ void mr_menu::setup_menus()
   action_vs_unit->addAction(act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_action_vs_unit);
 
-  action_city_menu = multiplayer_menu->addMenu(_("Default action vs city"));
+  action_city_menu = multiplayer_menu->addMenu(_("Default Action vs City"));
   act = action_city_menu->addAction(_("Ask"));
   act->setCheckable(true);
   act->setChecked(true);
@@ -1001,21 +1001,21 @@ void mr_menu::setup_menus()
   action_vs_city->addAction(act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_action_vs_city);
 
-  act = action_city_menu->addAction(_("Investigate city"));
+  act = action_city_menu->addAction(_("Investigate City"));
   act->setCheckable(true);
   act->setChecked(false);
   act->setData(ACTION_SPY_INVESTIGATE_CITY);
   action_vs_city->addAction(act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_action_vs_city);
 
-  act = action_city_menu->addAction(_("Investigate city (spends the unit)"));
+  act = action_city_menu->addAction(_("Investigate City (Spends the Unit)"));
   act->setCheckable(true);
   act->setChecked(false);
   act->setData(ACTION_INV_CITY_SPEND);
   action_vs_city->addAction(act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_action_vs_city);
 
-  act = action_city_menu->addAction(_("Establish embassy"));
+  act = action_city_menu->addAction(_("Establish Embassy"));
   act->setCheckable(true);
   act->setChecked(false);
   act->setData(ACTION_ESTABLISH_EMBASSY);
@@ -1029,21 +1029,21 @@ void mr_menu::setup_menus()
   action_vs_city->addAction(act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_action_vs_city);
 
-  act = action_city_menu->addAction(_("Steal technology"));
+  act = action_city_menu->addAction(_("Steal Technology"));
   act->setCheckable(true);
   act->setChecked(false);
   act->setData(ACTION_SPY_STEAL_TECH);
   action_vs_city->addAction(act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_action_vs_city);
 
-  act = action_city_menu->addAction(_("Steal technology and escape"));
+  act = action_city_menu->addAction(_("Steal Technology and Escape"));
   act->setCheckable(true);
   act->setChecked(false);
   act->setData(ACTION_SPY_STEAL_TECH_ESC);
   action_vs_city->addAction(act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_action_vs_city);
 
-  act = action_city_menu->addAction(_("Incite a revolt"));
+  act = action_city_menu->addAction(_("Incite a Revolt"));
   act->setCheckable(true);
   act->setChecked(false);
   act->setData(ACTION_SPY_INCITE_CITY);
@@ -1057,14 +1057,14 @@ void mr_menu::setup_menus()
   action_vs_city->addAction(act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_action_vs_city);
 
-  act = action_city_menu->addAction(_("Poison city"));
+  act = action_city_menu->addAction(_("Poison City"));
   act->setCheckable(true);
   act->setChecked(false);
   act->setData(ACTION_SPY_POISON);
   action_vs_city->addAction(act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_action_vs_city);
 
-  act = action_city_menu->addAction(_("Poison City Escape"));
+  act = action_city_menu->addAction(_("Poison City and Escape"));
   act->setCheckable(true);
   act->setChecked(false);
   act->setData(ACTION_SPY_POISON_ESC);
@@ -1090,47 +1090,47 @@ void mr_menu::setup_menus()
   act->setShortcut(QKeySequence(tr("F1")));
   connect(act, &QAction::triggered, this, &mr_menu::slot_show_map);
 
-  act = menu->addAction(_("Units"));
+  act = menu->addAction(_("Units View"));
   act->setShortcut(QKeySequence(tr("F2")));
   connect(act, &QAction::triggered, this, &top_bar_units_view);
 
   // TRANS: Also menu item, but 'headers' should be good enough.
-  act = menu->addAction(Q_("?header:Players"));
+  act = menu->addAction(Q_("?header:Nations View"));
   act->setShortcut(QKeySequence(tr("F3")));
   connect(act, &QAction::triggered, this, &popup_players_dialog);
 
-  act = menu->addAction(_("Cities"));
+  act = menu->addAction(_("Cities View"));
   act->setShortcut(QKeySequence(tr("F4")));
   connect(act, &QAction::triggered, this, &city_report_dialog_popup);
 
-  act = menu->addAction(_("Economy"));
+  act = menu->addAction(_("Economy View"));
   act->setShortcut(QKeySequence(tr("F5")));
   connect(act, &QAction::triggered, this, &economy_report_dialog_popup);
 
-  act = menu->addAction(_("Research"));
+  act = menu->addAction(_("Research View"));
   act->setShortcut(QKeySequence(tr("F6")));
   connect(act, &QAction::triggered, this, &mr_menu::slot_show_research_tab);
 
-  act = menu->addAction(_("Wonders of the World"));
+  act = menu->addAction(_("Wonders of the World Report"));
   act->setShortcut(QKeySequence(tr("F7")));
   connect(act, &QAction::triggered, this, &mr_menu::slot_traveler);
 
-  act = menu->addAction(_("Top Five Cities"));
+  act = menu->addAction(_("Top Five Cities Report"));
   act->setShortcut(QKeySequence(tr("F8")));
   connect(act, &QAction::triggered, this, &mr_menu::slot_top_five);
 
-  act = menu->addAction(_("Demographics"));
+  act = menu->addAction(_("Demographics Report"));
   act->setShortcut(QKeySequence(tr("F11")));
   connect(act, &QAction::triggered, this, &mr_menu::slot_demographics);
 
-  act = menu->addAction(_("Spaceship"));
+  act = menu->addAction(_("Spaceship View"));
   act->setShortcut(QKeySequence(tr("F12")));
   connect(act, &QAction::triggered, this, &mr_menu::slot_spaceship);
 
-  act = menu->addAction(_("Achievements"));
+  act = menu->addAction(_("Achievements Report"));
   connect(act, &QAction::triggered, this, &mr_menu::slot_achievements);
 
-  act = menu->addAction(_("Endgame report"));
+  act = menu->addAction(_("Endgame Report"));
   menu_list.insert(ENDGAME, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_endgame);
 
