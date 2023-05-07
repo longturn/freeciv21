@@ -465,12 +465,6 @@ To place a setting value on any of these settings use the ``/set <option-name> <
   revolt is eliminated, half of the gold (or quarter, if unit was caught), prepared to bribe citizens, can be
   lost or captured by enemy.
 
-``infrapoints``
-  :strong:`Default Value (Min, Max)`: 0 (0, 50000)
-
-  :strong:`Description`: Starting ``infrapoints`` per player. At the beginning of the game, each player is
-  given this many ``infrapoints``.
-
 ``kicktime``
   :strong:`Default Value (Min, Max)`: 1800 (0, 86400)
 
