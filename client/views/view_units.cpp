@@ -78,17 +78,17 @@ units_view::units_view() : QWidget()
   const QPixmap *spr =
       tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "upkeep.shield",
                                   "citybar.shields", "", "", false);
-  ui.units_widget->horizontalHeaderItem(4)->setIcon(crop_sprite(spr));
+  ui.units_widget->horizontalHeaderItem(5)->setIcon(crop_sprite(spr));
 
   // Add food icon for food upkeep column
   spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "upkeep.food",
                                     "citybar.food", "", "", false);
-  ui.units_widget->horizontalHeaderItem(5)->setIcon(crop_sprite(spr));
+  ui.units_widget->horizontalHeaderItem(6)->setIcon(crop_sprite(spr));
 
   // Add gold icon for gold upkeep column
   spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "upkeep.gold",
                                     "citybar.trade", "", "", false);
-  ui.units_widget->horizontalHeaderItem(6)->setIcon(crop_sprite(spr));
+  ui.units_widget->horizontalHeaderItem(7)->setIcon(crop_sprite(spr));
 
   connect(ui.upg_but, &QAbstractButton::pressed, this,
           &units_view::upgrade_units);
