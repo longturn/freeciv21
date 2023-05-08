@@ -2836,7 +2836,7 @@ void send_unit_info(struct conn_list *dest, struct unit *punit)
       if (pdata != nullptr) {
         BV_SET(pdata->can_see_unit, player_index(pplayer));
       }
-    } else if (pplayer->team == powner->team) {
+    } else if (players_on_same_team(pplayer, powner)) {
       send_packet_unit_info(pconn, &info);
       if (pdata != nullptr) {
         BV_SET(pdata->can_see_unit, player_index(pplayer));
