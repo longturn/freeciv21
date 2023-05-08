@@ -49,7 +49,6 @@ if (FREECIV_ENABLE_SERVER OR FREECIV_ENABLE_RULEDIT)
   add_subdirectory(nation)
 
   # Rulesets
-  add_ruleset(NAME alien SERV_FILE README README.alien)
   add_ruleset(NAME civ1 SERV_FILE)
   add_ruleset(NAME civ2 SERV_FILE)
   add_ruleset(NAME civ2civ3 SERV_FILE README README.civ2civ3)
