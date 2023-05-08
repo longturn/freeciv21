@@ -11,4 +11,5 @@ looking for more general  or generic gameplay information, it would be best to s
 
 .. toctree::
   players.rst
+  fc21-uri.rst
   :maxdepth: 2
