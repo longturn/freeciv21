@@ -49,9 +49,9 @@ specifies in which directory the ruleset files are to be found.
 
 The ruleset files in the data directory are user-editable, so you can modify them to create modified or custom
 rulesets (without having to recompile Freeciv21). It is suggested that you `do not` edit the existing files in
-the "civ2civ3", "classic", "experimental", "multiplayer", "alien", "civ1", or "civ2" directories, but rather
-copy them to another directory and edit the copies. This is so that its clear when you are using modified
-rules and not the standard ones.
+the "civ2civ3", "classic", "experimental", "multiplayer", "civ1", or "civ2" directories, but rather copy them
+to another directory and edit the copies. This is so that its clear when you are using modified rules and not
+the standard ones.
 
 The format used in the ruleset files should be fairly self-explanatory. A few points:
 

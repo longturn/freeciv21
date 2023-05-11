@@ -89,9 +89,6 @@ directory. The following roles are used in all of the rulesets shipped by the Fr
 :strong:`HeavyWeight`
   Airliftable from :improvement:`Airport` after you learn :advance:`Fusion Power`.
 
-:strong:`Hunter`
-  A special type of hunter. See :file:`alien/units.ruleset`.
-
 :strong:`Hut`
   Can be found in a hut.
 

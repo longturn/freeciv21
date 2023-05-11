@@ -148,7 +148,6 @@ aspects of playing a game. For more information on rulesets, you can refer to
 
 Freeciv21 comes with the following rulesets:
 
-* Alien
 * Civ1
 * Civ2
 * Civ2Civ3 (Default)
