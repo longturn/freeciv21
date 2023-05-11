@@ -4,14 +4,14 @@
 ; for other "maintenance".  If you want to make custom changes,
 ; you should create a new datadir subdirectory and copy this file
 ; into that directory, and then modify that copy.  Then use the
-; command "rulesetdir <mysubdir>" in the server to have freeciv
+; command "rulesetdir <mysubdir>" in the server to have Freeciv21
 ; use your new customized file.
 
-; Note that the freeciv AI may not cope well with anything more
+; Note that the Freeciv21 AI may not cope well with anything more
 ; than minor changes.
 
 [datafile]
-description="Civ2 buildings data for Freeciv (incomplete)"
+description="Civ2 buildings data for Freeciv21 (incomplete)"
 options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
@@ -1698,8 +1698,8 @@ sound_alt	= "w_generic"
 helptext	= _("\
 All your units regain two extra hitpoints per turn.\
 ")
-; NOTE: 
-; This does not match Civ1 or Civ2, but diplomatic effects are 
+; NOTE:
+; This does not match Civ1 or Civ2, but diplomatic effects are
 ; not very effective in multiplayer, and hitpoints effects do not
 ; apply for Civ1.  Note in Civ1 Pyramids have a gov-change effect,
 ; but become obsolete, and the Statue of Liberty does not exist.
