@@ -4,14 +4,14 @@
 ; for other "maintenance".  If you want to make custom changes
 ; you should create a new datadir subdirectory and copy this file
 ; into that directory, and then modify that copy.  Then use the
-; command "rulesetdir <mysubdir>" in the server to have freeciv
+; command "rulesetdir <mysubdir>" in the server to have Freeciv21
 ; use your new customized file.
 
-; Note that the freeciv AI may not cope well with anything more
+; Note that the Freeciv21 AI may not cope well with anything more
 ; than minor changes.
 
 [datafile]
-description="Civ2 style governments data for Freeciv (Fundamentalism incomplete)"
+description="Civ2 style governments data for Freeciv21 (Fundamentalism incomplete)"
 options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
@@ -169,7 +169,7 @@ In a fundamentalist society, the people and the rulers are entirely\
  preserve them.\
 "), _("\
 Improvements that normally convert unhappy citizens to content\
- citizens, produce `tithes' (gold) equivalent to the number\
+ citizens, produce \"tithes\" (gold) equivalent to the number\
  of people they would convert, and require no maintenance.\
 ")
 
