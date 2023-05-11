@@ -4,11 +4,11 @@
 ; for other "maintenance".  If you want to make custom changes
 ; you should create a new datadir subdirectory and copy this file
 ; into that directory, and then modify that copy.  Then use the
-; command "rulesetdir <mysubdir>" in the server to have freeciv
+; command "rulesetdir <mysubdir>" in the server to have Freeciv21
 ; use your new customized file.
 
 [datafile]
-description="Cities data for Freeciv"
+description="Cities data for Freeciv21"
 options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
@@ -57,7 +57,7 @@ reqs		=
     }
 helptext        = _("\
 Each entertainer produces two luxury points for their city per turn. \
-See the section on Happiness for the effects of luxury points.\
+See the section on Happiness for the effects of luxury goods.\
 ")
 
 [specialist_scientist]
@@ -84,7 +84,7 @@ reqs		=
       "MinSize", "5", "City"
     }
 helptext        = _("\
-Each tax collector produces two extra gold for your treasury \
+Each tax collector produces two extra gold for your national treasury \
 per turn.\
 ")
 

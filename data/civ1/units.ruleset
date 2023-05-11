@@ -3,13 +3,13 @@
 ; for other "maintenance".  If you want to make custom changes,
 ; you should create a new datadir subdirectory and copy this file
 ; into that directory, and then modify that copy.  Then use the
-; command "rulesetdir <mysubdir>" in the server to have freeciv
+; command "rulesetdir <mysubdir>" in the server to have Freeciv21
 ; use your new customized file.
 
 ; See classic/units.ruleset for more information.
 
 [datafile]
-description="Civ1-style unit_type data for Freeciv"
+description="Civ1-style unit_type data for Freeciv21"
 options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
@@ -412,7 +412,7 @@ uk_gold       = 0
 flags         = ""
 roles         = "DefendOk", "DefendOkStartUnit", "FirstBuild"
 helptext      = _("\
-This unit may be built from the start of the game.  It is the\
+This unit may be built from the start of the game. It is the\
  weakest offensive unit.\
 ")
 
@@ -573,7 +573,7 @@ uk_gold       = 0
 flags         = ""
 roles         = "DefendGood", "DefendGoodStartUnit"
 helptext      = _("\
-Mechanized Infantry; this unit has the strongest defense strength\
+Mechanized Infantry has the strongest defense strength\
  of any land unit, but is only available near the end of the\
  technology tree.\
 ")
@@ -1137,7 +1137,7 @@ roles         = ""
 helptext      = _("\
 The Carrier is a mobile airport.\
 "), _("\
-TIP:  Guard Carriers with a handful of fast-moving ships and a\
+TIP: Guard Carriers with a handful of fast-moving ships and a\
  battleship, as losing a fully-equipped Carrier is VERY\
  painful and expensive.\
 ")
@@ -1216,12 +1216,12 @@ TIP 1:  Nuking the ocean will not generate fallout, and is a most\
  effective (but expensive!!) way of getting rid of enemy\
  ships.\
 "), _("\
-TIP 2:  You may be involved in a situation where you've invaded an\
+TIP 2:  You may be involved in a situation where you have invaded an\
  enemy country en masse, but the enemy cities are too strong.\
  Before using a Nuclear unit, assemble a gang of Settlers\
  next to the city and have them ready to fix\
  the fallout on the same turn it occurs!  This minimizes the\
- chance of global warming.  Eco-friendly nukes!\
+ chance of global warming. Eco-friendly nukes!\
 ")
 
 [unit_diplomat]
@@ -1260,7 +1260,7 @@ helptext      = _("\
 A Diplomat is an official that carries your dispatches and\
  is authorized to deal with foreign dignitaries. He may\
  also undertake various covert operations with the intent of\
- harming your opponents; Diplomats in your own cities defend\
+ harming your opponents. Diplomats in your own cities defend\
  them against such actions.\
 "), _("\
 Many covert actions may be attempted even in peacetime, but the more\
@@ -1269,7 +1269,7 @@ Many covert actions may be attempted even in peacetime, but the more\
 "), _("\
 If a foreign unit is alone on a tile, you may attempt to bribe it\
  with your Diplomat. By paying a sum of gold the unit will immediately\
- become yours; the exact sum depends on the status of the unit and\
+ become yours. The exact sum depends on the status of the unit and\
  that of the civilization owning it. However, units belonging to\
  Democratic governments cannot be bribed. Bribery when not at war\
  will cause a diplomatic incident.\
@@ -1277,7 +1277,7 @@ If a foreign unit is alone on a tile, you may attempt to bribe it\
 Diplomats can also perform a number of actions in another player's\
  city, although each Diplomat may attempt only one action. Most of\
  these actions have a chance of failure. Also, any enemy Diplomats or\
- Spies in the city will oppose hostile actions; in this case, either\
+ Spies in the city will oppose hostile actions. In this case, either\
  your unit or the defending unit will die. If the defending unit dies,\
  you lose one movement point and may try again.\
 "), _("\
@@ -1315,7 +1315,7 @@ The actions available to Diplomats in a city are:\
  diplomatic incident.\
 "), _("\
 In some game strategies, hordes of Diplomats can be used to wreak\
- havoc on the enemy.  Little wonder that Diplomats are often\
+ havoc on the enemy. Little wonder that Diplomats are often\
  viewed with suspicion and fear!\
 ")
 
@@ -1356,14 +1356,14 @@ Caravans can establish trade routes with your own cities or those of other\
  doubled again if the cities are from different civilizations. This last\
  condition means the net benefit to your civilization of a trade route\
  is the same regardless of whether you own both cities or only one of\
- them; if you only own one city, trade in each city is doubled, but you\
+ them. If you only own one city, trade in each city is doubled, but you\
  only get the benefit from one end of the route. Each city can support a\
  maximum of three trade routes.\
 "), _("\
 Every Caravan that is used to build a wonder will add 50 shields\
  towards the production of the wonder.\
 "), _("\
-TIP:  You can stockpile a stack of Caravans in advance and bring\
+TIP: You can stockpile a stack of Caravans in advance and bring\
  them all into a city where you have started to build a wonder,\
  and finish it in only one turn!\
 ")
