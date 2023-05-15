@@ -56,8 +56,8 @@ reqs		=
 ; Nothing
     }
 helptext        = _("\
-Each entertainer produces two luxury points for their city per turn. \
-See the section on Happiness for the effects of luxury points.\
+Each entertainer produces two luxury good points for their city per turn. \
+See the section on Happiness for the effects of luxury goods.\
 ")
 
 [specialist_scientist]
@@ -70,7 +70,7 @@ reqs		=
       "MinSize", "5", "City"
     }
 helptext        = _("\
-Each scientist adds two points to your empire's research output \
+Each scientist adds two bulbs to your empire's research output \
 per turn.\
 ")
 
@@ -84,7 +84,7 @@ reqs		=
       "MinSize", "5", "City"
     }
 helptext        = _("\
-Each tax collector produces two extra gold for your treasury \
+Each tax collector produces two extra gold for your national treasury \
 per turn.\
 ")
 
