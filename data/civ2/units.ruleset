@@ -383,7 +383,7 @@ flags         = "Settlers", "Cant_Fortify", "NonMil", "Airbase", "AddToCity", "C
 roles         = "Settlers", "WorkerStartUnit", "CitiesStartUnit"
 helptext      = _("\
 Settlers are one of the key units in the game, as they are your main \
-means of founding new cities, and can also improve terrain; see the \
+means of founding new cities, and can also improve terrain. See the \
 help on Terrain and Terrain Alterations.\
 "), _("\
 Upkeep for Settlers is in food as well as production, and a Settler\
@@ -421,16 +421,16 @@ flags         = "Settlers", "Cant_Fortify", "NonMil", "Transform", "Airbase", "A
 roles         = "Settlers", "WorkerStartUnit", "CitiesStartUnit"
 helptext      = _("\
 Engineers are similar to Settlers, but they work twice as fast and\
- move twice as fast.  Engineers may also perform major terrain\
+ move twice as fast. Engineers may also perform major terrain\
  transformations (for example, converting Tundra into Desert) which\
- are beyond the capabilities of Settlers; see the Terrain\
+ are beyond the capabilities of Settlers. See the Terrain\
  Alterations section for more details.\
 "), _("\
-TIP 1:  Upgrade Settlers to Engineers when possible, as Engineers\
+TIP 1: Upgrade Settlers to Engineers when possible, as Engineers\
  require the same resources as ordinary Settlers.\
 "), _("\
-TIP 2:  If you manage to build Leonardo's Workshop, research\
- Explosives before the Workshop becomes obsolete.  This way,\
+TIP 2: If you manage to build Leonardo's Workshop, research\
+ Explosives before the Workshop becomes obsolete. This way,\
  your Settler units will be upgraded for free.\
 ")
 
@@ -462,7 +462,7 @@ uk_gold       = 0
 flags         = ""
 roles         = "DefendOk", "DefendOkStartUnit", "FirstBuild"
 helptext      = _("\
-This unit may be built from the start of the game.  It is the\
+This unit may be built from the start of the game. It is the\
  weakest offensive unit.\
 ")
 
@@ -1362,7 +1362,7 @@ flags         = "FieldUnit", "OneAttack", "Helicopter", "AirAttacker"
 roles         = ""
 helptext      = _("\
 The Helicopter is a very powerful unit, as it can both fly and\
- conquer cities.  Care must be exercised, because Helicopters lose a\
+ conquer cities. Care must be exercised, because Helicopters lose a\
  small amount of health for every turn not spent in a city or airbase\
  or on a Carrier, unless you have the United Nations wonder, and\
  Helicopters may be attacked by ground units.\
@@ -1637,7 +1637,7 @@ roles         = "Hunter"
 helptext      = _("\
 An improved Ironclad, with better move rate and vision.\
 "), _("\
-TIP:  A very fast unit, which is very useful for hunting down enemy\
+TIP: A very fast unit, which is very useful for hunting down enemy\
  Transports.\
 ")
 
@@ -1807,7 +1807,7 @@ roles         = ""
 helptext      = _("\
 The Carrier is a mobile airport.\
 "), _("\
-TIP:  Guard Carriers with a handful of fast-moving ships and a\
+TIP: Guard Carriers with a handful of fast-moving ships and a\
  battleship, as losing a fully-equipped Carrier is VERY\
  painful and expensive.\
 ")
@@ -1876,7 +1876,7 @@ helptext      = _("\
 The Cruise Missile is a long-distance missile\
  that can strike deep into enemy territory.\
 "), _("\
-TIP:  A handful of these can successfully keep the waters around\
+TIP: A handful of these can successfully keep the waters around\
  your treasured homeland free of enemy ships.\
 ")
 
@@ -1917,16 +1917,16 @@ On impact, the blast will destroy any unit in an area 3 tiles wide\
  land tiles within the blast area are subject to nuclear fallout,\
  which appears as pollution and contributes to global warming.\
 "), _("\
-TIP 1:  Nuking the ocean will not generate fallout, and is a most\
+TIP 1: Nuking the ocean will not generate fallout, and is a most\
  effective (but expensive!!) way of getting rid of enemy\
  ships.\
 "), _("\
-TIP 2:  You may be involved in a situation where you've invaded an\
+TIP 2: You may be involved in a situation where you've invaded an\
  enemy country en masse, but the enemy cities are too strong.\
  Before using a Nuclear unit, assemble a gang of Settlers\
  and/or Engineers next to the city and have them ready to fix\
  the fallout on the same turn it occurs!  This minimizes the\
- chance of global warming.  Eco-friendly nukes!\
+ chance of global warming. Eco-friendly nukes!\
 ")
 
 [unit_diplomat]
@@ -1982,7 +1982,7 @@ If a foreign unit is alone on a tile, you may attempt to bribe it\
 Diplomats can also perform a number of actions in another player's\
  city, although each Diplomat may attempt only one action. Most of\
  these actions have a chance of failure. Also, any enemy Diplomats or\
- Spies in the city will oppose hostile actions; in this case, either\
+ Spies in the city will oppose hostile actions. In this case, either\
  your unit or the defending unit will die. If the defending unit dies,\
  you lose one movement point and may try again.\
 "), _("\
@@ -2059,13 +2059,13 @@ roles         = "DiplomatStartUnit"
 helptext      = _("\
 A Spy is more skilled in the arts of espionage than her Diplomat predecessor.\
 "), _("\
-She can perform all the functions of the Diplomat; refer to the Diplomat\
+She can perform all the functions of the Diplomat. Refer to the Diplomat\
  entry for more details. Unlike a Diplomat, a Spy may also survive an\
  operation in a foreign city and become more experienced as a result.\
  Spies are also more effective than Diplomats at defending cities\
  against foreign Diplomats and Spies.\
 "), _("\
-A Spy can also be used to:\n\
+A Spy can also be used to:\n\n\
  - sabotage an enemy unit (reducing its hit points to half), if it is\
  alone on a tile and the players are at war;\n\
  - poison the water supply of an enemy city (reducing the population\
@@ -2128,7 +2128,7 @@ Caravans can establish trade routes with your own cities or those of other\
 Every Caravan that is used to build a wonder will add 50 shields\
  towards the production of the wonder.\
 "), _("\
-TIP:  You can stockpile a stack of Caravans in advance and bring\
+TIP: You can stockpile a stack of Caravans in advance and bring\
  them all into a city where you have started to build a wonder,\
  and finish it in only one turn!\
 ")
