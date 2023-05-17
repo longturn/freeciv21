@@ -24,8 +24,8 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Platform and version (please complete the following information):**
- - OS: [e.g. Windows 10]
- - Freeciv21 version: [e.g. 3.0-alpha3]
+ - OS: [e.g. Windows 10 / Linux / macOS]
+ - Freeciv21 version: [e.g. 3.1-alpha.1]
  - Ruleset/Longturn game (if applicable): [e.g. `classic` or `LTEx24`]
 
 **Additional context**
