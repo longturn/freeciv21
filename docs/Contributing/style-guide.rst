@@ -72,11 +72,11 @@ Attribution
 ===========
 
 As with our code, the documentation is written by contributors and proper attribution should always be given.
-We follow the `SPDX <https://spdx.dev/>`_ standard for attribution in all our documentation, music, and art
-files. For documentation files, we can the proper SPDX header to the very top of the page. For music and art
-we add a text license file along with the primary file. For example if we have :file:`art.png`, then there
-should be a corresponding :file:`art.png.license` file to give proper attribution. We use the GPL v3.0 or
-later license. Here is what the SPDX header should look like in all scenarios:
+We follow the `SPDX <https://spdx.dev/>`_ standard for attribution in all of our documentation, music, and art
+files. For documentation files, we can add the proper SPDX header to the very top of the page. For music and
+art we add a text license file along with the primary file. For example, if we have :file:`art.png`, then
+there should be a corresponding :file:`art.png.license` file to give proper attribution. We use the GPL v3.0
+or later license. Here is what the SPDX header should look like in all scenarios:
 
 .. code-block:: rst
 
@@ -85,7 +85,7 @@ later license. Here is what the SPDX header should look like in all scenarios:
 
 
 .. note::
-    We do not add the copydate date to our attribution blocks. There is recent commentary that this is not
+    We do not add a date (e.g. year) to our attribution blocks. There is recent commentary that this is not
     needed and leaving the date off makes keeping header blocks up to date easier.
 
 If the file you are working with came from legacy Freeciv, please add this line to the SPDX header for proper
@@ -192,10 +192,10 @@ adhere to, so the documentation is consistently formatted and certain language e
 same way.
 
 The Oxford Comma
-    The Oxford Comma is the usage of a comma when listing multple things and placing a comma before the "and"
-    at the end of the list. For example: You need to follow these steps: Click on :guilabel:`Menu`, then click
-    on :guilabel:`Options`, and finally click on :guilabel:`Interface`. Notice the comma usage before the word
-    "and", that is the Oxford comma and its usage is expected in our documentation.
+    The Oxford Comma is the usage of a comma when listing multple items and placing a comma before the "and"
+    or "or" at the end of the list. For example: You need to follow these steps: Click on :guilabel:`Menu`,
+    then click on :guilabel:`Options`, and finally click on :guilabel:`Interface`. Notice the comma usage
+    before the word "and", that is the Oxford comma and its usage is expected in our documentation.
 
 Capitalization
     For consistent formatting, the following should always use
@@ -232,8 +232,9 @@ Language Contractions
 The Use of Person
     In English there are three types of person: first, second, and third.  First person is possessive -- "I
     took a walk down the street". Second person is about speaking to someone -- "You took a walk down the
-    street". Third person is then for all other purposes. In our documentation we use the second person form.
-    We want to be conversational with our readers and speak to them about the game, features, actions, etc.
+    street". Third person is non-specific -- "They took a walk down the street". In our documentation we use
+    the second person form. We want to be conversational with our readers and speak to them about the game,
+    features, actions, etc.
 
     This page provides a good overview of the use person for US English:
     https://www.grammar-monster.com/glossary/person.htm
