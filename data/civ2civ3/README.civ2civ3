@@ -1,6 +1,5 @@
-=================================
-Civ2Civ3 Ruleset for Freeciv v3.1
-=================================
+Civ2Civ3 Ruleset for Freeciv21
+==============================
 
 
 OBJECTIVES:
@@ -9,10 +8,10 @@ OBJECTIVES:
 - The main purpose is to get a gameplay more similar to civ3, keeping
   the combat system from civ2.
 
-- Reduced micromanagement as much as possible. Don't be afraid by the
-  amount of changes, I think this ruleset is easier to learn than
+- Reduced micromanagement as much as possible. Do not be afraid by the
+  amount of changes, we think this ruleset is easier to learn than
   classic rules, and it is designed so there is not a big disadvantage
-  when you do not play optimally. I hope both rookies and experienced
+  when you do not play optimally. We hope both rookies and experienced
   players can enjoy it.
 
 - Removed the rules that allowed a sudden boost: mainly rapture growth,
@@ -26,10 +25,6 @@ OBJECTIVES:
 - All the new rules have been adapted so AI can play with them, and to
   avoid possible exploits by human players.
 
-I wish to keep it updated and to improve it with the comments from the
-players.
-
-
 INFO:
 -----
 
@@ -39,14 +34,14 @@ INFO:
   Terrains and Governments), so better use the tables in this ReadMe as
   reference.
 
-- I suggest new players to start a game with 6 players or so, AI skill
+- We suggest new players to start a game with 6 players or so, AI skill
   level Normal, and default ruleset options (Small continental map with
   100 land tiles per player).
 
 - For challenging games, you may place several AI players in the same
   team. For example, one team with 5 AIs together against you.
 
-- Cheating AI level was adjusted for these rules, I suggest experienced
+- Cheating AI level was adjusted for these rules, we suggest experienced
   players to use it.
   CHEATING AI: +40% Science, Luxury, Gold and Production, +40 AI love,
   +40% Veteran chance, +40% Bribe and Incite costs, -20% Pollution,
@@ -58,8 +53,8 @@ The following is a full list of changes compared to classic ruleset...
 CORE CHANGES:
 -------------
 
-- No Rapture Growth (Celebration only causes additional Trade per tile,
-  same as civ3). Foodbox readjusted to keep a constant city growth.
+- No Rapture Growth. Celebration only causes additional Trade per tile,
+  same as civ3. Foodbox readjusted to keep a constant city growth.
 
 - Settlers cost 2 population (as in civ3). This way, the number of tiles
   worked in the original city are reduced by 2, equal to the number of
@@ -68,7 +63,7 @@ CORE CHANGES:
 - Disabled national Trade Routes: it is still possible to create Trade
   Routes, but only to foreign cities that you are not at war with
   (trade routes are canceled when war breaks out). Each city can
-  support a maximum of 2 trade routes. Removed the one time revenues. 
+  support a maximum of 2 trade routes. Removed the one time revenues.
 
 - Every unit (except Settlers/Migrants, which cost population to build)
   pays some kind of Upkeep cost. Under some governments, this upkeep is
@@ -136,6 +131,7 @@ CORE CHANGES:
   wars between them.
 
 OPTIONAL RULES:
+---------------
 
 - Every player starts with 1 free Tech, 1 Settler, 1 Worker,
   1 Explorer, and 1 Diplomat. ('startunits', 'techlevel')
@@ -171,16 +167,18 @@ FOODBOX:
   create Settlers at best rate even without Granary. (This free granary
   helps the AI to build Settlers optimally).
 
+====== ========= ========== ========= ==========
 CITY   FOODBOX   SETTLER    FOODBOX   SETTLER
 SIZE    NEW       NEW        OLD       OLD
-1      20        -          20        - 
-2      20(10)#   -          30(15)    20(5-15) 
-3      20(10)#   20(20)     40(20)    30(10-20) 
-4      20(10)#   20(20)     50(25)    40(15-25) 
-5      20(10)    30(20)     60(30)    50(20-30) 
-6      30(10)    40(20)     70(35)    60(25-35) 
-7      30(10)    50(30)     80(40)    70(30-40) 
-8      40(10)    60(40)     90(45)    80(35-45) 
+====== ========= ========== ========= ==========
+1      20        N/A        20        N/A
+2      20(10)^   N/A        30(15)    20(5-15)
+3      20(10)^   20(20)     40(20)    30(10-20)
+4      20(10)^   20(20)     50(25)    40(15-25)
+5      20(10)    30(20)     60(30)    50(20-30)
+6      30(10)    40(20)     70(35)    60(25-35)
+7      30(10)    50(30)     80(40)    70(30-40)
+8      40(10)    60(40)     90(45)    80(35-45)
 9      40(10)    70(50)     100(50)   90(40-50)
 10     40(10)    80(60)     110(55)   100(45-55)
 11     40(10)    80(60)     120(60)   110(50-60)
@@ -188,18 +186,23 @@ SIZE    NEW       NEW        OLD       OLD
 13     40(10)    80(60)     140(70)   130(60-70)
 14     40(10)    80(60)     150(75)   140(65-75)
 15     ...       ...        ...       ...
+====== ========= ========== ========= ==========
 
-# Granary effect for free when city grows to this city level.
-FOODBOX = Foodbox size at that city level. (In brackets = Granary size).
-SETTLER = Food needed to recover the population if you create a Settler
-          at that city size. (In brackets = The same but with Granary).
-NEW = This ruleset. OLD = Classic ruleset
+Legend:
+
+- ^ = Granary effect for free when city grows to this city level.
+- FOODBOX = Foodbox size at that city level. (In brackets = Granary size).
+- SETTLER = Food needed to recover the population if you create a Settler
+  at that city size. (In brackets = The same but with Granary).
+- NEW = This ruleset.
+- OLD = Classic ruleset
 
 TIP: In order to keep max growth, you should build the Granary before
-     city grows larger than Pop 4 (same as Aqueduct at Pop 8, and
-     Sewer System at Pop 16).
+city grows larger than Pop 4 (same as Aqueduct at Pop 8, and
+Sewer System at Pop 16).
+
 TIP: Optimal production of Settlers occurs at any city with Pop <= 4, or
-     cities with Granary and Pop <= 6. 
+cities with Granary and Pop <= 6.
 
 
 TERRAIN:
@@ -242,37 +245,42 @@ TERRAIN:
   is known.
 
 - No minimum city output (was 1/1/0). City central tile simply gets
-  +1 Shield.
-  This way, no matter the tile where you place your city, you never
-  waste any resource (for example, with classic rules, a city placed
-  over bonused Grassland was wasting the Shield bonus).
+  +1 Shield. This way, no matter the tile where you place your city,
+  you never waste any resource (for example, with classic rules, a
+  city placed over bonused Grassland was wasting the Shield bonus).
 
-TILE      F/P/T  IRRIG(t)   MINE(t)    ROAD   MAX1   MAX2   TRANSFORM
+========= ====== ========== ========== ====== ====== ====== ===========
+TILE      F/P/T  IRRIG(t)   MINE[t]    ROAD   MAX1   MAX2   TRANSFORM
+========= ====== ========== ========== ====== ====== ====== ===========
 Deep      1/0/2  NO         NO         NO     2/0/2  2/1/2  No
-Ocean     1/0/2  NO         NO         NO     2/0/2  2/1/2 *Grass(36)
-Lake     *2/0/2  NO         NO         NO     2/0/2  2/1/2 *Grass(36)
-Swamp     1/0/0 *+1(5)     *NO         +0(4)  2/0/0  3/0/0 *Grass(24)
-Glacier   0/0/0  NO         +1(10)     +0(4)  0/1/0  0/3/0 *Lake(24)
-Tundra    1/0/0 *NO        *+1(5)     *+1(2)  1/1/1  1/1/1 *Plains(24)
+Ocean     1/0/2  NO         NO         NO     2/0/2  2/1/2  ^Grass(36)
+Lake      ^2/0/2 NO         NO         NO     2/0/2  2/1/2  ^Grass(36)
+Swamp     1/0/0  ^+1(5)     ^NO        +0(4)  2/0/0  3/0/0  ^Grass(24)
+Glacier   0/0/0  NO         +1(10)     +0(4)  0/1/0  0/3/0  ^Lake(24)
+Tundra    1/0/0  ^NO        ^+1(5)     ^+1(2) 1/1/1  1/1/1  ^Plains(24)
 Desert    0/1/0  +1(5)      +1(5)      +1(2)  0/2/1  0/4/1  Plains(24)
-Plains    1/1/0  +1(5)      Forest(10) +1(2)  2/1/1  3/1/1 *Lake(36)
-Grassland 2/0/0  +1(5)      Forest(15) +1(2)  3/0/1  4/0/1 *Lake(36)
-Jungle   *1/1/0 *Swamp(10) *NO         +0(4)  1/1/0  1/1/0 *Forest(24)
-Forest    1/2/0  Plain(10) *Grass(15)  +0(4)  1/2/0  1/3/0 *Hills(24)
-Hills    *1/1/0  +1(10)    *+2(10)     +0(4)  1/3/0  1/4/0  Plains(24)
-Mountains 0/1/0  NO        *+2(10)     +0(6)  0/3/0  0/4/0  Hills(36)
+Plains    1/1/0  +1(5)      Forest(10) +1(2)  2/1/1  3/1/1  ^Lake(36)
+Grassland 2/0/0  +1(5)      Forest(15) +1(2)  3/0/1  4/0/1  ^Lake(36)
+Jungle    ^1/1/0 ^Swamp(10) ^NO        +0(4)  1/1/0  1/1/0  ^Forest(24)
+Forest    1/2/0  Plain(10)  ^Grass(15) +0(4)  1/2/0  1/3/0  ^Hills(24)
+Hills     ^1/1/0 +1(10)     ^+2(10)    +0(4)  1/3/0  1/4/0  Plains(24)
+Mountains 0/1/0  NO         ^+2(10)    +0(6)  0/3/0  0/4/0  Hills(36)
+========= ====== ========== ========== ====== ====== ====== ===========
 
-F/P/T = Food/Production/Trade; (t) = turns
-MAX1 = irrigated/mined/roaded/harbour; MAX2 = farmland/railroad/oil well.
-* = Changes compared to classic ruleset. Most affected are Jungles,
-    Swamps and Tundras.
+Legend:
+
+- F/P/T = Food/Production/Trade
+- [t] = turns
+- MAX1 = irrigated/mined/roaded/harbour
+- MAX2 = farmland/railroad/oil well.
+- ^ = Changes compared to classic ruleset. Most affected are Jungles, Swamps and Tundras.
 
 TIP: The optimal tiles to place your initial cities are those with MAX
-     output equal or greater than 2/1/1, mainly those with bonus
-     resources or rivers. Hills and Plains are always good places for
-     cities, as well as Flood Desert (desert with river), or bonused
-     Grassland. The best defense comes from cities placed on Hills with
-     river.
+output equal or greater than 2/1/1, mainly those with bonus
+resources or rivers. Hills and Plains are always good places for
+cities, as well as Flood Desert (desert with river), or bonused
+Grassland. The best defense comes from cities placed on Hills with
+river.
 
 
 DEFENSE:
@@ -280,38 +288,54 @@ DEFENSE:
 
 - Halved the terrain defense bonuses, now more similar to civ3 values:
 
+======================== ======== =====
 TERRAIN                  NEW      OLD
+======================== ======== =====
 Forest/Jungle/Swamp      +25%     +50%
 Hills                    +50%     +100%
 Mountains                +100%    +200%
+River                    +25%     +50%
+======================== ======== =====
 
-RIVER                    +25%     +50%
-
-VETERAN
+======================== ======== =====
+VETERAN                  NEW      OLD
+======================== ======== =====
 Veteran                  +50%     (=)
 Hardened                 +75%     (=)
 Elite                    +100%    (=)
+Fortified                +50%     (=)
+======================== ======== =====
 
-FORTIFIED                +50%     (=)
 (only Land and Big Land units can fortify; inside cities, they are
 always considered fortified)
 
+================ ======== ======== ======== ==========
 BASE             VS LAND  VS SEA   VS AIR   VS MISSILE
+================ ======== ======== ======== ==========
 Fort             +50%     +50%     +0%      +0%
 Fortress         +100%    +100%    +50%     +50%
 Airstrip         +0%      +0%      +50%     +50%
 Airbase          +50%     +50%     +100%    +100%
+================ ======== ======== ======== ==========
 
+================ ======== ======== ======== ==========
 CITY             VS LAND  VS SEA   VS AIR   VS MISSILE
+================ ======== ======== ======== ==========
 Town (Pop<=8)    +50%     +0%      +0%      +0%
 City (Pop>8)     +100%    +50%     +0%      +0%
+================ ======== ======== ======== ==========
 
 Buildings each add:
+
+================ ======== ======== ======== ==========
+CITY             VS LAND  VS SEA   VS AIR   VS MISSILE
+================ ======== ======== ======== ==========
 Walls            +100%    +0%      +0%      +0%
 Great Wall(W)    +50%     +0%      +0%      +0%
 Coastal Defense  +0%      +100%    +0%      +0%
 SAM Battery      +0%      +0%      +100%    +0%
 SDI Defense      +0%      +0%      +0%      +100%
+================ ======== ======== ======== ==========
 
 - Every City of any size receives an inherent Defend_Bonus = +50%
   against all kinds of land units.
@@ -326,8 +350,10 @@ SDI Defense      +0%      +0%      +0%      +100%
   and prevents population loss in any city when a defending unit loses.
 
 Total Defense = (UNIT DEFENSE) * (100+TERRAIN)/100 * (100+RIVER)/100
- * (100+CITY+BASE)/100 * (100+FORTIFIED)/100 * (100+VETERAN)/100
+* (100+CITY+BASE)/100 * (100+FORTIFIED)/100 * (100+VETERAN)/100
+
 (Same as classic rules).
+
 
 EXAMPLE: Riflemen fortified in a fortress, on mountains, with a river,
          will get a total defense of 30 against land attacks:
@@ -348,34 +374,40 @@ EXAMPLE: Riflemen in a size 9 city, with walls, on hills,
 
 GOVERNMENTS:
 ------------
-                  Anarch   Tribal   Despot   Monarc   Fundam   Republ   Democr   Federat  Commun   
-Tax/Lux/Sci Rate  0        60       60       70       70       80       90       90       80       
-Output per tile # -1(if>2) -1(if>2) -1(if>2) 0        0        +1Trade  +1Trade  0        0        
-Celebration Bonus (no -1)  (no -1)  (no -1) (+1Trade) 0       (+1Trade)(+1Trade)(+1Trade) 0        
-                                                                                
-Unit Upkeep       Shield   Shield   Gold     Gold     Gold(x2) Shield   Gold(x2) Gold(x2) Shield   
-Free Units        2\2      2\2      2\2      3\3      2\2      1\1      1\1      2\2      3\3      
-Mil Unhappiness   0        0        0       -1       -1       -1       -2       -1       -1       
-Martial Law      +1        0       +1       +1        0        0        0        0       +2       
-                                                                                
-Civil war %       99       90       80       70       60       40       30       20       50       
-Empire Size       0        /12      /10      /14      /20      /16      /32      /24      /28      
-Special          +NoUpkeep +Veteran +75%Gold +50%Gold +Tithes  +Bribe  +Brib/Sub +Subvert +NoUpkeep
-                 -50%Lux  (Land/Mil)(Palace) (Palace) -50%Sci  -Revolt -Rev/Sen  -Senate  (Cost=1) 
-                 -NoTaxes +Content                    +Fanatic         +Partisan +Luxury  +Partisan 
-                                                                                
-Base Corruption   0%       30%      20%      10%      15%      25%      5%       0%       30%      
-Corrup by Dist *  1        1        1        1        1        1        1        0        0        
-Base Waste        30%      0%       10%      20%      15%      5%       25%      30%      0%       
-Waste by Dist **  1        1        1        1        1        1        1        0        0        
 
-* Corruption by Distance is doubled until The Corporation is researched
+==================== ========== ========== ======== ========= ======== ========= ========= ========= ==========
+Item                 Anarchy    Tribal     Despot   Monarchy  Funda    Republic  Democracy Fed       Communism
+==================== ========== ========== ======== ========= ======== ========= ========= ========= ==========
+Tax/Lux/Sci Rate     0          60         60       70        70       80        90        90        80
+Output per tile (#)  -1(if>2)   -1(if>2)   -1(if>2) 0         0        +1Trade   +1Trade   0         0
+Celebration Bonus    (no -1)    (no -1)    (no -1)  (+1Trade) 0        (+1Trade) (+1Trade) (+1Trade) 0
+Unit Upkeep          Shield     Shield     Gold     Gold      Gold(x2) Shield    Gold(x2)  Gold(x2)  Shield
+Free Units           2 / 2      2 / 2      2 / 2    3 / 3     2 / 2    1 / 1     1 / 1     2 / 2     3 / 3
+Mil Unhappiness      0          0          0        -1        -1       -1        -2        -1        -1
+Martial Law          +1         0          +1       +1        0        0         0         0         +2
+Civil war %          99         90         80       70        60       40        30        20        50
+Empire Size          0          /12        /10      /14       /20      /16       /32       /24       /28
+Special 1            +NoUpkeep  +Veteran   +75%Gold +50%Gold  +Tithes  +Bribe    +Brib/Sub +Subvert  +NoUpkeep
+Special 2            -50%Lux    (Land/Mil) (Palace) (Palace)  -50%Sci  -Revolt   -Rev/Sen  -Senate   (Cost=1)
+Special 3            -NoTaxes   +Content   n/a      n/a       +Fanatic n/a       +Partisan +Luxury   +Partisan
+Base Corruption      0%         30%        20%      10%       15%      25%       5%        0%        30%
+Corrup by Dist ^     1          1          1        1         1        1         1         0         0
+Base Waste           30%        0%         10%      20%       15%      5%        25%       30%       0%
+Waste by Dist ^^     1          1          1        1         1        1         1         0         0
+==================== ========== ========== ======== ========= ======== ========= ========= ========= ==========
+
+
+Legend:
+
+- ^ = Corruption by Distance is doubled until The Corporation is researched
   by the player (or increased to 1 for Federation).
-** Waste by Distance is doubled until Trade is researched by the player.
-# This penalty is negated by The Pyramids wonder, or when Railroad is
+- ^^ = Waste by Distance is doubled until Trade is researched by the player.
+- (#) = This penalty is negated by The Pyramids wonder, or when Railroad is
   researched by the player.
-+ Partisans appear in conquered cities (democratic or communist) if
-  Guerilla Warfare has been researched by any player.
+
+
+Partisans appear in conquered cities (democratic or communist) if
+Guerilla Warfare has been researched by any player.
 
 Added Fundamentalism (available with Theology), Tribal (available at
 start) and Federation (available with Economics).
@@ -390,8 +422,8 @@ start) and Federation (available with Economics).
   government.
 
 - "Unit Upkeep": Tribal, Republic and Communism use the standard unit
-  upkeep by Shields, while the other governments use Gold upkeep (x2
-  Gold per unit for modern governments).
+  upkeep by Shields, while the other governments use Gold upkeep
+  (x2 Gold per unit for modern governments).
 
 - "Free Units": Means units free of Gold/Shield upkeep and also free of
   Military Unhappiness. By default 2 free units per city.
@@ -429,11 +461,11 @@ start) and Federation (available with Economics).
   citizen, but units can't apply Martial Law.
 
 TIP: There is some hurry to get Monarchy or Republic (or to build
-     Pyramids), in order to avoid the initial penalty to output per
-     tile. However, the Corruption and Waste are evened for all
-     governments, so there are no big differences, and every government
-     could be used at any technological age. The choice depends on the
-     role of your civilization.
+Pyramids), in order to avoid the initial penalty to output per
+tile. However, the Corruption and Waste are evened for all
+governments, so there are no big differences, and every government
+could be used at any technological age. The choice depends on the
+role of your civilization.
 
 
 TECHS:
@@ -481,6 +513,7 @@ TECHS:
   transformation in the same terrain.
 
 Special effects:
+
 - Astronomy: Increases units vision when in fortresses.
 - Invention: Halves upgrade cost of your units.
 - Medicine: Reduces by 30% the chance of illness in your cities.
@@ -496,6 +529,7 @@ requirements have been changed to improve a bit the historical accuracy,
 to encourage the use of every military unit, and to avoid units or
 wonders becoming obsolete too soon. The following is a list of some
 inaccuracies from classic tech tree that were addressed in the new tree:
+
 - It was possible to research Pikemen before Phalanxs; Musketeers before
   Pikemen; Ironclads before Frigates; Destroyers before Ironclads;
   Armors before Artillery; Mech Infantry without Barracks III.
@@ -532,6 +566,7 @@ BUILDINGS:
 
   Added new effect: Food wasted by distance to Palace = -1% Food each 2
   tiles.
+
   For example, cities at distance 20 of the Palace lose -10% Food
   (-5% with courthouse), so they lose -1 Food when their production
   reaches 10 Food per turn (20 Food per turn with courthouse),
@@ -551,7 +586,7 @@ BUILDINGS:
 
 - Production bonus by Factory and Mfg Plant reduced to +25% each
   (was +50%), so the Power Plants are as important as the Factories.
-  Mfg Plants allows the construction of 2 units per turn. 
+  Mfg Plants allows the construction of 2 units per turn.
 
 - Super Highways double the effect of Stock Exchange (+50% to
   Gold/Luxuries), and they produce extra Trade at tiles with roads but
@@ -561,7 +596,7 @@ BUILDINGS:
 
 - Doubled costs of all Spaceship parts. All them require Library,
   University, Research Lab and Factory present in the city in order to
-  be built. 
+  be built.
 
 - Reduced by one the gold upkeep of Aqueduct, Colosseum (renamed to
   Amphitheatre), University, Bank, Stock Exchange, Port Facility,
@@ -575,12 +610,15 @@ BUILDINGS:
 - Adjusted the Pollution of all Power Plants, and increased building
   cost of Nuclear Plants:
 
-               Cost  Upkeep   Shields     Pollution(+Recycle)
-Power plant    130   4       +25%/+50%    100%(50%)
-Hydro plant    180   4       +25%/+50%    50% (25%)
-(+Hoover Dam)  (=)  (=)         (=)       25% (0%)
-Nuclear plant  240   2       +25%/+50%    50% (25%)
-Solar plant    320   4       +25%/+50%    25% (0%)
+============== ===== ======== =========== ===================
+Item           Cost  Upkeep   Shields     Pollution(+Recycle)
+============== ===== ======== =========== ===================
+Power plant    130   4        +25%/+50%   100%(50%)
+Hydro plant    180   4        +25%/+50%   50% (25%)
+(+Hoover Dam)  (=)   (=)      (=)         25% (0%)
+Nuclear plant  240   2        +25%/+50%   50% (25%)
+Solar plant    320   4        +25%/+50%   25% (0%)
+============== ===== ======== =========== ===================
 
 
 UNITS:
@@ -590,9 +628,9 @@ UNITS:
   Migrants available to work, or to migrate 1 pop, they can't create
   cities and can be captured. Costs more similar to civ3:
 
-Settlers:  pop_cost = 2, cost = 30, upkeep = 0
-Migrants:  pop_cost = 1, cost = 10, upkeep = 0
-Workers:   pop_cost = 0, cost = 20, upkeep = 1
+    - Settlers:  pop_cost = 2, cost = 30, upkeep = 0
+    - Migrants:  pop_cost = 1, cost = 10, upkeep = 0
+    - Workers:   pop_cost = 0, cost = 20, upkeep = 1
 
 - Non-military units now belongs to a new unit class ("Small Land") that
   can not pillage, nor capture cities, and does not create Zones of
@@ -670,8 +708,7 @@ Workers:   pop_cost = 0, cost = 20, upkeep = 1
   attack land units, they can only damage (not kill) them, but damage
   every unit in a stack or city; and are never damaged while attacking.
   Note they have a normal attack against sea units (they still can kill
-  or die).
-  Halved the attack so it is harder to bombard land enemies
+  or die). Halved the attack so it is harder to bombard land enemies
   successfully. Increased hit points so it is still possible to kill
   naval units.
 
@@ -699,61 +736,62 @@ Workers:   pop_cost = 0, cost = 20, upkeep = 1
   expensive. At the same time, modern units always get better ratio
   Att/Cost or Def/Cost.
 
-UNIT            Att  Def  Mov  FP   HP   Cost   
-Warrior         1    1    1    1    10   10
-Phalanx         1    2    1    1    10   20
-Archers         3   *1    1    1    10  *20
-Legion          4    2    1    1    10  *30  *Marines
-Pikemen        *2   *3    1    1    10  *30  *(No bonus anti-horse)
-Musketeers      3    3    1    1    20  *40  *Marines
-Riflemen        5    4    1    1    20  *50  *Marines
-Alpine Troops  *7   *4    1    1    20  *60   IgTer
-Partisan        4   *5    1    1    20  *60   IgTer, IgZOC
-Fanatics       *5   *5    1    1    20   20  *1 Pop, No upkeep, No unhappy
-Marines         8    5    1    1    20   60   Marines
-Paratroopers    6    4    1    1    20   60   Paratroopers
-                         
-Horsemen        2    1    2    1    10   20
-Chariot        *4    1    2    1    10   30  *Wheeled
-Elephants      *3   *2    2    1    10  *30
-Crusaders       5    1    2    1    10   40  *No unhappy
-Knights         4   *3    2    1    10   40
-Dragoons        5    2    2    1    20   50
-Cavalry         8    3    2    1    20   60
-Mech. Inf.      6    6    3    1    30  *70  *Wheeled
-Armor           10   5    3    1    30  *90  *Wheeled
-                         
-Catapult        6    1    1    1    10   40  *Wheeled
-Cannon          8    1    1    1    20  *50  *Wheeled
-Artillery       10  *2    1   *1(2) 20  *60  *Wheeled,*CityBuster
-Howitzer        12   2   *1   *1(2) 30  *80  *Wheeled,*CityBuster
-                         
-Trireme         1    1    3    1    10  *20   Cargo 2, Coastal
-Caravel        *1   *2    3    1    10  *30   Cargo 3
-Galleon         0    2    4    1    20   40   Cargo 4
-Transport       0    3    5    1    30   50   Cargo 8
-Carrier        *0    9    5   *1    40  *150  Cargo 8
-                         
-Frigate        *3    2    4    1    20  *40  *No Cargo
-Ironclad        4   *3    4    1   *20  *50
-Destroyer       4    4    6    1    30   60  *(x2 def anti-submarine)
-Cruiser         6    6    5   *1    30   80  
-AEGIS Cruiser   8    8    5   *1    30   100 *(x5 def anti-air/missile)
-Battleship      12   12   4   *1   *30   160 
-Submarine       12  *5    5   *1   *20  *70   Cargo 8, Invis
-                         
-Fighter         4   *4    10  *1    20   60   Fuel 2
-Bomber         *6   *2    8   *1   *30  *100 *Bombard 3, Fuel 3, FieldUnit
-Helicopter     *5    3    6   *1   *30  *70  *Bombard 2,*Cargo 1
-Stealth Fighter 8   *8    14  *1    20   80   Fuel 2, Invis
-Stealth Bomber *9    5    12  *1   *30  *120 *Bombard 4, Fuel 3, FieldUnit, Invis
-                         
-Cruise Missile  18   0   *16  *1(2) 10  *50  *CityBuster,*No FieldUnit
-Nuclear         99   0    16   1    10   160  Nuclear, FieldUnit
+=============== ==== ==== ==== ===== ==== =========================================
+UNIT            Att  Def  Mov  FP    HP   Cost
+=============== ==== ==== ==== ===== ==== =========================================
+Warrior          1    1    1    1     10   10
+Phalanx          1    2    1    1     10   20
+Archers          3   ^1    1    1     10  ^20
+Legion           4    2    1    1     10  ^30  ^Marines
+Pikemen         ^2   ^3    1    1     10  ^30  ^No bonus anti-horse)
+Musketeers       3    3    1    1     20  ^40  ^Marines
+Riflemen         5    4    1    1     20  ^50  ^Marines
+Alpine Troops   ^7   ^4    1    1     20  ^60   IgTer
+Partisan         4   ^5    1    1     20  ^60   IgTer, IgZOC
+Fanatics        ^5   ^5    1    1     20   20  ^1 Pop, No upkeep, No unhappy
+Marines          8    5    1    1     20   60   Marines
+Paratroopers     6    4    1    1     20   60   Paratroopers
+Horsemen         2    1    2    1     10   20
+Chariot         ^4    1    2    1     10   30  ^Wheeled
+Elephants       ^3   ^2    2    1     10  ^30
+Crusaders        5    1    2    1     10   40  ^No unhappy
+Knights          4   ^3    2    1     10   40
+Dragoons         5    2    2    1     20   50
+Cavalry          8    3    2    1     20   60
+Mech. Inf.       6    6    3    1     30  ^70  ^Wheeled
+Armor            10   5    3    1     30  ^90  ^Wheeled
+Catapult         6    1    1    1     10   40  ^Wheeled
+Cannon           8    1    1    1     20  ^50  ^Wheeled
+Artillery        10  ^2    1   ^1(2)  20  ^60  ^Wheeled, ^CityBuster
+Howitzer         12   2   ^1   ^1(2)  30  ^80  ^Wheeled, ^CityBuster
+Trireme          1    1    3    1     10  ^20   Cargo 2, Coastal
+Caravel         ^1   ^2    3    1     10  ^30   Cargo 3
+Galleon          0    2    4    1     20   40   Cargo 4
+Transport        0    3    5    1     30   50   Cargo 8
+Carrier         ^0    9    5   ^1     40  ^150  Cargo 8
+Frigate         ^3    2    4    1     20  ^40  ^No Cargo
+Ironclad         4   ^3    4    1    ^20  ^50
+Destroyer        4    4    6    1     30   60  ^(x2 def anti-submarine)
+Cruiser          6    6    5   ^1     30   80
+AEGIS Cruiser    8    8    5   ^1     30   100 ^(x5 def anti-air/missile)
+Battleship       12   12   4   ^1    ^30   160
+Submarine        12  ^5    5   ^1    ^20  ^70   Cargo 8, Invis
+Fighter          4   ^4    10  ^1     20   60   Fuel 2
+Bomber          ^6   ^2    8   ^1    ^30  ^100 ^Bombard 3, Fuel 3, FieldUnit
+Helicopter      ^5    3    6   ^1    ^30  ^70  ^Bombard 2, ^Cargo 1
+Stealth Fighter  8   ^8    14  ^1     20   80   Fuel 2, Invis
+Stealth Bomber  ^9    5    12  ^1    ^30  ^120 ^Bombard 4, Fuel 3, FieldUnit, Invis
+Cruise Missile   18   0   ^16  ^1(2)  10  ^50  ^CityBuster, ^No FieldUnit
+Nuclear          99   0    16   1     10   160  Nuclear, FieldUnit
+=============== ==== ==== ==== ===== ==== =========================================
 
-FP = Firepower, HP = Hit Points
-* = Changes compared to classic ruleset. Most affected are modern
-    infantry, air units, and all units that had 2 firepower.
+
+Legend:
+
+- FP = Firepower
+- HP = Hit Points
+- ^ = Changes compared to classic ruleset. Most affected are modern
+  infantry, air units, and all units that had 2 firepower.
 
 
 WONDERS:
@@ -860,7 +898,7 @@ FULL LIST OF WONDERS
   periods when government changes.
 - (#)"United Nations" 600:
   +10 to AI love for the owner. Revolution_When_Unhappy and Has_Senate
-  for every nation. 
+  for every nation.
 
 - "Great Wall" 300, Obsolete by Machine Tools (Artillery):
   +50% Defense bonus against Land units in every city, and cities do not
@@ -878,13 +916,14 @@ FULL LIST OF WONDERS
 
 Special "Cold War" effect: if Manhattan Project and United Nations were
 built, every nation with nuclear power receives the Has_Senate effect,
-until the Apollo Program is finished. 
+until the Apollo Program is finished.
 
 
 THANKS:
 -------
 
-To every people who collaborated to create this wonderful Freeciv game.
+To every people who collaborated to create this wonderful Freeciv21 game.
 Specially to those who programmed the Ruleset modding capabilities and
 the AI capable to play with them.
+
 Original developer David Fernandez (Bardo).

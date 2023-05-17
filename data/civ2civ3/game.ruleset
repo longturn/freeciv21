@@ -3,18 +3,18 @@
 ; for other "maintenance".  If you want to make custom changes,
 ; you should create a new datadir subdirectory and copy this file
 ; into that directory, and then modify that copy.  Then use the
-; command "rulesetdir <mysubdir>" in the server to have freeciv
+; command "rulesetdir <mysubdir>" in the server to have Freeciv21
 ; use your new customized file.
 
-; Note that the freeciv AI may not cope well with anything more
+; Note that the Freeciv21 AI may not cope well with anything more
 ; than minor changes.
 
 [datafile]
-description="Civ2Civ3 game rules for Freeciv"
+description="Civ2Civ3 game rules for Freeciv21"
 options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
-; This section contains meta information for freeciv-ruledit to recreate the ruleset
+; This section contains meta information for freeciv21-ruledit to recreate the ruleset
 ; file in a form wanted. These have no in-game effect whatsoever
 [ruledit]
 
@@ -25,12 +25,12 @@ description_file = "civ2civ3/README.civ2civ3"
 ; Ruleset name
 name = _("Civ2Civ3 ruleset")
 
-; There`s no separate versioning in rulesets part of main freeciv distribution
+; There`s no separate versioning in rulesets part of main Freeciv21 distribution
 ;version = ""
 
 ; When about to migrate ruleset under a new name in the future version, set
 ; alt_dir to the name of that future directory. Then savegames saved with this
-; version of freeciv can find the ruleset from the correct place when loading
+; version of Freeciv21 can find the ruleset from the correct place when loading
 ; the savegame to the future version.
 ;alt_dir = ""
 
@@ -38,15 +38,15 @@ name = _("Civ2Civ3 ruleset")
 ; /* TRANS: In the client, this is displayed alongside the contents of
 ;    README.civ2civ3, which are not localized. */
 summary = _("\
-You are playing Freeciv with civ2civ3 rules:\
+You are playing Freeciv21 with civ2civ3 rules:\
 \n\n\
-Gameplay more similar to civ3, keeping the combat system from civ2.\
+Gameplay is more similar to civ3, keeping the combat system from civ2.\
 \n\n\
-Adapted for single player, with AI less aggressive at start,\
+Adapted for single player, with AI less aggressive at the start,\
  but more challenging at the end.\
 \n\n\
 The differences from the former default ruleset, 'classic', are listed in\
- full in README.civ2civ3.\
+ full in the detailed description (README.civ2civ3).\
 ")
 
 ; Detailed description
@@ -356,7 +356,7 @@ nuke_units_max_range = 1
 airlift_max_range = "unlimited"
 
 ; What each action should be called when showing them to the player.
-; The first %s should be before the mnemonic of the action. A Freeciv client
+; The first %s should be before the mnemonic of the action. A Freeciv21 client
 ; that supports mnemonics will replace it with the in-band signal that marks
 ; the following character as a mnemonic in its graphical toolkit.
 ; The second %s marks where extra details should be inserted.
@@ -1844,7 +1844,7 @@ colorlist =
     }
 
 [teams]
-; freeciv optional team names definition.
+; Freeciv21 optional team names definition.
 ;
 ; names =
 ; _("Team 1"),
@@ -1854,7 +1854,7 @@ colorlist =
 ; etc...
 
 [settings]
-; freeciv game settings for civ2civ3 ruleset
+; Freeciv21 game settings for civ2civ3 ruleset
 ;
 set =
     { "name", "value"
