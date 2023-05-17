@@ -4,11 +4,11 @@
 ; for other "maintenance".  If you want to make custom changes,
 ; you should create a new datadir subdirectory and copy this file
 ; into that directory, and then modify that copy.  Then use the
-; command "rulesetdir <mysubdir>" in the server to have freeciv
+; command "rulesetdir <mysubdir>" in the server to have Freeciv21
 ; use your new customized file.
 
 [datafile]
-description="Civ2Civ3 technology data for Freeciv"
+description="Civ2Civ3 technology data for Freeciv21"
 options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
@@ -518,8 +518,8 @@ graphic     = "a.medicine"
 graphic_alt = "-"
 ; /* xgettext:no-c-format */
 helptext = _("\
-Reduces the risk of plague in your cities by 30% of the base chance \
-(this is additive with the benefits of any buildings).\
+Reduces the risk of plague in your cities by 30% of the base chance. \
+This is additive with the benefits of any buildings.\
 ")
 
 [advance_metallurgy]
@@ -599,7 +599,7 @@ req2     = "Miniaturization"
 flags    = ""
 graphic     = "a.nuclear_power"
 graphic_alt = "-"
-helptext = _("Gives sea units one extra move.")
+helptext = _("Gives sea units one extra movepoint.")
 
 [advance_philosophy]
 name     = _("Philosophy")
@@ -666,8 +666,8 @@ Allows Settlers, Migrants, Workers and Engineers to upgrade roads to \
 railroads.\
 "), _("\
 For Despotism or Tribal governments, cancels the penalty to worked \
-tiles with output greater than 2 (as if all your cities were always \
-celebrating).\
+tiles with output greater than 2, as if all your cities were always \
+celebrating.\
 ")
 
 [advance_recycling]
@@ -796,8 +796,8 @@ flags    = ""
 graphic     = "a.the_corporation"
 graphic_alt = "-"
 helptext = _("\
-Halves the corruption of trade related to distance from the capital \
-(or eliminates it for Federation governments).\
+Halves the corruption of trade related to distance from the capital, \
+or eliminates it for Federation governments.\
 ")
 
 [advance_the_republic]

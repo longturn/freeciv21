@@ -4,11 +4,11 @@
 ; for other "maintenance".  If you want to make custom changes
 ; you should create a new datadir subdirectory and copy this file
 ; into that directory, and then modify that copy.  Then use the
-; command "rulesetdir <mysubdir>" in the server to have freeciv
+; command "rulesetdir <mysubdir>" in the server to have Freeciv21
 ; use your new customized file.
 
 [datafile]
-description="Civ2Civ3 cities data for Freeciv"
+description="Civ2Civ3 cities data for Freeciv21"
 options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
@@ -86,7 +86,7 @@ reqs		=
 ; Nothing
     }
 helptext        = _("\
-Each tax collector produces two extra gold for your treasury \
+Each tax collector produces two extra gold for your national treasury \
 per turn, increasing to three once any player has built \
 A.Smith's Trading Co.\
 ")

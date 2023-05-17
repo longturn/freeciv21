@@ -4,14 +4,14 @@
 ; for other "maintenance".  If you want to make custom changes,
 ; you should create a new datadir subdirectory and copy this file
 ; into that directory, and then modify that copy.  Then use the
-; command "rulesetdir <mysubdir>" in the server to have freeciv
+; command "rulesetdir <mysubdir>" in the server to have Freeciv21
 ; use your new customized file.
 
-; Note that the freeciv AI may not cope well with anything more
+; Note that the Freeciv21 AI may not cope well with anything more
 ; than minor changes.
 
 [datafile]
-description="Civ2Civ3 tile_type data for Freeciv"
+description="Civ2Civ3 tile_type data for Freeciv21"
 options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
@@ -394,7 +394,7 @@ color.g              = 33
 color.b              = 129
 helptext             = _("\
 Deep oceans cover much of the world away from coastlines, and only\
- seaworthy units (not including Triremes) can travel on them.\
+ seaworthy units, not including Triremes, can travel on them.\
 ")
 
 [terrain_glacier]
@@ -440,7 +440,7 @@ color.g              = 232
 color.b              = 232
 helptext             = _("\
 Glaciers are found only in the most northerly or southerly\
- reaches of the world.  They are very cold, and hence difficult to\
+ reaches of the world. They are very cold, and hence difficult to\
  work with.\
 ")
 
@@ -495,7 +495,7 @@ Deserts can be irrigated for a small amount of extra food, but without\
  an oasis or river, bare desert cannot be further improved with\
  farmland.\
 "), _("\
-Rivers bring fertile soil to deserts; on a desert river not already\
+Rivers bring fertile soil to deserts. On a desert river not already\
  benefiting from an oasis, building irrigation will yield two extra food\
  resources rather than the usual one.\
 ")
@@ -642,7 +642,7 @@ In addition to being amenable to agriculture, Hills are frequently\
  rich in resources.\
 "), _("\
 Cities built in hills are at risk of earthquakes, which can interrupt\
- a city's current project.\
+ a city's current production target.\
 ")
 
 [terrain_jungle]
@@ -1200,8 +1200,8 @@ hidden_by      = "Farmland"
 flags          = "IrrigationSource"
 helptext       = _("\
 Building an irrigation system on a suitable tile causes it to \
-produce some extra food each turn. Most tiles yield one extra food; \
-a desert with a river will yield two, if it is not already benefiting \
+produce some extra food each turn. Most tiles yield one extra food. \
+A desert with a river will yield two, if it is not already benefiting \
 from an oasis.\
 "), _("\
 Without knowledge of Electricity, irrigation requires a nearby source \
@@ -1211,10 +1211,10 @@ target tile. However, once irrigated, land remains so even if the \
 water source is removed. Once Electricity is known, any suitable \
 tile may be irrigated without a water source.\
 "), _("\
-Building irrigation on a tile with a mine or oil well will destroy it.\
+Building irrigation on a tile with a mine or oil well will destroy the mine.\
 "), _("\
 City center tiles get their terrain's irrigation bonus automatically, \
-if there is no conflicting mine or oil well on the tile; however, \
+if there is no conflicting mine or oil well on the tile. However, \
 this does not make cities count as a water source for further \
 irrigation. Irrigation can be built on the city tile simply to allow \
 building further irrigation elsewhere, but will not give the tile any \
@@ -1245,7 +1245,7 @@ hidden_by      = "Oil Well"
 helptext       = _("\
 Mines can be built on some types of terrain, which increases the \
 number of production points produced by that tile. Hills and Mountains \
-get an extra 2 production points per tile; other terrains get 1 extra \
+get an extra 2 production points per tile. Other terrains get 1 extra \
 production point.\
 "), _("\
 Building a mine on an irrigated tile will destroy the irrigation.\
@@ -1341,25 +1341,25 @@ Dam, Nuclear Plant, or Solar Plant -- will reduce pollution from \
 production, as will a Recycling Center.\
 "), _("\
 The city's population starts adding to pollution with the Factory, \
-Super Highways, Offshore Platform, and Mfg. Plant buildings; each \
+Super Highways, Offshore Platform, and Mfg. Plant buildings. Each \
 building causes the population to add more to pollution. A Mass \
 Transit will counteract the pollution from two buildings in a city, \
 and the Eiffel Tower wonder will counteract the pollution from one \
 building in all the owner's cities.\
 "), _("\
-The contribution of these factors can be seen in the city dialog; once \
+The contribution of these factors can be seen in the city dialog. Once \
 it exceeds a threshold, the excess is the percent chance of pollution \
 appearing each turn.\
 "), _("\
 When an unused tile becomes polluted, there is the temptation to avoid \
-the effort of cleaning it; but the spread of pollution has far more \
+the effort of cleaning it, but the spread of pollution has far more \
 terrible results than the immediate economic impact -- every polluted \
 tile increases the chance of global warming. Each time global warming \
 advances, the entire world loses coastal land to the sea and to jungles \
 and swamps, and inland tiles are lost to desert. This tends to \
 devastate cities and leads to global impoverishment.\
 "), _("\
-The risk of global warming is cumulative; the longer polluted tiles \
+The risk of global warming is cumulative. The longer polluted tiles \
 are left uncleaned, the higher the risk becomes, and the risk can \
 linger for some time even after all pollution has been cleaned. If a \
 long time passes with an elevated risk of warming, its effects will be \
@@ -1422,7 +1422,7 @@ conflicts      = "Mine", "Oil Well"
 ; /* xgettext:no-c-format */
 helptext       = _("\
 Once Refrigeration is known, irrigation systems can be upgraded to \
-farmland by irrigating them a second time; if the city working the tile \
+farmland by irrigating them a second time. If the city working the tile \
 has a Supermarket, a farmland tile provides 50% more food. (Hence, \
 farmland is only useful on tiles which with irrigation yield 2 or more \
 food.)\
@@ -1524,12 +1524,10 @@ native_to      = "Land", "Small Land", "Merchant", "Big Land"
 conflicts      = "Airstrip", "Airbase"
 flags          = "NativeTile", "DiplomatDefense"
 helptext       = _("\
-Fortresses are more permanent forts; construction on them can only begin \
+Fortresses are more permanent forts. Construction on them can only begin \
 once the underlying fort is complete. Forts on River tiles cannot be \
 upgraded to Fortresses.\
-"),
-; /* xgettext:no-c-format */
-_("\
+"), _("\
 Compared to a fort, units in a fortress receive extra defense (+50%) \
 against all units (in total, their defense against land units and boats \
 is doubled), and do not count as aggressive if near a friendly city. \
@@ -1567,13 +1565,11 @@ hidden_by      = "Airbase"
 flags          = "Refuel", "ParadropFrom"
 helptext       = _("\
 Airstrips are rapidly-built runways allowing air units to land, refuel, \
-and recover outside cities; an aircraft remaining on an airstrip for a \
-whole turn without moving recovers a tenth of its hit points (that is, \
-the same amount it loses each turn while airborne). However, air units on \
+and recover outside cities. An aircraft remaining on an airstrip for a \
+whole turn without moving recovers a tenth of its hit points. This is, \
+the same amount it loses each turn while airborne. However, air units on \
 an airstrip are vulnerable to attack by land units.\
-"),
-; /* xgettext:no-c-format */
-_("\
+"), _("\
 Any units on an airstrip receive extra defense (+50%) against enemy \
 aircraft.\
 "), _("\
@@ -1607,17 +1603,15 @@ native_to      = "Air", "Helicopter", "Missile"
 conflicts      = "Fort", "Fortress"
 flags          = "Refuel", "ParadropFrom"
 helptext       = _("\
-Airbases are more permanent airstrips; construction on them can only \
+Airbases are more permanent airstrips. Construction on them can only \
 begin once the underlying airstrip is complete. Airstrips on River tiles \
 cannot be upgraded to Airbases.\
-"),
-; /* xgettext:no-c-format */
-_("\
+"), _("\
 Compared to an airstrip, units in an airbase receive extra defense (+50%) \
-against all units (in total, their defense against air units and missiles \
-is doubled), do not count as aggressive if near a friendly city, and can \
-see further afield. Also, air units recover more hit points (a third per \
-turn, the same as in a city without an Airport).\
+against all units. In total, their defense against air units and missiles \
+is doubled, do not count as aggressive if near a friendly city, and can \
+see further afield. Also, air units recover more hit points -- a third per \
+turn, the same as in a city without an Airport.\
 ")
 
 [extra_buoy]
@@ -1700,12 +1694,12 @@ flags          = "NativeTile", "AlwaysOnCityCenter"
 helptext       = _("\
 Roads allow your land units to move more quickly, and allow wheeled\
  Big Land units such as Chariots and Catapults to travel through\
- otherwise difficult terrain (Mountains, Jungle, and Swamp).\
+ otherwise difficult terrain such as Mountains, Jungle, and Swamp.\
 "), _("\
 On some terrains, roads also provide a trade bonus.\
 "), _("\
 Building roads on river tiles requires knowledge of Bridge Building.\
- City center tiles automatically get roads (even on a river tile).\
+ City center tiles automatically get roads, even on a river tile.\
 ")
 
 [extra_railroad]
@@ -1775,7 +1769,7 @@ bridged_over   = "River"
 helptext       = _("\
 With sufficient technology, you may build magnetic levitation systems\
  along your railroad routes. Land and Small Land units expend no\
- movement points when riding a maglev; you may ride indefinitely.\
+ movement points when riding a maglev. You may ride indefinitely.\
  (As may your enemies!)\
 "), _("\
 Your regular railroads are still used to carry heavy Big Land and\
@@ -1808,11 +1802,11 @@ Any land terrain type may have a River on it. A River adds 1\
  trade to the resources produced by that tile. It also increases a\
  tile's defense factor by 25%.\
 "), _("\
-Land units may move along rivers for faster travel (but not diagonally).\
- Triremes may also travel up rivers (although later boats cannot).\
+Land units may move along rivers for faster travel, but not diagonally.\
+ Triremes may also travel up rivers, although later boats cannot.\
 "), _("\
 Roads and railroads can only be built on River tiles if your\
- civilization has learned Bridge Building technology. Fortresses and\
+ civilization has learned the Bridge Building technology. Fortresses and\
  Airbases cannot be built on River tiles.\
 "), _("\
 Cities built on or next to rivers incur a small risk of flooding,\
