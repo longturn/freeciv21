@@ -1044,9 +1044,9 @@ helptext      = _("\
 Paratroopers are experts at airborne attacks. From a friendly city, \
 airbase, or airstrip, Paratroopers who have not expended any \
 movement points can paradrop directly to any tile in range, and be \
-immediately ready to act there. Beware dropping into unseen territory, \
+immediately ready to act there. (Beware dropping into unseen territory, \
 as Paratroopers landing on a tile occupied by enemy units are easy \
-targets!\
+targets!)\
 ")
 paratroopers_range = 10
 
@@ -2172,8 +2172,8 @@ You can build Nuclear units when you have the required advance, and\
  the Manhattan Project wonder has been built by any player.\
  However, without further technology they cannot move on their own.\
 "), _("\
-With Advanced Flight, all Nuclear units, including those already\
- built, gain a range of 8 movement points, and Rocketry increases\
+With Advanced Flight, all Nuclear units (including those already\
+ built) gain a range of 8 movement points, and Rocketry increases\
  this to 16.\
 "), _("\
 On impact, the blast will destroy any unit in an area 3 tiles wide\
@@ -2359,14 +2359,14 @@ She can perform all the functions of the Diplomat. Refer to the Diplomat\
 A Spy can also be used to:\n\n\
  - sabotage an enemy unit reducing its hitpoints to half, if it is\
  alone on a tile and the players are at war;\n\
- - poison the water supply of an enemy city, reducing the population\
- by one;\n\
+ - poison the water supply of an enemy city (reducing the population\
+ by one);\n\
  - steal specific technology, with a reduced chance of success;\n\
  - steal further technologies from a city which has already been\
  stolen from. Cities become more resistant each time they\
  are stolen from;\n\
- - sabotage predetermined city targets, with a reduced chance of\
- success.\
+ - sabotage predetermined city targets (with a reduced chance of\
+ success).\
 "), _("\
 A Spy that survives the more aggressive actions (sabotage, theft,\
  inciting rebellion, and poisoning) escapes to the safety of the\

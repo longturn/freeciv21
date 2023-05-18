@@ -2,8 +2,8 @@ Civ2Civ3 Ruleset for Freeciv21
 ==============================
 
 
-OBJECTIVES:
------------
+OBJECTIVES
+----------
 
 - The main purpose is to get a gameplay more similar to civ3, keeping
   the combat system from civ2.
@@ -25,8 +25,8 @@ OBJECTIVES:
 - All the new rules have been adapted so AI can play with them, and to
   avoid possible exploits by human players.
 
-INFO:
------
+INFO
+----
 
 - Help texts have been updated (mainly Buildings and Wonders), so the
   info showed ingame already takes into account the changed rules. Note
@@ -50,8 +50,8 @@ INFO:
 The following is a full list of changes compared to classic ruleset...
 
 
-CORE CHANGES:
--------------
+CORE CHANGES
+------------
 
 - No Rapture Growth. Celebration only causes additional Trade per tile,
   same as civ3. Foodbox readjusted to keep a constant city growth.
@@ -130,8 +130,8 @@ CORE CHANGES:
 - Increased AI_love for AI players, in order to reduce the amount of
   wars between them.
 
-OPTIONAL RULES:
----------------
+OPTIONAL RULES
+--------------
 
 - Every player starts with 1 free Tech, 1 Settler, 1 Worker,
   1 Explorer, and 1 Diplomat. ('startunits', 'techlevel')
@@ -155,8 +155,8 @@ OPTIONAL RULES:
   the target government. ('revolentype')
 
 
-FOODBOX:
---------
+FOODBOX
+-------
 
 - City FoodBox Size uniformed to even the population wasted when you
   build Settlers at larger cities (similar to civ3).
@@ -205,8 +205,8 @@ TIP: Optimal production of Settlers occurs at any city with Pop <= 4, or
 cities with Granary and Pop <= 6.
 
 
-TERRAIN:
---------
+TERRAIN
+-------
 
 - Jungles receive +1 Shield (1/1/0). Swamps can be irrigated for +1 Food
   (to 2/0/0). Tundras can be mined for +1 Shield (instead of irrigated)
@@ -283,8 +283,8 @@ Grassland. The best defense comes from cities placed on Hills with
 river.
 
 
-DEFENSE:
---------
+DEFENSE
+-------
 
 - Halved the terrain defense bonuses, now more similar to civ3 values:
 
@@ -295,6 +295,7 @@ Forest/Jungle/Swamp      +25%     +50%
 Hills                    +50%     +100%
 Mountains                +100%    +200%
 River                    +25%     +50%
+Fortified                +50%     (=)
 ======================== ======== =====
 
 ======================== ======== =====
@@ -303,7 +304,6 @@ VETERAN                  NEW      OLD
 Veteran                  +50%     (=)
 Hardened                 +75%     (=)
 Elite                    +100%    (=)
-Fortified                +50%     (=)
 ======================== ======== =====
 
 (only Land and Big Land units can fortify; inside cities, they are
@@ -356,45 +356,45 @@ Total Defense = (UNIT DEFENSE) * (100+TERRAIN)/100 * (100+RIVER)/100
 
 
 EXAMPLE: Riflemen fortified in a fortress, on mountains, with a river,
-         will get a total defense of 30 against land attacks:
+will get a total defense of 30 against land attacks:
 
-         Riflemen: defense 4
-         Fortified (+50%): 4 + 2 = 6
-         In Fortress (+100%):      6 + 6 = 12
-         On Mountains (+100%):             12 + 12 = 24
-         With River (+25%):                          24 + 6 = 30.
+- Riflemen: defense 4
+- Fortified (+50%): 4 + 2 = 6
+- In Fortress (+100%):      6 + 6 = 12
+- On Mountains (+100%):             12 + 12 = 24
+- With River (+25%):                          24 + 6 = 30.
 
 EXAMPLE: Riflemen in a size 9 city, with walls, on hills,
-         will get a total defense of 27 against land attacks:
+will get a total defense of 27 against land attacks:
 
-         Fortified (+50%): 4 + 2 = 6
-         On Hills (+50%):          6 + 3 = 9
-         In City with Walls (+200%):       9 + 18 = 27.
+- Fortified (+50%): 4 + 2 = 6
+- On Hills (+50%):          6 + 3 = 9
+- In City with Walls (+200%):       9 + 18 = 27.
 
 
-GOVERNMENTS:
-------------
+GOVERNMENTS
+-----------
 
-==================== ========== ========== ======== ========= ======== ========= ========= ========= ==========
-Item                 Anarchy    Tribal     Despot   Monarchy  Funda    Republic  Democracy Fed       Communism
-==================== ========== ========== ======== ========= ======== ========= ========= ========= ==========
-Tax/Lux/Sci Rate     0          60         60       70        70       80        90        90        80
-Output per tile (#)  -1(if>2)   -1(if>2)   -1(if>2) 0         0        +1Trade   +1Trade   0         0
-Celebration Bonus    (no -1)    (no -1)    (no -1)  (+1Trade) 0        (+1Trade) (+1Trade) (+1Trade) 0
-Unit Upkeep          Shield     Shield     Gold     Gold      Gold(x2) Shield    Gold(x2)  Gold(x2)  Shield
-Free Units           2 / 2      2 / 2      2 / 2    3 / 3     2 / 2    1 / 1     1 / 1     2 / 2     3 / 3
-Mil Unhappiness      0          0          0        -1        -1       -1        -2        -1        -1
-Martial Law          +1         0          +1       +1        0        0         0         0         +2
-Civil war %          99         90         80       70        60       40        30        20        50
-Empire Size          0          /12        /10      /14       /20      /16       /32       /24       /28
-Special 1            +NoUpkeep  +Veteran   +75%Gold +50%Gold  +Tithes  +Bribe    +Brib/Sub +Subvert  +NoUpkeep
-Special 2            -50%Lux    (Land/Mil) (Palace) (Palace)  -50%Sci  -Revolt   -Rev/Sen  -Senate   (Cost=1)
-Special 3            -NoTaxes   +Content   n/a      n/a       +Fanatic n/a       +Partisan +Luxury   +Partisan
-Base Corruption      0%         30%        20%      10%       15%      25%       5%        0%        30%
-Corrup by Dist ^     1          1          1        1         1        1         1         0         0
-Base Waste           30%        0%         10%      20%       15%      5%        25%       30%       0%
-Waste by Dist ^^     1          1          1        1         1        1         1         0         0
-==================== ========== ========== ======== ========= ======== ========= ========= ========= ==========
+==================== ========== ========== ========= ========== ======== ========== ========== ========== ==========
+Item                 Anarchy    Tribal     Despot    Monarchy   Funda    Republic   Democracy  Fed        Communism
+==================== ========== ========== ========= ========== ======== ========== ========== ========== ==========
+Max Tax/Lux/Sci Rate 0          60         60        70         70       80         90         90         80
+Output per tile (#)  -1 (if>2)  -1 (if>2)  -1 (if>2) 0          0        +1 Trade   +1 Trade   0          0
+Celebration Bonus    (no -1)    (no -1)    (no -1)   (+1 Trade) 0        (+1 Trade) (+1 Trade) (+1 Trade) 0
+Unit Upkeep          Shield     Shield     Gold      Gold       Gold(x2) Shield     Gold(x2)   Gold(x2)   Shield
+Free Units           2 / 2      2 / 2      2 / 2     3 / 3      2 / 2    1 / 1      1 / 1      2 / 2      3 / 3
+Mil Unhappiness      0          0          0         -1         -1       -1         -2         -1         -1
+Martial Law          +1         0          +1        +1         0        0          0          0          +2
+Civil war %          99         90         80        70         60       40         30         20         50
+Empire Size          0          /12        /10       /14        /20      /16        /32        /24        /28
+Special 1            +NoUpkeep  +Veteran   +75% Gold +50% Gold  +Tithes  +Bribe     +Brib/Sub  +Subvert   +NoUpkeep
+Special 2            -50% Lux   (Land/Mil) (Palace)  (Palace)   -50% Sci -Revolt    -Rev/Sen   -Senate    (Cost=1)
+Special 3            -NoTaxes   +Content   n/a       n/a        +Fanatic n/a        +Partisan  +Luxury    +Partisan
+Base Corruption      0%         30%        20%       10%        15%      25%        5%         0%         30%
+Corrup by Dist ^     1          1          1         1          1        1          1          0          0
+Base Waste           30%        0%         10%       20%        15%      5%         25%        30%        0%
+Waste by Dist ^^     1          1          1         1          1        1          1          0          0
+==================== ========== ========== ========= ========== ======== ========== ========== ========== ==========
 
 
 Legend:
@@ -468,8 +468,8 @@ could be used at any technological age. The choice depends on the
 role of your civilization.
 
 
-TECHS:
-------
+TECHS
+-----
 
 - Added new wonders: Mausoleum of Mausolos (available with Ceremonial
   Burial), and Statue of Zeus (available with Polytheism). Oracle of
@@ -550,8 +550,8 @@ before you can research the modern ones, but overall, researching paths
 are similar to classic tree.
 
 
-BUILDINGS:
-----------
+BUILDINGS
+---------
 
 - Aqueduct is cheaper near rivers or lakes. Sewer System is needed to
   grow larger than pop 16 (instead of 12). Each one reduces the chances
@@ -621,8 +621,8 @@ Solar plant    320   4        +25%/+50%   25% (0%)
 ============== ===== ======== =========== ===================
 
 
-UNITS:
-------
+UNITS
+-----
 
 - Settlers pop cost increased to 2 and removed the upkeep. New unit
   Migrants available to work, or to migrate 1 pop, they can't create
@@ -794,8 +794,8 @@ Legend:
   infantry, air units, and all units that had 2 firepower.
 
 
-WONDERS:
---------
+WONDERS
+-------
 
 Readjusted effects for most wonders. Restored all civ2 costs.
 
@@ -919,8 +919,8 @@ built, every nation with nuclear power receives the Has_Senate effect,
 until the Apollo Program is finished.
 
 
-THANKS:
--------
+THANKS
+------
 
 To every people who collaborated to create this wonderful Freeciv21 game.
 Specially to those who programmed the Ruleset modding capabilities and

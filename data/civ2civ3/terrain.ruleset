@@ -1699,7 +1699,7 @@ Roads allow your land units to move more quickly, and allow wheeled\
 On some terrains, roads also provide a trade bonus.\
 "), _("\
 Building roads on river tiles requires knowledge of Bridge Building.\
- City center tiles automatically get roads, even on a river tile.\
+ City center tiles automatically get roads (even on a river tile).\
 ")
 
 [extra_railroad]
@@ -1802,8 +1802,8 @@ Any land terrain type may have a River on it. A River adds 1\
  trade to the resources produced by that tile. It also increases a\
  tile's defense factor by 25%.\
 "), _("\
-Land units may move along rivers for faster travel, but not diagonally.\
- Triremes may also travel up rivers, although later boats cannot.\
+Land units may move along rivers for faster travel (but not diagonally).\
+ Triremes may also travel up rivers (although later boats cannot).\
 "), _("\
 Roads and railroads can only be built on River tiles if your\
  civilization has learned the Bridge Building technology. Fortresses and\
