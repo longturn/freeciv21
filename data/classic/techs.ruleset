@@ -4,11 +4,11 @@
 ; for other "maintenance".  If you want to make custom changes,
 ; you should create a new datadir subdirectory and copy this file
 ; into that directory, and then modify that copy.  Then use the
-; command "rulesetdir <mysubdir>" in the server to have freeciv
+; command "rulesetdir <mysubdir>" in the server to have Freeciv21
 ; use your new customized file.
 
 [datafile]
-description="Classic technology data for Freeciv (as Civ2, minus a few)"
+description="Classic technology data for Freeciv21 (as Civ2, minus a few)"
 options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
@@ -587,7 +587,7 @@ req2     = "Electronics"
 flags    = ""
 graphic     = "a.nuclear_power"
 graphic_alt = "-"
-helptext = _("Gives sea units one extra move.")
+helptext = _("Gives sea units one extra movepoint.")
 
 [advance_philosophy]
 name     = _("Philosophy")
