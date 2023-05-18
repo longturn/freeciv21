@@ -16,8 +16,8 @@ this file.
 
 
 
-Changes compared to the classic ruleset
----------------------------------------
+Changes Compared to the Classic Ruleset
+=======================================
 
 - Plagues are activated. Temples, Aqueducts, Sewer Systems reduce the
   chance of plague in a city, as do the new Hospital and Genetic Laboratory
@@ -64,6 +64,7 @@ Changes compared to the classic ruleset
     - radius 2 (radius_sq =  5): city size 3
     - radius 3 (radius_sq = 10): city size 10 + Railroad
     - radius 4 (radius_sq = 17): city size 30 + Railroad + Mass Transit + Super Highway
+
 
     The vision range of the city is adapted accordingly.
 
@@ -129,8 +130,8 @@ Changes compared to the classic ruleset
   one has never met. It grants embassy with already met players only.
 
 
-Use the new ruleset
--------------------
+Use the New Ruleset
+===================
 
 To play a game with the experimental rules, start the server with:
 
