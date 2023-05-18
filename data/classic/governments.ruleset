@@ -4,14 +4,14 @@
 ; for other "maintenance".  If you want to make custom changes
 ; you should create a new datadir subdirectory and copy this file
 ; into that directory, and then modify that copy.  Then use the
-; command "rulesetdir <mysubdir>" in the server to have freeciv
+; command "rulesetdir <mysubdir>" in the server to have Freeciv21
 ; use your new customized file.
 
-; Note that the freeciv AI may not cope well with anything more
+; Note that the Freeciv21 AI may not cope well with anything more
 ; than minor changes.
 
 [datafile]
-description="Classic governments data for Freeciv (as Civ2, minus fundamentalism)"
+description="Classic governments data for Freeciv21 (as Civ2, minus fundamentalism)"
 options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
@@ -92,7 +92,7 @@ ruler_male_title = _("Chief %s")
 ruler_female_title = _("?female:Chief %s")
 
 helptext = _("\
-Under Despotism, you are the absolute ruler of your people.  Your\
+Under Despotism, you are the absolute ruler of your people. Your\
  control over your citizens is maintained largely by martial law.\
 "), _("\
 Despotism suffers the highest level of corruption of all\
@@ -136,12 +136,12 @@ ruler_female_title = _("?female:Comrade %s")
 
 helptext = _("\
 A Communist government is based on the ideal that all people are\
- equal.  All goods are owned by the state, rather than by private\
- citizens.  Communism gives a balance between military and commercial\
+ equal. All goods are owned by the state, rather than by private\
+ citizens. Communism gives a balance between military and commercial\
  styles of government.\
 "), _("\
 Under Communism, corruption does not vary by distance from\
- the capital; all cities (including the capital) have a modest amount\
+ the capital. All cities (including the capital) have a modest amount\
  of corruption.\
 ")
 
@@ -160,9 +160,9 @@ ruler_female_title = _("?female:President %s")
 
 helptext = _("\
 Under a Republican government, citizens hold an election to select a\
- representative who will govern them; since elected leaders must\
+ representative who will govern them. Since elected leaders must\
  remain popular to remain in control, citizens are given a greater\
- degree of freedom.  Citizens under the Republic become unhappy\
+ degree of freedom. Citizens under the Republic become unhappy\
  easily, but the self-sufficiency of your citizens allows high levels\
  of trade.\
 ")
@@ -183,7 +183,7 @@ ruler_female_title = _("?female:Prime Minister %s")
 helptext = _("\
 Under Democracy, citizens govern directly by voting on issues.\
  Democracy offers the highest possible level of trade, but also\
- offers the most potential for unhappiness.  There is no corruption\
+ offers the most potential for unhappiness. There is no corruption\
  during Democracy, but citizens become very upset during\
  wars.\
 ")

@@ -4,14 +4,14 @@
 ; for other "maintenance".  If you want to make custom changes,
 ; you should create a new datadir subdirectory and copy this file
 ; into that directory, and then modify that copy.  Then use the
-; command "rulesetdir <mysubdir>" in the server to have freeciv
+; command "rulesetdir <mysubdir>" in the server to have Freeciv21
 ; use your new customized file.
 
-; Note that the freeciv AI may not cope well with anything more
+; Note that the Freeciv21 AI may not cope well with anything more
 ; than minor changes.
 
 [datafile]
-description="Classic tile_type data for Freeciv"
+description="Classic tile_type data for Freeciv21"
 options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
@@ -433,10 +433,10 @@ color.g              = 232
 color.b              = 232
 helptext             = _("\
 Glaciers are found only in the most northerly or southerly\
- reaches of the world.  They are very cold, and hence difficult to\
+ reaches of the world. They are very cold, and hence difficult to\
  work with.\
 "), _("\
-Oil wells can be built when Refining is known.\
+Oil wells can be built when Refining is discovered.\
 ")
 
 [terrain_desert]
@@ -486,7 +486,7 @@ helptext             = _("\
 Deserts are regions of extreme dryness, making agriculture and\
  trade very difficult.\
 "), _("\
-Oil wells can be built when Construction is known.\
+Oil wells can be built when Construction is discovered.\
 ")
 
 [terrain_forest]
@@ -1184,10 +1184,11 @@ irrigation system, must share an edge (not just a corner) with the \
 target tile. However, once irrigated, land remains so even if the \
 water source is removed.\
 "), _("\
-Building irrigation on a tile with a mine or oil well will destroy it.\
+Building irrigation on a tile with a mine or oil well will destroy it\
+ the mine or oil well.\
 "), _("\
 City center tiles get their terrain's irrigation bonus automatically, \
-if there is no conflicting mine or oil well on the tile; however, \
+if there is no conflicting mine or oil well on the tile. However, \
 this does not make cities count as a water source for further \
 irrigation. Irrigation can be built on the city tile simply to allow \
 building further irrigation elsewhere, but will not give the tile any \
@@ -1216,7 +1217,7 @@ conflicts      = "Irrigation", "Farmland"
 helptext       = _("\
 Mines can be built on some types of terrain, which increases the \
 number of production points produced by that tile. Hills get an extra \
-3 production points per tile; other terrains get 1 extra production \
+3 production points per tile and other terrains get 1 extra production \
 point.\
 "), _("\
 Building a mine on an irrigated tile will destroy the irrigation.\
@@ -1288,19 +1289,19 @@ Industrialization, and Automobile, Mass Production, and Plastics make \
 this worse. Building a Mass Transit in a city eliminates the \
 population's contribution to pollution.\
 "), _("\
-The contribution of these factors can be seen in the city dialog; once \
+The contribution of these factors can be seen in the city dialog. Once \
 it exceeds a threshold, the excess is the percent chance of pollution \
 appearing each turn.\
 "), _("\
 When an unused tile becomes polluted, there is the temptation to avoid \
-the effort of cleaning it; but the spread of pollution has far more \
+the effort of cleaning it, but the spread of pollution has far more \
 terrible results than the immediate economic impact -- every polluted \
 tile increases the chance of global warming. Each time global warming \
 advances, the entire world loses coastal land to the sea and to jungles \
 and swamps, and inland tiles are lost to desert. This tends to \
 devastate cities and leads to global impoverishment.\
 "), _("\
-The risk of global warming is cumulative; the longer polluted tiles \
+The risk of global warming is cumulative. The longer polluted tiles \
 are left uncleaned, the higher the risk becomes, and the risk can \
 linger for some time even after all pollution has been cleaned. If a \
 long time passes with an elevated risk of warming, its effects will be \
@@ -1361,7 +1362,7 @@ conflicts      = "Mine", "Oil Well"
 ; /* xgettext:no-c-format */
 helptext       = _("\
 Once Refrigeration is known, irrigation systems can be upgraded to \
-farmland by irrigating them a second time; if the city working the tile \
+farmland by irrigating them a second time. If the city working the tile \
 has a Supermarket, a farmland tile provides 50% more food. (Hence, \
 farmland is only useful on tiles which with irrigation yield 2 or more \
 food.)\
@@ -1426,11 +1427,9 @@ flags          = "NoStackDeath"
 helptext       = _("\
 Fortresses improve defense for land units outside cities. Among other \
 effects, a land unit remaining in a fortress for a whole turn without \
-moving recovers a quarter of its hit points. With Invention, fortresses \
+moving recovers a quarter of its hitpoints. With Invention, fortresses \
 gain watchtowers from which land units can see further afield.\
-"),
-; /* xgettext:no-c-format */
-_("\
+"), _("\
 Diplomatic units get a 25% defense bonus in diplomatic fights.\
 ")
 
@@ -1575,7 +1574,7 @@ bridged_over   = "River"
 helptext       = _("\
 Once you learn the Railroad technology, you may upgrade your roads\
  to railroads. Units expend no movement points when moving along a\
- railroad; you may ride a railroad indefinitely. (As may your enemies!)\
+ railroad. You may ride a railroad indefinitely. (As may your enemies!)\
 "), _("\
 A railroad also increases any shield resources produced by a tile.\
  A tile whose road is upgraded to a railroad retains any trade bonus\
@@ -1602,9 +1601,9 @@ defense_bonus  = 50
 native_to      = "Land"
 ; /* xgettext:no-c-format */
 helptext       = _("\
-Any land terrain type may have a River on it.  A River adds 1\
- trade to the resources produced by that tile.  It also increases a tile's\
- defense factor by 50%.  Finally, land units may move along a River (but\
+Any land terrain type may have a River on it. A River adds 1\
+ trade to the resources produced by that tile. It also increases a tile's\
+ defense factor by 50%. Finally, land units may move along a River (but\
  not diagonally) for fast travel.\
 "), _("\
 Roads and railroads can only be built on River tiles if your\
