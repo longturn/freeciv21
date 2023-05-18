@@ -1,12 +1,11 @@
-----------------------------------------------------------------------
-                   Experimental Freeciv Ruleset
-----------------------------------------------------------------------
+Experimental Freeciv21 Ruleset
+------------------------------
 
-This ruleset tries to use the new features available in freeciv that
+This ruleset tries to use the new features available in Freeciv21 that
 are not yet in use in default rulesets. It is based on the classic ruleset.
 The changes can be extracted by
 
-#> diff -ur data/classic/ data/experimental/
+$ diff -ur data/classic/ data/experimental/
 
 If the changes in this ruleset result in a working game (especially with
 regard to the AI) they could be included in the default ruleset for next
@@ -17,20 +16,20 @@ this file.
 
 
 
-1. Changes compared to the classic ruleset
-   ---------------------------------------
+Changes compared to the classic ruleset
+---------------------------------------
 
 - Plagues are activated. Temples, Aqueducts, Sewer Systems reduce the
   chance of plague in a city, as do the new Hospital and Genetic Laboratory
   buildings. The effect of Aqueducts is reduced after Industrialization
-  is discovered. Building the wonder 'Cure for Cancer' further reduces
+  is discovered. Building the wonder "Cure for Cancer" further reduces
   the possibility of plague for your entire empire.
 
 - The Genetic Laboratory increases the food output by 25% if the city
   size exceeds 20.
 
 - Migration is activated and locked by the ruleset. Migration effects for
-  the different governments are defined; cities belonging to more
+  the different governments are defined. Cities belonging to more
   representative governments are more attractive for cross-border migration.
 
 - After The Corporation is researched, the upkeep for most modern military
@@ -42,8 +41,9 @@ this file.
 - A new unit class Big Land is introduced, comprising all "siege" units
   (Catapult, Cannon etc) and Freight. Units of this type are restricted
   to flat terrain and cannot move into difficult terrain such as hills
-  and forest, unless roads are built; nor can they ride maglevs (they
+  and forest, unless roads are built. Nor can they ride maglevs (they
   ride the railroad instead).
+
   Freight does not obsolete Caravan so player does not lose ability
   to build units to establish traderoutes to remote cities.
 
@@ -59,13 +59,15 @@ this file.
   apprentice (1x) -> journeyman (1.25x) -> master (1.5x)
 
 - Activate variable city radii:
-    radius 1 (radius_sq =  2): start
-    radius 2 (radius_sq =  5): city size 3
-    radius 3 (radius_sq = 10): city size 10 + Railroad
-    radius 4 (radius_sq = 17): city size 30 + Railroad + Mass Transit +
-                               Super Highway
-  The vision range of the city is adapted accordingly.
-  The city graphics from the tileset change with the city radius.
+
+    - radius 1 (radius_sq =  2): start
+    - radius 2 (radius_sq =  5): city size 3
+    - radius 3 (radius_sq = 10): city size 10 + Railroad
+    - radius 4 (radius_sq = 17): city size 30 + Railroad + Mass Transit + Super Highway
+
+    The vision range of the city is adapted accordingly.
+
+    The city graphics from the tileset change with the city radius.
 
 - The number of build slots for units is increased at radius 3 and 4.
 
@@ -74,10 +76,10 @@ this file.
   and if not supplied, some techs may be lost. (However, technology is not
   lost in this way during periods of Anarchy.)
 
-- Activate server setting 'foggedborders': your view of foreign borders is
+- Activate server setting "foggedborders": your view of foreign borders is
   not updated if you can't currently see the territory.
 
-- Activated 'techlost_recv' and 'techlost_donor': whenever technologies are
+- Activated "techlost_recv" and "techlost_donor": whenever technologies are
   transferred between civilizations, there is a small chance that each of
   the parties will forget the technology in question.
 
@@ -93,7 +95,7 @@ this file.
 - Custom policy "Personal Freedom". You can trade off a science bonus
   against extra unhappiness from your aggressive military units.
 
-- There's only three disaster types: Earthquake and Fire, which can both
+- There is only three disaster types: Earthquake and Fire, which can both
   destroy a building in a city, and Industrial Accident (with Mfg. Plant),
   which causes pollution and population loss.
 
@@ -113,7 +115,7 @@ this file.
 - Several achievements are enabled.
 
 - Some buildings accumulate culture. Cultural victory is enabled by
-  default (can be changed with 'victories' setting).
+  default (can be changed with "victories" setting).
 
 - An explorer can establish an embassy to another player
 
@@ -127,20 +129,24 @@ this file.
   one has never met. It grants embassy with already met players only.
 
 
-2. Use the new ruleset
-   -------------------
+Use the new ruleset
+-------------------
 
 To play a game with the experimental rules, start the server with:
-       ./fcser -r data/experimental.serv
+
+$ ./freeciv21-server -r data/experimental.serv
+
 or a single player game with
-       ./freeciv-gtk3 -r data/experimental.serv
+
+$ ./freeciv21-client -r data/experimental.serv
+
 (and any other command-line arguments you normally use)
 
-Start the client normally.  The client must be network-compatible
+Start the client normally. The client must be network-compatible
 (usually meaning the same or similar version) but otherwise nothing
 special is needed.
 
-Note that the Freeciv AI might not play as well with rules other
-than standard Freeciv.  The AI is supposed to understand and
+Note that the Freeciv21 AI might not play as well with rules other
+than standard Freeciv21. The AI is supposed to understand and
 utilize all sane rules variations, so please report any AI
 failures so that they can be fixed.

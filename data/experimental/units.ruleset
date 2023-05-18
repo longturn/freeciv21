@@ -6,7 +6,7 @@
 ; for other "maintenance".  If you want to make custom changes,
 ; you should create a new datadir subdirectory and copy this file
 ; into that directory, and then modify that copy.  Then use the
-; command "rulesetdir <mysubdir>" in the server to have freeciv
+; command "rulesetdir <mysubdir>" in the server to have Freeciv21
 ; use your new customized file.
 ;
 ; You should sort role units from worst to better, as often the best
@@ -18,7 +18,7 @@
 ; then the first unit with this role will be chosen.
 
 [datafile]
-description="Experimental unit data for Freeciv"
+description="Experimental unit data for Freeciv21"
 options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
@@ -591,11 +591,11 @@ Engineers are similar to Workers, but they work twice as fast and\
  on a tile surrounded by sufficient existing land). See the\
  Terrain Alterations section for more details.\
 "), _("\
-TIP 1:  Upgrade Workers to Engineers when possible, as Engineers\
+TIP 1: Upgrade Workers to Engineers when possible, as Engineers\
  require the same resources as ordinary Workers.\
 "), _("\
-TIP 2:  If you manage to build Leonardo's Workshop, research\
- Explosives before the Workshop becomes obsolete.  This way,\
+TIP 2: If you manage to build Leonardo's Workshop, research\
+ Explosives before the Workshop becomes obsolete. This way,\
  your Workers units will be upgraded for free.\
 ")
 
@@ -627,7 +627,7 @@ uk_gold       = 0
 flags         = ""
 roles         = "DefendOk", "DefendOkStartUnit", "FirstBuild"
 helptext      = _("\
-This unit may be built from the start of the game.  It is the\
+This unit may be built from the start of the game. It is the\
  weakest offensive unit.\
 ")
 
@@ -759,7 +759,8 @@ flags         = ""
 roles         = "DefendGood", "DefendGoodStartUnit", "FirstBuild"
 helptext      = _("\
 Equipped with long pikes, Pikemen replaces Phalanx\
- as the preferred city defender.\
+ as the preferred city defender. Mounted units have a\
+ disadvantage against Pikemen.\
 ")
 
 [unit_musketeers]
@@ -829,7 +830,7 @@ Partisans are guerilla fighters who are experts\
 "), _("\
 A number of Partisans are granted free when an enemy conquers your\
  city -- they automatically assume defensive positions in the\
- surrounding countryside -- but only under these conditions:\n\
+ surrounding countryside -- but only under these conditions:\n\n\
  - Guerilla Warfare must be known by at least one player.\n\
  - At least three quarters of the citizens must have your nationality.\n\
  - You must know about Communism and Gunpowder.\n\
@@ -896,7 +897,7 @@ uk_gold       = 0
 flags         = "Shield2Gold"
 roles         = "DefendGood", "DefendGoodStartUnit", "FirstBuild"
 helptext      = _("\
-Riflemen are World War-era infantry, very good\
+Riflemen are World War-era infantry and very good\
  at defending your cities.\
 ")
 
@@ -1363,7 +1364,8 @@ flags         = "AirAttacker", "Shield2Gold"
 roles         = ""
 helptext      = _("\
 Fighters are your first airborne units. They can\
- move anywhere and attack any unit.\
+ move anywhere and attack any unit. Fighters have a\
+ disadvantage againt Helicopters.\
 ")
 
 [unit_bomber]
@@ -1472,7 +1474,7 @@ flags         = "AirAttacker", "Shield2Gold"
 roles         = ""
 helptext      = _("\
 An improved Fighter, with improved attack and a higher movement\
- radius.\
+ radius. Stealth Fighters have a disadvantage againt Helicopters.\
 ")
 
 [unit_stealth_bomber]
@@ -1709,7 +1711,7 @@ roles         = "Hunter"
 helptext      = _("\
 An improved Ironclad, with better move rate and vision.\
 "), _("\
-TIP:  A very fast unit, which is very useful for hunting down enemy\
+TIP: A very fast unit, which is very useful for hunting down enemy\
  Transports.\
 ")
 
@@ -1777,7 +1779,8 @@ flags         = "BadCityDefender", "Shield2Gold"
 roles         = "DefendGood", "DefendGoodStartUnit"
 helptext      = _("\
 The AEGIS Cruiser is equipped with an advanced\
- defensive missile system.\
+ defensive missile system. Airborne units are at a\
+ disadvantage against AEGIS Cruisers.\
 ")
 
 [unit_battleship]
@@ -1880,7 +1883,7 @@ roles         = ""
 helptext      = _("\
 The Carrier is a mobile airport.\
 "), _("\
-TIP:  Guard Carriers with a handful of fast-moving ships and a\
+TIP: Guard Carriers with a handful of fast-moving ships and a\
  battleship, as losing a fully-equipped Carrier is VERY\
  painful and expensive.\
 ")
@@ -1950,7 +1953,7 @@ helptext      = _("\
 The Cruise Missile is a long-distance missile\
  that can strike deep into enemy territory.\
 "), _("\
-TIP:  A handful of these can successfully keep the waters around\
+TIP: A handful of these can successfully keep the waters around\
  your treasured homeland free of enemy ships.\
 ")
 
@@ -1997,18 +2000,18 @@ On impact, the blast will destroy any unit in an area 3 tiles wide\
  land tiles within the blast area are subject to nuclear fallout.\
 "), _("\
 Nuclear fallout reduces tile output and increases the risk of global\
- nuclear winter; see the help on Fallout.\
+ nuclear winter. See the help on Fallout.\
 "), _("\
-TIP 1:  Nuking the ocean will not generate fallout, and is a most\
+TIP 1: Nuking the ocean will not generate fallout, and is a most\
  effective (but expensive!!) way of getting rid of enemy\
  ships.\
 "), _("\
-TIP 2:  You may be involved in a situation where you've invaded an\
+TIP 2: You may be involved in a situation where you have invaded an\
  enemy country en masse, but the enemy cities are too strong.\
  Before using a Nuclear unit, assemble a gang of Settlers, Workers,\
  and/or Engineers next to the city and have them ready to fix\
  the fallout on the same turn it occurs!  This minimizes the\
- chance of nuclear winter.  Eco-friendly nukes!\
+ chance of nuclear winter. Eco-friendly nukes!\
 ")
 
 [unit_diplomat]
@@ -2055,7 +2058,7 @@ helptext      = _("\
 A Diplomat is an official that carries your dispatches and\
  is authorized to deal with foreign dignitaries. He may\
  also undertake various covert operations with the intent of\
- harming your opponents; Diplomats in your own cities defend\
+ harming your opponents. Diplomats in your own cities defend\
  them against such actions.\
 "), _("\
 Many covert actions may be attempted even in peacetime, but the more\
@@ -2064,7 +2067,7 @@ Many covert actions may be attempted even in peacetime, but the more\
 "), _("\
 If a foreign unit is alone on a tile, you may attempt to bribe it\
  with your Diplomat. By paying a sum of gold the unit will immediately\
- become yours; the exact sum depends on the status of the unit and\
+ become yours. The exact sum depends on the status of the unit and\
  that of the civilization owning it. However, units belonging to\
  Democratic governments cannot be bribed. Bribery when not at war\
  will cause a diplomatic incident.\
@@ -2111,7 +2114,7 @@ The actions available to Diplomats in a city are:\
  diplomatic incident.\
 "), _("\
 In some game strategies, hordes of Diplomats can be used to wreak\
- havoc on the enemy.  Little wonder that Diplomats are often\
+ havoc on the enemy. Little wonder that Diplomats are often\
  viewed with suspicion and fear!\
 "), _("\
 Diplomats built under a Communist government will start at the first\
@@ -2230,12 +2233,12 @@ Caravans can establish trade routes with your own cities or those of other\
 "), _("\
 Initially cities can support a maximum of two trade routes. Knowledge of\
  the technologies Magnetism and The Corporation each increase this limit\
- by one; knowing both allows cities to support four trade routes each.\
+ by one. Knowing both allows cities to support four trade routes each.\
 "), _("\
 Every Caravan that is used to build a wonder will add 50 shields\
  towards the production of the wonder.\
 "), _("\
-TIP:  You can stockpile a stack of Caravans in advance and bring\
+TIP: You can stockpile a stack of Caravans in advance and bring\
  them all into a city where you have started to build a wonder,\
  and finish it in only one turn!\
 ")
@@ -2344,9 +2347,9 @@ veteran_power_fact = 100
 veteran_move_bonus = 0
 roles         = "KingStartUnit"
 helptext      = _("\
-This is you. If you lose this unit, you lose the game. So don't.\
+This is you. If you lose this unit, you lose the game. So do not.\
 "), _("\
-Won't unleash barbarians from huts.\
+Will not unleash barbarians from huts.\
 ")
 
 [unit_barbarian_leader]
