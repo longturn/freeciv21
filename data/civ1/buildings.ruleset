@@ -337,7 +337,7 @@ The amount of stored food will be set to half full whenever a city\
 ; Dare I ask where this food comes from?? :-)
 _("\
 Famine can occur when food stock reaches zero due to a food deficit,\
- which a Granary merely delays. In which case it leads to the loss\
+ which a Granary merely delays. A food deficit leads to the loss\
  of any Settlers consuming food, or of city population if there are\
  none. Famine can also occur at any time due to random crop failure,\
  in which case it causes loss of population and all stored food.\
@@ -527,11 +527,11 @@ Makes a city the capital and the center of your government.\
  Corruption in other cities is related to how far away from the\
  capital they are, except when the government is Democracy or\
  Communism. On top of this, corruption in your capital itself is\
- half of what it would otherwise be, as if it had a Courthouse.\
+ half of what it would otherwise be (as if it had a Courthouse).\
 "), _("\
 The cost to enemy Diplomats of inciting a revolt in a city also\
- depends upon the city's distance from the capital, under all\
- forms of government. Your capital city itself cannot be incited\
+ depends upon the city's distance from the capital (under all\
+ forms of government). Your capital city itself cannot be incited\
  to revolt, and enjoys a bonus when enemy agents try to evade your\
  own agents stationed in the city, or sabotage your buildings.\
 "), _("\

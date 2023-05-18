@@ -79,9 +79,9 @@ sabotage	= 100
 sound		= "b_airport"
 sound_alt	= "b_generic"
 helptext	= _("\
-Allows a city to produce veteran air units, including helicopters and\
- missiles.\
- Also, damaged air units, including helicopters, which stay in\
+Allows a city to produce veteran air units (including helicopters) and\
+ missiles. \
+Also, damaged air units (including helicopters) which stay in\
  town for one full turn without moving are completely restored.\
 "), _("\
 Two cities with Airports can airlift one unit per turn.\
@@ -313,9 +313,9 @@ sabotage	= 100
 sound		= "b_colosseum"
 sound_alt	= "b_generic"
 helptext	= _("\
-Entertains the citizens of a city, making 3 unhappy citizens content. \
- Four after the discovery of Electronics. However, it does not\
- affect citizens made unhappy by military activity.\
+Entertains the citizens of a city, making 3 unhappy citizens \
+content (four after the discovery of Electronics). However, it \
+does not affect citizens made unhappy by military activity.\
 ")
 
 [building_courthouse]
@@ -625,8 +625,8 @@ Makes a city the capital and the center of your government.\
  Corruption and waste in other cities is related to how far away\
  from the capital they are, except when the government is Democracy or\
  Communism. On top of this, corruption and waste in your capital\
- itself is half of what it would otherwise be, as if it had a\
- Courthouse.\
+ itself is half of what it would otherwise be (as if it had a\
+ Courthouse).\
 "), _("\
 The cost to enemy Diplomats and Spies of inciting a revolt in a\
  city also depends upon the city's distance from the capital,\
@@ -790,7 +790,7 @@ sound		= "b_sam_battery"
 sound_alt	= "b_generic"
 helptext	= _("\
 Doubles the defense of all units inside the city when attacked by\
- aircraft. Does not include helicopters or missiles.\
+ aircraft (not including helicopters or missiles).\
 ")
 
 [building_sdi_defense]
@@ -811,7 +811,7 @@ sabotage	= 100
 sound		= "b_sdi_defense"
 sound_alt	= "b_generic"
 helptext	= _("\
-Protects a city and its environs, up to 2 tiles away, from attacks\
+Protects a city and its environs (up to 2 tiles away) from attacks\
  by other nations' Nuclear units. A Nuclear unit not owned by you or a\
  teammate which attacks a city with SDI Defense, or attacks a unit (or is\
  deliberately exploded) within range, is shot down and simply has no effect.\
@@ -1102,8 +1102,8 @@ helptext	= _("\
 The entire map becomes permanently visible to the player who owns it\
  -- the player always has up-to-date knowledge of all terrain and\
  cities, but not units, despite fog-of-war. It allows all players to\
- start building spaceship parts, assuming they have researched the\
- necessary technologies.\
+ start building spaceship parts (assuming they have researched the\
+ necessary technologies).\
 ")
 
 [building_asmiths_trading_co]
@@ -1447,7 +1447,7 @@ sound		= "w_lighthouse"
 sound_alt	= "w_generic"
 helptext	= _("\
 Gives all your sea units 1 additional movement point. Makes all your\
- new military sea units veterans, for all cities.\
+ new military sea units veterans (for all cities).\
 ")
 
 [building_magellans_expedition]
@@ -1604,7 +1604,7 @@ sound_alt	= "w_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
 Boosts science production in each city with a Library by 50%.\
- Counts as having a Research Lab in all of your cities.\
+ (Counts as having a Research Lab in all of your cities.)\
 ")
 
 [building_shakespeares_theatre]
@@ -1673,7 +1673,7 @@ sound		= "w_sun_tzus_war_academy"
 sound_alt	= "w_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
-All your new military land units become veterans, for all cities.\
+All your new military land units become veterans (for all cities).\
  The chance of a land unit becoming a veteran after a battle increases\
  from 50% to 100%.\
 ")
@@ -1725,7 +1725,7 @@ sabotage	= 0
 sound		= "w_womens_suffrage"
 sound_alt	= "w_generic"
 helptext	= _("\
-Counts as a Police Station in every city. That is, for each city, it\
+Counts as a Police Station in every city. This means, for each city, it\
  reduces the unhappiness caused by aggressively deployed military\
  units owned by that city by 2 under Democracy and 1 under Republic --\
  in other words, it neutralizes the unhappiness caused by a single\
