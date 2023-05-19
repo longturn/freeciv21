@@ -4,14 +4,14 @@
 ; for other "maintenance".  If you want to make custom changes,
 ; you should create a new datadir subdirectory and copy this file
 ; into that directory, and then modify that copy.  Then use the
-; command "rulesetdir <mysubdir>" in the server to have freeciv
+; command "rulesetdir <mysubdir>" in the server to have Freeciv21
 ; use your new customized file.
 
-; Note that the freeciv AI may not cope well with anything more
+; Note that the Freeciv21 AI may not cope well with anything more
 ; than minor changes.
 
 [datafile]
-description="Royale tile_type data for Freeciv"
+description="Royale tile_type data for Freeciv21"
 options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
@@ -440,7 +440,7 @@ color.g              = 232
 color.b              = 232
 helptext             = _("\
 Glaciers are found only in the most northerly or southerly\
- reaches of the world.  They are very cold, and hence difficult to\
+ reaches of the world. They are very cold, and hence difficult to\
  work with.\
 ")
 
@@ -495,7 +495,7 @@ Deserts can be irrigated for a small amount of extra food, but without\
  an oasis or river, bare desert cannot be further improved with\
  farmland.\
 "), _("\
-Rivers bring fertile soil to deserts; on a desert river not already\
+Rivers bring fertile soil to deserts. On a desert river not already\
  benefiting from an oasis, building irrigation will yield two extra food\
  resources rather than the usual one.\
 ")
@@ -642,7 +642,7 @@ In addition to being amenable to agriculture, Hills are frequently\
  rich in resources.\
 "), _("\
 Cities built in hills are at risk of earthquakes, which can interrupt\
- a city's current project.\
+ a city's current production project.\
 ")
 
 [terrain_jungle]
@@ -1203,8 +1203,8 @@ hidden_by      = "Farmland"
 flags          = "IrrigationSource"
 helptext       = _("\
 Building an irrigation system on a suitable tile causes it to \
-produce some extra food each turn. Most tiles yield one extra food; \
-a desert with a river will yield two, if it is not already benefiting \
+produce some extra food each turn. Most tiles yield one extra food. \
+A desert with a river will yield two, if it is not already benefiting \
 from an oasis.\
 "), _("\
 Without knowledge of Electricity, irrigation requires a nearby source \
@@ -1214,10 +1214,11 @@ target tile. However, once irrigated, land remains so even if the \
 water source is removed. Once Electricity is known, any suitable \
 tile may be irrigated without a water source.\
 "), _("\
-Building irrigation on a tile with a mine or oil well will destroy it.\
+Building irrigation on a tile with a mine or oil well will destroy the \
+mine or oil well.\
 "), _("\
 City center tiles get their terrain's irrigation bonus automatically, \
-if there is no conflicting mine or oil well on the tile; however, \
+if there is no conflicting mine or oil well on the tile. However, \
 this does not make cities count as a water source for further \
 irrigation. Irrigation can be built on the city tile simply to allow \
 building further irrigation elsewhere, but will not give the tile any \
@@ -1248,7 +1249,7 @@ hidden_by      = "Oil Well"
 helptext       = _("\
 Mines can be built on some types of terrain, which increases the \
 number of production points produced by that tile. Hills and Mountains \
-get an extra 2 production points per tile; other terrains get 1 extra \
+get an extra 2 production points per tile. Other terrains get 1 extra \
 production point.\
 "), _("\
 Building a mine on an irrigated tile will destroy the irrigation.\
@@ -1344,25 +1345,25 @@ Dam, Nuclear Plant, or Solar Plant -- will reduce pollution from \
 production, as will a Recycling Center.\
 "), _("\
 The city's population starts adding to pollution with the Factory, \
-Super Highways, Offshore Platform, and Mfg. Plant buildings; each \
+Super Highways, Offshore Platform, and Mfg. Plant buildings. Each \
 building causes the population to add more to pollution. A Mass \
 Transit will counteract the pollution from two buildings in a city, \
 and the Eiffel Tower wonder will counteract the pollution from one \
 building in all the owner's cities.\
 "), _("\
-The contribution of these factors can be seen in the city dialog; once \
+The contribution of these factors can be seen in the city dialog. Once \
 it exceeds a threshold, the excess is the percent chance of pollution \
 appearing each turn.\
 "), _("\
 When an unused tile becomes polluted, there is the temptation to avoid \
-the effort of cleaning it; but the spread of pollution has far more \
+the effort of cleaning it, but the spread of pollution has far more \
 terrible results than the immediate economic impact -- every polluted \
 tile increases the chance of global warming. Each time global warming \
 advances, the entire world loses coastal land to the sea and to jungles \
 and swamps, and inland tiles are lost to desert. This tends to \
 devastate cities and leads to global impoverishment.\
 "), _("\
-The risk of global warming is cumulative; the longer polluted tiles \
+The risk of global warming is cumulative. The longer polluted tiles \
 are left uncleaned, the higher the risk becomes, and the risk can \
 linger for some time even after all pollution has been cleaned. If a \
 long time passes with an elevated risk of warming, its effects will be \
@@ -1425,12 +1426,12 @@ conflicts      = "Mine", "Oil Well"
 ; /* xgettext:no-c-format */
 helptext       = _("\
 Once Refrigeration is known, irrigation systems can be upgraded to \
-farmland by irrigating them a second time; if the city working the tile \
+farmland by irrigating them a second time. If the city working the tile \
 has a Supermarket, a farmland tile provides 50% more food. (Hence, \
 farmland is only useful on tiles which with irrigation yield 2 or more \
 food.)\
 "), _("\
-Farmland on a tile prevents any trade bonus from Super Highways.\
+NOTE: Farmland on a tile prevents any trade bonus from Super Highways.\
 "), _("\
 Like irrigation, farmland is incompatible with mines and oil wells.\
 ")
@@ -1531,9 +1532,7 @@ helptext       = _("\
 Fortresses are more permanent forts; construction on them can only begin \
 once the underlying fort is complete. Forts on River tiles cannot be \
 upgraded to Fortresses.\
-"),
-; /* xgettext:no-c-format */
-_("\
+"), _("\
 Units in a fortress receive extra defense (+100%) \
 against land units and boats, and do not count as aggressive if near a friendly city. \
 Any kind of land unit remaining in a fortress for a whole turn without \
@@ -1570,10 +1569,8 @@ conflicts      = "Pre-Fortress", "Fortress"
 flags          = "Refuel", "ParadropFrom"
 helptext       = _("\
 An Airbase provides permanent support for air units and missiles. Air units can land \
-and refuel on an Airbase and Paratroopers can be sent from Airbases. \ 
-"),
-; /* xgettext:no-c-format */
-_("\
+and refuel on an Airbase and Paratroopers can be sent from Airbases. \
+"), _("\
 Units in Airbases do not count as aggressive if near a friendly city, and can \
 see further afield. Also, air units recover more hit points (a third per \
 turn, the same as in a city without an Airport).\
@@ -1736,7 +1733,7 @@ bridged_over   = "River"
 helptext       = _("\
 With sufficient technology, you may build magnetic levitation systems\
  along your railroad routes. Land units expend no\
- movement points when riding a maglev; you may ride indefinitely.\
+ movement points when riding a maglev, you may ride indefinitely.\
  (As may your enemies!)\
 "), _("\
 Your regular railroads are still used to carry heavy Big Land and\

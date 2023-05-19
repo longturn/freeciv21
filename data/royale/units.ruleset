@@ -3,7 +3,7 @@
 ; for other "maintenance".  If you want to make custom changes,
 ; you should create a new datadir subdirectory and copy this file
 ; into that directory, and then modify that copy.  Then use the
-; command "rulesetdir <mysubdir>" in the server to have freeciv
+; command "rulesetdir <mysubdir>" in the server to have Freeciv21
 ; use your new customized file.
 ;
 ; You should sort role units from worst to better, as often the best
@@ -15,7 +15,7 @@
 ; then the first unit with this role will be chosen.
 
 [datafile]
-description="Royale unit_type data for Freeciv"
+description="Royale unit_type data for Freeciv21"
 options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
@@ -643,7 +643,7 @@ flags         = "Settlers", "Cant_Fortify", "NonMil", "HasNoZOC", "Airbase"
 roles         = "Settlers", "WorkerStartUnit"
 helptext      = _("\
 The original workers are those you start the game with. \
-You can't build original workers. While the original workers have less moves compared \
+You cannot build original workers. While the original workers have less moves compared \
 to the workers the original workers have one major advantage. The enemy is not able to \
 capture the original workers. Only the workers you can build can be captured. \
 Workers have the ability to improve terrain tiles. See the help on \
@@ -759,7 +759,7 @@ uk_gold       = 1
 flags         = "Capturer"
 roles         = "DefendOk", "DefendOkStartUnit", "FirstBuild"
 helptext      = _("\
-This unit may be built from the start of the game.  It is the\
+This unit may be built from the start of the game. It is the\
  weakest offensive unit.\
 ")
 
@@ -854,7 +854,7 @@ uk_gold       = 1
 flags         = "Capturer"
 roles         = "DefendOk", "DefendOkStartUnit", "BarbarianBuild", "BarbarianSea"
 helptext      = _("\
-Legions are heavily armed and well disciplined infantry\
+Swordsmen are heavily armed and well disciplined infantry\
  units with an excellent offensive value.\
 ")
 
@@ -956,7 +956,7 @@ uk_gold       = 1
 flags         = "Capturer"
 roles         = "DefendGood", "DefendGoodStartUnit", "FirstBuild"
 helptext      = _("\
-Riflemen are World War-era infantry, very good\
+Riflemen are World War-era infantry and very good\
  at defending your cities.\
 ")
 
@@ -989,14 +989,19 @@ uk_gold       = 1
 flags         = "Capturer"
 roles         = "DefendGood", "DefendGoodStartUnit", "FirstBuild"
 helptext      = _("\
-Infantry are modern version of infantry, relatively good\
- at defending your cities.\n\n
- Why: This unit is the end of an upgrade patch all the way from the warriors. It's the best non armored unit for defending your cities.\
- This was added so that the riflemen could be upgraded into something else than marines. Upgading those and the previous units\
- into marines created issues to the gameplay. The players were taking huge risks by building lots of cheap early units.\
- The plan was to uprade the early units at a later time for offensive purposes. Upgrading the early units into marines created situations where the game\
- ended (for some players) in a turn or two with no real warning. With this one as the final upgrade the problem is no more because of this upgrade path.\
- The infantry unit also allows an alternative research path because of the reasonably good defense value.\
+Infantry are modern version of Riflemen, relatively good \
+at defending your cities.\n\n
+Why: This unit is the end of an upgrade path all the way from Warriors. \
+It is the best non-armored unit for defending your cities. This was \
+added so that the Riflemen could be upgraded into something else than \
+Marines. Upgading those and the previous units into Marines created issues \
+to the gameplay. The players were taking huge risks by building lots of cheap \
+early units. The plan was to uprade the early units at a later time for o\
+ffensive purposes. Upgrading the early units into Marines created situations \
+where the game ended (for some players) in a turn or two with no real warning. \
+With this one as the final upgrade the problem is no more because of this upgrade \
+path. The Infantry unit also allows an alternative research path because of the \
+reasonably good defense value.\
 ")
 
 
@@ -1067,7 +1072,7 @@ roles         = "DefendGood", "DefendGoodStartUnit", "Partisan", "BarbarianTech"
 helptext      = _("\
 Partisans are guerilla fighters who are experts\
  at using the terrain to their advantage. Partisans\
- have no home city and units outside cities won't be\
+ have no home city and units outside cities will not be\
  killed if the city building them is lost. Since partisans\
  are citizens trained to fight the oppressor they can\
  once again become part of the normal population when\
@@ -1517,14 +1522,15 @@ flags         = "CityBuster", "Capturable"
 roles         = "AttackStrongStartUnit"
 helptext      = _("\
 Catapults are large rock-throwing machines of war.\
- They are very strong attackers - and even more powerful against cities - but equally weak\
- defenders and will need an escort to be effective.\
-  Unescorted catapults may be captured by the enemy. \
+ They are very strong attackers -- and even more powerful\
+ against cities -- but equally weak\
+ defenders and will need an escort to be effective. \
+Unescorted catapults may be captured by the enemy.\
 "), _("\
-While powerful, Catapults (and their successors) are bulky and awkward; \
-they require roads to move in rough terrain (mountains, swamps, and \
+While powerful, Catapults (and their successors) are bulky and awkward. \
+They require roads to move in rough terrain (mountains, swamps, and \
 jungles), are difficult to defend, and are too big for early ships \
-(Triremes and Caravels). Catapults and later siege units \ 
+(Triremes and Caravels). Catapults and later siege units \
 do not gain benefits from Barracks. \
 ")
 
@@ -1557,10 +1563,11 @@ flags         = "CityBuster", "Capturable"
 roles         = "AttackStrongStartUnit", "BarbarianTech", "BarbarianBuildTech"
 helptext      = _("\
 Cannons are large firearms that can fire heavy projectiles over long \
-distances. As with the catapults they replace, they are very strong \
-attackers - and even more powerful against cities - but equally weak defenders and will need an escort to be \
-effective, and have limited mobility. Cannon and other siege units do not gain benefits from Barracks. \
- Unescorted cannons may be captured by the enemy. \
+distances. As with the Catapults they replace, they are very strong \
+attackers -- and even more powerful against cities -- but equally weak \
+defenders and will need an escort to be effective, and have limited \
+mobility. Cannon and other siege units do not gain benefits from Barracks. \
+Unescorted cannons may be captured by the enemy. \
 ")
 
 [unit_artillery]
@@ -1592,9 +1599,10 @@ flags         = "CityBuster", "Capturable"
 roles         = "AttackStrongStartUnit"
 helptext      = _("\
 The artillery is an upgraded cannon. As with its predecessors, it is a \
-very strong attacker - and even more powerful against cities - but equally weak defender and will need an escort \
-to be effective, and has limited mobility. Artillery and other siege units do not gain benefits from Barracks. \
- Unescorted artilleries may be captured by the enemy. \
+very strong attacker -- and even more powerful against cities -- but \
+equally weak defender and will need an escort to be effective, and has \
+limited mobility. Artillery and other siege units do not gain benefits \
+from Barracks. Unescorted artilleries may be captured by the enemy.\
 ")
 
 [unit_howitzer]
@@ -1627,7 +1635,8 @@ roles         = "AttackStrongStartUnit"
 helptext      = _("\
 Howitzers are upgraded artillery with improved defensive as well as \
 offensive capabilities. However, they still have the limited mobility \
-of their predecessors. Like earlier siege units, Howitzers do not gain benefits from Barracks. \
+of their predecessors. Like earlier siege units, Howitzers do not gain \
+benefits from Barracks.\
 ")
 
 [unit_fighter]
@@ -1661,10 +1670,8 @@ roles         = "DefendOk", "DefendOkStartUnit"
 helptext      = _("\
 Fighters are your first airborne units. They can\
  move anywhere and attack any unit. The fighter will lose all moves when attacking another unit.\
-"),
-; /* xgettext:no-c-format */
-_("\
-Fighters are very good for securing access from nations with no air units. \
+"), _("\
+Fighters are very good for securing access from nations with no air units.\
 ")
 
 [unit_bomber]
@@ -1701,10 +1708,8 @@ Bombers are specialized airborne units that may\
 "), _("\
 A Bomber's attack against units on land is a bombard attack; against\
  units on water it has a regular attack.\
-"),
-; /* xgettext:no-c-format */
-_("\
-Bombers are very good for securing access from nations with no air units.  \
+"), _("\
+Bombers are very good for securing access from nations with no air units.\
 ")
 bombard_rate = 3
 
@@ -1738,14 +1743,14 @@ flags         = "OneAttack", "AirAttacker", "Bombarder", "HasNoZOC",
                 "Provoking"
 roles         = ""
 helptext      = _("\
-Helicopters can also transport one military land unit; while most troops \
+Helicopters can also transport one military land unit. While most troops \
 must load or unload in a city, airstrip, or airbase (and not in the field \
 or onboard a Carrier), units specializing in mobility (Paratroopers, \
 Alpine Troops, Marines, Partisans, and Fanatics) can embark or disembark \
 at any time.\
 "), _("\
 Unlike other aircraft, Helicopters are not required to return to a city, \
-base, or Carrier to refuel after a set number of turns; however, care \
+base, or Carrier to refuel after a set number of turns. However, care \
 must be exercised, due to the health they lose every turn.\
 ")
 bombard_rate = 2
@@ -1852,11 +1857,16 @@ The Trireme is your first boat unit. It can act\
  capabilities, and unlike later boats can travel on\
  rivers, but it may not enter deep ocean tiles.\
 "), _("\
-GUIDE: Since the triremes are able to travel on rivers, the players are able to use them for transporting military units \
-for attacking riverside cities deep inside homeland. The trireme can only transport smaller units but the barge (obsoleting the trireme) is able to move big siege units. \
-Because of the river travelling ability it is important to guard the coastal tiles with rivers on them. The units loaded on triremes \
-can't (only marines can) attack from the ship if the ship is on an ocean tile but if the ship moves on a river tile the land units will be able to attack and also \
-move without losing all of the move points when unloading from the trireme. The same thing applies to the barge unit.\
+GUIDE: Since the Triremes are able to travel on rivers, the players \
+are able to use them for transporting military units for attacking \
+riverside cities deep inside homeland. The Trireme can only transport \
+smaller units but the Barge (obsoleting the Trireme) is able to move \
+big siege units. Because of the river travelling ability it is important \
+to guard the coastal tiles with rivers on them. The units loaded on triremes \
+cannot attack (only Marines can) from the ship if the ship is on an ocean tile, \
+but if the ship moves on a river tile the land units will be able to attack and \
+also move without losing all of the movepoints when unloading from the trireme. \
+The same thing applies to the Barge unit.\
 ")
 
 
@@ -1889,8 +1899,8 @@ cargo         = "Land", "Small Land", "Merchant"
 flags         = "BadCityDefender", "HasNoZOC", "Settlers", "NonMil"
 roles         = "Ferryboat", "FerryStartUnit"
 helptext      = _("\
-The Barge can travel on ocean (but not deep ocean) and it can\
- clean up pollution. It's also able to\
+The Barge can travel on Ocean (but not Deep Ocean) and it can\
+ clean up pollution. It is also able to\
  move on rivers.\
 ")
 
@@ -1928,16 +1938,19 @@ The Longboat is your first deep ocean capable boat unit\
  that only can carry one Merchant or Small Land unit. It can act\
  as a transport ship and has rudimentary defensive\
  and offensive capabilities.\
- It's also unique and you can only have one Longboat\
+ It is also unique and you can only have one Longboat\
  at a time. The Longboat is heavier than the \
- trireme and this allows it to travel on deep ocean but \
+ Trireme and this allows it to travel on Deep Ocean but \
  not on rivers.\
 "), _("\
-GUIDE: The longboat is very useful for exploring the oceans and since it is able to carry settlers, it can be used for \
-establishing early colonies far away from home. You can only have one longboat at a time but this is not as limiting as you may think. \
-The longboat can take a settler to a far away land, unload the settler, build a city with it and then you can disband the longboat \
-in the new city. This way you can build a new longboat at home and will also get half of the shields back. Those can be used for \
-building a defensive unit or maybe a worker for the new colony city.\
+GUIDE: The longboat is very useful for exploring the oceans and since \
+it is able to carry Settlers, it can be used for establishing early \
+colonies far away from home. You can only have one Longboat at a time, \
+but this is not as limiting as you may think. The Longboat can take a \
+Settler to a far away land, unload the Settler, build a city with it and \
+then you can disband the Longboat in the new city. This way you can build a
+new Longboat at home and will also get half of the shields back. Those can be \
+used for building a defensive unit or maybe a Workers for the new colony city.\
 ")
 
 
@@ -1970,18 +1983,21 @@ cargo         = "Land", "Small Land", "Big Land", "Big Siege", "Merchant"
 flags         = "BadCityDefender", "Only_Native_Attack", "HasNoZOC"
 roles         = "Ferryboat"
 helptext      = _("\
- A much larger version of the caravel, it is most notorious \
+A much larger version of the Caravel, it is most notorious \
 because of heavy offensive capabilities. Much of the focus \
 on the design is on combat and because of that it \
 only has limited transport capacity even while it can also carry \
-those land units the regular caravel can't. In the early ages of exploration it's great for \
-keeping your coastals free of enemy ships.\
+those land units the regular Caravel cannot. In the early ages of \
+exploration it is great for keeping your coastals free of enemy ships.\
 "), _("\
-GUIDE: The Square-Rigged Caravel is able to carry only one unit but the unit can be one of the heavy ones. This allows \
-small and middle scale military operations that may surprise your enemy. A fleet of these ships is expensive to build but  \
-the surprise attack may cripple an unprepared nation. This is why a single ship loaded with a puny warrior may devastate the enemy economy. \
-The enemy can't see what is loaded on the ship and this is why bluffing with a this ship loaded with a weak unit may \
-make your enemy afraid and wasting resources on building defenses. \
+GUIDE: The Square-Rigged Caravel is able to carry only one unit but the \
+unit can be one of the heavy ones. This allows small and middle scale \
+military operations that may surprise your enemy. A fleet of these ships is \
+expensive to build, but the surprise attack may cripple an unprepared nation. \
+This is why a single ship loaded with a puny Warrior may devastate the enemy \
+economy. The enemy cannot see what is loaded on the ship and this is why \
+bluffing with this ship loaded with a weak unit may make your enemy afraid \
+and waste resources on building defenses.\
 ")
 
 [unit_caravel]
@@ -2115,9 +2131,8 @@ roles         = "Hunter"
 helptext      = _("\
 The Frigate is a specialized ship with a strong offensive value,\
  and can attack units on land, but it cannot transport units.\
- A flagship is more powerful, slightly faster and more expensive.\
- You can have only one unit of this type at a time\
- and it can't be bribed.\
+ A Flagship Frigate is more powerful, slightly faster and more expensive.\
+ You can have only one unit of this type at a time and it cannot be bribed.\
 ")
 
 
@@ -2188,7 +2203,7 @@ helptext      = _("\
 An improved Ironclad, with better move rate and vision.\
  Anti-submarine weapons double its defense against Submarines.\
 "), _("\
-TIP:  A very fast unit, which is very useful for hunting down enemy\
+TIP: A very fast unit, which is very useful for hunting down enemy\
  Transports and Submarines.\
 ")
 
@@ -2256,7 +2271,8 @@ flags         = "BadCityDefender"
 roles         = "DefendGood", "DefendGoodStartUnit"
 helptext      = _("\
 The AEGIS Cruiser is equipped with an advanced\
- defensive missile system.\
+ defensive missile system.  Airborne units are at a\
+ disadvantage against AEGIS Cruisers.\
 ")
 
 [unit_battleship]
@@ -2360,12 +2376,17 @@ roles         = "Hunter"
 helptext      = _("\
 Traveling under the surface of the ocean, Submarines have\
  a very high strategic value, but a weak defense if caught\
- off guard. The nuclear submarine is also able to carry missiles.\
+ off guard. The Nuclear Submarine is also able to carry <issiles.\
 "), _("\
-GUIDE:  The nuclear submarine is able to carry missile units. A chain of several nuclear submarines can be used to transport \
-nuclear missiles almost anywhere really fast. This makes them extremely dangerous. Like the non nuclear submarines these units use fuel and need refueling. \
-This is why you may need allies for refueling the submarines if they are far from home. Another option is to get remote colony cities you \
-can use as submarine bases. Since the nuclear submarines have no home city they can retaliate even if you lose all your coastal cities supporting your other naval units. \
+GUIDE: The Nuclear Submarine is able to carry Missile units. A chain \
+of several Nuclear Submarines can be used to transport Nuclear Missiles \
+almost anywhere really fast. This makes them extremely dangerous. Like \
+the Non-nuclear Submarines these units use fuel and need refueling. \
+This is why you may need allies for refueling the submarines if they are \
+far from home. Another option is to get remote colony cities you can use \
+as Submarine bases. Since the Nuclear Submarines have no home city they \
+can retaliate even if you lose all your coastal cities supporting your \
+other naval units.\
 ")
 
 [unit_carrier]
@@ -2403,7 +2424,7 @@ It can transport aircraft and military land units (not wheeled),\
  although land units cannot always be transferred to and from Helicopters\
  while onboard (see Helicopter help).\
 "), _("\
-TIP:  Guard Carriers with a handful of fast-moving ships and a\
+TIP: Guard Carriers with a handful of fast-moving ships and a\
  battleship, as losing a fully-equipped Carrier is VERY\
  painful and expensive.\
 ")
@@ -2449,8 +2470,6 @@ Transports can also clean pollution and fallout on water tiles, and \
 with knowledge of Miniaturization, may build oil platforms on deep ocean \
 tiles (for use by Offshore Platforms).\
 ")
-; FIXME: also cleans pollution/fallout in coastal cities (and faster
-; than Engineers)
 
 
 [unit_missile]
@@ -2484,15 +2503,19 @@ roles         = ""
 helptext      = _("\
 The Missile is a missile unit able to shoot down enemy air units.\
 "), _("\
-TIP:  A handful of these may successfully keep the air around\
+TIP: A handful of these may successfully keep the air around\
  your treasured homeland free of enemy air units.\
 "), _("\
-GUIDE: The missile units have poor vision so you may want to use fighters or other air units for scouting the area \
-before attacking. Few missile units can be used as the backbone of your air defense strategy before you get better \
-fighters. The enemy fighters and bombers will lose all moves when attacking so they will remain at the same place \
-until the next turn. This is when you can use the missiles for shooting down the sirplanes attacking you. \
-The nuclear submarines and carriers can also move the missile units. Use this to your advantage and you may need \
-less missiles to cover your air defense needs with the short range missile units. \
+GUIDE: The Missile units have poor vision so you may want to use \
+Fighters or other air units for scouting the area before attacking. \
+Few Missile units can be used as the backbone of your air defense \
+strategy before you get better Fighters. The enemy Fighters and \
+Bombers will lose all moves when attacking so they will remain at \
+the same place until the next turn. This is when you can use the \
+Missile for shooting down the airplanes attacking you. The Nuclear \
+Submarines and Carriers can also move the Missile units. Use this \
+to your advantage and you may need less Missiles to cover your air \
+defense needs with the short range missile units.\
 ")
 
 
@@ -2528,7 +2551,7 @@ helptext      = _("\
 The Cruise Missile is a long-distance missile\
  that can strike deep into enemy territory.\
 "), _("\
-TIP:  A handful of these can successfully keep the waters around\
+TIP: A handful of these can successfully keep the waters around\
  your treasured homeland free of enemy ships.\
 ")
 
@@ -2565,15 +2588,18 @@ helptext      = _("\
 The Intercontinental Missile is an ultra long-distance missile\
  that can strike extremely deep into enemy territory.\
 "), _("\
-TIP:  These extremely powerful missiles can\
+TIP: These extremely powerful missiles can\
  reach almost any place on the map.\
 "), _("\
-GUIDE: The missile units have poor vision so you may want to use fighters or other air units for scouting the area \
-before attacking. The intercontinental missiles can remain on air for several turns. Together with AWACS planes or maybe \
-hidden submarines (for vision) on the enemy coastal areas it is possible to launch a devastating attack virtually anywhere on \
-the map. Since the intercontinental missile can be killed by a missile unit, you may want to launch several of them at once \
-so that the enemy is not able to kill them all if the attack is noticed. This late game unit is also very good at sinking \
-the enemy ships. This is why extra caution is needed if your enemy is able to build these beasts.\
+GUIDE: The missile units have poor vision so you may want to use Fighters \
+or other air units for scouting the area before attacking. The Intercontinental \
+Missiles can remain in air for several turns. Together with AWACS planes or maybe \
+hidden Submarines (for vision) on the enemy coastal areas it is possible to launch \
+a devastating attack virtually anywhere on the map. Since the Intercontinental \
+Missile can be killed by a missile unit, you may want to launch several of them at once \
+so that the enemy is not able to kill them all if the attack is noticed. This late game \
+unit is also very good at sinking the enemy ships. This is why extra caution is needed \
+if your enemy is able to build these beasts.\
 ")
 
 
@@ -2626,17 +2652,16 @@ On impact, the blast will destroy any unit in an area 3 tiles wide\
  land tiles within the blast area are subject to nuclear fallout.\
  The tiles have 20% chance of losing infrastructure and\
  has a 20% chance of destroying city improvements. \
-(Improvements which have less than 100% sabotage chance aren't destroyed)\
+(Improvements which have less than 100% sabotage chance are not destroyed)\
 "), _("\
 Nuclear fallout reduces tile output and increases the risk of global\
- nuclear winter; see the help on Fallout.\
+ nuclear winter. See the help on Fallout.\
 "), _("\
-TIP:  You may be involved in a situation where you've invaded an\
+TIP: You may be involved in a situation where you have invaded an\
  enemy country en masse, but the enemy cities are too strong.\
  Before using a Nuclear unit, assemble a gang of cleanup units\
  next to the city and have them ready to fix the fallout on the\
  same turn it occurs! This minimizes the chance of nuclear winter.\
- Eco-friendly nukes!\
 ")
 
 
@@ -2688,7 +2713,7 @@ On impact, the blast will destroy any unit in an area 3 tiles wide\
  land tiles within the blast area are subject to nuclear fallout.\
  The tiles have 20% chance of losing infrastructure and \
  has a 20% chance of destroying city improvements. \
-(Improvements which have less than 100% sabotage chance aren't destroyed)\
+(Improvements which have less than 100% sabotage chance are not destroyed)\
 "), _("\
 Similar to pollution and global warming, the risk of global nuclear\
  winter increases with fallout. If nuclear winter occurs, terrain\
@@ -2696,14 +2721,12 @@ Similar to pollution and global warming, the risk of global nuclear\
  Migrants, Workers, and Engineers and (for fallout on water)\
  Transports can clean up nuclear fallout.\
 "), _("\
-TIP:  You may be involved in a situation where you've invaded an\
+TIP: You may be involved in a situation where you have invaded an\
  enemy country en masse, but the enemy cities are too strong.\
  Before using a Nuclear unit, assemble a gang of cleanup units\
  next to the city and have them ready to fix the fallout on the\
  same turn it occurs! This minimizes the chance of nuclear winter.\
- Eco-friendly nukes!\
 ")
-
 
 
 [unit_diplomat]
@@ -2751,7 +2774,7 @@ helptext      = _("\
 A Diplomat is an official that carries your dispatches and\
  is authorized to deal with foreign dignitaries. He may\
  also undertake various covert operations with the intent of\
- harming your opponents; Diplomats in your own cities defend\
+ harming your opponents. Diplomats in your own cities defend\
  them against such actions.\
 "), _("\
 Many covert actions may be attempted even in peacetime, but the more\
@@ -2762,7 +2785,7 @@ Many covert actions may be attempted even in peacetime, but the more\
 "), _("\
 If a foreign unit is alone on a tile, you may attempt to bribe it\
  with your Diplomat. By paying a sum of gold the unit will immediately\
- become yours; the exact sum depends on the status of the unit and\
+ become yours. The exact sum depends on the status of the unit and\
  that of the civilization owning it. However, units belonging to\
  Republican or Democratic governments cannot be bribed. Bribery when\
  not at war will cause a diplomatic incident.\
@@ -2771,7 +2794,7 @@ Diplomats can also perform a number of actions in another player's\
  city, although each Diplomat may attempt only one action. Most of\
  these actions have a chance of failure. Also, any enemy Diplomats or\
  Spies in the city will oppose hostile actions, as will the enemy Leader\
- in games with leaders; in this case, either your unit or the defending\
+ in games with leaders. In this case, either your unit or the defending\
  unit will die (if you go up against the Leader you will always die). If\
  the defending unit dies, you lose one movement point and may try again.\
 "), _("\
@@ -2803,7 +2826,7 @@ The actions available to Diplomats in a city are:\
  diplomatic incident.\
 "), _("\
 In some game strategies, hordes of Diplomats can be used to wreak\
- havoc on the enemy.  Little wonder that Diplomats are often\
+ havoc on the enemy. Little wonder that Diplomats are often\
  viewed with suspicion and fear!\
 "), _("\
 Diplomats built under Communist or Federation governments will\
@@ -2854,13 +2877,13 @@ roles         = "DiplomatStartUnit"
 helptext      = _("\
 A Spy is more skilled in the arts of espionage than her Diplomat predecessor.\
 "), _("\
-She can perform all the functions of the Diplomat; refer to the Diplomat\
+She can perform all the functions of the Diplomat. Refer to the Diplomat\
  entry for more details. Unlike a Diplomat, a Spy may also survive an\
  operation in a foreign city and become more experienced as a result.\
  Spies are also more effective than Diplomats at defending cities\
  against foreign Diplomats and Spies. \
 "), _("\
-A Spy can also be used to:\n\
+A Spy can also be used to:\n\n\
  - sabotage an enemy unit (reducing its hit points to half), if it is\
  alone on a tile and the players are at war;\n\
  - poison the water supply of an enemy city (reducing the population\
@@ -2923,18 +2946,18 @@ An Operative is more skilled in the arts of espionage than her Diplomat predeces
 "), _("\
 Operatives will be able to use many means for trasportation and \
 will ignore terrain when moving. \
-She can perform all the functions of the Spy; refer to the Diplomat\
- entry for more details. Unlike a Diplomat, an Operative may also survive an\
+She can perform all the functions of the Spy. Refer to the Spy and Diplomat\
+ entries for more details. Unlike a Diplomat, an Operative may also survive an\
  operation in a foreign city and become more experienced as a result.\
  Operatives are also more effective than Diplomats at defending cities\
  against foreign Diplomats, Spies and Operatives. If you steal a random tech, the\
- probability for succeeding is a probability between 0-1 and it's\
+ probability for succeeding is a probability between 0-1 and it is\
  typically something like 0.08- 0.12. However if you choose a tech to be stolen\
  the chance to succeed is much lower and is n*n instead of n. With the \
  probability of 0.08 the chance to succeed to steal a specific tech would be \
  a very low 0.0064 = one successful attempt out of every 156 attempts.\
 "), _("\
-An Operative can also be used to:\n\
+An Operative can also be used to:\n\n\
  - sabotage an enemy unit (reducing its hit points to half), if it is\
  alone on a tile and the players are at war;\n\
  - poison the water supply of an enemy city (reducing the population\
@@ -2994,19 +3017,22 @@ The actions available to Scribes in a foreign city are:\
   - \"Steal Technology\" / \"Industrial Espionage\": Your unit attempts to learn the secrets of a\
  random or chosen technology known to the city's owner but not to you. Trying to steal a \
  particular technology is much less likely to succeed than trying to steal a random \
- technology (\"At Scribe\'s discretion\"). Also, every time technology is stolen from a city, \
+ technology (\"At Scribe\'s discretion\"). Also, every time technology is stolen from a city,\
  the chances of further espionage attempts succeeding at that particular city go down. This\
  action may be attempted even when not at war, but will cause a\
  diplomatic incident.\
 "), _("\
 Like Spies, Scribes have small chance of returning after a successful mission, but are often \
-lost after a mission. Foreign Diplomats and Spies will defend against the Scribe as against other Spy actions.\
+lost after a mission. Foreign Diplomats and Spies will defend against the Scribe as against \
+other Spy actions.\
 "), _("\
-GUIDE: With no traditional tech trading the only way to get techs from other players is using the scribe unit. \
-Instead trading through diplomacy the players can trade or steal techs by using the scribe unit. \
-Diplomats, spies and operatives can't steal techs \
-but they can defend the cities against scribes trying to steal techs. This is why it's best to use those units for investigating the city \
-and also for killing the defending diplomats, spies and operatives. Only the scribe and other units like it are able to steal techs. 
+GUIDE: With no traditional tech trading the only way to get techs from other players is \
+using the Scribe unit. Instead trading through diplomacy the players can trade or steal \
+techs by using the Scribe unit. Diplomats, Spies, and Operatives cannot steal techs, \
+but they can defend the cities against Scribes trying to steal techs. This is why it is \
+best to use those units for investigating the city and also for killing the defending \
+Diplomats, Spies, and Operatives. Only the Scribe and other units like it are able to \
+steal techs.\
 ")
 
 
@@ -3050,21 +3076,22 @@ The Scholar wanders foreign lands seeking new knowledge to share in his native c
 The actions available to Scholar in a foreign city are:\
 "), _("\
   - \"Steal Technology\" / \"Industrial Espionage\": Your unit attempts to learn the secrets of a\
- random or chosen technology known to the city's owner but not to you. Trying to steal a \
- particular technology is much less likely to succeed than trying to steal a random \
- technology (\"At Scholar\'s discretion\"). Also, every time technology is stolen from a city, \
+ random or chosen technology known to the city's owner but not to you. Trying to steal a\
+ particular technology is much less likely to succeed than trying to steal a random\
+ technology (\"At Scholar\'s discretion\"). Also, every time technology is stolen from a city,\
  the chances of further espionage attempts succeeding at that particular city go down. This\
  action may be attempted even when not at war, but will cause a\
  diplomatic incident.\
 "), _("\
-Like Spies, Scholar have small chance of returning after a successful mission, but are often \
+Like Spies, Scholars have small chance of returning after a successful mission, but are often \
 lost after a mission. Foreign Diplomats and Spies will defend against the Scholar as against other Spy actions.\
 "), _("\
-GUIDE: With no traditional tech trading the only way to get techs from other players is using the Scholar or other tech trading unit. \
-Instead trading through diplomacy the players can trade or steal techs by using the Scholar unit. \
-Diplomats, spies and operatives can't steal techs \
-but they can defend the cities against Philosophers trying to steal techs. This is why it's best to use those units for investigating the city \
-and also for killing the defending diplomats, spies and operatives. Only the Scholar and other units like it are able to steal techs. 
+GUIDE: With no traditional tech trading the only way to get techs from other players is \
+using the Scholar or other tech trading unit. Instead trading through diplomacy the players \
+can trade or steal techs by using the Scholar unit. Diplomats, Spies, and Operatives cannot \
+steal techs, but they can defend the cities against Scholars trying to steal techs. This is \
+why it is best to use those units for investigating the city and also for killing the defending
+Diplomats, Spies, and Operatives. Only the Scholar and other units like it are able to steal techs.\
 ")
 
 
@@ -3110,7 +3137,7 @@ A Caravan sent to one of your own cities that is building a wonder\
  can add 50 shields towards its production. If your city is not\
  building a wonder, the Caravan can take no special action.\
 "), _("\
-TIP:  You can stockpile a stack of Caravans in advance and bring\
+TIP: You can stockpile a stack of Caravans in advance and bring\
  them all into a city where you have started to build a wonder,\
  and finish it in only one turn!\
 ")
@@ -3186,10 +3213,14 @@ Explorers can also perform some actions in another player's city, although\
 "), _("\
  - \"Investigate City\": This action is not enabled in this game.\
 "), _("\
-GUIDE:  The explorer can be used to break the Zones of Control (ZoC) if an enemy unit is blocking you. \
-This can be very useful in situations where the enemy is trying to limit your options by placing fortified units in strategic locations next to rivers or roads. \
-Simply move the explorer to a tile you want to go to and you can move unit(s) to a tile already occupied by your own unit. The explorer is also very good for checking \
-who is next to you and how far your enemies have already expanded. Many players consider killing an explorer as an act of war. This is why it sometimes makes sense to warn before killing the explorer.\
+GUIDE: The Explorer can be used to break the Zones of Control (ZoC) if an enemy \
+unit is blocking you. This can be very useful in situations where the enemy is \
+trying to limit your options by placing fortified units in strategic locations next \
+to rivers or roads. Simply move the Explorer to a tile you want to go to and you can \
+move unit(s) to a tile already occupied by your own unit. The Explorer is also very \
+good for checking who is next to you and how far your enemies have already expanded. \
+Many players consider killing an Explorer as an act of war. This is why it sometimes \
+makes sense to warn before killing the explorer.\
 ")
 
 
@@ -3230,9 +3261,9 @@ veteran_power_fact = 100
 veteran_move_bonus = 0
 roles         = "KingStartUnit"
 helptext      = _("\
-This is you. If you lose this unit, you lose the game. So don't.\
+This is you. If you lose this unit, you lose the game. So do not.\
 "), _("\
-Won't unleash barbarians from huts.\
+Will not unleash barbarians from huts.\
 ")
 
 [unit_barbarian_leader]

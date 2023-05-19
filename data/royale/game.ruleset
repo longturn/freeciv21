@@ -3,18 +3,18 @@
 ; for other "maintenance".  If you want to make custom changes,
 ; you should create a new datadir subdirectory and copy this file
 ; into that directory, and then modify that copy.  Then use the
-; command "rulesetdir <mysubdir>" in the server to have freeciv
+; command "rulesetdir <mysubdir>" in the server to have Freeciv21
 ; use your new customized file.
 
-; Note that the freeciv AI may not cope well with anything more
+; Note that the Freeciv21 AI may not cope well with anything more
 ; than minor changes.
 
 [datafile]
-description="Royale game rules for Freeciv"
+description="Royale game rules for Freeciv21"
 options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
-; This section contains meta information for freeciv-ruledit to recreate the ruleset
+; This section contains meta information for freeciv21-ruledit to recreate the ruleset
 ; file in a form wanted. These have no in-game effect whatsoever
 [ruledit]
 
@@ -25,12 +25,12 @@ description_file = "royale/README.royale"
 ; Ruleset name
 name = _("Royale ruleset")
 
-; There`s no separate versioning in rulesets part of main freeciv distribution
+; There`s no separate versioning in rulesets part of main Freeciv21 distribution
 ;version = ""
 
 ; When about to migrate ruleset under a new name in the future version, set
 ; alt_dir to the name of that future directory. Then savegames saved with this
-; version of freeciv can find the ruleset from the correct place when loading
+; version of Freeciv21 can find the ruleset from the correct place when loading
 ; the savegame to the future version.
 ;alt_dir = ""
 
@@ -38,7 +38,7 @@ name = _("Royale ruleset")
 ; /* TRANS: In the client, this is displayed alongside the contents of
 ;    README.royale, which are not localized. */
 summary = _("\
-You are playing Freeciv with Royale ruleset based on Longturn Traditional LTT rules (originally based on civ2civ3):\
+You are playing Freeciv21 with Royale ruleset based on Longturn Traditional LTT rules (originally based on civ2civ3):\
 \n\n\
 Gameplay more similar to classic 4x empire building games, keeping it easy to learn but challenging to master.\
 \n\n\
@@ -46,8 +46,8 @@ Also suitable for single player, with AI less aggressive at start,\
  but more challenging at the end.\
 \n\n\
 The Royale ruleset is designed to be played without AI players and allows very fast gameplay\
- meaning that one game doesn't take too much time. For similar gameplay with more turns look for the LTT ruleset.\
- and it's balanced to make the game interesting for both beginners and experienced players.\
+ meaning that one game does not take too much time. For similar gameplay with more turns look for the LTT ruleset.\
+ and it is balanced to make the game interesting for both beginners and experienced players.\
  Everything comes with a cost. Even advancing more than your opponent. This keeps it challenging and fair to everyone.\
 ")
 
@@ -367,7 +367,7 @@ nuke_units_max_range = 1
 airlift_max_range = "unlimited"
 
 ; What each action should be called when showing them to the player.
-; The first %s should be before the mnemonic of the action. A Freeciv client
+; The first %s should be before the mnemonic of the action. A Freeciv21 client
 ; that supports mnemonics will replace it with the in-band signal that marks
 ; the following character as a mnemonic in its graphical toolkit.
 ; The second %s marks where extra details should be inserted.
@@ -1831,7 +1831,7 @@ colorlist =
     }
 
 [teams]
-; freeciv optional team names definition.
+; Freeciv21 optional team names definition.
 ;
 ; names =
 ; _("Team 1"),
@@ -1841,7 +1841,7 @@ colorlist =
 ; etc...
 
 [settings]
-; freeciv game settings for royale ruleset
+; Freeciv21 game settings for royale ruleset
 ;
 set =
     { "name", "value"
