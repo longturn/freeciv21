@@ -1,24 +1,23 @@
-----------------------------------------------------------------------
-                   Multiplayer Freeciv Ruleset
-----------------------------------------------------------------------
+Multiplayer Freeciv21 Ruleset
+-----------------------------
 
-The 'multiplayer' ruleset is intended to rectify some game balance
+The "multiplayer" ruleset is intended to rectify some game balance
 issues encountered on multiplayer servers with the classic ruleset.
 It is based on the 'rewonder' ruleset designed by Madeline Book for
-Freeciv 2.1.
+legacy Freeciv 2.1.
 
 This ruleset is also suited for Longturn and Play-By-Email games.
 
 
-1. Changes compared to the classic ruleset
-   ---------------------------------------
+Changes Compared to the Classic Ruleset
+=======================================
 
 The differences can be extracted by
 
-#> diff -ur data/classic data/multiplayer
+$ diff -ur data/classic data/multiplayer
 
 Gameplay
---------
+^^^^^^^^
 
 Unit movement rates are twice that of the classic ruleset, to
 make this ruleset usable for Longturn games.
@@ -35,10 +34,10 @@ equivalent to their movement point fragment is considered. If they have 2/3
 movement points, they will attack with 2/3 strength. If they have 1/3 movement
 points, they will attack with 1/3 strength.
 
-Wonder changes
---------------
+Wonder Changes
+^^^^^^^^^^^^^^
 
-Almost all great wonders have been changed into small wonders; that
+Almost all great wonders have been changed into small wonders. That
 is, they are player-unique rather than world-unique. Each player may
 build their own "Oracle", for example, or even move such small wonders
 around by rebuilding them in other cities. For small wonders that
@@ -93,24 +92,24 @@ As for the remaining great wonders:
   anarchy-from-disorder effects of Democracy to all nations,
   regardless of government.
 
-Building changes
-----------------
+Building Changes
+^^^^^^^^^^^^^^^^
 
 - Colosseum: Renamed to "Amphitheater", and cost decreased to 60 (was 70).
 - Supermarket: Increases farmland tile food output by 100% (was 50%).
 - Police Station: Affects 2 and 4 unhappy citizens under Republic and
   Democracy respectively (was 1 and 2).
 
-Government changes
-------------------
+Government Changes
+^^^^^^^^^^^^^^^^^^
 
 The Fundamentalism government is added. This is similar to the one in
 the civ2 ruleset, with following exceptions:
 - Food upkeep for Settlers is 3
 - Free unit upkeep is worth 10 shields in each city
 
-Technology changes
-------------------
+Technology Changes
+^^^^^^^^^^^^^^^^^^
 
 - Philosophy gives a free tech to each player when they research it
   (not just the first player).
@@ -118,15 +117,16 @@ Technology changes
   pollution from production.
 - Added Fundamentalism from the civ2 ruleset.
 
-Unit changes
-------------
+Unit Changes
+^^^^^^^^^^^^
+
 - Unit movement rates are twice the values in the classic ruleset.
 - Caravans and Freight cannot create trade routes.
 - Caravans cost 30 production (was 50); Freight remain at 50.
 - Elephants, Crusaders, and Fanatics added from the civ2 ruleset.
 
-Default settings
-----------------
+Default Settings
+^^^^^^^^^^^^^^^^
 
 The ruleset suggests some server setting changes, although these can
 be overridden. Notably, huts, barbarians, national borders, and
@@ -134,22 +134,26 @@ diplomacy are all disabled, more initial units are given, and "fairer"
 map settings are used.
 
 
-2. Use the new ruleset
-   -------------------
+Use the New Ruleset
+===================
 
 To play a game with the multiplayer rules, start the server with:
-       ./fcser -r data/multiplayer.serv
+
+$ ./freevic21-server -r data/multiplayer.serv
+
 or a single player game with
-       ./freeciv-gtk3 -r data/multiplayer.serv
+
+$ ./freeciv21-client -r data/multiplayer.serv
+
 (and any other command-line arguments you normally use; depending on
-how you have Freeciv installed you may have to give the installed
+how you have Freeciv21 installed you may have to give the installed
 data directory path instead of "data")
 
 Start the client normally.  The client must be network-compatible
 (usually meaning the same or similar version) but otherwise nothing
 special is needed.
 
-Note that the Freeciv AI might not play as well with rules other
-than standard Freeciv.  The AI is supposed to understand and
+Note that the Freeciv21 AI might not play as well with rules other
+than standard Freeciv21.  The AI is supposed to understand and
 utilize all sane rules variations, so please report any AI
 failures so that they can be fixed.
