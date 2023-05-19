@@ -1,8 +1,10 @@
+# Server commands to make royaler Freeciv21 rules
+
 rulesetdir royale
 cmdlevel basic new
 cmdlevel basic first
 Easy
-metapatches 
+metapatches
 set aifill "6"
 set airliftingstyle "FROM_ALLIES|TO_ALLIES|DEST_UNLIMITED"
 set allowtake "HAhadOo"

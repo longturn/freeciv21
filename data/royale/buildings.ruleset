@@ -4,14 +4,14 @@
 ; for other "maintenance".  If you want to make custom changes,
 ; you should create a new datadir subdirectory and copy this file
 ; into that directory, and then modify that copy.  Then use the
-; command "rulesetdir <mysubdir>" in the server to have freeciv
+; command "rulesetdir <mysubdir>" in the server to have Freeciv21
 ; use your new customized file.
 
-; Note that the freeciv AI may not cope well with anything more
+; Note that the Freeciv21 AI may not cope well with anything more
 ; than minor changes.
 
 [datafile]
-description="Royale buildings data for Freeciv"
+description="Royale buildings data for Freeciv21"
 options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
@@ -81,8 +81,8 @@ sound		= "b_airport"
 sound_alt	= "b_generic"
 helptext	= _("\
 Allows a city to produce veteran air units (including helicopters and\
- missiles).\
- Also, damaged air units (again, including helicopters) which stay in\
+ missiles). \
+Also, damaged air units (again, including helicopters) which stay in\
  town for one full turn without moving are completely restored.\
 "), _("\
 A city with Airport can airlift one unit per turn (including\
@@ -90,7 +90,7 @@ A city with Airport can airlift one unit per turn (including\
  to another and will use all of the unit's movement points. A unit\
  must have some movement points left to be airlifted, and cannot\
  carry cargo. The current setting (unlimited to destination) means that\
- the destination city doesn't need to have an airport.\
+ the destination city does not need to have an airport.\
 ")
 
 [building_aqueduct]
@@ -114,19 +114,15 @@ sabotage	= 100
 sound		= "b_aqueduct"
 sound_alt	= "b_generic"
 helptext	= _("\
-Allows a city to grow larger than size 8. (A Sewer System is required \
-for a city to grow larger than size 16.)\
-"),
-; /* xgettext:no-c-format */
-_("\
+Allows a city to grow larger than size 8. A Sewer System is required \
+for a city to grow larger than size 16.\
+"), _("\
 These larger cities enjoy increased defense (+50%) against both land and \
-sea units; however, such large settlements have a small risk of fire, \
+sea units. However, such large settlements have a small risk of fire, \
 which can destroy buildings in the city.\
-"),
-; /* xgettext:no-c-format */
-_("\
+"), _("\
 Starting at size 5, growing cities incur an increasing risk of plague \
-due to overcrowding; an Aqueduct reduces that base chance by 30%.\
+due to overcrowding. An Aqueduct reduces that base chance by 30%.\
 "), _("\
 Building an Aqueduct in a city without access to a lake or river requires \
 knowledge of Construction, and it costs more to build and maintain.\
@@ -152,19 +148,15 @@ sabotage	= 100
 sound		= "b_aqueduct"
 sound_alt	= "b_generic"
 helptext	= _("\
-Allows a city to grow larger than size 8. (A Sewer System is required \
-for a city to grow larger than size 16.)\
-"),
-; /* xgettext:no-c-format */
-_("\
+Allows a city to grow larger than size 8. A Sewer System is required \
+for a city to grow larger than size 16.\
+"), _("\
 These larger cities enjoy increased defense (+50%) against both land and \
-sea units; however, such large settlements have a small risk of fire, \
+sea units. However, such large settlements have a small risk of fire, \
 which can destroy buildings in the city.\
-"),
-; /* xgettext:no-c-format */
-_("\
+"), _("\
 Starting at size 5, growing cities incur an increasing risk of plague \
-due to overcrowding; an Aqueduct reduces that base chance by 30%.\
+due to overcrowding. An Aqueduct, Lake reduces that base chance by 30%.\
 "), _("\
 Aqueducts in cities with access to a lake require no special technology and \
 are cheap to build and maintain.\
@@ -191,19 +183,15 @@ sabotage	= 100
 sound		= "b_aqueduct"
 sound_alt	= "b_generic"
 helptext	= _("\
-Allows a city to grow larger than size 8. (A Sewer System is required \
-for a city to grow larger than size 16.)\
-"),
-; /* xgettext:no-c-format */
-_("\
+Allows a city to grow larger than size 8. A Sewer System is required \
+for a city to grow larger than size 16.\
+"), _("\
 These larger cities enjoy increased defense (+50%) against both land and \
-sea units; however, such large settlements have a small risk of fire, \
+sea units. However, such large settlements have a small risk of fire, \
 which can destroy buildings in the city.\
-"),
-; /* xgettext:no-c-format */
-_("\
+"), _("\
 Starting at size 5, growing cities incur an increasing risk of plague \
-due to overcrowding; an Aqueduct reduces that base chance by 30%.\
+due to overcrowding. An Aqueduct, River reduces that base chance by 30%.\
 "), _("\
 Aqueducts in cities with access to a river require no special technology and \
 are cheap to build and maintain.\
@@ -229,10 +217,9 @@ sound		= "b_bank"
 sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
-Increases the luxury and tax output in a city by an additional 30%. \
+Increases the luxury good and tax output in a city by an additional 30%. \
 With both a Bank and a Marketplace in a city, the total bonus is 80%.\
 ")
-
 
 [building_mercantile_exchange]
 name		= _("Mercantile Exchange")
@@ -254,7 +241,7 @@ sound		= "b_bank"
 sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
-Increases the luxury and tax output in a city by an additional 30%. \
+Increases the luxury good and tax output in a city by an additional 30%. \
 With a Mercantile Exchange, a Bank and a Marketplace in a city, the total bonus is 110%.\
 ")
 
@@ -280,8 +267,8 @@ sound		= "b_barracks_i"
 sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
-With a Barracks, each new land (except siege units like Catapults) unit built in a city will\
- automatically have Veteran status, which means that its attack and\
+With a Barracks, each new land unit built in a city (except siege units like Catapults)\
+ will automatically have Veteran status, which means that its attack and\
  defense strengths are increased by 50%.\
 "), _("\
 Also, damaged land units which stay in town for one full turn\
@@ -309,7 +296,8 @@ sound		= "b_barracks_ii"
 sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
-With a Barracks, each new land unit (except siege units like Cannon and Artillery) built in a city will\
+With a Barracks II, each new land unit built in a city\
+ (except siege units like Cannon and Artillery) will\
  automatically have Veteran status, which means that its attack and\
  defense strengths are increased by 50%.\
 "), _("\
@@ -336,7 +324,8 @@ sound		= "b_barracks_iii"
 sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
-With a Barracks, each new land unit (except siege units like Artillery and Howitzer) built in a city will\
+With a Barracks III, each new land unit built in a city\
+ (except siege units like Artillery and Howitzer) will\
  automatically have Veteran status, which means that its attack and\
  defense strengths are increased by 50%.\
 "), _("\
@@ -364,7 +353,7 @@ sound		= "b_cathedral"
 sound_alt	= "b_generic"
 helptext	= _("\
 A Cathedral makes 3 unhappy citizens content in a city, making it \
-easier to maintain order in that city; however, it does not affect \
+easier to maintain order in that city. However, it does not affect \
 citizens made unhappy by aggression. Knowledge of Theology \
 increases the effect of a Cathedral, making an additional unhappy \
 citizen content, except under Communism.\
@@ -421,7 +410,7 @@ sound_alt	= "b_generic"
 helptext	= _("\
 Gives a +100% bonus to the intrinsic defense strength of units within \
 a city when defending against enemy ships. For small cities the defense \
-strength is doubled by this improvement; for cities larger than size 8, \
+strength is doubled by this improvement. For cities larger than size 8, \
 it is increased by two-thirds.\
 ")
 
@@ -445,7 +434,7 @@ sound		= "b_colosseum"
 sound_alt	= "b_generic"
 helptext	= _("\
 Entertains the citizens of a city, making 3 unhappy citizens content. \
- (Four after the discovery of Electricity.)  However, it does not\
+ (Four after the discovery of Electricity.) However, it does not\
  affect citizens made unhappy by military activity.\
 ")
 
@@ -500,7 +489,7 @@ Increases the shield production in a city by 50%, or 100% with an \
 electrical plant of any kind in the same city.\
 "), _("\
 This increase in production may contribute significantly to \
-pollution; a Factory also increases the pollution caused by the \
+pollution. A Factory also increases the pollution caused by the \
 population of the city.\
 ")
 
@@ -522,7 +511,7 @@ sabotage	= 100
 sound		= "b_granary"
 sound_alt	= "b_generic"
 helptext	= _("\
-When any small city grows or shrinks, 50 % of food points are saved; this \
+When any small city grows or shrinks, 50 % of food points are saved. This \
 helps cities to grow faster and more easily withstand famine. With a \
 Granary this is extended to cities of size 4 and above. \
 "), _("\
@@ -582,22 +571,20 @@ sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
 Any kind of electrical plant increases the shield production \
-effects of any Factory or Mfg. Plant in its city by 50% each. \
+effects of a Factory or Mfg. Plant in its city by 50% each. \
 Thus, an electrical plant in combination with either a Factory \
 or Mfg. Plant gives a 100% production bonus over \
-the level without any of these improvements; an electrical plant, \
+the level without any of these improvements. An electrical plant, \
 Factory, and Mfg. Plant together give a 200% production bonus. \
 The extra production may lead to the city generating more \
 pollution.\
-"),
-; /* xgettext:no-c-format */
-_("\
+"), _("\
 However, a Hydro Plant also reduces the pollution associated with shield \
 production to 50% of its normal value, or 25% in combination with a \
-Recycling Center; pollution is reduced further for the player who owns \
-the Hoover Dam. (A Hydro Plant's effect is the same as that of a \
-Nuclear Plant; with the Hoover Dam, its effect is increased to that of \
-a Solar Plant.)\
+Recycling Center. Pollution is reduced further for the player who owns \
+the Hoover Dam. A Hydro Plant's effect is the same as that of a \
+Nuclear Plant. With the Hoover Dam, its effect is increased to that of \
+a Solar Plant.\
 "), _("\
 In each city, only one Power Plant, Hydro Plant, Nuclear Plant, or \
 Solar Plant can take effect at any one time.\
@@ -645,7 +632,7 @@ sound		= "b_marketplace"
 sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
-Increases the luxury and tax output in a city by 50%.\
+Increases the luxury good and tax output in a city by 50%.\
 ")
 
 [building_mass_transit]
@@ -666,7 +653,7 @@ sabotage	= 100
 sound		= "b_mass_transit"
 sound_alt	= "b_generic"
 helptext	= _("\
-Reduces the pollution generated by the population in a city; this \
+Reduces the pollution generated by the population in a city. This \
 building counteracts the additional pollution associated with any \
 two other buildings. It also increases the working area for the city.\
 ")
@@ -692,7 +679,7 @@ sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
 Increases the shield production in a city by an additional 50%, or \
-100% with an electrical plant of any kind in the same city; this \
+100% with an electrical plant of any kind in the same city. This \
 effect is cumulative with that of a Factory.\
 "), _("\
 With sufficient shield production, cities with a Manufacturing Plant \
@@ -700,7 +687,7 @@ can produce up to two units each turn (but only single units of types \
 which cost population).\
 "), _("\
 This increase in shield production may contribute significantly to \
-pollution; a Manufacturing Plant also increases the pollution caused \
+pollution. A Manufacturing Plant also increases the pollution caused \
 by the population of the city.\
 "), _("\
 A Manufacturing Plant also has a small risk of suffering an industrial \
@@ -728,16 +715,14 @@ sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
 Any kind of electrical plant increases the shield production \
-effects of any Factory or Mfg. Plant in its city by 50% each. \
+effects of a Factory or Mfg. Plant in its city by 50% each. \
 Thus, an electrical plant in combination with either a Factory \
 or Mfg. Plant gives a 100% production bonus over \
-the level without any of these improvements; an electrical plant, \
+the level without any of these improvements. An electrical plant, \
 Factory, and Mfg. Plant together give a 200% production bonus. \
 The extra production may lead to the city generating more \
 pollution.\
-"),
-; /* xgettext:no-c-format */
-_("\
+"), _("\
 However, a Nuclear Plant also reduces the pollution associated with shield \
 production to 50% of its normal value, or 25% in combination with a \
 Recycling Center. (Its effect is the same as that of a Hydro Plant.)\
@@ -812,9 +797,7 @@ results in losing whatever spaceship you might have.\
 If the capital is in a dangerous location, or a more central capital\
  would give a better corruption distribution, you can move your palace\
  by rebuilding it in another city.\
-"),
-; /* xgettext:no-c-format */
-_("\
+"), _("\
 Under Despotism the city containing the palace gains a +75% \
 gold bonus, and under Monarchy a +50% gold bonus.\
 ")
@@ -846,12 +829,10 @@ this, corruption and production waste in the capital itself is half \
 of what it would otherwise be (and a Courthouse will eliminate it \
 entirely).\
 "), _("\
-The city where this palace is located cannot be incited to revolt, \
+The city where this second palace is located cannot be incited to revolt, \
 and enjoys a bonus when enemy agents try to evade your own agents \
 stationed in the city, or sabotage your buildings.\
-"),
-; /* xgettext:no-c-format */
-_("\
+"), _("\
 Under Despotism the city containing the palace gains a +75% \
 gold bonus, and under Monarchy a +50% gold bonus.\
 ")
@@ -898,7 +879,7 @@ sabotage	= 100
 sound		= "b_port_facility"
 sound_alt	= "b_generic"
 helptext	= _("\
-Allows a city to build veteran sea units.  Also, damaged sea units\
+Allows a city to build veteran sea units. Also, damaged sea units\
  which stay in town for one full turn without moving are completely\
  restored.\
 ")
@@ -926,10 +907,10 @@ sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
 Any kind of electrical plant increases the shield production \
-effects of any Factory or Mfg. Plant in its city by 50% each. \
+effects of a Factory or Mfg. Plant in its city by 50% each. \
 Thus, an electrical plant in combination with either a Factory \
 or Mfg. Plant gives a 100% production bonus over \
-the level without any of these improvements; an electrical plant, \
+the level without any of these improvements. An electrical plant, \
 Factory, and Mfg. Plant together give a 200% production bonus. \
 The extra production may lead to the city generating more \
 pollution.\
@@ -985,10 +966,8 @@ sound_alt	= "b_generic"
 helptext	= _("\
 Increases the science output in a city by an additional 50%, or \
 by 100% once the Internet wonder has been built by any player.\
-"),
-; /* xgettext:no-c-format */
-_("\
-The total bonus is 150% if a Library, a University and a \
+"), _("\
+The total bonus is 150% if a Library, a University, and a \
 Research Lab are all present in the same city, increasing to 300% \
 once the Great Library, Isaac Newton's College, and the Internet have \
 all been built.\
@@ -1044,7 +1023,6 @@ SDI I only defends against 30% of the attacks. SDI I + Palace adds 100% to the d
  NOTE: The Palace City gets 100% SDI defense with the Palace and with SDI I. SDI II and SDI III are not needed.\
 ")
 
-
 [building_sdi_defense_2]
 name		= _("SDI Defense II")
 genus		= "Improvement"
@@ -1073,7 +1051,6 @@ defending against conventional missiles. SDI II adds another 30% against the nuc
  NOTE: The Palace City gets 100% SDI defense with the Palace and with SDI I. SDI II and SDI III are not needed.\
  The Palace with SDI II but without SDI I doesn't give 100% defense against nukes.
 ")
-
 
 [building_sdi_defense_3]
 name		= _("SDI Defense III")
@@ -1149,16 +1126,14 @@ sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
 Any kind of electrical plant increases the shield production \
-effects of any Factory or Mfg. Plant in its city by 50% each. \
+effects of a Factory or Mfg. Plant in its city by 50% each. \
 Thus, an electrical plant in combination with either a Factory \
 or Mfg. Plant gives a 100% production bonus over \
-the level without any of these improvements; an electrical plant, \
+the level without any of these improvements. An electrical plant, \
 Factory, and Mfg. Plant together give a 200% production bonus. \
 The extra production may lead to the city generating more \
 pollution.\
-"),
-; /* xgettext:no-c-format */
-_("\
+"), _("\
 However, a Solar Plant also reduces the pollution associated with shield \
 production to 25% of its normal value, or eliminates it entirely in \
 combination with a Recycling Center.\
@@ -1190,11 +1165,12 @@ sound		= "b_space_component"
 sound_alt	= "b_generic"
 helptext	= _("\
 Space Components can be differentiated into Propulsion and Fuel\
- Components.  Each pair of them reduces your spaceship's travel\
- time.  You can build up to 8 pairs.\
+ Components. Each pair of them reduces your spaceship's travel\
+ time. You can build up to 8 pairs.\
 "), _("\
 Before you can build any spaceship parts, the Apollo Program wonder\
- must have been built by any player.\
+ must have been built by any player. The city must also have a Factory,\
+ Library, University, and a Research Lab.\
 ")
 
 [building_space_module]
@@ -1219,7 +1195,7 @@ sabotage	= 100
 sound		= "b_space_module"
 sound_alt	= "b_generic"
 helptext	= _("\
-Space Modules are the most expensive parts of spaceships.  There\
+Space Modules are the most expensive parts of spaceships. There\
  are three different types of Space Module:\
 "), _("\
 - Habitation Module: provides living space for 10,000 people.\
@@ -1233,7 +1209,8 @@ Space Modules are the most expensive parts of spaceships.  There\
 You can build up to 4 Space Modules of each kind.\
 "), _("\
 Before you can build any spaceship parts, the Apollo Program wonder\
- must have been built by any player.\
+ must have been built by any player. The city must also have a Factory,\
+ Library, University, and a Research Lab.\
 ")
 
 [building_space_structural]
@@ -1258,12 +1235,13 @@ sabotage	= 100
 sound		= "b_space_structural"
 sound_alt	= "b_generic"
 helptext	= _("\
-Space Structurals form the base of your spaceship.  All other\
- spaceship parts need to be connected to Structurals in order to\
- function.  You can build up to 32 Space Structurals.\
+Space Structurals form the base of your spaceship. All other\
+ spaceship parts need to be connected to Space Structurals in order to\
+ function. You can build up to 32 Space Structurals.\
 "), _("\
 Before you can build any spaceship parts, the Apollo Program wonder\
- must have been built by any player.\
+ must have been built by any player. The city must also have a Factory,\
+ Library, University, and a Research Lab.\
 ")
 
 [building_stock_exchange]
@@ -1286,10 +1264,10 @@ sound		= "b_stock_exchange"
 sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
-Increases the luxury and tax output in a city by an additional 40%, \
+Increases the luxury good and tax output in a city by an additional 40%, \
 or 65% if Super Highways are also in the city. A Marketplace, Bank, \
-Mercantile Exchange and Stock Exchange together in a city yield a total bonus of 150%; \
-adding Super Highways yields a total of 175%.\
+Mercantile Exchange, and Stock Exchange together in a city yield a total bonus of 150%. \
+Adding Super Highways yields a total of 175%.\
 ")
 
 [building_super_highways]
@@ -1314,11 +1292,9 @@ Each tile around the city with roads and without farmland, that\
  is already generating some trade, produces one extra trade resource.\
  The same applies to the city center tile (even if it is receiving a\
  farmland bonus).\
-"),
-; /* xgettext:no-c-format */
-_("\
+"), _("\
 Also doubles the effect of any Stock Exchange in the city (increasing\
- luxury and tax output by an additional 50%).\
+ luxury good and tax output by an additional 50%).\
 "), _("\
 Super Highways also increase the pollution caused by the population\
  of the city.\
@@ -1344,7 +1320,7 @@ sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
 Increases the food resources by 50% on each farmland tile which\
- is being used around the city.  Farmland tiles are those which\
+ is being used around the city. Farmland tiles are those which\
  have been irrigated a second time.\
 ")
 
@@ -1394,9 +1370,7 @@ sound_alt	= "b_generic"
 helptext	= _("\
 Increases the science output in a city by an additional 50%, or \
 by 100% once Isaac Newton's College has been built by any player.\
-"),
-; /* xgettext:no-c-format */
-_("\
+"), _("\
 The total bonus is 100% if a Library and a University are present \
 together in the same city, increasing to 200% once the Great Library and \
 Isaac Newton's College have both been built.\
@@ -1422,7 +1396,7 @@ sound_alt	= "w_generic"
 helptext	= _("\
 The entire map becomes permanently visible to the player who owns it \
 -- the player always has up-to-date knowledge of all terrain and \
-cities (but not units) despite fog-of-war.  It allows all players to \
+cities (but not units) despite fog-of-war. It allows all players to \
 start building spaceship parts (assuming they have researched the \
 necessary technologies).\
 "), _("\
@@ -1527,7 +1501,7 @@ sound_alt	= "w_generic"
 helptext	= _("\
 This stunning technological achievement makes one content citizen \
 happy in each of your cities (2 extra luxury per city). It further \
-reduces your risk of plague (by 10% of the base chance); with \
+reduces your risk of plague (by 10% of the base chance). With \
 knowledge of Medicine, any of your cities with an Aqueduct and a \
 Sewer System will be entirely free of plague.\
 ")
@@ -1550,7 +1524,7 @@ sabotage	= 0
 sound		= "w_darwins_voyage"
 sound_alt	= "w_generic"
 helptext	= _("\
-Charles Darwin's voyage sparked the discovery of the evolution \
+Charles Darwin's Voyage sparked the discovery of the evolution \
 of the species, which inspired greater confidence in science. \
 All your cities generate 1 extra science bulb.\
 "), _("\
@@ -1578,7 +1552,7 @@ sound_alt	= "w_generic"
 helptext	= _("\
 AI nations are more inclined to be friendly and forgiving toward the \
 owner of this wonder (until the Apollo Program is completed). It also \
-reduces the pollution caused by the population; it counteracts the \
+reduces the pollution caused by the population. It counteracts the \
 pollution associated with a single building in each of your cities.\
 ")
 
@@ -1656,7 +1630,7 @@ helptext	= _("\
 Makes one unhappy citizen content in every city of the player that \
 owns it (not including citizens unhappy about aggression). This wonder \
 also makes two content citizens happy in the city where it is located \
-(4 extra luxury points).\
+(4 extra luxury good points).\
 ")
 
 [building_hoover_dam]
@@ -1730,7 +1704,7 @@ sound		= "w_js_bachs_cathedral"
 sound_alt	= "w_generic"
 helptext	= _("\
 Makes one content citizen happy in every city of the player that owns \
-it (2 extra luxury points per city).\
+it (2 extra luxury good points per city).\
 ")
 
 [building_king_richards_crusade]
@@ -1779,9 +1753,8 @@ sabotage	= 0
 sound		= "w_leonardos_workshop"
 sound_alt	= "w_generic"
 helptext	= _("\
-Upgrades two obsolete units per game turn.\
+Upgrades two obsolete units per game turn for free.\
 ")
-
 
 [building_verrocchio_workshop]
 name		= _("Verrocchio's Workshop")
@@ -1802,8 +1775,8 @@ sabotage	= 0
 sound		= "w_leonardos_workshop"
 sound_alt	= "w_generic"
 helptext	= _("\
-Upgrades one obsolete unit per game turn. The workshop where \
-Leonardo da Vinci was a garzone (studio boy) before he was able to set up his own workshop.
+Upgrades one obsolete unit per game turn for free. The workshop where \
+Leonardo da Vinci was a garzone (studio boy) before he was able to set up his own workshop.\
 ")
 
 [building_lighthouse]
@@ -1856,8 +1829,6 @@ Gives all your sea units 1 additional movement point. The chance\
  increases by half.\
 ")
 
-
-
 [building_manhattan_project]
 name		= _("Manhattan Project")
 genus		= "GreatWonder"
@@ -1884,8 +1855,6 @@ each nation can have only one at a time. The Robotics advance is required to bui
 later Nuclear units, which are not limited in number.
 ")
 
-
-
 [building_marco_polos_embassy]
 name		= _("Marco Polo's Embassy")
 genus		= "GreatWonder"
@@ -1911,7 +1880,6 @@ TIP: it may make sense to let someone else to build this wonder. Everyone gets t
 and the Trade Conpany can't usually be instantly built after Marco Polo is finished.\
 ")
 
-
 [building_trade_company]
 name		= _("Trade Company")
 genus		= "GreatWonder"
@@ -1935,8 +1903,6 @@ This wonder gives the player extra trade with \
 far away countries. Increases trade output by 10% in \
 all cities owned by the player.\
 ")
-
-
 
 [building_atlantic_telegraph_company]
 name		= _("Atlantic Telegraph Company")
@@ -1964,8 +1930,6 @@ The city where the wonder is located gets extra trade for each \
 tile already producing trade.\
 ")
 
-
-
 [building_michelangelos_chapel]
 name		= _("Michelangelo's Chapel")
 genus		= "SmallWonder"
@@ -1986,7 +1950,7 @@ sound		= "w_michelangelos_chapel"
 sound_alt	= "w_generic"
 helptext	= _("\
 Doubles the base effect of Cathedrals. This makes 3 additional unhappy \
-citizens content in each city with a Cathedral; however, it does \
+citizens content in each city with a Cathedral. However, it does \
 not affect citizens made unhappy by aggression.\
 ")
 
@@ -2139,11 +2103,9 @@ helptext	= _("\
 Gives 1 additional luxury to every city, and 6 luxuries to the city \
 where it is located.\
 "), _("\
-Upon completion of this wonder, entertainer specialists' luxury \
+Upon completion of this wonder, entertainer specialists' luxury good \
 output increases to 3 permanently for every nation.\
 ")
-
-
 
 [building_sun_tzus_war_academy]
 name		= _("Sun Tzu's War Academy")
@@ -2165,8 +2127,8 @@ sound		= "w_sun_tzus_war_academy"
 sound_alt	= "w_generic"
 helptext	= _("\
 All your new military land units start with an additional veteran level \
-(this is cumulative with any Barracks building in a city; with both, units \
-are created as veteran 2).\
+This is cumulative with any Barracks building in a city. With both, units \
+are created as veteran 2.\
 ")
 
 [building_united_nations]
@@ -2199,8 +2161,6 @@ a row, that player's government falls (even for governments other than \
 Republic and Democracy).\
 ")
 
-
-
 [building_hal_salflieni_hypogeum]
 name		= _("Hal Saflieni Hypogeum")
 genus		= "SmallWonder"
@@ -2221,9 +2181,9 @@ sound		= "w_oracle"
 sound_alt	= "w_generic"
 helptext	= _("\
 Ħal Saflieni Hypogeum is thought to have been a sanctuary and necropolis. \
-It pre-dates bronze age and was one of the first, if not the first, shrines built. \
-With this wonder, the city having it will get +6 additional lux. The effect \
-of this very early wonder ends with the invention of bronze. \
+It pre-dates the Bronze Age and was one of the first, if not the first, shrines built. \
+With this wonder, the city having it will get +6 additional luxury good points. The effect \
+of this very early wonder ends with the invention of bronze working. \
 ")
 
 [building_capitalization]
@@ -2242,20 +2202,11 @@ obsolete_by	=
 build_cost	= 999
 upkeep		= 0
 sabotage	= 0
-; FIXME: this is the real helptext; restore when have a subordnate analogue
-; /* (ignore for gettext until fixed)
-;helptext	= _("\
-;This is not a normal improvement.  Instead, setting a city's\
-; production to Capitalization means its shield production is\
-; converted to tax output (money).\
-;")
-; */
 helptext	= _("\
-This is not a normal improvement.  Instead, setting a city's\
+This is not a normal improvement. Instead, setting a city's\
  production to Coinage means its shield production is\
- converted to tax output (money, coins!).\
+ converted to tax output (money, gold!).\
 ")
-
 
 [building_statue_of_liberty]
 name		= _("Statue of Liberty")

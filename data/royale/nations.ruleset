@@ -4,15 +4,15 @@
 ; for other "maintenance".  If you want to make custom changes
 ; you should create a new datadir subdirectory and copy this file
 ; into that directory, and then modify that copy.  Then use the
-; command "rulesetdir <mysubdir>" in the server to have freeciv
+; command "rulesetdir <mysubdir>" in the server to have Freeciv21
 ; use your new customized file.
 
 [datafile]
-description="Default nations data for Freeciv"
+description="Default nations data for Freeciv21"
 options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
-; This section contains meta information for freeciv-ruledit to recreate the ruleset
+; This section contains meta information for freeciv21-ruledit to recreate the ruleset
 ; file in a form wanted. These have no in-game effect whatsoever
 [ruledit]
 
