@@ -3,14 +3,14 @@
 ; for other "maintenance".  If you want to make custom changes,
 ; you should create a new datadir subdirectory and copy this file
 ; into that directory, and then modify that copy.  Then use the
-; command "rulesetdir <mysubdir>" in the server to have freeciv
+; command "rulesetdir <mysubdir>" in the server to have Freeciv21
 ; use your new customized file.
 
-; Note that the freeciv AI may not cope well with anything more
+; Note that the Freeciv21 AI may not cope well with anything more
 ; than minor changes.
 
 [datafile]
-description="Multiplayer buildings data for Freeciv"
+description="Multiplayer buildings data for Freeciv21"
 options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
@@ -79,13 +79,13 @@ sound		= "b_airport"
 sound_alt	= "b_generic"
 helptext	= _("\
 Allows a city to produce veteran air units (including helicopters and\
- missiles).\
- Also, damaged air units (again, including helicopters) which stay in\
+ missiles). \
+Also, damaged air units (again, including helicopters) which stay in\
  town for one full turn without moving are completely restored.\
 "), _("\
 Two cities with Airports can airlift one unit per turn. \
- Airlifting instantly transports the unit from one city to another\
- and will use all of the unit's movement points.  A unit must have\
+Airlifting instantly transports the unit from one city to another\
+ and will use all of the unit's movement points. A unit must have\
  some movement points left to be airlifted.\
 ")
 
@@ -112,7 +112,7 @@ sound		= "b_colosseum"
 sound_alt	= "b_generic"
 helptext	= _("\
 Entertains the citizens of a city, making 3 unhappy citizens content. \
- (Four after the discovery of Electricity.)  However, it does not\
+ (Four after the discovery of Electricity.) However, it does not\
  affect citizens made unhappy by military activity.\
 ")
 
@@ -134,7 +134,7 @@ sabotage	= 100
 sound		= "b_aqueduct"
 sound_alt	= "b_generic"
 helptext	= _("\
-Allows a city to grow larger than size 8.  A Sewer System is also\
+Allows a city to grow larger than size 8. A Sewer System is also\
  required for a city to grow larger than size 12.\
 ")
 ; There is also an effect to reduce the chance of plague, but you have to
@@ -215,7 +215,7 @@ sound		= "b_barracks_ii"
 sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
-With a Barracks, each new land unit built in a city will\
+With a Barracks II, each new land unit built in a city will\
  automatically have Veteran status, which means that its attack and\
  defense strengths are increased by 50%.\
 "), _("\
@@ -242,7 +242,7 @@ sound		= "b_barracks_iii"
 sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
-With a Barracks, each new land unit built in a city will\
+With a Barracks III, each new land unit built in a city will\
  automatically have Veteran status, which means that its attack and\
  defense strengths are increased by 50%.\
 "), _("\
@@ -270,10 +270,10 @@ sound		= "b_cathedral"
 sound_alt	= "b_generic"
 helptext	= _("\
 A Cathedral makes 3 unhappy citizens content in a city, making it\
- easier to maintain order in that city; however, it does not affect\
- citizens made unhappy by military activity.  The discovery of Theology\
+ easier to maintain order in that city. However, it does not affect\
+ citizens made unhappy by military activity. The discovery of Theology\
  increases the effect of a Cathedral, making an additional unhappy\
- citizen content.  The discovery of Communism lessens the effect of\
+ citizen content. The discovery of Communism lessens the effect of\
  a Cathedral, reducing by one the number of unhappy citizens made\
  content.\
 ")
@@ -297,10 +297,10 @@ sabotage	= 50
 sound		= "b_city_walls"
 sound_alt	= "b_generic"
 helptext	= _("\
-City Walls make it easier to defend a city.  They triple the defense\
+City Walls make it easier to defend a city. They triple the defense\
  strength of units within the city against land and helicopter\
  units.  They are ineffective against airborne and sea units as well\
- as Howitzers.  City Walls also prevent the loss of population which\
+ as Howitzers. City Walls also prevent the loss of population which\
  occurs when a defending unit is destroyed by a land unit.\
 ")
 
@@ -373,7 +373,7 @@ sound		= "b_factory"
 sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
-Increases the shield production in a city by 50%.  This increase may\
+Increases the shield production in a city by 50%. This increase may\
  also contribute significantly to pollution.\
 ")
 
@@ -420,7 +420,7 @@ sabotage	= 100
 sound		= "b_harbour"
 sound_alt	= "b_generic"
 helptext	= _("\
-Gives one extra food resource on all Oceanic tiles.  The city needs\
+Gives one extra food resource on all Oceanic tiles. The city needs\
  to be coastal to build this improvement.\
 ")
 
@@ -445,12 +445,12 @@ sound		= "b_hydro_plant"
 sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
-Increases the effect of Factory and Mfg. Plant on the shield\
+Increases the effect of a Factory and Mfg. Plant on the shield\
  production of a city, and also reduces the amount of pollution\
- generated by that production.  A Hydro Plant in combination with\
+ generated by that production. A Hydro Plant in combination with\
  either a Factory or Mfg. Plant gives a 75% production bonus over\
  the level without any of these improvements, while giving pollution\
- only 75% of the equivalent combination with a Power Plant; a\
+ only 75% of the equivalent combination with a Power Plant. A\
  Hydro Plant, Factory, and Mfg. Plant together give a 150%\
  production bonus with pollution only 50% of the equivalent\
  combination with a Power Plant.\
@@ -571,12 +571,12 @@ sound		= "b_nuclear_plant"
 sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
-Increases the effect of Factory and Mfg. Plant on the shield\
+Increases the effect of a Factory and Mfg. Plant on the shield\
  production of a city, and also reduces the amount of pollution\
- generated by that production.  A Nuclear Plant in combination with\
+ generated by that production. A Nuclear Plant in combination with\
  either a Factory or Mfg. Plant gives a 75% production bonus over\
  the level without any of these improvements, while giving pollution\
- only 75% of the equivalent combination with a Power Plant; a\
+ only 75% of the equivalent combination with a Power Plant. A\
  Nuclear Plant, Factory, and Mfg. Plant together give a 150%\
  production bonus with pollution only 50% of the equivalent\
  combination with a Power Plant.\
@@ -604,7 +604,7 @@ sabotage	= 100
 sound		= "b_offshore_platform"
 sound_alt	= "b_generic"
 helptext	= _("\
-Adds 1 extra shield resource on all Oceanic tiles worked by a city.  The\
+Adds 1 extra shield resource on all Oceanic tiles worked by a city. The\
  city needs to be coastal to build this improvement.\
 ")
 
@@ -648,9 +648,7 @@ Take good care of your capital, as its loss may result in your\
 If the capital is in a dangerous location, or a more central capital\
  would give a better corruption distribution, you can move your palace\
  by rebuilding it in another city.\
-"),
-; /* xgettext:no-c-format */
-_("\
+"), _("\
 Under Despotism the city containing the palace gains a +75%\
  production bonus, and under Monarchy a +50% production bonus.\
 ")
@@ -698,7 +696,7 @@ sabotage	= 100
 sound		= "b_port_facility"
 sound_alt	= "b_generic"
 helptext	= _("\
-Allows a city to build veteran sea units.  Also, damaged sea units\
+Allows a city to build veteran sea units. Also, damaged sea units\
  which stay in town for one full turn without moving are completely\
  restored.\
 ")
@@ -723,10 +721,10 @@ sound		= "b_power_plant"
 sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
-Increases the effect of Factory and Mfg. Plant on the shield\
- production of a city.  A Power Plant in combination with\
+Increases the effect of a Factory and Mfg. Plant on the shield\
+ production of a city. A Power Plant in combination with\
  either a Factory or Mfg. Plant gives a 75% production bonus over\
- the level without any of these improvements; a Power Plant,\
+ the level without any of these improvements. A Power Plant,\
  Factory, and Mfg. Plant together give a 150% production bonus.\
  The extra production may lead to the city generating more\
  pollution.\
@@ -850,7 +848,7 @@ sabotage	= 100
 sound		= "b_sewer_system"
 sound_alt	= "b_generic"
 helptext	= _("\
-Allows a city to grow larger than size 12.  An Aqueduct is first\
+Allows a city to grow larger than size 12. An Aqueduct is first\
  required for a city to grow larger than size 8.\
 ")
 ; There is also an effect to reduce the chance of plague, but you have to
@@ -876,13 +874,13 @@ sound		= "b_solar_plant"
 sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
-Increases the effect of Factory and Mfg. Plant on the shield\
+Increases the effect of a Factory and Mfg. Plant on the shield\
  production of a city, and also greatly reduces the amount of pollution\
- generated by that production; a Solar Plant leads to less overall\
+ generated by that production. A Solar Plant leads to less overall\
  pollution than no plant at all. A Solar Plant in combination with\
  either a Factory or Mfg. Plant gives a 75% production bonus over\
  the level without any of these improvements, while giving pollution\
- only 50% of the equivalent combination with a Power Plant; a\
+ only 50% of the equivalent combination with a Power Plant. A\
  Solar Plant, Factory, and Mfg. Plant together give a 150%\
  production bonus, and eliminates all pollution generated by\
  production in that city.\
@@ -911,8 +909,8 @@ sound		= "b_space_component"
 sound_alt	= "b_generic"
 helptext	= _("\
 Space Components can be differentiated into Propulsion and Fuel\
- Components.  Each pair of them reduces your spaceship's travel\
- time.  You can build up to 8 pairs.\
+ Components. Each pair of them reduces your spaceship's travel\
+ time. You can build up to 8 pairs.\
 "), _("\
 Before you can build any spaceship parts, you must build the\
  Apollo Program.\
@@ -937,7 +935,7 @@ sabotage	= 100
 sound		= "b_space_module"
 sound_alt	= "b_generic"
 helptext	= _("\
-Space Modules are the most expensive parts of spaceships.  There\
+Space Modules are the most expensive parts of spaceships. There\
  are three different types of Space Module:\
 "), _("\
 - Habitation Module: provides living space for 10,000 people.\
@@ -973,9 +971,9 @@ sabotage	= 100
 sound		= "b_space_structural"
 sound_alt	= "b_generic"
 helptext	= _("\
-Space Structurals form the base of your spaceship.  All other\
- spaceship parts need to be connected to Structurals in order to\
- function.  You can build up to 32 Space Structurals.\
+Space Structurals form the base of your spaceship. All other\
+ spaceship parts need to be connected to Space Structurals in order to\
+ function. You can build up to 32 Space Structurals.\
 "), _("\
 Before you can build any spaceship parts, you must build the\
  Apollo Program.\
@@ -1001,7 +999,7 @@ sound		= "b_stock_exchange"
 sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
-Together with a Bank, a Stock Exchange boosts tax and luxury\
+Together with a Bank, a Stock Exchange boosts tax and luxury good\
  production in a city by 50%. \
 Together with a Marketplace and a Bank, a Stock Exchange boosts\
  tax and luxury production in a city by 150%.\
@@ -1050,7 +1048,7 @@ sound_alt	= "b_generic"
 ; /* xgettext:no-c-format */
 helptext	= _("\
 Increases the food resources by 100% on each farmland tile which\
- is being used around the city.  Farmland tiles are those which\
+ is being used around the city. Farmland tiles are those which\
  have been irrigated a second time.\
 ")
 
@@ -1072,9 +1070,9 @@ sabotage	= 100
 sound		= "b_temple"
 sound_alt	= "b_generic"
 helptext	= _("\
-Makes one unhappy citizen content.  The Mysticism advance doubles\
- this effect.  With both Mysticism and the Oracle, 4 citizens are\
- made content.  Does not affect citizens made unhappy by military\
+Makes one unhappy citizen content. The Mysticism advance doubles\
+ this effect. With both Mysticism and the Oracle, 4 citizens are\
+ made content. Does not affect citizens made unhappy by military\
  activity.\
 ")
 
@@ -1506,8 +1504,8 @@ sound		= "w_magellans_expedition"
 sound_alt	= "w_generic"
 helptext	= _("\
 All your new sea units built in cities on the same continent start with\
- an additional veteran level (this is cumulative with any Port Facility\
- in a city; with both, units are created as Hardened).\
+ an additional veteran level. This is cumulative with any Port Facility\
+ in a city. With both, units are created as Hardened.\
 ")
 
 [building_manhattan_project]
@@ -1574,8 +1572,8 @@ sound		= "w_michelangelos_chapel"
 sound_alt	= "w_generic"
 helptext	= _("\
 Counts as having a Cathedral in each of your cities on the same\
- continent. This makes 3 unhappy citizens content in each city;\
- however, it does not affect citizens made unhappy by military activity.\
+ continent. This makes 3 unhappy citizens content in each city.\
+ However, it does not affect citizens made unhappy by military activity.\
  The discovery of Theology increases the effect of a Cathedral,\
  making an additional unhappy citizen content. The discovery of\
  Communism lessens the effect of a Cathedral, reducing by one\
@@ -1724,8 +1722,8 @@ sound		= "w_sun_tzus_war_academy"
 sound_alt	= "w_generic"
 helptext	= _("\
 All your new military land units produced in cities on the same continent\
- start with an additional veteran level (this is cumulative with any\
- Barracks building in a city; with both, units are created as Hardened).\
+ start with an additional veteran level. This is cumulative with any\
+ Barracks building in a city. With both, units are created as Hardened.\
 ")
 
 [building_united_nations]
@@ -1795,7 +1793,7 @@ build_cost	= 999
 upkeep		= 0
 sabotage	= 0
 helptext	= _("\
-This is not a normal improvement.  Instead, setting a city's\
+This is not a normal improvement. Instead, setting a city's\
  production to Coinage means its shield production is\
- converted to tax output (money, coins!).\
+ converted to tax output (money, gold!).\
 ")
