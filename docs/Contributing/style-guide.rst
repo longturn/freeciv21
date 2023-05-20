@@ -26,7 +26,7 @@ Headings
 Headings create chapter breaks between sections of a document as well as provide the title.
 
 Heading 1
-    Heading 1 is used to for the title of the page/document.  The asterisk is used to denote Heading 1 like
+    Heading 1 is used to for the title of the page/document. The asterisk is used to denote Heading 1 like
     this:
 
 .. code-block:: rst
@@ -192,7 +192,7 @@ adhere to, so the documentation is consistently formatted and certain language e
 same way.
 
 The Oxford Comma
-    The Oxford Comma is the usage of a comma when listing multple items and placing a comma before the "and"
+    The Oxford Comma is the usage of a comma when listing multiple items and placing a comma before the "and"
     or "or" at the end of the list. For example: You need to follow these steps: Click on :guilabel:`Menu`,
     then click on :guilabel:`Options`, and finally click on :guilabel:`Interface`. Notice the comma usage
     before the word "and", that is the Oxford comma and its usage is expected in our documentation.
@@ -230,7 +230,7 @@ Language Contractions
     :strong:`the usage of contractions is not advised` and should be used sparingly.
 
 The Use of Person
-    In English there are three types of person: first, second, and third.  First person is possessive -- "I
+    In English there are three types of person: first, second, and third. First person is possessive -- "I
     took a walk down the street". Second person is about speaking to someone -- "You took a walk down the
     street". Third person is non-specific -- "They took a walk down the street". In our documentation we use
     the second person form. We want to be conversational with our readers and speak to them about the game,
@@ -241,7 +241,7 @@ The Use of Person
 
 Double Negatives / Negations
     To aid the readability of our documentation, we want to stay away from using double negatives. A double
-    negative is where two negative words are combined together that end with a possitive. For example:
+    negative is where two negative words are combined together that end with a positive. For example:
     "The guidelines are not bad". The last two words are negative -- "not bad". It is better to use positive
     language. For example the first sentence is better written as: "The guidelines are good".
 
