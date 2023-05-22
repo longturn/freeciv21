@@ -3,7 +3,7 @@
 ; for other "maintenance".  If you want to make custom changes,
 ; you should create a new datadir subdirectory and copy this file
 ; into that directory, and then modify that copy.  Then use the
-; command "rulesetdir <mysubdir>" in the server to have freeciv
+; command "rulesetdir <mysubdir>" in the server to have Freeciv21
 ; use your new customized file.
 ;
 ; You should sort role units from worst to better, as often the best
@@ -15,7 +15,7 @@
 ; then the first unit with this role will be chosen.
 
 [datafile]
-description="Sandbox Units data for Freeciv"
+description="Sandbox Units data for Freeciv21"
 options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
@@ -671,7 +671,7 @@ uk_gold       = 1
 flags         = "Capturer"
 roles         = "DefendOk", "DefendOkStartUnit", "FirstBuild"
 helptext      = _("\
-This unit may be built from the start of the game.  It is the\
+This unit may be built from the start of the game. It is the\
  weakest offensive unit.\
 ")
 
@@ -937,7 +937,7 @@ Partisans are guerilla fighters who are experts\
 "), _("\
 A number of Partisans are granted free when an enemy conquers your\
  city -- they automatically assume defensive positions in the\
- surrounding countryside -- but only under these conditions:\n\
+ surrounding countryside -- but only under these conditions:\n\n\
  - Guerilla Warfare must be known by at least one player.\n\
  - At least three quarters of the citizens must have your nationality.\n\
  - You must know about Communism and Gunpowder.\n\
@@ -1383,8 +1383,8 @@ Catapults are large rock-throwing machines of war.\
  They are very strong attackers but equally weak\
  defenders and will need an escort to be effective.\
 "), _("\
-While powerful, Catapults (and their successors) are bulky and awkward; \
-they require roads to move in rough terrain (mountains, swamps, and \
+While powerful, Catapults (and their successors) are bulky and awkward. \
+They require roads to move in rough terrain (mountains, swamps, and \
 jungles), are difficult to defend, and are too big for early ships \
 (Triremes and Caravels).\
 ")
@@ -1520,9 +1520,7 @@ roles         = "DefendOk", "DefendOkStartUnit"
 helptext      = _("\
 Fighters are your first airborne units. They can\
  move anywhere and attack any unit.\
-"),
-; /* xgettext:no-c-format */
-_("\
+"), _("\
 Fighters and other aircraft lose 10% of their hitpoints for every \
 turn not spent in a city, airstrip, or airbase, or on a Carrier.\
 ")
@@ -1559,11 +1557,9 @@ Bombers are specialized airborne units that may\
  only attack ground targets, not other airborne\
  units.\
 "), _("\
-A Bomber's attack against units on land is a bombard attack; against\
+A Bomber's attack against units on land is a bombard attack. Against\
  units on water it has a regular attack.\
-"),
-; /* xgettext:no-c-format */
-_("\
+"), _("\
 As with other aircraft, Bombers lose 10% of their hitpoints for every \
 turn not spent in a city, airstrip, or airbase, or on a Carrier.\
 ")
@@ -1599,17 +1595,17 @@ flags         = "OneAttack", "AirAttacker", "Bombarder", "HasNoZOC",
                 "Provoking"
 roles         = ""
 helptext      = _("\
-A Helicopter's attack against units on land is a bombard attack; against \
+A Helicopter's attack against units on land is a bombard attack. Against \
 units on water it has a regular attack.\
 "), _("\
-Helicopters can also transport one military land unit; while most troops \
+Helicopters can also transport one military land unit. While most troops \
 must load or unload in a city, airstrip, or airbase (and not in the field \
 or onboard a Carrier), units specializing in mobility (Paratroopers, \
 Alpine Troops, Marines, Partisans, and Fanatics) can embark or disembark \
 at any time.\
 "), _("\
 Unlike other aircraft, Helicopters are not required to return to a city, \
-base, or Carrier to refuel after a set number of turns; however, care \
+base, or Carrier to refuel after a set number of turns. However, care \
 must be exercised, due to the health they lose every turn.\
 ")
 bombard_rate = 2
@@ -1882,10 +1878,10 @@ bonuses       =
 flags         = "BadCityDefender"
 roles         = "Hunter"
 helptext      = _("\
-An improved Ironclad, with better move rate and vision.\
- Anti-submarine weapons double its defense against Submarines.\
+An improved Ironclad, with better move rate and vision. \
+Anti-submarine weapons double its defense against Submarines.\
 "), _("\
-TIP:  A very fast unit, which is very useful for hunting down enemy\
+TIP: A very fast unit, which is very useful for hunting down enemy\
  Transports and Submarines.\
 ")
 
@@ -1953,7 +1949,8 @@ flags         = "BadCityDefender"
 roles         = "DefendGood", "DefendGoodStartUnit"
 helptext      = _("\
 The AEGIS Cruiser is equipped with an advanced\
- defensive missile system.\
+ defensive missile system. Airborne units are at a\
+ disvantage against AEGIS Cruisers.\
 ")
 
 [unit_battleship]
@@ -2065,7 +2062,7 @@ It can transport aircraft and military land units (not wheeled),\
  although land units cannot always be transferred to and from Helicopters\
  while onboard (see Helicopter help).\
 "), _("\
-TIP:  Guard Carriers with a handful of fast-moving ships and a\
+TIP: Guard Carriers with a handful of fast-moving ships and a\
  battleship, as losing a fully-equipped Carrier is VERY\
  painful and expensive.\
 ")
@@ -2112,8 +2109,6 @@ Transports can also clean pollution and fallout on water tiles, and \
 with knowledge of Miniaturization, may build oil platforms on deep ocean \
 tiles (for use by Offshore Platforms).\
 ")
-; FIXME: also cleans pollution/fallout in coastal cities (and faster
-; than Engineers)
 
 [unit_cruise_missile]
 name          = _("Cruise Missile")
@@ -2147,7 +2142,7 @@ helptext      = _("\
 The Cruise Missile is a long-distance missile\
  that can strike deep into enemy territory.\
 "), _("\
-TIP:  A handful of these can successfully keep the waters around\
+TIP: A handful of these can successfully keep the waters around\
  your treasured homeland free of enemy ships.\
 ")
 
@@ -2199,9 +2194,9 @@ On impact, the blast will destroy any unit in an area 3 tiles wide\
  land tiles within the blast area are subject to nuclear fallout.\
 "), _("\
 Nuclear fallout reduces tile output and increases the risk of global\
- nuclear winter; see the help on Fallout.\
+ nuclear winter. See the help on Fallout.\
 "), _("\
-TIP:  You may be involved in a situation where you've invaded an\
+TIP: You may be involved in a situation where you have invaded an\
  enemy country en masse, but the enemy cities are too strong.\
  Before using a Nuclear unit, assemble a gang of cleanup units\
  next to the city and have them ready to fix the fallout on the\
@@ -2256,12 +2251,12 @@ On impact, the blast will destroy any unit in an area 3 tiles wide\
  land tiles within the blast area are subject to nuclear fallout.\
 "), _("\
 Nuclear fallout reduces tile output and increases the risk of global\
- nuclear winter; see the help on Fallout.\
+ nuclear winter. See the help on Fallout.\
 "), _("\
 Make sure that the upkeep (gold and shield) of your ICBM is payed.\
  A non maintained nuke will detonate in place.\
 "), _("\
-TIP:  You may be involved in a situation where you've invaded an\
+TIP: You may be involved in a situation where you have invaded an\
  enemy country en masse, but the enemy cities are too strong.\
  Before using a Nuclear unit, assemble a gang of cleanup units\
  next to the city and have them ready to fix the fallout on the\
@@ -2315,7 +2310,7 @@ helptext      = _("\
 A Diplomat is an official that carries your dispatches and\
  is authorized to deal with foreign dignitaries. He may\
  also undertake various covert operations with the intent of\
- harming your opponents; Diplomats in your own cities defend\
+ harming your opponents. Diplomats in your own cities defend\
  them against such actions.\
 "), _("\
 Many covert actions may be attempted even in peacetime, but the more\
@@ -2326,7 +2321,7 @@ Many covert actions may be attempted even in peacetime, but the more\
 "), _("\
 If a foreign unit is alone on a tile, you may attempt to bribe it\
  with your Diplomat. By paying a sum of gold the unit will immediately\
- become yours; the exact sum depends on the status of the unit and\
+ become yours. The exact sum depends on the status of the unit and\
  that of the civilization owning it. However, units belonging to\
  Republican or Democratic governments cannot be bribed. Bribery when\
  not at war will cause a diplomatic incident.\
@@ -2335,7 +2330,7 @@ Diplomats can also perform a number of actions in another player's\
  city, although each Diplomat may attempt only one action. Most of\
  these actions have a chance of failure. Also, any enemy Diplomats or\
  Spies in the city will oppose hostile actions, as will the enemy Leader\
- in games with leaders; in this case, either your unit or the defending\
+ in games with leaders. In this case, either your unit or the defending\
  unit will die (if you go up against the Leader you will always die). If\
  the defending unit dies, you lose one movement point and may try again.\
 "), _("\
@@ -2375,7 +2370,7 @@ The actions available to Diplomats in a city are:\
  diplomatic incident.\
 "), _("\
 In some game strategies, hordes of Diplomats can be used to wreak\
- havoc on the enemy.  Little wonder that Diplomats are often\
+ havoc on the enemy. Little wonder that Diplomats are often\
  viewed with suspicion and fear!\
 "), _("\
 Diplomats built under Communist or Federation governments will\
@@ -2427,13 +2422,13 @@ roles         = "DiplomatStartUnit"
 helptext      = _("\
 A Spy is more skilled in the arts of espionage than her Diplomat predecessor.\
 "), _("\
-She can perform all the functions of the Diplomat; refer to the Diplomat\
+She can perform all the functions of the Diplomat. Refer to the Diplomat\
  entry for more details. Unlike a Diplomat, a Spy may also survive an\
  operation in a foreign city and become more experienced as a result.\
  Spies are also more effective than Diplomats at defending cities\
  against foreign Diplomats and Spies.\
 "), _("\
-A Spy can also be used to:\n\
+A Spy can also be used to:\n\n\
  - sabotage an enemy unit (reducing its hit points to half), if it is\
  alone on a tile and the players are at war;\n\
  - poison the water supply of an enemy city (reducing the population\
@@ -2487,7 +2482,7 @@ helptext      = _("\
 A Caravan carries goods or material for trading with other nations,\
  or to help build wonders in your own cities.\
 "), _("\
-Caravans can only travel on roads, railroads, rivers or ships.\
+Caravans can only travel on roads, railroads, rivers, or ships.\
  (Caravans cannot take advantage of maglevs, but may travel on\
  the railroads that accompany them.)\
 "), _("\
@@ -2500,7 +2495,7 @@ A Caravan sent to one of your own cities that is building a wonder\
  can add 50 shields towards its production. If your city is not\
  building a wonder, the Caravan can take no special action.\
 "), _("\
-TIP:  You can stockpile a stack of Caravans in advance and bring\
+TIP: You can stockpile a stack of Caravans in advance and bring\
  them all into a city where you have started to build a wonder,\
  and finish it in only one turn!\
 ")
@@ -2608,7 +2603,7 @@ uk_happy      = 0
 uk_shield     = 0
 uk_food       = 0
 uk_gold       = 0
-flags         = "IgZOC", "NonMil", "NoBuild", "NoHome", "SuperSpy", 
+flags         = "IgZOC", "NonMil", "NoBuild", "NoHome", "SuperSpy",
                 "EvacuateFirst", "Unbribable", "GameLoss", "Unique",
                 "Provoking"
 ; No veteran levels (level name is never displayed)
@@ -2619,9 +2614,9 @@ veteran_power_fact = 100
 veteran_move_bonus = 0
 roles         = "KingStartUnit"
 helptext      = _("\
-This is you. If you lose this unit, you lose the game. So don't.\
+This is you. If you lose this unit, you lose the game. So do not.\
 "), _("\
-Won't unleash barbarians from huts.\
+Will not unleash barbarians from huts.\
 ")
 
 [unit_barbarian_leader]

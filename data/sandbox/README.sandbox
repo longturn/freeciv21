@@ -1,27 +1,23 @@
-===============
 Sandbox Ruleset
 ===============
 
 History
 -------
 
-Sandbox ruleset started out as a copy of civ2civ3 ruleset as it stood
-in Freeciv 2.6 (civ2civ3 is Freeciv's default ruleset starting from
-version 3.0).
-The former ruleset for testing unusual features of the freeciv engine
-was called 'Experimental' and based on classic ruleset that was
-the default ruleset earlier. As the default ruleset changed, we felt
-the need to base also the testing ruleset to the new default.
+Sandbox ruleset started out as a copy of civ2civ3 ruleset as it stood in legacy Freeciv 2.6 (civ2civ3 is
+Freeciv21's default ruleset starting from version 3.0).
+
+The former ruleset for testing unusual features of the Freeciv21 engine was called 'Experimental' and based on
+the classic ruleset that was the default ruleset earlier. As the default ruleset changed, we felt the need to
+base also the testing ruleset to the new default.
 
 
 Warning
 -------
 
-This ruleset is a playpen for demonstrating new features. There's no
-guarantee that games started with one release will continue to be
-playable with another release (even a minor version), nor that the
-game will be any fun to play. Nor are there guaranteed to be
-appropriate graphics for all the game elements in the supplied
+This ruleset is a playpen for demonstrating new features. There is no guarantee that games started with one
+release will continue to be playable with another release (even a minor version), nor that the game will be
+any fun to play. Nor are there guaranteed to be appropriate graphics for all the game elements in the supplied
 tilesets, so substitutes may be used.
 
 
@@ -29,133 +25,146 @@ Main features relative to civ2civ3 ruleset
 ------------------------------------------
 
 Nukes:
-The Nuclear has lost its Explode Nuclear In Place ability. It can still do
-Nuke Units and Nuke City.
-The new unit type ICBM has been added. It requires Fusion Power.
-ICBM can do Nuke Target Tile - targeting any tile at the map no matter how
-distant.
-If ICBM upkeep cannot be paid, they explode in place.
+
+* The Nuclear has lost its Explode Nuclear In Place ability. It can still do Nuke Units and Nuke City.
+* The new unit type ICBM has been added. It requires Fusion Power.
+* ICBM can do Nuke Target Tile -- targeting any tile at the map no matter how distant.
+* If ICBM upkeep cannot be paid, they explode in place.
 
 Airlifting:
-Light weight units can be airlifted once Flight is known. Medium weight
-units can be airlifted once Advanced Flight is known. Heavy weight units
-can be airlifted once Fusion Power is known.
-To airlift heavy and medium weight units an airport is required both in
-the source and in the destination city.
-Cities that know Flight can airlift one light weight unit per turn. An
-Airport allows a city to airlift one more unit per turn.
+
+* Light weight units can be airlifted once Flight is known. Medium weight units can be airlifted once Advanced
+  Flight is known. Heavy weight units can be airlifted once Fusion Power is known.
+* To airlift heavy and medium weight units an Airport is required both in the source and in the destination
+  city.
+* Cities that know Flight can airlift one light weight unit per turn. An Airport allows a city to airlift one
+  more unit per turn.
 
 Map Stealing:
-Spies can steal other player's world map
+
+* Spies can steal other player's world map
 
 Spy elimination:
-A Spy can eliminate non allied spies and diplomats out in the open without
-also trying to perform any other action.
+
+* A Spy can eliminate non allied Spies and Diplomats out in the open without also trying to perform any other
+  action.
 
 Border Vision:
-Border Vision is gained mid-game once Electricity is known
+
+* Border Vision is gained mid-game once Electricity is known.
 
 Destroy City:
-Leader unit can destroy domestic cities.
+
+* Leader unit can destroy domestic cities.
 
 Unit Expulsion:
-Foreign units can be expelled from the territory of a player.
+
+* Foreign units can be expelled from the territory of a player.
 
 Paradropping:
-It's impossible for green Paratroopers to land on Forest and Jungle
-tiles. Veteran, hardened and elite Paratroopers can still do it.
+
+* It is impossible for green Paratroopers to land on Forest and Jungle tiles. Veteran, hardened, and elite
+  Paratroopers can still do it.
 
 Unit Disbanding:
-A unit can be Disbandable, Undisbandable or ConsensusUndisbandable. The
-consensus among the player's bureaucracy is that ConsensusUndisbandable
-units never should be disbanded (or recycled). Under some governments it
-has the power to enforce its will.
-The unit types Battleship and Carrier are ConsensusUndisbandable. Both unit
-types gets an Easter Egg in their ruleset comments: a reference to a news
-paper article indicating that ConsensusUndisbandable isn't a completely
-fictional concept.
+
+* A unit can be Disbandable, Undisbandable or ConsensusUndisbandable. The consensus among the player's
+  bureaucracy is that ConsensusUndisbandable units never should be disbanded (or recycled). Under some
+  governments it has the power to enforce its will.
+* The unit types Battleship and Carrier are ConsensusUndisbandable. Both unit types gets an Easter Egg in
+  their ruleset comments: a reference to a news paper article indicating that ConsensusUndisbandable is not a
+  completely fictional concept.
 
 Single Barbarian Nation:
-All barbarians belong to the same barbarian nation. There's no separate
-Pirates and (land) Barbarians.
+
+* All barbarians belong to the same barbarian nation. There is no separate Pirates and (land) Barbarians.
 
 Hermit's Place:
-Hermit's places are spontaneously, during game, appearing bonus extras
-that can grant techs to units exploring them. See its Help entry under
-Terrains for more information.
+
+* Hermit's Places are spontaneously, during game, appearing bonus extras that can grant techs to units
+  exploring them. See its Help entry under Terrains for more information.
 
 Sea Units in port:
-Sea Units in cities defend with 1/4 of their usual defense value.
+
+* Sea Units in cities defend with 1/4 of their usual defense value.
 
 Goods:
-Trade routes can carry many kinds of goods. There is production chains
-like that city with Mine can trade Ore to a city that then can trade
-Metal to third city which can then trade Goods or Equipment to fourth
-city. Goods later in chains trade for higher value.
+
+* Trade routes can carry many kinds of goods. There is production chains like that city with Mine can trade
+  Ore to a city that then can trade Metal to third city which can then trade Goods or Equipment to fourth
+  city. Goods later in chains trade for higher value.
 
 Corruption and World Size:
-Under Republic government, the speed corruption increases as one goes
-further from the capital is relative to the size of the world. At
-the maximum distance corruption is the same regardless of the size of
-the world.
+
+* Under Republic government, the speed corruption increases as one goes further from the capital is relative
+  to the size of the world. At the maximum distance corruption is the same regardless of the size of the
+  world.
 
 Units can be bribed/sabotaged if not alone on their tile:
-Being part of a unit stack won't protect against spy actions.
+
+* Being part of a unit stack will not protect against spy actions.
 
 Merchant movement restrictions:
-Caravans and Freight can only moves on roads and rivers (as in older
-versions of civ2civ3).
+
+* Caravans and Freight can only moves on roads and rivers (as in older versions of civ2civ3).
 
 One-time trade bonuses:
-Caravans and Freight get one-time bonuses when establishing trade
-routes, and can get revenue even when a trade route exists
-('Enter Marketplace'), as in older versions of civ2civ3; however,
-this latter action really requires a Marketplace building in the city.
+
+* Caravans and Freight get one-time bonuses when establishing trade routes, and can get revenue even when a
+  trade route exists ('Enter Marketplace'), as in older versions of civ2civ3. However, this latter action
+  really requires a Marketplace building in the city.
 
 Custom policy "Personal Freedom":
-You can trade off a science bonus against extra unhappiness from your
-aggressive military units.
+
+* You can trade off a science bonus against extra unhappiness from your aggressive military units.
 
 Opponents not seeing units in fortress or airbase:
-Opponents can't see units that are inside fortress or airbase.
-Units inside fort and airstrip can still be seen.
+
+* Opponents cannot see units that are inside fortress or airbase. Units inside fort and airstrip can still be
+  seen.
 
 Buoys visible only once Radio known:
-One can see Buoys only when one knows Radio. The leading player
-may build Buoys that others can't yet see.
 
-Stealing techs on city conquest
-Getting a tech with city conquest is never guaranteed to give techs.
-In early game you have 50% chance to get tech from the player losing the city.
-After University is known, no techs are got from the city conquest.
+One can see Buoys only when one knows Radio. The leading player may build Buoys that others cannot yet see.
 
-Nationality conversion on conquest
-When a city is conquered, 25% of its inhabitants convert to the nationality
-of the conqueror.
+Stealing techs on city conquest:
 
-Combat Rounds
-Each combat lasts 15 rounds at max, even if neither side dies in that time.
+* Getting a tech with city conquest is never guaranteed to give techs. In early game you have 50% chance to
+  get tech from the player losing the city. After University is known, no techs are got from the city
+  conquest.
 
-Caravel needs supplies
-Caravel needs to spend at least every third turn change next to a land tile
-to load supplies for the crew. Otherwise the unit is lost.
+Nationality conversion on conquest:
 
-Multiresearch enabled
-When switching research, already accumulated bulbs are not transferred to
-the new technology but are remembered towards previous research.
+* When a city is conquered, 25% of its inhabitants convert to the nationality of the conqueror.
 
-Tech trading requirement
-Treaties cannot have tech clauses before both sides know Writing.
+Combat Rounds:
 
-Plague
-Double probability for a plague spreading along a trade route. Enemy spies
-can release plague samples found in a target city's Research Lab.
+* Each combat lasts 15 rounds at max, even if neither side dies in that time.
 
-Disrupt Supply Lines
-Some units can disrupt the supply lines of enemy units. This removes 1 MP
-from the target unit at the cost of one move fragment for the unit doing the
-disrupting.
+Caravel needs supplies:
 
-Casus belli
-Staring to do Pillage to a tile gives the tile owner (not the extra owner) a
-casus belli against you.
+* Caravel needs to spend at least every third turn change next to a land tile to load supplies for the crew.
+  Otherwise the unit is lost.
+
+Multiresearch enabled:
+
+* When switching research, already accumulated bulbs are not transferred to the new technology but are
+  remembered towards previous research.
+
+Tech trading requirement:
+
+* Treaties cannot have tech clauses before both sides know Writing.
+
+Plague:
+
+* Double probability for a plague spreading along a trade route. Enemy spies can release plague samples found
+  in a target city's Research Lab.
+
+Disrupt Supply Lines:
+
+* Some units can disrupt the supply lines of enemy units. This removes 1 MP from the target unit at the cost
+  of one move fragment for the unit doing the disrupting.
+
+Casus belli:
+
+* Staring to do Pillage to a tile gives the tile owner (not the extra owner) a casus belli against you.
