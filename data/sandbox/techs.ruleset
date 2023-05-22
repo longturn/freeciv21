@@ -4,11 +4,11 @@
 ; for other "maintenance".  If you want to make custom changes,
 ; you should create a new datadir subdirectory and copy this file
 ; into that directory, and then modify that copy.  Then use the
-; command "rulesetdir <mysubdir>" in the server to have freeciv
+; command "rulesetdir <mysubdir>" in the server to have Freeciv21
 ; use your new customized file.
 
 [datafile]
-description="Sandbox technology data for Freeciv"
+description="Sandbox technology data for Freeciv21"
 options="+Freeciv-ruleset-Devel-2017.Jan.02"
 format_version=20
 
@@ -270,7 +270,7 @@ flags    = ""
 graphic     = "a.construction"
 graphic_alt = "-"
 helptext = _("\
-Allows Settlers, Migrants, Workers and Engineers to build forts and \
+Allows Settlers, Migrants, Workers, and Engineers to build forts and \
 fortresses.\
 ")
 
@@ -656,7 +656,7 @@ flags    = ""
 graphic     = "a.radio"
 graphic_alt = "-"
 helptext = _("\
-Allows Workers and Engineers to build airstrips, airbases and buoys.\
+Allows Workers and Engineers to build airstrips, airbases, and buoys.\
 ")
 
 [advance_railroad]
@@ -667,7 +667,7 @@ flags    = ""
 graphic     = "a.railroad"
 graphic_alt = "-"
 helptext = _("\
-Allows Settlers, Migrants, Workers and Engineers to upgrade roads to \
+Allows Settlers, Migrants, Workers, and Engineers to upgrade roads to \
 railroads.\
 "), _("\
 Halves one-time revenue from new trade routes.\
@@ -706,7 +706,7 @@ flags    = ""
 graphic     = "a.refrigeration"
 graphic_alt = "-"
 helptext = _("\
-Allows Settlers, Migrants, Workers and Engineers to upgrade \
+Allows Settlers, Migrants, Workers, and Engineers to upgrade \
 irrigation systems to farmland.\
 ")
 
@@ -783,7 +783,7 @@ flags    = ""
 graphic     = "a.superconductors"
 graphic_alt = "-"
 helptext = _("\
-Allows Settlers, Migrants, Workers and Engineers to upgrade railroads \
+Allows Settlers, Migrants, Workers, and Engineers to upgrade railroads \
 with maglev.\
 ")
 
