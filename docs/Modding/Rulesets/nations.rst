@@ -21,7 +21,7 @@ The following information is required to add a new nation:
   an existing nation.
 * A short historical description of the nation, shown in the Help dialog.
 * Several (real) leader names, preferably both men and women. Prefer recognized historically important
-  leaders, eg Henri IV (https://en.wikipedia.org/wiki/Henry_IV_of_France) and
+  leaders, eg Henry IV (https://en.wikipedia.org/wiki/Henry_IV_of_France) and
   Napoléon Bonaparte (https://en.wikipedia.org/wiki/Napoleon), but not
   Jean Casimir-Perier (https://en.wikipedia.org/wiki/Jean_Casimir-Perier).
 * Special names for the ruler in certain governments, if applicable. For instance, when in Despotism the
@@ -109,6 +109,11 @@ Another list of nation files - add your nation (:code:`<nationname>.ruleset`) to
 
 Here is yet another list of nations files; again add your nation (:file:`data/nation/<nationname>.ruleset`) to
 it. Nations part of the "core" group go to :file:`translations/freeciv/POTFILES.in` instead.
+
+.. note::
+  There is a short list of nations listed in :file:`translations/core/POTFILES.in` that translators can
+  target first as part of an internationalization efforts. The larger list of nations in
+  :file:`translations/nations/POTFILES.in` is where new less-used nations should go.
 
 
 How to add a Flag
