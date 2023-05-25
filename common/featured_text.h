@@ -12,6 +12,8 @@
       \____/        ********************************************************/
 #pragma once
 
+#include <QString>
+
 /*
  * Some words about the featured text module.
  *
@@ -218,8 +220,8 @@ ft_offset_t text_tag_start_offset(const struct text_tag *ptag);
 ft_offset_t text_tag_stop_offset(const struct text_tag *ptag);
 
 // Specific TTT_COLOR text tag type functions.
-const char *text_tag_color_foreground(const struct text_tag *ptag);
-const char *text_tag_color_background(const struct text_tag *ptag);
+QString text_tag_color_foreground(const struct text_tag *ptag);
+QString text_tag_color_background(const struct text_tag *ptag);
 
 // Specific TTT_LINK text tag type functions.
 enum text_link_type text_tag_link_type(const struct text_tag *ptag);
