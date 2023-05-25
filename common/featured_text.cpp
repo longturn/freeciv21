@@ -698,11 +698,11 @@ ft_offset_t text_tag_stop_offset(const struct text_tag *ptag)
    Return the foreground color suggested by this text tag.  This requires
    the tag type to be TTT_COLOR.  Returns nullptr on error, "" if unset.
  */
-const char *text_tag_color_foreground(const struct text_tag *ptag)
+QString text_tag_color_foreground(const struct text_tag *ptag)
 {
   if (ptag->type != TTT_COLOR) {
     qCritical("text_tag_color_foreground(): incompatible tag type.");
-    return nullptr;
+    return QStringLiteral();
   }
 
   return ptag->color.foreground;
@@ -712,11 +712,11 @@ const char *text_tag_color_foreground(const struct text_tag *ptag)
    Return the background color suggested by this text tag.  This requires
    the tag type to be TTT_COLOR.  Returns nullptr on error, "" if unset.
  */
-const char *text_tag_color_background(const struct text_tag *ptag)
+QString text_tag_color_background(const struct text_tag *ptag)
 {
   if (ptag->type != TTT_COLOR) {
     qCritical("text_tag_color_background(): incompatible tag type.");
-    return nullptr;
+    return QStringLiteral();
   }
 
   return ptag->color.background;

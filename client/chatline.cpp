@@ -33,6 +33,7 @@
 #include "colors_common.h"
 #include "connectdlg_common.h"
 #include "control.h"
+#include "featured_text.h"
 #include "game.h"
 #include "views/view_map_common.h"
 // gui-qt
@@ -710,54 +711,56 @@ void chat_widget::make_link(struct tile *ptile)
 QString apply_tags(QString str, const struct text_tag_list *tags,
                    QColor bg_color)
 {
-  int start, stop, last_i;
-  QString str_col;
-  QString color;
-  QString final_string;
-  QString style;
-  QByteArray qba;
-  QMultiMap<int, QString> mm;
-  QByteArray str_bytes;
-
   if (tags == nullptr) {
     return str;
   }
-  str_bytes = str.toLocal8Bit();
-  qba = str_bytes.data();
+
+  // Tag offsets are relative to bytes.
+  const auto qba = str.toUtf8();
+
+  // Tags to insert into the text
+  std::map<int, QString> html_tags;
 
   text_tag_list_iterate(tags, ptag)
   {
-    if ((text_tag_stop_offset(ptag) == FT_OFFSET_UNSET)) {
-      stop = qba.count();
-    } else {
-      stop = text_tag_stop_offset(ptag);
+    int start = text_tag_start_offset(ptag);
+    if (start == FT_OFFSET_UNSET) {
+      start = 0;
     }
 
-    if ((text_tag_start_offset(ptag) == FT_OFFSET_UNSET)) {
-      start = 0;
-    } else {
-      start = text_tag_start_offset(ptag);
+    int stop = text_tag_stop_offset(ptag);
+    if (stop == FT_OFFSET_UNSET) {
+      stop = qba.length();
     }
+
+    if (start == stop) {
+      // Get rid of empty tags
+      continue;
+    }
+
+    // We always append opening tags and prepend closing tags
+    // This corresponds to increasing depth in the tag tree
     switch (text_tag_type(ptag)) {
     case TTT_BOLD:
-      mm.insert(stop, QStringLiteral("</b>"));
-      mm.insert(start, QStringLiteral("<b>"));
+      html_tags[start] += QStringLiteral("<b>");
+      html_tags[stop] = html_tags[stop].prepend(QStringLiteral("</b>"));
       break;
     case TTT_ITALIC:
-      mm.insert(stop, QStringLiteral("</i>"));
-      mm.insert(start, QStringLiteral("<i>"));
+      html_tags[start] += QStringLiteral("<i>");
+      html_tags[stop] = html_tags[stop].prepend(QStringLiteral("</i>"));
       break;
     case TTT_STRIKE:
-      mm.insert(stop, QStringLiteral("</s>"));
-      mm.insert(start, QStringLiteral("<s>"));
+      html_tags[start] += QStringLiteral("<s>");
+      html_tags[stop] = html_tags[stop].prepend(QStringLiteral("</s>"));
       break;
     case TTT_UNDERLINE:
-      mm.insert(stop, QStringLiteral("</u>"));
-      mm.insert(start, QStringLiteral("<u>"));
+      html_tags[start] += QStringLiteral("<u>");
+      html_tags[stop] = html_tags[stop].prepend(QStringLiteral("</u>"));
       break;
-    case TTT_COLOR:
-      if (text_tag_color_foreground(ptag)) {
-        color = text_tag_color_foreground(ptag);
+    case TTT_COLOR: {
+      QString style;
+      if (!text_tag_color_foreground(ptag).isEmpty()) {
+        auto color = text_tag_color_foreground(ptag);
         if (color_mapping.find(color) != color_mapping.end()) {
           color = color_mapping[color];
         }
@@ -765,8 +768,8 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
           style += QStringLiteral("color:%1;").arg(color);
         }
       }
-      if (text_tag_color_background(ptag)) {
-        color = text_tag_color_background(ptag);
+      if (!text_tag_color_background(ptag).isEmpty()) {
+        auto color = text_tag_color_background(ptag);
         if (color_mapping.find(color) != color_mapping.end()) {
           color = color_mapping[color];
         }
@@ -774,10 +777,10 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
           style += QStringLiteral("background-color:%1;").arg(color);
         }
       }
-      mm.insert(stop, QStringLiteral("</span>"));
-      mm.insert(start, QStringLiteral("<span style=\"%1\">").arg(style));
-
+      html_tags[start] += QStringLiteral("<span style=\"%1\">").arg(style);
+      html_tags[stop] = html_tags[stop].prepend(QStringLiteral("</span>"));
       break;
+    }
     case TTT_LINK: {
       QColor pcolor;
 
@@ -795,14 +798,13 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
         break;
       }
 
-      color = pcolor.name(QColor::HexRgb);
-      str_col = QStringLiteral("<font color=\"%1\">").arg(color);
-      mm.insert(stop, QStringLiteral("</a></font>"));
-
-      color = QString(str_col + "<a href=%1,%2>")
-                  .arg(QString::number(text_tag_link_type(ptag)),
-                       QString::number(text_tag_link_id(ptag)));
-      mm.insert(start, color);
+      const auto color = pcolor.name(QColor::HexRgb);
+      html_tags[start] += QStringLiteral("<font color=\"%1\">").arg(color);
+      html_tags[start] += QString("<a href=%1,%2>")
+                              .arg(QString::number(text_tag_link_type(ptag)),
+                                   QString::number(text_tag_link_id(ptag)));
+      html_tags[stop] =
+          html_tags[stop].prepend(QStringLiteral("</a></font>"));
     } break;
     case TTT_INVALID:
       break;
@@ -810,34 +812,18 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
   }
   text_tag_list_iterate_end;
 
-  // insert html starting from last items
-  last_i = str.count();
-  QMultiMap<int, QString>::const_iterator i = mm.constEnd();
-  QMultiMap<int, QString>::const_iterator j = mm.constEnd();
-  while (i != mm.constBegin()) {
-    --i;
-    if (i.key() < last_i) {
-      final_string = final_string.prepend(
-          QString(qba.mid(i.key(), last_i - i.key())).toHtmlEscaped());
-    }
-    last_i = i.key();
-    j = i;
-    if (i != mm.constBegin()) {
-      --j;
-    }
-    if (j.key() == i.key() && i != j) {
-      final_string = final_string.prepend(j.value());
-      final_string = final_string.prepend(i.value());
-      --i;
-    } else {
-      final_string = final_string.prepend(i.value());
-    }
+  // Insert the HTML markup in the text
+  auto html = QStringLiteral();
+  int last_position = 0;
+  for (auto &[position, tags_to_insert] : html_tags) {
+    html += QString(qba.mid(last_position, position - last_position))
+                .toHtmlEscaped();
+    html += tags_to_insert;
+    last_position = position;
   }
-  if (last_i == str.count()) {
-    return str;
-  }
+  html += QString(qba.mid(last_position)).toHtmlEscaped();
 
-  return final_string;
+  return html;
 }
 
 /**
