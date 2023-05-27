@@ -769,7 +769,7 @@ QTextEdit#scenarios_view {
 
 QTextEdit {
   background-color: #232323;
-  color: #54ff54;
+  color: #f8f8f8;
 }
 
 QFontListView {
