@@ -1005,7 +1005,7 @@ void dont_run_as_root(const char *argv0, const char *fallback)
                _("%s: Fatal error: you're trying to run me as superuser!\n"),
                (argv0      ? argv0
                 : fallback ? fallback
-                           : "freeciv"));
+                           : "freeciv21"));
     fc_fprintf(stderr, _("Use a non-privileged account instead.\n"));
     exit(EXIT_FAILURE);
   }
