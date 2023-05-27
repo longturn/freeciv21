@@ -494,7 +494,7 @@ int client_main(int argc, char *argv[])
   }
 
   // disallow running as root -- too dangerous
-  dont_run_as_root(argv[0], "freeciv_client");
+  dont_run_as_root(argv[0], "freeciv21-client");
 
   log_set_file(logfile);
   backtrace_init();

@@ -393,7 +393,7 @@ int main(int argc, char *argv[])
   }
 
   // disallow running as root -- too dangerous
-  dont_run_as_root(argv[0], "freeciv_server");
+  dont_run_as_root(argv[0], "freeciv21-server");
 
   init_our_capability();
 
