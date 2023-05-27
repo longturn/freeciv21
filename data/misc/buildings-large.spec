@@ -27,6 +27,7 @@ sprites = {
   "b.colosseum", "tilesets/buildings/colosseum"
   "b.courthouse", "tilesets/buildings/courthouse"
   "b.factory", "tilesets/buildings/factory"
+  "b.genetic_lab", "tilesets/buildings/genetic_lab"
   "b.granary", "tilesets/buildings/granary"
   "b.harbour", "tilesets/buildings/harbour"
   "b.hospital", "tilesets/buildings/hospital"
