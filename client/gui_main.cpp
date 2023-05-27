@@ -73,13 +73,6 @@ void ui_main()
     tileset_init(tileset);
     tileset_load_tiles(tileset);
     qApp->setWindowIcon(QIcon(*get_icon_sprite(tileset)));
-    if (gui_options->first_boot) {
-      configure_fonts();
-    }
-    if (!isFontInstalled(QStringLiteral("Libertinus Sans"))
-        && !isFontInstalled(QStringLiteral("Linux Libertine"))) {
-      load_fonts();
-    }
     if (!load_theme(gui_options->gui_qt_default_theme_name)) {
       gui_clear_theme();
     }
