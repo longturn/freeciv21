@@ -125,15 +125,9 @@ public:
 
   struct tile *itile;
 
-protected:
-  void paintEvent(QPaintEvent *event) override;
-  void paint(QPainter *painter, QPaintEvent *event);
-
 private:
-  QFont info_font;
   info_tile(struct tile *ptile, QWidget *parent = 0);
   static info_tile *m_instance;
-  QStringList str_list;
   void calc_size();
 };
 

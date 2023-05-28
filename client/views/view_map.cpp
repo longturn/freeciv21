@@ -680,11 +680,13 @@ bool mapview_is_frozen() { return (0 < mapview_frozen_level); }
 /**
    Constructor for info_tile
  */
-info_tile::info_tile(struct tile *ptile, QWidget *parent) : QLabel(parent)
+info_tile::info_tile(struct tile *ptile, QWidget *parent)
+    : QLabel(parent), itile(ptile)
 {
-  setParent(parent);
-  info_font = fcFont::instance()->getFont(fonts::notify_label);
-  itile = ptile;
+  setFont(fcFont::instance()->getFont(fonts::notify_label));
+  setText(popup_info_text(itile).trimmed());
+  setWordWrap(true);
+
   calc_size();
 }
 
@@ -693,62 +695,31 @@ info_tile::info_tile(struct tile *ptile, QWidget *parent) : QLabel(parent)
  */
 void info_tile::calc_size()
 {
-  QFontMetrics fm(info_font);
-  QString str;
-  float x, y;
-  int w = 0;
+  auto size = sizeHint();
 
-  str = popup_info_text(itile);
-  str_list = str.split(QStringLiteral("\n"));
-
-  for (auto const &str : qAsConst(str_list)) {
-    w = qMax(w, fm.horizontalAdvance(str));
+  // Prevent it from getting too wide
+  QFontMetrics fm = fontMetrics();
+  const auto max_width = fm.averageCharWidth() * 70; // About 700px
+  if (size.width() > max_width) {
+    size.setWidth(max_width + 10); // Safety margin
+    size.setHeight(heightForWidth(size.width()) + 10);
   }
-  setFixedHeight(str_list.count() * (fm.height() + 5));
-  setFixedWidth(w + 10);
+
+  setFixedSize(size);
+
+  float x, y;
   if (tile_to_canvas_pos(&x, &y, itile)) {
     x *= queen()->mapview_wdg->scale();
     y *= queen()->mapview_wdg->scale();
     if (y - height() > 0) {
       y -= height();
     } else {
-      int hh = tileset_tile_height(tileset) * queen()->mapview_wdg->scale();
-      y += hh;
+      y += tileset_tile_height(tileset) * queen()->mapview_wdg->scale();
     }
     // Make sure it's visible
     x = std::clamp(int(x), 0, parentWidget()->width() - width());
     move(x, y);
   }
-}
-
-/**
-   Redirected paint event for info_tile
- */
-void info_tile::paint(QPainter *painter, QPaintEvent *event)
-{
-  Q_UNUSED(event)
-  QFontMetrics fm(info_font);
-  int pos, h;
-
-  h = fm.height();
-  pos = h;
-  painter->setFont(info_font);
-  for (int i = 0; i < str_list.count(); i++) {
-    painter->drawText(5, pos, str_list.at(i));
-    pos = pos + 5 + h;
-  }
-}
-
-/**
-   Paint event for info_tile
- */
-void info_tile::paintEvent(QPaintEvent *event)
-{
-  QPainter painter;
-
-  painter.begin(this);
-  paint(&painter, event);
-  painter.end();
 }
 
 /**
