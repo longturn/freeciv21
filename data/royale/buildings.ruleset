@@ -1049,7 +1049,7 @@ deliberately exploded) within range, may be shot down and simply has no effect. 
 Also, adds 30% to the intrinsic defense strength of units in the city when \
 defending against conventional missiles. SDI II adds another 30% against the nuclear attacks.\
  NOTE: The Palace City gets 100% SDI defense with the Palace and with SDI I. SDI II and SDI III are not needed.\
- The Palace with SDI II but without SDI I doesn't give 100% defense against nukes.
+ The Palace with SDI II but without SDI I doesn't give 100% defense against nukes.\
 ")
 
 [building_sdi_defense_3]
@@ -1078,7 +1078,7 @@ deliberately exploded) within range, may be shot down and simply has no effect. 
 Also, adds 40% to the intrinsic defense strength of units in the city when \
 defending against conventional missiles. SDI III adds another 30% against the nuclear attacks.\
  NOTE: The Palace City gets 100% SDI defense with the Palace and with SDI I. SDI II and SDI III are not needed.\
- The Palace with SDI III but without SDI I doesn't give 100% defense against nukes.
+ The Palace with SDI III but without SDI I doesn't give 100% defense against nukes.\
 ")
 
 [building_sewer_system]
@@ -1852,7 +1852,7 @@ The Manhattan Project will make it possible to build nuclear weapons. After it i
 anyone with the necessary technological advances can build nuclear weapons. The Nuclear \
 Fission advance is required to build the early Nuclear Bomb, which is unique to a nation: \
 each nation can have only one at a time. The Robotics advance is required to build the \
-later Nuclear units, which are not limited in number.
+later Nuclear units, which are not limited in number.\
 ")
 
 [building_marco_polos_embassy]
