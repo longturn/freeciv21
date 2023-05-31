@@ -990,7 +990,7 @@ flags         = "Capturer"
 roles         = "DefendGood", "DefendGoodStartUnit", "FirstBuild"
 helptext      = _("\
 Infantry are modern version of Riflemen, relatively good \
-at defending your cities.\n\n
+at defending your cities.\n\n\
 Why: This unit is the end of an upgrade path all the way from Warriors. \
 It is the best non-armored unit for defending your cities. This was \
 added so that the Riflemen could be upgraded into something else than \
@@ -1948,7 +1948,7 @@ it is able to carry Settlers, it can be used for establishing early \
 colonies far away from home. You can only have one Longboat at a time, \
 but this is not as limiting as you may think. The Longboat can take a \
 Settler to a far away land, unload the Settler, build a city with it and \
-then you can disband the Longboat in the new city. This way you can build a
+then you can disband the Longboat in the new city. This way you can build a \
 new Longboat at home and will also get half of the shields back. Those can be \
 used for building a defensive unit or maybe a Workers for the new colony city.\
 ")
@@ -3090,7 +3090,7 @@ GUIDE: With no traditional tech trading the only way to get techs from other pla
 using the Scholar or other tech trading unit. Instead trading through diplomacy the players \
 can trade or steal techs by using the Scholar unit. Diplomats, Spies, and Operatives cannot \
 steal techs, but they can defend the cities against Scholars trying to steal techs. This is \
-why it is best to use those units for investigating the city and also for killing the defending
+why it is best to use those units for investigating the city and also for killing the defending \
 Diplomats, Spies, and Operatives. Only the Scholar and other units like it are able to steal techs.\
 ")
 

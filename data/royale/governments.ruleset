@@ -94,7 +94,7 @@ Anarchy is simply the absence of any recognizable government.\
 * Big cities with size of 9 or more will get an extra 50 % defense against military attacks.\n\
 * The number of free units will be doubled for cities with size of 9 or more.\
 "), _("\
-Playing with Anarchy? \n
+Playing with Anarchy? \n\
 You do not usually want to play with Anarchy but you need to when there is a need to switch \
 the government. For these situations you may want to plan your production so that you have some \
 gold reserve before switching to Anarchy and also not using that many trade tiles while in Anarchy. \
@@ -144,7 +144,7 @@ Compared to Despotism, a Tribal economy is more shield-oriented. Its\
 * The number of free units will be doubled for cities with size of 9 or more.\n\
 * The number of free units will be doubled for cities with size of 9 or more.\
 "), _("\
-Playing with Tribal? \n
+Playing with Tribal? \n\
 Tribal nations get more production and are able to maintain more units for free. \
 Tribal is a very good alternative for someone who is not planning to go Monarchy first. Instead \
 you may want to consider building Ħal Saflieni Hypogeum in your capital city and also building \
@@ -193,7 +193,7 @@ Compared to Tribalism, a Despotic economy is more trade-oriented.\
 * Big cities with size of 9 or more will get an extra 50 % defense against military attacks. \n\
 * The number of free units will be doubled for cities with size of 9 or more.\
 "), _("\
-Playing with Despotism? \n
+Playing with Despotism? \n\
 With Despotism you get slightly better science and if you plan to go for Monarchy this may be your \
 choice. Despotism is a very good alternative for someone who is planning to go Monarchy first. \
 While you may want to consider building Ħal Saflieni Hypogeum in your capital city and also building \
@@ -241,7 +241,7 @@ Monarchy gives low unit upkeep costs.\
 * The number of free units will be doubled for cities with size of 9 or more.\
   The number of units avoiding the military unhappiness will also double at this size.\
 "), _("\
-Playing with Monarchy? \n
+Playing with Monarchy? \n\
 Monarchy is great for those players who want to play war. You do not get that much gold of \
 production with Monarchy but instead it is reasonably good for those players who want to attack, \
 attack, and attack. In the late early game and early mid game it is a good alternative also for \
@@ -289,7 +289,7 @@ Communism is a good government for maximizing shield production, and\
 * The number of free units will be doubled for cities with size of 9 or more.\
   The number of units avoiding the military unhappiness will also double at this size.\
 "), _("\
-Playing with Communism? \n
+Playing with Communism? \n\
 Communistic nations are able to grow big, fast and they can have huge production. The downside \
 is that the gold production is low. If you manage to get the Statue of Liberty it may make \
 sense to switch to Communism really fast. Also, if you have a vast empire and you are allied \
@@ -342,7 +342,7 @@ Fundamentalism is a good government for maximizing gold, and its Fanatics\
 * The number of free units will be doubled for cities with size of 9 or more.\
   The number of units avoiding the military unhappiness will also double at this size.\
 "), _("\
-Playing with fundamentalism? \n
+Playing with fundamentalism? \n\
 Fundamentalism is for a player who needs to build lots funda specific units (Crusaders, Fanatics) fast. \
 This may be useful if you are defending your nation or buying some time to your ally while that other \
 nation needs to focus on something else. Funda can also be used as an alternative early government if you \
@@ -387,7 +387,7 @@ Federalism is a system in which the power to govern is shared between\
 * The number of free units will be doubled for cities with size of 9 or more.\
   The number of units avoiding the military unhappiness will also double at this size.\
 "), _("\
-Playing with federation? \n
+Playing with federation? \n\
 Federation may work as a boost for switching into Democracy. If you need to research reasonably \
 fast and there is less need for gold, it may make sense to switch to Federation before you choose \
 another form of govermnent. With Federation you get a nice boost for your science while you are \
@@ -437,7 +437,7 @@ Under a Republican government, citizens hold an election to select a\
 * The number of free units will be doubled for cities with size of 9 or more.\
   The number of units avoiding the military unhappiness will also double at this size.\
 "), _("\
-Playing with Republic? \n
+Playing with Republic? \n\
 Republic is the fast lane to Democracy and it is quite bad if you plan to fight wars. \
 Unlike with some other governments you can declare wars while in Republic. This \
 however comes with a hefty price unless you manage to keep the wars extremely short or \
@@ -497,7 +497,7 @@ Under Democracy, citizens govern directly by voting on issues.\
 * The number of free units will be doubled for cities with size of 9 or more.\
   Unlike with other governments, the number of units avoiding the military unhappiness will NOT be doubled at this size.\
 "), _("\
-Playing with Democracy? \n
+Playing with Democracy? \n\
 Playing with a Democracy is probably the most effective way of creating a super power, \
 but this comes with a price. Unlike with some other setups Democracies are quite vulnerable \
 while the player is ramping up the economy. The most common reason to have Democracy as your \
