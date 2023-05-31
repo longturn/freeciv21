@@ -1,5 +1,5 @@
 ##########
-# Freeciv21 - flatpack.yaml
+# Freeciv21 - flatpak.yaml
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 # SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
@@ -7,8 +7,8 @@
 # Build Steps:
 #   - (once) sudo apt install flatpak-builder
 #   - (once) sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-#   - flatpak-builder --install-deps-from=flathub --force-clean build/flatpak dist/flatpack.yaml
-#   - flatpak-builder --user --install --force-clean build/flatpak dist/flatpack.yaml
+#   - flatpak-builder --install-deps-from=flathub --force-clean build/flatpak dist/flatpak.yaml
+#   - flatpak-builder --user --install --force-clean build/flatpak dist/flatpak.yaml
 #   - flatpak run net.longturn.freeciv21
 #   - flatpak remove net.longturn.freeciv21
 #
@@ -66,5 +66,5 @@ finish-args:
   - --filesystem=~/.local/share/freeciv21:create
 
 ##########
-# END flatpack.yaml
+# END flatpak.yaml
 ##########
