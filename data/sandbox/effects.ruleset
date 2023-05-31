@@ -251,8 +251,11 @@ reqs    =
 type    = "Bombard_Limit_Pct"
 value   = 1
 
+; /* <-- avoid gettext warnings
 ; Basic HP regen.  Not for helis or planes, as they have hp_loss_pct=10
 ; All unit-types' hitpoints are divisible by 10, so no need to worry about rounding
+; */ <-- avoid gettext warnings
+
 [effect_hp_regen_base]
 type    = "HP_Regen"
 value   = 10
@@ -912,7 +915,9 @@ reqs    =
       "Gov", "Democracy", "Player", TRUE
     }
 
+; /* <-- avoid gettext warnings
 ; ...except Women's Suffrage reduces it back to Republic levels
+; */ <-- avoid gettext warnings
 [effect_womens_suffrage_1]
 type    = "Unhappy_Factor"
 value   = -1
@@ -990,8 +995,11 @@ reqs   =
       "Gov", "Democracy", "Player", FALSE
     }
 
+; /* <-- avoid gettext warnings
 ; normally 2 for Democracy, but 1 of these not needed with Women's Suffrage
 ; due to reduced Unhappy_Factor
+; */ <-- avoid gettext warnings
+
 [effect_womens_suffrage_2]
 type    = "Make_Content_Mil"
 value   = -1
@@ -2694,7 +2702,9 @@ reqs    =
       "Building", "Police Station", "City"
     }
 
+; /* <-- avoid gettext warnings
 ; Net effect is to neutralize one unit's unhappiness
+; */ <-- avoid gettext warnings
 [effect_police_station_democracy]
 type    = "Make_Content_Mil"
 value   = 1
@@ -2982,7 +2992,9 @@ reqs    =
       "OutputType", "Luxury", "Local"
     }
 
+; /* <-- avoid gettext warnings
 ; Tiles with farmland don't get Super Highways + road trade bonus
+; */ <-- avoid gettext warnings
 [effect_super_highways]
 type    = "Output_Inc_Tile"
 value   = 1
@@ -2995,8 +3007,11 @@ reqs    =
       "CityTile", "Center", "Local", FALSE
     }
 
+; /* <-- avoid gettext warnings
 ; City center tiles do get the Super Highways + road trade bonus, even
 ; if they are already receiving a (possibly 'automatic') farmland bonus
+; */ <-- avoid gettext warnings
+
 [effect_super_highways_city_center_1]
 type    = "Output_Inc_Tile"
 value   = 1
