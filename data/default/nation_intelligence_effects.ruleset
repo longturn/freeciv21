@@ -1,9 +1,11 @@
+; /* <-- avoid gettext warnings
 ; This file contains the Nation_Intelligence effects used in most rulesets.
 ; Include it in effects.ruleset with:
 ;
 ; *include "default/nation_intelligence_effects.ruleset"
 ;
 ; You'll also want to add the +Nation_Intelligence option to effects.ruleset.
+; */ <-- avoid gettext warnings
 
 [effect_ni_multipliers_embassy]
 type  = "Nation_Intelligence"
