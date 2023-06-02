@@ -20,7 +20,7 @@ import sphinx_rtd_theme
 
 # -- Project information -----------------------------------------------------
 
-project = 'Freeciv21 manual'
+project = 'Freeciv21 Manual'
 copyright = 'GPL-3.0-or-later, Freeciv21 and Freeciv Contributors'
 author = 'Freeciv21 and Freeciv Contributors'
 
@@ -172,8 +172,9 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('Manuals/Program/freeciv21-server', 'freeciv21-server', 'The server for the Freeciv21 game',
-     [author], 6)
+  ('Manuals/Program/freeciv21-game-manual', 'freeciv21-game-manual', 'The game manual for the freeciv21-server.', [author], 6),
+  ('Manuals/Program/freeciv21-server', 'freeciv21-server', 'The server for the Freeciv21 game.', [author], 6)
+
 ]
 
 
