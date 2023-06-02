@@ -4,9 +4,8 @@
 Server Commands
 ***************
 
-After a server has been started from the :doc:`command-line <command-line>`, an administrator can issue a set
-of commands to the server's own command-line. This server command-line is separate from the OS terminal
-command-line.
+After a server has been started from the command-line, an administrator can issue a set of commands to the
+server's own command-line. This server command-line is separate from the OS terminal command-line.
 
 ``/start``
   This command starts the game. When starting a new game, it should be used after all human players have
@@ -75,7 +74,6 @@ command-line.
   With ``vital``, ``situational``, or ``rare``, a set of options with this level. With ``changed``, it shows
   only the options which have been modified from the ruleset defaults. While with ``locked`` all settings
   locked by the ruleset will be listed. With ``ruleset``, it will show the current ruleset directory name.
-  See :doc:`options`.
 
 ``/wall <message>``
   For each connected client, pops up a window showing the message entered.
@@ -118,7 +116,7 @@ command-line.
   Set an option on the server. The syntax and legal values depend on the option. See the help for each option.
   Some options are "bitwise", in that they consist of a choice from a set of values. Separate these with ``|``,
   for instance, ``/set topology wrapx|iso``. For these options, use syntax like ``/set topology ""`` to set no
-  values. See :doc:`options`.
+  values.
 
 ``/team <player> <team>``
   A team is a group of players that start out allied, with shared vision, embassies, and fight together to
@@ -149,8 +147,8 @@ command-line.
   after failures. See Note about Freeciv21 metaserver above.
 
 ``/metaserver <address>``
-  Set address (URL) for metaserver to report to. Same as ``--Metaserver`` on the :doc:`command-line`. See
-  Note about Freeciv21 metaserver above.
+  Set address (URL) for metaserver to report to. Same as ``--Metaserver`` on the command-line. See NOTE about
+  Freeciv21 metaserver above.
 
 ``/aitoggle <player-name>``
   Toggle :term:`AI` status of player. By default, new players are AI.
@@ -399,22 +397,22 @@ command-line.
   Save the current game to file ``<file-name>``. If no ``file-name`` argument is given saves to
   ``<auto-save name prefix><year>m.sav[.gz]``. To reload a savegame created by ``/save``, start the server
   with the command-line argument:``--file <filename>`` or ``-f <filename>`` and use the ``/start`` command
-  once players have reconnected. See :doc:`command-line`.
+  once players have reconnected.
 
 ``/scensave <file-name>``
   Save the current game to file ``<file-name>`` as a scenario. If no ``file-name`` argument is given saves to
   ``<auto-save name prefix><year>m.sav[.gz]``. To reload a savegame created by ``/scensave``, start the server
   with the command-line argument: ``--file <filename>`` or ``-f <filename>`` and use the ``/start`` command
-  once players have reconnected. See :doc:`command-line`.
+  once players have reconnected.
 
 ``/load <file-name>``
   Load a game from ``<file-name>``. Any current data including players, rulesets and server options are lost.
 
 ``/read <file-name>``
-  Process server commands from file. See :doc:`settings-file`.
+  Process server commands from file.
 
 ``/write <file-name>``
-  Write current settings as server commands to file. See :doc:`settings-file`.
+  Write current settings as server commands to file.
 
 ``/reset game|ruleset|script|default``
   Reset all settings if it is possible. The following levels are supported:
@@ -468,7 +466,7 @@ command-line.
 
 ``/fcdb lua <script>``
   The argument ``reload`` causes the database script file to be re-read after a change, while the argument
-  ``lua`` evaluates a line of Lua script in the context of the Lua instance for the database. See :doc:`fcdb`.
+  ``lua`` evaluates a line of Lua script in the context of the Lua instance for the database.
 
 ``/mapimg define <mapdef>``
   Create image files of the world/player map. Variations are:
