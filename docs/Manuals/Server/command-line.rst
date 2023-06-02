@@ -17,12 +17,6 @@ such as:
   It is generally considered a best practice to write a ``.sh`` script to run your server. This way you do not
   have to remember all the command line options to use every time you run your server.
 
-.. note::
-  With regard to the command line arguments concerning the metaserver, Freeciv21 does not have its own
-  metaserver at this time and the legacy Freeciv metaserver does not support Freeciv21. This means, right now,
-  that all commands related to the metaserver are held over from the fork from legacy Freeciv until the
-  Longturn community creates a custom metaserver.
-
 ``-A, --Announce <PROTO>``
     Announce game in LAN using protocol PROTO (IPv4/IPv6/none). Default is ``IPv4``. Options include:
     ``IPv4``, ``IPv6``, or ``none``.
@@ -30,6 +24,13 @@ such as:
 ``-B, --Bind-meta <ADDR>``
     Connect to metaserver from this address. Default will be your public IP address assigned from your
     internet service provider.
+
+.. note::
+  With regard to the command line arguments concerning the metaserver, Freeciv21 does not have its own
+  metaserver at this time and the legacy Freeciv metaserver does not support Freeciv21. This means, right now,
+  that all commands related to the metaserver are held over from the fork from legacy Freeciv until the
+  Longturn community creates a custom metaserver.
+
 
 ``-b, --bind <ADDR>``
     Listen for clients on ADDR. Default is the IP address of the server computer.
