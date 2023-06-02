@@ -12,6 +12,7 @@ advanced topics, modpack installer, and ruleset manuals.
   Game/index.rst
   Server/index.rst
   Advanced/index.rst
+  Program/index.rst
   modpack-installer.rst
   :maxdepth: 2
 
