@@ -172,8 +172,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'longturn-manuals', 'longturn-manuals Documentation',
-     [author], 1)
+    ('Manuals/Program/freeciv21-server', 'freeciv21-server', 'The server for the Freeciv21 game',
+     [author], 6)
 ]
 
 
