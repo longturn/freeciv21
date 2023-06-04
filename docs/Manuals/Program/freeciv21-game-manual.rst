@@ -7,7 +7,7 @@ freeciv21-game-manual
 SYNOPSIS
 ========
 
-This manual page refers to freeciv21-server(6) setting directives and has no OS command-line options.
+This manual page refers to freeciv21-server(6) setting directives and has no OS command line options.
 
 
 DESCRIPTION
@@ -17,7 +17,7 @@ DESCRIPTION
   :start-line: 21
   :end-line: 33
 
-The freeciv21-server(6) program has its own command-line interface. This page describes all of the server
+The freeciv21-server(6) program has its own command line interface. This page describes all of the server
 option directives an administrator can issue to the freeciv21-server. For more information on the server,
 refer to freeciv21-server(6). For more information on the game, refer to freeciv21-client(6).
 

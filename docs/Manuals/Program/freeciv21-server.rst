@@ -24,7 +24,7 @@ The game commences in prehistory and your mission is to lead your tribe from the
 
 Players of Civilization II\ |reg| by Microprose\ |reg| should feel at home. Freeciv21 takes its roots in the
 well-known FOSS game Freeciv and extends it for more fun, with a revived focus on competitive
-:strong:`multiplayer environments`.
+**multiplayer environments**.
 
 Freeciv21 is maintained by the team over at Longturn.net.
 
@@ -34,14 +34,14 @@ website at https://longturn.readthedocs.io/.
 This is the server `program` used to establish a Freeciv21 server. For more information on the game, refer
 to freeciv21-client(6).
 
-This manual page only lists the command-line arguments for the server `program`. For details of the
+This manual page only lists the command line arguments for the server `program`. For details of the
 directives a server administrator can use to control aspects of the server, see freeciv21-game-manual(6).
 
 
 OPTIONS
 =======
 
-The following options are accepted on the command-line of the server. They may not be combined as with other
+The following options are accepted on the command line of the server. They may not be combined as with other
 tools. For example: ``freeciv21-server -fp savegame.sav 5556`` will not work. Instead you will need to enter
 each option separately, such as, ``freevic21-server -s savegame.sav -p 5556``.
 
@@ -57,14 +57,14 @@ Here are some examples:
 freeciv21-server --file oldgame.sav -p 2224
   Starts a server on port `2224`, loading the savegame named `oldgame.sav`.
 
-freeciv21-server -R ranklog -l logfile -r start_script -f oldgame.sav.xz -p 2224
+freeciv21-server -R ranklog -l logfile -r start-script -f oldgame.sav.xz -p 2224
   Starts a server on port `2224`, loading the savegame named `oldgame.sav.xz`. Player ranking events are
-  logged to `ranking`, other logging events are placed in `logfile`. When the server first starts, it
-  immediately executes the server settings script named `start_script`. See freeciv21-server-manual(6) for
+  logged to `ranklog`, other logging events are placed in `logfile`. When the server first starts, it
+  immediately executes the server settings script named `start-script`. See freeciv21-server-manual(6) for
   more information on the server settings script.
 
-freeciv21-server -a -D users.conf -G -N -q 60  -l logfile -s ./saves -p 2224
-  Starts a server on port `2224` with authentication enabled (`-a`, `-D`, `-G`, and `-N`). If no activitiy
+freeciv21-server -a -D users.conf -G -N -q 60 -l logfile -s ./saves -p 2224
+  Starts a server on port `2224` with authentication enabled (`-a`, `-D`, `-G`, and `-N`). If no activity
   for 60 seconds the server will quit (`-q`). Logging events are placed in `logfile` and periodic saves are
   placed in the `./saves` directory.
 
@@ -90,7 +90,7 @@ This is most often `/usr/local/share/freeciv21`.
 * default/nationlist.ruleset
 
 These files are for the default ruleset for the game (civ2civ3), which are loaded if you do not use the
-`--ruleset` arguement. Alternate rules can be loaded with the ``rulsetdir`` direcctive in a start up script.
+`--ruleset` arguement. Alternate rules can be loaded with the ``rulsetdir`` directive in a start up script.
 Type ``help resetdir`` at the server command prompt for more information.
 
 
@@ -126,7 +126,7 @@ FREECIV_MULTICAST_GROUP
 FREECIV_DATA_PATH
   A colon separated list of directories pointing to the Freeciv21 data directories. By default Freeciv21
   looks in the following directories, in order, for any data files: the current directory; the "data"
-  subdirectory of the current directory; the subdirecotry ".local/share/freeciv21" in the user's home
+  subdirectory of the current directory; the subdirectory ".local/share/freeciv21" in the user's home
   directory; and the directory where the files are placed by running "cmake --target install".
 
 FREECIV_SAVE_PATH
@@ -139,7 +139,7 @@ FREECIV_SAVE_PATH
 FREECIV_SCENARIO_PATH
   A colon separated list of directories pointing to the Freeciv21 scenario directories. By default Freeciv21
   looks in the following directories, in order, for scenario files: the current directory; the
-  "data/scenarios" subdirectory of the current directory; the subdirecotry
+  "data/scenarios" subdirectory of the current directory; the subdirectory
   ".local/share/freeciv21/scenarios" in the user's home directory; and the directory where the files are
   placed by running "cmake --target install".
 
@@ -169,7 +169,7 @@ Please report bugs to the Freeciv21 bug tracker at https://github.com/longturn/f
 MORE INFORMATION
 ================
 
-See the Longturn home page at https://longturn.net/. You can also file the code repository at
+See the Longturn home page at https://longturn.net/. You can also find the code repository at
 https://github.com/longturn/freeciv21/.
 
 .. |reg|    unicode:: U+000AE .. REGISTERED SIGN

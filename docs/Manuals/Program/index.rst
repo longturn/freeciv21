@@ -9,4 +9,4 @@ The following pages are used to generate ``man`` pages for distribution with the
 .. toctree::
   freeciv21-server.rst
   freeciv21-game-manual.rst
-  :maxdepth: 2
+  :maxdepth: 1
