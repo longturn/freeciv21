@@ -10,4 +10,5 @@ The following pages are used to generate ``man`` pages for distribution with the
   freeciv21-client.rst
   freeciv21-server.rst
   freeciv21-game-manual.rst
+  freeciv21-manual.rst
   :maxdepth: 1
