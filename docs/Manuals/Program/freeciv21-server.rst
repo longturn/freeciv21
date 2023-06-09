@@ -88,8 +88,8 @@ These files are for the default ruleset for the game (civ2civ3), which are loade
 `--ruleset` arguement. Alternate rules can be loaded with the ``rulesetdir`` directive in a start up script.
 Type ``help rulesetdir`` at the server command prompt for more information.
 
-If you are going to enable user authentication, you will need the ``database.lua`` file. The file is
-available on the GitHub repo.
+If you are going to enable user authentication, you will need the `database.lua` file. The file is
+available on the GitHub repository (see below).
 
 
 ENVIRONMENT
