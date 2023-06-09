@@ -7,6 +7,7 @@ Program Manual Pages
 The following pages are used to generate ``man`` pages for distribution with the Linux packages.
 
 .. toctree::
+  freeciv21-client.rst
   freeciv21-server.rst
   freeciv21-game-manual.rst
   :maxdepth: 1
