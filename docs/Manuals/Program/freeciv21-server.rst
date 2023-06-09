@@ -7,13 +7,9 @@ freeciv21-server
 SYNOPSIS
 ========
 
-``freeciv21-server`` [ -A|--Announce `<PROTO>` ] [ -B|--Bind-meta `<ADDR>` ] [ -b|--bind `<ADDR>` ]
-[ -d|--debug `<LEVEL>` ] [ -e|--exit-on-end ] [ -F|--Fatal ] [ -f|--file `<FILE>` ] [ -i|--identity `<ADDR>` ]
-[ -k|--keep ] [ -l|--log `<FILE>` ] [ -M|--Metaserver `<ADDR>` ] [ -m|--meta ] [ -p|--port `<PORT>` ]
-[ -q|--quitidle `<TIME>` ] [ -R|--Ranklog `<FILE>` ] [ -r|--read `<FILE>` ] [ -S|--Serverid `<ID>` ]
-[ -s|--saves `<DIR>` ] [ -t|--timetrack ] [ -w|--warnings ] [ --ruleset `<RULESET>` ]
-[ --scenarios `<DIR>` ] [ -a|--auth ] [ -D|--Database `<FILE>` ] [ -G|--Guests ] [ -N|--Newusers ]
-[ -h|--help ] [ --help-all ] [ -v|--version ]
+``freeciv21-server`` [ -f|--file `<FILE>` ] [ -l|--log `<FILE>` ] [ -p|--port `<PORT>` ]
+[ -r|--read `<FILE>` ] [ -s|--saves `<DIR>` ] [ --ruleset `<RULESET>` ] [ -a|--auth ]
+[ -D|--Database `<FILE>` ] [ -G|--Guests ] [ -N|--Newusers ] [ -h|--help ] [ -v|--version ]
 
 
 DESCRIPTION
@@ -72,10 +68,9 @@ freeciv21-server -a -D users.conf -G -N -q 60 -l logfile -s ./saves -p 2224
 FILES
 =====
 
-The freeciv21-server requires the default ruleset files to be readable in the Freeciv21 `data` directory.
-This is most often `/usr/local/share/freeciv21`.
+The freeciv21-server requires the default ruleset files to be readable at start.
 
-* civ2civ3/buldings.ruleset
+* civ2civ3/buildings.ruleset
 * civ2civ3/cities.ruleset
 * civ2civ3/effects.ruleset
 * civ2civ3/game.ruleset
@@ -90,8 +85,11 @@ This is most often `/usr/local/share/freeciv21`.
 * default/nationlist.ruleset
 
 These files are for the default ruleset for the game (civ2civ3), which are loaded if you do not use the
-`--ruleset` arguement. Alternate rules can be loaded with the ``rulsetdir`` directive in a start up script.
-Type ``help resetdir`` at the server command prompt for more information.
+`--ruleset` arguement. Alternate rules can be loaded with the ``rulesetdir`` directive in a start up script.
+Type ``help rulesetdir`` at the server command prompt for more information.
+
+If you are going to enable user authentication, you will need the ``database.lua`` file. The file is
+available on the GitHub repo.
 
 
 ENVIRONMENT
@@ -106,19 +104,6 @@ FREECIV_CAPS
 
 FREECIV_COMPRESSION_LEVEL
   Sets the compression level for network traffic.
-
-FREECIV_DATA_ENCODING
-  Sets the character encoding used for data files, savegames, and network strings. This should not normally
-  be changed from the default of UTF-8, since that is the format of the supplied rulesets and the standard
-  network protocol.
-
-FREECIV_INTERNAL_ENCODING
-  Sets the character encoding used internally by freeciv21-server. This encoding should not be visible at
-  any interface. Defaults to UTF-8.
-
-FREECIV_LOCAL_ENCODING
-  Sets the local character encoding (used for the command line and terminal output). The default is inferred
-  from other aspects of the environment.
 
 FREECIV_MULTICAST_GROUP
   Sets the multicast group (for the LAN tab).
@@ -143,7 +128,7 @@ FREECIV_SCENARIO_PATH
   ".local/share/freeciv21/scenarios" in the user's home directory; and the directory where the files are
   placed by running "cmake --target install".
 
-  (This does not affect where the server creates scenario files See the `--scenarios` option for that.)
+  (This does not affect where the server creates scenario files. See the `--scenarios` option for that.)
 
 HOME
   Specifies the user's home directory.
