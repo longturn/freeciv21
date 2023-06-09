@@ -174,6 +174,7 @@ latex_documents = [
 man_pages = [
   ('Manuals/Program/freeciv21-client', 'freeciv21-client', 'The client for the Freeciv21 game.', [author], 6),
   ('Manuals/Program/freeciv21-game-manual', 'freeciv21-game-manual', 'The game manual for the freeciv21-server.', [author], 6),
+  ('Manuals/Program/freeciv21-manual', 'freeciv21-manual', 'Write a manual for a Freeciv21 ruleset.', [author], 6),
   ('Manuals/Program/freeciv21-server', 'freeciv21-server', 'The server for the Freeciv21 game.', [author], 6)
 
 ]
