@@ -112,7 +112,7 @@ freeciv21-client -n mycoolusernname -s localhost -p 2004
   Connect to an already running server with a username of `mycoolusername`, server host name of `localhost`,
   and port of `2004`.
 
-freeciv21-client \"fc21://[username]:[password]@[server]:[port]\" -a -t amplio2
+freeciv21-client """fc21://[username]:[password]@[server]:[port]""" -a -t amplio2
   Connect to an already running server using `URL` format. The parameters `[username]`, `[password]`,
   `[server]`, and `[port]` are replaced with valid values. This command also passes the autoconnect option
   (``-a``) as well as loads the Amplio2 Tileset.
