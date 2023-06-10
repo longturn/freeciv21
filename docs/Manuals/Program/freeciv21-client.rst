@@ -19,17 +19,17 @@ DESCRIPTION
   :end-line: 29
 
 This is the client interface `program` used to connect to a Freeciv21 server. For more information on the
-server, refer to freeciv21-server(6). The program can be launced without any command line parameters. A player
-can use the main menu to connect to a running game, open an existing savegame, start a new game, or start a
-new scenario game. However, if you wish to automate the connection to a running server or start a new game
-with a server settings file, command line options are available.
+server, refer to freeciv21-server(6). The program can be launched without any command line parameters. A
+player can use the main menu to connect to a running game, open an existing savegame, start a new game, or
+start a new scenario game. However, if you wish to automate the connection to a running server or start a new
+game with a server settings file, command line options are available.
 
 OPTIONS
 =======
 
 The following options are accepted on the command line of the client. They may not be combined as with other
 tools. For example: ``freeciv21-client -sp localhost 5556`` will not work. Instead you will need to enter
-each option separately, such as, ``freevic21-client -s localhost -p 5556``.
+each option separately, such as, ``freeciv21-client -s localhost -p 5556``.
 
 ``-A, --Announce <PROTO>``
     Announce game in LAN using protocol PROTO (IPv4/IPv6/none), Default is ``IPv4``. Options include:
@@ -92,13 +92,13 @@ each option separately, such as, ``freevic21-client -s localhost -p 5556``.
     Warn about deprecated modpack constructs.
 
 ``-h, --help``
-    Displays help on command line options.
+    Display help on command line options.
 
 ``--help-all``
-    Displays help including Qt specific options.
+    Display help including Qt specific options.
 
 ``-v, --version``
-    Displays version information.
+    Display version information.
 
 ``url``
     Server information in URL format. See examples below.
@@ -136,7 +136,7 @@ HOME
   Specifies the user's home directory.
 
 http_proxy
-  Set this variable accordingly when using a proxy.
+  Set this variable accordingly when using a proxy. For example, """http://my_proxy_address/""".
 
 LANG or LANGUAGE
   Sets the language and locale on some platforms.

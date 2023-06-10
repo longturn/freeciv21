@@ -40,16 +40,16 @@ each option separately, such as, ``freevic21-manual -r civ2civ3 -w``.
     Make manual for RULESET.
 
 ``-w, --wiki``
-    Write manual in wiki format
+    Write manual in wiki format.
 
 ``-h, --help``
     Displays help on command line options.
 
 ``--help-all``
-    Displays help including Qt specific options.
+    Display help including Qt specific options.
 
 ``-v, --version``
-    Displays version information.
+    Display version information.
 
 .. include:: freeciv21-server.rst
   :start-line: 148
