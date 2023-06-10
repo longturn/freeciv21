@@ -131,7 +131,7 @@ FREECIV_SCENARIO_PATH
   (This does not affect where the server creates scenario files. See the `--scenarios` option for that.)
 
 HOME
-  Specifies the user's home directory.
+  Specifies the user's home directory. For example, """http://my_proxy_address/""".
 
 http_proxy
   Set this variable accordingly when using a proxy.

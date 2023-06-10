@@ -110,10 +110,10 @@ such as:
     Allow new users to login if auth is enabled.
 
 ``-h, --help``
-    Displays help on command line options and quits.
+    Display help on command line options and quits.
 
 ``--help-all``
-    Displays help including Qt specific options and quits.
+    Display help including Qt specific options and quits.
 
 ``-v, --version``
-    Displays version information and quits.
+    Display version information and quits.
