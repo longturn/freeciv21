@@ -46,23 +46,23 @@ void fcmp_parse_cmdline(const QCoreApplication &app)
       {{{"d", _("debug")},
         // TRANS: Do not translate "fatal", "critical", "warning", "info" or
         //        "debug". It's exactly what the user must type.
-        _("Set debug log level (fatal/critical/warning/info/debug)"),
+        _("Set debug log level (fatal/critical/warning/info/debug)."),
         _("LEVEL"),
         QStringLiteral("info")},
        {{"i", "install"},
-        _("Automatically install modpack from a given URL"),
+        _("Automatically install modpack from a given URL."),
         // TRANS: Command line argument
         _("URL")},
        {{"L", "List"},
-        _("Load modpack list from given URL"),
+        _("Load modpack list from given URL."),
         // TRANS: Command line argument
         _("URL")},
        {{"p", "prefix"},
-        _("Install modpacks to given directory hierarchy"),
+        _("Install modpacks to given directory hierarchy."),
         // TRANS: Command line argument
         _("DIR")}});
   if (!ok) {
-    qFatal("Adding command line arguments failed");
+    qFatal("Adding command line arguments failed.");
     exit(EXIT_FAILURE);
   }
 
@@ -88,7 +88,7 @@ void fcmp_parse_cmdline(const QCoreApplication &app)
     fcmp.inst_prefix = freeciv_storage_dir();
 
     if (fcmp.inst_prefix.isNull()) {
-      qCritical("Cannot determine Freeciv21 storage directory");
+      qCritical("Cannot determine Freeciv21 storage directory.");
     }
   }
 }
