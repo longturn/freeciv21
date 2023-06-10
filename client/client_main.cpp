@@ -343,48 +343,45 @@ int client_main(int argc, char *argv[])
   bool ok = parser.addOptions(
       {{{"A", _("Announce")},
         // TRANS: Do not translate IPv4, IPv6 and none
-        _("Announce game in LAN using protocol PROTO (IPv4/IPv6/none)"),
+        _("Announce game in LAN using protocol PROTO (IPv4/IPv6/none)."),
         _("PROTO"),
         "IPv4"},
-       {{"a", "autoconnect"}, _("Skip connect dialog")},
-       {{"d", _("debug")},
+       {{"a", "autoconnect"}, _("Skip connect dialog.")},
+       {{"d", _("debug.")},
         // TRANS: Do not translate "fatal", "critical", "warning", "info" or
         //        "debug". It's exactly what the user must type.
-        _("Set debug log level (fatal/critical/warning/info/debug)"),
+        _("Set debug log level (fatal/critical/warning/info/debug)."),
         _("LEVEL"),
         QStringLiteral("info")},
-       {{"F", _("Fatal")}, _("Raise a signal on failed assertion")},
-       {{"f", "file"}, _("Load saved game FILE"), "FILE"},
+       {{"F", _("Fatal")}, _("Raise a signal on failed assertion.")},
+       {{"f", "file"}, _("Load saved game FILE."), "FILE"},
 #ifdef FREECIV_DEBUG
        {{"H", "Hackless"},
-        _("Do not request hack access to local, but not spawned, server")},
+        _("Do not request hack access to local, but not spawned, server.")},
 #endif // FREECIV_DEBUG
        {{"l", "log"},
-        _("Use FILE as logfile (spawned server also uses this)"),
+        _("Use FILE as logfile (spawned server also uses this)."),
         "FILE"},
-       {{"M", "Meta"}, _("Connect to the metaserver at HOST"), "HOST"},
-       {{"n", "name"}, _("Use NAME as username on server"), "NAME"},
+       {{"M", "Meta"}, _("Connect to the metaserver at HOST."), "HOST"},
+       {{"n", "name"}, _("Use NAME as username on server."), "NAME"},
        {{"p", "port"},
-        _("Connect to server port PORT (usually with -a)"),
+        _("Connect to server port PORT (usually with -a)."),
         "PORT"},
-       {{"P", _("Plugin")},
-        QString::asprintf(_("Use PLUGIN for sound output %s"),
-                          qUtf8Printable(audio_get_all_plugin_names())),
-        "PLUGIN"},
+       {{"P", _("Plugin")}, _("Use PLUGIN for sound output."), "PLUGIN"},
        {{"r", "read"},
-        _("Read startup script FILE (for spawned server only)"),
+        _("Read startup script FILE (for spawned server only)."),
         "FILE"},
        {{"s", "server"},
-        _("Connect to the server at HOST (usually with -a)"),
+        _("Connect to the server at HOST (usually with -a)."),
         "HOST"},
-       {{"S", "Sound"}, _("Read sound tags from FILE"), "FILE"},
-       {{"m", "music"}, _("Read music tags from FILE"), "FILE"},
-       {{"t", "tiles"}, _("Use data file FILE.tilespec for tiles"), "FILE"},
-       {{"w", "warnings"}, _("Warn about deprecated modpack constructs")}});
+       {{"S", "Sound"}, _("Read sound tags from FILE."), "FILE"},
+       {{"m", "music"}, _("Read music tags from FILE."), "FILE"},
+       {{"t", "tiles"}, _("Use data file FILE.tilespec for tiles."), "FILE"},
+       {{"w", "warnings"}, _("Warn about deprecated modpack constructs.")}});
   parser.addPositionalArgument(
-      _("url"), _("Server information in URL format"), _("[url]"));
+      _("url"), _("Server information in URL format."), _("[url]"));
   if (!ok) {
-    qFatal("Adding command line arguments failed");
+    qFatal("Adding command line arguments failed.");
     exit(EXIT_FAILURE);
   }
   parser.process(app);

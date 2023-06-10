@@ -160,77 +160,78 @@ int main(int argc, char *argv[])
   bool ok = parser.addOptions({
       {{"A", "Announce"},
        // TRANS: Do not translate IPv4, IPv6 and none
-       _("Announce game in LAN using protocol PROTO (IPv4/IPv6/none)"),
+       _("Announce game in LAN using protocol PROTO (IPv4/IPv6/none)."),
        // TRANS: Command-line argument
        _("PROTO"),
        "IPv4"},
       {{"B", "Bind-meta"},
-       _("Connect to metaserver from this address"),
+       _("Connect to metaserver from this address."),
        // TRANS: Command-line argument
        _("ADDR")},
       {{"b", "bind"},
-       _("Listen for clients on ADDR"),
+       _("Listen for clients on ADDR."),
        // TRANS: Command-line argument
        _("ADDR")},
       {{"d", _("debug")},
        // TRANS: Do not translate "fatal", "critical", "warning", "info" or
        //        "debug". It's exactly what the user must type.
-       _("Set debug log level (fatal/critical/warning/info/debug)"),
+       _("Set debug log level (fatal/critical/warning/info/debug)."),
        _("LEVEL"),
        QStringLiteral("info")},
       {{"e", "exit-on-end"},
-       _("When a game ends, exit instead of restarting")},
-      {{"F", "Fatal"}, _("Raise a signal on failed assertion")},
+       _("When a game ends, exit instead of restarting.")},
+      {{"F", "Fatal"}, _("Raise a signal on failed assertion.")},
       {{"f", "file"},
-       _("Load saved game"),
+       _("Load saved game."),
        // TRANS: Command-line argument
        _("FILE")},
       {{"i", "identity"},
-       _("Be known as ADDR at metaserver or LAN client"),
+       _("Be known as ADDR at metaserver or LAN client."),
        // TRANS: Command-line argument
        _("ADDR")},
       {{"k", "keep"},
-       _("Keep updating game information on metaserver even after failure")},
+       _("Keep updating game information on metaserver even after "
+         "failure.")},
       {{"l", "log"},
-       _("Use FILE as logfile"),
+       _("Use FILE as logfile."),
        // TRANS: Command-line argument
        _("FILE")},
       {{"M", "Metaserver"},
-       _("Set ADDR as metaserver address"),
+       _("Set ADDR as metaserver address."),
        // TRANS: Command-line argument
        _("ADDR")},
-      {{"m", "meta"}, _("Notify metaserver and send server's info")},
+      {{"m", "meta"}, _("Notify metaserver and send server's info.")},
       {{"p", "port"},
-       _("Listen for clients on port PORT"),
+       _("Listen for clients on port PORT."),
        // TRANS: Command-line argument
        _("PORT")},
       {{"q", "quitidle"},
-       _("Quit if no players for TIME seconds"),
+       _("Quit if no players for TIME seconds."),
        // TRANS: Command-line argument
        _("TIME")},
       {{"R", "Ranklog"},
-       _("Use FILE as ranking logfile"),
+       _("Use FILE as ranking logfile."),
        // TRANS: Command-line argument
        _("FILE")},
       {{"r", "read"},
-       _("Read startup file FILE"),
+       _("Read startup file FILE."),
        // TRANS: Command-line argument
        _("FILE")},
       {{"S", "Serverid"},
-       _("Sets the server id to ID"),
+       _("Sets the server id to ID."),
        // TRANS: Command-line argument
        _("ID")},
       {{"s", "saves"},
-       _("Save games to directory DIR"),
+       _("Save games to directory DIR."),
        // TRANS: Command-line argument
        _("DIR")},
       {{"t", "timetrack"},
-       _("Prints stats about elapsed time on misc tasks")},
-      {{"w", "warnings"}, _("Warn about deprecated modpack constructs")},
-      {"ruleset", _("Load ruleset RULESET"),
+       _("Prints stats about elapsed time on misc tasks.")},
+      {{"w", "warnings"}, _("Warn about deprecated modpack constructs.")},
+      {"ruleset", _("Load ruleset RULESET."),
        // TRANS: Command-line argument
        _("RULESET")},
-      {"scenarios", _("Save scenarios to directory DIR"),
+      {"scenarios", _("Save scenarios to directory DIR."),
        // TRANS: Command-line argument
        _("DIR")},
       {{"a", "auth"},
@@ -242,13 +243,13 @@ int main(int argc, char *argv[])
       {{"G", "Guests"}, _("Allow guests to login if auth is enabled.")},
       {{"N", "Newusers"}, _("Allow new users to login if auth is enabled.")},
 #ifdef AI_MODULES
-      {"LoadAI", _("Load ai module MODULE. Can appear multiple times"),
+      {"LoadAI", _("Load ai module MODULE. Can appear multiple times."),
        // TRANS: Command-line argument
        _("MODULE")},
 #endif // AI_MODULES
   });
   if (!ok) {
-    qFatal("Adding command line arguments failed");
+    qFatal("Adding command line arguments failed.");
     exit(EXIT_FAILURE);
   }
 

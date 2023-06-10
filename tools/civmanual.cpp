@@ -677,22 +677,22 @@ int main(int argc, char **argv)
       {{"d", _("debug")},
        // TRANS: Do not translate "fatal", "critical", "warning", "info" or
        //        "debug". It's exactly what the user must type.
-       _("Set debug log level (fatal/critical/warning/info/debug)"),
+       _("Set debug log level (fatal/critical/warning/info/debug)."),
        _("LEVEL"),
        QStringLiteral("info")},
-      {{"F", "Fatal"}, _("Raise a signal on failed assertion")},
+      {{"F", "Fatal"}, _("Raise a signal on failed assertion.")},
       {{"l", "log"},
-       _("Use FILE as logfile"),
+       _("Use FILE as logfile."),
        // TRANS: Command-line argument
        _("FILE")},
       {{"r", "ruleset"},
-       _("Make manual for RULESET"),
+       _("Make manual for RULESET."),
        // TRANS: Command-line argument
        _("RULESET")},
-      {{"w", "wiki"}, _("Write manual in wiki format")},
+      {{"w", "wiki"}, _("Write manual in wiki format.")},
   });
   if (!ok) {
-    qFatal("Adding command line arguments failed");
+    qFatal("Adding command line arguments failed.");
   }
 
   // Parse
