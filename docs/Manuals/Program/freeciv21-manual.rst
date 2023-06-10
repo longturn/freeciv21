@@ -43,7 +43,7 @@ each option separately, such as, ``freevic21-manual -r civ2civ3 -w``.
     Write manual in wiki format.
 
 ``-h, --help``
-    Displays help on command line options.
+    Display help on command line options.
 
 ``--help-all``
     Display help including Qt specific options.
