@@ -22,7 +22,7 @@ based modpack installer, refer to freeciv21-modpack-qt(6).
 OPTIONS
 =======
 
-The following options are accepted on the command line of the manual generator. They may not be combined as
+The following options are accepted on the command line of the modpack installer. They may not be combined as
 with other tools. For example:
 ``freeciv21-modpack -Lp https://raw.githubusercontent.com/longturn/modpacks/main/index.json ~/.local/fc21``
 will not work. Instead you will need to enter each option separately, such as,
