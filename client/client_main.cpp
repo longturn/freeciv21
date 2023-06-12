@@ -347,7 +347,7 @@ int client_main(int argc, char *argv[])
         _("PROTO"),
         "IPv4"},
        {{"a", "autoconnect"}, _("Skip connect dialog.")},
-       {{"d", _("debug.")},
+       {{"d", _("debug")},
         // TRANS: Do not translate "fatal", "critical", "warning", "info" or
         //        "debug". It's exactly what the user must type.
         _("Set debug log level (fatal/critical/warning/info/debug)."),
