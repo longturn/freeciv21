@@ -132,7 +132,7 @@ static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
   }
 
   client.conn.sock->connectToHost(url.host(), url.port());
-  if (!client.conn.sock->waitForConnected()) {
+  if (!client.conn.sock->waitForConnected(10)) {
     (void) fc_strlcpy(errbuf, _("Connection timed out."), errbufsize);
     return -1;
   }
