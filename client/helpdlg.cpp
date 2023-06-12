@@ -174,19 +174,17 @@ void help_dialog::hideEvent(QHideEvent *event)
 void help_dialog::showEvent(QShowEvent *event)
 {
   Q_UNUSED(event)
-  QList<int> sizes;
 
   if (!king()->qt_settings.help_geometry.isNull()) {
     restoreGeometry(king()->qt_settings.help_geometry);
     splitter->restoreState(king()->qt_settings.help_splitter1);
+    // Make sure the size isn't larger than the screen
+    resize(size().boundedTo(screen()->availableSize()));
   } else {
-    QList<QScreen *> screens = QGuiApplication::screens();
-    QRect rect = screens[0]->availableGeometry();
-
+    auto rect = screen()->availableGeometry();
     resize(qMax((rect.width() * 3) / 4, 1280),
            qMax((rect.height() * 3) / 4, 800));
-    sizes << rect.width() / 10 << rect.width() / 3;
-    splitter->setSizes(sizes);
+    splitter->setSizes({rect.width() / 10, rect.width() / 3});
   }
 }
 
