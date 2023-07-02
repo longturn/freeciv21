@@ -19,50 +19,75 @@ jobs:
         os: [ubuntu-22.04]
         compiler: [gcc, clang]
         build_type: ["", Release, Debug, RelWithDebInfo]
+        arch: [amd64]
         exclude:
           - compiler: clang
             build_type: RelWithDebInfo
+        include:
+          - os: ubuntu-22.04
+            compiler: gcc
+            build_type: Release
+            arch: arm64
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Setup ARM repositories
+        if: ${{ matrix.arch != 'amd64' }}
+        run: |
+          sudo cp .github/workflows/data/ubuntu-${{ matrix.arch }}.list \
+                  /etc/apt/sources.list.d/
+          sudo sed -i "s/^deb /deb [arch=amd64] /g" /etc/apt/sources.list
+          sudo dpkg --add-architecture ${{ matrix.arch }}
+      - name: Refresh repositories
+        run: |
+          sudo apt-get update
       - name: Install GCC
         if: ${{ matrix.compiler == 'gcc' }}
         run: |
-          sudo apt-get install g++
+          sudo apt-get install \
+            cmake \
+            crossbuild-essential-${{ matrix.arch }}
+          /usr/share/cmake/debtoolchainfilegen ${{ matrix.arch }} >toolchain.cmake
+          echo toolchain=-DCMAKE_TOOLCHAIN_FILE=toolchain.cmake >>"$GITHUB_ENV"
       - name: Install clang
         if: ${{ matrix.compiler == 'clang' }}
         run: |
+          [ "${{ matrix.arch }}" != "amd64" ] \
+            && echo "clang not implemented for ${{ matrix.arch }}" \
+            && exit 1
           sudo apt-get install clang
-          export CC=$(which clang)
-          export CXX=$(which clang++)
       - name: Install dependencies
         run: |
-          sudo apt-get update
           sudo apt-get install \
             cmake \
             ninja-build \
             python3 \
             python3-pip \
             gettext \
-            qtbase5-dev \
-            libqt5svg5-dev \
-            libkf5archive-dev \
-            liblua5.3-dev \
-            libsqlite3-dev \
-            libsdl2-mixer-dev \
+            libtolua-dev \
+            pkg-config \
+            shared-mime-info:amd64 \
+            qtbase5-dev:${{ matrix.arch }} \
+            libqt5svg5-dev:${{ matrix.arch }} \
+            libkf5archive-dev:${{ matrix.arch }} \
+            liblua5.3-dev:${{ matrix.arch }} \
+            libsqlite3-dev:${{ matrix.arch }} \
+            libsdl2-mixer-dev:${{ matrix.arch }} \
             python3-sphinx
           pip install -r docs/requirements.txt
       - name: Configure
         run: |
           cmake . -B build -G Ninja \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-            -DCMAKE_INSTALL_PREFIX=/usr
+            -DCMAKE_INSTALL_PREFIX=/usr \
+            $toolchain
       - name: Build
         run: |
           cmake --build build
       - name: Test
+        if: ${{ matrix.arch == 'amd64' }}
         run: |
           cmake --build build --target test
       - name: Debug
@@ -83,8 +108,14 @@ jobs:
             && matrix.build_type == 'Release'
         with:
           files: |
-            build/Linux-x86_64/freeciv21_*_amd64.deb
-            build/Linux-x86_64/freeciv21_*_amd64.deb.sha256
+            build/Linux-*/freeciv21_*_*.deb
+            build/Linux-*/freeciv21_*_*.deb.sha256
+      - name: Upload a build
+        uses: actions/upload-artifact@v3
+        if: matrix.compiler == 'gcc' && matrix.build_type == 'Release'
+        with:
+          name: Ubuntu package (${{ matrix.arch }})
+          path: build/Linux-*/freeciv21_*_*.deb
 
   flagstest:
     name: "Additional compile flags in Ubuntu"
