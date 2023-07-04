@@ -25,7 +25,7 @@ description: |
   Freeciv21 is based on the Qt framework and brought to you by the team at Longturn.net.
 
 # TODO: At some point, will want to integrate into cmake process and configure_file()
-version: '3.0'
+version: '3.0.1'
 grade: stable
 
 license: GPL-3.0-or-later
