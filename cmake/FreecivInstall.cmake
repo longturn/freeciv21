@@ -178,12 +178,14 @@ if(UNIX AND NOT APPLE)
       COMPONENT freeciv21
     )
 
-    install(
-      FILES
-      ${CMAKE_BINARY_DIR}/man/freeciv21-client.6
-      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/man/man6
-      COMPONENT freeciv21
-    )
+    if(SPHINX_FOUND)
+      install(
+        FILES
+        ${CMAKE_BINARY_DIR}/man/freeciv21-client.6
+        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/man/man6
+        COMPONENT freeciv21
+      )
+    endif()
   endif(FREECIV_ENABLE_CLIENT)
 
   if(FREECIV_ENABLE_SERVER)
@@ -203,15 +205,17 @@ if(UNIX AND NOT APPLE)
       COMPONENT freeciv21
     )
 
-    install(
-      FILES
-      ${CMAKE_BINARY_DIR}/man/freeciv21-server.6
-      ${CMAKE_BINARY_DIR}/man/freeciv21-game-manual.6
-      ${CMAKE_BINARY_DIR}/man/freeciv21-manual.6
-      ${CMAKE_BINARY_DIR}/man/freeciv21-ruleup.6
-      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/man/man6
-      COMPONENT freeciv21
-    )
+    if(SPHINX_FOUND)
+      install(
+        FILES
+        ${CMAKE_BINARY_DIR}/man/freeciv21-server.6
+        ${CMAKE_BINARY_DIR}/man/freeciv21-game-manual.6
+        ${CMAKE_BINARY_DIR}/man/freeciv21-manual.6
+        ${CMAKE_BINARY_DIR}/man/freeciv21-ruleup.6
+        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/man/man6
+        COMPONENT freeciv21
+      )
+    endif()
   endif(FREECIV_ENABLE_SERVER)
 
   if(FREECIV_ENABLE_FCMP_QT)
@@ -231,13 +235,15 @@ if(UNIX AND NOT APPLE)
       COMPONENT freeciv21
     )
 
-    install(
-      FILES
-      ${CMAKE_BINARY_DIR}/man/freeciv21-modpack-qt.6
-      ${CMAKE_BINARY_DIR}/man/freeciv21-modpack.6
-      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/man/man6
-      COMPONENT freeciv21
-    )
+    if(SPHINX_FOUND)
+      install(
+        FILES
+        ${CMAKE_BINARY_DIR}/man/freeciv21-modpack-qt.6
+        ${CMAKE_BINARY_DIR}/man/freeciv21-modpack.6
+        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/man/man6
+        COMPONENT freeciv21
+      )
+    endif()
   endif(FREECIV_ENABLE_FCMP_QT)
 
  if(FREECIV_ENABLE_RULEDIT)
