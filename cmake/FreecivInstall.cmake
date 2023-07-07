@@ -160,13 +160,6 @@ if(UNIX AND NOT APPLE)
     message(STATUS "CMAKE_INSTALL_PREFIX changed from the default to /usr.")
   endif()
 
-  # Generate the manual pages with Sphinx
-  if(SPHINX_FOUND)
-    message(STATUS "Creating manual pages...")
-    execute_process(
-        COMMAND sphinx-build -b man ${CMAKE_SOURCE_DIR}/docs ${CMAKE_BINARY_DIR}/man)
-  endif()
-
   # Install MetaInfo and Desktop files for the applications asked for at configure
   if(FREECIV_ENABLE_CLIENT)
     install(
