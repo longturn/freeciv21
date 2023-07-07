@@ -160,6 +160,13 @@ if(UNIX AND NOT APPLE)
     message(STATUS "CMAKE_INSTALL_PREFIX changed from the default to /usr.")
   endif()
 
+  # Generate the manual pages with Sphix
+  if(SPHINX_FOUND)
+    message(STATUS "Creating manual pages...")
+    execute_process(
+        COMMAND sphinx-build -b man ${CMAKE_SOURCE_DIR}/docs ${CMAKE_BINARY_DIR}/man)
+  endif()
+
   # Install MetaInfo and Desktop files for the applications asked for at configure
   if(FREECIV_ENABLE_CLIENT)
     install(
@@ -175,6 +182,13 @@ if(UNIX AND NOT APPLE)
       FILES
       ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.client.desktop
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+      COMPONENT freeciv21
+    )
+
+    install(
+      FILES
+      ${CMAKE_BINARY_DIR}/man/freeciv21-client.6
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/man/man6
       COMPONENT freeciv21
     )
   endif(FREECIV_ENABLE_CLIENT)
@@ -195,6 +209,15 @@ if(UNIX AND NOT APPLE)
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
       COMPONENT freeciv21
     )
+
+    install(
+      FILES
+      ${CMAKE_BINARY_DIR}/man/freeciv21-server.6
+      ${CMAKE_BINARY_DIR}/man/freeciv21-game-manual.6
+      ${CMAKE_BINARY_DIR}/man/freeciv21-manual.6
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/man/man6
+      COMPONENT freeciv21
+    )
   endif(FREECIV_ENABLE_SERVER)
 
   if(FREECIV_ENABLE_FCMP_QT)
@@ -211,6 +234,14 @@ if(UNIX AND NOT APPLE)
       FILES
       ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.modpack-qt.desktop
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+      COMPONENT freeciv21
+    )
+
+    install(
+      FILES
+      ${CMAKE_BINARY_DIR}/man/freeciv21-modpack-qt.6
+      ${CMAKE_BINARY_DIR}/man/freeciv21-modpack.6
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/man/man6
       COMPONENT freeciv21
     )
   endif(FREECIV_ENABLE_FCMP_QT)
@@ -230,6 +261,13 @@ if(UNIX AND NOT APPLE)
       ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.ruledit.desktop
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
       COMPONENT tool_ruledit
+    )
+
+    install(
+      FILES
+      ${CMAKE_BINARY_DIR}/man/freeciv21-ruleup.6
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/man/man6
+      COMPONENT freeciv21
     )
   endif(FREECIV_ENABLE_RULEDIT)
 endif(UNIX AND NOT APPLE)
