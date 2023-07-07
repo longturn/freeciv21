@@ -44,6 +44,7 @@ jobs:
             cmake \
             ninja-build \
             python3 \
+            python3-pip \
             gettext \
             qtbase5-dev \
             libqt5svg5-dev \
@@ -52,6 +53,7 @@ jobs:
             libsqlite3-dev \
             libsdl2-mixer-dev \
             python3-sphinx
+          pip install -r docs/requirements.txt
       - name: Configure
         run: |
           cmake . -B build -G Ninja \
