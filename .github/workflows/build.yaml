@@ -50,7 +50,8 @@ jobs:
             libkf5archive-dev \
             liblua5.3-dev \
             libsqlite3-dev \
-            libsdl2-mixer-dev
+            libsdl2-mixer-dev \
+            python3-sphinx
       - name: Configure
         run: |
           cmake . -B build -G Ninja \
