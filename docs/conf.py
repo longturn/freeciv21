@@ -177,6 +177,7 @@ man_pages = [
   ('Manuals/Program/freeciv21-manual', 'freeciv21-manual', 'Write a manual for a Freeciv21 ruleset.', [author], 6),
   ('Manuals/Program/freeciv21-modpack-qt', 'freeciv21-modpack-qt', 'GUI modpack installer for Freeciv21.', [author], 6),
   ('Manuals/Program/freeciv21-modpack', 'freeciv21-modpack', 'Command line modpack installer for Freeciv21.', [author], 6),
+  ('Manuals/Program/freeciv21-ruleup', 'freeciv21-ruleup', 'Command line ruleset upgrade tool for Freeciv21.', [author], 6),
   ('Manuals/Program/freeciv21-server', 'freeciv21-server', 'The server for the Freeciv21 game.', [author], 6)
 
 ]
