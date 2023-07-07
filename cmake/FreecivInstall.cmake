@@ -160,7 +160,7 @@ if(UNIX AND NOT APPLE)
     message(STATUS "CMAKE_INSTALL_PREFIX changed from the default to /usr.")
   endif()
 
-  # Generate the manual pages with Sphix
+  # Generate the manual pages with Sphinx
   if(SPHINX_FOUND)
     message(STATUS "Creating manual pages...")
     execute_process(
@@ -215,6 +215,7 @@ if(UNIX AND NOT APPLE)
       ${CMAKE_BINARY_DIR}/man/freeciv21-server.6
       ${CMAKE_BINARY_DIR}/man/freeciv21-game-manual.6
       ${CMAKE_BINARY_DIR}/man/freeciv21-manual.6
+      ${CMAKE_BINARY_DIR}/man/freeciv21-ruleup.6
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/man/man6
       COMPONENT freeciv21
     )
@@ -261,13 +262,6 @@ if(UNIX AND NOT APPLE)
       ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.ruledit.desktop
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
       COMPONENT tool_ruledit
-    )
-
-    install(
-      FILES
-      ${CMAKE_BINARY_DIR}/man/freeciv21-ruleup.6
-      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/man/man6
-      COMPONENT freeciv21
     )
   endif(FREECIV_ENABLE_RULEDIT)
 endif(UNIX AND NOT APPLE)

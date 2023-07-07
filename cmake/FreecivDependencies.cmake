@@ -171,7 +171,7 @@ if (FREECIV_ENABLE_FCMP_CLI OR FREECIV_ENABLE_FCMP_QT)
   find_package(SQLite3 REQUIRED)
 endif()
 
-# Add Spinx as a soft requirement so we can generate man pages and add to installer.
+# Add Sphinx as a soft requirement so we can generate man pages and add to installer.
 find_package(Sphinx QUIET)
 if (SPHINX_FOUND)
   message(STATUS "Sphinx Found.")
