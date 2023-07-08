@@ -2571,13 +2571,14 @@ void package_city(struct city *pcity, struct packet_city_info *packet,
   packet->disbanded_shields = pcity->disbanded_shields;
   packet->caravan_shields = pcity->caravan_shields;
   packet->last_turns_shield_surplus = pcity->last_turns_shield_surplus;
+  packet->bought_shields = pcity->bought_shields;
 
   worklist_copy(&packet->worklist, &pcity->worklist);
   packet->diplomat_investigate = dipl_invest;
 
   packet->airlift = pcity->airlift;
   packet->did_buy = pcity->did_buy;
-  packet->did_buy_production = pcity->did_buy_production;
+  packet->did_buy_production = pcity->bought_shields > 0;
   packet->did_sell = pcity->did_sell;
   packet->was_happy = pcity->was_happy;
 

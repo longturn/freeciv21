@@ -1828,12 +1828,12 @@ int city_change_production_penalty(const struct city *pcity,
     penalized_shields = pcity->before_change_shields;
   }
 
-  // Penalize 50% if you buy unit last turn but didnt built
-  if ((pcity->did_buy_production
+  // Penalize 50% if you bought a unit but didn't build it
+  if ((pcity->bought_shields > 0
        && ((target->kind == VUT_UTYPE
             && target->value.utype != pcity->changed_from.value.utype)))) {
-    unpenalized_shields = 0;
-    penalized_shields = pcity->before_change_shields;
+    unpenalized_shields -= pcity->bought_shields;
+    penalized_shields += pcity->bought_shields;
   }
 
   /* Do not put penalty on these. It shouldn't matter whether you disband
@@ -1848,6 +1848,7 @@ int city_change_production_penalty(const struct city *pcity,
     penalized_shields += pcity->caravan_shields;
   }
 
+  qCritical() << unpenalized_shields << penalized_shields;
   shield_stock_after_adjustment =
       unpenalized_shields + penalized_shields / 2;
 
@@ -3329,7 +3330,7 @@ struct city *create_city_virtual(struct player *pplayer, struct tile *ptile,
 
   pcity->turn_plague = -1; // -1 = never
   pcity->did_buy = false;
-  pcity->did_buy_production = false;
+  pcity->bought_shields = 0;
   pcity->city_radius_sq = game.info.init_city_radius_sq;
   pcity->turn_founded = game.info.turn;
   pcity->turn_last_built = game.info.turn;
