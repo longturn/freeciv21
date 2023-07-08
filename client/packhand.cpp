@@ -791,7 +791,7 @@ void handle_city_info(const struct packet_city_info *packet)
 
   pcity->airlift = packet->airlift;
   pcity->did_buy = packet->did_buy;
-  pcity->did_buy_production = packet->did_buy_production;
+  pcity->bought_shields = packet->bought_shields;
   pcity->did_sell = packet->did_sell;
   pcity->was_happy = packet->was_happy;
 
