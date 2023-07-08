@@ -1,9 +1,11 @@
 # CMakeLists for Freeciv21 Docs
 
+set(FREECIV_ENABLE_MANPAGES FALSE)
 find_package(Sphinx QUIET)
 
 if(SPHINX_FOUND)
   message(STATUS "Sphinx Found, configuring.")
+  set(FREECIV_ENABLE_MANPAGES TRUE)
   set(SPHINX_SOURCE ${CMAKE_SOURCE_DIR}/docs)
   set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR})
   set(SPHINX_MAN ${CMAKE_CURRENT_BINARY_DIR}/man)

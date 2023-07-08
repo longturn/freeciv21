@@ -178,7 +178,7 @@ if(UNIX AND NOT APPLE)
       COMPONENT freeciv21
     )
 
-    if(SPHINX_FOUND)
+    if(FREECIV_ENABLE_MANPAGES)
       install(
         FILES
         ${CMAKE_BINARY_DIR}/man/freeciv21-client.6
@@ -205,7 +205,7 @@ if(UNIX AND NOT APPLE)
       COMPONENT freeciv21
     )
 
-    if(SPHINX_FOUND)
+    if(FREECIV_ENABLE_MANPAGES)
       install(
         FILES
         ${CMAKE_BINARY_DIR}/man/freeciv21-server.6
@@ -235,7 +235,7 @@ if(UNIX AND NOT APPLE)
       COMPONENT freeciv21
     )
 
-    if(SPHINX_FOUND)
+    if(FREECIV_ENABLE_MANPAGES)
       install(
         FILES
         ${CMAKE_BINARY_DIR}/man/freeciv21-modpack-qt.6
