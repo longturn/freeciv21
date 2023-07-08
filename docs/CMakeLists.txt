@@ -16,11 +16,15 @@ if(SPHINX_FOUND)
                 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                 COMMENT "Generating documentation with Sphinx")
 
-  add_custom_target(man-pages ALL
+  # We only create man pages on Unix
+  if(UNIX AND NOT APPLE)
+    add_custom_target(man-pages ALL
                 COMMAND
                 ${SPHINX_EXECUTABLE} -b man ${SPHINX_SOURCE} ${SPHINX_MAN}
                 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                 COMMENT "Generating manual pages with Sphinx")
+  endif()
 else()
   message(STATUS "Sphinx NOT Found.")
+  set(FREECIV_ENABLE_MANPAGES FALSE)
 endif()
