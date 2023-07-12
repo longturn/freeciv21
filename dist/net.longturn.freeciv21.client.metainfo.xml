@@ -37,4 +37,7 @@
     <content_rating type="oars-1.0">
       <content_attribute id="social-chat">mild</content_attribute>
     </content_rating>
+    <releases>
+      <release version="3.0.1" type="stable" date="2023-06-17"/>
+    </releases>
 </component>
