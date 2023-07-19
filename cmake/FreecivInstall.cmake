@@ -153,6 +153,9 @@ endif()
 # Unix/Linux specific install steps
 if(UNIX AND NOT APPLE)
 
+  # Get the current day in year-month-day format
+  string(TIMESTAMP currentDay "%Y-%m-%d")
+
   # Fixes a bug of some sort on Linux where this gets set to /usr/local, but installs to /usr
   if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set (CMAKE_INSTALL_PREFIX "/usr"
@@ -162,14 +165,11 @@ if(UNIX AND NOT APPLE)
 
   # Install MetaInfo and Desktop files for the applications asked for at configure
   if(FREECIV_ENABLE_CLIENT)
-    install(
-      FILES
-      dist/net.longturn.freeciv21.client.metainfo.xml
-      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
-      COMPONENT freeciv21
-    )
     configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.client.desktop.in
                    net.longturn.freeciv21.client.desktop
+                   @ONLY NEWLINE_STYLE UNIX)
+    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.client.metainfo.xml.in
+                   net.longturn.freeciv21.client.metainfo.xml
                    @ONLY NEWLINE_STYLE UNIX)
     install(
       FILES
@@ -177,7 +177,18 @@ if(UNIX AND NOT APPLE)
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
       COMPONENT freeciv21
     )
-
+    install(
+      FILES
+      ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.client.metainfo.xml
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
+      COMPONENT freeciv21
+    )
+    install(
+      FILES
+      ${CMAKE_SOURCE_DIR}/data/icons/128x128/freeciv21-client.png
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/freeciv21/misc
+      COMPONENT freeciv21
+    )
     if(FREECIV_ENABLE_MANPAGES)
       install(
         FILES
@@ -189,14 +200,11 @@ if(UNIX AND NOT APPLE)
   endif(FREECIV_ENABLE_CLIENT)
 
   if(FREECIV_ENABLE_SERVER)
-    install(
-      FILES
-      dist/net.longturn.freeciv21.server.metainfo.xml
-      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
-      COMPONENT freeciv21
-    )
     configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.server.desktop.in
                    net.longturn.freeciv21.server.desktop
+                   @ONLY NEWLINE_STYLE UNIX)
+    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.server.metainfo.xml.in
+                   net.longturn.freeciv21.server.metainfo.xml
                    @ONLY NEWLINE_STYLE UNIX)
     install(
       FILES
@@ -204,7 +212,18 @@ if(UNIX AND NOT APPLE)
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
       COMPONENT freeciv21
     )
-
+    install(
+      FILES
+      ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.server.metainfo.xml
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
+      COMPONENT freeciv21
+    )
+    install(
+      FILES
+      ${CMAKE_SOURCE_DIR}/data/icons/128x128/freeciv21-server.png
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/freeciv21/misc
+      COMPONENT freeciv21
+    )
     if(FREECIV_ENABLE_MANPAGES)
       install(
         FILES
@@ -219,19 +238,28 @@ if(UNIX AND NOT APPLE)
   endif(FREECIV_ENABLE_SERVER)
 
   if(FREECIV_ENABLE_FCMP_QT)
-    install(
-      FILES
-      dist/net.longturn.freeciv21.modpack.metainfo.xml
-      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
-      COMPONENT freeciv21
-    )
-    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.modpack-qt.desktop.in
-                   net.longturn.freeciv21.modpack-qt.desktop
+    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.modpack.desktop.in
+                   net.longturn.freeciv21.modpack.desktop
+                   @ONLY NEWLINE_STYLE UNIX)
+    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.modpack.metainfo.xml.in
+                   net.longturn.freeciv21.modpack.metainfo.xml
                    @ONLY NEWLINE_STYLE UNIX)
     install(
       FILES
-      ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.modpack-qt.desktop
+      ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.modpack.desktop
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+      COMPONENT freeciv21
+    )
+    install(
+      FILES
+      ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.modpack.metainfo.xml
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
+      COMPONENT freeciv21
+    )
+    install(
+      FILES
+      ${CMAKE_SOURCE_DIR}/data/icons/128x128/freeciv21-modpack.png
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/freeciv21/misc
       COMPONENT freeciv21
     )
 
@@ -247,19 +275,22 @@ if(UNIX AND NOT APPLE)
   endif(FREECIV_ENABLE_FCMP_QT)
 
  if(FREECIV_ENABLE_RULEDIT)
-    install(
-      FILES
-      dist/net.longturn.freeciv21.ruledit.metainfo.xml
-      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
-      COMPONENT tool_ruledit
-    )
     configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.ruledit.desktop.in
                    net.longturn.freeciv21.ruledit.desktop
+                   @ONLY NEWLINE_STYLE UNIX)
+    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.ruledit.metainfo.xml.in
+                   net.longturn.freeciv21.ruledit.metainfo.xml
                    @ONLY NEWLINE_STYLE UNIX)
     install(
       FILES
       ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.ruledit.desktop
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+      COMPONENT tool_ruledit
+    )
+    install(
+      FILES
+      ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.ruledit.metainfo.xml
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
       COMPONENT tool_ruledit
     )
   endif(FREECIV_ENABLE_RULEDIT)
