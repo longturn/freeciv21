@@ -251,7 +251,7 @@
     Push "1"
     Call ConditionalAddToRegisty
     Push "DisplayIcon"
-    Push "$INSTDIR\client.ico"
+    Push "$INSTDIR\freeciv21-client.ico"
     Call ConditionalAddToRegisty
     Push "HelpLink"
     Push "@CPACK_NSIS_HELP_LINK@"
