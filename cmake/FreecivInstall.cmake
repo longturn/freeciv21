@@ -42,9 +42,9 @@ if(WIN32 OR MSYS OR MINGW)
   install(
     FILES
     dist/freeciv21-server.cmd
-    dist/client.ico
-    dist/mp.ico
-    dist/server.ico
+    data/icons/128x128/freeciv21-client.ico
+    data/icons/128x128/freeciv21-modpack.ico
+    data/icons/128x128/freeciv21-server.ico
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21)
 endif()
