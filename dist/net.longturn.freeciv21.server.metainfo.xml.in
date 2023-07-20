@@ -3,17 +3,13 @@
     <id type="desktop">net.longturn.freeciv21.server</id>
     <metadata_license>CC0</metadata_license>
     <project_license>GPL-3.0+</project_license>
-    <name>Freeciv21 server</name>
+    <name>Freeciv21 Server</name>
     <summary>Server component for the Freeciv21 game</summary>
     <description>
-        <p>
-            Freeciv21 is a Free and Open Source empire-building strategy game inspired by the history of human civilization.
-            The game commences in prehistory and your mission is to lead your tribe from the Stone Age to the Space Age...
-        </p>
-        <p>
-            The server hosts multiplayer games. For single-player games the client will launch the server for itself
-            automatically. The server is a console application.
-        </p>
+      <p>Freeciv21 is a free open source turn-based empire-building 4x strategy game, in which each player becomes the leader of a civilization. You compete against several opponents to build cities and use them to support a military and an economy. Players strive to complete an empire that survives all encounters with its neighbors to emerge victorious. Play begins at the dawn of history in 4,000 BCE.</p>
+      <p>Freeciv21 takes its roots in the well-known FOSS game Freeciv and extends it for more fun, with a revived focus on competitive multiplayer environments. Players can choose from over 500 nations and can play against the computer or other people in an active online community.</p>
+      <p>The code is maintained by the team over at Longturn.net and is based on the QT framework. The game supports both hex and square tiles and is easily modified to create custom rules.</p>
+      <p>The server hosts multiplayer games. For single-player games the client will launch the server for itself automatically. The server is a console application.</p>
     </description>
     <launchable type="desktop-id">net.longturn.freeciv21.server.desktop</launchable>
     <icon type="remote">https://raw.githubusercontent.com/longturn/freeciv21/master/data/icons/128x128/freeciv21-server.png</icon>
@@ -21,7 +17,7 @@
     <url type="bugtracker">https://github.com/longturn/freeciv21/issues</url>
     <screenshots>
       <screenshot type="default">
-        <caption>Freeciv21 Client</caption>
+        <caption>Freeciv21 Screenshot</caption>
         <image>https://raw.githubusercontent.com/longturn/freeciv21/master/dist/freeciv21-screenshot-2048x1112.png</image>
       </screenshot>
     </screenshots>

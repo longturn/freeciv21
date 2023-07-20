@@ -20,9 +20,11 @@ name: freeciv21
 title: Freeciv21
 summary: Freeciv21 - Freeciv for the 21st Century
 description: |
-  Freeciv21 is a free and open source empire-building strategy game inspired by the history of human civilization. The game commences in prehistory and your mission is to lead your tribe from the Stone Age to the Space Age.
-  This snap package contains everything you need to play local single-player games against the computer as well as connect to online multi-player games against human opponents.
-  Freeciv21 is based on the Qt framework and brought to you by the team at Longturn.net.
+  Freeciv21 is a free open source turn-based empire-building 4x strategy game, in which each player becomes the leader of a civilization. You compete against several opponents to build cities and use them to support a military and an economy. Players strive to complete an empire that survives all encounters with its neighbors to emerge victorious. Play begins at the dawn of history in 4,000 BCE.
+
+  Freeciv21 takes its roots in the well-known FOSS game Freeciv and extends it for more fun, with a revived focus on competitive multiplayer environments. Players can choose from over 500 nations and can play against the computer or other people in an active online community.
+
+  The code is maintained by the team over at Longturn.net and is based on the QT framework. The game supports both hex and square tiles and is easily modified to create custom rules.
 
 # TODO: At some point, will want to integrate into cmake process and configure_file()
 version: '3.1-dev'
@@ -35,7 +37,7 @@ issues: https://github.com/longturn/freeciv21/issues/new/choose
 confinement: strict
 compression: lzo
 
-# The base snap is the execution environment and is based on Ubuntu 22.04 
+# The base snap is the execution environment and is based on Ubuntu 22.04
 #  running in an LXD virtual machine
 base: core22
 
