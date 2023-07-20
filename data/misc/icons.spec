@@ -14,6 +14,6 @@ artists = "
 [extra]
 sprites =
 	{	"tag", "file"
-		"icon.freeciv", "misc/civicon"
+		"icon.freeciv", "misc/freeciv21-client"
 		; misc/mpicon.png is referenced directly from configure.ac
 	}
