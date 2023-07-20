@@ -15,14 +15,17 @@ SYNOPSIS
 DESCRIPTION
 ===========
 
-Freeciv21 is a free turn-based empire-building strategy game inspired by the history of human civilization.
-The game commences in prehistory and your mission is to lead your tribe from the Stone Age to the Space Age.
+Freeciv21 is a free open source turn-based empire-building 4x strategy game, in which each player becomes the
+leader of a civilization. You compete against several opponents to build cities and use them to support a
+military and an economy. Players strive to complete an empire that survives all encounters with its neighbors
+to emerge victorious. Play begins at the dawn of history in 4,000 BCE.
 
-Players of Civilization II\ |reg| by Microprose\ |reg| should feel at home. Freeciv21 takes its roots in the
-well-known FOSS game Freeciv and extends it for more fun, with a revived focus on competitive
-**multiplayer environments**.
+Freeciv21 takes its roots in the well-known FOSS game Freeciv and extends it for more fun, with a revived
+focus on competitive multiplayer environments. Players can choose from over 500 nations and can play against
+the computer or other people in an active online community.
 
-Freeciv21 is maintained by the team over at Longturn.net.
+The code is maintained by the team over at Longturn.net and is based on the QT framework. The game supports
+both hex and square tiles and is easily modified to create custom rules.
 
 An HTML version of this manual page along with much more information is available on our documentation
 website at https://longturn.readthedocs.io/.
