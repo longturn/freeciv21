@@ -115,7 +115,7 @@ public:
 
   enum client_pages current_page();
 
-  void set_status_bar(const QString &str, int timeout = 8000);
+  void set_status_bar(const QString &str, int timeout = 20000);
   void set_diplo_dialog(choice_dialog *widget);
   choice_dialog *get_diplo_dialog();
   void write_settings();
