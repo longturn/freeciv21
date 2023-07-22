@@ -870,7 +870,7 @@ const QString science_dialog_text()
    The "percent" value, if given, will be set to the completion percentage
    of the research target (actually it's a [0,1] scale not a percent).
  */
-const QString get_science_target_text(double *percent)
+const QString get_science_target_text()
 {
   struct research *research = research_get(client_player());
   QString str;
@@ -882,9 +882,6 @@ const QString get_science_target_text(double *percent)
   if (research->researching == A_UNSET) {
     str = QString(_("%1/- (never)"))
               .arg(QString::number(research->bulbs_researched));
-    if (percent) {
-      *percent = 0.0;
-    }
   } else {
     int total = research->client.researching_cost;
     int done = research->bulbs_researched;
@@ -904,10 +901,6 @@ const QString get_science_target_text(double *percent)
       // no forward progress -- no research, or tech loss disallowed
       str = QString(_("%1/%2 (never)"))
                 .arg(QString::number(done), QString::number(total));
-    }
-    if (percent) {
-      *percent = static_cast<double>(done) / static_cast<double>(total);
-      *percent = CLIP(0.0, *percent, 1.0);
     }
   }
 
@@ -1047,7 +1040,7 @@ const QString get_info_label_text_popup()
     str += QString(_("Researching %1: %2"))
                .arg(research_advance_name_translation(
                         presearch, presearch->researching),
-                    get_science_target_text(nullptr))
+                    get_science_target_text())
            + qendl();
     // perturn is defined as: (bulbs produced) - upkeep
     if (game.info.tech_upkeep_style != TECH_UPKEEP_NONE) {

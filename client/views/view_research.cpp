@@ -373,8 +373,6 @@ void science_report::update_report()
   int total;
   int done = research->bulbs_researched;
   QVariant qvar, qres;
-  double not_used;
-  QString str;
   qlist_item item;
 
   if (research->researching != A_UNSET) {
@@ -389,8 +387,7 @@ void science_report::update_report()
   progress_label->setAlignment(Qt::AlignHCenter);
   info_label->setAlignment(Qt::AlignHCenter);
   info_label->setText(get_science_goal_text(research->tech_goal));
-  str = get_science_target_text(&not_used);
-  progress->setFormat(str);
+  progress->setFormat(get_science_target_text());
   progress->setMinimum(0);
   progress->setMaximum(total);
   progress->set_pixmap(static_cast<int>(research->researching));
