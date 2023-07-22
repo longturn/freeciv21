@@ -750,10 +750,14 @@ int get_bulbs_per_turn(int *pours, bool *pteam, int *ptheirs)
  */
 int turns_to_research_done(const struct research *presearch, int per_turn)
 {
-  if (per_turn > 0) {
-    return ceil(static_cast<double>(presearch->client.researching_cost
-                                    - presearch->bulbs_researched)
-                / per_turn);
+  // Can be negative if the tech cost went down due to tech leak.
+  int missing =
+      presearch->client.researching_cost - presearch->bulbs_researched;
+  if (missing <= per_turn) {
+    // Tech will be researched at TC.
+    return 1;
+  } else if (per_turn > 0) {
+    return std::ceil(static_cast<double>(missing) / per_turn);
   } else {
     return -1;
   }
