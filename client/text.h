@@ -28,7 +28,7 @@ const QString unit_description(struct unit *punit);
 const QString get_airlift_text(const std::vector<unit *> &units,
                                const struct city *pdest);
 const QString science_dialog_text();
-const QString get_science_target_text(double *percent);
+const QString get_science_target_text();
 const QString get_science_goal_text(Tech_type_id goal);
 const QString get_info_label_text(bool moreinfo);
 const QString get_info_label_text_popup();
