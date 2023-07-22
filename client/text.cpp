@@ -915,35 +915,49 @@ const QString get_science_target_text()
 const QString get_science_goal_text(Tech_type_id goal)
 {
   const struct research *research = research_get(client_player());
-  int steps = research_goal_unknown_techs(research, goal);
-  int bulbs_needed = research_goal_bulbs_required(research, goal);
-  int turns;
-  int perturn = get_bulbs_per_turn(nullptr, nullptr, nullptr);
-  QString str, buf1, buf2, buf3;
-
   if (!research) {
     return QStringLiteral("-");
   }
 
+  if (!valid_advance_by_number(goal)) {
+    // No goal - act as if it were the current research
+    goal = research->researching;
+  }
+
+  int steps = research_goal_unknown_techs(research, goal);
+  int bulbs_needed = research_goal_bulbs_required(research, goal);
+  int perturn = get_bulbs_per_turn(nullptr, nullptr, nullptr);
+
   if (research_goal_tech_req(research, goal, research->researching)
       || research->researching == goal) {
     bulbs_needed -= research->bulbs_researched;
+    // Adjust for the actual cost of the current tech (e.g. due to tech leak)
+    bulbs_needed -=
+        research_goal_bulbs_required(research, research->researching);
+    bulbs_needed += research->client.researching_cost;
   }
 
+  int turns = -1;
+  if (bulbs_needed < perturn) {
+    turns = 1;
+  } else if (perturn > 0) {
+    turns = (bulbs_needed + perturn - 1) / perturn;
+  }
+
+  QString buf1, buf2, buf3;
   buf1 =
       QString(PL_("%1 step", "%1 steps", steps)).arg(QString::number(steps));
   buf2 = QString(PL_("%1 bulb", "%1 bulbs", bulbs_needed))
              .arg(QString::number(bulbs_needed));
-  if (perturn > 0) {
-    turns = (bulbs_needed + perturn - 1) / perturn;
+
+  if (turns >= 0) {
     buf3 = QString(PL_("%1 turn", "%1 turns", turns))
                .arg(QString::number(turns));
   } else {
     buf3 = QString(_("never"));
   }
-  str += QStringLiteral("(%1 - %2 - %3)").arg(buf1, buf2, buf3);
 
-  return str.trimmed();
+  return QStringLiteral("(%1 - %2 - %3)").arg(buf1, buf2, buf3);
 }
 
 /**
