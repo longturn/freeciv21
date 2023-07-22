@@ -849,9 +849,9 @@ const QString science_dialog_text()
 
   if (game.info.tech_upkeep_style != TECH_UPKEEP_NONE) {
     // perturn is defined as: (bulbs produced) - upkeep
+    str += qendl();
     str += QString(_("Bulbs produced per turn: %1"))
-               .arg(QString::number(perturn + upkeep))
-           + qendl();
+               .arg(QString::number(perturn + upkeep));
     /* TRANS: keep leading space; appended to "Bulbs produced per turn: %d"
      */
     str += QString(_(" (needed for technology upkeep: %1)"))
