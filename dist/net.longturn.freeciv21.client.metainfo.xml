@@ -6,18 +6,15 @@
     <name>Freeciv21 Client</name>
     <summary>Client for the Freeciv21 game</summary>
     <description>
-        <p>
-            Freeciv21 is a Free and Open Source empire-building strategy game inspired by the history of human civilization.
-            The game commences in prehistory and your mission is to lead your tribe from the Stone Age to the Space Age...
-        </p>
-        <p>
-            This client is for connecting to network games, or to launch local single-player games. It is based on the Qt framework.
-        </p>
+      <p>Freeciv21 is a free open source turn-based empire-building 4x strategy game, in which each player becomes the leader of a civilization. You compete against several opponents to build cities and use them to support a military and an economy. Players strive to complete an empire that survives all encounters with its neighbors to emerge victorious. Play begins at the dawn of history in 4,000 BCE.</p>
+      <p>Freeciv21 takes its roots in the well-known FOSS game Freeciv and extends it for more fun, with a revived focus on competitive multiplayer environments. Players can choose from over 500 nations and can play against the computer or other people in an active online community.</p>
+      <p>The code is maintained by the team over at Longturn.net and is based on the QT framework. The game supports both hex and square tiles and is easily modified to create custom rules.</p>
     </description>
     <launchable type="desktop-id">net.longturn.freeciv21.client.desktop</launchable>
     <icon type="remote">https://raw.githubusercontent.com/longturn/freeciv21/master/data/icons/64x64/freeciv21-client.png</icon>
     <url type="homepage">https://longturn.net/</url>
     <url type="bugtracker">https://github.com/longturn/freeciv21/issues</url>
+    <url type="help">https://longturn.readthedocs.io/en/latest/index.html</url>
     <screenshots>
       <screenshot type="default">
         <caption>Freeciv21 Client</caption>
