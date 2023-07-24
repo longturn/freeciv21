@@ -15,7 +15,7 @@ DESCRIPTION
 
 .. include:: freeciv21-server.rst
   :start-line: 17
-  :end-line: 29
+  :end-line: 30
 
 The freeciv21-server(6) program has its own command line interface. This page describes all of the server
 option directives an administrator can issue to the freeciv21-server. For more information on the server,

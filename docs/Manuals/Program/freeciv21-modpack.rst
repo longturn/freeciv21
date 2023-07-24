@@ -14,7 +14,7 @@ DESCRIPTION
 
 .. include:: freeciv21-server.rst
   :start-line: 17
-  :end-line: 29
+  :end-line: 30
 
 This is a program to read and install a modpack URL from the command line. If you are looking for a GUI
 based modpack installer, refer to freeciv21-modpack-qt(6).

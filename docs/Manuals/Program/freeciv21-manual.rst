@@ -15,7 +15,7 @@ DESCRIPTION
 
 .. include:: freeciv21-server.rst
   :start-line: 17
-  :end-line: 29
+  :end-line: 30
 
 This is a program to read a set of `RULESET` files and write a manual to a set of HTML files of the same name.
 

@@ -16,7 +16,7 @@ DESCRIPTION
 
 .. include:: freeciv21-server.rst
   :start-line: 17
-  :end-line: 29
+  :end-line: 30
 
 This is the client interface `program` used to connect to a Freeciv21 server. For more information on the
 server, refer to freeciv21-server(6). The program can be launched without any command line parameters. A
