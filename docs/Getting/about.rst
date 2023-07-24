@@ -24,12 +24,18 @@ About Freeciv21
 
 |
 
-Freeciv21 is a turn-based strategy game, in which each player becomes the leader of a civilization. You
-compete against several opponents to build cities, use them to support a military and economy, and finally
-to complete an empire that survives all encounters with its neighbors to emerge victorious. Each opponent
-may be either another human or controlled by the computer. All players begin at the dawn of history in 4,000
-BCE with a handful of units. Depending on the ruleset selected this is typically an :unit:`Explorer` and a
-couple of :unit:`Settlers`. The race then begins to expand outward from those humble beginnings.
+.. The top level description is also in README.md, freeciv21-server.rst, the 4 metainfo files, and snapcraft.yaml.
+Freeciv21 is a free open source turn-based empire-building 4x strategy game, in which each player becomes the
+leader of a civilization. You compete against several opponents to build cities and use them to support a
+military and an economy. Players strive to complete an empire that survives all encounters with its neighbors
+to emerge victorious. Play begins at the dawn of history in 4,000 BCE.
+
+Freeciv21 takes its roots in the well-known FOSS game Freeciv and extends it for more fun, with a revived
+focus on competitive multiplayer environments. Players can choose from over 500 nations and can play against
+the computer or other people in an active online community.
+
+The code is maintained by the team over at Longturn.net and is based on the QT framework. The game supports
+both hex and square tiles and is easily modified to create custom rules.
 
 Achieving success requires a balance between economic expansion, military strength, and technological
 development. Not only must you develop all three in concert to both expand and successfully defend your

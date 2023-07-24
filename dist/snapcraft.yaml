@@ -7,10 +7,10 @@
 # Build Steps:
 #   - (once) sudo snap install snapcraft --classic
 #   - (once) sudo snap install lxd
-#   - mkdir -p <source_dir>/build/snap/local
-#   - cp <source_dir>/dist/snapcraft.yaml <source_dir>/build/snap
-#   - cp <source_dir>/data/icons/128x128/freeciv21-client.png <source_dir>/build/snap/local
-#   - cd <source_dir>/build
+#   - mkdir -p build/snap/local
+#   - cp dist/snapcraft.yaml build/snap
+#   - cp data/icons/128x128/freeciv21-client.png build/snap/local
+#   - cd build
 #   - snapcraft
 #   - sudo snap install --devmode ./freeciv21_*.snap
 #
@@ -19,6 +19,7 @@
 name: freeciv21
 title: Freeciv21
 summary: Freeciv21 - Freeciv for the 21st Century
+# The description is also in README.md, about.rst, freeciv21-server.rst and the 4 metainfo files.
 description: |
   Freeciv21 is a free open source turn-based empire-building 4x strategy game, in which each player becomes the leader of a civilization. You compete against several opponents to build cities and use them to support a military and an economy. Players strive to complete an empire that survives all encounters with its neighbors to emerge victorious. Play begins at the dawn of history in 4,000 BCE.
 

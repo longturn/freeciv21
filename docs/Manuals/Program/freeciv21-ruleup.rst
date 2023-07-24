@@ -14,7 +14,7 @@ DESCRIPTION
 
 .. include:: freeciv21-server.rst
   :start-line: 17
-  :end-line: 29
+  :end-line: 30
 
 This command line utility allows a user to upgrade a ruleset designed for an older version of Freeciv21 to
 work on a newer version. freeciv21-ruleup does not create well-formatted human-readable ruleset files, so some

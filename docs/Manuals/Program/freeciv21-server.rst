@@ -15,6 +15,7 @@ SYNOPSIS
 DESCRIPTION
 ===========
 
+.. This description is also in README.md, about.rst, the 4 metainfo files, and snapcraft.yaml
 Freeciv21 is a free open source turn-based empire-building 4x strategy game, in which each player becomes the
 leader of a civilization. You compete against several opponents to build cities and use them to support a
 military and an economy. Players strive to complete an empire that survives all encounters with its neighbors
