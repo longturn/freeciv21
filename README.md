@@ -28,7 +28,7 @@ Installation
 
 ### Snap and Flathub Editions
 
-[![Get Freeciv21 from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-white.svg)](https://snapcraft.io/freeciv21) [![Get Freeciv21 from Flathub](https://dl.flathub.org/assets/badges/flathub-badge-i-en.svg)](https://flathub.org/apps/net.longturn.freeciv21)
+<p><a href='https://snapcraft.io/freeciv21'><img width='182' height='56' alt='Get Freeciv21 on Snapcraft' src='https://snapcraft.io/static/images/badges/en/snap-store-white.svg'/></a>&nbsp;<a href='https://flathub.org/apps/net.longturn.freeciv21'><img width='182' height='56' alt='Get Freeciv21 on Flathub' src='https://dl.flathub.org/assets/badges/flathub-badge-i-en.svg'/></a></p>
 
 ### Windows and macOS
 
