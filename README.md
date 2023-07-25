@@ -26,13 +26,9 @@ The documentation is found on our [documentation website](https://longturn.readt
 Installation
 ------------
 
-### Snap Edition
+### Snap and Flathub Editions
 
-[![Get Freeciv21 from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-white.svg)](https://snapcraft.io/freeciv21)
-
-### Flathub Edition
-
-Freeciv21 is also available on [Flathub](https://flathub.org/apps/net.longturn.freeciv21).
+[![Get Freeciv21 from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-white.svg)](https://snapcraft.io/freeciv21) [![Get Freeciv21 from Flathub](https://dl.flathub.org/assets/badges/flathub-badge-i-en.svg)](https://flathub.org/apps/net.longturn.freeciv21)
 
 ### Windows and macOS
 
