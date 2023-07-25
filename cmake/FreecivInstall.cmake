@@ -47,6 +47,12 @@ if(WIN32 OR MSYS OR MINGW)
     data/icons/128x128/freeciv21-server.ico
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21)
+
+  install(
+    FILES
+    data/icons/128x128/freeciv21-client.jpg
+    DESTINATION ${CMAKE_INSTALL_BINDIR}/data/misc
+    COMPONENT freeciv21)
 endif()
 
 # MSYS2 and MINGW specific installation
