@@ -16,7 +16,7 @@ Freeciv21
 <!-- This description is in each of the metainfo files, about.rst, freeciv21-server.rst, and snapcraft.yaml -->
 Freeciv21 is a free open source turn-based empire-building 4x strategy game, in which each player becomes the leader of a civilization. You compete against several opponents to build cities and use them to support a military and an economy. Players strive to complete an empire that survives all encounters with its neighbors to emerge victorious. Play begins at the dawn of history in 4,000 BCE.</p>
 <p>Freeciv21 takes its roots in the well-known FOSS game Freeciv and extends it for more fun, with a revived focus on competitive multiplayer environments. Players can choose from over 500 nations and can play against the computer or other people in an active online community.</p>
-<p>The code is maintained by the team over at [Longturn.net](https://longturn.net) and is based on the QT framework. The game supports both hex and square tiles and is easily modified to create custom rules.
+<p>The code is maintained by the team over at <a href="https://longturn.net/">Longturn.net</a> and is based on the QT framework. The game supports both hex and square tiles and is easily modified to create custom rules.
 <br clear="left"/></p>
 
 Get started by reviewing our [about page](https://longturn.readthedocs.io/en/latest/Getting/about.html). We welcome pull requests, bug reports and simple suggestions! Get in touch on [Discord](https://discord.gg/98krqGm). The #General channel is a great place to start.
@@ -29,6 +29,10 @@ Installation
 ### Snap Edition
 
 [![Get Freeciv21 from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-white.svg)](https://snapcraft.io/freeciv21)
+
+### Flathub Edition
+
+Freeciv21 is also available on [Flathub](https://flathub.org/apps/net.longturn.freeciv21).
 
 ### Windows and macOS
 
