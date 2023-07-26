@@ -10,6 +10,7 @@
 #   - mkdir -p build/snap/local
 #   - cp dist/snapcraft.yaml build/snap
 #   - cp data/icons/128x128/freeciv21-client.png build/snap/local
+#   - cp cmake/AutoRevision.txt build/snap/local
 #   - cd build
 #   - snapcraft
 #   - sudo snap install --devmode ./freeciv21_*.snap
@@ -27,10 +28,7 @@ description: |
 
   The code is maintained by the team over at Longturn.net and is based on the QT framework. The game supports both hex and square tiles and is easily modified to create custom rules.
 
-# TODO: At some point, will want to integrate into cmake process and configure_file()
-version: '3.1-dev'
-grade: devel
-
+adopt-info: freeciv21
 license: GPL-3.0-or-later
 website: https://longturn.net
 contact: longturn.net@gmail.com
@@ -48,10 +46,13 @@ icon: snap/local/freeciv21-client.png
 
 parts:
   freeciv21:
+    override-pull: |
+      snapcraftctl pull
+      snapcraftctl set-version `sed -n '2p' snap/local/AutoRevision.txt`
+      snapcraftctl set-grade "devel"
     plugin: cmake
     source: https://github.com/longturn/freeciv21.git
     source-type: git
-    # TODO: integrate into cmake process and configure_file()
     source-branch: master
     cmake-generator: Ninja
     cmake-parameters:
@@ -106,7 +107,7 @@ apps:
       - network-bind
   freeciv21-modpack-qt:
     common-id: net.longturn.freeciv21.modpack-qt
-    desktop: usr/share/applications/net.longturn.freeciv21.modpack-qt.desktop
+    desktop: usr/share/applications/net.longturn.freeciv21.modpack.desktop
     command: usr/bin/freeciv21-modpack-qt
     extensions:
       - kde-neon
