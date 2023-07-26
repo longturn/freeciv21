@@ -5,34 +5,34 @@
 # Always install the base documentation
 install(
   FILES
-  AUTHORS
-  COPYING
-  INSTALL
+  ${CMAKE_SOURCE_DIR}/AUTHORS
+  ${CMAKE_SOURCE_DIR}/COPYING
+  ${CMAKE_SOURCE_DIR}/INSTALL
   DESTINATION ${CMAKE_INSTALL_DOCDIR}
   COMPONENT freeciv21)
 
 # Always install the Licenses
 install(
   FILES
-  dist/licenses/0-MSYS2-INDEX.txt
-  dist/licenses/APACHE-2.txt
-  dist/licenses/BSD-2-CLAUSE.txt
-  dist/licenses/BSD-3-CLAUSE.txt
-  dist/licenses/BZ2.txt
-  dist/licenses/FTL.txt
-  dist/licenses/GPL2.txt
-  dist/licenses/GPL3.txt
-  dist/licenses/IMAGEMAGICK.txt
-  dist/licenses/LGPL-2.0-ONLY.txt
-  dist/licenses/LGPL-2.0-OR-LATER.txt
-  dist/licenses/LGPL-3.0-ONLY.txt
-  dist/licenses/LICENSEREF-KDE-ACCEPTED-LGPL.txt
-  dist/licenses/MAGICKWAND.txt
-  dist/licenses/MIT.txt
-  dist/licenses/OPENSSL.txt
-  dist/licenses/PNG.txt
-  dist/licenses/UNICODE.txt
-  dist/licenses/ZLIB.txt
+  ${CMAKE_SOURCE_DIR}/dist/licenses/0-MSYS2-INDEX.txt
+  ${CMAKE_SOURCE_DIR}/dist/licenses/APACHE-2.txt
+  ${CMAKE_SOURCE_DIR}/dist/licenses/BSD-2-CLAUSE.txt
+  ${CMAKE_SOURCE_DIR}/dist/licenses/BSD-3-CLAUSE.txt
+  ${CMAKE_SOURCE_DIR}/dist/licenses/BZ2.txt
+  ${CMAKE_SOURCE_DIR}/dist/licenses/FTL.txt
+  ${CMAKE_SOURCE_DIR}/dist/licenses/GPL2.txt
+  ${CMAKE_SOURCE_DIR}/dist/licenses/GPL3.txt
+  ${CMAKE_SOURCE_DIR}/dist/licenses/IMAGEMAGICK.txt
+  ${CMAKE_SOURCE_DIR}/dist/licenses/LGPL-2.0-ONLY.txt
+  ${CMAKE_SOURCE_DIR}/dist/licenses/LGPL-2.0-OR-LATER.txt
+  ${CMAKE_SOURCE_DIR}/dist/licenses/LGPL-3.0-ONLY.txt
+  ${CMAKE_SOURCE_DIR}/dist/licenses/LICENSEREF-KDE-ACCEPTED-LGPL.txt
+  ${CMAKE_SOURCE_DIR}/dist/licenses/MAGICKWAND.txt
+  ${CMAKE_SOURCE_DIR}/dist/licenses/MIT.txt
+  ${CMAKE_SOURCE_DIR}/dist/licenses/OPENSSL.txt
+  ${CMAKE_SOURCE_DIR}/dist/licenses/PNG.txt
+  ${CMAKE_SOURCE_DIR}/dist/licenses/UNICODE.txt
+  ${CMAKE_SOURCE_DIR}/dist/licenses/ZLIB.txt
   DESTINATION ${CMAKE_INSTALL_DOCDIR}/licenses
   COMPONENT freeciv21)
 
@@ -41,16 +41,16 @@ if(WIN32 OR MSYS OR MINGW)
   # Custom command files to run the applications
   install(
     FILES
-    dist/freeciv21-server.cmd
-    data/icons/128x128/freeciv21-client.ico
-    data/icons/128x128/freeciv21-modpack.ico
-    data/icons/128x128/freeciv21-server.ico
+    ${CMAKE_SOURCE_DIR}/dist/freeciv21-server.cmd
+    ${CMAKE_SOURCE_DIR}/data/icons/128x128/freeciv21-client.ico
+    ${CMAKE_SOURCE_DIR}/data/icons/128x128/freeciv21-modpack.ico
+    ${CMAKE_SOURCE_DIR}/data/icons/128x128/freeciv21-server.ico
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21)
 
   install(
     FILES
-    data/icons/128x128/freeciv21-client.jpg
+    ${CMAKE_SOURCE_DIR}/data/icons/128x128/freeciv21-client.png
     DESTINATION ${CMAKE_INSTALL_BINDIR}/data/misc
     COMPONENT freeciv21)
 endif()
