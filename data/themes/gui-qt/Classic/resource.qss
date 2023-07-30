@@ -664,7 +664,13 @@ units_select {
   border: 1px solid black;
 }
 
-chat_widget QLabel
+chat_widget, message_widget
+{
+  border: 1px solid #c3b48e;
+}
+
+chat_widget QLabel,
+message_widget QLabel
 {
   color: white;
 }
@@ -729,15 +735,18 @@ QProgressBar {
 }
 
 info_tile {
-color: #ffecba;
+  color: #ffecba;
   border: 1px solid black;
   background-color: rgba(0, 0, 0);
 }
 
 freeciv--report_widget {
-  color: #ffecba;
-  border: 1px solid #ffecba;
   background-color: rgba(0, 0, 0);
+  border: 1px solid #ffecba;
+}
+
+freeciv--report_widget QLabel {
+  color: #ffecba;
 }
 
 unit_item, impr_item {
