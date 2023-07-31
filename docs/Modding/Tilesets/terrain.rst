@@ -47,7 +47,7 @@ the corresponding sections.
   +--------------------------------+--------------------------------+--------------------------------+--------------------------------------+
   | One, same as ``match_type``    | ``t.l1.hills_n0e1s0w1``        | ``t.l0.floor_cell_u011``       | ``t.l0.floor_hex_cell_right_0_1_0``, |
   |                                | (:ref:`doc <single-match>`)    | (:ref:`doc <corner-same>`)     | ``t.l0.floor_hex_cell_left_1_0_0``   |
-  |                                | (:ref:`doc <single-match>`)    | (:ref:`doc <corner-same>`)     | (:ref:`doc <hex_corner-same>`)       |
+  |                                |                                |                                | (:ref:`doc <hex_corner-same>`)       |
   +--------------------------------+--------------------------------+--------------------------------+--------------------------------------+
   | One, different from            | Not implemented                | ``t.l1.coast_cell_u_g_g_g``    | Not implemented                      |
   | ``match_type``                 |                                | (:ref:`doc <corner-pair>`)     |                                      |
