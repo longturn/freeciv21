@@ -1848,7 +1848,6 @@ int city_change_production_penalty(const struct city *pcity,
     penalized_shields += pcity->caravan_shields;
   }
 
-  qCritical() << unpenalized_shields << penalized_shields;
   shield_stock_after_adjustment =
       unpenalized_shields + penalized_shields / 2;
 
