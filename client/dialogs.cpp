@@ -17,6 +17,7 @@
 #include <QKeyEvent>
 #include <QPainter>
 #include <QRadioButton>
+#include <QRandomGenerator>
 #include <QVBoxLayout>
 #include <QtMath>
 // utility
@@ -389,7 +390,6 @@ races_dialog::races_dialog(struct player *pplayer, QWidget *parent)
 
   selected_nation = -1;
   selected_style = -1;
-  selected_sex = -1;
   setWindowTitle(_("Select Nation"));
   selected_nation_tabs->setRowCount(0);
   selected_nation_tabs->setColumnCount(1);
@@ -432,6 +432,9 @@ races_dialog::races_dialog(struct player *pplayer, QWidget *parent)
   qgroupbox_layout->addWidget(is_female, 2, 0);
   is_female->setText(_("Female"));
   is_male->setText(_("Male"));
+  // Select a default fairly
+  is_male->setChecked(QRandomGenerator::global()->generate() % 2 == 0);
+  is_female->setChecked(!is_male->isChecked());
   no_name->setLayout(qgroupbox_layout);
 
   description = new QTextEdit;
@@ -699,7 +702,8 @@ void races_dialog::nation_selected(const QItemSelection &selected,
   description->setPlainText(buf);
   leader_name->clear();
   if (client.conn.playing == tplayer) {
-    leader_name->addItem(client.conn.playing->name, true);
+    // Add username preserving gender information
+    leader_name->addItem(client.conn.playing->name, is_male->isChecked());
   }
   nation_leader_list_iterate(
       nation_leaders(nation_by_number(selected_nation)), pleader)
@@ -753,11 +757,9 @@ void races_dialog::leader_selected(int index)
   if (leader_name->itemData(index).toBool()) {
     is_male->setChecked(true);
     is_female->setChecked(false);
-    selected_sex = 0;
   } else {
     is_male->setChecked(false);
     is_female->setChecked(true);
-    selected_sex = 1;
   }
 }
 
@@ -773,10 +775,7 @@ void races_dialog::ok_pressed()
     return;
   }
 
-  if (selected_sex == -1) {
-    output_window_append(ftc_client, _("You must select your sex."));
-    return;
-  }
+  fc_assert_ret(is_male->isChecked() || is_female->isChecked());
 
   if (selected_style == -1) {
     output_window_append(ftc_client, _("You must select your style."));
@@ -795,7 +794,7 @@ void races_dialog::ok_pressed()
   }
   ln_bytes = leader_name->currentText().toUtf8();
   dsend_packet_nation_select_req(&client.conn, player_number(tplayer),
-                                 selected_nation, selected_sex,
+                                 selected_nation, is_male->isChecked(),
                                  ln_bytes.data(), selected_style);
   close();
   deleteLater();
