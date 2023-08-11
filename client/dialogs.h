@@ -156,7 +156,6 @@ private slots:
 private:
   int selected_nation;
   int selected_style;
-  int selected_sex;
   struct player *tplayer;
   int last_index;
 };
