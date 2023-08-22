@@ -791,8 +791,9 @@ unit *find_visible_unit(const ::tile *ptile)
     }
   }
 
-  // If a city is here, return nothing (unit hidden by city).
-  if (tile_city(ptile)) {
+  // If a city is here (and UI is drawing them), return nothing
+  // (unit hidden by city).
+  if (gui_options->draw_cities && tile_city(ptile)) {
     return nullptr;
   }
 
