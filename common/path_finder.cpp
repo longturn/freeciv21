@@ -397,26 +397,27 @@ void path_finder::path_finder_private::attempt_unload(detail::vertex &source)
     // Nearby tiles
     adjc_iterate(&(wld.map), probe.tile, target)
     {
-      if (is_action_enabled_unit_on_tile(ACTION_TRANSPORT_DISEMBARK1, &probe,
-                                         target, nullptr)) {
-        auto next = source.child_for_action(ACTION_TRANSPORT_DISEMBARK1,
-                                            probe, target);
-        next.moved = true;
-        next.loaded = nullptr;
-        // See unithand.cpp:do_disembark
-        next.moves_left -= map_move_cost_unit(&(wld.map), &probe, target);
-        maybe_insert_vertex(next);
-      }
       // Thanks sveinung
-      if (is_action_enabled_unit_on_tile(ACTION_TRANSPORT_DISEMBARK2, &probe,
-                                         target, nullptr)) {
-        auto next = source.child_for_action(ACTION_TRANSPORT_DISEMBARK2,
-                                            probe, target);
-        next.moved = true;
-        next.loaded = nullptr;
-        // See unithand.cpp:do_disembark
-        next.moves_left -= map_move_cost_unit(&(wld.map), &probe, target);
-        maybe_insert_vertex(next);
+      for (auto action :
+           {ACTION_TRANSPORT_DISEMBARK1, ACTION_TRANSPORT_DISEMBARK2}) {
+        if (is_action_enabled_unit_on_tile(action, &probe, target,
+                                           nullptr)) {
+          auto next = source.child_for_action(action, probe, target);
+          next.moved = true;
+          // See unithand.cpp:do_disembark
+          next.moves_left -= map_move_cost_unit(&(wld.map), &probe, target);
+
+          if (can_unit_survive_at_tile(&(wld.map), &probe, target)) {
+            next.loaded = nullptr;
+          } else {
+            // Unit need to load in a transport to survive
+            // FIXME Should consider some action enabler here... Server side
+            // code doesn't do it.
+            next.loaded = transporter_for_unit_at(&probe, target);
+          }
+
+          maybe_insert_vertex(next);
+        }
       }
     }
     adjc_iterate_end;
