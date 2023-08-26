@@ -759,19 +759,9 @@ int tile_move_cost_ptrs(const struct civ_map *nmap, const struct unit *punit,
 
   } else if (!is_native_tile_to_class(pclass, t2)
              || !is_native_tile_to_class(pclass, t1)) {
-    if (tile_city(t1) == nullptr) {
-      /* Loading to/disembarking from transport. */
-
-      // UTYF_IGTER units get move benefit.
-      return (utype_has_flag(punittype, UTYF_IGTER) ? MOVE_COST_IGTER
-                                                    : SINGLE_MOVE);
-    } else {
-      /* Entering/leaving port. */
-
-      // UTYF_IGTER units get move benefit.
-      return (utype_has_flag(punittype, UTYF_IGTER) ? MOVE_COST_IGTER
-                                                    : SINGLE_MOVE);
-    }
+    // UTYF_IGTER units get move benefit.
+    return (utype_has_flag(punittype, UTYF_IGTER) ? MOVE_COST_IGTER
+                                                  : SINGLE_MOVE);
   }
 
   cost = tile_terrain(t2)->movement_cost * SINGLE_MOVE;
