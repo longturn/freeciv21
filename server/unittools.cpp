@@ -2522,7 +2522,7 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
             /* FIXME: Shouldn't unit_move_handling() be used here? This is
              * the unit escaping by moving itself. It should therefore
              * respect movement rules. */
-            unit_move(vunit, dsttile, move_cost, nullptr, false, false);
+            unit_move(vunit, dsttile, move_cost, nullptr, true, false);
             num_escaped[player_index(vplayer)]++;
             escaped = true;
             unitcount--;
