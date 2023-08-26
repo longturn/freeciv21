@@ -645,7 +645,7 @@ static bool do_disembark(struct player *act_player, struct unit *act_unit,
   fc_assert_ret_val(tgt_tile, false);
   fc_assert_ret_val(paction, false);
 
-  unit_move(act_unit, tgt_tile, move_cost, nullptr, false, false);
+  unit_move(act_unit, tgt_tile, move_cost, nullptr, true, false);
 
   return true;
 }
