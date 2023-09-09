@@ -322,5 +322,4 @@ extern int messages_where[]; // OR-ed MW_ values [E_COUNT]
 struct tileset;
 
 const char *tileset_name_for_topology(int topology_id);
-void option_set_default_ts(struct tileset *t);
 void fill_topo_ts_default();
