@@ -973,7 +973,6 @@ bool tilespec_try_read(const QString &tileset_name, bool verbose,
   } else {
     original = true;
   }
-  option_set_default_ts(tileset);
 
   return original;
 }

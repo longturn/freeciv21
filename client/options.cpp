@@ -4784,43 +4784,6 @@ const char *tileset_name_for_topology(int topology_id)
 }
 
 /**
-   Set given tileset as the default for suitable topology
- */
-void option_set_default_ts(struct tileset *t)
-{
-  const char *optname = "<not set>";
-  struct option *opt;
-
-  switch (tileset_topo_index(t)) {
-  case TS_TOPO_SQUARE:
-    // Overhead
-    optname = "default_tileset_square_name";
-    break;
-  case TS_TOPO_HEX:
-    // Hex
-    optname = "default_tileset_hex_name";
-    break;
-  case TS_TOPO_ISOHEX:
-    // Isohex
-    optname = "default_tileset_isohex_name";
-    break;
-  }
-
-  opt = optset_option_by_name(client_optset, optname);
-
-  if (opt == nullptr) {
-    qCritical("Unknown option name \"%s\" in option_set_default_ts()",
-              optname);
-    return;
-  }
-
-  /* Do not call option_str_set() since we don't want option changed callback
-   * to reload this tileset. */
-  opt->str_vtable->set(opt, tileset_basename(t));
-  option_gui_update(opt);
-}
-
-/**
    Does topology-specific tileset option lack value?
  */
 static bool is_ts_option_unset(const char *optname)
