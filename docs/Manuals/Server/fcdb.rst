@@ -5,8 +5,8 @@
 Authentication and Database Support (fcdb)
 ******************************************
 
-The Freeciv21 server allows the authentication of users, although by default it is not configured, and anyone
-can connect with any username.
+The Freeciv21 server allows for the authentication of users, although by default it is not configured, and
+anyone can connect with any username.
 
 In order to support authentication, the Freeciv21 server needs access to a database backend in which to store
 the credentials. To support different database backends, the database access code is written in Lua using
@@ -35,7 +35,7 @@ Freeciv21 server. A good default location is the user's :file:`$HOME` directory.
 
     [fcdb]
     backend="sqlite"
-    database="/my/path/to/freeciv21.sqlite"
+    database="/home/user/freeciv21.sqlite"
 
 
 For more information on the format of this file, see below. There are more settings available, but this file
@@ -46,9 +46,10 @@ storing passwords with MD5 hashes.
 
 .. code-block:: sh
 
-    $ sudo apt install luarocks
-    $ sudo luarocks --lua-version 5.3 install md5
-    $ sudo luarocks --lua-version 5.3 install luasql-sqlite3
+    $ sudo apt install luarocks lua5.3 liblua5.3-dev libsqlite3-dev
+    $ lua -v  # output should be 5.3.x
+    $ luarocks --local --lua-version 5.3 install md5
+    $ luarocks --local --lua-version 5.3 install luasql-sqlite3
 
 
 Lastly, we need to download the :file:`database.lua` script file.
@@ -58,6 +59,7 @@ Lastly, we need to download the :file:`database.lua` script file.
     $ mkdir -p $HOME/.config/freeciv21
     $ cd $HOME/.config/freeciv21
     $ wget https://raw.githubusercontent.com/longturn/freeciv21/master/lua/database.lua
+    $ cd ~
 
 
 Now start the server with:
@@ -75,9 +77,12 @@ command:
     /fcdb lua sqlite_createdb()
 
 
-Now you can create some users by connecting with the client. Due to the :code:`--Newusers` flag, when you
-connect with the client with a previously unknown username, the server will prompt for a password and save the
-new account to the database.
+You should now see a :file:`/home/user/freeciv21.sqlite` file as per the same path given in the
+:file:`fc_auth.conf` file.
+
+At this time you are ready to create some users by connecting with the client. Due to the :code:`--Newusers`
+flag, when you connect with the client with a previously unknown username, the server will prompt for a
+password and save the new account to the database.
 
 You may want to prepopulate the users table this way and then restart the server without :code:`--Newusers`
 for the actual game, or you can run the game with :code:`--Newusers`.
