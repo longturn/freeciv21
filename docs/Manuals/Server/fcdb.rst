@@ -48,6 +48,7 @@ storing passwords with MD5 hashes.
 
     $ sudo apt install luarocks lua5.3 liblua5.3-dev libsqlite3-dev
     $ lua -v  # output should be 5.3.x
+    $ eval $(luarocks path --bin --lua-version 5.3)
     $ luarocks --local --lua-version 5.3 install md5
     $ luarocks --local --lua-version 5.3 install luasql-sqlite3
 
