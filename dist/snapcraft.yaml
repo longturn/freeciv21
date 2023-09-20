@@ -47,9 +47,9 @@ icon: snap/local/freeciv21-client.png
 parts:
   freeciv21:
     override-pull: |
-      snapcraftctl pull
-      snapcraftctl set-version `sed -n '2p' snap/local/AutoRevision.txt`
-      snapcraftctl set-grade "devel"
+      craftctl default
+      craftctl set version=`sed -n '2p' ./cmake/AutoRevision.txt | cut -c2-`
+      craftctl set grade=`case $(sed -n '2p' ./cmake/AutoRevision.txt | cut -c2-) in *-alpha.*) echo devel; ;; *-beta.*) echo devel; ;; *-rc.*) echo candidate; ;; *-patch.*) echo stable; ;; *) echo stable; ;; esac`
     plugin: cmake
     source: https://github.com/longturn/freeciv21.git
     source-type: git
