@@ -35,8 +35,10 @@ Freeciv21 server. A good default location is the user's :file:`$HOME` directory.
 
     [fcdb]
     backend="sqlite"
-    database="/home/user/freeciv21.sqlite"
+    database="/home/[user]/freeciv21.sqlite"
 
+
+.. note:: The username ``[user]`` should be changed to a real user.
 
 For more information on the format of this file, see below. There are more settings available, but this file
 is entirely sufficient for a SQLite3 setup.
@@ -47,7 +49,6 @@ storing passwords with MD5 hashes.
 .. code-block:: sh
 
     $ sudo apt install luarocks lua5.3 liblua5.3-dev libsqlite3-dev
-    $ lua -v  # output should be 5.3.x
     $ eval $(luarocks path --bin --lua-version 5.3)
     $ luarocks --local --lua-version 5.3 install md5
     $ luarocks --local --lua-version 5.3 install luasql-sqlite3
@@ -78,7 +79,7 @@ command:
     /fcdb lua sqlite_createdb()
 
 
-You should now see a :file:`/home/user/freeciv21.sqlite` file as per the same path given in the
+You should now see a :file:`/home/[user]/freeciv21.sqlite` file as per the same path given in the
 :file:`fc_auth.conf` file.
 
 At this time you are ready to create some users by connecting with the client. Due to the :code:`--Newusers`
