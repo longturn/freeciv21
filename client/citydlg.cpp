@@ -945,24 +945,19 @@ void city_label::set_type(int x) { type = x; }
  */
 void city_label::mousePressEvent(QMouseEvent *event)
 {
+  if (!can_client_issue_orders() || !pcity
+      || cma_is_city_under_agent(pcity, nullptr)) {
+    return;
+  }
+
   int citnum, i, num_citizens, nothing_width;
   int w = tileset_small_sprite_width(tileset);
 
-  if (!pcity) {
-    return;
-  }
-  if (cma_is_city_under_agent(pcity, nullptr)) {
-    return;
-  }
   num_citizens = pcity->size;
-  nothing_width = (this->width() - num_citizens * w) / 2;
-  i = 1 + (num_citizens * 5 / 200);
+  i = 1 + (num_citizens / 40);
   w = w / i;
+  nothing_width = (this->width() - num_citizens * w) / 2;
   citnum = (event->x() - nothing_width) / w;
-
-  if (!can_client_issue_orders()) {
-    return;
-  }
 
   city_rotate_specialist(pcity, citnum);
 }
@@ -1952,7 +1947,7 @@ void city_dialog::update_citizens()
   int w = tileset_small_sprite_width(tileset);
   int h = tileset_small_sprite_height(tileset);
 
-  i = 1 + (num_citizens * 5 / 200);
+  i = 1 + (num_citizens / 40);
   w = w / i;
   QRect source_rect(0, 0, w, h);
   QRect dest_rect(0, 0, w, h);
