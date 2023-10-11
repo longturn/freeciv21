@@ -17,7 +17,11 @@ legend=_("The United States of America achieved its independence from\
 leaders = {
  "name",                        "sex"
  "George Washington",           "Male"
+<<<<<<< HEAD
  "Martha Washington",           "Female"
+=======
+ "Martha Washington",    	      "Female"
+>>>>>>> 3a13d69e8e (Update american.ruleset)
  "Benjamin Franklin",           "Male"
  "Alexander Hamilton",          "Male"
  "John Adams",                  "Male"
