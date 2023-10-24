@@ -1414,7 +1414,7 @@ Main Map (Keys):\n\
 "), _("\
 Main Map (Mouse):\n\
 =================\n\
-  Left-click on vity:            Open city dialog\n\
+  Left-click on city:            Open city dialog\n\
   Left-click on unit:            Select a single unit\n\
                                  (cancels any current activity if \"clear\n\
                                  Unit orders on selection\" is set)\n\
