@@ -86,3 +86,10 @@ Alternatively, Freeciv21 can be used with Nix. For this, enable Nix flakes and r
 ```sh
 nix run github:longturn/freeciv21#;
 ```
+
+### Server install using Docker and Docker Compose
+
+1. Install Docker and Docker Compose.
+2. Get the `Dockerfile` and `docker-compose.yml` files from this repository.
+3. Run `docker-compose up`.
+4. Check `localhost:5556` to confirm the server is running.
