@@ -1375,7 +1375,14 @@ void bounce_unit(struct unit *punit, bool verbose, bounce_reason reason,
         packet.orders[i] = steps[i].order;
       }
 
+      // Disable unit wait time since this is a forced action
+      auto timestamp = punit->action_timestamp;
+      punit->action_timestamp = 0;
+
       handle_unit_orders(pplayer, &packet);
+
+      // Restore unit wait time
+      punit->action_timestamp = timestamp;
 
       if (punit->tile != punit_tile) {
         return;
