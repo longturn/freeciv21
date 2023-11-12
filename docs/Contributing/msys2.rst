@@ -1,6 +1,6 @@
-..  SPDX-License-Identifier: GPL-3.0-or-later
-..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
-..  SPDX-FileCopyrightText: zekoz
+.. SPDX-License-Identifier: GPL-3.0-or-later
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+.. SPDX-FileCopyrightText: zekoz
 
 Setting up MSYS2 for Windows
 ****************************
