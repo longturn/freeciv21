@@ -18,7 +18,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 check_function_exists(at_quick_exit HAVE_AT_QUICK_EXIT)
 
 # Required to generate the network protocol implementation
-find_package(PythonInterp 3 REQUIRED)
+find_package(Python3 REQUIRED)
 
 # Required as the main networking and utility library
 find_package(Qt5 5.15 COMPONENTS Core Network REQUIRED)
