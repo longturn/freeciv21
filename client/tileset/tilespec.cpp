@@ -1173,13 +1173,21 @@ void tilespec_reread_frozen_refresh(const QString &name)
 }
 
 /**
+ * Makes a dummy "error" pixmap to prevent crashes.
+ */
+static QPixmap *make_error_pixmap()
+{
+  auto s = new QPixmap(20, 20);
+  s->fill(Qt::red);
+  return s;
+}
+
+/**
    Loads the given graphics file (found in the data path) into a newly
    allocated sprite.
  */
 static QPixmap *load_gfx_file(const char *gfx_filename)
 {
-  QPixmap *s;
-
   // Try out all supported file extensions to find one that works.
   auto supported = QImageReader::supportedImageFormats();
 
@@ -1197,17 +1205,14 @@ static QPixmap *load_gfx_file(const char *gfx_filename)
     if (!real_full_name.isEmpty()) {
       log_debug("trying to load gfx file \"%s\".",
                 qUtf8Printable(real_full_name));
-      s = load_gfxfile(qUtf8Printable(real_full_name));
-      if (s) {
+      if (const auto s = load_gfxfile(qUtf8Printable(real_full_name)); s) {
         return s;
       }
     }
   }
 
   qCritical("Could not load gfx file \"%s\".", gfx_filename);
-  s = new QPixmap(20, 20);
-  s->fill(Qt::red);
-  return s;
+  return make_error_pixmap();
 }
 
 /**
@@ -3163,7 +3168,9 @@ void tileset_setup_impr_type(struct tileset *t, struct impr_type *pimprove)
                                   pimprove->graphic_alt, "improvement",
                                   improvement_rule_name(pimprove), false);
 
-  // should maybe do something if nullptr, eg generic default?
+  if (!t->sprites.building[improvement_index(pimprove)]) {
+    t->sprites.building[improvement_index(pimprove)] = make_error_pixmap();
+  }
 }
 
 /**
@@ -3177,7 +3184,9 @@ void tileset_setup_tech_type(struct tileset *t, struct advance *padvance)
         t, LOG_VERBOSE, padvance->graphic_str, padvance->graphic_alt,
         "technology", advance_rule_name(padvance), false);
 
-    // should maybe do something if nullptr, eg generic default?
+    if (!t->sprites.tech[advance_index(padvance)]) {
+      t->sprites.tech[advance_index(padvance)] = make_error_pixmap();
+    }
   } else {
     t->sprites.tech[advance_index(padvance)] = nullptr;
   }
