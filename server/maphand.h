@@ -25,10 +25,10 @@ struct section_file;
 struct conn_list;
 
 struct player_tile {
-  struct vision_site *site;    // nullptr for no vision site
-  struct extra_type *resource; // nullptr for no resource
-  struct terrain *terrain;     // nullptr for unknown tiles
-  struct player *owner;        // nullptr for unowned
+  std::unique_ptr<vision_site> site; // nullptr for no vision site
+  struct extra_type *resource;       // nullptr for no resource
+  struct terrain *terrain;           // nullptr for unknown tiles
+  struct player *owner;              // nullptr for unowned
   struct player *extras_owner;
   bv_extras extras;
 

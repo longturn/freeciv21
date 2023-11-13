@@ -4635,9 +4635,7 @@ static void sg_load_player_vision(struct loaddata *loading,
     } else {
       // Error loading the data.
       log_sg("Skipping seen city %d for player %d.", i, plrno);
-      if (pdcity != nullptr) {
-        vision_site_destroy(pdcity);
-      }
+      delete pdcity;
     }
   }
 

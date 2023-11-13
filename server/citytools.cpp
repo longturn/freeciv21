@@ -2128,7 +2128,7 @@ bool send_city_suppression(bool now)
 static void package_dumb_city(struct player *pplayer, struct tile *ptile,
                               struct packet_city_short_info *packet)
 {
-  struct vision_site *pdcity = map_get_player_city(ptile, pplayer);
+  const vision_site *pdcity = map_get_player_city(ptile, pplayer);
 
   fc_assert_ret(pdcity != nullptr);
   packet->id = pdcity->identity;
@@ -2693,18 +2693,15 @@ bool update_dumb_city(struct player *pplayer, struct city *pcity)
  */
 void reality_check_city(struct player *pplayer, struct tile *ptile)
 {
-  struct vision_site *pdcity = map_get_player_city(ptile, pplayer);
+  auto playtile = map_get_player_tile(ptile, pplayer);
 
-  if (pdcity) {
+  if (playtile->site && playtile->site->location == ptile) {
     struct city *pcity = tile_city(ptile);
 
-    if (!pcity || pcity->id != pdcity->identity) {
-      struct player_tile *playtile = map_get_player_tile(ptile, pplayer);
-
-      dlsend_packet_city_remove(pplayer->connections, pdcity->identity);
-      fc_assert_ret(playtile->site == pdcity);
+    if (!pcity || pcity->id != playtile->site->identity) {
+      dlsend_packet_city_remove(pplayer->connections,
+                                playtile->site->identity);
       playtile->site = nullptr;
-      vision_site_destroy(pdcity);
     }
   }
 }
@@ -2714,15 +2711,12 @@ void reality_check_city(struct player *pplayer, struct tile *ptile)
  */
 void remove_dumb_city(struct player *pplayer, struct tile *ptile)
 {
-  struct vision_site *pdcity = map_get_player_city(ptile, pplayer);
+  auto playtile = map_get_player_tile(ptile, pplayer);
 
-  if (pdcity) {
-    struct player_tile *playtile = map_get_player_tile(ptile, pplayer);
-
-    dlsend_packet_city_remove(pplayer->connections, pdcity->identity);
-    fc_assert_ret(playtile->site == pdcity);
+  if (playtile->site && playtile->site->location == ptile) {
+    dlsend_packet_city_remove(pplayer->connections,
+                              playtile->site->identity);
     playtile->site = nullptr;
-    vision_site_destroy(pdcity);
   }
 }
 

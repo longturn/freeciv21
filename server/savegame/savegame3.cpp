@@ -6728,9 +6728,7 @@ static void sg_load_player_vision(struct loaddata *loading,
     } else {
       // Error loading the data.
       log_sg("Skipping seen city %d for player %d.", i, plrno);
-      if (pdcity != nullptr) {
-        vision_site_destroy(pdcity);
-      }
+      delete pdcity;
     }
   }
 
@@ -6972,7 +6970,7 @@ static void sg_save_player_vision(struct savedata *saving,
   i = 0;
   whole_map_iterate(&(wld.map), ptile)
   {
-    struct vision_site *pdcity = map_get_player_city(ptile, plr);
+    const vision_site *pdcity = map_get_player_city(ptile, plr);
     char impr_buf[B_LAST + 1];
     char buf[32];
 
