@@ -3386,7 +3386,7 @@ player *mapimg_server_tile_city(const struct tile *ptile,
   }
 
   if (knowledge && pplayer) {
-    struct vision_site *pdcity = map_get_player_city(ptile, pplayer);
+    const vision_site *pdcity = map_get_player_city(ptile, pplayer);
 
     if (pdcity) {
       return pdcity->owner;
