@@ -3,8 +3,9 @@
 
 #pragma once
 
-#include <QAbstractSlider>
+#include <QWidget>
 
+#include <limits>
 #include <vector>
 
 namespace freeciv {
@@ -19,10 +20,12 @@ namespace freeciv {
  * - No category can have a negative number of items
  * - Category names are translated
  * - Icons for all categories are equally sized
+ * - Maximum is exclusive
  *
  * If space allows, one icon is used to represent one item.
+ * TODO tooltips
  */
-class multi_slider: public QAbstractSlider
+class multi_slider: public QWidget
 {
   Q_OBJECT
 
@@ -30,7 +33,9 @@ class multi_slider: public QAbstractSlider
   {
     QString name;
     QPixmap icon;
-    unsigned minimum = 0, maximum = -1;
+    int minimum = 0, maximum = std::numeric_limits<int>::max();
+
+    bool allowed(int value) const { return value >= minimum && value < maximum; }
   };
 
 public:
@@ -38,9 +43,9 @@ public:
   virtual ~multi_slider() = default;
 
   std::size_t add_category(const QString &name, const QPixmap &icon);
-  void set_range(std::size_t category, unsigned min, unsigned max);
+  void set_range(std::size_t category, int min, int max);
 
-  void set_values(const std::vector<unsigned> &values);
+  void set_values(const std::vector<int> &values);
 
   QSize sizeHint() const override;
   QSize minimumSizeHint() const override;
@@ -54,15 +59,19 @@ protected:
   void paintEvent(QPaintEvent *event) override;
 
 private:
-  std::vector<unsigned> visible_handles() const;
-  bool move_handle_left();
-  bool move_handle_right();
+  void exchange(std::size_t giver, std::size_t taker, int amount);
+  bool exchange(std::size_t taker, int amount);
+
+  void focus_some_category();
+  bool move_focus(bool forward);
+
+  std::vector<int> visible_handles() const;
 
   // Invariant: m_categories.size() == m_handles.size()
   std::vector<category> m_categories;
-  std::vector<unsigned> m_values;
-  unsigned m_total; // Cached
-  std::size_t m_active_handle = 0;
+  std::vector<int> m_values;
+  int m_total; // Cached
+  int m_focused_category = 0;
 };
 
 } // namespace freeciv

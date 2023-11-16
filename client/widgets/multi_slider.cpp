@@ -14,21 +14,38 @@
 #include <qabstractslider.h>
 
 namespace {
-  // Handle metrics
+/// Widget dimensions, in logical pixels
+namespace metrics {
+  /// Gap between the icons and the focus indicator
+  const double focus_bar_gap = 1;
+  /// Height of the focus indicator
+  const double focus_bar_height = 2;
+  /// Gap at the top of the handle bar
   const double handle_bar_gap = 2;
+  /// Width of the handle bar
   const double handle_bar_width = 4;
+  /// Gap between the icons and the handle (circle)
   const double handle_gap = 1;
+  /// Radius of the handle
   const double handle_radius = 8;
+  /// Radius of the small disk inside the handle
   const double handle_indicator_radius = 4;
+  /// Radius of the small disk inside the handle, when the handle is active
   const double handle_active_indicator_radius = handle_indicator_radius + 1;
-  const double handle_extra_height = handle_gap + handle_radius * 2;
+  /// Height added to the icon height by control elements (handle etc)
+  const double extra_height = std::max(focus_bar_gap + focus_bar_height,
+                                       handle_gap + handle_radius * 2);
+} // namespace metrics
 } // anonymous namespace
 
 namespace freeciv {
 
-multi_slider::multi_slider(QWidget *parent): QAbstractSlider(parent)
+multi_slider::multi_slider(QWidget *parent): QWidget(parent)
 {
   setFocusPolicy(Qt::StrongFocus);
+  setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed,
+                            QSizePolicy::Slider));
+  setMouseTracking(true);
 }
 
 std::size_t multi_slider::add_category(const QString &name, const QPixmap &icon)
@@ -38,7 +55,7 @@ std::size_t multi_slider::add_category(const QString &name, const QPixmap &icon)
   return m_categories.size() - 1;
 }
 
-void multi_slider::set_range(std::size_t category, unsigned min, unsigned max)
+void multi_slider::set_range(std::size_t category, int min, int max)
 {
   fc_assert_ret(category < m_categories.size());
   fc_assert_ret(min <= max);
@@ -47,11 +64,11 @@ void multi_slider::set_range(std::size_t category, unsigned min, unsigned max)
   // TODO modify current values if needed? -- user's responsibility
 }
 
-void multi_slider::set_values(const std::vector<unsigned> &values)
+void multi_slider::set_values(const std::vector<int> &values)
 {
   fc_assert_ret(values.size() == m_categories.size());
   m_values = values;
-  m_total = std::accumulate(m_values.begin(), m_values.end(), 0u);
+  m_total = std::accumulate(m_values.begin(), m_values.end(), 0);
 }
 
 std::size_t multi_slider::total() const
@@ -66,8 +83,8 @@ QSize multi_slider::sizeHint() const
   }
 
   auto icon_size = m_categories.front().icon.size();
-  return QSize(total() * icon_size.width() + 2 * handle_radius,
-               icon_size.height() + handle_extra_height);
+  return QSize(total() * icon_size.width() + 2 * metrics::handle_radius,
+               icon_size.height() + metrics::extra_height);
 }
 
 QSize multi_slider::minimumSizeHint() const
@@ -77,67 +94,75 @@ QSize multi_slider::minimumSizeHint() const
   }
 
   auto icon_size = m_categories.front().icon.size();
-  return QSize(total() * 5 + 2 * handle_radius,
-               icon_size.height() + handle_extra_height);
+  return QSize(total() * 5 + 2 * metrics::handle_radius,
+               icon_size.height() + metrics::extra_height);
 }
 
 bool multi_slider::event(QEvent *event)
 {
-  // Allow using Tab and Backtab to move between visible handles
+  // Allow using Tab and Backtab to move between visible categories
   // We need to trap those early to override the default behaviour
   if (event->type() == QEvent::KeyPress) {
     auto kevt = dynamic_cast<QKeyEvent *>(event);
-    if (kevt->key() == Qt::Key_Tab) {
-      // Tab - check if focus should be moved to the next handle
-      auto handles = visible_handles();
-      if (m_active_handle + 1 < handles.size()) {
-        m_active_handle++;
-        event->accept();
-        update();
-        return true;
-      }
-    } else if (kevt->key() == Qt::Key_Backtab) {
-      // Backtab - check if focus should be moved to the previous handle
-      if (m_active_handle > 0) {
-        m_active_handle--;
-        event->accept();
-        update();
-        return true;
-      }
+    // Check if focus can be moved to the next visible category
+    if (kevt->key() == Qt::Key_Tab && move_focus(true)) {
+      event->accept();
+      return true;
+    } else if (kevt->key() == Qt::Key_Backtab && move_focus(false)) {
+      event->accept();
+      return true;
     }
   }
-  return QAbstractSlider::event(event);
+  return QWidget::event(event);
 }
 
 void multi_slider::focusInEvent(QFocusEvent *event)
 {
   if (m_values.size() > 2) {
     if (event->reason() == Qt::BacktabFocusReason) {
-      auto handles = visible_handles();
-      m_active_handle = handles.size() - 1;
+      m_focused_category = m_categories.size() - 1;
     } else {
 //    if (event->reason() == Qt::TabFocusReason) {
       // TODO mouse focus
-      m_active_handle = 0;
+      m_focused_category = 0;
     }
   }
-  QAbstractSlider::focusInEvent(event);
+  QWidget::focusInEvent(event);
 }
 
 void multi_slider::keyPressEvent(QKeyEvent *event)
 {
   if (event->modifiers() == Qt::NoModifier) {
-    if (event->key() == Qt::Key_Left && move_handle_left()) {
-      event->accept();
-      update();
-      return;
-    } else if (event->key() == Qt::Key_Right && move_handle_right()) {
-      event->accept();
-      update();
-      return;
+    switch (event->key()) {
+    case Qt::Key_Up:
+      if (exchange(m_focused_category, 1)) {
+        event->accept();
+        return;
+      }
+      break;
+    case Qt::Key_Down:
+      if (exchange(m_focused_category, -1)) {
+        event->accept();
+        return;
+      }
+      break;
+    case Qt::Key_Left:
+      if (move_focus(false)) {
+        event->accept();
+        return;
+      }
+      break;
+    case Qt::Key_Right:
+      if (move_focus(true)) {
+        event->accept();
+        return;
+      }
+      break;
+    default:
+      break;
     }
   }
-  QAbstractSlider::keyPressEvent(event);
+  QWidget::keyPressEvent(event);
 }
 
 void multi_slider::paintEvent(QPaintEvent *event)
@@ -153,47 +178,115 @@ void multi_slider::paintEvent(QPaintEvent *event)
 
   // Draw icons
   QPainter p(this);
+  p.setPen(Qt::NoPen);
+  p.setRenderHint(QPainter::Antialiasing);
+
   double xmin = 0, xmax = 0;
   for (std::size_t i = 0; i < m_values.size(); ++i) {
     xmax += m_values[i] * step_width;
     p.drawTiledPixmap(QRectF(xmin, 0, xmax - xmin, icon_size.height()),
                       m_categories[i].icon,
                       QPointF(xmin, 0));
+
+    // Focus indicator
+    if (hasFocus() && i == m_focused_category) {
+      p.setBrush(Qt::white);
+      p.drawRect(QRectF(xmin, icon_size.height() + metrics::focus_bar_gap,
+                        xmax - xmin, metrics::focus_bar_height));
+    }
     xmin = xmax;
   }
 
   // Draw handles (skipping the dummy last one)
-  p.save();
-  p.setRenderHint(QPainter::Antialiasing);
   p.setBrush(Qt::lightGray);
-  p.setPen(Qt::NoPen);
   auto handles = visible_handles();
   for (auto location: handles) {
     auto x = step_width * location;
 
     // Background
-    p.drawRect(QRectF(x - handle_bar_width / 2, handle_bar_gap,
-                      handle_bar_width, icon_size.height() + handle_gap));
-    p.drawEllipse(QPointF(x, icon_size.height() + handle_gap + handle_radius - 1),
-                  handle_radius, handle_radius);
+    p.drawRect(QRectF(x - metrics::handle_bar_width / 2, metrics::handle_bar_gap,
+                      metrics::handle_bar_width, icon_size.height() + metrics::handle_gap));
+    p.drawEllipse(QPointF(x, icon_size.height() + metrics::handle_gap + metrics::handle_radius - 1),
+                  metrics::handle_radius, metrics::handle_radius);
 
     // Active handle indicator
-    bool is_active = hasFocus() && location == handles[m_active_handle];
-    double inner_radius = is_active ? handle_active_indicator_radius
-                                    : handle_indicator_radius;
+    bool is_active = false; // FIXME mouse
+    double inner_radius = is_active ? metrics::handle_active_indicator_radius
+                                    : metrics::handle_indicator_radius;
     p.setBrush(is_active ? Qt::red : Qt::darkGray);
-    p.drawEllipse(QPointF(x, icon_size.height() + handle_gap + handle_radius - 1),
+    p.drawEllipse(QPointF(x, icon_size.height() + metrics::handle_gap + metrics::handle_radius - 1),
                   inner_radius, inner_radius);
     p.setBrush(Qt::lightGray);
   }
-  p.restore();
 }
 
-std::vector<unsigned> multi_slider::visible_handles() const
+void multi_slider::exchange(std::size_t giver, std::size_t taker, int amount)
 {
-  std::vector<unsigned> handles;
+  m_values[giver] -= amount;
+  m_values[taker] += amount;
+  focus_some_category();
+  update();
+}
+
+bool multi_slider::exchange(std::size_t taker, int amount)
+{
+  const auto &category = m_categories[m_focused_category];
+  if (!category.allowed(m_values[m_focused_category] + amount)) {
+    return false;
+  }
+
+  // Find category to exchange with. First look to the right...
+  for (int i = m_focused_category + 1; i < m_categories.size(); ++i) {
+    if (m_categories[i].allowed(m_values[i] - amount)) {
+      exchange(i, m_focused_category, amount);
+      return true;
+    }
+  }
+
+  // No luck to the right. Try on the other side
+  for (int i = m_focused_category - 1; i >= 0; --i) {
+    if (m_categories[i].allowed(m_values[i] - amount)) {
+      exchange(i, m_focused_category, amount);
+      return true;
+    }
+  }
+
+  // No luck
+  return false;
+}
+
+void multi_slider::focus_some_category()
+{
+  if (m_values[m_focused_category] > 0) {
+    // Already good
+    return;
+  }
+
+  // One of them will always succeed
+  if (!move_focus(true)) {
+    move_focus(false);
+  }
+}
+
+bool multi_slider::move_focus(bool forward)
+{
+  int step = forward ? 1 : -1;
+  // Check if focus can be moved to the next visible category
+  for (int i = m_focused_category + step; i >= 0 && i < m_categories.size(); i += step) {
+    if (m_values[i] > 0) {
+      m_focused_category = i;
+      update();
+      return true;
+    }
+  }
+  return false;
+}
+
+std::vector<int> multi_slider::visible_handles() const
+{
+  std::vector<int> handles;
   bool first = true;
-  unsigned location = 0;
+  int location = 0;
   for (auto it = m_values.begin(); it != m_values.end() - 1; ++it) {
     location += *it;
     if (first || *it > 0) {
@@ -202,56 +295,6 @@ std::vector<unsigned> multi_slider::visible_handles() const
     first = false;
   }
   return handles;
-}
-
-bool multi_slider::move_handle_left()
-{
-  auto handles = visible_handles();
-  auto handle_location = handles[m_active_handle];
-  if (handle_location == 0) {
-    return false;
-  }
-
-  // Find categories to modify (starting from the left)
-  auto location = 0;
-  for (auto it = m_values.begin(); it != m_values.end(); ++it) {
-    location += *it;
-    if (location == handle_location) {
-      // Found
-      if (*it == 1) {
-        m_active_handle--;
-      }
-      (*it)--;
-      (*next(it))++;
-      return true;
-    }
-  }
-  return false;
-}
-
-bool multi_slider::move_handle_right()
-{
-  auto handles = visible_handles();
-  auto handle_location = handles[m_active_handle];
-  if (handle_location == m_total) {
-    return false;
-  }
-
-  // Find categories to modify (starting from the right)
-  auto location = m_total;
-  for (auto it = m_values.rbegin(); it != m_values.rend(); ++it) {
-    location -= *it;
-    if (location == handle_location) {
-      // Found
-      (*it)--;
-      if (*next(it) == 0) {
-        m_active_handle++;
-      }
-      (*next(it))++;
-      return true;
-    }
-  }
-  return false;
 }
 
 } // namespace freeciv
