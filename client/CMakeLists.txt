@@ -139,6 +139,7 @@ target_sources(
   widgets/city/city_icon_widget.cpp
   widgets/city/governor_widget.cpp
   widgets/city/upkeep_widget.cpp
+  widgets/multi_slider.cpp
   widgets/report_widget.cpp
 
   # Generated
