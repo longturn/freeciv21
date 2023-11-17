@@ -18,6 +18,7 @@
 #include <QVBoxLayout>
 // common
 #include "effects.h"
+#include "fc_types.h"
 #include "government.h"
 #include "multipliers.h"
 #include "packets.h"
@@ -28,7 +29,7 @@
 #include "dialogs.h"
 #include "fc_client.h"
 #include "icons.h"
-#include "tileset/sprite.h"
+#include "widgets/multi_slider.h"
 
 static int scale_to_mult(const struct multiplier *pmul, int scale);
 static int mult_to_scale(const struct multiplier *pmul, int val);
@@ -72,8 +73,10 @@ national_budget_dialog::national_budget_dialog(QWidget *parent)
   some_layout->addWidget(cancel_button);
   some_layout->addWidget(apply_button);
   some_layout->addWidget(ok_button);
-  fcde = new fc_double_edge(this);
-  main_layout->addWidget(fcde);
+
+  slider = new freeciv::multi_slider;
+  main_layout->addWidget(slider);
+
   main_layout->addSpacing(20);
   main_layout->addLayout(some_layout);
   setLayout(main_layout);
@@ -93,7 +96,21 @@ void national_budget_dialog::refresh()
                       .arg(government_name_for_player(client.conn.playing),
                            QString::number(max)));
 
-  fcde->refresh();
+  if (!slider_init) {
+    for (auto tax : {O_GOLD, O_SCIENCE, O_LUXURY}) {
+      auto sprite = get_tax_sprite(tileset, tax);
+      slider->add_category(sprite->scaled(sprite->size() * 2));
+    }
+    slider_init = true;
+  }
+  slider->set_range(0, 0, max / 10);
+  slider->set_range(1, 0, max / 10);
+  slider->set_range(2, 0, max / 10);
+  slider->set_values({
+      client.conn.playing->economic.tax / 10,
+      client.conn.playing->economic.science / 10,
+      client.conn.playing->economic.luxury / 10,
+  });
 }
 
 /**
@@ -101,9 +118,11 @@ void national_budget_dialog::refresh()
  */
 void national_budget_dialog::apply()
 {
-  dsend_packet_player_rates(&client.conn, 10 * fcde->current_min,
-                            10 * (10 - fcde->current_max),
-                            10 * (fcde->current_max - fcde->current_min));
+  auto rates = slider->values();
+  dsend_packet_player_rates(&client.conn,
+                            10 * rates[0],  // Tax
+                            10 * rates[2],  // Lux
+                            10 * rates[1]); // Sci
 }
 
 /**
@@ -246,206 +265,4 @@ void popup_multiplier_dialog()
   }
   mrd = new multipler_rates_dialog(king()->central_wdg);
   mrd->show();
-}
-
-/**
-   Double edged slider constructor
- */
-fc_double_edge::fc_double_edge(QWidget *parent) : QWidget(parent)
-{
-  mouse_x = 0.;
-  moved = 0;
-  on_min = false;
-  on_max = false;
-  cursor_size = 0;
-
-  cursor_pix = *fcIcons::instance()->getPixmap(QStringLiteral("control"));
-  setMouseTracking(true);
-
-  setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-
-  refresh();
-}
-
-/**
-   Double edged slider destructor
- */
-fc_double_edge::~fc_double_edge() = default;
-
-/**
- * Refreshes tax data
- */
-void fc_double_edge::refresh()
-{
-  if (client.conn.playing) {
-    current_min = client.conn.playing->economic.tax / 10;
-    current_max = 10 - (client.conn.playing->economic.luxury / 10);
-    max_rates = get_player_bonus(client.conn.playing, EFT_MAX_RATES) / 10;
-  } else {
-    current_min = 0;
-    current_max = 10;
-    max_rates = 10;
-  }
-}
-
-/**
-   Default size for double edge slider
- */
-QSize fc_double_edge::sizeHint() const
-{
-  const auto sprite = get_tax_sprite(tileset, O_LUXURY);
-  return QSize(20 * sprite->width(), 2 * sprite->height());
-}
-
-/**
-   Double edge paint event
- */
-void fc_double_edge::paintEvent(QPaintEvent *event)
-{
-  Q_UNUSED(event)
-  QPainter p;
-  int i, j, pos;
-  QPixmap pix_scaled;
-  QSize s;
-  double x_min, x_max;
-
-  cursor_pix = cursor_pix.scaled(width() / 20, height());
-  cursor_size = cursor_pix.width();
-  p.begin(this);
-
-  x_min = static_cast<double>(current_min) / 10
-              * ((width() - 1) - 2 * cursor_size)
-          + cursor_size;
-  x_max = static_cast<double>(current_max) / 10
-              * ((width() - 1) - 2 * cursor_size)
-          + cursor_size;
-
-  pos = cursor_size;
-  auto pix = get_tax_sprite(tileset, O_GOLD);
-  s.setWidth((width() - 2 * cursor_size) / 10);
-  s.setHeight(height());
-  pix_scaled =
-      pix->scaled(s, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-  for (i = 0; i < current_min; i++) {
-    p.drawPixmap(pos, 0, pix_scaled);
-    pos = pos + pix_scaled.width();
-  }
-  j = i;
-  pix = get_tax_sprite(tileset, O_SCIENCE);
-  pix_scaled =
-      pix->scaled(s, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-  for (i = j; i < current_max; i++) {
-    p.drawPixmap(pos, 0, pix_scaled);
-    pos = pos + pix_scaled.width();
-  }
-  j = i;
-  pix = get_tax_sprite(tileset, O_LUXURY);
-  pix_scaled =
-      pix->scaled(s, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-  for (i = j; i < 10; i++) {
-    p.drawPixmap(pos, 0, pix_scaled);
-    pos = pos + pix_scaled.width();
-  }
-  p.drawPixmap(x_max - cursor_size / 2, 0, cursor_pix);
-  p.drawPixmap(x_min - cursor_size / 2, 0, cursor_pix);
-  p.end();
-}
-
-/**
-   Double edged slider mouse press event
- */
-void fc_double_edge::mousePressEvent(QMouseEvent *event)
-{
-  if (event->buttons() & Qt::LeftButton) {
-    mouse_x = static_cast<double>(event->x());
-
-    if (mouse_x <= current_max * width() / 10 - 2 * cursor_size) {
-      moved = 1;
-    } else {
-      moved = 2;
-    }
-  } else {
-    moved = 0;
-  }
-  mouseMoveEvent(event);
-  update();
-}
-
-/**
-   Double edged slider mouse move event
- */
-void fc_double_edge::mouseMoveEvent(QMouseEvent *event)
-{
-  float x_min, x_max, x_mouse;
-
-  if (on_max || on_min) {
-    setCursor(Qt::SizeHorCursor);
-  } else {
-    setCursor(Qt::ArrowCursor);
-  }
-
-  x_mouse = static_cast<float>(event->x());
-  x_min = static_cast<float>(current_min) / 10
-              * ((width() - 1) - 2 * cursor_size)
-          + cursor_size;
-  x_max = static_cast<float>(current_max) / 10
-              * ((width() - 1) - 2 * cursor_size)
-          + cursor_size;
-
-  on_min = (((x_mouse > (x_min - cursor_size * 1.1))
-             && (x_mouse < (x_min + cursor_size * 1.1)))
-            && (!on_max))
-           || (moved == 1);
-  on_max = (((x_mouse > (x_max - cursor_size * 1.1))
-             && (x_mouse < (x_max + cursor_size * 1.1)))
-            && !on_min)
-           || (moved == 2);
-  if (event->buttons() & Qt::LeftButton) {
-    if ((moved != 2) && on_min) {
-      x_min = x_mouse * width() / ((width() - 1) - 2 * cursor_size)
-              - cursor_size;
-      if (x_min < 0) {
-        x_min = 0;
-      }
-      if (x_min > width()) {
-        x_min = width();
-      }
-      current_min = (x_min * 10 / (width() - 1));
-      if (current_min > max_rates) {
-        current_min = max_rates;
-      }
-      if (current_max < current_min) {
-        current_max = current_min;
-      }
-      if (current_max - current_min > max_rates) {
-        current_min = current_max - max_rates;
-      }
-      moved = 1;
-    } else if ((moved != 1) && on_max) {
-      x_max = x_mouse * width() / ((width() - 1) - 2 * cursor_size)
-              - cursor_size;
-      if (x_max < 0) {
-        x_max = 0;
-      }
-      if (x_max > width()) {
-        x_max = width();
-      }
-      current_max = (x_max * 10 / (width() - 1));
-      if (current_max > max_rates + current_min) {
-        current_max = max_rates + current_min;
-      }
-      if (current_max < 10 - max_rates) {
-        current_max = 10 - max_rates;
-      }
-      if (current_min > current_max) {
-        current_min = current_max;
-      }
-      moved = 2;
-    }
-    update();
-  } else {
-    moved = 0;
-  }
-
-  mouse_x = x_mouse;
 }
