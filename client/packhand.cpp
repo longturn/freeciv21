@@ -688,6 +688,7 @@ void handle_city_info(const struct packet_city_info *packet)
         || (gui_options->draw_city_trade_routes && trade_routes_changed);
   }
 
+  pcity->client.full = true;
   sz_strlcpy(pcity->name, packet->name);
 
   // check data
@@ -1154,6 +1155,8 @@ void handle_city_short_info(const struct packet_city_short_info *packet)
     memset(pcity->feel, 0, sizeof(pcity->feel));
     memset(pcity->specialists, 0, sizeof(pcity->specialists));
   }
+
+  pcity->client.full = false;
 
   pcity->specialists[DEFAULT_SPECIALIST] = packet->size;
   city_size_set(pcity, packet->size);
