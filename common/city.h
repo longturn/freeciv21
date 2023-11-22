@@ -423,6 +423,7 @@ struct city {
 
     struct {
       /* Only used at the client (the server is omniscient; ./client/). */
+      bool full; // Did we get a full city info packet (owner or investigate)
       bool occupied;
       int walls;
       bool happy;
