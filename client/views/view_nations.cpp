@@ -558,6 +558,13 @@ void plr_widget::nation_selected(const QItemSelection &sl,
       if (other == pplayer || is_barbarian(other)) {
         continue;
       }
+      if (!BV_ISSET(pplayer->client.visible, NI_DIPLOMACY)
+          && !BV_ISSET(other->client.visible, NI_DIPLOMACY)) {
+        // We don't know anything about diplomatic relations between these
+        // players
+        continue;
+      }
+
       state = player_diplstate_get(pplayer, other);
       if (static_cast<int>(state->type) == i) {
         if (!added) {
