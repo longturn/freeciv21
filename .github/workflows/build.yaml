@@ -173,7 +173,7 @@ jobs:
     name: "Windows Clang"
     runs-on: windows-latest
     needs: clang-format
-    if: github.event_name == 'schedule'
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     env:
       VCPKG_ROOT: C:/vcpkg
       VCPKG_DEFAULT_BINARY_CACHE: ${{github.workspace}}/vcpkg/bincache
@@ -284,7 +284,7 @@ jobs:
 
   fedora:
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule'
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     container: fedora:latest
     steps:
       - name: Install dependencies
@@ -320,7 +320,7 @@ jobs:
 
   nix:
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule'
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
       - name: checkout
         uses: actions/checkout@v3
