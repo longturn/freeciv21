@@ -6,7 +6,7 @@ add_custom_command(
     ${CMAKE_CURRENT_BINARY_DIR}/hand_gen.h
     ${CMAKE_CURRENT_BINARY_DIR}/hand_gen.cpp
   COMMAND
-    ${PYTHON_EXECUTABLE}
+    ${Python3_EXECUTABLE}
     ${CMAKE_SOURCE_DIR}/common/generate_packets.py
     "" # common/packets_gen.h
     "" # common/packets_gen.c
