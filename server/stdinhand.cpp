@@ -79,6 +79,9 @@
 
 #include "stdinhand.h"
 
+#include <set>
+#include <string>
+
 #define OPTION_NAME_SPACE 25
 #define REG_EXP "\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)"
 static enum cmdlevel default_access_level = ALLOW_BASIC;
@@ -6334,35 +6337,27 @@ static bool kick_command(struct connection *caller, char *name, bool check)
   }
 
   if (nullptr != caller && ALLOW_ADMIN > conn_get_access(caller)) {
+    // Minimum number of unique addresses for /kick to make sense
     const int MIN_UNIQUE_CONNS = 3;
-    const char *unique_ipaddr[MIN_UNIQUE_CONNS];
-    int i, num_unique_connections = 0;
 
     if (pconn == caller) {
       cmd_reply(CMD_KICK, caller, C_FAIL, _("You may not kick yourself."));
       return false;
     }
 
+    // Collect unique IP addresses
+    std::set<std::string> unique_ipaddr;
     conn_list_iterate(game.est_connections, aconn)
     {
-      for (i = 0; i < num_unique_connections; i++) {
-        if (0 == strcmp(unique_ipaddr[i], aconn->server.ipaddr)) {
-          // Already listed.
-          break;
-        }
-      }
-      if (i >= num_unique_connections) {
-        num_unique_connections++;
-        if (MIN_UNIQUE_CONNS <= num_unique_connections) {
-          // We have enought already.
-          break;
-        }
-        unique_ipaddr[num_unique_connections - 1] = aconn->server.ipaddr;
+      unique_ipaddr.insert(aconn->server.ipaddr);
+      if (unique_ipaddr.size() >= MIN_UNIQUE_CONNS) {
+        // We have enough already.
+        break;
       }
     }
     conn_list_iterate_end;
 
-    if (MIN_UNIQUE_CONNS > num_unique_connections) {
+    if (unique_ipaddr.size() < MIN_UNIQUE_CONNS) {
       cmd_reply(CMD_KICK, caller, C_FAIL,
                 _("There must be at least %d unique connections to the "
                   "server for this command to be valid."),
