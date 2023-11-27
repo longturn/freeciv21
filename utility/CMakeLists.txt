@@ -3,7 +3,7 @@ add_custom_command(
   OUTPUT
     ${CMAKE_CURRENT_BINARY_DIR}/specenum_gen.h
   COMMAND
-    ${PYTHON_EXECUTABLE}
+    ${Python3_EXECUTABLE}
     ${CMAKE_CURRENT_SOURCE_DIR}/generate_specenum.py
     ${CMAKE_CURRENT_BINARY_DIR}/specenum_gen.h
   VERBATIM

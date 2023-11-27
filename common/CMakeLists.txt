@@ -4,7 +4,7 @@ add_custom_command(
     ${CMAKE_CURRENT_BINARY_DIR}/packets_gen.h
     ${CMAKE_CURRENT_BINARY_DIR}/packets_gen.cpp
   COMMAND
-    ${PYTHON_EXECUTABLE}
+    ${Python3_EXECUTABLE}
     ${CMAKE_CURRENT_SOURCE_DIR}/generate_packets.py
     ${CMAKE_CURRENT_BINARY_DIR}/packets_gen.h
     ${CMAKE_CURRENT_BINARY_DIR}/packets_gen.cpp
