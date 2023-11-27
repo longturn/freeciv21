@@ -956,7 +956,7 @@ void layer_terrain::fill_terrain_sprite_array(
           MATCH(iso_dirs[(i + 5) % 6]), // Direction "before"
           MATCH(iso_dirs[i])};          // Direction "after"
 
-      std::array<int, 2> indices;
+      std::array<int, 2> indices = {0, 0};
       switch (info.style) {
       case MATCH_SAME:
         fc_assert_ret(info.matches_with.size() == 2);
