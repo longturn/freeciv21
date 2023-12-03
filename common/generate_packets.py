@@ -46,20 +46,15 @@ def indent(prefix, string):
     return "\n".join(lines)
 
 
-def get_choices(allchoices):
-    def helper(helper, allchoices, index, so_far):
-        if index >= len(allchoices):
-            return [so_far]
-        t0 = so_far[:]
-        t1 = so_far[:]
-        t1.append(list(allchoices)[index])
-        return helper(helper, allchoices, index + 1, t1) + helper(
-            helper, allchoices, index + 1, t0
-        )
+def get_choices(all_caps):
+    """
+    Returns all possible combinations of any number of capabilities.
+    """
 
-    result = helper(helper, allchoices, 0, [])
-    assert len(result) == 2 ** len(allchoices)
-    return result
+    # Which of the capabilities to take
+    caps = it.product([True, False], repeat=len(all_caps))
+    # Apply it
+    return [list(it.compress(all_caps, selection)) for selection in caps]
 
 
 # A simple container for a type alias
