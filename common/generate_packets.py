@@ -39,26 +39,6 @@ def prefix(prefix, string):
     return "\n".join(lines)
 
 
-def write_disclaimer(f):
-    f.write(
-        """
- /****************************************************************************
- *                       THIS FILE WAS GENERATED                             *
- * Script: common/generate_packets.py                                        *
- * Input:  common/networking/packets.def                                     *
- *                       DO NOT CHANGE THIS FILE                             *
- ****************************************************************************/
-
-"""
-    )
-
-
-def fc_open(name):
-    f = open(name, "w")
-    write_disclaimer(f)
-    return f
-
-
 def get_choices(allchoices):
     def helper(helper, allchoices, index, so_far):
         if index >= len(allchoices):
@@ -1606,10 +1586,10 @@ extern "C" const char *const packet_functional_capability = "%s";
 
 def get_report(packets):
     if not generate_stats:
-        return "void delta_stats_report(void) {}\n\n"
+        return "void delta_stats_report() {}\n\n"
 
     intro = """
-void delta_stats_report(void) {
+void delta_stats_report() {
   int i;
 
 """
@@ -1627,9 +1607,9 @@ void delta_stats_report(void) {
 
 def get_reset(packets):
     if not generate_stats:
-        return "void delta_stats_reset(void) {}\n\n"
+        return "void delta_stats_reset() {}\n\n"
     intro = """
-void delta_stats_reset(void) {
+void delta_stats_reset() {
 """
     extro = "}\n\n"
     body = ""
@@ -2017,6 +1997,22 @@ def parse_packet_definitions(content: str) -> str:
     return packets
 
 
+def write_disclaimer(output: io.TextIOWrapper) -> None:
+    """
+    Add a warning that the file output file was generated.
+    """
+    output.write(
+        """
+ /****************************************************************************
+ *                       THIS FILE WAS GENERATED                             *
+ * Script: common/generate_packets.py                                        *
+ * Input:  common/networking/packets.def                                     *
+ *                       DO NOT CHANGE THIS FILE                             *
+ ****************************************************************************/
+"""
+    )
+
+
 def write_common_header(packets: list[Packet], output: io.TextIOWrapper) -> None:
     """
     Writes the contents of packets_gen.h to the output stream.
@@ -2025,14 +2021,14 @@ def write_common_header(packets: list[Packet], output: io.TextIOWrapper) -> None
     write_disclaimer(output)
     output.write(
         """
+#pragma once
 
-
-/* common */
+// common
 #include "actions.h"
 #include "disaster.h"
 #include "unit.h"
 
-/* common/aicore */
+// common/aicore
 #include "cm.h"
 
 """
@@ -2049,10 +2045,8 @@ def write_common_header(packets: list[Packet], output: io.TextIOWrapper) -> None
         output.write(p.get_prototypes())
     output.write(
         """
-void delta_stats_report(void);
-void delta_stats_reset(void);
-
-
+void delta_stats_report();
+void delta_stats_reset();
 """
     )
 
@@ -2065,24 +2059,23 @@ def write_common_source(packets: list[Packet], output: io.TextIOWrapper) -> None
     write_disclaimer(output)
     output.write(
         """
-#include <fc_config.h>
+#include "packets.h"
 
-#include <string.h>
-
-/* utility */
+// utility
 #include "bitvector.h"
 #include "capability.h"
+#include "fc_config.h"
 #include "genhash.h"
 #include "log.h"
 #include "support.h"
 
-/* common */
+// common
 #include "capstr.h"
 #include "connection.h"
 #include "dataio.h"
 #include "game.h"
 
-#include "packets.h"
+#include <string.h>
 """
     )
     output.write(get_packet_functional_capability(packets))
@@ -2139,15 +2132,12 @@ def write_client_header(packets: list[Packet], output: io.TextIOWrapper) -> None
     write_disclaimer(output)
     output.write(
         """
-#ifndef FC__PACKHAND_GEN_H
-#define FC__PACKHAND_GEN_H
+#pragma once
 
-
-
-/* utility */
+// utility
 #include "shared.h"
 
-/* common */
+// common
 #include "packets.h"
 
 bool client_handle_packet(enum packet_type type, const void *packet);
@@ -2170,13 +2160,6 @@ bool client_handle_packet(enum packet_type type, const void *packet);
             output.write("void handle_%s(const struct %s *packet);\n" % (a, p.name))
         else:
             output.write("void handle_%s(%s);\n" % (a, b))
-    output.write(
-        """
-
-
-#endif /* FC__PACKHAND_GEN_H */
-"""
-    )
 
 
 def write_client_source(packets: list[Packet], output: io.TextIOWrapper) -> None:
@@ -2187,15 +2170,13 @@ def write_client_source(packets: list[Packet], output: io.TextIOWrapper) -> None
     write_disclaimer(output)
     output.write(
         """
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-/* common */
-#include "packets.h"
-
 #include "packhand_gen.h"
+
+// utility
+#include "fc_config.h"
+
+// common
+#include "packets.h"
 
 bool client_handle_packet(enum packet_type type, const void *packet)
 {
@@ -2250,17 +2231,14 @@ def write_server_header(packets: list[Packet], output: io.TextIOWrapper) -> None
     write_disclaimer(output)
     output.write(
         """
-#ifndef FC__HAND_GEN_H
-#define FC__HAND_GEN_H
+#pragma once
 
-/* utility */
+// utility
 #include "shared.h"
 
-/* common */
+// common
 #include "fc_types.h"
 #include "packets.h"
-
-
 
 struct connection;
 
@@ -2295,14 +2273,6 @@ bool server_handle_packet(enum packet_type type, const void *packet,
                     output.write("void handle_%s(struct connection *pc%s);\n" % (a, b))
                 else:
                     output.write("void handle_%s(struct player *pplayer%s);\n" % (a, b))
-    output.write(
-        """
-
-
-
-#endif /* FC__HAND_GEN_H */
-"""
-    )
 
 
 def write_server_source(packets: list[Packet], output: io.TextIOWrapper) -> None:
@@ -2313,13 +2283,13 @@ def write_server_source(packets: list[Packet], output: io.TextIOWrapper) -> None
     write_disclaimer(output)
     output.write(
         """
-
-#include <fc_config.h>
-
-/* common */
-#include "packets.h"
-
 #include "hand_gen.h"
+
+// utility
+#include "fc_config.h"
+
+// common
+#include "packets.h"
 
 bool server_handle_packet(enum packet_type type, const void *packet,
                           struct player *pplayer, struct connection *pconn)
