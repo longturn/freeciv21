@@ -2298,40 +2298,38 @@ bool server_handle_packet(enum packet_type type, const void *packet,
             continue
         if packet.no_handle:
             continue
-        a = packet.name[len("packet_") :]
-        # python doesn't need comments :D
-        c = "((const struct %s *)packet)->" % packet.name
-        d = "(static_cast<const struct {0}*>(packet))".format(packet.name)
-        b = []
-        for x in packet.fields:
-            y = "%s%s" % (c, x.name)
-            if x.dataio_type == "worklist":
-                y = "&" + y
-            b.append(y)
-        b = ",\n      ".join(b)
-        if b:
-            b = ",\n      " + b
+
+        cast = f"static_cast<const {packet.name} *>(packet)"
 
         if packet.handle_via_packet:
             if packet.handle_per_conn:
-                # args="pconn, packet"
-                args = "pconn, " + d
+                # args = "pconn, packet"
+                args = "pconn, " + cast
             else:
-                args = "pplayer," + d
+                args = "pplayer, " + cast
 
         else:
+            args = []
+            for field in packet.fields:
+                arg = f"{cast}->{field.name}"
+                if field.dataio_type == "worklist":
+                    arg = "&" + arg
+                args.append(arg)
+            args = ",\n      ".join(args)
+            if args:
+                args = ",\n      " + args
+
             if packet.handle_per_conn:
-                args = "pconn" + b
+                args = "pconn" + args
             else:
-                args = "pplayer" + b
+                args = "pplayer" + args
 
         output.write(
-            """  case %s:
-    handle_%s(%s);
+            f"""  case {packet.type}:
+    handle_{packet.short_name()}({args});
     return true;
 
 """
-            % (packet.type, a, args)
         )
     output.write(
         """  default:
