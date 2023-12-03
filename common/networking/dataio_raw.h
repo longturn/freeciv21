@@ -143,15 +143,6 @@ bool dio_get_action_probability_raw(struct data_in *din,
                                     struct act_prob *aprob)
     fc__attribute((nonnull(2)));
 
-bool dio_get_uint8_vec8_raw(struct data_in *din, int **values,
-                            int stop_value) fc__attribute((nonnull(2)));
-bool dio_get_uint16_vec8_raw(struct data_in *din, int **values,
-                             int stop_value) fc__attribute((nonnull(2)));
-
-// There is currently no need to escape strings in the binary protocol.
-#define dio_get_estring_raw dio_get_string_raw
-#define dio_put_estring_raw dio_put_string_raw
-
 // Should be a function but we need some macro magic.
 #define DIO_BV_GET(pdin, location, bv)                                      \
   dio_get_memory_raw((pdin), (bv).vec, sizeof((bv).vec))
@@ -191,11 +182,6 @@ void dio_put_requirement_raw(struct raw_data_out *dout,
                              const struct requirement *preq);
 void dio_put_action_probability_raw(struct raw_data_out *dout,
                                     const struct act_prob *aprob);
-
-void dio_put_uint8_vec8_raw(struct raw_data_out *dout, int *values,
-                            int stop_value);
-void dio_put_uint16_vec8_raw(struct raw_data_out *dout, int *values,
-                             int stop_value);
 
 // Should be a function but we need some macro magic.
 #define DIO_BV_PUT(pdout, location, bv)                                     \

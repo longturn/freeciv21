@@ -197,7 +197,7 @@ class Field:
         self.is_struct = re.search("^struct.*", self.struct_type)
 
     def get_handle_type(self):
-        if self.dataio_type == "string" or self.dataio_type == "estring":
+        if self.dataio_type == "string":
             return "const char *"
         if self.dataio_type == "worklist":
             return f"const {self.struct_type} *"
@@ -228,7 +228,7 @@ class Field:
             return f"  worklist_copy(&real_packet->{self.name}, {self.name});"
         if self.is_array == 0:
             return f"  real_packet->{self.name} = {self.name};"
-        if self.dataio_type in ("string", "estring"):
+        if self.dataio_type == "string":
             return f"  sz_strlcpy(real_packet->{self.name}, {self.name});"
         if self.is_array == 1:
             tmp = f"real_packet->{self.name}[i] = {self.name}[i]"
@@ -254,7 +254,7 @@ class Field:
             return (
                 f"  differ = !BV_ARE_EQUAL(old->{self.name}, real_packet->{self.name});"
             )
-        if self.dataio_type in ["string", "estring"] and self.is_array == 1:
+        if self.dataio_type == "string" and self.is_array == 1:
             return (
                 f"  differ = (strcmp(old->{self.name}, real_packet->{self.name}) != 0);"
             )
@@ -266,7 +266,7 @@ class Field:
             return f"  differ = (old->{self.name} != real_packet->{self.name});"
 
         sizes = None, None
-        if self.dataio_type in ("string", "estring"):
+        if self.dataio_type == "string":
             c = f"strcmp(old->{self.name}[i], real_packet->{self.name}[i]) != 0"
             sizes = self.array_size1_o, self.array_size1_u
         elif self.is_struct:
@@ -360,7 +360,7 @@ class Field:
         if self.dataio_type == "memory":
             return f"  DIO_PUT({self.dataio_type}, &dout, &field_addr, &real_packet->{self.name}, {self.array_size_u});"
 
-        arr_types = ["string", "estring", "city_map"]
+        arr_types = ["string", "city_map"]
         if (self.dataio_type in arr_types and self.is_array == 1) or (
             self.dataio_type not in arr_types and self.is_array == 0
         ):
@@ -370,7 +370,7 @@ class Field:
                 c = f"DIO_PUT({self.dataio_type}, &dout, &field_addr, &real_packet->{self.name}[i][j]);"
             else:
                 c = f"DIO_PUT({self.dataio_type}, &dout, &field_addr, &real_packet->{self.name}[i]);"
-        elif self.dataio_type in ("string", "estring"):
+        elif self.dataio_type == "string":
             c = f"DIO_PUT({self.dataio_type}, &dout, &field_addr, real_packet->{self.name}[i]);"
 
         elif self.struct_type == "float":
@@ -403,7 +403,7 @@ class Field:
       DIO_PUT(uint8, &dout, &field_addr, 255);
 
     }}"""
-        if self.is_array == 2 and self.dataio_type not in ("string", "estring"):
+        if self.is_array == 2 and self.dataio_type != "string":
             return f"""
     {{
       int i, j;
@@ -457,7 +457,7 @@ class Field:
             return f"""if (!DIO_BV_GET(&din, &field_addr, real_packet->{self.name})) {{
   RECEIVE_PACKET_FIELD_ERROR({self.name});
 }}"""
-        if self.dataio_type in ["string", "estring", "city_map"] and self.is_array != 2:
+        if self.dataio_type in ["string", "city_map"] and self.is_array != 2:
             return f"""if (!DIO_GET({self.dataio_type}, &din, &field_addr, real_packet->{self.name}, sizeof(real_packet->{self.name}))) {{
   RECEIVE_PACKET_FIELD_ERROR({self.name});
 }}"""
@@ -489,7 +489,7 @@ class Field:
                 c = f"""if (!DIO_GET({self.dataio_type}, &din, &field_addr, &real_packet->{self.name}[i])) {{
       RECEIVE_PACKET_FIELD_ERROR({self.name});
     }}"""
-        elif self.dataio_type == "string" or self.dataio_type == "estring":
+        elif self.dataio_type == "string":
             c = f"""if (!DIO_GET({self.dataio_type}, &din, &field_addr, real_packet->{self.name}[i], sizeof(real_packet->{self.name}[i]))) {{
       RECEIVE_PACKET_FIELD_ERROR({self.name});
     }}"""
@@ -550,7 +550,7 @@ class Field:
   if (!DIO_GET({self.dataio_type}, &din, &field_addr, real_packet->{self.name}, {array_size_u})) {{
     RECEIVE_PACKET_FIELD_ERROR({self.name});
   }}"""
-            if self.is_array == 2 and self.dataio_type not in ("string", "estring"):
+            if self.is_array == 2 and self.dataio_type != "string":
                 return f"""
 {{
   int i, j;
