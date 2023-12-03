@@ -1434,6 +1434,10 @@ class Packet:
                 Variant(poscaps, negcaps, "%s_%d" % (self.name, no), fields, self, no)
             )
 
+    def short_name(self):
+        """Returns the "short" name of the packet, i.e. without the packet_ prefix."""
+        return self.name.replace("packet_", "")
+
     # Returns a code fragment which contains the struct for this packet.
 
     def get_struct(self):
@@ -2148,17 +2152,15 @@ bool client_handle_packet(enum packet_type type, const void *packet);
         if "sc" not in packet.dirs:
             continue
 
-        a = packet.name[len("packet_") :]
-        b = packet.fields
-        b = map(lambda x: "%s%s" % (x.get_handle_type(), x.name), b)
-        b = ", ".join(b)
-        if not b:
-            b = "void"
         if packet.handle_via_packet:
-            output.write("struct %s;\n" % packet.name)
-            output.write("void handle_%s(const struct %s *packet);\n" % (a, packet.name))
+            output.write(f"struct {packet.name};\n")
+            output.write(
+                f"void handle_{packet.short_name()}(const {packet.name} *packet);\n"
+            )
         else:
-            output.write("void handle_%s(%s);\n" % (a, b))
+            args = map(lambda x: x.get_handle_type() + x.name, packet.fields)
+            args = ", ".join(args)
+            output.write(f"void handle_{packet.short_name()}({args});\n")
 
 
 def write_client_source(packets: list[Packet], output: io.TextIOWrapper) -> None:
