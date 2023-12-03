@@ -2387,6 +2387,6 @@ if __name__ == "__main__":
     parser.add_argument("packets", help="File with packet definitions")
     parser.add_argument("header", help="Path to the header file to produce")
     parser.add_argument("source", help="Path to the source file to produce")
-    args = parser.parse_args()
+    arguments = parser.parse_args()
 
-    _main(args.packets, args.mode, args.header, args.source)
+    _main(arguments.packets, arguments.mode, arguments.header, arguments.source)
