@@ -12,10 +12,7 @@
 #          with Freeciv21. If not, see https://www.gnu.org/licenses/.
 
 import argparse
-import os
 import re
-import string
-import sys
 
 # The following parameters change the amount of output.
 
