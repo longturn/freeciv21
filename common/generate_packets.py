@@ -1244,108 +1244,115 @@ static char *stats_%(name)s_names[] = {%(names)s};
         return body + extro
 
 
-# Class which represents a packet. A packet contains a list of fields.
-
-
 class Packet:
-    def __init__(self, string, types):
+    """
+    Class representing a packet. A packet contains a list of fields.
+    """
+
+    def __init__(self, lines: list[str], types: list[Type]):
+        """
+        Parses a packet definition from the provided lines.
+        """
+
         self.types = types
         self.log_macro = use_log_macro
         self.gen_stats = generate_stats
         self.gen_log = generate_logs
-        string = string.strip()
-        lines = string.split("\n")
 
-        match = re.search("^\s*(\S+)\s*=\s*(\d+)\s*;\s*(.*?)\s*$", lines[0])
-        assert match, repr(lines[0])
+        lines = list(map(str.strip, lines))
 
-        self.type = match.group(1)
-        self.name = self.type.lower()
-        self.type_number = int(match.group(2))
-        assert 0 <= self.type_number <= 65535
-        dummy = match.group(3)
-
+        # Parse header: PACKET_A_B = 123; sc, lsend
+        header = lines[0]
         del lines[0]
 
-        arr = list(item.strip() for item in dummy.split(",") if item)
+        match = re.search("^(\S+)\s*=\s*(\d+)\s*;\s*(.*?)$", header)
+        assert match, repr(header)
+
+        self.type = match.group(1)  # PACKET_A_B
+        self.name = self.type.lower()  # packet_a_b
+        self.type_number = int(match.group(2))  # 123
+        assert 0 <= self.type_number <= 0xffff
+
+        # sc, lsend
+        flags = set(flag.strip() for flag in match.group(3).split(","))
 
         self.dirs = []
 
-        if "sc" in arr:
+        if "sc" in flags:
             self.dirs.append("sc")
-            arr.remove("sc")
-        if "cs" in arr:
+            flags.remove("sc")
+        if "cs" in flags:
             self.dirs.append("cs")
-            arr.remove("cs")
+            flags.remove("cs")
         assert len(self.dirs) > 0, repr(self.name) + repr(self.dirs)
 
         # "no" means normal packet
         # "yes" means is-info packet
         # "game" means is-game-info packet
         self.is_info = "no"
-        if "is-info" in arr:
+        if "is-info" in flags:
             self.is_info = "yes"
-            arr.remove("is-info")
-        if "is-game-info" in arr:
+            flags.remove("is-info")
+        if "is-game-info" in flags:
             self.is_info = "game"
-            arr.remove("is-game-info")
+            flags.remove("is-game-info")
 
-        self.want_pre_send = "pre-send" in arr
+        self.want_pre_send = "pre-send" in flags
         if self.want_pre_send:
-            arr.remove("pre-send")
+            flags.remove("pre-send")
 
-        self.want_post_recv = "post-recv" in arr
+        self.want_post_recv = "post-recv" in flags
         if self.want_post_recv:
-            arr.remove("post-recv")
+            flags.remove("post-recv")
 
-        self.want_post_send = "post-send" in arr
+        self.want_post_send = "post-send" in flags
         if self.want_post_send:
-            arr.remove("post-send")
+            flags.remove("post-send")
 
-        self.delta = "no-delta" not in arr
+        self.delta = "no-delta" not in flags
         if not self.delta:
-            arr.remove("no-delta")
+            flags.remove("no-delta")
 
-        self.no_packet = "no-packet" in arr
+        self.no_packet = "no-packet" in flags
         if self.no_packet:
-            arr.remove("no-packet")
+            flags.remove("no-packet")
 
-        self.handle_via_packet = "handle-via-packet" in arr
+        self.handle_via_packet = "handle-via-packet" in flags
         if self.handle_via_packet:
-            arr.remove("handle-via-packet")
+            flags.remove("handle-via-packet")
 
-        self.handle_per_conn = "handle-per-conn" in arr
+        self.handle_per_conn = "handle-per-conn" in flags
         if self.handle_per_conn:
-            arr.remove("handle-per-conn")
+            flags.remove("handle-per-conn")
 
-        self.no_handle = "no-handle" in arr
+        self.no_handle = "no-handle" in flags
         if self.no_handle:
-            arr.remove("no-handle")
+            flags.remove("no-handle")
 
-        self.dsend_given = "dsend" in arr
+        self.dsend_given = "dsend" in flags
         if self.dsend_given:
-            arr.remove("dsend")
+            flags.remove("dsend")
 
-        self.want_lsend = "lsend" in arr
+        self.want_lsend = "lsend" in flags
         if self.want_lsend:
-            arr.remove("lsend")
+            flags.remove("lsend")
 
-        self.want_force = "force" in arr
+        self.want_force = "force" in flags
         if self.want_force:
-            arr.remove("force")
+            flags.remove("force")
 
         self.cancel = []
         removes = []
         remaining = []
-        for i in arr:
+        for i in flags:
             match = re.search("^cancel\((.*)\)$", i)
             if match:
                 self.cancel.append(match.group(1))
                 continue
             remaining.append(i)
-        arr = remaining
+        flags = remaining
 
-        assert len(arr) == 0, repr(arr)
+        assert len(flags) == 0, repr(flags)
 
         self.fields = []
         for i in lines:
@@ -1979,7 +1986,7 @@ def parse_packet_definitions(content: str) -> str:
     content = re.sub(r"/\*(.|\n)*?\*/", "", content)  # C-style
     content = re.sub(r"#.*\n", "\n", content)  # Python-style
     content = re.sub(r"//.*\n", "\n", content)  # C++-style
-    content = re.sub(r"\s+\n", "\n", content)  # Empty lines
+    content = re.sub(r"\s+\n", "\n", content).strip()  # Empty lines
 
     # Parse types
     lines = content.splitlines()
@@ -1996,8 +2003,7 @@ def parse_packet_definitions(content: str) -> str:
     packets = []
     while remaining_lines:
         index = remaining_lines.index("end")
-        definition = remaining_lines[:index]
-        packets.append(Packet("\n".join(definition), types))
+        packets.append(Packet(remaining_lines[:index], types))
         remaining_lines = remaining_lines[index + 1 :]
 
     return packets
