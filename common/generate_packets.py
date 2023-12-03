@@ -31,8 +31,6 @@ fold_bool_into_header = 1
 
 ################# END OF PARAMETERS ####################
 
-lazy_overwrite = 0
-
 
 def prefix(prefix, string):
     lines = string.split("\n")
@@ -2029,11 +2027,7 @@ def main(input_name, mode, header, source):
 
     if mode == "common":
         # writing packets_gen.h
-        if lazy_overwrite:
-            output_h = fc_open(header + ".tmp")
-        else:
-            output_h = fc_open(header)
-
+        output_h = fc_open(header)
         output_h.write(
             """
 
@@ -2069,11 +2063,7 @@ void delta_stats_reset(void);
         output_h.close()
 
         # writing packets_gen.cpp
-        if lazy_overwrite:
-            output_c = fc_open(source + ".tmp")
-        else:
-            output_c = fc_open(source)
-
+        output_c = fc_open(source)
         output_c.write(
             """
 #include <fc_config.h>
@@ -2141,17 +2131,6 @@ static int stats_total_sent;
         output_c.write(get_packet_handlers_fill_initial(packets))
         output_c.write(get_packet_handlers_fill_capability(packets))
         output_c.close()
-
-        if lazy_overwrite:
-            for i in [header, source]:
-                if os.path.isfile(i):
-                    old = open(i).read()
-                else:
-                    old = ""
-                new = open(i + ".tmp").read()
-                if old != new:
-                    open(i, "w").write(new)
-                os.remove(i + ".tmp")
 
     elif mode == "server":
         # Writing hand_gen.h
