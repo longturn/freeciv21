@@ -2196,12 +2196,7 @@ bool client_handle_packet(enum packet_type type, const void *packet)
             args = packet_cast
         else:
             # static_cast(packet)->a, static_cast(packet)->b, ...
-            args = []
-            for field in packet.fields:
-                arg = packet_cast + "->" + field.name
-                if field.dataio_type == "worklist":
-                    arg = "&" + arg  # Take address
-                args.append(arg)
+            args = map(lambda field: packet_cast + "->" + field.name, packet.fields)
             args = ",\n      ".join(args)
             if args:
                 args = "\n      " + args
