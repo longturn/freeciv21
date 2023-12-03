@@ -34,11 +34,6 @@ fold_bool_into_header = 1
 
 ################# END OF PARAMETERS ####################
 
-# This program runs under any python version since 1.5.
-# Please leave it so. In particular use the string
-# module and not the function of the string type.
-
-
 lazy_overwrite = 0
 
 
@@ -1992,31 +1987,20 @@ def get_enum_packet(packets):
     return intro + body + extro
 
 
-def strip_c_comment(s):
-    # The obvious way:
-    #    s=re.sub(r"/\*(.|\n)*?\*/","",s)
-    # doesn't work with python version 2.2 and 2.3.
-    # Do it by hand then.
-    result = ""
-    for i in filter(lambda x: x, s.split("/*")):
-        l = i.split("*/", 1)
-        assert len(l) == 2, repr(i)
-        result = result + l[1]
-    return result
-
-
 # Main function. It reads and parses the input and generates the
 # various files.
 
 
 def main(input_name, mode, header, source):
     # parsing input
-    content = open(input_name).read()
-    content = strip_c_comment(content)
-    lines = content.split("\n")
-    lines = map(lambda x: re.sub("\s*#.*$", "", x), lines)
-    lines = map(lambda x: re.sub("\s*//.*$", "", x), lines)
-    lines = filter(lambda x: not re.search("^\s*$", x), lines)
+    with open(input_name, encoding="utf-8") as f:
+        content = f.read()
+    # Remove comments
+    content = re.sub(r"/\*(.|\n)*?\*/", "", content)  # C-style
+    content = re.sub(r"#.*\n", "\n", content)  # Python-style
+    content = re.sub(r"//.*\n", "\n", content)  # C++-style
+    content = re.sub(r"\s+\n", "\n", content)  # Empty lines
+    lines = content.splitlines()
     lines2 = []
     types = []
     for i in lines:
