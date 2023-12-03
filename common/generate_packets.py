@@ -232,12 +232,9 @@ class Field:
             return f"  sz_strlcpy(real_packet->{self.name}, {self.name});"
         if self.is_array == 1:
             tmp = f"real_packet->{self.name}[i] = {self.name}[i]"
-            return f"""  {{
-    int i;
-
-    for (i = 0; i < {self.array_size_u}; i++) {{
-      {tmp};
-    }}
+            return f"""
+  for (int i = 0; i < {self.array_size_u}; i++) {{
+    {tmp};
   }}"""
 
         assert False
@@ -553,11 +550,9 @@ class Field:
             if self.is_array == 2 and self.dataio_type != "string":
                 return f"""
 {{
-  int i, j;
-
 {extra}
-  for (i = 0; i < {self.array_size1_u}; i++) {{
-    for (j = 0; j < {self.array_size2_u}; j++) {{
+  for (int i = 0; i < {self.array_size1_u}; i++) {{
+    for (int j = 0; j < {self.array_size2_u}; j++) {{
       {c}
     }}
   }}
@@ -565,19 +560,15 @@ class Field:
             else:
                 return f"""
 {{
-  int i;
-
 {extra}
-  for (i = 0; i < {array_size_u}; i++) {{
+  for (int i = 0; i < {array_size_u}; i++) {{
     {c}
   }}
 }}"""
         elif deltafragment and self.diff and self.is_array == 1:
             return f"""
 {{
-int count;
-
-for (count = 0;; count++) {{
+for (int count = 0;; count++) {{
   int i;
 
   if (!DIO_GET(uint8, &din, &i)) {{
@@ -598,12 +589,8 @@ for (count = 0;; count++) {{
 }}"""
         else:
             return f"""
-{{
-  int i;
-
-  for (i = 0; i < {array_size_u}; i++) {{
-    {c}
-  }}
+for (int i = 0; i < {array_size_u}; i++) {{
+  {c}
 }}"""
 
 
