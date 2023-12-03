@@ -1271,7 +1271,7 @@ class Packet:
         self.type = match.group(1)  # PACKET_A_B
         self.name = self.type.lower()  # packet_a_b
         self.type_number = int(match.group(2))  # 123
-        assert 0 <= self.type_number <= 0xffff
+        assert 0 <= self.type_number <= 0xFFFF
 
         # sc, lsend
         flags = set(flag.strip() for flag in match.group(3).split(","))
@@ -1797,11 +1797,12 @@ def get_packet_handlers_fill_initial(packets):
     return intro + body + extro
 
 
-# Returns a code fragment which is the implementation of the
-# packet_handlers_fill_capability() function.
+def get_packet_handlers_fill_capability(packets: list[Packet]) -> str:
+    """
+    Returns a code fragment which is the implementation of the
+    packet_handlers_fill_capability() function.
+    """
 
-
-def get_packet_handlers_fill_capability(packets):
     intro = """void packet_handlers_fill_capability(struct packet_handlers *phandlers,
                                      const char *capability)
 {
@@ -1821,120 +1822,77 @@ def get_packet_handlers_fill_capability(packets):
 
     body = ""
     for p in unrestricted:
-        body = body + "  "
+        body += "  "
         for v in p.variants:
-            body = (
-                body
-                + """if (%(condition)s) {
-    %(log_macro)s("%(type)s: using variant=%(no)s cap=%%s", capability);
-    %(send_handler)s
-    %(receive_handler)s
-  } else """
-                % v.__dict__
-            )
-        body = (
-            body
-            + """{
-    qCritical("Unknown %(type)s variant for cap %%s", capability);
-  }
-"""
-            % v.__dict__
-        )
-    if len(cs_packets) > 0 or len(sc_packets) > 0:
-        body = (
-            body
-            + """  if (is_server()) {
-"""
-        )
-        for p in sc_packets:
-            body = body + "    "
-            for v in p.variants:
-                body = (
-                    body
-                    + """if (%(condition)s) {
-      %(log_macro)s("%(type)s: using variant=%(no)s cap=%%s", capability);
-      %(send_handler)s
-    } else """
-                    % v.__dict__
-                )
-            body = (
-                body
-                + """{
-      qCritical("Unknown %(type)s variant for cap %%s", capability);
-    }
-"""
-                % v.__dict__
-            )
-        for p in cs_packets:
-            body = body + "    "
-            for v in p.variants:
-                body = (
-                    body
-                    + """if (%(condition)s) {
-      %(log_macro)s("%(type)s: using variant=%(no)s cap=%%s", capability);
-      %(receive_handler)s
-    } else """
-                    % v.__dict__
-                )
-            body = (
-                body
-                + """{
-      qCritical("Unknown %(type)s variant for cap %%s", capability);
-    }
-"""
-                % v.__dict__
-            )
-        body = (
-            body
-            + """  } else {
-"""
-        )
-        for p in cs_packets:
-            body = body + "    "
-            for v in p.variants:
-                body = (
-                    body
-                    + """if (%(condition)s) {
-      %(log_macro)s("%(type)s: using variant=%(no)s cap=%%s", capability);
-      %(send_handler)s
-    } else """
-                    % v.__dict__
-                )
-            body = (
-                body
-                + """{
-      qCritical("Unknown %(type)s variant for cap %%s", capability);
-    }
-"""
-                % v.__dict__
-            )
-        for p in sc_packets:
-            body = body + "    "
-            for v in p.variants:
-                body = (
-                    body
-                    + """if (%(condition)s) {
-      %(log_macro)s("%(type)s: using variant=%(no)s cap=%%s", capability);
-      %(receive_handler)s
-    } else """
-                    % v.__dict__
-                )
-            body = (
-                body
-                + """{
-      qCritical("Unknown %(type)s variant for cap %%s", capability);
-    }
-"""
-                % v.__dict__
-            )
-        body = (
-            body
-            + """  }
-"""
-        )
+            body += f"""if ({v.condition}) {{
+    {v.log_macro}("{v.type}: using variant={v.no} cap=%s", capability);
+    {v.send_handler}
+    {v.receive_handler}
+  }} else """
 
-    extro = """}
+        body += f"""{{
+    qCritical("Unknown {v.type} variant for cap %s", capability);
+  }}
 """
+
+    if cs_packets or sc_packets:
+        body += "  if (is_server()) {\n"
+        for p in sc_packets:
+            body = body + "    "
+            for v in p.variants:
+                body += f"""if ({v.condition}) {{
+      {v.log_macro}("{v.type}: using variant={v.no} cap=%s", capability);
+      {v.send_handler}
+    }} else """
+
+            body += f"""{{
+      qCritical("Unknown {v.type} variant for cap %s", capability);
+    }}
+"""
+
+        for p in cs_packets:
+            body += "    "
+            for v in p.variants:
+                body += f"""if ({v.condition}) {{
+      {v.log_macro}("{v.type}: using variant={v.no} cap=%s", capability);
+      {v.receive_handler}
+    }} else """
+
+            body += f"""{{
+      qCritical("Unknown {v.type} variant for cap %s", capability);
+    }}
+"""
+
+        body += "  } else {\n"
+        for p in cs_packets:
+            body += "    "
+            for v in p.variants:
+                body += f"""if ({v.condition}) {{
+      {v.log_macro}("{v.type}: using variant={v.no} cap=%s", capability);
+      {v.send_handler}
+    }} else """
+
+            body += f"""{{
+      qCritical("Unknown {v.type} variant for cap %s", capability);
+    }}
+"""
+
+        for p in sc_packets:
+            body += "    "
+            for v in p.variants:
+                body += f"""if ({v.condition}) {{
+      {v.log_macro}("{v.type}: using variant={v.no} cap=%s", capability);
+      {v.receive_handler}
+    }} else """
+
+            body += f"""{{
+      qCritical("Unknown {v.type} variant for cap %s", capability);
+    }}
+"""
+
+        body += "  }\n"
+
+    extro = "}\n"
     return intro + body + extro
 
 
