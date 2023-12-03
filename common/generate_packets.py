@@ -2134,7 +2134,7 @@ static int stats_total_sent;
         output_c.close()
 
         if lazy_overwrite:
-            for i in [output_h_name, output_c_name]:
+            for i in [header, source]:
                 if os.path.isfile(i):
                     old = open(i).read()
                 else:
