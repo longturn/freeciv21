@@ -12,6 +12,7 @@
 #          with Freeciv21. If not, see https://www.gnu.org/licenses/.
 
 import argparse
+import io
 import re
 
 # The following parameters change the amount of output.
@@ -2016,20 +2017,14 @@ def parse_packet_definitions(content: str) -> str:
     return packets
 
 
-# Main function. It reads and parses the input and generates the
-# various files.
+def write_common_header(packets: list[Packet], output: io.TextIOWrapper) -> None:
+    """
+    Writes the contents of packets_gen.h to the output stream.
+    """
 
-
-def main(input_name, mode, header, source):
-    # parsing input
-    with open(input_name, encoding="utf-8") as f:
-        packets = parse_packet_definitions(f.read())
-
-    if mode == "common":
-        # writing packets_gen.h
-        output_h = fc_open(header)
-        output_h.write(
-            """
+    write_disclaimer(output)
+    output.write(
+        """
 
 
 /* common */
@@ -2041,31 +2036,35 @@ def main(input_name, mode, header, source):
 #include "cm.h"
 
 """
-        )
+    )
 
-        # write structs
-        for p in packets:
-            output_h.write(p.get_struct())
+    # write structs
+    for p in packets:
+        output.write(p.get_struct())
 
-        output_h.write(get_enum_packet(packets))
+    output.write(get_enum_packet(packets))
 
-        # write function prototypes
-        for p in packets:
-            output_h.write(p.get_prototypes())
-        output_h.write(
-            """
+    # write function prototypes
+    for p in packets:
+        output.write(p.get_prototypes())
+    output.write(
+        """
 void delta_stats_report(void);
 void delta_stats_reset(void);
 
 
 """
-        )
-        output_h.close()
+    )
 
-        # writing packets_gen.cpp
-        output_c = fc_open(source)
-        output_c.write(
-            """
+
+def write_common_source(packets: list[Packet], output: io.TextIOWrapper) -> None:
+    """
+    Writes the contents of packets_gen.cpp to the output stream.
+    """
+
+    write_disclaimer(output)
+    output.write(
+        """
 #include <fc_config.h>
 
 #include <string.h>
@@ -2085,58 +2084,172 @@ void delta_stats_reset(void);
 
 #include "packets.h"
 """
-        )
-        output_c.write(get_packet_functional_capability(packets))
-        output_c.write(
-            """
+    )
+    output.write(get_packet_functional_capability(packets))
+    output.write(
+        """
 static genhash_val_t hash_const(const void *vkey)
 {
-  return 0;
+return 0;
 }
 
 static bool cmp_const(const void *vkey1, const void *vkey2)
 {
-  return true;
+return true;
 }
 """
-        )
+    )
 
-        if generate_stats:
-            output_c.write(
-                """
+    if generate_stats:
+        output.write(
+            """
 static int stats_total_sent;
 
 """
-            )
+        )
 
-        if generate_stats:
-            # write stats
-            for p in packets:
-                output_c.write(p.get_stats())
-            # write report()
-        output_c.write(get_report(packets))
-        output_c.write(get_reset(packets))
-
-        output_c.write(get_packet_name(packets))
-        output_c.write(get_packet_has_game_info_flag(packets))
-
-        # write hash, cmp, send, receive
+    if generate_stats:
+        # write stats
         for p in packets:
-            output_c.write(p.get_variants())
-            output_c.write(p.get_send())
-            output_c.write(p.get_lsend())
-            output_c.write(p.get_dsend())
-            output_c.write(p.get_dlsend())
+            output.write(p.get_stats())
+        # write report()
+    output.write(get_report(packets))
+    output.write(get_reset(packets))
 
-        output_c.write(get_packet_handlers_fill_initial(packets))
-        output_c.write(get_packet_handlers_fill_capability(packets))
-        output_c.close()
+    output.write(get_packet_name(packets))
+    output.write(get_packet_has_game_info_flag(packets))
 
-    elif mode == "server":
-        # Writing hand_gen.h
-        f = fc_open(header)
-        f.write(
-            """
+    # write hash, cmp, send, receive
+    for p in packets:
+        output.write(p.get_variants())
+        output.write(p.get_send())
+        output.write(p.get_lsend())
+        output.write(p.get_dsend())
+        output.write(p.get_dlsend())
+
+    output.write(get_packet_handlers_fill_initial(packets))
+    output.write(get_packet_handlers_fill_capability(packets))
+
+
+def write_client_header(packets: list[Packet], output: io.TextIOWrapper) -> None:
+    """
+    Writes the contents of packhand_gen.h to the output stream.
+    """
+
+    write_disclaimer(output)
+    output.write(
+        """
+#ifndef FC__PACKHAND_GEN_H
+#define FC__PACKHAND_GEN_H
+
+
+
+/* utility */
+#include "shared.h"
+
+/* common */
+#include "packets.h"
+
+bool client_handle_packet(enum packet_type type, const void *packet);
+
+"""
+    )
+    for p in packets:
+        if "sc" not in p.dirs:
+            continue
+
+        a = p.name[len("packet_") :]
+        b = p.fields
+        # print len(p.fields),p.name
+        b = map(lambda x: "%s%s" % (x.get_handle_type(), x.name), b)
+        b = ", ".join(b)
+        if not b:
+            b = "void"
+        if p.handle_via_packet:
+            output.write("struct %s;\n" % p.name)
+            output.write("void handle_%s(const struct %s *packet);\n" % (a, p.name))
+        else:
+            output.write("void handle_%s(%s);\n" % (a, b))
+    output.write(
+        """
+
+
+#endif /* FC__PACKHAND_GEN_H */
+"""
+    )
+
+
+def write_client_source(packets: list[Packet], output: io.TextIOWrapper) -> None:
+    """
+    Writes the contents of packhand_gen.cpp to the output stream.
+    """
+
+    write_disclaimer(output)
+    output.write(
+        """
+
+#ifdef HAVE_CONFIG_H
+#include <fc_config.h>
+#endif
+
+/* common */
+#include "packets.h"
+
+#include "packhand_gen.h"
+
+bool client_handle_packet(enum packet_type type, const void *packet)
+{
+  switch (type) {
+"""
+    )
+    for p in packets:
+        if "sc" not in p.dirs:
+            continue
+        if p.no_handle:
+            continue
+        a = p.name[len("packet_") :]
+        c = "((const struct %s *)packet)->" % p.name
+        d = "(static_cast<const struct {0}*>(packet))".format(p.name)
+        b = []
+        for x in p.fields:
+            y = "%s%s" % (c, x.name)
+            if x.dataio_type == "worklist":
+                y = "&" + y
+            b.append(y)
+        b = ",\n      ".join(b)
+        if b:
+            b = "\n      " + b
+
+        if p.handle_via_packet:
+            args = d
+        else:
+            args = b
+
+        output.write(
+            """  case %s:
+handle_%s(%s);
+return true;
+
+"""
+            % (p.type, a, args)
+        )
+    output.write(
+        """  default:
+return false;
+}
+}
+"""
+    )
+
+
+def write_server_header(packets: list[Packet], output: io.TextIOWrapper) -> None:
+    """
+    Writes the contents of hand_gen.h to the output stream.
+    """
+
+    write_disclaimer(output)
+    output.write(
+        """
 #ifndef FC__HAND_GEN_H
 #define FC__HAND_GEN_H
 
@@ -2152,97 +2265,54 @@ static int stats_total_sent;
 struct connection;
 
 bool server_handle_packet(enum packet_type type, const void *packet,
-                          struct player *pplayer, struct connection *pconn);
+                        struct player *pplayer, struct connection *pconn);
 
 """
-        )
+    )
 
-        for p in packets:
-            if "cs" in p.dirs and not p.no_handle:
-                a = p.name[len("packet_") :]
-                packtype = a.split("_")[0]
-                b = p.fields
-                b = map(lambda x: "%s%s" % (x.get_handle_type(), x.name), b)
-                b = ", ".join(b)
-                if b:
-                    b = ", " + b
-                if p.handle_via_packet:
-                    f.write("struct %s;\n" % p.name)
-                    if p.handle_per_conn:
-                        f.write(
-                            "void handle_%s(struct connection *pc, const struct %s *packet);\n"
-                            % (a, p.name)
-                        )
-                    else:
-                        f.write(
-                            "void handle_%s(struct player *pplayer, const struct %s *packet);\n"
-                            % (a, p.name)
-                        )
+    for p in packets:
+        if "cs" in p.dirs and not p.no_handle:
+            a = p.name[len("packet_") :]
+            b = p.fields
+            b = map(lambda x: "%s%s" % (x.get_handle_type(), x.name), b)
+            b = ", ".join(b)
+            if b:
+                b = ", " + b
+            if p.handle_via_packet:
+                output.write("struct %s;\n" % p.name)
+                if p.handle_per_conn:
+                    output.write(
+                        "void handle_%s(struct connection *pc, const struct %s *packet);\n"
+                        % (a, p.name)
+                    )
                 else:
-                    if p.handle_per_conn:
-                        f.write("void handle_%s(struct connection *pc%s);\n" % (a, b))
-                    else:
-                        f.write("void handle_%s(struct player *pplayer%s);\n" % (a, b))
-        f.write(
-            """
+                    output.write(
+                        "void handle_%s(struct player *pplayer, const struct %s *packet);\n"
+                        % (a, p.name)
+                    )
+            else:
+                if p.handle_per_conn:
+                    output.write("void handle_%s(struct connection *pc%s);\n" % (a, b))
+                else:
+                    output.write("void handle_%s(struct player *pplayer%s);\n" % (a, b))
+    output.write(
+        """
 
 
 
 #endif /* FC__HAND_GEN_H */
 """
-        )
-        f.close()
-
-    if mode == "client":
-        # Writing packhand_gen.h
-        f = fc_open(header)
-        f.write(
-            """
-#ifndef FC__PACKHAND_GEN_H
-#define FC__PACKHAND_GEN_H
+    )
 
 
+def write_server_source(packets: list[Packet], output: io.TextIOWrapper) -> None:
+    """
+    Writes the contents of hand_gen.cpp to the output stream.
+    """
 
-/* utility */
-#include "shared.h"
-
-/* common */
-#include "packets.h"
-
-bool client_handle_packet(enum packet_type type, const void *packet);
-
-"""
-        )
-        for p in packets:
-            if "sc" not in p.dirs:
-                continue
-
-            a = p.name[len("packet_") :]
-            b = p.fields
-            # print len(p.fields),p.name
-            b = map(lambda x: "%s%s" % (x.get_handle_type(), x.name), b)
-            b = ", ".join(b)
-            if not b:
-                b = "void"
-            if p.handle_via_packet:
-                f.write("struct %s;\n" % p.name)
-                f.write("void handle_%s(const struct %s *packet);\n" % (a, p.name))
-            else:
-                f.write("void handle_%s(%s);\n" % (a, b))
-        f.write(
-            """
-
-
-#endif /* FC__PACKHAND_GEN_H */
-"""
-        )
-        f.close()
-
-    if mode == "server":
-        # Writing packhand_gen.cpp
-        f = fc_open(source)
-        f.write(
-            """
+    write_disclaimer(output)
+    output.write(
+        """
 
 #include <fc_config.h>
 
@@ -2256,115 +2326,83 @@ bool server_handle_packet(enum packet_type type, const void *packet,
 {
   switch (type) {
 """
-        )
-        for p in packets:
-            if "cs" not in p.dirs:
-                continue
-            if p.no_handle:
-                continue
-            a = p.name[len("packet_") :]
-            # python doesn't need comments :D
-            c = "((const struct %s *)packet)->" % p.name
-            d = "(static_cast<const struct {0}*>(packet))".format(p.name)
-            b = []
-            for x in p.fields:
-                y = "%s%s" % (c, x.name)
-                if x.dataio_type == "worklist":
-                    y = "&" + y
-                b.append(y)
-            b = ",\n      ".join(b)
-            if b:
-                b = ",\n      " + b
+    )
+    for p in packets:
+        if "cs" not in p.dirs:
+            continue
+        if p.no_handle:
+            continue
+        a = p.name[len("packet_") :]
+        # python doesn't need comments :D
+        c = "((const struct %s *)packet)->" % p.name
+        d = "(static_cast<const struct {0}*>(packet))".format(p.name)
+        b = []
+        for x in p.fields:
+            y = "%s%s" % (c, x.name)
+            if x.dataio_type == "worklist":
+                y = "&" + y
+            b.append(y)
+        b = ",\n      ".join(b)
+        if b:
+            b = ",\n      " + b
 
-            if p.handle_via_packet:
-                if p.handle_per_conn:
-                    # args="pconn, packet"
-                    args = "pconn, " + d
-                else:
-                    args = "pplayer," + d
-
+        if p.handle_via_packet:
+            if p.handle_per_conn:
+                # args="pconn, packet"
+                args = "pconn, " + d
             else:
-                if p.handle_per_conn:
-                    args = "pconn" + b
-                else:
-                    args = "pplayer" + b
+                args = "pplayer," + d
 
-            f.write(
-                """  case %s:
-    handle_%s(%s);
-    return true;
+        else:
+            if p.handle_per_conn:
+                args = "pconn" + b
+            else:
+                args = "pplayer" + b
+
+        output.write(
+            """  case %s:
+handle_%s(%s);
+return true;
 
 """
-                % (p.type, a, args)
-            )
-        f.write(
-            """  default:
-    return false;
-  }
+            % (p.type, a, args)
+        )
+    output.write(
+        """  default:
+return false;
+}
 }
 """
-        )
-        f.close()
+    )
 
-    if mode == "client":
-        # Writing packhand_gen.cpp
-        f = fc_open(source)
-        f.write(
-            """
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
+def _main(input_path: str, mode: str, header: str, source: str) -> None:
+    """
+    Parses packet definitions from input_path, then writes a header and the
+    corresponding source file. "mode" controls which pair of files is produced,
+    and can be one of "common", "client", or "server".
+    """
 
-/* common */
-#include "packets.h"
+    writers = {
+        "common": (write_common_header, write_common_source),
+        "client": (write_client_header, write_client_source),
+        "server": (write_server_header, write_server_source),
+    }
 
-#include "packhand_gen.h"
+    if not mode in writers:
+        raise ValueError(mode)
 
-bool client_handle_packet(enum packet_type type, const void *packet)
-{
-  switch (type) {
-"""
-        )
-        for p in packets:
-            if "sc" not in p.dirs:
-                continue
-            if p.no_handle:
-                continue
-            a = p.name[len("packet_") :]
-            c = "((const struct %s *)packet)->" % p.name
-            d = "(static_cast<const struct {0}*>(packet))".format(p.name)
-            b = []
-            for x in p.fields:
-                y = "%s%s" % (c, x.name)
-                if x.dataio_type == "worklist":
-                    y = "&" + y
-                b.append(y)
-            b = ",\n      ".join(b)
-            if b:
-                b = "\n      " + b
+    # Parse input
+    with open(input_path, encoding="utf-8") as in_file:
+        packets = parse_packet_definitions(in_file.read())
 
-            if p.handle_via_packet:
-                args = d
-            else:
-                args = b
+    # Write
+    write_header, write_source = writers[mode]
+    with open(header, "w", encoding="utf-8") as out_file:
+        write_header(packets, out_file)
 
-            f.write(
-                """  case %s:
-    handle_%s(%s);
-    return true;
-
-"""
-                % (p.type, a, args)
-            )
-        f.write(
-            """  default:
-    return false;
-  }
-}
-"""
-        )
-        f.close()
+    with open(source, "w", encoding="utf-8") as out_file:
+        write_source(packets, out_file)
 
 
 if __name__ == "__main__":
@@ -2379,4 +2417,4 @@ if __name__ == "__main__":
     parser.add_argument("source", help="Path to the source file to produce")
     args = parser.parse_args()
 
-    main(args.packets, args.mode, args.header, args.source)
+    _main(args.packets, args.mode, args.header, args.source)
