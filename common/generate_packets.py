@@ -2035,14 +2035,14 @@ def write_common_header(packets: list[Packet], output: io.TextIOWrapper) -> None
     )
 
     # write structs
-    for p in packets:
-        output.write(p.get_struct())
+    for packet in packets:
+        output.write(packet.get_struct())
 
     output.write(get_enum_packet(packets))
 
     # write function prototypes
-    for p in packets:
-        output.write(p.get_prototypes())
+    for packet in packets:
+        output.write(packet.get_prototypes())
     output.write(
         """
 void delta_stats_report();
@@ -2103,8 +2103,8 @@ static int stats_total_sent;
 
     if generate_stats:
         # write stats
-        for p in packets:
-            output.write(p.get_stats())
+        for packet in packets:
+            output.write(packet.get_stats())
         # write report()
     output.write(get_report(packets))
     output.write(get_reset(packets))
@@ -2113,12 +2113,12 @@ static int stats_total_sent;
     output.write(get_packet_has_game_info_flag(packets))
 
     # write hash, cmp, send, receive
-    for p in packets:
-        output.write(p.get_variants())
-        output.write(p.get_send())
-        output.write(p.get_lsend())
-        output.write(p.get_dsend())
-        output.write(p.get_dlsend())
+    for packet in packets:
+        output.write(packet.get_variants())
+        output.write(packet.get_send())
+        output.write(packet.get_lsend())
+        output.write(packet.get_dsend())
+        output.write(packet.get_dlsend())
 
     output.write(get_packet_handlers_fill_initial(packets))
     output.write(get_packet_handlers_fill_capability(packets))
@@ -2144,20 +2144,19 @@ bool client_handle_packet(enum packet_type type, const void *packet);
 
 """
     )
-    for p in packets:
-        if "sc" not in p.dirs:
+    for packet in packets:
+        if "sc" not in packet.dirs:
             continue
 
-        a = p.name[len("packet_") :]
-        b = p.fields
-        # print len(p.fields),p.name
+        a = packet.name[len("packet_") :]
+        b = packet.fields
         b = map(lambda x: "%s%s" % (x.get_handle_type(), x.name), b)
         b = ", ".join(b)
         if not b:
             b = "void"
-        if p.handle_via_packet:
-            output.write("struct %s;\n" % p.name)
-            output.write("void handle_%s(const struct %s *packet);\n" % (a, p.name))
+        if packet.handle_via_packet:
+            output.write("struct %s;\n" % packet.name)
+            output.write("void handle_%s(const struct %s *packet);\n" % (a, packet.name))
         else:
             output.write("void handle_%s(%s);\n" % (a, b))
 
@@ -2183,16 +2182,16 @@ bool client_handle_packet(enum packet_type type, const void *packet)
   switch (type) {
 """
     )
-    for p in packets:
-        if "sc" not in p.dirs:
+    for packet in packets:
+        if "sc" not in packet.dirs:
             continue
-        if p.no_handle:
+        if packet.no_handle:
             continue
-        a = p.name[len("packet_") :]
-        c = "((const struct %s *)packet)->" % p.name
-        d = "(static_cast<const struct {0}*>(packet))".format(p.name)
+        a = packet.name[len("packet_") :]
+        c = "((const struct %s *)packet)->" % packet.name
+        d = "(static_cast<const struct {0}*>(packet))".format(packet.name)
         b = []
-        for x in p.fields:
+        for x in packet.fields:
             y = "%s%s" % (c, x.name)
             if x.dataio_type == "worklist":
                 y = "&" + y
@@ -2201,7 +2200,7 @@ bool client_handle_packet(enum packet_type type, const void *packet)
         if b:
             b = "\n      " + b
 
-        if p.handle_via_packet:
+        if packet.handle_via_packet:
             args = d
         else:
             args = b
@@ -2212,7 +2211,7 @@ bool client_handle_packet(enum packet_type type, const void *packet)
     return true;
 
 """
-            % (p.type, a, args)
+            % (packet.type, a, args)
         )
     output.write(
         """  default:
@@ -2297,17 +2296,17 @@ bool server_handle_packet(enum packet_type type, const void *packet,
   switch (type) {
 """
     )
-    for p in packets:
-        if "cs" not in p.dirs:
+    for packet in packets:
+        if "cs" not in packet.dirs:
             continue
-        if p.no_handle:
+        if packet.no_handle:
             continue
-        a = p.name[len("packet_") :]
+        a = packet.name[len("packet_") :]
         # python doesn't need comments :D
-        c = "((const struct %s *)packet)->" % p.name
-        d = "(static_cast<const struct {0}*>(packet))".format(p.name)
+        c = "((const struct %s *)packet)->" % packet.name
+        d = "(static_cast<const struct {0}*>(packet))".format(packet.name)
         b = []
-        for x in p.fields:
+        for x in packet.fields:
             y = "%s%s" % (c, x.name)
             if x.dataio_type == "worklist":
                 y = "&" + y
@@ -2316,15 +2315,15 @@ bool server_handle_packet(enum packet_type type, const void *packet,
         if b:
             b = ",\n      " + b
 
-        if p.handle_via_packet:
-            if p.handle_per_conn:
+        if packet.handle_via_packet:
+            if packet.handle_per_conn:
                 # args="pconn, packet"
                 args = "pconn, " + d
             else:
                 args = "pplayer," + d
 
         else:
-            if p.handle_per_conn:
+            if packet.handle_per_conn:
                 args = "pconn" + b
             else:
                 args = "pplayer" + b
@@ -2335,7 +2334,7 @@ bool server_handle_packet(enum packet_type type, const void *packet,
     return true;
 
 """
-            % (p.type, a, args)
+            % (packet.type, a, args)
         )
     output.write(
         """  default:
