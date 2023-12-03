@@ -14,6 +14,7 @@
 import argparse
 import io
 import re
+import typing
 from collections import namedtuple
 
 # The following parameters change the amount of output.
@@ -36,7 +37,7 @@ fold_bool_into_header = 1
 
 def prefix(prefix, string):
     lines = string.split("\n")
-    lines = map(lambda x, prefix=prefix: prefix + x, lines)
+    lines = map(lambda x: prefix + x, lines)
     return "\n".join(lines)
 
 
@@ -1808,87 +1809,65 @@ def get_packet_handlers_fill_capability(packets: list[Packet]) -> str:
 {
 """
 
+    def variant_conditional(
+        indent: str, packet: Packet, code_func: typing.Callable[Variant, str]
+    ) -> str:
+        """
+        Produces code of the form:
+
+        if (variant1) {
+            {code_func(variant1)}
+        } else if (variant2) {
+            {code_func(variant2)}
+        } else {
+            log error
+        }
+        """
+
+        code = ""
+        for var in packet.variants:
+            code += f"""if ({var.condition}) {{
+  {var.log_macro}("{var.type}: using variant={var.no} cap=%s", capability);
+  {code_func(var)}
+}} else """
+
+        code += f"""{{
+  qCritical("Unknown {packet.type} variant for cap %s", capability);
+}}"""
+        return prefix(indent, code) + "\n"
+
     sc_packets = []
     cs_packets = []
     unrestricted = []
-    for p in packets:
-        if len(p.variants) > 1:
-            if len(p.dirs) == 1 and p.dirs[0] == "sc":
-                sc_packets.append(p)
-            elif len(p.dirs) == 1 and p.dirs[0] == "cs":
-                cs_packets.append(p)
+    for packet in packets:
+        if len(packet.variants) > 1:
+            if len(packet.dirs) == 1 and packet.dirs[0] == "sc":
+                sc_packets.append(packet)
+            elif len(packet.dirs) == 1 and packet.dirs[0] == "cs":
+                cs_packets.append(packet)
             else:
-                unrestricted.append(p)
+                unrestricted.append(packet)
 
     body = ""
-    for p in unrestricted:
-        body += "  "
-        for v in p.variants:
-            body += f"""if ({v.condition}) {{
-    {v.log_macro}("{v.type}: using variant={v.no} cap=%s", capability);
-    {v.send_handler}
-    {v.receive_handler}
-  }} else """
-
-        body += f"""{{
-    qCritical("Unknown {v.type} variant for cap %s", capability);
-  }}
-"""
+    for packet in unrestricted:
+        body += variant_conditional(
+            "  ", packet, lambda var: var.send_handler + "\n  " + var.receive_handler
+        )
 
     if cs_packets or sc_packets:
         body += "  if (is_server()) {\n"
-        for p in sc_packets:
-            body = body + "    "
-            for v in p.variants:
-                body += f"""if ({v.condition}) {{
-      {v.log_macro}("{v.type}: using variant={v.no} cap=%s", capability);
-      {v.send_handler}
-    }} else """
+        for packet in sc_packets:
+            body += variant_conditional("    ", packet, lambda var: var.send_handler)
 
-            body += f"""{{
-      qCritical("Unknown {v.type} variant for cap %s", capability);
-    }}
-"""
-
-        for p in cs_packets:
-            body += "    "
-            for v in p.variants:
-                body += f"""if ({v.condition}) {{
-      {v.log_macro}("{v.type}: using variant={v.no} cap=%s", capability);
-      {v.receive_handler}
-    }} else """
-
-            body += f"""{{
-      qCritical("Unknown {v.type} variant for cap %s", capability);
-    }}
-"""
+        for packet in cs_packets:
+            body += variant_conditional("    ", packet, lambda var: var.receive_handler)
 
         body += "  } else {\n"
-        for p in cs_packets:
-            body += "    "
-            for v in p.variants:
-                body += f"""if ({v.condition}) {{
-      {v.log_macro}("{v.type}: using variant={v.no} cap=%s", capability);
-      {v.send_handler}
-    }} else """
+        for packet in cs_packets:
+            body += variant_conditional("    ", packet, lambda var: var.send_handler)
 
-            body += f"""{{
-      qCritical("Unknown {v.type} variant for cap %s", capability);
-    }}
-"""
-
-        for p in sc_packets:
-            body += "    "
-            for v in p.variants:
-                body += f"""if ({v.condition}) {{
-      {v.log_macro}("{v.type}: using variant={v.no} cap=%s", capability);
-      {v.receive_handler}
-    }} else """
-
-            body += f"""{{
-      qCritical("Unknown {v.type} variant for cap %s", capability);
-    }}
-"""
+        for packet in sc_packets:
+            body += variant_conditional("    ", packet, lambda var: var.receive_handler)
 
         body += "  }\n"
 
