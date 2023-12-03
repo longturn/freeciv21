@@ -70,10 +70,10 @@ class Type:
 
 
 def parse_fields(string, types):
-    mo = re.search(r"^\s*(\S+(?:\(.*\))?)\s+([^;()]*)\s*;\s*(.*)\s*$", string)
-    assert mo, string
+    match = re.search(r"^\s*(\S+(?:\(.*\))?)\s+([^;()]*)\s*;\s*(.*)\s*$", string)
+    assert match, string
     arr = []
-    for i in mo.groups():
+    for i in match.groups():
         if i:
             arr.append(i.strip())
         else:
@@ -93,15 +93,15 @@ def parse_fields(string, types):
             break
 
     typeinfo = {}
-    mo = re.search("^(.*)\((.*)\)$", kind)
-    assert mo, repr(kind)
-    typeinfo["dataio_type"], typeinfo["struct_type"] = mo.groups()
+    match = re.search("^(.*)\((.*)\)$", kind)
+    assert match, repr(kind)
+    typeinfo["dataio_type"], typeinfo["struct_type"] = match.groups()
 
     if typeinfo["struct_type"] == "float":
-        mo = re.search("^(\D+)(\d+)$", typeinfo["dataio_type"])
-        assert mo
-        typeinfo["dataio_type"] = mo.group(1)
-        typeinfo["float_factor"] = int(mo.group(2))
+        match = re.search("^(\D+)(\d+)$", typeinfo["dataio_type"])
+        assert match
+        typeinfo["dataio_type"] = match.group(1)
+        typeinfo["float_factor"] = int(match.group(2))
 
     # analyze fields
     fields = []
@@ -119,18 +119,24 @@ def parse_fields(string, types):
                 arr[1] = "real_packet->" + arr[1]
                 return arr
 
-        mo = re.search(r"^(.*)\[(.*)\]\[(.*)\]$", i)
-        if mo:
-            t["name"] = mo.group(1)
+        match = re.search(r"^(.*)\[(.*)\]\[(.*)\]$", i)
+        if match:
+            t["name"] = match.group(1)
             t["is_array"] = 2
-            t["array_size1_d"], t["array_size1_u"], t["array_size1_o"] = f(mo.group(2))
-            t["array_size2_d"], t["array_size2_u"], t["array_size2_o"] = f(mo.group(3))
+            t["array_size1_d"], t["array_size1_u"], t["array_size1_o"] = f(
+                match.group(2)
+            )
+            t["array_size2_d"], t["array_size2_u"], t["array_size2_o"] = f(
+                match.group(3)
+            )
         else:
-            mo = re.search(r"^(.*)\[(.*)\]$", i)
-            if mo:
-                t["name"] = mo.group(1)
+            match = re.search(r"^(.*)\[(.*)\]$", i)
+            if match:
+                t["name"] = match.group(1)
                 t["is_array"] = 1
-                t["array_size_d"], t["array_size_u"], t["array_size_o"] = f(mo.group(2))
+                t["array_size_d"], t["array_size_u"], t["array_size_o"] = f(
+                    match.group(2)
+                )
             else:
                 t["name"] = i
                 t["is_array"] = 0
@@ -150,13 +156,13 @@ def parse_fields(string, types):
     removes = []
     remaining = []
     for i in arr:
-        mo = re.search("^add-cap\((.*)\)$", i)
-        if mo:
-            adds.append(mo.group(1))
+        match = re.search("^add-cap\((.*)\)$", i)
+        if match:
+            adds.append(match.group(1))
             continue
-        mo = re.search("^remove-cap\((.*)\)$", i)
-        if mo:
-            removes.append(mo.group(1))
+        match = re.search("^remove-cap\((.*)\)$", i)
+        if match:
+            removes.append(match.group(1))
             continue
         remaining.append(i)
     arr = remaining
@@ -1254,14 +1260,14 @@ class Packet:
         string = string.strip()
         lines = string.split("\n")
 
-        mo = re.search("^\s*(\S+)\s*=\s*(\d+)\s*;\s*(.*?)\s*$", lines[0])
-        assert mo, repr(lines[0])
+        match = re.search("^\s*(\S+)\s*=\s*(\d+)\s*;\s*(.*?)\s*$", lines[0])
+        assert match, repr(lines[0])
 
-        self.type = mo.group(1)
+        self.type = match.group(1)
         self.name = self.type.lower()
-        self.type_number = int(mo.group(2))
+        self.type_number = int(match.group(2))
         assert 0 <= self.type_number <= 65535
-        dummy = mo.group(3)
+        dummy = match.group(3)
 
         del lines[0]
 
@@ -1336,9 +1342,9 @@ class Packet:
         removes = []
         remaining = []
         for i in arr:
-            mo = re.search("^cancel\((.*)\)$", i)
-            if mo:
-                self.cancel.append(mo.group(1))
+            match = re.search("^cancel\((.*)\)$", i)
+            if match:
+                self.cancel.append(match.group(1))
                 continue
             remaining.append(i)
         arr = remaining
@@ -1984,9 +1990,9 @@ def parse_packet_definitions(content: str) -> str:
     remaining_lines = []
     types = []
     for line in lines:
-        mo = re.search("^type\s+(\S+)\s*=\s*(.+)\s*$", line)
-        if mo:
-            types.append(Type(mo.group(1), mo.group(2)))
+        match = re.search("^type\s+(\S+)\s*=\s*(.+)\s*$", line)
+        if match:
+            types.append(Type(match.group(1), match.group(2)))
         else:
             remaining_lines.append(line)
 
@@ -2260,7 +2266,9 @@ bool server_handle_packet(enum packet_type type, const void *packet,
                     f"void {handle_fn_name}(player *pc, const {packet.name} *packet);\n"
                 )
         else:
-            args = map(lambda field: field.get_handle_type() + field.name, packet.fields)
+            args = map(
+                lambda field: field.get_handle_type() + field.name, packet.fields
+            )
             args = ", ".join(args)
             if args:
                 args = ", " + args
