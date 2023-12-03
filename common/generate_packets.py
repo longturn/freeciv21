@@ -14,6 +14,7 @@
 import argparse
 import io
 import re
+from collections import namedtuple
 
 # The following parameters change the amount of output.
 
@@ -56,12 +57,7 @@ def get_choices(allchoices):
 
 
 # A simple container for a type alias
-
-
-class Type:
-    def __init__(self, alias, dest):
-        self.alias = alias
-        self.dest = dest
+Type = namedtuple("Type", ["alias", "dest"])
 
 
 # Parses a line of the form "COORD x, y; key" and returns a list of
