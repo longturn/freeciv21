@@ -984,8 +984,11 @@ static char *stats_{self.name}_names[] = {{names}};
 
 """
 
-    # Helper for get_receive()
     def get_delta_receive_body(self):
+        """
+        Helper for get_receive()
+        """
+
         key1 = map(
             lambda x: f"    {x.struct_type} {x.name} = real_packet->{x.name};",
             self.key_fields,
