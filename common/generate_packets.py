@@ -79,55 +79,6 @@ def parse_fields(line: str, aliases: typing.Mapping[str, str]) -> list:  # TODO 
     # Resolve type
     type_name = aliases.get(type_name, type_name)
 
-    typeinfo = {}
-    match = re.search(r"^(.*)\((.*)\)$", type_name)
-    assert match, repr(type_name)
-    typeinfo["dataio_type"], typeinfo["struct_type"] = match.groups()
-
-    if typeinfo["struct_type"] == "float":
-        match = re.search(r"^(\D+)(\d+)$", typeinfo["dataio_type"])
-        assert match
-        typeinfo["dataio_type"] = match.group(1)
-        typeinfo["float_factor"] = int(match.group(2))
-
-    # analyze fields
-    fields = []
-    for i in field_names:
-        t = {}
-
-        def f(x):
-            arr = x.split(":")
-            if len(arr) == 1:
-                return [x, x, x]
-            else:
-                assert len(arr) == 2
-                arr.append("old->" + arr[1])
-                arr[1] = "real_packet->" + arr[1]
-                return arr
-
-        match = re.search(r"^(.*)\[(.*)\]\[(.*)\]$", i)
-        if match:
-            t["name"] = match.group(1)
-            t["is_array"] = 2
-            t["array_size1_d"], t["array_size1_u"], t["array_size1_o"] = f(
-                match.group(2)
-            )
-            t["array_size2_d"], t["array_size2_u"], t["array_size2_o"] = f(
-                match.group(3)
-            )
-        else:
-            match = re.search(r"^(.*)\[(.*)\]$", i)
-            if match:
-                t["name"] = match.group(1)
-                t["is_array"] = 1
-                t["array_size_d"], t["array_size_u"], t["array_size_o"] = f(
-                    match.group(2)
-                )
-            else:
-                t["name"] = i
-                t["is_array"] = 0
-        fields.append(t)
-
     # analyze flags
     flaginfo = {}
     flaginfo["is_key"] = "key" in flags
@@ -163,11 +114,56 @@ def parse_fields(line: str, aliases: typing.Mapping[str, str]) -> list:  # TODO 
     else:
         flaginfo["remove_cap"] = ""
 
-    # print typeinfo,flaginfo,fields
-    result = []
-    for f in fields:
-        result.append(Field(f, typeinfo, flaginfo))
-    return result
+    typeinfo = {}
+    match = re.search(r"^(.*)\((.*)\)$", type_name)
+    assert match, repr(type_name)
+    typeinfo["dataio_type"], typeinfo["struct_type"] = match.groups()
+
+    if typeinfo["struct_type"] == "float":
+        match = re.search(r"^(\D+)(\d+)$", typeinfo["dataio_type"])
+        assert match
+        typeinfo["dataio_type"] = match.group(1)
+        typeinfo["float_factor"] = int(match.group(2))
+
+    # analyze fields
+    fields = []
+    for name in field_names:
+        field = {}
+
+        def f(x):
+            arr = x.split(":")
+            if len(arr) == 1:
+                return [x, x, x]
+
+            assert len(arr) == 2
+            arr.append("old->" + arr[1])
+            arr[1] = "real_packet->" + arr[1]
+            return arr
+
+        match = re.search(r"^(.*)\[(.*)\]\[(.*)\]$", name)
+        if match:
+            field["name"] = match.group(1)
+            field["is_array"] = 2
+            field["array_size1_d"], field["array_size1_u"], field["array_size1_o"] = f(
+                match.group(2)
+            )
+            field["array_size2_d"], field["array_size2_u"], field["array_size2_o"] = f(
+                match.group(3)
+            )
+        else:
+            match = re.search(r"^(.*)\[(.*)\]$", name)
+            if match:
+                field["name"] = match.group(1)
+                field["is_array"] = 1
+                field["array_size_d"], field["array_size_u"], field["array_size_o"] = f(
+                    match.group(2)
+                )
+            else:
+                field["name"] = name
+                field["is_array"] = 0
+        fields.append(Field(field, typeinfo, flaginfo))
+
+    return fields
 
 
 # Class for a field (part of a packet). It has a name, serveral types,
