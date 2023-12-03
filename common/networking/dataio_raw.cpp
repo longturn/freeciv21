@@ -401,56 +401,6 @@ void dio_put_sfloat_raw(struct raw_data_out *dout, float value,
 }
 
 /**
-   Insert number of values brefore stop_value using 8 bits. Then
-   insert values using 8 bits for each. stop_value is not required to
-   fit in 8 bits. Actual values may overflow.
- */
-void dio_put_uint8_vec8_raw(struct raw_data_out *dout, int *values,
-                            int stop_value)
-{
-  size_t count;
-
-  for (count = 0; values[count] != stop_value; count++) {
-    // nothing
-  }
-
-  if (enough_space(dout, 1 + count)) {
-    size_t i;
-
-    dio_put_uint8_raw(dout, count);
-
-    for (i = 0; i < count; i++) {
-      dio_put_uint8_raw(dout, values[i]);
-    }
-  }
-}
-
-/**
-   Insert number of values brefore stop_value using 8 bits. Then
-   insert values using 16 bits for each. stop_value is not required to
-   fit in 16 bits. Actual values may overflow.
- */
-void dio_put_uint16_vec8_raw(struct raw_data_out *dout, int *values,
-                             int stop_value)
-{
-  size_t count;
-
-  for (count = 0; values[count] != stop_value; count++) {
-    // nothing
-  }
-
-  if (enough_space(dout, 1 + 2 * count)) {
-    size_t i;
-
-    dio_put_uint8_raw(dout, count);
-
-    for (i = 0; i < count; i++) {
-      dio_put_uint16_raw(dout, values[i]);
-    }
-  }
-}
-
-/**
    Insert block directly from memory.
  */
 void dio_put_memory_raw(struct raw_data_out *dout, const void *value,
@@ -901,59 +851,6 @@ bool dio_get_worklist_raw(struct data_in *din, struct worklist *pwl)
     univ = universal_by_number(universals_n(kind), identifier);
     worklist_append(pwl, &univ);
   }
-
-  return true;
-}
-
-/**
-   Take vector of 8 bit values and insert stop_value after them. stop_value
-   does not need to fit in 8 bits.
- */
-bool dio_get_uint8_vec8_raw(struct data_in *din, int **values,
-                            int stop_value)
-{
-  int count, inx;
-  int *vec;
-
-  if (!dio_get_uint8_raw(din, &count)) {
-    return false;
-  }
-
-  vec = new int[count + 1];
-  for (inx = 0; inx < count; inx++) {
-    if (!dio_get_uint8_raw(din, vec + inx)) {
-      delete[] vec;
-      return false;
-    }
-  }
-  vec[inx] = stop_value;
-  *values = vec;
-
-  return true;
-}
-
-/**
-   Receive vector of uint16 values.
- */
-bool dio_get_uint16_vec8_raw(struct data_in *din, int **values,
-                             int stop_value)
-{
-  int count, inx;
-  int *vec;
-
-  if (!dio_get_uint8_raw(din, &count)) {
-    return false;
-  }
-
-  vec = new int[count + 1];
-  for (inx = 0; inx < count; inx++) {
-    if (!dio_get_uint16_raw(din, vec + inx)) {
-      delete[] vec;
-      return false;
-    }
-  }
-  vec[inx] = stop_value;
-  *values = vec;
 
   return true;
 }
