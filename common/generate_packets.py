@@ -13,6 +13,7 @@
 
 import argparse
 import io
+import itertools as it
 import re
 import typing
 from collections import namedtuple
@@ -35,7 +36,11 @@ fold_bool_into_header = 1
 ################# END OF PARAMETERS ####################
 
 
-def prefix(prefix, string):
+def indent(prefix, string):
+    """
+    Prepends `prefix` to every line in `string`.
+    """
+
     lines = string.split("\n")
     lines = map(lambda x: prefix + x, lines)
     return "\n".join(lines)
@@ -500,7 +505,7 @@ class Field:
                 "  real_packet->%(name)s = BV_ISSET(fields, %(i)d);\n"
                 % self.get_dict(vars())
             )
-        get = prefix("    ", get)
+        get = indent("    ", get)
         log_macro = packet.log_macro
         if packet.gen_log:
             f = "    %(log_macro)s(\"  got field '%(name)s'\");\n" % self.get_dict(
@@ -1148,14 +1153,14 @@ static char *stats_%(name)s_names[] = {%(names)s};
   """
             body1 = ""
             for field in self.key_fields:
-                body1 = body1 + prefix("  ", field.get_get(1)) + "\n"
+                body1 = body1 + indent("  ", field.get_get(1)) + "\n"
             body2 = self.get_delta_receive_body()
         else:
             delta_header = ""
             delta_body1 = ""
             body1 = ""
             for field in self.fields:
-                body1 += prefix("  ", field.get_get(0)) + "\n"
+                body1 += indent("  ", field.get_get(0)) + "\n"
             body2 = ""
         body1 = body1 + "\n"
 
@@ -1806,7 +1811,7 @@ def get_packet_handlers_fill_capability(packets: list[Packet]) -> str:
 """
 
     def variant_conditional(
-        indent: str, packet: Packet, code_func: typing.Callable[Variant, str]
+        prefix: str, packet: Packet, code_func: typing.Callable[Variant, str]
     ) -> str:
         """
         Produces code of the form:
@@ -1830,7 +1835,7 @@ def get_packet_handlers_fill_capability(packets: list[Packet]) -> str:
         code += f"""{{
   qCritical("Unknown {packet.type} variant for cap %s", capability);
 }}"""
-        return prefix(indent, code) + "\n"
+        return indent(prefix, code) + "\n"
 
     sc_packets = []
     cs_packets = []
