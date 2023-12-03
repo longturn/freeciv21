@@ -89,14 +89,6 @@ def get_choices(allchoices):
     return result
 
 
-def without(allparts, part):
-    result = []
-    for i in allparts:
-        if i not in part:
-            result.append(i)
-    return result
-
-
 # A simple container for a type alias
 
 
@@ -1461,7 +1453,7 @@ class Packet:
         choices = get_choices(all_caps)
         self.variants = []
         for i, poscaps in enumerate(choices):
-            negcaps = without(all_caps, poscaps)
+            negcaps = all_caps - set(poscaps)
             fields = []
             for field in self.fields:
                 if not field.add_cap and not field.remove_cap:
