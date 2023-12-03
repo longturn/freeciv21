@@ -794,13 +794,6 @@ static char *stats_{self.name}_names[] = {{names}};
         complex to create.
         """
 
-        temp = f"""{self.send_prototype}
-{{
-<real_packet1><delta_header>  SEND_PACKET_START({self.type});
-<faddr><log><report><pre1><body><pre2><post>  SEND_PACKET_END({self.type});
-}}
-
-"""
         if self.gen_stats:
             report = f"""
   stats_total_sent++;
@@ -849,7 +842,7 @@ static char *stats_{self.name}_names[] = {{names}};
   genhash **hash = pc->phs.sent + {self.type};
   int different = {diff};
 """
-                body = self.get_delta_send_body()
+                body = self.get_delta_send_body(pre2)
             else:
                 delta_header = ""
                 body = ""
@@ -870,13 +863,15 @@ static char *stats_{self.name}_names[] = {{names}};
 
         faddr = ""
 
-        for i in range(2):
-            for k, v in vars().items():
-                if isinstance(v, str):
-                    temp = temp.replace(f"<{k}>", v)
-        return temp
+        return f"""{self.send_prototype}
+{{
+{real_packet1}{delta_header}  SEND_PACKET_START({self.type});
+{faddr}{log}{report}{pre1}{body}{pre2}{post}  SEND_PACKET_END({self.type});
+}}
 
-    def get_delta_send_body(self):
+"""
+
+    def get_delta_send_body(self, pre2):
         """
         Helper for get_send()
         """
@@ -912,7 +907,7 @@ static char *stats_{self.name}_names[] = {{names}};
         if self.is_info != "no":
             body += f"""
   if (different == 0) {{
-{fl}{s}<pre2>    return 0;
+{fl}{s}{pre2}    return 0;
   }}
 """
 
@@ -949,13 +944,6 @@ static char *stats_{self.name}_names[] = {{names}};
         to create.
         """
 
-        temp = f"""{self.receive_prototype}
-{{
-<delta_header>  RECEIVE_PACKET_START({self.packet_name}, real_packet);
-<faddr><delta_body1><body1><log><body2><post>  RECEIVE_PACKET_END(real_packet);
-}}
-
-"""
         if self.delta:
             delta_header = f"""
   {self.name}_fields fields;
@@ -988,13 +976,13 @@ static char *stats_{self.name}_names[] = {{names}};
         else:
             post = ""
 
-        faddr = ""
+        return f"""{self.receive_prototype}
+{{
+{delta_header}  RECEIVE_PACKET_START({self.packet_name}, real_packet);
+{delta_body1}{body1}{log}{body2}{post}  RECEIVE_PACKET_END(real_packet);
+}}
 
-        for i in range(2):
-            for k, v in vars().items():
-                if isinstance(v, str):
-                    temp = temp.replace(f"<{k}>", v)
-        return temp
+"""
 
     # Helper for get_receive()
     def get_delta_receive_body(self):
