@@ -90,12 +90,12 @@ def parse_fields(string, types):
             break
 
     typeinfo = {}
-    match = re.search("^(.*)\((.*)\)$", kind)
+    match = re.search(r"^(.*)\((.*)\)$", kind)
     assert match, repr(kind)
     typeinfo["dataio_type"], typeinfo["struct_type"] = match.groups()
 
     if typeinfo["struct_type"] == "float":
-        match = re.search("^(\D+)(\d+)$", typeinfo["dataio_type"])
+        match = re.search(r"^(\D+)(\d+)$", typeinfo["dataio_type"])
         assert match
         typeinfo["dataio_type"] = match.group(1)
         typeinfo["float_factor"] = int(match.group(2))
@@ -153,11 +153,11 @@ def parse_fields(string, types):
     removes = []
     remaining = []
     for i in arr:
-        match = re.search("^add-cap\((.*)\)$", i)
+        match = re.search(r"^add-cap\((.*)\)$", i)
         if match:
             adds.append(match.group(1))
             continue
-        match = re.search("^remove-cap\((.*)\)$", i)
+        match = re.search(r"^remove-cap\((.*)\)$", i)
         if match:
             removes.append(match.group(1))
             continue
@@ -1266,7 +1266,7 @@ class Packet:
         header = lines[0]
         del lines[0]
 
-        match = re.search("^(\S+)\s*=\s*(\d+)\s*;\s*(.*?)$", header)
+        match = re.search(r"^(\S+)\s*=\s*(\d+)\s*;\s*(.*?)$", header)
         assert match, repr(header)
 
         self.type = match.group(1)  # PACKET_A_B
@@ -1346,7 +1346,7 @@ class Packet:
         removes = []
         remaining = []
         for i in flags:
-            match = re.search("^cancel\((.*)\)$", i)
+            match = re.search(r"^cancel\((.*)\)$", i)
             if match:
                 self.cancel.append(match.group(1))
                 continue
@@ -1931,7 +1931,7 @@ def parse_packet_definitions(content: str) -> str:
     remaining_lines = []
     types = []
     for line in lines:
-        match = re.search("^type\s+(\S+)\s*=\s*(.+)\s*$", line)
+        match = re.search(r"^type\s+(\S+)\s*=\s*(.+)\s*$", line)
         if match:
             types.append(Type(match.group(1), match.group(2)))
         else:
