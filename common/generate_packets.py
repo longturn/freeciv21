@@ -2242,31 +2242,33 @@ bool server_handle_packet(enum packet_type type, const void *packet,
 """
     )
 
-    for p in packets:
-        if "cs" in p.dirs and not p.no_handle:
-            a = p.name[len("packet_") :]
-            b = p.fields
-            b = map(lambda x: "%s%s" % (x.get_handle_type(), x.name), b)
-            b = ", ".join(b)
-            if b:
-                b = ", " + b
-            if p.handle_via_packet:
-                output.write("struct %s;\n" % p.name)
-                if p.handle_per_conn:
-                    output.write(
-                        "void handle_%s(struct connection *pc, const struct %s *packet);\n"
-                        % (a, p.name)
-                    )
-                else:
-                    output.write(
-                        "void handle_%s(struct player *pplayer, const struct %s *packet);\n"
-                        % (a, p.name)
-                    )
+    for packet in packets:
+        if not "cs" in packet.dirs:
+            continue
+        if packet.no_handle:
+            continue
+
+        handle_fn_name = f"handle_{packet.short_name()}"
+        if packet.handle_via_packet:
+            output.write(f"struct {packet.name};\n")
+            if packet.handle_per_conn:
+                output.write(
+                    f"void {handle_fn_name}(connection *pc, const {packet.name} *packet);\n"
+                )
             else:
-                if p.handle_per_conn:
-                    output.write("void handle_%s(struct connection *pc%s);\n" % (a, b))
-                else:
-                    output.write("void handle_%s(struct player *pplayer%s);\n" % (a, b))
+                output.write(
+                    f"void {handle_fn_name}(player *pc, const {packet.name} *packet);\n"
+                )
+        else:
+            args = map(lambda field: field.get_handle_type() + field.name, packet.fields)
+            args = ", ".join(args)
+            if args:
+                args = ", " + args
+
+            if packet.handle_per_conn:
+                output.write(f"void {handle_fn_name}(connection *pc{args});\n")
+            else:
+                output.write(f"void {handle_fn_name}(player *pplayer{args});\n")
 
 
 def write_server_source(packets: list[Packet], output: io.TextIOWrapper) -> None:
