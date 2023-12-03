@@ -11,10 +11,11 @@
 #     have received  a copy of the GNU  General Public License along
 #          with Freeciv21. If not, see https://www.gnu.org/licenses/.
 
-import sys
+import argparse
 import os
-import string
 import re
+import string
+import sys
 
 # The following parameters change the amount of output.
 
@@ -41,11 +42,6 @@ fold_bool_into_header = 1
 lazy_overwrite = 0
 
 
-def verbose(s):
-    if "-v" in sys.argv:
-        print(s)
-
-
 def prefix(prefix, string):
     lines = string.split("\n")
     lines = map(lambda x, prefix=prefix: prefix + x, lines)
@@ -67,7 +63,6 @@ def write_disclaimer(f):
 
 
 def fc_open(name):
-    verbose("writing %s" % name)
     f = open(name, "w")
     write_disclaimer(f)
     return f
@@ -2014,12 +2009,8 @@ def strip_c_comment(s):
 # various files.
 
 
-def main():
+def main(input_name, mode, header, source):
     # parsing input
-    src_dir = os.path.dirname(sys.argv[0])
-    src_root = src_dir + "/.."
-    input_name = src_dir + "/networking/packets.def"
-
     content = open(input_name).read()
     content = strip_c_comment(content)
     lines = content.split("\n")
@@ -2043,14 +2034,12 @@ def main():
 
     # parsing finished
 
-    # writing packets_gen.h
-    output_h_name = sys.argv[1]
-
-    if output_h_name != "":
+    if mode == "common":
+        # writing packets_gen.h
         if lazy_overwrite:
-            output_h = fc_open(output_h_name + ".tmp")
+            output_h = fc_open(header + ".tmp")
         else:
-            output_h = fc_open(output_h_name)
+            output_h = fc_open(header)
 
         output_h.write(
             """
@@ -2086,13 +2075,11 @@ void delta_stats_reset(void);
         )
         output_h.close()
 
-    # writing packets_gen.c
-    output_c_name = sys.argv[2]
-    if output_c_name != "":
+        # writing packets_gen.cpp
         if lazy_overwrite:
-            output_c = fc_open(output_c_name + ".tmp")
+            output_c = fc_open(source + ".tmp")
         else:
-            output_c = fc_open(output_c_name)
+            output_c = fc_open(source)
 
         output_c.write(
             """
@@ -2173,8 +2160,9 @@ static int stats_total_sent;
                     open(i, "w").write(new)
                 os.remove(i + ".tmp")
 
-    if sys.argv[5] != "":
-        f = fc_open(sys.argv[5])
+    elif mode == "server":
+        # Writing hand_gen.h
+        f = fc_open(header)
         f.write(
             """
 #ifndef FC__HAND_GEN_H
@@ -2233,8 +2221,9 @@ bool server_handle_packet(enum packet_type type, const void *packet,
         )
         f.close()
 
-    if sys.argv[3] != "":
-        f = fc_open(sys.argv[3])
+    if mode == "client":
+        # Writing packhand_gen.h
+        f = fc_open(header)
         f.write(
             """
 #ifndef FC__PACKHAND_GEN_H
@@ -2277,8 +2266,9 @@ bool client_handle_packet(enum packet_type type, const void *packet);
         )
         f.close()
 
-    if sys.argv[6] != "":
-        f = fc_open(sys.argv[6])
+    if mode == "server":
+        # Writing packhand_gen.cpp
+        f = fc_open(source)
         f.write(
             """
 
@@ -2344,8 +2334,9 @@ bool server_handle_packet(enum packet_type type, const void *packet,
         )
         f.close()
 
-    if sys.argv[4] != "":
-        f = fc_open(sys.argv[4])
+    if mode == "client":
+        # Writing packhand_gen.cpp
+        f = fc_open(source)
         f.write(
             """
 
@@ -2404,4 +2395,16 @@ bool client_handle_packet(enum packet_type type, const void *packet)
         f.close()
 
 
-main()
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--mode",
+        choices=("common", "client", "server"),
+        help="What to generate (common, client, or server code)",
+    )
+    parser.add_argument("packets", help="File with packet definitions")
+    parser.add_argument("header", help="Path to the header file to produce")
+    parser.add_argument("source", help="Path to the source file to produce")
+    args = parser.parse_args()
+
+    main(args.packets, args.mode, args.header, args.source)
