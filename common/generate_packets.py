@@ -1155,9 +1155,7 @@ static char *stats_%(name)s_names[] = {%(names)s};
             delta_body1 = ""
             body1 = ""
             for field in self.fields:
-                body1 = body1 + prefix("  ", field.get_get(0)) + "\n"
-            if not body1:
-                body1 = "  real_packet->__dummy = 0xff;"
+                body1 += prefix("  ", field.get_get(0)) + "\n"
             body2 = ""
         body1 = body1 + "\n"
 
@@ -1451,14 +1449,12 @@ class Packet:
     # Returns a code fragment which contains the struct for this packet.
 
     def get_struct(self):
-        intro = "struct %(name)s {\n" % self.__dict__
+        intro = f"struct {self.name} {{\n"
         extro = "};\n\n"
 
         body = ""
         for field in self.key_fields + self.other_fields:
-            body = body + "  %s;\n" % field.get_declar()
-        if not body:
-            body = "  char __dummy;			/* to avoid malloc(0); */\n"
+            body += f"  {field.get_declar()};\n"
         return intro + body + extro
 
     # '''
