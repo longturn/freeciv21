@@ -2189,31 +2189,29 @@ bool client_handle_packet(enum packet_type type, const void *packet)
             continue
         if packet.no_handle:
             continue
-        a = packet.name[len("packet_") :]
-        c = "((const struct %s *)packet)->" % packet.name
-        d = "(static_cast<const struct {0}*>(packet))".format(packet.name)
-        b = []
-        for x in packet.fields:
-            y = "%s%s" % (c, x.name)
-            if x.dataio_type == "worklist":
-                y = "&" + y
-            b.append(y)
-        b = ",\n      ".join(b)
-        if b:
-            b = "\n      " + b
+
+        packet_cast = f"static_cast<const {packet.name} *>(packet)"
 
         if packet.handle_via_packet:
-            args = d
+            args = packet_cast
         else:
-            args = b
+            # static_cast(packet)->a, static_cast(packet)->b, ...
+            args = []
+            for field in packet.fields:
+                arg = packet_cast + "->" + field.name
+                if field.dataio_type == "worklist":
+                    arg = "&" + arg  # Take address
+                args.append(arg)
+            args = ",\n      ".join(args)
+            if args:
+                args = "\n      " + args
 
         output.write(
-            """  case %s:
-    handle_%s(%s);
+            f"""  case {packet.type}:
+    handle_{packet.short_name()}({args});
     return true;
 
 """
-            % (packet.type, a, args)
         )
     output.write(
         """  default:
