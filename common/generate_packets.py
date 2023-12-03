@@ -57,15 +57,11 @@ def get_choices(all_caps):
     return [list(it.compress(all_caps, selection)) for selection in caps]
 
 
-# A simple container for a type alias
-Type = namedtuple("Type", ["alias", "dest"])
-
-
-def parse_fields(line: str, types: list[Type]) -> list:  # TODO list[Field]
+def parse_fields(line: str, aliases: typing.Mapping[str, str]) -> list:  # TODO list[Field]
     """
     Parses a line of the form "COORD x, y; flags" and returns a list of Field
-    objects. types is a list of Type objects which are used to dereference type
-    names.
+    objects. `aliases` is a map of type name: actual type which are used to
+    dereference type names.
     """
 
     if not ";" in line:
@@ -80,16 +76,8 @@ def parse_fields(line: str, types: list[Type]) -> list:  # TODO list[Field]
     # Split x, y
     field_names = list(map(str.strip, field_names.split(sep=",")))
 
-    # analyze type
-    while 1:
-        found = 0
-        for i in types:
-            if i.alias == type_name:
-                type_name = i.dest
-                found = 1
-                break
-        if not found:
-            break
+    # Resolve type
+    type_name = aliases.get(type_name, type_name)
 
     typeinfo = {}
     match = re.search(r"^(.*)\((.*)\)$", type_name)
@@ -1247,12 +1235,11 @@ class Packet:
     Class representing a packet. A packet contains a list of fields.
     """
 
-    def __init__(self, lines: list[str], types: list[Type]):
+    def __init__(self, lines: list[str], aliases: typing.Mapping[str, str]):
         """
         Parses a packet definition from the provided lines.
         """
 
-        self.types = types
         self.log_macro = use_log_macro
         self.gen_stats = generate_stats
         self.gen_log = generate_logs
@@ -1354,7 +1341,7 @@ class Packet:
 
         self.fields = []
         for i in lines:
-            self.fields = self.fields + parse_fields(i, types)
+            self.fields = self.fields + parse_fields(i, aliases)
         self.key_fields = list(filter(lambda x: x.is_key, self.fields))
         self.other_fields = list(filter(lambda x: not x.is_key, self.fields))
         self.bits = len(self.other_fields)
@@ -1921,22 +1908,27 @@ def parse_packet_definitions(content: str) -> str:
     content = re.sub(r"//.*\n", "\n", content)  # C++-style
     content = re.sub(r"\s+\n", "\n", content).strip()  # Empty lines
 
-    # Parse types
+    # Parse type aliases
     lines = content.splitlines()
-    remaining_lines = []
-    types = []
+    remaining_lines: list[str] = []
+    aliases: typing.Mapping[str, str] = {}
     for line in lines:
         match = re.search(r"^type\s+(\S+)\s*=\s*(.+)\s*$", line)
         if match:
-            types.append(Type(match.group(1), match.group(2)))
+            aliases[match.group(1)] = match.group(2)
         else:
             remaining_lines.append(line)
+
+    # Simplify aliases
+    for key in aliases:
+        while aliases[key] in aliases:
+            aliases[key] = aliases[aliases[key]]
 
     # Parse packets
     packets = []
     while remaining_lines:
         index = remaining_lines.index("end")
-        packets.append(Packet(remaining_lines[:index], types))
+        packets.append(Packet(remaining_lines[:index], aliases))
         remaining_lines = remaining_lines[index + 1 :]
 
     return packets
