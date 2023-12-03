@@ -1875,36 +1875,37 @@ def get_packet_handlers_fill_capability(packets: list[Packet]) -> str:
     return intro + body + extro
 
 
-# Returns a code fragment which is the declartion of
-# "enum packet_type".
+def get_enum_packet(packets: list[Packet]) -> str:
+    """
+    Returns a code fragment which is the declartion of "enum packet_type".
+    """
 
-
-def get_enum_packet(packets):
     intro = "enum packet_type {\n"
 
     mapping = {}
-    for p in packets:
-        if p.type_number in mapping:
-            print(p.name, mapping[p.type_number].name)
-            assert 0
-        mapping[p.type_number] = p
+    for packet in packets:
+        assert (
+            packet.type_number not in mapping
+        ), f"same number: {packet.name}/{mapping[packet.type_number].name}"
+        mapping[packet.type_number] = packet
     msorted = list(mapping.keys())
     msorted.sort()
 
     last = -1
     body = ""
-    for i in msorted:
-        p = mapping[i]
-        if i != last + 1:
-            line = "  %s = %d," % (p.type, i)
+    for index in msorted:
+        packet = mapping[index]
+        if index != last + 1:
+            line = f"  {packet.type} = {index},"
         else:
-            line = "  %s," % (p.type)
+            line = f"  {packet.type},"
 
-        if (i % 10) == 0:
-            line = "%-40s /* %d */" % (line, i)
-        body = body + line + "\n"
+        if index % 10 == 0:
+            line = f"{line:40s} /* {index} */"
 
-        last = i
+        body += line + "\n"
+
+        last = index
     extro = """
   PACKET_LAST  /* leave this last */
 };
