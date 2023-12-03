@@ -20,12 +20,10 @@ add_custom_command(
   COMMAND
     ${Python3_EXECUTABLE}
     ${CMAKE_SOURCE_DIR}/common/generate_packets.py
-    "" # common/packets_gen.h
-    "" # common/packets_gen.c
+    ${CMAKE_SOURCE_DIR}/common/networking/packets.def
+    --mode client
     ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.h
     ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.cpp
-    "" # server/hand_gen.h
-    "" # server/hand_gen.c
   VERBATIM
   DEPENDS
     ${CMAKE_SOURCE_DIR}/common/generate_packets.py
