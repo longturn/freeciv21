@@ -173,6 +173,24 @@ class Field:
     and some other attributes.
     """
 
+    name: str
+    dataio_type: str
+    struct_type: str
+
+    float_factor: int
+    diff: bool
+
+    is_array: int
+    array_size_d: int
+    array_size_o: int
+    array_size_u: int
+    array_size1_d: int
+    array_size1_o: int
+    array_size1_u: int
+    array_size2_d: int
+    array_size2_o: int
+    array_size2_u: int
+
     def __init__(self, fieldinfo, typeinfo, flaginfo):
         for i in fieldinfo, typeinfo, flaginfo:
             self.__dict__.update(i)
@@ -477,7 +495,7 @@ class Field:
     }}"""
         elif self.struct_type == "float":
             if self.is_array == 2:
-                c = f"""if (!DIO_GET({self.dataio_type}, &din, &field_addr, &real_packet->{self.name}[i][j], {float_factor})) {{
+                c = f"""if (!DIO_GET({self.dataio_type}, &din, &field_addr, &real_packet->{self.name}[i][j], {self.float_factor})) {{
       RECEIVE_PACKET_FIELD_ERROR({self.name});
     }}"""
             else:
