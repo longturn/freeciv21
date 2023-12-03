@@ -61,37 +61,39 @@ def get_choices(all_caps):
 Type = namedtuple("Type", ["alias", "dest"])
 
 
-# Parses a line of the form "COORD x, y; key" and returns a list of
-# Field objects. types is a list of Type objects which are used to
-# dereference type names.
+def parse_fields(line: str, types: list[Type]) -> list:  # TODO list[Field]
+    """
+    Parses a line of the form "COORD x, y; flags" and returns a list of Field
+    objects. types is a list of Type objects which are used to dereference type
+    names.
+    """
 
+    if not ";" in line:
+        raise ValueError(f"Missing ; in {line}")
 
-def parse_fields(string, types):
-    match = re.search(r"^\s*(\S+(?:\(.*\))?)\s+([^;()]*)\s*;\s*(.*)\s*$", string)
-    assert match, string
-    arr = []
-    for i in match.groups():
-        if i:
-            arr.append(i.strip())
-        else:
-            arr.append("")
-    kind, fields_, flags = arr
-    # print arr
+    # Split COORD x, y from flags
+    declaration, flags = map(str.strip, line.split(sep=";", maxsplit=1))
+    # Split flags
+    flags = list(map(str.strip, flags.split(sep=","))) if flags else []
+    # Split COORD from x, y
+    type_name, field_names = declaration.split(maxsplit=1)
+    # Split x, y
+    field_names = list(map(str.strip, field_names.split(sep=",")))
 
     # analyze type
     while 1:
         found = 0
         for i in types:
-            if i.alias == kind:
-                kind = i.dest
+            if i.alias == type_name:
+                type_name = i.dest
                 found = 1
                 break
         if not found:
             break
 
     typeinfo = {}
-    match = re.search(r"^(.*)\((.*)\)$", kind)
-    assert match, repr(kind)
+    match = re.search(r"^(.*)\((.*)\)$", type_name)
+    assert match, repr(type_name)
     typeinfo["dataio_type"], typeinfo["struct_type"] = match.groups()
 
     if typeinfo["struct_type"] == "float":
@@ -102,8 +104,7 @@ def parse_fields(string, types):
 
     # analyze fields
     fields = []
-    for i in fields_.split(","):
-        i = i.strip()
+    for i in field_names:
         t = {}
 
         def f(x):
@@ -141,18 +142,16 @@ def parse_fields(string, types):
 
     # analyze flags
     flaginfo = {}
-    arr = list(item.strip() for item in flags.split(","))
-    arr = list(filter(lambda x: len(x) > 0, arr))
-    flaginfo["is_key"] = "key" in arr
+    flaginfo["is_key"] = "key" in flags
     if flaginfo["is_key"]:
-        arr.remove("key")
-    flaginfo["diff"] = "diff" in arr
+        flags.remove("key")
+    flaginfo["diff"] = "diff" in flags
     if flaginfo["diff"]:
-        arr.remove("diff")
+        flags.remove("diff")
     adds = []
     removes = []
     remaining = []
-    for i in arr:
+    for i in flags:
         match = re.search(r"^add-cap\((.*)\)$", i)
         if match:
             adds.append(match.group(1))
@@ -162,8 +161,8 @@ def parse_fields(string, types):
             removes.append(match.group(1))
             continue
         remaining.append(i)
-    arr = remaining
-    assert len(arr) == 0, repr(arr)
+    flags = remaining
+    assert len(flags) == 0, line
     assert len(adds) + len(removes) in [0, 1]
 
     if adds:
