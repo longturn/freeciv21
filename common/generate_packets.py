@@ -1987,6 +1987,40 @@ def get_enum_packet(packets):
     return intro + body + extro
 
 
+def parse_packet_definitions(content: str) -> str:
+    """
+    Parses the content of the packets.def file describing the network protocol.
+    Returns the list of packets.
+    """
+
+    # Remove comments
+    content = re.sub(r"/\*(.|\n)*?\*/", "", content)  # C-style
+    content = re.sub(r"#.*\n", "\n", content)  # Python-style
+    content = re.sub(r"//.*\n", "\n", content)  # C++-style
+    content = re.sub(r"\s+\n", "\n", content)  # Empty lines
+
+    # Parse types
+    lines = content.splitlines()
+    remaining_lines = []
+    types = []
+    for line in lines:
+        mo = re.search("^type\s+(\S+)\s*=\s*(.+)\s*$", line)
+        if mo:
+            types.append(Type(mo.group(1), mo.group(2)))
+        else:
+            remaining_lines.append(line)
+
+    # Parse packets
+    packets = []
+    while remaining_lines:
+        index = remaining_lines.index("end")
+        definition = remaining_lines[:index]
+        packets.append(Packet("\n".join(definition), types))
+        remaining_lines = remaining_lines[index + 1 :]
+
+    return packets
+
+
 # Main function. It reads and parses the input and generates the
 # various files.
 
@@ -1994,29 +2028,7 @@ def get_enum_packet(packets):
 def main(input_name, mode, header, source):
     # parsing input
     with open(input_name, encoding="utf-8") as f:
-        content = f.read()
-    # Remove comments
-    content = re.sub(r"/\*(.|\n)*?\*/", "", content)  # C-style
-    content = re.sub(r"#.*\n", "\n", content)  # Python-style
-    content = re.sub(r"//.*\n", "\n", content)  # C++-style
-    content = re.sub(r"\s+\n", "\n", content)  # Empty lines
-    lines = content.splitlines()
-    lines2 = []
-    types = []
-    for i in lines:
-        mo = re.search("^type\s+(\S+)\s*=\s*(.+)\s*$", i)
-        if mo:
-            types.append(Type(mo.group(1), mo.group(2)))
-        else:
-            lines2.append(i)
-
-    packets = []
-    for string in re.split("(?m)^end$", "\n".join(lines2)):
-        string = string.strip()
-        if string:
-            packets.append(Packet(string, types))
-
-    # parsing finished
+        packets = parse_packet_definitions(f.read())
 
     if mode == "common":
         # writing packets_gen.h
