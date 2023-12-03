@@ -431,7 +431,6 @@ class Field:
         if fold_bool_into_header and self.struct_type == "bool" and not self.is_array:
             return f"  real_packet->{self.name} = BV_ISSET(fields, {index});\n"
         get = indent("    ", get)
-        log_macro = packet.log_macro
         if packet.gen_log:
             f = f"    {packet.log_macro}(\"  got field '{self.name}'\");\n"
         else:
@@ -623,7 +622,7 @@ class Variant:
         if self.poscaps or self.negcaps:
 
             def f(cap):
-                return 'has_capability("%s", capability)' % (cap)
+                return f'has_capability("{cap}", capability)'
 
             t = list(map(lambda x, f=f: f(x), self.poscaps)) + list(
                 map(lambda x, f=f: "!" + f(x), self.negcaps)
@@ -651,7 +650,7 @@ class Variant:
         self.extra_send_args = ""
         self.extra_send_args2 = ""
         self.extra_send_args3 = ", ".join(
-            map(lambda x: "%s%s" % (x.get_handle_type(), x.name), self.fields)
+            map(lambda x: x.get_handle_type() + x.name, self.fields)
         )
         if self.extra_send_args3:
             self.extra_send_args3 = ", " + self.extra_send_args3
@@ -897,8 +896,7 @@ static char *stats_{self.name}_names[] = {{names}};
   }}
 """
         body = ""
-        for i in range(len(self.other_fields)):
-            field = self.other_fields[i]
+        for i, field in enumerate(self.other_fields):
             body = body + field.get_cmp_wrapper(i)
         if self.gen_log:
             fl = f'    {self.log_macro}("  no change -> discard");\n'
@@ -924,8 +922,7 @@ static char *stats_{self.name}_names[] = {{names}};
             body += field.get_put(1) + "\n"
         body += "\n"
 
-        for i in range(len(self.other_fields)):
-            field = self.other_fields[i]
+        for i, field in enumerate(self.other_fields):
             body += field.get_put_wrapper(self, i, 1)
         body += """
   *old = *real_packet;
@@ -1022,8 +1019,7 @@ static char *stats_{self.name}_names[] = {{names}};
   }}
 
 """
-        for i in range(len(self.other_fields)):
-            field = self.other_fields[i]
+        for i, field in enumerate(self.other_fields):
             body = body + field.get_get_wrapper(self, i, 1)
 
         extro = f"""
@@ -1183,7 +1179,7 @@ class Packet:
         self.extra_send_args = ""
         self.extra_send_args2 = ""
         self.extra_send_args3 = ", ".join(
-            map(lambda x: "%s%s" % (x.get_handle_type(), x.name), self.fields)
+            map(lambda x: x.get_handle_type() + x.name, self.fields)
         )
         if self.extra_send_args3:
             self.extra_send_args3 = ", " + self.extra_send_args3
@@ -1237,7 +1233,7 @@ class Packet:
             no = i + 100
 
             self.variants.append(
-                Variant(poscaps, negcaps, "%s_%d" % (self.name, no), fields, self, no)
+                Variant(poscaps, negcaps, f"{self.name}_{no}", fields, self, no)
             )
 
     def short_name(self):
@@ -1446,7 +1442,7 @@ def get_packet_name(packets):
     last = -1
     body = ""
     for n in msorted:
-        for i in range(last + 1, n):
+        for _ in range(last + 1, n):
             body = body + '    "unknown",\n'
         body = body + f'    "{mapping[n].type}",\n'
         last = n
@@ -1480,7 +1476,7 @@ def get_packet_has_game_info_flag(packets):
     last = -1
     body = ""
     for n in msorted:
-        for i in range(last + 1, n):
+        for _ in range(last + 1, n):
             body += "    false,\n"
         if mapping[n].is_info != "game":
             body += f"    false, /* {mapping[n].type} */\n"
@@ -1513,7 +1509,7 @@ def get_packet_handlers_fill_initial(packets):
                 all_caps[f.add_cap] = 1
             if f.remove_cap:
                 all_caps[f.remove_cap] = 1
-    for cap in all_caps.keys():
+    for cap in all_caps:
         intro += f"""  fc_assert_msg(has_capability("{cap}", our_capability),
                 "Packets have support for unknown '{cap}' capability!");
 """
