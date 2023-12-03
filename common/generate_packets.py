@@ -2083,12 +2083,12 @@ def write_common_source(packets: list[Packet], output: io.TextIOWrapper) -> None
         """
 static genhash_val_t hash_const(const void *vkey)
 {
-return 0;
+  return 0;
 }
 
 static bool cmp_const(const void *vkey1, const void *vkey2)
 {
-return true;
+  return true;
 }
 """
     )
@@ -2208,16 +2208,16 @@ bool client_handle_packet(enum packet_type type, const void *packet)
 
         output.write(
             """  case %s:
-handle_%s(%s);
-return true;
+    handle_%s(%s);
+    return true;
 
 """
             % (p.type, a, args)
         )
     output.write(
         """  default:
-return false;
-}
+    return false;
+  }
 }
 """
     )
@@ -2243,7 +2243,7 @@ def write_server_header(packets: list[Packet], output: io.TextIOWrapper) -> None
 struct connection;
 
 bool server_handle_packet(enum packet_type type, const void *packet,
-                        struct player *pplayer, struct connection *pconn);
+                          struct player *pplayer, struct connection *pconn);
 
 """
     )
@@ -2331,16 +2331,16 @@ bool server_handle_packet(enum packet_type type, const void *packet,
 
         output.write(
             """  case %s:
-handle_%s(%s);
-return true;
+    handle_%s(%s);
+    return true;
 
 """
             % (p.type, a, args)
         )
     output.write(
         """  default:
-return false;
-}
+    return false;
+  }
 }
 """
     )
