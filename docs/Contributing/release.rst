@@ -53,6 +53,11 @@ These are the general steps to prepare and finalize a release:
    created PR's.
 #. While inside the ``Release Update of AutoRevision.txt`` PR, the release manager will enable an automatic
    rebase and merge.
+#. The release manager will open an issue titled ``Review workarounds after <version> release`` with the following text:
+
+      We should review the workarounds in the source code and check that they are still needed. Some
+      workarounds are documented here: :doc:`Workarounds`.
+
 #. When all the CI actions are complete, the release manager will make a post in the ``#news-channel`` on the
    Longturn.net Discord server.
 #. The release manager will download the Windows i686 and x86_64 installer packages and use their Microsoft
