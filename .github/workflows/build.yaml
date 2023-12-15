@@ -256,6 +256,7 @@ jobs:
           mkdir staging
           mv Freeciv21.app staging
           create-dmg \
+            --hdiutil-verbose \
             --volname "Freeciv21 Installer" \
             --volicon "client.icns" \
             --window-pos 200 120 \
