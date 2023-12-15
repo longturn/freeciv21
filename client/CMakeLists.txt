@@ -158,7 +158,6 @@ target_link_libraries(freeciv21-client PRIVATE tolua)
 
 target_link_libraries(freeciv21-client PRIVATE Qt5::Widgets)
 target_link_libraries(freeciv21-client PRIVATE Qt5::Svg)
-target_link_libraries(freeciv21-client PRIVATE ${SDL2_MIXER_LIBRARIES} ${SDL2_LIBRARY})
 
 if(NOT EMSCRIPTEN)
   target_sources(freeciv21-client PRIVATE servers.cpp)
@@ -168,13 +167,15 @@ if (AUDIO_SDL)
   target_sources(freeciv21-client PRIVATE audio/audio_sdl.cpp)
   if (NOT EMSCRIPTEN)
     # SDL comes with the -s option on emscripten
-    target_include_directories(freeciv21-client PRIVATE ${SDL2_INCLUDE_DIR})
+    # See https://github.com/microsoft/vcpkg/blob/2023.12.12/ports/sdl2/usage
+    target_link_libraries(freeciv21-client
+      PRIVATE $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>)
+    target_link_libraries(freeciv21-client PRIVATE ${SDL2_MIXER_LIBRARIES})
     target_include_directories(freeciv21-client PRIVATE ${SDL2_MIXER_INCLUDE_DIR})
   endif()
 endif()
 
-if(APPLE)
-  target_link_libraries(freeciv21-client PRIVATE "-framework AudioUnit" "-framework CoreAudio" "-framework ForceFeedback" "-framework AudioToolbox")
+if (APPLE)
   qt5_import_plugins(freeciv21-client INCLUDE Qt5::QCocoaIntegrationPlugin Qt5::QSvgPlugin)
 endif()
 
