@@ -25,7 +25,8 @@
       "inherits": "fullrelease",
       "installDir": ".install",
       "cacheVariables": {
-        "FREECIV_USE_VCPKG": "ON"
+        "FREECIV_USE_VCPKG": "ON",
+        "CMAKE_FIND_PACKAGE_PREFER_CONFIG": "ON"
       }
     },
     {
