@@ -165,13 +165,12 @@ endif()
 
 if (AUDIO_SDL)
   target_sources(freeciv21-client PRIVATE audio/audio_sdl.cpp)
+  # SDL comes with the -s option on emscripten
   if (NOT EMSCRIPTEN)
-    # SDL comes with the -s option on emscripten
     # See https://github.com/microsoft/vcpkg/blob/2023.12.12/ports/sdl2/usage
     target_link_libraries(freeciv21-client
       PRIVATE $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>)
-    target_link_libraries(freeciv21-client PRIVATE ${SDL2_MIXER_LIBRARIES})
-    target_include_directories(freeciv21-client PRIVATE ${SDL2_MIXER_INCLUDE_DIR})
+    target_link_libraries(freeciv21-client PRIVATE SDL2_mixer::SDL2_mixer)
   endif()
 endif()
 
