@@ -67,16 +67,14 @@ endif()
 # SDL2 for audio
 find_package(SDL2)
 find_package(SDL2_mixer)
-if (SDL2_MIXER_LIBRARIES AND SDL2_FOUND)
+if (SDL2_MIXER_FOUND AND SDL2_FOUND)
   set(AUDIO_SDL TRUE)
 endif()
 if (NOT SDL2_FOUND)
   message(STATUS "SDL2 not found - audio support disabled")
 endif()
-if (NOT SDL2_MIXER_LIBRARIES)
+if (NOT SDL2_MIXER_FOUND)
   message(STATUS "SDL2_mixer not found - audio support disabled")
-  set(SDL2_MIXER_LIBRARIES "")
-  set(SDL2_MIXER_INCLUDE_DIR "")
 endif()
 
 # Lua
