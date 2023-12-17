@@ -80,6 +80,13 @@ FIND_PACKAGE_HANDLE_STANDARD_ARGS(SDL2_mixer
                                   REQUIRED_VARS SDL2_MIXER_LIBRARIES SDL2_MIXER_INCLUDE_DIRS
                                   VERSION_VAR SDL2_MIXER_VERSION_STRING)
 
+if (SDL2_MIXER_FOUND)
+  add_library(SDL2_mixer::SDL2_mixer UNKNOWN IMPORTED)
+  set_target_properties(SDL2_mixer::SDL2_mixer PROPERTIES
+                        IMPORTED_LOCATION "${SDL2_MIXER_LIBRARIES}"
+                        INTERFACE_INCLUDE_DIRECTORIES "${SDL2_MIXER_INCLUDE_DIR}")
+endif()
+
 # for backward compatiblity
 set(SDLMIXER_LIBRARY ${SDL2_MIXER_LIBRARIES})
 set(SDLMIXER_INCLUDE_DIR ${SDL2_MIXER_INCLUDE_DIRS})
