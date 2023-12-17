@@ -28,6 +28,10 @@ These are the general steps to prepare and finalize a release:
    post to the ``#releases-project`` channel in the ``LT.DEV`` section on the Longturn Discord server. The
    main purpose of the post is to alert the developers of a pending cadence threshold and to gauge if we
    need to delay in any way or if we are good to proceed as normal.
+#. A release manager or another regular contributor will update the ``vcpkgGitCommitId`` value in the CI/CD
+   build file (:file:`.github/workflows/build.yaml`). Grab the Commit ID of the most recent release from
+   https://github.com/microsoft/vcpkg/releases. Commit and push a PR. Ensure all of the CI/CD Action runners
+   complete successfully.
 #. When it is time, the release manager will finalize the release notes and ask for an editorial review in the
    ``#releases-project`` channel. Updates are made as per review.
 #. If the release will be the :strong:`first release candidate` towards a stable release, the release manager
@@ -56,7 +60,7 @@ These are the general steps to prepare and finalize a release:
 #. The release manager will open an issue titled ``Review workarounds after <version> release`` with the following text:
 
       We should review the workarounds in the source code and check that they are still needed. Some
-      workarounds are documented here: :doc:`Workarounds`.
+      workarounds are documented here: :doc:`workarounds`.
 
 #. When all the CI actions are complete, the release manager will make a post in the ``#news-channel`` on the
    Longturn.net Discord server.
