@@ -207,7 +207,6 @@ jobs:
     runs-on: macos-latest
     needs: clang-format
     env:
-      MACOSX_DEPLOYMENT_TARGET: 10.15
       VCPKG_BUILD_TYPE: release
     steps:
       - uses: actions/checkout@v3
