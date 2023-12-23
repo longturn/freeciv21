@@ -163,7 +163,10 @@ if (AUDIO_SDL)
     # See https://github.com/microsoft/vcpkg/blob/2023.12.12/ports/sdl2/usage
     target_link_libraries(freeciv21-client
       PRIVATE $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>)
-    target_link_libraries(freeciv21-client PRIVATE SDL2_mixer::SDL2_mixer)
+    target_link_libraries(freeciv21-client
+      PRIVATE $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,
+                   SDL2_mixer::SDL2_mixer,
+                   SDL2_mixer::SDL2_mixer-static>)
   endif()
 endif()
 
