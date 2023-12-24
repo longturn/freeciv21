@@ -87,9 +87,12 @@ national_budget_dialog::national_budget_dialog(QWidget *parent)
  */
 void national_budget_dialog::refresh()
 {
-  const int max = client.conn.playing
-                      ? get_player_bonus(client.conn.playing, EFT_MAX_RATES)
-                      : 100;
+  if (!client.conn.playing) {
+    // The budget dialog doesn't make sense without a player
+    return;
+  }
+
+  const int max = get_player_bonus(client.conn.playing, EFT_MAX_RATES);
 
   // Trans: Government - max rate (of taxes) x%
   m_info->setText(QString(_("%1 - max rate: %2%"))
