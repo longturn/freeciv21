@@ -67,7 +67,7 @@ bool vision_reveal_tiles(struct vision *vision, bool reveal_tiles)
 struct vision_site *vision_site_new(int identity, struct tile *location,
                                     struct player *owner)
 {
-  vision_site *psite = new vision_site[1]();
+  vision_site *psite = new vision_site();
 
   psite->identity = identity;
   psite->location = location;
