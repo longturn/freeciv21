@@ -16,8 +16,6 @@
 
 // utility
 #include "shared.h"
-#include "support.h"
-#include "timing.h"
 
 // common
 #include "city.h"
@@ -1918,15 +1916,13 @@ static int min_food_surplus_for_fastest_growth(struct cm_state *state)
   int food_needed = city_granary_size(city_size) - pcity->food_stock;
   int min_turns;
 
-  city_map_iterate(city_radius_sq, cindex, x, y)
+  city_map_iterate_without_index(city_radius_sq, x, y)
   {
     struct tile *ptile = city_map_to_tile(pcity->tile, city_radius_sq, x, y);
-    if (!ptile) {
+    if (!ptile || !city_can_work_tile(pcity, ptile)) {
       continue;
     }
-    if (is_free_worked_index(cindex)) {
-      max_surplus += city_tile_output(pcity, ptile, is_celebrating, O_FOOD);
-    }
+    max_surplus += city_tile_output(pcity, ptile, is_celebrating, O_FOOD);
   }
   city_map_iterate_end;
 
@@ -1973,13 +1969,14 @@ static void begin_search(struct cm_state *state,
 
   // copy the parameter and sort the main lattice by it
   cm_copy_parameter(&state->parameter, parameter);
-  sort_lattice_by_fitness(state, &state->lattice);
 
   if (parameter->max_growth) {
     state->parameter.minimal_surplus[O_FOOD] =
         min_food_surplus_for_fastest_growth(state);
+    state->parameter.factor[O_FOOD] = 0;
   }
 
+  sort_lattice_by_fitness(state, &state->lattice);
   init_min_production(state);
 
   // clear out the old solution
