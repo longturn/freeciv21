@@ -119,6 +119,7 @@ target_sources(
   tileset/layer.cpp
   tileset/sprite.cpp
   tileset/tilespec.cpp
+  utils/collated_sort_proxy.cpp
   utils/colorizer.cpp
   utils/improvement_seller.cpp
   utils/unit_quick_menu.cpp
