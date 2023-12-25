@@ -57,6 +57,7 @@ int main(int argc, char **argv)
 {
   QApplication app(argc, argv);
   QCoreApplication::setApplicationVersion(freeciv21_version());
+  app.setDesktopFileName(QStringLiteral("net.longturn.freeciv21.ruledit"));
 
   log_init();
 
