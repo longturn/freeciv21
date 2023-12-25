@@ -310,6 +310,7 @@ int client_main(int argc, char *argv[])
 #endif
   QApplication app(argc, argv);
   QCoreApplication::setApplicationVersion(freeciv21_version());
+  app.setDesktopFileName(QStringLiteral("net.longturn.freeciv21"));
 
   i_am_client(); // Tell to libfreeciv that we are client
 
