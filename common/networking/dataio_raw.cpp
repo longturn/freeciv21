@@ -901,10 +901,12 @@ bool dio_get_requirement_raw(struct data_in *din, struct requirement *preq)
     return false;
   }
 
-  /*
-   * FIXME: the value returned by req_from_values() should be checked!
-   */
   *preq = req_from_values(type, range, survives, present, quiet, value);
+  if (preq->source.kind == universals_n_invalid()) {
+    // Keep bad requirements but make sure we never touch them.
+    qWarning() << "The server sent an invalid or unknown requirement.";
+    preq->source.kind = VUT_NONE;
+  }
 
   return true;
 }
