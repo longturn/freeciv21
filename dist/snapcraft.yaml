@@ -79,15 +79,15 @@ parts:
       - libsdl2-mixer-2.0-0
       - libsqlite3-0
     parse-info:
-      - usr/share/metainfo/net.longturn.freeciv21.client.metainfo.xml
+      - usr/share/metainfo/net.longturn.freeciv21.metainfo.xml
       - usr/share/metainfo/net.longturn.freeciv21.modpack.metainfo.xml
       - usr/share/metainfo/net.longturn.freeciv21.ruledit.metainfo.xml
       - usr/share/metainfo/net.longturn.freeciv21.server.metainfo.xml
 
 apps:
   freeciv21-client:
-    common-id: net.longturn.freeciv21.client
-    desktop: usr/share/applications/net.longturn.freeciv21.client.desktop
+    common-id: net.longturn.freeciv21
+    desktop: usr/share/applications/net.longturn.freeciv21.desktop
     command: usr/bin/freeciv21-client
     extensions:
       - kde-neon

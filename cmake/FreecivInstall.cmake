@@ -171,21 +171,21 @@ if(UNIX AND NOT APPLE)
 
   # Install MetaInfo and Desktop files for the applications asked for at configure
   if(FREECIV_ENABLE_CLIENT)
-    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.client.desktop.in
-                   net.longturn.freeciv21.client.desktop
+    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.desktop.in
+                   net.longturn.freeciv21.desktop
                    @ONLY NEWLINE_STYLE UNIX)
-    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.client.metainfo.xml.in
-                   net.longturn.freeciv21.client.metainfo.xml
+    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.metainfo.xml.in
+                   net.longturn.freeciv21.metainfo.xml
                    @ONLY NEWLINE_STYLE UNIX)
     install(
       FILES
-      ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.client.desktop
+      ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.desktop
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
       COMPONENT freeciv21
     )
     install(
       FILES
-      ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.client.metainfo.xml
+      ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.metainfo.xml
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
       COMPONENT freeciv21
     )
