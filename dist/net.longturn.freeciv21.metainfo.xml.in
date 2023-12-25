@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-    <id type="desktop">net.longturn.freeciv21.client</id>
+    <id type="desktop">net.longturn.freeciv21</id>
     <metadata_license>CC0</metadata_license>
     <project_license>GPL-3.0+</project_license>
     <name>Freeciv21 Client</name>
@@ -11,7 +11,7 @@
       <p>Freeciv21 takes its roots in the well-known FOSS game Freeciv and extends it for more fun, with a revived focus on competitive multiplayer environments. Players can choose from over 500 nations and can play against the computer or other people in an active online community.</p>
       <p>The code is maintained by the team over at Longturn.net and is based on the QT framework. The game supports both hex and square tiles and is easily modified to create custom rules.</p>
     </description>
-    <launchable type="desktop-id">net.longturn.freeciv21.client.desktop</launchable>
+    <launchable type="desktop-id">net.longturn.freeciv21.desktop</launchable>
     <icon type="remote">https://raw.githubusercontent.com/longturn/freeciv21/master/data/icons/128x128/freeciv21-client.png</icon>
     <url type="homepage">https://longturn.net/</url>
     <url type="bugtracker">https://github.com/longturn/freeciv21/issues</url>
