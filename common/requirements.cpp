@@ -339,26 +339,26 @@ void universal_value_from_str(struct universal *source, const char *value)
     break;
   case VUT_CITYTILE:
     source->value.citytile = citytile_type_by_name(value, fc_strcasecmp);
-    if (source->value.citytile != CITYT_LAST) {
+    if (citytile_type_is_valid(source->value.citytile)) {
       return;
     }
     break;
   case VUT_CITYSTATUS:
     source->value.citystatus = citystatus_type_by_name(value, fc_strcasecmp);
-    if (source->value.citystatus != CITYS_LAST) {
+    if (citystatus_type_is_valid(source->value.citystatus)) {
       return;
     }
     break;
   case VUT_VISIONLAYER:
     source->value.vlayer = vision_layer_by_name(value, fc_strcasecmp);
-    if (source->value.vlayer != V_COUNT) {
+    if (vision_layer_is_valid(source->value.vlayer)) {
       return;
     }
     break;
   case VUT_NINTEL:
     source->value.nintel =
         national_intelligence_by_name(value, fc_strcasecmp);
-    if (source->value.nintel != NI_COUNT) {
+    if (national_intelligence_is_valid(source->value.nintel)) {
       return;
     }
   case VUT_COUNT:
