@@ -59,6 +59,13 @@ int main(int argc, char **argv)
   QCoreApplication::setApplicationVersion(freeciv21_version());
   app.setDesktopFileName(QStringLiteral("net.longturn.freeciv21.ruledit"));
 
+  // Load window icons
+  QIcon::setThemeSearchPaths(get_data_dirs() + QIcon::themeSearchPaths());
+  QIcon::setFallbackThemeName(QIcon::themeName());
+  QIcon::setThemeName(QStringLiteral("icons"));
+
+  qApp->setWindowIcon(QIcon::fromTheme(QStringLiteral("freeciv21-client")));
+
   log_init();
 
   init_nls();

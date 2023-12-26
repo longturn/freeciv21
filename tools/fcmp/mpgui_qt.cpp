@@ -82,6 +82,13 @@ int main(int argc, char **argv)
   QCoreApplication::setApplicationVersion(freeciv21_version());
   app.setDesktopFileName(QStringLiteral("net.longturn.freeciv21.modpack"));
 
+  // Load window icons
+  QIcon::setThemeSearchPaths(get_data_dirs() + QIcon::themeSearchPaths());
+  QIcon::setFallbackThemeName(QIcon::themeName());
+  QIcon::setThemeName(QStringLiteral("icons"));
+
+  qApp->setWindowIcon(QIcon::fromTheme(QStringLiteral("freeciv21-modpack")));
+
   // Delegate option parsing to the common function.
   fcmp_parse_cmdline(app);
 

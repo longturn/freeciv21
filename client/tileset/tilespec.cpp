@@ -154,8 +154,6 @@ struct named_sprites {
       *treaty_thumb[2],   // 0=disagree, 1=agree
       *arrow[ARROW_LAST], // 0=right arrow, 1=plus, 2=minus
 
-      *icon,
-
       *events[E_COUNT],
 
       // The panel sprites for showing tax % allocations.
@@ -2555,8 +2553,6 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
       }
     }
   }
-
-  SET_SPRITE(icon, QStringLiteral("icon.freeciv"));
 
   for (i = 0; i < E_COUNT; i++) {
     const char *tag = get_event_tag(static_cast<event_type>(i));
@@ -5292,20 +5288,6 @@ const QPixmap *get_cursor_sprite(const struct tileset *t,
   *hot_x = t->sprites.cursor[cursor].hot_x;
   *hot_y = t->sprites.cursor[cursor].hot_y;
   return t->sprites.cursor[cursor].frame[frame];
-}
-
-/**
-   Return a sprite for the Freeciv21 icon.  Icons are used by the operating
-   system/window manager.  Usually Freeciv21 has to tell the OS what icon to
-   use.
-
-   Note that this function will return nullptr before the sprites are loaded.
-   The GUI code must be sure to call tileset_load_tiles before setting the
-   top-level icon.
- */
-const QPixmap *get_icon_sprite(const struct tileset *t)
-{
-  return t->sprites.icon;
 }
 
 /**

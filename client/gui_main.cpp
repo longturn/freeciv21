@@ -69,10 +69,16 @@ int main(int argc, char **argv) { return client_main(argc, argv); }
  */
 void ui_main()
 {
+  // Load window icons
+  QIcon::setThemeSearchPaths(get_data_dirs() + QIcon::themeSearchPaths());
+  QIcon::setFallbackThemeName(QIcon::themeName());
+  QIcon::setThemeName(QStringLiteral("icons"));
+
+  qApp->setWindowIcon(QIcon::fromTheme(QStringLiteral("freeciv21-client")));
+
   if (true) {
     tileset_init(tileset);
     tileset_load_tiles(tileset);
-    qApp->setWindowIcon(QIcon(*get_icon_sprite(tileset)));
     if (!load_theme(gui_options->gui_qt_default_theme_name)) {
       gui_clear_theme();
     }

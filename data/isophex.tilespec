@@ -160,7 +160,6 @@ files =
   "misc/space.spec",
   "misc/techs.spec",
   "misc/treaty.spec",
-  "misc/icons.spec",
   "misc/editor.spec",
   "isotrident/nuke.spec",
   "isotrident/cities.spec",
