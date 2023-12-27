@@ -117,6 +117,9 @@ jobs:
       - name: Build
         run: |
           cmake --build build
+      - name: Test
+        run: |
+          cmake --build build --target test
 
   windows:
     name: "Windows MSYS2 (gcc)"
@@ -157,6 +160,9 @@ jobs:
       - name: Build
         run: |
           cmake --build build
+      #- name: Test
+      #  run: |
+      #    cmake --build build --target test
       - name: Install
         run: |
           cmake --build build --target install
@@ -208,6 +214,8 @@ jobs:
          -DCMAKE_TOOLCHAIN_FILE="${{env.VCPKG_ROOT}}/scripts/buildsystems/vcpkg.cmake" -A x64 -T ClangCL
       - name: Building
         run: cmake --build build --config Debug
+      - name: Test
+        run: cmake --build build --target test
 
   os_x:
     name: "macOS"
@@ -240,6 +248,9 @@ jobs:
         with:
           configurePreset: 'fullrelease-macos'
           buildPreset: 'fullrelease-macos'
+      - name: Test
+        run: |
+          cmake --build build --target test
       - name: Split Branch Name
         env:
           BRANCH: ${{github.ref_name}}
@@ -319,6 +330,9 @@ jobs:
       - name: Build
         run: |
           cmake --build build
+      - name: Test
+        run: |
+          cmake --build build --target test
       - name: Install
         run: |
           DESTDIR=$PWD/build/install cmake --build build --target install
