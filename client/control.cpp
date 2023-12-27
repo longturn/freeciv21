@@ -2543,7 +2543,7 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
       unit_focus_set_and_select(qunit);
       maybe_goto = gui_options->keyboardless_goto;
     }
-  } else if (nullptr != pcity
+  } else if (qtype == SELECT_POPUP && nullptr != pcity
              && can_player_see_city_internals(client.conn.playing, pcity)) {
     // Otherwise use popups.
     popup_city_dialog(pcity);
