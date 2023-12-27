@@ -163,10 +163,6 @@ if(UNIX AND NOT APPLE)
     message(STATUS "CMAKE_INSTALL_PREFIX changed from the default to /usr.")
   endif()
 
-  install(FILES ${CMAKE_SOURCE_DIR}/data/icons/index.theme
-          DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/freeciv21/icons
-          COMPONENT freeciv21)
-
   # Install MetaInfo and Desktop files for the applications asked for at configure
   if(FREECIV_ENABLE_CLIENT)
     configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.desktop.in
@@ -187,10 +183,6 @@ if(UNIX AND NOT APPLE)
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
       COMPONENT freeciv21
     )
-    install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/icons
-            DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/freeciv21
-            COMPONENT freeciv21
-            FILES_MATCHING PATTERN "freeciv21-client.png")
 
     if(FREECIV_ENABLE_MANPAGES)
       install(
@@ -221,10 +213,6 @@ if(UNIX AND NOT APPLE)
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
       COMPONENT freeciv21
     )
-    install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/icons
-            DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/freeciv21
-            COMPONENT freeciv21
-            FILES_MATCHING PATTERN "freeciv21-server.png")
 
     if(FREECIV_ENABLE_MANPAGES)
       install(
@@ -258,10 +246,6 @@ if(UNIX AND NOT APPLE)
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
       COMPONENT freeciv21
     )
-    install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/icons
-            DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/freeciv21
-            COMPONENT freeciv21
-            FILES_MATCHING PATTERN "freeciv21-modpack.png")
 
     if(FREECIV_ENABLE_MANPAGES)
       install(
