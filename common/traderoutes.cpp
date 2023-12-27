@@ -449,23 +449,22 @@ int get_caravan_enter_city_trade_bonus(const struct city *pc1,
                                        struct goods_type *pgood,
                                        const bool establish_trade)
 {
-  int md, rmd, trade2, max_trade_2;
+  int rmd, trade2, max_trade_2;
   int tb = 0, bonus = 0;
 
   if (pc2) {
-    md = map_distance(pc1->tile, pc2->tile);
     rmd = real_map_distance(pc1->tile, pc2->tile);
     trade2 = pc2->surplus[O_TRADE];
     max_trade_2 = max_trade_prod(pc2, seen_as);
   } else {
-    md = rmd = 10;
+    rmd = 10;
     trade2 = pc1->surplus[O_TRADE] * 0.75;
     max_trade_2 = max_trade_prod(pc1, seen_as) * 0.75;
   }
 
   if (game.info.caravan_bonus_style == CBS_CLASSIC) {
     // Should this be real_map_distance (rmd)?
-    tb = md + 10;
+    tb = rmd + 10;
     tb = (tb * (pc1->surplus[O_TRADE] + trade2)) / 24;
   } else if (game.info.caravan_bonus_style == CBS_LOGARITHMIC) {
     // Logarithmic bonus
