@@ -145,7 +145,6 @@ map_view::map_view()
   connect(m_renderer, &freeciv::renderer::repaint_needed, this,
           qOverload<const QRegion &>(&map_view::update));
 
-  menu_click = false;
   cursor = -1;
   QTimer *timer = new QTimer(this);
   setAttribute(Qt::WA_OpaquePaintEvent, true);
