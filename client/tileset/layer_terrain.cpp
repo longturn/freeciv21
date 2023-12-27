@@ -786,7 +786,12 @@ int layer_terrain::terrain_group(const terrain *pterrain) const
     return -1;
   }
 
-  return m_terrain_info.at(terrain_index(pterrain)).group->number;
+  auto group = m_terrain_info.at(terrain_index(pterrain)).group;
+  if (!group) {
+    return -1;
+  }
+
+  return group->number;
 }
 
 namespace /* anonymous */ {
