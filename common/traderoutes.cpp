@@ -205,12 +205,12 @@ bool can_cities_trade(const struct city *pc1, const struct city *pc2)
 {
   /* If you change the logic here, make sure to update the help in
    * helptext_unit(). */
-  return (
-      pc1 && pc2 && pc1 != pc2
-      && (city_owner(pc1) != city_owner(pc2)
-          || map_distance(pc1->tile, pc2->tile) >= game.info.trademindist)
-      && (trade_route_type_trade_pct(cities_trade_route_type(pc1, pc2))
-          > 0));
+  return (pc1 && pc2 && pc1 != pc2
+          && (city_owner(pc1) != city_owner(pc2)
+              || real_map_distance(pc1->tile, pc2->tile)
+                     >= game.info.trademindist)
+          && (trade_route_type_trade_pct(cities_trade_route_type(pc1, pc2))
+              > 0));
 }
 
 /**
@@ -463,7 +463,6 @@ int get_caravan_enter_city_trade_bonus(const struct city *pc1,
   }
 
   if (game.info.caravan_bonus_style == CBS_CLASSIC) {
-    // Should this be real_map_distance (rmd)?
     tb = rmd + 10;
     tb = (tb * (pc1->surplus[O_TRADE] + trade2)) / 24;
   } else if (game.info.caravan_bonus_style == CBS_LOGARITHMIC) {
