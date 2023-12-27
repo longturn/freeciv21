@@ -147,6 +147,8 @@ debug_eval ()
     -DCMAKE_INSTALL_PREFIX=$PWD/build_$pull_request/install \
     -DCMAKE_BUILD_TYPE=Debug
   cmake --build build_$pull_request
+  # Run tests
+  cmake --build build_$pull_request --target test
   # Always test the installer
   cmake --build build_$pull_request --target install
 
@@ -184,6 +186,7 @@ asan_eval ()
     cmake --preset ASan -S . -B build_$pull_request
   fi
   cmake --build build_$pull_request
+  cmake --build build_$pull_request --target test
 
   echo
   echo "-- PR $pull_request is ready to be evaluated. Run $0 -c $pull_request to cleanup."
