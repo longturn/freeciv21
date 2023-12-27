@@ -2064,8 +2064,8 @@ end
 
 PACKET_RULESET_RESOURCE = 177; sc, lsend
   UINT8 id;
-
   UINT8 output[O_LAST];
+  STRVEC helptext[MAX_LEN_PACKET];
 end
 
 /****************** Scenario Related Packets ******************/

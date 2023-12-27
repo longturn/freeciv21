@@ -905,6 +905,8 @@ Tundra are broad, cold regions, fit for some agriculture and little\
 ; food                 = increased food production
 ; shield               = increased shield production
 ; trade                = increased trade production
+; helptext             = optional help text string; should escape all raw
+;                        newlines so that xgettext parsing works
 ;
 ; */ <-- avoid gettext warnings
 
@@ -912,12 +914,14 @@ Tundra are broad, cold regions, fit for some agriculture and little\
 extra       = "Gold"
 identifier  = "$"
 trade       = 6
+helptext    = _("Gold, when found on a Glacier, Hills, or Mountain tile, gives 6 more trade.")
 # glacier, hills, mountains.
 
 [resource_iron]
 extra       = "Iron"
 identifier  = "/"
 shield      = 3
+helptext    = _("Iron, when found on a Mountain tile, gives 3 more shields.")
 # mountains.
 
 [resource_game]
@@ -925,6 +929,7 @@ extra       = "Game"
 identifier  = "e"
 food        = 2
 shield      = 1
+helptext    = _("Game, when found on a Tundra tile, gives 2 more food and 1 more shield.")
 # tundra.
 
 [resource_furs]
@@ -932,18 +937,21 @@ extra       = "Furs"
 identifier  = "u"
 food        = 1
 trade       = 3
+helptext    = _("Furs, when found on a Tundra tile, gives 1 more food and 3 more trade.")
 # tundra-only (beaver pelts).
 
 [resource_coal]
 extra       = "Coal"
 identifier  = "c"
 shield      = 2
+helptext    = _("Coal, when found on a Hills tile, gives 2 more shields.")
 # hills.
 
 [resource_fish]
 extra       = "Fish"
 identifier  = "y"
 food        = 2
+helptext    = _("Fish, when found on an Ocean tile, gives 2 more food.")
 # ocean.
 
 [resource_fruit]
@@ -951,12 +959,14 @@ extra       = "Fruit"
 identifier  = "f"
 food        = 3
 trade       = 1
+helptext    = _("Fruit, when found on a Jungle tile, gives 3 more food and 1 more trade.")
 # jungle.
 
 [resource_gems]
 extra       = "Gems"
 identifier  = "g"
 trade       = 4
+helptext    = _("Gems, when found on a Jungle tile, gives 4 more trade.")
 # jungle.
 
 ; "h" reserved for strategic horses
@@ -965,12 +975,14 @@ trade       = 4
 extra       = "Buffalo"
 identifier  = "b"
 shield      = 2
+helptext    = _("Buffalo, when found on a Plains tile, gives 2 more shields.")
 # plains (horses => buffalo => cattle).
 
 [resource_wheat]
 extra       = "Wheat"
 identifier  = "j"
 food        = 2
+helptext    = _("Wheat, when found on a Plains tile, gives 2 more food.")
 # plains.
 
 ; "k" reserved for (cane) sugar
@@ -983,18 +995,21 @@ food        = 2
 extra       = "Oasis"
 identifier  = "o"
 food        = 3
+helptext    = _("Oasis, when found on a Desert tile, gives 3 more food.")
 # desert.
 
 [resource_peat]
 extra       = "Peat"
 identifier  = "a"
 shield      = 4
+helptext    = _("Peat, when found on a Swamp tile, gives 4 more shields.")
 # swamp (petroleum => peat => petroleum).
 
 [resource_pheasant]
 extra       = "Pheasant"
 identifier  = "p"
 food        = 2
+helptext    = _("Pheasant, when found on a Forest tile, gives 2 more food.")
 # forest, forested.
 
 ; "r" reserved for rubber
@@ -1003,6 +1018,7 @@ food        = 2
 extra       = "Resources"
 identifier  = "r"
 shield      = 1
+helptext    = _("\"Bonus\" Resources, when found on a Grassland tile, gives 1 more shield.")
 # grassland.
 
 [resource_icy_ivory]
@@ -1011,12 +1027,14 @@ identifier  = "i"
 food        = 1
 shield      = 1
 trade       = 4
+helptext    = _("Ivory, when found on a Glacier tile, gives 1 more food, 1 more shield, and 4 more trade.")
 # glacier (seals => walrus).
 
 [resource_silk]
 extra       = "Silk"
 identifier  = "s"
 trade       = 3
+helptext    = _("Silk, when found on a Forest tile, gives 3 more trade.")
 # forest, wooded.
 
 [resource_spice]
@@ -1024,6 +1042,7 @@ extra       = "Spice"
 identifier  = "t"
 food        = 1
 trade       = 4
+helptext    = _("Spice(s), when found on a Swamp tile, gives 1 more food and 4 more trade.")
 # swamp-only.
 
 ; "u" reserved for uranium
@@ -1033,18 +1052,21 @@ extra       = "Whales"
 identifier  = "v"
 food        = 1
 shield      = 1
+helptext    = _("Whales, when found on an Ocean tile, gives 1 more food and 1 more shield.")
 # ocean (sea).
 
 [resource_wine]
 extra       = "Wine"
 identifier  = "w"
 trade       = 4
+helptext    = _("Wine, when found on a Hills tile, gives 4 more trade.")
 # hills-only.
 
 [resource_oil]
 extra       = "Oil"
 identifier  = "x"
 shield      = 3 ; glacier used to have 4
+helptext    = _("Oil, when found on a Glacier or Desert tile, gives 3 more shields.")
 # glacier, desert
 
 

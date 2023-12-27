@@ -3907,6 +3907,9 @@ void handle_ruleset_resource(const struct packet_ruleset_resource *p)
 
   output_type_iterate(o) { presource->output[o] = p->output[o]; }
   output_type_iterate_end;
+
+  presource->helptext = packet_strvec_extract(p->helptext);
+  qCritical() << presource->helptext;
 }
 
 /**
