@@ -2542,7 +2542,8 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
       unit_focus_set_and_select(qunit);
       maybe_goto = gui_options->keyboardless_goto;
     }
-  } else if (nullptr != pcity && pcity->client.full) {
+  } else if (qtype == SELECT_POPUP && nullptr != pcity
+             && pcity->client.full) {
     // Otherwise use popups.
     popup_city_dialog(pcity);
   } else if (!near_pcity && unit_list_size(ptile->units) == 0
