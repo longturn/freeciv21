@@ -1834,6 +1834,8 @@ int city_change_production_penalty(const struct city *pcity,
             && target->value.utype != pcity->changed_from.value.utype)))) {
     unpenalized_shields -= pcity->bought_shields;
     penalized_shields += pcity->bought_shields;
+  } else {
+    unpenalized_shields += pcity->bought_shields;
   }
 
   /* Do not put penalty on these. It shouldn't matter whether you disband
