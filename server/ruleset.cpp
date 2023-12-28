@@ -7743,9 +7743,6 @@ static void send_ruleset_resources(struct conn_list *dest)
     }
     output_type_iterate_end;
 
-    packet_strvec_compute(packet.helptext, presource->helptext);
-    qCritical() << packet.helptext;
-
     lsend_packet_ruleset_resource(dest, &packet);
   }
   extra_type_by_cause_iterate_end;

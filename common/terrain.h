@@ -41,7 +41,6 @@ struct resource_type {
 #define RESOURCE_NONE_IDENTIFIER ' '
 
   int output[O_LAST]; // Amount added by this resource.
-  QVector<QString> *helptext;
 
   struct extra_type *self;
 };
