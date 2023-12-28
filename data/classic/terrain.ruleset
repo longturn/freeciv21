@@ -1622,6 +1622,14 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+Gold is a malleable metal that has been the source of wealth for thousands of\
+ years. Due to its ubiquity in nature it has traditionally been used as a hard\
+ currency (coins).\
+"), _("\
+Gold, when found on a Glacier, Hills, or Mountain tile, gives 6 more trade.\
+ For more information, review the help for the individual tile types.\
+")
 
 [extra_iron]
 name           = _("Iron")
@@ -1635,6 +1643,13 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+Iron ore can be forged into a variety of metals that can be used to make\
+ machines, armor, and many other useful things.\
+"), _("\
+Iron, when found on a Mountain tile, gives 3 more shields.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_game]
 name           = _("?animals:Game")
@@ -1648,6 +1663,13 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+Wild \"Game\" has been a source of food and tools for hunter-gathers in the\
+ ancient past all the way to modern times.\
+"), _("\
+Game, when found on a Tundra tile, gives 2 more food and 1 more shield.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_furs]
 name           = _("Furs")
@@ -1661,6 +1683,12 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+The fur trade has been source of food and trade for thousands of years.\
+"), _("\
+Furs, when found on a Tundra tile, gives 1 more food and 3 more trade.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_coal]
 name           = _("Coal")
@@ -1674,6 +1702,14 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+Coal is a hard black ore that is easily mined. When burned it produces a very\
+ hot fire useful for many purposes. In modern times, burning coal produces the\
+ heat needed for the steam engine or to generate electricity.\
+"), _("\
+Coal, when found on a Hills tile, gives 2 more shields.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_fish]
 name           = _("Fish")
@@ -1687,6 +1723,13 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+The fishing industry has been a source of food for all civilizations for all\
+ time.\
+"), _("\
+Fish, when found on an Ocean tile, gives 2 more food.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_fruit]
 name           = _("Fruit")
@@ -1700,6 +1743,13 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+The picking and cultivation of fruit has been a source of food for hunter-gathers\
+ in the ancient past all the way to modern times.\
+"), _("\
+Fruit, when found on a Jungle tile, gives 3 more food and 1 more trade.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_gems]
 name           = _("Gems")
@@ -1713,6 +1763,14 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+Freeciv21 combines all valuable stones used in jewelry and other important\
+ artifacts, such as diamonds and rubies, into the word \"gems\". These precious\
+ stones have been used for trade for thousands of years.\
+"), _("\
+Gems, when found on a Jungle tile, gives 4 more trade.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_buffalo]
 name           = _("Buffalo")
@@ -1726,6 +1784,13 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+Buffalo have been a source of food and tools for thousands of years,\
+ especially on the plains of North America.\
+"), _("\
+Buffalo, when found on a Plains tile, gives 2 more shields.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_wheat]
 name           = _("Wheat")
@@ -1739,6 +1804,13 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+The cultivation and discovery of wheat greatly increased the ability of\
+ civilizations to produce food for ever larger nations.\
+"), _("\
+Wheat, when found on a Plains tile, gives 2 more food.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_oasis]
 name           = _("Oasis")
@@ -1752,6 +1824,14 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+An oasis is an area of a surface fresh water spring in a desert region.\
+ The oasis is an important respite, fresh water, and food source in\
+ regions that have reduced rain fall.\
+"), _("\
+Oasis, when found on a Desert tile, gives 3 more food.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_peat]
 name           = _("Peat")
@@ -1765,6 +1845,14 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+Peat is an accumulation of partially decayed vegetation or organic matter.\
+ It is unique to naturally wet areas such as swamps and bogs. It can be burned\
+ and has many other useful purposes.\
+"), _("\
+Peat, when found on a Swamp tile, gives 4 more shields.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_pheasant]
 name           = _("Pheasant")
@@ -1778,6 +1866,13 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+The hunting of Pheasant and other game birds has been a source of food\
+ for many civilizations.\
+"), _("\
+Pheasant, when found on a Forest tile, gives 2 more food.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_bonus]
 name           = _("Resources")
@@ -1791,6 +1886,13 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+\"Bonus\" Resources is a map-tile game-play feature of Freeciv21. It is not\
+ a naturally occurring resource like the other ones added to the map.\
+"), _("\
+Resources, when found on a Grassland tile, gives 1 more shield.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_ivory]
 name           = _("Ivory")
@@ -1804,6 +1906,14 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+The hunting of animals with tusks such as arctic walrus has been a source of\
+ food, energy, and trade for many civilizations throughout history.\
+"), _("\
+Ivory, when found on a Glacier tile, gives 1 more food, 1 more shield, and 4\
+ more trade.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_silk]
 name           = _("Silk")
@@ -1817,6 +1927,14 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+The discovery of the silkworm and the ability to create garments and other\
+ important artifacts from the produced silk has been a source of trade for\
+ many civilizations.\
+"), _("\
+Silk, when found on a Forest tile, gives 3 more trade.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_spice]
 name           = _("Spice")
@@ -1830,6 +1948,13 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+Freeciv21 combines all the varying types of valuable spices used in trade\
+ into a single resource called \"Spice\".\
+"), _("\
+Spice(s), when found on a Swamp tile, gives 2 more food and 4 more trade.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_whales]
 name           = _("Whales")
@@ -1843,6 +1968,14 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+The hunting of whales has been an important source of food and energy for\
+ many civilizations. The modern world no longer needs the whale blubber\
+ with the discovery of oil.\
+"), _("\
+Whales, when found on an Ocean tile, gives 1 more food and 1 more shield.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_wine]
 name           = _("Wine")
@@ -1856,6 +1989,13 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+The fermentation of grapes into wine has been a source of trade between\
+ nations for thousands of years.\
+"), _("\
+Wine, when found on a Hills tile, gives 4 more trade.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_oil]
 name           = _("Oil")
@@ -1869,6 +2009,13 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+The discovery of oil and the production of fuel and other derivative\
+ petroleum products has revolutionized the modern world.\
+"), _("\
+Oil, when found on a Glacier or Desert tile, gives 3 more shields.\
+ For more information, review the help for the individual tile types.\
+")
 
 ; /* <-- avoid gettext warnings
 ;
