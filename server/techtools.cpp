@@ -838,7 +838,7 @@ static void research_tech_lost(struct research *presearch, Tech_type_id tech)
       notify_player(
           pplayer, nullptr, E_NEW_GOVERNMENT, ftc_server,
           _("The required technology for our government '%s' "
-            "was lost. The country has fallen in %s."),
+            "was lost. The country has fallen into %s."),
           government_name_translation(government_of_player(pplayer)),
           government_name_translation(pgov));
       handle_player_change_government(pplayer, government_number(pgov));
@@ -851,7 +851,7 @@ static void research_tech_lost(struct research *presearch, Tech_type_id tech)
 
       notify_player(pplayer, nullptr, E_NEW_GOVERNMENT, ftc_server,
                     _("The required technology for our new government "
-                      "'%s' was lost. The country has fallen in %s."),
+                      "'%s' was lost. The country has fallen into %s."),
                     government_name_translation(pplayer->target_government),
                     government_name_translation(pgov));
       pplayer->target_government = pgov;
