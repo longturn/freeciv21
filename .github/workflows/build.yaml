@@ -113,7 +113,7 @@ jobs:
             libsdl2-mixer-dev
       - name: Configure
         run: |
-            cmake . -B build -G Ninja --preset "DistroRelease"
+            cmake . -B build -G "Ninja Multi-Config" --preset "DistroRelease"
       - name: Build
         run: |
           cmake --build build

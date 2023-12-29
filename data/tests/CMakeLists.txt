@@ -17,5 +17,5 @@ file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/rulesets.cpp
 add_executable(test_rulesets ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/rulesets.cpp)
 target_link_libraries(test_rulesets PRIVATE Qt5::Test)
 add_test(NAME test_rulesets
-         COMMAND "${CMAKE_BINARY_DIR}/$<CONFIG>/test_rulesets"
+         COMMAND test_rulesets
          WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
