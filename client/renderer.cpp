@@ -120,8 +120,8 @@ void renderer::unqueue_updates()
     } else {
       QRectF to_update;
 
-      for (const auto [tile, upd_types] : updates) {
-        for (const auto [type, rect] : rects) {
+      for (const auto &[tile, upd_types] : updates) {
+        for (const auto &[type, rect] : rects) {
           if (upd_types & type) {
             float xl, yt;
             (void) tile_to_canvas_pos(&xl, &yt, tile);
