@@ -209,6 +209,9 @@ output into the :file:`build-vs` directory. If you want to install Freeciv21 to 
 you can go to :menuselection:`Build --> install Freeciv21`. When complete, you should find a fully functional
 install in the :file:`build-vs/install` directory.
 
+.. note:: The preferred :guilabel:`Configuration` is :strong:`debug-windows`, especially if you want to
+  troubleshoot code with the built-in debugger and also if you plan to use the unit test feature ``CTest``.
+
 .. note:: The first time you run the Configure Cache command (from
   :menuselection:`Project --> Configure Cache`) or ask Visual Studio to generate the C++ Intellisense data,
   Visual Studio will invoke the :file:`vcpkg` installation process to download and compile all of the project
@@ -240,8 +243,7 @@ these commands:
 
 .. code-block:: sh
 
-    cmake . -B build-vs -G "Visual Studio 17 2022" -DFREECIV_USE_VCPKG=ON -DCMAKE_INSTALL_PREFIX=./build-vs/install
-    cmake --build build-vs
+    cmake --preset windows-debug -S . -B build-vs
     cmake --build build-vs --target install
 
 
