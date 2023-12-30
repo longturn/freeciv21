@@ -38,7 +38,7 @@ This page assumes the user knows how to use :file:`git`, compile Freeciv21 and u
 
 .. code-block:: sh
 
-    $ patch -p1 < pr[pr-number].diff
+    $ git apply pr[pr-number].diff
 
 
 :strong:`Ensure The Build Directory Is Empty`
@@ -55,7 +55,8 @@ This page assumes the user knows how to use :file:`git`, compile Freeciv21 and u
     $ cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
     $ cmake --build build
     $ cmake --build build --target install
-    $ cmake --build build --target package      # MSys2 and Debian Linux Only
+    $ cmake --build build --target package      # MSYS2 and Debian Linux Only
+    $ cmake --build build --target test         # Not on MSYS2 or Visual Studio
 
 :strong:`Run tests`
 
