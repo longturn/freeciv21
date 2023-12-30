@@ -337,6 +337,56 @@ jobs:
         run: |
           DESTDIR=$PWD/build/install cmake --build build --target install
 
+  freebsd:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    steps:
+    - uses: actions/checkout@v4
+    # This has to be executed in a single step because freebsd-vm fails if run
+    # twice.
+    - name: Build, test, and install on FreeBSD
+      uses: vmactions/freebsd-vm@v1
+      with:
+        # qmake is required by /usr/local/lib/cmake/Qt5Core/Qt5CoreConfig.cmake
+        run: |
+          set -e
+          pkg install -y \
+            git \
+            cmake \
+            ninja \
+            gettext \
+            qt5-buildtools \
+            qt5-qmake \
+            qt5-network \
+            qt5-svg \
+            qt5-testlib \
+            qt5-widgets \
+            kf5-karchive \
+            lua53 \
+            sqlite3 \
+            sdl2_mixer \
+            readline \
+            zlib-ng \
+            libunwind \
+            elfutils
+
+          # Create an unpriviledged user to run tests as, otherwise the server
+          # refuses to start (and rightfully so)
+          pw user add -n action -m
+
+          # Create a script with the commands to run
+          cat >build-and-test.sh <<EOF
+          cmake -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_INSTALL_PREFIX=/usr
+          cmake --build build
+          cmake --build build --target test
+          DESTDIR=$PWD/build/install cmake --build build --target install
+          EOF
+
+          chmod +x build-and-test.sh
+          su action -c 'sh build-and-test.sh'
+
   nix:
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
