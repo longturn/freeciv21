@@ -304,10 +304,8 @@ static void client_game_reset()
 int client_main(int argc, char *argv[])
 {
   QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
   QApplication::setHighDpiScaleFactorRoundingPolicy(
       Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
-#endif
   QApplication app(argc, argv);
   QCoreApplication::setApplicationVersion(freeciv21_version());
   app.setDesktopFileName(QStringLiteral("net.longturn.freeciv21"));
