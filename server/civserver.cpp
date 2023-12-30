@@ -22,6 +22,8 @@
 #include <cstdlib>
 #ifdef FREECIV_MSWINDOWS
 #include <windows.h>
+#else
+#include <unistd.h> // SIGHUP, SIGPIPE
 #endif
 
 // Qt
