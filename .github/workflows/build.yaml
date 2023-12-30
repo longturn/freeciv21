@@ -250,7 +250,7 @@ jobs:
           buildPreset: 'fullrelease-macos'
       - name: Test
         run: |
-          cmake --build build --target test
+          cmake --build build* --target test
       - name: Split Branch Name
         env:
           BRANCH: ${{github.ref_name}}
