@@ -25,9 +25,6 @@
 #include <lmcons.h> // UNLEN
 #include <shlobj.h>
 #include <windows.h>
-#ifdef HAVE_DIRECT_H
-#include <direct.h>
-#endif              // HAVE_DIRECT_H
 #else               // FREECIV_MSWINDOWS
 #include <unistd.h> // getuid, geteuid
 #endif              // FREECIV_MSWINDOWS

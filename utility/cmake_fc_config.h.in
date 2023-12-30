@@ -39,9 +39,6 @@
 /* bzlib.h available */
 #cmakedefine HAVE_BZLIB_H
 
-/* direct.h available */
-#cmakedefine HAVE_DIRECT_H
-
 /* dlfcn.h available */
 #cmakedefine HAVE_DLFCN_H
 
