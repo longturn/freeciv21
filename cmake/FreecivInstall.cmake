@@ -127,25 +127,23 @@ elseif(WIN32)
   # The Visual Studio generator places all files and associated DLL libraries
   #  into a build directory. So we just grab those for install.
   install(
-    DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/
+    DIRECTORY ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin/
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21
     FILES_MATCHING PATTERN *.dll PATTERN *.pdb)
 
-  # QT platform plugin must be only one directory level away from the EXEs
-  #   so we ensure that here. This does create a duplicate file in install
-  #   directory, but since we are not packaging in Visual Studio it isn't
-  #   issue.
+  # Install the Qt framework DLL's'
   install(
-    DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/plugins/platforms
+    DIRECTORY ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/plugins/
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21
     FILES_MATCHING PATTERN *.dll)
 
-  # Grab a few files that get missed
+  # Grab some files that get missed
   install(
     FILES
     ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/SDL2.dll
+    ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/SDL2_mixer.dll
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21)
 endif()
