@@ -323,10 +323,13 @@ jobs:
             elfutils-libs
       - uses: actions/checkout@v3
       - name: Configure
+        # Set ALWAYS_ROOT because the container user is root and creating an
+        # unpriviledged user would be too much work.
         run: |
           cmake . -B build -G Ninja \
             -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-            -DCMAKE_INSTALL_PREFIX=/usr
+            -DCMAKE_INSTALL_PREFIX=/usr \
+            -DALWAYS_ROOT=YES
       - name: Build
         run: |
           cmake --build build
