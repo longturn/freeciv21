@@ -405,6 +405,7 @@ jobs:
   wasm:
     name: "WebAssembly"
     runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     needs: clang-format
     env:
       QT_VERSION: v5.15.8-lts-lgpl
