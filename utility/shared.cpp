@@ -33,6 +33,7 @@
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QDir>
+#include <QRegularExpression>
 #include <QStandardPaths>
 #include <QString>
 #include <QtGlobal>
@@ -208,29 +209,11 @@ static bool is_ascii(char ch)
    Check if the name is safe security-wise.  This is intended to be used to
    make sure an untrusted filename is safe to be used.
  */
-bool is_safe_filename(const char *name)
+bool is_safe_filename(const QString &name)
 {
-  int i = 0;
-
-  // must not be nullptr or empty
-  if (!name || *name == '\0') {
-    return false;
-  }
-
-  for (; '\0' != name[i]; i++) {
-    if (nullptr == strchr(".@", name[i])
-        && nullptr == strchr(base64url, name[i])) {
-      return false;
-    }
-  }
-
-  // we don't allow the filename to ascend directories
-  if (strstr(name, PARENT_DIR_OPERATOR)) {
-    return false;
-  }
-
-  // Otherwise, it is okay...
-  return true;
+  const QRegularExpression regex(QLatin1String("^[\\w_\\-.@]+$"));
+  return regex.match(name).hasMatch()
+         && !name.contains(QLatin1String(PARENT_DIR_OPERATOR));
 }
 
 /**
