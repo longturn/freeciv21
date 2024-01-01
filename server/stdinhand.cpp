@@ -1178,8 +1178,7 @@ static bool read_init_script_real(struct connection *caller,
     real_filename = tilde_filename;
   }
 
-  log_testmatic_alt(LOG_NORMAL, _("Loading script file '%s'."),
-                    qUtf8Printable(real_filename));
+  qInfo(_("Loading script file '%s'."), qUtf8Printable(real_filename));
 
   if (QFile::exists(real_filename)
       && (script_file = fc_fopen(qUtf8Printable(real_filename), "r"))) {
