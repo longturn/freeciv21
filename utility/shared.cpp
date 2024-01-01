@@ -1186,28 +1186,6 @@ bool make_dir(const char *pathname)
 }
 
 /**
-   Returns TRUE if the filename's path is absolute.
- */
-bool path_is_absolute(const char *filename)
-{
-  if (!filename) {
-    return false;
-  }
-
-#ifdef FREECIV_MSWINDOWS
-  if (strchr(filename, ':')) {
-    return true;
-  }
-#else  // FREECIV_MSWINDOWS
-  if (filename[0] == '/') {
-    return true;
-  }
-#endif // FREECIV_MSWINDOWS
-
-  return false;
-}
-
-/**
    Scan in a word or set of words from start to but not including
    any of the given delimiters. The buf pointer will point past delimiter,
    or be set to nullptr if there is nothing there. Removes excess white

@@ -183,7 +183,6 @@ void interpret_tilde(char *buf, size_t buf_size, const QString &filename);
 char *interpret_tilde_alloc(const char *filename);
 
 bool make_dir(const char *pathname);
-bool path_is_absolute(const char *filename);
 
 char scanin(char **buf, char *delimiters, char *dest, int size);
 
