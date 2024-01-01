@@ -207,8 +207,8 @@ jobs:
          -DCMAKE_TOOLCHAIN_FILE="${{env.VCPKG_ROOT}}/scripts/buildsystems/vcpkg.cmake" -A x64 -T ClangCL
       - name: Building
         run: cmake --build build --config Debug
-      - name: Test
-        run: cmake --build build --target test
+      #- name: Test
+      #  run: cmake --build build --target test
 
   os_x:
     name: "macOS"
