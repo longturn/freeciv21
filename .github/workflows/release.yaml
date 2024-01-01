@@ -97,7 +97,7 @@ jobs:
             mingw-w64-i686-readline
             mingw-w64-i686-lua
             mingw-w64-i686-SDL2_mixer
-            mingw-w64-i686-qt5
+            mingw-w64-i686-qt5-base
             mingw-w64-i686-qt5-svg
             mingw-w64-i686-karchive-qt5
       - name: Configure
