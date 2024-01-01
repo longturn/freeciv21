@@ -191,13 +191,13 @@ jobs:
       VCPKG_ROOT: C:/vcpkg
       VCPKG_DEFAULT_BINARY_CACHE: ${{github.workspace}}/vcpkg/bincache
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - uses: lukka/run-vcpkg@v10
         name: Install dependencies
         with:
           vcpkgGitCommitId: c8696863d371ab7f46e213d8f5ca923c4aef2a00
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - name: Enable Developer Command Prompt
         uses: ilammy/msvc-dev-cmd@v1
       - name: Configure
