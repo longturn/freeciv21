@@ -2,6 +2,8 @@ name: Release
 on:
   release:
     types: [published]
+  schedule:
+    - cron: "0 5 * * MON"
   workflow_dispatch: {}
 
 jobs:
@@ -74,7 +76,7 @@ jobs:
     defaults:
       run:
         shell: msys2 {0}
-    if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'release' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
       - uses: actions/checkout@v3
         with:
