@@ -82,3 +82,8 @@ if(FREECIV_ENABLE_NLS)
   target_include_directories(utility PUBLIC ${Intl_INCLUDE_DIRS})
   target_link_libraries(utility PUBLIC ${Intl_LIBRARIES})
 endif()
+
+# Tests
+if (BUILD_TESTING)
+  add_subdirectory(tests)
+endif()
