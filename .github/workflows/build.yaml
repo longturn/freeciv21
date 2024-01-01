@@ -191,20 +191,13 @@ jobs:
       VCPKG_ROOT: C:/vcpkg
       VCPKG_DEFAULT_BINARY_CACHE: ${{github.workspace}}/vcpkg/bincache
     steps:
+      - uses: lukka/run-vcpkg@v10
+        name: Install dependencies
+        with:
+          vcpkgGitCommitId: c8696863d371ab7f46e213d8f5ca923c4aef2a00
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: "Create dir: '${{env.VCPKG_DEFAULT_BINARY_CACHE}}'"
-        run: mkdir -p $VCPKG_DEFAULT_BINARY_CACHE
-        shell: bash
-      - name: Restore vcpkg and its artifacts.
-        uses: actions/cache@v3
-        with:
-          path: ${{env.VCPKG_DEFAULT_BINARY_CACHE}}/*
-          key: ${{hashFiles('vcpkg.json')}}
-      - name: Show content of workspace after cache has been restored
-        run: find $RUNNER_WORKSPACE
-        shell: bash
       - name: Enable Developer Command Prompt
         uses: ilammy/msvc-dev-cmd@v1
       - name: Configure
