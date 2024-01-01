@@ -11,10 +11,7 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-// ANSI
-#ifdef HAVE_STRING_H
 #include <string.h>
-#endif
 
 // utility
 #include "capability.h"
