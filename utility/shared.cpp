@@ -657,25 +657,20 @@ QVector<QString> *fileinfolist(const QStringList &dirs, const char *suffix)
    Returns a filename to access the specified file from a
    directory by searching all specified directories for the file.
 
-   If the specified 'filename' is nullptr, the returned string contains
+   If the specified 'filename' is empty, the returned string contains
    the effective path.  (But this should probably only be used for
    debug output.)
 
-   Returns nullptr if the specified filename cannot be found in any of the
-   data directories.  (A file is considered "found" if it can be
-   read-opened.)  The returned pointer points to static memory, so this
-   function can only supply one filename at a time.  Don't free that
-   pointer.
-
-   TODO: Make this re-entrant
+   Returns an empty string if the specified filename cannot be found
+   in any of the data directories.
  */
-QString fileinfoname(const QStringList &dirs, const char *filename)
+QString fileinfoname(const QStringList &dirs, const QString &filename)
 {
   if (dirs.isEmpty()) {
     return QString();
   }
 
-  if (!filename) {
+  if (filename.isEmpty()) {
     bool first = true;
 
     realfile->clear();
@@ -700,7 +695,8 @@ QString fileinfoname(const QStringList &dirs, const char *filename)
     }
   }
 
-  qDebug("Could not find readable file \"%s\" in data path.", filename);
+  qDebug("Could not find readable file \"%s\" in data path.",
+         qUtf8Printable(filename));
 
   return nullptr;
 }

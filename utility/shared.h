@@ -134,7 +134,7 @@ const QStringList &get_scenario_dirs();
 QVector<QString> *fileinfolist(const QStringList &dirs, const char *suffix);
 QFileInfoList find_files_in_path(const QStringList &path,
                                  const QString &pattern, bool nodups);
-QString fileinfoname(const QStringList &dirs, const char *filename);
+QString fileinfoname(const QStringList &dirs, const QString &filename);
 
 void init_nls();
 void free_nls();
