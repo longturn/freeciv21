@@ -42,7 +42,6 @@ if(FREECIV_ENABLE_NLS)
       "Please see https://github.com/longturn/freeciv21/issues/383")
   endif()
 
-  set(FREECIV_HAVE_LIBINTL_H TRUE)
   set(ENABLE_NLS TRUE)
   if(UNIX)
     set(LOCALEDIR "${CMAKE_INSTALL_FULL_LOCALEDIR}")
