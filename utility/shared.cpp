@@ -1167,6 +1167,20 @@ char *interpret_tilde_alloc(const char *filename)
 }
 
 /**
+ * Interpret ~/ in filename as home dir
+ */
+QString interpret_tilde(const QString &filename)
+{
+  if (filename == QLatin1String("~")) {
+    return QDir::homePath();
+  } else if (filename.startsWith(QLatin1String("~/"))) {
+    return QDir::homePath() + filename.midRef(1);
+  } else {
+    return filename;
+  }
+}
+
+/**
    If the directory "pathname" does not exist, recursively create all
    directories until it does.
  */
