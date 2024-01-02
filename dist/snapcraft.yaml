@@ -25,7 +25,7 @@ description: |
   The code is maintained by the team over at Longturn.net and is based on the QT framework. The game supports both hex and square tiles and is easily modified to create custom rules.
 
 # TODO: At some point, will want to integrate into cmake process and configure_file()
-version: '3.0.1'
+version: '3.0.2'
 grade: stable
 
 license: GPL-3.0-or-later
@@ -49,7 +49,7 @@ parts:
     source: https://github.com/longturn/freeciv21.git
     source-type: git
     # TODO: integrate into cmake process and configure_file()
-    source-branch: stable
+    source-commit: ddd1512dc07092e66eba6b8a0e3d30b0021ab0c2
     cmake-generator: Ninja
     cmake-parameters:
       - "-DCMAKE_INSTALL_PREFIX=/usr"
