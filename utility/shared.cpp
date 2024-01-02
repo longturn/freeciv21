@@ -1167,7 +1167,7 @@ char *interpret_tilde_alloc(const char *filename)
 }
 
 /**
- * Interpret ~/ in filename as home dir
+ * Interpret ~ in filename as home dir
  */
 QString interpret_tilde(const QString &filename)
 {
@@ -1184,15 +1184,11 @@ QString interpret_tilde(const QString &filename)
    If the directory "pathname" does not exist, recursively create all
    directories until it does.
  */
-bool make_dir(const char *pathname)
+bool make_dir(const QString &pathname)
 {
-  auto *path = interpret_tilde_alloc(pathname);
-  auto str = QString::fromUtf8(path);
   // We can always create a directory with an empty name -- it's the current
   // folder.
-  auto r = str.isEmpty() || QDir().mkpath(str);
-  delete[] path;
-  return r;
+  return pathname.isEmpty() || QDir().mkpath(interpret_tilde(pathname));
 }
 
 /**
