@@ -727,7 +727,7 @@ QFileInfoList find_files_in_path(const QStringList &path,
               [](const auto &lhs, const auto &rhs) {
                 return lhs.absoluteFilePath() < rhs.absoluteFilePath();
               });
-    std::unique(files.begin(), files.end());
+    files.erase(std::unique(files.begin(), files.end()), files.end());
   }
 
   // Sort the list by last modification time.
