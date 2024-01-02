@@ -185,7 +185,7 @@ void free_multicast_group();
 [[deprecated]] char *interpret_tilde_alloc(const char *filename);
 QString interpret_tilde(const QString &filename);
 
-bool make_dir(const char *pathname);
+bool make_dir(const QString &pathname);
 
 char scanin(char **buf, char *delimiters, char *dest, int size);
 
