@@ -1123,50 +1123,6 @@ void free_multicast_group()
 }
 
 /**
-   Interpret ~/ in filename as home dir
-   New path is returned in buf of size buf_size
-
-   This may fail if the path is too long.  It is better to use
-   interpret_tilde_alloc.
- */
-void interpret_tilde(char *buf, size_t buf_size, const QString &filename)
-{
-  if (filename.startsWith(QLatin1String("~/"))) {
-    fc_snprintf(buf, buf_size, "%s/%s", qUtf8Printable(QDir::homePath()),
-                qUtf8Printable(filename.right(filename.length() - 2)));
-  } else if (filename == QLatin1String("~")) {
-    qstrncpy(buf, qUtf8Printable(QDir::homePath()), buf_size);
-  } else {
-    qstrncpy(buf, qUtf8Printable(filename), buf_size);
-  }
-}
-
-/**
-   Interpret ~/ in filename as home dir
-
-   The new path is returned in buf, as a newly allocated buffer.  The new
-   path will always be allocated and written, even if there is no ~ present.
- */
-char *interpret_tilde_alloc(const char *filename)
-{
-  if (filename[0] == '~' && filename[1] == '/') {
-    QString home = QDir::homePath();
-    size_t sz;
-    char *buf;
-
-    filename += 2; /* Skip past "~/" */
-    sz = home.length() + qstrlen(filename) + 2;
-    buf = static_cast<char *>(fc_malloc(sz));
-    fc_snprintf(buf, sz, "%s/%s", qUtf8Printable(home), filename);
-    return buf;
-  } else if (filename[0] == '~' && filename[1] == '\0') {
-    return fc_strdup(qUtf8Printable(QDir::homePath()));
-  } else {
-    return fc_strdup(filename);
-  }
-}
-
-/**
  * Interpret ~ in filename as home dir
  */
 QString interpret_tilde(const QString &filename)

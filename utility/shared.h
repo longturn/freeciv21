@@ -180,9 +180,6 @@ enum m_pre_result match_prefix_full(m_pre_accessor_fn_t accessor_fn,
 char *get_multicast_group(bool ipv6_preferred);
 void free_multicast_group();
 
-[[deprecated]] void interpret_tilde(char *buf, size_t buf_size,
-                                    const QString &filename);
-[[deprecated]] char *interpret_tilde_alloc(const char *filename);
 QString interpret_tilde(const QString &filename);
 
 bool make_dir(const QString &pathname);
