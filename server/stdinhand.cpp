@@ -33,6 +33,7 @@
 #include "rand.h"
 #include "registry.h"
 #include "section_file.h"
+#include "shared.h"
 #include "support.h" // fc__attribute, bool type, etc.
 #include "timing.h"
 
@@ -1134,10 +1135,7 @@ static bool read_init_script_real(struct connection *caller,
                                   int read_recursion)
 {
   FILE *script_file;
-  const char extension[] = ".serv";
-  char serv_filename[strlen(extension) + qstrlen(script_filename) + 2];
-  char tilde_filename[4096];
-  QString real_filename;
+  const auto extension = QLatin1String(".serv");
 
   // check recursion depth
   if (read_recursion > GAME_MAX_READ_RECURSION) {
@@ -1145,33 +1143,31 @@ static bool read_init_script_real(struct connection *caller,
     return false;
   }
 
-  // abuse real_filename to find if we already have a .serv extension
-  real_filename = QString(script_filename);
-  if (!real_filename.endsWith(extension)) {
-    fc_snprintf(serv_filename, sizeof(serv_filename), "%s%s",
-                script_filename, extension);
-  } else {
-    sz_strlcpy(serv_filename, script_filename);
+  // Find if we already have a .serv extension
+  QString serv_filename = script_filename;
+  if (!serv_filename.endsWith(extension)) {
+    serv_filename += extension;
   }
 
+  QString tilde_filename;
   if (is_restricted(caller) && !from_cmdline) {
     if (!is_safe_filename(serv_filename)) {
       cmd_reply(CMD_READ_SCRIPT, caller, C_FAIL,
                 _("Name \"%s\" disallowed for security reasons."),
-                serv_filename);
+                qUtf8Printable(serv_filename));
       return false;
     }
-    sz_strlcpy(tilde_filename, serv_filename);
+    tilde_filename = serv_filename;
   } else {
-    interpret_tilde(tilde_filename, sizeof(tilde_filename), serv_filename);
+    tilde_filename = interpret_tilde(serv_filename);
   }
 
-  real_filename = fileinfoname(get_data_dirs(), tilde_filename);
+  auto real_filename = fileinfoname(get_data_dirs(), tilde_filename);
   if (real_filename.isEmpty()) {
     if (is_restricted(caller) && !from_cmdline) {
       cmd_reply(CMD_READ_SCRIPT, caller, C_FAIL,
                 _("No command script found by the name \"%s\"."),
-                serv_filename);
+                qUtf8Printable(serv_filename));
       return false;
     }
     // File is outside data directories
