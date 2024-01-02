@@ -1227,13 +1227,13 @@ QVector<QString> *get_init_script_choices()
  */
 static void write_init_script(char *script_filename)
 {
-  char real_filename[1024], buf[256];
+  char buf[256];
   FILE *script_file;
 
-  interpret_tilde(real_filename, sizeof(real_filename), script_filename);
+  const auto real_filename = interpret_tilde(script_filename);
 
   if (QFile::exists(real_filename)
-      && (script_file = fc_fopen(real_filename, "w"))) {
+      && (script_file = fc_fopen(qUtf8Printable(real_filename), "w"))) {
     fprintf(script_file, "#FREECIV SERVER COMMAND FILE, version %s\n",
             freeciv21_version());
     fputs(
@@ -1285,7 +1285,8 @@ static void write_init_script(char *script_filename)
     fclose(script_file);
 
   } else {
-    qCritical(_("Could not write script file '%s'."), real_filename);
+    qCritical(_("Could not write script file '%s'."),
+              qUtf8Printable((real_filename)));
   }
 }
 
