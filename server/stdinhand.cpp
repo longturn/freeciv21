@@ -5017,8 +5017,8 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
                         int read_recursion)
 {
   FILE *script_file;
-  const char extension[] = ".lua", *real_filename = nullptr;
-  char luafile[4096], tilde_filename[4096];
+  const auto extension = QLatin1String(".lua");
+  QString luafile, tilde_filename, real_filename;
   char *luaarg = nullptr;
   QStringList tokens;
   int ind;
@@ -5093,13 +5093,10 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
     }
     // Fall through.
   case LUA_FILE:
-    // Abuse real_filename to find if we already have a .lua extension.
-    real_filename =
-        luaarg + qstrlen(luaarg) - MIN(strlen(extension), qstrlen(luaarg));
-    if (strcmp(real_filename, extension) != 0) {
-      fc_snprintf(luafile, sizeof(luafile), "%s%s", luaarg, extension);
-    } else {
-      sz_strlcpy(luafile, luaarg);
+    // find if we already have a .lua extension.
+    luafile = luaarg;
+    if (!luafile.endsWith(extension)) {
+      luafile += extension;
     }
 
     if (is_restricted(caller)) {
@@ -5107,22 +5104,21 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
         cmd_reply(
             CMD_LUA, caller, C_FAIL,
             _("Freeciv21 script '%s' disallowed for security reasons."),
-            luafile);
+            qUtf8Printable(luafile));
         return false;
         ;
       }
-      sz_strlcpy(tilde_filename, luafile);
+      tilde_filename = luafile;
     } else {
-      interpret_tilde(tilde_filename, sizeof(tilde_filename), luafile);
+      tilde_filename = interpret_tilde(luafile);
     }
 
-    real_filename =
-        qUtf8Printable(fileinfoname(get_data_dirs(), tilde_filename));
-    if (!real_filename) {
+    real_filename = fileinfoname(get_data_dirs(), tilde_filename);
+    if (real_filename.isEmpty()) {
       if (is_restricted(caller)) {
         cmd_reply(CMD_LUA, caller, C_FAIL,
                   _("No Freeciv21 script found by the name '%s'."),
-                  tilde_filename);
+                  qUtf8Printable(tilde_filename));
         return false;
       }
       // File is outside data directories
@@ -5144,31 +5140,36 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
     break;
   case LUA_FILE:
     cmd_reply(CMD_LUA, caller, C_COMMENT,
-              _("Loading Freeciv21 script file '%s'."), real_filename);
+              _("Loading Freeciv21 script file '%s'."),
+              qUtf8Printable(real_filename));
 
     if (QFile::exists(real_filename)
-        && (script_file = fc_fopen(real_filename, "r"))) {
-      ret = script_server_do_file(caller, real_filename);
+        && (script_file = fc_fopen(qUtf8Printable(real_filename), "r"))) {
+      ret = script_server_do_file(caller, qUtf8Printable(real_filename));
       fclose(script_file);
       return ret;
     } else {
       cmd_reply(CMD_LUA, caller, C_FAIL,
-                _("Cannot read Freeciv21 script '%s'."), real_filename);
+                _("Cannot read Freeciv21 script '%s'."),
+                qUtf8Printable(real_filename));
       return false;
     }
     break;
   case LUA_UNSAFE_FILE:
     cmd_reply(CMD_LUA, caller, C_COMMENT,
-              _("Loading Freeciv21 script file '%s'."), real_filename);
+              _("Loading Freeciv21 script file '%s'."),
+              qUtf8Printable(real_filename));
 
     if (QFile::exists(real_filename)
-        && (script_file = fc_fopen(real_filename, "r"))) {
+        && (script_file = fc_fopen(qUtf8Printable(real_filename), "r"))) {
       fclose(script_file);
-      ret = script_server_unsafe_do_file(caller, real_filename);
+      ret = script_server_unsafe_do_file(caller,
+                                         qUtf8Printable(real_filename));
       return ret;
     } else {
       cmd_reply(CMD_LUA, caller, C_FAIL,
-                _("Cannot read Freeciv21 script '%s'."), real_filename);
+                _("Cannot read Freeciv21 script '%s'."),
+                qUtf8Printable(real_filename));
       return false;
     }
     break;
