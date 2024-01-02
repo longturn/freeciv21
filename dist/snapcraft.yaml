@@ -10,7 +10,6 @@
 #   - mkdir -p build/snap/local
 #   - cp dist/snapcraft.yaml build/snap
 #   - cp data/icons/128x128/freeciv21-client.png build/snap/local
-#   - cp cmake/AutoRevision.txt build/snap/local
 #   - cd build
 #   - snapcraft
 #   - sudo snap install --devmode ./freeciv21_*.snap
@@ -20,15 +19,15 @@
 name: freeciv21
 title: Freeciv21
 summary: Freeciv21 - Freeciv for the 21st Century
-# The description is also in README.md, about.rst, freeciv21-server.rst and the 4 metainfo files.
 description: |
   Freeciv21 is a free open source turn-based empire-building 4x strategy game, in which each player becomes the leader of a civilization. You compete against several opponents to build cities and use them to support a military and an economy. Players strive to complete an empire that survives all encounters with its neighbors to emerge victorious. Play begins at the dawn of history in 4,000 BCE.
-
   Freeciv21 takes its roots in the well-known FOSS game Freeciv and extends it for more fun, with a revived focus on competitive multiplayer environments. Players can choose from over 500 nations and can play against the computer or other people in an active online community.
-
   The code is maintained by the team over at Longturn.net and is based on the QT framework. The game supports both hex and square tiles and is easily modified to create custom rules.
 
-adopt-info: freeciv21
+# TODO: At some point, will want to integrate into cmake process and configure_file()
+version: '3.1.alpha4'
+grade: devel
+
 license: GPL-3.0-or-later
 website: https://longturn.net
 contact: longturn.net@gmail.com
@@ -46,14 +45,12 @@ icon: snap/local/freeciv21-client.png
 
 parts:
   freeciv21:
-    override-pull: |
-      craftctl default
-      craftctl set version=`sed -n '2p' ./cmake/AutoRevision.txt | cut -c2-`
-      craftctl set grade=`case $(sed -n '2p' ./cmake/AutoRevision.txt | cut -c2-) in *-alpha.*) echo devel; ;; *-beta.*) echo devel; ;; *-rc.*) echo candidate; ;; *-patch.*) echo stable; ;; *) echo stable; ;; esac`
     plugin: cmake
     source: https://github.com/longturn/freeciv21.git
     source-type: git
-    source-branch: master
+    # TODO: integrate into cmake process and configure_file()
+    #source-branch: stable
+    source-commit: a82c58f1d40307aaa88a8fd2d0e0e3e9a3dfe1fd
     cmake-generator: Ninja
     cmake-parameters:
       - "-DCMAKE_INSTALL_PREFIX=/usr"
@@ -86,7 +83,7 @@ parts:
 
 apps:
   freeciv21-client:
-    common-id: net.longturn.freeciv21
+    common-id: net.longturn.freeciv21.client
     desktop: usr/share/applications/net.longturn.freeciv21.desktop
     command: usr/bin/freeciv21-client
     extensions:
