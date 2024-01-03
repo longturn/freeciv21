@@ -658,6 +658,8 @@ void client_exit()
     options_save(log_option_save_msg);
   }
 
+  audio_shutdown();
+
   overview_free();
   tileset_free(tileset);
 
