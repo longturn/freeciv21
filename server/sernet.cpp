@@ -58,6 +58,11 @@ static struct connection connections[MAX_NUM_CONNECTIONS];
 
 static QUdpSocket *udp_socket = nullptr;
 
+#ifdef ENABLE_DNSSD
+#include <KDNSSD/PublicService>
+static std::unique_ptr<KDNSSD::PublicService> public_service = nullptr;
+#endif
+
 #define PROCESSING_TIME_STATISTICS 0
 
 static void start_processing_request(struct connection *pconn,
@@ -125,6 +130,9 @@ void close_connections_and_socket()
     udp_socket->close();
     delete udp_socket;
     udp_socket = nullptr;
+#ifdef ENABLE_DNSSD
+    public_service = nullptr;
+#endif
   }
 
   send_server_info_to_metaserver(META_GOODBYE);
@@ -441,6 +449,17 @@ std::optional<socket_server> server_open_socket()
               udp_socket->errorString().toLocal8Bit().data());
   }
 
+#ifdef ENABLE_DNSSD
+  public_service = std::make_unique<KDNSSD::PublicService>();
+  if (!srvarg.identity_name.isEmpty()) {
+    public_service->setDomain(srvarg.identity_name);
+  }
+  public_service->setServiceName(QLatin1String("Freeciv21"));
+  public_service->setType(QLatin1String("_freeciv21._tcp"));
+  public_service->setPort(server->serverPort());
+  public_service->publishAsync();
+#endif
+
   return server;
 }
 
@@ -564,6 +583,53 @@ void handle_client_heartbeat(struct connection *pconn)
   log_debug("Received heartbeat");
 }
 
+#ifdef ENABLE_DNSSD
+/**
+ * Fills the DNS-SD TXT data record with the player count and so on
+ */
+static QMap<QString, QByteArray> get_dnssd_text_data()
+{
+  QMap<QString, QByteArray> text_data;
+  text_data[QStringLiteral("version")] = VERSION_STRING;
+
+  switch (server_state()) {
+  case S_S_INITIAL:
+    // TRANS: Game state for local server
+    text_data[QStringLiteral("status")] = N_("Pregame");
+    break;
+  case S_S_RUNNING:
+    // TRANS: Game state for local server
+    text_data[QStringLiteral("status")] = N_("Running");
+    break;
+  case S_S_OVER:
+    // TRANS: Game state for local server
+    text_data[QStringLiteral("status")] = N_("Game over");
+    break;
+  }
+
+  text_data[QStringLiteral("players")] =
+      QStringLiteral("%1").arg(normal_player_count()).toUtf8();
+
+  int nhumans = 0;
+  players_iterate(pplayer)
+  {
+    if (pplayer->is_alive && is_human(pplayer)) {
+      nhumans++;
+    }
+  }
+  players_iterate_end;
+  text_data[QStringLiteral("humans")] =
+      QStringLiteral("%1").arg(nhumans).toUtf8();
+
+  // NOTE Because of a limitation in the DNS protocol, the message will be
+  //      truncated when longer than 255 - 4 = 251 bytes. We do not check
+  //      this.
+  text_data[QStringLiteral("msg")] = get_meta_message_string();
+
+  return text_data;
+}
+#endif // ENABLE_DNSSD
+
 /**
    Listen for UDP packets multicasted from clients requesting
    announcement of servers on the LAN.
@@ -589,6 +655,16 @@ void get_lanserver_announcement()
       log_debug("Received invalid request for server LAN announcement.");
     }
   }
+
+#ifdef ENABLE_DNSSD
+  if (public_service) {
+    const auto text_data = get_dnssd_text_data();
+    // Only update if needed to limit network traffic
+    if (text_data != public_service->textData()) {
+      public_service->setTextData(text_data);
+    }
+  }
+#endif
 }
 
 /**

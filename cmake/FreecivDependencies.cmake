@@ -121,6 +121,19 @@ set(FREECIV_HAVE_BZ2 ${KArchive_HAVE_BZIP2})
 set(FREECIV_HAVE_LZMA ${KArchive_HAVE_LZMA})
 set(FREECIV_HAVE_ZSTD ${KArchive_HAVE_ZSTD})
 
+# Local server discovery
+if (NOT EMSCRIPTEN)
+  find_package(KF5DNSSD)
+  set(ENABLE_DNSSD ${KF5DNSSD_FOUND})
+  if (KF5DNSSD_FOUND)
+    message(STATUS "Building with DNS-SD support enabled")
+  else()
+    message(STATUS "KDNSSD not found - DNS-SD support disabled")
+  endif()
+else()
+  message(STATUS "DNS-SD not supported on Emscripten")
+endif()
+
 find_package(ZLIB REQUIRED) # Network protocol code
 
 # Some systems don't have a well-defined root user

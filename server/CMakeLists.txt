@@ -90,6 +90,12 @@ target_include_directories(server PUBLIC ${CMAKE_SOURCE_DIR}/ai/classic)
 target_link_libraries(server PUBLIC Qt5::Core Qt5::Network server_gen)
 target_link_libraries(server PRIVATE Readline::readline)
 
+if (ENABLE_DNSSD)
+  set_source_files_properties(
+      sernet.cpp PROPERTIES COMPILE_DEFINITIONS ENABLE_DNSSD)
+  target_link_libraries(server PRIVATE KF5::DNSSD)
+endif()
+
 add_subdirectory(advisors)
 add_subdirectory(generator)
 add_subdirectory(savegame)
