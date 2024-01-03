@@ -164,8 +164,8 @@ void create_mpdb(const char *filename, bool scenario_db)
 
   if (ret == SQLITE_OK) {
     ret = mpdb_query(*handle,
-                     "create table modpacks (name VARCHAR(60) NOT nullptr, "
-                     "type VARCHAR(32), version VARCHAR(32) NOT nullptr);");
+                     "create table modpacks (name VARCHAR(60) NOT null, "
+                     "type VARCHAR(32), version VARCHAR(32) NOT null);");
   }
 
   if (ret == SQLITE_OK) {
