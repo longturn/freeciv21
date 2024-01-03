@@ -140,7 +140,7 @@ template <class _type_> void listener<_type_>::listen()
 {
   // If you get an error here, your listener likely doesn't inherit from the
   // listener<> correctly. See the class documentation.
-  instances.insert(static_cast<type_t *>(this));
+  instances.insert(dynamic_cast<type_t *>(this));
 }
 
 /***************************************************************************
@@ -148,7 +148,7 @@ template <class _type_> void listener<_type_>::listen()
 ***************************************************************************/
 template <class _type_> listener<_type_>::~listener()
 {
-  instances.erase(static_cast<type_t *>(this));
+  instances.erase(dynamic_cast<type_t *>(this));
 }
 
 /***************************************************************************
