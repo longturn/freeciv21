@@ -611,6 +611,11 @@ void audio_set_volume(double volume)
  */
 void audio_shutdown()
 {
+  // Already shut down
+  if (selected_plugin < 0) {
+    return;
+  }
+
   // avoid infinite loop at end of game
   audio_stop();
 
@@ -626,6 +631,9 @@ void audio_shutdown()
     secfile_destroy(ms_tagfile);
     ms_tagfile = nullptr;
   }
+
+  // Mark shutdown
+  selected_plugin = -1;
 }
 
 /**
