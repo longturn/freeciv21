@@ -111,7 +111,7 @@ struct adv_data {
   int infra_priority;
 
   // Government data
-  adv_want *government_want;
+  std::vector<adv_want> government_want;
   short govt_reeval;
 
   // Goals
