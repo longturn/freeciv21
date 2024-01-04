@@ -59,7 +59,9 @@ jobs:
 
       - name: Run clang-tidy
         run: |
-          run-clang-tidy -p build | ansifilter | ./codacy-clang-tidy >report.json
+          run-clang-tidy -header-filter=".*" -p build \
+            | ansifilter \
+            | ./codacy-clang-tidy >report.json
 
       - uses: actions/upload-artifact@v3
         with:
