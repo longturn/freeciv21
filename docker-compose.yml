@@ -1,0 +1,6 @@
+name: freeciv21
+services:
+  server:
+    build: .
+    ports:
+      - "5556:5556"
