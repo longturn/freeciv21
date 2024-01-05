@@ -12,9 +12,9 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include <cstdarg>
 
 // utility
-#include "fcintl.h"
 #include "log.h"
 #include "registry.h"
+#include "registry_ini.h"
 
 // common
 #include "rgbcolor.h"

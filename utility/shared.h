@@ -12,11 +12,16 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <QDir>
-
 // utility
-#include "log.h"
 #include "support.h" // bool, fc__attribute
+
+#include <QFileInfoList>
+#include <QString>
+#include <QStringList>
+
+#include <time.h>
+
+template <typename T> class QVector;
 
 // Changing these will break network compatability!
 #define MAX_LEN_ADDR 256 // see also MAXHOSTNAMELEN and RFC 1123 2.1

@@ -10,10 +10,9 @@
 **************************************************************************/
 #pragma once
 
-#include <fc_config.h>
-
 #include <QMutex>
 #include <QThread>
+#include <QtGlobal>
 
 class fcThread : public QThread {
 public:

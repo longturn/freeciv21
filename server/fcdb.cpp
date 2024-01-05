@@ -16,10 +16,9 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 // utility
 #include "fcintl.h"
 #include "log.h"
+#include "registry.h"
+#include "section_file.h"
 #include "support.h"
-
-// common
-#include "packets.h"
 
 /* server/scripting */
 #include "script_fcdb.h"

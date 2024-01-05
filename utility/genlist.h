@@ -34,8 +34,9 @@
 ****************************************************************************/
 
 // utility
-#include "fcthread.h"
 #include "support.h" // bool, fc__warn_unused_result
+
+#include <QMutex>
 
 // A single element of a genlist, opaque type.
 struct genlist_link;

@@ -26,7 +26,8 @@
 
 // utility
 #include "fcintl.h"
-#include "registry.h"
+#include "log.h"
+#include "registry_ini.h"
 #include "version.h"
 
 #include "netfile.h"

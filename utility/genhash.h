@@ -19,6 +19,8 @@
 #include "iterator.h"
 #include "support.h" // bool type
 
+#include <stddef.h>
+
 struct genhash; // opaque
 
 // Hash value type.

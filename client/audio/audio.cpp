@@ -20,6 +20,7 @@ received a copy of the GNU General Public License along with Freeciv21.
 #include "log.h"
 #include "rand.h"
 #include "registry.h"
+#include "registry_ini.h"
 #include "shared.h"
 
 // client

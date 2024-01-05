@@ -27,13 +27,14 @@
 
 // utility
 #include "net_types.h"
+#include "registry_ini.h"
 
 // generated
 #include "fc_version.h"
 
 // common
 #include "capstr.h"
-#include "dataio.h"
+#include "dataio_raw.h"
 #include "version.h"
 
 // client

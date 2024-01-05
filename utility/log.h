@@ -14,8 +14,10 @@
 
 // Qt
 #include <QLoggingCategory>
+#include <QString>
+#include <QtGlobal>
 
-#include "fcintl.h"
+#include <stdlib.h>
 
 constexpr auto LOG_FATAL = QtFatalMsg;
 constexpr auto LOG_ERROR = QtCriticalMsg;

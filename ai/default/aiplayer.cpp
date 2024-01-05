@@ -16,6 +16,8 @@
 #include "city.h"
 #include "game.h"
 #include "multipliers.h"
+#include "registry_ini.h"
+
 // server
 #include "citytools.h"
 

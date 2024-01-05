@@ -13,6 +13,8 @@
 
 #include "registry.h"
 
+#include "registry_ini.h"
+
 /**
    Create a section file from a file.  Returns nullptr on error.
  */

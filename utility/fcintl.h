@@ -12,10 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <clocale>
-
 #include "fc_config.h" // FREECIV_ENABLE_NLS
-#include "shared.h"    // bool
 #include "support.h"   // fc__attribute
 
 #ifdef FREECIV_ENABLE_NLS

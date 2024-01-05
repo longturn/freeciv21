@@ -17,8 +17,9 @@
 #pragma once
 
 // utility
-#include "log.h"     // QtMsgType
 #include "support.h" // bool type and fc__attribute
+
+#include <QString>
 
 class QIODevice;
 struct inputfile; // opaque

@@ -21,6 +21,7 @@
 #include "log.h"
 
 #include "rand.h"
+#include "shared.h"
 
 // Qt
 #include <QRandomGenerator>

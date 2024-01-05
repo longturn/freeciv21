@@ -15,6 +15,8 @@
 
 #include "fcintl.h"
 
+#include <QStringList>
+
 QString strvec_to_or_list(const QVector<QString> &psv)
 {
   if (psv.size() == 1) {

@@ -56,14 +56,14 @@
    necessary by making and populating a new table.
  */
 
-#include <cstring>
+#include "genhash.h"
 
 // utility
 #include "log.h"
 #include "shared.h" // ARRAY_SIZE
 #include "support.h"
 
-#include "genhash.h"
+#include <cstring>
 
 #define FULL_RATIO 0.75 // consider expanding when above this
 #define MIN_RATIO 0.24  // shrink when below this

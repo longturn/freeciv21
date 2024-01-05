@@ -11,13 +11,13 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#include <cstring>
-
-// utility
-#include "shared.h"  // TRUE, FALSE
-#include "support.h" // fc_is*
-
 #include "capability.h"
+
+#include "log.h"
+
+#include <QChar>
+
+#include <cstring>
 
 #define GET_TOKEN(start, end)                                               \
   {                                                                         \

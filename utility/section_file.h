@@ -10,15 +10,19 @@
 **************************************************************************/
 #pragma once
 
-#include <QMultiHash>
 /* This header contains internals of section_file that its users should
  * not care about. This header should be included by source files
  * implementing registry itself. */
 
 // utility
-#include "log.h"
 #include "registry_ini.h"
 #include "support.h"
+
+#include <QString>
+
+#include <stddef.h>
+
+template <class Key, class T> class QMultiHash;
 
 // Section structure.
 struct section {
