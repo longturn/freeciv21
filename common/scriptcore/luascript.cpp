@@ -26,9 +26,9 @@ extern "C" {
 #include "sol/sol.hpp"
 
 // utility
-#include "fcintl.h"
 #include "log.h"
 #include "registry.h"
+#include "registry_ini.h"
 
 // common
 #include "map.h"

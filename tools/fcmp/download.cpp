@@ -16,6 +16,7 @@
 #include <cerrno>
 
 // Qt
+#include <QDir>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -29,7 +30,6 @@
 #include "capability.h"
 #include "fcintl.h"
 #include "netfile.h"
-#include "registry.h"
 
 // tools
 #include "mpdb.h"

@@ -12,8 +12,11 @@
       \____/        ********************************************************/
 
 // utility
+#include "log.h"
 #include "registry.h"
+#include "registry_ini.h"
 #include "section_file.h"
+#include "shared.h"
 
 #include "comments.h"
 

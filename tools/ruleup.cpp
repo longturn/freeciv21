@@ -23,11 +23,11 @@
 
 // utility
 #include "fciconv.h"
-#include "registry.h"
 #include "version.h"
 
 // common
 #include "fc_interface.h"
+#include "game.h"
 
 // server
 #include "ruleset.h"

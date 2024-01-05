@@ -11,9 +11,8 @@
 
 #pragma once
 
+#include <QString>
 #include <QVector>
-
-class QString;
 
 QString strvec_to_or_list(const QVector<QString> &psv);
 QString strvec_to_and_list(const QVector<QString> &psv);

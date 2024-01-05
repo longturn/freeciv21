@@ -37,7 +37,7 @@
 #include "calendar.h"
 #include "city.h"
 #include "culture.h"
-#include "dataio.h"
+#include "dataio_raw.h"
 #include "effects.h"
 #include "events.h"
 #include "fc_interface.h"
@@ -53,7 +53,6 @@
 #include "tech.h"
 #include "unit.h"
 #include "unitlist.h"
-#include "version.h"
 #include "victory.h"
 
 // server
@@ -79,6 +78,7 @@
 #include "sanitycheck.h"
 #include "score.h"
 #include "sernet.h"
+#include "server_settings.h"
 #include "settings.h"
 #include "spacerace.h"
 #include "srv_log.h"

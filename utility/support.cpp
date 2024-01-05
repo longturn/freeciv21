@@ -55,8 +55,6 @@
 #include <strings.h>
 #endif
 
-#include <zlib.h>
-
 // Qt
 #include <QFileInfo>
 #include <QHostInfo>

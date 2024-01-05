@@ -17,9 +17,7 @@
 #include "capability.h"
 #include "fcintl.h"
 #include "registry.h"
-
-// modinst
-#include "download.h"
+#include "registry_ini.h"
 
 #include "mpdb.h"
 

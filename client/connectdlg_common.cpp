@@ -13,6 +13,7 @@
 // Qt
 #include <QCoreApplication>
 #include <QDebug>
+#include <QDir>
 #include <QProcess>
 #include <QStandardPaths>
 #include <QTcpServer>
@@ -30,17 +31,16 @@
 #include "log.h"
 #include "rand.h"
 #include "registry.h"
+#include "registry_ini.h"
 #include "shared.h"
 #include "support.h"
 
 // client
 #include "chatline_common.h"
 #include "client_main.h"
-#include "climisc.h"
 #include "clinet.h" // connect_to_server()
 #include "connectdlg_common.h"
 #include "packhand_gen.h"
-#include "tileset/tilespec.h"
 
 // gui-qt
 #include "qtg_cxxside.h"

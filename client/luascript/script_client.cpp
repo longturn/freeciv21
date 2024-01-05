@@ -14,13 +14,13 @@
 extern "C" {
 /* dependencies/lua */
 #include "lua.h"
-#include "lualib.h"
 
 /* dependencies/tolua */
 #include "tolua.h"
 }
 // utility
 #include "log.h"
+#include "section_file.h"
 
 // common
 #include "featured_text.h"

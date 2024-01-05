@@ -15,17 +15,12 @@
 
 // utility
 #include "fcintl.h"
-
-// common
-#include "chatline_common.h"
-#include "connectdlg_common.h"
+#include "section_file.h"
 
 // generated
 #include "fc_version.h"
 
 // client
-#include "client_main.h"
-#include "dialogs.h"
 #include "fc_client.h"
 
 // Qt

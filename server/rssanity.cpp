@@ -13,7 +13,7 @@
 
 // utility
 #include "deprecations.h"
-#include "fcintl.h"
+#include "registry_ini.h"
 
 // common
 #include "achievements.h"
@@ -22,10 +22,9 @@
 #include "game.h"
 #include "government.h"
 #include "movement.h"
-#include "multipliers.h"
 #include "nation.h"
-#include "player.h"
 #include "road.h"
+#include "server_settings.h"
 #include "specialist.h"
 #include "style.h"
 #include "tech.h"

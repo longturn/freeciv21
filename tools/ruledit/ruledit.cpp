@@ -32,6 +32,7 @@
 
 // common
 #include "fc_interface.h"
+#include "game.h"
 
 // server
 #include "sernet.h"

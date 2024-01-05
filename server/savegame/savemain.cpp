@@ -18,8 +18,10 @@
 #include <QString>
 
 // utility
+#include "fcthread.h"
 #include "log.h"
 #include "registry.h"
+#include "registry_ini.h"
 
 // common
 #include "ai.h"

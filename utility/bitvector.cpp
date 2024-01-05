@@ -12,11 +12,8 @@
       \____/        ********************************************************/
 
 #include <QBitArray>
-#include <cstdio>
 
 // utility
-#include "fcintl.h"
-
 #include "bitvector.h"
 
 /* bv_*  - static bitvectors; used for data which where the length is
