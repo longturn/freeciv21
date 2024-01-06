@@ -2795,11 +2795,11 @@ void mr_menu::save_image()
 
           auto path = QStandardPaths::writableLocation(
               QStandardPaths::PicturesLocation);
-          if (path.isEmpty()) {
+          if (path.isEmpty() || !QDir(path).exists()) {
             path = QStandardPaths::writableLocation(
                 QStandardPaths::HomeLocation);
           }
-          if (path.isEmpty()) {
+          if (path.isEmpty() || !QDir(path).exists()) {
             path = freeciv_storage_dir();
           }
           img_name =
