@@ -27,12 +27,10 @@ class QPaintEvent;
 class QPainter;
 class QPushButton;
 class QUrl;
-class chat_listener;
 
 void set_chat_colors(const QHash<QString, QString> &colors);
 QString apply_tags(QString str, const struct text_tag_list *tags,
                    QColor bg_color);
-template <> std::set<chat_listener *> listener<chat_listener>::instances;
 /***************************************************************************
   Listener for chat. See listener<> for information about how to use it
 ***************************************************************************/
