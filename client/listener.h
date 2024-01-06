@@ -10,6 +10,7 @@
 #pragma once
 
 #include <set>
+#include <utility>
 
 /***************************************************************************
   Helper template to connect C and C++ code.
@@ -103,7 +104,7 @@ public:
 
 private:
   // All instances of type_t that have called listen().
-  static std::set<type_t *> instances;
+  static std::set<listener<type_t> *> instances;
 
 protected:
   explicit listener();
@@ -112,13 +113,8 @@ protected:
   void listen();
 
 public:
-  template <class _member_fct_> static void invoke(_member_fct_ function);
-
-  template <class _member_fct_, class _arg1_t_>
-  static void invoke(_member_fct_ function, _arg1_t_ arg);
-
-  template <class _member_fct_, class _arg1_t_, class _arg2_t_>
-  static void invoke(_member_fct_ function, _arg1_t_ arg1, _arg2_t_ arg2);
+  template <class _member_fct_, class... _args_>
+  static void invoke(_member_fct_ function, _args_ &&...args);
 };
 
 /***************************************************************************
@@ -126,7 +122,8 @@ public:
 ***************************************************************************/
 #define FC_CPP_DECLARE_LISTENER(_type_)                                     \
   template <>                                                               \
-  std::set<_type_ *> listener<_type_>::instances = std::set<_type_ *>();
+  std::set<listener<_type_> *> listener<_type_>::instances =                \
+      std::set<listener<_type_> *>();
 
 /***************************************************************************
   Constructor
@@ -140,7 +137,7 @@ template <class _type_> void listener<_type_>::listen()
 {
   // If you get an error here, your listener likely doesn't inherit from the
   // listener<> correctly. See the class documentation.
-  instances.insert(dynamic_cast<type_t *>(this));
+  instances.insert(this);
 }
 
 /***************************************************************************
@@ -148,66 +145,22 @@ template <class _type_> void listener<_type_>::listen()
 ***************************************************************************/
 template <class _type_> listener<_type_>::~listener()
 {
-  instances.erase(dynamic_cast<type_t *>(this));
+  instances.erase(this);
 }
 
 /***************************************************************************
-  Invokes a member function on all instances of an listener type. Template
+  Invokes a member function on all instances of a listener type. Template
   parameters are meant to be automatically deduced.
 
-  Zero-parameter overload.
-
   @param function The member function to call
+  @param args     Arguments to pass ot the function.
 ***************************************************************************/
 template <class _type_>
-template <class _member_fct_>
-void listener<_type_>::invoke(_member_fct_ function)
+template <class _member_fct_, class... _args_>
+void listener<_type_>::invoke(_member_fct_ function, _args_ &&...args)
 {
-  typename std::set<type_t *>::iterator it = instances.begin();
-  typename std::set<type_t *>::iterator end = instances.end();
-  for (; it != end; ++it) {
-    ((*it)->*function)();
-  }
-}
-
-/***************************************************************************
-  Invokes a member function on all instances of an listener type. Template
-  parameters are meant to be automatically deduced.
-
-  One-parameter overload.
-
-  @param function The member function to call
-  @param arg      The argument to call the function with
-***************************************************************************/
-template <class _type_>
-template <class _member_fct_, class _arg1_t_>
-void listener<_type_>::invoke(_member_fct_ function, _arg1_t_ arg)
-{
-  typename std::set<type_t *>::iterator it = instances.begin();
-  typename std::set<type_t *>::iterator end = instances.end();
-  for (; it != end; ++it) {
-    ((*it)->*function)(arg);
-  }
-}
-
-/***************************************************************************
-  Invokes a member function on all instances of an listener type. Template
-  parameters are meant to be automatically deduced.
-
-  Two-parameters overload.
-
-  @param function The member function to call
-  @param arg1     The first argument to pass to the function
-  @param arg2     The second argument to pass to the function
-***************************************************************************/
-template <class _type_>
-template <class _member_fct_, class _arg1_t_, class _arg2_t_>
-void listener<_type_>::invoke(_member_fct_ function, _arg1_t_ arg1,
-                              _arg2_t_ arg2)
-{
-  typename std::set<type_t *>::iterator it = instances.begin();
-  typename std::set<type_t *>::iterator end = instances.end();
-  for (; it != end; ++it) {
-    ((*it)->*function)(arg1, arg2);
+  for (auto &instance : instances) {
+    (dynamic_cast<type_t *>(instance)->*function)(
+        std::forward<_args_>(args)...);
   }
 }
