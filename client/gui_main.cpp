@@ -43,8 +43,6 @@ void real_science_report_dialog_update(void *);
 
 extern void city_font_update();
 
-const bool gui_use_transliteration = false;
-const char *const gui_character_encoding = "UTF-8";
 const char *client_string = "gui-qt";
 static fc_client *freeciv_qt;
 

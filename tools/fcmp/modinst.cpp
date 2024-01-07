@@ -76,10 +76,9 @@ void load_install_info_lists(struct fcmp_params *fcmp)
 void fcmp_init()
 {
   init_nls();
-  init_character_encodings(FC_DEFAULT_DATA_ENCODING, false);
-
+  init_character_encodings();
   fc_srand(time(nullptr)); /* Needed at least for Windows version of
-                           netfile_get_section_file() */
+                              netfile_get_section_file() */
 }
 
 /**

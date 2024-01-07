@@ -21,20 +21,7 @@
 // Qt
 #include <QByteArray> // qstrdup(), qstrncpy()
 #include <QLocale>
-#include <QTextCodec>
 #include <QTextStream>
-
-// std
-#include <cstdarg>
-#include <cstdio>
-#include <cstdlib>
-
-static QTextCodec *localCodec;
-static QTextCodec *dataCodec;
-static QTextCodec *internalCodec;
-
-static const char *transliteration_string;
-static const char *local_encoding, *data_encoding, *internal_encoding;
 
 /**
    Must be called during the initialization phase of server and client to
@@ -42,94 +29,37 @@ static const char *local_encoding, *data_encoding, *internal_encoding;
 
    Pass an internal encoding of nullptr to use the local encoding internally.
  */
-void init_character_encodings(const char *my_internal_encoding,
-                              bool my_use_transliteration)
+void init_character_encodings()
 {
-  transliteration_string = "";
-  if (my_use_transliteration) {
-    transliteration_string = "//TRANSLIT";
-  }
-
-  /* Set the data encoding - first check $FREECIV_DATA_ENCODING,
-   * then fall back to the default. */
-  data_encoding = getenv("FREECIV_DATA_ENCODING");
-  if (!data_encoding) {
-    data_encoding = FC_DEFAULT_DATA_ENCODING;
-  }
-
-  /* Set the local encoding - first check $FREECIV_LOCAL_ENCODING,
-   * then ask the system. */
-  local_encoding = getenv("FREECIV_LOCAL_ENCODING");
-  if (!local_encoding) {
-    local_encoding =
-        qstrdup(QLocale::system().name().toLocal8Bit().constData());
-  }
-
-  /* Set the internal encoding - first check $FREECIV_INTERNAL_ENCODING,
-   * then check the passed-in default value, then fall back to the local
-   * encoding. */
-  internal_encoding = getenv("FREECIV_INTERNAL_ENCODING");
-  if (!internal_encoding) {
-    internal_encoding = my_internal_encoding;
-
-    if (!internal_encoding) {
-      internal_encoding = local_encoding;
-    }
-  }
-  localCodec = QTextCodec::codecForLocale();
-  dataCodec = QTextCodec::codecForName(data_encoding);
-  internalCodec = QTextCodec::codecForName(internal_encoding);
 #ifdef FREECIV_ENABLE_NLS
-  bind_textdomain_codeset("freeciv21-core", internal_encoding);
+  bind_textdomain_codeset("freeciv21-core", "UTF-8");
 #endif
-
-#ifdef FREECIV_DEBUG
-  fprintf(stderr, "Encodings: Data=%s, Local=%s, Internal=%s\n",
-          data_encoding, local_encoding, internal_encoding);
-#endif // FREECIV_DEBUG
 }
-
-/**
-   Return the internal encoding.  This depends on the server or GUI being
-   used.
- */
-const char *get_internal_encoding() { return internal_encoding; }
 
 char *data_to_internal_string_malloc(const char *text)
 {
-  QString s;
-  s = dataCodec->toUnicode(text);
-  s = internalCodec->fromUnicode(s);
-  return qstrdup(s.toLocal8Bit().data());
+  return qstrdup(text);
 }
+
 char *internal_to_data_string_malloc(const char *text)
 {
-  QString s;
-  s = internalCodec->toUnicode(text);
-  s = dataCodec->fromUnicode(s);
-  return qstrdup(s.toLocal8Bit().data());
+  return qstrdup(text);
 }
+
 char *internal_to_local_string_malloc(const char *text)
 {
-  QString s;
-  s = internalCodec->toUnicode(text);
-  s = localCodec->fromUnicode(s);
-  return qstrdup(s.toLocal8Bit().data());
+  return qstrdup(QString(text).toLocal8Bit());
 }
+
 char *local_to_internal_string_malloc(const char *text)
 {
-  QString s;
-  s = localCodec->toUnicode(text);
-  s = internalCodec->fromUnicode(s);
-  return qstrdup(s.toLocal8Bit().data());
+  return qstrdup(QString::fromLocal8Bit(text).toUtf8());
 }
+
 char *local_to_internal_string_buffer(const char *text, char *buf,
                                       size_t bufsz)
 {
-  QString s;
-  s = localCodec->toUnicode(text);
-  s = internalCodec->fromUnicode(s);
-  return qstrncpy(buf, s.toLocal8Bit().data(), bufsz);
+  return qstrncpy(buf, QString::fromLocal8Bit(text).toUtf8(), bufsz);
 }
 
 /**
