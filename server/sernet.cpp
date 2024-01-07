@@ -372,6 +372,7 @@ std::optional<socket_server> server_open_socket()
   // Local socket mode
   if (!srvarg.local_addr.isEmpty()) {
     auto server = std::make_unique<QLocalServer>();
+    server->setSocketOptions(QLocalServer::UserAccessOption);
     if (server->listen(srvarg.local_addr)) {
       connections_set_close_callback(server_conn_close_callback);
 
