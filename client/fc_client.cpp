@@ -12,6 +12,7 @@
 // Qt
 #include <QApplication>
 #include <QDirIterator>
+#include <QProcess>
 #include <QSettings>
 #include <QStackedLayout>
 #include <QStandardPaths>
@@ -19,6 +20,7 @@
 #include <QTcpSocket>
 #include <QTextBlock>
 #include <QTextCodec>
+
 // utility
 #include "fcintl.h"
 // common
@@ -685,6 +687,44 @@ void fc_client::start_new_game()
   if (is_server_running() || client_start_server(client_url().userName())) {
     /* saved settings are sent in client/options.c load_settable_options() */
   }
+}
+
+/**
+ * Load the modpack-installer from the start menu
+ */
+void fc_client::load_modpack()
+{
+  output_window_append(ftc_client, _("Starting the modpack installer..."));
+
+  const QString storage = freeciv_storage_dir();
+  if (storage == nullptr) {
+    output_window_append(ftc_client,
+                         _("Cannot find Freeciv21 storage directory"));
+    output_window_append(
+        ftc_client,
+        _("You'll have to start the modpack installer manually. Sorry..."));
+    return;
+  }
+
+  // Look for a modpack installer binary
+  const QString modpack_name = QStringLiteral("freeciv21-modpack-qt");
+
+  // First next to the client binary
+  // NOTE On Windows findExecutable adds the .exe automatically
+  QString location = QStandardPaths::findExecutable(
+      modpack_name, {QCoreApplication::applicationDirPath()});
+  if (location.isEmpty()) {
+    // Then in PATH
+    location = QStandardPaths::findExecutable(modpack_name);
+  }
+
+  // Start it
+  qInfo(_("Starting freeciv21-modpack-qt at %s"), qUtf8Printable(location));
+
+  QProcess *modProcess = new QProcess(this);
+  QStringList arguments;
+  modProcess->start(location, arguments);
+  modProcess->waitForFinished();
 }
 
 /**

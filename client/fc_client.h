@@ -140,6 +140,7 @@ public slots:
   void start_from_file(const QString &file);
   void start_new_game();
   void switch_page(int i);
+  void load_modpack();
 
 private:
   void create_loading_page();
