@@ -43,7 +43,6 @@
 
 static bool is_plain_public_message(const QString &s);
 
-FC_CPP_DECLARE_LISTENER(chat_listener)
 QStringList chat_listener::history = QStringList();
 
 namespace {

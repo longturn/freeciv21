@@ -3,8 +3,6 @@
 #include "options.h"
 #include "tilespec.h"
 
-FC_CPP_DECLARE_LISTENER(freeciv::map_updates_handler)
-
 namespace freeciv {
 
 /**
