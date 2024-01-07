@@ -123,7 +123,6 @@ int fc_strcoll(const char *str0, const char *str1);
 int fc_stricoll(const char *str0, const char *str1);
 
 FILE *fc_fopen(const char *filename, const char *opentype);
-int fc_remove(const char *filename);
 
 fc_errno fc_get_errno();
 const char *fc_strerror(fc_errno err);
