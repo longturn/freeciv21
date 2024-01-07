@@ -27,13 +27,6 @@
   };
   ~~~~~
 
-  The listener needs some static data. Declaring it is as simple as putting
-  a macro in some source file:
-
-  ~~~~~{.cpp}
-  FC_CPP_DECLARE_LISTENER(foo_listener)
-  ~~~~~
-
   Then, you call the listeners from the implementation of the C interface:
 
   ~~~~~{.cpp}
@@ -104,7 +97,7 @@ public:
 
 private:
   // All instances of type_t that have called listen().
-  static std::set<listener<type_t> *> instances;
+  inline static std::set<listener<type_t> *> instances{};
 
 protected:
   explicit listener();
@@ -116,14 +109,6 @@ public:
   template <class _member_fct_, class... _args_>
   static void invoke(_member_fct_ function, _args_ &&...args);
 };
-
-/***************************************************************************
-  Macro to declare the static data needed by listener<> classes
-***************************************************************************/
-#define FC_CPP_DECLARE_LISTENER(_type_)                                     \
-  template <>                                                               \
-  std::set<listener<_type_> *> listener<_type_>::instances =                \
-      std::set<listener<_type_> *>();
 
 /***************************************************************************
   Constructor
