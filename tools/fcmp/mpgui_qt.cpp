@@ -104,7 +104,7 @@ int main(int argc, char **argv)
   central = new QWidget;
   main_window = new mpgui_main(&app, central);
 
-  main_window->setGeometry(0, 30, 640, 60);
+  main_window->resize(820, 140);
   main_window->setWindowTitle(
       QString::fromUtf8(_("Freeciv21 modpack installer (Qt)")));
 
