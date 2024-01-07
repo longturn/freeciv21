@@ -40,7 +40,6 @@ void load_install_info_lists(struct fcmp_params *fcmp)
 {
   char main_db_filename[500];
   char scenario_db_filename[500];
-  struct stat buf;
 
   fc_snprintf(main_db_filename, sizeof(main_db_filename),
               "%s/" DATASUBDIR "/" FCMP_CONTROLD "/mp.db",
@@ -56,14 +55,14 @@ void load_install_info_lists(struct fcmp_params *fcmp)
               "%s/scenarios/" FCMP_CONTROLD "/modpacks.db",
               qUtf8Printable(fcmp->inst_prefix));
 
-  if (fc_stat(main_db_filename, &buf)) {
+  if (QFileInfo::exists(main_db_filename)) {
     create_mpdb(main_db_filename, false);
     load_install_info_list(main_ii_filename);
   } else {
     open_mpdb(main_db_filename, false);
   }
 
-  if (fc_stat(scenario_db_filename, &buf)) {
+  if (QFileInfo::exists(scenario_db_filename)) {
     create_mpdb(scenario_db_filename, true);
     load_install_info_list(scenario_ii_filename);
   } else {

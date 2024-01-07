@@ -118,19 +118,18 @@ bool script_server_unsafe_do_string(struct connection *caller,
 bool script_server_load_file(const char *filename, char **buf)
 {
   FILE *ffile;
-  struct stat stats;
   char *buffer;
 
-  fc_stat(filename, &stats);
+  QFileInfo stats(filename);
   ffile = fc_fopen(filename, "r");
 
   if (ffile != nullptr) {
     int len;
 
-    buffer = new char[stats.st_size + 1];
-    len = fread(buffer, 1, stats.st_size, ffile);
+    buffer = new char[stats.size() + 1];
+    len = fread(buffer, 1, stats.size(), ffile);
 
-    if (len == stats.st_size) {
+    if (len == stats.size()) {
       buffer[len] = '\0';
 
       *buf = buffer;
