@@ -75,9 +75,9 @@ int main(int argc, char **argv)
   (void) bindtextdomain("freeciv21-ruledit", get_locale_dir());
 #endif
 
-  init_character_encodings(FC_DEFAULT_DATA_ENCODING, false);
+  init_character_encodings();
 #ifdef ENABLE_NLS
-  bind_textdomain_codeset("freeciv21-ruledit", get_internal_encoding());
+  bind_textdomain_codeset("freeciv21-ruledit", "UTF-8");
 #endif
 
   // Initialize command line arguments.

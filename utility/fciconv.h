@@ -60,20 +60,15 @@
     encoding.
 */
 
-#define FC_DEFAULT_DATA_ENCODING "UTF-8"
+void init_character_encodings();
 
-void init_character_encodings(const char *internal_encoding,
-                              bool use_transliteration);
+[[deprecated]] char *data_to_internal_string_malloc(const char *text);
+[[deprecated]] char *internal_to_data_string_malloc(const char *text);
+[[deprecated]] char *internal_to_local_string_malloc(const char *text);
+[[deprecated]] char *local_to_internal_string_malloc(const char *text);
 
-const char *get_internal_encoding();
-
-char *data_to_internal_string_malloc(const char *text);
-char *internal_to_data_string_malloc(const char *text);
-char *internal_to_local_string_malloc(const char *text);
-char *local_to_internal_string_malloc(const char *text);
-
-char *local_to_internal_string_buffer(const char *text, char *buf,
-                                      size_t bufsz);
+[[deprecated]] char *
+local_to_internal_string_buffer(const char *text, char *buf, size_t bufsz);
 
 #define fc_printf(...) fc_fprintf(stdout, __VA_ARGS__)
 void fc_fprintf(FILE *stream, const char *format, ...)
