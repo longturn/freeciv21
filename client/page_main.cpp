@@ -28,11 +28,14 @@ page_main::page_main(QWidget *parent, fc_client *gui) : QWidget(parent)
   ui.bload->setText(_("Load saved game"));
   ui.bconnect->setText(_("Connect to network game"));
   ui.bquit->setText(_("Quit"));
+  ui.baddon->setText(_("Add Ons"));
 
   connect(ui.btut, &QAbstractButton::clicked, gui,
           &fc_client::start_tutorial);
   connect(ui.bstart, &QAbstractButton::clicked, gui,
           &fc_client::start_new_game);
+  connect(ui.baddon, &QAbstractButton::clicked, gui,
+          &fc_client::load_modpack);
   connect(ui.bscenario, &QPushButton::clicked,
           [gui]() { gui->switch_page(PAGE_SCENARIO); });
   connect(ui.boptions, &QAbstractButton::clicked,
