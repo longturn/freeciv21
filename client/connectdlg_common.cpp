@@ -19,6 +19,7 @@
 #include <QTcpServer>
 #include <QUrl>
 #include <QUuid>
+#include <QtGlobal>
 
 #include <cstring>
 
@@ -48,7 +49,7 @@
 
 bool server_quitting = false;
 
-static char challenge_fullname[MAX_LEN_PATH];
+static QString challenge_fullname{};
 static bool client_has_hack = false;
 
 int internal_server_port;
@@ -316,9 +317,9 @@ static void randomize_string(char *str, size_t n)
    and then sends the string to the server. If the server can open
    and read the string, then the client is given hack access.
  */
-void send_client_wants_hack(const char *filename)
+void send_client_wants_hack(const QString &filename)
 {
-  if (filename[0] != '\0') {
+  if (!filename.isEmpty()) {
     struct packet_single_want_hack_req req;
     struct section_file *file;
     auto sdir = freeciv_storage_dir();
@@ -332,9 +333,7 @@ void send_client_wants_hack(const char *filename)
     }
 
     QDir().mkpath(sdir);
-
-    fc_snprintf(challenge_fullname, sizeof(challenge_fullname), "%s/%s",
-                qUtf8Printable(sdir), filename);
+    challenge_fullname = sdir + QStringLiteral("/") + filename;
 
     // generate an authentication token
     randomize_string(req.token, sizeof(req.token));
@@ -343,7 +342,7 @@ void send_client_wants_hack(const char *filename)
     secfile_insert_str(file, req.token, "challenge.token");
     if (!secfile_save(file, challenge_fullname)) {
       qCritical("Couldn't write token to temporary file: %s",
-                challenge_fullname);
+                qUtf8Printable(challenge_fullname));
     }
     secfile_destroy(file);
 
@@ -358,11 +357,12 @@ void send_client_wants_hack(const char *filename)
 void handle_single_want_hack_reply(bool you_have_hack)
 {
   // remove challenge file
-  if (challenge_fullname[0] != '\0') {
-    if (fc_remove(challenge_fullname) == -1) {
-      qCritical("Couldn't remove temporary file: %s", challenge_fullname);
+  if (!challenge_fullname.isEmpty()) {
+    if (!QFile::remove(challenge_fullname)) {
+      qCritical("Couldn't remove temporary file: %s",
+                qUtf8Printable(challenge_fullname));
     }
-    challenge_fullname[0] = '\0';
+    challenge_fullname.clear();
   }
 
   if (you_have_hack) {
