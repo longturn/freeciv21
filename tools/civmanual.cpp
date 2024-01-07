@@ -667,7 +667,7 @@ int main(int argc, char **argv)
   QCoreApplication::setApplicationVersion(freeciv21_version());
 
   init_nls();
-  init_character_encodings(FC_DEFAULT_DATA_ENCODING, false);
+  init_character_encodings();
 
   QCommandLineParser parser;
   parser.addHelpOption();
