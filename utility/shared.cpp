@@ -642,7 +642,7 @@ QVector<QString> *fileinfolist(const QStringList &dirs, const char *suffix)
     dir.setNameFilters({QStringLiteral("*") + QString::fromUtf8(suffix)});
     for (auto name : dir.entryList()) {
       name.truncate(name.length() - qstrlen(suffix));
-      files->append(name.toUtf8().data());
+      files->append(name);
     }
   }
   std::sort(files->begin(), files->end());

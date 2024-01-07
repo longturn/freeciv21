@@ -124,7 +124,6 @@ int fc_stricoll(const char *str0, const char *str1);
 
 FILE *fc_fopen(const char *filename, const char *opentype);
 int fc_remove(const char *filename);
-int fc_stat(const char *filename, struct stat *buf);
 
 fc_errno fc_get_errno();
 const char *fc_strerror(fc_errno err);

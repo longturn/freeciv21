@@ -3794,7 +3794,6 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
     fc_strlcpy(name_buffer, OPTION_FILE_NAME, sizeof(name_buffer));
 #else
     int major, minor;
-    struct stat buf;
 
     name = freeciv_storage_dir();
     if (name.isEmpty()) {
@@ -3813,7 +3812,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
         fc_snprintf(name_buffer, sizeof(name_buffer),
                     "%s/freeciv-client-rc-%d.%d", qUtf8Printable(name),
                     major, minor);
-        if (0 == fc_stat(name_buffer, &buf)) {
+        if (QFileInfo::exists(name_buffer)) {
           if (MAJOR_NEW_OPTION_FILE_NAME != major
               || MINOR_NEW_OPTION_FILE_NAME != minor) {
             qInfo(_("Didn't find '%s' option file, "
@@ -3837,7 +3836,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
       fc_snprintf(name_buffer, sizeof(name_buffer),
                   "%s/.freeciv-client-rc-%d.%d",
                   qUtf8Printable(QDir::homePath()), major, minor);
-      if (0 == fc_stat(name_buffer, &buf)) {
+      if (QFileInfo::exists(name_buffer)) {
         qInfo(_("Didn't find '%s' option file, "
                 "loading from '%s' instead."),
               get_current_option_file_name()
@@ -3854,7 +3853,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
     // Try with the old one.
     fc_snprintf(name_buffer, sizeof(name_buffer), "%s/%s",
                 qUtf8Printable(name), OLD_OPTION_FILE_NAME);
-    if (0 == fc_stat(name_buffer, &buf)) {
+    if (QFileInfo::exists(name_buffer)) {
       qInfo(_("Didn't find '%s' option file, "
               "loading from '%s' instead."),
             get_current_option_file_name(), OLD_OPTION_FILE_NAME);
