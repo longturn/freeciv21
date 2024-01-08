@@ -5,7 +5,8 @@ on:
 jobs:
   update-autorevision:
     name: "Update AutoRevision"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    if: github.event_name == 'release'
     steps:
       - uses: actions/checkout@v3
         with:
@@ -39,7 +40,8 @@ jobs:
           delete-branch: true
   update-archive:
     name: "Update Source Archive"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    if: github.event_name == 'release'
     steps:
       - uses: actions/checkout@v3
         with:
