@@ -305,7 +305,8 @@ private:
   void update_info_label();
   void update_buy_button();
   void fill_citizens_pixmap(QPixmap *pixmap, QPainter *painter,
-                            citizen_category *categories, int num_citizens);
+                            const citizen_category *categories,
+                            int num_citizens);
   void update_citizens();
   void update_improvements();
   void update_units();
