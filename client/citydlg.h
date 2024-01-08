@@ -9,6 +9,7 @@
 **************************************************************************/
 #pragma once
 
+#include "city.h"
 #include "fc_types.h"
 
 // Qt
@@ -25,6 +26,8 @@
 #include <qobjectdefs.h>
 // gui-qt
 #include "dialogs.h"
+
+#define CITIZENS_PER_ROW 20
 
 class QAction;
 class QCheckBox;
@@ -251,9 +254,12 @@ public:
 private:
   struct city *pcity{nullptr};
   int type;
+  QSize get_pixmap_size() const;
 
 protected:
   void mousePressEvent(QMouseEvent *event) override;
+  QSize minimumSizeHint() const override;
+  QSize sizeHint() const override;
 };
 
 class city_info : public QWidget {
@@ -298,6 +304,8 @@ private:
   void update_building();
   void update_info_label();
   void update_buy_button();
+  void fill_citizens_pixmap(QPixmap *pixmap, QPainter *painter,
+                            citizen_category *categories, int num_citizens);
   void update_citizens();
   void update_improvements();
   void update_units();

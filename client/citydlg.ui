@@ -64,11 +64,11 @@
         </item>
         <item>
          <widget class="city_label" name="citizens_label">
-          <property name="minimumSize">
-           <size>
-            <width>200</width>
-            <height>0</height>
-           </size>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
           <property name="text">
            <string>citizens</string>
@@ -407,6 +407,12 @@
      <property name="autoFillBackground">
       <bool>true</bool>
      </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <layout class="QVBoxLayout" name="verticalLayout_7">
       <property name="spacing">
        <number>0</number>
@@ -430,6 +436,12 @@
         </property>
         <property name="documentMode">
          <bool>true</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
         <widget class="QWidget" name="tab_2">
          <attribute name="title">
@@ -596,6 +608,12 @@
                 <bool>true</bool>
                </property>
                <widget class="QWidget" name="scrollAreaWidgetContents">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="geometry">
                  <rect>
                   <x>0</x>
@@ -617,6 +635,12 @@
                  </item>
                  <item row="0" column="1">
                   <widget class="city_label" name="lab_table1">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
                    <property name="text">
                     <string>TextLabel</string>
                    </property>
@@ -634,6 +658,12 @@
                  </item>
                  <item row="1" column="1">
                   <widget class="city_label" name="lab_table2">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
                    <property name="text">
                     <string>TextLabel</string>
                    </property>
@@ -651,6 +681,12 @@
                  </item>
                  <item row="2" column="1">
                   <widget class="city_label" name="lab_table3">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
                    <property name="text">
                     <string>lab_table3</string>
                    </property>
@@ -668,6 +704,12 @@
                  </item>
                  <item row="3" column="1">
                   <widget class="city_label" name="lab_table4">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
                    <property name="text">
                     <string>TextLabel</string>
                    </property>
@@ -685,6 +727,12 @@
                  </item>
                  <item row="4" column="1">
                   <widget class="city_label" name="lab_table5">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
                    <property name="text">
                     <string>TextLabel</string>
                    </property>
@@ -702,6 +750,12 @@
                  </item>
                  <item row="5" column="1">
                   <widget class="city_label" name="lab_table6">
+                   <property name="sizePolicy">
+                   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                    <property name="text">
                     <string>TextLabel</string>
                    </property>

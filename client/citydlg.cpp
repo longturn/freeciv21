@@ -581,27 +581,56 @@ void city_label::set_type(int x) { type = x; }
  */
 void city_label::mousePressEvent(QMouseEvent *event)
 {
-  int citnum, i, num_citizens, nothing_width;
-  int w = tileset_small_sprite_width(tileset);
-
   if (!pcity) {
     return;
   }
+
   if (cma_is_city_under_agent(pcity, nullptr)) {
     return;
   }
-  num_citizens = pcity->size;
-  nothing_width = (this->width() - num_citizens * w) / 2;
-  i = 1 + (num_citizens * 5 / 200);
-  w = w / i;
-  citnum = (event->x() - nothing_width) / w;
 
   if (!can_client_issue_orders()) {
     return;
   }
 
-  city_rotate_specialist(pcity, citnum);
+  int sprite_width = tileset_small_sprite_width(tileset);
+  int sprite_height = tileset_small_sprite_height(tileset);
+
+  int num_citizens = pcity->size;
+
+  // if there's less than CITIZENS_PER_ROW citizens, we may have space on the
+  // sides, so account for that
+  int horizontal_spacing =
+      (this->width() - MIN(CITIZENS_PER_ROW, num_citizens) * sprite_width)
+      / 2;
+
+  int citizen_x = (event->x() - horizontal_spacing) / sprite_width;
+  int citizen_y = event->y() / sprite_height;
+
+  int citizen_index = citizen_y * CITIZENS_PER_ROW + citizen_x;
+
+  // users can click in empty space beyond the citizen sprites if there are
+  // incomplete rows
+  if (citizen_index < 0 || citizen_index > num_citizens - 1) {
+    return;
+  }
+
+  city_rotate_specialist(pcity, citizen_index);
 }
+
+QSize city_label::get_pixmap_size() const
+{
+  auto pix = this->pixmap(Qt::ReturnByValue);
+  if (pix.isNull()) {
+    return {0, 0};
+  } else {
+    return pix.size();
+  }
+}
+
+QSize city_label::minimumSizeHint() const { return this->get_pixmap_size(); }
+
+QSize city_label::sizeHint() const { return this->get_pixmap_size(); }
 
 /**
    Just sets target city for city_label
@@ -1423,80 +1452,99 @@ void city_dialog::update_buy_button()
 }
 
 /**
+   Fill a pixmap with citizen sprites
+ */
+void city_dialog::fill_citizens_pixmap(QPixmap *pixmap, QPainter *painter,
+                                       citizen_category *categories,
+                                       int num_citizens)
+{
+  int sprite_width = tileset_small_sprite_width(tileset);
+  int sprite_height = tileset_small_sprite_height(tileset);
+
+  QRect sprite_rectangle(0, 0, sprite_width, sprite_height);
+  QRect painting_area(0, 0, sprite_width, sprite_height);
+
+  pixmap->fill(Qt::transparent);
+  for (int i = 0; i < num_citizens; i++) {
+    painting_area.moveTo((i % CITIZENS_PER_ROW) * sprite_width,
+                         (i / CITIZENS_PER_ROW) * sprite_height);
+    auto pix = get_citizen_sprite(tileset, categories[i], i, pcity);
+    painter->begin(citizen_pixmap);
+    painter->drawPixmap(painting_area, *pix, sprite_rectangle);
+    painter->end();
+  }
+}
+
+/**
    Redraws citizens for city_label (citizens_label)
  */
 void city_dialog::update_citizens()
 {
   enum citizen_category categories[MAX_CITY_SIZE];
-  int i, j, width, height;
-  QPainter p;
   int num_citizens =
       get_city_citizen_types(pcity, FEELING_FINAL, categories);
-  int w = tileset_small_sprite_width(tileset);
-  int h = tileset_small_sprite_height(tileset);
 
-  i = 1 + (num_citizens * 5 / 200);
-  w = w / i;
-  QRect source_rect(0, 0, w, h);
-  QRect dest_rect(0, 0, w, h);
-  width = w * num_citizens;
-  height = h;
+  int num_rows = num_citizens / CITIZENS_PER_ROW;
+
+  // extra incomplete row for leftover citizens
+  if (num_citizens % CITIZENS_PER_ROW > 0) {
+    num_rows += 1;
+  }
+
+  int sprite_width = tileset_small_sprite_width(tileset);
+  int sprite_height = tileset_small_sprite_height(tileset);
+
+  int canvas_width = sprite_width * MIN(CITIZENS_PER_ROW, num_citizens);
+  int canvas_height = sprite_height * num_rows;
 
   if (citizen_pixmap) {
     citizen_pixmap->detach();
     delete citizen_pixmap;
   }
 
-  citizen_pixmap = new QPixmap(width, height);
+  citizen_pixmap = new QPixmap(canvas_width, canvas_height);
+  QPainter painter;
 
-  for (j = 0, i = 0; i < num_citizens; i++, j++) {
-    dest_rect.moveTo(i * w, 0);
-    auto pix = get_citizen_sprite(tileset, categories[j], j, pcity);
-    p.begin(citizen_pixmap);
-    p.drawPixmap(dest_rect, *pix, source_rect);
-    p.end();
-  }
+  this->fill_citizens_pixmap(citizen_pixmap, &painter, categories,
+                             num_citizens);
 
   ui.citizens_label->set_city(pcity);
   ui.citizens_label->setPixmap(*citizen_pixmap);
+  ui.citizens_label->updateGeometry();
 
   lab_table[FEELING_FINAL]->setPixmap(*citizen_pixmap);
+  lab_table[FEELING_FINAL]->updateGeometry();
   lab_table[FEELING_FINAL]->setToolTip(text_happiness_wonders(pcity));
 
-  for (int k = 0; k < FEELING_LAST - 1; k++) {
-    lab_table[k]->set_city(pcity);
+  for (int i = 0; i < FEELING_LAST - 1; i++) {
+    lab_table[i]->set_city(pcity);
     num_citizens = get_city_citizen_types(
-        pcity, static_cast<citizen_feeling>(k), categories);
+        pcity, static_cast<citizen_feeling>(i), categories);
+    this->fill_citizens_pixmap(citizen_pixmap, &painter, categories,
+                               num_citizens);
 
-    for (j = 0, i = 0; i < num_citizens; i++, j++) {
-      dest_rect.moveTo(i * w, 0);
-      auto pix = get_citizen_sprite(tileset, categories[j], j, pcity);
-      p.begin(citizen_pixmap);
-      p.drawPixmap(dest_rect, *pix, source_rect);
-      p.end();
-    }
+    lab_table[i]->setPixmap(*citizen_pixmap);
+    lab_table[i]->updateGeometry();
 
-    lab_table[k]->setPixmap(*citizen_pixmap);
-
-    switch (k) {
+    switch (i) {
     case FEELING_BASE:
-      lab_table[k]->setToolTip(text_happiness_cities(pcity));
+      lab_table[i]->setToolTip(text_happiness_cities(pcity));
       break;
 
     case FEELING_LUXURY:
-      lab_table[k]->setToolTip(text_happiness_luxuries(pcity));
+      lab_table[i]->setToolTip(text_happiness_luxuries(pcity));
       break;
 
     case FEELING_EFFECT:
-      lab_table[k]->setToolTip(text_happiness_buildings(pcity));
+      lab_table[i]->setToolTip(text_happiness_buildings(pcity));
       break;
 
     case FEELING_NATIONALITY:
-      lab_table[k]->setToolTip(text_happiness_nationality(pcity));
+      lab_table[i]->setToolTip(text_happiness_nationality(pcity));
       break;
 
     case FEELING_MARTIAL:
-      lab_table[k]->setToolTip(text_happiness_units(pcity));
+      lab_table[i]->setToolTip(text_happiness_units(pcity));
       break;
 
     default:
