@@ -96,8 +96,6 @@ static QStringList scenario_dir_names = {};
 
 static char *mc_group = nullptr;
 
-Q_GLOBAL_STATIC(QString, realfile);
-
 /**
    An AND function for fc_tristate.
  */
@@ -679,52 +677,21 @@ QVector<QString> *fileinfolist(const QStringList &dirs, const char *suffix)
    Returns a filename to access the specified file from a
    directory by searching all specified directories for the file.
 
-   If the specified 'filename' is nullptr, the returned string contains
-   the effective path.  (But this should probably only be used for
-   debug output.)
-
-   Returns nullptr if the specified filename cannot be found in any of the
-   data directories.  (A file is considered "found" if it can be
-   read-opened.)  The returned pointer points to static memory, so this
-   function can only supply one filename at a time.  Don't free that
-   pointer.
-
-   TODO: Make this re-entrant
+   Returns an empty string if the specified filename cannot be found
+   in any of the data directories.
  */
 QString fileinfoname(const QStringList &dirs, const char *filename)
 {
-  if (dirs.isEmpty()) {
-    return QString();
-  }
-
-  if (!filename) {
-    bool first = true;
-
-    realfile->clear();
-    for (const auto &dirname : dirs) {
-      if (first) {
-        *realfile += QStringLiteral("/%1").arg(dirname);
-        first = false;
-      } else {
-        *realfile += QStringLiteral("%1").arg(dirname);
-      }
-    }
-
-    return *realfile;
-  }
-
   for (const auto &dirname : dirs) {
-    struct stat buf; // see if we can open the file or directory
-
-    *realfile = QStringLiteral("%1/%2").arg(dirname, filename);
-    if (fc_stat(qUtf8Printable(*realfile), &buf) == 0) {
-      return *realfile;
+    QString path = dirname + QLatin1String("/") + filename;
+    if (QFileInfo::exists(path)) {
+      return path;
     }
   }
 
   qDebug("Could not find readable file \"%s\" in data path.", filename);
 
-  return nullptr;
+  return QString();
 }
 
 /**
