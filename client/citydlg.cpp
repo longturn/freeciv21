@@ -1455,7 +1455,7 @@ void city_dialog::update_buy_button()
    Fill a pixmap with citizen sprites
  */
 void city_dialog::fill_citizens_pixmap(QPixmap *pixmap, QPainter *painter,
-                                       citizen_category *categories,
+                                       const citizen_category *categories,
                                        int num_citizens)
 {
   int sprite_width = tileset_small_sprite_width(tileset);
@@ -1525,32 +1525,14 @@ void city_dialog::update_citizens()
 
     lab_table[i]->setPixmap(*citizen_pixmap);
     lab_table[i]->updateGeometry();
-
-    switch (i) {
-    case FEELING_BASE:
-      lab_table[i]->setToolTip(text_happiness_cities(pcity));
-      break;
-
-    case FEELING_LUXURY:
-      lab_table[i]->setToolTip(text_happiness_luxuries(pcity));
-      break;
-
-    case FEELING_EFFECT:
-      lab_table[i]->setToolTip(text_happiness_buildings(pcity));
-      break;
-
-    case FEELING_NATIONALITY:
-      lab_table[i]->setToolTip(text_happiness_nationality(pcity));
-      break;
-
-    case FEELING_MARTIAL:
-      lab_table[i]->setToolTip(text_happiness_units(pcity));
-      break;
-
-    default:
-      break;
-    }
   }
+
+  lab_table[FEELING_BASE]->setToolTip(text_happiness_cities(pcity));
+  lab_table[FEELING_LUXURY]->setToolTip(text_happiness_luxuries(pcity));
+  lab_table[FEELING_EFFECT]->setToolTip(text_happiness_buildings(pcity));
+  lab_table[FEELING_NATIONALITY]->setToolTip(
+      text_happiness_nationality(pcity));
+  lab_table[FEELING_MARTIAL]->setToolTip(text_happiness_units(pcity));
 }
 
 /**
