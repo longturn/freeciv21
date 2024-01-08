@@ -724,7 +724,6 @@ void fc_client::load_modpack()
   QProcess *modProcess = new QProcess(this);
   QStringList arguments;
   modProcess->start(location, arguments);
-  modProcess->waitForFinished();
 }
 
 /**
