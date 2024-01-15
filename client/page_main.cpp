@@ -28,13 +28,13 @@ page_main::page_main(QWidget *parent, fc_client *gui) : QWidget(parent)
   ui.bload->setText(_("Load saved game"));
   ui.bconnect->setText(_("Connect to network game"));
   ui.bquit->setText(_("Quit"));
-  ui.baddon->setText(_("Add-Ons"));
+  ui.bmods->setText(_("Mods"));
 
   connect(ui.btut, &QAbstractButton::clicked, gui,
           &fc_client::start_tutorial);
   connect(ui.bstart, &QAbstractButton::clicked, gui,
           &fc_client::start_new_game);
-  connect(ui.baddon, &QAbstractButton::clicked, gui,
+  connect(ui.bmods, &QAbstractButton::clicked, gui,
           &fc_client::load_modpack);
   connect(ui.bscenario, &QPushButton::clicked,
           [gui]() { gui->switch_page(PAGE_SCENARIO); });
@@ -46,10 +46,8 @@ page_main::page_main(QWidget *parent, fc_client *gui) : QWidget(parent)
   connect(ui.bload, &QPushButton::clicked,
           [gui]() { gui->switch_page(PAGE_LOAD); });
 
-  // TRANS: "version 2.6.0, Qt client"
-  msgbuf = QString(_("%1%2, Qt client"))
-               .arg(word_version())
-               .arg(freeciv21_version());
+  // TRANS: "version 2.6.0"
+  msgbuf = QString(_("%1%2")).arg(word_version()).arg(freeciv21_version());
   ui.lversion->setText(QString(msgbuf) + beta);
   setLayout(ui.gridLayout);
 }
