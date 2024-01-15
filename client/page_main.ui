@@ -128,9 +128,9 @@
      </widget>
     </item>
     <item row="8" column="0">
-     <widget class="QPushButton" name="baddon">
+     <widget class="QPushButton" name="bmods">
       <property name="text">
-       <string>Add Ons</string>
+       <string>Mods</string>
       </property>
       <property name="main_pagebt" stdset="0">
        <bool>true</bool>
