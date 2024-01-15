@@ -28,7 +28,7 @@ page_main::page_main(QWidget *parent, fc_client *gui) : QWidget(parent)
   ui.bload->setText(_("Load saved game"));
   ui.bconnect->setText(_("Connect to network game"));
   ui.bquit->setText(_("Quit"));
-  ui.baddon->setText(_("Add Ons"));
+  ui.baddon->setText(_("Add-Ons"));
 
   connect(ui.btut, &QAbstractButton::clicked, gui,
           &fc_client::start_tutorial);
