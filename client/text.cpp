@@ -1633,7 +1633,10 @@ QString text_happiness_cities_apply_rules(int cities, int max_content)
         .arg(cities)
         .arg(max_content);
   } else if (max_content == 0) {
-    return _("You have %1 cities, thus all citizens are unhappy.");
+    return QString(PL_("You have %1 city, thus all citizens are unhappy.",
+                       "You have %1 cities, thus all citizens are unhappy.",
+                       cities))
+        .arg(cities);
   } else {
     // TRANS: Pluralized in "%2 angry citizens"
     return QString(PL_("You have %1 cities, resulting in a maximum of "
