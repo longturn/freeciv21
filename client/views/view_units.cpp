@@ -392,12 +392,12 @@ void units_view::selection_changed(const QItemSelection &sl,
     qvar = itm->data(Qt::UserRole);
     uid = qvar.toInt();
     selected = cid_decode(uid);
-    counter = ui.units_widget->item(curr_row, 3)->text().toInt();
+    counter = ui.units_widget->item(curr_row, 4)->text().toInt();
     if (counter > 0) {
       ui.disband_but->setDisabled(false);
       ui.find_but->setDisabled(false);
     }
-    upg = ui.units_widget->item(curr_row, 1)->text();
+    upg = ui.units_widget->item(curr_row, 2)->text();
     if (upg != "-") {
       ui.upg_but->setDisabled(false);
     }
