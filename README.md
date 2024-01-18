@@ -86,3 +86,17 @@ Alternatively, Freeciv21 can be used with Nix. For this, enable Nix flakes and r
 ```sh
 nix run github:longturn/freeciv21#;
 ```
+
+### FreeBSD
+
+Freeciv21 is available in the FreeBSD ports tree. You can install the binary
+package using this command:
+```sh
+pgk install freeciv21
+```
+
+Although it is recommended to use the binary package, you can also build
+Freeciv21 using the ports tree:
+```sh
+make -C /usr/ports/games/freeciv21 install clean
+```
