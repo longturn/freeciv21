@@ -41,10 +41,11 @@ if(WIN32 OR MSYS OR MINGW)
   # Custom command files to run the applications
   install(
     FILES
-    dist/freeciv21-server.cmd
-    dist/client.ico
-    dist/mp.ico
-    dist/server.ico
+    dist/windows/client.ico
+    dist/windows/mp.ico
+    dist/windows/server.ico
+    dist/windows/freeciv21-server.cmd
+    dist/windows/qt.conf
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21)
 endif()
