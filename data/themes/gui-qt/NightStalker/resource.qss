@@ -103,6 +103,7 @@ resize_widget
 
 QPushButton[main_pagebt="true"] {
   color: white;
+  font-size: 1.5em;
   min-height: 32px;
   min-width: 200px;
   background: #000330;
