@@ -29,5 +29,3 @@ if(SPHINX_FOUND)
 else()
   message(STATUS "Sphinx NOT Found.")
 endif()
-
-option(FREECIV_ENABLE_MANPAGES "Enable manpages" OFF)
