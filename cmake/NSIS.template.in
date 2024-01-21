@@ -199,7 +199,7 @@
   FunctionEnd
 
   Function RunFreeciv21
-    ExecShell "" "$SMPROGRAMS\${APPNAME}\${APPNAME} Client.lnk"
+    ExecShell "" "$SMPROGRAMS\${APPNAME}\${APPNAME}.lnk"
   FunctionEnd
 
   Function UninstallExisting
@@ -224,11 +224,11 @@
 
 
     ; Create Desktop Icon
-    CreateShortCut "$DESKTOP\${APPNAME} Client.lnk" "$INSTDIR\freeciv21-client.exe" "" "$INSTDIR\freeciv21-client.ico" 0
+    CreateShortCut "$DESKTOP\${APPNAME}.lnk" "$INSTDIR\freeciv21-client.exe" "" "$INSTDIR\freeciv21-client.ico" 0
 
     ; Create Start Menu Entries
     CreateDirectory "$SMPROGRAMS\${APPNAME}"
-    CreateShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME} Client.lnk" "$INSTDIR\freeciv21-client.exe" "" "$INSTDIR\freeciv21-client.ico" 0
+    CreateShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME}.lnk" "$INSTDIR\freeciv21-client.exe" "" "$INSTDIR\freeciv21-client.ico" 0
     CreateShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME} Modpack Installer.lnk" "$INSTDIR\freeciv21-modpack-qt.exe" "" "$INSTDIR\freeciv21-modpack.ico" 0
     CreateShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME} Server.lnk" "$INSTDIR\freeciv21-server.exe" "" "$INSTDIR\freeciv21-server.ico" 0
 
