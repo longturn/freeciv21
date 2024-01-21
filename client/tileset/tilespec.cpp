@@ -785,7 +785,6 @@ const QVector<QString> *get_tileset_list(const struct option *poption)
 
   QVector<QString> *list = fileinfolist(get_data_dirs(), TILESPEC_SUFFIX);
   tilesets[idx]->clear();
-  tilesets[idx] = new QVector<QString>;
   for (const auto &file : qAsConst(*list)) {
     struct tileset *t = tileset_read_toplevel(file, false, topo);
     if (t) {
