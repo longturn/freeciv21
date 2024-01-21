@@ -48,6 +48,14 @@ if (FREECIV_ENABLE_SERVER
   set(FREECIV_BUILD_LIBSERVER TRUE)
 endif()
 
+# If we ask for the client, we have to have the Qt modpack installer from tools
+if (FREECIV_ENABLE_CLIENT)
+  cmake_dependent_option(
+  FREECIV_ENABLE_FCMP_QT
+  "Build the modpack installer (Qt interface)"
+  ON FREECIV_ENABLE_TOOLS OFF)
+endif()
+
 # By default we do not enable VCPKG
 option(FREECIV_USE_VCPKG "Use VCPKG" OFF)
 
