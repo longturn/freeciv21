@@ -73,6 +73,8 @@ fc_client::fc_client() : QMainWindow(), current_file(QLatin1String(""))
   QApplication::setFont(fcFont::instance()->getFont(fonts::default_font));
   QString path;
 
+  setWindowTitle(_("Freeciv21"));
+
   central_wdg = new QWidget;
   central_layout = new QStackedLayout;
 
