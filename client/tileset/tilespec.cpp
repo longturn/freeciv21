@@ -783,11 +783,8 @@ const QVector<QString> *get_tileset_list(const struct option *poption)
 
   fc_assert_ret_val(idx < ARRAY_SIZE(tilesets), nullptr);
 
-  /* Note: this means you must restart the client after installing a new
-      tileset. */
   QVector<QString> *list = fileinfolist(get_data_dirs(), TILESPEC_SUFFIX);
   tilesets[idx]->clear();
-  tilesets[idx] = new QVector<QString>;
   for (const auto &file : qAsConst(*list)) {
     struct tileset *t =
         tileset_read_toplevel(qUtf8Printable(file), false, topo);

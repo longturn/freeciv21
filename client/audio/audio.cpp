@@ -84,8 +84,9 @@ const QVector<QString> *get_soundplugin_list(const struct option *poption)
 const QVector<QString> *get_soundset_list(const struct option *poption)
 {
   static QVector<QString> *sound_list = new QVector<QString>;
-  sound_list->clear();
-  *sound_list = *fileinfolist(get_data_dirs(), SNDSPEC_SUFFIX);
+  auto list = fileinfolist(get_data_dirs(), SNDSPEC_SUFFIX);
+  *sound_list = std::move(*list);
+  delete list;
   return sound_list;
 }
 
@@ -95,8 +96,9 @@ const QVector<QString> *get_soundset_list(const struct option *poption)
 const QVector<QString> *get_musicset_list(const struct option *poption)
 {
   static QVector<QString> *music_list = new QVector<QString>;
-  music_list->clear();
-  *music_list = *fileinfolist(get_data_dirs(), MUSICSPEC_SUFFIX);
+  auto list = fileinfolist(get_data_dirs(), MUSICSPEC_SUFFIX);
+  *music_list = std::move(*list);
+  delete list;
   return music_list;
 }
 
