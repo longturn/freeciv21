@@ -774,7 +774,8 @@ QEvent::Type TilesetChanged;
  */
 const QVector<QString> *get_tileset_list(const struct option *poption)
 {
-  static QVector<QString> *tilesets[3] = {nullptr, nullptr, nullptr};
+  static QVector<QString> *tilesets[3] = {
+      new QVector<QString>, new QVector<QString>, new QVector<QString>};
   int topo = option_get_cb_data(poption);
   int idx;
 
@@ -782,23 +783,20 @@ const QVector<QString> *get_tileset_list(const struct option *poption)
 
   fc_assert_ret_val(idx < ARRAY_SIZE(tilesets), nullptr);
 
-  if (tilesets[idx] == nullptr) {
-    /* Note: this means you must restart the client after installing a new
-       tileset. */
-    QVector<QString> *list = fileinfolist(get_data_dirs(), TILESPEC_SUFFIX);
-
-    tilesets[idx] = new QVector<QString>;
-    for (const auto &file : qAsConst(*list)) {
-      struct tileset *t =
-          tileset_read_toplevel(qUtf8Printable(file), false, topo);
-
-      if (t) {
-        tilesets[idx]->append(file);
-        tileset_free(t);
-      }
+  /* Note: this means you must restart the client after installing a new
+      tileset. */
+  QVector<QString> *list = fileinfolist(get_data_dirs(), TILESPEC_SUFFIX);
+  tilesets[idx]->clear();
+  tilesets[idx] = new QVector<QString>;
+  for (const auto &file : qAsConst(*list)) {
+    struct tileset *t =
+        tileset_read_toplevel(qUtf8Printable(file), false, topo);
+    if (t) {
+      tilesets[idx]->append(file);
+      tileset_free(t);
     }
-    delete list;
   }
+  delete list;
 
   return tilesets[idx];
 }
