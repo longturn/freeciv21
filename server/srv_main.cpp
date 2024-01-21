@@ -204,9 +204,9 @@ void srv_init()
   has_been_srv_init = true;
 
   // init character encodings.
-  init_character_encodings(FC_DEFAULT_DATA_ENCODING, false);
+  init_character_encodings();
 #ifdef ENABLE_NLS
-  bind_textdomain_codeset("freeciv21-nations", get_internal_encoding());
+  bind_textdomain_codeset("freeciv21-nations", "UTF-8");
 #endif
 
   // Initialize callbacks.

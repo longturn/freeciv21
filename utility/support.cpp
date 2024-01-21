@@ -268,44 +268,6 @@ FILE *fc_fopen(const char *filename, const char *opentype)
 }
 
 /**
-   Wrapper function for remove() with filename conversion to local
-   encoding on Windows.
- */
-int fc_remove(const char *filename)
-{
-#ifdef FREECIV_MSWINDOWS
-  int result;
-  char *filename_in_local_encoding =
-      internal_to_local_string_malloc(filename);
-
-  result = remove(filename_in_local_encoding);
-  free(filename_in_local_encoding);
-  return result;
-#else  // FREECIV_MSWINDOWS
-  return remove(filename);
-#endif // FREECIV_MSWINDOWS
-}
-
-/**
-   Wrapper function for stat() with filename conversion to local
-   encoding on Windows.
- */
-int fc_stat(const char *filename, struct stat *buf)
-{
-#ifdef FREECIV_MSWINDOWS
-  int result;
-  char *filename_in_local_encoding =
-      internal_to_local_string_malloc(filename);
-
-  result = stat(filename_in_local_encoding, buf);
-  free(filename_in_local_encoding);
-  return result;
-#else  // FREECIV_MSWINDOWS
-  return stat(filename, buf);
-#endif // FREECIV_MSWINDOWS
-}
-
-/**
    Returns last error code.
  */
 fc_errno fc_get_errno()

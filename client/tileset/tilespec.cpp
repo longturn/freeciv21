@@ -789,8 +789,7 @@ const QVector<QString> *get_tileset_list(const struct option *poption)
 
     tilesets[idx] = new QVector<QString>;
     for (const auto &file : qAsConst(*list)) {
-      struct tileset *t =
-          tileset_read_toplevel(qUtf8Printable(file), false, topo);
+      struct tileset *t = tileset_read_toplevel(file, false, topo);
 
       if (t) {
         tilesets[idx]->append(file);
@@ -804,27 +803,20 @@ const QVector<QString> *get_tileset_list(const struct option *poption)
 }
 
 /**
-   Gets full filename for tilespec file, based on input name.
-   Returned data is allocated, and freed by user as required.
-   Input name may be null, in which case uses default.
-   Falls back to default if can't find specified name;
-   dies if can't find default.
+ * Gets full filename for tilespec file, based on input name.
  */
-static char *tilespec_fullname(QString tileset_name)
+static QString tilespec_fullname(QString tileset_name)
 {
   if (!tileset_name.isEmpty()) {
-    QString dname;
-    QString fname =
-        QStringLiteral("%1%2").arg(tileset_name, TILESPEC_SUFFIX);
-
-    dname = fileinfoname(get_data_dirs(), qUtf8Printable(fname));
+    auto fname = tileset_name + QStringLiteral(TILESPEC_SUFFIX);
+    auto dname = fileinfoname(get_data_dirs(), fname);
 
     if (!dname.isEmpty()) {
-      return fc_strdup(qUtf8Printable(dname));
+      return dname;
     }
   }
 
-  return nullptr;
+  return QString();
 }
 
 /**
@@ -835,7 +827,8 @@ static char *tilespec_fullname(QString tileset_name)
 static bool check_tilespec_capabilities(struct section_file *file,
                                         const char *which,
                                         const char *us_capstr,
-                                        const char *filename, bool verbose)
+                                        const QString &filename,
+                                        bool verbose)
 {
   QtMsgType level = verbose ? LOG_ERROR : LOG_DEBUG;
 
@@ -843,12 +836,12 @@ static bool check_tilespec_capabilities(struct section_file *file,
 
   if (nullptr == file_capstr) {
     log_base(level, "\"%s\": %s file doesn't have a capability string",
-             filename, which);
+             qUtf8Printable(filename), which);
     return false;
   }
   if (!has_capabilities(us_capstr, file_capstr)) {
-    log_base(level, "\"%s\": %s file appears incompatible:", filename,
-             which);
+    log_base(level, "\"%s\": %s file appears incompatible:",
+             qUtf8Printable(filename), which);
     log_base(level, "  datafile options: %s", file_capstr);
     log_base(level, "  supported options: %s", us_capstr);
     return false;
@@ -857,7 +850,7 @@ static bool check_tilespec_capabilities(struct section_file *file,
     log_base(level,
              "\"%s\": %s file requires option(s) "
              "that client doesn't support:",
-             filename, which);
+             qUtf8Printable(filename), which);
     log_base(level, "  datafile options: %s", file_capstr);
     log_base(level, "  supported options: %s", us_capstr);
     return false;
@@ -1493,11 +1486,10 @@ static void tileset_set_offsets(struct tileset *t, struct section_file *file)
 }
 
 static void tileset_stop_read(struct tileset *t, struct section_file *file,
-                              char *fname, struct section_list *sections,
+                              struct section_list *sections,
                               const char **layer_order)
 {
   secfile_destroy(file);
-  delete[] fname;
   delete[] layer_order;
   delete[] t;
   if (nullptr != sections) {
@@ -1576,7 +1568,6 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
                                              bool verbose, int topology_id)
 {
   struct section_file *file;
-  char *fname;
   const char *c;
   int i;
   size_t num_spec_files;
@@ -1593,25 +1584,24 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
   const char *tstr;
   int topo;
 
-  fname = tilespec_fullname(tileset_name);
-  if (!fname) {
+  auto fname = tilespec_fullname(tileset_name);
+  if (fname.isEmpty()) {
     if (verbose) {
       qCritical("Can't find tileset \"%s\".", qUtf8Printable(tileset_name));
     }
     return nullptr;
   }
-  qDebug("tilespec file is \"%s\".", fname);
+  qDebug("tilespec file is \"%s\".", qUtf8Printable(fname));
 
   if (!(file = secfile_load(fname, true))) {
-    qCritical("Could not open '%s':\n%s", fname, secfile_error());
-    delete[] fname;
+    qCritical("Could not open '%s':\n%s", qUtf8Printable(fname),
+              secfile_error());
     return nullptr;
   }
 
   if (!check_tilespec_capabilities(file, "tilespec", TILESPEC_CAPSTR, fname,
                                    verbose)) {
     secfile_destroy(file);
-    delete[] fname;
     return nullptr;
   }
 
@@ -1667,21 +1657,21 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
   if (!secfile_lookup_int(file, &t->priority, "tilespec.priority")
       || !secfile_lookup_bool(file, &is_hex, "tilespec.is_hex")) {
     qCritical("Tileset \"%s\" invalid: %s", t->name, secfile_error());
-    tileset_stop_read(t, file, fname, sections, layer_order);
+    tileset_stop_read(t, file, sections, layer_order);
     return nullptr;
   }
 
   tstr = secfile_lookup_str(file, "tilespec.type");
   if (tstr == nullptr) {
     qCritical("Tileset \"%s\": no tileset type", t->name);
-    tileset_stop_read(t, file, fname, sections, layer_order);
+    tileset_stop_read(t, file, sections, layer_order);
     return nullptr;
   }
 
   t->type = ts_type_by_name(tstr, fc_strcasecmp);
   if (!ts_type_is_valid(t->type)) {
     qCritical("Tileset \"%s\": unknown tileset type \"%s\"", t->name, tstr);
-    tileset_stop_read(t, file, fname, sections, layer_order);
+    tileset_stop_read(t, file, sections, layer_order);
     return nullptr;
   }
 
@@ -1697,7 +1687,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
 
     if (!secfile_lookup_int(file, &hex_side, "tilespec.hex_side")) {
       qCritical("Tileset \"%s\" invalid: %s", t->name, secfile_error());
-      tileset_stop_read(t, file, fname, sections, layer_order);
+      tileset_stop_read(t, file, sections, layer_order);
       return nullptr;
     }
     if (t->type == TS_ISOMETRIC) {
@@ -1718,7 +1708,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
     if (((topology_id & TF_HEX) && topology_id != (topo & (TF_ISO | TF_HEX)))
         || (!(topology_id & TF_HEX) && (topo & TF_HEX))) {
       // Not of requested topology
-      tileset_stop_read(t, file, fname, sections, layer_order);
+      tileset_stop_read(t, file, sections, layer_order);
       return nullptr;
     }
   }
@@ -1751,7 +1741,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
       || !secfile_lookup_int(file, &t->normal_tile_height,
                              "tilespec.normal_tile_height")) {
     qCritical("Tileset \"%s\" invalid: %s", t->name, secfile_error());
-    tileset_stop_read(t, file, fname, sections, layer_order);
+    tileset_stop_read(t, file, sections, layer_order);
     return nullptr;
   }
   if (t->type == TS_ISOMETRIC) {
@@ -1778,7 +1768,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
       || !secfile_lookup_int(file, &t->small_sprite_height,
                              "tilespec.small_tile_height")) {
     qCritical("Tileset \"%s\" invalid: %s", t->name, secfile_error());
-    tileset_stop_read(t, file, fname, sections, layer_order);
+    tileset_stop_read(t, file, sections, layer_order);
     return nullptr;
   }
   qDebug("tile sizes %dx%d, %dx%d unit, %dx%d small", t->normal_tile_width,
@@ -1788,14 +1778,14 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
   tstr = secfile_lookup_str(file, "tilespec.fog_style");
   if (tstr == nullptr) {
     qCritical("Tileset \"%s\": no fog_style", t->name);
-    tileset_stop_read(t, file, fname, sections, layer_order);
+    tileset_stop_read(t, file, sections, layer_order);
     return nullptr;
   }
 
   t->fogstyle = fog_style_by_name(tstr, fc_strcasecmp);
   if (!fog_style_is_valid(t->fogstyle)) {
     qCritical("Tileset \"%s\": unknown fog_style \"%s\"", t->name, tstr);
-    tileset_stop_read(t, file, fname, sections, layer_order);
+    tileset_stop_read(t, file, sections, layer_order);
     return nullptr;
   }
 
@@ -1804,7 +1794,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
 
   if (tileset_invalid_offsets(t, file)) {
     qCritical("Tileset \"%s\" invalid: %s", t->name, secfile_error());
-    tileset_stop_read(t, file, fname, sections, layer_order);
+    tileset_stop_read(t, file, sections, layer_order);
     return nullptr;
   }
   tileset_set_offsets(t, file);
@@ -1822,7 +1812,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
                     "Tileset \"%s\": unknown "
                     "unit_default_orientation \"%s\"",
                     t->name, c);
-      tileset_stop_read(t, file, fname, sections, layer_order);
+      tileset_stop_read(t, file, sections, layer_order);
       return nullptr;
     } else {
       /* Default orientation is allowed to not be a valid one for the
@@ -1845,14 +1835,14 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
       // Check for wrong layer names.
       if (!mapview_layer_is_valid(layer)) {
         qCritical("layer_order: Invalid layer \"%s\"", layer_order[i]);
-        tileset_stop_read(t, file, fname, sections, layer_order);
+        tileset_stop_read(t, file, sections, layer_order);
         return nullptr;
       }
       // Check for duplicates.
       for (j = 0; j < i; j++) {
         if (order[j] == layer) {
           qCritical("layer_order: Duplicate layer \"%s\"", layer_order[i]);
-          tileset_stop_read(t, file, fname, sections, layer_order);
+          tileset_stop_read(t, file, sections, layer_order);
           return nullptr;
         }
       }
@@ -1874,7 +1864,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
       if (!found) {
         qCritical("layer_order: Missing layer \"%s\"",
                   mapview_layer_name(static_cast<mapview_layer>(i)));
-        tileset_stop_read(t, file, fname, sections, layer_order);
+        tileset_stop_read(t, file, sections, layer_order);
         return nullptr;
       }
     }
@@ -1892,7 +1882,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
   tstr = secfile_lookup_str(file, "tilespec.darkness_style");
   if (tstr == nullptr) {
     qCritical("Tileset \"%s\": no darkness_style", t->name);
-    tileset_stop_read(t, file, fname, sections, layer_order);
+    tileset_stop_read(t, file, sections, layer_order);
     return nullptr;
   }
 
@@ -1900,14 +1890,14 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
   if (!darkness_style_is_valid(darkness_style)) {
     qCritical("Tileset \"%s\": unknown darkness_style \"%s\"", t->name,
               tstr);
-    tileset_stop_read(t, file, fname, sections, layer_order);
+    tileset_stop_read(t, file, sections, layer_order);
     return nullptr;
   }
 
   if (darkness_style == freeciv::DARKNESS_ISORECT
       && (t->type == TS_OVERHEAD || t->hex_width > 0 || t->hex_height > 0)) {
     qCritical("Invalid darkness style set in tileset \"%s\".", t->name);
-    tileset_stop_read(t, file, fname, sections, layer_order);
+    tileset_stop_read(t, file, sections, layer_order);
     return nullptr;
   }
 
@@ -1920,7 +1910,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
         secfile_lookup_str_vec(file, &count, "layer%d.match_types", i);
     for (int j = 0; j < count; j++) {
       if (!t->terrain_layers[i]->create_matching_group(match_types[j])) {
-        tileset_stop_read(t, file, fname, sections, layer_order);
+        tileset_stop_read(t, file, sections, layer_order);
         return nullptr;
       }
     }
@@ -1931,8 +1921,8 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
   if (nullptr == sections || 0 == section_list_size(sections)) {
     tileset_error(t, LOG_ERROR,
                   _("No [%s] sections supported by tileset \"%s\"."),
-                  TILE_SECTION_PREFIX, fname);
-    tileset_stop_read(t, file, fname, sections, layer_order);
+                  TILE_SECTION_PREFIX, qUtf8Printable(fname));
+    tileset_stop_read(t, file, sections, layer_order);
     return nullptr;
   }
 
@@ -1948,7 +1938,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
       } else {
         tileset_error(t, LOG_ERROR,
                       _("No terrain tag given in section [%s]."), sec_name);
-        tileset_stop_read(t, file, fname, sections, layer_order);
+        tileset_stop_read(t, file, sections, layer_order);
         return nullptr;
       }
     }
@@ -1961,7 +1951,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
       for (int l = 0; l < num_layers; l++) {
         if (!t->terrain_layers[l]->add_tag(
                 tag, QString(sec_name).mid(strlen(TILE_SECTION_PREFIX)))) {
-          tileset_stop_read(t, file, fname, sections, layer_order);
+          tileset_stop_read(t, file, sections, layer_order);
           return nullptr;
         }
 
@@ -1984,7 +1974,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
 
           if (!t->terrain_layers[l]->set_tag_offsets(tag, offset_x,
                                                      offset_y)) {
-            tileset_stop_read(t, file, fname, sections, layer_order);
+            tileset_stop_read(t, file, sections, layer_order);
             return nullptr;
           }
         }
@@ -1995,7 +1985,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
               file, "whole", "%s.layer%d_sprite_type", sec_name, l);
           if (!t->terrain_layers[l]->set_tag_sprite_type(
                   tag, check_sprite_type(type_str, sec_name))) {
-            tileset_stop_read(t, file, fname, sections, layer_order);
+            tileset_stop_read(t, file, sections, layer_order);
             return nullptr;
           }
         }
@@ -2008,7 +1998,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
           if (matching_group) {
             if (!t->terrain_layers[l]->set_tag_matching_group(
                     tag, matching_group)) {
-              tileset_stop_read(t, file, fname, sections, layer_order);
+              tileset_stop_read(t, file, sections, layer_order);
               return nullptr;
             }
           }
@@ -2020,7 +2010,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
             for (std::size_t j = 0; j < count; ++j) {
               if (!t->terrain_layers[l]->set_tag_matches_with(
                       tag, match_with[j])) {
-                tileset_stop_read(t, file, fname, sections, layer_order);
+                tileset_stop_read(t, file, sections, layer_order);
                 return nullptr;
               }
             }
@@ -2059,7 +2049,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
 
     if (t->estyle_hash->contains(extraname)) {
       qCritical("warning: duplicate extrastyle entry [%s].", extraname);
-      tileset_stop_read(t, file, fname, sections, layer_order);
+      tileset_stop_read(t, file, sections, layer_order);
       return nullptr;
     }
     t->estyle_hash->insert(extraname, style);
@@ -2068,8 +2058,9 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
   spec_filenames =
       secfile_lookup_str_vec(file, &num_spec_files, "tilespec.files");
   if (nullptr == spec_filenames || 0 == num_spec_files) {
-    qCritical("No tile graphics files specified in \"%s\"", fname);
-    tileset_stop_read(t, file, fname, sections, layer_order);
+    qCritical("No tile graphics files specified in \"%s\"",
+              qUtf8Printable(fname));
+    tileset_stop_read(t, file, sections, layer_order);
     return nullptr;
   }
 
@@ -2088,7 +2079,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
         qCritical("Can't find spec file \"%s\".", spec_filenames[i]);
       }
       delete sf;
-      tileset_stop_read(t, file, fname, sections, layer_order);
+      tileset_stop_read(t, file, sections, layer_order);
       return nullptr;
     }
     sf->file_name = fc_strdup(qUtf8Printable(dname));
@@ -2119,8 +2110,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
 
   secfile_check_unused(file);
   secfile_destroy(file);
-  qDebug("finished reading \"%s\".", fname);
-  delete[] fname;
+  qDebug("finished reading \"%s\".", qUtf8Printable(fname));
   delete[] layer_order;
 
   return t;
