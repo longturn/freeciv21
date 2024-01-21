@@ -79,29 +79,14 @@ const QVector<QString> *get_soundplugin_list(const struct option *poption)
 }
 
 /**
-   Returns a static string vector of audiosets of given type available
-   on the system by searching all data directories for files matching
-   suffix.
-   The list is nullptr-terminated.
- */
-static const QVector<QString> *
-get_audio_speclist(const char *suffix, QVector<QString> **audio_list)
-{
-  if (nullptr == *audio_list) {
-    *audio_list = fileinfolist(get_data_dirs(), suffix);
-  }
-
-  return *audio_list;
-}
-
-/**
    Returns a static string vector of soundsets available on the system.
  */
 const QVector<QString> *get_soundset_list(const struct option *poption)
 {
-  static QVector<QString> *sound_list = nullptr;
-
-  return get_audio_speclist(SNDSPEC_SUFFIX, &sound_list);
+  static QVector<QString> *sound_list = new QVector<QString>;
+  sound_list->clear();
+  *sound_list = *fileinfolist(get_data_dirs(), SNDSPEC_SUFFIX);
+  return sound_list;
 }
 
 /**
@@ -109,9 +94,10 @@ const QVector<QString> *get_soundset_list(const struct option *poption)
  */
 const QVector<QString> *get_musicset_list(const struct option *poption)
 {
-  static QVector<QString> *music_list = nullptr;
-
-  return get_audio_speclist(MUSICSPEC_SUFFIX, &music_list);
+  static QVector<QString> *music_list = new QVector<QString>;
+  music_list->clear();
+  *music_list = *fileinfolist(get_data_dirs(), MUSICSPEC_SUFFIX);
+  return music_list;
 }
 
 /**

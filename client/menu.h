@@ -203,6 +203,7 @@ private slots:
   void save_image();
   void tileset_custom_load();
   void load_new_tileset();
+  void add_modpacks();
   void back_to_menu();
   void quit_game();
 

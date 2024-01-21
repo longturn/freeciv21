@@ -31,6 +31,7 @@
 #include "road.h"
 #include "unit.h"
 // client
+#include "audio/audio.h"
 #include "citybar.h"
 #include "cityrep_g.h"
 #include "client_main.h"
@@ -38,6 +39,7 @@
 #include "clinet.h"
 #include "connectdlg_common.h"
 #include "control.h"
+#include "fc_client.h"
 #include "helpdlg.h"
 #include "mapctrl_g.h"
 #include "ratesdlg_g.h"
@@ -575,6 +577,8 @@ void mr_menu::setup_menus()
   connect(act, &QAction::triggered, this, &mr_menu::shortcut_options);
   act = menu->addAction(_("Load Another Tileset"));
   connect(act, &QAction::triggered, this, &mr_menu::tileset_custom_load);
+  act = menu->addAction(_("Add Modpacks"));
+  connect(act, &QAction::triggered, this, &mr_menu::add_modpacks);
   act = menu->addAction(_("Tileset Debugger"));
   connect(act, &QAction::triggered, queen()->mapview_wdg,
           &map_view::show_debugger);
@@ -2659,6 +2663,11 @@ void mr_menu::tileset_custom_load()
   dialog->setLayout(layout);
   dialog->show();
 }
+
+/**
+ * Slot for loading modpack installer
+ */
+void mr_menu::add_modpacks() { king()->load_modpack(); }
 
 /**
    Slot for loading new tileset
