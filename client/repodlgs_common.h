@@ -13,12 +13,15 @@
 
 #pragma once
 
+#include <QString>
+
 /*
  * Structure of data for the Economics View. See get_economy_report_data()
  */
 struct improvement_entry {
   struct impr_type *type;
   int count, redundant, cost, total_cost;
+  QString city_names;
 };
 
 /*

@@ -35,7 +35,8 @@ eco_report::eco_report() : QWidget()
 
   QStringList slist;
   slist << _("Type") << Q_("?Building or Unit type:Name") << _("Redundant")
-        << _("Count") << _("Cost") << _("Total Upkeep");
+        << _("Count") << _("Cost") << _("Total Upkeep")
+        << _("Redundant Cities");
 
   ui.eco_widget->setColumnCount(slist.count());
   ui.eco_widget->setHorizontalHeaderLabels(slist);
@@ -92,7 +93,7 @@ void eco_report::update_report()
     cid id = cid_encode_building(pimprove);
 
     ui.eco_widget->insertRow(i);
-    for (j = 0; j < 6; j++) {
+    for (j = 0; j < 7; j++) {
       item = new QTableWidgetItem;
       switch (j) {
       case 0: {
@@ -124,6 +125,9 @@ void eco_report::update_report()
         item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         item->setData(Qt::DisplayRole, pentry->total_cost);
         break;
+      case 6:
+        item->setTextAlignment(Qt::AlignVCenter | Qt::AlignLeft);
+        item->setData(Qt::DisplayRole, pentry->city_names);
       }
       ui.eco_widget->setItem(i, j, item);
     }
@@ -136,7 +140,7 @@ void eco_report::update_report()
     cid id = cid_encode_unit(putype);
 
     ui.eco_widget->insertRow(i + max_row);
-    for (j = 0; j < 6; j++) {
+    for (j = 0; j < 7; j++) {
       item = new QTableWidgetItem;
       switch (j) {
       case 0: {
@@ -170,6 +174,9 @@ void eco_report::update_report()
         item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         item->setData(Qt::DisplayRole, pentry->total_cost);
         break;
+      case 6:
+        item->setTextAlignment(Qt::AlignVCenter | Qt::AlignLeft);
+        item->setText(_("Not Applicable"));
       }
       ui.eco_widget->setItem(max_row + i, j, item);
     }
