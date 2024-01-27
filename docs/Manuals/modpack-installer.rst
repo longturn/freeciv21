@@ -21,6 +21,10 @@ They can be installed using the modpack installer tool :file:`freeciv21-modpack-
 standard installation. There is also a command-line-only tool called :file:`freeciv21-modpack`, which is
 mainly useful for headless game servers.
 
+The easiest way to open the modpack installer is by clicking the :guilabel:`Mods` button on the
+:doc:`Start Screen </Manuals/Game/start-screen>` or the :guilabel:`Add Modpacks` option from the
+:guilabel:`Game` menu.
+
 In standard Freeciv21 builds, when you start the graphical modpack installer, it will show a list of modpacks
 curated by the Freeciv21 developers and Longturn community. You can select one and click
 :guilabel:`Install modpack`. The tool will download the files for the selected modpack, any other modpacks it
