@@ -44,6 +44,7 @@ The following buttons are available on the :guilabel:`Start Screen`:
 * :guilabel:`Load Saved Game` -- Load a previously saved single player game. See `Load Saved Game`_ below.
 * :guilabel:`Start Scenario Game` -- Start a single player scenario game. See `Start Scenario Game`_ below.
 * :guilabel:`Options` -- Set client options. See `Options`_ below.
+* :guilabel:`Mods` -- Launch the modpack installer. See :doc:`/Manuals/modpack-installer`.
 * :guilabel:`Quit` -- Quit Freeciv21
 
 .. Note::
