@@ -13,6 +13,7 @@
 #   - cd build
 #   - snapcraft
 #   - sudo snap install --devmode ./freeciv21_*.snap
+#   - snapcraft upload --release=latest/edge ./freeciv21_*.snap
 #
 ##########
 
@@ -25,7 +26,7 @@ description: |
   The code is maintained by the team over at Longturn.net and is based on the QT framework. The game supports both hex and square tiles and is easily modified to create custom rules.
 
 # TODO: At some point, will want to integrate into cmake process and configure_file()
-version: '3.1.alpha4'
+version: '3.1-alpha.5'
 grade: devel
 
 license: GPL-3.0-or-later
@@ -50,7 +51,7 @@ parts:
     source-type: git
     # TODO: integrate into cmake process and configure_file()
     #source-branch: master
-    source-commit: a82c58f1d40307aaa88a8fd2d0e0e3e9a3dfe1fd
+    source-commit: baf62126f40b5b19115bba122189ca05ff46ef25
     cmake-generator: Ninja
     cmake-parameters:
       - "-DCMAKE_INSTALL_PREFIX=/usr"
