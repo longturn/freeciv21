@@ -4134,8 +4134,7 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
     /* Now that dead defender is certainly no longer listed as unit
      * supported by the city, we may even remove the city
      * (if it shrinks from size 1) */
-    auto pcity = tile_city(def_tile);
-    if (pdefender->hp <= 0) {
+    if (auto pcity = tile_city(def_tile); pcity != nullptr) {
       unit_attack_civilian_casualties(punit, pcity, paction, "attack");
     }
     if (unit_is_alive(winner_id)) {
