@@ -65,7 +65,7 @@ int main(int argc, char **argv)
   QIcon::setFallbackThemeName(QIcon::themeName());
   QIcon::setThemeName(QStringLiteral("icons"));
 
-  qApp->setWindowIcon(QIcon::fromTheme(QStringLiteral("freeciv21-client")));
+  qApp->setWindowIcon(QIcon::fromTheme(QStringLiteral("freeciv21-ruledit")));
 
   log_init();
 
