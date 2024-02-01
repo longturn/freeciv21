@@ -101,4 +101,4 @@ Build
 =====
 
 Now that you have the environment setup. You can follow the steps in :doc:`/Getting/install`. MSYS2 in a
-Linux emulation evironment on Windows, so the commands for :file:`git`, :file:`cmake`, etc. work the same.
+Linux emulation environment on Windows, so the commands for :file:`git`, :file:`cmake`, etc. work the same.

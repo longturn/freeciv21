@@ -150,7 +150,7 @@ City Traderoutes
   Default: ``Ctrl+D``
 
 City Production Levels
-  Toggles the disply of city production in the city bar.
+  Toggles the display of city production in the city bar.
 
   Default: ``Ctrl+P``
 

@@ -125,7 +125,7 @@ The game allows the user to load and save preset parameters for the agent. Choos
 it will save any changes you made to you Governor presets as well.
 
 The format for the options file (usually :file:`~/.local/share/freeciv21/freeciv-client-rc-X.Y` , where X.Y
-is the version of freeciv21 in use) is as follows (in case you which to change these presets manually, i.e.
+is the version of Freeciv21 in use) is as follows (in case you which to change these presets manually, i.e.
 with a text editor).
 
 Under the heading :literal:`[cma]`, is a :literal:`number_of_presets`. This should be set to the number of

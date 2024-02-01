@@ -17,7 +17,7 @@ references to the media files in a separate sub-directory.
 
 The soundtrack is broken up into time periods following the technology tree and is split by two moods: peace
 and combat. Peace is generally defined when you are "farming" and growing your civilization with no fighting
-going on at all. Any kind of fighting, inlcuding defense of your cities will trigger combat and the music mood
+going on at all. Any kind of fighting, including defense of your cities will trigger combat and the music mood
 will change. After 16 turns of no combat the music will return to peace.
 
 At the beginning of the game, you select the style of music you want to hear by picking the city style of your
@@ -33,7 +33,7 @@ civilization. The current choices are:
 The city style is automatically selected for you when you pick your nation, but you can change it if you like.
 
 The discovery of :advance:`University` changes the music for all city styles for the Renaissance Age. All
-further disoveries noted below will change the music for all city styles/nations.
+further discoveries noted below will change the music for all city styles/nations.
 
 The discovery of :advance:`Railroad` brings in the Industrial Age.
 
