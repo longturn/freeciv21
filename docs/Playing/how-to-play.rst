@@ -165,7 +165,7 @@ good to discuss here in the early game.
   :menuselection:`Game --> Load Another Tileset` and picking ``Hexemplio`` from the list.
 
 Let us first talk about two concepts: *Vision Radius* and *Working Radius*. Each city has a vision radius and
-a working radius. The vision radius is the tiles that the citizens of a city can see on the map. If an emeny
+a working radius. The vision radius is the tiles that the citizens of a city can see on the map. If an enemy
 unit comes within the vision radius of a city, a sentried unit inside of the city will wake up and alert you.
 Within the vision radius is the smaller working radius. When thinking of city planning, you should be most
 concerned with the working radius of a city. These are the tiles that the citizens of your cities manage to
@@ -223,7 +223,7 @@ but at the beginning of the game you will have a lot of land that is not being u
 takes more moves for your :unit:`Settlers` to reach the planned city center of the city. In Smallpoxing you
 only have to move a few tiles. With Largepoxing you have to move twice the distance and time (in turns).
 
-There is a third stragey. It is not called “Midpoxing” per se, but the strategy is similar to a middle ground
+There is a third strategy. It is not called “Midpoxing” per se, but the strategy is similar to a middle ground
 between the Smallpoxing and Largepoxing strategies. Here is an example of a Midpoxing strategy:
 
 .. _Midpoxing:

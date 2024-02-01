@@ -81,7 +81,7 @@ such as:
     Sets the server id to ID.
 
 ``-s, --saves <DIR>``
-    Save games to directory DIR. Generally a ver good idea to save games at least every turn and depending on
+    Save games to directory DIR. Generally a very good idea to save games at least every turn and depending on
     how long the turns are set to, to save within a turn. In the case of a server crash, restarting from a
     save comes in very handy.
 

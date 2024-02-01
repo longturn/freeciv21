@@ -30,7 +30,7 @@ All platforms can use `KDevelop <https://www.kdevelop.org/download>`_. However, 
 
 For the best results, especially if you are editing game code and not just Longturn game rulesets or
 documentation, you will want :strong:`Linux` to be your workstation OS. Many of the current developers use a
-Debain variant such as Ubuntu. Instructions for getting all of the tools needed for Debian Linux can be found
+Debian variant such as Ubuntu. Instructions for getting all of the tools needed for Debian Linux can be found
 in :doc:`/Getting/compile`. Do not follow the steps to clone the repository (e.g. the :code:`git clone`
 command), that will happen in a bit.
 

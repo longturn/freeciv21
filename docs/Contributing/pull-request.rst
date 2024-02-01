@@ -73,7 +73,7 @@ from Upstream to Local.
 2. Create a Branch from Upstream
 ================================
 
-Now that things are all up to date with the lastest code, let's create a branch to do your work in.
+Now that things are all up to date with the latest code, let's create a branch to do your work in.
 
 .. code-block:: sh
 
@@ -151,8 +151,8 @@ one commit into a Pull Request then you can read about `git add <https://git-scm
 The :file:`git status` command is used to list out all the changes that :file:`git` has seen. Changed files,
 new files, moved files, etc. are all listed. This command comes in handy when you want to organize your Pull
 Request into more than one commit. It's also very useful to ensure that what you see as changed follows along
-with what you THINK you have actually changed. Sometimes in the course of editing you may inadvertantly made
-a change to another file that you did not intend to actually change. If you find that you accidentially changed
+with what you THINK you have actually changed. Sometimes in the course of editing you may inadvertently made
+a change to another file that you did not intend to actually change. If you find that you accidentally changed
 a file, you can use the :file:`git restore <file>` command. This is also shown on the :file:`git status`
 command output.
 

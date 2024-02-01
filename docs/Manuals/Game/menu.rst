@@ -192,19 +192,19 @@ Scale Fonts
 
 City Bar Style
     This menu has a sub-menu of three options: :guilabel:`Simple`, :guilabel:`Traditional`, and
-    :guilabel:`Polished` as shown in :numref:`Citybar Style Simple`, :numref:`Citybar Sytle Traditional`,
+    :guilabel:`Polished` as shown in :numref:`Citybar Style Simple`, :numref:`Citybar Style Traditional`,
     and, :numref:`Citybar Style Polished`, respectively.
 
 .. _Citybar Style Simple:
 .. figure:: /_static/images/gui-elements/citybar-simple.png
   :align: center
-  :alt: City Bar Syle - Simple
+  :alt: City Bar Style - Simple
   :figclass: align-center
 
   City Bar Style - Simple
 
 
-.. _Citybar Sytle Traditional:
+.. _Citybar Style Traditional:
 .. figure:: /_static/images/gui-elements/citybar-traditional.png
   :align: center
   :alt: City Bar Style - Traditional
