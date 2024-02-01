@@ -201,7 +201,7 @@ server's own command-line. This server command-line is separate from the OS term
 .. note::
   The term *minimal changes* is not well understood at this time. The server help does not provide more
   details. An enterprising enthusiast could read the :term:`AI` code to determine what the term means and
-  provide more details. Any real player is not going to want the AI to run thier nation and will
+  provide more details. Any real player is not going to want the AI to run their nation and will
   :ref:`delegate <server-command-delegate>` instead.
 
 ``/handicapped <player-name>``

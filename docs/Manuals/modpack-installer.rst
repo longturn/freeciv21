@@ -89,7 +89,7 @@ modpacks by hand, the standard rulesets, tilesets, etc. supplied with Freeciv21 
 
 The precise location where files are downloaded to depends on your build and platform. For Unix systems, it
 is likely to be under the hidden :file:`~/.local/share/freeciv21` directory in your home directory. For
-Windows based sytems it will be in your user profile directory in a hidden :file:`AppData` folder, typically,
+Windows based systems it will be in your user profile directory in a hidden :file:`AppData` folder, typically,
 :file:`C:\\Users\\[MyUserName]\\AppData\\Roaming\\freeciv21` It is likely to be near where the Freeciv21
 interface stores its saved games.
 

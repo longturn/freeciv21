@@ -178,7 +178,7 @@ the :code:`[tilespec]` section. Currently options include:
 
 :strong:`String Lists`
 
-  String lists are aa comma-separated list of strings.
+  String lists are a comma-separated list of strings.
 
 * :code:`files` : A list of :file:`.spec` files to scan for sprites. See "individual spec files", below.
 
@@ -225,7 +225,7 @@ Multiple grids would be useful to have different size tiles in the same file. Ea
 left) and spacing, both in terms of pixels, and then refers to individual tiles of the grid by row and column.
 The origin, and rows and columns, are counted as (0,0) = top left.
 
-* :code:`x_top_left` : X-coordinate of the leftmost pixel of the leftomost cell.
+* :code:`x_top_left` : X-coordinate of the leftmost pixel of the leftmost cell.
 * :code:`y_top_left` : Y-coordinate of the topmost pixel of the topmost cell.
 * :code:`dx` : Cell width.
 * :code:`dy` : Cell height.

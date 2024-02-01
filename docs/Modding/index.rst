@@ -8,7 +8,7 @@ Modding
 
 The Modding category is an area for documentation editors to provide tips and other details on modifying
 aspects of Freeciv21 such as Rulesets, Musicsets, Soundsets and Tilesets. All of these areas allow for a
-large amount of varyability in game play that is not hardcoded in the software. This is one of the
+large amount of variability in game play that is not hardcoded in the software. This is one of the
 strengths of Freeciv21.
 
 There are five major areas of Modding that are often called "Modpacks" and are written by "Modders". The
@@ -102,7 +102,7 @@ Soundsets
 Soundsets are a collection of :literal:`spec` files that allow a Modder to add sound files to varying events
 that happen inside the game. Events such as founding a city, or attacking a unit can have a sound associated
 with them. There is a huge number of events in Freeciv21 that a Modder can attach a sound file to. Soundsets
-will start with a top-lvel :literal:`.soundset` file and with a directory of the same name will have
+will start with a top-level :literal:`.soundset` file and with a directory of the same name will have
 :literal:`.ogg` sound files to play in the client.
 
 Have a look at :file:`stdsounds.soundspec` and associated files in :file:`/stdsounds` for an example.
@@ -116,7 +116,7 @@ Musicsets
 
 Musicsets are a collection of :literal:`spec` files that allow a Modder to add Music files to play as a
 soundtrack inside the game. Game music follows the game based on the nation selected and the mood. The mood is
-essentially binary: peace or war. Musicsets will start with a top-lvel :literal:`.musicspec` file and with a
+essentially binary: peace or war. Musicsets will start with a top-level :literal:`.musicspec` file and with a
 directory of the same name will have :literal:`.ogg` sound files to play in the client.
 
 Have a look at :file:`stdmusic.musicspec` and associated files in :file:`/stdmusic` for an example.

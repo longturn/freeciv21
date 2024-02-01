@@ -12,7 +12,7 @@ different standards and should not be modified for the sole purpose of making it
 In a nutshell, new or refactored Freeciv21 code is written in modern C++ (the standard version evolves
 depending on what the targeted compilers support). This coding style strives to achieve a balance between old
 code originally written in C and the new possibilities brought by C++, so that new and old code do not look
-too different. At this time we are targetting C++17.
+too different. At this time we are targeting C++17.
 
 The rules listed on this page are guidelines. They represent the preferred way of writing code for Freeciv21,
 but good code that does not follow the guidelines will not be rejected directly. However, you should expect

@@ -18,7 +18,7 @@ This page has been adapted from the legacy Freeciv `Wiki <https://freeciv.fandom
 Freeciv21 is a turn-based game. A turn is a period of the game when all players (human and :term:`AI`) are
 allowed to make a specific number of game actions. Longturn online multi-player games have turns that are
 often set to a counter of 23 hours. This allows players all over the world an opportunity to log in and make
-thier moves at a reasonable time. Single player games (one human against the :term:`AI`) do not have a counter
+their moves at a reasonable time. Single player games (one human against the :term:`AI`) do not have a counter
 set. The turn ends when all moves have been completed and then the human player will manually clicks the
 :guilabel:`End Turn` button.
 
@@ -138,7 +138,7 @@ Phase End
 
   * For each player's unit:
 
-    * Hit ponts (:term:`HP`) regenerate/shrink;
+    * Hit points (:term:`HP`) regenerate/shrink;
     * If they shrink to zero or below, the unit dies;
     * Fueled units running out of fuel try to seek a resort automatically within left movepoints.
 
@@ -187,7 +187,7 @@ Phase End
     * If the production can be changed (the city has not bought the former turn) and the unit is obsolete,
       city switches to the obsoleting unit.
     * If the city does not fulfil the units requirements (tech, improvement, or unit has no ``NoBuild`` flag,
-      etc.) and the player is not :unit:`Barbarian`, it is notified and a signal is emitted: city surival is
+      etc.) and the player is not :unit:`Barbarian`, it is notified and a signal is emitted: city survival is
       not checked.
     * Otherwise, if we have enough shields to build the unit:
 

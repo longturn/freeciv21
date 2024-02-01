@@ -68,7 +68,7 @@ Select the installation type and then click :guilabel:`Next` to continue...
     :alt: Admin Installation Panel
     :figclass: align-center
 
-    Admin Install - Mult-User Selection
+    Admin Install - Multi-User Selection
 
 
 By default, the Admin installer will place the files in the :file:`C:\\Program Files` folder. Change if
@@ -78,7 +78,7 @@ you want and click :guilabel:`Next` to continue...
 .. figure:: /_static/images/windows-installer/05a-Admin-Folder.png
     :align: center
     :height: 400
-    :alt: Admin Instalation Folder Panel
+    :alt: Admin Installation Folder Panel
     :figclass: align-center
 
     Admin Install - Installation Folder
@@ -114,7 +114,7 @@ You will find an icon for the client on the Desktop or in the Start Menu at
 
 .. _non-admin:
 
-Non-Local Admin (Unpriviledged User) Instalation
+Non-Local Admin (Unprivileged User) Installation
 ================================================
 
 If you :emphasis:`are not` logged on as a local Administrator there is no UAC prompt and the following panel
@@ -152,7 +152,7 @@ The Non-Admin Installer places the files in your User Directory by default. Chan
 .. figure:: /_static/images/windows-installer/05b-User-Folder.png
     :align: center
     :height: 400
-    :alt: User Instalation Folder Panel
+    :alt: User Installation Folder Panel
     :figclass: align-center
 
     User Install - Installation Folder

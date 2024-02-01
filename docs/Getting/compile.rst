@@ -93,7 +93,7 @@ GNU Gettext
     https://www.gnu.org/software/gettext/
 
 Lua
-    Lua is a powerful, efficient, lightweight, embedable scripting language. It supports procedural
+    Lua is a powerful, efficient, lightweight, embeddable scripting language. It supports procedural
     programming, object-oriented programming, functional programming, data-driven programming, and data
     description. Exact version 5.3 is preferred.
 

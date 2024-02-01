@@ -284,7 +284,7 @@ Targeted Sabotage City Escape
 .. _action-sabotage-city-production:
 
 Sabotage City Production
-  Sabotage the city's produciton.
+  Sabotage the city's production.
 
   Rules:
 
@@ -296,7 +296,7 @@ Sabotage City Production
 .. _action-sabotage-city-production-escape:
 
 Sabotage City Production Escape
-  Sabotage the city's produciton and escape.
+  Sabotage the city's production and escape.
 
   Rules:
 
@@ -541,7 +541,7 @@ Establish Trade Route
 .. _action-enter-marketplace:
 
 Enter Marketplace
-  Get a one time bounus without creating a trade route.
+  Get a one time bonus without creating a trade route.
 
   Rules:
 
@@ -904,7 +904,7 @@ Bombard
   * if ``force_capture_units`` is TRUE, "Capture Units" must be impossible.
   * actor must have a ``bombard_rate`` > 0.
   * actor must have an ``attack`` > 0.
-  * actor must be on a tile next to the target or, if :code:`bombard_max_range` allows it, futher away.
+  * actor must be on a tile next to the target or, if :code:`bombard_max_range` allows it, further away.
   * target cannot be in a city the actor player is not at war with.
   * target owner must be at war with actor. (!)
 
@@ -916,7 +916,7 @@ Bombard 2
   Rules:
 
   * UI name can be set using :code:`ui_name_bombard_2`.
-  * actor must be on a tile next to the target or, if :code:`bombard_2_max_range` allows it, futher away.
+  * actor must be on a tile next to the target or, if :code:`bombard_2_max_range` allows it, further away.
   * A copy of "Bombard".
   * See "Bombard" for everything else.
 
@@ -928,7 +928,7 @@ Bombard 3
   Rules:
 
   * UI name can be set using :code:`ui_name_bombard_3`.
-  * actor must be on a tile next to the target or, if :code:`bombard_3_max_range` allows it, futher away.
+  * actor must be on a tile next to the target or, if :code:`bombard_3_max_range` allows it, further away.
   * A copy of "Bombard".
   * See "Bombard" for everything else.
 

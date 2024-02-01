@@ -69,7 +69,7 @@ community discussions.
   HP
     Hit Point(s)
 
-    The amount of health a unit has avalable. When this goes to zero the unit is killed.
+    The amount of health a unit has available. When this goes to zero the unit is killed.
 
   LT
     Longturn

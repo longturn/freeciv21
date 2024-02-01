@@ -13,12 +13,12 @@ Frequently Asked Questions (FAQ)
 ********************************
 
 
-The following page has a listing of frequenty asked questions with answers about Freeciv21.
+The following page has a listing of frequently asked questions with answers about Freeciv21.
 
 Gameplay
 ========
 
-This section of the FAQ is broken into a collection of sub-sections all surrounding general GamePlay aspects
+This section of the FAQ is broken into a collection of sub-sections all surrounding general Gameplay aspects
 of Freeciv21:
 
 * `Gameplay General`_
@@ -188,7 +188,7 @@ Other than as noted here, the :term:`AI` players are not known to cheat.
 Does the game have a combat calculator, like other Civ games have?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-There is no integrated combat calculator. You can use the one on the longturn.net website here:
+There is no integrated combat calculator. You can use the one on the Longturn.net website here:
 https://longturn.net/warcalc/. You can also select an attacking unit and then middle-click over a defending
 unit and in the pop-up window you will see the odds of win/loss.
 
@@ -851,10 +851,10 @@ If all players are on the same local area network (LAN), they should launch thei
 the existing server listed. Double-click on it to join.
 
 To play over the Internet, players will need to enter the hostname and port into their game interfaces. The
-game admin will need to tell the other players those details. To join a longturn.net server you start by
+game admin will need to tell the other players those details. To join a Longturn.net server you start by
 clicking :guilabel:`Connect to Network Game` and then in the bottom-left of the dialog fill in the
 :guilabel:`Connect`, :guilabel:`Port`, and :guilabel:`Username` fields provided by the game admin. Once ready,
-click the :guilabel:`Connect` button at the bottom-right, fill in your longturn.net password in the
+click the :guilabel:`Connect` button at the bottom-right, fill in your Longturn.net password in the
 :guilabel:`Password` box and you will be added to the game.
 
 .. note::

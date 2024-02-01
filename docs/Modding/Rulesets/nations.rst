@@ -25,7 +25,7 @@ The following information is required to add a new nation:
   Napoléon Bonaparte (https://en.wikipedia.org/wiki/Napoleon), but not
   Jean Casimir-Perier (https://en.wikipedia.org/wiki/Jean_Casimir-Perier).
 * Special names for the ruler in certain governments, if applicable. For instance, when in Despotism the
-  Egypian leader is called *Pharaoh*.
+  Egyptian leader is called *Pharaoh*.
 * A flag, preferably something official (if your nation does not have an official flag, think twice before
   including it). Wikipedia has many of those under free licenses.
 * A few nations that will be preferred by the server when there is a civil war. For instance, the
@@ -195,7 +195,7 @@ Contents and Style
 What Nations Can Be Added
 -------------------------
 
-A nation in Freeciv21 should preferrably be a current independent country or a historical kingdom or realm. A
+A nation in Freeciv21 should preferably be a current independent country or a historical kingdom or realm. A
 nation that is currently governed by or the part of a greater political entity, or in other ways lacks
 complete independence could in most cases be made a Freeciv21 nation as well, but must never be listed as
 *modern* (see `Nation grouping`_ below.)

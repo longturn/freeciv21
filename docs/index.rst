@@ -14,14 +14,14 @@ Welcome to the Freeciv21 manual
 *******************************
 
 Welcome to the documentation of the Freeciv21 project brought to you by the
-`longturn.net <https://longturn.net>`_ community. The documentation is organized in six categories:
+`Longturn.net <https://longturn.net>`_ community. The documentation is organized in six categories:
 
 :doc:`Getting <Getting/index>`
   The Getting category is where you to go learn about Freeciv21 and how to get it installed on your system.
 
 :doc:`Playing <Playing/index>`
   The Playing category is an area for documentation editors to provide tips and tricks on ways to play
-  Freeciv21 and any of they varying rulesets that the longurn.net community likes to play. You will also find
+  Freeciv21 and any of they varying rulesets that the Longturn.net community likes to play. You will also find
   the FAQ here.
 
 :doc:`Manuals <Manuals/index>`
@@ -31,7 +31,7 @@ Welcome to the documentation of the Freeciv21 project brought to you by the
 :doc:`Modding <Modding/index>`
   The Modding category is an area for documentation editors to provide tips and other details on modifying
   aspects of Freeciv21 such as Rulesets, Musicsets, Soundsets and Tilesets. All of these areas allow for a
-  large amount of varyability in game play that is not hardcoded in the software. This is one of the
+  large amount of variability in game play that is not hardcoded in the software. This is one of the
   strengths of Freeciv21.
 
 :doc:`Contributing <Contributing/index>`

@@ -21,7 +21,7 @@ These are the general steps to prepare and finalize a release:
    The easiest way to do this is to copy the contents of the last release, delete the bullet points, and
    add a single bullet of ``* Nothing for this release`` to each section. :strong:`DO NOT` add a tag at this
    time. This prevents an accidental release.
-#. A release manager will update the draft as PR's are commited to the repository to help keep track of
+#. A release manager will update the draft as PR's are committed to the repository to help keep track of
    the release cadence progress. As PR's are added to sections the ``* Nothing for this release`` is removed.
 #. Multiple PR's can be combined on a single bullet line. Documentation updates are often done this way.
 #. When we are getting close to crossing one of the release candidate thresholds, the release manager will
