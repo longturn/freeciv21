@@ -15,6 +15,5 @@
 // version informational strings
 const char *freeciv21_version();
 const char *freeciv_name_version();
-const char *word_version();
 const char *fc_comparable_version();
 const char *freeciv_datafile_version();
