@@ -42,13 +42,6 @@ const char *freeciv_name_version()
 }
 
 /**
-   Returns version string that can be used to compare two freeciv builds.
-   This does not handle git revisions, as there's no way to compare
-   which of the two commits is "higher".
- */
-const char *fc_comparable_version() { return freeciv21_version(); }
-
-/**
    Return version string in a format suitable to be written to created
    datafiles as human readable information.
  */
