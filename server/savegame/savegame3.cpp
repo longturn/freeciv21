@@ -1574,8 +1574,7 @@ static void sg_save_savefile(struct savedata *saving)
   secfile_insert_str(saving->file, saving->save_reason, "savefile.reason");
 
   // Save as accurate freeciv revision information as possible
-  secfile_insert_str(saving->file, freeciv_datafile_version(),
-                     "savefile.revision");
+  secfile_insert_str(saving->file, freeciv21_version(), "savefile.revision");
 
   /* Save rulesetdir at this point as this ruleset is required by this
    * savefile. */
