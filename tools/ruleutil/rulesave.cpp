@@ -64,7 +64,7 @@ static struct section_file *create_ruleset_file(const char *rsname,
   }
 
   secfile_insert_str(sfile, buf, "datafile.description");
-  secfile_insert_str(sfile, freeciv_datafile_version(), "datafile.ruledit");
+  secfile_insert_str(sfile, freeciv21_version(), "datafile.ruledit");
   secfile_insert_str(sfile, RULESET_CAPABILITIES, "datafile.options");
   secfile_insert_int(sfile, FORMAT_VERSION, "datafile.format_version");
 
