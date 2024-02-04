@@ -353,7 +353,7 @@ void handle_server_join_reply(bool you_can_join, const char *message,
     }
 
     client_info._obsolete = 5; // Old value for gui_type(GUI_QT)
-    client_info.emerg_version = EMERGENCY_VERSION;
+    client_info._obsolete2 = 0;
     qstrncpy(client_info.distribution, FREECIV_DISTRIBUTOR,
              sizeof(client_info.distribution));
     send_packet_client_info(&client.conn, &client_info);

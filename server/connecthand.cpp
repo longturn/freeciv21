@@ -399,7 +399,7 @@ bool handle_login_request(struct connection *pconn,
     info.major_version = MAJOR_VERSION;
     info.minor_version = MINOR_VERSION;
     info.patch_version = PATCH_VERSION;
-    info.emerg_version = EMERGENCY_VERSION;
+    info._obsolete = 0;
     sz_strlcpy(info.version_label, VERSION_LABEL);
     send_packet_server_info(pconn, &info);
   }
