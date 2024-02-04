@@ -665,7 +665,8 @@ end
 
 PACKET_SERVER_INFO = 29; sc, dsend
   STRING version_label[48];
-  UINT32 major_version, minor_version, patch_version, emerg_version;
+  UINT32 major_version, minor_version, patch_version;
+  UINT32 _obsolete;  # Since 3.1
 end
 
 /************** City packets **********************/
@@ -1291,7 +1292,7 @@ end
 
 PACKET_CLIENT_INFO = 119; cs, handle-per-conn
   UINT8 _obsolete;
-  UINT32 emerg_version;
+  UINT32 _obsolete2;  # Since 3.1
   STRING distribution[MAX_LEN_NAME];
 end
 

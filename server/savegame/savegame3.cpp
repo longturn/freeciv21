@@ -2375,7 +2375,6 @@ static void sg_save_scenario(struct savedata *saving)
 
   game_version =
       MAJOR_VERSION * 1000000 + MINOR_VERSION * 10000 + PATCH_VERSION * 100;
-  game_version += EMERGENCY_VERSION;
   secfile_insert_int(saving->file, game_version, "scenario.game_version");
 
   if (!saving->scenario || !game.scenario.is_scenario) {
