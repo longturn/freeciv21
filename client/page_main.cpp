@@ -18,8 +18,6 @@
 
 page_main::page_main(QWidget *parent, fc_client *gui) : QWidget(parent)
 {
-  QString msgbuf;
-  QString beta;
   ui.setupUi(this);
   ui.btut->setText(_("Tutorial"));
   ui.bstart->setText(_("Start new game"));
@@ -46,9 +44,8 @@ page_main::page_main(QWidget *parent, fc_client *gui) : QWidget(parent)
   connect(ui.bload, &QPushButton::clicked,
           [gui]() { gui->switch_page(PAGE_LOAD); });
 
-  // TRANS: "version 2.6.0"
-  msgbuf = QString(_("%1%2")).arg(word_version()).arg(freeciv21_version());
-  ui.lversion->setText(QString(msgbuf) + beta);
+  // TRANS: "Version 2.6.0"
+  ui.lversion->setText(QString(_("Version %1")).arg(freeciv21_version()));
   setLayout(ui.gridLayout);
 }
 
