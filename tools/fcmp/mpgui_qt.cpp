@@ -171,13 +171,9 @@ void mpgui::setup(QWidget *central, struct fcmp_params *params)
       new QPushButton(QString::fromUtf8(_("Install modpack")));
   QStringList headers;
   QLabel *URL_label;
-  QLabel *version_label;
-  char verbuf[2048];
 
-  fc_snprintf(verbuf, sizeof(verbuf), "%s%s", word_version(),
-              freeciv21_version());
-
-  version_label = new QLabel(QString::fromUtf8(verbuf));
+  auto version_label =
+      new QLabel(QString(_("Version %1")).arg(freeciv21_version()));
   version_label->setAlignment(Qt::AlignHCenter);
   version_label->setParent(central);
   version_label->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
