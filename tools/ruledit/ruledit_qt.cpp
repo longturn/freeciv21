@@ -83,8 +83,6 @@ ruledit_gui::ruledit_gui(ruledit_main *main) : QObject(main)
   QWidget *edit_widget = new QWidget();
   QPushButton *ruleset_accept;
   QLabel *rs_label;
-  QLabel *version_label;
-  char verbuf[2048];
 
   data.nationlist = nullptr;
   data.nationlist_saved = nullptr;
@@ -92,13 +90,12 @@ ruledit_gui::ruledit_gui(ruledit_main *main) : QObject(main)
   auto *central = new QWidget;
   main->setCentralWidget(central);
 
-  fc_snprintf(verbuf, sizeof(verbuf), "%s%s", word_version(),
-              freeciv21_version());
-
   main_layout = new QStackedLayout();
 
   preload_layout->setSizeConstraint(QLayout::SetMaximumSize);
-  version_label = new QLabel(verbuf);
+
+  auto version_label =
+      new QLabel(QString(_("Version %1")).arg(freeciv21_version()));
   version_label->setAlignment(Qt::AlignHCenter);
   version_label->setParent(central);
   preload_layout->addWidget(version_label);
