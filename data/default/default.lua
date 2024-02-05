@@ -188,11 +188,26 @@ function _deflua_make_partisans_callback(city, loser, winner, reason)
     return
   end
 
-  local partisans = random(0, 1 + (city.size + 1) / 2) + 1
+  local size = math.tointeger(city.size)
+  local partisans = random(0, 1 + (size + 1) / 2) + 1
   if partisans > 8 then
     partisans = 8
   end
   city.tile:place_partisans(loser, partisans, city:map_sq_radius())
+
+  -- In rulesets where partisans cost population, we reduce the city size
+  -- accordingly. This avoids an exploit where two players would keep conquering
+  -- a city back and forth to generate an unbounded number of partisans.
+  -- Get the generated unit type
+  local partisan_utype = find.role_unit_type("Partisan", loser) or
+                         find.role_unit_type("Partisan", nil)
+  if partisan_utype then  -- Better safe than sorry
+    local pop_cost = partisan_utype.pop_cost * partisans
+    if pop_cost > 0 then
+      edit.resize_city(city, math.max(1, size - pop_cost), 'partisans')
+    end
+  end
+
   notify.event(loser, city.tile, E.CITY_LOST,
       _("The loss of %s has inspired partisans!"), city.name)
   notify.event(winner, city.tile, E.UNIT_WIN_ATT,
