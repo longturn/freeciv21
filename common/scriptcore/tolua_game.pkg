@@ -79,6 +79,7 @@ struct Building_Type {
 
 struct Unit_Type {
   int build_cost;
+  int pop_cost;
 
   const int item_number @ id;
 };
