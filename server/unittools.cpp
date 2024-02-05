@@ -1176,7 +1176,15 @@ void place_partisans(struct tile *pcenter, struct player *powner, int count,
                      int sq_radius)
 {
   struct tile *ptile = nullptr;
-  struct unit_type *u_type = get_role_unit(L_PARTISAN, 0);
+  struct unit_type *u_type = best_role_unit_for_player(powner, L_PARTISAN);
+  if (!u_type) {
+    // If the player cannot build any partisan, pick the first one
+    u_type = get_role_unit(L_PARTISAN, 0);
+  }
+  if (!u_type) {
+    // Cannot do anything.
+    return;
+  }
 
   while (count-- > 0
          && find_a_good_partisan_spot(pcenter, powner, u_type, sq_radius,
