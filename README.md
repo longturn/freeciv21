@@ -92,7 +92,7 @@ nix run github:longturn/freeciv21#;
 Freeciv21 is available in the FreeBSD ports tree. You can install the binary
 package using this command:
 ```sh
-pgk install freeciv21
+pkg install freeciv21
 ```
 
 Although it is recommended to use the binary package, you can also build
