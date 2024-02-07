@@ -22,7 +22,7 @@ mining, or are occupied by an enemy, the Governor becomes active. Second, it sup
 like production (shields), gold, science, or luxury goods. Third, it gives the player a fine-grained control
 over this, with the possibility of setting constraints for any kind of city output. The latter includes the
 constraint of celebration, which makes it very easy to let your cities grow, even in harder times. The forth,
-and probably most valuable thing in war times, is that is keeps your cities content, preventing them from
+and probably most valuable thing in war times, is that it keeps your cities content, preventing them from
 revolt.
 
 The legacy Freeciv Wiki also contains some other useful information related to the CMA:
