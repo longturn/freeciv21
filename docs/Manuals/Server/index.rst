@@ -12,7 +12,7 @@ bottom of this page in the footer.
 .. note::
   This manual is for advanced users of Freeciv21. Most players simply install the game and either play local
   single-player games or join online Longturn multi-player games and do not really worry at all about the
-  server. If you are good at Linux administration, interesting in hosting your own server, or better
+  server. If you are good at Linux administration, interested in hosting your own server, or better
   understand how the Longturn team goes about creating the online games, then read on!
 
 If you are having trouble, come find the Longturn Community on Discord at https://discord.gg/98krqGm. A good
