@@ -531,8 +531,7 @@ Clear Orders
     Clear any delayed orders from the above two menu items.
 
 Add All Cities to Trade Planning
-    All all current cities in your into an advanced trade planning array. This is used by the WarCiv
-    ruleset.
+    Add all current cities into an advanced trade planning array. This is used by the WarCiv ruleset.
 
 Calculate Trade Planning
     Run a trade effectiveness algorithm across all of the cities in the trade plan to determine the best
