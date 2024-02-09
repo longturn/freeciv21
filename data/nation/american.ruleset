@@ -17,8 +17,7 @@ legend=_("The United States of America achieved its independence from\
 leaders = {
  "name",                        "sex"
  "George Washington",           "Male"
- "Martha Washington",    	"Female"
- "Alexander Hamilton",          "Male"
+ "Martha Washington",           "Female"
  "Benjamin Franklin",           "Male"
  "John Adams",                  "Male"
  "Thomas Jefferson",            "Male"
@@ -43,9 +42,9 @@ leaders = {
  "Lyndon B. Johnson",           "Male"
  "Richard Nixon",               "Male"
  "Ronald Reagan",               "Male"
- "George H. W. Bush",		"Male"
- "Bill Clinton",		"Male"
- "Hillary Clinton",		"Female"
+ "George H. W. Bush",           "Male"
+ "Bill Clinton",                "Male"
+ "Hillary Clinton",             "Female"
 }
 
 ruler_titles = {
@@ -62,7 +61,7 @@ init_techs=""
 init_buildings=""
 init_units=""
 
-civilwar_nations = "confederate", "vermont", "californian", "texan"
+civilwar_nations = "confederate", "alaskan", "vermont", "californian", "texan", "muscogee"
 
 cities =
  "Washington (ocean, river, swamp, !desert)", 

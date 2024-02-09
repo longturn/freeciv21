@@ -1,0 +1,75 @@
+[nation_tokiponan]
+
+name=_("Toki Ponan")
+plural=_("?plural:Toki Ponans")
+groups= "Imaginary"
+legend=_("Toki Pona is a conlang created by Sonja lang in 2001 which is\
+ notable for its extremely small size, consisting of 14 letters and anywhere\
+ from 120 words to 137 words.")
+
+leaders = {
+ "name",                        "sex"
+ "Sonja Lang",                  "Female"   ; Creator of the language.
+ "jan Misali",                  "Male"     ; Famous Toki Ponan youtuber.
+ "Jonathan Gabel",              "Male"     ; Creator of sitelen sitelen.
+}
+
+flag="tokipona"
+flag_alt = "-"
+style = "European"
+
+init_techs=""
+init_buildings=""
+init_units=""
+
+civilwar_nations = "papuanewguinean", "finnish", "serbian", "croatian", "esperant", "dutch", "acadian", "english", "georgian", "chinese", "cantonese",  ;nations decided based on number of roots by language, Papua New Guinea for Tok Pisin.
+
+cities = ; list of cities and their Toki Ponan translations taken from: https://github.com/jan-Lope/Toki_Pona-Parser/blob/master/toki-pona-unofficial-words-cities.pro
+ "ma tomo towano", ; Toronto (Canada)
+ "ma tomo sene", ; Genf (Switzerland)
+ "ma tomo alipasi", ; Halifax (Canada)
+ "ma tomo nujoka", ; New York City (USA)
+ "ma tomo solu", ; Seoul (Capital of South Korea)
+ "ma tomo sensan", ; St. John"s (Canada)
+ "ma tomo alana", ; Atlanta (USA)
+ "ma tomo pasen", ; Boston (USA)
+ "ma tomo asina", ; Athen (Capital of Greece)
+ "ma tomo tuku", ; Turku (Finland)
+ "ma tomo iwesun", ; Hilversum (Netherlands)
+ "ma tomo peminan", ; Birmingham (England)
+ "ma tomo anpu", ; Hamburg (Germany)
+ "ma tomo alenta", ; Atlanta (USA)
+ "ma tomo wenesija" ; Venedig (Italy)
+ "ma tomo sesija", ; Shediac (Canada)
+ "ma tomo wankuwa", ; Vancouver (Canada)
+ "ma tomo sije", ; Dieppe (Canada)
+ "ma tomo tokijo", ; Tokyo; Tokio (Capital of Japan)
+ "ma tomo osaka", ; Osaka (Japan)
+ "ma tomo lesinki", ; Helsinki; Helsingfors (Capital of Finnland)
+ "ma tomo tanpele", ; Tampere (Finland)
+ "ma tomo putapesi", ; Budapest (Capital of Hungary)
+ "ma tomo mesiko", ; Mexiko-Stadt (Capital of Mexiko)
+ "ma tomo lantan", ; London (Caiptal of UK)
+ "ma tomo ansetan", ; Amsterdam (Capital of Netherlands)
+ "ma tomo minsen", ; Munich (Germany)
+ "ma tomo pilense", ; Florenz (Italy)
+ "ma tomo kunte", ; Krung Thep; Bangkok (Capital of Thailand)
+ "ma tomo loma", ; Rome (Capital of Italy)
+ "ma tomo milano", ; Milan (Italy)
+ "ma tomo napoli", ; Napoli, Neapel (Italy)
+ "ma tomo ele", ; Los Angeles (USA)
+ "ma tomo sanpansiko", ; San Francisco (USA)
+ "ma tomo akajela", ; Al-Qahirah, Kairo (Capital of Egypt)
+ "ma tomo pesin", ; Beijing; Peking (Capital of China)
+ "ma tomo kakawi", ; Calgary (Canada)
+ "ma tomo kenpisi", ; Cambridge (USA, UK)
+ "ma tomo telawi", ; Tel Aviv (Israel)
+ "ma tomo sawi", ; Sackville (Canada)
+ "ma tomo paki", ; Paris (Capital of France)
+ "ma tomo esupo", ; Espoo (Finland)
+ "ma tomo sakata", ; Jakarta (Capital of Indonesia)
+ "ma tomo polan", ; Portland (USA)
+ "ma tomo alawa", ; Ottawa (Capital of Canada)
+ "ma tomo manten", ; Moncton (Canada)
+ "ma tomo monkela", ; Montreal (Canada)
+ "ma tomo pelin", ; Berlin (Capital of Germany)

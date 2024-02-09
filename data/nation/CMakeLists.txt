@@ -15,6 +15,7 @@ install(
   akwe.ruleset
   alandalus.ruleset
   alander.ruleset
+  alaskan.ruleset
   albanian.ruleset
   aleut.ruleset
   algerian.ruleset
@@ -43,6 +44,7 @@ install(
   atlantean.ruleset
   australian.ruleset
   austrian.ruleset
+  austriahungary.ruleset
   avar.ruleset
   aymara.ruleset
   azeri.ruleset
@@ -125,6 +127,7 @@ install(
   comanche.ruleset
   comorian.ruleset
   confederate.ruleset
+  congofreestate.ruleset
   congolesebrazzaville.ruleset
   congolese.ruleset
   cornish.ruleset
@@ -144,12 +147,14 @@ install(
   czechoslovak.ruleset
   czech.ruleset
   dacian.ruleset
+  dagestan.ruleset
   dahomean.ruleset
   danish.ruleset
   darfuri.ruleset
   djiboutian.ruleset
   dominicano.ruleset
   dominican.ruleset
+  donetsk.ruleset
   dryad.ruleset
   dutch.ruleset
   eastgerman.ruleset
@@ -191,6 +196,7 @@ install(
   georgian.ruleset
   gepid.ruleset
   germanbelgian.ruleset
+  germanempire.ruleset
   germanic.ruleset
   german.ruleset
   ghanaian.ruleset
@@ -220,6 +226,7 @@ install(
   helvetian.ruleset
   hephthalite.ruleset
   hessian.ruleset
+  hessedarmstadt.ruleset
   himyarite.ruleset
   hittite.ruleset
   holyroman.ruleset
@@ -294,6 +301,7 @@ install(
   lithuanian.ruleset
   lojbanistani.ruleset
   lorrain.ruleset
+  luhansk.ruleset
   luwian.ruleset
   luxembourgish.ruleset
   lycian.ruleset
@@ -408,6 +416,7 @@ install(
   rapanui.ruleset
   raramuri.ruleset
   rhenish.ruleset
+  rhodesia.ruleset
   riffian.ruleset
   riograndense.ruleset
   romanian.ruleset
@@ -418,6 +427,7 @@ install(
   ruthenian.ruleset
   rwandan.ruleset
   ryukyuan.ruleset
+  saarprotectorate.ruleset
   sabine.ruleset
   sahrawi.ruleset
   saintlucian.ruleset
@@ -436,6 +446,7 @@ install(
   savoyard.ruleset
   saxon.ruleset
   scanian.ruleset
+  schaumburglippe.ruleset
   schleswig-holsteinian.ruleset
   scottishgaelic.ruleset
   scottish.ruleset
@@ -504,6 +515,7 @@ install(
   timurid.ruleset
   tocharian.ruleset
   togolese.ruleset
+  tokiponan.ruleset
   toltec.ruleset
   tongan.ruleset
   transnistrian.ruleset

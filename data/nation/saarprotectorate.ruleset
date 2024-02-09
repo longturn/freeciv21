@@ -1,0 +1,64 @@
+[nation_saarprotectorate]
+
+name=_("Saar Protectorate")
+plural=_("?plural:Saarlanders")
+groups="European"
+legend=_("The Saar Protectorate was a short-lived protectorate (1947–56)\
+partitioned from Germany after its defeat in World War II;\ 
+it was administered by the French Fourth Republic. On rejoining West Germany in 1957,\ 
+it became the smallest 'area state', the Saarland. It is named after the Saar River.")
+
+leaders = {
+ "name",                        "sex"
+ "Johannes Hoffmann",           "Male"
+ "Charles de Gaulle",           "Male"
+ "Gilbert Grandval",     	"Male"
+ "Hubert Ney",     		"Male"
+ "Erich Honecker",           	"Male"
+}
+
+ruler_titles = {
+ "government",      "male_title",            "female_title"
+ "Despotism", _("High Commissioner %s"), _("High Commissioner %s")
+ "Democracy",       _("Prime Minister %s"),      _("?female:Prime Minister %s")
+ "Fundamentalism",  _("Archbishop %s"),      _("?female:Archbishop %s")
+ "Communism",       _("First Secretary %s"), _("?female:First Secretary %s")
+ "Monarchy",        _("King %s"),          _("Queen %s")
+}
+
+flag="saarprotectorate"
+flag_alt = "germany"
+style = "european"
+
+init_techs=""
+init_buildings=""
+init_units=""
+
+civilwar_nations="rhenish", "palatinate", "luxembourgish", "lorrain", "prussian"
+
+cities =
+ "Saarbrücken",
+  "Neunkirchen", 
+  "Homburg",
+  "St. Ingbert",
+  "Saarlouis",
+  "Merzig", 
+  "St. Wendel", 
+  "Blieskastel", 
+  "Dillingen/Saar", 
+  "Lebach",
+  "Püttlingen",
+  "Bexbach", 
+  "Sulzbach/Saar",
+  "Wadern",
+  "Ottweiler", 
+  "Friedrichsthal", 
+  "Heusweiler", 
+  "Losheim am See",
+  "Schiffweiler",
+  "Tholey", 
+  "Mettlach",
+  "Überherrn",
+  "Kleinbittersdorf", 
+  "Wallerfangen", 
+  "Nonnweiler"
