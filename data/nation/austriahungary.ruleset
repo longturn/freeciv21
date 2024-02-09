@@ -12,22 +12,23 @@ It was ruled by the House of Habsburg, and constituted the last phase in the con
 Following the 1867 reforms, the Austrian and the Hungarian states were co-equal within the Empire.\
 The Compromise required regular renewal, as did the customs union between the two halves of the Empire.\
 Foreign affairs and the military fell under joint control, but all other government faculties were divided between the respective states.")
+; Legend from: https://en.wikipedia.org/wiki/Austria-Hungary
 
 leaders = {
-"name", "sex" ; Full name/s in comment
-"Franz Joseph I", "Male"
-"Gyula Andrássy", "Male"
-"Conrad von Hötzendorf", "Male"
-"Kasimir Felix Badeni", "Male"
-"Friedrich von Beust", "Male"
-"Svetozar Boroevic", "Male"
-"Heinrich Lamnasch", "Male"
-"János Hadik", "Male"
-"Edourad von Taaffe", "Male"
-"Rudolf Stöger-Steiner von Steinstätten", "Male"
-"Heinrich Lammasch", "Male"
-"Karl I",             "Male"
-"Maria Theresia",      "Female"	
+"name",                                     "sex" ; Full name/s in comment
+"Franz Joseph I",                           "Male"
+"Gyula Andrássy",                           "Male"
+"Conrad von Hötzendorf",                    "Male"
+"Kasimir Felix Badeni",                     "Male"
+"Friedrich von Beust",                      "Male"
+"Svetozar Boroevic",                        "Male"
+"Heinrich Lamnasch",                        "Male"
+"János Hadik",                              "Male"
+"Edourad von Taaffe",                       "Male"
+"Rudolf Stöger-Steiner von Steinstätten",   "Male"
+"Heinrich Lammasch",                        "Male"
+"Karl I",                                   "Male"
+"Maria Theresia",                           "Female"	
 }
 
 ruler_titles = {

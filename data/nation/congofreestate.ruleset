@@ -6,14 +6,24 @@ groups="Modern", "African"
 
 legend=_("The Congo Free State was a large state in Central Africa from 1885 to 1908\
  which was in personal union with the Kingdom of Belgium under Leopold II.\
- Leopold's reign in the Congo eventually earned infamy due to the increasing mistreatment of the indigenous peoples.")
+ Leopold's reign in the Congo eventually earned infamy due to the increasing\
+ mistreatment of the indigenous peoples.")
 
 leaders = {
  "name",                        "sex"
- "Leopold II",			"Male"
+ "Leopold II",			"Male"	
+ "Marie Henriette",             "Female"
+ "F. W. de Winton",             "Male"
+ "Camille Janssen",             "Male"
+ "Théophile Wahis"              "Male"
  "Joseph Conrad",		"Male"
  "Henry Morton Stanley",	"Male"
  "Tippu-Tip",			"Male"
+}
+
+ruler_titles = {
+ "government",      "male_title",                     "female_title"
+ "Despotism",       _("Governeror-General %s"),      _("?female:Governeror-General %s")
 }
 
 flag="congofreestate"

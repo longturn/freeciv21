@@ -5,9 +5,10 @@ plural=_("?plural:Saarlanders")
 groups="European"
 legend=_("The Saar Protectorate was a short-lived protectorate (1947–56)\
 partitioned from Germany after its defeat in World War II;\ 
-it was administered by the French Fourth Republic. On rejoining West Germany in 1957,\ 
-it became the smallest 'area state', the Saarland. It is named after the Saar River.")
-
+it was administered by the French Fourth Republic. On rejoining West Germany\
+in 1957, it became the smallest 'area state', the Saarland. It is named\
+after the Saar River.")
+;Legend from: https://en.wikipedia.org/wiki/Saar_Protectorate
 leaders = {
  "name",                        "sex"
  "Johannes Hoffmann",           "Male"
@@ -18,12 +19,12 @@ leaders = {
 }
 
 ruler_titles = {
- "government",      "male_title",            "female_title"
- "Despotism", _("High Commissioner %s"), _("High Commissioner %s")
- "Democracy",       _("Prime Minister %s"),      _("?female:Prime Minister %s")
- "Fundamentalism",  _("Archbishop %s"),      _("?female:Archbishop %s")
- "Communism",       _("First Secretary %s"), _("?female:First Secretary %s")
- "Monarchy",        _("King %s"),          _("Queen %s")
+ "government",      "male_title",              "female_title"
+ "Despotism",       _("High Commissioner %s"), _("?female:High Commissioner %s")
+ "Democracy",       _("Prime Minister %s"),    _("?female:Prime Minister %s")
+ "Fundamentalism",  _("Archbishop %s"),        _("?female:Archbishop %s")
+ "Communism",       _("First Secretary %s"),   _("?female:First Secretary %s")
+ "Monarchy",        _("King %s"),              _("Queen %s")
 }
 
 flag="saarprotectorate"
