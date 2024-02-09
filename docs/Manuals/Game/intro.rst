@@ -15,7 +15,7 @@ Regardless the method you used to get into a game, eventually you will make it t
 shown in :numref:`Game Overview` below. This is known as the :ref:`Map View <game-manual-map-view>`.
 
 .. _Game Overview:
-.. figure:: ../../../dist/freeciv21-screenshot-2048x1112.png
+.. figure:: ../../../dist/freeciv21-screenshot.png
     :scale: 25%
     :align: center
     :alt: Freeciv21 game overview
