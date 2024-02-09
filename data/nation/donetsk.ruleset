@@ -25,7 +25,7 @@ legend=_("The Donetsk People's Republic is an unrecognised republic of\
  resolution calling on countries not to recognise what it called the\
  "attempted illegal annexation" and demanded that Russia "immediately,\
  completely and unconditionally withdraw.")
-
+; Legend from: https://en.wikipedia.org/wiki/Donetsk_People%27s_Republic
 leaders = {
  "name",                          "sex"
  "Alexander Zakharchenko"         "Male"   ; (1976–2018) Head of the Donetsk People's Republic from 4 November 2014 – 31 August 2018 
