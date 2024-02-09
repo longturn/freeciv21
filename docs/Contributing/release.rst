@@ -21,13 +21,17 @@ These are the general steps to prepare and finalize a release:
    The easiest way to do this is to copy the contents of the last release, delete the bullet points, and
    add a single bullet of ``* Nothing for this release`` to each section. :strong:`DO NOT` add a tag at this
    time. This prevents an accidental release.
-#. A release manager will update the draft as PR's are commited to the repository to help keep track of
+#. A release manager will update the draft as PR's are committed to the repository to help keep track of
    the release cadence progress. As PR's are added to sections the ``* Nothing for this release`` is removed.
 #. Multiple PR's can be combined on a single bullet line. Documentation updates are often done this way.
 #. When we are getting close to crossing one of the release candidate thresholds, the release manager will
    post to the ``#releases-project`` channel in the ``LT.DEV`` section on the Longturn Discord server. The
    main purpose of the post is to alert the developers of a pending cadence threshold and to gauge if we
    need to delay in any way or if we are good to proceed as normal.
+#. A release manager or another regular contributor will update the ``vcpkgGitCommitId`` value in the CI/CD
+   build file (:file:`.github/workflows/build.yaml`). Grab the Commit ID of the most recent release from
+   https://github.com/microsoft/vcpkg/releases. Commit and push a PR. Ensure all of the CI/CD Action runners
+   complete successfully.
 #. When it is time, the release manager will finalize the release notes and ask for an editorial review in the
    ``#releases-project`` channel. Updates are made as per review.
 #. If the release will be the :strong:`first release candidate` towards a stable release, the release manager
@@ -37,15 +41,16 @@ These are the general steps to prepare and finalize a release:
       `branches page <https://github.com/longturn/freeciv21/branches>`_.
    #. From the same page, create a new ``stable`` branch from ``master``.
    #. Update ``cmake/AutoRevision.txt`` with the hash of the last commit in ``master`` and
-      ``v[major version].[minor version]-dev`` with the version of the :strong:`next stable release`, then
+      ``v[major version].[minor version]-dev.0`` with the version of the :strong:`next stable release`, then
       open a PR for this change to ``master``. This way, development builds from ``master`` will immediately
       use the version number of the next stable.
 
 #. If the release is a :strong:`release candidate` for a :strong:`stable release`, the release manager will
    make sure that the :guilabel:`Target` branch in the release draft is set to ``stable``.
 #. The release manager will add a tag to the release notes page and then click :guilabel:`Publish Release`.
-   The format of the tag is ``v[major version].[minor version]-[pre-release name].[number]``. For example:
-   ``v3.0-beta.6``. :strong:`The format is very important` to the build configuration process.
+   The format of the tag is ``v[major version].[minor version]-[pre-release name].[number]`` for pre-releases
+   and ``v[major version].[minor version].[patch version]`` for stable versions. For example:
+   ``v3.0-beta.6`` or ``v3.1.0``. :strong:`The format is very important` to the build configuration process.
 #. After a few minutes the continuous integration (CI) will open a PR titled
    ``Release Update of AutoRevision.txt``. The release manager will open the PR, click on the
    :guilabel:`Close pull request` button, and then click :guilabel:`Open pull request` button. This is a
@@ -53,6 +58,11 @@ These are the general steps to prepare and finalize a release:
    created PR's.
 #. While inside the ``Release Update of AutoRevision.txt`` PR, the release manager will enable an automatic
    rebase and merge.
+#. The release manager will open an issue titled ``Review workarounds after <version> release`` with the following text:
+
+      We should review the workarounds in the source code and check that they are still needed. Some
+      workarounds are documented here: :doc:`workarounds`.
+
 #. When all the CI actions are complete, the release manager will make a post in the ``#news-channel`` on the
    Longturn.net Discord server.
 #. The release manager will download the Windows i686 and x86_64 installer packages and use their Microsoft

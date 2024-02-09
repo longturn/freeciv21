@@ -9,6 +9,8 @@
 **************************************************************************/
 #pragma once
 
+#include "fc_types.h"
+
 adv_want dai_effect_value(struct player *pplayer, struct government *gov,
                           const struct adv_data *adv,
                           const struct city *pcity, const bool capital,

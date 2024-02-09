@@ -339,26 +339,26 @@ void universal_value_from_str(struct universal *source, const char *value)
     break;
   case VUT_CITYTILE:
     source->value.citytile = citytile_type_by_name(value, fc_strcasecmp);
-    if (source->value.citytile != CITYT_LAST) {
+    if (citytile_type_is_valid(source->value.citytile)) {
       return;
     }
     break;
   case VUT_CITYSTATUS:
     source->value.citystatus = citystatus_type_by_name(value, fc_strcasecmp);
-    if (source->value.citystatus != CITYS_LAST) {
+    if (citystatus_type_is_valid(source->value.citystatus)) {
       return;
     }
     break;
   case VUT_VISIONLAYER:
     source->value.vlayer = vision_layer_by_name(value, fc_strcasecmp);
-    if (source->value.vlayer != V_COUNT) {
+    if (vision_layer_is_valid(source->value.vlayer)) {
       return;
     }
     break;
   case VUT_NINTEL:
     source->value.nintel =
         national_intelligence_by_name(value, fc_strcasecmp);
-    if (source->value.nintel != NI_COUNT) {
+    if (national_intelligence_is_valid(source->value.nintel)) {
       return;
     }
   case VUT_COUNT:
@@ -422,13 +422,22 @@ struct universal universal_by_number(const enum universals_n kind,
     break;
   case VUT_IMPR_GENUS:
     source.value.impr_genus = impr_genus_id(value);
-    return source;
+    if (impr_genus_id_is_valid(source.value.impr_genus)) {
+      return source;
+    }
+    break;
   case VUT_EXTRA:
     source.value.extra = extra_by_number(value);
-    return source;
+    if (source.value.extra != nullptr) {
+      return source;
+    }
+    break;
   case VUT_GOOD:
     source.value.good = goods_by_number(value);
-    return source;
+    if (source.value.good != nullptr) {
+      return source;
+    }
+    break;
   case VUT_TERRAIN:
     source.value.terrain = terrain_by_number(value);
     if (source.value.terrain != nullptr) {
@@ -437,7 +446,11 @@ struct universal universal_by_number(const enum universals_n kind,
     break;
   case VUT_TERRFLAG:
     source.value.terrainflag = value;
-    return source;
+    if (terrain_flag_id_is_valid(
+            terrain_flag_id(source.value.terrainflag))) {
+      return source;
+    }
+    break;
   case VUT_NATION:
     source.value.nation = nation_by_number(value);
     if (source.value.nation != nullptr) {
@@ -479,28 +492,52 @@ struct universal universal_by_number(const enum universals_n kind,
     break;
   case VUT_UCFLAG:
     source.value.unitclassflag = value;
-    return source;
+    if (source.value.unitclassflag) {
+      return source;
+    }
+    break;
   case VUT_MINVETERAN:
     source.value.minveteran = value;
-    return source;
+    if (source.value.minveteran > 0) {
+      return source;
+    }
+    break;
   case VUT_UNITSTATE:
     source.value.unit_state = ustate_prop(value);
-    return source;
+    if (ustate_prop_is_valid(source.value.unit_state)) {
+      return source;
+    }
+    break;
   case VUT_ACTIVITY:
     source.value.activity = unit_activity(value);
-    return source;
+    if (unit_activity_is_valid(source.value.activity)) {
+      return source;
+    }
+    break;
   case VUT_MINMOVES:
     source.value.minmoves = value;
-    return source;
+    if (source.value.minmoves > 0) {
+      return source;
+    }
+    break;
   case VUT_MINHP:
     source.value.min_hit_points = value;
-    return source;
+    if (source.value.min_hit_points > 0) {
+      return source;
+    }
+    break;
   case VUT_AGE:
     source.value.age = value;
-    return source;
+    if (source.value.age > 0) {
+      return source;
+    }
+    break;
   case VUT_MINTECHS:
     source.value.min_techs = value;
-    return source;
+    if (source.value.min_techs > 0) {
+      return source;
+    }
+    break;
   case VUT_ACTION:
     source.value.action = action_by_number(value);
     if (source.value.action != nullptr) {
@@ -509,64 +546,122 @@ struct universal universal_by_number(const enum universals_n kind,
     break;
   case VUT_OTYPE:
     source.value.outputtype = output_type_id(value);
-    return source;
+    if (source.value.outputtype != O_LAST) {
+      return source;
+    }
+    break;
   case VUT_SPECIALIST:
     source.value.specialist = specialist_by_number(value);
-    return source;
+    if (source.value.specialist) {
+      return source;
+    }
+    break;
   case VUT_MINSIZE:
     source.value.minsize = value;
-    return source;
+    if (source.value.minsize > 0) {
+      return source;
+    }
+    break;
   case VUT_MINCULTURE:
     source.value.minculture = value;
-    return source;
+    if (source.value.minculture > 0) {
+      return source;
+    }
+    break;
   case VUT_MINFOREIGNPCT:
     source.value.minforeignpct = value;
-    return source;
+    if (source.value.minforeignpct > 0) {
+      return source;
+    }
+    break;
   case VUT_AI_LEVEL:
     source.value.ai_level = ai_level(value);
-    return source;
+    if (ai_level_is_valid(source.value.ai_level)) {
+      return source;
+    }
+    break;
   case VUT_MAXTILEUNITS:
     source.value.max_tile_units = value;
-    return source;
+    if (0 <= source.value.max_tile_units) {
+      return source;
+    }
+    break;
   case VUT_TERRAINCLASS:
     source.value.terrainclass = value;
-    return source;
+    if (terrain_class_is_valid(terrain_class(source.value.terrainclass))) {
+      return source;
+    }
+    break;
   case VUT_BASEFLAG:
     source.value.baseflag = value;
-    return source;
+    if (base_flag_id_is_valid(base_flag_id(source.value.baseflag))) {
+      return source;
+    }
+    break;
   case VUT_ROADFLAG:
     source.value.roadflag = value;
-    return source;
+    if (road_flag_id_is_valid(road_flag_id(source.value.roadflag))) {
+      return source;
+    }
+    break;
   case VUT_EXTRAFLAG:
     source.value.extraflag = value;
-    return source;
+    if (extra_flag_id_is_valid(extra_flag_id(source.value.extraflag))) {
+      return source;
+    }
+    break;
   case VUT_MINYEAR:
     source.value.minyear = value;
     return source;
   case VUT_MINCALFRAG:
     source.value.mincalfrag = value;
-    return source;
+    if (source.value.mincalfrag >= 0) {
+      return source;
+    }
+    break;
   case VUT_TOPO:
     source.value.topo_property = topo_flag(value);
-    return source;
+    if (topo_flag_is_valid(source.value.topo_property)) {
+      return source;
+    }
+    break;
   case VUT_SERVERSETTING:
     source.value.ssetval = value;
-    return source;
+    if (source.value.ssetval != SSETV_NONE) {
+      return source;
+    }
+    break;
   case VUT_TERRAINALTER:
     source.value.terrainalter = value;
-    return source;
+    if (terrain_alteration_is_valid(
+            static_cast<terrain_alteration>(source.value.terrainalter))) {
+      return source;
+    }
+    break;
   case VUT_CITYTILE:
     source.value.citytile = citytile_type(value);
-    return source;
+    if (citytile_type_is_valid(source.value.citytile)) {
+      return source;
+    }
+    break;
   case VUT_CITYSTATUS:
     source.value.citystatus = citystatus_type(value);
-    return source;
+    if (citystatus_type_is_valid(source.value.citystatus)) {
+      return source;
+    }
+    break;
   case VUT_VISIONLAYER:
     source.value.vlayer = vision_layer(value);
-    return source;
+    if (vision_layer_is_valid(source.value.vlayer)) {
+      return source;
+    }
+    break;
   case VUT_NINTEL:
     source.value.nintel = static_cast<national_intelligence>(value);
-    return source;
+    if (national_intelligence_is_valid(source.value.nintel)) {
+      return source;
+    }
+    break;
   case VUT_COUNT:
     break;
   }

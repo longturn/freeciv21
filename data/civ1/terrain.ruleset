@@ -1180,6 +1180,14 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+Gold is a malleable metal that has been the source of wealth for thousands of\
+ years. Due to its ubiquity in nature it has traditionally been used as a hard\
+ currency (coins).\
+"), _("\
+Gold, when found on a Mountain tile, gives 6 more trade.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_game]
 name           = _("?animals:Game")
@@ -1193,6 +1201,13 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+Wild \"Game\" has been a source of food and tools for hunter-gathers in the\
+ ancient past all the way to modern times.\
+"), _("\
+Game, when found on a Forest or Tundra tile, gives 2 more food.\
+ For more information, review the help for the individual tile types.\
+")
 
 [extra_coal]
 name           = _("Coal")
@@ -1206,6 +1221,14 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+Coal is a hard black ore that is easily mined. When burned it produces a very\
+ hot fire useful for many purposes. In modern times, burning coal produces the\
+ heat needed for the steam engine or to generate electricity.\
+"), _("\
+Coal, when found on a Hills tile, gives 2 more shields.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_fish]
 name           = _("Fish")
@@ -1219,6 +1242,13 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+The fishing industry has been a source of food for all civilizations for all\
+ time.\
+"), _("\
+Fish, when found on an Ocean tile, gives 2 more food.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_gems]
 name           = _("Gems")
@@ -1232,6 +1262,14 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+Freeciv21 combines all valuable stones used in jewelry and other important\
+ artifacts, such as diamonds and rubies, into the word \"gems\". These precious\
+ stones have been used for trade for thousands of years.\
+"), _("\
+Gems, when found on a Jungle tile, gives 4 more trade.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_horses]
 name           = _("Horses")
@@ -1245,6 +1283,12 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+Horses have aided humans in many useful ways for thousands of years.\
+"), _("\
+Horses, when found on a Plains tile, gives 2 more shields.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_oasis]
 name           = _("Oasis")
@@ -1258,6 +1302,14 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+An oasis is an area of a surface fresh water spring in a desert region.\
+ The oasis is an important respite, fresh water, and food source in\
+ regions that have reduced rain fall.\
+"), _("\
+Oasis, when found on a Desert tile, gives 3 more food.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_oil]
 name           = _("Oil")
@@ -1271,6 +1323,13 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+The discovery of oil and the production of fuel and other derivative\
+ petroleum products has revolutionized the modern world.\
+"), _("\
+Oil, when found on a Swamp tile, gives 3 more shields.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_bonus]
 name           = _("Resources")
@@ -1284,6 +1343,13 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+\"Bonus\" Resources is a map-tile game-play feature of Freeciv21. It is not\
+ a naturally occurring resource like the other ones added to the map.\
+"), _("\
+Resources, when found on a Grassland tile, gives 1 more shield.\
+ For more information, review the help for the individual tile type.\
+")
 
 [extra_seals]
 name           = _("Seals")
@@ -1297,6 +1363,13 @@ act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
+helptext       = _("\
+The hunting of seals has been a source of food, energy, and trade for many\
+ civilizations throughout history.\
+"), _("\
+Seals, when found on an Artic tile, gives 2 more food.\
+ For more information, review the help for the individual tile type.\
+")
 
 
 ; /* <-- avoid gettext warnings

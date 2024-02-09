@@ -1989,7 +1989,7 @@ static bool img_save(const struct img *pimg, const char *mapimgfile,
     return false;
   }
 
-  if (!path_is_absolute(mapimgfile) && path != nullptr) {
+  if (!QFileInfo(mapimgfile).isAbsolute() && path != nullptr) {
     make_dir(path);
 
     sz_strlcpy(tmpname, path);

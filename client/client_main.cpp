@@ -304,12 +304,11 @@ static void client_game_reset()
 int client_main(int argc, char *argv[])
 {
   QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
   QApplication::setHighDpiScaleFactorRoundingPolicy(
       Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
-#endif
   QApplication app(argc, argv);
   QCoreApplication::setApplicationVersion(freeciv21_version());
+  app.setDesktopFileName(QStringLiteral("net.longturn.freeciv21"));
 
   i_am_client(); // Tell to libfreeciv that we are client
 
@@ -467,7 +466,8 @@ int client_main(int argc, char *argv[])
   auto positional = parser.positionalArguments();
   if (positional.size() == 1) {
     url = QUrl(positional.constFirst());
-    if (!url.isValid() || url.scheme() != QStringLiteral("fc21")) {
+    // Supported schemes: fc21://, fc21+local://
+    if (!url.isValid() || (!url.scheme().startsWith("fc21"))) {
       // Try with the default protocol
       url = QUrl(QStringLiteral("fc21://") + positional.constFirst());
       // Still no luck
@@ -657,6 +657,8 @@ void client_exit()
   if (gui_options->save_options_on_exit) {
     options_save(log_option_save_msg);
   }
+
+  audio_shutdown();
 
   overview_free();
   tileset_free(tileset);

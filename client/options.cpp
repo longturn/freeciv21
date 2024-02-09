@@ -15,7 +15,9 @@
 
 #include <cstring>
 #include <sys/stat.h>
+
 // Qt
+#include <QDir>
 #include <QHash>
 #include <QUrl>
 
@@ -24,6 +26,7 @@
 #include "fcintl.h"
 #include "log.h"
 #include "registry.h"
+#include "registry_ini.h"
 #include "shared.h"
 #include "support.h"
 
@@ -35,7 +38,6 @@
 #include "version.h"
 
 /* client/include */
-#include "dialogs_g.h"
 #include "gui_main_g.h"
 #include "menu_g.h"
 #include "optiondlg_g.h"

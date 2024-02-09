@@ -111,7 +111,7 @@ public:
   ~fc_client() override;
   QWidget *pages[static_cast<int>(PAGE_GAME) + 2];
   void fc_main(QApplication *);
-  void add_server_source(QTcpSocket *socket);
+  void add_server_source(QIODevice *socket);
 
   enum client_pages current_page();
 
@@ -140,6 +140,7 @@ public slots:
   void start_from_file(const QString &file);
   void start_new_game();
   void switch_page(int i);
+  void load_modpack();
 
 private:
   void create_loading_page();

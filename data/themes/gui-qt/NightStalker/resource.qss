@@ -103,18 +103,20 @@ resize_widget
 
 QPushButton[main_pagebt="true"] {
   color: white;
-  min-height: 40px;
+  font-size: 1.5em;
+  padding: 0.2em 1em;
+  min-height: 32px;
   min-width: 200px;
   background: #000330;
   border: 2px solid #1237FF;
-  border-radius: 0px;
-  padding: 0px;
+  border-radius: 4px;
+  padding: 4px;
 }
 
 QPushButton:hover[main_pagebt="true"] {
   color: white;
   background: #000330;
-  border: 3px solid #3399FF;
+  border: 4px solid #3399FF;
 }
 
 QPushButton, QToolButton {

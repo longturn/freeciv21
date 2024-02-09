@@ -62,6 +62,13 @@ jobs:
       - name: Build
         run: |
           cmake --build build
+      - name: Test
+        run: |
+          cmake --build build --target test
+      - name: Debug
+        if: failure()
+        run: |
+          cat build/Testing/Temporary/LastTest.log
       - name: Install
         run: |
           DESTDIR=$PWD/build/install cmake --build build --target install
@@ -106,10 +113,13 @@ jobs:
             libsdl2-mixer-dev
       - name: Configure
         run: |
-            cmake . -B build -G Ninja --preset "DistroRelease"
+            cmake . -B build -G "Ninja Multi-Config" --preset "DistroRelease"
       - name: Build
         run: |
           cmake --build build
+      - name: Test
+        run: |
+          cmake --build build --target test
 
   windows:
     name: "Windows MSYS2 (gcc)"
@@ -150,6 +160,9 @@ jobs:
       - name: Build
         run: |
           cmake --build build
+      #- name: Test
+      #  run: |
+      #    cmake --build build --target test
       - name: Install
         run: |
           cmake --build build --target install
@@ -173,7 +186,7 @@ jobs:
     name: "Windows Clang"
     runs-on: windows-latest
     needs: clang-format
-    if: github.event_name == 'schedule'
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     env:
       VCPKG_ROOT: C:/vcpkg
       VCPKG_DEFAULT_BINARY_CACHE: ${{github.workspace}}/vcpkg/bincache
@@ -181,17 +194,10 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: "Create dir: '${{env.VCPKG_DEFAULT_BINARY_CACHE}}'"
-        run: mkdir -p $VCPKG_DEFAULT_BINARY_CACHE
-        shell: bash
-      - name: Restore vcpkg and its artifacts.
-        uses: actions/cache@v3
+      - uses: lukka/run-vcpkg@v10
+        name: Install dependencies
         with:
-          path: ${{env.VCPKG_DEFAULT_BINARY_CACHE}}/*
-          key: ${{hashFiles('vcpkg.json')}}
-      - name: Show content of workspace after cache has been restored
-        run: find $RUNNER_WORKSPACE
-        shell: bash
+          vcpkgGitCommitId: 53bef8994c541b6561884a8395ea35715ece75db
       - name: Enable Developer Command Prompt
         uses: ilammy/msvc-dev-cmd@v1
       - name: Configure
@@ -201,13 +207,14 @@ jobs:
          -DCMAKE_TOOLCHAIN_FILE="${{env.VCPKG_ROOT}}/scripts/buildsystems/vcpkg.cmake" -A x64 -T ClangCL
       - name: Building
         run: cmake --build build --config Debug
+      #- name: Test
+      #  run: cmake --build build --target test
 
   os_x:
     name: "macOS"
     runs-on: macos-latest
     needs: clang-format
     env:
-      MACOSX_DEPLOYMENT_TARGET: 10.15
       VCPKG_BUILD_TYPE: release
     steps:
       - uses: actions/checkout@v3
@@ -222,15 +229,21 @@ jobs:
             gettext \
             create-dmg
           brew link gettext --force
+      - uses: actions/setup-python@v4  # Workaround for #2069
+        with:
+          python-version: '3.11'
       - uses: lukka/run-vcpkg@v10
         name: Install dependencies
         with:
-          vcpkgGitCommitId: 50fd3d9957195575849a49fa591e645f1d8e7156
+          vcpkgGitCommitId: 53bef8994c541b6561884a8395ea35715ece75db
       - name: Build
         uses: lukka/run-cmake@v10
         with:
           configurePreset: 'fullrelease-macos'
           buildPreset: 'fullrelease-macos'
+      - name: Test
+        run: |
+          cmake --build build* --target test
       - name: Split Branch Name
         env:
           BRANCH: ${{github.ref_name}}
@@ -253,6 +266,7 @@ jobs:
           mkdir staging
           mv Freeciv21.app staging
           create-dmg \
+            --hdiutil-verbose \
             --volname "Freeciv21 Installer" \
             --volicon "client.icns" \
             --window-pos 200 120 \
@@ -264,11 +278,6 @@ jobs:
             "Freeciv21-${{steps.split.outputs.fragment}}.dmg" \
             "staging/"
           shasum -a 256 Freeciv21-${{steps.split.outputs.fragment}}.dmg > Freeciv21-${{steps.split.outputs.fragment}}.dmg.sha256
-      - name: Debug
-        if: failure()
-        run: |
-          cat CMakeCache.txt
-          echo ${{steps.split.outputs.fragment}}
       - name: Upload package
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
@@ -284,7 +293,7 @@ jobs:
 
   fedora:
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule'
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     container: fedora:latest
     steps:
       - name: Install dependencies
@@ -307,20 +316,76 @@ jobs:
             elfutils-libs
       - uses: actions/checkout@v3
       - name: Configure
+        # Set ALWAYS_ROOT because the container user is root and creating an
+        # unpriviledged user would be too much work.
         run: |
           cmake . -B build -G Ninja \
             -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-            -DCMAKE_INSTALL_PREFIX=/usr
+            -DCMAKE_INSTALL_PREFIX=/usr \
+            -DALWAYS_ROOT=YES
       - name: Build
         run: |
           cmake --build build
+      - name: Test
+        run: |
+          cmake --build build --target test
       - name: Install
         run: |
           DESTDIR=$PWD/build/install cmake --build build --target install
 
+  freebsd:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    steps:
+    - uses: actions/checkout@v4
+    # This has to be executed in a single step because freebsd-vm fails if run
+    # twice.
+    - name: Build, test, and install on FreeBSD
+      uses: vmactions/freebsd-vm@v1
+      with:
+        # qmake is required by /usr/local/lib/cmake/Qt5Core/Qt5CoreConfig.cmake
+        run: |
+          set -e
+          pkg install -y \
+            git \
+            cmake \
+            ninja \
+            gettext \
+            qt5-buildtools \
+            qt5-qmake \
+            qt5-network \
+            qt5-svg \
+            qt5-testlib \
+            qt5-widgets \
+            kf5-karchive \
+            lua53 \
+            sqlite3 \
+            sdl2_mixer \
+            readline \
+            zlib-ng \
+            libunwind \
+            elfutils
+
+          # Create an unpriviledged user to run tests as, otherwise the server
+          # refuses to start (and rightfully so)
+          pw user add -n action -m
+
+          # Create a script with the commands to run
+          cat >build-and-test.sh <<EOF
+          cmake -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_INSTALL_PREFIX=/usr
+          cmake --build build
+          cmake --build build --target test
+          DESTDIR=$PWD/build/install cmake --build build --target install
+          EOF
+
+          chmod +x build-and-test.sh
+          su action -c 'sh build-and-test.sh'
+
   nix:
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule'
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -333,6 +398,7 @@ jobs:
   wasm:
     name: "WebAssembly"
     runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     needs: clang-format
     env:
       QT_VERSION: v5.15.8-lts-lgpl

@@ -14,6 +14,7 @@
 #include <fc_config.h>
 
 // Qt
+#include <QLocalSocket>
 #include <QString>
 #include <QTcpSocket>
 #include <QUrl>
@@ -85,28 +86,31 @@ static void client_conn_close_callback(struct connection *pconn)
 }
 
 /**
-   Try to connect to a server:
-    - try to create a TCP socket to the given URL (default to
-      localhost:DEFAULT_SOCK_PORT).
-    - if successful:
-           - start monitoring the socket for packets from the server
-           - send a "login request" packet to the server
-       and - return 0
-    - if unable to create the connection, close the socket, put an error
-      message in ERRBUF and return the Unix error code (ie., errno, which
-      will be non-zero).
+ * Called when there is an error on the socket.
+ */
+static void error_on_socket()
+{
+  if (client.conn.sock != nullptr) {
+    log_debug("%s", qUtf8Printable(client.conn.sock->errorString()));
+    output_window_append(ftc_client,
+                         qUtf8Printable(client.conn.sock->errorString()));
+  }
+  client.conn.used = false;
+}
+
+/**
+ * Try to connect to a server:
+ *  - try to create a TCP socket to the given URL
+ *  - if successful:
+ *         - start monitoring the socket for packets from the server
+ *         - send a "login request" packet to the server
+ *     and - return 0
+ *  - if unable to create the connection, close the socket, put an error
+ *    message in ERRBUF and return the Unix error code (ie., errno, which
+ *    will be non-zero).
  */
 static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
 {
-  // Apply defaults
-  auto url_copy = url;
-  if (url_copy.host().isEmpty()) {
-    url_copy.setHost(QStringLiteral("localhost"));
-  }
-  if (url_copy.port() <= 0) {
-    url_copy.setPort(DEFAULT_SOCK_PORT);
-  }
-
   connections_set_close_callback(client_conn_close_callback);
 
   // connection in progress? wait.
@@ -114,29 +118,45 @@ static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
     (void) fc_strlcpy(errbuf, _("Connection in progress."), errbufsize);
     return -1;
   }
+
+  // Reset
+  if (client.conn.sock) {
+    client.conn.sock->disconnect(client.conn.sock);
+    client.conn.sock->deleteLater();
+  }
   client.conn.used = true; // Now there will be a connection :)
 
   // Connect
-  if (!client.conn.sock) {
-    client.conn.sock = new QTcpSocket;
-    QObject::connect(client.conn.sock, &QAbstractSocket::errorOccurred, [] {
-      if (client.conn.sock != nullptr) {
-        log_debug("%s", qUtf8Printable(client.conn.sock->errorString()));
-        output_window_append(
-            ftc_client, qUtf8Printable(client.conn.sock->errorString()));
-      }
-      client.conn.used = false;
-    });
-    QObject::connect(client.conn.sock, &QAbstractSocket::disconnected,
+  if (url.scheme() == QStringLiteral("fc21")) {
+    QTcpSocket *sock = new QTcpSocket;
+    client.conn.sock = sock;
+    QObject::connect(sock, &QAbstractSocket::errorOccurred,
+                     &error_on_socket);
+    QObject::connect(sock, &QTcpSocket::disconnected,
                      [] { client.conn.used = false; });
-  }
+    sock->connectToHost(url.host(), url.port());
 
-  client.conn.sock->connectToHost(url.host(), url.port());
-  if (!client.conn.sock->waitForConnected(10000)) {
-    (void) fc_strlcpy(errbuf, _("Connection timed out."), errbufsize);
-    return -1;
+    if (!sock->waitForConnected(10000)) {
+      (void) fc_strlcpy(errbuf, _("Connection timed out."), errbufsize);
+      return -1;
+    }
+    make_connection(sock, url.userName());
+
+  } else if (url.scheme() == QStringLiteral("fc21+local")) {
+    QLocalSocket *sock = new QLocalSocket;
+    client.conn.sock = sock;
+    QObject::connect(sock, &QLocalSocket::errorOccurred, &error_on_socket);
+    QObject::connect(
+        sock, &QLocalSocket::disconnected,
+        [userName = url.userName()] { client.conn.used = false; });
+    sock->connectToServer(url.path());
+
+    if (!sock->waitForConnected(10000)) {
+      (void) fc_strlcpy(errbuf, _("Connection timed out."), errbufsize);
+      return -1;
+    }
+    make_connection(sock, url.userName());
   }
-  make_connection(client.conn.sock, url.userName());
 
   return 0;
 }
@@ -166,7 +186,7 @@ int connect_to_server(const QUrl &url, char *errbuf, int errbufsize)
 /**
    Called after a connection is completed (e.g., in try_to_connect).
  */
-void make_connection(QTcpSocket *sock, const QString &username)
+void make_connection(QIODevice *sock, const QString &username)
 {
   struct packet_server_join_req req;
 
@@ -234,7 +254,7 @@ void disconnect_from_server()
  */
 static int read_from_connection(struct connection *pc, bool block)
 {
-  QTcpSocket *socket = pc->sock;
+  auto socket = pc->sock;
   bool have_data_for_server =
       (pc->used && pc->send_buffer && 0 < pc->send_buffer->ndata);
 
@@ -250,7 +270,7 @@ static int read_from_connection(struct connection *pc, bool block)
 
   if (block) {
     // Wait (and block the main event loop) until we get some data
-    socket->waitForReadyRead();
+    socket->waitForReadyRead(-1);
   }
 
   // Consume everything
@@ -275,7 +295,7 @@ static int read_from_connection(struct connection *pc, bool block)
    This function is called when the client received a new input from the
    server.
  */
-void input_from_server(QTcpSocket *sock)
+void input_from_server(QIODevice *sock)
 {
   int nb;
 

@@ -19,6 +19,7 @@
 #include "capability.h"
 #include "fcintl.h"
 #include "log.h"
+#include "registry_ini.h"
 #include "support.h"
 
 // generated
@@ -398,7 +399,7 @@ bool handle_login_request(struct connection *pconn,
     info.major_version = MAJOR_VERSION;
     info.minor_version = MINOR_VERSION;
     info.patch_version = PATCH_VERSION;
-    info.emerg_version = EMERGENCY_VERSION;
+    info._obsolete = 0;
     sz_strlcpy(info.version_label, VERSION_LABEL);
     send_packet_server_info(pconn, &info);
   }
@@ -953,7 +954,7 @@ bool connection_delegate_restore(struct connection *pconn)
    Close a connection. Use this in the server to take care of delegation
  stuff (reset the username of the controlled connection).
  */
-void connection_close_server(struct connection *pconn, const char *reason)
+void connection_close_server(struct connection *pconn, const QString &reason)
 {
   // Restore possible delegations before the connection is closed.
   connection_delegate_restore(pconn);

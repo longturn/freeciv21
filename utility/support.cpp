@@ -55,8 +55,6 @@
 #include <strings.h>
 #endif
 
-#include <zlib.h>
-
 // Qt
 #include <QFileInfo>
 #include <QHostInfo>
@@ -65,6 +63,7 @@
 
 // utility
 #include "fciconv.h"
+#include "fcintl.h"
 #include "log.h"
 
 #include "support.h"

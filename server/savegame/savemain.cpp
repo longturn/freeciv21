@@ -18,8 +18,10 @@
 #include <QString>
 
 // utility
+#include "fcthread.h"
 #include "log.h"
 #include "registry.h"
+#include "registry_ini.h"
 
 // common
 #include "ai.h"
@@ -243,7 +245,7 @@ void save_game(const char *orig_filename, const char *save_reason,
     }
   }
 
-  if (!path_is_absolute(stdata->filepath)) {
+  if (!QFileInfo(stdata->filepath).isAbsolute()) {
     QString tmpname;
 
     if (!scenario) {

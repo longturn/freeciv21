@@ -33,6 +33,7 @@
 #include "rand.h"
 #include "registry.h"
 #include "section_file.h"
+#include "shared.h"
 #include "support.h" // fc__attribute, bool type, etc.
 #include "timing.h"
 
@@ -78,6 +79,9 @@
 #include "difficulty.h"
 
 #include "stdinhand.h"
+
+#include <set>
+#include <string>
 
 #define OPTION_NAME_SPACE 25
 #define REG_EXP "\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)"
@@ -1131,10 +1135,7 @@ static bool read_init_script_real(struct connection *caller,
                                   int read_recursion)
 {
   FILE *script_file;
-  const char extension[] = ".serv";
-  char serv_filename[strlen(extension) + qstrlen(script_filename) + 2];
-  char tilde_filename[4096];
-  QString real_filename;
+  const auto extension = QLatin1String(".serv");
 
   // check recursion depth
   if (read_recursion > GAME_MAX_READ_RECURSION) {
@@ -1142,56 +1143,60 @@ static bool read_init_script_real(struct connection *caller,
     return false;
   }
 
-  // abuse real_filename to find if we already have a .serv extension
-  real_filename = QString(script_filename);
-  if (!real_filename.endsWith(extension)) {
-    fc_snprintf(serv_filename, sizeof(serv_filename), "%s%s",
-                script_filename, extension);
-  } else {
-    sz_strlcpy(serv_filename, script_filename);
+  // Find if we already have a .serv extension
+  QString serv_filename = script_filename;
+  if (!serv_filename.endsWith(extension)) {
+    serv_filename += extension;
   }
 
+  QString tilde_filename;
   if (is_restricted(caller) && !from_cmdline) {
     if (!is_safe_filename(serv_filename)) {
       cmd_reply(CMD_READ_SCRIPT, caller, C_FAIL,
                 _("Name \"%s\" disallowed for security reasons."),
-                serv_filename);
+                qUtf8Printable(serv_filename));
       return false;
     }
-    sz_strlcpy(tilde_filename, serv_filename);
+    tilde_filename = serv_filename;
   } else {
-    interpret_tilde(tilde_filename, sizeof(tilde_filename), serv_filename);
+    tilde_filename = interpret_tilde(serv_filename);
   }
 
-  real_filename = fileinfoname(get_data_dirs(), tilde_filename);
+  auto real_filename = fileinfoname(get_data_dirs(), tilde_filename);
   if (real_filename.isEmpty()) {
     if (is_restricted(caller) && !from_cmdline) {
       cmd_reply(CMD_READ_SCRIPT, caller, C_FAIL,
                 _("No command script found by the name \"%s\"."),
-                serv_filename);
+                qUtf8Printable(serv_filename));
       return false;
     }
     // File is outside data directories
     real_filename = tilde_filename;
   }
 
-  log_testmatic_alt(LOG_NORMAL, _("Loading script file '%s'."),
-                    qUtf8Printable(real_filename));
+  qInfo(_("Loading script file '%s'."), qUtf8Printable(real_filename));
 
   if (QFile::exists(real_filename)
       && (script_file = fc_fopen(qUtf8Printable(real_filename), "r"))) {
     char buffer[MAX_LEN_CONSOLE_LINE];
+    bool ok = true;
 
     // the size is set as to not overflow buffer in handle_stdin_input
     while (fgets(buffer, MAX_LEN_CONSOLE_LINE - 1, script_file)) {
       // Execute script contents with same permissions as caller
-      handle_stdin_input_real(caller, buffer, check, read_recursion + 1);
+      if (!handle_stdin_input_real(caller, buffer, check,
+                                   read_recursion + 1)) {
+        // Errors are fatal
+        qCritical() << buffer;
+        ok = false;
+        break;
+      }
     }
     fclose(script_file);
 
     show_ruleset_info(caller, CMD_READ_SCRIPT, check, read_recursion);
 
-    return true;
+    return ok;
   } else {
     cmd_reply(CMD_READ_SCRIPT, caller, C_FAIL,
               _("Cannot read command line scriptfile '%s'."),
@@ -1222,13 +1227,13 @@ QVector<QString> *get_init_script_choices()
  */
 static void write_init_script(char *script_filename)
 {
-  char real_filename[1024], buf[256];
+  char buf[256];
   FILE *script_file;
 
-  interpret_tilde(real_filename, sizeof(real_filename), script_filename);
+  const auto real_filename = interpret_tilde(script_filename);
 
   if (QFile::exists(real_filename)
-      && (script_file = fc_fopen(real_filename, "w"))) {
+      && (script_file = fc_fopen(qUtf8Printable(real_filename), "w"))) {
     fprintf(script_file, "#FREECIV SERVER COMMAND FILE, version %s\n",
             freeciv21_version());
     fputs(
@@ -1280,7 +1285,8 @@ static void write_init_script(char *script_filename)
     fclose(script_file);
 
   } else {
-    qCritical(_("Could not write script file '%s'."), real_filename);
+    qCritical(_("Could not write script file '%s'."),
+              qUtf8Printable((real_filename)));
   }
 }
 
@@ -4006,7 +4012,7 @@ static bool set_rulesetdir(struct connection *caller, char *str, bool check,
   if (strcmp(str, game.server.rulesetdir) == 0) {
     cmd_reply(CMD_RULESETDIR, caller, C_COMMENT,
               _("Ruleset directory is already \"%s\""), str);
-    return false;
+    return true;
   }
 
   if (is_restricted(caller)
@@ -4462,7 +4468,7 @@ static bool handle_stdin_input_real(struct connection *caller, char *str,
   cptr_s = str = skip_leading_spaces(str);
   if ('\0' == *cptr_s || '#' == *cptr_s) {
     // This appear to be a comment or blank line.
-    return false;
+    return true;
   }
 
   if (SERVER_COMMAND_PREFIX == *cptr_s) {
@@ -5011,8 +5017,8 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
                         int read_recursion)
 {
   FILE *script_file;
-  const char extension[] = ".lua", *real_filename = nullptr;
-  char luafile[4096], tilde_filename[4096];
+  const auto extension = QLatin1String(".lua");
+  QString luafile, tilde_filename, real_filename;
   char *luaarg = nullptr;
   QStringList tokens;
   int ind;
@@ -5087,13 +5093,10 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
     }
     // Fall through.
   case LUA_FILE:
-    // Abuse real_filename to find if we already have a .lua extension.
-    real_filename =
-        luaarg + qstrlen(luaarg) - MIN(strlen(extension), qstrlen(luaarg));
-    if (strcmp(real_filename, extension) != 0) {
-      fc_snprintf(luafile, sizeof(luafile), "%s%s", luaarg, extension);
-    } else {
-      sz_strlcpy(luafile, luaarg);
+    // find if we already have a .lua extension.
+    luafile = luaarg;
+    if (!luafile.endsWith(extension)) {
+      luafile += extension;
     }
 
     if (is_restricted(caller)) {
@@ -5101,22 +5104,21 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
         cmd_reply(
             CMD_LUA, caller, C_FAIL,
             _("Freeciv21 script '%s' disallowed for security reasons."),
-            luafile);
+            qUtf8Printable(luafile));
         return false;
         ;
       }
-      sz_strlcpy(tilde_filename, luafile);
+      tilde_filename = luafile;
     } else {
-      interpret_tilde(tilde_filename, sizeof(tilde_filename), luafile);
+      tilde_filename = interpret_tilde(luafile);
     }
 
-    real_filename =
-        qUtf8Printable(fileinfoname(get_data_dirs(), tilde_filename));
-    if (!real_filename) {
+    real_filename = fileinfoname(get_data_dirs(), tilde_filename);
+    if (real_filename.isEmpty()) {
       if (is_restricted(caller)) {
         cmd_reply(CMD_LUA, caller, C_FAIL,
                   _("No Freeciv21 script found by the name '%s'."),
-                  tilde_filename);
+                  qUtf8Printable(tilde_filename));
         return false;
       }
       // File is outside data directories
@@ -5138,31 +5140,36 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
     break;
   case LUA_FILE:
     cmd_reply(CMD_LUA, caller, C_COMMENT,
-              _("Loading Freeciv21 script file '%s'."), real_filename);
+              _("Loading Freeciv21 script file '%s'."),
+              qUtf8Printable(real_filename));
 
     if (QFile::exists(real_filename)
-        && (script_file = fc_fopen(real_filename, "r"))) {
-      ret = script_server_do_file(caller, real_filename);
+        && (script_file = fc_fopen(qUtf8Printable(real_filename), "r"))) {
+      ret = script_server_do_file(caller, qUtf8Printable(real_filename));
       fclose(script_file);
       return ret;
     } else {
       cmd_reply(CMD_LUA, caller, C_FAIL,
-                _("Cannot read Freeciv21 script '%s'."), real_filename);
+                _("Cannot read Freeciv21 script '%s'."),
+                qUtf8Printable(real_filename));
       return false;
     }
     break;
   case LUA_UNSAFE_FILE:
     cmd_reply(CMD_LUA, caller, C_COMMENT,
-              _("Loading Freeciv21 script file '%s'."), real_filename);
+              _("Loading Freeciv21 script file '%s'."),
+              qUtf8Printable(real_filename));
 
     if (QFile::exists(real_filename)
-        && (script_file = fc_fopen(real_filename, "r"))) {
+        && (script_file = fc_fopen(qUtf8Printable(real_filename), "r"))) {
       fclose(script_file);
-      ret = script_server_unsafe_do_file(caller, real_filename);
+      ret = script_server_unsafe_do_file(caller,
+                                         qUtf8Printable(real_filename));
       return ret;
     } else {
       cmd_reply(CMD_LUA, caller, C_FAIL,
-                _("Cannot read Freeciv21 script '%s'."), real_filename);
+                _("Cannot read Freeciv21 script '%s'."),
+                qUtf8Printable(real_filename));
       return false;
     }
     break;
@@ -6334,35 +6341,27 @@ static bool kick_command(struct connection *caller, char *name, bool check)
   }
 
   if (nullptr != caller && ALLOW_ADMIN > conn_get_access(caller)) {
+    // Minimum number of unique addresses for /kick to make sense
     const int MIN_UNIQUE_CONNS = 3;
-    const char *unique_ipaddr[MIN_UNIQUE_CONNS];
-    int i, num_unique_connections = 0;
 
     if (pconn == caller) {
       cmd_reply(CMD_KICK, caller, C_FAIL, _("You may not kick yourself."));
       return false;
     }
 
+    // Collect unique IP addresses
+    std::set<std::string> unique_ipaddr;
     conn_list_iterate(game.est_connections, aconn)
     {
-      for (i = 0; i < num_unique_connections; i++) {
-        if (0 == strcmp(unique_ipaddr[i], aconn->server.ipaddr)) {
-          // Already listed.
-          break;
-        }
-      }
-      if (i >= num_unique_connections) {
-        num_unique_connections++;
-        if (MIN_UNIQUE_CONNS <= num_unique_connections) {
-          // We have enought already.
-          break;
-        }
-        unique_ipaddr[num_unique_connections - 1] = aconn->server.ipaddr;
+      unique_ipaddr.insert(aconn->server.ipaddr);
+      if (unique_ipaddr.size() >= MIN_UNIQUE_CONNS) {
+        // We have enough already.
+        break;
       }
     }
     conn_list_iterate_end;
 
-    if (MIN_UNIQUE_CONNS > num_unique_connections) {
+    if (unique_ipaddr.size() < MIN_UNIQUE_CONNS) {
       cmd_reply(CMD_KICK, caller, C_FAIL,
                 _("There must be at least %d unique connections to the "
                   "server for this command to be valid."),

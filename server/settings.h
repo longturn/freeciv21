@@ -11,12 +11,11 @@
 
 #pragma once
 
-// utility
-#include "shared.h"
-
 // common
-#include "game.h"
-#include "server_settings.h"
+#include "connection.h"
+
+// utility
+#include "registry_ini.h"
 
 struct sset_val_name {
   const char *support; /* Untranslated long support name, used

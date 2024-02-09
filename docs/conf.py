@@ -15,7 +15,17 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
-import sphinx_rtd_theme
+try:
+    import sphinx_rtd_theme
+    has_theme = True
+except ImportError:
+    has_theme = False
+
+try:
+    import sphinx_last_updated_by_git
+    has_updated_by_git = True
+except ImportError:
+    has_updated_by_git = False
 
 
 # -- Project information -----------------------------------------------------
@@ -48,9 +58,11 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx.ext.ifconfig',
-    'sphinx_rtd_theme',
-    'sphinx_last_updated_by_git',
 ]
+if has_theme:
+    extensions.append('sphinx_rtd_theme')
+if has_updated_by_git:
+    extensions.append('sphinx_last_updated_by_git')
 
 # See https://github.com/readthedocs/recommonmark#linking-to-headings-in-other-files
 autosectionlabel_prefix_document = True
@@ -95,8 +107,8 @@ numfig = True
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-#
-html_theme = 'sphinx_rtd_theme'
+if has_theme:
+    html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -104,7 +116,6 @@ html_theme = 'sphinx_rtd_theme'
 #
 html_theme_options = {
     'style_external_links': True
-
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -218,7 +229,7 @@ epub_exclude_files = ['search.html']
 # -- Options for intersphinx extension ---------------------------------------
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'https://docs.python.org/': None}
+intersphinx_mapping = {'python': ('https://docs.python.org/3', None)}
 
 # -- Options for todo extension ----------------------------------------------
 

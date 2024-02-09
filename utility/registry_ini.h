@@ -15,8 +15,14 @@
 // utility
 #include "support.h" // bool type and fc__attribute
 
-// Opaque types.
+#include <QString>
+#include <QVector>
+
+#include <stddef.h>
+
 class QIODevice;
+
+// Opaque types.
 struct section_file;
 struct section;
 struct entry;

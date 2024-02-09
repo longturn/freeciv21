@@ -1,7 +1,7 @@
-..  SPDX-License-Identifier: GPL-3.0-or-later
-..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
-..  SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
-..  SPDX-FileCopyrightText: Pranav Sampathkumar <pranav.sampathkumar@gmail.com>
+.. SPDX-License-Identifier: GPL-3.0-or-later
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+.. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
+.. SPDX-FileCopyrightText: Pranav Sampathkumar <pranav.sampathkumar@gmail.com>
 
 Evaluating a Pull Request
 *************************
@@ -38,7 +38,7 @@ This page assumes the user knows how to use :file:`git`, compile Freeciv21 and u
 
 .. code-block:: sh
 
-    $ patch -p1 < pr[pr-number].diff
+    $ git apply pr[pr-number].diff
 
 
 :strong:`Ensure The Build Directory Is Empty`
@@ -55,8 +55,14 @@ This page assumes the user knows how to use :file:`git`, compile Freeciv21 and u
     $ cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
     $ cmake --build build
     $ cmake --build build --target install
-    $ cmake --build build --target package      # MSys2 and Debian Linux Only
+    $ cmake --build build --target package      # MSYS2 and Debian Linux Only
+    $ cmake --build build --target test         # Not on MSYS2 or Visual Studio
 
+:strong:`Run tests`
+
+..code-block:: sh
+
+  $ cmake --build build --target test
 
 :strong:`Read The Issue's Notes`
 

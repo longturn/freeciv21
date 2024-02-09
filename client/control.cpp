@@ -1172,9 +1172,7 @@ void control_mouse_cursor(struct tile *ptile)
     if (nullptr != punit && unit_owner(punit) == client_player()) {
       // Set mouse cursor to select a unit.
       mouse_cursor_type = CURSOR_SELECT;
-    } else if (nullptr != pcity
-               && can_player_see_city_internals(client.conn.playing,
-                                                pcity)) {
+    } else if (nullptr != pcity && pcity->client.full) {
       // Set mouse cursor to select a city.
       mouse_cursor_type = CURSOR_SELECT;
     } else {
@@ -2544,8 +2542,8 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
       unit_focus_set_and_select(qunit);
       maybe_goto = gui_options->keyboardless_goto;
     }
-  } else if (nullptr != pcity
-             && can_player_see_city_internals(client.conn.playing, pcity)) {
+  } else if (qtype == SELECT_POPUP && nullptr != pcity
+             && pcity->client.full) {
     // Otherwise use popups.
     popup_city_dialog(pcity);
   } else if (!near_pcity && unit_list_size(ptile->units) == 0

@@ -169,8 +169,7 @@ files =
   "misc/overlays.spec",
   "misc/citybar.spec",
   "misc/shields-large.spec",
-  "misc/editor.spec",
-  "misc/icons.spec"
+  "misc/editor.spec"
 
 
 ; Include color definitions

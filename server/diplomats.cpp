@@ -378,9 +378,8 @@ void spy_send_sabotage_list(struct connection *pc, struct unit *pdiplomat,
     improvement_iterate_end;
   } else {
     // Can't see hidden buildings.
-    struct vision_site *plrcity;
-
-    plrcity = map_get_player_city(city_tile(pcity), unit_owner(pdiplomat));
+    const vision_site *plrcity =
+        map_get_player_city(city_tile(pcity), unit_owner(pdiplomat));
 
     if (!plrcity) {
       // Must know city to remember visible buildings.

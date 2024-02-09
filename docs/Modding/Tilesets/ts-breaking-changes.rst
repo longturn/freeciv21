@@ -4,8 +4,8 @@
 Tileset Breaking Changes
 ************************
 
-This page lists in reverse chronilogical order breaking changes merged into the ``master`` branch of the
-GitHub repository to aid Tileset modders keep thier tilesets up to date.
+This page lists in reverse chronological order breaking changes merged into the ``master`` branch of the
+GitHub repository to aid Tileset modders keep their tilesets up to date.
 
 Post Beta.4 before Beta.5
 =========================

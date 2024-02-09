@@ -6,12 +6,10 @@ add_custom_command(
     ${CMAKE_CURRENT_BINARY_DIR}/hand_gen.h
     ${CMAKE_CURRENT_BINARY_DIR}/hand_gen.cpp
   COMMAND
-    ${PYTHON_EXECUTABLE}
+    ${Python3_EXECUTABLE}
     ${CMAKE_SOURCE_DIR}/common/generate_packets.py
-    "" # common/packets_gen.h
-    "" # common/packets_gen.c
-    "" # client/packhand_gen.h
-    "" # client/packhand_gen.c
+    ${CMAKE_SOURCE_DIR}/common/networking/packets.def
+    --mode server
     ${CMAKE_CURRENT_BINARY_DIR}/hand_gen.h
     ${CMAKE_CURRENT_BINARY_DIR}/hand_gen.cpp
   VERBATIM
@@ -117,3 +115,8 @@ add_dependencies(freeciv21-server freeciv_translations)
 install(TARGETS freeciv21-server
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         COMPONENT freeciv21)
+
+# Tests
+if (BUILD_TESTING AND FREECIV_ENABLE_SERVER)
+  add_subdirectory(tests)
+endif()

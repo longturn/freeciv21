@@ -16,6 +16,7 @@
 // utility
 #include "rand.h"
 #include "registry.h"
+#include "registry_ini.h"
 
 // common
 #include "actions.h"

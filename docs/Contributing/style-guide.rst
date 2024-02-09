@@ -1,6 +1,6 @@
-..  SPDX-License-Identifier: GPL-3.0-or-later
-..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
-..  SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
+.. SPDX-License-Identifier: GPL-3.0-or-later
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+.. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
@@ -80,8 +80,8 @@ or later license. Here is what the SPDX header should look like in all scenarios
 
 .. code-block:: rst
 
-    ..  SPDX-License-Identifier: GPL-3.0-or-later
-    ..  SPDX-FileCopyrightText: [contributor name or handle] <[contributor email address]>
+    .. SPDX-License-Identifier: GPL-3.0-or-later
+    .. SPDX-FileCopyrightText: [contributor name or handle] <[contributor email address]>
 
 
 .. note::
@@ -93,7 +93,7 @@ attribution:
 
 .. code-block:: rst
 
-    ..  SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+    .. SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
 
 Interpreted Text Roles

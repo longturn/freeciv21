@@ -49,8 +49,6 @@
 #define fc__fallthrough
 #endif
 
-#include <zlib.h>
-
 #ifdef FREECIV_MSWINDOWS
 typedef long int fc_errno;
 #else

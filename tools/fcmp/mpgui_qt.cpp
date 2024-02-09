@@ -80,6 +80,14 @@ int main(int argc, char **argv)
 {
   QApplication app(argc, argv);
   QCoreApplication::setApplicationVersion(freeciv21_version());
+  app.setDesktopFileName(QStringLiteral("net.longturn.freeciv21.modpack"));
+
+  // Load window icons
+  QIcon::setThemeSearchPaths(get_data_dirs() + QIcon::themeSearchPaths());
+  QIcon::setFallbackThemeName(QIcon::themeName());
+  QIcon::setThemeName(QStringLiteral("icons"));
+
+  qApp->setWindowIcon(QIcon::fromTheme(QStringLiteral("freeciv21-modpack")));
 
   // Delegate option parsing to the common function.
   fcmp_parse_cmdline(app);
@@ -96,7 +104,7 @@ int main(int argc, char **argv)
   central = new QWidget;
   main_window = new mpgui_main(&app, central);
 
-  main_window->setGeometry(0, 30, 640, 60);
+  main_window->resize(820, 140);
   main_window->setWindowTitle(
       QString::fromUtf8(_("Freeciv21 modpack installer (Qt)")));
 
@@ -163,13 +171,9 @@ void mpgui::setup(QWidget *central, struct fcmp_params *params)
       new QPushButton(QString::fromUtf8(_("Install modpack")));
   QStringList headers;
   QLabel *URL_label;
-  QLabel *version_label;
-  char verbuf[2048];
 
-  fc_snprintf(verbuf, sizeof(verbuf), "%s%s", word_version(),
-              freeciv21_version());
-
-  version_label = new QLabel(QString::fromUtf8(verbuf));
+  auto version_label =
+      new QLabel(QString(_("Version %1")).arg(freeciv21_version()));
   version_label->setAlignment(Qt::AlignHCenter);
   version_label->setParent(central);
   version_label->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);

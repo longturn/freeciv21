@@ -39,28 +39,23 @@ include(AutoRevision)
 # Set some variables from AutoRevision for use here and later
 list(LENGTH FC21_REV_TAG_LIST FC21_REV_TAG_LIST_LENGTH)
 
-# When we tag a stable release we only get 2 of the 4 components populated
-#   So we manually set some of the variables we need for the full version.
-if(${FC21_REV_TAG_LIST_LENGTH} EQUAL 2)
+# When we tag a stable release we only get 3 of the 4 components populated,
+# so we manually set some of the variables we need for the full version.
+if (${FC21_REV_TAG_LIST_LENGTH} EQUAL 3)
   list(GET FC21_REV_TAG_LIST 0 FC21_MAJOR_VERSION)
   list(GET FC21_REV_TAG_LIST 1 FC21_MINOR_VERSION)
-  set(FC21_LABEL_VERSION "Stable")
-  set(FC21_EMER_VERSION "0")
-  set(FC21_PATCH_VERSION "0")
+  list(GET FC21_REV_TAG_LIST 2 FC21_PATCH_VERSION)
+  set(FC21_VERSION_LABEL "stable")
   set(IS_STABLE_VERSION true)
-  set(FREECIV21_VERSION "${FC21_MAJOR_VERSION}.${FC21_MINOR_VERSION}")
+  set(FREECIV21_VERSION "${FC21_MAJOR_VERSION}.${FC21_MINOR_VERSION}.${FC21_PATCH_VERSION}")
 else()
+  message(STATUS "${FC21_REV_TAG_LIST}")
   list(GET FC21_REV_TAG_LIST 0 FC21_MAJOR_VERSION)
   list(GET FC21_REV_TAG_LIST 1 FC21_MINOR_VERSION)
-  list(GET FC21_REV_TAG_LIST 2 FC21_LABEL_VERSION)
-  if (${FC21_REV_TAG_LIST_LENGTH} GREATER 3)
-    list(GET FC21_REV_TAG_LIST 3 FC21_EMER_VERSION)
-  else()
-    set(FC21_EMER_VERSION 0)
-  endif()
-  set(FC21_PATCH_VERSION ${FC21_REV_HEAD_HASH_D})
+  list(GET FC21_REV_TAG_LIST 2 FC21_VERSION_LABEL)
+  list(GET FC21_REV_TAG_LIST 3 FC21_PATCH_VERSION)
   set(IS_STABLE_VERSION false)
-  set(FREECIV21_VERSION "${FC21_MAJOR_VERSION}.${FC21_MINOR_VERSION}.${FC21_PATCH_VERSION}")
+  set(FREECIV21_VERSION "${FC21_MAJOR_VERSION}.${FC21_MINOR_VERSION}")
 endif()
 
 # Set project

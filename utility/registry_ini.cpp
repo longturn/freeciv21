@@ -568,9 +568,7 @@ struct section_file *secfile_load_section(const QString &filename,
                                           const QString &section,
                                           bool allow_duplicates)
 {
-  char real_filename[1024];
-
-  interpret_tilde(real_filename, sizeof(real_filename), filename);
+  const auto real_filename = interpret_tilde(filename);
   return secfile_from_input_file(inf_from_file(real_filename, datafilename),
                                  filename, section, allow_duplicates);
 }
@@ -609,7 +607,6 @@ static bool is_legal_table_entry_name(char c, bool num)
  */
 bool secfile_save(const struct section_file *secfile, QString filename)
 {
-  char real_filename[1024];
   char pentry_name[128];
   const char *col_entry_name;
   const struct entry_list_link *ent_iter, *save_iter, *col_iter;
@@ -622,13 +619,13 @@ bool secfile_save(const struct section_file *secfile, QString filename)
     filename = secfile->name;
   }
 
-  interpret_tilde(real_filename, sizeof(real_filename), filename);
+  auto real_filename = interpret_tilde(filename);
   auto fs = std::make_unique<KFilterDev>(real_filename);
   fs->open(QIODevice::WriteOnly);
 
   if (!fs->isOpen()) {
     SECFILE_LOG(secfile, nullptr, _("Could not open %s for writing"),
-                real_filename);
+                qUtf8Printable((real_filename)));
     return false;
   }
 
@@ -766,7 +763,8 @@ bool secfile_save(const struct section_file *secfile, QString filename)
                     "a less efficient non-tabular format will be used.\n"
                     "To avoid this make sure all rows of a table are\n"
                     "filled out with an entry for every column.",
-                    real_filename, section_name(psection), expect);
+                    qUtf8Printable(real_filename), section_name(psection),
+                    expect);
                 fc_assert_ret_val(fs->write("\n") > 0, false);
               }
               fc_assert_ret_val(fs->write("}\n") > 0, false);
@@ -835,7 +833,8 @@ bool secfile_save(const struct section_file *secfile, QString filename)
 
   if (fs->error() != 0) {
     SECFILE_LOG(secfile, nullptr, "Error before closing %s: %s",
-                real_filename, qUtf8Printable(fs->errorString()));
+                qUtf8Printable(real_filename),
+                qUtf8Printable(fs->errorString()));
     return false;
   }
 

@@ -157,7 +157,6 @@ files =
   "misc/space.spec",
   "misc/techs.spec",
   "misc/treaty.spec",
-  "misc/icons.spec",
   "misc/editor.spec",
   "trident/fog.spec",
   "trident/cities.spec",

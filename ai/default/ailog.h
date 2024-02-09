@@ -12,6 +12,9 @@
 // utility
 #include "support.h"
 
+// common
+#include "tech.h"
+
 // Qt
 #include <QLoggingCategory>
 

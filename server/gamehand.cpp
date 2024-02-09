@@ -18,6 +18,7 @@
 #include "fcintl.h"
 #include "log.h"
 #include "rand.h"
+#include "section_file.h"
 #include "shared.h"
 #include "support.h"
 
@@ -28,7 +29,6 @@
 #include "game.h"
 #include "movement.h"
 #include "nation.h"
-#include "packets.h"
 
 // server
 #include "citytools.h"

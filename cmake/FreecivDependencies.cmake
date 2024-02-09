@@ -18,7 +18,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 check_function_exists(at_quick_exit HAVE_AT_QUICK_EXIT)
 
 # Required to generate the network protocol implementation
-find_package(PythonInterp 3 REQUIRED)
+find_package(Python3 REQUIRED)
 
 # Required as the main networking and utility library
 find_package(Qt5 5.15 COMPONENTS Core Network REQUIRED)
@@ -42,7 +42,6 @@ if(FREECIV_ENABLE_NLS)
       "Please see https://github.com/longturn/freeciv21/issues/383")
   endif()
 
-  set(FREECIV_HAVE_LIBINTL_H TRUE)
   set(ENABLE_NLS TRUE)
   if(UNIX)
     set(LOCALEDIR "${CMAKE_INSTALL_FULL_LOCALEDIR}")
@@ -65,19 +64,18 @@ if(FREECIV_ENABLE_NLS)
 endif()
 
 # SDL2 for audio
-find_package(SDL2 QUIET)
-find_package(SDL2_mixer QUIET)
-if (SDL2_MIXER_LIBRARIES AND SDL2_LIBRARY)
+find_package(SDL2)
+find_package(SDL2_mixer)
+if (EMSCRIPTEN OR (SDL2_mixer_FOUND AND SDL2_FOUND))
+  message(STATUS "Building with audio support enabled")
   set(AUDIO_SDL TRUE)
-endif()
-if (NOT SDL2_LIBRARY)
-  message("SDL2 not found")
-  set(SDL2_INCLUDE_DIR "")
-endif()
-if (NOT SDL2_MIXER_LIBRARIES)
-  message("SDL2_mixer not found")
-  set(SDL2_MIXER_LIBRARIES "")
-  set(SDL2_MIXER_INCLUDE_DIR "")
+else()
+  if (NOT SDL2_FOUND)
+    message(STATUS "SDL2 not found - audio support disabled")
+  endif()
+  if (NOT SDL2_mixer_FOUND)
+    message(STATUS "SDL2_mixer not found - audio support disabled")
+  endif()
 endif()
 
 # Lua
@@ -169,4 +167,12 @@ endif()
 # FCMP-specific dependencies
 if (FREECIV_ENABLE_FCMP_CLI OR FREECIV_ENABLE_FCMP_QT)
   find_package(SQLite3 REQUIRED)
+endif()
+
+# Testing
+if (NOT EMSCRIPTEN)
+  include(CTest)
+  if (BUILD_TESTING)
+    find_package(Qt5Test REQUIRED)
+  endif()
 endif()

@@ -563,7 +563,7 @@ void send_tile_info(struct conn_list *dest, struct tile *ptile,
       send_packet_tile_info(pconn, &info);
     } else if (pplayer && map_is_known(ptile, pplayer)) {
       struct player_tile *plrtile = map_get_player_tile(ptile, pplayer);
-      struct vision_site *psite = map_get_player_site(ptile, pplayer);
+      const vision_site *psite = map_get_player_site(ptile, pplayer);
 
       info.known = TILE_KNOWN_UNSEEN;
       info.continent = tile_continent(ptile);
@@ -1128,17 +1128,9 @@ static void map_change_own_seen(struct player *pplayer, struct tile *ptile,
 void change_playertile_site(struct player_tile *ptile,
                             struct vision_site *new_site)
 {
-  if (ptile->site == new_site) {
-    // Do nothing.
-    return;
+  if (ptile->site.get() != new_site) {
+    ptile->site.reset(new_site);
   }
-
-  if (ptile->site != nullptr) {
-    // Releasing old site from tile
-    vision_site_destroy(ptile->site);
-  }
-
-  ptile->site = new_site;
 }
 
 /**
@@ -1190,9 +1182,8 @@ void show_map_to_all()
  */
 void player_map_init(struct player *pplayer)
 {
-  pplayer->server.private_map = static_cast<player_tile *>(
-      fc_realloc(pplayer->server.private_map,
-                 MAP_INDEX_SIZE * sizeof(*pplayer->server.private_map)));
+  delete[] pplayer->server.private_map;
+  pplayer->server.private_map = new player_tile[MAP_INDEX_SIZE];
 
   whole_map_iterate(&(wld.map), ptile) { player_tile_init(ptile, pplayer); }
   whole_map_iterate_end;
@@ -1212,7 +1203,7 @@ void player_map_free(struct player *pplayer)
   whole_map_iterate(&(wld.map), ptile) { player_tile_free(ptile, pplayer); }
   whole_map_iterate_end;
 
-  free(pplayer->server.private_map);
+  delete[] pplayer->server.private_map;
   pplayer->server.private_map = nullptr;
   pplayer->tile_known->clear();
 }
@@ -1323,11 +1314,7 @@ static void player_tile_init(struct tile *ptile, struct player *pplayer)
  */
 static void player_tile_free(struct tile *ptile, struct player *pplayer)
 {
-  struct player_tile *plrtile = map_get_player_tile(ptile, pplayer);
-
-  if (plrtile->site != nullptr) {
-    vision_site_destroy(plrtile->site);
-  }
+  map_get_player_tile(ptile, pplayer)->site = nullptr;
 }
 
 /**
@@ -1349,7 +1336,7 @@ struct vision_site *map_get_player_city(const struct tile *ptile,
 struct vision_site *map_get_player_site(const struct tile *ptile,
                                         const struct player *pplayer)
 {
-  return map_get_player_tile(ptile, pplayer)->site;
+  return map_get_player_tile(ptile, pplayer)->site.get();
 }
 
 /**
@@ -1459,63 +1446,46 @@ static void really_give_tile_info_from_player_to_player(struct player *pfrom,
                                                         struct player *pdest,
                                                         struct tile *ptile)
 {
-  struct player_tile *from_tile, *dest_tile;
-  if (!map_is_known_and_seen(ptile, pdest, V_MAIN)) {
-    /* I can just hear people scream as they try to comprehend this if :).
-     * Let me try in words:
-     * 1) if the tile is seen by pfrom the info is sent to pdest
-     *  OR
-     * 2) if the tile is known by pfrom AND (he has more recent info
-     *     OR it is not known by pdest)
-     */
-    if (map_is_known_and_seen(ptile, pfrom, V_MAIN)
-        || (map_is_known(ptile, pfrom)
-            && (((map_get_player_tile(ptile, pfrom)->last_updated
-                  > map_get_player_tile(ptile, pdest)->last_updated))
-                || !map_is_known(ptile, pdest)))) {
-      from_tile = map_get_player_tile(ptile, pfrom);
-      dest_tile = map_get_player_tile(ptile, pdest);
-      // Update and send tile knowledge
-      map_set_known(ptile, pdest);
-      dest_tile->terrain = from_tile->terrain;
-      dest_tile->extras = from_tile->extras;
-      dest_tile->resource = from_tile->resource;
-      dest_tile->owner = from_tile->owner;
-      dest_tile->extras_owner = from_tile->extras_owner;
-      dest_tile->last_updated = from_tile->last_updated;
-      send_tile_info(pdest->connections, ptile, false);
-
-      // update and send city knowledge
-      // remove outdated cities
-      if (dest_tile->site) {
-        if (!from_tile->site) {
-          /* As the city was gone on the newer from_tile
-             it will be removed by this function */
-          reality_check_city(pdest, ptile);
-        } else // We have a dest_city. update
-            if (from_tile->site->identity != dest_tile->site->identity) {
-          /* As the city was gone on the newer from_tile
-             it will be removed by this function */
-          reality_check_city(pdest, ptile);
-        }
-      }
-
-      // Set and send new city info
-      if (from_tile->site) {
-        if (!dest_tile->site) {
-          /* We cannot assign new vision site with change_playertile_site(),
-           * since location is not yet set up for new site */
-          dest_tile->site = vision_site_new(0, ptile, nullptr);
-          *dest_tile->site = *from_tile->site;
-        }
-        /* Note that we don't care if receiver knows vision source city
-         * or not. */
-        send_city_info_at_tile(pdest, pdest->connections, nullptr, ptile);
-      }
-
-      city_map_update_tile_frozen(ptile);
-    }
+  // No need to transfer if pdest can see the tile
+  if (map_is_known_and_seen(ptile, pdest, V_MAIN)) {
+    return;
   }
+
+  // Nothing to transfer if the pfrom doesn't know the tile
+  if (!map_is_known(ptile, pfrom)) {
+    return;
+  }
+
+  // If pdest knows the tile, check that pfrom has more recent info
+  if (map_is_known(ptile, pdest)
+      && !map_is_known_and_seen(ptile, pfrom, V_MAIN)
+      && map_get_player_tile(ptile, pfrom)->last_updated
+             <= map_get_player_tile(ptile, pdest)->last_updated) {
+    return;
+  }
+
+  // Transfer knowldege
+  auto from_tile = map_get_player_tile(ptile, pfrom);
+  auto dest_tile = map_get_player_tile(ptile, pdest);
+
+  // Update and send tile knowledge
+  map_set_known(ptile, pdest);
+  dest_tile->terrain = from_tile->terrain;
+  dest_tile->extras = from_tile->extras;
+  dest_tile->resource = from_tile->resource;
+  dest_tile->owner = from_tile->owner;
+  dest_tile->extras_owner = from_tile->extras_owner;
+  dest_tile->last_updated = from_tile->last_updated;
+  send_tile_info(pdest->connections, ptile, false);
+
+  // Set and send latest city info
+  if (from_tile->site) {
+    change_playertile_site(dest_tile, new vision_site(*from_tile->site));
+    // Note that we don't care if receiver knows vision source city or not.
+    send_city_info_at_tile(pdest, pdest->connections, nullptr, ptile);
+  }
+
+  city_map_update_tile_frozen(ptile);
 }
 
 /**

@@ -14,6 +14,7 @@
 #include <QList>
 // gui-qt
 #include "dialogs.h"
+#include "widgets/multi_slider.h"
 
 class QMouseEvent;
 class QObject;
@@ -21,36 +22,6 @@ class QPaintEvent;
 class QPushButton;
 class QSize;
 class QSlider;
-
-/**************************************************************************
- * Custom slider with two settable values
- */
-class fc_double_edge : public QWidget {
-  Q_OBJECT
-
-private:
-  double cursor_size;
-  double mouse_x;
-  int moved;
-  bool on_min;
-  bool on_max;
-  int max_rates;
-  QPixmap cursor_pix;
-
-public:
-  fc_double_edge(QWidget *parent = nullptr);
-  ~fc_double_edge() override;
-  int current_min;
-  int current_max;
-
-  void refresh();
-  QSize sizeHint() const override;
-
-protected:
-  void paintEvent(QPaintEvent *event) override;
-  void mousePressEvent(QMouseEvent *event) override;
-  void mouseMoveEvent(QMouseEvent *event) override;
-};
 
 /**************************************************************************
  * Dialog used to change national budget
@@ -64,7 +35,8 @@ public:
   void refresh();
 
 private:
-  fc_double_edge *fcde;
+  freeciv::multi_slider *slider;
+  bool slider_init = false;
   QLabel *m_info;
 
   void apply();

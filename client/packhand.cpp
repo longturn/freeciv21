@@ -353,7 +353,7 @@ void handle_server_join_reply(bool you_can_join, const char *message,
     }
 
     client_info._obsolete = 5; // Old value for gui_type(GUI_QT)
-    client_info.emerg_version = EMERGENCY_VERSION;
+    client_info._obsolete2 = 0;
     qstrncpy(client_info.distribution, FREECIV_DISTRIBUTOR,
              sizeof(client_info.distribution));
     send_packet_client_info(&client.conn, &client_info);
@@ -688,6 +688,7 @@ void handle_city_info(const struct packet_city_info *packet)
         || (gui_options->draw_city_trade_routes && trade_routes_changed);
   }
 
+  pcity->client.full = true;
   sz_strlcpy(pcity->name, packet->name);
 
   // check data
@@ -1154,6 +1155,8 @@ void handle_city_short_info(const struct packet_city_short_info *packet)
     memset(pcity->feel, 0, sizeof(pcity->feel));
     memset(pcity->specialists, 0, sizeof(pcity->specialists));
   }
+
+  pcity->client.full = false;
 
   pcity->specialists[DEFAULT_SPECIALIST] = packet->size;
   city_size_set(pcity, packet->size);

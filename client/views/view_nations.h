@@ -9,13 +9,15 @@
 **************************************************************************/
 #pragma once
 
+// client
+#include "utils/collated_sort_proxy.h"
+#include "views/view_nations_data.h"
+
 // Qt
 #include <QAbstractListModel>
 #include <QItemDelegate>
 #include <QTableView>
 #include <QWidget>
-// client
-#include "views/view_nations_data.h"
 
 class QHBoxLayout;
 class QItemSelection;
@@ -102,7 +104,7 @@ private:
 class plr_widget : public QTableView {
   Q_OBJECT
   plr_model *list_model;
-  QSortFilterProxyModel *filter_model;
+  freeciv::collated_sort_filter_proxy_model *filter_model;
   plr_item_delegate *pid;
   plr_report *plr;
   QString techs_known;

@@ -45,37 +45,6 @@ enum data_type {
   DIOT_LAST
 };
 
-// What a location inside a packet is.
-enum plocation_kind {
-  // A field. Addressed by its name.
-  PADR_FIELD,
-  // An array element. Addressed by its number.
-  PADR_ELEMENT
-};
-
-// Address of a location inside a packet.
-struct plocation {
-  // The location kind.
-  enum plocation_kind kind;
-
-  union {
-    // Used if this is an array element
-    int number;
-
-    // Used if this is a field.
-    char *name;
-  };
-
-  /* If the full address is to a location inside this this field should
-   * point to it. If this location is the final location this field should
-   * be nullptr. */
-  struct plocation *sub_location;
-};
-
-struct plocation *plocation_field_new(char *name);
-struct plocation *plocation_elem_new(int number);
-const char *plocation_name(const struct plocation *loc);
-
 // network string conversion
 typedef char *(*DIO_PUT_CONV_FUN)(const char *src, size_t *length);
 void dio_set_put_conv_callback(DIO_PUT_CONV_FUN fun);
@@ -143,20 +112,11 @@ bool dio_get_action_probability_raw(struct data_in *din,
                                     struct act_prob *aprob)
     fc__attribute((nonnull(2)));
 
-bool dio_get_uint8_vec8_raw(struct data_in *din, int **values,
-                            int stop_value) fc__attribute((nonnull(2)));
-bool dio_get_uint16_vec8_raw(struct data_in *din, int **values,
-                             int stop_value) fc__attribute((nonnull(2)));
-
-// There is currently no need to escape strings in the binary protocol.
-#define dio_get_estring_raw dio_get_string_raw
-#define dio_put_estring_raw dio_put_string_raw
-
 // Should be a function but we need some macro magic.
-#define DIO_BV_GET(pdin, location, bv)                                      \
+#define DIO_BV_GET(pdin, bv)                                                \
   dio_get_memory_raw((pdin), (bv).vec, sizeof((bv).vec))
 
-#define DIO_GET(f, d, l, ...) dio_get_##f##_raw(d, ##__VA_ARGS__)
+#define DIO_GET(f, d, ...) dio_get_##f##_raw(d, ##__VA_ARGS__)
 
 // puts
 void dio_put_type_raw(struct raw_data_out *dout, enum data_type type,
@@ -192,13 +152,8 @@ void dio_put_requirement_raw(struct raw_data_out *dout,
 void dio_put_action_probability_raw(struct raw_data_out *dout,
                                     const struct act_prob *aprob);
 
-void dio_put_uint8_vec8_raw(struct raw_data_out *dout, int *values,
-                            int stop_value);
-void dio_put_uint16_vec8_raw(struct raw_data_out *dout, int *values,
-                             int stop_value);
-
 // Should be a function but we need some macro magic.
-#define DIO_BV_PUT(pdout, location, bv)                                     \
+#define DIO_BV_PUT(pdout, bv)                                               \
   dio_put_memory_raw((pdout), (bv).vec, sizeof((bv).vec))
 
-#define DIO_PUT(f, d, l, ...) dio_put_##f##_raw(d, ##__VA_ARGS__)
+#define DIO_PUT(f, d, ...) dio_put_##f##_raw(d, ##__VA_ARGS__)

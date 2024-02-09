@@ -16,6 +16,7 @@
 #include "fcintl.h"
 #include "log.h"
 #include "registry.h"
+#include "registry_ini.h"
 #include "shared.h"
 #include "support.h"
 

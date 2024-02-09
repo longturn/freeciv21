@@ -18,14 +18,12 @@ add_custom_command(
     ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.h
     ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.cpp
   COMMAND
-    ${PYTHON_EXECUTABLE}
+    ${Python3_EXECUTABLE}
     ${CMAKE_SOURCE_DIR}/common/generate_packets.py
-    "" # common/packets_gen.h
-    "" # common/packets_gen.c
+    ${CMAKE_SOURCE_DIR}/common/networking/packets.def
+    --mode client
     ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.h
     ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.cpp
-    "" # server/hand_gen.h
-    "" # server/hand_gen.c
   VERBATIM
   DEPENDS
     ${CMAKE_SOURCE_DIR}/common/generate_packets.py
@@ -121,6 +119,7 @@ target_sources(
   tileset/layer.cpp
   tileset/sprite.cpp
   tileset/tilespec.cpp
+  utils/collated_sort_proxy.cpp
   utils/colorizer.cpp
   utils/improvement_seller.cpp
   utils/unit_quick_menu.cpp
@@ -139,6 +138,7 @@ target_sources(
   widgets/city/city_icon_widget.cpp
   widgets/city/governor_widget.cpp
   widgets/city/upkeep_widget.cpp
+  widgets/multi_slider.cpp
   widgets/report_widget.cpp
 
   # Generated
@@ -159,7 +159,6 @@ target_link_libraries(freeciv21-client PRIVATE tolua)
 
 target_link_libraries(freeciv21-client PRIVATE Qt5::Widgets)
 target_link_libraries(freeciv21-client PRIVATE Qt5::Svg)
-target_link_libraries(freeciv21-client PRIVATE ${SDL2_MIXER_LIBRARIES} ${SDL2_LIBRARY})
 
 if(NOT EMSCRIPTEN)
   target_sources(freeciv21-client PRIVATE servers.cpp)
@@ -167,15 +166,18 @@ endif()
 
 if (AUDIO_SDL)
   target_sources(freeciv21-client PRIVATE audio/audio_sdl.cpp)
+  # SDL comes with the -s option on emscripten
   if (NOT EMSCRIPTEN)
-    # SDL comes with the -s option on emscripten
-    target_include_directories(freeciv21-client PRIVATE ${SDL2_INCLUDE_DIR})
-    target_include_directories(freeciv21-client PRIVATE ${SDL2_MIXER_INCLUDE_DIR})
+    # See https://github.com/microsoft/vcpkg/blob/2023.12.12/ports/sdl2/usage
+    target_link_libraries(freeciv21-client
+      PRIVATE $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>)
+    # Keep the PRIVATE directive on one long line, error w/ crlf or whitespace
+    target_link_libraries(freeciv21-client
+      PRIVATE $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>)
   endif()
 endif()
 
-if(APPLE)
-  target_link_libraries(freeciv21-client PRIVATE "-framework AudioUnit" "-framework CoreAudio" "-framework ForceFeedback" "-framework AudioToolbox")
+if (APPLE)
   qt5_import_plugins(freeciv21-client INCLUDE Qt5::QCocoaIntegrationPlugin Qt5::QSvgPlugin)
 endif()
 

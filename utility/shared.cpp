@@ -25,15 +25,15 @@
 #include <lmcons.h> // UNLEN
 #include <shlobj.h>
 #include <windows.h>
-#ifdef HAVE_DIRECT_H
-#include <direct.h>
-#endif // HAVE_DIRECT_H
-#endif // FREECIV_MSWINDOWS
+#else               // FREECIV_MSWINDOWS
+#include <unistd.h> // getuid, geteuid
+#endif              // FREECIV_MSWINDOWS
 
 // Qt
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QDir>
+#include <QRegularExpression>
 #include <QStandardPaths>
 #include <QString>
 #include <QtGlobal>
@@ -91,8 +91,6 @@ static QStringList save_dir_names = {};
 static QStringList scenario_dir_names = {};
 
 static char *mc_group = nullptr;
-
-Q_GLOBAL_STATIC(QString, realfile);
 
 /**
    An AND function for fc_tristate.
@@ -209,29 +207,11 @@ static bool is_ascii(char ch)
    Check if the name is safe security-wise.  This is intended to be used to
    make sure an untrusted filename is safe to be used.
  */
-bool is_safe_filename(const char *name)
+bool is_safe_filename(const QString &name)
 {
-  int i = 0;
-
-  // must not be nullptr or empty
-  if (!name || *name == '\0') {
-    return false;
-  }
-
-  for (; '\0' != name[i]; i++) {
-    if (nullptr == strchr(".@", name[i])
-        && nullptr == strchr(base64url, name[i])) {
-      return false;
-    }
-  }
-
-  // we don't allow the filename to ascend directories
-  if (strstr(name, PARENT_DIR_OPERATOR)) {
-    return false;
-  }
-
-  // Otherwise, it is okay...
-  return true;
+  const QRegularExpression regex(QLatin1String("^[\\w_\\-.@]+$"));
+  return regex.match(name).hasMatch()
+         && !name.contains(QLatin1String(PARENT_DIR_OPERATOR));
 }
 
 /**
@@ -675,52 +655,22 @@ QVector<QString> *fileinfolist(const QStringList &dirs, const char *suffix)
    Returns a filename to access the specified file from a
    directory by searching all specified directories for the file.
 
-   If the specified 'filename' is nullptr, the returned string contains
-   the effective path.  (But this should probably only be used for
-   debug output.)
-
-   Returns nullptr if the specified filename cannot be found in any of the
-   data directories.  (A file is considered "found" if it can be
-   read-opened.)  The returned pointer points to static memory, so this
-   function can only supply one filename at a time.  Don't free that
-   pointer.
-
-   TODO: Make this re-entrant
+   Returns an empty string if the specified filename cannot be found
+   in any of the data directories.
  */
-QString fileinfoname(const QStringList &dirs, const char *filename)
+QString fileinfoname(const QStringList &dirs, const QString &filename)
 {
-  if (dirs.isEmpty()) {
-    return QString();
-  }
-
-  if (!filename) {
-    bool first = true;
-
-    realfile->clear();
-    for (const auto &dirname : dirs) {
-      if (first) {
-        *realfile += QStringLiteral("/%1").arg(dirname);
-        first = false;
-      } else {
-        *realfile += QStringLiteral("%1").arg(dirname);
-      }
-    }
-
-    return *realfile;
-  }
-
   for (const auto &dirname : dirs) {
-    struct stat buf; // see if we can open the file or directory
-
-    *realfile = QStringLiteral("%1/%2").arg(dirname, filename);
-    if (fc_stat(qUtf8Printable(*realfile), &buf) == 0) {
-      return *realfile;
+    QString path = dirname + QLatin1String("/") + filename;
+    if (QFileInfo::exists(path)) {
+      return path;
     }
   }
 
-  qDebug("Could not find readable file \"%s\" in data path.", filename);
+  qDebug("Could not find readable file \"%s\" in data path.",
+         qUtf8Printable(filename));
 
-  return nullptr;
+  return QString();
 }
 
 /**
@@ -749,7 +699,7 @@ QFileInfoList find_files_in_path(const QStringList &path,
               [](const auto &lhs, const auto &rhs) {
                 return lhs.absoluteFilePath() < rhs.absoluteFilePath();
               });
-    std::unique(files.begin(), files.end());
+    files.erase(std::unique(files.begin(), files.end()), files.end());
   }
 
   // Sort the list by last modification time.
@@ -1145,46 +1095,16 @@ void free_multicast_group()
 }
 
 /**
-   Interpret ~/ in filename as home dir
-   New path is returned in buf of size buf_size
-
-   This may fail if the path is too long.  It is better to use
-   interpret_tilde_alloc.
+ * Interpret ~ in filename as home dir
  */
-void interpret_tilde(char *buf, size_t buf_size, const QString &filename)
+QString interpret_tilde(const QString &filename)
 {
-  if (filename.startsWith(QLatin1String("~/"))) {
-    fc_snprintf(buf, buf_size, "%s/%s", qUtf8Printable(QDir::homePath()),
-                qUtf8Printable(filename.right(filename.length() - 2)));
-  } else if (filename == QLatin1String("~")) {
-    qstrncpy(buf, qUtf8Printable(QDir::homePath()), buf_size);
+  if (filename == QLatin1String("~")) {
+    return QDir::homePath();
+  } else if (filename.startsWith(QLatin1String("~/"))) {
+    return QDir::homePath() + filename.midRef(1);
   } else {
-    qstrncpy(buf, qUtf8Printable(filename), buf_size);
-  }
-}
-
-/**
-   Interpret ~/ in filename as home dir
-
-   The new path is returned in buf, as a newly allocated buffer.  The new
-   path will always be allocated and written, even if there is no ~ present.
- */
-char *interpret_tilde_alloc(const char *filename)
-{
-  if (filename[0] == '~' && filename[1] == '/') {
-    QString home = QDir::homePath();
-    size_t sz;
-    char *buf;
-
-    filename += 2; /* Skip past "~/" */
-    sz = home.length() + qstrlen(filename) + 2;
-    buf = static_cast<char *>(fc_malloc(sz));
-    fc_snprintf(buf, sz, "%s/%s", qUtf8Printable(home), filename);
-    return buf;
-  } else if (filename[0] == '~' && filename[1] == '\0') {
-    return fc_strdup(qUtf8Printable(QDir::homePath()));
-  } else {
-    return fc_strdup(filename);
+    return filename;
   }
 }
 
@@ -1192,37 +1112,11 @@ char *interpret_tilde_alloc(const char *filename)
    If the directory "pathname" does not exist, recursively create all
    directories until it does.
  */
-bool make_dir(const char *pathname)
+bool make_dir(const QString &pathname)
 {
-  auto *path = interpret_tilde_alloc(pathname);
-  auto str = QString::fromUtf8(path);
   // We can always create a directory with an empty name -- it's the current
   // folder.
-  auto r = str.isEmpty() || QDir().mkpath(str);
-  delete[] path;
-  return r;
-}
-
-/**
-   Returns TRUE if the filename's path is absolute.
- */
-bool path_is_absolute(const char *filename)
-{
-  if (!filename) {
-    return false;
-  }
-
-#ifdef FREECIV_MSWINDOWS
-  if (strchr(filename, ':')) {
-    return true;
-  }
-#else  // FREECIV_MSWINDOWS
-  if (filename[0] == '/') {
-    return true;
-  }
-#endif // FREECIV_MSWINDOWS
-
-  return false;
+  return pathname.isEmpty() || QDir().mkpath(interpret_tilde(pathname));
 }
 
 /**

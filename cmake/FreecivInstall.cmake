@@ -41,17 +41,12 @@ if(WIN32 OR MSYS OR MINGW)
   # Custom command files to run the applications
   install(
     FILES
-    ${CMAKE_SOURCE_DIR}/dist/freeciv21-server.cmd
     ${CMAKE_SOURCE_DIR}/data/icons/128x128/freeciv21-client.ico
     ${CMAKE_SOURCE_DIR}/data/icons/128x128/freeciv21-modpack.ico
     ${CMAKE_SOURCE_DIR}/data/icons/128x128/freeciv21-server.ico
+    ${CMAKE_SOURCE_DIR}/dist/windows/freeciv21-server.cmd
+    ${CMAKE_SOURCE_DIR}/dist/windows/qt.conf
     DESTINATION ${CMAKE_INSTALL_BINDIR}
-    COMPONENT freeciv21)
-
-  install(
-    FILES
-    ${CMAKE_SOURCE_DIR}/data/icons/128x128/freeciv21-client.png
-    DESTINATION ${CMAKE_INSTALL_BINDIR}/data/misc
     COMPONENT freeciv21)
 endif()
 
@@ -133,25 +128,23 @@ elseif(WIN32)
   # The Visual Studio generator places all files and associated DLL libraries
   #  into a build directory. So we just grab those for install.
   install(
-    DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/
+    DIRECTORY ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin/
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21
     FILES_MATCHING PATTERN *.dll PATTERN *.pdb)
 
-  # QT platform plugin must be only one directory level away from the EXEs
-  #   so we ensure that here. This does create a duplicate file in install
-  #   directory, but since we are not packaging in Visual Studio it isn't
-  #   issue.
+  # Install the Qt framework DLL's'
   install(
-    DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/plugins/platforms
+    DIRECTORY ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/plugins/
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21
     FILES_MATCHING PATTERN *.dll)
 
-  # Grab a few files that get missed
+  # Grab some files that get missed
   install(
     FILES
     ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/SDL2.dll
+    ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/SDL2_mixer.dll
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21)
 endif()
@@ -171,30 +164,25 @@ if(UNIX AND NOT APPLE)
 
   # Install MetaInfo and Desktop files for the applications asked for at configure
   if(FREECIV_ENABLE_CLIENT)
-    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.client.desktop.in
-                   net.longturn.freeciv21.client.desktop
+    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.desktop.in
+                   net.longturn.freeciv21.desktop
                    @ONLY NEWLINE_STYLE UNIX)
-    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.client.metainfo.xml.in
-                   net.longturn.freeciv21.client.metainfo.xml
+    configure_file(${CMAKE_SOURCE_DIR}/dist/net.longturn.freeciv21.metainfo.xml.in
+                   net.longturn.freeciv21.metainfo.xml
                    @ONLY NEWLINE_STYLE UNIX)
     install(
       FILES
-      ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.client.desktop
+      ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.desktop
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
       COMPONENT freeciv21
     )
     install(
       FILES
-      ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.client.metainfo.xml
+      ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.metainfo.xml
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
       COMPONENT freeciv21
     )
-    install(
-      FILES
-      ${CMAKE_SOURCE_DIR}/data/icons/128x128/freeciv21-client.png
-      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/freeciv21/misc
-      COMPONENT freeciv21
-    )
+
     if(FREECIV_ENABLE_MANPAGES)
       install(
         FILES
@@ -224,12 +212,7 @@ if(UNIX AND NOT APPLE)
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
       COMPONENT freeciv21
     )
-    install(
-      FILES
-      ${CMAKE_SOURCE_DIR}/data/icons/128x128/freeciv21-server.png
-      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/freeciv21/misc
-      COMPONENT freeciv21
-    )
+
     if(FREECIV_ENABLE_MANPAGES)
       install(
         FILES
@@ -260,12 +243,6 @@ if(UNIX AND NOT APPLE)
       FILES
       ${CMAKE_BINARY_DIR}/net.longturn.freeciv21.modpack.metainfo.xml
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
-      COMPONENT freeciv21
-    )
-    install(
-      FILES
-      ${CMAKE_SOURCE_DIR}/data/icons/128x128/freeciv21-modpack.png
-      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/freeciv21/misc
       COMPONENT freeciv21
     )
 

@@ -130,7 +130,6 @@ struct vision_site {
 };
 
 #define vision_site_owner(v) ((v)->owner)
-void vision_site_destroy(struct vision_site *psite);
 struct vision_site *vision_site_new(int identity, struct tile *location,
                                     struct player *owner);
 struct vision_site *vision_site_new_from_city(const struct city *pcity);

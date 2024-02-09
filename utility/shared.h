@@ -12,11 +12,16 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <QDir>
-
 // utility
-#include "log.h"
 #include "support.h" // bool, fc__attribute
+
+#include <QFileInfoList>
+#include <QString>
+#include <QStringList>
+
+#include <time.h>
+
+template <typename T> class QVector;
 
 // Changing these will break network compatability!
 #define MAX_LEN_ADDR 256 // see also MAXHOSTNAMELEN and RFC 1123 2.1
@@ -107,7 +112,7 @@ const char *int_to_text(unsigned int number);
 
 bool is_ascii_name(const char *name);
 bool is_base64url(const char *s);
-bool is_safe_filename(const char *name);
+bool is_safe_filename(const QString &name);
 void randomize_base64url_string(char *s, size_t n);
 
 char *skip_leading_spaces(char *s);
@@ -134,7 +139,7 @@ const QStringList &get_scenario_dirs();
 QVector<QString> *fileinfolist(const QStringList &dirs, const char *suffix);
 QFileInfoList find_files_in_path(const QStringList &path,
                                  const QString &pattern, bool nodups);
-QString fileinfoname(const QStringList &dirs, const char *filename);
+QString fileinfoname(const QStringList &dirs, const QString &filename);
 
 void init_nls();
 void free_nls();
@@ -179,11 +184,10 @@ enum m_pre_result match_prefix_full(m_pre_accessor_fn_t accessor_fn,
 
 char *get_multicast_group(bool ipv6_preferred);
 void free_multicast_group();
-void interpret_tilde(char *buf, size_t buf_size, const QString &filename);
-char *interpret_tilde_alloc(const char *filename);
 
-bool make_dir(const char *pathname);
-bool path_is_absolute(const char *filename);
+QString interpret_tilde(const QString &filename);
+
+bool make_dir(const QString &pathname);
 
 char scanin(char **buf, char *delimiters, char *dest, int size);
 

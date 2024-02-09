@@ -3,7 +3,7 @@ add_custom_command(
   OUTPUT
     ${CMAKE_CURRENT_BINARY_DIR}/specenum_gen.h
   COMMAND
-    ${PYTHON_EXECUTABLE}
+    ${Python3_EXECUTABLE}
     ${CMAKE_CURRENT_SOURCE_DIR}/generate_specenum.py
     ${CMAKE_CURRENT_BINARY_DIR}/specenum_gen.h
   VERBATIM
@@ -81,4 +81,9 @@ freeciv_add_flag_if_supported(
 if(FREECIV_ENABLE_NLS)
   target_include_directories(utility PUBLIC ${Intl_INCLUDE_DIRS})
   target_link_libraries(utility PUBLIC ${Intl_LIBRARIES})
+endif()
+
+# Tests
+if (BUILD_TESTING)
+  add_subdirectory(tests)
 endif()

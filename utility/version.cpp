@@ -40,30 +40,3 @@ const char *freeciv_name_version()
 
   return msgbuf;
 }
-
-/**
-   Return string describing version type.
- */
-const char *word_version() { return _("version "); }
-
-/**
-   Returns version string that can be used to compare two freeciv builds.
-   This does not handle git revisions, as there's no way to compare
-   which of the two commits is "higher".
- */
-const char *fc_comparable_version() { return freeciv21_version(); }
-
-/**
-   Return version string in a format suitable to be written to created
-   datafiles as human readable information.
- */
-const char *freeciv_datafile_version()
-{
-  static char buf[500] = {'\0'};
-
-  if (buf[0] == '\0') {
-    fc_snprintf(buf, sizeof(buf), "%s", freeciv21_version());
-  }
-
-  return buf;
-}

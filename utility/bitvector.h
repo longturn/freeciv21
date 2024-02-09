@@ -14,6 +14,8 @@
 
 #include <cstring> // memset
 
+class QBitArray;
+
 // utility
 #include "log.h"
 
