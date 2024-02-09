@@ -22,7 +22,7 @@ legend=_(" The Luhansk People's Republic, abbreviated as LPR is an\
  of protecting the republics. In September 2022,Russia proclaimed the\
  annexation of the LPR and other occupied territories,following\
  illegitimate referendums which were illegal under international law.")
-
+; Legend from: https://en.wikipedia.org/wiki/Luhansk_People%27s_Republic
 leaders = {
  "name",                          "sex"
  "Gennadiy Tsypkalov",            "Male"   ; (1973–2016), first acting head of the Luhansk People's Republic

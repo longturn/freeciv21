@@ -15,6 +15,7 @@ legend=_("Dagestan is a republic of Russia situated in North Caucausus\
  government, it rose up multiple times against Russia, once in 1828,\
  and again in 1917, it eventually became an autonomous republic under\
  the Soviet Union in 1921.")
+; Legend from: https://en.wikipedia.org/wiki/Dagestan
 
 leaders = {
  "name",                        "sex"

@@ -17,11 +17,12 @@ flag="schaumburglippe"
 flag_alt = "-"
 style = "European"
 
-ruler_titles = { "government",      "male_title",      "female_title"
-                 "Despotism",       _("Prince %s"),    _("Princess %s")
-                 "Democracy", _("Minister-President %s"), _("?female:Minister-President %s")
-                 "Fundamentalism",  _("Bishop %s"),    _("?female:Bishop %s")
-               }
+ruler_titles = { 
+ "government",      "male_title",               "female_title"
+ "Despotism",       _("Prince %s"),             _("Princess %s")
+ "Democracy",       _("Minister-President %s"), _("?female:Minister-President %s")
+ "Fundamentalism",  _("Bishop %s"),             _("?female:Bishop %s")
+}
 
 init_techs=""
 init_buildings=""
