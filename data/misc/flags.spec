@@ -23,6 +23,7 @@ artists = "
    Ainu			Daniel Markstedt
    Akwe			Dan Cottrell and Daniel Markstedt
    Aland		J.M. Maalderink
+   Alaska               Open Clip Art
    Albania		TigerTjäder (Wikimedia Commons)
    Aleut		Daniel Markstedt
    Algeria 		Lauris Kaplinski
@@ -51,6 +52,7 @@ artists = "
    Atlantis		J.M. Maalderink
    Australia		Daniel McRae
    Austria		Christoph Breitler
+   Austria Hungary	Public Domain (Wikimedia Commons) 
    Avar			J.M. Maalderink
    Aymara		Daniel Markstedt
    Azerbaijan		Daniel McRae
@@ -127,6 +129,7 @@ artists = "
    Colombia		Lauris Kaplinski
    Comanche		Zachary Harden
    Comoros		Open Clip Art
+   Congo Free State	Public Domain from Wikimedia Commons modified by XYZ/Sketlux
    Constantine		Nikos Mavrogiannopoulos
    Cornwall		Vasco Alexandre Da Silva Costa
    Corsica		Patricia Fidi
@@ -143,6 +146,7 @@ artists = "
    Czech		Lauris Kaplinski
    Czechoslovakia	Tlusťa (Wikimedia Commons)
    Dacian		Andrzej M. Gorzym
+   Dagestan		Stianbh (Wikimedia Commons)
    Dahomey		Daniel Markstedt
    Darfur		Daniel Markstedt
    DDR			Jwnabd (Wikimedia Commons)
@@ -151,6 +155,7 @@ artists = "
    Djibouti		Open Clip Art
    Dominica		Caleb Moore and Christian Schaller
    Dominican Republic	Daniel Markstedt and capellan2000 (Open Clip Art)
+   Donetsk              Vladimir Đorđević (Wikimedia)
    DR Congo		Drieskamp (Wikimedia Commons)
    Dryad		Ivan Alvarado
    East Timor		SKopp (Wikimedia Commons)
@@ -190,6 +195,7 @@ artists = "
    Gaul			Daniel Markstedt and Kilian Valkhof
    Georgia		Christian Schaller
    Gepid		Andrzej G.
+   German Empire	XYZ/Sketlux 
    Germanic		Andrzej G.
    Germany		Philipp Sadleder
    Ghana		J.M. Maalderink
@@ -221,6 +227,7 @@ artists = "
    Helvetii		J.M. Maalderink and Andrzej G.
    Hephthalite		J.M. Maalderink
    Hesse		Madden (Wikimedia Commons)
+   Hessen-Darmstadt	XYZ/Sketlux 
    Himyar		Daniel Markstedt
    Hittite		Daniel Markstedt
    Honduras		Wikimedia Commons
@@ -302,6 +309,7 @@ artists = "
    Lithuania		Christian Schaller
    Lombardy		Flanker (Wikimedia Commons)
    Lorraine		J.M. Maalderink
+   Luhansk              Revolver 45 (Wikimedia Commons)
    Luna			Daniel Markstedt
    Lusatia		J.M. Maalderink
    Luwian		Andrzej G.
@@ -425,6 +433,7 @@ artists = "
    Raramuri		J.M. Maalderink
    Rep. Congo		J.M. Maalderink
    Rhineland		J.M. Maalderink
+   Rhodesia		modified by XYZ/Sketlux from Wikimedia Commons in 2016. 
    Rif			Mysid (Wikipedia)
    Romania		Daniel McRae
    Rome			Vasco Alexandre Da Silva Costa, Patricia Fidi
@@ -432,6 +441,7 @@ artists = "
    RVN			J.M. Maalderink
    Rwanda		Cezary Biele
    Ryukyu		Daniel Markstedt
+   Saar Protectorate	EclecticArkie (Wikimedia Commons) 
    Sabinium		J.M. Maalderink
    SADR			J.M. Maalderink
    St. Kitts and Nevis	Denelson83 and Pumbaa80 (Wikimedia Commons)
@@ -451,6 +461,7 @@ artists = "
    Savoy		J.M. Maalderink
    Saxony 		Sir Iain (Wikimedia Commons)
    Scania		Daniel Markstedt
+   Schaumburg-Lippe	XYZ/Sketlux 
    Schleswig-Holstein	Madden and Drbashir117 (Wikimedia Commons)
    Scotland		Sigge Kotliar
    Scottish Gaelic	Oxenhillshaw (Wikimedia Commons), Daniel Markstedt and Michael Bauer
@@ -517,6 +528,7 @@ artists = "
    Timur		Daniel Markstedt
    Tocharian		Dan Cottrell and Daniel Markstedt
    Togo			Vzb83 and Madden (Wikimedia Commons)
+   Toki Pona            Spencer van der Meulen (Wikimedia Commons)
    Toltec		J.M. Maalderink
    Tonga		Madden (Wikimedia Commons)
    Transnistria		Sigge Kotliar and J.M. Maalderink
@@ -594,6 +606,7 @@ sprites =
 		"f.ainu", "tilesets/flags/ainu"
 		"f.akwe", "tilesets/flags/akwe"
 		"f.aland", "tilesets/flags/aland"
+		"f.alaska", "tilesets/flags/alaska"
 		"f.albania", "tilesets/flags/albania"
 		"f.aleut", "tilesets/flags/aleut"
 		"f.algeria", "tilesets/flags/algeria"
@@ -622,6 +635,7 @@ sprites =
 		"f.atlantis", "tilesets/flags/atlantis"
 		"f.australia", "tilesets/flags/australia"
 		"f.austria", "tilesets/flags/austria"
+		"f.austriahungary", "tilesets/flags/austriahungary"
 		"f.avar", "tilesets/flags/avar"
 		"f.aymara", "tilesets/flags/aymara"
 		"f.azerbaijan", "tilesets/flags/azerbaijan"
@@ -699,6 +713,7 @@ sprites =
 		"f.colombia", "tilesets/flags/colombia"
 		"f.comanche", "tilesets/flags/comanche"
 		"f.comoros", "tilesets/flags/comoros"
+		"f.congofreestate", "tilesets/flags/congofreestate"
 ;		"f.constantine", "tilesets/flags/constantine"	; alt. Byzantine
 		"f.cornwall", "tilesets/flags/cornwall"
 		"f.corsica", "tilesets/flags/corsica"
@@ -715,6 +730,7 @@ sprites =
 		"f.czech", "tilesets/flags/czech"
 		"f.czechoslovakia", "tilesets/flags/czechoslovakia"
 		"f.dacian", "tilesets/flags/dacian"
+		"f.dagestan", "tilesets/flags/dagestan"
 		"f.dahomey", "tilesets/flags/dahomey"
 		"f.darfur", "tilesets/flags/darfur"
 		"f.ddr", "tilesets/flags/ddr"
@@ -723,6 +739,7 @@ sprites =
 		"f.djibouti", "tilesets/flags/djibouti"
 		"f.dominica", "tilesets/flags/dominica"
 		"f.dominican_republic", "tilesets/flags/dominican_republic"
+		"f.donetsk", "tilesets/flags/donetsk"
 		"f.dr_congo", "tilesets/flags/dr_congo"
 		"f.dryad", "tilesets/flags/dryad"
 		"f.ecuador", "tilesets/flags/ecuador"
@@ -762,6 +779,7 @@ sprites =
 		"f.gaul", "tilesets/flags/gaul"
 		"f.georgia", "tilesets/flags/georgia"
 		"f.gepid", "tilesets/flags/gepid"
+		"f.germanempire", "tilesets/flags/germanempire"
 		"f.germanic", "tilesets/flags/germanic"
 		"f.germany", "tilesets/flags/germany"
 		"f.ghana", "tilesets/flags/ghana"
@@ -793,6 +811,7 @@ sprites =
 		"f.helvetii", "tilesets/flags/helvetii"
 		"f.hephthalite", "tilesets/flags/hephthalite"
 		"f.hesse", "tilesets/flags/hesse"
+		"f.hessedarmstadt", "tilesets/flags/hessedarmstadt"
 		"f.himyar", "tilesets/flags/himyar"
 		"f.hittite", "tilesets/flags/hittite"
 		"f.honduras", "tilesets/flags/honduras"
@@ -874,6 +893,7 @@ sprites =
 		"f.lithuania", "tilesets/flags/lithuania"
 		"f.lombardy", "tilesets/flags/lombardy"
 		"f.lorraine", "tilesets/flags/lorraine"
+		"f.luhansk", "tilesets/flags/luhansk"
 		"f.luna", "tilesets/flags/luna"
 		"f.lusatia", "tilesets/flags/lusatia"
 		"f.luwian", "tilesets/flags/luwian"
@@ -997,6 +1017,7 @@ sprites =
 		"f.raramuri", "tilesets/flags/raramuri"
 		"f.r_congo", "tilesets/flags/r_congo"
 		"f.rhineland", "tilesets/flags/rhineland"
+		"f.rhodesia", "tilesets/flags/rhodesia"
 		"f.rif", "tilesets/flags/rif"
 		"f.romania", "tilesets/flags/romania"
 		"f.rome", "tilesets/flags/rome"			; Roman republic flag
@@ -1005,6 +1026,7 @@ sprites =
 		"f.rvn", "tilesets/flags/rvn"
 		"f.rwanda", "tilesets/flags/rwanda"
 		"f.ryukyu", "tilesets/flags/ryukyu"
+		"f.saarprotectorate", "tilesets/flags/saarprotectorate"
 		"f.sabinium", "tilesets/flags/sabinium"
 		"f.sadr", "tilesets/flags/sadr"
 		"f.saint_kitts_and_nevis", "tilesets/flags/saint_kitts_and_nevis"
@@ -1024,6 +1046,7 @@ sprites =
 		"f.savoy", "tilesets/flags/savoy"
 		"f.saxony", "tilesets/flags/saxony"
 		"f.scania", "tilesets/flags/scania"
+		"f.schaumburglippe", "tilesets/flags/schaumburglippe"
 		"f.schleswig-holstein", "tilesets/flags/schleswig-holstein"
 		"f.scotland", "tilesets/flags/scotland"
 		"f.scottishgaelic", "tilesets/flags/scottishgaelic"
@@ -1090,6 +1113,7 @@ sprites =
 		"f.timur", "tilesets/flags/timur"
 		"f.tocharian", "tilesets/flags/tocharian"
 		"f.togo", "tilesets/flags/togo"
+		"f.tokipona", "tilesets/flags/tokipona"
 		"f.toltec", "tilesets/flags/toltec"
 		"f.tonga", "tilesets/flags/tonga"
 		"f.transnistria", "tilesets/flags/transnistria"
