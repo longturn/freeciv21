@@ -680,7 +680,7 @@ struct adv_data *adv_data_get(struct player *pplayer, bool *caller_closes)
 }
 
 /**
-   Allocate memory for advisor data. Save to call multiple times.
+   Allocate memory for advisor data. Safe to call multiple times.
  */
 void adv_data_init(struct player *pplayer)
 {
@@ -691,7 +691,7 @@ void adv_data_init(struct player *pplayer)
   }
   adv = pplayer->server.adv;
 
-  adv->government_want = nullptr;
+  adv->government_want.clear();
 
   adv->dipl.adv_dipl_slots = new adv_dipl *[MAX_NUM_PLAYER_SLOTS]();
   player_slots_iterate(pslot)
@@ -724,9 +724,7 @@ void adv_data_default(struct player *pplayer)
   fc_assert_ret(adv != nullptr);
 
   adv->govt_reeval = 0;
-  if (!adv->government_want) {
-    adv->government_want = new adv_want[government_count() + 1]();
-  }
+  adv->government_want.resize(government_count());
 
   adv->wonder_city = 0;
 
@@ -746,8 +744,7 @@ void adv_data_close(struct player *pplayer)
 
   adv_data_phase_done(pplayer);
 
-  delete[] adv->government_want;
-  adv->government_want = nullptr;
+  adv->government_want.clear();
   if (adv->dipl.adv_dipl_slots != nullptr) {
     players_iterate(aplayer)
     {

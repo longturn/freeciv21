@@ -32,6 +32,7 @@
 
 // common
 #include "fc_interface.h"
+#include "game.h"
 
 // server
 #include "sernet.h"
@@ -57,6 +58,14 @@ int main(int argc, char **argv)
 {
   QApplication app(argc, argv);
   QCoreApplication::setApplicationVersion(freeciv21_version());
+  app.setDesktopFileName(QStringLiteral("net.longturn.freeciv21.ruledit"));
+
+  // Load window icons
+  QIcon::setThemeSearchPaths(get_data_dirs() + QIcon::themeSearchPaths());
+  QIcon::setFallbackThemeName(QIcon::themeName());
+  QIcon::setThemeName(QStringLiteral("icons"));
+
+  qApp->setWindowIcon(QIcon::fromTheme(QStringLiteral("freeciv21-ruledit")));
 
   log_init();
 

@@ -154,8 +154,6 @@ struct named_sprites {
       *treaty_thumb[2],   // 0=disagree, 1=agree
       *arrow[ARROW_LAST], // 0=right arrow, 1=plus, 2=minus
 
-      *icon,
-
       *events[E_COUNT],
 
       // The panel sprites for showing tax % allocations.
@@ -776,7 +774,8 @@ QEvent::Type TilesetChanged;
  */
 const QVector<QString> *get_tileset_list(const struct option *poption)
 {
-  static QVector<QString> *tilesets[3] = {nullptr, nullptr, nullptr};
+  static QVector<QString> *tilesets[3] = {
+      new QVector<QString>, new QVector<QString>, new QVector<QString>};
   int topo = option_get_cb_data(poption);
   int idx;
 
@@ -784,23 +783,17 @@ const QVector<QString> *get_tileset_list(const struct option *poption)
 
   fc_assert_ret_val(idx < ARRAY_SIZE(tilesets), nullptr);
 
-  if (tilesets[idx] == nullptr) {
-    /* Note: this means you must restart the client after installing a new
-       tileset. */
-    QVector<QString> *list = fileinfolist(get_data_dirs(), TILESPEC_SUFFIX);
-
-    tilesets[idx] = new QVector<QString>;
-    for (const auto &file : qAsConst(*list)) {
-      struct tileset *t =
-          tileset_read_toplevel(qUtf8Printable(file), false, topo);
-
-      if (t) {
-        tilesets[idx]->append(file);
-        tileset_free(t);
-      }
+  QVector<QString> *list = fileinfolist(get_data_dirs(), TILESPEC_SUFFIX);
+  tilesets[idx]->clear();
+  for (const auto &file : qAsConst(*list)) {
+    struct tileset *t =
+        tileset_read_toplevel(qUtf8Printable(file), false, topo);
+    if (t) {
+      tilesets[idx]->append(file);
+      tileset_free(t);
     }
-    delete list;
   }
+  delete list;
 
   return tilesets[idx];
 }
@@ -1173,13 +1166,21 @@ void tilespec_reread_frozen_refresh(const QString &name)
 }
 
 /**
+ * Makes a dummy "error" pixmap to prevent crashes.
+ */
+static QPixmap *make_error_pixmap()
+{
+  auto s = new QPixmap(20, 20);
+  s->fill(Qt::red);
+  return s;
+}
+
+/**
    Loads the given graphics file (found in the data path) into a newly
    allocated sprite.
  */
 static QPixmap *load_gfx_file(const char *gfx_filename)
 {
-  QPixmap *s;
-
   // Try out all supported file extensions to find one that works.
   auto supported = QImageReader::supportedImageFormats();
 
@@ -1197,17 +1198,14 @@ static QPixmap *load_gfx_file(const char *gfx_filename)
     if (!real_full_name.isEmpty()) {
       log_debug("trying to load gfx file \"%s\".",
                 qUtf8Printable(real_full_name));
-      s = load_gfxfile(qUtf8Printable(real_full_name));
-      if (s) {
+      if (const auto s = load_gfxfile(qUtf8Printable(real_full_name)); s) {
         return s;
       }
     }
   }
 
   qCritical("Could not load gfx file \"%s\".", gfx_filename);
-  s = new QPixmap(20, 20);
-  s->fill(Qt::red);
-  return s;
+  return make_error_pixmap();
 }
 
 /**
@@ -2551,8 +2549,6 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     }
   }
 
-  SET_SPRITE(icon, QStringLiteral("icon.freeciv"));
-
   for (i = 0; i < E_COUNT; i++) {
     const char *tag = get_event_tag(static_cast<event_type>(i));
 
@@ -3163,7 +3159,9 @@ void tileset_setup_impr_type(struct tileset *t, struct impr_type *pimprove)
                                   pimprove->graphic_alt, "improvement",
                                   improvement_rule_name(pimprove), false);
 
-  // should maybe do something if nullptr, eg generic default?
+  if (!t->sprites.building[improvement_index(pimprove)]) {
+    t->sprites.building[improvement_index(pimprove)] = make_error_pixmap();
+  }
 }
 
 /**
@@ -3177,7 +3175,9 @@ void tileset_setup_tech_type(struct tileset *t, struct advance *padvance)
         t, LOG_VERBOSE, padvance->graphic_str, padvance->graphic_alt,
         "technology", advance_rule_name(padvance), false);
 
-    // should maybe do something if nullptr, eg generic default?
+    if (!t->sprites.tech[advance_index(padvance)]) {
+      t->sprites.tech[advance_index(padvance)] = make_error_pixmap();
+    }
   } else {
     t->sprites.tech[advance_index(padvance)] = nullptr;
   }
@@ -5283,20 +5283,6 @@ const QPixmap *get_cursor_sprite(const struct tileset *t,
   *hot_x = t->sprites.cursor[cursor].hot_x;
   *hot_y = t->sprites.cursor[cursor].hot_y;
   return t->sprites.cursor[cursor].frame[frame];
-}
-
-/**
-   Return a sprite for the Freeciv21 icon.  Icons are used by the operating
-   system/window manager.  Usually Freeciv21 has to tell the OS what icon to
-   use.
-
-   Note that this function will return nullptr before the sprites are loaded.
-   The GUI code must be sure to call tileset_load_tiles before setting the
-   top-level icon.
- */
-const QPixmap *get_icon_sprite(const struct tileset *t)
-{
-  return t->sprites.icon;
 }
 
 /**

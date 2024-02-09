@@ -1375,7 +1375,14 @@ void bounce_unit(struct unit *punit, bool verbose, bounce_reason reason,
         packet.orders[i] = steps[i].order;
       }
 
+      // Disable unit wait time since this is a forced action
+      auto timestamp = punit->action_timestamp;
+      punit->action_timestamp = 0;
+
       handle_unit_orders(pplayer, &packet);
+
+      // Restore unit wait time
+      punit->action_timestamp = timestamp;
 
       if (punit->tile != punit_tile) {
         return;
@@ -4329,7 +4336,7 @@ static bool maybe_cancel_patrol_due_to_enemy(struct unit *punit)
   {
     struct unit *penemy = is_non_allied_unit_tile(ptile, pplayer);
 
-    struct vision_site *pdcity = map_get_player_site(ptile, pplayer);
+    const vision_site *pdcity = map_get_player_site(ptile, pplayer);
 
     if ((penemy && can_player_see_unit(pplayer, penemy))
         || (pdcity && !pplayers_allied(pplayer, vision_site_owner(pdcity))

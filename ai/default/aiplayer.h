@@ -14,6 +14,7 @@
 
 // common
 #include "player.h"
+#include "unit.h"
 
 struct player;
 struct ai_plr;

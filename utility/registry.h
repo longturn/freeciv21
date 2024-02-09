@@ -10,8 +10,8 @@
 **************************************************************************/
 #pragma once
 
-struct section;
 class QString;
+
 void registry_module_init();
 void registry_module_close();
 
@@ -25,5 +25,3 @@ void secfile_allow_digital_boolean(struct section_file *secfile,
 
 const char *secfile_error();
 const char *section_name(const struct section *psection);
-
-#include "registry_ini.h"

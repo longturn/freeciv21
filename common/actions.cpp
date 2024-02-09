@@ -4387,8 +4387,8 @@ static struct act_prob ap_dipl_battle_win(const struct unit *pattacker,
   }
 
   // Convert to action probability
-  out.min = chance * ACTPROB_VAL_1_PCT;
-  out.max = chance * ACTPROB_VAL_1_PCT;
+  out.min = std::max(ACTPROB_VAL_MIN, chance * ACTPROB_VAL_1_PCT);
+  out.max = std::min(ACTPROB_VAL_MAX, chance * ACTPROB_VAL_1_PCT);
 
   return out;
 }

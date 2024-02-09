@@ -1,6 +1,6 @@
-..  SPDX-License-Identifier: GPL-3.0-or-later
-..  SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
-..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+.. SPDX-License-Identifier: GPL-3.0-or-later
+.. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: wonder
@@ -17,7 +17,7 @@ Nation_Intelligence
 The ``Nation_Intelligence`` effect controls what kind of information about a foreign nation is visible in the
 :ref:`Nations View <game-manual-nations-and-diplomacy-view>`. A value of ``0`` or lower hides the information,
 while it becomes visible when the effect evaluates to ``1`` or bigger. For instance, the following effect
-repurposes the :wonder:`United Nations` to reveal everyone's secrets to everone else:
+repurposes the :wonder:`United Nations` to reveal everyone's secrets to everyone else:
 
 .. code-block:: ini
 

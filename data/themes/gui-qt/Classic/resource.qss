@@ -82,6 +82,23 @@ resize_widget
   background: #ddca97;
 }
 
+QPushButton[main_pagebt="true"] {
+  font-size: 1.5em;
+  padding: 0.2em 1em;
+  min-height: 32px;
+  min-width: 200px;
+}
+
+QPushButton, QToolButton {
+  border-image: url(LittleFingerbutton-default.png) 3 3 3 3;
+  border-top: 4px e0d2b2;
+  border-bottom: 4px e0d2b2;
+  border-right: 4px e0d2b2;
+  border-left: 4px e0d2b2;
+  border-radius: 4px;
+  padding: 4px;
+}
+
 QPushButton, QToolButton {
   border-image: url(LittleFingerbutton-default.png) 3 3 3 3;
   border-top: 3px transparent;

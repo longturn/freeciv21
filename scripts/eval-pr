@@ -77,7 +77,7 @@ base_setup ()
   echo "-- Applying the .diff via patch."
   echo
   git checkout -- .
-  patch -p1 < pr$pull_request.diff
+  git apply pr$pull_request.diff
   rm pr$pull_request.diff
 
   # Always start with a empty build directory when testing
@@ -143,10 +143,14 @@ debug_eval ()
   echo
   # We ask for a debug build in order to run the code through a debugger while evaluating
   cmake -S . -B build_$pull_request \
-    -G Ninja \
+    -G "Ninja Multi-Config" \
     -DCMAKE_INSTALL_PREFIX=$PWD/build_$pull_request/install \
     -DCMAKE_BUILD_TYPE=Debug
   cmake --build build_$pull_request
+
+  # Run tests except on MSYS2 (they fail)
+  [[ $MSYSTEM ]] || cmake --build build_$pull_request --target test
+
   # Always test the installer
   cmake --build build_$pull_request --target install
 
@@ -184,6 +188,7 @@ asan_eval ()
     cmake --preset ASan -S . -B build_$pull_request
   fi
   cmake --build build_$pull_request
+  cmake --build build_$pull_request --target test
 
   echo
   echo "-- PR $pull_request is ready to be evaluated. Run $0 -c $pull_request to cleanup."

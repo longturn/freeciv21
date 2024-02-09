@@ -11,20 +11,17 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-// ANSI
-#ifdef HAVE_STRING_H
 #include <string.h>
-#endif
 
 // utility
 #include "capability.h"
 #include "fcintl.h"
 #include "registry.h"
+#include "section_file.h"
 
 // common
 #include "actions.h"
 #include "effects.h"
-#include "game.h"
 #include "movement.h"
 #include "requirements.h"
 #include "unittype.h"

@@ -11,18 +11,17 @@
                                  If not, see https://www.gnu.org/licenses/.
  */
 
-#include <fc_config.h>
+#include "fciconv.h"
+
+#include "fc_config.h"
+#include "fcintl.h"
+
+#include <cstdarg>
+#include <cstdio>
 
 #include <QLocale>
 #include <QTextCodec>
-#include <cstdarg>
-#include <cstdio>
-#include <cstring>
-
-// utility
-#include "fciconv.h"
-#include "fcintl.h"
-#include "support.h"
+#include <QTextStream>
 
 static QTextCodec *localCodec;
 static QTextCodec *dataCodec;

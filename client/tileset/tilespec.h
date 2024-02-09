@@ -256,7 +256,6 @@ const QPixmap *get_cursor_sprite(const struct tileset *t,
                                  int *hot_y, int frame);
 const struct citybar_sprites *get_citybar_sprites(const struct tileset *t);
 const struct editor_sprites *get_editor_sprites(const struct tileset *t);
-const QPixmap *get_icon_sprite(const struct tileset *t);
 const QPixmap *get_attention_crosshair_sprite(const struct tileset *t);
 const QPixmap *get_indicator_sprite(const struct tileset *t,
                                     enum indicator_type indicator,

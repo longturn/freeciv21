@@ -1,8 +1,8 @@
 # Support for sphinx-build
 include(FindPackageHandleStandardArgs)
 
-if(PythonInterp_FOUND)
-  get_filename_component(_PYTHON_DIR "${PYTHON_EXECUTABLE}" DIRECTORY)
+if (Python3_Interpreter_FOUND)
+  get_filename_component(_PYTHON_DIR "${Python3_EXECUTABLE}" DIRECTORY)
     set(_PYTHON_PATHS
       "${_PYTHON_DIR}"
       "${_PYTHON_DIR}/bin"

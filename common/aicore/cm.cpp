@@ -16,8 +16,6 @@
 
 // utility
 #include "shared.h"
-#include "support.h"
-#include "timing.h"
 
 // common
 #include "city.h"
@@ -1189,8 +1187,7 @@ static void sort_lattice_by_fitness(const struct cm_state *state,
 /**
    Create the lattice.
  */
-static void init_tile_lattice(struct city *pcity,
-                              struct tile_type_vector *lattice)
+static void init_tile_lattice(struct city *pcity, struct cm_state *state)
 {
   struct cm_tile_type type;
   struct tile *pcenter = city_tile(pcity);
@@ -1205,21 +1202,23 @@ static void init_tile_lattice(struct city *pcity,
       continue;
     } else if (city_can_work_tile(pcity, ptile)) {
       compute_tile_production(pcity, ptile, &type); // clobbers type
-      tile_type_lattice_add(lattice, &type,
+      tile_type_lattice_add(&state->lattice, &type,
                             ctindex); // copy type if needed
     }
   }
   city_tile_iterate_index_end;
 
   // Add all the specialists into the lattice.
-  init_specialist_lattice_nodes(lattice, pcity);
+  if (state->parameter.allow_specialists) {
+    init_specialist_lattice_nodes(&state->lattice, pcity);
+  }
 
   // Set the lattice_depth fields, and clean up unreachable nodes.
-  top_sort_lattice(lattice);
-  clean_lattice(lattice, pcity);
+  top_sort_lattice(&state->lattice);
+  clean_lattice(&state->lattice, pcity);
 
   // All done now.
-  print_lattice(LOG_LATTICE, lattice);
+  print_lattice(LOG_LATTICE, &state->lattice);
 }
 
 /**
@@ -1832,12 +1831,16 @@ static bool bb_next(struct cm_state *state, bool negative_ok)
 /**
    Initialize the state for the branch-and-bound algorithm.
  */
-static struct cm_state *cm_state_init(struct city *pcity, bool negative_ok)
+static struct cm_state *cm_state_init(struct city *pcity,
+                                      const cm_parameter *param,
+                                      bool negative_ok)
 {
   const int SCIENCE = 0, TAX = 1, LUXURY = 2;
   const struct player *pplayer = city_owner(pcity);
   int numtypes;
   auto *state = new cm_state;
+  state->parameter = *param;
+
   int rates[3];
 
   log_base(LOG_CM_STATE, "creating cm_state for %s (size %d)",
@@ -1848,7 +1851,7 @@ static struct cm_state *cm_state_init(struct city *pcity, bool negative_ok)
 
   // create the lattice
   tile_type_vector_init(&state->lattice);
-  init_tile_lattice(pcity, &state->lattice);
+  init_tile_lattice(pcity, state);
   numtypes = tile_type_vector_size(&state->lattice);
 
   get_tax_rates(pplayer, rates);
@@ -1918,15 +1921,13 @@ static int min_food_surplus_for_fastest_growth(struct cm_state *state)
   int food_needed = city_granary_size(city_size) - pcity->food_stock;
   int min_turns;
 
-  city_map_iterate(city_radius_sq, cindex, x, y)
+  city_map_iterate_without_index(city_radius_sq, x, y)
   {
     struct tile *ptile = city_map_to_tile(pcity->tile, city_radius_sq, x, y);
-    if (!ptile) {
+    if (!ptile || !city_can_work_tile(pcity, ptile)) {
       continue;
     }
-    if (is_free_worked_index(cindex)) {
-      max_surplus += city_tile_output(pcity, ptile, is_celebrating, O_FOOD);
-    }
+    max_surplus += city_tile_output(pcity, ptile, is_celebrating, O_FOOD);
   }
   city_map_iterate_end;
 
@@ -1973,13 +1974,14 @@ static void begin_search(struct cm_state *state,
 
   // copy the parameter and sort the main lattice by it
   cm_copy_parameter(&state->parameter, parameter);
-  sort_lattice_by_fitness(state, &state->lattice);
 
   if (parameter->max_growth) {
     state->parameter.minimal_surplus[O_FOOD] =
         min_food_surplus_for_fastest_growth(state);
+    state->parameter.factor[O_FOOD] = 0;
   }
 
+  sort_lattice_by_fitness(state, &state->lattice);
   init_min_production(state);
 
   // clear out the old solution
@@ -2088,7 +2090,7 @@ static void cm_find_best_solution(struct cm_state *state,
 void cm_query_result(struct city *pcity, const struct cm_parameter *param,
                      std::unique_ptr<cm_result> &result, bool negative_ok)
 {
-  struct cm_state *state = cm_state_init(pcity, negative_ok);
+  struct cm_state *state = cm_state_init(pcity, param, negative_ok);
 
   /* Refresh the city.  Otherwise the CM can give wrong results or just be
    * slower than necessary.  Note that cities are often passed in in an

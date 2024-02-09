@@ -30,6 +30,7 @@
 #include "fcintl.h"
 #include "log.h"
 #include "registry.h"
+#include "registry_ini.h"
 #include "requirements.h"
 #include "support.h"
 
@@ -2576,7 +2577,9 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
       case ACTRES_BOMBARD:
         cat_snprintf(buf, bufsz,
                      // TRANS: %d is bombard rate.
-                     _("  * %d per turn.\n"), utype->bombard_rate);
+                     PL_("  * %d round per action.\n",
+                         "  * %d rounds per action.\n", utype->bombard_rate),
+                     utype->bombard_rate);
         cat_snprintf(buf, bufsz,
                      // TRANS: talking about bombard
                      _("  * These attacks will only damage (never kill)"
@@ -3469,7 +3472,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
       && (is_extra_caused_by(pextra, EC_HUT)
           || is_extra_caused_by(pextra, EC_RESOURCE)
           || (proad != nullptr && road_has_flag(proad, RF_RIVER)))) {
-    CATLSTR(buf, bufsz, _("Placed by map generator.\n"));
+    CATLSTR(buf, bufsz, _("This resource is placed by map generator.\n"));
   }
 
   if (is_extra_removed_by(pextra, ERM_ENTER)) {

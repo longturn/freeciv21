@@ -15,6 +15,10 @@
 
 #include "section_file.h"
 
+#include <QMultiHash>
+
+#include "log.h"
+
 #define MAX_LEN_ERRORBUF 1024
 
 static char error_buffer[MAX_LEN_ERRORBUF] = "\0";

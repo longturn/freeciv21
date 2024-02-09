@@ -1,5 +1,5 @@
-..  SPDX-License-Identifier: GPL-3.0-or-later
-..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+.. SPDX-License-Identifier: GPL-3.0-or-later
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 freeciv21-server
 ****************
@@ -16,6 +16,7 @@ DESCRIPTION
 ===========
 
 .. This description is also in README.md, about.rst, the 4 metainfo files, and snapcraft.yaml
+
 Freeciv21 is a free open source turn-based empire-building 4x strategy game, in which each player becomes the
 leader of a civilization. You compete against several opponents to build cities and use them to support a
 military and an economy. Players strive to complete an empire that survives all encounters with its neighbors
@@ -89,7 +90,7 @@ The freeciv21-server requires the default ruleset files to be readable at start.
 * default/nationlist.ruleset
 
 These files are for the default ruleset for the game (civ2civ3), which are loaded if you do not use the
-`--ruleset` arguement. Alternate rules can be loaded with the ``rulesetdir`` directive in a start up script.
+`--ruleset` argument. Alternate rules can be loaded with the ``rulesetdir`` directive in a start up script.
 Type ``help rulesetdir`` at the server command prompt for more information.
 
 If you are going to enable user authentication, you will need the `database.lua` file. The file is

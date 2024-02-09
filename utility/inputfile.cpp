@@ -72,6 +72,7 @@
 
 // utility
 #include "fcintl.h"
+#include "log.h"
 
 #include "inputfile.h"
 

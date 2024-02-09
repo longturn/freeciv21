@@ -18,6 +18,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QSortFilterProxyModel>
+#include <qnamespace.h>
 // utility
 #include "astring.h"
 #include "fcintl.h"
@@ -30,6 +31,7 @@
 #include "improvement.h"
 #include "nation.h"
 #include "research.h"
+#include "utils/collated_sort_proxy.h"
 #include "views/view_nations_data.h"
 // client
 #include "chatline_common.h"
@@ -315,11 +317,18 @@ plr_widget::plr_widget(QWidget *widget) : QTableView(widget)
   pid = new plr_item_delegate(this);
   setItemDelegate(pid);
   list_model = new plr_model(this);
-  filter_model = new QSortFilterProxyModel();
+
+  filter_model = new freeciv::collated_sort_filter_proxy_model;
   filter_model->setDynamicSortFilter(true);
   filter_model->setSourceModel(list_model);
   filter_model->setFilterRole(Qt::DisplayRole);
+  QCollator coll;
+  coll.setCaseSensitivity(Qt::CaseInsensitive);
+  coll.setLocale(locale());
+  coll.setNumericMode(true);
+  filter_model->set_collator(coll);
   setModel(filter_model);
+
   setSortingEnabled(true);
   setSelectionMode(QAbstractItemView::SingleSelection);
   setAutoScroll(true);
@@ -558,6 +567,13 @@ void plr_widget::nation_selected(const QItemSelection &sl,
       if (other == pplayer || is_barbarian(other)) {
         continue;
       }
+      if (!BV_ISSET(pplayer->client.visible, NI_DIPLOMACY)
+          && !BV_ISSET(other->client.visible, NI_DIPLOMACY)) {
+        // We don't know anything about diplomatic relations between these
+        // players
+        continue;
+      }
+
       state = player_diplstate_get(pplayer, other);
       if (static_cast<int>(state->type) == i) {
         if (!added) {

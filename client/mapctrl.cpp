@@ -386,10 +386,6 @@ void map_view::shortcut_released(Qt::MouseButton bt)
       king()->rallies.hover_city = false;
       return;
     }
-    if (menu_click) {
-      menu_click = false;
-      return;
-    }
     if (!keyboardless_goto_active || goto_is_active()) {
       action_button_pressed(pos.x(), pos.y(), SELECT_POPUP);
     }

@@ -26,9 +26,9 @@ The documentation is found on our [documentation website](https://longturn.readt
 Installation
 ------------
 
-### Snap and Flathub Editions
+### Snap, Flathub and AUR Editions
 
-<p><a href='https://snapcraft.io/freeciv21'><img width='182' height='56' alt='Get Freeciv21 on Snapcraft' src='https://snapcraft.io/static/images/badges/en/snap-store-white.svg'/></a>&nbsp;<a href='https://flathub.org/apps/net.longturn.freeciv21'><img width='182' height='56' alt='Get Freeciv21 on Flathub' src='https://dl.flathub.org/assets/badges/flathub-badge-i-en.svg'/></a></p>
+<p><a href='https://snapcraft.io/freeciv21'><img width='182' height='56' alt='Get Freeciv21 on Snapcraft' src='https://snapcraft.io/static/images/badges/en/snap-store-white.svg'/></a>&nbsp;<a href='https://flathub.org/apps/net.longturn.freeciv21'><img width='182' height='56' alt='Get Freeciv21 on Flathub' src='https://dl.flathub.org/assets/badges/flathub-badge-i-en.svg'/></a>&nbsp;<a href='https://aur.archlinux.org/packages/freeciv21'><img width='182' height'56' alt="AUR version" src="https://img.shields.io/aur/version/freeciv21?style=for-the-badge&logo=archlinux&label=AUR"></p>
 
 ### Windows and macOS
 
@@ -85,4 +85,18 @@ cmake --build build --target install
 Alternatively, Freeciv21 can be used with Nix. For this, enable Nix flakes and run
 ```sh
 nix run github:longturn/freeciv21#;
+```
+
+### FreeBSD
+
+Freeciv21 is available in the FreeBSD ports tree. You can install the binary
+package using this command:
+```sh
+pkg install freeciv21
+```
+
+Although it is recommended to use the binary package, you can also build
+Freeciv21 using the ports tree:
+```sh
+make -C /usr/ports/games/freeciv21 install clean
 ```

@@ -63,8 +63,6 @@ public:
   void hide_all_fcwidgets();
   void show_all_fcwidgets();
 
-  bool menu_click;
-
   double scale() const;
 
   freeciv::tileset_debugger *debugger() const { return m_debugger; }

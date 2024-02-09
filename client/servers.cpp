@@ -27,13 +27,14 @@
 
 // utility
 #include "net_types.h"
+#include "registry_ini.h"
 
 // generated
 #include "fc_version.h"
 
 // common
 #include "capstr.h"
-#include "dataio.h"
+#include "dataio_raw.h"
 #include "version.h"
 
 // client
@@ -267,7 +268,7 @@ static struct server_list *parse_metaserver_data(QIODevice *f)
                                        "version_comments." FOLLOWTAG);
 
   if (latest_ver != nullptr) {
-    const char *my_comparable = fc_comparable_version();
+    const char *my_comparable = freeciv21_version();
     char vertext[2048];
 
     qDebug("Metaserver says latest '" FOLLOWTAG

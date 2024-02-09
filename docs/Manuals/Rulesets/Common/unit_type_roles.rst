@@ -1,5 +1,5 @@
-..  SPDX-License-Identifier: GPL-3.0-or-later
-..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+.. SPDX-License-Identifier: GPL-3.0-or-later
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
@@ -44,7 +44,7 @@ directory. The following roles are used in all of the rulesets shipped by the Fr
   Can be created as a :unit:`Barbarian` that disembarks from a barbarian boat.
 
 :strong:`BarbarianSeaTech`
-  Can be created as a :unit:`Barbarian` that disembarks from a barbarian boatif someone has researched its
+  Can be created as a :unit:`Barbarian` that disembarks from a barbarian boat if someone has researched its
   technology requirements.
 
 :strong:`BorderPolice`

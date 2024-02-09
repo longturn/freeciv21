@@ -12,10 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <clocale>
-
 #include "fc_config.h" // FREECIV_ENABLE_NLS
-#include "shared.h"    // bool
 #include "support.h"   // fc__attribute
 
 #ifdef FREECIV_ENABLE_NLS
@@ -23,7 +20,6 @@
 /* Include libintl.h only if nls enabled.
  * It defines some wrapper macros that
  * we don't want defined when nls is disabled. */
-#ifdef FREECIV_HAVE_LIBINTL_H
 #include <libintl.h>
 
 // MSYS libintl redefines asprintf/vasprintf as macros, and this clashes with
@@ -34,8 +30,6 @@
 
 #ifdef vasprintf
 #undef vasprintf
-#endif
-
 #endif
 
 // Core freeciv

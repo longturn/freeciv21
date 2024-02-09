@@ -20,6 +20,7 @@ received a copy of the GNU General Public License along with Freeciv21.
 #include "log.h"
 #include "rand.h"
 #include "registry.h"
+#include "registry_ini.h"
 #include "shared.h"
 
 // client
@@ -78,29 +79,15 @@ const QVector<QString> *get_soundplugin_list(const struct option *poption)
 }
 
 /**
-   Returns a static string vector of audiosets of given type available
-   on the system by searching all data directories for files matching
-   suffix.
-   The list is nullptr-terminated.
- */
-static const QVector<QString> *
-get_audio_speclist(const char *suffix, QVector<QString> **audio_list)
-{
-  if (nullptr == *audio_list) {
-    *audio_list = fileinfolist(get_data_dirs(), suffix);
-  }
-
-  return *audio_list;
-}
-
-/**
    Returns a static string vector of soundsets available on the system.
  */
 const QVector<QString> *get_soundset_list(const struct option *poption)
 {
-  static QVector<QString> *sound_list = nullptr;
-
-  return get_audio_speclist(SNDSPEC_SUFFIX, &sound_list);
+  static QVector<QString> *sound_list = new QVector<QString>;
+  auto list = fileinfolist(get_data_dirs(), SNDSPEC_SUFFIX);
+  *sound_list = std::move(*list);
+  delete list;
+  return sound_list;
 }
 
 /**
@@ -108,9 +95,11 @@ const QVector<QString> *get_soundset_list(const struct option *poption)
  */
 const QVector<QString> *get_musicset_list(const struct option *poption)
 {
-  static QVector<QString> *music_list = nullptr;
-
-  return get_audio_speclist(MUSICSPEC_SUFFIX, &music_list);
+  static QVector<QString> *music_list = new QVector<QString>;
+  auto list = fileinfolist(get_data_dirs(), MUSICSPEC_SUFFIX);
+  *music_list = std::move(*list);
+  delete list;
+  return music_list;
 }
 
 /**
@@ -609,6 +598,11 @@ void audio_set_volume(double volume)
  */
 void audio_shutdown()
 {
+  // Already shut down
+  if (selected_plugin < 0) {
+    return;
+  }
+
   // avoid infinite loop at end of game
   audio_stop();
 
@@ -624,6 +618,9 @@ void audio_shutdown()
     secfile_destroy(ms_tagfile);
     ms_tagfile = nullptr;
   }
+
+  // Mark shutdown
+  selected_plugin = -1;
 }
 
 /**

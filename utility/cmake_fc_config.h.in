@@ -39,70 +39,6 @@
 /* bzlib.h available */
 #cmakedefine HAVE_BZLIB_H
 
-/* direct.h available */
-#cmakedefine HAVE_DIRECT_H
-
-/* dlfcn.h available */
-#cmakedefine HAVE_DLFCN_H
-
-/* execinfo.h available */
-#cmakedefine HAVE_EXECINFO_H
-
-/* libcharset.h available */
-#cmakedefine HAVE_LIBCHARSET_H
-
-/* memory.h available */
-#cmakedefine HAVE_MEMORY_H
-
-
-/* strings.h available */
-#cmakedefine HAVE_STRINGS_H
-
-/* string.h available */
-#cmakedefine HAVE_STRING_H
-
-/* sys/file.h available */
-#cmakedefine HAVE_SYS_FILE_H
-
-/* sys/signal.h available */
-#cmakedefine HAVE_SYS_SIGNAL_H
-
-/* sys/stat.h available */
-#cmakedefine HAVE_SYS_STAT_H
-
-/* sys/termio.h available */
-#cmakedefine HAVE_SYS_TERMIO_H
-
-/* sys/utsname.h available */
-#cmakedefine HAVE_SYS_UTSNAME_H
-
-/* sys/wait.h available */
-#cmakedefine HAVE_SYS_WAIT_H
-
-/* termios.h available */
-#cmakedefine HAVE_TERMIOS_H
-
-/* libintl.h available */
-#cmakedefine HAVE_LIBINTL_H
-
-/* backtrace() available */
-#cmakedefine HAVE_BACKTRACE
-
-/* strcasecoll() available */
-#cmakedefine HAVE_STRCASECOLL
-
-/* strcasestr() available */
-#cmakedefine HAVE_STRCASESTR
-
-/* stricoll() available */
-#cmakedefine HAVE_STRICOLL
-
-/* _setjmp() available */
-#cmakedefine HAVE__SETJMP
-
-/* _strcoll() available */
-#cmakedefine HAVE__STRCOLL
-
 /* _stricoll() available */
 #cmakedefine HAVE__STRICOLL
 
@@ -111,8 +47,6 @@
 
 /* Custom path to CA cert bundle */
 #cmakedefine CUSTOM_CACERT_PATH
-
-/***** Previously freeciv_config.h *****/
 
 /* bzip2 compression is available in KArchive */
 #cmakedefine FREECIV_HAVE_BZ2
@@ -126,26 +60,11 @@
 /* Max number of AI modules */
 #cmakedefine FREECIV_AI_MOD_LAST ${FREECIV_AI_MOD_LAST}
 
-/* C11 static assert supported */
-#cmakedefine FREECIV_C11_STATIC_ASSERT
-
-/* qstrlen() in static assert supported */
-#cmakedefine FREECIV_STATIC_STRLEN
-
-/* C++11 static assert supported */
-#cmakedefine FREECIV_CXX11_STATIC_ASSERT
-
-/* Testmatic integration enabled */
-#cmakedefine FREECIV_TESTMATIC
-
 /* Metaserver URL */
 #cmakedefine FREECIV_META_URL "${FREECIV_META_URL}"
 
 /* Native language support enabled */
 #cmakedefine FREECIV_ENABLE_NLS
-
-/* libintl.h available */
-#cmakedefine FREECIV_HAVE_LIBINTL_H
 
 /* Windows build */
 #cmakedefine FREECIV_MSWINDOWS 1

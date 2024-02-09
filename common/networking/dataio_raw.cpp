@@ -401,56 +401,6 @@ void dio_put_sfloat_raw(struct raw_data_out *dout, float value,
 }
 
 /**
-   Insert number of values brefore stop_value using 8 bits. Then
-   insert values using 8 bits for each. stop_value is not required to
-   fit in 8 bits. Actual values may overflow.
- */
-void dio_put_uint8_vec8_raw(struct raw_data_out *dout, int *values,
-                            int stop_value)
-{
-  size_t count;
-
-  for (count = 0; values[count] != stop_value; count++) {
-    // nothing
-  }
-
-  if (enough_space(dout, 1 + count)) {
-    size_t i;
-
-    dio_put_uint8_raw(dout, count);
-
-    for (i = 0; i < count; i++) {
-      dio_put_uint8_raw(dout, values[i]);
-    }
-  }
-}
-
-/**
-   Insert number of values brefore stop_value using 8 bits. Then
-   insert values using 16 bits for each. stop_value is not required to
-   fit in 16 bits. Actual values may overflow.
- */
-void dio_put_uint16_vec8_raw(struct raw_data_out *dout, int *values,
-                             int stop_value)
-{
-  size_t count;
-
-  for (count = 0; values[count] != stop_value; count++) {
-    // nothing
-  }
-
-  if (enough_space(dout, 1 + 2 * count)) {
-    size_t i;
-
-    dio_put_uint8_raw(dout, count);
-
-    for (i = 0; i < count; i++) {
-      dio_put_uint16_raw(dout, values[i]);
-    }
-  }
-}
-
-/**
    Insert block directly from memory.
  */
 void dio_put_memory_raw(struct raw_data_out *dout, const void *value,
@@ -906,59 +856,6 @@ bool dio_get_worklist_raw(struct data_in *din, struct worklist *pwl)
 }
 
 /**
-   Take vector of 8 bit values and insert stop_value after them. stop_value
-   does not need to fit in 8 bits.
- */
-bool dio_get_uint8_vec8_raw(struct data_in *din, int **values,
-                            int stop_value)
-{
-  int count, inx;
-  int *vec;
-
-  if (!dio_get_uint8_raw(din, &count)) {
-    return false;
-  }
-
-  vec = new int[count + 1];
-  for (inx = 0; inx < count; inx++) {
-    if (!dio_get_uint8_raw(din, vec + inx)) {
-      delete[] vec;
-      return false;
-    }
-  }
-  vec[inx] = stop_value;
-  *values = vec;
-
-  return true;
-}
-
-/**
-   Receive vector of uint16 values.
- */
-bool dio_get_uint16_vec8_raw(struct data_in *din, int **values,
-                             int stop_value)
-{
-  int count, inx;
-  int *vec;
-
-  if (!dio_get_uint8_raw(din, &count)) {
-    return false;
-  }
-
-  vec = new int[count + 1];
-  for (inx = 0; inx < count; inx++) {
-    if (!dio_get_uint16_raw(din, vec + inx)) {
-      delete[] vec;
-      return false;
-    }
-  }
-  vec[inx] = stop_value;
-  *values = vec;
-
-  return true;
-}
-
-/**
    De-serialize an action probability.
  */
 bool dio_get_action_probability_raw(struct data_in *din,
@@ -1004,10 +901,12 @@ bool dio_get_requirement_raw(struct data_in *din, struct requirement *preq)
     return false;
   }
 
-  /*
-   * FIXME: the value returned by req_from_values() should be checked!
-   */
   *preq = req_from_values(type, range, survives, present, quiet, value);
+  if (preq->source.kind == universals_n_invalid()) {
+    // Keep bad requirements but make sure we never touch them.
+    qWarning() << "The server sent an invalid or unknown requirement.";
+    preq->source.kind = VUT_NONE;
+  }
 
   return true;
 }
@@ -1029,56 +928,4 @@ void dio_put_requirement_raw(struct raw_data_out *dout,
   dio_put_bool8_raw(dout, survives);
   dio_put_bool8_raw(dout, present);
   dio_put_bool8_raw(dout, quiet);
-}
-
-/**
-  Create a new address of the location of a field inside a packet.
- */
-struct plocation *plocation_field_new(char *name)
-{
-  auto *out = new plocation;
-
-  out->kind = PADR_FIELD;
-  out->name = name;
-  out->sub_location = nullptr;
-
-  return out;
-}
-
-/**
-  Create a new address of the location of an array element inside a packet.
- */
-struct plocation *plocation_elem_new(int number)
-{
-  auto *out = new plocation;
-
-  out->kind = PADR_ELEMENT;
-  out->number = number;
-  out->sub_location = nullptr;
-
-  return out;
-}
-
-/**
-   Give textual description of the location. This might return address of
-   a static buffer next call reuses, so don't expect result to be valid
-   over another call to this.
- */
-const char *plocation_name(const struct plocation *loc)
-{
-  static char locname[10];
-
-  if (loc == nullptr) {
-    return "No location";
-  }
-
-  switch (loc->kind) {
-  case PADR_FIELD:
-    return loc->name;
-  case PADR_ELEMENT:
-    fc_snprintf(locname, sizeof(locname), "%d", loc->number);
-    return locname;
-  }
-
-  return "Illegal location";
 }

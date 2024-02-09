@@ -14,8 +14,10 @@
 
 // Qt
 #include <QLoggingCategory>
+#include <QString>
+#include <QtGlobal>
 
-#include "fcintl.h"
+#include <stdlib.h>
 
 constexpr auto LOG_FATAL = QtFatalMsg;
 constexpr auto LOG_ERROR = QtCriticalMsg;
@@ -63,14 +65,6 @@ const QString &log_get_level();
   {                                                                         \
   }
 #endif
-
-#ifdef FREECIV_TESTMATIC
-#define log_testmatic(message, ...) qCritical(message, ##__VA_ARGS__)
-#else
-#define log_testmatic(message, ...) ((void) 0)
-#endif
-
-#define log_testmatic_alt(lvl, ...) log_testmatic(__VA_ARGS__)
 
 // Used by game debug command
 #define log_test qInfo

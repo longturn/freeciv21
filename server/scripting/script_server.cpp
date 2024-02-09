@@ -15,7 +15,6 @@
 /* dependencies/lua */
 extern "C" {
 #include "lua.h"
-#include "lualib.h"
 
 /* dependencies/tolua */
 #include "tolua.h"
@@ -23,6 +22,7 @@ extern "C" {
 // utility
 #include "log.h"
 #include "registry.h"
+#include "registry_ini.h"
 
 /* common/scriptcore */
 #include "api_game_specenum.h"

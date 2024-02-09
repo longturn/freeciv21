@@ -30,7 +30,8 @@
 #include "fc_types.h"
 
 // Forward declarations
-class QTcpSocket;
+class QIODevice;
+class QString;
 
 struct conn_pattern_list;
 struct genhash;
@@ -126,7 +127,7 @@ struct packet_header {
 ***********************************************************/
 struct connection {
   int id; /* used for server/client communication */
-  QTcpSocket *sock = nullptr;
+  QIODevice *sock = nullptr;
   bool used;
   bool established; // have negotiated initial packets
   struct packet_header packet_header;
@@ -259,9 +260,9 @@ struct connection {
 
 typedef void (*conn_close_fn_t)(struct connection *pconn);
 void connections_set_close_callback(conn_close_fn_t func);
-void connection_close(struct connection *pconn, const char *reason);
+void connection_close(struct connection *pconn, const QString &reason);
 
-int read_socket_data(QTcpSocket *sock, struct socket_packet_buffer *buffer);
+int read_socket_data(QIODevice *sock, struct socket_packet_buffer *buffer);
 void flush_connection_send_buffer_all(struct connection *pc);
 bool connection_send_data(struct connection *pconn,
                           const unsigned char *data, int len);

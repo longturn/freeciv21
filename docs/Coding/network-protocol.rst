@@ -1,7 +1,7 @@
-..  SPDX-License-Identifier: GPL-3.0-or-later
-..  SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
-..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
-..  SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
+.. SPDX-License-Identifier: GPL-3.0-or-later
+.. SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+.. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
 Network Protocol
 ****************
@@ -161,9 +161,9 @@ exists the unchanged fields will be assumed to be zero.
 
 For a ``bool`` field, another optimization called ``bool-header-folding`` is applied. Instead of sending an
 indicator in the bitvector if the given ``bool`` value has changed, and so using 1 byte for the real value,
-the actual value of the ``bool`` is transfered in the bitvector bit of this ``bool`` field.
+the actual value of the ``bool`` is transferred in the bitvector bit of this ``bool`` field.
 
-Another optimization called ``array-diff`` is used to reduce the amount of elements transfered if an array is
+Another optimization called ``array-diff`` is used to reduce the amount of elements transferred if an array is
 changed. This is independent of the ``delta-header`` bit, i.e. it will only be used if the array has changed
 its value and the bit indicates this. Instead of transferring the whole array only a list of ``index`` and
 ``new value of this index`` pairs are transferred. The ``index`` is 8 bit and the end of this pair list is
@@ -185,7 +185,7 @@ Compression
 
 To further reduce the network traffic between the client and the server, the (delta) packets are compressed
 using the DEFLATE compression algorithm. To get better compression results, multiple packets are grouped
-together and compressed into a chunk. This chunk is then transfered as a normal packet. A chunk packet starts
+together and compressed into a chunk. This chunk is then transferred as a normal packet. A chunk packet starts
 with the 2 byte ``length`` field, which every packet has. A chunk packet has no type. A chunk packet is
 identified by having a too large ``length`` field. If the length of the packet is over ``COMPRESSION_BORDER``,
 it is a chunk packet. It will be uncompressed at the receiving side and re-fed into the receiving queue.
@@ -285,5 +285,5 @@ will find the set of used capabilities for a given packet. Let us say there are 
 Each of these combinations is called a variant. If ``n`` is the number of capabilities used by the packet the
 number of variants is :math:`2^n`.
 
-For each of these variants a seperate send and receive function will be generated. The variant for a packet and
+For each of these variants a separate send and receive function will be generated. The variant for a packet and
 a connection is calculated once and then saved in the connection struct.

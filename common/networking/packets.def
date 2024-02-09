@@ -204,8 +204,6 @@ type STRING             = string(char)
 # used in non vanilla generate_packets.py packet generators.
 type STRVEC             = STRING
 type WORKLIST           = worklist(struct worklist)
-# string that is URI encoded in the JSON protocol
-type ESTRING            = estring(char)
 type UNIT_ORDER         = unit_order(struct unit_order)
 type CM_PARAMETER       = cm_parameter(struct cm_parameter)
 
@@ -657,7 +655,7 @@ PACKET_EARLY_CHAT_MSG = 28; sc, lsend
 end
 
 PACKET_CHAT_MSG_REQ = 26; cs, handle-per-conn, dsend
-  ESTRING message[MAX_LEN_MSG];
+  STRING message[MAX_LEN_MSG];
 end
 
 # Used in initial protocol.
@@ -667,7 +665,8 @@ end
 
 PACKET_SERVER_INFO = 29; sc, dsend
   STRING version_label[48];
-  UINT32 major_version, minor_version, patch_version, emerg_version;
+  UINT32 major_version, minor_version, patch_version;
+  UINT32 _obsolete;  # Since 3.1
 end
 
 /************** City packets **********************/
@@ -747,7 +746,7 @@ PACKET_CITY_INFO = 31; sc, lsend, is-game-info, force, cancel(PACKET_CITY_SHORT_
 
   BV_IMPRS improvements;
   BV_CITY_OPTIONS city_options;
-  ESTRING name[MAX_LEN_CITYNAME];
+  STRING name[MAX_LEN_CITYNAME];
 
   UINT16 rally_point_length;
   BOOL rally_point_persistent;
@@ -775,7 +774,7 @@ PACKET_CITY_SHORT_INFO = 32; sc, lsend, is-game-info, cancel(PACKET_CITY_INFO)
   SINT8 city_image;
 
   BV_IMPRS improvements;
-  ESTRING name[MAX_LEN_CITYNAME];
+  STRING name[MAX_LEN_CITYNAME];
 end
 
 PACKET_TRADEROUTE_INFO = 249; sc, lsend, handle-via-packet
@@ -824,7 +823,7 @@ end
 
 PACKET_CITY_RENAME = 40; cs, dsend
   CITY city_id;
-  ESTRING name[MAX_LEN_CITYNAME];
+  STRING name[MAX_LEN_CITYNAME];
 end
 
 PACKET_CITY_OPTIONS_REQ = 41; cs, dsend
@@ -848,7 +847,7 @@ end
 
 PACKET_CITY_NAME_SUGGESTION_INFO = 44; sc, dsend, lsend
   UNIT unit_id;
-  ESTRING name[MAX_LEN_CITYNAME];
+  STRING name[MAX_LEN_CITYNAME];
 end
 
 PACKET_CITY_SABOTAGE_LIST = 45; sc, lsend
@@ -1124,7 +1123,7 @@ PACKET_UNIT_DO_ACTION = 84; cs, dsend
   UNIT actor_id;
   ACTION_TGT target_id;   # city_id, unit_id or tile_id
   ACTION_SUB_TGT sub_tgt_id;
-  ESTRING name[MAX_LEN_NAME];
+  STRING name[MAX_LEN_NAME];
   ACTION_ID action_type;
 end
 
@@ -1293,7 +1292,7 @@ end
 
 PACKET_CLIENT_INFO = 119; cs, handle-per-conn
   UINT8 _obsolete;
-  UINT32 emerg_version;
+  UINT32 _obsolete2;  # Since 3.1
   STRING distribution[MAX_LEN_NAME];
 end
 
@@ -2066,7 +2065,6 @@ end
 
 PACKET_RULESET_RESOURCE = 177; sc, lsend
   UINT8 id;
-
   UINT8 output[O_LAST];
 end
 
@@ -2244,7 +2242,7 @@ end
 
 PACKET_EDIT_CITY = 213; cs, handle-per-conn, handle-via-packet
   CITY id; key
-  ESTRING name[MAX_LEN_CITYNAME];
+  STRING name[MAX_LEN_CITYNAME];
   PLAYER owner;
   PLAYER original;
   UINT8 size;

@@ -20,15 +20,14 @@
 
 // utility
 #include "fcintl.h"
+#include "section_file.h"
+
 // common
-#include "chatline_common.h"
-#include "connectdlg_common.h"
 #include "rgbcolor.h"
+
 // client
-#include "client_main.h"
-#include "options.h"
-// gui-qt
 #include "fc_client.h"
+#include "options.h"
 
 static struct terrain *char2terrain(char ch);
 

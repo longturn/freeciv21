@@ -1,9 +1,9 @@
-..  SPDX-License-Identifier: GPL-3.0-or-later
-..  SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
-..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
-..  SPDX-FileCopyrightText: Pranav Sampathkumar <pranav.sampathkumar@gmail.com>
-..  SPDX-FileCopyrightText: NIKEA-SOFT
-..  SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
+.. SPDX-License-Identifier: GPL-3.0-or-later
+.. SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+.. SPDX-FileCopyrightText: Pranav Sampathkumar <pranav.sampathkumar@gmail.com>
+.. SPDX-FileCopyrightText: NIKEA-SOFT
+.. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
@@ -575,7 +575,7 @@ the sight range of one of your units or cities.
 
 We keep track of Fog of War by counting the number of units and cities of each client that can see the tile.
 This requires a number per player, per tile, so each :code:`player_tile` has a :code:`short[]`. Every time a
-unit, city, or somthing else can observe a tile 1 is added to its player's number at the tile, and when it
+unit, city, or something else can observe a tile 1 is added to its player's number at the tile, and when it
 cannot observe any more (killed/moved/pillaged) 1 is subtracted. In addition to the initialization/loading of
 a game this array is manipulated with the :code:`void unfog_area(struct player *pplayer, int x, int y, int
 len)` and :code:`void fog_area(struct player *pplayer, int x, int y, int len)` functions. The :code:`int len`
@@ -607,7 +607,7 @@ gets fogged the date is updated.
 There is a Shared Vision feature, meaning that if ``p1`` gives Shared Vision to ``p2``, every time a function
 like :code:`show_area()`, :code:`fog_area()`, :code:`unfog_area()`, or
 :code:`give_tile_info_from_player_to_player()` is called on ``p1``, ``p2`` also gets the information. Note
-that if ``p2`` gives Shared Vision to ``p3``, ``p3`` also gets the informtion for ``p1``. This is controlled
+that if ``p2`` gives Shared Vision to ``p3``, ``p3`` also gets the information for ``p1``. This is controlled
 by ``p1's`` really_gives_vision bitvector, where the dependencies will be kept.
 
 National Borders

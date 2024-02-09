@@ -1,5 +1,5 @@
-..  SPDX-License-Identifier: GPL-3.0-or-later
-..  SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+.. SPDX-License-Identifier: GPL-3.0-or-later
+.. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 freeciv21-client
 ****************
@@ -147,5 +147,5 @@ LC_ALL or LC_CTYPE
 USER
   Specifies the username of the current user.
 
-.. include:: freeciv21-server.rst
-  :start-line: 148
+.. .. include:: freeciv21-server.rst
+..   :start-line: 148

@@ -10,6 +10,8 @@
 **************************************************************************/
 #pragma once
 
+#include <QString>
+
 struct extra_type;
 struct tile;
 struct unit;

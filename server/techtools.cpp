@@ -788,24 +788,6 @@ pick_random_tech_to_lose(const struct research *presearch)
 }
 
 /**
-   Helper for research_tech_lost().
- */
-static inline struct government *
-pick_random_government(struct player *pplayer)
-{
-  struct government *picked = nullptr;
-  int gov_nb = 0;
-
-  for (auto &pgov : governments) {
-    if (can_change_to_government(pplayer, &pgov) && 0 == fc_rand(++gov_nb)) {
-      picked = &pgov;
-    }
-  };
-  fc_assert(nullptr != picked);
-  return picked;
-}
-
-/**
    Remove one tech from the research.
  */
 static void research_tech_lost(struct research *presearch, Tech_type_id tech)
@@ -850,15 +832,13 @@ static void research_tech_lost(struct research *presearch, Tech_type_id tech)
   {
     // Check government.
     if (!can_change_to_government(pplayer, government_of_player(pplayer))) {
-      /* Lost the technology for the government; switch to random
-       * available government. */
-      struct government *pgov = pick_random_government(pplayer);
+      // Lost the technology for the government; switch to Anarchy.
+      struct government *pgov = game.government_during_revolution;
 
       notify_player(
           pplayer, nullptr, E_NEW_GOVERNMENT, ftc_server,
           _("The required technology for our government '%s' "
-            "was lost. The citizens have started a "
-            "revolution into '%s'."),
+            "was lost. The country has fallen into %s."),
           government_name_translation(government_of_player(pplayer)),
           government_name_translation(pgov));
       handle_player_change_government(pplayer, government_number(pgov));
@@ -866,14 +846,12 @@ static void research_tech_lost(struct research *presearch, Tech_type_id tech)
     } else if (nullptr != pplayer->target_government
                && !can_change_to_government(pplayer,
                                             pplayer->target_government)) {
-      /* Lost the technology for the target government; use a random
-       * available government as new target government. */
-      struct government *pgov = pick_random_government(pplayer);
+      // Lost the technology for the target government; switch to Anarchy.
+      struct government *pgov = game.government_during_revolution;
 
       notify_player(pplayer, nullptr, E_NEW_GOVERNMENT, ftc_server,
                     _("The required technology for our new government "
-                      "'%s' was lost. The citizens chose '%s' as new "
-                      "target government."),
+                      "'%s' was lost. The country has fallen into %s."),
                     government_name_translation(pplayer->target_government),
                     government_name_translation(pgov));
       pplayer->target_government = pgov;

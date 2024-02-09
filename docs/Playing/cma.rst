@@ -22,7 +22,7 @@ mining, or are occupied by an enemy, the Governor becomes active. Second, it sup
 like production (shields), gold, science, or luxury goods. Third, it gives the player a fine-grained control
 over this, with the possibility of setting constraints for any kind of city output. The latter includes the
 constraint of celebration, which makes it very easy to let your cities grow, even in harder times. The forth,
-and probably most valuable thing in war times, is that is keeps your cities content, preventing them from
+and probably most valuable thing in war times, is that it keeps your cities content, preventing them from
 revolt.
 
 The legacy Freeciv Wiki also contains some other useful information related to the CMA:
@@ -125,7 +125,7 @@ The game allows the user to load and save preset parameters for the agent. Choos
 it will save any changes you made to you Governor presets as well.
 
 The format for the options file (usually :file:`~/.local/share/freeciv21/freeciv-client-rc-X.Y` , where X.Y
-is the version of freeciv21 in use) is as follows (in case you which to change these presets manually, i.e.
+is the version of Freeciv21 in use) is as follows (in case you which to change these presets manually, i.e.
 with a text editor).
 
 Under the heading :literal:`[cma]`, is a :literal:`number_of_presets`. This should be set to the number of

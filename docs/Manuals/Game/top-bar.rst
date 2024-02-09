@@ -194,7 +194,7 @@ The :guilabel:`Nations and Diplomacy View` has a few buttons at the upper left. 
 :guilabel:`Nations and Diplomacy View`.
 
 Let us talk about the buttons from right to left as :guilabel:`Meet` takes the longest to describe. If you
-have any active treaty negotiations ocurring, you can click on the :guilabel:`Active Diplomacy` button to
+have any active treaty negotiations occurring, you can click on the :guilabel:`Active Diplomacy` button to
 switch to that page. The :numref:`Nations and Diplomacy View Button` on the top function bar will change to a
 flag icon with a red dot to give you a visual reminder that there are open meetings to attend to.
 

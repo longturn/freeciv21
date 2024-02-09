@@ -12,8 +12,9 @@
 **************************************************************************/
 #pragma once
 
-// utility
-#include "shared.h"
+#include "support.h"
+
+#include <stdio.h>
 
 /*
   Technical details:

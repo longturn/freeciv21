@@ -20,7 +20,7 @@ class QTcpSocket;
 
 void options_extra_init();
 void set_rulesets(int num_rulesets, QStringList rulesets);
-void add_net_input(QTcpSocket *sock);
+void add_net_input(QIODevice *sock);
 void remove_net_input();
 void real_conn_list_dialog_update(void *unused);
 void sound_bell();

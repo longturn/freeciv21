@@ -144,9 +144,9 @@ def make_macros(file):
 
 
 /* Utility */
-#include "fcintl.h"     /* translation */
-#include "log.h"        /* fc_assert. */
-#include "support.h"    /* bool type. */
+#include "fcintl.h" // translation
+#include "log.h"    // fc_assert
+#include "shared.h" // ARRAY_SIZE
 
 #ifndef SPECENUM_NAME
 #error Must define a SPECENUM_NAME to use this header
