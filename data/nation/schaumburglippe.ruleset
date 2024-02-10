@@ -8,7 +8,7 @@ legend=_("Schaumburg-Lippe was created as a county in 1647, became a principalit
 leaders = {
  "name",                			"sex"
  "Adolf II zu Schaumburg-Lippe.",            	"Male"
- "Philipp I. zur Lippe-Alverdissen",            "Male"
+ "Philipp I zur Lippe-Alverdissen",            "Male"
  "Heinrich Lorenz",       			"Male"
  "Heinrich Drake",        			"Male"
 }
