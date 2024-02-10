@@ -31,6 +31,7 @@ artists = "
    Alsace		Patricia Fidi, Saebhiar (Wikimedia Commons) and J.M. Maalderink
    Amazigh		Mysid
    Amazon		Ann Barcomb
+   Ambazonia            Washiucho and SiBr4 (Wikimedia Commons)
    Andorra		Patricia Fidi
    Angola		SKopp (Wikimedia Commons)
    Animals              Jacob Nevins
@@ -309,6 +310,7 @@ artists = "
    Lithuania		Christian Schaller
    Lombardy		Flanker (Wikimedia Commons)
    Lorraine		J.M. Maalderink
+   Louisiana            Fry1989 (Wikimedia Commons)
    Luhansk              Revolver 45 (Wikimedia Commons)
    Luna			Daniel Markstedt
    Lusatia		J.M. Maalderink
@@ -383,6 +385,7 @@ artists = "
    Niger		J.M. Maalderink
    Nigeria		Brett Roper
    Normandy		Syryatsu
+   Northern Ireland     Sangjinhwa (Wikimedia Commons)
    North Korea		Zachary Harden
    Northumbria		J.M. Maalderink
    Norway		Christian Schaller
@@ -614,6 +617,7 @@ sprites =
 		"f.alsace", "tilesets/flags/alsace"
 		"f.amazigh", "tilesets/flags/amazigh"
 		"f.amazon", "tilesets/flags/amazon"
+		"f.ambazonia", "tilesets/flags/ambazonia"
 		"f.andorra", "tilesets/flags/andorra"
 		"f.angola", "tilesets/flags/angola"
 		"f.animals", "tilesets/flags/animals"
@@ -893,6 +897,7 @@ sprites =
 		"f.lithuania", "tilesets/flags/lithuania"
 		"f.lombardy", "tilesets/flags/lombardy"
 		"f.lorraine", "tilesets/flags/lorraine"
+		"f.louisiana", "tilesets/flags/louisiana"
 		"f.luhansk", "tilesets/flags/luhansk"
 		"f.luna", "tilesets/flags/luna"
 		"f.lusatia", "tilesets/flags/lusatia"
@@ -967,6 +972,7 @@ sprites =
 		"f.niger", "tilesets/flags/niger"
 		"f.nigeria", "tilesets/flags/nigeria"
 		"f.normandy", "tilesets/flags/normandy"
+		"f.northernireland", "tilesets/flags/northernireland"
 		"f.north_korea", "tilesets/flags/north_korea"
 		"f.northumbria", "tilesets/flags/northumbria"
 		"f.norway", "tilesets/flags/norway"

@@ -22,6 +22,7 @@ install(
   alsatian.ruleset
   amazigh.ruleset
   amazonian.ruleset
+  ambazonian.ruleset
   american.ruleset
   andorran.ruleset
   angolan.ruleset
@@ -301,6 +302,7 @@ install(
   lithuanian.ruleset
   lojbanistani.ruleset
   lorrain.ruleset
+  louisianan.ruleset
   luhansk.ruleset
   luwian.ruleset
   luxembourgish.ruleset
@@ -368,6 +370,7 @@ install(
   nigerien.ruleset
   nimiipuu.ruleset
   norman.ruleset
+  northernirish.ruleset
   northkorean.ruleset
   northumbrian.ruleset
   norwegian.ruleset

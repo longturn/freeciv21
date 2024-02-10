@@ -3,7 +3,7 @@
 name=_("Rhodesia")
 plural=_("?plural:Rhodesians")
 groups= "African", "Modern"
-legend=_("Rhodesia, was an unrecognised state located in southern\
+legend=_("Rhodesia was an unrecognised state located in southern\
  Africa during the Cold War. From 1965 to 1979, it comprised the\
  region now known as Zimbabwe. The country was considered a de facto\
  successor state to the former British colony of Southern Rhodesia.\

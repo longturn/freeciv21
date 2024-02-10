@@ -20,6 +20,7 @@ data/nation/algerian.ruleset
 data/nation/alsatian.ruleset
 data/nation/amazigh.ruleset
 data/nation/amazonian.ruleset
+data/nation/ambazonian.ruleset
 data/nation/andorran.ruleset
 data/nation/angolan.ruleset
 data/nation/anhaltian.ruleset
@@ -265,6 +266,7 @@ data/nation/lippe.ruleset
 data/nation/lithuanian.ruleset
 data/nation/lojbanistani.ruleset
 data/nation/lorrain.ruleset
+data/nation/louisianan.ruleset
 data/nation/luhansk.ruleset
 data/nation/luwian.ruleset
 data/nation/luxembourgish.ruleset
@@ -329,6 +331,7 @@ data/nation/nigerian.ruleset
 data/nation/nigerien.ruleset
 data/nation/nimiipuu.ruleset
 data/nation/norman.ruleset
+data/nation/northernirish.ruleset
 data/nation/northkorean.ruleset
 data/nation/northumbrian.ruleset
 data/nation/norwegian.ruleset
