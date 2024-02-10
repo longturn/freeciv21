@@ -5,13 +5,15 @@ plural=_("?plural:Hesse-Darmstadter")
 groups="European", "Early Modern"
 legend=_("The Grand Duchy of Hesse existed from 1806 till 1918.\
  It emerged in 1806 from the Landgraviate of Hesse-Darmstadt.\
- When the monarchy was overthrown in 1918 it became the People's State of Hesse.")
+ When the monarchy was overthrown in 1918 it became the People's\
+ State of Hesse.")
 
 leaders = {
  "name",                                 "sex"
- "Georg I von Hessen-Darmstadt"          "Male"
+ "Georg I von Hessen-Darmstadt",         "Male"
+ "Magdalena zur Lippe",                  "Female"
  "Ernst Ludwig",           	         "Male"
- "Ludwig I.",               	         "Male"
+ "Ludwig I",               	         "Male"
  "Carl von Ewald",     		         "Male"
  "Heinrich von Gagern",     	         "Male"
  "Carl Grolman",           	         "Male"
@@ -40,24 +42,24 @@ civilwar_nations="hanoverian", "badian", "palatinate", "rhenish", "lippian", "rh
 
 cities =
  "Darmstadt",
-  "Offenbach", 
-  "Mainz",
-  "Worms",
-  "Giessen",
-  "Bensheim", 
-  "Vilbel", 
-  "Friedberg", 
-  "Alsfeld", 
-  "Biedenkopf",
-  "Battenberg",
-  "Vöhl", 
-  "Wimpfen",
-  "Lauterbach", 
-  "Schlitz", 
-  "Büdingen", 
-  "Dieburg", 
-  "Erbach",
-  "Helmhof",
-  "Heppenheim",
-  "Neckarsteinach",
-  "Schotten"
+ "Offenbach", 
+ "Mainz",
+ "Worms",
+ "Giessen",
+ "Bensheim", 
+ "Vilbel", 
+ "Friedberg", 
+ "Alsfeld", 
+ "Biedenkopf",
+ "Battenberg",
+ "Vöhl", 
+ "Wimpfen",
+ "Lauterbach", 
+ "Schlitz", 
+ "Büdingen", 
+ "Dieburg", 
+ "Erbach",
+ "Helmhof",
+ "Heppenheim",
+ "Neckarsteinach",
+ "Schotten"
