@@ -17,7 +17,6 @@
 #include "fc_types.h"
 // client
 #include "dialogs_g.h"
-// gui-qt
 #include "hudwidget.h"
 #include "widgets/decorations.h"
 

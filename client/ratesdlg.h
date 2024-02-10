@@ -12,7 +12,7 @@
 // Qt
 #include <QDialog>
 #include <QList>
-// gui-qt
+// client
 #include "dialogs.h"
 #include "widgets/multi_slider.h"
 

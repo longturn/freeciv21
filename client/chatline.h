@@ -16,7 +16,7 @@
 #include <QEvent>
 #include <QLineEdit>
 #include <QTextBrowser>
-// gui-qt
+// client
 #include "listener.h"
 #include "widgets/decorations.h"
 

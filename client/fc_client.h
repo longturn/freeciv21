@@ -17,12 +17,11 @@
 // common
 #include "packets.h"
 // client
+#include "chatline.h"
+#include "menu.h"
 #include "pages_g.h"
 #include "servers.h"
 #include "tileset/tilespec.h"
-// gui-qt
-#include "chatline.h"
-#include "menu.h"
 #include "tradecalculation.h"
 
 class QApplication;

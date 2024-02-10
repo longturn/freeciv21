@@ -71,6 +71,7 @@
 #include "control.h" // for fill_xxx
 #include "editor.h"
 #include "goto.h"
+#include "helpdlg.h"
 #include "layer_background.h"
 #include "layer_base_flags.h"
 #include "layer_darkness.h"
@@ -82,9 +83,6 @@
 #include "tilespec.h"
 #include "utils/colorizer.h"
 #include "views/view_map.h"
-
-// gui-qt
-#include "helpdlg.h"
 
 #define TILESPEC_CAPSTR                                                     \
   "+Freeciv-tilespec-Devel-2019-Jul-03 duplicates_ok precise-hp-bars "      \

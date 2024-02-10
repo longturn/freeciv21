@@ -152,7 +152,7 @@ if (FREECIV_ENABLE_CLIENT)
     COMPONENT freeciv21
     FILES_MATCHING PATTERN *.png PATTERN *.spec)
   install(
-    DIRECTORY themes/gui-qt
+    DIRECTORY themes
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/themes"
     COMPONENT freeciv21
     FILES_MATCHING PATTERN theme.conf

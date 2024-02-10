@@ -10,7 +10,7 @@
 **************************************************************************/
 #pragma once
 
-// gui-qt
+// client
 #include "canvas.h"
 
 #include <QRect>

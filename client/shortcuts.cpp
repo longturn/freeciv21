@@ -25,10 +25,9 @@
 #include <qshortcut.h>
 #include <qvariant.h>
 // client
-#include "options.h"
-// gui-qt
 #include "fc_client.h"
 #include "hudwidget.h"
+#include "options.h"
 #include "page_game.h"
 #include "views/view_map.h"
 

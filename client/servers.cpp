@@ -38,10 +38,8 @@
 #include "version.h"
 
 // client
-#include "client_main.h"
-
-// gui-qt
 #include "chatline.h"
+#include "client_main.h"
 
 struct server_scan {
   enum server_scan_type type;

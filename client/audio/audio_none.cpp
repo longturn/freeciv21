@@ -9,14 +9,10 @@
                   see https://www.gnu.org/licenses/.
  */
 
-#include "support.h"
-
-#include "audio.h"
-
 #include "audio_none.h"
-
-// gui-qt
+#include "audio.h"
 #include "qtg_cxxside.h"
+#include "support.h"
 
 /**
    Clean up

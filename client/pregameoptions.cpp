@@ -22,10 +22,9 @@
 #include "chatline_common.h"
 #include "colors_common.h"
 #include "connectdlg_common.h"
-// clienchatlint
+// client
 #include "client_main.h"
 #include "climisc.h"
-// gui-qt
 #include "dialogs.h"
 #include "fc_client.h"
 #include "icons.h"

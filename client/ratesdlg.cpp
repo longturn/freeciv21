@@ -24,11 +24,10 @@
 #include "packets.h"
 // client
 #include "client_main.h"
-#include "tileset/tilespec.h"
-// gui-qt
 #include "dialogs.h"
 #include "fc_client.h"
 #include "icons.h"
+#include "tileset/tilespec.h"
 #include "widgets/multi_slider.h"
 
 static int scale_to_mult(const struct multiplier *pmul, int scale);

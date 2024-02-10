@@ -41,8 +41,6 @@
 #include "clinet.h" // connect_to_server()
 #include "connectdlg_common.h"
 #include "packhand_gen.h"
-
-// gui-qt
 #include "qtg_cxxside.h"
 
 #define WAIT_BETWEEN_TRIES 100000 // usecs
