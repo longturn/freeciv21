@@ -20,12 +20,11 @@
 // client
 #include "client_main.h"
 #include "colors_common.h"
-#include "spaceshipdlg_g.h"
-// gui-qt
 #include "fc_client.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
 #include "spaceshipdlg.h"
+#include "spaceshipdlg_g.h"
 
 class QGridLayout;
 

@@ -15,11 +15,10 @@
 
 #include "views/view_economics.h"
 // client
-#include "tileset/sprite.h"
-// gui-qt
 #include "fc_client.h"
 #include "hudwidget.h"
 #include "page_game.h"
+#include "tileset/sprite.h"
 #include "top_bar.h"
 
 /**

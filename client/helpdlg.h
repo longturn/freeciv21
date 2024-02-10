@@ -15,9 +15,8 @@
 // common
 #include "extras.h"
 // client
-#include "helpdata.h"
-// gui-qt
 #include "dialogs.h"
+#include "helpdata.h"
 
 class QCloseEvent;
 class QFrame;

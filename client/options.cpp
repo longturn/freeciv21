@@ -55,18 +55,15 @@
 #include "governor.h"
 #include "mapctrl_common.h"
 #include "music.h"
+#include "options.h"
 #include "overview_common.h"
 #include "packhand_gen.h"
+#include "qtg_cxxside.h"
 #include "themes_common.h"
 #include "tileset/tilespec.h"
 #include "views/view_cities_data.h"
 #include "views/view_map_common.h"
 #include "views/view_nations_data.h"
-
-#include "options.h"
-
-// gui-qt
-#include "qtg_cxxside.h"
 
 typedef QHash<QString, QString> optionsHash;
 typedef QHash<QString, intptr_t> dialOptionsHash;

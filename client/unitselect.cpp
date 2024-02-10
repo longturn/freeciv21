@@ -20,15 +20,14 @@
 // common
 #include "movement.h"
 // client
+#include "canvas.h"
 #include "client_main.h"
 #include "control.h"
-#include "tileset/tilespec.h"
-#include "views/view_map_common.h"
-// gui-qt
-#include "canvas.h"
 #include "fonts.h"
 #include "page_game.h"
+#include "tileset/tilespec.h"
 #include "views/view_map.h"
+#include "views/view_map_common.h"
 
 /**
    Contructor for units_select

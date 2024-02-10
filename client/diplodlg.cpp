@@ -34,7 +34,6 @@
 // client
 #include "client_main.h"
 #include "colors_common.h"
-// gui-qt
 #include "diplodlg_g.h"
 #include "fc_client.h"
 #include "icons.h"

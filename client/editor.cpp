@@ -30,14 +30,10 @@
 #include "control.h"
 #include "editor.h"
 #include "mapctrl_common.h"
+#include "mapview_g.h"
+#include "qtg_cxxside.h"
 #include "tileset/tilespec.h"
 #include "views/view_map_geometry.h"
-
-/* client/include */
-#include "mapview_g.h"
-
-// gui-qt
-#include "qtg_cxxside.h"
 
 enum selection_modes {
   SELECTION_MODE_NEW = 0,

@@ -57,12 +57,10 @@
 #include "options.h"
 #include "packhand.h"
 #include "page_game.h"
+#include "qtg_cxxside.h"
 #include "tileset/tilespec.h"
 #include "views/view_map.h"
 #include "views/view_map_common.h"
-
-// gui-qt
-#include "qtg_cxxside.h"
 
 extern void flush_dirty_overview();
 /**

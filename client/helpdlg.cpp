@@ -31,13 +31,12 @@
 #include "canvas.h"
 #include "client_main.h"
 #include "climisc.h"
-#include "views/view_map_common.h"
-// gui-qt
 #include "fc_client.h"
 #include "fonts.h"
 #include "helpdlg.h"
 #include "tileset/sprite.h"
 #include "tileset/tilespec.h"
+#include "views/view_map_common.h"
 
 #define MAX_HELP_TEXT_SIZE 8192
 #define REQ_LABEL_NEVER _("(Never)")
