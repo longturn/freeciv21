@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-22.04
     if: github.event_name == 'release'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - # Make sure there are no unstaged changes
@@ -30,7 +30,7 @@ jobs:
           echo Target branch is $branch
           echo branch=$branch >> $GITHUB_OUTPUT
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4.0.4
+        uses: peter-evans/create-pull-request@v6
         with:
           base: ${{ steps.branch.outputs.branch }}
           commit-message: "Release update of AutoRevision.txt"
@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-22.04
     if: github.event_name == 'release'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - run: git rev-parse --short=5 HEAD > cmake/AutoRevision.txt
@@ -80,7 +80,7 @@ jobs:
         shell: msys2 {0}
     if: github.event_name == 'release' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: msys2/setup-msys2@v2
