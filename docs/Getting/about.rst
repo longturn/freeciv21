@@ -13,7 +13,7 @@ About Freeciv21
 ***************
 
 .. _Freeciv21 Overview:
-.. figure:: ../../dist/freeciv21-screenshot-2048x1112.png
+.. figure:: ../../dist/freeciv21-screenshot.png
   :width: 800px
   :align: center
   :alt: Freeciv21 Overview

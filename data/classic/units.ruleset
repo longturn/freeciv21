@@ -410,8 +410,8 @@ flags         = "Unreachable", "DoesntOccupyTile"
 ; "Explorer"              = unit to use for exploring
 ; "Hut"                   = can be found in a hut
 ; "HutTech"               = can be found in a hut, but its techs required
-; "Partisan"              = can be created as a partisan (only one unit can have this
-;                           flag), see end of this file for its tech requirements option
+; "Partisan"              = can be created as a partisan if the
+;                           Inspire_Partisans effect is enabled
 ; "DefendOk"              = AI hint: ok for defending with
 ; "DefendGood"            = AI hint: good for defending with
 ; "Ferryboat"             = AI hint: useful for ferrying

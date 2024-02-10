@@ -2,6 +2,7 @@
 .. SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
+.. SPDX-FileCopyrightText: Tobias Rehbein <tobias.rehbein@web.de>
 
 
 Compiling Freeciv21
@@ -397,6 +398,8 @@ them directives and they start with :literal:`-D`. The defaults are marked with 
                                               (recommended)
   FREECIV_ENABLE_RULEDIT={ON/OFF}             Enables the Ruleset Editor
   FREECIV_ENABLE_RULEUP={ON/OFF}              Enables the Ruleset upgrade tool
+  FREECIV_ENABLE_MANPAGES={ON/OFF}            Enables the generation of manpages. This is primarily
+                                              relevant for Unix-like operating systems
   FREECIV_USE_VCPKG={ON/:strong:`OFF`}        Enables the use of VCPKG
   FREECIV_DOWNLOAD_FONTS{:strong:`ON`/OFF}    Enables the downloading of Libertinus Fonts
   CMAKE_BUILD_TYPE={:strong:`Release`/Debug}  Changes the Build Type. Most people will pick Release

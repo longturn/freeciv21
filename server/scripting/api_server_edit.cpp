@@ -9,6 +9,8 @@
  */
 
 // utility
+#include "city.h"
+#include "cityturn.h"
 #include "fcintl.h"
 #include "rand.h"
 
@@ -277,6 +279,20 @@ void api_edit_create_city(lua_State *L, Player *pplayer, Tile *ptile,
 
   // TODO: Allow initial citizen to be of nationality other than owner
   create_city(pplayer, ptile, name, pplayer);
+}
+
+/**
+ * Resizes a city.
+ */
+void api_edit_resize_city(lua_State *L, City *pcity, int size,
+                          const char *reason)
+{
+  LUASCRIPT_CHECK_STATE(L);
+  LUASCRIPT_CHECK_ARG_NIL(L, pcity, 2, City);
+
+  LUASCRIPT_CHECK(L, size > 0 && size < MAX_CITY_SIZE, "Invalid city size");
+
+  city_change_size(pcity, size, city_owner(pcity), reason);
 }
 
 /**
