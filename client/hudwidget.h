@@ -19,7 +19,6 @@
 #include <QTableWidget>
 // utility
 #include "fc_types.h"
-// gui-qt
 #include "shortcuts.h"
 
 class QComboBox;

@@ -23,14 +23,12 @@
 
 // client
 #include "client_main.h"
+#include "messagewin.h"
 #include "messagewin_common.h"
 #include "options.h"
 #include "page_game.h"
 #include "update_queue.h"
 #include "views/view_map.h"
-
-// gui-qt
-#include "messagewin.h"
 
 static struct message **messages = nullptr;
 static int messages_total = 0;

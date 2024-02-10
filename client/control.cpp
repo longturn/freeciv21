@@ -37,23 +37,20 @@
 
 // client
 #include "audio/audio.h"
+#include "chatline.h"
 #include "client_main.h"
 #include "climap.h"
 #include "climisc.h"
+#include "control.h"
 #include "editor.h"
 #include "goto.h"
 #include "governor.h"
 #include "options.h"
 #include "overview_common.h"
-#include "tileset/tilespec.h"
-#include "update_queue.h"
-
-#include "control.h"
-
-// gui-qt
-#include "chatline.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
+#include "tileset/tilespec.h"
+#include "update_queue.h"
 #include "views/view_map.h"
 
 struct client_disband_unit_data {

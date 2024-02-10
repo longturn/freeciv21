@@ -15,8 +15,9 @@
 // Qt
 #include <QFrame>
 #include <QLabel>
-// gui-qt is The One
+// client
 #include "widgets/decorations.h"
+
 class QImage;
 class QMouseEvent;
 class QMoveEvent;

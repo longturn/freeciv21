@@ -16,10 +16,9 @@
 // common
 #include "nation.h"
 // client
-#include "tileset/sprite.h"
-// gui-qt
 #include "fc_client.h"
 #include "page_game.h"
+#include "tileset/sprite.h"
 
 /**
    Constructor for endgame report

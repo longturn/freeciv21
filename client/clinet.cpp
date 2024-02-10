@@ -40,8 +40,6 @@
 #include "governor.h"
 #include "options.h"
 #include "packhand.h"
-
-// gui-qt
 #include "qtg_cxxside.h"
 
 // In autoconnect mode, try to connect to once a second

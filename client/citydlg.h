@@ -24,7 +24,7 @@
 #include <QToolTip>
 #include <QtMath>
 #include <qobjectdefs.h>
-// gui-qt
+// client
 #include "dialogs.h"
 
 #define CITIZENS_PER_ROW 20

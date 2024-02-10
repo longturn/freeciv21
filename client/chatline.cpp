@@ -26,6 +26,7 @@
 // common
 #include "chat.h"
 #include "chatline_common.h"
+
 // client
 #include "audio/audio.h"
 #include "client_main.h"
@@ -33,17 +34,16 @@
 #include "colors_common.h"
 #include "connectdlg_common.h"
 #include "control.h"
-#include "featured_text.h"
-#include "game.h"
-#include "views/view_map_common.h"
-// gui-qt
 #include "dialogs.h"
 #include "fc_client.h"
+#include "featured_text.h"
 #include "fonts.h"
+#include "game.h"
 #include "icons.h"
 #include "messagewin.h"
 #include "page_game.h"
 #include "views/view_map.h"
+#include "views/view_map_common.h"
 
 static bool is_plain_public_message(const QString &s);
 

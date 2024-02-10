@@ -22,13 +22,10 @@
 #include "featured_text.h"
 #include "packets.h"
 
-// gui-qt
-#include "chatline.h"
-
 // client
-#include "client_main.h"
-
+#include "chatline.h"
 #include "chatline_common.h"
+#include "client_main.h"
 
 Q_GLOBAL_STATIC(QMutex, ow_mutex);
 

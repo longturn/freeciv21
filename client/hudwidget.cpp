@@ -29,19 +29,18 @@
 #include "unitlist.h"
 // client
 #include "calendar.h"
-#include "client_main.h"
-#include "goto.h"
-#include "text.h"
-#include "views/view_map_common.h"
-// gui-qt
 #include "canvas.h"
+#include "client_main.h"
 #include "fc_client.h"
 #include "fonts.h"
+#include "goto.h"
 #include "icons.h"
 #include "page_game.h"
+#include "text.h"
 #include "tileset/sprite.h"
 #include "top_bar.h"
 #include "views/view_map.h"
+#include "views/view_map_common.h"
 #include "widgets/decorations.h"
 
 static QString popup_terrain_info(struct tile *ptile);

@@ -17,11 +17,10 @@
 // common
 #include "featured_text.h"
 #include "luaconsole_g.h"
-/* client/luascript */
-#include "script_client.h"
-// gui-qt
+// client
 #include "chatline.h"
 #include "fc_client.h"
+#include "script_client.h"
 
 QString qlua_filename;
 

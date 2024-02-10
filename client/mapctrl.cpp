@@ -17,23 +17,22 @@
 #include "map.h"
 // client
 #include "chatline_common.h"
+#include "citydlg.h"
 #include "citydlg_common.h"
 #include "client_main.h"
+#include "fc_client.h"
 #include "mapctrl.h"
 #include "mapctrl_common.h"
+#include "messagewin.h"
+#include "page_game.h"
+#include "shortcuts.h"
 #include "themes_common.h"
 #include "tile.h"
 #include "tileset/tilespec.h"
 #include "unit.h"
-#include "views/view_map_common.h"
-// gui-qt
-#include "citydlg.h"
-#include "fc_client.h"
-#include "messagewin.h"
-#include "page_game.h"
-#include "shortcuts.h"
 #include "unitselect.h"
 #include "views/view_map.h"
+#include "views/view_map_common.h"
 
 extern void qload_lua_script();
 extern void qreload_lua_script();

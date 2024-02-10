@@ -24,12 +24,11 @@
 
 #include "decorations.h"
 // Qt
+#include "fc_client.h"
+#include "icons.h"
 #include <QMouseEvent>
 #include <QPainter>
 #include <qnamespace.h>
-// gui-qt
-#include "fc_client.h"
-#include "icons.h"
 
 /**
   Scale widget allowing scaling other widgets, shown in right top corner

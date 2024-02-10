@@ -26,9 +26,8 @@
 // client
 #include "cityrep_g.h"
 #include "client_main.h"
-#include "governor.h"
-// gui-qt
 #include "fc_client.h"
+#include "governor.h"
 #include "hudwidget.h"
 #include "icons.h"
 #include "page_game.h"

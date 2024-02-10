@@ -19,7 +19,7 @@
 #include <QTableWidget>
 // utility
 #include "fc_types.h"
-// gui-qt
+// client
 #include "dialogs.h"
 #include "shortcuts.h"
 

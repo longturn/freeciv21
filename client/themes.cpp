@@ -201,7 +201,7 @@ QStringList get_gui_specific_themes_directories(int *count)
 
   *count = data_dirs.size();
   for (const auto &data_dir : data_dirs) {
-    directories.append(QStringLiteral("%1/themes/gui-qt").arg(data_dir));
+    directories.append(QStringLiteral("%1/themes").arg(data_dir));
   }
 
   return directories;

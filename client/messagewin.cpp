@@ -21,13 +21,11 @@
 
 // client
 #include "client_main.h"
-#include "messagewin_common.h"
-#include "update_queue.h"
-
-// gui-qt
 #include "fc_client.h"
+#include "messagewin_common.h"
 #include "page_game.h"
 #include "tileset/sprite.h"
+#include "update_queue.h"
 #include "views/view_map.h"
 
 /**

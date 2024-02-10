@@ -27,19 +27,18 @@
 #include "government.h"
 #include "research.h"
 // client
+#include "citydlg.h"
 #include "client_main.h"
 #include "climisc.h"
+#include "fc_client.h"
 #include "helpdlg.h"
+#include "page_game.h"
 #include "text.h"
 #include "tileset/sprite.h"
-#include "views/view_research_reqtree.h"
-// gui-qt
-#include "citydlg.h"
-#include "fc_client.h"
-#include "page_game.h"
 #include "tooltips.h"
 #include "top_bar.h"
 #include "views/view_research.h"
+#include "views/view_research_reqtree.h"
 
 extern QString split_text(const QString &text, bool cut);
 extern QString cut_helptext(const QString &text);

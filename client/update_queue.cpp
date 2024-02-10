@@ -33,16 +33,14 @@
 #include "repodlgs_g.h"
 
 // client
+#include "canvas.h"
 #include "client_main.h"
 #include "connectdlg_common.h"
+#include "qtg_cxxside.h"
 #include "tileset/tilespec.h"
 #include "update_queue.h"
 #include "views/view_nations_data.h"
 #include "views/view_units.h"
-
-// gui-qt
-#include "canvas.h"
-#include "qtg_cxxside.h"
 
 update_queue *update_queue::m_instance = nullptr;
 

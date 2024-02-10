@@ -21,9 +21,8 @@
 // client
 #include "client_main.h"
 #include "climisc.h"
-#include "movement.h"
-// gui-qt
 #include "fc_client.h"
+#include "movement.h"
 #include "tooltips.h"
 
 extern QString split_text(const QString &text, bool cut);

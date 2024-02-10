@@ -31,13 +31,11 @@
 // client
 #include "client_main.h"
 #include "climisc.h"
-#include "ratesdlg_g.h"
-
-// gui-qt
 #include "fc_client.h"
 #include "fonts.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
+#include "ratesdlg_g.h"
 #include "tileset/sprite.h"
 #include "top_bar.h"
 #include "views/view_economics.h"

@@ -160,7 +160,6 @@ struct client_options {
   };
   char mapimg_filename[512] = "mapimage filename";
 
-// gui-qt client specific options.
 #define FC_QT_DEFAULT_THEME_NAME "NightStalker"
   bool gui_qt_fullscreen = true;
   bool gui_qt_show_preview = true;

@@ -127,10 +127,10 @@ QIcon fcIcons::getIcon(const QString &id)
   QIcon icon;
 
   // Try custom icon from theme.
-  icon.addFile(
-      fileinfoname(get_data_dirs(),
-                   qUtf8Printable(QStringLiteral("themes/gui-qt/%1/%2.svg")
-                                      .arg(current_theme, id))));
+  icon.addFile(fileinfoname(
+      get_data_dirs(),
+      qUtf8Printable(
+          QStringLiteral("themes/%1/%2.svg").arg(current_theme, id))));
   if (!icon.isNull()) {
     return icon;
   }
@@ -138,24 +138,24 @@ QIcon fcIcons::getIcon(const QString &id)
   // Try SVG from icons dir.
   QString path = fileinfoname(
       get_data_dirs(),
-      qUtf8Printable(QStringLiteral("themes/gui-qt/icons/%1.svg").arg(id)));
+      qUtf8Printable(QStringLiteral("themes/icons/%1.svg").arg(id)));
   if (!path.isEmpty()) {
     // Special icon engine for theme colorization.
     return QIcon(new icon_engine(path));
   }
 
   // Fall back to PNG.
-  icon.addFile(
-      fileinfoname(get_data_dirs(),
-                   qUtf8Printable(QStringLiteral("themes/gui-qt/%1/%2.png")
-                                      .arg(current_theme, id))));
+  icon.addFile(fileinfoname(
+      get_data_dirs(),
+      qUtf8Printable(
+          QStringLiteral("themes/%1/%2.png").arg(current_theme, id))));
   if (!icon.isNull()) {
     return icon;
   }
 
   icon.addFile(fileinfoname(
       get_data_dirs(),
-      qUtf8Printable(QStringLiteral("themes/gui-qt/icons/%1.png").arg(id))));
+      qUtf8Printable(QStringLiteral("themes/icons/%1.png").arg(id))));
 
   return icon;
 }
@@ -174,7 +174,7 @@ QPixmap *fcIcons::getPixmap(const QString &id)
   if (QPixmapCache::find(id, pm)) {
     return pm;
   }
-  str = QStringLiteral("themes/gui-qt/");
+  str = QStringLiteral("themes/");
   png_bytes = QString(str + current_theme + "/" + id + ".png").toLocal8Bit();
   status = pm->load(fileinfoname(get_data_dirs(), png_bytes.data()));
 
@@ -196,7 +196,7 @@ QString fcIcons::getPath(const QString &id)
   QString str;
   QByteArray png_bytes;
 
-  str = QStringLiteral("themes/gui-qt/icons/");
+  str = QStringLiteral("themes/icons/");
   png_bytes = QString(str + id + ".png").toLocal8Bit();
 
   return fileinfoname(get_data_dirs(), png_bytes.data());

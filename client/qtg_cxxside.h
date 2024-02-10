@@ -12,9 +12,8 @@
 // common
 #include "fc_types.h"
 // client
-#include "tileset/tilespec.h"
-// gui-qt
 #include "pages_g.h"
+#include "tileset/tilespec.h"
 
 class QTcpSocket;
 

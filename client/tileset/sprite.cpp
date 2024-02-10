@@ -13,7 +13,7 @@
 #include <QPainter>
 // utility
 #include "log.h"
-// gui-qt
+// client
 #include "fc_client.h"
 #include "sprite.h"
 

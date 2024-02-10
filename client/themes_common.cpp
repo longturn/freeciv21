@@ -18,10 +18,8 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 
 // client
 #include "options.h"
-#include "themes_common.h"
-
-// gui-qt
 #include "qtg_cxxside.h"
+#include "themes_common.h"
 
 Q_GLOBAL_STATIC(QVector<QString>, themes_list)
 

@@ -15,11 +15,10 @@
 #include <QPainter>
 #include <QPushButton>
 // client
+#include "fc_client.h"
 #include "page_game.h"
 #include "page_pregame.h"
 #include "voteinfo.h"
-// gui-qt
-#include "fc_client.h"
 
 /**
    Constructor for pregamevote

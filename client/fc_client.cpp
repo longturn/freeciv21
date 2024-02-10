@@ -31,8 +31,6 @@
 #include "client_main.h"
 #include "clinet.h"
 #include "connectdlg_common.h"
-#include "update_queue.h"
-// gui-qt
 #include "fonts.h"
 #include "gui_main.h"
 #include "icons.h"
@@ -47,6 +45,7 @@
 #include "page_scenario.h"
 #include "tileset/sprite.h"
 #include "top_bar.h"
+#include "update_queue.h"
 #include "views/view_map.h"
 #include "voteinfo_bar.h"
 
@@ -138,7 +137,6 @@ fc_client::~fc_client()
 }
 
 /**
-   Main part of gui-qt.
    This is not called simply 'fc_client::main()', since SDL includes
    ould sometimes cause 'main' to be considered an macro that expands to
    'SDL_main'

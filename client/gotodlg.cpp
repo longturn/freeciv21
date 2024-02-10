@@ -24,14 +24,13 @@
 // client
 #include "client_main.h"
 #include "control.h"
+#include "fc_client.h"
 #include "goto.h"
+#include "page_game.h"
 #include "text.h"
+#include "tileset/sprite.h"
 #include "views/view_map.h"
 #include "views/view_map_common.h"
-// gui-qt
-#include "fc_client.h"
-#include "page_game.h"
-#include "tileset/sprite.h"
 
 /**
    Constructor for goto_dialog

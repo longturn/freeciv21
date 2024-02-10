@@ -33,24 +33,22 @@
 #include "game.h"
 
 // client
+#include "canvas.h"
 #include "citydlg_common.h"
 #include "client_main.h"
 #include "climisc.h"
 #include "control.h"
-#include "global_worklist.h"
-#include "governor.h"
-#include "mapctrl_common.h"
-#include "tileset/tilespec.h"
-#include "views/view_map_common.h"
-// gui-qt
-#include "canvas.h"
 #include "fc_client.h"
 #include "fonts.h"
+#include "global_worklist.h"
+#include "governor.h"
 #include "hudwidget.h"
 #include "icons.h"
+#include "mapctrl_common.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
 #include "text.h"
+#include "tileset/tilespec.h"
 #include "tooltips.h"
 #include "top_bar.h"
 #include "unitlist.h"
@@ -58,6 +56,7 @@
 #include "utils/unit_quick_menu.h"
 #include "views/view_cities.h" // hIcon
 #include "views/view_map.h"
+#include "views/view_map_common.h"
 #include "widgets/city/governor_widget.h"
 
 extern QString split_text(const QString &text, bool cut);
