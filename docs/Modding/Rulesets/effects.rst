@@ -814,9 +814,10 @@ Inspire_Partisans
     the player cannot build any, the first Partisan unit type is used. If the created partisans units have a
     non-zero ``pop_cost``, the city will lose citizens accordingly.
 
-    Note that this effect can create units that the player could normally not build (because the tech hasn't
-    been researched or the ``NoBuild`` flag is set. It is your responsibility to set the appropriate
-    requirements to avoid creating advanced units if a city is conquered in the early game.
+    .. note::
+        This effect can create units that the player could normally not build (because the tech hasn't
+        been researched or the ``NoBuild`` flag is set). It is your responsibility to set the appropriate
+        requirements to avoid creating advanced units if a city is conquered in the early game.
 
 .. _effect-happiness-to-gold:
 
