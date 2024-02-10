@@ -19,7 +19,7 @@ leaders = {
  "Wally Hickel",             "Male"   ; 2nd governor of the State of Alaska, only governor to be a member of the Alaskan Independece party
  "Mike Gravel",              "Male"   ; Senator from Alaska and presidental candidate
  "Sarah Palin",              "Female" ; 9th governor of the State of Alaska and vice presidental candidate
- "Mike Dunleavy",            "Male"   ; 12th and current governor of the state of Alaska
+ "Mike Dunleavy",            "Male"   ; 12th governor of the state of Alaska
 }
 
 ruler_titles = {
