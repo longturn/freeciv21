@@ -11,8 +11,9 @@ legend=_("The Donetsk People's Republic is an unrecognised republic of\
 leaders = {
  "name",                          "sex"
  "John James Hughes",             "Male"   ; (1814-1889) Founder of the city of Donetsk
+ "Konstantin Kosenko"             "Male"   ; (1885-1921) Second mayor of the city of Donetsk
  "Alexander Zakharchenko"         "Male"   ; (1976–2018) Head of the Donetsk People's Republic from 4 November 2014 – 31 August 2018 
- "Denis Pushilin",                "Male" 
+ "Denis Pushilin",                "Male"   
  "Elena Pushilina",               "Female" ; Denis Pushilin's wife
 }
 
@@ -33,7 +34,7 @@ init_buildings=""
 init_units=""
 
 conflicts_with= 
-civilwar_nations= "soviet", "russian", "ukrainian",
+civilwar_nations= "ukrainian", "soviet", "russian", 
 
 cities =
  "Donetsk",
@@ -88,4 +89,3 @@ cities =
  "Bilytske",
  "Zalizne",
  "Sviatohirsk"
-

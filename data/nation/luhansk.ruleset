@@ -11,9 +11,13 @@ legend=_("The Luhansk People's Republic, is an unrecognised republic\
 ; Legend from: https://en.wikipedia.org/wiki/Luhansk_People%27s_Republic
 leaders = {
  "name",                          "sex"
- "Charles Gascoigne",             "Male"   ; (1737-1806), British industrialist and founder of the city of Luhansk.
+ "Charles Gascoigne",             "Male"   ; (1737-1806), British industrialist and founder of the city of Luhansk
+ "Pyotr Bogynya",                 "Male"   ; (1898-1944), First Chairman of Executive Committee of Luhansk Oblast
+ "Melania Pavlovna",              "Female" ; Wife of Pyotr Bogynya
+ "Mykola Kholodylin",             "Male"   ; (1843-1929), First mayor of the city of Luhansk
+ "Georgiy Petrov",                "Male"   ; Longest serving mayor from 1965 to 1985
  "Gennadiy Tsypkalov",            "Male"   ; (1973–2016), first acting head of the Luhansk People's Republic
- "Liliya Tsypkalova",              "Female" ; Wife of Gennadiy Tsypkalov
+ "Liliya Tsypkalova",             "Female" ; Wife of Gennadiy Tsypkalov
  "Vasily Nikitin",                "Male"   ; Prime Minister from 18 May 2014 – 3 July 2014
 }
 
@@ -74,5 +78,3 @@ cities =
  "Oleksandrivsk",
  "Miusynsk",
  "Almazna"
-
-
