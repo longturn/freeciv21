@@ -15,7 +15,7 @@ other government faculties were divided between the respective states.")
 ; Legend from: https://en.wikipedia.org/wiki/Austria-Hungary
 
 leaders = {
-"name",                                     "sex" ; Full name/s in comment
+"name",                                     "sex"
 "Franz Joseph I",                           "Male"
 "Gyula Andrássy",                           "Male"
 "Conrad von Hötzendorf",                    "Male"

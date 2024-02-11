@@ -15,15 +15,17 @@ legend=_("Dagestan is a republic of Russia situated in North Caucausus\
 ; Legend from: https://en.wikipedia.org/wiki/Dagestan
 
 leaders = {
- "name",                        "sex"
- "Kazi-Mulla"                   "Male"  ; Ghazi Muhammad (1793–1832), first Imam of the Caucasian Imamate
- "Gamzat-bek"                   "Male"  ; (1789-1834), Second Imam of the Caucasian Imamate
- "Sheykh Shamil"                "Male"  ; Imam Shamil (1797-1871), Third and final Imam of the Causasian Imamate
- "Ħamzatazul Rasul Ħamzatil"    "Male"  ; Rasul Gamzatovich Gamzatov (1923-2003) Famous poet from Dagestan.
- "Sergey Melikov",              "Male"  ; Current Head of the Republic of Dagestan
- "Tapa Tchermoev",              "Male"  ; (1882-1937), First prime minister of the Mountainous Republic of the Northern Caucasus.
- "Khavarsultan Khanum",         "Female"; 1st wife of Tapa Tchermoev
- "Natasha Brailovsky",          "Female"; né Kanelsky, 2nd wife of Tapa Tchermoev
+ "name",                         "sex"
+ "Kazi-Mulla",                   "Male"  ; Ghazi Muhammad (1793–1832), first Imam of the Caucasian Imamate
+ "Gamzat-bek",                   "Male"  ; (1789-1834), Second Imam of the Caucasian Imamate
+ "Sheykh Shamil",                "Male"  ; Imam Shamil (1797-1871), Third and final Imam of the Causasian Imamate
+ "Ħamzatazul Rasul Ħamzatil",    "Male"  ; Rasul Gamzatovich Gamzatov (1923-2003) Famous poet from Dagestan
+ "Magomedali Magomedov",         "Male"  ; (1930-2002) First head of the Republic of Dagestan
+ "Zulgizhat Magomedova",         "Female"; Wife of Magomedali Magomedov
+ "Sergey Melikov",               "Male"  ; Current Head of the Republic of Dagestan
+ "Tapa Tchermoev",               "Male"  ; (1882-1937), First prime minister of the Mountainous Republic of the Northern Caucasus
+ "Khavarsultan Khanum",          "Female"; 1st wife of Tapa Tchermoev
+ "Natasha Brailovsky",           "Female"; né Kanelsky, 2nd wife of Tapa Tchermoev
 }
 
 ruler_titles = {
@@ -40,7 +42,7 @@ init_techs=""
 init_buildings=""
 init_units=""
 
-conflicts_with= "karelian" ; flag is too similar =(
+conflicts_with= "karelian" ; flag is too similar
 civilwar_nations = "soviet", "russian", "ossetian", "tatar", "chechen", "circassian"
 
 cities =
@@ -72,4 +74,3 @@ cities =
 "Novyj Sulak",        ; Novy Sulak
 "Komsomol'skij",      ; Komsomolsky
 "Ači-Su"              ; Achisu
-
