@@ -45,7 +45,6 @@ init_techs = ""
 init_buildings = ""
 init_units = ""
 
-conflicts_with = 
 civilwar_nations = "irish", "british", "english", "gaelic", "scottish gaelic" ; add to civilwar nation list for Ireland and Britain. 
 
 cities = ; Cities sourced from geoba.se

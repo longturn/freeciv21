@@ -6,13 +6,13 @@ groups="African"
 legend=_("The struggle for an independent Ambazonia began in 2017\
  with the Anglophone crisis.")
 leaders = {
- "name",                         "sex"
- "Emmanuel Mbela Lifafa Endeley, "Male"   ; (1916-1988) First Premier of British Southern Cameroons
- "Grace Mafuatem",               "Female" ; Mother of Lekea Oliver and Chris Anu
- "Lekeaka Oliver",               "Male"   ; (1968-2022) Leader of the Red Dragon militia
- "Ayuk Ndifon Defcam",           "Male"   ; (????-2023) Known as General Transporter
- "Clement Mbashie",              "Male"   ; (????-2023) Known as General No Pity
- "Chris Anu",                    "Male"   ; Brother of Lekeaka Oliver
+ "name",                          "sex"
+ "Emmanuel Mbela Lifafa Endeley", "Male"   ; (1916-1988) First Premier of British Southern Cameroons
+ "Grace Mafuatem",                "Female" ; Mother of Lekea Oliver and Chris Anu
+ "Lekeaka Oliver",                "Male"   ; (1968-2022) Leader of the Red Dragon militia
+ "Ayuk Ndifon Defcam",            "Male"   ; (????-2023) Known as General Transporter
+ "Clement Mbashie",               "Male"   ; (????-2023) Known as General No Pity
+ "Chris Anu",                     "Male"   ; Brother of Lekeaka Oliver
 }
 
 ruler_titles = {
@@ -30,7 +30,7 @@ init_techs=""
 init_buildings=""
 init_units=""
 
-civilwar_nations=, "cameroonian", "nigerian", "biafran"
+civilwar_nations= "cameroonian", "nigerian", "biafran"
 
 cities =
  "Buea",
