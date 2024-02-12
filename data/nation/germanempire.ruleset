@@ -1,7 +1,7 @@
 [nation_germanempire]
 
 name=_("German Empire")
-plural=_("?plural:Germans")
+plural=_("?plural:Imperial Germans")
 groups= "European", "Modern"
 legend=_("The German Empire was the historical German nation state that existed\
  from the unification of Germany in 1871 to the abdication of Kaiser Wilhelm II\
@@ -10,20 +10,20 @@ legend=_("The German Empire was the historical German nation state that existed\
  The state was the predecessor of today's Germany.")
 ; Legend from https://en.wikipedia.org/wiki/German_Empire
 leaders = {
- "name",                                "sex"
- "Otto von Bismarck",			"Male"
- "Johanna von Puttkamer"                "Female"
- "Wilhelm II",                     	"Male"
- "Augusta Viktoria",                    "Female"
- "Friedrich Ebert",              	"Male"
- "Max von Baden",                      	"Male"
- "Friedrich Engels",      		"Male"
- "Erich Ludendorff",                	"Male"
- "Friedrich III",                   	"Male"
- "Ludwig II",           		"Male"
- "Theobald von Bethmann Hollweg",	"Male"
- "Paul von Hindenburg",                	"Male"
- "Rosa Luxemburg",               	"Female"
+ "name",                            "sex"
+ "Otto von Bismarck",               "Male"
+ "Johanna von Puttkamer",           "Female"
+ "Wilhelm II",                      "Male"
+ "Augusta Viktoria",                "Female"
+ "Friedrich Ebert",                 "Male"
+ "Max von Baden",                   "Male"
+ "Friedrich Engels",                "Male"
+ "Erich Ludendorff",                "Male"
+ "Friedrich III",                   "Male"
+ "Ludwig II",                       "Male"
+ "Theobald von Bethmann Hollweg",   "Male"
+ "Paul von Hindenburg",             "Male"
+ "Rosa Luxemburg",                  "Female"
 }
 
 ruler_titles = {
@@ -41,14 +41,14 @@ style = "European"
 init_techs=""
 init_buildings=""
 init_units=""
-conflicts_with= "lorrain", "rhenish", "bavarian", "polish", "alsatian", "saxon",
+conflicts_with= "german", "rhenish", "bavarian", "polish", "alsatian", "saxon",
  "hanoverian", "hessian", "lippian", "wuerttembergian", "oldenburgian",
  "palatinate", "schleswig-holsteinian", "thuringian",
- "westphalian", "german"
-civilwar_nations= "lorrain", "rhenish", "bavarian", "polish", "alsatian", "saxon",
+ "westphalian", "lorrain"
+civilwar_nations= "german", "rhenish", "bavarian", "polish", "alsatian", "saxon",
  "hanoverian", "hessian", "lippian", "wuerttembergian", "oldenburgian",
  "palatinate", "schleswig-holsteinian", "thuringian",
- "westphalian", "german"
+ "westphalian",  "lorrain"
 
 cities =
  "Berlin (grassland, !mountains)", 
@@ -162,4 +162,4 @@ cities =
  "Donauwörth (hills, mountains, river)",
  "Dessau (plains, forest)",
  "Worms (plains, forest, river, !ocean)",
- "Wittstock (grassland, plains, ocean, !mountains)"'
+ "Wittstock (grassland, plains, ocean, !mountains)"

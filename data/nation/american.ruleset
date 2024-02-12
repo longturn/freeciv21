@@ -17,15 +17,7 @@ legend=_("The United States of America achieved its independence from\
 leaders = {
  "name",                        "sex"
  "George Washington",           "Male"
-<<<<<<< HEAD
-<<<<<<< HEAD
  "Martha Washington",           "Female"
-=======
- "Martha Washington",    	      "Female"
->>>>>>> 3a13d69e8e (Update american.ruleset)
-=======
- "Martha Washington",    	"Female"
->>>>>>> 69015a1911 (More updates.)
  "Benjamin Franklin",           "Male"
  "Alexander Hamilton",          "Male"
  "John Adams",                  "Male"
@@ -70,7 +62,7 @@ init_techs=""
 init_buildings=""
 init_units=""
 
-civilwar_nations = "confederate", "texan", "alaskan", "vermont", "californian", "louisianan", "muscogee",
+civilwar_nations = "confederate", "texan", "alaskan", "vermont", "californian", "louisianan", "muscogee"
 
 cities =
  "Washington (ocean, river, swamp, !desert)", 
