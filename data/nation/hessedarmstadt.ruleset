@@ -12,12 +12,12 @@ leaders = {
  "name",                                 "sex"
  "Georg I von Hessen-Darmstadt",         "Male"
  "Magdalena zur Lippe",                  "Female"
- "Ernst Ludwig",           	         "Male"
- "Ludwig I",               	         "Male"
- "Carl von Ewald",     		         "Male"
- "Heinrich von Gagern",     	         "Male"
- "Carl Grolman",           	         "Male"
- "Christian Ewald",    		         "Male"
+ "Ernst Ludwig",                         "Male"
+ "Ludwig I",                             "Male"
+ "Carl von Ewald",                       "Male"
+ "Heinrich von Gagern",                  "Male"
+ "Carl Grolman",                         "Male"
+ "Christian Ewald",                      "Male"
  "Alice von Grossbritannien und Irland", "Female"
 }
 
@@ -38,7 +38,7 @@ init_buildings=""
 init_units=""
 
 conflicts_with= "hessian"
-civilwar_nations="hanoverian", "badian", "palatinate", "rhenish", "lippian", "rhenish", "prussian", "lippian"
+civilwar_nations= "hanoverian", "badian", "palatinate", "rhenish", "lippian", "rhenish", "prussian", "lippian"
 
 cities =
  "Darmstadt",

@@ -11,14 +11,14 @@ legend=_("The Congo Free State was a large state in Central Africa from 1885 to 
 
 leaders = {
  "name",                        "sex"
- "Leopold II",			"Male"	
+ "Leopold II",                  "Male"	
  "Marie Henriette",             "Female"
  "Francis Walter de Winton",    "Male"
  "Camille Janssen",             "Male"
- "Théophile Wahis"              "Male"
- "Joseph Conrad",		"Male"
- "Henry Morton Stanley",	"Male"
- "Tippu-Tip",			"Male"
+ "Théophile Wahis",             "Male"
+ "Joseph Conrad",               "Male"
+ "Henry Morton Stanley",        "Male"
+ "Tippu-Tip",                   "Male"
 }
 
 ruler_titles = {

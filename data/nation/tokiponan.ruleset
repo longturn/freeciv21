@@ -23,7 +23,8 @@ init_techs=""
 init_buildings=""
 init_units=""
 
-civilwar_nations = "papuanewguinean", "finnish", "serbian", "croatian", "esperant", "dutch", "acadian", "canadian", "georgian", "chinese", "cantonese",  ;nations decided based on number of roots by language, Papua New Guinea for Tok Pisin and Canada for English.
+;nations decided based on number of roots by language, Papua New Guinea for Tok Pisin and Canada for English.
+civilwar_nations = "papuanewguinean", "finnish", "serbian", "croatian", "esperant", "dutch", "acadian", "canadian", "georgian", "chinese", "cantonese"
 
 cities = ; list of cities and their Toki Ponan translations taken from: https://github.com/jan-Lope/Toki_Pona-Parser/blob/master/toki-pona-unofficial-words-cities.pro
  "ma tomo Petekiten",  ; Fredericton (Canada) Capital of New Brunswick, where Sonja Lang is from.
@@ -41,7 +42,7 @@ cities = ; list of cities and their Toki Ponan translations taken from: https://
  "ma tomo Peminan",    ; Birmingham (England)
  "ma tomo Anpu",       ; Hamburg (Germany)
  "ma tomo Alenta",     ; Atlanta (USA)
- "ma tomo Wenesija"    ; Venedig (Italy)
+ "ma tomo Wenesija"m   ; Venedig (Italy)
  "ma tomo Sesija",     ; Shediac (Canada)
  "ma tomo Wankuwa",    ; Vancouver (Canada)
  "ma tomo Sije",       ; Dieppe (Canada)
