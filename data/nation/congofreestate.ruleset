@@ -7,7 +7,7 @@ groups="Modern", "African"
 legend=_("The Congo Free State was a large state in Central Africa from 1885 to 1908\
  which was in personal union with the Kingdom of Belgium under Leopold II.\
  Leopold's reign in the Congo eventually earned infamy due to the increasing\
- mistreatment of the indigenous peoples.")
+ mistreatment of the indigenous people.")
 
 leaders = {
  "name",                        "sex"
@@ -34,7 +34,7 @@ init_techs=""
 init_buildings=""
 init_units=""
 conflicts_with = "kongo", "congolese"
-civilwar_nations = "katangan", "rwandan", "burundian", "kongo", "congolese", "congolesebrazzaville"
+civilwar_nations = "katangan", "rwandan", "burundian", "kongo", "congolese"
 
 cities =
  "Léopoldville", 
