@@ -115,7 +115,7 @@ static int mpdb_query(sqlite3 *handle, const char *query)
     ret = sqlite3_finalize(stmt);
   }
 
-  if (ret != SQLITE_OK) {
+  if (ret != SQLITE_OK && ret != SQLITE_ROW) {
     qCritical("Query \"%s\" failed. (%d)", query, ret);
   }
 
