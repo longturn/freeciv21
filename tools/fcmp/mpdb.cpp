@@ -111,12 +111,12 @@ static int mpdb_query(sqlite3 *handle, const char *query)
     ret = sqlite3_step(stmt);
   }
 
-  if (ret == SQLITE_DONE) {
-    ret = sqlite3_finalize(stmt);
+  if (ret != SQLITE_DONE && ret != SQLITE_ROW) {
+    qCritical("Query \"%s\" failed. (%d)", query, ret);
   }
 
-  if (ret != SQLITE_OK && ret != SQLITE_ROW) {
-    qCritical("Query \"%s\" failed. (%d)", query, ret);
+  if (int errcode = sqlite3_finalize(stmt); errcode != SQLITE_OK) {
+    qCritical("Finalizing query \"%s\" returned error. (%d)", query, ret);
   }
 
   return ret;
@@ -160,13 +160,13 @@ void create_mpdb(const char *filename, bool scenario_db)
         ");");
   }
 
-  if (ret == SQLITE_OK) {
+  if (ret == SQLITE_DONE) {
     ret = mpdb_query(*handle,
                      "create table modpacks (name VARCHAR(60) NOT null, "
                      "type VARCHAR(32), version VARCHAR(32) NOT null);");
   }
 
-  if (ret == SQLITE_OK) {
+  if (ret == SQLITE_DONE) {
     log_debug("Created %s", filename);
   } else {
     qCritical(_("Creating \"%s\" failed: %s"), filename,
@@ -240,11 +240,11 @@ bool mpdb_update_modpack(const char *name, enum modpack_type type,
     ret = mpdb_query(*handle, qbuf);
   }
 
-  if (ret != SQLITE_OK) {
+  if (ret != SQLITE_DONE) {
     qCritical(_("Failed to insert modpack '%s' information"), name);
   }
 
-  return ret != SQLITE_OK;
+  return ret != SQLITE_DONE;
 }
 
 /**
