@@ -274,15 +274,18 @@ const char *mpdb_installed_version(const char *name, enum modpack_type type)
   }
 
   if (ret == SQLITE_ROW) {
-    version = qstrdup((const char*)sqlite3_column_text(stmt, 2));
+    version = qstrdup((const char *) sqlite3_column_text(stmt, 2));
   }
 
   if (ret != SQLITE_DONE && ret != SQLITE_ROW) {
-    qCritical("Query to get installed version for \"%s\" failed. (%d)", name, ret);
+    qCritical("Query to get installed version for \"%s\" failed. (%d)", name,
+              ret);
   }
 
   if (int errcode = sqlite3_finalize(stmt); errcode != SQLITE_OK) {
-    qCritical("Finalizing query to get installed version for \"%s\" failed. (%d)", name, ret);
+    qCritical(
+        "Finalizing query to get installed version for \"%s\" failed. (%d)",
+        name, ret);
   }
 
   return version;
