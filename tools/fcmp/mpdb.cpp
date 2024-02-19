@@ -248,13 +248,15 @@ bool mpdb_update_modpack(const char *name, enum modpack_type type,
 }
 
 /**
-   Return version of modpack.
+   Return version of modpack. The caller is responsible to free the returned
+   string.
  */
 const char *mpdb_installed_version(const char *name, enum modpack_type type)
 {
   sqlite3 **handle;
   int ret;
   char qbuf[2048];
+  const char *version = nullptr;
   sqlite3_stmt *stmt;
 
   if (type == MPT_SCENARIO) {
@@ -271,13 +273,17 @@ const char *mpdb_installed_version(const char *name, enum modpack_type type)
     ret = sqlite3_step(stmt);
   }
 
-  if (ret == SQLITE_DONE) {
-    ret = sqlite3_finalize(stmt);
-  }
-
   if (ret == SQLITE_ROW) {
-    return (const char *) sqlite3_column_text(stmt, 2);
+    version = qstrdup((const char*)sqlite3_column_text(stmt, 2));
   }
 
-  return nullptr;
+  if (ret != SQLITE_DONE && ret != SQLITE_ROW) {
+    qCritical("Query to get installed version for \"%s\" failed. (%d)", name, ret);
+  }
+
+  if (int errcode = sqlite3_finalize(stmt); errcode != SQLITE_OK) {
+    qCritical("Finalizing query to get installed version for \"%s\" failed. (%d)", name, ret);
+  }
+
+  return version;
 }
