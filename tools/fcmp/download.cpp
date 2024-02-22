@@ -318,6 +318,7 @@ const char *download_modpack(const QUrl &url, const struct fcmp_params *fcmp,
           return msg;
         }
       }
+      delete[] inst_ver;
     }
   }
 

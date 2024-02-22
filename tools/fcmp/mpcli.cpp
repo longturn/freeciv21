@@ -73,6 +73,8 @@ static void setup_modpack_list(const QString &name, const QUrl &url,
   if (!notes.isEmpty()) {
     qInfo() << _("Comment=") << notes;
   }
+
+  delete[] tmp;
 }
 
 /**
