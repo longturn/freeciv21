@@ -307,7 +307,6 @@ void mpgui::refresh_list_versions()
   for (int i = 0; i < mpcount; i++) {
     QString name_str;
     int type_int;
-    const char *new_inst;
     enum modpack_type type;
     QByteArray name_bytes;
 
@@ -315,13 +314,12 @@ void mpgui::refresh_list_versions()
     type_int = mplist_table->item(i, ML_TYPE)->text().toInt();
     type = (enum modpack_type) type_int;
     name_bytes = name_str.toUtf8();
-    new_inst = mpdb_installed_version(name_bytes.data(), type);
 
-    if (new_inst == nullptr) {
-      new_inst = _("Not installed");
-    }
+    auto tmp = mpdb_installed_version(qUtf8Printable(name_bytes), type);
+    QString new_inst = tmp ? tmp : _("Not installed");
+    delete[] tmp;
 
-    mplist_table->item(i, ML_COL_INST)->setText(QString::fromUtf8(new_inst));
+    mplist_table->item(i, ML_COL_INST)->setText(new_inst);
   }
 
   mplist_table->resizeColumnsToContents();
@@ -352,6 +350,7 @@ void mpgui::setup_list(const QString &name, const QUrl &url,
 
   const char *tmp = mpdb_installed_version(qUtf8Printable(name), type);
   QString inst_str = tmp ? tmp : _("Not installed");
+  delete[] tmp;
 
   QString type_nbr;
   QTableWidgetItem *item;
