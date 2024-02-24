@@ -18,6 +18,7 @@
 #include <QGridLayout>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QPushButton>
 #include <QScrollArea>
 #include <QTimer>
 #include <QToolTip>
@@ -26,6 +27,7 @@
 #include "game.h"
 #include "government.h"
 #include "research.h"
+
 // client
 #include "citydlg.h"
 #include "client_main.h"
@@ -39,6 +41,9 @@
 #include "top_bar.h"
 #include "views/view_research.h"
 #include "views/view_research_reqtree.h"
+
+// server
+#include "../server/techtools.h"
 
 extern QString split_text(const QString &text, bool cut);
 extern QString cut_helptext(const QString &text);
@@ -273,15 +278,22 @@ science_report::science_report() : QWidget()
   auto sci_layout = new QGridLayout();
   res_diag = new research_diagram();
   auto scroll = new QScrollArea();
+  refresh_but = new QPushButton();
+  refresh_but->setText(_("Refresh"));
+  refresh_but->setToolTip(_("Press to refresh currently researched "
+                            "technology calculation again."));
+  refresh_but->setVisible(false);
 
   progress->setTextVisible(true);
   progress_label->setSizePolicy(size_fixed_policy);
   sci_layout->addWidget(progress_label, 0, 0, 1, 8);
-  sci_layout->addWidget(researching_combo, 1, 0, 1, 4);
+  sci_layout->addWidget(researching_combo, 1, 0, 1, 3);
+  sci_layout->addWidget(refresh_but, 1, 3, 1, 1);
   researching_combo->setSizePolicy(size_fixed_policy);
+  refresh_but->setSizePolicy(size_fixed_policy);
   sci_layout->addWidget(progress, 1, 5, 1, 4);
   progress->setSizePolicy(size_fixed_policy);
-  sci_layout->addWidget(goal_combo, 2, 0, 1, 4);
+  sci_layout->addWidget(goal_combo, 2, 0, 1, 3);
   goal_combo->setSizePolicy(size_fixed_policy);
   sci_layout->addWidget(info_label, 2, 5, 1, 4);
   info_label->setSizePolicy(size_fixed_policy);
@@ -297,6 +309,9 @@ science_report::science_report() : QWidget()
   QObject::connect(researching_combo,
                    QOverload<int>::of(&QComboBox::currentIndexChanged), this,
                    &science_report::current_tech_changed);
+
+  QObject::connect(refresh_but, &QAbstractButton::pressed, this,
+                   &science_report::push_research);
 
   QObject::connect(goal_combo,
                    QOverload<int>::of(&QComboBox::currentIndexChanged), this,
@@ -500,6 +515,12 @@ void science_report::update_report()
     researching_combo->setDisabled(false);
     goal_combo->setDisabled(false);
   }
+
+  // If tech leak happens we enable a button to force/push a refresh.
+  if (done >= total) {
+    refresh_but->setVisible(true);
+  }
+
   update_reqtree();
 }
 
@@ -537,6 +558,18 @@ void science_report::goal_tech_changed(int changed_index)
     if (can_client_issue_orders()) {
       dsend_packet_player_tech_goal(&client.conn, qvar.toInt());
     }
+  }
+}
+
+/**
+ * Push (redo) research when qty bulbs researched is
+ * greater than the number needed
+ */
+void science_report::push_research()
+{
+  if (can_client_issue_orders()) {
+    auto research = research_get(client_player());
+    dsend_packet_player_research(&client.conn, research->researching);
   }
 }
 

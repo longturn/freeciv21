@@ -23,6 +23,7 @@ class QObject;
 class QPaintEvent;
 class QScrollArea;
 class progress_bar;
+class QPushButton;
 
 /****************************************************************************
   Custom widget representing research diagram in science_report
@@ -72,6 +73,7 @@ class science_report : public QWidget {
 
   QComboBox *goal_combo;
   QComboBox *researching_combo;
+  QPushButton *refresh_but;
   progress_bar *progress;
   QLabel *info_label;
   QLabel *progress_label;
@@ -94,6 +96,7 @@ private:
 private slots:
   void current_tech_changed(int index);
   void goal_tech_changed(int index);
+  void push_research();
 };
 
 void popdown_science_report();
