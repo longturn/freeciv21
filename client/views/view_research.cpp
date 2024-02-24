@@ -42,9 +42,6 @@
 #include "views/view_research.h"
 #include "views/view_research_reqtree.h"
 
-// server
-#include "../server/techtools.h"
-
 extern QString split_text(const QString &text, bool cut);
 extern QString cut_helptext(const QString &text);
 extern QString get_tooltip_improvement(impr_type *building,
