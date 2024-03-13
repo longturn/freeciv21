@@ -116,7 +116,8 @@ static int mpdb_query(sqlite3 *handle, const char *query)
   }
 
   if (int errcode = sqlite3_finalize(stmt); errcode != SQLITE_OK) {
-    qCritical("Finalizing query \"%s\" returned error. (%d)", query, ret);
+    qCritical("Finalizing query \"%s\" returned error. (%d)", query,
+              errcode);
   }
 
   return ret;
@@ -285,7 +286,7 @@ const char *mpdb_installed_version(const char *name, enum modpack_type type)
   if (int errcode = sqlite3_finalize(stmt); errcode != SQLITE_OK) {
     qCritical(
         "Finalizing query to get installed version for \"%s\" failed. (%d)",
-        name, ret);
+        name, errcode);
   }
 
   return version;
