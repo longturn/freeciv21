@@ -788,12 +788,48 @@ void handle_diplomacy_cancel_pact(struct player *pplayer,
     return;
   }
 
+  // check what the new status will be
+  new_type = cancel_pact_result(old_type);
+
+  // avoid accidentally breaking alliances
+  if (new_type == DS_WAR) {
+    bool blocking_alliances = false;
+
+    players_iterate_alive(pplayer3)
+    {
+      if (pplayer3 != pplayer && pplayer3 != pplayer2
+          && pplayers_allied(pplayer3, pplayer)
+          && pplayers_allied(pplayer3, pplayer2)) {
+        blocking_alliances = true;
+
+        if (players_on_same_team(pplayer, pplayer3)) {
+          notify_player(
+              pplayer, nullptr, E_TREATY_BROKEN, ftc_server,
+              _("Your advisors discourage you from cancelling your pact "
+                "with the %s, as this would force your team mate %s to "
+                "break their alliance with the %s."),
+              nation_plural_for_player(pplayer2), player_name(pplayer3),
+              nation_plural_for_player(pplayer2));
+        } else {
+          notify_player(pplayer, nullptr, E_TREATY_BROKEN, ftc_server,
+                        _("Your advisors discourage you from cancelling "
+                          "your pact with the %s, as this would break your "
+                          "alliance with the %s."),
+                        nation_plural_for_player(pplayer2),
+                        nation_plural_for_player(pplayer3));
+        }
+      }
+    }
+    players_iterate_alive_end;
+
+    if (blocking_alliances) {
+      return;
+    }
+  }
+
   reject_all_treaties(pplayer);
   reject_all_treaties(pplayer2);
   // else, breaking a treaty
-
-  // check what the new status will be
-  new_type = cancel_pact_result(old_type);
 
   ds_plrplr2 = player_diplstate_get(pplayer, pplayer2);
   ds_plr2plr = player_diplstate_get(pplayer2, pplayer);
@@ -875,41 +911,6 @@ void handle_diplomacy_cancel_pact(struct player *pplayer,
                 player_name(pplayer), nation_plural_for_player(pplayer2),
                 nation_plural_for_player(pplayer),
                 diplstate_type_translated_name(new_type));
-
-  // Check fall-out of a war declaration.
-  players_iterate_alive(other)
-  {
-    if (other != pplayer && other != pplayer2 && new_type == DS_WAR
-        && pplayers_allied(pplayer2, other)
-        && pplayers_allied(pplayer, other)) {
-      if (!players_on_same_team(pplayer, other)) {
-        /* If an ally declares war on another ally, break off your alliance
-         * to the aggressor. This prevents in-alliance wars, which are not
-         * permitted. */
-        notify_player(other, nullptr, E_TREATY_BROKEN, ftc_server,
-                      _("%s has attacked your ally %s! "
-                        "You cancel your alliance to the aggressor."),
-                      player_name(pplayer), player_name(pplayer2));
-        player_diplstate_get(other, pplayer)->has_reason_to_cancel = 1;
-        player_update_last_war_action(other);
-        handle_diplomacy_cancel_pact(other, player_number(pplayer),
-                                     CLAUSE_ALLIANCE);
-      } else {
-        /* We are in the same team as the agressor; we cannot break
-         * alliance with him. We trust our team mate and break alliance
-         * with the attacked player */
-        notify_player(other, nullptr, E_TREATY_BROKEN, ftc_server,
-                      _("Your team mate %s declared war on %s. "
-                        "You are obligated to cancel alliance with %s."),
-                      player_name(pplayer),
-                      nation_plural_for_player(pplayer2),
-                      player_name(pplayer2));
-        handle_diplomacy_cancel_pact(other, player_number(pplayer2),
-                                     CLAUSE_ALLIANCE);
-      }
-    }
-  }
-  players_iterate_alive_end;
 }
 
 /**
