@@ -957,8 +957,8 @@ static void update_diplomatics()
                 if (cancel1) {
                   // Cancel the alliance.
                   to1->has_reason_to_cancel = 1;
-                  handle_diplomacy_cancel_pact(plr3, player_number(plr1),
-                                               CLAUSE_ALLIANCE);
+                  handle_diplomacy_cancel_pact_explicit(
+                      plr3, player_number(plr1), CLAUSE_ALLIANCE, false);
 
                   // Avoid asymmetric turns_left for the armistice.
                   to1->auto_cancel_turn = game.info.turn;
@@ -972,8 +972,8 @@ static void update_diplomatics()
                 if (cancel2) {
                   // Cancel the alliance.
                   to2->has_reason_to_cancel = 1;
-                  handle_diplomacy_cancel_pact(plr3, player_number(plr2),
-                                               CLAUSE_ALLIANCE);
+                  handle_diplomacy_cancel_pact_explicit(
+                      plr3, player_number(plr2), CLAUSE_ALLIANCE, false);
 
                   // Avoid asymmetric turns_left for the armistice.
                   to2->auto_cancel_turn = game.info.turn;
