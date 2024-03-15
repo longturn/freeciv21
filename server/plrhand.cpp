@@ -736,15 +736,32 @@ void player_update_last_war_action(struct player *pplayer)
 /**
    Handles a player cancelling a "pact" with another player.
 
-   packet.id is id of player we want to cancel a pact with
-   packet.val1 is a special value indicating what kind of treaty we want
-     to break. If this is CLAUSE_VISION we break shared vision. If it is
-     a pact treaty type, we break one pact level. If it is CLAUSE_LAST
-     we break _all_ treaties and go straight to war.
+   other_player_id is id of player we want to cancel a pact with
+   clause is a special value indicating what kind of treaty we want to
+     break. If this is CLAUSE_VISION we break shared vision. If it is a
+     pact treaty type, we break one pact level. If it is CLAUSE_LAST we
+     break _all_ treaties and go straight to war.
  */
 void handle_diplomacy_cancel_pact(struct player *pplayer,
                                   int other_player_id,
                                   enum clause_type clause)
+{
+  handle_diplomacy_cancel_pact_explicit(pplayer, other_player_id, clause,
+                                        is_human(pplayer));
+}
+
+/**
+   A variant of handle_diplomacy_cancel_pact that allows the caller to
+   explicitely control if war declarations should be prevented to
+   protect existing alliances.
+
+   protect_alliances is a flag, that, if set to true, will prevent war
+     declarations if they would break existing alliances.
+ */
+void handle_diplomacy_cancel_pact_explicit(struct player *pplayer,
+                                           int other_player_id,
+                                           enum clause_type clause,
+                                           bool protect_alliances)
 {
   enum diplstate_type old_type;
   enum diplstate_type new_type;
@@ -786,6 +803,52 @@ void handle_diplomacy_cancel_pact(struct player *pplayer,
 
   if (diplcheck != DIPL_OK) {
     return;
+  }
+
+  // check what the new status will be
+  new_type = cancel_pact_result(old_type);
+
+  // avoid accidentally breaking alliances
+  if (protect_alliances && new_type == DS_WAR) {
+    bool blocking_alliances = false;
+
+    players_iterate_alive(pplayer3)
+    {
+      if (pplayer3 != pplayer && pplayer3 != pplayer2
+          && pplayers_allied(pplayer3, pplayer)
+          && pplayers_allied(pplayer3, pplayer2)) {
+        if (players_on_same_team(pplayer, pplayer3)) {
+          // if pplayer3 is an AI, let them break their alliance as we
+          // can't coordinate with them in a way, that they would cancel
+          // alliances in preparation of war on team level.
+          if (is_ai(pplayer3)) {
+            continue;
+          }
+
+          notify_player(
+              pplayer, nullptr, E_TREATY_BROKEN, ftc_server,
+              _("Your advisors discourage you from cancelling your pact "
+                "with the %s, as this would force your team mate %s to "
+                "break their alliance with the %s."),
+              nation_plural_for_player(pplayer2), player_name(pplayer3),
+              nation_plural_for_player(pplayer2));
+        } else {
+          notify_player(pplayer, nullptr, E_TREATY_BROKEN, ftc_server,
+                        _("Your advisors discourage you from cancelling "
+                          "your pact with the %s, as this would break your "
+                          "alliance with the %s."),
+                        nation_plural_for_player(pplayer2),
+                        nation_plural_for_player(pplayer3));
+        }
+
+        blocking_alliances = true;
+      }
+    }
+    players_iterate_alive_end;
+
+    if (blocking_alliances) {
+      return;
+    }
   }
 
   reject_all_treaties(pplayer);
@@ -876,7 +939,9 @@ void handle_diplomacy_cancel_pact(struct player *pplayer,
                 nation_plural_for_player(pplayer),
                 diplstate_type_translated_name(new_type));
 
-  // Check fall-out of a war declaration.
+  // Check fall-out of a war declaration. This is only relevant if an AI
+  // declares war or if we cut through the web of alliances after an AI
+  // has declared war.
   players_iterate_alive(other)
   {
     if (other != pplayer && other != pplayer2 && new_type == DS_WAR
@@ -892,8 +957,8 @@ void handle_diplomacy_cancel_pact(struct player *pplayer,
                       player_name(pplayer), player_name(pplayer2));
         player_diplstate_get(other, pplayer)->has_reason_to_cancel = 1;
         player_update_last_war_action(other);
-        handle_diplomacy_cancel_pact(other, player_number(pplayer),
-                                     CLAUSE_ALLIANCE);
+        handle_diplomacy_cancel_pact_explicit(other, player_number(pplayer),
+                                              CLAUSE_ALLIANCE, false);
       } else {
         /* We are in the same team as the agressor; we cannot break
          * alliance with him. We trust our team mate and break alliance
@@ -904,8 +969,8 @@ void handle_diplomacy_cancel_pact(struct player *pplayer,
                       player_name(pplayer),
                       nation_plural_for_player(pplayer2),
                       player_name(pplayer2));
-        handle_diplomacy_cancel_pact(other, player_number(pplayer2),
-                                     CLAUSE_ALLIANCE);
+        handle_diplomacy_cancel_pact_explicit(other, player_number(pplayer2),
+                                              CLAUSE_ALLIANCE, false);
       }
     }
   }
