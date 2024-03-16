@@ -60,7 +60,7 @@ This page assumes the user knows how to use :file:`git`, compile Freeciv21 and u
 
 :strong:`Run tests`
 
-..code-block:: sh
+.. code-block:: sh
 
   $ cmake --build build --target test
 
