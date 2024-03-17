@@ -154,7 +154,7 @@
 #include "support.h"
 
 // KArchive dependency
-#include <KFilterDev>
+#include <KCompressionDevice>
 
 // std
 #include <cstdarg>
@@ -618,7 +618,7 @@ bool secfile_save(const struct section_file *secfile, QString filename)
   }
 
   auto real_filename = interpret_tilde(filename);
-  auto fs = std::make_unique<KFilterDev>(real_filename);
+  auto fs = std::make_unique<KCompressionDevice>(real_filename);
   fs->open(QIODevice::WriteOnly);
 
   if (!fs->isOpen()) {

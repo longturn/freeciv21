@@ -95,7 +95,7 @@ int fc_strncasecmp(const char *str0, const char *str1, size_t n)
 {
   auto left = QString::fromUtf8(str0);
   auto right = QString::fromUtf8(str1);
-  return left.leftRef(n).compare(right.leftRef(n), Qt::CaseInsensitive);
+  return left.left(n).compare(right.left(n), Qt::CaseInsensitive);
 }
 
 /**
@@ -212,7 +212,7 @@ int fc_strncasequotecmp(const char *str0, const char *str1, size_t n)
       && right.endsWith(QLatin1String("\""))) {
     right = right.mid(1, right.length() - 2);
   }
-  return left.leftRef(n).compare(right.leftRef(n), Qt::CaseInsensitive);
+  return left.left(n).compare(right.left(n), Qt::CaseInsensitive);
 }
 
 /**
@@ -379,7 +379,7 @@ size_t fc_strlcpy(char *dest, const char *src, size_t n)
   size_t cut_at = n - 1;
   QByteArray encoded;
   do {
-    encoded = source.leftRef(cut_at--).toUtf8();
+    encoded = source.left(cut_at--).toUtf8();
   } while (cut_at > 0 && encoded.size() + 1 > n);
 
   if (cut_at == 0) {
