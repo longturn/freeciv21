@@ -56,7 +56,7 @@ static QStringList default_data_path()
       QStringList{QStringLiteral("."), QStringLiteral("data"),
                   freeciv_storage_dir() + QStringLiteral("/" DATASUBDIR),
                   QStringLiteral(FREECIV_INSTALL_DATADIR)}
-      + QStandardPaths::standardLocations(QStandardPaths::DataLocation);
+      + QStandardPaths::standardLocations(QStandardPaths::AppDataLocation);
   QCoreApplication::setApplicationName(app_name);
   return paths;
 }
@@ -1102,7 +1102,7 @@ QString interpret_tilde(const QString &filename)
   if (filename == QLatin1String("~")) {
     return QDir::homePath();
   } else if (filename.startsWith(QLatin1String("~/"))) {
-    return QDir::homePath() + filename.midRef(1);
+    return QDir::homePath() + filename.mid(1);
   } else {
     return filename;
   }
