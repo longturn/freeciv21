@@ -28,7 +28,7 @@ add_executable(
 target_link_libraries(freeciv21-ruledit server)
 target_link_libraries(freeciv21-ruledit tools_ruleutil)
 target_link_libraries(freeciv21-ruledit tools_shared)
-target_link_libraries(freeciv21-ruledit Qt5::Widgets)
+target_link_libraries(freeciv21-ruledit Qt6::Widgets)
 add_dependencies(freeciv21-ruledit freeciv_translations)
 
 install(TARGETS freeciv21-ruledit

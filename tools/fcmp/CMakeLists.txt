@@ -28,7 +28,7 @@ if (FREECIV_ENABLE_FCMP_QT)
     mpgui_qt.cpp
   )
   target_link_libraries(freeciv21-modpack-qt PRIVATE freeciv_modpack)
-  target_link_libraries(freeciv21-modpack-qt PRIVATE Qt5::Widgets)
+  target_link_libraries(freeciv21-modpack-qt PRIVATE Qt6::Widgets)
   install(TARGETS freeciv21-modpack-qt
           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
           COMPONENT freeciv21)
