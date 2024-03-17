@@ -8890,7 +8890,6 @@ void send_rulesets(struct conn_list *dest)
   send_ruleset_trade_routes(dest);
   send_ruleset_team_names(dest);
   send_ruleset_actions(dest);
-  send_ruleset_action_enablers(dest);
   send_ruleset_action_auto_performers(dest);
   send_ruleset_tech_classes(dest);
   send_ruleset_techs(dest);
@@ -8911,6 +8910,7 @@ void send_rulesets(struct conn_list *dest)
   send_ruleset_cities(dest);
   send_ruleset_multipliers(dest);
   send_ruleset_musics(dest);
+  send_ruleset_action_enablers(dest);
   send_ruleset_cache(dest);
 
   // Indicate client that all rulesets have now been sent.
