@@ -11,7 +11,7 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#include <sqlite3.h>
+#include "mpdb.h"
 
 // utility
 #include "capability.h"
@@ -19,7 +19,10 @@
 #include "registry.h"
 #include "registry_ini.h"
 
-#include "mpdb.h"
+#include <QDir>
+#include <QFileInfo>
+
+#include <sqlite3.h>
 
 #define MPDB_CAPSTR "+mpdb"
 
@@ -130,18 +133,11 @@ void create_mpdb(const char *filename, bool scenario_db)
 {
   sqlite3 **handle;
   int ret;
-  int llen = qstrlen(filename) + 1;
-  char *local_name = new char[llen];
-  int i;
 
-  qstrncpy(local_name, filename, llen);
-  for (i = llen - 1; local_name[i] != '/'; i--) {
-    // Nothing
-  }
-  local_name[i] = '\0';
-  if (!make_dir(local_name)) {
+  // Create parent directory
+  if (QFileInfo info(filename); !QDir().mkpath(info.dir().path())) {
     qCritical(_("Can't create directory \"%s\" for modpack database."),
-              local_name);
+              qUtf8Printable(info.dir().path()));
     return;
   }
 
