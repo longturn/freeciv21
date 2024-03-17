@@ -55,7 +55,8 @@
 static void close_socket_nomessage(struct connection *pc)
 {
   connection_common_close(pc);
-  remove_net_input();
+  pc->playing = nullptr;
+
   popdown_races_dialog();
 
   set_client_state(C_S_DISCONNECTED);
