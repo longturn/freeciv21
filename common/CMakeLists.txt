@@ -31,7 +31,7 @@ target_include_directories(common_gen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(common_gen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/aicore)
 target_include_directories(common_gen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/networking)
 
-target_link_libraries(common_gen PUBLIC Qt5::Core)
+target_link_libraries(common_gen PUBLIC Qt6::Core)
 target_link_libraries(common_gen PUBLIC utility)
 
 # Main library
@@ -99,7 +99,7 @@ add_subdirectory(aicore)
 add_subdirectory(networking)
 add_subdirectory(scriptcore)
 
-# Qt5::Gui for map images -- could be made optional
-target_link_libraries(common PUBLIC Qt5::Core Qt5::Gui Qt5::Network)
+# Qt6::Gui for map images -- could be made optional
+target_link_libraries(common PUBLIC Qt6::Core Qt6::Gui Qt6::Network)
 target_link_libraries(common PRIVATE aicore networking)
 target_link_libraries(common PUBLIC common_gen scriptcore)

@@ -92,7 +92,7 @@ if(MSYS OR MINGW)
       file(INSTALL DESTINATION ${CMAKE_INSTALL_PREFIX} MESSAGE_LAZY FILES ${r_deps})
     ]] COMPONENT freeciv21)
 
-  # Qt5 Plugins and required DLLs
+  # Qt6 Plugins and required DLLs
   #   Before installation, run a series of commands that copy each of the Qt
   #   runtime files to the appropriate directory for installation
   install(CODE [[
