@@ -19,7 +19,6 @@
 #include <QStatusBar>
 #include <QTcpSocket>
 #include <QTextBlock>
-#include <QTextCodec>
 
 // utility
 #include "fcintl.h"
@@ -61,7 +60,6 @@ fc_client::fc_client() : QMainWindow(), current_file(QLatin1String(""))
   setWindowFlags(Qt::FramelessWindowHint);
   setWindowState(Qt::WindowFullScreen);
 #endif
-  QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
   status_bar_queue.clear();
   for (int i = 0; i <= PAGE_GAME; i++) {
     pages_layout[i] = nullptr;
@@ -154,7 +152,6 @@ void fc_client::fc_main(QApplication *qapp)
 
   startTimer(TIMER_INTERVAL);
   connect(qapp, &QCoreApplication::aboutToQuit, this, &fc_client::closing);
-  qapp->setAttribute(Qt::AA_UseHighDpiPixmaps);
   qapp->exec();
 
   free_mapcanvas_and_overview();
