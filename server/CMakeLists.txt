@@ -88,7 +88,7 @@ target_include_directories(server PUBLIC ${CMAKE_SOURCE_DIR}/ai)
 target_include_directories(server PUBLIC ${CMAKE_SOURCE_DIR}/ai/default)
 target_include_directories(server PUBLIC ${CMAKE_SOURCE_DIR}/ai/classic)
 
-target_link_libraries(server PUBLIC Qt5::Core Qt5::Network server_gen)
+target_link_libraries(server PUBLIC Qt6::Core Qt6::Network server_gen)
 target_link_libraries(server PRIVATE Readline::readline)
 
 add_subdirectory(advisors)
