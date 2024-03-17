@@ -148,13 +148,6 @@ void sound_bell()
 void add_net_input(QTcpSocket *sock) { king()->add_server_source(sock); }
 
 /**
-   Stop waiting for any server network data.  See add_net_input().
-
-   This function is called if the client disconnects from the server.
- */
-void remove_net_input() {}
-
-/**
    Set one of the unit icons (specified by idx) in the information area
    based on punit.
 
