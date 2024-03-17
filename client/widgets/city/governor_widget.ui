@@ -471,7 +471,7 @@
   <tabstop>allow_disorder</tabstop>
  </tabstops>
  <resources/>
- <connections>
+ <!--<connections>
   <connection>
    <sender>food_surplus</sender>
    <signal>valueChanged(int)</signal>
@@ -680,5 +680,5 @@
     </hint>
    </hints>
   </connection>
- </connections>
+ </connections>-->
 </ui>
