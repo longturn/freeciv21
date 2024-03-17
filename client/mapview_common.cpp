@@ -2370,7 +2370,7 @@ static struct link_mark *link_mark_new(enum text_link_type type, int id,
 /**
    Remove a link mark.
  */
-static void link_mark_destroy(struct link_mark *pmark) { free(pmark); }
+static void link_mark_destroy(struct link_mark *pmark) { delete pmark; }
 
 /**
    Returns the location of the pointed mark.
