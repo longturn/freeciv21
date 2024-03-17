@@ -21,8 +21,6 @@
 
 #include <time.h>
 
-template <typename T> class QVector;
-
 // Changing these will break network compatability!
 #define MAX_LEN_ADDR 256 // see also MAXHOSTNAMELEN and RFC 1123 2.1
 #define MAX_LEN_PATH 4095
