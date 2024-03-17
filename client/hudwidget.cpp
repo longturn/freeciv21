@@ -905,7 +905,7 @@ void hud_action::leaveEvent(QEvent *event)
 /**
    Enter event for hud_action, used to get status of pixmap higlight
  */
-void hud_action::enterEvent(QEvent *event)
+void hud_action::enterEvent(QEnterEvent *event)
 {
   focus = true;
   update();
@@ -1614,7 +1614,7 @@ void hud_unit_combat::leaveEvent(QEvent *event)
 /**
    Leave event for hud unit combat. Shows highlight.
  */
-void hud_unit_combat::enterEvent(QEvent *event)
+void hud_unit_combat::enterEvent(QEnterEvent *event)
 {
   focus = true;
   update();
