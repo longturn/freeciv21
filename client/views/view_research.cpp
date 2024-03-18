@@ -279,7 +279,7 @@ science_report::science_report() : QWidget()
   refresh_but->setText(_("Refresh"));
   refresh_but->setToolTip(_("Press to refresh currently researched "
                             "technology calculation again."));
-  refresh_but->setVisible(false);
+  refresh_but->setDisabled(true);
 
   progress->setTextVisible(true);
   progress_label->setSizePolicy(size_fixed_policy);
@@ -515,7 +515,7 @@ void science_report::update_report()
 
   // If tech leak happens we enable a button to force/push a refresh.
   if (done >= total) {
-    refresh_but->setVisible(true);
+    refresh_but->setDisabled(false);
   }
 
   update_reqtree();
