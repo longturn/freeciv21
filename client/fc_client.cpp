@@ -287,8 +287,12 @@ void fc_client::add_server_source(QIODevice *sock)
  */
 void fc_client::closeEvent(QCloseEvent *event)
 {
-  popup_quit_dialog();
-  event->ignore();
+  if (!is_closing()) {
+    popup_quit_dialog();
+    event->ignore();
+  } else {
+    event->accept();
+  }
 }
 
 /**

@@ -114,6 +114,7 @@ public:
 
   enum client_pages current_page();
 
+  void closing();
   void set_status_bar(const QString &str, int timeout = 20000);
   void set_diplo_dialog(choice_dialog *widget);
   choice_dialog *get_diplo_dialog();
@@ -130,7 +131,6 @@ public:
 
 private slots:
   void server_input();
-  void closing();
   void clear_status_bar();
 
 public slots:
