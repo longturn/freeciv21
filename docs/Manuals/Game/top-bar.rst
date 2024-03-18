@@ -368,9 +368,8 @@ you instruct your scientists which technologies to research. When you click the 
   Research View Button
 
 
-:numref:`Research Tree` below shows a sample of a :guilabel:`Research Tree`. In this picture the player has
-actually finished all of the available technologies (known as completing the research tree) and is simply
-researching "future" technologies.
+:numref:`Research Tree` below shows a sample of a :guilabel:`Research Tree`. In this picture the player is
+researching :advance:`Sanitation`.
 
 .. _Research Tree:
 .. figure:: /_static/images/gui-elements/research-tree.png
@@ -385,8 +384,15 @@ researching "future" technologies.
 If nothing is being researched, the :guilabel:`Research View` button will pulse to bring attention to it.
 
 On the :guilabel:`Research Tree`, the top left drop down box is where you can pick from a menu of what
-technology you want your scientists to concentrate on. The bottom left drop down box is where you can set a
-future target. The client will work through the list of technologies as turns progress in order of dependency.
+technology advance you want your scientists to concentrate (:guilabel:`Current Research`). The bottom left
+drop down box is where you can set a future target (:guilabel:`Research Target`). The game will work through
+the list of technologies as turns progress in order of dependency.
+
+To the right of the :guilabel:`Current Research` drop down box, you will find a :guilabel:`Refresh` button. In
+some circumstances a player can find that the current researched bulbs is greater than the bulbs needed to
+complete the task. The :guilabel:`Refresh` button will be enabled in this situation and the player can press
+to refresh the research on the current advance to complete the task.
+
 The progress bar on the right will show you how many bulbs you are producing each turn, how many more bulbs
 you have left to finish the research target and, if enabled, how many bulbs are being used for technology
 upkeep.
