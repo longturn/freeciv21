@@ -30,6 +30,7 @@
 #include "game.h"
 #include "government.h"
 #include "map.h"
+#include "movement.h"
 #include "research.h"
 #include "traderoutes.h"
 #include "unitlist.h"
@@ -462,13 +463,22 @@ const QString popup_info_text(struct tile *ptile)
       }
     }
 
+    // TRANS: Unknown MP left
+    QString mp_left = _("?");
+    if (!client_player() || owner == client_player()) {
+      mp_left = move_points_text_full(punit->moves_left, false, nullptr,
+                                      nullptr, false);
+    }
     /* TRANS: A is attack power, D is defense power, FP is firepower,
      * HP is hitpoints (current and max). */
-    str += QString(_("A:%1 D:%2 FP:%3 HP:%4/%5"))
+    QString max_mp = move_points_text_full(unit_move_rate(punit), false,
+                                           nullptr, nullptr, false);
+    str += QString(_("A:%1 D:%2 FP:%3 HP:%4/%5 MP:%6 of %7"))
                .arg(QString::number(ptype->attack_strength),
                     QString::number(ptype->defense_strength),
                     QString::number(ptype->firepower),
-                    QString::number(punit->hp), QString::number(ptype->hp));
+                    QString::number(punit->hp), QString::number(ptype->hp),
+                    mp_left, max_mp);
     {
       const char *veteran_name =
           utype_veteran_name_translation(ptype, punit->veteran);
