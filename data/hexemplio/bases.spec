@@ -25,6 +25,7 @@ artists = "
     Eleazar [El](buoy)
     Anton Ecker (Kaldred) (ruins)
     GriffonSpade [GS]
+    Hugo Flávio (hugoflavio.com) [HF]
 "
 
 [file]
@@ -58,6 +59,8 @@ tiles = { "row", "column", "tag"
  1,  4, "base.buoy_mg"
 ;[VC]
  0,  5, "extra.ruins_mg"
+;[HF]
+ 0,  6, "city.happy"
 ;[HH]
  1,  5, "city.european_occupied_0"
  1,  5, "city.classical_occupied_0"
