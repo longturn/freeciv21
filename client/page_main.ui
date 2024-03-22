@@ -49,6 +49,9 @@
       <property name="text">
        <string>Start</string>
       </property>
+      <property name="autoDefault">
+       <bool>true</bool>
+      </property>
       <property name="main_pagebt" stdset="0">
        <bool>true</bool>
       </property>
@@ -68,6 +71,9 @@
      <widget class="QPushButton" name="bquit">
       <property name="text">
        <string>Quit</string>
+      </property>
+      <property name="autoDefault">
+       <bool>true</bool>
       </property>
       <property name="main_pagebt" stdset="0">
        <bool>true</bool>
@@ -92,6 +98,9 @@
       <property name="text">
        <string>Options</string>
       </property>
+      <property name="autoDefault">
+       <bool>true</bool>
+      </property>
       <property name="main_pagebt" stdset="0">
        <bool>true</bool>
       </property>
@@ -101,6 +110,9 @@
      <widget class="QPushButton" name="bload">
       <property name="text">
        <string>Load</string>
+      </property>
+      <property name="autoDefault">
+       <bool>true</bool>
       </property>
       <property name="main_pagebt" stdset="0">
        <bool>true</bool>
@@ -112,6 +124,9 @@
       <property name="text">
        <string>Scenario</string>
       </property>
+      <property name="autoDefault">
+       <bool>true</bool>
+      </property>
       <property name="main_pagebt" stdset="0">
        <bool>true</bool>
       </property>
@@ -121,6 +136,9 @@
      <widget class="QPushButton" name="bconnect">
       <property name="text">
        <string>Connect</string>
+      </property>
+      <property name="autoDefault">
+       <bool>true</bool>
       </property>
       <property name="main_pagebt" stdset="0">
        <bool>true</bool>
@@ -132,6 +150,9 @@
       <property name="text">
        <string>Mods</string>
       </property>
+      <property name="autoDefault">
+       <bool>true</bool>
+      </property>
       <property name="main_pagebt" stdset="0">
        <bool>true</bool>
       </property>
@@ -141,6 +162,9 @@
      <widget class="QPushButton" name="btut">
       <property name="text">
        <string>Tutorial</string>
+      </property>
+      <property name="autoDefault">
+       <bool>true</bool>
       </property>
       <property name="main_pagebt" stdset="0">
        <bool>true</bool>
