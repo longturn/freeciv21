@@ -222,8 +222,10 @@ jobs:
           fetch-depth: 0
       - name: Install build tools
         run: |
+          brew update
+          # Remove the bloat installed by default to avoid conflicts
+          brew remove --force $(brew list)
           # Overwrite GitHub's Python symlinks
-          brew update --overwrite
           brew install --overwrite \
             cmake \
             ninja \
