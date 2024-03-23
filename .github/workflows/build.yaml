@@ -213,7 +213,7 @@ jobs:
   os_x:
     name: "macOS"
     runs-on: macos-latest
-    needs: clang-format
+    # needs: clang-format
     env:
       VCPKG_BUILD_TYPE: release
     steps:
@@ -223,7 +223,8 @@ jobs:
       - name: Install build tools
         run: |
           brew update
-          brew install \
+          # Overwrite GitHub's Python symlinks
+          brew install --overwrite \
             cmake \
             ninja \
             gettext \
@@ -558,6 +559,7 @@ jobs:
 
   clang-format:
     name: clang-format Code Formatter
+    needs: os_x
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
