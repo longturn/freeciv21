@@ -225,12 +225,13 @@ jobs:
           brew update
           # Remove the bloat installed by default to avoid conflicts
           brew remove --force $(brew list)
-          # Overwrite GitHub's Python symlinks
+          # Make sure to overwrite existing symlinks
           brew install --overwrite \
             cmake \
-            ninja \
+            create-dmg \
             gettext \
-            create-dmg
+            ninja \
+            pkg-config
           brew link gettext --force
       - uses: lukka/run-vcpkg@v11
         name: Install dependencies
