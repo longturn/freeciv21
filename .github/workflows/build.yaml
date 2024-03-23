@@ -235,7 +235,7 @@ jobs:
           brew link gettext --force
       - uses: actions/setup-python@v5  # Workaround for #2069
         with:
-        python-version: '3.11'
+          python-version: '3.11'
       - uses: lukka/run-vcpkg@v11
         name: Install dependencies
         with:
