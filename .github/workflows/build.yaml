@@ -233,15 +233,16 @@ jobs:
             ninja \
             pkg-config
           brew link gettext --force
+      - uses: actions/setup-python@v5  # Workaround for #2069
+        with:
+        python-version: '3.11'
       - uses: lukka/run-vcpkg@v11
         name: Install dependencies
         with:
-          # Contains the proper fix for #2069
-          # See https://github.com/microsoft/vcpkg/pull/28084
-          vcpkgGitCommitId: cf4ebef2294e164875ce17d7937f44d3e3ea156e
-      - if: failure()
-        name: Setup tmate session
+          vcpkgGitCommitId: 53bef8994c541b6561884a8395ea35715ece75db
+      - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
+        # if: failure()
       - name: Build
         uses: lukka/run-cmake@v10
         with:
