@@ -235,6 +235,9 @@ jobs:
           # Contains the proper fix for #2069
           # See https://github.com/microsoft/vcpkg/pull/28084
           vcpkgGitCommitId: cf4ebef2294e164875ce17d7937f44d3e3ea156e
+      - on: failure()
+        name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
       - name: Build
         uses: lukka/run-cmake@v10
         with:
