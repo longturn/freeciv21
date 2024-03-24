@@ -5515,7 +5515,7 @@ void tileset_player_init(struct tileset *t, struct player *pplayer)
   if (player_has_color(t, pplayer)) {
     c = get_player_color(t, pplayer);
   }
-  QPixmap color(128, 64);
+  QPixmap color(t->normal_tile_width, t->normal_tile_height);
   color.fill(c);
 
   for (i = 0; i < EDGE_COUNT; i++) {
