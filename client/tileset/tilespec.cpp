@@ -326,6 +326,7 @@ struct tileset {
   int full_tile_width, full_tile_height;
   int unit_tile_width, unit_tile_height;
   int small_sprite_width, small_sprite_height;
+  double preferred_scale;
 
   int max_upkeep_height;
 
@@ -637,6 +638,14 @@ int tileset_num_city_colors(const struct tileset *t)
 bool tileset_use_hard_coded_fog(const struct tileset *t)
 {
   return FOG_AUTO == t->fogstyle;
+}
+
+/**
+ * Returns the preferred scale (zoom level) of the tileset.
+ */
+double tileset_preferred_scale(const struct tileset *t)
+{
+  return t->preferred_scale;
 }
 
 /**
@@ -1852,6 +1861,10 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
     tileset_stop_read(t, file, fname, sections, layer_order);
     return nullptr;
   }
+
+  t->preferred_scale = secfile_lookup_int_def_min_max(
+                           file, 100, 1, 1000, "tilespec.preferred_scale")
+                       / 100.;
 
   t->select_step_ms = secfile_lookup_int_def_min_max(
       file, 100, 1, 10000, "tilespec.select_step_ms");

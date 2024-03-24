@@ -76,7 +76,7 @@ public slots:
   void zoom_in();
   void zoom_reset();
   void zoom_out();
-  void set_scale(double scale);
+  void set_scale(double scale, bool animate = true);
 
   void show_debugger();
   void hide_debugger();
