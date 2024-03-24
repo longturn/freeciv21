@@ -372,8 +372,22 @@ static bool load_river_sprites(struct tileset *t,
 static void tileset_setup_base(struct tileset *t,
                                const struct extra_type *pextra,
                                const char *tag);
-static void tileset_setup_road(struct tileset *t, struct extra_type *pextra,
-                               const char *tag);
+
+static void tileset_setup_crossing_separate(struct tileset *t, 
+                                            struct extra_type *pextra,
+                                            const char *tag);
+
+static void tileset_setup_crossing_parity(struct tileset *t, 
+                                          struct extra_type *pextra,
+                                          const char *tag);
+
+static void tileset_setup_crossing_combined(struct tileset *t, 
+                                            struct extra_type *pextra,
+                                            const char *tag);
+
+static void tileset_setup_river(struct tileset *t, 
+                                struct extra_type *pextra,
+                                const char *tag);
 
 bool is_extra_drawing_enabled(struct extra_type *pextra);
 
@@ -3222,10 +3236,16 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
       break;
 
     case ESTYLE_ROAD_ALL_SEPARATE:
+      tileset_setup_crossing_separate(t, pextra, tag);
+      break;
     case ESTYLE_ROAD_PARITY_COMBINED:
+      tileset_setup_crossing_parity(t, pextra, tag);
+      break;
     case ESTYLE_ROAD_ALL_COMBINED:
+      tileset_setup_crossing_combined(t, pextra, tag);
+      break;
     case ESTYLE_RIVER:
-      tileset_setup_road(t, pextra, tag);
+      tileset_setup_river(t, pextra, tag);
       break;
 
     case ESTYLE_SINGLE1:
@@ -3297,108 +3317,147 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
   }
 }
 
-/**
-   Set road sprite values; should only happen after
-   tilespec_load_tiles().
+/* Set road/rail/maglev sprite values for ESTYLE_ROAD_ALL_SEPARATE.
+ * should only happen after tilespec_load_tiles().
  */
-static void tileset_setup_road(struct tileset *t, struct extra_type *pextra,
-                               const char *tag)
+static void tileset_setup_crossing_separate(struct tileset *t, 
+                                            struct extra_type *pextra,
+                                            const char *tag)
+{
+  QString full_tag_name;
+  const int id = extra_index(pextra);
+
+  /* place isolated sprites */
+  full_tag_name = QStringLiteral("%1_isolated").arg(tag);
+  SET_SPRITE(extras[id].u.road.isolated, qUtf8Printable(full_tag_name));
+
+  /* place the directional sprite options, one per corner. */
+  for (int i = 0; i < t->num_valid_tileset_dirs; i++) {
+    enum direction8 dir = t->valid_tileset_dirs[i];
+    QString dir_name = dir_get_tileset_name(dir);
+
+    full_tag_name = QStringLiteral("%1_%2").arg(tag, dir_name);
+
+    SET_SPRITE(extras[id].u.road.ru.dir[i], qUtf8Printable(full_tag_name));
+  }
+
+  /* place special corner road sprites */
+  for (int i = 0; i < t->num_valid_tileset_dirs; i++) {
+    enum direction8 dir = t->valid_tileset_dirs[i];
+
+    if (!is_cardinal_tileset_dir(t, dir)) {
+      QString dtn = dir_get_tileset_name(dir);
+
+      full_tag_name =
+          QStringLiteral("%1_c_%2").arg(pextra->graphic_str, dtn);
+
+      SET_SPRITE_OPT(extras[id].u.road.corner[dir],
+                     qUtf8Printable(full_tag_name));
+    }
+  }
+}
+
+/* Set road/rail/maglev sprite values for ESTYLE_ROAD_PARITY_COMBINED.
+ * should only happen after tilespec_load_tiles().
+ */
+static void tileset_setup_crossing_parity(struct tileset *t, 
+                                          struct extra_type *pextra,
+                                          const char *tag)
 {
   QString full_tag_name;
   const int id = extra_index(pextra);
   int i;
-  int extrastyle = t->sprites.extras[id].extrastyle;
 
-  /* Isolated road graphics are used by ESTYLE_ROAD_ALL_SEPARATE and
-     ESTYLE_ROAD_PARITY_COMBINED. */
-  if (extrastyle == ESTYLE_ROAD_ALL_SEPARATE
-      || extrastyle == ESTYLE_ROAD_PARITY_COMBINED) {
-    full_tag_name = QStringLiteral("%1_isolated").arg(tag);
-    SET_SPRITE(extras[id].u.road.isolated, qUtf8Printable(full_tag_name));
+  /* place isolated sprites */
+  full_tag_name = QStringLiteral("%1_isolated").arg(tag);
+  SET_SPRITE(extras[id].u.road.isolated, qUtf8Printable(full_tag_name));
+
+  int num_index = 1 << (t->num_valid_tileset_dirs / 2), j;
+
+  /* place the directional sprite options. 
+   * The comment below exemplifies square tiles:
+   * additional sprites for each road type: 16 each for cardinal and diagonal
+   * directions. Each set of 16 provides a NSEW-indexed sprite to provide 
+   * connectors for all rails in the cardinal/diagonal directions.  The 0 
+   * entry is unused (the "isolated" sprite is used instead). */
+  for (i = 1; i < num_index; i++) {
+    QString c, d;
+
+    for (j = 0; j < t->num_valid_tileset_dirs / 2; j++) {
+      int value = (i >> j) & 1;
+      c += QStringLiteral("%1%2").arg(
+          dir_get_tileset_name(t->valid_tileset_dirs[2 * j]),
+          QString::number(value));
+      d += QStringLiteral("%1%2").arg(
+          dir_get_tileset_name(t->valid_tileset_dirs[2 * j + 1]),
+          QString::number(value));
+    }
+    full_tag_name = QStringLiteral("%1_c_%2").arg(tag, c);
+
+    SET_SPRITE(extras[id].u.road.ru.combo.even[i],
+               qUtf8Printable(full_tag_name));
+    full_tag_name = QStringLiteral("%1_d_%2").arg(tag, d);
+
+    SET_SPRITE(extras[id].u.road.ru.combo.odd[i],
+               qUtf8Printable(full_tag_name));
   }
+  
+  /* place special corner tiles */
+  for (i = 0; i < t->num_valid_tileset_dirs; i++) {
+    enum direction8 dir = t->valid_tileset_dirs[i];
 
-  if (extrastyle == ESTYLE_ROAD_ALL_SEPARATE) {
-    /* ESTYLE_ROAD_ALL_SEPARATE has just 8 additional sprites for each
-     * road type: one going off in each direction. */
-    for (i = 0; i < t->num_valid_tileset_dirs; i++) {
-      enum direction8 dir = t->valid_tileset_dirs[i];
-      QString dir_name = dir_get_tileset_name(dir);
+    if (!is_cardinal_tileset_dir(t, dir)) {
+      QString dtn = dir_get_tileset_name(dir);
 
-      full_tag_name = QStringLiteral("%1_%2").arg(tag, dir_name);
+      full_tag_name =
+          QStringLiteral("%1_c_%2").arg(pextra->graphic_str, dtn);
 
-      SET_SPRITE(extras[id].u.road.ru.dir[i], qUtf8Printable(full_tag_name));
-    }
-  } else if (extrastyle == ESTYLE_ROAD_PARITY_COMBINED) {
-    int num_index = 1 << (t->num_valid_tileset_dirs / 2), j;
-
-    /* ESTYLE_ROAD_PARITY_COMBINED has 32 additional sprites for each road
-     * type: 16 each for cardinal and diagonal directions.  Each set
-     * of 16 provides a NSEW-indexed sprite to provide connectors for
-     * all rails in the cardinal/diagonal directions.  The 0 entry is
-     * unused (the "isolated" sprite is used instead). */
-
-    for (i = 1; i < num_index; i++) {
-      QString c, d;
-
-      for (j = 0; j < t->num_valid_tileset_dirs / 2; j++) {
-        int value = (i >> j) & 1;
-        c += QStringLiteral("%1%2").arg(
-            dir_get_tileset_name(t->valid_tileset_dirs[2 * j]),
-            QString::number(value));
-        d += QStringLiteral("%1%2").arg(
-            dir_get_tileset_name(t->valid_tileset_dirs[2 * j + 1]),
-            QString::number(value));
-      }
-      full_tag_name = QStringLiteral("%1_c_%2").arg(tag, c);
-
-      SET_SPRITE(extras[id].u.road.ru.combo.even[i],
-                 qUtf8Printable(full_tag_name));
-      full_tag_name = QStringLiteral("%1_d_%2").arg(tag, d);
-
-      SET_SPRITE(extras[id].u.road.ru.combo.odd[i],
-                 qUtf8Printable(full_tag_name));
-    }
-  } else if (extrastyle == ESTYLE_ROAD_ALL_COMBINED) {
-    /* ESTYLE_ROAD_ALL_COMBINED includes 256 sprites, one for every
-     * possibility. Just go around clockwise, with all combinations. */
-    for (i = 0; i < t->num_index_valid; i++) {
-      QString idx_str = valid_index_str(t, i);
-
-      full_tag_name = QStringLiteral("%1_%2").arg(tag, idx_str);
-
-      SET_SPRITE(extras[id].u.road.ru.total[i],
-                 qUtf8Printable(full_tag_name));
-    }
-  } else if (extrastyle == ESTYLE_RIVER) {
-    if (!load_river_sprites(t, &t->sprites.extras[id].u.road.ru.rivers,
-                            tag)) {
-      tileset_error(t, LOG_FATAL,
-                    _("No river-style graphics \"%s*\" for extra \"%s\""),
-                    tag, extra_rule_name(pextra));
-    }
-  } else {
-    fc_assert(false);
-  }
-
-  /* Corner road graphics are used by ESTYLE_ROAD_ALL_SEPARATE and
-   * ESTYLE_ROAD_PARITY_COMBINED. */
-  if (extrastyle == ESTYLE_ROAD_ALL_SEPARATE
-      || extrastyle == ESTYLE_ROAD_PARITY_COMBINED) {
-    for (i = 0; i < t->num_valid_tileset_dirs; i++) {
-      enum direction8 dir = t->valid_tileset_dirs[i];
-
-      if (!is_cardinal_tileset_dir(t, dir)) {
-        QString dtn = dir_get_tileset_name(dir);
-
-        full_tag_name =
-            QStringLiteral("%1_c_%2").arg(pextra->graphic_str, dtn);
-
-        SET_SPRITE_OPT(extras[id].u.road.corner[dir],
-                       qUtf8Printable(full_tag_name));
-      }
+      SET_SPRITE_OPT(extras[id].u.road.corner[dir],
+                     qUtf8Printable(full_tag_name));
     }
   }
 }
+
+
+/* Set road/rail/maglev sprite values for ESTYLE_ROAD_ALL_COMBINED.
+ * should only happen after tilespec_load_tiles().
+ */
+static void tileset_setup_crossing_combined(struct tileset *t, 
+                                            struct extra_type *pextra,
+                                            const char *tag)
+{
+  QString full_tag_name;
+  const int id = extra_index(pextra);
+
+  /* Just go around clockwise, with all combinations. */
+  for (int i = 0; i < t->num_index_valid; i++) {
+    QString idx_str = valid_index_str(t, i);
+
+    full_tag_name = QStringLiteral("%1_%2").arg(tag, idx_str);
+
+    SET_SPRITE(extras[id].u.road.ru.total[i],
+               qUtf8Printable(full_tag_name));
+  }
+}
+
+
+/* Set river sprites (ESTYLE_RIVER).
+ * should only happen after tilespec_load_tiles().
+ */
+static void tileset_setup_river(struct tileset *t, 
+                                struct extra_type *pextra,
+                                const char *tag)
+{
+  const int id = extra_index(pextra);
+
+  if (!load_river_sprites(t, &t->sprites.extras[id].u.road.ru.rivers,
+                              tag)) {
+    tileset_error(t, LOG_FATAL,
+                  _("No river-style graphics \"%s*\" for extra \"%s\""),
+                  tag, extra_rule_name(pextra));
+  }
+}
+
 
 /**
    Set base sprite values; should only happen after
