@@ -213,7 +213,7 @@ jobs:
   os_x:
     name: "macOS"
     runs-on: macos-latest
-    needs: clang-format
+    # needs: clang-format
     env:
       VCPKG_BUILD_TYPE: release
     steps:
@@ -223,11 +223,15 @@ jobs:
       - name: Install build tools
         run: |
           brew update
-          brew install \
+          # Remove the bloat installed by default to avoid conflicts
+          brew remove --force $(brew list)
+          # Make sure to overwrite existing symlinks
+          brew install --overwrite \
             cmake \
-            ninja \
+            create-dmg \
             gettext \
-            create-dmg
+            ninja \
+            pkg-config
           brew link gettext --force
       - uses: actions/setup-python@v5  # Workaround for #2069
         with:
@@ -236,6 +240,9 @@ jobs:
         name: Install dependencies
         with:
           vcpkgGitCommitId: 53bef8994c541b6561884a8395ea35715ece75db
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        # if: failure()
       - name: Build
         uses: lukka/run-cmake@v10
         with:
@@ -556,6 +563,7 @@ jobs:
 
   clang-format:
     name: clang-format Code Formatter
+    needs: os_x
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
