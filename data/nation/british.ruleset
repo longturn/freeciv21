@@ -36,14 +36,14 @@ init_units=""
 
 ; We do not want British nation in the same game with English or any of the
 ; other nations within modern Great Britain.
-conflicts_with="english", "scottish", "welsh", "cornish", "northumbrian"
+conflicts_with="english", "scottish", "welsh", "cornish", "northumbrian", "northernirish"
 civilwar_nations=
 ; Sub-national nations
  "english", "scottish", "welsh", "cornish",
 ; Northern Ireland
- "irish",
+ "northernirish",
 ; English-speaking ex-colonies
- "american", "australian", "canadian", "New Zealand"
+ "american", "australian", "canadian", "newzealand"
 
 ; Cities listed roughly in order from south to north
 cities =

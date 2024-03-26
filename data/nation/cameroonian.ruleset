@@ -8,9 +8,9 @@ legend=_("Cameroon is a country in West Central Africa. Colonized by the\
  has been independent since 1960.")
 leaders = {
  "name",                "sex"
- "John Ngu Foncha", "Male"
- "Ahmadou Ahidjo", "Male"
- "Paul Biya", "Male"
+ "John Ngu Foncha",     "Male"
+ "Ahmadou Ahidjo",      "Male"
+ "Paul Biya",           "Male"
 }
 
 flag = "cameroon"
@@ -21,7 +21,7 @@ init_techs=""
 init_buildings=""
 init_units=""
 
-civilwar_nations="nigerian", "fulani"
+civilwar_nations="ambazonian", "nigerian", "fulani"
 
 cities =
  "Yaoundé",

@@ -27,7 +27,7 @@ style = "European"
 init_techs=""
 init_buildings=""
 init_units=""
-civilwar_nations="american", "canadian", "argentine", "russian", "viking"
+civilwar_nations="american", "canadian", "argentine", "russian", "viking", "esperant", "tokiponan"
 
 cities =
  "jbotcad",

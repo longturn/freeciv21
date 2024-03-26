@@ -1,0 +1,64 @@
+[nation_ambazonian]
+
+name = _("Ambazonia")
+plural = _("?plural:Ambazonians")
+groups="African"
+legend=_("The struggle for an independent Ambazonia began in 2017\
+ with the Anglophone crisis.")
+leaders = {
+ "name",                          "sex"
+ "Emmanuel Mbela Lifafa Endeley", "Male"   ; (1916-1988) First Premier of British Southern Cameroons
+ "Grace Mafuatem",                "Female" ; Mother of Lekea Oliver and Chris Anu
+ "Lekeaka Oliver",                "Male"   ; (1968-2022) Leader of the Red Dragon militia
+ "Ayuk Ndifon Defcam",            "Male"   ; (????-2023) Known as General Transporter
+ "Clement Mbashie",               "Male"   ; (????-2023) Known as General No Pity
+ "Chris Anu",                     "Male"   ; Brother of Lekeaka Oliver
+}
+
+ruler_titles = {
+ "government",      "male_title",                 "female_title"
+ "Despotism",       _("Field Marshall %s"),       _("?female:Field Marshall %s")
+ "Monarchy",        _("Baron %s"),                _("?Baroness %s")              
+ "Communism",       _("Paramount Ruler %s"),      _("?female:Paramount Ruler %s")
+}
+
+flag = "ambazonia"
+flag_alt = "-"
+style = "Tropical"
+
+init_techs=""
+init_buildings=""
+init_units=""
+
+civilwar_nations= "cameroonian", "nigerian", "biafran"
+
+cities =
+ "Buea",
+ "Bamenda",
+ "Kumba",
+ "Bafut",
+ "Bali",
+ "Limbé",
+ "Wum",
+ "Tiko",
+ "Kumbo",
+ "Mutengene",
+ "Buea",
+ "Fundong",
+ "Fontem",
+ "Mbanga",
+ "Muyuka",
+ "Ndop",
+ "Mamfe",
+ "Nkambe",
+ "Mbengwi",
+ "Batibo",
+ "Bambili",
+ "Ako",
+ "Bangem",
+ "Eyumojock",
+ "Idenau",
+ "Menji",
+ "Ndu",
+ "Santa",
+ "Mbanga"
