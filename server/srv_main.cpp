@@ -883,6 +883,38 @@ static void update_diplomatics()
              * both players to war. */
             break;
           case 0:
+            /* Automatically extend cease-fires, if both parties share
+             * common allies. We only handle this if both parties are
+             * human, as AI doesn't know how to cancel alliances to
+             * enter war if desired and might get caught in an eternal
+             * cease-fire. */
+            if (is_human(plr1) && is_human(plr2)) {
+              bool extend_ceasefire = false;
+
+              players_iterate_alive(plr3)
+              {
+                if (plr3 != plr1 && plr3 != plr2
+                    && pplayers_allied(plr3, plr1)
+                    && pplayers_allied(plr3, plr2)) {
+                  notify_player(
+                      plr1, nullptr, E_DIPLOMACY, ftc_server,
+                      _("The cease-fire with %s would have run out, but "
+                        "your common ally %s convinces you to extend it."),
+                      player_name(plr2), player_name(plr3));
+
+                  extend_ceasefire = true;
+                }
+              }
+              players_iterate_alive_end;
+
+              if (extend_ceasefire) {
+                // Extend cease-fire
+                state->turns_left = TURNS_EXTEND_CEASEFIRE;
+                continue;
+              }
+            }
+
+            // cease-fire has run out.
             notify_player(plr1, nullptr, E_DIPLOMACY, ftc_server,
                           _("The cease-fire with %s has run out. "
                             "You are now at war with the %s."),
