@@ -933,7 +933,9 @@ static void handle_diplomacy_cancel_pact_internal(struct player *pplayer,
                 nation_plural_for_player(pplayer),
                 diplstate_type_translated_name(new_type));
 
-  // Check fall-out of a war declaration.
+  // Check fall-out of a war declaration. This is only relevant if an AI
+  // declares war or if we cut through the web of alliances after an AI
+  // has declared war.
   players_iterate_alive(other)
   {
     if (other != pplayer && other != pplayer2 && new_type == DS_WAR
