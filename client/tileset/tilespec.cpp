@@ -7,7 +7,7 @@
        | @ @  \_               Foundation, either version 3 of the  License,
        |                              or (at your option) any later version.
      _/     /\                  You should have received  a copy of the GNU
-    /o)  (o/\ \_           f     General Public License along with Freeciv21.
+    /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
