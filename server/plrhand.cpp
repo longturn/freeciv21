@@ -88,11 +88,6 @@ static void send_player_diplstate_c_real(struct player *src,
 static void send_nation_availability_real(struct conn_list *dest,
                                           bool nationset_change);
 
-static void handle_diplomacy_cancel_pact_internal(struct player *pplayer,
-                                                  int other_player_id,
-                                                  enum clause_type clause,
-                                                  bool protect_alliances);
-
 // Used by shuffle_players() and shuffled_player().
 static int shuffled_order[MAX_NUM_PLAYER_SLOTS];
 
@@ -751,14 +746,22 @@ void handle_diplomacy_cancel_pact(struct player *pplayer,
                                   int other_player_id,
                                   enum clause_type clause)
 {
-  handle_diplomacy_cancel_pact_internal(pplayer, other_player_id, clause,
-                                        is_human(pplayer));
+  handle_diplomacy_cancel_pact2(pplayer, other_player_id, clause,
+                                is_human(pplayer));
 }
 
-static void handle_diplomacy_cancel_pact_internal(struct player *pplayer,
-                                                  int other_player_id,
-                                                  enum clause_type clause,
-                                                  bool protect_alliances)
+/**
+   A variant of handle_diplomacy_cancel_pact that allows the caller to
+   control if war declarations should be prevented to protect existing
+   alliances.
+
+   protect_alliances is a flag, that, if set to true, will prevent war
+     declarations if they would break existing alliances.
+ */
+void handle_diplomacy_cancel_pact2(struct player *pplayer,
+                                   int other_player_id,
+                                   enum clause_type clause,
+                                   bool protect_alliances)
 {
   enum diplstate_type old_type;
   enum diplstate_type new_type;
@@ -951,8 +954,8 @@ static void handle_diplomacy_cancel_pact_internal(struct player *pplayer,
                       player_name(pplayer), player_name(pplayer2));
         player_diplstate_get(other, pplayer)->has_reason_to_cancel = 1;
         player_update_last_war_action(other);
-        handle_diplomacy_cancel_pact_internal(other, player_number(pplayer),
-                                              CLAUSE_ALLIANCE, false);
+        handle_diplomacy_cancel_pact2(other, player_number(pplayer),
+                                      CLAUSE_ALLIANCE, false);
       } else {
         /* We are in the same team as the agressor; we cannot break
          * alliance with him. We trust our team mate and break alliance
@@ -963,8 +966,8 @@ static void handle_diplomacy_cancel_pact_internal(struct player *pplayer,
                       player_name(pplayer),
                       nation_plural_for_player(pplayer2),
                       player_name(pplayer2));
-        handle_diplomacy_cancel_pact_internal(other, player_number(pplayer2),
-                                              CLAUSE_ALLIANCE, false);
+        handle_diplomacy_cancel_pact2(other, player_number(pplayer2),
+                                      CLAUSE_ALLIANCE, false);
       }
     }
   }

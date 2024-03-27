@@ -148,6 +148,11 @@ void send_delegation_info(const struct connection *pconn);
 
 struct player *player_by_user_delegated(const char *name);
 
+void handle_diplomacy_cancel_pact2(struct player *pplayer,
+                                   int other_player_id,
+                                   enum clause_type clause,
+                                   bool protect_alliances);
+
 // player colors
 void playercolor_init();
 void playercolor_free();
