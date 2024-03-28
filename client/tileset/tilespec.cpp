@@ -89,7 +89,7 @@
 #define TILESPEC_CAPSTR                                                     \
   "+Freeciv-tilespec-Devel-2019-Jul-03 duplicates_ok precise-hp-bars "      \
   "unlimited-unit-select-frames unlimited-upkeep-sprites hex_corner "       \
-  "terrain-specific-extras"
+  "terrain-specific-extras options"
 /*
  * Tilespec capabilities acceptable to this program:
  *
@@ -113,14 +113,18 @@
  *      (upkeep.unhappy*, upkeep.output*)
  * hex_corner
  *    - The sprite type "hex_corner" is supported
+ * options
+ *    - Signales that tileset options are supported
  */
 
-#define SPEC_CAPSTR "+Freeciv-spec-Devel-2019-Jul-03"
+#define SPEC_CAPSTR "+Freeciv-spec-Devel-2019-Jul-03 options"
 /*
  * Individual spec file capabilities acceptable to this program:
  *
  * +Freeciv-3.1-spec
  *    - basic format for Freeciv versions 3.1.x; required
+ * options
+ *    - Signals that tileset options are supported
  */
 
 #define TILESPEC_SUFFIX ".tilespec"
@@ -1350,10 +1354,20 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
                     secfile_error());
           continue;
         }
+
+        // Cursor pointing coordinates
         hot_x = secfile_lookup_int_default(file, 0, "%s.tiles%d.hot_x",
                                            sec_name, j);
         hot_y = secfile_lookup_int_default(file, 0, "%s.tiles%d.hot_y",
                                            sec_name, j);
+
+        // User-configured options
+        auto option = QString::fromUtf8(secfile_lookup_str_default(
+            file, "", "%s.tiles%d.option", sec_name, j));
+        if (!option.isEmpty() && !t->options_enabled.count(option)) {
+          // Skip sprites that correspond to disabled options
+          continue;
+        }
 
         // there must be at least 1 because of the while():
         fc_assert_action(num_tags > 0, continue);
@@ -1377,7 +1391,9 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
 
         if (!duplicates_ok) {
           for (k = 0; k < num_tags; k++) {
-            if (t->sprite_hash->contains(tags[k])) {
+            if (t->sprite_hash->contains(tags[k]) && !option.isEmpty()) {
+              // Warn about duplicated sprites, except if it was enabled by
+              // a user option (to override the default).
               qCritical("warning: %s: already have a sprite for \"%s\".",
                         t->name, tags[k]);
             }
