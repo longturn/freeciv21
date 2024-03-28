@@ -2295,7 +2295,7 @@ static void assign_sprite(struct tileset *t, QPixmap *&field,
                   _("Could not find required sprite matching %s"),
                   qUtf8Printable(strvec_to_or_list(names_vec)));
   } else {
-    tileset_error(t, LOG_WARN,
+    tileset_error(t, LOG_NORMAL,
                   _("Could not find optional sprite matching %s"),
                   qUtf8Printable(strvec_to_or_list(names_vec)));
   }
