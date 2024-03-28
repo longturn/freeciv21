@@ -883,6 +883,46 @@ static void update_diplomatics()
              * both players to war. */
             break;
           case 0:
+            // Automatically extend cease-fires, if both parties share common
+            // allies. We only handle this if both parties are human, as AI
+            // doesn't know how to cancel alliances to enter war if desired
+            // and might get caught in an eternal cease-fire.
+            if (is_human(plr1) && is_human(plr2)) {
+              bool extend_ceasefire = false;
+
+              players_iterate_alive(plr3)
+              {
+                if (plr3 != plr1 && plr3 != plr2
+                    && pplayers_allied(plr3, plr1)
+                    && pplayers_allied(plr3, plr2)) {
+                  notify_player(
+                      plr1, nullptr, E_DIPLOMACY, ftc_server,
+                      _("The cease-fire with %s would have run out, but "
+                        "your common ally %s convinces you to extend it for "
+                        "another four turns."),
+                      player_name(plr2), player_name(plr3));
+                  notify_player(
+                      plr2, nullptr, E_DIPLOMACY, ftc_server,
+                      _("The cease-fire with %s would have run out, but "
+                        "your common ally %s convinces you to extend it for "
+                        "another four turns."),
+                      player_name(plr1), player_name(plr3));
+
+                  extend_ceasefire = true;
+                }
+              }
+              players_iterate_alive_end;
+
+              if (extend_ceasefire) {
+                // Extend cease-fire by four turns
+                state->turns_left += 4;
+                state2->turns_left += 4;
+
+                return;
+              }
+            }
+
+            // cease-fire has run out.
             notify_player(plr1, nullptr, E_DIPLOMACY, ftc_server,
                           _("The cease-fire with %s has run out. "
                             "You are now at war with the %s."),
@@ -957,8 +997,8 @@ static void update_diplomatics()
                 if (cancel1) {
                   // Cancel the alliance.
                   to1->has_reason_to_cancel = 1;
-                  handle_diplomacy_cancel_pact(plr3, player_number(plr1),
-                                               CLAUSE_ALLIANCE);
+                  handle_diplomacy_cancel_pact2(plr3, player_number(plr1),
+                                                CLAUSE_ALLIANCE, false);
 
                   // Avoid asymmetric turns_left for the armistice.
                   to1->auto_cancel_turn = game.info.turn;
@@ -972,8 +1012,8 @@ static void update_diplomatics()
                 if (cancel2) {
                   // Cancel the alliance.
                   to2->has_reason_to_cancel = 1;
-                  handle_diplomacy_cancel_pact(plr3, player_number(plr2),
-                                               CLAUSE_ALLIANCE);
+                  handle_diplomacy_cancel_pact2(plr3, player_number(plr2),
+                                                CLAUSE_ALLIANCE, false);
 
                   // Avoid asymmetric turns_left for the armistice.
                   to2->auto_cancel_turn = game.info.turn;
