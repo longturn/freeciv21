@@ -374,20 +374,19 @@ static void tileset_setup_base(struct tileset *t,
                                const struct extra_type *pextra,
                                const char *tag);
 
-static void tileset_setup_crossing_separate(struct tileset *t, 
+static void tileset_setup_crossing_separate(struct tileset *t,
                                             struct extra_type *pextra,
                                             const char *tag);
 
-static void tileset_setup_crossing_parity(struct tileset *t, 
+static void tileset_setup_crossing_parity(struct tileset *t,
                                           struct extra_type *pextra,
                                           const char *tag);
 
-static void tileset_setup_crossing_combined(struct tileset *t, 
+static void tileset_setup_crossing_combined(struct tileset *t,
                                             struct extra_type *pextra,
                                             const char *tag);
 
-static void tileset_setup_river(struct tileset *t, 
-                                struct extra_type *pextra,
+static void tileset_setup_river(struct tileset *t, struct extra_type *pextra,
                                 const char *tag);
 
 bool is_extra_drawing_enabled(struct extra_type *pextra);
@@ -3343,7 +3342,7 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
 /* Set road/rail/maglev sprite values for ESTYLE_ROAD_ALL_SEPARATE.
  * should only happen after tilespec_load_tiles().
  */
-static void tileset_setup_crossing_separate(struct tileset *t, 
+static void tileset_setup_crossing_separate(struct tileset *t,
                                             struct extra_type *pextra,
                                             const char *tag)
 {
@@ -3385,7 +3384,7 @@ static void tileset_setup_crossing_separate(struct tileset *t,
 /* Set road/rail/maglev sprite values for ESTYLE_ROAD_PARITY_COMBINED.
  * should only happen after tilespec_load_tiles().
  */
-static void tileset_setup_crossing_parity(struct tileset *t, 
+static void tileset_setup_crossing_parity(struct tileset *t,
                                           struct extra_type *pextra,
                                           const char *tag)
 {
@@ -3400,11 +3399,11 @@ static void tileset_setup_crossing_parity(struct tileset *t,
 
   int num_index = 1 << (t->num_valid_tileset_dirs / 2), j;
 
-  /* place the directional sprite options. 
+  /* place the directional sprite options.
    * The comment below exemplifies square tiles:
    * additional sprites for each road type: 16 each for cardinal and diagonal
-   * directions. Each set of 16 provides a NSEW-indexed sprite to provide 
-   * connectors for all rails in the cardinal/diagonal directions.  The 0 
+   * directions. Each set of 16 provides a NSEW-indexed sprite to provide
+   * connectors for all rails in the cardinal/diagonal directions.  The 0
    * entry is unused (the "isolated" sprite is used instead). */
   for (i = 1; i < num_index; i++) {
     QString c, d;
@@ -3444,11 +3443,10 @@ static void tileset_setup_crossing_parity(struct tileset *t,
   }
 }
 
-
 /* Set road/rail/maglev sprite values for ESTYLE_ROAD_ALL_COMBINED.
  * should only happen after tilespec_load_tiles().
  */
-static void tileset_setup_crossing_combined(struct tileset *t, 
+static void tileset_setup_crossing_combined(struct tileset *t,
                                             struct extra_type *pextra,
                                             const char *tag)
 {
@@ -3466,24 +3464,20 @@ static void tileset_setup_crossing_combined(struct tileset *t,
   }
 }
 
-
 /* Set river sprites (ESTYLE_RIVER).
  * should only happen after tilespec_load_tiles().
  */
-static void tileset_setup_river(struct tileset *t, 
-                                struct extra_type *pextra,
+static void tileset_setup_river(struct tileset *t, struct extra_type *pextra,
                                 const char *tag)
 {
   const int id = extra_index(pextra);
 
-  if (!load_river_sprites(t, &t->sprites.extras[id].u.road.ru.rivers,
-                              tag)) {
+  if (!load_river_sprites(t, &t->sprites.extras[id].u.road.ru.rivers, tag)) {
     tileset_error(t, LOG_FATAL,
-                  _("No river-style graphics \"%s*\" for extra \"%s\""),
-                  tag, extra_rule_name(pextra));
+                  _("No river-style graphics \"%s*\" for extra \"%s\""), tag,
+                  extra_rule_name(pextra));
   }
 }
-
 
 /**
    Set base sprite values; should only happen after
