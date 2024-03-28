@@ -45,24 +45,23 @@ This page assumes the user knows how to use :file:`git`, compile Freeciv21 and u
 
 .. code-block:: sh
 
-    $ rm -Rf build
+    $ rm -Rf build_[pr-number]
 
 
 :strong:`Configure And Compile The Code`
 
 .. code-block:: sh
 
-    $ cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
-    $ cmake --build build
-    $ cmake --build build --target install
-    $ cmake --build build --target package      # MSYS2 and Debian Linux Only
-    $ cmake --build build --target test         # Not on MSYS2 or Visual Studio
+    $ cmake . -B build_[pr-number] -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build_[pr-number]/install
+    $ cmake --build build_[pr-number]
+    $ cmake --build build_[pr-number] --target install
+    $ cmake --build build_[pr-number] --target package      # MSYS2 and Debian Linux Only
 
 :strong:`Run tests`
 
 .. code-block:: sh
 
-  $ cmake --build build --target test
+  $ cmake --build build_[pr-number] --target test
 
 :strong:`Read The Issue's Notes`
 
@@ -75,10 +74,10 @@ probably have to re-download the diff and run another test.
 If it is a big change, it might be worthwhile to run an entire game with just AI to make sure it does not
 break anything. You can compile the code, with additional checks such as address sanitizer with
 :code:`$ cmake . --preset ASan`. Once the code is compiled, you can run the autogame with
-:code:`$ ./build/freeciv21-server -r ./data/test-autogame.serv`. You can also observe the game with
-:code:`$ ./build/freeciv21-client -a -p 5556 -s localhost`. ASan by default halts on every error, this is
-sometimes useful to developers to fix the errors sequentially. If you'd rather prefer listing all the errors
-at once, set the environment variable using :code:`$ export ASAN_OPTIONS="halt_on_error=0"`
+:code:`$ ./build_[pr-number]/freeciv21-server -r ./data/test-autogame.serv`. You can also observe the game
+with :code:`$ ./build_[pr-number]/freeciv21-client -a -p 5556 -s localhost`. ASan by default halts on every
+error, this is sometimes useful to developers to fix the errors sequentially. If you'd rather prefer listing
+all the errors at once, set the environment variable using :code:`$ export ASAN_OPTIONS="halt_on_error=0"`
 
 :strong:`Cleanup`
 
@@ -108,7 +107,7 @@ images and music files get copied over, merged, or renamed, and authorship infor
 sure that the author of the PR understands where the files come from and who authored them. If possible, ask
 the original author directly if we can include their art.
 
-We request that all assets file be accompanied with license and copyright information in the form of a
+We request that all asset files be accompanied with license and copyright information in the form of a
 `license file <https://reuse.software/spec/#comment-headers>`_. You will find many examples in the
 repository. The license should be `compatible with version 3 of the GPL
 <https://www.gnu.org/licenses/license-list.html>`_.
