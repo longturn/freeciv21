@@ -35,6 +35,7 @@
 #include "deprecations.h"
 #include "fcintl.h"
 #include "log.h"
+#include "name_translation.h"
 #include "rand.h"
 #include "registry.h"
 #include "registry_ini.h"
@@ -269,7 +270,20 @@ struct specfile {
   char *file_name;
 };
 
-/*
+/// The prefix for option sections in the tilespec file.
+const static char *const OPTION_SECTION_PREFIX = "option_";
+
+/**
+ * Tileset options allow altering the behavior of a tileset.
+ */
+struct tileset_option {
+
+  QString name; ///< Internal name of the option, not user-visible
+  name_translation description; ///< One-line description for use in the UI
+  bool enabled_by_default;      ///< Default status
+};
+
+/**
  * Information about an individual sprite. All fields except 'sprite' are
  * filled at the time of the scan of the specfile. 'Sprite' is
  * set/cleared on demand in load_sprite/unload_sprite.
@@ -300,6 +314,9 @@ struct tileset {
   char *description;
 
   std::vector<tileset_log_entry> log;
+
+  std::vector<tileset_option> options;
+  std::set<QString> options_enabled;
 
   std::vector<std::unique_ptr<freeciv::layer>> layers;
   struct {
@@ -366,6 +383,8 @@ static bool tileset_update = false;
 
 static struct tileset *tileset_read_toplevel(const QString &tileset_name,
                                              bool verbose, int topology_id);
+
+static bool tileset_setup_options(struct tileset *t, const section_file *file);
 
 static void tileset_setup_base(struct tileset *t,
                                const struct extra_type *pextra,
@@ -2048,6 +2067,10 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
   section_list_destroy(sections);
   sections = nullptr;
 
+  if (!tileset_setup_options(t, file)) {
+    return nullptr;
+  }
+
   t->estyle_hash = new QHash<QString, int>;
 
   for (i = 0; i < ESTYLE_COUNT; i++) {
@@ -2131,6 +2154,65 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
   delete[] layer_order;
 
   return t;
+}
+
+/**
+ * Loads tileset options.
+ *
+ * This function loads options from the a '.tilespec' file and sets up all
+ * structures in the tileset.
+ */
+static bool tileset_setup_options(struct tileset *t, const section_file *file)
+{
+  auto sections =
+      secfile_sections_by_name_prefix(file, OPTION_SECTION_PREFIX);
+  if (!sections) {
+    return true;
+  }
+
+  std::set<QString> all_names;
+
+  section_list_iterate(sections, psection)
+  {
+    // Mandatory fields: name, description. Optional: enabled_by_default.
+    const auto sec_name = section_name(psection);
+
+    tileset_option option;
+
+    auto name = secfile_lookup_str_default(file, "", "%s.name", sec_name);
+    if (qstrlen(name) == 0) {
+      tileset_error(t, QtCriticalMsg, "Option \"%s\" has no name", sec_name);
+      continue; // Skip instead of erroring out: options are optional
+    }
+    option.name = QString::fromUtf8(name);
+
+    // Check for duplicates
+    if (all_names.count(option.name)) {
+      tileset_error(t, QtCriticalMsg, "Duplicated option name \"%s\"", name);
+      continue; // Skip instead of erroring out: options are optional
+    }
+    all_names.insert(option.name);
+
+    auto description =
+        secfile_lookup_str_default(file, "", "%s.description", sec_name);
+    if (qstrlen(description) == 0) {
+      tileset_error(t, QtCriticalMsg, "Option \"%s\" has no description",
+                    name);
+      continue; // Skip instead of erroring out: options are optional
+    }
+    name_init(&option.description);
+    name_set(&option.description, nullptr, description);
+
+    option.enabled_by_default =
+        secfile_lookup_bool_default(file, false, "%s.default", sec_name);
+    if (option.enabled_by_default) {
+      t->options_enabled.insert(option.name);
+      t->options.emplace_back(std::move(option));
+    }
+  }
+  section_list_iterate_end;
+
+  return true;
 }
 
 /**
