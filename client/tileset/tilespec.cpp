@@ -1425,8 +1425,18 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
                 secfile_error());
       continue;
     }
+
+    // Cursor pointing coordinates
     hot_x = secfile_lookup_int_default(file, 0, "extra.sprites%d.hot_x", i);
     hot_y = secfile_lookup_int_default(file, 0, "extra.sprites%d.hot_y", i);
+
+    // User-configured options
+    auto option = QString::fromUtf8(secfile_lookup_str_default(
+        file, "", "extras.sprites%d.option", i));
+    if (!option.isEmpty() && !t->options_enabled.count(option)) {
+      // Skip sprites that correspond to disabled options
+      continue;
+    }
 
     ss = new small_sprite;
     ss->ref_count = 0;
