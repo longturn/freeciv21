@@ -97,6 +97,7 @@ target_sources(
   themes.cpp
   themes_common.cpp
   tileset_debugger.cpp
+  tileset_options.cpp
   tooltips.cpp
   top_bar.cpp
   tradecalculation.cpp

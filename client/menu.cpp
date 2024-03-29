@@ -18,6 +18,7 @@
 #include <QMessageBox>
 #include <QStandardPaths>
 #include <QVBoxLayout>
+#include <qmenubar.h>
 // utility
 #include "fcintl.h"
 // common
@@ -29,6 +30,7 @@
 #include "map.h"
 #include "multipliers.h"
 #include "road.h"
+#include "tileset_options.h"
 #include "unit.h"
 // client
 #include "audio/audio.h"
@@ -577,6 +579,10 @@ void mr_menu::setup_menus()
   connect(act, &QAction::triggered, this, &mr_menu::tileset_custom_load);
   act = menu->addAction(_("Add Modpacks"));
   connect(act, &QAction::triggered, this, &mr_menu::add_modpacks);
+  tileset_options = menu->addAction(_("Tileset Options"));
+  connect(tileset_options, &QAction::triggered, this,
+          &mr_menu::show_tileset_options);
+  tileset_options->setEnabled(tileset_has_options(tileset));
   act = menu->addAction(_("Tileset Debugger"));
   connect(act, &QAction::triggered, queen()->mapview_wdg,
           &map_view::show_debugger);
@@ -2665,6 +2671,15 @@ void mr_menu::tileset_custom_load()
 /**
  * Slot for loading modpack installer
  */
+void mr_menu::show_tileset_options()
+{
+  auto dialog = new freeciv::tileset_options_dialog(tileset, this);
+  dialog->show();
+}
+
+/**
+ * Slot for loading modpack installer
+ */
 void mr_menu::add_modpacks() { king()->load_modpack(); }
 
 /**
@@ -2733,6 +2748,17 @@ void mr_menu::slot_build_base(int id)
     }
     extra_type_by_cause_iterate_end;
   }
+}
+
+/**
+ * Reimplemented virtual function.
+ */
+bool mr_menu::event(QEvent *event)
+{
+  if (event->type() == TilesetChanged) {
+    tileset_options->setEnabled(tileset_has_options(tileset));
+  }
+  return QMenuBar::event(event);
 }
 
 /**
