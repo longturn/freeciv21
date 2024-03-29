@@ -23,6 +23,9 @@
 #include <QColor>
 #include <QEvent>
 
+#include <optional>
+#include <set>
+
 struct base_type;
 struct help_item;
 struct resource_type;
@@ -97,6 +100,17 @@ struct tileset_log_entry {
   QString message;
 };
 
+/**
+ * Tileset options allow altering the behavior of a tileset.
+ */
+struct tileset_option {
+
+  QString name; ///< Internal name of the option, not user-visible
+  QString
+      description; ///< One-line description for use in the UI (translated)
+  bool enabled_by_default; ///< Default status
+};
+
 struct tileset;
 
 extern struct tileset *tileset;
@@ -119,13 +133,22 @@ bool tileset_is_fully_loaded();
 std::vector<tileset_log_entry> tileset_log(const struct tileset *t);
 bool tileset_has_error(const struct tileset *t);
 
+bool tileset_has_options(const struct tileset *t);
+std::vector<tileset_option> tileset_get_options(const struct tileset *t);
+bool tileset_option_is_enabled(const struct tileset *t, const QString &name);
+bool tileset_set_option(struct tileset *t, const QString &name,
+                        bool enabled);
+
 void finish_loading_sprites(struct tileset *t);
 
 bool tilespec_try_read(const QString &name, bool verbose, int topo_id);
-bool tilespec_reread(const QString &tileset_name,
-                     bool game_fully_initialized);
+bool tilespec_reread(
+    const QString &tileset_name, bool game_fully_initialized,
+    const std::optional<std::set<QString>> &options = std::nullopt);
 void tilespec_reread_callback(struct option *poption);
-void tilespec_reread_frozen_refresh(const QString &name);
+void tilespec_reread_frozen_refresh(
+    const QString &name,
+    const std::optional<std::set<QString>> &options = std::nullopt);
 
 void tileset_setup_specialist_type(struct tileset *t, Specialist_type_id id);
 void tileset_setup_unit_type(struct tileset *t, struct unit_type *punittype);
