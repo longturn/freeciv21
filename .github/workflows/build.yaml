@@ -213,7 +213,7 @@ jobs:
   os_x:
     name: "macOS"
     runs-on: macos-latest
-    # needs: clang-format
+    needs: clang-format
     env:
       VCPKG_BUILD_TYPE: release
     steps:
@@ -240,9 +240,6 @@ jobs:
         name: Install dependencies
         with:
           vcpkgGitCommitId: 53bef8994c541b6561884a8395ea35715ece75db
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        # if: failure()
       - name: Build
         uses: lukka/run-cmake@v10
         with:
@@ -563,7 +560,6 @@ jobs:
 
   clang-format:
     name: clang-format Code Formatter
-    needs: os_x
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
