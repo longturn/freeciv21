@@ -914,7 +914,7 @@ static void update_diplomatics()
 
               if (extend_ceasefire) {
                 // Extend cease-fire by four turns
-                state->turns_left = 4;
+                state->turns_left = TURNS_EXTEND_CEASEFIRE;
                 break;
               }
             }
