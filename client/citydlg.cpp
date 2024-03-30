@@ -664,7 +664,7 @@ city_info::city_info(QWidget *parent) : QWidget(parent)
   };
 
   QLabel *dummy;
-  std::tie(dummy, m_food) = create_labels(_("<B>Food:</B>"));
+  std::tie(dummy, m_food) = create_labels(_("<b>Food:</b>"));
   std::tie(dummy, m_granary) = create_labels(_("Granary:"));
   std::tie(dummy, m_size) = create_labels(_("Citizens:"));
   std::tie(dummy, m_growth) = create_labels(_("Change in:"));
@@ -672,13 +672,13 @@ city_info::city_info(QWidget *parent) : QWidget(parent)
   info_grid_layout->addItem(new QSpacerItem(0, 9),
                             info_grid_layout->rowCount(), 0);
 
-  std::tie(dummy, m_production) = create_labels(_("<B>Production:</B>"));
+  std::tie(dummy, m_production) = create_labels(_("<b>Production:</b>"));
   std::tie(dummy, m_waste) = create_labels(_("Waste:"));
 
   info_grid_layout->addItem(new QSpacerItem(0, 9),
                             info_grid_layout->rowCount(), 0);
 
-  std::tie(dummy, m_trade) = create_labels(_("<B>Trade:</B>"));
+  std::tie(dummy, m_trade) = create_labels(_("<b>Trade:</b>"));
   std::tie(dummy, m_corruption) = create_labels(_("Corruption:"));
   std::tie(dummy, m_gold) = create_labels(_("Gold:"));
   std::tie(dummy, m_science) = create_labels(_("Science:"));
@@ -701,43 +701,94 @@ void city_info::update_labels(struct city *pcity)
                         qUtf8Printable(get_city_dialog_status_text(pcity))));
   m_size->setToolTip(get_city_dialog_size_text(pcity));
 
-  m_food->setText(QString::asprintf(
-      "<B style=\"white-space:pre\">%3d (%+4d)</B>",
-      pcity->prod[O_FOOD] + pcity->waste[O_FOOD], pcity->surplus[O_FOOD]));
-  m_food->setToolTip(get_city_dialog_output_text(pcity, O_FOOD));
+  if (pcity->surplus[O_FOOD] < 0) {
+    m_food->setText(QString::asprintf(
+        "<b style=\"white-space:pre;\">%3d (<b "
+        "style=\"color:red;\">%+4d</b>)</b>",
+        pcity->prod[O_FOOD] + pcity->waste[O_FOOD], pcity->surplus[O_FOOD]));
+    m_food->setToolTip(get_city_dialog_output_text(pcity, O_FOOD));
+    m_growth->setText(get_city_dialog_growth_value(pcity));
+    m_growth->setStyleSheet("QLabel { color:red; }");
+  } else {
+    m_food->setText(QString::asprintf(
+        "<b style=\"white-space:pre;\">%3d (%+4d)</b>",
+        pcity->prod[O_FOOD] + pcity->waste[O_FOOD], pcity->surplus[O_FOOD]));
+    m_food->setToolTip(get_city_dialog_output_text(pcity, O_FOOD));
+    m_growth->setText(get_city_dialog_growth_value(pcity));
+    m_growth->setStyleSheet("QLabel { color:white; }");
+  }
 
-  m_production->setText(
-      QString::asprintf("<B style=\"white-space:pre\">%3d (%+4d)</B>",
-                        pcity->prod[O_SHIELD] + pcity->waste[O_SHIELD],
-                        pcity->surplus[O_SHIELD]));
-  m_production->setToolTip(get_city_dialog_output_text(pcity, O_SHIELD));
+  if (pcity->surplus[O_SHIELD] < 0) {
+    m_production->setText(
+        QString::asprintf("<b style=\"white-space:pre\">%3d (<b "
+                          "style=\"color:red;\">%+4d</b>)</b>",
+                          pcity->prod[O_SHIELD] + pcity->waste[O_SHIELD],
+                          pcity->surplus[O_SHIELD]));
+    m_production->setToolTip(get_city_dialog_output_text(pcity, O_SHIELD));
+  } else {
+    m_production->setText(
+        QString::asprintf("<b style=\"white-space:pre\">%3d (%+4d)</b>",
+                          pcity->prod[O_SHIELD] + pcity->waste[O_SHIELD],
+                          pcity->surplus[O_SHIELD]));
+    m_production->setToolTip(get_city_dialog_output_text(pcity, O_SHIELD));
+  }
 
-  m_trade->setText(
-      QString::asprintf("<B style=\"white-space:pre\">%3d (%+4d)</B>",
-                        pcity->prod[O_TRADE] + pcity->waste[O_TRADE],
-                        pcity->surplus[O_TRADE]));
-  m_trade->setToolTip(get_city_dialog_output_text(pcity, O_TRADE));
+  if (pcity->surplus[O_TRADE] < 0) {
+    m_trade->setText(
+        QString::asprintf("<b style=\"white-space:pre\">%3d (<b "
+                          "style=\"color:red;\">%+4d</b>)</b>",
+                          pcity->prod[O_TRADE] + pcity->waste[O_TRADE],
+                          pcity->surplus[O_TRADE]));
+    m_trade->setToolTip(get_city_dialog_output_text(pcity, O_TRADE));
+  } else {
+    m_trade->setText(
+        QString::asprintf("<b style=\"white-space:pre\">%3d (%+4d)</b>",
+                          pcity->prod[O_TRADE] + pcity->waste[O_TRADE],
+                          pcity->surplus[O_TRADE]));
+    m_trade->setToolTip(get_city_dialog_output_text(pcity, O_TRADE));
+  }
 
-  m_gold->setText(QString::asprintf(
-      "%3d (%+4d)", pcity->prod[O_GOLD] + pcity->waste[O_GOLD],
-      pcity->surplus[O_GOLD]));
-  m_gold->setToolTip(get_city_dialog_output_text(pcity, O_GOLD));
+  if (pcity->surplus[O_GOLD] < 0) {
+    m_gold->setText(QString::asprintf(
+        "%3d (<b style=\"color:red;\">%+4d</b>)",
+        pcity->prod[O_GOLD] + pcity->waste[O_GOLD], pcity->surplus[O_GOLD]));
+    m_gold->setToolTip(get_city_dialog_output_text(pcity, O_GOLD));
+  } else {
+    m_gold->setText(QString::asprintf(
+        "%3d (%+4d)", pcity->prod[O_GOLD] + pcity->waste[O_GOLD],
+        pcity->surplus[O_GOLD]));
+    m_gold->setToolTip(get_city_dialog_output_text(pcity, O_GOLD));
+  }
 
-  m_luxury->setText(QString::asprintf(
-      "%3d (%+4d)", pcity->prod[O_LUXURY] + pcity->waste[O_LUXURY],
-      pcity->surplus[O_LUXURY]));
-  m_luxury->setToolTip(get_city_dialog_output_text(pcity, O_LUXURY));
+  if (pcity->surplus[O_LUXURY] < 0) {
+    m_luxury->setText(
+        QString::asprintf("%3d (<b style=\"color:red;\">%+4d</b>)",
+                          pcity->prod[O_LUXURY] + pcity->waste[O_LUXURY],
+                          pcity->surplus[O_LUXURY]));
+    m_luxury->setToolTip(get_city_dialog_output_text(pcity, O_LUXURY));
+  } else {
+    m_luxury->setText(QString::asprintf(
+        "%3d (%+4d)", pcity->prod[O_LUXURY] + pcity->waste[O_LUXURY],
+        pcity->surplus[O_LUXURY]));
+    m_luxury->setToolTip(get_city_dialog_output_text(pcity, O_LUXURY));
+  }
 
-  m_science->setText(QString::asprintf(
-      "%3d (%+4d)", pcity->prod[O_SCIENCE] + pcity->waste[O_SCIENCE],
-      pcity->surplus[O_SCIENCE]));
-  m_science->setToolTip(get_city_dialog_output_text(pcity, O_SCIENCE));
+  if (pcity->surplus[O_SCIENCE] < 0) {
+    m_science->setText(
+        QString::asprintf("%3d (<b style=\"color:red;\">%+4d</b>)",
+                          pcity->prod[O_SCIENCE] + pcity->waste[O_SCIENCE],
+                          pcity->surplus[O_SCIENCE]));
+    m_science->setToolTip(get_city_dialog_output_text(pcity, O_SCIENCE));
+  } else {
+    m_science->setText(QString::asprintf(
+        "%3d (%+4d)", pcity->prod[O_SCIENCE] + pcity->waste[O_SCIENCE],
+        pcity->surplus[O_SCIENCE]));
+    m_science->setToolTip(get_city_dialog_output_text(pcity, O_SCIENCE));
+  }
 
   m_granary->setText(
       QString::asprintf("%3d/%-4d", pcity->food_stock,
                         city_granary_size(city_size_get(pcity))));
-
-  m_growth->setText(get_city_dialog_growth_value(pcity));
 
   m_corruption->setText(QString::asprintf("%3d", pcity->waste[O_TRADE]));
 
