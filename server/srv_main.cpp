@@ -903,8 +903,7 @@ static void update_diplomatics()
                   notify_player(
                       plr1, nullptr, E_DIPLOMACY, ftc_server,
                       _("The cease-fire with %s would have run out, but "
-                        "your common ally %s convinces you to extend it for "
-                        "another four turns."),
+                        "your common ally %s convinces you to extend it."),
                       player_name(plr2), player_name(plr3));
 
                   extend_ceasefire = true;
