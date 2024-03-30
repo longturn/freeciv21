@@ -223,11 +223,15 @@ jobs:
       - name: Install build tools
         run: |
           brew update
-          brew install \
+          # Remove the bloat installed by default to avoid conflicts
+          brew remove --force $(brew list)
+          # Make sure to overwrite existing symlinks
+          brew install --overwrite \
             cmake \
-            ninja \
+            create-dmg \
             gettext \
-            create-dmg
+            ninja \
+            pkg-config
           brew link gettext --force
       - uses: actions/setup-python@v5  # Workaround for #2069
         with:
