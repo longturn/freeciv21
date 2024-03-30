@@ -197,7 +197,7 @@ jobs:
       - uses: lukka/run-vcpkg@v11
         name: Install dependencies
         with:
-          vcpkgGitCommitId: 53bef8994c541b6561884a8395ea35715ece75db
+          vcpkgGitCommitId: a34c873a9717a888f58dc05268dea15592c2f0ff
       - name: Enable Developer Command Prompt
         uses: ilammy/msvc-dev-cmd@v1
       - name: Configure
@@ -239,7 +239,7 @@ jobs:
       - uses: lukka/run-vcpkg@v11
         name: Install dependencies
         with:
-          vcpkgGitCommitId: 53bef8994c541b6561884a8395ea35715ece75db
+          vcpkgGitCommitId: a34c873a9717a888f58dc05268dea15592c2f0ff
       - name: Build
         uses: lukka/run-cmake@v10
         with:
