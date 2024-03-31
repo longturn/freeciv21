@@ -1,2 +1,2 @@
-e5a21
-v3.0-patch.3
+b9d167
+v3.0-patch.4
