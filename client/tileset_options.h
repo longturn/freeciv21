@@ -17,6 +17,8 @@ namespace freeciv {
  * Lets the user toggle tileset options.
  */
 class tileset_options_dialog : public QDialog {
+  Q_OBJECT
+
   std::map<QString, QCheckBox *> m_checks;
 
 public:
