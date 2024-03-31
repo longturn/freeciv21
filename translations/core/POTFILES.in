@@ -206,7 +206,6 @@ common/vision.cpp
 common/workertask.cpp
 common/worklist.cpp
 data/amplio2.tilespec
-data/cimpletoon.tilespec
 data/civ1/buildings.ruleset
 data/civ1/cities.ruleset
 data/civ1/effects.ruleset
