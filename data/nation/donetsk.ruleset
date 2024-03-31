@@ -12,9 +12,9 @@ leaders = {
  "name",                          "sex"
  "John James Hughes",             "Male"   ; (1814-1889) Founder of the city of Donetsk
  "Konstantin Kosenko",            "Male"   ; (1885-1921) Second mayor of the city of Donetsk
- "Alexander Zakharchenko",        "Male"   ; (1976–2018) Head of the Donetsk People's Republic from 4 November 2014 – 31 August 2018 
+ "Alexander Zakharchenko",        "Male"   ; (1976–2018) Head of the Donetsk People´s Republic from 4 November 2014 – 31 August 2018
  "Denis Pushilin",                "Male"   
- "Elena Pushilina",               "Female" ; Denis Pushilin's wife
+ "Elena Pushilina",               "Female" ; Denis Pushilin´s wife
 }
 
 ruler_titles = {
