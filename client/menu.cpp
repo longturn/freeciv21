@@ -15,10 +15,11 @@
 #include <QApplication>
 #include <QFileDialog>
 #include <QMainWindow>
+#include <QMenuBar>
 #include <QMessageBox>
 #include <QStandardPaths>
 #include <QVBoxLayout>
-#include <qmenubar.h>
+
 // utility
 #include "fcintl.h"
 // common

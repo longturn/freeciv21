@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2024 Louis Moureaux
+// SPDX-FileCopyrightText: Louis Moureaux
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "tileset_options.h"
