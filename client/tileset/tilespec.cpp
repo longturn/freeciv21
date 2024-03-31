@@ -247,7 +247,7 @@ struct named_sprites {
           struct river_sprites rivers;
         } ru;
       } road;
-    } u;
+    } u[MAX_NUM_TERRAINS];
   } extras[MAX_EXTRA_TYPES];
   struct {
     QPixmap *main[EDGE_COUNT], *city[EDGE_COUNT], *worked[EDGE_COUNT],
@@ -366,28 +366,27 @@ static bool tileset_update = false;
 static struct tileset *tileset_read_toplevel(const QString &tileset_name,
                                              bool verbose, int topology_id);
 
-static bool load_river_sprites(struct tileset *t,
-                               struct river_sprites *store,
-                               const char *tag_pfx);
-
 static void tileset_setup_base(struct tileset *t,
                                const struct extra_type *pextra,
                                const char *tag);
 
 static void tileset_setup_crossing_separate(struct tileset *t,
                                             struct extra_type *pextra,
+                                            struct terrain *pterrain,
                                             const char *tag);
 
 static void tileset_setup_crossing_parity(struct tileset *t,
                                           struct extra_type *pextra,
+                                          struct terrain *pterrain,
                                           const char *tag);
 
 static void tileset_setup_crossing_combined(struct tileset *t,
                                             struct extra_type *pextra,
+                                            struct terrain *pterrain,
                                             const char *tag);
 
 static void tileset_setup_river(struct tileset *t, struct extra_type *pextra,
-                                const char *tag);
+                                struct terrain *pterrain, const char *tag);
 
 bool is_extra_drawing_enabled(struct extra_type *pextra);
 
@@ -2964,43 +2963,6 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
 }
 
 /**
-   Load sprites of one river type.
- */
-static bool load_river_sprites(struct tileset *t,
-                               struct river_sprites *store,
-                               const char *tag_pfx)
-{
-  bool ok = true;
-  int i;
-  QString buffer;
-
-  for (i = 0; i < t->num_index_cardinal; i++) {
-    buffer =
-        QStringLiteral("%1_s_%2").arg(tag_pfx, cardinal_index_str(t, i));
-    store->spec[i] = load_sprite(t, buffer);
-    if (store->spec[i] == nullptr) {
-      qCritical("Missing \"%s\" for \"%s\".", qUtf8Printable(buffer),
-                tag_pfx);
-      ok = false;
-    }
-  }
-
-  for (i = 0; i < t->num_cardinal_tileset_dirs; i++) {
-    buffer =
-        QStringLiteral("%1_outlet_%2")
-            .arg(tag_pfx, dir_get_tileset_name(t->cardinal_tileset_dirs[i]));
-    store->outlet[i] = load_sprite(t, buffer);
-    if (store->outlet[i] == nullptr) {
-      qCritical("Missing \"%s\" for \"%s\".", qUtf8Printable(buffer),
-                tag_pfx);
-      ok = false;
-    }
-  }
-
-  return ok;
-}
-
-/**
    Frees any internal buffers which are created by load_sprite. Should
    be called after the last (for a given period of time) load_sprite
    call.  This saves a fair amount of memory, but it will take extra time
@@ -3218,6 +3180,21 @@ void tileset_setup_tech_type(struct tileset *t, struct advance *padvance)
 }
 
 /**
+ * Make the list of possible tag names for the extras which
+ * may vary depending on the terrain they're on.
+ */
+static QStringList make_tag_terrain_list(const QString &prefix,
+                                         const QString &suffix,
+                                         const struct terrain *pterrain)
+{
+  return {
+      QStringLiteral("%1_%2%3").arg(prefix, pterrain->graphic_str, suffix),
+      QStringLiteral("%1_%2%3").arg(prefix, pterrain->graphic_alt, suffix),
+      QStringLiteral("%1%2").arg(prefix, suffix),
+  };
+}
+
+/**
    Set extra sprite values; should only happen after
    tilespec_load_tiles().
  */
@@ -3252,117 +3229,100 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
 
     extra_type_list_append(t->style_lists[extrastyle], pextra);
 
-    switch (extrastyle) {
-    case ESTYLE_3LAYER:
-      tileset_setup_base(t, pextra, tag);
-      break;
+    terrain_type_iterate(pterrain)
+    {
+      switch (extrastyle) {
+      case ESTYLE_3LAYER:
+        tileset_setup_base(t, pextra, tag);
+        break;
 
-    case ESTYLE_ROAD_ALL_SEPARATE:
-      tileset_setup_crossing_separate(t, pextra, tag);
-      break;
-    case ESTYLE_ROAD_PARITY_COMBINED:
-      tileset_setup_crossing_parity(t, pextra, tag);
-      break;
-    case ESTYLE_ROAD_ALL_COMBINED:
-      tileset_setup_crossing_combined(t, pextra, tag);
-      break;
-    case ESTYLE_RIVER:
-      tileset_setup_river(t, pextra, tag);
-      break;
+      case ESTYLE_ROAD_ALL_SEPARATE:
+        tileset_setup_crossing_separate(t, pextra, pterrain, tag);
+        break;
+      case ESTYLE_ROAD_PARITY_COMBINED:
+        tileset_setup_crossing_parity(t, pextra, pterrain, tag);
+        break;
+      case ESTYLE_ROAD_ALL_COMBINED:
+        tileset_setup_crossing_combined(t, pextra, pterrain, tag);
+        break;
+      case ESTYLE_RIVER:
+        tileset_setup_river(t, pextra, pterrain, tag);
+        break;
 
-    case ESTYLE_SINGLE1:
-      t->special_layers.background->set_sprite(pextra, tag);
-      break;
-    case ESTYLE_SINGLE2:
-      t->special_layers.middleground->set_sprite(pextra, tag);
-      break;
+      case ESTYLE_SINGLE1:
+        t->special_layers.background->set_sprite(pextra, tag);
+        break;
+      case ESTYLE_SINGLE2:
+        t->special_layers.middleground->set_sprite(pextra, tag);
+        break;
 
-    case ESTYLE_CARDINALS: {
-      int i;
-      QString buffer;
-
-      /* We use direction-specific irrigation and farmland graphics, if
-       * they are available.  If not, we just fall back to the basic
-       * irrigation graphics. */
-      for (i = 0; i < t->num_index_cardinal; i++) {
-        buffer = QStringLiteral("%1_%2").arg(tag, cardinal_index_str(t, i));
-        t->sprites.extras[id].u.cardinals[i] = load_sprite(t, buffer);
-        if (!t->sprites.extras[id].u.cardinals[i]) {
-          t->sprites.extras[id].u.cardinals[i] = load_sprite(t, tag);
+      case ESTYLE_CARDINALS: {
+        /* We use direction-specific irrigation and farmland graphics, if
+         * they are available.  If not, we just fall back to the basic
+         * irrigation graphics. */
+        for (int i = 0; i < t->num_index_cardinal; i++) {
+          QStringList tags =
+              make_tag_terrain_list(tag, cardinal_index_str(t, i), pterrain);
+          QStringList alt_tags = make_tag_terrain_list(tag, "", pterrain);
+          assign_sprite(
+              t,
+              t->sprites.extras[id].u[terrain_index(pterrain)].cardinals[i],
+              tags + alt_tags, true);
         }
-        if (!t->sprites.extras[id].u.cardinals[i]) {
-          tileset_error(t, LOG_FATAL,
-                        _("No cardinal-style graphics \"%s*\" for "
-                          "extra \"%s\""),
-                        tag, extra_rule_name(pextra));
-        }
+      } break;
+      case ESTYLE_COUNT:
+        break;
       }
-    } break;
-    case ESTYLE_COUNT:
-      break;
     }
+    terrain_type_iterate_end;
   }
 
   if (!fc_strcasecmp(pextra->activity_gfx, "none")) {
     t->sprites.extras[id].activity = nullptr;
   } else {
-    t->sprites.extras[id].activity = load_sprite(t, pextra->activity_gfx);
-    if (t->sprites.extras[id].activity == nullptr) {
-      t->sprites.extras[id].activity = load_sprite(t, pextra->act_gfx_alt);
-    }
-    if (t->sprites.extras[id].activity == nullptr) {
-      t->sprites.extras[id].activity = load_sprite(t, pextra->act_gfx_alt2);
-    }
-    if (t->sprites.extras[id].activity == nullptr) {
-      tileset_error(t, LOG_FATAL,
-                    _("Missing %s building activity sprite for tags \"%s\" "
-                      "and alternatives \"%s\" and \"%s\"."),
-                    extra_rule_name(pextra), pextra->activity_gfx,
-                    pextra->act_gfx_alt, pextra->act_gfx_alt2);
-    }
+    QStringList tags = {
+        pextra->activity_gfx,
+        pextra->act_gfx_alt,
+        pextra->act_gfx_alt2,
+    };
+    assign_sprite(t, t->sprites.extras[id].activity, tags, true);
   }
 
   if (!fc_strcasecmp(pextra->rmact_gfx, "none")) {
     t->sprites.extras[id].rmact = nullptr;
   } else {
-    t->sprites.extras[id].rmact = load_sprite(t, pextra->rmact_gfx);
-    if (t->sprites.extras[id].rmact == nullptr) {
-      t->sprites.extras[id].rmact = load_sprite(t, pextra->rmact_gfx_alt);
-      if (t->sprites.extras[id].rmact == nullptr) {
-        tileset_error(t, LOG_FATAL,
-                      _("Missing %s removal activity sprite for tags \"%s\" "
-                        "and alternative \"%s\"."),
-                      extra_rule_name(pextra), pextra->rmact_gfx,
-                      pextra->rmact_gfx_alt);
-      }
-    }
+    QStringList tags = {
+        pextra->rmact_gfx,
+        pextra->rmact_gfx_alt,
+    };
+    assign_sprite(t, t->sprites.extras[id].rmact, tags, true);
   }
 }
 
-/* Set road/rail/maglev sprite values for ESTYLE_ROAD_ALL_SEPARATE.
+/**
+ * Set road/rail/maglev sprite values for ESTYLE_ROAD_ALL_SEPARATE.
  * should only happen after tilespec_load_tiles().
  */
 static void tileset_setup_crossing_separate(struct tileset *t,
                                             struct extra_type *pextra,
+                                            struct terrain *pterrain,
                                             const char *tag)
 {
   QString full_tag_name;
   const int id = extra_index(pextra);
 
   /* place isolated sprites */
-  full_tag_name = QStringLiteral("%1_isolated").arg(tag);
-  assign_sprite(t, t->sprites.extras[id].u.road.isolated,
-                {qUtf8Printable(full_tag_name)}, true);
+  assign_sprite(
+      t, t->sprites.extras[id].u[terrain_index(pterrain)].road.isolated,
+      make_tag_terrain_list(tag, "_isolated", pterrain), true);
 
   /* place the directional sprite options, one per corner. */
   for (int i = 0; i < t->num_valid_tileset_dirs; i++) {
     enum direction8 dir = t->valid_tileset_dirs[i];
-    QString dir_name = dir_get_tileset_name(dir);
-
-    full_tag_name = QStringLiteral("%1_%2").arg(tag, dir_name);
-
-    assign_sprite(t, t->sprites.extras[id].u.road.ru.dir[i],
-                  {qUtf8Printable(full_tag_name)}, true);
+    QString dir_name = QStringLiteral("_%1").arg(dir_get_tileset_name(dir));
+    assign_sprite(
+        t, t->sprites.extras[id].u[terrain_index(pterrain)].road.ru.dir[i],
+        make_tag_terrain_list(tag, dir_name, pterrain), true);
   }
 
   /* place special corner road sprites */
@@ -3370,13 +3330,11 @@ static void tileset_setup_crossing_separate(struct tileset *t,
     enum direction8 dir = t->valid_tileset_dirs[i];
 
     if (!is_cardinal_tileset_dir(t, dir)) {
-      QString dtn = dir_get_tileset_name(dir);
-
-      full_tag_name =
-          QStringLiteral("%1_c_%2").arg(pextra->graphic_str, dtn);
-
-      assign_sprite(t, t->sprites.extras[id].u.road.corner[dir],
-                    {qUtf8Printable(full_tag_name)}, false);
+      QString dtn = QStringLiteral("_c_%1").arg(dir_get_tileset_name(dir));
+      assign_sprite(
+          t,
+          t->sprites.extras[id].u[terrain_index(pterrain)].road.corner[dir],
+          make_tag_terrain_list(tag, dtn, pterrain), false);
     }
   }
 }
@@ -3386,6 +3344,7 @@ static void tileset_setup_crossing_separate(struct tileset *t,
  */
 static void tileset_setup_crossing_parity(struct tileset *t,
                                           struct extra_type *pextra,
+                                          struct terrain *pterrain,
                                           const char *tag)
 {
   QString full_tag_name;
@@ -3393,9 +3352,9 @@ static void tileset_setup_crossing_parity(struct tileset *t,
   int i;
 
   /* place isolated sprites */
-  full_tag_name = QStringLiteral("%1_isolated").arg(tag);
-  assign_sprite(t, t->sprites.extras[id].u.road.isolated,
-                {qUtf8Printable(full_tag_name)}, true);
+  assign_sprite(
+      t, t->sprites.extras[id].u[terrain_index(pterrain)].road.isolated,
+      make_tag_terrain_list(tag, "_isolated", pterrain), true);
 
   int num_index = 1 << (t->num_valid_tileset_dirs / 2), j;
 
@@ -3406,7 +3365,8 @@ static void tileset_setup_crossing_parity(struct tileset *t,
    * connectors for all rails in the cardinal/diagonal directions.  The 0
    * entry is unused (the "isolated" sprite is used instead). */
   for (i = 1; i < num_index; i++) {
-    QString c, d;
+    QString c = QStringLiteral("_c_");
+    QString d = QStringLiteral("_d_");
 
     for (j = 0; j < t->num_valid_tileset_dirs / 2; j++) {
       int value = (i >> j) & 1;
@@ -3417,14 +3377,18 @@ static void tileset_setup_crossing_parity(struct tileset *t,
           dir_get_tileset_name(t->valid_tileset_dirs[2 * j + 1]),
           QString::number(value));
     }
-    full_tag_name = QStringLiteral("%1_c_%2").arg(tag, c);
 
-    assign_sprite(t, t->sprites.extras[id].u.road.ru.combo.even[i],
-                  {qUtf8Printable(full_tag_name)}, true);
-    full_tag_name = QStringLiteral("%1_d_%2").arg(tag, d);
+    assign_sprite(t,
+                  t->sprites.extras[id]
+                      .u[terrain_index(pterrain)]
+                      .road.ru.combo.even[i],
+                  make_tag_terrain_list(tag, c, pterrain), true);
 
-    assign_sprite(t, t->sprites.extras[id].u.road.ru.combo.odd[i],
-                  {qUtf8Printable(full_tag_name)}, true);
+    assign_sprite(t,
+                  t->sprites.extras[id]
+                      .u[terrain_index(pterrain)]
+                      .road.ru.combo.odd[i],
+                  make_tag_terrain_list(tag, d, pterrain), true);
   }
 
   /* place special corner tiles */
@@ -3432,13 +3396,11 @@ static void tileset_setup_crossing_parity(struct tileset *t,
     enum direction8 dir = t->valid_tileset_dirs[i];
 
     if (!is_cardinal_tileset_dir(t, dir)) {
-      QString dtn = dir_get_tileset_name(dir);
-
-      full_tag_name =
-          QStringLiteral("%1_c_%2").arg(pextra->graphic_str, dtn);
-
-      assign_sprite(t, t->sprites.extras[id].u.road.corner[dir],
-                    {qUtf8Printable(full_tag_name)}, false);
+      QString dtn = QStringLiteral("_c_%1").arg(dir_get_tileset_name(dir));
+      assign_sprite(
+          t,
+          t->sprites.extras[id].u[terrain_index(pterrain)].road.corner[dir],
+          make_tag_terrain_list(tag, dtn, pterrain), false);
     }
   }
 }
@@ -3448,34 +3410,48 @@ static void tileset_setup_crossing_parity(struct tileset *t,
  */
 static void tileset_setup_crossing_combined(struct tileset *t,
                                             struct extra_type *pextra,
+                                            struct terrain *pterrain,
                                             const char *tag)
 {
-  QString full_tag_name;
   const int id = extra_index(pextra);
 
   /* Just go around clockwise, with all combinations. */
   for (int i = 0; i < t->num_index_valid; i++) {
-    QString idx_str = valid_index_str(t, i);
-
-    full_tag_name = QStringLiteral("%1_%2").arg(tag, idx_str);
-
-    assign_sprite(t, t->sprites.extras[id].u.road.ru.total[i],
-                  {qUtf8Printable(full_tag_name)}, true);
+    QString idx_str = QStringLiteral("_%1").arg(valid_index_str(t, i));
+    assign_sprite(
+        t, t->sprites.extras[id].u[terrain_index(pterrain)].road.ru.total[i],
+        make_tag_terrain_list(tag, idx_str, pterrain), true);
   }
 }
 
-/* Set river sprites (ESTYLE_RIVER).
+/**
+ * Set river sprites (ESTYLE_RIVER).
  * should only happen after tilespec_load_tiles().
  */
 static void tileset_setup_river(struct tileset *t, struct extra_type *pextra,
-                                const char *tag)
+                                struct terrain *pterrain, const char *tag)
 {
   const int id = extra_index(pextra);
 
-  if (!load_river_sprites(t, &t->sprites.extras[id].u.road.ru.rivers, tag)) {
-    tileset_error(t, LOG_FATAL,
-                  _("No river-style graphics \"%s*\" for extra \"%s\""), tag,
-                  extra_rule_name(pextra));
+  QString suffix;
+
+  for (int i = 0; i < t->num_index_cardinal; i++) {
+    suffix = QStringLiteral("_s_%1").arg(cardinal_index_str(t, i));
+    assign_sprite(t,
+                  t->sprites.extras[id]
+                      .u[terrain_index(pterrain)]
+                      .road.ru.rivers.spec[i],
+                  make_tag_terrain_list(tag, suffix, pterrain), true);
+  }
+
+  for (int i = 0; i < t->num_cardinal_tileset_dirs; i++) {
+    suffix = QStringLiteral("_outlet_%1")
+                 .arg(dir_get_tileset_name(t->cardinal_tileset_dirs[i]));
+    assign_sprite(t,
+                  t->sprites.extras[id]
+                      .u[terrain_index(pterrain)]
+                      .road.ru.rivers.outlet[i],
+                  make_tag_terrain_list(tag, suffix, pterrain), true);
   }
 }
 
@@ -3491,15 +3467,15 @@ static void tileset_setup_base(struct tileset *t,
 
   fc_assert_ret(id >= 0 && id < extra_count());
 
-  QString full_tag_name = QString(tag) + QStringLiteral("_bg");
+  QString full_tag_name = QStringLiteral("%1_bg").arg(tag);
   t->special_layers.background->set_sprite(
       pextra, full_tag_name, FULL_TILE_X_OFFSET, FULL_TILE_Y_OFFSET);
 
-  full_tag_name = QString(tag) + QStringLiteral("_mg");
+  full_tag_name = QStringLiteral("%1_mg").arg(tag);
   t->special_layers.middleground->set_sprite(
       pextra, full_tag_name, FULL_TILE_X_OFFSET, FULL_TILE_Y_OFFSET);
 
-  full_tag_name = QString(tag) + QStringLiteral("_fg");
+  full_tag_name = QStringLiteral("%1_fg").arg(tag);
   t->special_layers.foreground->set_sprite(
       pextra, full_tag_name, FULL_TILE_X_OFFSET, FULL_TILE_Y_OFFSET);
 }
@@ -3815,13 +3791,14 @@ void fill_unit_sprite_array(const struct tileset *t,
 }
 
 /**
-   Add any corner road sprites to the sprite array.
+   Add any corner road/rail/maglev sprites to the sprite array.
  */
-static void fill_road_corner_sprites(const struct tileset *t,
-                                     const struct extra_type *pextra,
-                                     std::vector<drawn_sprite> &sprs,
-                                     bool road, bool *road_near, bool hider,
-                                     bool *hider_near)
+static void fill_crossing_corner_sprites(const struct tileset *t,
+                                         const struct extra_type *pextra,
+                                         const struct terrain *pterrain,
+                                         std::vector<drawn_sprite> &sprs,
+                                         bool road, bool *road_near,
+                                         bool hider, bool *hider_near)
 {
   int i;
   int extra_idx = extra_index(pextra);
@@ -3852,27 +3829,28 @@ static void fill_road_corner_sprites(const struct tileset *t,
       enum direction8 cwdir = t->valid_tileset_dirs[cw];
       enum direction8 ccwdir = t->valid_tileset_dirs[ccw];
 
-      if (t->sprites.extras[extra_idx].u.road.corner[dir]
+      if (t->sprites.extras[extra_idx]
+              .u[terrain_index(pterrain)]
+              .road.corner[dir]
           && (road_near[cwdir] && road_near[ccwdir]
               && !(hider_near[cwdir] && hider_near[ccwdir]))
           && !(road && road_near[dir] && !(hider && hider_near[dir]))) {
-        sprs.emplace_back(t,
-                          t->sprites.extras[extra_idx].u.road.corner[dir]);
+        sprs.emplace_back(t, t->sprites.extras[extra_idx]
+                                 .u[terrain_index(pterrain)]
+                                 .road.corner[dir]);
       }
     }
   }
 }
 
 /**
-   Fill all road and rail sprites into the sprite array.
+   Fill all road/rail/maglev sprites into the sprite array.
  */
-static void fill_road_sprite_array(const struct tileset *t,
-                                   const struct extra_type *pextra,
-                                   std::vector<drawn_sprite> &sprs,
-                                   bv_extras textras,
-                                   bv_extras *textras_near,
-                                   struct terrain *tterrain_near[8],
-                                   const struct city *pcity)
+static void fill_crossing_sprite_array(
+    const struct tileset *t, const struct extra_type *pextra,
+    std::vector<drawn_sprite> &sprs, bv_extras textras,
+    bv_extras *textras_near, struct terrain *tterrain_near[8],
+    struct terrain *pterrain, const struct city *pcity)
 {
   bool road, road_near[8], hider, hider_near[8];
   bool land_near[8], hland_near[8];
@@ -3987,8 +3965,8 @@ static void fill_road_sprite_array(const struct tileset *t,
   }
 
   // Draw road corners
-  fill_road_corner_sprites(t, pextra, sprs, road, road_near, hider,
-                           hider_near);
+  fill_crossing_corner_sprites(t, pextra, pterrain, sprs, road, road_near,
+                               hider, hider_near);
 
   if (extrastyle == ESTYLE_ROAD_ALL_SEPARATE) {
     /* With ESTYLE_ROAD_ALL_SEPARATE, we simply draw one road for every
@@ -4000,8 +3978,9 @@ static void fill_road_sprite_array(const struct tileset *t,
     if (road) {
       for (i = 0; i < t->num_valid_tileset_dirs; i++) {
         if (draw_road[t->valid_tileset_dirs[i]]) {
-          sprs.emplace_back(t,
-                            t->sprites.extras[extra_idx].u.road.ru.dir[i]);
+          sprs.emplace_back(t, t->sprites.extras[extra_idx]
+                                   .u[terrain_index(pterrain)]
+                                   .road.ru.dir[i]);
         }
       }
     }
@@ -4031,11 +4010,13 @@ static void fill_road_sprite_array(const struct tileset *t,
       /* Draw the cardinal/even roads first. */
       if (road_even_tileno != 0) {
         sprs.emplace_back(t, t->sprites.extras[extra_idx]
-                                 .u.road.ru.combo.even[road_even_tileno]);
+                                 .u[terrain_index(pterrain)]
+                                 .road.ru.combo.even[road_even_tileno]);
       }
       if (road_odd_tileno != 0) {
         sprs.emplace_back(t, t->sprites.extras[extra_idx]
-                                 .u.road.ru.combo.odd[road_odd_tileno]);
+                                 .u[terrain_index(pterrain)]
+                                 .road.ru.combo.odd[road_odd_tileno]);
       }
     }
   } else if (extrastyle == ESTYLE_ROAD_ALL_COMBINED) {
@@ -4056,8 +4037,9 @@ static void fill_road_sprite_array(const struct tileset *t,
       }
 
       if (road_tileno != 0 || draw_single_road) {
-        sprs.emplace_back(
-            t, t->sprites.extras[extra_idx].u.road.ru.total[road_tileno]);
+        sprs.emplace_back(t, t->sprites.extras[extra_idx]
+                                 .u[terrain_index(pterrain)]
+                                 .road.ru.total[road_tileno]);
       }
     }
   } else {
@@ -4069,7 +4051,9 @@ static void fill_road_sprite_array(const struct tileset *t,
   if (extrastyle == ESTYLE_ROAD_ALL_SEPARATE
       || extrastyle == ESTYLE_ROAD_PARITY_COMBINED) {
     if (draw_single_road) {
-      sprs.emplace_back(t, t->sprites.extras[extra_idx].u.road.isolated);
+      sprs.emplace_back(t, t->sprites.extras[extra_idx]
+                               .u[terrain_index(pterrain)]
+                               .road.isolated);
     }
   }
 }
@@ -4107,10 +4091,11 @@ static void fill_irrigation_sprite_array(const struct tileset *t,
                                          std::vector<drawn_sprite> &sprs,
                                          bv_extras textras,
                                          bv_extras *textras_near,
+                                         const struct terrain *pterrain,
                                          const struct city *pcity)
 {
   /* We don't draw the irrigation if there's a city (it just gets overdrawn
-   * anyway, and ends up looking bad). */
+   * anyway, and ends up looking bad). Unless*/
   if (!(pcity && gui_options->draw_cities)) {
     extra_type_list_iterate(t->style_lists[ESTYLE_CARDINALS], pextra)
     {
@@ -4132,7 +4117,9 @@ static void fill_irrigation_sprite_array(const struct tileset *t,
           if (!hidden) {
             int idx = get_irrigation_index(t, pextra, textras_near);
 
-            sprs.emplace_back(t, t->sprites.extras[eidx].u.cardinals[idx]);
+            sprs.emplace_back(t, t->sprites.extras[eidx]
+                                     .u[terrain_index(pterrain)]
+                                     .cardinals[idx]);
           }
         }
       }
@@ -4638,8 +4625,9 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
             int idx = extra_index(priver);
 
             if (BV_ISSET(textras_near[didx], idx)) {
-              sprs.emplace_back(
-                  t, t->sprites.extras[idx].u.road.ru.rivers.outlet[dir]);
+              sprs.emplace_back(t, t->sprites.extras[idx]
+                                       .u[terrain_index(pterrain)]
+                                       .road.ru.rivers.outlet[dir]);
             }
           }
           extra_type_list_iterate_end;
@@ -4647,7 +4635,8 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
       }
     }
 
-    fill_irrigation_sprite_array(t, sprs, textras, textras_near, pcity);
+    fill_irrigation_sprite_array(t, sprs, textras, textras_near, pterrain,
+                                 pcity);
 
     if (!solid_bg) {
       extra_type_list_iterate(t->style_lists[ESTYLE_RIVER], priver)
@@ -4670,8 +4659,9 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
             }
           }
 
-          sprs.emplace_back(
-              t, t->sprites.extras[idx].u.road.ru.rivers.spec[tileno]);
+          sprs.emplace_back(t, t->sprites.extras[idx]
+                                   .u[terrain_index(pterrain)]
+                                   .road.ru.rivers.spec[tileno]);
         }
       }
       extra_type_list_iterate_end;
@@ -4682,8 +4672,8 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     extra_type_list_iterate(t->style_lists[ESTYLE_ROAD_ALL_SEPARATE], pextra)
     {
       if (is_extra_drawing_enabled(pextra)) {
-        fill_road_sprite_array(t, pextra, sprs, textras, textras_near,
-                               tterrain_near, pcity);
+        fill_crossing_sprite_array(t, pextra, sprs, textras, textras_near,
+                                   tterrain_near, pterrain, pcity);
       }
     }
     extra_type_list_iterate_end;
@@ -4691,16 +4681,16 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
                             pextra)
     {
       if (is_extra_drawing_enabled(pextra)) {
-        fill_road_sprite_array(t, pextra, sprs, textras, textras_near,
-                               tterrain_near, pcity);
+        fill_crossing_sprite_array(t, pextra, sprs, textras, textras_near,
+                                   tterrain_near, pterrain, pcity);
       }
     }
     extra_type_list_iterate_end;
     extra_type_list_iterate(t->style_lists[ESTYLE_ROAD_ALL_COMBINED], pextra)
     {
       if (is_extra_drawing_enabled(pextra)) {
-        fill_road_sprite_array(t, pextra, sprs, textras, textras_near,
-                               tterrain_near, pcity);
+        fill_crossing_sprite_array(t, pextra, sprs, textras, textras_near,
+                                   tterrain_near, pterrain, pcity);
       }
     }
     extra_type_list_iterate_end;
