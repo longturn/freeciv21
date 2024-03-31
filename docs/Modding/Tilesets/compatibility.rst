@@ -48,7 +48,7 @@ terrain-specific-extras
     Terrain-specific extra sprites allow for different sprites to be used depending on the terrain. Currently,
     only rivers/roads/rails/maglev sprites may be made terrain-specific, but compatibility for specials and
     bases is expected to roll out soon. To use terrain-specific sprites, use the same nomenclature as before,
-    but with the terrain time included after the type of extra. 
+    but with the terrain name included after the type of extra. 
     E.g. ``road.road_isolated`` becomes ``road.road_mountain_isolated``.
 
 options
