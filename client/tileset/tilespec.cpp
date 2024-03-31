@@ -114,7 +114,7 @@
  * hex_corner
  *    - The sprite type "hex_corner" is supported
  * options
- *    - Signales that tileset options are supported
+ *    - Signals that tileset options are supported
  */
 
 #define SPEC_CAPSTR "+Freeciv-spec-Devel-2019-Jul-03 options"
