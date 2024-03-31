@@ -3874,6 +3874,30 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
 Q_GLOBAL_STATIC(optionsHash, settable_options)
 
 /**
+ * Migrate players using cimpletoon/toonhex to amplio2/hexemplio with the
+ * cimpletoon option enabled.
+ *
+ * \since 3.1
+ */
+static void
+tileset_options_migrate_cimpletoon(struct client_options *options)
+{
+  for (auto &name : {options->default_tileset_iso_name,
+                     options->default_tileset_isohex_name,
+                     options->default_tileset_square_name}) {
+    if (name == QStringLiteral("cimpletoon")) {
+      fc_strlcpy(name, "amplio2", sizeof(name));
+      options->tileset_options[QStringLiteral("amplio2")]
+                              [QStringLiteral("cimpletoon")] = true;
+    } else if (name == QStringLiteral("toonhex")) {
+      fc_strlcpy(name, "hexemplio", sizeof(name));
+      options->tileset_options[QStringLiteral("hexemplio")]
+                              [QStringLiteral("cimpletoon")] = true;
+    }
+  }
+}
+
+/**
  * Load tileset options.
  *
  * Every tileset has its own section called tileset_xxx. The options are
@@ -4446,6 +4470,7 @@ void options_load()
   }
 
   tileset_options_load(sf, gui_options);
+  tileset_options_migrate_cimpletoon(gui_options);
   settable_options_load(sf);
   global_worklists_load(sf);
 
