@@ -61,7 +61,7 @@ jobs:
           sha256sum --binary Freeciv21-${{github.ref_name}}.tar.gz > Freeciv21-${{github.ref_name}}.tar.gz.sha256
       - name: Create zip
         run: |
-          zip -r Freeciv21-${{github.ref_name}}.zip * -x \/build/* \*.gz \/data/graphics/*
+          zip -r Freeciv21-${{github.ref_name}}.zip * -x \/build/* \*.gz \*.sha256 \/data/graphics/*
           sha256sum --binary Freeciv21-${{github.ref_name}}.zip > Freeciv21-${{github.ref_name}}.zip.sha256
       - name: Upload package
         uses: softprops/action-gh-release@v2
