@@ -105,6 +105,7 @@ the :code:`[tilespec]` section. Currently options include:
 
 * :code:`priority` : When user does not specify tileset, the game automatically loads available compatible
   tileset with highest priority.
+* :code:`preferred_scale` : The preferred scaling factor (zoom level), in percents.
 * :code:`normal_tile_width` : The width of terrain tiles.
 * :code:`normal_tile_height` : The height of terrain tiles.
 * :code:`unit_width` : Unit sprite width. Default is always ok, setting is provided just for symmetry with
