@@ -715,7 +715,7 @@ void city_info::update_labels(struct city *pcity)
         pcity->prod[O_FOOD] + pcity->waste[O_FOOD], pcity->surplus[O_FOOD]));
     m_food->setToolTip(get_city_dialog_output_text(pcity, O_FOOD));
     m_growth->setText(get_city_dialog_growth_value(pcity));
-    m_growth->setStyleSheet("QLabel { color:white; }");
+    m_growth->setStyleSheet("QLabel { white-space:pre; }");
   }
 
   if (pcity->surplus[O_SHIELD] < 0) {
