@@ -1358,7 +1358,7 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
             // Ignore unknown options
             tileset_error(
                 t, QtWarningMsg, "%s: unknown option %s for sprite %s",
-                tileset_name_get(t), qUtf8Printable(option), tags[0]);
+                tileset_basename(t), qUtf8Printable(option), tags[0]);
           } else if (!tileset_option_is_enabled(t, option)) {
             // Skip sprites that correspond to disabled options
             continue;
@@ -1438,7 +1438,7 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
       if (!tileset_has_option(t, option)) {
         // Ignore unknown options
         tileset_error(t, QtWarningMsg, "%s: unknown option %s for sprite %s",
-                      tileset_name_get(t), qUtf8Printable(option), tags[0]);
+                      tileset_basename(t), qUtf8Printable(option), tags[0]);
       } else if (!tileset_option_is_enabled(t, option)) {
         // Skip sprites that correspond to disabled options
         continue;
@@ -2241,7 +2241,7 @@ static bool tileset_setup_options(struct tileset *t,
 
   // Then apply client options. They override any default value we may have
   // set.
-  const auto tileset_name = tileset_name_get(t);
+  const auto tileset_name = tileset_basename(t);
   if (gui_options->tileset_options.count(tileset_name)) {
     for (const auto &[name, value] :
          gui_options->tileset_options[tileset_name]) {
@@ -5862,7 +5862,7 @@ bool tileset_set_option(struct tileset *t, const QString &name, bool enabled)
 
   if (it->second.enabled != enabled) {
     // Change the value in the client settings
-    gui_options->tileset_options[tileset_name_get(t)][name] = enabled;
+    gui_options->tileset_options[tileset_basename(t)][name] = enabled;
     tilespec_reread_frozen_refresh(t->name);
   }
   return true;
