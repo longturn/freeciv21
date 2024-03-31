@@ -80,7 +80,7 @@
 #include "layer_special.h"
 #include "layer_terrain.h"
 #include "layer_units.h"
-#include "options.h" // for fill_xxx
+#include "options.h" // for fill_xxx, tileset options
 #include "page_game.h"
 #include "tilespec.h"
 #include "utils/colorizer.h"
@@ -374,14 +374,11 @@ int focus_unit_state = 0;
 
 static bool tileset_update = false;
 
-static struct tileset *
-tileset_read_toplevel(const QString &tileset_name, bool verbose,
-                      int topology_id,
-                      const std::map<QString, bool> &options = {});
+static struct tileset *tileset_read_toplevel(const QString &tileset_name,
+                                             bool verbose, int topology_id);
 
 static bool tileset_setup_options(struct tileset *t,
-                                  const section_file *file,
-                                  const std::map<QString, bool> &options);
+                                  const section_file *file);
 
 static void tileset_setup_base(struct tileset *t,
                                const struct extra_type *pextra,
@@ -1010,8 +1007,7 @@ bool tilespec_try_read(const QString &tileset_name, bool verbose,
 
    Returns TRUE iff new tileset has been succesfully loaded.
  */
-bool tilespec_reread(const QString &name, bool game_fully_initialized,
-                     const std::map<QString, bool> &options)
+bool tilespec_reread(const QString &name, bool game_fully_initialized)
 {
   int id;
   enum client_states state = client_state();
@@ -1039,15 +1035,14 @@ bool tilespec_reread(const QString &name, bool game_fully_initialized,
    *
    * We read in the new tileset.  This should be pretty straightforward.
    */
-  tileset = tileset_read_toplevel(name, false, -1, options);
+  tileset = tileset_read_toplevel(name, false, -1);
   if (tileset != nullptr) {
     new_tileset_in_use = true;
   } else {
     new_tileset_in_use = false;
 
     if (old_name
-        && !(tileset =
-                 tileset_read_toplevel(old_name, false, -1, options))) {
+        && !(tileset = tileset_read_toplevel(old_name, false, -1))) {
       // Always fails.
       fc_assert_exit_msg(nullptr != tileset,
                          "Failed to re-read the currently loaded tileset.");
@@ -1186,11 +1181,10 @@ void tilespec_reread_callback(struct option *poption)
 
    See tilespec_reread() for details.
  */
-void tilespec_reread_frozen_refresh(const QString &name,
-                                    const std::map<QString, bool> &options)
+void tilespec_reread_frozen_refresh(const QString &name)
 {
   tileset_update = true;
-  tilespec_reread(name, true, options);
+  tilespec_reread(name, true);
   tileset_update = false;
   menus_init();
 }
@@ -1632,10 +1626,8 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
    intro files.
    topology_id of -1 means any topology is acceptable.
  */
-static struct tileset *
-tileset_read_toplevel(const QString &tileset_name, bool verbose,
-                      int topology_id,
-                      const std::map<QString, bool> &options)
+static struct tileset *tileset_read_toplevel(const QString &tileset_name,
+                                             bool verbose, int topology_id)
 {
   struct section_file *file;
   char *fname;
@@ -2103,7 +2095,7 @@ tileset_read_toplevel(const QString &tileset_name, bool verbose,
   section_list_destroy(sections);
   sections = nullptr;
 
-  if (!tileset_setup_options(t, file, options)) {
+  if (!tileset_setup_options(t, file)) {
     return nullptr;
   }
 
@@ -2199,9 +2191,9 @@ tileset_read_toplevel(const QString &tileset_name, bool verbose,
  * structures in the tileset.
  */
 static bool tileset_setup_options(struct tileset *t,
-                                  const section_file *file,
-                                  const std::map<QString, bool> &options)
+                                  const section_file *file)
 {
+  // First load options from the tilespec file.
   auto sections =
       secfile_sections_by_name_prefix(file, OPTION_SECTION_PREFIX);
   if (!sections) {
@@ -2241,12 +2233,24 @@ static bool tileset_setup_options(struct tileset *t,
 
     option.enabled_by_default =
         secfile_lookup_bool_default(file, false, "%s.default", sec_name);
-    option.enabled =
-        options.count(name) ? options.at(name) : option.enabled_by_default;
+    option.enabled = option.enabled_by_default;
 
     t->options[name] = std::move(option);
   }
   section_list_iterate_end;
+
+  // Then apply client options. They override any default value we may have
+  // set.
+  const auto tileset_name = tileset_name_get(t);
+  if (gui_options->tileset_options.count(tileset_name)) {
+    for (const auto &[name, value] :
+         gui_options->tileset_options[tileset_name]) {
+      if (tileset_has_option(t, name)) {
+        t->options[name].enabled = value;
+      }
+      // Silently ignore options that do not exist.
+    }
+  }
 
   return true;
 }
@@ -5857,13 +5861,9 @@ bool tileset_set_option(struct tileset *t, const QString &name, bool enabled)
   fc_assert_ret_val(it != t->options.end(), false);
 
   if (it->second.enabled != enabled) {
-    // Build a map of options to enable and reload the tileset
-    std::map<QString, bool> map;
-    for (const auto &[opt_name, opt] : tileset_get_options(t)) {
-      map[opt_name] = opt.enabled;
-    }
-    map[name] = enabled; // Don't forget to change the option we care about
-    tilespec_reread_frozen_refresh(t->name, map);
+    // Change the value in the client settings
+    gui_options->tileset_options[tileset_name_get(t)][name] = enabled;
+    tilespec_reread_frozen_refresh(t->name);
   }
   return true;
 }

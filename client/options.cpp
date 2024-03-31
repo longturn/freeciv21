@@ -3928,8 +3928,7 @@ static void tileset_options_save(struct section_file *sf,
 {
   for (const auto &[tileset, settings] : options->tileset_options) {
     for (const auto &[name, value] : settings) {
-      secfile_insert_bool(sf, value, "%s%s.%s",
-                          TILESET_OPTIONS_PREFIX,
+      secfile_insert_bool(sf, value, "%s%s.%s", TILESET_OPTIONS_PREFIX,
                           qUtf8Printable(tileset), qUtf8Printable(name));
     }
   }
