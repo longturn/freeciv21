@@ -28,7 +28,7 @@ ruler_titles = {
 }
 
 flag="saarprotectorate"
-flag_alt = "germany"
+flag_alt = "denmark"  ; Similar colors
 style = "european"
 
 init_techs=""

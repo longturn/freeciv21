@@ -26,7 +26,7 @@ ruler_titles = {
 }
 
 flag="donetsk"
-flag_alt = "-"
+flag_alt = "russia"  ; Obvious reason... no other flag matches
 style = "European"
 
 init_techs=""

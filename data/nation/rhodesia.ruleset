@@ -40,7 +40,7 @@ ruler_titles = {
 }
 
 flag="rhodesia"
-flag_alt = "germany"
+flag_alt = "nigeria"  ; Similar colors
 style = "European"
 
 init_techs=""

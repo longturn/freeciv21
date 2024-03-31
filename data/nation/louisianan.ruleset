@@ -49,7 +49,7 @@ ruler_titles = {
 }
 
 flag = "louisiana"
-flag_alt = "-"
+flag_alt = "france"  ; Colony
 style = "Celtic"
 
 init_techs = ""
