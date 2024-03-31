@@ -57,18 +57,18 @@ jobs:
         run: mkdir -p -v $PWD/build
       - name: Create tar.gz
         run: |
-          git archive --format=tar.gz --prefix=Freeciv21-${{github.ref_name}}/ -o $PWD/build/Freeciv21-${{github.ref_name}}.tar.gz HEAD
-          sha256sum --binary $PWD/build/Freeciv21-${{github.ref_name}}.tar.gz > $PWD/build/Freeciv21-${{github.ref_name}}.tar.gz.sha256
+          tar --exclude='build' -czf Freeciv21-${{github.ref_name}}.tar.gz *
+          sha256sum --binary Freeciv21-${{github.ref_name}}.tar.gz > Freeciv21-${{github.ref_name}}.tar.gz.sha256
       - name: Create zip
         run: |
-          git archive --format=zip --prefix=Freeciv21-${{github.ref_name}}/ -o $PWD/build/Freeciv21-${{github.ref_name}}.zip HEAD
-          sha256sum --binary $PWD/build/Freeciv21-${{github.ref_name}}.zip > $PWD/build/Freeciv21-${{github.ref_name}}.zip.sha256
+          zip -r Freeciv21-${{github.ref_name}}.zip * -x \/build/* \*.gz
+          sha256sum --binary Freeciv21-${{github.ref_name}}.zip > Freeciv21-${{github.ref_name}}.zip.sha256
       - name: Upload package
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            build/Freeciv21-${{github.ref_name}}.tar.gz
-            build/Freeciv21-${{github.ref_name}}.tar.gz.sha256
-            build/Freeciv21-${{github.ref_name}}.zip
-            build/Freeciv21-${{github.ref_name}}.zip.sha256
+            Freeciv21-${{github.ref_name}}.tar.gz
+            Freeciv21-${{github.ref_name}}.tar.gz.sha256
+            Freeciv21-${{github.ref_name}}.zip
+            Freeciv21-${{github.ref_name}}.zip.sha256
