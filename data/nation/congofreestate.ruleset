@@ -26,8 +26,8 @@ ruler_titles = {
  "Despotism",       _("Governeror-General %s"),      _("?female:Governeror-General %s")
 }
 
-flag="congofreestate"
-flag_alt = "german"
+flag = "congofreestate"
+flag_alt = "dr_congo"
 style = "Tropical"
 
 init_techs=""

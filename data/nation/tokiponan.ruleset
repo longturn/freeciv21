@@ -16,7 +16,7 @@ leaders = {
 }
 
 flag="tokipona"
-flag_alt = "-"
+flag_alt = "caddo"  ; Similar colors
 style = "European"
 
 init_techs=""

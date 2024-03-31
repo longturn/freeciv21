@@ -38,7 +38,7 @@ ruler_titles = {
 }
 
 flag = "northernireland" ; Credits to Sangjinhwa on Wikimedia commons.
-flag_alt = "-"
+flag_alt = "england" ; Similar colors
 style = "Celtic"
 
 init_techs = ""

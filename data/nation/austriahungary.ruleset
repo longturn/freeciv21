@@ -41,7 +41,7 @@ ruler_titles = {
 }
 
 flag="austriahungary"
-flag_alt = "-"
+flag_alt = "austria"
 style = "European"
 
 init_techs=""

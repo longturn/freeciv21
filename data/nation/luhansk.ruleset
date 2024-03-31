@@ -30,7 +30,7 @@ ruler_titles = {
 }
 
 flag="luhansk"
-flag_alt = "-"
+flag_alt = "russia"  ; Obvious reasons
 style = "European"
 
 init_techs=""
