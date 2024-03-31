@@ -87,7 +87,8 @@
 
 #define TILESPEC_CAPSTR                                                     \
   "+Freeciv-tilespec-Devel-2019-Jul-03 duplicates_ok precise-hp-bars "      \
-  "unlimited-unit-select-frames unlimited-upkeep-sprites hex_corner"
+  "unlimited-unit-select-frames unlimited-upkeep-sprites hex_corner "       \
+  "terrain-specific-extras"
 /*
  * Tilespec capabilities acceptable to this program:
  *
