@@ -14,6 +14,7 @@
 #include <fc_config.h>
 
 #include <cstring>
+#include <qglobal.h>
 #include <sys/stat.h>
 
 // Qt
@@ -64,6 +65,8 @@
 #include "views/view_cities_data.h"
 #include "views/view_map_common.h"
 #include "views/view_nations_data.h"
+
+const char *const TILESET_OPTIONS_PREFIX = "tileset_";
 
 typedef QHash<QString, QString> optionsHash;
 typedef QHash<QString, intptr_t> dialOptionsHash;
@@ -3871,6 +3874,68 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
 Q_GLOBAL_STATIC(optionsHash, settable_options)
 
 /**
+ * Load tileset options.
+ *
+ * Every tileset has its own section called tileset_xxx. The options are
+ * saved as name=value pairs.
+ * \see tileset_options_save
+ */
+static void tileset_options_load(struct section_file *sf,
+                                 struct client_options *options)
+{
+  // Gather all tileset_xxx sections
+  auto sections =
+      secfile_sections_by_name_prefix(sf, TILESET_OPTIONS_PREFIX);
+  if (!sections) {
+    return;
+  }
+
+  section_list_iterate(sections, psection)
+  {
+    // Extract the tileset name from the name of the section.
+    auto tileset_name =
+        section_name(psection) + strlen(TILESET_OPTIONS_PREFIX);
+
+    // Get all values from the section and fill a map with them.
+    auto entries = section_entries(psection);
+    auto settings = std::map<QString, bool>();
+    entry_list_iterate(entries, pentry)
+    {
+      bool value = true;
+      if (entry_bool_get(pentry, &value)) {
+        settings[entry_name(pentry)] = value;
+      } else {
+        // Ignore options we can't convert to a bool, but warn the user.
+        qWarning("Could not load option %s for tileset %s",
+                 entry_name(pentry), tileset_name);
+      }
+    }
+    entry_list_iterate_end;
+
+    // Store the loaded options for later use.
+    options->tileset_options[tileset_name] = settings;
+  }
+  section_list_iterate_end;
+}
+
+/**
+ * Save tileset options.
+ *
+ * \see tileset_options_load
+ */
+static void tileset_options_save(struct section_file *sf,
+                                 const struct client_options *options)
+{
+  for (const auto &[tileset, settings] : options->tileset_options) {
+    for (const auto &[name, value] : settings) {
+      secfile_insert_bool(sf, value, "%s%s.%s",
+                          TILESET_OPTIONS_PREFIX,
+                          qUtf8Printable(tileset), qUtf8Printable(name));
+    }
+  }
+}
+
+/**
    Load the server options.
  */
 static void settable_options_load(struct section_file *sf)
@@ -4381,6 +4446,7 @@ void options_load()
     create_default_cma_presets();
   }
 
+  tileset_options_load(sf, gui_options);
   settable_options_load(sf);
   global_worklists_load(sf);
 
@@ -4434,6 +4500,9 @@ void options_save(option_save_log_callback log_cb)
 
   message_options_save(sf, "client");
   options_dialogs_save(sf);
+
+  // Tileset options
+  tileset_options_save(sf, gui_options);
 
   // server settings
   save_cma_presets(sf);
