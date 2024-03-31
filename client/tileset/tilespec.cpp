@@ -309,8 +309,7 @@ struct tileset {
 
   std::vector<tileset_log_entry> log;
 
-  std::vector<tileset_option> options;
-  std::set<QString> options_enabled;
+  std::map<QString, tileset_option> options;
 
   std::vector<std::unique_ptr<freeciv::layer>> layers;
   struct {
@@ -375,13 +374,14 @@ int focus_unit_state = 0;
 
 static bool tileset_update = false;
 
-static struct tileset *tileset_read_toplevel(
-    const QString &tileset_name, bool verbose, int topology_id,
-    const std::optional<std::set<QString>> &options = std::nullopt);
+static struct tileset *
+tileset_read_toplevel(const QString &tileset_name, bool verbose,
+                      int topology_id,
+                      const std::map<QString, bool> &options = {});
 
-static bool
-tileset_setup_options(struct tileset *t, const section_file *file,
-                      const std::optional<std::set<QString>> &options);
+static bool tileset_setup_options(struct tileset *t,
+                                  const section_file *file,
+                                  const std::map<QString, bool> &options);
 
 static void tileset_setup_base(struct tileset *t,
                                const struct extra_type *pextra,
@@ -1011,7 +1011,7 @@ bool tilespec_try_read(const QString &tileset_name, bool verbose,
    Returns TRUE iff new tileset has been succesfully loaded.
  */
 bool tilespec_reread(const QString &name, bool game_fully_initialized,
-                     const std::optional<std::set<QString>> &options)
+                     const std::map<QString, bool> &options)
 {
   int id;
   enum client_states state = client_state();
@@ -1186,8 +1186,8 @@ void tilespec_reread_callback(struct option *poption)
 
    See tilespec_reread() for details.
  */
-void tilespec_reread_frozen_refresh(
-    const QString &name, const std::optional<std::set<QString>> &options)
+void tilespec_reread_frozen_refresh(const QString &name,
+                                    const std::map<QString, bool> &options)
 {
   tileset_update = true;
   tilespec_reread(name, true, options);
@@ -1359,9 +1359,16 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
         // User-configured options
         auto option = QString::fromUtf8(secfile_lookup_str_default(
             file, "", "%s.tiles%d.option", sec_name, j));
-        if (!option.isEmpty() && !t->options_enabled.count(option)) {
-          // Skip sprites that correspond to disabled options
-          continue;
+        if (!option.isEmpty()) {
+          if (!tileset_has_option(t, option)) {
+            // Ignore unknown options
+            tileset_error(
+                t, QtWarningMsg, "%s: unknown option %s for sprite %s",
+                tileset_name_get(t), qUtf8Printable(option), tags[0]);
+          } else if (!tileset_option_is_enabled(t, option)) {
+            // Skip sprites that correspond to disabled options
+            continue;
+          }
         }
 
         // there must be at least 1 because of the while():
@@ -1431,11 +1438,17 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
     hot_y = secfile_lookup_int_default(file, 0, "extra.sprites%d.hot_y", i);
 
     // User-configured options
-    auto option = QString::fromUtf8(secfile_lookup_str_default(
-        file, "", "extras.sprites%d.option", i));
-    if (!option.isEmpty() && !t->options_enabled.count(option)) {
-      // Skip sprites that correspond to disabled options
-      continue;
+    auto option = QString::fromUtf8(
+        secfile_lookup_str_default(file, "", "extras.sprites%d.option", i));
+    if (!option.isEmpty()) {
+      if (!tileset_has_option(t, option)) {
+        // Ignore unknown options
+        tileset_error(t, QtWarningMsg, "%s: unknown option %s for sprite %s",
+                      tileset_name_get(t), qUtf8Printable(option), tags[0]);
+      } else if (!tileset_option_is_enabled(t, option)) {
+        // Skip sprites that correspond to disabled options
+        continue;
+      }
     }
 
     ss = new small_sprite;
@@ -1622,7 +1635,7 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
 static struct tileset *
 tileset_read_toplevel(const QString &tileset_name, bool verbose,
                       int topology_id,
-                      const std::optional<std::set<QString>> &options)
+                      const std::map<QString, bool> &options)
 {
   struct section_file *file;
   char *fname;
@@ -2185,9 +2198,9 @@ tileset_read_toplevel(const QString &tileset_name, bool verbose,
  * This function loads options from the a '.tilespec' file and sets up all
  * structures in the tileset.
  */
-static bool
-tileset_setup_options(struct tileset *t, const section_file *file,
-                      const std::optional<std::set<QString>> &options)
+static bool tileset_setup_options(struct tileset *t,
+                                  const section_file *file,
+                                  const std::map<QString, bool> &options)
 {
   auto sections =
       secfile_sections_by_name_prefix(file, OPTION_SECTION_PREFIX);
@@ -2209,14 +2222,13 @@ tileset_setup_options(struct tileset *t, const section_file *file,
       tileset_error(t, QtCriticalMsg, "Option \"%s\" has no name", sec_name);
       continue; // Skip instead of erroring out: options are optional
     }
-    option.name = QString::fromUtf8(name);
 
     // Check for duplicates
-    if (all_names.count(option.name)) {
+    if (all_names.count(name)) {
       tileset_error(t, QtCriticalMsg, "Duplicated option name \"%s\"", name);
       continue; // Skip instead of erroring out: options are optional
     }
-    all_names.insert(option.name);
+    all_names.insert(name);
 
     auto description =
         secfile_lookup_str_default(file, "", "%s.description", sec_name);
@@ -2229,18 +2241,12 @@ tileset_setup_options(struct tileset *t, const section_file *file,
 
     option.enabled_by_default =
         secfile_lookup_bool_default(file, false, "%s.default", sec_name);
+    option.enabled =
+        options.count(name) ? options.at(name) : option.enabled_by_default;
 
-    if (options == std::nullopt && option.enabled_by_default) {
-      t->options_enabled.insert(option.name);
-    }
-    t->options.emplace_back(std::move(option));
+    t->options[name] = std::move(option);
   }
   section_list_iterate_end;
-
-  // Override enabled options. We don't check the ones passed in argument
-  if (options != std::nullopt) {
-    t->options_enabled = *options;
-  }
 
   return true;
 }
@@ -5811,85 +5817,92 @@ bool tileset_has_options(const struct tileset *t)
 }
 
 /**
+ * Checks if the tileset has supports the given user-settable option.
+ */
+bool tileset_has_option(const struct tileset *t, const QString &option)
+{
+  return t->options.count(option);
+}
+
+/**
  * Gets the user-settable options of the tileset.
  */
-std::vector<tileset_option> tileset_get_options(const struct tileset *t)
+std::map<QString, tileset_option>
+tileset_get_options(const struct tileset *t)
 {
   return t->options;
 }
 
 /**
  * Checks if an user-settable tileset option is enabled.
+ *
+ * The option must exist in the tileset.
  */
 bool tileset_option_is_enabled(const struct tileset *t, const QString &name)
 {
-  return t->options_enabled.count(name);
+  return t->options.at(name).enabled;
 }
 
 /**
  * Enable or disable a user-settable tileset option.
+ *
+ * The tileset may be reloaded as a result, invalidating \c t.
  *
  * Returns false if the option does not exist. The game must have been
  * initialized before calling this.
  */
 bool tileset_set_option(struct tileset *t, const QString &name, bool enabled)
 {
-  if (enabled && t->options_enabled.count(name)) {
-    // Already enabled
-    return true;
-  }
+  auto it = t->options.find(name);
+  fc_assert_ret_val(it != t->options.end(), false);
 
-  // Check that it exists
-  for (const auto &option : t->options) {
-    if (option.name == name) {
-      if (enabled) {
-        // Enable if currently disabled
-        t->options_enabled.insert(name);
-        tilespec_reread_frozen_refresh(t->name,
-                                       std::set(t->options_enabled));
-      } else if (t->options_enabled.count(name)) {
-        // Disable if currently enabled
-        t->options_enabled.erase(name);
-        tilespec_reread_frozen_refresh(t->name,
-                                       std::set(t->options_enabled));
-      }
-      return true;
+  if (it->second.enabled != enabled) {
+    // Build a map of options to enable and reload the tileset
+    std::map<QString, bool> map;
+    for (const auto &[opt_name, opt] : tileset_get_options(t)) {
+      map[opt_name] = opt.enabled;
     }
+    map[name] = enabled; // Don't forget to change the option we care about
+    tilespec_reread_frozen_refresh(t->name, map);
   }
-
-  // Not found
-  return false;
+  return true;
 }
 
 /**
    Return tileset name
  */
-const char *tileset_name_get(struct tileset *t) { return t->given_name; }
+const char *tileset_name_get(const struct tileset *t)
+{
+  return t->given_name;
+}
 
 /**
    Return tileset version
  */
-const char *tileset_version(struct tileset *t) { return t->version; }
+const char *tileset_version(const struct tileset *t) { return t->version; }
 
 /**
    Return tileset description summary
  */
-const char *tileset_summary(struct tileset *t) { return t->summary; }
+const char *tileset_summary(const struct tileset *t) { return t->summary; }
 
 /**
    Return tileset description body
  */
-const char *tileset_description(struct tileset *t) { return t->description; }
+const char *tileset_description(const struct tileset *t)
+{
+  return t->description;
+}
 
 /**
    Return tileset topology index
  */
-int tileset_topo_index(struct tileset *t) { return t->ts_topo_idx; }
+int tileset_topo_index(const struct tileset *t) { return t->ts_topo_idx; }
 
 /**
  * Creates the help item for the given tileset
  */
-help_item *tileset_help(struct tileset *t)
+help_item *tileset_help(const struct tileset *t)
 {
   if (t == nullptr) {
     return nullptr;

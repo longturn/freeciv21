@@ -30,16 +30,19 @@ tileset_options_dialog::tileset_options_dialog(struct tileset *t,
   auto layout = new QVBoxLayout;
   setLayout(layout);
 
-  for (const auto &option : tileset_get_options(t)) {
+  for (const auto &[name_, option] : tileset_get_options(t)) {
+    // https://stackoverflow.com/q/46114214 (TODO C++20)
+    auto name = name_;
+
     auto check = new QCheckBox(option.description);
 
     // Sync check box state with the tileset
-    check->setChecked(tileset_option_is_enabled(t, option.name));
-    connect(check, &QCheckBox::toggled, [option](bool checked) {
-      tileset_set_option(tileset, option.name, checked);
+    check->setChecked(tileset_option_is_enabled(t, name));
+    connect(check, &QCheckBox::toggled, [name](bool checked) {
+      tileset_set_option(tileset, name, checked);
     });
 
-    m_checks[option.name] = check;
+    m_checks[name] = check;
     layout->addWidget(check);
   }
 
@@ -59,9 +62,9 @@ tileset_options_dialog::tileset_options_dialog(struct tileset *t,
  */
 void tileset_options_dialog::reset()
 {
-  for (const auto &option : tileset_get_options(tileset)) {
+  for (const auto &[name, option] : tileset_get_options(tileset)) {
     // Changes are propagated though the clicked() signal.
-    m_checks[option.name]->setChecked(option.enabled_by_default);
+    m_checks[name]->setChecked(option.enabled_by_default);
   }
 }
 
