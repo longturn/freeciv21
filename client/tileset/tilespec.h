@@ -143,11 +143,9 @@ void finish_loading_sprites(struct tileset *t);
 
 bool tilespec_try_read(const QString &name, bool verbose, int topo_id);
 bool tilespec_reread(const QString &tileset_name,
-                     bool game_fully_initialized,
-                     const std::map<QString, bool> &options = {});
+                     bool game_fully_initialized);
 void tilespec_reread_callback(struct option *poption);
-void tilespec_reread_frozen_refresh(
-    const QString &name, const std::map<QString, bool> &options = {});
+void tilespec_reread_frozen_refresh(const QString &name);
 
 void tileset_setup_specialist_type(struct tileset *t, Specialist_type_id id);
 void tileset_setup_unit_type(struct tileset *t, struct unit_type *punittype);
