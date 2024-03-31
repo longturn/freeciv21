@@ -17,6 +17,9 @@ summary = _("Small overhead tileset.")
 ; TODO: add more overall information fields on tiles,
 ; eg, authors, colors, etc.
 
+; The preferred scaling factor (zoom level), in percents
+preferred_scale = 100
+
 ; Basic tile sizes:
 normal_tile_width  = 30
 normal_tile_height = 30
