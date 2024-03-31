@@ -155,6 +155,7 @@ files =
   "misc/treaty.spec",
   "misc/editor.spec",
   "misc/units.spec",
+  "cimpletoon/orient_units.spec",
   "amplio2/nuke.spec",
   "amplio2/explosions.spec",
   "hexemplio/activities.spec",
@@ -359,3 +360,8 @@ styles =
       "ts.horses",     "Single1"
       "ts.seals",      "Single1"
     }
+
+[option_cimpletoon]
+name = "cimpletoon"
+description = _("Use 3D Cimpletoon units")
+default = FALSE

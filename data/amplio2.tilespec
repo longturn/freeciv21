@@ -149,6 +149,7 @@ files =
   "misc/governments.spec",
   "misc/specialists.spec",
   "misc/units.spec",
+  "cimpletoon/orient_units.spec",
   "amplio2/veterancy.spec",
   "misc/flags-large.spec",
   "misc/buildings-large.spec",
@@ -340,3 +341,8 @@ styles =
       "ts.horses",     "Single1"
       "ts.seals",      "Single1"
     }
+
+[option_cimpletoon]
+name = "cimpletoon"
+description = _("Use 3D Cimpletoon units")
+default = FALSE
