@@ -16,7 +16,7 @@ shown in :numref:`Game Overview` below. This is known as the :ref:`Map View <gam
 
 .. _Game Overview:
 .. figure:: ../../../dist/freeciv21-screenshot.png
-    :scale: 25%
+    :scale: 50%
     :align: center
     :alt: Freeciv21 game overview
     :figclass: align-center
