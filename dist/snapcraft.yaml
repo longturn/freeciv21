@@ -26,7 +26,7 @@ description: |
   The code is maintained by the team over at Longturn.net and is based on the QT framework. The game supports both hex and square tiles and is easily modified to create custom rules.
 
 # TODO: At some point, will want to integrate into cmake process and configure_file()
-version: '3.0.3'
+version: '3.0.4'
 grade: stable
 
 license: GPL-3.0-or-later
