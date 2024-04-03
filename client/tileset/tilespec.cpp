@@ -4792,31 +4792,44 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_ROADS:
-    extra_type_list_iterate(t->style_lists[ESTYLE_ROAD_ALL_SEPARATE], pextra)
-    {
-      if (is_extra_drawing_enabled(pextra)) {
-        fill_crossing_sprite_array(t, pextra, sprs, textras, textras_near,
-                                   tterrain_near, pterrain, pcity);
+    /**
+     * Future code-dweller beware: We do not fully understand how
+     * fill_crossing_sprite_array works for the ESTYLE_ROAD_PARITY_COMBINED
+     * sprites. We do know that our recent changes for the terrain-specific
+     * extras caused an issue when the client tried to assemble an edge tile
+     * where one edge is null. We have found that wrapping all of this under
+     * `if (ptile)` solved the error, and we will leave it there. Good luck.
+     * HF and LM.
+     */
+    if (ptile) {
+      extra_type_list_iterate(t->style_lists[ESTYLE_ROAD_ALL_SEPARATE],
+                              pextra)
+      {
+        if (is_extra_drawing_enabled(pextra)) {
+          fill_crossing_sprite_array(t, pextra, sprs, textras, textras_near,
+                                     tterrain_near, pterrain, pcity);
+        }
       }
-    }
-    extra_type_list_iterate_end;
-    extra_type_list_iterate(t->style_lists[ESTYLE_ROAD_PARITY_COMBINED],
-                            pextra)
-    {
-      if (is_extra_drawing_enabled(pextra)) {
-        fill_crossing_sprite_array(t, pextra, sprs, textras, textras_near,
-                                   tterrain_near, pterrain, pcity);
+      extra_type_list_iterate_end;
+      extra_type_list_iterate(t->style_lists[ESTYLE_ROAD_PARITY_COMBINED],
+                              pextra)
+      {
+        if (is_extra_drawing_enabled(pextra)) {
+          fill_crossing_sprite_array(t, pextra, sprs, textras, textras_near,
+                                     tterrain_near, pterrain, pcity);
+        }
       }
-    }
-    extra_type_list_iterate_end;
-    extra_type_list_iterate(t->style_lists[ESTYLE_ROAD_ALL_COMBINED], pextra)
-    {
-      if (is_extra_drawing_enabled(pextra)) {
-        fill_crossing_sprite_array(t, pextra, sprs, textras, textras_near,
-                                   tterrain_near, pterrain, pcity);
+      extra_type_list_iterate_end;
+      extra_type_list_iterate(t->style_lists[ESTYLE_ROAD_ALL_COMBINED],
+                              pextra)
+      {
+        if (is_extra_drawing_enabled(pextra)) {
+          fill_crossing_sprite_array(t, pextra, sprs, textras, textras_near,
+                                     tterrain_near, pterrain, pcity);
+        }
       }
+      extra_type_list_iterate_end;
     }
-    extra_type_list_iterate_end;
     break;
 
   case LAYER_SPECIAL1:
