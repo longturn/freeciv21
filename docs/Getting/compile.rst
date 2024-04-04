@@ -257,6 +257,12 @@ reading in the `Other CMake Notes`_ section below for more notes about other com
   $ cmake . -B build -G Ninja
 
 
+.. note:: If you are compiling on Windows MSYS2, alter the above command to add
+
+   ``-DCMAKE_INSTALL_PREFIX=$PWD/build/install``
+
+   at the end.
+
 On macOS, you need to use a preset that is defined in the :file:`CMakePresets.json` file. When complete
 you can go to the `Compiling/Building`_ section below to continue.
 
