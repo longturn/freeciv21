@@ -89,7 +89,7 @@ Premade Environment
 ===================
 
 Visit https://github.com/jwrober/freeciv-msys2 to get a set of scripts and instructions to quickly build an
-environment. The scripts create an x86_64 environment.
+environment. The scripts create an x86_64 development environment.
 
 
 Build
