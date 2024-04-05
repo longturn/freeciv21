@@ -6,12 +6,12 @@
 Citizen Governor (aka Citizen Management Agent, or CMA)
 *******************************************************
 
-The Citizen Governor is designed to help you manage your cities, i.e. deploy the workers on the available
+The Citizen Governor is designed to help you manage your cities, i.e. deploy the citizens on the available
 tiles around (or make them scientists, taxmen, or even entertainers), to get the most out of the city. You can
 switch the Governor on or off at any time for any city, but there are some handicaps (explained below), if you
 have governor controlled and non-governor-controlled cities nearby.
 
-The heart of the Governor system is an optimizing algorithm, that tries to deploy the workers of a city in
+The heart of the Governor system is an optimizing algorithm, that tries to deploy the citizens of a city in
 such a way, that a user-defined goal is achieved as much as possible. You know probably, there is already a
 kind of optimizing, when you open a city, and click on the center tile (the city symbol) of the map. This
 optimization tries to maximize mostly the food output, but it does not care about disorder.
@@ -55,12 +55,14 @@ compared to the others (e.g how much shields are worth with respect to everythin
 are constraints. You can command the city not to lose food, e.g. by setting the surplus constraint to zero,
 and you can allow the city to lose gold by setting the gold surplus to -3, and urge them to make at least 5
 shields per round by setting the production surplus to 5. The most powerful constraint, though, is the
-Celebrate constraint, which makes the city celebrate at once (which usually takes effect the round after you
-change it).
+:guilabel:`Celebrate` constraint, which makes the city celebrate at once (which usually takes effect the round
+after you change it).
+
+.. note:: Celebration is a ruleset defined setting and is not available for all games.
 
 It is obvious that the Governor cannot fulfill all these constraints in every case. Whenever the constraints
 cannot be fulfilled, the Governor quits its service for that city, giving a message:
-:strong:`"The agent can't fulfill the requirements for Berlin. Passing back control."` You then have the
+:strong:`"The agent can't fulfill the requirements for [city name]. Passing back control."` You then have the
 choice of either managing the city on your own (which has some drawbacks, see below), or open that city and
 change the surplus requirements so that they can be fulfilled.
 
@@ -68,6 +70,11 @@ When you have made a setup for a city, you need to click on :guilabel:`Enable` t
 this button's text is greyed, either the Governor is already active, or the task is impossible. In the
 latter case you see dashes instead of numbers in the results block. If you ever want to switch off the
 Governor deliberately, click :guilabel:`Disable`.
+
+The :guilabel:`Optimize` option for Food output will ensure that the city is always growing. By enabling the
+:guilabel:`Allow Specialists` option, the Governor will pull citizens from working tiles and turn them into
+Entertainer, Scientist, or Taxmen specialists to meet the constraints. Lastly, enabling the
+:guilabel:`Allow Disorder` option will allow the city to go into disorder to meet constraints.
 
 Advanced Usage
 ==============
