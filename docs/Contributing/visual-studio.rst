@@ -16,41 +16,43 @@ Base Installation
 
 Start by downloading the Community Edition installer from https://visualstudio.microsoft.com/vs/community.
 
-Double-click the :file:`VisualStudioSetup.exe` file in your Downloads directory and follow the prompts to
-get the setup process started. At some point you will be prompted to select the type of workload you want to
-install. Select :guilabel:`Desktop development with C++` and :guilabel:`Python Development`. Next click on the
-Individual components tab and select the following options: :guilabel:`Git for Windows`,
-:guilabel:`C++ Clang Compiler for Windows (13.0.0)`, :guilabel:`C++ Clang-cl for v143 build tools (x64/x86)`,
-and :guilabel:`Python 3 64-bit (3.9.7)`.
+Double-click the :file:`VisualStudioSetup.exe` file in your Downloads folder and follow the prompts to get the
+setup process started. At some point you will be prompted to select the type of workload you want to
+install. Select :guilabel:`Python Development` and :guilabel:`Desktop development with C++`. On the right
+panel, under :guilabel:`Installation Details`, uncheck :guilabel:`vcpkg package manager` and check
+:guilabel:`Windows 10 SDK 10.0.20348.0)`.
+
+.. note:: We remove the ``vcpkg`` package manager inside of Visual Studio in order to install one that is
+   better managed and easily updated later down this page.
+
+Next click on the Individual components tab and select the following options: :guilabel:`Git for Windows`,
+:guilabel:`C++ Clang Compiler for Windows (17.0.3)`, and
+:guilabel:`MSBuild support for LLVM (clang-cl) toolset`.
 
 When ready click :guilabel:`Install`. Depending on your Internet connection speed, this may take a while.
+There is a :guilabel:`Start after installation` check box that you can uncheck as we do not need to open
+Visual Studio post installation.
 
-When the installation process is finished you may be presented with a collection of options. You do not need
-Visual Studio right now, so best to close everything at this point.
+When the installation process is finished you may close the installer.
 
-Add Python to the System Path
-=============================
+Install Python
+==============
 
-Freeciv21 development needs access to a Python Interpreter. This is why we installed it in the section above.
-We also need Python for the ``git clang-format`` command used as part of adding a
-:ref:`pull request <pull-Request>` to our GitHub  repository. In Windows Explorer look for Python.
-As of this writing it is found in :file:`C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Python39_64`.
-If not found there, look for it in your user profile. For example:
-:file:`C:\\Users\\[UserID]\\AppData\\Local\\Programs\\Python\\Python39`. Once you know where it is, we can
-add it to the system ``%PATH%``.
+Freeciv21 development needs access to a Python Interpreter. We also need Python for the ``git clang-format``
+command used as part of adding a :ref:`pull request <pull-Request>` to our GitHub  repository.
 
-Open :guilabel:`Advanced System Settings` from :menuselection:`Start Menu --> Settings --> System --> About`.
-Click the :guilabel:`Environment Variables` button. In the :guilabel:`System variables` section, select ``Path``
-and click :guilabel:`Edit`. Add :file:`C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Python39_64`
-and :file:`C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Python39_64\Scripts`.
+Right-click the :guilabel:`Start Menu` and either open an Admin level PowerShell or Terminal depending on the
+version of Windows you have installed. From now on we will refer to this as the **Terminal**.
 
-Open a PowerShell prompt. You should be able to enter ``python`` at the prompt and the interpreter should
-load. You can type ``quit()`` to exit the interpreter.
+From the prompt enter ``python`` and press enter. Windows should open the Windows App Store to Python 3.x (as
+of this writing its 3.12). Click :guilabel:`Get` to install it. Once the installation is finished, you can
+close the Windows App Store and return to the Terminal. Enter ``python`` a second time and you should now get
+a python interpreter like below. You can type ``quit()`` to exit the interpreter.
 
 .. code-block:: sh
 
-    PS C:\Windows\System32> python
-    Python 3.9.7 (tags/v3.9.7:1016ef3, Aug 30 2021, 20:19:38) [MSC v.1929 64 bit (AMD64)] on win32
+    PS C:\> python
+    Python 3.12.2 (tags/v3.12.2:6abddd9, Feb  6 2024, 21:26:36) [MSC v.1937 64 bit (AMD64)] on win32
     Type "help", "copyright", "credits" or "license" for more information.
     >>>
 
@@ -66,8 +68,7 @@ First, create a directory on your computer to install :file:`vcpkg` into. For ex
 The directory can be anywhere, however the author prefers to :strong:`not` install things in the root of the
 :file:`C:\\` drive.
 
-Open an Administrative elevated PowerShell terminal window. The easiest way to do this is to right-click on
-the :guilabel:`Start Menu` and select it from the menu: :guilabel:`Windows PowerShell (Admin)`.
+In the Terminal window change to the directory.
 
 .. code-block:: sh
 
@@ -169,23 +170,29 @@ There is an available extension called :strong:`Qt Visual Studio Tools`. This ex
 Qt Designer and other Qt tools within the Visual Studio IDE. This is especially useful if you want to edit
 any of the client :file:`.ui` files.
 
-Start by `downloading <https://www.qt.io/download-qt-installer>`_ the installer. Double-click the downloaded
-file and login with your Qt account. If you do not have a Qt account, there should be a link in the installer
-window to create one. Click :guilabel:`Next`, agree to the GNU License and state that you are an individual,
-not a business. Click :guilabel:`Next` and pick to either send or not send usage statistics to Qt.
-Click :guilabel:`Next`. Note that installing to :file:`C:\\Qt` is fine. Ensure :guilabel:`Custom Install`
-is selected and then click :guilabel:`Next`. On the right, uncheck :guilabel:`latest support release` and
-check :guilabel:`LTS`, click :guilabel:`Filter`. Expand :guilabel:`Qt` and check the ``5.15.2`` option. Click
-:guilabel:`Next` and agree to the Microsoft license. Click :guilabel:`Next` and note that :strong:`Qt` for
-the Start Menu is fine. Click :guilabel:`Next` and :guilabel:`Install` to begin the process.
+Start by `downloading <https://www.qt.io/download-qt-installer-oss>`_ the installer.
+
+#. Double-click the downloaded file and login with your Qt account. If you do not have a Qt account, there
+   should be a link in the installer window to create one.
+#. Click :guilabel:`Next`, agree to the GNU License and state that you are an individual, not a business.
+#. Click :guilabel:`Next` and pick to either send or not send usage statistics to Qt.
+#. Click :guilabel:`Next`. Note that installing to :file:`C:\\Qt` is fine.
+#. Ensure :guilabel:`Custom Install` is selected and then click :guilabel:`Next`.
+#. On the right, uncheck :guilabel:`latest supported release` and check :guilabel:`Archive`, click
+   :guilabel:`Filter`.
+#. Expand :guilabel:`Qt` and check the ``5.15.2`` option.
+#. Click :guilabel:`Next` and agree to the Microsoft license.
+#. Click :guilabel:`Next` and note that :strong:`Qt` for the Start Menu is fine.
+#. Click :guilabel:`Next` and :guilabel:`Install` to begin the process.
 
 .. note:: You can reduce the size of the Qt Tools install by expanding the ``5.15.2`` option and unchecking
   ``WebAssembly``, ``MSVC 2015 64-bit``, ``MSVC 2019 32-bit``, ``MinGW 8.1.0 32-bit``, ``MinGW 8.1.0 64-bit``,
   ``UWP*``, and ``Android``. Unless you intend to develop for those platforms, you do not need to download and
-  install those components.
+  install those components for Freeciv21.
 
-To install the extension. In Visual Studio, click on :menuselection:`Extensions --> Manage Extensions --> Online`.
-Search for :strong:`Qt Visual Studio Tools` and install it.
+To install the extension. In Visual Studio, click on
+:menuselection:`Extensions --> Manage Extensions --> Online`. Search for :strong:`Qt Visual Studio Tools` and
+install it.
 
 To set the version of Qt in the extension's options. Click on
 :menuselection:`Extensions --> Qt VS Tools --> Qt Versions`. Add version ``5.15`` and in the path enter:
@@ -200,14 +207,14 @@ To configure Freeciv21 in Visual Studio you first have to select either the :fil
 :file:`windows-debug` configuration preset as defined in :file:`CMakePresets.json`. On the
 :guilabel:`Standard` toolbar, which is enabled by default, you will click the :guilabel:`Target System` drop
 down box and pick the :strong:`Local Machine` option. Next you will click the :guilabel:`Configuration` drop
-down box and pick the :strong:`windows-release` or :strong:`windows-debug` option. Visual Studio will then
-automatically populate the :guilabel:`Build Preset` drop down box based on what you select for
-:guilabel:`Configuration`. With these options set you will lastly click :menuselection:`Project --> Configure
-Cache`. When this process is complete you can then compile (build) by clicking
-:menuselection:`Build --> Build All`. Visual Studio will compile all targets for Freeciv21 and place the
-output into the :file:`build-vs` directory. If you want to install Freeciv21 to test any work you are doing,
-you can go to :menuselection:`Build --> install Freeciv21`. When complete, you should find a fully functional
-install in the :file:`build-vs/install` directory.
+down box and pick the :strong:`windows-release` or :strong:`windows-debug` option (debug is preferred for
+development).
+
+With these options set you will lastly click :menuselection:`Project --> Configure Cache`. When this process
+is complete you can then compile (build) by clicking :menuselection:`Build --> Build All`. Visual Studio will
+compile all targets for Freeciv21 and place the output into the :file:`build-vs` directory. If you want to
+install Freeciv21 to test any work you are doing, you can go to :menuselection:`Build --> install Freeciv21`.
+When complete, you should find a fully functional install in the :file:`build-vs/install` directory.
 
 .. note:: The preferred :guilabel:`Configuration` is :strong:`debug-windows`, especially if you want to
   troubleshoot code with the built-in debugger and also if you plan to use the unit test feature ``CTest``.
