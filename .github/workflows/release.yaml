@@ -5,6 +5,11 @@ on:
   schedule:
     - cron: "0 5 * * MON"
   workflow_dispatch: {}
+  workflow_run:
+    workflows: ["Build"]
+    branches: [master, stable]
+    types:
+      - completed
 
 jobs:
   update-autorevision:
@@ -50,6 +55,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - # Make sure there are no unstaged changes
+        # Was reporting changes to eol=crlf files in .gitattributes
+        run: git checkout -- .
       - run: git rev-parse --short=5 HEAD > cmake/AutoRevision.txt
       - run: git describe --tags `git rev-list --tags --max-count=1` >> cmake/AutoRevision.txt
       - run: cat cmake/AutoRevision.txt
