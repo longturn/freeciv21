@@ -25,8 +25,8 @@ panel, under :guilabel:`Installation Details`, uncheck :guilabel:`vcpkg package 
 .. note:: We remove the ``vcpkg`` package manager inside of Visual Studio in order to install one that is
    better managed and easily updated later down this page.
 
-Next click on the Individual components tab and select the following options: :guilabel:`Git for Windows`,
-:guilabel:`C++ Clang Compiler for Windows (17.0.3)`, and
+Next click on the :guilabel:`Individual Components` tab and select the following options:
+:guilabel:`Git for Windows`, :guilabel:`C++ Clang Compiler for Windows (17.0.3)`, and
 :guilabel:`MSBuild support for LLVM (clang-cl) toolset`.
 
 When ready click :guilabel:`Install`. Depending on your Internet connection speed, this may take a while.
