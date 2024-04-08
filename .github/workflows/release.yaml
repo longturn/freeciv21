@@ -7,7 +7,6 @@ on:
   workflow_dispatch: {}
   workflow_run:
     workflows: ["Build"]
-    branches: [master, stable]
     types:
       - completed
 
