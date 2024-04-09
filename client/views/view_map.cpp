@@ -376,10 +376,7 @@ void map_view::resizeEvent(QResizeEvent *event)
  */
 void map_view::wheelEvent(QWheelEvent *event)
 {
-  auto delta = event->pixelDelta();
-  if (delta.isNull()) {
-    delta = event->angleDelta();
-  }
+  auto delta = event->angleDelta();
 
   if (event->modifiers() == Qt::NoModifier) {
     // Scrolling
