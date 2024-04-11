@@ -185,7 +185,9 @@ static std::vector<fc_shortcut> default_shortcuts()
       {SC_GOJOINCITY, fc_shortcut::keyboard, Qt::Key_J | Qt::ShiftModifier,
        Qt::AllButtons, Qt::NoModifier, _("Go And Join City")},
       {SC_PILLAGE, fc_shortcut::keyboard, Qt::Key_P | Qt::ShiftModifier,
-       Qt::AllButtons, Qt::NoModifier, _("Pillage")}};
+       Qt::AllButtons, Qt::NoModifier, _("Pillage")},
+      {SC_FALLOUT, fc_shortcut::keyboard, Qt::Key_N, Qt::AllButtons,
+       Qt::NoModifier, _("Clean Nuclear Fallout")}};
 }
 
 /**

@@ -1088,6 +1088,13 @@ int unit_actions::update_actions()
         SC_NUKE));
   }
 
+  // Clean nuclear fallout
+  if (can_unit_do_activity(current_unit, ACTIVITY_FALLOUT)) {
+    actions.append(new hud_action(
+        this, fcIcons::instance()->getIcon(QStringLiteral("fallout")),
+        SC_FALLOUT));
+  }
+
   // Wait
   actions.append(new hud_action(
       this, fcIcons::instance()->getIcon(QStringLiteral("wait")), SC_WAIT));

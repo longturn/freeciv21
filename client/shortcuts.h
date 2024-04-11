@@ -91,6 +91,7 @@ enum shortcut_id {
   SC_GOBUILDCITY = 57,
   SC_GOJOINCITY = 58,
   SC_PILLAGE = 59,
+  SC_FALLOUT = 60,
 };
 
 /**************************************************************************
