@@ -921,7 +921,7 @@ void mr_menu::setup_menus()
   connect(act, &QAction::triggered, this, &mr_menu::slot_clean_pollution);
   act = menu->addAction(_("Clean Nuclear Fallout"));
   menu_list.insert(FALLOUT, act);
-  act->setShortcut(QKeySequence(tr("n")));
+  shortcuts->link_action(SC_FALLOUT, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_clean_fallout);
   act = menu->addAction(
       QString(action_id_name_translation(ACTION_HELP_WONDER)));

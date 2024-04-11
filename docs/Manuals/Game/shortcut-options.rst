@@ -1,5 +1,6 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+.. SPDX-FileCopyrightText: Tobias Rehbein <tobias.rehbein@web.de>
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
@@ -360,3 +361,8 @@ Pillage
   Instruct a unit to pillage infrastructure improvements on a tile.
 
   Default: ``Shift+P``
+
+Clean Nuclear Fallout
+  Instruct a unit to clean nuclear fallout on a tile.
+
+  Default: ``N``
