@@ -750,38 +750,43 @@ void city_info::update_labels(struct city *pcity)
 
   if (pcity->surplus[O_GOLD] < 0) {
     m_gold->setText(QString::asprintf(
-        "%3d (<b style=\"color:red;\">%+4d</b>)",
+        "<span style=\"white-space:pre\">%3d (<b "
+        "style=\"color:red;\">%+4d</b>)</span>",
         pcity->prod[O_GOLD] + pcity->waste[O_GOLD], pcity->surplus[O_GOLD]));
     m_gold->setToolTip(get_city_dialog_output_text(pcity, O_GOLD));
   } else {
     m_gold->setText(QString::asprintf(
-        "%3d (%+4d)", pcity->prod[O_GOLD] + pcity->waste[O_GOLD],
-        pcity->surplus[O_GOLD]));
+        "<span style=\"white-space:pre\">%3d (%+4d)</span>",
+        pcity->prod[O_GOLD] + pcity->waste[O_GOLD], pcity->surplus[O_GOLD]));
     m_gold->setToolTip(get_city_dialog_output_text(pcity, O_GOLD));
   }
 
   if (pcity->surplus[O_LUXURY] < 0) {
     m_luxury->setText(
-        QString::asprintf("%3d (<b style=\"color:red;\">%+4d</b>)",
+        QString::asprintf("<span style=\"white-space:pre\">%3d (<b "
+                          "style=\"color:red;\">%+4d</b>)</span>",
                           pcity->prod[O_LUXURY] + pcity->waste[O_LUXURY],
                           pcity->surplus[O_LUXURY]));
     m_luxury->setToolTip(get_city_dialog_output_text(pcity, O_LUXURY));
   } else {
     m_luxury->setText(QString::asprintf(
-        "%3d (%+4d)", pcity->prod[O_LUXURY] + pcity->waste[O_LUXURY],
+        "<span style=\"white-space:pre\">%3d (%+4d)</span>",
+        pcity->prod[O_LUXURY] + pcity->waste[O_LUXURY],
         pcity->surplus[O_LUXURY]));
     m_luxury->setToolTip(get_city_dialog_output_text(pcity, O_LUXURY));
   }
 
   if (pcity->surplus[O_SCIENCE] < 0) {
     m_science->setText(
-        QString::asprintf("%3d (<b style=\"color:red;\">%+4d</b>)",
+        QString::asprintf("<span style=\"white-space:pre\">%3d (<b "
+                          "style=\"color:red;\">%+4d</b>)</span>",
                           pcity->prod[O_SCIENCE] + pcity->waste[O_SCIENCE],
                           pcity->surplus[O_SCIENCE]));
     m_science->setToolTip(get_city_dialog_output_text(pcity, O_SCIENCE));
   } else {
     m_science->setText(QString::asprintf(
-        "%3d (%+4d)", pcity->prod[O_SCIENCE] + pcity->waste[O_SCIENCE],
+        "<span style=\"white-space:pre\">%3d (%+4d)</span>",
+        pcity->prod[O_SCIENCE] + pcity->waste[O_SCIENCE],
         pcity->surplus[O_SCIENCE]));
     m_science->setToolTip(get_city_dialog_output_text(pcity, O_SCIENCE));
   }
