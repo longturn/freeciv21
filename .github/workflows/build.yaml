@@ -572,7 +572,13 @@ jobs:
           sudo apt-get install \
             cmake \
             ninja-build \
-            qtbase5-dev
+            gettext \
+            qtbase5-dev \
+            libqt5svg5-dev \
+            libkf5archive-dev \
+            liblua5.3-dev \
+            libsqlite3-dev \
+            libsdl2-mixer-dev
       - name: Configure
         run: |
           mkdir -p build/snap/local
