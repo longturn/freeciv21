@@ -571,7 +571,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install \
             cmake \
-            ninja-build
+            ninja-build \
+            qtbase5-dev
       - name: Configure
         run: |
           mkdir -p build/snap/local
