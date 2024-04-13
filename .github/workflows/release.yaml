@@ -42,6 +42,7 @@ jobs:
             This PR updates `${{ steps.branch.outputs.branch }}`.
             Close and reopen this pull request to start the CI.
           delete-branch: true
+
   update-archive:
     name: "Update Source Archive"
     runs-on: ubuntu-22.04
@@ -75,3 +76,26 @@ jobs:
             Freeciv21-${{github.ref_name}}.tar.gz.sha256
             Freeciv21-${{github.ref_name}}.zip
             Freeciv21-${{github.ref_name}}.zip.sha256
+
+  snapcraft:
+    name: "Snap Package"
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Configure
+        run: |
+          mkdir -p build/snap/local
+          cmake . -B build -G Ninja
+          cp data/icons/128x128/freeciv21-client.png build/snap/local
+      - uses: snapcore/action-build@v1
+        with:
+          path: build
+      - uses: snapcore/action-publish@v1
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
+        with:
+          snap: ${{ steps.build.outputs.snap }}
+          release: edge
