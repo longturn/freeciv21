@@ -558,6 +558,23 @@ jobs:
           name: wasm-client
           path: freeciv21-client.*
 
+  snapcraft:
+    name: "Snap Package"
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Configure
+        run: |
+          mkdir -p build/snap/local
+          cmake . -B build -G Ninja
+          cp data/icons/128x128/freeciv21-client.png build/snap/local
+      - uses: snapcore/action-build@v1
+        with:
+          path: build
+
   clang-format:
     name: clang-format Code Formatter
     runs-on: ubuntu-latest
