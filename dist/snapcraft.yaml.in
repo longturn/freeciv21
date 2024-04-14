@@ -25,7 +25,6 @@ description: |
   Freeciv21 takes its roots in the well-known FOSS game Freeciv and extends it for more fun, with a revived focus on competitive multiplayer environments. Players can choose from over 500 nations and can play against the computer or other people in an active online community.
   The code is maintained by the team over at Longturn.net and is based on the QT framework. The game supports both hex and square tiles and is easily modified to create custom rules.
 
-# TODO: At some point, will want to integrate into cmake process and configure_file()
 version: '@FC21_MAJOR_VERSION@.@FC21_MINOR_VERSION@-@FC21_VERSION_LABEL@.@FC21_PATCH_VERSION@'
 grade: devel
 
@@ -43,6 +42,10 @@ base: core22
 # Assummes 'snapcraft' is called from a directory above the snap directory
 #  and the file was copied from <source_dir>/data/icons/128x128
 icon: snap/local/freeciv21-client.png
+
+architectures:
+  - build-on: arm64
+  - build-on: amd64
 
 parts:
   freeciv21:
