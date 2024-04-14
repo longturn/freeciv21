@@ -44,7 +44,6 @@ base: core22
 icon: snap/local/freeciv21-client.png
 
 architectures:
-  - build-on: arm64
   - build-on: amd64
 
 parts:
