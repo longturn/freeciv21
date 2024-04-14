@@ -587,6 +587,11 @@ jobs:
       - uses: snapcore/action-build@v1
         with:
           path: build
+      - name: Upload a build
+        uses: actions/upload-artifact@v4
+        with:
+          name: snap-file
+          path: build/Freeciv21-*.snap
 
   clang-format:
     name: clang-format Code Formatter
