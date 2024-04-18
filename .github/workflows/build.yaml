@@ -561,7 +561,7 @@ jobs:
   snapcraft:
     name: "Snap Package"
     runs-on: ubuntu-latest
-    #if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -579,7 +579,6 @@ jobs:
             liblua5.3-dev \
             libsqlite3-dev \
             libsdl2-mixer-dev
-          echo ${{ secrets.STORE_LOGIN }}
       - name: Configure
         run: |
           mkdir -p build/snap/local
