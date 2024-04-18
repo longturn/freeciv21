@@ -2,15 +2,12 @@ name: Release
 on:
   release:
     types: [published]
-  schedule:
-    - cron: "0 5 * * MON"
   workflow_dispatch: {}
 
 jobs:
   update-autorevision:
     name: "Update AutoRevision"
     runs-on: ubuntu-22.04
-    if: github.event_name == 'release'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -46,7 +43,6 @@ jobs:
   update-archive:
     name: "Update Source Archive"
     runs-on: ubuntu-22.04
-    if: github.event_name == 'release'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -77,7 +73,6 @@ jobs:
   snapcraft:
     name: "Snap Package"
     runs-on: ubuntu-latest
-    if: github.event_name == 'release'
     steps:
       - uses: actions/checkout@v4
         with:
