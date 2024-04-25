@@ -134,8 +134,8 @@ Copy Production
 
   Default: ``Shift`` plus Right mouse button
 
-Show/hide workers
-  Toggle the display of :unit:`Workers` or :unit:`Engineers` on the main map.
+Show/hide city working area
+  Toggles an overlay showing the working area of a city on the map.
 
   Default: ``Alt+Shift`` plus Right mouse button
 
