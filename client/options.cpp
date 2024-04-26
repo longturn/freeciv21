@@ -77,8 +77,10 @@ client_options *gui_options = nullptr;
  * of non-initialized datas when calling the changed callback. */
 static bool options_fully_initialized = false;
 
+/* See #2237
 static const QVector<QString> *
 get_mapimg_format_list(const struct option *poption);
+*/
 
 /**
   Option set structure.
@@ -1277,7 +1279,9 @@ static void manual_turn_done_callback(struct option *poption);
 static void voteinfo_bar_callback(struct option *poption);
 static void font_changed_callback(struct option *poption);
 static void allfont_changed_callback(struct option *poption);
+/* See #2237
 static void mapimg_changed_callback(struct option *poption);
+*/
 static void game_music_enable_callback(struct option *poption);
 static void menu_music_enable_callback(struct option *poption);
 static void sound_volume_callback(struct option *poption);
@@ -1797,6 +1801,7 @@ static void init_client_options()
                          "overview."),
                       COC_OVERVIEW, true, overview_redraw_callback),
 
+      /* See #2237
       // options for map images
       GEN_STR_LIST_OPTION(mapimg_format, N_("Image format"),
                           N_("The image toolkit and file format used for "
@@ -1838,6 +1843,7 @@ static void init_client_options()
              "A string identifying the game turn and map options will "
              "be appended."),
           COC_MAPIMG, GUI_DEFAULT_MAPIMG_FILENAME, nullptr, 0),
+      */
 
       GEN_BOOL_OPTION(gui_qt_fullscreen, N_("Fullscreen"),
                       N_("If this option is set the client will use the "
@@ -4792,6 +4798,7 @@ static void font_changed_callback(struct option *poption)
 /**
    Callback for mapimg options.
  */
+/* See #2237
 static void mapimg_changed_callback(struct option *poption)
 {
   if (!mapimg_client_define()) {
@@ -4811,6 +4818,7 @@ static void mapimg_changed_callback(struct option *poption)
                   option_name(poption));
   }
 }
+*/
 
 /**
    Callback for music enabling option.
@@ -4845,12 +4853,14 @@ static void menu_music_enable_callback(struct option *poption)
 /**
    Option framework wrapper for mapimg_get_format_list()
  */
+/* See #2237
 static const QVector<QString> *
 get_mapimg_format_list(const struct option *poption)
 {
   Q_UNUSED(poption)
   return mapimg_get_format_list();
 }
+*/
 
 /**
    What is the user defined tileset for the given topology
