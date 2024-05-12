@@ -19,15 +19,14 @@ An operating system that support Qt
 
     * Arch
     * Debian 11+ (Bullseye)\ |reg|
-    * Fedora 30+
+    * Fedora 37+
     * Gentoo
     * KDE Neon
     * Manjaro
     * Mint 20+ or Mint Debian Edition (set to Bullseye)
-    * openSUSE 15.3+
+    * openSUSE Tumbleweed (Leap is not supported)
     * Slackware
     * Ubuntu 22.04 LTS+
-    * Fedora 37+
 
 
 .. note::
