@@ -24,7 +24,7 @@ struct player_spaceship;
 const QString get_tile_output_text(const struct tile *ptile);
 const QString popup_info_text(struct tile *ptile);
 const QString get_nearest_city_text(struct city *pcity, int sq_dist);
-const QString unit_description(struct unit *punit);
+const QString unit_description(const unit *punit);
 const QString get_airlift_text(const std::vector<unit *> &units,
                                const struct city *pdest);
 const QString science_dialog_text();

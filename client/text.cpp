@@ -548,7 +548,7 @@ const QString get_nearest_city_text(struct city *pcity, int sq_dist)
    FIXME: This function is not re-entrant because it returns a pointer to
    static data.
  */
-const QString unit_description(struct unit *punit)
+const QString unit_description(const unit *punit)
 {
   int pcity_near_dist;
   struct player *owner = unit_owner(punit);

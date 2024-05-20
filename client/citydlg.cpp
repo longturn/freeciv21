@@ -26,6 +26,7 @@
 // utility
 #include "fc_types.h"
 #include "fcintl.h"
+#include "player.h"
 #include "support.h"
 // common
 #include "citizens.h"
@@ -54,6 +55,7 @@
 #include "unitlist.h"
 #include "utils/improvement_seller.h"
 #include "utils/unit_quick_menu.h"
+#include "utils/unit_utils.h"
 #include "views/view_cities.h" // hIcon
 #include "views/view_map.h"
 #include "views/view_map_common.h"
@@ -102,8 +104,7 @@ void unit_list_widget::set_units(unit_list *units)
   clear();
 
   QSize icon_size;
-  unit_list_iterate(units, punit)
-  {
+  for (const auto *punit : sorted(units)) {
     auto *item = new QListWidgetItem();
     item->setToolTip(unit_description(punit));
     item->setData(Qt::UserRole, punit->id);
@@ -113,7 +114,6 @@ void unit_list_widget::set_units(unit_list *units)
     item->setIcon(QIcon(pixmap));
     addItem(item);
   }
-  unit_list_iterate_end;
 
   setGridSize(icon_size);
   setIconSize(icon_size);
@@ -1762,77 +1762,6 @@ void city_dialog::dbl_click_p(QTableWidgetItem *item)
   worklist_remove(&queue, selected_row_p);
   city_set_queue(pcity, &queue);
 }
-
-namespace /* anonymous */ {
-/**
- * Finds how deeply the unit is nested in transports.
- */
-int transport_depth(const unit *unit)
-{
-  int depth = 0;
-  for (auto parent = unit->transporter; parent != nullptr;
-       parent = parent->transporter) {
-    depth++;
-  }
-  return depth;
-}
-
-/**
- * Comparison function to sort units as shown in the city dialog.
- */
-int units_sort(const unit *const *plhs, const unit *const *prhs)
-{
-  if (plhs == prhs || *plhs == *prhs) {
-    return 0;
-  }
-
-  auto lhs = *plhs;
-  auto rhs = *prhs;
-
-  // Transports are shown before the units they transport.
-  if (lhs == rhs->transporter) {
-    return false;
-  } else if (lhs->transporter == rhs) {
-    return true;
-  }
-
-  // When one unit is deeper or the two transporters are different, compare
-  // the parents instead.
-  int lhs_depth = transport_depth(lhs);
-  int rhs_depth = transport_depth(rhs);
-  if (lhs_depth > rhs_depth) {
-    return units_sort(&lhs->transporter, &rhs);
-  } else if (lhs_depth < rhs_depth) {
-    return units_sort(&lhs, &rhs->transporter);
-  } else if (lhs->transporter != rhs->transporter) {
-    return units_sort(&lhs->transporter, &rhs->transporter);
-  }
-
-  // Put defensive units on the left
-  if (lhs->utype->defense_strength != rhs->utype->defense_strength) {
-    return rhs->utype->defense_strength - lhs->utype->defense_strength;
-  }
-
-  // Put fortified units on the left, then fortifying units, then sentried
-  // units.
-  for (auto activity :
-       {ACTIVITY_FORTIFIED, ACTIVITY_FORTIFYING, ACTIVITY_SENTRY}) {
-    if (lhs->activity == activity && rhs->activity != activity) {
-      return false;
-    } else if (lhs->activity != activity && rhs->activity == activity) {
-      return true;
-    }
-  }
-
-  // Order by unit type
-  if (lhs->utype != rhs->utype) {
-    return lhs->utype->item_number - rhs->utype->item_number;
-  }
-
-  // Then unit id
-  return lhs->id - rhs->id;
-}
-} // anonymous namespace
 
 /**
    Updates layouts for supported and present units in city

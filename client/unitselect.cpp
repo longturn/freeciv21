@@ -26,6 +26,7 @@
 #include "fonts.h"
 #include "page_game.h"
 #include "tileset/tilespec.h"
+#include "utils/unit_utils.h"
 #include "views/view_map.h"
 #include "views/view_map_common.h"
 
@@ -76,7 +77,7 @@ void units_select::create_pixmap()
   QPixmap *tmp_pix;
   QRect crop;
   QPixmap *unit_pixmap;
-  struct unit *punit;
+  const unit *punit;
   float isosize;
 
   delete pix;
@@ -86,7 +87,7 @@ void units_select::create_pixmap()
   }
 
   update_units();
-  if (unit_list.count() > 0) {
+  if (!unit_list.empty()) {
     if (!tileset_is_isometric(tileset)) {
       item_size.setWidth(tileset_unit_width(tileset));
       item_size.setHeight(tileset_unit_width(tileset));
@@ -211,14 +212,12 @@ void units_select::mouseMoveEvent(QMouseEvent *event)
  */
 void units_select::mousePressEvent(QMouseEvent *event)
 {
-  struct unit *punit;
   if (event->button() == Qt::LeftButton && highligh_num != -1) {
     update_units();
-    if (highligh_num >= unit_list.count()) {
+    if (highligh_num >= unit_list.size()) {
       return;
     }
-    punit = unit_list.at(highligh_num);
-    unit_focus_set(punit);
+    unit_focus_set(unit_list.at(highligh_num));
   }
   QMenu::mousePressEvent(event);
 }
@@ -234,7 +233,6 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
   int *f_size;
   QPen pen;
   QString str, str2, unit_name;
-  struct unit *punit;
   int point_size = info_font.pointSize();
   int pixel_size = info_font.pixelSize();
 
@@ -243,8 +241,8 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
   } else {
     f_size = &point_size;
   }
-  if (highligh_num != -1 && highligh_num < unit_list.count()) {
-    punit = unit_list.at(highligh_num);
+  if (highligh_num != -1 && highligh_num < unit_list.size()) {
+    auto punit = unit_list.at(highligh_num);
     // TRANS: HP - hit points
     unit_name = unit_name_translation(punit);
     str2 = QString(_("%1 HP:%2/%3"))
@@ -271,7 +269,7 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
     painter->setPen(pen);
     painter->setFont(info_font);
     painter->drawText(10, h, str);
-    if (highligh_num != -1 && highligh_num < unit_list.count()) {
+    if (highligh_num != -1 && highligh_num < unit_list.size()) {
       painter->drawText(10, height() - 5 - h, unit_name);
       painter->drawText(10, height() - 5, str2);
     }
@@ -332,18 +330,16 @@ void units_select::update_units()
   if (utile != nullptr) {
     punit_list = utile->units;
     if (punit_list != nullptr) {
-      unit_list_iterate(utile->units, punit)
-      {
+      for (auto *punit : sorted(utile->units)) {
         unit_count++;
         if (i > show_line * column_count) {
           unit_list.push_back(punit);
         }
         i++;
       }
-      unit_list_iterate_end;
     }
   }
-  if (unit_list.count() == 0) {
+  if (unit_list.empty()) {
     close();
   }
 }

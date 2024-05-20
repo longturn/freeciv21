@@ -124,6 +124,7 @@ target_sources(
   utils/colorizer.cpp
   utils/improvement_seller.cpp
   utils/unit_quick_menu.cpp
+  utils/unit_utils.cpp
   views/view_cities.cpp
   views/view_cities_data.cpp
   views/view_economics.cpp

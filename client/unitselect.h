@@ -14,6 +14,8 @@
 
 #include <QMenu>
 
+#include <vector>
+
 class QPixmap;
 class QSize;
 class QFont;
@@ -27,10 +29,9 @@ class units_select : public QMenu {
   Q_OBJECT
   Q_DISABLE_COPY(units_select);
   QPixmap *pix;
-  QPixmap *h_pix;          /** pixmap for highlighting */
-  QSize item_size;         /** size of each pixmap of unit */
-  QList<unit *> unit_list; /** storing units only for drawing, for rest units
-                            * iterate utile->units */
+  QPixmap *h_pix;                /** pixmap for highlighting */
+  QSize item_size;               /** size of each pixmap of unit */
+  std::vector<unit *> unit_list; ///< units currently visible
   QFont ufont;
   QFont info_font;
   int column_count, row_count;
