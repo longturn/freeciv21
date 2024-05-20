@@ -98,20 +98,16 @@ void units_select::create_pixmap()
     delete h_pix;
     h_pix = new QPixmap(item_size.width(), item_size.height());
     h_pix->fill(palette().color(QPalette::HighlightedText));
-    if (unit_count < 5) {
-      row_count = 1;
-      pix = new QPixmap((unit_list.size()) * item_size.width(),
-                        item_size.height());
-    } else if (unit_count < 9) {
-      row_count = 2;
-      pix = new QPixmap(4 * item_size.width(), 2 * item_size.height());
-    } else {
-      row_count = 3;
-      if (unit_count > 12) {
-        more = true;
-      }
-      pix = new QPixmap(4 * item_size.width(), 3 * item_size.height());
-    }
+
+    // Determine the layout. 5 columns up to 25 units, then 6.
+    column_count = qMin(unit_count, unit_count <= 25 ? 5 : 6);
+    // Up to 6 rows visible at the same time.
+    row_count = qMin((unit_count + column_count - 1) / column_count, 6);
+    // And whether we go over.
+    more = unit_count > row_count * column_count;
+
+    pix = new QPixmap(column_count * item_size.width(),
+                      row_count * item_size.height());
     pix->fill(Qt::transparent);
     for (auto *punit : qAsConst(unit_list)) {
       unit_pixmap = new QPixmap(tileset_unit_width(tileset),
@@ -147,7 +143,7 @@ void units_select::create_pixmap()
     while (!pix_list.isEmpty()) {
       tmp_pix = pix_list.takeFirst();
       i++;
-      if (i % 4 == 0) {
+      if (i % column_count == 0) {
         x = 0;
         y = y + item_size.height();
       }
@@ -200,7 +196,7 @@ void units_select::mouseMoveEvent(QMouseEvent *event)
   } else if (row_count > 0) {
     a = (event->x() - 10) / item_size.width();
     b = (event->y() - fm.height() - 3) / item_size.height();
-    highligh_num = b * 4 + a;
+    highligh_num = b * column_count + a;
   }
   if (old_h != highligh_num) {
     create_pixmap();
@@ -281,7 +277,7 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
     }
     // draw scroll
     if (more) {
-      int maxl = ((unit_count - 1) / 4) + 1;
+      int maxl = ((unit_count - 1) / column_count) + 1;
       float page_height = 3.0f / maxl;
       float page_start = (static_cast<float>(show_line)) / maxl;
       pen.setColor(palette().color(QPalette::HighlightedText));
@@ -339,7 +335,7 @@ void units_select::update_units()
       unit_list_iterate(utile->units, punit)
       {
         unit_count++;
-        if (i > show_line * 4) {
+        if (i > show_line * column_count) {
           unit_list.push_back(punit);
         }
         i++;
@@ -366,16 +362,22 @@ void units_select::closeEvent(QCloseEvent *event)
  */
 void units_select::wheelEvent(QWheelEvent *event)
 {
-  int nr;
-
   if (!more && utile == nullptr) {
     return;
   }
-  nr = qCeil(static_cast<qreal>(unit_list_size(utile->units)) / 4) - 3;
-  if (event->angleDelta().y() < 0) {
+
+  // The number of hidden lines. This is the number of rows needed to show
+  // all units, minus what is shown without scrolling.
+  auto nr = (unit_list_size(utile->units) + column_count - 1) / column_count
+            - row_count;
+
+  // We scroll one full row per scroll event. The angle delta determines the
+  // direction in which we scroll. We don't scroll when it's 0.
+  const auto delta = event->angleDelta().y();
+  if (delta < 0) {
     show_line++;
     show_line = qMin(show_line, nr);
-  } else {
+  } else if (delta > 0) {
     show_line--;
     show_line = qMax(0, show_line);
   }

@@ -33,7 +33,7 @@ class units_select : public QMenu {
                             * iterate utile->units */
   QFont ufont;
   QFont info_font;
-  int row_count;
+  int column_count, row_count;
 
 public:
   units_select(struct tile *ptile, QWidget *parent = 0);
