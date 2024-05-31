@@ -387,7 +387,7 @@ sprites =
 		"f.niger", "tilesets/flags/niger-large"
 		"f.nigeria", "tilesets/flags/nigeria-large"
 		"f.normandy", "tilesets/flags/normandy-large"
-		"f.northernireland", "tilesets/flags/northernireland-large"
+		"f.northireland", "tilesets/flags/northireland-large"
 		"f.north_korea", "tilesets/flags/north_korea-large"
 		"f.northumbria", "tilesets/flags/northumbria-large"
 		"f.norway", "tilesets/flags/norway-large"

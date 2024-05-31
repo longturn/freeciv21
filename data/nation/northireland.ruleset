@@ -1,9 +1,9 @@
-[nation_northirish]
+[nation_northireland]
 
 name   = _("Northern Ireland")
 plural = _("?plural:Northern Irish")
 groups = "Modern", "European"
-legend=_("Northern Ireland is a part of the United Kingdom that occupies\
+legend=_("North Ireland is a part of the United Kingdom that occupies\
 the northeastern part of the island of Ireland. Northern Ireland has a\
 complex history of conflict and cooperation between the British unionists,\
 who want to remain in the U.K., and the Irish nationalists, who seek to\
@@ -37,7 +37,7 @@ ruler_titles = {
  "Democracy",       _("First Minister %s"),_("?female:First Minister %s")
 }
 
-flag = "northernireland" ; Credits to Sangjinhwa on Wikimedia commons.
+flag = "northireland" ; Credits to Sangjinhwa on Wikimedia commons.
 flag_alt = "england" ; Similar colors
 style = "Celtic"
 
@@ -45,7 +45,7 @@ init_techs = ""
 init_buildings = ""
 init_units = ""
 
-civilwar_nations = "irish", "british", "english", "gaelic", "scottish gaelic" ; add to civilwar nation list for Ireland and Britain. 
+civilwar_nations = "irish", "british", "english", "gaelic", "scottish gaelic" ; add to civilwar nation list for Ireland and Britain.
 
 cities = ; Cities sourced from geoba.se
   "Belfast",
