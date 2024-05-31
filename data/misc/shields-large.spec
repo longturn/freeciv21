@@ -388,7 +388,7 @@ sprites =
 		"f.shield.nigeria", "tilesets/flags/nigeria-shield-large"
 		"f.shield.normandy", "tilesets/flags/normandy-shield-large"
 		"f.shield.north_korea", "tilesets/flags/north_korea-shield-large"
-		"f.shield.northernireland", "tilesets/flags/northernireland-shield-large"
+		"f.shield.northireland", "tilesets/flags/northireland-shield-large"
 		"f.shield.northumbria", "tilesets/flags/northumbria-shield-large"
 		"f.shield.norway", "tilesets/flags/norway-shield-large"
 		"f.shield.novgorod", "tilesets/flags/novgorod-shield-large"

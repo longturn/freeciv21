@@ -370,7 +370,7 @@ install(
   nigerien.ruleset
   nimiipuu.ruleset
   norman.ruleset
-  northernirish.ruleset
+  northireland.ruleset
   northkorean.ruleset
   northumbrian.ruleset
   norwegian.ruleset
