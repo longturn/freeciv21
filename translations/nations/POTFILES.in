@@ -159,6 +159,7 @@ data/nation/filipino.ruleset
 data/nation/finnish.ruleset
 data/nation/flemish.ruleset
 data/nation/florentine.ruleset
+data/nation/floridian.ruleset
 data/nation/formosan.ruleset
 data/nation/franconian.ruleset
 data/nation/frankish.ruleset
@@ -260,6 +261,7 @@ data/nation/liberian.ruleset
 data/nation/liburnian.ruleset
 data/nation/libyan.ruleset
 data/nation/liechtensteiner.ruleset
+data/nation/liege.ruleset
 data/nation/ligurian.ruleset
 data/nation/lipkatatar.ruleset
 data/nation/lippe.ruleset
@@ -352,6 +354,7 @@ data/nation/ozite.ruleset
 data/nation/paeonian.ruleset
 data/nation/pakistani.ruleset
 data/nation/palatinate.ruleset
+data/nation/palauan.ruleset
 data/nation/palestinian.ruleset
 data/nation/palmyrene.ruleset
 data/nation/panamanian.ruleset

@@ -39,7 +39,7 @@ style = "european"
 init_techs=""
 init_buildings=""
 init_units=""
-civilwar_nations="dutch", "walloon"
+civilwar_nations="dutch", "walloon", "liege"
 
 cities =
  "Antwerpen (river)",

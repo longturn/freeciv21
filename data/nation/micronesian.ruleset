@@ -29,7 +29,7 @@ init_techs=""
 init_buildings=""
 init_units=""
 
-civilwar_nations = "fijian", "papuan"
+civilwar_nations = "fijian", "papuan", "palauan"
 
 cities =
  "Palikir",

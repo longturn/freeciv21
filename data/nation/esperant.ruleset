@@ -9,6 +9,10 @@ legend=_("The Esperants are a world community united by the Esperanto\
 leaders = {
  "name",                        "sex"
  "L.L. ZAMENHOF",               "Male"
+ "Klara ZAMENHOF",              "Female"
+ "Adam ZAMENHOF",               "Male"
+ "Lidia ZAMENHOF",              "Female"
+ "Zofia ZAMENHOF",              "Female"
  "Théophile CART",              "Male"
  "Fernand DORÉ",                "Male"
  "Georges KERSAUDY",            "Male"
@@ -28,6 +32,56 @@ civilwar_nations = "volapukan", "tokiponan"
 
 cities =
  "Esperanturbo",
+ "Bjalistoko (hills)",
+ "Nurenbergo (hills, mountains, river, !ocean)",
+ "Bulonjo ĉe maro",
+ "Ĝenevo",
+ "Kembriĝo",
+ "Barcelono (ocean)",
+ "Vaŝingtono",
+ "Antverpeno",
+ "Hago",
+ "Prago",
+ "Helsinko",
+ "Vieno",
+ "Budapeŝto",
+ "Stokholmo",
+ "Romo",
+ "Zagrebo",
+ "Kopenhago",
+ "Sofio",
+ "Tokio",
+ "Beogrado",
+ "Ateno",
+ "Rejkjaviko",
+ "Varno",
+ "Braziljo",
+ "Vankuvero",
+ "Pekino",
+ "Havano",
+ "Bergeno",
+ "Seulo",
+ "Adelajdo",
+ "Tel-Avivo",
+ "Vilno",
+ "Hanojo",
+ "Bonaero",
+ "Nitro",
+ "Lisbono",
+ "Interna Ideo",
+ "Fundamento",
+ "Guto Malgranda",
+ "Krestomatio",
+ "La Espero",
+ "Verda Standardo",
+ "Homaranismo",
+ "Streĉita Kordo",
+ "Interrompita Kanto",
+ "Verda Koro",
+ "Faka Forumo",
+ "Gufujo",
+ "Aligatorejo",
+ "Fina Venko",
  "Novurbo",
  "Kongresurbo",
  "Sabla Plaĝo (ocean)",
@@ -53,6 +107,7 @@ cities =
  "Klar-akvo (ocean)",
  "Granda Truo",
  "Pinara Kresto",
+ "Sovaĝa Arbaro (forest)",
  "Paco",
  "Espero",
  "Pafilfumo",
@@ -77,3 +132,6 @@ cities =
  "Banburgo-ĉe-Rivero (river)",
  "Granda Rivero (river)",
  "Novburgo-ĉe-Maro (ocean)"
+ "Pacejo",
+ "Esperejo",
+ "Neĝa Monto (mountains)"
