@@ -23,6 +23,8 @@
 #include <QColor>
 #include <QEvent>
 
+#include <map>
+
 struct base_type;
 struct help_item;
 struct resource_type;
@@ -97,6 +99,16 @@ struct tileset_log_entry {
   QString message;
 };
 
+/**
+ * Tileset options allow altering the behavior of a tileset.
+ */
+struct tileset_option {
+  QString
+      description; ///< One-line description for use in the UI (translated)
+  bool enabled;    /// < Current status
+  bool enabled_by_default; ///< Default status
+};
+
 struct tileset;
 
 extern struct tileset *tileset;
@@ -118,6 +130,14 @@ bool tileset_is_fully_loaded();
 
 std::vector<tileset_log_entry> tileset_log(const struct tileset *t);
 bool tileset_has_error(const struct tileset *t);
+
+bool tileset_has_options(const struct tileset *t);
+bool tileset_has_option(const struct tileset *t, const QString &name);
+std::map<QString, tileset_option>
+tileset_get_options(const struct tileset *t);
+bool tileset_option_is_enabled(const struct tileset *t, const QString &name);
+bool tileset_set_option(struct tileset *t, const QString &name,
+                        bool enabled);
 
 void finish_loading_sprites(struct tileset *t);
 
@@ -309,6 +329,7 @@ int tileset_citybar_offset_y(const struct tileset *t);
 int tileset_tilelabel_offset_y(const struct tileset *t);
 int tileset_num_city_colors(const struct tileset *t);
 bool tileset_use_hard_coded_fog(const struct tileset *t);
+double tileset_preferred_scale(const struct tileset *t);
 
 int tileset_num_cardinal_dirs(const struct tileset *t);
 int tileset_num_index_cardinals(const struct tileset *t);
@@ -321,9 +342,9 @@ QString cardinal_index_str(const struct tileset *t, int idx);
 #define TS_TOPO_HEX 1
 #define TS_TOPO_ISOHEX 2
 
-const char *tileset_name_get(struct tileset *t);
-const char *tileset_version(struct tileset *t);
-const char *tileset_summary(struct tileset *t);
-const char *tileset_description(struct tileset *t);
-int tileset_topo_index(struct tileset *t);
-help_item *tileset_help(struct tileset *t);
+const char *tileset_name_get(const struct tileset *t);
+const char *tileset_version(const struct tileset *t);
+const char *tileset_summary(const struct tileset *t);
+const char *tileset_description(const struct tileset *t);
+int tileset_topo_index(const struct tileset *t);
+help_item *tileset_help(const struct tileset *t);

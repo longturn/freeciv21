@@ -104,7 +104,7 @@ On Linux, the easiest way to install KDevelop is with a command such as this:
 
 .. code-block:: sh
 
-    $ sudo apt install kdevelop
+    $ sudo apt install kdevelop clang-format-11
 
 
 Once installed, you can then import the Freeciv21 project into it. Follow these steps:

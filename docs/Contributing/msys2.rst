@@ -37,7 +37,6 @@ This chapter is about creating a new MSYS2 build environment.
    possible to build a Freeciv21 source tree that was created via release tarball or zip file.
 
     * pkgconf
-    * tar
     * git
     * automake
     * libtool
@@ -47,39 +46,35 @@ This chapter is about creating a new MSYS2 build environment.
     * python3
     * python-pip
     * make
+    * clang
 
-#. Install these arch-specific packages for building common parts (i686 or x86_64, but not both). It is
-   recommended that you install the x86_64 packages, unless you think you need a cross-compiler.
+#. Install these packages for building common parts.
 
-    * mingw-w64-i686-gcc / mingw-w64-x86_64-gcc
-    * mingw-w64-i686-gdb / mingw-w64-x86_64-gdb
-    * mingw-w64-i686-curl / mingw-w64-x86_64-curl
-    * mingw-w64-i686-bzip2 / mingw-w64-x86_64-bzip2
-    * mingw-w64-i686-readline / mingw-w64-x86_64-readline
-    * mingw-w64-i686-lua / mingw-w64-x86_64-lua
-    * mingw-w64-i686-imagemagick / mingw-w64-x86_64-imagemagick
-    * mingw-w64-i686-SDL2_mixer / mingw-w64-x86_64-SDL2_mixer
-    * mingw-w64-i686-cmake / mingw-w64-x86_64-cmake
-    * mingw-w64-i686-ninga / mingw-w64-x86_64-ninja
-    * mingw-w64-i686-libunwind / mingw-w64-x86_64-libunwind
-    * mingw-w64-i686-make / mingw-w64-x86_64-make
-    * mingw-w64-i686-python3 / mingw-w64-x86_64-python3
-    * mingw-w64-i686-python3-pip / mingw-w64-x86_64-python3-pip
+    * mingw-w64-x86_64-gcc (will give you bzip2, readline and python3)
+    * mingw-w64-x86_64-gdb
+    * mingw-w64-x86_64-curl
+    * mingw-w64-x86_64-lua
+    * mingw-w64-x86_64-tolua
+    * mingw-w64-x86_64-SDL2_mixer
+    * mingw-w64-x86_64-cmake
+    * mingw-w64-x86_64-ninja
+    * mingw-w64-x86_64-libunwind
+    * mingw-w64-x86_64-make
+    * mingw-w64-x86_64-python-pip
 
-#. Arch-specific optional packages for building common parts (i686 or x86_64, but not both).
+#. Packages for building the client and/or Ruledit.
 
-    * mingw-w64-i686-drmingw / mingw-w64-x86_64-drmingw
-    * mingw-w64-i686-tolua / mingw-w64-x86_64-tolua
+    * mingw-w64-x86_64-qt5
+    * mingw-w64-x86_64-qt5-svg
+    * mingw-w64-x86_64-karchive-qt5
 
-#. Arch-specific packages for building the client and/or Ruledit (i686 or x86_64, but not both).
+#. Package needed for building Windows installer package.
 
-    * mingw-w64-i686-qt5 / mingw-w64-x86_64-qt5
-    * mingw-w64-i686-qt5-svg / mingw-w64-x86_64-qt5-svg
-    * mingq-w64-i686-karchive-qt5 / mingw-w64-x86_64-karchive-qt5
+    * mingw-w64-x86_64-nsis
 
-#. Arch-specific package needed for building Windows installer package (i686 or x86_64, but not both).
+#. Packages needed for documentation development.
 
-    * mingw-w64-i686-nsis / mingw-w64-x86_64-nsis
+    * mingw-w64-x86_64-python-sphinx
 
 #. Add some environment variables to the :file:`.bash_profile` file. The code sample assumes x86_64.
 
@@ -94,11 +89,11 @@ Premade Environment
 ===================
 
 Visit https://github.com/jwrober/freeciv-msys2 to get a set of scripts and instructions to quickly build an
-environment. The scripts create an x86_64 environment.
+environment. The scripts create an x86_64 development environment.
 
 
 Build
 =====
 
-Now that you have the environment setup. You can follow the steps in :doc:`/Getting/install`. MSYS2 in a
+Now that you have the environment setup. You can follow the steps in :doc:`/Getting/compile`. MSYS2 in a
 Linux emulation environment on Windows, so the commands for :file:`git`, :file:`cmake`, etc. work the same.

@@ -14,6 +14,7 @@
 #include <fc_config.h>
 
 #include <cstring>
+#include <qglobal.h>
 #include <sys/stat.h>
 
 // Qt
@@ -55,18 +56,17 @@
 #include "governor.h"
 #include "mapctrl_common.h"
 #include "music.h"
+#include "options.h"
 #include "overview_common.h"
 #include "packhand_gen.h"
+#include "qtg_cxxside.h"
 #include "themes_common.h"
 #include "tileset/tilespec.h"
 #include "views/view_cities_data.h"
 #include "views/view_map_common.h"
 #include "views/view_nations_data.h"
 
-#include "options.h"
-
-// gui-qt
-#include "qtg_cxxside.h"
+const char *const TILESET_OPTIONS_PREFIX = "tileset_";
 
 typedef QHash<QString, QString> optionsHash;
 typedef QHash<QString, intptr_t> dialOptionsHash;
@@ -77,8 +77,10 @@ client_options *gui_options = nullptr;
  * of non-initialized datas when calling the changed callback. */
 static bool options_fully_initialized = false;
 
+/* See #2237
 static const QVector<QString> *
 get_mapimg_format_list(const struct option *poption);
+*/
 
 /**
   Option set structure.
@@ -1277,7 +1279,9 @@ static void manual_turn_done_callback(struct option *poption);
 static void voteinfo_bar_callback(struct option *poption);
 static void font_changed_callback(struct option *poption);
 static void allfont_changed_callback(struct option *poption);
+/* See #2237
 static void mapimg_changed_callback(struct option *poption);
+*/
 static void game_music_enable_callback(struct option *poption);
 static void menu_music_enable_callback(struct option *poption);
 static void sound_volume_callback(struct option *poption);
@@ -1797,6 +1801,7 @@ static void init_client_options()
                          "overview."),
                       COC_OVERVIEW, true, overview_redraw_callback),
 
+      /* See #2237
       // options for map images
       GEN_STR_LIST_OPTION(mapimg_format, N_("Image format"),
                           N_("The image toolkit and file format used for "
@@ -1838,6 +1843,7 @@ static void init_client_options()
              "A string identifying the game turn and map options will "
              "be appended."),
           COC_MAPIMG, GUI_DEFAULT_MAPIMG_FILENAME, nullptr, 0),
+      */
 
       GEN_BOOL_OPTION(gui_qt_fullscreen, N_("Fullscreen"),
                       N_("If this option is set the client will use the "
@@ -3874,6 +3880,91 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
 Q_GLOBAL_STATIC(optionsHash, settable_options)
 
 /**
+ * Migrate players using cimpletoon/toonhex to amplio2/hexemplio with the
+ * cimpletoon option enabled.
+ *
+ * \since 3.1
+ */
+static void
+tileset_options_migrate_cimpletoon(struct client_options *options)
+{
+  for (auto &name : {options->default_tileset_iso_name,
+                     options->default_tileset_isohex_name,
+                     options->default_tileset_square_name}) {
+    if (name == QStringLiteral("cimpletoon")) {
+      fc_strlcpy(name, "amplio2", sizeof(name));
+      options->tileset_options[QStringLiteral("amplio2")]
+                              [QStringLiteral("cimpletoon")] = true;
+    } else if (name == QStringLiteral("toonhex")) {
+      fc_strlcpy(name, "hexemplio", sizeof(name));
+      options->tileset_options[QStringLiteral("hexemplio")]
+                              [QStringLiteral("cimpletoon")] = true;
+    }
+  }
+}
+
+/**
+ * Load tileset options.
+ *
+ * Every tileset has its own section called tileset_xxx. The options are
+ * saved as name=value pairs.
+ * \see tileset_options_save
+ */
+static void tileset_options_load(struct section_file *sf,
+                                 struct client_options *options)
+{
+  // Gather all tileset_xxx sections
+  auto sections =
+      secfile_sections_by_name_prefix(sf, TILESET_OPTIONS_PREFIX);
+  if (!sections) {
+    return;
+  }
+
+  section_list_iterate(sections, psection)
+  {
+    // Extract the tileset name from the name of the section.
+    auto tileset_name =
+        section_name(psection) + strlen(TILESET_OPTIONS_PREFIX);
+
+    // Get all values from the section and fill a map with them.
+    auto entries = section_entries(psection);
+    auto settings = std::map<QString, bool>();
+    entry_list_iterate(entries, pentry)
+    {
+      bool value = true;
+      if (entry_bool_get(pentry, &value)) {
+        settings[entry_name(pentry)] = value;
+      } else {
+        // Ignore options we can't convert to a bool, but warn the user.
+        qWarning("Could not load option %s for tileset %s",
+                 entry_name(pentry), tileset_name);
+      }
+    }
+    entry_list_iterate_end;
+
+    // Store the loaded options for later use.
+    options->tileset_options[tileset_name] = settings;
+  }
+  section_list_iterate_end;
+}
+
+/**
+ * Save tileset options.
+ *
+ * \see tileset_options_load
+ */
+static void tileset_options_save(struct section_file *sf,
+                                 const struct client_options *options)
+{
+  for (const auto &[tileset, settings] : options->tileset_options) {
+    for (const auto &[name, value] : settings) {
+      secfile_insert_bool(sf, value, "%s%s.%s", TILESET_OPTIONS_PREFIX,
+                          qUtf8Printable(tileset), qUtf8Printable(name));
+    }
+  }
+}
+
+/**
    Load the server options.
  */
 static void settable_options_load(struct section_file *sf)
@@ -4384,6 +4475,8 @@ void options_load()
     create_default_cma_presets();
   }
 
+  tileset_options_load(sf, gui_options);
+  tileset_options_migrate_cimpletoon(gui_options);
   settable_options_load(sf);
   global_worklists_load(sf);
 
@@ -4437,6 +4530,9 @@ void options_save(option_save_log_callback log_cb)
 
   message_options_save(sf, "client");
   options_dialogs_save(sf);
+
+  // Tileset options
+  tileset_options_save(sf, gui_options);
 
   // server settings
   save_cma_presets(sf);
@@ -4702,6 +4798,7 @@ static void font_changed_callback(struct option *poption)
 /**
    Callback for mapimg options.
  */
+/* See #2237
 static void mapimg_changed_callback(struct option *poption)
 {
   if (!mapimg_client_define()) {
@@ -4721,6 +4818,7 @@ static void mapimg_changed_callback(struct option *poption)
                   option_name(poption));
   }
 }
+*/
 
 /**
    Callback for music enabling option.
@@ -4755,12 +4853,14 @@ static void menu_music_enable_callback(struct option *poption)
 /**
    Option framework wrapper for mapimg_get_format_list()
  */
+/* See #2237
 static const QVector<QString> *
 get_mapimg_format_list(const struct option *poption)
 {
   Q_UNUSED(poption)
   return mapimg_get_format_list();
 }
+*/
 
 /**
    What is the user defined tileset for the given topology

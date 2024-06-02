@@ -160,7 +160,6 @@ struct client_options {
   };
   char mapimg_filename[512] = "mapimage filename";
 
-// gui-qt client specific options.
 #define FC_QT_DEFAULT_THEME_NAME "NightStalker"
   bool gui_qt_fullscreen = true;
   bool gui_qt_show_preview = true;
@@ -178,6 +177,10 @@ struct client_options {
   bool gui_qt_show_titlebar = true;
 
   struct overview overview = {};
+
+  /// Saved tileset options. The first index is the tileset name, the second
+  /// is the option name.
+  std::map<QString, std::map<QString, bool>> tileset_options;
 };
 
 extern client_options *gui_options;

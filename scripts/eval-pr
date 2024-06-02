@@ -11,7 +11,7 @@
 # Bash shell script to aid the process of evaluating a pull request
 #---
 
-version="1.1"
+version="1.2"
 re='^[0-9]+$'
 asan="false"
 
@@ -142,8 +142,7 @@ debug_eval ()
   echo "-- Building Debug."
   echo
   # We ask for a debug build in order to run the code through a debugger while evaluating
-  cmake -S . -B build_$pull_request \
-    -G "Ninja Multi-Config" \
+  cmake -S . -B build_$pull_request -G Ninja \
     -DCMAKE_INSTALL_PREFIX=$PWD/build_$pull_request/install \
     -DCMAKE_BUILD_TYPE=Debug
   cmake --build build_$pull_request

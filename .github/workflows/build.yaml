@@ -24,7 +24,7 @@ jobs:
             build_type: RelWithDebInfo
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Install GCC
@@ -76,7 +76,7 @@ jobs:
         run: |
           cmake --build build --target package
       - name: Upload package
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: |
           startsWith(github.ref, 'refs/tags/')
             && matrix.compiler == 'gcc'
@@ -91,7 +91,7 @@ jobs:
     needs: clang-format
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Install GCC
@@ -129,7 +129,7 @@ jobs:
       run:
         shell: msys2 {0}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: msys2/setup-msys2@v2
@@ -170,14 +170,14 @@ jobs:
         run: |
           cmake --build build --target package
       - name: Upload package
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
             build/Windows-x86_64/Freeciv21-*-Windows-x86_64.exe
             build/Windows-x86_64/Freeciv21-*-Windows-x86_64.exe.sha256
       - name: Upload a build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Windows-exe
           path: build/Windows-x86_64/Freeciv21-*.exe
@@ -191,13 +191,13 @@ jobs:
       VCPKG_ROOT: C:/vcpkg
       VCPKG_DEFAULT_BINARY_CACHE: ${{github.workspace}}/vcpkg/bincache
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: lukka/run-vcpkg@v10
+      - uses: lukka/run-vcpkg@v11
         name: Install dependencies
         with:
-          vcpkgGitCommitId: 53bef8994c541b6561884a8395ea35715ece75db
+          vcpkgGitCommitId: a34c873a9717a888f58dc05268dea15592c2f0ff
       - name: Enable Developer Command Prompt
         uses: ilammy/msvc-dev-cmd@v1
       - name: Configure
@@ -217,25 +217,29 @@ jobs:
     env:
       VCPKG_BUILD_TYPE: release
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Install build tools
         run: |
           brew update
-          brew install \
+          # Remove the bloat installed by default to avoid conflicts
+          brew remove --force $(brew list)
+          # Make sure to overwrite existing symlinks
+          brew install --overwrite \
             cmake \
-            ninja \
+            create-dmg \
             gettext \
-            create-dmg
+            ninja \
+            pkg-config
           brew link gettext --force
-      - uses: actions/setup-python@v4  # Workaround for #2069
+      - uses: actions/setup-python@v5  # Workaround for #2069
         with:
           python-version: '3.11'
-      - uses: lukka/run-vcpkg@v10
+      - uses: lukka/run-vcpkg@v11
         name: Install dependencies
         with:
-          vcpkgGitCommitId: 53bef8994c541b6561884a8395ea35715ece75db
+          vcpkgGitCommitId: a34c873a9717a888f58dc05268dea15592c2f0ff
       - name: Build
         uses: lukka/run-cmake@v10
         with:
@@ -279,14 +283,14 @@ jobs:
             "staging/"
           shasum -a 256 Freeciv21-${{steps.split.outputs.fragment}}.dmg > Freeciv21-${{steps.split.outputs.fragment}}.dmg.sha256
       - name: Upload package
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
             Freeciv21-*.dmg
             Freeciv21-*.dmg.sha256
       - name: Upload a build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: macOS-dmg
           path: Freeciv21-*.dmg
@@ -314,7 +318,7 @@ jobs:
             zlib-devel \
             libunwind-devel \
             elfutils-libs
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Configure
         # Set ALWAYS_ROOT because the container user is root and creating an
         # unpriviledged user would be too much work.
@@ -388,8 +392,8 @@ jobs:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
       - name: checkout
-        uses: actions/checkout@v3
-      - uses: cachix/install-nix-action@v19
+        uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v22
       - run: nix flake check
       # TODO: We can add the build to a cache for others (see cachix.org)
       # It's free for FOSS.
@@ -403,10 +407,10 @@ jobs:
     env:
       QT_VERSION: v5.15.8-lts-lgpl
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Cache Qt build
         id: qtcache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/qt
           key: qt-wasm-${{ env.QT_VERSION }}-svg-socket-v2
@@ -419,7 +423,7 @@ jobs:
             clang \
             python3 \
             gettext
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         name: Checkout emsdk
         with:
           repository: emscripten-core/emsdk
@@ -442,7 +446,7 @@ jobs:
           cd lua-5.4.3
           emcmake cmake .
           emmake make install
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         if: steps.qtcache.outputs.cache-hit != 'true'
         name: Checkout qtbase
         with:
@@ -460,7 +464,7 @@ jobs:
           git cherry-pick 76d12eea2252c5e537dff15b103bdc1f925cf760
           ./configure -xplatform wasm-emscripten -opensource -confirm-license -prefix ~/qt -nomake examples
           make install
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         if: steps.qtcache.outputs.cache-hit != 'true'
         name: Checkout qtsvg
         with:
@@ -474,7 +478,7 @@ jobs:
           cd qtsvg
           ~/qt/bin/qmake
           make install
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         name: Checkout zstd
         with:
           repository: facebook/zstd
@@ -487,7 +491,7 @@ jobs:
           mkdir bld
           emcmake cmake build/cmake -DZSTD_BUILD_PROGRAMS=0 -DZSTD_BUILD_SHARED=0
           emmake make install
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         name: Checkout extra-cmake-modules
         with:
           repository: KDE/extra-cmake-modules
@@ -498,7 +502,7 @@ jobs:
           cd ecm
           cmake .
           sudo make install
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         name: Checkout karchive
         with:
           repository: KDE/karchive
@@ -543,22 +547,58 @@ jobs:
         run: |
           cat common/networking/CMakeFiles/networking.dir/includes_CXX.rsp
           cat CMakeCache.txt
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: cmakecache
           path: CMakeCache.txt
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: wasm-client
           path: freeciv21-client.*
+
+  snapcraft:
+    name: "Snap Package"
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install \
+            cmake \
+            ninja-build \
+            gettext \
+            qtbase5-dev \
+            libqt5svg5-dev \
+            libkf5archive-dev \
+            liblua5.3-dev \
+            libsqlite3-dev \
+            libsdl2-mixer-dev
+      - name: Configure
+        run: |
+          mkdir -p build/snap/local
+          cmake . -B build -G Ninja
+          cp data/icons/128x128/freeciv21-client.png build/snap/local
+      - uses: snapcore/action-build@v1
+        id: snapcraft
+        with:
+          path: build
+      - name: Upload a build
+        uses: actions/upload-artifact@v4
+        with:
+          name: snap
+          path: ${{ steps.snapcraft.outputs.snap }}
 
   clang-format:
     name: clang-format Code Formatter
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
     - name: Run clang-format style check for C/C++

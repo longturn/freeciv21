@@ -5,7 +5,7 @@ plural=_("?plural:Luhansk")
 groups= "Modern", "European"
 legend=_("The Luhansk People's Republic is an unrecognised republic\
  of Russia in the occupied parts of eastern Ukraine's Luhansk Oblast\
- The LPR was created by Russian-backed paramilitaries in 2014, and it\ 
+ The LPR was created by Russian-backed paramilitaries in 2014, and it\
  operated as a breakaway state until it was annexed by Russia in September\
  2022.")
 ; Legend from: https://en.wikipedia.org/wiki/Luhansk_People%27s_Republic
@@ -16,7 +16,7 @@ leaders = {
  "Melania Pavlovna",              "Female" ; Wife of Pyotr Bogynya
  "Mykola Kholodylin",             "Male"   ; (1843-1929), First mayor of the city of Luhansk
  "Georgiy Petrov",                "Male"   ; Longest serving mayor from 1965 to 1985
- "Gennadiy Tsypkalov",            "Male"   ; (1973–2016), first acting head of the Luhansk People's Republic
+ "Gennadiy Tsypkalov",            "Male"   ; (1973–2016), first acting head of the Luhansk People´s Republic
  "Liliya Tsypkalova",             "Female" ; Wife of Gennadiy Tsypkalov
  "Vasily Nikitin",                "Male"   ; Prime Minister from 18 May 2014 – 3 July 2014
 }
@@ -30,7 +30,7 @@ ruler_titles = {
 }
 
 flag="luhansk"
-flag_alt = "-"
+flag_alt = "russia"  ; Obvious reasons
 style = "European"
 
 init_techs=""

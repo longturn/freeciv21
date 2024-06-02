@@ -19,14 +19,13 @@
 
 name: freeciv21
 title: Freeciv21
-summary: Freeciv21 - Freeciv for the 21st Century
+summary: Freeciv21 - Develop your civilization from humble roots to a global empire
 description: |
   Freeciv21 is a free open source turn-based empire-building 4x strategy game, in which each player becomes the leader of a civilization. You compete against several opponents to build cities and use them to support a military and an economy. Players strive to complete an empire that survives all encounters with its neighbors to emerge victorious. Play begins at the dawn of history in 4,000 BCE.
   Freeciv21 takes its roots in the well-known FOSS game Freeciv and extends it for more fun, with a revived focus on competitive multiplayer environments. Players can choose from over 500 nations and can play against the computer or other people in an active online community.
   The code is maintained by the team over at Longturn.net and is based on the QT framework. The game supports both hex and square tiles and is easily modified to create custom rules.
 
-# TODO: At some point, will want to integrate into cmake process and configure_file()
-version: '3.1-alpha.5'
+version: '@FC21_MAJOR_VERSION@.@FC21_MINOR_VERSION@-@FC21_VERSION_LABEL@.@FC21_PATCH_VERSION@'
 grade: devel
 
 license: GPL-3.0-or-later
@@ -44,14 +43,15 @@ base: core22
 #  and the file was copied from <source_dir>/data/icons/128x128
 icon: snap/local/freeciv21-client.png
 
+architectures:
+  - build-on: amd64
+
 parts:
   freeciv21:
     plugin: cmake
     source: https://github.com/longturn/freeciv21.git
     source-type: git
-    # TODO: integrate into cmake process and configure_file()
-    #source-branch: master
-    source-commit: baf62126f40b5b19115bba122189ca05ff46ef25
+    source-branch: master
     cmake-generator: Ninja
     cmake-parameters:
       - "-DCMAKE_INSTALL_PREFIX=/usr"

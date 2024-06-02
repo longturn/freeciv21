@@ -65,6 +65,7 @@
 #include "script_server.h"
 
 #include "ruleset.h"
+#include "unittype.h"
 
 // RULESET_SUFFIX already used, no leading dot here
 #define RULES_SUFFIX "ruleset"
@@ -2302,6 +2303,15 @@ static bool load_ruleset_units(struct section_file *file,
         u->city_size = 1;
         ok = false;
         break;
+      }
+
+      // L_FERRYBOAT makes the AI consider the unit as a transport.
+      // Ensure it can actually transport something.
+      if (utype_has_role(u, L_FERRYBOAT) && u->transport_capacity == 0) {
+        qCWarning(ruleset_category,
+                  "\"%s\": Unit %s has FerryBoat flag but cannot transport",
+                  filename, utype_rule_name(u));
+        BV_CLR(u->roles, L_FERRYBOAT - L_FIRST);
       }
     }
     unit_type_iterate_end;
@@ -8890,7 +8900,6 @@ void send_rulesets(struct conn_list *dest)
   send_ruleset_trade_routes(dest);
   send_ruleset_team_names(dest);
   send_ruleset_actions(dest);
-  send_ruleset_action_enablers(dest);
   send_ruleset_action_auto_performers(dest);
   send_ruleset_tech_classes(dest);
   send_ruleset_techs(dest);
@@ -8911,6 +8920,7 @@ void send_rulesets(struct conn_list *dest)
   send_ruleset_cities(dest);
   send_ruleset_multipliers(dest);
   send_ruleset_musics(dest);
+  send_ruleset_action_enablers(dest);
   send_ruleset_cache(dest);
 
   // Indicate client that all rulesets have now been sent.

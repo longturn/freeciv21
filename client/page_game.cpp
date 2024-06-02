@@ -27,14 +27,9 @@
 #include "government.h"
 #include "repodlgs_g.h"
 // client
-#include "client_main.h"
-#include "text.h"
-#include "tileset/tilespec.h"
-#include "views/view_map_common.h"
-
-// gui-qt - Eye of Storm
 #include "chatline.h"
 #include "citydlg.h"
+#include "client_main.h"
 #include "fc_client.h"
 #include "gotodlg.h"
 #include "hudwidget.h"
@@ -44,8 +39,11 @@
 #include "minimap.h"
 #include "minimap_panel.h"
 #include "ratesdlg.h"
+#include "text.h"
+#include "tileset/tilespec.h"
 #include "top_bar.h"
 #include "views/view_map.h"
+#include "views/view_map_common.h"
 #include "views/view_nations.h"
 #include "views/view_units.h"
 

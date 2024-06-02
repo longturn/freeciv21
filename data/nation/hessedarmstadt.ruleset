@@ -30,7 +30,7 @@ ruler_titles = {
 }
 
 flag="hessedarmstadt"
-flag_alt = "germany"
+flag_alt = "singapore"  ; Similar colors
 style = "european"
 
 init_techs=""

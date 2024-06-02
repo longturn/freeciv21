@@ -18,6 +18,9 @@ summary = _("Small hex tileset.")
 ; TODO: add more overall information fields on tiles,
 ; eg, authors, colors, etc.
 
+; The preferred scaling factor (zoom level), in percents
+preferred_scale = 100
+
 ; Basic tile sizes:
 normal_tile_width  = 40
 normal_tile_height = 72
@@ -151,7 +154,6 @@ files =
   "misc/governments.spec",
   "misc/specialists.spec",
   "trident/buildings.spec",
-  "misc/wonders.spec",
   "misc/flags.spec",
   "misc/shields.spec",
   "misc/cursors.spec",

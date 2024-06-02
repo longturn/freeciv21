@@ -41,7 +41,7 @@ layer_darkness::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
   }
 
   // Don't draw darkness when the solid background is used
-  if (!solid_background(ptile, punit, tile_city(ptile))) {
+  if (solid_background(ptile, punit, tile_city(ptile))) {
     return {};
   }
 

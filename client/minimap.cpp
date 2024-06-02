@@ -18,11 +18,9 @@
 
 // client
 #include "client_main.h"
+#include "fc_client.h"
 #include "minimap_panel.h"
 #include "overview_common.h"
-
-// gui-qt
-#include "fc_client.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
 #include "views/view_map.h"

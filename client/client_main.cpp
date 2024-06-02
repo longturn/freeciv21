@@ -74,12 +74,14 @@
 #include "fonts.h"
 #include "global_worklist.h"
 #include "governor.h"
+#include "helpdlg.h"
 #include "messagewin_common.h"
 #include "minimap_panel.h"
 #include "music.h"
 #include "options.h"
 #include "overview_common.h"
 #include "packhand.h"
+#include "qtg_cxxside.h"
 #include "themes_common.h"
 #include "tileset/tilespec.h"
 #include "update_queue.h"
@@ -87,10 +89,6 @@
 #include "views/view_map_common.h"
 #include "views/view_nations_data.h"
 #include "voteinfo.h"
-
-// gui-qt
-#include "helpdlg.h"
-#include "qtg_cxxside.h"
 
 /* client/luascript */
 #include "script_client.h"

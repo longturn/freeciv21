@@ -87,21 +87,19 @@
 #include "editor.h"
 #include "goto.h" // client_goto_init()
 #include "governor.h"
+#include "helpdlg.h"
 #include "messagewin_common.h"
 #include "music.h"
 #include "options.h"
 #include "overview_common.h"
 #include "page_game.h"
+#include "qtg_cxxside.h"
 #include "tileset/tilespec.h"
 #include "update_queue.h"
 #include "views/view_map.h"
 #include "views/view_map_common.h"
 #include "views/view_nations_data.h"
 #include "voteinfo.h"
-
-// gui-qt
-#include "helpdlg.h"
-#include "qtg_cxxside.h"
 
 /* client/luascript */
 #include "script_client.h"

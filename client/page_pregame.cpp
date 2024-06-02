@@ -23,9 +23,8 @@
 #include "connectdlg_common.h"
 #include "game.h"
 // client
-#include "client_main.h"
-// gui-qt
 #include "chatline.h"
+#include "client_main.h"
 #include "dialogs.h"
 #include "fc_client.h"
 #include "icons.h"

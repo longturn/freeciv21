@@ -1,5 +1,5 @@
-Freeciv21
-=========
+Freeciv21 - Develop Your Civilization from Humble Roots to a Global Empire
+==========================================================================
 
 [![License: GPL v3+](https://img.shields.io/badge/License-GPLv3%2B-blue)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![Build](https://github.com/longturn/freeciv21/actions/workflows/build.yaml/badge.svg)](https://github.com/longturn/freeciv21/actions/workflows/build.yaml)

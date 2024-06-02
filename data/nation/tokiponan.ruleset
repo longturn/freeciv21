@@ -16,7 +16,7 @@ leaders = {
 }
 
 flag="tokipona"
-flag_alt = "-"
+flag_alt = "caddo"  ; Similar colors
 style = "European"
 
 init_techs=""
@@ -33,7 +33,7 @@ cities = ; list of cities and their Toki Ponan translations taken from: https://
  "ma tomo Alipasi",    ; Halifax (Canada)
  "ma tomo Nujoka",     ; New York City (USA)
  "ma tomo Solu",       ; Seoul (Capital of South Korea)
- "ma tomo Sensan",     ; St. John's (Canada)
+ "ma tomo Sensan",     ; St. John´s (Canada)
  "ma tomo Alana",      ; Atlanta (USA)
  "ma tomo Pasen",      ; Boston (USA)
  "ma tomo Asina",      ; Athen (Capital of Greece)

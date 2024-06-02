@@ -11,7 +11,7 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#include <sqlite3.h>
+#include "mpdb.h"
 
 // utility
 #include "capability.h"
@@ -19,7 +19,10 @@
 #include "registry.h"
 #include "registry_ini.h"
 
-#include "mpdb.h"
+#include <QDir>
+#include <QFileInfo>
+
+#include <sqlite3.h>
 
 #define MPDB_CAPSTR "+mpdb"
 
@@ -111,12 +114,13 @@ static int mpdb_query(sqlite3 *handle, const char *query)
     ret = sqlite3_step(stmt);
   }
 
-  if (ret == SQLITE_DONE) {
-    ret = sqlite3_finalize(stmt);
+  if (ret != SQLITE_DONE && ret != SQLITE_ROW) {
+    qCritical("Query \"%s\" failed. (%d)", query, ret);
   }
 
-  if (ret != SQLITE_OK) {
-    qCritical("Query \"%s\" failed. (%d)", query, ret);
+  if (int errcode = sqlite3_finalize(stmt); errcode != SQLITE_OK) {
+    qCritical("Finalizing query \"%s\" returned error. (%d)", query,
+              errcode);
   }
 
   return ret;
@@ -129,18 +133,11 @@ void create_mpdb(const char *filename, bool scenario_db)
 {
   sqlite3 **handle;
   int ret;
-  int llen = qstrlen(filename) + 1;
-  char *local_name = new char[llen];
-  int i;
 
-  qstrncpy(local_name, filename, llen);
-  for (i = llen - 1; local_name[i] != '/'; i--) {
-    // Nothing
-  }
-  local_name[i] = '\0';
-  if (!make_dir(local_name)) {
+  // Create parent directory
+  if (QFileInfo info(filename); !QDir().mkpath(info.dir().path())) {
     qCritical(_("Can't create directory \"%s\" for modpack database."),
-              local_name);
+              qUtf8Printable(info.dir().path()));
     return;
   }
 
@@ -160,13 +157,13 @@ void create_mpdb(const char *filename, bool scenario_db)
         ");");
   }
 
-  if (ret == SQLITE_OK) {
+  if (ret == SQLITE_DONE) {
     ret = mpdb_query(*handle,
                      "create table modpacks (name VARCHAR(60) NOT null, "
                      "type VARCHAR(32), version VARCHAR(32) NOT null);");
   }
 
-  if (ret == SQLITE_OK) {
+  if (ret == SQLITE_DONE) {
     log_debug("Created %s", filename);
   } else {
     qCritical(_("Creating \"%s\" failed: %s"), filename,
@@ -240,21 +237,23 @@ bool mpdb_update_modpack(const char *name, enum modpack_type type,
     ret = mpdb_query(*handle, qbuf);
   }
 
-  if (ret != SQLITE_OK) {
+  if (ret != SQLITE_DONE) {
     qCritical(_("Failed to insert modpack '%s' information"), name);
   }
 
-  return ret != SQLITE_OK;
+  return ret != SQLITE_DONE;
 }
 
 /**
-   Return version of modpack.
+   Return version of modpack. The caller is responsible to free the returned
+   string.
  */
 const char *mpdb_installed_version(const char *name, enum modpack_type type)
 {
   sqlite3 **handle;
   int ret;
   char qbuf[2048];
+  const char *version = nullptr;
   sqlite3_stmt *stmt;
 
   if (type == MPT_SCENARIO) {
@@ -271,13 +270,20 @@ const char *mpdb_installed_version(const char *name, enum modpack_type type)
     ret = sqlite3_step(stmt);
   }
 
-  if (ret == SQLITE_DONE) {
-    ret = sqlite3_finalize(stmt);
-  }
-
   if (ret == SQLITE_ROW) {
-    return (const char *) sqlite3_column_text(stmt, 2);
+    version = qstrdup((const char *) sqlite3_column_text(stmt, 2));
   }
 
-  return nullptr;
+  if (ret != SQLITE_DONE && ret != SQLITE_ROW) {
+    qCritical("Query to get installed version for \"%s\" failed. (%d)", name,
+              ret);
+  }
+
+  if (int errcode = sqlite3_finalize(stmt); errcode != SQLITE_OK) {
+    qCritical(
+        "Finalizing query to get installed version for \"%s\" failed. (%d)",
+        name, errcode);
+  }
+
+  return version;
 }

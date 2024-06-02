@@ -49,20 +49,18 @@
 #include "mapview_g.h"
 
 // client
+#include "canvas.h"
 #include "citydlg_common.h"
+#include "client_main.h"
 #include "climap.h"
 #include "control.h"
 #include "editor.h"
 #include "map_updates_handler.h"
 #include "overview_common.h"
+#include "qtg_cxxside.h"
 #include "tileset/tilespec.h"
 #include "views/view_map_common.h"
 #include "views/view_map_geometry.h"
-
-// gui-qt
-#include "canvas.h"
-#include "client_main.h"
-#include "qtg_cxxside.h"
 
 Q_LOGGING_CATEGORY(graphics_category, "freeciv.graphics")
 
@@ -2357,7 +2355,7 @@ static struct link_mark *link_mark_new(enum text_link_type type, int id,
 /**
    Remove a link mark.
  */
-static void link_mark_destroy(struct link_mark *pmark) { free(pmark); }
+static void link_mark_destroy(struct link_mark *pmark) { delete pmark; }
 
 /**
    Returns the location of the pointed mark.

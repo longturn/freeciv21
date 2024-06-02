@@ -23,14 +23,14 @@ ruler_titles = {
 }
 
 flag = "ambazonia"
-flag_alt = "-"
+flag_alt = "greece"  ; Looks similar. Greece uses greece_ancient by default
 style = "Tropical"
 
 init_techs=""
 init_buildings=""
 init_units=""
 
-civilwar_nations= "cameroonian", "nigerian", "biafran"
+civilwar_nations="cameroonian", "nigerian", "biafran"
 
 cities =
  "Buea",

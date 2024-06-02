@@ -4,7 +4,7 @@ name   = _("Louisianan")
 plural = _("?plural:Louisianans")
 groups = "American"
 legend = _("Louisiana is a state in the Deep South of the United\
- States of America known for its distinct French culture, and cuisine\ 
+ States of America known for its distinct French culture, and cuisine\
  on January 26, 1861, the state voted to seceed from the United States,\
  existing independently for a short time until February 26, 1861\
  when it finally joined the Confederate States of America. The\
@@ -42,14 +42,14 @@ leaders = {
 ruler_titles = {
  "government",      "male_title",         "female_title"
  "Despotism",       _("Demagouge %s"),    _("?female:Demagouge %s")
- "Monarchy",        _("Kingfish %s"),     _("?female:Kingfish %s")    ; Huey Long's nickname.
+ "Monarchy",        _("Kingfish %s"),     _("?female:Kingfish %s")    ; Huey Long´s nickname.
  "Republic",        _("Governeror %s"),   _("?female:Governeror %s")
  "Democracy",       _("Speaker %s"),      _("?female:Speaker %s")
  "Fundamentalism",  _("Reverend %s"),     _("?female:Reverend %s")
 }
 
 flag = "louisiana"
-flag_alt = "-"
+flag_alt = "france"  ; Colony
 style = "Celtic"
 
 init_techs = ""
@@ -185,4 +185,3 @@ cities =
  "White Castle",
  "Zwolle",
  "Independence"
- 

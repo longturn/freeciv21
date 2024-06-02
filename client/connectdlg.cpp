@@ -12,9 +12,8 @@
 #include "game.h"
 // client
 #include "chatline_common.h"
-#include "packhand_gen.h"
-// gui-qt
 #include "fc_client.h"
+#include "packhand_gen.h"
 #include "page_network.h"
 #include "pages_g.h"
 #include "qtg_cxxside.h"

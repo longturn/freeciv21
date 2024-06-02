@@ -15,9 +15,11 @@
 #include <QApplication>
 #include <QFileDialog>
 #include <QMainWindow>
+#include <QMenuBar>
 #include <QMessageBox>
 #include <QStandardPaths>
 #include <QVBoxLayout>
+
 // utility
 #include "fcintl.h"
 // common
@@ -29,6 +31,7 @@
 #include "map.h"
 #include "multipliers.h"
 #include "road.h"
+#include "tileset_options.h"
 #include "unit.h"
 // client
 #include "audio/audio.h"
@@ -39,20 +42,13 @@
 #include "clinet.h"
 #include "connectdlg_common.h"
 #include "control.h"
-#include "fc_client.h"
-#include "helpdlg.h"
-#include "mapctrl_g.h"
-#include "ratesdlg_g.h"
-#include "renderer.h"
-#include "repodlgs_g.h"
-#include "tileset/tilespec.h"
-#include "views/view_map_common.h"
-// gui-qt
 #include "dialogs.h"
 #include "fc_client.h"
 #include "gotodlg.h"
 #include "gui_main.h"
+#include "helpdlg.h"
 #include "hudwidget.h"
+#include "mapctrl_g.h"
 #include "messageoptions.h"
 #include "messagewin.h"
 #include "minimap.h"
@@ -61,12 +57,17 @@
 #include "page_pregame.h"
 #include "qtg_cxxside.h"
 #include "ratesdlg.h"
+#include "ratesdlg_g.h"
+#include "renderer.h"
+#include "repodlgs_g.h"
 #include "shortcuts.h"
 #include "spaceshipdlg.h"
 #include "tileset/sprite.h"
+#include "tileset/tilespec.h"
 #include "top_bar.h"
 #include "unithudselector.h"
 #include "views/view_map.h"
+#include "views/view_map_common.h"
 #include "views/view_nations.h"
 #include "views/view_units.h"
 
@@ -579,6 +580,10 @@ void mr_menu::setup_menus()
   connect(act, &QAction::triggered, this, &mr_menu::tileset_custom_load);
   act = menu->addAction(_("Add Modpacks"));
   connect(act, &QAction::triggered, this, &mr_menu::add_modpacks);
+  tileset_options = menu->addAction(_("Tileset Options"));
+  connect(tileset_options, &QAction::triggered, this,
+          &mr_menu::show_tileset_options);
+  tileset_options->setEnabled(tileset_has_options(tileset));
   act = menu->addAction(_("Tileset Debugger"));
   connect(act, &QAction::triggered, queen()->mapview_wdg,
           &map_view::show_debugger);
@@ -916,7 +921,7 @@ void mr_menu::setup_menus()
   connect(act, &QAction::triggered, this, &mr_menu::slot_clean_pollution);
   act = menu->addAction(_("Clean Nuclear Fallout"));
   menu_list.insert(FALLOUT, act);
-  act->setShortcut(QKeySequence(tr("n")));
+  shortcuts->link_action(SC_FALLOUT, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_clean_fallout);
   act = menu->addAction(
       QString(action_id_name_translation(ACTION_HELP_WONDER)));
@@ -2667,6 +2672,15 @@ void mr_menu::tileset_custom_load()
 /**
  * Slot for loading modpack installer
  */
+void mr_menu::show_tileset_options()
+{
+  auto dialog = new freeciv::tileset_options_dialog(tileset, this);
+  dialog->show();
+}
+
+/**
+ * Slot for loading modpack installer
+ */
 void mr_menu::add_modpacks() { king()->load_modpack(); }
 
 /**
@@ -2735,6 +2749,17 @@ void mr_menu::slot_build_base(int id)
     }
     extra_type_by_cause_iterate_end;
   }
+}
+
+/**
+ * Reimplemented virtual function.
+ */
+bool mr_menu::event(QEvent *event)
+{
+  if (event->type() == TilesetChanged) {
+    tileset_options->setEnabled(tileset_has_options(tileset));
+  }
+  return QMenuBar::event(event);
 }
 
 /**

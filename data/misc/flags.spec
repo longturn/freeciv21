@@ -53,7 +53,7 @@ artists = "
    Atlantis		J.M. Maalderink
    Australia		Daniel McRae
    Austria		Christoph Breitler
-   Austria Hungary	Public Domain (Wikimedia Commons) 
+   Austria Hungary	Public Domain (Wikimedia Commons)
    Avar			J.M. Maalderink
    Aymara		Daniel Markstedt
    Azerbaijan		Daniel McRae
@@ -197,7 +197,7 @@ artists = "
    Gaul			Daniel Markstedt and Kilian Valkhof
    Georgia		Christian Schaller
    Gepid		Andrzej G.
-   German Empire	XYZ/Sketlux 
+   German Empire	XYZ/Sketlux
    Germanic		Andrzej G.
    Germany		Philipp Sadleder
    Ghana		J.M. Maalderink
@@ -229,7 +229,7 @@ artists = "
    Helvetii		J.M. Maalderink and Andrzej G.
    Hephthalite		J.M. Maalderink
    Hesse		Madden (Wikimedia Commons)
-   Hessen-Darmstadt	XYZ/Sketlux 
+   Hessen-Darmstadt	XYZ/Sketlux
    Himyar		Daniel Markstedt
    Hittite		Daniel Markstedt
    Honduras		Wikimedia Commons
@@ -439,7 +439,7 @@ artists = "
    Raramuri		J.M. Maalderink
    Rep. Congo		J.M. Maalderink
    Rhineland		J.M. Maalderink
-   Rhodesia		modified by XYZ/Sketlux from Wikimedia Commons in 2016. 
+   Rhodesia		modified by XYZ/Sketlux from Wikimedia Commons in 2016.
    Rif			Mysid (Wikipedia)
    Romania		Daniel McRae
    Rome			Vasco Alexandre Da Silva Costa, Patricia Fidi
@@ -447,7 +447,7 @@ artists = "
    RVN			J.M. Maalderink
    Rwanda		Cezary Biele
    Ryukyu		Daniel Markstedt
-   Saar Protectorate	EclecticArkie (Wikimedia Commons) 
+   Saar Protectorate	EclecticArkie (Wikimedia Commons)
    Sabinium		J.M. Maalderink
    SADR			J.M. Maalderink
    St. Kitts and Nevis	Denelson83 and Pumbaa80 (Wikimedia Commons)
@@ -467,7 +467,7 @@ artists = "
    Savoy		J.M. Maalderink
    Saxony 		Sir Iain (Wikimedia Commons)
    Scania		Daniel Markstedt
-   Schaumburg-Lippe	XYZ/Sketlux 
+   Schaumburg-Lippe	XYZ/Sketlux
    Schleswig-Holstein	Madden and Drbashir117 (Wikimedia Commons)
    Scotland		Sigge Kotliar
    Scottish Gaelic	Oxenhillshaw (Wikimedia Commons), Daniel Markstedt and Michael Bauer
@@ -977,7 +977,7 @@ sprites =
 		"f.niger", "tilesets/flags/niger"
 		"f.nigeria", "tilesets/flags/nigeria"
 		"f.normandy", "tilesets/flags/normandy"
-		"f.northernireland", "tilesets/flags/northernireland"
+		"f.northireland", "tilesets/flags/northireland"
 		"f.north_korea", "tilesets/flags/north_korea"
 		"f.northumbria", "tilesets/flags/northumbria"
 		"f.norway", "tilesets/flags/norway"

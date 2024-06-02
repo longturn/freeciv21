@@ -20,6 +20,9 @@ summary = _("Large iso-hex tileset, similar to Amplio.")
 ; TODO: add more overall information fields on tiles,
 ; eg, authors, colors, etc.
 
+; The preferred scaling factor (zoom level), in percents
+preferred_scale = 100
+
 ; Basic tile sizes:
 normal_tile_width  = 126
 normal_tile_height = 64
@@ -155,6 +158,7 @@ files =
   "misc/treaty.spec",
   "misc/editor.spec",
   "misc/units.spec",
+  "cimpletoon/orient_units.spec",
   "amplio2/nuke.spec",
   "amplio2/explosions.spec",
   "hexemplio/activities.spec",
@@ -359,3 +363,8 @@ styles =
       "ts.horses",     "Single1"
       "ts.seals",      "Single1"
     }
+
+[option_cimpletoon]
+name = "cimpletoon"
+description = _("Use 3D Cimpletoon units")
+default = FALSE

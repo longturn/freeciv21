@@ -12,7 +12,7 @@
 #include <QHash>
 #include <QPixmapCache>
 /****************************************************************************
-  Class helping reading icons/pixmaps from themes/gui-qt/icons folder
+  Class helping reading icons/pixmaps from themes/icons folder
 ****************************************************************************/
 class fcIcons {
   Q_DISABLE_COPY(fcIcons);

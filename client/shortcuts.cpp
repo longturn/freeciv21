@@ -25,10 +25,9 @@
 #include <qshortcut.h>
 #include <qvariant.h>
 // client
-#include "options.h"
-// gui-qt
 #include "fc_client.h"
 #include "hudwidget.h"
+#include "options.h"
 #include "page_game.h"
 #include "views/view_map.h"
 
@@ -90,7 +89,8 @@ static std::vector<fc_shortcut> default_shortcuts()
       {SC_COPY_PROD, fc_shortcut::mouse, QKeySequence(), Qt::RightButton,
        Qt::ShiftModifier, _("Copy production")},
       {SC_HIDE_WORKERS, fc_shortcut::mouse, QKeySequence(), Qt::RightButton,
-       Qt::ShiftModifier | Qt::AltModifier, _("Show/hide workers")},
+       Qt::ShiftModifier | Qt::AltModifier,
+       _("Show/hide city working area")},
       {SC_SHOW_UNITS, fc_shortcut::keyboard,
        Qt::Key_Space | Qt::ControlModifier, Qt::AllButtons, Qt::NoModifier,
        _("Units selection (for tile under mouse position)")},
@@ -186,7 +186,9 @@ static std::vector<fc_shortcut> default_shortcuts()
       {SC_GOJOINCITY, fc_shortcut::keyboard, Qt::Key_J | Qt::ShiftModifier,
        Qt::AllButtons, Qt::NoModifier, _("Go And Join City")},
       {SC_PILLAGE, fc_shortcut::keyboard, Qt::Key_P | Qt::ShiftModifier,
-       Qt::AllButtons, Qt::NoModifier, _("Pillage")}};
+       Qt::AllButtons, Qt::NoModifier, _("Pillage")},
+      {SC_FALLOUT, fc_shortcut::keyboard, Qt::Key_N, Qt::AllButtons,
+       Qt::NoModifier, _("Clean Nuclear Fallout")}};
 }
 
 /**

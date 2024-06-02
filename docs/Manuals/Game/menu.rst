@@ -114,6 +114,18 @@ Add Modpacks
     Launches the modpack installer. This utility allows the Longturn community to create third-party content
     and offer it for enhanced gameplay. For more information refer to :doc:`/Manuals/modpack-installer`.
 
+Tileset Options
+    For tilesets supporting it, opens a dialog that lets you change the appearance of the map.
+
+.. _Tileset Options Dialog:
+.. figure:: /_static/images/gui-elements/tileset-options.png
+  :scale: 100%
+  :align: center
+  :alt: Freeciv21 Tileset Options dialog
+  :figclass: align-center
+
+  Tileset Options Dialog
+
 Tileset Debugger
     Opens the :guilabel:`Tileset Debugger` dialog. This option is documented in
     :doc:`/Modding/Tilesets/debugger`
@@ -586,7 +598,7 @@ National Budget...
 
 .. _National Budget Dialog:
 .. figure:: /_static/images/gui-elements/tax-rates.png
-  :scale: 65%
+  :scale: 100%
   :align: center
   :alt: Freeciv21 National Budget dialog
   :figclass: align-center

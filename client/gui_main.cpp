@@ -21,23 +21,22 @@
 // client
 #include "client_main.h"
 #include "clinet.h"
-#include "mapview_g.h"
-#include "options.h"
-#include "themes_common.h"
-#include "tileset/sprite.h"
-#include "tileset/tilespec.h"
-#include "views/view_map_common.h"
-// gui-qt
 #include "fc_client.h"
 #include "fonts.h"
 #include "helpdlg.h"
 #include "hudwidget.h"
+#include "mapview_g.h"
 #include "messagewin.h"
+#include "options.h"
 #include "page_game.h"
 #include "page_pregame.h"
 #include "qtg_cxxside.h"
+#include "themes_common.h"
+#include "tileset/sprite.h"
+#include "tileset/tilespec.h"
 #include "unitselect.h"
 #include "views/view_map.h"
+#include "views/view_map_common.h"
 #include "widgets/report_widget.h"
 
 void real_science_report_dialog_update(void *);
@@ -146,13 +145,6 @@ void sound_bell()
    to the server.
  */
 void add_net_input(QIODevice *sock) { king()->add_server_source(sock); }
-
-/**
-   Stop waiting for any server network data.  See add_net_input().
-
-   This function is called if the client disconnects from the server.
- */
-void remove_net_input() {}
 
 /**
    Set one of the unit icons (specified by idx) in the information area

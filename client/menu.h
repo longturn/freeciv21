@@ -181,6 +181,7 @@ public:
   void update_bases_menu();
   void set_tile_for_order(struct tile *ptile);
   bool shortcut_exists(const fc_shortcut &fcs, QString &where);
+  QAction *tileset_options = nullptr;
   QAction *minimap_status = nullptr;
   QAction *scale_fonts_status = nullptr;
   QAction *lock_status = nullptr;
@@ -191,6 +192,10 @@ public:
   bool delayed_order = false;
   bool quick_airlifting = false;
   Unit_type_id airlift_type_id = 0;
+
+protected:
+  bool event(QEvent *event) override;
+
 private slots:
   // game menu
   void local_options();
@@ -204,6 +209,7 @@ private slots:
   void tileset_custom_load();
   void load_new_tileset();
   void add_modpacks();
+  void show_tileset_options();
   void back_to_menu();
   void quit_game();
 

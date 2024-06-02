@@ -29,23 +29,22 @@
 #include "climap.h"
 #include "climisc.h"
 #include "colors_common.h"
+#include "fc_client.h"
+#include "fonts.h"
+#include "hudwidget.h"
 #include "mapctrl_common.h"
 #include "mapview_g.h"
+#include "messagewin.h"
 #include "minimap_panel.h"
+#include "page_game.h"
+#include "qtg_cxxside.h"
 #include "renderer.h"
 #include "text.h"
 #include "tileset/sprite.h"
 #include "tileset/tilespec.h"
-#include "views/view_map_common.h"
-// gui-qt
-#include "fc_client.h"
-#include "fonts.h"
-#include "hudwidget.h"
-#include "messagewin.h"
-#include "page_game.h"
-#include "qtg_cxxside.h"
 #include "top_bar.h"
 #include "views/view_map.h"
+#include "views/view_map_common.h"
 #include "views/view_research.h"
 #include "widgets/decorations.h"
 
@@ -244,7 +243,7 @@ void map_view::zoom_in() { set_scale(1.2 * scale()); }
 /**
  * Resets the zoom level.
  */
-void map_view::zoom_reset() { set_scale(1); }
+void map_view::zoom_reset() { set_scale(tileset_preferred_scale(tileset)); }
 
 /**
  * Zooms out by 20%.
@@ -259,13 +258,17 @@ double map_view::scale() const { return m_renderer->scale(); }
 /**
  * Sets the map scale.
  */
-void map_view::set_scale(double scale)
+void map_view::set_scale(double scale, bool animate)
 {
   m_scale_animation->stop();
-  m_scale_animation->setDuration(gui_options->smooth_center_slide_msec);
   m_scale_animation->setEndValue(scale);
-  m_scale_animation->setCurrentTime(0);
-  m_scale_animation->start();
+  if (animate) {
+    m_scale_animation->setDuration(gui_options->smooth_center_slide_msec);
+    m_scale_animation->setCurrentTime(0);
+    m_scale_animation->start();
+  } else {
+    set_scale_now(scale);
+  }
 }
 
 /**
@@ -377,10 +380,7 @@ void map_view::resizeEvent(QResizeEvent *event)
  */
 void map_view::wheelEvent(QWheelEvent *event)
 {
-  auto delta = event->pixelDelta();
-  if (delta.isNull()) {
-    delta = event->angleDelta();
-  }
+  auto delta = event->angleDelta();
 
   if (event->modifiers() == Qt::NoModifier) {
     // Scrolling
@@ -630,10 +630,10 @@ void tileset_changed(void)
   // Refresh the tileset debugger if it exists
   if (auto debugger = queen()->mapview_wdg->debugger();
       debugger != nullptr) {
-    // When not zoomed in, unscaled_tileset is null
-    // When zoomed in, unscaled_tileset is not null and holds the log
     debugger->refresh(tileset);
   }
+
+  queen()->mapview_wdg->set_scale(tileset_preferred_scale(tileset), false);
 
   update_unit_info_label(get_units_in_focus());
   popdown_city_dialog();

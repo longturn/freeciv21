@@ -23,10 +23,8 @@
 // common
 #include "city.h"
 
-// gui-qt
-#include "canvas.h"
-
 // client
+#include "canvas.h"
 #include "client_main.h"
 #include "colors_common.h"
 #include "views/view_map_common.h"

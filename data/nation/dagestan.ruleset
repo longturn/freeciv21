@@ -35,7 +35,7 @@ ruler_titles = {
 }
 
 flag="dagestan"
-flag_alt = "-"
+flag_alt = "mars"  ;  Similar colors
 style = "European"
 
 init_techs=""

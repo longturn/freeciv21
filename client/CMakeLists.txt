@@ -97,6 +97,7 @@ target_sources(
   themes.cpp
   themes_common.cpp
   tileset_debugger.cpp
+  tileset_options.cpp
   tooltips.cpp
   top_bar.cpp
   tradecalculation.cpp
@@ -200,8 +201,8 @@ if(EMSCRIPTEN)
                       "--preload-file=${CMAKE_SOURCE_DIR}/data/hexemplio@data/hexemplio"
                       "--preload-file=${CMAKE_SOURCE_DIR}/data/amplio2.tilespec@data/amplio2.tilespec"
                       "--preload-file=${CMAKE_SOURCE_DIR}/data/amplio2@data/amplio2"
-                      "--preload-file=${CMAKE_SOURCE_DIR}/data/themes/gui-qt/Classic@data/themes/gui-qt/Classic"
-                      "--preload-file=${CMAKE_SOURCE_DIR}/data/themes/gui-qt/icons@data/themes/gui-qt/icons"
+                      "--preload-file=${CMAKE_SOURCE_DIR}/data/themes/Classic@data/themes/Classic"
+                      "--preload-file=${CMAKE_SOURCE_DIR}/data/themes/icons@data/themes/icons"
                       "--preload-file=${CMAKE_SOURCE_DIR}/data/stdmusic.musicspec@data/stdmusic.musicspec"
                       "--preload-file=${CMAKE_SOURCE_DIR}/data/stdmusic@data/stdmusic"
                       "--preload-file=${CMAKE_SOURCE_DIR}/data/stdsounds@data/stdsounds"

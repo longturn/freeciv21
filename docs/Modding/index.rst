@@ -89,6 +89,7 @@ guides document specific aspects of tileset creation:
   Tilesets/tutorial.rst
   Tilesets/graphics.rst
   Tilesets/terrain.rst
+  Tilesets/options.rst
   Tilesets/debugger.rst
   Tilesets/compatibility.rst
   Tilesets/ts-breaking-changes.rst

@@ -4,7 +4,7 @@
     <metadata_license>CC0</metadata_license>
     <project_license>GPL-3.0+</project_license>
     <name>Freeciv21</name>
-    <summary>Freeciv for the 21st Century</summary>
+    <summary>Develop your civilization from humble roots to a global empire</summary>
     <description>
       <!-- This description is in each of the metainfo files, README.md, about.rst, freeciv21-server.rst, and snapcraft.yaml -->
       <p>Freeciv21 is a free open source turn-based empire-building 4x strategy game, in which each player becomes the leader of a civilization. You compete against several opponents to build cities and use them to support a military and an economy. Players strive to complete an empire that survives all encounters with its neighbors to emerge victorious. Play begins at the dawn of history in 4,000 BCE.</p>

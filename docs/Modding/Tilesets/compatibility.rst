@@ -1,7 +1,7 @@
 .. SPDX-License-Identifier:  GPL-3.0-or-later
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
-Tileset compatibility
+Tileset Compatibility
 *********************
 
 The tileset format evolves when new Freeciv21 releases are published. As a rule of thumb, we try
@@ -43,3 +43,13 @@ unlimited-upkeep-sprites
 
 hex_corner
     Support for this option signals the availability of the new ``hex_corner`` sprite type for terrain.
+
+terrain-specific-extras
+    Terrain-specific extra sprites allow for different sprites to be used depending on the terrain. Currently,
+    only rivers/roads/rails/maglev sprites may be made terrain-specific, but compatibility for specials and
+    bases is expected to roll out soon. To use terrain-specific sprites, use the same nomenclature as before,
+    but with the terrain name included after the type of extra. 
+    E.g. ``road.road_isolated`` becomes ``road.road_mountain_isolated``.
+
+options
+    Support for this option signals that :doc:`options` are available.

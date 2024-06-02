@@ -131,12 +131,18 @@ endif()
 if (FREECIV_ENABLE_CLIENT)
   # Tilesets
   add_tileset(NAME amplio2)
-  add_tileset(NAME cimpletoon)
   add_tileset(NAME hex2t)
   add_tileset(NAME hexemplio)
   add_tileset(NAME isophex)
   add_tileset(NAME isotrident)
   add_tileset(NAME trident)
+
+  # Cimpletoon option. Sprites shared by amplio2 and hexemplio
+  install(
+    DIRECTORY cimpletoon
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
+    COMPONENT freeciv21
+    FILES_MATCHING PATTERN *.png PATTERN *.spec PATTERN README.*)
 
   add_subdirectory(tilesets)
 
@@ -152,8 +158,8 @@ if (FREECIV_ENABLE_CLIENT)
     COMPONENT freeciv21
     FILES_MATCHING PATTERN *.png PATTERN *.spec)
   install(
-    DIRECTORY themes/gui-qt
-    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/themes"
+    DIRECTORY themes
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
     COMPONENT freeciv21
     FILES_MATCHING PATTERN theme.conf
                    PATTERN *.jpg

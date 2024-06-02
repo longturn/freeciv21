@@ -206,7 +206,6 @@ common/vision.cpp
 common/workertask.cpp
 common/worklist.cpp
 data/amplio2.tilespec
-data/cimpletoon.tilespec
 data/civ1/buildings.ruleset
 data/civ1/cities.ruleset
 data/civ1/effects.ruleset
@@ -348,7 +347,6 @@ data/sandbox/styles.ruleset
 data/sandbox/techs.ruleset
 data/sandbox/terrain.ruleset
 data/sandbox/units.ruleset
-data/toonhex.tilespec
 data/trident.tilespec
 server/actiontools.cpp
 server/advisors/advbuilding.cpp

@@ -13,7 +13,7 @@
 #include "fcintl.h"
 // common
 #include "version.h"
-// gui-qt
+// client
 #include "fc_client.h"
 
 page_main::page_main(QWidget *parent, fc_client *gui) : QWidget(parent)

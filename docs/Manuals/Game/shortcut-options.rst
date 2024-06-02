@@ -1,5 +1,6 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+.. SPDX-FileCopyrightText: Tobias Rehbein <tobias.rehbein@web.de>
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
@@ -134,8 +135,8 @@ Copy Production
 
   Default: ``Shift`` plus Right mouse button
 
-Show/hide workers
-  Toggle the display of :unit:`Workers` or :unit:`Engineers` on the main map.
+Show/hide city working area
+  Toggles an overlay showing the working area of a city on the map.
 
   Default: ``Alt+Shift`` plus Right mouse button
 
@@ -360,3 +361,8 @@ Pillage
   Instruct a unit to pillage infrastructure improvements on a tile.
 
   Default: ``Shift+P``
+
+Clean Nuclear Fallout
+  Instruct a unit to clean nuclear fallout on a tile.
+
+  Default: ``N``

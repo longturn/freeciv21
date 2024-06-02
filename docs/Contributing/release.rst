@@ -32,6 +32,9 @@ These are the general steps to prepare and finalize a release:
    build file (:file:`.github/workflows/build.yaml`). Grab the Commit ID of the most recent release from
    https://github.com/microsoft/vcpkg/releases. Commit and push a PR. Ensure all of the CI/CD Action runners
    complete successfully.
+#. If the new release is a change from ``alpha`` to ``beta`` or ``release candidate`` series, the
+   :file:`dist/snapcraft.yaml.in` file needs an update. Change the ``channel`` flag -- ``edge`` for Alpha,
+   ``beta`` for Beta and ``candidate`` for the RC's
 #. When it is time, the release manager will finalize the release notes and ask for an editorial review in the
    ``#releases-project`` channel. Updates are made as per review.
 #. If the release will be the :strong:`first release candidate` towards a stable release, the release manager
@@ -40,10 +43,11 @@ These are the general steps to prepare and finalize a release:
    #. Delete the existing ``stable`` branch on Github's
       `branches page <https://github.com/longturn/freeciv21/branches>`_.
    #. From the same page, create a new ``stable`` branch from ``master``.
-   #. Update ``cmake/AutoRevision.txt`` with the hash of the last commit in ``master`` and
+   #. Update :file:`cmake/AutoRevision.txt` with the hash of the last commit in ``master`` and
       ``v[major version].[minor version]-dev.0`` with the version of the :strong:`next stable release`, then
       open a PR for this change to ``master``. This way, development builds from ``master`` will immediately
       use the version number of the next stable.
+   #. Update :file:`dist/snapcraft.yaml.in` to change the ``channel`` tag to ``stable``.
 
 #. If the release is a :strong:`release candidate` for a :strong:`stable release`, the release manager will
    make sure that the :guilabel:`Target` branch in the release draft is set to ``stable``.
@@ -58,7 +62,8 @@ These are the general steps to prepare and finalize a release:
    created PR's.
 #. While inside the ``Release Update of AutoRevision.txt`` PR, the release manager will enable an automatic
    rebase and merge.
-#. The release manager will open an issue titled ``Review workarounds after <version> release`` with the following text:
+#. The release manager will open an issue titled ``Review workarounds after <version> release`` with the
+   following text:
 
       We should review the workarounds in the source code and check that they are still needed. Some
       workarounds are documented here: :doc:`workarounds`.
