@@ -1,13 +1,15 @@
 [nation_liege]
 
-name   = _("Liegean")
-plural = _("?plural:Liegeans")
+name   = _("Liègean")
+; pre-2.6 had plain ASCII names
+rule_name="Liege"
+plural = _("?plural:Liègeans")
 groups = "Modern", "European"
-legend = _("Liege was constituted in ecclesiastic principalty in 985,\
+legend = _("Liège was constituted in ecclesiastic principalty in 985,\
  when Bishop Notger was granted the control of several cities in current Belgium.\
  As a federated state of the Holy Roman Empire, it was characterized\
- with large civil liberties for which liegean struggled strongly for.\
- It lasted until 1792, when the recently formed Republic of Liege voted\
+ with large civil liberties for which liègean struggled strongly for.\
+ It lasted until 1792, when the recently formed Republic of Liège voted\
  the union with revolutionary France.\
  Liege played later a major role in the Belgian independance.")
 
