@@ -1,6 +1,6 @@
 [nation_liege]
 
-name   = _("Liègean")
+name   = _("Liège")
 ; pre-2.6 had plain ASCII names
 rule_name="Liege"
 plural = _("?plural:Liègeans")
