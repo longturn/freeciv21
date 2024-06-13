@@ -24,6 +24,9 @@ signals:
 
 private:
   void emit_params_changed();
+  void queue_params_changed();
+
+  bool m_dirty = false; ///< Whether we need to propagate a params update.
 };
 
 } // namespace freeciv

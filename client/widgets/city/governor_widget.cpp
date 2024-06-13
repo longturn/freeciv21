@@ -12,6 +12,7 @@
 
 // Qt
 #include <QSlider>
+#include <QTimer>
 
 namespace freeciv {
 
@@ -49,7 +50,7 @@ governor_widget::governor_widget(QWidget *parent) : QWidget(parent)
   };
   for (auto slider : sliders) {
     connect(slider, &QSlider::valueChanged, this,
-            &governor_widget::emit_params_changed);
+            &governor_widget::queue_params_changed);
   }
 
   const auto checkboxes = {
@@ -60,7 +61,7 @@ governor_widget::governor_widget(QWidget *parent) : QWidget(parent)
   };
   for (auto box : checkboxes) {
     connect(box, &QCheckBox::toggled, this,
-            &governor_widget::emit_params_changed);
+            &governor_widget::queue_params_changed);
   }
 }
 
@@ -130,6 +131,19 @@ void governor_widget::set_parameters(const cm_parameter &params)
 void governor_widget::emit_params_changed()
 {
   emit parameters_changed(parameters());
+  m_dirty = false;
+}
+
+/**
+ * Queues an update of the parameters. This prevents emitting
+ * parameters_changed, and thus recalculating the results, too often.
+ */
+void governor_widget::queue_params_changed()
+{
+  if (!m_dirty) {
+    QTimer::singleShot(100, this, &governor_widget::emit_params_changed);
+    m_dirty = true;
+  }
 }
 
 } // namespace freeciv
