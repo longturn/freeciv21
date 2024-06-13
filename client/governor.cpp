@@ -52,7 +52,6 @@
 
 static struct preset_list *preset_list = nullptr;
 
-static void city_changed(int city_id);
 static void city_remove(int city_id)
 {
   attr_city_set(ATTR_CITY_CMA_PARAMETER, city_id, 0, nullptr);
@@ -160,7 +159,7 @@ void governor::run()
       continue;
     }
     if (pcity) {
-      city_changed(pcity->id);
+      gimb->handle_city(pcity);
     }
   }
   scity_changed.clear();
@@ -628,15 +627,6 @@ void cma_yoloswag::handle_city(struct city *pcity)
   }
 
   log_handle_city2("END handle city=(%d)", city_id);
-}
-
-static void city_changed(int city_id)
-{
-  struct city *pcity = game_city_by_number(city_id);
-
-  if (pcity) {
-    gimb->handle_city(pcity);
-  }
 }
 
 /**
