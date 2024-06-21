@@ -2,6 +2,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  * SPDX-FileCopyrightText: Freeciv21 and Freeciv contributors
  * SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+ * SPDX-FileCopyrightText: Tobias Rehbein <tobias.rehbein@web.de>
  */
 
 /**
@@ -67,8 +68,10 @@ units_view::units_view() : QWidget()
 
   // Configure the unitwaittime table
   slist.clear();
-  slist << _("Type") << _("Name") << _("Location") << _("Time Left");
+  slist << _("Type") << _("Name") << _("Location") << _("Time Left")
+        << _("Id");
   ui.uwt_widget->setColumnCount(slist.count());
+  ui.uwt_widget->setColumnHidden(4, true);
   ui.uwt_widget->setHorizontalHeaderLabels(slist);
   ui.uwt_widget->setSortingEnabled(true);
   ui.uwt_widget->setAlternatingRowColors(true);
@@ -299,57 +302,86 @@ void units_view::update_waiting()
   QFontMetrics fm(f);
   int h = fm.height() + 24;
 
-  ui.uwt_widget->setRowCount(0);
-  ui.uwt_widget->clearContents();
-
   struct unit_waiting_entry unit_entries[U_LAST];
 
   int entries_used = 0;
   get_units_waiting_data(unit_entries, &entries_used);
 
-  max_row = 0;
+  max_row = ui.uwt_widget->rowCount();
+
+  // Remember all units initially in the table. This allows us to distinguish
+  // between known units we need to update and new units we need to add to
+  // the table. As we remove all updated units from this map, the remaining
+  // items are the units we need to remove from the table.
+  QMap<QString, QTableWidgetItem *> idsInTable;
+  for (int r = 0; r < max_row; r++) {
+    QTableWidgetItem *item = ui.uwt_widget->item(r, 4);
+    idsInTable[item->text()] = item;
+  }
+
   for (int i = 0; i < entries_used; i++) {
     struct unit_waiting_entry *pentry = unit_entries + i;
     const struct unit_type *putype = pentry->type;
     cid id = cid_encode_unit(putype);
+    QString unitId = QString("%1").arg(pentry->id);
+    QString unitWaittime = format_simple_duration(abs(pentry->timer));
 
-    ui.uwt_widget->insertRow(max_row);
-    for (int j = 0; j < 4; j++) {
-      auto item = new QTableWidgetItem;
-      switch (j) {
-      case 0:
-        // Unit type image sprite
-        {
-          auto sprite =
-              get_unittype_sprite(tileset, putype, direction8_invalid())
-                  ->scaledToHeight(h);
-          QLabel *lbl = new QLabel;
-          lbl->setPixmap(QPixmap(sprite));
-          lbl->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
-          ui.uwt_widget->setCellWidget(i, j, lbl);
+    if (!idsInTable.contains(unitId)) {
+      // Create a new row for the unit
+      ui.uwt_widget->insertRow(max_row);
+      for (int j = 0; j < 5; j++) {
+        auto item = new QTableWidgetItem;
+        switch (j) {
+        case 0:
+          // Unit type image sprite
+          {
+            auto sprite =
+                get_unittype_sprite(tileset, putype, direction8_invalid())
+                    ->scaledToHeight(h);
+            QLabel *lbl = new QLabel;
+            lbl->setPixmap(QPixmap(sprite));
+            lbl->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
+            ui.uwt_widget->setCellWidget(i, j, lbl);
+          }
+          item->setData(Qt::UserRole, id);
+          break;
+        case 1:
+          // Unit type name
+          item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+          item->setText(utype_name_translation(putype));
+          break;
+        case 2:
+          // # Location
+          item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+          item->setText(QString(_("%1")).arg(pentry->city_name));
+          break;
+        case 3:
+          // # Time Left
+          item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+          item->setText(QString(_("%1")).arg(unitWaittime));
+          break;
+        case 4:
+          // # Id
+          item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
+          item->setText(QString("%1").arg(unitId));
+          break;
         }
-        item->setData(Qt::UserRole, id);
-        break;
-      case 1:
-        // Unit type name
-        item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-        item->setText(utype_name_translation(putype));
-        break;
-      case 2:
-        // # Location
-        item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-        item->setText(QString(_("%1")).arg(pentry->city_name));
-        break;
-      case 3:
-        // # Time Left
-        item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-        item->setText(QString(_("%1")).arg(
-            format_simple_duration(abs(pentry->timer))));
-        break;
+        ui.uwt_widget->setItem(max_row, j, item);
       }
-      ui.uwt_widget->setItem(max_row, j, item);
+      max_row++;
+    } else {
+      // Unit is already in table, update the corresponding row.
+      int row = idsInTable[unitId]->row();
+      ui.uwt_widget->item(row, 3)->setText(unitWaittime);
+      idsInTable.remove(unitId);
     }
-    max_row++;
+  }
+
+  // Delete units initially in the table, but not waiting anymore.
+  for (int i = 0; i < idsInTable.values().size(); i++) {
+    int row = idsInTable.values()[i]->row();
+    ui.uwt_widget->removeRow(row);
+    max_row--;
   }
 
   if (max_row == 0) {
@@ -649,6 +681,7 @@ void get_units_waiting_data(struct unit_waiting_entry *entries,
           get_nearest_city_text(pcity_near, pcity_near_dist);
       entries[*num_entries_used].timer =
           time(nullptr) - punit->action_timestamp;
+      entries[*num_entries_used].id = punit->id;
 
       (*num_entries_used)++;
     }

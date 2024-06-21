@@ -1,6 +1,7 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-or-later
  * SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+ * SPDX-FileCopyrightText: Tobias Rehbein <tobias.rehbein@web.de>
  */
 
 #pragma once
@@ -35,6 +36,7 @@ struct unit_waiting_entry {
   const struct unit_type *type;
   time_t timer;
   QString city_name;
+  int id;
 };
 
 void get_units_view_data(struct unit_view_entry *entries,
