@@ -313,20 +313,20 @@ void units_view::update_waiting()
   // between known units we need to update and new units we need to add to
   // the table. As we remove all updated units from this map, the remaining
   // items are the units we need to remove from the table.
-  QMap<QString, QTableWidgetItem *> idsInTable;
+  QMap<QString, QTableWidgetItem *> ids_in_table;
   for (int r = 0; r < max_row; r++) {
     QTableWidgetItem *item = ui.uwt_widget->item(r, 4);
-    idsInTable[item->text()] = item;
+    ids_in_table[item->text()] = item;
   }
 
   for (int i = 0; i < entries_used; i++) {
     struct unit_waiting_entry *pentry = unit_entries + i;
     const struct unit_type *putype = pentry->type;
     cid id = cid_encode_unit(putype);
-    QString unitId = QString("%1").arg(pentry->id);
-    QString unitWaittime = format_simple_duration(abs(pentry->timer));
+    QString unit_id = QString("%1").arg(pentry->id);
+    QString unit_waittime = format_simple_duration(abs(pentry->timer));
 
-    if (!idsInTable.contains(unitId)) {
+    if (!ids_in_table.contains(unit_id)) {
       // Create a new row for the unit
       ui.uwt_widget->insertRow(max_row);
       for (int j = 0; j < 5; j++) {
@@ -358,12 +358,12 @@ void units_view::update_waiting()
         case 3:
           // # Time Left
           item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-          item->setText(QString(_("%1")).arg(unitWaittime));
+          item->setText(QString(_("%1")).arg(unit_waittime));
           break;
         case 4:
           // # Id
           item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-          item->setText(QString("%1").arg(unitId));
+          item->setText(QString("%1").arg(unit_id));
           break;
         }
         ui.uwt_widget->setItem(max_row, j, item);
@@ -371,15 +371,15 @@ void units_view::update_waiting()
       max_row++;
     } else {
       // Unit is already in table, update the corresponding row.
-      int row = idsInTable[unitId]->row();
-      ui.uwt_widget->item(row, 3)->setText(unitWaittime);
-      idsInTable.remove(unitId);
+      int row = ids_in_table[unit_id]->row();
+      ui.uwt_widget->item(row, 3)->setText(unit_waittime);
+      ids_in_table.remove(unit_id);
     }
   }
 
   // Delete units initially in the table, but not waiting anymore.
-  for (int i = 0; i < idsInTable.values().size(); i++) {
-    int row = idsInTable.values()[i]->row();
+  for (int i = 0; i < ids_in_table.values().size(); i++) {
+    int row = ids_in_table.values()[i]->row();
     ui.uwt_widget->removeRow(row);
     max_row--;
   }
