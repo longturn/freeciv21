@@ -245,7 +245,7 @@ Tech_Parasite
 
 Airlift
     Allow airlift to/from a city. The value tells how many units per turn can be airlifted, unless server
-    setting ``airlifttingstyle`` sets the number unlimited for either source or destination city. If airlifts
+    setting ``airliftingstyle`` sets the number unlimited for either source or destination city. If airlifts
     are set to unlimited, they are enabled by any positive value of this effect.
 
 .. _effect-any-government:
