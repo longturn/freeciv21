@@ -391,7 +391,7 @@ static int max_tile_trade(const struct city *pcity, const player *seen_as)
       continue;
     }
 
-    if (is_free_worked_index(cindex)) {
+    if (is_city_center_index(cindex)) {
       total += city_tile_output(pcity, ptile, is_celebrating, O_TRADE);
       continue;
     }

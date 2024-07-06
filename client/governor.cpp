@@ -200,7 +200,7 @@ inline bool operator==(const struct cm_result &result1,
   fc_assert_ret_val(result1.city_radius_sq == result2.city_radius_sq, false);
   city_map_iterate(result1.city_radius_sq, cindex, x, y)
   {
-    if (is_free_worked_index(cindex)) {
+    if (is_city_center_index(cindex)) {
       continue;
     }
 
@@ -311,8 +311,7 @@ bool cma_yoloswag::apply_result_on_server(
   connection_do_buffer(&client.conn);
 
   // Remove all surplus workers
-  city_tile_iterate_skip_free_worked(city_radius_sq, pcenter, ptile, idx, x,
-                                     y)
+  city_tile_iterate_skip_center(city_radius_sq, pcenter, ptile, idx, x, y)
   {
     if (tile_worked(ptile) == pcity && !result->worker_positions[idx]) {
       log_apply_result("Removing worker at {%d,%d}.", x, y);
@@ -324,7 +323,7 @@ bool cma_yoloswag::apply_result_on_server(
       }
     }
   }
-  city_tile_iterate_skip_free_worked_end;
+  city_tile_iterate_skip_center_end;
 
   // Change the excess non-default specialists to default.
   specialist_type_iterate(sp)
@@ -350,8 +349,7 @@ bool cma_yoloswag::apply_result_on_server(
   // Set workers
   /* FIXME: This code assumes that any toggled worker will turn into a
    * DEFAULT_SPECIALIST! */
-  city_tile_iterate_skip_free_worked(city_radius_sq, pcenter, ptile, idx, x,
-                                     y)
+  city_tile_iterate_skip_center(city_radius_sq, pcenter, ptile, idx, x, y)
   {
     if (nullptr == tile_worked(ptile) && result->worker_positions[idx]) {
       log_apply_result("Putting worker at {%d,%d}.", x, y);
@@ -364,7 +362,7 @@ bool cma_yoloswag::apply_result_on_server(
       }
     }
   }
-  city_tile_iterate_skip_free_worked_end;
+  city_tile_iterate_skip_center_end;
 
   /* Set all specialists except DEFAULT_SPECIALIST (all the unchanged
    * ones remain as DEFAULT_SPECIALIST). */

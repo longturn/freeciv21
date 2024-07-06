@@ -179,18 +179,18 @@ void citylog_map_workers(QtMsgType level, struct city *pcity);
   }                                                                         \
   city_map_iterate_outwards_radius_sq_index_end;
 
-// simple extension to skip is_free_worked() tiles.
-#define city_tile_iterate_skip_free_worked(_radius_sq, _city_tile, _tile,   \
-                                           _index, _x, _y)                  \
+// simple extension to skip the city center.
+#define city_tile_iterate_skip_center(_radius_sq, _city_tile, _tile,        \
+                                      _index, _x, _y)                       \
   {                                                                         \
     city_map_iterate(_radius_sq, _index, _x, _y)                            \
     {                                                                       \
-      if (!is_free_worked_index(_index)) {                                  \
+      if (!is_city_center_index(_index)) {                                  \
         struct tile *_tile =                                                \
             city_map_to_tile(_city_tile, _radius_sq, _x, _y);               \
         if (nullptr != _tile) {
 
-#define city_tile_iterate_skip_free_worked_end                              \
+#define city_tile_iterate_skip_center_end                                   \
   }                                                                         \
   }                                                                         \
   }                                                                         \
@@ -757,11 +757,8 @@ bool city_exist(int id);
 // ===
 
 bool is_city_center(const struct city *pcity, const struct tile *ptile);
-bool is_free_worked(const struct city *pcity, const struct tile *ptile);
-
-#define is_free_worked_index(city_tile_index)                               \
+#define is_city_center_index(city_tile_index)                               \
   (CITY_MAP_CENTER_TILE_INDEX == city_tile_index)
-#define FREE_WORKED_TILES (1)
 
 void *city_ai_data(const struct city *pcity, const struct ai_type *ai);
 void city_set_ai_data(struct city *pcity, const struct ai_type *ai,

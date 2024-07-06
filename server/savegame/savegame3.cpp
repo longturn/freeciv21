@@ -4934,12 +4934,13 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
     city_repair_size(pcity, -1);
   }
 
-  repair = city_size_get(pcity) - sp_count - (workers - FREE_WORKED_TILES);
+  // workers - 1: account for city center
+  repair = city_size_get(pcity) - sp_count - (workers - 1);
   if (0 != repair) {
     log_sg("[%s] size mismatch for '%s' (%d,%d): size [%d] != "
-           "(workers [%d] - free worked tiles [%d]) + specialists [%d]",
+           "(workers [%d] - 1 + specialists [%d]",
            citystr, city_name_get(pcity), TILE_XY(city_tile(pcity)),
-           city_size_get(pcity), workers, FREE_WORKED_TILES, sp_count);
+           city_size_get(pcity), workers, sp_count);
 
     // repair pcity
     city_repair_size(pcity, repair);

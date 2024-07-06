@@ -642,7 +642,7 @@ static void apply_solution(struct cm_state *state,
                            const struct partial_solution *soln)
 {
   struct city *pcity = state->pcity;
-  int i, citizen_count = 0, city_radius_sq = city_map_radius_sq_get(pcity);
+  int i, citizen_count = 0;
 
 #ifdef GATHER_TIME_STATS
   performance.current->apply_count++;
@@ -653,16 +653,8 @@ static void apply_solution(struct cm_state *state,
   /* Clear all specialists, and remove all workers from fields (except
    * the city center). */
   memset(&pcity->specialists, 0, sizeof(pcity->specialists));
-
-  city_map_iterate(city_radius_sq, cindex, x, y)
-  {
-    if (is_free_worked_index(cindex)) {
-      state->workers_map[cindex] = true;
-    } else {
-      state->workers_map[cindex] = false;
-    }
-  }
-  city_map_iterate_end;
+  memset(state->workers_map, 0, city_map_tiles_from_city(state->pcity));
+  state->workers_map[CITY_MAP_CENTER_TILE_INDEX] = true;
 
   /* Now for each tile type, find the right number of such tiles and set them
    * as worked.  For specialists we just increase the number of specialists
@@ -1198,7 +1190,7 @@ static void init_tile_lattice(struct city *pcity, struct cm_state *state)
   city_tile_iterate_index(city_map_radius_sq_get(pcity), pcenter, ptile,
                           ctindex)
   {
-    if (is_free_worked(pcity, ptile)) {
+    if (is_city_center(pcity, ptile)) {
       continue;
     } else if (city_can_work_tile(pcity, ptile)) {
       compute_tile_production(pcity, ptile, &type); // clobbers type
@@ -1595,27 +1587,16 @@ static void compute_max_stats_heuristic(const struct cm_state *state,
      we add free production, and have the city.c code do the rest */
 
   struct city *pcity = state->pcity;
-  struct tile *pcenter = city_tile(pcity);
   bool is_celebrating = base_city_celebrating(pcity);
 
   output_type_iterate(stat_index)
   {
-    pcity->citizen_base[stat_index] = production[stat_index];
+    pcity->citizen_base[stat_index] =
+        production[stat_index]
+        + city_tile_output(pcity, city_tile(pcity), is_celebrating,
+                           stat_index);
   }
   output_type_iterate_end;
-
-  city_tile_iterate(city_map_radius_sq_get(pcity), pcenter, ptile)
-  {
-    if (is_free_worked(pcity, ptile)) {
-      output_type_iterate(stat_index)
-      {
-        pcity->citizen_base[stat_index] +=
-            city_tile_output(pcity, ptile, is_celebrating, stat_index);
-      }
-      output_type_iterate_end;
-    }
-  }
-  city_tile_iterate_end;
 
   set_city_production(pcity);
   memcpy(production, pcity->prod, sizeof(pcity->prod));
@@ -2193,7 +2174,7 @@ int cm_result_workers(const std::unique_ptr<cm_result> &result)
 
   city_map_iterate(result->city_radius_sq, cindex, x, y)
   {
-    if (is_free_worked_index(cindex)) {
+    if (is_city_center_index(cindex)) {
       continue;
     }
 
@@ -2458,7 +2439,7 @@ void cm_print_result(const std::unique_ptr<cm_result> &result)
 
   city_map_iterate(result->city_radius_sq, cindex, x, y)
   {
-    if (is_free_worked_index(cindex)) {
+    if (is_city_center_index(cindex)) {
       city_map_data[cindex] = 2;
     } else if (result->worker_positions[cindex]) {
       city_map_data[cindex] = 1;
