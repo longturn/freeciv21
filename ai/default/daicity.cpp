@@ -1454,12 +1454,13 @@ adv_want dai_city_want(struct player *pplayer, struct city *acity,
   trade_routes_iterate(acity, proute) { prod[O_TRADE] += proute->value; }
   trade_routes_iterate_end;
   prod[O_GOLD] += get_city_tithes_bonus(acity);
+  auto gov_centers = player_gov_centers(city_owner(acity));
   output_type_iterate(o)
   {
     bonus[o] =
         get_final_city_output_bonus(acity, static_cast<output_type_id>(o));
     waste[o] = city_waste(acity, static_cast<output_type_id>(o),
-                          prod[o] * bonus[o] / 100, nullptr);
+                          prod[o] * bonus[o] / 100, nullptr, gov_centers);
   }
   output_type_iterate_end;
   add_tax_income(

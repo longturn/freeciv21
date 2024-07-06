@@ -20,6 +20,7 @@
 #include "distribute.h"
 #include "fcintl.h"
 #include "log.h"
+#include "player.h"
 #include "support.h"
 
 // common
@@ -2862,10 +2863,12 @@ void set_city_production(struct city *pcity)
    * calculated, so if you had "science waste" it would not include taxed
    * science.  However waste is calculated after the bonuses are multiplied
    * on, so shield waste will include shield bonuses. */
+  auto gov_centers = player_gov_centers(city_owner(pcity));
   output_type_iterate(o)
   {
-    pcity->waste[o] = city_waste(
-        pcity, o, pcity->prod[o] * pcity->bonus[o] / 100, nullptr);
+    pcity->waste[o] =
+        city_waste(pcity, o, pcity->prod[o] * pcity->bonus[o] / 100, nullptr,
+                   gov_centers);
   }
   output_type_iterate_end;
 
@@ -3072,7 +3075,7 @@ void city_refresh_from_main_map(struct city *pcity, bool *workers_map)
    (not cumulative).
  */
 int city_waste(const struct city *pcity, Output_type_id otype, int total,
-               int *breakdown)
+               int *breakdown, std::vector<city *> gov_centers)
 {
   int penalty_waste = 0;
   int penalty_size = 0;  /* separate notradesize/fulltradesize from normal
@@ -3122,10 +3125,9 @@ int city_waste(const struct city *pcity, Output_type_id otype, int total,
         gov_center = pcity;
         min_dist = 0;
       } else {
-        city_list_iterate(city_owner(pcity)->cities, gc)
-        {
+        for (const auto gc : gov_centers) {
           // Do not recheck current city
-          if (gc != pcity && is_gov_center(gc)) {
+          if (gc != pcity) {
             int dist = real_map_distance(gc->tile, pcity->tile);
 
             if (dist < min_dist) {
@@ -3134,7 +3136,6 @@ int city_waste(const struct city *pcity, Output_type_id otype, int total,
             }
           }
         }
-        city_list_iterate_end;
       }
 
       if (gov_center == nullptr) {

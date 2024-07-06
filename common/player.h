@@ -440,6 +440,7 @@ int num_known_tech_with_flag(const struct player *pplayer,
 int player_get_expected_income(const struct player *pplayer);
 
 struct city *player_primary_capital(const struct player *pplayer);
+std::vector<city *> player_gov_centers(const struct player *pplayer);
 
 const char *love_text(const int love);
 
