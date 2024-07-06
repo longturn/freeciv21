@@ -197,6 +197,9 @@ struct cm_state {
   struct tile_type_vector lattice;
   struct tile_type_vector lattice_by_prod[O_LAST];
 
+  // the output of tiles the city works for free.
+  std::array<int, O_LAST> city_center_output = {0};
+
   // the best known solution, and its fitness
   struct partial_solution best;
   struct cm_fitness best_value;
@@ -889,10 +892,9 @@ static int compare_tile_type_by_stat(const void *va, const void *vb)
  */
 static void compute_tile_production(const struct city *pcity,
                                     const struct tile *ptile,
+                                    bool is_celebrating,
                                     struct cm_tile_type *out)
 {
-  bool is_celebrating = base_city_celebrating(pcity);
-
   output_type_iterate(o)
   {
     out->production[o] = city_tile_output(pcity, ptile, is_celebrating, o);
@@ -1187,13 +1189,21 @@ static void init_tile_lattice(struct city *pcity, struct cm_state *state)
   // add all the fields into the lattice
   tile_type_init(&type); // init just once
 
+  bool is_celebrating = base_city_celebrating(pcity);
   city_tile_iterate_index(city_map_radius_sq_get(pcity), pcenter, ptile,
                           ctindex)
   {
     if (is_city_center(pcity, ptile)) {
+      output_type_iterate(o)
+      {
+        state->city_center_output[o] =
+            city_tile_output(pcity, ptile, is_celebrating, o);
+      }
+      output_type_iterate_end;
       continue;
     } else if (city_can_work_tile(pcity, ptile)) {
-      compute_tile_production(pcity, ptile, &type); // clobbers type
+      compute_tile_production(pcity, ptile, is_celebrating,
+                              &type); // clobbers type
       tile_type_lattice_add(&state->lattice, &type,
                             ctindex); // copy type if needed
     }
@@ -1587,14 +1597,10 @@ static void compute_max_stats_heuristic(const struct cm_state *state,
      we add free production, and have the city.c code do the rest */
 
   struct city *pcity = state->pcity;
-  bool is_celebrating = base_city_celebrating(pcity);
-
   output_type_iterate(stat_index)
   {
     pcity->citizen_base[stat_index] =
-        production[stat_index]
-        + city_tile_output(pcity, city_tile(pcity), is_celebrating,
-                           stat_index);
+        production[stat_index] + state->city_center_output[stat_index];
   }
   output_type_iterate_end;
 
