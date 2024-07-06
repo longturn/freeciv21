@@ -1600,18 +1600,22 @@ static void compute_max_stats_heuristic(const struct cm_state *state,
 
   output_type_iterate(stat_index)
   {
-    int base = production[stat_index];
-
-    city_tile_iterate(city_map_radius_sq_get(pcity), pcenter, ptile)
-    {
-      if (is_free_worked(pcity, ptile)) {
-        base += city_tile_output(pcity, ptile, is_celebrating, stat_index);
-      }
-    }
-    city_tile_iterate_end;
-    pcity->citizen_base[stat_index] = base;
+    pcity->citizen_base[stat_index] = production[stat_index];
   }
   output_type_iterate_end;
+
+  city_tile_iterate(city_map_radius_sq_get(pcity), pcenter, ptile)
+  {
+    if (is_free_worked(pcity, ptile)) {
+      output_type_iterate(stat_index)
+      {
+        pcity->citizen_base[stat_index] +=
+            city_tile_output(pcity, ptile, is_celebrating, stat_index);
+      }
+      output_type_iterate_end;
+    }
+  }
+  city_tile_iterate_end;
 
   set_city_production(pcity);
   memcpy(production, pcity->prod, sizeof(pcity->prod));
