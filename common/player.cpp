@@ -1259,6 +1259,25 @@ struct city *player_primary_capital(const struct player *pplayer)
 }
 
 /**
+   Locate the player's government centers
+ */
+std::vector<city *> player_gov_centers(const struct player *pplayer)
+{
+  fc_assert_ret_val(pplayer, {});
+
+  auto centers = std::vector<city *>();
+  city_list_iterate(pplayer->cities, gc)
+  {
+    if (is_gov_center(gc)) {
+      centers.push_back(gc);
+    }
+  }
+  city_list_iterate_end;
+
+  return centers;
+}
+
+/**
    Return a text describing an AI's love for you.  (Oooh, kinky!!)
  */
 const char *love_text(const int love)

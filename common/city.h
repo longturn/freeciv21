@@ -696,7 +696,7 @@ void city_remove_improvement(struct city *pcity,
 void city_refresh_from_main_map(struct city *pcity, bool *workers_map);
 
 int city_waste(const struct city *pcity, Output_type_id otype, int total,
-               int *breakdown);
+               int *breakdown, std::vector<city *> gov_centers);
 Specialist_type_id best_specialist(Output_type_id otype,
                                    const struct city *pcity);
 int get_final_city_output_bonus(const struct city *pcity,

@@ -367,34 +367,40 @@ static std::unique_ptr<cityresult> cityresult_fill(struct ai_type *ait,
   // Now we have a valid city center as well as best other tile.
 
   if (virtual_city) {
+    auto gov_centers = player_gov_centers(city_owner(pcity));
     /* Corruption and waste of a size one city deducted. Notice that we
      * don't do this if 'fulltradesize' is changed, since then we'd
      * never make cities. */
     int shield =
         result->city_center.tdc->shield + result->best_other.tdc->shield;
     result->waste =
-        adv->shield_priority * city_waste(pcity, O_SHIELD, shield, nullptr);
+        adv->shield_priority
+        * city_waste(pcity, O_SHIELD, shield, nullptr, gov_centers);
 
     if (game.info.fulltradesize == 1) {
       int trade =
           result->city_center.tdc->trade + result->best_other.tdc->trade;
       result->corruption =
-          adv->science_priority * city_waste(pcity, O_TRADE, trade, nullptr);
+          adv->science_priority
+          * city_waste(pcity, O_TRADE, trade, nullptr, gov_centers);
     } else {
       result->corruption = 0;
     }
   } else {
+    auto gov_centers = player_gov_centers(city_owner(pcity));
     /* Deduct difference in corruption and waste for real cities. Note that
      * it is possible (with notradesize) that we _gain_ value here. */
     city_size_add(pcity, 1);
     result->corruption =
         adv->science_priority
-        * (city_waste(pcity, O_TRADE, result->best_other.tdc->trade, nullptr)
+        * (city_waste(pcity, O_TRADE, result->best_other.tdc->trade, nullptr,
+                      gov_centers)
            - pcity->waste[O_TRADE]);
-    result->waste = adv->shield_priority
-                    * (city_waste(pcity, O_SHIELD,
-                                  result->best_other.tdc->shield, nullptr)
-                       - pcity->waste[O_SHIELD]);
+    result->waste =
+        adv->shield_priority
+        * (city_waste(pcity, O_SHIELD, result->best_other.tdc->shield,
+                      nullptr, gov_centers)
+           - pcity->waste[O_SHIELD]);
     city_size_add(pcity, -1);
   }
   result->total -= result->corruption;

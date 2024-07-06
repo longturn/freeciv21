@@ -867,7 +867,7 @@ static int compare_tile_type_by_stat(const void *va, const void *vb)
   }
 
   /* consider the influence of trade on science, luxury, gold
-     for compute_max_stats_heuristics, which uses these sorted arrays,
+     for compute_max_stats_heuristic, which uses these sorted arrays,
      it is essential, that the sorting is correct, else promising
      branches get pruned */
   double valuea = (*a)->production[compare_key]

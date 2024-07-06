@@ -539,11 +539,13 @@ QString get_city_dialog_output_text(const struct city *pcity,
     int wastetypes[OLOSS_LAST];
     bool breakdown_ok;
     int regular_waste;
+    auto gov_centers = player_gov_centers(city_owner(pcity));
     /* FIXME: this will give the wrong answer in rulesets with waste on
      * taxed outputs, such as 'science waste', as our total so far includes
      * contributions taxed from trade, whereas the equivalent bit in
      * set_city_production() does not */
-    if (city_waste(pcity, otype, city_sum_total(sum), wastetypes)
+    if (city_waste(pcity, otype, city_sum_total(sum), wastetypes,
+                   gov_centers)
         == pcity->waste[otype]) {
       // Our calculation matches the server's, so we trust our breakdown.
       city_sum_add_if_nonzero(sum, -wastetypes[OLOSS_SIZE],
