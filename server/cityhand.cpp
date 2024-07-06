@@ -133,7 +133,7 @@ void handle_city_make_specialist(struct player *pplayer, int city_id,
     return;
   }
 
-  if (is_free_worked(pcity, ptile)) {
+  if (is_city_center(pcity, ptile)) {
     auto_arrange_workers(pcity);
   } else if (tile_worked(ptile) == pcity) {
     city_map_update_empty(pcity, ptile);
@@ -178,7 +178,7 @@ void handle_city_make_worker(struct player *pplayer, int city_id,
     return;
   }
 
-  if (is_free_worked(pcity, ptile)) {
+  if (is_city_center(pcity, ptile)) {
     auto_arrange_workers(pcity);
     sync_cities();
     return;

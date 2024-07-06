@@ -1551,7 +1551,7 @@ void create_city(struct player *pplayer, struct tile *ptile,
   // Set up citizens nationality.
   citizens_init(pcity);
 
-  /* Place a worker at the is_city_center() is_free_worked().
+  /* Place a worker at the city center
    * It is possible to build a city on a tile that is already worked;
    * this will displace the worker on the newly-built city's tile -- Syela */
   tile_set_worked(ptile, pcity); // instead of city_map_update_worker()
@@ -3094,7 +3094,7 @@ static bool city_map_update_tile_direct(struct tile *ptile, bool queued)
 {
   struct city *pwork = tile_worked(ptile);
 
-  if (nullptr != pwork && !is_free_worked(pwork, ptile)
+  if (nullptr != pwork && !is_city_center(pwork, ptile)
       && !city_can_work_tile(pwork, ptile)) {
     tile_set_worked(ptile, nullptr);
     send_tile_info(nullptr, ptile, false);
@@ -3164,13 +3164,13 @@ void city_map_update_all(struct city *pcity)
 {
   struct tile *pcenter = city_tile(pcity);
 
-  city_tile_iterate_skip_free_worked(city_map_radius_sq_get(pcity), pcenter,
-                                     ptile, _index, _x, _y)
+  city_tile_iterate_skip_center(city_map_radius_sq_get(pcity), pcenter,
+                                ptile, _index, _x, _y)
   {
     // bypass city_map_update_tile_now() for efficiency
     city_map_update_tile_direct(ptile, false);
   }
-  city_tile_iterate_skip_free_worked_end;
+  city_tile_iterate_skip_center_end;
 }
 
 /**
@@ -3342,7 +3342,7 @@ bool city_map_update_radius_sq(struct city *pcity)
         struct tile *ptile =
             city_map_to_tile(city_tile(pcity), radius_sq, city_x, city_y);
 
-        if (ptile && !is_free_worked(pcity, ptile)
+        if (ptile && !is_city_center(pcity, ptile)
             && tile_worked(ptile) != pcity
             && city_can_work_tile(pcity, ptile)) {
           city_map_update_worker(pcity, ptile);

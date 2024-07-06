@@ -278,8 +278,8 @@ void apply_cmresult_to_city(struct city *pcity,
   struct tile *pcenter = city_tile(pcity);
 
   // Now apply results
-  city_tile_iterate_skip_free_worked(city_map_radius_sq_get(pcity), pcenter,
-                                     ptile, idx, x, y)
+  city_tile_iterate_skip_center(city_map_radius_sq_get(pcity), pcenter,
+                                ptile, idx, x, y)
   {
     struct city *pwork = tile_worked(ptile);
 
@@ -295,7 +295,7 @@ void apply_cmresult_to_city(struct city *pcity,
       }
     }
   }
-  city_tile_iterate_skip_free_worked_end;
+  city_tile_iterate_skip_center_end;
 
   specialist_type_iterate(sp)
   {
@@ -794,15 +794,15 @@ static citizens city_reduce_workers(struct city *pcity, citizens change)
 
   fc_assert_ret_val(0 < change, 0);
 
-  city_tile_iterate_skip_free_worked(city_map_radius_sq_get(pcity), pcenter,
-                                     ptile, _index, _x, _y)
+  city_tile_iterate_skip_center(city_map_radius_sq_get(pcity), pcenter,
+                                ptile, _index, _x, _y)
   {
     if (0 < want && tile_worked(ptile) == pcity) {
       city_map_update_empty(pcity, ptile);
       want--;
     }
   }
-  city_tile_iterate_skip_free_worked_end;
+  city_tile_iterate_skip_center_end;
 
   return change - want;
 }
@@ -1004,15 +1004,15 @@ static bool city_increase_size(struct city *pcity,
    * make new citizens into scientists or taxmen -- Massimo */
 
   // Ignore food if no square can be worked
-  city_tile_iterate_skip_free_worked(city_map_radius_sq_get(pcity), pcenter,
-                                     ptile, _index, _x, _y)
+  city_tile_iterate_skip_center(city_map_radius_sq_get(pcity), pcenter,
+                                ptile, _index, _x, _y)
   {
     if (tile_worked(ptile) != pcity // quick test
         && city_can_work_tile(pcity, ptile)) {
       have_square = true;
     }
   }
-  city_tile_iterate_skip_free_worked_end;
+  city_tile_iterate_skip_center_end;
 
   if ((pcity->surplus[O_FOOD] >= 2 || !have_square)
       && is_city_option_set(pcity, CITYO_SCIENCE_SPECIALISTS)) {

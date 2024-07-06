@@ -1070,7 +1070,7 @@ static void resolve_city_emergency(struct ai_type *ait,
       fc_assert_action(city_base_to_city_map(&ax, &ay, acity, atile),
                        continue);
 
-      if (is_free_worked(acity, atile)) {
+      if (is_city_center(acity, atile)) {
         // Can't remove a worker here.
         continue;
       }

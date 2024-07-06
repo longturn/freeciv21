@@ -444,7 +444,7 @@ void citylog_map_workers(QtMsgType level, struct city *pcity)
     struct tile *ptile = city_map_to_tile(
         city_tile(pcity), city_map_radius_sq_get(pcity), x, y);
     city_map_data[cindex] = (ptile && tile_worked(ptile) == pcity)
-                                ? (is_free_worked_index(cindex) ? 2 : 1)
+                                ? (is_city_center_index(cindex) ? 2 : 1)
                                 : 0;
   }
   city_map_iterate_end;
@@ -1369,7 +1369,7 @@ bool base_city_can_work_tile(const struct player *restriction,
     return false;
   }
 
-  if (!is_free_worked(pcity, ptile)
+  if (!is_city_center(pcity, ptile)
       && nullptr != unit_occupies_tile(ptile, powner)) {
     return false;
   }
@@ -3459,14 +3459,6 @@ bool is_city_center(const struct city *pcity, const struct tile *ptile)
   }
 
   return tile_index(city_tile(pcity)) == tile_index(ptile);
-}
-
-/**
-   Return TRUE if the city is worked without using up a citizen.
- */
-bool is_free_worked(const struct city *pcity, const struct tile *ptile)
-{
-  return is_city_center(pcity, ptile);
 }
 
 /**

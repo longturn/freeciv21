@@ -625,8 +625,8 @@ void handle_city_info(const struct packet_city_info *packet)
     } else if (city_owner(pcity) != powner) {
       /* Remember what were the worked tiles.  The server won't
        * send to us again. */
-      city_tile_iterate_skip_free_worked(city_map_radius_sq_get(pcity),
-                                         ptile, pworked, _index, _x, _y)
+      city_tile_iterate_skip_center(city_map_radius_sq_get(pcity), ptile,
+                                    pworked, _index, _x, _y)
       {
         if (pcity == tile_worked(pworked)) {
           if (nullptr == worked_tiles) {
@@ -635,7 +635,7 @@ void handle_city_info(const struct packet_city_info *packet)
           tile_list_append(worked_tiles, pworked);
         }
       }
-      city_tile_iterate_skip_free_worked_end;
+      city_tile_iterate_skip_center_end;
       client_remove_city(pcity);
       pcity = nullptr;
       city_has_changed_owner = true;
@@ -1107,8 +1107,8 @@ void handle_city_short_info(const struct packet_city_short_info *packet)
     } else if (city_owner(pcity) != powner) {
       /* Remember what were the worked tiles.  The server won't
        * send to us again. */
-      city_tile_iterate_skip_free_worked(city_map_radius_sq_get(pcity),
-                                         ptile, pworked, _index, _x, _y)
+      city_tile_iterate_skip_center(city_map_radius_sq_get(pcity), ptile,
+                                    pworked, _index, _x, _y)
       {
         if (pcity == tile_worked(pworked)) {
           if (nullptr == worked_tiles) {
@@ -1117,7 +1117,7 @@ void handle_city_short_info(const struct packet_city_short_info *packet)
           tile_list_append(worked_tiles, pworked);
         }
       }
-      city_tile_iterate_skip_free_worked_end;
+      city_tile_iterate_skip_center_end;
       radius_sq = city_map_radius_sq_get(pcity);
       client_remove_city(pcity);
       pcity = nullptr;

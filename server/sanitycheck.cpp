@@ -341,14 +341,14 @@ static void check_city_size(struct city *pcity, const char *file,
 
   SANITY_CITY(pcity, city_size_get(pcity) >= 1);
 
-  city_tile_iterate_skip_free_worked(city_map_radius_sq_get(pcity), pcenter,
-                                     ptile, _index, _x, _y)
+  city_tile_iterate_skip_center(city_map_radius_sq_get(pcity), pcenter,
+                                ptile, _index, _x, _y)
   {
     if (tile_worked(ptile) == pcity) {
       citizen_count++;
     }
   }
-  city_tile_iterate_skip_free_worked_end;
+  city_tile_iterate_skip_center_end;
 
   citizen_count += city_specialists(pcity);
   delta = city_size_get(pcity) - citizen_count;
