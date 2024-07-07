@@ -274,6 +274,14 @@ enum city_updates {
   CU_POPUP_DIALOG = 1 << 2
 };
 
+/// Used to cache the value of waste effects to speed up governors
+struct cached_waste {
+  int level = 0;           // EFT_OUTPUT_WASTE
+  int relative = 0;        // EFT_OUTPUT_WASTE_PCT
+  int by_distance = 0;     // EFT_OUTPUT_WASTE_BY_DISTANCE
+  int by_rel_distance = 0; // EFT_OUTPUT_WASTE_BY_REL_DISTANCE
+};
+
 struct tile_cache; // defined and only used within city.c
 
 struct adv_city; /* defined in ./server/advisors/infracache.h */
@@ -523,8 +531,9 @@ const char *get_output_name(Output_type_id output);
 struct output_type *get_output_type(Output_type_id output);
 Output_type_id output_type_by_identifier(const char *id);
 void add_specialist_output(const struct city *pcity, int *output);
-void set_city_production(struct city *pcity,
-                         const std::vector<city *> &gov_centers);
+void set_city_production(
+    struct city *pcity, const std::vector<city *> &gov_centers,
+    const std::array<cached_waste, O_LAST> *pcwaste = nullptr);
 
 // properties
 
@@ -694,11 +703,13 @@ void city_remove_improvement(struct city *pcity,
                              const struct impr_type *pimprove);
 
 // city update functions
-void city_refresh_from_main_map(struct city *pcity, bool *workers_map,
-                                const std::vector<city *> &gov_centers);
-
+void city_refresh_from_main_map(
+    struct city *pcity, bool *workers_map,
+    const std::vector<city *> &gov_centers,
+    const std::array<cached_waste, O_LAST> *pcwaste = nullptr);
 int city_waste(const struct city *pcity, Output_type_id otype, int total,
-               int *breakdown, const std::vector<city *> &gov_centers);
+               int *breakdown, const std::vector<city *> &gov_centers,
+               const cached_waste *pcwaste = nullptr);
 Specialist_type_id best_specialist(Output_type_id otype,
                                    const struct city *pcity);
 int get_final_city_output_bonus(const struct city *pcity,
