@@ -1019,7 +1019,6 @@ void city_dialog::update_disabled()
   ui.buy_button->setEnabled(can_edit);
   ui.cma_enable_but->setEnabled(can_edit);
   ui.production_combo_p->setEnabled(can_edit);
-  ui.present_units_list->setEnabled(can_edit);
   update_prod_buttons();
 }
 
