@@ -204,6 +204,9 @@ struct cm_state {
   // cached government centers to avoid looping through all cities
   std::vector<city *> gov_centers;
 
+  // cached waste levels to avoid recomputations
+  std::array<cached_waste, O_LAST> waste;
+
   // the best known solution, and its fitness
   struct partial_solution best;
   struct cm_fitness best_value;
@@ -694,7 +697,8 @@ static void apply_solution(struct cm_state *state,
   }
 
   // Finally we must refresh the city to reset all the precomputed fields.
-  city_refresh_from_main_map(pcity, state->workers_map, state->gov_centers);
+  city_refresh_from_main_map(pcity, state->workers_map, state->gov_centers,
+                             &state->waste);
   fc_assert_ret(citizen_count == city_size_get(pcity));
 }
 
@@ -1608,7 +1612,7 @@ static void compute_max_stats_heuristic(const struct cm_state *state,
   }
   output_type_iterate_end;
 
-  set_city_production(pcity, state->gov_centers);
+  set_city_production(pcity, state->gov_centers, &state->waste);
   memcpy(production, pcity->prod, sizeof(pcity->prod));
 }
 
@@ -1853,6 +1857,20 @@ static struct cm_state *cm_state_init(struct city *pcity,
 
   // cache government centers
   state->gov_centers = player_gov_centers(pplayer);
+
+  // cache waste levels
+  output_type_iterate(o)
+  {
+    state->waste[o].level =
+        get_city_output_bonus(pcity, get_output_type(o), EFT_OUTPUT_WASTE);
+    state->waste[o].relative = get_city_output_bonus(
+        pcity, get_output_type(o), EFT_OUTPUT_WASTE_PCT);
+    state->waste[o].by_distance = get_city_output_bonus(
+        pcity, get_output_type(o), EFT_OUTPUT_WASTE_BY_DISTANCE);
+    state->waste[o].by_rel_distance = get_city_output_bonus(
+        pcity, get_output_type(o), EFT_OUTPUT_WASTE_BY_REL_DISTANCE);
+  }
+  output_type_iterate_end;
 
   // For the heuristic, make sorted copies of the lattice
   output_type_iterate(stat_index)

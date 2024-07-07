@@ -2806,7 +2806,8 @@ int city_airlift_max(const struct city *pcity)
     the bonus[] and citizen_base[] arrays are alread built.
  */
 void set_city_production(struct city *pcity,
-                         const std::vector<city *> &gov_centers)
+                         const std::vector<city *> &gov_centers,
+                         const std::array<cached_waste, O_LAST> *pcwaste)
 {
   /* Calculate city production!
    *
@@ -2868,7 +2869,7 @@ void set_city_production(struct city *pcity,
   {
     pcity->waste[o] =
         city_waste(pcity, o, pcity->prod[o] * pcity->bonus[o] / 100, nullptr,
-                   gov_centers);
+                   gov_centers, pcwaste ? &pcwaste->at(o) : nullptr);
   }
   output_type_iterate_end;
 
@@ -3023,8 +3024,10 @@ static inline void city_support(struct city *pcity)
 
    If 'workers_map' is set, only basic updates are needed.
  */
-void city_refresh_from_main_map(struct city *pcity, bool *workers_map,
-                                const std::vector<city *> &gov_centers)
+void city_refresh_from_main_map(
+    struct city *pcity, bool *workers_map,
+    const std::vector<city *> &gov_centers,
+    const std::array<cached_waste, O_LAST> *pcwaste)
 {
   if (workers_map == nullptr) {
     // do a full refresh
@@ -3041,7 +3044,7 @@ void city_refresh_from_main_map(struct city *pcity, bool *workers_map,
   get_worked_tile_output(pcity, pcity->citizen_base, workers_map);
   add_specialist_output(pcity, pcity->citizen_base);
 
-  set_city_production(pcity, gov_centers);
+  set_city_production(pcity, gov_centers, pcwaste);
   citizen_base_mood(pcity);
   /* Note that pollution is calculated before unhappy_city_check() makes
    * deductions for disorder; so a city in disorder still causes pollution */
@@ -3076,15 +3079,22 @@ void city_refresh_from_main_map(struct city *pcity, bool *workers_map,
    (not cumulative).
  */
 int city_waste(const struct city *pcity, Output_type_id otype, int total,
-               int *breakdown, const std::vector<city *> &gov_centers)
+               int *breakdown, const std::vector<city *> &gov_centers,
+               const cached_waste *pcwaste)
 {
   int penalty_waste = 0;
   int penalty_size = 0;  /* separate notradesize/fulltradesize from normal
                           * corruption */
   int total_eft = total; /* normal corruption calculated on total reduced by
                           * possible size penalty */
-  int waste_level =
-      get_city_output_bonus(pcity, get_output_type(otype), EFT_OUTPUT_WASTE);
+
+  cached_waste waste;
+  if (pcwaste) {
+    waste = *pcwaste;
+  } else {
+    waste.level = get_city_output_bonus(pcity, get_output_type(otype),
+                                        EFT_OUTPUT_WASTE);
+  }
   bool waste_all = false;
 
   if (otype == O_TRADE) {
@@ -3112,11 +3122,13 @@ int city_waste(const struct city *pcity, Output_type_id otype, int total,
   /* Distance-based waste.
    * Don't bother calculating if there's nothing left to lose. */
   if (total_eft > 0) {
-    int waste_by_dist = get_city_output_bonus(pcity, get_output_type(otype),
-                                              EFT_OUTPUT_WASTE_BY_DISTANCE);
-    int waste_by_rel_dist = get_city_output_bonus(
-        pcity, get_output_type(otype), EFT_OUTPUT_WASTE_BY_REL_DISTANCE);
-    if (waste_by_dist > 0 || waste_by_rel_dist > 0) {
+    if (!pcwaste) {
+      waste.by_distance = get_city_output_bonus(
+          pcity, get_output_type(otype), EFT_OUTPUT_WASTE_BY_DISTANCE);
+      waste.by_rel_distance = get_city_output_bonus(
+          pcity, get_output_type(otype), EFT_OUTPUT_WASTE_BY_REL_DISTANCE);
+    }
+    if (waste.by_distance > 0 || waste.by_rel_distance > 0) {
       const struct city *gov_center = nullptr;
       int min_dist = FC_INFINITY;
 
@@ -3142,12 +3154,12 @@ int city_waste(const struct city *pcity, Output_type_id otype, int total,
       if (gov_center == nullptr) {
         waste_all = true; // no gov center - no income
       } else {
-        waste_level += waste_by_dist * min_dist / 100;
-        if (waste_by_rel_dist > 0) {
+        waste.level += waste.by_distance * min_dist / 100;
+        if (waste.by_rel_distance > 0) {
           /* Multiply by 50 as an "standard size" for which
            * EFT_OUTPUT_WASTE_BY_DISTANCE and
            * EFT_OUTPUT_WASTE_BY_REL_DISTANCE would give same result. */
-          waste_level += waste_by_rel_dist * 50 * min_dist / 100
+          waste.level += waste.by_rel_distance * 50 * min_dist / 100
                          / MAX(wld.map.xsize, wld.map.ysize);
         }
       }
@@ -3157,16 +3169,18 @@ int city_waste(const struct city *pcity, Output_type_id otype, int total,
   if (waste_all) {
     penalty_waste = total_eft;
   } else {
-    int waste_pct = get_city_output_bonus(pcity, get_output_type(otype),
-                                          EFT_OUTPUT_WASTE_PCT);
+    if (!pcwaste) {
+      waste.relative = get_city_output_bonus(pcity, get_output_type(otype),
+                                             EFT_OUTPUT_WASTE_PCT);
+    }
 
     /* corruption/waste calculated only for the actually produced amount */
-    if (waste_level > 0) {
-      penalty_waste = total_eft * waste_level / 100;
+    if (waste.level > 0) {
+      penalty_waste = total_eft * waste.level / 100;
     }
 
     // bonus calculated only for the actually produced amount
-    penalty_waste -= penalty_waste * waste_pct / 100;
+    penalty_waste -= penalty_waste * waste.relative / 100;
 
     // Clip
     penalty_waste = MIN(MAX(penalty_waste, 0), total_eft);
