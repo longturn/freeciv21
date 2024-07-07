@@ -152,7 +152,8 @@ bool city_refresh(struct city *pcity)
 
   retval = city_map_update_radius_sq(pcity);
   city_units_upkeep(pcity); // update unit upkeep
-  city_refresh_from_main_map(pcity, nullptr);
+  city_refresh_from_main_map(pcity, nullptr,
+                             player_gov_centers(city_owner(pcity)));
   city_style_refresh(pcity);
 
   if (retval) {

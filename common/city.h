@@ -523,7 +523,8 @@ const char *get_output_name(Output_type_id output);
 struct output_type *get_output_type(Output_type_id output);
 Output_type_id output_type_by_identifier(const char *id);
 void add_specialist_output(const struct city *pcity, int *output);
-void set_city_production(struct city *pcity);
+void set_city_production(struct city *pcity,
+                         const std::vector<city *> &gov_centers);
 
 // properties
 
@@ -693,10 +694,11 @@ void city_remove_improvement(struct city *pcity,
                              const struct impr_type *pimprove);
 
 // city update functions
-void city_refresh_from_main_map(struct city *pcity, bool *workers_map);
+void city_refresh_from_main_map(struct city *pcity, bool *workers_map,
+                                const std::vector<city *> &gov_centers);
 
 int city_waste(const struct city *pcity, Output_type_id otype, int total,
-               int *breakdown, std::vector<city *> gov_centers);
+               int *breakdown, const std::vector<city *> &gov_centers);
 Specialist_type_id best_specialist(Output_type_id otype,
                                    const struct city *pcity);
 int get_final_city_output_bonus(const struct city *pcity,

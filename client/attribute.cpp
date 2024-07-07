@@ -71,7 +71,7 @@ void attribute_init() {}
 void attribute_free()
 {
   for (auto *at : qAsConst(*attribute_hash)) {
-    ::operator delete(at);
+    delete[] static_cast<char *>(at);
   }
   attribute_hash->clear();
 }

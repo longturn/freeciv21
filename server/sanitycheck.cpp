@@ -363,7 +363,8 @@ static void check_city_size(struct city *pcity, const char *file,
               city_specialists(pcity));
 
     city_repair_size(pcity, delta);
-    city_refresh_from_main_map(pcity, nullptr);
+    city_refresh_from_main_map(pcity, nullptr,
+                               player_gov_centers(city_owner(pcity)));
   }
 }
 
