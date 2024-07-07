@@ -358,6 +358,16 @@ bool is_allowed_city_name(struct player *pplayer, const char *cityname,
 {
   struct connection *pconn = conn_by_user(pplayer->username);
 
+  // Disallow leading, trailing, and double spaces
+  if (QString(cityname).simplified() != cityname) {
+    if (error_buf) {
+      fc_snprintf(error_buf, bufsz,
+                  _("City names may not contain leading, trailing, or "
+                    "consecutive spaces."));
+    }
+    return false;
+  }
+
   // Mode 1: A city name has to be unique for each player.
   if (CNM_PLAYER_UNIQUE == game.server.allowed_city_names
       && city_list_find_name(pplayer->cities, cityname)) {
