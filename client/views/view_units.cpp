@@ -75,7 +75,7 @@ units_view::units_view() : QWidget()
   ui.uwt_widget->setHorizontalHeaderLabels(slist);
   ui.uwt_widget->setSortingEnabled(true);
   ui.uwt_widget->setAlternatingRowColors(true);
-  ui.uwt_label->setText("Units Waiting:");
+  ui.uwt_group->setTitle(_("Units Waiting:"));
 
   // Add shield icon for shield upkeep column
   const QPixmap *spr =
@@ -385,9 +385,9 @@ void units_view::update_waiting()
   }
 
   if (max_row == 0) {
-    ui.uwt_label->setHidden(true);
-    ui.uwt_widget->setHidden(true);
+    ui.uwt_group->setVisible(false);
   } else {
+    ui.uwt_group->setVisible(true);
     ui.uwt_widget->setRowCount(max_row);
     ui.uwt_widget->resizeRowsToContents();
     ui.uwt_widget->resizeColumnsToContents();

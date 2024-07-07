@@ -18,34 +18,19 @@
     <rect>
      <x>30</x>
      <y>20</y>
-     <width>681</width>
-     <height>521</height>
+     <width>640</width>
+     <height>369</height>
     </rect>
    </property>
-   <layout class="QGridLayout" name="units_layout">
-    <item row="7" column="0" colspan="4">
-     <widget class="QTableWidget" name="uwt_widget">
-      <property name="editTriggers">
-       <set>QAbstractItemView::NoEditTriggers</set>
-      </property>
-      <property name="selectionMode">
-       <enum>QAbstractItemView::SingleSelection</enum>
-      </property>
-      <property name="selectionBehavior">
-       <enum>QAbstractItemView::SelectRows</enum>
-      </property>
-      <property name="showGrid">
+   <layout class="QGridLayout" name="units_layout" rowstretch="0,0,1">
+    <item row="1" column="0">
+     <widget class="QPushButton" name="find_but">
+      <property name="enabled">
        <bool>false</bool>
       </property>
-      <property name="sortingEnabled">
-       <bool>true</bool>
+      <property name="text">
+       <string>PushButton</string>
       </property>
-      <attribute name="horizontalHeaderStretchLastSection">
-       <bool>false</bool>
-      </attribute>
-      <attribute name="verticalHeaderVisible">
-       <bool>false</bool>
-      </attribute>
      </widget>
     </item>
     <item row="1" column="1">
@@ -68,16 +53,6 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
-     <widget class="QPushButton" name="find_but">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="text">
-       <string>PushButton</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="0" colspan="4">
      <widget class="QLabel" name="units_label">
       <property name="frameShape">
@@ -87,19 +62,6 @@
        <string>TextLabel</string>
       </property>
      </widget>
-    </item>
-    <item row="4" column="0">
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
     </item>
     <item row="1" column="3">
      <spacer name="horizontalSpacer">
@@ -114,7 +76,7 @@
       </property>
      </spacer>
     </item>
-    <item row="3" column="0" colspan="4">
+    <item row="2" column="0" colspan="4">
      <widget class="QTableWidget" name="units_widget">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -151,14 +113,38 @@
       </attribute>
      </widget>
     </item>
-    <item row="5" column="0" colspan="2">
-     <widget class="QLabel" name="uwt_label">
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+    <item row="2" column="4">
+     <widget class="QGroupBox" name="uwt_group">
+      <property name="title">
+       <string>GroupBox</string>
       </property>
-      <property name="text">
-       <string>TextLabel</string>
-      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QTableWidget" name="uwt_widget">
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::SingleSelection</enum>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
+         </property>
+         <property name="showGrid">
+          <bool>false</bool>
+         </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
+         <attribute name="horizontalHeaderStretchLastSection">
+          <bool>false</bool>
+         </attribute>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </item>
    </layout>
