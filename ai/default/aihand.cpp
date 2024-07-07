@@ -635,6 +635,8 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
     // We do celebrate!
     ai->celebrate = true;
 
+    auto gov_centers = player_gov_centers(pplayer);
+
     city_list_iterate(pplayer->cities, pcity)
     {
       auto cmr = cm_result_new(pcity);
@@ -645,7 +647,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
         cm_query_result(pcity, &cmp, cmr, false);
         if (cmr->found_a_valid) {
           apply_cmresult_to_city(pcity, cmr);
-          city_refresh_from_main_map(pcity, nullptr);
+          city_refresh_from_main_map(pcity, nullptr, gov_centers);
           if (!city_happy(pcity)) {
             CITY_LOG(LOG_ERROR, pcity, "is NOT happy when it should be!");
           }
@@ -656,12 +658,13 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
     }
     city_list_iterate_end;
   } else if (celebrate == AI_CELEBRATION_NO) {
+    auto gov_centers = player_gov_centers(pplayer);
     city_list_iterate(pplayer->cities, pcity)
     {
       /* KLUDGE: Must refresh to restore the original values which
        * were clobbered in cm_query_result(), after the national budget
        * were changed. */
-      city_refresh_from_main_map(pcity, nullptr);
+      city_refresh_from_main_map(pcity, nullptr, gov_centers);
     }
     city_list_iterate_end;
   }

@@ -2805,7 +2805,8 @@ int city_airlift_max(const struct city *pcity)
     This initializes the prod[] and waste[] arrays.  It assumes that
     the bonus[] and citizen_base[] arrays are alread built.
  */
-void set_city_production(struct city *pcity)
+void set_city_production(struct city *pcity,
+                         const std::vector<city *> &gov_centers)
 {
   /* Calculate city production!
    *
@@ -2863,7 +2864,6 @@ void set_city_production(struct city *pcity)
    * calculated, so if you had "science waste" it would not include taxed
    * science.  However waste is calculated after the bonuses are multiplied
    * on, so shield waste will include shield bonuses. */
-  auto gov_centers = player_gov_centers(city_owner(pcity));
   output_type_iterate(o)
   {
     pcity->waste[o] =
@@ -3023,7 +3023,8 @@ static inline void city_support(struct city *pcity)
 
    If 'workers_map' is set, only basic updates are needed.
  */
-void city_refresh_from_main_map(struct city *pcity, bool *workers_map)
+void city_refresh_from_main_map(struct city *pcity, bool *workers_map,
+                                const std::vector<city *> &gov_centers)
 {
   if (workers_map == nullptr) {
     // do a full refresh
@@ -3040,7 +3041,7 @@ void city_refresh_from_main_map(struct city *pcity, bool *workers_map)
   get_worked_tile_output(pcity, pcity->citizen_base, workers_map);
   add_specialist_output(pcity, pcity->citizen_base);
 
-  set_city_production(pcity);
+  set_city_production(pcity, gov_centers);
   citizen_base_mood(pcity);
   /* Note that pollution is calculated before unhappy_city_check() makes
    * deductions for disorder; so a city in disorder still causes pollution */
@@ -3075,7 +3076,7 @@ void city_refresh_from_main_map(struct city *pcity, bool *workers_map)
    (not cumulative).
  */
 int city_waste(const struct city *pcity, Output_type_id otype, int total,
-               int *breakdown, std::vector<city *> gov_centers)
+               int *breakdown, const std::vector<city *> &gov_centers)
 {
   int penalty_waste = 0;
   int penalty_size = 0;  /* separate notradesize/fulltradesize from normal

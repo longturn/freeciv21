@@ -15,6 +15,7 @@
 #include <QLoggingCategory>
 
 // utility
+#include "player.h"
 #include "shared.h"
 
 // common
@@ -199,6 +200,9 @@ struct cm_state {
 
   // the output of tiles the city works for free.
   std::array<int, O_LAST> city_center_output = {0};
+
+  // cached government centers to avoid looping through all cities
+  std::vector<city *> gov_centers;
 
   // the best known solution, and its fitness
   struct partial_solution best;
@@ -690,7 +694,7 @@ static void apply_solution(struct cm_state *state,
   }
 
   // Finally we must refresh the city to reset all the precomputed fields.
-  city_refresh_from_main_map(pcity, state->workers_map);
+  city_refresh_from_main_map(pcity, state->workers_map, state->gov_centers);
   fc_assert_ret(citizen_count == city_size_get(pcity));
 }
 
@@ -1604,7 +1608,7 @@ static void compute_max_stats_heuristic(const struct cm_state *state,
   }
   output_type_iterate_end;
 
-  set_city_production(pcity);
+  set_city_production(pcity, state->gov_centers);
   memcpy(production, pcity->prod, sizeof(pcity->prod));
 }
 
@@ -1847,6 +1851,9 @@ static struct cm_state *cm_state_init(struct city *pcity,
 
   get_tax_rates(pplayer, rates);
 
+  // cache government centers
+  state->gov_centers = player_gov_centers(pplayer);
+
   // For the heuristic, make sorted copies of the lattice
   output_type_iterate(stat_index)
   {
@@ -2086,7 +2093,7 @@ void cm_query_result(struct city *pcity, const struct cm_parameter *param,
   /* Refresh the city.  Otherwise the CM can give wrong results or just be
    * slower than necessary.  Note that cities are often passed in in an
    * unrefreshed state (which should probably be fixed). */
-  city_refresh_from_main_map(pcity, nullptr);
+  city_refresh_from_main_map(pcity, nullptr, state->gov_centers);
 
   cm_find_best_solution(state, param, result, negative_ok);
   cm_state_free(state);
