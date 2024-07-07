@@ -2,7 +2,7 @@
 
 name   = _("Floridian")
 plural = _("?plural:Floridians")
-groups = "American"
+groups = "Early Modern", "American"
 legend = _("Florida is the third most populous state of the USA\
  and is well known for its tourism. It was repeatedly colonized by\
  Spain and Great Britain before the \"Florida Patriots\" proclaimed\

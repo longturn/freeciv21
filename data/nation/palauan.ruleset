@@ -16,7 +16,7 @@ leaders = {
 }
 
 flag     = "palau"
-flag_alt = "-"
+flag_alt = "micronesia"
 style    = "Tropical"
 
 init_techs     = ""
