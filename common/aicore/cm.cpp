@@ -201,6 +201,9 @@ struct cm_state {
   // the output of tiles the city works for free.
   std::array<int, O_LAST> city_center_output = {0};
 
+  // specialist outputs
+  std::vector<std::array<int, O_LAST>> specialist_outputs = {};
+
   // cached government centers to avoid looping through all cities
   std::vector<city *> gov_centers;
 
@@ -698,7 +701,7 @@ static void apply_solution(struct cm_state *state,
 
   // Finally we must refresh the city to reset all the precomputed fields.
   city_refresh_from_main_map(pcity, state->workers_map, state->gov_centers,
-                             &state->waste);
+                             &state->waste, &state->specialist_outputs);
   fc_assert_ret(citizen_count == city_size_get(pcity));
 }
 
@@ -969,7 +972,7 @@ static void tile_type_lattice_add(struct tile_type_vector *lattice,
    Create lattice nodes for each type of specialist.  This adds a new
    tile_type for each specialist type.
  */
-static void init_specialist_lattice_nodes(struct tile_type_vector *lattice,
+static void init_specialist_lattice_nodes(struct cm_state *state,
                                           const struct city *pcity)
 {
   struct cm_tile_type type;
@@ -981,16 +984,21 @@ static void init_specialist_lattice_nodes(struct tile_type_vector *lattice,
    * the bonus for the specialist (if the city is allowed to use it) */
   specialist_type_iterate(i)
   {
+    std::array<int, O_LAST> outputs = {0};
+
     if (city_can_use_specialist(pcity, i)) {
       type.spec = i;
       output_type_iterate(output)
       {
-        type.production[output] = get_specialist_output(pcity, i, output);
+        outputs[output] = get_specialist_output(pcity, i, output);
+        type.production[output] = outputs[output];
       }
       output_type_iterate_end;
 
-      tile_type_lattice_add(lattice, &type, 0);
+      tile_type_lattice_add(&state->lattice, &type, 0);
     }
+
+    state->specialist_outputs.push_back(outputs);
   }
   specialist_type_iterate_end;
 }
@@ -1220,7 +1228,7 @@ static void init_tile_lattice(struct city *pcity, struct cm_state *state)
 
   // Add all the specialists into the lattice.
   if (state->parameter.allow_specialists) {
-    init_specialist_lattice_nodes(&state->lattice, pcity);
+    init_specialist_lattice_nodes(state, pcity);
   }
 
   // Set the lattice_depth fields, and clean up unreachable nodes.
