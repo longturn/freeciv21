@@ -441,10 +441,16 @@ void city_widget::clear_worlist()
  */
 void city_widget::buy()
 {
-  const auto saved_selection =
-      selected_cities; // Copy to avoid invalidations
+  auto saved_selection = selected_cities; // Copy to avoid invalidations
+
+  // Sort cheapest first
+  std::sort(saved_selection.begin(), saved_selection.end(),
+            [](const city *lhs, const city *rhs) {
+              return lhs->client.buy_cost < rhs->client.buy_cost;
+            });
+
+  // Buy
   for (auto *pcity : saved_selection) {
-    Q_ASSERT(pcity != nullptr);
     cityrep_buy(pcity);
   }
 }
