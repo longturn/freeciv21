@@ -106,7 +106,7 @@ static std::vector<fc_shortcut> default_shortcuts()
       {SC_GOTOAIRLIFT, fc_shortcut::keyboard, Qt::Key_T, Qt::AllButtons,
        Qt::NoModifier, _("Go to/Airlift to City...")},
       {SC_AUTOEXPLORE, fc_shortcut::keyboard, Qt::Key_X, Qt::AllButtons,
-       Qt::NoModifier, _("Auto Explore")},
+       Qt::ShiftModifier, _("Auto Explore")},
       {SC_PATROL, fc_shortcut::keyboard, Qt::Key_Q, Qt::AllButtons,
        Qt::NoModifier, _("Patrol")},
       {SC_UNSENTRY_TILE, fc_shortcut::keyboard,
