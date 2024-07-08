@@ -364,9 +364,6 @@ struct tileset {
   int replaced_hue; // -1 means no replacement
   struct color_system *color_system;
   struct extra_type_list *style_lists[ESTYLE_COUNT];
-
-  int num_preferred_themes;
-  char **preferred_themes;
 };
 
 struct tileset *tileset;
@@ -903,15 +900,6 @@ static bool check_tilespec_capabilities(struct section_file *file,
 static void tileset_free_toplevel(struct tileset *t)
 {
   int i;
-
-  if (t->preferred_themes) {
-    for (i = 0; i < t->num_preferred_themes; i++) {
-      delete[] t->preferred_themes[i];
-    }
-    delete[] t->preferred_themes;
-    t->preferred_themes = nullptr;
-  }
-  t->num_preferred_themes = 0;
 
   if (t->estyle_hash) {
     delete t->estyle_hash;
@@ -1646,7 +1634,6 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
   const char **spec_filenames;
   size_t num_layers;
   const char **layer_order = nullptr;
-  size_t num_preferred_themes;
   struct section_list *sections = nullptr;
   const char *file_capstr;
   bool duplicates_ok, is_hex;
@@ -2170,23 +2157,6 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
   delete[] spec_filenames;
 
   t->color_system = color_system_read(file);
-
-  // FIXME: remove this hack.
-  t->preferred_themes = const_cast<char **>(secfile_lookup_str_vec(
-      file, &num_preferred_themes, "tilespec.preferred_themes"));
-  if (num_preferred_themes <= 0) {
-    t->preferred_themes = const_cast<char **>(secfile_lookup_str_vec(
-        file, &num_preferred_themes, "tilespec.prefered_themes"));
-    if (num_preferred_themes > 0) {
-      qCWarning(deprecations_category,
-                "Entry tilespec.prefered_themes in tilespec."
-                " Use correct spelling tilespec.preferred_themes instead");
-    }
-  }
-  t->num_preferred_themes = num_preferred_themes;
-  for (i = 0; i < t->num_preferred_themes; i++) {
-    t->preferred_themes[i] = fc_strdup(t->preferred_themes[i]);
-  }
 
   secfile_check_unused(file);
   secfile_destroy(file);
