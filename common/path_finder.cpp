@@ -101,6 +101,7 @@ bool vertex::comparable(const vertex &other) const
  */
 void vertex::fill_probe(unit &probe) const
 {
+  probe.activity = ACTIVITY_IDLE; // Else it doesn't want to move.
   probe.tile = location;
   probe.transporter = loaded;
   probe.client.transported_by = loaded ? loaded->id : -1;
