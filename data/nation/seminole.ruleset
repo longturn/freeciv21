@@ -44,7 +44,7 @@ style = "Celtic"
 init_techs=""
 init_buildings=""
 init_units=""
-civilwar_nations="Muskogee", "Chickasaw", "Choctaw" 
+civilwar_nations="muskogee", "chickasaw", "choctaw", "floridian" 
 
 cities =
 ; principal town

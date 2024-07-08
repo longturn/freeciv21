@@ -181,6 +181,7 @@ install(
   finnish.ruleset
   flemish.ruleset
   florentine.ruleset
+  floridian.ruleset
   formosan.ruleset
   franconian.ruleset
   frankish.ruleset
@@ -296,6 +297,7 @@ install(
   liburnian.ruleset
   libyan.ruleset
   liechtensteiner.ruleset
+  liege.ruleset
   ligurian.ruleset
   lipkatatar.ruleset
   lippe.ruleset
@@ -391,6 +393,7 @@ install(
   paeonian.ruleset
   pakistani.ruleset
   palatinate.ruleset
+  palauan.ruleset
   palestinian.ruleset
   palmyrene.ruleset
   panamanian.ruleset

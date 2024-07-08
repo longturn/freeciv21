@@ -182,6 +182,7 @@ artists = "
    Finland		SKopp (Wikimedia Commons)
    Flanders		Cedric de Launois (Open Clip Art)
    Florence		Kanchelskis (Wikimedia Commons)
+   Florida              Smthngnw (Wikipedia Commons)
    Formosan		resodan
    France (old)		Patricia Fidi
    France		Tobias Jakobs
@@ -312,6 +313,7 @@ artists = "
    Lorraine		J.M. Maalderink
    Louisiana            Fry1989 (Wikimedia Commons)
    Luhansk              Revolver 45 (Wikimedia Commons)
+   Luik			Jed (Wikimedia Commons)
    Luna			Daniel Markstedt
    Lusatia		J.M. Maalderink
    Luwian		Andrzej G.
@@ -404,6 +406,7 @@ artists = "
    Oz			Daniel Markstedt
    Pakistan		Lauris Kaplinski
    Palatinate		Madden (Wikimedia Commons)
+   Palau		Gabbe (Wikimedia Commons)
    Palestine		J.M. Maalderink
    Palmyra		JB Grout
    Panama		J.M. Maalderink
@@ -769,6 +772,7 @@ sprites =
 		"f.finland", "tilesets/flags/finland"
 		"f.flanders", "tilesets/flags/flanders"
 		"f.florence", "tilesets/flags/florence"
+		"f.florida", "tilesets/flags/florida"
 		"f.formosan", "tilesets/flags/formosan"
 		"f.france", "tilesets/flags/france"
 		"f.france_old", "tilesets/flags/france_old"
@@ -899,6 +903,7 @@ sprites =
 		"f.lorraine", "tilesets/flags/lorraine"
 		"f.louisiana", "tilesets/flags/louisiana"
 		"f.luhansk", "tilesets/flags/luhansk"
+		"f.luik", "tilesets/flags/luik"
 		"f.luna", "tilesets/flags/luna"
 		"f.lusatia", "tilesets/flags/lusatia"
 		"f.luwian", "tilesets/flags/luwian"
@@ -993,6 +998,7 @@ sprites =
 		"f.pakistan", "tilesets/flags/pakistan"
 		"f.palatinate", "tilesets/flags/palatinate"
 		"f.palestine", "tilesets/flags/palestine"
+		"f.palau", "tilesets/flags/palau"
 		"f.palmyra", "tilesets/flags/palmyra"
 		"f.panama", "tilesets/flags/panama"
 		"f.papua_newguinea", "tilesets/flags/papua_newguinea"

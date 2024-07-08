@@ -62,7 +62,7 @@ init_techs=""
 init_buildings=""
 init_units=""
 
-civilwar_nations = "confederate", "texan", "alaskan", "vermont", "californian", "louisianan", "muscogee"
+civilwar_nations = "confederate", "texan", "alaskan", "vermont", "californian", "louisianan", "floridian", "muscogee"
 
 cities =
  "Washington (ocean, river, swamp, !desert)", 
