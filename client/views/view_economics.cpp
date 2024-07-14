@@ -185,8 +185,13 @@ void eco_report::update_report()
             .arg(QString::number(tax),
                  QString::number(building_total + unit_total));
   ui.eco_label->setText(buf);
+
+  // Resize all columns except the last (which we want to wrap).
+  for (int i = 0; i < ui.eco_widget->columnCount() - 1; ++i) {
+    ui.eco_widget->resizeColumnToContents(i);
+  }
+  // Resize rows to let text wrap around.
   ui.eco_widget->resizeRowsToContents();
-  ui.eco_widget->resizeColumnsToContents();
 }
 
 /**
