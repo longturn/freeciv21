@@ -37,8 +37,6 @@ void get_economy_report_data(struct improvement_entry *entries,
   *num_entries_used = 0;
   *total_cost = 0;
   *total_income = 0;
-  QStringList redundant_cities;
-  redundant_cities.clear();
   QString str;
 
   if (nullptr == client.conn.playing) {
@@ -48,14 +46,14 @@ void get_economy_report_data(struct improvement_entry *entries,
   improvement_iterate(pimprove)
   {
     if (is_improvement(pimprove)) {
-      int count = 0, redundant = 0, cost = 0;
+      QStringList redundant_cities;
+      int count = 0, cost = 0;
       city_list_iterate(client.conn.playing->cities, pcity)
       {
         if (city_has_building(pcity, pimprove)) {
           count++;
           cost += city_improvement_upkeep(pcity, pimprove);
           if (is_improvement_redundant(pcity, pimprove)) {
-            redundant++;
             redundant_cities.append(pcity->name);
           }
         }
@@ -66,7 +64,7 @@ void get_economy_report_data(struct improvement_entry *entries,
         continue;
       }
 
-      if (redundant == 0) {
+      if (redundant_cities.isEmpty()) {
         str = (_("None"));
       } else {
         // Convert the string list we built to a standard string for display.
@@ -75,7 +73,7 @@ void get_economy_report_data(struct improvement_entry *entries,
 
       entries[*num_entries_used].type = pimprove;
       entries[*num_entries_used].count = count;
-      entries[*num_entries_used].redundant = redundant;
+      entries[*num_entries_used].redundant = redundant_cities.size();
       entries[*num_entries_used].total_cost = cost;
       entries[*num_entries_used].cost = cost / count;
       entries[*num_entries_used].city_names = str;
