@@ -893,17 +893,17 @@ How do I take over an idle player that was assigned to me?
 
 Same procedure as `How do I take over an AI player?`_ above.
 
-Does capturing work like MP2?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Does capturing work like Freeciv-Web?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Unit capturing is ruleset defined. Capturing in :term:`LTT` works slightly differently than in the :term:`MP2`
-ruleset. You can capture any “capturable” unit with a “capturer” unit, if the target is alone on a tile. Units
+ruleset used at Freeciv-Web.
+You can capture any “capturable” unit with a “capturer” unit, if the target is alone on a tile. Units
 that are “capturable” have a mention of this in their help text. Units that are “capturers” also have a
 mention of this in their help text.
 
 .. Tip::
-  Due to the game interface mechanics, you can capture units from boats. This cannot be done using the regular
-  :term:`Goto` command, but has to be done using the number pad on your keyboard.
+  You can also capture units from boats. Guard your coastal workers.
 
 
 Where do I go to see the rules for a game? Like how big a victory alliance can be?

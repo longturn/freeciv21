@@ -88,6 +88,7 @@ community discussions.
     Multiplayer 2 Ruleset
 
     There are many MP2 :ref:`rulesets <modding-rulesets>` and they are numbered: MP2a, MP2b, MP2c, etc.
+    They are not compatible with Freeciv21.
 
   MP
     Move Point(s)
