@@ -535,7 +535,7 @@ Multiplayer Menu
 ================
 
 The :guilabel:`Multiplayer` menu has a collection of functions to aid certain multiplayer games. Many of
-the options are specifically tailored to the MP2c and WarCiv rulesets. It has the following options:
+the options are specifically tailored to fast multiplayer games. It has the following options:
 
 Delayed Go To
     Give a unit orders to move at a specific time in the turn. This assumes that the turn is time based.
