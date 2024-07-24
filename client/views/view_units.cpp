@@ -40,10 +40,10 @@ units_view::units_view() : QWidget()
 {
   ui.setupUi(this);
 
-  QFont font = ui.units_widget->horizontalHeader()->font();
+  QFont font = ui.units_table->horizontalHeader()->font();
   font.setWeight(QFont::Bold);
-  ui.units_widget->horizontalHeader()->setFont(font);
-  ui.uwt_widget->horizontalHeader()->setFont(font);
+  ui.units_table->horizontalHeader()->setFont(font);
+  ui.uwt_table->horizontalHeader()->setFont(font);
 
   // Configure the units table
   QStringList slist;
@@ -51,10 +51,10 @@ units_view::units_view() : QWidget()
         << _("⚒  In Progress") << _("⚔  Active") << _("Shield Upkeep")
         << _("Food Upkeep") << _("Gold Upkeep");
   ui.units_label->setText(QString(_("Units:")));
-  ui.units_widget->setColumnCount(slist.count());
-  ui.units_widget->setHorizontalHeaderLabels(slist);
-  ui.units_widget->setSortingEnabled(false);
-  ui.units_widget->setAlternatingRowColors(true);
+  ui.units_table->setColumnCount(slist.count());
+  ui.units_table->setHorizontalHeaderLabels(slist);
+  ui.units_table->setSortingEnabled(false);
+  ui.units_table->setAlternatingRowColors(true);
   ui.upg_but->setText(_("Upgrade"));
   ui.upg_but->setToolTip(_("Upgrade selected unit."));
   ui.upg_but->setDisabled(true);
@@ -70,28 +70,34 @@ units_view::units_view() : QWidget()
   slist.clear();
   slist << _("Type") << _("Name") << _("Location") << _("Time Left")
         << _("Id");
-  ui.uwt_widget->setColumnCount(slist.count());
-  ui.uwt_widget->setColumnHidden(4, true);
-  ui.uwt_widget->setHorizontalHeaderLabels(slist);
-  ui.uwt_widget->setSortingEnabled(true);
-  ui.uwt_widget->setAlternatingRowColors(true);
+  ui.uwt_table->setColumnCount(slist.count());
+  ui.uwt_table->setColumnHidden(4, true);
+  ui.uwt_table->setHorizontalHeaderLabels(slist);
+  ui.uwt_table->setSortingEnabled(true);
+  ui.uwt_table->setAlternatingRowColors(true);
   ui.uwt_label->setText("Units Waiting:");
+
+  // Configure the splitter
+  /* HACK: Why do we need to set the strech factor to 2:1
+   * in order to achieve a split that resembles 1:1? */
+  ui.splitter->setStretchFactor(0, 2);
+  ui.splitter->setStretchFactor(1, 1);
 
   // Add shield icon for shield upkeep column
   const QPixmap *spr =
       tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "upkeep.shield",
                                   "citybar.shields", "", "", false);
-  ui.units_widget->horizontalHeaderItem(5)->setIcon(crop_sprite(spr));
+  ui.units_table->horizontalHeaderItem(5)->setIcon(crop_sprite(spr));
 
   // Add food icon for food upkeep column
   spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "upkeep.food",
                                     "citybar.food", "", "", false);
-  ui.units_widget->horizontalHeaderItem(6)->setIcon(crop_sprite(spr));
+  ui.units_table->horizontalHeaderItem(6)->setIcon(crop_sprite(spr));
 
   // Add gold icon for gold upkeep column
   spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "upkeep.gold",
                                     "citybar.trade", "", "", false);
-  ui.units_widget->horizontalHeaderItem(7)->setIcon(crop_sprite(spr));
+  ui.units_table->horizontalHeaderItem(7)->setIcon(crop_sprite(spr));
 
   connect(ui.upg_but, &QAbstractButton::pressed, this,
           &units_view::upgrade_units);
@@ -99,7 +105,7 @@ units_view::units_view() : QWidget()
           &units_view::find_nearest);
   connect(ui.disband_but, &QAbstractButton::pressed, this,
           &units_view::disband_units);
-  connect(ui.units_widget->selectionModel(),
+  connect(ui.units_table->selectionModel(),
           &QItemSelectionModel::selectionChanged, this,
           &units_view::selection_changed);
   setLayout(ui.units_layout);
@@ -127,8 +133,8 @@ void units_view::update_view()
   QFontMetrics fm(f);
   int h = fm.height() + 24;
 
-  ui.units_widget->setRowCount(0);
-  ui.units_widget->clearContents();
+  ui.units_table->setRowCount(0);
+  ui.units_table->clearContents();
 
   int entries_used = 0; // Position in the units array
   struct unit_view_entry unit_entries[U_LAST];
@@ -149,7 +155,7 @@ void units_view::update_view()
     const struct unit_type *putype = pentry->type;
     cid id = cid_encode_unit(putype);
 
-    ui.units_widget->insertRow(max_row);
+    ui.units_table->insertRow(max_row);
     for (int j = 0; j < 8; j++) {
       QTableWidgetItem *item = new QTableWidgetItem;
       switch (j) {
@@ -162,7 +168,7 @@ void units_view::update_view()
           QLabel *lbl = new QLabel;
           lbl->setPixmap(QPixmap(sprite));
           lbl->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
-          ui.units_widget->setCellWidget(i, j, lbl);
+          ui.units_table->setCellWidget(i, j, lbl);
         }
         item->setData(Qt::UserRole, id);
         break;
@@ -224,14 +230,14 @@ void units_view::update_view()
         total_gold += pentry->gold_cost;
         break;
       }
-      ui.units_widget->setItem(max_row, j, item);
+      ui.units_table->setItem(max_row, j, item);
     }
     max_row++;
   }
 
   // Add a "footer" to the table showing the totals.
-  ui.units_widget->setRowCount(max_row);
-  ui.units_widget->insertRow(max_row);
+  ui.units_table->setRowCount(max_row);
+  ui.units_table->insertRow(max_row);
   for (int j = 0; j < 8; j++) {
     QTableWidgetItem *item_totals = new QTableWidgetItem;
     switch (j) {
@@ -267,21 +273,18 @@ void units_view::update_view()
       item_totals->setText(QString(_("------\n%1")).arg(total_gold));
       break;
     }
-    ui.units_widget->setItem(max_row, j, item_totals);
+    ui.units_table->setItem(max_row, j, item_totals);
   }
 
   if (max_row == 0) {
-    ui.units_label->setHidden(true);
     ui.units_widget->setHidden(true);
-    ui.find_but->setHidden(true);
-    ui.upg_but->setHidden(true);
-    ui.disband_but->setHidden(true);
   } else {
-    ui.units_widget->resizeRowsToContents();
-    ui.units_widget->resizeColumnsToContents();
-    ui.units_widget->horizontalHeader()->resizeSections(
+    ui.units_widget->setHidden(false);
+    ui.units_table->resizeRowsToContents();
+    ui.units_table->resizeColumnsToContents();
+    ui.units_table->horizontalHeader()->resizeSections(
         QHeaderView::ResizeToContents);
-    ui.units_widget->verticalHeader()->setSectionResizeMode(
+    ui.units_table->verticalHeader()->setSectionResizeMode(
         QHeaderView::ResizeToContents);
   }
 
@@ -307,7 +310,7 @@ void units_view::update_waiting()
   int entries_used = 0;
   get_units_waiting_data(unit_entries, &entries_used);
 
-  max_row = ui.uwt_widget->rowCount();
+  max_row = ui.uwt_table->rowCount();
 
   // Remember all units initially in the table. This allows us to distinguish
   // between known units we need to update and new units we need to add to
@@ -315,7 +318,7 @@ void units_view::update_waiting()
   // items are the units we need to remove from the table.
   QMap<QString, QTableWidgetItem *> ids_in_table;
   for (int r = 0; r < max_row; r++) {
-    QTableWidgetItem *item = ui.uwt_widget->item(r, 4);
+    QTableWidgetItem *item = ui.uwt_table->item(r, 4);
     ids_in_table[item->text()] = item;
   }
 
@@ -328,7 +331,7 @@ void units_view::update_waiting()
 
     if (!ids_in_table.contains(unit_id)) {
       // Create a new row for the unit
-      ui.uwt_widget->insertRow(max_row);
+      ui.uwt_table->insertRow(max_row);
       for (int j = 0; j < 5; j++) {
         auto item = new QTableWidgetItem;
         switch (j) {
@@ -341,7 +344,7 @@ void units_view::update_waiting()
             QLabel *lbl = new QLabel;
             lbl->setPixmap(QPixmap(sprite));
             lbl->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
-            ui.uwt_widget->setCellWidget(i, j, lbl);
+            ui.uwt_table->setCellWidget(i, j, lbl);
           }
           item->setData(Qt::UserRole, id);
           break;
@@ -366,13 +369,13 @@ void units_view::update_waiting()
           item->setText(QString("%1").arg(unit_id));
           break;
         }
-        ui.uwt_widget->setItem(max_row, j, item);
+        ui.uwt_table->setItem(max_row, j, item);
       }
       max_row++;
     } else {
       // Unit is already in table, update the corresponding row.
       int row = ids_in_table[unit_id]->row();
-      ui.uwt_widget->item(row, 3)->setText(unit_waittime);
+      ui.uwt_table->item(row, 3)->setText(unit_waittime);
       ids_in_table.remove(unit_id);
     }
   }
@@ -380,20 +383,20 @@ void units_view::update_waiting()
   // Delete units initially in the table, but not waiting anymore.
   for (int i = 0; i < ids_in_table.values().size(); i++) {
     int row = ids_in_table.values()[i]->row();
-    ui.uwt_widget->removeRow(row);
+    ui.uwt_table->removeRow(row);
     max_row--;
   }
 
   if (max_row == 0) {
-    ui.uwt_label->setHidden(true);
     ui.uwt_widget->setHidden(true);
   } else {
-    ui.uwt_widget->setRowCount(max_row);
-    ui.uwt_widget->resizeRowsToContents();
-    ui.uwt_widget->resizeColumnsToContents();
-    ui.uwt_widget->horizontalHeader()->resizeSections(
+    ui.uwt_widget->setHidden(false);
+    ui.uwt_table->setRowCount(max_row);
+    ui.uwt_table->resizeRowsToContents();
+    ui.uwt_table->resizeColumnsToContents();
+    ui.uwt_table->horizontalHeader()->resizeSections(
         QHeaderView::ResizeToContents);
-    ui.uwt_widget->verticalHeader()->setSectionResizeMode(
+    ui.uwt_table->verticalHeader()->setSectionResizeMode(
         QHeaderView::ResizeToContents);
   }
 }
@@ -418,18 +421,18 @@ void units_view::selection_changed(const QItemSelection &sl,
   }
 
   curr_row = sl.indexes().at(0).row();
-  max_row = ui.units_widget->rowCount() - 1;
+  max_row = ui.units_table->rowCount() - 1;
   if (curr_row >= 0 && curr_row <= max_row) {
-    itm = ui.units_widget->item(curr_row, 0);
+    itm = ui.units_table->item(curr_row, 0);
     qvar = itm->data(Qt::UserRole);
     uid = qvar.toInt();
     selected = cid_decode(uid);
-    counter = ui.units_widget->item(curr_row, 4)->text().toInt();
+    counter = ui.units_table->item(curr_row, 4)->text().toInt();
     if (counter > 0) {
       ui.disband_but->setDisabled(false);
       ui.find_but->setDisabled(false);
     }
-    upg = ui.units_widget->item(curr_row, 2)->text();
+    upg = ui.units_table->item(curr_row, 2)->text();
     if (upg != "-") {
       ui.upg_but->setDisabled(false);
     }
