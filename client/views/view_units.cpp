@@ -78,10 +78,14 @@ units_view::units_view() : QWidget()
   ui.uwt_label->setText("Units Waiting:");
 
   // Configure the splitter
-  /* HACK: Why do we need to set the strech factor to 2:1
-   * in order to achieve a split that resembles 1:1? */
-  ui.splitter->setStretchFactor(0, 2);
-  ui.splitter->setStretchFactor(1, 1);
+  // Configuring the splitter to distribute its children equally, is more
+  // complicated than one might expect. We need to set the child widgets
+  // sizes to the same value, using the QSplitters setSizes method. As QT
+  // will still enforce the minimum size policy, we have to base this value
+  // on the maximum minimum size of the children.
+  auto equalHeight = std::max(ui.units_widget->minimumSizeHint().height(),
+                              ui.uwt_widget->minimumSizeHint().height());
+  ui.splitter->setSizes({equalHeight, equalHeight});
 
   // Add shield icon for shield upkeep column
   const QPixmap *spr =
