@@ -22,6 +22,8 @@
 #include <QScrollArea>
 #include <QTimer>
 #include <QToolTip>
+#include <qabstractslider.h>
+#include <qscrollbar.h>
 
 // common
 #include "game.h"
@@ -301,6 +303,9 @@ science_report::science_report() : QWidget()
   scroll->setPalette(QPalette(QColor(215, 215, 215)));
   scroll->setWidget(res_diag);
   scroll->setSizePolicy(size_expanding_policy);
+  scroll->horizontalScrollBar()->setValue(
+      science_report::horizontalScrollValue);
+  scroll->verticalScrollBar()->setValue(science_report::verticalScrollValue);
   sci_layout->addWidget(scroll, 4, 0, 1, 10);
 
   QObject::connect(researching_combo,
@@ -313,6 +318,16 @@ science_report::science_report() : QWidget()
   QObject::connect(goal_combo,
                    QOverload<int>::of(&QComboBox::currentIndexChanged), this,
                    &science_report::goal_tech_changed);
+
+  QScrollBar *horizontalScrollBar = scroll->horizontalScrollBar();
+  QObject::connect(horizontalScrollBar,
+                   QOverload<int>::of(&QAbstractSlider::valueChanged), this,
+                   &science_report::setHorizontalScrollValue);
+
+  QScrollBar *verticalScrollBar = scroll->verticalScrollBar();
+  QObject::connect(verticalScrollBar,
+                   QOverload<int>::of(&QAbstractSlider::valueChanged), this,
+                   &science_report::setVerticalScrollValue);
 
   setLayout(sci_layout);
 }
@@ -568,6 +583,24 @@ void science_report::push_research()
     auto research = research_get(client_player());
     dsend_packet_player_research(&client.conn, research->researching);
   }
+}
+
+/**
+   Set the backing field for the horizontal scroll value. This is used
+   to restore the scroll state when the view is reinstantiated.
+*/
+void science_report::setHorizontalScrollValue(int value)
+{
+  science_report::horizontalScrollValue = value;
+}
+
+/**
+   Set the backing field for the vertical scroll value. This is used
+   to restore the scroll state when the view is reinstantiated.
+*/
+void science_report::setVerticalScrollValue(int value)
+{
+  science_report::verticalScrollValue = value;
 }
 
 /**
