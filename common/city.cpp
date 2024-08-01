@@ -2249,7 +2249,7 @@ void add_specialist_output(
     if (count > 0) {
       output_type_iterate(stat_index)
       {
-        int amount = pcsoutputs
+        int amount = pcsoutputs && !pcsoutputs->empty()
                          ? pcsoutputs->at(sp)[stat_index]
                          : get_specialist_output(pcity, sp, stat_index);
 
