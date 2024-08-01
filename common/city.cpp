@@ -2878,7 +2878,8 @@ void set_city_production(struct city *pcity,
   {
     pcity->waste[o] =
         city_waste(pcity, o, pcity->prod[o] * pcity->bonus[o] / 100, nullptr,
-                   gov_centers, pcwaste ? &pcwaste->at(o) : nullptr);
+                   gov_centers,
+                   pcwaste && !pcwaste->empty() ? &pcwaste->at(o) : nullptr);
   }
   output_type_iterate_end;
 
