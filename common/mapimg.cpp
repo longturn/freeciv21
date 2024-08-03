@@ -31,6 +31,7 @@ received a copy of the GNU General Public License along with Freeciv21.
 
 // Qt
 #include <QImage>
+#include <QImageWriter>
 #include <QPainter>
 
 // == image colors ==
@@ -174,19 +175,6 @@ static void base_coor_isohexa(struct img *pimg, int *base_x, int *base_y,
 
 BV_DEFINE(bv_mapdef_arg, MAPDEF_COUNT);
 
-// image format
-#define SPECENUM_NAME imageformat
-#define SPECENUM_BITWISE
-#define SPECENUM_VALUE0 IMGFORMAT_GIF
-#define SPECENUM_VALUE0NAME "gif"
-#define SPECENUM_VALUE1 IMGFORMAT_PNG
-#define SPECENUM_VALUE1NAME "png"
-#define SPECENUM_VALUE2 IMGFORMAT_PPM
-#define SPECENUM_VALUE2NAME "ppm"
-#define SPECENUM_VALUE3 IMGFORMAT_JPG
-#define SPECENUM_VALUE3NAME "jpg"
-#include "specenum_gen.h"
-
 // player definitions
 #define SPECENUM_NAME show_player
 #define SPECENUM_VALUE0 SHOW_NONE
@@ -225,6 +213,8 @@ BV_DEFINE(bv_mapdef_arg, MAPDEF_COUNT);
 #define MAX_LEN_MAPARG MAX_LEN_MAPDEF
 #define MAX_NUM_MAPIMG 10
 
+const static auto MAPIMG_DEFAULT_IMGFORMAT = QByteArrayLiteral("png");
+
 static inline bool mapimg_initialised();
 static bool mapimg_test(int id);
 static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
@@ -239,7 +229,7 @@ struct mapdef {
   char maparg[MAX_LEN_MAPARG];
   char error[MAX_LEN_MAPDEF];
   enum mapimg_status status;
-  enum imageformat format;
+  QByteArray format;
   int zoom;
   int turns;
   bool layers[MAPIMG_LAYER_COUNT];
@@ -314,30 +304,13 @@ static void img_plot_tile(struct img *pimg, const struct tile *ptile,
 static bool img_save(const struct img *pimg, const char *mapimgfile,
                      const char *path);
 static bool img_save_qt(const struct img *pimg, const char *mapimgfile);
-static bool img_filename(const char *mapimgfile, enum imageformat format,
+static bool img_filename(const char *mapimgfile, const QByteArray &format,
                          char *filename, size_t filename_len);
 static void img_createmap(struct img *pimg);
 
 // == image toolkits ==
 typedef bool (*img_save_func)(const struct img *pimg,
                               const char *mapimgfile);
-
-struct toolkit {
-  enum imageformat format_default;
-  int formats;
-};
-
-#define GEN_TOOLKIT(_format_default, _formats) {_format_default, _formats},
-
-static struct toolkit img_toolkits[] = {
-    GEN_TOOLKIT(IMGFORMAT_PNG, IMGFORMAT_PNG)};
-
-static const int img_toolkits_count = ARRAY_SIZE(img_toolkits);
-
-#define MAPIMG_DEFAULT_IMGFORMAT IMGFORMAT_PNG
-#define MAPIMG_DEFAULT_IMGTOOL IMGTOOL_QT
-
-static const struct toolkit *img_toolkit_get();
 
 // == logging ==
 #define MAX_LEN_ERRORBUF 1024
@@ -493,7 +466,7 @@ char *mapimg_help(const char *cmdname)
   enum show_player showplr;
   enum mapimg_layer layer;
   QString defaults[MAPDEF_COUNT];
-  QString str_format, str_showplr, help;
+  QString str_showplr, help;
   struct mapdef *pmapdef;
 
   if (help.length() > 0) {
@@ -502,22 +475,8 @@ char *mapimg_help(const char *cmdname)
   }
   pmapdef = mapdef_new(false);
 
-  {
-    enum imageformat format;
-    const struct toolkit *toolkit = img_toolkit_get();
-
-    str_format += QStringLiteral(" - ");
-
-    const char *separator = "";
-    for (format = imageformat_begin(); format != imageformat_end();
-         format = imageformat_next(format)) {
-      if (toolkit->formats & format) {
-        str_format += QStringLiteral("%1'%2'").arg(separator,
-                                                   imageformat_name(format));
-        separator = ", ";
-      }
-    }
-  }
+  auto str_format =
+      QImageWriter::supportedImageFormats().join(QByteArrayLiteral(", "));
 
   // Possible 'show' settings.
   for (showplr = show_player_begin(); showplr != show_player_end();
@@ -539,7 +498,7 @@ char *mapimg_help(const char *cmdname)
 
   // Default values.
   defaults[MAPDEF_FORMAT] =
-      QStringLiteral("(%2)").arg(imageformat_name(pmapdef->format));
+      QStringLiteral("(%2)").arg(QString(MAPIMG_DEFAULT_IMGFORMAT));
   defaults[MAPDEF_SHOW] =
       QStringLiteral("(%1)").arg(show_player_name(pmapdef->player.show));
   defaults[MAPDEF_TURNS] =
@@ -592,8 +551,7 @@ char *mapimg_help(const char *cmdname)
             "map=<map>              %5 which map layers to draw\n"
             "\n"
             "<format> = use image format <format>. The following formats "
-            "are "
-            "compiled in:\n"
+            "are available:\n"
             "%6\n"
             "\n"
             "<show> determines which players are represented and how many "
@@ -612,7 +570,7 @@ char *mapimg_help(const char *cmdname)
             "Examples of <mapdef>:\n"
             " 'zoom=1:map=tcub:show=all:format=png'\n"
             " 'zoom=2:map=tcub:show=each:format=png'\n"
-            " 'zoom=1:map=tcub:show=plrname:plrname=Otto:format=gif'\n"
+            " 'zoom=1:map=tcub:show=plrname:plrname=Otto:format=bmp'\n"
             " 'zoom=3:map=cu:show=plrbv:plrbv=010011:format=jpg'\n"
             " 'zoom=1:map=t:show=none:format=jpg'"))
           .arg(defaults[MAPDEF_FORMAT], -10)
@@ -771,32 +729,10 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
   switch (arg) {
   case MAPDEF_FORMAT:
     // file format
-    {
-      QStringList formatargs;
-      enum imageformat format;
-
-      // get format options
-      formatargs = QString(val).split(QStringLiteral("|"));
-      if (formatargs.count() == 2) {
-        format =
-            imageformat_by_name(qUtf8Printable(formatargs.at(1)), strcmp);
-
-        if (imageformat_is_valid(format)) {
-          const struct toolkit *toolkit = img_toolkit_get();
-
-          if (toolkit && (toolkit->formats & format)) {
-            pmapdef->format = format;
-          }
-        }
-      } else {
-        // Only one argument to format.
-        // toolkit defined
-        const struct toolkit *toolkit = img_toolkit_get();
-
-        if (toolkit) {
-          pmapdef->format = toolkit->format_default;
-        }
-      }
+    if (QImageWriter::supportedImageFormats().contains(val)) {
+      pmapdef->format = val;
+    } else {
+      pmapdef->format = MAPIMG_DEFAULT_IMGFORMAT;
     }
     break;
 
@@ -1035,7 +971,7 @@ bool mapimg_show(int id, char *str, size_t str_len, bool detail)
     cat_snprintf(str, str_len, _("  - file name string:         %s\n"),
                  mapimg_generate_name(pmapdef));
     cat_snprintf(str, str_len, _("  - image format:             %s\n"),
-                 imageformat_name(pmapdef->format));
+                 MAPIMG_DEFAULT_IMGFORMAT.data());
     cat_snprintf(str, str_len, _("  - zoom factor:              %d\n"),
                  pmapdef->zoom);
     cat_snprintf(str, str_len, _("  - show area within borders: %s\n"),
@@ -1287,28 +1223,22 @@ bool mapimg_colortest(const char *savename, const char *path)
 #undef SIZE_X
 #undef SIZE_Y
 
-    enum imageformat format;
-    const struct toolkit *toolkit = img_toolkit_get();
+  for (const auto &format : QImageWriter::supportedImageFormats()) {
+    char buf[128];
 
-    for (format = imageformat_begin(); format != imageformat_end();
-         format = imageformat_next(format)) {
-      if (toolkit->formats & format) {
-        char buf[128];
+    // Set the image format.
+    pmapdef->format = format;
 
-        // Set the image format.
-        pmapdef->format = format;
+    fc_snprintf(buf, sizeof(buf), "colortest");
+    // filename for color test
+    generate_save_name(savename, mapimgfile, sizeof(mapimgfile), buf);
 
-        fc_snprintf(buf, sizeof(buf), "colortest");
-        // filename for color test
-        generate_save_name(savename, mapimgfile, sizeof(mapimgfile), buf);
-
-        if (!img_save(pimg, mapimgfile, path)) {
-          /* If one of the mapimg format/toolkit combination fail, return
-           * FALSE, i.e. an error occurred. */
-          ret = false;
-        }
-      }
+    if (!img_save(pimg, mapimgfile, path)) {
+      /* If one of the mapimg format/toolkit combination fail, return
+       * FALSE, i.e. an error occurred. */
+      ret = false;
     }
+  }
 
   img_destroy(pimg);
   mapdef_destroy(pmapdef);
@@ -1359,8 +1289,7 @@ static bool mapimg_def2str(struct mapdef *pmapdef, char *str, size_t str_len)
   }
 
   str[0] = '\0';
-  cat_snprintf(str, str_len,
-               "format=%s:", imageformat_name(pmapdef->format));
+  cat_snprintf(str, str_len, "format=%s:", pmapdef->format.data());
   cat_snprintf(str, str_len, "turns=%d:", pmapdef->turns);
 
   i = 0;
@@ -1620,11 +1549,6 @@ static void mapdef_destroy(struct mapdef *pmapdef)
  */
 
 /**
-   Return the definition of the requested toolkit (or nullptr).
- */
-static const struct toolkit *img_toolkit_get() { return img_toolkits; }
-
-/**
    Create a new image.
  */
 static struct img *img_new(struct mapdef *mapdef, int topo, int xsize,
@@ -1798,13 +1722,7 @@ static void img_plot_tile(struct img *pimg, const struct tile *ptile,
 static bool img_save(const struct img *pimg, const char *mapimgfile,
                      const char *path)
 {
-  const struct toolkit *toolkit = img_toolkit_get();
   char tmpname[600];
-
-  if (!toolkit) {
-    MAPIMG_LOG(_("toolkit not defined"));
-    return false;
-  }
 
   if (!QFileInfo(mapimgfile).isAbsolute() && path != nullptr) {
     make_dir(path);
@@ -1829,12 +1747,8 @@ static bool img_save_qt(const struct img *pimg, const char *mapimgfile)
 {
   char pngname[MAX_LEN_PATH];
 
-  if (pimg->def->format != IMGFORMAT_PNG) {
-    MAPIMG_LOG(_("Qt can only create images in the png format"));
-    return false;
-  }
-
-  if (!img_filename(mapimgfile, IMGFORMAT_PNG, pngname, sizeof(pngname))) {
+  if (!img_filename(mapimgfile, pimg->def->format, pngname,
+                    sizeof(pngname))) {
     MAPIMG_LOG(_("error generating the file name"));
     return false;
   }
@@ -1898,13 +1812,11 @@ static bool img_save_qt(const struct img *pimg, const char *mapimgfile)
 /**
    Generate the final filename.
  */
-static bool img_filename(const char *mapimgfile, enum imageformat format,
+static bool img_filename(const char *mapimgfile, const QByteArray &format,
                          char *filename, size_t filename_len)
 {
-  fc_assert_ret_val(imageformat_is_valid(format), false);
-
   fc_snprintf(filename, filename_len, "%s.map.%s", mapimgfile,
-              imageformat_name(format));
+              format.data());
 
   return true;
 }
