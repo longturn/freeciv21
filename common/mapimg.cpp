@@ -295,7 +295,6 @@ static inline void img_set_pixel(struct img *pimg, const int mindex,
                                  const struct rgbcolor *pcolor);
 static inline int img_index(const int x, const int y,
                             const struct img *pimg);
-static const char *img_playerstr(const struct player *pplayer);
 static void img_plot(struct img *pimg, int x, int y,
                      const struct rgbcolor *pcolor, const bv_pixel pixel);
 static void img_plot_tile(struct img *pimg, const struct tile *ptile,
@@ -1806,22 +1805,6 @@ static bool img_filename(const char *mapimgfile, const QByteArray &format,
               format.data());
 
   return true;
-}
-
-/**
-   Return a definition string for the player.
- */
-static const char *img_playerstr(const struct player *pplayer)
-{
-  static char buf[512];
-  const struct rgbcolor *pcolor = imgcolor_player(player_index(pplayer));
-
-  fc_snprintf(buf, sizeof(buf),
-              "playerno:%d:color:(%3d, %3d, %3d):name:\"%s\"",
-              player_number(pplayer), pcolor->r, pcolor->g, pcolor->b,
-              player_name(pplayer));
-
-  return buf;
 }
 
 /**
