@@ -187,12 +187,6 @@ BV_DEFINE(bv_mapdef_arg, MAPDEF_COUNT);
 #define SPECENUM_VALUE3NAME "jpg"
 #include "specenum_gen.h"
 
-// image format
-#define SPECENUM_NAME imagetool
-#define SPECENUM_VALUE0 IMGTOOL_QT
-#define SPECENUM_VALUE0NAME "qt"
-#include "specenum_gen.h"
-
 // player definitions
 #define SPECENUM_NAME show_player
 #define SPECENUM_VALUE0 SHOW_NONE
@@ -246,7 +240,6 @@ struct mapdef {
   char error[MAX_LEN_MAPDEF];
   enum mapimg_status status;
   enum imageformat format;
-  enum imagetool tool;
   int zoom;
   int turns;
   bool layers[MAPIMG_LAYER_COUNT];
@@ -330,35 +323,21 @@ typedef bool (*img_save_func)(const struct img *pimg,
                               const char *mapimgfile);
 
 struct toolkit {
-  enum imagetool tool;
   enum imageformat format_default;
   int formats;
-  const img_save_func img_save;
-  const char *help;
 };
 
-#define GEN_TOOLKIT(_tool, _format_default, _formats, _save_func, _help)    \
-  {_tool, _format_default, _formats, _save_func, _help},
+#define GEN_TOOLKIT(_format_default, _formats) {_format_default, _formats},
 
-static struct toolkit img_toolkits[] = {GEN_TOOLKIT(
-    IMGTOOL_QT, IMGFORMAT_PNG, IMGFORMAT_PNG, img_save_qt, N_("Qt"))};
+static struct toolkit img_toolkits[] = {
+    GEN_TOOLKIT(IMGFORMAT_PNG, IMGFORMAT_PNG)};
 
 static const int img_toolkits_count = ARRAY_SIZE(img_toolkits);
 
 #define MAPIMG_DEFAULT_IMGFORMAT IMGFORMAT_PNG
 #define MAPIMG_DEFAULT_IMGTOOL IMGTOOL_QT
 
-static const struct toolkit *img_toolkit_get(enum imagetool tool);
-
-#define img_toolkit_iterate(_toolkit)                                       \
-  {                                                                         \
-    int _i;                                                                 \
-    for (_i = 0; _i < img_toolkits_count; _i++) {                           \
-      const struct toolkit *_toolkit = &img_toolkits[_i];
-
-#define img_toolkit_iterate_end                                             \
-  }                                                                         \
-  }
+static const struct toolkit *img_toolkit_get();
 
 // == logging ==
 #define MAX_LEN_ERRORBUF 1024
@@ -511,7 +490,6 @@ static const char *showname_help(enum show_player showplr)
 char *mapimg_help(const char *cmdname)
 {
   Q_UNUSED(cmdname)
-  enum imagetool tool;
   enum show_player showplr;
   enum mapimg_layer layer;
   QString defaults[MAPDEF_COUNT];
@@ -523,15 +501,10 @@ char *mapimg_help(const char *cmdname)
     return fc_strdup(qUtf8Printable(help));
   }
   pmapdef = mapdef_new(false);
-  // Possible 'format' settings (toolkit + format).
-  for (tool = imagetool_begin(); tool != imagetool_end();
-       tool = imagetool_next(tool)) {
-    enum imageformat format;
-    const struct toolkit *toolkit = img_toolkit_get(tool);
 
-    if (!toolkit) {
-      continue;
-    }
+  {
+    enum imageformat format;
+    const struct toolkit *toolkit = img_toolkit_get();
 
     str_format += QStringLiteral(" - ");
 
@@ -543,10 +516,6 @@ char *mapimg_help(const char *cmdname)
                                                    imageformat_name(format));
         separator = ", ";
       }
-    }
-
-    if (tool != imagetool_max()) {
-      str_format += QStringLiteral("\n");
     }
   }
 
@@ -569,8 +538,8 @@ char *mapimg_help(const char *cmdname)
   }
 
   // Default values.
-  defaults[MAPDEF_FORMAT] = QStringLiteral("(%1|%2)").arg(
-      imagetool_name(pmapdef->tool), imageformat_name(pmapdef->format));
+  defaults[MAPDEF_FORMAT] =
+      QStringLiteral("(%2)").arg(imageformat_name(pmapdef->format));
   defaults[MAPDEF_SHOW] =
       QStringLiteral("(%1)").arg(show_player_name(pmapdef->player.show));
   defaults[MAPDEF_TURNS] =
@@ -805,63 +774,28 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
     {
       QStringList formatargs;
       enum imageformat format;
-      enum imagetool tool;
-      bool error = true;
 
       // get format options
-
       formatargs = QString(val).split(QStringLiteral("|"));
-
       if (formatargs.count() == 2) {
-        tool = imagetool_by_name(qUtf8Printable(formatargs.at(0)), strcmp);
         format =
             imageformat_by_name(qUtf8Printable(formatargs.at(1)), strcmp);
 
-        if (imageformat_is_valid(format) && imagetool_is_valid(tool)) {
-          const struct toolkit *toolkit = img_toolkit_get(tool);
+        if (imageformat_is_valid(format)) {
+          const struct toolkit *toolkit = img_toolkit_get();
 
           if (toolkit && (toolkit->formats & format)) {
-            pmapdef->tool = tool;
             pmapdef->format = format;
-
-            error = false;
           }
         }
       } else {
         // Only one argument to format.
-        tool = imagetool_by_name(qUtf8Printable(formatargs.at(0)), strcmp);
-        if (imagetool_is_valid(tool)) {
-          // toolkit defined
-          const struct toolkit *toolkit = img_toolkit_get(tool);
+        // toolkit defined
+        const struct toolkit *toolkit = img_toolkit_get();
 
-          if (toolkit) {
-            pmapdef->tool = toolkit->tool;
-            pmapdef->format = toolkit->format_default;
-
-            error = false;
-          }
-        } else {
-          format =
-              imageformat_by_name(qUtf8Printable(formatargs.at(0)), strcmp);
-          if (imageformat_is_valid(format)) {
-            // format defined
-            img_toolkit_iterate(toolkit)
-            {
-              if ((toolkit->formats & format)) {
-                pmapdef->tool = toolkit->tool;
-                pmapdef->format = toolkit->format_default;
-
-                error = false;
-                break;
-              }
-            }
-            img_toolkit_iterate_end;
-          }
+        if (toolkit) {
+          pmapdef->format = toolkit->format_default;
         }
-      }
-
-      if (error) {
-        goto INVALID;
       }
     }
     break;
@@ -1100,8 +1034,6 @@ bool mapimg_show(int id, char *str, size_t str_len, bool detail)
     }
     cat_snprintf(str, str_len, _("  - file name string:         %s\n"),
                  mapimg_generate_name(pmapdef));
-    cat_snprintf(str, str_len, _("  - image toolkit:            %s\n"),
-                 imagetool_name(pmapdef->tool));
     cat_snprintf(str, str_len, _("  - image format:             %s\n"),
                  imageformat_name(pmapdef->format));
     cat_snprintf(str, str_len, _("  - zoom factor:              %d\n"),
@@ -1303,7 +1235,6 @@ bool mapimg_colortest(const char *savename, const char *path)
   int max_playercolor = mapimg.mapimg_plrcolor_count();
   int max_terraincolor = terrain_count();
   bool ret = true;
-  enum imagetool tool;
 
 #define SIZE_X 16
 #define SIZE_Y 5
@@ -1356,32 +1287,18 @@ bool mapimg_colortest(const char *savename, const char *path)
 #undef SIZE_X
 #undef SIZE_Y
 
-  for (tool = imagetool_begin(); tool != imagetool_end();
-       tool = imagetool_next(tool)) {
     enum imageformat format;
-    const struct toolkit *toolkit = img_toolkit_get(tool);
-
-    if (!toolkit) {
-      continue;
-    }
-
-    // Set the toolkit.
-    pmapdef->tool = tool;
+    const struct toolkit *toolkit = img_toolkit_get();
 
     for (format = imageformat_begin(); format != imageformat_end();
          format = imageformat_next(format)) {
       if (toolkit->formats & format) {
         char buf[128];
-        const char *tname = imagetool_name(tool);
 
         // Set the image format.
         pmapdef->format = format;
 
-        if (tname != nullptr) {
-          fc_snprintf(buf, sizeof(buf), "colortest-%s", tname);
-        } else {
-          fc_snprintf(buf, sizeof(buf), "colortest");
-        }
+        fc_snprintf(buf, sizeof(buf), "colortest");
         // filename for color test
         generate_save_name(savename, mapimgfile, sizeof(mapimgfile), buf);
 
@@ -1392,7 +1309,6 @@ bool mapimg_colortest(const char *savename, const char *path)
         }
       }
     }
-  }
 
   img_destroy(pimg);
   mapdef_destroy(pmapdef);
@@ -1443,8 +1359,8 @@ static bool mapimg_def2str(struct mapdef *pmapdef, char *str, size_t str_len)
   }
 
   str[0] = '\0';
-  cat_snprintf(str, str_len, "format=%s|%s:", imagetool_name(pmapdef->tool),
-               imageformat_name(pmapdef->format));
+  cat_snprintf(str, str_len,
+               "format=%s:", imageformat_name(pmapdef->format));
   cat_snprintf(str, str_len, "turns=%d:", pmapdef->turns);
 
   i = 0;
@@ -1666,7 +1582,6 @@ static struct mapdef *mapdef_new(bool colortest)
   pmapdef->error[0] = '\0';
   pmapdef->status = MAPIMG_STATUS_UNKNOWN;
   pmapdef->format = MAPIMG_DEFAULT_IMGFORMAT;
-  pmapdef->tool = MAPIMG_DEFAULT_IMGTOOL;
   pmapdef->zoom = 2;
   pmapdef->turns = 1;
   pmapdef->layers[MAPIMG_LAYER_TERRAIN] = false;
@@ -1707,18 +1622,7 @@ static void mapdef_destroy(struct mapdef *pmapdef)
 /**
    Return the definition of the requested toolkit (or nullptr).
  */
-static const struct toolkit *img_toolkit_get(enum imagetool tool)
-{
-  img_toolkit_iterate(toolkit)
-  {
-    if (toolkit->tool == tool) {
-      return toolkit;
-    }
-  }
-  img_toolkit_iterate_end;
-
-  return nullptr;
-}
+static const struct toolkit *img_toolkit_get() { return img_toolkits; }
 
 /**
    Create a new image.
@@ -1889,13 +1793,12 @@ static void img_plot_tile(struct img *pimg, const struct tile *ptile,
 }
 
 /**
-   Save an image as ppm file.
+   Save an image.
  */
 static bool img_save(const struct img *pimg, const char *mapimgfile,
                      const char *path)
 {
-  enum imagetool tool = pimg->def->tool;
-  const struct toolkit *toolkit = img_toolkit_get(tool);
+  const struct toolkit *toolkit = img_toolkit_get();
   char tmpname[600];
 
   if (!toolkit) {
@@ -1916,9 +1819,7 @@ static bool img_save(const struct img *pimg, const char *mapimgfile,
 
   sz_strlcat(tmpname, mapimgfile);
 
-  MAPIMG_ASSERT_RET_VAL(toolkit->img_save, false);
-
-  return toolkit->img_save(pimg, tmpname);
+  return img_save_qt(pimg, tmpname);
 }
 
 /**
