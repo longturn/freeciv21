@@ -29,6 +29,10 @@ received a copy of the GNU General Public License along with Freeciv21.
 
 #include "mapimg.h"
 
+// Qt
+#include <QImage>
+#include <QPainter>
+
 // == image colors ==
 enum img_special {
   IMGCOLOR_ERROR,
@@ -187,6 +191,8 @@ BV_DEFINE(bv_mapdef_arg, MAPDEF_COUNT);
 #define SPECENUM_NAME imagetool
 #define SPECENUM_VALUE0 IMGTOOL_PPM
 #define SPECENUM_VALUE0NAME "ppm"
+#define SPECENUM_VALUE1 IMGTOOL_QT
+#define SPECENUM_VALUE1NAME "qt"
 #include "specenum_gen.h"
 
 // player definitions
@@ -317,6 +323,7 @@ static void img_plot_tile(struct img *pimg, const struct tile *ptile,
 static bool img_save(const struct img *pimg, const char *mapimgfile,
                      const char *path);
 static bool img_save_ppm(const struct img *pimg, const char *mapimgfile);
+static bool img_save_qt(const struct img *pimg, const char *mapimgfile);
 static bool img_filename(const char *mapimgfile, enum imageformat format,
                          char *filename, size_t filename_len);
 static void img_createmap(struct img *pimg);
@@ -339,7 +346,8 @@ struct toolkit {
 static struct toolkit img_toolkits[] = {
     GEN_TOOLKIT(IMGTOOL_PPM, IMGFORMAT_PPM, IMGFORMAT_PPM, img_save_ppm,
                 N_("Standard ppm files"))
-};
+        GEN_TOOLKIT(IMGTOOL_QT, IMGFORMAT_PNG, IMGFORMAT_PNG, img_save_qt,
+                    N_("Qt"))};
 
 static const int img_toolkits_count = ARRAY_SIZE(img_toolkits);
 
@@ -1995,6 +2003,79 @@ static bool img_save_ppm(const struct img *pimg, const char *mapimgfile)
 
   qDebug("Map image saved as '%s'.", ppmname);
   fclose(fp);
+
+  return true;
+}
+
+/**
+ * Save an image with Qt.
+ */
+static bool img_save_qt(const struct img *pimg, const char *mapimgfile)
+{
+  char pngname[MAX_LEN_PATH];
+
+  if (pimg->def->format != IMGFORMAT_PNG) {
+    MAPIMG_LOG(_("Qt can only create images in the png format"));
+    return false;
+  }
+
+  if (!img_filename(mapimgfile, IMGFORMAT_PNG, pngname, sizeof(pngname))) {
+    MAPIMG_LOG(_("error generating the file name"));
+    return false;
+  }
+
+  QImage image(pimg->imgsize.x * pimg->def->zoom,
+               pimg->imgsize.y * pimg->def->zoom, QImage::Format_ARGB32);
+  if (image.isNull()) {
+    MAPIMG_LOG(_("could not allocate memory for image"));
+    return false;
+  }
+
+  if (pimg->def->colortest) {
+    image.setText(QStringLiteral("Description"),
+                  QStringLiteral("color test"));
+  } else if (BV_ISSET_ANY(pimg->def->player.checked_plrbv)) {
+    players_iterate(pplayer)
+    {
+      if (!BV_ISSET(pimg->def->player.checked_plrbv,
+                    player_index(pplayer))) {
+        continue;
+      }
+
+      const auto pcolor = imgcolor_player(player_index(pplayer));
+
+      image.setText(
+          QStringLiteral("Player %1 color").arg(player_number(pplayer)),
+          QStringLiteral("(%1, %2, %3)")
+              .arg(pcolor->r)
+              .arg(pcolor->g)
+              .arg(pcolor->b));
+      image.setText(
+          QStringLiteral("Player %1 name").arg(player_number(pplayer)),
+          player_name(pplayer));
+    }
+    players_iterate_end;
+  }
+
+  image.setDevicePixelRatio(pimg->def->zoom);
+  image.fill(Qt::transparent);
+
+  QPainter p;
+  p.begin(&image);
+
+  // Iterate over tiles
+  for (int y = 0; y < pimg->imgsize.y; y++) {
+    for (int x = 0; x < pimg->imgsize.x; x++) {
+      if (const auto pcolor = pimg->map[img_index(x, y, pimg)]; pcolor) {
+        p.fillRect(x, y, 1, 1, QColor(pcolor->r, pcolor->g, pcolor->b));
+      }
+    }
+  }
+
+  p.end();
+
+  image.save(pngname);
+  qDebug("Map image saved as '%s'.", pngname);
 
   return true;
 }
