@@ -303,14 +303,9 @@ static void img_plot_tile(struct img *pimg, const struct tile *ptile,
                           const bv_pixel pixel);
 static bool img_save(const struct img *pimg, const char *mapimgfile,
                      const char *path);
-static bool img_save_qt(const struct img *pimg, const char *mapimgfile);
 static bool img_filename(const char *mapimgfile, const QByteArray &format,
                          char *filename, size_t filename_len);
 static void img_createmap(struct img *pimg);
-
-// == image toolkits ==
-typedef bool (*img_save_func)(const struct img *pimg,
-                              const char *mapimgfile);
 
 // == logging ==
 #define MAX_LEN_ERRORBUF 1024
@@ -1737,14 +1732,6 @@ static bool img_save(const struct img *pimg, const char *mapimgfile,
 
   sz_strlcat(tmpname, mapimgfile);
 
-  return img_save_qt(pimg, tmpname);
-}
-
-/**
- * Save an image with Qt.
- */
-static bool img_save_qt(const struct img *pimg, const char *mapimgfile)
-{
   char pngname[MAX_LEN_PATH];
 
   if (!img_filename(mapimgfile, pimg->def->format, pngname,
