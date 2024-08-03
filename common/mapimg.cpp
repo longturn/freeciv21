@@ -30,7 +30,6 @@ received a copy of the GNU General Public License along with Freeciv21.
 #include "rgbcolor.h"
 #include "terrain.h"
 #include "tile.h"
-#include "version.h"
 
 #include "mapimg.h"
 
@@ -54,8 +53,6 @@ received a copy of the GNU General Public License along with Freeciv21.
 #else
 #define magickwand_size_t unsigned long
 #endif
-
-Q_GLOBAL_STATIC(QVector<QString>, format_list)
 
 // == image colors ==
 enum img_special {
@@ -1098,40 +1095,6 @@ struct mapdef *mapimg_isvalid(int id)
   }
 
   return pmapdef;
-}
-
-/**
-   Return a list of all available tookits and formats for the client.
- */
-const QVector<QString> *mapimg_get_format_list()
-{
-  if (format_list->isEmpty()) {
-    enum imagetool tool;
-
-    for (tool = imagetool_begin(); tool != imagetool_end();
-         tool = imagetool_next(tool)) {
-      enum imageformat format;
-      const struct toolkit *toolkit = img_toolkit_get(tool);
-
-      if (!toolkit) {
-        continue;
-      }
-
-      for (format = imageformat_begin(); format != imageformat_end();
-           format = imageformat_next(format)) {
-        if (toolkit->formats & format) {
-          char str_format[64];
-
-          fc_snprintf(str_format, sizeof(str_format), "%s|%s",
-                      imagetool_name(tool), imageformat_name(format));
-
-          format_list->append(str_format);
-        }
-      }
-    }
-  }
-
-  return format_list;
 }
 
 /**
