@@ -33,6 +33,10 @@ manual*.html
 # Core dumps
 /core
 
+# Valgrind
+callgrind.*
+heaptrack.*
+
 # CMake files
 CMakeCache.txt
 CMakeFiles
