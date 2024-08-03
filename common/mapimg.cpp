@@ -189,10 +189,8 @@ BV_DEFINE(bv_mapdef_arg, MAPDEF_COUNT);
 
 // image format
 #define SPECENUM_NAME imagetool
-#define SPECENUM_VALUE0 IMGTOOL_PPM
-#define SPECENUM_VALUE0NAME "ppm"
-#define SPECENUM_VALUE1 IMGTOOL_QT
-#define SPECENUM_VALUE1NAME "qt"
+#define SPECENUM_VALUE0 IMGTOOL_QT
+#define SPECENUM_VALUE0NAME "qt"
 #include "specenum_gen.h"
 
 // player definitions
@@ -322,7 +320,6 @@ static void img_plot_tile(struct img *pimg, const struct tile *ptile,
                           const bv_pixel pixel);
 static bool img_save(const struct img *pimg, const char *mapimgfile,
                      const char *path);
-static bool img_save_ppm(const struct img *pimg, const char *mapimgfile);
 static bool img_save_qt(const struct img *pimg, const char *mapimgfile);
 static bool img_filename(const char *mapimgfile, enum imageformat format,
                          char *filename, size_t filename_len);
@@ -343,16 +340,13 @@ struct toolkit {
 #define GEN_TOOLKIT(_tool, _format_default, _formats, _save_func, _help)    \
   {_tool, _format_default, _formats, _save_func, _help},
 
-static struct toolkit img_toolkits[] = {
-    GEN_TOOLKIT(IMGTOOL_PPM, IMGFORMAT_PPM, IMGFORMAT_PPM, img_save_ppm,
-                N_("Standard ppm files"))
-        GEN_TOOLKIT(IMGTOOL_QT, IMGFORMAT_PNG, IMGFORMAT_PNG, img_save_qt,
-                    N_("Qt"))};
+static struct toolkit img_toolkits[] = {GEN_TOOLKIT(
+    IMGTOOL_QT, IMGFORMAT_PNG, IMGFORMAT_PNG, img_save_qt, N_("Qt"))};
 
 static const int img_toolkits_count = ARRAY_SIZE(img_toolkits);
 
-#define MAPIMG_DEFAULT_IMGFORMAT IMGFORMAT_PPM
-#define MAPIMG_DEFAULT_IMGTOOL IMGTOOL_PPM
+#define MAPIMG_DEFAULT_IMGFORMAT IMGFORMAT_PNG
+#define MAPIMG_DEFAULT_IMGTOOL IMGTOOL_QT
 
 static const struct toolkit *img_toolkit_get(enum imagetool tool);
 
@@ -539,7 +533,7 @@ char *mapimg_help(const char *cmdname)
       continue;
     }
 
-    str_format += QStringLiteral(" - '%1': ").arg(tool);
+    str_format += QStringLiteral(" - ");
 
     const char *separator = "";
     for (format = imageformat_begin(); format != imageformat_end();
@@ -615,7 +609,7 @@ char *mapimg_help(const char *cmdname)
             "\n"
             "option                 (default)  description\n"
             "\n"
-            "format=<[tool|]format> %1 file format\n"
+            "format=<format>        %1 file format\n"
             "show=<show>            %2 which players to show\n"
             "  plrname=<name>                    player name\n"
             "  plrid=<id>                        numeric player id\n"
@@ -628,11 +622,9 @@ char *mapimg_help(const char *cmdname)
             "zoom=<zoom>            %4 magnification factor (1-5)\n"
             "map=<map>              %5 which map layers to draw\n"
             "\n"
-            "<[tool|]format> = use image format <format>, optionally "
-            "specifying "
-            "toolkit <tool>. The following toolkits and formats are "
-            "compiled "
-            "in:\n"
+            "<format> = use image format <format>. The following formats "
+            "are "
+            "compiled in:\n"
             "%6\n"
             "\n"
             "<show> determines which players are represented and how many "
@@ -649,11 +641,11 @@ char *mapimg_help(const char *cmdname)
             " - 'u' show units of specified players\n"
             "\n"
             "Examples of <mapdef>:\n"
-            " 'zoom=1:map=tcub:show=all:format=ppm|ppm'\n"
+            " 'zoom=1:map=tcub:show=all:format=png'\n"
             " 'zoom=2:map=tcub:show=each:format=png'\n"
             " 'zoom=1:map=tcub:show=plrname:plrname=Otto:format=gif'\n"
             " 'zoom=3:map=cu:show=plrbv:plrbv=010011:format=jpg'\n"
-            " 'zoom=1:map=t:show=none:format=magick|jpg'"))
+            " 'zoom=1:map=t:show=none:format=jpg'"))
           .arg(defaults[MAPDEF_FORMAT], -10)
           .arg(defaults[MAPDEF_SHOW], -10)
           .arg(defaults[MAPDEF_TURNS], -10)
@@ -1927,84 +1919,6 @@ static bool img_save(const struct img *pimg, const char *mapimgfile,
   MAPIMG_ASSERT_RET_VAL(toolkit->img_save, false);
 
   return toolkit->img_save(pimg, tmpname);
-}
-
-/**
-   Save an image as ppm file (toolkit: ppm).
- */
-static bool img_save_ppm(const struct img *pimg, const char *mapimgfile)
-{
-  char ppmname[MAX_LEN_PATH];
-  FILE *fp;
-  int x, y, xxx, yyy, mindex;
-  const struct rgbcolor *pcolor;
-
-  if (pimg->def->format != IMGFORMAT_PPM) {
-    MAPIMG_LOG(_("the ppm toolkit can only create images in the ppm "
-                 "format"));
-    return false;
-  }
-
-  if (!img_filename(mapimgfile, IMGFORMAT_PPM, ppmname, sizeof(ppmname))) {
-    MAPIMG_LOG(_("error generating the file name"));
-    return false;
-  }
-
-  fp = fopen(ppmname, "w");
-  if (!fp) {
-    MAPIMG_LOG(_("could not open file: %s"), ppmname);
-    return false;
-  }
-
-  fprintf(fp, "P3\n");
-  fprintf(fp, "# version:2\n");
-  fprintf(fp, "# map definition: %s\n", pimg->def->maparg);
-
-  if (pimg->def->colortest) {
-    fprintf(fp, "# color test\n");
-  } else if (BV_ISSET_ANY(pimg->def->player.checked_plrbv)) {
-    players_iterate(pplayer)
-    {
-      if (!BV_ISSET(pimg->def->player.checked_plrbv,
-                    player_index(pplayer))) {
-        continue;
-      }
-
-      fprintf(fp, "# %s\n", img_playerstr(pplayer));
-    }
-    players_iterate_end;
-  } else {
-    fprintf(fp, "# no players\n");
-  }
-
-  fprintf(fp, "%d %d\n", pimg->imgsize.x * pimg->def->zoom,
-          pimg->imgsize.y * pimg->def->zoom);
-  fprintf(fp, "255\n");
-
-  // y coordinate
-  for (y = 0; y < pimg->imgsize.y; y++) {
-    // zoom for y
-    for (yyy = 0; yyy < pimg->def->zoom; yyy++) {
-      // x coordinate
-      for (x = 0; x < pimg->imgsize.x; x++) {
-        mindex = img_index(x, y, pimg);
-        pcolor = pimg->map[mindex];
-
-        // zoom for x
-        for (xxx = 0; xxx < pimg->def->zoom; xxx++) {
-          if (pcolor == nullptr) {
-            pcolor = imgcolor_special(IMGCOLOR_BACKGROUND);
-          }
-          fprintf(fp, "%d %d %d\n", pcolor->r, pcolor->g, pcolor->b);
-        }
-      }
-    }
-  }
-
-  qDebug("Map image saved as '%s'.", ppmname);
-  fclose(fp);
-
-  return true;
 }
 
 /**
