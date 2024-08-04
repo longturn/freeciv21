@@ -67,6 +67,23 @@ Terrain is then assigned to tiles based on their height and temperature as
 described in the :ref:`terrain assignment <mapgen-terrain-assignment>` section
 below.
 
+Pseudo-Fractal Height
+^^^^^^^^^^^^^^^^^^^^^
+
+Again, "height" in the name of this generator stands for "altitude", and like
+``RANDOM`` this generator is based on a height map. It works by dividing the map
+in blocks (five by five initially) and assigning a random height to their
+corners. Each block is then processed recursively, cutting it equally in four
+blocks. The height at the corners of the smaller blocks are computed by
+averaging the heights at the corners of the large blocks and adding a decreasing
+amount of noise. This process is repeated until blocks are one tile wide or
+less.
+
+At the end of the generation, more random noise is added on top of the generated
+height map to give more variety on large maps, with warmer tiles generally
+getting more noise. The generated height map is then used to assign terrains as
+:ref:`described below <mapgen-terrain-assignment>`.
+
 .. _mapgen-terrain-assignment:
 
 Terrain Assignment
