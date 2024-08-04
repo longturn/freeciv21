@@ -14,6 +14,9 @@ This page describes how maps are generated in Freeciv21, from a technical
 perspective. There are several generators the user can choose from
 (``generator`` server setting), but they share a lot of code.
 
+.. note::
+  See :doc:`/Manuals/Advanced/map-generator` for a less technical introduction.
+
 Map generation is performed in multiple passes. After some initialization, the
 first step, shared between all generators, is the creation of a basic
 temperature map. Since no terrain information exists at this stage, the

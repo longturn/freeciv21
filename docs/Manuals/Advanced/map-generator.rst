@@ -9,6 +9,9 @@ The generated map and player placement for a game can be manipulated by changing
 the varying options to create the map you want to play. It is assumed that the game master is using a
 :doc:`/Manuals/Server/settings-file`.
 
+.. note::
+  See :doc:`/Coding/mapgen` for a detailed description of the inner workings of the generator.
+
 The server options that impact what kind of map the generator creates are:
 
 * ``alltemperate``
