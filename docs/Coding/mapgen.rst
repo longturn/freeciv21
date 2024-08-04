@@ -40,8 +40,129 @@ the list of allowed resources for the terrain. Huts are added in a similar way
 but with a minimum distance of 3 tiles. The final step is to distribute players,
 as described in :ref:`Player Placement <mapgen-placement>` below.
 
+Generators
+----------
+
+Several algorithms are available to generate maps, controlled by the
+``generator`` server setting. The default is
+:ref:`fully random height <mapgen-random>` (``RANDOM``).
+
+.. _mapgen-random:
+
+Fully Random Height
+^^^^^^^^^^^^^^^^^^^
+
+"Height" in the name of the generator stands for "altitude". This generator is
+extremely simple: it builds a completely random height map and smoothes it out.
+Terrain is then assigned to tiles based on their height and temperature as
+described in the :ref:`terrain assignment <mapgen-terrain-assignment>` section
+below.
+
+.. _mapgen-terrain-assignment:
+
+Terrain Assignment
+^^^^^^^^^^^^^^^^^^
+
+Generators that use a height map to generate the map share a common routine to
+assign terrains to the generated tiles, whose algorithm is described in this
+section. The first input is a "normalized" height map where the tile heights
+range from 0 to 1000 and are spread uniformly in this range. This allows for
+fast queries of the type "the lowest 20% of the world". The second input of the
+algorithm is a temperature map, normalized to have only four types of tiles:
+frozen, cold, temperate, and tropical.
+
+The very first step taken by the algorithm is to reduce the height of terrain
+near the polar strips, if any. This prevents generating land next to them and
+disconnects land from the poles.
+
+Oceans and poles are generated next. Sea level is determined as the percentage
+of sea tiles, 100 minus the ``landmass`` server setting. Any tile with a low
+enough height is considered an ocean candidate. It is raised slightly if it is
+next to a land tile and lowered otherwise. A suitable ocean terrain for is
+chosen for the local depth and temperature: all sea tiles in the frozen region
+become ice as well as 30% of the tiles in the cold region that are directly
+adjacent to the frozen region. This gives the poles their slightly irregular
+shapes. At this stage, all tiles above sea level are filled with a dummy land
+terrain.
+
+Having generated the "sea" poles, the lowering is reverted to allow for cold
+land terrain in the area.
+
+The temperature map is recomputed after creating oceans. In addition to the
+distance from the poles, it now takes other factors into account. High ground is
+made up to 30% colder and the temperature near oceans is made up to 15% less
+extreme (in both the highs and lows). After this step, the map is again
+simplified to four groups: frozen, cold, temperate, and tropical.
+
+In rulesets without frozen oceans, it may happen that the poles have still not
+been generated. They are marked back as land tiles by setting them to the
+"unknown" terrain.
+
+The next step is to place relief, i.e. hills and mountains. This is again based
+on the height map: the highest land tiles become hills or mountains. The exact
+fraction of land tiles that will become a hill or mountain is governed by the
+``steepness`` server setting. Large chunks of steep terrain are avoided by
+randomly converting only half of the tiles and not converting tiles that are
+significantly higher than one their neighbors. In addition to the above, steep
+terrain is added in places that would otherwise be too flat.
+
+.. note::
+  The ``FRACTURE`` generator doesn't use the same logic for placing hills.
+
+Once it is decided that a tile will be steep, it is set to hilly terrain if the
+tile is in the region of hot temperature, and mountains otherwise. About 70% of
+the tiles in the hot region are picked with the ``green`` flag, while 70% of
+the tiles at other temperatures avoid it.
+
+The last step to generate the terrain is to fill in the gaps between the ocean
+and the hills. This is done according to terrain fractions that depend on the
+global ``wetness`` and ``temperature`` settings. Terrains are generated in
+patches, according to properties defined in ``terrain.ruleset`` and conditions
+on the tile. The following combinations are generated one at a time:
+
+.. table:: Terrain produced by the generator and their matching to tiles
+  :widths: auto
+  :align: center
+
+  +--------+-----------+-----------+----------+---------+-------------+---------+-----------+
+  |        | Terrain properties               | Tile properties                 |           |
+  +        +-----------+-----------+----------+---------+-------------+---------+           +
+  | Label  | Required  | Preferred | Avoided  | Wetness | Temp.       | Height  | Thr.      |
+  +========+===========+===========+==========+=========+=============+=========+===========+
+  | Forest | Foliage   | Temperate | Tropical | All     | Not frozen  | \-      | 60        |
+  +--------+-----------+-----------+----------+---------+-------------+---------+-----------+
+  | Jungle | Foliage   | Tropical  | Cold     | All     | Tropical    | \-      | 50        |
+  +--------+-----------+-----------+----------+---------+-------------+---------+-----------+
+  | Swamp  | Wet       | \-        | Foliage  | Not dry | Hot         | Low     | 50        |
+  +--------+-----------+-----------+----------+---------+-------------+---------+-----------+
+  | Desert | Dry       | Tropical  | Cold     | Dry     | Not frozen  | Not low | 80        |
+  +--------+-----------+-----------+----------+---------+-------------+---------+-----------+
+  | Desert | Dry       | Tropical  | Wet      | All     | Not frozen  | Not low | 40        |
+  +--------+-----------+-----------+----------+---------+-------------+---------+-----------+
+  | Ice    | Frozen    | \-        | Mountain | \-      | \-          | \-      | \-        |
+  +--------+-----------+-----------+----------+---------+-------------+---------+-----------+
+  | Tundra | Cold      | \-        | Mountain | \-      | \-          | \-      | \-        |
+  +--------+-----------+-----------+----------+---------+-------------+---------+-----------+
+  | Plains | Temperate | Green     | Mountain | \-      | \-          | \-      | \-        |
+  +--------+-----------+-----------+----------+---------+-------------+---------+-----------+
+
+Terrain patches expand outwards from a seed tile until the required tile
+properties are no longer met or a threshold in colatitude and height difference
+is reached (*Thr.* in the table). Ice, tundra, and plains/grassland are
+generated to fill in gaps and do not expand in patches.
+
+The algorithm to match the desired terrain properties to the ruleset-defined
+terrain types by first collecting all terrains with the required property. Then,
+types without at least some of the "preferred" property and types with a
+non-zero "avoided" property are removed from the set. Of the remaining terrains,
+one is picked at random, with a higher chance to be selected when the required
+property has a high value in the ruleset. If this search fails, it is resumed
+without the "preferred" property; if this fails again, the "avoided" property is
+also dropped.
+
 .. _mapgen-placement:
-Player placement
+
+Player Placement
 ----------------
 
 .. table:: Mode chosen by the generator to generate start positions
