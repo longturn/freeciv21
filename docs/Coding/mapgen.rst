@@ -23,8 +23,9 @@ frozen, cold, temperate, and tropical.
 
 After the temperature is set, the actual map generation starts. This depends on
 the map generator chosen by the user, with various fallbacks in place. The
-details of each generator are described below.  After this step, at least
-terrain is set everywhere. Depending on the map generator, players and specials
+details of each generator are described :ref:`below <mapgen-generators>`.
+After this step, terrain is set everywhere and rivers have been generated.
+Depending on the map generator, players and specials
 may already have been placed (this is for instance the case with the "fair
 islands" generator).
 
@@ -39,6 +40,11 @@ between them. For each tile that gets a resource, one is picked at random from
 the list of allowed resources for the terrain. Huts are added in a similar way
 but with a minimum distance of 3 tiles. The final step is to distribute players,
 as described in :ref:`Player Placement <mapgen-placement>` below.
+
+.. todo::
+  Rivers
+
+.. _mapgen-generators:
 
 Generators
 ----------
