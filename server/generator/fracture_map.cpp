@@ -32,6 +32,7 @@ int num_landmass = 50;
 typedef struct {
   int x;
   int y;
+  bool edge;
 } map_point;
 
 typedef struct {
@@ -54,6 +55,9 @@ void make_fracture_map()
   int x, y;
   struct tile *ptile1;
 
+  const bool wrapx = wld.map.topology_id & TF_WRAPX,
+             wrapy = wld.map.topology_id & TF_WRAPY;
+
   /* Calculate the mountain level.  map.server.mountains specifies the
    * percentage of land that is turned into hills and mountains. */
   hmap_mountain_level = (((hmap_max_level - hmap_shore_level)
@@ -73,28 +77,41 @@ void make_fracture_map()
   /* Setup a whole bunch of landmasses along the view bordere. These will be
      sunken to create ocean terrain.*/
   nn = 0;
-  for (x = 3; x < wld.map.xsize; x += 5, nn++) {
-    fracture_points[nn].x = x;
-    fracture_points[nn].y = 3;
+  if (!wrapy) {
+    for (x = 3; x < wld.map.xsize; x += 5, nn++) {
+      fracture_points[nn].x = x;
+      fracture_points[nn].y = 3;
+      fracture_points[nn].edge = true;
+    }
+    for (x = 3; x < wld.map.xsize; x += 5, nn++) {
+      fracture_points[nn].x = x;
+      fracture_points[nn].y = wld.map.ysize - 3;
+      fracture_points[nn].edge = true;
+    }
   }
-  for (x = 3; x < wld.map.xsize; x += 5, nn++) {
-    fracture_points[nn].x = x;
-    fracture_points[nn].y = wld.map.ysize - 3;
-  }
-  for (y = 3; y < wld.map.ysize; y += 5, nn++) {
-    fracture_points[nn].x = 3;
-    fracture_points[nn].y = y;
-  }
-  for (y = 3; y < wld.map.ysize; y += 5, nn++) {
-    fracture_points[nn].x = wld.map.xsize - 3;
-    fracture_points[nn].y = y;
+  if (!wrapx) {
+    for (y = 3; y < wld.map.ysize; y += 5, nn++) {
+      fracture_points[nn].x = 3;
+      fracture_points[nn].y = y;
+      fracture_points[nn].edge = true;
+    }
+    for (y = 3; y < wld.map.ysize; y += 5, nn++) {
+      fracture_points[nn].x = wld.map.xsize - 3;
+      fracture_points[nn].y = y;
+      fracture_points[nn].edge = true;
+    }
   }
 
-  // pick remaining points randomly
+  // pick remaining points randomly, but not too close to non-wrapping edges
   mm = nn;
-  for (; nn < mm + num_landmass; nn++) {
-    fracture_points[nn].x = fc_rand(wld.map.xsize - 6) + 3;
-    fracture_points[nn].y = fc_rand(wld.map.ysize - 6) + 3;
+  {
+    const int minx = wrapx ? 0 : 3, maxx = wld.map.xsize - (wrapx ? 0 : 6),
+              miny = wrapy ? 0 : 3, maxy = wld.map.ysize - (wrapy ? 0 : 6);
+    for (; nn < mm + num_landmass; nn++) {
+      fracture_points[nn].x = fc_rand(maxx) + minx;
+      fracture_points[nn].y = fc_rand(maxy) + miny;
+      fracture_points[nn].edge = false;
+    }
   }
   for (nn = 0; nn < mm + num_landmass; nn++) {
     landmass[nn].minX = wld.map.xsize - 1;
@@ -109,7 +126,7 @@ void make_fracture_map()
 
   // Assign a base elevation to the landmass
   for (nn = 0; nn < mm + num_landmass; nn++) {
-    if (nn < mm) { // sink the border masses
+    if (fracture_points[nn].edge) { // sink the border masses
       landmass[nn].elevation = 0;
     } else {
       landmass[nn].elevation = fc_rand(1000);
