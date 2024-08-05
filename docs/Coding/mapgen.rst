@@ -327,8 +327,9 @@ oceanic tile, at most 3 ocean tiles around, and no adjacent river. Afterwards,
 new river mouths are only added with a 1% probability. Instead, when the random
 tile is next to an existing river, the river grows in this direction. Further
 conditions for rivers to grow require that the new tile has no cardinally
-adjacent ocean and at most  one adjacent ocean, and furthermore at most two
-adjacent rivers. In this way the rivers slowly grow inwards.
+adjacent ocean and at most one adjacent ocean, and furthermore at most two
+adjacent rivers. Dry tiles are also penalized by dropping them with a 50%
+chance. In this way the rivers slowly grow inwards.
 
 Terrains are placed in a similar way: tiles are picked at random and terrain is
 assigned to them until reaching their expected number. This is done by groups of
