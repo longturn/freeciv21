@@ -47,6 +47,47 @@ as described in :ref:`Player Placement <mapgen-placement>` below.
 .. todo::
   Rivers
 
+Terrain Fractions
+-----------------
+
+The map generators need terrain information to know what to generate. However,
+the server settings control the world temperature and wetness. A conversion
+is needed between them.
+
+The generators know four types of terrains: mountains (including hills),
+forests (including jungles), deserts, and swamps. Ice, tundra, plains, and
+grassland are always used to fill in the gap between those, depending on the
+local temperature. The fraction of tiles that will have rivers is handled in a
+similar way and is thus also described in this section.
+
+The equations used to derive the fraction of each terrain are highly arbitrary
+and have likely been determined through trial and error. Since the details are
+not particularly enlightening, only the general ideas are discussed below.
+
+The first fraction to be computed is the amount of polar terrain, decided based
+on the average temperature and the size of the map (larger maps get less). Since
+poles count towards the total landmass but have quite boring terrain, the
+fractions of all other terrains on the rest of the land is increased to
+compensate.
+
+The fraction of mountains is directly proportional to the ``steepness``
+parameter. It is about 20% for the default ``steepness`` of 30, and increases
+to 60% for a ``steepness`` of 100. The fractions of all other terrain types are
+reduced when there are lots of mountains, leaving room for plains and grassland.
+
+The ``wetness`` parameter controls directly the amount of forest, which ranges
+between 5% and 35%. An amount of jungle is taken away from this based on the
+fraction of the map covered by hot temperatures, but is not used consistently by
+map generators. ``wetness`` also sets the amount of rivers, ranging from 3% to
+11% of all land including mountains.
+
+The most complicated formulae are for swamp and desert, as they combine
+``wetness`` and ``temperature``. Swamps do not appear at all when the world is
+dry and cold, but their fraction increases with both ``wetness`` and
+``temperature`` --- slightly faster with the former. Deserts may also not appear
+if the world is very cold and wet. Their fraction increases rather quickly with
+``temperature`` and is mildly reduced by ``wetness``.
+
 .. _mapgen-height-generators:
 
 Height-Based Generators
