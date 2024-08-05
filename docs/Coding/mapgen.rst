@@ -26,14 +26,14 @@ frozen, cold, temperate, and tropical.
 
 After the temperature is set, the actual map generation starts. This depends on
 the map generator chosen by the user, with various fallbacks in place. The
-details of each generator are described :ref:`below <mapgen-generators>`.
+details of each generator are described below.
 After this step, terrain is set everywhere and rivers have been generated.
 Depending on the map generator, players and specials
 may already have been placed (this is for instance the case with the "fair
 islands" generator).
 
 At this stage, tiny (1x1) islands are removed if disabled in the settings
-(``tinyislands``) parameter. Water is also fine-tuned to always have shallow
+(``tinyislands`` parameter). Water is also fine-tuned to always have shallow
 ocean next to the coast and be generally smooth. Continent numbers are assigned
 and small seas are turned to lakes. The temperature map is reset after this is
 done.
@@ -47,32 +47,36 @@ as described in :ref:`Player Placement <mapgen-placement>` below.
 .. todo::
   Rivers
 
-.. _mapgen-generators:
+.. _mapgen-height-generators:
 
-Generators
-----------
+Height-Based Generators
+-----------------------
 
-Several algorithms are available to generate maps, controlled by the
-``generator`` server setting. The default is
-:ref:`fully random height <mapgen-random>` (``RANDOM``).
+Three of the available algorithms start by building a height map for the whole
+world: :ref:`mapgen-random` (``RANDOM``), :ref:`mapgen-fractal` (``FRACTAL``),
+and :ref:`Fracture Map <mapgen-fracture>` (``FRACTURE``).
+This height map is then used to assign tiles to continents or seas, and to
+distribute terrains on the map. The algorithm used for this is shared between
+the generators and is described in :ref:`mapgen-terrain-assignment`.
 
 .. _mapgen-random:
 
 Fully Random Height
 ^^^^^^^^^^^^^^^^^^^
 
-"Height" in the name of the generator stands for "altitude". This generator is
-extremely simple: it builds a completely random height map and smoothes it out.
+This generator is extremely simple: it builds a completely random height map and
+smoothes it out.
 Terrain is then assigned to tiles based on their height and temperature as
 described in the :ref:`terrain assignment <mapgen-terrain-assignment>` section
 below.
 
+.. _mapgen-fractal:
+
 Pseudo-Fractal Height
 ^^^^^^^^^^^^^^^^^^^^^
 
-Again, "height" in the name of this generator stands for "altitude", and like
-``RANDOM`` this generator is based on a height map. It works by dividing the map
-in blocks (five by five initially) and assigning a random height to their
+This generator works by dividing the map in blocks (five by five initially, or
+six in wrapping directions) and assigning a random height to their
 corners. Each block is then processed recursively, cutting it equally in four
 blocks. The height at the corners of the smaller blocks are computed by
 averaging the heights at the corners of the large blocks and adding a decreasing
@@ -83,6 +87,13 @@ At the end of the generation, more random noise is added on top of the generated
 height map to give more variety on large maps, with warmer tiles generally
 getting more noise. The generated height map is then used to assign terrains as
 :ref:`described below <mapgen-terrain-assignment>`.
+
+.. _mapgen-fracture:
+
+Fracture Map
+^^^^^^^^^^^^
+
+.. todo:: Fill in this section
 
 .. _mapgen-terrain-assignment:
 
