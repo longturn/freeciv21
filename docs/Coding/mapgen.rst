@@ -197,6 +197,152 @@ property has a high value in the ruleset. If this search fails, it is resumed
 without the "preferred" property; if this fails again, the "avoided" property is
 also dropped.
 
+.. _mapgen-island:
+
+Island-Based Generators
+-----------------------
+
+The ``ISLAND`` generator setting corresponds to three different code paths
+depending on the ``startpos`` setting. They all try to fill the map with
+islands, but of different sizes and in different numbers to match the desired
+starting positions. The general idea is to generate island shapes randomly and
+paste them somewhere on the map. If this doesn't work, the process is repeated
+with a slightly smaller island until a fitting size and shape is found. Once
+islands are created, the map is finalized by filling them with terrain and
+creating rivers.
+
+The three available island-based generators are as follows, selected according
+to the value of ``startpos``:
+
+``VARIABLE``:
+  This generator tries to create three types of islands: 70% of the land is
+  given to big islands, 20% to medium, and 10% to small islands. In an ideal
+  case, each player starts on a big island and gets one medium and one small
+  island. However, due to the random nature of the algorithm it is not
+  guaranteed that the smaller islands will be evenly distributed.
+
+  If it is unable to create all the big islands, this generator starts again
+  with a smaller size until they all fit, increasing the size of medium islands
+  accordingly. Medium and small islands are optional and are only generated if
+  they can be placed on the map.
+
+``DEFAULT`` or ``SINGLE``:
+  This generator also tries to create one big island per player. Their size
+  follows a slightly complicated formula. The available landmass is first
+  divided by the number of players. The islands are get one third of the
+  landmass per player if this number is larger than 80 tiles; else half the
+  landmass per player if this is larger than 60 tiles; otherwise exactly the
+  landmass per player. However, the island size is always capped to 120 tiles.
+  The big islands are then created, shrinking them down to up to 10% of their
+  default size if they will not fit.
+
+  To make up for any undistributed landmass, more islands are created with
+  random initial sizes up to the default island size. The generator first
+  attempts to place larger islands, then resorts to smaller ones if it fails.
+
+``2or3`` or ``ALL``:
+  The generator has to create even larger islands for this starting positions
+  mode. Depending on the landmass settings, these large islands take up a
+  different fraction of available land: 50% for a landmass above 60%, 60% for a
+  landmass above 40%, and 70% for a landmass below. This part of the landmass is
+  then distributed evenly among player islands, with two or three players per
+  island; but letting the islands shrink to 10% of their intended size if
+  needed to place them.
+
+  Smaller islands are then created in two different sizes, one of each per
+  player, while also letting those shrink to 10% of their size if needed.
+
+The generators become significantly slower with high ``landmass``, and simply
+refuse to proceed when it is too high (above 80 or 85%). In such cases, they
+fall back to ``RANDOM``, ``FRACTAL``, or ``ISLANDS`` with the ``SINGLE`` player
+placement strategy.
+
+Island Creation
+^^^^^^^^^^^^^^^
+
+To create an island, the generator first builds up its shape and then tries to
+place it on the map. The shape is created by starting from a single tile and
+randomly expanding the island by adding cardinally adjacent tiles until the
+desired size is reached. In addition to the random expansion, all tiles with
+four neighbors are automatically added to the island; this prevents gaps from
+appearing in the middle.
+
+With the island shape created, the algorithm then tries to place it on the map
+by randomly selecting a tile as center and checking for collisions with the map
+boundaries and other islands. This is tried many times before the algorithm
+eventually gives up. Once a fitting location is found, the tiles at the map
+location are set to "unknown" terrain (the map is initially only water), then
+its terrain is immediately set.
+
+Rivers and Terrain
+^^^^^^^^^^^^^^^^^^
+
+Once an island is placed, rivers are added to it. The number of river tiles is
+computed worldwide and each island gets a fraction of it proportional to its
+surface. Creating rivers is done by repeatedly picking a random tile in the
+island. The first suitable river mouth found in this way becomes a river;
+suitable river mouths are coastal tiles with a single cardinally adjacent
+oceanic tile, at most 3 ocean tiles around, and no adjacent river. Afterwards,
+new river mouths are only added with a 1% probability. Instead, when the random
+tile is next to an existing river, the river grows in this direction. Further
+conditions for rivers to grow require that the new tile has no cardinally
+adjacent ocean and at most  one adjacent ocean, and furthermore at most two
+adjacent rivers. In this way the rivers slowly grow inwards.
+
+Terrains are placed in a similar way: tiles are picked at random and terrain is
+assigned to them until reaching their expected number. This is done by groups of
+terrains, starting with forest-like, then desert-like, mountain-like, and
+finally swamp-like. The gaps are then filled with ice, tundras, plains, and
+grassland depending on the local temperature.
+
+The placement algorithm works as follows: for a given terrain type, a line is
+picked in the table below. Lines with larger weights are selected more
+frequently. Each line specifies both the properties of the terrain that will be
+placed and conditions on the tile wetness and temperature that need to be met.
+If they are not fullfilled, the tile is rejected and another one is picked at
+random. In addition, some terrain types are generated less often next to the
+coast; this is controlled by the "ocean affinity" parameter. For coastal tiles,
+this defines the probability that the terrain will be placed on an otherwise
+suitable tile. Finally, the creation of patches of similar terrain is encouraged
+by requiring that the tile passes a coin flip when the terrain would not be next
+to another tile of the same type.
+
+.. table:: Terrain classes produced by the island generators and their matching to tiles
+  :widths: auto
+  :align: center
+
+  +----------+----------+-----------+-----------+----------+---------+-------------+--------+
+  |          |          | Terrain properties               | Tile properties       |        |
+  +          + Ocean    +-----------+-----------+----------+---------+-------------+        +
+  | Type     | Affinity | Required  | Preferred | Avoided  | Wetness | Temp.       | Weight |
+  +==========+==========+===========+===========+==========+=========+=============+========+
+  |          |          | Foliage   | Tropical  | Dry      | All     | Tropical    | 1      |
+  +          +          +-----------+-----------+----------+---------+-------------+--------+
+  |          |          | Foliage   | Temperate | \-       | All     | All         | 3      |
+  + Forest   + 60%      +-----------+-----------+----------+---------+-------------+--------+
+  |          |          | Foliage   | Wet       | Frozen   | Not dry | Tropical    | 1      |
+  +          +          +-----------+-----------+----------+---------+-------------+--------+
+  |          |          | Foliage   | Cold      | \-       | All     | Not frozen  | 1      |
+  +----------+----------+-----------+-----------+----------+---------+-------------+--------+
+  |          |          | Dry       | Tropical  | Green    | Dry     | Hot         | 3      |
+  +          +          +-----------+-----------+----------+---------+-------------+--------+
+  |          |          | Dry       | Temperate | Green    | Dry     | Not frozen  | 2      |
+  + Desert   + 40%      +-----------+-----------+----------+---------+-------------+--------+
+  |          |          | Cold      | Dry       | Tropical | Dry     | Not hot     | 1      |
+  +          +          +-----------+-----------+----------+---------+-------------+--------+
+  |          |          | Frozen    | Dry       | \-       | Dry     | Frozen      | 1      |
+  +----------+----------+-----------+-----------+----------+---------+-------------+--------+
+  |          |          | Mountain  | Green     | \-       | All     | All         | 2      |
+  + Mountain + 20%      +-----------+-----------+----------+---------+-------------+--------+
+  |          |          | Mountain  | \-        | Green    | All     | All         | 1      |
+  +----------+----------+-----------+-----------+----------+---------+-------------+--------+
+  |          |          | Wet       | Tropical  | Foliage  | Not dry | Tropical    | 1      |
+  +          +          +-----------+-----------+----------+---------+-------------+--------+
+  | Swamp    | 80%      | Wet       | Temperate | Foliage  | Not dry | Hot         | 2      |
+  +          +          +-----------+-----------+----------+---------+-------------+--------+
+  |          |          | Wet       | Cold      | Foliage  | Not dry | Not hot     | 1      |
+  +----------+----------+-----------+-----------+----------+---------+-------------+--------+
+
 .. _mapgen-placement:
 
 Player Placement
@@ -268,7 +414,7 @@ island. ``VARIABLE`` is used as a fallback in all cases.
 For the ``SINGLE`` and ``2or3`` modes, an attempt is made at avoiding islands
 with too much variation in their total value. Then a number of players is
 assigned to each island according to the placement mode: all on the best island
-for ``ALL``, one per island for ``SINGLE``, two per island for ``2to3`` (3 on
+for ``ALL``, one per island for ``SINGLE``, two per island for ``2or3`` (3 on
 the best island if needed), and a variable number of players for ``VARIABLE``
 (trying to have a total value of 1500 per player, or failing that to distribute
 available tiles evenly).
