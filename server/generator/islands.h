@@ -5,9 +5,9 @@
 
 #pragma once
 
-void mapgenerator2();
-void mapgenerator3();
-void mapgenerator4();
+void map_island_generate_variable();
+void map_island_generate_single();
+void map_island_generate_2or3();
 
 void island_terrain_init();
 void island_terrain_free();

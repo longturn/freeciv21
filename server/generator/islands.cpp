@@ -304,7 +304,7 @@ static void initworld(struct gen234_state *pstate)
 /**
    island base map generators
  */
-void mapgenerator2()
+void map_island_generate_variable()
 {
   long int totalweight;
   struct gen234_state state;
@@ -403,7 +403,7 @@ void mapgenerator2()
    On popular demand, this tries to mimick the generator 3 as best as
    possible.
  */
-void mapgenerator3()
+void map_island_generate_single()
 {
   int spares = 1;
   int j = 0;
@@ -503,7 +503,7 @@ void mapgenerator3()
 /**
    Generator for placing a couple of players to each island.
  */
-void mapgenerator4()
+void map_island_generate_2or3()
 {
   int bigweight = 70;
   int spares = 1;
