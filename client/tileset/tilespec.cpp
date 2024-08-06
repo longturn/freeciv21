@@ -690,7 +690,7 @@ static struct tileset *tileset_new()
    Return the tileset name of the direction.  This is similar to
    dir_get_name but you shouldn't change this or all tilesets will break.
  */
-static QString dir_get_tileset_name(enum direction8 dir)
+QString dir_get_tileset_name(enum direction8 dir)
 {
   switch (dir) {
   case DIR8_NORTH:

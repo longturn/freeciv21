@@ -339,6 +339,7 @@ int tileset_num_cardinal_dirs(const struct tileset *t);
 int tileset_num_index_cardinals(const struct tileset *t);
 std::array<direction8, 8> tileset_cardinal_dirs(const struct tileset *t);
 QString cardinal_index_str(const struct tileset *t, int idx);
+QString dir_get_tileset_name(enum direction8 dir);
 
 /* These are used as array index -> can't be changed freely to values
    bigger than size of those arrays. */
