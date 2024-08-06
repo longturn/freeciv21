@@ -507,6 +507,24 @@ int tileset_full_tile_height(const struct tileset *t)
 }
 
 /**
+ * Return the x offset of full tiles in the tileset. Use this to draw "full
+ * sprites".
+ */
+int tileset_full_tile_x_offset(const struct tileset *t)
+{
+  return FULL_TILE_X_OFFSET;
+}
+
+/**
+ * Return the y offset of full tiles in the tileset. Use this to draw "full
+ * sprites".
+ */
+int tileset_full_tile_y_offset(const struct tileset *t)
+{
+  return FULL_TILE_Y_OFFSET;
+}
+
+/**
    Return the unit tile width of the current tileset.
  */
 int tileset_unit_width(const struct tileset *t)
@@ -3293,10 +3311,6 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
     terrain_type_iterate(pterrain)
     {
       switch (extrastyle) {
-      case ESTYLE_3LAYER:
-        tileset_setup_base(t, pextra, tag);
-        break;
-
       case ESTYLE_ROAD_ALL_SEPARATE:
         tileset_setup_crossing_separate(t, pextra, pterrain, tag);
         break;
@@ -3307,13 +3321,9 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
         tileset_setup_crossing_combined(t, pextra, pterrain, tag);
         break;
 
+      case ESTYLE_3LAYER: // Migrated away to layer_special
       case ESTYLE_SINGLE1:
-        t->special_layers.background->set_sprite(pextra, tag);
-        break;
       case ESTYLE_SINGLE2:
-        t->special_layers.middleground->set_sprite(pextra, tag);
-        break;
-
       case ESTYLE_RIVER: // Migrated away to layer_water
       case ESTYLE_CARDINALS:
       case ESTYLE_COUNT:
@@ -3473,31 +3483,6 @@ static void tileset_setup_crossing_combined(struct tileset *t,
         t, t->sprites.extras[id].u[terrain_index(pterrain)].road.ru.total[i],
         make_tag_terrain_list(tag, idx_str, pterrain), true);
   }
-}
-
-/**
-   Set base sprite values; should only happen after
-   tilespec_load_tiles().
- */
-static void tileset_setup_base(struct tileset *t,
-                               const struct extra_type *pextra,
-                               const char *tag)
-{
-  const int id = extra_index(pextra);
-
-  fc_assert_ret(id >= 0 && id < extra_count());
-
-  QString full_tag_name = QStringLiteral("%1_bg").arg(tag);
-  t->special_layers.background->set_sprite(
-      pextra, full_tag_name, FULL_TILE_X_OFFSET, FULL_TILE_Y_OFFSET);
-
-  full_tag_name = QStringLiteral("%1_mg").arg(tag);
-  t->special_layers.middleground->set_sprite(
-      pextra, full_tag_name, FULL_TILE_X_OFFSET, FULL_TILE_Y_OFFSET);
-
-  full_tag_name = QStringLiteral("%1_fg").arg(tag);
-  t->special_layers.foreground->set_sprite(
-      pextra, full_tag_name, FULL_TILE_X_OFFSET, FULL_TILE_Y_OFFSET);
 }
 
 /**

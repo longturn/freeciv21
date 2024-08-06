@@ -27,6 +27,9 @@ public:
   explicit layer_special(struct tileset *ts, mapview_layer layer);
   virtual ~layer_special() = default;
 
+  void initialize_extra(const extra_type *extra, const QString &tag,
+                        extrastyle_id style) override;
+
   void set_sprite(const extra_type *extra, const QString &tag,
                   int offset_x = 0, int offset_y = 0);
 
