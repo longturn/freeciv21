@@ -1288,7 +1288,7 @@ bool map_generate(bool autosize, struct unit_type *initial_unit)
     }
 
     if (MAPGEN_FRACTURE == wld.map.server.generator) {
-      make_fracture_map();
+      make_fracture_hmap();
     }
 
     // if hmap only generator make anything else
