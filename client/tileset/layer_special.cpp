@@ -15,7 +15,6 @@
 
 #include "extras.h"
 #include "game.h" // For extra_type_iterate
-#include "sprite_g.h"
 #include "tilespec.h"
 
 namespace freeciv {
@@ -25,6 +24,32 @@ layer_special::layer_special(struct tileset *ts, mapview_layer layer)
 {
   fc_assert(layer == LAYER_SPECIAL1 || layer == LAYER_SPECIAL2
             || layer == LAYER_SPECIAL3);
+}
+
+/**
+ * Loads sprites for the extra if it has ESTYLE_SINGLE1/2 or ESTYLE_3LAYER.
+ */
+void layer_special::initialize_extra(const extra_type *extra,
+                                     const QString &tag, extrastyle_id style)
+{
+  // SINGLE1 extras have a sprite on special layer 1 only
+  // SINGLE2 extras have a sprite on special layer 2 only
+  // 3LAYER extras have a sprite on all 3 layers
+  if (style == ESTYLE_SINGLE1 && type() == LAYER_SPECIAL1) {
+    set_sprite(extra, tag);
+  } else if (style == ESTYLE_SINGLE2 && type() == LAYER_SPECIAL2) {
+    set_sprite(extra, tag);
+  } else if (style == ESTYLE_3LAYER) {
+    auto full_tag_name = QStringLiteral("%1_bg").arg(tag);
+    if (type() == LAYER_SPECIAL2) {
+      full_tag_name = QStringLiteral("%1_mg").arg(tag);
+    } else if (type() == LAYER_SPECIAL3) {
+      full_tag_name = QStringLiteral("%1_fg").arg(tag);
+    }
+
+    set_sprite(extra, full_tag_name, tileset_full_tile_x_offset(tileset()),
+               tileset_full_tile_y_offset(tileset()));
+  }
 }
 
 void layer_special::set_sprite(const extra_type *extra, const QString &tag,
