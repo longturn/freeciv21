@@ -304,7 +304,7 @@ static void initworld(struct gen234_state *pstate)
 /**
    island base map generators
  */
-static void map_island_generate_variable()
+static void map_generate_island_variable()
 {
   long int totalweight;
   struct gen234_state state;
@@ -403,7 +403,7 @@ static void map_island_generate_variable()
    On popular demand, this tries to mimick the generator 3 as best as
    possible.
  */
-static void map_island_generate_single()
+static void map_generate_island_single()
 {
   int spares = 1;
   int j = 0;
@@ -503,7 +503,7 @@ static void map_island_generate_single()
 /**
    Generator for placing a couple of players to each island.
  */
-static void map_island_generate_2or3()
+static void map_generate_island_2or3()
 {
   int bigweight = 70;
   int spares = 1;
@@ -570,7 +570,7 @@ static void map_island_generate_2or3()
 /**
  * Generate a map with the ISLAND family of generators.
  */
-void map_island_generate()
+void map_generate_island()
 {
   // initialise terrain selection lists used by make_island()
   island_terrain_init();
@@ -578,16 +578,16 @@ void map_island_generate()
   // 2 or 3 players per isle?
   if (MAPSTARTPOS_2or3 == wld.map.server.startpos
       || MAPSTARTPOS_ALL == wld.map.server.startpos) {
-    map_island_generate_2or3();
+    map_generate_island_2or3();
   }
   if (MAPSTARTPOS_DEFAULT == wld.map.server.startpos
       || MAPSTARTPOS_SINGLE == wld.map.server.startpos) {
     // Single player per isle.
-    map_island_generate_single();
+    map_generate_island_single();
   }
   if (MAPSTARTPOS_VARIABLE == wld.map.server.startpos) {
     // "Variable" single player.
-    map_island_generate_variable();
+    map_generate_island_variable();
   }
 
   // free terrain selection lists used by make_island()

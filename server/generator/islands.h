@@ -5,4 +5,4 @@
 
 #pragma once
 
-void map_island_generate();
+void map_generate_island();
