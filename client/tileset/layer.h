@@ -48,6 +48,31 @@ struct tile_corner {
   const struct tile *tile[NUM_CORNER_TILES];
 };
 
+#define SPECENUM_NAME extrastyle_id
+#define SPECENUM_VALUE0 ESTYLE_ROAD_ALL_SEPARATE
+#define SPECENUM_VALUE0NAME "RoadAllSeparate"
+#define SPECENUM_VALUE1 ESTYLE_ROAD_PARITY_COMBINED
+#define SPECENUM_VALUE1NAME "RoadParityCombined"
+#define SPECENUM_VALUE2 ESTYLE_ROAD_ALL_COMBINED
+#define SPECENUM_VALUE2NAME "RoadAllCombined"
+#define SPECENUM_VALUE3 ESTYLE_RIVER
+#define SPECENUM_VALUE3NAME "River"
+#define SPECENUM_VALUE4 ESTYLE_SINGLE1
+#define SPECENUM_VALUE4NAME "Single1"
+#define SPECENUM_VALUE5 ESTYLE_SINGLE2
+#define SPECENUM_VALUE5NAME "Single2"
+#define SPECENUM_VALUE6 ESTYLE_3LAYER
+#define SPECENUM_VALUE6NAME "3Layer"
+#define SPECENUM_VALUE7 ESTYLE_CARDINALS
+#define SPECENUM_VALUE7NAME "Cardinals"
+#define SPECENUM_COUNT ESTYLE_COUNT
+#include "specenum_gen.h"
+
+// This the way directional indices are now encoded:
+#define MAX_INDEX_CARDINAL 64
+#define MAX_INDEX_HALF 16
+#define MAX_INDEX_VALID 256
+
 /* Items on the mapview are drawn in layers.  Each entry below represents
  * one layer.  The names are basically arbitrary and just correspond to
  * groups of elements in fill_sprite_array().  Callers of fill_sprite_array
