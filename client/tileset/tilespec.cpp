@@ -2353,6 +2353,41 @@ QPixmap *load_sprite(struct tileset *t, const QString &tag_name)
 }
 
 /**
+ * Finds the first sprite matching a list of possible names and returns it.
+ * Aborts when a required sprite is not found; otherwise, warns and returns
+ * nullptr.
+ */
+QPixmap *load_sprite(struct tileset *t, const QStringList &possible_names,
+                     bool required)
+{
+  // go through the list of possible names until
+  // you find a sprite that exists.
+  for (const auto &name : possible_names) {
+    auto sprite = load_sprite(t, name);
+    if (sprite) {
+      return sprite;
+    }
+  }
+
+  // TODO Qt6
+  // We should be able to remove the line below and
+  // update the tileset_errors in the if statement.
+  QVector<QString> names_vec(possible_names.begin(), possible_names.end());
+  // if sprite couldn't be found and it is required, crash, else warn.
+  if (required) {
+    tileset_error(t, LOG_FATAL,
+                  _("Could not find required sprite matching %s"),
+                  qUtf8Printable(strvec_to_or_list(names_vec)));
+  } else {
+    tileset_error(t, LOG_NORMAL,
+                  _("Could not find optional sprite matching %s"),
+                  qUtf8Printable(strvec_to_or_list(names_vec)));
+  }
+
+  return nullptr;
+}
+
+/**
    Unloads the sprite. Decrease the reference counter. If the last
    reference is removed the sprite is freed.
  */
@@ -2381,28 +2416,7 @@ static void unload_sprite(struct tileset *t, const QString &tag_name)
 static void assign_sprite(struct tileset *t, QPixmap *&field,
                           const QStringList &possible_names, bool required)
 {
-  // go through the list of possible names until
-  // you find a sprite that exists.
-  for (const auto &name : possible_names) {
-    field = load_sprite(t, name);
-    if (field) {
-      return;
-    }
-  }
-  // TODO Qt6
-  // We should be able to remove the line below and
-  // update the tileset_errors in the if statement.
-  QVector<QString> names_vec(possible_names.begin(), possible_names.end());
-  // if sprite couldn't be found and it is required, crash, else warn.
-  if (required) {
-    tileset_error(t, LOG_FATAL,
-                  _("Could not find required sprite matching %s"),
-                  qUtf8Printable(strvec_to_or_list(names_vec)));
-  } else {
-    tileset_error(t, LOG_NORMAL,
-                  _("Could not find optional sprite matching %s"),
-                  qUtf8Printable(strvec_to_or_list(names_vec)));
-  }
+  field = load_sprite(t, possible_names, required);
 }
 
 /**
