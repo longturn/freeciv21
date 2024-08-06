@@ -1267,7 +1267,7 @@ bool map_generate(bool autosize, struct unit_type *initial_unit)
     }
 
     if (MAPGEN_ISLAND == wld.map.server.generator) {
-      map_island_generate();
+      map_generate_island();
     }
 
     if (MAPGEN_FRACTAL == wld.map.server.generator) {
