@@ -8,6 +8,7 @@
 // common
 #include "game.h"
 #include "map.h"
+#include "map_types.h"
 #include "terrain.h"
 
 // server/generator
@@ -304,7 +305,7 @@ static void initworld(struct gen234_state *pstate)
 /**
    island base map generators
  */
-static void map_generate_island_variable()
+static bool map_generate_island_variable()
 {
   long int totalweight;
   struct gen234_state state;
@@ -320,9 +321,8 @@ static void map_generate_island_variable()
   int bigfrac = 70, midfrac = 20, smallfrac = 10;
 
   if (wld.map.server.landpercent > 85) {
-    qDebug("ISLAND generator: falling back to RANDOM generator");
-    wld.map.server.generator = MAPGEN_RANDOM;
-    return;
+    qDebug("ISLAND generator: falling back to the next generator");
+    return false;
   }
 
   pstate->totalmass =
@@ -331,9 +331,7 @@ static void map_generate_island_variable()
       / 100;
   totalweight = 100 * player_count();
 
-  fc_assert_action(!placed_map_is_initialized(),
-                   wld.map.server.generator = MAPGEN_RANDOM;
-                   return );
+  fc_assert_ret_val(!placed_map_is_initialized(), false);
 
   while (!done && bigfrac > midfrac) {
     done = true;
@@ -369,14 +367,13 @@ static void map_generate_island_variable()
 
   if (bigfrac <= midfrac) {
     // We could never make adequately big islands.
-    qDebug("ISLAND generator: falling back to RANDOM generator");
-    wld.map.server.generator = MAPGEN_RANDOM;
+    qDebug("ISLAND generator: falling back to the next generator");
 
     // init world created this map, destroy it before abort
     destroy_placed_map();
     delete[] height_map;
     height_map = nullptr;
-    return;
+    return false;
   }
 
   /* Now place smaller islands, but don't worry if they're small,
@@ -397,13 +394,15 @@ static void map_generate_island_variable()
   if (checkmass > wld.map.xsize + wld.map.ysize + totalweight) {
     qDebug("%ld mass left unplaced", checkmass);
   }
+
+  return true;
 }
 
 /**
    On popular demand, this tries to mimick the generator 3 as best as
    possible.
  */
-static void map_generate_island_single()
+static bool map_generate_island_single()
 {
   int spares = 1;
   int j = 0;
@@ -414,17 +413,15 @@ static void map_generate_island_single()
   struct gen234_state *pstate = &state;
 
   if (wld.map.server.landpercent > 80) {
-    qDebug("ISLAND generator: falling back to FRACTAL generator due "
+    qDebug("ISLAND generator: falling back to the next generator due "
            "to landpercent > 80.");
-    wld.map.server.generator = MAPGEN_FRACTAL;
-    return;
+    return false;
   }
 
   if (wld.map.xsize < 40 || wld.map.ysize < 40) {
-    qDebug("ISLAND generator: falling back to FRACTAL generator due "
+    qDebug("ISLAND generator: falling back to the next generator due "
            "to unsupported map size.");
-    wld.map.server.generator = MAPGEN_FRACTAL;
-    return;
+    return false;
   }
 
   pstate->totalmass =
@@ -498,12 +495,14 @@ static void map_generate_island_single()
   } else if (checkmass > wld.map.xsize + wld.map.ysize) {
     qDebug("%ld mass left unplaced", checkmass);
   }
+
+  return true;
 }
 
 /**
    Generator for placing a couple of players to each island.
  */
-static void map_generate_island_2or3()
+static bool map_generate_island_2or3()
 {
   int bigweight = 70;
   int spares = 1;
@@ -515,9 +514,8 @@ static void map_generate_island_2or3()
   // no islands with mass >> sqr(min(xsize,ysize))
 
   if (player_count() < 2 || wld.map.server.landpercent > 80) {
-    qDebug("ISLAND generator: falling back to startpos=SINGLE");
-    wld.map.server.startpos = MAPSTARTPOS_SINGLE;
-    return;
+    qDebug("ISLAND generator: falling back to the next generator.");
+    return false;
   }
 
   if (wld.map.server.landpercent > 60) {
@@ -565,33 +563,41 @@ static void map_generate_island_2or3()
   if (checkmass > wld.map.xsize + wld.map.ysize + totalweight) {
     qDebug("%ld mass left unplaced", checkmass);
   }
+
+  return true;
 }
 
 /**
- * Generate a map with the ISLAND family of generators.
+ * Generate a map with the ISLAND family of generators. Returns true on
+ * success.
  */
-void map_generate_island()
+bool map_generate_island()
 {
   // initialise terrain selection lists used by make_island()
   island_terrain_init();
 
-  // 2 or 3 players per isle?
-  if (MAPSTARTPOS_2or3 == wld.map.server.startpos
-      || MAPSTARTPOS_ALL == wld.map.server.startpos) {
-    map_generate_island_2or3();
-  }
-  if (MAPSTARTPOS_DEFAULT == wld.map.server.startpos
-      || MAPSTARTPOS_SINGLE == wld.map.server.startpos) {
+  bool ok = false;
+  switch (wld.map.server.startpos) {
+  case MAPSTARTPOS_2or3:
+  case MAPSTARTPOS_ALL:
+    // 2 or 3 players per isle
+    ok = map_generate_island_2or3();
+    break;
+  case MAPSTARTPOS_DEFAULT:
+  case MAPSTARTPOS_SINGLE:
     // Single player per isle.
-    map_generate_island_single();
-  }
-  if (MAPSTARTPOS_VARIABLE == wld.map.server.startpos) {
+    ok = map_generate_island_single();
+    break;
+  case MAPSTARTPOS_VARIABLE:
     // "Variable" single player.
-    map_generate_island_variable();
+    ok = map_generate_island_variable();
+    break;
   }
 
   // free terrain selection lists used by make_island()
   island_terrain_free();
+
+  return ok;
 }
 
 #undef DMSIS
