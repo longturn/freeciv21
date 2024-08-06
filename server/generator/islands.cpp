@@ -76,7 +76,7 @@ static long int checkmass;
 /**
    Initialize terrain selection lists for make_island().
  */
-void island_terrain_init()
+static void island_terrain_init()
 {
   struct terrain_select *ptersel;
 
@@ -132,7 +132,7 @@ void island_terrain_init()
 /**
    Free memory allocated for terrain selection lists.
  */
-void island_terrain_free()
+static void island_terrain_free()
 {
   if (!island_terrain.init) {
     return;
@@ -304,7 +304,7 @@ static void initworld(struct gen234_state *pstate)
 /**
    island base map generators
  */
-void map_island_generate_variable()
+static void map_island_generate_variable()
 {
   long int totalweight;
   struct gen234_state state;
@@ -403,7 +403,7 @@ void map_island_generate_variable()
    On popular demand, this tries to mimick the generator 3 as best as
    possible.
  */
-void map_island_generate_single()
+static void map_island_generate_single()
 {
   int spares = 1;
   int j = 0;
@@ -503,7 +503,7 @@ void map_island_generate_single()
 /**
    Generator for placing a couple of players to each island.
  */
-void map_island_generate_2or3()
+static void map_island_generate_2or3()
 {
   int bigweight = 70;
   int spares = 1;
@@ -565,6 +565,33 @@ void map_island_generate_2or3()
   if (checkmass > wld.map.xsize + wld.map.ysize + totalweight) {
     qDebug("%ld mass left unplaced", checkmass);
   }
+}
+
+/**
+ * Generate a map with the ISLAND family of generators.
+ */
+void map_island_generate()
+{
+  // initialise terrain selection lists used by make_island()
+  island_terrain_init();
+
+  // 2 or 3 players per isle?
+  if (MAPSTARTPOS_2or3 == wld.map.server.startpos
+      || MAPSTARTPOS_ALL == wld.map.server.startpos) {
+    map_island_generate_2or3();
+  }
+  if (MAPSTARTPOS_DEFAULT == wld.map.server.startpos
+      || MAPSTARTPOS_SINGLE == wld.map.server.startpos) {
+    // Single player per isle.
+    map_island_generate_single();
+  }
+  if (MAPSTARTPOS_VARIABLE == wld.map.server.startpos) {
+    // "Variable" single player.
+    map_island_generate_variable();
+  }
+
+  // free terrain selection lists used by make_island()
+  island_terrain_free();
 }
 
 #undef DMSIS

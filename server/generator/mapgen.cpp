@@ -31,8 +31,8 @@
 /* server/generator */
 #include "fair_islands.h"
 #include "fracture_map.h"
-#include "islands.h"
 #include "height_map.h"
+#include "islands.h"
 #include "mapgen_topology.h"
 #include "mapgen_utils.h"
 #include "startpos.h"
@@ -1267,26 +1267,7 @@ bool map_fractal_generate(bool autosize, struct unit_type *initial_unit)
     }
 
     if (MAPGEN_ISLAND == wld.map.server.generator) {
-      // initialise terrain selection lists used by make_island()
-      island_terrain_init();
-
-      // 2 or 3 players per isle?
-      if (MAPSTARTPOS_2or3 == wld.map.server.startpos
-          || MAPSTARTPOS_ALL == wld.map.server.startpos) {
-        map_island_generate_2or3();
-      }
-      if (MAPSTARTPOS_DEFAULT == wld.map.server.startpos
-          || MAPSTARTPOS_SINGLE == wld.map.server.startpos) {
-        // Single player per isle.
-        map_island_generate_single();
-      }
-      if (MAPSTARTPOS_VARIABLE == wld.map.server.startpos) {
-        // "Variable" single player.
-        map_island_generate_variable();
-      }
-
-      // free terrain selection lists used by make_island()
-      island_terrain_free();
+      map_island_generate();
     }
 
     if (MAPGEN_FRACTAL == wld.map.server.generator) {
