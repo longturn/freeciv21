@@ -1272,20 +1272,11 @@ bool map_generate(bool autosize, struct unit_type *initial_unit)
     }
 
     if (MAPGEN_FRACTAL == wld.map.server.generator) {
-      make_pseudofractal1_hmap(
-          1
-          + ((MAPSTARTPOS_DEFAULT == wld.map.server.startpos
-              || MAPSTARTPOS_ALL == wld.map.server.startpos)
-                 ? 0
-                 : player_count()));
+      make_pseudofractal_hmap();
     }
 
     if (MAPGEN_RANDOM == wld.map.server.generator) {
-      make_random_hmap(
-          MAX(1, 1 + get_sqsize()
-                     - (MAPSTARTPOS_DEFAULT != wld.map.server.startpos
-                            ? player_count() / 4
-                            : 0)));
+      make_random_hmap();
     }
 
     if (MAPGEN_FRACTURE == wld.map.server.generator) {

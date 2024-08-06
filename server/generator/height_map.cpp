@@ -96,14 +96,18 @@ void renormalize_hmap_poles()
    Create uncorrelated rand map and do some call to smoth to correlate
    it a little and create randoms shapes
  */
-void make_random_hmap(int smooth)
+void make_random_hmap()
 {
-  int i = 0;
+  int smooth = MAX(1, 1 + get_sqsize()
+                          - (MAPSTARTPOS_DEFAULT != wld.map.server.startpos
+                                 ? player_count() / 4
+                                 : 0));
+
   height_map = new int[MAP_INDEX_SIZE];
 
   INITIALIZE_ARRAY(height_map, MAP_INDEX_SIZE, fc_rand(1000 * smooth));
 
-  for (; i < smooth; i++) {
+  for (int i = 0; i < smooth; i++) {
     smooth_int_map(height_map, true);
   }
 
@@ -196,7 +200,7 @@ static void gen5rec(int step, int xl, int yt, int xr, int yb)
    extra_div can be increased to break the world up into more, smaller
    islands.  This is used in conjunction with the startpos setting.
  */
-void make_pseudofractal1_hmap(int extra_div)
+void make_pseudofractal_hmap()
 {
   const bool xnowrap = !current_topo_has_flag(TF_WRAPX);
   const bool ynowrap = !current_topo_has_flag(TF_WRAPY);
@@ -205,6 +209,11 @@ void make_pseudofractal1_hmap(int extra_div)
    * How many blocks should the x and y directions be divided into
    * initially.
    */
+  const int extra_div = 1
+                        + ((MAPSTARTPOS_DEFAULT == wld.map.server.startpos
+                            || MAPSTARTPOS_ALL == wld.map.server.startpos)
+                               ? 0
+                               : player_count());
   const int xdiv = 5 + extra_div;
   const int ydiv = 5 + extra_div;
 

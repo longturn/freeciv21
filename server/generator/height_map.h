@@ -33,7 +33,7 @@ extern int hmap_shore_level, hmap_mountain_level;
 
 void normalize_hmap_poles();
 void renormalize_hmap_poles();
-void make_random_hmap(int smooth);
-void make_pseudofractal1_hmap(int extra_div);
+void make_random_hmap();
+void make_pseudofractal_hmap();
 
 bool area_is_too_flat(struct tile *ptile, int thill, int my_height);
