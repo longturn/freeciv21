@@ -2996,61 +2996,12 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     }
   }
 
-  switch (t->darkness_layer->style()) {
-  case freeciv::DARKNESS_NONE:
-    // Nothing.
-    break;
-  case freeciv::DARKNESS_ISORECT: {
-    // Isometric: take a single tx.darkness tile and split it into 4.
-    QPixmap *darkness = load_sprite(t, QStringLiteral("tx.darkness"));
-    const int ntw = t->normal_tile_width, nth = t->normal_tile_height;
-    int offsets[4][2] = {
-        {ntw / 2, 0}, {0, nth / 2}, {ntw / 2, nth / 2}, {0, 0}};
-
-    if (!darkness) {
-      tileset_error(t, LOG_FATAL, _("Sprite tx.darkness missing."));
-    }
-    for (i = 0; i < 4; i++) {
-      const auto sprite = std::unique_ptr<QPixmap>(
-          crop_sprite(darkness, offsets[i][0], offsets[i][1], ntw / 2,
-                      nth / 2, nullptr, 0, 0));
-      t->darkness_layer->set_sprite(i, *sprite);
-    }
-  } break;
-  case freeciv::DARKNESS_CARD_SINGLE:
-    for (i = 0; i < t->num_cardinal_tileset_dirs; i++) {
-      enum direction8 dir = t->cardinal_tileset_dirs[i];
-
-      buffer =
-          QStringLiteral("tx.darkness_%1").arg(dir_get_tileset_name(dir));
-
-      const auto sprite = load_sprite(t, buffer);
-      if (sprite) {
-        t->darkness_layer->set_sprite(i, *sprite);
-      } else {
-        tileset_error(t, LOG_FATAL, _("Sprite for tag '%s' missing."),
-                      qUtf8Printable(buffer));
-      }
-    }
-    break;
-  case freeciv::DARKNESS_CARD_FULL:
-    for (i = 1; i < t->num_index_cardinal; i++) {
-      buffer =
-          QStringLiteral("tx.darkness_%1").arg(cardinal_index_str(t, i));
-
-      const auto sprite = load_sprite(t, buffer);
-      if (sprite) {
-        t->darkness_layer->set_sprite(i, *sprite);
-      } else {
-        tileset_error(t, LOG_FATAL, _("Sprite for tag '%s' missing."),
-                      qUtf8Printable(buffer));
-      }
-    }
-    break;
-  case freeciv::DARKNESS_CORNER:
+  t->darkness_layer->load_sprites();
+  // For LAYER_FOG
+  if (t->darkness_layer->style() == freeciv::DARKNESS_CORNER) {
     t->sprites.tx.fullfog = static_cast<QPixmap **>(fc_realloc(
         t->sprites.tx.fullfog, 81 * sizeof(*t->sprites.tx.fullfog)));
-    for (i = 0; i < 81; i++) {
+    for (int i = 0; i < 81; i++) {
       // Unknown, fog, known.
       char ids[] = {'u', 'f', 'k'};
       char buf[512] = "t.fog";
@@ -3066,8 +3017,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
 
       t->sprites.tx.fullfog[i] = load_sprite(t, buf);
     }
-    break;
-  };
+  }
 
   // no other place to initialize these variables
   sprite_vector_init(&t->sprites.nation_flag);
