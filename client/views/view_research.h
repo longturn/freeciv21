@@ -71,6 +71,8 @@ struct qlist_item {
 class science_report : public QWidget {
   Q_OBJECT
 
+  static inline int horizontalScrollValue;
+  static inline int verticalScrollValue;
   QComboBox *goal_combo;
   QComboBox *researching_combo;
   QPushButton *refresh_but;
@@ -97,6 +99,8 @@ private slots:
   void current_tech_changed(int index);
   void goal_tech_changed(int index);
   void push_research();
+  void setHorizontalScrollValue(int value);
+  void setVerticalScrollValue(int value);
 };
 
 void popdown_science_report();
