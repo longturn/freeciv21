@@ -3381,6 +3381,11 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
       }
     }
     terrain_type_iterate_end;
+
+    // Also init modern class-based layers
+    for (auto &layer : t->layers) {
+      layer->initialize_extra(pextra, tag, extrastyle);
+    }
   }
 
   if (!fc_strcasecmp(pextra->activity_gfx, "none")) {
