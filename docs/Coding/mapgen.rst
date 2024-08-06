@@ -17,6 +17,8 @@ perspective. There are several generators the user can choose from
 
 .. note::
   See :doc:`/Manuals/Advanced/map-generator` for a less technical introduction.
+  This page expects the reader to already be familiar with the settings
+  governing map creation.
 
 Map generation is performed in multiple passes. After some initialization, the
 first step, shared between all generators, is the creation of a basic
@@ -44,6 +46,10 @@ between them. For each tile that gets a resource, one is picked at random from
 the list of allowed resources for the terrain. Huts are added in a similar way
 but with a minimum distance of 3 tiles. The final step is to distribute players,
 as described in :ref:`Player Placement <mapgen-placement>` below.
+
+.. todo::
+  This page is missing information about the Fair Islands generator. Please feel
+  free to contribute!
 
 .. _mapgen-fractions:
 
