@@ -1229,7 +1229,7 @@ static void print_mapgen_map()
    based on the map.server.size server parameter and the specified topology.
    If not map.xsize and map.ysize will be used.
  */
-bool map_fractal_generate(bool autosize, struct unit_type *initial_unit)
+bool map_generate(bool autosize, struct unit_type *initial_unit)
 {
   auto rstate = fc_rand_state();
 

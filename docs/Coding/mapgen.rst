@@ -15,7 +15,7 @@ This page describes how maps are generated in Freeciv21, from a technical
 perspective. There are several generators the user can choose from
 (``generator`` server setting), but they share a lot of code. The map generator
 code is located under ``server/generator``. The entry point is
-``map_fractal_generate`` in ``mapgen.cpp``.
+``map_generate`` in ``mapgen.cpp``.
 
 .. note::
   See :doc:`/Manuals/Advanced/map-generator` for a less technical introduction.
