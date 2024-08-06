@@ -4,6 +4,7 @@ add_library(
   fair_islands.cpp
   fracture_map.cpp
   height_map.cpp
+  islands.cpp
   mapgen.cpp
   mapgen_topology.cpp
   mapgen_utils.cpp
