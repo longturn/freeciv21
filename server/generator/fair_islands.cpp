@@ -7,8 +7,8 @@
 
 // common
 #include "fc_types.h"
-#include "nation.h"
 #include "map.h"
+#include "nation.h"
 
 // server/generator
 #include "mapgen.h"
