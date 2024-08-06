@@ -3288,9 +3288,9 @@ void tileset_setup_tech_type(struct tileset *t, struct advance *padvance)
  * Make the list of possible tag names for the extras which
  * may vary depending on the terrain they're on.
  */
-static QStringList make_tag_terrain_list(const QString &prefix,
-                                         const QString &suffix,
-                                         const struct terrain *pterrain)
+QStringList make_tag_terrain_list(const QString &prefix,
+                                  const QString &suffix,
+                                  const struct terrain *pterrain)
 {
   return {
       QStringLiteral("%1_%2%3").arg(prefix, pterrain->graphic_str, suffix),

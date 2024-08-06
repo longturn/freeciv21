@@ -153,6 +153,10 @@ void tileset_setup_impr_type(struct tileset *t, struct impr_type *pimprove);
 void tileset_setup_tech_type(struct tileset *t, struct advance *padvance);
 void tileset_setup_tile_type(struct tileset *t,
                              const struct terrain *pterrain);
+
+QStringList make_tag_terrain_list(const QString &prefix,
+                                  const QString &suffix,
+                                  const struct terrain *pterrain);
 void tileset_setup_extra(struct tileset *t, struct extra_type *pextra);
 void tileset_setup_government(struct tileset *t, struct government *gov);
 void tileset_setup_nation_flag(struct tileset *t,
