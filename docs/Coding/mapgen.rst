@@ -122,8 +122,8 @@ below, and :ref:`rivers are added on top <mapgen-height-rivers>`.
 Pseudo-Fractal Height
 ^^^^^^^^^^^^^^^^^^^^^
 
-This generator works by dividing the map in blocks (five by five initially, or
-six in wrapping directions) and assigning a random height to their
+This generator works by dividing the map in blocks (five plus the number of
+player islands to be created) and assigning a random height to their
 corners. Each block is then processed recursively, cutting it equally in four
 blocks. The height at the corners of the smaller blocks are computed by
 averaging the heights at the corners of the large blocks and adding a decreasing
