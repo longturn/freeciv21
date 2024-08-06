@@ -80,6 +80,7 @@
 #include "layer_special.h"
 #include "layer_terrain.h"
 #include "layer_units.h"
+#include "layer_water.h"
 #include "options.h" // for fill_xxx, tileset options
 #include "page_game.h"
 #include "tilespec.h"
@@ -145,10 +146,6 @@ static const char edge_name[EDGE_COUNT][3] = {"ns", "we", "ud", "lr"};
 
 using styles = std::vector<std::unique_ptr<freeciv::colorizer>>;
 using city_sprite = std::vector<styles>;
-
-struct river_sprites {
-  QPixmap *spec[MAX_INDEX_CARDINAL], *outlet[MAX_INDEX_CARDINAL];
-};
 
 struct citizen_graphic {
   /* Each citizen type has up to MAX_NUM_CITIZEN_SPRITES different
@@ -235,7 +232,6 @@ struct named_sprites {
     QPixmap *activity, *rmact;
     int extrastyle;
     union {
-      QPixmap *cardinals[MAX_INDEX_CARDINAL];
       struct {
         QPixmap
             /* for extrastyles ESTYLE_ROAD_ALL_SEPARATE and
@@ -253,7 +249,6 @@ struct named_sprites {
           } combo;
           // ESTYLE_ALL_SEPARATE
           QPixmap *total[MAX_INDEX_VALID];
-          struct river_sprites rivers;
         } ru;
       } road;
     } u[MAX_NUM_TERRAINS];
@@ -396,11 +391,6 @@ static void tileset_setup_crossing_combined(struct tileset *t,
                                             struct extra_type *pextra,
                                             struct terrain *pterrain,
                                             const char *tag);
-
-static void tileset_setup_river(struct tileset *t, struct extra_type *pextra,
-                                struct terrain *pterrain, const char *tag);
-
-bool is_extra_drawing_enabled(struct extra_type *pextra);
 
 static void tileset_player_free(struct tileset *t, int plrid);
 
@@ -1610,6 +1600,9 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
   case LAYER_UNIT:
   case LAYER_FOCUS_UNIT: {
     t->layers.emplace_back(std::make_unique<freeciv::layer_units>(t, layer));
+  } break;
+  case LAYER_WATER: {
+    t->layers.emplace_back(std::make_unique<freeciv::layer_water>(t));
   } break;
   default:
     t->layers.push_back(std::make_unique<freeciv::layer>(t, layer));
@@ -3363,9 +3356,6 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
       case ESTYLE_ROAD_ALL_COMBINED:
         tileset_setup_crossing_combined(t, pextra, pterrain, tag);
         break;
-      case ESTYLE_RIVER:
-        tileset_setup_river(t, pextra, pterrain, tag);
-        break;
 
       case ESTYLE_SINGLE1:
         t->special_layers.background->set_sprite(pextra, tag);
@@ -3374,20 +3364,8 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
         t->special_layers.middleground->set_sprite(pextra, tag);
         break;
 
-      case ESTYLE_CARDINALS: {
-        /* We use direction-specific irrigation and farmland graphics, if
-         * they are available.  If not, we just fall back to the basic
-         * irrigation graphics. */
-        for (int i = 0; i < t->num_index_cardinal; i++) {
-          QStringList tags =
-              make_tag_terrain_list(tag, cardinal_index_str(t, i), pterrain);
-          QStringList alt_tags = make_tag_terrain_list(tag, "", pterrain);
-          assign_sprite(
-              t,
-              t->sprites.extras[id].u[terrain_index(pterrain)].cardinals[i],
-              tags + alt_tags, true);
-        }
-      } break;
+      case ESTYLE_RIVER: // Migrated away to layer_water
+      case ESTYLE_CARDINALS:
       case ESTYLE_COUNT:
         break;
       }
@@ -3544,37 +3522,6 @@ static void tileset_setup_crossing_combined(struct tileset *t,
     assign_sprite(
         t, t->sprites.extras[id].u[terrain_index(pterrain)].road.ru.total[i],
         make_tag_terrain_list(tag, idx_str, pterrain), true);
-  }
-}
-
-/**
- * Set river sprites (ESTYLE_RIVER).
- * should only happen after tilespec_load_tiles().
- */
-static void tileset_setup_river(struct tileset *t, struct extra_type *pextra,
-                                struct terrain *pterrain, const char *tag)
-{
-  const int id = extra_index(pextra);
-
-  QString suffix;
-
-  for (int i = 0; i < t->num_index_cardinal; i++) {
-    suffix = QStringLiteral("_s_%1").arg(cardinal_index_str(t, i));
-    assign_sprite(t,
-                  t->sprites.extras[id]
-                      .u[terrain_index(pterrain)]
-                      .road.ru.rivers.spec[i],
-                  make_tag_terrain_list(tag, suffix, pterrain), true);
-  }
-
-  for (int i = 0; i < t->num_cardinal_tileset_dirs; i++) {
-    suffix = QStringLiteral("_outlet_%1")
-                 .arg(dir_get_tileset_name(t->cardinal_tileset_dirs[i]));
-    assign_sprite(t,
-                  t->sprites.extras[id]
-                      .u[terrain_index(pterrain)]
-                      .road.ru.rivers.outlet[i],
-                  make_tag_terrain_list(tag, suffix, pterrain), true);
   }
 }
 
@@ -4182,76 +4129,6 @@ static void fill_crossing_sprite_array(
 }
 
 /**
-   Return the index of the sprite to be used for irrigation or farmland in
-   this tile.
-
-   We assume that the current tile has farmland or irrigation.  We then
-   choose a sprite (index) based upon which cardinally adjacent tiles have
-   either farmland or irrigation (the two are considered interchangable for
-   this).
- */
-static int get_irrigation_index(const struct tileset *t,
-                                struct extra_type *pextra,
-                                bv_extras *textras_near)
-{
-  int tileno = 0, i;
-
-  for (i = 0; i < t->num_cardinal_tileset_dirs; i++) {
-    enum direction8 dir = t->cardinal_tileset_dirs[i];
-
-    if (BV_ISSET(textras_near[dir], extra_index(pextra))) {
-      tileno |= 1 << i;
-    }
-  }
-
-  return tileno;
-}
-
-/**
-   Fill in the farmland/irrigation sprite for the tile.
- */
-static void fill_irrigation_sprite_array(const struct tileset *t,
-                                         std::vector<drawn_sprite> &sprs,
-                                         bv_extras textras,
-                                         bv_extras *textras_near,
-                                         const struct terrain *pterrain,
-                                         const struct city *pcity)
-{
-  /* We don't draw the irrigation if there's a city (it just gets overdrawn
-   * anyway, and ends up looking bad). Unless*/
-  if (!(pcity && gui_options->draw_cities)) {
-    extra_type_list_iterate(t->style_lists[ESTYLE_CARDINALS], pextra)
-    {
-      if (is_extra_drawing_enabled(pextra)) {
-        int eidx = extra_index(pextra);
-
-        if (BV_ISSET(textras, eidx)) {
-          bool hidden = false;
-
-          extra_type_list_iterate(pextra->hiders, phider)
-          {
-            if (BV_ISSET(textras, extra_index(phider))) {
-              hidden = true;
-              break;
-            }
-          }
-          extra_type_list_iterate_end;
-
-          if (!hidden) {
-            int idx = get_irrigation_index(t, pextra, textras_near);
-
-            sprs.emplace_back(t, t->sprites.extras[eidx]
-                                     .u[terrain_index(pterrain)]
-                                     .cardinals[idx]);
-          }
-        }
-      }
-    }
-    extra_type_list_iterate_end;
-  }
-}
-
-/**
    Fill in the city overlays for the tile.  This includes the citymap
    overlays on the mapview as well as the tile output sprites.
  */
@@ -4676,22 +4553,12 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
                   const struct tile_corner *pcorner,
                   const struct unit *punit)
 {
-  int tileno, dir;
   bv_extras textras_near[8]{};
   bv_extras textras;
   struct terrain *tterrain_near[8] = {nullptr};
   struct terrain *pterrain = nullptr;
 
   const auto pcity = tile_city(ptile);
-
-  /* Unit drawing is disabled when the view options are turned off,
-   * but only where we're drawing on the mapview. */
-  bool do_draw_unit =
-      (punit
-       && (gui_options->draw_units || !ptile
-           || (gui_options->draw_focus_unit && unit_is_in_focus(punit))));
-  bool solid_bg = (gui_options->solid_color_behind_units
-                   && (do_draw_unit || (pcity && gui_options->draw_cities)));
 
   const city *citymode = is_any_city_dialog_open();
 
@@ -4738,57 +4605,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_WATER:
-    if (nullptr != pterrain) {
-      if (!solid_bg && terrain_type_terrain_class(pterrain) == TC_OCEAN) {
-        for (dir = 0; dir < t->num_cardinal_tileset_dirs; dir++) {
-          int didx = t->cardinal_tileset_dirs[dir];
-
-          extra_type_list_iterate(t->style_lists[ESTYLE_RIVER], priver)
-          {
-            int idx = extra_index(priver);
-
-            if (BV_ISSET(textras_near[didx], idx)) {
-              sprs.emplace_back(t, t->sprites.extras[idx]
-                                       .u[terrain_index(pterrain)]
-                                       .road.ru.rivers.outlet[dir]);
-            }
-          }
-          extra_type_list_iterate_end;
-        }
-      }
-    }
-
-    fill_irrigation_sprite_array(t, sprs, textras, textras_near, pterrain,
-                                 pcity);
-
-    if (!solid_bg) {
-      extra_type_list_iterate(t->style_lists[ESTYLE_RIVER], priver)
-      {
-        int idx = extra_index(priver);
-
-        if (BV_ISSET(textras, idx)) {
-          int i;
-
-          // Draw rivers on top of irrigation.
-          tileno = 0;
-          for (i = 0; i < t->num_cardinal_tileset_dirs; i++) {
-            enum direction8 cdir = t->cardinal_tileset_dirs[i];
-
-            if (tterrain_near[cdir] == nullptr
-                || terrain_type_terrain_class(tterrain_near[cdir])
-                       == TC_OCEAN
-                || BV_ISSET(textras_near[cdir], idx)) {
-              tileno |= 1 << i;
-            }
-          }
-
-          sprs.emplace_back(t, t->sprites.extras[idx]
-                                   .u[terrain_index(pterrain)]
-                                   .road.ru.rivers.spec[tileno]);
-        }
-      }
-      extra_type_list_iterate_end;
-    }
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_ROADS:
