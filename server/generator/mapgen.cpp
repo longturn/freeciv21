@@ -1273,16 +1273,16 @@ bool map_fractal_generate(bool autosize, struct unit_type *initial_unit)
       // 2 or 3 players per isle?
       if (MAPSTARTPOS_2or3 == wld.map.server.startpos
           || MAPSTARTPOS_ALL == wld.map.server.startpos) {
-        mapgenerator4();
+        map_island_generate_2or3();
       }
       if (MAPSTARTPOS_DEFAULT == wld.map.server.startpos
           || MAPSTARTPOS_SINGLE == wld.map.server.startpos) {
         // Single player per isle.
-        mapgenerator3();
+        map_island_generate_single();
       }
       if (MAPSTARTPOS_VARIABLE == wld.map.server.startpos) {
         // "Variable" single player.
-        mapgenerator2();
+        map_island_generate_variable();
       }
 
       // free terrain selection lists used by make_island()
