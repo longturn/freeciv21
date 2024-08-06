@@ -4589,7 +4589,7 @@ static void fill_goto_sprite_array(const struct tileset *t,
    Should the given extra be drawn
    FIXME: Some extras can not be switched
  */
-bool is_extra_drawing_enabled(struct extra_type *pextra)
+bool is_extra_drawing_enabled(const extra_type *pextra)
 {
   bool no_disable = true; // Draw if matches no cause
 
