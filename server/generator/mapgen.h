@@ -10,6 +10,20 @@
 **************************************************************************/
 #pragma once
 
-#include "support.h" // bool type
+#include "fc_types.h"
 
+#define HAS_POLES                                                           \
+  (wld.map.server.temperature < 70 && !wld.map.server.alltemperate)
+
+extern int forest_pct;
+extern int desert_pct;
+extern int swamp_pct;
+extern int mountain_pct;
+extern int jungle_pct;
+extern int river_pct;
+
+extern struct extra_type *river_types[MAX_ROAD_TYPES];
+extern int river_type_count;
+
+void make_polar();
 bool map_fractal_generate(bool autosize, struct unit_type *initial_unit);
