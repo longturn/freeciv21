@@ -134,7 +134,41 @@ getting more noise. The generated height map is then used to assign terrains as
 Fracture Map
 ^^^^^^^^^^^^
 
-.. todo:: Fill in this section
+The ``FRACTURE`` generator starts from points distributed randomly on the map
+and grows them until they meet their neighbors. Each point is given a random
+height, which is shared by all connected tiles. After adding some randomness
+on top, the lowest areas are flooded and only the highest ones remain as
+islands. Interesting structures with many small islands are often created in one
+or two areas generated right next to the sea level.
+
+Hills and mountains are added at the boundaries between areas in a crude mimic
+of plate tectonics; this results in large mountain ranges inland and hills all
+along the coasts.
+
+The initial points used by the algorithm are distributed randomly on the map,
+except that submersed points are added all along the poles and map boundaries to
+prevent the land from hitting them. The number of points depends on the map
+size.
+
+The height map created from the fracture points is passed to the normal
+terrain-making algorithm, except that hills and mountains are generated
+differently. Their location with Fracture is not based on the absolute height of
+the tiles, which would result in the highest areas being completely filled with
+mountains, but instead on the local elevation --- that is, the difference in
+elevation between a tile and its neighbors. The threshold for placing hills or
+mountains is commonly reached at area boundaries, and mountain ranges appear
+there. Mountains are explicitly removed directly along the coast as this would
+result in unplayable maps.
+
+In addition to the above, hills and mountains are added stochastically in
+regions that would otherwise be too flat. To take the the ``steepness`` setting
+into account, hills and mountains are placed randomly everywhere on the map
+until they cover ``steepness`` percents of the total land area.
+
+After hills and mountains have been added, the rest of the terrain selection
+proceeds :ref:`as with other generators <mapgen-terrain-assignment>`. The
+general flatness of the areas created by ``FRACTURE`` may result in large
+patches of similar terrain.
 
 .. _mapgen-terrain-assignment:
 
