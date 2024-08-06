@@ -59,12 +59,9 @@ public:
   darkness_style style() const { return m_style; }
 
   /**
-   * Sets one of the sprites used to draw the darkness.
+   * Loads all the sprites needed to draw the darkness.
    */
-  void set_sprite(std::size_t index, const QPixmap &p)
-  {
-    m_sprites[index] = p;
-  }
+  void load_sprites();
 
   std::vector<drawn_sprite>
   fill_sprite_array(const tile *ptile, const tile_edge *pedge,
@@ -72,6 +69,14 @@ public:
                     const unit *punit) const override;
 
 private:
+  /**
+   * Sets one of the sprites used to draw the darkness.
+   */
+  void set_sprite(std::size_t index, const QPixmap &p)
+  {
+    m_sprites[index] = p;
+  }
+
   darkness_style m_style;
 
   // First unused
