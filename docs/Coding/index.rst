@@ -10,6 +10,7 @@ architected.
   architecture.rst
   hacking.rst
   ai.rst
+  mapgen.rst
   attributes.rst
   guidelines.rst
   internationalization.rst
