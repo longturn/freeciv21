@@ -48,7 +48,7 @@ static map_point *fracture_points;
 /**
    Fracture map generator
  */
-void make_fracture_map()
+void make_fracture_hmap()
 {
   int nn, mm;
   int rad;
