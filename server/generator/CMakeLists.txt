@@ -1,6 +1,7 @@
 add_library(
   generator
   STATIC
+  fair_islands.cpp
   fracture_map.cpp
   height_map.cpp
   mapgen.cpp
