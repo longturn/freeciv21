@@ -3,4 +3,6 @@
 // SPDX-FileCopyrightText: Freeciv authors
 // SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
+#pragma once
+
 bool map_generate_fair_islands();

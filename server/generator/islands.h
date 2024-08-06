@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: Freeciv authors
 // SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
+#pragma once
+
 void mapgenerator2();
 void mapgenerator3();
 void mapgenerator4();
