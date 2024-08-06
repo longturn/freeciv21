@@ -377,8 +377,10 @@ server/diplomats.cpp
 server/edithand.cpp
 server/fcdb.cpp
 server/gamehand.cpp
+server/generator/fair_islands.cpp
 server/generator/fracture_map.cpp
 server/generator/height_map.cpp
+server/generator/islands.cpp
 server/generator/mapgen.cpp
 server/generator/mapgen_topology.cpp
 server/generator/mapgen_utils.cpp
