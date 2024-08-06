@@ -359,7 +359,7 @@ struct tileset {
   QSet<struct small_sprite *> *small_sprites;
   // This hash table maps tilespec tags to struct small_sprites.
   QHash<QString, struct small_sprite *> *sprite_hash;
-  QHash<QString, int> *estyle_hash;
+  QHash<QString, extrastyle_id> *estyle_hash;
   struct named_sprites sprites;
   int replaced_hue; // -1 means no replacement
   struct color_system *color_system;
@@ -2099,7 +2099,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
     return nullptr;
   }
 
-  t->estyle_hash = new QHash<QString, int>;
+  t->estyle_hash = new QHash<QString, extrastyle_id>;
 
   for (i = 0; i < ESTYLE_COUNT; i++) {
     t->style_lists[i] = extra_type_list_new();
@@ -2109,11 +2109,10 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
                    file, nullptr, "extras.styles%d.name", i));
        i++) {
     const char *style_name;
-    int style;
 
     style_name = secfile_lookup_str_default(file, "Single1",
                                             "extras.styles%d.style", i);
-    style = extrastyle_id_by_name(style_name, fc_strcasecmp);
+    auto style = extrastyle_id_by_name(style_name, fc_strcasecmp);
 
     if (t->estyle_hash->contains(extraname)) {
       qCritical("warning: duplicate extrastyle entry [%s].", extraname);
@@ -3307,7 +3306,6 @@ static QStringList make_tag_terrain_list(const QString &prefix,
 void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
 {
   const int id = extra_index(pextra);
-  int extrastyle;
 
   if (!fc_strcasecmp(pextra->graphic_str, "none")) {
     // Extra without graphics
@@ -3329,7 +3327,7 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
                extra_rule_name(pextra));
       }
     }
-    extrastyle = t->estyle_hash->value(tag);
+    auto extrastyle = t->estyle_hash->value(tag);
 
     t->sprites.extras[id].extrastyle = extrastyle;
 
