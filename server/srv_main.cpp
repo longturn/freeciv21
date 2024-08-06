@@ -2978,7 +2978,7 @@ void srv_ready()
     }
 
     for (i = 0; !created && i < max; i++) {
-      created = map_fractal_generate(true, utype);
+      created = map_generate(true, utype);
       if (!created && max > 1) {
         int set;
 

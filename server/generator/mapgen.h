@@ -42,4 +42,4 @@ void make_polar();
 
 bool test_wetness(const struct tile *ptile, wetness_c c);
 
-bool map_fractal_generate(bool autosize, struct unit_type *initial_unit);
+bool map_generate(bool autosize, struct unit_type *initial_unit);
