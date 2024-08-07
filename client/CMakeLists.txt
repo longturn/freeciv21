@@ -110,10 +110,12 @@ target_sources(
 
   audio/audio.cpp
   audio/audio_none.cpp
+
   tileset/drawn_sprite.cpp
   tileset/layer_background.cpp
   tileset/layer_base_flags.cpp
   tileset/layer_darkness.cpp
+  tileset/layer_editor.cpp
   tileset/layer_fog.cpp
   tileset/layer_grid.cpp
   tileset/layer_special.cpp
@@ -124,11 +126,13 @@ target_sources(
   tileset/layer.cpp
   tileset/sprite.cpp
   tileset/tilespec.cpp
+
   utils/collated_sort_proxy.cpp
   utils/colorizer.cpp
   utils/improvement_seller.cpp
   utils/unit_quick_menu.cpp
   utils/unit_utils.cpp
+
   views/view_cities.cpp
   views/view_cities_data.cpp
   views/view_economics.cpp
@@ -140,6 +144,7 @@ target_sources(
   views/view_research.cpp
   views/view_research_reqtree.cpp
   views/view_units.cpp
+
   widgets/decorations.cpp
   widgets/city/city_icon_widget.cpp
   widgets/city/governor_widget.cpp
