@@ -42,6 +42,7 @@
 #include "shared.h"
 #include "style.h"
 #include "support.h"
+#include "tileset/layer_overlays.h"
 #include "workertask.h"
 
 // common
@@ -162,7 +163,7 @@ struct named_sprites {
       *dither_tile; // only used for isometric view
 
   struct {
-    QPixmap *tile, *worked_tile, *unworked_tile;
+    QPixmap *tile;
   } mask;
 
   const QPixmap *tech[A_LAST];
@@ -190,12 +191,6 @@ struct named_sprites {
   struct {
     std::vector<QPixmap *> unhappy, output[O_LAST];
   } upkeep;
-  struct {
-    QPixmap *disorder, *happy;
-    std::vector<QPixmap> tile_foodnum, tile_shieldnum, tile_tradenum;
-    struct sprite_vector worked_tile_overlay;
-    struct sprite_vector unworked_tile_overlay;
-  } city;
   struct citybar_sprites citybar;
   struct editor_sprites editor;
   struct {
@@ -229,9 +224,6 @@ struct named_sprites {
   struct {
     QPixmap *borders[EDGE_COUNT][2];
   } grid;
-  struct {
-    struct sprite_vector overlays;
-  } colors;
 };
 
 struct specfile {
@@ -569,14 +561,6 @@ int tileset_tilelabel_offset_y(const struct tileset *t)
 int tileset_small_sprite_height(const struct tileset *t)
 {
   return t->small_sprite_height;
-}
-
-/**
-   Return the number of possible colors for city overlays.
- */
-int tileset_num_city_colors(const struct tileset *t)
-{
-  return t->sprites.city.worked_tile_overlay.size;
 }
 
 /**
@@ -1544,6 +1528,9 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
   case LAYER_GRID1:
   case LAYER_GRID2: {
     t->layers.emplace_back(std::make_unique<freeciv::layer_grid>(t, layer));
+  } break;
+  case LAYER_OVERLAYS: {
+    t->layers.emplace_back(std::make_unique<freeciv::layer_overlays>(t));
   } break;
   case LAYER_TERRAIN1: {
     auto l = std::make_unique<freeciv::layer_terrain>(t, 0);
@@ -2528,7 +2515,6 @@ static void tileset_setup_citizen_types(struct tileset *t)
 static void tileset_lookup_sprite_tags(struct tileset *t)
 {
   QString buffer, buffer2;
-  const int W = t->normal_tile_width, H = t->normal_tile_height;
   int i, j, f;
 
   fc_assert_ret(t->sprite_hash != nullptr);
@@ -2559,9 +2545,6 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   } else {
     assign_sprite(t, t->sprites.mask.tile, {"mask.tile"}, true);
   }
-  assign_sprite(t, t->sprites.mask.worked_tile, {"mask.worked_tile"}, true);
-  assign_sprite(t, t->sprites.mask.unworked_tile, {"mask.unworked_tile"},
-                true);
 
   assign_sprite(t, t->sprites.tax_luxury, {"s.tax_luxury"}, true);
   assign_sprite(t, t->sprites.tax_science, {"s.tax_science"}, true);
@@ -2659,35 +2642,6 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   assign_sprite(t, t->sprites.editor.military_base, {"editor.military_base"},
                 true);
 
-  assign_sprite(t, t->sprites.city.disorder, {"city.disorder"}, true);
-  assign_sprite(t, t->sprites.city.happy, {"city.happy"}, false);
-
-  // digit sprites
-  for (int i = 0;; ++i) {
-    buffer = QStringLiteral("city.t_food_%1").arg(QString::number(i));
-    if (auto sprite = load_sprite(t, buffer)) {
-      t->sprites.city.tile_foodnum.push_back(*sprite);
-    } else {
-      break;
-    }
-  }
-  for (int i = 0;; ++i) {
-    buffer = QStringLiteral("city.t_shields_%1").arg(QString::number(i));
-    if (auto sprite = load_sprite(t, buffer)) {
-      t->sprites.city.tile_shieldnum.push_back(*sprite);
-    } else {
-      break;
-    }
-  }
-  for (int i = 0;; ++i) {
-    buffer = QStringLiteral("city.t_trade_%1").arg(QString::number(i));
-    if (auto sprite = load_sprite(t, buffer)) {
-      t->sprites.city.tile_tradenum.push_back(*sprite);
-    } else {
-      break;
-    }
-  }
-
   // Must have at least one upkeep sprite per output type (and unhappy)
   // The rest are optional.
   buffer = QStringLiteral("upkeep.unhappy");
@@ -2730,42 +2684,6 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   t->max_upkeep_height = calculate_max_upkeep_height(t);
 
   assign_sprite(t, t->sprites.user.attention, {"user.attention"}, true);
-
-  sprite_vector_init(&t->sprites.colors.overlays);
-  for (i = 0;; i++) {
-    QPixmap *sprite;
-
-    buffer = QStringLiteral("colors.overlay_%1").arg(QString::number(i));
-    sprite = load_sprite(t, buffer);
-    if (!sprite) {
-      break;
-    }
-    sprite_vector_append(&t->sprites.colors.overlays, sprite);
-  }
-  if (i == 0) {
-    tileset_error(t, LOG_FATAL,
-                  _("Missing overlay-color sprite colors.overlay_0."));
-  }
-
-  // Chop up and build the overlay graphics.
-  sprite_vector_reserve(&t->sprites.city.worked_tile_overlay,
-                        sprite_vector_size(&t->sprites.colors.overlays));
-  sprite_vector_reserve(&t->sprites.city.unworked_tile_overlay,
-                        sprite_vector_size(&t->sprites.colors.overlays));
-  for (i = 0; i < sprite_vector_size(&t->sprites.colors.overlays); i++) {
-    QPixmap *color, *color_mask;
-    QPixmap *worked, *unworked;
-
-    color = *sprite_vector_get(&t->sprites.colors.overlays, i);
-    color_mask = crop_sprite(color, 0, 0, W, H, t->sprites.mask.tile, 0, 0);
-    worked = crop_sprite(color_mask, 0, 0, W, H, t->sprites.mask.worked_tile,
-                         0, 0);
-    unworked = crop_sprite(color_mask, 0, 0, W, H,
-                           t->sprites.mask.unworked_tile, 0, 0);
-    delete color_mask;
-    t->sprites.city.worked_tile_overlay.p[i] = worked;
-    t->sprites.city.unworked_tile_overlay.p[i] = unworked;
-  }
 
   // Initialize all class-based layers
   for (auto &layer : t->layers) {
@@ -3610,91 +3528,6 @@ static void fill_crossing_sprite_array(
 }
 
 /**
-   Fill in the city overlays for the tile.  This includes the citymap
-   overlays on the mapview as well as the tile output sprites.
- */
-static void fill_city_overlays_sprite_array(const struct tileset *t,
-                                            std::vector<drawn_sprite> &sprs,
-                                            const struct tile *ptile,
-                                            const struct city *citymode)
-{
-  const struct city *pcity;
-  const struct city *pwork;
-  struct unit *psettler = nullptr;
-  int city_x, city_y;
-  const int NUM_CITY_COLORS = t->sprites.city.worked_tile_overlay.size;
-
-  if (nullptr == ptile || TILE_UNKNOWN == client_tile_get_known(ptile)) {
-    return;
-  }
-  pwork = tile_worked(ptile);
-
-  if (citymode) {
-    pcity = citymode;
-  } else {
-    pcity = find_city_or_settler_near_tile(ptile, &psettler);
-  }
-
-  /* Below code does not work if pcity is invisible.
-   * Make sure it is not. */
-  fc_assert_ret(pcity == nullptr || pcity->tile != nullptr);
-  if (pcity && !pcity->tile) {
-    pcity = nullptr;
-  }
-
-  if (pcity && city_base_to_city_map(&city_x, &city_y, pcity, ptile)) {
-    // FIXME: check elsewhere for valid tile (instead of above)
-    if (!citymode && pcity->client.colored) {
-      // Add citymap overlay for a city.
-      int idx = pcity->client.color_index % NUM_CITY_COLORS;
-
-      if (nullptr != pwork && pwork == pcity) {
-        sprs.emplace_back(t, t->sprites.city.worked_tile_overlay.p[idx]);
-      } else if (city_can_work_tile(pcity, ptile)) {
-        sprs.emplace_back(t, t->sprites.city.unworked_tile_overlay.p[idx]);
-      }
-    } else if (nullptr != pwork && pwork == pcity
-               && (citymode || gui_options->draw_city_output)) {
-      // Add on the tile output sprites.
-      const int ox = t->type == TS_ISOMETRIC ? t->normal_tile_width / 3 : 0;
-      const int oy =
-          t->type == TS_ISOMETRIC ? -t->normal_tile_height / 3 : 0;
-
-      if (!t->sprites.city.tile_foodnum.empty()) {
-        int food = city_tile_output_now(pcity, ptile, O_FOOD);
-        food = CLIP(0, food / game.info.granularity,
-                    t->sprites.city.tile_foodnum.size() - 1);
-        sprs.emplace_back(
-            t, const_cast<QPixmap *>(&t->sprites.city.tile_foodnum[food]),
-            true, ox, oy);
-      }
-      if (!t->sprites.city.tile_shieldnum.empty()) {
-        int shields = city_tile_output_now(pcity, ptile, O_SHIELD);
-        shields = CLIP(0, shields / game.info.granularity,
-                       t->sprites.city.tile_shieldnum.size() - 1);
-        sprs.emplace_back(
-            t,
-            const_cast<QPixmap *>(&t->sprites.city.tile_shieldnum[shields]),
-            true, ox, oy);
-      }
-      if (!t->sprites.city.tile_tradenum.empty()) {
-        int trade = city_tile_output_now(pcity, ptile, O_TRADE);
-        trade = CLIP(0, trade / game.info.granularity,
-                     t->sprites.city.tile_tradenum.size() - 1);
-        sprs.emplace_back(
-            t, const_cast<QPixmap *>(&t->sprites.city.tile_tradenum[trade]),
-            true, ox, oy);
-      }
-    }
-  } else if (psettler && psettler->client.colored) {
-    // Add citymap overlay for a unit.
-    int idx = psettler->client.color_index % NUM_CITY_COLORS;
-
-    sprs.emplace_back(t, t->sprites.city.unworked_tile_overlay.p[idx]);
-  }
-}
-
-/**
    Indicate whether a unit is to be drawn with a surrounding city outline
    under current conditions.
    (This includes being in focus, but if the caller has already checked
@@ -3794,8 +3627,6 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
   struct terrain *pterrain = nullptr;
 
   const auto pcity = tile_city(ptile);
-
-  const city *citymode = is_any_city_dialog_open();
 
   if (ptile && client_tile_get_known(ptile) != TILE_UNKNOWN) {
     textras = *tile_extras(ptile);
@@ -3926,10 +3757,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_OVERLAYS:
-    fill_city_overlays_sprite_array(t, sprs, ptile, citymode);
-    if (mapdeco_is_crosshair_set(ptile)) {
-      sprs.emplace_back(t, t->sprites.user.attention);
-    }
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_CITYBAR:
@@ -4099,21 +3927,6 @@ void tileset_free_tiles(struct tileset *t)
   }
   t->specfiles->clear();
 
-  sprite_vector_iterate(&t->sprites.city.worked_tile_overlay, psprite)
-  {
-    delete *psprite;
-  }
-  sprite_vector_iterate_end;
-  sprite_vector_free(&t->sprites.city.worked_tile_overlay);
-
-  sprite_vector_iterate(&t->sprites.city.unworked_tile_overlay, psprite)
-  {
-    delete *psprite;
-  }
-  sprite_vector_iterate_end;
-  sprite_vector_free(&t->sprites.city.unworked_tile_overlay);
-
-  sprite_vector_free(&t->sprites.colors.overlays);
   sprite_vector_free(&t->sprites.explode.unit);
   sprite_vector_free(&t->sprites.nation_flag);
   sprite_vector_free(&t->sprites.nation_shield);

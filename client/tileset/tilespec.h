@@ -300,7 +300,6 @@ int tileset_small_sprite_width(const struct tileset *t);
 int tileset_small_sprite_height(const struct tileset *t);
 int tileset_citybar_offset_y(const struct tileset *t);
 int tileset_tilelabel_offset_y(const struct tileset *t);
-int tileset_num_city_colors(const struct tileset *t);
 bool tileset_use_hard_coded_fog(const struct tileset *t);
 double tileset_preferred_scale(const struct tileset *t);
 int tileset_replaced_hue(const struct tileset *t);

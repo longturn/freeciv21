@@ -906,9 +906,10 @@ void put_unit_city_overlays(const unit *punit, QPixmap *pcanvas,
  * tells what color the citymap will be drawn on the mapview.
  *
  * This array can be added to without breaking anything elsewhere.
+ * color_index can grow without limit and even wrap around, the drawing code
+ * will take care of it.
  */
 static int color_index = 0;
-#define NUM_CITY_COLORS tileset_num_city_colors(tileset)
 
 /**
    Toggle the city color.  This cycles through the possible colors for the
@@ -922,7 +923,7 @@ void toggle_city_color(struct city *pcity)
   } else {
     pcity->client.colored = true;
     pcity->client.color_index = color_index;
-    color_index = (color_index + 1) % NUM_CITY_COLORS;
+    color_index++;
   }
 
   refresh_city_mapcanvas(pcity, pcity->tile, true);
@@ -940,7 +941,7 @@ void toggle_unit_color(struct unit *punit)
   } else {
     punit->client.colored = true;
     punit->client.color_index = color_index;
-    color_index = (color_index + 1) % NUM_CITY_COLORS;
+    color_index++;
   }
 
   refresh_unit_mapcanvas(punit, unit_tile(punit), true);
