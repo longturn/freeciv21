@@ -117,6 +117,7 @@ target_sources(
   tileset/layer_darkness.cpp
   tileset/layer_editor.cpp
   tileset/layer_fog.cpp
+  tileset/layer_goto.cpp
   tileset/layer_grid.cpp
   tileset/layer_special.cpp
   tileset/layer_terrain.cpp

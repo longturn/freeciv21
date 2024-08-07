@@ -110,6 +110,12 @@ bool tilespec_reread(const QString &tileset_name,
 void tilespec_reread_callback(struct option *poption);
 void tilespec_reread_frozen_refresh(const QString &name);
 
+void assign_digit_sprites(struct tileset *t,
+                          QPixmap *units[NUM_TILES_DIGITS],
+                          QPixmap *tens[NUM_TILES_DIGITS],
+                          QPixmap *hundreds[NUM_TILES_DIGITS],
+                          const QStringList &patterns);
+
 void tileset_setup_specialist_type(struct tileset *t, Specialist_type_id id);
 void tileset_setup_unit_type(struct tileset *t, struct unit_type *punittype);
 void tileset_setup_impr_type(struct tileset *t, struct impr_type *pimprove);
