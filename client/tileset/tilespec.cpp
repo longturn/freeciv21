@@ -76,6 +76,7 @@
 #include "helpdlg.h"
 #include "layer_background.h"
 #include "layer_base_flags.h"
+#include "layer_city_size.h"
 #include "layer_darkness.h"
 #include "layer_editor.h"
 #include "layer_fog.h"
@@ -192,8 +193,7 @@ struct named_sprites {
     std::vector<QPixmap *> unhappy, output[O_LAST];
   } upkeep;
   struct {
-    QPixmap *disorder, *happy, *size[NUM_TILES_DIGITS],
-        *size_tens[NUM_TILES_DIGITS], *size_hundreds[NUM_TILES_DIGITS];
+    QPixmap *disorder, *happy;
     std::vector<QPixmap> tile_foodnum, tile_shieldnum, tile_tradenum;
     city_sprite tile, single_wall, wall[NUM_WALL_TYPES], occupied;
     struct sprite_vector worked_tile_overlay;
@@ -1517,6 +1517,9 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
   case LAYER_BACKGROUND:
     t->layers.push_back(std::make_unique<freeciv::layer_background>(t));
     break;
+  case LAYER_CITY2: {
+    t->layers.emplace_back(std::make_unique<freeciv::layer_city_size>(t));
+  } break;
   case LAYER_DARKNESS: {
     t->layers.emplace_back(
         std::make_unique<freeciv::layer_darkness>(t, t->darkness_style));
@@ -2745,10 +2748,6 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   assign_sprite(t, t->sprites.city.happy, {"city.happy"}, false);
 
   // digit sprites
-  assign_digit_sprites(t, t->sprites.city.size, t->sprites.city.size_tens,
-                       t->sprites.city.size_hundreds,
-                       {QStringLiteral("city.size_%1")});
-
   for (int i = 0;; ++i) {
     buffer = QStringLiteral("city.t_food_%1").arg(QString::number(i));
     if (auto sprite = load_sprite(t, buffer)) {
@@ -4012,46 +4011,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_CITY2:
-    // City size.  Drawing this under fog makes it hard to read.
-    if (pcity && gui_options->draw_cities
-        && !citybar_painter::current()->has_size()) {
-      bool warn = false;
-      unsigned int size = city_size_get(pcity);
-
-      sprs.emplace_back(t, t->sprites.city.size[size % 10], false,
-                        tileset_full_tile_offset(t) + t->city_size_offset);
-      if (10 <= size) {
-        sprs.emplace_back(t, t->sprites.city.size_tens[(size / 10) % 10],
-                          false,
-                          tileset_full_tile_offset(t) + t->city_size_offset);
-        if (100 <= size) {
-          QPixmap *sprite = t->sprites.city.size_hundreds[(size / 100) % 10];
-
-          if (nullptr != sprite) {
-            sprs.emplace_back(t, sprite, false,
-                              tileset_full_tile_offset(t)
-                                  + t->city_size_offset);
-          } else {
-            warn = true;
-          }
-          if (1000 <= size) {
-            warn = true;
-          }
-        }
-      }
-
-      if (warn) {
-        // Warn only once by tileset.
-        static char last_reported[256] = "";
-
-        if (0 != strcmp(last_reported, t->name)) {
-          qInfo(_("Tileset \"%s\" doesn't support big cities size, "
-                  "such as %d. Size not displayed as expected."),
-                t->name, size);
-          sz_strlcpy(last_reported, t->name);
-        }
-      }
-    }
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_GRID2:
