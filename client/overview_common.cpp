@@ -301,7 +301,7 @@ static void put_overview_tile_area(QPixmap *pcanvas, const tile *ptile,
   p.fillRect(x, y, w, h, overview_tile_color(ptile));
   if (gui_options->overview.fog
       && TILE_KNOWN_UNSEEN == client_tile_get_known(ptile)) {
-    p.drawPixmap(x, y, w, h, *get_basic_fog_sprite(tileset));
+    p.fillRect(x, y, w, h, QColor(0, 0, 0, 128));
   }
   p.end();
 }

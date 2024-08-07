@@ -45,18 +45,8 @@ namespace freeciv {
 
 class layer_darkness : public layer {
 public:
-  explicit layer_darkness(struct tileset *ts);
+  explicit layer_darkness(struct tileset *ts, darkness_style style);
   virtual ~layer_darkness() = default;
-
-  /**
-   * Sets the way in which the darkness is drawn.
-   */
-  void set_darkness_style(darkness_style style) { m_style = style; }
-
-  /**
-   * Gets the way in which the darkness is drawn.
-   */
-  darkness_style style() const { return m_style; }
 
   /**
    * Loads all the sprites needed to draw the darkness.
