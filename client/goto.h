@@ -16,6 +16,7 @@ class PFPath;
 struct tile;
 struct unit;
 struct unit_list;
+struct unit_order;
 
 enum goto_tile_state {
   GTS_TURN_STEP,

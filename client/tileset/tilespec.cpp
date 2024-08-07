@@ -79,6 +79,7 @@
 #include "layer_darkness.h"
 #include "layer_editor.h"
 #include "layer_fog.h"
+#include "layer_goto.h"
 #include "layer_grid.h"
 #include "layer_special.h"
 #include "layer_terrain.h"
@@ -200,15 +201,6 @@ struct named_sprites {
   } city;
   struct citybar_sprites citybar;
   struct editor_sprites editor;
-  struct {
-    struct {
-      QPixmap *specific;
-      QPixmap *turns[NUM_TILES_DIGITS];
-      QPixmap *turns_tens[NUM_TILES_DIGITS];
-      QPixmap *turns_hundreds[NUM_TILES_DIGITS];
-    } s[GTS_COUNT];
-    QPixmap *waypoint;
-  } path;
   struct {
     QPixmap *attention;
   } user;
@@ -1536,6 +1528,9 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
     t->layers.emplace_back(std::make_unique<freeciv::layer_fog>(
         t, t->fogstyle, t->darkness_style));
   } break;
+  case LAYER_GOTO: {
+    t->layers.emplace_back(std::make_unique<freeciv::layer_goto>(t));
+  } break;
   case LAYER_GRID1:
   case LAYER_GRID2: {
     t->layers.emplace_back(std::make_unique<freeciv::layer_grid>(t, layer));
@@ -2413,11 +2408,11 @@ static void assign_digit_sprites_helper(struct tileset *t,
  * Assigns the digits for city or go-to orders, for units, tens,
  * and hundreds (i.e. up to 999)
  */
-static void assign_digit_sprites(struct tileset *t,
-                                 QPixmap *units[NUM_TILES_DIGITS],
-                                 QPixmap *tens[NUM_TILES_DIGITS],
-                                 QPixmap *hundreds[NUM_TILES_DIGITS],
-                                 const QStringList &patterns)
+void assign_digit_sprites(struct tileset *t,
+                          QPixmap *units[NUM_TILES_DIGITS],
+                          QPixmap *tens[NUM_TILES_DIGITS],
+                          QPixmap *hundreds[NUM_TILES_DIGITS],
+                          const QStringList &patterns)
 {
   assign_digit_sprites_helper(t, units, patterns, QStringLiteral(), true);
   assign_digit_sprites_helper(t, tens, patterns, QStringLiteral("0"), true);
@@ -2750,24 +2745,9 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   assign_sprite(t, t->sprites.city.happy, {"city.happy"}, false);
 
   // digit sprites
-  QStringList patterns = {QStringLiteral("city.size_%1")};
   assign_digit_sprites(t, t->sprites.city.size, t->sprites.city.size_tens,
-                       t->sprites.city.size_hundreds, patterns);
-  patterns.prepend(QStringLiteral("path.turns_%1"));
-  assign_digit_sprites(t, t->sprites.path.s[GTS_MP_LEFT].turns,
-                       t->sprites.path.s[GTS_MP_LEFT].turns_tens,
-                       t->sprites.path.s[GTS_MP_LEFT].turns_hundreds,
-                       patterns);
-  patterns.prepend(QStringLiteral("path.steps_%1"));
-  assign_digit_sprites(t, t->sprites.path.s[GTS_TURN_STEP].turns,
-                       t->sprites.path.s[GTS_TURN_STEP].turns_tens,
-                       t->sprites.path.s[GTS_TURN_STEP].turns_hundreds,
-                       patterns);
-  patterns[0] = QStringLiteral("path.exhausted_mp_%1");
-  assign_digit_sprites(t, t->sprites.path.s[GTS_EXHAUSTED_MP].turns,
-                       t->sprites.path.s[GTS_EXHAUSTED_MP].turns_tens,
-                       t->sprites.path.s[GTS_EXHAUSTED_MP].turns_hundreds,
-                       patterns);
+                       t->sprites.city.size_hundreds,
+                       {QStringLiteral("city.size_%1")});
 
   for (int i = 0;; ++i) {
     buffer = QStringLiteral("city.t_food_%1").arg(QString::number(i));
@@ -2836,14 +2816,6 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   t->max_upkeep_height = calculate_max_upkeep_height(t);
 
   assign_sprite(t, t->sprites.user.attention, {"user.attention"}, true);
-
-  assign_sprite(t, t->sprites.path.s[GTS_MP_LEFT].specific, {"path.normal"},
-                false);
-  assign_sprite(t, t->sprites.path.s[GTS_EXHAUSTED_MP].specific,
-                {"path.exhausted_mp"}, false);
-  assign_sprite(t, t->sprites.path.s[GTS_TURN_STEP].specific, {"path.step"},
-                false);
-  assign_sprite(t, t->sprites.path.waypoint, {"path.waypoint"}, true);
 
   sprite_vector_init(&t->sprites.colors.overlays);
   for (i = 0;; i++) {
@@ -3829,70 +3801,6 @@ bool unit_drawn_with_city_outline(const struct unit *punit, bool check_focus)
 }
 
 /**
-   Fill in the given sprite array with any needed goto sprites.
- */
-static void fill_goto_sprite_array(const struct tileset *t,
-                                   std::vector<drawn_sprite> &sprs,
-                                   const struct tile *ptile,
-                                   const struct tile_edge *pedge,
-                                   const struct tile_corner *pcorner)
-{
-  QPixmap *sprite;
-  bool warn = false;
-  enum goto_tile_state state;
-  int length;
-  bool waypoint;
-
-  if (goto_tile_state(ptile, &state, &length, &waypoint)) {
-    if (length >= 0) {
-      fc_assert_ret(state >= 0);
-      fc_assert_ret(state < ARRAY_SIZE(t->sprites.path.s));
-
-      sprite = t->sprites.path.s[state].specific;
-      if (sprite != nullptr) {
-        sprs.emplace_back(t, sprite, false, 0, 0);
-      }
-
-      sprite = t->sprites.path.s[state].turns[length % 10];
-      sprs.emplace_back(t, sprite);
-      if (length >= 10) {
-        sprite = t->sprites.path.s[state].turns_tens[(length / 10) % 10];
-        sprs.emplace_back(t, sprite);
-        if (length >= 100) {
-          sprite =
-              t->sprites.path.s[state].turns_hundreds[(length / 100) % 10];
-
-          if (sprite != nullptr) {
-            sprs.emplace_back(t, sprite);
-            if (length >= 1000) {
-              warn = true;
-            }
-          } else {
-            warn = true;
-          }
-        }
-      }
-    }
-
-    if (waypoint) {
-      sprs.emplace_back(t, t->sprites.path.waypoint, false, 0, 0);
-    }
-
-    if (warn) {
-      // Warn only once by tileset.
-      static char last_reported[256] = "";
-
-      if (0 != strcmp(last_reported, t->name)) {
-        qInfo(_("Tileset \"%s\" doesn't support long goto paths, "
-                "such as %d. Path not displayed as expected."),
-              t->name, length);
-        sz_strlcpy(last_reported, t->name);
-      }
-    }
-  }
-}
-
-/**
    Should the given extra be drawn
    FIXME: Some extras can not be switched
  */
@@ -4163,9 +4071,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_GOTO:
-    if (ptile && goto_is_active()) {
-      fill_goto_sprite_array(t, sprs, ptile, pedge, pcorner);
-    }
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_WORKERTASK:
