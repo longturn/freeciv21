@@ -114,6 +114,7 @@ target_sources(
   tileset/drawn_sprite.cpp
   tileset/layer_background.cpp
   tileset/layer_base_flags.cpp
+  tileset/layer_city.cpp
   tileset/layer_city_size.cpp
   tileset/layer_darkness.cpp
   tileset/layer_editor.cpp

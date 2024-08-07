@@ -18,6 +18,7 @@
 class QPixmap;
 
 struct city;
+struct citystyle;
 struct extra_type;
 struct player;
 struct terrain;
@@ -188,6 +189,15 @@ public:
    * \see initialize_player
    */
   virtual void free_player(int player_id) { Q_UNUSED(player_id); }
+
+  /**
+   * Initializes data for a city style.
+   */
+  virtual void initialize_city_style(const citystyle &style, int index)
+  {
+    Q_UNUSED(style);
+    Q_UNUSED(index);
+  }
 
   /**
    * Initializes extra-specific data. This is called after terrains have been

@@ -76,6 +76,7 @@
 #include "helpdlg.h"
 #include "layer_background.h"
 #include "layer_base_flags.h"
+#include "layer_city.h"
 #include "layer_city_size.h"
 #include "layer_darkness.h"
 #include "layer_editor.h"
@@ -142,9 +143,6 @@ const static char *const OPTION_SECTION_PREFIX = "option_";
 
 #define MAX_NUM_LAYERS 3
 
-using styles = std::vector<std::unique_ptr<freeciv::colorizer>>;
-using city_sprite = std::vector<styles>;
-
 struct citizen_graphic {
   /* Each citizen type has up to MAX_NUM_CITIZEN_SPRITES different
    * sprites, as defined by the tileset. */
@@ -195,7 +193,6 @@ struct named_sprites {
   struct {
     QPixmap *disorder, *happy;
     std::vector<QPixmap> tile_foodnum, tile_shieldnum, tile_tradenum;
-    city_sprite tile, single_wall, wall[NUM_WALL_TYPES], occupied;
     struct sprite_vector worked_tile_overlay;
     struct sprite_vector unworked_tile_overlay;
   } city;
@@ -597,6 +594,12 @@ double tileset_preferred_scale(const struct tileset *t)
 {
   return t->preferred_scale;
 }
+
+/**
+ * Returns the hue (color) that should be replaced with the player color in
+ * player-dependent sprites.
+ */
+int tileset_replaced_hue(const struct tileset *t) { return t->replaced_hue; }
 
 /**
  * @brief Returns the number of cardinal directions used by the tileset.
@@ -1517,6 +1520,10 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
   case LAYER_BACKGROUND:
     t->layers.push_back(std::make_unique<freeciv::layer_background>(t));
     break;
+  case LAYER_CITY1: {
+    t->layers.emplace_back(std::make_unique<freeciv::layer_city>(
+        t, t->city_offset, t->occupied_offset));
+  } break;
   case LAYER_CITY2: {
     t->layers.emplace_back(std::make_unique<freeciv::layer_city_size>(t));
   } break;
@@ -2512,98 +2519,6 @@ static void tileset_setup_citizen_types(struct tileset *t)
                     name);
     }
   }
-}
-
-/**
-   Return the sprite in the city_sprite listing that corresponds to this
-   city - based on city style and size.
-
-   See also load_city_sprite, free_city_sprite.
- */
-static const QPixmap *get_city_sprite(const city_sprite &city_sprite,
-                                      const struct city *pcity)
-{
-  // get style and match the best tile based on city size
-  int style = style_of_city(pcity);
-  int img_index;
-
-  fc_assert_ret_val(style < city_sprite.size(), nullptr);
-
-  const auto num_thresholds = city_sprite[style].size();
-  const auto &thresholds = city_sprite[style];
-
-  if (num_thresholds == 0) {
-    return nullptr;
-  }
-
-  // Get the sprite with the index defined by the effects.
-  img_index = pcity->client.city_image;
-  if (img_index == -100) {
-    /* Server doesn't know right value as this is from old savegame.
-     * Guess here based on *client* side information as was done in
-     * versions where information was not saved to savegame - this should
-     * give us right answer of what city looked like by the time it was
-     * put under FoW. */
-    img_index = get_city_bonus(pcity, EFT_CITY_IMAGE);
-  }
-  img_index = CLIP(0, img_index, num_thresholds - 1);
-
-  const auto owner =
-      pcity->owner; // city_owner asserts when there is no owner
-  auto color = QColor();
-  if (owner && owner->rgb) {
-    color.setRgb(owner->rgb->r, owner->rgb->g, owner->rgb->b);
-  }
-  return thresholds[img_index]->pixmap(color);
-}
-
-/**
-   Allocates one threshold set for city sprite
- */
-static styles load_city_thresholds_sprites(struct tileset *t, QString tag,
-                                           char *graphic, char *graphic_alt)
-{
-  char *gfx_in_use = graphic;
-  auto thresholds = styles();
-
-  for (int size = 0; size < MAX_CITY_SIZE; size++) {
-    const auto buffer = QStringLiteral("%1_%2_%3")
-                            .arg(gfx_in_use, tag, QString::number(size));
-    if (const auto sprite = load_sprite(t, buffer)) {
-      thresholds.push_back(
-          std::make_unique<freeciv::colorizer>(*sprite, t->replaced_hue));
-    } else if (size == 0) {
-      if (gfx_in_use == graphic) {
-        // Try again with graphic_alt.
-        size--;
-        gfx_in_use = graphic_alt;
-      } else {
-        // Don't load any others if the 0 element isn't there.
-        break;
-      }
-    }
-  }
-
-  return thresholds;
-}
-
-/**
-   Allocates and loads a new city sprite from the given sprite tags.
-
-   tag may be nullptr.
-
-   See also get_city_sprite, free_city_sprite.
- */
-static city_sprite load_city_sprite(struct tileset *t, const QString &tag)
-{
-  auto csprite = city_sprite();
-
-  for (int i = 0; i < game.control.styles_count; ++i) {
-    csprite.push_back(load_city_thresholds_sprites(
-        t, tag, city_styles[i].graphic, city_styles[i].graphic_alt));
-  }
-
-  return csprite;
 }
 
 /**
@@ -3978,15 +3893,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_CITY1:
-    // City.  Some city sprites are drawn later.
-    if (pcity && gui_options->draw_cities) {
-      if (!citybar_painter::current()->has_flag()) {
-        sprs.emplace_back(t, get_city_flag_sprite(t, pcity), true,
-                          tileset_full_tile_offset(t) + t->city_flag_offset);
-      }
-      bool occupied_graphic = !citybar_painter::current()->has_units();
-      fill_basic_city_sprite_array(t, sprs, pcity, occupied_graphic);
-    }
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_SPECIAL2:
@@ -4067,44 +3974,8 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
  */
 void tileset_setup_city_tiles(struct tileset *t, int style)
 {
-  if (style == game.control.styles_count - 1) {
-    int i;
-
-    // Free old sprites
-    t->sprites.city.tile.clear();
-
-    for (i = 0; i < NUM_WALL_TYPES; i++) {
-      t->sprites.city.wall[i].clear();
-    }
-    t->sprites.city.single_wall.clear();
-    t->sprites.city.occupied.clear();
-
-    t->sprites.city.tile = load_city_sprite(t, QStringLiteral("city"));
-
-    for (i = 0; i < NUM_WALL_TYPES; i++) {
-      QString buffer;
-
-      buffer = QStringLiteral("bldg_%1").arg(QString::number(i));
-      t->sprites.city.wall[i] = load_city_sprite(t, buffer);
-    }
-    t->sprites.city.single_wall =
-        load_city_sprite(t, QStringLiteral("wall"));
-
-    t->sprites.city.occupied =
-        load_city_sprite(t, QStringLiteral("occupied"));
-
-    for (style = 0; style < game.control.styles_count; style++) {
-      if (t->sprites.city.tile[style].empty()) {
-        tileset_error(t, LOG_FATAL,
-                      _("City style \"%s\": no city graphics."),
-                      city_style_rule_name(style));
-      }
-      if (t->sprites.city.occupied[style].empty()) {
-        tileset_error(t, LOG_FATAL,
-                      _("City style \"%s\": no occupied graphics."),
-                      city_style_rule_name(style));
-      }
-    }
+  for (auto &&layer : t->layers) {
+    layer->initialize_city_style(city_styles[style], style);
   }
 }
 
@@ -4200,20 +4071,9 @@ static void unload_all_sprites(struct tileset *t)
  */
 void tileset_free_tiles(struct tileset *t)
 {
-  int i;
-
   log_debug("tileset_free_tiles()");
 
   unload_all_sprites(t);
-
-  t->sprites.city.tile.clear();
-
-  for (i = 0; i < NUM_WALL_TYPES; i++) {
-    t->sprites.city.wall[i].clear();
-  }
-  t->sprites.city.single_wall.clear();
-
-  t->sprites.city.occupied.clear();
 
   if (t->sprite_hash) {
     delete t->sprite_hash;
@@ -4381,20 +4241,6 @@ const QPixmap *get_unittype_sprite(const struct tileset *t,
      * tileset load. */
     fc_assert_ret_val(direction8_is_valid(facing), nullptr);
     return t->sprites.units.facing[uidx][facing]->pixmap(replace);
-  }
-}
-
-/**
-   Return a "sample" sprite for this city style.
- */
-const QPixmap *get_sample_city_sprite(const struct tileset *t, int style_idx)
-{
-  const auto num_thresholds = t->sprites.city.tile[style_idx].size();
-
-  if (num_thresholds == 0) {
-    return nullptr;
-  } else {
-    return t->sprites.city.tile[style_idx].back()->pixmap(QColor());
   }
 }
 
@@ -4589,56 +4435,6 @@ void tileset_init(struct tileset *t)
 }
 
 /**
- * Fills @c sprs with sprites to draw a city. The flag and city size are not
- * included. The occupied graphic is optional.
- */
-void fill_basic_city_sprite_array(const struct tileset *t,
-                                  std::vector<drawn_sprite> &sprs,
-                                  const city *pcity, bool occupied_graphic)
-{
-  /* For iso-view the city.wall graphics include the full city, whereas
-   * for non-iso view they are an overlay on top of the base city
-   * graphic. */
-  if (t->type == TS_OVERHEAD || pcity->client.walls <= 0) {
-    sprs.emplace_back(t, get_city_sprite(t->sprites.city.tile, pcity), true,
-                      tileset_full_tile_offset(t) + t->city_offset);
-  }
-  if (t->type == TS_ISOMETRIC && pcity->client.walls > 0) {
-    auto spr = get_city_sprite(t->sprites.city.wall[pcity->client.walls - 1],
-                               pcity);
-    if (spr == nullptr) {
-      spr = get_city_sprite(t->sprites.city.single_wall, pcity);
-    }
-
-    if (spr != nullptr) {
-      sprs.emplace_back(t, spr, true,
-                        tileset_full_tile_offset(t) + t->city_offset);
-    }
-  }
-  if (occupied_graphic && pcity->client.occupied) {
-    sprs.emplace_back(t, get_city_sprite(t->sprites.city.occupied, pcity),
-                      true,
-                      tileset_full_tile_offset(t) + t->occupied_offset);
-  }
-  if (t->type == TS_OVERHEAD && pcity->client.walls > 0) {
-    auto spr = get_city_sprite(t->sprites.city.wall[pcity->client.walls - 1],
-                               pcity);
-    if (spr == nullptr) {
-      spr = get_city_sprite(t->sprites.city.single_wall, pcity);
-    }
-
-    if (spr != nullptr) {
-      ADD_SPRITE_FULL(spr);
-    }
-  }
-  if (pcity->client.unhappy) {
-    ADD_SPRITE_FULL(t->sprites.city.disorder);
-  } else if (t->sprites.city.happy != nullptr && pcity->client.happy) {
-    ADD_SPRITE_FULL(t->sprites.city.happy);
-  }
-}
-
-/**
    Fill the sprite array with sprites that together make a representative
    image of the given terrain type. Suitable for use as an icon and in list
    views.
@@ -4670,6 +4466,19 @@ fill_basic_terrain_layer_sprite_array(struct tileset *t, int layer,
 
   tile_virtual_destroy(tile);
   return sprs;
+}
+
+/**
+ * Returns the layer_city of the tileset.
+ */
+const freeciv::layer_city *tileset_layer_city(const struct tileset *t)
+{
+  for (const auto &layer : t->layers) {
+    if (auto lc = dynamic_cast<const freeciv::layer_city *>(layer.get())) {
+      return lc;
+    }
+  }
+  fc_assert_ret_val(false, nullptr);
 }
 
 /**

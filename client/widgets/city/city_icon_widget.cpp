@@ -8,6 +8,7 @@
 
 // client
 #include "game.h"
+#include "tileset/layer_city.h"
 #include "tileset/tilespec.h"
 
 #include <QPainter>
@@ -54,8 +55,7 @@ QSize city_icon_widget::sizeHint() const
       std::max(tileset_tile_width(tileset), tileset_tile_height(tileset));
 
   if (auto city = game_city_by_number(m_city); city) {
-    std::vector<drawn_sprite> sprs;
-    fill_basic_city_sprite_array(tileset, sprs, city, true);
+    auto sprs = tileset_layer_city(tileset)->fill_sprite_array_no_flag(city);
     const auto bounds = sprite_array_bounds(sprs);
     size = std::max(bounds.width(), bounds.height());
   }
@@ -75,9 +75,7 @@ void city_icon_widget::paintEvent(QPaintEvent *event)
     return;
   }
 
-  std::vector<drawn_sprite> sprs;
-  // Keeping the occupied flag disabled because it looks bad with amplio2
-  fill_basic_city_sprite_array(tileset, sprs, city, false);
+  auto sprs = tileset_layer_city(tileset)->fill_sprite_array_no_flag(city);
 
   // Center the sprites
   auto bounds = sprite_array_bounds(sprs);

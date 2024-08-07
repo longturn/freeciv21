@@ -48,7 +48,7 @@
 #include "page_game.h"
 #include "qtg_cxxside.h"
 #include "text.h"
-#include "tileset/sprite.h"
+#include "tileset/layer_city.h"
 #include "tileset/tilespec.h"
 #include "unithudselector.h"
 #include "unitselect.h"
@@ -372,7 +372,6 @@ races_dialog::races_dialog(struct player *pplayer, QWidget *parent)
   QGroupBox *no_name;
   QTableWidgetItem *item;
   QHeaderView *header;
-  QSize size;
   QString title;
   QLabel *ns_label;
 
@@ -452,12 +451,10 @@ races_dialog::races_dialog(struct player *pplayer, QWidget *parent)
     if (i >= 0) {
       item = new QTableWidgetItem;
       styles->insertRow(i);
-      auto pix = get_sample_city_sprite(tileset, i);
-      item->setData(Qt::DecorationRole, *pix);
+      auto pix = tileset_layer_city(tileset)->sample_sprite(i);
+      item->setData(Qt::DecorationRole, pix);
       item->setData(Qt::UserRole, style_number(pstyle));
-      size.setWidth(pix->width());
-      size.setHeight(pix->height());
-      item->setSizeHint(size);
+      item->setSizeHint(pix.size());
       styles->setItem(i, 0, item);
       item = new QTableWidgetItem;
       item->setText(style_name_translation(pstyle));
