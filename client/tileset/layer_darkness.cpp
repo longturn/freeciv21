@@ -21,14 +21,14 @@
 
 namespace freeciv {
 
-layer_darkness::layer_darkness(struct tileset *ts)
-    : freeciv::layer(ts, LAYER_DARKNESS), m_style(DARKNESS_NONE), m_sprites{}
+layer_darkness::layer_darkness(struct tileset *ts, darkness_style style)
+    : freeciv::layer(ts, LAYER_DARKNESS), m_style(style), m_sprites{}
 {
 }
 
 void layer_darkness::load_sprites()
 {
-  switch (style()) {
+  switch (m_style) {
   case freeciv::DARKNESS_NONE:
     // Nothing.
     break;

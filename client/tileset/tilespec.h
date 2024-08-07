@@ -44,18 +44,6 @@ struct resource_type;
 #define SPECENUM_VALUE1NAME N_("Isometric")
 #include "specenum_gen.h"
 
-#define SPECENUM_NAME fog_style
-// Fog is automatically appended by the code.
-#define SPECENUM_VALUE0 FOG_AUTO
-#define SPECENUM_VALUE0NAME "Auto"
-// A single fog sprite is provided by the tileset (tx.fog).
-#define SPECENUM_VALUE1 FOG_SPRITE
-#define SPECENUM_VALUE1NAME "Sprite"
-// No fog, or fog derived from darkness style.
-#define SPECENUM_VALUE2 FOG_DARKNESS
-#define SPECENUM_VALUE2NAME "Darkness"
-#include "specenum_gen.h"
-
 #define NUM_TILES_PROGRESS 8
 #define NUM_CORNER_DIRS 4
 
@@ -270,7 +258,6 @@ const QPixmap *get_unit_upkeep_sprite(const struct tileset *t,
                                       Output_type_id otype,
                                       const struct unit *punit,
                                       const int *upkeep_cost);
-const QPixmap *get_basic_fog_sprite(const struct tileset *t);
 std::vector<drawn_sprite>
 fill_basic_extra_sprite_array(const struct tileset *t,
                               const struct extra_type *pextra);

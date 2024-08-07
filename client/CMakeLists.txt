@@ -114,6 +114,7 @@ target_sources(
   tileset/layer_background.cpp
   tileset/layer_base_flags.cpp
   tileset/layer_darkness.cpp
+  tileset/layer_fog.cpp
   tileset/layer_special.cpp
   tileset/layer_terrain.cpp
   tileset/layer_units.cpp

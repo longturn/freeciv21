@@ -78,10 +78,12 @@
 #include "layer_background.h"
 #include "layer_base_flags.h"
 #include "layer_darkness.h"
+#include "layer_fog.h"
 #include "layer_special.h"
 #include "layer_terrain.h"
 #include "layer_units.h"
 #include "layer_water.h"
+#include "layer_workertask.h"
 #include "options.h" // for fill_xxx, tileset options
 #include "page_game.h"
 #include "tilespec.h"
@@ -213,9 +215,6 @@ struct named_sprites {
     QPixmap *attention;
   } user;
   struct {
-    QPixmap *fog, **fullfog;
-  } tx; // terrain extra
-  struct {
     QPixmap *activity, *rmact;
     int extrastyle;
     union {
@@ -299,6 +298,7 @@ struct tileset {
   } special_layers;
   std::array<freeciv::layer_terrain *, MAX_NUM_LAYERS> terrain_layers;
   freeciv::layer_darkness *darkness_layer;
+  freeciv::layer_fog *fog_layer;
   freeciv::layer_units *units_layer, *focus_units_layer;
   freeciv::layer_workertask *workertask_layer;
 
@@ -316,7 +316,8 @@ struct tileset {
 
   enum direction8 unit_default_orientation;
 
-  enum fog_style fogstyle;
+  freeciv::darkness_style darkness_style;
+  freeciv::fog_style fogstyle;
 
   QPoint unit_flag_offset, city_flag_offset, unit_offset, city_offset,
       city_size_offset;
@@ -608,7 +609,7 @@ int tileset_num_city_colors(const struct tileset *t)
  */
 bool tileset_use_hard_coded_fog(const struct tileset *t)
 {
-  return FOG_AUTO == t->fogstyle;
+  return t->fogstyle == freeciv::FOG_AUTO;
 }
 
 /**
@@ -1541,8 +1542,14 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
     t->layers.push_back(std::make_unique<freeciv::layer_background>(t));
     break;
   case LAYER_DARKNESS: {
-    auto l = std::make_unique<freeciv::layer_darkness>(t);
+    auto l = std::make_unique<freeciv::layer_darkness>(t, t->darkness_style);
     t->darkness_layer = l.get();
+    t->layers.emplace_back(std::move(l));
+  } break;
+  case LAYER_FOG: {
+    auto l = std::make_unique<freeciv::layer_fog>(t, t->fogstyle,
+                                                  t->darkness_style);
+    t->fog_layer = l.get();
     t->layers.emplace_back(std::move(l));
   } break;
   case LAYER_TERRAIN1: {
@@ -1834,7 +1841,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
     return nullptr;
   }
 
-  t->fogstyle = fog_style_by_name(tstr, fc_strcasecmp);
+  t->fogstyle = freeciv::fog_style_by_name(tstr, fc_strcasecmp);
   if (!fog_style_is_valid(t->fogstyle)) {
     qCritical("Tileset \"%s\": unknown fog_style \"%s\"", t->name, tstr);
     tileset_stop_read(t, file, fname, sections, layer_order);
@@ -1875,6 +1882,28 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
        * tileset */
       t->unit_default_orientation = dir;
     }
+  }
+
+  tstr = secfile_lookup_str(file, "tilespec.darkness_style");
+  if (tstr == nullptr) {
+    qCritical("Tileset \"%s\": no darkness_style", t->name);
+    tileset_stop_read(t, file, fname, sections, layer_order);
+    return nullptr;
+  }
+
+  t->darkness_style = freeciv::darkness_style_by_name(tstr, fc_strcasecmp);
+  if (!darkness_style_is_valid(t->darkness_style)) {
+    qCritical("Tileset \"%s\": unknown darkness_style \"%s\"", t->name,
+              tstr);
+    tileset_stop_read(t, file, fname, sections, layer_order);
+    return nullptr;
+  }
+
+  if (t->darkness_style == freeciv::DARKNESS_ISORECT
+      && (t->type == TS_OVERHEAD || t->hex_width > 0 || t->hex_height > 0)) {
+    qCritical("Invalid darkness style set in tileset \"%s\".", t->name);
+    tileset_stop_read(t, file, fname, sections, layer_order);
+    return nullptr;
   }
 
   // Layer order
@@ -1934,30 +1963,6 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
       tileset_add_layer(t, static_cast<mapview_layer>(i));
     }
   }
-
-  tstr = secfile_lookup_str(file, "tilespec.darkness_style");
-  if (tstr == nullptr) {
-    qCritical("Tileset \"%s\": no darkness_style", t->name);
-    tileset_stop_read(t, file, fname, sections, layer_order);
-    return nullptr;
-  }
-
-  auto darkness_style = freeciv::darkness_style_by_name(tstr, fc_strcasecmp);
-  if (!darkness_style_is_valid(darkness_style)) {
-    qCritical("Tileset \"%s\": unknown darkness_style \"%s\"", t->name,
-              tstr);
-    tileset_stop_read(t, file, fname, sections, layer_order);
-    return nullptr;
-  }
-
-  if (darkness_style == freeciv::DARKNESS_ISORECT
-      && (t->type == TS_OVERHEAD || t->hex_width > 0 || t->hex_height > 0)) {
-    qCritical("Invalid darkness style set in tileset \"%s\".", t->name);
-    tileset_stop_read(t, file, fname, sections, layer_order);
-    return nullptr;
-  }
-
-  t->darkness_layer->set_darkness_style(darkness_style);
 
   // Terrain layer info.
   for (i = 0; i < MAX_NUM_LAYERS; i++) {
@@ -2724,6 +2729,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   }
 
   t->units_layer->load_sprites();
+  t->fog_layer->load_sprites();
   t->focus_units_layer->load_sprites();
   t->workertask_layer->load_sprites();
 
@@ -2869,8 +2875,6 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
                 false);
   assign_sprite(t, t->sprites.path.waypoint, {"path.waypoint"}, true);
 
-  assign_sprite(t, t->sprites.tx.fog, {"tx.fog"}, true);
-
   sprite_vector_init(&t->sprites.colors.overlays);
   for (i = 0;; i++) {
     QPixmap *sprite;
@@ -2944,27 +2948,6 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   }
 
   t->darkness_layer->load_sprites();
-  // For LAYER_FOG
-  if (t->darkness_layer->style() == freeciv::DARKNESS_CORNER) {
-    t->sprites.tx.fullfog = static_cast<QPixmap **>(fc_realloc(
-        t->sprites.tx.fullfog, 81 * sizeof(*t->sprites.tx.fullfog)));
-    for (int i = 0; i < 81; i++) {
-      // Unknown, fog, known.
-      char ids[] = {'u', 'f', 'k'};
-      char buf[512] = "t.fog";
-      int values[4], vi, k = i;
-
-      for (vi = 0; vi < 4; vi++) {
-        values[vi] = k % 3;
-        k /= 3;
-
-        cat_snprintf(buf, sizeof(buf), "_%c", ids[values[vi]]);
-      }
-      fc_assert(k == 0);
-
-      t->sprites.tx.fullfog[i] = load_sprite(t, buf);
-    }
-  }
 
   // no other place to initialize these variables
   sprite_vector_init(&t->sprites.nation_flag);
@@ -3889,56 +3872,6 @@ static void fill_city_overlays_sprite_array(const struct tileset *t,
 }
 
 /**
-   Add sprites for fog (and some forms of darkness).
- */
-static void fill_fog_sprite_array(const struct tileset *t,
-                                  std::vector<drawn_sprite> &sprs,
-                                  const struct tile *ptile,
-                                  const struct tile_edge *pedge,
-                                  const struct tile_corner *pcorner)
-{
-  if (t->fogstyle == FOG_SPRITE && gui_options->draw_fog_of_war
-      && nullptr != ptile
-      && TILE_KNOWN_UNSEEN == client_tile_get_known(ptile)) {
-    // With FOG_AUTO, fog is done this way.
-    sprs.emplace_back(t, t->sprites.tx.fog);
-  }
-
-  if (t->darkness_layer->style() == freeciv::DARKNESS_CORNER && pcorner
-      && gui_options->draw_fog_of_war) {
-    int i, tileno = 0;
-
-    for (i = 3; i >= 0; i--) {
-      const int unknown = 0, fogged = 1, known = 2;
-      int value = -1;
-
-      if (!pcorner->tile[i]) {
-        value = fogged;
-      } else {
-        switch (client_tile_get_known(pcorner->tile[i])) {
-        case TILE_KNOWN_SEEN:
-          value = known;
-          break;
-        case TILE_KNOWN_UNSEEN:
-          value = fogged;
-          break;
-        case TILE_UNKNOWN:
-          value = unknown;
-          break;
-        }
-      }
-      fc_assert(value >= 0 && value < 3);
-
-      tileno = tileno * 3 + value;
-    }
-
-    if (t->sprites.tx.fullfog[tileno]) {
-      sprs.emplace_back(t, t->sprites.tx.fullfog[tileno]);
-    }
-  }
-}
-
-/**
    Indicate whether a unit is to be drawn with a surrounding city outline
    under current conditions.
    (This includes being in focus, but if the caller has already checked
@@ -4364,7 +4297,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_FOG:
-    fill_fog_sprite_array(t, sprs, ptile, pedge, pcorner);
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_CITY2:
@@ -4662,11 +4595,6 @@ void tileset_free_tiles(struct tileset *t)
   }
   sprite_vector_iterate_end;
   sprite_vector_free(&t->sprites.city.unworked_tile_overlay);
-
-  if (t->sprites.tx.fullfog) {
-    free(t->sprites.tx.fullfog);
-    t->sprites.tx.fullfog = nullptr;
-  }
 
   sprite_vector_free(&t->sprites.colors.overlays);
   sprite_vector_free(&t->sprites.explode.unit);
@@ -4985,15 +4913,6 @@ const QPixmap *get_unit_upkeep_sprite(const struct tileset *t,
   } else {
     return nullptr;
   }
-}
-
-/**
-   Return a rectangular sprite containing a fog "color".  This can be used
-   for drawing fog onto arbitrary areas (like the overview).
- */
-const QPixmap *get_basic_fog_sprite(const struct tileset *t)
-{
-  return t->sprites.tx.fog;
 }
 
 /**
