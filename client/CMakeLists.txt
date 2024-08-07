@@ -121,6 +121,7 @@ target_sources(
   tileset/layer_fog.cpp
   tileset/layer_goto.cpp
   tileset/layer_grid.cpp
+  tileset/layer_overlays.cpp
   tileset/layer_special.cpp
   tileset/layer_terrain.cpp
   tileset/layer_units.cpp
