@@ -42,7 +42,6 @@
 #include "shared.h"
 #include "style.h"
 #include "support.h"
-#include "tileset/layer_workertask.h"
 #include "workertask.h"
 
 // common
@@ -78,6 +77,7 @@
 #include "layer_background.h"
 #include "layer_base_flags.h"
 #include "layer_darkness.h"
+#include "layer_editor.h"
 #include "layer_fog.h"
 #include "layer_grid.h"
 #include "layer_special.h"
@@ -1528,6 +1528,9 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
   case LAYER_DARKNESS: {
     t->layers.emplace_back(
         std::make_unique<freeciv::layer_darkness>(t, t->darkness_style));
+  } break;
+  case LAYER_EDITOR: {
+    t->layers.emplace_back(std::make_unique<freeciv::layer_editor>(t));
   } break;
   case LAYER_FOG: {
     t->layers.emplace_back(std::make_unique<freeciv::layer_fog>(
@@ -4170,17 +4173,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_EDITOR:
-    if (ptile && editor_is_active()) {
-      if (editor_tile_is_selected(ptile)) {
-        int color = 2 % tileset_num_city_colors(tileset);
-        sprs.emplace_back(t, t->sprites.city.unworked_tile_overlay.p[color]);
-      }
-
-      if (nullptr != map_startpos_get(ptile)) {
-        // FIXME: Use a more representative sprite.
-        sprs.emplace_back(t, t->sprites.user.attention);
-      }
-    }
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_INFRAWORK:
