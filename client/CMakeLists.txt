@@ -118,6 +118,7 @@ target_sources(
   tileset/layer_terrain.cpp
   tileset/layer_units.cpp
   tileset/layer_water.cpp
+  tileset/layer_workertask.cpp
   tileset/layer.cpp
   tileset/sprite.cpp
   tileset/tilespec.cpp

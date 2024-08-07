@@ -73,6 +73,9 @@ struct tile_corner {
 #define MAX_INDEX_HALF 16
 #define MAX_INDEX_VALID 256
 
+// Numbers on the map are shown in base 10
+#define NUM_TILES_DIGITS 10
+
 /* Items on the mapview are drawn in layers.  Each entry below represents
  * one layer.  The names are basically arbitrary and just correspond to
  * groups of elements in fill_sprite_array().  Callers of fill_sprite_array
