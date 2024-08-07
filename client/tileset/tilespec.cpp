@@ -42,6 +42,7 @@
 #include "shared.h"
 #include "style.h"
 #include "support.h"
+#include "tileset/layer_workertask.h"
 #include "workertask.h"
 
 // common
@@ -134,8 +135,6 @@
 /// The prefix for option sections in the tilespec file.
 const static char *const OPTION_SECTION_PREFIX = "option_";
 
-#define NUM_TILES_DIGITS 10
-
 #define FULL_TILE_X_OFFSET ((t->normal_tile_width - t->full_tile_width) / 2)
 #define FULL_TILE_Y_OFFSET (t->normal_tile_height - t->full_tile_height)
 
@@ -191,15 +190,6 @@ struct named_sprites {
     struct sprite_vector unit;
     QPixmap *nuke;
   } explode;
-  struct {
-    QPixmap *vet_lev[MAX_VET_LEVELS], *auto_attack, *auto_settler,
-        *auto_explore, *fortified, *fortifying,
-        *go_to, // goto is a C keyword :-)
-        *irrigate, *plant, *pillage, *sentry, *stack, *loaded, *transform,
-        *connect, *patrol, *convert, *battlegroup[MAX_NUM_BATTLEGROUPS],
-        *action_decision_want, *lowfuel, *tired;
-    std::vector<QPixmap *> hp_bar, select;
-  } unit;
   struct {
     std::vector<QPixmap *> unhappy, output[O_LAST];
   } upkeep;
@@ -312,6 +302,8 @@ struct tileset {
   } special_layers;
   std::array<freeciv::layer_terrain *, MAX_NUM_LAYERS> terrain_layers;
   freeciv::layer_darkness *darkness_layer;
+  freeciv::layer_units *units_layer, *focus_units_layer;
+  freeciv::layer_workertask *workertask_layer;
 
   enum ts_type type;
   int hex_width, hex_height;
@@ -362,8 +354,6 @@ struct tileset {
 };
 
 struct tileset *tileset;
-
-int focus_unit_state = 0;
 
 static bool tileset_update = false;
 
@@ -522,6 +512,15 @@ int tileset_full_tile_x_offset(const struct tileset *t)
 int tileset_full_tile_y_offset(const struct tileset *t)
 {
   return FULL_TILE_Y_OFFSET;
+}
+
+/**
+ * Return the x and y offsets of full tiles in the tileset. Use this to draw
+ * "full sprites".
+ */
+QPoint tileset_full_tile_offset(const struct tileset *t)
+{
+  return QPoint(FULL_TILE_X_OFFSET, FULL_TILE_Y_OFFSET);
 }
 
 /**
@@ -1615,12 +1614,23 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
         FULL_TILE_Y_OFFSET + t->city_flag_offset_y);
     t->layers.emplace_back(std::move(l));
   } break;
-  case LAYER_UNIT:
+  case LAYER_UNIT: {
+    auto l = std::make_unique<freeciv::layer_units>(t, layer);
+    t->units_layer = l.get();
+    t->layers.emplace_back(move(l));
+  } break;
   case LAYER_FOCUS_UNIT: {
-    t->layers.emplace_back(std::make_unique<freeciv::layer_units>(t, layer));
+    auto l = std::make_unique<freeciv::layer_units>(t, layer);
+    t->focus_units_layer = l.get();
+    t->layers.emplace_back(move(l));
   } break;
   case LAYER_WATER: {
     t->layers.emplace_back(std::make_unique<freeciv::layer_water>(t));
+  } break;
+  case LAYER_WORKERTASK: {
+    auto l = std::make_unique<freeciv::layer_workertask>(t, layer);
+    t->workertask_layer = l.get();
+    t->layers.emplace_back(move(l));
   } break;
   default:
     t->layers.push_back(std::make_unique<freeciv::layer>(t, layer));
@@ -2742,61 +2752,18 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     sprite_vector_append(&t->sprites.explode.unit, sprite);
   }
 
-  assign_sprite(t, t->sprites.unit.auto_attack, {"unit.auto_attack"}, true);
-  assign_sprite(t, t->sprites.unit.auto_settler, {"unit.auto_settler"},
-                true);
-  assign_sprite(t, t->sprites.unit.auto_explore, {"unit.auto_explore"},
-                true);
-  assign_sprite(t, t->sprites.unit.fortified, {"unit.fortified"}, true);
-  assign_sprite(t, t->sprites.unit.fortifying, {"unit.fortifying"}, true);
-  assign_sprite(t, t->sprites.unit.go_to, {"unit.goto"}, true);
-  assign_sprite(t, t->sprites.unit.irrigate, {"unit.irrigate"}, true);
-  assign_sprite(t, t->sprites.unit.plant, {"unit.plant"}, true);
-  assign_sprite(t, t->sprites.unit.pillage, {"unit.pillage"}, true);
-  assign_sprite(t, t->sprites.unit.sentry, {"unit.sentry"}, true);
-  assign_sprite(t, t->sprites.unit.convert, {"unit.convert"}, true);
-  assign_sprite(t, t->sprites.unit.stack, {"unit.stack"}, true);
-  assign_sprite(t, t->sprites.unit.loaded, {"unit.loaded"}, true);
-  assign_sprite(t, t->sprites.unit.transform, {"unit.transform"}, true);
-  assign_sprite(t, t->sprites.unit.connect, {"unit.connect"}, true);
-  assign_sprite(t, t->sprites.unit.patrol, {"unit.patrol"}, true);
-  for (i = 0; i < MAX_NUM_BATTLEGROUPS; i++) {
-    QStringList buffer = {
-        QStringLiteral("unit.battlegroup_%1").arg(QString::number(i)),
-        QStringLiteral("city.size_%1").arg(QString::number(i + 1))};
-    fc_assert(MAX_NUM_BATTLEGROUPS < NUM_TILES_DIGITS);
-    assign_sprite(t, t->sprites.unit.battlegroup[i], {buffer}, true);
-  }
-  assign_sprite(t, t->sprites.unit.lowfuel, {"unit.lowfuel"}, true);
-  assign_sprite(t, t->sprites.unit.tired, {"unit.tired"}, true);
-
-  assign_sprite(t, t->sprites.unit.action_decision_want,
-                {"unit.action_decision_want"}, false);
-
-  for (i = 0; i <= 100; i++) {
-    buffer = QStringLiteral("unit.hp_%1").arg(QString::number(i));
-    auto sprite = load_sprite(t, buffer);
-    if (sprite) {
-      t->sprites.unit.hp_bar.push_back(sprite);
-    }
-  }
-
-  for (i = 0; i < MAX_VET_LEVELS; i++) {
-    /* Veteran level sprites are optional.  For instance "green" units
-     * usually have no special graphic. */
-    buffer = QStringLiteral("unit.vet_%1").arg(QString::number(i));
-    t->sprites.unit.vet_lev[i] = load_sprite(t, buffer);
-  }
-
-  for (i = 0;; i++) {
-    buffer = QStringLiteral("unit.select%1").arg(QString::number(i));
-    auto sprite = load_sprite(t, buffer);
-    if (!sprite) {
-      break;
-    }
-    t->sprites.unit.select.push_back(sprite);
-  }
-  focus_unit_state = 0;
+  t->units_layer->load_sprites(
+      QPoint(t->activity_offset_x, t->activity_offset_y),
+      QPoint(t->select_offset_x, t->select_offset_y),
+      QPoint(t->unit_offset_x, t->unit_offset_y),
+      QPoint(t->unit_flag_offset_x, t->unit_flag_offset_y));
+  t->focus_units_layer->load_sprites(
+      QPoint(t->activity_offset_x, t->activity_offset_y),
+      QPoint(t->select_offset_x, t->select_offset_y),
+      QPoint(t->unit_offset_x, t->unit_offset_y),
+      QPoint(t->unit_flag_offset_x, t->unit_flag_offset_y));
+  t->workertask_layer->load_sprites(
+      QPoint(t->activity_offset_x, t->activity_offset_y));
 
   assign_sprite(t, t->sprites.citybar.shields, {"citybar.shields"}, true);
   assign_sprite(t, t->sprites.citybar.food, {"citybar.food"}, true);
@@ -3556,8 +3523,8 @@ const QPixmap *get_city_flag_sprite(const struct tileset *t,
 /**
    Return a sprite for the national flag for this unit.
  */
-static QPixmap *get_unit_nation_flag_sprite(const struct tileset *t,
-                                            const struct unit *punit)
+QPixmap *get_unit_nation_flag_sprite(const struct tileset *t,
+                                     const struct unit *punit)
 {
   struct nation_type *pnation = nation_of_unit(punit);
 
@@ -3604,195 +3571,6 @@ void build_tile_data(const struct tile *ptile, struct terrain *pterrain,
     tterrain_near[dir] = pterrain;
     BV_CLR_ALL(textras_near[dir]);
   }
-}
-
-/**
- * Returns the sprite used to represent a given activity on the map.
- */
-const QPixmap *get_activity_sprite(const struct tileset *t,
-                                   enum unit_activity activity,
-                                   extra_type *target)
-{
-  switch (activity) {
-  case ACTIVITY_MINE:
-    if (target == nullptr) {
-      return t->sprites.unit.plant;
-    } else {
-      return t->sprites.extras[extra_index(target)].activity;
-    }
-    break;
-  case ACTIVITY_PLANT:
-    return t->sprites.unit.plant;
-    break;
-  case ACTIVITY_IRRIGATE:
-    if (target == nullptr) {
-      return t->sprites.unit.irrigate;
-    } else {
-      return t->sprites.extras[extra_index(target)].activity;
-    }
-    break;
-  case ACTIVITY_CULTIVATE:
-    return t->sprites.unit.irrigate;
-    break;
-  case ACTIVITY_POLLUTION:
-  case ACTIVITY_FALLOUT:
-    return t->sprites.extras[extra_index(target)].rmact;
-    break;
-  case ACTIVITY_PILLAGE:
-    return t->sprites.unit.pillage;
-    break;
-  case ACTIVITY_EXPLORE:
-    // Drawn below as the server side agent.
-    break;
-  case ACTIVITY_FORTIFIED:
-    return t->sprites.unit.fortified;
-    break;
-  case ACTIVITY_FORTIFYING:
-    return t->sprites.unit.fortifying;
-    break;
-  case ACTIVITY_SENTRY:
-    return t->sprites.unit.sentry;
-    break;
-  case ACTIVITY_GOTO:
-    return t->sprites.unit.go_to;
-    break;
-  case ACTIVITY_TRANSFORM:
-    return t->sprites.unit.transform;
-    break;
-  case ACTIVITY_BASE:
-  case ACTIVITY_GEN_ROAD:
-    return t->sprites.extras[extra_index(target)].activity;
-    break;
-  case ACTIVITY_CONVERT:
-    return t->sprites.unit.convert;
-    break;
-  default:
-    break;
-  }
-  return nullptr;
-}
-
-/**
-   Fill in the sprite array for the unit.
- */
-void fill_unit_sprite_array(const struct tileset *t,
-                            std::vector<drawn_sprite> &sprs,
-                            const tile *ptile, const struct unit *punit)
-{
-  const struct unit_type *ptype = unit_type_get(punit);
-
-  if (ptile && unit_is_in_focus(punit) && !t->sprites.unit.select.empty()) {
-    // Special case for drawing the selection rectangle.  The blinking  unit
-    // is handled separately, inside get_drawable_unit().
-    sprs.emplace_back(t, t->sprites.unit.select[focus_unit_state], true,
-                      t->select_offset_x, t->select_offset_y);
-  }
-
-  // Flag
-  if (!ptile || !tile_city(ptile)) {
-    if (!gui_options->solid_color_behind_units) {
-      sprs.emplace_back(t, get_unit_nation_flag_sprite(t, punit), true,
-                        FULL_TILE_X_OFFSET + t->unit_flag_offset_x,
-                        FULL_TILE_Y_OFFSET + t->unit_flag_offset_y);
-    } else {
-      // Taken care of in the LAYER_BACKGROUND.
-    }
-  }
-
-  // Add the sprite for the unit type.
-  const auto rgb = punit->owner ? punit->owner->rgb : nullptr;
-  const auto color = rgb ? QColor(rgb->r, rgb->g, rgb->b) : QColor();
-  const auto uspr = get_unittype_sprite(t, ptype, punit->facing, color);
-  sprs.emplace_back(t, uspr, true, FULL_TILE_X_OFFSET + t->unit_offset_x,
-                    FULL_TILE_Y_OFFSET + t->unit_offset_y);
-
-  if (t->sprites.unit.loaded && unit_transported(punit)) {
-    ADD_SPRITE_FULL(t->sprites.unit.loaded);
-  }
-
-  // Activity sprite
-  if (auto sprite =
-          get_activity_sprite(t, punit->activity, punit->activity_target)) {
-    sprs.emplace_back(t, sprite, true,
-                      FULL_TILE_X_OFFSET + t->activity_offset_x,
-                      FULL_TILE_Y_OFFSET + t->activity_offset_y);
-  }
-
-  {
-    QPixmap *s = nullptr;
-    int offset_x = 0;
-    int offset_y = 0;
-
-    switch (punit->ssa_controller) {
-    case SSA_NONE:
-      break;
-    case SSA_AUTOSETTLER:
-      s = t->sprites.unit.auto_settler;
-      break;
-    case SSA_AUTOEXPLORE:
-      s = t->sprites.unit.auto_explore;
-      // Specified as an activity in the tileset.
-      offset_x = t->activity_offset_x;
-      offset_y = t->activity_offset_y;
-      break;
-    default:
-      s = t->sprites.unit.auto_attack;
-      break;
-    }
-
-    if (s != nullptr) {
-      sprs.emplace_back(t, s, true, FULL_TILE_X_OFFSET + offset_x,
-                        FULL_TILE_Y_OFFSET + offset_y);
-    }
-  }
-
-  if (unit_has_orders(punit)) {
-    if (punit->orders.repeat) {
-      ADD_SPRITE_FULL(t->sprites.unit.patrol);
-    } else if (punit->activity != ACTIVITY_IDLE) {
-      sprs.emplace_back(t, t->sprites.unit.connect);
-    } else {
-      sprs.emplace_back(t, t->sprites.unit.go_to, true,
-                        FULL_TILE_X_OFFSET + t->activity_offset_x,
-                        FULL_TILE_Y_OFFSET + t->activity_offset_y);
-    }
-  }
-
-  if (t->sprites.unit.action_decision_want != nullptr
-      && should_ask_server_for_actions(punit)) {
-    sprs.emplace_back(t, t->sprites.unit.action_decision_want, true,
-                      FULL_TILE_X_OFFSET + t->activity_offset_x,
-                      FULL_TILE_Y_OFFSET + t->activity_offset_y);
-  }
-
-  if (punit->battlegroup != BATTLEGROUP_NONE) {
-    ADD_SPRITE_FULL(t->sprites.unit.battlegroup[punit->battlegroup]);
-  }
-
-  if (t->sprites.unit.lowfuel && utype_fuel(ptype) && punit->fuel == 1
-      && punit->moves_left <= 2 * SINGLE_MOVE) {
-    // Show a low-fuel graphic if the plane has 2 or fewer moves left.
-    ADD_SPRITE_FULL(t->sprites.unit.lowfuel);
-  }
-  if (t->sprites.unit.tired && punit->moves_left < SINGLE_MOVE
-      && ptype->move_rate > 0) {
-    /* Show a "tired" graphic if the unit has fewer than one move
-     * remaining, except for units for which it's full movement. */
-    ADD_SPRITE_FULL(t->sprites.unit.tired);
-  }
-
-  if ((ptile && unit_list_size(ptile->units) > 1)
-      || punit->client.occupied) {
-    ADD_SPRITE_FULL(t->sprites.unit.stack);
-  }
-
-  if (t->sprites.unit.vet_lev[punit->veteran]) {
-    ADD_SPRITE_FULL(t->sprites.unit.vet_lev[punit->veteran]);
-  }
-
-  auto ihp = ((t->sprites.unit.hp_bar.size() - 1) * punit->hp) / ptype->hp;
-  ihp = CLIP(0, ihp, t->sprites.unit.hp_bar.size() - 1); // Safety
-  ADD_SPRITE_FULL(t->sprites.unit.hp_bar[ihp]);
 }
 
 /**
@@ -4697,70 +4475,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_WORKERTASK:
-    if (citymode != nullptr && ptile != nullptr) {
-      worker_task_list_iterate(citymode->task_reqs, ptask)
-      {
-        if (ptask->ptile == ptile) {
-          switch (ptask->act) {
-          case ACTIVITY_MINE:
-            if (ptask->tgt == nullptr) {
-              sprs.emplace_back(t, t->sprites.unit.plant, true,
-                                FULL_TILE_X_OFFSET + t->activity_offset_x,
-                                FULL_TILE_Y_OFFSET + t->activity_offset_y);
-            } else {
-              sprs.emplace_back(
-                  t, t->sprites.extras[extra_index(ptask->tgt)].activity,
-                  true, FULL_TILE_X_OFFSET + t->activity_offset_x,
-                  FULL_TILE_Y_OFFSET + t->activity_offset_y);
-            }
-            break;
-          case ACTIVITY_PLANT:
-            sprs.emplace_back(t, t->sprites.unit.plant, true,
-                              FULL_TILE_X_OFFSET + t->activity_offset_x,
-                              FULL_TILE_Y_OFFSET + t->activity_offset_y);
-            break;
-          case ACTIVITY_IRRIGATE:
-            if (ptask->tgt == nullptr) {
-              sprs.emplace_back(t, t->sprites.unit.irrigate, true,
-                                FULL_TILE_X_OFFSET + t->activity_offset_x,
-                                FULL_TILE_Y_OFFSET + t->activity_offset_y);
-            } else {
-              sprs.emplace_back(
-                  t, t->sprites.extras[extra_index(ptask->tgt)].activity,
-                  true, FULL_TILE_X_OFFSET + t->activity_offset_x,
-                  FULL_TILE_Y_OFFSET + t->activity_offset_y);
-            }
-            break;
-          case ACTIVITY_CULTIVATE:
-            sprs.emplace_back(t, t->sprites.unit.irrigate, true,
-                              FULL_TILE_X_OFFSET + t->activity_offset_x,
-                              FULL_TILE_Y_OFFSET + t->activity_offset_y);
-            break;
-          case ACTIVITY_GEN_ROAD:
-            sprs.emplace_back(
-                t, t->sprites.extras[extra_index(ptask->tgt)].activity, true,
-                FULL_TILE_X_OFFSET + t->activity_offset_x,
-                FULL_TILE_Y_OFFSET + t->activity_offset_y);
-            break;
-          case ACTIVITY_TRANSFORM:
-            sprs.emplace_back(t, t->sprites.unit.transform, true,
-                              FULL_TILE_X_OFFSET + t->activity_offset_x,
-                              FULL_TILE_Y_OFFSET + t->activity_offset_y);
-            break;
-          case ACTIVITY_POLLUTION:
-          case ACTIVITY_FALLOUT:
-            sprs.emplace_back(
-                t, t->sprites.extras[extra_index(ptask->tgt)].rmact, true,
-                FULL_TILE_X_OFFSET + t->activity_offset_x,
-                FULL_TILE_Y_OFFSET + t->activity_offset_y);
-            break;
-          default:
-            break;
-          }
-        }
-      }
-      worker_task_list_iterate_end;
-    }
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_EDITOR:
@@ -4851,7 +4566,7 @@ void tileset_setup_city_tiles(struct tileset *t, int style)
  */
 int get_focus_unit_toggle_timeout(const struct tileset *t)
 {
-  if (t->sprites.unit.select.empty()) {
+  if (t->focus_units_layer->focus_unit_state_count() == 0) {
     return 100;
   } else {
     return t->select_step_ms;
@@ -4862,14 +4577,17 @@ int get_focus_unit_toggle_timeout(const struct tileset *t)
    Reset the focus unit state.  This should be called when changing
    focus units.
  */
-void reset_focus_unit_state(struct tileset *t) { focus_unit_state = 0; }
+void reset_focus_unit_state(struct tileset *t)
+{
+  t->focus_units_layer->focus_unit_state() = 0;
+}
 
 /**
    Setup tileset for showing combat where focus unit participates.
  */
 void focus_unit_in_combat(struct tileset *t)
 {
-  if (t->sprites.unit.select.empty()) {
+  if (t->focus_units_layer->focus_unit_state_count() == 0) {
     reset_focus_unit_state(t);
   }
 }
@@ -4880,11 +4598,12 @@ void focus_unit_in_combat(struct tileset *t)
  */
 void toggle_focus_unit_state(struct tileset *t)
 {
-  focus_unit_state++;
-  if (t->sprites.unit.select.empty()) {
-    focus_unit_state %= 2;
+  t->focus_units_layer->focus_unit_state()++;
+  if (t->focus_units_layer->focus_unit_state_count() == 0) {
+    t->focus_units_layer->focus_unit_state() %= 2;
   } else {
-    focus_unit_state %= t->sprites.unit.select.size();
+    t->focus_units_layer->focus_unit_state() %=
+        t->focus_units_layer->focus_unit_state_count();
   }
 }
 
@@ -4899,8 +4618,9 @@ struct unit *get_drawable_unit(const struct tileset *t, const ::tile *ptile)
     return nullptr;
   }
 
-  if (!unit_is_in_focus(punit) || !t->sprites.unit.select.empty()
-      || focus_unit_state == 0) {
+  if (!unit_is_in_focus(punit)
+      || t->focus_units_layer->focus_unit_state_count() > 0
+      || t->focus_units_layer->focus_unit_state() == 0) {
     return punit;
   } else {
     return nullptr;
