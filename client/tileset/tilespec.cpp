@@ -79,6 +79,7 @@
 #include "layer_base_flags.h"
 #include "layer_darkness.h"
 #include "layer_fog.h"
+#include "layer_grid.h"
 #include "layer_special.h"
 #include "layer_terrain.h"
 #include "layer_units.h"
@@ -136,9 +137,6 @@
 
 /// The prefix for option sections in the tilespec file.
 const static char *const OPTION_SECTION_PREFIX = "option_";
-
-// This must correspond to enum edge_type.
-static const char edge_name[EDGE_COUNT][3] = {"ns", "we", "ud", "lr"};
 
 #define MAX_NUM_LAYERS 3
 
@@ -240,17 +238,11 @@ struct named_sprites {
     } u[MAX_NUM_TERRAINS];
   } extras[MAX_EXTRA_TYPES];
   struct {
-    QPixmap *main[EDGE_COUNT], *city[EDGE_COUNT], *worked[EDGE_COUNT],
-        *unavailable, *nonnative, *selected[EDGE_COUNT],
-        *coastline[EDGE_COUNT], *borders[EDGE_COUNT][2];
+    QPixmap *borders[EDGE_COUNT][2];
   } grid;
   struct {
     struct sprite_vector overlays;
   } colors;
-  struct {
-    QPixmap *grid_borders[EDGE_COUNT][2];
-    QPixmap *color;
-  } player[MAX_NUM_PLAYER_SLOTS];
 };
 
 struct specfile {
@@ -897,11 +889,9 @@ static void tileset_free_toplevel(struct tileset *t)
  */
 void tileset_free(struct tileset *t)
 {
-  int i;
-
   tileset_free_tiles(t);
   tileset_free_toplevel(t);
-  for (i = 0; i < ARRAY_SIZE(t->sprites.player); i++) {
+  for (int i = 0; i < MAX_NUM_PLAYER_SLOTS; i++) {
     tileset_player_free(t, i);
   }
   delete t->specfiles;
@@ -1542,6 +1532,10 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
   case LAYER_FOG: {
     t->layers.emplace_back(std::make_unique<freeciv::layer_fog>(
         t, t->fogstyle, t->darkness_style));
+  } break;
+  case LAYER_GRID1:
+  case LAYER_GRID2: {
+    t->layers.emplace_back(std::make_unique<freeciv::layer_grid>(t, layer));
   } break;
   case LAYER_TERRAIN1: {
     auto l = std::make_unique<freeciv::layer_terrain>(t, 0);
@@ -2884,42 +2878,6 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     t->sprites.city.unworked_tile_overlay.p[i] = unworked;
   }
 
-  {
-    assign_sprite(t, t->sprites.grid.unavailable, {"grid.unavailable"},
-                  true);
-    assign_sprite(t, t->sprites.grid.nonnative, {"grid.nonnative"}, false);
-
-    for (i = 0; i < EDGE_COUNT; i++) {
-      int be;
-
-      if (i == EDGE_UD && t->hex_width == 0) {
-        continue;
-      } else if (i == EDGE_LR && t->hex_height == 0) {
-        continue;
-      }
-
-      buffer = QStringLiteral("grid.main.%1").arg(edge_name[i]);
-      assign_sprite(t, t->sprites.grid.main[i], {buffer}, true);
-
-      buffer = QStringLiteral("grid.city.%1").arg(edge_name[i]);
-      assign_sprite(t, t->sprites.grid.city[i], {buffer}, true);
-
-      buffer = QStringLiteral("grid.worked.%1").arg(edge_name[i]);
-      assign_sprite(t, t->sprites.grid.worked[i], {buffer}, true);
-
-      buffer = QStringLiteral("grid.selected.%1").arg(edge_name[i]);
-      assign_sprite(t, t->sprites.grid.selected[i], {buffer}, true);
-
-      buffer = QStringLiteral("grid.coastline.%1").arg(edge_name[i]);
-      assign_sprite(t, t->sprites.grid.coastline[i], {buffer}, true);
-
-      for (be = 0; be < 2; be++) {
-        buffer = QStringLiteral("grid.borders.%1").arg(edge_name[i][be]);
-        assign_sprite(t, t->sprites.grid.borders[i][be], {buffer}, true);
-      }
-    }
-  }
-
   // Initialize all class-based layers
   for (auto &layer : t->layers) {
     layer->load_sprites();
@@ -3868,138 +3826,6 @@ bool unit_drawn_with_city_outline(const struct unit *punit, bool check_focus)
 }
 
 /**
-   Fill in the grid sprites for the given tile, city, and unit.
- */
-static void fill_grid_sprite_array(const struct tileset *t,
-                                   std::vector<drawn_sprite> &sprs,
-                                   const struct tile *ptile,
-                                   const struct tile_edge *pedge,
-                                   const struct city *citymode)
-{
-  if (pedge) {
-    bool known[NUM_EDGE_TILES], city[NUM_EDGE_TILES];
-    bool unit[NUM_EDGE_TILES], worked[NUM_EDGE_TILES];
-    int i;
-
-    for (i = 0; i < NUM_EDGE_TILES; i++) {
-      int dummy_x, dummy_y;
-      const struct tile *tile = pedge->tile[i];
-      struct player *powner = tile ? tile_owner(tile) : nullptr;
-
-      known[i] = tile && client_tile_get_known(tile) != TILE_UNKNOWN;
-      unit[i] = false;
-      if (tile && !citymode) {
-        for (const auto pfocus_unit : get_units_in_focus()) {
-          if (unit_drawn_with_city_outline(pfocus_unit, false)) {
-            struct tile *utile = unit_tile(pfocus_unit);
-            int radius = game.info.init_city_radius_sq
-                         + get_target_bonus_effects(
-                             nullptr, unit_owner(pfocus_unit), nullptr,
-                             nullptr, nullptr, utile, nullptr, nullptr,
-                             nullptr, nullptr, nullptr, EFT_CITY_RADIUS_SQ);
-
-            if (city_tile_to_city_map(&dummy_x, &dummy_y, radius, utile,
-                                      tile)) {
-              unit[i] = true;
-              break;
-            }
-          }
-        }
-      }
-      worked[i] = false;
-
-      city[i] = (tile
-                 && (nullptr == powner || nullptr == client.conn.playing
-                     || powner == client.conn.playing)
-                 && player_in_city_map(client.conn.playing, tile));
-      if (city[i]) {
-        if (citymode) {
-          /* In citymode, we only draw worked tiles for this city - other
-           * tiles may be marked as unavailable. */
-          worked[i] = (tile_worked(tile) == citymode);
-        } else {
-          worked[i] = (nullptr != tile_worked(tile));
-        }
-      }
-      // Draw city grid for main citymap
-      if (tile && citymode
-          && city_base_to_city_map(&dummy_x, &dummy_y, citymode, tile)) {
-        sprs.emplace_back(t, t->sprites.grid.selected[pedge->type]);
-      }
-    }
-    if (mapdeco_is_highlight_set(pedge->tile[0])
-        || mapdeco_is_highlight_set(pedge->tile[1])) {
-      sprs.emplace_back(t, t->sprites.grid.selected[pedge->type]);
-    } else {
-      if (gui_options->draw_map_grid) {
-        if (worked[0] || worked[1]) {
-          sprs.emplace_back(t, t->sprites.grid.worked[pedge->type]);
-        } else if (city[0] || city[1]) {
-          sprs.emplace_back(t, t->sprites.grid.city[pedge->type]);
-        } else if (known[0] || known[1]) {
-          sprs.emplace_back(t, t->sprites.grid.main[pedge->type]);
-        }
-      }
-      if (gui_options->draw_city_outlines) {
-        if (XOR(city[0], city[1])) {
-          sprs.emplace_back(t, t->sprites.grid.city[pedge->type]);
-        }
-        if (XOR(unit[0], unit[1])) {
-          sprs.emplace_back(t, t->sprites.grid.worked[pedge->type]);
-        }
-      }
-    }
-
-    if (gui_options->draw_borders && BORDERS_DISABLED != game.info.borders
-        && known[0] && known[1]) {
-      struct player *owner0 = tile_owner(pedge->tile[0]);
-      struct player *owner1 = tile_owner(pedge->tile[1]);
-
-      if (owner0 != owner1) {
-        if (owner0) {
-          int plrid = player_index(owner0);
-          sprs.emplace_back(
-              t, t->sprites.player[plrid].grid_borders[pedge->type][0]);
-        }
-        if (owner1) {
-          int plrid = player_index(owner1);
-          sprs.emplace_back(
-              t, t->sprites.player[plrid].grid_borders[pedge->type][1]);
-        }
-      }
-    }
-  } else if (nullptr != ptile
-             && TILE_UNKNOWN != client_tile_get_known(ptile)) {
-    int cx, cy;
-
-    if (citymode
-        // test to ensure valid coordinates?
-        && city_base_to_city_map(&cx, &cy, citymode, ptile)
-        && !client_city_can_work_tile(citymode, ptile)) {
-      sprs.emplace_back(t, t->sprites.grid.unavailable);
-    }
-
-    if (gui_options->draw_native && citymode == nullptr) {
-      bool native = true;
-      for (const auto pfocus : get_units_in_focus()) {
-        if (!is_native_tile(unit_type_get(pfocus), ptile)) {
-          native = false;
-          break;
-        }
-      }
-
-      if (!native) {
-        if (t->sprites.grid.nonnative != nullptr) {
-          sprs.emplace_back(t, t->sprites.grid.nonnative);
-        } else {
-          sprs.emplace_back(t, t->sprites.grid.unavailable);
-        }
-      }
-    }
-  }
-}
-
-/**
    Fill in the given sprite array with any needed goto sprites.
  */
 static void fill_goto_sprite_array(const struct tileset *t,
@@ -4238,9 +4064,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_GRID1:
-    if (t->type == TS_ISOMETRIC) {
-      fill_grid_sprite_array(t, sprs, ptile, pedge, citymode);
-    }
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_CITY1:
@@ -4320,9 +4144,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_GRID2:
-    if (t->type == TS_OVERHEAD) {
-      fill_grid_sprite_array(t, sprs, ptile, pedge, citymode);
-    }
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_OVERLAYS:
@@ -4904,20 +4726,6 @@ struct color_system *get_color_system(const struct tileset *t)
  */
 void tileset_init(struct tileset *t)
 {
-  player_slots_iterate(pslot)
-  {
-    int edge, j, id = player_slot_index(pslot);
-
-    for (edge = 0; edge < EDGE_COUNT; edge++) {
-      for (j = 0; j < 2; j++) {
-        t->sprites.player[id].grid_borders[edge][j] = nullptr;
-      }
-    }
-
-    t->sprites.player[id].color = nullptr;
-  }
-  player_slots_iterate_end;
-
   t->max_upkeep_height = 0;
 }
 
@@ -5044,41 +4852,17 @@ tileset_get_layers(const struct tileset *t)
  */
 void tileset_player_init(struct tileset *t, struct player *pplayer)
 {
-  int plrid, i, j;
-
   fc_assert_ret(pplayer != nullptr);
 
-  plrid = player_index(pplayer);
+  auto plrid = player_index(pplayer);
   fc_assert_ret(plrid >= 0);
-  fc_assert_ret(plrid < ARRAY_SIZE(t->sprites.player));
+  fc_assert_ret(plrid < MAX_NUM_PLAYER_SLOTS);
 
   // Free all data before recreating it.
   tileset_player_free(t, plrid);
 
   for (auto &&layer : t->layers) {
     layer->initialize_player(pplayer);
-  }
-
-  QColor c = Qt::black;
-  if (player_has_color(t, pplayer)) {
-    c = get_player_color(t, pplayer);
-  }
-  QPixmap color(t->normal_tile_width, t->normal_tile_height);
-  color.fill(c);
-
-  for (i = 0; i < EDGE_COUNT; i++) {
-    for (j = 0; j < 2; j++) {
-      QPixmap *s;
-
-      if (t->sprites.grid.borders[i][j]) {
-        s = crop_sprite(&color, 0, 0, t->normal_tile_width,
-                        t->normal_tile_height, t->sprites.grid.borders[i][j],
-                        0, 0);
-      } else {
-        s = t->sprites.grid.borders[i][j];
-      }
-      t->sprites.player[plrid].grid_borders[i][j] = s;
-    }
   }
 }
 
@@ -5087,27 +4871,11 @@ void tileset_player_init(struct tileset *t, struct player *pplayer)
  */
 static void tileset_player_free(struct tileset *t, int plrid)
 {
-  int i, j;
-
   fc_assert_ret(plrid >= 0);
-  fc_assert_ret(plrid < ARRAY_SIZE(t->sprites.player));
+  fc_assert_ret(plrid < MAX_NUM_PLAYER_SLOTS);
 
   for (auto &&layer : t->layers) {
     layer->free_player(plrid);
-  }
-
-  if (t->sprites.player[plrid].color) {
-    delete t->sprites.player[plrid].color;
-    t->sprites.player[plrid].color = nullptr;
-  }
-
-  for (i = 0; i < EDGE_COUNT; i++) {
-    for (j = 0; j < 2; j++) {
-      if (t->sprites.player[plrid].grid_borders[i][j]) {
-        delete t->sprites.player[plrid].grid_borders[i][j];
-        t->sprites.player[plrid].grid_borders[i][j] = nullptr;
-      }
-    }
   }
 }
 

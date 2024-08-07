@@ -5,14 +5,12 @@
 
 #pragma once
 
-#include "fc_types.h"
 #include "layer.h"
 #include "layer_darkness.h"
 
 #include <QPixmap>
 
 #include <array>
-#include <memory>
 
 namespace freeciv {
 

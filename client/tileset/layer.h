@@ -182,7 +182,8 @@ public:
 
   /**
    * Frees data initialized by initialize_player. Note that this takes the
-   * player ID and not a pointer to the player.
+   * player ID and not a pointer to the player; the player may have never
+   * existed.
    *
    * \see initialize_player
    */
