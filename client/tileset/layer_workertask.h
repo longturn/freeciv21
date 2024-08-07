@@ -19,7 +19,7 @@ public:
                             const QPoint &activity_offset);
   virtual ~layer_workertask() = default;
 
-  void load_sprites();
+  void load_sprites() override;
 
   void initialize_extra(const extra_type *extra, const QString &tag,
                         extrastyle_id style) override;
