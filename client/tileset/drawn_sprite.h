@@ -23,6 +23,8 @@ struct drawn_sprite {
                         bool foggable, const QPoint &offset);
   drawn_sprite(const drawn_sprite &other) = default;
   drawn_sprite(drawn_sprite &&other) = default;
+  drawn_sprite &operator=(const drawn_sprite &other) = default;
+  drawn_sprite &operator=(drawn_sprite &&other) = default;
 
   const QPixmap *sprite;
   bool foggable;          // Set to FALSE for sprites that are never fogged.

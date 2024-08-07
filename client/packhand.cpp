@@ -841,9 +841,6 @@ void handle_city_info(const struct packet_city_info *packet)
   }
 
   pcity->client.walls = packet->walls;
-  if (pcity->client.walls > NUM_WALL_TYPES) {
-    pcity->client.walls = NUM_WALL_TYPES;
-  }
   pcity->style = packet->style;
   pcity->capital = packet->capital;
   if (packet->capital == CAPITAL_PRIMARY) {

@@ -29,6 +29,10 @@ struct base_type;
 struct help_item;
 struct resource_type;
 
+namespace freeciv {
+class layer_city;
+}
+
 // Create the sprite_vector type.
 #define SPECVEC_TAG sprite
 #define SPECVEC_TYPE QPixmap *
@@ -151,10 +155,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
 std::vector<drawn_sprite>
 fill_basic_terrain_layer_sprite_array(struct tileset *t, int layer,
                                       struct terrain *pterrain);
-
-void fill_basic_city_sprite_array(const struct tileset *t,
-                                  std::vector<drawn_sprite> &sprs,
-                                  const city *pcity, bool occupied_graphic);
+const freeciv::layer_city *tileset_layer_city(const struct tileset *t);
 
 int get_focus_unit_toggle_timeout(const struct tileset *t);
 void reset_focus_unit_state(struct tileset *t);
@@ -209,8 +210,6 @@ struct editor_sprites {
       *terrain_resource, *terrain_special, *unit, *city, *vision, *territory,
       *properties, *road, *military_base;
 };
-
-#define NUM_WALL_TYPES 7
 
 const QPixmap *get_spaceship_sprite(const struct tileset *t,
                                     enum spaceship_part part);
@@ -304,6 +303,7 @@ int tileset_tilelabel_offset_y(const struct tileset *t);
 int tileset_num_city_colors(const struct tileset *t);
 bool tileset_use_hard_coded_fog(const struct tileset *t);
 double tileset_preferred_scale(const struct tileset *t);
+int tileset_replaced_hue(const struct tileset *t);
 
 int tileset_num_cardinal_dirs(const struct tileset *t);
 int tileset_num_index_cardinals(const struct tileset *t);
