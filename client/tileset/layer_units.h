@@ -23,7 +23,7 @@ public:
                        const QPoint &unit_flag_offset);
   virtual ~layer_units() = default;
 
-  void load_sprites();
+  void load_sprites() override;
 
   void initialize_extra(const extra_type *extra, const QString &tag,
                         extrastyle_id style) override;

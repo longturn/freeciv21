@@ -168,6 +168,11 @@ public:
                     const tile_corner *pcorner, const unit *punit) const;
 
   /**
+   * Loads all sprites that do not depend on the ruleset.
+   */
+  virtual void load_sprites() {}
+
+  /**
    * Initializes data specific to one player. This allows to cache tiles
    * depending on the actual players in a game.
    *

@@ -34,7 +34,7 @@ public:
                      darkness_style darkness);
   virtual ~layer_fog() = default;
 
-  void load_sprites();
+  void load_sprites() override;
 
   std::vector<drawn_sprite>
   fill_sprite_array(const tile *ptile, const tile_edge *pedge,

@@ -293,14 +293,8 @@ struct tileset {
   std::map<QString, tileset_option> options;
 
   std::vector<std::unique_ptr<freeciv::layer>> layers;
-  struct {
-    freeciv::layer_special *background, *middleground, *foreground;
-  } special_layers;
   std::array<freeciv::layer_terrain *, MAX_NUM_LAYERS> terrain_layers;
-  freeciv::layer_darkness *darkness_layer;
-  freeciv::layer_fog *fog_layer;
-  freeciv::layer_units *units_layer, *focus_units_layer;
-  freeciv::layer_workertask *workertask_layer;
+  freeciv::layer_units *focus_units_layer;
 
   enum ts_type type;
   int hex_width, hex_height;
@@ -1542,15 +1536,12 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
     t->layers.push_back(std::make_unique<freeciv::layer_background>(t));
     break;
   case LAYER_DARKNESS: {
-    auto l = std::make_unique<freeciv::layer_darkness>(t, t->darkness_style);
-    t->darkness_layer = l.get();
-    t->layers.emplace_back(std::move(l));
+    t->layers.emplace_back(
+        std::make_unique<freeciv::layer_darkness>(t, t->darkness_style));
   } break;
   case LAYER_FOG: {
-    auto l = std::make_unique<freeciv::layer_fog>(t, t->fogstyle,
-                                                  t->darkness_style);
-    t->fog_layer = l.get();
-    t->layers.emplace_back(std::move(l));
+    t->layers.emplace_back(std::make_unique<freeciv::layer_fog>(
+        t, t->fogstyle, t->darkness_style));
   } break;
   case LAYER_TERRAIN1: {
     auto l = std::make_unique<freeciv::layer_terrain>(t, 0);
@@ -1567,20 +1558,11 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
     t->terrain_layers[2] = l.get();
     t->layers.emplace_back(std::move(l));
   } break;
-  case LAYER_SPECIAL1: {
-    auto l = std::make_unique<freeciv::layer_special>(t, layer);
-    t->special_layers.background = l.get();
-    t->layers.emplace_back(std::move(l));
-  } break;
-  case LAYER_SPECIAL2: {
-    auto l = std::make_unique<freeciv::layer_special>(t, layer);
-    t->special_layers.middleground = l.get();
-    t->layers.emplace_back(std::move(l));
-  } break;
+  case LAYER_SPECIAL1:
+  case LAYER_SPECIAL2:
   case LAYER_SPECIAL3: {
-    auto l = std::make_unique<freeciv::layer_special>(t, layer);
-    t->special_layers.foreground = l.get();
-    t->layers.emplace_back(std::move(l));
+    t->layers.emplace_back(
+        std::make_unique<freeciv::layer_special>(t, layer));
   } break;
   case LAYER_BASE_FLAGS: {
     auto l = std::make_unique<freeciv::layer_base_flags>(
@@ -1588,11 +1570,9 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
     t->layers.emplace_back(std::move(l));
   } break;
   case LAYER_UNIT: {
-    auto l = std::make_unique<freeciv::layer_units>(
+    t->layers.emplace_back(std::make_unique<freeciv::layer_units>(
         t, layer, t->activity_offset, t->select_offset, t->unit_offset,
-        t->unit_flag_offset);
-    t->units_layer = l.get();
-    t->layers.emplace_back(move(l));
+        t->unit_flag_offset));
   } break;
   case LAYER_FOCUS_UNIT: {
     auto l = std::make_unique<freeciv::layer_units>(
@@ -1605,10 +1585,8 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
     t->layers.emplace_back(std::make_unique<freeciv::layer_water>(t));
   } break;
   case LAYER_WORKERTASK: {
-    auto l = std::make_unique<freeciv::layer_workertask>(t, layer,
-                                                         t->activity_offset);
-    t->workertask_layer = l.get();
-    t->layers.emplace_back(move(l));
+    t->layers.emplace_back(std::make_unique<freeciv::layer_workertask>(
+        t, layer, t->activity_offset));
   } break;
   default:
     t->layers.push_back(std::make_unique<freeciv::layer>(t, layer));
@@ -2728,11 +2706,6 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     sprite_vector_append(&t->sprites.explode.unit, sprite);
   }
 
-  t->units_layer->load_sprites();
-  t->fog_layer->load_sprites();
-  t->focus_units_layer->load_sprites();
-  t->workertask_layer->load_sprites();
-
   assign_sprite(t, t->sprites.citybar.shields, {"citybar.shields"}, true);
   assign_sprite(t, t->sprites.citybar.food, {"citybar.food"}, true);
   assign_sprite(t, t->sprites.citybar.trade, {"citybar.trade"}, true);
@@ -2947,7 +2920,10 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     }
   }
 
-  t->darkness_layer->load_sprites();
+  // Initialize all class-based layers
+  for (auto &layer : t->layers) {
+    layer->load_sprites();
+  }
 
   // no other place to initialize these variables
   sprite_vector_init(&t->sprites.nation_flag);
