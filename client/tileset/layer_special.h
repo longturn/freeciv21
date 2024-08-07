@@ -31,7 +31,7 @@ public:
                         extrastyle_id style) override;
 
   void set_sprite(const extra_type *extra, const QString &tag,
-                  int offset_x = 0, int offset_y = 0);
+                  const QPoint &offset = QPoint());
 
   std::vector<drawn_sprite>
   fill_sprite_array(const tile *ptile, const tile_edge *pedge,

@@ -16,12 +16,14 @@ namespace freeciv {
 
 class layer_units : public layer {
 public:
-  explicit layer_units(struct tileset *ts, mapview_layer layer);
+  explicit layer_units(struct tileset *ts, mapview_layer layer,
+                       const QPoint &activity_offset,
+                       const QPoint &select_offset,
+                       const QPoint &unit_offset,
+                       const QPoint &unit_flag_offset);
   virtual ~layer_units() = default;
 
-  void load_sprites(const QPoint &activity_offset,
-                    const QPoint &select_offset, const QPoint &unit_offset,
-                    const QPoint &unit_flag_offset);
+  void load_sprites();
 
   void initialize_extra(const extra_type *extra, const QString &tag,
                         extrastyle_id style) override;

@@ -19,18 +19,17 @@ namespace freeciv {
 /**
  * Constructor
  */
-layer_workertask::layer_workertask(struct tileset *ts, mapview_layer layer)
-    : freeciv::layer(ts, layer)
+layer_workertask::layer_workertask(struct tileset *ts, mapview_layer layer,
+                                   const QPoint &activity_offset)
+    : freeciv::layer(ts, layer), m_activity_offset(activity_offset)
 {
 }
 
 /**
  * Loads all static sprites needed by this layer (activities etc).
  */
-void layer_workertask::load_sprites(const QPoint &activity_offset)
+void layer_workertask::load_sprites()
 {
-  m_activity_offset = activity_offset;
-
   m_activities[ACTIVITY_MINE] = load_sprite(tileset(), {"unit.plant"}, true);
   m_activities[ACTIVITY_PLANT] = m_activities[ACTIVITY_MINE];
   m_activities[ACTIVITY_IRRIGATE] =
