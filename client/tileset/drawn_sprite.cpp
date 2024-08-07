@@ -24,6 +24,15 @@ drawn_sprite::drawn_sprite(const struct tileset *ts, const QPixmap *sprite,
 }
 
 /**
+ * Instantiates a drawn sprite, ensuring that it's never null.
+ */
+drawn_sprite::drawn_sprite(const struct tileset *ts, const QPixmap *sprite,
+                           bool foggable, const QPoint &offset)
+    : drawn_sprite(ts, sprite, foggable, offset.x(), offset.y())
+{
+}
+
+/**
  * Calculates the bounding rectangle of the given sprite array.
  */
 QRect sprite_array_bounds(const std::vector<drawn_sprite> &sprs)
