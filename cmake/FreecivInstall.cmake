@@ -22,12 +22,10 @@ install(
   ${CMAKE_SOURCE_DIR}/dist/licenses/FTL.txt
   ${CMAKE_SOURCE_DIR}/dist/licenses/GPL2.txt
   ${CMAKE_SOURCE_DIR}/dist/licenses/GPL3.txt
-  ${CMAKE_SOURCE_DIR}/dist/licenses/IMAGEMAGICK.txt
   ${CMAKE_SOURCE_DIR}/dist/licenses/LGPL-2.0-ONLY.txt
   ${CMAKE_SOURCE_DIR}/dist/licenses/LGPL-2.0-OR-LATER.txt
   ${CMAKE_SOURCE_DIR}/dist/licenses/LGPL-3.0-ONLY.txt
   ${CMAKE_SOURCE_DIR}/dist/licenses/LICENSEREF-KDE-ACCEPTED-LGPL.txt
-  ${CMAKE_SOURCE_DIR}/dist/licenses/MAGICKWAND.txt
   ${CMAKE_SOURCE_DIR}/dist/licenses/MIT.txt
   ${CMAKE_SOURCE_DIR}/dist/licenses/OPENSSL.txt
   ${CMAKE_SOURCE_DIR}/dist/licenses/PNG.txt

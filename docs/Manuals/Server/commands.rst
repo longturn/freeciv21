@@ -492,7 +492,7 @@ server's own command-line. This server command-line is separate from the OS term
     :widths: auto
     :align: left
 
-    "format=<[tool|]format>", "(ppm|ppm)", "file format"
+    "format=<format>", "(png)", "file format"
     "show=<show>", "(all)", "which players to show"
     "plrname=<name>", "", "player name"
     "plrid=<id>", "", "numeric player id"
@@ -505,10 +505,7 @@ server's own command-line. This server command-line is separate from the OS term
 
         <p>&nbsp;</p>
 
-  ``<[tool|]format> =`` use image format ``<format>``, optionally specifying toolkit ``<tool>``. The following
-  toolkits and formats are compiled in:
-
-   * ``0``: ``ppm``
+  ``<format> =`` use image format ``<format>``. The ``png`` format is always supported.
 
   ``<show>`` determines which players are represented and how many images are saved by this definition:
 
@@ -532,11 +529,11 @@ server's own command-line. This server command-line is separate from the OS term
 
   Examples of ``<mapdef>``:
 
-   * ``zoom=1:map=tcub:show=all:format=ppm|ppm``
+   * ``zoom=1:map=tcub:show=all:format=png``
    * ``zoom=2:map=tcub:show=each:format=png``
-   * ``zoom=1:map=tcub:show=plrname:plrname=Otto:format=gif``
-   * ``zoom=3:map=cu:show=plrbv:plrbv=010011:format=jpg``
-   * ``zoom=1:map=t:show=none:format=magick|jpg``
+   * ``zoom=1:map=tcub:show=plrname:plrname=Otto:format=png``
+   * ``zoom=3:map=cu:show=plrbv:plrbv=010011:format=png``
+   * ``zoom=1:map=t:show=none:format=png``
 
 ``/rfcstyle``
   Switch server output between 'RFC-style' and normal style.

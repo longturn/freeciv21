@@ -109,5 +109,3 @@ bool mapimg_create(struct mapdef *pmapdef, bool force, const char *savename,
 bool mapimg_colortest(const char *savename, const char *path);
 
 struct mapdef *mapimg_isvalid(int id);
-
-const QVector<QString> *mapimg_get_format_list();

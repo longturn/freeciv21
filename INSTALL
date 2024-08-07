@@ -153,7 +153,6 @@ following commands.
      qt5-default \
      libkf5archive-dev \
      liblua5.3-dev \
-     libmagickwand-dev \
      libsdl2-mixer-dev \
      libunwind-dev \
      libdw-dev

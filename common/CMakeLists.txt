@@ -99,6 +99,7 @@ add_subdirectory(aicore)
 add_subdirectory(networking)
 add_subdirectory(scriptcore)
 
-target_link_libraries(common PUBLIC Qt5::Core Qt5::Network)
+# Qt5::Gui for map images -- could be made optional
+target_link_libraries(common PUBLIC Qt5::Core Qt5::Gui Qt5::Network)
 target_link_libraries(common PRIVATE aicore networking)
 target_link_libraries(common PUBLIC common_gen scriptcore)

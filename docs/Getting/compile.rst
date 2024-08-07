@@ -171,7 +171,6 @@ following commands:
      liblua5.3-dev \
      libsqlite3-dev \
      libsdl2-mixer-dev \
-     libmagickwand-dev \
      libunwind-dev \
      libdw-dev \
      python3-sphinx \

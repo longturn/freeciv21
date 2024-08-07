@@ -11,10 +11,6 @@ received a copy of the GNU General Public License along with Freeciv21.
 
 #include <cstdarg>
 
-#ifdef HAVE_MAPIMG_MAGICKWAND
-#include <wand/MagickWand.h>
-#endif // HAVE_MAPIMG_MAGICKWAND
-
 // utility
 #include "bitvector.h"
 #include "fcintl.h"
@@ -30,32 +26,13 @@ received a copy of the GNU General Public License along with Freeciv21.
 #include "rgbcolor.h"
 #include "terrain.h"
 #include "tile.h"
-#include "version.h"
 
 #include "mapimg.h"
 
-/* Some magick for ImageMagick - the interface has changed:
-     ImageMagick-6.6.2-0: PixelGetNextIteratorRow(..., unsigned long *)
-     ImageMagick-6.6.2-1: PixelGetNextIteratorRow(..., size_t *)
-   Theoretically, "unsigned long" and "size_t" are pretty much the same but
-   in practice the compiler will complain bitterly.
-   (from Gem-0.93 ImageMAGICK plugin) */
-#ifndef MagickLibInterface
-#define MagickLibInterface 0
-#endif
-#ifndef MagickLibVersion
-#define MagickLibVersion 0
-#endif
-
-/* This won't catch ImageMagick>=6.6.2-0.
-   Another workaround: compile with "-fpermissive" */
-#if (MagickLibInterface > 3) || (MagickLibVersion >= 0x662)
-#define magickwand_size_t size_t
-#else
-#define magickwand_size_t unsigned long
-#endif
-
-Q_GLOBAL_STATIC(QVector<QString>, format_list)
+// Qt
+#include <QImage>
+#include <QImageWriter>
+#include <QPainter>
 
 // == image colors ==
 enum img_special {
@@ -198,27 +175,6 @@ static void base_coor_isohexa(struct img *pimg, int *base_x, int *base_y,
 
 BV_DEFINE(bv_mapdef_arg, MAPDEF_COUNT);
 
-// image format
-#define SPECENUM_NAME imageformat
-#define SPECENUM_BITWISE
-#define SPECENUM_VALUE0 IMGFORMAT_GIF
-#define SPECENUM_VALUE0NAME "gif"
-#define SPECENUM_VALUE1 IMGFORMAT_PNG
-#define SPECENUM_VALUE1NAME "png"
-#define SPECENUM_VALUE2 IMGFORMAT_PPM
-#define SPECENUM_VALUE2NAME "ppm"
-#define SPECENUM_VALUE3 IMGFORMAT_JPG
-#define SPECENUM_VALUE3NAME "jpg"
-#include "specenum_gen.h"
-
-// image format
-#define SPECENUM_NAME imagetool
-#define SPECENUM_VALUE0 IMGTOOL_PPM
-#define SPECENUM_VALUE0NAME "ppm"
-#define SPECENUM_VALUE1 IMGTOOL_MAGICKWAND
-#define SPECENUM_VALUE1NAME "magick"
-#include "specenum_gen.h"
-
 // player definitions
 #define SPECENUM_NAME show_player
 #define SPECENUM_VALUE0 SHOW_NONE
@@ -257,6 +213,8 @@ BV_DEFINE(bv_mapdef_arg, MAPDEF_COUNT);
 #define MAX_LEN_MAPARG MAX_LEN_MAPDEF
 #define MAX_NUM_MAPIMG 10
 
+const static auto MAPIMG_DEFAULT_IMGFORMAT = QByteArrayLiteral("png");
+
 static inline bool mapimg_initialised();
 static bool mapimg_test(int id);
 static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
@@ -271,8 +229,7 @@ struct mapdef {
   char maparg[MAX_LEN_MAPARG];
   char error[MAX_LEN_MAPDEF];
   enum mapimg_status status;
-  enum imageformat format;
-  enum imagetool tool;
+  QByteArray format;
   int zoom;
   int turns;
   bool layers[MAPIMG_LAYER_COUNT];
@@ -306,13 +263,6 @@ static void mapdef_destroy(struct mapdef *pmapdef);
 // == images ==
 struct mapdef;
 
-// Some lengths used for the images created by the magickwand toolkit.
-#define IMG_BORDER_HEIGHT 5
-#define IMG_BORDER_WIDTH IMG_BORDER_HEIGHT
-#define IMG_SPACER_HEIGHT 5
-#define IMG_LINE_HEIGHT 5
-#define IMG_TEXT_HEIGHT 12
-
 struct img {
   struct mapdef *def; // map definition
   int turn;           // save turn
@@ -345,7 +295,6 @@ static inline void img_set_pixel(struct img *pimg, const int mindex,
                                  const struct rgbcolor *pcolor);
 static inline int img_index(const int x, const int y,
                             const struct img *pimg);
-static const char *img_playerstr(const struct player *pplayer);
 static void img_plot(struct img *pimg, int x, int y,
                      const struct rgbcolor *pcolor, const bv_pixel pixel);
 static void img_plot_tile(struct img *pimg, const struct tile *ptile,
@@ -353,62 +302,9 @@ static void img_plot_tile(struct img *pimg, const struct tile *ptile,
                           const bv_pixel pixel);
 static bool img_save(const struct img *pimg, const char *mapimgfile,
                      const char *path);
-static bool img_save_ppm(const struct img *pimg, const char *mapimgfile);
-#ifdef HAVE_MAPIMG_MAGICKWAND
-static bool img_save_magickwand(const struct img *pimg,
-                                const char *mapimgfile);
-#endif // HAVE_MAPIMG_MAGICKWAND
-static bool img_filename(const char *mapimgfile, enum imageformat format,
+static bool img_filename(const char *mapimgfile, const QByteArray &format,
                          char *filename, size_t filename_len);
 static void img_createmap(struct img *pimg);
-
-// == image toolkits ==
-typedef bool (*img_save_func)(const struct img *pimg,
-                              const char *mapimgfile);
-
-struct toolkit {
-  enum imagetool tool;
-  enum imageformat format_default;
-  int formats;
-  const img_save_func img_save;
-  const char *help;
-};
-
-#define GEN_TOOLKIT(_tool, _format_default, _formats, _save_func, _help)    \
-  {_tool, _format_default, _formats, _save_func, _help},
-
-static struct toolkit img_toolkits[] = {
-    GEN_TOOLKIT(IMGTOOL_PPM, IMGFORMAT_PPM, IMGFORMAT_PPM, img_save_ppm,
-                N_("Standard ppm files"))
-#ifdef HAVE_MAPIMG_MAGICKWAND
-        GEN_TOOLKIT(IMGTOOL_MAGICKWAND, IMGFORMAT_GIF,
-                    IMGFORMAT_GIF + IMGFORMAT_PNG + IMGFORMAT_PPM
-                        + IMGFORMAT_JPG,
-                    img_save_magickwand, N_("ImageMagick"))
-#endif // HAVE_MAPIMG_MAGICKWAND
-};
-
-static const int img_toolkits_count = ARRAY_SIZE(img_toolkits);
-
-#ifdef HAVE_MAPIMG_MAGICKWAND
-#define MAPIMG_DEFAULT_IMGFORMAT IMGFORMAT_GIF
-#define MAPIMG_DEFAULT_IMGTOOL IMGTOOL_MAGICKWAND
-#else
-#define MAPIMG_DEFAULT_IMGFORMAT IMGFORMAT_PPM
-#define MAPIMG_DEFAULT_IMGTOOL IMGTOOL_PPM
-#endif // HAVE_MAPIMG_MAGICKWAND
-
-static const struct toolkit *img_toolkit_get(enum imagetool tool);
-
-#define img_toolkit_iterate(_toolkit)                                       \
-  {                                                                         \
-    int _i;                                                                 \
-    for (_i = 0; _i < img_toolkits_count; _i++) {                           \
-      const struct toolkit *_toolkit = &img_toolkits[_i];
-
-#define img_toolkit_iterate_end                                             \
-  }                                                                         \
-  }
 
 // == logging ==
 #define MAX_LEN_ERRORBUF 1024
@@ -561,11 +457,10 @@ static const char *showname_help(enum show_player showplr)
 char *mapimg_help(const char *cmdname)
 {
   Q_UNUSED(cmdname)
-  enum imagetool tool;
   enum show_player showplr;
   enum mapimg_layer layer;
   QString defaults[MAPDEF_COUNT];
-  QString str_format, str_showplr, help;
+  QString str_showplr, help;
   struct mapdef *pmapdef;
 
   if (help.length() > 0) {
@@ -573,32 +468,9 @@ char *mapimg_help(const char *cmdname)
     return fc_strdup(qUtf8Printable(help));
   }
   pmapdef = mapdef_new(false);
-  // Possible 'format' settings (toolkit + format).
-  for (tool = imagetool_begin(); tool != imagetool_end();
-       tool = imagetool_next(tool)) {
-    enum imageformat format;
-    const struct toolkit *toolkit = img_toolkit_get(tool);
 
-    if (!toolkit) {
-      continue;
-    }
-
-    str_format += QStringLiteral(" - '%1': ").arg(tool);
-
-    const char *separator = "";
-    for (format = imageformat_begin(); format != imageformat_end();
-         format = imageformat_next(format)) {
-      if (toolkit->formats & format) {
-        str_format += QStringLiteral("%1'%2'").arg(separator,
-                                                   imageformat_name(format));
-        separator = ", ";
-      }
-    }
-
-    if (tool != imagetool_max()) {
-      str_format += QStringLiteral("\n");
-    }
-  }
+  auto str_format =
+      QImageWriter::supportedImageFormats().join(QByteArrayLiteral(", "));
 
   // Possible 'show' settings.
   for (showplr = show_player_begin(); showplr != show_player_end();
@@ -619,8 +491,8 @@ char *mapimg_help(const char *cmdname)
   }
 
   // Default values.
-  defaults[MAPDEF_FORMAT] = QStringLiteral("(%1|%2)").arg(
-      imagetool_name(pmapdef->tool), imageformat_name(pmapdef->format));
+  defaults[MAPDEF_FORMAT] =
+      QStringLiteral("(%2)").arg(QString(MAPIMG_DEFAULT_IMGFORMAT));
   defaults[MAPDEF_SHOW] =
       QStringLiteral("(%1)").arg(show_player_name(pmapdef->player.show));
   defaults[MAPDEF_TURNS] =
@@ -659,7 +531,7 @@ char *mapimg_help(const char *cmdname)
             "\n"
             "option                 (default)  description\n"
             "\n"
-            "format=<[tool|]format> %1 file format\n"
+            "format=<format>        %1 file format\n"
             "show=<show>            %2 which players to show\n"
             "  plrname=<name>                    player name\n"
             "  plrid=<id>                        numeric player id\n"
@@ -672,11 +544,8 @@ char *mapimg_help(const char *cmdname)
             "zoom=<zoom>            %4 magnification factor (1-5)\n"
             "map=<map>              %5 which map layers to draw\n"
             "\n"
-            "<[tool|]format> = use image format <format>, optionally "
-            "specifying "
-            "toolkit <tool>. The following toolkits and formats are "
-            "compiled "
-            "in:\n"
+            "<format> = use image format <format>. The following formats "
+            "are available:\n"
             "%6\n"
             "\n"
             "<show> determines which players are represented and how many "
@@ -693,11 +562,11 @@ char *mapimg_help(const char *cmdname)
             " - 'u' show units of specified players\n"
             "\n"
             "Examples of <mapdef>:\n"
-            " 'zoom=1:map=tcub:show=all:format=ppm|ppm'\n"
+            " 'zoom=1:map=tcub:show=all:format=png'\n"
             " 'zoom=2:map=tcub:show=each:format=png'\n"
-            " 'zoom=1:map=tcub:show=plrname:plrname=Otto:format=gif'\n"
+            " 'zoom=1:map=tcub:show=plrname:plrname=Otto:format=bmp'\n"
             " 'zoom=3:map=cu:show=plrbv:plrbv=010011:format=jpg'\n"
-            " 'zoom=1:map=t:show=none:format=magick|jpg'"))
+            " 'zoom=1:map=t:show=none:format=jpg'"))
           .arg(defaults[MAPDEF_FORMAT], -10)
           .arg(defaults[MAPDEF_SHOW], -10)
           .arg(defaults[MAPDEF_TURNS], -10)
@@ -854,67 +723,10 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
   switch (arg) {
   case MAPDEF_FORMAT:
     // file format
-    {
-      QStringList formatargs;
-      enum imageformat format;
-      enum imagetool tool;
-      bool error = true;
-
-      // get format options
-
-      formatargs = QString(val).split(QStringLiteral("|"));
-
-      if (formatargs.count() == 2) {
-        tool = imagetool_by_name(qUtf8Printable(formatargs.at(0)), strcmp);
-        format =
-            imageformat_by_name(qUtf8Printable(formatargs.at(1)), strcmp);
-
-        if (imageformat_is_valid(format) && imagetool_is_valid(tool)) {
-          const struct toolkit *toolkit = img_toolkit_get(tool);
-
-          if (toolkit && (toolkit->formats & format)) {
-            pmapdef->tool = tool;
-            pmapdef->format = format;
-
-            error = false;
-          }
-        }
-      } else {
-        // Only one argument to format.
-        tool = imagetool_by_name(qUtf8Printable(formatargs.at(0)), strcmp);
-        if (imagetool_is_valid(tool)) {
-          // toolkit defined
-          const struct toolkit *toolkit = img_toolkit_get(tool);
-
-          if (toolkit) {
-            pmapdef->tool = toolkit->tool;
-            pmapdef->format = toolkit->format_default;
-
-            error = false;
-          }
-        } else {
-          format =
-              imageformat_by_name(qUtf8Printable(formatargs.at(0)), strcmp);
-          if (imageformat_is_valid(format)) {
-            // format defined
-            img_toolkit_iterate(toolkit)
-            {
-              if ((toolkit->formats & format)) {
-                pmapdef->tool = toolkit->tool;
-                pmapdef->format = toolkit->format_default;
-
-                error = false;
-                break;
-              }
-            }
-            img_toolkit_iterate_end;
-          }
-        }
-      }
-
-      if (error) {
-        goto INVALID;
-      }
+    if (QImageWriter::supportedImageFormats().contains(val)) {
+      pmapdef->format = val;
+    } else {
+      pmapdef->format = MAPIMG_DEFAULT_IMGFORMAT;
     }
     break;
 
@@ -1101,40 +913,6 @@ struct mapdef *mapimg_isvalid(int id)
 }
 
 /**
-   Return a list of all available tookits and formats for the client.
- */
-const QVector<QString> *mapimg_get_format_list()
-{
-  if (format_list->isEmpty()) {
-    enum imagetool tool;
-
-    for (tool = imagetool_begin(); tool != imagetool_end();
-         tool = imagetool_next(tool)) {
-      enum imageformat format;
-      const struct toolkit *toolkit = img_toolkit_get(tool);
-
-      if (!toolkit) {
-        continue;
-      }
-
-      for (format = imageformat_begin(); format != imageformat_end();
-           format = imageformat_next(format)) {
-        if (toolkit->formats & format) {
-          char str_format[64];
-
-          fc_snprintf(str_format, sizeof(str_format), "%s|%s",
-                      imagetool_name(tool), imageformat_name(format));
-
-          format_list->append(str_format);
-        }
-      }
-    }
-  }
-
-  return format_list;
-}
-
-/**
    Delete a map image definition.
  */
 bool mapimg_delete(int id)
@@ -1186,10 +964,8 @@ bool mapimg_show(int id, char *str, size_t str_len, bool detail)
     }
     cat_snprintf(str, str_len, _("  - file name string:         %s\n"),
                  mapimg_generate_name(pmapdef));
-    cat_snprintf(str, str_len, _("  - image toolkit:            %s\n"),
-                 imagetool_name(pmapdef->tool));
     cat_snprintf(str, str_len, _("  - image format:             %s\n"),
-                 imageformat_name(pmapdef->format));
+                 MAPIMG_DEFAULT_IMGFORMAT.data());
     cat_snprintf(str, str_len, _("  - zoom factor:              %d\n"),
                  pmapdef->zoom);
     cat_snprintf(str, str_len, _("  - show area within borders: %s\n"),
@@ -1389,7 +1165,6 @@ bool mapimg_colortest(const char *savename, const char *path)
   int max_playercolor = mapimg.mapimg_plrcolor_count();
   int max_terraincolor = terrain_count();
   bool ret = true;
-  enum imagetool tool;
 
 #define SIZE_X 16
 #define SIZE_Y 5
@@ -1442,41 +1217,20 @@ bool mapimg_colortest(const char *savename, const char *path)
 #undef SIZE_X
 #undef SIZE_Y
 
-  for (tool = imagetool_begin(); tool != imagetool_end();
-       tool = imagetool_next(tool)) {
-    enum imageformat format;
-    const struct toolkit *toolkit = img_toolkit_get(tool);
+  for (const auto &format : QImageWriter::supportedImageFormats()) {
+    char buf[128];
 
-    if (!toolkit) {
-      continue;
-    }
+    // Set the image format.
+    pmapdef->format = format;
 
-    // Set the toolkit.
-    pmapdef->tool = tool;
+    fc_snprintf(buf, sizeof(buf), "colortest");
+    // filename for color test
+    generate_save_name(savename, mapimgfile, sizeof(mapimgfile), buf);
 
-    for (format = imageformat_begin(); format != imageformat_end();
-         format = imageformat_next(format)) {
-      if (toolkit->formats & format) {
-        char buf[128];
-        const char *tname = imagetool_name(tool);
-
-        // Set the image format.
-        pmapdef->format = format;
-
-        if (tname != nullptr) {
-          fc_snprintf(buf, sizeof(buf), "colortest-%s", tname);
-        } else {
-          fc_snprintf(buf, sizeof(buf), "colortest");
-        }
-        // filename for color test
-        generate_save_name(savename, mapimgfile, sizeof(mapimgfile), buf);
-
-        if (!img_save(pimg, mapimgfile, path)) {
-          /* If one of the mapimg format/toolkit combination fail, return
-           * FALSE, i.e. an error occurred. */
-          ret = false;
-        }
-      }
+    if (!img_save(pimg, mapimgfile, path)) {
+      /* If one of the mapimg format/toolkit combination fail, return
+       * FALSE, i.e. an error occurred. */
+      ret = false;
     }
   }
 
@@ -1529,8 +1283,7 @@ static bool mapimg_def2str(struct mapdef *pmapdef, char *str, size_t str_len)
   }
 
   str[0] = '\0';
-  cat_snprintf(str, str_len, "format=%s|%s:", imagetool_name(pmapdef->tool),
-               imageformat_name(pmapdef->format));
+  cat_snprintf(str, str_len, "format=%s:", pmapdef->format.data());
   cat_snprintf(str, str_len, "turns=%d:", pmapdef->turns);
 
   i = 0;
@@ -1752,7 +1505,6 @@ static struct mapdef *mapdef_new(bool colortest)
   pmapdef->error[0] = '\0';
   pmapdef->status = MAPIMG_STATUS_UNKNOWN;
   pmapdef->format = MAPIMG_DEFAULT_IMGFORMAT;
-  pmapdef->tool = MAPIMG_DEFAULT_IMGTOOL;
   pmapdef->zoom = 2;
   pmapdef->turns = 1;
   pmapdef->layers[MAPIMG_LAYER_TERRAIN] = false;
@@ -1789,22 +1541,6 @@ static void mapdef_destroy(struct mapdef *pmapdef)
  * images (internal functions)
  * ==============================================
  */
-
-/**
-   Return the definition of the requested toolkit (or nullptr).
- */
-static const struct toolkit *img_toolkit_get(enum imagetool tool)
-{
-  img_toolkit_iterate(toolkit)
-  {
-    if (toolkit->tool == tool) {
-      return toolkit;
-    }
-  }
-  img_toolkit_iterate_end;
-
-  return nullptr;
-}
 
 /**
    Create a new image.
@@ -1975,19 +1711,12 @@ static void img_plot_tile(struct img *pimg, const struct tile *ptile,
 }
 
 /**
-   Save an image as ppm file.
+   Save an image.
  */
 static bool img_save(const struct img *pimg, const char *mapimgfile,
                      const char *path)
 {
-  enum imagetool tool = pimg->def->tool;
-  const struct toolkit *toolkit = img_toolkit_get(tool);
   char tmpname[600];
-
-  if (!toolkit) {
-    MAPIMG_LOG(_("toolkit not defined"));
-    return false;
-  }
 
   if (!QFileInfo(mapimgfile).isAbsolute() && path != nullptr) {
     make_dir(path);
@@ -2002,279 +1731,24 @@ static bool img_save(const struct img *pimg, const char *mapimgfile,
 
   sz_strlcat(tmpname, mapimgfile);
 
-  MAPIMG_ASSERT_RET_VAL(toolkit->img_save, false);
+  char pngname[MAX_LEN_PATH];
 
-  return toolkit->img_save(pimg, tmpname);
-}
-
-/**
-   Save an image using magickwand as toolkit. This allows different file
-   formats.
-
-   Image structure:
-
-   [             0]
-                     border
-   [+IMG_BORDER_HEIGHT]
-                     title
-   [+  IMG_TEXT_HEIGHT]
-                     space (only if count(displayed players) > 0)
-   [+IMG_SPACER_HEIGHT]
-                     player line (only if count(displayed players) > 0)
-   [+  IMG_LINE_HEIGHT]
-                     space
-   [+IMG_SPACER_HEIGHT]
-                     map
-   [+   map_height]
-                     border
-   [+IMG_BORDER_HEIGHT]
-
- */
-#ifdef HAVE_MAPIMG_MAGICKWAND
-#define SET_COLOR(str, pcolor)                                              \
-  fc_snprintf(str, sizeof(str), "rgb(%d,%d,%d)", pcolor->r, pcolor->g,      \
-              pcolor->b);
-static bool img_save_magickwand(const struct img *pimg,
-                                const char *mapimgfile)
-{
-  const struct rgbcolor *pcolor = nullptr;
-  struct player *pplr_now = nullptr, *pplr_only = nullptr;
-  bool ret = true;
-  char imagefile[MAX_LEN_PATH];
-  char str_color[32], comment[2048] = "", title[258];
-  magickwand_size_t img_width, img_height, map_width, map_height;
-  int x, y, xxx, yyy, row, i, mindex, plrwidth, plroffset, textoffset;
-  bool withplr = BV_ISSET_ANY(pimg->def->player.checked_plrbv);
-
-  if (!img_filename(mapimgfile, pimg->def->format, imagefile,
-                    sizeof(imagefile))) {
+  if (!img_filename(mapimgfile, pimg->def->format, pngname,
+                    sizeof(pngname))) {
     MAPIMG_LOG(_("error generating the file name"));
     return false;
   }
 
-  MagickWand *mw;
-  PixelIterator *imw;
-  PixelWand **pmw, *pw;
-  DrawingWand *dw;
-
-  MagickWandGenesis();
-
-  mw = NewMagickWand();
-  dw = NewDrawingWand();
-  pw = NewPixelWand();
-
-  map_width = pimg->imgsize.x * pimg->def->zoom;
-  map_height = pimg->imgsize.y * pimg->def->zoom;
-
-  img_width = map_width + 2 * IMG_BORDER_WIDTH;
-  img_height = map_height + 2 * IMG_BORDER_HEIGHT + IMG_TEXT_HEIGHT
-               + IMG_SPACER_HEIGHT + (withplr ? 2 * IMG_SPACER_HEIGHT : 0);
-
-  fc_snprintf(title, sizeof(title), "%s (%s)", pimg->title, mapimgfile);
-
-  SET_COLOR(str_color, imgcolor_special(IMGCOLOR_BACKGROUND));
-  PixelSetColor(pw, str_color);
-  MagickNewImage(mw, img_width, img_height, pw);
-
-  textoffset = 0;
-  if (withplr) {
-    if (bvplayers_count(pimg->def) == 1) {
-      // only one player
-      for (i = 0; i < player_slot_count(); i++) {
-        if (BV_ISSET(pimg->def->player.checked_plrbv, i)) {
-          pplr_only = player_by_number(i);
-          break;
-        }
-      }
-    }
-
-    if (pplr_only) {
-      magickwand_size_t plr_color_square = IMG_TEXT_HEIGHT;
-
-      textoffset += IMG_TEXT_HEIGHT + IMG_BORDER_HEIGHT;
-
-      pcolor = imgcolor_player(player_index(pplr_only));
-      SET_COLOR(str_color, pcolor);
-
-      // Show the color of the selected player.
-      imw = NewPixelRegionIterator(mw, IMG_BORDER_WIDTH, IMG_BORDER_HEIGHT,
-                                   IMG_TEXT_HEIGHT, IMG_TEXT_HEIGHT);
-      // y coordinate
-      for (y = 0; y < IMG_TEXT_HEIGHT; y++) {
-        pmw = PixelGetNextIteratorRow(imw, &plr_color_square);
-        // x coordinate
-        for (x = 0; x < IMG_TEXT_HEIGHT; x++) {
-          PixelSetColor(pmw[x], str_color);
-        }
-        PixelSyncIterator(imw);
-      }
-      DestroyPixelIterator(imw);
-    }
-
-    // Show a line displaying the colors of alive players
-    plrwidth = map_width / MIN(map_width, player_count());
-    plroffset = (map_width - MIN(map_width, plrwidth * player_count())) / 2;
-
-    imw = NewPixelRegionIterator(mw, IMG_BORDER_WIDTH,
-                                 IMG_BORDER_HEIGHT + IMG_TEXT_HEIGHT
-                                     + IMG_SPACER_HEIGHT,
-                                 map_width, IMG_LINE_HEIGHT);
-    // y coordinate
-    for (y = 0; y < IMG_LINE_HEIGHT; y++) {
-      pmw = PixelGetNextIteratorRow(imw, &map_width);
-
-      // x coordinate
-      for (x = plroffset; x < map_width; x++) {
-        i = (x - plroffset) / plrwidth;
-        pplr_now = player_by_number(i);
-
-        if (i > player_count() || pplr_now == nullptr
-            || !pplr_now->is_alive) {
-          continue;
-        }
-
-        if (BV_ISSET(pimg->def->player.checked_plrbv, i)) {
-          // The selected player is alive - display it.
-          pcolor = imgcolor_player(i);
-          SET_COLOR(str_color, pcolor);
-          PixelSetColor(pmw[x], str_color);
-        } else if (pplr_only != nullptr) {
-          /* Display the state between pplr_only and pplr_now:
-           *  - if allied:
-           *      - show each second pixel
-           *  - if pplr_now does shares map with pplr_onlyus:
-           *      - show every other line of pixels
-           * This results in the following patterns (# = color):
-           *   ######      # # #       ######
-           *                # # #       # # #
-           *   ######      # # #       ######
-           *                # # #       # # #
-           *   shared      allied      shared vision
-           *   vision                   + allied */
-          if ((pplayers_allied(pplr_now, pplr_only) && (x + y) % 2 == 0)
-              || (y % 2 == 0 && gives_shared_vision(pplr_now, pplr_only))) {
-            pcolor = imgcolor_player(i);
-            SET_COLOR(str_color, pcolor);
-            PixelSetColor(pmw[x], str_color);
-          }
-        }
-      }
-      PixelSyncIterator(imw);
-    }
-    DestroyPixelIterator(imw);
-  }
-
-  // Display the image name.
-  SET_COLOR(str_color, imgcolor_special(IMGCOLOR_TEXT));
-  PixelSetColor(pw, str_color);
-  DrawSetFillColor(dw, pw);
-  DrawSetFont(dw, "Times-New-Roman");
-  DrawSetFontSize(dw, IMG_TEXT_HEIGHT);
-  DrawAnnotation(dw, IMG_BORDER_WIDTH + textoffset,
-                 IMG_TEXT_HEIGHT + IMG_BORDER_HEIGHT,
-                 (unsigned char *) title);
-  MagickDrawImage(mw, dw);
-
-  // Display the map.
-  imw = NewPixelRegionIterator(
-      mw, IMG_BORDER_WIDTH,
-      IMG_BORDER_HEIGHT + IMG_TEXT_HEIGHT + IMG_SPACER_HEIGHT
-          + (withplr ? (IMG_LINE_HEIGHT + IMG_SPACER_HEIGHT) : 0),
-      map_width, map_height);
-  // y coordinate
-  for (y = 0; y < pimg->imgsize.y; y++) {
-    // zoom for y
-    for (yyy = 0; yyy < pimg->def->zoom; yyy++) {
-      pmw = PixelGetNextIteratorRow(imw, &map_width);
-
-      // x coordinate
-      for (x = 0; x < pimg->imgsize.x; x++) {
-        mindex = img_index(x, y, pimg);
-        pcolor = pimg->map[mindex];
-
-        if (pcolor != nullptr) {
-          SET_COLOR(str_color, pcolor);
-
-          // zoom for x
-          for (xxx = 0; xxx < pimg->def->zoom; xxx++) {
-            row = x * pimg->def->zoom + xxx;
-            PixelSetColor(pmw[row], str_color);
-          }
-        }
-      }
-      PixelSyncIterator(imw);
-    }
-  }
-  DestroyPixelIterator(imw);
-
-  cat_snprintf(comment, sizeof(comment), "map definition: %s\n",
-               pimg->def->maparg);
-  if (BV_ISSET_ANY(pimg->def->player.checked_plrbv)) {
-    players_iterate(pplayer)
-    {
-      if (!BV_ISSET(pimg->def->player.checked_plrbv,
-                    player_index(pplayer))) {
-        continue;
-      }
-
-      pcolor = imgcolor_player(player_index(pplayer));
-      cat_snprintf(comment, sizeof(comment), "%s\n", img_playerstr(pplayer));
-    }
-    players_iterate_end;
-  }
-  MagickCommentImage(mw, comment);
-
-  if (!MagickWriteImage(mw, imagefile)) {
-    MAPIMG_LOG(_("error saving map image '%s'"), imagefile);
-    ret = false;
-  } else {
-    qDebug("Map image saved as '%s'.", imagefile);
-  }
-
-  DestroyDrawingWand(dw);
-  DestroyPixelWand(pw);
-  DestroyMagickWand(mw);
-
-  MagickWandTerminus();
-
-  return ret;
-}
-#undef SET_COLOR
-#endif // HAVE_MAPIMG_MAGICKWAND
-
-/**
-   Save an image as ppm file (toolkit: ppm).
- */
-static bool img_save_ppm(const struct img *pimg, const char *mapimgfile)
-{
-  char ppmname[MAX_LEN_PATH];
-  FILE *fp;
-  int x, y, xxx, yyy, mindex;
-  const struct rgbcolor *pcolor;
-
-  if (pimg->def->format != IMGFORMAT_PPM) {
-    MAPIMG_LOG(_("the ppm toolkit can only create images in the ppm "
-                 "format"));
+  QImage image(pimg->imgsize.x * pimg->def->zoom,
+               pimg->imgsize.y * pimg->def->zoom, QImage::Format_ARGB32);
+  if (image.isNull()) {
+    MAPIMG_LOG(_("could not allocate memory for image"));
     return false;
   }
-
-  if (!img_filename(mapimgfile, IMGFORMAT_PPM, ppmname, sizeof(ppmname))) {
-    MAPIMG_LOG(_("error generating the file name"));
-    return false;
-  }
-
-  fp = fopen(ppmname, "w");
-  if (!fp) {
-    MAPIMG_LOG(_("could not open file: %s"), ppmname);
-    return false;
-  }
-
-  fprintf(fp, "P3\n");
-  fprintf(fp, "# version:2\n");
-  fprintf(fp, "# map definition: %s\n", pimg->def->maparg);
 
   if (pimg->def->colortest) {
-    fprintf(fp, "# color test\n");
+    image.setText(QStringLiteral("Description"),
+                  QStringLiteral("color test"));
   } else if (BV_ISSET_ANY(pimg->def->player.checked_plrbv)) {
     players_iterate(pplayer)
     {
@@ -2283,39 +1757,40 @@ static bool img_save_ppm(const struct img *pimg, const char *mapimgfile)
         continue;
       }
 
-      fprintf(fp, "# %s\n", img_playerstr(pplayer));
+      const auto pcolor = imgcolor_player(player_index(pplayer));
+
+      image.setText(
+          QStringLiteral("Player %1 color").arg(player_number(pplayer)),
+          QStringLiteral("(%1, %2, %3)")
+              .arg(pcolor->r)
+              .arg(pcolor->g)
+              .arg(pcolor->b));
+      image.setText(
+          QStringLiteral("Player %1 name").arg(player_number(pplayer)),
+          player_name(pplayer));
     }
     players_iterate_end;
-  } else {
-    fprintf(fp, "# no players\n");
   }
 
-  fprintf(fp, "%d %d\n", pimg->imgsize.x * pimg->def->zoom,
-          pimg->imgsize.y * pimg->def->zoom);
-  fprintf(fp, "255\n");
+  image.setDevicePixelRatio(pimg->def->zoom);
+  image.fill(Qt::transparent);
 
-  // y coordinate
-  for (y = 0; y < pimg->imgsize.y; y++) {
-    // zoom for y
-    for (yyy = 0; yyy < pimg->def->zoom; yyy++) {
-      // x coordinate
-      for (x = 0; x < pimg->imgsize.x; x++) {
-        mindex = img_index(x, y, pimg);
-        pcolor = pimg->map[mindex];
+  QPainter p;
+  p.begin(&image);
 
-        // zoom for x
-        for (xxx = 0; xxx < pimg->def->zoom; xxx++) {
-          if (pcolor == nullptr) {
-            pcolor = imgcolor_special(IMGCOLOR_BACKGROUND);
-          }
-          fprintf(fp, "%d %d %d\n", pcolor->r, pcolor->g, pcolor->b);
-        }
+  // Iterate over tiles
+  for (int y = 0; y < pimg->imgsize.y; y++) {
+    for (int x = 0; x < pimg->imgsize.x; x++) {
+      if (const auto pcolor = pimg->map[img_index(x, y, pimg)]; pcolor) {
+        p.fillRect(x, y, 1, 1, QColor(pcolor->r, pcolor->g, pcolor->b));
       }
     }
   }
 
-  qDebug("Map image saved as '%s'.", ppmname);
-  fclose(fp);
+  p.end();
+
+  image.save(pngname);
+  qDebug("Map image saved as '%s'.", pngname);
 
   return true;
 }
@@ -2323,31 +1798,13 @@ static bool img_save_ppm(const struct img *pimg, const char *mapimgfile)
 /**
    Generate the final filename.
  */
-static bool img_filename(const char *mapimgfile, enum imageformat format,
+static bool img_filename(const char *mapimgfile, const QByteArray &format,
                          char *filename, size_t filename_len)
 {
-  fc_assert_ret_val(imageformat_is_valid(format), false);
-
   fc_snprintf(filename, filename_len, "%s.map.%s", mapimgfile,
-              imageformat_name(format));
+              format.data());
 
   return true;
-}
-
-/**
-   Return a definition string for the player.
- */
-static const char *img_playerstr(const struct player *pplayer)
-{
-  static char buf[512];
-  const struct rgbcolor *pcolor = imgcolor_player(player_index(pplayer));
-
-  fc_snprintf(buf, sizeof(buf),
-              "playerno:%d:color:(%3d, %3d, %3d):name:\"%s\"",
-              player_number(pplayer), pcolor->r, pcolor->g, pcolor->b,
-              player_name(pplayer));
-
-  return buf;
 }
 
 /**
