@@ -15,10 +15,11 @@ namespace freeciv {
 
 class layer_workertask : public layer {
 public:
-  explicit layer_workertask(struct tileset *ts, mapview_layer layer);
+  explicit layer_workertask(struct tileset *ts, mapview_layer layer,
+                            const QPoint &activity_offset);
   virtual ~layer_workertask() = default;
 
-  void load_sprites(const QPoint &activity_offset);
+  void load_sprites();
 
   void initialize_extra(const extra_type *extra, const QString &tag,
                         extrastyle_id style) override;

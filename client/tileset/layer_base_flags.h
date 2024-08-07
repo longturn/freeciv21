@@ -15,11 +15,13 @@
 #include "fc_types.h"
 #include "layer.h"
 
+#include <QPoint>
+
 namespace freeciv {
 
 class layer_base_flags : public layer {
 public:
-  explicit layer_base_flags(struct tileset *ts, int offset_x, int offset_y);
+  explicit layer_base_flags(struct tileset *ts, const QPoint &offset);
   virtual ~layer_base_flags() = default;
 
   std::vector<drawn_sprite>
@@ -28,7 +30,7 @@ public:
                     const unit *punit) const override;
 
 private:
-  int m_offset_x, m_offset_y;
+  QPoint m_offset;
 };
 
 } // namespace freeciv

@@ -47,20 +47,19 @@ void layer_special::initialize_extra(const extra_type *extra,
       full_tag_name = QStringLiteral("%1_fg").arg(tag);
     }
 
-    set_sprite(extra, full_tag_name, tileset_full_tile_x_offset(tileset()),
-               tileset_full_tile_y_offset(tileset()));
+    set_sprite(extra, full_tag_name, tileset_full_tile_offset(tileset()));
   }
 }
 
 void layer_special::set_sprite(const extra_type *extra, const QString &tag,
-                               int offset_x, int offset_y)
+                               const QPoint &offset)
 {
   fc_assert_ret(extra != nullptr);
 
   auto sprite = load_sprite(tileset(), tag);
   if (sprite) {
-    m_sprites.at(extra->id) = std::make_unique<drawn_sprite>(
-        tileset(), sprite, true, offset_x, offset_y);
+    m_sprites.at(extra->id) =
+        std::make_unique<drawn_sprite>(tileset(), sprite, true, offset);
   }
 }
 

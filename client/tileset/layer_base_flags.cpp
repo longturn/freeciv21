@@ -26,10 +26,8 @@ namespace freeciv {
  * Map layer that draws flags for bases that have @ref EF_SHOW_FLAG set.
  */
 
-layer_base_flags::layer_base_flags(struct tileset *ts, int offset_x,
-                                   int offset_y)
-    : freeciv::layer(ts, LAYER_BASE_FLAGS), m_offset_x(offset_x),
-      m_offset_y(offset_y)
+layer_base_flags::layer_base_flags(struct tileset *ts, const QPoint &offset)
+    : freeciv::layer(ts, LAYER_BASE_FLAGS), m_offset(offset)
 {
 }
 
@@ -70,7 +68,7 @@ std::vector<drawn_sprite> layer_base_flags::fill_sprite_array(
         return {drawn_sprite(
             tileset(),
             get_nation_flag_sprite(tileset(), nation_of_player(eowner)),
-            true, m_offset_x, m_offset_y)};
+            true, m_offset)};
       }
     }
   }

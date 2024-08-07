@@ -135,9 +135,6 @@
 /// The prefix for option sections in the tilespec file.
 const static char *const OPTION_SECTION_PREFIX = "option_";
 
-#define FULL_TILE_X_OFFSET ((t->normal_tile_width - t->full_tile_width) / 2)
-#define FULL_TILE_Y_OFFSET (t->normal_tile_height - t->full_tile_height)
-
 // This must correspond to enum edge_type.
 static const char edge_name[EDGE_COUNT][3] = {"ns", "we", "ud", "lr"};
 
@@ -321,21 +318,13 @@ struct tileset {
 
   enum fog_style fogstyle;
 
-  int unit_flag_offset_x, unit_flag_offset_y;
-  int city_flag_offset_x, city_flag_offset_y;
-  int unit_offset_x, unit_offset_y;
-  int city_offset_x, city_offset_y;
-  int city_size_offset_x, city_size_offset_y;
+  QPoint unit_flag_offset, city_flag_offset, unit_offset, city_offset,
+      city_size_offset;
 
   int citybar_offset_y;
   int tilelabel_offset_y;
-  int activity_offset_x;
-  int activity_offset_y;
-  int select_offset_x;
-  int select_offset_y;
+  QPoint activity_offset, select_offset, occupied_offset;
   int select_step_ms = 100;
-  int occupied_offset_x;
-  int occupied_offset_y;
   int unit_upkeep_offset_y;
   int unit_upkeep_small_offset_y;
 
@@ -362,11 +351,6 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
 
 static bool tileset_setup_options(struct tileset *t,
                                   const section_file *file);
-
-static void tileset_setup_base(struct tileset *t,
-                               const struct extra_type *pextra,
-                               const char *tag);
-
 static void tileset_setup_crossing_separate(struct tileset *t,
                                             struct extra_type *pextra,
                                             struct terrain *pterrain,
@@ -497,30 +481,13 @@ int tileset_full_tile_height(const struct tileset *t)
 }
 
 /**
- * Return the x offset of full tiles in the tileset. Use this to draw "full
- * sprites".
- */
-int tileset_full_tile_x_offset(const struct tileset *t)
-{
-  return FULL_TILE_X_OFFSET;
-}
-
-/**
- * Return the y offset of full tiles in the tileset. Use this to draw "full
- * sprites".
- */
-int tileset_full_tile_y_offset(const struct tileset *t)
-{
-  return FULL_TILE_Y_OFFSET;
-}
-
-/**
  * Return the x and y offsets of full tiles in the tileset. Use this to draw
  * "full sprites".
  */
 QPoint tileset_full_tile_offset(const struct tileset *t)
 {
-  return QPoint(FULL_TILE_X_OFFSET, FULL_TILE_Y_OFFSET);
+  return QPoint((t->normal_tile_width - t->full_tile_width) / 2,
+                t->normal_tile_height - t->full_tile_height);
 }
 
 /**
@@ -1504,41 +1471,41 @@ check_sprite_type(const char *sprite_type, const char *tile_section)
 static bool tileset_invalid_offsets(struct tileset *t,
                                     struct section_file *file)
 {
-  return !secfile_lookup_int(file, &t->unit_flag_offset_x,
+  return !secfile_lookup_int(file, &t->unit_flag_offset.rx(),
                              "tilespec.unit_flag_offset_x")
-         || !secfile_lookup_int(file, &t->unit_flag_offset_y,
+         || !secfile_lookup_int(file, &t->unit_flag_offset.ry(),
                                 "tilespec.unit_flag_offset_y")
-         || !secfile_lookup_int(file, &t->city_flag_offset_x,
+         || !secfile_lookup_int(file, &t->city_flag_offset.rx(),
                                 "tilespec.city_flag_offset_x")
-         || !secfile_lookup_int(file, &t->city_flag_offset_y,
+         || !secfile_lookup_int(file, &t->city_flag_offset.ry(),
                                 "tilespec.city_flag_offset_y")
-         || !secfile_lookup_int(file, &t->unit_offset_x,
+         || !secfile_lookup_int(file, &t->unit_offset.rx(),
                                 "tilespec.unit_offset_x")
-         || !secfile_lookup_int(file, &t->unit_offset_y,
+         || !secfile_lookup_int(file, &t->unit_offset.ry(),
                                 "tilespec.unit_offset_y")
-         || !secfile_lookup_int(file, &t->activity_offset_x,
+         || !secfile_lookup_int(file, &t->activity_offset.rx(),
                                 "tilespec.activity_offset_x")
-         || !secfile_lookup_int(file, &t->activity_offset_y,
+         || !secfile_lookup_int(file, &t->activity_offset.ry(),
                                 "tilespec.activity_offset_y")
-         || !secfile_lookup_int(file, &t->select_offset_x,
+         || !secfile_lookup_int(file, &t->select_offset.rx(),
                                 "tilespec.select_offset_x")
-         || !secfile_lookup_int(file, &t->select_offset_y,
+         || !secfile_lookup_int(file, &t->select_offset.ry(),
                                 "tilespec.select_offset_y")
-         || !secfile_lookup_int(file, &t->city_offset_x,
+         || !secfile_lookup_int(file, &t->city_offset.rx(),
                                 "tilespec.city_offset_x")
-         || !secfile_lookup_int(file, &t->city_offset_y,
+         || !secfile_lookup_int(file, &t->city_offset.ry(),
                                 "tilespec.city_offset_y")
-         || !secfile_lookup_int(file, &t->city_size_offset_x,
+         || !secfile_lookup_int(file, &t->city_size_offset.rx(),
                                 "tilespec.city_size_offset_x")
-         || !secfile_lookup_int(file, &t->city_size_offset_y,
+         || !secfile_lookup_int(file, &t->city_size_offset.ry(),
                                 "tilespec.city_size_offset_y")
          || !secfile_lookup_int(file, &t->citybar_offset_y,
                                 "tilespec.citybar_offset_y")
          || !secfile_lookup_int(file, &t->tilelabel_offset_y,
                                 "tilespec.tilelabel_offset_y")
-         || !secfile_lookup_int(file, &t->occupied_offset_x,
+         || !secfile_lookup_int(file, &t->occupied_offset.rx(),
                                 "tilespec.occupied_offset_x")
-         || !secfile_lookup_int(file, &t->occupied_offset_y,
+         || !secfile_lookup_int(file, &t->occupied_offset.ry(),
                                 "tilespec.occupied_offset_y");
 }
 
@@ -1610,17 +1577,20 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
   } break;
   case LAYER_BASE_FLAGS: {
     auto l = std::make_unique<freeciv::layer_base_flags>(
-        t, FULL_TILE_X_OFFSET + t->city_flag_offset_x,
-        FULL_TILE_Y_OFFSET + t->city_flag_offset_y);
+        t, tileset_full_tile_offset(t) + t->city_flag_offset);
     t->layers.emplace_back(std::move(l));
   } break;
   case LAYER_UNIT: {
-    auto l = std::make_unique<freeciv::layer_units>(t, layer);
+    auto l = std::make_unique<freeciv::layer_units>(
+        t, layer, t->activity_offset, t->select_offset, t->unit_offset,
+        t->unit_flag_offset);
     t->units_layer = l.get();
     t->layers.emplace_back(move(l));
   } break;
   case LAYER_FOCUS_UNIT: {
-    auto l = std::make_unique<freeciv::layer_units>(t, layer);
+    auto l = std::make_unique<freeciv::layer_units>(
+        t, layer, t->activity_offset, t->select_offset, t->unit_offset,
+        t->unit_flag_offset);
     t->focus_units_layer = l.get();
     t->layers.emplace_back(move(l));
   } break;
@@ -1628,7 +1598,8 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
     t->layers.emplace_back(std::make_unique<freeciv::layer_water>(t));
   } break;
   case LAYER_WORKERTASK: {
-    auto l = std::make_unique<freeciv::layer_workertask>(t, layer);
+    auto l = std::make_unique<freeciv::layer_workertask>(t, layer,
+                                                         t->activity_offset);
     t->workertask_layer = l.get();
     t->layers.emplace_back(move(l));
   } break;
@@ -2048,13 +2019,13 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
           auto offset_x = secfile_lookup_int_default(
               file, 0, "%s.layer%d_offset_x", sec_name, l);
           if (is_tall) {
-            offset_x += FULL_TILE_X_OFFSET;
+            offset_x += tileset_full_tile_offset(t).x();
           }
 
           auto offset_y = secfile_lookup_int_default(
               file, 0, "%s.layer%d_offset_y", sec_name, l);
           if (is_tall) {
-            offset_y += FULL_TILE_Y_OFFSET;
+            offset_y += tileset_full_tile_offset(t).y();
           }
 
           if (!t->terrain_layers[l]->set_tag_offsets(tag, offset_x,
@@ -2752,18 +2723,9 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     sprite_vector_append(&t->sprites.explode.unit, sprite);
   }
 
-  t->units_layer->load_sprites(
-      QPoint(t->activity_offset_x, t->activity_offset_y),
-      QPoint(t->select_offset_x, t->select_offset_y),
-      QPoint(t->unit_offset_x, t->unit_offset_y),
-      QPoint(t->unit_flag_offset_x, t->unit_flag_offset_y));
-  t->focus_units_layer->load_sprites(
-      QPoint(t->activity_offset_x, t->activity_offset_y),
-      QPoint(t->select_offset_x, t->select_offset_y),
-      QPoint(t->unit_offset_x, t->unit_offset_y),
-      QPoint(t->unit_flag_offset_x, t->unit_flag_offset_y));
-  t->workertask_layer->load_sprites(
-      QPoint(t->activity_offset_x, t->activity_offset_y));
+  t->units_layer->load_sprites();
+  t->focus_units_layer->load_sprites();
+  t->workertask_layer->load_sprites();
 
   assign_sprite(t, t->sprites.citybar.shields, {"citybar.shields"}, true);
   assign_sprite(t, t->sprites.citybar.food, {"citybar.food"}, true);
@@ -3536,7 +3498,7 @@ QPixmap *get_unit_nation_flag_sprite(const struct tileset *t,
 }
 
 #define ADD_SPRITE_FULL(s)                                                  \
-  sprs.emplace_back(t, s, true, FULL_TILE_X_OFFSET, FULL_TILE_Y_OFFSET)
+  sprs.emplace_back(t, s, true, tileset_full_tile_offset(t))
 
 /**
    Assemble some data that is used in building the tile sprite arrays.
@@ -4377,8 +4339,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     if (pcity && gui_options->draw_cities) {
       if (!citybar_painter::current()->has_flag()) {
         sprs.emplace_back(t, get_city_flag_sprite(t, pcity), true,
-                          FULL_TILE_X_OFFSET + t->city_flag_offset_x,
-                          FULL_TILE_Y_OFFSET + t->city_flag_offset_y);
+                          tileset_full_tile_offset(t) + t->city_flag_offset);
       }
       bool occupied_graphic = !citybar_painter::current()->has_units();
       fill_basic_city_sprite_array(t, sprs, pcity, occupied_graphic);
@@ -4414,19 +4375,18 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
       unsigned int size = city_size_get(pcity);
 
       sprs.emplace_back(t, t->sprites.city.size[size % 10], false,
-                        FULL_TILE_X_OFFSET + t->city_size_offset_x,
-                        FULL_TILE_Y_OFFSET + t->city_size_offset_y);
+                        tileset_full_tile_offset(t) + t->city_size_offset);
       if (10 <= size) {
         sprs.emplace_back(t, t->sprites.city.size_tens[(size / 10) % 10],
-                          false, FULL_TILE_X_OFFSET + t->city_size_offset_x,
-                          FULL_TILE_Y_OFFSET + t->city_size_offset_y);
+                          false,
+                          tileset_full_tile_offset(t) + t->city_size_offset);
         if (100 <= size) {
           QPixmap *sprite = t->sprites.city.size_hundreds[(size / 100) % 10];
 
           if (nullptr != sprite) {
             sprs.emplace_back(t, sprite, false,
-                              FULL_TILE_X_OFFSET + t->city_size_offset_x,
-                              FULL_TILE_Y_OFFSET + t->city_size_offset_y);
+                              tileset_full_tile_offset(t)
+                                  + t->city_size_offset);
           } else {
             warn = true;
           }
@@ -4498,8 +4458,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
 
       if (t->sprites.extras[id].activity != nullptr) {
         sprs.emplace_back(t, t->sprites.extras[id].activity, true,
-                          FULL_TILE_X_OFFSET + t->activity_offset_x,
-                          FULL_TILE_Y_OFFSET + t->activity_offset_y);
+                          tileset_full_tile_offset(t) + t->activity_offset);
       }
     }
     break;
@@ -5080,8 +5039,7 @@ void fill_basic_city_sprite_array(const struct tileset *t,
    * graphic. */
   if (t->type == TS_OVERHEAD || pcity->client.walls <= 0) {
     sprs.emplace_back(t, get_city_sprite(t->sprites.city.tile, pcity), true,
-                      FULL_TILE_X_OFFSET + t->city_offset_x,
-                      FULL_TILE_Y_OFFSET + t->city_offset_y);
+                      tileset_full_tile_offset(t) + t->city_offset);
   }
   if (t->type == TS_ISOMETRIC && pcity->client.walls > 0) {
     auto spr = get_city_sprite(t->sprites.city.wall[pcity->client.walls - 1],
@@ -5091,14 +5049,14 @@ void fill_basic_city_sprite_array(const struct tileset *t,
     }
 
     if (spr != nullptr) {
-      sprs.emplace_back(t, spr, true, FULL_TILE_X_OFFSET + t->city_offset_x,
-                        FULL_TILE_Y_OFFSET + t->city_offset_y);
+      sprs.emplace_back(t, spr, true,
+                        tileset_full_tile_offset(t) + t->city_offset);
     }
   }
   if (occupied_graphic && pcity->client.occupied) {
     sprs.emplace_back(t, get_city_sprite(t->sprites.city.occupied, pcity),
-                      true, FULL_TILE_X_OFFSET + t->occupied_offset_x,
-                      FULL_TILE_Y_OFFSET + t->occupied_offset_y);
+                      true,
+                      tileset_full_tile_offset(t) + t->occupied_offset);
   }
   if (t->type == TS_OVERHEAD && pcity->client.walls > 0) {
     auto spr = get_city_sprite(t->sprites.city.wall[pcity->client.walls - 1],

@@ -22,24 +22,22 @@ namespace freeciv {
 /**
  * Constructor
  */
-layer_units::layer_units(struct tileset *ts, mapview_layer layer)
-    : freeciv::layer(ts, layer)
+layer_units::layer_units(struct tileset *ts, mapview_layer layer,
+                         const QPoint &activity_offset,
+                         const QPoint &select_offset,
+                         const QPoint &unit_offset,
+                         const QPoint &unit_flag_offset)
+    : freeciv::layer(ts, layer), m_activity_offset(activity_offset),
+      m_select_offset(select_offset), m_unit_offset(unit_offset),
+      m_unit_flag_offset(unit_flag_offset)
 {
 }
 
 /**
  * Loads all static sprites needed by this layer (activities etc).
  */
-void layer_units::load_sprites(const QPoint &activity_offset,
-                               const QPoint &select_offset,
-                               const QPoint &unit_offset,
-                               const QPoint &unit_flag_offset)
+void layer_units::load_sprites()
 {
-  m_activity_offset = activity_offset;
-  m_select_offset = select_offset;
-  m_unit_offset = unit_offset;
-  m_unit_flag_offset = unit_flag_offset;
-
   m_activities[ACTIVITY_MINE] = load_sprite(tileset(), {"unit.plant"}, true);
   m_activities[ACTIVITY_PLANT] = m_activities[ACTIVITY_MINE];
   m_activities[ACTIVITY_IRRIGATE] =
