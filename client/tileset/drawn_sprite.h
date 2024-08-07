@@ -10,6 +10,7 @@
 #include <vector>
 
 class QPixmap;
+class QPoint;
 class QRect;
 
 struct tileset;
@@ -18,6 +19,8 @@ struct drawn_sprite {
   explicit drawn_sprite(const tileset *ts, const QPixmap *sprite,
                         bool foggable = true, int offset_x = 0,
                         int offset_y = 0);
+  explicit drawn_sprite(const tileset *ts, const QPixmap *sprite,
+                        bool foggable, const QPoint &offset);
   drawn_sprite(const drawn_sprite &other) = default;
   drawn_sprite(drawn_sprite &&other) = default;
 
