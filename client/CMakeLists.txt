@@ -118,6 +118,7 @@ target_sources(
   tileset/layer_city.cpp
   tileset/layer_city_size.cpp
   tileset/layer_darkness.cpp
+  tileset/layer_infrawork.cpp
   tileset/layer_editor.cpp
   tileset/layer_fog.cpp
   tileset/layer_goto.cpp

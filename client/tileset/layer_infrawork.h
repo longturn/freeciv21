@@ -13,11 +13,11 @@
 
 namespace freeciv {
 
-class layer_workertask : public layer_abstract_activities {
+class layer_infrawork : public layer_abstract_activities {
 public:
-  explicit layer_workertask(struct tileset *ts,
-                            const QPoint &activity_offset);
-  virtual ~layer_workertask() = default;
+  explicit layer_infrawork(struct tileset *ts,
+                           const QPoint &activity_offset);
+  virtual ~layer_infrawork() = default;
 
   std::vector<drawn_sprite>
   fill_sprite_array(const tile *ptile, const tile_edge *pedge,

@@ -19,9 +19,9 @@ namespace freeciv {
 /**
  * Constructor
  */
-layer_workertask::layer_workertask(struct tileset *ts, mapview_layer layer,
+layer_workertask::layer_workertask(struct tileset *ts,
                                    const QPoint &activity_offset)
-    : freeciv::layer_abstract_activities(ts, layer),
+    : freeciv::layer_abstract_activities(ts, LAYER_WORKERTASK),
       m_activity_offset(activity_offset)
 {
 }
