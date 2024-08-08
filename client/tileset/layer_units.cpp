@@ -27,9 +27,9 @@ layer_units::layer_units(struct tileset *ts, mapview_layer layer,
                          const QPoint &select_offset,
                          const QPoint &unit_offset,
                          const QPoint &unit_flag_offset)
-    : freeciv::layer(ts, layer), m_activity_offset(activity_offset),
-      m_select_offset(select_offset), m_unit_offset(unit_offset),
-      m_unit_flag_offset(unit_flag_offset)
+    : freeciv::layer_abstract_activities(ts, layer),
+      m_activity_offset(activity_offset), m_select_offset(select_offset),
+      m_unit_offset(unit_offset), m_unit_flag_offset(unit_flag_offset)
 {
 }
 
@@ -38,24 +38,7 @@ layer_units::layer_units(struct tileset *ts, mapview_layer layer,
  */
 void layer_units::load_sprites()
 {
-  m_activities[ACTIVITY_MINE] = load_sprite(tileset(), {"unit.plant"}, true);
-  m_activities[ACTIVITY_PLANT] = m_activities[ACTIVITY_MINE];
-  m_activities[ACTIVITY_IRRIGATE] =
-      load_sprite(tileset(), {"unit.irrigate"}, true);
-  m_activities[ACTIVITY_CULTIVATE] = m_activities[ACTIVITY_IRRIGATE];
-  m_activities[ACTIVITY_PILLAGE] =
-      load_sprite(tileset(), {"unit.pillage"}, true);
-  m_activities[ACTIVITY_FORTIFIED] =
-      load_sprite(tileset(), {"unit.fortified"}, true);
-  m_activities[ACTIVITY_FORTIFYING] =
-      load_sprite(tileset(), {"unit.fortifying"}, true);
-  m_activities[ACTIVITY_SENTRY] =
-      load_sprite(tileset(), {"unit.sentry"}, true);
-  m_activities[ACTIVITY_GOTO] = load_sprite(tileset(), {"unit.goto"}, true);
-  m_activities[ACTIVITY_TRANSFORM] =
-      load_sprite(tileset(), {"unit.transform"}, true);
-  m_activities[ACTIVITY_CONVERT] =
-      load_sprite(tileset(), {"unit.convert"}, true);
+  layer_abstract_activities::load_sprites();
 
   m_auto_attack = load_sprite(tileset(), {"unit.auto_attack"}, true);
   m_auto_explore = load_sprite(tileset(), {"unit.auto_explore"}, true);
@@ -97,36 +80,6 @@ void layer_units::load_sprites()
       break;
     }
     m_select.push_back(sprite);
-  }
-}
-
-/**
- * Loads the extra activity and remove activity sprites.
- */
-void layer_units::initialize_extra(const extra_type *extra,
-                                   const QString &tag, extrastyle_id style)
-{
-  fc_assert(extra->id == m_extra_activities.size());
-
-  if (!fc_strcasecmp(extra->activity_gfx, "none")) {
-    m_extra_activities.push_back(nullptr);
-  } else {
-    QStringList tags = {
-        extra->activity_gfx,
-        extra->act_gfx_alt,
-        extra->act_gfx_alt2,
-    };
-    m_extra_activities.push_back(load_sprite(tileset(), tags, true));
-  }
-
-  if (!fc_strcasecmp(extra->rmact_gfx, "none")) {
-    m_extra_rm_activities.push_back(nullptr);
-  } else {
-    QStringList tags = {
-        extra->rmact_gfx,
-        extra->rmact_gfx_alt,
-    };
-    m_extra_rm_activities.push_back(load_sprite(tileset(), tags, true));
   }
 }
 
@@ -188,7 +141,7 @@ layer_units::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
 
   // Activity
   if (auto sprite =
-          get_activity_sprite(punit->activity, punit->activity_target)) {
+          activity_sprite(punit->activity, punit->activity_target)) {
     sprs.emplace_back(tileset(), sprite, true,
                       full_offset + m_activity_offset);
   }
@@ -247,39 +200,6 @@ layer_units::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
 }
 
 /**
- * Resets data about extras
- */
-void layer_units::reset_ruleset()
-{
-  m_extra_activities.clear();
-  m_extra_rm_activities.clear();
-}
-
-/**
- * Returns the sprite used to represent a given activity on the map.
- */
-QPixmap *layer_units::get_activity_sprite(unit_activity activity,
-                                          const extra_type *target) const
-{
-  // Nicely inconsistent
-  switch (activity) {
-  case ACTIVITY_POLLUTION:
-  case ACTIVITY_FALLOUT:
-    return m_extra_rm_activities[extra_index(target)];
-    break;
-  case ACTIVITY_BASE:
-  case ACTIVITY_GEN_ROAD:
-    return m_extra_activities[extra_index(target)];
-    break;
-  default:
-    break;
-  }
-
-  return target ? m_extra_activities[extra_index(target)]
-                : m_activities[activity];
-}
-
-/**
  * Adds the sprite used to represent an automated unit on the map to sprs.
  */
 void layer_units::add_automated_sprite(std::vector<drawn_sprite> &sprs,
@@ -323,8 +243,8 @@ void layer_units::add_orders_sprite(std::vector<drawn_sprite> &sprs,
     } else if (punit->activity != ACTIVITY_IDLE) {
       sprs.emplace_back(tileset(), m_connect);
     } else {
-      sprs.emplace_back(tileset(), m_activities[ACTIVITY_GOTO], true,
-                        full_offset + m_activity_offset);
+      sprs.emplace_back(tileset(), activity_sprite(ACTIVITY_GOTO, nullptr),
+                        true, full_offset + m_activity_offset);
     }
   }
 }

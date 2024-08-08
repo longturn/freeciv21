@@ -112,6 +112,7 @@ target_sources(
   audio/audio_none.cpp
 
   tileset/drawn_sprite.cpp
+  tileset/layer_abstract_activities.cpp
   tileset/layer_background.cpp
   tileset/layer_base_flags.cpp
   tileset/layer_city.cpp
