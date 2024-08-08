@@ -54,7 +54,7 @@ layer_goto::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
                               const tile_corner *pcorner,
                               const unit *punit) const
 {
-  if (!ptile && !goto_is_active()) {
+  if (!ptile || !goto_is_active()) {
     return {};
   }
 
