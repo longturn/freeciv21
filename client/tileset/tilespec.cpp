@@ -42,7 +42,6 @@
 #include "shared.h"
 #include "style.h"
 #include "support.h"
-#include "tileset/layer_overlays.h"
 #include "workertask.h"
 
 // common
@@ -84,6 +83,8 @@
 #include "layer_fog.h"
 #include "layer_goto.h"
 #include "layer_grid.h"
+#include "layer_infrawork.h"
+#include "layer_overlays.h"
 #include "layer_special.h"
 #include "layer_terrain.h"
 #include "layer_units.h"
@@ -1529,6 +1530,10 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
   case LAYER_GRID2: {
     t->layers.emplace_back(std::make_unique<freeciv::layer_grid>(t, layer));
   } break;
+  case LAYER_INFRAWORK: {
+    t->layers.emplace_back(
+        std::make_unique<freeciv::layer_infrawork>(t, t->activity_offset));
+  } break;
   case LAYER_OVERLAYS: {
     t->layers.emplace_back(std::make_unique<freeciv::layer_overlays>(t));
   } break;
@@ -1574,8 +1579,8 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
     t->layers.emplace_back(std::make_unique<freeciv::layer_water>(t));
   } break;
   case LAYER_WORKERTASK: {
-    t->layers.emplace_back(std::make_unique<freeciv::layer_workertask>(
-        t, layer, t->activity_offset));
+    t->layers.emplace_back(
+        std::make_unique<freeciv::layer_workertask>(t, t->activity_offset));
   } break;
   default:
     t->layers.push_back(std::make_unique<freeciv::layer>(t, layer));
@@ -3778,14 +3783,7 @@ fill_sprite_array(struct tileset *t, enum mapview_layer layer,
     break;
 
   case LAYER_INFRAWORK:
-    if (ptile != nullptr && ptile->placing != nullptr) {
-      const int id = extra_index(ptile->placing);
-
-      if (t->sprites.extras[id].activity != nullptr) {
-        sprs.emplace_back(t, t->sprites.extras[id].activity, true,
-                          tileset_full_tile_offset(t) + t->activity_offset);
-      }
-    }
+    fc_assert_ret_val(false, {});
     break;
 
   case LAYER_COUNT:
