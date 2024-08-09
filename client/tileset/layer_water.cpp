@@ -6,7 +6,6 @@
 #include "layer_water.h"
 
 #include "colors_common.h"
-#include "control.h"
 #include "extras.h"
 #include "fc_types.h"
 #include "tilespec.h"
