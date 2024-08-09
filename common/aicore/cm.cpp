@@ -8,6 +8,7 @@
  see https://www.gnu.org/licenses/.
  */
 
+#include <array>
 #include <cstdlib>
 #include <cstring>
 
