@@ -188,7 +188,7 @@ jobs:
     needs: clang-format
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     env:
-      VCPKG_ROOT: C:/vcpkg
+      VCPKG_ROOT: ${{github.workspace}}/vcpkg
       VCPKG_DEFAULT_BINARY_CACHE: ${{github.workspace}}/vcpkg/bincache
     steps:
       - uses: actions/checkout@v4
@@ -197,14 +197,9 @@ jobs:
       - uses: lukka/run-vcpkg@v11
         name: Install dependencies
         with:
-          vcpkgGitCommitId: f7423ee180c4b7f40d43402c2feb3859161ef625
-      - name: Enable Developer Command Prompt
-        uses: ilammy/msvc-dev-cmd@v1
+          vcpkgGitCommitId: 1de2026f28ead93ff1773e6e680387643e914ea1
       - name: Configure
-        run: cmake -S . -B build -G "Visual Studio 17 2022" \
-         -DCMAKE_BUILD_TYPE=Debug -DVCPKG_BUILD_TYPE=debug \
-         -DVCPKG_TARGET_ARCHITECTURE=x64 -DFREECIV_USE_VCPKG=ON \
-         -DCMAKE_TOOLCHAIN_FILE="${{env.VCPKG_ROOT}}/scripts/buildsystems/vcpkg.cmake" -A x64 -T ClangCL
+        run: cmake -S . -B build --preset "windows-debug"
       - name: Building
         run: cmake --build build --config Debug
       #- name: Test
