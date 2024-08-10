@@ -33,14 +33,6 @@ namespace freeciv {
 class layer_city;
 }
 
-// Create the sprite_vector type.
-#define SPECVEC_TAG sprite
-#define SPECVEC_TYPE QPixmap *
-#include "specvec.h"
-#define sprite_vector_iterate(sprite_vec, psprite)                          \
-  TYPED_VECTOR_ITERATE(QPixmap *, sprite_vec, psprite)
-#define sprite_vector_iterate_end VECTOR_ITERATE_END
-
 #define SPECENUM_NAME ts_type
 #define SPECENUM_VALUE0 TS_OVERHEAD
 #define SPECENUM_VALUE0NAME N_("Overhead")
@@ -197,7 +189,7 @@ enum spaceship_part {
 
 struct citybar_sprites {
   QPixmap *shields, *food, *trade, *occupied, *background;
-  struct sprite_vector occupancy;
+  std::vector<QPixmap *> occupancy;
 };
 
 struct editor_sprites {
@@ -239,7 +231,7 @@ const QPixmap *get_sample_city_sprite(const struct tileset *t,
                                       int style_idx);
 const QPixmap *get_tax_sprite(const struct tileset *t, Output_type_id otype);
 const QPixmap *get_treaty_thumb_sprite(const struct tileset *t, bool on_off);
-const struct sprite_vector *
+const std::vector<QPixmap *> &
 get_unit_explode_animation(const struct tileset *t);
 const QPixmap *get_nuke_explode_sprite(const struct tileset *t);
 const QPixmap *get_cursor_sprite(const struct tileset *t,
