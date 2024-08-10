@@ -148,18 +148,6 @@ QPixmap *load_sprite(struct tileset *t, const QStringList &possible_names,
                      bool required);
 
 std::vector<drawn_sprite>
-fill_sprite_array(struct tileset *t, enum mapview_layer layer,
-                  const struct tile *ptile, const struct tile_edge *pedge,
-                  const struct tile_corner *pcorner,
-                  const struct unit *punit);
-void fill_crossing_sprite_array(const struct tileset *t,
-                                const struct extra_type *pextra,
-                                std::vector<drawn_sprite> &sprs,
-                                bv_extras textras, bv_extras *textras_near,
-                                struct terrain *tterrain_near[8],
-                                struct terrain *pterrain,
-                                const struct city *pcity);
-std::vector<drawn_sprite>
 fill_basic_terrain_layer_sprite_array(struct tileset *t, int layer,
                                       struct terrain *pterrain);
 const freeciv::layer_city *tileset_layer_city(const struct tileset *t);

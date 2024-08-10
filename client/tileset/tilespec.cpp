@@ -200,28 +200,6 @@ struct named_sprites {
   } user;
   struct {
     QPixmap *activity, *rmact;
-    int extrastyle;
-    union {
-      struct {
-        QPixmap
-            /* for extrastyles ESTYLE_ROAD_ALL_SEPARATE and
-               ESTYLE_ROAD_PARITY_COMBINED */
-            *isolated,
-            *corner[8]; /* Indexed by direction; only non-cardinal dirs used.
-                         */
-        union {
-          // for ESTYLE_ROAD_ALL_SEPARATE
-          QPixmap *dir[8]; // all entries used
-          // ESTYLE_ROAD_PARITY_COMBINED
-          struct {
-            QPixmap *even[MAX_INDEX_HALF], // first unused
-                *odd[MAX_INDEX_HALF];      // first unused
-          } combo;
-          // ESTYLE_ALL_SEPARATE
-          QPixmap *total[MAX_INDEX_VALID];
-        } ru;
-      } road;
-    } u[MAX_NUM_TERRAINS];
   } extras[MAX_EXTRA_TYPES];
   struct {
     QPixmap *borders[EDGE_COUNT][2];
@@ -309,7 +287,6 @@ struct tileset {
   struct named_sprites sprites;
   int replaced_hue; // -1 means no replacement
   struct color_system *color_system;
-  struct extra_type_list *style_lists[ESTYLE_COUNT];
 };
 
 struct tileset *tileset;
@@ -321,20 +298,6 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
 
 static bool tileset_setup_options(struct tileset *t,
                                   const section_file *file);
-static void tileset_setup_crossing_separate(struct tileset *t,
-                                            struct extra_type *pextra,
-                                            struct terrain *pterrain,
-                                            const char *tag);
-
-static void tileset_setup_crossing_parity(struct tileset *t,
-                                          struct extra_type *pextra,
-                                          struct terrain *pterrain,
-                                          const char *tag);
-
-static void tileset_setup_crossing_combined(struct tileset *t,
-                                            struct extra_type *pextra,
-                                            struct terrain *pterrain,
-                                            const char *tag);
 
 static void tileset_player_free(struct tileset *t, int plrid);
 
@@ -858,17 +821,9 @@ static bool check_tilespec_capabilities(struct section_file *file,
  */
 static void tileset_free_toplevel(struct tileset *t)
 {
-  int i;
-
   if (t->estyle_hash) {
     delete t->estyle_hash;
     t->estyle_hash = nullptr;
-  }
-  for (i = 0; i < ESTYLE_COUNT; i++) {
-    if (t->style_lists[i] != nullptr) {
-      extra_type_list_destroy(t->style_lists[i]);
-      t->style_lists[i] = nullptr;
-    }
   }
 
   if (t->color_system) {
@@ -2092,10 +2047,6 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
 
   t->estyle_hash = new QHash<QString, extrastyle_id>;
 
-  for (i = 0; i < ESTYLE_COUNT; i++) {
-    t->style_lists[i] = extra_type_list_new();
-  }
-
   for (i = 0; (extraname = secfile_lookup_str_default(
                    file, nullptr, "extras.styles%d.name", i));
        i++) {
@@ -2960,8 +2911,7 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
   const int id = extra_index(pextra);
 
   if (!fc_strcasecmp(pextra->graphic_str, "none")) {
-    // Extra without graphics
-    t->sprites.extras[id].extrastyle = extrastyle_id_invalid();
+    // Extra without graphics; nothing to do
   } else {
     const char *tag;
 
@@ -2980,34 +2930,6 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
       }
     }
     auto extrastyle = t->estyle_hash->value(tag);
-
-    t->sprites.extras[id].extrastyle = extrastyle;
-
-    extra_type_list_append(t->style_lists[extrastyle], pextra);
-
-    terrain_type_iterate(pterrain)
-    {
-      switch (extrastyle) {
-      case ESTYLE_ROAD_ALL_SEPARATE:
-        tileset_setup_crossing_separate(t, pextra, pterrain, tag);
-        break;
-      case ESTYLE_ROAD_PARITY_COMBINED:
-        tileset_setup_crossing_parity(t, pextra, pterrain, tag);
-        break;
-      case ESTYLE_ROAD_ALL_COMBINED:
-        tileset_setup_crossing_combined(t, pextra, pterrain, tag);
-        break;
-
-      case ESTYLE_3LAYER: // Migrated away to layer_special
-      case ESTYLE_SINGLE1:
-      case ESTYLE_SINGLE2:
-      case ESTYLE_RIVER: // Migrated away to layer_water
-      case ESTYLE_CARDINALS:
-      case ESTYLE_COUNT:
-        break;
-      }
-    }
-    terrain_type_iterate_end;
 
     // Also init modern class-based layers
     for (auto &layer : t->layers) {
@@ -3034,131 +2956,6 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
         pextra->rmact_gfx_alt,
     };
     assign_sprite(t, t->sprites.extras[id].rmact, tags, true);
-  }
-}
-
-/**
- * Set road/rail/maglev sprite values for ESTYLE_ROAD_ALL_SEPARATE.
- * should only happen after tilespec_load_tiles().
- */
-static void tileset_setup_crossing_separate(struct tileset *t,
-                                            struct extra_type *pextra,
-                                            struct terrain *pterrain,
-                                            const char *tag)
-{
-  QString full_tag_name;
-  const int id = extra_index(pextra);
-
-  /* place isolated sprites */
-  assign_sprite(
-      t, t->sprites.extras[id].u[terrain_index(pterrain)].road.isolated,
-      make_tag_terrain_list(tag, "_isolated", pterrain), true);
-
-  /* place the directional sprite options, one per corner. */
-  for (int i = 0; i < t->num_valid_tileset_dirs; i++) {
-    enum direction8 dir = t->valid_tileset_dirs[i];
-    QString dir_name = QStringLiteral("_%1").arg(dir_get_tileset_name(dir));
-    assign_sprite(
-        t, t->sprites.extras[id].u[terrain_index(pterrain)].road.ru.dir[i],
-        make_tag_terrain_list(tag, dir_name, pterrain), true);
-  }
-
-  /* place special corner road sprites */
-  for (int i = 0; i < t->num_valid_tileset_dirs; i++) {
-    enum direction8 dir = t->valid_tileset_dirs[i];
-
-    if (!is_cardinal_tileset_dir(t, dir)) {
-      QString dtn = QStringLiteral("_c_%1").arg(dir_get_tileset_name(dir));
-      assign_sprite(
-          t,
-          t->sprites.extras[id].u[terrain_index(pterrain)].road.corner[dir],
-          make_tag_terrain_list(tag, dtn, pterrain), false);
-    }
-  }
-}
-
-/* Set road/rail/maglev sprite values for ESTYLE_ROAD_PARITY_COMBINED.
- * should only happen after tilespec_load_tiles().
- */
-static void tileset_setup_crossing_parity(struct tileset *t,
-                                          struct extra_type *pextra,
-                                          struct terrain *pterrain,
-                                          const char *tag)
-{
-  QString full_tag_name;
-  const int id = extra_index(pextra);
-  int i;
-
-  /* place isolated sprites */
-  assign_sprite(
-      t, t->sprites.extras[id].u[terrain_index(pterrain)].road.isolated,
-      make_tag_terrain_list(tag, "_isolated", pterrain), true);
-
-  int num_index = 1 << (t->num_valid_tileset_dirs / 2), j;
-
-  /* place the directional sprite options.
-   * The comment below exemplifies square tiles:
-   * additional sprites for each road type: 16 each for cardinal and diagonal
-   * directions. Each set of 16 provides a NSEW-indexed sprite to provide
-   * connectors for all rails in the cardinal/diagonal directions.  The 0
-   * entry is unused (the "isolated" sprite is used instead). */
-  for (i = 1; i < num_index; i++) {
-    QString c = QStringLiteral("_c_");
-    QString d = QStringLiteral("_d_");
-
-    for (j = 0; j < t->num_valid_tileset_dirs / 2; j++) {
-      int value = (i >> j) & 1;
-      c += QStringLiteral("%1%2").arg(
-          dir_get_tileset_name(t->valid_tileset_dirs[2 * j]),
-          QString::number(value));
-      d += QStringLiteral("%1%2").arg(
-          dir_get_tileset_name(t->valid_tileset_dirs[2 * j + 1]),
-          QString::number(value));
-    }
-
-    assign_sprite(t,
-                  t->sprites.extras[id]
-                      .u[terrain_index(pterrain)]
-                      .road.ru.combo.even[i],
-                  make_tag_terrain_list(tag, c, pterrain), true);
-
-    assign_sprite(t,
-                  t->sprites.extras[id]
-                      .u[terrain_index(pterrain)]
-                      .road.ru.combo.odd[i],
-                  make_tag_terrain_list(tag, d, pterrain), true);
-  }
-
-  /* place special corner tiles */
-  for (i = 0; i < t->num_valid_tileset_dirs; i++) {
-    enum direction8 dir = t->valid_tileset_dirs[i];
-
-    if (!is_cardinal_tileset_dir(t, dir)) {
-      QString dtn = QStringLiteral("_c_%1").arg(dir_get_tileset_name(dir));
-      assign_sprite(
-          t,
-          t->sprites.extras[id].u[terrain_index(pterrain)].road.corner[dir],
-          make_tag_terrain_list(tag, dtn, pterrain), false);
-    }
-  }
-}
-
-/* Set road/rail/maglev sprite values for ESTYLE_ROAD_ALL_COMBINED.
- * should only happen after tilespec_load_tiles().
- */
-static void tileset_setup_crossing_combined(struct tileset *t,
-                                            struct extra_type *pextra,
-                                            struct terrain *pterrain,
-                                            const char *tag)
-{
-  const int id = extra_index(pextra);
-
-  /* Just go around clockwise, with all combinations. */
-  for (int i = 0; i < t->num_index_valid; i++) {
-    QString idx_str = QStringLiteral("_%1").arg(valid_index_str(t, i));
-    assign_sprite(
-        t, t->sprites.extras[id].u[terrain_index(pterrain)].road.ru.total[i],
-        make_tag_terrain_list(tag, idx_str, pterrain), true);
   }
 }
 
@@ -3280,276 +3077,6 @@ void build_tile_data(const struct tile *ptile, struct terrain *pterrain,
      * past the edge of the map. */
     tterrain_near[dir] = pterrain;
     BV_CLR_ALL(textras_near[dir]);
-  }
-}
-
-/**
-   Add any corner road/rail/maglev sprites to the sprite array.
- */
-static void fill_crossing_corner_sprites(const struct tileset *t,
-                                         const struct extra_type *pextra,
-                                         const struct terrain *pterrain,
-                                         std::vector<drawn_sprite> &sprs,
-                                         bool road, bool *road_near,
-                                         bool hider, bool *hider_near)
-{
-  int i;
-  int extra_idx = extra_index(pextra);
-
-  if (is_cardinal_only_road(pextra)) {
-    return;
-  }
-
-  /* Roads going diagonally adjacent to this tile need to be
-   * partly drawn on this tile. */
-
-  /* Draw the corner sprite if:
-   *   - There is a diagonal road (not rail!) between two adjacent tiles.
-   *   - There is no diagonal road (not rail!) that intersects this road.
-   * The logic is simple: roads are drawn underneath railrods, but are
-   * not always covered by them (even in the corners!).  But if a railroad
-   * connects two tiles, only the railroad (no road) is drawn between
-   * those tiles.
-   */
-  for (i = 0; i < t->num_valid_tileset_dirs; i++) {
-    enum direction8 dir = t->valid_tileset_dirs[i];
-
-    if (!is_cardinal_tileset_dir(t, dir)) {
-      // Draw corner sprites for this non-cardinal direction.
-      int cw = (i + 1) % t->num_valid_tileset_dirs;
-      int ccw =
-          (i + t->num_valid_tileset_dirs - 1) % t->num_valid_tileset_dirs;
-      enum direction8 cwdir = t->valid_tileset_dirs[cw];
-      enum direction8 ccwdir = t->valid_tileset_dirs[ccw];
-
-      if (t->sprites.extras[extra_idx]
-              .u[terrain_index(pterrain)]
-              .road.corner[dir]
-          && (road_near[cwdir] && road_near[ccwdir]
-              && !(hider_near[cwdir] && hider_near[ccwdir]))
-          && !(road && road_near[dir] && !(hider && hider_near[dir]))) {
-        sprs.emplace_back(t, t->sprites.extras[extra_idx]
-                                 .u[terrain_index(pterrain)]
-                                 .road.corner[dir]);
-      }
-    }
-  }
-}
-
-/**
-   Fill all road/rail/maglev sprites into the sprite array.
- */
-void fill_crossing_sprite_array(const struct tileset *t,
-                                const struct extra_type *pextra,
-                                std::vector<drawn_sprite> &sprs,
-                                bv_extras textras, bv_extras *textras_near,
-                                struct terrain *tterrain_near[8],
-                                struct terrain *pterrain,
-                                const struct city *pcity)
-{
-  bool road, road_near[8], hider, hider_near[8];
-  bool land_near[8], hland_near[8];
-  bool draw_road[8], draw_single_road;
-  int dir;
-  int extra_idx = -1;
-  bool cl = false;
-  int extrastyle;
-  const struct road_type *proad = extra_road_get(pextra);
-
-  extra_idx = extra_index(pextra);
-
-  extrastyle = t->sprites.extras[extra_idx].extrastyle;
-
-  if (extra_has_flag(pextra, EF_CONNECT_LAND)) {
-    cl = true;
-  } else {
-    int i;
-
-    for (i = 0; i < 8; i++) {
-      land_near[i] = false;
-    }
-  }
-
-  /* Fill some data arrays. rail_near and road_near store whether road/rail
-   * is present in the given direction.  draw_rail and draw_road store
-   * whether road/rail is to be drawn in that direction.  draw_single_road
-   * and draw_single_rail store whether we need an isolated road/rail to be
-   * drawn. */
-  road = BV_ISSET(textras, extra_idx);
-
-  hider = false;
-  extra_type_list_iterate(pextra->hiders, phider)
-  {
-    if (BV_ISSET(textras, extra_index(phider))) {
-      hider = true;
-      break;
-    }
-  }
-  extra_type_list_iterate_end;
-
-  draw_single_road = road && (!pcity || !gui_options->draw_cities) && !hider;
-
-  for (dir = 0; dir < 8; dir++) {
-    bool roads_exist;
-
-    /* Check if there is adjacent road/rail. */
-    if (!is_cardinal_only_road(pextra)
-        || is_cardinal_tileset_dir(t, static_cast<direction8>(dir))) {
-      road_near[dir] = false;
-      extra_type_list_iterate(proad->integrators, iextra)
-      {
-        if (BV_ISSET(textras_near[dir], extra_index(iextra))) {
-          road_near[dir] = true;
-          break;
-        }
-      }
-      extra_type_list_iterate_end;
-      if (cl) {
-        land_near[dir] =
-            (tterrain_near[dir] != T_UNKNOWN
-             && terrain_type_terrain_class(tterrain_near[dir]) != TC_OCEAN);
-      }
-    } else {
-      road_near[dir] = false;
-      land_near[dir] = false;
-    }
-
-    /* Draw rail/road if there is a connection from this tile to the
-     * adjacent tile.  But don't draw road if there is also a rail
-     * connection. */
-    roads_exist = road && (road_near[dir] || land_near[dir]);
-    draw_road[dir] = roads_exist;
-    hider_near[dir] = false;
-    hland_near[dir] =
-        tterrain_near[dir] != T_UNKNOWN
-        && terrain_type_terrain_class(tterrain_near[dir]) != TC_OCEAN;
-    extra_type_list_iterate(pextra->hiders, phider)
-    {
-      bool hider_dir = false;
-      bool land_dir = false;
-
-      if (!is_cardinal_only_road(phider)
-          || is_cardinal_tileset_dir(t, static_cast<direction8>(dir))) {
-        if (BV_ISSET(textras_near[dir], extra_index(phider))) {
-          hider_near[dir] = true;
-          hider_dir = true;
-        }
-        if (hland_near[dir] && is_extra_caused_by(phider, EC_ROAD)
-            && extra_has_flag(phider, EF_CONNECT_LAND)) {
-          land_dir = true;
-        }
-        if (hider_dir || land_dir) {
-          if (BV_ISSET(textras, extra_index(phider))) {
-            draw_road[dir] = false;
-          }
-        }
-      }
-    }
-    extra_type_list_iterate_end;
-
-    /* Don't draw an isolated road/rail if there's any connection.
-     * draw_single_road would be true in the first place only if start tile
-     * has road, so it will have road connection with any adjacent road
-     * tile. We check from real existence of road (road_near[dir]) and not
-     * from whether road gets drawn (draw_road[dir]) as latter can be FALSE
-     * when road is simply hidden by another one, and we don't want to
-     * draw single road in that case either. */
-    if (draw_single_road && road_near[dir]) {
-      draw_single_road = false;
-    }
-  }
-
-  // Draw road corners
-  fill_crossing_corner_sprites(t, pextra, pterrain, sprs, road, road_near,
-                               hider, hider_near);
-
-  if (extrastyle == ESTYLE_ROAD_ALL_SEPARATE) {
-    /* With ESTYLE_ROAD_ALL_SEPARATE, we simply draw one road for every
-     * connection. This means we only need a few sprites, but a lot of
-     * drawing is necessary and it generally doesn't look very good. */
-    int i;
-
-    // First draw roads under rails.
-    if (road) {
-      for (i = 0; i < t->num_valid_tileset_dirs; i++) {
-        if (draw_road[t->valid_tileset_dirs[i]]) {
-          sprs.emplace_back(t, t->sprites.extras[extra_idx]
-                                   .u[terrain_index(pterrain)]
-                                   .road.ru.dir[i]);
-        }
-      }
-    }
-  } else if (extrastyle == ESTYLE_ROAD_PARITY_COMBINED) {
-    /* With ESTYLE_ROAD_PARITY_COMBINED, we draw one sprite for cardinal
-     * road connections, one sprite for diagonal road connections.
-     * This means we need about 4x more sprites than in style 0, but up to
-     * 4x less drawing is needed.  The drawing quality may also be
-     * improved. */
-
-    // First draw roads under rails.
-    if (road) {
-      int road_even_tileno = 0, road_odd_tileno = 0, i;
-
-      for (i = 0; i < t->num_valid_tileset_dirs / 2; i++) {
-        enum direction8 even = t->valid_tileset_dirs[2 * i];
-        enum direction8 odd = t->valid_tileset_dirs[2 * i + 1];
-
-        if (draw_road[even]) {
-          road_even_tileno |= 1 << i;
-        }
-        if (draw_road[odd]) {
-          road_odd_tileno |= 1 << i;
-        }
-      }
-
-      /* Draw the cardinal/even roads first. */
-      if (road_even_tileno != 0) {
-        sprs.emplace_back(t, t->sprites.extras[extra_idx]
-                                 .u[terrain_index(pterrain)]
-                                 .road.ru.combo.even[road_even_tileno]);
-      }
-      if (road_odd_tileno != 0) {
-        sprs.emplace_back(t, t->sprites.extras[extra_idx]
-                                 .u[terrain_index(pterrain)]
-                                 .road.ru.combo.odd[road_odd_tileno]);
-      }
-    }
-  } else if (extrastyle == ESTYLE_ROAD_ALL_COMBINED) {
-    /* RSTYLE_ALL_COMBINED is a very simple method that lets us simply
-     * retrieve entire finished tiles, with a bitwise index of the presence
-     * of roads in each direction. */
-
-    // Draw roads first
-    if (road) {
-      int road_tileno = 0, i;
-
-      for (i = 0; i < t->num_valid_tileset_dirs; i++) {
-        enum direction8 vdir = t->valid_tileset_dirs[i];
-
-        if (draw_road[vdir]) {
-          road_tileno |= 1 << i;
-        }
-      }
-
-      if (road_tileno != 0 || draw_single_road) {
-        sprs.emplace_back(t, t->sprites.extras[extra_idx]
-                                 .u[terrain_index(pterrain)]
-                                 .road.ru.total[road_tileno]);
-      }
-    }
-  } else {
-    fc_assert(false);
-  }
-
-  /* Draw isolated rail/road separately (ESTYLE_ROAD_ALL_SEPARATE and
-     ESTYLE_ROAD_PARITY_COMBINED only). */
-  if (extrastyle == ESTYLE_ROAD_ALL_SEPARATE
-      || extrastyle == ESTYLE_ROAD_PARITY_COMBINED) {
-    if (draw_single_road) {
-      sprs.emplace_back(t, t->sprites.extras[extra_idx]
-                               .u[terrain_index(pterrain)]
-                               .road.isolated);
-    }
   }
 }
 
@@ -4347,13 +3874,6 @@ static void tileset_player_free(struct tileset *t, int plrid)
  */
 void tileset_ruleset_reset(struct tileset *t)
 {
-  for (int i = 0; i < ESTYLE_COUNT; i++) {
-    if (t->style_lists[i] != nullptr) {
-      extra_type_list_destroy(t->style_lists[i]);
-      t->style_lists[i] = extra_type_list_new();
-    }
-  }
-
   for (auto &layer : t->layers) {
     layer->reset_ruleset();
   }
