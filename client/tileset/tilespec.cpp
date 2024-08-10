@@ -3027,9 +3027,6 @@ QPixmap *get_unit_nation_flag_sprite(const struct tileset *t,
   }
 }
 
-#define ADD_SPRITE_FULL(s)                                                  \
-  sprs.emplace_back(t, s, true, tileset_full_tile_offset(t))
-
 /**
    Assemble some data that is used in building the tile sprite arrays.
      (map_x, map_y) : the (normalized) map position
