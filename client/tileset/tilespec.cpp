@@ -238,10 +238,7 @@ struct tileset {
   int hex_width, hex_height;
   int ts_topo_idx;
 
-  int normal_tile_width, normal_tile_height;
-  int full_tile_width, full_tile_height;
-  int unit_tile_width, unit_tile_height;
-  int small_sprite_width, small_sprite_height;
+  QSize normal_tile_size, full_tile_size, unit_tile_size, small_sprite_size;
   double preferred_scale;
 
   int max_upkeep_height;
@@ -359,7 +356,7 @@ int tileset_hex_height(const struct tileset *t) { return t->hex_height; }
  */
 int tileset_tile_width(const struct tileset *t)
 {
-  return t->normal_tile_width;
+  return t->normal_tile_size.width();
 }
 
 /**
@@ -371,7 +368,7 @@ int tileset_tile_width(const struct tileset *t)
  */
 int tileset_tile_height(const struct tileset *t)
 {
-  return t->normal_tile_height;
+  return t->normal_tile_size.height();
 }
 
 /**
@@ -382,7 +379,7 @@ int tileset_tile_height(const struct tileset *t)
  */
 int tileset_full_tile_width(const struct tileset *t)
 {
-  return t->full_tile_width;
+  return t->full_tile_size.width();
 }
 
 /**
@@ -395,7 +392,7 @@ int tileset_full_tile_width(const struct tileset *t)
  */
 int tileset_full_tile_height(const struct tileset *t)
 {
-  return t->full_tile_height;
+  return t->full_tile_size.height();
 }
 
 /**
@@ -404,8 +401,9 @@ int tileset_full_tile_height(const struct tileset *t)
  */
 QPoint tileset_full_tile_offset(const struct tileset *t)
 {
-  return QPoint((t->normal_tile_width - t->full_tile_width) / 2,
-                t->normal_tile_height - t->full_tile_height);
+  return QPoint((t->normal_tile_size.width() - t->full_tile_size.width())
+                    / 2,
+                t->normal_tile_size.height() - t->full_tile_size.height());
 }
 
 /**
@@ -413,7 +411,7 @@ QPoint tileset_full_tile_offset(const struct tileset *t)
  */
 int tileset_unit_width(const struct tileset *t)
 {
-  return t->unit_tile_width;
+  return t->unit_tile_size.width();
 }
 
 /**
@@ -421,7 +419,7 @@ int tileset_unit_width(const struct tileset *t)
  */
 int tileset_unit_height(const struct tileset *t)
 {
-  return t->unit_tile_height;
+  return t->unit_tile_size.height();
 }
 
 /**
@@ -482,7 +480,7 @@ int tileset_unit_layout_offset_y(const struct tileset *t)
  */
 int tileset_small_sprite_width(const struct tileset *t)
 {
-  return t->small_sprite_width;
+  return t->small_sprite_size.width();
 }
 
 /**
@@ -510,7 +508,7 @@ int tileset_tilelabel_offset_y(const struct tileset *t)
  */
 int tileset_small_sprite_height(const struct tileset *t)
 {
-  return t->small_sprite_height;
+  return t->small_sprite_size.height();
 }
 
 /**
@@ -1729,44 +1727,44 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
   t->num_index_valid = 1 << t->num_valid_tileset_dirs;
   t->num_index_cardinal = 1 << t->num_cardinal_tileset_dirs;
 
-  if (!secfile_lookup_int(file, &t->normal_tile_width,
+  if (!secfile_lookup_int(file, &t->normal_tile_size.rwidth(),
                           "tilespec.normal_tile_width")
-      || !secfile_lookup_int(file, &t->normal_tile_height,
+      || !secfile_lookup_int(file, &t->normal_tile_size.rheight(),
                              "tilespec.normal_tile_height")) {
     qCritical("Tileset \"%s\" invalid: %s", t->name, secfile_error());
     tileset_stop_read(t, file, fname, sections, layer_order);
     return nullptr;
   }
   if (t->type == TS_ISOMETRIC) {
-    t->full_tile_width = t->normal_tile_width;
+    t->full_tile_size.rwidth() = t->normal_tile_size.width();
     if (tileset_hex_height(t) > 0) {
-      t->full_tile_height = t->normal_tile_height;
+      t->full_tile_size.rheight() = t->normal_tile_size.height();
     } else {
-      t->full_tile_height = 3 * t->normal_tile_height / 2;
+      t->full_tile_size.rheight() = 3 * t->normal_tile_size.height() / 2;
     }
   } else {
-    t->full_tile_width = t->normal_tile_width;
-    t->full_tile_height = t->normal_tile_height;
+    t->full_tile_size = t->normal_tile_size;
   }
-  t->unit_tile_width = secfile_lookup_int_default(file, t->full_tile_width,
-                                                  "tilespec.unit_width");
-  t->unit_tile_height = secfile_lookup_int_default(file, t->full_tile_height,
-                                                   "tilespec.unit_height");
+  t->unit_tile_size.rwidth() = secfile_lookup_int_default(
+      file, t->full_tile_size.width(), "tilespec.unit_width");
+  t->unit_tile_size.rheight() = secfile_lookup_int_default(
+      file, t->full_tile_size.height(), "tilespec.unit_height");
   // Hue to be replaced in unit graphics
   t->replaced_hue =
       secfile_lookup_int_default(file, -1, "tilespec.replaced_hue");
 
-  if (!secfile_lookup_int(file, &t->small_sprite_width,
+  if (!secfile_lookup_int(file, &t->small_sprite_size.rwidth(),
                           "tilespec.small_tile_width")
-      || !secfile_lookup_int(file, &t->small_sprite_height,
+      || !secfile_lookup_int(file, &t->small_sprite_size.rheight(),
                              "tilespec.small_tile_height")) {
     qCritical("Tileset \"%s\" invalid: %s", t->name, secfile_error());
     tileset_stop_read(t, file, fname, sections, layer_order);
     return nullptr;
   }
-  qDebug("tile sizes %dx%d, %dx%d unit, %dx%d small", t->normal_tile_width,
-         t->normal_tile_height, t->full_tile_width, t->full_tile_height,
-         t->small_sprite_width, t->small_sprite_height);
+  qDebug("tile sizes %dx%d, %dx%d unit, %dx%d small",
+         t->normal_tile_size.width(), t->normal_tile_size.height(),
+         t->full_tile_size.width(), t->full_tile_size.height(),
+         t->small_sprite_size.width(), t->small_sprite_size.height());
 
   tstr = secfile_lookup_str(file, "tilespec.fog_style");
   if (tstr == nullptr) {
