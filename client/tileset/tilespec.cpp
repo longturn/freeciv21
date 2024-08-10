@@ -617,6 +617,24 @@ std::array<direction8, 8> tileset_cardinal_dirs(const struct tileset *t)
 }
 
 /**
+ * @brief Returns the number of valid directions in the tileset.
+ */
+int tileset_num_valid_dirs(const struct tileset *t)
+{
+  return t->num_valid_tileset_dirs;
+}
+
+/**
+ * @brief Returns the valid directions for the tileset.
+ *
+ * Only the first @ref tileset_num_valid_dirs items should be used.
+ */
+std::array<direction8, 8> tileset_valid_dirs(const struct tileset *t)
+{
+  return t->valid_tileset_dirs;
+}
+
+/**
    Initialize.
  */
 static struct tileset *tileset_new()
@@ -694,8 +712,7 @@ static bool is_valid_tileset_dir(const struct tileset *t,
    "Cardinal", in this sense, means that a tile will share a border with
    another tile in the direction rather than sharing just a single vertex.
  */
-static bool is_cardinal_tileset_dir(const struct tileset *t,
-                                    enum direction8 dir)
+bool is_cardinal_tileset_dir(const struct tileset *t, enum direction8 dir)
 {
   if (t->hex_width > 0 || t->hex_height > 0) {
     return is_valid_tileset_dir(t, dir);
@@ -2257,13 +2274,10 @@ QString cardinal_index_str(const struct tileset *t, int idx)
    Do the same thing as cardinal_str, except including all valid
  directions. The returned string is a pointer to static memory.
  */
-static QString &valid_index_str(const struct tileset *t, int idx)
+QString valid_index_str(const struct tileset *t, int idx)
 {
-  static QString c;
-  int i;
-
-  c = QString();
-  for (i = 0; i < t->num_valid_tileset_dirs; i++) {
+  auto c = QString();
+  for (int i = 0; i < t->num_valid_tileset_dirs; i++) {
     int value = (idx >> i) & 1;
 
     c += QStringLiteral("%1%2").arg(
