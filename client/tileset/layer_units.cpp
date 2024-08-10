@@ -40,28 +40,27 @@ void layer_units::load_sprites()
 {
   layer_abstract_activities::load_sprites();
 
-  m_auto_attack = load_sprite(tileset(), {"unit.auto_attack"}, true);
-  m_auto_explore = load_sprite(tileset(), {"unit.auto_explore"}, true);
-  m_auto_settler = load_sprite(tileset(), {"unit.auto_settler"}, true);
-  m_connect = load_sprite(tileset(), {"unit.connect"}, true);
-  m_loaded = load_sprite(tileset(), {"unit.loaded"}, true);
-  m_lowfuel = load_sprite(tileset(), {"unit.lowfuel"}, true);
-  m_patrol = load_sprite(tileset(), {"unit.patrol"}, true);
-  m_stack = load_sprite(tileset(), {"unit.stack"}, true);
-  m_tired = load_sprite(tileset(), {"unit.tired"}, true);
-  m_action_decision_want =
-      load_sprite(tileset(), {"unit.action_decision_want"}, false);
+  m_auto_attack = load_sprite({"unit.auto_attack"}, true);
+  m_auto_explore = load_sprite({"unit.auto_explore"}, true);
+  m_auto_settler = load_sprite({"unit.auto_settler"}, true);
+  m_connect = load_sprite({"unit.connect"}, true);
+  m_loaded = load_sprite({"unit.loaded"}, true);
+  m_lowfuel = load_sprite({"unit.lowfuel"}, true);
+  m_patrol = load_sprite({"unit.patrol"}, true);
+  m_stack = load_sprite({"unit.stack"}, true);
+  m_tired = load_sprite({"unit.tired"}, true);
+  m_action_decision_want = load_sprite({"unit.action_decision_want"}, false);
 
   static_assert(MAX_NUM_BATTLEGROUPS < NUM_TILES_DIGITS);
   for (int i = 0; i < MAX_NUM_BATTLEGROUPS; i++) {
     QStringList buffer = {QStringLiteral("unit.battlegroup_%1").arg(i),
                           QStringLiteral("city.size_%1").arg(i + 1)};
-    m_battlegroup[i] = load_sprite(tileset(), {buffer}, true);
+    m_battlegroup[i] = load_sprite({buffer}, true);
   }
 
   for (int i = 0; i <= 100; i++) {
     auto name = QStringLiteral("unit.hp_%1").arg(i);
-    if (auto sprite = load_sprite(tileset(), name); sprite) {
+    if (auto sprite = load_sprite({name})) {
       m_hp_bar.push_back(sprite);
     }
   }
@@ -70,12 +69,12 @@ void layer_units::load_sprites()
     /* Veteran level sprites are optional.  For instance "green" units
      * usually have no special graphic. */
     auto name = QStringLiteral("unit.vet_%1").arg(i);
-    m_veteran_level[i] = load_sprite(tileset(), name);
+    m_veteran_level[i] = load_sprite({name});
   }
 
   for (int i = 0;; i++) {
     auto buffer = QStringLiteral("unit.select%1").arg(QString::number(i));
-    auto sprite = load_sprite(tileset(), buffer);
+    auto sprite = load_sprite({buffer});
     if (!sprite) {
       break;
     }

@@ -56,8 +56,7 @@ void layer_special::set_sprite(const extra_type *extra, const QString &tag,
 {
   fc_assert_ret(extra != nullptr);
 
-  auto sprite = load_sprite(tileset(), tag);
-  if (sprite) {
+  if (auto sprite = load_sprite({tag})) {
     m_sprites.at(extra->id) =
         std::make_unique<drawn_sprite>(tileset(), sprite, true, offset);
   }

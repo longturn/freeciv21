@@ -19,7 +19,7 @@ layer_fog::layer_fog(struct tileset *ts, fog_style style,
 
 void layer_fog::load_sprites()
 {
-  m_fog_sprite = load_sprite(tileset(), {"tx.fog"}, true);
+  m_fog_sprite = load_sprite({"tx.fog"}, true);
 
   if (m_darkness == DARKNESS_CORNER) {
     for (int i = 0; i < 81; i++) {
@@ -36,7 +36,7 @@ void layer_fog::load_sprites()
       }
       fc_assert(k == 0);
 
-      m_darkness_sprites.push_back(load_sprite(tileset(), buf));
+      m_darkness_sprites.push_back(load_sprite({buf}));
     }
   }
 }

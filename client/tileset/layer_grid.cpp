@@ -30,8 +30,8 @@ void layer_grid::load_sprites()
       std::array{QStringLiteral("ns"), QStringLiteral("we"),
                  QStringLiteral("ud"), QStringLiteral("lr")};
 
-  m_unavailable = load_sprite(tileset(), {"grid.unavailable"}, true);
-  m_nonnative = load_sprite(tileset(), {"grid.nonnative"}, false);
+  m_unavailable = load_sprite({"grid.unavailable"}, true);
+  m_nonnative = load_sprite({"grid.nonnative"}, false);
 
   for (int i = 0; i < EDGE_COUNT; i++) {
     int be;
@@ -43,20 +43,20 @@ void layer_grid::load_sprites()
     }
 
     auto name = QStringLiteral("grid.main.%1").arg(edge_name[i]);
-    m_main[i] = load_sprite(tileset(), {name}, true);
+    m_main[i] = load_sprite({name}, true);
 
     name = QStringLiteral("grid.city.%1").arg(edge_name[i]);
-    m_city[i] = load_sprite(tileset(), {name}, true);
+    m_city[i] = load_sprite({name}, true);
 
     name = QStringLiteral("grid.worked.%1").arg(edge_name[i]);
-    m_worked[i] = load_sprite(tileset(), {name}, true);
+    m_worked[i] = load_sprite({name}, true);
 
     name = QStringLiteral("grid.selected.%1").arg(edge_name[i]);
-    m_selected[i] = load_sprite(tileset(), {name}, true);
+    m_selected[i] = load_sprite({name}, true);
 
     for (be = 0; be < 2; be++) {
       name = QStringLiteral("grid.borders.%1").arg(edge_name[i][be]);
-      m_basic_borders[i][be] = load_sprite(tileset(), {name}, true);
+      m_basic_borders[i][be] = load_sprite({name}, true);
     }
   }
 }

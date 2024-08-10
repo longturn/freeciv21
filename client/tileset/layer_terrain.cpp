@@ -342,7 +342,7 @@ void layer_terrain::initialize_cell_whole_match_none(const terrain *terrain,
                  .arg(m_number)
                  .arg(info.sprite_name)
                  .arg(i + 1);
-    auto sprite = load_sprite(tileset(), buffer);
+    auto sprite = load_sprite({buffer});
     if (!sprite) {
       break;
     }
@@ -510,9 +510,8 @@ void layer_terrain::initialize_cell_corner_match_full(const terrain *terrain,
     auto buffer = QStringLiteral("t.l%1.cellgroup_%2_%3_%4_%5")
                       .arg(QString::number(m_number), n->name[0], e->name[0],
                            s->name[0], w->name[0]);
-    auto sprite = load_sprite(tileset(), buffer);
 
-    if (sprite) {
+    if (auto sprite = load_sprite({buffer})) {
       // Crop the sprite to separate this cell.
       const int W = sprite->width();
       const int H = sprite->height();
@@ -526,13 +525,12 @@ void layer_terrain::initialize_cell_corner_match_full(const terrain *terrain,
       // We allocated new sprite with crop_sprite. Store its address so we
       // can free it.
       m_allocated.emplace_back(sprite);
+      info.sprites.push_back(sprite);
     } else {
       tileset_error(tileset(), LOG_ERROR,
                     "Terrain graphics sprite for tag \"%s\" missing.",
                     qUtf8Printable(buffer));
     }
-
-    info.sprites.push_back(sprite);
   }
 }
 
@@ -623,8 +621,7 @@ void layer_terrain::initialize_cell_hex_corner(const terrain *terrain,
                        .arg(groups[indices[idir][2]]->name[0]);
         }
 
-        auto sprite = load_sprite(tileset(), buffer);
-        if (sprite) {
+        if (auto sprite = load_sprite({buffer})) {
           // Crop the sprite to separate this cell.
           const int W = tileset_tile_width(tileset());
           const int H = tileset_tile_height(tileset());
@@ -641,13 +638,12 @@ void layer_terrain::initialize_cell_hex_corner(const terrain *terrain,
           // We allocated a new sprite with crop_sprite. Store its address so
           // we can free it.
           m_allocated.emplace_back(sprite);
+          info.sprites.push_back(sprite);
         } else {
           tileset_error(tileset(), LOG_ERROR,
                         "Terrain graphics sprite for tag \"%s\" missing.",
                         qUtf8Printable(buffer));
         }
-
-        info.sprites.push_back(sprite);
       }
     }
   }
@@ -734,8 +730,7 @@ layer_terrain::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
   // FIXME: this should avoid calling load_sprite since it's slow and
   // increases the refcount without limit.
   if (QPixmap * sprite;
-      ptile->spec_sprite
-      && (sprite = load_sprite(tileset(), ptile->spec_sprite))) {
+      ptile->spec_sprite && (sprite = load_sprite({ptile->spec_sprite}))) {
     if (m_number == 0) {
       sprites.emplace_back(tileset(), sprite);
     }

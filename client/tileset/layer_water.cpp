@@ -39,7 +39,7 @@ void layer_water::initialize_extra(const extra_type *extra,
       for (int i = 0; i < tileset_num_index_cardinals(tileset()); i++) {
         QStringList tags = make_tag_terrain_list(
             tag, cardinal_index_str(tileset(), i), terrain);
-        sprites[i] = load_sprite(tileset(), tags + alt_tags, true);
+        sprites[i] = load_sprite(tags + alt_tags, true);
       }
 
       data.sprites.push_back(sprites);
@@ -60,16 +60,16 @@ void layer_water::initialize_extra(const extra_type *extra,
       for (int i = 0; i < tileset_num_index_cardinals(tileset()); i++) {
         auto suffix =
             QStringLiteral("_s_%1").arg(cardinal_index_str(tileset(), i));
-        river_sprites[i] = load_sprite(
-            tileset(), make_tag_terrain_list(tag, suffix, terrain), true);
+        river_sprites[i] =
+            load_sprite(make_tag_terrain_list(tag, suffix, terrain), true);
       }
 
       for (int i = 0; i < tileset_num_cardinal_dirs(tileset()); i++) {
         auto suffix = QStringLiteral("_outlet_%1")
                           .arg(dir_get_tileset_name(
                               tileset_cardinal_dirs(tileset())[i]));
-        outlet_sprites[i] = load_sprite(
-            tileset(), make_tag_terrain_list(tag, suffix, terrain), true);
+        outlet_sprites[i] =
+            load_sprite(make_tag_terrain_list(tag, suffix, terrain), true);
       }
 
       outlet.sprites.push_back(outlet_sprites);

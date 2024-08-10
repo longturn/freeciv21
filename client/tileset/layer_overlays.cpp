@@ -24,7 +24,7 @@ void layer_overlays::load_sprites()
   // Tile output counters
   for (int i = 0;; ++i) {
     auto buffer = QStringLiteral("city.t_food_%1").arg(i);
-    if (auto sprite = load_sprite(tileset(), buffer)) {
+    if (auto sprite = load_sprite({buffer})) {
       m_food.push_back(sprite);
     } else {
       break;
@@ -32,7 +32,7 @@ void layer_overlays::load_sprites()
   }
   for (int i = 0;; ++i) {
     auto buffer = QStringLiteral("city.t_shields_%1").arg(i);
-    if (auto sprite = load_sprite(tileset(), buffer)) {
+    if (auto sprite = load_sprite({buffer})) {
       m_prod.push_back(sprite);
     } else {
       break;
@@ -40,7 +40,7 @@ void layer_overlays::load_sprites()
   }
   for (int i = 0;; ++i) {
     auto buffer = QStringLiteral("city.t_trade_%1").arg(i);
-    if (auto sprite = load_sprite(tileset(), buffer)) {
+    if (auto sprite = load_sprite({buffer})) {
       m_trade.push_back(sprite);
     } else {
       break;
@@ -51,7 +51,7 @@ void layer_overlays::load_sprites()
   std::vector<QPixmap *> colors;
   for (int i = 0;; ++i) {
     auto buffer = QStringLiteral("colors.overlay_%1").arg(i);
-    auto sprite = load_sprite(tileset(), buffer);
+    auto sprite = load_sprite({buffer});
     if (!sprite) {
       break;
     }
@@ -62,8 +62,8 @@ void layer_overlays::load_sprites()
                   _("Missing overlay-color sprite colors.overlay_0."));
   }
 
-  auto worked_base = load_sprite(tileset(), {"mask.worked_tile"}, true);
-  auto unworked_base = load_sprite(tileset(), {"mask.unworked_tile"}, true);
+  auto worked_base = load_sprite({"mask.worked_tile"}, true);
+  auto unworked_base = load_sprite({"mask.unworked_tile"}, true);
 
   // Chop up and build the overlay graphics.
   auto W = tileset_tile_width(tileset()), H = tileset_tile_height(tileset());

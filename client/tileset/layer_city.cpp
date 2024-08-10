@@ -28,9 +28,8 @@ layer_city::layer_city(struct tileset *ts, const QPoint &city_offset,
  */
 void layer_city::load_sprites()
 {
-  m_disorder =
-      load_sprite(tileset(), {QStringLiteral("city.disorder")}, true);
-  m_happy = load_sprite(tileset(), {QStringLiteral("city.happy")}, false);
+  m_disorder = load_sprite({QStringLiteral("city.disorder")}, true);
+  m_happy = load_sprite({QStringLiteral("city.happy")}, false);
 }
 
 namespace /* anonymous */ {

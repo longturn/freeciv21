@@ -244,6 +244,9 @@ protected:
   bool solid_background(const tile *ptile, const unit *punit,
                         const city *pcity) const;
 
+  QPixmap *load_sprite(const QStringList &possible_names,
+                       bool required = false) const;
+
 private:
   struct tileset *m_ts;
   mapview_layer m_layer;

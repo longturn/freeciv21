@@ -35,15 +35,12 @@ void layer_goto::load_sprites()
                        patterns);
 
   // Turn steps
-  m_states[GTS_MP_LEFT].specific =
-      load_sprite(tileset(), {"path.normal"}, false);
-  m_states[GTS_EXHAUSTED_MP].specific =
-      load_sprite(tileset(), {"path.exhausted_mp"}, false);
-  m_states[GTS_TURN_STEP].specific =
-      load_sprite(tileset(), {"path.step"}, false);
+  m_states[GTS_MP_LEFT].specific = load_sprite({"path.normal"});
+  m_states[GTS_EXHAUSTED_MP].specific = load_sprite({"path.exhausted_mp"});
+  m_states[GTS_TURN_STEP].specific = load_sprite({"path.step"});
 
   // Waypoint
-  m_waypoint = load_sprite(tileset(), {"path.waypoint"}, true);
+  m_waypoint = load_sprite({"path.waypoint"}, true);
 }
 
 /**
