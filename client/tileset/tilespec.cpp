@@ -3619,11 +3619,7 @@ fill_basic_terrain_layer_sprite_array(struct tileset *t, int layer,
   for (const auto &layer : t->layers) {
     const auto lsprs =
         layer->fill_sprite_array(tile, nullptr, nullptr, nullptr);
-    // Merge by hand because drawn_sprite isn't copyable (but it is
-    // copy-constructible)
-    for (const auto &sprite : lsprs) {
-      sprs.emplace_back(sprite);
-    }
+    sprs.insert(sprs.end(), lsprs.begin(), lsprs.end());
   }
 
   tile_virtual_destroy(tile);
@@ -3660,11 +3656,7 @@ fill_basic_extra_sprite_array(const struct tileset *t,
   for (const auto &layer : t->layers) {
     const auto lsprs =
         layer->fill_sprite_array(tile, nullptr, nullptr, nullptr);
-    // Merge by hand because drawn_sprite isn't copyable (but it is
-    // copy-constructible)
-    for (const auto &sprite : lsprs) {
-      sprs.emplace_back(sprite);
-    }
+    sprs.insert(sprs.end(), lsprs.begin(), lsprs.end());
   }
 
   tile_virtual_destroy(tile);
