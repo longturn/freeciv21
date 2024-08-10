@@ -32,34 +32,21 @@
 #include "bitvector.h"
 #include "capability.h"
 #include "city.h"
-#include "deprecations.h"
 #include "fcintl.h"
 #include "log.h"
-#include "name_translation.h"
-#include "rand.h"
 #include "registry.h"
 #include "registry_ini.h"
 #include "shared.h"
-#include "style.h"
 #include "support.h"
-#include "workertask.h"
 
 // common
-#include "effects.h"
 #include "game.h" // game.control.styles_count
 #include "government.h"
 #include "helpdata.h"
-#include "map.h"
-#include "movement.h"
 #include "nation.h"
-#include "player.h"
-#include "road.h"
 #include "specialist.h"
-#include "unit.h"
-#include "unitlist.h"
 
 /* client/include */
-#include "citydlg_g.h"
 #include "mapview_g.h" // for update_map_canvas_visible
 #include "menu_g.h"
 #include "sprite_g.h"
@@ -71,8 +58,6 @@
 #include "climisc.h"
 #include "colors_common.h"
 #include "control.h" // for fill_xxx
-#include "editor.h"
-#include "goto.h"
 #include "helpdlg.h"
 #include "layer_background.h"
 #include "layer_base_flags.h"
