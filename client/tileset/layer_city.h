@@ -23,8 +23,11 @@ public:
   constexpr static int NUM_WALL_TYPES = 7;
 
   explicit layer_city(struct tileset *ts, const QPoint &city_offset,
+                      const QPoint &city_flag_offset,
                       const QPoint &occupied_offset);
   virtual ~layer_city() = default;
+
+  void load_sprites() override;
 
   void initialize_city_style(const citystyle &style, int index) override;
 
@@ -48,7 +51,7 @@ public:
   void reset_ruleset() override;
 
 private:
-  QPoint m_city_offset, m_occupied_offset;
+  QPoint m_city_offset, m_city_flag_offset, m_occupied_offset;
   QPixmap *m_disorder, *m_happy;
 
   city_sprite m_tile, m_single_wall, m_occupied;

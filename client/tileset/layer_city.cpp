@@ -15,10 +15,22 @@
 namespace freeciv {
 
 layer_city::layer_city(struct tileset *ts, const QPoint &city_offset,
+                       const QPoint &city_flag_offset,
                        const QPoint &occupied_offset)
     : freeciv::layer(ts, LAYER_CITY1), m_city_offset(city_offset),
+      m_city_flag_offset(city_flag_offset),
       m_occupied_offset(occupied_offset)
 {
+}
+
+/**
+ * Loads the disorder and happy sprites.
+ */
+void layer_city::load_sprites()
+{
+  m_disorder =
+      load_sprite(tileset(), {QStringLiteral("city.disorder")}, true);
+  m_happy = load_sprite(tileset(), {QStringLiteral("city.happy")}, false);
 }
 
 namespace /* anonymous */ {
@@ -154,9 +166,9 @@ layer_city::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
 
   // The flag, if needed
   if (!citybar_painter::current()->has_flag()) {
-    sprs.emplace_back(tileset(), get_city_flag_sprite(tileset(), pcity),
-                      true,
-                      tileset_full_tile_offset(tileset()) + m_city_offset);
+    sprs.emplace_back(
+        tileset(), get_city_flag_sprite(tileset(), pcity), true,
+        tileset_full_tile_offset(tileset()) + m_city_flag_offset);
   }
 
   auto more = fill_sprite_array_no_flag(pcity);
