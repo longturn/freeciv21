@@ -1244,7 +1244,6 @@ QLayout *help_widget::create_terrain_widget(const QString &title,
 {
   QGraphicsDropShadowEffect *effect;
   QLabel *label;
-  QPixmap *spr;
   QHBoxLayout *layout = new QHBoxLayout();
   QHBoxLayout *layout1 = new QHBoxLayout();
   QHBoxLayout *layout2 = new QHBoxLayout();
@@ -1266,19 +1265,14 @@ QLayout *help_widget::create_terrain_widget(const QString &title,
   make_helplabel(_("Output becomes: "), tooltip, layout2);
   make_helplabel(QString::number(food), tooltip, layout2)
       ->setProperty("foodlab", "true");
-  spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "citybar.food",
-                                    "citybar.food", "", "", false);
-  make_helppiclabel(spr, tooltip, layout2);
+  auto sprites = get_citybar_sprites(tileset);
+  make_helppiclabel(sprites->food, tooltip, layout2);
   make_helplabel(QString::number(sh), tooltip, layout2)
       ->setProperty("shieldlab", "true");
-  spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "citybar.shields",
-                                    "upkeep.shield", "", "", false);
-  make_helppiclabel(spr, tooltip, layout2);
+  make_helppiclabel(sprites->shields, tooltip, layout2);
   make_helplabel(QString::number(eco), tooltip, layout2)
       ->setProperty("ecolab", "true");
-  spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "citybar.trade",
-                                    "upkeep.gold", "", "", false);
-  make_helppiclabel(spr, tooltip, layout2);
+  make_helppiclabel(sprites->trade, tooltip, layout2);
   w2->setLayout(layout2);
 
   layout->addWidget(w1, Qt::AlignVCenter);
