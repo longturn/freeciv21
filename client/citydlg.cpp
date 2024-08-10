@@ -207,7 +207,7 @@ QPixmap unit_list_widget::create_unit_image(const unit *punit)
     }
 
     unit_pixmap.fill(Qt::transparent);
-    put_unit(punit, &unit_pixmap, 0, 0);
+    put_unit(punit, &unit_pixmap, QPoint());
 
     if (m_show_upkeep) {
       put_unit_city_overlays(punit, &unit_pixmap, 0,

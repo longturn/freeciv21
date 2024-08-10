@@ -114,7 +114,7 @@ void units_select::create_pixmap()
       unit_pixmap = new QPixmap(tileset_unit_width(tileset),
                                 tileset_unit_height(tileset));
       unit_pixmap->fill(Qt::transparent);
-      put_unit(punit, unit_pixmap, 0, 0);
+      put_unit(punit, unit_pixmap, QPoint());
       img = unit_pixmap->toImage();
       crop = zealous_crop_rect(img);
       cropped_img = img.copy(crop);

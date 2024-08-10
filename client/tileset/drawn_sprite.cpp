@@ -18,7 +18,7 @@
 drawn_sprite::drawn_sprite(const struct tileset *ts, const QPixmap *sprite,
                            bool foggable, int offset_x, int offset_y)
     : sprite(sprite), foggable(foggable && tileset_use_hard_coded_fog(ts)),
-      offset_x(offset_x), offset_y(offset_y)
+      offset(offset_x, offset_y)
 {
   fc_assert(sprite);
 }
@@ -39,8 +39,7 @@ QRect sprite_array_bounds(const std::vector<drawn_sprite> &sprs)
 {
   QRect bounds;
   for (const auto &sprite : sprs) {
-    bounds |= QRect(QPoint(sprite.offset_x, sprite.offset_y),
-                    sprite.sprite->size());
+    bounds |= QRect(sprite.offset, sprite.sprite->size());
   }
   return bounds;
 }

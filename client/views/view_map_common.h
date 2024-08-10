@@ -74,10 +74,10 @@ struct tile *get_center_tile_mapcanvas();
 bool tile_visible_mapcanvas(struct tile *ptile);
 bool tile_visible_and_not_on_border_mapcanvas(struct tile *ptile);
 
-void put_unit(const struct unit *punit, QPixmap *pcanvas, int canvas_x,
-              int canvas_y);
-void put_terrain(struct tile *ptile, QPixmap *pcanvas, int canvas_x,
-                 int canvas_y);
+void put_unit(const struct unit *punit, QPixmap *pcanvas,
+              const QPoint &canvas_loc);
+void put_terrain(struct tile *ptile, QPixmap *pcanvas,
+                 const QPoint &canvas_loc);
 
 void put_unit_city_overlays(const unit *punit, QPixmap *pcanvas,
                             int canvas_x, int canvas_y,
@@ -87,7 +87,7 @@ void toggle_unit_color(struct unit *punit);
 
 void put_nuke_mushroom_pixmaps(struct tile *ptile);
 
-void put_drawn_sprites(QPixmap *pcanvas, int canvas_x, int canvas_y,
+void put_drawn_sprites(QPixmap *pcanvas, const QPoint &canvas_loc,
                        const std::vector<drawn_sprite> &sprites, bool fog,
                        bool city_unit = false);
 

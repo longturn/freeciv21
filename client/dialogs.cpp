@@ -1209,7 +1209,7 @@ void choice_dialog::set_layout()
     pix = new QPixmap(tileset_unit_width(tileset),
                       tileset_unit_height(tileset));
     pix->fill(Qt::transparent);
-    put_unit(targeted_unit, pix, 0, 0);
+    put_unit(targeted_unit, pix, QPoint());
     target_unit_button->setIcon(QIcon(*pix));
     delete pix;
     target_unit_button->setIconSize(QSize(96, 96));
@@ -1361,7 +1361,7 @@ void choice_dialog::next_unit()
   pix =
       new QPixmap(tileset_unit_width(tileset), tileset_unit_height(tileset));
   pix->fill(Qt::transparent);
-  put_unit(targeted_unit, pix, 0, 0);
+  put_unit(targeted_unit, pix, QPoint());
   target_unit_button->setIcon(QIcon(*pix));
   delete pix;
   switch_target();
@@ -1392,7 +1392,7 @@ void choice_dialog::prev_unit()
   pix =
       new QPixmap(tileset_unit_width(tileset), tileset_unit_height(tileset));
   pix->fill(Qt::transparent);
-  put_unit(targeted_unit, pix, 0, 0);
+  put_unit(targeted_unit, pix, QPoint());
   target_unit_button->setIcon(QIcon(*pix));
   delete pix;
   switch_target();

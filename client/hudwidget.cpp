@@ -662,7 +662,7 @@ void hud_units::update_actions()
   unit_pixmap =
       new QPixmap(tileset_unit_width(tileset), tileset_unit_height(tileset));
   unit_pixmap->fill(Qt::transparent);
-  put_unit(punit, unit_pixmap, 0, 0);
+  put_unit(punit, unit_pixmap, QPoint());
   img = unit_pixmap->toImage();
   crop = zealous_crop_rect(img);
   cropped_img = img.copy(crop);
@@ -746,7 +746,7 @@ void hud_units::update_actions()
                               tileset_tile_height(tileset));
   }
   tile_pixmap->fill(QColor(0, 0, 0, 0));
-  put_terrain(punit->tile, tile_pixmap, 0, 0);
+  put_terrain(punit->tile, tile_pixmap, QPoint());
   img = tile_pixmap->toImage();
   crop = zealous_crop_rect(img);
   cropped_img = img.copy(crop);
@@ -1406,7 +1406,7 @@ void hud_unit_combat::init_images(bool redraw)
   defender_pixmap.fill(Qt::transparent);
   if (defender != nullptr) {
     if (!redraw) {
-      put_unit(defender, &defender_pixmap, 0, 0);
+      put_unit(defender, &defender_pixmap, QPoint());
     } else {
       defender_pixmap =
           *get_unittype_sprite(tileset, type_defender, direction8_invalid());
@@ -1430,7 +1430,7 @@ void hud_unit_combat::init_images(bool redraw)
   attacker_pixmap.fill(Qt::transparent);
   if (attacker != nullptr) {
     if (!redraw) {
-      put_unit(attacker, &attacker_pixmap, 0, 0);
+      put_unit(attacker, &attacker_pixmap, QPoint());
     } else {
       attacker_pixmap =
           *get_unittype_sprite(tileset, type_attacker, direction8_invalid());

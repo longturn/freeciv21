@@ -773,7 +773,7 @@ bool tile_visible_and_not_on_border_mapcanvas(struct tile *ptile)
 /**
    Draw an array of drawn sprites onto the canvas.
  */
-void put_drawn_sprites(QPixmap *pcanvas, int canvas_x, int canvas_y,
+void put_drawn_sprites(QPixmap *pcanvas, const QPoint &canvas_loc,
                        const std::vector<drawn_sprite> &sprites, bool fog,
                        bool city_unit)
 {
@@ -795,14 +795,14 @@ void put_drawn_sprites(QPixmap *pcanvas, int canvas_x, int canvas_y,
       p2.fillRect(temp.rect(), QColor(0, 0, 0, 110));
       p2.end();
 
-      p.drawPixmap(canvas_x + s.offset_x, canvas_y + s.offset_y, temp);
+      p.drawPixmap(canvas_loc + s.offset, temp);
     } else {
       /* We avoid calling canvas_put_sprite_fogged, even though it
        * should be a valid thing to do, because gui-gtk-2.0 didn't have
        * a full implementation. */
       p.setCompositionMode(QPainter::CompositionMode_SourceOver);
       p.setOpacity(1);
-      p.drawPixmap(canvas_x + s.offset_x, canvas_y + s.offset_y, *s.sprite);
+      p.drawPixmap(canvas_loc + s.offset, *s.sprite);
     }
   }
   p.end();
@@ -816,7 +816,7 @@ void put_one_element(QPixmap *pcanvas,
                      const std::unique_ptr<freeciv::layer> &layer,
                      const struct tile *ptile, const struct tile_edge *pedge,
                      const struct tile_corner *pcorner,
-                     const struct unit *punit, int canvas_x, int canvas_y)
+                     const struct unit *punit, const QPoint &canvas_loc)
 {
   bool city_unit = false;
   int dummy_x, dummy_y;
@@ -832,20 +832,20 @@ void put_one_element(QPixmap *pcanvas,
     }
   }
   /*** Draw terrain and specials ***/
-  put_drawn_sprites(pcanvas, canvas_x, canvas_y, sprites, fog, city_unit);
+  put_drawn_sprites(pcanvas, canvas_loc, sprites, fog, city_unit);
 }
 
 /**
    Draw the given unit onto the canvas store at the given location. The area
    of drawing is tileset_unit_height(tileset) x tileset_unit_width(tileset).
  */
-void put_unit(const struct unit *punit, QPixmap *pcanvas, int canvas_x,
-              int canvas_y)
+void put_unit(const struct unit *punit, QPixmap *pcanvas,
+              const QPoint &canvas_loc)
 {
-  canvas_y += (tileset_unit_height(tileset) - tileset_tile_height(tileset));
+  auto loc = canvas_loc;
+  loc.ry() += (tileset_unit_height(tileset) - tileset_tile_height(tileset));
   for (const auto &layer : tileset_get_layers(tileset)) {
-    put_one_element(pcanvas, layer, nullptr, nullptr, nullptr, punit,
-                    canvas_x, canvas_y);
+    put_one_element(pcanvas, layer, nullptr, nullptr, nullptr, punit, loc);
   }
 }
 
@@ -855,15 +855,14 @@ void put_unit(const struct unit *punit, QPixmap *pcanvas, int canvas_x,
    tileset_full_tile_height(tileset) x tileset_full_tile_width(tileset)
    (even though most tiles are not this tall).
  */
-void put_terrain(struct tile *ptile, QPixmap *pcanvas, int canvas_x,
-                 int canvas_y)
+void put_terrain(struct tile *ptile, QPixmap *pcanvas,
+                 const QPoint &canvas_loc)
 {
   // Use full tile height, even for terrains.
-  canvas_y +=
-      (tileset_full_tile_height(tileset) - tileset_tile_height(tileset));
+  auto loc = canvas_loc;
+  loc.ry() += (tileset_unit_height(tileset) - tileset_tile_height(tileset));
   for (const auto &layer : tileset_get_layers(tileset)) {
-    put_one_element(pcanvas, layer, ptile, nullptr, nullptr, nullptr,
-                    canvas_x, canvas_y);
+    put_one_element(pcanvas, layer, ptile, nullptr, nullptr, nullptr, loc);
   }
 }
 
@@ -985,14 +984,14 @@ void put_nuke_mushroom_pixmaps(struct tile *ptile)
  */
 static void put_one_tile(QPixmap *pcanvas,
                          const std::unique_ptr<freeciv::layer> &layer,
-                         const tile *ptile, int canvas_x, int canvas_y)
+                         const tile *ptile, const QPoint &canvas_loc)
 {
   if (client_tile_get_known(ptile) != TILE_UNKNOWN
       || (editor_is_active() && editor_tile_is_selected(ptile))) {
     struct unit *punit = get_drawable_unit(tileset, ptile);
 
-    put_one_element(pcanvas, layer, ptile, nullptr, nullptr, punit, canvas_x,
-                    canvas_y);
+    put_one_element(pcanvas, layer, ptile, nullptr, nullptr, punit,
+                    canvas_loc);
   }
 }
 
@@ -1179,18 +1178,19 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
       continue;
     }
     for (auto it = freeciv::gui_rect_iterator(tileset, rect); it.next();) {
-      const int cx = it.x() - mapview.gui_x0, cy = it.y() - mapview.gui_y0;
+      const auto loc =
+          QPoint(it.x() - mapview.gui_x0, it.y() - mapview.gui_y0);
 
       if (it.has_corner()) {
         put_one_element(mapview.store, layer, nullptr, nullptr, &it.corner(),
-                        nullptr, cx, cy);
+                        nullptr, loc);
       }
       if (it.has_edge()) {
         put_one_element(mapview.store, layer, nullptr, &it.edge(), nullptr,
-                        nullptr, cx, cy);
+                        nullptr, loc);
       }
       if (it.has_tile()) {
-        put_one_tile(mapview.store, layer, it.tile(), cx, cy);
+        put_one_tile(mapview.store, layer, it.tile(), loc);
       }
     }
   }
@@ -1613,7 +1613,7 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
         p.end();
 
         // Draw
-        put_unit(punit, mapview.store, new_x, new_y);
+        put_unit(punit, mapview.store, QPoint(new_x, new_y));
         dirty_rect(new_x, new_y, tuw, tuh);
 
         // Flush.

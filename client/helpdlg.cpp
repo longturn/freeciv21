@@ -34,7 +34,6 @@
 #include "fc_client.h"
 #include "fonts.h"
 #include "helpdlg.h"
-#include "tileset/sprite.h"
 #include "tileset/tilespec.h"
 #include "views/view_map_common.h"
 
@@ -1170,7 +1169,7 @@ QPixmap *terrain_canvas(struct terrain *terrain,
   for (i = 0; i < 3; ++i) {
     auto sprites =
         fill_basic_terrain_layer_sprite_array(tileset, i, terrain);
-    put_drawn_sprites(canvas, 0, canvas_y, sprites, false);
+    put_drawn_sprites(canvas, QPoint(0, canvas_y), sprites, false);
   }
 
   pextra = nullptr;
@@ -1183,12 +1182,12 @@ QPixmap *terrain_canvas(struct terrain *terrain,
     extra_type_by_cause_iterate_end;
     fc_assert_ret_val(pextra, nullptr);
     auto sprites = fill_basic_extra_sprite_array(tileset, pextra);
-    put_drawn_sprites(canvas, 0, canvas_y, sprites, false);
+    put_drawn_sprites(canvas, QPoint(0, canvas_y), sprites, false);
   }
 
   if (resource != nullptr) {
     auto sprites = fill_basic_extra_sprite_array(tileset, resource);
-    put_drawn_sprites(canvas, 0, canvas_y, sprites, false);
+    put_drawn_sprites(canvas, QPoint(0, canvas_y), sprites, false);
   }
 
   return canvas;
