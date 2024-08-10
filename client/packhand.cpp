@@ -3300,6 +3300,10 @@ void handle_ruleset_description_part(
  */
 void handle_rulesets_ready()
 {
+  // Init extras - has to come after terrain
+  extra_type_iterate(pextra) { tileset_setup_extra(tileset, pextra); }
+  extra_type_iterate_end;
+
   // Setup extra hiders caches
   extra_type_iterate(pextra)
   {
@@ -3353,8 +3357,7 @@ void handle_rulesets_ready()
   // Adjust editor for changed ruleset.
   editor_ruleset_changed();
 
-  /* We are not going to crop any more sprites from big sprites, free them.
-   */
+  // We are not going to crop any more sprites from big sprites, free them.
   finish_loading_sprites(tileset);
 
   game.client.ruleset_ready = true;
@@ -4036,8 +4039,6 @@ void handle_ruleset_extra(const struct packet_ruleset_extra *p)
   pextra->conflicts = p->conflicts;
 
   pextra->helptext = packet_strvec_extract(p->helptext);
-
-  tileset_setup_extra(tileset, pextra);
 }
 
 /**
