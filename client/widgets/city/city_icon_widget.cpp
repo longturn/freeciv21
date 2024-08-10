@@ -86,7 +86,8 @@ void city_icon_widget::paintEvent(QPaintEvent *event)
   p.translate(bounds.topLeft() - origin);
 
   for (const auto sprite : sprs) {
-    p.drawPixmap(QPointF(sprite.offset_x, sprite.offset_y), *sprite.sprite);
+    // Floating-point API for DPI scaling.
+    p.drawPixmap(QPointF(sprite.offset), *sprite.sprite);
   }
 }
 

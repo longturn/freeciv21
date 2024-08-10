@@ -10,9 +10,6 @@
 
 #include "tileset_debugger.h"
 
-// client/include
-#include "dialogs_g.h"
-
 // client
 #include "climap.h"
 #include "editor.h"
@@ -148,8 +145,7 @@ void tileset_debugger::set_tile(const ::tile *t)
     // Geometry
     auto rectangle = QRect();
     for (const auto &ds : sprites) {
-      rectangle |= QRect(ds.offset_x, ds.offset_y, ds.sprite->width(),
-                         ds.sprite->height());
+      rectangle |= QRect(ds.offset, ds.sprite->size());
     }
 
     // Draw the composite picture
@@ -164,7 +160,7 @@ void tileset_debugger::set_tile(const ::tile *t)
     // direction. Compensate by offsetting the painter back...
     p.translate(-rectangle.topLeft() + QPoint(1, 1));
     for (const auto &ds : sprites) {
-      p.drawPixmap(ds.offset_x, ds.offset_y, *ds.sprite);
+      p.drawPixmap(ds.offset, *ds.sprite);
     }
     p.end();
     item->setIcon(0, QIcon(this_layer));
@@ -181,11 +177,12 @@ void tileset_debugger::set_tile(const ::tile *t)
       p.drawRect(0, 0, this_layer.width() - 1, this_layer.height() - 1);
       // We inherit the translation set above
       p.translate(-rectangle.topLeft() + QPoint(1, 1));
-      p.drawPixmap(ds.offset_x, ds.offset_y, *ds.sprite);
+      p.drawPixmap(ds.offset, *ds.sprite);
       p.end();
       child->setIcon(0, QIcon(this_sprite));
-      child->setText(
-          0, QString(_("Offset: %1, %2")).arg(ds.offset_x).arg(ds.offset_y));
+      child->setText(0, QString(_("Offset: %1, %2"))
+                            .arg(ds.offset.x())
+                            .arg(ds.offset.y()));
       maxSize = maxSize.expandedTo(rectangle.size());
     }
   }

@@ -1,16 +1,17 @@
 /*
- * SPDX-FileCopyrightText: Copyright (c) 2021 Freeciv21 contributors
- * SPDX-FileCopyrightText: 2023 Louis Moureaux <m_louis30@yahoo.com>
+ * SPDX-FileCopyrightText: Freeciv21 contributors
+ * SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
  *
  * SPDX-License-Identifier: GPLv3-or-later
  */
 
 #pragma once
 
+#include <QPoint>
+
 #include <vector>
 
 class QPixmap;
-class QPoint;
 class QRect;
 
 struct tileset;
@@ -27,8 +28,8 @@ struct drawn_sprite {
   drawn_sprite &operator=(drawn_sprite &&other) = default;
 
   const QPixmap *sprite;
-  bool foggable;          // Set to FALSE for sprites that are never fogged.
-  int offset_x, offset_y; // offset from tile origin
+  bool foggable; ///< Set to FALSE for sprites that are never fogged.
+  QPoint offset; ///< offset from tile origin
 };
 
 QRect sprite_array_bounds(const std::vector<drawn_sprite> &sprs);

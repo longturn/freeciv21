@@ -122,7 +122,7 @@ void upkeep_widget::refresh()
       auto pixmap = QPixmap(icon_width,
                             tileset_unit_with_upkeep_height(get_tileset()));
       pixmap.fill(Qt::transparent);
-      put_unit(unit, &pixmap, 0, 0);
+      put_unit(unit, &pixmap, QPoint());
 
       auto free_unhappy = get_city_bonus(city, EFT_MAKE_CONTENT_MIL);
       const auto happy_cost = city_unit_unhappiness(unit, &free_unhappy);
