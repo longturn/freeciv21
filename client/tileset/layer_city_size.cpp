@@ -10,8 +10,8 @@
 
 namespace freeciv {
 
-layer_city_size::layer_city_size(struct tileset *ts)
-    : freeciv::layer(ts, LAYER_CITY2)
+layer_city_size::layer_city_size(struct tileset *ts, const QPoint &offset)
+    : freeciv::layer(ts, LAYER_CITY2), m_offset(offset)
 {
 }
 
@@ -46,18 +46,18 @@ layer_city_size::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
 
   // Units
   auto sprite = m_units[size % NUM_TILES_DIGITS];
-  sprs.emplace_back(tileset(), sprite);
+  sprs.emplace_back(tileset(), sprite, false, m_offset);
 
   // Tens
   size /= NUM_TILES_DIGITS;
   if (size > 0 && (sprite = m_tens[size % NUM_TILES_DIGITS])) {
-    sprs.emplace_back(tileset(), sprite);
+    sprs.emplace_back(tileset(), sprite, false, m_offset);
   }
 
   // Hundreds (optional)
   size /= NUM_TILES_DIGITS;
   if (size > 0 && (sprite = m_hundreds[size % NUM_TILES_DIGITS])) {
-    sprs.emplace_back(tileset(), sprite);
+    sprs.emplace_back(tileset(), sprite, false, m_offset);
     // Divide for the warning: warn for thousands if we had a hundreds sprite
     size /= NUM_TILES_DIGITS;
   }
