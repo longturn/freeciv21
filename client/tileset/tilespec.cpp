@@ -162,8 +162,8 @@ struct named_sprites {
     std::unique_ptr<freeciv::colorizer> facing[U_LAST][DIR8_MAGIC_MAX];
   } units;
 
-  struct sprite_vector nation_flag;
-  struct sprite_vector nation_shield;
+  std::vector<QPixmap *> nation_flag;
+  std::vector<QPixmap *> nation_shield;
 
   struct citizen_graphic citizen[CITIZEN_LAST], specialist[SP_MAX];
   QPixmap *spaceship[SPACESHIP_COUNT];
@@ -172,7 +172,7 @@ struct named_sprites {
     QPixmap *frame[NUM_CURSOR_FRAMES];
   } cursor[CURSOR_LAST];
   struct {
-    struct sprite_vector unit;
+    std::vector<QPixmap *> unit;
     QPixmap *nuke;
   } explode;
   struct {
@@ -2547,7 +2547,6 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
 
   assign_sprite(t, t->sprites.explode.nuke, {"explode.nuke"}, true);
 
-  sprite_vector_init(&t->sprites.explode.unit);
   for (i = 0;; i++) {
     QPixmap *sprite;
 
@@ -2556,7 +2555,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     if (!sprite) {
       break;
     }
-    sprite_vector_append(&t->sprites.explode.unit, sprite);
+    t->sprites.explode.unit.push_back(sprite);
   }
 
   assign_sprite(t, t->sprites.citybar.shields, {"citybar.shields"}, true);
@@ -2565,7 +2564,6 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   assign_sprite(t, t->sprites.citybar.occupied, {"citybar.occupied"}, true);
   assign_sprite(t, t->sprites.citybar.background, {"citybar.background"},
                 true);
-  sprite_vector_init(&t->sprites.citybar.occupancy);
   for (i = 0;; i++) {
     QPixmap *sprite;
 
@@ -2574,9 +2572,9 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     if (!sprite) {
       break;
     }
-    sprite_vector_append(&t->sprites.citybar.occupancy, sprite);
+    t->sprites.citybar.occupancy.push_back(sprite);
   }
-  if (t->sprites.citybar.occupancy.size < 2) {
+  if (t->sprites.citybar.occupancy.size() < 2) {
     tileset_error(t, LOG_FATAL,
                   _("Missing necessary citybar.occupancy_N sprites."));
   }
@@ -2649,10 +2647,6 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   for (auto &layer : t->layers) {
     layer->load_sprites();
   }
-
-  // no other place to initialize these variables
-  sprite_vector_init(&t->sprites.nation_flag);
-  sprite_vector_init(&t->sprites.nation_shield);
 }
 
 /**
@@ -3003,12 +2997,11 @@ void tileset_setup_nation_flag(struct tileset *t, struct nation_type *nation)
                   nation_rule_name(nation));
   }
 
-  sprite_vector_reserve(&t->sprites.nation_flag, game.control.nation_count);
-  t->sprites.nation_flag.p[nation_index(nation)] = flag;
+  t->sprites.nation_flag.resize(game.control.nation_count);
+  t->sprites.nation_flag[nation_index(nation)] = flag;
 
-  sprite_vector_reserve(&t->sprites.nation_shield,
-                        game.control.nation_count);
-  t->sprites.nation_shield.p[nation_index(nation)] = shield;
+  t->sprites.nation_shield.resize(game.control.nation_count);
+  t->sprites.nation_shield[nation_index(nation)] = shield;
 }
 
 /**
@@ -3029,9 +3022,9 @@ QPixmap *get_unit_nation_flag_sprite(const struct tileset *t,
   struct nation_type *pnation = nation_of_unit(punit);
 
   if (gui_options->draw_unit_shields) {
-    return t->sprites.nation_shield.p[nation_index(pnation)];
+    return t->sprites.nation_shield[nation_index(pnation)];
   } else {
-    return t->sprites.nation_flag.p[nation_index(pnation)];
+    return t->sprites.nation_flag[nation_index(pnation)];
   }
 }
 
@@ -3276,10 +3269,10 @@ void tileset_free_tiles(struct tileset *t)
   }
   t->specfiles->clear();
 
-  sprite_vector_free(&t->sprites.explode.unit);
-  sprite_vector_free(&t->sprites.nation_flag);
-  sprite_vector_free(&t->sprites.nation_shield);
-  sprite_vector_free(&t->sprites.citybar.occupancy);
+  t->sprites.explode.unit.clear();
+  t->sprites.nation_flag.clear();
+  t->sprites.nation_shield.clear();
+  t->sprites.citybar.occupancy.clear();
 }
 
 /**
@@ -3331,7 +3324,7 @@ const QPixmap *get_citizen_sprite(const struct tileset *t,
 const QPixmap *get_nation_flag_sprite(const struct tileset *t,
                                       const struct nation_type *pnation)
 {
-  return t->sprites.nation_flag.p[nation_index(pnation)];
+  return t->sprites.nation_flag[nation_index(pnation)];
 }
 
 /**
@@ -3340,7 +3333,7 @@ const QPixmap *get_nation_flag_sprite(const struct tileset *t,
 const QPixmap *get_nation_shield_sprite(const struct tileset *t,
                                         const struct nation_type *pnation)
 {
-  return t->sprites.nation_shield.p[nation_index(pnation)];
+  return t->sprites.nation_shield[nation_index(pnation)];
 }
 
 /**
@@ -3465,10 +3458,10 @@ const QPixmap *get_treaty_thumb_sprite(const struct tileset *t, bool on_off)
    Return a sprite_vector containing the animation sprites for a unit
    explosion.
  */
-const struct sprite_vector *
+const std::vector<QPixmap *> &
 get_unit_explode_animation(const struct tileset *t)
 {
-  return &t->sprites.explode.unit;
+  return t->sprites.explode.unit;
 }
 
 /**

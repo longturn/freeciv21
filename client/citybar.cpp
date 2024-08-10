@@ -489,13 +489,13 @@ QRect traditional_citybar_painter::paint(QPainter &painter,
       unsigned long count = unit_list_size(pcity->tile->units);
       count =
           qBound(0UL, count,
-                 static_cast<unsigned long>(citybar->occupancy.size - 1));
-      first.add_icon(citybar->occupancy.p[count]);
+                 static_cast<unsigned long>(citybar->occupancy.size() - 1));
+      first.add_icon(citybar->occupancy[count]);
     } else {
       if (pcity->client.occupied) {
         first.add_icon(citybar->occupied);
       } else {
-        first.add_icon(citybar->occupancy.p[0]);
+        first.add_icon(citybar->occupancy[0]);
       }
     }
 
@@ -642,7 +642,7 @@ QRect polished_citybar_painter::paint(QPainter &painter,
   // Decide on the target height. It's the max of the font sizes and the
   // occupied indicator (we assume all indicators have the same size).
   // It's used to scale the flag, progress bars and production.
-  double target_height = citybar->occupancy.p[0]->height();
+  double target_height = citybar->occupancy[0]->height();
   target_height = std::max(target_height,
                            QFontMetricsF(get_font(FONT_CITY_NAME)).height());
   target_height = std::max(target_height,
@@ -717,14 +717,15 @@ QRect polished_citybar_painter::paint(QPainter &painter,
   // Occupied indicator
   if (can_player_see_units_in_city(client.conn.playing, pcity)) {
     unsigned long count = unit_list_size(pcity->tile->units);
-    count = qBound(0UL, count,
-                   static_cast<unsigned long>(citybar->occupancy.size - 1));
-    line.add_icon(citybar->occupancy.p[count]);
+    count =
+        qBound(0UL, count,
+               static_cast<unsigned long>(citybar->occupancy.size() - 1));
+    line.add_icon(citybar->occupancy[count]);
   } else {
     if (pcity->client.occupied) {
       line.add_icon(citybar->occupied);
     } else {
-      line.add_icon(citybar->occupancy.p[0]);
+      line.add_icon(citybar->occupancy[0]);
     }
   }
 

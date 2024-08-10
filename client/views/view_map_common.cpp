@@ -1479,7 +1479,6 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
 {
   struct unit *losing_unit = (hp0 == 0 ? punit0 : punit1);
   float canvas_x, canvas_y;
-  int i;
 
   set_units_in_combat(punit0, punit1);
 
@@ -1490,8 +1489,7 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
 
   unqueue_mapview_updates();
 
-  const struct sprite_vector *anim = get_unit_explode_animation(tileset);
-  const int num_tiles_explode_unit = sprite_vector_size(anim);
+  const auto &anim = get_unit_explode_animation(tileset);
 
   while (punit0->hp > hp0 || punit1->hp > hp1) {
     const int diff0 = punit0->hp - hp0, diff1 = punit1->hp - hp1;
@@ -1508,7 +1506,7 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
     anim_delay(gui_options->smooth_combat_step_msec);
   }
 
-  if (num_tiles_explode_unit > 0
+  if (!anim.empty()
       && tile_to_canvas_pos(&canvas_x, &canvas_y, unit_tile(losing_unit))) {
     refresh_unit_mapcanvas(losing_unit, unit_tile(losing_unit), false);
     unqueue_mapview_updates();
@@ -1517,10 +1515,8 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
                  tileset_tile_width(tileset), tileset_tile_height(tileset));
     p.end();
 
-    for (i = 0; i < num_tiles_explode_unit; i++) {
-      QPixmap *sprite = *sprite_vector_get(anim, i);
-
-      /* We first draw the explosion onto the unit and draw draw the
+    for (const auto *sprite : anim) {
+      /* We first draw the explosion onto the unit and draw the
        * complete thing onto the map canvas window. This avoids
        * flickering. */
       p.begin(mapview.store);
