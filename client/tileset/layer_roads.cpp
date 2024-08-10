@@ -82,8 +82,8 @@ void layer_roads::initialize_corners(corner_sprites &data,
     auto dir = tileset_valid_dirs(tileset())[i];
     if (!is_cardinal_tileset_dir(tileset(), dir)) {
       QString dtn = QStringLiteral("_c_%1").arg(dir_get_tileset_name(dir));
-      data.corners[dir] = load_sprite(
-          tileset(), make_tag_terrain_list(tag, dtn, terrain), false);
+      data.corners[dir] =
+          load_sprite(make_tag_terrain_list(tag, dtn, terrain), false);
     }
   }
 }
@@ -100,8 +100,8 @@ void layer_roads::initialize_all_combined(all_combined_data &data,
   for (int i = 0; i < count; ++i) {
     QString idx_str =
         QStringLiteral("_%1").arg(valid_index_str(tileset(), i));
-    data.sprites[i] = load_sprite(
-        tileset(), make_tag_terrain_list(tag, idx_str, terrain), true);
+    data.sprites[i] =
+        load_sprite(make_tag_terrain_list(tag, idx_str, terrain), true);
   }
 }
 
@@ -113,15 +113,15 @@ void layer_roads::initialize_all_separate(all_separate_data &data,
                                           const terrain *terrain)
 {
   // Load the isolated sprite
-  data.isolated = load_sprite(
-      tileset(), make_tag_terrain_list(tag, "_isolated", terrain), true);
+  data.isolated =
+      load_sprite(make_tag_terrain_list(tag, "_isolated", terrain), true);
 
   // Load the directional sprite options, one per direction
   for (int i = 0; i < tileset_num_valid_dirs(tileset()); ++i) {
     auto dir = tileset_valid_dirs(tileset())[i];
     QString dir_name = QStringLiteral("_%1").arg(dir_get_tileset_name(dir));
-    data.sprites[i] = load_sprite(
-        tileset(), make_tag_terrain_list(tag, dir_name, terrain), true);
+    data.sprites[i] =
+        load_sprite(make_tag_terrain_list(tag, dir_name, terrain), true);
   }
 }
 
@@ -133,8 +133,8 @@ void layer_roads::initialize_parity_combined(parity_combined_data &data,
                                              const terrain *terrain)
 {
   // Load the isolated sprite
-  data.isolated = load_sprite(
-      tileset(), make_tag_terrain_list(tag, "_isolated", terrain), true);
+  data.isolated =
+      load_sprite(make_tag_terrain_list(tag, "_isolated", terrain), true);
 
   int num_index = 1 << (tileset_num_valid_dirs(tileset()) / 2);
 
@@ -160,10 +160,10 @@ void layer_roads::initialize_parity_combined(parity_combined_data &data,
                 .arg(value);
     }
 
-    data.sprites.first[i] = load_sprite(
-        tileset(), make_tag_terrain_list(tag, cs, terrain), true);
-    data.sprites.second[i] = load_sprite(
-        tileset(), make_tag_terrain_list(tag, ds, terrain), true);
+    data.sprites.first[i] =
+        load_sprite(make_tag_terrain_list(tag, cs, terrain), true);
+    data.sprites.second[i] =
+        load_sprite(make_tag_terrain_list(tag, ds, terrain), true);
   }
 }
 

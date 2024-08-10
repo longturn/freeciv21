@@ -34,8 +34,7 @@ void layer_darkness::load_sprites()
     break;
   case freeciv::DARKNESS_ISORECT: {
     // Isometric: take a single tx.darkness tile and split it into 4.
-    QPixmap *darkness =
-        load_sprite(tileset(), QStringLiteral("tx.darkness"));
+    QPixmap *darkness = load_sprite({QStringLiteral("tx.darkness")});
     const int ntw = tileset_tile_width(tileset()),
               nth = tileset_tile_height(tileset());
     int offsets[4][2] = {
@@ -58,7 +57,7 @@ void layer_darkness::load_sprites()
       auto buffer =
           QStringLiteral("tx.darkness_%1").arg(dir_get_tileset_name(dir));
 
-      const auto sprite = load_sprite(tileset(), buffer);
+      const auto sprite = load_sprite({buffer});
       if (sprite) {
         set_sprite(i, *sprite);
       } else {
@@ -73,7 +72,7 @@ void layer_darkness::load_sprites()
       auto buffer = QStringLiteral("tx.darkness_%1")
                         .arg(cardinal_index_str(tileset(), i));
 
-      const auto sprite = load_sprite(tileset(), buffer);
+      const auto sprite = load_sprite({buffer});
       if (sprite) {
         set_sprite(i, *sprite);
       } else {

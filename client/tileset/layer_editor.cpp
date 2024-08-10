@@ -22,8 +22,8 @@ layer_editor::layer_editor(struct tileset *ts)
 void layer_editor::load_sprites()
 {
   // FIXME: Use better sprites.
-  auto color = load_sprite(tileset(), {"colors.overlay_0"}, true);
-  auto unworked = load_sprite(tileset(), {"mask.unworked_tile"}, true);
+  auto color = load_sprite({"colors.overlay_0"}, true);
+  auto unworked = load_sprite({"mask.unworked_tile"}, true);
 
   auto W = tileset_tile_width(tileset()), H = tileset_tile_height(tileset());
   auto mask = std::unique_ptr<QPixmap>(
@@ -33,7 +33,7 @@ void layer_editor::load_sprites()
   m_selected = *selected;
 
   // FIXME: Use a more representative sprite.
-  m_starting_position = load_sprite(tileset(), {"user.attention"}, true);
+  m_starting_position = load_sprite({"user.attention"}, true);
 }
 
 std::vector<drawn_sprite>

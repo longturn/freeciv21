@@ -19,24 +19,17 @@ namespace freeciv {
  */
 void layer_abstract_activities::load_sprites()
 {
-  m_activities[ACTIVITY_MINE] = load_sprite(tileset(), {"unit.plant"}, true);
+  m_activities[ACTIVITY_MINE] = load_sprite({"unit.plant"}, true);
   m_activities[ACTIVITY_PLANT] = m_activities[ACTIVITY_MINE];
-  m_activities[ACTIVITY_IRRIGATE] =
-      load_sprite(tileset(), {"unit.irrigate"}, true);
+  m_activities[ACTIVITY_IRRIGATE] = load_sprite({"unit.irrigate"}, true);
   m_activities[ACTIVITY_CULTIVATE] = m_activities[ACTIVITY_IRRIGATE];
-  m_activities[ACTIVITY_PILLAGE] =
-      load_sprite(tileset(), {"unit.pillage"}, true);
-  m_activities[ACTIVITY_FORTIFIED] =
-      load_sprite(tileset(), {"unit.fortified"}, true);
-  m_activities[ACTIVITY_FORTIFYING] =
-      load_sprite(tileset(), {"unit.fortifying"}, true);
-  m_activities[ACTIVITY_SENTRY] =
-      load_sprite(tileset(), {"unit.sentry"}, true);
-  m_activities[ACTIVITY_GOTO] = load_sprite(tileset(), {"unit.goto"}, true);
-  m_activities[ACTIVITY_TRANSFORM] =
-      load_sprite(tileset(), {"unit.transform"}, true);
-  m_activities[ACTIVITY_CONVERT] =
-      load_sprite(tileset(), {"unit.convert"}, true);
+  m_activities[ACTIVITY_PILLAGE] = load_sprite({"unit.pillage"}, true);
+  m_activities[ACTIVITY_FORTIFIED] = load_sprite({"unit.fortified"}, true);
+  m_activities[ACTIVITY_FORTIFYING] = load_sprite({"unit.fortifying"}, true);
+  m_activities[ACTIVITY_SENTRY] = load_sprite({"unit.sentry"}, true);
+  m_activities[ACTIVITY_GOTO] = load_sprite({"unit.goto"}, true);
+  m_activities[ACTIVITY_TRANSFORM] = load_sprite({"unit.transform"}, true);
+  m_activities[ACTIVITY_CONVERT] = load_sprite({"unit.convert"}, true);
 }
 
 /**
@@ -56,7 +49,7 @@ void layer_abstract_activities::initialize_extra(const extra_type *extra,
         extra->act_gfx_alt,
         extra->act_gfx_alt2,
     };
-    m_extra_activities.push_back(load_sprite(tileset(), tags, true));
+    m_extra_activities.push_back(load_sprite(tags, true));
   }
 
   if (!fc_strcasecmp(extra->rmact_gfx, "none")) {
@@ -66,7 +59,7 @@ void layer_abstract_activities::initialize_extra(const extra_type *extra,
         extra->rmact_gfx,
         extra->rmact_gfx_alt,
     };
-    m_extra_rm_activities.push_back(load_sprite(tileset(), tags, true));
+    m_extra_rm_activities.push_back(load_sprite(tags, true));
   }
 }
 

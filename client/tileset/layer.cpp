@@ -11,10 +11,11 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
+#include "layer.h"
+
 #include "control.h"
 #include "options.h"
-
-#include "layer.h"
+#include "tilespec.h"
 
 namespace freeciv {
 
@@ -70,6 +71,15 @@ bool layer::solid_background(const tile *ptile, const unit *punit,
   }
 
   return do_draw_unit(ptile, punit) || (gui_options->draw_cities && pcity);
+}
+
+/**
+ * \brief Shortcut to load a sprite from the tileset.
+ */
+QPixmap *layer::load_sprite(const QStringList &possible_names,
+                            bool required) const
+{
+  return ::load_sprite(tileset(), possible_names, required);
 }
 
 } // namespace freeciv
