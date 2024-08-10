@@ -2880,11 +2880,19 @@ QStringList make_tag_terrain_list(const QString &prefix,
                                   const QString &suffix,
                                   const struct terrain *pterrain)
 {
-  return {
-      QStringLiteral("%1_%2%3").arg(prefix, pterrain->graphic_str, suffix),
-      QStringLiteral("%1_%2%3").arg(prefix, pterrain->graphic_alt, suffix),
-      QStringLiteral("%1%2").arg(prefix, suffix),
-  };
+  if (!strlen(pterrain->graphic_alt)
+      || pterrain->graphic_alt == QStringLiteral("-")) {
+    return {
+        QStringLiteral("%1_%2%3").arg(prefix, pterrain->graphic_str, suffix),
+        QStringLiteral("%1%2").arg(prefix, suffix),
+    };
+  } else {
+    return {
+        QStringLiteral("%1_%2%3").arg(prefix, pterrain->graphic_str, suffix),
+        QStringLiteral("%1_%2%3").arg(prefix, pterrain->graphic_alt, suffix),
+        QStringLiteral("%1%2").arg(prefix, suffix),
+    };
+  }
 }
 
 /**
