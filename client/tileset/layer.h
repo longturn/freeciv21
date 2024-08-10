@@ -164,9 +164,20 @@ public:
    */
   virtual ~layer() = default;
 
+  /**
+   * Returns the list of sprites drawn by this layer somewhere on the map.
+   * Only one of ptile, pedge, or pcorner should be non-null.
+   */
   virtual std::vector<drawn_sprite>
   fill_sprite_array(const tile *ptile, const tile_edge *pedge,
-                    const tile_corner *pcorner, const unit *punit) const;
+                    const tile_corner *pcorner, const unit *punit) const
+  {
+    Q_UNUSED(ptile);
+    Q_UNUSED(pedge);
+    Q_UNUSED(pcorner);
+    Q_UNUSED(punit);
+    return {};
+  }
 
   /**
    * Loads all sprites that do not depend on the ruleset.

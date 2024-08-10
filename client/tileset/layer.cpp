@@ -12,19 +12,11 @@
       \____/        ********************************************************/
 
 #include "control.h"
-#include "tilespec.h"
+#include "options.h"
 
 #include "layer.h"
-#include "log.h"
 
 namespace freeciv {
-
-std::vector<drawn_sprite>
-layer::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
-                         const tile_corner *pcorner, const unit *punit) const
-{
-  return ::fill_sprite_array(m_ts, m_layer, ptile, pedge, pcorner, punit);
-}
 
 /**
  * @brief Whether a unit should be drawn.
