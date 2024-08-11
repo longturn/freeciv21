@@ -2,7 +2,7 @@
 Installing Freeciv21:
 =====================
 
-An HTML version of this file is available at https://longturn.readthedocs.io/en/latest/install/install.html.
+A better maintained HTML version of this file is available at https://longturn.readthedocs.io/en/latest/Getting/compile.html.
 
 This document contains sections and subsections as follows:
      0. Prerequisites
@@ -15,20 +15,20 @@ This document contains sections and subsections as follows:
 0. Prerequisites:
 =================
 
-Freeciv21 has a number of prerequisites.  Note, that apart from the first prerequisite, the Freeciv21 
+Freeciv21 has a number of prerequisites.  Note, that apart from the first prerequisite, the Freeciv21
 configuration process is smart enough to work out whether your system is suitable.  If in doubt, just try it.
 
  - An operating system that support Qt.
 
-Any modern operating system that support Qt is required. As of this writing this is Linux, Windows and Mac 
+Any modern operating system that support Qt is required. As of this writing this is Linux, Windows and Mac
 OS X. On Windows Msys2 is supported.
 
  - A C and C++ compiler.
 
-Freeciv21 is written in very portable C and C++.  Both 32- and 64-bit machines are supported.  You cannot 
+Freeciv21 is written in very portable C and C++.  Both 32- and 64-bit machines are supported.  You cannot
 use a "K&R C" compiler, or a C++ compiler. The C++ compiler must support C++ 17.
 
-Development of Freeciv21 is primarily done with "gcc", the GNU project's excellent C and C++ compiler. 
+Development of Freeciv21 is primarily done with "gcc", the GNU project's excellent C and C++ compiler.
 Microsoft Windows MS Visual C support is under development.
 
  - A "cmake" program.
@@ -77,7 +77,7 @@ The Freeciv21 project maintains a single Qt client.
 
 Qt-client is written in C++, so you need appropriate compiler. In Freeciv21 development, g++ has been used.
 
- - Qt5Core, Qt5Gui, and Qt5Widgets libraries and headers. At least version 5.11 is required.
+ - Qt5Core, Qt5Gui, QtSvg, and Qt5Widgets libraries and headers. At least version 5.15 is required.
 
 
 2. Compiling and Installing Freeciv21:
@@ -88,7 +88,7 @@ directory:
 
    cmake . -B build -G Ninja
 
-To customize the compile, cmake requires the use of command line parameters.  cmake calls them directives 
+To customize the compile, cmake requires the use of command line parameters.  cmake calls them directives
 and they start with -D. The defaults are marked with * (e.g. *ON*).
 
   -DFREECIV_ENABLE_TOOLS={*ON*/OFF}     -- Enables all the tools with one parameter (Ruledit, FCMP, Ruleup,
@@ -129,30 +129,30 @@ Once the compilation is complete, install the game with this command.
 
 After compilation, the important results are:
 
-  - The :file:`build/freeciv21-client` client application binary.
-  - The :file:`build/freeciv21-server` game server binary.
+  - The build/freeciv21-client client application binary.
+  - The build/freeciv21-server game server binary.
 
 
 3. Debian Linux Notes:
 ======================
 
-Below are all the command line steps needed to start with a fresh install of Debian or its variants (e.g. 
+Below are all the command line steps needed to start with a fresh install of Debian or its variants (e.g.
 Ubuntu, Linux Mint) to install Freeciv21.
 
-Start with ensuring your have a source repository (deb-src) turned on in apt sources and then run the 
+Start with ensuring your have a source repository (deb-src) turned on in apt sources and then run the
 following commands.
 
    sudo apt update
-
-   sudo apt build-dep freeciv
 
    sudo apt install git \
      cmake \
      ninja-build \
      python3 \
-     qt5-default \
+     qtbase5-dev \
+     libqt5svg5-dev \
      libkf5archive-dev \
      liblua5.3-dev \
+     libsqlite3-dev \
      libsdl2-mixer-dev \
      libunwind-dev \
      libdw-dev
@@ -174,8 +174,8 @@ At this point follow the steps in section 2 above.
 Msys2 is an available environment for compiling Freeciv21. Microsoft Windows Visual C is under development.
 
 Freeciv21 currently supports building and installing using the Msys2 environment. Build instructions for
-Msys2 versions are documented in doc/README.msys2. Alternately you can visit
-https://github.com/jwrober/freeciv-msys2 for ready made scripts.
+Msys2 versions are documented at https://longturn.readthedocs.io/en/latest/Contributing/msys2.html.
+Alternately you can visit https://github.com/jwrober/freeciv-msys2 for ready made scripts.
 
 Follow the steps starting in configuring above.
 
