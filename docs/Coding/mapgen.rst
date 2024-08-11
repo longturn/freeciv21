@@ -13,39 +13,46 @@ Map Generator
 
 This page describes how maps are generated in Freeciv21, from a technical
 perspective. There are several generators the user can choose from
-(``generator`` server setting), but they share a lot of code.
+(``generator`` server setting), but they share a lot of code. The map generator
+code is located under ``server/generator``. The entry point is
+``map_fractal_generate`` in ``mapgen.cpp``.
 
 .. note::
   See :doc:`/Manuals/Advanced/map-generator` for a less technical introduction.
   This page expects the reader to already be familiar with the settings
   governing map creation.
 
+.. note::
+  Code references are as of August 2024.
+
 Map generation is performed in multiple passes. After some initialization, the
 first step, shared between all generators, is the creation of a basic
 temperature map. Since no terrain information exists at this stage, the
 temperature is simply a measure of the distance to the pole (the "colatitude").
 Unless ``alltemperate`` is set, the world is then divided in four regions:
-frozen, cold, temperate, and tropical.
+frozen, cold, temperate, and tropical (``create_tmap()``).
 
 After the temperature is set, the actual map generation starts. This depends on
 the map generator chosen by the user, with various fallbacks in place. The
 details of each generator are described below.
 After this step, terrain is set everywhere and rivers have been generated.
-Depending on the map generator, players and specials
+Depending on the map generator, players and resources
 may already have been placed (this is for instance the case with the "fair
 islands" generator).
 
 At this stage, tiny (1x1) islands are removed if disabled in the settings
-(``tinyislands`` parameter). Water is also fine-tuned to always have shallow
-ocean next to the coast and be generally smooth. Continent numbers are assigned
-and small seas are turned to lakes. The temperature map is reset after this is
-done.
+(``tinyislands`` parameter, ``remove_tiny_islands()``). Water is also fine-tuned
+to always have shallow ocean next to the coast and be generally smooth
+(``smooth_water_depth()``). Continent numbers are assigned and small seas are
+turned to lakes (``assign_continent_numbers()`` and ``regenerate_lakes()``). The
+temperature map is reset after this is done.
 
 If not done earlier, resources are then added to the map with at least one tile
 between them. For each tile that gets a resource, one is picked at random from
-the list of allowed resources for the terrain. Huts are added in a similar way
-but with a minimum distance of 3 tiles. The final step is to distribute players,
-as described in :ref:`Player Placement <mapgen-placement>` below.
+the list of allowed resources for the terrain (``add_resources()``). Huts are
+added in a similar way but with a minimum distance of 3 tiles (``make_huts()``).
+The final step is to distribute players, as described in
+:ref:`Player Placement <mapgen-placement>` below.
 
 .. todo::
   This page is missing information about the Fair Islands generator. Please feel
@@ -60,7 +67,7 @@ The map generators need terrain information to know what to generate. However,
 the server settings control the world temperature and wetness. A conversion
 is needed between them.
 
-The generators know four types of terrains: mountains (including hills),
+The generators know four types of terrain: mountains (including hills),
 forests (including jungles), deserts, and swamps. Ice, tundra, plains, and
 grassland are always used to fill in the gap between those, depending on the
 local temperature. The fraction of tiles that will have rivers is handled in a
@@ -68,7 +75,9 @@ similar way and is thus also described in this section.
 
 The equations used to derive the fraction of each terrain are highly arbitrary
 and have likely been determined through trial and error. Since the details are
-not particularly enlightening, only the general ideas are discussed below.
+not particularly enlightening, only the general ideas are discussed below. The
+interested reader can read the function ``adjust_terrain_param()`` in
+``mapgen.cpp``.
 
 The first fraction to be computed is the amount of polar terrain, decided based
 on the average temperature and the size of the map (larger maps get less). Since
@@ -103,13 +112,15 @@ Three of the available algorithms start by building a height map for the whole
 world: :ref:`mapgen-random` (``RANDOM``), :ref:`mapgen-fractal` (``FRACTAL``),
 and :ref:`Fracture Map <mapgen-fracture>` (``FRACTURE``).
 This height map is then used to assign tiles to continents or seas, and to
-distribute terrains on the map. The algorithm used for this is shared between
-the generators and is described in :ref:`mapgen-terrain-assignment`.
+distribute terrain on the map. The algorithm used for this is shared between the
+generators and is described in :ref:`mapgen-terrain-assignment`.
 
 .. _mapgen-random:
 
 Fully Random Height
 ^^^^^^^^^^^^^^^^^^^
+
+Entry point: ``make_random_hmap()``.
 
 This generator is extremely simple: it builds a completely random height map and
 smoothes it out.
@@ -122,6 +133,8 @@ below, and :ref:`rivers are added on top <mapgen-height-rivers>`.
 Pseudo-Fractal Height
 ^^^^^^^^^^^^^^^^^^^^^
 
+Entry point: ``make_pseudofractal1_hmap()``.
+
 This generator works by dividing the map in blocks (five plus the number of
 player islands to be created) and assigning a random height to their
 corners. Each block is then processed recursively, cutting it equally in four
@@ -132,13 +145,16 @@ less.
 
 At the end of the generation, more random noise is added on top of the generated
 height map to give more variety on large maps, with warmer tiles generally
-getting more noise. The generated height map is then used to assign terrains as
-:ref:`described below <mapgen-terrain-assignment>`.
+getting more noise. The generated height map is then used to assign terrain and
+generate rivers as described in :ref:`mapgen-terrain-assignment` and
+:ref:`mapgen-height-rivers`.
 
 .. _mapgen-fracture:
 
 Fracture Map
 ^^^^^^^^^^^^
+
+Entry point: ``make_fracture_map()``.
 
 The ``FRACTURE`` generator starts from points distributed randomly on the map
 and grows them until they meet their neighbors. Each point is given a random
@@ -148,7 +164,7 @@ islands. Interesting structures with many small islands are often created in one
 or two areas generated right next to the sea level.
 
 Hills and mountains are added at the boundaries between areas in a crude mimic
-of plate tectonics; this results in large mountain ranges inland and hills all
+of plate tectonics. This results in large mountain ranges inland and hills all
 along the coasts.
 
 The initial points used by the algorithm are distributed randomly on the map,
@@ -182,8 +198,10 @@ Terrain Assignment
 ^^^^^^^^^^^^^^^^^^
 
 Generators that use a height map to generate the map share a common routine to
-assign terrains to the generated tiles, whose algorithm is described in this
-section. The first input is a "normalized" height map where the tile heights
+assign terrain to the generated tiles, whose algorithm is described in this
+section. The code is in the ``make_land()`` function.
+
+The first input is a "normalized" height map where the tile heights
 range from 0 to 1000 and are spread uniformly in this range. This allows for
 fast queries of the type "the lowest 20% of the world". The second input of the
 algorithm is a temperature map, normalized to have only four types of tiles:
@@ -191,7 +209,7 @@ frozen, cold, temperate, and tropical.
 
 The very first step taken by the algorithm is to reduce the height of terrain
 near the polar strips, if any. This prevents generating land next to them and
-disconnects land from the poles.
+disconnects land from the poles. (``normalize_hmap_poles()``)
 
 Oceans and poles are generated next. Sea level is determined as the percentage
 of sea tiles, 100 minus the ``landmass`` server setting. Any tile with a low
@@ -204,7 +222,7 @@ shapes. At this stage, all tiles above sea level are filled with a dummy land
 terrain.
 
 Having generated the "sea" poles, the lowering is reverted to allow for cold
-land terrain in the area.
+land terrain in the area. (``renormalize_hmap_poles()``)
 
 The temperature map is recomputed after creating oceans. In addition to the
 distance from the poles, it now takes other factors into account. High ground is
@@ -214,7 +232,7 @@ simplified to four groups: frozen, cold, temperate, and tropical.
 
 In rulesets without frozen oceans, it may happen that the poles have still not
 been generated. They are marked back as land tiles by setting them to the
-"unknown" terrain.
+"unknown" terrain. (``make_polar_land()``)
 
 The next step is to place relief, i.e. hills and mountains. This is again based
 on the height map: the highest land tiles become hills or mountains. The exact
@@ -222,10 +240,11 @@ fraction of land tiles that will become a hill or mountain is governed by the
 ``steepness`` server setting. Large chunks of steep terrain are avoided by
 randomly converting only half of the tiles and not converting tiles that are
 significantly higher than one their neighbors. In addition to the above, steep
-terrain is added in places that would otherwise be too flat.
+terrain is added in places that would otherwise be too flat. (``make_relief()``)
 
 .. note::
-  The ``FRACTURE`` generator doesn't use the same logic for placing hills.
+  The ``FRACTURE`` generator uses a different logic for placing hills. The
+  code is in ``make_fracture_relief()``.
 
 Once it is decided that a tile will be steep, it is set to hilly terrain if the
 tile is in the region of hot temperature, and mountains otherwise. About 70% of
@@ -234,7 +253,7 @@ the tiles at other temperatures avoid it.
 
 The last step to generate the terrain is to fill in the gaps between the ocean
 and the hills. This is done according to terrain fractions that depend on the
-global ``wetness`` and ``temperature`` settings. Terrains are generated in
+global ``wetness`` and ``temperature`` settings. Terrain is generated in
 patches, according to properties defined in ``terrain.ruleset`` and conditions
 on the tile. The following combinations are generated one at a time:
 
@@ -265,9 +284,9 @@ on the tile. The following combinations are generated one at a time:
   +--------+-----------+-----------+----------+---------+-------------+---------+-----------+
 
 Terrain patches expand outwards from a seed tile until the required tile
-properties are no longer met or a threshold in colatitude and height difference
-is reached (*Thr.* in the table). Ice, tundra, and plains/grassland are
-generated to fill in gaps and do not expand in patches.
+properties are no longer met or a threshold (*Thr.* in the table) in colatitude
+and height difference is reached. Ice, tundra, and plains/grassland are
+generated to fill in gaps and do not expand in patches. (``make_terrains()``)
 
 The algorithm to match the desired terrain properties to the ruleset-defined
 terrain types by first collecting all terrains with the required property. Then,
@@ -275,8 +294,8 @@ types without at least some of the "preferred" property and types with a
 non-zero "avoided" property are removed from the set. Of the remaining terrains,
 one is picked at random, with a higher chance to be selected when the required
 property has a high value in the ruleset. If this search fails, it is resumed
-without the "preferred" property; if this fails again, the "avoided" property is
-also dropped.
+without the "preferred" property. If this fails again, the "avoided" property is
+also dropped. (``pick_terrain()``)
 
 .. _mapgen-height-rivers:
 
@@ -288,7 +307,8 @@ Springs may not be frozen or low in the height map. They may not be ocean and
 there may not be a river in the area yet. The algorithm also tries to avoid
 springs in locations with many hills and mountains nearby, or in ice and
 deserts (according to the corresponding terrain properties: ``mountainous``,
-``frozen``, ``dry``).
+``frozen``, ``dry``). The entry point to generate rivers is the
+``make_rivers()`` function.
 
 Once a spring is found, the river is flown from there one tile at a time.
 To decide which direction the river takes, the possible directions are tested in
@@ -327,11 +347,11 @@ Height map:
   Rivers must flow in the direction which takes it to the tile with the lowest
   value on the height map.
 
-If these rules haven't decided the direction, the random number generator gets
-the decision.
+If these rules failed to decide the direction, the random number generator
+makes the decision.
 
 Once a river has been formed, it is added to the map by adding the river extra
-as needed. If the river goes through terrains where rivers are forbidden, the
+as needed. If the river goes through terrain where rivers are forbidden, the
 terrain is simply changed. The whole process is repeated until enough tiles are
 covered with rivers according to the :ref:`river fraction <mapgen-fractions>`.
 
@@ -384,7 +404,7 @@ to the value of ``startpos``:
   different fraction of available land: 50% for a landmass above 60%, 60% for a
   landmass above 40%, and 70% for a landmass below. This part of the landmass is
   then distributed evenly among player islands, with two or three players per
-  island; but letting the islands shrink to 10% of their intended size if
+  island, but letting the islands shrink to 10% of their intended size if
   needed to place them.
 
   Smaller islands are then created in two different sizes, one of each per
@@ -402,7 +422,7 @@ To create an island, the generator first builds up its shape and then tries to
 place it on the map. The shape is created by starting from a single tile and
 randomly expanding the island by adding cardinally adjacent tiles until the
 desired size is reached. In addition to the random expansion, all tiles with
-four neighbors are automatically added to the island; this prevents gaps from
+four neighbors are automatically added to the island. This prevents gaps from
 appearing in the middle.
 
 With the island shape created, the algorithm then tries to place it on the map
@@ -418,8 +438,8 @@ Rivers and Terrain
 Once an island is placed, rivers are added to it. The number of river tiles is
 computed worldwide and each island gets a fraction of it proportional to its
 surface. Creating rivers is done by repeatedly picking a random tile in the
-island. The first suitable river mouth found in this way becomes a river;
-suitable river mouths are coastal tiles with a single cardinally adjacent
+island. The first suitable river mouth found in this way becomes a river.
+Suitable river mouths are coastal tiles with a single cardinally adjacent
 oceanic tile, at most 3 ocean tiles around, and no adjacent river. Afterwards,
 new river mouths are only added with a 1% probability. Instead, when the random
 tile is next to an existing river, the river grows in this direction. Further
@@ -428,7 +448,7 @@ adjacent ocean and at most one adjacent ocean, and furthermore at most two
 adjacent rivers. Dry tiles are also penalized by dropping them with a 50%
 chance. In this way the rivers slowly grow inwards.
 
-Terrains are placed in a similar way: tiles are picked at random and terrain is
+Terrain is placed in a similar way: tiles are picked at random and terrain is
 assigned to them until reaching their expected number. This is done by groups of
 terrains, starting with forest-like, then desert-like, mountain-like, and
 finally swamp-like. The gaps are then filled with ice, tundras, plains, and
@@ -440,7 +460,7 @@ frequently. Each line specifies both the properties of the terrain that will be
 placed and conditions on the tile wetness and temperature that need to be met.
 If they are not fullfilled, the tile is rejected and another one is picked at
 random. In addition, some terrain types are generated less often next to the
-coast; this is controlled by the "ocean affinity" parameter. For coastal tiles,
+coast. This is controlled by the "ocean affinity" parameter. For coastal tiles,
 this defines the probability that the terrain will be placed on an otherwise
 suitable tile. Finally, the creation of patches of similar terrain is encouraged
 by requiring that the tile passes a coin flip when the terrain would not be next
@@ -508,6 +528,8 @@ generator if ``startpos`` is set to ``DEFAULT``, as listed on the right.
 Starting positions are allocated using the chosen method. If a method fails,
 another method is tried in the following order: ``SINGLE``, ``2or3``, ``ALL``,
 and finally ``VARIABLE``.
+
+The code is located in the ``create_start_positions()`` function.
 
 Placement tries to find fair starting positions using a "tile value" metric,
 computed as the sum of all outputs produced by the tile (food, production, and
