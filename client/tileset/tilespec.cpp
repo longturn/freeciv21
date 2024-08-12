@@ -3582,10 +3582,7 @@ struct color_system *get_color_system(const struct tileset *t)
 /**
    Initialize tileset structure
  */
-void tileset_init(struct tileset *t)
-{
-  t->max_upkeep_height = 0;
-}
+void tileset_init(struct tileset *t) { t->max_upkeep_height = 0; }
 
 /**
    Fill the sprite array with sprites that together make a representative
