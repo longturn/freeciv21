@@ -29,7 +29,7 @@ categories are currently defined:
 .. _logging-parameters:
 .. table:: Logging Parameters
   :widths: auto
-  :align: left
+  :align: center
 
   ======================== ====================================
   Name                     Used for
