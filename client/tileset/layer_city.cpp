@@ -32,14 +32,12 @@ void layer_city::load_sprites()
   m_happy = load_sprite({QStringLiteral("city.happy")}, false);
 }
 
-namespace /* anonymous */ {
 /**
  * Loads a set of size-dependent city sprites, with tags of the form
  * `graphic_tag_size`.
  */
-static layer_city::styles load_city_size_sprites(struct tileset *t,
-                                                 const QString &tag,
-                                                 const citystyle &style)
+layer_city::styles layer_city::load_city_size_sprites(const QString &tag,
+                                                      const citystyle &style)
 {
   auto gfx_in_use = style.graphic;
   auto sprites = layer_city::styles();
@@ -47,9 +45,9 @@ static layer_city::styles load_city_size_sprites(struct tileset *t,
   for (int size = 0; size < MAX_CITY_SIZE; size++) {
     const auto buffer = QStringLiteral("%1_%2_%3")
                             .arg(gfx_in_use, tag, QString::number(size));
-    if (const auto sprite = load_sprite(t, buffer)) {
+    if (const auto sprite = load_sprite({buffer}, true, false)) {
       sprites.push_back(std::make_unique<freeciv::colorizer>(
-          *sprite, tileset_replaced_hue(t)));
+          *sprite, tileset_replaced_hue(tileset())));
     } else if (size == 0) {
       if (gfx_in_use == style.graphic) {
         // Try again with graphic_alt.
@@ -59,12 +57,29 @@ static layer_city::styles load_city_size_sprites(struct tileset *t,
         // Don't load any others if the 0 element isn't there.
         break;
       }
+    } else {
+      // Stop loading as soon as we don't find the next one.
+      break;
     }
+  }
+  if (sprites.empty() && strlen(style.graphic_alt)
+      && style.graphic_alt != QStringLiteral("-")) {
+    tileset_error(tileset(), QtInfoMsg,
+                  "Could not find any sprite matching %s_%s_0 or %s_%s_0",
+                  style.graphic, qUtf8Printable(tag), style.graphic_alt,
+                  qUtf8Printable(tag));
+  } else if (sprites.empty()) {
+    // No graphic_alt
+    tileset_error(tileset(), QtInfoMsg,
+                  "Could not find any sprite matching %s_%s_0",
+                  style.graphic, qUtf8Printable(tag));
+  } else {
+    tileset_error(tileset(), QtInfoMsg, "Loaded %d %s_%s* sprites",
+                  sprites.size(), gfx_in_use, qUtf8Printable(tag));
   }
 
   return sprites;
 }
-} // anonymous namespace
 
 /**
  * Loads all sprites for a city style.
@@ -73,16 +88,15 @@ void layer_city::initialize_city_style(const citystyle &style, int index)
 {
   fc_assert_ret(index == m_tile.size());
 
-  m_tile.push_back(
-      load_city_size_sprites(tileset(), QStringLiteral("city"), style));
+  m_tile.push_back(load_city_size_sprites(QStringLiteral("city"), style));
   m_single_wall.push_back(
-      load_city_size_sprites(tileset(), QStringLiteral("wall"), style));
+      load_city_size_sprites(QStringLiteral("wall"), style));
   m_occupied.push_back(
-      load_city_size_sprites(tileset(), QStringLiteral("occupied"), style));
+      load_city_size_sprites(QStringLiteral("occupied"), style));
 
   for (int i = 0; i < m_walls.size(); i++) {
-    m_walls[i].push_back(load_city_size_sprites(
-        tileset(), QStringLiteral("bldg_%1").arg(i), style));
+    m_walls[i].push_back(
+        load_city_size_sprites(QStringLiteral("bldg_%1").arg(i), style));
   }
 
   if (m_tile.back().empty()) {

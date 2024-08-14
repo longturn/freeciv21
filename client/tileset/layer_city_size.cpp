@@ -64,9 +64,11 @@ layer_city_size::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
 
   // Warn if the city is too large (only once by tileset).
   if (size > 0 && !m_warned) {
-    qInfo(_("Tileset \"%s\" doesn't support big city sizes, such as %d. "
-            "Size not displayed as expected."),
-          tileset_name_get(tileset()), size);
+    tileset_error(
+        tileset(), QtWarningMsg,
+        _("Tileset \"%s\" doesn't support big city sizes, such as %d. "
+          "Size not displayed as expected."),
+        tileset_name_get(tileset()), size);
     m_warned = true;
   }
 

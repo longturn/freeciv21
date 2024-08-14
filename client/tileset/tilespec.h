@@ -135,7 +135,6 @@ const std::vector<std::unique_ptr<freeciv::layer>> &
 tileset_get_layers(const struct tileset *t);
 
 // Gfx support
-QPixmap *load_sprite(struct tileset *t, const QString &tag_name);
 QPixmap *load_sprite(struct tileset *t, const QStringList &possible_names,
                      bool required, bool verbose = true);
 
