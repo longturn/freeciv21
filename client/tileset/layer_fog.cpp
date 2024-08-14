@@ -22,17 +22,17 @@ void layer_fog::load_sprites()
   m_fog_sprite = load_sprite({"tx.fog"}, true);
 
   if (m_darkness == DARKNESS_CORNER) {
-    for (int i = 0; i < 81; i++) {
+    for (int i = 0; i < 81 /* 3^4 */; i++) {
       // Unknown, fog, known.
-      char ids[] = {'u', 'f', 'k'};
-      char buf[512] = "t.fog";
-      int values[4], vi, k = i;
+      const QChar ids[] = {'u', 'f', 'k'};
+      auto buf = QStringLiteral("t.fog");
+      int values[4], k = i;
 
-      for (vi = 0; vi < 4; vi++) {
+      for (int vi = 0; vi < 4; vi++) {
         values[vi] = k % 3;
         k /= 3;
 
-        cat_snprintf(buf, sizeof(buf), "_%c", ids[values[vi]]);
+        buf += QStringLiteral("_") + ids[values[vi]];
       }
       fc_assert(k == 0);
 
