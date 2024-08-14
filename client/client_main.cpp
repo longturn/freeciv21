@@ -374,7 +374,9 @@ int client_main(int argc, char *argv[])
        {{"S", "Sound"}, _("Read sound tags from FILE."), "FILE"},
        {{"m", "music"}, _("Read music tags from FILE."), "FILE"},
        {{"t", "tiles"}, _("Use data file FILE.tilespec for tiles."), "FILE"},
-       {{"w", "warnings"}, _("Warn about deprecated modpack constructs.")}});
+       {{"w", "warnings"}, _("Warn about deprecated modpack constructs.")},
+       {"debug-tileset", _("Prints tileset debugging information.")}});
+
   parser.addPositionalArgument(
       _("url"), _("Server information in URL format."), _("[url]"));
   if (!ok) {
@@ -384,8 +386,16 @@ int client_main(int argc, char *argv[])
   parser.process(app);
 
   // Process the parsed options
-  if (!log_init(parser.value(QStringLiteral("debug")))) {
-    exit(EXIT_FAILURE);
+
+  // Init log level
+  {
+    QStringList extra;
+    if (!parser.isSet(QStringLiteral("debug-tileset"))) {
+      extra.push_back(QStringLiteral("freeciv.tileset.info = false"));
+    }
+    if (!log_init(parser.value(QStringLiteral("debug")), extra)) {
+      exit(EXIT_FAILURE);
+    }
   }
   if (parser.isSet(QStringLiteral("version"))) {
     fc_fprintf(stderr, "%s %s\n", freeciv_name_version(), client_string);
