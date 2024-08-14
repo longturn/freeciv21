@@ -76,10 +76,10 @@ bool layer::solid_background(const tile *ptile, const unit *punit,
 /**
  * \brief Shortcut to load a sprite from the tileset.
  */
-QPixmap *layer::load_sprite(const QStringList &possible_names,
-                            bool required) const
+QPixmap *layer::load_sprite(const QStringList &possible_names, bool required,
+                            bool verbose) const
 {
-  return ::load_sprite(tileset(), possible_names, required);
+  return ::load_sprite(tileset(), possible_names, required, verbose);
 }
 
 } // namespace freeciv
