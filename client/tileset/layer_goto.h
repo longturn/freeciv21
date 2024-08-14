@@ -8,6 +8,8 @@
 #include "goto.h"
 #include "layer.h"
 
+#include <array>
+
 class QPixmap;
 
 namespace freeciv {
