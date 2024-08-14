@@ -49,8 +49,10 @@ static QFile *log_file = nullptr;
   Parses a log level string as provided by the user on the command line, and
   installs the corresponding Qt log filters. Prints a warning and returns
   false if the log level name isn't known.
+
+  Additional logging rules can be passed in Qt format.
  */
-bool log_init(const QString &level_str)
+bool log_init(const QString &level_str, const QStringList &extra_rules)
 {
   // Even if it's invalid.
   log_level = level_str;
@@ -84,40 +86,46 @@ bool log_init(const QString &level_str)
 
   // Create default filter rules to pass to Qt. We do it this way so the user
   // can override our simplistic rules with environment variables.
+  auto rules = QStringList();
   if (level_str == QStringLiteral("fatal")) {
     // Level "fatal" cannot be disabled, so we omit it below.
-    QLoggingCategory::setFilterRules(QStringLiteral("*.critical = false\n"
-                                                    "*.warning = false\n"
-                                                    "*.info = false\n"
-                                                    "*.debug = false\n"));
-    return true;
+    rules += {
+        QStringLiteral("*.critical = false"),
+        QStringLiteral("*.warning = false"),
+        QStringLiteral("*.info = false"),
+        QStringLiteral("*.debug = false"),
+    };
   } else if (level_str == QStringLiteral("critical")) {
-    QLoggingCategory::setFilterRules(QStringLiteral("*.critical = true\n"
-                                                    "*.warning = false\n"
-                                                    "*.info = false\n"
-                                                    "*.debug = false\n"));
-    return true;
+    rules += {
+        QStringLiteral("*.critical = true"),
+        QStringLiteral("*.warning = false"),
+        QStringLiteral("*.info = false"),
+        QStringLiteral("*.debug = false"),
+    };
   } else if (level_str == QStringLiteral("warning")) {
-    QLoggingCategory::setFilterRules(QStringLiteral("*.critical = true\n"
-                                                    "*.warning = true\n"
-                                                    "*.info = false\n"
-                                                    "*.debug = false\n"));
-    return true;
+    rules += {
+        QStringLiteral("*.critical = true"),
+        QStringLiteral("*.warning = true"),
+        QStringLiteral("*.info = false"),
+        QStringLiteral("*.debug = false"),
+    };
   } else if (level_str == QStringLiteral("info")) {
-    QLoggingCategory::setFilterRules(QStringLiteral("*.critical = true\n"
-                                                    "*.warning = true\n"
-                                                    "*.info = true\n"
-                                                    "*.debug = false\n"
-                                                    "qt.*.info = false\n"));
-    return true;
+    rules += {
+        QStringLiteral("*.critical = true"),
+        QStringLiteral("*.warning = true"),
+        QStringLiteral("*.info = true"),
+        QStringLiteral("*.debug = false"),
+        QStringLiteral("qt.*.info = false"),
+    };
   } else if (level_str == QStringLiteral("debug")) {
-    QLoggingCategory::setFilterRules(QStringLiteral("*.critical = true\n"
-                                                    "*.warning = true\n"
-                                                    "*.info = true\n"
-                                                    "*.debug = true\n"
-                                                    "qt.*.info = false\n"
-                                                    "qt.*.debug = false\n"));
-    return true;
+    rules += {
+        QStringLiteral("*.critical = true"),
+        QStringLiteral("*.warning = true"),
+        QStringLiteral("*.info = true"),
+        QStringLiteral("*.debug = true"),
+        QStringLiteral("qt.*.info = false"),
+        QStringLiteral("qt.*.debug = false"),
+    };
   } else {
     // Not a known name
     // TRANS: Do not translate "fatal", "critical", "warning", "info" or
@@ -127,6 +135,13 @@ bool log_init(const QString &level_str)
               qUtf8Printable(level_str));
     return false;
   }
+
+  rules += extra_rules;
+  QLoggingCategory::setFilterRules(rules.join('\n'));
+
+  qDebug() << "Applied logging rules" << rules;
+
+  return true;
 }
 
 /**
