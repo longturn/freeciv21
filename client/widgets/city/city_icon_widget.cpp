@@ -55,7 +55,8 @@ QSize city_icon_widget::sizeHint() const
       std::max(tileset_tile_width(tileset), tileset_tile_height(tileset));
 
   if (auto city = game_city_by_number(m_city); city) {
-    auto sprs = tileset_layer_city(tileset)->fill_sprite_array_no_flag(city);
+    auto sprs =
+        tileset_layer_city(tileset)->fill_sprite_array_no_flag(city, false);
     const auto bounds = sprite_array_bounds(sprs);
     size = std::max(bounds.width(), bounds.height());
   }
@@ -75,7 +76,9 @@ void city_icon_widget::paintEvent(QPaintEvent *event)
     return;
   }
 
-  auto sprs = tileset_layer_city(tileset)->fill_sprite_array_no_flag(city);
+  // We don't show the occupied flag as it looks bad with amplio
+  auto sprs =
+      tileset_layer_city(tileset)->fill_sprite_array_no_flag(city, false);
 
   // Center the sprites
   auto bounds = sprite_array_bounds(sprs);

@@ -38,7 +38,7 @@ public:
                     const unit *punit) const override;
 
   std::vector<drawn_sprite>
-  fill_sprite_array_no_flag(const city *pcity) const;
+  fill_sprite_array_no_flag(const city *pcity, bool show_occupied) const;
 
   /**
    * Returns an example of what a city might look like.

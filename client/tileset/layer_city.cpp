@@ -184,7 +184,8 @@ layer_city::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
         tileset_full_tile_offset(tileset()) + m_city_flag_offset);
   }
 
-  auto more = fill_sprite_array_no_flag(pcity);
+  auto more = fill_sprite_array_no_flag(
+      pcity, !citybar_painter::current()->has_units());
   sprs.insert(sprs.end(), more.begin(), more.end());
 
   return sprs;
@@ -192,10 +193,12 @@ layer_city::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
 
 /**
  * Fill in the given sprite array with any city sprites. Doesn't account for
- * options->draw_cities. The flag and city size are not included.
+ * options->draw_cities. The flag and city size are not included, and the
+ * occupied city indicator is only shown if requested.
  */
 std::vector<drawn_sprite>
-layer_city::fill_sprite_array_no_flag(const city *pcity) const
+layer_city::fill_sprite_array_no_flag(const city *pcity,
+                                      bool show_occupied) const
 {
   auto walls = pcity->client.walls;
   if (walls >= NUM_WALL_TYPES) { // Failsafe
@@ -227,7 +230,7 @@ layer_city::fill_sprite_array_no_flag(const city *pcity) const
   }
 
   // Occupied flag
-  if (!citybar_painter::current()->has_units() && pcity->client.occupied) {
+  if (show_occupied && pcity->client.occupied) {
     sprs.emplace_back(tileset(), get_city_sprite(m_occupied, pcity), true,
                       tileset_full_tile_offset(tileset())
                           + m_occupied_offset);
