@@ -82,6 +82,8 @@
 #include "utils/colorizer.h"
 #include "views/view_map.h"
 
+Q_LOGGING_CATEGORY(tileset_category, "freeciv.tileset");
+
 #define TILESPEC_CAPSTR                                                     \
   "+Freeciv-tilespec-Devel-2019-Jul-03 duplicates_ok precise-hp-bars "      \
   "unlimited-unit-select-frames unlimited-upkeep-sprites hex_corner "       \
@@ -299,10 +301,22 @@ void tileset_error(struct tileset *t, QtMsgType level, const char *format,
     t->log.push_back(tileset_log_entry{level, buf});
   }
 
-  log_base(level, "%s", qUtf8Printable(buf));
-
-  if (level == QtFatalMsg) {
-    exit(EXIT_FAILURE);
+  switch (level) {
+  case QtFatalMsg:
+    qFatal("%s", qUtf8Printable(buf));
+    break;
+  case QtCriticalMsg:
+    qCCritical(tileset_category).noquote() << buf;
+    break;
+  case QtWarningMsg:
+    qCWarning(tileset_category).noquote() << buf;
+    break;
+  case QtInfoMsg:
+    qCInfo(tileset_category).noquote() << buf;
+    break;
+  case QtDebugMsg:
+    qCDebug(tileset_category).noquote() << buf;
+    break;
   }
 }
 
@@ -616,7 +630,7 @@ QString dir_get_tileset_name(enum direction8 dir)
   case DIR8_NORTHWEST:
     return QStringLiteral("nw");
   }
-  qCritical("Wrong direction8 variant: %d.", dir);
+  qCCritical(tileset_category, "Wrong direction8 variant: %d.", dir);
   return QLatin1String("");
 }
 
@@ -879,7 +893,7 @@ bool tilespec_try_read(const QString &tileset_name, bool verbose,
                     _("No usable default tileset found, aborting!"));
     }
 
-    qDebug("Trying tileset \"%s\".", tileset->name);
+    qCDebug(tileset_category, "Trying tileset \"%s\".", tileset->name);
   } else {
     original = true;
   }
@@ -905,7 +919,8 @@ bool tilespec_reread(const QString &name, bool game_fully_initialized)
   enum client_states state = client_state();
   bool new_tileset_in_use;
 
-  qInfo(_("Loading tileset \"%s\"."), qUtf8Printable(name));
+  qCInfo(tileset_category, _("Loading tileset \"%s\"."),
+         qUtf8Printable(name));
 
   /* Step 0:  Record old data.
    *
@@ -1120,7 +1135,8 @@ static QPixmap *load_gfx_file(const char *gfx_filename)
     }
   }
 
-  qCritical("Could not load gfx file \"%s\".", gfx_filename);
+  qCCritical(tileset_category, "Could not load gfx file \"%s\".",
+             gfx_filename);
   return make_error_pixmap();
 }
 
@@ -1211,7 +1227,8 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
                                  sec_name)
           || !secfile_lookup_int(file, &dx, "%s.dx", sec_name)
           || !secfile_lookup_int(file, &dy, "%s.dy", sec_name)) {
-        qCritical("Grid \"%s\" invalid: %s", sec_name, secfile_error());
+        qCCritical(tileset_category, "Grid \"%s\" invalid: %s", sec_name,
+                   secfile_error());
         continue;
       }
 
@@ -1231,8 +1248,9 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
                                    sec_name, j)
             || !(tags = secfile_lookup_str_vec(
                      file, &num_tags, "%s.tiles%d.tag", sec_name, j))) {
-          qCritical("Small sprite \"%s.tiles%d\" invalid: %s", sec_name, j,
-                    secfile_error());
+          qCCritical(tileset_category,
+                     "Small sprite \"%s.tiles%d\" invalid: %s", sec_name, j,
+                     secfile_error());
           continue;
         }
 
@@ -1282,8 +1300,9 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
             if (t->sprite_hash->contains(tags[k]) && !option.isEmpty()) {
               // Warn about duplicated sprites, except if it was enabled by
               // a user option (to override the default).
-              qCritical("warning: %s: already have a sprite for \"%s\".",
-                        t->name, tags[k]);
+              qCCritical(tileset_category,
+                         "warning: %s: already have a sprite for \"%s\".",
+                         t->name, tags[k]);
             }
             t->sprite_hash->insert(tags[k], ss);
           }
@@ -1314,8 +1333,9 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
                                         "extra.sprites%d.tag", i))
         || !(filename =
                  secfile_lookup_str(file, "extra.sprites%d.file", i))) {
-      qCritical("Extra sprite \"extra.sprites%d\" invalid: %s", i,
-                secfile_error());
+      qCCritical(tileset_category,
+                 "Extra sprite \"extra.sprites%d\" invalid: %s", i,
+                 secfile_error());
       continue;
     }
 
@@ -1350,8 +1370,9 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
     if (!duplicates_ok) {
       for (k = 0; k < num_tags; k++) {
         if (t->sprite_hash->contains(tags[k])) {
-          qCritical("warning: %s: already have a sprite for \"%s\".",
-                    t->name, tags[k]);
+          qCCritical(tileset_category,
+                     "warning: %s: already have a sprite for \"%s\".",
+                     t->name, tags[k]);
         }
         t->sprite_hash->insert(tags[k], ss);
       }
@@ -1385,7 +1406,8 @@ check_sprite_type(const char *sprite_type, const char *tile_section)
   if (fc_strcasecmp(sprite_type, "whole") == 0) {
     return freeciv::layer_terrain::CELL_WHOLE;
   }
-  qCritical("[%s] unknown sprite_type \"%s\".", tile_section, sprite_type);
+  qCCritical(tileset_category, "[%s] unknown sprite_type \"%s\".",
+             tile_section, sprite_type);
   return freeciv::layer_terrain::CELL_WHOLE;
 }
 
@@ -1577,14 +1599,16 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
   fname = tilespec_fullname(tileset_name);
   if (!fname) {
     if (verbose) {
-      qCritical("Can't find tileset \"%s\".", qUtf8Printable(tileset_name));
+      qCCritical(tileset_category, "Can't find tileset \"%s\".",
+                 qUtf8Printable(tileset_name));
     }
     return nullptr;
   }
-  qDebug("tilespec file is \"%s\".", fname);
+  qCDebug(tileset_category, "tilespec file is \"%s\".", fname);
 
   if (!(file = secfile_load(fname, true))) {
-    qCritical("Could not open '%s':\n%s", fname, secfile_error());
+    qCCritical(tileset_category, "Could not open '%s':\n%s", fname,
+               secfile_error());
     delete[] fname;
     return nullptr;
   }
@@ -1647,21 +1671,23 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
   sz_strlcpy(t->name, tileset_name.toUtf8().data());
   if (!secfile_lookup_int(file, &t->priority, "tilespec.priority")
       || !secfile_lookup_bool(file, &is_hex, "tilespec.is_hex")) {
-    qCritical("Tileset \"%s\" invalid: %s", t->name, secfile_error());
+    qCCritical(tileset_category, "Tileset \"%s\" invalid: %s", t->name,
+               secfile_error());
     tileset_stop_read(t, file, fname, sections, layer_order);
     return nullptr;
   }
 
   tstr = secfile_lookup_str(file, "tilespec.type");
   if (tstr == nullptr) {
-    qCritical("Tileset \"%s\": no tileset type", t->name);
+    qCCritical(tileset_category, "Tileset \"%s\": no tileset type", t->name);
     tileset_stop_read(t, file, fname, sections, layer_order);
     return nullptr;
   }
 
   t->type = ts_type_by_name(tstr, fc_strcasecmp);
   if (!ts_type_is_valid(t->type)) {
-    qCritical("Tileset \"%s\": unknown tileset type \"%s\"", t->name, tstr);
+    qCCritical(tileset_category,
+               "Tileset \"%s\": unknown tileset type \"%s\"", t->name, tstr);
     tileset_stop_read(t, file, fname, sections, layer_order);
     return nullptr;
   }
@@ -1677,7 +1703,8 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
     int hex_side;
 
     if (!secfile_lookup_int(file, &hex_side, "tilespec.hex_side")) {
-      qCritical("Tileset \"%s\" invalid: %s", t->name, secfile_error());
+      qCCritical(tileset_category, "Tileset \"%s\" invalid: %s", t->name,
+                 secfile_error());
       tileset_stop_read(t, file, fname, sections, layer_order);
       return nullptr;
     }
@@ -1731,7 +1758,8 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
                           "tilespec.normal_tile_width")
       || !secfile_lookup_int(file, &t->normal_tile_size.rheight(),
                              "tilespec.normal_tile_height")) {
-    qCritical("Tileset \"%s\" invalid: %s", t->name, secfile_error());
+    qCCritical(tileset_category, "Tileset \"%s\" invalid: %s", t->name,
+               secfile_error());
     tileset_stop_read(t, file, fname, sections, layer_order);
     return nullptr;
   }
@@ -1757,25 +1785,27 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
                           "tilespec.small_tile_width")
       || !secfile_lookup_int(file, &t->small_sprite_size.rheight(),
                              "tilespec.small_tile_height")) {
-    qCritical("Tileset \"%s\" invalid: %s", t->name, secfile_error());
+    qCCritical(tileset_category, "Tileset \"%s\" invalid: %s", t->name,
+               secfile_error());
     tileset_stop_read(t, file, fname, sections, layer_order);
     return nullptr;
   }
-  qDebug("tile sizes %dx%d, %dx%d unit, %dx%d small",
-         t->normal_tile_size.width(), t->normal_tile_size.height(),
-         t->full_tile_size.width(), t->full_tile_size.height(),
-         t->small_sprite_size.width(), t->small_sprite_size.height());
+  qCDebug(tileset_category, "tile sizes %dx%d, %dx%d unit, %dx%d small",
+          t->normal_tile_size.width(), t->normal_tile_size.height(),
+          t->full_tile_size.width(), t->full_tile_size.height(),
+          t->small_sprite_size.width(), t->small_sprite_size.height());
 
   tstr = secfile_lookup_str(file, "tilespec.fog_style");
   if (tstr == nullptr) {
-    qCritical("Tileset \"%s\": no fog_style", t->name);
+    qCCritical(tileset_category, "Tileset \"%s\": no fog_style", t->name);
     tileset_stop_read(t, file, fname, sections, layer_order);
     return nullptr;
   }
 
   t->fogstyle = freeciv::fog_style_by_name(tstr, fc_strcasecmp);
   if (!fog_style_is_valid(t->fogstyle)) {
-    qCritical("Tileset \"%s\": unknown fog_style \"%s\"", t->name, tstr);
+    qCCritical(tileset_category, "Tileset \"%s\": unknown fog_style \"%s\"",
+               t->name, tstr);
     tileset_stop_read(t, file, fname, sections, layer_order);
     return nullptr;
   }
@@ -1788,7 +1818,8 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
       file, 100, 1, 10000, "tilespec.select_step_ms");
 
   if (tileset_invalid_offsets(t, file)) {
-    qCritical("Tileset \"%s\" invalid: %s", t->name, secfile_error());
+    qCCritical(tileset_category, "Tileset \"%s\" invalid: %s", t->name,
+               secfile_error());
     tileset_stop_read(t, file, fname, sections, layer_order);
     return nullptr;
   }
@@ -1818,22 +1849,25 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
 
   tstr = secfile_lookup_str(file, "tilespec.darkness_style");
   if (tstr == nullptr) {
-    qCritical("Tileset \"%s\": no darkness_style", t->name);
+    qCCritical(tileset_category, "Tileset \"%s\": no darkness_style",
+               t->name);
     tileset_stop_read(t, file, fname, sections, layer_order);
     return nullptr;
   }
 
   t->darkness_style = freeciv::darkness_style_by_name(tstr, fc_strcasecmp);
   if (!darkness_style_is_valid(t->darkness_style)) {
-    qCritical("Tileset \"%s\": unknown darkness_style \"%s\"", t->name,
-              tstr);
+    qCCritical(tileset_category,
+               "Tileset \"%s\": unknown darkness_style \"%s\"", t->name,
+               tstr);
     tileset_stop_read(t, file, fname, sections, layer_order);
     return nullptr;
   }
 
   if (t->darkness_style == freeciv::DARKNESS_ISORECT
       && (t->type == TS_OVERHEAD || t->hex_width > 0 || t->hex_height > 0)) {
-    qCritical("Invalid darkness style set in tileset \"%s\".", t->name);
+    qCCritical(tileset_category,
+               "Invalid darkness style set in tileset \"%s\".", t->name);
     tileset_stop_read(t, file, fname, sections, layer_order);
     return nullptr;
   }
@@ -1851,14 +1885,16 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
 
       // Check for wrong layer names.
       if (!mapview_layer_is_valid(layer)) {
-        qCritical("layer_order: Invalid layer \"%s\"", layer_order[i]);
+        qCCritical(tileset_category, "layer_order: Invalid layer \"%s\"",
+                   layer_order[i]);
         tileset_stop_read(t, file, fname, sections, layer_order);
         return nullptr;
       }
       // Check for duplicates.
       for (j = 0; j < i; j++) {
         if (order[j] == layer) {
-          qCritical("layer_order: Duplicate layer \"%s\"", layer_order[i]);
+          qCCritical(tileset_category, "layer_order: Duplicate layer \"%s\"",
+                     layer_order[i]);
           tileset_stop_read(t, file, fname, sections, layer_order);
           return nullptr;
         }
@@ -1879,8 +1915,8 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
         }
       }
       if (!found) {
-        qCritical("layer_order: Missing layer \"%s\"",
-                  mapview_layer_name(static_cast<mapview_layer>(i)));
+        qCCritical(tileset_category, "layer_order: Missing layer \"%s\"",
+                   mapview_layer_name(static_cast<mapview_layer>(i)));
         tileset_stop_read(t, file, fname, sections, layer_order);
         return nullptr;
       }
@@ -2040,7 +2076,8 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
     auto style = extrastyle_id_by_name(style_name, fc_strcasecmp);
 
     if (t->estyle_hash->contains(extraname)) {
-      qCritical("warning: duplicate extrastyle entry [%s].", extraname);
+      qCCritical(tileset_category,
+                 "warning: duplicate extrastyle entry [%s].", extraname);
       tileset_stop_read(t, file, fname, sections, layer_order);
       return nullptr;
     }
@@ -2050,7 +2087,8 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
   spec_filenames =
       secfile_lookup_str_vec(file, &num_spec_files, "tilespec.files");
   if (nullptr == spec_filenames || 0 == num_spec_files) {
-    qCritical("No tile graphics files specified in \"%s\"", fname);
+    qCCritical(tileset_category,
+               "No tile graphics files specified in \"%s\"", fname);
     tileset_stop_read(t, file, fname, sections, layer_order);
     return nullptr;
   }
@@ -2067,7 +2105,8 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
     dname = fileinfoname(get_data_dirs(), spec_filenames[i]);
     if (dname.isEmpty()) {
       if (verbose) {
-        qCritical("Can't find spec file \"%s\".", spec_filenames[i]);
+        qCCritical(tileset_category, "Can't find spec file \"%s\".",
+                   spec_filenames[i]);
       }
       delete sf;
       tileset_stop_read(t, file, fname, sections, layer_order);
@@ -2084,7 +2123,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
 
   secfile_check_unused(file);
   secfile_destroy(file);
-  qDebug("finished reading \"%s\".", fname);
+  qCDebug(tileset_category, "finished reading \"%s\".", fname);
   delete[] fname;
   delete[] layer_order;
 
@@ -2181,7 +2220,8 @@ static const char *citizen_rule_name(enum citizen_category citizen)
   default:
     break;
   }
-  qCritical("Unknown citizen type: %d.", static_cast<int>(citizen));
+  qCCritical(tileset_category, "Unknown citizen type: %d.",
+             static_cast<int>(citizen));
   return nullptr;
 }
 
@@ -2227,7 +2267,7 @@ QString valid_index_str(const struct tileset *t, int idx)
    counter is increased. Can return nullptr if the sprite couldn't be
    loaded.
  */
-QPixmap *load_sprite(struct tileset *t, const QString &tag_name)
+static QPixmap *load_sprite(struct tileset *t, const QString &tag_name)
 {
   struct small_sprite *ss;
 
@@ -2701,9 +2741,10 @@ QPixmap *tiles_lookup_sprite_tag_alt(struct tileset *t, QtMsgType level,
 
   sp = load_sprite(t, alt);
   if (sp) {
-    qDebug("Using alternate graphic \"%s\" "
-           "(instead of \"%s\") for %s \"%s\".",
-           alt, tag, what, name);
+    qCDebug(tileset_category,
+            "Using alternate graphic \"%s\" "
+            "(instead of \"%s\") for %s \"%s\".",
+            alt, tag, what, name);
     return sp;
   }
 
@@ -2910,10 +2951,11 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
                       _("No extra style for \"%s\" or \"%s\"."),
                       pextra->graphic_str, pextra->graphic_alt);
       } else {
-        qDebug("Using alternate graphic \"%s\" "
-               "(instead of \"%s\") for extra \"%s\".",
-               pextra->graphic_alt, pextra->graphic_str,
-               extra_rule_name(pextra));
+        qCDebug(tileset_category,
+                "Using alternate graphic \"%s\" "
+                "(instead of \"%s\") for extra \"%s\".",
+                pextra->graphic_alt, pextra->graphic_str,
+                extra_rule_name(pextra));
       }
     }
     auto extrastyle = t->estyle_hash->value(tag);
@@ -3053,8 +3095,9 @@ void build_tile_data(const struct tile *ptile, struct terrain *pterrain,
         textras_near[dir] = *tile_extras(tile1);
         continue;
       }
-      qCritical("build_tile_data() tile (%d,%d) has no terrain!",
-                TILE_XY(tile1));
+      qCCritical(tileset_category,
+                 "build_tile_data() tile (%d,%d) has no terrain!",
+                 TILE_XY(tile1));
     }
     /* At the edges of the (known) map, pretend the same terrain continued
      * past the edge of the map. */

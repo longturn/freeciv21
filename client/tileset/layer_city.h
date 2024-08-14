@@ -52,6 +52,9 @@ public:
   void reset_ruleset() override;
 
 private:
+  layer_city::styles load_city_size_sprites(const QString &tag,
+                                            const citystyle &style);
+
   QPoint m_city_offset, m_city_flag_offset, m_occupied_offset;
   QPixmap *m_disorder, *m_happy;
 

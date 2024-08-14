@@ -97,9 +97,11 @@ layer_goto::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
 
     // Warn if the path is too long (only once by tileset).
     if (length > 0 && !m_warned) {
-      qInfo(_("Tileset \"%s\" doesn't support long goto paths, such as %d. "
-              "Path not displayed as expected."),
-            tileset_name_get(tileset()), length);
+      tileset_error(
+          tileset(), QtWarningMsg,
+          _("Tileset \"%s\" doesn't support long goto paths, such as %d. "
+            "Path not displayed as expected."),
+          tileset_name_get(tileset()), length);
       m_warned = true;
     }
   }
