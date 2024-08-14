@@ -1370,9 +1370,8 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
     if (!duplicates_ok) {
       for (k = 0; k < num_tags; k++) {
         if (t->sprite_hash->contains(tags[k])) {
-          qCCritical(tileset_category,
-                     "warning: %s: already have a sprite for \"%s\".",
-                     t->name, tags[k]);
+          qCWarning(tileset_category, "%s: already have a sprite for \"%s\".",
+                    t->name, tags[k]);
         }
         t->sprite_hash->insert(tags[k], ss);
       }
