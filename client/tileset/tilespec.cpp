@@ -2280,7 +2280,7 @@ QPixmap *load_sprite(struct tileset *t, const QString &tag_name)
  * nullptr.
  */
 QPixmap *load_sprite(struct tileset *t, const QStringList &possible_names,
-                     bool required)
+                     bool required, bool verbose)
 {
   // go through the list of possible names until
   // you find a sprite that exists.
@@ -2291,19 +2291,21 @@ QPixmap *load_sprite(struct tileset *t, const QStringList &possible_names,
     }
   }
 
-  // TODO Qt6
-  // We should be able to remove the line below and
-  // update the tileset_errors in the if statement.
-  QVector<QString> names_vec(possible_names.begin(), possible_names.end());
-  // if sprite couldn't be found and it is required, crash, else warn.
-  if (required) {
-    tileset_error(t, LOG_FATAL,
-                  _("Could not find required sprite matching %s"),
-                  qUtf8Printable(strvec_to_or_list(names_vec)));
-  } else {
-    tileset_error(t, LOG_NORMAL,
-                  _("Could not find optional sprite matching %s"),
-                  qUtf8Printable(strvec_to_or_list(names_vec)));
+  if (verbose) {
+    // TODO Qt6
+    // We should be able to remove the line below and
+    // update the tileset_errors in the if statement.
+    QVector<QString> names_vec(possible_names.begin(), possible_names.end());
+    // if sprite couldn't be found and it is required, crash, else warn.
+    if (required) {
+      tileset_error(t, LOG_FATAL,
+                    _("Could not find required sprite matching %s"),
+                    qUtf8Printable(strvec_to_or_list(names_vec)));
+    } else {
+      tileset_error(t, LOG_NORMAL,
+                    _("Could not find optional sprite matching %s"),
+                    qUtf8Printable(strvec_to_or_list(names_vec)));
+    }
   }
 
   return nullptr;

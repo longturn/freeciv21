@@ -60,13 +60,16 @@ void layer_units::load_sprites()
 
   for (int i = 0; i <= 100; i++) {
     auto name = QStringLiteral("unit.hp_%1").arg(i);
-    if (auto sprite = load_sprite({name})) {
+    if (auto sprite = load_sprite({name}, true, false)) {
       m_hp_bar.push_back(sprite);
     }
   }
   if (m_hp_bar.empty()) {
     tileset_error(tileset(), QtFatalMsg,
                   "No unit.hp_* sprite in the tileset.");
+  } else {
+    tileset_error(tileset(), QtInfoMsg, "Loaded %d unit.hp* sprites.",
+                  m_hp_bar.size());
   }
 
   for (int i = 0; i < MAX_VET_LEVELS; i++) {

@@ -245,7 +245,7 @@ protected:
                         const city *pcity) const;
 
   QPixmap *load_sprite(const QStringList &possible_names,
-                       bool required = false) const;
+                       bool required = false, bool verbose = true) const;
 
 private:
   struct tileset *m_ts;
