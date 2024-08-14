@@ -1488,8 +1488,8 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
         t, t->city_offset, t->city_flag_offset, t->occupied_offset));
   } break;
   case LAYER_CITY2: {
-    t->layers.emplace_back(
-        std::make_unique<freeciv::layer_city_size>(t, t->city_size_offset));
+    t->layers.emplace_back(std::make_unique<freeciv::layer_city_size>(
+        t, tileset_full_tile_offset(t) + t->city_size_offset));
   } break;
   case LAYER_DARKNESS: {
     t->layers.emplace_back(
