@@ -64,6 +64,10 @@ void layer_units::load_sprites()
       m_hp_bar.push_back(sprite);
     }
   }
+  if (m_hp_bar.empty()) {
+    tileset_error(tileset(), QtFatalMsg,
+                  "No unit.hp_* sprite in the tileset.");
+  }
 
   for (int i = 0; i < MAX_VET_LEVELS; i++) {
     /* Veteran level sprites are optional.  For instance "green" units
