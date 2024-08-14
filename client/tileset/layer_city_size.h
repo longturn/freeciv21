@@ -9,6 +9,8 @@
 
 #include <QPoint>
 
+#include <array>
+
 class QPixmap;
 
 namespace freeciv {

@@ -10,6 +10,7 @@
 
 #include <QPoint>
 
+#include <array>
 #include <memory>
 
 class QPixmap;

@@ -8,6 +8,8 @@
 #include "fc_types.h"
 #include "layer.h"
 
+#include <array>
+
 namespace freeciv {
 
 class layer_water : public layer {
