@@ -2247,9 +2247,12 @@ void add_specialist_output(
     // This is more than just an optimization. For governors that forbid
     // specialists, the cache may not be filled.
     if (count > 0) {
+      // If there is a cache it must not be empty.
+      fc_assert(!pcsoutputs || !pcsoutputs->empty());
+
       output_type_iterate(stat_index)
       {
-        int amount = pcsoutputs && !pcsoutputs->empty()
+        int amount = pcsoutputs
                          ? pcsoutputs->at(sp)[stat_index]
                          : get_specialist_output(pcity, sp, stat_index);
 
@@ -2876,10 +2879,12 @@ void set_city_production(struct city *pcity,
    * on, so shield waste will include shield bonuses. */
   output_type_iterate(o)
   {
+    // If there is a cache it must not be empty.
+    fc_assert(!pcwaste || !pcwaste->empty());
+
     pcity->waste[o] =
         city_waste(pcity, o, pcity->prod[o] * pcity->bonus[o] / 100, nullptr,
-                   gov_centers,
-                   pcwaste && !pcwaste->empty() ? &pcwaste->at(o) : nullptr);
+                   gov_centers, pcwaste ? &pcwaste->at(o) : nullptr);
   }
   output_type_iterate_end;
 
