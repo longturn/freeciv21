@@ -2244,14 +2244,19 @@ void add_specialist_output(
   {
     int count = pcity->specialists[sp];
 
-    output_type_iterate(stat_index)
-    {
-      int amount = pcsoutputs ? pcsoutputs->at(sp)[stat_index]
-                              : get_specialist_output(pcity, sp, stat_index);
+    // This is more than just an optimization. For governors that forbid
+    // specialists, the cache may not be filled.
+    if (count > 0) {
+      output_type_iterate(stat_index)
+      {
+        int amount = pcsoutputs
+                         ? pcsoutputs->at(sp)[stat_index]
+                         : get_specialist_output(pcity, sp, stat_index);
 
-      output[stat_index] += count * amount;
+        output[stat_index] += count * amount;
+      }
+      output_type_iterate_end;
     }
-    output_type_iterate_end;
   }
   specialist_type_iterate_end;
 }
