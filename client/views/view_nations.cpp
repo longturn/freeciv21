@@ -327,6 +327,7 @@ plr_widget::plr_widget(QWidget *widget) : QTableView(widget)
   coll.setNumericMode(true);
   filter_model->set_collator(coll);
   setModel(filter_model);
+  sortByColumn(0, Qt::AscendingOrder); // Sort players alphabetically
 
   setSortingEnabled(true);
   setSelectionMode(QAbstractItemView::SingleSelection);
