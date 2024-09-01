@@ -2248,7 +2248,8 @@ void add_specialist_output(
     // specialists, the cache may not be filled.
     if (count > 0) {
       // If there is a cache it must not be empty.
-      fc_assert(!pcsoutputs || !pcsoutputs->empty());
+      fc_assert_action(!pcsoutputs || !pcsoutputs->empty(),
+                       pcsoutputs = nullptr);
 
       output_type_iterate(stat_index)
       {
@@ -2873,15 +2874,15 @@ void set_city_production(struct city *pcity,
   trade_routes_iterate_end;
   pcity->prod[O_GOLD] += get_city_tithes_bonus(pcity);
 
+  // If there is a cache it must not be empty.
+  fc_assert_action(!pcwaste || !pcwaste->empty(), pcwaste = nullptr);
+
   /* Account for waste.  Note that waste is calculated before tax income is
    * calculated, so if you had "science waste" it would not include taxed
    * science.  However waste is calculated after the bonuses are multiplied
    * on, so shield waste will include shield bonuses. */
   output_type_iterate(o)
   {
-    // If there is a cache it must not be empty.
-    fc_assert(!pcwaste || !pcwaste->empty());
-
     pcity->waste[o] =
         city_waste(pcity, o, pcity->prod[o] * pcity->bonus[o] / 100, nullptr,
                    gov_centers, pcwaste ? &pcwaste->at(o) : nullptr);
