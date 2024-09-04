@@ -238,4 +238,3 @@ const char *unit_veteran_level_string(const struct unit *punit);
 const char *unit_achieved_rank_string(const struct unit *punit);
 const char *unit_tired_attack_string(const struct unit *punit);
 const char *unit_firepower_if_not_one(int firepower);
-const char *unit_n_stack_kills(int unitcount);

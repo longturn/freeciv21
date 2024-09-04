@@ -2558,8 +2558,10 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
     if (unitcount > 1) {
       notify_player(pvictor, unit_tile(pkiller), E_UNIT_WIN_ATT, ftc_server,
                     /* TRANS: "Another unit was eliminated by..." */
-                    "Another %s eliminated by our attacking %s!",
-                    unit_n_stack_kills(unitcount), punit_link);
+                    PL_("Another unit was eliminated by your attacking %s!",
+                        "Another %2$d units were eliminated by your attacking %1$s!",
+                         unitcount - 1),
+                    punit_link, unitcount - 1);
     }
 
     /* inform the owners: this only tells about owned units that were killed.
