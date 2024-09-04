@@ -63,7 +63,7 @@ jobs:
             | ansifilter \
             | ./codacy-clang-tidy >report.json
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4.1.7
         with:
           name: clang-tidy-report
           path: report.json
