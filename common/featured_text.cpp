@@ -1207,21 +1207,3 @@ const char *unit_firepower_if_not_one(int firepower)
   }
   return buf;
 }
-
-/**
-   Get string of number of extra units killed by attacker
-   when a stack is taken down.
-   N.B.: The returned string is static, so every call to this function
-   overwrites the previous.
- */
-const char *unit_n_stack_kills(int unitcount)
-{
-  static char buf[MAX_LEN_LINK];
-
-  if (unitcount > 2) {
-    fc_snprintf(buf, sizeof(buf), _("%d units were"), unitcount = 1);
-  } else {
-    fc_snprintf(buf, sizeof(buf), _("unit was"));
-  }
-  return buf;
-}
