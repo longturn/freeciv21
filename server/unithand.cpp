@@ -4076,7 +4076,7 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
         attacker_vet, attacker_link, punit->id, attacker_fp,
         (float) att_power / POWER_FACTOR, att_hp_start - punit->hp,
         punit->hp,
-        (punit->veteran - old_unit_vet) ? unit_achieved_rank_string(punit)
+        (punit->veteran != old_unit_vet) ? unit_achieved_rank_string(punit)
                                         : "");
 
     // notify defender of promotion
