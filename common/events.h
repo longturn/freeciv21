@@ -168,6 +168,9 @@
 // Combat without winner (Combat_Rounds)
 #define SPECENUM_VALUE136 E_UNIT_TIE_ATT
 #define SPECENUM_VALUE137 E_UNIT_TIE_DEF
+// bombarding
+#define SPECENUM_VALUE138 E_UNIT_BOMB_ATT
+#define SPECENUM_VALUE139 E_UNIT_BOMB_DEF
 
 /*
  * Note: If you add a new event, make sure you make a similar change

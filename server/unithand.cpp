@@ -13,6 +13,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <set>
 
 // utility
 #include "astring.h"
@@ -3692,6 +3693,7 @@ static bool unit_bombard(struct unit *punit, struct tile *ptile,
 {
   struct player *pplayer = unit_owner(punit);
   struct city *pcity = tile_city(ptile);
+  std::set<struct player *> players_to_notify;
 
   // Sanity check: The actor still exists.
   fc_assert_ret_val(pplayer, false);
@@ -3733,20 +3735,7 @@ static bool unit_bombard(struct unit *punit, struct tile *ptile,
 
       unit_bombs_unit(punit, pdefender, &att_hp, &def_hp);
 
-      notify_player(pplayer, ptile, E_UNIT_WIN_ATT, ftc_server,
-                    /* TRANS: Your Bomber bombards the English Rifleman.*/
-                    _("Your %s bombards the %s %s."),
-                    unit_name_translation(punit),
-                    nation_adjective_for_player(unit_owner(pdefender)),
-                    unit_name_translation(pdefender));
-
-      notify_player(
-          unit_owner(pdefender), ptile, E_UNIT_WIN_DEF, ftc_server,
-          /* TRANS: Your Rifleman is bombarded by the French Bomber.*/
-          _("Your %s is bombarded by the %s %s."),
-          unit_name_translation(pdefender),
-          nation_adjective_for_player(pplayer),
-          unit_name_translation(punit));
+      players_to_notify.insert(unit_owner(pdefender));
 
       punit->hp = att_hp;
       pdefender->hp = def_hp;
@@ -3759,11 +3748,11 @@ static bool unit_bombard(struct unit *punit, struct tile *ptile,
   }
   unit_list_iterate_safe_end;
 
-  // Notify the client
+  // Notify the client (triggers explosion on tile)
   see_combat_unit(punit);
   send_bombardment(punit, ptile);
 
-  // Send units about affected units
+  // Send updates about affected units
   unit_list_iterate_safe(ptile->units, pdefender)
   {
     if (is_unit_reachable_at(pdefender, punit, ptile)) {
@@ -3771,6 +3760,24 @@ static bool unit_bombard(struct unit *punit, struct tile *ptile,
     }
   }
   unit_list_iterate_safe_end;
+
+  // Notify the players hit by the bombardment
+  for (auto player_to_notify : players_to_notify) {
+    notify_player(
+        player_to_notify, ptile, E_UNIT_BOMB_DEF, ftc_server,
+        /* TRANS: Your units in [tile] have been bombarded by the French
+           Bomber.*/
+        _("Your units in %s were bombarded by a %s %s %s [id:%d]."),
+        tile_link(ptile), nation_adjective_for_player(pplayer),
+        unit_veteran_level_string(punit), unit_name_translation(punit),
+        punit->id);
+  }
+  // Notify the player that bombarded
+  notify_player(pplayer, ptile, E_UNIT_BOMB_ATT, ftc_server,
+                /* TRANS: Your Bomber bombarded [coords?].*/
+                _("Your %s %s [id:%d] bombarded the units at %s."),
+                unit_veteran_level_string(punit),
+                unit_name_translation(punit), punit->id, tile_link(ptile));
 
   unit_did_action(punit);
   unit_forget_last_activity(punit);
