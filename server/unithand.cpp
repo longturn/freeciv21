@@ -4227,7 +4227,6 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
   }
   // this function should have not passed through this line of code
   fc_assert_ret_val(false, true);
-  return true;
 }
 
 /**
