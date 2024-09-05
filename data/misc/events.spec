@@ -120,6 +120,8 @@ tiles = { "row", "column", "tag"
   4,  9, "e_my_spy_nuke"
   4, 10, "e_my_spy_steal_map"
 ;  4, 11, "e_embassy_was_expelled"
+  4, 12,  "e_unit_bomb_att"
+  4, 13,  "e_unit_bomb_def"
 
 ;  5,  0, "e_enemy_diplomat_escape" ; base sprite for enemy diplomats
   5,  1, "e_enemy_diplomat_bribe"
