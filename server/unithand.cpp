@@ -4050,7 +4050,7 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
         defender_vet, defender_link, pdefender->id, defender_fp,
         (float) def_power / POWER_FACTOR, def_hp_start - pdefender->hp,
         pdefender->hp,
-        (pdefender->veteran - old_defender_vet)
+        (pdefender->veteran != old_defender_vet)
             ? unit_achieved_rank_string(pdefender)
             : "");
 
