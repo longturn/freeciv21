@@ -4080,7 +4080,7 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
                                         : "");
 
     // notify defender of promotion
-    if (pdefender->veteran == old_defender_vet ? 0 : 1) {
+    if (pdefender->veteran != old_defender_vet) {
       notify_unit_experience(pdefender);
     }
     return true;
