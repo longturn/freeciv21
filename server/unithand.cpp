@@ -4114,7 +4114,7 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
         (float) def_power / POWER_FACTOR, def_hp_start);
 
     // notify attacker of promotion
-    if (punit->veteran == old_unit_vet ? 0 : 1) {
+    if (punit->veteran != old_unit_vet) {
       notify_unit_experience(punit);
     }
 
