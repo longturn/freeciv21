@@ -2600,11 +2600,11 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
               /* TRANS: "Musketeers and 3 other units lost to
                * an attack from the Polish Destroyer."
                * (only happens with at least 2 other units) */
-              PL_("%d other unit lost when the %s %s defeated your %s.",
-                  "%d other units lost when the %s %s defeated your %s.",
+              PL_("One other unit lost when the %s %s defeated your %s.",
+                  "%4$d other units lost when the %s %s defeated your %s.",
                   others),
-              others, nation_adjective_for_player(pvictor), pkiller_link,
-              punit_link);
+              punit_link, nation_adjective_for_player(pvictor), pkiller_link,
+              others);
         } else {
           notify_player(
               player_by_number(i), ptile, E_UNIT_LOST_DEF, ftc_server,
