@@ -4272,7 +4272,7 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
                     nation_adjective_for_player(unit_owner(pdefender)),
                     defender_vet, defender_link, pdefender->id,
                     def_hp_start - pdefender->hp, pdefender->hp,
-                    (pdefender->veteran - old_defender_vet)
+                    (pdefender->veteran != old_defender_vet)
                         ? unit_achieved_rank_string(pdefender)
                         : "");
       // notify defender of victory
@@ -4306,7 +4306,7 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
           nation_adjective_for_player(unit_owner(pdefender)),
           defender_vet, defender_link, pdefender->id,
           def_hp_start - pdefender->hp, pdefender->hp,
-          (pdefender->veteran - old_defender_vet)
+          (pdefender->veteran != old_defender_vet)
               ? unit_achieved_rank_string(pdefender)
               : "");
       notify_player(
