@@ -3531,58 +3531,82 @@ void handle_unit_change_activity(struct player *pplayer, int unit_id,
 }
 
 /**
-   Make sure everyone who can see combat does.
+ * Make sure everyone who can see combat does.
+ *
+ * This includes a special case for attacking/defending:
+ *
+ * Normally the player doesn't get the information about the units inside a
+ * city. However for attacking/defending the player has to know the unit of
+ * the other side. After the combat a remove_unit packet will be sent to the
+ * client to tidy up.
+ *
+ * Note these packets must be sent out before unit_versus_unit is called, so
+ * that the original unit stats (HP) will be sent.
  */
-static void see_combat(struct unit *pattacker, struct unit *pdefender)
+static void see_combat_unit(struct unit *punit)
 {
-  struct packet_unit_short_info unit_att_short_packet, unit_def_short_packet;
-  struct packet_unit_info unit_att_packet, unit_def_packet;
+  packet_unit_short_info short_packet;
+  packet_unit_info full_packet;
 
-  /*
-   * Special case for attacking/defending:
-   *
-   * Normally the player doesn't get the information about the units inside a
-   * city. However for attacking/defending the player has to know the unit of
-   * the other side.  After the combat a remove_unit packet will be sent
-   * to the client to tidy up.
-   *
-   * Note these packets must be sent out before unit_versus_unit is called,
-   * so that the original unit stats (HP) will be sent.
-   */
-  package_short_unit(pattacker, &unit_att_short_packet, UNIT_INFO_IDENTITY,
-                     0);
-  package_short_unit(pdefender, &unit_def_short_packet, UNIT_INFO_IDENTITY,
-                     0);
-  package_unit(pattacker, &unit_att_packet);
-  package_unit(pdefender, &unit_def_packet);
+  package_short_unit(punit, &short_packet, UNIT_INFO_IDENTITY, 0);
+  package_unit(punit, &full_packet);
 
   conn_list_iterate(game.est_connections, pconn)
   {
     struct player *pplayer = pconn->playing;
 
     if (pplayer != nullptr) {
-      /* NOTE: this means the player can see combat between submarines even
-       * if neither sub is visible.  See similar comment in send_combat. */
-      if (map_is_known_and_seen(unit_tile(pattacker), pplayer, V_MAIN)
-          || map_is_known_and_seen(unit_tile(pdefender), pplayer, V_MAIN)) {
-        /* Units are sent even if they were visible already. They may
-         * have changed orientation for combat. */
-        if (pplayer == unit_owner(pattacker)) {
-          send_packet_unit_info(pconn, &unit_att_packet);
+      // NOTE: this means the player can see combat between submarines even
+      // if neither sub is visible. See similar comment in send_combat.
+      if (map_is_known_and_seen(unit_tile(punit), pplayer, V_MAIN)) {
+        // Units are sent even if they were visible already. They may have
+        // changed orientation for combat.
+        if (players_on_same_team(pplayer, unit_owner(punit))) {
+          send_packet_unit_info(pconn, &full_packet);
         } else {
-          send_packet_unit_short_info(pconn, &unit_att_short_packet, false);
-        }
-
-        if (pplayer == unit_owner(pdefender)) {
-          send_packet_unit_info(pconn, &unit_def_packet);
-        } else {
-          send_packet_unit_short_info(pconn, &unit_def_short_packet, false);
+          send_packet_unit_short_info(pconn, &short_packet, false);
         }
       }
     } else if (pconn->observer) {
       // Global observer sees everything...
-      send_packet_unit_info(pconn, &unit_att_packet);
-      send_packet_unit_info(pconn, &unit_def_packet);
+      send_packet_unit_info(pconn, &full_packet);
+    }
+  }
+  conn_list_iterate_end;
+}
+
+/**
+ * Send bombardment info to players.
+ */
+static void send_bombardment(const unit *pattacker, const tile *ptarget)
+{
+  struct packet_unit_bombard_info info;
+  info.attacker_unit_id = pattacker->id;
+  info.target_tile = ptarget->index;
+
+  players_iterate(other_player)
+  {
+    /* NOTE: this means the player can see combat between submarines even
+     * if neither sub is visible.  See similar comment in see_combat. */
+    if (map_is_known_and_seen(unit_tile(pattacker), other_player, V_MAIN)
+        || map_is_known_and_seen(ptarget, other_player, V_MAIN)) {
+      lsend_packet_unit_bombard_info(other_player->connections, &info);
+
+      // Remove the client knowledge of the units. This corresponds to the
+      // send_packet_unit_short_info calls in see_combat.
+      if (!can_player_see_unit(other_player, pattacker)) {
+        unit_goes_out_of_sight(other_player, pattacker);
+      }
+    }
+  }
+  players_iterate_end;
+
+  /* Send combat info to non-player observers as well.  They already know
+   * about the unit so no unit_info is needed. */
+  conn_list_iterate(game.est_connections, pconn)
+  {
+    if (nullptr == pconn->playing && pconn->observer) {
+      send_packet_unit_bombard_info(pconn, &info);
     }
   }
   conn_list_iterate_end;
@@ -3592,7 +3616,7 @@ static void see_combat(struct unit *pattacker, struct unit *pdefender)
    Send combat info to players.
  */
 static void send_combat(struct unit *pattacker, struct unit *pdefender,
-                        int att_veteran, int def_veteran, int bombard)
+                        int att_veteran, int def_veteran)
 {
   struct packet_unit_combat_info combat;
 
@@ -3614,7 +3638,7 @@ static void send_combat(struct unit *pattacker, struct unit *pdefender,
 
       /*
        * Remove the client knowledge of the units.  This corresponds to the
-       * send_packet_unit_short_info calls up above.
+       * send_packet_unit_short_info calls in see_combat.
        */
       if (!can_player_see_unit(other_player, pattacker)) {
         unit_goes_out_of_sight(other_player, pattacker);
@@ -3724,19 +3748,26 @@ static bool unit_bombard(struct unit *punit, struct tile *ptile,
           nation_adjective_for_player(pplayer),
           unit_name_translation(punit));
 
-      see_combat(punit, pdefender);
-
       punit->hp = att_hp;
       pdefender->hp = def_hp;
-
-      send_combat(punit, pdefender, 0, 0, 1);
-
-      send_unit_info(nullptr, pdefender);
 
       // May cause an incident
       action_consequence_success(paction, unit_owner(punit),
                                  unit_owner(pdefender), unit_tile(pdefender),
                                  unit_link(pdefender));
+    }
+  }
+  unit_list_iterate_safe_end;
+
+  // Notify the client
+  see_combat_unit(punit);
+  send_bombardment(punit, ptile);
+
+  // Send units about affected units
+  unit_list_iterate_safe(ptile->units, pdefender)
+  {
+    if (is_unit_reachable_at(pdefender, punit, ptile)) {
+      send_unit_info(nullptr, pdefender);
     }
   }
   unit_list_iterate_safe_end;
@@ -3989,7 +4020,8 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
     unit_transport_unload_send(punit);
   }
 
-  see_combat(punit, pdefender);
+  see_combat_unit(punit);
+  see_combat_unit(pdefender);
 
   punit->hp = att_hp;
   pdefender->hp = def_hp;
@@ -4021,7 +4053,7 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
                              def_tile, unit_link(pdefender));
 
   send_combat(punit, pdefender, punit->veteran - old_unit_vet,
-              pdefender->veteran - old_defender_vet, 0);
+              pdefender->veteran - old_defender_vet);
 
   // Neither died
   if (punit->hp > 0 && pdefender->hp > 0) {

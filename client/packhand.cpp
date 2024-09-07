@@ -53,6 +53,7 @@
 #include "spaceship.h"
 #include "specialist.h"
 #include "style.h"
+#include "tile.h"
 #include "traderoutes.h"
 #include "unit.h"
 #include "unitlist.h"
@@ -536,6 +537,74 @@ void handle_unit_combat_info(const struct packet_unit_combat_info *packet)
       punit1->veteran++;
       refresh_unit_mapcanvas(punit1, unit_tile(punit1), true);
     }
+  }
+}
+
+/**
+ * A bombardment packet. The server tells us the attacker and the bombarded
+ * tile.
+ */
+void handle_unit_bombard_info(int attacker_unit_id, int target_tile_id)
+{
+  const auto attacker = game_unit_by_number(attacker_unit_id);
+  const auto tile = index_to_tile(&(wld.map), target_tile_id);
+  if (!tile) {
+    // We do not do anything with a tile that doesn't exist/is unknown.
+    return;
+  }
+
+  /*
+   * Determine whether we should show something.
+   */
+  bool show = attacker && tile_visible_mapcanvas(unit_tile(attacker));
+  show |= tile_visible_mapcanvas(tile);
+
+  if (gui_options->auto_center_on_combat) {
+    // Only center the map if the player is involved.
+    // The attacking player is for sure involved.
+    bool involved = attacker && unit_owner(attacker) == client.conn.playing;
+
+    // Or if the player's territory gets bombed.
+    involved |= tile->owner == client.conn.playing;
+    involved |= tile->extras_owner == client.conn.playing;
+
+    // Or if the player's unit gets bombed.
+    unit_list_iterate(tile->units, bombed_unit)
+    {
+      if (unit_owner(bombed_unit) == client.conn.playing) {
+        involved = true;
+        break;
+      }
+    }
+    unit_list_iterate_end;
+
+    // Or also the player whose city gets bombed (borders may be disabled).
+    auto city = tile_city(tile);
+    involved |= city && city->owner == client.conn.playing;
+
+    if (involved) {
+      // Center the map
+      queen()->mapview_wdg->center_on_tile(unit_tile(attacker));
+      show = true;
+    }
+  }
+
+  /*
+   * Play the bombing animation.
+   */
+  if (show) {
+    // Play sound
+    if (attacker) {
+      audio_play_sound(unit_type_get(attacker)->sound_fight,
+                       unit_type_get(attacker)->sound_fight_alt);
+    }
+
+    // Display it
+    set_units_in_combat(attacker, nullptr);
+    animate_unit_explosion(tile);
+    set_units_in_combat(nullptr, nullptr);
+    refresh_tile_mapcanvas(tile, false);
+    flush_dirty_overview();
   }
 }
 

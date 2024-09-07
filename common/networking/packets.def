@@ -1088,6 +1088,11 @@ PACKET_UNIT_COMBAT_INFO = 65; sc, lsend
   BOOL make_def_veteran;
 end
 
+PACKET_UNIT_BOMBARD_INFO = 66; sc, lsend, cap(bombard-info)
+  UNIT attacker_unit_id;
+  TILE target_tile;
+end
+
 PACKET_UNIT_SSCS_SET = 71; cs, dsend
   UNIT unit_id;
   UNIT_DATA_TYPE type;
