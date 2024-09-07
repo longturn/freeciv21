@@ -33,7 +33,6 @@
 #include "city.h"
 #include "combat.h"
 #include "events.h"
-#include "featured_text.h"
 #include "game.h"
 #include "government.h"
 #include "idex.h"
@@ -2344,6 +2343,12 @@ struct unit *unit_change_owner(struct unit *punit, struct player *pplayer,
    Called when one unit kills another in combat (this function is only
    called in one place).  It handles all side effects including
    notifications and killstack.
+   \note WARNING: This function iterates through all _possible_ players,
+   not just the players present in the server. That means that, in the
+   loops, you must account for situations where the loop is going to go
+   through players that do not exist, and the consequences that such
+   iterations could have. E.g. notify_player, when pointed to nullptr,
+   will send messages to _everyone_.
  */
 void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
 {
@@ -2544,7 +2549,6 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
 
         if (!escaped) {
           num_killed[player_index(vplayer)]++;
-
           if (vunit != punit) {
             other_killed[player_index(vplayer)] = vunit;
             other_killed[player_index(pvictor)] = vunit;
@@ -2572,51 +2576,45 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
      * Also if a large number of units die you don't find out what type
      * they all are. */
     for (i = 0; i < MAX_NUM_PLAYER_SLOTS; i++) {
-      if (num_killed[i] == 1) {
-        if (i == player_index(pvictim)) {
-          fc_assert(other_killed[i] == nullptr);
-          notify_player(player_by_number(i), ptile, E_UNIT_LOST_DEF,
-                        ftc_server,
-                        // TRANS: "Cannon ... the Polish Destroyer."
-                        _("%s lost when the %s %s defeated your %s."),
-                        punit_link, nation_adjective_for_player(pvictor),
-                        pkiller_link, punit_link);
-        } else {
+      /* The owner can get two extra messages.
+       * One if more units of their own died
+       * One if allied units died as well. */
+      if (i == player_index(pvictim)) {
+        if (num_killed[i] > 1) {
           fc_assert(other_killed[i] != punit);
-          notify_player(player_by_number(i), ptile, E_UNIT_LOST_DEF,
-                        ftc_server,
-                        /* TRANS: "Cannon lost when the Polish Destroyer
-                         * attacked the German Musketeers." */
-                        _("%s lost when the %s %s defeated the %s %s."),
-                        unit_link(other_killed[i]),
-                        nation_adjective_for_player(pvictor), pkiller_link,
-                        nation_adjective_for_player(pvictim), punit_link);
-        }
-      } else if (num_killed[i] > 1) {
-        if (i == player_index(pvictim)) {
-          int others = num_killed[i] - 1;
           notify_player(
               player_by_number(i), ptile, E_UNIT_LOST_DEF, ftc_server,
-              /* TRANS: "Musketeers and 3 other units lost to
-               * an attack from the Polish Destroyer."
-               * (only happens with at least 2 other units) */
+              /* TRANS: "One other unit lost when the celtiberian armor
+              defeated your mech inf. */
               PL_("One other unit lost when the %s %s defeated your %s.",
-                  "%4$d other units lost when the %s %s defeated your %s.",
-                  others),
-              punit_link, nation_adjective_for_player(pvictor), pkiller_link,
-              others);
-        } else {
+                  "%4$d other units lost when the %1$s %2$s defeated your %3$s.",
+                  num_killed[i] - 1),
+              nation_adjective_for_player(pvictor), pkiller_link, punit_link,
+              num_killed[i] - 1);
+        }
+        if ((unitcount-1) > num_killed[i]) {
           notify_player(
               player_by_number(i), ptile, E_UNIT_LOST_DEF, ftc_server,
-              /* TRANS: "2 units lost when the Polish Destroyer
-               * attacked the German Musketeers."
-               * (only happens with at least 2 other units) */
-              PL_("%d unit lost when the %s %s defeated the %s %s.",
-                  "%d units lost when the %s %s defeated the %s %s.",
+              /* TRANS: "One allied unit lost when the celtiberian armor
+              defeated your mech inf. */
+              PL_("One allied unit lost when the %s %s defeated your %s.",
+                  "%4$d allied units lost when the %1$s %2$s defeated your %3$s.",
+                  unitcount),
+              nation_adjective_for_player(pvictor), pkiller_link, punit_link,
+              unitcount);
+        }
+      } else {
+        if (num_killed[i] >= 1) {
+          notify_player(
+              player_by_number(i), ptile, E_UNIT_LOST_DEF, ftc_server,
+              /* TRANS: "One unit lost when the celtiberian armor
+              defeated the roman mech inf. */
+              PL_("One unit lost when the %s %s defeated the %s %s.",
+                  "%5$d units lost when the %1$s %2$s defeated the %3$s %4$s.",
                   num_killed[i]),
-              num_killed[i], nation_adjective_for_player(pvictor),
-              pkiller_link, nation_adjective_for_player(pvictim),
-              punit_link);
+              nation_adjective_for_player(pvictor), pkiller_link,
+              nation_adjective_for_player(pvictim), punit_link,
+              num_killed[i]);
         }
       }
     }
