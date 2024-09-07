@@ -2587,18 +2587,20 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
               /* TRANS: "One other unit lost when the celtiberian armor
               defeated your mech inf. */
               PL_("One other unit lost when the %s %s defeated your %s.",
-                  "%4$d other units lost when the %1$s %2$s defeated your %3$s.",
+                  "%4$d other units lost when the %1$s %2$s defeated your "
+                  "%3$s.",
                   num_killed[i] - 1),
               nation_adjective_for_player(pvictor), pkiller_link, punit_link,
               num_killed[i] - 1);
         }
-        if ((unitcount-1) > num_killed[i]) {
+        if ((unitcount - 1) > num_killed[i]) {
           notify_player(
               player_by_number(i), ptile, E_UNIT_LOST_DEF, ftc_server,
               /* TRANS: "One allied unit lost when the celtiberian armor
               defeated your mech inf. */
               PL_("One allied unit lost when the %s %s defeated your %s.",
-                  "%4$d allied units lost when the %1$s %2$s defeated your %3$s.",
+                  "%4$d allied units lost when the %1$s %2$s defeated your "
+                  "%3$s.",
                   unitcount),
               nation_adjective_for_player(pvictor), pkiller_link, punit_link,
               unitcount);
@@ -2610,7 +2612,8 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
               /* TRANS: "One unit lost when the celtiberian armor
               defeated the roman mech inf. */
               PL_("One unit lost when the %s %s defeated the %s %s.",
-                  "%5$d units lost when the %1$s %2$s defeated the %3$s %4$s.",
+                  "%5$d units lost when the %1$s %2$s defeated the %3$s "
+                  "%4$s.",
                   num_killed[i]),
               nation_adjective_for_player(pvictor), pkiller_link,
               nation_adjective_for_player(pvictim), punit_link,

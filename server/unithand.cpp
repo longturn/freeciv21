@@ -4060,11 +4060,12 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
           unit_owner(pdefender), unit_tile(pdefender), E_UNIT_TIE_DEF,
           ftc_server,
           /* TRANS: "Your green Warrior [id:100 ...A:1.0, lost 3 HP,
-           * 7 HP remaining%s] brushed off a pathetic attack from the Greek 
+           * 7 HP remaining%s] brushed off a pathetic attack from the Greek
            * Polish Archer [id:200* ...D:8.0, lost 5 HP, 5 HP remaining%s]!";
            * The last %s is either a promoted string or empty */
           _("Your %s %s [id:%d %sA:%.1f, lost %d HP, %d HP remaining]"
-            " brushed off a pathetic attack from the %s %s %s [id:%d %sD:%.1f, lost %d"
+            " brushed off a pathetic attack from the %s %s %s [id:%d "
+            "%sD:%.1f, lost %d"
             " HP, %d HP remaining%s]!"),
           defender_vet, defender_link, pdefender->id, defender_fp,
           (float) def_power / POWER_FACTOR, def_hp_start - pdefender->hp,
@@ -4072,8 +4073,8 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
           attacker_vet, attacker_link, punit->id, attacker_fp,
           (float) att_power / POWER_FACTOR, att_hp_start - punit->hp,
           punit->hp,
-          (punit->veteran != old_unit_vet) ? 
-          unit_achieved_rank_string(punit) : "");
+          (punit->veteran != old_unit_vet) ? unit_achieved_rank_string(punit)
+                                           : "");
     } else {
       // notify attacker of battle tie
       notify_player(
@@ -4110,8 +4111,8 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
           attacker_vet, attacker_link, punit->id, attacker_fp,
           (float) att_power / POWER_FACTOR, att_hp_start - punit->hp,
           punit->hp,
-          (punit->veteran != old_unit_vet) ? 
-          unit_achieved_rank_string(punit) : "");
+          (punit->veteran != old_unit_vet) ? unit_achieved_rank_string(punit)
+                                           : "");
     }
 
     // notify attacker of promotion
@@ -4141,56 +4142,60 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
     // scorn the defender if the attacker didn't lose any hp
     if (att_hp_start == punit->hp) {
       // notify the attacker of victory
-      notify_player(
-          unit_owner(punit), unit_tile(punit), E_UNIT_WIN_ATT, ftc_server,
-          /* TRANS: "Your attacking green Legion [id:200 ...A:4.0
-           * lost 1 HP, has 9 HP remaining%s] eliminated the worthless
-           * Greek green Warriors [id:100 HP:10]." */
-          _("Your %s %s [id:%d %s%sA:%.1f, lost %d HP, "
-            "has %d remaining] eliminated the worthless %s %s %s "
-            "[id:%d %sD:%.1f, lost %d HP]."),
-          attacker_vet, attacker_link, punit->id, attacker_fp, attacker_tired,
-          (float) att_power / POWER_FACTOR, att_hp_start - punit->hp,
-          punit->hp, nation_adjective_for_player(unit_owner(pdefender)),
-          defender_vet, defender_link, pdefender->id, defender_fp,
-          (float) def_power / POWER_FACTOR, def_hp_start);
+      notify_player(unit_owner(punit), unit_tile(punit), E_UNIT_WIN_ATT,
+                    ftc_server,
+                    /* TRANS: "Your attacking green Legion [id:200 ...A:4.0
+                     * lost 1 HP, has 9 HP remaining%s] eliminated the
+                     * worthless Greek green Warriors [id:100 HP:10]." */
+                    _("Your %s %s [id:%d %s%sA:%.1f, lost %d HP, "
+                      "has %d remaining] eliminated the worthless %s %s %s "
+                      "[id:%d %sD:%.1f, lost %d HP]."),
+                    attacker_vet, attacker_link, punit->id, attacker_fp,
+                    attacker_tired, (float) att_power / POWER_FACTOR,
+                    att_hp_start - punit->hp, punit->hp,
+                    nation_adjective_for_player(unit_owner(pdefender)),
+                    defender_vet, defender_link, pdefender->id, defender_fp,
+                    (float) def_power / POWER_FACTOR, def_hp_start);
       // notify defender of defeat
-      notify_player(unit_owner(pdefender), unit_tile(pdefender),
-          E_UNIT_LOST_DEF, ftc_server,
+      notify_player(
+          unit_owner(pdefender), unit_tile(pdefender), E_UNIT_LOST_DEF,
+          ftc_server,
           /* TRANS: "Your green Warriors [id:100 ...D:1.0 HP:10]
            * helplessly perished in an attack by the Greek green Legion
            * [id:200 ...A:4.0 lost 1 HP, has 9 HP remaining%s]."
            * last %s is either ", promoted ..." or empty string */
           _("Your %s %s [id:%d %sD:%.1f HP:%d] helplessly perished in an"
-            " attack by the %s %s %s [id:%d %s%sA:%.1f, lost %d HP, has %d HP "
+            " attack by the %s %s %s [id:%d %s%sA:%.1f, lost %d HP, has %d "
+            "HP "
             "remaining%s]."),
           defender_vet, defender_link, pdefender->id, defender_fp,
           (float) def_power / POWER_FACTOR, def_hp_start,
-          nation_adjective_for_player(unit_owner(punit)),
-          attacker_vet, attacker_link, punit->id, attacker_fp,
-          attacker_tired, (float) att_power / POWER_FACTOR,
-          att_hp_start - punit->hp, punit->hp,
-          (punit->veteran != old_unit_vet)
-              ? unit_achieved_rank_string(punit)
-              : "");
+          nation_adjective_for_player(unit_owner(punit)), attacker_vet,
+          attacker_link, punit->id, attacker_fp, attacker_tired,
+          (float) att_power / POWER_FACTOR, att_hp_start - punit->hp,
+          punit->hp,
+          (punit->veteran != old_unit_vet) ? unit_achieved_rank_string(punit)
+                                           : "");
     } else {
       // notify the attacker of victory
-      notify_player(
-          unit_owner(punit), unit_tile(punit), E_UNIT_WIN_ATT, ftc_server,
-          /* TRANS: "Your green Legion [id:200 ...A:4.0
-           * lost 1 HP, has 9 HP remaining%s] eliminated the
-           * Greek green Warriors [id:100 HP:10]." */
-          _("Your %s %s [id:%d %s%sA:%.1f, lost %d HP, "
-            "has %d remaining] eliminated the %s %s %s "
-            "[id:%d %sD:%.1f, lost %d HP]."),
-          attacker_vet, attacker_link, punit->id, attacker_fp, attacker_tired,
-          (float) att_power / POWER_FACTOR, att_hp_start - punit->hp,
-          punit->hp, nation_adjective_for_player(unit_owner(pdefender)),
-          defender_vet, defender_link, pdefender->id, defender_fp,
-          (float) def_power / POWER_FACTOR, def_hp_start);
+      notify_player(unit_owner(punit), unit_tile(punit), E_UNIT_WIN_ATT,
+                    ftc_server,
+                    /* TRANS: "Your green Legion [id:200 ...A:4.0
+                     * lost 1 HP, has 9 HP remaining%s] eliminated the
+                     * Greek green Warriors [id:100 HP:10]." */
+                    _("Your %s %s [id:%d %s%sA:%.1f, lost %d HP, "
+                      "has %d remaining] eliminated the %s %s %s "
+                      "[id:%d %sD:%.1f, lost %d HP]."),
+                    attacker_vet, attacker_link, punit->id, attacker_fp,
+                    attacker_tired, (float) att_power / POWER_FACTOR,
+                    att_hp_start - punit->hp, punit->hp,
+                    nation_adjective_for_player(unit_owner(pdefender)),
+                    defender_vet, defender_link, pdefender->id, defender_fp,
+                    (float) def_power / POWER_FACTOR, def_hp_start);
       // notify defender of defeat
-      notify_player(unit_owner(pdefender), unit_tile(pdefender),
-          E_UNIT_LOST_DEF, ftc_server,
+      notify_player(
+          unit_owner(pdefender), unit_tile(pdefender), E_UNIT_LOST_DEF,
+          ftc_server,
           /* TRANS: "Your green Warriors [id:100 ...D:1.0 HP:10]
            * perished in an attack by the Greek green Legion
            * [id:200 ...A:4.0 lost 1 HP, has 9 HP remaining%s]."
@@ -4200,13 +4205,12 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
             "remaining%s]."),
           defender_vet, defender_link, pdefender->id, defender_fp,
           (float) def_power / POWER_FACTOR, def_hp_start,
-          nation_adjective_for_player(unit_owner(punit)),
-          attacker_vet, attacker_link, punit->id, attacker_fp,
-          attacker_tired, (float) att_power / POWER_FACTOR,
-          att_hp_start - punit->hp, punit->hp,
-          (punit->veteran != old_unit_vet)
-              ? unit_achieved_rank_string(punit)
-              : "");
+          nation_adjective_for_player(unit_owner(punit)), attacker_vet,
+          attacker_link, punit->id, attacker_fp, attacker_tired,
+          (float) att_power / POWER_FACTOR, att_hp_start - punit->hp,
+          punit->hp,
+          (punit->veteran != old_unit_vet) ? unit_achieved_rank_string(punit)
+                                           : "");
     }
     // notify attacker of promotion
     if (punit->veteran != old_unit_vet) {
@@ -4258,23 +4262,23 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
     // scorn the attacker if the defender didn't lose any hp
     if (def_hp_start == pdefender->hp) {
       // notify attacker of defeat
-      notify_player(unit_owner(punit), unit_tile(punit), E_UNIT_LOST_ATT,
-                    ftc_server,
-                    /* TRANS: "Your green Cannon [id:100 ...A:8.0
-                     * failed against the Greek Polish Destroyer [id:200 lost
-                     * 27 HP, 3 HP remaining%s]!";
-                     * last %s is either "and ..." or empty string */
-                    _("Your %s %s [id:%d %sA:%.1f, lost %d HP] failed terribly"
-                      " against the %s %s %s [id:%d lost %d HP, %d HP "
-                      "remaining%s]!"),
-                    attacker_vet, attacker_link, punit->id, attacker_fp,
-                    (float) att_power / POWER_FACTOR, att_hp_start,
-                    nation_adjective_for_player(unit_owner(pdefender)),
-                    defender_vet, defender_link, pdefender->id,
-                    def_hp_start - pdefender->hp, pdefender->hp,
-                    (pdefender->veteran != old_defender_vet)
-                        ? unit_achieved_rank_string(pdefender)
-                        : "");
+      notify_player(
+          unit_owner(punit), unit_tile(punit), E_UNIT_LOST_ATT, ftc_server,
+          /* TRANS: "Your green Cannon [id:100 ...A:8.0
+           * failed against the Greek Polish Destroyer [id:200 lost
+           * 27 HP, 3 HP remaining%s]!";
+           * last %s is either "and ..." or empty string */
+          _("Your %s %s [id:%d %sA:%.1f, lost %d HP] failed terribly"
+            " against the %s %s %s [id:%d lost %d HP, %d HP "
+            "remaining%s]!"),
+          attacker_vet, attacker_link, punit->id, attacker_fp,
+          (float) att_power / POWER_FACTOR, att_hp_start,
+          nation_adjective_for_player(unit_owner(pdefender)), defender_vet,
+          defender_link, pdefender->id, def_hp_start - pdefender->hp,
+          pdefender->hp,
+          (pdefender->veteran != old_defender_vet)
+              ? unit_achieved_rank_string(pdefender)
+              : "");
       // notify defender of victory
       notify_player(
           unit_owner(pdefender), def_tile, E_UNIT_WIN_DEF, ftc_server,
@@ -4292,8 +4296,8 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
           (float) att_power / POWER_FACTOR, att_hp_start);
     } else {
       // notify attacker of defeat
-      notify_player(unit_owner(punit), unit_tile(punit), E_UNIT_LOST_ATT,
-          ftc_server,
+      notify_player(
+          unit_owner(punit), unit_tile(punit), E_UNIT_LOST_ATT, ftc_server,
           /* TRANS: "Your green Cannon [id:100 ...A:8.0
            * perished while attacking the Greek Polish Destroyer [id:200 lost
            * 27 HP, 3 HP remaining%s]!";
@@ -4303,9 +4307,9 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
             "remaining%s]!"),
           attacker_vet, attacker_link, punit->id, attacker_fp,
           (float) att_power / POWER_FACTOR, att_hp_start,
-          nation_adjective_for_player(unit_owner(pdefender)),
-          defender_vet, defender_link, pdefender->id,
-          def_hp_start - pdefender->hp, pdefender->hp,
+          nation_adjective_for_player(unit_owner(pdefender)), defender_vet,
+          defender_link, pdefender->id, def_hp_start - pdefender->hp,
+          pdefender->hp,
           (pdefender->veteran != old_defender_vet)
               ? unit_achieved_rank_string(pdefender)
               : "");
@@ -4322,7 +4326,7 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
           pdefender->hp, attacker_tired,
           nation_adjective_for_player(unit_owner(punit)), attacker_vet,
           attacker_link, punit->id, attacker_fp,
-          (float) att_power / POWER_FACTOR, att_hp_start);      
+          (float) att_power / POWER_FACTOR, att_hp_start);
     }
     // notify defender of promotion
     if (pdefender->veteran == old_defender_vet ? 0 : 1) {
