@@ -105,6 +105,7 @@ void draw_segment(const tile *ptile, enum direction8 dir, bool safe);
 
 void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
                              struct unit *punit1, int hp1);
+void animate_unit_explosion(const tile *location);
 void move_unit_map_canvas(struct unit *punit, struct tile *ptile, int dx,
                           int dy);
 
