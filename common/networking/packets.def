@@ -1086,7 +1086,6 @@ PACKET_UNIT_COMBAT_INFO = 65; sc, lsend
   HP defender_hp;
   BOOL make_att_veteran;
   BOOL make_def_veteran;
-  BOOL bombard;
 end
 
 PACKET_UNIT_BOMBARD_INFO = 66; sc, lsend, cap(bombard-info)
