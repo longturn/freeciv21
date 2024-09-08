@@ -1478,7 +1478,6 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
                              struct unit *punit1, int hp1)
 {
   struct unit *losing_unit = (hp0 == 0 ? punit0 : punit1);
-  float canvas_x, canvas_y;
 
   set_units_in_combat(punit0, punit1);
 
@@ -1488,8 +1487,6 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
   punit1->hp = MAX(punit1->hp, hp1);
 
   unqueue_mapview_updates();
-
-  const auto &anim = get_unit_explode_animation(tileset);
 
   while (punit0->hp > hp0 || punit1->hp > hp1) {
     const int diff0 = punit0->hp - hp0, diff1 = punit1->hp - hp1;
@@ -1506,40 +1503,67 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
     anim_delay(gui_options->smooth_combat_step_msec);
   }
 
-  if (!anim.empty()
-      && tile_to_canvas_pos(&canvas_x, &canvas_y, unit_tile(losing_unit))) {
-    refresh_unit_mapcanvas(losing_unit, unit_tile(losing_unit), false);
-    unqueue_mapview_updates();
-    QPainter p(mapview.tmp_store);
-    p.drawPixmap(canvas_x, canvas_y, *mapview.store, canvas_x, canvas_y,
-                 tileset_tile_width(tileset), tileset_tile_height(tileset));
-    p.end();
-
-    for (const auto *sprite : anim) {
-      /* We first draw the explosion onto the unit and draw the
-       * complete thing onto the map canvas window. This avoids
-       * flickering. */
-      p.begin(mapview.store);
-      p.drawPixmap(canvas_x, canvas_y, *mapview.tmp_store, canvas_x,
-                   canvas_y, tileset_tile_width(tileset),
-                   tileset_tile_height(tileset));
-      p.drawPixmap(
-          canvas_x + tileset_tile_width(tileset) / 2 - sprite->width() / 2,
-          canvas_y + tileset_tile_height(tileset) / 2 - sprite->height() / 2,
-          *sprite);
-      p.end();
-      dirty_rect(canvas_x, canvas_y, tileset_tile_width(tileset),
-                 tileset_tile_height(tileset));
-
-      flush_dirty();
-      anim_delay(gui_options->smooth_combat_step_msec);
-    }
-  }
+  refresh_unit_mapcanvas(losing_unit, unit_tile(losing_unit), false);
+  animate_unit_explosion(unit_tile(losing_unit));
 
   set_units_in_combat(nullptr, nullptr);
   refresh_unit_mapcanvas(punit0, unit_tile(punit0), true);
   refresh_unit_mapcanvas(punit1, unit_tile(punit1), true);
   flush_dirty_overview();
+}
+
+/**
+ * Draws an explosion animation on the given sprite.
+ */
+void animate_unit_explosion(const tile *location)
+{
+  if (gui_options->smooth_combat_step_msec == 0) {
+    return;
+  }
+
+  const auto anim = get_unit_explode_animation(tileset);
+  if (anim.empty()) {
+    return;
+  }
+
+  float canvas_x, canvas_y;
+  if (!tile_to_canvas_pos(&canvas_x, &canvas_y, location)) {
+    // Hidden tile: nothing to draw
+    return;
+  }
+
+  unqueue_mapview_updates();
+
+  // Save the map without the explosion overlay
+  const auto base_map =
+      mapview.store->copy(canvas_x, canvas_y, tileset_tile_width(tileset),
+                          tileset_tile_height(tileset));
+
+  /*
+   * Animation loop
+   */
+  for (const auto &sprite : anim) {
+    QPainter p;
+    p.begin(mapview.store);
+
+    // Restore the base map
+    p.drawPixmap(canvas_x, canvas_y, base_map);
+
+    // Overlay the explosion
+    p.drawPixmap(
+        canvas_x + tileset_tile_width(tileset) / 2 - sprite->width() / 2,
+        canvas_y + tileset_tile_height(tileset) / 2 - sprite->height() / 2,
+        *sprite);
+    p.end();
+
+    // Force a repaint
+    dirty_rect(canvas_x, canvas_y, tileset_tile_width(tileset),
+               tileset_tile_height(tileset));
+    flush_dirty();
+
+    // Wait
+    anim_delay(gui_options->smooth_combat_step_msec);
+  }
 }
 
 /**
