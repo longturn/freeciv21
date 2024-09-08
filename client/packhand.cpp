@@ -495,11 +495,9 @@ void handle_unit_combat_info(const struct packet_unit_combat_info *packet)
   struct unit *punit1 = game_unit_by_number(packet->defender_unit_id);
 
   if (punit0 && punit1) {
-    if (!packet->bombard) {
-      popup_combat_info(packet->attacker_unit_id, packet->defender_unit_id,
-                        packet->attacker_hp, packet->defender_hp,
-                        packet->make_att_veteran, packet->make_def_veteran);
-    }
+    popup_combat_info(packet->attacker_unit_id, packet->defender_unit_id,
+                      packet->attacker_hp, packet->defender_hp,
+                      packet->make_att_veteran, packet->make_def_veteran);
     if (tile_visible_mapcanvas(unit_tile(punit0))
         && tile_visible_mapcanvas(unit_tile(punit1))) {
       show_combat = true;
