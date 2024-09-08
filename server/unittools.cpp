@@ -2787,7 +2787,7 @@ void package_short_unit(struct unit *punit,
 /**
    Handle situation where unit goes out of player sight.
  */
-void unit_goes_out_of_sight(struct player *pplayer, struct unit *punit)
+void unit_goes_out_of_sight(struct player *pplayer, const unit *punit)
 {
   dlsend_packet_unit_remove(pplayer->connections, punit->id);
   if (punit->server.moving != nullptr) {
