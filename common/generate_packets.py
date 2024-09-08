@@ -16,6 +16,7 @@ import io
 import itertools as it
 import re
 import typing
+from textwrap import dedent, indent
 
 # The following parameters change the amount of output.
 
@@ -33,16 +34,6 @@ generate_variant_logs = 1
 fold_bool_into_header = 1
 
 ################# END OF PARAMETERS ####################
-
-
-def indent(prefix, string):
-    """
-    Prepends `prefix` to every line in `string`.
-    """
-
-    lines = string.split("\n")
-    lines = map(lambda x: prefix + x, lines)
-    return "\n".join(lines)
 
 
 def get_choices(all_caps):
@@ -430,7 +421,7 @@ class Field:
         get = self.get_get(deltafragment)
         if fold_bool_into_header and self.struct_type == "bool" and not self.is_array:
             return f"  real_packet->{self.name} = BV_ISSET(fields, {index});\n"
-        get = indent("    ", get)
+        get = indent(get, "    ")
         if packet.gen_log:
             f = f"    {packet.log_macro}(\"  got field '{self.name}'\");\n"
         else:
@@ -624,8 +615,8 @@ class Variant:
             def f(cap):
                 return f'has_capability("{cap}", capability)'
 
-            t = list(map(lambda x, f=f: f(x), self.poscaps)) + list(
-                map(lambda x, f=f: "!" + f(x), self.negcaps)
+            t = list(map(lambda x: f(x), self.poscaps)) + list(
+                map(lambda x: "!" + f(x), self.negcaps)
             )
             self.condition = " && ".join(t)
         else:
@@ -957,14 +948,14 @@ static char *stats_{self.name}_names[] = {{names}};
   """
             body1 = ""
             for field in self.key_fields:
-                body1 = body1 + indent("  ", field.get_get(1)) + "\n"
+                body1 = body1 + indent(field.get_get(1), "  ") + "\n"
             body2 = self.get_delta_receive_body()
         else:
             delta_header = ""
             delta_body1 = ""
             body1 = ""
             for field in self.fields:
-                body1 += indent("  ", field.get_get(0)) + "\n"
+                body1 += indent(field.get_get(0), "  ") + "\n"
             body2 = ""
         body1 = body1 + "\n"
 
@@ -1151,6 +1142,16 @@ class Packet:
             remaining.append(i)
         flags = remaining
 
+        self.capability = None
+        remaining = []
+        for i in flags:
+            match = re.search(r"^cap\((.*)\)$", i)
+            if match:
+                self.capability = match.group(1)
+                break
+            remaining.append(i)
+        flags = remaining
+
         assert len(flags) == 0, repr(flags)
 
         self.fields = []
@@ -1279,19 +1280,29 @@ class Packet:
             func = "packet"
             args = ", packet"
 
-        return f"""{self.send_prototype}
-{{
-  if (!pc->used) {{
-    qCritical("WARNING: trying to send data to the closed connection %s",
-              conn_description(pc));
-    return -1;
-  }}
-  fc_assert_ret_val_msg(pc->phs.handlers->send[{self.type}].{func} != NULL, -1,
-                        "Handler for {self.type} not installed");
-  return pc->phs.handlers->send[{self.type}].{func}(pc{args});
-}}
+        send_function = f"pc->phs.handlers->send[{self.type}].{func}"
+        check = "true" if self.capability is None else "false"
 
-"""
+        return dedent(
+            f"""\
+            {self.send_prototype}
+            {{
+              if (!pc->used) {{
+                  qCritical("WARNING: trying to send data to the closed connection %s",
+                          conn_description(pc));
+                  return -1;
+              }}
+              if constexpr ({check}) {{
+                fc_assert_ret_val_msg({send_function} != nullptr, -1,
+                                      "Handler for {self.type} not installed");
+              }} else if (!{send_function}) {{
+                return 0;
+              }}
+              return {send_function}(pc{args});
+            }}
+
+            """
+        )
 
     def get_variants(self):
         result = ""
@@ -1370,6 +1381,9 @@ def get_packet_functional_capability(packets):
 
     all_caps = set()
     for p in packets:
+        if p.capability is not None:
+            all_caps.add(p.capability)
+
         for f in p.fields:
             if f.add_cap:
                 all_caps.add(f.add_cap)
@@ -1502,13 +1516,15 @@ def get_packet_handlers_fill_initial(packets):
     intro = """void packet_handlers_fill_initial(packet_handlers *phandlers)
 {
 """
-    all_caps = {}
+    all_caps = set()
     for p in packets:
+        if p.capability:
+            all_caps.add(p.capability)
         for f in p.fields:
             if f.add_cap:
-                all_caps[f.add_cap] = 1
+                all_caps.add(f.add_cap)
             if f.remove_cap:
-                all_caps[f.remove_cap] = 1
+                all_caps.add(f.remove_cap)
     for cap in all_caps:
         intro += f"""  fc_assert_msg(has_capability("{cap}", our_capability),
                 "Packets have support for unknown '{cap}' capability!");
@@ -1596,7 +1612,7 @@ def get_packet_handlers_fill_capability(packets: list[Packet]) -> str:
         code += f"""{{
   qCritical("Unknown {packet.type} variant for cap %s", capability);
 }}"""
-        return indent(prefix, code) + "\n"
+        return indent(code, prefix) + "\n"
 
     sc_packets = []
     cs_packets = []
@@ -1613,28 +1629,42 @@ def get_packet_handlers_fill_capability(packets: list[Packet]) -> str:
     body = ""
     for packet in unrestricted:
         body += variant_conditional(
-            "  ", packet, lambda var: var.send_handler + "\n  " + var.receive_handler
+            "", packet, lambda var: var.send_handler + "\n  " + var.receive_handler
         )
 
     if cs_packets or sc_packets:
-        body += "  if (is_server()) {\n"
+        body += "if (is_server()) {\n"
         for packet in sc_packets:
-            body += variant_conditional("    ", packet, lambda var: var.send_handler)
+            body += variant_conditional("  ", packet, lambda var: var.send_handler)
 
         for packet in cs_packets:
-            body += variant_conditional("    ", packet, lambda var: var.receive_handler)
+            body += variant_conditional("  ", packet, lambda var: var.receive_handler)
 
-        body += "  } else {\n"
+        body += "} else {\n"
         for packet in cs_packets:
-            body += variant_conditional("    ", packet, lambda var: var.send_handler)
+            body += variant_conditional("  ", packet, lambda var: var.send_handler)
 
         for packet in sc_packets:
-            body += variant_conditional("    ", packet, lambda var: var.receive_handler)
+            body += variant_conditional("  ", packet, lambda var: var.receive_handler)
 
-        body += "  }\n"
+        body += "}\n"
+
+    # Packets controlled by capabilities
+    for packet in packets:
+        if packet.capability is None:
+            continue
+
+        body += dedent(
+            f"""
+        if (!has_capability("{packet.capability}", capability)) {{
+          log_packet_detailed("{packet.type}: will not send, cap=%s", capability);
+          phandlers->send[{packet.type}].packet = nullptr;
+        }}
+        """
+        )
 
     extro = "}\n"
-    return intro + body + extro
+    return intro + indent(body, "  ") + extro
 
 
 def get_enum_packet(packets: list[Packet]) -> str:

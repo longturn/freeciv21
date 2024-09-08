@@ -132,6 +132,9 @@ Syntax:
      function sends to list of connections instead of just one
      connection, which is the case for the other send functions.
 
+     add-cap(capability): only transmit this packet if the given capability is
+     available at runtime.
+
      cs: a packet which is sent from the client to the server
 
      sc: a packet which is sent from the server to the client
