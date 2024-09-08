@@ -3765,9 +3765,9 @@ static bool unit_bombard(struct unit *punit, struct tile *ptile,
   for (auto player_to_notify : players_to_notify) {
     notify_player(
         player_to_notify, ptile, E_UNIT_BOMB_DEF, ftc_server,
-        /* TRANS: Your units in [tile] have been bombarded by the French
+        /* TRANS: Your units at [tile] have been bombarded by the French
            Bomber.*/
-        _("Your units in %s were bombarded by a %s %s %s [id:%d]."),
+        _("Your units at %s were bombarded by a %s %s %s [id:%d]."),
         tile_link(ptile), nation_adjective_for_player(pplayer),
         unit_veteran_level_string(punit), unit_name_translation(punit),
         punit->id);
