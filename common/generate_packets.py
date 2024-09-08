@@ -615,7 +615,7 @@ class Variant:
             def f(cap):
                 return f'has_capability("{cap}", capability)'
 
-            t = list(map(lambda x: f(x), self.poscaps)) + list(
+            t = list(map(f, self.poscaps)) + list(
                 map(lambda x: "!" + f(x), self.negcaps)
             )
             self.condition = " && ".join(t)
