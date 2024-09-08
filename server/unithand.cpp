@@ -3765,19 +3765,20 @@ static bool unit_bombard(struct unit *punit, struct tile *ptile,
   for (auto player_to_notify : players_to_notify) {
     notify_player(
         player_to_notify, ptile, E_UNIT_BOMB_DEF, ftc_server,
-        /* TRANS: Your units at [tile] have been bombarded by the French
-           Bomber.*/
+        /* TRANS: Your units at (x, y) have been bombarded by the French
+           green Bomber [id:123].*/
         _("Your units at %s were bombarded by a %s %s %s [id:%d]."),
         tile_link(ptile), nation_adjective_for_player(pplayer),
         unit_veteran_level_string(punit), unit_name_translation(punit),
         punit->id);
   }
   // Notify the player that bombarded
-  notify_player(pplayer, ptile, E_UNIT_BOMB_ATT, ftc_server,
-                /* TRANS: Your Bomber bombarded [coords?].*/
-                _("Your %s %s [id:%d] bombarded the units at %s."),
-                unit_veteran_level_string(punit),
-                unit_name_translation(punit), punit->id, tile_link(ptile));
+  notify_player(
+      pplayer, ptile, E_UNIT_BOMB_ATT, ftc_server,
+      /* TRANS: Your green Bomber [id:123] bombarded the units at (x, y).*/
+      _("Your %s %s [id:%d] bombarded the units at %s."),
+      unit_veteran_level_string(punit), unit_name_translation(punit),
+      punit->id, tile_link(ptile));
 
   unit_did_action(punit);
   unit_forget_last_activity(punit);
