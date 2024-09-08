@@ -33,8 +33,8 @@ These are the general steps to prepare and finalize a release:
    https://github.com/microsoft/vcpkg/releases. Commit and push a PR. Ensure all of the CI/CD Action runners
    complete successfully.
 #. If the new release is a change from ``alpha`` to ``beta`` or ``release candidate`` series, the
-   :file:`dist/snapcraft.yaml.in` file needs an update. Change the ``channel`` flag -- ``edge`` for Alpha,
-   ``beta`` for Beta and ``candidate`` for the RC's
+   :file:`.github/workflows/release.yaml` file needs an update. In the ``snapcraft`` section, change the
+   ``release`` flag -- ``edge`` for Alpha, ``beta`` for Beta and ``candidate`` for the RC's.
 #. When it is time, the release manager will finalize the release notes and ask for an editorial review in the
    ``#releases-project`` channel. Updates are made as per review.
 #. If the release will be the :strong:`first release candidate` towards a stable release, the release manager
@@ -47,7 +47,8 @@ These are the general steps to prepare and finalize a release:
       ``v[major version].[minor version]-dev.0`` with the version of the :strong:`next stable release`, then
       open a PR for this change to ``master``. This way, development builds from ``master`` will immediately
       use the version number of the next stable.
-   #. Update :file:`dist/snapcraft.yaml.in` to change the ``channel`` tag to ``stable``.
+   #. Update :file:`.github/workflows/release.yaml`. In the ``snapcraft`` section, change the ``release``
+      flag to ``stable``.
 
 #. If the release is a :strong:`release candidate` for a :strong:`stable release`, the release manager will
    make sure that the :guilabel:`Target` branch in the release draft is set to ``stable``.
