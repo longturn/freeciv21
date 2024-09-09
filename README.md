@@ -19,9 +19,10 @@ Freeciv21 is a free open source turn-based empire-building 4x strategy game, in 
 <p>The code is maintained by the team over at <a href="https://longturn.net/">Longturn.net</a> and is based on the QT framework. The game supports both hex and square tiles and is easily modified to create custom rules.
 <br clear="left"/></p>
 
-Get started by reviewing our [about page](https://longturn.readthedocs.io/en/latest/Getting/about.html). We welcome pull requests, bug reports and simple suggestions! Get in touch on [Discord](https://discord.gg/98krqGm). The #General channel is a great place to start.
-
+Get started by reviewing our [about page](https://longturn.readthedocs.io/en/latest/Getting/about.html) and get in touch on [Discord](https://discord.gg/98krqGm). The #General channel is a great place to start.
 The documentation is found on our [documentation website](https://longturn.readthedocs.io/).
+
+We welcome pull requests, bug reports and simple suggestions! Check out our [contributing docs](https://longturn.readthedocs.io/en/latest/Contributing/index.html) or talk to us on Discord.
 
 Installation
 ------------
