@@ -96,8 +96,10 @@ jobs:
             libsqlite3-dev \
             libsdl2-mixer-dev
       - name: Debug
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
         run: |
-          cat ${{ secrets.STORE_LOGIN }}
+          env
       - name: Configure
         run: |
           mkdir -p build/snap/local
