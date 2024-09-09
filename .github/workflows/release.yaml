@@ -97,7 +97,7 @@ jobs:
             libsdl2-mixer-dev
       - name: Debug
         env:
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.S_LOGIN }}
         run: |
           env
       - name: Configure
