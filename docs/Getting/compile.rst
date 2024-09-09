@@ -164,6 +164,7 @@ following commands:
   $ sudo apt install git \
      cmake \
      ninja-build \
+     g++ \
      python3 \
      qtbase5-dev \
      libqt5svg5-dev \
@@ -173,8 +174,9 @@ following commands:
      libsdl2-mixer-dev \
      libunwind-dev \
      libdw-dev \
+     gettext \
      python3-sphinx \
-     clang-format-11
+     clang-format
 
 
 At this point, follow the steps in `Obtaining the Source Code`_ section below.
