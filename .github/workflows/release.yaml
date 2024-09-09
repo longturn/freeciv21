@@ -97,11 +97,6 @@ jobs:
             liblua5.3-dev \
             libsqlite3-dev \
             libsdl2-mixer-dev
-      - name: Debug
-        env:
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.JW_SECRET2 }}
-        run: |
-          echo "$JW_SECRET2"
       - name: Configure
         run: |
           mkdir -p build/snap/local
