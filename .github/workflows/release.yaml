@@ -15,8 +15,6 @@ jobs:
       - # Make sure there are no unstaged changes
         # Was reporting changes to eol=crlf files in .gitattributes
         run: git checkout -- .
-      - run: git status
-      - run: git stash
       - run: git rev-parse --short=5 HEAD > cmake/AutoRevision.txt
       - run: git describe --tags `git rev-list --tags --max-count=1` >> cmake/AutoRevision.txt
       - run: cat cmake/AutoRevision.txt
@@ -28,8 +26,12 @@ jobs:
           branch=$(git branch -r --contains HEAD --format '%(refname:strip=3)')
           echo Target branch is $branch
           echo branch=$branch >> $GITHUB_OUTPUT
+      - name: Problem file cleanup
+        # We have this problematic file that we need to remove
+        run: |
+          rm dist/freeciv21-server.cmd
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v7
         with:
           base: ${{ steps.branch.outputs.branch }}
           commit-message: "Release update of AutoRevision.txt"
