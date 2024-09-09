@@ -15,6 +15,8 @@ jobs:
       - # Make sure there are no unstaged changes
         # Was reporting changes to eol=crlf files in .gitattributes
         run: git checkout -- .
+      - run: git status
+      - run: git stash
       - run: git rev-parse --short=5 HEAD > cmake/AutoRevision.txt
       - run: git describe --tags `git rev-list --tags --max-count=1` >> cmake/AutoRevision.txt
       - run: cat cmake/AutoRevision.txt
