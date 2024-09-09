@@ -101,7 +101,7 @@ jobs:
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.JW_SECRET }}
         run: |
-          env
+          echo "$JW_SECRET"
       - name: Configure
         run: |
           mkdir -p build/snap/local
