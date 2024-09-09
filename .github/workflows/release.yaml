@@ -95,6 +95,9 @@ jobs:
             liblua5.3-dev \
             libsqlite3-dev \
             libsdl2-mixer-dev
+      - name: Debug
+        run: |
+          cat ${{ secrets.STORE_LOGIN }}
       - name: Configure
         run: |
           mkdir -p build/snap/local
