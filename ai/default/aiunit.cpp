@@ -641,7 +641,8 @@ static void dai_military_bodyguard(struct ai_type *ait,
       int unit_mv_rate = unit_move_rate(punit);
       fc_assert_ret_msg(unit_mv_rate, "div by zero");
       if (me2goal < me2them
-          || (me2goal / unit_mv_rate < them2goal / unit_move_rate(aunit)
+          || (me2goal / unit_mv_rate
+                  < them2goal / std::min(1, unit_move_rate(aunit))
               && me2goal / unit_mv_rate < me2them / unit_mv_rate
               && unit_mv_rate > unit_move_rate(aunit))) {
         ptile = aunit->goto_tile;
@@ -794,7 +795,7 @@ int look_for_charge(struct ai_type *ait, struct player *pplayer,
         continue;
       }
       // Reduce want based on move cost.
-      def >>= move_cost / (2 * unit_move_rate(punit));
+      def >>= move_cost / (2 * std::min(1, unit_move_rate(punit)));
       if (def > best_def && ai_fuzzy(pplayer, true)) {
         *acity = pcity;
         *aunit = nullptr;
