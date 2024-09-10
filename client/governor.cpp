@@ -20,6 +20,7 @@
 #include "dataio.h"
 #include "featured_text.h"
 #include "nation.h"
+#include "player.h"
 #include "specialist.h"
 // client
 #include "attribute.h"
@@ -51,11 +52,6 @@
 #include "speclist.h"
 
 static struct preset_list *preset_list = nullptr;
-
-static void city_remove(int city_id)
-{
-  attr_city_set(ATTR_CITY_CMA_PARAMETER, city_id, 0, nullptr);
-}
 
 struct cma_preset {
   char *descr;
@@ -119,19 +115,19 @@ governor *governor::i()
 // register new event and run it if hot
 void governor::add_city_changed(struct city *pcity)
 {
-  scity_changed.insert(pcity);
+  scity_changed.insert(pcity->id);
   run();
 };
 
 void governor::add_city_new(struct city *pcity)
 {
-  scity_changed.insert(pcity);
+  scity_changed.insert(pcity->id);
   run();
 };
 
 void governor::add_city_remove(struct city *pcity)
 {
-  scity_remove.insert(pcity);
+  scity_remove.insert(pcity->id);
   run();
 };
 
@@ -142,34 +138,23 @@ void governor::run()
     return;
   }
 
-  for (auto *pcity : qAsConst(scity_changed)) {
-    // dont check city if its not ours, asan says
-    // city was removed, but city still points to something
-    // uncomment and check whats happening when city is conquered
-    bool dontCont = false;
-    city_list_iterate(client.conn.playing->cities, wtf)
-    {
-      if (wtf == pcity) {
-        dontCont = true;
-      }
-    }
-    city_list_iterate_end;
+  // Remove deleted cities
+  for (auto id : scity_remove) {
+    attr_city_set(ATTR_CITY_CMAFE_PARAMETER, id, 0, nullptr);
+    attr_city_set(ATTR_CITY_CMA_PARAMETER, id, 0, nullptr);
+  }
+  scity_remove.clear();
 
-    if (!dontCont) {
-      continue;
-    }
-    if (pcity) {
-      gimb->handle_city(pcity);
+  // Handle changed cities
+  for (auto id : scity_changed) {
+    auto city = player_city_by_number(client.conn.playing, id);
+    // Might have been removed
+    if (city) {
+      gimb->handle_city(city);
     }
   }
   scity_changed.clear();
-  for (auto *pcity : qAsConst(scity_remove)) {
-    if (pcity) {
-      attr_city_set(ATTR_CITY_CMAFE_PARAMETER, pcity->id, 0, nullptr);
-      city_remove(pcity->id);
-    }
-  }
-  scity_remove.clear();
+
   update_turn_done_button_state();
 }
 
