@@ -11,7 +11,8 @@
 #pragma once
 
 #include "attribute.h"
-#include <QSet>
+
+#include <set>
 
 class governor {
 public:
@@ -33,8 +34,8 @@ private:
   governor() { superhot = 1; };
   void run();
   static governor *m_instance;
-  QSet<struct city *> scity_changed;
-  QSet<struct city *> scity_remove;
+  std::set<int> scity_changed;
+  std::set<int> scity_remove;
   int superhot;
 };
 
