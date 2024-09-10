@@ -538,6 +538,7 @@ void science_report::current_tech_changed(int changed_index)
   if (researching_combo->hasFocus()) {
     if (can_client_issue_orders()) {
       dsend_packet_player_research(&client.conn, qvar.toInt());
+      dsend_packet_player_tech_goal(&client.conn, qvar.toInt());
     }
   }
 }
