@@ -1133,6 +1133,29 @@ const char *unit_tile_link(const struct unit *punit)
 }
 
 /**
+ * Get a text of a unit's numerical veteran level and the bonus percentage it
+ * confers. N.B.: The returned string is static, so every call to this
+ * function overwrites the previous.
+ * @param punit The unit to display the veteran level and bonus of
+ * @return The veteran level and bonus in string format
+ */
+const char *unit_veteran_level_and_bonus(const unit *punit)
+{
+  static char buf[MAX_LEN_LINK];
+
+  if (!punit) {
+    buf[0] = '\0'; /* If no unit, return empty string */
+    return buf;
+  }
+
+  const veteran_level *vlevel =
+      utype_veteran_level(unit_type_get(punit), punit->veteran);
+  snprintf(buf, sizeof(buf), _("v%d %d%%"), punit->veteran,
+           vlevel->power_fact);
+  return buf;
+}
+
+/**
    Get a text of a unit's vet level.
    N.B.: The returned string is static, so every call to this function
    overwrites the previous.

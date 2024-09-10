@@ -3572,10 +3572,12 @@ static void wakeup_neighbor_sentries(struct unit *punit)
         send_unit_info(nullptr, penemy);
         notify_player(
             unit_owner(penemy), unit_tile(punit), E_UNIT_ORDERS, ftc_server,
-            _("Your sentried %s spotted  a %s v%d %s [id:%d hp:%d] at %s "),
+            _("Your sentried %s spotted a %s %s %s [id:%d, %s, hp:%d] at "
+              "%s."),
             unit_link(penemy),
-            nation_adjective_for_player(unit_owner(punit)), punit->veteran,
-            unit_name_translation(punit), punit->id, punit->hp,
+            nation_adjective_for_player(unit_owner(punit)),
+            unit_veteran_level_string(punit), unit_name_translation(punit),
+            punit->id, unit_veteran_level_and_bonus(punit), punit->hp,
             tile_link(punit->tile));
       }
     }

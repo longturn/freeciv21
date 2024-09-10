@@ -234,6 +234,7 @@ const char *tile_link(const struct tile *ptile);
 const char *unit_link(const struct unit *punit);
 const char *unit_tile_link(const struct unit *punit);
 
+const char *unit_veteran_level_and_bonus(const struct unit *punit);
 const char *unit_veteran_level_string(const struct unit *punit);
 const char *unit_achieved_rank_string(const struct unit *punit);
 const char *unit_tired_attack_string(const struct unit *punit);
