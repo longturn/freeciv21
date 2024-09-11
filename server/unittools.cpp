@@ -2566,7 +2566,7 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
           PL_("Another unit was eliminated by your attacking %s!",
               "Another %2$d units were eliminated by your attacking %1$s!",
               unitcount - 1),
-          punit_link, unitcount - 1);
+          pkiller_link, unitcount - 1);
     }
 
     /* inform the owners: this only tells about owned units that were killed.
