@@ -995,9 +995,6 @@ void choose_tech(struct research *research, Tech_type_id tech)
       tech_researched(research);
     }
   } else {
-    if (research->researching == tech) {
-      return;
-    }
     if (research_invention_state(research, tech) != TECH_PREREQS_KNOWN) {
       // Can't research this.
       return;
