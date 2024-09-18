@@ -1183,3 +1183,25 @@ Tech_type_id get_tech_on_reqtree(struct reqtree *tree, int x, int y)
   }
   return A_NONE;
 }
+
+/**
+   Find the center of a node, identified by tech id in a given reqtree
+   and return true if the node was found; false otherwise. If a node
+   is found, x and y are filled with the center of the node in
+   reqtrees coordinate system.
+ */
+bool get_position_on_reqtree(struct reqtree *tree, Tech_type_id tech, int *x,
+                             int *y)
+{
+  for (int i = 0; i < tree->num_nodes; i++) {
+    struct tree_node *node = tree->nodes[i];
+
+    if (tech == node->tech) {
+      *x = node->node_x + node->node_width / 2;
+      *y = node->node_y + node->node_height / 2;
+      return true;
+    }
+  }
+
+  return false;
+}

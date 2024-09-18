@@ -20,12 +20,16 @@
 #include <QPainter>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QStringLiteral>
 #include <QTimer>
+#include <QToolButton>
 #include <QToolTip>
 
 // common
+#include "fc_types.h"
 #include "game.h"
 #include "government.h"
+#include "icons.h"
 #include "research.h"
 
 // client
@@ -105,6 +109,16 @@ void research_diagram::reset()
   pcanvas = new QPixmap(width, height);
   pcanvas->fill(Qt::transparent);
   resize(width, height);
+}
+
+/**
+   Find the center of a node, identified by tech id, and return true
+   if the node was found; false otherwise. If a node is found, x and y
+   are filled with the center of the node.
+ */
+bool research_diagram::get_tech_position(Tech_type_id id, int *x, int *y)
+{
+  return get_position_on_reqtree(req, id, x, y);
 }
 
 /**
@@ -274,25 +288,47 @@ science_report::science_report() : QWidget()
   researching_combo = new QComboBox();
   auto sci_layout = new QGridLayout();
   res_diag = new research_diagram();
-  auto scroll = new QScrollArea();
+  scroll = new QScrollArea();
   refresh_but = new QPushButton();
   refresh_but->setText(_("Refresh"));
   refresh_but->setToolTip(_("Press to refresh currently researched "
                             "technology calculation again."));
   refresh_but->setDisabled(true);
 
+  locate_researching_but = new QToolButton();
+  locate_researching_but->setIcon(
+      fcIcons::instance()->getIcon(QStringLiteral("crosshair")));
+  locate_researching_but->setIconSize(
+      QSize(locate_researching_but->fontInfo().pixelSize(),
+            locate_researching_but->fontInfo().pixelSize()));
+  locate_researching_but->setToolTip(
+      _("Press to locate currently researched "
+        "technology in tree."));
+  locate_researching_but->setDisabled(true);
+
+  locate_goal_but = new QToolButton();
+  locate_goal_but->setIcon(
+      fcIcons::instance()->getIcon(QStringLiteral("crosshair")));
+  locate_goal_but->setIconSize(
+      QSize(locate_researching_but->fontInfo().pixelSize(),
+            locate_researching_but->fontInfo().pixelSize()));
+  locate_goal_but->setToolTip(_("Press to locate technology goal in tree."));
+  locate_goal_but->setDisabled(true);
+
   progress->setTextVisible(true);
   progress_label->setSizePolicy(size_fixed_policy);
-  sci_layout->addWidget(progress_label, 0, 0, 1, 8);
+  sci_layout->addWidget(progress_label, 0, 0, 1, 9);
   sci_layout->addWidget(researching_combo, 1, 0, 1, 3);
-  sci_layout->addWidget(refresh_but, 1, 3, 1, 1);
   researching_combo->setSizePolicy(size_fixed_policy);
+  sci_layout->addWidget(locate_researching_but, 1, 3, 1, 1);
+  sci_layout->addWidget(refresh_but, 1, 4, 1, 1);
   refresh_but->setSizePolicy(size_fixed_policy);
-  sci_layout->addWidget(progress, 1, 5, 1, 4);
+  sci_layout->addWidget(progress, 1, 6, 1, 4);
   progress->setSizePolicy(size_fixed_policy);
   sci_layout->addWidget(goal_combo, 2, 0, 1, 3);
   goal_combo->setSizePolicy(size_fixed_policy);
-  sci_layout->addWidget(info_label, 2, 5, 1, 4);
+  sci_layout->addWidget(locate_goal_but, 2, 3, 1, 1);
+  sci_layout->addWidget(info_label, 2, 6, 1, 4);
   info_label->setSizePolicy(size_fixed_policy);
 
   size = res_diag->size();
@@ -309,6 +345,12 @@ science_report::science_report() : QWidget()
 
   QObject::connect(refresh_but, &QAbstractButton::pressed, this,
                    &science_report::push_research);
+
+  QObject::connect(locate_goal_but, &QAbstractButton::pressed, this,
+                   &science_report::locate_goal);
+
+  QObject::connect(locate_researching_but, &QAbstractButton::pressed, this,
+                   &science_report::locate_researching);
 
   QObject::connect(goal_combo,
                    QOverload<int>::of(&QComboBox::currentIndexChanged), this,
@@ -518,6 +560,10 @@ void science_report::update_report()
     refresh_but->setDisabled(false);
   }
 
+  // Update locate buttons
+  locate_researching_but->setDisabled(research->researching == A_UNSET);
+  locate_goal_but->setDisabled(research->tech_goal == A_UNSET);
+
   update_reqtree();
 }
 
@@ -525,6 +571,17 @@ void science_report::update_report()
    Calls update for research_diagram
  */
 void science_report::update_reqtree() { res_diag->update_reqtree(); }
+
+/**
+   Scroll the science tree to display the technology identified by tech id.
+ */
+void science_report::scroll_reqtree_to_tech(Tech_type_id id)
+{
+  int x, y;
+  if (res_diag->get_tech_position(id, &x, &y)) {
+    scroll->ensureVisible(x, y, scroll->width() / 2, scroll->height() / 2);
+  }
+}
 
 /**
    Slot used when combo box with current tech changes
@@ -568,6 +625,33 @@ void science_report::push_research()
     auto research = research_get(client_player());
     dsend_packet_player_research(&client.conn, research->researching);
   }
+}
+
+/**
+   Locate technology goal in tree and scroll so that it is visible.
+*/
+void science_report::locate_goal()
+{
+  auto research = research_get(client_player());
+  if (!research) {
+    return;
+  }
+
+  scroll_reqtree_to_tech(research->tech_goal);
+}
+
+/**
+   Locate the currently researched technology in tree and scroll so that it
+   is visible.
+*/
+void science_report::locate_researching()
+{
+  auto research = research_get(client_player());
+  if (!research) {
+    return;
+  }
+
+  scroll_reqtree_to_tech(research->researching);
 }
 
 /**
