@@ -24,6 +24,7 @@ class QPaintEvent;
 class QScrollArea;
 class progress_bar;
 class QPushButton;
+class QToolButton;
 
 /****************************************************************************
   Custom widget representing research diagram in science_report
@@ -37,6 +38,7 @@ public:
   void update_reqtree();
   void reset();
   QSize size();
+  bool get_tech_position(Tech_type_id id, int *x, int *y);
 private slots:
   void show_tooltip();
 
@@ -71,9 +73,12 @@ struct qlist_item {
 class science_report : public QWidget {
   Q_OBJECT
 
+  QScrollArea *scroll;
   QComboBox *goal_combo;
   QComboBox *researching_combo;
   QPushButton *refresh_but;
+  QToolButton *locate_researching_but;
+  QToolButton *locate_goal_but;
   progress_bar *progress;
   QLabel *info_label;
   QLabel *progress_label;
@@ -92,11 +97,14 @@ public:
 private:
   void update_reqtree();
   int index{0};
+  void scroll_reqtree_to_tech(Tech_type_id id);
 
 private slots:
   void current_tech_changed(int index);
   void goal_tech_changed(int index);
   void push_research();
+  void locate_researching();
+  void locate_goal();
 };
 
 void popdown_science_report();

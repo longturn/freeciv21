@@ -97,3 +97,6 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
                                         int w, int h);
 
 Tech_type_id get_tech_on_reqtree(struct reqtree *tree, int x, int y);
+
+bool get_position_on_reqtree(struct reqtree *tree, Tech_type_id tech, int *x,
+                             int *y);
