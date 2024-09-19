@@ -369,7 +369,7 @@ you instruct your scientists which technologies to research. When you click the 
 
 
 :numref:`Research Tree` below shows a sample of a :guilabel:`Research Tree`. In this picture the player is
-researching :advance:`Sanitation`.
+researching :advance:`Code of Laws`.
 
 .. _Research Tree:
 .. figure:: /_static/images/gui-elements/research-tree.png
@@ -387,6 +387,11 @@ On the :guilabel:`Research Tree`, the top left drop down box is where you can pi
 technology advance you want your scientists to concentrate (:guilabel:`Current Research`). The bottom left
 drop down box is where you can set a future target (:guilabel:`Research Target`). The game will work through
 the list of technologies as turns progress in order of dependency.
+
+To the right of the :guilabel:`Current Research` and :guilabel:`Research Target` drop down boxes, you will
+find a small button with a crosshair icon.
+Pressing one of these buttons will scroll the corresponding technology in the :guilabel:`Research Tree` into
+view.
 
 To the right of the :guilabel:`Current Research` drop down box, you will find a :guilabel:`Refresh` button. In
 some circumstances a player can find that the current researched bulbs is greater than the bulbs needed to
