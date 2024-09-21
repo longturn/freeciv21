@@ -638,14 +638,14 @@ static void dai_military_bodyguard(struct ai_type *ait,
       int me2them = real_map_distance(unit_tile(punit), unit_tile(aunit));
       int me2goal = real_map_distance(unit_tile(punit), aunit->goto_tile);
       int them2goal = real_map_distance(unit_tile(aunit), aunit->goto_tile);
-      int unit_mv_rate = unit_move_rate(punit);
-      fc_assert_ret_msg(unit_mv_rate, "div by zero");
-      fc_assert_ret_msg(punit, "div by zero");
-      fc_assert_ret_msg(aunit, "div by zero");
+      int punit_mv_rate = unit_move_rate(punit);
+      int aunit_mv_rate = unit_move_rate(aunit);
+      fc_assert_ret_msg(punit_mv_rate, "div by zero");
+      fc_assert_ret_msg(aunit_mv_rate, "div by zero");
       if (me2goal < me2them
-          || (me2goal / unit_mv_rate < them2goal / unit_move_rate(aunit)
-              && me2goal / unit_mv_rate < me2them / unit_mv_rate
-              && unit_mv_rate > unit_move_rate(aunit))) {
+          || (me2goal / punit_mv_rate < them2goal / aunit_mv_rate
+              && me2goal / punit_mv_rate < me2them / punit_mv_rate
+              && punit_mv_rate > aunit_mv_rate)) {
         ptile = aunit->goto_tile;
       } else {
         ptile = unit_tile(aunit);
