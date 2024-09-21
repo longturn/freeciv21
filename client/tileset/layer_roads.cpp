@@ -247,6 +247,8 @@ bool should_draw(const struct tileset *t, const extra_type *extra,
  * Returns data needed to draw roads on a tile. This is the directions in
  * which roads should be drawn, and whether an "isolated" road should be
  * drawn.
+ *
+ * The returned array is indexed in the tileset *valid* directions.
  */
 std::tuple<std::bitset<DIR8_MAGIC_MAX>, bool>
 road_data(const struct tileset *t, const tile *ptile,
@@ -445,9 +447,8 @@ void layer_roads::fill_all_separate(std::vector<drawn_sprite> &sprs,
 
   // Draw the sprites
   for (int i = 0; i < tileset_num_valid_dirs(tileset()); ++i) {
-    auto dir = tileset_valid_dirs(tileset())[i];
-    if (draw[dir]) {
-      sprs.emplace_back(tileset(), data.sprites[dir]);
+    if (draw[i]) {
+      sprs.emplace_back(tileset(), data.sprites[i]);
     }
   }
 
