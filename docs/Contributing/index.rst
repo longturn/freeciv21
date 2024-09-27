@@ -14,5 +14,6 @@ Freeciv21 project.
   release.rst
   workarounds.rst
   stable-branch.rst
+  game-admin.rst
   style-guide.rst
   :maxdepth: 1

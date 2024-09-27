@@ -34,6 +34,8 @@ Debian variant such as Ubuntu. Instructions for getting all of the tools needed 
 in :doc:`/Getting/compile`. Do not follow the steps to clone the repository (e.g. the :code:`git clone`
 command), that will happen in a bit.
 
+.. _dev-env-github:
+
 GitHub
 ======
 
