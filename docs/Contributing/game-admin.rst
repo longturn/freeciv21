@@ -10,7 +10,7 @@
 Longturn Game Admin Guide
 *************************
 
-Any competent player can act as a game admin. There are a few tools and some knowledge you will need to be successful.
+Any competent player can act as a Game Admin. There are a few tools and some knowledge you will need to be successful.
 
 Tools
 =====
@@ -88,9 +88,8 @@ Setup a New Game
 
 Now that you know the basics of how the game files on the repository work, let us move to the steps to admin a new game.
 
-You must first have been granted game admin rights on the main longturn website. The website uses Django as the back-end,
-so managing game pages on the site is very simple. If you do not have access, please ask on the main Longturn Discord
-server.
+You must first have been granted Game Admin rights on the main longturn website. The website uses Django as the
+back-end, so managing game pages on the site is very simple. If you do not have access, please ask on the main Longturn Discord server.
 
 #. Login at https://longturn.net
 #. On the lower left, click "Admin Site".
@@ -106,12 +105,15 @@ server.
 Notes on the :strong:`game description`:
 
 * Give details as to the type of game you want to play. This is especially important for Team and Experimental games.
-  This is also important if the game is going to be special, such as a Scenario or use a third-party ruleset.
+  This is also important if the game is going to be special, such as a Scenario or use a third-party ruleset. Recall
+  that Experimental games often have rules change mid game to fix bugs or make changes. They are Experimental by nature,
+  so its good to add these kinds of notes to the description.
 * Mention what ruleset will be used or any other special rules for the game.
-* For team games, explain how the teams will be selected/defined up front. For teamless games, potentially mention how
+* Mention winning alliance size and any game ending / announcement rules.
+* For team games, explain how the teams will be selected / defined up front. For teamless games, potentially mention how
   many players are needed for the game to start.
-* Players are very interested in what kind of tileset will be used. Some only play squares, some only hexes. Define the
-  game tileset in the description.
+* Players are very interested in what kind of map topology will be used. Some only play squares, some only hexes. Define
+  the game topology in the description.
 * Establish the length of turns. We have often run turns at 23 hours. However, lately we have been going with 25 hours.
   Either way, make sure to mention it in the game description. If you intend to change the length of the turn at a
   certain point in the game (e.g. for late game make the turns two days -- ``2*23`` or ``2*25``) you will definitely
@@ -153,18 +155,34 @@ When enough players have signed up, you will want to announce it on the game cha
 These are the steps to finalize a game:
 
 #. Go into the admin site on the Longturn server and set a start date at least 7 days into the future and save.
-#. Ask players to confirm participation on the website.
+#. Ask players to confirm participation on the website. The typical confirmation period is 7 days.
 #. Start editing the ``players.serv`` file and push changes up to the repo.
-#. Ask a server admin to setup a test game with the game server and map generator settings to see how things look.
-   :strong:`Note`: Game admins should test locally to check things out before asking a server admin to do it on the main
+#. Ask a Server Admin to setup a test game with the game server and map generator settings to see how things look.
+   :strong:`Note`: Game Admins should test locally to check things out before asking a server admin to do it on the main
    game server.
 #. Based on confirmations, you will finalize the ``players.serv`` file and push any other last minute changes to the
-   game server settings based on test results.
+   game server settings based on test results. The server can not handle a nation name of "random", you will need to be
+   the random nation namer for those players that ask for a random nation.
 #. Go to the admin site and set the port for the game.
-#. Ask a server admin to start the game for you.
+#. Ask a Server Admin to start the game for you.
 #. Announce game start. Ensure first turn is extended.
 
-The last thing a game admin is expected to do, once a game has started, is to keep an eye on the game channel on the
-Discord server. It is the game admin's responsibility to arbitrate complaints or issues between players. Timely response
-is important as you are able given the time zone you live in. Other game and server admins often watch the active game
-channels to provide guidance and assistance as well.
+..note:: Server admins can perform additional actions when starting the game, such as looking at the map or performing
+  edits. For example, it is common to post the size of the largest islands. Since this requires extra work, make sure
+  you talk to the Server Admin beforehand.
+
+
+During the Game
+===============
+
+Once the game has started, the Game Admin is expected to keep an eye on the game channel on the Discord server. It is
+the Game Admin's responsibility to arbitrate complaints or issues between players. Timely response is important as you
+are able given the time zone you live in. Other Game and Server Admins often watch the active game channels to provide guidance and assistance as well.
+
+Ending the Game
+===============
+
+Depending on how you setup the game, players can form alliances or other winning conditions will come true. Players
+typically announce the win on the game channel on Discord. Admins typically offer a 5 day (``5*24``) cooling period to
+allow other players to either reject the win -- keep playing -- or accepting the win -- stop playing. The Server Admin
+can end the game when asked. A player from the winning alliance can grab a screenshot of the final game report and post. Server Admins can also generate an animated ``gif`` file of the map to show the rise and fall of nations as the game progressed.
