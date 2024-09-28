@@ -89,7 +89,8 @@ Setup a New Game
 Now that you know the basics of how the game files on the repository work, let us move to the steps to admin a new game.
 
 You must first have been granted Game Admin rights on the main longturn website. The website uses Django as the
-back-end, so managing game pages on the site is very simple. If you do not have access, please ask on the main Longturn Discord server.
+back-end, so managing game pages on the site is very simple. If you do not have access, please ask on the main Longturn
+Discord server.
 
 #. Login at https://longturn.net
 #. On the lower left, click "Admin Site".
@@ -113,7 +114,7 @@ Notes on the :strong:`game description`:
 * For team games, explain how the teams will be selected / defined up front. For teamless games, potentially mention how
   many players are needed for the game to start.
 * Players are very interested in what kind of map topology will be used. Some only play squares, some only hexes. Define
-  the game topology in the description.
+  the map topology in the description.
 * Establish the length of turns. We have often run turns at 23 hours. However, lately we have been going with 25 hours.
   Either way, make sure to mention it in the game description. If you intend to change the length of the turn at a
   certain point in the game (e.g. for late game make the turns two days -- ``2*23`` or ``2*25``) you will definitely
@@ -177,7 +178,8 @@ During the Game
 
 Once the game has started, the Game Admin is expected to keep an eye on the game channel on the Discord server. It is
 the Game Admin's responsibility to arbitrate complaints or issues between players. Timely response is important as you
-are able given the time zone you live in. Other Game and Server Admins often watch the active game channels to provide guidance and assistance as well.
+are able given the time zone you live in. Other Game and Server Admins often watch the active game channels to provide
+guidance and assistance as well.
 
 Ending the Game
 ===============
@@ -185,4 +187,6 @@ Ending the Game
 Depending on how you setup the game, players can form alliances or other winning conditions will come true. Players
 typically announce the win on the game channel on Discord. Admins typically offer a 5 day (``5*24``) cooling period to
 allow other players to either reject the win -- keep playing -- or accepting the win -- stop playing. The Server Admin
-can end the game when asked. A player from the winning alliance can grab a screenshot of the final game report and post. Server Admins can also generate an animated ``gif`` file of the map to show the rise and fall of nations as the game progressed.
+can end the game when asked. A player from the winning alliance can grab a screenshot of the final game report and post.
+Server Admins can also generate an animated ``gif`` file of the map to show the rise and fall of nations as the game
+progressed.
