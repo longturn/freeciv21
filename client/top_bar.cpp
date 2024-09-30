@@ -617,6 +617,7 @@ void top_bar_units_view()
       return;
     }
     uv = reinterpret_cast<units_view *>(w);
+    uv->update_units();
     queen()->game_tab_widget->setCurrentWidget(uv);
   }
 }
