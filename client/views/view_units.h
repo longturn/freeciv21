@@ -62,6 +62,7 @@ public:
   units_view();
   ~units_view();
   void update_view();
+  void update_units();
   void update_waiting();
   void init();
 

@@ -132,13 +132,23 @@ void units_view::init() { queen()->game_tab_widget->setCurrentIndex(index); }
  */
 void units_view::update_view()
 {
+  QTimer *timer = new QTimer(this);
+  connect(timer, &QTimer::timeout, this, &units_view::update_waiting);
+  timer->start(1000);
+
+  update_units();
+  update_waiting();
+}
+
+/**
+   Updates the units table
+*/
+void units_view::update_units()
+{
   // used to set the height of the unit sprite
   QFont f = QApplication::font();
   QFontMetrics fm(f);
   int h = fm.height() + 24;
-
-  ui.units_table->setRowCount(0);
-  ui.units_table->clearContents();
 
   int entries_used = 0; // Position in the units array
   struct unit_view_entry unit_entries[U_LAST];
@@ -152,14 +162,43 @@ void units_view::update_view()
   int total_gold = 0;   // Sum of gold upkeep
   int total_shield = 0; // Sum of shield upkeep
   int total_food = 0;   // Sum of food upkeep
-  int max_row = 0;      // Max rows in the table widget
+  int max_row = ui.units_table->rowCount(); // Max rows in the table widget
+
+  // Remove "footer" rows from units table
+  if (max_row >= 1) {
+    max_row--;
+    ui.units_table->removeRow(max_row);
+  }
+
+  // Keep tab of all unit types currently in the table. This is used to
+  // update already existing rows in the table. After updating a unit type
+  // the corresponding entry is removed from the map. Once all unit types,
+  // used by the player, have been processed the remaining unit types can be
+  // removed from the units table.
+  std::map<cid, QTableWidgetItem *> unittypes_in_table;
+  for (int r = 0; r < ui.units_table->rowCount(); r++) {
+    QTableWidgetItem *item = ui.units_table->item(r, 0);
+
+    bool ok = false;
+    cid key = (cid) item->data(Qt::UserRole).toInt(&ok);
+    fc_assert_action(ok == true, continue);
+    unittypes_in_table[key] = ui.units_table->item(r, 0);
+  }
 
   for (int i = 0; i < entries_used; i++) {
     struct unit_view_entry *pentry = unit_entries + i;
     const struct unit_type *putype = pentry->type;
     cid id = cid_encode_unit(putype);
 
-    ui.units_table->insertRow(max_row);
+    auto existing_row_for_unittype = unittypes_in_table.find(id);
+    bool new_row = existing_row_for_unittype == unittypes_in_table.end();
+    int current_row = max_row;
+    if (new_row) {
+      ui.units_table->insertRow(max_row);
+    } else {
+      current_row = existing_row_for_unittype->second->row();
+    }
+
     for (int j = 0; j < 8; j++) {
       QTableWidgetItem *item = new QTableWidgetItem;
       switch (j) {
@@ -172,7 +211,7 @@ void units_view::update_view()
           QLabel *lbl = new QLabel;
           lbl->setPixmap(QPixmap(sprite));
           lbl->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
-          ui.units_table->setCellWidget(i, j, lbl);
+          ui.units_table->setCellWidget(current_row, j, lbl);
         }
         item->setData(Qt::UserRole, id);
         break;
@@ -234,9 +273,20 @@ void units_view::update_view()
         total_gold += pentry->gold_cost;
         break;
       }
-      ui.units_table->setItem(max_row, j, item);
+      ui.units_table->setItem(current_row, j, item);
     }
-    max_row++;
+
+    if (new_row) {
+      max_row++;
+    } else {
+      unittypes_in_table.erase(id);
+    }
+  }
+
+  // Remove rows no longer needed in the table.
+  for (const auto &[_, value] : unittypes_in_table) {
+    ui.units_table->removeRow(value->row());
+    max_row--;
   }
 
   // Add a "footer" to the table showing the totals.
@@ -291,12 +341,6 @@ void units_view::update_view()
     ui.units_table->verticalHeader()->setSectionResizeMode(
         QHeaderView::ResizeToContents);
   }
-
-  QTimer *timer = new QTimer(this);
-  connect(timer, &QTimer::timeout, this, &units_view::update_waiting);
-  timer->start(1000);
-
-  update_waiting();
 }
 
 /**
