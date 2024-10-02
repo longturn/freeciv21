@@ -341,6 +341,8 @@ void units_view::update_units()
     ui.units_table->verticalHeader()->setSectionResizeMode(
         QHeaderView::ResizeToContents);
   }
+
+  update_buttons(ui.units_table->selectionModel()->selection());
 }
 
 /**
@@ -454,6 +456,15 @@ void units_view::update_waiting()
  */
 void units_view::selection_changed(const QItemSelection &sl,
                                    const QItemSelection &ds)
+{
+  update_buttons(sl);
+}
+
+/*
+  Updates the buttons according to the item selection sl in the units
+  table.
+*/
+void units_view::update_buttons(const QItemSelection &sl)
 {
   QTableWidgetItem *itm;
   QVariant qvar;
