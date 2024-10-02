@@ -64,6 +64,7 @@ public:
   void update_view();
   void update_units();
   void update_waiting();
+  void update_buttons(const QItemSelection &sl);
   void init();
 
 private:
