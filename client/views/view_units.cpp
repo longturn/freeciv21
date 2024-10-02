@@ -460,7 +460,7 @@ void units_view::selection_changed(const QItemSelection &sl,
   update_buttons(sl);
 }
 
-/*
+/**
   Updates the buttons according to the item selection sl in the units
   table.
 */
