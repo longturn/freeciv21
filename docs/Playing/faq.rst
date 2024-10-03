@@ -2,6 +2,7 @@
 .. SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 .. SPDX-FileCopyrightText: louis94 <m_louis30@yahoo.com>
+.. SPDX-FileCopyrightText: Tobias Rehbein <tobias.rehbein@web.de>
 
 .. Custom Interpretive Text Roles for longturn.net/Freeciv21
 .. role:: unit
@@ -245,9 +246,42 @@ row, then click :guilabel:`Cancel Treaty` at the top. This drops you from :empha
 See the in-game help on :title-reference:`Diplomacy` for more detail.
 
 .. note::
-  The ability to arbitrarily leave :emphasis:`peace` and go to :emphasis:`war` is also heavily dependent on
-  the form of government your nation is currently ruled by. See the in-game help on
-  :title-reference:`Government` for more details.
+  See also `Why can I not declare war on another player?`_ below.
+
+
+Why can I not declare war on another player?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The ability to arbitrarily leave :emphasis:`peace` and go to :emphasis:`war` is also heavily dependent on the
+form of government your nation is currently ruled by. See the in-game help on :title-reference:`Government`
+for more details.
+
+In an effort to prevent unintentional diplomatic incidents in games with complex :emphasis:`alliance` systems,
+declaring :emphasis:`war` will be prevented if it would break an existing :emphasis:`alliance` between you, or
+one of your teammates in team games, and the other player. In this case, a message will tell you which
+:emphasis:`alliances` would be broken. If you really want to declare :emphasis:`war`, you will have to make
+the informed decision to explicitly cancel these :emphasis:`alliances` before you can declare :emphasis:`war`.
+
+.. note::
+  If the declaration of :emphasis:`war` would break an :emphasis:`alliance` of a teammate who is an
+  :emphasis:`AI`, the action will succeed, as you can't coordinate war preparations with an :emphasis:`AI`
+  like you can with a human player. For the same reason, :emphasis:`AI` teammates can always break your
+  :emphasis:`alliances`.
+
+Why does a cease-fire not expire?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In an effort to prevent unintentional diplomatic incidents in games with complex :emphasis:`alliance` systems,
+:emphasis:`cease-fires` are automatically extended if returning to :emphasis:`war` would break an existing
+alliance with another player. A message will inform you which :emphasis:`alliances` would be broken. If you
+wish to deliberately return to :emphasis:`war`, you must make the informed decision to break these
+:emphasis:`alliances`. If the :emphasis:`alliance` that is preventing the cease-fire from ending is canceled,
+it will end immediately on the next turn. Keep this in mind.
+
+.. note::
+  If one of the parties whose :emphasis:`cease-fire` runs out is an :emphasis:`AI`, the :emphasis:`cease-fire`
+  will expire, as the :emphasis:`AI` does not know how to cancel :emphasis:`alliances` to let the
+  :emphasis:`cease-fire` run out.
 
 How do I do diplomatic meetings?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
