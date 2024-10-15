@@ -379,10 +379,8 @@ void pageGame::updateSidebarTooltips()
     fc_snprintf(buf, sizeof(buf), _("Income: %d    Total Costs: %d"), tax,
                 building_total + unit_total);
     sw_economy->setToolTip(buf);
-    if (player_primary_capital(client_player())) {
-      auto cities = city_list_size(client_player()->cities);
-      sw_cities->setToolTip(QString(_("Cities: %1 total")).arg(cities));
-    }
+    sw_cities->setToolTip(QString(_("Cities: %1 total"))
+                              .arg(city_list_size(client_player()->cities)));
     sw_science->show();
     sw_economy->show();
   } else {
