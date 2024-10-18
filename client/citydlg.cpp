@@ -2738,6 +2738,13 @@ bool production_widget::eventFilter(QObject *obj, QEvent *ev)
 
     if (!pw_rect.contains(QCursor::pos())) {
       close();
+      return true;
+    }
+  } else if (ev->type() == QEvent::KeyRelease) {
+    auto key_event = dynamic_cast<QKeyEvent *>(ev);
+    if (key_event && key_event->key() == Qt::Key_Escape) {
+      close();
+      return true;
     }
   }
 
