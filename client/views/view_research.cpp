@@ -670,7 +670,7 @@ void real_science_report_dialog_update(void *unused)
     struct research *research = research_get(client_player());
     if (research->researching == A_UNSET) {
       str = QString(_("none"));
-    } else if (research->client.researching_cost != 0) {
+    } else {
       str =
           research_advance_name_translation(research, research->researching);
       str += QStringLiteral("\n");
@@ -697,8 +697,6 @@ void real_science_report_dialog_update(void *unused)
         && research->techs_researched < game.control.num_tech_types) {
       blk = true;
     }
-  } else {
-    str = QStringLiteral(" ");
   }
 
   if (blk) {

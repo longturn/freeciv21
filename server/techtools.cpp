@@ -433,9 +433,6 @@ void found_new_tech(struct research *presearch, Tech_type_id tech_found,
     research_update(presearch);
   }
 
-  // Inform players about their new tech.
-  send_research_info(presearch, nullptr);
-
   if (was_first) {
     /* Inform all players about new global advances to give them a
      * chance for obsolete buildings. */
@@ -576,6 +573,9 @@ void found_new_tech(struct research *presearch, Tech_type_id tech_found,
   if (!saving_bulbs && presearch->bulbs_researched > 0) {
     presearch->bulbs_researched = 0;
   }
+
+  // Inform players about their new tech.
+  send_research_info(presearch, nullptr);
 
   if (bonus_tech_hack) {
     Tech_type_id additional_tech;
