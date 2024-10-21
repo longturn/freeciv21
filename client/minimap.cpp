@@ -32,26 +32,10 @@ const auto always_visible_margin = 15;
 /**
    Constructor for minimap
  */
-minimap_view::minimap_view(QWidget *parent) : fcwidget()
+minimap_view::minimap_view(QWidget *parent) : fcwidget(parent)
 {
-  setParent(parent);
   setAttribute(Qt::WA_OpaquePaintEvent, true);
-  w_ratio = 0.0;
-  h_ratio = 0.0;
-  // Dark magic: This call is required for the widget to work.
-  resize(0, 0);
-  background = QBrush(QColor(0, 0, 0));
   setCursor(Qt::CrossCursor);
-  pix = new QPixmap;
-}
-
-/**
-   Minimap_view destructor
- */
-minimap_view::~minimap_view()
-{
-  delete pix;
-  pix = nullptr;
 }
 
 /**
@@ -72,20 +56,6 @@ void minimap_view::paintEvent(QPaintEvent *event)
 void minimap_view::update_menu()
 {
   ::king()->menu_bar->minimap_status->setChecked(false);
-}
-
-/**
-   Minimap is being moved, position is being remembered
- */
-void minimap_view::moveEvent(QMoveEvent *event) { position = event->pos(); }
-
-/**
-   Minimap is just unhidden, old position is restored
- */
-void minimap_view::showEvent(QShowEvent *event)
-{
-  move(position);
-  event->setAccepted(true);
 }
 
 namespace {
@@ -133,6 +103,10 @@ void minimap_view::draw_viewport(QPainter *painter)
   }
 
   painter->setPen(QColor(Qt::white));
+
+  auto w_ratio = static_cast<double>(width()) / gui_options->overview.width;
+  auto h_ratio =
+      static_cast<double>(height()) / gui_options->overview.height;
 
   QVector<QLineF> lines;
   for (int i = 0; i < 4; i++) {
@@ -239,8 +213,6 @@ void minimap_view::resizeEvent(QResizeEvent *event)
 
   if (C_S_RUNNING <= client_state() && size.width() > 0
       && size.height() > 0) {
-    w_ratio = static_cast<float>(width()) / gui_options->overview.width;
-    h_ratio = static_cast<float>(height()) / gui_options->overview.height;
     king()->qt_settings.minimap_width =
         static_cast<float>(size.width()) / mapview.width;
     king()->qt_settings.minimap_height =
@@ -258,11 +230,12 @@ void minimap_view::resizeEvent(QResizeEvent *event)
 void minimap_view::mousePressEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::RightButton) {
-    cursor = event->pos();
     auto fx = event->pos().x();
     auto fy = event->pos().y();
-    fx = qRound(fx / w_ratio);
-    fy = qRound(fy / h_ratio);
+    fx = qRound(fx * gui_options->overview.width
+                / static_cast<double>(width()));
+    fy = qRound(fy * gui_options->overview.height
+                / static_cast<double>(height()));
     fx = qMax(fx, 1);
     fy = qMax(fy, 1);
     fx = qMin(fx, gui_options->overview.width - 1);

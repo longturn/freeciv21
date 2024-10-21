@@ -38,7 +38,7 @@ class minimap_view : public fcwidget {
 
 public:
   minimap_view(QWidget *parent);
-  ~minimap_view() override;
+
   void paint(QPainter *painter, QPaintEvent *event);
   void update_menu() override;
   void update_image();
@@ -51,14 +51,7 @@ protected:
   void paintEvent(QPaintEvent *event) override;
   void resizeEvent(QResizeEvent *event) override;
   void mousePressEvent(QMouseEvent *event) override;
-  void moveEvent(QMoveEvent *event) override;
-  void showEvent(QShowEvent *event) override;
 
 private:
   void draw_viewport(QPainter *painter);
-  float w_ratio, h_ratio;
-  QBrush background;
-  QPixmap *pix;
-  QPoint cursor;
-  QPoint position;
 };
