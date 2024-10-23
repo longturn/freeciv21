@@ -35,6 +35,6 @@
       <content_attribute id="social-chat">mild</content_attribute>
     </content_rating>
     <releases>
-      <release version="3.0.4" type="stable" date="2024-03-31"/>
+      <release version="3.0.5" type="stable" date="2024-10-31"/>
     </releases>
 </component>
