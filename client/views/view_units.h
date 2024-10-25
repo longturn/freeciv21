@@ -42,8 +42,7 @@ struct unit_waiting_entry {
 void get_units_view_data(struct unit_view_entry *entries,
                          int *num_entries_used);
 
-void get_units_waiting_data(struct unit_waiting_entry *entries,
-                            int *num_entries_used);
+std::vector<unit_waiting_entry> get_units_waiting_data();
 
 void units_view_dialog_update(void *unused);
 
