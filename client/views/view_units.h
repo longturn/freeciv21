@@ -27,6 +27,7 @@ struct unit_view_entry {
   int count, in_prod, total_cost, food_cost, gold_cost, shield_cost;
   bool upg;
 };
+std::vector<unit_view_entry> get_units_view_data();
 
 /**
  * Structure of unit waiting data for the Units View.
@@ -38,10 +39,6 @@ struct unit_waiting_entry {
   QString city_name;
   int id;
 };
-
-void get_units_view_data(struct unit_view_entry *entries,
-                         int *num_entries_used);
-
 std::vector<unit_waiting_entry> get_units_waiting_data();
 
 void units_view_dialog_update(void *unused);
