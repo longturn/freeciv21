@@ -355,10 +355,7 @@ void units_view::update_waiting()
   QFontMetrics fm(f);
   int h = fm.height() + 24;
 
-  struct unit_waiting_entry unit_entries[U_LAST];
-
-  int entries_used = 0;
-  get_units_waiting_data(unit_entries, &entries_used);
+  auto unit_entries = get_units_waiting_data();
 
   max_row = ui.uwt_table->rowCount();
 
@@ -372,12 +369,12 @@ void units_view::update_waiting()
     ids_in_table[item->text()] = item;
   }
 
-  for (int i = 0; i < entries_used; i++) {
-    struct unit_waiting_entry *pentry = unit_entries + i;
-    const struct unit_type *putype = pentry->type;
+  for (int i = 0; i < unit_entries.size(); i++) {
+    const unit_waiting_entry &entry = unit_entries[i];
+    const struct unit_type *putype = entry.type;
     cid id = cid_encode_unit(putype);
-    QString unit_id = QString("%1").arg(pentry->id);
-    QString unit_waittime = format_simple_duration(abs(pentry->timer));
+    QString unit_id = QString("%1").arg(entry.id);
+    QString unit_waittime = format_simple_duration(abs(entry.timer));
 
     if (!ids_in_table.contains(unit_id)) {
       // Create a new row for the unit
@@ -406,7 +403,7 @@ void units_view::update_waiting()
         case 2:
           // # Location
           item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-          item->setText(QString(_("%1")).arg(pentry->city_name));
+          item->setText(QString(_("%1")).arg(entry.city_name));
           break;
         case 3:
           // # Time Left
@@ -721,47 +718,37 @@ void get_units_view_data(struct unit_view_entry *entries,
 /**
  * Returns an array of units subject to unitwaittime.
  */
-void get_units_waiting_data(struct unit_waiting_entry *entries,
-                            int *num_entries_used)
+std::vector<unit_waiting_entry> get_units_waiting_data()
 {
-  *num_entries_used = 0;
-
   if (nullptr == client.conn.playing) {
-    return;
+    return {};
   }
 
-  int pcity_near_dist = 0; // Init distance
+  auto entries = std::vector<unit_waiting_entry>();
 
   unit_list_iterate(client.conn.playing->units, punit)
   {
+    int pcity_near_dist = 0; // Init distance
     struct city *pcity_near = get_nearest_city(punit, &pcity_near_dist);
 
     if (!can_unit_move_now(punit) && punit->ssa_controller == SSA_NONE) {
-
-      entries[*num_entries_used].type = punit->utype;
-      entries[*num_entries_used].city_name =
-          get_nearest_city_text(pcity_near, pcity_near_dist);
-      entries[*num_entries_used].timer =
-          time(nullptr) - punit->action_timestamp;
-      entries[*num_entries_used].id = punit->id;
-
-      (*num_entries_used)++;
-    }
-
-    // Skip unused unit types
-    if (*num_entries_used == 0) {
-      continue;
+      entries.push_back(
+          {.type = punit->utype,
+           .timer = time(nullptr) - punit->action_timestamp,
+           .city_name = get_nearest_city_text(pcity_near, pcity_near_dist),
+           .id = punit->id});
     }
   }
   unit_list_iterate_end;
 
-  std::sort(entries, entries + *num_entries_used,
-            [](const auto &lhs, const auto &rhs) {
-              return QString::localeAwareCompare(
-                         utype_name_translation(lhs.type),
-                         utype_name_translation(rhs.type))
-                     < 0;
-            });
+  std::sort(
+      entries.begin(), entries.end(), [](const auto &lhs, const auto &rhs) {
+        return QString::localeAwareCompare(utype_name_translation(lhs.type),
+                                           utype_name_translation(rhs.type))
+               < 0;
+      });
+
+  return entries;
 }
 
 /************************************
@@ -782,7 +769,9 @@ void units_view_dialog_update(void *unused)
     if (queen()->game_tab_widget->currentIndex() == i) {
       w = queen()->game_tab_widget->widget(i);
       uv = reinterpret_cast<units_view *>(w);
-      uv->update_view();
+      if (uv) {
+        uv->update_view();
+      }
     }
   }
   queen()->updateSidebarTooltips();
