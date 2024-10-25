@@ -150,10 +150,7 @@ void units_view::update_units()
   QFontMetrics fm(f);
   int h = fm.height() + 24;
 
-  int entries_used = 0; // Position in the units array
-  struct unit_view_entry unit_entries[U_LAST];
-
-  get_units_view_data(unit_entries, &entries_used);
+  auto unit_entries = get_units_view_data();
 
   // Variables for the nested loops
   int total_count = 0;  // Sum of unit type
@@ -185,9 +182,9 @@ void units_view::update_units()
     unittypes_in_table[key] = ui.units_table->item(r, 0);
   }
 
-  for (int i = 0; i < entries_used; i++) {
-    struct unit_view_entry *pentry = unit_entries + i;
-    const struct unit_type *putype = pentry->type;
+  for (int i = 0; i < unit_entries.size(); i++) {
+    const unit_view_entry &entry = unit_entries[i];
+    const struct unit_type *putype = entry.type;
     cid id = cid_encode_unit(putype);
 
     auto existing_row_for_unittype = unittypes_in_table.find(id);
@@ -223,7 +220,7 @@ void units_view::update_units()
       case 2:
         // Is Upgradable
         item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
-        if (pentry->upg) {
+        if (entry.upg) {
           item->setData(Qt::DisplayRole, "★");
           upg_count++;
         } else {
@@ -233,44 +230,44 @@ void units_view::update_units()
       case 3:
         // # In Progress
         item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
-        item->setData(Qt::DisplayRole, pentry->in_prod);
-        in_progress += pentry->in_prod;
+        item->setData(Qt::DisplayRole, entry.in_prod);
+        in_progress += entry.in_prod;
         break;
       case 4:
         // # Active
         item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
-        item->setData(Qt::DisplayRole, pentry->count);
-        total_count += pentry->count;
+        item->setData(Qt::DisplayRole, entry.count);
+        total_count += entry.count;
         break;
       case 5:
         // Shield upkeep
         item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
-        if (pentry->shield_cost == 0) {
+        if (entry.shield_cost == 0) {
           item->setText("-");
         } else {
-          item->setData(Qt::DisplayRole, pentry->shield_cost);
+          item->setData(Qt::DisplayRole, entry.shield_cost);
         }
-        total_shield += pentry->shield_cost;
+        total_shield += entry.shield_cost;
         break;
       case 6:
         // Food upkeep
         item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
-        if (pentry->food_cost == 0) {
+        if (entry.food_cost == 0) {
           item->setText("-");
         } else {
-          item->setData(Qt::DisplayRole, pentry->food_cost);
+          item->setData(Qt::DisplayRole, entry.food_cost);
         }
-        total_food += pentry->food_cost;
+        total_food += entry.food_cost;
         break;
       case 7:
         // Gold upkeep
         item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
-        if (pentry->gold_cost == 0) {
+        if (entry.gold_cost == 0) {
           item->setText("-");
         } else {
-          item->setData(Qt::DisplayRole, pentry->gold_cost);
+          item->setData(Qt::DisplayRole, entry.gold_cost);
         }
-        total_gold += pentry->gold_cost;
+        total_gold += entry.gold_cost;
         break;
       }
       ui.units_table->setItem(current_row, j, item);
@@ -641,10 +638,9 @@ struct unit *find_nearest_unit(const struct unit_type *utype,
 /**
  * Returns an array of units data.
  */
-void get_units_view_data(struct unit_view_entry *entries,
-                         int *num_entries_used)
+std::vector<unit_view_entry> get_units_view_data()
 {
-  *num_entries_used = 0;
+  auto entries = std::vector<unit_view_entry>();
 
   players_iterate(pplayer)
   {
@@ -693,26 +689,25 @@ void get_units_view_data(struct unit_view_entry *entries,
         continue;
       }
 
-      entries[*num_entries_used].type = unittype;
-      entries[*num_entries_used].count = count;
-      entries[*num_entries_used].in_prod = in_progress;
-      entries[*num_entries_used].upg = upgradable;
-      entries[*num_entries_used].gold_cost = gold_cost;
-      entries[*num_entries_used].food_cost = food_cost;
-      entries[*num_entries_used].shield_cost = shield_cost;
-      (*num_entries_used)++;
+      entries.push_back({.type = unittype,
+                         .count = count,
+                         .in_prod = in_progress,
+                         .food_cost = food_cost,
+                         .gold_cost = gold_cost,
+                         .shield_cost = shield_cost,
+                         .upg = upgradable});
     }
     unit_type_iterate_end;
   }
   players_iterate_end;
 
-  std::sort(entries, entries + *num_entries_used,
-            [](const auto &lhs, const auto &rhs) {
-              return QString::localeAwareCompare(
-                         utype_name_translation(lhs.type),
-                         utype_name_translation(rhs.type))
-                     < 0;
-            });
+  std::sort(
+      entries.begin(), entries.end(), [](const auto &lhs, const auto &rhs) {
+        return QString::localeAwareCompare(utype_name_translation(lhs.type),
+                                           utype_name_translation(rhs.type))
+               < 0;
+      });
+  return entries;
 }
 
 /**
