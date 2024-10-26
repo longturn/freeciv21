@@ -825,20 +825,20 @@ static enum unit_activity char2activity(char activity)
 
 /**
    Quote the memory block denoted by data and length so it consists only of
-   " a-f0-9:". The returned string has to be freed by the caller using
- free().
+   " a-f0-9:". The returned string has to be deleted by the caller.
  */
 static char *quote_block(const void *const data, int length)
 {
-  char *buffer = new char[length * 3 + 10];
+  auto bufsize = length * 3 + 10;
+  char *buffer = new char[bufsize];
   size_t offset;
   int i;
 
-  sprintf(buffer, "%d:", length);
+  snprintf(buffer, bufsize, "%d:", length);
   offset = qstrlen(buffer);
 
   for (i = 0; i < length; i++) {
-    sprintf(buffer + offset, "%02x ", ((unsigned char *) data)[i]);
+    snprintf(buffer + offset, bufsize, "%02x ", ((unsigned char *) data)[i]);
     offset += 3;
   }
   return buffer;
