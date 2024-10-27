@@ -60,14 +60,6 @@ extern int last_center_player_city;
 extern int last_center_enemy_city;
 
 /**
-   Check if point x, y is in area (px -> pxe, py - pye)
- */
-bool is_point_in_area(int x, int y, int px, int py, int pxe, int pye)
-{
-  return x >= px && y >= py && x <= pxe && y <= pye;
-}
-
-/**
    Draws calculated trade routes
  */
 void draw_calculated_trade_routes(QPainter *painter)
@@ -400,105 +392,43 @@ void map_view::wheelEvent(QWheelEvent *event)
 }
 
 /**
-   Sets new point for new search
+ * Finds a suitable location for a widget of the given size, avoiding overlap
+ * with other widgets.
  */
-void map_view::resume_searching(int pos_x, int pos_y, int &w, int &h,
-                                int wdth, int hght, int recursive_nr,
-                                bool direction)
+QPoint map_view::find_place(const QSize &size) const
 {
-  int new_pos_x, new_pos_y;
+  // We scan all possible locations from left to right and from top to
+  // bottom. At each step we check for overlap with other widgets. We return
+  // the first point without overlap.
+  const auto step = 5;
 
-  recursive_nr++;
-  new_pos_x = pos_x;
-  new_pos_y = pos_y;
+  // This is the rectangle that would be covered by the widget.
+  auto candidate = QRect(QPoint(), size);
 
-  if (direction) {
-    if (pos_y + hght + 4 < height() && pos_x < width() / 2) {
-      new_pos_y = pos_y + 5;
-    } else if (pos_x > 0 && pos_y > 10) {
-      new_pos_x = pos_x - 5;
-    } else if (pos_y > 0) {
-      new_pos_y = pos_y - 5;
-    } else if (pos_x + wdth + 4 < this->width()) {
-      new_pos_x = pos_x + 5;
+  const auto children = findChildren<QWidget *>();
+  while (candidate.bottom() < height()) {
+    // Check if the candidate rectangle intersects with another widget
+    if (!std::any_of(children.begin(), children.end(),
+                     [candidate](const QWidget *child) {
+                       return child->isVisible()
+                              && candidate.intersects(child->rect());
+                     })) {
+      // We found a good location
+      return candidate.topLeft();
     }
-  } else {
-    if (pos_y + hght + 4 < height() && pos_x > width() / 2) {
-      new_pos_y = pos_y + 5;
-    } else if (pos_x > 0 && pos_y > 10) {
-      new_pos_x = pos_x - 5;
-    } else if (pos_y > 0) {
-      new_pos_y = pos_y - 5;
-    } else if (pos_x + wdth + 4 < this->width()) {
-      new_pos_x = pos_x + 5;
+
+    // Move the candidate rectangle to the next point
+    if (candidate.right() + step < width()) {
+      // Step right
+      candidate.moveTo(candidate.left() + step, candidate.top());
+    } else {
+      // Next line
+      candidate.moveTo(0, candidate.top() + step);
     }
   }
 
-  find_place(new_pos_x, new_pos_y, w, h, wdth, hght, recursive_nr,
-             direction);
-}
-
-/**
-   Searches place for widget with size w and height h
-   Starts looking from position pos_x, pos_y, going clockwork
-   Returns position as (w,h)
-   Along with resume_searching its recursive function.
-   direction = false (default) = clockwise
- */
-void map_view::find_place(int pos_x, int pos_y, int &w, int &h, int wdth,
-                          int hght, int recursive_nr, bool direction)
-{
-  int i;
-  int x, y, xe, ye;
-  QList<fcwidget *> widgets = this->findChildren<fcwidget *>();
-  bool cont_searching = false;
-
-  if (recursive_nr >= 1000) {
-    /**
-     * give up searching position
-     */
-    return;
-  }
-  /**
-   * try position pos_x, pos_y,
-   * check middle and borders if aren't  above other widget
-   */
-
-  for (i = 0; i < widgets.count(); i++) {
-    if (!widgets[i]->isVisible()) {
-      continue;
-    }
-    x = widgets[i]->pos().x();
-    y = widgets[i]->pos().y();
-
-    if (x == 0 && y == 0) {
-      continue;
-    }
-    xe = widgets[i]->pos().x() + widgets[i]->width();
-    ye = widgets[i]->pos().y() + widgets[i]->height();
-
-    if (is_point_in_area(pos_x, pos_y, x, y, xe, ye)) {
-      cont_searching = true;
-    }
-    if (is_point_in_area(pos_x + wdth, pos_y, x, y, xe, ye)) {
-      cont_searching = true;
-    }
-    if (is_point_in_area(pos_x + wdth, pos_y + hght, x, y, xe, ye)) {
-      cont_searching = true;
-    }
-    if (is_point_in_area(pos_x, pos_y + hght, x, y, xe, ye)) {
-      cont_searching = true;
-    }
-    if (is_point_in_area(pos_x + wdth / 2, pos_y + hght / 2, x, y, xe, ye)) {
-      cont_searching = true;
-    }
-  }
-  w = pos_x;
-  h = pos_y;
-  if (cont_searching) {
-    resume_searching(pos_x, pos_y, w, h, wdth, hght, recursive_nr,
-                     direction);
-  }
+  // We didn't find any solution :'(
+  return QPoint();
 }
 
 /**

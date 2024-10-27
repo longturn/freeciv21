@@ -8,10 +8,8 @@
 #include "widgets/report_widget.h"
 
 // client
-#include "dialogs_g.h"
 #include "fc_client.h"
 #include "fonts.h"
-#include "page_game.h"
 #include "views/view_map.h"
 
 // Qt
@@ -55,12 +53,6 @@ report_widget::report_widget(const QString &caption, const QString &headline,
   auto cw = new close_widget(this);
   cw->setFixedSize(12, 12);
   cw->put_to_corner();
-
-  auto x = width();
-  auto y = height();
-  queen()->mapview_wdg->find_place(queen()->mapview_wdg->width() - x - 4, 4,
-                                   x, y, x, y, 0);
-  move(x, y);
 }
 
 /**
