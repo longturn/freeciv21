@@ -987,6 +987,7 @@ void popup_notify_dialog(const char *caption, const char *headline,
 
   freeciv::report_widget *nd = new freeciv::report_widget(
       caption, headline, lines, queen()->mapview_wdg);
+  nd->move(queen()->mapview_wdg->find_place(nd->size()));
   nd->show();
 }
 

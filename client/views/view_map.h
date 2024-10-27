@@ -54,10 +54,9 @@ class map_view : public QWidget {
 
 public:
   map_view();
-  void find_place(int pos_x, int pos_y, int &w, int &h, int wdth, int hght,
-                  int recursive_nr, bool direction = false);
-  void resume_searching(int pos_x, int pos_y, int &w, int &h, int wdtht,
-                        int hght, int recursive_nr, bool direction);
+
+  QPoint find_place(const QSize &size) const;
+
   void update_cursor(enum cursor_type);
 
   void hide_all_fcwidgets();
@@ -105,6 +104,7 @@ private:
   double m_scale = 1;
   std::unique_ptr<QPropertyAnimation> m_origin_animation;
   std::unique_ptr<QPropertyAnimation> m_scale_animation;
+
   QPointer<freeciv::tileset_debugger> m_debugger = nullptr;
   std::vector<QPointer<fcwidget>> m_hidden_fcwidgets;
 };
