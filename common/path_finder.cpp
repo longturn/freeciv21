@@ -48,6 +48,7 @@ vertex vertex::child_for_action(action_id action, const unit &probe,
   ret.order.order = ORDER_PERFORM_ACTION;
   ret.order.action = action;
   ret.order.target = target->index;
+  ret.order.sub_target = NO_TARGET;
   ret.order.dir = DIR8_ORIGIN;
   ret.moves_left = probe.moves_left;
   ret.location = target;
