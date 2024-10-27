@@ -6035,14 +6035,14 @@ static bool sg_load_player_unit(struct loaddata *loading, struct player *plr,
             break;
           case ASTK_NONE:
             // None of these can take a sub target.
-            fc_assert_msg(order_sub_tgt == -1,
+            fc_assert_msg(order_sub_tgt == NO_TARGET,
                           "Specified sub target for action %d unsupported.",
                           order->action);
             order->sub_target = NO_TARGET;
             break;
           case ASTK_COUNT:
-            fc_assert_msg(order_sub_tgt == -1, "Bad action action %d.",
-                          order->action);
+            fc_assert_msg(order_sub_tgt == NO_TARGET,
+                          "Bad action action %d.", order->action);
             order->sub_target = NO_TARGET;
             break;
           }
