@@ -116,6 +116,7 @@ void goto_add_waypoint()
       finder.push_waypoint(goto_destination);
     }
   }
+  is_valid_goto_draw_line(goto_destination);
 }
 
 /**
