@@ -6219,8 +6219,8 @@ const char *action_ui_name_default(int act)
     // TRANS: Rec_ycle Unit (100% chance of success).
     return N_("Rec%sycle Unit%s");
   case ACTION_DISBAND_UNIT:
-    // TRANS: _You're Fired (100% chance of success).
-    return N_("%sYou're Fired%s");
+    // TRANS: _Disband Unit (100% chance of success).
+    return N_("%sDisband Unit%s");
   case ACTION_HOME_CITY:
     // TRANS: Set _Home City (100% chance of success).
     return N_("Set %sHome City%s");
