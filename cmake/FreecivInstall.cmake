@@ -291,8 +291,8 @@ if(FREECIV_ENABLE_CLIENT AND FREECIV_DOWNLOAD_FONTS)
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
-    URL https://github.com/alerque/libertinus/releases/download/v7.051/Libertinus-7.051.zip
-    URL_HASH SHA256=4d9be29b5cb380c35af8ba967abcc752ad1e07be1f738a9789c33e0dd7478c92
+    URL https://github.com/alerque/libertinus/releases/download/v7.040/Libertinus-7.040.zip
+    URL_HASH SHA256=2cce08507441d8ae7b835cfe51fb643ad5d9f6b44db4360c4e244f0e474a72f6
   )
 
   if(MSYS OR MINGW OR WIN32)
