@@ -298,6 +298,7 @@ public:
   void refresh();
   struct city *pcity = nullptr;
   bool dont_focus{false};
+  bool present_units_exp = false;
 
 private:
   void update_title();
@@ -342,6 +343,7 @@ private slots:
   void cma_context_menu(const QPoint p);
   void save_cma();
   void city_rename();
+  void present_units_exp_col();
 
 protected:
   void showEvent(QShowEvent *event) override;

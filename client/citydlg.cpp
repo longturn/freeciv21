@@ -904,6 +904,8 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
   connect(ui.p_table_p->selectionModel(),
           &QItemSelectionModel::selectionChanged, this,
           &city_dialog::item_selected);
+  connect(ui.present_units_exp_col_but, &QAbstractButton::clicked, this,
+          &city_dialog::present_units_exp_col);
 
   // governor tab
   ui.qgbox->setTitle(_("Presets:"));
@@ -1789,11 +1791,37 @@ void city_dialog::update_units()
     units = pcity->tile->units;
   }
 
+  // set direction of the expand/collapse arrow
+  if (present_units_exp == false) {
+    ui.present_units_exp_col_but->setArrowType(Qt::UpArrow);
+  } else {
+    ui.present_units_exp_col_but->setArrowType(Qt::DownArrow);
+  }
+
   n = unit_list_size(units);
+  ui.present_units_list->setLayoutDirection(Qt::LeftToRight);
   ui.present_units_list->set_units(units);
   ui.present_units_list->setVisible(n > 0);
   fc_snprintf(buf, sizeof(buf), _("Present units: %d"), n);
-  ui.curr_units->setText(QString(buf));
+  ui.present_units_label->setText(QString(buf));
+}
+
+/**
+ * Slot to expand or collapse the present units list
+ */
+void city_dialog::present_units_exp_col()
+{
+  if (present_units_exp == false) {
+    ui.present_units_group_box->setSizePolicy(QSizePolicy::MinimumExpanding,
+                                              QSizePolicy::Expanding);
+    ui.present_units_exp_col_but->setArrowType(Qt::DownArrow);
+    present_units_exp = true;
+  } else {
+    ui.present_units_group_box->setSizePolicy(QSizePolicy::MinimumExpanding,
+                                              QSizePolicy::Minimum);
+    ui.present_units_exp_col_but->setArrowType(Qt::UpArrow);
+    present_units_exp = false;
+  }
 }
 
 /**
