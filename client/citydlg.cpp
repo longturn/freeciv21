@@ -1792,16 +1792,16 @@ void city_dialog::update_units()
   }
 
   // set direction of the expand/collapse arrow
-  if (present_units_exp == false) {
-    ui.present_units_exp_col_but->setArrowType(Qt::UpArrow);
-  } else {
+  if (present_units_exp) {
     ui.present_units_exp_col_but->setArrowType(Qt::DownArrow);
+  } else {
+    ui.present_units_exp_col_but->setArrowType(Qt::UpArrow);
   }
 
   n = unit_list_size(units);
   ui.present_units_list->setLayoutDirection(Qt::LeftToRight);
   ui.present_units_list->set_units(units);
-  ui.present_units_list->setVisible(n > 0);
+  ui.present_units_list->setVisible(n >= 0);
   fc_snprintf(buf, sizeof(buf), _("Present units: %d"), n);
   ui.present_units_label->setText(QString(buf));
 }
@@ -1811,16 +1811,20 @@ void city_dialog::update_units()
  */
 void city_dialog::present_units_exp_col()
 {
-  if (present_units_exp == false) {
-    ui.present_units_group_box->setSizePolicy(QSizePolicy::MinimumExpanding,
-                                              QSizePolicy::Expanding);
-    ui.present_units_exp_col_but->setArrowType(Qt::DownArrow);
-    present_units_exp = true;
-  } else {
+  if (present_units_exp) {
     ui.present_units_group_box->setSizePolicy(QSizePolicy::MinimumExpanding,
                                               QSizePolicy::Minimum);
     ui.present_units_exp_col_but->setArrowType(Qt::UpArrow);
+    ui.present_units_exp_col_but->setToolTip(
+        _("Click to expand the present units list"));
     present_units_exp = false;
+  } else {
+    ui.present_units_group_box->setSizePolicy(QSizePolicy::MinimumExpanding,
+                                              QSizePolicy::Expanding);
+    ui.present_units_exp_col_but->setArrowType(Qt::DownArrow);
+    ui.present_units_exp_col_but->setToolTip(
+        _("Click to collapse the present units list"));
+    present_units_exp = true;
   }
 }
 

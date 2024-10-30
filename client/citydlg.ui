@@ -351,6 +351,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+       </property>
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
          <widget class="QLabel" name="present_units_label">
