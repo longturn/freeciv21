@@ -157,7 +157,6 @@ files =
   "misc/shields.spec",
   "misc/cursors.spec",
   "misc/buildings.spec",
-  "misc/wonders.spec",
   "misc/space.spec",
   "misc/techs.spec",
   "misc/treaty.spec",
