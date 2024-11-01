@@ -99,7 +99,6 @@ void client_remove_unit(struct unit *punit)
   if (old > 0 && get_num_units_in_focus() == 0) {
     unit_focus_advance();
   } else if (update) {
-    update_unit_pix_label(get_units_in_focus());
     update_unit_info_label(get_units_in_focus());
   }
 

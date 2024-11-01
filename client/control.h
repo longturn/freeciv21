@@ -157,8 +157,6 @@ void unit_focus_update();
 void set_auto_center_enabled(bool enabled);
 void auto_center_on_focus_unit();
 
-void update_unit_pix_label(const std::vector<unit *> &units);
-
 unit *find_visible_unit(const ::tile *ptile);
 void set_units_in_combat(struct unit *pattacker, struct unit *pdefender);
 int blink_active_unit();
@@ -213,8 +211,3 @@ void key_unit_wakeup_others();
 
 void finish_city(struct tile *ptile, const char *name);
 void cancel_city(struct tile *ptile);
-
-/* don't change this unless you also put more entries in data/Freeciv */
-#define MAX_NUM_UNITS_BELOW 4
-
-extern int num_units_below;

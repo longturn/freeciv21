@@ -68,9 +68,6 @@ static int disband_unit_alternatives[3] = {
     ACTION_HELP_WONDER,
 };
 
-// gui-dep code may adjust depending on tile size etc:
-int num_units_below = MAX_NUM_UNITS_BELOW;
-
 // current_focus points to the current unit(s) in focus
 static auto current_focus = std::vector<unit *>();
 
@@ -900,65 +897,6 @@ int blink_turn_done_button()
   }
 
   return blink_time;
-}
-
-/**
-   Update unit icons (and arrow) in the information display, for specified
-   punit as the active unit and other units on the same square.  In practice
-   punit is almost always (or maybe strictly always?) the focus unit.
-
-   Static vars store some info on current (ie previous) state, to avoid
-   unnecessary redraws; initialise to "flag" values to always redraw first
-   time.  In principle we _might_ need more info (eg ai.control, connecting),
-   but in practice this is enough?
-
-   Used to store unit_ids for below units, to use for callbacks (now done
-   inside gui-dep set_unit_icon()), but even with ids here they would not
-   be enough information to know whether to redraw -- instead redraw every
-   time.  (Could store enough info to know, but is it worth it?)
- */
-void update_unit_pix_label(const std::vector<unit *> &units)
-{
-  int i;
-
-  /* Check for any change in the unit's state.  This assumes that a unit's
-   * orders cannot be changed directly but must be removed and then reset. */
-  if (!units.empty() && C_S_OVER != client_state()) {
-    /* There used to be a complicated and bug-prone check here to see if
-     * the unit had actually changed.  This was misguided since the stacked
-     * units (below) are redrawn in any case.  Unless we write a general
-     * system for unit updates here we might as well just redraw it every
-     * time. */
-    struct unit *punit = units.front();
-
-    set_unit_icon(-1, punit);
-
-    i = 0; // index into unit_below_canvas
-    unit_list_iterate(unit_tile(punit)->units, aunit)
-    {
-      if (aunit != punit) {
-        if (i < num_units_below) {
-          set_unit_icon(i, aunit);
-        }
-        i++;
-      }
-    }
-    unit_list_iterate_end;
-
-    if (i > num_units_below) {
-      set_unit_icons_more_arrow(true);
-    } else {
-      set_unit_icons_more_arrow(false);
-      for (; i < num_units_below; i++) {
-        set_unit_icon(i, nullptr);
-      }
-    }
-  } else {
-    for (i = -1; i < num_units_below; i++) {
-      set_unit_icon(i, nullptr);
-    }
-    set_unit_icons_more_arrow(false);
-  }
 }
 
 /**
