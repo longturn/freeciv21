@@ -147,32 +147,6 @@ void sound_bell()
 void add_net_input(QIODevice *sock) { king()->add_server_source(sock); }
 
 /**
-   Set one of the unit icons (specified by idx) in the information area
-   based on punit.
-
-   punit is the unit the information should be taken from. Use nullptr to
-   clear the icon.
-
-   idx specified which icon should be modified. Use idx == -1 to indicate
-   the icon for the active unit. Or idx in [0..num_units_below-1] for
-   secondary (inactive) units on the same tile.
- */
-void set_unit_icon(int idx, struct unit *punit)
-{ // PORTME
-}
-
-/**
-   Most clients use an arrow (e.g., sprites.right_arrow) to indicate when
-   the units_below will not fit. This function is called to activate or
-   deactivate the arrow.
-
-   Is disabled by default.
- */
-void set_unit_icons_more_arrow(bool onoff)
-{ // PORTME
-}
-
-/**
    Called when the set of units in focus (get_units_in_focus()) changes.
    Standard updates like update_unit_info_label() are handled in the
  platform- independent code, so some clients will not need to do anything

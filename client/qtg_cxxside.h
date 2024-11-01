@@ -29,8 +29,6 @@ client_pages get_current_client_page();
 void popup_combat_info(int attacker_unit_id, int defender_unit_id,
                        int attacker_hp, int defender_hp,
                        bool make_att_veteran, bool make_def_veteran);
-void set_unit_icon(int idx, unit *punit);
-void set_unit_icons_more_arrow(bool onoff);
 void real_focus_units_changed();
 void gui_update_font(const QString &font_name, const QFont &font_value);
 
