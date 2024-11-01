@@ -28,7 +28,7 @@ struct ai_type;
  * it can also be used for fixed allocations to ensure able
  * to hold full number of unit types.
  * Used in the network protocol. */
-#define U_LAST MAX_NUM_UNITS
+#define U_LAST MAX_NUM_UNIT_TYPES
 
 /* The largest distance a ruleset can allow a unit to paradrop.
  *
