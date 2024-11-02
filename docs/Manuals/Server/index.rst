@@ -24,6 +24,7 @@ place to start is the ``#questions-and-answers`` or ``#technicalities`` channels
   command-line.rst
   commands.rst
   options.rst
+  maths.rst
   settings-file.rst
   fcdb.rst
   :maxdepth: 2
