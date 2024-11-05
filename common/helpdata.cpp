@@ -1004,7 +1004,9 @@ void boot_help_texts(const nation_set *nations_to_show,
             }
             multipliers_iterate_end;
             break;
-          case HELP_EFFECT:
+          case HELP_EFFECT: {
+            std::list<help_item *> effect_help;
+
             for (int i = 0; i < EFT_COUNT; ++i) {
               auto effects = get_effects(static_cast<effect_type>(i));
               if (effect_list_size(effects) > 0) {
@@ -1034,10 +1036,16 @@ void boot_help_texts(const nation_set *nations_to_show,
                 effect_list_iterate_end;
 
                 pitem->text = qstrdup(qUtf8Printable(all_text));
-                help_nodes->append(pitem);
+                effect_help.push_back(pitem);
               }
             }
+
+            effect_help.sort(help_item_compar);
+            for (auto pitem : effect_help) {
+              help_nodes->append(pitem);
+            }
             break;
+          }
           default:
             qCritical("Bad current_type: %d.", current_type);
             break;
