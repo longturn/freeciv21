@@ -1167,8 +1167,10 @@ QString effect_type_unit_text(effect_type type, int value)
     float factor = 1.0f + value / 1000.0f;
     return QString(PL_("**%1", "**%1", factor)).arg(factor);
   }
-  case EFT_OUTPUT_WASTE_BY_DISTANCE:
-    return QString(PL_("%1%/tile", "%1%/tile", value)).arg(value);
+  case EFT_OUTPUT_WASTE_BY_DISTANCE: {
+    float waste = value / 100.0f;
+    return QString(PL_("%1%/tile", "%1%/tile", waste)).arg(waste);
+  }
   case EFT_CITY_BUILD_SLOTS:
     return QString(PL_("%1 slot", "%1 slots", value)).arg(value);
   case EFT_MAX_TRADE_ROUTES:
