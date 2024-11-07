@@ -23,6 +23,8 @@ These are the general steps to prepare and finalize a release:
    time. This prevents an accidental release.
 #. A release manager will update the draft as PR's are committed to the repository to help keep track of
    the release cadence progress. As PR's are added to sections the ``* Nothing for this release`` is removed.
+#. As PR's are added to the draft release notes, pay attention to the contributor. If a new contributor has
+   opened a PR, call it out --- "With this release we welcome @[GithubID] as a new contributor (#[PR])"
 #. Multiple PR's can be combined on a single bullet line. Documentation updates are often done this way.
 #. When we are getting close to crossing one of the release candidate thresholds, the release manager will
    post to the ``#releases-project`` channel in the ``LT.DEV`` section on the Longturn Discord server. The
