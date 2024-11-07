@@ -29,7 +29,7 @@ jobs:
       - name: Problem file cleanup
         # We have this problematic file that we need to remove
         run: |
-          rm dist/freeciv21-server.cmd
+          rm dist/windows/freeciv21-server.cmd
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
