@@ -4921,14 +4921,23 @@ void fill_topo_ts_default()
     } else {
       log_debug("Setting tileset for square topologies.");
       tilespec_try_read(QString(), false, 0);
+      qstrncpy(gui_options->default_tileset_square_name,
+               tileset_basename(tileset),
+               sizeof(gui_options->default_tileset_square_name));
     }
   }
   if (is_ts_option_unset("default_tileset_hex_name")) {
     log_debug("Setting tileset for hex topology.");
     tilespec_try_read(QString(), false, TF_HEX);
+    qstrncpy(gui_options->default_tileset_hex_name,
+             tileset_basename(tileset),
+             sizeof(gui_options->default_tileset_hex_name));
   }
   if (is_ts_option_unset("default_tileset_isohex_name")) {
     log_debug("Setting tileset for isohex topology.");
     tilespec_try_read(QString(), false, TF_ISO | TF_HEX);
+    qstrncpy(gui_options->default_tileset_isohex_name,
+             tileset_basename(tileset),
+             sizeof(gui_options->default_tileset_isohex_name));
   }
 }
