@@ -664,6 +664,10 @@ Nuke City
   * the actor unit must be on a tile next to the target unless :code:`nuke_city_max_range` allows it to be
     further away.
 
+  .. note::
+    Units that can perform this action can only be built when the
+    :ref:`Enable_Nuke <effect-enable-nuke>` effect is active.
+
 .. _action-conquer-city:
 
 Conquer City
@@ -1006,6 +1010,10 @@ Nuke Units
     * it is in a city.
     * it is on a tile with a native Extra.
 
+  .. note::
+    Units that can perform this action can only be built when the
+    :ref:`Enable_Nuke <effect-enable-nuke>` effect is active.
+
 .. _action-spy-attack:
 
 Spy Attack
@@ -1046,6 +1054,10 @@ Explode Nuclear
   * if :code:`force_bombard` is TRUE, "Bombard", "Bombard 2", and "Bombard 3" must be impossible.
   * actor must be on the same tile as the target unless :code:`explode_nuclear_max_range` allows it to be
     further away.
+
+  .. note::
+    Units that can perform this action can only be built when the
+    :ref:`Enable_Nuke <effect-enable-nuke>` effect is active.
 
 .. _action-paradrop-unit:
 

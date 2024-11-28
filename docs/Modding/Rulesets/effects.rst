@@ -269,7 +269,10 @@ Gov_Center
 .. _effect-enable-nuke:
 
 Enable_Nuke
-    Allows the production of nuclear weapons.
+    Allows the production of nuclear weapons (units that can do the
+    :ref:`Explode Nuclear <action-explode-nuclear>`,
+    :ref:`Nuke City <action-nuke-city>`, or
+    :ref:`Nuke Units <action-nuke-units>` actions).
 
 .. _effect-enable-space:
 
