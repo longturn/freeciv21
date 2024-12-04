@@ -557,7 +557,9 @@ void units_view::find_nearest()
       }
     }
   }
-  popdown_units_view();
+
+  // Show map
+  queen()->game_tab_widget->setCurrentIndex(0);
 }
 
 /**
