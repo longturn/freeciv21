@@ -103,6 +103,11 @@ Discord server.
 #. Leave all the rest of the fields as is. Do not set the port or a start date at this time. Those will get set later.
 #. Click ``Save`` in the lower right.
 
+
+.. note:: The Longturn server is configured to accept incoming connections on ports ``5050`` to ``5099``. Note
+  that port ``5060`` can be problematic for some corporate and educational facilites and should be avoided.
+
+
 Notes on the :strong:`game description`:
 
 * Give details as to the type of game you want to play. This is especially important for Team and Experimental games.
@@ -124,6 +129,20 @@ Notes on the :strong:`game description`:
   same time you are trying to do some moves, such as establishing a new city or attacking. A non-RTS game would not
   allow this synchronous action. A RTS game would allow it. Teamless games are often non-RTS, same with Team games.
   However, Experimental or other types are games could allow it.
+
+
+The following code-block can be used to copy and paste into the Django admin site for new games.
+
+.. code-block:: html
+
+  <b>Description: </b>This is the game description. This game will be a [team | teamless | scenario] game.<br><br>
+  <b>Rules: </b>This game will use [LTT | LTX] Rules.<br><br>
+  <b>Winning Alliance: </b>This game will use the following math formula for the winning alliance:
+    <kbd>round(N/4)</kbd>, where <kbd>N</kbd> is the number of confirmed players rounded down to the nearest
+    whole number.<br><br>
+  <b>Map Topology: </b>This game will use [hex | square | iso | overhead] map tiles.<br><br>
+  <b>Turn Length: </b>This game will have 25 hour turns.<br><br>
+  <b>RTS: </b>This game [will | will not] allow Real Time Strategy (RTS) player engagement.
 
 
 At this point you can announce the game on the ``#new-games`` channel on the Longturn Discord server to let people know
