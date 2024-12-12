@@ -89,7 +89,7 @@ static inline size_t SPECVEC_FOO(_vector_size)(const SPECVEC_VECTOR *tthis)
 }
 
 static inline SPECVEC_TYPE *
-    SPECVEC_FOO(_vector_get)(const SPECVEC_VECTOR *tthis, int svindex)
+SPECVEC_FOO(_vector_get)(const SPECVEC_VECTOR *tthis, int svindex)
 {
   if (svindex == -1 && tthis->size > 0) {
     return tthis->p + tthis->size - 1;

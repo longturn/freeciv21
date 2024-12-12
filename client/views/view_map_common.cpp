@@ -318,8 +318,8 @@ bool tile_to_canvas_pos(float *canvas_x, float *canvas_y, const tile *ptile)
    * backing store we need to draw it in case the canvas is resized.
    */
   return (*canvas_x > -tileset_tile_width(tileset)
-          && *canvas_x<mapview.store_width
-                           && * canvas_y> - tileset_tile_height(tileset)
+          && *canvas_x < mapview.store_width
+          && *canvas_y > -tileset_tile_height(tileset)
           && *canvas_y < (mapview.store_height
                           + (tileset_full_tile_height(tileset)
                              - tileset_tile_height(tileset))));

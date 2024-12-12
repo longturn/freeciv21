@@ -94,11 +94,11 @@ void fc_assert_handle_failure(const char *condition, const char *file,
 
 // Like assert() with extra message.
 #define fc_assert_msg(condition, message, ...)                              \
-  ((condition)                                                              \
-       ? ((void) 0)                                                         \
-       : fc_assert_handle_failure(                                          \
-           #condition, QT_MESSAGELOG_FILE, QT_MESSAGELOG_LINE,              \
-           QT_MESSAGELOG_FUNC, QString::asprintf(message, ##__VA_ARGS__)))
+  ((condition) ? ((void) 0)                                                 \
+               : fc_assert_handle_failure(                                  \
+                     #condition, QT_MESSAGELOG_FILE, QT_MESSAGELOG_LINE,    \
+                     QT_MESSAGELOG_FUNC,                                    \
+                     QString::asprintf(message, ##__VA_ARGS__)))
 
 // Do action on failure.
 #define fc_assert_action(condition, action)                                 \
@@ -109,7 +109,7 @@ void fc_assert_handle_failure(const char *condition, const char *file,
   }
 
 // Return on failure.
-#define fc_assert_ret(condition) fc_assert_action(condition, return )
+#define fc_assert_ret(condition) fc_assert_action(condition, return)
 // Return a value on failure.
 #define fc_assert_ret_val(condition, val)                                   \
   fc_assert_action(condition, return val)

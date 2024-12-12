@@ -352,7 +352,7 @@ void calc_civ_score(struct player *pplayer)
   }
   unit_list_iterate_end
 
-      improvement_iterate(i)
+  improvement_iterate(i)
   {
     if (is_great_wonder(i) && (wonder_city = city_from_great_wonder(i))
         && player_owns_city(pplayer, wonder_city)) {

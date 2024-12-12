@@ -118,8 +118,8 @@ static inline void SPECPQ_FOO(_pq_destroy)(SPECPQ_PQ *_pq)
   Alternative destructor for queue structure.
 ****************************************************************************/
 static inline void
-    SPECPQ_FOO(_pq_destroy_full)(SPECPQ_PQ *_pq,
-                                 SPECPQ_FOO(_pq_data_free_fn_t) data_free)
+SPECPQ_FOO(_pq_destroy_full)(SPECPQ_PQ *_pq,
+                             SPECPQ_FOO(_pq_data_free_fn_t) data_free)
 {
   SPECPQ_PQ_ *pq = reinterpret_cast<SPECPQ_PQ_ *>(_pq);
   int i;
