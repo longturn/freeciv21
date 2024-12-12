@@ -4203,7 +4203,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                            ratio);
             }
           } // else this effect somehow has no effect; keep quiet
-        }   // else there was some extra condition making it complicated
+        } // else there was some extra condition making it complicated
         break;
       case EFT_UNIT_UPKEEP_FREE_PER_CITY:
         if (!unittype) {

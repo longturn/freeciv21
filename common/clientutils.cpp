@@ -46,7 +46,7 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile)
     int rmextra_units[MAX_EXTRA_TYPES][ACTIVITY_LAST];
     int activity_total[ACTIVITY_LAST];
     int activity_units[ACTIVITY_LAST];
-  } * t;
+  } *t;
 
   t = new tmp_state[1]();
   memset(calc, 0, sizeof(*calc));

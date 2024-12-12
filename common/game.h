@@ -541,7 +541,7 @@ extern struct world wld;
 #define GAME_DEFAULT_SCORETURN 20
 
 #define GAME_DEFAULT_VICTORY_CONDITIONS                                     \
-  ((victory_condition_type)(1 << VC_SPACERACE | 1 << VC_ALLIED))
+  ((victory_condition_type) (1 << VC_SPACERACE | 1 << VC_ALLIED))
 #define GAME_DEFAULT_END_SPACESHIP true
 
 #define GAME_DEFAULT_SPACESHIP_TRAVEL_TIME 100

@@ -226,7 +226,7 @@ int current_compat_ver() { return compat[compat_current].version; }
  */
 char bin2ascii_hex(int value, int halfbyte_wanted)
 {
-  return hex_chars[((value) >> ((halfbyte_wanted) *4)) & 0xf];
+  return hex_chars[((value) >> ((halfbyte_wanted) * 4)) & 0xf];
 }
 
 /**

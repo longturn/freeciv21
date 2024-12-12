@@ -238,9 +238,10 @@ static inline void package_research_info(struct packet_research_info *packet,
   packet->future_tech = presearch->future_tech;
   packet->researching = presearch->researching;
   packet->researching_cost =
-      (packet->researching != A_UNSET ? research_total_bulbs_required(
-           presearch, presearch->researching, false)
-                                      : 0);
+      (packet->researching != A_UNSET
+           ? research_total_bulbs_required(presearch, presearch->researching,
+                                           false)
+           : 0);
   packet->bulbs_researched = presearch->bulbs_researched;
   packet->tech_goal = presearch->tech_goal;
   packet->total_bulbs_prod = 0;
@@ -693,7 +694,7 @@ void update_bulbs(struct player *pplayer, int bulbs, bool check_tech)
                   (is_future_tech(tech)
                        ? "Future Tech"
                        : qUtf8Printable(
-                           research_advance_rule_name(research, tech))));
+                             research_advance_rule_name(research, tech))));
         research_tech_lost(research, tech);
         /* Make notification after losing the research, in case it is
          * a future tech (for getting the right tech number). */

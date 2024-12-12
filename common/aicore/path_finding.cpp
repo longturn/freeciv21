@@ -938,7 +938,7 @@ struct pf_danger_node {
     signed short cost;      // See comment above.
     unsigned extra_cost;    // See comment above.
     signed dir_to_here : 4; // See comment above.
-  } * danger_segment;
+  } *danger_segment;
 };
 
 // Derived structure of struct pf_map.

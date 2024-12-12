@@ -3171,9 +3171,10 @@ bool is_req_active(
                                 req->source.value.building);
     break;
   case VUT_IMPR_GENUS:
-    eval = (target_building ? BOOL_TO_TRISTATE(
-                target_building->genus == req->source.value.impr_genus)
-                            : TRI_MAYBE);
+    eval =
+        (target_building ? BOOL_TO_TRISTATE(target_building->genus
+                                            == req->source.value.impr_genus)
+                         : TRI_MAYBE);
     break;
   case VUT_EXTRA:
     eval = is_extra_type_in_range(target_tile, target_city, req->range,
