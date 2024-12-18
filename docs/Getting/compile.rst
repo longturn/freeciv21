@@ -174,10 +174,7 @@ following commands:
      libsdl2-mixer-dev \
      libunwind-dev \
      libdw-dev \
-     gettext \
-     python3-sphinx \
-     clang-format
-
+     gettext
 
 At this point, follow the steps in `Obtaining the Source Code`_ section below.
 
@@ -203,8 +200,7 @@ RHEL, CentOS Stream) to install Freeciv21.
     readline-devel \
     zlib-devel \
     libunwind-devel \
-    elfutils-libs \
-    python3-sphinx
+    elfutils-libs
 
 
 At this point, follow the steps in `Obtaining the Source Code`_ section below.
