@@ -24,7 +24,7 @@ class QBitArray;
   (((val) & (1u << (bit_no))) == (1u << (bit_no)))
 
 // Static bitvectors.
-#define _BV_BYTES(bits) ((((bits) - 1) / 8) + 1)
+#define _BV_BYTES(bits) ((((bits) -1) / 8) + 1)
 #define _BV_BYTE_INDEX(bits) ((bits) / 8)
 #define _BV_BITMASK(bit) (1u << ((bit) & 0x7))
 #ifdef FREECIV_DEBUG

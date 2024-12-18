@@ -50,7 +50,9 @@ static const char *event_sections[] = {
     N_("Vote: %s"), N_("Wonder: %s"), nullptr};
 
 #define GEN_EV(event, section, descr)                                       \
-  {#event, nullptr, section, descr, nullptr, event}
+  {                                                                         \
+    #event, nullptr, section, descr, nullptr, event                         \
+  }
 
 /*
  * Holds information about all event types. The entries don't have

@@ -29,7 +29,10 @@ struct name_translation {
 };
 
 // Inititalization macro.
-#define NAME_INIT {nullptr, "\0", "\0"}
+#define NAME_INIT                                                           \
+  {                                                                         \
+    nullptr, "\0", "\0"                                                     \
+  }
 
 /****************************************************************************
   Initializes a name translation structure.

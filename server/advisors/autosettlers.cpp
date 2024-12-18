@@ -748,7 +748,7 @@ adv_want settler_evaluate_improvements(struct unit *punit,
           }
           extra_type_iterate_end;
         } // endif: can we arrive sooner than current worker, if any?
-      } // endif: are we travelling to a legal destination?
+      }   // endif: are we travelling to a legal destination?
     }
     city_tile_iterate_index_end;
   }

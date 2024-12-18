@@ -1283,90 +1283,56 @@ static bool plrcol_validate(int value, struct connection *caller,
 #define GEN_BOOL(name, value, sclass, scateg, slevel, al_read, al_write,    \
                  short_help, extra_help, func_validate, func_action,        \
                  _default)                                                  \
-  {name,                                                                    \
-   sclass,                                                                  \
-   al_read,                                                                 \
-   al_write,                                                                \
-   short_help,                                                              \
-   extra_help,                                                              \
-   nullptr,                                                                 \
-   SST_BOOL,                                                                \
-   scateg,                                                                  \
-   slevel,                                                                  \
-   {.boolean = {&value, _default, func_validate, bool_name, false}},        \
-   func_action,                                                             \
-   false}
+  {                                                                         \
+    name, sclass, al_read, al_write, short_help, extra_help, nullptr,       \
+        SST_BOOL, scateg, slevel,                                           \
+        {.boolean = {&value, _default, func_validate, bool_name, false}},   \
+        func_action, false                                                  \
+  }
 
 #define GEN_INT(name, value, sclass, scateg, slevel, al_read, al_write,     \
                 short_help, extra_help, func_help, func_validate,           \
                 func_action, _min, _max, _default)                          \
-  {name,                                                                    \
-   sclass,                                                                  \
-   al_read,                                                                 \
-   al_write,                                                                \
-   short_help,                                                              \
-   extra_help,                                                              \
-   func_help,                                                               \
-   SST_INT,                                                                 \
-   scateg,                                                                  \
-   slevel,                                                                  \
-   {.integer = {(int *) &value, _default, _min, _max, func_validate, 0}},   \
-   func_action,                                                             \
-   false}
+  {                                                                         \
+    name, sclass, al_read, al_write, short_help, extra_help, func_help,     \
+        SST_INT, scateg, slevel,                                            \
+        {.integer = {(int *) &value, _default, _min, _max, func_validate,   \
+                     0}},                                                   \
+        func_action, false                                                  \
+  }
 
 #define GEN_STRING(name, value, sclass, scateg, slevel, al_read, al_write,  \
                    short_help, extra_help, func_validate, func_action,      \
                    _default)                                                \
-  {name,                                                                    \
-   sclass,                                                                  \
-   al_read,                                                                 \
-   al_write,                                                                \
-   short_help,                                                              \
-   extra_help,                                                              \
-   nullptr,                                                                 \
-   SST_STRING,                                                              \
-   scateg,                                                                  \
-   slevel,                                                                  \
-   {.string = {value, _default, sizeof(value), func_validate,               \
-               (char *) ""}},                                               \
-   func_action,                                                             \
-   false}
+  {                                                                         \
+    name, sclass, al_read, al_write, short_help, extra_help, nullptr,       \
+        SST_STRING, scateg, slevel,                                         \
+        {.string = {value, _default, sizeof(value), func_validate,          \
+                    (char *) ""}},                                          \
+        func_action, false                                                  \
+  }
 
 #define GEN_ENUM(name, value, sclass, scateg, slevel, al_read, al_write,    \
                  short_help, extra_help, func_help, func_validate,          \
                  func_action, func_name, _default)                          \
-  {name,                                                                    \
-   sclass,                                                                  \
-   al_read,                                                                 \
-   al_write,                                                                \
-   short_help,                                                              \
-   extra_help,                                                              \
-   func_help,                                                               \
-   SST_ENUM,                                                                \
-   scateg,                                                                  \
-   slevel,                                                                  \
-   {.enumerator = {&value, sizeof(value), _default, func_validate,          \
-                   (val_name_func_t) func_name, 0}},                        \
-   func_action,                                                             \
-   false}
+  {                                                                         \
+    name, sclass, al_read, al_write, short_help, extra_help, func_help,     \
+        SST_ENUM, scateg, slevel,                                           \
+        {.enumerator = {&value, sizeof(value), _default, func_validate,     \
+                        (val_name_func_t) func_name, 0}},                   \
+        func_action, false                                                  \
+  }
 
 #define GEN_BITWISE(name, value, sclass, scateg, slevel, al_read, al_write, \
                     short_help, extra_help, func_validate, func_action,     \
                     func_name, _default)                                    \
-  {name,                                                                    \
-   sclass,                                                                  \
-   al_read,                                                                 \
-   al_write,                                                                \
-   short_help,                                                              \
-   extra_help,                                                              \
-   nullptr,                                                                 \
-   SST_BITWISE,                                                             \
-   scateg,                                                                  \
-   slevel,                                                                  \
-   {.bitwise = {(unsigned *) (void *) &value, _default, func_validate,      \
-                func_name, 0}},                                             \
-   func_action,                                                             \
-   false}
+  {                                                                         \
+    name, sclass, al_read, al_write, short_help, extra_help, nullptr,       \
+        SST_BITWISE, scateg, slevel,                                        \
+        {.bitwise = {(unsigned *) (void *) &value, _default, func_validate, \
+                     func_name, 0}},                                        \
+        func_action, false                                                  \
+  }
 
 // game settings
 static struct setting settings[] = {

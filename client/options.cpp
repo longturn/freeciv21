@@ -245,13 +245,11 @@ struct option {
 
 #define OPTION_INIT(optset, spec_type, spec_table_var, common_table,        \
                     spec_table, changed_cb, cb_data)                        \
-  {.poptset = optset,                                                       \
-   .type = spec_type,                                                       \
-   .common_vtable = &common_table,                                          \
-   .spec_table_var = &spec_table,                                           \
-   .changed_callback = changed_cb,                                          \
-   .callback_data = cb_data,                                                \
-   .gui_data = nullptr}
+  {                                                                         \
+    .poptset = optset, .type = spec_type, .common_vtable = &common_table,   \
+    .spec_table_var = &spec_table, .changed_callback = changed_cb,          \
+    .callback_data = cb_data, .gui_data = nullptr                           \
+  }
 #define OPTION_BOOL_INIT(optset, common_table, bool_table, changed_cb)      \
   OPTION_INIT(optset, OT_BOOLEAN, bool_vtable, common_table, bool_table,    \
               changed_cb, 0)

@@ -657,7 +657,7 @@ path_finder::path_finder(const unit *unit)
  */
 path_finder::path_finder(const unit *unit, const path::step &init)
     : m_d(std::make_unique<path_finder_private>(
-          unit, detail::vertex{init, nullptr}))
+        unit, detail::vertex{init, nullptr}))
 {
 }
 

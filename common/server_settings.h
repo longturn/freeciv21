@@ -15,7 +15,7 @@ received a copy of the GNU General Public License along with Freeciv21.
 #include "fc_types.h"
 
 // Special value to signal the absence of a server setting.
-#define SERVER_SETTING_NONE ((server_setting_id) - 1)
+#define SERVER_SETTING_NONE ((server_setting_id) -1)
 
 // Pure server settings.
 server_setting_id server_setting_by_name(const char *name);

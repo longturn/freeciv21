@@ -122,7 +122,7 @@ bool map_startpos_remove(struct tile *ptile);
 
 #define MAP_TO_NATIVE_POS(pnat_x, pnat_y, map_x, map_y)                     \
   (MAP_IS_ISOMETRIC                                                         \
-       ? (*(pnat_y) = (map_x) + (map_y) - wld.map.xsize,                    \
+       ? (*(pnat_y) = (map_x) + (map_y) -wld.map.xsize,                     \
           *(pnat_x) = (2 * (map_x) - *(pnat_y) - (*(pnat_y) & 1)) / 2)      \
        : (*(pnat_x) = (map_x), *(pnat_y) = (map_y)))
 
@@ -132,7 +132,7 @@ bool map_startpos_remove(struct tile *ptile);
                     : (*(pmap_x) = (nat_x), *(pmap_y) = (nat_y)))
 
 #define MAP_TO_NATURAL_POS(pnat_x, pnat_y, map_x, map_y)                    \
-  (MAP_IS_ISOMETRIC ? (*(pnat_y) = (map_x) + (map_y) - wld.map.xsize,       \
+  (MAP_IS_ISOMETRIC ? (*(pnat_y) = (map_x) + (map_y) -wld.map.xsize,        \
                        *(pnat_x) = 2 * (map_x) - *(pnat_y))                 \
                     : (*(pnat_x) = (map_x), *(pnat_y) = (map_y)))
 

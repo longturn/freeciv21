@@ -92,7 +92,7 @@
 // Offset type (in bytes).
 typedef int ft_offset_t;
 // Unset offset value.
-#define FT_OFFSET_UNSET ((ft_offset_t) - 1)
+#define FT_OFFSET_UNSET ((ft_offset_t) -1)
 
 // Opaque type.
 struct text_tag;
@@ -136,7 +136,10 @@ struct ft_color {
   const char *background;
 };
 
-#define FT_COLOR(fg, bg) { fg, bg }
+#define FT_COLOR(fg, bg)                                                    \
+  {                                                                         \
+    fg, bg                                                                  \
+  }
 
 /**************************************************************************
   Constructor.
