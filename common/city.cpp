@@ -2649,13 +2649,18 @@ static inline void unhappy_city_check(struct city *pcity)
    Calculate the pollution from production and population in the city.
  */
 int city_pollution_types(const struct city *pcity, int shield_total,
-                         int *pollu_prod, int *pollu_pop, int *pollu_mod)
+                         int trade_total, int *pollu_prod, int *pollu_trade,
+                         int *pollu_pop, int *pollu_mod)
 {
-  int prod, pop, mod;
+  int prod, trade, pop, mod;
 
   // Add one one pollution per shield, multipled by the bonus.
   prod = 100 + get_city_bonus(pcity, EFT_POLLU_PROD_PCT);
   prod = shield_total * MAX(prod, 0) / 100;
+
+  // Add pollution per trade, multipled by the effect.
+  trade = get_city_bonus(pcity, EFT_POLLU_TRADE_PCT);
+  trade = trade_total * MAX(trade, 0) / 100;
 
   // Add one pollution per citizen for baseline combined bonus (100%).
   pop = (100 + get_city_bonus(pcity, EFT_POLLU_POP_PCT))
@@ -2668,23 +2673,27 @@ int city_pollution_types(const struct city *pcity, int shield_total,
   if (pollu_prod) {
     *pollu_prod = prod;
   }
+  if (pollu_trade) {
+    *pollu_trade = trade;
+  }
   if (pollu_pop) {
     *pollu_pop = pop;
   }
   if (pollu_mod) {
     *pollu_mod = mod;
   }
-  return MAX(prod + pop + mod, 0);
+  return MAX(prod + trade + pop + mod, 0);
 }
 
 /**
-   Calculate pollution for the city.  The shield_total must be passed in
-   (most callers will want to pass pcity->shield_prod).
+   Calculate pollution for the city.  The shield_total and trade_total must
+   be passed in (most callers will want to pass pcity->shield_prod).
  */
-int city_pollution(const struct city *pcity, int shield_total)
+int city_pollution(const struct city *pcity, int shield_total,
+                   int trade_total)
 {
-  return city_pollution_types(pcity, shield_total, nullptr, nullptr,
-                              nullptr);
+  return city_pollution_types(pcity, shield_total, trade_total, nullptr,
+                              nullptr, nullptr, nullptr);
 }
 
 /**
@@ -3065,7 +3074,8 @@ void city_refresh_from_main_map(
   citizen_base_mood(pcity);
   /* Note that pollution is calculated before unhappy_city_check() makes
    * deductions for disorder; so a city in disorder still causes pollution */
-  pcity->pollution = city_pollution(pcity, pcity->prod[O_SHIELD]);
+  pcity->pollution =
+      city_pollution(pcity, pcity->prod[O_SHIELD], pcity->prod[O_TRADE]);
 
   happy_copy(pcity, FEELING_LUXURY);
   citizen_happy_luxury(pcity); // with our new found luxuries

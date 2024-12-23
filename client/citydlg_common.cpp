@@ -666,16 +666,18 @@ QString get_city_dialog_illness_text(const struct city *pcity)
  */
 QString get_city_dialog_pollution_text(const struct city *pcity)
 {
-  int pollu, prod, pop, mod;
+  int pollu, prod, trade, pop, mod;
   struct city_sum *sum = city_sum_new(Q_("?city_pollution:%+4.0f : %s"));
 
   /* On the server, pollution is calculated before production is deducted
    * for disorder; we need to compensate for that */
   pollu = city_pollution_types(
-      pcity, pcity->prod[O_SHIELD] + pcity->unhappy_penalty[O_SHIELD], &prod,
+      pcity, pcity->prod[O_SHIELD] + pcity->unhappy_penalty[O_SHIELD],
+      pcity->prod[O_TRADE] + pcity->unhappy_penalty[O_TRADE], &prod, &trade,
       &pop, &mod);
 
   city_sum_add(sum, prod, Q_("?city_pollution:Pollution from shields"));
+  city_sum_add(sum, trade, Q_("?city_pollution:Pollution from trade"));
   city_sum_add(sum, pop, Q_("?city_pollution:Pollution from citizens"));
   city_sum_add(sum, mod, Q_("?city_pollution:Pollution modifier"));
   return city_sum_print(sum, false,

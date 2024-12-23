@@ -1074,6 +1074,7 @@ QString effect_type_unit_text(effect_type type, int value)
   case EFT_POLLU_POP_PCT:
   case EFT_POLLU_POP_PCT_2:
   case EFT_POLLU_PROD_PCT:
+  case EFT_POLLU_TRADE_PCT:
   case EFT_INCITE_COST_PCT:
   case EFT_SPY_RESISTANT:
   case EFT_VETERAN_COMBAT:

@@ -170,6 +170,7 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
   case EFT_POLLU_POP_PCT:
   case EFT_POLLU_POP_PCT_2:
   case EFT_POLLU_PROD_PCT:
+  case EFT_POLLU_TRADE_PCT:
   case EFT_OUTPUT_BONUS:
   case EFT_OUTPUT_BONUS_2:
   case EFT_OUTPUT_ADD_TILE:
