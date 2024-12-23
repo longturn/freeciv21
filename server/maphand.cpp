@@ -199,13 +199,12 @@ void climate_change(bool warming, int effect)
       update_tile_knowledge(ptile);
 
       // Check the unit activities.
-      unit_list_iterate(ptile->units, punit)
+      unit_activities_cancel_all_illegal(ptile);
+      adjc_iterate(&(wld.map), ptile, n_tile)
       {
-        if (!can_unit_continue_current_activity(punit)) {
-          unit_activity_handling(punit, ACTIVITY_IDLE);
-        }
+        unit_activities_cancel_all_illegal(n_tile);
       }
-      unit_list_iterate_end;
+      adjc_iterate_end;
     } else if (old == tnew) {
       // This counts toward a climate change although nothing is changed.
       effect--;
