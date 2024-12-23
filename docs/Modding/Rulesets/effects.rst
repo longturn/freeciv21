@@ -690,10 +690,13 @@ HP_Regen_Min
 City_Vision_Radius_Sq
     Increase city vision radius in squared distance by AMOUNT tiles.
 
+    .. warning::
+        Vision in the Stealth and Subsurface layers must always be smaller than in the Main layer.
+
     .. note::
         This effect is added automatically for VisionLayers other than Main, with a value of 2, and a
         VisionLayer=Main requirement is added to any existing instances of this effect. This behaviour can be
-        turned off by requiring the ``+VisionLayer`` option in :file:`effects.ruleset`, allowing you to use
+        turned off by requiring the ``+Vision_Layer`` option in :file:`effects.ruleset`, allowing you to use
         VisionLayer requirements to specify which layer (Main, Stealth or Subsurface) the effect applies to.
 
 .. _effect-unit-vision-radius-sq:
@@ -701,9 +704,12 @@ City_Vision_Radius_Sq
 Unit_Vision_Radius_Sq
     Increase unit vision radius in squared distance by AMOUNT tiles.
 
+    .. warning::
+        Vision in the Stealth and Subsurface layers must always be smaller than in the Main layer.
+
     .. note::
         A VisionLayer=Main requirement is added automatically to any existing instances of this effect. This
-        behaviour can be turned off by requiring the ``+VisionLayer`` option in :file:`effects.ruleset`,
+        behaviour can be turned off by requiring the ``+Vision_Layer`` option in :file:`effects.ruleset`,
         allowing you to use VisionLayer requirements to specify which layer (Main, Stealth or Subsurface) the
         effect applies to.
 
