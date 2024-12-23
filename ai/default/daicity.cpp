@@ -1479,7 +1479,8 @@ adv_want dai_city_want(struct player *pplayer, struct city *acity,
   want += prod[O_FOOD] * adv->food_priority;
   if (prod[O_SHIELD] != 0) {
     want += prod[O_SHIELD] * adv->shield_priority;
-    want -= city_pollution(acity, prod[O_SHIELD]) * adv->pollution_priority;
+    want -= city_pollution(acity, prod[O_SHIELD], prod[O_TRADE])
+            * adv->pollution_priority;
   }
   want += prod[O_LUXURY] * adv->luxury_priority;
   want += prod[O_SCIENCE] * adv->science_priority;

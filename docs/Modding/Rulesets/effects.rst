@@ -434,6 +434,11 @@ Pollu_Pop_Pct_2
     i.e. 1 pollution per citizen). This factor is applied after :ref:`Pollu_Pop_Pct <effect-pollu-pop-pct>`,
     so is multiplicative with it.
 
+.. _effect-pollu-trade-pct:
+
+Pollu_Trade_Pct
+    Each trade generates AMOUNT percent of pollution.
+
 .. _effect-pollu-prod-pct:
 
 Pollu_Prod_Pct
