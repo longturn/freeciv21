@@ -495,7 +495,7 @@ To place a setting value on any of these settings use the ``/set <option-name> <
   the unit.
 
 ``landmass``
-  :strong:`Default Value (Min, Max)`: 30 (15, 85)
+  :strong:`Default Value (Min, Max)`: 30 (15, 100)
 
   :strong:`Description`: Percentage of the map that is land. This setting gives the approximate percentage of
   the map that will be made into land.
