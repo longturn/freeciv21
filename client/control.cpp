@@ -2518,7 +2518,7 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
 }
 
 /**
-   Quickselecting a unit is normally done with <control> left, right click,
+   Quickselecting a unit is normally done with [control] left, right click,
    for the current tile. Bypassing the stack popup is quite convenient,
    and can be tactically important in furious multiplayer games.
  */

@@ -12,142 +12,148 @@
       \____/        ********************************************************/
 
 /**
-  \file
-  the idea with this file is to create something similar to the ms-windows
-  .ini files functions.
-  however the interface is nice. ie:
-  secfile_lookup_str(file, "player%d.unit%d.name", plrno, unitno);
-
-  Description of the file format
-  ==============================
-
-  (This is based on a format by the original authors, with
-  various incremental extensions. --dwp)
-
-  - Whitespace lines are ignored, as are lines where the first
-  non-whitespace character is ';' (comment lines).
-  Optionally '#' can also be used for comments.
-
-  - A line of the form:
-       *include "filename"
-  includes the named file at that point.  (The '*' must be the
-  first character on the line.) The file is found by looking in
-  FREECIV_DATA_PATH.  Non-infinite recursive includes are allowed.
-
-  - A line with "[name]" labels the start of a section with
-  that name; one of these must be the first non-comment line in
-  the file.  Any spaces within the brackets are included in the
-  name, but this feature (?) should probably not be used...
-
-  - Within a section, lines have one of the following forms:
-      subname = "stringvalue"
-      subname = -digits
-      subname = digits
-      subname = TRUE
-      sunname = FALSE
-  for a value with given name and string, negative integer, and
-  positive integer values, respectively.  These entries are
-  referenced in the following functions as "sectionname.subname".
-  The section name should not contain any dots ('.'); the subname
-  can, but they have no particular significance.  There can be
-  optional whitespace before and/or after the equals sign.
-  You can put a newline after (but not before) the equals sign.
-
-  Backslash is an escape character in strings (double-quoted strings
-  only, not names); recognised escapes are \n, \\, and \".
-  (Any other \<char> is just treated as <char>.)
-
-  - Gettext markings:  You can surround strings like so:
-      foo = _("stringvalue")
-  The registry just ignores these extra markings, but this is
-  useful for marking strings for translations via gettext tools.
-
-  - Multiline strings:  Strings can have embeded newlines, eg:
-    foo = _("
-    This is a string
-    over multiple lines
-    ")
-  This is equivalent to:
-    foo = _("\nThis is a string\nover multiple lines\n")
-  Note that if you missplace the trailing doublequote you can
-  easily end up with strange errors reading the file...
-
-  - Strings read from a file: A file can be read as a string value:
-    foo = *filename.txt*
-
-  - Vector format: An entry can have multiple values separated
-  by commas, eg:
-      foo = 10, 11, "x"
-  These are accessed by names "foo", "foo,1" and "foo,2"
-  (with section prefix as above).  So the above is equivalent to:
-      foo   = 10
-      foo,1 = 11
-      foo,2 = "x"
-  As in the example, in principle you can mix integers and strings,
-  but the calling program will probably require elements to be the
-  same type.   Note that the first element of a vector is not "foo,0",
-  in order that the name of the first element is the same whether or
-  not there are subsequent elements.  However as a convenience, if
-  you try to lookup "foo,0" then you get back "foo".  (So you should
-  never have "foo,0" as a real name in the datafile.)
-
-  - Tabular format:  The lines:
-      foo = { "bar",  "baz",   "bax"
-              "wow",   10,     -5
-              "cool",  "str"
-              "hmm",    314,   99, 33, 11
-      }
-  are equivalent to the following:
-      foo0.bar = "wow"
-      foo0.baz = 10
-      foo0.bax = -5
-      foo1.bar = "cool"
-      foo1.baz = "str"
-      foo2.bar = "hmm"
-      foo2.baz = 314
-      foo2.bax = 99
-      foo2.bax,1 = 33
-      foo2.bax,2 = 11
-  The first line specifies the base name and the column names, and the
-  subsequent lines have data.  Again it is possible to mix string and
-  integer values in a column, and have either more or less values
-  in a row than there are column headings, but the code which uses
-  this information (via the registry) may set more stringent conditions.
-  If a row has more entries than column headings, the last column is
-  treated as a vector (as above).  You can optionally put a newline
-  after '=' and/or after '{'.
-
-  The equivalence above between the new and old formats is fairly
-  direct: internally, data is converted to the old format.
-  In principle it could be a good idea to represent the data
-  as a table (2-d array) internally, but the current method
-  seems sufficient and relatively simple...
-
-  There is a limited ability to save data in tabular:
-  So long as the section_file is constructed in an expected way,
-  tabular data (with no missing or extra values) can be saved
-  in tabular form.  (See section_file_save().)
-
-  - Multiline vectors: if the last non-comment non-whitespace
-  character in a line is a comma, the line is considered to
-  continue on to the next line.  Eg:
-      foo = 10,
-            11,
-            "x"
-  This is equivalent to the original "vector format" example above.
-  Such multi-lines can occur for column headings, vectors, or
-  table rows, again with some potential for strange errors...
-
-  Hashing registry lookups
-  ========================
-
-  (by dwp)
-  - Have a hash table direct to entries, bypassing sections division.
-  - For convenience, store the key (the full section+entry name)
-    in the hash table (some memory overhead).
-  - The number of entries is fixed when the hash table is built.
-  - Now uses hash.c
- */
+ * \file
+ * the idea with this file is to create something similar to the ms-windows
+ * .ini files functions.
+ * however the interface is nice. ie:
+ * secfile_lookup_str(file, "player%d.unit%d.name", plrno, unitno);
+ *
+ * Description of the file format
+ * ==============================
+ *
+ * (This is based on a format by the original authors, with
+ * various incremental extensions. --dwp)
+ *
+ * - Whitespace lines are ignored, as are lines where the first
+ *   non-whitespace character is ';' (comment lines).
+ *   Optionally '#' can also be used for comments.
+ *
+ * - A line of the form:
+ *      *include "filename"
+ *   includes the named file at that point.  (The '*' must be the
+ *   first character on the line.) The file is found by looking in
+ *   FREECIV_DATA_PATH.  Non-infinite recursive includes are allowed.
+ *
+ * - A line with "[name]" labels the start of a section with
+ *   that name; one of these must be the first non-comment line in
+ *   the file.  Any spaces within the brackets are included in the
+ *   name, but this feature (?) should probably not be used...
+ *
+ * - Within a section, lines have one of the following forms:
+ *     subname = "stringvalue"
+ *     subname = -digits
+ *     subname = digits
+ *     subname = TRUE
+ *     sunname = FALSE
+ *   for a value with given name and string, negative integer, and
+ *   positive integer values, respectively.  These entries are
+ *   referenced in the following functions as "sectionname.subname".
+ *   The section name should not contain any dots ('.'); the subname
+ *   can, but they have no particular significance.  There can be
+ *   optional whitespace before and/or after the equals sign.
+ *   You can put a newline after (but not before) the equals sign.
+ *
+ *   Backslash is an escape character in strings (double-quoted strings
+ *   only, not names); recognised escapes are \\n, \\\\, and \\".
+ *   (Any other \\\<char> is just treated as \<char>.)
+ *
+ * - Gettext markings:  You can surround strings like so:
+ *
+ *     foo = _("stringvalue")
+ *
+ *   The registry just ignores these extra markings, but this is
+ *   useful for marking strings for translations via gettext tools.
+ *
+ * - Multiline strings:  Strings can have embeded newlines, eg:
+ *
+ *     foo = _("
+ *     This is a string
+ *     over multiple lines
+ *     ")
+ *
+ *   This is equivalent to:
+ *
+ *     foo = _("\\nThis is a string\\nover multiple lines\\n")
+ *
+ *   Note that if you missplace the trailing doublequote you can
+ *   easily end up with strange errors reading the file...
+ *
+ * - Strings read from a file: A file can be read as a string value:
+ *   foo = *filename.txt*
+ *
+ * - Vector format: An entry can have multiple values separated
+ *   by commas, eg:
+ *       foo = 10, 11, "x"
+ *   These are accessed by names "foo", "foo,1" and "foo,2"
+ *   (with section prefix as above).  So the above is equivalent to:
+ *       foo   = 10
+ *       foo,1 = 11
+ *       foo,2 = "x"
+ *   As in the example, in principle you can mix integers and strings,
+ *   but the calling program will probably require elements to be the
+ *   same type.   Note that the first element of a vector is not "foo,0",
+ *   in order that the name of the first element is the same whether or
+ *   not there are subsequent elements.  However as a convenience, if
+ *   you try to lookup "foo,0" then you get back "foo".  (So you should
+ *   never have "foo,0" as a real name in the datafile.)
+ *
+ * - Tabular format:  The lines:
+ *     foo = { "bar",  "baz",   "bax"
+ *             "wow",   10,     -5
+ *             "cool",  "str"
+ *             "hmm",    314,   99, 33, 11
+ *     }
+ *   are equivalent to the following:
+ *       foo0.bar = "wow"
+ *       foo0.baz = 10
+ *       foo0.bax = -5
+ *       foo1.bar = "cool"
+ *       foo1.baz = "str"
+ *       foo2.bar = "hmm"
+ *       foo2.baz = 314
+ *       foo2.bax = 99
+ *       foo2.bax,1 = 33
+ *       foo2.bax,2 = 11
+ *   The first line specifies the base name and the column names, and the
+ *   subsequent lines have data.  Again it is possible to mix string and
+ *   integer values in a column, and have either more or less values
+ *   in a row than there are column headings, but the code which uses
+ *   this information (via the registry) may set more stringent conditions.
+ *   If a row has more entries than column headings, the last column is
+ *   treated as a vector (as above).  You can optionally put a newline
+ *   after '=' and/or after '{'.
+ *
+ *   The equivalence above between the new and old formats is fairly
+ *   direct: internally, data is converted to the old format.
+ *   In principle it could be a good idea to represent the data
+ *   as a table (2-d array) internally, but the current method
+ *   seems sufficient and relatively simple...
+ *
+ *   There is a limited ability to save data in tabular:
+ *   So long as the section_file is constructed in an expected way,
+ *   tabular data (with no missing or extra values) can be saved
+ *   in tabular form.  (See section_file_save().)
+ *
+ * - Multiline vectors: if the last non-comment non-whitespace
+ *   character in a line is a comma, the line is considered to
+ *   continue on to the next line.  Eg:
+ *       foo = 10,
+ *             11,
+ *             "x"
+ *   This is equivalent to the original "vector format" example above.
+ *   Such multi-lines can occur for column headings, vectors, or
+ *   table rows, again with some potential for strange errors...
+ *
+ * Hashing registry lookups
+ * ========================
+ *
+ * (by dwp)
+ * - Have a hash table direct to entries, bypassing sections division.
+ * - For convenience, store the key (the full section+entry name)
+ *   in the hash table (some memory overhead).
+ * - The number of entries is fixed when the hash table is built.
+ * - Now uses hash.c
+ **/
 // KArchive
 #include <KFilterDev>
 

@@ -141,9 +141,9 @@ void make_escapes(const char *str, char *buf, size_t buf_len)
    Copies a string. Backslash followed by a genuine newline always
    removes the newline.
    If full_escapes is TRUE:
-     - '\n' -> newline translation.
-     - Other '\c' sequences (any character 'c') are just passed
-       through with the '\' removed (eg, includes '\\', '\"').
+     - `\\n` -> newline translation.
+     - Other `\\c` sequences (any character `c`) are just passed
+       through with the `\\` removed (eg, includes `\\`, `"`).
    See also make_escapes().
  */
 QString remove_escapes(const QString &str, bool full_escapes)

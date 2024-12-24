@@ -92,14 +92,14 @@ struct pf_map {
 /**
  * Casts to `pf_map`
  *
- * \fixme Capitalized because this used to be a macro.
+ * \todo Capitalized because this used to be a macro.
  */
 pf_map *PF_MAP(void *x) { return reinterpret_cast<pf_map *>(x); }
 
 /**
  * Casts to `pf_map`
  *
- * \fixme Capitalized because this used to be a macro.
+ * \todo Capitalized because this used to be a macro.
  */
 const pf_map *PF_MAP(const void *x)
 {

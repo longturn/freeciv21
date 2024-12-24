@@ -444,7 +444,7 @@ void shortcut_edit::set_shortcut(const fc_shortcut &shortcut)
 }
 
 /**
- * \reimp
+ * Reimplemented from QObject
  */
 bool shortcut_edit::event(QEvent *event)
 {

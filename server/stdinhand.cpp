@@ -2020,7 +2020,7 @@ static bool connectmsg_command(struct connection *caller, char *str,
 
 /**
    Translate an AI level back to its CMD_* value.
-   If we just used /set ailevel <num> we wouldn't have to do this - rp
+   If we just used `/set ailevel <num>` we wouldn't have to do this - rp
  */
 static enum command_id cmd_of_level(enum ai_level level)
 {
@@ -2662,7 +2662,7 @@ static bool vote_command(struct connection *caller, char *str, bool check)
 }
 
 /**
-   Cancel a vote... /cancelvote <vote number>|all.
+   Cancel a vote... /cancelvote (vote number)|all.
  */
 static bool cancelvote_command(struct connection *caller, char *arg,
                                bool check)

@@ -12,7 +12,7 @@
 namespace freeciv {
 
 /**
- * @class colorizer Swaps colors in QPixmap
+ * @class colorizer colorizer.h Swaps colors in QPixmap
  *
  * Starting from a base pixmap, this class generates new pixmaps with one
  * color replaced (for instance, all pink pixels changed to green).
