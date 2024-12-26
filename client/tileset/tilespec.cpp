@@ -223,6 +223,7 @@ struct tileset {
   char name[512];
   char given_name[MAX_LEN_NAME];
   char version[MAX_LEN_NAME];
+  QString file_name;
   int priority;
 
   char *summary;
@@ -1621,6 +1622,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
   }
 
   t = tileset_new();
+  t->file_name = fname;
 
   file_capstr = secfile_lookup_str(file, "%s.options", "tilespec");
   duplicates_ok = (nullptr != file_capstr
@@ -2947,9 +2949,11 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
     if (!t->estyle_hash->contains(tag)) {
       tag = pextra->graphic_alt;
       if (!t->estyle_hash->contains(tag)) {
-        tileset_error(t, LOG_FATAL,
-                      _("No extra style for \"%s\" or \"%s\"."),
-                      pextra->graphic_str, pextra->graphic_alt);
+        tileset_error(
+            t, LOG_FATAL,
+            _("Missing entry for \"%s\" or \"%s\" in extras.styles in %s."),
+            pextra->graphic_str, pextra->graphic_alt,
+            qUtf8Printable(t->file_name));
       } else {
         qCDebug(tileset_category,
                 "Using alternate graphic \"%s\" "
