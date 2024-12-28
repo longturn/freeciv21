@@ -1,5 +1,5 @@
 /*
- Copyright (c) 1996-2023 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2024 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -528,6 +528,9 @@ hud_units::hud_units(QWidget *parent)
   setLayout(main_layout);
   mw = new move_widget(this);
   setFocusPolicy(Qt::ClickFocus);
+
+  connect(&unit_label, &click_label::wheel_scrolled, this,
+          &hud_units::cycle_units);
 }
 
 /**
@@ -771,6 +774,89 @@ void hud_units::update_actions()
 }
 
 /**
+   Cycle idle or sentried units for the unittype of the currently
+   selected unit.
+
+   The sign of direction determines in which direction the units will
+   be cycled.
+ */
+void hud_units::cycle_units(const int direction)
+{
+  if (get_num_units_in_focus() != 1) {
+    return;
+  }
+
+  struct unit *current_unit = head_of_units_in_focus();
+
+  // Get the count of relevant units and determine the index of the
+  // current unit among these units. If the current unit is not among
+  // the relevant units, then index 0 is assumed by default.
+  int unit_count = 0;
+  int current_unit_index = 0;
+  unit_list_iterate(client_player()->units, punit)
+  {
+    if (punit->utype != current_unit->utype) {
+      continue;
+    }
+
+    if (ACTIVITY_IDLE != punit->activity
+        && ACTIVITY_SENTRY != punit->activity) {
+      continue;
+    }
+
+    if (!can_unit_do_activity(punit, ACTIVITY_IDLE)) {
+      continue;
+    }
+
+    if (current_unit->id == punit->id) {
+      current_unit_index = unit_count;
+    }
+
+    unit_count++;
+  }
+  unit_list_iterate_end;
+
+  // Determine the index of the unit to be selected next.
+  int cycle_unit_index = current_unit_index;
+  if (direction > 0) {
+    cycle_unit_index++;
+  } else if (direction < 0) {
+    cycle_unit_index--;
+  }
+
+  if (cycle_unit_index < 0) {
+    cycle_unit_index = unit_count - 1;
+  } else if (cycle_unit_index >= unit_count) {
+    cycle_unit_index = 0;
+  }
+
+  // Select the next unit.
+  unit_count = 0;
+  unit_list_iterate(client_player()->units, punit)
+  {
+    if (punit->utype != current_unit->utype) {
+      continue;
+    }
+
+    if (ACTIVITY_IDLE != punit->activity
+        && ACTIVITY_SENTRY != punit->activity) {
+      continue;
+    }
+
+    if (!can_unit_do_activity(punit, ACTIVITY_IDLE)) {
+      continue;
+    }
+
+    if (unit_count == cycle_unit_index) {
+      unit_focus_set_and_select(punit);
+    }
+
+    unit_count++;
+  }
+  unit_list_iterate_end;
+}
+
+/**
    Custom label with extra mouse events
  */
 click_label::click_label() : QLabel()
@@ -787,6 +873,24 @@ void click_label::mousePressEvent(QMouseEvent *e)
   if (e->button() == Qt::LeftButton) {
     emit left_clicked();
   }
+}
+
+/**
+   Wheel event for click_label
+ */
+void click_label::wheelEvent(QWheelEvent *e)
+{
+  static int accumulatedDelta = 0;
+  accumulatedDelta += e->angleDelta().y();
+
+  if (abs(accumulatedDelta) < 120) {
+    return;
+  }
+
+  int steps = accumulatedDelta / 120;
+  accumulatedDelta = accumulatedDelta - steps * 120;
+
+  emit wheel_scrolled(steps);
 }
 
 /**
