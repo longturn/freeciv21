@@ -28,7 +28,7 @@ Translating Text
 Translating user-facing text is the most work-intensive part of internationalization. As a developer, you
 only need to make sure that strings are marked for translation when appropriate. In Freeciv21, this is done
 using a set of macros based on the `gettext <https://www.gnu.org/software/gettext/manual/gettext.html>`_
-library (defined in ``utility/fcintl.h``). The most simple one returns a translated version of a string:
+library (defined in :freeciv21:`fcintl.h`). The most simple one returns a translated version of a string:
 
 .. code-block:: cpp
 

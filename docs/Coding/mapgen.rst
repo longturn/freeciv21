@@ -15,22 +15,19 @@ This page describes how maps are generated in Freeciv21, from a technical
 perspective. There are several generators the user can choose from
 (``generator`` server setting), but they share a lot of code. The map generator
 code is located under ``server/generator``. The entry point is
-``map_generate`` in ``mapgen.cpp``.
+:freeciv21:`map_generate` in :freeciv21:`mapgen.cpp`.
 
 .. note::
   See :doc:`/Manuals/Advanced/map-generator` for a less technical introduction.
   This page expects the reader to already be familiar with the settings
   governing map creation.
 
-.. note::
-  Code references are as of August 2024.
-
 Map generation is performed in multiple passes. After some initialization, the
 first step, shared between all generators, is the creation of a basic
 temperature map. Since no terrain information exists at this stage, the
 temperature is simply a measure of the distance to the pole (the "colatitude").
 Unless ``alltemperate`` is set, the world is then divided in four regions:
-frozen, cold, temperate, and tropical (``create_tmap()``).
+frozen, cold, temperate, and tropical (:freeciv21:`create_tmap`).
 
 After the temperature is set, the actual map generation starts. This depends on
 the map generator chosen by the user, with various fallbacks in place. The
@@ -41,18 +38,18 @@ may already have been placed (this is for instance the case with the "fair
 islands" generator).
 
 At this stage, tiny (1x1) islands are removed if disabled in the settings
-(``tinyislands`` parameter, ``remove_tiny_islands()``). Water is also fine-tuned
-to always have shallow ocean next to the coast and be generally smooth
-(``smooth_water_depth()``). Continent numbers are assigned and small seas are
-turned to lakes (``assign_continent_numbers()`` and ``regenerate_lakes()``). The
-temperature map is reset after this is done.
+(``tinyislands`` parameter, :freeciv21:`remove_tiny_islands`). Water is also
+fine-tuned to always have shallow ocean next to the coast and be generally
+smooth (:freeciv21:`smooth_water_depth`). Continent numbers are assigned and
+small seas are turned to lakes (:freeciv21:`assign_continent_numbers` and
+:freeciv21:`regenerate_lakes`). The temperature map is reset after this is done.
 
 If not done earlier, resources are then added to the map with at least one tile
 between them. For each tile that gets a resource, one is picked at random from
-the list of allowed resources for the terrain (``add_resources()``). Huts are
-added in a similar way but with a minimum distance of 3 tiles (``make_huts()``).
-The final step is to distribute players, as described in
-:ref:`Player Placement <mapgen-placement>` below.
+the list of allowed resources for the terrain (:freeciv21:`add_resources`). Huts
+are added in a similar way but with a minimum distance of 3 tiles
+(:freeciv21:`make_huts`). The final step is to distribute players, as described
+in :ref:`Player Placement <mapgen-placement>` below.
 
 .. todo::
   This page is missing information about the Fair Islands generator. Please feel
@@ -76,8 +73,8 @@ similar way and is thus also described in this section.
 The equations used to derive the fraction of each terrain are highly arbitrary
 and have likely been determined through trial and error. Since the details are
 not particularly enlightening, only the general ideas are discussed below. The
-interested reader can read the function ``adjust_terrain_param()`` in
-``mapgen.cpp``.
+interested reader can read the function :freeciv21:`adjust_terrain_param` in
+:freeciv21:`mapgen.cpp`.
 
 The first fraction to be computed is the amount of polar terrain, decided based
 on the average temperature and the size of the map (larger maps get less). Since
@@ -120,7 +117,7 @@ generators and is described in :ref:`mapgen-terrain-assignment`.
 Fully Random Height
 ^^^^^^^^^^^^^^^^^^^
 
-Entry point: ``make_random_hmap()``.
+Entry point: :freeciv21:`make_random_hmap`.
 
 This generator is extremely simple: it builds a completely random height map and
 smoothes it out.
@@ -133,7 +130,7 @@ below, and :ref:`rivers are added on top <mapgen-height-rivers>`.
 Pseudo-Fractal Height
 ^^^^^^^^^^^^^^^^^^^^^
 
-Entry point: ``make_pseudofractal1_hmap()``.
+Entry point: :freeciv21:`make_pseudofractal_hmap`.
 
 This generator works by dividing the map in blocks (five plus the number of
 player islands to be created) and assigning a random height to their
@@ -154,7 +151,7 @@ generate rivers as described in :ref:`mapgen-terrain-assignment` and
 Fracture Map
 ^^^^^^^^^^^^
 
-Entry point: ``make_fracture_map()``.
+Entry point: :freeciv21:`make_fracture_hmap`.
 
 The ``FRACTURE`` generator starts from points distributed randomly on the map
 and grows them until they meet their neighbors. Each point is given a random
@@ -199,7 +196,7 @@ Terrain Assignment
 
 Generators that use a height map to generate the map share a common routine to
 assign terrain to the generated tiles, whose algorithm is described in this
-section. The code is in the ``make_land()`` function.
+section. The code is in the :freeciv21:`make_land` function.
 
 The first input is a "normalized" height map where the tile heights
 range from 0 to 1000 and are spread uniformly in this range. This allows for
@@ -209,7 +206,7 @@ frozen, cold, temperate, and tropical.
 
 The very first step taken by the algorithm is to reduce the height of terrain
 near the polar strips, if any. This prevents generating land next to them and
-disconnects land from the poles. (``normalize_hmap_poles()``)
+disconnects land from the poles. (:freeciv21:`normalize_hmap_poles`)
 
 Oceans and poles are generated next. Sea level is determined as the percentage
 of sea tiles, 100 minus the ``landmass`` server setting. Any tile with a low
@@ -222,7 +219,7 @@ shapes. At this stage, all tiles above sea level are filled with a dummy land
 terrain.
 
 Having generated the "sea" poles, the lowering is reverted to allow for cold
-land terrain in the area. (``renormalize_hmap_poles()``)
+land terrain in the area. (:freeciv21:`renormalize_hmap_poles`)
 
 The temperature map is recomputed after creating oceans. In addition to the
 distance from the poles, it now takes other factors into account. High ground is
@@ -232,7 +229,7 @@ simplified to four groups: frozen, cold, temperate, and tropical.
 
 In rulesets without frozen oceans, it may happen that the poles have still not
 been generated. They are marked back as land tiles by setting them to the
-"unknown" terrain. (``make_polar_land()``)
+"unknown" terrain. (:freeciv21:`make_polar_land`)
 
 The next step is to place relief, i.e. hills and mountains. This is again based
 on the height map: the highest land tiles become hills or mountains. The exact
@@ -240,11 +237,12 @@ fraction of land tiles that will become a hill or mountain is governed by the
 ``steepness`` server setting. Large chunks of steep terrain are avoided by
 randomly converting only half of the tiles and not converting tiles that are
 significantly higher than one their neighbors. In addition to the above, steep
-terrain is added in places that would otherwise be too flat. (``make_relief()``)
+terrain is added in places that would otherwise be too flat.
+(:freeciv21:`make_relief`)
 
 .. note::
   The ``FRACTURE`` generator uses a different logic for placing hills. The
-  code is in ``make_fracture_relief()``.
+  code is in :freeciv21:`make_fracture_relief`.
 
 Once it is decided that a tile will be steep, it is set to hilly terrain if the
 tile is in the region of hot temperature, and mountains otherwise. About 70% of
@@ -286,7 +284,8 @@ on the tile. The following combinations are generated one at a time:
 Terrain patches expand outwards from a seed tile until the required tile
 properties are no longer met or a threshold (*Thr.* in the table) in colatitude
 and height difference is reached. Ice, tundra, and plains/grassland are
-generated to fill in gaps and do not expand in patches. (``make_terrains()``)
+generated to fill in gaps and do not expand in patches.
+(:freeciv21:`make_terrains`)
 
 The algorithm to match the desired terrain properties to the ruleset-defined
 terrain types by first collecting all terrains with the required property. Then,
@@ -295,7 +294,7 @@ non-zero "avoided" property are removed from the set. Of the remaining terrains,
 one is picked at random, with a higher chance to be selected when the required
 property has a high value in the ruleset. If this search fails, it is resumed
 without the "preferred" property. If this fails again, the "avoided" property is
-also dropped. (``pick_terrain()``)
+also dropped. (:freeciv21:`pick_terrain`)
 
 .. _mapgen-height-rivers:
 
@@ -308,7 +307,7 @@ there may not be a river in the area yet. The algorithm also tries to avoid
 springs in locations with many hills and mountains nearby, or in ice and
 deserts (according to the corresponding terrain properties: ``mountainous``,
 ``frozen``, ``dry``). The entry point to generate rivers is the
-``make_rivers()`` function.
+:freeciv21:`make_rivers` function.
 
 Once a spring is found, the river is flown from there one tile at a time.
 To decide which direction the river takes, the possible directions are tested in
@@ -529,7 +528,7 @@ Starting positions are allocated using the chosen method. If a method fails,
 another method is tried in the following order: ``SINGLE``, ``2or3``, ``ALL``,
 and finally ``VARIABLE``.
 
-The code is located in the ``create_start_positions()`` function.
+The code is located in the :freeciv21:`create_start_positions` function.
 
 Placement tries to find fair starting positions using a "tile value" metric,
 computed as the sum of all outputs produced by the tile (food, production, and

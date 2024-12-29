@@ -41,7 +41,7 @@ The long-term goals for Freeciv21 :term:`AI` development are:
 Want Calculations
 =================
 
-Build calculations are expressed through a structure called :code:`adv_choice`. This has a variable called
+Build calculations are expressed through a structure called :freeciv21:`adv_choice`. This has a variable called
 "want", which determines how much the :term:`AI` wants whatever item is pointed to by :code:`choice->type`.
 :code:`choice->want` is:
 
@@ -69,11 +69,11 @@ Diplomats, in particular, seem to violate these standards.
 Amortize
 ========
 
-Hard fact: :code:`amortize(benefit, delay)` returns
+Hard fact: :freeciv21:`amortize` returns
 :math:`\texttt{benefit} \times \left(1 - \frac{1}{\texttt{MORT}}\right)^{\texttt{delay}}`.
 
 Speculation: What is better... to receive $10 annually starting in 5 years from now or $5 annually starting
-from this year? How can you take inflation into account? The function :code:`amortize()` is meant to help you
+from this year? How can you take inflation into account? The function :freeciv21:`amortize` is meant to help you
 answer these questions. To achieve this, it re-scales the future benefit in terms of today's money.
 
 Suppose we have a constant rate of inflation, :math:`x` percent. Then in five years $10 will buy as much
@@ -81,7 +81,7 @@ as :math:`10\left(\frac{100}{100 + x}\right)^5` will buy today. Denoting :math:`
 :math:`q` we get the general formula, :math:`N` dollars, :math:`Y` years from now will be worth
 :math:`N\times q^Y` in today's money. If we receive :math:`N` every year starting :math:`Y` years from now, the
 total amount receivable (in today's money) is :math:`\frac{\,N\,\times\, q^Y}{1 - q}`. This is the sum of
-infinite geometric series. This is exactly the operation that the :code:`amortize()` function performs, the
+infinite geometric series. This is exactly the operation that the :code:`amortize` function performs, the
 multiplication by some :math:`q < 1` raised to power :math:`Y`. Note that the factor :math:`\frac{1}{1 - q}`
 does not depend on the parameters :math:`N` and :math:`Y`, and can be ignored. The connection between the
 :math:`\texttt{MORT}` constant and the inflation rate :math:`x` is given by
@@ -89,16 +89,16 @@ does not depend on the parameters :math:`N` and :math:`Y`, and can be ignored. T
 :math:`\texttt{MORT} = 24` corresponds to the inflation rate, or the rate of expansion of your civilization of
 4.3%
 
-Most likely this explanation is not what the authors of :code:`amortize()` had in mind, but the basic idea is
+Most likely this explanation is not what the authors of :freeciv21:`amortize` had in mind, but the basic idea is
 correct: the value of the payoff decays exponentially with the delay.
 
-The version of amortize used in the military code (:code:`military_amortize()`) remains a complete mystery.
+The version of amortize used in the military code (:freeciv21:`military_amortize`) remains a complete mystery.
 
 
 Estimation of Profit From a Military Operation
 ==============================================
 
-This estimation is implemented by the :code:`kill_desire()` function, which is not perfect, the
+This estimation is implemented by the :freeciv21:`kill_desire` function, which is not perfect, the
 :code:`multi-victim` part is flawed, plus some corrections. In general:
 
 .. math::
@@ -126,7 +126,7 @@ Selecting Military Units
 
 The code dealing with choosing military units to be built and targets for them is especially messy.
 
-Military units are requested in the :code:`military_advisor_choose_build()` function. It first considers the
+Military units are requested in the :freeciv21:`military_advisor_choose_build` function. It first considers the
 defensive units and then ventures into selection of attackers (if home is safe). There are two possibilities
 here: we just build a new attacker or we already have an attacker which was forced, for some reason, to defend.
 In the second case it is easy: we calculate how good the existing attacker is and if it is good, we build a
@@ -135,17 +135,17 @@ defender to free it up.
 Building a brand new attacker is more complicated. First, the :code:`ai_choose_attacker_*` functions are
 called to find the first approximation to the best attacker that can be built here. This prototype attacker
 is selected using very simple :math:`\texttt{attack\_power}\times\texttt{speed}` formula. Then, already in the
-:code:`kill_something_with()` function, we search for targets for the prototype attacker using the
-:code:`find_something_to_kill()` function. Having found a target, we do the last refinement by calling the
-:code:`process_attacker_want()` function to look for the best attacker type to take out the target. This type
-will be our attacker of choice. Note that the :code:`function process_attacker_want()` function has side-effects
+:freeciv21:`kill_something_with` function, we search for targets for the prototype attacker using the
+:freeciv21:`find_something_to_kill` function. Having found a target, we do the last refinement by calling the
+:freeciv21:`process_attacker_want` function to look for the best attacker type to take out the target. This type
+will be our attacker of choice. Note that the function :freeciv21:`process_attacker_want` function has side-effects
 with regards to the Technology selection.
 
 Here is an example:
 
-First the :code:`ai_choose_attacker_land()` function selects a :unit:`Dragoon` because it is strong and fast.
-Then the :code:`find_something_to_kill()` function finds a victim for the (virtual) :unit:`Dragoon`, an enemy
-:unit:`Riflemen` standing right next to the city. Then the :code:`process_attacker_want()` function figures
+First the :freeciv21:`dai_choose_attacker` function selects a :unit:`Dragoon` because it is strong and fast.
+Then the :freeciv21:`find_something_to_kill` function finds a victim for the (virtual) :unit:`Dragoon`, an enemy
+:unit:`Riflemen` standing right next to the city. Then the :freeciv21:`process_attacker_want` function figures
 out that since the enemy is right beside us, it can be taken out easier using an :unit:`Artillery`. It also
 figures that a :unit:`Howitzer` would do this job even better, so bumps up our desire for
 :advance:`Robotics`.
@@ -232,7 +232,7 @@ There are currently seven difficulty levels:
 
 The ``hard`` level is no-holds-barred. ``Cheating`` is the same except that it has ruleset defined extra
 bonuses, while ``normal`` has a number of handicaps. In ``easy``, the :term:`AI` also does random stupid
-things through the :code:`ai_fuzzy()` function. In ``novice`` the :term:`AI` researches slower than normal
+things through the :freeciv21:`ai_fuzzy` function. In ``novice`` the :term:`AI` researches slower than normal
 players. The ``experimental`` level is only for coding. You can gate new code with the ``H_EXPERIMENTAL``
 handicap and test ``experimental`` level :term:`AI`'s against ``hard`` level :term:`AI`'s.
 
@@ -261,7 +261,7 @@ Other handicaps used are:
   ``H_DANGER``      Always thinks its city is in danger.
   ================= =======
 
-For an up-to-date list of all handicaps and their use for each difficulty level see :file:`ai/handicaps.h`.
+For an up-to-date list of all handicaps and their use for each difficulty level see :freeciv21:`handicaps.h`.
 
 
 Things That Need To Be Fixed
@@ -278,7 +278,7 @@ Things That Need To Be Fixed
 * :term:`AI` sometimes believes that wasting a horde of weak military units to kill one enemy is profitable.
 * Stop building shore defense improvements in landlocked cities with a Lake adjacent.
 * Fix the :term:`AI` valuation of :improvement:`Supermarket`. It currently never builds it. See the
-  :code:`farmland_food()` and :code:`ai_eval_buildings()` functions in :file:`advdomestic.cpp`.
+  :freeciv21:`building_advisor_choose` function in :freeciv21:`advbuilding.cpp`.
 * Teach the :term:`AI` to coordinate the units in an attack.
 
 
@@ -286,7 +286,7 @@ Idea Space
 ==========
 
 * Friendly cities can be used as beachheads.
-* The :code:`Assess_danger()` function should acknowledge positive feedback between multiple attackers.
+* The :freeciv21:`assess_danger` function should acknowledge positive feedback between multiple attackers.
 * It would be nice for a bodyguard and charge to meet en-route more elegantly.
-* The :code:`struct choice` should have a priority indicator in it. This will reduce the number of "special"
+* The :freeciv21:`choice` struct should have a priority indicator in it. This will reduce the number of "special"
   want values and remove the necessity to have want capped, thus reducing confusion.
