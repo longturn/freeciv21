@@ -27,6 +27,22 @@ try:
 except ImportError:
     has_updated_by_git = False
 
+try:
+    import sphinxcontrib.doxylink.doxylink
+    # Standard doxylink fails to parse our tagfile. A fixed version exists in
+    # which Entry has a "matches" member. Check for this function to detect if
+    # we can use doxylink. To install the fixed version, create a virtualenv and
+    # activate it, then do:
+    #
+    #   pip install git+https://github.com/lmoureaux/doxylink
+    #
+    # If building the documentation through CMake, you will need to run cmake
+    # from within the virtualenv.
+    sphinxcontrib.doxylink.doxylink.Entry.matches
+    tags.add('doxylink')
+except (AttributeError, ImportError) as e:
+    print(e)
+    ...
 
 # -- Project information -----------------------------------------------------
 
@@ -63,6 +79,8 @@ if has_theme:
     extensions.append('sphinx_rtd_theme')
 if has_updated_by_git:
     extensions.append('sphinx_last_updated_by_git')
+if 'doxylink' in tags:
+    extensions.append('sphinxcontrib.doxylink')
 
 # See https://github.com/readthedocs/recommonmark#linking-to-headings-in-other-files
 autosectionlabel_prefix_document = True
@@ -235,3 +253,11 @@ intersphinx_mapping = {'python': ('https://docs.python.org/3', None)}
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+
+# -- Options for doxylink extension ------------------------------------------
+# add_function_parentheses = False
+doxylink_is_internal = True
+doxylink = {
+    'freeciv21': ('doxygen/tagfile.xml',
+                  'https://longturn.readthedocs.io/en/latest/Doxygen'),
+}

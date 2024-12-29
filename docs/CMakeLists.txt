@@ -6,15 +6,29 @@ else()
   find_package(Sphinx QUIET)
 endif()
 
-if(SPHINX_FOUND)
-  message(STATUS "Sphinx Found, configuring.")
+find_package(Doxygen)
+
+if (SPHINX_FOUND AND DOXYGEN_FOUND)
+  message(STATUS "Sphinx and Doxygen found, configuring.")
+
   set(SPHINX_SOURCE ${CMAKE_SOURCE_DIR}/docs)
   set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR})
   set(SPHINX_MAN ${CMAKE_CURRENT_BINARY_DIR}/man)
 
+  # We need to run doxygen before sphinx to update doxygen/tagfile.xml. This
+  # command does it. The output is a dummy one so the command always runs.
+  # doxygen has some level of caching so it doesn't take that long, and
+  # collecting a list of all source files would be cumbersome.
+  add_custom_command(OUTPUT dummy-doxygen
+                     COMMAND Doxygen::doxygen
+                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+                     COMMENT "Running Doxygen")
+
+  # This builds the main documentation website.
   add_custom_target(docs
                 COMMAND
                 ${SPHINX_EXECUTABLE} -b html ${SPHINX_SOURCE} ${SPHINX_BUILD}
+                DEPENDS dummy-doxygen
                 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                 COMMENT "Generating documentation with Sphinx")
 
