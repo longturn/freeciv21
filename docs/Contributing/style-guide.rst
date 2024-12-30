@@ -112,6 +112,8 @@ to alter is placed inside back-ticks.
   to it like this: :literal:`:ref:`My Anchor``. Notice that the anchor has an underscore at the beginning.
   This is required for sphinx to recognize it. Also notice the use of the anchor in :literal:`:ref:` leaves
   the underscore off.
+* :literal:`:freeciv21:` -- Creates a reference to a C++ code entity or file documended using
+  Doxygen, powered by :external+intersphinx:doc:`Intersphinx <index>`.
 * :literal:`:numref:` -- Create a cross-reference to a named figure.
 * :literal:`:table:` -- Create a named table reference. Place an anchor (e.g. :literal:`.. _My Anchor:`) above
   to enable :literal:`:numref:`.
@@ -119,6 +121,7 @@ to alter is placed inside back-ticks.
   above to enable :literal:`:numref:`.
 * :literal:`:emphasis:` -- Emphasis is used to :emphasis:`bring attention to something`.
 * :literal:`:file:` -- File is used for file names and paths such as :file:`~/.local/share/freeciv21/saves`.
+  For C++ source files, prefer ``:freeciv21:`` above.
 * :literal:`:guilabel:` -- GUI Label is used to bring attention to something on the screen like the
   :guilabel:`Next` button on the installer wizard.
 * :literal:`:literal:` -- Literal is used when you want to note a text element in its raw form. This is
