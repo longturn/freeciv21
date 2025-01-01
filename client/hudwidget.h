@@ -43,6 +43,7 @@ struct tile;
 struct unit;
 struct unit_list;
 
+void cycle_units(const int direction);
 void show_new_turn_info();
 bool has_player_unit_type(Unit_type_id utype);
 
