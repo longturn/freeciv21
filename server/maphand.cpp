@@ -1788,7 +1788,20 @@ static void check_units_single_tile(struct tile *ptile)
   {
     if (unit_tile(punit) == ptile && !unit_transported(punit)
         && !can_unit_exist_at_tile(&(wld.map), punit, ptile)) {
-      bounce_unit(punit, true, bounce_reason::terrain_change, 1);
+      bounce_unit(
+          punit, 1,
+          [](struct bounce_event bevent) -> void {
+            notify_player(unit_owner(bevent.bunit), bevent.to_tile,
+                          E_UNIT_RELOCATED, ftc_server,
+                          _("Moved your %s due to changing terrain."),
+                          unit_link(bevent.bunit));
+          },
+          [](struct bounce_event bevent) -> void {
+            notify_player(unit_owner(bevent.bunit), unit_tile(bevent.bunit),
+                          E_UNIT_LOST_MISC, ftc_server,
+                          _("Disbanded your %s due to changing terrain."),
+                          unit_tile_link(bevent.bunit));
+          });
     }
   }
   unit_list_iterate_safe_end;

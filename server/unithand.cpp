@@ -349,7 +349,7 @@ static bool do_capture_units(struct player *pplayer, struct unit *punit,
 
     if (nullptr != pcity) {
       // The captured unit is in a city. Bounce it.
-      bounce_unit(to_capture, true);
+      bounce_unit(to_capture);
     }
   }
   unit_list_iterate_end;
