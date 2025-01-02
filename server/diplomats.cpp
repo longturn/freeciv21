@@ -645,7 +645,7 @@ bool diplomat_bribe(struct player *pplayer, struct unit *pdiplomat,
       ((nullptr != pcity && !pplayers_allied(city_owner(pcity), pplayer))
        || 1 < unit_list_size(unit_tile(pvictim)->units));
   if (bounce) {
-    bounce_unit(pvictim, true);
+    bounce_unit(pvictim);
   }
 
   // This costs!
