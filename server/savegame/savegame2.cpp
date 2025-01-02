@@ -5065,7 +5065,7 @@ static void sg_load_sanitycheck(struct loaddata *loading)
                unit_rule_name(punit),
                terrain_rule_name(unit_tile(punit)->terrain),
                TILE_XY(unit_tile(punit)));
-        bounce_unit(punit, true);
+        bounce_unit(punit);
       }
     }
     unit_list_iterate_safe_end;

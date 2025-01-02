@@ -624,7 +624,11 @@ static void transfer_unit(struct unit *punit, struct city *tocity,
 
       if (utype_has_flag(unit_type_get(punit), UTYF_GAMELOSS)) {
         // Try to save game loss units.
-        bounce_unit(punit, verbose);
+        if (verbose) {
+          bounce_unit(punit);
+        } else {
+          bounce_unit_silently(punit);
+        }
       } else {
         // Kill the unique unit.
 
@@ -755,7 +759,7 @@ void transfer_city_units(struct player *pplayer, struct player *pvictim,
         unit_list_remove(units, vunit);
       } else if (!pplayers_allied(pplayer, unit_owner(vunit))) {
         // the owner of vunit is allied to pvictim but not to pplayer
-        bounce_unit(vunit, verbose);
+        bounce_unit(vunit);
       }
     }
     unit_list_iterate_safe_end;
@@ -794,7 +798,7 @@ void transfer_city_units(struct player *pplayer, struct player *pvictim,
       transfer_unit(vunit, pcity, true, verbose);
       if (unit_tile(vunit) == ptile && !pplayers_allied(pplayer, pvictim)) {
         // Unit is inside city being transferred, bounce it
-        bounce_unit(vunit, true);
+        bounce_unit(vunit);
       }
     } else {
       /* The unit is lost.  Call notify_player (in all other cases it is

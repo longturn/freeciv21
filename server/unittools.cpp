@@ -15,6 +15,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <functional>
 
 // utility
 #include "bitvector.h"
@@ -1319,13 +1320,24 @@ bool bounce_path_constraint::is_allowed(
 /**
  * Move or remove a unit due to stack conflicts. This function will try to
  * find a random safe tile within a given distance of the unit's current tile
- * and move the unit there. If no tiles are found, the unit is disbanded. If
- * 'verbose' is true, a message is sent to the unit owner regarding what
- * happened (the exact message depends on 'reason'). The maximum distance it
- * 2 by default for backward compatibility.
+ * and move the unit there. If no tiles are found, the unit is disbanded. The
+ * maximum distance it 2 by default for backward compatibility. A function
+ * reference may be provided to handle successfully finding a bounce
+ * location. By default this will report the bounce to the unit's owner
+ * before the unit is moved. A function reference may also be provided to
+ * handle failing to find a bounce location. By default this will report the
+ * failed bounce to the unit's owner before the unit is disbanded.
+ *
+ * See `bounce_unit_silently` to attempt a bounce without reporting it to the
+ * unit's owner.
+ *
+ * Note: The unit may have died even if the bounce was successful.
+ * Note: If a transport fails to bounce, all units in the transport will be
+ * bounced, triggering on_success or on_fail for each.
  */
-void bounce_unit(struct unit *punit, bool verbose, bounce_reason reason,
-                 int max_distance)
+void bounce_unit(struct unit *punit, int max_distance,
+                 std::function<void(struct bounce_event)> on_success,
+                 std::function<void(struct bounce_event)> on_failure)
 {
   if (!punit) {
     return;
@@ -1356,20 +1368,8 @@ void bounce_unit(struct unit *punit, bool verbose, bounce_reason reason,
     const auto path = paths[fc_rand(paths.size())];
     const auto steps = path.steps();
     const auto end_tile = path.steps().back().location;
-
-    if (verbose) {
-      switch (reason) {
-      case bounce_reason::generic:
-        notify_player(pplayer, end_tile, E_UNIT_RELOCATED, ftc_server,
-                      // TRANS: A unit is moved to resolve stack conflicts.
-                      _("Moved your %s."), unit_link(punit));
-        break;
-      case bounce_reason::terrain_change:
-        notify_player(pplayer, end_tile, E_UNIT_RELOCATED, ftc_server,
-                      _("Moved your %s due to changing terrain."),
-                      unit_link(punit));
-        break;
-      }
+    if (on_success) {
+      on_success({.bunit = punit, .to_tile = end_tile});
     }
 
     // Execute the orders making up the path. See control.cpp in the client
@@ -1394,6 +1394,10 @@ void bounce_unit(struct unit *punit, bool verbose, bounce_reason reason,
 
       handle_unit_orders(pplayer, &packet);
 
+      if (!punit) {
+        return; // Unit died while executing orders
+      }
+
       // Restore unit wait time
       punit->action_timestamp = timestamp;
 
@@ -1409,25 +1413,41 @@ void bounce_unit(struct unit *punit, bool verbose, bounce_reason reason,
    * Try to bounce transported units. */
   if (0 < get_transporter_occupancy(punit)) {
     const auto pcargo_units = unit_transport_cargo(punit);
-    unit_list_iterate(pcargo_units, pcargo) { bounce_unit(pcargo, verbose); }
+    unit_list_iterate(pcargo_units, pcargo)
+    {
+      bounce_unit(pcargo, max_distance, on_success, on_failure);
+    }
     unit_list_iterate_end;
   }
 
-  if (verbose) {
-    switch (reason) {
-    case bounce_reason::generic:
-      notify_player(pplayer, punit_tile, E_UNIT_LOST_MISC, ftc_server,
-                    // TRANS: A unit is disbanded to resolve stack conflicts.
-                    _("Disbanded your %s."), unit_tile_link(punit));
-      break;
-    case bounce_reason::terrain_change:
-      notify_player(pplayer, punit_tile, E_UNIT_LOST_MISC, ftc_server,
-                    _("Disbanded your %s due to changing terrain."),
-                    unit_tile_link(punit));
-      break;
-    }
+  if (on_failure) {
+    on_failure({.bunit = punit, .to_tile = nullptr});
   }
+
   wipe_unit(punit, ULR_STACK_CONFLICT, nullptr);
+}
+
+void bounce_unit_silently(struct unit *punit, int max_distance)
+{
+  bounce_unit(punit, max_distance, nullptr, nullptr);
+}
+
+void report_unit_bounced_to_resolve_stack_conflicts(
+    struct bounce_event bevent)
+{
+  notify_player(unit_owner(bevent.bunit), bevent.to_tile, E_UNIT_RELOCATED,
+                ftc_server,
+                // TRANS: A unit is moved to resolve stack conflicts.
+                _("Moved your %s."), unit_link(bevent.bunit));
+}
+
+void report_unit_disbanded_to_resolve_stack_conflicts(
+    struct bounce_event bevent)
+{
+  notify_player(unit_owner(bevent.bunit), unit_tile(bevent.bunit),
+                E_UNIT_LOST_MISC, ftc_server,
+                // TRANS: A unit is moved to resolve stack conflicts.
+                _("Disbanded your %s."), unit_tile_link(bevent.bunit));
 }
 
 /**
@@ -1473,7 +1493,11 @@ static void throw_units_from_illegal_cities(struct player *pplayer,
     if (nullptr != pcity && !pplayers_allied(city_owner(pcity), pplayer)) {
       ptrans = unit_transport_get(punit);
       if (nullptr == ptrans || pplayer != unit_owner(ptrans)) {
-        bounce_unit(punit, verbose);
+        if (verbose) {
+          bounce_unit(punit);
+        } else {
+          bounce_unit_silently(punit);
+        }
       }
     }
   }
@@ -1514,7 +1538,11 @@ static void resolve_stack_conflicts(struct player *pplayer,
       {
         if (unit_owner(aunit) == pplayer || unit_owner(aunit) == aplayer
             || !can_unit_survive_at_tile(&(wld.map), aunit, ptile)) {
-          bounce_unit(aunit, verbose);
+          if (verbose) {
+            bounce_unit(aunit);
+          } else {
+            bounce_unit_silently(aunit);
+          }
         }
       }
       unit_list_iterate_safe_end;

@@ -12,6 +12,8 @@
       \____/        ********************************************************/
 #pragma once
 
+#include <functional>
+
 #include "fc_types.h"
 
 #include "packets.h" // enum unit_info_use
@@ -105,14 +107,21 @@ int get_unit_vision_at(struct unit *punit, const struct tile *ptile,
 void unit_refresh_vision(struct unit *punit);
 void unit_list_refresh_vision(struct unit_list *punitlist);
 
-/// Why do we need to bounce a unit?
-enum class bounce_reason {
-  generic,        ///< We just need to do it
-  terrain_change, ///< We need to do it because of changing terrain
+struct bounce_event {
+  struct unit *bunit;
+  struct tile *to_tile;
 };
-void bounce_unit(struct unit *punit, bool verbose,
-                 bounce_reason reason = bounce_reason::generic,
-                 int max_distance = 2);
+void report_unit_bounced_to_resolve_stack_conflicts(
+    struct bounce_event bevent);
+void report_unit_disbanded_to_resolve_stack_conflicts(
+    struct bounce_event bevent);
+void bounce_unit(struct unit *punit, int max_distance = 2,
+                 std::function<void(struct bounce_event)> on_success =
+                     report_unit_bounced_to_resolve_stack_conflicts,
+                 std::function<void(struct bounce_event)> on_failure =
+                     report_unit_disbanded_to_resolve_stack_conflicts);
+void bounce_unit_silently(struct unit *punit, int max_distance = 2);
+
 bool unit_activity_needs_target_from_client(enum unit_activity activity);
 void unit_assign_specific_activity_target(struct unit *punit,
                                           enum unit_activity *activity,
