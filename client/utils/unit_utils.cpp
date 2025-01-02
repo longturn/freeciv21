@@ -70,9 +70,9 @@ bool units_sort(const unit *lhs, const unit *rhs)
     return lhs->utype->item_number > rhs->utype->item_number;
   }
 
-  // By nationality so units from the same player are grouped together
-  if (player_index(lhs->nationality) != player_index(rhs->nationality)) {
-    return player_index(lhs->nationality) < player_index(rhs->nationality);
+  // By owner so units from the same player are grouped together
+  if (player_index(lhs->owner) != player_index(rhs->owner)) {
+    return player_index(lhs->owner) < player_index(rhs->owner);
   }
 
   // Then unit id
