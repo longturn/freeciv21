@@ -46,6 +46,9 @@ build.ninja
 *_autogen
 /Testing
 
+# Custom user scripts
+/*.sh
+
 # Build directories
 /build*
 .flatpak-builder
