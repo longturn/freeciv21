@@ -1073,10 +1073,11 @@ void rscompat_postprocess(struct rscompat_info *info)
 }
 
 /**
- * Adds <VisionLayer, Main, Local, True> req to all unit/city vision reqs,
- * as compat for missing CAP_VUT_VISIONLAYER
+ * Adds `VisionLayer`, `Main`, `Local`, `True` req to all unit/city vision
+ * reqs, as compat for missing CAP_VUT_VISIONLAYER
  *
- * @data is a struct rscompat_info *.
+ * @param peffect The effect to change.
+ * @param data A struct rscompat_info *.
  */
 static bool rscompat_vision_effect_cb(struct effect *peffect, void *data)
 {

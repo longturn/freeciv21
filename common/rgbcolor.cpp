@@ -72,8 +72,8 @@ void rgbcolor_destroy(struct rgbcolor *prgbcolor)
 }
 
 /**
-   Lookup an RGB color definition (<colorpath>.red, <colorpath>.green and
-   <colorpath>.blue). Returns TRUE on success and FALSE on error.
+   Lookup an RGB color definition (`[colorpath].red`, `[colorpath].green` and
+   `[colorpath].blue`). Returns TRUE on success and FALSE on error.
  */
 bool rgbcolor_load(struct section_file *file, struct rgbcolor **prgbcolor,
                    const char *path, ...)
@@ -103,8 +103,8 @@ bool rgbcolor_load(struct section_file *file, struct rgbcolor **prgbcolor,
 }
 
 /**
-   Save an RGB color definition (<colorpath>.red, <colorpath>.green and
-   <colorpath>.blue).
+   Save an RGB color definition (`[colorpath].red`, `[colorpath].green` and
+   `[colorpath].blue`).
  */
 void rgbcolor_save(struct section_file *file,
                    const struct rgbcolor *prgbcolor, const char *path, ...)

@@ -17,4 +17,5 @@ architected.
   logging.rst
   network-protocol.rst
   scorelog.rst
+  Doxygen Documentation <https://longturn.readthedocs.io/en/latest/Doxygen>
   :maxdepth: 1

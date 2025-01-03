@@ -581,7 +581,7 @@ void set_mapview_origin(float gui_x0, float gui_y0)
 
 /**
    Return the scroll dimensions of the clipping window for the mapview
- window..
+   window.
 
    Imagine the entire map in scroll coordinates.  It is a rectangle.  Now
    imagine the mapview "window" sliding around through this rectangle.  How

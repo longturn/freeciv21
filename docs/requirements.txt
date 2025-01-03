@@ -1,3 +1,6 @@
 sphinx<7.2  # See #2023
 sphinx_rtd_theme
 sphinx_last_updated_by_git
+
+# Optional: link Doxygen docs from sphinx
+git+https://github.com/lmoureaux/doxylink
