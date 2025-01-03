@@ -1877,9 +1877,7 @@ void cycle_units(const int direction)
 
   struct unit *current_unit = head_of_units_in_focus();
 
-  int unit_count = 0;
-  int current_unit_index = 0;
-  std::tie(unit_count, current_unit_index) =
+  auto [unit_count, current_unit_index] =
       cycle_units_get_count_and_index(current_unit);
 
   if (unit_count == 0) {
