@@ -47,7 +47,7 @@ build.ninja
 /Testing
 
 # Custom user scripts
-*.sh
+/*.sh
 
 # Build directories
 /build*

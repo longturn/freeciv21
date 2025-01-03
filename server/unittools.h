@@ -111,16 +111,21 @@ struct bounce_event {
   struct unit *bunit;
   struct tile *to_tile;
 };
+struct bounce_disband_event {
+  struct unit *bunit;
+};
 void report_unit_bounced_to_resolve_stack_conflicts(
     struct bounce_event bevent);
 void report_unit_disbanded_to_resolve_stack_conflicts(
-    struct bounce_event bevent);
-void bounce_unit(struct unit *punit, int max_distance = 2,
-                 std::function<void(struct bounce_event)> on_success =
-                     report_unit_bounced_to_resolve_stack_conflicts,
-                 std::function<void(struct bounce_event)> on_failure =
-                     report_unit_disbanded_to_resolve_stack_conflicts);
+    struct bounce_disband_event bevent);
+void bounce_unit(
+    struct unit *punit, int max_distance = 2,
+    std::function<void(struct bounce_event)> on_success =
+        report_unit_bounced_to_resolve_stack_conflicts,
+    std::function<void(struct bounce_disband_event)> on_failure =
+        report_unit_disbanded_to_resolve_stack_conflicts);
 void bounce_unit_silently(struct unit *punit, int max_distance = 2);
+bool unit_exists(int unit_id);
 
 bool unit_activity_needs_target_from_client(enum unit_activity activity);
 void unit_assign_specific_activity_target(struct unit *punit,
