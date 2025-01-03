@@ -1796,7 +1796,7 @@ static void check_units_single_tile(struct tile *ptile)
                           _("Moved your %s due to changing terrain."),
                           unit_link(bevent.bunit));
           },
-          [](struct bounce_event bevent) -> void {
+          [](struct bounce_disband_event bevent) -> void {
             notify_player(unit_owner(bevent.bunit), unit_tile(bevent.bunit),
                           E_UNIT_LOST_MISC, ftc_server,
                           _("Disbanded your %s due to changing terrain."),
