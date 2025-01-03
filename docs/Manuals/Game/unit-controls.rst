@@ -44,4 +44,4 @@ the left side and the game map will center on the unit for you. As with other wi
 click+drag the widget to move it by using the plus symbol in the upper left corner.
 
 If you scroll your mouse wheel over the unit icon on the left side of the widget, the game will cycle through
-idle or units of the same unit type.
+idle or sentried units of the same unit type.
