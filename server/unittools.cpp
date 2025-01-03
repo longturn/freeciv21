@@ -1331,18 +1331,22 @@ bool bounce_path_constraint::is_allowed(
  * See `bounce_unit_silently` to attempt a bounce without reporting it to the
  * unit's owner.
  *
- * Note: The unit may have died even if the bounce was successful.
- * Note: If a transport fails to bounce, all units in the transport will be
+ * \note
+ * The unit may have died even if the bounce was successful.
+ *
+ * \note
+ * If a transport fails to bounce, all units in the transport will be
  * bounced, triggering on_success or on_fail for each.
  */
 void bounce_unit(struct unit *punit, int max_distance,
                  std::function<void(struct bounce_event)> on_success,
-                 std::function<void(struct bounce_event)> on_failure)
+                 std::function<void(struct bounce_disband_event)> on_failure)
 {
   if (!punit) {
     return;
   }
 
+  const int unit_id = punit->id;
   const auto pplayer = unit_owner(punit);
   const auto punit_tile = unit_tile(punit);
 
@@ -1394,7 +1398,7 @@ void bounce_unit(struct unit *punit, int max_distance,
 
       handle_unit_orders(pplayer, &packet);
 
-      if (!punit) {
+      if (!unit_exists(unit_id)) {
         return; // Unit died while executing orders
       }
 
@@ -1413,25 +1417,35 @@ void bounce_unit(struct unit *punit, int max_distance,
    * Try to bounce transported units. */
   if (0 < get_transporter_occupancy(punit)) {
     const auto pcargo_units = unit_transport_cargo(punit);
-    unit_list_iterate(pcargo_units, pcargo)
+    unit_list_iterate_safe(pcargo_units, pcargo)
     {
       bounce_unit(pcargo, max_distance, on_success, on_failure);
     }
-    unit_list_iterate_end;
+    unit_list_iterate_safe_end;
   }
 
   if (on_failure) {
-    on_failure({.bunit = punit, .to_tile = nullptr});
+    on_failure({.bunit = punit});
   }
 
   wipe_unit(punit, ULR_STACK_CONFLICT, nullptr);
 }
 
+/**
+ * Move or remove a unit due to stack conflicts. This does not report the
+ * move to the unit owner.
+ *
+ * See: `bounce_unit`
+ */
 void bounce_unit_silently(struct unit *punit, int max_distance)
 {
   bounce_unit(punit, max_distance, nullptr, nullptr);
 }
 
+/**
+ * Reports that a unit was bounced due to stack conflicts to the unit's
+ * owner.
+ */
 void report_unit_bounced_to_resolve_stack_conflicts(
     struct bounce_event bevent)
 {
@@ -1441,14 +1455,23 @@ void report_unit_bounced_to_resolve_stack_conflicts(
                 _("Moved your %s."), unit_link(bevent.bunit));
 }
 
+/**
+ * Reports that a unit was disbanded due to stack conflicts to the unit's
+ * owner.
+ */
 void report_unit_disbanded_to_resolve_stack_conflicts(
-    struct bounce_event bevent)
+    struct bounce_disband_event bevent)
 {
   notify_player(unit_owner(bevent.bunit), unit_tile(bevent.bunit),
                 E_UNIT_LOST_MISC, ftc_server,
                 // TRANS: A unit is moved to resolve stack conflicts.
                 _("Disbanded your %s."), unit_tile_link(bevent.bunit));
 }
+
+/**
+ * Checks if a unit (still) exists.
+ */
+bool unit_exists(int unit_id) { return !!idex_lookup_unit(&wld, unit_id); }
 
 /**
    Throw pplayer's units from non allied cities
