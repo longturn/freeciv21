@@ -1,5 +1,5 @@
 /**************************************************************************
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2024 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -43,6 +43,7 @@ struct tile;
 struct unit;
 struct unit_list;
 
+void cycle_units(const int direction);
 void show_new_turn_info();
 bool has_player_unit_type(Unit_type_id utype);
 
@@ -144,11 +145,13 @@ public:
   click_label();
 signals:
   void left_clicked();
+  void wheel_scrolled(const int delta);
 private slots:
   void mouse_clicked();
 
 protected:
   void mousePressEvent(QMouseEvent *e) override;
+  void wheelEvent(QWheelEvent *e) override;
 };
 
 /****************************************************************************
@@ -221,6 +224,9 @@ private:
   move_widget *mw;
   unit_list *ul_units;
   tile *current_tile;
+
+private slots:
+  void cycle_units(const int delta);
 };
 
 /****************************************************************************

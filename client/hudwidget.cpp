@@ -1,5 +1,5 @@
 /*
- Copyright (c) 1996-2023 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2024 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -44,6 +44,12 @@
 #include "widgets/decorations.h"
 
 static QString popup_terrain_info(struct tile *ptile);
+static bool cycle_units_predicate(const struct unit *current_unit,
+                                  const struct unit *candidate);
+static std::tuple<int, int>
+cycle_units_get_count_and_index(const struct unit *current_unit);
+static void cycle_units_select_index(const struct unit *current_unit,
+                                     int index);
 
 /**
    Returns true if player has any unit of unit_type
@@ -528,6 +534,9 @@ hud_units::hud_units(QWidget *parent)
   setLayout(main_layout);
   mw = new move_widget(this);
   setFocusPolicy(Qt::ClickFocus);
+
+  connect(&unit_label, &click_label::wheel_scrolled, this,
+          &hud_units::cycle_units);
 }
 
 /**
@@ -771,6 +780,18 @@ void hud_units::update_actions()
 }
 
 /**
+   Cycle idle or sentried units for the unittype of the currently
+   selected unit.
+
+   The sign of direction determines in which direction the units will
+   be cycled.
+ */
+void hud_units::cycle_units(const int direction)
+{
+  ::cycle_units(direction);
+}
+
+/**
    Custom label with extra mouse events
  */
 click_label::click_label() : QLabel()
@@ -787,6 +808,24 @@ void click_label::mousePressEvent(QMouseEvent *e)
   if (e->button() == Qt::LeftButton) {
     emit left_clicked();
   }
+}
+
+/**
+   Wheel event for click_label
+ */
+void click_label::wheelEvent(QWheelEvent *e)
+{
+  static int accumulatedDelta = 0;
+  accumulatedDelta += e->angleDelta().y();
+
+  if (abs(accumulatedDelta) < 120) {
+    return;
+  }
+
+  int steps = accumulatedDelta / 120;
+  accumulatedDelta = accumulatedDelta - steps * 120;
+
+  emit wheel_scrolled(steps);
 }
 
 /**
@@ -1730,4 +1769,134 @@ void hud_battle_log::showEvent(QShowEvent *event)
   }
   m_timer.restart();
   setVisible(true);
+}
+
+/**
+   This predicate is called by cycle_units and friends to filter
+   relevant units from the iterated units.
+
+   current_unit is the currently selected unit.
+   candidate is the candidate checked for relevance.
+ */
+static bool cycle_units_predicate(const struct unit *current_unit,
+                                  const struct unit *candidate)
+{
+  fc_assert_ret_val(current_unit != nullptr && candidate != nullptr, false);
+
+  if (candidate->utype != current_unit->utype) {
+    return false;
+  }
+
+  if (ACTIVITY_IDLE != candidate->activity
+      && ACTIVITY_SENTRY != candidate->activity) {
+    return false;
+  }
+
+  if (!can_unit_do_activity(candidate, ACTIVITY_IDLE)) {
+    return false;
+  }
+
+  return true;
+}
+
+/**
+  Gets the count of relevant units and determines the index of the
+  current unit among these units.
+
+  If current_unit is not among the relevant units, then index 0 is
+  assumed by default.
+
+  current_unit is the currently selected unit.
+ */
+static std::tuple<int, int>
+cycle_units_get_count_and_index(const struct unit *current_unit)
+{
+  fc_assert_ret_val(current_unit != nullptr, std::make_tuple(0, 0));
+
+  int unit_count = 0;
+  int current_unit_index = 0;
+
+  unit_list_iterate(client_player()->units, punit)
+  {
+    if (!cycle_units_predicate(current_unit, punit)) {
+      continue;
+    }
+
+    if (current_unit->id == punit->id) {
+      current_unit_index = unit_count;
+    }
+
+    unit_count++;
+  }
+  unit_list_iterate_end;
+
+  return {unit_count, current_unit_index};
+}
+
+/**
+   Selects the next unit when units are cycled.
+
+   current_unit is the currently selected unit.
+   index is the index of the unit to be selected next among the
+   relevant units.
+ */
+static void cycle_units_select_index(const struct unit *current_unit,
+                                     int index)
+{
+  fc_assert_ret(current_unit != nullptr);
+
+  // Select the next unit.
+  int unit_count = 0;
+  unit_list_iterate(client_player()->units, punit)
+  {
+    if (!cycle_units_predicate(current_unit, punit)) {
+      continue;
+    }
+
+    if (unit_count == index) {
+      unit_focus_set_and_select(punit);
+    }
+
+    unit_count++;
+  }
+  unit_list_iterate_end;
+}
+
+/**
+   Cycle idle or sentried units for the unittype of the currently
+   selected unit.
+
+   The sign of direction determines in which direction the units will
+   be cycled.
+ */
+void cycle_units(const int direction)
+{
+  if (get_num_units_in_focus() != 1) {
+    return;
+  }
+
+  struct unit *current_unit = head_of_units_in_focus();
+
+  auto [unit_count, current_unit_index] =
+      cycle_units_get_count_and_index(current_unit);
+
+  if (unit_count == 0) {
+    return;
+  }
+
+  // Determine the index of the unit to be selected next.
+  int cycle_unit_index = current_unit_index;
+  if (direction > 0) {
+    cycle_unit_index++;
+  } else if (direction < 0) {
+    cycle_unit_index--;
+  }
+
+  if (cycle_unit_index < 0) {
+    cycle_unit_index = unit_count - 1;
+  } else if (cycle_unit_index >= unit_count) {
+    cycle_unit_index = 0;
+  }
+
+  cycle_units_select_index(current_unit, cycle_unit_index);
 }
