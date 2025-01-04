@@ -37,12 +37,10 @@
 
 // client
 #include "audio/audio.h"
-#include "chatline.h"
 #include "client_main.h"
 #include "climap.h"
 #include "climisc.h"
 #include "control.h"
-#include "editor.h"
 #include "goto.h"
 #include "governor.h"
 #include "options.h"
