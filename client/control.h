@@ -141,6 +141,7 @@ void wakeup_sentried_units(struct tile *ptile);
 void clear_unit_orders(struct unit *punit);
 
 bool unit_is_in_focus(const struct unit *punit);
+bool unit_is_on_stand_by(const struct unit *punit);
 struct unit *get_focus_unit_on_tile(const struct tile *ptile);
 struct unit *head_of_units_in_focus();
 std::vector<unit *> &get_units_in_focus();

@@ -550,11 +550,8 @@ void units_view::find_nearest()
   if ((punit = find_nearest_unit(utype, ptile))) {
     queen()->mapview_wdg->center_on_tile(punit->tile);
 
-    if (ACTIVITY_IDLE == punit->activity
-        || ACTIVITY_SENTRY == punit->activity) {
-      if (can_unit_do_activity(punit, ACTIVITY_IDLE)) {
-        unit_focus_set_and_select(punit);
-      }
+    if (unit_is_on_stand_by(punit)) {
+      unit_focus_set_and_select(punit);
     }
   }
 

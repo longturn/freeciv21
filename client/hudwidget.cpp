@@ -1787,16 +1787,7 @@ static bool cycle_units_predicate(const struct unit *current_unit,
     return false;
   }
 
-  if (ACTIVITY_IDLE != candidate->activity
-      && ACTIVITY_SENTRY != candidate->activity) {
-    return false;
-  }
-
-  if (!can_unit_do_activity(candidate, ACTIVITY_IDLE)) {
-    return false;
-  }
-
-  return true;
+  return unit_is_on_stand_by(candidate);
 }
 
 /**

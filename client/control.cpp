@@ -357,12 +357,32 @@ static void ask_server_for_actions(struct unit *punit)
 }
 
 /**
-   Return TRUE iff this unit is in focus.
+   Return TRUE if this unit is in focus.
  */
 bool unit_is_in_focus(const struct unit *punit)
 {
   const auto &focus = get_units_in_focus();
   return std::find(focus.begin(), focus.end(), punit) != focus.end();
+}
+
+/**
+   Returns TRUE if this unit is on stand by.
+
+   A unit is on stand by, if it is idle or sentried and not busy
+   building anything.
+*/
+bool unit_is_on_stand_by(const struct unit *punit)
+{
+  if (ACTIVITY_IDLE != punit->activity
+      && ACTIVITY_SENTRY != punit->activity) {
+    return false;
+  }
+
+  if (!can_unit_do_activity(punit, ACTIVITY_IDLE)) {
+    return false;
+  }
+
+  return true;
 }
 
 /**
