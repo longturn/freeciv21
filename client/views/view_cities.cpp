@@ -734,7 +734,7 @@ void city_widget::sell(const struct impr_type *building)
     for (auto *pcity : saved_selection) {
       int city_id = pcity->id;
       if (nullptr == game_city_by_number(city_id)) {
-        return;
+        continue;
       }
 
       if (!pcity->did_sell && city_has_building(pcity, building)) {
