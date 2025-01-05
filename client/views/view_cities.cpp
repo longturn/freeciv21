@@ -21,7 +21,6 @@
 #include "fcintl.h"
 // common
 #include "citydlg_common.h"
-#include "game.h"
 #include "global_worklist.h"
 // client
 #include "cityrep_g.h"
@@ -32,6 +31,7 @@
 #include "icons.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
+#include "repodlgs_common.h"
 #include "top_bar.h"
 #include "views/view_cities.h"
 #include "views/view_map.h"
@@ -720,24 +720,28 @@ void city_widget::sell(const struct impr_type *building)
 
   hud_message_box *ask = new hud_message_box(king()->central_wdg);
   QString imprname = improvement_name_translation(building);
-  QString buf =
-      QString(_("Are you sure you want to sell the %1?")).arg(imprname);
+  QString buf;
+  if (selected_cities.size() == 1) {
+    buf = QString(_("Are you sure you want to sell the %1?")).arg(imprname);
+  } else {
+    buf = QString(_("Do you really wish to sell every %1?")).arg(imprname);
+  }
+
   ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
   ask->setDefaultButton(QMessageBox::No);
   ask->button(QMessageBox::Yes)->setText(_("Yes Sell"));
   ask->set_text_title(buf, _("Sell?"));
   ask->setAttribute(Qt::WA_DeleteOnClose);
   connect(ask, &hud_message_box::accepted, this, [=]() {
-    for (auto *pcity : selected_cities) {
-      int city_id = pcity->id;
-      if (nullptr == game_city_by_number(city_id)) {
-        continue;
-      }
+    char buf[1024];
+    sell_all_improvements_for_cities(selected_cities, building, false, buf,
+                                     sizeof(buf));
 
-      if (!pcity->did_sell && city_has_building(pcity, building)) {
-        city_sell_improvement(pcity, impr_id);
-      }
-    }
+    hud_message_box *result = new hud_message_box(king()->central_wdg);
+    result->set_text_title(buf, _("Sell Results"));
+    result->setStandardButtons(QMessageBox::Ok);
+    result->setAttribute(Qt::WA_DeleteOnClose);
+    result->show();
   });
 
   ask->show();

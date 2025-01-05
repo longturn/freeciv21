@@ -48,6 +48,10 @@ void get_economy_report_units_data(struct unit_entry *entries,
 void sell_all_improvements(const struct impr_type *pimprove,
                            bool redundant_only, char *message,
                            size_t message_sz);
+void sell_all_improvements_for_cities(QList<struct city *> cities,
+                                      const struct impr_type *pimprove,
+                                      bool redundant_only, char *message,
+                                      size_t message_sz);
 void disband_all_units(const struct unit_type *punittype,
                        bool in_cities_only, char *message,
                        size_t message_sz);

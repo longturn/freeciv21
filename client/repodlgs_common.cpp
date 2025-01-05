@@ -13,7 +13,6 @@
 
 // utility
 #include "fcintl.h"
-#include "log.h"
 #include "support.h" // fc_snprintf()
 
 // common
@@ -168,6 +167,34 @@ void sell_all_improvements(const struct impr_type *pimprove,
                            bool redundant_only, char *message,
                            size_t message_sz)
 {
+  if (nullptr == client.conn.playing) {
+    return;
+  }
+
+  QList<struct city *> cities;
+  city_list_iterate(client.conn.playing->cities, pcity)
+  {
+    cities.append(pcity);
+  }
+  city_list_iterate_end;
+
+  sell_all_improvements_for_cities(cities, pimprove, redundant_only, message,
+                                   message_sz);
+}
+
+/**
+   Sell all improvements of the given type in cities.  If
+ "redundant_only" is specified then only those improvements that are replaced
+ will be sold.
+
+   The "message" string will be filled with a GUI-friendly message about
+   what was sold.
+*/
+void sell_all_improvements_for_cities(QList<struct city *> cities,
+                                      const struct impr_type *pimprove,
+                                      bool redundant_only, char *message,
+                                      size_t message_sz)
+{
   int count = 0, gold = 0;
 
   if (!can_client_issue_orders()) {
@@ -175,16 +202,21 @@ void sell_all_improvements(const struct impr_type *pimprove,
     return;
   }
 
-  city_list_iterate(client.conn.playing->cities, pcity)
-  {
-    if (!pcity->did_sell && city_has_building(pcity, pimprove)
-        && (!redundant_only || is_improvement_redundant(pcity, pimprove))) {
-      count++;
-      gold += impr_sell_gold(pimprove);
-      city_sell_improvement(pcity, improvement_number(pimprove));
+  for (auto pcity : cities) {
+    int city_id = pcity->id;
+    if (nullptr == game_city_by_number(city_id)) {
+      continue;
     }
+
+    if (pcity->did_sell || !city_has_building(pcity, pimprove)
+        || (redundant_only && !is_improvement_redundant(pcity, pimprove))) {
+      continue;
+    }
+
+    count++;
+    gold += impr_sell_gold(pimprove);
+    city_sell_improvement(pcity, improvement_number(pimprove));
   }
-  city_list_iterate_end;
 
   if (count > 0) {
     // FIXME: plurality of count is ignored!
