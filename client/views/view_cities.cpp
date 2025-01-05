@@ -21,7 +21,6 @@
 #include "fcintl.h"
 // common
 #include "citydlg_common.h"
-#include "game.h"
 #include "global_worklist.h"
 // client
 #include "cityrep_g.h"
