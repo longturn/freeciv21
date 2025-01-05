@@ -728,10 +728,7 @@ void city_widget::sell(const struct impr_type *building)
   ask->set_text_title(buf, _("Sell?"));
   ask->setAttribute(Qt::WA_DeleteOnClose);
   connect(ask, &hud_message_box::accepted, this, [=]() {
-    const auto saved_selection =
-        selected_cities; // Copy to avoid invalidations
-
-    for (auto *pcity : saved_selection) {
+    for (auto *pcity : selected_cities) {
       int city_id = pcity->id;
       if (nullptr == game_city_by_number(city_id)) {
         continue;
