@@ -567,7 +567,6 @@ void city_widget::display_list_menu(const QPoint)
     QString imprname;
     const struct impr_type *building;
     Impr_type_id impr_id;
-    int city_id;
     bool need_clear = true;
     bool sell_ask = true;
 
@@ -686,16 +685,19 @@ void city_widget::display_list_menu(const QPoint)
             ask->button(QMessageBox::Yes)->setText(_("Yes Sell"));
             ask->set_text_title(buf, _("Sell?"));
             ask->setAttribute(Qt::WA_DeleteOnClose);
-            city_id = pcity->id;
             impr_id = improvement_number(building);
             connect(ask, &hud_message_box::accepted, this, [=]() {
-              struct city *pcity = game_city_by_number(city_id);
               struct impr_type *building = improvement_by_number(impr_id);
-              if (!pcity || !building) {
+              if (!building) {
                 return;
               }
-              if (!pcity->did_sell && city_has_building(pcity, building)) {
-                city_sell_improvement(pcity, impr_id);
+
+              auto saved_selection =
+                  selected_cities; // Copy to avoid invalidation
+              for (auto *pcity : saved_selection) {
+                if (!pcity->did_sell && city_has_building(pcity, building)) {
+                  city_sell_improvement(pcity, impr_id);
+                }
               }
             });
             ask->show();
