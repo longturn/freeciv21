@@ -21,6 +21,7 @@
 #include "fcintl.h"
 // common
 #include "citydlg_common.h"
+#include "game.h"
 #include "global_worklist.h"
 // client
 #include "cityrep_g.h"
@@ -565,10 +566,7 @@ void city_widget::display_list_menu(const QPoint)
     cid id;
     struct universal target;
     QString imprname;
-    const struct impr_type *building;
-    Impr_type_id impr_id;
     bool need_clear = true;
-    bool sell_ask = true;
 
     if (!act) {
       return;
@@ -579,6 +577,11 @@ void city_widget::display_list_menu(const QPoint)
     qvar = act->data();
     id = qvar.toInt();
     target = cid_decode(id);
+
+    if (m_state == SELL) {
+      sell(target.value.building);
+      return;
+    }
 
     city_list_iterate(client_player()->cities, iter_city)
     {
@@ -672,37 +675,6 @@ void city_widget::display_list_menu(const QPoint)
         case CHANGE_PROD_LAST:
           city_queue_insert(pcity, -1, &target);
           break;
-        case SELL:
-          building = target.value.building;
-          if (sell_ask) {
-            hud_message_box *ask = new hud_message_box(king()->central_wdg);
-            imprname = improvement_name_translation(building);
-            QString buf = QString(_("Are you sure you want to sell the %1?"))
-                              .arg(imprname);
-            sell_ask = false;
-            ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
-            ask->setDefaultButton(QMessageBox::No);
-            ask->button(QMessageBox::Yes)->setText(_("Yes Sell"));
-            ask->set_text_title(buf, _("Sell?"));
-            ask->setAttribute(Qt::WA_DeleteOnClose);
-            impr_id = improvement_number(building);
-            connect(ask, &hud_message_box::accepted, this, [=]() {
-              struct impr_type *building = improvement_by_number(impr_id);
-              if (!building) {
-                return;
-              }
-
-              auto saved_selection =
-                  selected_cities; // Copy to avoid invalidation
-              for (auto *pcity : saved_selection) {
-                if (!pcity->did_sell && city_has_building(pcity, building)) {
-                  city_sell_improvement(pcity, impr_id);
-                }
-              }
-            });
-            ask->show();
-          }
-          break;
         case CMA:
           if (CMA_NONE == id) {
             cma_release_city(pcity);
@@ -731,6 +703,47 @@ void city_widget::display_list_menu(const QPoint)
     }
   });
   list_menu->popup(QCursor::pos());
+}
+
+/**
+   Sell building for all selected cities after asking for
+   confirmation.
+*/
+void city_widget::sell(const struct impr_type *building)
+{
+  fc_assert_ret(building != nullptr);
+
+  Impr_type_id impr_id = improvement_number(building);
+  if (nullptr == improvement_by_number(impr_id)) {
+    return;
+  }
+
+  hud_message_box *ask = new hud_message_box(king()->central_wdg);
+  QString imprname = improvement_name_translation(building);
+  QString buf =
+      QString(_("Are you sure you want to sell the %1?")).arg(imprname);
+  ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
+  ask->setDefaultButton(QMessageBox::No);
+  ask->button(QMessageBox::Yes)->setText(_("Yes Sell"));
+  ask->set_text_title(buf, _("Sell?"));
+  ask->setAttribute(Qt::WA_DeleteOnClose);
+  connect(ask, &hud_message_box::accepted, this, [=]() {
+    const auto saved_selection =
+        selected_cities; // Copy to avoid invalidations
+
+    for (auto *pcity : saved_selection) {
+      int city_id = pcity->id;
+      if (nullptr == game_city_by_number(city_id)) {
+        return;
+      }
+
+      if (!pcity->did_sell && city_has_building(pcity, building)) {
+        city_sell_improvement(pcity, impr_id);
+      }
+    }
+  });
+
+  ask->show();
 }
 
 /**

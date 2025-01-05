@@ -182,6 +182,7 @@ private:
   void fill_production_menus(city_widget::menu_labels what,
                              QMap<QString, cid> &custom_labels,
                              TestCityFunc test_func, QMenu *menu);
+  void sell(const struct impr_type *building);
 };
 
 /***************************************************************************
