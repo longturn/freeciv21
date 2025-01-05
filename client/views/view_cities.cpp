@@ -724,7 +724,8 @@ void city_widget::sell(const struct impr_type *building)
   if (selected_cities.size() == 1) {
     buf = QString(_("Are you sure you want to sell the %1?")).arg(imprname);
   } else {
-    buf = QString(_("Do you really wish to sell every %1?")).arg(imprname);
+    buf = QString(_("Do you really wish to sell all selected %1?"))
+              .arg(imprname);
   }
 
   ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
