@@ -1422,6 +1422,10 @@ void bounce_unit(struct unit *punit, int max_distance,
       bounce_unit(pcargo, max_distance, on_success, on_failure);
     }
     unit_list_iterate_safe_end;
+
+    if (!unit_exists(unit_id)) {
+      return; // Unit died while unloading cargo
+    }
   }
 
   if (on_failure) {
