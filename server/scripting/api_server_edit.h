@@ -44,6 +44,7 @@ void api_edit_create_city(lua_State *L, Player *pplayer, Tile *ptile,
                           const char *name);
 void api_edit_resize_city(lua_State *L, City *pcity, int size,
                           const char *reason);
+void api_edit_remove_city(lua_State *L, City *pcity);
 Player *api_edit_create_player(lua_State *L, const char *username,
                                Nation_Type *pnation, const char *ai);
 void api_edit_change_gold(lua_State *L, Player *pplayer, int amount);

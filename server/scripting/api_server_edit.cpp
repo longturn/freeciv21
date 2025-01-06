@@ -296,6 +296,16 @@ void api_edit_resize_city(lua_State *L, City *pcity, int size,
 }
 
 /**
+ *  Destroy a city
+ */
+void api_edit_remove_city(lua_State *L, City *pcity)
+{
+  LUASCRIPT_CHECK_STATE(L);
+  LUASCRIPT_CHECK_ARG_NIL(L, pcity, 2, City);
+  remove_city(pcity);
+}
+
+/**
    Create a new player.
  */
 Player *api_edit_create_player(lua_State *L, const char *username,
