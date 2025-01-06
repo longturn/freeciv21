@@ -1413,6 +1413,10 @@ void bounce_unit(struct unit *punit, int max_distance,
     }
   }
 
+  if (on_failure) {
+    on_failure({.bunit = punit});
+  }
+
   /* Didn't find a place to bounce the unit, going to disband it.
    * Try to bounce transported units. */
   if (0 < get_transporter_occupancy(punit)) {
@@ -1426,10 +1430,6 @@ void bounce_unit(struct unit *punit, int max_distance,
     if (!unit_exists(unit_id)) {
       return; // Unit died while unloading cargo
     }
-  }
-
-  if (on_failure) {
-    on_failure({.bunit = punit});
   }
 
   wipe_unit(punit, ULR_STACK_CONFLICT, nullptr);
