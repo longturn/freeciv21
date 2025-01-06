@@ -178,8 +178,8 @@ void sell_all_improvements(const struct impr_type *pimprove,
   }
   city_list_iterate_end;
 
-  sell_all_improvements_for_cities(cities, pimprove, redundant_only, message,
-                                   message_sz);
+  sell_all_improvements_for_cities(std::move(cities), pimprove,
+                                   redundant_only, message, message_sz);
 }
 
 /**
