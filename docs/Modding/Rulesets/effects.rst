@@ -806,7 +806,8 @@ Martial_Law_Max
 .. _effect-rapture-grow:
 
 Rapture_Grow
-    Can rapture grow cities.
+    A value larger than zero enables city growth through "rapture". The growth frequency can be
+    controlled via the :ref:`rapturedelay <server-option-rapturedelay>` server option.
 
 .. _effect-revolution-unhappiness:
 

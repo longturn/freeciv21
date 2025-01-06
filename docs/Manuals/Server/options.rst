@@ -715,11 +715,14 @@ To place a setting value on any of these settings use the ``/set <option-name> <
   Regardless of this setting, individual player colors can be changed after the game starts with the
   ``/playercolor`` command.
 
+.. _server-option-rapturedelay:
+
 ``rapturedelay``
   :strong:`Default Value (Min, Max)`: 1 (1, 99)
 
   :strong:`Description`: Number of turns between rapture effect. Sets the number of turns between rapture
   growth of a city. If set to :math:`n` a city will grow after celebrating for :math:`n+1` turns.
+  See also the `Rapture_Grow effect <effect-rapture-grow>`.
 
 ``razechance``
   :strong:`Default Value (Min, Max)`: 20 (0, 100)
