@@ -412,7 +412,7 @@ void gold_widget::paintEvent(QPaintEvent *event)
   }
 
   // Draw the button
-  QToolButton::paintEvent(event);
+  top_bar_widget::paintEvent(event);
 }
 
 /**
