@@ -776,6 +776,17 @@ void science_report_dialog_popup(bool raise)
   } else {
     i = queen()->gimmeIndexOf(QStringLiteral("SCI"));
     w = queen()->game_tab_widget->widget(i);
+
+    // This check includes raise, because science_report_dialog_popup is also
+    // called from packhand.cpp and we don't want to close an open view in
+    // this case. If the user triggers science_report_dialog_popup, raise is
+    // always set to true; it is set to false if it is called from
+    // packhand.cpp.
+    if (raise && w->isVisible()) {
+      top_bar_show_map();
+      return;
+    }
+
     sci_rep = reinterpret_cast<science_report *>(w);
     if (queen()->game_tab_widget->currentIndex() == i) {
       sci_rep->redraw();
