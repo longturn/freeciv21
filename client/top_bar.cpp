@@ -24,7 +24,6 @@
 
 // common
 #include "chatline_common.h"
-#include "government.h"
 #include "nation.h"
 #include "research.h"
 
@@ -32,10 +31,8 @@
 #include "client_main.h"
 #include "climisc.h"
 #include "fc_client.h"
-#include "fonts.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
-#include "ratesdlg_g.h"
 #include "tileset/sprite.h"
 #include "top_bar.h"
 #include "views/view_map.h"
