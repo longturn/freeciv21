@@ -16,13 +16,13 @@
 
 // common
 #include "game.h"
+#include "top_bar.h"
 #include "victory.h"
 // client
 #include "client_main.h"
 #include "colors_common.h"
 #include "fc_client.h"
 #include "page_game.h"
-#include "qtg_cxxside.h"
 #include "spaceshipdlg.h"
 #include "spaceshipdlg_g.h"
 
@@ -198,10 +198,12 @@ void popup_spaceship_dialog(struct player *pplayer)
   } else {
     i = queen()->gimmeIndexOf(QStringLiteral("SPS"));
     fc_assert(i != -1);
-    if (queen()->game_tab_widget->currentIndex() == i) {
+    w = queen()->game_tab_widget->widget(i);
+    if (w->isVisible()) {
+      top_bar_show_map();
       return;
     }
-    w = queen()->game_tab_widget->widget(i);
+
     ss_rep = reinterpret_cast<ss_report *>(w);
     queen()->game_tab_widget->setCurrentWidget(ss_rep);
   }
