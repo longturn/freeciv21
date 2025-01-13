@@ -36,6 +36,6 @@
       <content_attribute id="social-chat">mild</content_attribute>
     </content_rating>
     <releases>
-      <release version="@FC21_REV_TAG@" date="@currentDay@" type="development"/>
+      <release version="@FC21_REV_TAG@" date="@currentDay@" type="stable"/>
     </releases>
 </component>
