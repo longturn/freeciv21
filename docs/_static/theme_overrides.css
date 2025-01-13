@@ -51,6 +51,23 @@ h4 {
     font-size: 22px;
 }
 
+/* add whitespace between list items */
+li {
+    margin-bottom: 7px;
+}
+
+li ol li {
+  margin-bottom: 7px;
+}
+
+li ul li {
+  margin-bottom: 7px;
+}
+
+.toctree-wrapper li, .current li {
+    margin-bottom: 3px;
+}
+
 /* set the font of the side nav bar header */
 .wy-side-nav-search {
     font-family: Libertinus Sans, sans-serif;

@@ -21,50 +21,73 @@ These are the general steps to prepare and finalize a release:
    The easiest way to do this is to copy the contents of the last release, delete the bullet points, and
    add a single bullet of ``* Nothing for this release`` to each section. :strong:`DO NOT` add a tag at this
    time. This prevents an accidental release.
+
 #. A release manager will update the draft as PR's are committed to the repository to help keep track of
    the release cadence progress. As PR's are added to sections the ``* Nothing for this release`` is removed.
+
 #. As PR's are added to the draft release notes, pay attention to the contributor. If a new contributor has
    opened a PR, call it out --- "With this release we welcome @[GithubID] as a new contributor (#[PR])"
+
 #. Multiple PR's can be combined on a single bullet line. Documentation updates are often done this way.
+
 #. When we are getting close to crossing one of the release candidate thresholds, the release manager will
    post to the ``#releases-project`` channel in the ``LT.DEV`` section on the Longturn Discord server. The
    main purpose of the post is to alert the developers of a pending cadence threshold and to gauge if we
    need to delay in any way or if we are good to proceed as normal.
+
 #. A release manager or another regular contributor will update the ``vcpkgGitCommitId`` value in the CI/CD
    build file (:file:`.github/workflows/build.yaml`). Grab the Commit ID of the most recent release from
    https://github.com/microsoft/vcpkg/releases. Commit and push a PR. Ensure all of the CI/CD Action runners
    complete successfully.
-#. If the new release is a change from ``alpha`` to ``beta`` or ``release candidate`` series, the
-   :file:`.github/workflows/release.yaml` file needs an update. In the ``snapcraft`` section, change the
-   ``release`` flag -- ``edge`` for Alpha, ``beta`` for Beta and ``candidate`` for the RC's.
+
+#. If the new release is a change from the ``dev``, ``alpha``, ``beta``, ``candidate``, or ``stable`` release
+   series, there are some file updates needed:
+
+   * :file:`.github/workflows/release.yaml` --- In the ``snapcraft`` section, change the ``release`` flag:
+     ``edge`` for Dev or Alpha, ``beta`` for Beta, ``candidate`` for the RC's, and ``stable`` for Stable.
+
+   * :file:`dist/*.metainfo.xml.in` --- At the bottom in the ``releases`` section, change the ``type`` value.
+     Use ``development`` for Dev, Alpha and Beta, ``candidate`` for the RC's, and ``stable`` for Stable.
+
 #. When it is time, the release manager will finalize the release notes and ask for an editorial review in the
    ``#releases-project`` channel. Updates are made as per review.
+
 #. If the release will be the :strong:`first release candidate` towards a stable release, the release manager
    will:
 
-   #. Delete the existing ``stable`` branch on Github's
+   #. Tag the ``stable`` branch at ``HEAD`` with a ``-final`` tag for the old stable release.
+
+   #. Remove branch protections from the ``stable`` branch in the repository settings.
+
+   #. Delete the existing ``stable`` branch on the repository's
       `branches page <https://github.com/longturn/freeciv21/branches>`_.
+
    #. From the same page, create a new ``stable`` branch from ``master``.
-   #. Update :file:`cmake/AutoRevision.txt` with the hash of the last commit in ``master`` and
-      ``v[major version].[minor version]-dev.0`` with the version of the :strong:`next stable release`, then
-      open a PR for this change to ``master``. This way, development builds from ``master`` will immediately
-      use the version number of the next stable.
-   #. Update :file:`.github/workflows/release.yaml`. In the ``snapcraft`` section, change the ``release``
-      flag to ``stable``.
+
+   #. Create a new ``stable`` branch protection setting.
+
+   #. Update :file:`cmake/AutoRevision.txt` with the hash of the last commit in ``master`` and set a
+      development version (``v[major version].[minor version]-dev.0``). Open a PR for this change to
+      ``master``. This way, development builds from ``master`` will immediately use the version number of the
+      next stable until we release a new unstable release.
 
 #. If the release is a :strong:`release candidate` for a :strong:`stable release`, the release manager will
    make sure that the :guilabel:`Target` branch in the release draft is set to ``stable``.
+
 #. The release manager will add a tag to the release notes page and then click :guilabel:`Publish Release`.
-   The format of the tag is ``v[major version].[minor version]-[pre-release name].[number]`` for pre-releases
-   and ``v[major version].[minor version].[patch version]`` for stable versions. For example:
-   ``v3.0-beta.6`` or ``v3.1.0``. :strong:`The format is very important` to the build configuration process.
+   The format of the tag is ``v[major version].[minor version]-[release name].[number]``. For example:
+   ``v3.0-stable.5`` or ``v3.1-rc.1``. :strong:`The format is very important` to the build configuration
+   process.
+
 #. After a few minutes the continuous integration (CI) will open a PR titled
    ``Release Update of AutoRevision.txt``. The release manager will open the PR, click on the
    :guilabel:`Close pull request` button, and then click :guilabel:`Open pull request` button. This is a
    necessary step to handle a GitHub security feature. GitHub requires a human to be involved to merge CI
    created PR's.
+
 #. While inside the ``Release Update of AutoRevision.txt`` PR, the release manager will enable an automatic
    rebase and merge.
+
 #. The release manager will open an issue titled ``Review workarounds after <version> release`` with the
    following text:
 
@@ -73,13 +96,10 @@ These are the general steps to prepare and finalize a release:
 
 #. When all the CI actions are complete, the release manager will make a post in the ``#news-channel`` on the
    Longturn.net Discord server.
-#. The release manager will download the Windows i686 and x86_64 installer packages and use their Microsoft
-   Account to submit the files for Microsoft SmartScreen analysis. The instructions are `provided here
-   <https://learn.microsoft.com/en-us/windows/security/threat-protection/microsoft-defender-smartscreen/microsoft-defender-smartscreen-overview#submit-files-to-microsoft-defender-smartscreen-for-review>`_.
-   We do this to help our Windows-based users have an easier time downloading the game in the Microsoft Edge
-   browser.
+
 #. The release manager mentions user @Corbeau on Discord ``#releases-project`` channel giving the new URL to
    update his blog page once all of the GitHub action runners are complete.
+
 #. The release manager mentions user @panch93 on Discord ``#releases-project`` channel so he can update the
    Arch AUR with the latest release.
 
