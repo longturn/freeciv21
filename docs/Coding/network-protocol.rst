@@ -16,9 +16,9 @@ data and transported over the network.
 Packets
 =======
 
-The packets used in the protocol are defined in ``common/networking/packets.def``. Each packet has a type
+The packets used in the protocol are defined in :file:`common/networking/packets.def`. Each packet has a type
 identifier (a number) and some fields. The packet definition file is parsed by
-``common/generate_packets.py``, which generates a set of C++ functions to serialize them.
+:file:`common/generate_packets.py`, which generates a set of C++ functions to serialize them.
 For each ``foo`` packet structure, there is one send and one receive function:
 
 .. code-block:: cpp
@@ -29,14 +29,14 @@ For each ``foo`` packet structure, there is one send and one receive function:
 
 The :code:`send_packet_foo()` function serializes a structure into a bytestream and adds this to the send
 buffer in the connection struct. The :code:`receive_packet_foo()` function de-serializes a bytestream into a
-structure and removes the bytestream from the input buffer in the connection struct. The connection struct is
-defined in :file:`common/connection.h`.
+structure and removes the bytestream from the input buffer in the connection struct.
+The :freeciv21:`connection` struct is defined in :freeciv21:`connection.h`.
 
 Each structure field in a structure is serialized using architecture independent functions such as
-:code:`dio_put_uint32()` and de-serialized with functions like :code:`dio_get_uint32()`.
+:freeciv21:`dio_put_uint32_raw` and de-serialized with functions like :freeciv21:`dio_get_uint32_raw`.
 
 A packet is constituted by a header followed by the serialized structure data. The header contains the
-following fields (the sizes are defined in :file:`common/packets.cpp`:code:`packet_header_set()`):
+following fields (the sizes are defined in`:freeciv21:`packet_header_set`):
 
 .. code-block:: cpp
 
@@ -46,7 +46,7 @@ following fields (the sizes are defined in :file:`common/packets.cpp`:code:`pack
 
 For backward compatibility reasons, packets used for the initial protocol (notably before checking the
 capabilities) have different header fields sizes as defined in
-:file:`common/packets.c`:code:`packet_header_init()`:
+:freeciv21:`packet_header_init`:
 
 .. code-block:: cpp
 
@@ -139,9 +139,9 @@ There are 4 ways to solve this problem:
 #. We modify the client to deal with a fast server gracefully.
 
 We mitigated the problem by increasing the send buffer size on the server and making it dynamic. We also added
-in strategic places in the code calls to a new :code:`flush_packets()` function that makes the server stall
+in strategic places in the code calls to a new :freeciv21:`flush_packets` function that makes the server stall
 for some time draining the send buffers. Strategic places include whenever we send the whole map. The maximum
-amount of time spent per :code:`flush_packets()` call is specified by the ``netwait`` variable.
+amount of time spent per :freeciv21:`flush_packets` call is specified by the ``netwait`` variable.
 
 To disconnect unreachable clients, the server pings the
 client after a certain time elapses (set using the :literal:`pingtimeout` variable). If the client does not

@@ -51,6 +51,7 @@ build.ninja
 
 # Build directories
 /build*
+/doxygen
 .flatpak-builder
 
 # Nix build artifacts

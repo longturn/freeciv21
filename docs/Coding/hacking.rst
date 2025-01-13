@@ -73,8 +73,8 @@ If you plan to compare results of autogames the following changes can be helpful
 Old Lists
 =========
 
-For variable length list of units and cities Freeciv21 uses a :code:`genlist`, which is implemented in
-:file:`utility/genlist.cpp`. By some macro magic type specific macros have been defined, creating a lot of
+For variable length list of units and cities Freeciv21 uses a :freeciv21:`genlist`, which is implemented in
+:freeciv21:`genlist.cpp`. By some macro magic type specific macros have been defined, creating a lot of
 trouble for C++ programmers. These macro-based lists are being phased out in favor of STL containers. In the
 meantime, we preserve here an explanation of how to use them.
 
@@ -98,15 +98,15 @@ Note that the macro itself declares the variable :code:`punit`. Similarly there 
 
 
 There are other operations than iterating that can be performed on a list; inserting, deleting, or sorting
-etc. See :file:`utility/speclist.h`. Note that the way the :code:`*_list_iterate macro` is implemented means
+etc. See :freeciv21:`speclist.h`. Note that the way the :code:`*_list_iterate macro` is implemented means
 you can use "continue" and "break" in the usual manner.
 
 One thing you should keep in the back of your mind. Say you are iterating through a unit list, and then
 somewhere inside the iteration decide to disband a unit. In the server you would do this by calling
-:code:`wipe_unit(punit)`, which would then remove the unit node from all the relevant unit lists. However, by
-the way :code:`unit_list_iterate` works, if the removed unit was the following node :code:`unit_list_iterate`
+:freeciv21:`wipe_unit`, which would then remove the unit node from all the relevant unit lists. However, by
+the way :freeciv21:`unit_list_iterate` works, if the removed unit was the following node :freeciv21:`unit_list_iterate`
 will already have saved the pointer, and use it in a moment, with a segfault as the result. To avoid this, use
-:code:`unit_list_iterate_safe` instead.
+:freeciv21:`unit_list_iterate_safe` instead.
 
 Graphics
 ========
@@ -132,8 +132,8 @@ Map Structure
 =============
 
 The map is maintained in a pretty straightforward C array, containing :math:`X\times Y` tiles. You can use the
-function :code:`struct tile *map_pos_to_tile(x, y)` to find a pointer to a specific tile. A tile has various
-fields; see the struct in :file:`common/map.h`.
+function :freeciv21:`map_pos_to_tile` to find a pointer to a tile at specific coordinates. A tile has various
+fields; see the struct :freeciv21:`tile`.
 
 You may iterate tiles, you may use the following methods:
 
@@ -195,7 +195,7 @@ for iterating all tiles in the radius defined ``radius`` (in square distance, se
 
 for iterating all tiles in the radius defined ``radius`` (in real distance, see below), beginning by
 ``center_tile``. Actually, this is the duplicate of square_iterate, or various tricky ones defined in
-:file:`common/map.h`, which automatically adjust the tile values. The defined macros should be used whenever
+:freeciv21:`map.h`, which automatically adjust the tile values. The defined macros should be used whenever
 possible, the examples above were only included to give people the knowledge of how things work.
 
 Note that the following:
@@ -215,14 +215,14 @@ is not a reliable way to iterate all adjacent tiles for all topologies, so such 
 Also available are the functions calculating distance between tiles. In Freeciv21, we are using 3 types of
 distance between tiles:
 
-* The :code:`map_distance(ptile0, ptile1)` function returns the *Manhattan* distance between tiles, i.e. the
+* The :freeciv21:`map_distance` function returns the *Manhattan* distance between tiles, i.e. the
   distance from :code:`ptile0` to :code:`ptile1`, only using cardinal directions. For example,
   :math:`|dx| + |dy|` for non-hexagonal topologies.
 
-* The :code:`real_map_distance(ptile0, ptile1)` function returns the *normal* distance between tiles, i.e. the
+* The :freeciv21:`real_map_distance` function returns the *normal* distance between tiles, i.e. the
   minimal distance from :code:`ptile0` to :code:`ptile1` using all valid directions for the current topology.
 
-* The :code:`sq_map_distance(ptile0, ptile1)` function returns the *square* distance between tiles. This is a
+* The :freeciv21:`sq_map_distance` function returns the *square* distance between tiles. This is a
   simple way to make Pythagorean effects for making circles on the map for example. For non-hexagonal
   topologies, it would be :math:`dx^2 + dy^2`. Only useless square root is missing.
 
@@ -355,17 +355,17 @@ When performing operations in map coordinates (like a translation of tile :code:
 -> :code:`(x + dx, y + dy)`), the new map coordinates may be unsuitable for the current map. In case, you
 should use one of the following functions or macros:
 
-* :code:`map_pos_to_tile()`: return ``NULL`` if normalization is not possible;
+* :freeciv21:`map_pos_to_tile`: return ``nullptr`` if normalization is not possible;
 
-* :code:`normalize_map_pos()`: return ``TRUE`` if normalization have been done (wrapping X and Y coordinates
+* :freeciv21:`normalize_map_pos`: return ``true`` if normalization have been done (wrapping X and Y coordinates
   if the current topology allows it);
 
-* :code:`is_normal_map_pos()`: return ``TRUE`` if the map coordinates exist for the map;
+* :freeciv21:`is_normal_map_pos`: return ``true`` if the map coordinates exist for the map;
 
-* :code:`CHECK_MAP_POS()`: assert whether the map coordinates exist for the map.
+* :freeciv21:`CHECK_MAP_POS`: assert whether the map coordinates exist for the map.
 
 Map coordinates are quite central in the coordinate system, and they may be easily converted to any other
-coordinates: :code:`MAP_TO_NATURAL_POS()`, :code:`MAP_TO_NATIVE_POS()`, or :code:`map_pos_to_index()`
+coordinates: :freeciv21:`MAP_TO_NATURAL_POS`, :freeciv21:`MAP_TO_NATIVE_POS`, or :freeciv21:`map_pos_to_index`
 functions.
 
 Natural Coordinates
@@ -399,7 +399,7 @@ With an isometric view, this looks like:
 Natural coordinates are mostly used for operations which concern the user view. It is the best way to
 determine the horizontal and the vertical axis of the view.
 
-The only coordinates conversion is done using the :code:`NATURAL_TO_MAP_POS()` function.
+The only coordinates conversion is done using the :freeciv21:`NATURAL_TO_MAP_POS` function.
 
 Native Coordinates
 ^^^^^^^^^^^^^^^^^^
@@ -439,18 +439,18 @@ coordinates by compressing the natural representation in the X axis to get the 3
 
 
 The resulting coordinate system is much easier to use than map coordinates for some operations. These
-include most internal topology operations (e.g., :code:`normalize_map_pos`, or :code:`whole_map_iterate`) as
+include most internal topology operations (e.g., :freeciv21:`normalize_map_pos`, or :freeciv21:`whole_map_iterate`) as
 well as storage (in ``map.tiles`` and savegames, for instance).
 
 In general, native coordinates can be defined based on this property; the basic map becomes a continuous
 (gap-free) cardinally-oriented rectangle when expressed in native coordinates.
 
-Native coordinates can be easily converted to map coordinates using the :code:`NATIVE_TO_MAP_POS()` function,
-to index using the code:`native_pos_to_index()` function and to tile (shortcut) using the
-:code:`native_pos_to_tile()` function.
+Native coordinates can be easily converted to map coordinates using the :freeciv21:`NATIVE_TO_MAP_POS` function,
+to index using the code: :freeciv21:`native_pos_to_index` function and to tile (shortcut) using the
+:freeciv21:`native_pos_to_tile` function.
 
-After operations, such as the :code:`FC_WRAP(x, map.xsize)` function, the result may be checked with the
-:code:`CHECK_NATIVE_POS()` function.
+After operations, such as the :freeciv21:`FC_WRAP` function, the result may be checked with the
+:freeciv21:`CHECK_NATIVE_POS` function.
 
 Index Coordinates
 ^^^^^^^^^^^^^^^^^
@@ -460,10 +460,10 @@ coordinate system is closely tied to the ordering of the tiles in native coordin
 easier to use for some operations (like storage) because it is one-dimensional. In general you cannot assume
 anything about the ordering of the positions within the system.
 
-Indexes can be easily converted to native coordinates using the :code:`index_to_native_pos()` function or to
-map positions (shortcut) using the :code:`index_to_map_pos()` function.
+Indexes can be easily converted to native coordinates using the :freeciv21:`index_to_native_pos` function or to
+map positions (shortcut) using the :freeciv21:`index_to_map_pos` function.
 
-A map index can tested using the :code:`CHECK_INDEX` macro.
+A map index can tested using the :freeciv21:`CHECK_INDEX` macro.
 
 With a classical rectangular map, the first three coordinate systems are equivalent. When we introduce
 isometric maps, the distinction becomes important, as demonstrated above. Many places in the code have
@@ -523,13 +523,13 @@ The math then works out to:
   y_\texttt{nat} &= x_\texttt{map} + y_\texttt{map} - x_\texttt{size} \\
   x_\texttt{nat} &= \left\lfloor x_\texttt{map} - y_\texttt{map} + \dfrac{x_\texttt{size}}{2} \right\rfloor
 
-which leads to the macros :code:`NATIVE_TO_MAP_POS()`, and :code:`MAP_TO_NATIVE_POS()` that are defined in
-:file:`map.h`.
+which leads to the macros :freeciv21:`NATIVE_TO_MAP_POS`, and :freeciv21:`MAP_TO_NATIVE_POS` that are defined in
+:freeciv21:`map.h`.
 
 Unknown Tiles and Fog of War
 ----------------------------
 
-In :file:`common/player.h`, there are several fields:
+In :freeciv21:`player.h`, there are several fields:
 
 .. code-block:: cpp
 
@@ -549,7 +549,7 @@ In :file:`common/player.h`, there are several fields:
     };
 
 
-While :code:`tile_get_known()` returns:
+While :freeciv21:`tile_get_known` returns:
 
 .. code-block:: cpp
 
@@ -561,11 +561,11 @@ While :code:`tile_get_known()` returns:
     };
 
 
-The values :code:`TILE_UNKNOWN` and :code:`TILE_KNOWN_SEEN` are straightforward. :code:`TILE_KNOWN_UNSEEN` is
+The values :freeciv21:`TILE_UNKNOWN` and :freeciv21:`TILE_KNOWN_SEEN` are straightforward. :freeciv21:`TILE_KNOWN_UNSEEN` is
 a tile of which the user knows the terrain, but not recent cities, roads, etc.
 
-:code:`TILE_UNKNOWN` tiles never are (nor should be) sent to the client. In the past, :code:`UNKNOWN` tiles
-that were adjacent to :code:`UNSEEN` or :code:`SEEN` were sent to make the drawing process easier, but this
+:freeciv21:`TILE_UNKNOWN` tiles never are (nor should be) sent to the client. In the past, :freeciv21:`TILE_UNKNOWN` tiles
+that were adjacent to :freeciv21:`TILE_KNOWN_UNSEEN` or :freeciv21:`TILE_KNOWN_SEEN` were sent to make the drawing process easier, but this
 has now been removed. This means exploring new land may sometimes change the appearance of existing land (but
 this is not fundamentally different from what might happen when you transform land). Sending the extra info,
 however, not only confused the goto code but allowed cheating.
@@ -574,18 +574,17 @@ Fog of War is the fact that even when you have seen a tile once you are not sent
 the sight range of one of your units or cities.
 
 We keep track of Fog of War by counting the number of units and cities of each client that can see the tile.
-This requires a number per player, per tile, so each :code:`player_tile` has a :code:`short[]`. Every time a
+This requires a number per player, per tile, so each :freeciv21:`player_tile` has a :code:`short[]`. Every time a
 unit, city, or something else can observe a tile 1 is added to its player's number at the tile, and when it
 cannot observe any more (killed/moved/pillaged) 1 is subtracted. In addition to the initialization/loading of
-a game this array is manipulated with the :code:`void unfog_area(struct player *pplayer, int x, int y, int
-len)` and :code:`void fog_area(struct player *pplayer, int x, int y, int len)` functions. The :code:`int len`
+a game this array is manipulated with the :freeciv21:`unfog_area` and :freeciv21:`fog_area` functions. The :code:`int len`
 variable is the radius of the area that should be fogged/unfogged, i.e. a ``len`` of 1 is a normal unit. In
-addition to keeping track of Fog of War, these functions also make sure to reveal :code:`TILE_UNKNOWN` tiles
-you get near, and send information about :code:`TILE_UNKNOWN` tiles near that the client needs for drawing.
-They then send the tiles to the :code:`void send_tile_info(struct player *dest, int x, int y)` function, which
+addition to keeping track of Fog of War, these functions also make sure to reveal :freeciv21:`TILE_UNKNOWN` tiles
+you get near, and send information about :freeciv21:`TILE_UNKNOWN` tiles near that the client needs for drawing.
+They then send the tiles to the :freeciv21:`send_tile_info` function, which
 then sets the correct ``known_type`` and sends the tile to the client.
 
-If you want to just show the terrain and cities of the square the function :code:`show_area()` does this. The
+If you want to just show the terrain and cities of the square the function :freeciv21:`show_area` does this. The
 tiles remain fogged. If you play without Fog of War all the values of the seen arrays are initialized to 1. So
 you are using the exact same code, you just never get down to 0. As changes in the "fogginess" of the tiles
 are only sent to the client when the value shifts between zero and non-zero, no redundant packages are sent.
@@ -605,8 +604,8 @@ This field is not kept up to date as long as the player can see the tile and it 
 gets fogged the date is updated.
 
 There is a Shared Vision feature, meaning that if ``p1`` gives Shared Vision to ``p2``, every time a function
-like :code:`show_area()`, :code:`fog_area()`, :code:`unfog_area()`, or
-:code:`give_tile_info_from_player_to_player()` is called on ``p1``, ``p2`` also gets the information. Note
+like :freeciv21:`show_area`, :freeciv21:`fog_area`, :freeciv21:`unfog_area`, or
+:freeciv21:`give_tile_info_from_player_to_player` is called on ``p1``, ``p2`` also gets the information. Note
 that if ``p2`` gives Shared Vision to ``p3``, ``p3`` also gets the information for ``p1``. This is controlled
 by ``p1's`` really_gives_vision bitvector, where the dependencies will be kept.
 

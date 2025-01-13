@@ -23,7 +23,7 @@ namespace freeciv {
 /**
  * @class layer_base_flags
  *
- * Map layer that draws flags for bases that have @ref EF_SHOW_FLAG set.
+ * Map layer that draws flags for bases that have EF_SHOW_FLAG set.
  */
 
 layer_base_flags::layer_base_flags(struct tileset *ts, const QPoint &offset)
