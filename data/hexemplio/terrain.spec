@@ -32,7 +32,7 @@ dx = 126
 dy = 64
 pixel_border = 1
 
-tiles = { "row", "column","tag"
+tiles = { "row", "column", "tag", "option"
 
 ; terrain - layer 0
   0,    0,  "t.l0.desert1"			;[?]
@@ -104,6 +104,7 @@ tiles = { "row", "column","tag"
  4, 4, "tx.farmland"										;[GS]
  4, 5, "tx.fallout"											;[?][GS]
  4, 6, "tx.pollution"										;[?]
+ 5, 8, "tx.pollution", "highvis_pollution"
  4, 7, "tx.village"											;[BFW][GS]
 
 ;misc
