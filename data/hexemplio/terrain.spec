@@ -19,6 +19,7 @@ artists = "
 	Unknown FreeCol Artist(s)
 	Vegard Stolpnessaeter [VS]
 	Jwrober (darker irrigation and farmland channels)
+  Hugo Flávio [HF]
 "
 
 [file]
@@ -104,7 +105,7 @@ tiles = { "row", "column", "tag", "option"
  4, 4, "tx.farmland"										;[GS]
  4, 5, "tx.fallout"											;[?][GS]
  4, 6, "tx.pollution"										;[?]
- 5, 8, "tx.pollution", "highvis_pollution"
+ 5, 8, "tx.pollution", "highvis_pollution" ;[?][HF]
  4, 7, "tx.village"											;[BFW][GS]
 
 ;misc
