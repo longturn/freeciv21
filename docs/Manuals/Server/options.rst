@@ -156,6 +156,8 @@ To place a setting value on any of these settings use the ``/set <option-name> <
       rather than current.
     * ``DISTANCE``: Bonuses are proportional only to distance.
 
+.. _server-option-citymindist:
+
 ``citymindist``
   :strong:`Default Value (Min, Max)`: 2 (1, 11)
 

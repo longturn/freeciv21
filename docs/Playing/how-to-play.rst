@@ -146,6 +146,8 @@ increasing trade), and Mines (increasing production), among other improvements. 
 improvements on some tiles may require a technology advance to be learned by your scientists.
 See :title-reference:`Help --> Terrain --> Terrain Alterations` for more information.
 
+.. _how-to-play-city-placement:
+
 Deciding Where to Build Cities
 ------------------------------
 

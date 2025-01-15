@@ -6,6 +6,7 @@ Freeciv21 and any of the varying rulesets that the Longturn.net community likes 
 
 
 .. toctree::
+  LT-Guide/index.rst
   faq.rst
   how-to-play.rst
   cma.rst
