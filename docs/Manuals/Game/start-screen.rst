@@ -240,6 +240,7 @@ Start
 
 When you are finished with all the settings, clicking :guilabel:`Start` will cause the game to start!
 
+.. _game-manual-connect-network:
 
 Connect to Network Game
 =======================
