@@ -348,3 +348,8 @@ styles =
 name = "cimpletoon"
 description = _("Use 3D Cimpletoon units")
 default = FALSE
+
+[option_highvis_pollution]
+name = "highvis_pollution"
+description = _("Highly-visible Pollution")
+default = FALSE
