@@ -13,6 +13,7 @@ artists = "
     CapTVK
     GriffonSpade
     Gyubal Wahazar
+    Hugo Flávio [HF]
 "
 
 [file]
@@ -26,7 +27,7 @@ dx = 96
 dy = 48
 pixel_border = 1
 
-tiles = { "row", "column", "tag"
+tiles = { "row", "column", "tag", "option"
 
 ; terrain
  0,  0, "t.l0.desert1"
@@ -88,7 +89,8 @@ tiles = { "row", "column", "tag"
  10, 4, "ts.forest_game"
 
  11, 2, "ts.horses"
- 11, 4, "ts.grassland_resources", "ts.river_resources"
+ 11, 4, "ts.grassland_resources"
+ 11, 4, "ts.river_resources"
 
 ;roads
  12, 0, "road.road_isolated"
@@ -118,9 +120,10 @@ tiles = { "row", "column", "tag"
  2,  6, "tx.farmland"
  3,  6, "tx.mine"
  4,  6, "tx.pollution"
- 5,  6, "tx.village"
- 6,  6, "tx.fallout"
- 7,  6, "tx.oil_rig"
+ 5,  6, "tx.pollution", "highvis_pollution" ;[HF]
+ 6,  6, "tx.village"
+ 7,  6, "tx.fallout"
+ 8,  6, "tx.oil_rig"
 
  15,  0, "t.dither_tile"
  15,  0, "tx.darkness"
