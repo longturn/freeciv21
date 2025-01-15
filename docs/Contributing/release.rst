@@ -44,10 +44,10 @@ These are the general steps to prepare and finalize a release:
    series, there are some file updates needed:
 
    * :file:`.github/workflows/release.yaml` --- In the ``snapcraft`` section, change the ``release`` flag:
-     ``edge`` for Dev or Alpha, ``beta`` for Beta, ``candidate`` for the RC's, and ``stable`` for Stable.
+     ``edge`` for Dev or Alpha, ``beta`` for Beta, ``candidate`` for the RCs, and ``stable`` for Stable.
 
    * :file:`dist/*.metainfo.xml.in` --- At the bottom in the ``releases`` section, change the ``type`` value.
-     Use ``development`` for Dev, Alpha and Beta, ``candidate`` for the RC's, and ``stable`` for Stable.
+     Use ``development`` for Dev, Alpha and Beta, ``candidate`` for the RCs, and ``stable`` for Stable.
 
 #. When it is time, the release manager will finalize the release notes and ask for an editorial review in the
    ``#releases-project`` channel. Updates are made as per review.
@@ -64,7 +64,7 @@ These are the general steps to prepare and finalize a release:
 
    #. From the same page, create a new ``stable`` branch from ``master``.
 
-   #. Create a new ``stable`` branch protection setting.
+   #. Restore the ``stable`` branch protection setting.
 
    #. Update :file:`cmake/AutoRevision.txt` with the hash of the last commit in ``master`` and set a
       development version (``v[major version].[minor version]-dev.0``). Open a PR for this change to
@@ -76,14 +76,14 @@ These are the general steps to prepare and finalize a release:
 
 #. The release manager will add a tag to the release notes page and then click :guilabel:`Publish Release`.
    The format of the tag is ``v[major version].[minor version]-[release name].[number]``. For example:
-   ``v3.0-stable.5`` or ``v3.1-rc.1``. :strong:`The format is very important` to the build configuration
+   ``v3.0-patch.5`` or ``v3.1-rc.1``. :strong:`The format is very important` to the build configuration
    process.
 
 #. After a few minutes the continuous integration (CI) will open a PR titled
    ``Release Update of AutoRevision.txt``. The release manager will open the PR, click on the
    :guilabel:`Close pull request` button, and then click :guilabel:`Open pull request` button. This is a
    necessary step to handle a GitHub security feature. GitHub requires a human to be involved to merge CI
-   created PR's.
+   created PRs.
 
 #. While inside the ``Release Update of AutoRevision.txt`` PR, the release manager will enable an automatic
    rebase and merge.
