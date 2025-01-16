@@ -21,6 +21,13 @@ Freeciv Manual, available separately at: http://www.freeciv.org/wiki/Manual
 
 If you are looking for help on playing Freeciv21, then keep reading!
 
+.. note::
+  If you are looking for tips and tricks on how to play Longturn online multiplayer games, have a look at the
+  :doc:`/Playing/LT-Guide/index`. This :title-reference:`How to Play Freeciv21` page is generic and is
+  concerned with the basics of gameplay, whereas the :title-reference:`Longturn Game Playing Guide` is more
+  focused to the rulsets the online community plays.
+
+
 Basic Strategy
 ==============
 
