@@ -4,8 +4,9 @@
 Longturn Game Playing Guide
 ***************************
 
-This is the Longturn game player's guide. This playing guide is similar to :doc:`/Playing/how-to-play`,
-however it is less generic and more focused on the rulesets we often play.
+This is the :title-reference:`Longturn Game Playing Guide`. This playing guide is similar to
+:doc:`/Playing/how-to-play`, however it is less generic and much more focused on the rulesets we often play
+online against other human players.
 
 .. toctree::
   intro.rst

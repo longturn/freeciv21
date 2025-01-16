@@ -6,9 +6,9 @@ Freeciv21 and any of the varying rulesets that the Longturn.net community likes 
 
 
 .. toctree::
+  how-to-play.rst
   LT-Guide/index.rst
   faq.rst
-  how-to-play.rst
   cma.rst
   turn-change.rst
   :maxdepth: 1
