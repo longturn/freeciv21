@@ -1969,7 +1969,7 @@ void remove_city(struct city *pcity)
 bool unit_conquer_city(struct unit *punit, struct city *pcity)
 {
   bool try_civil_war = false;
-  bool city_remains;
+  int pcity_id = pcity->id;
   struct player *pplayer = unit_owner(punit);
   struct player *cplayer = city_owner(pcity);
 
@@ -2013,8 +2013,6 @@ bool unit_conquer_city(struct unit *punit, struct city *pcity)
    * the city will be destroyed.
    */
   if (city_size_get(pcity) <= 1) {
-    int saved_id = pcity->id;
-
     notify_player(pplayer, city_tile(pcity), E_UNIT_WIN_ATT, ftc_server,
                   _("You destroy %s completely."), city_tile_link(pcity));
     notify_player(cplayer, city_tile(pcity), E_CITY_LOST, ftc_server,
@@ -2023,7 +2021,7 @@ bool unit_conquer_city(struct unit *punit, struct city *pcity)
     script_server_signal_emit("city_destroyed", pcity, cplayer, pplayer);
 
     // We cant't be sure of city existence after running some script
-    if (city_exist(saved_id)) {
+    if (city_exist(pcity_id)) {
       remove_city(pcity);
     }
 
@@ -2033,62 +2031,25 @@ bool unit_conquer_city(struct unit *punit, struct city *pcity)
     return true;
   }
 
-  auto coins = cplayer->economic.gold;
-  coins = MIN(coins, int(fc_rand((coins / 20) + 1))
-                         + (coins * (city_size_get(pcity))) / 200);
-  pplayer->economic.gold += coins;
-  cplayer->economic.gold -= coins;
-  send_player_info_c(pplayer, pplayer->connections);
-  send_player_info_c(cplayer, cplayer->connections);
   if (pcity->original != pplayer) {
-    if (coins > 0) {
-      notify_player(pplayer, city_tile(pcity), E_UNIT_WIN_ATT, ftc_server,
-                    PL_("You conquer %s; your lootings accumulate"
-                        " to %d gold!",
-                        "You conquer %s; your lootings accumulate"
-                        " to %d gold!",
-                        coins),
-                    city_link(pcity), coins);
-      notify_player(cplayer, city_tile(pcity), E_CITY_LOST, ftc_server,
-                    PL_("%s conquered %s and looted %d gold"
-                        " from the city.",
-                        "%s conquered %s and looted %d gold"
-                        " from the city.",
-                        coins),
-                    player_name(pplayer), city_link(pcity), coins);
-    } else {
-      notify_player(pplayer, city_tile(pcity), E_UNIT_WIN_ATT, ftc_server,
-                    _("You conquer %s."), city_link(pcity));
-      notify_player(cplayer, city_tile(pcity), E_CITY_LOST, ftc_server,
-                    _("%s conquered %s."), player_name(pplayer),
-                    city_link(pcity));
-    }
+    notify_player(pplayer, city_tile(pcity), E_UNIT_WIN_ATT, ftc_server,
+                  _("You conquer %s."), city_link(pcity));
+    notify_player(cplayer, city_tile(pcity), E_CITY_LOST, ftc_server,
+                  _("%s conquered %s."), player_name(pplayer),
+                  city_link(pcity));
   } else {
-    if (coins > 0) {
-      notify_player(pplayer, city_tile(pcity), E_UNIT_WIN_ATT, ftc_server,
-                    PL_("You have liberated %s!"
-                        " Lootings accumulate to %d gold.",
-                        "You have liberated %s!"
-                        " Lootings accumulate to %d gold.",
-                        coins),
-                    city_link(pcity), coins);
-      notify_player(cplayer, city_tile(pcity), E_CITY_LOST, ftc_server,
-                    PL_("%s liberated %s and looted %d gold"
-                        " from the city.",
-                        "%s liberated %s and looted %d gold"
-                        " from the city.",
-                        coins),
-                    player_name(pplayer), city_link(pcity), coins);
-    } else {
-      notify_player(pplayer, city_tile(pcity), E_UNIT_WIN_ATT, ftc_server,
-                    _("You have liberated %s!"), city_link(pcity));
-      notify_player(cplayer, city_tile(pcity), E_CITY_LOST, ftc_server,
-                    _("%s liberated %s."), player_name(pplayer),
-                    city_link(pcity));
-    }
+    notify_player(pplayer, city_tile(pcity), E_UNIT_WIN_ATT, ftc_server,
+                  _("You have liberated %s!"), city_link(pcity));
+    notify_player(cplayer, city_tile(pcity), E_CITY_LOST, ftc_server,
+                  _("%s liberated %s."), player_name(pplayer),
+                  city_link(pcity));
   }
 
-  if (fc_rand(100) < get_unit_bonus(punit, EFT_CONQUEST_TECH_PCT)) {
+  int conquestTechPct = get_unit_bonus(punit, EFT_CONQUEST_TECH_PCT);
+  script_server_signal_emit("city_loot", pcity, punit);
+  bool city_remains = city_exist(pcity_id);
+
+  if (fc_rand(100) < conquestTechPct) {
     // Just try to steal. Ignore failures to get tech
     steal_a_tech(pplayer, cplayer, A_UNSET);
   }
@@ -2097,8 +2058,9 @@ bool unit_conquer_city(struct unit *punit, struct city *pcity)
    * the size is reduced. */
   /* FIXME: maybe it should be a ruleset option whether barbarians get
    * free buildings such as palaces? */
-  city_remains = transfer_city(pplayer, pcity, 0, true, true, true,
-                               !is_barbarian(pplayer));
+  city_remains = city_remains
+                 && transfer_city(pplayer, pcity, 0, true, true, true,
+                                  !is_barbarian(pplayer));
 
   if (city_remains) {
     // reduce size should not destroy this city
