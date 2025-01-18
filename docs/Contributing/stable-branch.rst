@@ -16,23 +16,23 @@ occasions where we are introducing major breaking changes that take time to reso
 back-port a commit (a single patch) or a Pull Request (a collection of commits) over to the ``stable`` branch.
 
 The ``stable`` branch is created when preparing for the first Release Candidate towards a stable release, see
-:doc:`release`.
-This page documents the rules and procedures for maintaining the ``stable`` branch.
+:doc:`release`. This page documents the rules and procedures for maintaining the ``stable`` branch.
 
 Requirements for a Back-Port
 ============================
 
 Only specific categories of commits will be approved for a back-port from ``master`` to ``stable``. They are:
 
-* :strong:`Bug Fixes` -- Not 100% of bug fixes should be back-ported, but certainly most should be considered.
-  `Breaking` bugs that are found and patched should always be back-ported.
-* :strong:`Documentation` -- We can support a ``latest`` and ``stable`` version in our documentation system.
+* :strong:`Bug Fixes` --- Not 100% of bug fixes should be back-ported, but certainly most should be considered.
+  *Breaking* bugs that are found and patched should always be back-ported.
+
+* :strong:`Documentation` --- We can support a ``latest`` and ``stable`` version in our documentation system.
   If there are issues found in our documentation that explicitly targets ``stable``, then we should back-port
   or author a Pull Request with a target of ``stable``.
 
 :strong:`Things we will not back-port`
 
-* :strong:`New Features or general improvements` -- This is what ``master`` branch is for.
+* :strong:`New Features or general improvements` --- This is what ``master`` branch is for.
 
 As we often do, we will allow common sense to dictate any deviations from these rules. However, it should be
 generally understood that there should be a careful consideration of what to back-port from ``master`` to
@@ -46,7 +46,9 @@ the primary comment that the PR is a back-port candidate. If the whole PR is not
 commit within the PR is, then this distinction should be highlighted as part of the comment. The full Commit
 ID is the definitive reference point to reduce ambiguity.
 
-As is customary, all PRs should target the ``master`` branch.
+As is customary, all PRs should target the ``master`` branch by default. If needed, contributors may also
+submit PRs that target the ``stable`` branch. Notes in the description should be clear as to why the PR is
+targeting the nom-development branch.
 
 Who Approves a Back-Port Request?
 =================================
@@ -58,6 +60,10 @@ of patches that need to be back-ported.
 
 The back-port project is here: https://github.com/orgs/longturn/projects/3. You can find it by going to the
 main Longturn GitHub repository page and click on the projects tab.
+
+.. note::
+  The back-port project is a protected project in the GitHub repository. If you do not have access, an access
+  request can be made in the ``LT.DEV`` section on our Discord server.
 
 As part of the review process, simply tag the PR to the project and add a ``back-port`` label to aid tracking.
 Once the PR has been merged into ``master``, go get the commit ID(s) and add those to the appropriate column
@@ -76,3 +82,8 @@ Follow these steps:
 #. Run ``git cherry-pick -x $(cat commits.txt)``
 #. Push ``stable`` to upstream: ``git push upstream``
 #. Update the project sheet to denote which commits were back-ported.
+
+.. note::
+  The only time that we allow a direct push to ``stable`` branch is via the cherry pick approach described
+  above. All other commits to ``stable`` should either follow the existing back-port process, or via a PR that
+  targets ``stable`` directly so the standard review process is followed.
