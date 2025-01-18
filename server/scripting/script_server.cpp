@@ -451,6 +451,8 @@ static void script_server_signals_create()
   // First player is city owner, second is enemy.
   luascript_signal_create(fcl_main, "city_destroyed", 3, API_TYPE_CITY,
                           API_TYPE_PLAYER, API_TYPE_PLAYER);
+  luascript_signal_create(fcl_main, "city_loot", 2, API_TYPE_CITY,
+                          API_TYPE_UNIT);
 
   // First player is former owner, second new one.
   luascript_signal_create(fcl_main, "city_transferred", 4, API_TYPE_CITY,

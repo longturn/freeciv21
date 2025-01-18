@@ -227,3 +227,37 @@ function _deflua_harmless_disaster_message(disaster, city, had_internal_effect)
 end
 
 signal.connect("disaster_occurred", "_deflua_harmless_disaster_message")
+
+function _deflua_city_conquer_gold_loot(city, looterunit)
+  local treasury = city.owner:gold()
+  local loot = math.min(
+    treasury, 
+    math.floor(random(0, (treasury / 20) + 1)) + 
+        math.floor((treasury * city.size) / 200)
+  )
+  if loot <= 0 then
+    return false
+  end
+  looterunit.owner:change_gold(loot)
+  city.owner:change_gold(-loot)
+  notify.event(looterunit.owner, city.tile, E.UNIT_WIN_ATT, 
+    string.format(
+      PL_("Your lootings from %s accumulate to %d gold!",
+          "Your lootings from %s accumulate to %d gold!",
+          loot),
+      city:link_text(), loot
+    )
+  )
+  notify.event(city.owner, city.tile, E.CITY_LOST, 
+    string.format(
+      PL_("%s looted %d gold from %s.",
+          "%s looted %d gold from %s.",
+          loot),
+      looterunit.owner.name, loot, city:link_text()
+    )
+  )
+  return true
+end
+
+signal.connect("city_loot", "_deflua_city_conquer_gold_loot")
+
