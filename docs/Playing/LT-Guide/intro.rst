@@ -10,16 +10,17 @@
 Introduction
 ************
 
-The Longturn community maintains and plays three specialized rulesets: Longturn Tradidional (LTT), Longturn
-Experimental (LTX), and Royale. The LTT and LTX rulesets are losely based on the Civ2Civ3 ruleset as it existed
-"way back" in legacy Freeciv v2.0 days. Royale is new as of 2023.
+The Longturn community maintains and plays three specialized rulesets: Longturn Traditional (LTT), Longturn
+Experimental (LTX), and Royale. The :term:`LTT` and :term:`LTX` rulesets are loosely based on the Civ2Civ3
+ruleset as it existed "way back" in legacy Freeciv v2.0 days. Royale is new as of 2023.
 
 Here are some generalized notes related to the three rulesets:
 
-* :strong:`LTT`: There are actually two versions: LTT and LTT2. LTT is the original standard ruleset played
-  across many games, including `The League <https://longturn.net/game/TheLeague/>`_. In 2024, we created an
-  updated LTT2 based on input from the community as well as the :doc:`game admin's </Contributing/game-admin>`
-  experience. LTT2 should be considered a logical evolution of LTT.
+* :strong:`LTT`: There are actually two versions: :term:`LTT` and :term:`LTT2`. :term:`LTT` is the original
+  standard ruleset played across many games, including `The League <https://longturn.net/game/TheLeague/>`_.
+  In 2024, we created an updated :term:`LTT2` based on input from the community as well as the
+  :doc:`game admin's </Contributing/game-admin>` experience. :term:`LTT2` should be considered a logical
+  evolution of :term:`LTT`.
 
   .. note::
     LTT2 is considered the default stable ruleset. The League still plays LTT and will change to LTT2 when
@@ -31,8 +32,8 @@ Here are some generalized notes related to the three rulesets:
 
 * :strong:`Royale`: This is a newer ruleset that takes many thoughts from LTT and tries to create a simpler
   set of rules for brand new Longturn players. The general idea is to create a set of rules that can be played
-  by experieced and new players, with enough slack that new players will not get overwhelmed if they make
-  gameplay mistakes.
+  by experienced and new players, with enough slack that new players will not get overwhelmed if they make
+  game-play mistakes.
 
 
 .. _lt-game-guide-other-tutorials:
@@ -50,7 +51,7 @@ Here are links to some other tutorials. Your mileage may vary with some of them.
   Terrain, Cities, Economy, Units, Combat, Diplomacy, Government, Technology, Wonders, and Buildings. Gives a
   good overview of how the varying elements of a game work if you are new to Freeciv or Freeciv21.
 * `Multiplayer Game Manual on Freeciv Fandom <https://freeciv.fandom.com/wiki/Multiplayer_Game_Manual>`_.
-* `Multiplayer Ruleset (cheatsheet) on Freeciv Fandom <https://freeciv.fandom.com/wiki/Multiplayer_Ruleset>`_.
+* `Multiplayer Ruleset (cheat-sheet) on Freeciv Fandom <https://freeciv.fandom.com/wiki/Multiplayer_Ruleset>`_.
 * `How to Play Freeciv on Freeciv Fandom <https://freeciv.fandom.com/wiki/How_to_Play>`_.
 * `The Art of Freeciv on Freeciv Fandom <https://freeciv.fandom.com/wiki/The_Art_of_Freeciv_2.1>`_
 * `How to Join a Longturn Game on Longturn Blog <https://longturn21.blogspot.com/p/how-to-join-longturn-game.html>`_.
@@ -76,7 +77,7 @@ A Note About Tilesets
 =====================
 
 Longturn games will generally use one of two map topologies: squares or hexes. Some players love squares, and
-hate hexes. Some players are the opposite! Longturn game admins will annouce up front what map topology a game
+hate hexes. Some players are the opposite! Longturn game admins will announce up front what map topology a game
 will use.
 
 For squares: The shipped Amplio2 tileset is the default. It is in an isometric direction. There are two

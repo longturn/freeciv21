@@ -11,4 +11,5 @@ online against other human players.
 .. toctree::
   intro.rst
   first-turn.rst
+  twenty-turns.rst
   :maxdepth: 2

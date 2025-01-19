@@ -943,6 +943,8 @@ To place a setting value on any of these settings use the ``/set <option-name> <
     * ``HORIZONTAL``: Horizontal placement. Players of the same team will be placed horizontally.
     * ``VERTICAL``: Vertical placement. Players of the same team will be placed vertically.
 
+.. _server-option-techleak:
+
 ``techleak``
   :strong:`Default Value (Min, Max)`: 100 (0, 300)
 
