@@ -22,6 +22,11 @@ community discussions.
     Freeciv21 comes with a pre-programmed artificial intelligence that you can play against in single-player
     games.
 
+  BPT
+    Bulbs Per Turn
+
+    This is the rate of science output by your nation.
+
   FC
     Freeciv
 
@@ -61,6 +66,11 @@ community discussions.
     Fire Power
 
     The amount of damage an attacking unit can inflict on a defending unit within a single round of combat.
+
+  GPT
+    Gold Per Turn
+
+    This is the direct output of your nation's economy.
 
   Goto
     Units that are out of :term:`MP` can be given advanced orders to take an action at the start of the next
