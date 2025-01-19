@@ -83,6 +83,8 @@ to get you started:
 * Once the first 5 cities are planted, you need to expand as fast as possible with more :unit:`Settlers`!
   Refer to the **Settler Race** section below.
 
+.. _lt-guide-city-planning:
+
 City Planning
 =============
 
