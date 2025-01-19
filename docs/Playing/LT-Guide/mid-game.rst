@@ -23,7 +23,7 @@ elimination of the Despotism penalty.
   As a reminder, you can also get rid of the Despotism penalty with the :wonder:`Pyramids` Small Wonder if
   that fits your strategy better. However, at some point you **must** get to Democracy.
 
-You should to research the following technologies (not necessarily in this order):
+You should research the following technologies (not necessarily in this order):
 
 * :advance:`Currency` --- Gives :improvement:`Marketplace` improvement, which increases the luxury and tax
   output in a city by 50%.
