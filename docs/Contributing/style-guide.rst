@@ -104,48 +104,66 @@ interface markup elements to bring attention to something or make it more obviou
 to do. Interpreted text roles are simply a code word surrounded by a colon on both sides and the text you want
 to alter is placed inside back-ticks.
 
-* :literal:`:doc:` -- Doc is used to create a hyperlink reference between documents in the documentation
+* :literal:`:doc:` --- Doc is used to create a hyperlink reference between documents in the documentation
   system.
-* :literal:`:ref:` -- Create a cross-reference link to an anchor in another document. This is similar to
+
+* :literal:`:ref:` --- Create a cross-reference link to an anchor in another document. This is similar to
   :literal:`:doc:`, except it allows you to go to a specific location within a page, instead of the top of the
-  page. To use :literal:`:ref:`, you add an anchor in a page such as :literal:`.. _My Anchor:` and then refer
+  page. To use :literal:`:ref:`, you add an anchor in a page such as :literal:`.. _My-Anchor:` and then refer
   to it like this: :literal:`:ref:`My Anchor``. Notice that the anchor has an underscore at the beginning.
   This is required for sphinx to recognize it. Also notice the use of the anchor in :literal:`:ref:` leaves
   the underscore off.
-* :literal:`:numref:` -- Create a cross-reference to a named figure.
-* :literal:`:table:` -- Create a named table reference. Place an anchor (e.g. :literal:`.. _My Anchor:`) above
-  to enable :literal:`:numref:`.
-* :literal:`:figure:` -- Create a named figure reference. Place an anchor (e.g. :literal:`.. _My Anchor:`)
+
+* :literal:`:numref:` --- Create a cross-reference to a named figure.
+
+* :literal:`:table:` --- Create a named table reference. Place an anchor (e.g. :literal:`.. _My-Anchor:`)
   above to enable :literal:`:numref:`.
-* :literal:`:emphasis:` -- Emphasis is used to :emphasis:`bring attention to something`.
-* :literal:`:file:` -- File is used for file names and paths such as :file:`~/.local/share/freeciv21/saves`.
-* :literal:`:guilabel:` -- GUI Label is used to bring attention to something on the screen like the
+
+* :literal:`:figure:` --- Create a named figure reference. Place an anchor (e.g. :literal:`.. _My Anchor:`)
+  above to enable :literal:`:numref:`.
+
+* :literal:`:emphasis:` --- Emphasis is used to :emphasis:`bring attention to something`.
+
+* :literal:`:file:` --- File is used for file names and paths such as :file:`~/.local/share/freeciv21/saves`.
+
+* :literal:`:guilabel:` --- GUI Label is used to bring attention to something on the screen like the
   :guilabel:`Next` button on the installer wizard.
-* :literal:`:literal:` -- Literal is used when you want to note a text element in its raw form. This is
+
+* :literal:`:literal:` --- Literal is used when you want to note a text element in its raw form. This is
   equivalent to using two back-ticks: ````text````.
-* ``math`` and ``.. math::`` -- Used to insert mathematics, see `Formulas`_.
-* :literal:`:menuselection:` -- Menu Selection is used to give the path of menu clicks such as
+
+* :literal:`math` and :literal:`.. math::` --- Used to insert mathematics, see `Formulas`_.
+
+* :literal:`:menuselection:` --- Menu Selection is used to give the path of menu clicks such as
   :menuselection:`Game --> Local Options`. To denote submenus, use a test arrow like this: :literal:`-->`
   between the selection items.
-* :literal:`:strong:` -- Strong is used to :strong:`bold some text`. A good use of :literal:`:strong:` is to
+
+* :literal:`:strong:` --- Strong is used to :strong:`bold some text`. A good use of :literal:`:strong:` is to
   highlight game elements.
-* :literal:`:title-reference:` -- Title Reference is used notate a :title-reference:`title entry` in the
+
+* :literal:`:term:` --- Term is used to cross-reference to an entry in the :doc:`/glossary`.
+
+* :literal:`:title-reference:` --- Title Reference is used notate a :title-reference:`title entry` in the
   in-game help or to refer to a page in the documentation without giving an actual hyperlink reference
   (see :literal:`:doc:` above).
-* :literal:`.. versionadded::` -- Used at the paragraph level to document the first version in which a feature
-  was added.
+
+* :literal:`.. versionadded::` --- Used at the paragraph level to document the first version in which a
+  feature was added.
 
 The docutils specification allows for custom Interpreted Text Roles and we use this feature. The docutils
 documentation on this feature is available here:
 https://docutils.sourceforge.io/docs/ref/rst/directives.html#custom-interpreted-text-roles
 
-* :literal:`:unit:` -- This provides an opportunity to highlight a Freeciv21 unit, such as the
-  :unit:`Musketeer`
-* :literal:`:improvement:` -- This provides an opportunity to highlight a Freeciv21 building or city
+* :literal:`:unit:` --- This provides an opportunity to highlight a Freeciv21 unit, such as the
+  :unit:`Musketeer`.
+
+* :literal:`:improvement:` --- This provides an opportunity to highlight a Freeciv21 building or city
   improvement, such as the :improvement:`Granary`.
-* :literal:`:wonder:` -- This provides an opportunity to highlight a Freeciv21 small or great wonder, such as
+
+* :literal:`:wonder:` --- This provides an opportunity to highlight a Freeciv21 small or great wonder, such as
   the :wonder:`Pyramids`.
-* :literal:`:advance:` -- This provides an opportunity to highlight a Freeciv21 technology advance, such as
+
+* :literal:`:advance:` --- This provides an opportunity to highlight a Freeciv21 technology advance, such as
   :advance:`Ceremonial Burial`.
 
 Admonition Directives
