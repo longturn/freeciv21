@@ -77,7 +77,12 @@ community discussions.
   LTT
     Longturn Traditional
 
-    Longturn's standard :ref:`ruleset <modding-rulesets>`.
+    Longturn's legacy standard :ref:`ruleset <modding-rulesets>`.
+
+  LTT2
+    Longturn Traditional version 2
+
+    Longturn's current standard :ref:`ruleset <modding-rulesets>`.
 
   LTX
     Longturn Experimental
