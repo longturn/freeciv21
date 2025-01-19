@@ -332,9 +332,14 @@ This table provides some information on the important wonders before the :advanc
 |       |                 |                              |                                | Veteran 2 (175%) right away     |
 |       |                 |                              |                                | after production.               |
 +-------+-----------------+------------------------------+--------------------------------+---------------------------------+
-| 5     | King Richard's  | :advance:`Chivalry`          | notes...                       | notes...                        |
-|       | Crusade         | /                            |                                |                                 |
-|       |                 | :advance:`Navigation`        |                                |                                 |
+| 5     | King Richard's  | :advance:`Chivalry`          | Reduces the unhappiness caused | The primary benefit of this     |
+|       | Crusade         | /                            | by aggressively deployed       | wonder is the reduction of gold |
+|       |                 | :advance:`Navigation`        | military units owned by the    | upkeep for military units. With |
+|       |                 |                              | city by 1. Under governments   | Monarchy, unit upkeep is in     |
+|       |                 |                              | where unit upkeep is paid in   | Gold. This wonder helps your    |
+|       |                 |                              | gold, it gives two free gold   | treasury greatly.               |
+|       |                 |                              | per city towards upkeep every  |                                 |
+|       |                 |                              | turn.                          |                                 |
 +-------+-----------------+------------------------------+--------------------------------+---------------------------------+
 | 5     | Leonardo's      | :advance:`Invention`         | Upgrades two obsolete units    | At about this stage of the      |
 |       | Workshop        | /                            | per game turn.                 | game, most players will have a  |
