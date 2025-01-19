@@ -12,4 +12,7 @@ online against other human players.
   intro.rst
   first-turn.rst
   twenty-turns.rst
+  mid-game.rst
+  late-game.rst
+  final-notes.rst
   :maxdepth: 2
