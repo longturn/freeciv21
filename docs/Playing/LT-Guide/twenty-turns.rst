@@ -48,9 +48,12 @@ you should not overstay your welcome. There is also nothing wrong with placing a
 shared border, on a tile inside your border, to act as a sentry.
 
 .. note::
-  As opposed to typical single-player :term:`AI` games, “peace” is the default state between nations in
-  :term:`LTT`/:term:`LTX` rulesets. When you meet a player and establish a contact embassy, you will
-  automatically go into Armistice with that player and in 16 turns will be in Peace diplomatic status.
+  As opposed to typical single-player :term:`AI` games, “Armistice” is the default state between nations in
+  :term:`LTT` and "War" for :term:`LTX` rulesets. When you meet a player and establish a contact embassy, you
+  will automatically go into Armistice or War with that player.
+
+  This setting comes from the ``initial_diplomatic_state`` setting in the :file:`game.ruleset` ruleset file
+  and is not shown in game help.
 
 
 Deciding on an Initial Strategy
