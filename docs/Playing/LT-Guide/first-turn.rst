@@ -11,8 +11,9 @@ The First Turn
 **************
 
 The first turn (typically ``T1``) is an incredibly important turn for any Longturn game. With any Longturn
-game, the first turn is always 3 days long (``3 * 24h``). There are many reasons for this, but a main one is
-that the first turn can either set you up for success or doom you to demise. Yes, it is that important.
+game, the first turn is always 3 days long (:math:`3\times24\text{h}`). There are many reasons for this, but
+a main one is that the first turn can either set you up for success or doom you to demise. Yes, it is that
+important.
 
 .. note::
   If you have not played a game in some time or if this is a first time to play, be sure to explore the
