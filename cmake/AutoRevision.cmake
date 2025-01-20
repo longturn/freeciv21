@@ -72,10 +72,11 @@ message(STATUS "Version tag: ${FC21_REV_TAG}")
 #  v3.0-alpha.1
 #  v3.0-beta.1
 #  v3.0-rc.1
+#  v3.0-patch.1
 #  v3.0
 #  v3.0.1
 if (NOT "${FC21_REV_TAG}"
-    MATCHES "^v[0-9]+\.[0-9]+\-?((dev)|(alpha)|(beta)|(rc)|(patch))+\.[0-9]?$")
+    MATCHES "v[0-9]+\.[0-9]+(\.[0-9]+)?(-((dev)|(alpha)|(beta)|(rc)|(patch))\.[0-9]+)?$")
   message(SEND_ERROR "The version tag '${FC21_REV_TAG}' does not follow the expected format.")
 endif()
 
