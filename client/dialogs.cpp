@@ -40,7 +40,6 @@
 #include "client_main.h"
 #include "control.h"
 #include "fc_client.h"
-#include "fonts.h"
 #include "helpdlg.h"
 #include "hudwidget.h"
 #include "icons.h"
