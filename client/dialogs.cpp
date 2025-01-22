@@ -981,6 +981,7 @@ void popup_notify_dialog(const char *caption, const char *headline,
   for (auto report : list) {
     if (report->caption() == caption && report->headline() == headline) {
       report->close();
+      return;
     }
   }
 
