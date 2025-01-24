@@ -1,6 +1,7 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
+.. include:: /global-include.rst
 
 Windows Installation
 ********************
@@ -185,5 +186,3 @@ uncheck the box before clicking :guilabel:`Finish` to complete the installation.
 
 You will find an icon for the client on the Desktop or in the Start Menu at
 :menuselection:`Start Menu --> Freeciv21 --> Freeciv21 Client`.
-
-.. |reg|    unicode:: U+000AE .. REGISTERED SIGN
