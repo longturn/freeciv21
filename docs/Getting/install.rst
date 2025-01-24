@@ -3,6 +3,7 @@
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
+.. include:: /global-include.rst
 
 Installing Freeciv21
 ********************
@@ -34,5 +35,3 @@ macOS
 
 To install the macOS ``.dmg`` package, you start by double-clicking the file to mount it in Finder. Drag the
 game to your Applications folder, or a place of your choosing.  When finished, unmount the package.
-
-.. |reg|    unicode:: U+000AE .. REGISTERED SIGN

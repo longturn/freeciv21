@@ -3,12 +3,6 @@
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
-.. Custom Interpretive Text Roles for longturn.net/Freeciv21
-.. role:: unit
-.. role:: improvement
-.. role:: wonder
-.. role:: advance
-
 About Freeciv21
 ***************
 
@@ -21,8 +15,6 @@ About Freeciv21
 
   Freeciv21 Overview
 
-
-|
 
 .. The top level description is also in README.md, freeciv21-server.rst, the 4 metainfo files, and snapcraft.yaml.
 
@@ -52,4 +44,5 @@ empire, but any of these four items may provide victory over your opponents:
 * If playing a multiplayer game with only humans, victory can be declared based on diplomatic factors and
   other pre-set game rules.
 
-.. note:: Spacerace Victory is set by the ruleset and thereby may not be not enabled for all games.
+.. note::
+  Spacerace Victory is set by the ruleset and thereby may not be not enabled for all games.

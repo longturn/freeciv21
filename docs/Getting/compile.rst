@@ -4,6 +4,7 @@
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 .. SPDX-FileCopyrightText: Tobias Rehbein <tobias.rehbein@web.de>
 
+.. include:: /global-include.rst
 
 Compiling Freeciv21
 *******************
@@ -257,11 +258,12 @@ reading in the `Other CMake Notes`_ section below for more notes about other com
   $ cmake . -B build -G Ninja
 
 
-.. note:: If you are compiling on Windows MSYS2, alter the above command to add
+.. note::
+  If you are compiling on Windows MSYS2, alter the above command to add
 
-   ``-DCMAKE_INSTALL_PREFIX=$PWD/build/install``
+  ``-DCMAKE_INSTALL_PREFIX=$PWD/build/install``
 
-   at the end.
+  at the end.
 
 On macOS, you need to use a preset that is defined in the :file:`CMakePresets.json` file. When complete
 you can go to the `Compiling/Building`_ section below to continue.
@@ -299,16 +301,18 @@ Once the compilation is complete, install the game with this command.
   $ cmake --build build --target install
 
 
-.. note:: If you did not change the default install prefix, you will need to elevate privileges
-    with :file:`sudo`.
+.. note::
+  If you did not change the default install prefix, you will need to elevate privileges with :file:`sudo`.
+
 
 .. tip::
-    If you want to enable menu integration for the installed copy of Freeciv21, you will want to copy the
-    :literal:`.desktop` files in :file:`$CMAKE_INSTALL_PREFIX/share/applications` to
-    :file:`$HOME/.local/share/applications`.
+  If you want to enable menu integration for the installed copy of Freeciv21, you will want to copy the
+  :literal:`.desktop` files in :file:`$CMAKE_INSTALL_PREFIX/share/applications` to
+  :file:`$HOME/.local/share/applications`.
 
-    This is only necessary if you change the installation prefix. If you do not and use elevated privileges,
-    then the files get copied to the system default location.
+  This is only necessary if you change the installation prefix. If you do not and use elevated privileges,
+  then the files get copied to the system default location.
+
 
 At this point, the compilation and installation process is complete. The following sections document other
 aspects of the packaging and documentation generation process.
@@ -430,6 +434,3 @@ A very common Debian Linux configuration command looks like this:
 .. code-block:: sh
 
   $ cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
-
-
-.. |reg|    unicode:: U+000AE .. REGISTERED SIGN
