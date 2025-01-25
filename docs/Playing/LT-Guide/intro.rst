@@ -1,18 +1,14 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
-.. Custom Interpretive Text Roles for longturn.net/Freeciv21
-.. role:: unit
-.. role:: improvement
-.. role:: wonder
-.. role:: advance
+.. include:: /global-include.rst
 
 Introduction
 ************
 
-The Longturn community maintains and plays three specialized rulesets: Longturn Traditional (LTT), Longturn
-Experimental (LTX), and Royale. The :term:`LTT` and :term:`LTX` rulesets are loosely based on the Civ2Civ3
-ruleset as it existed "way back" in legacy Freeciv v2.0 days. Royale is new as of 2023.
+The Longturn community maintains and plays three specialized rulesets: Longturn Traditional (:term:`LTT`),
+Longturn Experimental (:term:`LTX`), and Royale. The :term:`LTT` and :term:`LTX` rulesets are loosely based on
+the Civ2Civ3 ruleset as it existed "way back" in legacy Freeciv v2.0 days. Royale is new as of 2023.
 
 Here are some generalized notes related to the three rulesets:
 
@@ -23,18 +19,17 @@ Here are some generalized notes related to the three rulesets:
   evolution of :term:`LTT`.
 
   .. note::
-    LTT2 is considered the default stable ruleset. The League still plays LTT and will change to LTT2 when
-    appropriate.
+    :term:`LTT2` is considered the default stable ruleset. The League still plays :term:`LTT` and will change
+    to :term:`LTT2` when appropriate.
 
-* :strong:`LTX`: This is our experimental ruleset. LTX is based on LTT, so many of the play style elements in
-  LTT are similar in LTX. We use LTX as a test bed for new ideas. Ideas that gain traction and are well
-  received by our player community can be merged into LTT2.
+* :strong:`LTX`: This is our experimental ruleset. :term:`LTX` is based on :term:`LTT`, so many of the play
+  style elements in :term:`LTT` are similar in :term:`LTX`. We use :term:`LTX` as a test bed for new ideas.
+  Ideas that gain traction and are well received by our player community can be merged into :term:`LTT2`.
 
-* :strong:`Royale`: This is a newer ruleset that takes many thoughts from LTT and tries to create a simpler
-  set of rules for brand new Longturn players. The general idea is to create a set of rules that can be played
-  by experienced and new players, with enough slack that new players will not get overwhelmed if they make
-  game-play mistakes.
-
+* :strong:`Royale`: This is a newer ruleset that takes many thoughts from :term:`LTT` and tries to create a
+  simpler set of rules for brand new Longturn players. The general idea is to create a set of rules that can
+  be played by experienced and new players, with enough slack that new players will not get overwhelmed if
+  they make game-play mistakes.
 
 .. _lt-game-guide-other-tutorials:
 
@@ -47,9 +42,10 @@ Here are links to some other tutorials. Your mileage may vary with some of them.
 * `LTX on Freeciv Fandom <https://freeciv.fandom.com/wiki/LongTurn_Experimental_ruleset>`_
 * `Intro to Freeciv on Freeciv Fandom <https://freeciv.fandom.com/wiki/Introduction_to_Freeciv>`_
 * `Game Manual on Freeciv Fandom <https://freeciv.fandom.com/wiki/Game_Manual>`_. Overall game mechanics for
-  the Classic ruleset. LTT/LTX rulesets are similar and are derived from the Civ2Civ3 ruleset. Topics include:
-  Terrain, Cities, Economy, Units, Combat, Diplomacy, Government, Technology, Wonders, and Buildings. Gives a
-  good overview of how the varying elements of a game work if you are new to Freeciv or Freeciv21.
+  the Classic ruleset. :term:`LTT`/:term:`LTX` rulesets are similar and are derived from the Civ2Civ3 ruleset.
+  Topics include: Terrain, Cities, Economy, Units, Combat, Diplomacy, Government, Technology, Wonders, and
+  Buildings. Gives a good overview of how the varying elements of a game work if you are new to Freeciv or
+  Freeciv21.
 * `Multiplayer Game Manual on Freeciv Fandom <https://freeciv.fandom.com/wiki/Multiplayer_Game_Manual>`_.
 * `Multiplayer Ruleset (cheat-sheet) on Freeciv Fandom <https://freeciv.fandom.com/wiki/Multiplayer_Ruleset>`_.
 * `How to Play Freeciv on Freeciv Fandom <https://freeciv.fandom.com/wiki/How_to_Play>`_.

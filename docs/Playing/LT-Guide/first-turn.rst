@@ -1,11 +1,7 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
-.. Custom Interpretive Text Roles for longturn.net/Freeciv21
-.. role:: unit
-.. role:: improvement
-.. role:: wonder
-.. role:: advance
+.. include:: /global-include.rst
 
 The First Turn
 **************
@@ -17,8 +13,8 @@ important.
 
 .. note::
   If you have not played a game in some time or if this is a first time to play, be sure to explore the
-  in-game help. There is very important information in there. Refer to it often as you progress through the
-  game. You may also some some additional insight by reading the
+  in-game help from the :menuselection:`help` menu. There is very important information in there. Refer to it
+  often as you progress through the game. You may also some some additional insight by reading the
   :ref:`other tutorials <lt-game-guide-other-tutorials>`.
 
 
@@ -71,18 +67,19 @@ to get you started:
     building the :improvement:`Aqueduct+River` improvement.
 
 * Remember that your first city will be your capital. Do not put it on the coast! To change the capital city
-  from one city to another you have to build the :wonder:`Palace` small wonder in the new city, which is A)
+  from one city to another you have to build the :wonder:`Palace` Small Wonder in the new city, which is A)
   expensive and B) costly in time, so plan accordingly.
 
-* Look for specials like wheat, pheasant, and silk. Wheat helps to grow a city like wildfire (+4 food with
+* Look for specials like Wheat, Pheasant, and Silk. Wheat helps to grow a city like wildfire (+4 food with
   Irrigation and :wonder:`Pyramids` or :advance:`Monarchy`). In not too much time you can have a city getting
-  +20 food per turn, which means your city will grow once per turn after size 4 with a :improvement:`Granary`.
+  :math:`+20` food per turn, which means your city will grow once per turn after size 4 with a
+  :improvement:`Granary`.
 
 * There is an important setting called :ref:`City Minimum Distance <server-option-citymindist>`. This setting
   defines how many tiles must be between city centers. See `City Planning`_ section below.
 
 * Once the first 5 cities are planted, you need to expand as fast as possible with more :unit:`Settlers`!
-  Refer to the **Settler Race** section below.
+  Refer to the :ref:`Settler Race <lt-guide-settler-race>` section below.
 
 .. _lt-guide-city-planning:
 
@@ -97,12 +94,12 @@ Some other thoughts related to initial city planning:
 * Using a tool such as Inkscape really helps you plan your cities. Recall that there are a number of factors
   to consider when it comes to city planning and placement:
 
-  * Distance from the Capital.
+  #. Distance from the Capital.
 
-  * Available specials on tiles around the potential city centers.
+  #. Available specials on tiles around the potential city centers.
 
-  * Locations of freshwater from rivers and lakes.
+  #. Locations of freshwater from rivers and lakes.
 
-  * No wasted tiles. Force overlap of any kind so that every tile is available.
+  #. No wasted tiles. Force overlap of any kind so that every tile is available.
 
 With everything in Longturn games: it is all about balance.

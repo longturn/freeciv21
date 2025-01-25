@@ -4,11 +4,7 @@
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 .. SPDX-FileCopyrightText: David Koníř <david.konir@gmail.com>
 
-.. Custom Interpretive Text Roles for longturn.net/Freeciv21
-.. role:: unit
-.. role:: improvement
-.. role:: wonder
-.. role:: advance
+.. include:: /global-include.rst
 
 How to Play Freeciv21
 *********************
@@ -151,7 +147,7 @@ trade. This area is called the *Working Radius*. This output can be increased by
 improved with Irrigation (increasing food output), Roads (allowing units to move faster and in some cases
 increasing trade), and Mines (increasing production), among other improvements. The ability to do some
 improvements on some tiles may require a technology advance to be learned by your scientists.
-See :title-reference:`Help --> Terrain --> Terrain Alterations` for more information.
+See :menuselection:`Help --> Terrain --> Terrain Alterations` for more information.
 
 .. _how-to-play-city-placement:
 
@@ -174,13 +170,13 @@ good to discuss here in the early game.
   :menuselection:`Game --> Load Another Tileset` and picking ``Hexemplio`` from the list.
 
 Let us first talk about two concepts: *Vision Radius* and *Working Radius*. Each city has a vision radius and
-a working radius. The vision radius is the tiles that the citizens of a city can see on the map. If an enemy
-unit comes within the vision radius of a city, a sentried unit inside of the city will wake up and alert you.
-Within the vision radius is the smaller working radius. When thinking of city planning, you should be most
-concerned with the working radius of a city. These are the tiles that the citizens of your cities manage to
-extract Resources (Shields, Food, and Trade). When the working radius of a city overlaps with that of another
-city, only one city at a time can manage that tile. This is another one of those *balance* items in playing
-Freeciv21.
+a working radius. The vision radius is the tiles that the citizens of a city can see on the map (typically
+viewed as well-lit or bright tiles vs dark tiles). If an enemy unit comes within the vision radius of a city,
+a sentried unit inside of the city will wake up and alert you. Within the vision radius is the smaller working
+radius. When thinking of city planning, you should be most concerned with the working radius of a city. These
+are the tiles that the citizens of your cities manage to extract Resources (Shields, Food, and Trade). When
+the working radius of a city overlaps with that of another city, only one city at a time can manage that tile.
+This is another one of those *balance* items in playing Freeciv21.
 
 When you have a :unit:`Settler` selected, it will have a red outline shown on the map. This is the city's
 working radius if you placed the :unit:`Settler` at that spot with the :menuselection:`Work --> Build City`
@@ -269,12 +265,12 @@ Entertainer when you take a citizen off the land.
 If you click on the central tile of the land (the "City Center"), the citizens will be rearranged to maximize
 food production. You will also want to look at the level of food in the Granary and the amount of surplus food
 the city is producing each turn. The city will lose excess food at turn change. For example: The Granary in
-the city has 18/20 food (needs two food to grow to next city size) and the city is currently producing +4 food
-surplus each turn. This means that at turn change you will lose 2 food as waste at turn change. This is a good
-opportunity to move the citizens around to get food to +2 surplus. This could be accomplished by taking a
-citizen off a tile producing 2 food and turn it into a Taxman for a turn to get gold. At turn change, open the
-city and restore the citizen to farming. This kind of individual city management style is called
-"micro-management" and is a very powerful mechanism of game play.
+the city has :math:`^{18}/_{20}` food (needs two food to grow to next city size) and the city is currently
+producing :math:`+4` food surplus each turn. This means that at turn change you will lose 2 food as waste at
+turn change. This is a good opportunity to move the citizens around to get food to :math:`+2` surplus. This
+could be accomplished by taking a citizen off a tile producing 2 food and turn it into a Taxman for a turn to
+get gold. At turn change, open the city and restore the citizen to farming. This kind of individual city
+management style is called "micro-management" and is a very powerful mechanism of game play.
 
 The golden rule of taking care of a city is that there should be at least as many happy citizens as unhappy
 citizens. A city where this is not the case falls into disorder. Such cities are labeled with a raised fist or
@@ -297,7 +293,7 @@ receives no benefit and once established, cannot be revoked.
 If you are in contact with another player, then you can arrange a diplomatic meeting. From the
 :ref:`Nations and Diplomacy View <game-manual-nations-and-diplomacy-view>`, this is done by selecting the
 nation with whom you wish to meet and clicking :guilabel:`Meet`. If the entry under the embassy column is not
-blank and the other player is connected (or is a server AI) then a treaty dialog will pop up.
+blank and the other player is connected (or is a server :term:`AI`) then a treaty dialog will pop up.
 
 In this dialog you can negotiate an exchange of assets (maps, vision, advances, cities, or gold), embassies,
 or relationship pacts such as a Cease-fire or Peace. The list of items that can be traded through diplomacy is
@@ -310,7 +306,7 @@ relations with others. Under authoritarian governments such as monarchy you can 
 the representative governments (Republic and Democracy) have a senate which will block the unprovoked
 cancellation of a treaty, unless a foreign :unit:`Diplomat` or :unit:`Spy` sparks a diplomatic incident. The
 only way to dissolve a pact in this situation is to dissolve your government by going into anarchy. The
-details of pacts are described in the :title-reference:`Help --> Diplomacy` section.
+details of pacts are described in the :menuselection:`Help --> Diplomacy` section.
 
 A few notes:
 
@@ -336,7 +332,7 @@ Things to Keep in Mind
 ----------------------
 
 * What the next advance you will need is.
-* What your tax, luxury goods and research rates are currently set to.
+* What your Tax, Luxury Goods, and Research rates are currently set to.
 * Treaties are often broken, so do not neglect defense!
 * Some wonders can be made obsolete by a new technology.
 

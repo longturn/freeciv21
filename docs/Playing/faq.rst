@@ -4,11 +4,7 @@
 .. SPDX-FileCopyrightText: louis94 <m_louis30@yahoo.com>
 .. SPDX-FileCopyrightText: Tobias Rehbein <tobias.rehbein@web.de>
 
-.. Custom Interpretive Text Roles for longturn.net/Freeciv21
-.. role:: unit
-.. role:: improvement
-.. role:: wonder
-.. role:: advance
+.. include:: /global-include.rst
 
 Frequently Asked Questions (FAQ)
 ********************************
@@ -132,14 +128,15 @@ between your two consecutive logins. Once a player has made all of their moves, 
 before they can move again. This does mean that a player can move a unit just before :term:`TC` and just
 after and in between your two logins. In short, a player cannot :emphasis:`move twice` until you do.
 
-The primary server setting to mitigate the :term:`TC` problem is called ``unitwaittime``, which imposes a
-minimum time between moves of a single unit on successive turns. This setting is used to prevent a varying
-collection of what the Longturn community calls "turn change shenanigans". For example, one such issue is
-moving a :unit:`Worker` into enemy territory just before :term:`TC` and giving it orders to build a road.
-After :term:`TC` you go in and capture a city using the road for move benefit. Without ``unitwaittime`` you
-would be able to move the :unit:`Worker` back to safety immediately, thereby preventing it from being captured
-or destroyed. With ``unitwaittime`` enabled, you have to wait the requisite amount of time. This makes the
-game harder, but also more fair since not everyone can be online at every :term:`TC`.
+The primary :ref:`server setting <server-option-unitwaittime>` to mitigate the :term:`TC` problem is
+called ``unitwaittime``, which imposes a minimum time between moves of a single unit on successive turns. This
+setting is used to prevent a varying collection of what the Longturn community calls "turn change shenanigans".
+For example, one such issue is moving a :unit:`Worker` into enemy territory just before :term:`TC` and giving
+it orders to build a road. After :term:`TC` you go in and capture a city using the road for move benefit.
+Without ``unitwaittime`` you would be able to move the :unit:`Worker` back to safety immediately, thereby
+preventing it from being captured or destroyed. With ``unitwaittime`` enabled, you have to wait the requisite
+amount of time. This makes the game harder, but also more fair since not everyone can be online at every
+:term:`TC`.
 
 .. Note::
   The ``unitwaittime`` setting is really only used in Longturn multi-player games and is not enabled/used for
@@ -211,11 +208,7 @@ Do things that give more trade only give this bonus if there is already at least
 
 The short answer is yes in :term:`LTT`. This is a ruleset configured item.
 
-.. raw:: html
-
-    <embed>
-        <hr>
-    </embed>
+|hr|
 
 Diplomacy
 ---------
@@ -308,11 +301,7 @@ The :ref:`Nations and Diplomacy <game-manual-nations-and-diplomacy-view>` View (
 technology advance information if you have an embassy with the target nation. To see what is going on, select
 a nation and look at the bottom of the page.
 
-.. raw:: html
-
-    <embed>
-        <hr>
-    </embed>
+|hr|
 
 Game Map and Tilesets
 ---------------------
@@ -352,11 +341,7 @@ Can one use a hexagonal tileset for iso-hex maps and vice versa?
 
 See the question `Can one use a regular square tileset for iso-square maps and vice versa?`_ above.
 
-.. raw:: html
-
-    <embed>
-        <hr>
-    </embed>
+|hr|
 
 Cities and Terrain
 ------------------
@@ -366,7 +351,7 @@ This subsection of the Gameplay section is a discussion around cities and the te
 My irrigated grassland produces only 2 food. Is this a bug?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-No, it is not -- it is a feature. Your government is probably Despotism, which has a -1 output penalty
+No, it is not --- it is a feature. Your government is probably Despotism, which has a :math:`-1` output penalty
 whenever a tile produces more than 2 units of food, production, or trade. You should change your government.
 See the in-game help on :title-reference:`Government` for more detail to get rid of this penalty.
 
@@ -462,7 +447,7 @@ There are at least the following differences:
   a ruleset configurable item.
 * Some ships cannot travel on deep ocean (such as :unit:`Triremes`)
 * Shallow ocean has a 10% defense bonus.
-* Ocean tiles allow you to build :improvement:`Harbor`, giving +1 food. The :improvement:`Harbor` city
+* Ocean tiles allow you to build :improvement:`Harbor`, giving :math:`+1` food. The :improvement:`Harbor` city
   improvement often comes with the discovery of :advance:`Seafaring` in most rulesets, but this is a ruleset
   configurable item.
 
@@ -499,13 +484,14 @@ and then add Farmland on top of it, just like any other regular tile.
 Does the city tile have any production bonuses?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-A city tile has a +1 production bonus, added after any other bonuses (such as Railroad).
+A city tile has a :math:`+1` production bonus, added after any other bonuses (such as Railroad).
 
 Does LTT have the extra food from rivers on a desert tile when irrigated, like other rulesets have?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Yes, an irrigated desert tile with a river gives an extra +1 food in addition to the regular irrigation food
-bonus. This is a game engine (server) item and is not driven by a ruleset, such as :term:`LTT`.
+Yes, an irrigated desert tile with a river gives an extra :math:`+1` food in addition to the regular
+irrigation food bonus. This is a game engine (server) item and is not driven by a ruleset, such as
+:term:`LTT`.
 
 Is there any penalty when changing a city production task?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -542,11 +528,7 @@ Can you build a hill under a city?
 
 Yes, you sure can!
 
-.. raw:: html
-
-    <embed>
-        <hr>
-    </embed>
+|hr|
 
 Units - General
 ---------------
@@ -569,10 +551,8 @@ What is a unit’s terraforming speed based on?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 It is based on the base amount of :term:`MP`'s for that unit and veteran level bonus. The base terraforming
-duration is specified in the ruleset files.
-
-.. todo::
-  This is discussed in detail in a forthcoming LTT Gamer's Manual. Update this entry at that time.
+duration is specified in the ruleset files. See :ref:`managing your workforce <lt-guide-manage-workforce>` in
+the :title-reference:`Longturn Game Playing Guide`.
 
 Can workers do all land conversions? Or are most land conversions locked behind engineers?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -614,31 +594,35 @@ to gain an upgrade via experience. The experience depends on the unit and what t
 :unit:`Worker` gains experience by creating terrain infrastructure, or a :unit:`Phalanx` gains experience
 during both defense and offense (attack) movements. See the following table:
 
-+-----------------+-------------------+------------------+------------------------+
-|                 |                   |                  | Promotion Chance       |
-| Level           | Combat Strength   | Move Bonus       +-----------+------------+
-|                 |                   |                  | In Combat | By Working |
-+=================+===================+==================+===========+============+
-| Green           | 1x                | 0                | 50        | 9          |
-+-----------------+-------------------+------------------+-----------+------------+
-| Veteran 1 (v)   | 1.5x (from Green) | 1/3 (from Green) | 45        | 6          |
-+-----------------+-------------------+------------------+-----------+------------+
-| Veteran 2 (vv)  | 1.75x             | 2/3              | 40        | 6          |
-+-----------------+-------------------+------------------+-----------+------------+
-| Veteran 3 (vvv) | 2x                | 1                | 35        | 6          |
-+-----------------+-------------------+------------------+-----------+------------+
-| Hardened 1 (h1) | 2.25x             | 1 1/3            | 30        | 5          |
-+-----------------+-------------------+------------------+-----------+------------+
-| Hardened 2 (h2) | 2.5x              | 1 2/3            | 25        | 5          |
-+-----------------+-------------------+------------------+-----------+------------+
-| Hardened 3 (h3) | 2.75x             | 2                | 20        | 4          |
-+-----------------+-------------------+------------------+-----------+------------+
-| Elite 1 (e1)    | 3x                | 2 1/3            | 15        | 4          |
-+-----------------+-------------------+------------------+-----------+------------+
-| Elite 2 (e2)    | 3.25x             | 2 2/3            | 10        | 3          |
-+-----------------+-------------------+------------------+-----------+------------+
-| Elite 3 (e3)    | 3.5x              | 3                | 0         | 0          |
-+-----------------+-------------------+------------------+-----------+------------+
+.. table:: Veteran Levels
+  :widths: auto
+
+  +------------+-------------------+------------------+-------------------------------------+
+  | Vet Level  | Combat Strength   | Move Bonus       | Promotion Chance (%)                |
+  |            |                   |                  +-------------+-----------------------+
+  |            |                   |                  | In Combat   | By Working (per turn) |
+  +============+===================+==================+=============+=======================+
+  | Green      | :math:`1` x       | :math:`0`        | 50%         | 9%                    |
+  +------------+-------------------+------------------+-------------+-----------------------+
+  | Veteran 1  | :math:`1.5` x     | :math:`^1/_3`    | 45%         | 6%                    |
+  |            | (from Green)      | (from Green)     |             |                       |
+  +------------+-------------------+------------------+-------------+-----------------------+
+  | Veteran 2  | :math:`1.75` x    | :math:`^2/_3`    | 40%         | 6%                    |
+  +------------+-------------------+------------------+-------------+-----------------------+
+  | Veteran 3  | :math:`2` x       | :math:`1`        | 35%         | 6%                    |
+  +------------+-------------------+------------------+-------------+-----------------------+
+  | Hardened 1 | :math:`2.25` x    | :math:`1\:^1/_3` | 30%         | 5%                    |
+  +------------+-------------------+------------------+-------------+-----------------------+
+  | Hardened 2 | :math:`2.5` x     | :math:`1\:^2/_3` | 25%         | 5%                    |
+  +------------+-------------------+------------------+-------------+-----------------------+
+  | Hardened 3 | :math:`2.75` x    | :math:`2`        | 20%         | 4%                    |
+  +------------+-------------------+------------------+-------------+-----------------------+
+  | Elite 1    | :math:`3` x       | :math:`2\:^1/_3` | 15%         | 4%                    |
+  +------------+-------------------+------------------+-------------+-----------------------+
+  | Elite 2    | :math:`3.25` x    | :math:`2\:^2/_3` | 10%         | 3%                    |
+  +------------+-------------------+------------------+-------------+-----------------------+
+  | Elite 3    | :math:`3.5` x     | :math:`3`        | 0           | 0                     |
+  +------------+-------------------+------------------+-------------+-----------------------+
 
 Is it possible to change a unit’s home city?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -647,7 +631,7 @@ To be clear, a unit's "home city" is the city that produced it.
 
 It is possible when the unit is moved to a city that is not its current home city. You then get an option to
 change the home city. With the unit in a city you can either use shortcut key “h” or
-:guilabel:`Unit --> Set Home City` to re-home the unit to the city it is inside.
+:menuselection:`Unit --> Set Home City` to re-home the unit to the city it is inside.
 
 .. Note::
   Some rulesets allow "unhomed" units. These kind of units will never have a home city and you cannot change
@@ -660,11 +644,7 @@ After. For example, you can beat an enemy attacking unit with a queued :term:`Go
 rush-buying a defensive unit (it will get built first during normal :doc:`turn change processing
 </Playing/turn-change>`), and the attacking unit will move after that.
 
-.. raw:: html
-
-    <embed>
-        <hr>
-    </embed>
+|hr|
 
 Units - Military
 ----------------
@@ -700,19 +680,65 @@ the Longturn Community enjoys playing. As in the game of Chess, the "board" does
 must gauge the risk-reward ratios of your moves and counter-moves. This is the same in Freeciv21. The game
 will not do the math for you. This table should help you in doing the math:
 
-+---------------------------------------+-----------------+------------------+-----------------+----------------------+-----------+-----------+--------------------+-------------------+
-| Terrain                               | Open (Sentried) | Open (Fortified) | Fortress (Open) | Fortress (Fortified) | City <= 8 | City >= 9 | City <= 8 w/ Walls | City >=9 w/ Walls |
-+=======================================+=================+==================+=================+======================+===========+===========+====================+===================+
-| Grass, Plains, Desert, Tundra, Desert | 1.0x            | 1.5x             | 2.0x            | 3.0x                 | 2.25x     | 3.0x      | 3.75x              | 4.5x              |
-+---------------------------------------+-----------------+------------------+-----------------+----------------------+-----------+-----------+--------------------+-------------------+
-| Forest, Jungle, Swamp                 | 1.25x           | 1.88x            | 2.5x            | 3.75x                | 2.81x     | 3.75x     | 4.69x              | 5.63x             |
-+---------------------------------------+-----------------+------------------+-----------------+----------------------+-----------+-----------+--------------------+-------------------+
-| Hills                                 | 1.5x            | 2.25x            | 3.0x            | 4.5x                 | 3.38x     | 4.5x      | 5.63x              | 6.75x             |
-+---------------------------------------+-----------------+------------------+-----------------+----------------------+-----------+-----------+--------------------+-------------------+
-| Mountains                             | 2.0x            | 3.0x             | 4.0x            | 6.0x                 | N/A       | N/A       | N/A                | N/A               |
-+---------------------------------------+-----------------+------------------+-----------------+----------------------+-----------+-----------+--------------------+-------------------+
-| w/ River                              | +1.25x on top of the other modifiers above                                                                                                   |
-+---------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------+
+
+.. list-table:: Important Early Wonders
+  :widths: auto
+  :header-rows: 1
+
+  * - Terrain
+    - Open (Sentried)
+    - Open (Fortified)
+    - Fortress (Open)
+    - Fortress (Fortified)
+    - City <= 8
+    - City >= 9
+    - City <= 8 w/ Walls
+    - City >=9 w/ Walls
+  * - Grass, Plains, Desert, Tundra, Desert
+    - 1.0x
+    - 1.5x
+    - 2.0x
+    - 3.0x
+    - 2.25x
+    - 3.0x
+    - 3.75x
+    - 4.5x
+  * - Forest, Jungle, Swamp
+    - 1.25x
+    - 1.88x
+    - 2.5x
+    - 3.75x
+    - 2.81x
+    - 3.75x
+    - 4.69x
+    - 5.63x
+  * - Hills
+    - 1.5x
+    - 2.25x
+    - 3.0x
+    - 4.5x
+    - 3.38x
+    - 4.5x
+    - 5.63x
+    - 6.75x
+  * - Mountains
+    - 2.0x
+    - 3.0x
+    - 4.0x
+    - 6.0x
+    - N/A
+    - N/A
+    - N/A
+    - N/A
+  * - w/ River
+    - +1.25x on top of the other modifiers above
+    - +1.25x on top of the other modifiers above
+    - +1.25x on top of the other modifiers above
+    - +1.25x on top of the other modifiers above
+    - +1.25x on top of the other modifiers above
+    - +1.25x on top of the other modifiers above
+    - +1.25x on top of the other modifiers above
+    - +1.25x on top of the other modifiers above
 
 .. Tip::
   The legacy Freeciv WiKi gives some good information in the Game Manual about Terrain here:
@@ -777,11 +803,7 @@ When a city is captured, all units homed in that city that are currently in anot
 Any units not in a native city (e.g. your own city) are lost. This includes allied cities or outside of any
 city in the field.
 
-.. raw:: html
-
-    <embed>
-        <hr>
-    </embed>
+|hr|
 
 Other
 -----
@@ -857,11 +879,7 @@ This only works after you can beat the :term:`AI`, of course.
 Another idea is to create starting situations in which the players are already fully developed. Refer to the
 section on :ref:`scenarios <modding-scenarios>`.
 
-.. raw:: html
-
-    <embed>
-        <hr>
-    </embed>
+|hr|
 
 Non-Gameplay Specific Questions
 ===============================
@@ -931,10 +949,9 @@ Does capturing work like Freeciv-Web?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Unit capturing is ruleset defined. Capturing in :term:`LTT` works slightly differently than in the :term:`MP2`
-ruleset used at Freeciv-Web.
-You can capture any “capturable” unit with a “capturer” unit, if the target is alone on a tile. Units
-that are “capturable” have a mention of this in their help text. Units that are “capturers” also have a
-mention of this in their help text.
+ruleset used at Freeciv-Web. You can capture any “capturable” unit with a “capturer” unit, if the target is
+alone on a tile. Units that are “capturable” have a mention of this in their help text. Units that are
+“capturers” also have a mention of this in their help text.
 
 .. Tip::
   You can also capture units from boats. Guard your coastal workers.
@@ -943,9 +960,9 @@ mention of this in their help text.
 Where do I go to see the rules for a game? Like how big a victory alliance can be?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-All rules and winning conditions are posted to the `https://forum.longturn.net/index.php <forums>`_ under the
-Games index. Each game has a section for varying posts related to the game. Winning conditions are also often
-posted on the Longturn Discord `https://discord.gg/98krqGm <server>`_ in the channel for the game.
+All rules and winning conditions are posted to game page on https://longturn.net. Each game has a page for
+information related to the game. Winning conditions are posted here and also often on the Longturn Discord
+`https://discord.gg/98krqGm <server>`_ in the dedicated channel for the game.
 
 Does the Nations view show whether the player is idling?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -991,11 +1008,7 @@ Technically yes, they are enabled. However in reality they are not enabled, beca
 distance is 999. They are overpowered and would cause game balance issues in the multi-player environments
 targeted by :term:`LTT`.
 
-.. raw:: html
-
-    <embed>
-        <hr>
-    </embed>
+|hr|
 
 Game Interface Configuration
 ----------------------------
@@ -1003,20 +1016,20 @@ Game Interface Configuration
 How do I make the font bigger for help text?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You can change a collection of fonts and font sizes by going to :guilabel:`Game --> Set local options` and
-then clicking on the :guilabel:`Fonts` tab.
+You can change a collection of fonts and font sizes by going to :menuselection:`Game --> Set local options`
+and then clicking on the :guilabel:`Fonts` tab.
 
 Is it possible to save login info in the game so it does not have to be entered each time?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Yes, you can set a number of items by going to :guilabel:`Game --> Set local options` and then clicking on
-the :guilabel:`Network` tab. You can set the server, port and username. You cannot save the password as that
-is a security risk.
+Yes, you can set a number of items by going to :menuselection:`Game --> Set local options` and then clicking
+on the :guilabel:`Network` tab. You can set the server, port and username. You cannot save the password as
+that is a security risk.
 
 Where can I turn off “connected / disconnected” messages filling up the chat window?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You can adjust a collection of things by going to :guilabel:`Game --> Messages`. Anything checked in the
+You can adjust a collection of things by going to :menuselection:`Game --> Messages`. Anything checked in the
 ``out`` column will go to the :guilabel:`server/chatline` widget of the game interface. Anything in the
 ``mes`` column will show in the :guilabel:`messages` widget. Lastly, anything checked in the ``pop`` column
 will produce a pop-up window message.
@@ -1033,7 +1046,7 @@ How do I enable/disable sound or music support?
 
 The game can be started without sound by supplying the command-line arguments :literal:`-P none`.
 The default sound plugin can also be configured in the game settings by going to
-:guilabel:`Game -->Set local options` and then clicking on the :guilabel:`Sound` tab.
+:menuselection:`Game -->Set local options` and then clicking on the :guilabel:`Sound` tab.
 
 If the game was compiled with sound support, it will be enabled by default. All pre-compiled
 packages provided by the Longturn community come with sound support enabled.
@@ -1058,11 +1071,7 @@ Again, this is easiest if the ruleset is available through the
 If the ruleset you want is not available via the modpack installer, you will have to install it by hand from
 somewhere. To do that is beyond the scope of this FAQ.
 
-.. raw:: html
-
-    <embed>
-        <hr>
-    </embed>
+|hr|
 
 Community
 ---------
@@ -1105,11 +1114,7 @@ Patches and bug reports are best reported to the Freeciv21 bug tracking system a
 https://github.com/longturn/freeciv21/issues/new/choose. For more information, have a look at
 :doc:`/Contributing/bugs`.
 
-.. raw:: html
-
-    <embed>
-        <hr>
-    </embed>
+|hr|
 
 Technical Stuff
 ---------------
@@ -1240,11 +1245,7 @@ not help. If you find your game running too slow, these may be the reasons:
 * :strong:`Network`: Any modern internet connection will suffice to play Freeciv21. Even mobile hot-spots
   provide enough bandwidth.
 
-.. raw:: html
-
-    <embed>
-        <hr>
-    </embed>
+|hr|
 
 Windows
 -------
@@ -1260,15 +1261,9 @@ OK, I have downloaded and installed it, how do I run it?
 
 See the document about :doc:`/Getting/windows-install`.
 
-.. raw:: html
-
-    <embed>
-        <hr>
-    </embed>
+|hr|
 
 macOS
 -----
 
 Pre-compiled binaries in a :file:`*.dmg` file can be downloaded from https://github.com/longturn/freeciv21/releases.
-
-.. |reg|    unicode:: U+000AE .. REGISTERED SIGN

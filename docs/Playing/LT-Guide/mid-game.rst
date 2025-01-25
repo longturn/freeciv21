@@ -1,11 +1,7 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
-.. Custom Interpretive Text Roles for longturn.net/Freeciv21
-.. role:: unit
-.. role:: improvement
-.. role:: wonder
-.. role:: advance
+.. include:: /global-include.rst
 
 Turn 20+: Mid-Game Strategy
 ***************************
@@ -131,7 +127,7 @@ Mid-Game Military
 This is the point in the game where some fighting often happens. You are going to be bumping up against your
 neighbors, they might have more land than you at this point. Just like with the notes about military
 aggression for the early game, any involvement in military conflict is taking away from growth. As with all
-things “Longturn”, there are tradeoffs.
+things Longturn, there are tradeoffs.
 
 A few thoughts about aggression at this stage of the game:
 
