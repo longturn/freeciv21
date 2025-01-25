@@ -3,6 +3,11 @@ Root of sphinx-build files here for the Longturn Documentation Project
 
 To create a local test build run this command from this same directory
 
-    sphinx-build -b html . ../build/docs
+    cd build
+    python -m virtualenv venv
+    source venv/bin/activate
+    pip install -r ../docs/requirements.txt
 
-and then open ../build/docs/index.html in your browser of choice
+    sphinx-build -b html ../docs ./docs/
+
+and then open build/docs/index.html in your browser of choice
