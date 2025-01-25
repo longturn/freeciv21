@@ -2,6 +2,8 @@
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 .. SPDX-FileCopyrightText: Pranav Sampathkumar <pranav.sampathkumar@gmail.com>
 
+.. include:: /global-include.rst
+
 How to Submit a Pull Request
 ****************************
 

@@ -1,14 +1,17 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
+.. include:: /global-include.rst
+
 Visual Studio for Windows
 *************************
 
 Freeciv21 can be compiled using Microsoft Visual Studio\ |reg| and :file:`clang-cl`. This page will help you
 get version 2022 up and running.
 
-.. warning:: Visual Studio and the corresponding dependencies require a great deal of HDD space on your
-   computer. Be sure to have at least 80GB of available space before starting this process.
+.. warning::
+  Visual Studio and the corresponding dependencies require a great deal of HDD space on your computer. Be
+  sure to have at least 80GB of available space before starting this process.
 
 
 Base Installation
@@ -22,8 +25,9 @@ install. Select :guilabel:`Python Development` and :guilabel:`Desktop developmen
 panel, under :guilabel:`Installation Details`, uncheck :guilabel:`vcpkg package manager` and check
 :guilabel:`Windows 10 SDK 10.0.20348.0)`.
 
-.. note:: We remove the ``vcpkg`` package manager inside of Visual Studio in order to install one that is
-   better managed and easily updated later down this page.
+.. note::
+  We remove the ``vcpkg`` package manager inside of Visual Studio in order to install one that is better
+  managed and easily updated later down this page.
 
 Next click on the :guilabel:`Individual Components` tab and select the following options:
 :guilabel:`Git for Windows`, :guilabel:`C++ Clang Compiler for Windows (17.0.3)`, and
@@ -87,9 +91,10 @@ that you installed :file:`vcpkg` into. The forward slashes are correct.
     Tools> exit
 
 
-.. warning:: The :file:`vcpkg` website/readme will ask for you to run a :file:`vcpkg integrate install`
-  command to fully integrate all the packages installed into Visual Studio. :strong:`Do Not` run this command
-  as it actually breaks Visual Studio's ability to find and use the :file:`clang-cl` compiler, which we need.
+.. warning::
+  The :file:`vcpkg` website/readme will ask for you to run a :file:`vcpkg integrate install` command to fully
+  integrate all the packages installed into Visual Studio. :strong:`Do Not` run this command as it actually
+  breaks Visual Studio's ability to find and use the :file:`clang-cl` compiler, which we need.
 
 GitHub
 ======
@@ -185,7 +190,8 @@ Start by `downloading <https://www.qt.io/download-qt-installer-oss>`_ the instal
 #. Click :guilabel:`Next` and note that :strong:`Qt` for the Start Menu is fine.
 #. Click :guilabel:`Next` and :guilabel:`Install` to begin the process.
 
-.. note:: You can reduce the size of the Qt Tools install by expanding the ``5.15.2`` option and unchecking
+.. note::
+  You can reduce the size of the Qt Tools install by expanding the ``5.15.2`` option and unchecking
   ``WebAssembly``, ``MSVC 2015 64-bit``, ``MSVC 2019 32-bit``, ``MinGW 8.1.0 32-bit``, ``MinGW 8.1.0 64-bit``,
   ``UWP*``, and ``Android``. Unless you intend to develop for those platforms, you do not need to download and
   install those components for Freeciv21.
@@ -216,24 +222,27 @@ compile all targets for Freeciv21 and place the output into the :file:`build-vs`
 install Freeciv21 to test any work you are doing, you can go to :menuselection:`Build --> install Freeciv21`.
 When complete, you should find a fully functional install in the :file:`build-vs/install` directory.
 
-.. note:: The preferred :guilabel:`Configuration` is :strong:`debug-windows`, especially if you want to
+.. note::
+  The preferred :guilabel:`Configuration` is :strong:`debug-windows`, especially if you want to
   troubleshoot code with the built-in debugger and also if you plan to use the unit test feature ``CTest``.
 
-.. note:: The first time you run the Configure Cache command (from
-  :menuselection:`Project --> Configure Cache`) or ask Visual Studio to generate the C++ Intellisense data,
-  Visual Studio will invoke the :file:`vcpkg` installation process to download and compile all of the project
-  dependencies listed in the manifest file: :file:`vcpkg.json`. :strong:`This will take a very long time`. On
-  a fast computer with a good Internet connection it will take at least 3 hours to complete. Everything will
-  be downloaded and compiled into the :file:`C:\\Tools\\vcpkg` directory, or wherever you configured
-  :file:`vcpkg` earlier. Binaries for the packages will be copied into the :file:`./build-vs/` directory
-  inside of the main Freeciv21 directory and reused for subsequent builds.
+.. note::
+  The first time you run the Configure Cache command (from :menuselection:`Project --> Configure Cache`) or
+  ask Visual Studio to generate the C++ Intellisense data, Visual Studio will invoke the :file:`vcpkg`
+  installation process to download and compile all of the project dependencies listed in the manifest file:
+  :file:`vcpkg.json`. :strong:`This will take a very long time`. On a fast computer with a good Internet
+  connection it will take at least 3 hours to complete. Everything will be downloaded and compiled into the
+  :file:`C:\\Tools\\vcpkg` directory, or wherever you configured :file:`vcpkg` earlier. Binaries for the
+  packages will be copied into the :file:`./build-vs/` directory inside of the main Freeciv21 directory and
+  reused for subsequent builds.
 
-.. attention:: As documented in :doc:`/Getting/compile`, there is a :file:`--target package` option
-  available to build an installable package for Windows. This is only available to the MSYS2 environment. This
-  does not mean that you can not test an install using Visual Studio. After going to
-  :menuselection:`Build --> install Freeciv21` you can still manually start up the client or a server as
-  needed to debug. To do this you will start up either the client, the server, or both and then in Visual
-  Studio go to :menuselection:`Debug --> Attach to Process`
+.. attention::
+  As documented in :doc:`/Getting/compile`, there is a :file:`--target package` option available to build an
+  installable package for Windows. This is only available to the MSYS2 environment. This does not mean that
+  you can not test an install using Visual Studio. After going to :menuselection:`Build --> install Freeciv21`
+  you can still manually start up the client or a server as needed to debug. To do this you will start up
+  either the client, the server, or both and then in Visual Studio go to
+  :menuselection:`Debug --> Attach to Process`.
 
 :strong:`Notes about Clang-Cl vs MSVC`
 
@@ -259,5 +268,3 @@ location to be a sub-directory of the :file:`build-vs` directory for use during 
 purposes. This is the same as selecting the :file:`windows-debug` preset configuration. The second and third
 command then "builds" and "installs" the configured code solution. You will need to manually start the client
 and/or server to test.
-
-.. |reg|    unicode:: U+000AE .. REGISTERED SIGN
