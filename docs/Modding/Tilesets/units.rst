@@ -2,6 +2,8 @@
 .. SPDX-FileCopyrightText: Freeciv21 and Freeciv contributors
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
+.. include:: /global-include.rst
+
 Units
 *****
 

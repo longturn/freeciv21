@@ -2,12 +2,7 @@
 .. SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
-.. Custom Interpretive Text Roles for longturn.net/Freeciv21
-.. role:: unit
-.. role:: improvement
-.. role:: wonder
-.. role:: advance
-
+.. include:: /global-include.rst
 
 Musicsets Overview
 ******************

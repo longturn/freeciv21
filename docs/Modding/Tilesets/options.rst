@@ -1,7 +1,7 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
-.. role:: unit
+.. include:: /global-include.rst
 
 Tileset Options
 ***************

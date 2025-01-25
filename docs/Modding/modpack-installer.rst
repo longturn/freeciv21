@@ -1,6 +1,8 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: David Koníř <david.konir@gmail.com>
 
+.. include:: /global-include.rst
+
 Serving Modpacks for the Modpack Installer
 ******************************************
 

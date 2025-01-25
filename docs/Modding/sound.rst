@@ -2,6 +2,8 @@
 .. SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
+.. include:: /global-include.rst
+
 Sound Support
 *************
 
