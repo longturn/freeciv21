@@ -1,11 +1,7 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
-.. Custom Interpretive Text Roles for longturn.net/Freeciv21
-.. role:: unit
-.. role:: improvement
-.. role:: wonder
-.. role:: advance
+.. include:: /global-include.rst
 
 The Late-Game Strategy
 ***********************
@@ -41,7 +37,7 @@ than size 16. Once you learn :advance:`Explosives`, you can either use gold to u
 :unit:`Engineers` or allow :wonder:`Leonardo’s Workshop` to do it for you. Every tile should be grassland by
 now (or at least the majority of them). Use :unit:`Engineers` to cut down Mountains and Hills (ones without a
 special on them). Use the :unit:`Engineers` to get rid of Desert tiles (ones without a special on them). This
-is the time of the game where the majority of your cities should be at +20 food and growing every turn.
+is the time of the game where the majority of your cities should be at :math:`+20` food and growing every turn.
 
 This is also a time in the game where pollution can cause Global Warming. In :term:`LTT` and :term:`LTX`
 games, Global Warming is very powerful and can wreak havoc on your growth plans. Keep tiles clear of pollution

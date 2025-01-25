@@ -1,11 +1,7 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
-.. Custom Interpretive Text Roles for longturn.net/Freeciv21
-.. role:: unit
-.. role:: improvement
-.. role:: wonder
-.. role:: advance
+.. include:: /global-include.rst
 
 Final Notes + Victory Declaration
 *********************************
@@ -24,11 +20,11 @@ turn change cycle of 25h.
 We used to use an old Forum site (https://forum.longturn.net/), but have moved away from it in favor of
 Discord.
 
-As a final conclusion – remember, :strong:`this is a game` and the Longturn Community values good
+As a final conclusion –-- remember, :strong:`this is a game` and the Longturn Community values good
 sportsmanship as much as we do anything else. Have a good time, play to win, lose with grace, and make some
 friends.
 
 See you next game!
 
-Regards
-The Longturn Game Admins - Wieder_Fi, Louis94, Panch93, TriClad, Kryon, Corbeau, and Jwrober
+Regards, The Longturn Game Admins:
+  Wieder_Fi, Louis94, Panch93, TriClad, Kryon, Corbeau, and Jwrober
