@@ -3,6 +3,8 @@
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
+.. include:: /global-include.rst
+
 Network Protocol
 ****************
 
@@ -150,14 +152,13 @@ reply its connection is closed.
 Delta
 =====
 
-If delta is enabled for this packet, the packet-payload (after the bytes used by the packet-header) is followed
-by the ``delta-header``. The ``delta-header`` is a bitvector which represents all non-key fields of the
-packet. If
-the field has changed the corresponding bit is set and the field value is also included in ``delta-body``. The
-values of the unchanged fields will be filled in from an old version at the receiving side. The old version
-filled in from is the previous packet of the same kind that has the same value in each key field. If the
-packet's kind do not have any key fields the previous packet of the same kind is used. If no old version
-exists the unchanged fields will be assumed to be zero.
+If delta is enabled for this packet, the packet-payload (after the bytes used by the packet-header) is
+followed by the ``delta-header``. The ``delta-header`` is a bitvector which represents all non-key fields of
+the packet. If the field has changed the corresponding bit is set and the field value is also included in
+``delta-body``. The values of the unchanged fields will be filled in from an old version at the receiving
+side. The old version filled in from is the previous packet of the same kind that has the same value in each
+key field. If the packet's kind do not have any key fields the previous packet of the same kind is used. If
+no old version exists the unchanged fields will be assumed to be zero.
 
 For a ``bool`` field, another optimization called ``bool-header-folding`` is applied. Instead of sending an
 indicator in the bitvector if the given ``bool`` value has changed, and so using 1 byte for the real value,

@@ -3,6 +3,8 @@
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
+.. include:: /global-include.rst
+
 Internationalization
 ********************
 
@@ -23,7 +25,7 @@ Paying attention to these three points is sufficient to get internationalization
 of the cases.
 
 Translating Text
-----------------
+================
 
 Translating user-facing text is the most work-intensive part of internationalization. As a developer, you
 only need to make sure that strings are marked for translation when appropriate. In Freeciv21, this is done
@@ -67,7 +69,7 @@ returns the original). This is useful in static contexts.
 
 
 Not Translated
---------------
+==============
 
 While most text should be translated, there are a few cases where this is not wanted:
 
@@ -78,7 +80,7 @@ While most text should be translated, there are a few cases where this is not wa
 
 
 Helper Comments
----------------
+===============
 
 When translators work on strings, they are provided with a list taken out of context. They can see the
 original text in English and sometimes the source code, but most translators cannot read code. In some
@@ -112,7 +114,7 @@ In complex cases, adding an example or a short explanation also makes the code e
 
 
 Character Encodings
--------------------
+===================
 
 The way characters are encoded into strings has long been a hot topic of internationalization, and
 language-specific character encodings are still around on some systems. Freeciv21 always uses UTF-8 for data
@@ -128,7 +130,7 @@ be rarely, if ever, needed.
 
 
 Common Difficulties
--------------------
+===================
 
 Every language is different, and there is no reason for the order of words or even sentences to be the same
 as in English. When possible, it is thus preferable to provide the translators with full sentences or

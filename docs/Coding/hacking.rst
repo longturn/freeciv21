@@ -5,11 +5,7 @@
 .. SPDX-FileCopyrightText: NIKEA-SOFT
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
-.. Custom Interpretive Text Roles for longturn.net/Freeciv21
-.. role:: unit
-.. role:: improvement
-.. role:: wonder
-.. role:: advance
+.. include:: /global-include.rst
 
 Freeciv21 Hacker's Guide
 ************************

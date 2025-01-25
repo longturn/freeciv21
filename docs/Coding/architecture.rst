@@ -3,6 +3,8 @@
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
+.. include:: /global-include.rst
+
 Architecture
 ************
 
@@ -61,6 +63,7 @@ structure of the repository:
   :file:`translations` Localization.
   :file:`utility`      Utility classes and functions not found in Qt or other dependencies.
   ==================== ==========
+
 
 .. note::
     Some folders do not follow this structure. Their contents should eventually be moved.
