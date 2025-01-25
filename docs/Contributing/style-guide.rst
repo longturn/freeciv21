@@ -2,12 +2,7 @@
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
-.. Custom Interpretive Text Roles for longturn.net/Freeciv21
-.. role:: unit
-.. role:: improvement
-.. role:: wonder
-.. role:: advance
-
+.. include:: /global-include.rst
 
 Documentation Style Guide
 *************************
@@ -31,8 +26,8 @@ Heading 1
 
 .. code-block:: rst
 
-    This is an awesome page title
-    *****************************
+    This is an awesome page title (h1)
+    **********************************
 
 
 Heading 2
@@ -41,8 +36,8 @@ Heading 2
 
 .. code-block:: rst
 
-    This is a chapter marker
-    ========================
+    This is a chapter marker (h2)
+    =============================
 
 
 Heading 3
@@ -52,8 +47,8 @@ Heading 3
 
 .. code-block:: rst
 
-    This is a sub-chapter marker
-    ----------------------------
+    This is a sub-chapter marker (h3)
+    ---------------------------------
 
 
 Heading 4
@@ -62,8 +57,8 @@ Heading 4
 
 .. code-block:: rst
 
-    This is a sub-chapter break
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    This is a sub-chapter break (h4)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 .. _style-attribution:
@@ -85,8 +80,8 @@ or later license. Here is what the SPDX header should look like in all scenarios
 
 
 .. note::
-    We do not add a date (e.g. year) to our attribution blocks. There is recent commentary that this is not
-    needed and leaving the date off makes keeping header blocks up to date easier.
+  We do not add a date (e.g. year) to our attribution blocks. There is recent commentary that this is not
+  needed and leaving the date off makes keeping header blocks up to date easier.
 
 If the file you are working with came from legacy Freeciv, please add this line to the SPDX header for proper
 attribution:
@@ -107,22 +102,10 @@ to alter is placed inside back-ticks.
 * :literal:`:doc:` --- Doc is used to create a hyperlink reference between documents in the documentation
   system.
 
-* :literal:`:ref:` --- Create a cross-reference link to an anchor in another document. This is similar to
-  :literal:`:doc:`, except it allows you to go to a specific location within a page, instead of the top of the
-  page. To use :literal:`:ref:`, you add an anchor in a page such as :literal:`.. _My-Anchor:` and then refer
-  to it like this: :literal:`:ref:`My Anchor``. Notice that the anchor has an underscore at the beginning.
-  This is required for sphinx to recognize it. Also notice the use of the anchor in :literal:`:ref:` leaves
-  the underscore off.
-
-* :literal:`:numref:` --- Create a cross-reference to a named figure.
-
-* :literal:`:table:` --- Create a named table reference. Place an anchor (e.g. :literal:`.. _My-Anchor:`)
-  above to enable :literal:`:numref:`.
-
-* :literal:`:figure:` --- Create a named figure reference. Place an anchor (e.g. :literal:`.. _My Anchor:`)
-  above to enable :literal:`:numref:`.
-
 * :literal:`:emphasis:` --- Emphasis is used to :emphasis:`bring attention to something`.
+
+* :literal:`:figure:` --- Create a named figure reference. Place an anchor (e.g. :literal:`.. _My-Anchor:`)
+  above to enable :literal:`:numref:`.
 
 * :literal:`:file:` --- File is used for file names and paths such as :file:`~/.local/share/freeciv21/saves`.
 
@@ -132,14 +115,26 @@ to alter is placed inside back-ticks.
 * :literal:`:literal:` --- Literal is used when you want to note a text element in its raw form. This is
   equivalent to using two back-ticks: ````text````.
 
-* :literal:`math` and :literal:`.. math::` --- Used to insert mathematics, see `Formulas`_.
+* :literal:`:math:` and :literal:`.. math::` --- Used to insert mathematics, see `Formulas`_.
 
 * :literal:`:menuselection:` --- Menu Selection is used to give the path of menu clicks such as
   :menuselection:`Game --> Local Options`. To denote submenus, use a test arrow like this: :literal:`-->`
   between the selection items.
 
+* :literal:`:numref:` --- Create a cross-reference to a named figure.
+
+* :literal:`:ref:` --- Create a cross-reference link to an anchor in another document. This is similar to
+  :literal:`:doc:`, except it allows you to go to a specific location within a page, instead of the top of the
+  page. To use :literal:`:ref:`, you add an anchor in a page such as :literal:`.. _My-Anchor:` and then refer
+  to it like this: :literal:`:ref:`My-Anchor``. Notice that the anchor has an underscore at the beginning.
+  This is required for sphinx to recognize it. Also notice the use of the anchor in :literal:`:ref:` leaves
+  the underscore off.
+
 * :literal:`:strong:` --- Strong is used to :strong:`bold some text`. A good use of :literal:`:strong:` is to
   highlight game elements.
+
+* :literal:`:table:` --- Create a named table reference. Place an anchor (e.g. :literal:`.. _My-Anchor:`)
+  above to enable :literal:`:numref:`.
 
 * :literal:`:term:` --- Term is used to cross-reference to an entry in the :doc:`/glossary`.
 
@@ -154,17 +149,17 @@ The docutils specification allows for custom Interpreted Text Roles and we use t
 documentation on this feature is available here:
 https://docutils.sourceforge.io/docs/ref/rst/directives.html#custom-interpreted-text-roles
 
-* :literal:`:unit:` --- This provides an opportunity to highlight a Freeciv21 unit, such as the
-  :unit:`Musketeer`.
+* :literal:`:advance:` --- This provides an opportunity to highlight a Freeciv21 technology advance, such as
+  :advance:`Ceremonial Burial`.
 
 * :literal:`:improvement:` --- This provides an opportunity to highlight a Freeciv21 building or city
   improvement, such as the :improvement:`Granary`.
 
+* :literal:`:unit:` --- This provides an opportunity to highlight a Freeciv21 unit, such as the
+  :unit:`Musketeer`.
+
 * :literal:`:wonder:` --- This provides an opportunity to highlight a Freeciv21 small or great wonder, such as
   the :wonder:`Pyramids`.
-
-* :literal:`:advance:` --- This provides an opportunity to highlight a Freeciv21 technology advance, such as
-  :advance:`Ceremonial Burial`.
 
 Admonition Directives
 =====================
@@ -173,24 +168,29 @@ Admonitions are specially marked "topics" that can appear anywhere an ordinary b
 admonition is rendered as an offset block in a document, sometimes outlined or shaded, with a title matching
 the admonition type. We use some of the standard admonitions in our documentation as well.
 
-* :literal:`.. attention::` -- Use Attention to bring a very important high profile item to the reader's
+* :literal:`.. attention::` --- Use Attention to bring a very important high profile item to the reader's
   attention.
 
 .. attention::
-    This is a really important message! Do not forget to eat breakfast every day.
+  This is a really important message! Do not forget to eat breakfast every day.
 
-* :literal:`.. todo::` -- Use To Do as a reminder for documentation editors to come back and fix things at
+* :literal:`.. note::` ---  Use the Note as the way to give more information to the reader on a topic.
+
+.. note::
+  It is important to note that Freeciv21 is really fun to play with groups of people online.
+
+* :literal:`.. tip::` --- Use Tip to give a trick on how to do something.
+
+.. tip::
+  It is always best to play Freeciv21 with friends.
+
+* :literal:`.. todo::` --- Use To Do as a reminder for documentation editors to come back and fix things at
   a later date.
 
 .. todo::
-    Come back and fix something later.
+  Come back and fix something later.
 
-* :literal:`.. note::` --  Use the Note as the way to give more information to the reader on a topic.
-
-.. note::
-    It is important to note that Freeciv21 is really fun to play with groups of people online.
-
-* :literal:`.. code-block:: rst` -- The code block is an excellent way to display actual code or any
+* :literal:`.. code-block:: rst` --- The code block is an excellent way to display actual code or any
   pre-formatted plain text. The tag ``rst`` can be replaces by ``sh``, ``cpp``, and ``ini`` as well to give
   different types of markup for shell commands, C++ code, and ini file formatting.
 
@@ -248,9 +248,9 @@ Language Contractions
     :strong:`the usage of contractions is not advised` and should be used sparingly.
 
 The Use of Person
-    In English there are three types of person: first, second, and third. First person is possessive -- "I
-    took a walk down the street". Second person is about speaking to someone -- "You took a walk down the
-    street". Third person is non-specific -- "They took a walk down the street". In our documentation we use
+    In English there are three types of person: first, second, and third. First person is possessive --- "I
+    took a walk down the street". Second person is about speaking to someone --- "You took a walk down the
+    street". Third person is non-specific --- "They took a walk down the street". In our documentation we use
     the second person form. We want to be conversational with our readers and speak to them about the game,
     features, actions, etc.
 
@@ -260,7 +260,7 @@ The Use of Person
 Double Negatives / Negations
     To aid the readability of our documentation, we want to stay away from using double negatives. A double
     negative is where two negative words are combined together that end with a positive. For example:
-    "The guidelines are not bad". The last two words are negative -- "not bad". It is better to use positive
+    "The guidelines are not bad". The last two words are negative --- "not bad". It is better to use positive
     language. For example the first sentence is better written as: "The guidelines are good".
 
 Figure Numbers

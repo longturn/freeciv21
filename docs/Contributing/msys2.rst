@@ -2,6 +2,8 @@
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 .. SPDX-FileCopyrightText: zekoz
 
+.. include:: /global-include.rst
+
 Setting up MSYS2 for Windows
 ****************************
 

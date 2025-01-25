@@ -3,6 +3,8 @@
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 .. SPDX-FileCopyrightText: Pranav Sampathkumar <pranav.sampathkumar@gmail.com>
 
+.. include:: /global-include.rst
+
 Evaluating a Pull Request
 *************************
 
