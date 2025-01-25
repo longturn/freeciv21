@@ -1,152 +1,152 @@
 /* set a custom font face to match in game standard font */
 @font-face {
-    font-family: Libertinus Sans;
-    font-weight: normal;
-    font-style: normal;
-    src: url(./LibertinusSans-Regular.woff2);
+  font-family: Libertinus Sans;
+  font-weight: normal;
+  font-style: normal;
+  src: url(./LibertinusSans-Regular.woff2);
 }
 
 @font-face {
-    font-family: Libertinus Sans;
-    font-weight: bold;
-    font-style: normal;
-    src: url(./LibertinusSans-Bold.woff2);
+  font-family: Libertinus Sans;
+  font-weight: bold;
+  font-style: normal;
+  src: url(./LibertinusSans-Bold.woff2);
 }
 
 @font-face {
-    font-family: Libertinus Sans;
-    font-weight: normal;
-    font-style: italic;
-    src: url(./LibertinusSans-Italic.woff2);
+  font-family: Libertinus Sans;
+  font-weight: normal;
+  font-style: italic;
+  src: url(./LibertinusSans-Italic.woff2);
 }
 
 /* set the base body tags font */
 body {
-    font-family: Libertinus Sans, sans-serif;
-    font-size: 18px;
+  font-family: Libertinus Sans, sans-serif;
+  font-size: 18px;
 }
 
 p {
-    font-family: Libertinus Sans, sans-serif;
-    font-size: 18px;
+  font-family: Libertinus Sans, sans-serif;
+  font-size: 18px;
 }
 
 h1 {
-    font-family: Libertinus Sans, sans-serif;
-    font-size: 28px;
+  font-family: Libertinus Sans, sans-serif;
+  font-size: 28px;
 }
 
 h2 {
-    font-family: Libertinus Sans, sans-serif;
-    font-size: 26px;
+  font-family: Libertinus Sans, sans-serif;
+  font-size: 26px;
 }
 
 h3 {
-    font-family: Libertinus Sans, sans-serif;
-    font-size: 24px;
+  font-family: Libertinus Sans, sans-serif;
+  font-size: 24px;
 }
 
 h4 {
-    font-family: Libertinus Sans, sans-serif;
-    font-size: 22px;
+  font-family: Libertinus Sans, sans-serif;
+  font-size: 22px;
 }
 
 /* add whitespace between list items */
-li {
+li, div[*wy-grid-for-nav] li {
   margin-bottom: 7px;
 }
 
-li ol li {
+li ol li, div[*wy-grid-for-nav] li {
   margin-bottom: 7px;
 }
 
-li ul li {
+li ul li, div[*wy-grid-for-nav] li {
   margin-bottom: 7px;
 }
 
-.toctree-wrapper li, .current li {
-    margin-bottom: 3px;
+.current li, div[*wy-grid-for-nav] li {
+  margin-bottom: 3px;
 }
 
 /* set the font of the side nav bar header */
 .wy-side-nav-search {
-    font-family: Libertinus Sans, sans-serif;
+  font-family: Libertinus Sans, sans-serif;
 }
 
 .pre, code, pre {
-    font-size: 15px;
+  font-size: 15px;
 }
 
 .rst-content .linenodiv pre, .rst-content div[class^="highlight"] pre, .rst-content pre.literal-block {
-    font-size: 15px;
+  font-size: 15px;
 }
 
 .rst-content span[class^="math"] {
-    font-size: 16px;
+  font-size: 16px;
 }
 
 /* fix for overlapping inline code blocks in tables */
 html.writer-html5 .rst-content table.docutils :is(td, th) > p :is(.pre, code, pre) {
-    line-height: 1.25rem;
+  line-height: 1.25rem;
 }
 
 /* override table width restrictions */
 .wy-table-responsive table td, .wy-table-responsive table th {
-    white-space: normal;
+  white-space: normal;
 }
 
 .wy-table-responsive {
-    margin-bottom: 24px;
-    max-width: 100%;
+  margin-bottom: 24px;
+  max-width: 100%;
 }
 
 /* no wrapping in builtin roles */
 .guilabel {
-    white-space: nowrap;
+  white-space: nowrap;
 }
 
 /* format for custom interpretive text roles */
 .unit {
-    border: 1px solid #64b9b9;
-    background: #8ff9db;
-    font-size:80%;
-    font-weight:700;
-    border-radius:4px;
-    padding:2px 6px;
-    margin:auto 2px
+  border: 1px solid #64b9b9;
+  background: #8ff9db;
+  font-size:80%;
+  font-weight:700;
+  border-radius:4px;
+  padding:2px 6px;
+  margin:auto 2px
 }
 
 .improvement {
-    border: 1px solid #aa9f61;
-    background: #f7e68b;
-    font-size:80%;
-    font-weight:700;
-    border-radius:4px;
-    padding:2px 6px;
-    margin:auto 2px
+  border: 1px solid #aa9f61;
+  background: #f7e68b;
+  font-size:80%;
+  font-weight:700;
+  border-radius:4px;
+  padding:2px 6px;
+  margin:auto 2px
 }
 
 .wonder {
-    border: 1px solid #a069c6;
-    background: #e2b3f7;
-    font-size:80%;
-    font-weight:700;
-    border-radius:4px;
-    padding:2px 6px;
-    margin:auto 2px
+  border: 1px solid #a069c6;
+  background: #e2b3f7;
+  font-size:80%;
+  font-weight:700;
+  border-radius:4px;
+  padding:2px 6px;
+  margin:auto 2px
 }
 
 .advance {
-    border: 1px solid #aa726f;
-    background: #f4bab7;
-    font-size:80%;
-    font-weight:700;
-    border-radius:4px;
-    padding:2px 6px;
-    margin:auto 2px
+  border: 1px solid #aa726f;
+  background: #f4bab7;
+  font-size:80%;
+  font-weight:700;
+  border-radius:4px;
+  padding:2px 6px;
+  margin:auto 2px
 }
 
 /* add an underline for the title-reference interpretive text role */
 cite {
-    text-decoration: underline;
+  text-decoration: underline;
 }
