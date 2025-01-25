@@ -1,6 +1,8 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
+.. include:: /global-include.rst
+
 Controlling the Map Generator
 *****************************
 
@@ -42,16 +44,16 @@ the options that are least impacting to the overall map.
 
 These options change the makeup of tiles and not the map itself:
 
-* ``alltemperate`` -- When ``enabled``, all tiles have a similar temperature. Players will all have similar
+* ``alltemperate`` --- When ``enabled``, all tiles have a similar temperature. Players will all have similar
   tiles to work. Set to ``disabled`` if you want to control with the ``temperature`` and ``wetness`` options.
-* ``huts`` -- How many huts you want on the map. Longturn games typically have ``0`` huts.
-* ``specials`` -- How many specials (tile resources) you want on the map.
-* ``steepness`` -- Bigger numbers produce hilly and mountainous terrain, lower numbers do not.
-* ``temperature`` -- You can create a hot or cold world with this option.
-* ``tinyisles`` -- Set to ``enabled`` if you want small single-tile (1x1) islands on the map.
-* ``wetness`` -- This option allows you to create a dry or wet map. Lower numbers are dry, higher numbers are
+* ``huts`` --- How many huts you want on the map. Longturn games typically have ``0`` huts.
+* ``specials`` --- How many specials (tile resources) you want on the map.
+* ``steepness`` --- Bigger numbers produce hilly and mountainous terrain, lower numbers do not.
+* ``temperature`` --- You can create a hot or cold world with this option.
+* ``tinyisles`` --- Set to ``enabled`` if you want small single-tile (1x1) islands on the map.
+* ``wetness`` --- This option allows you to create a dry or wet map. Lower numbers are dry, higher numbers are
   wet.
-* ``revealmap`` -- This setting is used to reveal the whole map at game start. Good to use for testing, but
+* ``revealmap`` --- This setting is used to reveal the whole map at game start. Good to use for testing, but
   not for real games.
 
 
@@ -64,11 +66,11 @@ map that you can work and navigate around.
 
 The settings that define the poles and base topology are:
 
-* ``flatpoles`` -- A low setting (``0``) will give poles with water and a high (``100``) will fill in with
+* ``flatpoles`` --- A low setting (``0``) will give poles with water and a high (``100``) will fill in with
   mostly glacier tiles on the poles.
-* ``separatepoles`` -- When ``enabled`` will break poles up and when ``disabled`` will keep them together.
-* ``singlepole`` -- When ``enabled`` will allow for a single pole and when ``disabled`` will give two poles.
-* ``topology`` -- Sets the wrap (``X``, ``Y``), the orientation (isometric or overhead) and the tile type
+* ``separatepoles`` --- When ``enabled`` will break poles up and when ``disabled`` will keep them together.
+* ``singlepole`` --- When ``enabled`` will allow for a single pole and when ``disabled`` will give two poles.
+* ``topology`` --- Sets the wrap (``X``, ``Y``), the orientation (isometric or overhead) and the tile type
   (squares vs hexes).
 
 :strong:`Recipe: Blocking poles on the map`
@@ -123,11 +125,11 @@ The overall size of the map (total number of X and Y tiles) is driven by a colle
 
 The ``mapsize`` option is the driver and has three possible configurations:
 
-#. ``FULLSIZE`` -- When used, you must also have the ``size`` option set. The value is simply a number (in
+#. ``FULLSIZE`` --- When used, you must also have the ``size`` option set. The value is simply a number (in
    thousands) of tiles.
-#. ``PLAYER`` -- When used, you must also have the ``tilesperplayer`` option set. The map generator will take
+#. ``PLAYER`` --- When used, you must also have the ``tilesperplayer`` option set. The map generator will take
    this into account and try its best to give each player a similar number of tiles to settle.
-#. ``XYSIZE`` -- When used, you must also have the ``xsize`` and ``ysize`` options set. These values are
+#. ``XYSIZE`` --- When used, you must also have the ``xsize`` and ``ysize`` options set. These values are
    similar to the ``size`` option. Give the map generator very specific number of tiles on the two axis.
 
 No recipes here. As a game master, you can figure out how big or small you want your map. Longturn games use
@@ -160,27 +162,27 @@ We will get to some recipes in a bit, but before we do that, let us talk about t
 
 First up, ``generator`` has the following configurations:
 
-* ``SCENARIO`` -- This configuration is for Scenario games only. This is a special use case.
-* ``RANDOM`` -- The default. As the name implies, there is a dependency on the built-in Random Number
+* ``SCENARIO`` --- This configuration is for Scenario games only. This is a special use case.
+* ``RANDOM`` --- The default. As the name implies, there is a dependency on the built-in Random Number
   Generator (RNG) in the server. The generator will attempt to create equally spaced, relatively small
   islands. Player placement will be impacted by the ``landmass`` option. The larger the value the bigger the
   continents/islands. This option is also impacted by the ``mapsize`` option. Best to use the ``FULLSIZE`` or
   the ``XYSIZE`` configuration.
-* ``FRACTAL`` -- This is the setting most Longturn games use. This configuration will create earth-like maps.
+* ``FRACTAL`` --- This is the setting most Longturn games use. This configuration will create earth-like maps.
   By default, all players are placed on the same continent. The ``landmass`` option can also impact placement.
-* ``ISLAND`` -- Each player is placed on their own island. Each island is similar in size, but not shape.
-* ``FAIR`` -- Every player gets the exact same island.
-* ``FRACTURE`` -- Similar to ``FRACTAL``, however this configuration often places mountains on the coasts.
+* ``ISLAND`` --- Each player is placed on their own island. Each island is similar in size, but not shape.
+* ``FAIR`` --- Every player gets the exact same island.
+* ``FRACTURE`` --- Similar to ``FRACTAL``, however this configuration often places mountains on the coasts.
 
 Now let us discuss ``startpos``, which has the following configurations:
 
-* ``DEFAULT`` -- The default. This configuration uses the ``generator`` configuration to place players.
-* ``SINGLE`` -- One player per island/continent.
-* ``2or3`` -- As the configuration name implies, the ``startpos`` will place 2 or 3 players together on an
+* ``DEFAULT`` --- The default. This configuration uses the ``generator`` configuration to place players.
+* ``SINGLE`` --- One player per island/continent.
+* ``2or3`` --- As the configuration name implies, the ``startpos`` will place 2 or 3 players together on an
   island/continent.
-* ``ALL`` -- Everyone is placed on the same continent. Make sure you give enough tiles when using this
+* ``ALL`` --- Everyone is placed on the same continent. Make sure you give enough tiles when using this
   configuration. The ``landmass`` and ``tilesperplayer`` will come in handy.
-* ``VARIABLE`` -- The server will use the RNG to give a bit of randomness to player placement. The size of the
+* ``VARIABLE`` --- The server will use the RNG to give a bit of randomness to player placement. The size of the
   continents will be taken into account.
 
 :strong:`Recipe: Large Pangea-like world`
@@ -214,12 +216,12 @@ correct when teams are involved is quite important!
 
 The ``teamplacement`` option has the following configurations:
 
-* ``DISABLED`` -- If set, then the option configuration is ignored.
-* ``CLOSEST`` -- The default. The name implies what happens.
-* ``CONTINENT`` -- Everyone on the same continent. This requires tuning ``landmass``, ``generator``, and
+* ``DISABLED`` --- If set, then the option configuration is ignored.
+* ``CLOSEST`` --- The default. The name implies what happens.
+* ``CONTINENT`` --- Everyone on the same continent. This requires tuning ``landmass``, ``generator``, and
   ``startpos`` to fit how you want the teams to get placed on the same continent.
-* ``HORIZONTAL`` -- Place team players in a East-West alignment.
-* ``VERTICAL`` -- Place team players in a North-South alignment.
+* ``HORIZONTAL`` --- Place team players in a East-West alignment.
+* ``VERTICAL`` --- Place team players in a North-South alignment.
 
 :strong:`Recipe: Two team game with each team on their own continent`
 

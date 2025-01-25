@@ -1,12 +1,7 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
-.. Custom Interpretive Text Roles for longturn.net/Freeciv21
-.. role:: unit
-.. role:: improvement
-.. role:: wonder
-.. role:: advance
-
+.. include:: /global-include.rst
 
 Top Function Bar
 ****************

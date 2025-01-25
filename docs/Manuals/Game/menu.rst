@@ -1,12 +1,7 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
-.. Custom Interpretive Text Roles for longturn.net/Freeciv21
-.. role:: unit
-.. role:: improvement
-.. role:: wonder
-.. role:: advance
-
+.. include:: /global-include.rst
 
 Menu Bar
 ********
@@ -589,7 +584,7 @@ The :guilabel:`Civilization` menu is used to gain access to many functions of yo
 pages for units, cities, nations, etc; change the form of government and see how you are doing compared to
 your opponents with the demographics report. It has the following options:
 
-National Budget...
+National Budget
     Selecting this menu item will bring up a dialog box allowing you to set the rate in percentage points for
     gold (taxes), science (bulbs), and luxury (goods). This is the same as clicking on the
     :ref:`National Budget View <game-manual-national-budget-view>` button on the :doc:`top-bar`.
