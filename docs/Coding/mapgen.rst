@@ -2,11 +2,7 @@
 .. SPDX-FileCopyrightText: Erik Sigra <sigra@home.se>
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
-.. Custom Interpretive Text Roles for longturn.net/Freeciv21
-.. role:: unit
-.. role:: improvement
-.. role:: wonder
-.. role:: advance
+.. include:: /global-include.rst
 
 Map Generator
 *************
@@ -509,7 +505,7 @@ Player Placement
 
 .. table:: Mode chosen by the generator to generate start positions
   :widths: auto
-  :align: right
+  :align: center
 
   ============ =======
   Generator    Default
