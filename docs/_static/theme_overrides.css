@@ -53,7 +53,7 @@ h4 {
 
 /* add whitespace between list items */
 li {
-    margin-bottom: 7px;
+  margin-bottom: 7px;
 }
 
 li ol li {
@@ -98,7 +98,6 @@ html.writer-html5 .rst-content table.docutils :is(td, th) > p :is(.pre, code, pr
 .wy-table-responsive {
     margin-bottom: 24px;
     max-width: 100%;
-    overflow: visible;
 }
 
 /* no wrapping in builtin roles */
