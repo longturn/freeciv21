@@ -3,6 +3,8 @@
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
+.. include:: /global-include.rst
+
 Nation Sets and Flags
 *********************
 

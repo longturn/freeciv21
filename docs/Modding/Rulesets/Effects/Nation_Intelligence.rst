@@ -2,9 +2,7 @@
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
-.. Custom Interpretive Text Roles for longturn.net/Freeciv21
-.. role:: wonder
-
+.. include:: /global-include.rst
 
 Nation_Intelligence
 *******************

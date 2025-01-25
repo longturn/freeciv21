@@ -2,6 +2,8 @@
 .. SPDX-FileCopyrightText: Freeciv21 and Freeciv contributors
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
+.. include:: /global-include.rst
+
 Terrain
 *******
 
@@ -35,31 +37,32 @@ in the matching. The table below summarizes the naming scheme; available options
 the corresponding sections.
 
 .. _terrain-matching-groups:
-.. table:: Terrain Matching Groups
+.. list-table:: Terrain Matching Groups
   :widths: auto
   :align: left
+  :header-rows: 1
 
-  +--------------------------------+--------------------------------+--------------------------------+--------------------------------------+
-  | Matched groups                 | ``single``                     | ``corner``                     | ``hex_corner``                       |
-  +================================+================================+================================+======================================+
-  | None                           | ``t.l0.grassland1``            | Avoid                          | Avoid                                |
-  |                                | (:ref:`doc <single-simple>`)   | (:ref:`doc <corner-simple>`)   |                                      |
-  +--------------------------------+--------------------------------+--------------------------------+--------------------------------------+
-  | One, same as ``match_type``    | ``t.l1.hills_n0e1s0w1``        | ``t.l0.floor_cell_u011``       | ``t.l0.floor_hex_cell_right_0_1_0``, |
-  |                                | (:ref:`doc <single-match>`)    | (:ref:`doc <corner-same>`)     | ``t.l0.floor_hex_cell_left_1_0_0``   |
-  |                                |                                |                                | (:ref:`doc <hex_corner-same>`)       |
-  +--------------------------------+--------------------------------+--------------------------------+--------------------------------------+
-  | One, different from            | Not implemented                | ``t.l1.coast_cell_u_g_g_g``    | Not implemented                      |
-  | ``match_type``                 |                                | (:ref:`doc <corner-pair>`)     |                                      |
-  +--------------------------------+                                +--------------------------------+--------------------------------------+
-  | Two or more                    |                                | ``t.l0.cellgroup_g_g_g_g``     | ``t.l0.hex_cell_right_g_g_g``,       |
-  |                                |                                | (:ref:`doc <corner-general>`)  | ``t.l0.hex_cell_left_g_g_g``         |
-  |                                |                                |                                | (:ref:`doc <hex_corner-general>`)    |
-  +--------------------------------+--------------------------------+--------------------------------+--------------------------------------+
+  * - Matched groups
+    - ``single``
+    - ``corner``
+    - ``hex_corner``
+  * - None
+    - ``t.l0.grassland1`` (:ref:`doc <single-simple>`)
+    - Avoid (:ref:`doc <corner-simple>`)
+    - Avoid
+  * - One, same as ``match_type``
+    - ``t.l1.hills_n0e1s0w1`` (:ref:`doc <single-match>`)
+    - ``t.l0.floor_cell_u011`` (:ref:`doc <corner-same>`)
+    - ``t.l0.floor_hex_cell_right_0_1_0``, ``t.l0.floor_hex_cell_left_1_0_0`` (:ref:`doc <hex_corner-same>`)
+  * - One, different from ``match_type``
+    - Not implemented
+    - ``t.l1.coast_cell_u_g_g_g`` (:ref:`doc <corner-pair>`)
+    - Not implemented
+  * - Two or more
+    - Not implemented
+    - ``t.l0.cellgroup_g_g_g_g`` (:ref:`doc <corner-general>`)
+    - ``t.l0.hex_cell_right_g_g_g``, ``t.l0.hex_cell_left_g_g_g`` (:ref:`doc <hex_corner-general>`)
 
-.. raw:: html
-
-    <p>&nbsp;</p>
 
 Sprite type ``single``
 ----------------------

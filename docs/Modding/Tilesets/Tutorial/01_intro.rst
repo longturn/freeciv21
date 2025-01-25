@@ -1,6 +1,8 @@
 .. SPDX-License-Identifier:  GPL-3.0-or-later
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
+.. include:: /global-include.rst
+
 First steps
 ***********
 

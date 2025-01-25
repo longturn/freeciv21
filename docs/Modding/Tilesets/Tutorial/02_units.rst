@@ -1,12 +1,7 @@
 .. SPDX-License-Identifier:  GPL-3.0-or-later
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
-.. Custom Interpretive Text Roles for longturn.net/Freeciv21
-.. role:: unit
-.. role:: improvement
-.. role:: wonder
-.. role:: advance
-
+.. include:: /global-include.rst
 
 Adding units
 ************

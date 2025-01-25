@@ -3,8 +3,7 @@
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
-.. Custom Interpretive Text Roles for longturn.net/Freeciv21
-.. role:: improvement
+.. include:: /global-include.rst
 
 Effects
 *******
@@ -1085,7 +1084,7 @@ Wonder_Visible
 
 Nation_Intelligence
     Controls the information available in the :ref:`Nations View <game-manual-nations-and-diplomacy-view>`.
-    :doc:`See the detailed description. <Effects/Nation_Intelligence>`
+    See the :doc:`detailed description. <Effects/Nation_Intelligence>`
 
     .. toctree::
         :hidden:
