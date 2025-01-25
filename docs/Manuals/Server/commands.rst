@@ -1,6 +1,8 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
+.. include:: /global-include.rst
+
 Server Commands
 ***************
 
@@ -500,10 +502,6 @@ server's own command-line. This server command-line is separate from the OS term
     "turns=<turns>", "(1)", "save image each <turns> turns (0=no autosave, save with create)"
     "zoom=<zoom>", "(2)", "magnification factor (1-5)"
     "map=<map>", "(bcku)", "which map layers to draw"
-
-  .. raw:: html
-
-        <p>&nbsp;</p>
 
   ``<format> =`` use image format ``<format>``. The ``png`` format is always supported.
 

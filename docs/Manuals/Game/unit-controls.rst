@@ -1,12 +1,7 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
-.. Custom Interpretive Text Roles for longturn.net/Freeciv21
-.. role:: unit
-.. role:: improvement
-.. role:: wonder
-.. role:: advance
-
+.. include:: /global-include.rst
 
 Unit Controls
 *************
@@ -28,8 +23,8 @@ that has been selected.
 
 
 You can see that the :unit:`Workers` is selected because it has a white selection ring around its base.
-Looking at the dialog, in the header, you can see that this unit is ID # 111, has 4 3/9 Move Points (MPs), and
-10 of 10 Hit Points (HPs).
+Looking at the dialog, in the header, you can see that this unit is ID # 111, has :math:`4^3/_9` Move Points
+(:term:`MP`), and 10 of 10 Hit Points (:term:`HP`).
 
 From left to right you can see an image of the unit with MPs overlaid, the terrain it is on with
 infrastructure improvements shown, and then the actions that this unit can take. In this example the actions

@@ -1,12 +1,7 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
-
-.. Custom Interpretive Text Roles for longturn.net/Freeciv21
-.. role:: unit
-.. role:: improvement
-.. role:: wonder
-.. role:: advance
+.. include:: /global-include.rst
 
 Server Options
 **************
@@ -1114,6 +1109,8 @@ To place a setting value on any of these settings use the ``/set <option-name> <
 
   :strong:`Description`: Turn-blocking game play mode. If this is turned on, the game turn is not advanced
   until all players have finished their turn, including disconnected players.
+
+.. _server-option-unitwaittime:
 
 ``unitwaittime``
   :strong:`Default Value (Min, Max)`: 0 (0, 8639999)
