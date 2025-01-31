@@ -3254,6 +3254,7 @@ static void nullify_caravan_and_disband_plus(struct city *pcity)
 void nullify_prechange_production(struct city *pcity)
 {
   nullify_caravan_and_disband_plus(pcity);
+  pcity->bought_shields = 0;
   pcity->before_change_shields = 0;
 }
 
