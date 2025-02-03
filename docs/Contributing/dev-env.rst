@@ -91,6 +91,8 @@ your computer:
 .. code-block:: sh
 
   ~/GitHub/freeciv21$ git remote add upstream https://github.com/longturn/freeciv21.git
+  ~/GitHub/freeciv21$ git fetch upstream
+  ~/GitHub/freeciv21$ git pull upstream master
 
 
 You will also need to set a couple global configuration settings so :code:`git` knows a bit more about you.
@@ -99,8 +101,8 @@ You will also need to set a couple global configuration settings so :code:`git` 
 
   ~/GitHub/freeciv21$ git config --global user.email [email address associated with GitHub]
   ~/GitHub/freeciv21$ git config --global user.name [your first and last name]
-
-
+  
+  
 KDevelop Project Setup
 ======================
 
