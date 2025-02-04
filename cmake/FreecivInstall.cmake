@@ -80,7 +80,7 @@ if(MSYS OR MINGW)
     #   Uses the repurposed variable from above to tell the function where
     #   the dll files are located. Ignores dll's that come with Windows.
     file(GLOB exes "${CMAKE_INSTALL_PREFIX}/freeciv21-*.exe")
-	file(GET_RUNTIME_DEPENDENCIES
+	  file(GET_RUNTIME_DEPENDENCIES
       RESOLVED_DEPENDENCIES_VAR r_deps
       UNRESOLVED_DEPENDENCIES_VAR u_deps
       DIRECTORIES ${MINGW_PATH}
