@@ -79,14 +79,14 @@ if(MSYS OR MINGW)
     # Function to analyze the third party dll files linked to the exe's
     #   Uses the repurposed variable from above to tell the function where
     #   the dll files are located. Ignores dll's that come with Windows.
-    file(GET_RUNTIME_DEPENDENCIES
+    file(GLOB exes "${CMAKE_INSTALL_PREFIX}/freeciv21-*.exe")
+	file(GET_RUNTIME_DEPENDENCIES
       RESOLVED_DEPENDENCIES_VAR r_deps
       UNRESOLVED_DEPENDENCIES_VAR u_deps
       DIRECTORIES ${MINGW_PATH}
       PRE_EXCLUDE_REGEXES "^api-ms-*"
       POST_EXCLUDE_REGEXES "C:[\\\\/][Ww][Ii][Nn][Dd][Oo][Ww][Ss][\\\\/].*"
-      EXECUTABLES
-        "${CMAKE_INSTALL_PREFIX}/freeciv21-*.exe"
+      EXECUTABLES ${exes}
       )
       message(STATUS "Installing library dependencies for freeciv21 executables...")
       file(INSTALL DESTINATION ${CMAKE_INSTALL_PREFIX} MESSAGE_LAZY FILES ${r_deps})
