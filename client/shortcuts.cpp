@@ -187,7 +187,11 @@ static std::vector<fc_shortcut> default_shortcuts()
       {SC_PILLAGE, fc_shortcut::keyboard, Qt::Key_P | Qt::ShiftModifier,
        Qt::AllButtons, Qt::NoModifier, _("Pillage")},
       {SC_FALLOUT, fc_shortcut::keyboard, Qt::Key_N, Qt::AllButtons,
-       Qt::NoModifier, _("Clean Nuclear Fallout")}};
+       Qt::NoModifier, _("Clean Nuclear Fallout")},
+      {SC_MAKE_UNIT_LINK, fc_shortcut::mouse, QKeySequence(),
+       Qt::RightButton,
+       Qt::ControlModifier | Qt::AltModifier | Qt::ShiftModifier,
+       _("Show link to unit")}};
 }
 
 /**

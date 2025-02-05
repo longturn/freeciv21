@@ -685,18 +685,37 @@ int chat_widget::default_size(int lines)
 }
 
 /**
- * Makes link to tile/unit or city
+ * Makes link to tile or city
  */
-void chat_widget::make_link(struct tile *ptile)
+void chat_widget::make_tile_link(struct tile *ptile)
+{
+  make_link(ptile, false);
+}
+
+/**
+ * Makes link to unit; falls back to linking tile or city if there is
+ * no unit to link.
+ */
+void chat_widget::make_unit_link(struct tile *ptile)
+{
+  make_link(ptile, true);
+}
+
+/**
+ * Makes a link to tile or city by default. If use_unit is true, a
+ * link to a unit is generated first, before falling back to the
+ * default behavior.
+ */
+void chat_widget::make_link(struct tile *ptile, bool use_unit)
 {
   struct unit *punit;
   QString buf;
 
   punit = find_visible_unit(ptile);
-  if (tile_city(ptile)) {
-    buf = city_link(tile_city(ptile));
-  } else if (punit) {
+  if (use_unit && punit) {
     buf = unit_link(punit);
+  } else if (tile_city(ptile)) {
+    buf = city_link(tile_city(ptile));
   } else {
     buf = tile_link(ptile);
   }
