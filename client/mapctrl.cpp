@@ -21,7 +21,6 @@
 #include "citydlg_common.h"
 #include "client_main.h"
 #include "fc_client.h"
-#include "mapctrl.h"
 #include "mapctrl_common.h"
 #include "messagewin.h"
 #include "page_game.h"
