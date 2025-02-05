@@ -92,6 +92,7 @@ enum shortcut_id {
   SC_GOJOINCITY = 58,
   SC_PILLAGE = 59,
   SC_FALLOUT = 60,
+  SC_MAKE_UNIT_LINK = 61,
 };
 
 /**************************************************************************

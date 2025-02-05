@@ -320,7 +320,13 @@ void map_view::shortcut_pressed(shortcut_id id)
 
   case SC_MAKE_LINK:
     if (ptile != nullptr) {
-      queen()->chat->make_link(ptile);
+      queen()->chat->make_tile_link(ptile);
+    }
+    break;
+
+  case SC_MAKE_UNIT_LINK:
+    if (ptile != nullptr) {
+      queen()->chat->make_unit_link(ptile);
     }
     break;
 

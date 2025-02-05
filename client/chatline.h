@@ -106,7 +106,8 @@ public:
 
   void append(const QString &str);
   chat_input *chat_line;
-  void make_link(struct tile *ptile);
+  void make_tile_link(struct tile *ptile);
+  void make_unit_link(struct tile *ptile);
   void update_widgets();
   int default_size(int lines);
   void take_focus();
@@ -128,7 +129,7 @@ protected:
 private:
   void chat_message_received(const QString &message,
                              const struct text_tag_list *tags) override;
-
+  void make_link(struct tile *ptile, bool use_unit);
   bool m_chat_visible = true;
   QTextBrowser *chat_output;
   QPushButton *remove_links;
