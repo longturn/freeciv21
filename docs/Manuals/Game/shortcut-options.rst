@@ -366,3 +366,8 @@ Clean Nuclear Fallout
   Instruct a unit to clean nuclear fallout on a tile.
 
   Default: ``N``
+
+Show link to unit
+  Copies a link to a unit to the :guilabel:`Server Chat/Command Line` widget on the main map.
+
+  Default: ``Ctrl+Alt+Shift`` plus Right mouse button
