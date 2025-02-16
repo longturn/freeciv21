@@ -2060,7 +2060,8 @@ void unit_set_ai_data(struct unit *punit, const struct ai_type *ai,
  */
 int unit_bribe_cost(struct unit *punit, struct player *briber)
 {
-  int cost, default_hp, dist = 0;
+  float cost;
+  int default_hp, dist = 0;
   struct tile *ptile = unit_tile(punit);
 
   fc_assert_ret_val(punit != nullptr, 0);
@@ -2085,7 +2086,7 @@ int unit_bribe_cost(struct unit *punit, struct player *briber)
   cost /= dist + 2;
 
   // Consider the build cost.
-  cost *= unit_build_shield_cost_base(punit) / 10;
+  cost *= unit_build_shield_cost_base(punit) / 10.0;
 
   // Rule set specific cost modification
   cost += (cost
@@ -2113,8 +2114,7 @@ int unit_bribe_cost(struct unit *punit, struct player *briber)
   /* Cost now contains the basic bribe cost.  We now reduce it by:
    *    bribecost = cost/2 + cost/2 * damage/hp
    *              = cost/2 * (1 + damage/hp) */
-  return (static_cast<float>(cost) / 2
-          * (1.0 + static_cast<float>(punit->hp) / default_hp));
+  return (cost / 2 * (1.0 + static_cast<float>(punit->hp) / default_hp));
 }
 
 /**
