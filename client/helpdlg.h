@@ -1,5 +1,5 @@
 /**************************************************************************
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2025 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -12,8 +12,6 @@
 #include <QDialog>
 #include <QHash>
 #include <QList>
-// common
-#include "extras.h"
 // client
 #include "dialogs.h"
 #include "helpdata.h"
@@ -134,7 +132,7 @@ private slots:
 
 public:
   struct terrain *terrain_max_values();
-  struct unit_type *uclass_max_values(struct unit_class *uclass);
+  struct unit_type *utype_max_values();
 };
 
 void update_help_fonts();
