@@ -1,5 +1,5 @@
 /*
- Copyright (c) 1996-2023 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2025 Freeciv21 and Freeciv contributors. This file is
  part of Freeciv21. Freeciv21 is free software: you can redistribute it
  and/or modify it under the terms of the GNU  General Public License  as
  published by the Free Software Foundation, either version 3 of the
@@ -862,7 +862,7 @@ void help_widget::set_topic_unit(const help_item *topic, const char *title)
 
     // Create information panel
     show_info_panel();
-    max_utype = uclass_max_values(utype->uclass);
+    max_utype = utype_max_values();
 
     // Unit icon
     add_info_pixmap(
@@ -1607,18 +1607,17 @@ struct terrain *help_widget::terrain_max_values()
 }
 
 /**
-   Retrieves the maximum values any unit of uclass will ever have.
+   Retrieves the maximum values any unit will ever have.
    Supported fields:
      attack_strength, bombard_rate, build_cost, city_size, convert_time,
      defense_strength, firepower, fuel, happy_cost, hp, move_rate, pop_cost,
      upkeep, vision_radius_sq
    Other fiels in returned value are undefined. Especially, all pointers are
-   invalid except uclass.
- */
-struct unit_type *help_widget::uclass_max_values(struct unit_class *uclass)
+   invalid.
+*/
+struct unit_type *help_widget::utype_max_values()
 {
   struct unit_type *max = new struct unit_type();
-  max->uclass = uclass;
   max->attack_strength = 0;
   max->bombard_rate = 0;
   max->build_cost = 0;
@@ -1640,29 +1639,27 @@ struct unit_type *help_widget::uclass_max_values(struct unit_class *uclass)
   max->vision_radius_sq = 0;
   unit_type_iterate(utype)
   {
-    if (utype->uclass == uclass) {
 #define SET_MAX(v) max->v = max->v > utype->v ? max->v : utype->v
-      SET_MAX(attack_strength);
-      SET_MAX(bombard_rate);
-      SET_MAX(build_cost);
-      SET_MAX(city_size);
-      SET_MAX(convert_time);
-      SET_MAX(defense_strength);
-      SET_MAX(firepower);
-      SET_MAX(fuel);
-      SET_MAX(happy_cost);
-      SET_MAX(hp);
-      SET_MAX(move_rate);
-      SET_MAX(pop_cost);
-      SET_MAX(upkeep[O_FOOD]);
-      SET_MAX(upkeep[O_GOLD]);
-      SET_MAX(upkeep[O_LUXURY]);
-      SET_MAX(upkeep[O_SCIENCE]);
-      SET_MAX(upkeep[O_SHIELD]);
-      SET_MAX(upkeep[O_TRADE]);
-      SET_MAX(vision_radius_sq);
+    SET_MAX(attack_strength);
+    SET_MAX(bombard_rate);
+    SET_MAX(build_cost);
+    SET_MAX(city_size);
+    SET_MAX(convert_time);
+    SET_MAX(defense_strength);
+    SET_MAX(firepower);
+    SET_MAX(fuel);
+    SET_MAX(happy_cost);
+    SET_MAX(hp);
+    SET_MAX(move_rate);
+    SET_MAX(pop_cost);
+    SET_MAX(upkeep[O_FOOD]);
+    SET_MAX(upkeep[O_GOLD]);
+    SET_MAX(upkeep[O_LUXURY]);
+    SET_MAX(upkeep[O_SCIENCE]);
+    SET_MAX(upkeep[O_SHIELD]);
+    SET_MAX(upkeep[O_TRADE]);
+    SET_MAX(vision_radius_sq);
 #undef SET_MAX
-    }
   }
   unit_type_iterate_end return max;
 }
