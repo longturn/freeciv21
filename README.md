@@ -101,3 +101,17 @@ Freeciv21 using the ports tree:
 ```sh
 make -C /usr/ports/games/freeciv21 install clean
 ```
+
+### OpenBSD
+
+Freeciv21 is available in the OpenBSD ports tree. You can install the binary
+package using this command (as root):
+```sh
+pkg_add freeciv21
+```
+
+Although it is recommended to use the binary package, you can also build
+Freeciv21 using the ports tree:
+```sh
+make -C /usr/ports/games/freeciv21 install clean
+```
