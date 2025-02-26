@@ -35,7 +35,7 @@ enum special_river_move {
 // ===
 
 struct resource_type {
-
+  std::string rule_name;
   char id_old_save; // Single-character identifier used in old savegames.
 #define RESOURCE_NULL_IDENTIFIER '\0'
 #define RESOURCE_NONE_IDENTIFIER ' '
