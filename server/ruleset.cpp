@@ -105,7 +105,6 @@ static const char name_too_long[] = "Name \"%s\" too long; truncating.";
 #define MAX_SECTION_LABEL 64
 #define section_strlcpy(dst, src)                                           \
   (void) loud_strlcpy(dst, src, MAX_SECTION_LABEL, name_too_long)
-static char (*resource_sections)[MAX_SECTION_LABEL] = nullptr;
 static char (*terrain_sections)[MAX_SECTION_LABEL] = nullptr;
 static char (*extra_sections)[MAX_SECTION_LABEL] = nullptr;
 static char (*base_sections)[MAX_SECTION_LABEL] = nullptr;
@@ -2785,9 +2784,6 @@ static bool load_terrain_names(struct section_file *file,
   if (ok) {
     int idx;
 
-    delete[] resource_sections;
-    resource_sections = new char[nval][MAX_SECTION_LABEL]{};
-
     /* Cannot use resource_type_iterate() before resource are added to
      * EC_RESOURCE caused_by list. Have to get them by
      * extra_type_by_rule_name() */
@@ -2804,7 +2800,7 @@ static bool load_terrain_names(struct section_file *file,
 
         if (pextra != nullptr) {
           resource_type_init(pextra);
-          section_strlcpy(resource_sections[idx], sec_name);
+          pextra->data.resource->rule_name = sec_name;
         } else {
           qCCritical(
               ruleset_category,
@@ -3508,15 +3504,13 @@ static bool load_ruleset_terrain(struct section_file *file,
   }
 
   if (ok) {
-    int i = 0;
     // resource details
-
     extra_type_by_cause_iterate(EC_RESOURCE, presource)
     {
       char identifier[MAX_LEN_NAME];
-      const char *rsection = resource_sections[i];
+      auto resource = presource->data.resource;
 
-      if (!presource->data.resource) {
+      if (!resource) {
         qCCritical(ruleset_category,
                    "\"%s\" extra \"%s\" has \"Resource\" cause but no "
                    "corresponding [resource_*] section",
@@ -3527,48 +3521,44 @@ static bool load_ruleset_terrain(struct section_file *file,
 
       output_type_iterate(o)
       {
-        presource->data.resource->output[o] = secfile_lookup_int_default(
-            file, 0, "%s.%s", rsection, get_output_identifier(o));
+        resource->output[o] = secfile_lookup_int_default(
+            file, 0, "%s.%s", resource->rule_name.data(),
+            get_output_identifier(o));
       }
       output_type_iterate_end;
 
-      sz_strlcpy(identifier,
-                 secfile_lookup_str(file, "%s.identifier", rsection));
-      presource->data.resource->id_old_save = identifier[0];
-      if (RESOURCE_NULL_IDENTIFIER
-          == presource->data.resource->id_old_save) {
+      sz_strlcpy(identifier, secfile_lookup_str(file, "%s.identifier",
+                                                resource->rule_name.data()));
+      resource->id_old_save = identifier[0];
+      if (resource->id_old_save == RESOURCE_NULL_IDENTIFIER) {
         qCCritical(ruleset_category, "\"%s\" [%s] identifier missing value.",
-                   filename, rsection);
+                   filename, resource->rule_name.data());
         ok = false;
         break;
       }
-      if (RESOURCE_NONE_IDENTIFIER
-          == presource->data.resource->id_old_save) {
+      if (resource->id_old_save == RESOURCE_NONE_IDENTIFIER) {
         qCCritical(ruleset_category,
                    "\"%s\" [%s] cannot use '%c' as an identifier;"
                    " it is reserved.",
-                   filename, rsection,
-                   presource->data.resource->id_old_save);
+                   filename, resource->rule_name.data(),
+                   resource->id_old_save);
         ok = false;
         break;
       }
-      i++;
-    }
-    extra_type_by_cause_iterate_end;
 
-    for (j = 0; ok && j < game.control.num_resource_types; j++) {
-      const char *section = resource_sections[j];
-      const char *extra_name = secfile_lookup_str(file, "%s.extra", section);
+      const char *extra_name =
+          secfile_lookup_str(file, "%s.extra", resource->rule_name.data());
       struct extra_type *pextra = extra_type_by_rule_name(extra_name);
 
       if (!is_extra_caused_by(pextra, EC_RESOURCE)) {
         qCCritical(ruleset_category,
                    "\"%s\" resource section [%s]: extra \"%s\" does not "
                    "have \"Resource\" in its causes",
-                   filename, section, extra_name);
+                   filename, resource->rule_name.data(), extra_name);
         ok = false;
       }
     }
+    extra_type_by_cause_iterate_end;
   }
 
   if (ok) {
@@ -8795,12 +8785,10 @@ static bool load_rulesetdir(const char *rsdir, bool compat_mode,
   delete[] extra_sections;
   delete[] base_sections;
   delete[] road_sections;
-  delete[] resource_sections;
   delete[] terrain_sections;
   extra_sections = nullptr;
   base_sections = nullptr;
   road_sections = nullptr;
-  resource_sections = nullptr;
   terrain_sections = nullptr;
 
   if (ok) {
