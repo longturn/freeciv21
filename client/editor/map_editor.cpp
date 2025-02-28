@@ -56,7 +56,7 @@ map_editor::map_editor(QWidget *parent)
   ui.but_close->setText("");
   ui.but_close->setToolTip(_("Close"));
   ui.but_close->setIcon(
-    fcIcons::instance()->getIcon(QStringLiteral("city-close")));
+      fcIcons::instance()->getIcon(QStringLiteral("city-close")));
   connect(ui.but_close, &QAbstractButton::clicked, this, &map_editor::close);
 }
 

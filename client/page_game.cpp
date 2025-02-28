@@ -30,6 +30,7 @@
 #include "chatline.h"
 #include "citydlg.h"
 #include "client_main.h"
+#include "editor/map_editor.h"
 #include "fc_client.h"
 #include "gotodlg.h"
 #include "hudwidget.h"
@@ -46,7 +47,6 @@
 #include "views/view_map_common.h"
 #include "views/view_nations.h"
 #include "views/view_units.h"
-#include "editor/map_editor.h"
 
 #include "voteinfo_bar.h"
 
@@ -178,7 +178,6 @@ pageGame::pageGame(QWidget *parent)
   // map editor
   map_editor_wdg = new map_editor(mapview_wdg);
   map_editor_wdg->hide();
-
 
   // Battle log widget
   unitinfo_wdg = new hud_units(mapview_wdg);

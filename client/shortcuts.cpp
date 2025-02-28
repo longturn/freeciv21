@@ -192,8 +192,9 @@ static std::vector<fc_shortcut> default_shortcuts()
        Qt::RightButton,
        Qt::ControlModifier | Qt::AltModifier | Qt::ShiftModifier,
        _("Show link to unit")},
-       {SC_MAP_EDITOR, fc_shortcut::keyboard, Qt::Key_E | Qt::ShiftModifier | Qt::ControlModifier,
-         Qt::AllButtons, Qt::NoModifier, _("Open Map Editor")}};
+      {SC_MAP_EDITOR, fc_shortcut::keyboard,
+       Qt::Key_E | Qt::ShiftModifier | Qt::ControlModifier, Qt::AllButtons,
+       Qt::NoModifier, _("Open Map Editor")}};
 }
 
 /**
