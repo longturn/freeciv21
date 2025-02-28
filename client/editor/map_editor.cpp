@@ -4,6 +4,7 @@
 #include "editor/map_editor.h"
 
 #include "icons.h"
+#include "minimap_panel.h"
 #include "page_game.h"
 #include "views/view_map.h"
 
@@ -47,6 +48,7 @@ void map_editor::showEvent(QShowEvent *event)
 {
   queen()->mapview_wdg->hide_all_fcwidgets();
   queen()->unitinfo_wdg->hide();
+  queen()->minimap_panel->show();
   auto height = queen()->mapview_wdg->height();
   this->setFixedHeight(height);
   setVisible(true);
