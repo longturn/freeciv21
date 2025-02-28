@@ -366,3 +366,12 @@ Show link to unit
   Copies a link to a unit to the :guilabel:`Server Chat/Command Line` widget on the main map.
 
   Default: ``Ctrl+Alt+Shift`` plus Right mouse button
+
+Open Map Editor
+  Open the Map Editor dialog.
+
+  Default: ``Ctrl+Shift+E``
+
+  .. note::
+    The Map Editor is brand new to Freeciv21 as of March 2025. It is highly experimental. Your mileage may
+    vary.
