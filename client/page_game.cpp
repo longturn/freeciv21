@@ -46,6 +46,7 @@
 #include "views/view_map_common.h"
 #include "views/view_nations.h"
 #include "views/view_units.h"
+#include "editor/map_editor.h"
 
 #include "voteinfo_bar.h"
 
@@ -167,10 +168,17 @@ pageGame::pageGame(QWidget *parent)
 
   // The mini-map widget
   minimap_panel = new ::minimap_panel(mapview_wdg, mapview_wdg);
+
+  // city dialog
   city_overlay = new city_dialog(mapview_wdg);
   connect(mapview_wdg, &map_view::scale_changed, city_overlay,
           &city_dialog::refresh);
   city_overlay->hide();
+
+  // map editor
+  map_editor_wdg = new map_editor(mapview_wdg);
+  map_editor_wdg->hide();
+
 
   // Battle log widget
   unitinfo_wdg = new hud_units(mapview_wdg);

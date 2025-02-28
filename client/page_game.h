@@ -33,6 +33,7 @@ class top_bar;
 class top_bar_widget;
 class units_select;
 class xvote;
+class map_editor;
 
 /****************************************************************************
   Widget holding all game tabs
@@ -86,6 +87,7 @@ public:
   top_bar_widget *sw_diplo;
   indicators_widget *sw_indicators;
   top_bar_widget *sw_science;
+  map_editor *map_editor_wdg;
   bool diplomacy_notify = false;
 public slots:
 private slots:
