@@ -93,6 +93,7 @@ enum shortcut_id {
   SC_PILLAGE = 59,
   SC_FALLOUT = 60,
   SC_MAKE_UNIT_LINK = 61,
+  SC_MAP_EDITOR = 62,
 };
 
 /**************************************************************************
