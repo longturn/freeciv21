@@ -32,6 +32,7 @@
 #include "unitselect.h"
 #include "views/view_map.h"
 #include "views/view_map_common.h"
+#include "editor/map_editor.h"
 
 extern void qload_lua_script();
 extern void qreload_lua_script();
@@ -312,6 +313,10 @@ void map_view::shortcut_pressed(shortcut_id id)
 
   case SC_RELOAD_LUA:
     qreload_lua_script();
+    break;
+
+  case SC_MAP_EDITOR:
+    queen()->map_editor_wdg->show();
     break;
 
   case SC_HIDE_WORKERS:
