@@ -3,6 +3,7 @@
 
 #include "editor/map_editor.h"
 
+#include "citydlg.h"
 #include "icons.h"
 #include "minimap_panel.h"
 #include "page_game.h"
@@ -46,9 +47,17 @@ map_editor::~map_editor() {}
  */
 void map_editor::showEvent(QShowEvent *event)
 {
+  // hide the city dialog if its open
+  if (queen()->city_overlay->isVisible()) {
+    queen()->city_overlay->hide();
+  }
+
+  // clear the map of all widget except minimap
   queen()->mapview_wdg->hide_all_fcwidgets();
   queen()->unitinfo_wdg->hide();
   queen()->minimap_panel->show();
+
+  // set the height of the map editor to the height of the game
   auto height = queen()->mapview_wdg->height();
   this->setFixedHeight(height);
   setVisible(true);

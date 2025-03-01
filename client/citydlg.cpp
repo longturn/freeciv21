@@ -39,6 +39,7 @@
 #include "client_main.h"
 #include "climisc.h"
 #include "control.h"
+#include "editor/map_editor.h"
 #include "fc_client.h"
 #include "fonts.h"
 #include "global_worklist.h"
@@ -2246,6 +2247,12 @@ void city_dialog::update_title()
  */
 void real_city_dialog_popup(struct city *pcity)
 {
+  // TODO: Change this to a question when the map editor is more feature
+  // complete.
+  if (queen()->map_editor_wdg->isVisible()) {
+    queen()->map_editor_wdg->hide();
+  }
+
   auto *widget = queen()->city_overlay;
   if (!queen()->city_overlay->isVisible()) {
     top_bar_show_map();
