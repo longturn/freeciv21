@@ -3,10 +3,10 @@
 
 #include "editor/map_editor.h"
 
+// client
 #include "citydlg.h"
 #include "client_main.h"
 #include "fc_client.h"
-#include "icons.h"
 #include "minimap_panel.h"
 #include "page_game.h"
 #include "views/view_map.h"
@@ -28,8 +28,6 @@ map_editor::map_editor(QWidget *parent)
   setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding);
   setAutoFillBackground(true);
   setVisible(false);
-
-  QIcon::setThemeName(QStringLiteral("icons"));
 
   ui.label_title->setText(_("MAP EDITOR"));
   ui.label_title->setAlignment(Qt::AlignCenter);
@@ -91,7 +89,7 @@ void map_editor::check_open()
   } else {
     hud_message_box *ask = new hud_message_box(king()->central_wdg);
     ask->set_text_title(_("Cannot enable edit mode. You do not have the "
-                          "correct access level"),
+                          "correct access level."),
                         _("Map Editor"));
     ask->setStandardButtons(QMessageBox::Ok);
     ask->setDefaultButton(QMessageBox::Ok);
