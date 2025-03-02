@@ -41,7 +41,7 @@ layer_editor::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
                                 const tile_corner *pcorner,
                                 const unit *punit) const
 {
-  if (!ptile && !editor_is_active()) {
+  if (!ptile || !editor_is_active()) {
     return {};
   }
 
@@ -51,7 +51,7 @@ layer_editor::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
     sprs.emplace_back(tileset(), &m_selected);
   }
 
-  if (nullptr != map_startpos_get(ptile)) {
+  if (map_startpos_get(ptile)) {
     sprs.emplace_back(tileset(), m_starting_position);
   }
 
