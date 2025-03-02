@@ -316,7 +316,7 @@ void map_view::shortcut_pressed(shortcut_id id)
     break;
 
   case SC_MAP_EDITOR:
-    queen()->map_editor_wdg->show();
+    queen()->map_editor_wdg->check_open();
     break;
 
   case SC_HIDE_WORKERS:
