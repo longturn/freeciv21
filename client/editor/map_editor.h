@@ -28,6 +28,7 @@ private slots:
 public:
   map_editor(QWidget *parent = 0);
   ~map_editor() override;
+  void check_open();
 
 protected:
   void showEvent(QShowEvent *event) override;
