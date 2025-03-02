@@ -4,6 +4,8 @@
 #include "editor/map_editor.h"
 
 #include "citydlg.h"
+#include "client_main.h"
+#include "fc_client.h"
 #include "icons.h"
 #include "minimap_panel.h"
 #include "page_game.h"
@@ -27,14 +29,28 @@ map_editor::map_editor(QWidget *parent)
   setAutoFillBackground(true);
   setVisible(false);
 
-  ui.label_status->setText(_("MAP EDITOR<br/>This is WIP!"));
+  QIcon::setThemeName(QStringLiteral("icons"));
+
+  ui.label_title->setText(_("MAP EDITOR"));
+  ui.label_title->setAlignment(Qt::AlignCenter);
+  ui.label_status->setText(_("This is WIP!"));
   ui.label_status->setStyleSheet("background-color:red;");
   ui.label_status->setAlignment(Qt::AlignCenter);
   ui.but_close->setText("");
   ui.but_close->setToolTip(_("Close"));
-  ui.but_close->setIcon(
-      fcIcons::instance()->getIcon(QStringLiteral("city-close")));
+  ui.but_close->setIcon(QIcon::fromTheme(QStringLiteral("close")));
   connect(ui.but_close, &QAbstractButton::clicked, this, &map_editor::close);
+
+  // Tile Tools
+  ui.tbut_inspect_tile->setText("");
+  ui.tbut_inspect_tile->setToolTip(_("Inspect Tile"));
+  ui.tbut_inspect_tile->setIcon(
+      QIcon::fromTheme(QStringLiteral("editor-inspect")));
+
+  ui.tbut_edit_tile->setText("");
+  ui.tbut_edit_tile->setToolTip(_("Edit Tile"));
+  ui.tbut_edit_tile->setIcon(
+      QIcon::fromTheme(QStringLiteral("editor-tile")));
 }
 
 /**
@@ -43,7 +59,7 @@ map_editor::map_editor(QWidget *parent)
 map_editor::~map_editor() {}
 
 /**
- *  \brief Show event
+ *  \brief Show event, enable edit mode
  */
 void map_editor::showEvent(QShowEvent *event)
 {
@@ -64,10 +80,35 @@ void map_editor::showEvent(QShowEvent *event)
 }
 
 /**
+ * \brief Check that we can go into edit mode
+ */
+void map_editor::check_open()
+{
+  struct connection *my_conn = &client.conn;
+  if (can_conn_edit(my_conn) || can_conn_enable_editing(my_conn)) {
+    dsend_packet_edit_mode(my_conn, true);
+    queen()->map_editor_wdg->show();
+  } else {
+    hud_message_box *ask = new hud_message_box(king()->central_wdg);
+    ask->set_text_title(_("Cannot enable edit mode. You do not have the "
+                          "correct access level"),
+                        _("Map Editor"));
+    ask->setStandardButtons(QMessageBox::Ok);
+    ask->setDefaultButton(QMessageBox::Ok);
+    ask->setAttribute(Qt::WA_DeleteOnClose);
+    ask->show();
+  }
+}
+
+/**
  * \brief Close the dialog, show the wigets hidden at open/showEvent
  */
 void map_editor::close()
 {
+  // Notify the server we are exiting edit mode
+  struct connection *my_conn = &client.conn;
+  dsend_packet_edit_mode(my_conn, false);
+
   setVisible(false);
   queen()->mapview_wdg->show_all_fcwidgets();
   queen()->unitinfo_wdg->show();
