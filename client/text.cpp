@@ -35,6 +35,7 @@
 #include "map.h"
 #include "movement.h"
 #include "research.h"
+#include "tile.h"
 #include "traderoutes.h"
 #include "unitlist.h"
 
@@ -170,8 +171,37 @@ const QString popup_info_text(struct tile *ptile)
     str += QString(_("Unknown"));
     return str.trimmed();
   }
-  str += QString(_("Terrain: <a href=\"test\">%1</a>")).arg(tile_get_info_text(ptile, true, 0))
-         + qbr();
+
+  {
+    str += QString(_("Terrain:"));
+
+    struct tile_info *info = tile_get_info(ptile);
+    str += QString(" <a href=\"test\">%1</a>").arg(info->name);
+    for (auto extra : info->extras) {
+      str += QString("/<a href=\"test\">%1</a>").arg(extra);
+    }
+    if (info->resource) {
+      str += QString(" (<a href=\"test\">%1</a>)").arg(info->resource);
+    }
+    if (!info->nuisances.empty()) {
+      bool first_nuisance = true;
+      str += QString(" [");
+      for (auto nuisance : info->nuisances) {
+        if (first_nuisance) {
+	  first_nuisance = false;
+        } else {
+	  str += QString("/");
+        }
+
+	str += QString("<a href=\"test\">%1</a>").arg(nuisance);
+      }
+      str += QString("]");
+    }
+    tile_delete_info(info);
+
+    str += qbr();
+  }
+
   str += QString(_("Food/Prod/Trade: %1")).arg(get_tile_output_text(ptile))
          + qbr();
   first = true;
@@ -182,8 +212,8 @@ const QString popup_info_text(struct tile *ptile)
       if (!first) {
         str += QStringLiteral(",%1").arg(extra_name_translation(pextra));
       } else {
-        str += QStringLiteral("%1").arg(extra_name_translation(pextra))
-               + qbr();
+        str +=
+            QStringLiteral("%1").arg(extra_name_translation(pextra)) + qbr();
         first = false;
       }
     }

@@ -617,7 +617,7 @@ info_tile::info_tile(struct tile *ptile, QWidget *parent)
   setFont(fcFont::instance()->getFont(fonts::notify_label));
   setTextFormat(Qt::RichText);
   setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-  setText(popup_info_text(itile).trimmed());
+  setText(popup_info_text(itile));
   setWordWrap(true);
 
   calc_size();
