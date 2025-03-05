@@ -17,6 +17,8 @@
 // utility
 #include "astring.h"
 #include "fcintl.h"
+#include "helpdata.h"
+#include "helpdlg.h"
 #include "log.h"
 #include "nation.h"
 #include "support.h"
@@ -176,12 +178,12 @@ const QString popup_info_text(struct tile *ptile)
     str += QString(_("Terrain:"));
 
     struct tile_info *info = tile_get_info(ptile);
-    str += QString(" <a href=\"test\">%1</a>").arg(info->name);
+    str += QString(" %1").arg(create_help_link(info->name, HELP_TERRAIN));
     for (auto extra : info->extras) {
-      str += QString("/<a href=\"test\">%1</a>").arg(extra);
+      str += QString("/%1").arg(create_help_link(extra, HELP_EXTRA));
     }
     if (info->resource) {
-      str += QString(" (<a href=\"test\">%1</a>)").arg(info->resource);
+      str += QString(" (%1)").arg(create_help_link(info->resource, HELP_EXTRA));
     }
     if (!info->nuisances.empty()) {
       bool first_nuisance = true;
@@ -193,7 +195,7 @@ const QString popup_info_text(struct tile *ptile)
 	  str += QString("/");
         }
 
-	str += QString("<a href=\"test\">%1</a>").arg(nuisance);
+	str += QString("%1").arg(create_help_link(nuisance, HELP_EXTRA));
       }
       str += QString("]");
     }

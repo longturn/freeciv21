@@ -23,6 +23,7 @@
 #include <Qt>
 
 // utility
+#include "helpdlg.h"
 #include "log.h"
 // client
 #include "citybar.h"
@@ -621,6 +622,13 @@ info_tile::info_tile(struct tile *ptile, QWidget *parent)
   setWordWrap(true);
 
   calc_size();
+
+  connect(this, &QLabel::linkActivated, this, &info_tile::anchor_clicked);
+}
+
+void info_tile::anchor_clicked(const QString &link)
+{
+  follow_help_link(link);
 }
 
 /**
