@@ -183,19 +183,20 @@ const QString popup_info_text(struct tile *ptile)
       str += QString("/%1").arg(create_help_link(extra, HELP_EXTRA));
     }
     if (info->resource) {
-      str += QString(" (%1)").arg(create_help_link(info->resource, HELP_EXTRA));
+      str +=
+          QString(" (%1)").arg(create_help_link(info->resource, HELP_EXTRA));
     }
     if (!info->nuisances.empty()) {
       bool first_nuisance = true;
       str += QString(" [");
       for (auto nuisance : info->nuisances) {
         if (first_nuisance) {
-	  first_nuisance = false;
+          first_nuisance = false;
         } else {
-	  str += QString("/");
+          str += QString("/");
         }
 
-	str += QString("%1").arg(create_help_link(nuisance, HELP_EXTRA));
+        str += QString("%1").arg(create_help_link(nuisance, HELP_EXTRA));
       }
       str += QString("]");
     }
