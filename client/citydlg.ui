@@ -122,13 +122,13 @@
            </size>
           </property>
           <property name="editTriggers">
-           <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+           <set>QAbstractItemView::NoEditTriggers</set>
           </property>
           <property name="selectionMode">
-           <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+           <enum>QAbstractItemView::NoSelection</enum>
           </property>
           <property name="selectionBehavior">
-           <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+           <enum>QAbstractItemView::SelectItems</enum>
           </property>
           <property name="showGrid">
            <bool>false</bool>
@@ -206,7 +206,7 @@
         <item>
          <spacer name="verticalSpacer">
           <property name="orientation">
-           <enum>Qt::Orientation::Vertical</enum>
+           <enum>Qt::Vertical</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -229,7 +229,7 @@
        </layout>
       </item>
       <item row="0" column="0" colspan="2">
-       <layout class="QHBoxLayout" name="horizontalLayout">
+       <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,1,0">
         <property name="leftMargin">
          <number>6</number>
         </property>
@@ -268,7 +268,7 @@
         <item>
          <spacer name="horizontalSpacer_2">
           <property name="orientation">
-           <enum>Qt::Orientation::Horizontal</enum>
+           <enum>Qt::Vertical</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -302,7 +302,7 @@
    <item>
     <spacer name="horizontalSpacer">
      <property name="orientation">
-      <enum>Qt::Orientation::Horizontal</enum>
+      <enum>Qt::Vertical</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
@@ -317,10 +317,10 @@
      <item>
       <spacer name="middleSpacer">
        <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
+        <enum>Qt::Vertical</enum>
        </property>
        <property name="sizeType">
-        <enum>QSizePolicy::Policy::MinimumExpanding</enum>
+        <enum>QSizePolicy::Fixed</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -333,7 +333,7 @@
      <item>
       <spacer name="present_units_vertical_spacer">
        <property name="orientation">
-        <enum>Qt::Orientation::Vertical</enum>
+        <enum>Qt::Vertical</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -380,16 +380,16 @@
            </sizepolicy>
           </property>
           <property name="selectionMode">
-           <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
+           <enum>QAbstractItemView::NoSelection</enum>
           </property>
           <property name="flow">
-           <enum>QListView::Flow::LeftToRight</enum>
+           <enum>QListView::LeftToRight</enum>
           </property>
           <property name="resizeMode">
-           <enum>QListView::ResizeMode::Adjust</enum>
+           <enum>QListView::Fixed</enum>
           </property>
           <property name="viewMode">
-           <enum>QListView::ViewMode::IconMode</enum>
+           <enum>QListView::ListMode</enum>
           </property>
          </widget>
         </item>
@@ -411,7 +411,7 @@
    <item>
     <spacer name="horizontalSpacer_3">
      <property name="orientation">
-      <enum>Qt::Orientation::Horizontal</enum>
+      <enum>Qt::Vertical</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
@@ -482,16 +482,13 @@
           <item>
            <widget class="QScrollArea" name="scrollArea_2">
             <property name="frameShape">
-             <enum>QFrame::Shape::NoFrame</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Shadow::Plain</enum>
+             <enum>QFrame::NoFrame</enum>
             </property>
             <property name="horizontalScrollBarPolicy">
-             <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+             <enum>Qt::ScrollBarAsNeeded</enum>
             </property>
             <property name="sizeAdjustPolicy">
-             <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents</enum>
+             <enum>QAbstractScrollArea::AdjustIgnored</enum>
             </property>
             <property name="widgetResizable">
              <bool>true</bool>
@@ -551,7 +548,7 @@
               <item>
                <spacer name="verticalSpacer_2">
                 <property name="orientation">
-                 <enum>Qt::Orientation::Vertical</enum>
+                 <enum>Qt::Vertical</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
@@ -581,13 +578,13 @@
              <item>
               <widget class="QTableWidget" name="nationality_table">
                <property name="editTriggers">
-                <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+                <set>QAbstractItemView::NoEditTriggers</set>
                </property>
                <property name="selectionMode">
-                <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+                <enum>QAbstractItemView::NoSelection</enum>
                </property>
                <property name="selectionBehavior">
-                <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+                <enum>QAbstractItemView::SelectItems</enum>
                </property>
                <property name="showGrid">
                 <bool>false</bool>
@@ -618,10 +615,10 @@
              <item>
               <widget class="QScrollArea" name="scrollArea">
                <property name="frameShape">
-                <enum>QFrame::Shape::NoFrame</enum>
+                <enum>QFrame::NoFrame</enum>
                </property>
                <property name="sizeAdjustPolicy">
-                <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents</enum>
+                <enum>QAbstractScrollArea::AdjustIgnored</enum>
                </property>
                <property name="widgetResizable">
                 <bool>true</bool>
@@ -794,133 +791,90 @@
           <string>Page</string>
          </attribute>
          <layout class="QHBoxLayout" name="horizontalLayout_8">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
           <item>
-           <widget class="QScrollArea" name="scrollArea_3">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::Shape::NoFrame</enum>
-            </property>
-            <property name="horizontalScrollBarPolicy">
-             <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
-            </property>
-            <property name="sizeAdjustPolicy">
-             <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents</enum>
-            </property>
-            <property name="widgetResizable">
-             <bool>true</bool>
-            </property>
-            <widget class="QWidget" name="scrollAreaWidgetContents_3">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>118</width>
-               <height>329</height>
-              </rect>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_11">
-              <property name="topMargin">
-               <number>6</number>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <widget class="QLabel" name="cma_result_pix">
+              <property name="text">
+               <string/>
               </property>
-              <item>
-               <widget class="QGroupBox" name="qgbox">
-                <property name="title">
-                 <string>GroupBox</string>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_2">
-                 <item>
-                  <layout class="QVBoxLayout" name="verticalLayout">
-                   <item>
-                    <widget class="QLabel" name="cma_result_pix">
-                     <property name="text">
-                      <string/>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignmentFlag::AlignCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="cma_result">
-                     <property name="text">
-                      <string>cma_info_text</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QPushButton" name="cma_enable_but">
-                     <property name="text">
-                      <string>PushButton</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QTableWidget" name="cma_table">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="contextMenuPolicy">
-                      <enum>Qt::ContextMenuPolicy::CustomContextMenu</enum>
-                     </property>
-                     <property name="editTriggers">
-                      <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
-                     </property>
-                     <property name="selectionMode">
-                      <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
-                     </property>
-                     <property name="selectionBehavior">
-                      <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
-                     </property>
-                     <property name="showGrid">
-                      <bool>false</bool>
-                     </property>
-                     <property name="columnCount">
-                      <number>1</number>
-                     </property>
-                     <attribute name="horizontalHeaderVisible">
-                      <bool>false</bool>
-                     </attribute>
-                     <attribute name="verticalHeaderVisible">
-                      <bool>false</bool>
-                     </attribute>
-                     <column/>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="bsavecma">
-                <property name="text">
-                 <string>PushButton</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QGroupBox" name="groupBox">
-                <property name="title">
-                 <string>Settings</string>
-                </property>
-                <layout class="QVBoxLayout" name="verticalLayout_12">
-                 <item>
-                  <widget class="freeciv::governor_widget" name="governor" native="true"/>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </widget>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="cma_result">
+              <property name="text">
+               <string>cma_info_text</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="cma_enable_but">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTableWidget" name="cma_table">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="contextMenuPolicy">
+               <enum>Qt::NoContextMenu</enum>
+              </property>
+              <property name="editTriggers">
+               <set>QAbstractItemView::NoEditTriggers</set>
+              </property>
+              <property name="selectionMode">
+               <enum>QAbstractItemView::NoSelection</enum>
+              </property>
+              <property name="selectionBehavior">
+               <enum>QAbstractItemView::SelectItems</enum>
+              </property>
+              <property name="showGrid">
+               <bool>false</bool>
+              </property>
+              <property name="columnCount">
+               <number>1</number>
+              </property>
+              <attribute name="horizontalHeaderVisible">
+               <bool>false</bool>
+              </attribute>
+              <attribute name="verticalHeaderVisible">
+               <bool>false</bool>
+              </attribute>
+              <column/>
+             </widget>
+            </item>
+            <item>
+             <widget class="freeciv::governor_widget" name="governor" native="true"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="bsavecma">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
