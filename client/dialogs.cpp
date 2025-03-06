@@ -1536,9 +1536,9 @@ static void unit_recycle(QVariant data1, QVariant data2)
   int actor_id = data1.toInt();
   int tgt_city_id = data2.toInt();
 
-  if (nullptr != game_unit_by_number(actor_id)
-      && nullptr != game_city_by_number(tgt_city_id)) {
-    request_do_action(ACTION_RECYCLE_UNIT, actor_id, tgt_city_id, 0, "");
+  if (game_unit_by_number(actor_id) && game_city_by_number(tgt_city_id)) {
+    auto ask = new recycle_box(actor_id, tgt_city_id, king()->central_wdg);
+    ask->show();
   }
 }
 
@@ -3390,7 +3390,33 @@ void disband_box::disband_clicked()
 disband_box::~disband_box() = default;
 
 /**
-   Pops up a dialog to confirm disband of the unit(s).
+ * Recycle Message box contructor
+ */
+recycle_box::recycle_box(int unit, int city, QWidget *parent)
+    : hud_message_box(parent), m_unit(unit), m_city(city)
+{
+  setAttribute(Qt::WA_DeleteOnClose);
+  setModal(false);
+
+  set_text_title(_("Are you sure you want to recycle this unit?"),
+                 _("Recycle units"));
+
+  addButton(_("Yes"), QMessageBox::AcceptRole);
+  auto no = addButton(_("No"), QMessageBox::RejectRole);
+  setDefaultButton(no);
+  connect(this, &QDialog::accepted, this, &recycle_box::recycle_clicked);
+}
+
+/**
+ * Clicked Yes in recycle box
+ */
+void recycle_box::recycle_clicked()
+{
+  request_do_action(ACTION_RECYCLE_UNIT, m_unit, m_city, 0, "");
+}
+
+/**
+ * Pops up a dialog to confirm disband of the unit(s).
  */
 void popup_disband_dialog(const std::vector<unit *> &punits)
 {
