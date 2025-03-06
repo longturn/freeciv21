@@ -39,8 +39,7 @@ game to your Applications folder, or a place of your choosing. When finished, un
 .. note::
   In newer versions of macOS, you may get an error message when trying to mount the package: "Freeciv21.app is
   damaged and can't be opened." You will need to adjust the security settings on your computer. Here are some
-  website links to help.
+  website links to help:
 
-  https://appletoolbox.com/app-is-damaged-cannot-be-opened-mac/
-
-  https://support.apple.com/guide/mac-help/open-an-app-by-overriding-security-settings-mh40617/15.0/mac/15.0
+  * https://appletoolbox.com/app-is-damaged-cannot-be-opened-mac/
+  * https://support.apple.com/guide/mac-help/open-an-app-by-overriding-security-settings-mh40617/15.0/mac/15.0
