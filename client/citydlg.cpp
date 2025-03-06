@@ -909,8 +909,6 @@ city_dialog::city_dialog(QWidget *parent) : QWidget(parent)
           &city_dialog::present_units_exp_col);
 
   // governor tab
-  ui.qgbox->setTitle(_("Presets:"));
-
   ui.cma_table->horizontalHeader()->setSectionResizeMode(
       QHeaderView::Stretch);
 
