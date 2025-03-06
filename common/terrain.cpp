@@ -10,6 +10,7 @@
  */
 
 // utility
+#include "fc_types.h"
 #include "fcintl.h"
 #include "log.h" // fc_assert
 #include "rand.h"
@@ -385,19 +386,9 @@ int count_terrain_flag_near_tile(const struct tile *ptile,
   return count;
 }
 
-/**
-   Return a (static) string with extra(s) name(s):
-     eg: "Mine"
-     eg: "Road/Farmland"
-   This only includes "infrastructure", i.e., man-made extras.
- */
-const char *get_infrastructure_text(bv_extras extras)
+std::list<const char *> *get_infrastructure_texts(bv_extras extras)
 {
-  static char s[256];
-  char *p;
-  int len;
-
-  s[0] = '\0';
+  std::list<const char *> *texts = new std::list<const char *>;
 
   extra_type_iterate(pextra)
   {
@@ -417,17 +408,43 @@ const char *get_infrastructure_text(bv_extras extras)
       extra_type_iterate_end;
 
       if (!hidden) {
-        cat_snprintf(s, sizeof(s), "%s/", extra_name_translation(pextra));
+        texts->push_back(fc_strdup(extra_name_translation(pextra)));
       }
     }
   }
   extra_type_iterate_end;
+
+  return texts;
+}
+
+/**
+   Return a (static) string with extra(s) name(s):
+     eg: "Mine"
+     eg: "Road/Farmland"
+   This only includes "infrastructure", i.e., man-made extras.
+ */
+const char *get_infrastructure_text(bv_extras extras)
+{
+  static char s[256];
+  char *p;
+  int len;
+
+  s[0] = '\0';
+
+  std::list<const char *> *texts = get_infrastructure_texts(extras);
+  for (auto text : *texts) {
+    cat_snprintf(s, sizeof(s), "%s/", text);
+    delete text;
+  }
 
   len = qstrlen(s);
   p = s + len - 1;
   if (len > 0 && *p == '/') {
     *p = '\0';
   }
+
+  texts->clear();
+  delete texts;
 
   return s;
 }

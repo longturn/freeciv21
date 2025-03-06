@@ -37,6 +37,7 @@
 #include "map.h"
 #include "movement.h"
 #include "research.h"
+#include "terrain.h"
 #include "tile.h"
 #include "traderoutes.h"
 #include "unitlist.h"
@@ -369,10 +370,30 @@ const QString popup_info_text(struct tile *ptile)
     }
   }
   {
-    const char *infratext = get_infrastructure_text(ptile->extras);
+    {
+      std::list<const char *> *infras =
+          get_infrastructure_texts(ptile->extras);
 
-    if (*infratext != '\0') {
-      str += QString(_("Infrastructure: %1")).arg(infratext) + qbr();
+      if (!infras->empty()) {
+        str += QString("%1 ").arg(_("Infrastructure:"));
+
+        bool first_infra = true;
+        for (auto infra : *infras) {
+          if (first_infra) {
+            first_infra = false;
+          } else {
+            str += "/";
+          }
+
+          str += QString(create_help_link(infra, HELP_EXTRA));
+          delete infra;
+        }
+
+        str += qbr();
+      }
+
+      infras->clear();
+      delete infras;
     }
   }
   activity_text = concat_tile_activity_text(ptile);
