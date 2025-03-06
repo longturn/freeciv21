@@ -97,6 +97,20 @@ private slots:
   void disband_clicked();
 };
 
+/**
+ * Nonmodal message box for recycling units
+ */
+class recycle_box : public hud_message_box {
+  Q_OBJECT
+  int m_unit, m_city;
+
+public:
+  explicit recycle_box(int unit, int city, QWidget *parent = 0);
+  ~recycle_box() override = default;
+private slots:
+  void recycle_clicked();
+};
+
 /***************************************************************************
  Dialog for goto popup
 ***************************************************************************/
