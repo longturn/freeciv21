@@ -4,19 +4,17 @@
 #pragma once
 
 // Qt
-#include <QLabel>
-#include <QWidget>
+#include <QStackedWidget>
 
 // client
 #include "dialogs.h"
-
-class QEvent;
+#include "editor/tool_tile.h"
 
 #include "ui_map_editor.h"
 /**
  * Map Editor Dialog Class
  */
-class map_editor : public QWidget {
+class map_editor : public QStackedWidget {
   Q_OBJECT
 
 private:
@@ -29,6 +27,12 @@ public:
   map_editor(QWidget *parent = 0);
   ~map_editor() override;
   void check_open();
+  void update_players();
+  bool players_done = false;
+  void select_tool_tile();
+
+  editor_tool_tile *ett_wdg;
+  bool ett_wdg_active = false;
 
 protected:
   void showEvent(QShowEvent *event) override;

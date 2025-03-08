@@ -112,6 +112,7 @@ target_sources(
   audio/audio_none.cpp
 
   editor/map_editor.cpp
+  editor/tool_tile.cpp
 
   tileset/drawn_sprite.cpp
   tileset/layer_abstract_activities.cpp
