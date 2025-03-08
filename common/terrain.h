@@ -12,6 +12,8 @@
       \____/        ********************************************************/
 #pragma once
 
+#include <list>
+
 // utility
 #include "bitvector.h"
 #include "shared.h"
@@ -295,6 +297,7 @@ void resource_types_free();
 
 // Special helper functions
 const char *get_infrastructure_text(bv_extras extras);
+std::list<const char *> *get_infrastructure_texts(bv_extras extras);
 struct extra_type *get_preferred_pillage(bv_extras extras);
 
 int terrain_extra_build_time(const struct terrain *pterrain,

@@ -17,10 +17,13 @@
 
 // Qt
 #include <QCommandLinkButton>
+#include <QCursor>
 #include <QMouseEvent>
 #include <QPainter>
+#include <Qt>
 
 // utility
+#include "helpdlg.h"
 #include "log.h"
 // client
 #include "citybar.h"
@@ -613,10 +616,19 @@ info_tile::info_tile(struct tile *ptile, QWidget *parent)
     : QLabel(parent), itile(ptile)
 {
   setFont(fcFont::instance()->getFont(fonts::notify_label));
-  setText(popup_info_text(itile).trimmed());
+  setTextFormat(Qt::RichText);
+  setTextInteractionFlags(Qt::LinksAccessibleByMouse);
+  setText(popup_info_text(itile));
   setWordWrap(true);
 
   calc_size();
+
+  connect(this, &QLabel::linkActivated, this, &info_tile::anchor_clicked);
+}
+
+void info_tile::anchor_clicked(const QString &link)
+{
+  follow_help_link(link);
 }
 
 /**
@@ -666,6 +678,16 @@ void info_tile::drop()
 bool info_tile::shown() { return m_instance && m_instance->isVisible(); }
 
 /**
+ * Returns true, if the info tile is currently under the mouse cursor.
+ * TODO: Support multiple screens.
+ */
+bool info_tile::under_mouse()
+{
+  return m_instance->rect().contains(
+      m_instance->mapFromGlobal(QCursor::pos()));
+};
+
+/**
    Returns given instance
  */
 info_tile *info_tile::i(struct tile *p)
@@ -675,6 +697,11 @@ info_tile *info_tile::i(struct tile *p)
   }
   return m_instance;
 }
+
+/**
+ * Closes the info tile when the mouse leaves.
+ */
+void info_tile::leaveEvent(QEvent *event) { popdown_tile_info(); }
 
 /**
    Popups information label tile
