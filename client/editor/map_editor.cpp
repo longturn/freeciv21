@@ -64,7 +64,6 @@ map_editor::~map_editor() {}
  */
 void map_editor::showEvent(QShowEvent *event)
 {
-
   update_players();
 
   // hide the city dialog if its open
@@ -131,7 +130,6 @@ void map_editor::update_players()
   if (!players_done) {
     players_iterate(pplayer)
     {
-
       auto sprite =
           *get_nation_flag_sprite(tileset, nation_of_player(pplayer));
       ui.combo_players->addItem(sprite,
