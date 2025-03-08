@@ -4,7 +4,7 @@
 #pragma once
 
 // Qt
-#include <QStackedWidget>
+#include <QWidget>
 
 // client
 #include "dialogs.h"
@@ -14,25 +14,28 @@
 /**
  * Map Editor Dialog Class
  */
-class map_editor : public QStackedWidget {
+class map_editor : public QWidget {
   Q_OBJECT
 
 private:
   Ui::FormMapEditor ui;
 
-private slots:
+private:
   void close();
 
-public:
-  map_editor(QWidget *parent = 0);
-  ~map_editor() override;
-  void check_open();
+  // Players/Nations
   void update_players();
   bool players_done = false;
-  void select_tool_tile();
 
+  // Tile Tool
+  void select_tool_tile();
   editor_tool_tile *ett_wdg;
   bool ett_wdg_active = false;
+
+public:
+  map_editor(QWidget *parent);
+  ~map_editor() override;
+  void check_open();
 
 protected:
   void showEvent(QShowEvent *event) override;

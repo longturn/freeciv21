@@ -17,11 +17,10 @@ private:
   Ui::FormToolTile ui;
 
 public:
-  editor_tool_tile(QWidget *parent = 0);
+  editor_tool_tile(QWidget *parent = nullptr);
   ~editor_tool_tile() override;
   void select_tile();
 
 protected:
-  void showEvent(QShowEvent *event) override;
   void paintEvent(QPaintEvent *event) override;
 };
