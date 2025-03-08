@@ -30,3 +30,37 @@ Alternately, HTML can be used in a webpage. For example:
 
 Notice the same 4 parameters. The ``[password]`` parameter can be obmitted. If so, the server will prompt the
 user for credentials before connecting.
+
+.. note::
+  The square brackets ``[`` and ``]`` are meant to be replaced. For example: ``[username]`` should be replaced
+  with ``myusername``. Same for the other three parameters.
+
+
+Automating Login on Linux
+=========================
+
+The simplest way to automate the login process on Linux is to create a shell script with the parameters. For
+example:
+
+.. code-block:: sh
+
+  $ nano lt-game.sh
+
+    #!/bin/bash
+
+    /fully/qualified/path/to/freeciv21-client "fc21://[username]:[password]@[server]:[port]" -a
+
+  $ chmod +x lt-game.sh
+  $ ./lt-game.sh
+
+
+Alternatively, you can create a custom :file:`.desktop` file for the game.
+
+Automating Login on Windows
+===========================
+
+With Windows as your operating system, you can automate the login process with a shortcut. Start by finding the
+location where you installed Freeciv21. By default this is in :file:`C:\\Program Files\\Freeciv21`. Right-click
+on the :file:`freeciv21-client.exe` and select :guilabel:`Create Shortcut`. Right-click on the new shortcut and
+select :guilabel:`Properties`. At the end of the path to the :file:`freeciv21-client.exe` (which maybe inside
+quotes), add ``fc21://[username]:[password]@[server]:[port] -a`` and click :guilabel:`Apply`
