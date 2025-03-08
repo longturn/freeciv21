@@ -1,15 +1,16 @@
 // SPDX-License-Identifier: GPLv3-or-later
 // SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
+// Editor
 #include "editor/map_editor.h"
 
-// client
-#include "citydlg.h"
-#include "client_main.h"
-#include "fc_client.h"
-#include "minimap_panel.h"
-#include "page_game.h"
-#include "views/view_map.h"
+// Client
+#include "citydlg.h"        //showEvent
+#include "client_main.h"    //check_open
+#include "fc_client.h"      //check_open
+#include "minimap_panel.h"  //showEvent
+#include "page_game.h"      //showEvent
+#include "views/view_map.h" //showEvent
 
 /**
  *  \class map_editor
@@ -31,24 +32,26 @@ map_editor::map_editor(QWidget *parent)
 
   ui.label_title->setText(_("MAP EDITOR"));
   ui.label_title->setAlignment(Qt::AlignCenter);
+
+  // Temp label, or maybe we re-use at a later date.
   ui.label_status->setText(_("This is WIP!"));
   ui.label_status->setStyleSheet("background-color:red;");
   ui.label_status->setAlignment(Qt::AlignCenter);
+
+  // Set the close button.
   ui.but_close->setText("");
   ui.but_close->setToolTip(_("Close"));
   ui.but_close->setIcon(QIcon::fromTheme(QStringLiteral("close")));
   connect(ui.but_close, &QAbstractButton::clicked, this, &map_editor::close);
 
-  // Tile Tools
-  ui.tbut_inspect_tile->setText("");
-  ui.tbut_inspect_tile->setToolTip(_("Inspect Tile"));
-  ui.tbut_inspect_tile->setIcon(
-      QIcon::fromTheme(QStringLiteral("editor-inspect")));
-
+  // Set the tool button or Tile Tool
   ui.tbut_edit_tile->setText("");
-  ui.tbut_edit_tile->setToolTip(_("Edit Tile"));
+  ui.tbut_edit_tile->setToolTip(_("Open Tile Tool"));
+  ui.tbut_edit_tile->setMinimumSize(32, 32);
   ui.tbut_edit_tile->setIcon(
       QIcon::fromTheme(QStringLiteral("editor-tile")));
+  connect(ui.tbut_edit_tile, &QAbstractButton::clicked, this,
+          &map_editor::select_tool_tile);
 }
 
 /**
@@ -61,6 +64,9 @@ map_editor::~map_editor() {}
  */
 void map_editor::showEvent(QShowEvent *event)
 {
+
+  update_players();
+
   // hide the city dialog if its open
   if (queen()->city_overlay->isVisible()) {
     queen()->city_overlay->hide();
@@ -70,6 +76,11 @@ void map_editor::showEvent(QShowEvent *event)
   queen()->mapview_wdg->hide_all_fcwidgets();
   queen()->unitinfo_wdg->hide();
   queen()->minimap_panel->show();
+  // TODO: Figure out how to disable the turn done button
+
+  // initialize editor functions
+  // TODO: as called, causes an assertion
+  // editor_init();
 
   // set the height of the map editor to the height of the game
   auto height = queen()->mapview_wdg->height();
@@ -110,4 +121,42 @@ void map_editor::close()
   setVisible(false);
   queen()->mapview_wdg->show_all_fcwidgets();
   queen()->unitinfo_wdg->show();
+}
+
+/**
+ * \brief Populate a combo box with the current list of players
+ */
+void map_editor::update_players()
+{
+  if (!players_done) {
+    players_iterate(pplayer)
+    {
+
+      auto sprite =
+          *get_nation_flag_sprite(tileset, nation_of_player(pplayer));
+      ui.combo_players->addItem(sprite,
+                                _(qUtf8Printable(player_name(pplayer))));
+    }
+    players_iterate_end;
+    players_done = true;
+  }
+}
+
+/**
+ * \brief Activate the Tile Tool when clicked
+ */
+void map_editor::select_tool_tile()
+{
+  if (ett_wdg_active) {
+    ui.tbut_edit_tile->setToolTip(_("Open Tile Tool"));
+    ett_wdg->hide();
+    ett_wdg_active = false;
+  } else {
+    ui.tbut_edit_tile->setToolTip(_("Close Tile Tool"));
+    ett_wdg = new editor_tool_tile(0);
+    ui.vlayout_tools->addWidget(ett_wdg);
+    ett_wdg->show();
+    ett_wdg->update();
+    ett_wdg_active = true;
+  }
 }
