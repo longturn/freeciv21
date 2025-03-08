@@ -4,13 +4,13 @@
 // Editor
 #include "editor/map_editor.h"
 
-// Client
-#include "citydlg.h"        //showEvent
-#include "client_main.h"    //check_open
-#include "fc_client.h"      //check_open
-#include "minimap_panel.h"  //showEvent
-#include "page_game.h"      //showEvent
-#include "views/view_map.h" //showEvent
+// Client                   ::Where Needed::
+#include "citydlg.h"        //map_editor::showEvent
+#include "client_main.h"    //map_editor::check_open
+#include "fc_client.h"      //map_editor::check_open
+#include "minimap_panel.h"  //map_editor::showEvent
+#include "page_game.h"      //map_editor::showEvent
+#include "views/view_map.h" //map_editor::showEvent
 
 /**
  *  \class map_editor
@@ -151,7 +151,7 @@ void map_editor::select_tool_tile()
     ett_wdg_active = false;
   } else {
     ui.tbut_edit_tile->setToolTip(_("Close Tile Tool"));
-    ett_wdg = new editor_tool_tile(0);
+    ett_wdg = new editor_tool_tile;
     ui.vlayout_tools->addWidget(ett_wdg);
     ett_wdg->show();
     ett_wdg->update();

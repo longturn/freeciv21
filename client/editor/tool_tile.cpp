@@ -55,16 +55,12 @@ editor_tool_tile::editor_tool_tile(QWidget *parent)
 editor_tool_tile::~editor_tool_tile() {}
 
 /**
- *  \brief Show event for editor_tool_tile
- */
-void editor_tool_tile::showEvent(QShowEvent *event) { setVisible(true); }
-
-/**
  *  \brief Paint event for editor_tool_tile
  */
 void editor_tool_tile::paintEvent(QPaintEvent *event)
 {
   // Draw a rounded rectangle border around the Tile Tool widget
+  // TODO: Change this to Theme CSS
   QPainter painter(this);
   painter.drawRoundedRect(5, 5, width() - 10, height() - 10, 5, 5);
   QWidget::paintEvent(event);
