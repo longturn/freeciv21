@@ -8,7 +8,7 @@ To create a local test build run this command from this same directory
     cd build
     (once) pip install virtualenv
     python -m virtualenv venv
-    source venv/bin/activate (on Windows use "venv\Scripts\Activate.ps1")
+    source venv/bin/activate
     pip install -r ../docs/requirements.txt
 
     sphinx-build -b html ../docs ./docs/
