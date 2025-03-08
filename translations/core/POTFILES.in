@@ -92,6 +92,7 @@ client/text.cpp
 client/themes.cpp
 client/themes_common.cpp
 client/editor/map_editor.cpp
+client/editor/tool_tile.cpp
 client/tileset/drawn_sprite.cpp
 client/tileset/layer_abstract_activities.cpp
 client/tileset/layer_background.cpp
