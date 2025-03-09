@@ -87,17 +87,16 @@ chat_widget, message_widget {
 *[civstatus="true"] {
   color: white;
 }
+
 *[civstatus_bg="true"] {
    background-color: rgb(0,0,0,125);
 }
 
-close_widget
-{
+close_widget {
   background: #1155BB;
 }
 
-resize_widget
-{
+resize_widget {
   background: #1155BB;
 }
 
@@ -127,8 +126,7 @@ QPushButton, QToolButton {
   padding: 2px;
 }
 
-QPushButton:hover, QToolButton:hover,
-QPushButton:checked, QToolButton:checked {
+QPushButton:hover, QToolButton:hover, QPushButton:checked, QToolButton:checked {
   color: white;
   background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #565656, stop: 1 #414141);
   border: 2px solid #3399FF;
@@ -359,6 +357,7 @@ QMenu {
   background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgba(84, 85, 86, 225), stop:1 rgba(55, 55, 54, 255));
   border:none;
 }
+
 QMenu::item {
   color: #FFFFFF;
   padding: 3px 20px 3px 25px;
@@ -388,8 +387,7 @@ QMenu::icon:checked {
   background-color: rgba(51, 153, 255, 112);
 }
 
-minimap_view
-{
+minimap_view {
   selection-background-color: #1155BB;
 }
 
@@ -832,23 +830,20 @@ QScrollBar::handle:horizontal {
 }
 
 fc_game_tab_widget {
-   background-image:url(LittleFingerpattern-game.png);
+  background-image:url(LittleFingerpattern-game.png);
 }
 
-help_widget QTextBrowser
-{
+help_widget QTextBrowser {
   background-color: #414a57;
   color: white;
 }
 
-help_widget QWidget
-{
+help_widget QWidget {
   background-color: #414a57;
   color: white;
 }
 
-help_widget QTreeWidget
-{
+help_widget QTreeWidget {
   background-color: #414a57;
   color: white;
 }
@@ -870,27 +865,23 @@ units_select {
   border: 2px solid #0000AA;
 }
 
-chatwdg QTextBrowser
-{
+chatwdg QTextBrowser {
   background-color: transparent;
   border: none;
   color: rgb( 240, 240, 240);
 }
 
-chatwdg QLineEdit
-{
+chatwdg QLineEdit {
   background-color: black;
   border: 1px solid #13395f;
   color: rgb( 240, 240, 240);
 }
 
-chatwdg QScrollBar:vertical
-{
+chatwdg QScrollBar:vertical {
   background: transparent;
 }
 
-messagewdg QListWidget
-{
+messagewdg QListWidget {
   border: none;
   background-color: transparent;
 }
