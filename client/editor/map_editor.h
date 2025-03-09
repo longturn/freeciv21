@@ -7,7 +7,6 @@
 #include <QWidget>
 
 // client
-#include "dialogs.h"
 #include "editor/tool_tile.h"
 
 #include "ui_map_editor.h"

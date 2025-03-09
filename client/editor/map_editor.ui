@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>250</width>
-    <height>789</height>
+    <height>790</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -48,10 +48,10 @@
   <widget class="QPushButton" name="but_close">
    <property name="geometry">
     <rect>
-     <x>220</x>
+     <x>218</x>
      <y>10</y>
-     <width>25</width>
-     <height>25</height>
+     <width>28</width>
+     <height>28</height>
     </rect>
    </property>
    <property name="text">
@@ -67,9 +67,9 @@
      <height>41</height>
     </rect>
    </property>
-   <layout class="QGridLayout" name="gridLayout">
+   <layout class="QGridLayout" name="glayout_tools">
     <item row="0" column="0">
-     <widget class="QToolButton" name="tbut_edit_tile">
+     <widget class="QToolButton" name="tbut_tool_tile">
       <property name="minimumSize">
        <size>
         <width>32</width>
@@ -82,7 +82,7 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <spacer name="horizontalSpacer">
+     <spacer name="tbut_spacer">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -96,13 +96,13 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="verticalLayoutWidget_2">
+  <widget class="QGroupBox" name="qGroupBox_tools">
    <property name="geometry">
     <rect>
-     <x>-1</x>
+     <x>2</x>
      <y>180</y>
-     <width>251</width>
-     <height>591</height>
+     <width>246</width>
+     <height>590</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="vlayout_tools">
@@ -118,14 +118,20 @@
     <property name="bottomMargin">
      <number>5</number>
     </property>
+    <item>
+     <widget class="QStackedWidget" name="stackedWidget_tools">
+      <widget class="QWidget" name="page_1"/>
+      <widget class="QWidget" name="page_2"/>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QComboBox" name="combo_players">
    <property name="geometry">
     <rect>
-     <x>3</x>
+     <x>2</x>
      <y>80</y>
-     <width>245</width>
+     <width>246</width>
      <height>40</height>
     </rect>
    </property>
@@ -147,8 +153,8 @@
     <rect>
      <x>10</x>
      <y>60</y>
-     <width>141</width>
-     <height>18</height>
+     <width>140</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="text">

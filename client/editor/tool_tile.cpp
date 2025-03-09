@@ -23,9 +23,9 @@
  */
 editor_tool_tile::editor_tool_tile(QWidget *parent)
 {
+  // chatline font is fixed width
   auto value_font = fcFont::instance()->getFont(fonts::chatline);
   ui.setupUi(this);
-  parent = 0;
 
   // Set default values and the font we want.
   ui.value_x->setText(_("N/A"));
@@ -45,26 +45,12 @@ editor_tool_tile::editor_tool_tile(QWidget *parent)
       QIcon::fromTheme(QStringLiteral("pencil-ruler")));
   connect(ui.tbut_select_tile, &QAbstractButton::clicked, this,
           &editor_tool_tile::select_tile);
-
-  setVisible(false);
 }
 
 /**
  *  \brief Destructor for editor_tool_tile
  */
 editor_tool_tile::~editor_tool_tile() {}
-
-/**
- *  \brief Paint event for editor_tool_tile
- */
-void editor_tool_tile::paintEvent(QPaintEvent *event)
-{
-  // Draw a rounded rectangle border around the Tile Tool widget
-  // TODO: Change this to Theme CSS
-  QPainter painter(this);
-  painter.drawRoundedRect(5, 5, width() - 10, height() - 10, 5, 5);
-  QWidget::paintEvent(event);
-}
 
 /**
  *  \brief Select a tile for editor_tool_tile

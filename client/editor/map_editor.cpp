@@ -28,7 +28,6 @@ map_editor::map_editor(QWidget *parent)
   setParent(parent);
   setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding);
   setAutoFillBackground(true);
-  setVisible(false);
 
   ui.label_title->setText(_("MAP EDITOR"));
   ui.label_title->setAlignment(Qt::AlignCenter);
@@ -45,12 +44,12 @@ map_editor::map_editor(QWidget *parent)
   connect(ui.but_close, &QAbstractButton::clicked, this, &map_editor::close);
 
   // Set the tool button or Tile Tool
-  ui.tbut_edit_tile->setText("");
-  ui.tbut_edit_tile->setToolTip(_("Open Tile Tool"));
-  ui.tbut_edit_tile->setMinimumSize(32, 32);
-  ui.tbut_edit_tile->setIcon(
+  ui.tbut_tool_tile->setText("");
+  ui.tbut_tool_tile->setToolTip(_("Open Tile Tool"));
+  ui.tbut_tool_tile->setMinimumSize(32, 32);
+  ui.tbut_tool_tile->setIcon(
       QIcon::fromTheme(QStringLiteral("editor-tile")));
-  connect(ui.tbut_edit_tile, &QAbstractButton::clicked, this,
+  connect(ui.tbut_tool_tile, &QAbstractButton::clicked, this,
           &map_editor::select_tool_tile);
 }
 
@@ -84,6 +83,7 @@ void map_editor::showEvent(QShowEvent *event)
   // set the height of the map editor to the height of the game
   auto height = queen()->mapview_wdg->height();
   this->setFixedHeight(height);
+  ui.qGroupBox_tools->setFixedHeight(height - 190);
   setVisible(true);
 }
 
@@ -146,13 +146,13 @@ void map_editor::update_players()
 void map_editor::select_tool_tile()
 {
   if (ett_wdg_active) {
-    ui.tbut_edit_tile->setToolTip(_("Open Tile Tool"));
+    ui.tbut_tool_tile->setToolTip(_("Open Tile Tool"));
     ett_wdg->hide();
     ett_wdg_active = false;
   } else {
-    ui.tbut_edit_tile->setToolTip(_("Close Tile Tool"));
+    ui.tbut_tool_tile->setToolTip(_("Close Tile Tool"));
     ett_wdg = new editor_tool_tile;
-    ui.vlayout_tools->addWidget(ett_wdg);
+    ui.stackedWidget_tools->addWidget(ett_wdg);
     ett_wdg->show();
     ett_wdg->update();
     ett_wdg_active = true;
