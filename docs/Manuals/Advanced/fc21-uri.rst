@@ -28,12 +28,19 @@ Alternately, HTML can be used in a webpage. For example:
     <a href="fc21://[username]:[password]@[server]:[port]">Game Name</a>
 
 
-Notice the same 4 parameters. The ``[password]`` parameter can be obmitted. If so, the server will prompt the
-user for credentials before connecting.
+Notice the same four parameters. The ``[password]`` parameter can be obmitted. If so, the server will prompt
+the user for credentials before connecting.
 
 .. note::
   The square brackets ``[`` and ``]`` are meant to be replaced. For example: ``[username]`` should be replaced
   with ``myusername``. Same for the other three parameters.
+
+
+.. tip::
+  Passwords containing special characters (e.g. ``/`` or ``@``), can cause the client to exit unexpectedly
+  without establishing a connection to the server. In this case, you must set your password as
+  `url-encoded <https://en.wikipedia.org/wiki/Percent-encoding>`_. You can paste your password into this
+  tool to get a url-encoded version of your password: https://www.urlencoder.io/.
 
 
 Automating Login on Linux
@@ -59,8 +66,17 @@ Alternatively, you can create a custom :file:`.desktop` file for the game.
 Automating Login on Windows
 ===========================
 
-With Windows as your operating system, you can automate the login process with a shortcut. Start by finding the
-location where you installed Freeciv21. By default this is in :file:`C:\\Program Files\\Freeciv21`. Right-click
-on the :file:`freeciv21-client.exe` and select :guilabel:`Create Shortcut`. Right-click on the new shortcut and
-select :guilabel:`Properties`. At the end of the path to the :file:`freeciv21-client.exe` (which maybe inside
-quotes), add ``fc21://[username]:[password]@[server]:[port] -a`` and click :guilabel:`Apply`
+On Windows, you can automate the login process with a Shortcut. Start by finding the location where you
+installed Freeciv21. By default this is in :file:`C:\\Program Files\\Freeciv21`. Right-click on
+:file:`freeciv21-client.exe` and select :guilabel:`Create Shortcut`. Right-click on the new shortcut and
+select :guilabel:`Properties`. At the end of the path to the :file:`freeciv21-client.exe`, add
+``fc21://[username]:[password]@[server]:[port] -a`` and click :guilabel:`Apply`.
+
+.. note::
+  The path to :file:`freeciv21-client.exe` may be wrapped in quotation marks (``"``). This is typically
+  used when there are spaces in the full path. As noted, the default install location has a space in the
+  path, so do not be surprised to see :file:`"C:\\Program Files\\Freeciv21\freeciv21-client.exe"` in the
+  shortcut. You do not need to continue quoting after the path to the ``exe``. A valid shortcut target
+  with quotation marks will look like this:
+
+  ``"C:\Program Files\Freeciv21\freeciv21-client.exe" fc21://[username]:[password]@[server]:[port] -a``
