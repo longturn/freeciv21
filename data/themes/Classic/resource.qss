@@ -196,10 +196,6 @@ QComboBox::down-arrow {
   image: url(LittleFingercombo-arrow.png);
 }
 
-QComboBox QAbstractItemView::item {
-  color: grey;
-}
-
 QSlider::groove:horizontal {
   background: transparent;
   height: 16px;
