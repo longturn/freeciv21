@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>254</width>
-    <height>770</height>
+    <width>250</width>
+    <height>750</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -25,14 +25,14 @@
      <item>
       <widget class="QLabel" name="label_title">
        <property name="text">
-        <string>TextLabel</string>
+        <string>title</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QLabel" name="label_status">
        <property name="text">
-        <string>TextLabel</string>
+        <string>status</string>
        </property>
       </widget>
      </item>
@@ -55,7 +55,7 @@
    <item row="2" column="0" colspan="2">
     <widget class="QComboBox" name="combo_players">
      <property name="insertPolicy">
-      <enum>QComboBox::InsertAlphabetically</enum>
+      <enum>QComboBox::InsertAtBottom</enum>
      </property>
      <property name="iconSize">
       <size>
@@ -79,7 +79,7 @@
         </size>
        </property>
        <property name="text">
-        <string>...</string>
+        <string>tile</string>
        </property>
       </widget>
      </item>
