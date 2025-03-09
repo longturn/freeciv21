@@ -1,12 +1,12 @@
 Root of sphinx-build files here for the Longturn Documentation Project
     https://github.com/orgs/longturn/projects/1
 
+To create a local test build run these commands from the source directory.
+
 LINUX::
 
-To create a local test build run this command from this same directory
-
     cd build
-    (once) pip install virtualenv
+    sudo apt-get install virtualenv     # Only required the first time
     python -m virtualenv venv
     source venv/bin/activate
     pip install -r ../docs/requirements.txt
@@ -18,11 +18,11 @@ To create a local test build run this command from this same directory
 WINDOWS::
 
     cd build-vs
-    (once) pip install virtualenv 
+    pip install virtualenv             # Only required the first time
     python -m virtualenv venv
-    venv\Scripts\Activate.ps1 (or .bat for command prompt)
+    venv\Scripts\Activate.ps1          # or .bat for command prompt
     pip install -r ..\docs\requirements.txt
 
-    sphinx-build -b html ..\docs docs
+    sphinx-build -b html ..\docs docs\
 
     and then open build-vs\docs\index.html in your browser of choice
