@@ -79,12 +79,6 @@ void map_editor::showEvent(QShowEvent *event)
   // initialize editor functions
   // TODO: as called, causes an assertion
   // editor_init();
-
-  // set the height of the map editor to the height of the game
-  auto height = queen()->mapview_wdg->height();
-  this->setFixedHeight(height);
-  ui.qGroupBox_tools->setFixedHeight(height - 190);
-  setVisible(true);
 }
 
 /**
