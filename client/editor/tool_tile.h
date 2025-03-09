@@ -20,7 +20,4 @@ public:
   editor_tool_tile(QWidget *parent = nullptr);
   ~editor_tool_tile() override;
   void select_tile();
-
-protected:
-  void paintEvent(QPaintEvent *event) override;
 };
