@@ -1138,7 +1138,7 @@ void Choice_dialog_button::setData2(QVariant wariat) { data2 = wariat; }
  */
 choice_dialog::choice_dialog(const QString title, const QString text,
                              QWidget *parent, void (*run_on_close_in)(int))
-    : QWidget(parent), target_unit_button(nullptr), unit_skip(nullptr)
+    : QWidget(parent), target_unit_label(nullptr), unit_skip(nullptr)
 {
   QLabel *l = new QLabel(text);
 
@@ -1194,7 +1194,6 @@ void choice_dialog::set_layout()
 
   if ((game_unit_by_number(unit_id)) && targeted_unit
       && unit_list_size(targeted_unit->tile->units) > 1) {
-    QPixmap *pix;
     QPushButton *next, *prev;
     unit_skip = new QHBoxLayout;
     next = new QPushButton();
@@ -1206,18 +1205,15 @@ void choice_dialog::set_layout()
     prev->setIcon(fcIcons::instance()->getIcon(QStringLiteral("city-left")));
     prev->setIconSize(QSize(32, 32));
     prev->setFixedSize(QSize(36, 36));
-    target_unit_button = new QPushButton;
-    pix = new QPixmap(tileset_unit_width(tileset),
-                      tileset_unit_height(tileset));
-    pix->fill(Qt::transparent);
-    put_unit(targeted_unit, pix, QPoint());
-    target_unit_button->setIcon(QIcon(*pix));
-    delete pix;
-    target_unit_button->setIconSize(QSize(96, 96));
-    target_unit_button->setFixedSize(QSize(100, 100));
+    target_unit_label = new QLabel;
+    auto pix =
+        QPixmap(tileset_unit_width(tileset), tileset_unit_height(tileset));
+    pix.fill(Qt::transparent);
+    put_unit(targeted_unit, &pix, QPoint());
+    target_unit_label->setPixmap(pix);
     unit_skip->addStretch(100);
     unit_skip->addWidget(prev, Qt::AlignCenter);
-    unit_skip->addWidget(target_unit_button, Qt::AlignCenter);
+    unit_skip->addWidget(target_unit_label, Qt::AlignCenter);
     unit_skip->addWidget(next, Qt::AlignCenter);
     layout->addLayout(unit_skip);
     unit_skip->addStretch(100);
@@ -1331,40 +1327,32 @@ bool try_default_city_action(QVariant q1, QVariant q2)
  */
 void choice_dialog::next_unit()
 {
-  struct tile *ptile;
-  struct unit *new_target = nullptr;
-  bool break_next = false;
-  bool first = true;
-  QPixmap *pix;
-
   if (targeted_unit == nullptr) {
     return;
   }
 
-  ptile = targeted_unit->tile;
+  auto ptile = targeted_unit->tile;
 
+  // Figure out the index of the current target
+  int index = 0;
   unit_list_iterate(ptile->units, ptgt)
   {
-    if (first) {
-      new_target = ptgt;
-      first = false;
-    }
-    if (break_next) {
-      new_target = ptgt;
+    if (ptgt == targeted_unit) {
       break;
     }
-    if (ptgt == targeted_unit) {
-      break_next = true;
-    }
+    index++;
   }
   unit_list_iterate_end;
-  targeted_unit = new_target;
-  pix =
-      new QPixmap(tileset_unit_width(tileset), tileset_unit_height(tileset));
-  pix->fill(Qt::transparent);
-  put_unit(targeted_unit, pix, QPoint());
-  target_unit_button->setIcon(QIcon(*pix));
-  delete pix;
+
+  // Target the next unit
+  index = (index + 1) % unit_list_size(ptile->units);
+  targeted_unit = unit_list_get(ptile->units, index);
+
+  auto pix =
+      QPixmap(tileset_unit_width(tileset), tileset_unit_height(tileset));
+  pix.fill(Qt::transparent);
+  put_unit(targeted_unit, &pix, QPoint());
+  target_unit_label->setPixmap(pix);
   switch_target();
 }
 
@@ -1373,29 +1361,33 @@ void choice_dialog::next_unit()
  */
 void choice_dialog::prev_unit()
 {
-  struct tile *ptile;
-  struct unit *new_target = nullptr;
-  QPixmap *pix;
   if (targeted_unit == nullptr) {
     return;
   }
 
-  ptile = targeted_unit->tile;
+  auto ptile = targeted_unit->tile;
+
+  // Figure out the index of the current target
+  int index = 0;
   unit_list_iterate(ptile->units, ptgt)
   {
-    if ((ptgt == targeted_unit) && new_target != nullptr) {
+    if (ptgt == targeted_unit) {
       break;
     }
-    new_target = ptgt;
+    index++;
   }
   unit_list_iterate_end;
-  targeted_unit = new_target;
-  pix =
-      new QPixmap(tileset_unit_width(tileset), tileset_unit_height(tileset));
-  pix->fill(Qt::transparent);
-  put_unit(targeted_unit, pix, QPoint());
-  target_unit_button->setIcon(QIcon(*pix));
-  delete pix;
+
+  // Target the previous unit
+  auto size = unit_list_size(ptile->units);
+  index = (index + size - 1) % size;
+  targeted_unit = unit_list_get(ptile->units, index);
+
+  auto pix =
+      QPixmap(tileset_unit_width(tileset), tileset_unit_height(tileset));
+  pix.fill(Qt::transparent);
+  put_unit(targeted_unit, &pix, QPoint());
+  target_unit_label->setPixmap(pix);
   switch_target();
 }
 

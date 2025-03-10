@@ -26,6 +26,7 @@ class QGridLayout;
 class QHBoxLayout;
 class QItemSelection;
 class QKeyEvent;
+class QLabel;
 class QMouseEvent;
 class QObject;
 class QPaintEvent;
@@ -182,7 +183,7 @@ public:
 ***************************************************************************/
 class choice_dialog : public QWidget {
   Q_OBJECT
-  QPushButton *target_unit_button;
+  QLabel *target_unit_label;
   QVBoxLayout *layout;
   QHBoxLayout *unit_skip;
   QList<Choice_dialog_button *> buttons_list;
