@@ -501,7 +501,11 @@ bool create_start_positions(enum map_startpos mode,
       qDebug("starters on isle %i", k);
     }
   }
-  fc_assert_ret_val(player_count() <= sum, false);
+  fc_assert_action(player_count() <= sum, {
+    delete[] tile_value;
+    tile_value = nullptr;
+    return false;
+  });
 
   // now search for the best place and set start_positions
   while (map_startpos_count() < player_count()) {
