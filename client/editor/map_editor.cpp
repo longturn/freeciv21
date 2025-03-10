@@ -99,7 +99,12 @@ void map_editor::check_open()
 {
   struct connection *my_conn = &client.conn;
   if (can_conn_edit(my_conn) || can_conn_enable_editing(my_conn)) {
+    // Notify the server we are going into edit mode
     dsend_packet_edit_mode(my_conn, true);
+
+    // While editing, ensure we can take all possible nations
+    send_chat_printf("/set allowtake hHaAoObd");
+
     queen()->map_editor_wdg->show();
   } else {
     hud_message_box *ask = new hud_message_box(king()->central_wdg);
@@ -133,28 +138,16 @@ void map_editor::close()
 void map_editor::update_players()
 {
   if (!players_done) {
-
-    // Ensure we can take all possible nations
-    send_chat_printf("/set allowtake hHaAoObd");
-
     players_iterate(pplayer)
     {
-      auto sprite =
-          *get_nation_flag_sprite(tileset, nation_of_player(pplayer));
-      ui.combo_players->addItem(
-          sprite, _(qUtf8Printable(nation_adjective_for_player(pplayer))));
+      if (!is_barbarian(pplayer)) {
+        auto sprite =
+            *get_nation_flag_sprite(tileset, nation_of_player(pplayer));
+        ui.combo_players->addItem(
+            sprite, _(qUtf8Printable(nation_adjective_for_player(pplayer))));
+      }
     }
     players_iterate_end;
-
-    // Pirates and Barbarians are problematic, so we get rid of them
-    for (int i = 0; i <= ui.combo_players->count(); i++) {
-      if (ui.combo_players->itemText(i).toUtf8() == "Pirate") {
-        ui.combo_players->removeItem(i);
-      }
-      if (ui.combo_players->itemText(i).toUtf8() == "Barbarian") {
-        ui.combo_players->removeItem(i);
-      }
-    }
 
     ui.combo_players->model()->sort(0, Qt::AscendingOrder);
     ui.combo_players->setCurrentText(
@@ -174,11 +167,9 @@ void map_editor::player_changed(int index)
 
   players_iterate(pplayer)
   {
-    if (ui.combo_players->hasFocus()) {
-      if (ui.combo_players->currentText().toUtf8()
-          == nation_adjective_for_player(pplayer)) {
-        send_chat_printf("/take \"%s\"", pplayer->name);
-      }
+    if (ui.combo_players->currentText().toUtf8()
+        == nation_adjective_for_player(pplayer)) {
+      send_chat_printf("/take \"%s\"", pplayer->name);
     }
   }
   players_iterate_end;
