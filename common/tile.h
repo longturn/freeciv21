@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include <list>
+
 // utility
 #include "bitvector.h"
 
@@ -57,6 +59,17 @@ struct tile {
   char *label; // nullptr for no label
   char *spec_sprite;
 };
+
+struct tile_info {
+  char *name;
+  char *resource;
+  std::list<char *> extras;
+  std::list<char *> nuisances;
+};
+
+// `struct tile_info` and related functions.
+struct tile_info *tile_get_info(const struct tile *ptile);
+void tile_delete_info(struct tile_info *info);
 
 // 'struct tile_list' and related functions.
 #define SPECLIST_TAG tile

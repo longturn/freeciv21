@@ -11,6 +11,7 @@
  */
 
 #include <QBitArray>
+#include <cstddef>
 // utility
 #include "bitvector.h"
 #include "log.h"
@@ -21,6 +22,7 @@
 #include "game.h"
 #include "map.h"
 #include "road.h"
+#include "terrain.h"
 #include "unit.h"
 #include "unitlist.h"
 
@@ -762,27 +764,71 @@ bool tile_apply_activity(struct tile *ptile, Activity_type_id act,
    Return if there has been any pollution (even prior calling this)
  */
 static bool tile_info_pollution(char *buf, int bufsz,
-                                const struct tile *ptile,
-                                struct extra_type *pextra, bool prevp,
-                                bool linebreak)
+                                const struct tile *ptile, char *pextra,
+                                bool prevp, bool linebreak)
 {
-  if (tile_has_visible_extra(ptile, pextra)) {
-    if (!prevp) {
-      if (linebreak) {
-        fc_strlcat(buf, "\n[", bufsz);
-      } else {
-        fc_strlcat(buf, " [", bufsz);
-      }
+  if (!prevp) {
+    if (linebreak) {
+      fc_strlcat(buf, "\n[", bufsz);
     } else {
-      fc_strlcat(buf, "/", bufsz);
+      fc_strlcat(buf, " [", bufsz);
     }
-
-    fc_strlcat(buf, extra_name_translation(pextra), bufsz);
-
-    return true;
+  } else {
+    fc_strlcat(buf, "/", bufsz);
   }
 
-  return prevp;
+  fc_strlcat(buf, pextra, bufsz);
+
+  return true;
+}
+
+struct tile_info *tile_get_info(const struct tile *ptile)
+{
+  tile_info *info = new tile_info;
+  info->name = fc_strdup(terrain_name_translation(tile_terrain(ptile)));
+
+  info->resource = nullptr;
+  if (tile_resource_is_valid(ptile)) {
+    info->resource = fc_strdup(extra_name_translation(ptile->resource));
+  }
+
+  extra_type_iterate(pextra)
+  {
+    if (pextra->category == ECAT_NATURAL
+        && tile_has_visible_extra(ptile, pextra)) {
+      info->extras.push_back(fc_strdup(extra_name_translation(pextra)));
+    }
+  }
+  extra_type_iterate_end;
+
+  extra_type_iterate(pextra)
+  {
+    if (pextra->category == ECAT_NUISANCE
+        && tile_has_visible_extra(ptile, pextra)) {
+      info->nuisances.push_back(fc_strdup(extra_name_translation(pextra)));
+    }
+  }
+  extra_type_iterate_end;
+
+  return info;
+}
+
+void tile_delete_info(struct tile_info *info)
+{
+  delete info->name;
+  delete info->resource;
+
+  for (auto extra : info->extras) {
+    delete extra;
+  }
+  info->extras.clear();
+
+  for (auto nuisance : info->nuisances) {
+    delete nuisance;
+  }
+  info->nuisances.clear();
+
+  delete info;
 }
 
 /**
@@ -804,40 +850,36 @@ const char *tile_get_info_text(const struct tile *ptile,
   bool lb = false;
   int bufsz = sizeof(s);
 
-  sz_strlcpy(s, terrain_name_translation(tile_terrain(ptile)));
+  struct tile_info *info = tile_get_info(ptile);
+
+  sz_strlcpy(s, info->name);
   if (linebreaks & TILE_LB_TERRAIN_RIVER) {
     // Linebreak needed before next text
     lb = true;
   }
 
-  extra_type_iterate(pextra)
-  {
-    if (pextra->category == ECAT_NATURAL
-        && tile_has_visible_extra(ptile, pextra)) {
-      if (lb) {
-        sz_strlcat(s, "\n");
-        lb = false;
-      } else {
-        sz_strlcat(s, "/");
-      }
-      sz_strlcat(s, extra_name_translation(pextra));
+  for (char *extra : info->extras) {
+    if (lb) {
+      sz_strlcat(s, "\n");
+      lb = false;
+    } else {
+      sz_strlcat(s, "/");
     }
+    sz_strlcat(s, extra);
   }
-  extra_type_iterate_end;
   if (linebreaks & TILE_LB_RIVER_RESOURCE) {
     // New linebreak requested
     lb = true;
   }
 
-  if (tile_resource_is_valid(ptile)) {
+  if (info->resource) {
     if (lb) {
       sz_strlcat(s, "\n");
       lb = false;
     } else {
       sz_strlcat(s, " ");
     }
-    cat_snprintf(s, sizeof(s), "(%s)",
-                 extra_name_translation(ptile->resource));
+    cat_snprintf(s, sizeof(s), "(%s)", info->resource);
   }
   if (linebreaks & TILE_LB_RESOURCE_POLL) {
     // New linebreak requested
@@ -846,18 +888,15 @@ const char *tile_get_info_text(const struct tile *ptile,
 
   if (include_nuisances) {
     pollution = false;
-    extra_type_iterate(pextra)
-    {
-      if (pextra->category == ECAT_NUISANCE) {
-        pollution =
-            tile_info_pollution(s, bufsz, ptile, pextra, pollution, lb);
-      }
+    for (char *extra : info->nuisances) {
+      pollution = tile_info_pollution(s, bufsz, ptile, extra, pollution, lb);
     }
-    extra_type_iterate_end;
     if (pollution) {
       sz_strlcat(s, "]");
     }
   }
+
+  tile_delete_info(info);
 
   return s;
 }

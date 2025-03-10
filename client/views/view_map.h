@@ -120,6 +120,7 @@ public:
   static info_tile *i(struct tile *p = nullptr);
   static void drop();
   static bool shown();
+  static bool under_mouse();
 
   struct tile *itile;
 
@@ -127,6 +128,12 @@ private:
   info_tile(struct tile *ptile, QWidget *parent = 0);
   static info_tile *m_instance;
   void calc_size();
+
+protected:
+  void leaveEvent(QEvent *event) override;
+
+private slots:
+  void anchor_clicked(const QString &link);
 };
 
 void popdown_tile_info();
