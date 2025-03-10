@@ -861,7 +861,7 @@ void set_client_state(enum client_states newstate)
     init_city_report_game_data();
     options_dialogs_set();
     create_event(nullptr, E_GAME_START, ftc_client, _("Game started."));
-    if (pplayer) {
+    if (pplayer && pplayer->is_alive) {
       research_update(research_get(pplayer));
     }
     role_unit_precalcs();
