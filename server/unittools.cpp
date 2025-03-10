@@ -1369,8 +1369,8 @@ void bounce_unit(struct unit *punit, int max_distance,
   qDebug() << "Bouncing: found" << paths.size() << "possible paths";
 
   if (!paths.empty()) {
-    const auto path = paths[fc_rand(paths.size())];
-    const auto steps = path.steps();
+    const auto& path = paths[fc_rand(paths.size())];
+    const auto& steps = path.steps();
     const auto end_tile = path.steps().back().location;
     if (on_success) {
       on_success({.bunit = punit, .to_tile = end_tile});
