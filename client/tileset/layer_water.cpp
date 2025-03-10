@@ -46,7 +46,7 @@ void layer_water::initialize_extra(const extra_type *extra,
     }
     terrain_type_iterate_end;
 
-    m_cardinals.push_back(data);
+    m_cardinals.push_back(std::move(data));
   } else if (style == ESTYLE_RIVER) {
     extra_data outlet, river;
     river.extra = extra;
