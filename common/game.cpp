@@ -189,6 +189,15 @@ void game_remove_city(struct world *gworld, struct city *pcity)
       }
     }
     city_tile_iterate_end;
+
+    // Remove improvements to ensure that wonders get removed from caches.
+    improvement_iterate(pimprove)
+    {
+      if (city_has_building(pcity, pimprove)) {
+        city_remove_improvement(pcity, pimprove);
+      }
+    }
+    improvement_iterate_end;
   }
 
   idex_unregister_city(gworld, pcity);
