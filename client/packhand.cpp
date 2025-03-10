@@ -2602,7 +2602,7 @@ void handle_research_info(const struct packet_research_info *packet)
     }
   }
   advance_index_iterate_end;
-  if (!client_is_global_observer()) {
+  if (!client_is_global_observer() && client_player()->is_alive) {
     research_update(presearch);
   }
 
