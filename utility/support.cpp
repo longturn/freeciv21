@@ -40,6 +40,7 @@
 
 #include <fc_config.h>
 
+#include <climits>
 #include <cmath> // ceil()
 #include <cstdarg>
 #include <cstdio>
@@ -577,7 +578,13 @@ int cat_snprintf(char *str, size_t n, const char *format, ...)
   va_start(ap, format);
   ret = fc_vsnprintf(str + len, n - len, format, ap);
   va_end(ap);
-  return (-1 == ret ? -1 : ret + len);
+
+  if (-1 == ret) {
+    return -1;
+  }
+
+  fc_assert_ret_val(ret <= INT_MAX - len, INT_MAX);
+  return ret + len;
 }
 
 /**
