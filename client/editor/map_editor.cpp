@@ -4,13 +4,16 @@
 // Editor
 #include "editor/map_editor.h"
 
-// Client                   ::Where Needed::
+// Client                     ::Where Needed::
 #include "citydlg.h"        //map_editor::showEvent
 #include "client_main.h"    //map_editor::check_open
 #include "fc_client.h"      //map_editor::check_open
 #include "minimap_panel.h"  //map_editor::showEvent
 #include "page_game.h"      //map_editor::showEvent
 #include "views/view_map.h" //map_editor::showEvent
+
+// common
+#include "chatline_common.h" //map_editor::player_changed
 
 /**
  *  \class map_editor
@@ -28,6 +31,9 @@ map_editor::map_editor(QWidget *parent)
   setParent(parent);
   setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding);
   setAutoFillBackground(true);
+
+  // initialize in constructor
+  ett_wdg = new editor_tool_tile;
 
   ui.label_title->setText(_("MAP EDITOR"));
   ui.label_title->setAlignment(Qt::AlignCenter);
@@ -51,6 +57,11 @@ map_editor::map_editor(QWidget *parent)
       QIcon::fromTheme(QStringLiteral("editor-tile")));
   connect(ui.tbut_tool_tile, &QAbstractButton::clicked, this,
           &map_editor::select_tool_tile);
+
+  // Slot to handle selections from the players list
+  QObject::connect(ui.combo_players,
+                   QOverload<int>::of(&QComboBox::currentIndexChanged), this,
+                   &map_editor::player_changed);
 }
 
 /**
@@ -92,7 +103,7 @@ void map_editor::check_open()
     queen()->map_editor_wdg->show();
   } else {
     hud_message_box *ask = new hud_message_box(king()->central_wdg);
-    ask->set_text_title(_("Cannot enable edit mode. You do not have the "
+    ask->set_text_title(_("Cannot enable edit mode! You do not have the "
                           "correct access level."),
                         _("Map Editor"));
     ask->setStandardButtons(QMessageBox::Ok);
@@ -107,30 +118,75 @@ void map_editor::check_open()
  */
 void map_editor::close()
 {
-  // Notify the server we are exiting edit mode
+  // Notify the server we are exiting edit mode and show all floating widgets
   struct connection *my_conn = &client.conn;
   dsend_packet_edit_mode(my_conn, false);
-
-  setVisible(false);
   queen()->mapview_wdg->show_all_fcwidgets();
   queen()->unitinfo_wdg->show();
+  setVisible(false);
 }
 
 /**
- * \brief Populate a combo box with the current list of players
+ * \brief Populate a combo box with the current list of players by nation
+ * name
  */
 void map_editor::update_players()
 {
   if (!players_done) {
+
+    // Ensure we can take all possible nations
+    send_chat_printf("/set allowtake hHaAoObd");
+
     players_iterate(pplayer)
     {
       auto sprite =
           *get_nation_flag_sprite(tileset, nation_of_player(pplayer));
-      ui.combo_players->addItem(sprite,
-                                _(qUtf8Printable(player_name(pplayer))));
+      ui.combo_players->addItem(
+          sprite, _(qUtf8Printable(nation_adjective_for_player(pplayer))));
     }
     players_iterate_end;
+
+    // Pirates and Barbarians are problematic, so we get rid of them
+    for (int i = 0; i <= ui.combo_players->count(); i++) {
+      if (ui.combo_players->itemText(i).toUtf8() == "Pirate") {
+        ui.combo_players->removeItem(i);
+      }
+      if (ui.combo_players->itemText(i).toUtf8() == "Barbarian") {
+        ui.combo_players->removeItem(i);
+      }
+    }
+
+    ui.combo_players->model()->sort(0, Qt::AscendingOrder);
+    ui.combo_players->setCurrentText(
+        _(qUtf8Printable(nation_adjective_for_player(client.conn.playing))));
     players_done = true;
+  }
+}
+
+/**
+ * \brief Slot to change the active player for editing
+ */
+void map_editor::player_changed(int index)
+{
+  struct city *capital;
+
+  ui.combo_players->setCurrentIndex(index);
+
+  players_iterate(pplayer)
+  {
+    if (ui.combo_players->hasFocus()) {
+      if (ui.combo_players->currentText().toUtf8()
+          == nation_adjective_for_player(pplayer)) {
+        send_chat_printf("/take \"%s\"", pplayer->name);
+      }
+    }
+  }
+  players_iterate_end;
+
+  capital = player_primary_capital(client.conn.playing);
+  if (capital->tile) {
+    // Center on the tile
+    queen()->mapview_wdg->center_on_tile(capital->tile);
   }
 }
 
@@ -145,7 +201,6 @@ void map_editor::select_tool_tile()
     ett_wdg_active = false;
   } else {
     ui.tbut_tool_tile->setToolTip(_("Close Tile Tool"));
-    ett_wdg = new editor_tool_tile;
     ui.stackedWidget_tools->addWidget(ett_wdg);
     ett_wdg->show();
     ett_wdg->update();

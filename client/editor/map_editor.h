@@ -19,10 +19,9 @@ class map_editor : public QWidget {
 private:
   Ui::FormMapEditor ui;
 
-private:
   void close();
 
-  // Players/Nations
+  // Players
   void update_players();
   bool players_done = false;
 
@@ -30,6 +29,9 @@ private:
   void select_tool_tile();
   editor_tool_tile *ett_wdg;
   bool ett_wdg_active = false;
+
+private slots:
+  void player_changed(int index);
 
 public:
   map_editor(QWidget *parent);
