@@ -161,8 +161,6 @@ void map_editor::update_players()
  */
 void map_editor::player_changed(int index)
 {
-  struct city *capital;
-
   ui.combo_players->setCurrentIndex(index);
 
   players_iterate(pplayer)
@@ -173,12 +171,6 @@ void map_editor::player_changed(int index)
     }
   }
   players_iterate_end;
-
-  capital = player_primary_capital(client.conn.playing);
-  if (capital->tile) {
-    // Center on the tile
-    queen()->mapview_wdg->center_on_tile(capital->tile);
-  }
 }
 
 /**
