@@ -2752,6 +2752,14 @@ static void sg_load_players(struct loaddata *loading)
   if (game_was_started()) {
     assign_player_colors();
   }
+
+  // Now that we have players, we can check if techs are reachable.
+  // For example, dead players cannot reach any tech.
+  for (auto &pupres : research_array) {
+    if (research_is_valid(pupres)) {
+      research_update(&pupres);
+    }
+  }
 }
 
 /**
@@ -4843,13 +4851,7 @@ static void sg_load_researches(struct loaddata *loading)
     }
   }
 
-  /* In case of tech_leakage, we can update research only after all the
-   * researches have been loaded */
-  for (auto &pupres : research_array) {
-    if (research_is_valid(pupres)) {
-      research_update(&pupres);
-    }
-  };
+  // research_update is called after loading players
 }
 
 /* =======================================================================
