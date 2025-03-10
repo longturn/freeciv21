@@ -248,6 +248,7 @@ static enum attribute_serial unserialize_hash(attributeHash *hash,
     if (!dio_get_memory_raw(&din, ADD_TO_POINTER(pvalue, 4), value_length)) {
       qDebug("attribute.cpp unserialize_hash() "
              "memory dio_input_too_short");
+      ::operator delete[](pvalue);
       return A_SERIAL_FAIL;
     }
 
