@@ -170,6 +170,7 @@ static bool manual_command(struct tag_types *tag_info)
   if (!load_rulesets(nullptr, nullptr, false, nullptr, false, false,
                      false)) {
     // Failed to load correct ruleset
+    connection_common_close(&my_conn);
     return false;
   }
 
@@ -183,6 +184,7 @@ static bool manual_command(struct tag_types *tag_info)
 
     if (QFile::exists(filename) || !(doc = fc_fopen(filename, "w"))) {
       qCritical(_("Could not write manual file %s."), filename);
+      connection_common_close(&my_conn);
       return false;
     }
 
@@ -632,6 +634,7 @@ static bool manual_command(struct tag_types *tag_info)
     qInfo(_("Manual file %s successfully written."), filename);
   } // manuals
 
+  connection_common_close(&my_conn);
   return true;
 }
 
