@@ -10,7 +10,8 @@
 
 namespace freeciv {
 
-layer_goto::layer_goto(struct tileset *ts) : freeciv::layer(ts, LAYER_GOTO)
+layer_goto::layer_goto(struct tileset *ts)
+    : freeciv::layer(ts, LAYER_GOTO), m_waypoint(nullptr), m_states()
 {
 }
 
