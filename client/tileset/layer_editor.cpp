@@ -15,7 +15,7 @@
 namespace freeciv {
 
 layer_editor::layer_editor(struct tileset *ts)
-    : freeciv::layer(ts, LAYER_EDITOR)
+    : freeciv::layer(ts, LAYER_EDITOR), m_starting_position(nullptr)
 {
 }
 
