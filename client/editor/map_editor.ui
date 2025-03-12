@@ -20,10 +20,51 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="1">
+    <widget class="QToolButton" name="but_close">
+     <property name="maximumSize">
+      <size>
+       <width>32</width>
+       <height>32</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="2">
+    <layout class="QVBoxLayout" name="vlayout_tools">
+     <property name="spacing">
+      <number>5</number>
+     </property>
+     <property name="sizeConstraint">
+      <enum>QLayout::SetDefaultConstraint</enum>
+     </property>
+     <property name="leftMargin">
+      <number>5</number>
+     </property>
+     <property name="topMargin">
+      <number>5</number>
+     </property>
+     <property name="rightMargin">
+      <number>5</number>
+     </property>
+     <property name="bottomMargin">
+      <number>5</number>
+     </property>
+    </layout>
+   </item>
    <item row="0" column="0">
     <layout class="QVBoxLayout" name="vlayout_status_labels">
      <item>
       <widget class="QLabel" name="label_title">
+       <property name="maximumSize">
+        <size>
+         <width>200</width>
+         <height>20</height>
+        </size>
+       </property>
        <property name="text">
         <string>title</string>
        </property>
@@ -31,26 +72,18 @@
      </item>
      <item>
       <widget class="QLabel" name="label_status">
+       <property name="maximumSize">
+        <size>
+         <width>200</width>
+         <height>20</height>
+        </size>
+       </property>
        <property name="text">
         <string>status</string>
        </property>
       </widget>
      </item>
     </layout>
-   </item>
-   <item row="0" column="1">
-    <widget class="QToolButton" name="but_close">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label_players">
-     <property name="text">
-      <string>Current Players:</string>
-     </property>
-    </widget>
    </item>
    <item row="2" column="0" colspan="2">
     <widget class="QComboBox" name="combo_players">
@@ -70,19 +103,6 @@
    </item>
    <item row="3" column="0" colspan="2">
     <layout class="QGridLayout" name="glayout_tools">
-     <item row="0" column="0">
-      <widget class="QToolButton" name="tbut_tool_tile">
-       <property name="minimumSize">
-        <size>
-         <width>32</width>
-         <height>32</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>tile</string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="1">
       <spacer name="tbut_spacer">
        <property name="orientation">
@@ -96,31 +116,55 @@
        </property>
       </spacer>
      </item>
+     <item row="0" column="0">
+      <widget class="QToolButton" name="tbut_tool_tile">
+       <property name="minimumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>tile</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
-   <item row="4" column="0" colspan="2">
-    <widget class="QGroupBox" name="qGroupBox_tools">
-     <layout class="QVBoxLayout" name="vlayout_tools">
-      <property name="leftMargin">
-       <number>5</number>
-      </property>
-      <property name="topMargin">
-       <number>5</number>
-      </property>
-      <property name="rightMargin">
-       <number>5</number>
-      </property>
-      <property name="bottomMargin">
-       <number>5</number>
-      </property>
-      <item>
-       <widget class="QStackedWidget" name="stackedWidget_tools">
-        <widget class="QWidget" name="page_1"/>
-        <widget class="QWidget" name="page_2"/>
-       </widget>
-      </item>
-     </layout>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_players">
+     <property name="maximumSize">
+      <size>
+       <width>240</width>
+       <height>20</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Current Players:</string>
+     </property>
     </widget>
+   </item>
+   <item row="5" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::MinimumExpanding</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

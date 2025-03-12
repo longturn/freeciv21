@@ -10,6 +10,18 @@
     <height>500</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>240</width>
+    <height>500</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -35,6 +47,70 @@
     <property name="bottomMargin">
      <number>5</number>
     </property>
+    <item row="6" column="0">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="label_nat_y">
+      <property name="text">
+       <string>Native Y: </string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_y">
+      <property name="text">
+       <string>Tile Y: </string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="QLabel" name="value_nat_y">
+      <property name="text">
+       <string>value_nat_y</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QLabel" name="value_nat_x">
+      <property name="text">
+       <string>value_nat_x</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QLabel" name="value_y">
+      <property name="text">
+       <string>value_y</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_x">
+      <property name="text">
+       <string>Tile X: </string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
     <item row="0" column="0">
      <widget class="QToolButton" name="tbut_select_tile">
       <property name="minimumSize">
@@ -51,7 +127,7 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="0">
+    <item row="4" column="0">
      <widget class="QLabel" name="label_nat_x">
       <property name="text">
        <string>Native X: </string>
@@ -61,74 +137,24 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="1">
-     <widget class="QLabel" name="value_nat_x">
-      <property name="text">
-       <string>value_nat_x</string>
-      </property>
-     </widget>
-    </item>
     <item row="2" column="1">
-     <widget class="QLabel" name="value_y">
-      <property name="text">
-       <string>value_y</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="1">
-     <widget class="QLabel" name="value_nat_y">
-      <property name="text">
-       <string>value_nat_y</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
      <widget class="QLabel" name="value_x">
       <property name="text">
        <string>value_x</string>
       </property>
      </widget>
     </item>
-    <item row="5" column="0">
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="4" column="0">
-     <widget class="QLabel" name="label_nat_y">
-      <property name="text">
-       <string>Native Y: </string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-    </item>
     <item row="1" column="0">
-     <widget class="QLabel" name="label_x">
+     <widget class="QLabel" name="label_continent">
       <property name="text">
-       <string>Tile X: </string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <string>Continent: </string>
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="label_y">
+    <item row="1" column="1">
+     <widget class="QLabel" name="value_continent">
       <property name="text">
-       <string>Tile Y: </string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <string>value_continent</string>
       </property>
      </widget>
     </item>
