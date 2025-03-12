@@ -183,8 +183,6 @@ void editor_ruleset_changed()
  */
 void editor_init()
 {
-  //fc_assert(editor == nullptr);
-
   editor = new editor_state[1]();
 
   tool_init(ETT_TERRAIN, _("Terrain"), ETF_HAS_VALUE | ETF_HAS_SIZE,
