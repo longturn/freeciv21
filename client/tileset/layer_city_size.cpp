@@ -11,7 +11,8 @@
 namespace freeciv {
 
 layer_city_size::layer_city_size(struct tileset *ts, const QPoint &offset)
-    : freeciv::layer(ts, LAYER_CITY2), m_offset(offset)
+    : freeciv::layer(ts, LAYER_CITY2), m_offset(offset), m_units(), m_tens(),
+      m_hundreds()
 {
 }
 
