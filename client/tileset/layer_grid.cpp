@@ -19,7 +19,7 @@
 namespace freeciv {
 
 layer_grid::layer_grid(struct tileset *ts, mapview_layer layer)
-    : freeciv::layer(ts, layer)
+    : freeciv::layer(ts, layer), m_unavailable(nullptr), m_nonnative(nullptr)
 {
 }
 
