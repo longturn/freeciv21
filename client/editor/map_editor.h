@@ -20,15 +20,13 @@ private:
   Ui::FormMapEditor ui;
 
   void close();
-
-  // Players
   void update_players();
-  bool players_done = false;
-
-  // Tile Tool
   void select_tool_tile();
-  editor_tool_tile *ett_wdg;
+
+  bool players_done = false;
   bool ett_wdg_active = false;
+
+  editor_tool_tile *ett_wdg;
 
 private slots:
   void player_changed(int index);
@@ -36,7 +34,9 @@ private slots:
 public:
   map_editor(QWidget *parent);
   ~map_editor() override;
+
   void check_open();
+  void tile_selected(struct tile *ptile);
 
 protected:
   void showEvent(QShowEvent *event) override;
