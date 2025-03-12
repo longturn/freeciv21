@@ -471,8 +471,7 @@ const char *conn_description(const struct connection *pconn, bool is_private)
  */
 bool can_conn_edit(const struct connection *pconn)
 {
-  return (can_conn_enable_editing(pconn) && game.info.is_edit_mode
-          && (nullptr != pconn->playing || pconn->observer));
+  return (can_conn_enable_editing(pconn) && game.info.is_edit_mode);
 }
 
 /**
