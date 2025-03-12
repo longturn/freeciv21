@@ -11,11 +11,13 @@
 // Qt
 #include <QApplication>
 #include <QMouseEvent>
-// common
+
+// Common
 #include "control.h"
 #include "goto.h"
 #include "map.h"
-// client
+
+// Client
 #include "chatline_common.h"
 #include "citydlg.h"
 #include "citydlg_common.h"
@@ -33,6 +35,7 @@
 #include "unitselect.h"
 #include "views/view_map.h"
 #include "views/view_map_common.h"
+#include "editor.h"
 
 extern void qload_lua_script();
 extern void qreload_lua_script();
@@ -193,6 +196,12 @@ void map_view::shortcut_pressed(shortcut_id id)
 
   switch (id) {
   case SC_SELECT_BUTTON:
+    // Handle tile clicking in the editor.
+    if (editor_is_active() && check_tile_tool()) {
+      queen()->map_editor_wdg->tile_selected(ptile);
+      return;
+    }
+
     // Trade Generator - skip
     if (king()->trade_gen.hover_city) {
       king()->trade_gen.add_tile(ptile);
