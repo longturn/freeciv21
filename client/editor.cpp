@@ -183,7 +183,7 @@ void editor_ruleset_changed()
  */
 void editor_init()
 {
-  fc_assert(editor == nullptr);
+  //fc_assert(editor == nullptr);
 
   editor = new editor_state[1]();
 
