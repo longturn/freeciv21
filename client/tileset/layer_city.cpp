@@ -19,7 +19,8 @@ layer_city::layer_city(struct tileset *ts, const QPoint &city_offset,
                        const QPoint &occupied_offset)
     : freeciv::layer(ts, LAYER_CITY1), m_city_offset(city_offset),
       m_city_flag_offset(city_flag_offset),
-      m_occupied_offset(occupied_offset)
+      m_occupied_offset(occupied_offset), m_disorder(nullptr),
+      m_happy(nullptr)
 {
 }
 
