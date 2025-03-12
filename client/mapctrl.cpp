@@ -22,6 +22,7 @@
 #include "citydlg.h"
 #include "citydlg_common.h"
 #include "client_main.h"
+#include "editor.h"
 #include "editor/map_editor.h"
 #include "fc_client.h"
 #include "mapctrl_common.h"
@@ -35,7 +36,6 @@
 #include "unitselect.h"
 #include "views/view_map.h"
 #include "views/view_map_common.h"
-#include "editor.h"
 
 extern void qload_lua_script();
 extern void qreload_lua_script();
