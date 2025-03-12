@@ -1521,7 +1521,7 @@ void animate_unit_explosion(const tile *location)
     return;
   }
 
-  const auto anim = get_unit_explode_animation(tileset);
+  const auto &anim = get_unit_explode_animation(tileset);
   if (anim.empty()) {
     return;
   }
