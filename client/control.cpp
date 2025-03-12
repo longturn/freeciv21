@@ -274,7 +274,7 @@ void set_hover_state(const std::vector<unit *> &units,
                      enum unit_orders order)
 {
   fc_assert_ret(!units.empty()
-                || (state == HOVER_NONE || state == HOVER_DEBUG_TILE));
+                || (state == HOVER_NONE || state == HOVER_DEBUG_TILE || state == HOVER_EDIT_TILE));
   fc_assert_ret(state == HOVER_CONNECT || activity == ACTIVITY_LAST);
   fc_assert_ret((state == HOVER_GOTO || state == HOVER_GOTO_SEL_TGT)
                 || order == ORDER_LAST);
@@ -1175,6 +1175,9 @@ void control_mouse_cursor(struct tile *ptile)
   case HOVER_GOTO_SEL_TGT:
   case HOVER_DEBUG_TILE:
     /* Select a tile to target / find targets on. */
+    mouse_cursor_type = CURSOR_SELECT;
+    break;
+  case HOVER_EDIT_TILE:
     mouse_cursor_type = CURSOR_SELECT;
     break;
   };
@@ -2466,6 +2469,8 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
         clear_hover_state();
       }
       return;
+    case HOVER_EDIT_TILE:
+      break;
     }
 
     clear_hover_state();
@@ -2749,6 +2754,9 @@ void key_cancel_action()
     keyboardless_goto_start_tile = nullptr;
     break;
   case HOVER_DEBUG_TILE:
+    clear_hover_state();
+    break;
+  case HOVER_EDIT_TILE:
     clear_hover_state();
     break;
   case HOVER_NONE:
