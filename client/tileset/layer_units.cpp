@@ -27,7 +27,10 @@ layer_units::layer_units(struct tileset *ts, mapview_layer layer,
                          const QPoint &select_offset,
                          const QPoint &unit_offset,
                          const QPoint &unit_flag_offset)
-    : freeciv::layer_abstract_activities(ts, layer),
+    : freeciv::layer_abstract_activities(ts, layer), m_auto_attack(nullptr),
+      m_auto_settler(nullptr), m_auto_explore(nullptr), m_connect(nullptr),
+      m_loaded(nullptr), m_lowfuel(nullptr), m_patrol(nullptr),
+      m_stack(nullptr), m_tired(nullptr), m_action_decision_want(nullptr),
       m_activity_offset(activity_offset), m_select_offset(select_offset),
       m_unit_offset(unit_offset), m_unit_flag_offset(unit_flag_offset)
 {
