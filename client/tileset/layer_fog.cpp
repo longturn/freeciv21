@@ -13,7 +13,8 @@ namespace freeciv {
 
 layer_fog::layer_fog(struct tileset *ts, fog_style style,
                      darkness_style darkness)
-    : freeciv::layer(ts, LAYER_FOG), m_style(style), m_darkness(darkness)
+    : freeciv::layer(ts, LAYER_FOG), m_style(style), m_darkness(darkness),
+      m_fog_sprite(nullptr)
 {
 }
 
