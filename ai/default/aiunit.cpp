@@ -13,6 +13,7 @@
 
 // utility
 #include "bitvector.h"
+#include "log.h"
 #include "rand.h"
 #include "registry.h"
 #include "registry_ini.h"
@@ -796,7 +797,9 @@ int look_for_charge(struct ai_type *ait, struct player *pplayer,
         continue;
       }
       // Reduce want based on move cost.
-      def >>= move_cost / (2 * std::min(1, unit_move_rate(punit)));
+      int divisor = (2 * std::min(1, unit_move_rate(punit)));
+      fc_assert_action(divisor != 0, continue);
+      def >>= move_cost / divisor;
       if (def > best_def && ai_fuzzy(pplayer, true)) {
         *acity = pcity;
         *aunit = nullptr;
