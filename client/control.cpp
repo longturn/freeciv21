@@ -274,7 +274,8 @@ void set_hover_state(const std::vector<unit *> &units,
                      enum unit_orders order)
 {
   fc_assert_ret(!units.empty()
-                || (state == HOVER_NONE || state == HOVER_DEBUG_TILE || state == HOVER_EDIT_TILE));
+                || (state == HOVER_NONE || state == HOVER_DEBUG_TILE
+                    || state == HOVER_EDIT_TILE));
   fc_assert_ret(state == HOVER_CONNECT || activity == ACTIVITY_LAST);
   fc_assert_ret((state == HOVER_GOTO || state == HOVER_GOTO_SEL_TGT)
                 || order == ORDER_LAST);
