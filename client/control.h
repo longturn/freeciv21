@@ -24,6 +24,7 @@ enum cursor_hover_state {
   HOVER_ACT_SEL_TGT,
   HOVER_GOTO_SEL_TGT,
   HOVER_DEBUG_TILE,
+  HOVER_EDIT_TILE,
 };
 
 // Selecting unit from a stack without popup.
