@@ -201,7 +201,7 @@ layer_units::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
   // HP
   {
     auto ihp = ((m_hp_bar.size() - 1) * punit->hp) / type->hp;
-    ihp = CLIP(0, ihp, m_hp_bar.size() - 1); // Safety
+    ihp = MIN(ihp, m_hp_bar.size() - 1); // Safety
     sprs.emplace_back(tileset(), m_hp_bar[ihp], true, full_offset);
   }
 
