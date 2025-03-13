@@ -325,7 +325,10 @@ void map_view::shortcut_pressed(shortcut_id id)
     break;
 
   case SC_MAP_EDITOR:
-    queen()->map_editor_wdg->check_open();
+    // Editor is not meant to be used with observers
+    if (!client_is_observer() || !client_is_global_observer()) {
+      queen()->map_editor_wdg->check_open();
+    }
     break;
 
   case SC_HIDE_WORKERS:
