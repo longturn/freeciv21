@@ -17,6 +17,7 @@
 
 // Qt
 #include <QCommandLinkButton>
+#include <QCursor>
 #include <QMouseEvent>
 #include <QPainter>
 
@@ -666,6 +667,15 @@ void info_tile::drop()
 bool info_tile::shown() { return m_instance && m_instance->isVisible(); }
 
 /**
+ * Returns true, if the info tile is currently under the mouse cursor.
+ */
+bool info_tile::under_mouse()
+{
+  return m_instance->rect().contains(
+      m_instance->mapFromGlobal(QCursor::pos()));
+};
+
+/**
    Returns given instance
  */
 info_tile *info_tile::i(struct tile *p)
@@ -675,6 +685,11 @@ info_tile *info_tile::i(struct tile *p)
   }
   return m_instance;
 }
+
+/**
+ * Closes the info tile when the mouse leaves.
+ */
+void info_tile::leaveEvent(QEvent *event) { popdown_tile_info(); }
 
 /**
    Popups information label tile
