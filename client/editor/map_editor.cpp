@@ -127,6 +127,7 @@ void map_editor::close()
   queen()->mapview_wdg->show_all_fcwidgets();
   queen()->unitinfo_wdg->show();
   ett_wdg->close_tool();
+  ett_wdg->hide();
   editor_free();
 
   setVisible(false);
@@ -189,7 +190,7 @@ void map_editor::select_tool_tile()
     ett_wdg_active = false;
   } else {
     ui.tbut_tool_tile->setToolTip(_("Close Tile Tool"));
-    ui.vlayout_tools->addWidget(ett_wdg);
+    ui.sw_tools->addWidget(ett_wdg);
     editor_set_tool(ETT_TERRAIN);
     ett_wdg->show();
     ett_wdg->update();

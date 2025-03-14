@@ -53,6 +53,25 @@
      <property name="bottomMargin">
       <number>5</number>
      </property>
+     <item>
+      <widget class="QStackedWidget" name="sw_tools">
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Panel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <property name="lineWidth">
+        <number>3</number>
+       </property>
+       <property name="currentIndex">
+        <number>-1</number>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item row="0" column="0">
