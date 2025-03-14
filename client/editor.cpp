@@ -332,7 +332,14 @@ enum editor_tool_mode editor_tool_get_mode(enum editor_tool_type ett)
 /**
    Returns TRUE if the *client* is in edit mode.
  */
-bool editor_is_active() { editor != nullptr &&can_conn_edit(&client.conn); }
+bool editor_is_active()
+{
+  if (editor != nullptr && can_conn_edit(&client.conn)) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 /**
    Returns TRUE if the given tool should be made available to the user via

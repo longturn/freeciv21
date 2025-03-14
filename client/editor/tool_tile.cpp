@@ -25,21 +25,9 @@
  */
 editor_tool_tile::editor_tool_tile(QWidget *parent)
 {
-  // chatline font is fixed width
-  auto value_font = fcFont::instance()->getFont(fonts::chatline);
-  ui.setupUi(this);
 
-  // Set default values and the font we want.
-  ui.value_continent->setText(_("-"));
-  ui.value_continent->setFont(value_font);
-  ui.value_x->setText(_("-"));
-  ui.value_x->setFont(value_font);
-  ui.value_y->setText(_("-"));
-  ui.value_y->setFont(value_font);
-  ui.value_nat_x->setText(_("-"));
-  ui.value_nat_x->setFont(value_font);
-  ui.value_nat_y->setText(_("-"));
-  ui.value_nat_y->setFont(value_font);
+  ui.setupUi(this);
+  set_default_values();
 
   // Set the tool button or Tile Tool
   ui.tbut_select_tile->setText("");
@@ -59,6 +47,27 @@ editor_tool_tile::editor_tool_tile(QWidget *parent)
 editor_tool_tile::~editor_tool_tile() {}
 
 /**
+ * \brief Function that can be used to set the default values for the widget
+ */
+void editor_tool_tile::set_default_values()
+{
+  // chatline font is fixed width
+  auto value_font = fcFont::instance()->getFont(fonts::chatline);
+
+  // Set default values and the font we want.
+  ui.value_continent->setText(_("-"));
+  ui.value_continent->setFont(value_font);
+  ui.value_x->setText(_("-"));
+  ui.value_x->setFont(value_font);
+  ui.value_y->setText(_("-"));
+  ui.value_y->setFont(value_font);
+  ui.value_nat_x->setText(_("-"));
+  ui.value_nat_x->setFont(value_font);
+  ui.value_nat_y->setText(_("-"));
+  ui.value_nat_y->setFont(value_font);
+}
+
+/**
  *  \brief Select a tile for editor_tool_tile
  */
 void editor_tool_tile::select_tile()
@@ -71,7 +80,11 @@ void editor_tool_tile::select_tile()
 /**
  * \bried Close the Tile Tool
  */
-void editor_tool_tile::close_tool() { void clear_hover_state(); }
+void editor_tool_tile::close_tool()
+{
+  clear_hover_state();
+  set_default_values();
+}
 
 /**
  * \bried Update the editor tool widget UI elements
@@ -85,5 +98,5 @@ void editor_tool_tile::update_ett(struct tile *ptile)
   ui.value_nat_x->setNum(index_to_native_pos_x(ptile->index));
   ui.value_nat_y->setNum(index_to_native_pos_y(ptile->index));
 
-  void clear_hover_state();
+  clear_hover_state();
 }
