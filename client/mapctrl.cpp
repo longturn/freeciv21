@@ -11,15 +11,18 @@
 // Qt
 #include <QApplication>
 #include <QMouseEvent>
-// common
+
+// Common
 #include "control.h"
 #include "goto.h"
 #include "map.h"
-// client
+
+// Client
 #include "chatline_common.h"
 #include "citydlg.h"
 #include "citydlg_common.h"
 #include "client_main.h"
+#include "editor.h"
 #include "editor/map_editor.h"
 #include "fc_client.h"
 #include "mapctrl_common.h"
@@ -193,6 +196,12 @@ void map_view::shortcut_pressed(shortcut_id id)
 
   switch (id) {
   case SC_SELECT_BUTTON:
+    // Handle tile clicking in the editor.
+    if (editor_is_active()) {
+      queen()->map_editor_wdg->tile_selected(ptile);
+      return;
+    }
+
     // Trade Generator - skip
     if (king()->trade_gen.hover_city) {
       king()->trade_gen.add_tile(ptile);
@@ -316,7 +325,10 @@ void map_view::shortcut_pressed(shortcut_id id)
     break;
 
   case SC_MAP_EDITOR:
-    queen()->map_editor_wdg->check_open();
+    // Editor is not meant to be used with observers
+    if (!client_is_observer() || !client_is_global_observer()) {
+      queen()->map_editor_wdg->check_open();
+    }
     break;
 
   case SC_HIDE_WORKERS:

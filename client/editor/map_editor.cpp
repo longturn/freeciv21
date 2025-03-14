@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: GPLv3-or-later
 // SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
-// Editor
+// editor
 #include "editor/map_editor.h"
 
-// Client                     ::Where Needed::
+// client                     ::Where Needed::
 #include "citydlg.h"        //map_editor::showEvent
 #include "client_main.h"    //map_editor::check_open
+#include "editor.h"         //map_editor::showEvent
 #include "fc_client.h"      //map_editor::check_open
 #include "minimap_panel.h"  //map_editor::showEvent
 #include "page_game.h"      //map_editor::showEvent
@@ -33,7 +34,7 @@ map_editor::map_editor(QWidget *parent)
   setAutoFillBackground(true);
 
   // initialize in constructor
-  ett_wdg = new editor_tool_tile;
+  ett_wdg = new editor_tool_tile(nullptr);
 
   ui.label_title->setText(_("MAP EDITOR"));
   ui.label_title->setAlignment(Qt::AlignCenter);
@@ -67,7 +68,7 @@ map_editor::map_editor(QWidget *parent)
 /**
  *  \brief Destructor for map_editor
  */
-map_editor::~map_editor() {}
+map_editor::~map_editor() { delete ett_wdg; }
 
 /**
  *  \brief Show event, enable edit mode
@@ -88,8 +89,7 @@ void map_editor::showEvent(QShowEvent *event)
   // TODO: Figure out how to disable the turn done button
 
   // initialize editor functions
-  // TODO: as called, causes an assertion
-  // editor_init();
+  editor_init();
 }
 
 /**
@@ -101,9 +101,6 @@ void map_editor::check_open()
   if (can_conn_edit(my_conn) || can_conn_enable_editing(my_conn)) {
     // Notify the server we are going into edit mode
     dsend_packet_edit_mode(my_conn, true);
-
-    // While editing, ensure we can take all possible nations
-    send_chat_printf("/set allowtake hHaAoObd");
 
     queen()->map_editor_wdg->show();
   } else {
@@ -126,8 +123,13 @@ void map_editor::close()
   // Notify the server we are exiting edit mode and show all floating widgets
   struct connection *my_conn = &client.conn;
   dsend_packet_edit_mode(my_conn, false);
+
   queen()->mapview_wdg->show_all_fcwidgets();
   queen()->unitinfo_wdg->show();
+  ett_wdg->close_tool();
+  ett_wdg->hide();
+  editor_free();
+
   setVisible(false);
 }
 
@@ -138,6 +140,9 @@ void map_editor::close()
 void map_editor::update_players()
 {
   if (!players_done) {
+    // While updating players, ensure we can take all possible nations
+    send_chat_printf("/set allowtake hHaAoObd");
+
     players_iterate(pplayer)
     {
       if (!is_barbarian(pplayer)) {
@@ -180,13 +185,30 @@ void map_editor::select_tool_tile()
 {
   if (ett_wdg_active) {
     ui.tbut_tool_tile->setToolTip(_("Open Tile Tool"));
+    ett_wdg->close_tool();
     ett_wdg->hide();
     ett_wdg_active = false;
   } else {
     ui.tbut_tool_tile->setToolTip(_("Close Tile Tool"));
-    ui.stackedWidget_tools->addWidget(ett_wdg);
+    ui.sw_tools->addWidget(ett_wdg);
+    editor_set_tool(ETT_TERRAIN);
     ett_wdg->show();
     ett_wdg->update();
     ett_wdg_active = true;
+  }
+}
+
+/**
+ * \brief Capture tile selected and pass tile structure to the editor tool
+ * tile widget
+ */
+void map_editor::tile_selected(struct tile *ptile)
+{
+  // Take the tile handed to us from mapctrl.cpp and pass it to the tile tool
+  // widget, which will do the real work.
+  if (can_edit_tile_properties(ptile)) {
+    if (ett_wdg_active) {
+      ett_wdg->update_ett(ptile);
+    }
   }
 }
