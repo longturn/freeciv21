@@ -203,7 +203,6 @@ void map_editor::select_tool_tile()
  */
 void map_editor::tile_selected(struct tile *ptile)
 {
-
   // Take the tile handed to us from mapctrl.cpp and pass it to the tile tool
   // widget, which will do the real work.
   if (can_edit_tile_properties(ptile)) {
