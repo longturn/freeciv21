@@ -25,7 +25,6 @@
  */
 editor_tool_tile::editor_tool_tile(QWidget *parent)
 {
-
   ui.setupUi(this);
   set_default_values();
 
