@@ -68,7 +68,7 @@ map_editor::map_editor(QWidget *parent)
 /**
  *  \brief Destructor for map_editor
  */
-map_editor::~map_editor() {}
+map_editor::~map_editor() { delete ett_wdg; }
 
 /**
  *  \brief Show event, enable edit mode
@@ -127,7 +127,6 @@ void map_editor::close()
   queen()->mapview_wdg->show_all_fcwidgets();
   queen()->unitinfo_wdg->show();
   ett_wdg->close_tool();
-  delete ett_wdg;
   editor_free();
 
   setVisible(false);
@@ -185,6 +184,7 @@ void map_editor::select_tool_tile()
 {
   if (ett_wdg_active) {
     ui.tbut_tool_tile->setToolTip(_("Open Tile Tool"));
+    ett_wdg->close_tool();
     ett_wdg->hide();
     ett_wdg_active = false;
   } else {
