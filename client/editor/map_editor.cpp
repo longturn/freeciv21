@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPLv3-or-later
 // SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
-// Editor
+// editor
 #include "editor/map_editor.h"
 
-// Client                     ::Where Needed::
+// client                     ::Where Needed::
 #include "citydlg.h"        //map_editor::showEvent
 #include "client_main.h"    //map_editor::check_open
 #include "editor.h"         //map_editor::showEvent
@@ -13,7 +13,7 @@
 #include "page_game.h"      //map_editor::showEvent
 #include "views/view_map.h" //map_editor::showEvent
 
-// Common
+// common
 #include "chatline_common.h" //map_editor::player_changed
 
 /**
@@ -34,7 +34,7 @@ map_editor::map_editor(QWidget *parent)
   setAutoFillBackground(true);
 
   // initialize in constructor
-  ett_wdg = new editor_tool_tile(0);
+  ett_wdg = new editor_tool_tile(nullptr);
 
   ui.label_title->setText(_("MAP EDITOR"));
   ui.label_title->setAlignment(Qt::AlignCenter);
@@ -127,7 +127,9 @@ void map_editor::close()
   queen()->mapview_wdg->show_all_fcwidgets();
   queen()->unitinfo_wdg->show();
   ett_wdg->close_tool();
+  delete ett_wdg;
   editor_free();
+
   setVisible(false);
 }
 
@@ -187,8 +189,8 @@ void map_editor::select_tool_tile()
     ett_wdg_active = false;
   } else {
     ui.tbut_tool_tile->setToolTip(_("Close Tile Tool"));
-    ett_wdg = new editor_tool_tile(0);
     ui.vlayout_tools->addWidget(ett_wdg);
+    editor_set_tool(ETT_TERRAIN);
     ett_wdg->show();
     ett_wdg->update();
     ett_wdg_active = true;
@@ -201,7 +203,12 @@ void map_editor::select_tool_tile()
  */
 void map_editor::tile_selected(struct tile *ptile)
 {
+
   // Take the tile handed to us from mapctrl.cpp and pass it to the tile tool
   // widget, which will do the real work.
-  ett_wdg->update_ett(ptile);
+  if (can_edit_tile_properties(ptile)) {
+    if (ett_wdg_active) {
+      ett_wdg->update_ett(ptile);
+    }
+  }
 }

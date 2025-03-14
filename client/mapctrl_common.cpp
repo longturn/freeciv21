@@ -369,7 +369,6 @@ void update_line(int canvas_x, int canvas_y)
   case HOVER_PARADROP:
   case HOVER_ACT_SEL_TGT:
   case HOVER_DEBUG_TILE:
-    break;
   case HOVER_EDIT_TILE:
     break;
   };

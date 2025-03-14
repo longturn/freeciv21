@@ -1175,10 +1175,8 @@ void control_mouse_cursor(struct tile *ptile)
   case HOVER_ACT_SEL_TGT:
   case HOVER_GOTO_SEL_TGT:
   case HOVER_DEBUG_TILE:
-    /* Select a tile to target / find targets on. */
-    mouse_cursor_type = CURSOR_SELECT;
-    break;
   case HOVER_EDIT_TILE:
+    /* Select a tile to target / find targets on. */
     mouse_cursor_type = CURSOR_SELECT;
     break;
   };
@@ -2755,8 +2753,6 @@ void key_cancel_action()
     keyboardless_goto_start_tile = nullptr;
     break;
   case HOVER_DEBUG_TILE:
-    clear_hover_state();
-    break;
   case HOVER_EDIT_TILE:
     clear_hover_state();
     break;
