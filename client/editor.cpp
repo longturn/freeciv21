@@ -183,6 +183,8 @@ void editor_ruleset_changed()
  */
 void editor_init()
 {
+  fc_assert(editor != nullptr);
+
   editor = new editor_state[1]();
 
   tool_init(ETT_TERRAIN, _("Terrain"), ETF_HAS_VALUE | ETF_HAS_SIZE,
@@ -330,7 +332,7 @@ enum editor_tool_mode editor_tool_get_mode(enum editor_tool_type ett)
 /**
    Returns TRUE if the *client* is in edit mode.
  */
-bool editor_is_active() { return can_conn_edit(&client.conn); }
+bool editor_is_active() { editor != nullptr &&can_conn_edit(&client.conn); }
 
 /**
    Returns TRUE if the given tool should be made available to the user via
@@ -614,7 +616,7 @@ static void editor_grab_tool(const struct tile *ptile)
 /**
    Returns TRUE if the given tile has some objects with editable properties.
  */
-static inline bool can_edit_tile_properties(struct tile *ptile)
+bool can_edit_tile_properties(struct tile *ptile)
 {
   return ptile != nullptr;
 }

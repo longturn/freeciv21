@@ -57,6 +57,7 @@ void editor_free();
 void editor_ruleset_changed();
 
 bool editor_is_active();
+bool can_edit_tile_properties(struct tile *ptile);
 enum editor_tool_type editor_get_tool();
 void editor_set_tool(enum editor_tool_type emt);
 const struct tile *editor_get_current_tile();
