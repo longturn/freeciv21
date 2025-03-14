@@ -74,7 +74,6 @@ void editor_tool_tile::select_tile()
 {
   set_hover_state({}, HOVER_EDIT_TILE, ACTIVITY_LAST, nullptr, NO_TARGET,
                   NO_TARGET, ACTION_NONE, ORDER_LAST);
-  return;
 }
 
 /**
@@ -84,6 +83,7 @@ void editor_tool_tile::close_tool()
 {
   clear_hover_state();
   set_default_values();
+  editor_clear();
 }
 
 /**
@@ -91,12 +91,13 @@ void editor_tool_tile::close_tool()
  */
 void editor_tool_tile::update_ett(struct tile *ptile)
 {
-  editor_set_current_tile(ptile);
-  ui.value_continent->setNum(ptile->continent);
-  ui.value_x->setNum(index_to_map_pos_x(ptile->index));
-  ui.value_y->setNum(index_to_map_pos_y(ptile->index));
-  ui.value_nat_x->setNum(index_to_native_pos_x(ptile->index));
-  ui.value_nat_y->setNum(index_to_native_pos_y(ptile->index));
-
+  if (ptile) {
+    editor_set_current_tile(ptile);
+    ui.value_continent->setNum(ptile->continent);
+    ui.value_x->setNum(index_to_map_pos_x(ptile->index));
+    ui.value_y->setNum(index_to_map_pos_y(ptile->index));
+    ui.value_nat_x->setNum(index_to_native_pos_x(ptile->index));
+    ui.value_nat_y->setNum(index_to_native_pos_y(ptile->index));
+  }
   clear_hover_state();
 }
