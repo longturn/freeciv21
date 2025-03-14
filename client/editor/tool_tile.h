@@ -17,6 +17,7 @@ private:
   Ui::FormToolTile ui;
 
   void select_tile();
+  void set_default_values();
 
 public:
   editor_tool_tile(QWidget *parent = nullptr);
