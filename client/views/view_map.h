@@ -131,6 +131,9 @@ private:
 
 protected:
   virtual void leaveEvent(QEvent *event) override;
+
+private slots:
+  void anchor_clicked(const QString &link);
 };
 
 void popdown_tile_info();
