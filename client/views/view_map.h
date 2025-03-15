@@ -130,7 +130,7 @@ private:
   void calc_size();
 
 protected:
-  virtual void leaveEvent(QEvent *event) override;
+  void leaveEvent(QEvent *event) override;
 
 private slots:
   void anchor_clicked(const QString &link);
