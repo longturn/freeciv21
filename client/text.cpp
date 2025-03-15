@@ -44,6 +44,8 @@
 #include "climisc.h"
 #include "control.h"
 #include "goto.h"
+#include "helpdata.h"
+#include "helpdlg.h"
 
 #include "text.h"
 
@@ -364,12 +366,14 @@ const QString popup_info_text(struct tile *ptile)
     if (punit->name.isEmpty()) {
       // TRANS: "Unit: <unit type> #<unit id>
       unit_description = QString(_("%1 #%2"))
-                             .arg(utype_name_translation(ptype))
+                             .arg(create_help_link(
+                                 utype_name_translation(ptype), HELP_UNIT))
                              .arg(punit->id);
     } else {
       // TRANS: "Unit: <unit type> #<unit id> "<unit name>"
       unit_description = QString(_("%1 #%2 \"%3\""))
-                             .arg(utype_name_translation(ptype))
+                             .arg(create_help_link(
+                                 utype_name_translation(ptype), HELP_UNIT))
                              .arg(punit->id)
                              .arg(punit->name);
     }
