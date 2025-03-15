@@ -11,6 +11,9 @@
 #include <math.h> // ceil
 #include <string.h>
 
+// Qt
+#include <QRegularExpression>
+
 // utility
 #include "astring.h"
 #include "fcintl.h"
@@ -156,11 +159,11 @@ const QString popup_info_text(struct tile *ptile)
   bool first;
 
   index_to_map_pos(&tile_x, &tile_y, tile_index(ptile));
-  str = QString(_("Location: (%1, %2) [%3]\n"))
+  str = QString(_("Location: (%1, %2) [%3]<br>"))
             .arg(QString::number(tile_x), QString::number(tile_y),
                  QString::number(tile_continent(ptile)));
   index_to_native_pos(&nat_x, &nat_y, tile_index(ptile));
-  str += QString(_("Native coordinates: (%1, %2)\n"))
+  str += QString(_("Native coordinates: (%1, %2)<br>"))
              .arg(QString::number(nat_x), QString::number(nat_y));
 
   if (client_tile_get_known(ptile) == TILE_UNKNOWN) {
@@ -168,9 +171,9 @@ const QString popup_info_text(struct tile *ptile)
     return str.trimmed();
   }
   str += QString(_("Terrain: %1")).arg(tile_get_info_text(ptile, true, 0))
-         + qendl();
+         + qbr();
   str += QString(_("Food/Prod/Trade: %1")).arg(get_tile_output_text(ptile))
-         + qendl();
+         + qbr();
   first = true;
   extra_type_iterate(pextra)
   {
@@ -179,8 +182,8 @@ const QString popup_info_text(struct tile *ptile)
       if (!first) {
         str += QStringLiteral(",%1").arg(extra_name_translation(pextra));
       } else {
-        str += QStringLiteral("%1").arg(extra_name_translation(pextra))
-               + qendl();
+        str +=
+            QStringLiteral("%1").arg(extra_name_translation(pextra)) + qbr();
         first = false;
       }
     }
@@ -193,11 +196,11 @@ const QString popup_info_text(struct tile *ptile)
     get_full_nation(nation, sizeof(nation), owner);
 
     if (nullptr != client.conn.playing && owner == client.conn.playing) {
-      str += QString(_("Our territory")) + qendl();
+      str += QString(_("Our territory")) + qbr();
     } else if (nullptr != owner && nullptr == client.conn.playing) {
       // TRANS: "Territory of <username> (<nation + team>)"
       str +=
-          QString(_("Territory of %1 (%2)")).arg(username, nation) + qendl();
+          QString(_("Territory of %1 (%2)")).arg(username, nation) + qbr();
     } else if (nullptr != owner) {
       struct player_diplstate *ds =
           player_diplstate_get(client.conn.playing, owner);
@@ -210,7 +213,7 @@ const QString popup_info_text(struct tile *ptile)
             QString(PL_("Territory of %1 (%2) (%3 turn cease-fire)",
                         "Territory of %1 (%2) (%3 turn cease-fire)", turns))
                 .arg(username, nation, QString::number(turns))
-            + qendl();
+            + qbr();
       } else if (ds->type == DS_ARMISTICE) {
         int turns = ds->turns_left;
         /* TRANS: "Territory of <username> (<nation + team>)
@@ -219,7 +222,7 @@ const QString popup_info_text(struct tile *ptile)
             QString(PL_("Territory of %1 (%2) (%3 turn armistice)",
                         "Territory of %1 (%2) (%3 turn armistice)", turns))
                 .arg(username, nation, QString::number(turns))
-            + qendl();
+            + qbr();
       } else {
         int type = ds->type;
         /* TRANS: "Territory of <username>
@@ -227,10 +230,10 @@ const QString popup_info_text(struct tile *ptile)
         str +=
             QString(_("Territory of %1 (%2 | %3)"))
                 .arg(username, nation, diplo_nation_plural_adjectives[type])
-            + qendl();
+            + qbr();
       }
     } else {
-      str += QString(_("Unclaimed territory")) + qendl();
+      str += QString(_("Unclaimed territory")) + qbr();
     }
   }
   if (pcity) {
@@ -247,7 +250,7 @@ const QString popup_info_text(struct tile *ptile)
       // TRANS: "City: <city name> | <username> (<nation + team>)"
       str += QString(_("City: %1 | %2 (%3)"))
                  .arg(city_name_get(pcity), username, nation)
-             + qendl();
+             + qbr();
     } else {
       struct player_diplstate *ds =
           player_diplstate_get(client_player(), owner);
@@ -260,7 +263,7 @@ const QString popup_info_text(struct tile *ptile)
                            "City: %1 | %2 (%3, %4 turn cease-fire)", turns))
                    .arg(city_name_get(pcity), username, nation,
                         QString::number(turns))
-               + qendl();
+               + qbr();
 
       } else if (ds->type == DS_ARMISTICE) {
         int turns = ds->turns_left;
@@ -271,14 +274,14 @@ const QString popup_info_text(struct tile *ptile)
                            "City: %1 | %2 (%3, %4 turn armistice)", turns))
                    .arg(city_name_get(pcity), username, nation,
                         QString::number(turns))
-               + qendl();
+               + qbr();
       } else {
         /* TRANS: "City: <city name> | <username>
          * (<nation + team>, <diplomatic state>)" */
         str += QString(_("City: %1 | %2 (%3, %4)"))
                    .arg(city_name_get(pcity), username, nation,
                         diplo_city_adjectives[ds->type])
-               + qendl();
+               + qbr();
       }
     }
     if (can_player_see_units_in_city(client_player(), pcity)) {
@@ -314,7 +317,7 @@ const QString popup_info_text(struct tile *ptile)
     if (!improvements.isEmpty()) {
       // TRANS: %s is a list of "and"-separated improvements.
       str += QString(_("   with %1.")).arg(strvec_to_and_list(improvements))
-             + qendl();
+             + qbr();
     }
 
     for (const auto &pfocus_unit : get_units_in_focus()) {
@@ -328,7 +331,7 @@ const QString popup_info_text(struct tile *ptile)
                    .arg(city_name_get(hcity),
                         QString::number(
                             trade_base_between_cities(hcity, pcity)))
-               + qendl();
+               + qbr();
       }
     }
   }
@@ -336,12 +339,12 @@ const QString popup_info_text(struct tile *ptile)
     const char *infratext = get_infrastructure_text(ptile->extras);
 
     if (*infratext != '\0') {
-      str += QString(_("Infrastructure: %1")).arg(infratext) + qendl();
+      str += QString(_("Infrastructure: %1")).arg(infratext) + qbr();
     }
   }
   activity_text = concat_tile_activity_text(ptile);
   if (activity_text.length() > 0) {
-    str += QString(_("Activity: %1")).arg(activity_text) + qendl();
+    str += QString(_("Activity: %1")).arg(activity_text) + qbr();
   }
   if (punit && !pcity) {
     struct player *owner = unit_owner(punit);
@@ -354,7 +357,7 @@ const QString popup_info_text(struct tile *ptile)
     if (dt < 0 && !can_unit_move_now(punit)) {
       char buf[64];
       format_time_duration(-dt, buf, sizeof(buf));
-      str += _("Can move in ") + QString(buf) + qendl();
+      str += _("Can move in ") + QString(buf) + qbr();
     }
 
     auto unit_description = QString();
@@ -378,29 +381,29 @@ const QString popup_info_text(struct tile *ptile)
                  .arg(unit_description)
                  .arg(username)
                  .arg(nation)
-             + qendl();
+             + qbr();
 
       if (game.info.citizen_nationality
           && unit_nationality(punit) != unit_owner(punit)) {
         if (hcity != nullptr) {
-          /* TRANS: on own line immediately following \n, "from <city> |
+          /* TRANS: on own line immediately following <br>, "from <city> |
            * <nationality> people" */
           str +=
               QString(_("from %1 | %2 people"))
                   .arg(city_name_get(hcity),
                        nation_adjective_for_player(unit_nationality(punit)))
-              + qendl();
+              + qbr();
         } else {
           /* TRANS: Nationality of the people comprising a unit, if
            * different from owner. */
           str +=
               QString(_("%1 people"))
                   .arg(nation_adjective_for_player(unit_nationality(punit)))
-              + qendl();
+              + qbr();
         }
       } else if (hcity != nullptr) {
-        // TRANS: on own line immediately following \n, ... <city>
-        str += QString(_("from %1")).arg(city_name_get(hcity)) + qendl();
+        // TRANS: on own line immediately following <br>, ... <city>
+        str += QString(_("from %1")).arg(city_name_get(hcity)) + qbr();
       }
     } else if (nullptr != owner) {
       struct player_diplstate *ds =
@@ -414,7 +417,7 @@ const QString popup_info_text(struct tile *ptile)
                            "Unit: %1 | %2 (%3, %4 turn cease-fire)", turns))
                    .arg(unit_description, username, nation,
                         QString::number(turns))
-               + qendl();
+               + qbr();
       } else if (ds->type == DS_ARMISTICE) {
         int turns = ds->turns_left;
 
@@ -424,14 +427,14 @@ const QString popup_info_text(struct tile *ptile)
                            "Unit: %1 | %2 (%3, %4 turn armistice)", turns))
                    .arg(unit_description, username, nation,
                         QString::number(turns))
-               + qendl();
+               + qbr();
       } else {
         /* TRANS: "Unit: <unit type> | <username> (<nation + team>,
          * <diplomatic state>)" */
         str += QString(_("Unit: %1 | %2 (%3, %4)"))
                    .arg(unit_description, username, nation,
                         diplo_city_adjectives[ds->type])
-               + qendl();
+               + qbr();
       }
     }
 
@@ -459,7 +462,7 @@ const QString popup_info_text(struct tile *ptile)
         str += QString(_("Chance to win: A:%1% D:%2%"))
                    .arg(QString::number(att_chance),
                         QString::number(def_chance))
-               + qendl();
+               + qbr();
       }
     }
 
@@ -486,22 +489,22 @@ const QString popup_info_text(struct tile *ptile)
         str += QStringLiteral(" (%1)").arg(veteran_name);
       }
     }
-    str += qendl();
+    str += qbr();
 
     if (!is_action_possible_on_unit(ACTION_SPY_BRIBE_UNIT, punit)) {
-      str += _("Bribing not possible.") + qendl();
+      str += _("Bribing not possible.") + qbr();
     } else if (unit_owner(punit) == client_player()
                || client_is_global_observer()) {
       // Show bribe cost for own units.
       str += QString(_("Probable bribe cost: %1"))
                  .arg(QString::number(unit_bribe_cost(punit, nullptr)))
-             + qendl();
+             + qbr();
     } else {
       // We can only give an (lower) boundary for units of other players.
       str +=
           QString(_("Estimated bribe cost: > %1"))
               .arg(QString::number(unit_bribe_cost(punit, client_player())))
-          + qendl();
+          + qbr();
     }
 
     if ((nullptr == client.conn.playing || owner == client.conn.playing)
@@ -512,7 +515,7 @@ const QString popup_info_text(struct tile *ptile)
     }
   }
 
-  return str.trimmed();
+  return str.trimmed().remove(QRegularExpression("<br>$"));
 }
 
 #define FAR_CITY_SQUARE_DIST (2 * (6 * 6))
