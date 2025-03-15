@@ -33,6 +33,7 @@
 #include "colors_common.h"
 #include "fc_client.h"
 #include "fonts.h"
+#include "helpdlg.h"
 #include "hudwidget.h"
 #include "mapctrl_common.h"
 #include "mapview_g.h"
@@ -621,6 +622,17 @@ info_tile::info_tile(struct tile *ptile, QWidget *parent)
   setWordWrap(true);
 
   calc_size();
+
+  connect(this, &QLabel::linkActivated, this, &info_tile::anchor_clicked);
+}
+
+/**
+   Called when a link in the info_tile has been clicked. Tries to open
+   the corresponding entry in the help system.
+ */
+void info_tile::anchor_clicked(const QString &link)
+{
+  follow_help_link(link);
 }
 
 /**
