@@ -20,6 +20,7 @@
 #include <QCursor>
 #include <QMouseEvent>
 #include <QPainter>
+#include <Qt>
 
 // utility
 #include "log.h"
@@ -614,6 +615,8 @@ info_tile::info_tile(struct tile *ptile, QWidget *parent)
     : QLabel(parent), itile(ptile)
 {
   setFont(fcFont::instance()->getFont(fonts::notify_label));
+  setTextFormat(Qt::RichText);
+  setTextInteractionFlags(Qt::LinksAccessibleByMouse);
   setText(popup_info_text(itile).trimmed());
   setWordWrap(true);
 

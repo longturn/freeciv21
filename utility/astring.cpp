@@ -61,6 +61,11 @@ QString strvec_to_and_list(const QVector<QString> &psv)
 
 QString qendl() { return QStringLiteral("\n"); }
 
+/**
+   Returns a "<br>" literal.
+ */
+QString qbr() { return QStringLiteral("<br>"); }
+
 // break line after after n-th char
 QString break_lines(const QString &src, int after)
 {
