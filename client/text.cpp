@@ -138,8 +138,12 @@ static inline void get_full_nation(char *buf, int buflen,
 
 /**
    Text to popup on a middle-click in the mapview.
+
+   The text is generated including links to help pages if with_links
+   is true.  This is set to false, if the text is generated to be
+   displayed in a hud_units tooltip, where the user can't click links.
  */
-const QString popup_info_text(struct tile *ptile)
+const QString popup_info_text(struct tile *ptile, bool with_links)
 {
   QString activity_text;
   struct city *pcity = tile_city(ptile);
@@ -159,6 +163,17 @@ const QString popup_info_text(struct tile *ptile)
   char nation[2 * MAX_LEN_NAME + 32];
   int tile_x, tile_y, nat_x, nat_y;
   bool first;
+
+  std::function<QString(const char *name, help_page_type hpt)> maybe_link;
+  if (with_links) {
+    maybe_link = [](const char *name, help_page_type hpt) -> QString {
+      return create_help_link(name, hpt);
+    };
+  } else {
+    maybe_link = [](const char *name, help_page_type _) -> QString {
+      return QString(name);
+    };
+  }
 
   index_to_map_pos(&tile_x, &tile_y, tile_index(ptile));
   str = QString(_("Location: (%1, %2) [%3]<br>"))
@@ -365,17 +380,17 @@ const QString popup_info_text(struct tile *ptile)
     auto unit_description = QString();
     if (punit->name.isEmpty()) {
       // TRANS: "Unit: <unit type> #<unit id>
-      unit_description = QString(_("%1 #%2"))
-                             .arg(create_help_link(
-                                 utype_name_translation(ptype), HELP_UNIT))
-                             .arg(punit->id);
+      unit_description =
+          QString(_("%1 #%2"))
+              .arg(maybe_link(utype_name_translation(ptype), HELP_UNIT))
+              .arg(punit->id);
     } else {
       // TRANS: "Unit: <unit type> #<unit id> "<unit name>"
-      unit_description = QString(_("%1 #%2 \"%3\""))
-                             .arg(create_help_link(
-                                 utype_name_translation(ptype), HELP_UNIT))
-                             .arg(punit->id)
-                             .arg(punit->name);
+      unit_description =
+          QString(_("%1 #%2 \"%3\""))
+              .arg(maybe_link(utype_name_translation(ptype), HELP_UNIT))
+              .arg(punit->id)
+              .arg(punit->name);
     }
 
     if (!client_player() || owner == client_player()) {
