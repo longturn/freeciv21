@@ -22,7 +22,7 @@ struct player_spaceship;
   These functions return static strings with generally useful text.
 ****************************************************************************/
 const QString get_tile_output_text(const struct tile *ptile);
-const QString popup_info_text(struct tile *ptile);
+const QString popup_info_text(struct tile *ptile, bool with_links);
 const QString get_nearest_city_text(struct city *pcity, int sq_dist);
 const QString unit_description(const unit *punit);
 const QString get_airlift_text(const std::vector<unit *> &units,
