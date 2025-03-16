@@ -46,7 +46,7 @@
       "name": "ASan",
       "displayName": "Build Everything in debug mode with ASan and ccache",
       "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build",
+      "binaryDir": "${sourceDir}/build-asan",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "RelWithDebInfo",
         "CMAKE_CXX_FLAGS": "-O2 -DGLIBCXX_ASSERTIONS -fsanitize=address -fsanitize=leak -fsanitize=undefined -fsanitize-address-use-after-scope -fsanitize-recover=all",
@@ -88,6 +88,24 @@
       "environment": {
         "CXX": "clazy",
         "CLAZY_CHECKS": "level2,no-qstring-allocations,no-ctor-missing-parent-argument,no-missing-qobject-macro"
+      }
+    },
+    {
+      "name": "clang",
+      "displayName": "Build with Clang and clang-tidy checks included at compile tile.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-clang",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_C_CLANG_TIDY": "clang-tidy",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_CXX_CLANG_TIDY": "clang-tidy",
+        "FREECIV_ENABLE_TOOLS": "ON",
+        "FREECIV_ENABLE_SERVER": "ON",
+        "FREECIV_ENABLE_CLIENT": "ON",
+        "FREECIV_ENABLE_NLS": "OFF"
       }
     },
     {
