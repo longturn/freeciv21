@@ -1,0 +1,32 @@
+# clang-tidy config file for Freeciv21
+
+# Include more checks over time
+Checks: >
+  -*,
+  misc-include-cleaner
+
+InheritParentConfig: true
+
+# We really only have .h files, but including all possible variations
+HeaderFileExtensions:
+  - h
+  - hh
+  - hpp
+  - hxx
+
+# We really only have .cpp files, but including all possible variations
+ImplementationFileExtensions:
+  - c
+  - cc
+  - cpp
+  - cxx
+
+HeaderFilterRegex: ''
+
+ExcludeHeaderFilterRegex: ''
+
+FormatStyle: file
+
+SystemHeaders: false
+
+UseColor: true
