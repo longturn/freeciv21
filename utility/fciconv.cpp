@@ -17,6 +17,7 @@
 
 #include <cstdarg>
 #include <cstdio>
+#include <libintl.h> // NOLINT(misc-include-cleaner)
 
 #include <QLocale>
 #include <QTextCodec>
