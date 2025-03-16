@@ -105,7 +105,7 @@
         "FREECIV_ENABLE_TOOLS": "ON",
         "FREECIV_ENABLE_SERVER": "ON",
         "FREECIV_ENABLE_CLIENT": "ON",
-        "FREECIV_ENABLE_NLS": "OFF"
+        "FREECIV_ENABLE_NLS": "ON"
       }
     },
     {
