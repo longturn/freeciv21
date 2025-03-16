@@ -14,10 +14,10 @@
 #include "fciconv.h"
 
 #include "fc_config.h"
+#include "fcintl.h" // NOLINT(misc-include-cleaner)
 
 #include <cstdarg>
 #include <cstdio>
-#include <libintl.h> // NOLINT(misc-include-cleaner)
 
 #include <QLocale>
 #include <QTextCodec>
