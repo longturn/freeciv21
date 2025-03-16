@@ -14,7 +14,6 @@
 #include <cstdlib>
 
 // utility
-#include "fcthread.h"
 #include "log.h"
 #include "rand.h"
 

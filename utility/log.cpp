@@ -13,8 +13,6 @@
 
 #include <fc_config.h>
 
-#include <vector>
-
 // Qt
 #include <QFileInfo>
 #include <QLoggingCategory>
@@ -28,8 +26,6 @@
 
 // utility
 #include "fcintl.h"
-#include "shared.h"
-
 #include "log.h"
 
 Q_LOGGING_CATEGORY(assert_category, "freeciv.assert")

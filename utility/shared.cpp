@@ -18,7 +18,6 @@
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
-#include <sys/stat.h>
 
 #ifdef FREECIV_MSWINDOWS
 #define ALWAYS_ROOT
