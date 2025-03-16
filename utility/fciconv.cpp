@@ -14,7 +14,6 @@
 #include "fciconv.h"
 
 #include "fc_config.h"
-#include "fcintl.h"
 
 #include <cstdarg>
 #include <cstdio>

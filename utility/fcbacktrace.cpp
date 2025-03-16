@@ -18,9 +18,6 @@
 #include <backward.hpp>
 #endif
 
-// utility
-#include "log.h"
-
 #include "fcbacktrace.h"
 
 // We don't want backtrace-spam to testmatic logs
