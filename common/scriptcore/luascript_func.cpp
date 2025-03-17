@@ -13,7 +13,6 @@
 /* dependencies/lua */
 extern "C" {
 #include "lua.h"
-#include "lualib.h"
 }
 
 /* common/scriptcore */

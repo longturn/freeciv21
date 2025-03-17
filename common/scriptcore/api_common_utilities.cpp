@@ -17,7 +17,6 @@
 
 // utilities
 #include "deprecations.h"
-#include "fcintl.h"
 #include "rand.h"
 
 // common

@@ -10,7 +10,6 @@
 
 // utility
 #include "deprecations.h"
-#include "fcintl.h"
 
 // common
 #include "achievements.h"

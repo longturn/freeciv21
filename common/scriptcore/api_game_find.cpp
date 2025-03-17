@@ -8,9 +8,6 @@
  see https://www.gnu.org/licenses/.
  */
 
-// utility
-#include "fcintl.h"
-
 // common
 #include "idex.h"
 #include "map.h"
