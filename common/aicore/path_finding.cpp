@@ -9,12 +9,9 @@
                   see https://www.gnu.org/licenses/.
  */
 // utility
-#include "bitvector.h"
-#include "genhash.h"
 #include "log.h"
 
 // common
-#include "game.h"
 #include "map.h"
 #include "movement.h"
 

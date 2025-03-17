@@ -23,7 +23,7 @@
 #include "city.h"
 #include "game.h"
 #include "government.h"
-#include "map.h"
+#include "map.h" // NOLINT(misc-include-cleaner)
 #include "specialist.h"
 
 #include "cm.h"

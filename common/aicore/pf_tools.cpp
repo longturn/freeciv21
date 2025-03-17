@@ -16,7 +16,6 @@
 #include "log.h"
 
 // common
-#include "base.h"
 #include "game.h"
 #include "movement.h"
 #include "tile.h"

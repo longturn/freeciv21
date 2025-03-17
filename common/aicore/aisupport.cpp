@@ -10,9 +10,7 @@
  */
 
 // utility
-#include "log.h"
 #include "shared.h"
-#include "support.h"
 
 // common
 #include "city.h"

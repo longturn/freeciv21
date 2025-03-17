@@ -11,15 +11,12 @@
 
 // utility
 #include "log.h"
-#include "support.h"
 
 // common
 #include "city.h"
-#include "game.h"
 #include "map.h"
 #include "unit.h"
 #include "unitlist.h"
-#include "unittype.h"
 
 #include "citymap.h"
 
