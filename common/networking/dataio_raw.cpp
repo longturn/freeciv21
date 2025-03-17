@@ -26,21 +26,15 @@
 // Qt
 #include <QtEndian>
 
-// utility
-#include "support.h"
-
 // common
-#include "events.h"
-#include "player.h"
 #include "requirements.h"
-#include "tech.h"
 #include "unit.h"
 #include "worklist.h"
 
 /* common/aicore */
 #include "cm.h"
 
-#include "dataio.h"
+#include "dataio.h" // NOLINT(misc-include-cleaner)
 
 static bool get_conv(char *dst, size_t ndst, const char *src, size_t nsrc);
 

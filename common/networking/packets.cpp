@@ -21,7 +21,7 @@
 #include "support.h"
 
 // commmon
-#include "dataio.h"
+#include "dataio.h" // NOLINT(misc-include-cleaner)
 #include "game.h"
 #include "packets.h"
 
