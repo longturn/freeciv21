@@ -1,6 +1,6 @@
 #include <QProcess>
 
-#include <QtTest>
+#include <QtTest> // NOLINT(misc-include-cleaner)
 
 // Macro values replaced by cmake
 #define RULESETS "$<JOIN:${RULESET_LIST},", ">"

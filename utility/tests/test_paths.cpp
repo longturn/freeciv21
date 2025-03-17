@@ -1,6 +1,6 @@
 #include "shared.h"
 
-#include <QtTest>
+#include <QtTest> // NOLINT(misc-include-cleaner)
 
 /**
  * Tests functions acting on paths
