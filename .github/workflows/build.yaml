@@ -156,7 +156,7 @@ jobs:
           export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/mingw64/lib/pkgconfig:/mingw64/share/pkgconfig
           cmake . -B build -G Ninja \
            -DCMAKE_INSTALL_PREFIX=$PWD/build/install \
-           -DCMAKE_BUILD_TYPE=Release
+           -DCMAKE_BUILD_TYPE=Debug
       - name: Build
         run: |
           cmake --build build
@@ -179,7 +179,7 @@ jobs:
       - name: Upload a build
         uses: actions/upload-artifact@v4
         with:
-          name: Windows-exe
+          name: WindowsDebug-exe
           path: build/Windows-x86_64/Freeciv21-*.exe
 
   windows_clang_msvc:

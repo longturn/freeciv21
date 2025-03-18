@@ -135,11 +135,11 @@ endif()
 
 # Define the GUI type for Win32 Qt programs
 # Removes the console window that pops up with the GUI app
-if (WIN32 OR MINGW OR MSYS)
-  set(GUI_TYPE WIN32)
-else()
-  set(GUI_TYPE "")
-endif()
+#if (WIN32 OR MINGW OR MSYS)
+#  set(GUI_TYPE WIN32)
+#else()
+#  set(GUI_TYPE "")
+#endif()
 
 if (EMSCRIPTEN)
   # This is a bit hacky and maybe it should be removed.
