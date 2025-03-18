@@ -11,9 +11,8 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
+// Qt
 #include <QBitArray>
-// utility
-#include "shared.h"
 
 // common
 #include "player.h"

@@ -22,7 +22,7 @@
 #include "path_finding.h"
 #include "pf_tools.h"
 
-/* server/advisors */
+// server/advisors
 #include "advgoto.h"
 #include "autoexplorer.h"
 
@@ -32,13 +32,10 @@
 #include "unithand.h"
 #include "unittools.h"
 
-/* server/advisors */
-#include "advdata.h"
-
 // ai
 #include "handicaps.h"
 
-/* ai/default */
+// ai/default
 #include "aidata.h"
 #include "aiguard.h"
 #include "ailog.h"

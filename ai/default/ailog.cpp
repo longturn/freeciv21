@@ -13,10 +13,8 @@
 #include "nation.h"
 #include "player.h"
 #include "research.h"
-// server
-#include "notify.h"
 
-/* ai/default */
+// ai/default
 #include "aidata.h"
 #include "aiplayer.h"
 #include "aiunit.h"

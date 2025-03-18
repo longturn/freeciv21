@@ -25,17 +25,17 @@
 
 // server
 #include "plrhand.h"
-#include "srv_log.h"
+#include "srv_log.h" // NOLINT(misc-include-cleaner)
 #include "techtools.h"
 
-/* server/advisors */
+// server/advisors
 #include "advdata.h"
 
-/* ai/default */
+// ai/default
 #include "aidata.h"
 #include "ailog.h"
 #include "aiplayer.h"
-#include "aitools.h"
+#include "aitools.h" // NOLINT(misc-include-cleaner)
 #include "daieffects.h"
 
 #include "aitech.h"

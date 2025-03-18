@@ -9,22 +9,18 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
   :X:              Freeciv21. If not, see https://www.gnu.org/licenses/.
  */
 
+// Qt
 #include <QHash>
-
-// utility
-#include "support.h"
-#include "timing.h"
 
 // common
 #include "city.h"
 #include "game.h"
 #include "government.h"
 #include "map.h"
-#include "packets.h"
 #include "player.h"
 #include "workertask.h"
 
-/* common/aicore */
+// common/aicore
 #include "citymap.h"
 #include "pf_tools.h"
 
@@ -35,7 +31,7 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "unithand.h"
 #include "unittools.h"
 
-/* server/advisors */
+// server/advisors
 #include "advdata.h"
 #include "advgoto.h"
 #include "advtools.h"
@@ -45,7 +41,7 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 // ai
 #include "handicaps.h"
 
-/* ai/default */
+// ai/default
 #include "aidata.h"
 #include "aiferry.h"
 #include "ailog.h"

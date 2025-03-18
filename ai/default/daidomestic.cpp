@@ -17,22 +17,20 @@
 // common
 #include "city.h"
 #include "game.h"
-#include "government.h"
 #include "movement.h"
 #include "traderoutes.h"
 #include "unit.h"
 #include "unitlist.h"
 #include "unittype.h"
 
-/* common/aicore */
+// common/aicore
 #include "pf_tools.h"
 
 // server
 #include "citytools.h"
 #include "srv_log.h"
-#include "unittools.h"
 
-/* server/advisors */
+// server/advisors
 #include "advbuilding.h"
 #include "advchoice.h"
 #include "advdata.h"
@@ -42,7 +40,7 @@
 #include "aitraits.h"
 #include "handicaps.h"
 
-/* ai/default */
+// ai/default
 #include "aidata.h"
 #include "ailog.h"
 #include "aiplayer.h"

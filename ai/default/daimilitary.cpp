@@ -19,21 +19,20 @@
 // common
 #include "combat.h"
 #include "game.h"
-#include "government.h"
 #include "map.h"
 #include "movement.h"
 #include "research.h"
 #include "specialist.h"
 #include "unitlist.h"
 
-/* common/aicore */
+// common/aicore
 #include "pf_tools.h"
 
 // server
 #include "srv_log.h"
 #include "srv_main.h"
 
-/* server/advisors */
+// server/advisors
 #include "advbuilding.h"
 #include "advchoice.h"
 #include "advdata.h"
@@ -45,12 +44,11 @@
 #include "difficulty.h"
 #include "handicaps.h"
 
-/* ai/default */
+// ai/default
 #include "aiair.h"
 #include "aidata.h"
 #include "aidiplomat.h"
 #include "aiferry.h"
-#include "aihand.h"
 #include "aihunt.h"
 #include "ailog.h"
 #include "aiparatrooper.h"

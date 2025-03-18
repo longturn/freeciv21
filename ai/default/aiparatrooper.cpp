@@ -24,18 +24,17 @@ received a copy of the GNU General Public License along with Freeciv21.
 #include "maphand.h"
 #include "srv_log.h"
 #include "unithand.h"
-#include "unittools.h"
 
-/* server/advisors */
+// server/advisors
 #include "advdata.h"
 
-/* server/generator */
+// server/generator
 #include "mapgen_utils.h"
 
 // ai
 #include "handicaps.h"
 
-/* ai/default */
+// ai/default
 #include "aidata.h"
 #include "ailog.h"
 #include "aiplayer.h"

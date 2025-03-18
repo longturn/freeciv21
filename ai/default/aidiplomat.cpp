@@ -9,21 +9,16 @@
  */
 
 // utility
-#include "bitvector.h"
 #include "log.h"
 #include "shared.h"
-#include "timing.h"
 
 // common
 #include "actions.h"
 #include "city.h"
-#include "combat.h"
 #include "game.h"
-#include "government.h"
 #include "map.h"
 #include "movement.h"
 #include "nation.h"
-#include "packets.h"
 #include "player.h"
 #include "research.h"
 #include "unit.h"
@@ -41,15 +36,14 @@
 #include "srv_log.h"
 #include "unithand.h"
 
-/* server/advisors */
+// server/advisors
 #include "advbuilding.h"
-#include "advdata.h"
 #include "advgoto.h"
 
 // ai
 #include "handicaps.h"
 
-/* ai/default */
+// ai/default
 #include "aidata.h"
 #include "aiguard.h"
 #include "aihand.h"

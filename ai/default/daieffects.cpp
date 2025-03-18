@@ -15,7 +15,6 @@
 #include "government.h"
 #include "map.h"
 #include "movement.h"
-#include "multipliers.h"
 #include "player.h"
 #include "research.h"
 #include "specialist.h"
@@ -25,7 +24,7 @@
 // server
 #include "plrhand.h"
 
-/* server/advisors */
+// server/advisors
 #include "advdata.h"
 #include "advtools.h"
 

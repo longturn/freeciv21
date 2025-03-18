@@ -22,13 +22,12 @@
 #include "game.h"
 #include "government.h"
 #include "nation.h"
-#include "packets.h"
 #include "player.h"
 #include "research.h"
 #include "unit.h"
 #include "victory.h"
 
-/* common/aicore */
+// common/aicore
 #include "cm.h"
 
 // server
@@ -38,14 +37,14 @@
 #include "spacerace.h"
 #include "srv_log.h"
 
-/* server/advisors */
+// server/advisors
 #include "advdata.h"
 #include "advspace.h"
 
 // ai
 #include "handicaps.h"
 
-/* ai/default */
+// ai/default
 #include "aidata.h"
 #include "ailog.h"
 #include "aiplayer.h"

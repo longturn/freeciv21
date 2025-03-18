@@ -17,7 +17,6 @@ received a copy of the GNU General Public License along with Freeciv21.
 #include "log.h"
 #include "rand.h"
 #include "shared.h"
-#include "support.h"
 
 // common
 #include "aisupport.h"
@@ -25,8 +24,6 @@ received a copy of the GNU General Public License along with Freeciv21.
 #include "diptreaty.h"
 #include "events.h"
 #include "game.h"
-#include "nation.h"
-#include "packets.h"
 #include "player.h"
 #include "research.h"
 #include "spaceship.h"
@@ -38,7 +35,7 @@ received a copy of the GNU General Public License along with Freeciv21.
 #include "maphand.h"
 #include "notify.h"
 
-/* server/advisors */
+// server/advisors
 #include "advdata.h"
 #include "advtools.h"
 
@@ -46,11 +43,10 @@ received a copy of the GNU General Public License along with Freeciv21.
 #include "aitraits.h"
 #include "handicaps.h"
 
-/* ai/default */
+// ai/default
 #include "aidata.h"
 #include "ailog.h"
 #include "aiplayer.h"
-#include "aitools.h"
 #include "aiunit.h"
 #include "daicity.h"
 

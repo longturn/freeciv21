@@ -30,9 +30,8 @@
 // server
 #include "srv_log.h"
 #include "unithand.h"
-#include "unittools.h"
 
-/* server/advisors */
+// server/advisors
 #include "advdata.h"
 #include "advgoto.h"
 #include "advtools.h"
@@ -40,12 +39,11 @@
 // ai
 #include "handicaps.h"
 
-/* ai/default */
+// ai/default
 #include "ailog.h"
 #include "aiplayer.h"
 #include "aitools.h"
 #include "aiunit.h"
-#include "daicity.h"
 
 #include "aihunt.h"
 

@@ -25,16 +25,15 @@
 #include "maphand.h"
 #include "srv_log.h"
 #include "unithand.h"
-#include "unittools.h"
 
-/* server/advisors */
+// server/advisors
 #include "advbuilding.h"
 #include "advgoto.h"
 
 // ai
 #include "handicaps.h"
 
-/* ai/default */
+// ai/default
 #include "ailog.h"
 #include "aiplayer.h"
 #include "aitools.h"
