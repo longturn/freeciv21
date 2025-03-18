@@ -19,13 +19,13 @@
 #include <QHBoxLayout>
 #include <QScrollArea>
 #include <QSpinBox>
-// utility
-#include "log.h"
+
 // client
 #include "fc_client.h"
-#include "optiondlg.h"
 #include "options.h"
 #include "page_pregame.h"
+
+#include "optiondlg.h"
 
 enum {
   RESPONSE_CANCEL,

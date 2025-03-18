@@ -11,15 +11,11 @@
 // utility
 #include "fcintl.h"
 #include "log.h"
-#include "support.h"
 
 // common
-#include "combat.h"
 #include "game.h"
-#include "unitlist.h"
 
 // client
-#include "chatline_common.h"
 #include "client_main.h"
 #include "climisc.h"
 #include "control.h"

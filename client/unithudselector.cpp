@@ -7,12 +7,6 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
  */
-#include "unithudselector.h"
-#include "client_main.h"
-#include "control.h"
-#include "dialogs.h"
-#include "hudwidget.h"
-#include "tileset/tilespec.h"
 
 // Qt
 #include <QComboBox>
@@ -23,6 +17,14 @@
 #include <QPainter>
 #include <QRadioButton>
 #include <QVBoxLayout>
+
+// client
+#include "client_main.h"
+#include "control.h"
+#include "dialogs.h"
+#include "hudwidget.h"
+
+#include "unithudselector.h"
 
 /**
    Constructor for unit_hud_selector

@@ -22,18 +22,16 @@
 
 // utility
 #include "log.h"
+
 // client
 #include "citybar.h"
-#include "citydlg_g.h"
 #include "client_main.h"
 #include "climap.h"
-#include "climisc.h"
 #include "colors_common.h"
 #include "fc_client.h"
 #include "fonts.h"
 #include "hudwidget.h"
 #include "mapctrl_common.h"
-#include "mapview_g.h"
 #include "messagewin.h"
 #include "minimap_panel.h"
 #include "page_game.h"
@@ -43,10 +41,15 @@
 #include "tileset/sprite.h"
 #include "tileset/tilespec.h"
 #include "top_bar.h"
-#include "views/view_map.h"
 #include "views/view_map_common.h"
 #include "views/view_research.h"
 #include "widgets/decorations.h"
+
+// client/inclde
+#include "citydlg_g.h"
+#include "mapview_g.h"
+
+#include "views/view_map.h"
 
 static int mapview_frozen_level = 0;
 extern void destroy_city_dialog();

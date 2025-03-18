@@ -12,23 +12,21 @@
 
 #include <cstring>
 
-// utility
-#include "fcintl.h"
-
 // common
 #include "featured_text.h"
-/* client/include */
+
+// client/include
 #include "citydlg_g.h"
-#include "mapview_g.h"
 
 // client
 #include "client_main.h"
 #include "messagewin.h"
-#include "messagewin_common.h"
 #include "options.h"
 #include "page_game.h"
 #include "update_queue.h"
 #include "views/view_map.h"
+
+#include "messagewin_common.h"
 
 static struct message **messages = nullptr;
 static int messages_total = 0;

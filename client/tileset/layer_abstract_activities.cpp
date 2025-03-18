@@ -3,9 +3,10 @@
 // SPDX-FileCopyrightText: Freeciv21 authors
 // SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
-#include "layer_abstract_activities.h"
+// client/tileset
+#include "tilespec.h" // NOLINT(misc-include-cleaner)
 
-#include "tilespec.h"
+#include "layer_abstract_activities.h"
 
 namespace freeciv {
 

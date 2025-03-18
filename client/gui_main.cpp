@@ -13,11 +13,9 @@
 #include <SDL2/SDL.h>
 #endif // AUDIO_SDL
 
-#include "gui_main.h"
 // Qt
 #include <QApplication>
-// utility
-#include "log.h"
+
 // client
 #include "client_main.h"
 #include "clinet.h"
@@ -25,19 +23,19 @@
 #include "fonts.h"
 #include "helpdlg.h"
 #include "hudwidget.h"
-#include "mapview_g.h"
 #include "messagewin.h"
 #include "options.h"
 #include "page_game.h"
 #include "page_pregame.h"
 #include "qtg_cxxside.h"
 #include "themes_common.h"
-#include "tileset/sprite.h"
 #include "tileset/tilespec.h"
 #include "unitselect.h"
 #include "views/view_map.h"
 #include "views/view_map_common.h"
 #include "widgets/report_widget.h"
+
+#include "gui_main.h"
 
 void real_science_report_dialog_update(void *);
 

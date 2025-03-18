@@ -27,8 +27,6 @@
 #include <QPainterPath>
 
 // client
-#include "colors_common.h"
-#include "fc_client.h"
 #include "fonts.h"
 #include "tileset/sprite.h"
 

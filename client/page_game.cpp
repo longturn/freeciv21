@@ -11,8 +11,6 @@
          \ \                    If not, see https://www.gnu.org/licenses/.
 ******    '"   **********************************************************/
 
-#include "page_game.h"
-
 // Qt
 #include <QGridLayout>
 #include <QIcon>
@@ -21,11 +19,13 @@
 
 // utility
 #include "fcintl.h"
+
 // common
 #include "calendar.h"
 #include "cityrep_g.h"
 #include "government.h"
-#include "repodlgs_g.h"
+#include "repodlgs_g.h" // NOLINT(misc-include-cleaner)
+
 // client
 #include "chatline.h"
 #include "citydlg.h"
@@ -46,9 +46,9 @@
 #include "views/view_map.h"
 #include "views/view_map_common.h"
 #include "views/view_nations.h"
-#include "views/view_units.h"
-
 #include "voteinfo_bar.h"
+
+#include "page_game.h"
 
 int last_center_capital = 0;
 int last_center_player_city = 0;

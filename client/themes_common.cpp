@@ -11,14 +11,14 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 
 // utility
 #include "log.h"
-#include "support.h"
 
-/* client/include */
+// client/include
 #include "themes_g.h"
 
 // client
 #include "options.h"
 #include "qtg_cxxside.h"
+
 #include "themes_common.h"
 
 Q_GLOBAL_STATIC(QVector<QString>, themes_list)

@@ -17,12 +17,8 @@
 
 $#include <fc_config.h>
 
-/* common/scriptcore */
-$#include "luascript_types.h"
-
-/* client/luascript */
+// client/luascript
 $#include "api_client_base.h"
-$#include "script_client.h"
 
 /* Chat module. */
 

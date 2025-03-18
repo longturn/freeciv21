@@ -11,11 +11,14 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#include "layer_special.h"
-
+// common
 #include "extras.h"
-#include "game.h" // For extra_type_iterate
+#include "game.h" // NOLINT(misc-include-cleaner) For extra_type_iterate
+
+// client/tileset
 #include "tilespec.h"
+
+#include "layer_special.h"
 
 namespace freeciv {
 

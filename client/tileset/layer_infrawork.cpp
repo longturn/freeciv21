@@ -3,11 +3,10 @@
 // SPDX-FileCopyrightText: Freeciv21 authors
 // SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
-#include "layer_infrawork.h"
-
-#include "citydlg_g.h"
+// client/tileset
 #include "tilespec.h"
-#include "workertask.h"
+
+#include "layer_infrawork.h"
 
 /**
  * \class freeciv::layer_infrawork

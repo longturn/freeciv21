@@ -8,8 +8,6 @@
  see https://www.gnu.org/licenses/.
  */
 
-#include "menu.h"
-
 // Qt
 #include <QActionGroup>
 #include <QApplication>
@@ -22,6 +20,7 @@
 
 // utility
 #include "fcintl.h"
+
 // common
 #include "fc_types.h"
 #include "game.h"
@@ -33,6 +32,7 @@
 #include "road.h"
 #include "tileset_options.h"
 #include "unit.h"
+
 // client
 #include "audio/audio.h"
 #include "citybar.h"
@@ -57,7 +57,6 @@
 #include "page_pregame.h"
 #include "qtg_cxxside.h"
 #include "ratesdlg.h"
-#include "ratesdlg_g.h"
 #include "renderer.h"
 #include "repodlgs_g.h"
 #include "shortcuts.h"
@@ -69,7 +68,8 @@
 #include "views/view_map.h"
 #include "views/view_map_common.h"
 #include "views/view_nations.h"
-#include "views/view_units.h"
+
+#include "menu.h"
 
 extern void popup_endgame_report();
 static void enable_interface(bool enable);

@@ -16,10 +16,7 @@
 // utility
 #include "log.h"
 
-// common
-#include "packets.h"
-
-/* client/include */
+// client/include
 #include "voteinfo_bar_g.h"
 
 // client

@@ -8,8 +8,6 @@
  see https://www.gnu.org/licenses/.
  */
 
-#include "minimap.h"
-
 // Qt
 #include <QMouseEvent>
 #include <QPainter>
@@ -22,8 +20,9 @@
 #include "minimap_panel.h"
 #include "overview_common.h"
 #include "page_game.h"
-#include "qtg_cxxside.h"
 #include "views/view_map.h"
+
+#include "minimap.h"
 
 namespace {
 const auto always_visible_margin = 15;

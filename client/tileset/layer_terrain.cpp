@@ -11,15 +11,21 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#include "layer_terrain.h"
-
+// common
 #include "climap.h"
-#include "extras.h"
+#include "sprite_g.h"
+
+// common
 #include "game.h" // For extra_type_iterate
 #include "map.h"
+
+// utility
 #include "rand.h"
-#include "sprite_g.h"
+
+// client/tileset
 #include "tilespec.h"
+
+#include "layer_terrain.h"
 
 /**
  * \class freeciv::layer_terrain

@@ -1,15 +1,16 @@
 // SPDX-FileCopyrightText: Louis Moureaux
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "tileset_options.h"
-
-#include "name_translation.h"
-#include "tileset/tilespec.h"
-
+// Qt
 #include <QCheckBox>
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
+
+// client/tileset
+#include "tileset/tilespec.h"
+
+#include "tileset_options.h"
 
 namespace freeciv {
 

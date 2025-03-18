@@ -15,16 +15,18 @@
 #include <QPushButton>
 
 // common
-#include "game.h"
+#include "game.h" // NOLINT(misc-include-cleaner)
 #include "top_bar.h"
 #include "victory.h"
+
 // client
 #include "client_main.h"
 #include "colors_common.h"
 #include "fc_client.h"
 #include "page_game.h"
-#include "spaceshipdlg.h"
 #include "spaceshipdlg_g.h"
+
+#include "spaceshipdlg.h"
 
 class QGridLayout;
 

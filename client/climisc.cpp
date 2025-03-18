@@ -16,11 +16,13 @@
   used throughout the client.
  */
 
-#include <QBitArray>
 #include <algorithm>
 #include <cstdarg>
 #include <cstdlib>
 #include <cstring>
+
+// Qt
+#include <QBitArray>
 
 // utility
 #include "fcintl.h"
@@ -37,10 +39,9 @@
 #include "mapimg.h"
 #include "packets.h"
 #include "research.h"
-#include "spaceship.h"
 #include "unitlist.h"
 
-/* client/include */
+// client/include
 #include "citydlg_g.h"
 #include "cityrep_g.h"
 #include "dialogs_g.h"

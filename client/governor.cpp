@@ -9,19 +9,20 @@
                   see https://www.gnu.org/licenses/.
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
+// Qt
 #include <QElapsedTimer>
 
 // utility
 #include "bugs.h"
-#include "fciconv.h"
 
 // common
 #include "city.h"
-#include "dataio.h"
+#include "dataio.h" // NOLINT(misc-include-cleaner)
 #include "featured_text.h"
 #include "nation.h"
 #include "player.h"
 #include "specialist.h"
+
 // client
 #include "attribute.h"
 #include "citydlg_common.h"
@@ -31,7 +32,7 @@
 // include
 #include "citydlg_g.h"
 #include "cityrep_g.h"
-#include "mapctrl_g.h"
+#include "mapctrl_g.h" // NOLINT(misc-include-cleaner)
 
 #include "governor.h"
 

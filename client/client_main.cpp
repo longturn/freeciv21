@@ -31,7 +31,7 @@
 
 // utility
 #include "capstr.h"
-#include "dataio.h"
+#include "dataio.h" // NOLINT(misc-include-cleaner)
 #include "deprecations.h"
 #include "fcbacktrace.h"
 #include "fciconv.h"
@@ -52,11 +52,11 @@
 #include "server_settings.h"
 #include "version.h"
 
-/* client/include */
+// client/include
 #include "dialogs_g.h"
 #include "diplodlg_g.h"
 #include "gui_main_g.h"
-#include "mapctrl_g.h"
+#include "mapctrl_g.h" // NOLINT(misc-include-cleaner)
 #include "mapview_g.h"
 #include "menu_g.h"
 #include "pages_g.h"
@@ -90,7 +90,7 @@
 #include "views/view_nations_data.h"
 #include "voteinfo.h"
 
-/* client/luascript */
+// client/luascript
 #include "script_client.h"
 
 #include "client_main.h"

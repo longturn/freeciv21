@@ -8,19 +8,20 @@
  see https://www.gnu.org/licenses/.
  */
 
-#include "luaconsole.h"
 // Qt
 #include <QFileDialog>
 #include <QString>
-// utility
-#include "shared.h"
+
 // common
 #include "featured_text.h"
 #include "luaconsole_g.h"
+
 // client
 #include "chatline.h"
 #include "fc_client.h"
 #include "script_client.h"
+
+#include "luaconsole.h"
 
 QString qlua_filename;
 

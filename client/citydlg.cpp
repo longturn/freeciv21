@@ -8,7 +8,6 @@
  see https://www.gnu.org/licenses/.
  */
 
-#include "citydlg.h"
 // Qt
 #include <QApplication>
 #include <QCheckBox>
@@ -23,11 +22,13 @@
 #include <QSplitter>
 #include <QVBoxLayout>
 #include <QWidgetAction>
+
 // utility
 #include "fc_types.h"
 #include "fcintl.h"
 #include "player.h"
 #include "support.h"
+
 // common
 #include "citizens.h"
 #include "city.h"
@@ -46,7 +47,6 @@
 #include "governor.h"
 #include "hudwidget.h"
 #include "icons.h"
-#include "mapctrl_common.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
 #include "text.h"
@@ -61,6 +61,8 @@
 #include "views/view_map.h"
 #include "views/view_map_common.h"
 #include "widgets/city/governor_widget.h"
+
+#include "citydlg.h"
 
 extern QString split_text(const QString &text, bool cut);
 extern QString cut_helptext(const QString &text);

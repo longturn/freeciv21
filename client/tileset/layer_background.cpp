@@ -11,13 +11,13 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#include "layer_background.h"
-
-#include "client_main.h"
+// client
 #include "colors_common.h"
-#include "control.h" // unit_is_in_focus
+#include "control.h" // for unit_is_in_focus()
 #include "sprite_g.h"
 #include "tilespec.h"
+
+#include "layer_background.h"
 
 namespace freeciv {
 

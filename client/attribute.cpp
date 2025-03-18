@@ -10,12 +10,12 @@
                  with Freeciv21. If not, see https://www.gnu.org/licenses/.
  */
 
+// Qt
 #include <QHash>
 
 // utility
-#include "dataio.h"
+#include "dataio.h" // NOLINT(misc-include-cleaner)
 #include "fcintl.h"
-#include "genhash.h" // genhash_val_t
 #include "log.h"
 
 // common

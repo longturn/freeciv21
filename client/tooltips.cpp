@@ -13,16 +13,19 @@
 #include <QHelpEvent>
 #include <QModelIndex>
 #include <QToolTip>
+
 // utility
 #include "fcintl.h"
-#include "support.h"
+
 // common
 #include "helpdata.h"
+
 // client
 #include "client_main.h"
 #include "climisc.h"
 #include "fc_client.h"
 #include "movement.h"
+
 #include "tooltips.h"
 
 extern QString split_text(const QString &text, bool cut);

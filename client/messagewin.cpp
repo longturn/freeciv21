@@ -8,8 +8,6 @@
  see https://www.gnu.org/licenses/.
  */
 
-#include "messagewin.h"
-
 // Qt
 #include <QApplication>
 #include <QGridLayout>
@@ -24,9 +22,10 @@
 #include "fc_client.h"
 #include "messagewin_common.h"
 #include "page_game.h"
-#include "tileset/sprite.h"
 #include "update_queue.h"
 #include "views/view_map.h"
+
+#include "messagewin.h"
 
 /**
    message_widget constructor

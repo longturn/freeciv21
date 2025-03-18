@@ -10,7 +10,6 @@
 
 // common
 #include "map.h"
-#include "shared.h"
 
 // client
 #include "client_main.h"

@@ -10,13 +10,13 @@
 
 // common
 #include "game.h"
+
 // client
 #include "chatline_common.h"
 #include "fc_client.h"
 #include "packhand_gen.h"
 #include "page_network.h"
 #include "pages_g.h"
-#include "qtg_cxxside.h"
 
 /**
    Configure the dialog depending on what type of authentication request the

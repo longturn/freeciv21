@@ -8,7 +8,6 @@
  see https://www.gnu.org/licenses/.
  */
 
-#include "fc_client.h"
 // Qt
 #include <QApplication>
 #include <QDirIterator>
@@ -23,8 +22,10 @@
 
 // utility
 #include "fcintl.h"
+
 // common
 #include "climisc.h"
+
 // client
 #include "chatline.h"
 #include "chatline_common.h"
@@ -36,18 +37,19 @@
 #include "icons.h"
 #include "messagewin.h"
 #include "minimap.h"
-#include "optiondlg.h"
+#include "optiondlg.h" // NOLINT(misc-include-cleaner)
 #include "page_game.h"
 #include "page_load.h"
 #include "page_main.h"
 #include "page_network.h"
 #include "page_pregame.h"
 #include "page_scenario.h"
-#include "tileset/sprite.h"
 #include "top_bar.h"
 #include "update_queue.h"
 #include "views/view_map.h"
 #include "voteinfo_bar.h"
+
+#include "fc_client.h"
 
 fcFont *fcFont::m_instance = 0;
 void real_science_report_dialog_update(void *);

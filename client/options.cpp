@@ -38,7 +38,7 @@
 #include "events.h"
 #include "version.h"
 
-/* client/include */
+// client/include
 #include "gui_main_g.h"
 #include "menu_g.h"
 #include "optiondlg_g.h"
@@ -50,13 +50,11 @@
 #include "chatline_common.h"
 #include "citybar.h"
 #include "client_main.h"
-#include "climisc.h"
 #include "connectdlg_common.h"
 #include "global_worklist.h"
 #include "governor.h"
 #include "mapctrl_common.h"
 #include "music.h"
-#include "options.h"
 #include "overview_common.h"
 #include "packhand_gen.h"
 #include "qtg_cxxside.h"
@@ -65,6 +63,8 @@
 #include "views/view_cities_data.h"
 #include "views/view_map_common.h"
 #include "views/view_nations_data.h"
+
+#include "options.h"
 
 const char *const TILESET_OPTIONS_PREFIX = "tileset_";
 

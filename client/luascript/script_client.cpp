@@ -11,13 +11,6 @@
 #include <cstdarg>
 #include <ctime>
 
-extern "C" {
-/* dependencies/lua */
-#include "lua.h"
-
-/* dependencies/tolua */
-#include "tolua.h"
-}
 // utility
 #include "log.h"
 #include "section_file.h"
@@ -25,17 +18,16 @@ extern "C" {
 // common
 #include "featured_text.h"
 
-/* common/scriptcore */
+// common/scriptcore
 #include "api_game_specenum.h"
 #include "luascript.h"
-
 #include "tolua_game_gen.h"
 #include "tolua_signal_gen.h"
 
 // client
 #include "luaconsole_common.h"
 
-/* client/luascript */
+// client/luascript
 #include "tolua_client_gen.h"
 
 #include "script_client.h"

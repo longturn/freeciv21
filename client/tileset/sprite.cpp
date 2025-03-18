@@ -11,10 +11,13 @@
 // Qt
 #include <QImageReader>
 #include <QPainter>
+
 // utility
 #include "log.h"
+
 // client
-#include "fc_client.h"
+#include "fc_client.h" // NOLINT(misc-include-cleaner)
+
 #include "sprite.h"
 
 /**

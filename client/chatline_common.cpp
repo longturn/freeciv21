@@ -11,12 +11,13 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#include <QGlobalStatic>
 #include <cstdarg>
+
+// Qt
+#include <QGlobalStatic>
 
 // utility
 #include "fcintl.h"
-#include "fcthread.h"
 
 // common
 #include "featured_text.h"

@@ -8,17 +8,19 @@
  see https://www.gnu.org/licenses/.
  */
 
-#include "endgamereport.h"
 // Qt
 #include <QGridLayout>
 #include <QHeaderView>
 #include <QTableWidget>
+
 // common
 #include "nation.h"
+
 // client
 #include "fc_client.h"
 #include "page_game.h"
-#include "tileset/sprite.h"
+
+#include "endgamereport.h"
 
 /**
    Constructor for endgame report

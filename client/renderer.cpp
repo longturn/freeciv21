@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: GPLv3-or-later
  */
 
-#include "renderer.h"
-
+// client
 #include "map_updates_handler.h"
-#include "mapview_g.h"
 #include "views/view_map_common.h"
+
+#include "renderer.h"
 
 namespace freeciv {
 

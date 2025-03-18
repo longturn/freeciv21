@@ -9,10 +9,10 @@
                   see https://www.gnu.org/licenses/.
  */
 
+// client
 #include "audio_none.h"
 #include "audio.h"
 #include "qtg_cxxside.h"
-#include "support.h"
 
 /**
    Clean up

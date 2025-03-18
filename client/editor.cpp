@@ -10,6 +10,7 @@
                                             https://www.gnu.org/licenses/.
  */
 
+// Qt
 #include <QRect>
 #include <QSet>
 
@@ -26,8 +27,6 @@
 
 // client
 #include "client_main.h"
-#include "climap.h"
-#include "control.h"
 #include "editor.h"
 #include "mapctrl_common.h"
 #include "mapview_g.h"

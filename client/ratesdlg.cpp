@@ -8,7 +8,6 @@
  see https://www.gnu.org/licenses/.
  */
 
-#include "ratesdlg.h"
 // Qt
 #include <QApplication>
 #include <QGroupBox>
@@ -16,19 +15,22 @@
 #include <QPainter>
 #include <QScreen>
 #include <QVBoxLayout>
+
 // common
 #include "effects.h"
 #include "fc_types.h"
 #include "government.h"
 #include "multipliers.h"
 #include "packets.h"
+
 // client
 #include "client_main.h"
 #include "dialogs.h"
 #include "fc_client.h"
-#include "icons.h"
 #include "tileset/tilespec.h"
 #include "widgets/multi_slider.h"
+
+#include "ratesdlg.h"
 
 static int scale_to_mult(const struct multiplier *pmul, int scale);
 static int mult_to_scale(const struct multiplier *pmul, int val);

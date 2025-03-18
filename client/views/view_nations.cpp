@@ -13,26 +13,26 @@
  * the nations view (formally known as the plrdlg - player dialog).
  */
 
-#include "views/view_nations.h"
 // Qt
 #include <QMouseEvent>
 #include <QPainter>
 #include <QSortFilterProxyModel>
 #include <qnamespace.h>
+
 // utility
 #include "astring.h"
 #include "fcintl.h"
+
 // common
 #include "city.h"
 #include "colors_common.h"
 #include "game.h"
 #include "government.h"
-#include "icons.h"
 #include "improvement.h"
 #include "nation.h"
 #include "research.h"
 #include "utils/collated_sort_proxy.h"
-#include "views/view_nations_data.h"
+
 // client
 #include "chatline_common.h"
 #include "client_main.h"
@@ -42,6 +42,9 @@
 #include "tileset/sprite.h"
 #include "tileset/tilespec.h"
 #include "top_bar.h"
+#include "views/view_nations_data.h"
+
+#include "views/view_nations.h"
 
 /**
    Help function to draw checkbox inside delegate

@@ -26,9 +26,8 @@
 #include "pf_tools.h"
 #include "road.h"
 #include "unit.h"
-#include "unitlist.h"
 
-/* client/include */
+// client/include
 #include "client_main.h"
 #include "control.h"
 #include "mapview_g.h"

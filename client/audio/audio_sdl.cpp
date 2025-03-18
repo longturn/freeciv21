@@ -13,22 +13,20 @@
 
 #include <fc_config.h>
 
+#include <array>
 #include <cstring>
 
 #ifdef AUDIO_SDL
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 #endif
+
 // utility
 #include "log.h"
-#include "support.h"
 
-// client
+// client/audio
 #include "audio.h"
-
 #include "audio_sdl.h"
-
-#include <array>
 
 struct sample {
   Mix_Chunk *wave = nullptr;

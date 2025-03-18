@@ -24,22 +24,15 @@
 #include "game.h"
 #include "specialist.h"
 
-/* client/include */
+// client/include
 #include "citydlg_g.h"
 
 // client
 #include "citydlg_common.h"
-
-// for can_client_issue_orders()
-#include "client_main.h"
-#include "climap.h"
+#include "client_main.h"      // for can_client_issue_orders()
+#include "options.h"          // for concise_city_production
+#include "tileset/tilespec.h" // for tileset_is_isometric(tileset)
 #include "views/view_map_common.h"
-
-// for concise_city_production
-#include "options.h"
-
-// for tileset_is_isometric(tileset)
-#include "tileset/tilespec.h"
 
 static int citydlg_map_width, citydlg_map_height;
 

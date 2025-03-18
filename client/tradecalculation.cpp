@@ -7,21 +7,22 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
  */
-#include "tradecalculation.h"
 
 #include <random>
+
 // common
 #include "city.h"
 #include "featured_text.h"
 #include "traderoutes.h"
+
 // client
-#include "chatline_common.h" // Help me, I want to common
+#include "chatline_common.h"
 #include "client_main.h"
-// qt
-#include "fc_client.h"
-#include "messagewin.h"
+#include "fc_client.h" // NOLINT(misc-include-cleaner)
 #include "page_game.h"
 #include "views/view_map.h"
+
+#include "tradecalculation.h"
 
 /**
    Constructor for trade city used to trade calculation

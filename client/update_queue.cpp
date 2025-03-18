@@ -16,13 +16,11 @@
 
 // utility
 #include "log.h"
-#include "support.h" // bool
 
 // common
 #include "city.h"
-#include "player.h"
 
-/* client/include */
+// client/include
 #include "citydlg_g.h"
 #include "cityrep_g.h"
 #include "dialogs_g.h"
@@ -33,14 +31,13 @@
 #include "repodlgs_g.h"
 
 // client
-#include "canvas.h"
 #include "client_main.h"
 #include "connectdlg_common.h"
 #include "qtg_cxxside.h"
-#include "tileset/tilespec.h"
-#include "update_queue.h"
 #include "views/view_nations_data.h"
 #include "views/view_units.h"
+
+#include "update_queue.h"
 
 update_queue *update_queue::m_instance = nullptr;
 
