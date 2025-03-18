@@ -19,7 +19,6 @@ received a copy of the GNU General Public License along with Freeciv21.
 #include "calendar.h"
 #include "extras.h"
 #include "government.h"
-#include "map.h"
 #include "movement.h"
 #include "nation.h"
 #include "player.h"

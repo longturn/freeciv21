@@ -15,12 +15,11 @@
 // utility
 #include "fcintl.h"
 #include "log.h"
-#include "shared.h"
 #include "support.h"
 
 // common
-#include "game.h"
 #include "player.h"
+
 #include "team.h"
 
 struct team_slot {

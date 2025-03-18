@@ -9,9 +9,6 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
   :X:              Freeciv21. If not, see https://www.gnu.org/licenses/.
  */
 
-// utility
-#include "fcintl.h"
-
 // common
 #include "fc_types.h"
 #include "game.h"

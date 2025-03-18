@@ -21,7 +21,6 @@
 #include "game.h"
 #include "nation.h"
 #include "player.h"
-#include "tech.h"
 
 #include "government.h"
 

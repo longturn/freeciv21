@@ -16,11 +16,11 @@ received a copy of the GNU General Public License along with Freeciv21.
 // utility
 #include "fcintl.h"
 #include "log.h" // fc_assert
-#include "timing.h"
 
 // common
-#include "ai.h"
 #include "player.h"
+
+#include "ai.h"
 
 static struct ai_type ai_types[FREECIV_AI_MOD_LAST];
 

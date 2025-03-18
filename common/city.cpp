@@ -21,7 +21,6 @@
 #include "distribute.h"
 #include "fcintl.h"
 #include "log.h"
-#include "player.h"
 #include "support.h"
 
 // common
@@ -33,7 +32,7 @@
 #include "improvement.h"
 #include "map.h"
 #include "movement.h"
-#include "packets.h"
+#include "player.h"
 #include "requirements.h"
 #include "specialist.h"
 #include "traderoutes.h"

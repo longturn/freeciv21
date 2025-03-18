@@ -11,15 +11,15 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#include <QSet>
 #include <cstring> // qstrlen
-#include <stdexcept>
+
+// Qt
+#include <QSet>
 
 // utility
 #include "log.h"
 #include "rand.h"
 #include "shared.h"
-#include "support.h"
 
 // common
 #include "ai.h"
@@ -27,7 +27,6 @@
 #include "game.h"
 #include "movement.h"
 #include "nation.h"
-#include "packets.h"
 #include "road.h"
 #include "unit.h"
 

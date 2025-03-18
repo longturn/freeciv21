@@ -1,8 +1,10 @@
 // SPDX-FileCopyrightText: 2022 Louis Moureaux
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "path_finder.h"
+#include <map>
+#include <queue>
 
+// common
 #include "actions.h"
 #include "game.h"
 #include "map.h"
@@ -13,9 +15,7 @@
 #include "unit_utils.h"
 #include "world_object.h"
 
-#include <map>
-#include <queue>
-#include <set>
+#include "path_finder.h"
 
 namespace freeciv {
 

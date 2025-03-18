@@ -32,7 +32,6 @@
 #include "map.h"
 #include "multipliers.h"
 #include "nation.h"
-#include "packets.h"
 #include "player.h"
 #include "research.h"
 #include "specialist.h"

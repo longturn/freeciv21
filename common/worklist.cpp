@@ -15,12 +15,9 @@
 
 // utility
 #include "log.h"
-#include "support.h"
 
 // common
-#include "city.h"
 #include "requirements.h"
-#include "unit.h"
 
 #include "worklist.h"
 

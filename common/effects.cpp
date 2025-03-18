@@ -21,9 +21,8 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "city.h"
 #include "government.h"
 #include "improvement.h"
-#include "map.h"
+#include "map.h" // NOLINT(misc-include-cleaner)
 #include "multipliers.h"
-#include "packets.h"
 #include "player.h"
 #include "tech.h"
 

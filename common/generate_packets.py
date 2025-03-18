@@ -1819,7 +1819,7 @@ def write_common_source(packets: list[Packet], output: io.TextIOWrapper) -> None
 // common
 #include "capstr.h"
 #include "connection.h"
-#include "dataio.h"
+#include "dataio.h" // NOLINT(misc-include-cleaner)
 #include "game.h"
 
 #include <string.h>

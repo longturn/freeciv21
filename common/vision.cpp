@@ -13,12 +13,11 @@
 
 // utility
 #include "log.h"
-#include "shared.h"
 
 // common
-#include "game.h"
 #include "player.h"
 #include "tile.h"
+
 #include "vision.h"
 
 /**

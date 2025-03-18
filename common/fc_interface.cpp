@@ -14,7 +14,7 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 
 // common
 #include "player.h"
-#include "tile.h"
+#include "tile.h" // NOLINT(misc-include-cleaner)
 
 #include "fc_interface.h"
 

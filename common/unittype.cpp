@@ -25,7 +25,6 @@
 #include "ai.h"
 #include "combat.h"
 #include "game.h"
-#include "government.h"
 #include "movement.h"
 #include "player.h"
 #include "research.h"

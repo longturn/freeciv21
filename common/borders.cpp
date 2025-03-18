@@ -9,15 +9,10 @@ received a copy of the GNU General Public License along with Freeciv21.
                               If not, see https://www.gnu.org/licenses/.
  */
 
-// utility
-#include "fcintl.h"
-#include "log.h"
-
 // common
 #include "game.h"
 #include "map.h"
 #include "tile.h"
-#include "unit.h"
 
 #include "borders.h"
 
