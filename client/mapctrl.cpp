@@ -384,7 +384,7 @@ void map_view::shortcut_released(Qt::MouseButton bt)
   auto md = QApplication::keyboardModifiers();
   auto pos = mapFromGlobal(QCursor::pos()) / scale();
 
-  if (info_tile::shown()) {
+  if (info_tile::shown() && !info_tile::under_mouse()) {
     popdown_tile_info();
   }
 

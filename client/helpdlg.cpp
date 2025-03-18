@@ -92,6 +92,50 @@ void update_help_fonts()
 }
 
 /**
+   Create a link into the help system for the entry with the given name and
+   help page type hpt.
+
+   The link is intended to be handled by the follow_help_link function.
+ */
+QString create_help_link(const char *name, help_page_type hpt)
+{
+  QString s;
+  s = QString(name).toHtmlEscaped().replace(QLatin1String(" "),
+                                            QLatin1String("&nbsp;"));
+  return "<a href=" + QString::number(hpt) + "," + s + ">" + s + "</a>";
+}
+
+/**
+   Open a link created by the create_help_link function.
+
+   The link consists of two parts, the name and help page type of the entry
+   that should be opened.
+ */
+void follow_help_link(const QString &link)
+{
+  QStringList sl;
+  int n;
+  QString st;
+  enum help_page_type type;
+
+  sl = link.split(QStringLiteral(","));
+  n = sl.at(0).toInt();
+  type = static_cast<help_page_type>(n);
+  st = sl.at(1);
+  st = st.replace("\u00A0", QLatin1String(" "));
+
+  if (strcmp(qUtf8Printable(st), REQ_LABEL_NEVER) != 0
+      && strcmp(qUtf8Printable(st),
+                skip_intl_qualifier_prefix(REQ_LABEL_NONE))
+             != 0
+      && strcmp(qUtf8Printable(st),
+                advance_name_translation(advance_by_number(A_NONE)))
+             != 0) {
+    popup_help_dialog_typed(qUtf8Printable(st), type);
+  }
+}
+
+/**
    Constructor for help dialog
  */
 help_dialog::help_dialog(QWidget *parent) : qfc_dialog(parent)
@@ -715,10 +759,7 @@ void help_widget::add_extras_of_act_for_terrain(struct terrain *pterr,
  */
 QString help_widget::link_me(const char *str, help_page_type hpt)
 {
-  QString s;
-  s = QString(str).toHtmlEscaped().replace(QLatin1String(" "),
-                                           QLatin1String("&nbsp;"));
-  return " <a href=" + QString::number(hpt) + "," + s + ">" + s + "</a> ";
+  return " " + create_help_link(str, hpt) + " ";
 }
 
 /**
@@ -735,31 +776,11 @@ void help_widget::add_info_separator()
 void help_widget::info_panel_done() { info_layout->addStretch(); }
 
 /**
-   Hyperlink clicked, link has 2 variables, string(name of given help)
-   and int(help_page_type)
+   Hyperlink clicked, open the corresponding entry.
  */
 void help_widget::anchor_clicked(const QString &link)
 {
-  QStringList sl;
-  int n;
-  QString st;
-  enum help_page_type type;
-
-  sl = link.split(QStringLiteral(","));
-  n = sl.at(0).toInt();
-  type = static_cast<help_page_type>(n);
-  st = sl.at(1);
-  st = st.replace("\u00A0", QLatin1String(" "));
-
-  if (strcmp(qUtf8Printable(st), REQ_LABEL_NEVER) != 0
-      && strcmp(qUtf8Printable(st),
-                skip_intl_qualifier_prefix(REQ_LABEL_NONE))
-             != 0
-      && strcmp(qUtf8Printable(st),
-                advance_name_translation(advance_by_number(A_NONE)))
-             != 0) {
-    popup_help_dialog_typed(qUtf8Printable(st), type);
-  }
+  follow_help_link(link);
 }
 
 /**

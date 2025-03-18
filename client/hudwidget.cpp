@@ -762,7 +762,7 @@ void hud_units::update_actions()
   img = cropped_img.scaledToHeight(height() - 5, Qt::SmoothTransformation);
   pix = QPixmap::fromImage(img);
   tile_label.setPixmap(pix);
-  unit_label.setToolTip(popup_info_text(punit->tile));
+  unit_label.setToolTip(popup_info_text(punit->tile, false));
   tile_label.setToolTip(popup_terrain_info(punit->tile));
   wwidth = wwidth + pix.width();
   delete tile_pixmap;

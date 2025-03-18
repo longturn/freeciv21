@@ -54,6 +54,10 @@ on Plains. The popup information widget gives a great deal of information about 
 terrain type, and infrastructure improvements made to the tile. If a unit is on the tile, as in our example,
 you are also given details about the unit.
 
+If you move the mouse pointer over the popup while the :ref:`Popup Tile Info Shortcut <shortcut-popup-tile-info>`
+is active, the popup will stay open after you release the shortcut, as long as the mouse remains over the
+popup. That allows you to click the links in the popup, that open the corresponding help entry.
+
 .. _Unit Information:
 .. figure:: /_static/images/gui-elements/unit-info.png
   :scale: 65%
