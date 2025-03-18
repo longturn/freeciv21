@@ -12,6 +12,10 @@
       \____/        ********************************************************/
 
 #include <cstring>
+#include <zlib.h>
+
+// Qt
+#include <QRegularExpression>
 
 // utility
 #include "capability.h"
@@ -23,11 +27,9 @@
 // commmon
 #include "dataio.h" // NOLINT(misc-include-cleaner)
 #include "game.h"
+
 #include "packets.h"
 
-#include <QRegularExpression>
-
-#include <zlib.h>
 /*
  * Value for the 16bit size to indicate a jumbo packet
  */

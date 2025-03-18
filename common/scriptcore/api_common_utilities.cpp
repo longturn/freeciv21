@@ -23,7 +23,7 @@
 #include "map.h"
 #include "version.h"
 
-/* common/scriptcore */
+// common/scriptcore
 #include "luascript.h"
 
 #include "api_common_utilities.h"

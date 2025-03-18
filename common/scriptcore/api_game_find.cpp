@@ -12,7 +12,7 @@
 #include "idex.h"
 #include "map.h"
 
-/* common/scriptcore */
+// common/scriptcore
 #include "luascript.h"
 
 #include "api_game_find.h"

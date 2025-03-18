@@ -31,7 +31,7 @@
 #include "unitlist.h"
 #include "unittype.h"
 
-/* common/scriptcore */
+// common/scriptcore
 #include "luascript.h"
 
 #include "api_game_methods.h"

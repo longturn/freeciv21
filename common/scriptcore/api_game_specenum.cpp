@@ -11,7 +11,7 @@
 
 #include <cstring>
 
-/* dependencies/lua */
+// dependencies/lua
 extern "C" {
 #include "lauxlib.h"
 #include "lua.h"

@@ -10,12 +10,12 @@
 
 #include <cstdarg>
 
-/* dependencies/lua */
+// dependencies/lua
 extern "C" {
 #include "lua.h"
 }
 
-/* common/scriptcore */
+// common/scriptcore
 #include "luascript.h"
 #include "luascript_types.h"
 

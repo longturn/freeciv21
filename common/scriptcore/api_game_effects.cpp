@@ -11,7 +11,7 @@
 // common
 #include "effects.h"
 
-/* common/scriptcore */
+// common/scriptcore
 #include "luascript.h"
 
 #include "api_game_effects.h"

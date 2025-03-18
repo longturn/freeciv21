@@ -8,6 +8,11 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
  */
+
+// Qt
+#include <QDebug>
+#include <QString>
+
 // utility
 #include "log.h"
 
@@ -17,10 +22,6 @@
 
 /* common/aicore */
 #include "pf_tools.h"
-
-// Qt
-#include <QDebug>
-#include <QString>
 
 #include "path_finding.h"
 
@@ -935,7 +936,7 @@ struct pf_danger_node {
     signed short cost;      // See comment above.
     unsigned extra_cost;    // See comment above.
     signed dir_to_here : 4; // See comment above.
-  } * danger_segment;
+  } *danger_segment;
 };
 
 // Derived structure of struct pf_map.

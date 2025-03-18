@@ -31,7 +31,7 @@
 #include "unit.h"
 #include "worklist.h"
 
-/* common/aicore */
+// common/aicore
 #include "cm.h"
 
 #include "dataio.h" // NOLINT(misc-include-cleaner)

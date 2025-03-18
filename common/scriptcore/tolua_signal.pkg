@@ -19,7 +19,7 @@
 
 $#include <fc_config.h>
 
-/* common/scriptcore */
+// common/scriptcore
 $#include "api_signal_base.h"
 
 /* Signal module. */
