@@ -26,7 +26,6 @@
 #include "requirements.h"
 
 // ruledit
-#include "ruledit.h"
 #include "ruledit_qt.h"
 #include "univ_value.h"
 

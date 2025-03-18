@@ -24,7 +24,6 @@
 
 // common
 #include "game.h"
-#include "improvement.h"
 
 // ruledit
 #include "req_edit.h"

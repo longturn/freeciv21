@@ -26,10 +26,10 @@
 #include "effects.h"
 
 // ruledit
-#include "ruledit.h"
 #include "ruledit_qt.h"
 
 #include "effect_edit.h"
+
 /**
    Setup effect_edit object
  */

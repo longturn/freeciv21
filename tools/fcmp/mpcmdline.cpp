@@ -16,8 +16,6 @@
 
 // utility
 #include "fcintl.h"
-// common
-#include "version.h"
 
 // modinst
 #include "modinst.h"

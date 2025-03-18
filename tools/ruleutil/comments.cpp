@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 
 // utility
-#include "log.h"
+#include "log.h" // NOLINT(misc-include-cleaner)
 #include "registry.h"
 #include "registry_ini.h"
 #include "section_file.h"

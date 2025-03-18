@@ -11,13 +11,13 @@
 
 #include <fc_config.h>
 
-#include <QFile>
 #include <cstdlib>
 #include <cstring>
 
 // Qt
 #include <QCommandLineParser>
 #include <QCoreApplication>
+#include <QFile>
 
 // utility
 #include "astring.h"
@@ -30,16 +30,13 @@
 // common
 #include "capstr.h"
 #include "connection.h"
-#include "events.h"
 #include "fc_interface.h"
 #include "fc_types.h" // LINE_BREAK
 #include "game.h"
 #include "government.h"
 #include "helpdata.h"
 #include "improvement.h"
-#include "map.h"
 #include "movement.h"
-#include "player.h"
 #include "version.h"
 
 // server
@@ -50,7 +47,7 @@
 #include "settings.h"
 #include "srv_main.h"
 
-/* tools/shared */
+// tools/shared
 #include "tools_fc_interface.h"
 
 enum manuals {

@@ -18,11 +18,7 @@
 
 // utility
 #include "fcintl.h"
-#include "log.h"
 #include "registry.h"
-
-// common
-#include "game.h"
 
 // ruledit
 #include "ruledit_qt.h"

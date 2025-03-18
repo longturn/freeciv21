@@ -20,7 +20,6 @@
 #include "unittype.h"
 
 // ruledit
-#include "ruledit.h"
 #include "ruledit_qt.h"
 #include "tab_tech.h"
 

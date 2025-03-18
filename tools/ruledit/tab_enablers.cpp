@@ -25,12 +25,12 @@
 #include "log.h"
 
 // common
-#include "game.h"
-#include "government.h"
+#include "game.h" // NOLINT(misc-include-cleaner)
 
 // ruledit
 #include "ruledit.h"
 #include "ruledit_qt.h"
+
 #include "tab_enablers.h"
 
 class fix_enabler_item : public req_vec_fix_item {
@@ -324,10 +324,10 @@ void tab_enabler::add_now()
   new_enabler = action_enabler_new();
 
   fc_assert_action(NUM_ACTIONS > 0, action_enabler_free(new_enabler);
-                   return );
+                   return);
   fc_assert_action(action_id_exists(NUM_ACTIONS - 1),
                    action_enabler_free(new_enabler);
-                   return );
+                   return);
   new_enabler->action = (NUM_ACTIONS - 1);
 
   action_enabler_add(new_enabler);
