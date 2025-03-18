@@ -16,8 +16,15 @@ class editor_tool_tile : public QWidget {
 private:
   Ui::FormToolTile ui;
 
+  void select_tile();
+  void set_default_values();
+
 public:
   editor_tool_tile(QWidget *parent = nullptr);
   ~editor_tool_tile() override;
-  void select_tile();
+
+  void close_tool();
+  void update_ett(struct tile *ptile);
 };
+
+bool check_tile_tool();
