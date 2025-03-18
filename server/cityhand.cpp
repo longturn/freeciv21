@@ -14,7 +14,6 @@
 // utility
 #include "fcintl.h"
 #include "log.h"
-#include "rand.h"
 #include "support.h"
 
 // common
@@ -27,7 +26,7 @@
 #include "unit.h"
 #include "worklist.h"
 
-/* common/aicore */
+// common/aicore
 #include "cm.h"
 
 // server

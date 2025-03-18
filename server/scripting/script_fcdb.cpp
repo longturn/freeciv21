@@ -14,15 +14,11 @@
 // sol2
 #include "sol/sol.hpp"
 
-/* dependencies/lua */
-#include "lua.h"
-
 // utility
 #include "log.h"
 
-/* common/scriptcore */
+// common/scriptcore
 #include "luascript.h"
-#include "luascript_types.h"
 #include "tolua_common_a_gen.h"
 #include "tolua_game_gen.h"
 

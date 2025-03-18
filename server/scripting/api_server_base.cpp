@@ -8,7 +8,7 @@
  see https://www.gnu.org/licenses/.
  */
 
-/* common/scriptcore */
+// common/scriptcore
 #include "luascript.h"
 
 // server
@@ -16,11 +16,8 @@
 #include "settings.h"
 #include "srv_main.h"
 
-/* server/sqavegame */
+// server/sqavegame
 #include "savemain.h"
-
-/* server/scripting */
-#include "script_server.h"
 
 #include "api_server_base.h"
 

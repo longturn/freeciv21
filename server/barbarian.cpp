@@ -25,7 +25,6 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "effects.h"
 #include "events.h"
 #include "game.h"
-#include "government.h"
 #include "map.h"
 #include "movement.h"
 #include "nation.h"
@@ -43,7 +42,7 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "unithand.h"
 #include "unittools.h"
 
-/* server/advisors */
+// server/advisors
 #include "advdata.h"
 
 // ai

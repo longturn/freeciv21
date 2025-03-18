@@ -17,17 +17,11 @@
 #include <ltdl.h>
 #endif
 
-// utility
-#include "support.h"
-
 // common
 #include "ai.h"
 #include "player.h"
 
-/* server/advisors */
-#include "autosettlers.h"
-
-/* ai/classic */
+// ai/classic
 #include "classicai.h"
 
 #include "aiiface.h"
@@ -70,7 +64,7 @@ bool load_ai_module(const char *modname)
   struct ai_type *ai = ai_type_alloc();
   bool setup_success;
   lt_dlhandle handle;
-  bool (*setup_func)(struct ai_type * ai);
+  bool (*setup_func)(struct ai_type *ai);
   const char *(*capstr_func)(void);
   const char *capstr;
   char buffer[2048];

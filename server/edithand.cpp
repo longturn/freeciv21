@@ -10,13 +10,14 @@
                                             https://www.gnu.org/licenses/.
  */
 
-#include <QSet>
 #include <climits> // USHRT_MAX
+
+// Qt
+#include <QSet>
 
 // utility
 #include "bitvector.h"
 #include "fcintl.h"
-#include "log.h"
 #include "shared.h"
 #include "support.h"
 
@@ -45,10 +46,10 @@
 #include "techtools.h"
 #include "unittools.h"
 
-/* server/generator */
+// server/generator
 #include "mapgen_utils.h"
 
-/* server/savegame */
+// server/savegame
 #include "savemain.h"
 
 #include "edithand.h"

@@ -8,6 +8,7 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
   :X:      received a copy of the GNU General Public License along with
   :X:              Freeciv21. If not, see https://www.gnu.org/licenses/.
  */
+
 // utility
 #include "fcintl.h"
 #include "log.h"
@@ -17,14 +18,10 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 // common
 #include "game.h"
 #include "government.h"
-#include "movement.h"
 #include "player.h"
 #include "research.h"
 #include "tech.h"
 #include "unit.h"
-
-/* common/scriptcore */
-#include "luascript_types.h"
 
 // server
 #include "citytools.h"
@@ -36,7 +33,7 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "plrhand.h"
 #include "unittools.h"
 
-/* server/scripting */
+// server/scripting
 #include "script_server.h"
 
 #include "techtools.h"

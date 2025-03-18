@@ -19,15 +19,12 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "connection.h"
 #include "packets.h"
 
-/* common/scripting */
-#include "luascript_types.h"
-
 // server
 #include "connecthand.h"
 #include "notify.h"
 #include "srv_main.h"
 
-/* server/scripting */
+// server/scripting
 #include "script_fcdb.h"
 
 #include "auth.h"

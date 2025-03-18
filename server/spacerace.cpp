@@ -20,12 +20,12 @@
 #include "events.h"
 #include "game.h"
 #include "nation.h"
-#include "packets.h"
 #include "spaceship.h"
 
 // server
 #include "notify.h"
 #include "plrhand.h"
+
 #include "spacerace.h"
 
 /**

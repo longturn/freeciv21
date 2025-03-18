@@ -8,11 +8,10 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
   :X:      received a copy of the GNU General Public License along with
   :X:              Freeciv21. If not, see https://www.gnu.org/licenses/.
  */
+
 // utility
-#include "fcintl.h"
 #include "log.h"
 #include "rand.h"
-#include "support.h" // bool type
 
 // common
 #include "map.h"

@@ -28,7 +28,6 @@
 #include "console.h"
 #include "hand_gen.h"
 #include "notify.h"
-#include "settings.h"
 #include "stdinhand.h"
 
 #include "voting.h"

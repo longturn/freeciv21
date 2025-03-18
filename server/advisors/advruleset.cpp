@@ -12,13 +12,11 @@
       \____/        ********************************************************/
 
 // common
-#include "base.h"
 #include "effects.h"
-#include "map.h"
 #include "movement.h"
 #include "unittype.h"
 
-/* server/advisors */
+// server/advisors
 #include "autosettlers.h"
 
 #include "advruleset.h"

@@ -25,25 +25,21 @@
 #include <QUdpSocket>
 
 // utility
+#include "fc_version.h"
 #include "log.h"
 #include "shared.h"
 #include "support.h"
 #include "timing.h"
 
-// generated
-#include "fc_version.h"
-
 // common
-#include "dataio.h"
-#include "events.h"
+#include "dataio.h" // NOLINT(misc-include-cleaner)
 #include "game.h"
 #include "packets.h"
 
-/* server/scripting */
+// server/scripting
 #include "script_server.h"
 
 // server
-#include "aiiface.h"
 #include "connecthand.h"
 #include "meta.h"
 #include "plrhand.h"

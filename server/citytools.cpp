@@ -11,8 +11,10 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
+// Qt
 #include <QBitArray>
 
+// utility
 #include "bitvector.h"
 #include "fcintl.h"
 #include "log.h"
@@ -26,7 +28,6 @@
 #include "city.h"
 #include "culture.h"
 #include "game.h"
-#include "government.h"
 #include "idex.h"
 #include "improvement.h"
 #include "map.h"
@@ -42,11 +43,8 @@
 #include "unitlist.h"
 #include "vision.h"
 
-/* common/aicore */
+// common/aicore
 #include "cm.h"
-
-/* common/scriptcore */
-#include "luascript_types.h"
 
 // server
 #include "barbarian.h"
@@ -64,12 +62,12 @@
 #include "unithand.h"
 #include "unittools.h"
 
-/* server/advisors */
+// server/advisors
 #include "advbuilding.h"
 #include "advgoto.h"
 #include "infracache.h"
 
-/* server/scripting */
+// server/scripting
 #include "script_server.h"
 
 // ai

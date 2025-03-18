@@ -11,6 +11,7 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
+// Qt
 #include <QBitArray>
 
 // utility
@@ -44,10 +45,9 @@
 #include "sanitycheck.h"
 #include "sernet.h"
 #include "srv_main.h"
-#include "unithand.h"
 #include "unittools.h"
 
-/* server/generator */
+// server/generator
 #include "mapgen_utils.h"
 
 #include "maphand.h"

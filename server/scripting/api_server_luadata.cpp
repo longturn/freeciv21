@@ -14,11 +14,8 @@
 // common
 #include "game.h"
 
-/* common/scriptcore */
+// common/scriptcore
 #include "luascript.h"
-
-/* server/scripting */
-#include "script_server.h"
 
 #include "api_server_luadata.h"
 

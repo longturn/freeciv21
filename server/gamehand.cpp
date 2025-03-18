@@ -11,7 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#include <QtWidgets/QtWidgets>
 #include <cstdio> // for remove()
 
 // utility
@@ -39,7 +38,7 @@
 #include "stdinhand.h"
 #include "unittools.h"
 
-/* server/advisors */
+// server/advisors
 #include "advdata.h"
 
 #include "gamehand.h"

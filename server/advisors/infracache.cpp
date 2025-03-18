@@ -13,15 +13,11 @@
 
 // common
 #include "city.h"
-#include "game.h"
 #include "map.h"
 #include "player.h"
 #include "tile.h"
 
-// server
-#include "maphand.h"
-
-/* server/advisors */
+// server/advisors
 #include "advbuilding.h"
 #include "autosettlers.h"
 

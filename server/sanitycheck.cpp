@@ -24,7 +24,6 @@
 #include "nation.h"
 #include "player.h"
 #include "research.h"
-#include "specialist.h"
 #include "terrain.h"
 #include "unit.h"
 #include "unitlist.h"
@@ -34,7 +33,6 @@
 #include "maphand.h"
 #include "plrhand.h"
 #include "srv_main.h"
-#include "unittools.h"
 
 #include "sanitycheck.h"
 

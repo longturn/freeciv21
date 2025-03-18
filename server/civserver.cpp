@@ -13,11 +13,10 @@
 
 #include <fc_config.h>
 
-#include <QString>
-
 #include <csignal>
 #include <cstdio>
 #include <cstdlib>
+
 #ifdef FREECIV_MSWINDOWS
 #include <windows.h>
 #else
@@ -27,6 +26,7 @@
 // Qt
 #include <QCommandLineParser>
 #include <QCoreApplication>
+#include <QString>
 
 // utility
 #include "deprecations.h"
@@ -35,14 +35,13 @@
 #include "log.h"
 #include "support.h"
 #include "timing.h"
+#include "version.h"
 
 // common
 #include "capstr.h"
 #include "game.h"
-#include "version.h"
 
 // server
-#include "aiiface.h"
 #include "console.h"
 #include "sernet.h"
 #include "server.h"

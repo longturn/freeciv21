@@ -17,12 +17,15 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <set>
+#include <string>
+
+// readline
+#include <readline/readline.h>
 
 // Qt
 #include <QCoreApplication>
 #include <QRegularExpression>
-
-#include <readline/readline.h>
 
 // utility
 #include "astring.h"
@@ -30,7 +33,6 @@
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
-#include "rand.h"
 #include "registry.h"
 #include "section_file.h"
 #include "shared.h"
@@ -68,10 +70,10 @@
 #include "techtools.h"
 #include "voting.h"
 
-/* server/savegame */
+// server/savegame
 #include "savemain.h"
 
-/* server/scripting */
+// server/scripting
 #include "script_fcdb.h"
 #include "script_server.h"
 
@@ -79,9 +81,6 @@
 #include "difficulty.h"
 
 #include "stdinhand.h"
-
-#include <set>
-#include <string>
 
 #define OPTION_NAME_SPACE 25
 #define REG_EXP "\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)"

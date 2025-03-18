@@ -64,17 +64,20 @@
 
 #include <fc_config.h>
 
-#include <QBitArray>
-#include <QSet>
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <sstream>
 
+// Qt
+#include <QBitArray>
+#include <QSet>
+
 // utility
 #include "bitvector.h"
 #include "capability.h"
+#include "fc_version.h"
 #include "fcintl.h"
 #include "idex.h"
 #include "log.h"
@@ -83,9 +86,6 @@
 #include "shared.h"
 #include "support.h" // bool type
 #include "timing.h"
-
-// generated
-#include "fc_version.h"
 
 // common
 #include "achievements.h"
@@ -98,7 +98,6 @@
 #include "mapimg.h"
 #include "movement.h"
 #include "multipliers.h"
-#include "packets.h"
 #include "research.h"
 #include "rgbcolor.h"
 #include "specialist.h"
@@ -126,15 +125,15 @@
 #include "techtools.h"
 #include "unittools.h"
 
-/* server/advisors */
+// server/advisors
 #include "advbuilding.h"
 #include "advdata.h"
 #include "infracache.h"
 
-/* server/generator */
+// server/generator
 #include "mapgen_utils.h"
 
-/* server/scripting */
+// server/scripting
 #include "script_server.h"
 
 // ai

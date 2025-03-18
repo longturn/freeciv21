@@ -40,9 +40,6 @@
 #include "unit.h"
 #include "unitlist.h"
 
-/* common/scriptcore */
-#include "luascript_types.h"
-
 // server
 #include "actiontools.h"
 #include "citizenshand.h"
@@ -57,10 +54,10 @@
 #include "techtools.h"
 #include "unittools.h"
 
-/* server/advisors */
+// server/advisors
 #include "autosettlers.h"
 
-/* server/scripting */
+// server/scripting
 #include "script_server.h"
 
 #include "unithand.h"

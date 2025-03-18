@@ -21,7 +21,7 @@
 #include "shared.h"
 #include "support.h"
 
-/* common/aicore */
+// common/aicore
 #include "cm.h"
 
 // common
@@ -47,13 +47,9 @@
 #include "unit.h"
 #include "unitlist.h"
 
-/* common/scriptcore */
-#include "luascript_types.h"
-
 // server
 #include "citizenshand.h"
 #include "citytools.h"
-#include "cityturn.h"
 #include "maphand.h"
 #include "notify.h"
 #include "plrhand.h"
@@ -63,12 +59,13 @@
 #include "techtools.h"
 #include "unittools.h"
 
-/* server/advisors */
+// server/advisors
 #include "advbuilding.h"
-#include "advdata.h"
 
-/* server/scripting */
+// server/scripting
 #include "script_server.h"
+
+#include "cityturn.h"
 
 // Queue for pending city_refresh()
 static struct city_list *city_refresh_queue = nullptr;

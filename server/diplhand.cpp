@@ -24,19 +24,16 @@
 #include "packets.h"
 #include "player.h"
 #include "research.h"
-/* common/scriptcore */
-#include "luascript_types.h"
 
 // server
 #include "citytools.h"
-#include "cityturn.h"
 #include "maphand.h"
 #include "notify.h"
 #include "plrhand.h"
 #include "techtools.h"
 #include "unittools.h"
 
-/* server/scripting */
+// server/scripting
 #include "script_server.h"
 
 #include "diplhand.h"

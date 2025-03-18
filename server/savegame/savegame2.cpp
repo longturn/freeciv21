@@ -58,13 +58,14 @@
 
 #include <fc_config.h>
 
-#include <QBitArray>
-
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <sstream>
+
+// Qt
+#include <QBitArray>
 
 // utility
 #include "bitvector.h"
@@ -75,6 +76,7 @@
 #include "registry.h"
 #include "shared.h"
 #include "support.h" // bool type
+
 // common
 #include "achievements.h"
 #include "ai.h"
@@ -87,14 +89,12 @@
 #include "mapimg.h"
 #include "movement.h"
 #include "multipliers.h"
-#include "packets.h"
 #include "research.h"
 #include "rgbcolor.h"
 #include "specialist.h"
 #include "style.h"
 #include "unit.h"
 #include "unitlist.h"
-#include "version.h"
 
 // server
 #include "citizenshand.h"
@@ -116,15 +116,15 @@
 #include "techtools.h"
 #include "unittools.h"
 
-/* server/advisors */
+// server/advisors
 #include "advbuilding.h"
 #include "advdata.h"
 #include "infracache.h"
 
-/* server/generator */
+// server/generator
 #include "mapgen_utils.h"
 
-/* server/scripting */
+// server/scripting
 #include "script_server.h"
 
 // ai

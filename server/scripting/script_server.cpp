@@ -12,30 +12,24 @@
 #include <ctime>
 #include <sys/stat.h>
 
-/* dependencies/lua */
-extern "C" {
-#include "lua.h"
-
-/* dependencies/tolua */
-#include "tolua.h"
-}
 // utility
 #include "log.h"
 #include "registry.h"
 #include "registry_ini.h"
 
-/* common/scriptcore */
+// common/scriptcore
 #include "api_game_specenum.h"
 #include "luascript.h"
 #include "luascript_func.h"
 #include "luascript_signal.h"
 #include "tolua_game_gen.h"
 #include "tolua_signal_gen.h"
+
 // server
 #include "console.h"
 #include "stdinhand.h"
 
-/* server/scripting */
+// server/scripting
 #include "tolua_server_gen.h"
 
 #include "script_server.h"

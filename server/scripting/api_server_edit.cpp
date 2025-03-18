@@ -18,8 +18,8 @@
 #include "movement.h"
 #include "research.h"
 #include "unittype.h"
-/* common/scriptcore */
-#include "api_game_find.h"
+
+// common/scriptcore
 #include "luascript.h"
 
 // server
@@ -35,7 +35,7 @@
 #include "techtools.h"
 #include "unittools.h"
 
-/* server/generator */
+// server/generator
 #include "mapgen_utils.h"
 
 #include "api_server_edit.h"

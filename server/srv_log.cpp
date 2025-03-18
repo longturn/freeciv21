@@ -12,7 +12,6 @@
       \____/        ********************************************************/
 
 // utility
-#include "shared.h"
 #include "timing.h"
 
 // common
@@ -25,9 +24,6 @@
 
 // server
 #include "notify.h"
-
-/* server/advisors */
-#include "advdata.h"
 
 #include "srv_log.h"
 

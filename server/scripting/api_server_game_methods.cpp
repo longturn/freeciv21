@@ -9,17 +9,11 @@
                   see https://www.gnu.org/licenses/.
  */
 
-// utility
-#include "fcintl.h"
-
-/* common/scriptcore */
+// common/scriptcore
 #include "luascript.h"
 
 // ai
 #include "aitraits.h" // ai_trait_get_value()
-
-/* server/scripting */
-#include "script_server.h"
 
 #include "api_server_game_methods.h"
 

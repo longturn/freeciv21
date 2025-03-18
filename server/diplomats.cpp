@@ -17,7 +17,6 @@
 #include "rand.h"
 
 // common
-#include "base.h"
 #include "combat.h"
 #include "events.h"
 #include "game.h"
@@ -29,11 +28,9 @@
 
 // server
 #include "actiontools.h"
-#include "aiiface.h"
 #include "citytools.h"
 #include "cityturn.h"
 #include "diplhand.h"
-#include "diplomats.h"
 #include "maphand.h"
 #include "notify.h"
 #include "plrhand.h"
@@ -41,8 +38,10 @@
 #include "unithand.h"
 #include "unittools.h"
 
-/* server/scripting */
+// server/scripting
 #include "script_server.h"
+
+#include "diplomats.h"
 
 /****************************************************************************/
 
@@ -272,10 +271,8 @@ bool diplomat_investigate(struct player *pplayer, struct unit *pdiplomat,
                           struct city *pcity, const struct action *paction)
 {
   struct player *cplayer;
-  struct packet_unit_short_info unit_packet {
-  };
-  struct packet_city_info city_packet {
-  };
+  struct packet_unit_short_info unit_packet {};
+  struct packet_city_info city_packet {};
   struct traderoute_packet_list *routes;
 
   // Fetch target city's player.  Sanity checks.

@@ -24,18 +24,16 @@
 #include "unit.h"
 #include "unitlist.h"
 
-/* common/aicore */
+// common/aicore
 #include "aisupport.h"
-#include "path_finding.h"
 
 // server
 #include "cityturn.h"
 #include "maphand.h"
 #include "plrhand.h"
 #include "srv_log.h"
-#include "unittools.h"
 
-/* server/advisors */
+// server/advisors
 #include "advbuilding.h"
 #include "advcity.h"
 #include "advtools.h"

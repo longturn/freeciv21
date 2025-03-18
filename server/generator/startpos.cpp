@@ -11,8 +11,10 @@
                                  If not, see https://www.gnu.org/licenses/.
  */
 
-#include <QBitArray>
 #include <cmath> // sqrt, HUGE_VAL
+
+// Qt
+#include <QBitArray>
 
 // utility
 #include "fcintl.h"
@@ -23,13 +25,11 @@
 #include "map.h"
 #include "movement.h"
 
-// server
-#include "maphand.h"
-
-/* server/generator */
+// server/generator
 #include "mapgen_utils.h"
-#include "startpos.h"
 #include "temperature_map.h"
+
+#include "startpos.h"
 
 struct islands_data_type {
   Continent_id id;

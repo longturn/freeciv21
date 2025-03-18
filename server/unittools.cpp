@@ -11,11 +11,12 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#include <QDateTime>
-
 #include <cstdlib>
 #include <cstring>
 #include <functional>
+
+// Qt
+#include <QDateTime>
 
 // utility
 #include "bitvector.h"
@@ -35,7 +36,6 @@
 #include "combat.h"
 #include "events.h"
 #include "game.h"
-#include "government.h"
 #include "idex.h"
 #include "map.h"
 #include "movement.h"
@@ -52,12 +52,12 @@
 #include "path_finding.h"
 #include "pf_tools.h"
 
-/* server/scripting */
+// server/scripting
 #include "script_server.h"
 
 // server
 #include "actiontools.h"
-#include "aiiface.h"
+#include "aiiface.h" // NOLINT(misc-include-cleaner)
 #include "citytools.h"
 #include "cityturn.h"
 #include "gamehand.h"
@@ -69,7 +69,7 @@
 #include "techtools.h"
 #include "unithand.h"
 
-/* server/advisors */
+// server/advisors
 #include "advgoto.h"
 #include "autoexplorer.h"
 #include "autosettlers.h"

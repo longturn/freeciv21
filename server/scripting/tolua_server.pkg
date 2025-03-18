@@ -19,20 +19,15 @@
 
 $#include <fc_config.h>
 
-/* common/scriptcore */
+// common/scriptcore
 $#include "luascript_types.h"
 
-/* server */
-$#include "commands.h"
-$#include "console.h"
-
-/* server/scripting */
+// server/scripting
 $#include "api_server_edit.h"
 $#include "api_server_base.h"
 $#include "api_server_luadata.h"
 $#include "api_server_notify.h"
 $#include "api_server_game_methods.h"
-$#include "script_server.h"
 
 /* Server module. */
 module server {

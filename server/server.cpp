@@ -17,17 +17,11 @@
  * along with Freeciv21.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "server.h"
-#include "unittools.h"
+#include <cstdio>
 
-// Qt
-#include <QCoreApplication>
-#include <QDir>
-#include <QFile>
-#include <QHostInfo>
-#include <QLocalSocket>
-#include <QTcpSocket>
-#include <QTimer>
+// Readline
+#include <readline/history.h>
+#include <readline/readline.h>
 
 // Stuff to wait for input on stdin.
 #ifdef Q_OS_WIN
@@ -37,11 +31,15 @@
 #include <QtCore/QSocketNotifier>
 #include <unistd.h>
 #endif
-#include <cstdio>
 
-// Readline
-#include <readline/history.h>
-#include <readline/readline.h>
+// Qt
+#include <QCoreApplication>
+#include <QDir>
+#include <QFile>
+#include <QHostInfo>
+#include <QLocalSocket>
+#include <QTcpSocket>
+#include <QTimer>
 
 // utility
 #include "fciconv.h" // local_to_internal_string_malloc
@@ -74,6 +72,8 @@
 #include "stdinhand.h"
 #include "timing.h"
 #include "voting.h"
+
+#include "server.h"
 
 using namespace freeciv;
 

@@ -17,13 +17,10 @@
 
 // utility
 #include "capability.h"
+#include "fc_version.h"
 #include "fcintl.h"
 #include "log.h"
-#include "registry_ini.h"
 #include "support.h"
-
-// generated
-#include "fc_version.h"
 
 // common
 #include "capstr.h"

@@ -11,13 +11,7 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-// utility
-#include "support.h"
-
-// common
-#include "improvement.h"
-#include "requirements.h"
-#include "unittype.h"
+#include "unittype.h" // NOLINT(misc-include-cleaner)
 
 #include "advchoice.h"
 

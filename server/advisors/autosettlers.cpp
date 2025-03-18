@@ -13,36 +13,31 @@
 
 // utility
 #include "log.h"
-#include "support.h"
 #include "timing.h"
 
 // common
 #include "ai.h"
 #include "city.h"
 #include "game.h"
-#include "government.h"
 #include "map.h"
 #include "movement.h"
 #include "nation.h"
-#include "packets.h"
 #include "unitlist.h"
 #include "workertask.h"
 
-/* common/aicore */
+// common/aicore
 #include "citymap.h"
 #include "path_finding.h"
 #include "pf_tools.h"
 
 // server
 #include "citytools.h"
-#include "maphand.h"
 #include "srv_log.h"
 #include "unithand.h"
 #include "unittools.h"
 
-/* server/advisors */
+// server/advisors
 #include "advbuilding.h"
-#include "advdata.h"
 #include "advgoto.h"
 #include "advtools.h"
 #include "infracache.h"

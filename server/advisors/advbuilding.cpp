@@ -17,9 +17,8 @@
 #include "game.h"
 #include "movement.h"
 #include "player.h"
-#include "specialist.h"
 
-/* common/aicore */
+// common/aicore
 #include "path_finding.h"
 #include "pf_tools.h"
 
@@ -27,7 +26,7 @@
 #include "citytools.h"
 #include "srv_log.h"
 
-/* server/advisors */
+// server/advisors
 #include "advdata.h"
 #include "infracache.h" // adv_city
 
