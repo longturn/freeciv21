@@ -13,6 +13,7 @@ architected.
   mapgen.rst
   attributes.rst
   guidelines.rst
+  debug-windows.rst
   internationalization.rst
   logging.rst
   network-protocol.rst
