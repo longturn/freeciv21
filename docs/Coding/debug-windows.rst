@@ -49,11 +49,11 @@ These are the steps for the player on their Windows computer:
 #. At the ``PS C:\WINDOWS\System32>`` prompt, type ``cmd`` and press :guilabel:`Enter`.
 #. At the ``C:\WINDOWS\System32>`` prompt, type ``setx /M QT_ASSUME_STDERR_HAS_CONSOLE "1"`` and press
    :guilabel:`Enter`.
-#. You sould get the following message: ``SUCCESS: Specified value was saved.``
+#. You should get the following message: ``SUCCESS: Specified value was saved.``
 #. Type ``setx /M QT_FORCE_STDERR_LOGGING "1"`` and press :guilabel:`Enter`.
-#. You sould get the following message: ``SUCCESS: Specified value was saved.``
+#. You should get the following message: ``SUCCESS: Specified value was saved.``
 #. Type ``setx /M QT_LOGGING_RULES "freeciv.stacktrace*=true"`` and press :guilabel:`Enter`.
-#. You sould get the following message: ``SUCCESS: Specified value was saved.``
+#. You should get the following message: ``SUCCESS: Specified value was saved.``
 #. Type ``exit`` and press :guilabel:`Enter` twice to close the command shell.
 #. Right click :guilabel:`Start Menu` and select :guilabel:`Windows PowerShell (Admin)`.
 #. At the ``PS C:\WINDOWS\System32>`` prompt, type ``cmd`` and press :guilabel:`Enter`.
@@ -61,8 +61,8 @@ These are the steps for the player on their Windows computer:
 #. Type ``cd C:\Temp\Freeciv21`` and press :guilabel:`Enter`.
 #. Type ``freeciv21-client.exe -d debug -l output.log`` and press :guilabel:`Enter`.
 
-At this point the player running the test will will see tons of output to the console window, all if it is
-also being sent to the log file. Launcing the game will be slow in debug mode, so it is probably a good idea
+At this point the player running the test will will see tons of output to the console window, all of it is
+also being sent to the log file. Launching the game will be slow in debug mode, so it is probably a good idea
 to let the player know and to be patient.
 
 Have the player do the tests to get to the crash. Open the log file in Notepad++ or any good text file reader.
@@ -76,7 +76,7 @@ The player can uninstall the debug package by double-clicking the :file:`Uninsta
 location. They will want to reinstall the regular package to the regular location to fix any shortcuts that
 get deleted by the uninstall process.
 
-The envrionment variables can be left as they cause no problems. If the player wants to remove them, they can
+The environment variables can be left as they cause no problems. If the player wants to remove them, they can
 be found in
 :menuselection:`Start Menu -> Settings -> System -> About -> Advanced System Settings -> Environment Variables`.
 
