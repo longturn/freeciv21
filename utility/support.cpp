@@ -565,7 +565,7 @@ int fc_snprintf(char *str, size_t n, const char *format, ...)
 int cat_snprintf(char *str, size_t n, const char *format, ...)
 {
   size_t len;
-  int ret;
+  int ret, ilen;
   va_list ap;
 
   fc_assert_ret_val(nullptr != format, -1);
@@ -583,8 +583,11 @@ int cat_snprintf(char *str, size_t n, const char *format, ...)
     return -1;
   }
 
-  fc_assert_ret_val(ret <= INT_MAX - len, INT_MAX);
-  return ret + len;
+  fc_assert_action(len <= INT_MAX, len = INT_MAX);
+  ilen = static_cast<int>(len);
+
+  fc_assert_ret_val(ret <= INT_MAX - ilen, INT_MAX);
+  return ret + ilen;
 }
 
 /**
