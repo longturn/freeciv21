@@ -1345,7 +1345,9 @@ void choice_dialog::next_unit()
   unit_list_iterate_end;
 
   // Target the next unit
-  index = (index + 1) % unit_list_size(ptile->units);
+  auto size = unit_list_size(ptile->units);
+  fc_assert_ret(size != 0);
+  index = (index + 1) % size;
   targeted_unit = unit_list_get(ptile->units, index);
 
   auto pix =
