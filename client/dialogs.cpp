@@ -1382,6 +1382,7 @@ void choice_dialog::prev_unit()
 
   // Target the previous unit
   auto size = unit_list_size(ptile->units);
+  fc_assert_ret(size != 0);
   index = (index + size - 1) % size;
   targeted_unit = unit_list_get(ptile->units, index);
 
