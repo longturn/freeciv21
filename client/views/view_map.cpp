@@ -20,6 +20,7 @@
 #include <QCursor>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QVBoxLayout>
 #include <Qt>
 
 // utility
@@ -56,7 +57,6 @@ extern void destroy_city_dialog();
 extern QPixmap *canvas;
 static QRegion dirty;
 
-info_tile *info_tile::m_instance = nullptr;
 extern int last_center_enemy;
 extern int last_center_capital;
 extern int last_center_player_city;
@@ -612,128 +612,76 @@ bool mapview_is_frozen() { return (0 < mapview_frozen_level); }
 /**
    Constructor for info_tile
  */
-info_tile::info_tile(struct tile *ptile, QWidget *parent)
-    : QLabel(parent), itile(ptile)
+info_tile::info_tile(struct tile *ptile, QWidget *parent) : QMenu(parent)
 {
-  setFont(fcFont::instance()->getFont(fonts::notify_label));
-  setTextFormat(Qt::RichText);
-  setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-  setText(popup_info_text(itile, true));
-  setWordWrap(true);
+  setAttribute(Qt::WA_DeleteOnClose, true);
 
-  calc_size();
+  auto layout = new QVBoxLayout;
+  layout->setSizeConstraint(QLayout::SetFixedSize);
+  setLayout(layout);
 
-  connect(this, &QLabel::linkActivated, this, &info_tile::anchor_clicked);
-}
+  auto label = new QLabel;
+  layout->addWidget(label);
+  label->setFont(fcFont::instance()->getFont(fonts::notify_label));
+  label->setTextFormat(Qt::RichText);
+  label->setTextInteractionFlags(Qt::TextBrowserInteraction);
+  label->setText(popup_info_text(ptile, true));
+  label->setWordWrap(true);
 
-/**
-   Called when a link in the info_tile has been clicked. Tries to open
-   the corresponding entry in the help system.
- */
-void info_tile::anchor_clicked(const QString &link)
-{
-  follow_help_link(link);
-}
+  connect(label, &QLabel::linkActivated, follow_help_link);
+  connect(label, &QLabel::linkActivated, this, &info_tile::hide);
 
-/**
-   Calculates size of info_tile and moves it to be fully visible
- */
-void info_tile::calc_size()
-{
-  auto size = sizeHint();
-
-  // Prevent it from getting too wide
-  QFontMetrics fm = fontMetrics();
-  const auto max_width = fm.averageCharWidth() * 70; // About 700px
-  if (size.width() > max_width) {
-    size.setWidth(max_width + 10); // Safety margin
-    size.setHeight(heightForWidth(size.width()) + 10);
-  }
-
-  setFixedSize(size);
-
-  float x, y;
-  if (tile_to_canvas_pos(&x, &y, itile)) {
-    x *= queen()->mapview_wdg->scale();
-    y *= queen()->mapview_wdg->scale();
-    if (y - height() > 0) {
-      y -= height();
-    } else {
-      y += tileset_tile_height(tileset) * queen()->mapview_wdg->scale();
+  // Setup map deco
+  mapdeco_set_crosshair(ptile, true);
+  auto punit = find_visible_unit(ptile);
+  if (punit) {
+    mapdeco_set_gotoroute(punit);
+    if (punit->goto_tile && unit_has_orders(punit)) {
+      mapdeco_set_crosshair(punit->goto_tile, true);
     }
-    // Make sure it's visible
-    x = std::clamp(int(x), 0, parentWidget()->width() - width());
-    move(x, y);
   }
 }
 
 /**
-   Deletes current instance
+ * Clears the map deco.
  */
-void info_tile::drop()
+info_tile::~info_tile()
 {
-  delete m_instance;
-  m_instance = nullptr;
+  mapdeco_clear_crosshairs();
+  mapdeco_clear_gotoroutes();
 }
-
-/**
- * Check if the info tile is currently shown.
- */
-bool info_tile::shown() { return m_instance && m_instance->isVisible(); }
-
-/**
- * Returns true, if the info tile is currently under the mouse cursor.
- */
-bool info_tile::under_mouse()
-{
-  return m_instance->rect().contains(
-      m_instance->mapFromGlobal(QCursor::pos()));
-};
-
-/**
-   Returns given instance
- */
-info_tile *info_tile::i(struct tile *p)
-{
-  if (!m_instance && p) {
-    m_instance = new info_tile(p, queen()->mapview_wdg);
-  }
-  return m_instance;
-}
-
-/**
- * Closes the info tile when the mouse leaves.
- */
-void info_tile::leaveEvent(QEvent *event) { popdown_tile_info(); }
 
 /**
    Popups information label tile
  */
 void popup_tile_info(struct tile *ptile)
 {
-  struct unit *punit = nullptr;
-
   if (TILE_UNKNOWN != client_tile_get_known(ptile)) {
-    mapdeco_set_crosshair(ptile, true);
-    punit = find_visible_unit(ptile);
-    if (punit) {
-      mapdeco_set_gotoroute(punit);
-      if (punit->goto_tile && unit_has_orders(punit)) {
-        mapdeco_set_crosshair(punit->goto_tile, true);
-      }
-    }
-    info_tile::i(ptile)->show();
-  }
-}
+    float x, y;
+    if (tile_to_canvas_pos(&x, &y, ptile)) {
+      auto mapview = queen()->mapview_wdg;
+      x *= mapview->scale();
+      y *= mapview->scale();
 
-/**
-   Popdowns information label tile
- */
-void popdown_tile_info()
-{
-  mapdeco_clear_crosshairs();
-  mapdeco_clear_gotoroutes();
-  info_tile::i()->drop();
+      // Show the popup
+      auto info = new info_tile(ptile, mapview);
+      // Make sure the layout is done so  we get the right metrics below
+      info->layout()->update();
+      info->layout()->activate();
+
+      // Try to avoid covering the tile. This assumes that the menu is shown
+      // below the location passed to popeup().
+      auto tile_height = tileset_tile_height(tileset);
+      if (y + tile_height + info->height() < mapview->height()) {
+        y += tile_height;
+      } else {
+        y = std::max(0, int(y) - info->height());
+      }
+
+      // Show the popup
+      info->popup(queen()->mapview_wdg->mapToGlobal(QPoint(x, y)));
+    }
+  }
 }
 
 /**
