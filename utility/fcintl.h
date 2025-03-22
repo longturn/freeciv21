@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2025 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -12,8 +12,11 @@
       \____/        ********************************************************/
 #pragma once
 
-#include "fc_config.h" // FREECIV_ENABLE_NLS
-#include "support.h"   // fc__attribute
+// generated
+#include <fc_config.h> // FREECIV_ENABLE_NLS
+
+// utiltiy
+#include "support.h" // fc__attribute
 
 #ifdef FREECIV_ENABLE_NLS
 

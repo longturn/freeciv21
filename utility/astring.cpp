@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2025 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -11,11 +11,17 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
+// self
 #include "astring.h"
 
+// utility
 #include "fcintl.h"
 
+// Qt
+#include <QString>
 #include <QStringList>
+#include <QVector>
+#include <Qt> // Qt::SkipEmptyParts
 
 QString strvec_to_or_list(const QVector<QString> &psv)
 {

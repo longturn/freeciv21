@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2025 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -11,14 +11,22 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#include <QLoggingCategory>
-#include <sstream>
+// self
+#include "fcbacktrace.h"
 
+// dependency
 #ifdef FREECIV_DEBUG
 #include <backward.hpp>
 #endif
 
-#include "fcbacktrace.h"
+// Qt
+#include <QLoggingCategory>
+#include <QMessageLogContext>
+#include <QString>
+
+// std
+#include <sstream>
+#include <string>
 
 // We don't want backtrace-spam to testmatic logs
 #if defined(FREECIV_DEBUG) && !defined(FREECIV_TESTMATIC)

@@ -1,5 +1,5 @@
 /*
-             ____             Copyright (c) 1996-2020 Freeciv21 and Freeciv
+             ____             Copyright (c) 1996-2025 Freeciv21 and Freeciv
             /    \__          contributors. This file is part of Freeciv21.
 |\         /    @   \   Freeciv21 is free software: you can redistribute it
 \ \_______|    \  .:|>         and/or modify it under the terms of the GNU
@@ -11,17 +11,32 @@
                                  If not, see https://www.gnu.org/licenses/.
  */
 
+// self
 #include "fciconv.h"
 
+// utility
 #include "fc_config.h"
-#include "fcintl.h" // NOLINT(misc-include-cleaner)
+#include "fcintl.h"
 
-#include <cstdarg>
-#include <cstdio>
+// dependency
+#ifdef FREECIV_ENABLE_NLS
 
+/* Include libintl.h only if nls enabled.
+ * It defines some wrapper macros that
+ * we don't want defined when nls is disabled. */
+#include <libintl.h>
+#endif
+
+// Qt
+#include <QByteArray> // qstrdup(), qstrncpy()
 #include <QLocale>
 #include <QTextCodec>
 #include <QTextStream>
+
+// std
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
 
 static QTextCodec *localCodec;
 static QTextCodec *dataCodec;

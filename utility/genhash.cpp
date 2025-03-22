@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2025 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -56,14 +56,19 @@
    necessary by making and populating a new table.
  */
 
+// self
 #include "genhash.h"
 
 // utility
+#include "iterator.h"
 #include "log.h"
 #include "shared.h" // ARRAY_SIZE
 #include "support.h"
 
+// std
+#include <cstdint>
 #include <cstring>
+#include <new>
 
 #define FULL_RATIO 0.75 // consider expanding when above this
 #define MIN_RATIO 0.24  // shrink when below this
