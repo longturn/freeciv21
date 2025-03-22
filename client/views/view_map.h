@@ -12,6 +12,7 @@
 // Qt
 #include <QFrame>
 #include <QLabel>
+#include <QMenu>
 #include <QPointer>
 #include <QPropertyAnimation>
 #include <QQueue>
@@ -112,31 +113,15 @@ private:
 /**************************************************************************
   Information label about clicked tile
 **************************************************************************/
-class info_tile : public QLabel {
+class info_tile : public QMenu {
   Q_OBJECT
   Q_DISABLE_COPY(info_tile);
 
 public:
-  static info_tile *i(struct tile *p = nullptr);
-  static void drop();
-  static bool shown();
-  static bool under_mouse();
-
-  struct tile *itile;
-
-private:
-  info_tile(struct tile *ptile, QWidget *parent = 0);
-  static info_tile *m_instance;
-  void calc_size();
-
-protected:
-  void leaveEvent(QEvent *event) override;
-
-private slots:
-  void anchor_clicked(const QString &link);
+  explicit info_tile(struct tile *ptile, QWidget *parent = 0);
+  virtual ~info_tile();
 };
 
-void popdown_tile_info();
 void popup_tile_info(struct tile *ptile);
 bool mapview_is_frozen();
 
