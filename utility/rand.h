@@ -1,5 +1,5 @@
 /**************************************************************************
- Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2025 Freeciv21 and Freeciv contributors. This file is
  __    __          part of Freeciv21. Freeciv21 is free software: you can
 / \\..// \    redistribute it and/or modify it under the terms of the GNU
   ( oo )        General Public License  as published by the Free Software
@@ -10,8 +10,9 @@
 **************************************************************************/
 #pragma once
 
+// std
+#include <cstdint>
 #include <random>
-#include <stdint.h>
 
 #define fc_rand(_size) fc_rand_debug((_size), "fc_rand", __LINE__, __FILE__)
 

@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2025 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -11,10 +11,18 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#include <QBitArray>
+// self
+#include "bitvector.h"
 
 // utility
-#include "bitvector.h"
+#include "log.h"
+
+// Qt
+#include <QBitArray>
+#include <QStringLiteral>
+
+// std
+#include <cstddef>
 
 /* bv_*  - static bitvectors; used for data which where the length is
            fixed (number of players; flags for enums; ...). They are

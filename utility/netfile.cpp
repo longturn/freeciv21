@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2025 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -11,9 +11,17 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
+// self
+#include "netfile.h"
+
+// generated
 #include <fc_config.h>
 
-#include <memory>
+// utility
+#include "fcintl.h"
+#include "log.h"
+#include "registry_ini.h"
+#include "version.h"
 
 // Qt
 #include <QBuffer>
@@ -22,15 +30,12 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QObject>
 #include <QSaveFile>
+#include <QString>
 
-// utility
-#include "fcintl.h"
-#include "log.h"
-#include "registry_ini.h"
-#include "version.h"
-
-#include "netfile.h"
+// std
+#include <memory>
 
 /**
    Fetch file from given URL to given file stream. This is core
