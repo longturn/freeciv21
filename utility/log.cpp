@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2025 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -11,22 +11,28 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
+// self
+#include "log.h"
+
+// generated
 #include <fc_config.h>
 
-// Qt
-#include <QFileInfo>
-#include <QLoggingCategory>
-#include <QMutexLocker>
-#include <QString>
+// utility
+#include "fcintl.h"
 
-// Windows
+// Windows dependency
 #ifdef Q_OS_WIN
 #include <windows.h>
 #endif
 
-// utility
-#include "fcintl.h"
-#include "log.h"
+// Qt
+#include <QFile>
+#include <QFileInfo>
+#include <QIODevice>
+#include <QLoggingCategory>
+#include <QMutex>
+#include <QString>
+#include <QtCore>
 
 Q_LOGGING_CATEGORY(assert_category, "freeciv.assert")
 

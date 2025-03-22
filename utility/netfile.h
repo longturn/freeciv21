@@ -1,5 +1,5 @@
 /**************************************************************************
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2025 Freeciv21 and Freeciv contributors. This file is
  __    __          part of Freeciv21. Freeciv21 is free software: you can
 / \\..// \    redistribute it and/or modify it under the terms of the GNU
   ( oo )        General Public License  as published by the Free Software
@@ -11,12 +11,13 @@
 
 #pragma once
 
-#include <functional>
-
 // Forward declarations
 class QJsonDocument;
 class QString;
 class QUrl;
+
+// std
+#include <functional>
 
 struct section_file;
 

@@ -1,5 +1,5 @@
 /*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+/   \          /   \          Copyright (c) 1996-2025 Freeciv21 and Freeciv
 \_   \        /  __/          contributors. This file is part of Freeciv21.
  _\   \      /  /__     Freeciv21 is free software: you can redistribute it
  \___  \____/   __/    and/or modify it under the terms of the GNU  General
@@ -12,12 +12,14 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <cstring> // memset
-
-class QBitArray;
-
 // utility
 #include "log.h"
+
+// Qt
+class QBitArray;
+
+// std
+#include <cstring> // memset
 
 // Yields TRUE iff the bit bit_no is set in val.
 #define TEST_BIT(val, bit_no)                                               \

@@ -1,5 +1,5 @@
 /*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2025 Freeciv21 and Freeciv contributors. This file is
  __    __          part of Freeciv21. Freeciv21 is free software: you can
 / \\..// \    redistribute it and/or modify it under the terms of the GNU
   ( oo )        General Public License  as published by the Free Software
@@ -9,11 +9,14 @@
                   see https://www.gnu.org/licenses/.
  */
 
-#include <vector>
-// utility
-#include "log.h" // fc_assert
-
+// self
 #include "distribute.h"
+
+// utility
+#include "log.h"
+
+// std
+#include <vector>
 
 /**
    Distribute "number" elements into "groups" groups with ratios given by
