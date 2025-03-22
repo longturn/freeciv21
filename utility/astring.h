@@ -1,5 +1,5 @@
 /**************************************************************************
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2025 Freeciv21 and Freeciv contributors. This file is
  __    __          part of Freeciv21. Freeciv21 is free software: you can
 / \\..// \    redistribute it and/or modify it under the terms of the GNU
   ( oo )        General Public License  as published by the Free Software
@@ -11,8 +11,9 @@
 
 #pragma once
 
-#include <QString>
+// Qt
 #include <QVector>
+class QString;
 
 QString strvec_to_or_list(const QVector<QString> &psv);
 QString strvec_to_and_list(const QVector<QString> &psv);

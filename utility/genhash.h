@@ -1,5 +1,5 @@
 /**************************************************************************
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ Copyright (c) 1996-2025 Freeciv21 and Freeciv contributors. This file is
  __    __          part of Freeciv21. Freeciv21 is free software: you can
 / \\..// \    redistribute it and/or modify it under the terms of the GNU
   ( oo )        General Public License  as published by the Free Software
@@ -10,16 +10,9 @@
 **************************************************************************/
 #pragma once
 
-/****************************************************************************
-   A general-purpose generic hash table implementation.
-   See comments in "genhash.c".
-****************************************************************************/
-
 // utility
 #include "iterator.h"
 #include "support.h" // bool type
-
-#include <stddef.h>
 
 struct genhash; // opaque
 
