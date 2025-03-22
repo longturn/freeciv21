@@ -19,9 +19,9 @@
 #include "rand.h"
 
 // std
+#include <algorithm>
 #include <cstdlib>
 #include <vector>
-#include <algorithm>
 
 /**
    Create a new empty genlist.
