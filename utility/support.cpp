@@ -63,6 +63,9 @@
 #include <QThread>
 
 // utility
+#ifdef FREECIV_MSWINDOWS
+#include "fciconv.h"
+#endif
 #include "fcintl.h"
 #include "log.h"
 
