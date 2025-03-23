@@ -1077,8 +1077,10 @@ void city_dialog::hideEvent(QHideEvent *event)
     update_map_canvas_visible();
     pcity = nullptr;
   }
-  queen()->mapview_wdg->show_all_fcwidgets();
-  king()->menu_bar->minimap_status->setEnabled(true);
+  if (king() && queen()) {
+    queen()->mapview_wdg->show_all_fcwidgets();
+    king()->menu_bar->minimap_status->setEnabled(true);
+  }
 }
 
 /**
