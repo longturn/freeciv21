@@ -21,7 +21,7 @@ check_function_exists(at_quick_exit HAVE_AT_QUICK_EXIT)
 find_package(Python3 REQUIRED)
 
 # Required as the main networking and utility library
-find_package(Qt6 6.7 COMPONENTS Core Gui Network REQUIRED)
+find_package(Qt6 6.6 COMPONENTS Core Gui Network REQUIRED)
 
 # Required for utility
 if(FREECIV_ENABLE_SERVER)
@@ -158,10 +158,10 @@ if (FREECIV_ENABLE_CLIENT
     OR FREECIV_ENABLE_FCMP_QT
     OR FREECIV_ENABLE_RULEDIT)
   # May want to relax the version later
-  find_package(Qt6 6.7 COMPONENTS Widgets REQUIRED)
+  find_package(Qt6 6.6 COMPONENTS Widgets REQUIRED)
 endif()
 if (FREECIV_ENABLE_CLIENT)
-  find_package(Qt6 6.7 COMPONENTS Svg REQUIRED)
+  find_package(Qt6 6.6 COMPONENTS Svg REQUIRED)
 endif()
 
 # FCMP-specific dependencies
