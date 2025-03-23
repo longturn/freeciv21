@@ -1666,6 +1666,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
     qCCritical(tileset_category, "Tileset \"%s\" invalid: %s", t->name,
                secfile_error());
     tileset_stop_read(t, file, sections, layer_order);
+    return nullptr;
   }
 
   tstr = secfile_lookup_str(file, "tilespec.type");
