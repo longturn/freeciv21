@@ -1,10 +1,7 @@
 // SPDX-License-Identifier: GPLv3-or-later
 // SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
-// Qt
-#include <QPainter>
-
-// editor
+// self
 #include "editor/tool_tile.h"
 
 // client
@@ -12,6 +9,9 @@
 #include "fcintl.h"         //editor_tool_tile::editor_tool_tile
 #include "fonts.h"          //editor_tool_tile::editor_tool_tile
 #include "mapctrl_common.h" //editor_tool_tile::select_tile
+
+// Qt
+#include <QPainter>
 
 /**
  *  \class editor_tool_tile

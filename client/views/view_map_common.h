@@ -13,11 +13,13 @@
 // common
 #include "featured_text.h"
 #include "map.h"
-// include
-#include "colors_g.h"
 
+// client
 #include "map_updates_handler.h"
 #include "tileset/tilespec.h"
+
+// client/include
+#include "colors_g.h"
 
 struct view {
   float gui_x0, gui_y0;

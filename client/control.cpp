@@ -11,9 +11,9 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#include <QSet>
-#include <QTimer>
-#include <algorithm>
+// self
+#include "control.h"
+
 // utility
 #include "bitvector.h"
 #include "fcintl.h"
@@ -27,8 +27,7 @@
 #include "path_finder.h"
 #include "unitlist.h"
 
-/* common/aicore */
-/* client/include */
+// client/include
 #include "citydlg_g.h"
 #include "dialogs_g.h"
 #include "mapctrl_g.h"
@@ -40,7 +39,6 @@
 #include "client_main.h"
 #include "climap.h"
 #include "climisc.h"
-#include "control.h"
 #include "goto.h"
 #include "governor.h"
 #include "options.h"
@@ -50,6 +48,13 @@
 #include "tileset/tilespec.h"
 #include "update_queue.h"
 #include "views/view_map.h"
+
+// Qt
+#include <QSet>
+#include <QTimer>
+
+// Std
+#include <algorithm>
 
 struct client_disband_unit_data {
   int unit_id;

@@ -10,8 +10,8 @@
                                             https://www.gnu.org/licenses/.
  */
 
-#include <QRect>
-#include <QSet>
+// self
+#include "editor.h"
 
 // utility
 #include "bitvector.h"
@@ -28,12 +28,15 @@
 #include "client_main.h"
 #include "climap.h"
 #include "control.h"
-#include "editor.h"
 #include "mapctrl_common.h"
 #include "mapview_g.h"
 #include "qtg_cxxside.h"
 #include "tileset/tilespec.h"
 #include "views/view_map_geometry.h"
+
+// Qt
+#include <QRect>
+#include <QSet>
 
 enum selection_modes {
   SELECTION_MODE_NEW = 0,

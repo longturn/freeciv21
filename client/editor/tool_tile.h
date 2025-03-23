@@ -4,7 +4,7 @@
 #pragma once
 
 // Qt
-#include <QWidget>
+class QWidget;
 
 #include "ui_tool_tile.h"
 /*

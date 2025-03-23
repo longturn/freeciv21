@@ -4,6 +4,9 @@
 // editor
 #include "editor/map_editor.h"
 
+// common
+#include "chatline_common.h" //map_editor::player_changed
+
 // client                     ::Where Needed::
 #include "citydlg.h"        //map_editor::showEvent
 #include "client_main.h"    //map_editor::check_open
@@ -12,9 +15,6 @@
 #include "minimap_panel.h"  //map_editor::showEvent
 #include "page_game.h"      //map_editor::showEvent
 #include "views/view_map.h" //map_editor::showEvent
-
-// common
-#include "chatline_common.h" //map_editor::player_changed
 
 /**
  *  \class map_editor
