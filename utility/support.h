@@ -116,8 +116,6 @@ int fc_stricoll(const char *str0, const char *str1);
 
 FILE *fc_fopen(const char *filename, const char *opentype);
 
-fc_errno fc_get_errno();
-const char *fc_strerror(fc_errno err);
 void fc_usleep(unsigned long usec);
 
 bool fc_strrep(char *str, size_t len, const char *search,
