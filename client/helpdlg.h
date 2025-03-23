@@ -127,8 +127,6 @@ private:
 
 public slots:
   void set_topic(const help_item *item);
-private slots:
-  void anchor_clicked(const QString &link);
 
 public:
   struct terrain *terrain_max_values();

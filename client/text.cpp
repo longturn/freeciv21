@@ -534,7 +534,7 @@ const QString popup_info_text(struct tile *ptile, bool with_links)
     }
   }
 
-  return str.trimmed().remove(QRegularExpression("<br>$"));
+  return str.trimmed().remove(QRegularExpression(QStringLiteral("<br>$")));
 }
 
 #define FAR_CITY_SQUARE_DIST (2 * (6 * 6))

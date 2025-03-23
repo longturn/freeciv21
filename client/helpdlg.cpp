@@ -99,10 +99,10 @@ void update_help_fonts()
  */
 QString create_help_link(const char *name, help_page_type hpt)
 {
-  QString s;
-  s = QString(name).toHtmlEscaped().replace(QLatin1String(" "),
-                                            QLatin1String("&nbsp;"));
-  return "<a href=" + QString::number(hpt) + "," + s + ">" + s + "</a>";
+  QString d = QString(name).toHtmlEscaped().replace(
+      QStringLiteral(" "), QStringLiteral("&nbsp;"));
+  QString a = QString::fromUtf8(QString(name).toUtf8().toPercentEncoding());
+  return "<a href=" + QString::number(hpt) + "," + a + ">" + d + "</a>";
 }
 
 /**
@@ -113,26 +113,30 @@ QString create_help_link(const char *name, help_page_type hpt)
  */
 void follow_help_link(const QString &link)
 {
-  QStringList sl;
-  int n;
-  QString st;
-  enum help_page_type type;
+  QStringList sl = link.split(QStringLiteral(","));
+  fc_assert_ret(sl.size() == 2);
+  int n = sl.at(0).toInt();
+  enum help_page_type type = static_cast<help_page_type>(n);
+  QString st =
+      QString::fromUtf8(QByteArray::fromPercentEncoding(sl.at(1).toUtf8()));
 
-  sl = link.split(QStringLiteral(","));
-  n = sl.at(0).toInt();
-  type = static_cast<help_page_type>(n);
-  st = sl.at(1);
-  st = st.replace("\u00A0", QLatin1String(" "));
-
-  if (strcmp(qUtf8Printable(st), REQ_LABEL_NEVER) != 0
-      && strcmp(qUtf8Printable(st),
-                skip_intl_qualifier_prefix(REQ_LABEL_NONE))
-             != 0
-      && strcmp(qUtf8Printable(st),
-                advance_name_translation(advance_by_number(A_NONE)))
-             != 0) {
-    popup_help_dialog_typed(qUtf8Printable(st), type);
+  if (st == QString(REQ_LABEL_NEVER)) {
+    return;
   }
+
+  if (st == QString(skip_intl_qualifier_prefix(REQ_LABEL_NONE))) {
+    return;
+  }
+
+  if (st == QString(advance_name_translation(advance_by_number(A_NONE)))) {
+    return;
+  }
+
+  if (st == QString(advance_name_translation(advance_by_number(A_NONE)))) {
+    return;
+  }
+
+  popup_help_dialog_typed(qUtf8Printable(st), type);
 }
 
 /**
@@ -746,8 +750,7 @@ void help_widget::add_extras_of_act_for_terrain(struct terrain *pterr,
                   .toHtmlEscaped()
             + "\n";
       tb->setText(str.trimmed());
-      connect(tb, &QLabel::linkActivated, this,
-              &help_widget::anchor_clicked);
+      connect(tb, &QLabel::linkActivated, &follow_help_link);
       info_layout->addWidget(tb);
     }
   }
@@ -759,7 +762,8 @@ void help_widget::add_extras_of_act_for_terrain(struct terrain *pterr,
  */
 QString help_widget::link_me(const char *str, help_page_type hpt)
 {
-  return " " + create_help_link(str, hpt) + " ";
+  return QStringLiteral(" ") + create_help_link(str, hpt)
+         + QStringLiteral(" ");
 }
 
 /**
@@ -774,14 +778,6 @@ void help_widget::add_info_separator()
    Called when everything needed has been added to the information panel.
  */
 void help_widget::info_panel_done() { info_layout->addStretch(); }
-
-/**
-   Hyperlink clicked, open the corresponding entry.
- */
-void help_widget::anchor_clicked(const QString &link)
-{
-  follow_help_link(link);
-}
 
 /**
    Shows the given help page.
@@ -932,8 +928,7 @@ void help_widget::set_topic_unit(const help_item *topic, const char *title)
       str = "<b>" + str + "</b> "
             + link_me(advance_name_translation(tech), HELP_TECH);
       tb->setText(str.trimmed());
-      connect(tb, &QLabel::linkActivated, this,
-              &help_widget::anchor_clicked);
+      connect(tb, &QLabel::linkActivated, &follow_help_link);
       info_layout->addWidget(tb);
     } else {
       add_info_label(_("No technology required."));
@@ -952,8 +947,7 @@ void help_widget::set_topic_unit(const help_item *topic, const char *title)
               + link_me(advance_name_translation(tech), HELP_TECH) + ")";
         tb = set_properties(this);
         tb->setText(str.trimmed());
-        connect(tb, &QLabel::linkActivated, this,
-                &help_widget::anchor_clicked);
+        connect(tb, &QLabel::linkActivated, &follow_help_link);
         info_layout->addWidget(tb);
       } else {
         add_info_label(
@@ -1036,8 +1030,7 @@ void help_widget::set_topic_building(const help_item *topic,
       str = "<b>" + str + "</b> " + s1;
       tb = set_properties(this);
       tb->setText(str.trimmed());
-      connect(tb, &QLabel::linkActivated, this,
-              &help_widget::anchor_clicked);
+      connect(tb, &QLabel::linkActivated, &follow_help_link);
       info_layout->addWidget(tb);
     }
 
@@ -1056,8 +1049,7 @@ void help_widget::set_topic_building(const help_item *topic,
     if (!s2.isEmpty()) {
       tb = set_properties(this);
       tb->setText(str.trimmed());
-      connect(tb, &QLabel::linkActivated, this,
-              &help_widget::anchor_clicked);
+      connect(tb, &QLabel::linkActivated, &follow_help_link);
       info_layout->addWidget(tb);
     }
     info_panel_done();
@@ -1096,8 +1088,7 @@ void help_widget::set_topic_tech(const help_item *topic, const char *title)
                   + link_me(government_name_translation(&pgov),
                             HELP_GOVERNMENT);
             tb->setText(str.trimmed());
-            connect(tb, &QLabel::linkActivated, this,
-                    &help_widget::anchor_clicked);
+            connect(tb, &QLabel::linkActivated, &follow_help_link);
             info_layout->addWidget(tb);
           }
         }
@@ -1117,8 +1108,7 @@ void help_widget::set_topic_tech(const help_item *topic, const char *title)
                                                       : HELP_IMPROVEMENT);
             tb = set_properties(this);
             tb->setText(str.trimmed());
-            connect(tb, &QLabel::linkActivated, this,
-                    &help_widget::anchor_clicked);
+            connect(tb, &QLabel::linkActivated, &follow_help_link);
             info_layout->addWidget(tb);
           }
         }
@@ -1135,8 +1125,7 @@ void help_widget::set_topic_tech(const help_item *topic, const char *title)
                                                       : HELP_IMPROVEMENT);
             tb = set_properties(this);
             tb->setText(str.trimmed());
-            connect(tb, &QLabel::linkActivated, this,
-                    &help_widget::anchor_clicked);
+            connect(tb, &QLabel::linkActivated, &follow_help_link);
             info_layout->addWidget(tb);
           }
         }
@@ -1154,8 +1143,7 @@ void help_widget::set_topic_tech(const help_item *topic, const char *title)
               + link_me(utype_name_translation(punittype), HELP_UNIT);
         tb = set_properties(this);
         tb->setText(str.trimmed());
-        connect(tb, &QLabel::linkActivated, this,
-                &help_widget::anchor_clicked);
+        connect(tb, &QLabel::linkActivated, &follow_help_link);
         info_layout->addWidget(tb);
       }
       unit_type_iterate_end;
@@ -1306,7 +1294,7 @@ void help_widget::make_terrain_lab(QString &str)
 {
   QLabel *tb = set_properties(this);
   tb->setText(str.trimmed());
-  connect(tb, &QLabel::linkActivated, this, &help_widget::anchor_clicked);
+  connect(tb, &QLabel::linkActivated, &follow_help_link);
   info_layout->addWidget(tb);
 }
 
