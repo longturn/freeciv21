@@ -23,19 +23,6 @@
 #include <QLocale>
 #include <QTextStream>
 
-/**
-   Must be called during the initialization phase of server and client to
-   initialize the character encodings to be used.
-
-   Pass an internal encoding of nullptr to use the local encoding internally.
- */
-void init_character_encodings()
-{
-#ifdef FREECIV_ENABLE_NLS
-  bind_textdomain_codeset("freeciv21-core", "UTF-8");
-#endif
-}
-
 char *data_to_internal_string_malloc(const char *text)
 {
   return qstrdup(text);

@@ -861,13 +861,27 @@ static void autocap_update(void)
 
   capitalization_opt_in(ac_enabled);
 }
+
+namespace /* anonymous */ {
+/**
+ * Binds a text domain for use in freeciv21, and sets its encoding to UTF-8.
+ */
+static void bind_text_domain_and_encoding(const char *name)
+{
+  bindtextdomain("freeciv21-core", get_locale_dir());
+  bind_textdomain_codeset("freeciv21-core", "UTF-8");
+}
+} // anonymous namespace
 #endif // FREECIV_ENABLE_NLS
 
 /**
-   Setup for Native Language Support, if configured to use it.
-   (Call this only once, or it may leak memory.)
+ * Setup for Native Language Support, if configured to use it.
+ * (Call this only once, or it may leak memory.)
+ *
+ * The freeciv21-core text domain is always set up and bound. You can pass an
+ * additional domain to bind.
  */
-void init_nls()
+void init_nls(const char *extra_text_domain)
 {
   /*
    * Setup the cached locale numeric formatting information. Defaults
@@ -882,9 +896,15 @@ void init_nls()
   setup_langname(); // Makes sure LANG env variable has been set
 #endif              // FREECIV_MSWINDOWS
 
-  (void) setlocale(LC_ALL, "");
-  (void) bindtextdomain("freeciv21-core", get_locale_dir());
-  (void) textdomain("freeciv21-core");
+  setlocale(LC_ALL, "");
+
+  // Set up the core text domain.
+  bind_text_domain_and_encoding("freeciv21-core");
+  textdomain("freeciv21-core");
+
+  if (extra_text_domain) {
+    bind_text_domain_and_encoding(extra_text_domain);
+  }
 
   /* Don't touch the defaults when LC_NUMERIC == "C".
      This is intended to cater to the common case where:

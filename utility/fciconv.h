@@ -13,20 +13,12 @@
 /*
   Technical details:
 
-  - There are three encodings used by freeciv: the data encoding, the
-    internal encoding, and the local encoding.  Each is a character set
-    (like utf-8 or latin1).  Each string in the code must be in one of these
-    three encodings; to cut down on bugs always document whenever you have
-    a string in anything other than the internal encoding and never make
-    global variables hold anything other than the internal encoding; the
-    local and data encodings should only be used locally within the code
-    and always documented as such.
-
-  - The data_encoding is used in all data files and network transactions.
-    This is always UTF-8.
-
-  - The internal_encoding is used internally within freeciv.  This is always
-    UTF-8.
+  - There are two encodings used by freeciv: the data encoding and the system
+    encoding.  The data encoding corresponds to all data files and the
+    network protocal. It is always UTF-8.  The system may use any encoding it
+    likes, and a conversion from UTF-8 may be needed, for instance when
+    printing to the terminal.  Thankfully, Qt abstracts much of this away for
+    us. Use QString whenever possible and avoid this header.
 
   - The local_encoding is the one supported on the command line, which is
     generally the value listed in the $LANG environment variable.  This is
@@ -54,13 +46,9 @@
   - Everything in the client is also in UTF-8.
 
   - Everything printed to the command line must be converted into the
-    "local encoding" which may be anything as defined by the system.  Using
-    fc_fprintf is generally the easiest way to print to the command line
-    in which case all strings passed to it should be in the internal
-    encoding.
+    "local encoding" which may be anything as defined by the system.  Qt's
+    logging functions (qInfo and similar) do this for us.
 */
-
-void init_character_encodings();
 
 [[deprecated]] char *data_to_internal_string_malloc(const char *text);
 [[deprecated]] char *internal_to_data_string_malloc(const char *text);

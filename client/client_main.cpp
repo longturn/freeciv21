@@ -323,14 +323,7 @@ int client_main(int argc, char *argv[])
     init_ai(ai);
   }
 
-  init_nls();
-#ifdef ENABLE_NLS
-  (void) bindtextdomain("freeciv21-nations", get_locale_dir());
-#endif
-  init_character_encodings();
-#ifdef ENABLE_NLS
-  bind_textdomain_codeset("freeciv21-nations", "UTF-8");
-#endif
+  init_nls("freeciv21-nations");
 
   QCommandLineParser parser;
   parser.addHelpOption();

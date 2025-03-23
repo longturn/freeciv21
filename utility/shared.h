@@ -141,7 +141,7 @@ QFileInfoList find_files_in_path(const QStringList &path,
                                  const QString &pattern, bool nodups);
 QString fileinfoname(const QStringList &dirs, const QString &filename);
 
-void init_nls();
+void init_nls(const char *extra_text_domain = nullptr);
 void free_nls();
 char *setup_langname();
 

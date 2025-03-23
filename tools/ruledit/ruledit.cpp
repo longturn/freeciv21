@@ -69,16 +69,7 @@ int main(int argc, char **argv)
 
   log_init();
 
-  init_nls();
-
-#ifdef ENABLE_NLS
-  (void) bindtextdomain("freeciv21-ruledit", get_locale_dir());
-#endif
-
-  init_character_encodings();
-#ifdef ENABLE_NLS
-  bind_textdomain_codeset("freeciv21-ruledit", "UTF-8");
-#endif
+  init_nls("freeciv21-ruledit");
 
   // Initialize command line arguments.
   re_parse_cmdline(app);
