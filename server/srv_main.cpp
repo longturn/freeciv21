@@ -22,7 +22,6 @@
 // utility
 #include "bitvector.h"
 #include "bugs.h"
-#include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
 #include "rand.h"
@@ -168,10 +167,7 @@ void srv_init()
   i_am_server(); // Tell to libfreeciv that we are server
 
   // NLS init
-  init_nls();
-#ifdef ENABLE_NLS
-  (void) bindtextdomain("freeciv21-nations", get_locale_dir());
-#endif
+  init_nls("freeciv21-nations");
 
   // We want this before any AI stuff
   timing_log_init();
@@ -202,12 +198,6 @@ void srv_init()
 
   // mark as initialized
   has_been_srv_init = true;
-
-  // init character encodings.
-  init_character_encodings();
-#ifdef ENABLE_NLS
-  bind_textdomain_codeset("freeciv21-nations", "UTF-8");
-#endif
 
   // Initialize callbacks.
   game.callbacks.unit_deallocate = identity_number_release;

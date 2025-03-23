@@ -109,7 +109,6 @@ int main(int argc, char **argv)
   log_init();
 
   init_nls();
-  init_character_encodings();
 
   rup_parse_cmdline(app);
 
