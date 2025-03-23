@@ -334,11 +334,7 @@ enum editor_tool_mode editor_tool_get_mode(enum editor_tool_type ett)
  */
 bool editor_is_active()
 {
-  if (editor != nullptr && can_conn_edit(&client.conn)) {
-    return true;
-  } else {
-    return false;
-  }
+  return editor != nullptr && can_conn_edit(&client.conn);
 }
 
 /**

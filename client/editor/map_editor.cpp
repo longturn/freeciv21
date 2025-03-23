@@ -33,6 +33,11 @@ map_editor::map_editor(QWidget *parent)
   setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding);
   setAutoFillBackground(true);
 
+  // Prevent mouse events from going through the panels to the main map
+  for (auto child : findChildren<QWidget *>()) {
+    child->setAttribute(Qt::WA_NoMousePropagation);
+  }
+
   // initialize in constructor
   ett_wdg = new editor_tool_tile(nullptr);
 
