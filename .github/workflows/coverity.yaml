@@ -8,23 +8,25 @@ on:
 
 jobs:
   latest:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:24.10
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install \
+          apt-get update
+          apt-get install -y \
             cmake \
             ninja-build \
             g++ \
             python3 \
             gettext \
-            qtbase5-dev \
-            libqt5svg5-dev \
-            libkf5archive-dev \
+            qt6-base-dev \
+            qt6-svg-dev \
+            libkf6archive-dev \
             liblua5.3-dev \
             libsqlite3-dev \
             libsdl2-mixer-dev
