@@ -490,7 +490,7 @@ void city_widget::display_list_menu(const QPoint)
   if (selected_cities.isEmpty()) {
     select_only = true;
   }
-  for (auto *pcity : qAsConst(selected_cities)) {
+  for (auto *pcity : std::as_const(selected_cities)) {
     sell_gold = sell_gold + pcity->client.buy_cost;
   }
   if (!can_client_issue_orders()) {
@@ -896,7 +896,7 @@ void city_widget::select_same_island()
       continue;
     }
     pcity = reinterpret_cast<city *>(qvar.value<void *>());
-    for (auto *pscity : qAsConst(selected_cities)) {
+    for (auto *pscity : std::as_const(selected_cities)) {
       if (nullptr != pcity
           && (tile_continent(pcity->tile) == tile_continent(pscity->tile))) {
         selection.append(QItemSelectionRange(i));
@@ -1190,7 +1190,7 @@ void city_widget::cities_selected(const QItemSelection &sl,
   if (indexes.isEmpty()) {
     return;
   }
-  for (auto i : qAsConst(indexes)) {
+  for (auto i : std::as_const(indexes)) {
     qvar = i.data(Qt::UserRole);
     if (qvar.isNull()) {
       continue;

@@ -70,7 +70,7 @@ void attribute_init() {}
  */
 void attribute_free()
 {
-  for (auto *at : qAsConst(*attribute_hash)) {
+  for (auto *at : std::as_const(*attribute_hash)) {
     delete[] static_cast<char *>(at);
   }
   attribute_hash->clear();
@@ -114,7 +114,7 @@ static enum attribute_serial serialize_hash(attributeHash *hash,
   total_length += entries * (4 + 4 + 4 + 2 + 2); // value_size + key
   i = 0;
 
-  for (auto *pvalue : qAsConst(*hash)) {
+  for (auto *pvalue : std::as_const(*hash)) {
     struct data_in din;
 
     dio_input_init(&din, pvalue, 4);

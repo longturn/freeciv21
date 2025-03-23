@@ -142,7 +142,7 @@ void load_fonts()
   const auto il =
       find_files_in_path(get_data_dirs(), QStringLiteral("fonts"), false);
   if (!il.isEmpty()) {
-    for (const auto &info : qAsConst(il)) {
+    for (const auto &info : std::as_const(il)) {
       QDirIterator iterator(
           info.absolutePath(),
           {QStringLiteral("*.otf"), QStringLiteral("*.ttf")}, QDir::Files,

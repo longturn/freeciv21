@@ -265,7 +265,7 @@ void help_dialog::make_tree()
   struct terrain *pterrain;
   struct unit_type *f_type;
 
-  for (const auto *pitem : qAsConst(*help_nodes)) {
+  for (const auto *pitem : std::as_const(*help_nodes)) {
     const char *s;
     int last;
     title = pitem->topic;
@@ -585,19 +585,19 @@ void help_widget::update_fonts()
   l = findChildren<QWidget *>();
 
   auto f = fcFont::instance()->getFont(fonts::notify_label);
-  for (auto i : qAsConst(l)) {
+  for (auto i : std::as_const(l)) {
     if (i->property(fonts::help_label).isValid()) {
       i->setFont(f);
     }
   }
   f = fcFont::instance()->getFont(fonts::help_text);
-  for (auto i : qAsConst(l)) {
+  for (auto i : std::as_const(l)) {
     if (i->property(fonts::help_text).isValid()) {
       i->setFont(f);
     }
   }
   f = fcFont::instance()->getFont(fonts::default_font);
-  for (auto i : qAsConst(l)) {
+  for (auto i : std::as_const(l)) {
     if (i->property(fonts::default_font).isValid()) {
       i->setFont(f);
     }

@@ -8182,7 +8182,7 @@ static void send_ruleset_governments(struct conn_list *dest)
 
     // Send one packet_government_ruler_title per ruler title.
 
-    for (auto *pruler_title : qAsConst(*government_ruler_titles(&g))) {
+    for (auto *pruler_title : std::as_const(*government_ruler_titles(&g))) {
       {
         const struct nation_type *pnation = ruler_title_nation(pruler_title);
 

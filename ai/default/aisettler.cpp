@@ -211,7 +211,7 @@ cityresult::cityresult(struct tile *ptile)
  */
 cityresult::~cityresult()
 {
-  for (const auto &ptdc : qAsConst(tdc_hash)) {
+  for (const auto &ptdc : std::as_const(tdc_hash)) {
     delete[] ptdc;
   }
 }
@@ -1142,7 +1142,7 @@ void dai_auto_settler_reset(struct ai_type *ait, struct player *pplayer)
   ai->settler->cache.save = 0;
 #endif // FREECIV_DEBUG
 
-  for (const auto *ptdc : qAsConst(*ai->settler->tdc_hash)) {
+  for (const auto *ptdc : std::as_const(*ai->settler->tdc_hash)) {
     delete[] ptdc;
   }
   ai->settler->tdc_hash->clear();

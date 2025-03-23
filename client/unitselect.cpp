@@ -110,7 +110,7 @@ void units_select::create_pixmap()
     pix = new QPixmap(column_count * item_size.width(),
                       row_count * item_size.height());
     pix->fill(Qt::transparent);
-    for (auto *punit : qAsConst(unit_list)) {
+    for (auto *punit : std::as_const(unit_list)) {
       unit_pixmap = new QPixmap(tileset_unit_width(tileset),
                                 tileset_unit_height(tileset));
       unit_pixmap->fill(Qt::transparent);

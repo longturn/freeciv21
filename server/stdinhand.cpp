@@ -2466,7 +2466,7 @@ static bool team_command(struct connection *caller, char *str, bool check)
     arg =
         QString(buf).split(QRegularExpression(REG_EXP), Qt::SkipEmptyParts);
     remove_quotes(arg);
-    for (const auto &a : qAsConst(arg)) {
+    for (const auto &a : std::as_const(arg)) {
       qInfo() << a;
     }
   }
@@ -6868,7 +6868,7 @@ static void show_rulesets(struct connection *caller)
   cmd_reply(CMD_LIST, caller, C_COMMENT, horiz_line);
 
   serv_list = get_init_script_choices();
-  for (const auto &s : qAsConst(*serv_list)) {
+  for (const auto &s : std::as_const(*serv_list)) {
     cmd_reply(CMD_LIST, caller, C_COMMENT, "%s", qUtf8Printable(s));
   }
   delete serv_list;

@@ -239,7 +239,7 @@ static bool is_valid_start_pos(const struct tile *ptile, const void *dataptr)
   // Don't start too close to someone else.
   cont_size = get_continent_size(cont);
   island = islands + islands_index[cont];
-  for (auto *psp : qAsConst(*wld.map.startpos_table)) {
+  for (auto *psp : std::as_const(*wld.map.startpos_table)) {
     if (psp->exclude) {
       continue;
     }

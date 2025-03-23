@@ -2294,7 +2294,7 @@ void city_font_update()
 
   auto f = fcFont::instance()->getFont(fonts::notify_label);
 
-  for (auto i : qAsConst(l)) {
+  for (auto i : std::as_const(l)) {
     if (i->property(fonts::notify_label).isValid()) {
       i->setFont(f);
     }

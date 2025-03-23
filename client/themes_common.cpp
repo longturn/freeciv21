@@ -79,7 +79,7 @@ const QVector<QString> *get_themes_list(const struct option *poption)
 {
   if (themes_list->isEmpty()) {
     for (int i = 0; i < num_directories; i++) {
-      for (const auto &theme : qAsConst(directories[i].themes)) {
+      for (const auto &theme : std::as_const(directories[i].themes)) {
         bool found = false;
         for (int k = 0; k < themes_list->count(); k++) {
           if (themes_list->at(k) == theme) {

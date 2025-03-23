@@ -627,11 +627,11 @@ void plr_widget::nation_selected(const QItemSelection &sl,
     advance_iterate_end;
     sorted_list_a.sort(Qt::CaseInsensitive);
     sorted_list_b.sort(Qt::CaseInsensitive);
-    for (auto const &res : qAsConst(sorted_list_a)) {
+    for (auto const &res : std::as_const(sorted_list_a)) {
       techs_known = techs_known + QStringLiteral("<i>") + res.toHtmlEscaped()
                     + "," + QStringLiteral("</i>") + sp;
     }
-    for (auto const &res : qAsConst(sorted_list_b)) {
+    for (auto const &res : std::as_const(sorted_list_b)) {
       techs_unknown = techs_unknown + QStringLiteral("<i>")
                       + res.toHtmlEscaped() + "," + QStringLiteral("</i>")
                       + sp;
@@ -665,7 +665,7 @@ void plr_widget::nation_selected(const QItemSelection &sl,
     }
     advance_iterate_end;
     sorted_list_a.sort(Qt::CaseInsensitive);
-    for (auto const &res : qAsConst(sorted_list_a)) {
+    for (auto const &res : std::as_const(sorted_list_a)) {
       tech_str = tech_str + QStringLiteral("<i>") + res.toHtmlEscaped() + ","
                  + QStringLiteral("</i>") + sp;
     }
