@@ -76,7 +76,7 @@ void editor_tool_tile::select_tile()
 }
 
 /**
- * \bried Close the Tile Tool
+ * \brief Close the Tile Tool
  */
 void editor_tool_tile::close_tool()
 {
@@ -86,7 +86,7 @@ void editor_tool_tile::close_tool()
 }
 
 /**
- * \bried Update the editor tool widget UI elements
+ * \brief Update the editor tool widget UI elements
  */
 void editor_tool_tile::update_ett(struct tile *ptile)
 {
