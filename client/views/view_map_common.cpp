@@ -17,18 +17,8 @@
  * would expect.
  */
 
-#include <array>
-
-#include <QCoreApplication>
-#include <QElapsedTimer>
-#include <QEventLoop>
-#include <QGlobalStatic>
-#include <QHash>
-#include <QLoggingCategory>
-#include <QPainter>
-#include <QPixmap>
-#include <QSet>
-#include <QTimer>
+// self
+#include "views/view_map_common.h"
 
 // utility
 #include "fcintl.h"
@@ -43,7 +33,7 @@
 #include "traderoutes.h"
 #include "unitlist.h"
 
-/* client/include */
+// client/include
 #include "citydlg_g.h"
 #include "mapctrl_g.h"
 #include "mapview_g.h"
@@ -59,8 +49,22 @@
 #include "overview_common.h"
 #include "qtg_cxxside.h"
 #include "tileset/tilespec.h"
-#include "views/view_map_common.h"
 #include "views/view_map_geometry.h"
+
+// Qt
+#include <QCoreApplication>
+#include <QElapsedTimer>
+#include <QEventLoop>
+#include <QGlobalStatic>
+#include <QHash>
+#include <QLoggingCategory>
+#include <QPainter>
+#include <QPixmap>
+#include <QSet>
+#include <QTimer>
+
+// std
+#include <array>
 
 Q_LOGGING_CATEGORY(graphics_category, "freeciv.graphics")
 

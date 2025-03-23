@@ -8,16 +8,15 @@
  see https://www.gnu.org/licenses/.
  */
 
-// Qt
-#include <QApplication>
-#include <QMouseEvent>
+// self
+#include "mapctrl.h"
 
-// Common
+// common
 #include "control.h"
 #include "goto.h"
 #include "map.h"
 
-// Client
+// client
 #include "chatline_common.h"
 #include "citydlg.h"
 #include "citydlg_common.h"
@@ -36,6 +35,10 @@
 #include "unitselect.h"
 #include "views/view_map.h"
 #include "views/view_map_common.h"
+
+// Qt
+#include <QApplication>
+#include <QMouseEvent>
 
 extern void qload_lua_script();
 extern void qreload_lua_script();

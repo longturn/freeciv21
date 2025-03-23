@@ -8,6 +8,9 @@
  see https://www.gnu.org/licenses/.
  */
 
+// self
+#include "mapctrl_common.h"
+
 // utility
 #include "fcintl.h"
 #include "log.h"
@@ -25,7 +28,6 @@
 #include "control.h"
 #include "goto.h"
 #include "governor.h"
-#include "mapctrl_common.h"
 #include "mapview_g.h"
 #include "minimap_panel.h"
 #include "options.h"
