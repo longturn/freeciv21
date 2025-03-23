@@ -115,21 +115,21 @@ int main(int argc, char *argv[])
 {
   if (SIG_ERR == signal(SIGINT, signal_handler)) {
     fc_fprintf(stderr, _("Failed to install SIGINT handler: %s\n"),
-               fc_strerror(fc_get_errno()));
+               strerror(errno));
     exit(EXIT_FAILURE);
   }
 
 #ifdef SIGHUP
   if (SIG_ERR == signal(SIGHUP, signal_handler)) {
     fc_fprintf(stderr, _("Failed to install SIGHUP handler: %s\n"),
-               fc_strerror(fc_get_errno()));
+               strerror(errno));
     exit(EXIT_FAILURE);
   }
 #endif // SIGHUP
 
   if (SIG_ERR == signal(SIGTERM, signal_handler)) {
     fc_fprintf(stderr, _("Failed to install SIGTERM handler: %s\n"),
-               fc_strerror(fc_get_errno()));
+               strerror(errno));
     exit(EXIT_FAILURE);
   }
 
@@ -137,8 +137,7 @@ int main(int argc, char *argv[])
   /* Ignore SIGPIPE, the error is handled by the return value
    * of the write call. */
   if (SIG_ERR == signal(SIGPIPE, signal_handler)) {
-    fc_fprintf(stderr, _("Failed to ignore SIGPIPE: %s\n"),
-               fc_strerror(fc_get_errno()));
+    fc_fprintf(stderr, _("Failed to ignore SIGPIPE: %s\n"), strerror(errno));
     exit(EXIT_FAILURE);
   }
 #endif // SIGPIPE

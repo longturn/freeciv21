@@ -35,7 +35,6 @@
 #include "support.h"
 
 // utility
-#include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
 
@@ -258,44 +257,6 @@ FILE *fc_fopen(const char *filename, const char *opentype)
   return result;
 #else  // FREECIV_MSWINDOWS
   return fopen(filename, opentype);
-#endif // FREECIV_MSWINDOWS
-}
-
-/**
-   Returns last error code.
- */
-fc_errno fc_get_errno()
-{
-#ifdef FREECIV_MSWINDOWS
-  return GetLastError();
-#else  // FREECIV_MSWINDOWS
-  return errno;
-#endif // FREECIV_MSWINDOWS
-}
-
-/**
-   Return a string which describes a given error (errno-style.)
-   The string is converted as necessary from the local_encoding
-   to internal_encoding, for inclusion in translations.  May be
-   subsequently converted back to local_encoding for display.
-
-   Note that this is not the reentrant form.
- */
-const char *fc_strerror(fc_errno err)
-{
-#ifdef FREECIV_MSWINDOWS
-  static char buf[256];
-
-  if (!FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM
-                         | FORMAT_MESSAGE_IGNORE_INSERTS,
-                     nullptr, err, 0, buf, sizeof(buf), nullptr)) {
-    fc_snprintf(buf, sizeof(buf), _("error %ld (failed FormatMessage)"),
-                err);
-  }
-  return buf;
-#else  // FREECIV_MSWINDOWS
-  static char buf[256];
-  return local_to_internal_string_buffer(strerror(err), buf, sizeof(buf));
 #endif // FREECIV_MSWINDOWS
 }
 
