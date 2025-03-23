@@ -443,7 +443,7 @@ bool handle_login_request(struct connection *pconn,
 
   // Remove the ping timeout given in sernet.c:server_make_connection().
   fc_assert_msg(1 == pconn->server.ping_timers->size(),
-                "Ping timer list size %d, should be 1. Have we sent "
+                "Ping timer list size %lld, should be 1. Have we sent "
                 "a ping to unestablished connection %s?",
                 pconn->server.ping_timers->size(), conn_description(pconn));
 
