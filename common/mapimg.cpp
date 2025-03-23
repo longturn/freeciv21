@@ -628,7 +628,7 @@ bool mapimg_define(const char *maparg, bool check)
   // get map options
   mapargs = QString(maparg).split(QStringLiteral(":"));
 
-  for (const auto &str : qAsConst(mapargs)) {
+  for (const auto &str : std::as_const(mapargs)) {
     // split map options into variable and value
     mapopts = str.split(QStringLiteral("="));
 

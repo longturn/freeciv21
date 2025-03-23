@@ -101,7 +101,7 @@ void edithand_send_initial_packets(struct conn_list *dest)
   }
 
   // Send map start positions.
-  for (auto *psp : qAsConst(*wld.map.startpos_table)) {
+  for (auto *psp : std::as_const(*wld.map.startpos_table)) {
     if (psp->exclude) {
       continue;
     }

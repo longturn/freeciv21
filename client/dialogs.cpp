@@ -1718,7 +1718,7 @@ void popup_action_selection(struct unit *actor_unit,
   unit_act = qdef_act::action()->vs_unit_get();
   city_act = qdef_act::action()->vs_city_get();
 
-  for (auto caras : qAsConst(king()->trade_gen.lines)) {
+  for (auto caras : std::as_const(king()->trade_gen.lines)) {
     if (caras.autocaravan == actor_unit) {
       int i;
       if (nullptr != game_unit_by_number(actor_unit->id)

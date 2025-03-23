@@ -146,7 +146,7 @@ void fcdb_free(void)
 {
   script_fcdb_free();
 
-  for (auto popt : qAsConst(fcdb_config)) {
+  for (auto popt : std::as_const(fcdb_config)) {
     // Dangling pointers freed below
     delete[] popt->value;
     delete popt;

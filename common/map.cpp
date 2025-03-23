@@ -507,7 +507,7 @@ void map_free(struct civ_map *fmap)
     fmap->tiles = nullptr;
 
     if (fmap->startpos_table) {
-      for (auto *a : qAsConst(*fmap->startpos_table)) {
+      for (auto *a : std::as_const(*fmap->startpos_table)) {
         startpos_destroy(a);
       }
       delete fmap->startpos_table;
@@ -1456,7 +1456,7 @@ bool startpos_pack(const struct startpos *psp,
   packet->exclude = psp->exclude;
   BV_CLR_ALL(packet->nations);
 
-  for (const auto *pnation : qAsConst(*psp->nations)) {
+  for (const auto *pnation : std::as_const(*psp->nations)) {
     BV_SET(packet->nations, nation_index(pnation));
   }
   return true;

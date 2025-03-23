@@ -660,7 +660,7 @@ void fc_game_tab_widget::current_changed(int index)
     return;
   }
 
-  for (auto *sw : qAsConst(queen()->top_bar_wdg->objects)) {
+  for (auto *sw : std::as_const(queen()->top_bar_wdg->objects)) {
     sw->update();
   }
   currentWidget()->hide();

@@ -2054,7 +2054,7 @@ void mapdeco_init()
  */
 void mapdeco_free()
 {
-  for (auto *a : qAsConst(*mapdeco_gotoline)) {
+  for (auto *a : std::as_const(*mapdeco_gotoline)) {
     delete a;
     a = nullptr;
   }
@@ -2112,7 +2112,7 @@ bool mapdeco_is_crosshair_set(const struct tile *ptile)
  */
 void mapdeco_clear_crosshairs()
 {
-  for (const auto *ptile : qAsConst(*mapdeco_crosshair_set)) {
+  for (const auto *ptile : std::as_const(*mapdeco_crosshair_set)) {
     refresh_tile_mapcanvas(ptile, false);
   }
   mapdeco_crosshair_set->clear();

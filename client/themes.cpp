@@ -225,7 +225,7 @@ QStringList get_useable_themes_in_directory(QString &directory)
   sl << dir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
   name = QString(directory);
 
-  for (auto const &str : qAsConst(sl)) {
+  for (auto const &str : std::as_const(sl)) {
 #ifdef Q_OS_WIN
     // "System" creates endless problems on Windows, see #1287 #756
     if (str == QStringLiteral("System")) {

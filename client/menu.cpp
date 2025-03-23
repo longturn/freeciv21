@@ -163,7 +163,7 @@ void gov_menu::create()
   int gov_count, i;
 
   // Clear any content
-  for (auto *action : qAsConst(actions)) {
+  for (auto *action : std::as_const(actions)) {
     removeAction(action);
     action->deleteLater();
   }
@@ -243,7 +243,7 @@ QSet<gov_menu *> gov_menu::instances = QSet<gov_menu *>();
  */
 void gov_menu::create_all()
 {
-  for (gov_menu *m : qAsConst(instances)) {
+  for (gov_menu *m : std::as_const(instances)) {
     m->create();
   }
 }
@@ -253,7 +253,7 @@ void gov_menu::create_all()
  */
 void gov_menu::update_all()
 {
-  for (gov_menu *m : qAsConst(instances)) {
+  for (gov_menu *m : std::as_const(instances)) {
     m->update();
   }
 }
@@ -283,7 +283,7 @@ static void reset_menu_and_sub_menues(QMenu *menu)
 {
   QList<QAction *> actions = menu->actions();
   // Delete each existing menu item.
-  for (auto *action : qAsConst(actions)) {
+  for (auto *action : std::as_const(actions)) {
     if (action->menu() != nullptr) {
       // Delete the sub menu
       reset_menu_and_sub_menues(action->menu());
@@ -437,7 +437,7 @@ void go_act_menu::update()
    * at the current tile is pointless since it should be performed at the
    * target tile. */
   QList<QAction *> keys = items.keys();
-  for (QAction *item : qAsConst(keys)) {
+  for (QAction *item : std::as_const(keys)) {
     if (units_can_do_action(get_units_in_focus(), items.value(item), true)) {
       item->setVisible(true);
       can_do_something = true;
@@ -473,7 +473,7 @@ QSet<go_act_menu *> go_act_menu::instances;
  */
 void go_act_menu::reset_all()
 {
-  for (go_act_menu *m : qAsConst(instances)) {
+  for (go_act_menu *m : std::as_const(instances)) {
     m->reset();
   }
 }
@@ -483,7 +483,7 @@ void go_act_menu::reset_all()
  */
 void go_act_menu::update_all()
 {
-  for (go_act_menu *m : qAsConst(instances)) {
+  for (go_act_menu *m : std::as_const(instances)) {
     m->update();
   }
 }
@@ -1367,7 +1367,7 @@ void mr_menu::update_roads_menu()
     return;
   }
   QList<QAction *> actions = roads_menu->actions();
-  for (auto *act : qAsConst(actions)) {
+  for (auto *act : std::as_const(actions)) {
     removeAction(act);
     act->deleteLater();
   }
@@ -1416,7 +1416,7 @@ void mr_menu::update_bases_menu()
   }
 
   QList<QAction *> actions = bases_menu->actions();
-  for (auto *act : qAsConst(actions)) {
+  for (auto *act : std::as_const(actions)) {
     removeAction(act);
     act->deleteLater();
   }
@@ -1459,7 +1459,7 @@ void mr_menu::nonunit_sensitivity()
 {
   QMultiHash<munit, QAction *>::iterator i;
   QList<munit> keys = menu_list.keys();
-  for (munit key : qAsConst(keys)) {
+  for (munit key : std::as_const(keys)) {
     i = menu_list.find(key);
     while (i != menu_list.end() && i.key() == key) {
       switch (key) {
@@ -1531,7 +1531,7 @@ void mr_menu::menus_sensitive()
   }
 
   /** Disable first all sensitive menus */
-  for (QAction *a : qAsConst(menu_list)) {
+  for (QAction *a : std::as_const(menu_list)) {
     a->setEnabled(false);
   }
 
@@ -1552,7 +1552,7 @@ void mr_menu::menus_sensitive()
   units_all_same_tile = units_on_the_same_tile(punits);
 
   keys = menu_list.keys();
-  for (munit key : qAsConst(keys)) {
+  for (munit key : std::as_const(keys)) {
     i = menu_list.find(key);
     while (i != menu_list.end() && i.key() == key) {
       switch (key) {
@@ -2195,7 +2195,7 @@ void mr_menu::slot_autocaravan()
   punit = head_of_units_in_focus();
   homecity = game_city_by_number(punit->homecity);
   home_tile = homecity->tile;
-  for (auto gilles : qAsConst(king()->trade_gen.lines)) {
+  for (auto gilles : std::as_const(king()->trade_gen.lines)) {
     if ((gilles.t1 == home_tile || gilles.t2 == home_tile)
         && gilles.autocaravan == nullptr) {
       // send caravan
@@ -2645,9 +2645,9 @@ void mr_menu::tileset_custom_load()
 
   // Gather the list of tilesets
   QStringList tilesets;
-  for (auto const &s : qAsConst(sl)) {
+  for (auto const &s : std::as_const(sl)) {
     poption = optset_option_by_name(client_optset, qUtf8Printable(s));
-    for (const auto &name : qAsConst(*get_tileset_list(poption))) {
+    for (const auto &name : std::as_const(*get_tileset_list(poption))) {
       tilesets.append(name);
     }
   }
@@ -2658,7 +2658,7 @@ void mr_menu::tileset_custom_load()
                  tilesets.end());
 
   // Add the buttons
-  for (const auto &name : qAsConst(tilesets)) {
+  for (const auto &name : std::as_const(tilesets)) {
     but = new QPushButton(name);
     connect(but, &QAbstractButton::clicked, this,
             &mr_menu::load_new_tileset);

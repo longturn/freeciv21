@@ -981,7 +981,7 @@ int unit_actions::update_actions()
   clear_layout();
   setUpdatesEnabled(false);
 
-  for (auto *a : qAsConst(actions)) {
+  for (auto *a : std::as_const(actions)) {
     delete a;
   }
   qDeleteAll(actions);
@@ -1143,7 +1143,7 @@ int unit_actions::update_actions()
       this, fcIcons::instance()->getIcon(QStringLiteral("done")),
       SC_DONE_MOVING));
 
-  for (auto *a : qAsConst(actions)) {
+  for (auto *a : std::as_const(actions)) {
     const auto shortcut =
         fc_shortcuts::sc()->get_shortcut(a->action_shortcut);
     if (shortcut.is_valid()) {
@@ -1656,7 +1656,7 @@ void hud_battle_log::update_size()
   king()->qt_settings.battlelog_scale = scale;
   delete layout();
   main_layout = new QVBoxLayout;
-  for (auto *hudc : qAsConst(lhuc)) {
+  for (auto *hudc : std::as_const(lhuc)) {
     hudc->set_scale(scale);
     main_layout->addWidget(hudc);
     hudc->set_fading(1.0);
@@ -1694,7 +1694,7 @@ void hud_battle_log::add_combat_info(hud_unit_combat *huc)
     hudc = lhuc.takeLast();
     delete hudc;
   }
-  for (auto *hudc : qAsConst(lhuc)) {
+  for (auto *hudc : std::as_const(lhuc)) {
     main_layout->addWidget(hudc);
     hudc->set_fading(1.0);
   }
@@ -1743,10 +1743,10 @@ void hud_battle_log::moveEvent(QMoveEvent *event)
 void hud_battle_log::timerEvent(QTimerEvent *event)
 {
   if (m_timer.elapsed() > 4000 && m_timer.elapsed() < 20000) {
-    for (auto *hudc : qAsConst(lhuc)) {
+    for (auto *hudc : std::as_const(lhuc)) {
       if (hudc->get_focus()) {
         m_timer.restart();
-        for (auto *hupdate : qAsConst(lhuc)) {
+        for (auto *hupdate : std::as_const(lhuc)) {
           hupdate->set_fading(1.0);
         }
         return;
@@ -1764,7 +1764,7 @@ void hud_battle_log::timerEvent(QTimerEvent *event)
  */
 void hud_battle_log::showEvent(QShowEvent *event)
 {
-  for (auto *hupdate : qAsConst(lhuc)) {
+  for (auto *hupdate : std::as_const(lhuc)) {
     hupdate->set_fading(1.0);
   }
   m_timer.restart();

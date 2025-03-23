@@ -439,7 +439,7 @@ void init_new_game()
   targeted_list = startpos_list_new();
   flexible_list = startpos_list_new();
 
-  for (auto *psp : qAsConst(*wld.map.startpos_table)) {
+  for (auto *psp : std::as_const(*wld.map.startpos_table)) {
     if (psp->exclude) {
       continue;
     }
@@ -1115,7 +1115,7 @@ static void send_ruleset_choices(struct connection *pc)
 
   ruleset_choices = get_init_script_choices();
 
-  for (const auto &s : qAsConst(*ruleset_choices)) {
+  for (const auto &s : std::as_const(*ruleset_choices)) {
     const int maxlen = sizeof packet.rulesets[i];
     if (i >= MAX_NUM_RULESETS) {
       qDebug("Can't send more than %d ruleset names to client, "

@@ -540,7 +540,7 @@ const QStringList &get_data_dirs()
       data_dir_names = default_data_path();
       data_dir_names.removeDuplicates();
     }
-    for (const auto &name : qAsConst(data_dir_names)) {
+    for (const auto &name : std::as_const(data_dir_names)) {
       qDebug() << "Data path component:" << name;
     }
   }
@@ -570,7 +570,7 @@ const QStringList &get_save_dirs()
       save_dir_names = default_save_path();
       save_dir_names.removeDuplicates();
     }
-    for (const auto &name : qAsConst(save_dir_names)) {
+    for (const auto &name : std::as_const(save_dir_names)) {
       qDebug() << "Save path component:" << name;
     }
   }
@@ -601,7 +601,7 @@ const QStringList &get_scenario_dirs()
       scenario_dir_names = default_scenario_path();
       scenario_dir_names.removeDuplicates();
     }
-    for (const auto &name : qAsConst(scenario_dir_names)) {
+    for (const auto &name : std::as_const(scenario_dir_names)) {
       qDebug() << "Scenario path component:" << name;
     }
   }

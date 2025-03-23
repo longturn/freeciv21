@@ -736,7 +736,7 @@ const QVector<QString> *get_tileset_list(const struct option *poption)
 
   QVector<QString> *list = fileinfolist(get_data_dirs(), TILESPEC_SUFFIX);
   tilesets[idx]->clear();
-  for (const auto &file : qAsConst(*list)) {
+  for (const auto &file : std::as_const(*list)) {
     struct tileset *t = tileset_read_toplevel(file, false, topo);
     if (t) {
       tilesets[idx]->append(file);
@@ -862,7 +862,7 @@ bool tilespec_try_read(const QString &tileset_name, bool verbose,
     QVector<QString> *list = fileinfolist(get_data_dirs(), TILESPEC_SUFFIX);
 
     original = false;
-    for (const auto &file : qAsConst(*list)) {
+    for (const auto &file : std::as_const(*list)) {
       struct tileset *t =
           tileset_read_toplevel(qUtf8Printable(file), false, topo_id);
 
@@ -1040,7 +1040,7 @@ bool tilespec_reread(const QString &name, bool game_fully_initialized)
 
   // New style notifications. See QApplication::setStyle for inspiration
   auto widgets = QApplication::allWidgets();
-  for (auto *w : qAsConst(widgets)) {
+  for (auto *w : std::as_const(widgets)) {
     if (w->windowType() != Qt::Desktop) {
       QEvent e(TilesetChanged);
       QApplication::sendEvent(w, &e);
@@ -1113,7 +1113,7 @@ static QPixmap *load_gfx_file(const char *gfx_filename)
   // it). This dramatically improves tileset loading performance on Windows.
   supported.prepend("png");
 
-  for (auto gfx_fileext : qAsConst(supported)) {
+  for (auto gfx_fileext : std::as_const(supported)) {
     QString real_full_name;
     QString full_name =
         QStringLiteral("%1.%2").arg(gfx_filename, gfx_fileext.data());
@@ -2689,7 +2689,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
  */
 void finish_loading_sprites(struct tileset *t)
 {
-  for (auto *sf : qAsConst(*t->specfiles)) {
+  for (auto *sf : std::as_const(*t->specfiles)) {
     if (sf->big_sprite) {
       delete sf->big_sprite;
       sf->big_sprite = nullptr;
@@ -3287,7 +3287,7 @@ void tileset_free_tiles(struct tileset *t)
     t->sprite_hash = nullptr;
   }
 
-  for (auto *ss : qAsConst(*t->small_sprites)) {
+  for (auto *ss : std::as_const(*t->small_sprites)) {
     if (ss->file) {
       delete[] ss->file;
     }
@@ -3296,7 +3296,7 @@ void tileset_free_tiles(struct tileset *t)
   }
   t->small_sprites->clear();
 
-  for (auto *sf : qAsConst(*t->specfiles)) {
+  for (auto *sf : std::as_const(*t->specfiles)) {
     delete[] sf->file_name;
     if (sf->big_sprite) {
       delete sf->big_sprite;

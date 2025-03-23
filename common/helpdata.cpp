@@ -75,7 +75,7 @@ void free_help_texts()
   if (!help_nodes) {
     return;
   }
-  for (const auto *ptmp : qAsConst(*help_nodes)) {
+  for (const auto *ptmp : std::as_const(*help_nodes)) {
     delete[] ptmp->topic;
     delete[] ptmp->text;
     delete ptmp;
@@ -467,7 +467,7 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
     data_dirs_info += _("This instance of Freeciv21 searches the following "
                         "directories for data files:");
     data_dirs_info += "\n\n";
-    for (const auto &path : qAsConst(get_data_dirs())) {
+    for (const auto &path : std::as_const(get_data_dirs())) {
       QFileInfo info(path + "/");
       data_dirs_info += "* " + info.absolutePath() + " ";
       if (!info.exists()) {
@@ -993,7 +993,7 @@ void boot_help_texts(const nation_set *nations_to_show,
               pitem->topic = qstrdup(name);
               if (pmul->helptext) {
                 const char *sep = "";
-                for (const auto &text : qAsConst(*pmul->helptext)) {
+                for (const auto &text : std::as_const(*pmul->helptext)) {
                   cat_snprintf(help_text_buffer, sizeof(help_text_buffer),
                                "%s%s", sep, qUtf8Printable(text));
                   sep = "\n\n";
@@ -1125,7 +1125,7 @@ get_help_item_spec(const char *name, enum help_page_type htype, int *pos)
 
   idx = 0;
 
-  for (const auto *ptmp : qAsConst(*help_nodes)) {
+  for (const auto *ptmp : std::as_const(*help_nodes)) {
     char *p = ptmp->topic;
 
     while (*p == ' ') {
@@ -1195,7 +1195,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
   }
 
   if (nullptr != pimprove->helptext) {
-    for (const auto &text : qAsConst(*pimprove->helptext)) {
+    for (const auto &text : std::as_const(*pimprove->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
@@ -1662,7 +1662,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
   cat_snprintf(buf, bufsz, _("* Belongs to %s unit class."),
                uclass_name_translation(pclass));
   if (nullptr != pclass->helptext) {
-    for (const auto &text : qAsConst(*pclass->helptext)) {
+    for (const auto &text : std::as_const(*pclass->helptext)) {
       cat_snprintf(buf, bufsz, "\n%s\n", _(qUtf8Printable(text)));
     }
   } else {
@@ -2870,7 +2870,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
     }
   }
   if (nullptr != utype->helptext) {
-    for (const auto &text : qAsConst(*utype->helptext)) {
+    for (const auto &text : std::as_const(*utype->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
@@ -3103,7 +3103,7 @@ void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
     if (strlen(buf) > 0) {
       CATLSTR(buf, bufsz, "\n");
     }
-    for (const auto &text : qAsConst(*vap->helptext)) {
+    for (const auto &text : std::as_const(*vap->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
@@ -3209,7 +3209,7 @@ void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
     if (buf[0] != '\0') {
       CATLSTR(buf, bufsz, "\n");
     }
-    for (const auto &text : qAsConst(*pterrain->helptext)) {
+    for (const auto &text : std::as_const(*pterrain->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
@@ -3423,7 +3423,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
   }
 
   if (pextra->helptext != nullptr) {
-    for (const auto &text : qAsConst(*pextra->helptext)) {
+    for (const auto &text : std::as_const(*pextra->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
@@ -3859,7 +3859,7 @@ void helptext_goods(char *buf, size_t bufsz, struct player *pplayer,
   buf[0] = '\0';
 
   if (nullptr != pgood->helptext) {
-    for (const auto &text : qAsConst(*pgood->helptext)) {
+    for (const auto &text : std::as_const(*pgood->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
@@ -3911,7 +3911,7 @@ void helptext_specialist(char *buf, size_t bufsz, struct player *pplayer,
   buf[0] = '\0';
 
   if (nullptr != pspec->helptext) {
-    for (const auto &text : qAsConst(*pspec->helptext)) {
+    for (const auto &text : std::as_const(*pspec->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
@@ -3951,7 +3951,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
   buf[0] = '\0';
 
   if (nullptr != gov->helptext) {
-    for (const auto &text : qAsConst(*gov->helptext)) {
+    for (const auto &text : std::as_const(*gov->helptext)) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }

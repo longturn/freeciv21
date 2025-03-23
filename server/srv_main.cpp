@@ -2260,7 +2260,7 @@ void update_nations_with_startpos()
          * If there are no start positions for a nation, remove it from the
          * available set. */
         pnation.server.no_startpos = true;
-        for (auto *psp : qAsConst(*wld.map.startpos_table)) {
+        for (auto *psp : std::as_const(*wld.map.startpos_table)) {
           if (psp->exclude) {
             continue;
           }
@@ -2645,7 +2645,7 @@ static void generate_players()
     int i, min;
 
     // Initialization.
-    for (auto *psp : qAsConst(*wld.map.startpos_table)) {
+    for (auto *psp : std::as_const(*wld.map.startpos_table)) {
       if (psp->exclude) {
         continue;
       }

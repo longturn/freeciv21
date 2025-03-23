@@ -158,7 +158,7 @@ void fcUdpScan::readPendingDatagrams()
   while (hasPendingDatagrams()) {
     bool add = true;
     QNetworkDatagram qn = receiveDatagram();
-    for (auto const &d : qAsConst(datagram_list)) {
+    for (auto const &d : std::as_const(datagram_list)) {
       QByteArray d1 = d.data();
       QByteArray d2 = qn.data();
       if (d1.data() == d2.data()) {
@@ -191,7 +191,7 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
 
   struct server *pserver;
 
-  for (auto const &datagram : qAsConst(datagram_list)) {
+  for (auto const &datagram : std::as_const(datagram_list)) {
     if (datagram.isNull() || !datagram.isValid()) {
       continue;
     }

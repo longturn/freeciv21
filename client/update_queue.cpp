@@ -86,7 +86,7 @@ void update_queue::wq_run_requests(waitingQueue &hash, int request_id)
     return;
   }
   list = hash.value(request_id);
-  for (auto wq_data : qAsConst(*list)) {
+  for (auto wq_data : std::as_const(*list)) {
     push(wq_data->callback, wq_data_extract(wq_data));
   }
   hash.remove(request_id);
@@ -125,8 +125,8 @@ void update_queue::init()
     data_destroy(pair.second);
   }
 
-  for (auto a : qAsConst(wq_processing_finished)) {
-    for (auto data : qAsConst(*a)) {
+  for (auto a : std::as_const(wq_processing_finished)) {
+    for (auto data : std::as_const(*a)) {
       wq_data_destroy(data);
     }
   }
@@ -185,7 +185,7 @@ void update_queue::push(uq_callback_t callback,
                         struct update_queue_data *uq_data)
 {
   struct update_queue_data *uqr_data = nullptr;
-  for (auto p : qAsConst(queue)) {
+  for (auto p : std::as_const(queue)) {
     if (p.first == callback)
       uqr_data = p.second;
   }
@@ -212,7 +212,7 @@ void update_queue::add(uq_callback_t callback, void *data)
 // Returns whether this callback is listed in the update queue.
 bool update_queue::has_callback(uq_callback_t callback)
 {
-  for (auto pair : qAsConst(queue)) {
+  for (auto pair : std::as_const(queue)) {
     if (pair.first == callback)
       return true;
   }
@@ -224,7 +224,7 @@ bool update_queue::has_callback_full(uq_callback_t callback,
                                      uq_free_fn_t *free_data_func)
 {
   struct update_queue_data *uq_data = nullptr;
-  for (auto p : qAsConst(queue)) {
+  for (auto p : std::as_const(queue)) {
     if (p.first == callback)
       uq_data = p.second;
   }

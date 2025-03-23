@@ -775,7 +775,7 @@ const struct packet_handlers *packet_handlers_get(const char *capability)
   tokens = QString(capability).split(QRegularExpression("[ \t\n,]+"));
   tokens.sort();
 
-  for (const auto &str : qAsConst(tokens)) {
+  for (const auto &str : std::as_const(tokens)) {
     if (!has_capability(qUtf8Printable(str), packet_functional_capability)) {
       continue;
     }
