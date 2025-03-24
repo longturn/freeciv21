@@ -17,10 +17,12 @@
 #include "support.h"
 
 // common
+#include "extras.h"
 #include "fc_interface.h"
 #include "game.h"
 #include "map.h"
 #include "road.h"
+#include "terrain.h"
 #include "unit.h"
 #include "unitlist.h"
 
@@ -761,28 +763,56 @@ bool tile_apply_activity(struct tile *ptile, Activity_type_id act,
    Add one entry about pollution situation to buffer.
    Return if there has been any pollution (even prior calling this)
  */
-static bool tile_info_pollution(char *buf, int bufsz,
-                                const struct tile *ptile,
-                                struct extra_type *pextra, bool prevp,
+static bool tile_info_pollution(QString &buf, QString pollution, bool prevp,
                                 bool linebreak)
 {
-  if (tile_has_visible_extra(ptile, pextra)) {
-    if (!prevp) {
-      if (linebreak) {
-        fc_strlcat(buf, "\n[", bufsz);
-      } else {
-        fc_strlcat(buf, " [", bufsz);
-      }
+  if (!prevp) {
+    if (linebreak) {
+      buf += QStringLiteral("\n[");
     } else {
-      fc_strlcat(buf, "/", bufsz);
+      buf += QStringLiteral(" [");
     }
-
-    fc_strlcat(buf, extra_name_translation(pextra), bufsz);
-
-    return true;
+  } else {
+    buf += QStringLiteral("/");
   }
 
-  return prevp;
+  buf += pollution;
+
+  return true;
+}
+
+/**
+   Return a tile_info struct containing information about ptile.
+ */
+struct tile_info tile_get_info(const struct tile *ptile)
+{
+  struct tile_info info;
+
+  info.terrain = QString(terrain_name_translation(tile_terrain(ptile)));
+
+  if (tile_resource_is_valid(ptile)) {
+    info.resource = QString(extra_name_translation(ptile->resource));
+  }
+
+  extra_type_iterate(pextra)
+  {
+    if (pextra->category == ECAT_NATURAL
+        && tile_has_visible_extra(ptile, pextra)) {
+      info.extras.append(QString(extra_name_translation(pextra)));
+    }
+  }
+  extra_type_iterate_end;
+
+  extra_type_iterate(pextra)
+  {
+    if (pextra->category == ECAT_NUISANCE
+        && tile_has_visible_extra(ptile, pextra)) {
+      info.nuisances.append(QString(extra_name_translation(pextra)));
+    }
+  }
+  extra_type_iterate_end;
+
+  return info;
 }
 
 /**
@@ -796,48 +826,40 @@ static bool tile_info_pollution(char *buf, int bufsz,
      "Hills (Coals)"
      "Hills (Coals) [Pollution]"
  */
-const char *tile_get_info_text(const struct tile *ptile,
+const char *tile_get_info_text(const struct tile_info info,
                                bool include_nuisances, int linebreaks)
 {
-  static char s[256];
   bool pollution;
   bool lb = false;
-  int bufsz = sizeof(s);
 
-  sz_strlcpy(s, terrain_name_translation(tile_terrain(ptile)));
+  QString s = info.terrain;
   if (linebreaks & TILE_LB_TERRAIN_RIVER) {
     // Linebreak needed before next text
     lb = true;
   }
 
-  extra_type_iterate(pextra)
-  {
-    if (pextra->category == ECAT_NATURAL
-        && tile_has_visible_extra(ptile, pextra)) {
-      if (lb) {
-        sz_strlcat(s, "\n");
-        lb = false;
-      } else {
-        sz_strlcat(s, "/");
-      }
-      sz_strlcat(s, extra_name_translation(pextra));
+  for (auto extra : info.extras) {
+    if (lb) {
+      s += QStringLiteral("\n");
+      lb = false;
+    } else {
+      s += QStringLiteral("/");
     }
+    s += extra;
   }
-  extra_type_iterate_end;
   if (linebreaks & TILE_LB_RIVER_RESOURCE) {
     // New linebreak requested
     lb = true;
   }
 
-  if (tile_resource_is_valid(ptile)) {
+  if (!info.resource.isEmpty()) {
     if (lb) {
-      sz_strlcat(s, "\n");
+      s += QStringLiteral("\n");
       lb = false;
     } else {
-      sz_strlcat(s, " ");
+      s += QStringLiteral(" ");
     }
-    cat_snprintf(s, sizeof(s), "(%s)",
-                 extra_name_translation(ptile->resource));
+    s += QString("(%1)").arg(info.resource);
   }
   if (linebreaks & TILE_LB_RESOURCE_POLL) {
     // New linebreak requested
@@ -846,20 +868,17 @@ const char *tile_get_info_text(const struct tile *ptile,
 
   if (include_nuisances) {
     pollution = false;
-    extra_type_iterate(pextra)
-    {
-      if (pextra->category == ECAT_NUISANCE) {
-        pollution =
-            tile_info_pollution(s, bufsz, ptile, pextra, pollution, lb);
-      }
+    for (auto nuiscance : info.nuisances) {
+      pollution = tile_info_pollution(s, nuiscance, pollution, lb);
     }
-    extra_type_iterate_end;
     if (pollution) {
-      sz_strlcat(s, "]");
+      s += QStringLiteral("]");
     }
   }
 
-  return s;
+  static char ret[256];
+  fc_strlcpy(ret, s.toStdString().c_str(), sizeof(ret));
+  return ret;
 }
 
 /**
