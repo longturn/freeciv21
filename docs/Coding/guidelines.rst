@@ -69,14 +69,47 @@ The syntax is supported by all mainstream compilers.
 Includes
 --------
 
-Included headers coming from the same place should be grouped together: first all Freeciv21 headers grouped
-by source directory, then Qt headers, and finally headers from the Standard Library:
+There are a collection of coding guidelines as it relates to includes:
+
+* It is considered a best practice to follow Include What You Use (IWYU) policies when deciding what to
+  include.
+* Included headers should follow a pattern of :strong:`most` specific to :strong:`least` specific. A common
+  pattern is:
+
+  * ``self`` --- This is how we name the :file:`.h` header that corresponds with the same :file:`.cpp`. You
+    cannot get more specific.
+  * ``generated`` -- There are a few symbol headers that are generated at configure and should be included
+    near the top.
+  * ``utility`` --- This directory has a large set of common symbols and is considered specific.
+  * ``common`` --- A very large segment of the shared symbols are defined here. After ``utility``, these are
+    quite specific.g
+  * ``dependency`` -- After ``utility`` and ``common``, we want to include external dependencies.
+  * ``ai`` --- The server makes heavy usage of the game Artificial Intelligence (AI) so we include first.
+  * ``server`` --- The server provides an abstraction layer that we make a lot of use of, but its lower on the
+    include hierarchy.
+  * ``client`` --- The client is the presentation layer.
+  * ``Qt`` --- We rely on the Qt system. These are highly abstracted from our base code and should be included
+    near the last.
+  * C Standard Library (``std``) --- Any reliance on the ``std`` is even more abstracted than Qt and should be
+    last.
+
+Example:
 
 .. code-block:: cpp
+
+    // self
+    #include "foo.h"
+
+    // generated
+    #include <fc_config.h>
+
+    // utility
+    #include "fcintl.h"
 
     // common
     #include "tile.h"
     #include "unit.h"
+    #include "city.h"
 
     // client
     #include "layer.h"
@@ -87,11 +120,9 @@ by source directory, then Qt headers, and finally headers from the Standard Libr
 
     // std
     #include <map>
+    #include <vector>
 
-This order forces Freeciv21 headers to include the Qt and Standard Library headers they need, facilitating
-their use in other files.
 
-In ``cpp`` files, the header of the same name should always be included first.
 
 
 Forward Declarations
