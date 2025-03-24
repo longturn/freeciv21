@@ -35,6 +35,7 @@
 #include "map.h"
 #include "movement.h"
 #include "research.h"
+#include "tile.h"
 #include "traderoutes.h"
 #include "unitlist.h"
 
@@ -164,14 +165,14 @@ const QString popup_info_text(struct tile *ptile, bool with_links)
   int tile_x, tile_y, nat_x, nat_y;
   bool first;
 
-  std::function<QString(const char *name, help_page_type hpt)> maybe_link;
+  std::function<QString(QString name, help_page_type hpt)> maybe_link;
   if (with_links) {
-    maybe_link = [](const char *name, help_page_type hpt) -> QString {
-      return create_help_link(name, hpt);
+    maybe_link = [](QString name, help_page_type hpt) -> QString {
+      return create_help_link(name.toStdString().c_str(), hpt);
     };
   } else {
-    maybe_link = [](const char *name, help_page_type _) -> QString {
-      return QString(name);
+    maybe_link = [](QString name, help_page_type _) -> QString {
+      return name;
     };
   }
 
@@ -187,8 +188,23 @@ const QString popup_info_text(struct tile *ptile, bool with_links)
     str += QString(_("Unknown"));
     return str.trimmed();
   }
-  str += QString(_("Terrain: %1")).arg(tile_get_info_text(ptile, true, 0))
-         + qbr();
+
+  {
+    struct tile_info info = tile_get_info(ptile);
+    info.terrain = maybe_link(info.terrain, HELP_TERRAIN);
+    if (!info.resource.isEmpty()) {
+      info.resource = maybe_link(info.resource, HELP_EXTRA);
+    }
+    for (auto &extra : info.extras) {
+      extra = maybe_link(extra, HELP_EXTRA);
+    }
+    for (auto &nuisance : info.nuisances) {
+      nuisance = maybe_link(nuisance, HELP_EXTRA);
+    }
+    str += QString(_("Terrain: %1")).arg(tile_get_info_text(info, true, 0));
+    str += qbr();
+  }
+
   str += QString(_("Food/Prod/Trade: %1")).arg(get_tile_output_text(ptile))
          + qbr();
   first = true;
@@ -382,13 +398,15 @@ const QString popup_info_text(struct tile *ptile, bool with_links)
       // TRANS: "Unit: <unit type> #<unit id>
       unit_description =
           QString(_("%1 #%2"))
-              .arg(maybe_link(utype_name_translation(ptype), HELP_UNIT))
+              .arg(maybe_link(QString(utype_name_translation(ptype)),
+                              HELP_UNIT))
               .arg(punit->id);
     } else {
       // TRANS: "Unit: <unit type> #<unit id> "<unit name>"
       unit_description =
           QString(_("%1 #%2 \"%3\""))
-              .arg(maybe_link(utype_name_translation(ptype), HELP_UNIT))
+              .arg(maybe_link(QString(utype_name_translation(ptype)),
+                              HELP_UNIT))
               .arg(punit->id)
               .arg(punit->name);
     }

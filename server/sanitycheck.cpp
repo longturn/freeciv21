@@ -460,7 +460,7 @@ static void check_units(const char *file, const char *function, int line)
                     "but it can't continue at %s",
                     TILE_XY(ptile), unit_rule_name(punit),
                     get_activity_text(punit->activity),
-                    tile_get_info_text(ptile, true, 0));
+                    tile_get_info_text(tile_get_info(ptile), true, 0));
       }
 
       if (activity_requires_target(punit->activity)
@@ -743,7 +743,8 @@ void real_sanity_check_tile(struct tile *ptile, const char *file,
     if (!can_unit_exist_at_tile(&(wld.map), punit, ptile)
         && !unit_transported(punit)) {
       SANITY_FAIL("(%4d,%4d) %s can't survive on %s", TILE_XY(ptile),
-                  unit_rule_name(punit), tile_get_info_text(ptile, true, 0));
+                  unit_rule_name(punit),
+                  tile_get_info_text(tile_get_info(ptile), true, 0));
     }
   }
   unit_list_iterate_end;
