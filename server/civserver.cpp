@@ -319,6 +319,8 @@ int main(int argc, char *argv[])
       qCritical(_("Cannot use --bind with --local"));
       exit(EXIT_FAILURE);
     }
+  } else {
+    srvarg.bind_addr.setAddress(QHostAddress::Any);
   }
   if (parser.isSet(QStringLiteral("Bind-meta"))) {
     srvarg.bind_meta_addr = parser.value(QStringLiteral("Bind-meta"));
