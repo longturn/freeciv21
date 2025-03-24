@@ -107,9 +107,9 @@ Example:
     #include "fcintl.h"
 
     // common
+    #include "city.h"
     #include "tile.h"
     #include "unit.h"
-    #include "city.h"
 
     // client
     #include "layer.h"
