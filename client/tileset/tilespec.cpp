@@ -264,11 +264,11 @@ struct tileset {
   int num_valid_tileset_dirs, num_cardinal_tileset_dirs;
   int num_index_valid, num_index_cardinal;
   std::array<direction8, 8> valid_tileset_dirs, cardinal_tileset_dirs;
-  QSet<specfile *> *specfiles;
-  QSet<struct small_sprite *> *small_sprites;
+  QSet<specfile *> specfiles;
+  QSet<small_sprite *> small_sprites;
   // This hash table maps tilespec tags to struct small_sprites.
-  QHash<QString, struct small_sprite *> *sprite_hash;
-  QHash<QString, extrastyle_id> *estyle_hash;
+  QHash<QString, small_sprite *> sprite_hash;
+  QHash<QString, extrastyle_id> estyle_hash;
   struct named_sprites sprites;
   int replaced_hue; // -1 means no replacement
   struct color_system *color_system;
@@ -598,14 +598,7 @@ std::array<direction8, 8> tileset_valid_dirs(const struct tileset *t)
 /**
    Initialize.
  */
-static struct tileset *tileset_new()
-{
-  struct tileset *t = new struct tileset[1]();
-
-  t->specfiles = new QSet<specfile *>;
-  t->small_sprites = new QSet<struct small_sprite *>;
-  return t;
-}
+static struct tileset *tileset_new() { return new struct tileset(); }
 
 /**
    Return the tileset name of the direction.  This is similar to
@@ -812,10 +805,7 @@ static bool check_tilespec_capabilities(struct section_file *file,
  */
 static void tileset_free_toplevel(struct tileset *t)
 {
-  if (t->estyle_hash) {
-    delete t->estyle_hash;
-    t->estyle_hash = nullptr;
-  }
+  t->estyle_hash.clear();
 
   if (t->color_system) {
     color_system_free(t->color_system);
@@ -838,9 +828,7 @@ void tileset_free(struct tileset *t)
   for (int i = 0; i < MAX_NUM_PLAYER_SLOTS; i++) {
     tileset_player_free(t, i);
   }
-  delete t->specfiles;
-  delete t->small_sprites;
-  delete[] t;
+  delete t;
 }
 
 /**
@@ -1287,22 +1275,22 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
         ss->hot_x = hot_x;
         ss->hot_y = hot_y;
 
-        t->small_sprites->insert(ss);
+        t->small_sprites.insert(ss);
 
         if (!duplicates_ok) {
           for (k = 0; k < num_tags; k++) {
-            if (t->sprite_hash->contains(tags[k]) && !option.isEmpty()) {
+            if (t->sprite_hash.contains(tags[k]) && !option.isEmpty()) {
               // Warn about duplicated sprites, except if it was enabled by
               // a user option (to override the default).
               qCCritical(tileset_category,
                          "warning: %s: already have a sprite for \"%s\".",
                          t->name, tags[k]);
             }
-            t->sprite_hash->insert(tags[k], ss);
+            t->sprite_hash.insert(tags[k], ss);
           }
         } else {
           for (k = 0; k < num_tags; k++) {
-            t->sprite_hash->insert(tags[k], ss);
+            t->sprite_hash.insert(tags[k], ss);
           }
         }
 
@@ -1359,20 +1347,20 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
     ss->hot_x = hot_x;
     ss->hot_y = hot_y;
 
-    t->small_sprites->insert(ss);
+    t->small_sprites.insert(ss);
 
     if (!duplicates_ok) {
       for (k = 0; k < num_tags; k++) {
-        if (t->sprite_hash->contains(tags[k])) {
+        if (t->sprite_hash.contains(tags[k])) {
           qCWarning(tileset_category,
                     "%s: already have a sprite for \"%s\".", t->name,
                     tags[k]);
         }
-        t->sprite_hash->insert(tags[k], ss);
+        t->sprite_hash.insert(tags[k], ss);
       }
     } else {
       for (k = 0; k < num_tags; k++) {
-        t->sprite_hash->insert(tags[k], ss);
+        t->sprite_hash.insert(tags[k], ss);
       }
     }
     delete[] tags;
@@ -1460,7 +1448,7 @@ static void tileset_stop_read(struct tileset *t, struct section_file *file,
 {
   secfile_destroy(file);
   delete[] layer_order;
-  delete[] t;
+  delete t;
   if (nullptr != sections) {
     section_list_destroy(sections);
   }
@@ -1548,7 +1536,7 @@ static void tileset_add_layer(struct tileset *t, mapview_layer layer)
         t, layer, t->activity_offset, t->select_offset, t->unit_offset,
         t->unit_flag_offset);
     t->focus_units_layer = l.get();
-    t->layers.emplace_back(move(l));
+    t->layers.emplace_back(std::move(l));
   } break;
   case LAYER_WATER: {
     t->layers.emplace_back(std::make_unique<freeciv::layer_water>(t));
@@ -2055,7 +2043,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
     return nullptr;
   }
 
-  t->estyle_hash = new QHash<QString, extrastyle_id>;
+  t->estyle_hash.clear();
 
   for (i = 0; (extraname = secfile_lookup_str_default(
                    file, nullptr, "extras.styles%d.name", i));
@@ -2066,13 +2054,13 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
                                             "extras.styles%d.style", i);
     auto style = extrastyle_id_by_name(style_name, fc_strcasecmp);
 
-    if (t->estyle_hash->contains(extraname)) {
+    if (t->estyle_hash.contains(extraname)) {
       qCCritical(tileset_category,
                  "warning: duplicate extrastyle entry [%s].", extraname);
       tileset_stop_read(t, file, sections, layer_order);
       return nullptr;
     }
-    t->estyle_hash->insert(extraname, style);
+    t->estyle_hash.insert(extraname, style);
   }
 
   spec_filenames =
@@ -2085,8 +2073,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
     return nullptr;
   }
 
-  fc_assert(t->sprite_hash == nullptr);
-  t->sprite_hash = new QHash<QString, struct small_sprite *>;
+  t->sprite_hash.clear();
   for (i = 0; i < num_spec_files; i++) {
     struct specfile *sf = new specfile();
     QString dname;
@@ -2107,7 +2094,7 @@ static struct tileset *tileset_read_toplevel(const QString &tileset_name,
     sf->file_name = fc_strdup(qUtf8Printable(dname));
     scan_specfile(t, sf, duplicates_ok);
 
-    t->specfiles->insert(sf);
+    t->specfiles.insert(sf);
   }
   delete[] spec_filenames;
 
@@ -2265,7 +2252,7 @@ static QPixmap *load_sprite(struct tileset *t, const QString &tag_name)
 
   log_debug("load_sprite(tag='%s')", qUtf8Printable(tag_name));
   // Lookup information about where the sprite is found.
-  if (!(ss = t->sprite_hash->value(tag_name, nullptr))) {
+  if (!(ss = t->sprite_hash.value(tag_name, nullptr))) {
     return nullptr;
   }
 
@@ -2349,7 +2336,7 @@ QPixmap *load_sprite(struct tileset *t, const QStringList &possible_names,
  */
 static void unload_sprite(struct tileset *t, const QString &tag_name)
 {
-  struct small_sprite *ss = t->sprite_hash->value(tag_name);
+  struct small_sprite *ss = t->sprite_hash.value(tag_name);
   fc_assert_ret(ss);
   fc_assert_ret(ss->ref_count >= 1);
   fc_assert_ret(ss->sprite);
@@ -2509,7 +2496,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   QString buffer, buffer2;
   int i, j, f;
 
-  fc_assert_ret(t->sprite_hash != nullptr);
+  fc_assert_ret(!t->sprite_hash.isEmpty());
 
   assign_sprite(t, t->sprites.treaty_thumb[0],
                 {"treaty.disagree_thumb_down"}, true);
@@ -2564,7 +2551,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
       buffer =
           QStringLiteral("cursor.%1%2").arg(names[i], QString::number(f));
       assign_sprite(t, t->sprites.cursor[i].frame[f], {buffer}, true);
-      ss = t->sprite_hash->value(buffer, nullptr);
+      ss = t->sprite_hash.value(buffer, nullptr);
       if (ss) {
         t->sprites.cursor[i].hot_x = ss->hot_x;
         t->sprites.cursor[i].hot_y = ss->hot_y;
@@ -2689,7 +2676,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
  */
 void finish_loading_sprites(struct tileset *t)
 {
-  for (auto *sf : std::as_const(*t->specfiles)) {
+  for (auto *sf : std::as_const(t->specfiles)) {
     if (sf->big_sprite) {
       delete sf->big_sprite;
       sf->big_sprite = nullptr;
@@ -2721,7 +2708,7 @@ QPixmap *tiles_lookup_sprite_tag_alt(struct tileset *t, QtMsgType level,
   QPixmap *sp;
 
   // (should get sprite_hash before connection)
-  fc_assert_ret_val_msg(nullptr != t->sprite_hash, nullptr,
+  fc_assert_ret_val_msg(!t->sprite_hash.isEmpty(), nullptr,
                         "attempt to lookup for %s \"%s\" before "
                         "sprite_hash setup",
                         what, name);
@@ -2936,9 +2923,9 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
     const char *tag;
 
     tag = pextra->graphic_str;
-    if (!t->estyle_hash->contains(tag)) {
+    if (!t->estyle_hash.contains(tag)) {
       tag = pextra->graphic_alt;
-      if (!t->estyle_hash->contains(tag)) {
+      if (!t->estyle_hash.contains(tag)) {
         tileset_error(
             t, LOG_FATAL,
             _("Missing entry for \"%s\" or \"%s\" in extras.styles in %s."),
@@ -2952,7 +2939,7 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
                 extra_rule_name(pextra));
       }
     }
-    auto extrastyle = t->estyle_hash->value(tag);
+    auto extrastyle = t->estyle_hash.value(tag);
 
     // Also init modern class-based layers
     for (auto &layer : t->layers) {
@@ -3260,16 +3247,14 @@ struct unit *get_drawable_unit(const struct tileset *t, const ::tile *ptile)
  */
 static void unload_all_sprites(struct tileset *t)
 {
-  if (t->sprite_hash) {
-    QHash<QString, small_sprite *>::const_iterator i =
-        t->sprite_hash->constBegin();
-    while (i != t->sprite_hash->constEnd()) {
-      QByteArray qba = i.key().toLocal8Bit();
-      while (i.value()->ref_count > 0) {
-        unload_sprite(t, qba.data());
-      }
-      i++;
+  QHash<QString, small_sprite *>::const_iterator i =
+      t->sprite_hash.constBegin();
+  while (i != t->sprite_hash.constEnd()) {
+    QByteArray qba = i.key().toLocal8Bit();
+    while (i.value()->ref_count > 0) {
+      unload_sprite(t, qba.data());
     }
+    i++;
   }
 }
 
@@ -3282,21 +3267,18 @@ void tileset_free_tiles(struct tileset *t)
 
   unload_all_sprites(t);
 
-  if (t->sprite_hash) {
-    delete t->sprite_hash;
-    t->sprite_hash = nullptr;
-  }
+  t->sprite_hash.clear();
 
-  for (auto *ss : std::as_const(*t->small_sprites)) {
+  for (auto *ss : std::as_const(t->small_sprites)) {
     if (ss->file) {
       delete[] ss->file;
     }
     fc_assert(ss->sprite == nullptr);
     delete ss;
   }
-  t->small_sprites->clear();
+  t->small_sprites.clear();
 
-  for (auto *sf : std::as_const(*t->specfiles)) {
+  for (auto *sf : std::as_const(t->specfiles)) {
     delete[] sf->file_name;
     if (sf->big_sprite) {
       delete sf->big_sprite;
@@ -3304,7 +3286,7 @@ void tileset_free_tiles(struct tileset *t)
     }
     delete sf;
   }
-  t->specfiles->clear();
+  t->specfiles.clear();
 
   t->sprites.explode.unit.clear();
   t->sprites.nation_flag.clear();
