@@ -238,7 +238,7 @@ void research_diagram::show_tooltip()
   QPoint cp;
 
   timer_active = false;
-  cp = QCursor::pos();
+  cp = QCursor::pos(queen()->screen());
   if (qAbs(cp.x() - tooltip_pos.x()) < 4
       && qAbs(cp.y() - tooltip_pos.y()) < 4) {
     QToolTip::showText(cp, tooltip_text, this, tooltip_rect);

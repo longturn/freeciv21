@@ -430,7 +430,7 @@ void diplo_wdg::show_menu(int player)
 
   // Check user response for not defined responses in slots
   menu->setAttribute(Qt::WA_DeleteOnClose);
-  menu->popup(QCursor::pos());
+  menu->popup(QCursor::pos(queen()->screen()));
 }
 
 /**

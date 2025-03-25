@@ -175,7 +175,7 @@ void goto_dialog::sort_def()
 void goto_dialog::show_me()
 {
   QPoint p, final_p;
-  p = QCursor::pos();
+  p = QCursor::pos(queen()->screen());
   p = parentWidget()->mapFromGlobal(p);
   final_p.setX(p.x());
   final_p.setY(p.y());
