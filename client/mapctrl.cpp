@@ -70,7 +70,7 @@ void create_line_at_mouse_pos(void)
   QPoint global_pos, local_pos;
   int x, y;
 
-  global_pos = QCursor::pos();
+  global_pos = QCursor::pos(queen()->screen());
   local_pos = queen()->mapview_wdg->mapFromGlobal(global_pos)
               / queen()->mapview_wdg->scale();
   x = local_pos.x();
@@ -182,7 +182,7 @@ void map_view::keyPressEvent(QKeyEvent *event)
 void map_view::shortcut_pressed(shortcut_id id)
 {
   // FIXME mouse handling
-  auto pos = mapFromGlobal(QCursor::pos()) / scale();
+  auto pos = mapFromGlobal(QCursor::pos(queen()->screen())) / scale();
 
   auto ptile = canvas_pos_to_tile(pos.x(), pos.y());
   auto pcity = ptile ? tile_city(ptile) : nullptr;
@@ -372,7 +372,7 @@ void map_view::shortcut_pressed(shortcut_id id)
 void map_view::shortcut_released(Qt::MouseButton bt)
 {
   auto md = QApplication::keyboardModifiers();
-  auto pos = mapFromGlobal(QCursor::pos()) / scale();
+  auto pos = mapFromGlobal(QCursor::pos(queen()->screen())) / scale();
 
   if (info_tile::shown()) {
     popdown_tile_info();

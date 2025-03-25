@@ -411,7 +411,7 @@ void plr_widget::display_header_menu(const QPoint)
     }
   });
 
-  hideshow_column->popup(QCursor::pos());
+  hideshow_column->popup(QCursor::pos(queen()->screen()));
 }
 
 /**
@@ -872,7 +872,7 @@ void plr_report::toggle_ai_mode()
     }
   });
 
-  ai_menu->popup(QCursor::pos());
+  ai_menu->popup(QCursor::pos(queen()->screen()));
 }
 
 /**

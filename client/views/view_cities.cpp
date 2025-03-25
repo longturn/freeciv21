@@ -702,7 +702,7 @@ void city_widget::display_list_menu(const QPoint)
       }
     }
   });
-  list_menu->popup(QCursor::pos());
+  list_menu->popup(QCursor::pos(queen()->screen()));
 }
 
 /**
@@ -1155,7 +1155,7 @@ void city_widget::display_header_menu(const QPoint)
       setColumnWidth(col, 100);
     }
   });
-  hideshow_column->popup(QCursor::pos());
+  hideshow_column->popup(QCursor::pos(queen()->screen()));
 }
 
 /**

@@ -471,7 +471,7 @@ void top_bar_indicators_menu()
 
   menu->create();
   menu->update();
-  menu->popup(QCursor::pos());
+  menu->popup(QCursor::pos(queen()->screen()));
 }
 
 /**
@@ -512,7 +512,7 @@ void top_bar_right_click_diplomacy()
     }
 
     menu->setAttribute(Qt::WA_DeleteOnClose);
-    menu->popup(QCursor::pos());
+    menu->popup(QCursor::pos(queen()->screen()));
   }
 }
 
@@ -562,7 +562,7 @@ void top_bar_right_click_science()
                        &top_bar_widget::someSlot);
     }
     menu->setAttribute(Qt::WA_DeleteOnClose);
-    menu->popup(QCursor::pos());
+    menu->popup(QCursor::pos(queen()->screen()));
   }
 }
 
