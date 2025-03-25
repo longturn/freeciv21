@@ -289,10 +289,6 @@ void attribute_flush()
     return;
   }
 
-  if (0 == attribute_hash->size()) {
-    return;
-  }
-
   pplayer->attribute_block.clear();
   serialize_hash(attribute_hash, pplayer->attribute_block);
   send_attribute_block(pplayer, &client.conn);
