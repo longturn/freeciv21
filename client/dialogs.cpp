@@ -1262,7 +1262,7 @@ void choice_dialog::show_me()
 {
   QPoint p;
 
-  p = mapFromGlobal(QCursor::pos());
+  p = mapFromGlobal(QCursor::pos(queen()->screen()));
   p.setY(p.y() - this->height());
   p.setX(p.x() - this->width());
   move(p);

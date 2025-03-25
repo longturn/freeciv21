@@ -47,7 +47,7 @@ units_select::units_select(struct tile *ptile, QWidget *parent)
   create_pixmap();
   setMouseTracking(true);
 
-  popup(mapFromGlobal(QCursor::pos()));
+  popup(mapFromGlobal(QCursor::pos(queen()->screen())));
 }
 
 /**

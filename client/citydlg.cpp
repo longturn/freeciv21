@@ -1370,7 +1370,7 @@ void city_dialog::cma_context_menu(const QPoint)
     }
   });
 
-  cma_menu->popup(QCursor::pos());
+  cma_menu->popup(QCursor::pos(queen()->screen()));
 }
 
 /**
@@ -1478,7 +1478,7 @@ void city_dialog::display_worklist_menu(const QPoint)
     city_queue_insert_worklist(pcity, selected_row_p + 1, worklist);
   });
 
-  list_menu->popup(QCursor::pos());
+  list_menu->popup(QCursor::pos(queen()->screen()));
 }
 
 /**
@@ -2723,7 +2723,7 @@ production_widget::production_widget(QWidget *parent, struct city *pcity,
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   }
 
-  pos = QCursor::pos();
+  pos = QCursor::pos(queen()->screen());
 
   if (pos.x() + width() > desk_width) {
     pos.setX(desk_width - width());
@@ -2773,7 +2773,7 @@ bool production_widget::eventFilter(QObject *obj, QEvent *ev)
     br.setY(pos().y() + height());
     pw_rect.setBottomRight(br);
 
-    if (!pw_rect.contains(QCursor::pos())) {
+    if (!pw_rect.contains(QCursor::pos(queen()->screen()))) {
       close();
       return true;
     }
