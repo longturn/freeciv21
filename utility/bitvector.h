@@ -1,17 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
-// SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 #pragma once
 
 // utility
 #include "log.h"
-
-// Qt
-class QBitArray;
-
-// std
-#include <cstring> // memset
 
 // Yields TRUE iff the bit bit_no is set in val.
 #define TEST_BIT(val, bit_no)                                               \

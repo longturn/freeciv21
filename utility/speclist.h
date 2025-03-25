@@ -1,15 +1,8 @@
-/**************************************************************************
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
- __    __          part of Freeciv21. Freeciv21 is free software: you can
-/ \\..// \    redistribute it and/or modify it under the terms of the GNU
-  ( oo )        General Public License  as published by the Free Software
-   \__/         Foundation, either version 3 of the License,  or (at your
-                      option) any later version. You should have received
-    a copy of the GNU General Public License along with Freeciv21. If not,
-                  see https://www.gnu.org/licenses/.
-**************************************************************************/
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
-/* speclists: "specific genlists", by dwp.
+/**
+ * speclists: "specific genlists", by dwp.
  * (A generalisation of previous city_list and unit_list stuff.)
  *
  * This file is used to implement a "specific" genlist.
@@ -115,11 +108,15 @@
  *   TYPED_LIST_BOTH_ITERATE_REV(struct foo_list_link, foo_t,               \
                                  foolist, plink, pfoo)
  * #define foo_list_both_iterate_rev_end LIST_BOTH_ITERATE_REV_END
- *
- * Note this is not protected against multiple inclusions; this is so that
+ */
+
+/**
+ * NOTE
+ * This is not protected against multiple inclusions; this is so that
  * you can have multiple different speclists. For each speclist, this file
  * should be included _once_, inside a .h file which _is_ itself protected
- * against multiple inclusions. */
+ * against multiple inclusions.
+ */
 
 #include "genlist.h"
 

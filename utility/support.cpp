@@ -1,15 +1,5 @@
-/*
-  /\ ___ /\        Copyright (c) 1996-2020 ＦＲＥＥＣＩＶ ２１ and Freeciv
- (  o   o  )                 contributors. This file is part of Freeciv21.
-  \  >#<  /           Freeciv21 is free software: you can redistribute it
-  /       \                    and/or modify it under the terms of the GNU
- /         \       ^      General Public License  as published by the Free
-|           |     //  Software Foundation, either version 3 of the License,
- \         /    //                  or (at your option) any later version.
-  ///  ///   --                     You should have received a copy of the
-                          GNU General Public License along with Freeciv21.
-                                  If not, see https://www.gnu.org/licenses/.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
 /**
   \file
@@ -38,23 +28,22 @@
 
  */
 
+// self
+#include "support.h"
+
+// generated
 #include <fc_config.h>
 
-#include <climits>
-#include <cmath> // ceil()
-#include <cstdarg>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <sys/stat.h>
+// utility
+#include "fciconv.h"
+#include "fcintl.h"
+#include "log.h"
 
+// Windows dependency
 #ifdef FREECIV_MSWINDOWS
 #include <process.h>
 #include <windows.h>
 #endif // FREECIV_MSWINDOWS
-#ifdef HAVE_STRINGS_H
-#include <strings.h>
-#endif
 
 // Qt
 #include <QFileInfo>
@@ -62,12 +51,14 @@
 #include <QString>
 #include <QThread>
 
-// utility
-#include "fciconv.h"
-#include "fcintl.h"
-#include "log.h"
-
-#include "support.h"
+// std
+#include <cerrno>
+#include <climits>
+#include <cmath>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 /**
    Function used by fc_strdup macro, strdup() replacement

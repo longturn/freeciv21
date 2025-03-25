@@ -1,46 +1,40 @@
-/**************************************************************************
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
- __    __          part of Freeciv21. Freeciv21 is free software: you can
-/ \\..// \    redistribute it and/or modify it under the terms of the GNU
-  ( oo )        General Public License  as published by the Free Software
-   \__/         Foundation, either version 3 of the License,  or (at your
-                      option) any later version. You should have received
-    a copy of the GNU General Public License along with Freeciv21. If not,
-                  see https://www.gnu.org/licenses/.
-**************************************************************************/
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
-/* specvectors: "specific vectors".
+/**
+ * specvectors: "specific vectors".
+ *
+ * This file is used to implement resizable arrays.
+ *
+ * Before including this file, you must define the following:
+ *  - SPECVEC_TAG - this tag will be used to form names for functions etc.
+ *    You may also define:
+ *  - SPECVEC_TYPE - the typed vector will contain pointers to this type;
+ *    If SPECVEC_TYPE is not defined, then 'struct SPECVEC_TAG' is used.
+ *  At the end of this file, these (and other defines) are undef-ed.
+ *
+ * Assuming SPECVEC_TAG were 'foo', and SPECVEC_TYPE were 'foo_t',
+ * including this file would provide a struct definition for:
+ *    struct foo_vector;
+ * and prototypes for the following functions:
+ *    void foo_vector_init(struct foo_vector *tthis);
+ *    void foo_vector_reserve(struct foo_vector *tthis, int n);
+ *    int  foo_vector_size(const struct foo_vector *tthis);
+ *    foo_t *foo_vector_get(struct foo_vector *tthis, int svindex);
+ *    void foo_vector_copy(struct foo_vector *to,
+ *              const struct foo_vector *from);
+ *    void foo_vector_free(struct foo_vector *tthis);
+ *    void foo_vector_append(struct foo_vector *tthis, foo_t pfoo);
+ *    void foo_vector_remove(struct foo_vector *tthis, int svindex);
+ */
 
-   This file is used to implement resizable arrays.
-
-   Before including this file, you must define the following:
-     SPECVEC_TAG - this tag will be used to form names for functions etc.
-   You may also define:
-     SPECVEC_TYPE - the typed vector will contain pointers to this type;
-   If SPECVEC_TYPE is not defined, then 'struct SPECVEC_TAG' is used.
-   At the end of this file, these (and other defines) are undef-ed.
-
-   Assuming SPECVEC_TAG were 'foo', and SPECVEC_TYPE were 'foo_t',
-   including this file would provide a struct definition for:
-      struct foo_vector;
-   and prototypes for the following functions:
-      void foo_vector_init(struct foo_vector *tthis);
-      void foo_vector_reserve(struct foo_vector *tthis, int n);
-      int  foo_vector_size(const struct foo_vector *tthis);
-      foo_t *foo_vector_get(struct foo_vector *tthis, int svindex);
-      void foo_vector_copy(struct foo_vector *to,
-                const struct foo_vector *from);
-      void foo_vector_free(struct foo_vector *tthis);
-      void foo_vector_append(struct foo_vector *tthis, foo_t pfoo);
-      void foo_vector_remove(struct foo_vector *tthis, int svindex);
-
-   Note this is not protected against multiple inclusions; this is
-   so that you can have multiple different specvectors.  For each
-   specvector, this file should be included _once_, inside a .h file
-   which _is_ itself protected against multiple inclusions.
-*/
-
-#include <cstring> // for memcpy
+/**
+ * NOTE:
+ * This header is NOT protected against multiple inclusions; this is
+ * so that you can have multiple different specvectors. For each
+ * specvector, this file should be included _once_, inside a .h file
+ * which _is_ itself protected against multiple inclusions.
+ */
 
 #ifndef SPECVEC_TAG
 #error Must define a SPECVEC_TAG to use this header

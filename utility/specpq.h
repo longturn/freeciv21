@@ -1,14 +1,8 @@
-/**************************************************************************
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
- part of Freeciv21. Freeciv21 is free software: you can redistribute it
- and/or modify it under the terms of the GNU  General Public License  as
- published by the Free Software Foundation, either version 3 of the
- License,  or (at your option) any later version. You should have received
- a copy of the GNU General Public License along with Freeciv21. If not,
- see https://www.gnu.org/licenses/.
-**************************************************************************/
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
-/* specpqs: "specific priority queues".
+/**
+ * specpqs: "specific priority queues".
  *
  * This file is used to implement a "specific" priority queues.
  * That is, a (sometimes) type-checked priority queue. (Or at least a
@@ -39,11 +33,15 @@
  *    bool foo_pq_remove(struct foo_pq *pq, data_t *pdata);
  *    bool foo_pq_peek(const struct foo_pq *pq, data_t *pdata);
  *    bool foo_pq_priority(const struct foo_pq *pq, priority_t *ppriority);
- *
- * Note this is not protected against multiple inclusions; this is so that
+ */
+
+/**
+ * NOTE
+ * This header is NOT protected against multiple inclusions; this is so that
  * you can have multiple different speclists. For each speclist, this file
  * should be included _once_, inside a .h file which _is_ itself protected
- * against multiple inclusions. */
+ * against multiple inclusions.
+ */
 
 #ifndef SPECPQ_TAG
 #error Must define a SPECPQ_TAG to use this header

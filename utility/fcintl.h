@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
-// SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 #pragma once
 
@@ -10,6 +9,7 @@
 // utiltiy
 #include "support.h" // fc__attribute
 
+// dependency
 #ifdef FREECIV_ENABLE_NLS
 
 /* Include libintl.h only if nls enabled.

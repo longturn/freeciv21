@@ -3,32 +3,10 @@
 
 #pragma once
 
-/****************************************************************************
-  MODULE: genlist
-
-  A "genlist" is a generic doubly-linked list. That is:
-    generic:        stores (void*) pointers to arbitrary user data;
-    doubly-linked:  can be efficiently traversed both "forwards"
-                    and "backwards".
-
-  The list data structures are allocated dynamically, and list elements can
-  be added or removed at arbitrary positions.
-
-  Positions in the list are specified starting from 0, up to n - 1 for a
-  list with n elements. The position -1 can be used to refer to the last
-  element (that is, the same as n - 1, or n when adding a new element), but
-  other negative numbers are not meaningful.
-
-  A trap to beware of with iterators is modifying the list while the
-  iterator is active, in particular removing the next element pointed
-  to by the iterator (see further comments below).
-
-  See also the speclist module.
-****************************************************************************/
-
 // utility
 #include "support.h" // bool, fc__warn_unused_result
 
+// Qt
 #include <QMutex>
 
 // A single element of a genlist, opaque type.

@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
-// SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 // self
 #include "astring.h"
@@ -12,7 +11,7 @@
 #include <QString>
 #include <QStringList>
 #include <QVector>
-#include <Qt> // Qt::SkipEmptyParts
+#include <Qt>
 
 QString strvec_to_or_list(const QVector<QString> &psv)
 {
