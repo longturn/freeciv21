@@ -7,6 +7,7 @@
 class QString;
 
 // std
+#include <cinttypes>
 #include <cstdio>
 
 /**
