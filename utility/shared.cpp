@@ -1,24 +1,41 @@
-/*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
-\_   \        /  __/          contributors. This file is part of Freeciv21.
- _\   \      /  /__     Freeciv21 is free software: you can redistribute it
- \___  \____/   __/    and/or modify it under the terms of the GNU  General
-     \_       _/          Public License  as published by the Free Software
-       | @ @  \_               Foundation, either version 3 of the  License,
-       |                              or (at your option) any later version.
-     _/     /\                  You should have received  a copy of the GNU
-    /o)  (o/\ \_                General Public License along with Freeciv21.
-    \_____/ /                     If not, see https://www.gnu.org/licenses/.
-      \____/        ********************************************************/
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
+// self
+#include "shared.h"
+
+// generated
 #include <fc_config.h>
 
-#include <climits>
-#include <clocale>
-#include <cstdarg>
-#include <cstdio>
-#include <cstdlib>
+// utility
+#include "fciconv.h"
+#include "fcintl.h"
+#include "log.h"
+#include "rand.h"
+#include "support.h"
 
+// dependency
+#ifdef FREECIV_ENABLE_NLS
+
+/* Include libintl.h only if nls enabled.
+ * It defines some wrapper macros that
+ * we don't want defined when nls is disabled. */
+#include <libintl.h>
+#endif
+
+// Qt
+#include <QChar>
+#include <QCoreApplication>
+#include <QDateTime>
+#include <QDir>
+#include <QLoggingCategory>
+#include <QRegularExpression>
+#include <QStandardPaths>
+#include <QString>
+#include <QtCore>
+#include <QtGlobal>
+
+// windows dependencies
 #ifdef FREECIV_MSWINDOWS
 #define ALWAYS_ROOT
 #include <lmcons.h> // UNLEN
@@ -28,22 +45,15 @@
 #include <unistd.h> // getuid, geteuid
 #endif              // FREECIV_MSWINDOWS
 
-// Qt
-#include <QCoreApplication>
-#include <QDateTime>
-#include <QDir>
-#include <QRegularExpression>
-#include <QStandardPaths>
-#include <QString>
-#include <QtGlobal>
-
-// utility
-#include "fciconv.h"
-#include "fcintl.h"
-#include "log.h"
-#include "rand.h"
-
-#include "shared.h"
+// std
+#include <algorithm>
+#include <climits>
+#include <clocale>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <time.h>
 
 static QStringList default_data_path()
 {

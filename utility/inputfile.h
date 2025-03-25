@@ -3,7 +3,7 @@
 
 /**********************************************************************
   A low-level object for reading a registry-format file.
-  See comments in inputfile.c
+  See comments in inputfile.cpp
 ***********************************************************************/
 
 #pragma once
@@ -12,9 +12,9 @@
 #include "support.h" // bool type and fc__attribute
 
 // Qt
-#include <QString>
-
+class QString;
 class QIODevice;
+
 struct inputfile; // opaque
 
 using datafilename_fn_t = QString (*)(const QString &filename);

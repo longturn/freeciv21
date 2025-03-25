@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
-// SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 /**
+  \file
   A low-level object for reading a registry-format file.
   original author: David Pfitzner <dwp@mso.anu.edu.au>
 

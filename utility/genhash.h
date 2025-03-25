@@ -1,11 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
-// SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 #pragma once
 
 // utility
-#include "iterator.h"
 #include "support.h" // bool type
 
 struct genhash; // opaque
