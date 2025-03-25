@@ -2692,6 +2692,7 @@ void finish_loading_sprites(struct tileset *t)
  */
 void tileset_load_tiles(struct tileset *t)
 {
+  fc_assert_ret(t != nullptr);
   tileset_lookup_sprite_tags(t);
   finish_loading_sprites(t);
 }
