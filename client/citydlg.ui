@@ -824,7 +824,7 @@
              </sizepolicy>
             </property>
             <property name="contextMenuPolicy">
-             <enum>Qt::NoContextMenu</enum>
+             <enum>Qt::CustomContextMenu</enum>
             </property>
             <property name="editTriggers">
              <set>QAbstractItemView::NoEditTriggers</set>
