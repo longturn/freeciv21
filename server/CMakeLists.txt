@@ -48,6 +48,7 @@ add_library(
   commands.cpp
   connecthand.cpp
   console.cpp
+  demographic.cpp
   diplhand.cpp
   diplomats.cpp
   edithand.cpp

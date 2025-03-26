@@ -29,6 +29,7 @@
 #include "achievements.h"
 #include "calendar.h"
 #include "connection.h"
+#include "demographic.h"
 #include "events.h"
 #include "game.h"
 #include "government.h"
@@ -174,38 +175,47 @@ static const char *score_to_text(int value);
 /*
  * Describes a row.
  */
-static struct dem_row {
-  const char key;
-  const char *name;
-  int (*get_value)(const struct player *);
-  const char *(*to_text)(int);
-  bool greater_values_are_better;
-} rowtable[] = {
-    {'s', N_("Score"), get_total_score, score_to_text, true},
-    {'z', N_("League Score"), get_league_score, score_to_text,
-     true}, // z cuz inverted s. B)
-    {'N', N_("Population"), get_population, population_to_text, true},
-    {'n', N_("Population"), get_pop, citizenunits_to_text, true},
-    {'c', N_("Cities"), get_cities, cities_to_text, true},
-    {'i', N_("Improvements"), get_improvements, improvements_to_text, true},
-    {'w', N_("Wonders"), get_all_wonders, wonders_to_text, true},
-    {'A', N_("Land Area"), get_landarea, area_to_text, true},
-    {'S', N_("Settled Area"), get_settledarea, area_to_text, true},
+static std::map<char, demographic> rowtable = {
+    {'s', demographic(N_("Score"), get_total_score, score_to_text, true)},
+    {'z', demographic(N_("League Score"), get_league_score, score_to_text,
+                      true)}, // z cuz inverted s. B)
+    {'N', demographic(N_("Population"), get_population, population_to_text,
+                      true)},
+    {'n',
+     demographic(N_("Population"), get_pop, citizenunits_to_text, true)},
+    {'c', demographic(N_("Cities"), get_cities, cities_to_text, true)},
+    {'i', demographic(N_("Improvements"), get_improvements,
+                      improvements_to_text, true)},
+    {'w',
+     demographic(N_("Wonders"), get_all_wonders, wonders_to_text, true)},
+    {'A', demographic(N_("Land Area"), get_landarea, area_to_text, true)},
+    {'S',
+     demographic(N_("Settled Area"), get_settledarea, area_to_text, true)},
     // TRANS: How literate people are.
-    {'L', N_("?ability:Literacy"), get_literacy, percent_to_text, true},
-    {'a', N_("Agriculture"), get_agriculture, agriculture_to_text, true},
-    {'P', N_("Production"), get_production, production_to_text, true},
-    {'E', N_("Economics"), get_economics, economics_to_text, true},
-    {'g', N_("Gold Income"), get_income, income_to_text, true},
-    {'R', N_("Research Speed"), get_research, science_to_text, true},
-    {'M', N_("Military Service"), get_mil_service, mil_service_to_text,
-     false},
-    {'m', N_("Military Units"), get_mil_units, mil_units_to_text, true},
-    {'u', N_("Built Units"), get_units_built, mil_units_to_text, true},
-    {'k', N_("Killed Units"), get_units_killed, mil_units_to_text, true},
-    {'l', N_("Lost Units"), get_units_lost, mil_units_to_text, true},
-    {'O', N_("Pollution"), get_pollution, pollution_to_text, true},
-    {'C', N_("Culture"), get_culture, culture_to_text, true}};
+    {'L', demographic(N_("?ability:Literacy"), get_literacy, percent_to_text,
+                      true)},
+    {'a', demographic(N_("Agriculture"), get_agriculture,
+                      agriculture_to_text, true)},
+    {'P', demographic(N_("Production"), get_production, production_to_text,
+                      true)},
+    {'E',
+     demographic(N_("Economics"), get_economics, economics_to_text, true)},
+    {'g', demographic(N_("Gold Income"), get_income, income_to_text, true)},
+    {'R',
+     demographic(N_("Research Speed"), get_research, science_to_text, true)},
+    {'M', demographic(N_("Military Service"), get_mil_service,
+                      mil_service_to_text, false)},
+    {'m', demographic(N_("Military Units"), get_mil_units, mil_units_to_text,
+                      true)},
+    {'u', demographic(N_("Built Units"), get_units_built, mil_units_to_text,
+                      true)},
+    {'k', demographic(N_("Killed Units"), get_units_killed,
+                      mil_units_to_text, true)},
+    {'l',
+     demographic(N_("Lost Units"), get_units_lost, mil_units_to_text, true)},
+    {'O',
+     demographic(N_("Pollution"), get_pollution, pollution_to_text, true)},
+    {'C', demographic(N_("Culture"), get_culture, culture_to_text, true)}};
 
 // Demographics columns.
 enum dem_flag { DEM_COL_QUANTITY, DEM_COL_RANK, DEM_COL_BEST, DEM_COL_LAST };
@@ -1057,11 +1067,11 @@ static const char *wonders_to_text(int value)
    Construct one demographics line.
  */
 static void dem_line_item(char *outptr, size_t out_size,
-                          struct player *pplayer, struct dem_row *prow,
+                          struct player *pplayer, const demographic &demo,
                           bv_cols selcols)
 {
   if (nullptr != pplayer && BV_ISSET(selcols, DEM_COL_QUANTITY)) {
-    const char *text = prow->to_text(prow->get_value(pplayer));
+    const char *text = demo.text(demo.evaluate(pplayer));
 
     cat_snprintf(outptr, out_size, " %s", text);
     cat_snprintf(outptr, out_size, "%*s",
@@ -1070,16 +1080,12 @@ static void dem_line_item(char *outptr, size_t out_size,
   }
 
   if (nullptr != pplayer && BV_ISSET(selcols, DEM_COL_RANK)) {
-    int basis = prow->get_value(pplayer);
+    int basis = demo.evaluate(pplayer);
     int place = 1;
 
     players_iterate(other)
     {
-      if (GOOD_PLAYER(other)
-          && ((prow->greater_values_are_better
-               && prow->get_value(other) > basis)
-              || (!prow->greater_values_are_better
-                  && prow->get_value(other) < basis))) {
+      if (GOOD_PLAYER(other) && demo.compare(basis, demo.evaluate(other))) {
         place++;
       }
     }
@@ -1090,16 +1096,13 @@ static void dem_line_item(char *outptr, size_t out_size,
 
   if (nullptr == pplayer || BV_ISSET(selcols, DEM_COL_BEST)) {
     struct player *best_player = pplayer;
-    int best_value = nullptr != pplayer ? prow->get_value(pplayer) : 0;
+    int best_value = nullptr != pplayer ? demo.evaluate(pplayer) : 0;
 
     players_iterate(other)
     {
       if (GOOD_PLAYER(other)) {
-        int value = prow->get_value(other);
-
-        if (!best_player
-            || (prow->greater_values_are_better && value > best_value)
-            || (!prow->greater_values_are_better && value < best_value)) {
+        int value = demo.evaluate(other);
+        if (!best_player || demo.compare(best_value, value)) {
           best_player = other;
           best_value = value;
         }
@@ -1112,7 +1115,7 @@ static void dem_line_item(char *outptr, size_t out_size,
             && (pplayer != best_player))) {
       cat_snprintf(outptr, out_size, "   %s: %s",
                    nation_plural_for_player(best_player),
-                   prow->to_text(prow->get_value(best_player)));
+                   demo.text(demo.evaluate(best_player)));
     }
   }
 }
@@ -1148,14 +1151,7 @@ bool is_valid_demography(const char *demography, int *error)
     }
 
     // See if the character is a valid row label.
-    for (j = 0; j < ARRAY_SIZE(rowtable); j++) {
-      if (demography[i] == rowtable[j].key) {
-        found = true;
-        break;
-      }
-    }
-
-    if (!found) {
+    if (rowtable.count(demography[i]) == 0) {
       if (error != nullptr) {
         (*error) = i;
       }
@@ -1176,31 +1172,29 @@ void report_demographics(struct connection *pconn)
 {
   char civbuf[1024];
   char buffer[4096];
-  int i;
-  bool anyrows;
   bv_cols selcols;
   int numcols = 0;
   struct player *pplayer = pconn->playing;
 
   BV_CLR_ALL(selcols);
   fc_assert_ret(ARRAY_SIZE(coltable) == DEM_COL_LAST);
-  for (i = 0; i < DEM_COL_LAST; i++) {
+  for (int i = 0; i < DEM_COL_LAST; i++) {
     if (strchr(game.server.demography, coltable[i].key)) {
       BV_SET(selcols, i);
       numcols++;
     }
   }
 
-  anyrows = false;
-  for (i = 0; i < ARRAY_SIZE(rowtable); i++) {
-    if (strchr(game.server.demography, rowtable[i].key)) {
-      anyrows = true;
-      break;
+  std::vector<demographic> rows;
+  auto demography = QString(game.server.demography);
+  for (const auto &[key, demo] : rowtable) {
+    if (demography.contains(key)) {
+      rows.push_back(demo);
     }
   }
 
   if ((!pconn->observer && !pplayer) || (pplayer && !pplayer->is_alive)
-      || !anyrows || numcols == 0) {
+      || rows.empty() || numcols == 0) {
     page_conn(pconn->self, _("Demographics Report:"),
               _("Sorry, the Demographics report is unavailable."), "");
     return;
@@ -1215,17 +1209,15 @@ void report_demographics(struct connection *pconn)
   }
 
   buffer[0] = '\0';
-  for (i = 0; i < ARRAY_SIZE(rowtable); i++) {
-    if (strchr(game.server.demography, rowtable[i].key)) {
-      const char *name = Q_(rowtable[i].name);
+  for (const auto &demo : rows) {
+    const char *name = Q_(demo.name());
 
-      cat_snprintf(buffer, sizeof(buffer), "%s", name);
-      cat_snprintf(buffer, sizeof(buffer), "%*s",
-                   18 - static_cast<int>(get_internal_string_length(name)),
-                   "");
-      dem_line_item(buffer, sizeof(buffer), pplayer, &rowtable[i], selcols);
-      sz_strlcat(buffer, "\n");
-    }
+    cat_snprintf(buffer, sizeof(buffer), "%s", name);
+    cat_snprintf(buffer, sizeof(buffer), "%*s",
+                 18 - static_cast<int>(get_internal_string_length(name)),
+                 "");
+    dem_line_item(buffer, sizeof(buffer), pplayer, demo, selcols);
+    sz_strlcat(buffer, "\n");
   }
 
   page_conn(pconn->self, _("Demographics Report:"), civbuf, buffer);
