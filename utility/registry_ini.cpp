@@ -149,7 +149,7 @@
   - Now uses hash.c
  */
 // KArchive
-#include <KFilterDev>
+#include <KCompressionDevice>
 
 // utility
 #include "bugs.h"
@@ -620,7 +620,7 @@ bool secfile_save(const struct section_file *secfile, QString filename)
   }
 
   auto real_filename = interpret_tilde(filename);
-  auto fs = std::make_unique<KFilterDev>(real_filename);
+  auto fs = std::make_unique<KCompressionDevice>(real_filename);
   fs->open(QIODevice::WriteOnly);
 
   if (!fs->isOpen()) {

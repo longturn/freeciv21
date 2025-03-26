@@ -21,7 +21,7 @@ check_function_exists(at_quick_exit HAVE_AT_QUICK_EXIT)
 find_package(Python3 REQUIRED)
 
 # Required as the main networking and utility library
-find_package(Qt5 5.15 COMPONENTS Core Gui Network REQUIRED)
+find_package(Qt6 6.6 COMPONENTS Core Gui Network REQUIRED)
 
 # Required for utility
 if(FREECIV_ENABLE_SERVER)
@@ -116,7 +116,7 @@ add_subdirectory(dependencies/sol2)
 include(FreecivBackward)
 
 # Compression
-find_package(KF5Archive REQUIRED)
+find_package(KF6Archive REQUIRED)
 set(FREECIV_HAVE_BZ2 ${KArchive_HAVE_BZIP2})
 set(FREECIV_HAVE_LZMA ${KArchive_HAVE_LZMA})
 set(FREECIV_HAVE_ZSTD ${KArchive_HAVE_ZSTD})
@@ -158,10 +158,10 @@ if (FREECIV_ENABLE_CLIENT
     OR FREECIV_ENABLE_FCMP_QT
     OR FREECIV_ENABLE_RULEDIT)
   # May want to relax the version later
-  find_package(Qt5 5.15 COMPONENTS Widgets REQUIRED)
+  find_package(Qt6 6.6 COMPONENTS Widgets REQUIRED)
 endif()
 if (FREECIV_ENABLE_CLIENT)
-  find_package(Qt5 5.15 COMPONENTS Svg REQUIRED)
+  find_package(Qt6 6.6 COMPONENTS Svg REQUIRED)
 endif()
 
 # FCMP-specific dependencies
@@ -173,6 +173,6 @@ endif()
 if (NOT EMSCRIPTEN)
   include(CTest)
   if (BUILD_TESTING)
-    find_package(Qt5Test REQUIRED)
+    find_package(Qt6Test REQUIRED)
   endif()
 endif()

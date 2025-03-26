@@ -178,8 +178,13 @@ target_link_libraries(freeciv21-client PRIVATE common)
 target_link_libraries(freeciv21-client PRIVATE cvercmp)
 target_link_libraries(freeciv21-client PRIVATE tolua)
 
-target_link_libraries(freeciv21-client PRIVATE Qt5::Widgets)
-target_link_libraries(freeciv21-client PRIVATE Qt5::Svg)
+target_link_libraries(freeciv21-client PRIVATE Qt6::Widgets)
+target_link_libraries(freeciv21-client PRIVATE Qt6::Svg)
+
+# Workaround for QTBUG-93413
+set_source_files_properties(
+  widgets/city/governor_widget.ui
+  PROPERTIES AUTOUIC_OPTIONS "--connections;string")
 
 if(NOT EMSCRIPTEN)
   target_sources(freeciv21-client PRIVATE servers.cpp)
@@ -199,11 +204,11 @@ if (AUDIO_SDL)
 endif()
 
 if (APPLE)
-  qt5_import_plugins(freeciv21-client INCLUDE Qt5::QCocoaIntegrationPlugin Qt5::QSvgPlugin)
+  qt6_import_plugins(freeciv21-client INCLUDE Qt6::QCocoaIntegrationPlugin Qt6::QSvgPlugin)
 endif()
 
 if(EMSCRIPTEN)
-  qt5_import_plugins(freeciv21-client INCLUDE Qt5::QWasmIntegrationPlugin)
+  qt6_import_plugins(freeciv21-client INCLUDE Qt6::QWasmIntegrationPlugin)
   target_link_options(freeciv21-client PRIVATE
                       -sASSERTIONS=1
                       -sWEBSOCKET_URL=wss://

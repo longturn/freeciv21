@@ -7,7 +7,7 @@ file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/cli.cpp
               INPUT ${CMAKE_CURRENT_BINARY_DIR}/cli.cpp.in)
 
 add_executable(test_server_cli ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/cli.cpp)
-target_link_libraries(test_server_cli PRIVATE Qt5::Test)
+target_link_libraries(test_server_cli PRIVATE Qt6::Test)
 add_test(NAME test_server_cli
          COMMAND test_server_cli
          WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
