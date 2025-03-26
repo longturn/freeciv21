@@ -62,7 +62,7 @@
 #include "log.h"
 
 // KArchive dependency
-#include <KFilterDev>
+#include <KCompressionDevice>
 
 // Qt
 #include <QLoggingCategory>
@@ -203,7 +203,7 @@ struct inputfile *inf_from_file(const QString &filename,
 
   fc_assert_ret_val(!filename.isEmpty(), nullptr);
   fc_assert_ret_val(0 < filename.length(), nullptr);
-  auto *fp = new KFilterDev(filename);
+  auto *fp = new KCompressionDevice(filename);
   fp->open(QIODevice::ReadOnly);
   if (!fp->isOpen()) {
     delete fp;
@@ -231,7 +231,7 @@ struct inputfile *inf_from_stream(QIODevice *stream,
   inf->filename.clear();
   inf->fp = stream;
   inf->stream = new QTextStream(stream);
-  inf->stream->setCodec("UTF-8");
+  inf->stream->setEncoding(QStringConverter::Utf8);
   inf->stream->setAutoDetectUnicode(true); // Allow UTF-16 and UTF-32
   inf->datafn = datafn;
 
@@ -253,8 +253,8 @@ static void inf_close_partial(struct inputfile *inf)
 
   // No way to determine whether a generic QIODevice has error'ed :(
   bool error = false;
-  if (dynamic_cast<KFilterDev *>(inf->fp)) {
-    error = dynamic_cast<KFilterDev *>(inf->fp)->error() != 0;
+  if (dynamic_cast<KCompressionDevice *>(inf->fp)) {
+    error = dynamic_cast<KCompressionDevice *>(inf->fp)->error() != 0;
   }
   if (error) {
     qCCritical(inf_category) << "Error before closing" << inf_filename(inf)
@@ -632,7 +632,7 @@ static QString get_token_entry_name(struct inputfile *inf)
   }
 
   // Check that we didn't eat a comment in the middle
-  auto ref = inf->cur_line.midRef(inf->cur_line_pos, eq - inf->cur_line_pos);
+  auto ref = inf->cur_line.mid(inf->cur_line_pos, eq - inf->cur_line_pos);
   if (ref.contains(';') || ref.contains('#')) {
     return "";
   }
@@ -799,7 +799,7 @@ static QString get_token_value(struct inputfile *inf)
                  qUtf8Printable(name));
       return "";
     }
-    auto fp = new KFilterDev(rfname);
+    auto fp = new KCompressionDevice(rfname);
     fp->open(QIODevice::ReadOnly);
     if (!fp->isOpen()) {
       qCCritical(inf_category, _("Cannot open stringfile \"%s\"."),

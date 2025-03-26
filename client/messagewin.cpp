@@ -107,7 +107,7 @@ void message_widget::item_selected(const QItemSelection &sl,
 /**
    Mouse entered message_widget
  */
-void message_widget::enterEvent(QEvent *event)
+void message_widget::enterEvent(QEnterEvent *event)
 {
   setCursor(Qt::ArrowCursor);
 }
@@ -126,7 +126,7 @@ void message_widget::leaveEvent(QEvent *event)
 void message_widget::paintEvent(QPaintEvent *event)
 {
   QStyleOption opt;
-  opt.init(this);
+  opt.initFrom(this);
   QPainter p(this);
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }

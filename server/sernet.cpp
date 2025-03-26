@@ -528,7 +528,7 @@ void connection_ping(struct connection *pconn)
 {
   civtimer *timer = timer_new(TIMER_USER, TIMER_ACTIVE);
 
-  log_debug("sending ping to %s (open=%d)", conn_description(pconn),
+  log_debug("sending ping to %s (open=%lld)", conn_description(pconn),
             pconn->server.ping_timers->size());
   timer_start(timer);
   pconn->server.ping_timers->append(timer);

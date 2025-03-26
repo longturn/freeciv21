@@ -175,7 +175,7 @@ protected:
   void mousePressEvent(QMouseEvent *e) override;
   void mouseMoveEvent(QMouseEvent *event) override;
   void leaveEvent(QEvent *event) override;
-  void enterEvent(QEvent *event) override;
+  void enterEvent(QEnterEvent *event) override;
 private slots:
   void mouse_clicked();
   void mouse_right_clicked();
@@ -266,7 +266,7 @@ protected:
   void paintEvent(QPaintEvent *event) override;
   void mousePressEvent(QMouseEvent *e) override;
   void leaveEvent(QEvent *event) override;
-  void enterEvent(QEvent *event) override;
+  void enterEvent(QEnterEvent *event) override;
 
 private:
   void init_images(bool redraw = false);

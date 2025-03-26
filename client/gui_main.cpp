@@ -304,6 +304,7 @@ void popup_quit_dialog()
       disconnect_from_server();
     }
     king()->write_settings();
+    king()->closing();
     qApp->quit();
   });
   ask->show();

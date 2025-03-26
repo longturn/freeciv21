@@ -301,7 +301,6 @@ static void client_game_reset()
  */
 int client_main(int argc, char *argv[])
 {
-  QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
   QApplication::setHighDpiScaleFactorRoundingPolicy(
       Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
   QApplication app(argc, argv);

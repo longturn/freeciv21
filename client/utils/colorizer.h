@@ -8,6 +8,7 @@
 
 #include <QBitmap>
 #include <QColor>
+#include <QObject>
 #include <QPixmap>
 
 #include <map>
