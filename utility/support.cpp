@@ -63,7 +63,9 @@
 #include <QThread>
 
 // utility
+#ifdef FREECIV_MSWINDOWS
 #include "fciconv.h"
+#endif
 #include "fcintl.h"
 #include "log.h"
 
@@ -102,7 +104,7 @@ int fc_strncasecmp(const char *str0, const char *str1, size_t n)
 {
   auto left = QString::fromUtf8(str0);
   auto right = QString::fromUtf8(str1);
-  return left.leftRef(n).compare(right.leftRef(n), Qt::CaseInsensitive);
+  return left.left(n).compare(right.left(n), Qt::CaseInsensitive);
 }
 
 /**
@@ -219,7 +221,7 @@ int fc_strncasequotecmp(const char *str0, const char *str1, size_t n)
       && right.endsWith(QLatin1String("\""))) {
     right = right.mid(1, right.length() - 2);
   }
-  return left.leftRef(n).compare(right.leftRef(n), Qt::CaseInsensitive);
+  return left.left(n).compare(right.left(n), Qt::CaseInsensitive);
 }
 
 /**
@@ -265,44 +267,6 @@ FILE *fc_fopen(const char *filename, const char *opentype)
   return result;
 #else  // FREECIV_MSWINDOWS
   return fopen(filename, opentype);
-#endif // FREECIV_MSWINDOWS
-}
-
-/**
-   Returns last error code.
- */
-fc_errno fc_get_errno()
-{
-#ifdef FREECIV_MSWINDOWS
-  return GetLastError();
-#else  // FREECIV_MSWINDOWS
-  return errno;
-#endif // FREECIV_MSWINDOWS
-}
-
-/**
-   Return a string which describes a given error (errno-style.)
-   The string is converted as necessary from the local_encoding
-   to internal_encoding, for inclusion in translations.  May be
-   subsequently converted back to local_encoding for display.
-
-   Note that this is not the reentrant form.
- */
-const char *fc_strerror(fc_errno err)
-{
-#ifdef FREECIV_MSWINDOWS
-  static char buf[256];
-
-  if (!FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM
-                         | FORMAT_MESSAGE_IGNORE_INSERTS,
-                     nullptr, err, 0, buf, sizeof(buf), nullptr)) {
-    fc_snprintf(buf, sizeof(buf), _("error %ld (failed FormatMessage)"),
-                err);
-  }
-  return buf;
-#else  // FREECIV_MSWINDOWS
-  static char buf[256];
-  return local_to_internal_string_buffer(strerror(err), buf, sizeof(buf));
 #endif // FREECIV_MSWINDOWS
 }
 
@@ -386,7 +350,7 @@ size_t fc_strlcpy(char *dest, const char *src, size_t n)
   size_t cut_at = n - 1;
   QByteArray encoded;
   do {
-    encoded = source.leftRef(cut_at--).toUtf8();
+    encoded = source.left(cut_at--).toUtf8();
   } while (cut_at > 0 && encoded.size() + 1 > n);
 
   if (cut_at == 0) {

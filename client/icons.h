@@ -10,7 +10,9 @@
 #pragma once
 
 #include <QHash>
+#include <QIcon>
 #include <QPixmapCache>
+
 /****************************************************************************
   Class helping reading icons/pixmaps from themes/icons folder
 ****************************************************************************/
