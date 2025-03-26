@@ -128,7 +128,7 @@ static const char *get_tile_change_menu_text(struct tile *ptile,
   const char *text;
 
   tile_apply_activity(newtile, activity, nullptr);
-  text = tile_get_info_text(tile_get_info(newtile), false, 0);
+  text = tile_get_info_text(tile_info(newtile), false, 0);
   tile_virtual_destroy(newtile);
 
   return text;

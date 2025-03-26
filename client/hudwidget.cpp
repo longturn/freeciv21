@@ -1305,7 +1305,7 @@ QString popup_terrain_info(struct tile *ptile)
 
   terr = ptile->terrain;
   ret = QString(_("Terrain: %1\n"))
-            .arg(tile_get_info_text(tile_get_info(ptile), true, 0));
+            .arg(tile_get_info_text(tile_info(ptile), true, 0));
   ret =
       ret
       + QString(_("Food/Prod/Trade: %1\n")).arg(get_tile_output_text(ptile));

@@ -157,6 +157,19 @@ void tile_change_terrain(struct tile *ptile, struct terrain *pterrain);
 bool tile_apply_activity(struct tile *ptile, Activity_type_id act,
                          struct extra_type *tgt);
 
+/**
+  Contains some information about a tile as human readable translated
+  string.
+ */
+struct tile_info {
+  explicit tile_info(const struct tile *ptile);
+
+  QString terrain;
+  QString resource;
+  QStringList extras;
+  QStringList nuisances;
+};
+
 #define TILE_LB_TERRAIN_RIVER (1 << 0)
 #define TILE_LB_RIVER_RESOURCE (1 << 1)
 #define TILE_LB_RESOURCE_POLL (1 << 2)
@@ -170,16 +183,3 @@ bool tile_virtual_check(const tile *vtile);
 
 bool tile_set_label(struct tile *ptile, const char *label);
 bool tile_is_placing(const struct tile *ptile);
-
-/**
-  Contains some information about a tile as human readable translated
-  string.
- */
-struct tile_info {
-  QString terrain;
-  QString resource;
-  QStringList extras;
-  QStringList nuisances;
-};
-
-struct tile_info tile_get_info(const struct tile *ptile);

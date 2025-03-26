@@ -782,23 +782,21 @@ static bool tile_info_pollution(QString &buf, QString pollution, bool prevp,
 }
 
 /**
-   Return a tile_info struct containing information about ptile.
+   Construct a tile_info struct containing information about ptile.
  */
-struct tile_info tile_get_info(const struct tile *ptile)
+tile_info::tile_info(const struct tile *ptile)
 {
-  struct tile_info info;
-
-  info.terrain = QString(terrain_name_translation(tile_terrain(ptile)));
+  terrain = QString(terrain_name_translation(tile_terrain(ptile)));
 
   if (tile_resource_is_valid(ptile)) {
-    info.resource = QString(extra_name_translation(ptile->resource));
+    resource = QString(extra_name_translation(ptile->resource));
   }
 
   extra_type_iterate(pextra)
   {
     if (pextra->category == ECAT_NATURAL
         && tile_has_visible_extra(ptile, pextra)) {
-      info.extras.append(QString(extra_name_translation(pextra)));
+      extras.append(QString(extra_name_translation(pextra)));
     }
   }
   extra_type_iterate_end;
@@ -807,12 +805,10 @@ struct tile_info tile_get_info(const struct tile *ptile)
   {
     if (pextra->category == ECAT_NUISANCE
         && tile_has_visible_extra(ptile, pextra)) {
-      info.nuisances.append(QString(extra_name_translation(pextra)));
+      nuisances.append(QString(extra_name_translation(pextra)));
     }
   }
   extra_type_iterate_end;
-
-  return info;
 }
 
 /**
