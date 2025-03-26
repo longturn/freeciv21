@@ -190,7 +190,7 @@ const QString popup_info_text(struct tile *ptile, bool with_links)
   }
 
   {
-    struct tile_info info = tile_get_info(ptile);
+    struct tile_info info = tile_info(ptile);
     info.terrain = maybe_link(info.terrain, HELP_TERRAIN);
     if (!info.resource.isEmpty()) {
       info.resource = maybe_link(info.resource, HELP_EXTRA);
