@@ -165,13 +165,13 @@ const QString popup_info_text(struct tile *ptile, bool with_links)
   int tile_x, tile_y, nat_x, nat_y;
   bool first;
 
-  std::function<QString(QString name, help_page_type hpt)> maybe_link;
+  std::function<QString(const QString &name, help_page_type hpt)> maybe_link;
   if (with_links) {
-    maybe_link = [](QString name, help_page_type hpt) -> QString {
+    maybe_link = [](const QString &name, help_page_type hpt) -> QString {
       return create_help_link(name.toStdString().c_str(), hpt);
     };
   } else {
-    maybe_link = [](QString name, help_page_type _) -> QString {
+    maybe_link = [](const QString &name, help_page_type _) -> QString {
       return name;
     };
   }
