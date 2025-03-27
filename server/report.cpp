@@ -707,14 +707,6 @@ static int get_great_wonders(const struct player *pplayer)
 }
 
 /**
-   Technology output
- */
-static int get_techout(const struct player *pplayer)
-{
-  return pplayer->score.techout;
-}
-
-/**
    Literacy score calculated one way. See also get_literacy() to see
    alternative way.
  */
@@ -1502,45 +1494,38 @@ void log_civ_score_now()
 
   /* Add new tags only at end of this list. Maintaining the order of
    * old tags is critical. */
-  static const struct {
-    const char *name;
-    int (*get_value)(const struct player *);
-  } score_tags[] = {
-      {"pop", get_pop},
-      {"bnp", get_economics},
-      {"mfg", get_production},
-      {"cities", get_cities},
-      {"techs", get_techs},
-      {"munits", get_munits},
-      {"settlers", get_settlers}, // "original" tags end here
-
-      {"wonders", get_great_wonders},
-      {"techout", get_techout},
-      {"landarea", get_landarea},
-      {"settledarea", get_settledarea},
-      {"pollution", get_pollution},
-      {"literacy", get_literacy2},
-      {"spaceship", get_spaceship}, // new 1.8.2 tags end here
-
-      {"gold", get_gold},
-      {"taxrate", get_taxrate},
-      {"scirate", get_scirate},
-      {"luxrate", get_luxrate},
-      {"riots", get_riots},
-      {"happypop", get_happypop},
-      {"contentpop", get_contentpop},
-      {"unhappypop", get_unhappypop},
-      {"specialists", get_specialists},
-      {"gov", get_gov},
-      {"corruption", get_corruption}, // new 1.11.5 tags end here
-
-      {"score", get_total_score}, // New 2.1.10 tag end here.
-
-      {"unitsbuilt", get_units_built}, // New tags since 2.3.0.
-      {"unitskilled", get_units_killed},
-      {"unitslost", get_units_lost},
-
-      {"culture", get_culture} // New tag in 2.6.0.
+  static const std::array score_tags{
+      demographic("pop", get_pop, citizenunits_to_text, true),
+      demographic("bnp", get_economics, economics_to_text, true),
+      demographic("mfg", get_production, production_to_text, true),
+      demographic("cities", get_cities, cities_to_text, true),
+      demographic("techs", get_techs, nullptr, true),
+      demographic("munits", get_munits, mil_units_to_text, true),
+      demographic("settlers", get_settlers, mil_units_to_text, true),
+      demographic("wonders", get_great_wonders, wonders_to_text, true),
+      demographic("techout", get_research, science_to_text, true),
+      demographic("landarea", get_landarea, area_to_text, true),
+      demographic("settledarea", get_settledarea, area_to_text, true),
+      demographic("pollution", get_pollution, pollution_to_text, true),
+      demographic("literacy", get_literacy2, percent_to_text, true),
+      demographic("spaceship", get_spaceship, score_to_text, true),
+      demographic("gold", get_gold, income_to_text, true),
+      demographic("taxrate", get_taxrate, percent_to_text, true),
+      demographic("scirate", get_scirate, percent_to_text, true),
+      demographic("luxrate", get_luxrate, percent_to_text, true),
+      demographic("riots", get_riots, nullptr, false),
+      demographic("happypop", get_happypop, citizenunits_to_text, true),
+      demographic("contentpop", get_contentpop, citizenunits_to_text, true),
+      demographic("unhappypop", get_unhappypop, citizenunits_to_text, false),
+      demographic("specialists", get_specialists, citizenunits_to_text,
+                  true),
+      demographic("gov", get_gov, nullptr, true /* FIXME */),
+      demographic("corruption", get_corruption, economics_to_text, true),
+      demographic("score", get_total_score, score_to_text, true),
+      demographic("unitsbuilt", get_units_built, mil_units_to_text, true),
+      demographic("unitskilled", get_units_killed, mil_units_to_text, true),
+      demographic("unitslost", get_units_lost, score_to_text, true),
+      demographic("culture", get_culture, culture_to_text, true),
   };
 
   if (!game.server.scorelog) {
@@ -1587,8 +1572,8 @@ void log_civ_score_now()
                              "\n");
 
       fprintf(score_log->fp, "id %s\n", server.game_identifier);
-      for (i = 0; i < ARRAY_SIZE(score_tags); i++) {
-        fprintf(score_log->fp, "tag %d %s\n", i, score_tags[i].name);
+      for (const auto &demo : score_tags) {
+        fprintf(score_log->fp, "tag %d %s\n", i, demo.name());
       }
       break;
     case SL_APPEND:
@@ -1681,7 +1666,7 @@ void log_civ_score_now()
   }
   players_iterate_end;
 
-  for (i = 0; i < ARRAY_SIZE(score_tags); i++) {
+  for (const auto &demo : score_tags) {
     players_iterate(pplayer)
     {
       if (!GOOD_PLAYER(pplayer)
@@ -1690,7 +1675,7 @@ void log_civ_score_now()
       }
 
       fprintf(score_log->fp, "data %d %d %d %d\n", game.info.turn, i,
-              player_number(pplayer), score_tags[i].get_value(pplayer));
+              player_number(pplayer), demo.evaluate(pplayer));
     }
     players_iterate_end;
   }
