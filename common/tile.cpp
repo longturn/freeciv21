@@ -763,8 +763,8 @@ bool tile_apply_activity(struct tile *ptile, Activity_type_id act,
    Add one entry about pollution situation to buffer.
    Return if there has been any pollution (even prior calling this)
  */
-static bool tile_info_pollution(QString &buf, QString pollution, bool prevp,
-                                bool linebreak)
+static bool tile_info_pollution(QString &buf, const QString &pollution,
+                                bool prevp, bool linebreak)
 {
   if (!prevp) {
     if (linebreak) {
@@ -822,8 +822,8 @@ tile_info::tile_info(const struct tile *ptile)
      "Hills (Coals)"
      "Hills (Coals) [Pollution]"
  */
-const char *tile_get_info_text(const struct tile_info info,
-                               bool include_nuisances, int linebreaks)
+const char *tile_get_info_text(const tile_info &info, bool include_nuisances,
+                               int linebreaks)
 {
   bool pollution;
   bool lb = false;
