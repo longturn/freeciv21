@@ -168,7 +168,7 @@ const QString popup_info_text(struct tile *ptile, bool with_links)
   std::function<QString(const QString &name, help_page_type hpt)> maybe_link;
   if (with_links) {
     maybe_link = [](const QString &name, help_page_type hpt) -> QString {
-      return create_help_link(name.toStdString().c_str(), hpt);
+      return create_help_link(qUtf8Printable(name), hpt);
     };
   } else {
     maybe_link = [](const QString &name, help_page_type _) -> QString {
