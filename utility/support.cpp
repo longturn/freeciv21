@@ -4,12 +4,12 @@
 /**
   \file
   This module contains replacements for functions which are not
-  available on all platforms.  Where the functions are available
+  available on all platforms. Where the functions are available
   natively, these are (mostly) just wrappers.
 
   Notice the function names here are prefixed by, eg, "fc".  An
   alternative would be to use the "standard" function name, and
-  provide the implementation only if required.  However the method
+  provide the implementation only if required. However the method
   here has some advantages:
 
    - We can provide definite prototypes in support.h, rather than
@@ -19,7 +19,7 @@
    whether or not there is a _prototype_ for the function available.)
 
    - We don't have to include fc_config.h in support.h, but can instead
-   restrict it to this .c file.
+   restrict it to this .cpp file.
 
    - We can add some extra stuff to these functions if we want.
 
@@ -28,22 +28,16 @@
 
  */
 
+// generated
+#include <fc_config.h> // MSYS2 requires before 'self'
+
 // self
 #include "support.h"
-
-// generated
-#include <fc_config.h>
 
 // utility
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
-
-// Windows dependency
-#ifdef FREECIV_MSWINDOWS
-#include <process.h>
-#include <windows.h>
-#endif // FREECIV_MSWINDOWS
 
 // Qt
 #include <QFileInfo>
@@ -51,10 +45,18 @@
 #include <QString>
 #include <QThread>
 
+// dependency Windows
+#ifdef FREECIV_MSWINDOWS
+#include <process.h>
+#include <windows.h>
+#endif // FREECIV_MSWINDOWS
+#ifdef HAVE_STRINGS_H
+#include <strings.h>
+#endif
+
 // std
-#include <cerrno>
 #include <climits>
-#include <cmath>
+#include <cmath> // ceil()
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>

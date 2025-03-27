@@ -7,15 +7,15 @@
   original author: David Pfitzner <dwp@mso.anu.edu.au>
 
   This module implements an object which is useful for reading/parsing
-  a file in the registry format of registry.c.  It takes care of the
+  a file in the registry format of registry.cpp. It takes care of the
   low-level file-reading details, and provides functions to return
-  specific "tokens" from the file.  Probably this should really use
+  specific "tokens" from the file. Probably this should really use
   higher-level tools... (flex/lex bison/yacc?)
 
   When the user tries to read a token, we return a (const char*)
   pointing to some data if the token was found, or nullptr otherwise.
   The data pointed to should not be modified.  The retuned pointer
-  is valid _only_ until another inputfile is performed.  (So should
+  is valid _only_ until another inputfile is performed. (So should
   be used immediately, or fc_strdup-ed etc.)
 
   The tokens recognised are as follows:

@@ -5,11 +5,11 @@
  * \file
  * Technical details:
  *
- * - There are two encodings used by freeciv: the data encoding and the
- * system encoding.  The data encoding corresponds to all data files and the
- *  network protocal. It is always UTF-8.  The system may use any encoding it
+ * - There are two encodings used by freeciv21: the data encoding and the
+ *  system encoding. The data encoding corresponds to all data files and the
+ *  network protocal. It is always UTF-8. The system may use any encoding it
  *  likes, and a conversion from UTF-8 may be needed, for instance when
- *  printing to the terminal.  Thankfully, Qt abstracts much of this away for
+ *  printing to the terminal. Thankfully, Qt abstracts much of this away for
  *  us. Use QString whenever possible and avoid this header.
  *
  * - The local_encoding is the one supported on the command line, which is
@@ -19,7 +19,7 @@
  *
  * Practical details:
  *
- * - Translation files are not controlled by freeciv iconv.  The .po files
+ * - Translation files are not controlled by freeciv iconv. The .po files
  *  can be in any character set, as set at the top of the file.
  *
  * - All translatable texts should be American English ASCII. In the past,

@@ -10,8 +10,7 @@ class QString;
 #include <cinttypes>
 #include <cstdio>
 
-/**
- * Want to use GCC's __attribute__ keyword to check variadic
+/* Want to use GCC's __attribute__ keyword to check variadic
  * parameters to printf-like functions, without upsetting other
  * compilers: put any required defines magic here.
  * If other compilers have something equivalent, could also

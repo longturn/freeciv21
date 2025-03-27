@@ -22,11 +22,11 @@
        *include "filename"
   includes the named file at that point.  (The '*' must be the
   first character on the line.) The file is found by looking in
-  FREECIV_DATA_PATH.  Non-infinite recursive includes are allowed.
+  FREECIV_DATA_PATH. Non-infinite recursive includes are allowed.
 
   - A line with "[name]" labels the start of a section with
   that name; one of these must be the first non-comment line in
-  the file.  Any spaces within the brackets are included in the
+  the file. Any spaces within the brackets are included in the
   name, but this feature (?) should probably not be used...
 
   - Within a section, lines have one of the following forms:
@@ -75,10 +75,10 @@
       foo,2 = "x"
   As in the example, in principle you can mix integers and strings,
   but the calling program will probably require elements to be the
-  same type.   Note that the first element of a vector is not "foo,0",
+  same type. Note that the first element of a vector is not "foo,0",
   in order that the name of the first element is the same whether or
   not there are subsequent elements.  However as a convenience, if
-  you try to lookup "foo,0" then you get back "foo".  (So you should
+  you try to lookup "foo,0" then you get back "foo". (So you should
   never have "foo,0" as a real name in the datafile.)
 
   - Tabular format:  The lines:
@@ -99,12 +99,12 @@
       foo2.bax,1 = 33
       foo2.bax,2 = 11
   The first line specifies the base name and the column names, and the
-  subsequent lines have data.  Again it is possible to mix string and
+  subsequent lines have data. Again it is possible to mix string and
   integer values in a column, and have either more or less values
   in a row than there are column headings, but the code which uses
   this information (via the registry) may set more stringent conditions.
   If a row has more entries than column headings, the last column is
-  treated as a vector (as above).  You can optionally put a newline
+  treated as a vector (as above). You can optionally put a newline
   after '=' and/or after '{'.
 
   The equivalence above between the new and old formats is fairly
@@ -116,7 +116,7 @@
   There is a limited ability to save data in tabular:
   So long as the section_file is constructed in an expected way,
   tabular data (with no missing or extra values) can be saved
-  in tabular form.  (See section_file_save().)
+  in tabular form. (See section_file_save().)
 
   - Multiline vectors: if the last non-comment non-whitespace
   character in a line is a comma, the line is considered to
