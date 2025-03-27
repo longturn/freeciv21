@@ -14,15 +14,6 @@
 #include "rand.h"
 #include "support.h"
 
-// dependency
-#ifdef FREECIV_ENABLE_NLS
-
-/* Include libintl.h only if nls enabled.
- * It defines some wrapper macros that
- * we don't want defined when nls is disabled. */
-#include <libintl.h>
-#endif
-
 // Qt
 #include <QChar>
 #include <QCoreApplication>
@@ -34,6 +25,15 @@
 #include <QString>
 #include <QtCore>
 #include <QtGlobal>
+
+// i18n dependency
+#ifdef FREECIV_ENABLE_NLS
+
+/* Include libintl.h only if nls enabled.
+ * It defines some wrapper macros that
+ * we don't want defined when nls is disabled. */
+#include <libintl.h>
+#endif
 
 // windows dependencies
 #ifdef FREECIV_MSWINDOWS

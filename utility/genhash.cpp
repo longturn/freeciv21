@@ -5,8 +5,8 @@
    \file
    A general-purpose generic hash table implementation.
 
-   Based on implementation previous included in registry.c, but separated
-   out so that can be used more generally.  Maybe we should just use glib?
+   Based on implementation previous included in registry.cpp, but separated
+   out so that can be used more generally. Maybe we should just use glib?
 
       Original author:  David Pfitzner  dwp@mso.anu.edu.au
 

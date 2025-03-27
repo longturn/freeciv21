@@ -11,7 +11,7 @@
 #include "fcintl.h"
 
 // Windows dependency
-#ifdef Q_OS_WIN
+#ifdef FREECIV_MSWINDOWS
 #include <windows.h>
 #endif
 
