@@ -629,7 +629,7 @@ info_tile::info_tile(struct tile *ptile, QWidget *parent) : QMenu(parent)
   label->setWordWrap(true);
 
   connect(label, &QLabel::linkActivated, follow_help_link);
-  connect(label, &QLabel::linkActivated, this, &info_tile::hide);
+  connect(label, &QLabel::linkActivated, this, &info_tile::close);
 
   // Setup map deco
   mapdeco_set_crosshair(ptile, true);
