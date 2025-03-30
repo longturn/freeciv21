@@ -10,7 +10,8 @@
 **************************************************************************/
 #pragma once
 
-#include "support.h" // bool type
+// common
+#include "fc_types.h"
 
 struct connection;
 struct conn_list;
@@ -36,6 +37,7 @@ void send_current_history_report(struct conn_list *dest);
 void report_wonders_of_the_world(struct conn_list *dest);
 void report_top_five_cities(struct conn_list *dest);
 bool is_valid_demography(const char *demography, int *error);
+void update_demographics(struct player *pplayer);
 void report_demographics(struct connection *pconn);
 void report_achievements(struct connection *pconn);
 void report_final_scores(struct conn_list *dest);

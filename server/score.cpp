@@ -18,6 +18,7 @@
 // utility
 #include "bitvector.h"
 #include "log.h"
+#include "report.h"
 #include "shared.h"
 
 // common
@@ -364,6 +365,8 @@ void calc_civ_score(struct player *pplayer)
   pplayer->score.spaceship = pplayer->spaceship.state;
 
   pplayer->score.game = get_civ_score(pplayer);
+
+  update_demographics(pplayer);
 }
 
 /**
