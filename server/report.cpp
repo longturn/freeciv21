@@ -1157,6 +1157,20 @@ bool is_valid_demography(const char *demography, int *error)
 }
 
 /**
+ * Updates cached demographics values.
+ *
+ * All values are stored, even the ones that are not enabled. This simplifies
+ * the implementation and allows toggling demographics during the game.
+ */
+void update_demographics(struct player *pplayer)
+{
+  pplayer->score.demographics.clear();
+  for (const auto &[_, demo] : rowtable) {
+    pplayer->score.demographics[demo.name()] = demo.evaluate(pplayer);
+  }
+}
+
+/**
    Send demographics report; what gets reported depends on value of
    demographics server option.
  */
