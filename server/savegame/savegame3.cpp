@@ -4182,6 +4182,25 @@ static void sg_load_player_main(struct loaddata *loading, struct player *plr)
   plr->score.game =
       secfile_lookup_int_default(loading->file, 0, "score%d.total", plrno);
 
+  // Load demographics
+  for (int i = 0;; ++i) {
+    auto name = secfile_lookup_str(loading->file,
+                                   "score%d.demographics%d.name", plrno, i);
+    if (!name) {
+      // Reached the end.
+      break;
+    }
+
+    int value;
+    if (!secfile_lookup_int(loading->file, &value,
+                            "score%d.demographics%d.value", plrno, i)) {
+      qWarning("Missing value for demographic %s (player %d)", name, plrno);
+      continue;
+    }
+
+    plr->score.demographics[name] = value;
+  }
+
   // Load space ship data.
   {
     struct player_spaceship *ship = &plr->spaceship;
@@ -4515,6 +4534,17 @@ static void sg_save_player_main(struct savedata *saving, struct player *plr)
   secfile_insert_int(saving->file, plr->score.culture, "score%d.culture",
                      plrno);
   secfile_insert_int(saving->file, plr->score.game, "score%d.total", plrno);
+
+  { // Save demographics
+    int i = 0;
+    for (const auto &[name, value] : plr->score.demographics) {
+      secfile_insert_str(saving->file, name.c_str(),
+                         "score%d.demographics%d.name", plrno, i);
+      secfile_insert_int(saving->file, value, "score%d.demographics%d.value",
+                         plrno, i);
+      i++;
+    }
+  }
 
   // Save space ship status.
   secfile_insert_int(saving->file, ship->state, "player%d.spaceship.state",

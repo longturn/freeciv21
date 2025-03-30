@@ -107,6 +107,7 @@ struct player_score {
   int game; // Total score you get in player dialog.
 
   /// Cached demographic values, indexed by their untranslated name.
+  /// \note Can be incomplete when loading from old saves.
   std::map<std::string, int> demographics;
 };
 
