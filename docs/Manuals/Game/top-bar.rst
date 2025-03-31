@@ -49,14 +49,11 @@ two-finger gestures on your mouse/trackpad to swipe up, down, left, and right.
 
 One other feature of the :guilabel:`Map View` is the ability to middle-click on a unit (via the
 :ref:`Popup Tile Info Shortcut <shortcut-popup-tile-info>`). After a middle-click a popup widget will appear
-giving you some information about the tile. :numref:`Unit Information`, gives an example of a :unit:`Howitzer`
-on Plains. The popup information widget gives a great deal of information about the coordinates of the tile,
+giving you some information about the tile. :numref:`Unit Information`, gives an example of :unit:`Horsemen`
+on Hills. The popup information widget gives a great deal of information about the coordinates of the tile,
 terrain type, and infrastructure improvements made to the tile. If a unit is on the tile, as in our example,
-you are also given details about the unit.
-
-If you move the mouse pointer over the popup while the :ref:`Popup Tile Info Shortcut <shortcut-popup-tile-info>`
-is active, the popup will stay open after you release the shortcut, as long as the mouse remains over the
-popup. That allows you to click the links in the popup, that open the corresponding help entry.
+you are also given details about the unit. Some information is displayed as a link which, when clicked, opens
+the corresponding help entry.
 
 .. _Unit Information:
 .. figure:: /_static/images/gui-elements/unit-info.png
