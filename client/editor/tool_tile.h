@@ -5,6 +5,8 @@
 
 // Qt
 class QWidget;
+class QString;
+class QPixmap;
 
 #include "ui_tool_tile.h"
 /*
@@ -18,6 +20,13 @@ private:
 
   void select_tile();
   void set_default_values();
+
+  const QString get_tile_road_name(struct tile *ptile);
+  const QString get_tile_infra_name(struct tile *ptile);
+  const QString get_tile_nuisance_name(struct tile *ptile);
+  const QString get_tile_hut_name(struct tile *ptile);
+  const QString get_tile_base_name(struct tile *ptile);
+  QPixmap get_tile_sprites(struct tile *ptile, struct terrain *terrain);
 
 public:
   editor_tool_tile(QWidget *parent = nullptr);

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>250</width>
+    <width>300</width>
     <height>750</height>
    </rect>
   </property>
@@ -36,25 +36,31 @@
    <item row="4" column="0" colspan="2">
     <layout class="QVBoxLayout" name="vlayout_tools">
      <property name="spacing">
-      <number>5</number>
+      <number>0</number>
      </property>
      <property name="sizeConstraint">
-      <enum>QLayout::SetDefaultConstraint</enum>
+      <enum>QLayout::SetNoConstraint</enum>
      </property>
      <property name="leftMargin">
-      <number>5</number>
+      <number>2</number>
      </property>
      <property name="topMargin">
-      <number>5</number>
+      <number>2</number>
      </property>
      <property name="rightMargin">
-      <number>5</number>
+      <number>2</number>
      </property>
      <property name="bottomMargin">
-      <number>5</number>
+      <number>2</number>
      </property>
      <item>
       <widget class="QStackedWidget" name="sw_tools">
+       <property name="minimumSize">
+        <size>
+         <width>260</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="autoFillBackground">
         <bool>false</bool>
        </property>

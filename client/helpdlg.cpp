@@ -41,9 +41,6 @@
 #define REQ_LABEL_NEVER _("(Never)")
 #define REQ_LABEL_NONE _("?tech:None")
 static help_dialog *help_dlg = nullptr;
-QPixmap *terrain_canvas(struct terrain *terrain,
-                        const struct extra_type *resource = nullptr,
-                        enum extra_cause cause = EC_COUNT);
 
 extern QList<const struct help_item *> *help_nodes;
 
@@ -1168,50 +1165,6 @@ void help_widget::set_topic_tech(const help_item *topic, const char *title)
   } else {
     set_topic_other(topic, title);
   }
-}
-
-/**
-   Creates a terrain image on the given canvas.
- */
-QPixmap *terrain_canvas(struct terrain *terrain,
-                        const struct extra_type *resource,
-                        enum extra_cause cause)
-{
-  QPixmap *canvas;
-  int canvas_y, i, width, height;
-  struct extra_type *pextra;
-
-  width = tileset_full_tile_width(tileset);
-  height = tileset_full_tile_height(tileset);
-  canvas_y = height - tileset_tile_height(tileset);
-
-  canvas = new QPixmap(width, height);
-  canvas->fill(Qt::transparent);
-  for (i = 0; i < 3; ++i) {
-    auto sprites =
-        fill_basic_terrain_layer_sprite_array(tileset, i, terrain);
-    put_drawn_sprites(canvas, QPoint(0, canvas_y), sprites, false);
-  }
-
-  pextra = nullptr;
-  if (cause != EC_COUNT) {
-    extra_type_by_cause_iterate(cause, e)
-    {
-      pextra = e;
-      break;
-    }
-    extra_type_by_cause_iterate_end;
-    fc_assert_ret_val(pextra, nullptr);
-    auto sprites = fill_basic_extra_sprite_array(tileset, pextra);
-    put_drawn_sprites(canvas, QPoint(0, canvas_y), sprites, false);
-  }
-
-  if (resource != nullptr) {
-    auto sprites = fill_basic_extra_sprite_array(tileset, resource);
-    put_drawn_sprites(canvas, QPoint(0, canvas_y), sprites, false);
-  }
-
-  return canvas;
 }
 
 // helper for create_terrain_widget
