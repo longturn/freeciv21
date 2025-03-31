@@ -1062,10 +1062,11 @@ static void dem_line_item(char *outptr, size_t out_size,
                           struct player *pplayer, const demographic &demo,
                           bv_cols selcols)
 {
-  int value = -1;
-  if (!pplayer || BV_ISSET(selcols, DEM_COL_QUANTITY)
-      || BV_ISSET(selcols, DEM_COL_RANK)
-      || BV_ISSET(selcols, DEM_COL_BEST)) {
+  int value = 0;
+  if (pplayer
+      && (BV_ISSET(selcols, DEM_COL_QUANTITY)
+          || BV_ISSET(selcols, DEM_COL_RANK)
+          || BV_ISSET(selcols, DEM_COL_BEST))) {
     if (pplayer->score.demographics.count(demo.name()) > 0) {
       value = pplayer->score.demographics[demo.name()];
     } else {
