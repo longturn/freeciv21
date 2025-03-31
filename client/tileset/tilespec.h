@@ -137,6 +137,9 @@ tileset_get_layers(const struct tileset *t);
 // Gfx support
 QPixmap *load_sprite(struct tileset *t, const QStringList &possible_names,
                      bool required, bool verbose = true);
+QPixmap *terrain_canvas(struct terrain *terrain,
+                        const struct extra_type *resource = nullptr,
+                        enum extra_cause cause = EC_COUNT);
 
 std::vector<drawn_sprite>
 fill_basic_terrain_layer_sprite_array(struct tileset *t, int layer,

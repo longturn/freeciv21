@@ -200,7 +200,7 @@ void map_view::shortcut_pressed(shortcut_id id)
   switch (id) {
   case SC_SELECT_BUTTON:
     // Handle tile clicking in the editor.
-    if (editor_is_active()) {
+    if (editor_is_active() && hover_state == HOVER_EDIT_TILE) {
       queen()->map_editor_wdg->tile_selected(ptile);
       return;
     }

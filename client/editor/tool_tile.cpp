@@ -4,14 +4,20 @@
 // self
 #include "editor/tool_tile.h"
 
+// common
+#include "nation.h"
+
 // client
-#include "editor.h"         //editor_tool_tile::update_ett
-#include "fcintl.h"         //editor_tool_tile::editor_tool_tile
-#include "fonts.h"          //editor_tool_tile::editor_tool_tile
-#include "mapctrl_common.h" //editor_tool_tile::select_tile
+#include "editor.h"
+#include "fcintl.h"
+#include "fonts.h"
+#include "mapctrl_common.h"
+#include "tileset/tilespec.h"
+#include "views/view_map_common.h"
 
 // Qt
 #include <QPainter>
+#include <QPoint>
 
 /**
  *  \class editor_tool_tile
@@ -56,14 +62,59 @@ void editor_tool_tile::set_default_values()
   // Set default values and the font we want.
   ui.value_continent->setText(_("-"));
   ui.value_continent->setFont(value_font);
+  ui.value_continent->setAlignment(Qt::AlignLeft);
+
+  ui.value_owner->setText(_("-"));
+  ui.value_owner->setFont(value_font);
+  ui.value_owner->setAlignment(Qt::AlignLeft);
+
   ui.value_x->setText(_("-"));
   ui.value_x->setFont(value_font);
+  ui.value_x->setAlignment(Qt::AlignLeft);
+
   ui.value_y->setText(_("-"));
   ui.value_y->setFont(value_font);
+  ui.value_y->setAlignment(Qt::AlignLeft);
+
   ui.value_nat_x->setText(_("-"));
   ui.value_nat_x->setFont(value_font);
+  ui.value_nat_x->setAlignment(Qt::AlignLeft);
+
   ui.value_nat_y->setText(_("-"));
   ui.value_nat_y->setFont(value_font);
+  ui.value_nat_y->setAlignment(Qt::AlignLeft);
+
+  ui.value_terrain->setText(_("-"));
+  ui.value_terrain->setFont(value_font);
+  ui.value_terrain->setAlignment(Qt::AlignLeft);
+
+  ui.pixmap_terrain->setText(_("-"));
+  ui.pixmap_terrain->setFont(value_font);
+  ui.pixmap_terrain->setAlignment(Qt::AlignLeft);
+
+  ui.value_resource->setText(_("-"));
+  ui.value_resource->setFont(value_font);
+  ui.value_resource->setAlignment(Qt::AlignLeft);
+
+  ui.value_road->setText(_("-"));
+  ui.value_road->setFont(value_font);
+  ui.value_road->setAlignment(Qt::AlignLeft);
+
+  ui.value_infra->setText(_("-"));
+  ui.value_infra->setFont(value_font);
+  ui.value_infra->setAlignment(Qt::AlignLeft);
+
+  ui.value_base->setText(_("-"));
+  ui.value_base->setFont(value_font);
+  ui.value_base->setAlignment(Qt::AlignLeft);
+
+  ui.value_hut->setText(_("-"));
+  ui.value_hut->setFont(value_font);
+  ui.value_hut->setAlignment(Qt::AlignLeft);
+
+  ui.value_nuisance->setText(_("-"));
+  ui.value_nuisance->setFont(value_font);
+  ui.value_nuisance->setAlignment(Qt::AlignLeft);
 }
 
 /**
@@ -86,17 +137,224 @@ void editor_tool_tile::close_tool()
 }
 
 /**
- * \brief Update the editor tool widget UI elements
+ * \brief Update the editor tool widget UI elements based on the tile
+ * selected
  */
 void editor_tool_tile::update_ett(struct tile *ptile)
 {
-  if (ptile) {
+  if (ptile != nullptr) {
+    clear_hover_state();
     editor_set_current_tile(ptile);
+
+    // tile terrain w/ image
+    ui.value_terrain->setText(
+        QString(terrain_name_translation(tile_terrain(ptile))));
+    struct terrain *pterrain = terrain_by_translated_name(
+        terrain_name_translation(tile_terrain(ptile)));
+    QPixmap pm = get_tile_sprites(ptile, pterrain);
+    ui.pixmap_terrain->setPixmap(pm);
+
+    // tile continent number
     ui.value_continent->setNum(ptile->continent);
+
+    // tile owner
+    struct player *owner = tile_owner(ptile);
+    if (owner != nullptr) {
+      ui.value_owner->setText(nation_adjective_for_player(owner));
+    } else {
+      ui.value_owner->setText(_("None"));
+    }
+
+    // tile coordinates
     ui.value_x->setNum(index_to_map_pos_x(ptile->index));
     ui.value_y->setNum(index_to_map_pos_y(ptile->index));
     ui.value_nat_x->setNum(index_to_native_pos_x(ptile->index));
     ui.value_nat_y->setNum(index_to_native_pos_y(ptile->index));
+
+    // tile resource
+    if (ptile->resource) {
+      struct extra_type *res = ptile->resource;
+      ui.value_resource->setText(extra_name_translation(res));
+    } else {
+      ui.value_resource->setText(_("None"));
+    }
+
+    // tile road (highest level)
+    ui.value_road->setText(get_tile_road_name(ptile));
+    // tile infrastructure
+    ui.value_infra->setText(get_tile_infra_name(ptile));
+    // tile base
+    ui.value_base->setText(get_tile_base_name(ptile));
+    // tile hut
+    ui.value_hut->setText(get_tile_hut_name(ptile));
+    // tile nuisance (pollution, fallout)
+    ui.value_nuisance->setText(get_tile_nuisance_name(ptile));
   }
-  clear_hover_state();
+}
+
+/**
+ * \brief Return a string of the final road on a tile
+ */
+const QString editor_tool_tile::get_tile_road_name(struct tile *ptile)
+{
+  QString sroad = nullptr;
+  extra_type_by_cause_iterate(EC_ROAD, pextra)
+  {
+    if (tile_has_extra(ptile, pextra)) {
+      sroad = extra_name_translation(pextra);
+    }
+  }
+  extra_type_by_cause_iterate_end;
+
+  if (sroad != nullptr) {
+    return sroad;
+  } else {
+    return "None";
+  }
+}
+
+/**
+ * \brief Return a strong of the added infrastructure on a tile
+ */
+const QString editor_tool_tile::get_tile_infra_name(struct tile *ptile)
+{
+  QString sinfra = nullptr;
+  extra_type_by_cause_iterate(EC_IRRIGATION, pextra)
+  {
+    if (tile_has_extra(ptile, pextra)) {
+      sinfra = extra_name_translation(pextra);
+    }
+  }
+  extra_type_by_cause_iterate_end;
+
+  extra_type_by_cause_iterate(EC_MINE, pextra)
+  {
+    if (tile_has_extra(ptile, pextra)) {
+      sinfra + extra_name_translation(pextra);
+    }
+  }
+  extra_type_by_cause_iterate_end;
+
+  if (sinfra != nullptr) {
+    return sinfra;
+  } else {
+    return "None";
+  }
+}
+
+/**
+ * \brief Return a strong of the any nuisances on a tile
+ */
+const QString editor_tool_tile::get_tile_nuisance_name(struct tile *ptile)
+{
+  QString snuisance = nullptr;
+  extra_type_by_cause_iterate(EC_POLLUTION, pextra)
+  {
+    if (tile_has_extra(ptile, pextra)) {
+      snuisance = extra_name_translation(pextra);
+    }
+  }
+  extra_type_by_cause_iterate_end;
+
+  extra_type_by_cause_iterate(EC_FALLOUT, pextra)
+  {
+    if (tile_has_extra(ptile, pextra)) {
+      snuisance + extra_name_translation(pextra);
+    }
+  }
+  extra_type_by_cause_iterate_end;
+
+  if (snuisance != nullptr) {
+    return snuisance;
+  } else {
+    return "None";
+  }
+}
+
+/**
+ * \brief Return a string of any huts on a tile
+ */
+const QString editor_tool_tile::get_tile_hut_name(struct tile *ptile)
+{
+  QString shut = nullptr;
+  extra_type_by_cause_iterate(EC_HUT, pextra)
+  {
+    if (tile_has_extra(ptile, pextra)) {
+      shut + extra_name_translation(pextra);
+    }
+  }
+  extra_type_by_cause_iterate_end;
+
+  if (shut != nullptr) {
+    return shut;
+  } else {
+    return "None";
+  }
+}
+
+/**
+ * \brief Return a string of any bases on a tile
+ */
+const QString editor_tool_tile::get_tile_base_name(struct tile *ptile)
+{
+  QString sbase = nullptr;
+  extra_type_by_cause_iterate(EC_BASE, pextra)
+  {
+    if (tile_has_extra(ptile, pextra)) {
+      sbase + extra_name_translation(pextra);
+    }
+  }
+  extra_type_by_cause_iterate_end;
+
+  if (sbase != nullptr) {
+    return sbase;
+  } else {
+    return "None";
+  }
+}
+
+/**
+ * \brief Return a pixmap of the selected tile.
+ * TODO: Add more layers over time, right now we show the base tile and any
+ * resource We don't show any other infrastructure extras, such as
+ * roads/rivers, mines, irrigation, bases, or pollution.
+ */
+QPixmap editor_tool_tile::get_tile_sprites(struct tile *ptile,
+                                           struct terrain *terrain)
+{
+  int width = tileset_full_tile_width(tileset);
+  int height = tileset_full_tile_height(tileset);
+  int canvas_y = height - tileset_tile_height(tileset);
+
+  QPixmap *tile_pixmap;
+  tile_pixmap = new QPixmap(width, height);
+  tile_pixmap->fill(Qt::transparent);
+
+  // Get base level of sprites for the terrain. Does not give us specials,
+  // roads, etc.
+  for (int i = 0; i < 3; ++i) {
+    auto sprites =
+        fill_basic_terrain_layer_sprite_array(tileset, i, terrain);
+    put_drawn_sprites(tile_pixmap, QPoint(0, canvas_y), sprites, false);
+  }
+
+  // Add any resource on the tile
+  // FIXME: fill_basic_extra_sprite_array() does not work with all EC_* cause
+  // codes.
+  if (terrain->resources) {
+    struct extra_type *tres = nullptr;
+    extra_type_by_cause_iterate(EC_RESOURCE, pextra)
+    {
+      if (tile_has_extra(ptile, pextra)) {
+        tres = pextra;
+        break;
+      }
+    }
+    extra_type_by_cause_iterate_end;
+    if (tres != nullptr) {
+      auto sprites = fill_basic_extra_sprite_array(tileset, tres);
+      put_drawn_sprites(tile_pixmap, QPoint(0, canvas_y), sprites, false);
+    }
+  }
+  return *tile_pixmap;
 }
