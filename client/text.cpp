@@ -35,7 +35,6 @@
 #include "map.h"
 #include "movement.h"
 #include "research.h"
-#include "tile.h"
 #include "traderoutes.h"
 #include "unitlist.h"
 
@@ -369,10 +368,21 @@ const QString popup_info_text(struct tile *ptile, bool with_links)
     }
   }
   {
-    const char *infratext = get_infrastructure_text(ptile->extras);
+    auto infras = get_infrastructure_texts(ptile->extras);
+    if (!infras.isEmpty()) {
+      str += QString(_("Infrastructure: "));
 
-    if (*infratext != '\0') {
-      str += QString(_("Infrastructure: %1")).arg(infratext) + qbr();
+      bool first = true;
+      for (auto &infra : infras) {
+        if (first) {
+          first = false;
+        } else {
+          str += QStringLiteral("/");
+        }
+        str += maybe_link(infra, HELP_EXTRA);
+      }
+
+      str += qbr();
     }
   }
   activity_text = concat_tile_activity_text(ptile);

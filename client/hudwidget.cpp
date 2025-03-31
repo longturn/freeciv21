@@ -1309,8 +1309,8 @@ QString popup_terrain_info(struct tile *ptile)
   ret =
       ret
       + QString(_("Food/Prod/Trade: %1\n")).arg(get_tile_output_text(ptile));
-  t = get_infrastructure_text(ptile->extras);
-  if (t != QLatin1String("")) {
+  t = get_infrastructure_texts(ptile->extras).join(QStringLiteral("/"));
+  if (!t.isEmpty()) {
     ret = ret + QString(_("Infrastructure: %1\n")).arg(t);
   }
   ret = ret + QString(_("Defense bonus: %1%\n")).arg(terr->defense_bonus);
