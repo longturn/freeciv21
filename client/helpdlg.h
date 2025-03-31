@@ -134,6 +134,8 @@ public:
 };
 
 QString create_help_link(const char *name, help_page_type hpt);
+QString create_help_link(const char *name, const char *entry,
+                         help_page_type hpt);
 void follow_help_link(const QString &link);
 void update_help_fonts();
 void popup_help_dialog_typed(const char *item, help_page_type htype);

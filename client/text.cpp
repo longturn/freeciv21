@@ -114,26 +114,27 @@ static inline void get_full_username(char *buf, int buflen,
    Fill the buffer with the player's nation name (in adjective form) and
    optionally add the player's team name.
  */
-static inline void get_full_nation(char *buf, int buflen,
-                                   const struct player *pplayer)
+static inline QString get_full_nation(const struct player *pplayer,
+                                      bool with_link)
 {
-  if (!buf || buflen < 1) {
-    return;
-  }
+  QString s;
 
   if (!pplayer) {
-    buf[0] = '\0';
-    return;
+    return s;
   }
 
-  if (pplayer->team) {
+  if (with_link) {
     // TRANS: "<nation adjective>, team <team name>"
-    fc_snprintf(buf, buflen, _("%s, team %s"),
-                nation_adjective_for_player(pplayer),
-                team_name_translation(pplayer->team));
+    s = QString(_("%1, team %2"))
+            .arg(create_help_link(nation_adjective_for_player(pplayer),
+                                  nation_plural_for_player(pplayer),
+                                  HELP_NATIONS))
+            .arg(team_name_translation(pplayer->team));
   } else {
-    fc_strlcpy(buf, nation_adjective_for_player(pplayer), buflen);
+    s = QString(nation_adjective_for_player(pplayer));
   }
+
+  return s;
 }
 
 /**
@@ -160,7 +161,6 @@ const QString popup_info_text(struct tile *ptile, bool with_links)
       Q_("?city:Friendly(team)")};
   QString str;
   char username[MAX_LEN_NAME + 32];
-  char nation[2 * MAX_LEN_NAME + 32];
   int tile_x, tile_y, nat_x, nat_y;
   bool first;
 
@@ -225,7 +225,7 @@ const QString popup_info_text(struct tile *ptile, bool with_links)
     struct player *owner = tile_owner(ptile);
 
     get_full_username(username, sizeof(username), owner);
-    get_full_nation(nation, sizeof(nation), owner);
+    QString nation = get_full_nation(owner, with_links);
 
     if (nullptr != client.conn.playing && owner == client.conn.playing) {
       str += QString(_("Our territory")) + qbr();
@@ -276,7 +276,7 @@ const QString popup_info_text(struct tile *ptile, bool with_links)
     improvements.reserve(improvement_count());
 
     get_full_username(username, sizeof(username), owner);
-    get_full_nation(nation, sizeof(nation), owner);
+    QString nation = get_full_nation(owner, with_links);
 
     if (nullptr == client.conn.playing || owner == client.conn.playing) {
       // TRANS: "City: <city name> | <username> (<nation + team>)"
@@ -395,7 +395,7 @@ const QString popup_info_text(struct tile *ptile, bool with_links)
     const struct unit_type *ptype = unit_type_get(punit);
 
     get_full_username(username, sizeof(username), owner);
-    get_full_nation(nation, sizeof(nation), owner);
+    QString nation = get_full_nation(owner, with_links);
 
     time_t dt = time(nullptr) - punit->action_timestamp;
     if (dt < 0 && !can_unit_move_now(punit)) {
