@@ -99,9 +99,21 @@ void update_help_fonts()
  */
 QString create_help_link(const char *name, help_page_type hpt)
 {
+  return create_help_link(name, name, hpt);
+}
+
+/**
+   Create a link into the help system for the given entry and help page type
+   hpt. The name is the name of the link as shown to the user.
+
+   The link is intended to be handled by the follow_help_link function.
+ */
+QString create_help_link(const char *name, const char *entry,
+                         help_page_type hpt)
+{
   QString d = QString(name).toHtmlEscaped().replace(
       QStringLiteral(" "), QStringLiteral("&nbsp;"));
-  QString a = QString::fromUtf8(QString(name).toUtf8().toPercentEncoding());
+  QString a = QString::fromUtf8(QString(entry).toUtf8().toPercentEncoding());
   return "<a href=" + QString::number(hpt) + "," + a + ">" + d + "</a>";
 }
 
