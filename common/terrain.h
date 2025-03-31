@@ -294,7 +294,7 @@ struct resource_type *resource_type_init(struct extra_type *pextra);
 void resource_types_free();
 
 // Special helper functions
-const char *get_infrastructure_text(bv_extras extras);
+const QStringList get_infrastructure_texts(bv_extras extras);
 struct extra_type *get_preferred_pillage(bv_extras extras);
 
 int terrain_extra_build_time(const struct terrain *pterrain,

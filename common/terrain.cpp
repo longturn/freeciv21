@@ -386,18 +386,12 @@ int count_terrain_flag_near_tile(const struct tile *ptile,
 }
 
 /**
-   Return a (static) string with extra(s) name(s):
-     eg: "Mine"
-     eg: "Road/Farmland"
-   This only includes "infrastructure", i.e., man-made extras.
+   Filters infrastructure from extras and returns the list of infrastructure
+   names.
  */
-const char *get_infrastructure_text(bv_extras extras)
+const QStringList get_infrastructure_texts(bv_extras extras)
 {
-  static char s[256];
-  char *p;
-  int len;
-
-  s[0] = '\0';
+  QStringList l;
 
   extra_type_iterate(pextra)
   {
@@ -417,19 +411,13 @@ const char *get_infrastructure_text(bv_extras extras)
       extra_type_iterate_end;
 
       if (!hidden) {
-        cat_snprintf(s, sizeof(s), "%s/", extra_name_translation(pextra));
+        l.append(QString(extra_name_translation(pextra)));
       }
     }
   }
   extra_type_iterate_end;
 
-  len = qstrlen(s);
-  p = s + len - 1;
-  if (len > 0 && *p == '/') {
-    *p = '\0';
-  }
-
-  return s;
+  return l;
 }
 
 /**
