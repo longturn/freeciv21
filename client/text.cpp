@@ -341,7 +341,8 @@ const QString popup_info_text(struct tile *ptile, bool with_links)
     {
       if (is_improvement_visible(pimprove)
           && city_has_building(pcity, pimprove)) {
-        improvements.append(improvement_name_translation(pimprove));
+        improvements.append(maybe_link(
+            improvement_name_translation(pimprove), HELP_IMPROVEMENT));
       }
     }
     improvement_iterate_end;
