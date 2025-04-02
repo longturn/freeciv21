@@ -12,10 +12,12 @@
 // dependency
 #ifdef FREECIV_ENABLE_NLS
 
-/* Include libintl.h only if nls enabled.
+/**
+ * Include libintl.h only if nls enabled.
  * It defines some wrapper macros that
- * we don't want defined when nls is disabled. */
-#include <libintl.h>
+ * we don't want defined when nls is disabled.
+ */
+#include <libintl.h> // NOLINT(misc-include-cleaner)
 
 // MSYS libintl redefines asprintf/vasprintf as macros, and this clashes with
 // QString::asprintf and QString::vasprintf.

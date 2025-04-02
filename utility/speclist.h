@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
+// utility
+#include "support.h"
+
 /**
  * speclists: "specific genlists", by dwp.
  * (A generalisation of previous city_list and unit_list stuff.)

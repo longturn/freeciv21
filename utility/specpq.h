@@ -1,6 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
+// utility
+#include "log.h"
+#include "support.h"
+
+// std
+#include <cstdlib>
+
 /**
  * specpqs: "specific priority queues".
  *

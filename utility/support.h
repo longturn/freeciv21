@@ -7,7 +7,7 @@
 class QString;
 
 // std
-#include <cinttypes>
+#include <cstdarg>
 #include <cstdio>
 
 /* Want to use GCC's __attribute__ keyword to check variadic
