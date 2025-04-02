@@ -1,15 +1,7 @@
 #!/usr/bin/env python3
 
-#                      Copyright (c) 1996-2021 Freeciv21 and Freeciv
-#     ,_,               contributors. This file is part of Freeciv21.
-#    (0_0)_----------_           Freeciv21 is free software: you can
-#   (_____)           |~'  redistribute it and/or modify it under the
-#   `-"-"-'           /      terms of the GNU  General Public License
-#     `|__|~-----~|__|   as published by the Free Software Foundation,
-#                                   either version 3 of the  License,
-#                  or (at your option) any later version. You should
-#     have received  a copy of the GNU  General Public License along
-#          with Freeciv21. If not, see https://www.gnu.org/licenses/.
+# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
 # The maximum number of enumerators.
 max_enum_values=150
@@ -27,16 +19,8 @@ def make_header(file):
  *                       DO NOT CHANGE THIS FILE                           *
  **************************************************************************/
 
-/*                      Copyright (c) 1996-2021 Freeciv21 and Freeciv
-#     ,_,               contributors. This file is part of Freeciv21.
-#    (0_0)_----------_           Freeciv21 is free software: you can
-#   (_____)           |~'  redistribute it and/or modify it under the
-#   `-"-"-'           /      terms of the GNU  General Public License
-#     `|__|~-----~|__|   as published by the Free Software Foundation,
-#                                   either version 3 of the  License,
-#                  or (at your option) any later version. You should
-#     have received  a copy of the GNU  General Public License along
-#          with Freeciv21. If not, see https://www.gnu.org/licenses/.*/
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 ''')
 
 def make_documentation(file):
