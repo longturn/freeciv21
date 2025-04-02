@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
-// must be first
-
 // self
 #include "path_finding.h"
 
