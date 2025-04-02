@@ -7,7 +7,11 @@
 #include "registry_ini.h"
 #include "support.h"
 
+// Qt
 class QString;
+
+// std
+#include <cstddef>
 
 template <class Key, class T> class QMultiHash;
 

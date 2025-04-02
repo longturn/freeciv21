@@ -6,6 +6,10 @@
 // utility
 #include "support.h"
 
+// std
+#include <cstddef>
+#include <cstdio>
+
 [[deprecated]] char *data_to_internal_string_malloc(const char *text);
 [[deprecated]] char *internal_to_data_string_malloc(const char *text);
 [[deprecated]] char *internal_to_local_string_malloc(const char *text);
