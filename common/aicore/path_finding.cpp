@@ -2,7 +2,6 @@
 // SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
 // must be first
-#include "packets.h" // NOLINT(misc-include-cleaner) -- compile fails without it.
 
 // self
 #include "path_finding.h"

@@ -3,6 +3,18 @@
 
 #pragma once
 
+// utility
+#include "support.h"
+
+// common
+#include "fc_types.h"
+#include "map_types.h"
+#include "tile.h"
+#include "unittype.h"
+
+// std
+#include <vector>
+
 // ========================== Explanations ===============================
 
 /*

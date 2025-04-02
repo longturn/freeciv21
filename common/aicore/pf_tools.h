@@ -3,6 +3,12 @@
 
 #pragma once
 
+// common
+#include "player.h"
+#include "tile.h"
+#include "unit.h"
+#include "unittype.h"
+
 // aicore
 #include "path_finding.h"
 
