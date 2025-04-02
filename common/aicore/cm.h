@@ -5,6 +5,11 @@
 
 // common
 #include "city.h" // CITY_MAP_MAX_SIZE
+#include "fc_types.h"
+
+// std
+#include <memory>
+#include <vector>
 
 // A description of the goal.
 struct cm_parameter {

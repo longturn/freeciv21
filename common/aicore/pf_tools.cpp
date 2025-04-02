@@ -1,9 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
-// must be first
-#include "game.h" // NOLINT(misc-include-cleaner) -- compile fails without it.
-
 // self
 #include "pf_tools.h"
 
@@ -17,6 +14,7 @@
 #include "effects.h"
 #include "extras.h"
 #include "fc_types.h"
+#include "game.h"
 #include "map.h"
 #include "movement.h"
 #include "path_finding.h"
