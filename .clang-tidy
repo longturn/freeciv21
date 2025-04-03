@@ -23,8 +23,6 @@ ImplementationFileExtensions:
 
 HeaderFilterRegex: ''
 
-ExcludeHeaderFilterRegex: ''
-
 FormatStyle: file
 
 SystemHeaders: false
