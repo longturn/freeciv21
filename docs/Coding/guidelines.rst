@@ -82,9 +82,10 @@ There are a collection of coding guidelines as it relates to includes:
     near the top.
   * ``utility`` --- This directory has a large set of common symbols and is considered specific.
   * ``common`` --- A very large segment of the shared symbols are defined here. After ``utility``, these are
-    quite specific.g
+    quite specific.
   * ``dependency`` -- After ``utility`` and ``common``, we want to include external dependencies.
-  * ``ai`` --- The server makes heavy usage of the game Artificial Intelligence (AI) so we include first.
+  * ``ai`` --- The server makes heavy usage of the game Artificial Intelligence (:term:`AI`) so we include
+    first.
   * ``server`` --- The server provides an abstraction layer that we make a lot of use of, but its lower on the
     include hierarchy.
   * ``client`` --- The client is the presentation layer.
@@ -123,6 +124,22 @@ Example:
     #include <vector>
 
 
+
+Some helpful tips:
+
+1. The use of :file:`clang-tidy` is encouraged.
+
+.. code-block:: sh
+
+    freeciv21$ cmake --preset clang
+    freeciv21$ clang-tidy -p build-clang path/to/cpp-or-h/file
+
+
+Start with the header (:file:`.h`), resolve any complaints and then move to the :file:`.cpp`. Multiple runs
+of :file:`clang-tidy` can be useful.
+
+2. Do not include the generated :file:`specenum_gen.h` file. The network protocol uses named ``enums``
+   heavily. The named enum will be in another header. Use code search to find if needed.
 
 
 Forward Declarations
