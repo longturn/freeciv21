@@ -1,33 +1,48 @@
-/*
-Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
- /\/\             part of Freeciv21. Freeciv21 is free software: you can
-   \_\  _..._    redistribute it and/or modify it under the terms of the
-   (" )(_..._)      GNU General Public License  as published by the Free
-    ^^  // \\      Software Foundation, either version 3 of the License,
-                  or (at your option) any later version. You should have
-received a copy of the GNU General Public License along with Freeciv21.
-                              If not, see https://www.gnu.org/licenses/.
- */
-
-#include <cmath> // ceil, floor
-#include <cstdarg>
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
 // utility
+#include "bitvector.h"
 #include "fcintl.h"
+#include "log.h"
+#include "shared.h"
+#include "support.h"
 
 // common
 #include "actions.h"
+#include "base.h"
 #include "city.h"
 #include "combat.h"
+#include "effects.h"
+#include "extras.h"
 #include "fc_interface.h"
+#include "fc_types.h"
 #include "game.h"
 #include "map.h"
+#include "metaknowledge.h"
 #include "movement.h"
 #include "nation.h"
+#include "player.h"
+#include "requirements.h"
 #include "research.h"
+#include "road.h"
 #include "server_settings.h"
+#include "tech.h"
+#include "terrain.h"
 #include "tile.h"
+#include "traderoutes.h"
 #include "unit.h"
+#include "unitlist.h"
+#include "unittype.h"
+
+// Qt
+#include <QMessageLogger>
+#include <QtGlobal> // Q_UNUSED
+
+// std
+#include <algorithm> // max, min
+#include <cmath>     // ceil, floor
+#include <cstdarg>
 
 // Custom data types for obligatory hard action requirements.
 
