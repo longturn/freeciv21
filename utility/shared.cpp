@@ -721,134 +721,129 @@ QFileInfoList find_files_in_path(const QStringList &path,
   return files;
 }
 
+#ifdef FREECIV_ENABLE_NLS
+namespace /* anonymous */ {
+
+#ifdef FREECIV_MSWINDOWS
 /**
    Language environmental variable (with emulation).
  */
-char *setup_langname()
+static void setup_langname()
 {
-  char *langname = nullptr;
-
-#ifdef ENABLE_NLS
-  langname = getenv("LANG");
-
-#ifdef FREECIV_MSWINDOWS
-  // set LANG by hand if it is not set
-  if (!langname) {
-    switch (PRIMARYLANGID(GetUserDefaultLangID())) {
-    case LANG_ARABIC:
-      langname = "ar";
-      break;
-    case LANG_CATALAN:
-      langname = "ca";
-      break;
-    case LANG_CZECH:
-      langname = "cs";
-      break;
-    case LANG_DANISH:
-      langname = "da";
-      break;
-    case LANG_GERMAN:
-      langname = "de";
-      break;
-    case LANG_GREEK:
-      langname = "el";
-      break;
-    case LANG_ENGLISH:
-      switch (SUBLANGID(GetUserDefaultLangID())) {
-      case SUBLANG_ENGLISH_UK:
-        langname = "en_GB";
-        break;
-      default:
-        langname = "en";
-        break;
-      }
-      break;
-    case LANG_SPANISH:
-      langname = "es";
-      break;
-    case LANG_ESTONIAN:
-      langname = "et";
-      break;
-    case LANG_FARSI:
-      langname = "fa";
-      break;
-    case LANG_FINNISH:
-      langname = "fi";
-      break;
-    case LANG_FRENCH:
-      langname = "fr";
-      break;
-    case LANG_HEBREW:
-      langname = "he";
-      break;
-    case LANG_HUNGARIAN:
-      langname = "hu";
-      break;
-    case LANG_ITALIAN:
-      langname = "it";
-      break;
-    case LANG_JAPANESE:
-      langname = "ja";
-      break;
-    case LANG_KOREAN:
-      langname = "ko";
-      break;
-    case LANG_LITHUANIAN:
-      langname = "lt";
-      break;
-    case LANG_DUTCH:
-      langname = "nl";
-      break;
-    case LANG_NORWEGIAN:
-      langname = "nb";
-      break;
-    case LANG_POLISH:
-      langname = "pl";
-      break;
-    case LANG_PORTUGUESE:
-      switch (SUBLANGID(GetUserDefaultLangID())) {
-      case SUBLANG_PORTUGUESE_BRAZILIAN:
-        langname = "pt_BR";
-        break;
-      default:
-        langname = "pt";
-        break;
-      }
-      break;
-    case LANG_ROMANIAN:
-      langname = "ro";
-      break;
-    case LANG_RUSSIAN:
-      langname = "ru";
-      break;
-    case LANG_SWEDISH:
-      langname = "sv";
-      break;
-    case LANG_TURKISH:
-      langname = "tr";
-      break;
-    case LANG_UKRAINIAN:
-      langname = "uk";
-      break;
-    case LANG_CHINESE:
-      langname = "zh_CN";
-      break;
-    }
-
-    if (langname != nullptr) {
-      static char envstr[40];
-
-      fc_snprintf(envstr, sizeof(envstr), "LANG=%s", langname);
-      putenv(envstr);
-    }
+  if (qEnvironmentVariableIsSet("LANG")
+      && !qEnvironmentVariableIsEmpty("LANG")) {
+    return;
   }
-#endif // FREECIV_MSWINDOWS
-#endif // ENABLE_NLS
 
-  return langname;
+  // Get a default lang name
+  QString langname;
+  switch (PRIMARYLANGID(GetUserDefaultLangID())) {
+  case LANG_ARABIC:
+    langname = QStringLiteral("ar");
+    break;
+  case LANG_CATALAN:
+    langname = QStringLiteral("ca");
+    break;
+  case LANG_CZECH:
+    langname = QStringLiteral("cs");
+    break;
+  case LANG_DANISH:
+    langname = QStringLiteral("da");
+    break;
+  case LANG_GERMAN:
+    langname = QStringLiteral("de");
+    break;
+  case LANG_GREEK:
+    langname = QStringLiteral("el");
+    break;
+  case LANG_ENGLISH:
+    switch (SUBLANGID(GetUserDefaultLangID())) {
+    case SUBLANG_ENGLISH_UK:
+      langname = QStringLiteral("en_GB");
+      break;
+    default:
+      langname = QStringLiteral("en");
+      break;
+    }
+    break;
+  case LANG_SPANISH:
+    langname = QStringLiteral("es");
+    break;
+  case LANG_ESTONIAN:
+    langname = QStringLiteral("et");
+    break;
+  case LANG_FARSI:
+    langname = QStringLiteral("fa");
+    break;
+  case LANG_FINNISH:
+    langname = QStringLiteral("fi");
+    break;
+  case LANG_FRENCH:
+    langname = QStringLiteral("fr");
+    break;
+  case LANG_HEBREW:
+    langname = QStringLiteral("he");
+    break;
+  case LANG_HUNGARIAN:
+    langname = QStringLiteral("hu");
+    break;
+  case LANG_ITALIAN:
+    langname = QStringLiteral("it");
+    break;
+  case LANG_JAPANESE:
+    langname = QStringLiteral("ja");
+    break;
+  case LANG_KOREAN:
+    langname = QStringLiteral("ko");
+    break;
+  case LANG_LITHUANIAN:
+    langname = QStringLiteral("lt");
+    break;
+  case LANG_DUTCH:
+    langname = QStringLiteral("nl");
+    break;
+  case LANG_NORWEGIAN:
+    langname = QStringLiteral("nb");
+    break;
+  case LANG_POLISH:
+    langname = QStringLiteral("pl");
+    break;
+  case LANG_PORTUGUESE:
+    switch (SUBLANGID(GetUserDefaultLangID())) {
+    case SUBLANG_PORTUGUESE_BRAZILIAN:
+      langname = QStringLiteral("pt_BR");
+      break;
+    default:
+      langname = QStringLiteral("pt");
+      break;
+    }
+    break;
+  case LANG_ROMANIAN:
+    langname = QStringLiteral("ro");
+    break;
+  case LANG_RUSSIAN:
+    langname = QStringLiteral("ru");
+    break;
+  case LANG_SWEDISH:
+    langname = QStringLiteral("sv");
+    break;
+  case LANG_TURKISH:
+    langname = QStringLiteral("tr");
+    break;
+  case LANG_UKRAINIAN:
+    langname = QStringLiteral("uk");
+    break;
+  case LANG_CHINESE:
+    langname = QStringLiteral("zh_CN");
+    break;
+  }
+
+  if (!langname.isEmpty()) {
+    qputenv("LANG", langname.toLocal8Bit());
+  }
 }
+#endif // FREECIV_MSWINDOWS
 
-#ifdef FREECIV_ENABLE_NLS
 /**
    Update autocap behavior to match current language.
  */
@@ -873,7 +868,6 @@ static void autocap_update(void)
   capitalization_opt_in(ac_enabled);
 }
 
-namespace /* anonymous */ {
 /**
  * Binds a text domain for use in freeciv21, and sets its encoding to UTF-8.
  */
