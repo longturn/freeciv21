@@ -55,7 +55,7 @@ jobs:
 
       - name: Install Codacy Tools
         run: |
-          apt-get install -y ansifilter
+          apt-get install -y ansifilter wget
           wget -O codacy-clang-tidy https://github.com/codacy/codacy-clang-tidy/releases/download/1.3.8/codacy-clang-tidy-linux-1.3.8
           chmod +x codacy-clang-tidy
 
@@ -76,8 +76,6 @@ jobs:
     name: Upload
     needs: run
     runs-on: ubuntu-latest
-    container:
-      image: ubuntu:24.10
     steps:
       - uses: actions/download-artifact@v4
         with:
