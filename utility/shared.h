@@ -129,7 +129,6 @@ QString fileinfoname(const QStringList &dirs, const QString &filename);
 
 void init_nls(const char *extra_text_domain = nullptr);
 void free_nls();
-char *setup_langname();
 
 void dont_run_as_root(const char *argv0, const char *fallback);
 
