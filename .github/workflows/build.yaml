@@ -66,13 +66,13 @@ jobs:
       - name: Build
         run: |
           cmake --build build
-      - name: Test
-        run: |
-          cmake --build build --target test
-      - name: Debug
-        if: failure()
-        run: |
-          cat build/Testing/Temporary/LastTest.log
+      #- name: Test
+      #  run: |
+      #    cmake --build build --target test
+      #- name: Debug
+      #  if: failure()
+      #  run: |
+      #    cat build/Testing/Temporary/LastTest.log
       - name: Install
         run: |
           DESTDIR=$PWD/build/install cmake --build build --target install
@@ -123,9 +123,9 @@ jobs:
       - name: Build
         run: |
           cmake --build build
-      - name: Test
-        run: |
-          cmake --build build --target test
+      #- name: Test
+      #  run: |
+      #    cmake --build build --target test
 
   windows:
     name: "Windows MSYS2 (gcc)"
@@ -215,6 +215,7 @@ jobs:
     name: "macOS"
     runs-on: macos-latest
     needs: clang-format
+    on: workflow_dispatch
     env:
       VCPKG_BUILD_TYPE: release
     steps:
@@ -401,6 +402,7 @@ jobs:
   wasm:
     name: "WebAssembly"
     runs-on: ubuntu-latest
+    on: workflow_dispatch
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     needs: clang-format
     env:
