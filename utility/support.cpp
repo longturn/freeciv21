@@ -248,13 +248,8 @@ int fc_stricoll(const char *str0, const char *str1)
 FILE *fc_fopen(const char *filename, const char *opentype)
 {
 #ifdef FREECIV_MSWINDOWS
-  FILE *result;
-  char *filename_in_local_encoding =
-      internal_to_local_string_malloc(filename);
-
-  result = fopen(filename_in_local_encoding, opentype);
-  free(filename_in_local_encoding);
-  return result;
+  auto bytes = QString::fromUtf8(filename).toLocal8Bit();
+  return fopen(bytes.data(), opentype);
 #else  // FREECIV_MSWINDOWS
   return fopen(filename, opentype);
 #endif // FREECIV_MSWINDOWS
