@@ -214,8 +214,8 @@ jobs:
   os_x:
     name: "macOS"
     runs-on: macos-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     needs: clang-format
-    on: workflow_dispatch
     env:
       VCPKG_BUILD_TYPE: release
     steps:
@@ -402,7 +402,6 @@ jobs:
   wasm:
     name: "WebAssembly"
     runs-on: ubuntu-latest
-    on: workflow_dispatch
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     needs: clang-format
     env:
