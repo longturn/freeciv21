@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>240</width>
+    <width>260</width>
     <height>500</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>240</width>
+    <width>260</width>
     <height>500</height>
    </size>
   </property>
@@ -30,24 +30,44 @@
     <rect>
      <x>0</x>
      <y>10</y>
-     <width>248</width>
-     <height>491</height>
+     <width>260</width>
+     <height>500</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <property name="leftMargin">
-     <number>15</number>
+     <number>8</number>
     </property>
     <property name="topMargin">
-     <number>5</number>
+     <number>2</number>
     </property>
     <property name="rightMargin">
-     <number>5</number>
+     <number>2</number>
     </property>
     <property name="bottomMargin">
-     <number>5</number>
+     <number>2</number>
     </property>
+    <item row="8" column="0">
+     <widget class="QLabel" name="label_nat_y">
+      <property name="text">
+       <string>Native Y: </string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
     <item row="6" column="0">
+     <widget class="QLabel" name="label_y">
+      <property name="text">
+       <string>Tile Y: </string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="15" column="0">
      <spacer name="verticalSpacer">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
@@ -60,54 +80,37 @@
       </property>
      </spacer>
     </item>
-    <item row="5" column="0">
-     <widget class="QLabel" name="label_nat_y">
+    <item row="4" column="0">
+     <widget class="QLabel" name="label_owner">
       <property name="text">
-       <string>Native Y: </string>
+       <string>Owner:</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
-    <item row="3" column="0">
-     <widget class="QLabel" name="label_y">
+    <item row="11" column="0">
+     <widget class="QLabel" name="label_infra">
       <property name="text">
-       <string>Tile Y: </string>
+       <string>Infrastructure:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="0">
+     <widget class="QLabel" name="label_road">
+      <property name="text">
+       <string>Road:</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
-    <item row="5" column="1">
-     <widget class="QLabel" name="value_nat_y">
+    <item row="14" column="1">
+     <widget class="QLabel" name="value_nuisance">
       <property name="text">
-       <string>value_nat_y</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="1">
-     <widget class="QLabel" name="value_nat_x">
-      <property name="text">
-       <string>value_nat_x</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="1">
-     <widget class="QLabel" name="value_y">
-      <property name="text">
-       <string>value_y</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="label_x">
-      <property name="text">
-       <string>Tile X: </string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <string>value_nuisance</string>
       </property>
      </widget>
     </item>
@@ -127,7 +130,21 @@
       </property>
      </widget>
     </item>
-    <item row="4" column="0">
+    <item row="7" column="1">
+     <widget class="QLabel" name="value_nat_x">
+      <property name="text">
+       <string>value_nat_x</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLabel" name="pixmap_terrain">
+      <property name="text">
+       <string>pixmap_terrain</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0">
      <widget class="QLabel" name="label_nat_x">
       <property name="text">
        <string>Native X: </string>
@@ -137,24 +154,153 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="1">
+    <item row="5" column="1">
      <widget class="QLabel" name="value_x">
       <property name="text">
        <string>value_x</string>
       </property>
      </widget>
     </item>
+    <item row="9" column="1">
+     <widget class="QLabel" name="value_resource">
+      <property name="text">
+       <string>value_terrain</string>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="1">
+     <widget class="QLabel" name="value_road">
+      <property name="text">
+       <string>value_road</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="1">
+     <widget class="QLabel" name="value_nat_y">
+      <property name="text">
+       <string>value_nat_y</string>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="1">
+     <widget class="QLabel" name="value_base">
+      <property name="text">
+       <string>value_base</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1">
+     <widget class="QLabel" name="value_y">
+      <property name="text">
+       <string>value_y</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="label_x">
+      <property name="text">
+       <string>Tile X: </string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QLabel" name="value_owner">
+      <property name="text">
+       <string>value_owner</string>
+      </property>
+     </widget>
+    </item>
+    <item row="11" column="1">
+     <widget class="QLabel" name="value_infra">
+      <property name="text">
+       <string>value_infra</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QLabel" name="value_continent">
+      <property name="text">
+       <string>value_continent</string>
+      </property>
+     </widget>
+    </item>
+    <item row="14" column="0">
+     <widget class="QLabel" name="label_nuisance">
+      <property name="text">
+       <string>Nuisance:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="0">
+     <widget class="QLabel" name="label_resource">
+      <property name="text">
+       <string>Resource:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
     <item row="1" column="0">
+     <widget class="QLabel" name="label_terrain">
+      <property name="text">
+       <string>Base Terrain: </string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::AutoText</enum>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="0">
+     <widget class="QLabel" name="label_base">
+      <property name="text">
+       <string>Base:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
      <widget class="QLabel" name="label_continent">
       <property name="text">
        <string>Continent: </string>
       </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLabel" name="value_continent">
+     <widget class="QLabel" name="value_terrain">
       <property name="text">
-       <string>value_continent</string>
+       <string>value_terrain</string>
+      </property>
+     </widget>
+    </item>
+    <item row="13" column="0">
+     <widget class="QLabel" name="label_hut">
+      <property name="text">
+       <string>Hut:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="13" column="1">
+     <widget class="QLabel" name="value_hut">
+      <property name="text">
+       <string>value_hut</string>
       </property>
      </widget>
     </item>

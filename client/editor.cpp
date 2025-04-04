@@ -186,7 +186,8 @@ void editor_ruleset_changed()
  */
 void editor_init()
 {
-  fc_assert(editor != nullptr);
+  // ensure no editor is set
+  void editor_free();
 
   editor = new editor_state[1]();
 
@@ -238,10 +239,10 @@ void editor_init()
  */
 void editor_clear()
 {
-  fc_assert_ret(editor != nullptr);
-
-  edit_buffer_clear(editor->copybuf);
-  editor->selected_tile_table->clear();
+  if (editor != nullptr) {
+    edit_buffer_clear(editor->copybuf);
+    editor->selected_tile_table->clear();
+  }
 }
 
 /**
