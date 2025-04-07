@@ -61,13 +61,13 @@ endif()
 project(freeciv21 VERSION ${FREECIV21_VERSION} LANGUAGES C CXX)
 
 # Gather all the tailored settings we need for Windows builds early.
-if(WIN32 OR MSYS OR MINGW)
+if(WIN32 OR MSYS)
   # We need to alter the out of box values of these variables for Win32 et al builds
   set(CMAKE_INSTALL_DATAROOTDIR ".")
   set(CMAKE_INSTALL_BINDIR ".")
   set(PROJECT_NAME "data")
   set(CMAKE_INSTALL_DOCDIR "${CMAKE_INSTALL_DATAROOTDIR}/doc/")
-  get_filename_component(MINGW_PATH ${CMAKE_CXX_COMPILER} PATH)
+  get_filename_component(CLANG_PATH ${CMAKE_CXX_COMPILER} PATH)
 endif()
 
 add_compile_definitions(PUBLIC $<$<CONFIG:Debug>:FREECIV_DEBUG>)
