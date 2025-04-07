@@ -13,21 +13,20 @@ Freeciv21 has a number of prerequisites. Note, that apart from the first prerequ
 configuration process is smart enough to work out whether your system is suitable. If in doubt, just try it.
 
 An operating system that support Qt
-    Any modern operating system that supports Qt 5.15+ is required. As of this writing this is Linux,
+    Any modern operating system that supports Qt 6.6+ is required. As of this writing this is Linux,
     Microsoft Windows\ |reg| and Apple macOS\ |reg|.
 
     Linux Distributions:
 
     * Arch
-    * Debian 11+ (Bullseye)\ |reg|
-    * Fedora 37+
+    * Debian 13 "Testing" (Trixie)\ |reg|
+    * Fedora 41+
     * Gentoo
     * KDE Neon
     * Manjaro
-    * Mint 20+ or Mint Debian Edition (set to Bullseye)
     * openSUSE Tumbleweed (Leap is not supported)
     * Slackware
-    * Ubuntu 22.04 LTS+
+    * Ubuntu 24.10+
 
 
 .. note::
@@ -100,9 +99,9 @@ Lua
 
     https://www.lua.org/about.html
 
-KF 5 Archive Library
+KDE Frameworks KArchive Library
     KDE frameworks KArchive provides classes for easy reading, creation and manipulation of "archive" formats
-    like ZIP and TAR.
+    like ZIP and TAR. Any version that is included in the KDE Frameworks v6+.
 
     https://invent.kde.org/frameworks/karchive
 
@@ -127,10 +126,10 @@ C++ compiler.
     has been used as well as tests against LLVM's compiler (:file:`clang++`)
 
 QT Libraries
-    Freeciv21 uses the Qt libraries, specifically :file:`Qt5Core`, :file:`Qt5Gui`, :file:`Qt5Network`,
-    :file:`Qt5Svg`, and :file:`Qt5Widgets` libraries and headers.
+    Freeciv21 uses the Qt libraries, specifically :file:`Qt6Core`, :file:`Qt6Gui`, :file:`Qt6Network`,
+    :file:`Qt6Svg`, and :file:`Qt6Widgets` libraries and headers.
 
-    At least version 5.15 is required.
+    At least version 6.6 is required.
 
 Installing Package Dependencies
 ===============================
@@ -167,9 +166,9 @@ following commands:
      ninja-build \
      g++ \
      python3 \
-     qtbase5-dev \
-     libqt5svg5-dev \
-     libkf5archive-dev \
+     qt6-base-dev \
+     qt6-svg-dev \
+     libkf6archive-dev \
      liblua5.3-dev \
      libsqlite3-dev \
      libsdl2-mixer-dev \
@@ -195,9 +194,9 @@ RHEL, CentOS Stream) to install Freeciv21.
     ninja-build \
     python \
     gettext \
-    qt5-qtbase-devel \
-    qt5-qtsvg-devel \
-    kf5-karchive-devel \
+    qt6-qtbase-devel \
+    qt6-qtsvg-devel \
+    kf6-karchive-devel \
     lua-devel \
     sqlite-devel \
     SDL2_mixer-devel \
