@@ -188,114 +188,114 @@ jobs:
           name: Windows-exe
           path: build/Windows-x86_64/Freeciv21-*.exe
 
-  windows_clang_msvc:
-    name: "Windows Clang"
-    runs-on: windows-latest
-    needs: clang-format
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    env:
-      VCPKG_ROOT: ${{github.workspace}}/vcpkg
-      VCPKG_DEFAULT_BINARY_CACHE: ${{github.workspace}}/vcpkg/bincache
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: lukka/run-vcpkg@v11
-        name: Install dependencies
-        with:
-          vcpkgGitCommitId: b322364f06308bdd24823f9d8f03fe0cc86fd46f
-      - name: Configure
-        run: cmake -S . -B build --preset "windows-debug"
-      - name: Building
-        run: cmake --build build --config Debug
+#  windows_clang_msvc:
+#    name: "Windows Clang"
+#    runs-on: windows-latest
+#    needs: clang-format
+#    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+#    env:
+#      VCPKG_ROOT: ${{github.workspace}}/vcpkg
+#      VCPKG_DEFAULT_BINARY_CACHE: ${{github.workspace}}/vcpkg/bincache
+#    steps:
+#      - uses: actions/checkout@v4
+#        with:
+#          fetch-depth: 0
+#      - uses: lukka/run-vcpkg@v11
+#        name: Install dependencies
+#        with:
+#          vcpkgGitCommitId: b322364f06308bdd24823f9d8f03fe0cc86fd46f
+#      - name: Configure
+#        run: cmake -S . -B build --preset "windows-debug"
+#      - name: Building
+#        run: cmake --build build --config Debug
       #- name: Test
       #  run: cmake --build build --target test
 
-  os_x:
-    name: "macOS"
-    runs-on: macos-latest
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    needs: clang-format
-    env:
-      VCPKG_BUILD_TYPE: release
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Install build tools
-        run: |
-          brew update
+#  os_x:
+#    name: "macOS"
+#    runs-on: macos-latest
+#    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+#    needs: clang-format
+#    env:
+#      VCPKG_BUILD_TYPE: release
+#    steps:
+#      - uses: actions/checkout@v4
+#        with:
+#          fetch-depth: 0
+#      - name: Install build tools
+#        run: |
+#          brew update
           # Remove the bloat installed by default to avoid conflicts
-          brew remove --force $(brew list)
+#          brew remove --force $(brew list)
           # Make sure to overwrite existing symlinks
-          brew install --overwrite \
-            cmake \
-            create-dmg \
-            gettext \
-            ninja \
-            pkg-config
-          brew link gettext --force
-      - uses: actions/setup-python@v5  # Workaround for #2069
-        with:
-          python-version: '3.11'
-      - uses: lukka/run-vcpkg@v11
-        name: Install dependencies
-        with:
-          vcpkgGitCommitId: b322364f06308bdd24823f9d8f03fe0cc86fd46f
-      - name: Build
-        uses: lukka/run-cmake@v10
-        with:
-          configurePreset: 'fullrelease-macos'
-          buildPreset: 'fullrelease-macos'
-      - name: Test
-        run: |
-          cmake --build build* --target test
-      - name: Split Branch Name
-        env:
-          BRANCH: ${{github.ref_name}}
-        id: split
-        run: echo "fragment=${BRANCH##*/}" >> $GITHUB_OUTPUT
-      - name: Create App Bundle
-        run: |
-          mkdir -p Freeciv21.app/Contents/MacOS Freeciv21.app/Contents/Resources
-          cp dist/Info.plist Freeciv21.app/Contents/
-          cp -r .install/share/freeciv21/* Freeciv21.app/Contents/Resources
-          cp .install/bin/freeciv21-* Freeciv21.app/Contents/MacOS
-          mkdir client.iconset
-          cp data/icons/16x16/freeciv21-client.png client.iconset/icon_16x16.png
-          cp data/icons/32x32/freeciv21-client.png client.iconset/icon_16x16@2x.png
-          cp data/icons/32x32/freeciv21-client.png client.iconset/icon_32x32.png
-          cp data/icons/64x64/freeciv21-client.png client.iconset/icon_32x32@2x.png
-          cp data/icons/128x128/freeciv21-client.png client.iconset/icon_128x128.png
-          iconutil -c icns client.iconset
-          cp client.icns Freeciv21.app/Contents/Resources
-          mkdir staging
-          mv Freeciv21.app staging
-          create-dmg \
-            --hdiutil-verbose \
-            --volname "Freeciv21 Installer" \
-            --volicon "client.icns" \
-            --window-pos 200 120 \
-            --window-size 800 400 \
-            --icon-size 100 \
-            --icon "Freeciv21.app" 200 190 \
-            --hide-extension "Freeciv21.app" \
-            --app-drop-link 600 185 \
-            "Freeciv21-${{steps.split.outputs.fragment}}.dmg" \
-            "staging/"
-          shasum -a 256 Freeciv21-${{steps.split.outputs.fragment}}.dmg > Freeciv21-${{steps.split.outputs.fragment}}.dmg.sha256
-      - name: Upload package
-        uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: |
-            Freeciv21-*.dmg
-            Freeciv21-*.dmg.sha256
-      - name: Upload a build
-        uses: actions/upload-artifact@v4
-        with:
-          name: macOS-dmg
-          path: Freeciv21-*.dmg
+#          brew install --overwrite \
+#            cmake \
+#            create-dmg \
+#            gettext \
+#            ninja \
+#            pkg-config
+#          brew link gettext --force
+#      - uses: actions/setup-python@v5  # Workaround for #2069
+#        with:
+#          python-version: '3.11'
+#      - uses: lukka/run-vcpkg@v11
+#        name: Install dependencies
+#        with:
+#          vcpkgGitCommitId: b322364f06308bdd24823f9d8f03fe0cc86fd46f
+#      - name: Build
+#        uses: lukka/run-cmake@v10
+#        with:
+#          configurePreset: 'fullrelease-macos'
+#          buildPreset: 'fullrelease-macos'
+#      - name: Test
+#        run: |
+#          cmake --build build* --target test
+#      - name: Split Branch Name
+#        env:
+#          BRANCH: ${{github.ref_name}}
+#        id: split
+#        run: echo "fragment=${BRANCH##*/}" >> $GITHUB_OUTPUT
+#      - name: Create App Bundle
+#        run: |
+#          mkdir -p Freeciv21.app/Contents/MacOS Freeciv21.app/Contents/Resources
+#          cp dist/Info.plist Freeciv21.app/Contents/
+#          cp -r .install/share/freeciv21/* Freeciv21.app/Contents/Resources
+#          cp .install/bin/freeciv21-* Freeciv21.app/Contents/MacOS
+#          mkdir client.iconset
+#          cp data/icons/16x16/freeciv21-client.png client.iconset/icon_16x16.png
+#          cp data/icons/32x32/freeciv21-client.png client.iconset/icon_16x16@2x.png
+#          cp data/icons/32x32/freeciv21-client.png client.iconset/icon_32x32.png
+#          cp data/icons/64x64/freeciv21-client.png client.iconset/icon_32x32@2x.png
+#          cp data/icons/128x128/freeciv21-client.png client.iconset/icon_128x128.png
+#          iconutil -c icns client.iconset
+#          cp client.icns Freeciv21.app/Contents/Resources
+#          mkdir staging
+#          mv Freeciv21.app staging
+#          create-dmg \
+#            --hdiutil-verbose \
+#            --volname "Freeciv21 Installer" \
+#            --volicon "client.icns" \
+#            --window-pos 200 120 \
+#            --window-size 800 400 \
+#            --icon-size 100 \
+#            --icon "Freeciv21.app" 200 190 \
+#            --hide-extension "Freeciv21.app" \
+#            --app-drop-link 600 185 \
+#            "Freeciv21-${{steps.split.outputs.fragment}}.dmg" \
+#            "staging/"
+#          shasum -a 256 Freeciv21-${{steps.split.outputs.fragment}}.dmg > Freeciv21-${{steps.split.outputs.fragment}}.dmg.sha256
+#      - name: Upload package
+#        uses: softprops/action-gh-release@v2
+#        if: startsWith(github.ref, 'refs/tags/')
+#        with:
+#          files: |
+#            Freeciv21-*.dmg
+#            Freeciv21-*.dmg.sha256
+#      - name: Upload a build
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: macOS-dmg
+#          path: Freeciv21-*.dmg
 
   fedora:
     runs-on: ubuntu-latest
@@ -396,165 +396,6 @@ jobs:
       # It's free for FOSS.
       - run: nix build .#freeciv21
 
-  wasm:
-    name: "WebAssembly"
-    runs-on: ubuntu-latest
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    needs: clang-format
-    env:
-      QT_VERSION: v5.15.8-lts-lgpl
-    steps:
-      - uses: actions/checkout@v4
-      - name: Cache Qt build
-        id: qtcache
-        uses: actions/cache@v4
-        with:
-          path: ~/qt
-          key: qt-wasm-${{ env.QT_VERSION }}-svg-socket-v2
-      - name: Install build tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install \
-            cmake \
-            ninja-build \
-            clang \
-            python3 \
-            gettext
-      - uses: actions/checkout@v4
-        name: Checkout emsdk
-        with:
-          repository: emscripten-core/emsdk
-          path: emsdk
-      - name: Install emsdk
-        run: |
-          cd emsdk
-          ./emsdk install latest
-          ./emsdk activate latest
-          touch prime.c
-          source emsdk_env.sh
-          emcc -sUSE_ZLIB=1 -sUSE_SDL=2 -sUSE_SDL_MIXER=2 prime.c -o prime.o
-          ln -s libSDL2_mixer_ogg.a upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libSDL2_mixer.a
-      - name: Install lua
-        run: |
-          source emsdk/emsdk_env.sh
-          wget https://www.lua.org/ftp/lua-5.4.3.tar.gz
-          tar xf lua-5.4.3.tar.gz
-          cp dist/wasm/lua.CMakeLists.txt lua-5.4.3/CMakeLists.txt
-          cd lua-5.4.3
-          emcmake cmake .
-          emmake make install
-      - uses: actions/checkout@v4
-        if: steps.qtcache.outputs.cache-hit != 'true'
-        name: Checkout qtbase
-        with:
-          repository: qt/qtbase
-          ref: ${{ env.QT_VERSION }}
-          path: qtbase
-      - name: Build Qt
-        if: steps.qtcache.outputs.cache-hit != 'true'
-        run: |
-          source emsdk/emsdk_env.sh
-          cd qtbase
-          git config --global user.email "root@example.com"
-          git config --global user.name "root"
-          git fetch origin 76d12eea2252c5e537dff15b103bdc1f925cf760
-          git cherry-pick 76d12eea2252c5e537dff15b103bdc1f925cf760
-          ./configure -xplatform wasm-emscripten -opensource -confirm-license -prefix ~/qt -nomake examples
-          make install
-      - uses: actions/checkout@v4
-        if: steps.qtcache.outputs.cache-hit != 'true'
-        name: Checkout qtsvg
-        with:
-          repository: qt/qtsvg
-          ref: ${{ env.QT_VERSION }}
-          path: qtsvg
-      - name: Build QtSvg
-        if: steps.qtcache.outputs.cache-hit != 'true'
-        run: |
-          source emsdk/emsdk_env.sh
-          cd qtsvg
-          ~/qt/bin/qmake
-          make install
-      - uses: actions/checkout@v4
-        name: Checkout zstd
-        with:
-          repository: facebook/zstd
-          ref: v1.5.0
-          path: zstd
-      - name: Build zstd
-        run: |
-          source emsdk/emsdk_env.sh
-          cd zstd
-          mkdir bld
-          emcmake cmake build/cmake -DZSTD_BUILD_PROGRAMS=0 -DZSTD_BUILD_SHARED=0
-          emmake make install
-      - uses: actions/checkout@v4
-        name: Checkout extra-cmake-modules
-        with:
-          repository: KDE/extra-cmake-modules
-          ref: v5.96.0
-          path: ecm
-      - name: Install ecm
-        run: |
-          cd ecm
-          cmake .
-          sudo make install
-      - uses: actions/checkout@v4
-        name: Checkout karchive
-        with:
-          repository: KDE/karchive
-          ref: v5.96.0
-          path: karchive
-      - name: Install karchive
-        run: |
-          source emsdk/emsdk_env.sh
-          cd karchive
-          git apply ../dist/wasm/karchive.diff
-          emcmake cmake . \
-            -DECM_DIR=/usr/local/share/ECM/cmake -DBUILD_TESTING=0 \
-            -DQt5Core_DIR=$HOME/qt/lib/cmake/Qt5Core \
-            -DKF_IGNORE_PLATFORM_CHECK=1 \
-            -DCMAKE_INSTALL_PREFIX=../emsdk/upstream/emscripten/cache/sysroot
-          emmake make install
-      - name: Build Freeciv
-        run: |
-          source emsdk/emsdk_env.sh
-          ls $HOME/qt/lib/cmake/Qt5
-          emcmake cmake . \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DQt5_DIR=$HOME/qt/lib/cmake/Qt5 \
-            -DQt5Svg_DIR=$HOME/qt/lib/cmake/Qt5Svg \
-            -DQt5Gui_DIR=$HOME/qt/lib/cmake/Qt5Gui \
-            -DQt5Core_DIR=$HOME/qt/lib/cmake/Qt5Core \
-            -DQt5Network_DIR=$HOME/qt/lib/cmake/Qt5Network \
-            -DFREECIV_ENABLE_SERVER=0 \
-            -DLUA_MATH_LIBRARY=emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/libc.a \
-            -DQt5Widgets_DIR=$HOME/qt/lib/cmake/Qt5Widgets \
-            -DQt5EventDispatcherSupport_DIR=$HOME/qt/lib/cmake/Qt5EventDispatcherSupport \
-            -DQt5FontDatabaseSupport_DIR=$HOME/qt/lib/cmake/Qt5FontDatabaseSupport \
-            -DQt5EglSupport_DIR=$HOME/qt/lib/cmake/Qt5EglSupport \
-            -DFREECIV_ENABLE_FCMP_CLI=0 -DFREECIV_ENABLE_FCMP_QT=0 \
-            -DFREECIV_BUILD_LIBSERVER=0 -DFREECIV_ENABLE_RULEUP=0 \
-            -DFREECIV_ENABLE_RULEDIT=0 -DFREECIV_ENABLE_CIVMANUAL=0 \
-            -DKF5Archive_DIR=../emsdk/upstream/emscripten/cache/sysroot/lib/cmake \
-            -DCAN_UNWIND_STACK=0
-          VERBOSE=1 emmake make
-      - name: Debug
-        if: failure()
-        run: |
-          cat common/networking/CMakeFiles/networking.dir/includes_CXX.rsp
-          cat CMakeCache.txt
-      - uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: cmakecache
-          path: CMakeCache.txt
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: wasm-client
-          path: freeciv21-client.*
-
   snapcraft:
     name: "Snap Package"
     runs-on: ubuntu-latest
@@ -572,7 +413,7 @@ jobs:
             cmake \
             ninja-build \
             gettext \
-            qtbase5-dev \
+            qt6-base-dev \
             qt6-svg-dev \
             libkf6archive-dev \
             liblua5.3-dev \
