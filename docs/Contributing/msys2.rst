@@ -11,6 +11,11 @@ This document is about building and compiling Freeciv21 with MSYS2 on Windows. M
 https://www.msys2.org. The Longturn Community builds the Windows Installer packages using MSYS2. If you
 are looking for a first class development environment on Windows, have a look at :doc:`visual-studio`.
 
+.. note::
+   As of April 2025, we have moved to Qt6, which required a change from ``gcc`` to ``clang`` as the base
+   C / C++ compiler and C Standard Library. If you have an existing MSYS2 environment, it is recommended to
+   uninstall or remove any exsting setups and start over.
+
 
 Setup
 =====
@@ -30,61 +35,55 @@ This chapter is about creating a new MSYS2 build environment.
         > pacman -Syuu
 
 
-#. The :file:`msys2_shell` will close when this is complete. Run it again and install following packages with
-   :code:`pacman -Su <package name>`. The packages needed for building Freeciv21 are numerous. These packages
-   are needed even if you do not plan to make the installer, update documentation, but only build Freeciv21
-   for local use.
+#. The :file:`msys2_shell` will close when this is complete. Run the command in step 3 again and allow
+   :file:`pacman` to ensure everything in the base package is up to date.
 
-#. Install these arch independent packages that are needed for building Freeciv21. With these packages it is
-   possible to build a Freeciv21 source tree that was created via release tarball or zip file.
+#. Install following packages with :code:`pacman -Su <package name>`. The packages needed for building
+   Freeciv21 are numerous. These packages are needed even if you do not plan to make the installer, update
+   documentation, but only build Freeciv21 for local use. We do have you install more packages than are
+   required to compile Freeciv21 so you have a more complete development environment.
 
-    * pkgconf
+#. Install these architecture independent packages that are needed for building Freeciv21. With these packages
+   it is possible to build a Freeciv21 source tree that was created via release tarball or zip file.
+
     * git
-    * automake
-    * libtool
-    * autoconf
     * patch
-    * ed
-    * python3
-    * python-pip
-    * make
-    * clang
+    * zip
+    * unzip
 
 #. Install these packages for building common parts.
 
-    * mingw-w64-x86_64-gcc (will give you bzip2, readline and python3)
-    * mingw-w64-x86_64-gdb
-    * mingw-w64-x86_64-curl
-    * mingw-w64-x86_64-lua
-    * mingw-w64-x86_64-tolua
-    * mingw-w64-x86_64-SDL2_mixer
-    * mingw-w64-x86_64-cmake
-    * mingw-w64-x86_64-ninja
-    * mingw-w64-x86_64-libunwind
-    * mingw-w64-x86_64-make
-    * mingw-w64-x86_64-python-pip
+    * mingw-w64-clang-x86_64-cmake (brings in a collection of other dependencies we need automatically)
+    * mingw-w64-clang-x86_64-clang
+    * mingw-w64-clang-x86_64-readline
+    * mingw-w64-clang-x86_64-lua
+    * mingw-w64-clang-x86_64-SDL2_mixer
+    * mingw-w64-clang-x86_64-clang-tools-extra (optional: gives ``clang-tidy`` and ``clang-format``)
+
 
 #. Packages for building the client and/or Ruledit.
 
-    * mingw-w64-x86_64-qt5
-    * mingw-w64-x86_64-qt5-svg
-    * mingw-w64-x86_64-karchive-qt5
+    * mingw-w64-clang-x86_64-qt6-base
+    * mingw-w64-clang-x86_64-qt6-svg
+    * mingw-w64-clang-x86_64-karchive
 
 #. Package needed for building Windows installer package.
 
-    * mingw-w64-x86_64-nsis
+    * mingw-w64-clang-x86_64-nsis
 
 #. Packages needed for documentation development.
 
-    * mingw-w64-x86_64-python-sphinx
+    * mingw-w64-clang-x86_64-python-sphinx
+    * mingw-w64-clang-x86_64-python-pip
+    * mingw-w64-clang-x86_64-python-virtualenv
 
 #. Add some environment variables to the :file:`.bash_profile` file. The code sample assumes x86_64.
 
 .. code-block:: sh
 
-    export PATH=/mingw64/bin:${PATH}
-    export MSYSTEM=MINGW64
-    export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/mingw64/lib/pkgconfig:/mingw64/share/pkgconfig
+    export PATH=/clang64/bin:${PATH}
+    export MSYSTEM=CLANG64
+    export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/clang64/lib/pkgconfig:/clang64/share/pkgconfig
 
 
 Premade Environment
