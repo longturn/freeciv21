@@ -15,7 +15,7 @@ set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING")
 set(CPACK_PACKAGE_CHECKSUM "SHA256")
 
-if(WIN32 OR MSYS OR MINGW)
+if(WIN32 OR MSYS)
 
   # Use the NSIS Package for Windows
   set(CPACK_GENERATOR "NSIS")
@@ -23,11 +23,7 @@ if(WIN32 OR MSYS OR MINGW)
 
   # Establish some variables to place the package where we want it
   if(NOT CPACK_SYSTEM_NAME)
-    if("$ENV{MSYSTEM}" STREQUAL "MINGW32")
-      set(CPACK_CPU_ARCH "i686")
-    else()
-      set(CPACK_CPU_ARCH $ENV{MSYSTEM_CARCH})
-    endif()
+    set(CPACK_CPU_ARCH $ENV{MSYSTEM_CARCH})
     set(CPACK_SYSTEM_NAME "${CMAKE_SYSTEM_NAME}-${CPACK_CPU_ARCH}")
   endif()
 

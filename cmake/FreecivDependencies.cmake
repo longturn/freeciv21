@@ -45,7 +45,7 @@ if(FREECIV_ENABLE_NLS)
   set(ENABLE_NLS TRUE)
   if(UNIX)
     set(LOCALEDIR "${CMAKE_INSTALL_FULL_LOCALEDIR}")
-  elseif(WIN32 OR MSYS OR MINGW)
+  elseif(WIN32 OR MSYS)
     set(LOCALEDIR "${CMAKE_INSTALL_LOCALEDIR}")
   endif()
   include(GettextTranslate)
@@ -129,13 +129,13 @@ if (EMSCRIPTEN)
 endif()
 
 # Networking library
-if (WIN32 OR MINGW OR MSYS)
+if (WIN32 OR MSYS)
   set(FREECIV_MSWINDOWS TRUE)
 endif()
 
 # Define the GUI type for Win32 Qt programs
 # Removes the console window that pops up with the GUI app
-if (WIN32 OR MINGW OR MSYS)
+if (WIN32 OR MSYS)
   set(GUI_TYPE WIN32)
 else()
   set(GUI_TYPE "")
