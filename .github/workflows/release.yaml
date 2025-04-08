@@ -94,15 +94,18 @@ jobs:
         run: |
           apt-get update
           apt-get install -y \
+            git \
             cmake \
             ninja-build \
+            g++ \
             gettext \
             qt6-base-dev \
             qt6-svg-dev \
             libkf6archive-dev \
             liblua5.3-dev \
             libsqlite3-dev \
-            libsdl2-mixer-dev
+            libsdl2-mixer-dev \
+            sudo
       - name: Configure
         run: |
           mkdir -p build/snap/local
