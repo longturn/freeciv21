@@ -418,7 +418,8 @@ jobs:
             libkf6archive-dev \
             liblua5.3-dev \
             libsqlite3-dev \
-            libsdl2-mixer-dev
+            libsdl2-mixer-dev \
+            sudo
       - name: Configure
         run: |
           mkdir -p build/snap/local
