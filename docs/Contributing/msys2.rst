@@ -14,7 +14,7 @@ are looking for a first class development environment on Windows, have a look at
 .. note::
    As of April 2025, we have moved to Qt6, which required a change from ``gcc`` to ``clang`` as the base
    C / C++ compiler and C Standard Library. If you have an existing MSYS2 environment, it is recommended to
-   uninstall or remove any exsting setups and start over.
+   uninstall or remove any existing setups and start over.
 
 
 Setup
