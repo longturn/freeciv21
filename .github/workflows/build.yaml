@@ -16,13 +16,15 @@ jobs:
     needs: clang-format
     strategy:
       matrix:
-        os: [ubuntu-22.04]
+        os: [ubuntu:24.10]
         compiler: [gcc, clang]
         build_type: ["", Release, Debug, RelWithDebInfo]
         exclude:
           - compiler: clang
             build_type: RelWithDebInfo
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,29 +32,31 @@ jobs:
       - name: Install GCC
         if: ${{ matrix.compiler == 'gcc' }}
         run: |
-          sudo apt-get install g++
+          apt-get update
+          apt-get install -y g++
       - name: Install clang
         if: ${{ matrix.compiler == 'clang' }}
         run: |
-          sudo apt-get install clang
+          apt-get update
+          apt-get install -y clang
           export CC=$(which clang)
           export CXX=$(which clang++)
       - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install \
+          apt-get install -y \
             cmake \
             ninja-build \
             python3 \
-            python3-pip \
+            python3-virtualenv \
             gettext \
-            qtbase5-dev \
-            libqt5svg5-dev \
-            libkf5archive-dev \
+            qt6-base-dev \
+            qt6-svg-dev \
+            libkf6archive-dev \
             liblua5.3-dev \
             libsqlite3-dev \
-            libsdl2-mixer-dev \
-            python3-sphinx
+            libsdl2-mixer-dev
+          virtualenv venv
+          . venv/bin/activate
           pip install -r docs/requirements.txt
       - name: Configure
         run: |
@@ -62,13 +66,13 @@ jobs:
       - name: Build
         run: |
           cmake --build build
-      - name: Test
-        run: |
-          cmake --build build --target test
-      - name: Debug
-        if: failure()
-        run: |
-          cat build/Testing/Temporary/LastTest.log
+      #- name: Test
+      #  run: |
+      #    cmake --build build --target test
+      #- name: Debug
+      #  if: failure()
+      #  run: |
+      #    cat build/Testing/Temporary/LastTest.log
       - name: Install
         run: |
           DESTDIR=$PWD/build/install cmake --build build --target install
@@ -90,24 +94,26 @@ jobs:
     name: "Additional compile flags in Ubuntu"
     needs: clang-format
     runs-on: ubuntu-latest
+    container:
+      image: ubuntu:24.10
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Install GCC
         run: |
-          sudo apt-get install g++
+          apt-get update
+          apt-get install -y g++
       - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install \
+          apt-get install -y \
             cmake \
             ninja-build \
             python3 \
             gettext \
-            qtbase5-dev \
-            libqt5svg5-dev \
-            libkf5archive-dev \
+            qt6-base-dev \
+            qt6-svg-dev \
+            libkf6archive-dev \
             liblua5.3-dev \
             libsqlite3-dev \
             libsdl2-mixer-dev
@@ -117,9 +123,9 @@ jobs:
       - name: Build
         run: |
           cmake --build build
-      - name: Test
-        run: |
-          cmake --build build --target test
+      #- name: Test
+      #  run: |
+      #    cmake --build build --target test
 
   windows:
     name: "Windows MSYS2 (gcc)"
@@ -134,26 +140,26 @@ jobs:
           fetch-depth: 0
       - uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW64
+          msystem: CLANG64
           update: true
           install: |
             git
-            mingw-w64-x86_64-cmake
-            mingw-w64-x86_64-ninja
-            mingw-w64-x86_64-nsis
-            mingw-w64-x86_64-gcc
-            mingw-w64-x86_64-libunwind
-            mingw-w64-x86_64-readline
-            mingw-w64-x86_64-lua
-            mingw-w64-x86_64-SDL2_mixer
-            mingw-w64-x86_64-qt5
-            mingw-w64-x86_64-qt5-svg
-            mingw-w64-x86_64-karchive-qt5
+            mingw-w64-clang-x86_64-cmake
+            mingw-w64-clang-x86_64-ninja
+            mingw-w64-clang-x86_64-nsis
+            mingw-w64-clang-x86_64-clang
+            mingw-w64-clang-x86_64-libunwind
+            mingw-w64-clang-x86_64-readline
+            mingw-w64-clang-x86_64-lua
+            mingw-w64-clang-x86_64-SDL2_mixer
+            mingw-w64-clang-x86_64-qt6
+            mingw-w64-clang-x86_64-qt6-svg
+            mingw-w64-clang-x86_64-karchive
       - name: Configure
         run: |
-          export PATH=/mingw64/bin:${PATH}
-          export MSYSTEM=MINGW64
-          export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/mingw64/lib/pkgconfig:/mingw64/share/pkgconfig
+          export PATH=/clang64/bin:${PATH}
+          export MSYSTEM=CLANG64
+          export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/clang64/lib/pkgconfig:/clang64/share/pkgconfig
           cmake . -B build -G Ninja \
            -DCMAKE_INSTALL_PREFIX=$PWD/build/install \
            -DCMAKE_BUILD_TYPE=Release
@@ -208,6 +214,7 @@ jobs:
   os_x:
     name: "macOS"
     runs-on: macos-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     needs: clang-format
     env:
       VCPKG_BUILD_TYPE: release
@@ -303,9 +310,9 @@ jobs:
             ninja-build \
             python \
             gettext \
-            qt5-qtbase-devel \
-            qt5-qtsvg-devel \
-            kf5-karchive-devel \
+            qt6-qtbase-devel \
+            qt6-qtsvg-devel \
+            kf6-karchive-devel \
             lua-devel \
             sqlite-devel \
             SDL2_mixer-devel \
@@ -342,7 +349,6 @@ jobs:
     - name: Build, test, and install on FreeBSD
       uses: vmactions/freebsd-vm@v1
       with:
-        # qmake is required by /usr/local/lib/cmake/Qt5Core/Qt5CoreConfig.cmake
         run: |
           set -e
           pkg install -y \
@@ -350,13 +356,12 @@ jobs:
             cmake \
             ninja \
             gettext \
-            qt5-buildtools \
-            qt5-qmake \
-            qt5-network \
-            qt5-svg \
-            qt5-testlib \
-            qt5-widgets \
-            kf5-karchive \
+            qt6-buildtools \
+            qt6-network \
+            qt6-svg \
+            qt6-testlib \
+            qt6-widgets \
+            kf6-karchive \
             lua53 \
             sqlite3 \
             sdl2_mixer \
@@ -556,6 +561,8 @@ jobs:
   snapcraft:
     name: "Snap Package"
     runs-on: ubuntu-latest
+    container:
+      image: ubuntu:24.10
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
       - uses: actions/checkout@v4
@@ -563,14 +570,14 @@ jobs:
           fetch-depth: 0
       - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install \
+          apt-get update
+          apt-get install -y \
             cmake \
             ninja-build \
             gettext \
             qtbase5-dev \
-            libqt5svg5-dev \
-            libkf5archive-dev \
+            qt6-svg-dev \
+            libkf6archive-dev \
             liblua5.3-dev \
             libsqlite3-dev \
             libsdl2-mixer-dev

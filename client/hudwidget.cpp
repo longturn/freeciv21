@@ -905,7 +905,7 @@ void hud_action::leaveEvent(QEvent *event)
 /**
    Enter event for hud_action, used to get status of pixmap higlight
  */
-void hud_action::enterEvent(QEvent *event)
+void hud_action::enterEvent(QEnterEvent *event)
 {
   focus = true;
   update();
@@ -1309,8 +1309,8 @@ QString popup_terrain_info(struct tile *ptile)
   ret =
       ret
       + QString(_("Food/Prod/Trade: %1\n")).arg(get_tile_output_text(ptile));
-  t = get_infrastructure_text(ptile->extras);
-  if (t != QLatin1String("")) {
+  t = get_infrastructure_texts(ptile->extras).join(QStringLiteral("/"));
+  if (!t.isEmpty()) {
     ret = ret + QString(_("Infrastructure: %1\n")).arg(t);
   }
   ret = ret + QString(_("Defense bonus: %1%\n")).arg(terr->defense_bonus);
@@ -1614,7 +1614,7 @@ void hud_unit_combat::leaveEvent(QEvent *event)
 /**
    Leave event for hud unit combat. Shows highlight.
  */
-void hud_unit_combat::enterEvent(QEvent *event)
+void hud_unit_combat::enterEvent(QEnterEvent *event)
 {
   focus = true;
   update();

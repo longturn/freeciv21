@@ -15,6 +15,9 @@
 #include <cstring>
 #include <set>
 
+// Qt
+#include <QByteArrayView>
+
 // utility
 #include "astring.h"
 #include "fcintl.h"
@@ -1988,8 +1991,9 @@ void handle_unit_rename(player *pplayer, int unit_id, const char *name)
   fc_assert_ret(unit != nullptr);
   fc_assert_ret(pplayer == unit->owner);
 
-  // Use the QByteArray overload to prevent unbounded read
-  unit->name = QString::fromUtf8(name, MAX_LEN_NAME);
+  // Use the QByteArrayView to prevent unbounded read
+  auto qname = QByteArrayView(name, MAX_LEN_NAME);
+  unit->name = QString::fromUtf8(qname.left(qname.indexOf('\0')));
   send_unit_info(nullptr, unit);
 }
 

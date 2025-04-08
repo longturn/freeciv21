@@ -65,7 +65,7 @@ static QStringList default_data_path()
       QStringList{QStringLiteral("."), QStringLiteral("data"),
                   freeciv_storage_dir() + QStringLiteral("/" DATASUBDIR),
                   QStringLiteral(FREECIV_INSTALL_DATADIR)}
-      + QStandardPaths::standardLocations(QStandardPaths::DataLocation);
+      + QStandardPaths::standardLocations(QStandardPaths::AppDataLocation);
   QCoreApplication::setApplicationName(app_name);
   return paths;
 }
@@ -484,11 +484,12 @@ char *user_username(char *buf, size_t bufsz)
 #ifdef FREECIV_MSWINDOWS
   // On windows the GetUserName function will give us the login name.
   {
-    char name[UNLEN + 1];
-    DWORD length = sizeof(name);
+    TCHAR name[UNLEN + 1];
+    DWORD length = sizeof(name) / sizeof(TCHAR);
 
     if (GetUserName(name, &length)) {
-      fc_strlcpy(buf, name, bufsz);
+      // And of course this is 16-bits!
+      fc_strlcpy(buf, qUtf8Printable(QString::fromWCharArray(name)), bufsz);
       if (is_ascii_name(buf)) {
         qDebug("GetUserName username is %s", buf);
         return buf;
@@ -1131,7 +1132,7 @@ QString interpret_tilde(const QString &filename)
   if (filename == QLatin1String("~")) {
     return QDir::homePath();
   } else if (filename.startsWith(QLatin1String("~/"))) {
-    return QDir::homePath() + filename.midRef(1);
+    return QDir::homePath() + filename.mid(1);
   } else {
     return filename;
   }

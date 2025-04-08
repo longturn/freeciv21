@@ -2,7 +2,7 @@
   description = "Freeciv21 is an empire-building strategy game inspired by the history of human civilization. ";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -16,7 +16,7 @@
           pkgs.stdenv.mkDerivation {
             name = "freeciv21";
             src = self;
-            nativeBuildInputs = [ pkgs.qt5.wrapQtAppsHook ];
+            nativeBuildInputs = [ pkgs.kdePackages.wrapQtAppsHook ];
             buildInputs = with pkgs;[
               cmake
               ninja
@@ -24,15 +24,15 @@
               python3
               gettext
               readline
-              qt5.qtbase
+              qt6.qtbase
               # Use the libertinus in nixpkgs opposed to downloading
               libertinus
-              libsForQt5.qt5.qtsvg
+              kdePackages.qtsvg
               lua5_3_compat
               sqlite.dev
               SDL2_mixer.dev
               # KArchive dep is automatically satisfied in x86_64-darwin
-            ] ++ (if system == "x86_64-darwin" then [ ] else [ libsForQt5.karchive ]);
+            ] ++ (if system == "x86_64-darwin" then [ ] else [ kdePackages.karchive ]);
             buildPhase = ''
               mkdir -p $out/
               cmake . -B build -G Ninja \

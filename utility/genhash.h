@@ -6,6 +6,9 @@
 // utility
 #include "support.h" // bool type
 
+// std
+#include <cstddef>
+
 struct genhash; // opaque
 
 // Hash value type.

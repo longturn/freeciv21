@@ -19,6 +19,10 @@
 #include "tech.h"
 #include "traits.h"
 
+// std
+#include <map>
+#include <string>
+
 #define PLAYER_DEFAULT_TAX_RATE 0
 #define PLAYER_DEFAULT_SCIENCE_RATE 100
 #define PLAYER_DEFAULT_LUXURY_RATE 0
@@ -101,6 +105,10 @@ struct player_score {
                      * by combat or otherwise. */
   int culture;
   int game; // Total score you get in player dialog.
+
+  /// Cached demographic values, indexed by their untranslated name.
+  /// \note Can be incomplete when loading from old saves.
+  std::map<std::string, int> demographics;
 };
 
 struct player_ai {

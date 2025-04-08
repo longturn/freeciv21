@@ -1062,8 +1062,26 @@ static void dem_line_item(char *outptr, size_t out_size,
                           struct player *pplayer, const demographic &demo,
                           bv_cols selcols)
 {
+  int value = 0;
+  if (pplayer
+      && (BV_ISSET(selcols, DEM_COL_QUANTITY)
+          || BV_ISSET(selcols, DEM_COL_RANK)
+          || BV_ISSET(selcols, DEM_COL_BEST))) {
+    if (pplayer->score.demographics.count(demo.name()) > 0) {
+      value = pplayer->score.demographics[demo.name()];
+    } else {
+      // Fallback in case it's missing (e.g. save).
+      // TRANS: %s can be score, population, economics, etc.
+      qWarning(
+          _("Updating demographic \"%s\". The value may be different from "
+            "what it was at turn change."),
+          Q_(demo.name()));
+      value = demo.evaluate(pplayer);
+    }
+  }
+
   if (nullptr != pplayer && BV_ISSET(selcols, DEM_COL_QUANTITY)) {
-    const char *text = demo.text(demo.evaluate(pplayer));
+    const char *text = demo.text(value);
 
     cat_snprintf(outptr, out_size, " %s", text);
     cat_snprintf(outptr, out_size, "%*s",
@@ -1072,7 +1090,7 @@ static void dem_line_item(char *outptr, size_t out_size,
   }
 
   if (nullptr != pplayer && BV_ISSET(selcols, DEM_COL_RANK)) {
-    int basis = demo.evaluate(pplayer);
+    int basis = value;
     int place = 1;
 
     players_iterate(other)
@@ -1088,7 +1106,7 @@ static void dem_line_item(char *outptr, size_t out_size,
 
   if (nullptr == pplayer || BV_ISSET(selcols, DEM_COL_BEST)) {
     struct player *best_player = pplayer;
-    int best_value = nullptr != pplayer ? demo.evaluate(pplayer) : 0;
+    int best_value = nullptr != pplayer ? value : 0;
 
     players_iterate(other)
     {
@@ -1154,6 +1172,20 @@ bool is_valid_demography(const char *demography, int *error)
 
   // Looks like all characters were valid.
   return true;
+}
+
+/**
+ * Updates cached demographics values.
+ *
+ * All values are stored, even the ones that are not enabled. This simplifies
+ * the implementation and allows toggling demographics during the game.
+ */
+void update_demographics(struct player *pplayer)
+{
+  pplayer->score.demographics.clear();
+  for (const auto &[_, demo] : rowtable) {
+    pplayer->score.demographics[demo.name()] = demo.evaluate(pplayer);
+  }
 }
 
 /**

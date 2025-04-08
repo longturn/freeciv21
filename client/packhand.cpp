@@ -199,8 +199,11 @@ static struct unit *unpackage_unit(const struct packet_unit_info *packet)
   unit_tile_set(punit, index_to_tile(&(wld.map), packet->tile));
   punit->facing = packet->facing;
   punit->homecity = packet->homecity;
-  punit->name =
-      QString::fromUtf8(QByteArray(packet->name, ARRAY_SIZE(packet->name)));
+
+  // Use QByteArrayView to prevent an unbounded read
+  auto name = QByteArrayView(packet->name, ARRAY_SIZE(packet->name));
+  punit->name = QString::fromUtf8(name.left(name.indexOf('\0')));
+
   output_type_iterate(o) { punit->upkeep[o] = packet->upkeep[o]; }
   output_type_iterate_end;
   punit->moves_left = packet->movesleft;
@@ -305,8 +308,10 @@ unpackage_short_unit(const struct packet_unit_short_info *packet)
   punit->veteran = packet->veteran;
   punit->hp = packet->hp;
   punit->activity = static_cast<unit_activity>(packet->activity);
-  punit->name =
-      QString::fromUtf8(QByteArray(packet->name, ARRAY_SIZE(packet->name)));
+
+  // Use QByteArrayView to prevent an unbounded read
+  auto name = QByteArrayView(packet->name, ARRAY_SIZE(packet->name));
+  punit->name = QString::fromUtf8(name.left(name.indexOf('\0')));
 
   if (packet->activity_tgt == EXTRA_NONE) {
     punit->activity_target = nullptr;

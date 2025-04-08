@@ -6,6 +6,12 @@
 // utility
 #include "log.h"
 
+// Qt
+#include <QBitArray>
+
+// std
+#include <cstddef>
+
 // Yields TRUE iff the bit bit_no is set in val.
 #define TEST_BIT(val, bit_no)                                               \
   (((val) & (1u << (bit_no))) == (1u << (bit_no)))

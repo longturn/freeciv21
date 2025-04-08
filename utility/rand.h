@@ -4,6 +4,7 @@
 #pragma once
 
 // std
+#include <cstdint>
 #include <random>
 
 #define fc_rand(_size) fc_rand_debug((_size), "fc_rand", __LINE__, __FILE__)
