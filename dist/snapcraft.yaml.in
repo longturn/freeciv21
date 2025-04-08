@@ -5,7 +5,7 @@
 # SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 #
 # Build Steps:
-#   - sudo apt install snapd (run once to install -- fedora dnf is similar)
+#   - sudo apt install snapd (run once to install -- fedora's dnf is similar)
 #   - sudo snap install snapcraft --classic (run once to install)
 #   - sudo snap install lxd (run once to install)
 #   - mkdir -p build/snap/local
