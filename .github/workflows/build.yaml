@@ -356,19 +356,16 @@ jobs:
             cmake \
             ninja \
             gettext \
-            qt6-buildtools \
-            qt6-network \
+            qt6-base \
             qt6-svg \
-            qt6-testlib \
-            qt6-widgets \
             kf6-karchive \
             lua53 \
             sqlite3 \
             sdl2_mixer \
             readline \
-            zlib-ng \
             libunwind \
-            elfutils
+            elfutils \
+            pkgconf
 
           # Create an unpriviledged user to run tests as, otherwise the server
           # refuses to start (and rightfully so)
