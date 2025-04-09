@@ -3059,8 +3059,7 @@ void do_nuclear_explosion(struct player *pplayer, struct tile *ptile)
   }
   square_iterate_end;
 
-  script_server_signal_emit("nuke_exploded", 2, API_TYPE_TILE, ptile,
-                            API_TYPE_PLAYER, pplayer);
+  script_server_signal_emit("nuke_exploded", ptile, pplayer);
   notify_conn(nullptr, ptile, E_NUKE, ftc_server,
               _("The %s detonated a nuke!"),
               nation_plural_for_player(pplayer));
