@@ -5,11 +5,12 @@
 # SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 #
 # Build Steps:
-#   - (once) sudo snap install snapcraft --classic
-#   - (once) sudo snap install lxd
+#   - sudo apt install snapd (run once to install -- fedora's dnf is similar)
+#   - sudo snap install snapcraft --classic (run once to install)
+#   - sudo snap install lxd (run once to install)
 #   - mkdir -p build/snap/local
-#   - cp dist/snapcraft.yaml build/snap
 #   - cp data/icons/128x128/freeciv21-client.png build/snap/local
+#   - cmake . -B build -G Ninja
 #   - cd build
 #   - snapcraft
 #   - sudo snap install --devmode ./freeciv21_*.snap
@@ -18,6 +19,7 @@
 ##########
 
 name: freeciv21
+adopt-info: freeciv21
 title: Freeciv21
 summary: Freeciv21 - Develop your civilization from humble roots to a global empire
 description: |
@@ -35,16 +37,16 @@ issues: https://github.com/longturn/freeciv21/issues/new/choose
 confinement: strict
 compression: lzo
 
-# The base snap is the execution environment and is based on Ubuntu 22.04
-#  running in an LXD virtual machine
-base: core22
+# The base snap is the execution environment and is based on Ubuntu 24.04
+# supports Qt6 and runs in an LXD virtual machine
+base: core24
 
 # Assummes 'snapcraft' is called from a directory above the snap directory
 #  and the file was copied from <source_dir>/data/icons/128x128
 icon: snap/local/freeciv21-client.png
 
-architectures:
-  - build-on: amd64
+platforms:
+  amd64:
 
 parts:
   freeciv21:
@@ -66,10 +68,13 @@ parts:
       - liblua5.3-dev
       - libsqlite3-dev
       - libsdl2-mixer-dev
-      - qtbase5-dev
-      - libqt5svg5-dev
-      - libkf5archive-dev
       - libmagickwand-dev
+      - qt6-base-dev
+      - qt6-svg-dev
+    # base core24 doesn't have kf6archive, so we get it from a snap
+    build-snaps:
+      - core24
+      - kf6-core24
     # packages/libraries needed at run time
     stage-packages:
       - liblua5.3-0
@@ -88,7 +93,7 @@ apps:
     desktop: usr/share/applications/net.longturn.freeciv21.desktop
     command: usr/bin/freeciv21-client
     extensions:
-      - kde-neon
+      - kde-neon-6
     plugs:
       - home
       - network
@@ -98,7 +103,7 @@ apps:
     desktop: usr/share/applications/net.longturn.freeciv21.server.desktop
     command: usr/bin/freeciv21-server
     extensions:
-      - kde-neon
+      - kde-neon-6
     plugs:
       - home
       - network
@@ -108,7 +113,7 @@ apps:
     desktop: usr/share/applications/net.longturn.freeciv21.modpack.desktop
     command: usr/bin/freeciv21-modpack-qt
     extensions:
-      - kde-neon
+      - kde-neon-6
     plugs:
       - home
       - network
@@ -117,7 +122,7 @@ apps:
     desktop: usr/share/applications/net.longturn.freeciv21.ruledit.desktop
     command: usr/bin/freeciv21-ruledit
     extensions:
-      - kde-neon
+      - kde-neon-6
     plugs:
       - home
 
