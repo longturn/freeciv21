@@ -128,7 +128,7 @@ jobs:
       #    cmake --build build --target test
 
   windows:
-    name: "Windows MSYS2 (gcc)"
+    name: "Windows MSYS2 (clang)"
     runs-on: windows-latest
     needs: clang-format
     defaults:
