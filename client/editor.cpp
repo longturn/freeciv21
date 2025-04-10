@@ -187,7 +187,7 @@ void editor_ruleset_changed()
 void editor_init()
 {
   // ensure no editor is set
-  void editor_free();
+  editor_free();
 
   editor = new editor_state[1]();
 

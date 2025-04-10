@@ -21,12 +21,12 @@ private:
   void select_tile();
   void set_default_values();
 
-  const QString get_tile_road_name(struct tile *ptile);
-  const QString get_tile_infra_name(struct tile *ptile);
-  const QString get_tile_nuisance_name(struct tile *ptile);
-  const QString get_tile_hut_name(struct tile *ptile);
-  const QString get_tile_base_name(struct tile *ptile);
-  QPixmap get_tile_sprites(struct tile *ptile, struct terrain *terrain);
+  QString get_tile_road_name(const struct tile *ptile) const;
+  QString get_tile_infra_name(const struct tile *ptile) const;
+  QString get_tile_nuisance_name(const struct tile *ptile) const;
+  QString get_tile_hut_name(const struct tile *ptile) const;
+  QString get_tile_base_name(const struct tile *ptile) const;
+  QPixmap get_tile_sprites(const struct tile *ptile) const;
 
 public:
   editor_tool_tile(QWidget *parent = nullptr);
