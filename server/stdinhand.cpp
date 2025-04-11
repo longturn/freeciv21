@@ -1228,7 +1228,7 @@ QVector<QString> *get_init_script_choices()
 static void write_init_script(char *script_filename)
 {
   char buf[256];
-  FILE *script_file;
+  FILE *script_file = nullptr;
 
   const auto real_filename = interpret_tilde(script_filename);
 
