@@ -394,7 +394,7 @@ void progress_bar::paintEvent(QPaintEvent *event)
 
     i = text().indexOf('\n');
     s1 = text().left(i);
-    s2 = text().right(text().count() - i);
+    s2 = text().right(text().size() - i);
 
     if (2 * f_size >= 2 * height() / 3) {
       if (point_size < 0) {

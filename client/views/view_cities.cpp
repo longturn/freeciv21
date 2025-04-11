@@ -528,7 +528,7 @@ void city_widget::display_list_menu(const QPoint)
             &city_widget::clear_worlist);
     tmp2_menu = tmp_menu->addMenu(_("Add"));
     gen_worklist_labels(cma_labels);
-    if (cma_labels.count() == 0) {
+    if (cma_labels.isEmpty()) {
       tmp2_menu->addAction(wl_empty);
       worklist_defined = false;
     }
