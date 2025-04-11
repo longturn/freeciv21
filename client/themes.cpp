@@ -69,7 +69,7 @@ void load_diag_colors(QSettings &settings)
   for (int i = 0; i < COLOR_LAST; ++i) {
     const auto name = color_std_name(static_cast<color_std>(i));
     if (settings.contains(name)) {
-      diag_colors[i].setNamedColor(settings.value(name).toString());
+      diag_colors[i] = QColor::fromString(settings.value(name).toString());
     } else {
       diag_colors[i] = QColor(); // Invalid, fetch from tileset
     }

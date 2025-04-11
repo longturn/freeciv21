@@ -462,13 +462,13 @@ void option_dialog::set_color(struct option *poption, struct ft_color color)
   but = w->findChild<QPushButton *>(QStringLiteral("text_color"));
   if (nullptr != but && nullptr != color.foreground
       && '\0' != color.foreground[0]) {
-    col.setNamedColor(color.foreground);
+    col = QColor::fromString(color.foreground);
     but->setStyleSheet(s1 + col.name() + s2);
   }
   but = w->findChild<QPushButton *>(QStringLiteral("text_background"));
   if (nullptr != but && nullptr != color.background
       && '\0' != color.background[0]) {
-    col.setNamedColor(color.background);
+    col = QColor::fromString(color.background);
     but->setStyleSheet(s1 + col.name() + s2);
   }
 }
@@ -776,14 +776,14 @@ void option_dialog::set_color()
   but = qobject_cast<QPushButton *>(QObject::sender());
 
   if (but->objectName() == QLatin1String("text_color")) {
-    c.setNamedColor(ft_color.foreground);
+    c = QColor::fromString(ft_color.foreground);
     color = QColorDialog::getColor(c, this);
     if (color.isValid()) {
       pal.setColor(QPalette::Button, color);
       but->setPalette(pal);
     }
   } else if (but->objectName() == QLatin1String("text_background")) {
-    c.setNamedColor(ft_color.background);
+    c = QColor::fromString(ft_color.background);
     color = QColorDialog::getColor(c, this);
     if (color.isValid()) {
       pal.setColor(QPalette::Button, color);
