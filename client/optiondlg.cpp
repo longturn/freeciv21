@@ -52,7 +52,7 @@ QString split_text(const QString &text, bool cut)
   sl = text.split(QStringLiteral("\n"));
   for (const QString &s : std::as_const(sl)) {
     st = s;
-    while (st.count() >= 80) {
+    while (st.size() >= 80) {
       str = st.left(80);
       i = str.lastIndexOf(' ');
       if (i == -1) {
@@ -68,8 +68,8 @@ QString split_text(const QString &text, bool cut)
       }
     }
     str = st;
-    if (str.left(str.count()) != QLatin1String("")) {
-      result = result + str.left(str.count()) + '\n';
+    if (str.left(str.size()) != QLatin1String("")) {
+      result = result + str.left(str.size()) + '\n';
     }
     j++;
     if (j >= 12 && cut) {
@@ -92,7 +92,7 @@ QString cut_helptext(const QString &text)
   // Remove all lines from help which has '*' in first 3 chars
   sl = text.split('\n');
   for (const QString &s : std::as_const(sl)) {
-    if (s.count() > 2) {
+    if (s.size() > 2) {
       if (s.at(0) != '*' && s.at(1) != '*' && s.at(2) != '*') {
         ret_str = ret_str + s + '\n';
       }

@@ -130,7 +130,7 @@ void hud_message_box::set_text_title(const QString &s1, const QString &s2)
     int i;
     i = s1.indexOf('\n');
     cs1 = s1.left(i);
-    cs2 = s1.right(s1.count() - i);
+    cs2 = s1.right(s1.size() - i);
     mult = 2;
     w2 = qMax(fm_text->horizontalAdvance(cs1),
               fm_text->horizontalAdvance(cs2));
@@ -392,7 +392,7 @@ void hud_input_box::set_text_title_definput(const QString &s1,
     int i;
     i = s1.indexOf('\n');
     cs1 = s1.left(i);
-    cs2 = s1.right(s1.count() - i);
+    cs2 = s1.right(s1.size() - i);
     mult = 2;
     w2 = qMax(fm_text->horizontalAdvance(cs1),
               fm_text->horizontalAdvance(cs2));
@@ -693,9 +693,9 @@ void hud_units::update_actions()
   move_pt_text = move_points_text(punit->moves_left, false);
   if (move_pt_text.contains('/')) {
     fraction2 = move_pt_text.right(1);
-    move_pt_text.remove(move_pt_text.count() - 2, 2);
+    move_pt_text.remove(move_pt_text.size() - 2, 2);
     fraction1 = move_pt_text.right(1);
-    move_pt_text.remove(move_pt_text.count() - 1, 1);
+    move_pt_text.remove(move_pt_text.size() - 1, 1);
   }
   crop = QRect(5, 5, pix.width() - 5, pix.height() - 5);
   font.setCapitalization(QFont::Capitalize);
