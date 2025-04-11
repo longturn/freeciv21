@@ -4909,10 +4909,6 @@ static bool do_unit_establish_trade(struct player *pplayer,
   char punit_link[MAX_LEN_LINK];
   int revenue;
   bool can_establish;
-  int home_overbooked = 0;
-  int dest_overbooked = 0;
-  int home_max;
-  int dest_max;
   struct city *pcity_homecity;
   struct trade_route_list *routes_out_of_dest;
   struct trade_route_list *routes_out_of_home;
@@ -4973,60 +4969,60 @@ static bool do_unit_establish_trade(struct player *pplayer,
                   && !have_cities_trade_route(pcity_homecity, pcity_dest);
 
   if (can_establish) {
-    home_max = max_trade_routes(pcity_homecity);
-    dest_max = max_trade_routes(pcity_dest);
-    home_overbooked = city_num_trade_routes(pcity_homecity) - home_max;
-    dest_overbooked = city_num_trade_routes(pcity_dest) - dest_max;
-  }
+    auto home_max = max_trade_routes(pcity_homecity);
+    auto dest_max = max_trade_routes(pcity_dest);
+    auto home_overbooked = city_num_trade_routes(pcity_homecity) - home_max;
+    auto dest_overbooked = city_num_trade_routes(pcity_dest) - dest_max;
 
-  if (can_establish && (home_overbooked >= 0 || dest_overbooked >= 0)) {
-    int trade = trade_base_between_cities(pcity_homecity, pcity_dest);
+    if (home_overbooked >= 0 || dest_overbooked >= 0) {
+      int trade = trade_base_between_cities(pcity_homecity, pcity_dest);
 
-    // See if there's a trade route we can cancel at the home city.
-    if (home_overbooked >= 0) {
-      if (home_max <= 0
-          || (city_trade_removable(pcity_homecity, routes_out_of_home)
-              >= trade)) {
-        notify_player(pplayer, city_tile(pcity_dest), E_BAD_COMMAND,
-                      ftc_server,
-                      _("Sorry, your %s cannot establish"
-                        " a trade route here!"),
-                      punit_link);
-        if (home_max > 0) {
+      // See if there's a trade route we can cancel at the home city.
+      if (home_overbooked >= 0) {
+        if (home_max <= 0
+            || (city_trade_removable(pcity_homecity, routes_out_of_home)
+                >= trade)) {
           notify_player(pplayer, city_tile(pcity_dest), E_BAD_COMMAND,
                         ftc_server,
-                        PL_("      The city of %s already has %d "
-                            "better trade route!",
-                            "      The city of %s already has %d "
-                            "better trade routes!",
-                            home_max),
-                        homecity_link, home_max);
+                        _("Sorry, your %s cannot establish"
+                          " a trade route here!"),
+                        punit_link);
+          if (home_max > 0) {
+            notify_player(pplayer, city_tile(pcity_dest), E_BAD_COMMAND,
+                          ftc_server,
+                          PL_("      The city of %s already has %d "
+                              "better trade route!",
+                              "      The city of %s already has %d "
+                              "better trade routes!",
+                              home_max),
+                          homecity_link, home_max);
+          }
+          can_establish = false;
         }
-        can_establish = false;
       }
-    }
 
-    // See if there's a trade route we can cancel at the dest city.
-    if (can_establish && dest_overbooked >= 0) {
-      if (dest_max <= 0
-          || (city_trade_removable(pcity_dest, routes_out_of_dest)
-              >= trade)) {
-        notify_player(pplayer, city_tile(pcity_dest), E_BAD_COMMAND,
-                      ftc_server,
-                      _("Sorry, your %s cannot establish"
-                        " a trade route here!"),
-                      punit_link);
-        if (dest_max > 0) {
+      // See if there's a trade route we can cancel at the dest city.
+      if (can_establish && dest_overbooked >= 0) {
+        if (dest_max <= 0
+            || (city_trade_removable(pcity_dest, routes_out_of_dest)
+                >= trade)) {
           notify_player(pplayer, city_tile(pcity_dest), E_BAD_COMMAND,
                         ftc_server,
-                        PL_("      The city of %s already has %d "
-                            "better trade route!",
-                            "      The city of %s already has %d "
-                            "better trade routes!",
-                            dest_max),
-                        destcity_link, dest_max);
+                        _("Sorry, your %s cannot establish"
+                          " a trade route here!"),
+                        punit_link);
+          if (dest_max > 0) {
+            notify_player(pplayer, city_tile(pcity_dest), E_BAD_COMMAND,
+                          ftc_server,
+                          PL_("      The city of %s already has %d "
+                              "better trade route!",
+                              "      The city of %s already has %d "
+                              "better trade routes!",
+                              dest_max),
+                          destcity_link, dest_max);
+          }
+          can_establish = false;
         }
-        can_establish = false;
       }
     }
   }
