@@ -782,7 +782,7 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
         if (color_mapping.find(color) != color_mapping.end()) {
           color = color_mapping[color];
         }
-        if (QColor::isValidColor(color)) {
+        if (QColor::isValidColorName(color)) {
           style += QStringLiteral("color:%1;").arg(color);
         }
       }
@@ -791,7 +791,7 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
         if (color_mapping.find(color) != color_mapping.end()) {
           color = color_mapping[color];
         }
-        if (QColor::isValidColor(color)) {
+        if (QColor::isValidColorName(color)) {
           style += QStringLiteral("background-color:%1;").arg(color);
         }
       }
