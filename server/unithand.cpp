@@ -5615,7 +5615,6 @@ void handle_unit_orders(struct player *pplayer,
   int length = packet->length;
   struct unit *punit = player_unit_by_number(pplayer, packet->unit_id);
   struct tile *src_tile = index_to_tile(&(wld.map), packet->src_tile);
-  struct unit_order *order_list;
 #ifdef FREECIV_DEBUG
   int i;
 #endif
@@ -5652,6 +5651,7 @@ void handle_unit_orders(struct player *pplayer,
     unit_activity_handling(punit, ACTIVITY_IDLE);
   }
 
+  struct unit_order *order_list = nullptr;
   if (length) {
     order_list = create_unit_orders(length, packet->orders);
     if (!order_list) {
