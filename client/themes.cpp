@@ -46,7 +46,7 @@ void load_chat_colors(QSettings &settings)
 
   for (auto k : settings.childKeys()) {
     auto val = settings.value(k).toString();
-    if (!QColor::isValidColor(val)) {
+    if (!QColor::isValidColorName(val)) {
       qWarning() << "color invalid: " << val;
       continue;
     }
@@ -100,7 +100,7 @@ QPalette load_palette(QSettings &settings)
     }
 
     const auto val = settings.value(name).toString();
-    if (!QColor::isValidColor(val)) {
+    if (!QColor::isValidColorName(val)) {
       qWarning() << "color invalid:" << val;
       continue;
     }
