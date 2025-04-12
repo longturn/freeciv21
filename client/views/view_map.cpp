@@ -677,6 +677,7 @@ void popup_tile_info(struct tile *ptile)
 
       // Try to avoid covering the tile. This assumes that the menu is shown
       // below the location passed to popeup().
+      auto tile_height = tileset_tile_height(tileset) * mapview->scale();
       if (y + tile_height + info->sizeHint().height() < mapview->height()) {
         y += tile_height;
       } else {
