@@ -424,12 +424,9 @@ void toggle_unit_sel_widget(struct tile *ptile)
   if (unit_sel != nullptr) {
     unit_sel->close();
     delete unit_sel;
-    unit_sel = new units_select(ptile, queen()->mapview_wdg);
-    unit_sel->show();
-  } else {
-    unit_sel = new units_select(ptile, queen()->mapview_wdg);
-    unit_sel->show();
   }
+
+  unit_sel = new units_select(ptile, queen()->mapview_wdg);
 }
 
 /**
