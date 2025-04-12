@@ -21,6 +21,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QVBoxLayout>
+#include <QWidgetAction>
 #include <Qt>
 
 // utility
@@ -618,7 +619,9 @@ info_tile::info_tile(struct tile *ptile, QWidget *parent) : QMenu(parent)
 
   auto layout = new QVBoxLayout;
   layout->setSizeConstraint(QLayout::SetFixedSize);
-  setLayout(layout);
+
+  auto widget = new QWidget(this);
+  widget->setLayout(layout);
 
   auto label = new QLabel;
   layout->addWidget(label);
@@ -627,6 +630,10 @@ info_tile::info_tile(struct tile *ptile, QWidget *parent) : QMenu(parent)
   label->setTextInteractionFlags(Qt::TextBrowserInteraction);
   label->setText(popup_info_text(ptile, true));
   label->setWordWrap(true);
+
+  auto action = new QWidgetAction(this);
+  action->setDefaultWidget(widget);
+  addAction(action);
 
   connect(label, &QLabel::linkActivated, follow_help_link);
   connect(label, &QLabel::linkActivated, this, &info_tile::close);
@@ -647,6 +654,8 @@ info_tile::info_tile(struct tile *ptile, QWidget *parent) : QMenu(parent)
  */
 info_tile::~info_tile()
 {
+  QMenu::clear();
+
   mapdeco_clear_crosshairs();
   mapdeco_clear_gotoroutes();
 }
@@ -665,21 +674,17 @@ void popup_tile_info(struct tile *ptile)
 
       // Show the popup
       auto info = new info_tile(ptile, mapview);
-      // Make sure the layout is done so  we get the right metrics below
-      info->layout()->update();
-      info->layout()->activate();
 
       // Try to avoid covering the tile. This assumes that the menu is shown
       // below the location passed to popeup().
-      auto tile_height = tileset_tile_height(tileset);
-      if (y + tile_height + info->height() < mapview->height()) {
+      if (y + tile_height + info->sizeHint().height() < mapview->height()) {
         y += tile_height;
       } else {
-        y = std::max(0, int(y) - info->height());
+        y = std::max(0, int(y) - info->sizeHint().height());
       }
 
       // Show the popup
-      info->popup(queen()->mapview_wdg->mapToGlobal(QPoint(x, y)));
+      info->popup(mapview->mapToGlobal(QPoint(x, y)));
     }
   }
 }
