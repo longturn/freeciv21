@@ -16,6 +16,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QTimer>
+#include <QWidgetAction>
 #include <QtMath>
 // common
 #include "movement.h"
@@ -36,6 +37,49 @@
 units_select::units_select(struct tile *ptile, QWidget *parent)
     : QMenu(parent)
 {
+  m_widget = new units_select_widget(ptile, this);
+
+  auto action = new QWidgetAction(this);
+  action->setDefaultWidget(m_widget);
+  addAction(action);
+
+  popup(mapFromGlobal(QCursor::pos(queen()->screen())));
+}
+
+/**
+   Destructor for unit select
+ */
+units_select::~units_select()
+{
+  m_widget->close();
+  delete m_widget;
+}
+
+/**
+   Updates unit list on tile
+ */
+void units_select::update_units() { m_widget->update_units(); }
+
+/**
+   Close event for units_select, restores focus to map
+ */
+void units_select::closeEvent(QCloseEvent *event)
+{
+  queen()->mapview_wdg->setFocus();
+  QMenu::closeEvent(event);
+}
+
+/**
+   Create pixmap of whole widget except borders (pix)
+ */
+void units_select::create_pixmap() { m_widget->create_pixmap(); }
+
+/**
+   Constructor for units_select_widget
+ */
+units_select_widget::units_select_widget(struct tile *ptile, QWidget *parent)
+    : QWidget(parent)
+{
   utile = ptile;
   pix = nullptr;
   show_line = 0;
@@ -46,14 +90,12 @@ units_select::units_select(struct tile *ptile, QWidget *parent)
   h_pix = nullptr;
   create_pixmap();
   setMouseTracking(true);
-
-  popup(mapFromGlobal(QCursor::pos(queen()->screen())));
 }
 
 /**
-   Destructor for unit select
+   Destructor for units_select_widget
  */
-units_select::~units_select()
+units_select_widget::~units_select_widget()
 {
   delete h_pix;
   delete pix;
@@ -62,7 +104,7 @@ units_select::~units_select()
 /**
    Create pixmap of whole widget except borders (pix)
  */
-void units_select::create_pixmap()
+void units_select_widget::create_pixmap()
 {
   int a;
   int x, y, i;
@@ -181,9 +223,9 @@ void units_select::create_pixmap()
 }
 
 /**
-   Event for mouse moving around units_select
+   Event for mouse moving around units_select_widget
  */
-void units_select::mouseMoveEvent(QMouseEvent *event)
+void units_select_widget::mouseMoveEvent(QMouseEvent *event)
 {
   int a, b;
   int old_h;
@@ -206,11 +248,11 @@ void units_select::mouseMoveEvent(QMouseEvent *event)
 }
 
 /**
-   Mouse pressed event for units_select.
+   Mouse pressed event for units_select_widget.
    Left Button - chooses units
    Right Button - closes widget
  */
-void units_select::mousePressEvent(QMouseEvent *event)
+void units_select_widget::mousePressEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::LeftButton && highligh_num != -1) {
     update_units();
@@ -219,13 +261,13 @@ void units_select::mousePressEvent(QMouseEvent *event)
     }
     unit_focus_set(unit_list.at(highligh_num));
   }
-  QMenu::mousePressEvent(event);
+  QWidget::mousePressEvent(event);
 }
 
 /**
    Redirected paint event
  */
-void units_select::paint(QPainter *painter, QPaintEvent *event)
+void units_select_widget::paint(QPainter *painter, QPaintEvent *event)
 {
   Q_UNUSED(event)
   QFontMetrics fm(info_font);
@@ -298,9 +340,9 @@ void units_select::paint(QPainter *painter, QPaintEvent *event)
 /**
    Paint event, redirects to paint(...)
  */
-void units_select::paintEvent(QPaintEvent *event)
+void units_select_widget::paintEvent(QPaintEvent *event)
 {
-  QMenu::paintEvent(event); // Draw background
+  QWidget::paintEvent(event); // Draw background
 
   QPainter painter;
   painter.begin(this);
@@ -311,7 +353,7 @@ void units_select::paintEvent(QPaintEvent *event)
 /**
    Updates unit list on tile
  */
-void units_select::update_units()
+void units_select_widget::update_units()
 {
   int i = 1;
   struct unit_list *punit_list;
@@ -343,20 +385,10 @@ void units_select::update_units()
     close();
   }
 }
-
 /**
-   Close event for units_select, restores focus to map
+   Mouse wheel event for units_select_widget
  */
-void units_select::closeEvent(QCloseEvent *event)
-{
-  queen()->mapview_wdg->setFocus();
-  QMenu::closeEvent(event);
-}
-
-/**
-   Mouse wheel event for units_select
- */
-void units_select::wheelEvent(QWheelEvent *event)
+void units_select_widget::wheelEvent(QWheelEvent *event)
 {
   if (!more && utile == nullptr) {
     return;
