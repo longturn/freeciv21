@@ -838,7 +838,8 @@ static char *quote_block(const void *const data, int length)
   offset = qstrlen(buffer);
 
   for (i = 0; i < length; i++) {
-    snprintf(buffer + offset, bufsize, "%02x ", ((unsigned char *) data)[i]);
+    snprintf(buffer + offset, bufsize - offset, "%02x ",
+             ((unsigned char *) data)[i]);
     offset += 3;
   }
   return buffer;
