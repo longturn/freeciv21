@@ -69,7 +69,7 @@ void scale_widget::paintEvent(QPaintEvent *event)
 void scale_widget::mousePressEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::LeftButton) {
-    if (event->localPos().x() <= size) {
+    if (event->position().x() <= size) {
       scale = scale / 1.2;
     } else {
       scale = scale * 1.2;
@@ -104,7 +104,7 @@ void move_widget::put_to_corner() { move(0, 0); }
 void move_widget::mouseMoveEvent(QMouseEvent *event)
 {
   if (!king()->interface_locked) {
-    auto new_location = event->globalPos() - point;
+    auto new_location = event->globalPosition().toPoint() - point;
     if (new_location.x() < 0) {
       new_location.setX(0);
     } else if (new_location.x() + width()
@@ -127,7 +127,8 @@ void move_widget::mouseMoveEvent(QMouseEvent *event)
 void move_widget::mousePressEvent(QMouseEvent *event)
 {
   if (!king()->interface_locked) {
-    point = event->globalPos() - parentWidget()->geometry().topLeft();
+    point = event->globalPosition().toPoint()
+            - parentWidget()->geometry().topLeft();
   }
   update();
 }
@@ -226,17 +227,18 @@ resizable_widget::get_in_event_mouse(const QMouseEvent *event) const
 {
   auto flags = Qt::Edges();
 
-  if (std::abs(event->x()) < event_width && event->x() < width() / 2) {
+  if (std::abs(event->position().x()) < event_width
+      && event->position().x() < width() / 2) {
     flags |= Qt::LeftEdge;
-  } else if (std::abs(event->x() - width()) < event_width
-             && event->x() >= width() / 2) {
+  } else if (std::abs(event->position().x() - width()) < event_width
+             && event->position().x() >= width() / 2) {
     flags |= Qt::RightEdge;
   }
 
-  if (std::abs(event->y()) < event_width) {
+  if (std::abs(event->position().y()) < event_width) {
     flags |= Qt::TopEdge;
-  } else if (std::abs(event->y() - height()) < event_width
-             && event->y() >= height() / 2) {
+  } else if (std::abs(event->position().y() - height()) < event_width
+             && event->position().y() >= height() / 2) {
     flags |= Qt::BottomEdge;
   }
 
