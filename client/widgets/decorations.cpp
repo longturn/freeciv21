@@ -88,7 +88,7 @@ move_widget::move_widget(QWidget *parent) : QLabel()
   setParent(parent);
   setCursor(Qt::SizeAllCursor);
   pix = fcIcons::instance()->getIcon(QStringLiteral("move")).pixmap(32);
-  pix.setDevicePixelRatio(2);
+  pix.setDevicePixelRatio(2 * pix.devicePixelRatio());
   setPixmap(pix);
   setFixedSize(16, 16);
 }
