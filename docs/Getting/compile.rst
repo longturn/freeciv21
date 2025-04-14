@@ -24,6 +24,7 @@ An operating system that support Qt
     * Gentoo
     * KDE Neon
     * Manjaro
+    * NixOS
     * openSUSE Tumbleweed (Leap is not supported)
     * Slackware
     * Ubuntu 24.10+
@@ -351,6 +352,32 @@ use this command to create the Windows Installer package:
 
 
 When the command is finished running, you will find an installer in :file:`build/Windows-${arch}`
+
+Building with Nix
+=================
+
+The project also contains a :file:`flake.nix` allowing it to be built in NixOS or using the Nix package manager.
+
+The following command is needed to configure the flake and should be repeated any time the flake is altered:
+
+.. code-block:: sh
+
+  $ nix flake check
+
+To create a standard release build:
+
+.. code-block:: sh
+
+  $ nix build .#freeciv21 --out-link ./build-nix
+
+This will create a symlink to the build directory under :file:`build-nix` in the source directory. The binaries can be found under 
+:file:`./build-nix/bin/freeciv21-server` for example.
+
+To create a debug build retaining debug symbols compatible with :file:`gdb`:
+
+.. code-block:: sh
+
+  $ nix build .#freeciv21-debug --out-link ./build-nix-debug
 
 Documentation Build Notes
 =========================
