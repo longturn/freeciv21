@@ -29,7 +29,8 @@ jobs:
             libkf6archive-dev \
             liblua5.3-dev \
             libsqlite3-dev \
-            libsdl2-mixer-dev
+            libsdl2-mixer-dev \
+            wget
       - name: Download Coverity Build Tool
         run: |
           wget -q https://scan.coverity.com/download/cxx/linux64 --post-data "token=${TOKEN}&project=longturn/freeciv21" -O cov-analysis-linux64.tar.gz
