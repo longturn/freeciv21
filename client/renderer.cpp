@@ -87,10 +87,7 @@ void renderer::render(QPainter &painter, const QRegion &region) const
  */
 void renderer::render(QPainter &painter, const QRect &area) const
 {
-  if (scale() != 1) {
-    painter.setRenderHint(QPainter::SmoothPixmapTransform);
-  }
-
+  painter.setRenderHint(QPainter::SmoothPixmapTransform);
   auto mapview_rect =
       QRectF(area.left() / scale(), area.top() / scale(),
              area.width() / scale(), area.height() / scale());
