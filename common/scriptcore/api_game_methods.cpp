@@ -1007,6 +1007,17 @@ Tile *api_methods_unit_tile_get(lua_State *L, Unit *punit)
 }
 
 /**
+   Return the current hitpoints of the unit.
+ */
+int api_methods_unit_hitpoints_get(lua_State *L, Unit *punit)
+{
+  LUASCRIPT_CHECK_STATE(L, 0);
+  LUASCRIPT_CHECK_SELF(L, punit, 0);
+
+  return punit->hp;
+}
+
+/**
    Get unit orientation
  */
 const Direction *api_methods_unit_orientation_get(lua_State *L, Unit *punit)

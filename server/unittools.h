@@ -144,6 +144,11 @@ struct unit *create_unit_full(struct player *pplayer, struct tile *ptile,
                               int veteran_level, int homecity_id,
                               int moves_left, int hp_left,
                               struct unit *ptrans);
+bool unit_damage_hitpoints(struct unit *punit, int amount,
+                           enum unit_loss_reason loss_reason,
+                           struct player *killer);
+void unit_recover_hitpoints(struct unit *punit, int amount);
+void unit_set_hitpoints(struct unit *punit, int amount);
 void wipe_unit(struct unit *punit, enum unit_loss_reason reason,
                struct player *killer);
 void kill_unit(struct unit *pkiller, struct unit *punit, bool vet);
