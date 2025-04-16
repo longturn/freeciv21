@@ -177,7 +177,7 @@ following commands:
      libdw-dev \
      gettext \
      python3-sphinx \
-     clang-format
+     clang-format-17
 
 
 At this point, follow the steps in `Obtaining the Source Code`_ section below.
@@ -205,7 +205,8 @@ RHEL, CentOS Stream) to install Freeciv21.
     zlib-devel \
     libunwind-devel \
     elfutils-libs \
-    python3-sphinx
+    python3-sphinx \
+    clang17-tools-extra
 
 
 At this point, follow the steps in `Obtaining the Source Code`_ section below.
