@@ -7,8 +7,8 @@
 #include "support.h"
 
 // std
-#include <cstddef>
-#include <cstdio>
+#include <cstddef> // size_t
+#include <cstdio>  // FILE
 
 [[deprecated]] char *data_to_internal_string_malloc(const char *text);
 [[deprecated]] char *internal_to_data_string_malloc(const char *text);

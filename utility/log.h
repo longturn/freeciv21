@@ -5,7 +5,13 @@
 
 // Qt
 #include <QLoggingCategory>
-class QString;
+#include <QString>
+#include <QStringLiteral>
+#include <QtLogging>
+#include <qcontainerfwd.h> // QStringList = QList<QString>
+
+// std
+#include <cstdlib> // EXIT_FAILURE
 
 constexpr auto LOG_FATAL = QtFatalMsg;
 constexpr auto LOG_ERROR = QtCriticalMsg;

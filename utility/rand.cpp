@@ -19,7 +19,8 @@
 #include <QRandomGenerator>
 
 // std
-#include <random>
+#include <cstdint> // std::uint_fast32_t
+#include <random>  // std::mt19937
 
 #define log_rand log_debug
 

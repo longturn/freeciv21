@@ -8,10 +8,10 @@
 #include "fcintl.h"
 
 // Qt
-#include <QString>
-#include <QStringList>
-#include <QVector>
-#include <Qt>
+#include <QStringLiteral>
+#include <QVector>         // IWYU pragma: keep
+#include <Qt>              //Qt::SkipEmptyParts
+#include <qcontainerfwd.h> // QVector<QString>
 
 QString strvec_to_or_list(const QVector<QString> &psv)
 {

@@ -10,7 +10,7 @@
 #include <QBitArray>
 
 // std
-#include <cstddef>
+#include <cstddef> // size_t
 
 // Yields TRUE iff the bit bit_no is set in val.
 #define TEST_BIT(val, bit_no)                                               \

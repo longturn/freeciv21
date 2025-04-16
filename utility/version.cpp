@@ -5,7 +5,6 @@
 #include "version.h"
 
 // generated
-#include <fc_config.h>
 #include <fc_version.h>
 
 // utility

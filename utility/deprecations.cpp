@@ -4,4 +4,7 @@
 // self
 #include "deprecations.h"
 
+// Qt
+#include <QLoggingCategory>
+
 Q_LOGGING_CATEGORY(deprecations_category, "freeciv.depr")

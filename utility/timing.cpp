@@ -10,6 +10,7 @@
 // Qt
 #include <QElapsedTimer>
 #include <QLoggingCategory>
+#include <QtLogging> // qDebug, qWarning, qCricital, etc
 
 Q_LOGGING_CATEGORY(timers_category, "freeciv.timers")
 

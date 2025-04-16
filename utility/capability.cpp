@@ -8,11 +8,11 @@
 #include "log.h"
 
 // Qt
-#include <QByteArray> // qstrlen()
+#include <QByteArrayAlgorithms> // qstrlen()
 #include <QChar>
 
 // std
-#include <cstring>
+#include <cstring> // strncmp
 
 #define GET_TOKEN(start, end)                                               \
   {                                                                         \

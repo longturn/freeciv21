@@ -4,6 +4,9 @@
 // self
 #include "bugs.h"
 
+// Qt
+#include <QLoggingCategory>
+
 Q_LOGGING_CATEGORY(bugs_category, "freeciv.bugs")
 
 #if 0

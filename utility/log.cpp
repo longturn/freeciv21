@@ -17,12 +17,15 @@
 
 // Qt
 #include <QFile>
-#include <QFileInfo>
 #include <QIODevice>
 #include <QLoggingCategory>
 #include <QMutex>
 #include <QString>
+#include <QStringLiteral>
 #include <QtCore>
+#include <QtLogging>
+#include <qcontainerfwd.h>         // QStringList = QList<QString>
+#include <qtpreprocessorsupport.h> // Q_UNUSED
 
 Q_LOGGING_CATEGORY(assert_category, "freeciv.assert")
 

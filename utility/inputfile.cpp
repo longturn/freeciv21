@@ -67,11 +67,13 @@
 // Qt
 #include <QLoggingCategory>
 #include <QString>
+#include <QStringLiteral>
 #include <QTextStream>
+#include <qstringconverter_base.h> // QStringConverter
 
 // std
-#include <cstdarg>
-#include <utility>
+#include <cstdarg> // va_*
+#include <utility> // std:move
 
 #define INF_MAGIC (0xabdc0132) // arbitrary
 

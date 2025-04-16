@@ -6,6 +6,7 @@
 // Qt
 #include <QMutex>
 #include <QThread>
+#include <qcompilerdetection.h> // Q_DECL_OVERRIDE
 
 class fcThread : public QThread {
 public:

@@ -4,7 +4,7 @@
 #pragma once
 
 // Qt
-#include <QVector>
+#include <qcontainerfwd.h> // QVector<QString>
 class QString;
 
 QString strvec_to_or_list(const QVector<QString> &psv);

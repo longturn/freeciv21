@@ -8,7 +8,7 @@
 #include "log.h"
 
 // std
-#include <vector>
+#include <vector> // std:vector
 
 /**
    Distribute "number" elements into "groups" groups with ratios given by

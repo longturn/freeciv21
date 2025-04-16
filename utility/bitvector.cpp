@@ -9,10 +9,9 @@
 
 // Qt
 #include <QBitArray>
-#include <QStringLiteral>
 
 // std
-#include <cstddef>
+#include <cstddef> // size_t
 
 /* bv_*  - static bitvectors; used for data which where the length is
            fixed (number of players; flags for enums; ...). They are

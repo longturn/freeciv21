@@ -15,16 +15,21 @@
 #include "support.h"
 
 // Qt
+#include <QByteArrayAlgorithms> // qstrlen
 #include <QChar>
 #include <QCoreApplication>
-#include <QDateTime>
 #include <QDir>
-#include <QLoggingCategory>
+#include <QFileInfoList>
+#include <QLatin1String>
 #include <QRegularExpression>
 #include <QStandardPaths>
 #include <QString>
+#include <QStringLiteral>
+#include <Qt> //Qt::SkipEmptyParts
 #include <QtCore>
-#include <QtGlobal>
+#include <QtEnvironmentVariables> // qEnvironmentVariable*
+#include <QtLogging>              // qDebug, qWarning, qCricital, etc
+#include <qcontainerfwd.h>        // QStringList = QList<QString>
 
 // i18n dependency
 #ifdef FREECIV_ENABLE_NLS
@@ -46,14 +51,14 @@
 #endif              // FREECIV_MSWINDOWS
 
 // std
-#include <algorithm>
-#include <climits>
+#include <algorithm> // std::sort, std::unique
+#include <climits>   // CHAR_MAX
 #include <clocale>
-#include <cstdarg>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <time.h>
+#include <cstdio>  // stderr, sscanf
+#include <cstdlib> // EXIT_FAILURE, free
+#include <cstring> // str*
+#include <ctime>   // time_t
+#include <utility> // std::as_const
 
 static QStringList default_data_path()
 {

@@ -16,7 +16,7 @@
 #include <Qt>
 
 // std
-#include <cstdarg>
+#include <cstdarg> // va_*
 
 #define MAX_LEN_ERRORBUF 1024
 

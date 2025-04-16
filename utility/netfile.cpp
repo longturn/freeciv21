@@ -4,9 +4,6 @@
 // self
 #include "netfile.h"
 
-// generated
-#include <fc_config.h>
-
 // utility
 #include "fcintl.h"
 #include "log.h"
@@ -17,6 +14,7 @@
 #include <QBuffer>
 #include <QEventLoop>
 #include <QJsonDocument>
+#include <QLatin1String>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -25,7 +23,7 @@
 #include <QString>
 
 // std
-#include <memory>
+#include <memory> // std::make_unique
 
 /**
    Fetch file from given URL to given file stream. This is core

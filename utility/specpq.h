@@ -6,7 +6,7 @@
 #include "support.h"
 
 // std
-#include <cstdlib>
+#include <cstdlib> // free
 
 /**
  * specpqs: "specific priority queues".

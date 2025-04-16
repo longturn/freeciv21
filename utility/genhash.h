@@ -7,7 +7,7 @@
 #include "support.h" // bool type
 
 // std
-#include <cstddef>
+#include <cstddef> // size_t
 
 struct genhash; // opaque
 

@@ -11,11 +11,11 @@
 #include "support.h"
 
 // Qt
-#include <QByteArray> // qstrlen()
+#include <QByteArrayAlgorithms> // qstrlen()
 #include <QChar>
 
 // std
-#include <cstring>
+#include <cstring> // strchr
 
 static bool autocap = false;
 

@@ -15,8 +15,8 @@
 #include <QString>
 
 // std
-#include <sstream>
-#include <string>
+#include <sstream> // std::stringstream
+#include <string>  // std::string, std:getline
 
 // We don't want backtrace-spam to testmatic logs
 #if defined(FREECIV_DEBUG) && !defined(FREECIV_TESTMATIC)
