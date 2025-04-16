@@ -53,7 +53,7 @@ typedef int fc_errno;
 #define NFCPP_FREE(ptr)                                                     \
   do {                                                                      \
     if (ptr) {                                                              \
-      delete[](ptr);                                                        \
+      delete[] (ptr);                                                       \
     }                                                                       \
   } while (false)
 
@@ -83,14 +83,14 @@ typedef int fc_errno;
 #define NFCNPP_FREE(ptr)                                                    \
   do {                                                                      \
     if (ptr) {                                                              \
-      delete[](ptr);                                                        \
+      delete[] (ptr);                                                       \
       (ptr) = nullptr;                                                      \
     }                                                                       \
   } while (false)
 
 #define FCPP_FREE(ptr)                                                      \
   do {                                                                      \
-    delete[](ptr);                                                          \
+    delete[] (ptr);                                                         \
     (ptr) = NULL;                                                           \
   } while (false)
 

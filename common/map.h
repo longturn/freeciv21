@@ -104,7 +104,7 @@ bool map_startpos_remove(struct tile *ptile);
 #endif // FREECIV_DEBUG
 
 #define native_pos_to_index_nocheck(nat_x, nat_y)                           \
-  ((nat_x) + (nat_y) *wld.map.xsize)
+  ((nat_x) + (nat_y) * wld.map.xsize)
 #define native_pos_to_index(nat_x, nat_y)                                   \
   (CHECK_NATIVE_POS((nat_x), (nat_y)),                                      \
    native_pos_to_index_nocheck(nat_x, nat_y))
@@ -116,14 +116,14 @@ bool map_startpos_remove(struct tile *ptile);
 
 /* Obscure math.  See explanation in doc/HACKING. */
 #define NATIVE_TO_MAP_POS(pmap_x, pmap_y, nat_x, nat_y)                     \
-  (MAP_IS_ISOMETRIC ? (*(pmap_x) = ((nat_y) + ((nat_y) &1)) / 2 + (nat_x),  \
+  (MAP_IS_ISOMETRIC ? (*(pmap_x) = ((nat_y) + ((nat_y) & 1)) / 2 + (nat_x), \
                        *(pmap_y) = (nat_y) - *(pmap_x) + wld.map.xsize)     \
                     : (*(pmap_x) = (nat_x), *(pmap_y) = (nat_y)))
 
 #define MAP_TO_NATIVE_POS(pnat_x, pnat_y, map_x, map_y)                     \
   (MAP_IS_ISOMETRIC                                                         \
        ? (*(pnat_y) = (map_x) + (map_y) -wld.map.xsize,                     \
-          *(pnat_x) = (2 * (map_x) - *(pnat_y) - (*(pnat_y) &1)) / 2)       \
+          *(pnat_x) = (2 * (map_x) - *(pnat_y) - (*(pnat_y) & 1)) / 2)      \
        : (*(pnat_x) = (map_x), *(pnat_y) = (map_y)))
 
 #define NATURAL_TO_MAP_POS(pmap_x, pmap_y, nat_x, nat_y)                    \

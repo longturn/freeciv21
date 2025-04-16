@@ -324,10 +324,10 @@ void tab_enabler::add_now()
   new_enabler = action_enabler_new();
 
   fc_assert_action(NUM_ACTIONS > 0, action_enabler_free(new_enabler);
-                   return );
+                   return);
   fc_assert_action(action_id_exists(NUM_ACTIONS - 1),
                    action_enabler_free(new_enabler);
-                   return );
+                   return);
   new_enabler->action = (NUM_ACTIONS - 1);
 
   action_enabler_add(new_enabler);

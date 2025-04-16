@@ -51,7 +51,7 @@ static const char *event_sections[] = {
 
 #define GEN_EV(event, section, descr)                                       \
   {                                                                         \
-#event, nullptr, section, descr, nullptr, event                         \
+    #event, nullptr, section, descr, nullptr, event                         \
   }
 
 /*

@@ -583,8 +583,7 @@ void texai_req_worker_task_rcv(struct texai_req *req)
  **************************************************************************/
 void texai_city_alloc(struct ai_type *ait, struct city *pcity)
 {
-  struct texai_city *city_data = new struct texai_city {
-  };
+  struct texai_city *city_data = new struct texai_city {};
 
   city_data->defai.building_wait = BUILDING_WAIT_MINIMUM;
   adv_init_choice(&(city_data->defai.choice));
