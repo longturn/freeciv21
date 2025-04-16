@@ -7,12 +7,12 @@
 #include "support.h" // bool type and fc__attribute
 
 // Qt
-#include <QVector>
+#include <qcontainerfwd.h> // QVector<QString>
 class QString;
 class QIODevice;
 
 // std
-#include <cstddef>
+#include <cstddef> // size_t
 
 // Opaque types.
 struct section_file;

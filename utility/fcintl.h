@@ -17,7 +17,7 @@
  * It defines some wrapper macros that
  * we don't want defined when nls is disabled.
  */
-#include <libintl.h> // NOLINT(misc-include-cleaner)
+#include <libintl.h> // IWYU pragma: keep
 
 // MSYS libintl redefines asprintf/vasprintf as macros, and this clashes with
 // QString::asprintf and QString::vasprintf.

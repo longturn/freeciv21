@@ -7,8 +7,8 @@
 class QString;
 
 // std
-#include <cstdarg>
-#include <cstdio>
+#include <cstdarg> // va_*
+#include <cstdio>  // FILE, std*
 
 /* Want to use GCC's __attribute__ keyword to check variadic
  * parameters to printf-like functions, without upsetting other

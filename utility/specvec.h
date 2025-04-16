@@ -6,8 +6,8 @@
 #include "support.h"
 
 // std
-#include <cstddef>
-#include <cstdlib>
+#include <cstddef> // size_t
+#include <cstdlib> // free
 
 /**
  * specvectors: "specific vectors".

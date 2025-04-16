@@ -156,11 +156,19 @@
 // KArchive dependency
 #include <KCompressionDevice>
 
+// Qt
+#include <QByteArrayAlgorithms> // qstrlen, qstrdup
+#include <QLoggingCategory>     // qCCritical. qCWarning
+#include <QString>
+#include <QStringLiteral>
+#include <QtLogging>       // qDebug, qWarning, qCricital, etc
+#include <qcontainerfwd.h> // QVector<QString>
+
 // std
-#include <cstdarg>
-#include <cstdlib>
-#include <cstring>
-#include <memory>
+#include <cstdarg> // va_*
+#include <cstdlib> // free
+#include <cstring> // str*
+#include <memory>  // std::make_unique
 
 #define MAX_LEN_SECPATH 1024
 

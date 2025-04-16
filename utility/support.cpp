@@ -39,10 +39,15 @@
 #include "log.h"
 
 // Qt
-#include <QFileInfo>
+#include <QByteArray>
+#include <QByteArrayAlgorithms> // qstrlen, qstrdup, qstrncpy
+#include <QChar>
 #include <QHostInfo>
+#include <QLatin1String>
 #include <QString>
 #include <QThread>
+#include <qnamespace.h>            // Qt::CaseInsensitive
+#include <qtpreprocessorsupport.h> // Q_UNUSED
 
 // dependency Windows
 #ifdef FREECIV_MSWINDOWS
@@ -54,12 +59,11 @@
 #endif
 
 // std
-#include <climits>
-#include <cmath> // ceil()
-#include <cstdarg>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
+#include <climits> // INT_MAX
+#include <cstdarg> // va_*
+#include <cstdio>  // FILE, fopen, vsnprintf
+#include <cstdlib> // at_quick_exit
+#include <cstring> // str*, mem*
 
 /**
    Function used by fc_strdup macro, strdup() replacement

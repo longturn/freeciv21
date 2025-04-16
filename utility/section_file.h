@@ -11,7 +11,7 @@
 class QString;
 
 // std
-#include <cstddef>
+#include <cstddef> // size_t
 
 template <class Key, class T> class QMultiHash;
 

@@ -9,7 +9,7 @@ class QString;
 class QUrl;
 
 // std
-#include <functional>
+#include <functional> // nf_errmsg
 
 struct section_file;
 

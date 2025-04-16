@@ -56,9 +56,10 @@
 #include "support.h"
 
 // std
-#include <cstdint>
-#include <cstring>
-#include <new>
+#include <cstddef> // size_t
+#include <cstdint> // intptr_t
+#include <cstring> // str*, mem*
+#include <new>     // operator delete[]
 
 #define FULL_RATIO 0.75 // consider expanding when above this
 #define MIN_RATIO 0.24  // shrink when below this

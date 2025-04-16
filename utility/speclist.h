@@ -121,6 +121,7 @@
  * against multiple inclusions.
  */
 
+// utiltiy
 #include "genlist.h"
 
 #ifndef SPECLIST_TAG

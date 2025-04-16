@@ -33,9 +33,10 @@
 #include "rand.h"
 
 // std
-#include <algorithm>
-#include <cstdlib>
-#include <vector>
+#include <algorithm> // std::shuffle
+#include <cstddef>   // size_t
+#include <cstdlib>   // qsort
+#include <vector>    // std::vector
 
 /**
    Create a new empty genlist.

@@ -55,13 +55,18 @@
 /* Include libintl.h only if nls enabled.
  * It defines some wrapper macros that
  * we don't want defined when nls is disabled. */
-#include <libintl.h>
+#include <libintl.h> // IWYU pragma: keep
 #endif
 
 // Qt
-#include <QByteArray> // qstrdup(), qstrncpy()
+#include <QByteArrayAlgorithms> // qstrdup, qstrncpy
 #include <QLocale>
 #include <QTextStream>
+
+// std
+#include <cstdarg> // va_*
+#include <cstddef> // size_t
+#include <cstdio>  // FILE
 
 char *data_to_internal_string_malloc(const char *text)
 {
