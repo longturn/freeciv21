@@ -233,6 +233,62 @@ void api_edit_unit_kill(lua_State *L, Unit *punit, const char *reason,
 }
 
 /**
+   Inflict 'amount' points of damage to the unit, and send unit info.
+
+   If the unit is reduced to 0 or fewer hitpoints as a result, it is killed
+   and the 'reason' and 'killer' are used to generate notifications.
+
+   Returns true if the unit survived, otherwise false.
+ */
+bool api_edit_unit_damage_hitpoints(lua_State *L, Unit *unit, int amount,
+                                    const char *reason, Player *killer)
+{
+  LUASCRIPT_CHECK_STATE(L, true);
+  LUASCRIPT_CHECK_ARG_NIL(L, unit, 2, Unit, true);
+  LUASCRIPT_CHECK_ARG(L, amount >= 0, 3,
+                      "The damage amount cannot be negative", true);
+  LUASCRIPT_CHECK_ARG_NIL(L, reason, 4, string, true);
+  enum unit_loss_reason loss_reason =
+      unit_loss_reason_by_name(reason, fc_strcasecmp);
+  LUASCRIPT_CHECK_ARG(L, unit_loss_reason_is_valid(loss_reason), 4,
+                      "Invalid unit loss reason", true);
+
+  return unit_damage_hitpoints(unit, amount, loss_reason, killer);
+}
+
+/**
+   Increase unit hitpoints by 'amount', and send unit info.
+
+   The hitpoints will be capped at the unit's maximum.
+ */
+void api_edit_unit_recover_hitpoints(lua_State *L, Unit *unit, int amount)
+{
+  LUASCRIPT_CHECK_STATE(L);
+  LUASCRIPT_CHECK_ARG_NIL(L, unit, 2, Unit);
+  LUASCRIPT_CHECK_ARG(L, amount >= 0, 3,
+                      "The regen amount cannot be negative");
+
+  unit_recover_hitpoints(unit, amount);
+}
+
+/**
+   Set unit hitpoints to 'amount', and send unit info.
+
+   The amount must be greater than 0 and no greater than the unit's maximum.
+ */
+void api_edit_unit_set_hitpoints(lua_State *L, Unit *unit, int amount)
+{
+  LUASCRIPT_CHECK_STATE(L);
+  LUASCRIPT_CHECK_ARG_NIL(L, unit, 2, Unit);
+  LUASCRIPT_CHECK_ARG(L, amount > 0, 3,
+                      "The hitpoints amount must be positive");
+  LUASCRIPT_CHECK_ARG(L, amount <= unit_type_get(unit)->hp, 3,
+                      "The hitpoints amount cannot be greater than the max");
+
+  unit_set_hitpoints(unit, amount);
+}
+
+/**
    Change terrain on tile
  */
 bool api_edit_change_terrain(lua_State *L, Tile *ptile, Terrain *pterr)

@@ -37,7 +37,10 @@ void api_edit_unit_turn(lua_State *L, Unit *punit, Direction dir);
 
 void api_edit_unit_kill(lua_State *L, Unit *punit, const char *reason,
                         Player *killer);
-
+bool api_edit_unit_damage_hitpoints(lua_State *L, Unit *unit, int amount,
+                                    const char *reason, Player *killer);
+void api_edit_unit_recover_hitpoints(lua_State *L, Unit *unit, int amount);
+void api_edit_unit_set_hitpoints(lua_State *L, Unit *unit, int amount);
 bool api_edit_change_terrain(lua_State *L, Tile *ptile, Terrain *pterr);
 
 void api_edit_create_city(lua_State *L, Player *pplayer, Tile *ptile,
