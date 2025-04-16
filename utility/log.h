@@ -97,7 +97,7 @@ void fc_assert_handle_failure(const char *condition, const char *file,
   }
 
 // Return on failure.
-#define fc_assert_ret(condition) fc_assert_action(condition, return )
+#define fc_assert_ret(condition) fc_assert_action(condition, return)
 // Return a value on failure.
 #define fc_assert_ret_val(condition, val)                                   \
   fc_assert_action(condition, return val)

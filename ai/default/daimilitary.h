@@ -23,7 +23,7 @@
    to finish him off. */
 #define FINISH_HIM_CITY_COUNT 5
 
-typedef struct unit_list *(player_unit_list_getter)(struct player *pplayer);
+typedef struct unit_list *(player_unit_list_getter) (struct player *pplayer);
 
 struct unit_type *dai_choose_defender_versus(struct city *pcity,
                                              struct unit *attacker);

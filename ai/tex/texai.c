@@ -575,8 +575,7 @@ bool fc_ai_tex_setup(struct ai_type *ai)
 
   qstrncpy(ai->name, "tex", sizeof(ai->name));
 
-  ai->private = new struct dai_private_data {
-  };
+  ai->private = new struct dai_private_data {};
   ai->private->contemplace_workers =
       false; /* We use custom code to set worker want and type */
 
