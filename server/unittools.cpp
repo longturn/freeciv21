@@ -1922,6 +1922,58 @@ struct unit *create_unit_full(struct player *pplayer, struct tile *ptile,
 }
 
 /**
+   Inflict 'amount' points of damage to the unit, and unit info is updated.
+
+   If the unit is reduced to 0 or fewer hitpoints as a result, it is killed
+   and the 'loss_reason' and 'killer' parameters are used to generate
+   notifications and update stats.
+
+   Returns true if the unit survived, otherwise false.
+ */
+bool unit_damage_hitpoints(struct unit *punit, int amount,
+                           enum unit_loss_reason loss_reason,
+                           struct player *killer)
+{
+  fc_assert(punit != nullptr);
+  fc_assert(amount >= 0);
+  fc_assert(unit_loss_reason_is_valid(loss_reason));
+  punit->hp -= amount;
+  if (punit->hp <= 0) {
+    wipe_unit(punit, loss_reason, killer);
+    return false;
+  }
+  send_unit_info(nullptr, punit);
+  return true;
+}
+
+/**
+   Increase unit hitpoints by 'amount'. The hitpoints will be capped at the
+   unit's maximum, and unit info will be updated.
+ */
+void unit_recover_hitpoints(struct unit *punit, int amount)
+{
+  fc_assert(punit != nullptr);
+  fc_assert(amount >= 0);
+  unit_set_hitpoints(punit,
+                     MIN(punit->hp + amount, unit_type_get(punit)->hp));
+}
+
+/**
+   Set unit hitpoints to 'amount', and update unit info.
+
+   The amount must be greater than 0 and no greater than the unit's maximum.
+ */
+void unit_set_hitpoints(struct unit *punit, int amount)
+{
+  fc_assert(punit != nullptr);
+  fc_assert(amount > 0);
+  int max = unit_type_get(punit)->hp;
+  fc_assert(amount <= max);
+  punit->hp = amount;
+  send_unit_info(nullptr, punit);
+}
+
+/**
    Set the call back to run when the server removes the unit.
  */
 void unit_set_removal_callback(struct unit *punit,
