@@ -80,6 +80,7 @@ struct Building_Type {
 struct Unit_Type {
   int build_cost;
   int pop_cost;
+  int hp;
 
   const int item_number @ id;
 };
@@ -240,6 +241,8 @@ module Unit {
   module properties {
     Tile *api_methods_unit_tile_get
       @ tile(lua_State *L, Unit *self);
+    int api_methods_unit_hitpoints_get
+      @ hp(lua_State *L, Unit *self);
   }
 
   Unit *api_methods_unit_transporter
@@ -271,6 +274,10 @@ end
 
 function Unit:get_homecity()
   return find.city(self.owner, self.homecity)
+end
+
+function Unit:hp_pct()
+  return self.hp * 100 / self.utype.hp
 end
 $]
 

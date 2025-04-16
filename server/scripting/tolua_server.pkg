@@ -116,6 +116,13 @@ module edit {
   void api_edit_unit_kill
     @ unit_kill(lua_State *L, Unit *self, const char *reason,
                 Player *killer);
+  bool api_edit_unit_damage_hitpoints
+    @ unit_damage_hp(lua_State *L, Unit *unit, int amount,
+                            const char *reason, Player *killer);
+  void api_edit_unit_recover_hitpoints
+    @ unit_recover_hp(lua_State *L, Unit *unit, int amount);
+  void api_edit_unit_set_hitpoints
+    @ unit_set_hp(lua_State *L, Unit *unit, int amount);
   bool api_edit_change_terrain
     @ change_terrain(lua_State *L, Tile *ptile, Terrain *pterr);
   void api_edit_create_city
@@ -347,6 +354,33 @@ end
 
 function Unit:kill(reason, killer)
   edit.unit_kill(self, reason, killer)
+end
+
+function Unit:damage_hp(amount, reason, killer)
+  return edit.unit_damage_hitpoints(self, amount, reason, killer)
+end
+
+function Unit:damage_hp_pct(amount, reason, killer)
+  local damage = math.ceil(self.utype.hp * amount / 100)
+  return self:damage_hp(damage, reason, killer)
+end
+
+function Unit:recover_hp(amount)
+  edit.unit_recover_hitpoints(self, amount)
+end
+
+function Unit:recover_hp_pct(amount)
+  local recover = math.ceil(self.utype.hp * amount / 100)
+  return self:recover_hp(recover)
+end
+
+function Unit:set_hp(amount)
+  edit.unit_set_hitpoints(self, amount)
+end
+
+function Unit:set_hp_pct(amount)
+  local total_hp = math.ceil(self.utype.hp * amount / 100)
+  edit.unit_set_hitpoints(self, total_hp)
 end
 
 function Unit:move(moveto, movecost)
