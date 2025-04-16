@@ -145,7 +145,7 @@ one commit into a Pull Request then you can read about `git add <https://git-scm
 
     ~/GitHub/freeciv21$ git status
     ~/GitHub/freeciv21$ git add --all
-    ~/GitHub/freeciv21$ git clang-format --binary /usr/bin/clang-format-11
+    ~/GitHub/freeciv21$ git clang-format-17
     ~/GitHub/freeciv21$ git add --all
     ~/GitHub/freeciv21$ git commit
 
