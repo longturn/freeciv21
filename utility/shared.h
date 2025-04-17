@@ -8,7 +8,7 @@
 
 // Qt
 #include <QFileInfoList>
-#include <qcontainerfwd.h> // QStringList = QList<QString>
+#include <QtContainerFwd> // QStringList = QList<QString>
 
 // std
 #include <cstddef> // size_t

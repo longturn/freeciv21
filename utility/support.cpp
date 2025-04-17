@@ -46,8 +46,8 @@
 #include <QLatin1String>
 #include <QString>
 #include <QThread>
-#include <qnamespace.h>            // Qt::CaseInsensitive
-#include <qtpreprocessorsupport.h> // Q_UNUSED
+#include <Qt>                    // Qt::CaseInsensitive
+#include <QtPreprocessorSupport> // Q_UNUSED
 
 // dependency Windows
 #ifdef FREECIV_MSWINDOWS

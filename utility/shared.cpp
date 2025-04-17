@@ -15,8 +15,7 @@
 #include "support.h"
 
 // Qt
-#include <QByteArrayAlgorithms> // qstrlen
-#include <QChar>
+#include <QByteArrayAlgorithms> // qstr*
 #include <QCoreApplication>
 #include <QDir>
 #include <QFileInfoList>
@@ -25,11 +24,10 @@
 #include <QStandardPaths>
 #include <QString>
 #include <QStringLiteral>
-#include <Qt> //Qt::SkipEmptyParts
-#include <QtCore>
+#include <Qt>                     //Qt::SkipEmptyParts
+#include <QtContainerFwd>         // QStringList = QList<QString>
 #include <QtEnvironmentVariables> // qEnvironmentVariable*
 #include <QtLogging>              // qDebug, qWarning, qCricital, etc
-#include <qcontainerfwd.h>        // QStringList = QList<QString>
 
 // i18n dependency
 #ifdef FREECIV_ENABLE_NLS

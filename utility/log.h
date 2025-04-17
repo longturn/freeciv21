@@ -7,8 +7,8 @@
 #include <QLoggingCategory>
 #include <QString>
 #include <QStringLiteral>
+#include <QtContainerFwd> // QStringList = QList<QString>
 #include <QtLogging>
-#include <qcontainerfwd.h> // QStringList = QList<QString>
 
 // std
 #include <cstdlib> // EXIT_FAILURE

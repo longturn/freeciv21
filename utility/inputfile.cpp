@@ -69,7 +69,7 @@
 #include <QString>
 #include <QStringLiteral>
 #include <QTextStream>
-#include <qstringconverter_base.h> // QStringConverter
+#include <qstringconverter_base.h> // QT-BUG
 
 // std
 #include <cstdarg> // va_*
