@@ -22,10 +22,10 @@
 #include <QMutex>
 #include <QString>
 #include <QStringLiteral>
+#include <QtContainerFwd> // QStringList = QList<QString>
 #include <QtCore>
 #include <QtLogging>
-#include <qcontainerfwd.h>         // QStringList = QList<QString>
-#include <qtpreprocessorsupport.h> // Q_UNUSED
+#include <QtPreprocessorSupport> // Q_UNUSED
 
 Q_LOGGING_CATEGORY(assert_category, "freeciv.assert")
 

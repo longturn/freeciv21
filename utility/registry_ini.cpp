@@ -161,8 +161,8 @@
 #include <QLoggingCategory>     // qCCritical. qCWarning
 #include <QString>
 #include <QStringLiteral>
-#include <QtLogging>       // qDebug, qWarning, qCricital, etc
-#include <qcontainerfwd.h> // QVector<QString>
+#include <QtContainerFwd> // QVector<QString>
+#include <QtLogging>      // qDebug, qWarning, qCricital, etc
 
 // std
 #include <cstdarg> // va_*

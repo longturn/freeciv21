@@ -7,7 +7,7 @@
 #include "support.h" // bool type and fc__attribute
 
 // Qt
-#include <qcontainerfwd.h> // QVector<QString>
+#include <QtContainerFwd> // QVector<QString>
 class QString;
 class QIODevice;
 
