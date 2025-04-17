@@ -24,7 +24,7 @@
 #include <QStandardPaths>
 #include <QString>
 #include <QStringLiteral>
-#include <Qt>                     //Qt::SkipEmptyParts
+#include <Qt>                     // Qt::SkipEmptyParts
 #include <QtContainerFwd>         // QStringList = QList<QString>
 #include <QtEnvironmentVariables> // qEnvironmentVariable*
 #include <QtLogging>              // qDebug, qWarning, qCricital, etc
