@@ -9,9 +9,9 @@
 
 // Qt
 #include <QStringLiteral>
-#include <QVector>         // IWYU pragma: keep
-#include <Qt>              // Qt::SkipEmptyParts
-#include <QtContainerFwd>  // QVector<QString>, QStringList = QList<QString>
+#include <QVector>        // IWYU pragma: keep
+#include <Qt>             // Qt::SkipEmptyParts
+#include <QtContainerFwd> // QVector<QString>, QStringList = QList<QString>
 
 QString strvec_to_or_list(const QVector<QString> &psv)
 {
