@@ -128,7 +128,7 @@ C++ compiler.
 
 QT Libraries
     Freeciv21 uses the Qt libraries, specifically :file:`Qt6Core`, :file:`Qt6Gui`, :file:`Qt6Network`,
-    :file:`Qt6Svg`, and :file:`Qt6Widgets` libraries and headers.
+    :file:`Qt6Multimedia`, :file:`Qt6Svg`, and :file:`Qt6Widgets` libraries and headers.
 
     At least version 6.6 is required.
 
@@ -168,6 +168,7 @@ following commands:
      g++ \
      python3 \
      qt6-base-dev \
+     qt6-multimedia-dev \
      qt6-svg-dev \
      libkf6archive-dev \
      liblua5.3-dev \
@@ -196,6 +197,7 @@ RHEL, CentOS Stream) to install Freeciv21.
     python \
     gettext \
     qt6-qtbase-devel \
+    qt6-qtmultimedia-devel \
     qt6-qtsvg-devel \
     kf6-karchive-devel \
     lua-devel \

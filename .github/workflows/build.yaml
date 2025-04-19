@@ -50,6 +50,7 @@ jobs:
             python3-virtualenv \
             gettext \
             qt6-base-dev \
+            qt6-multimedia-dev \
             qt6-svg-dev \
             libkf6archive-dev \
             liblua5.3-dev \
@@ -112,6 +113,7 @@ jobs:
             python3 \
             gettext \
             qt6-base-dev \
+            qt6-multimedia-dev \
             qt6-svg-dev \
             libkf6archive-dev \
             liblua5.3-dev \
@@ -151,6 +153,7 @@ jobs:
             mingw-w64-clang-x86_64-lua
             mingw-w64-clang-x86_64-SDL2_mixer
             mingw-w64-clang-x86_64-qt6-base
+            mingw-w64-clang-x86_64-qt6-multimedia
             mingw-w64-clang-x86_64-qt6-svg
             mingw-w64-clang-x86_64-karchive
       - name: Configure
@@ -309,6 +312,7 @@ jobs:
             python \
             gettext \
             qt6-qtbase-devel \
+            qt6-qtmultimedia-devel \
             qt6-qtsvg-devel \
             kf6-karchive-devel \
             lua-devel \
@@ -355,6 +359,7 @@ jobs:
             ninja \
             gettext \
             qt6-base \
+            qt6-multimedia \
             qt6-svg \
             kf6-karchive \
             lua53 \
@@ -414,6 +419,7 @@ jobs:
             g++ \
             gettext \
             qt6-base-dev \
+            qt6-multimedia-dev \
             qt6-svg-dev \
             libkf6archive-dev \
             liblua5.3-dev \
