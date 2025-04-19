@@ -25,6 +25,7 @@ received a copy of the GNU General Public License along with Freeciv21.
 
 // client
 #include "audio_none.h"
+#include "audio_qt.h"
 #ifdef AUDIO_SDL
 #include "audio_sdl.h"
 #endif
@@ -33,7 +34,7 @@ received a copy of the GNU General Public License along with Freeciv21.
 
 #include "audio.h"
 
-#define MAX_NUM_PLUGINS 2
+#define MAX_NUM_PLUGINS 3
 #define SNDSPEC_SUFFIX ".soundspec"
 #define MUSICSPEC_SUFFIX ".musicspec"
 
@@ -172,6 +173,8 @@ bool audio_select_plugin(const QString &name)
  */
 void audio_init()
 {
+  audio_qt_init();
+
 #ifdef AUDIO_SDL
   audio_sdl_init();
 #endif

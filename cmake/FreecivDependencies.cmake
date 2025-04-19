@@ -161,7 +161,7 @@ if (FREECIV_ENABLE_CLIENT
   find_package(Qt6 6.6 COMPONENTS Widgets REQUIRED)
 endif()
 if (FREECIV_ENABLE_CLIENT)
-  find_package(Qt6 6.6 COMPONENTS Svg REQUIRED)
+  find_package(Qt6 6.6 COMPONENTS Multimedia Svg REQUIRED)
 endif()
 
 # FCMP-specific dependencies
