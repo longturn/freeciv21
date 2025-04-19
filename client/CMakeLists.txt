@@ -110,6 +110,7 @@ target_sources(
 
   audio/audio.cpp
   audio/audio_none.cpp
+  audio/audio_qt.cpp
 
   editor/map_editor.cpp
   editor/tool_tile.cpp
@@ -178,6 +179,7 @@ target_link_libraries(freeciv21-client PRIVATE common)
 target_link_libraries(freeciv21-client PRIVATE cvercmp)
 target_link_libraries(freeciv21-client PRIVATE tolua)
 
+target_link_libraries(freeciv21-client PRIVATE Qt6::Multimedia)
 target_link_libraries(freeciv21-client PRIVATE Qt6::Widgets)
 target_link_libraries(freeciv21-client PRIVATE Qt6::Svg)
 
