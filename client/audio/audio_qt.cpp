@@ -11,10 +11,10 @@
 #include "audio.h"
 
 // Qt
+#include <QAudio>
 #include <QAudioOutput>
 #include <QMediaPlayer>
 #include <QSoundEffect>
-#include <QtAudio>
 
 namespace {
 static QMediaPlayer *player = nullptr;
@@ -29,8 +29,8 @@ static std::map<QString, QSoundEffect> cache = {};
  */
 static void qt_audio_set_volume(double volume)
 {
-  audio_volume = QtAudio::convertVolume(
-      volume, QtAudio::LogarithmicVolumeScale, QtAudio::LinearVolumeScale);
+  audio_volume = QAudio::convertVolume(
+      volume, QAudio::LogarithmicVolumeScale, QAudio::LinearVolumeScale);
   output->setVolume(audio_volume);
 }
 
@@ -39,8 +39,8 @@ static void qt_audio_set_volume(double volume)
  */
 static double qt_audio_get_volume()
 {
-  return QtAudio::convertVolume(audio_volume, QtAudio::LinearVolumeScale,
-                                QtAudio::LogarithmicVolumeScale);
+  return QAudio::convertVolume(audio_volume, QAudio::LinearVolumeScale,
+                               QAudio::LogarithmicVolumeScale);
 }
 
 /**
