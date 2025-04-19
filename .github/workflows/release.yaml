@@ -36,6 +36,9 @@ jobs:
           base: ${{ steps.branch.outputs.branch }}
           commit-message: "Release update of AutoRevision.txt"
           branch: release/autorevision/${{ steps.branch.outputs.branch }}
+          # Ensure we only add the changed cmake/AutoRevision.txt file in the commit
+          add-paths: |
+            cmake/*.txt
           title: "Release update of AutoRevision.txt"
           body: >
             Automatic changes triggered by a new release.
