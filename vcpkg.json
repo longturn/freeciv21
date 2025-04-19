@@ -4,6 +4,7 @@
   "builtin-baseline": "23ceb9cbf9b6d32f485cf039547b70102a6ef9d8",
   "dependencies": [
     "qtbase",
+    "qtmultimedia",
     "qtsvg",
     "openssl",
     "lua",
