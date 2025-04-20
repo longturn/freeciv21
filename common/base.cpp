@@ -19,7 +19,7 @@
 #include "unittype.h"
 
 // Qt
-#include <QtGlobal> // Q_UNUSED
+#include <QtPreprocessorSupport> // Q_UNUSED
 
 /**
    Check if base provides effect
