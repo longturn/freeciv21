@@ -21,5 +21,10 @@
         </array>
     </dict>
   </array>
+  <!-- https://doc.qt.io/archives/qt-6.8/qtmultimedia-apple.html -->
+  <key>NSCameraUsageDescription</key>
+  <string>Required for technical reasons but not used.</string>
+  <key>NSMicrophoneUsageDescription</key>
+  <string>Required for technical reasons but not used.</string>
 </dict>
 </plist>
