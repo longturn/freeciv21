@@ -27,6 +27,7 @@
               qt6.qtbase
               # Use the libertinus in nixpkgs opposed to downloading
               libertinus
+              kdePackages.qtmultimedia
               kdePackages.qtsvg
               lua5_3_compat
               sqlite.dev
