@@ -70,6 +70,7 @@ parts:
       - libsdl2-mixer-dev
       - libmagickwand-dev
       - qt6-base-dev
+      - qt6-multimedia-dev
       - qt6-svg-dev
     # base core24 doesn't have kf6archive, so we get it from a snap
     build-snaps:
