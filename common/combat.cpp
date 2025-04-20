@@ -1,34 +1,32 @@
-/*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
-\_   \        /  __/          contributors. This file is part of Freeciv21.
- _\   \      /  /__     Freeciv21 is free software: you can redistribute it
- \___  \____/   __/    and/or modify it under the terms of the GNU  General
-     \_       _/          Public License  as published by the Free Software
-       | @ @  \_               Foundation, either version 3 of the  License,
-       |                              or (at your option) any later version.
-     _/     /\                  You should have received  a copy of the GNU
-    /o)  (o/\ \_                General Public License along with Freeciv21.
-    \_____/ /                     If not, see https://www.gnu.org/licenses/.
-      \____/        ********************************************************/
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
-#include <cmath>
+// self
+#include "combat.h"
 
 // utility
 #include "bitvector.h"
 #include "log.h"
 #include "rand.h"
+#include "shared.h"
 
 // common
-#include "base.h"
+#include "actions.h"
+#include "city.h"
+#include "effects.h"
+#include "extras.h"
+#include "fc_types.h"
 #include "game.h"
 #include "map.h"
 #include "movement.h"
-#include "packets.h"
+#include "player.h"
+#include "tile.h"
 #include "unit.h"
 #include "unitlist.h"
 #include "unittype.h"
 
-#include "combat.h"
+// std
+#include <cmath>
 
 /**
    Checks if player is restricted diplomatically from attacking the tile.

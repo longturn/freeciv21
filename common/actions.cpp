@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
+// self
+#include "actions.h"
+
 // utility
 #include "bitvector.h"
 #include "fcintl.h"
@@ -9,7 +12,6 @@
 #include "support.h"
 
 // common
-#include "actions.h"
 #include "base.h"
 #include "city.h"
 #include "combat.h"
@@ -36,13 +38,16 @@
 #include "unittype.h"
 
 // Qt
+#include <QLatin1String>
 #include <QMessageLogger>
-#include <QtGlobal> // Q_UNUSED
+#include <QString>
+#include <QStringLiteral>
+#include <QtPreprocessorSupport> // Q_UNUSED
 
 // std
 #include <algorithm> // max, min
 #include <cmath>     // ceil, floor
-#include <cstdarg>
+#include <cstdarg>   // va_*
 
 // Custom data types for obligatory hard action requirements.
 

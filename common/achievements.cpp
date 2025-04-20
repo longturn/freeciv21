@@ -25,8 +25,11 @@
 #include "terrain.h"
 #include "tile.h"
 
+// Qt
+#include <QtLogging> // qDebug, qWarning, qCricital, etc
+
 // std
-#include <vector>
+#include <vector> // std:vector
 
 static struct achievement achievements[MAX_ACHIEVEMENT_TYPES];
 
