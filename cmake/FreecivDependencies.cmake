@@ -162,6 +162,25 @@ if (FREECIV_ENABLE_CLIENT
 endif()
 if (FREECIV_ENABLE_CLIENT)
   find_package(Qt6 6.6 COMPONENTS Multimedia Svg REQUIRED)
+
+  # Check that we can decode ogg/vorbis
+  include(CheckSourceRuns)
+  set(CMAKE_REQUIRED_LIBRARIES Qt6::Multimedia)
+  check_source_runs(CXX [[
+    #include <QMediaFormat>
+    int main() {
+      auto fmt = QMediaFormat(QMediaFormat::Ogg);
+      fmt.setAudioCodec(QMediaFormat::AudioCodec::Vorbis);
+      return fmt.isSupported(QMediaFormat::Decode) ? 0 : 1;
+    }
+    ]]
+    HAVE_OGG_VORBIS)
+  unset(CMAKE_REQUIRED_LIBRARIES)
+  if (NOT HAVE_OGG_VORBIS)
+    message(WARNING "Qt Multimedia does not support OGG Vorbis on your system. "
+                    "Additional runtime libraries or environment variables "
+                    "(QT_MEDIA_BACKEND) may be needed to play in-game music.")
+  endif()
 endif()
 
 # FCMP-specific dependencies
