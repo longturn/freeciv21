@@ -13,6 +13,7 @@
 // Qt
 #include <QAudio>
 #include <QAudioOutput>
+#include <QMediaFormat>
 #include <QMediaPlayer>
 #include <QSoundEffect>
 
@@ -163,6 +164,14 @@ static bool qt_audio_init()
                        break;
                      }
                    });
+
+  auto fmt = QMediaFormat(QMediaFormat::Ogg);
+  fmt.setAudioCodec(QMediaFormat::AudioCodec::Vorbis);
+  if (!fmt.isSupported(QMediaFormat::Decode)) {
+    qWarning("Qt Multimedia does not support OGG Vorbis on your system. "
+             "Additional runtime libraries or environment variables "
+             "(QT_MEDIA_BACKEND) may be needed to play in-game music.");
+  }
 
   return true;
 }
