@@ -1,14 +1,8 @@
-/*
-_   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
- \  |    This file is part of Freeciv21. Freeciv21 is free software: you
-  \_|        can redistribute it and/or modify it under the terms of the
- .' '.              GNU General Public License  as published by the Free
- :O O:             Software Foundation, either version 3 of the License,
- '/ \'           or (at your option) any later version. You should have
-  :X:      received a copy of the GNU General Public License along with
-  :X:              Freeciv21. If not, see https://www.gnu.org/licenses/.
- */
-#include <cstring>
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+
+// self
+#include "effects.h"
 
 // utility
 #include "astring.h"
@@ -19,15 +13,29 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 
 // common
 #include "city.h"
+#include "fc_types.h"
 #include "government.h"
 #include "improvement.h"
-#include "map.h"
 #include "multipliers.h"
-#include "packets.h"
+#include "packets.h" // IWYU pragma: keep (FIXME)
 #include "player.h"
+#include "requirements.h"
 #include "tech.h"
+#include "tile.h"
+#include "unit.h"
+#include "unittype.h"
 
-#include "effects.h"
+// FIXME: no header providing "lsend_packet_ruleset_effect" is directly
+// included (in packets_gen.h, which breaks compile if included)
+
+// Qt
+#include <QByteArrayAlgorithms> // qstrlen, qstrdup, qstrncpy
+#include <QStringLiteral>
+#include <QtContainerFwd> // QVector<QString>
+
+// std
+#include <cmath>   // std:pow
+#include <cstring> // str*, mem*
 
 static bool initialized = false;
 
