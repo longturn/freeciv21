@@ -1,27 +1,16 @@
-/*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
-\_   \        /  __/          contributors. This file is part of Freeciv21.
- _\   \      /  /__     Freeciv21 is free software: you can redistribute it
- \___  \____/   __/    and/or modify it under the terms of the GNU  General
-     \_       _/          Public License  as published by the Free Software
-       | @ @  \_               Foundation, either version 3 of the  License,
-       |                              or (at your option) any later version.
-     _/     /\                  You should have received  a copy of the GNU
-    /o)  (o/\ \_                General Public License along with Freeciv21.
-    \_____/ /                     If not, see https://www.gnu.org/licenses/.
-      \____/        ********************************************************/
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
 /**
- This module is for generic handling of help data, independent
- of gui considerations.
+ * \file: This module is for generic handling of help data, independent of
+ * gui considerations.
  */
 
+// self
+#include "helpdata.h"
+
+// generated
 #include <fc_config.h>
-
-#include <QBitArray>
-#include <QList>
-
-#include <cstring>
 
 // utility
 #include "astring.h"
@@ -32,24 +21,59 @@
 #include "registry.h"
 #include "registry_ini.h"
 #include "requirements.h"
+#include "shared.h"
 #include "support.h"
 
 // common
+#include "actions.h"
+#include "base.h"
+#include "city.h"
 #include "effects.h"
+#include "extras.h"
+#include "fc_types.h"
 #include "game.h"
 #include "government.h"
+#include "improvement.h"
 #include "map.h"
 #include "movement.h"
 #include "multipliers.h"
+#include "name_translation.h"
 #include "nation.h"
+#include "packets.h"
+#include "player.h"
 #include "reqtext.h"
 #include "research.h"
+#include "road.h"
 #include "server_settings.h"
 #include "specialist.h"
+#include "tech.h"
+#include "terrain.h"
+#include "traderoutes.h"
 #include "unit.h"
+#include "unittype.h"
 #include "version.h"
 
-#include "helpdata.h"
+// common/networking
+#include "connection.h"
+
+// Qt
+#include <QBitArray>
+#include <QByteArrayAlgorithms> // qstrlen, qstrdup, qstrncpy
+#include <QFileInfo>
+#include <QList>
+#include <QString>
+#include <QStringLiteral>
+#include <QtConfig>              // QT_VERSION_STR
+#include <QtContainerFwd>        // QVector<QString>
+#include <QtLogging>             // qDebug, qWarning, qCricital, etc
+#include <QtPreprocessorSupport> // Q_UNUSED
+#include <QtVersion>             // qVersion
+
+// std
+#include <algorithm> // std::sort, std::unique
+#include <cstring>   // str*, mem*
+#include <list>      // std::list
+#include <utility>   // std:move, std::as_const
 
 // helper macro for easy conversion from snprintf and cat_snprintf
 #define CATLSTR(_b, _s, _t) fc_strlcat(_b, _t, _s)

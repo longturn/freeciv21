@@ -1,29 +1,23 @@
-/*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
-\_   \        /  __/          contributors. This file is part of Freeciv21.
- _\   \      /  /__     Freeciv21 is free software: you can redistribute it
- \___  \____/   __/    and/or modify it under the terms of the GNU  General
-     \_       _/          Public License  as published by the Free Software
-       | @ @  \_               Foundation, either version 3 of the  License,
-       |                              or (at your option) any later version.
-     _/     /\                  You should have received  a copy of the GNU
-    /o)  (o/\ \_                General Public License along with Freeciv21.
-    \_____/ /                     If not, see https://www.gnu.org/licenses/.
-      \____/        ********************************************************/
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
 /**
-   idex = ident index: a lookup table for quick mapping of unit and city
-   id values to unit and city pointers.
-
-   Method: use separate hash tables for each type.
-   Means code duplication for city/unit cases, but simplicity advantages.
-   Don't have to manage memory at all: store pointers to unit and city
-   structs allocated elsewhere, and keys are pointers to id values inside
-   the structs.
-
-   Note id values should probably be unsigned int: here leave as plain int
-   so can use pointers to pcity->id etc.
+ * \file
+ * idex = ident index: a lookup table for quick mapping of unit and city
+ * id values to unit and city pointers.
+ *
+ * Method: use separate hash tables for each type.
+ * Means code duplication for city/unit cases, but simplicity advantages.
+ * Don't have to manage memory at all: store pointers to unit and city
+ * structs allocated elsewhere, and keys are pointers to id values inside
+ * the structs.
+ *
+ * Note id values should probably be unsigned int: here leave as plain int
+ * so can use pointers to pcity->id etc.
  */
+
+// self
+#include "idex.h"
 
 // utility
 #include "log.h"
@@ -31,8 +25,11 @@
 // common
 #include "city.h"
 #include "unit.h"
+#include "unittype.h"
+#include "world_object.h"
 
-#include "idex.h"
+// Qt
+#include <QHash>
 
 /**
     Initialize.  Should call this at the start before use.
