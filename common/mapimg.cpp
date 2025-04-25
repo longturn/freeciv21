@@ -1,20 +1,15 @@
-/*
-Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
- /\/\             part of Freeciv21. Freeciv21 is free software: you can
-   \_\  _..._    redistribute it and/or modify it under the terms of the
-   (" )(_..._)      GNU General Public License  as published by the Free
-    ^^  // \\      Software Foundation, either version 3 of the License,
-                  or (at your option) any later version. You should have
-received a copy of the GNU General Public License along with Freeciv21.
-                              If not, see https://www.gnu.org/licenses/.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
-#include <cstdarg>
+// self
+#include "mapimg.h"
 
 // utility
 #include "bitvector.h"
 #include "fcintl.h"
 #include "log.h"
+#include "shared.h"
+#include "support.h"
 #include "timing.h"
 
 // common
@@ -27,12 +22,28 @@ received a copy of the GNU General Public License along with Freeciv21.
 #include "terrain.h"
 #include "tile.h"
 
-#include "mapimg.h"
-
 // Qt
+#include <QByteArray>
+#include <QByteArrayAlgorithms> // qstrlen, qstrdup, qstrncpy
+#include <QColor>
+#include <QFileInfo>
 #include <QImage>
 #include <QImageWriter>
+#include <QLatin1String>
 #include <QPainter>
+#include <QString>
+#include <QStringLiteral>
+#include <Qt>                    // Qt::*
+#include <QtContainerFwd>        // QStringList = QList<QString>
+#include <QtLogging>             // qDebug, qWarning, qCricital, etc
+#include <QtPreprocessorSupport> // Q_UNUSED
+
+// std
+#include <cstdarg> // va_*
+#include <cstddef> // size_t
+#include <cstdio>  // sscanf
+#include <cstring> // str*, mem*
+#include <utility> // std::as_const
 
 // == image colors ==
 enum img_special {
