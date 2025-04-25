@@ -1,13 +1,5 @@
-/***********************************************************************
-Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors. This file is
- /\/\             part of Freeciv21. Freeciv21 is free software: you can
-   \_\  _..._    redistribute it and/or modify it under the terms of the
-   (" )(_..._)      GNU General Public License  as published by the Free
-    ^^  // \\      Software Foundation, either version 3 of the License,
-                  or (at your option) any later version. You should have
-received a copy of the GNU General Public License along with Freeciv21.
-                              If not, see https://www.gnu.org/licenses/.
-***********************************************************************/
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
 /****************************************************************************
   Map images:
@@ -48,7 +40,14 @@ received a copy of the GNU General Public License along with Freeciv21.
 
 #pragma once
 
+// common
+#include "player.h"
+#include "terrain.h"
 #include "tile.h"
+
+// std
+#include <cstddef> // size_t
+
 #define MAX_LEN_MAPDEF 256
 
 // map image layers
@@ -70,7 +69,8 @@ received a copy of the GNU General Public License along with Freeciv21.
 // used a possible dummy value
 #define SPECENUM_COUNT MAPIMG_LAYER_COUNT
 #define SPECENUM_COUNTNAME "-"
-#include "specenum_gen.h"
+#include "specenum_gen.h" // IWYU pragma: keep (FIXME)
+
 /* If you change this enum, the default values for the client have to be
  * adapted (see options.c). */
 
