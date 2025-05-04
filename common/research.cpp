@@ -1,14 +1,11 @@
-/*
-_   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
- \  |    This file is part of Freeciv21. Freeciv21 is free software: you
-  \_|        can redistribute it and/or modify it under the terms of the
- .' '.              GNU General Public License  as published by the Free
- :O O:             Software Foundation, either version 3 of the License,
- '/ \'           or (at your option) any later version. You should have
-  :X:      received a copy of the GNU General Public License along with
-  :X:              Freeciv21. If not, see https://www.gnu.org/licenses/.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv and Freeciv21 Contributors
+
+// self
+#include "research.h"
+
 // utility
+#include "bitvector.h"
 #include "fcintl.h"
 #include "iterator.h"
 #include "log.h"
@@ -16,15 +13,28 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "support.h"
 
 // common
+#include "city.h"
+#include "effects.h"
 #include "fc_types.h"
 #include "game.h"
 #include "name_translation.h"
 #include "nation.h"
 #include "player.h"
+#include "requirements.h"
 #include "team.h"
 #include "tech.h"
 
-#include "research.h"
+// Qt
+#include <QByteArray>
+#include <QByteArrayAlgorithms> // qstrlen, qstrdup, qstrncpy
+#include <QGlobalStatic>        // Q_GLOBAL_STATIC
+#include <QString>
+#include <QtContainerFwd> // QVector<QString>
+
+// std
+#include <cstddef> // size_t
+#include <vector>  // std:vector
+
 // FIXME: Dont use extern, move inside some game running class eventually
 std::vector<research> research_array(MAX_NUM_PLAYER_SLOTS);
 

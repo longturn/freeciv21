@@ -1,11 +1,14 @@
-// SPDX-FileCopyrightText: 2022 Louis Moureaux
 // SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv and Freeciv21 Contributors
+// SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
 #pragma once
 
+// common
 #include "unit.h"
 
-#include <vector>
+// std
+#include <vector> // std::vector
 
 struct tile;
 

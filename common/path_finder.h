@@ -1,17 +1,27 @@
-// SPDX-FileCopyrightText: 2022 Louis Moureaux
 // SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv and Freeciv21 Contributors
+// SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
 #pragma once
 
+// utility
+#include "log.h"
+
+// common
+#include "fc_types.h"
 #include "path.h"
+#include "player.h"
 #include "unit.h"
 
-#include <map>
-#include <memory>
-#include <optional>
-#include <queue>
-#include <set>
-#include <utility>
+// std
+#include <cstddef>    // size_t
+#include <functional> // std::greater
+#include <map>        // std::multimap
+#include <memory>     // std::unique_ptr
+#include <optional>   // std::optional
+#include <queue>      // std::priority_queue
+#include <utility>    // std::move
+#include <vector>     // std::vector
 
 struct tile;
 

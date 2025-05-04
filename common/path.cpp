@@ -1,11 +1,23 @@
-// SPDX-FileCopyrightText: 2022 Louis Moureaux
 // SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv and Freeciv21 Contributors
+// SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
+// self
 #include "path.h"
 
-#include "path_finder.h"
+// utility
+#include "log.h"
 
-#include <algorithm>
+// common
+#include "path_finder.h"
+#include "unit.h"
+
+// Qt
+#include <QtPreprocessorSupport> // Q_UNUSED
+
+// std
+#include <algorithm> // std::sort, std::unique
+#include <vector>    // std::vector
 
 namespace freeciv {
 

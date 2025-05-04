@@ -1,20 +1,11 @@
-/*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
-\_   \        /  __/          contributors. This file is part of Freeciv21.
- _\   \      /  /__     Freeciv21 is free software: you can redistribute it
- \___  \____/   __/    and/or modify it under the terms of the GNU  General
-     \_       _/          Public License  as published by the Free Software
-       | @ @  \_               Foundation, either version 3 of the  License,
-       |                              or (at your option) any later version.
-     _/     /\                  You should have received  a copy of the GNU
-    /o)  (o/\ \_                General Public License along with Freeciv21.
-    \_____/ /                     If not, see https://www.gnu.org/licenses/.
-      \____/        ********************************************************/
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv and Freeciv21 Contributors
 
-#include <QBitArray>
-#include <QString>
+// self
+#include "player.h"
 
 // utility
+#include "bitvector.h"
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h"
@@ -23,22 +14,42 @@
 // common
 #include "ai.h"
 #include "city.h"
+#include "effects.h"
+#include "extras.h"
 #include "fc_interface.h"
-#include "featured_text.h"
+#include "fc_types.h"
 #include "game.h"
-#include "government.h"
 #include "idex.h"
 #include "improvement.h"
 #include "map.h"
 #include "multipliers.h"
 #include "nation.h"
+#include "requirements.h"
 #include "research.h"
 #include "rgbcolor.h"
+#include "spaceship.h"
+#include "team.h"
+#include "tech.h"
+#include "tile.h"
+#include "traderoutes.h"
 #include "unit.h"
 #include "unitlist.h"
+#include "unittype.h"
 #include "vision.h"
 
-#include "player.h"
+// common/networking
+#include "connection.h"
+
+// Qt
+#include <QBitArray>
+#include <QString>
+#include <QStringLiteral>
+#include <Qt>        // Qt::*
+#include <QtLogging> // qDebug, qWarning, qCricital, etc
+
+// std
+#include <cstring> // str*, mem*
+#include <vector>  // std:vector
 
 struct player_slot {
   struct player *player;

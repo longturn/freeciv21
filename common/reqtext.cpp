@@ -1,34 +1,45 @@
-/*
-Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors. This file is
- /\/\             part of Freeciv21. Freeciv21 is free software: you can
-   \_\  _..._    redistribute it and/or modify it under the terms of the
-   (" )(_..._)      GNU General Public License  as published by the Free
-    ^^  // \\      Software Foundation, either version 3 of the License,
-                  or (at your option) any later version. You should have
-received a copy of the GNU General Public License along with Freeciv21.
-                              If not, see https://www.gnu.org/licenses/.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv and Freeciv21 Contributors
+
+// self
+#include "reqtext.h"
 
 // utility
 #include "astring.h"
 #include "fcintl.h"
+#include "log.h"
+#include "support.h"
 
 // common
 #include "achievements.h"
 #include "actions.h"
+#include "base.h"
 #include "calendar.h"
+#include "city.h"
 #include "extras.h"
+#include "fc_types.h"
 #include "government.h"
-#include "map.h"
+#include "improvement.h"
 #include "movement.h"
 #include "nation.h"
 #include "player.h"
 #include "requirements.h"
+#include "road.h"
 #include "server_settings.h"
 #include "specialist.h"
 #include "style.h"
+#include "tech.h"
+#include "terrain.h"
+#include "traderoutes.h"
+#include "unittype.h"
 
-#include "reqtext.h"
+// Qt
+#include <QString>
+#include <QtContainerFwd> // QVector<QString>
+#include <QtLogging>      // qDebug, qWarning, qCricital, etc
+
+// std
+#include <cstddef> // size_t
 
 /**
    Append text for the requirement. Something like
