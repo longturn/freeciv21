@@ -1,23 +1,26 @@
-/*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
- __    __          part of Freeciv21. Freeciv21 is free software: you can
-/ \\..// \    redistribute it and/or modify it under the terms of the GNU
-  ( oo )        General Public License  as published by the Free Software
-   \__/         Foundation, either version 3 of the License,  or (at your
-                      option) any later version. You should have received
-    a copy of the GNU General Public License along with Freeciv21. If not,
-                  see https://www.gnu.org/licenses/.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv and Freeciv21 Contributors
+
+// self
+#include "requirements.h"
+
 // utility
+#include "bitvector.h"
 #include "fcintl.h"
 #include "log.h"
+#include "shared.h"
 #include "support.h"
 
 // common
 #include "achievements.h"
+#include "actions.h"
+#include "base.h"
 #include "calendar.h"
 #include "citizens.h"
+#include "city.h"
 #include "culture.h"
+#include "extras.h"
+#include "fc_types.h"
 #include "game.h"
 #include "government.h"
 #include "improvement.h"
@@ -30,8 +33,24 @@
 #include "server_settings.h"
 #include "specialist.h"
 #include "style.h"
+#include "tech.h"
+#include "terrain.h"
+#include "tile.h"
+#include "traderoutes.h"
+#include "unit.h"
+#include "unitlist.h"
+#include "unittype.h"
 
-#include "requirements.h"
+// Qt
+#include <QString>
+#include <QStringLiteral>
+#include <QtLogging>             // qDebug, qWarning, qCricital, etc
+#include <QtPreprocessorSupport> // Q_UNUSED
+
+// std
+#include <cstdarg> // va_*
+#include <cstddef> // size_t
+#include <cstdlib> // atoi
 
 /**
   Container for req_item_found functions

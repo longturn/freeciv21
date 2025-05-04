@@ -1,13 +1,6 @@
-/***********************************************************************
-_   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
- \  |    This file is part of Freeciv21. Freeciv21 is free software: you
-  \_|        can redistribute it and/or modify it under the terms of the
- .' '.              GNU General Public License  as published by the Free
- :O O:             Software Foundation, either version 3 of the License,
- '/ \'           or (at your option) any later version. You should have
-  :X:      received a copy of the GNU General Public License along with
-  :X:              Freeciv21. If not, see https://www.gnu.org/licenses/.
-***********************************************************************/
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv and Freeciv21 Contributors
+
 #pragma once
 
 // utility
@@ -17,6 +10,10 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 // common
 #include "fc_types.h"
 #include "tech.h"
+
+// std
+#include <cstddef> // size_t
+#include <vector>  // std:vector
 
 /* TECH_KNOWN is self-explanatory, TECH_PREREQS_KNOWN are those for which all
  * requirements are fulfilled; all others (including those which can never

@@ -1,21 +1,42 @@
-// SPDX-FileCopyrightText: 2022 Louis Moureaux
 // SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv and Freeciv21 Contributors
+// SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
+// self
 #include "path_finder.h"
 
+// utility
+#include "log.h"
+
+// common
 #include "actions.h"
+#include "city.h"
+#include "fc_types.h"
 #include "game.h"
 #include "map.h"
 #include "movement.h"
 #include "path.h"
+#include "player.h"
 #include "tile.h"
 #include "unit.h"
 #include "unit_utils.h"
+#include "unitlist.h"
+#include "unittype.h"
 #include "world_object.h"
 
-#include <map>
-#include <queue>
-#include <set>
+// Qt
+#include <QtPreprocessorSupport> // Q_UNUSED
+
+// std
+#include <algorithm> // std:min, std::find_if
+#include <cstddef>   // size_t
+#include <map>       // std::multimap
+#include <memory>    // std::make_unique
+#include <optional>  // std::optional, std::nullopt
+#include <queue>     // std::priority_queue
+#include <tuple>     // std:tie
+#include <utility>   // std:move
+#include <vector>    // std:vector
 
 namespace freeciv {
 
