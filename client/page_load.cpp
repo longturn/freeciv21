@@ -20,6 +20,7 @@
 
 // utility
 #include "fcintl.h"
+#include "registry.h"
 #include "section_file.h"
 
 // common

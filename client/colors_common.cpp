@@ -12,6 +12,7 @@
 
 // utility
 #include "log.h"
+#include "registry.h"
 #include "shared.h"
 
 // common

@@ -1,32 +1,36 @@
-/*
-    Copyright (c) 1996-2020 Freeciv21 and Freeciv  contributors. This file
-                         is part of Freeciv21. Freeciv21 is free software:
-|\_/|,,_____,~~`        you can redistribute it and/or modify it under the
-(.".)~~     )`~}}    terms of the GNU General Public License  as published
- \o/\ /---~\\ ~}}     by the Free Software Foundation, either version 3 of
-   _//    _// ~}       the License, or (at your option) any later version.
-                        You should have received a copy of the GNU General
-                          Public License along with Freeciv21. If not, see
-                                            https://www.gnu.org/licenses/.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
-#include <QBitArray>
+// self
+#include "tile.h"
+
 // utility
 #include "bitvector.h"
 #include "log.h"
+#include "shared.h"
 #include "support.h"
 
 // common
+#include "base.h"
+#include "city.h"
 #include "extras.h"
 #include "fc_interface.h"
+#include "fc_types.h"
 #include "game.h"
 #include "map.h"
 #include "road.h"
 #include "terrain.h"
 #include "unit.h"
 #include "unitlist.h"
+#include "unittype.h"
 
-#include "tile.h"
+// Qt
+#include <QBitArray>
+#include <QStringLiteral>
+#include <QtLogging> // qDebug, qWarning, qCricital, etc
+
+// std
+#include <cstring> // str*, mem*
 
 static bv_extras empty_extras;
 

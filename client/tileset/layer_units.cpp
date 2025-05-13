@@ -7,6 +7,7 @@
 #include "layer_units.h"
 
 #include "control.h"
+#include "map.h"
 #include "movement.h"
 #include "options.h"
 #include "rgbcolor.h"

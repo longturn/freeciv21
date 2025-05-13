@@ -1,15 +1,6 @@
-/*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
-\_   \        /  __/          contributors. This file is part of Freeciv21.
- _\   \      /  /__     Freeciv21 is free software: you can redistribute it
- \___  \____/   __/    and/or modify it under the terms of the GNU  General
-     \_       _/          Public License  as published by the Free Software
-       | @ @  \_               Foundation, either version 3 of the  License,
-       |                              or (at your option) any later version.
-     _/     /\                  You should have received  a copy of the GNU
-    /o)  (o/\ \_                General Public License along with Freeciv21.
-    \_____/ /                     If not, see https://www.gnu.org/licenses/.
-      \____/        ********************************************************/
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+
 #pragma once
 
 #define SPECENUM_NAME trait
@@ -22,7 +13,7 @@
 #define SPECENUM_VALUE3 TRAIT_BUILDER
 #define SPECENUM_VALUE3NAME "Builder"
 #define SPECENUM_COUNT TRAIT_COUNT
-#include "specenum_gen.h"
+#include "specenum_gen.h" // IWYU pragma: keep
 
 #define TRAIT_DEFAULT_VALUE 50
 #define TRAIT_MAX_VALUE (TRAIT_DEFAULT_VALUE * TRAIT_DEFAULT_VALUE)
