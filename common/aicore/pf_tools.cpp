@@ -6,6 +6,7 @@
 
 // utility
 #include "bitvector.h"
+#include "iterator.h"
 #include "log.h"
 #include "shared.h"
 
@@ -28,12 +29,10 @@
 #include "aiactions.h"
 
 // Qt
-#include <QHash>
-#include <QLoggingCategory>
-#include <QtGlobal>
+#include <QtPreprocessorSupport> // Q_UNUSED
 
 // std
-#include <cstring>
+#include <cstring> // str*, mem*
 
 // ===================== Capability Functions ========================
 

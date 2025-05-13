@@ -69,7 +69,7 @@
 // used a possible dummy value
 #define SPECENUM_COUNT MAPIMG_LAYER_COUNT
 #define SPECENUM_COUNTNAME "-"
-#include "specenum_gen.h" // IWYU pragma: keep (FIXME)
+#include "specenum_gen.h" // IWYU pragma: keep
 
 /* If you change this enum, the default values for the client have to be
  * adapted (see options.c). */

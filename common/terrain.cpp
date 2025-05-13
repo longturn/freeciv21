@@ -1,29 +1,33 @@
-/*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
- __    __          part of Freeciv21. Freeciv21 is free software: you can
-/ \\..// \    redistribute it and/or modify it under the terms of the GNU
-  ( oo )        General Public License  as published by the Free Software
-   \__/         Foundation, either version 3 of the License,  or (at your
-                      option) any later version. You should have received
-    a copy of the GNU General Public License along with Freeciv21. If not,
-                  see https://www.gnu.org/licenses/.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+
+// self
+#include "terrain.h"
 
 // utility
+#include "bitvector.h"
 #include "fcintl.h"
-#include "log.h" // fc_assert
-#include "rand.h"
+#include "log.h"
 #include "shared.h"
 #include "support.h"
 
 // common
 #include "extras.h"
+#include "fc_types.h"
 #include "game.h"
 #include "map.h"
+#include "name_translation.h"
 #include "rgbcolor.h"
 #include "road.h"
+#include "tile.h"
 
-#include "terrain.h"
+// Qt
+#include <QString>
+#include <QtContainerFwd> // QStringList = QList<QString>
+
+// std
+#include <algorithm> // std:max
+#include <cstring>   // str*, mem*
 
 static struct terrain civ_terrains[MAX_NUM_TERRAINS];
 static struct user_flag user_terrain_flags[MAX_NUM_USER_TER_FLAGS];

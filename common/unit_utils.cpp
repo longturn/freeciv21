@@ -1,13 +1,21 @@
-// SPDX-FileCopyrightText: 1996-2021 Freeciv contributors
-// SPDX-FileCopyrightText: 1996-2021 Freeciv21 contributors
-// SPDX-FileCopyrightText: 2022 Louis Moureaux
 // SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+// SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
+// self
 #include "unit_utils.h"
 
+// utility
+#include "shared.h"
+
+// common
+#include "city.h"
+#include "effects.h"
+#include "fc_types.h"
 #include "game.h"
 #include "tile.h"
 #include "unit.h"
+#include "unittype.h"
 
 /**
  * returns how many hp's a unit will gain on this square

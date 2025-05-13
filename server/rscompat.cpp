@@ -22,6 +22,7 @@
 // common
 #include "actions.h"
 #include "effects.h"
+#include "map.h"
 #include "movement.h"
 #include "requirements.h"
 #include "unittype.h"

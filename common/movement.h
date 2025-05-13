@@ -5,7 +5,6 @@
 
 // common
 #include "fc_types.h"
-#include "map.h" // IWYU pragma: keep (FIXME)
 #include "map_types.h"
 #include "path_finder.h"
 #include "player.h"

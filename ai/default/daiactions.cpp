@@ -12,6 +12,7 @@
 
 // common
 #include "city.h"
+#include "map.h"
 #include "metaknowledge.h"
 #include "movement.h"
 #include "player.h"

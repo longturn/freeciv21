@@ -18,6 +18,7 @@
 #include "fcintl.h"
 #include "log.h"
 #include "rand.h"
+#include "registry.h"
 #include "section_file.h"
 #include "shared.h"
 #include "support.h"

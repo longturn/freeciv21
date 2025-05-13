@@ -27,6 +27,7 @@
 
 // utility
 #include "net_types.h"
+#include "registry.h"
 #include "registry_ini.h"
 
 // generated
