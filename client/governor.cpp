@@ -116,19 +116,16 @@ governor *governor::i()
 void governor::add_city_changed(struct city *pcity)
 {
   scity_changed.insert(pcity->id);
-  run();
 };
 
 void governor::add_city_new(struct city *pcity)
 {
   scity_changed.insert(pcity->id);
-  run();
 };
 
 void governor::add_city_remove(struct city *pcity)
 {
   scity_remove.insert(pcity->id);
-  run();
 };
 
 // run all events
