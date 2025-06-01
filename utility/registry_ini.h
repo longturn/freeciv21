@@ -57,7 +57,8 @@ struct section_file *secfile_from_stream(QIODevice *stream,
                                          bool allow_duplicates);
 
 bool secfile_save(const struct section_file *secfile, QString filename);
-void secfile_check_unused(const struct section_file *secfile);
+void secfile_check_unused(const struct section_file *secfile,
+                          int max_warnings = 10);
 const char *secfile_name(const struct section_file *secfile);
 
 enum entry_special_type { EST_NORMAL, EST_INCLUDE, EST_COMMENT };

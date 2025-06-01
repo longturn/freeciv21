@@ -854,27 +854,37 @@ bool secfile_save(const struct section_file *secfile, QString filename)
    you could do something like:
       section_file_lookup(&file, "foo.bar");  / * unused * /
  */
-void secfile_check_unused(const struct section_file *secfile)
+void secfile_check_unused(const struct section_file *secfile,
+                          int max_warnings)
 {
-  bool any = false;
+  int count = 0;
 
   section_list_iterate(secfile_sections(secfile), psection)
   {
     entry_list_iterate(section_entries(psection), pentry)
     {
       if (!entry_used(pentry)) {
-        if (!any && secfile->name) {
+        if (count == 0 && secfile->name) {
           qDebug("Unused entries in file %s:", secfile->name);
-          any = true;
         }
-        qCWarning(deprecations_category, "%s: unused entry: %s.%s",
-                  secfile->name != nullptr ? secfile->name : "nameless",
-                  section_name(psection), entry_name(pentry));
+        count++;
+        if (count <= max_warnings) {
+          qCWarning(deprecations_category, "%s: unused entry: %s.%s",
+                    secfile->name != nullptr ? secfile->name : "nameless",
+                    section_name(psection), entry_name(pentry));
+        }
       }
     }
     entry_list_iterate_end;
   }
   section_list_iterate_end;
+
+  if (count > max_warnings) {
+    qCWarning(deprecations_category,
+              "%s: total %d unused entries (showing first %d)",
+              secfile->name != nullptr ? secfile->name : "nameless", count,
+              max_warnings);
+  }
 }
 
 /**
