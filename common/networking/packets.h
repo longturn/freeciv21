@@ -1,78 +1,28 @@
-/*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
-\_   \        /  __/          contributors. This file is part of Freeciv21.
- _\   \      /  /__     Freeciv21 is free software: you can redistribute it
- \___  \____/   __/    and/or modify it under the terms of the GNU  General
-     \_       _/          Public License  as published by the Free Software
-       | @ @  \_               Foundation, either version 3 of the  License,
-       |                              or (at your option) any later version.
-     _/     /\                  You should have received  a copy of the GNU
-    /o)  (o/\ \_                General Public License along with Freeciv21.
-    \_____/ /                     If not, see https://www.gnu.org/licenses/.
-      \____/        ********************************************************/
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+
 #pragma once
 
 struct connection;
 struct data_in;
 
+// generated
+#include <packets_gen.h>
+
 // utility
+#include "log.h"
 #include "shared.h" // MAX_LEN_ADDR
 
 // common
-#include "connection.h" // struct connection, MAX_LEN_*
-#include "diptreaty.h"
-#include "effects.h"
-#include "events.h"
-#include "improvement.h" // bv_imprs
+#include "connection.h"
+#include "diptreaty.h" // IWYU pragma: keep - needed by the server
+#include "fc_types.h"
 #include "player.h"
-#include "requirements.h"
-#include "spaceship.h"
-#include "team.h"
-#include "tile.h"
+#include "team.h" // IWYU pragma: keep - needed by the server/map generator
 #include "traderoutes.h"
-#include "unittype.h"
-#include "worklist.h"
 
-// Used in network protocol.
-#define MAX_LEN_MSG 1536
-#define MAX_LEN_ROUTE 2000 /* MAX_LEN_PACKET / 2 - header */
-
-/* The size of opaque (void *) data sent in the network packet.  To avoid
- * fragmentation issues, this SHOULD NOT be larger than the standard
- * ethernet or PPP 1500 byte frame size (with room for headers).
- *
- * Do not spend much time optimizing, you have no idea of the actual dynamic
- * path characteristics between systems, such as VPNs and tunnels.
- *
- * Used in network protocol.
- */
-#define ATTRIBUTE_CHUNK_SIZE (1400)
-
-// Used in network protocol.
-enum report_type {
-  REPORT_WONDERS_OF_THE_WORLD,
-  REPORT_TOP_5_CITIES,
-  REPORT_DEMOGRAPHIC,
-  REPORT_ACHIEVEMENTS
-};
-
-// Used in network protocol.
-enum unit_info_use {
-  UNIT_INFO_IDENTITY,
-  UNIT_INFO_CITY_SUPPORTED,
-  UNIT_INFO_CITY_PRESENT
-};
-
-// Used in network protocol.
-enum authentication_type {
-  AUTH_LOGIN_FIRST,   // request a password for a returning user
-  AUTH_NEWUSER_FIRST, // request a password for a new user
-  AUTH_LOGIN_RETRY,   // inform the client to try a different password
-  AUTH_NEWUSER_RETRY  /* inform the client to try a different [new] password
-                       */
-};
-
-#include "packets_gen.h"
+// Qt
+#include <QtContainerFwd> // QVector<QString>
 
 struct packet_handlers {
   union {
