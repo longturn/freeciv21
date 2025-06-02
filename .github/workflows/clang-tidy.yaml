@@ -26,9 +26,13 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
+      - name: Setup mirror
+        run: |
+          sed -i 's/archive\.ubuntu\.com/azure.archive.ubuntu.com/g' /etc/apt/sources.list.d/ubuntu.sources
+          apt-get update
+
       - name: Install Dependencies
         run: |
-          apt-get update
           apt-get install -y \
             clang \
             cmake \
