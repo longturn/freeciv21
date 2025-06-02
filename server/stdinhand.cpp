@@ -3531,6 +3531,12 @@ static bool take_command(struct connection *caller, char *str, bool check)
 
   if (arg.count() == 2) {
     sz_strlcpy(username, qUtf8Printable(arg.at(i)));
+    if (!is_valid_username(username)) {
+      cmd_reply(CMD_TAKE, caller, C_FAIL,
+                _("\"%s\" is not a valid username."), username);
+      return res;
+    }
+
     pconn = conn_by_user_prefix(qUtf8Printable(arg.at(i)), &match_result);
     i++; // found a conn, now reference the second argument
 
