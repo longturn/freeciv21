@@ -15,9 +15,12 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Setup mirror
+        run: |
+          sed -i 's/archive\.ubuntu\.com/azure.archive.ubuntu.com/g' /etc/apt/sources.list.d/ubuntu.sources
+          apt-get update
       - name: Install dependencies
         run: |
-          apt-get update
           apt-get install -y \
             cmake \
             ninja-build \
