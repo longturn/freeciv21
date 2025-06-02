@@ -2,6 +2,7 @@
 
 # SPDX-License-Identifier: GPL-3.0-or-later
 # SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+# SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 import argparse
 import io
@@ -1762,13 +1763,14 @@ def write_common_header(packets: list[Packet], output: io.TextIOWrapper) -> None
         """
 #pragma once
 
-// common
-#include "actions.h"
-#include "disaster.h"
-#include "unit.h"
+// utility
+#include "shared.h" // MAX_LEN_ADDR
 
-// common/aicore
+// common
 #include "cm.h"
+#include "disaster.h"
+#include "fc_types.h"
+#include "unit.h"
 
 """
     )
@@ -1798,23 +1800,34 @@ def write_common_source(packets: list[Packet], output: io.TextIOWrapper) -> None
     write_disclaimer(output)
     output.write(
         """
-#include "packets.h"
+// self - generated
+#include <packets_gen.h>
 
 // utility
 #include "bitvector.h"
 #include "capability.h"
-#include "fc_config.h"
 #include "genhash.h"
 #include "log.h"
 #include "support.h"
 
 // common
+#include "actions.h"
 #include "capstr.h"
 #include "connection.h"
-#include "dataio.h"
+#include "dataio_raw.h"
+#include "fc_types.h"
 #include "game.h"
+#include "packets.h"
+#include "requirements.h"
+#include "unit.h"
+#include "worklist.h"
 
-#include <string.h>
+// Qt
+#include <QtLogging> // qDebug, qWarning, qCricital, etc
+
+// std
+#include <cstdlib> // EXIT_FAILURE, free, at_quick_exit
+#include <cstring> // str*, mem*
 """
     )
     output.write(get_packet_functional_capability(packets))
