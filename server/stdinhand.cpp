@@ -27,6 +27,7 @@
 // utility
 #include "astring.h"
 #include "bitvector.h"
+#include "connection.h"
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
@@ -3492,12 +3493,16 @@ static bool take_command(struct connection *caller, char *str, bool check)
 {
   int i = 0;
   QStringList arg;
-  char buf[MAX_LEN_CONSOLE_LINE], msg[MAX_LEN_MSG];
+  char buf[MAX_LEN_CONSOLE_LINE], msg[MAX_LEN_MSG],
+      username[MAX_LEN_NAME] = "\0";
   bool is_newgame = !game_was_started();
   enum m_pre_result match_result;
   struct connection *pconn = caller;
   struct player *pplayer = nullptr;
   bool res = false;
+
+  // superusers bypass authentication checks
+  bool superuser = !caller || caller->access_level == ALLOW_HACK;
 
   /******** PART I: fill pconn and pplayer ********/
 
@@ -3525,13 +3530,19 @@ static bool take_command(struct connection *caller, char *str, bool check)
   }
 
   if (arg.count() == 2) {
-    if (!(pconn = conn_by_user_prefix(qUtf8Printable(arg.at(i)),
-                                      &match_result))) {
+    sz_strlcpy(username, qUtf8Printable(arg.at(i)));
+    pconn = conn_by_user_prefix(qUtf8Printable(arg.at(i)), &match_result);
+    i++; // found a conn, now reference the second argument
+
+    // If the user isn't connected, we can proceed only when called from the
+    // console or with ALLOW_HACK.
+    if (!pconn && !superuser) {
       cmd_reply_no_such_conn(CMD_TAKE, caller, qUtf8Printable(arg.at(i)),
                              match_result);
       return res;
     }
-    i++; // found a conn, now reference the second argument
+  } else if (pconn) {
+    sz_strlcpy(username, pconn->username);
   }
 
   if (strcmp(qUtf8Printable(arg.at(i)), "-") == 0) {
@@ -3571,17 +3582,19 @@ static bool take_command(struct connection *caller, char *str, bool check)
   }
 
   // check allowtake for permission
-  if (!is_allowed_to_take(caller, pconn, pplayer, false, msg, sizeof(msg))) {
+  if (!superuser
+      && !is_allowed_to_take(caller, pconn, pplayer, false, msg,
+                             sizeof(msg))) {
     cmd_reply(CMD_TAKE, caller, C_FAIL, "%s", msg);
     return res;
   }
 
   // taking your own player makes no sense.
-  if ((nullptr != pplayer && !pconn->observer && pplayer == pconn->playing)
-      || (nullptr == pplayer && !pconn->observer
+  if ((pplayer && pconn && !pconn->observer && pplayer == pconn->playing)
+      || (!pplayer && pconn && !pconn->observer
           && nullptr != pconn->playing)) {
     cmd_reply(CMD_TAKE, caller, C_FAIL, _("%s already controls %s."),
-              pconn->username, player_name(pconn->playing));
+              username, player_name(pconn->playing));
     return res;
   }
 
@@ -3589,11 +3602,11 @@ static bool take_command(struct connection *caller, char *str, bool check)
    * create new player. This is necessary for previously
    * detached connections only. Others can reuse the slot
    * they first release. */
-  if (!pplayer && !pconn->playing
+  if (!pplayer && pconn && !pconn->playing
       && (normal_player_count() >= game.server.max_players
           || normal_player_count() >= server.playable_nations)) {
     cmd_reply(CMD_TAKE, caller, C_FAIL,
-              _("There is no free player slot for %s."), pconn->username);
+              _("There is no free player slot for %s."), username);
     return res;
   }
   fc_assert_action(player_count() <= MAX_NUM_PLAYER_SLOTS, return false);
@@ -3608,11 +3621,10 @@ static bool take_command(struct connection *caller, char *str, bool check)
   if (pplayer && pplayer->is_connected) {
     if (nullptr == caller) {
       notify_conn(nullptr, nullptr, E_CONNECTION, ftc_server,
-                  _("Reassigned nation to %s by server console."),
-                  pconn->username);
+                  _("Reassigned nation to %s by server console."), username);
     } else {
       notify_conn(nullptr, nullptr, E_CONNECTION, ftc_server,
-                  _("Reassigned nation to %s by %s."), pconn->username,
+                  _("Reassigned nation to %s by %s."), username,
                   caller->username);
     }
 
@@ -3630,7 +3642,7 @@ static bool take_command(struct connection *caller, char *str, bool check)
   /* if the connection is already attached to another player,
    * unattach and cleanup old player (rename, remove, etc)
    * We may have been observing the player we now want to take */
-  if (nullptr != pconn->playing || pconn->observer) {
+  if (pconn && (pconn->playing || pconn->observer)) {
     char name[MAX_LEN_NAME];
 
     if (pplayer) {
@@ -3644,16 +3656,35 @@ static bool take_command(struct connection *caller, char *str, bool check)
       // find pplayer again; the pointer might have been changed
       pplayer = player_by_name(name);
     }
+  } else if (!pconn) {
+    // Remove the player from any player it may be assigned to
+    players_iterate(pother)
+    {
+      if (strncmp(pother->username, username, MAX_LEN_NAME) == 0) {
+        sz_strlcpy(pother->username, _(ANON_USER_NAME));
+        pother->unassigned_user = true;
+        pother->user_turns = 0; // reset for a new user
+        pother->is_connected = false;
+        send_player_info_c(pother, game.est_connections);
+      }
+    }
+    players_iterate_end;
   }
 
   // Now attach to new player
-  if ((res = connection_attach(pconn, pplayer, false))) {
-    // Successfully attached
-    pplayer = pconn->playing; // In case pplayer was nullptr.
+  if (!pconn || (res = connection_attach(pconn, pplayer, false))) {
+    if (!pconn) {
+      sz_strlcpy(pplayer->username, username);
+      pplayer->unassigned_user = false;
+      pplayer->user_turns = 0; // reset for a new user
+      pplayer->is_connected = false;
+      send_player_info_c(pplayer, game.est_connections);
+    }
 
+    // Successfully attached
     // inform about the status before changes
     cmd_reply(CMD_TAKE, caller, C_OK, _("%s now controls %s (%s, %s)."),
-              pconn->username, player_name(pplayer),
+              username, player_name(pplayer),
               is_barbarian(pplayer) ? _("Barbarian")
               : is_ai(pplayer)      ? _("AI")
                                     : _("Human"),
