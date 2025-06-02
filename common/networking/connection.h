@@ -1,25 +1,12 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+
 /**************************************************************************
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
- __    __          part of Freeciv21. Freeciv21 is free software: you can
-/ \\..// \    redistribute it and/or modify it under the terms of the GNU
-  ( oo )        General Public License  as published by the Free Software
-   \__/         Foundation, either version 3 of the License,  or (at your
-                      option) any later version. You should have received
-    a copy of the GNU General Public License along with Freeciv21. If not,
-                  see https://www.gnu.org/licenses/.
-**************************************************************************/
+ *  The connection struct and related stuff.
+ *  Includes cmdlevel stuff, which is connection-based.
+ ***************************************************************************/
+
 #pragma once
-
-#include <ctime> // time_t
-
-/**************************************************************************
-  The connection struct and related stuff.
-  Includes cmdlevel stuff, which is connection-based.
-***************************************************************************/
-
-// Qt
-#include <QList>
-#include <QString>
 
 // utility
 #include "shared.h"  // MAX_LEN_ADDR
@@ -29,6 +16,13 @@
 // common
 #include "fc_types.h"
 
+// Qt
+#include <QList>
+#include <QString>
+
+// std
+#include <ctime> // time_t
+
 // Forward declarations
 class QIODevice;
 class QString;
@@ -36,44 +30,6 @@ class QString;
 struct conn_pattern_list;
 struct genhash;
 struct packet_handlers;
-
-// Used in the network protocol.
-#define MAX_LEN_PACKET 4096
-#define MAX_LEN_CAPSTR 512
-#define MAX_LEN_PASSWORD                                                    \
-  512 /* do not change this under any circumstances                         \
-       */
-#define MAX_LEN_CONTENT (MAX_LEN_PACKET - 20)
-
-#define MAX_LEN_BUFFER (MAX_LEN_PACKET * 128)
-
-/****************************************************************************
-  Command access levels for client-side use; at present, they are only
-  used to control access to server commands typed at the client chatline.
-  Used in the network protocol.
-****************************************************************************/
-#define SPECENUM_NAME cmdlevel
-// User may issue no commands at all.
-#define SPECENUM_VALUE0 ALLOW_NONE
-#define SPECENUM_VALUE0NAME "none"
-// Informational or observer commands only.
-#define SPECENUM_VALUE1 ALLOW_INFO
-#define SPECENUM_VALUE1NAME "info"
-// User may issue basic player commands.
-#define SPECENUM_VALUE2 ALLOW_BASIC
-#define SPECENUM_VALUE2NAME "basic"
-/* User may issue commands that affect game & users
- * (starts a vote if the user's level is 'basic'). */
-#define SPECENUM_VALUE3 ALLOW_CTRL
-#define SPECENUM_VALUE3NAME "ctrl"
-// User may issue commands that affect the server.
-#define SPECENUM_VALUE4 ALLOW_ADMIN
-#define SPECENUM_VALUE4NAME "admin"
-// User may issue *all* commands - dangerous!
-#define SPECENUM_VALUE5 ALLOW_HACK
-#define SPECENUM_VALUE5NAME "hack"
-#define SPECENUM_COUNT CMDLEVEL_COUNT
-#include "specenum_gen.h"
 
 /***************************************************************************
   On the distinction between nations(formerly races), players, and users,
@@ -88,18 +44,6 @@ enum auth_status {
   AS_REQUESTING_OLD_PASS,
   AS_ESTABLISHED
 };
-
-// get 'struct conn_list' and related functions:
-/* do this with forward definition of struct connection, so that
- * connection struct can contain a struct conn_list */
-struct connection;
-#define SPECLIST_TAG conn
-#define SPECLIST_TYPE struct connection
-#include "speclist.h"
-
-#define conn_list_iterate(connlist, pconn)                                  \
-  TYPED_LIST_ITERATE(struct connection, connlist, pconn)
-#define conn_list_iterate_end LIST_ITERATE_END
 
 /***********************************************************
   This is a buffer where the data is first collected,

@@ -1,31 +1,38 @@
-/*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
-\_   \        /  __/          contributors. This file is part of Freeciv21.
- _\   \      /  /__     Freeciv21 is free software: you can redistribute it
- \___  \____/   __/    and/or modify it under the terms of the GNU  General
-     \_       _/          Public License  as published by the Free Software
-       | @ @  \_               Foundation, either version 3 of the  License,
-       |                              or (at your option) any later version.
-     _/     /\                  You should have received  a copy of the GNU
-    /o)  (o/\ \_                General Public License along with Freeciv21.
-    \_____/ /                     If not, see https://www.gnu.org/licenses/.
-      \____/        ********************************************************/
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
-// Qt
-#include <QLocalSocket>
-#include <QTcpSocket>
+// self
+#include "connection.h"
+
+// generated
+#include <packets_gen.h>
 
 // utility
 #include "fcintl.h"
 #include "genhash.h"
 #include "log.h"
-#include "support.h" // fc_str(n)casecmp
+#include "shared.h"
+#include "support.h"
+#include "timing.h"
 
 // common
-#include "game.h" // game.all_connections
+#include "fc_types.h"
+#include "game.h"
 #include "packets.h"
+#include "player.h"
 
-#include "connection.h"
+// Qt
+#include <QChar>
+#include <QLocalSocket>
+#include <QObject>
+#include <QString>
+#include <QTcpSocket>
+#include <QtLogging> // qDebug, qWarning, qCricital, etc
+
+// std
+#include <cstddef> // size_t
+#include <cstdlib> // EXIT_FAILURE, free, at_quick_exit
+#include <cstring> // str*, mem*
 
 static void default_conn_close_callback(struct connection *pconn);
 
