@@ -145,9 +145,6 @@ void map_editor::close()
 void map_editor::update_players()
 {
   if (!players_done) {
-    // While updating players, ensure we can take all possible nations
-    send_chat_printf("/set allowtake hHaAoObd");
-
     players_iterate(pplayer)
     {
       if (!is_barbarian(pplayer)) {
