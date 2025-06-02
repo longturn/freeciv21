@@ -2654,7 +2654,8 @@ static struct setting settings[] = {
            "connections;\n"
            "     3 = Controller allowed, no observers allowed, can't "
            "displace connections;\n"
-           "     4 = No controller allowed, observers allowed"),
+           "     4 = No controller allowed, observers allowed.\n"
+           "The limits do not affect clients with HACK access level."),
         allowtake_callback, nullptr, GAME_DEFAULT_ALLOW_TAKE),
 
     GEN_BOOL("autotoggle", game.server.auto_ai_toggle, SSET_META,

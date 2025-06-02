@@ -70,7 +70,9 @@ To place a setting value on any of these settings use the ``/set <option-name> <
   * 1 = Controller allowed, observers allowed, cannot displace connections.
   * 2 = Controller allowed, no observers allowed, can displace connections.
   * 3 = Controller allowed, no observers allowed, cannot displace connections.
-  * 4 = No controller allowed, observers allowed
+  * 4 = No controller allowed, observers allowed.
+
+  The limits do not affect clients with HACK access level.
 
 ``alltemperate``
   :strong:`Default Value`: disabled
