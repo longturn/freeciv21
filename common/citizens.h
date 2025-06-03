@@ -6,9 +6,6 @@
 // common
 #include "fc_types.h"
 
-struct player_slot;
-struct city;
-
 void citizens_init(struct city *pcity);
 void citizens_free(struct city *pcity);
 

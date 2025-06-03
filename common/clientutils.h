@@ -3,10 +3,10 @@
 
 #pragma once
 
-class QString;
+// common
+#include "fc_types.h"
 
-struct extra_type;
-struct tile;
-struct unit;
+// Qt
+class QString;
 
 QString concat_tile_activity_text(struct tile *ptile);

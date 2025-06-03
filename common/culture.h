@@ -3,8 +3,8 @@
 
 #pragma once
 
-struct city;
-struct player;
+// common
+#include "fc_types.h"
 
 int city_culture(const struct city *pcity);
 int city_history_gain(const struct city *pcity);

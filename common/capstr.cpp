@@ -11,7 +11,7 @@
 #include "support.h"
 
 // common
-#include "connection.h" // MAX_LEN_CAPSTR
+#include "fc_types.h"
 
 // std
 #include <cstdlib> // getenv

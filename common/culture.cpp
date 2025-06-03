@@ -7,8 +7,8 @@
 // common
 #include "city.h"
 #include "effects.h"
+#include "fc_types.h"
 #include "game.h"
-#include "player.h"
 
 /**
    Return current culture score of the city.
