@@ -11,10 +11,8 @@
 #include "shared.h"
 
 // common
-#include "actions.h"
 #include "city.h"
 #include "effects.h"
-#include "extras.h"
 #include "fc_types.h"
 #include "game.h"
 #include "map.h"
@@ -26,7 +24,7 @@
 #include "unittype.h"
 
 // std
-#include <cmath>
+#include <cmath> // pow
 
 /**
    Checks if player is restricted diplomatically from attacking the tile.

@@ -4,11 +4,7 @@
 #pragma once
 
 // common
-#include "city.h"
-#include "player.h"
-#include "tile.h"
-#include "unit.h"
-#include "unittype.h"
+#include "fc_types.h"
 
 /*
  * attack_strength and defense_strength are multiplied by POWER_FACTOR
