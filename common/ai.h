@@ -4,7 +4,7 @@
 #pragma once
 
 // common
-#include "fc_types.h" // MAX_LEN_NAME
+#include "fc_types.h"
 
 /* Update this capability string when ever there is changes to ai_type
  * structure below. When changing mandatory capability part, check that

@@ -5,8 +5,7 @@
 
 // common
 #include "fc_types.h"
-#include "name_translation.h"
-#include "player.h"
+#include "name_translation.h" // struct name_translation
 
 struct achievement {
   int id;

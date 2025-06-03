@@ -9,7 +9,7 @@
 
 // utility
 #include "fcintl.h"
-#include "log.h" // fc_assert
+#include "log.h"
 #include "support.h"
 
 // common
@@ -19,7 +19,7 @@
 #include <QMessageLogger>
 
 // std
-#include <cstring>
+#include <cstring> // str*, mem*
 
 static struct ai_type ai_types[FREECIV_AI_MOD_LAST];
 
