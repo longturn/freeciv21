@@ -33,6 +33,7 @@
 #include "game.h"
 #include "specialist.h"
 #include "unitlist.h"
+#include "worklist.h"
 
 // client
 #include "citydlg_common.h" // city_production_cost_str()

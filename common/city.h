@@ -11,10 +11,12 @@
 
 // common
 #include "fc_types.h"
-#include "improvement.h"
-#include "name_translation.h"
-#include "requirements.h"
-#include "worklist.h"
+#include "improvement.h"      // improvement_iterate()
+#include "name_translation.h" // struct name_translation
+#include "player.h"           // players_iterate()
+#include "requirements.h"     // struct requirement_vector
+#include "unit.h"             // struct unit_order
+#include "vision.h"           // struct vision
 
 // Qt
 #include <QtLogging> // QtMsgType
@@ -30,28 +32,6 @@ enum production_class_type {
   PCT_WONDER,
   PCT_LAST
 };
-
-/* Various city options.  These are stored by the server and can be
- * toggled by the user.  Each one defaults to off.  Adding new ones
- * will break network compatibility. If you want to reorder or remove
- * an option remember to load the city option order from the savegame.
- * It is stored in savefile.city_options_vector
- *
- * Used in the network protocol.
- */
-#define SPECENUM_NAME city_options
-// If unit production (e.g. settler) is allowed to disband a small city
-#define SPECENUM_VALUE0 CITYO_DISBAND
-#define SPECENUM_VALUE0NAME "Disband"
-// If new citizens are science specialists
-#define SPECENUM_VALUE1 CITYO_SCIENCE_SPECIALISTS
-#define SPECENUM_VALUE1NAME "Sci_Specialists"
-// If new citizens are gold specialists
-#define SPECENUM_VALUE2 CITYO_GOLD_SPECIALISTS
-#define SPECENUM_VALUE2NAME "Tax_Specialists"
-#define SPECENUM_COUNT CITYO_LAST
-#define SPECENUM_BITVECTOR bv_city_options
-#include "specenum_gen.h"
 
 /* Changing the max radius requires updating network capabilities and results
  * in incompatible savefiles. */
@@ -253,18 +233,6 @@ enum citizen_category {
   CITIZEN_SPECIALIST = CITIZEN_LAST,
 };
 
-/* changing this order will break network compatibility,
- * and clients that don't use the symbols. */
-enum citizen_feeling {
-  FEELING_BASE,        // before any of the modifiers below
-  FEELING_LUXURY,      // after luxury
-  FEELING_EFFECT,      // after building effects
-  FEELING_NATIONALITY, // after citizen nationality effects
-  FEELING_MARTIAL,     // after units enforce martial order
-  FEELING_FINAL,       // after wonders (final result)
-  FEELING_LAST
-};
-
 // Ways city output can be lost. Not currently part of network protocol.
 enum output_loss {
   OLOSS_WASTE, // regular corruption or waste
@@ -290,11 +258,11 @@ struct cached_waste {
   int by_rel_distance = 0; // EFT_OUTPUT_WASTE_BY_REL_DISTANCE
 };
 
-struct tile_cache; // defined and only used within city.c
+struct tile_cache; // defined and only used within city.cpp
 
-struct adv_city; /* defined in ./server/advisors/infracache.h */
+struct adv_city; // defined in server/advisors/infracache.h
 
-struct cm_parameter; /* defined in ./common/aicore/cm.h */
+struct cm_parameter; // defined in common/aicore/cm.h
 
 struct city {
   char name[MAX_LEN_CITYNAME];

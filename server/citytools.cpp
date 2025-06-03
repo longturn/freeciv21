@@ -41,6 +41,7 @@
 #include "unit.h"
 #include "unitlist.h"
 #include "vision.h"
+#include "worklist.h"
 
 /* common/aicore */
 #include "cm.h"

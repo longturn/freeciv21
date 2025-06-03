@@ -17,6 +17,7 @@
 #include "actions.h"
 #include "ai.h"
 #include "citizens.h"
+#include "cm.h"
 #include "effects.h"
 #include "fc_types.h"
 #include "game.h"
@@ -35,9 +36,6 @@
 #include "unittype.h"
 #include "workertask.h"
 #include "worklist.h"
-
-// common/aicore
-#include "cm.h"
 
 // Qt
 #include <QtLogging> // QtMsgType

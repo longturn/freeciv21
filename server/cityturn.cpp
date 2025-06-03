@@ -46,6 +46,7 @@
 #include "traderoutes.h"
 #include "unit.h"
 #include "unitlist.h"
+#include "worklist.h"
 
 /* common/scriptcore */
 #include "luascript_types.h"
