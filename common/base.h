@@ -3,36 +3,8 @@
 
 #pragma once
 
-// utility
-#include "fcintl.h"
-
 // common
 #include "fc_types.h"
-#include "requirements.h"
-
-// Used in the network protocol.
-#define SPECENUM_NAME base_gui_type
-#define SPECENUM_VALUE0 BASE_GUI_FORTRESS
-#define SPECENUM_VALUE0NAME "Fortress"
-#define SPECENUM_VALUE1 BASE_GUI_AIRBASE
-#define SPECENUM_VALUE1NAME "Airbase"
-#define SPECENUM_VALUE2 BASE_GUI_OTHER
-#define SPECENUM_VALUE2NAME "Other"
-#include "specenum_gen.h"
-
-// Used in the network protocol.
-#define SPECENUM_NAME base_flag_id
-// Unit inside are not considered aggressive if base is close to city
-#define SPECENUM_VALUE0 BF_NOT_AGGRESSIVE
-/* TRANS: this and following strings are 'base flags', which may rarely
- * be presented to the player in ruleset help text */
-#define SPECENUM_VALUE0NAME N_("NoAggressive")
-
-#define SPECENUM_COUNT BF_COUNT
-#define SPECENUM_BITVECTOR bv_base_flags
-#include "specenum_gen.h"
-
-struct extra_type;
 
 struct base_type {
   Base_type_id item_number;
