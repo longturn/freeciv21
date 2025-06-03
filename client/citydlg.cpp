@@ -32,6 +32,7 @@
 #include "citizens.h"
 #include "city.h"
 #include "game.h"
+#include "worklist.h"
 
 // client
 #include "canvas.h"

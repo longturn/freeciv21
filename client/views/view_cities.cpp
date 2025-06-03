@@ -20,12 +20,13 @@
 // utility
 #include "fcintl.h"
 // common
-#include "citydlg_common.h"
-#include "global_worklist.h"
+#include "worklist.h"
 // client
+#include "citydlg_common.h"
 #include "cityrep_g.h"
 #include "client_main.h"
 #include "fc_client.h"
+#include "global_worklist.h"
 #include "governor.h"
 #include "hudwidget.h"
 #include "icons.h"

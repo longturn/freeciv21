@@ -106,6 +106,7 @@
 #include "unit.h"
 #include "unitlist.h"
 #include "version.h"
+#include "worklist.h"
 
 // server
 #include "citizenshand.h"

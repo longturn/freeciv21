@@ -23,6 +23,7 @@
 #include "culture.h"
 #include "game.h"
 #include "specialist.h"
+#include "worklist.h"
 
 /* client/include */
 #include "citydlg_g.h"
