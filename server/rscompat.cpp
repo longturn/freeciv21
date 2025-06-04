@@ -24,6 +24,7 @@
 #include "effects.h"
 #include "map.h"
 #include "movement.h"
+#include "packets.h"
 #include "requirements.h"
 #include "unittype.h"
 

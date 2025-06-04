@@ -5,12 +5,12 @@
 
 // common
 #include "fc_types.h"
-#include "name_translation.h"
-#include "requirements.h"
+#include "name_translation.h" // struct name_translation
+#include "requirements.h"     // struct requirement_vector
 
 // Qt
+class QString;
 #include <QHash>
-#include <QString>
 #include <QtContainerFwd> // QVector<QString>
 
 // std

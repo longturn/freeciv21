@@ -28,6 +28,7 @@
 #include "game.h"
 #include "government.h"
 #include "multipliers.h"
+#include "packets.h"
 #include "specialist.h"
 #include "style.h"
 

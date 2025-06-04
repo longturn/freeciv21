@@ -22,6 +22,7 @@
 #include "movement.h"
 #include "multipliers.h"
 #include "nation.h"
+#include "packets.h"
 #include "rgbcolor.h"
 #include "specialist.h"
 #include "style.h"

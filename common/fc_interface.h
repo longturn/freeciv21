@@ -6,11 +6,6 @@
 // common
 #include "fc_types.h"
 
-struct player;
-struct tile;
-struct color;
-struct extra_type;
-
 // The existence of each function should be checked in interface_init()!
 struct functions {
   server_setting_id (*server_setting_by_name)(const char *name);

@@ -3,32 +3,30 @@
 
 #pragma once
 
+// generated
+#include <packets_gen.h>
+
 // utility
 #include "fcintl.h"
-#include "section_file.h"
 #include "shared.h" // MAX_UINT32
 #include "timing.h"
 
 // common
-#include "city.h"
-#include "connection.h" // struct conn_list
+#include "city.h" // CITY_MAP_*
 #include "fc_types.h"
-#include "packets.h"
-#include "player.h"
-#include "terrain.h"
-#include "traits.h"
-#include "unit.h"
-#include "unittype.h"
-#include "world_object.h"
-
-// FIXME: no header providing "packet_* is directly
-// included (in packets_gen.h, which breaks compile if included)
+#include "player.h"   // enum plrcolor_mode
+#include "rgbcolor.h" // struct rgbcolor
+#include "traits.h"   // struct trait_limits
+#include "unittype.h" // struct veteran_system
+#include "world_object.h" // IWYU pragma: keep - (FIXME) struct world needed by scriptcore
 
 // Qt
 #include <QMutex>
 
 // std
 #include <ctime> // time_t
+
+struct world;
 
 enum debug_globals { DEBUG_FERRIES, DEBUG_LAST };
 

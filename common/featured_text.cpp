@@ -23,7 +23,9 @@
 // Qt
 #include <QByteArray>
 #include <QByteArrayAlgorithms> // qstrlen, qstrdup, qstrncpy
+#include <QChar>
 #include <QLatin1String>
+#include <QString>
 #include <QStringLiteral>
 #include <QtLogging> // qDebug, qWarning, qCricital, etc
 

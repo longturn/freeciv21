@@ -15,6 +15,7 @@
 #include "actions.h"
 #include "ai.h"
 #include "city.h"
+#include "cm.h"
 #include "diptreaty.h"
 #include "disaster.h"
 #include "effects.h"
@@ -40,10 +41,6 @@
 #include "unit.h"
 #include "unitlist.h"
 #include "unittype.h"
-#include "world_object.h"
-
-// common/aicore
-#include "cm.h"
 
 // Qt
 #include <QByteArrayAlgorithms> // qstrlen, qstrdup, qstrncpy
