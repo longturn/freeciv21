@@ -14,7 +14,6 @@
 #include "fc_types.h"
 #include "game.h"
 #include "name_translation.h"
-#include "player.h"
 #include "requirements.h"
 
 static struct multiplier multipliers[MAX_NUM_MULTIPLIERS];

@@ -9,9 +9,9 @@
 ***************************************************************************/
 
 // common
-#include "city.h"
-#include "unit.h"
-#include "world_object.h"
+#include "city.h" // struct city
+#include "fc_types.h"
+#include "unit.h" // struct unit
 
 void idex_init(struct world *iworld);
 void idex_free(struct world *iworld);

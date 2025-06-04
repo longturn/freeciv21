@@ -24,7 +24,6 @@
 #include "road.h"
 #include "terrain.h"
 #include "tile.h"
-#include "unit.h"
 #include "unitlist.h"
 #include "unittype.h"
 

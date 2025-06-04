@@ -8,8 +8,7 @@
 
 // common
 #include "fc_types.h"
-#include "player.h"
-#include "requirements.h"
+#include "requirements.h" // struct requirement
 
 enum fc_tristate mke_eval_req(
     const struct player *pow_player, const struct player *target_player,

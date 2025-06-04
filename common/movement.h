@@ -5,13 +5,8 @@
 
 // common
 #include "fc_types.h"
-#include "map_types.h"
-#include "path_finder.h"
-#include "player.h"
-#include "terrain.h"
-#include "tile.h"
-#include "unit.h"
-#include "unittype.h"
+#include "map_types.h" // struct civ_map
+#include "tile.h"      // struct tile
 
 #define SINGLE_MOVE (terrain_control.move_fragments)
 #define MOVE_COST_IGTER (terrain_control.igter_cost)

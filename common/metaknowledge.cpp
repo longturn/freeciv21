@@ -17,7 +17,6 @@
 #include "map.h"
 #include "player.h"
 #include "requirements.h"
-#include "specialist.h"
 #include "tile.h"
 #include "traderoutes.h"
 #include "unit.h"

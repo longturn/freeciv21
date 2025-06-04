@@ -7,6 +7,7 @@
 #include "fcintl.h"
 
 // common
+#include "extras.h" // struct extra_type, goods_type
 #include "fc_types.h"
 
 // std

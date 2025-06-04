@@ -14,6 +14,10 @@
 #include "qtg_cxxside.h"
 #include "support.h"
 
+// common
+#include "city.h"
+#include "fc_types.h"
+
 /**
    Clean up
  */

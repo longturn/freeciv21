@@ -20,6 +20,10 @@
 #include "layer.h"
 #include "options.h"
 
+// common
+#include "city.h"
+#include "fc_types.h"
+
 #include <QColor>
 #include <QEvent>
 

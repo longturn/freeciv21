@@ -24,7 +24,7 @@
 
 // common
 #include "city.h"
-#include "unit.h"
+#include "fc_types.h"
 #include "unittype.h"
 #include "world_object.h"
 

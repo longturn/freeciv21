@@ -10,11 +10,11 @@
 
 // common
 #include "fc_types.h"
-#include "game.h"
-#include "map_types.h"
-#include "tile.h"
-#include "unit.h"
-#include "unittype.h"
+#include "game.h"      // map topology
+#include "map_types.h" // struct startpos
+#include "tile.h"      // struct tile
+#include "unit.h"      // struct unit
+#include "unittype.h"  // struct unit_type
 
 // Qt
 #include <QSet>
