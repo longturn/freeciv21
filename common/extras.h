@@ -3,72 +3,17 @@
 
 #pragma once
 
-// utility
-#include "fcintl.h"
-
 // common
 #include "fc_types.h"
-#include "name_translation.h"
-#include "requirements.h"
-#include "terrain.h"
-#include "unittype.h"
+#include "name_translation.h" // struct name_translation
+#include "requirements.h"     // struct requirement_vector
 
 // Qt
-#include <QString>
+class QString;
 #include <QtContainerFwd> // QVector<QString>
 
 // std
 #include <cstdint> // uint8_t, uint16_t
-
-// Used in the network protocol.
-#define SPECENUM_NAME extra_flag_id
-// Tile with this extra is considered native for units in tile.
-#define SPECENUM_VALUE0 EF_NATIVE_TILE
-#define SPECENUM_VALUE0NAME N_("?extraflag:NativeTile")
-// Refuel native units
-#define SPECENUM_VALUE1 EF_REFUEL
-#define SPECENUM_VALUE1NAME N_("?extraflag:Refuel")
-#define SPECENUM_VALUE2 EF_TERR_CHANGE_REMOVES
-#define SPECENUM_VALUE2NAME N_("?extraflag:TerrChangeRemoves")
-// Extra will be built in cities automatically
-#define SPECENUM_VALUE3 EF_AUTO_ON_CITY_CENTER
-#define SPECENUM_VALUE3NAME N_("?extraflag:AutoOnCityCenter")
-// Extra is always present in cities
-#define SPECENUM_VALUE4 EF_ALWAYS_ON_CITY_CENTER
-#define SPECENUM_VALUE4NAME N_("?extraflag:AlwaysOnCityCenter")
-// Road style gfx from ocean extra connects to nearby land
-#define SPECENUM_VALUE5 EF_CONNECT_LAND
-#define SPECENUM_VALUE5NAME N_("?extraflag:ConnectLand")
-// Counts towards Global Warming
-#define SPECENUM_VALUE6 EF_GLOBAL_WARMING
-#define SPECENUM_VALUE6NAME N_("?extraflag:GlobalWarming")
-// Counts towards Nuclear Winter
-#define SPECENUM_VALUE7 EF_NUCLEAR_WINTER
-#define SPECENUM_VALUE7NAME N_("?extraflag:NuclearWinter")
-// Owner's flag will be shown on the tile
-#define SPECENUM_VALUE8 EF_SHOW_FLAG
-#define SPECENUM_VALUE8NAME N_("?extraflag:ShowFlag")
-/* Extra's defense bonus will be counted to
- * separate "Natural" defense layer. */
-#define SPECENUM_VALUE9 EF_NATURAL_DEFENSE
-#define SPECENUM_VALUE9NAME N_("?extraflag:NaturalDefense")
-// Units inside will not die all at once
-#define SPECENUM_VALUE10 EF_NO_STACK_DEATH
-#define SPECENUM_VALUE10NAME N_("NoStackDeath")
-
-#define SPECENUM_VALUE11 EF_USER_FLAG_1
-#define SPECENUM_VALUE12 EF_USER_FLAG_2
-#define SPECENUM_VALUE13 EF_USER_FLAG_3
-#define SPECENUM_VALUE14 EF_USER_FLAG_4
-#define SPECENUM_VALUE15 EF_USER_FLAG_5
-#define SPECENUM_VALUE16 EF_USER_FLAG_6
-#define SPECENUM_VALUE17 EF_USER_FLAG_7
-#define SPECENUM_VALUE18 EF_USER_FLAG_8
-
-#define SPECENUM_COUNT EF_COUNT
-#define SPECENUM_NAMEOVERRIDE
-#define SPECENUM_BITVECTOR bv_extra_flags
-#include "specenum_gen.h"
 
 #define EF_LAST_USER_FLAG EF_USER_FLAG_8
 #define MAX_NUM_USER_EXTRA_FLAGS (EF_LAST_USER_FLAG - EF_USER_FLAG_1 + 1)
@@ -140,6 +85,8 @@ struct extra_type {
     struct resource_type *resource;
   } data;
 };
+
+#include "fc_types.h" // included after the definition of struct extra_type to prevent a forward declaration error
 
 // get 'struct extra_type_list' and related functions:
 #define SPECLIST_TAG extra_type

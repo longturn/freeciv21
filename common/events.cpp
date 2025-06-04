@@ -10,6 +10,9 @@
 #include "shared.h"
 #include "support.h"
 
+// common
+#include "fc_types.h"
+
 // Qt
 #include <QByteArrayAlgorithms> // qstrlen, qstrdup, qstrncpy
 #include <QChar>

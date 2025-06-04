@@ -4,32 +4,9 @@
 #pragma once
 
 // common
-#include "city.h"
 #include "fc_types.h"
-#include "name_translation.h"
-#include "requirements.h"
-
-// Used in the network protocol.
-#define SPECENUM_NAME disaster_effect_id
-#define SPECENUM_VALUE0 DE_DESTROY_BUILDING
-#define SPECENUM_VALUE0NAME "DestroyBuilding"
-#define SPECENUM_VALUE1 DE_REDUCE_POP
-#define SPECENUM_VALUE1NAME "ReducePopulation"
-#define SPECENUM_VALUE2 DE_EMPTY_FOODSTOCK
-#define SPECENUM_VALUE2NAME "EmptyFoodStock"
-#define SPECENUM_VALUE3 DE_EMPTY_PRODSTOCK
-#define SPECENUM_VALUE3NAME "EmptyProdStock"
-#define SPECENUM_VALUE4 DE_POLLUTION
-#define SPECENUM_VALUE4NAME "Pollution"
-#define SPECENUM_VALUE5 DE_FALLOUT
-#define SPECENUM_VALUE5NAME "Fallout"
-#define SPECENUM_VALUE6 DE_REDUCE_DESTROY
-#define SPECENUM_VALUE6NAME "ReducePopDestroy"
-#define SPECENUM_COUNT DE_COUNT
-#define SPECENUM_BITVECTOR bv_disaster_effects
-#include "specenum_gen.h"
-
-#define DISASTER_BASE_RARITY 1000000
+#include "name_translation.h" // struct name_translation
+#include "requirements.h"     // struct requirement_vector
 
 struct disaster_type {
   int id;
