@@ -31,6 +31,7 @@
 #include "city.h"
 #include "culture.h"
 #include "game.h"
+#include "packets.h"
 #include "specialist.h"
 #include "unitlist.h"
 #include "worklist.h"

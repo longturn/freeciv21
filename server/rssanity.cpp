@@ -23,6 +23,7 @@
 #include "government.h"
 #include "movement.h"
 #include "nation.h"
+#include "packets.h"
 #include "road.h"
 #include "server_settings.h"
 #include "specialist.h"

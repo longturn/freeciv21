@@ -4,7 +4,7 @@
 #pragma once
 
 // Qt
-#include <QString>
+class QString;
 
 // std
 #include <cstddef> // size_t

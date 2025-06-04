@@ -13,8 +13,8 @@
 #include "unit.h"
 
 /* Struct with functions pointers; the functions are defined in
-   ./client/client_main.c:init_client_functions() and
-   ./server/srv_main.c:init_server_functions(). */
+   client/client_main.cpp:init_client_functions() and
+   server/srv_main.cpp:init_server_functions(). */
 struct functions fc_functions;
 
 // The functions are accessed via this pointer.

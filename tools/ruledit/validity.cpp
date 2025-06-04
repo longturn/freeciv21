@@ -19,6 +19,7 @@
 #include "game.h"
 #include "government.h"
 #include "improvement.h"
+#include "packets.h"
 #include "requirements.h"
 #include "specialist.h"
 #include "style.h"
