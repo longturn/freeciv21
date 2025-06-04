@@ -7,6 +7,10 @@
 
 #include "tilespec.h"
 
+// common
+#include "city.h"
+#include "fc_types.h"
+
 namespace freeciv {
 
 /**

@@ -3,7 +3,12 @@
 
 #include "tileset_options.h"
 
+// common
+#include "city.h"
+#include "fc_types.h"
 #include "name_translation.h"
+
+// client
 #include "tileset/tilespec.h"
 
 #include <QCheckBox>

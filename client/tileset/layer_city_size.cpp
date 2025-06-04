@@ -8,6 +8,10 @@
 #include "citybar.h"
 #include "tilespec.h"
 
+// common
+#include "city.h"
+#include "fc_types.h"
+
 namespace freeciv {
 
 layer_city_size::layer_city_size(struct tileset *ts, const QPoint &offset)

@@ -13,6 +13,10 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "log.h"
 #include "support.h"
 
+// common
+#include "city.h"
+#include "fc_types.h"
+
 /* client/include */
 #include "themes_g.h"
 

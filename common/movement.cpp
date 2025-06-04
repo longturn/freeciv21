@@ -11,7 +11,6 @@
 #include "support.h"
 
 // common
-#include "actions.h"
 #include "city.h"
 #include "effects.h"
 #include "extras.h"

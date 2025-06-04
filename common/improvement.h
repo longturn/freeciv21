@@ -3,51 +3,14 @@
 
 #pragma once
 
-// utility
-#include "bitvector.h"
-
 // common
 #include "fc_types.h"
-#include "name_translation.h"
-#include "requirements.h"
+#include "name_translation.h" // struct name_translation
+#include "requirements.h"     // struct requirement_vector
 
 // Qt
-#include <QString>
+class QString;
 #include <QtContainerFwd> // QVector<QString>
-
-/* B_LAST is a value that is guaranteed to be larger than all
- * actual Impr_type_id values.  It is used as a flag value; it can
- * also be used for fixed allocations to ensure ability to hold the
- * full number of improvement types.
- *
- * B_NEVER is the pointer equivalent replacement for B_LAST flag value.
- *
- * Used in the network protocol.
- */
-#define B_LAST MAX_NUM_BUILDINGS
-
-#define B_NEVER (nullptr)
-
-// Changing these breaks network compatibility.
-#define SPECENUM_NAME impr_flag_id
-// improvement should be visible to others without spying
-#define SPECENUM_VALUE0 IF_VISIBLE_BY_OTHERS
-#define SPECENUM_VALUE0NAME "VisibleByOthers"
-// this small wonder is moved to another city if game.savepalace is on.
-#define SPECENUM_VALUE1 IF_SAVE_SMALL_WONDER
-#define SPECENUM_VALUE1NAME "SaveSmallWonder"
-// when built, gives gold
-#define SPECENUM_VALUE2 IF_GOLD
-#define SPECENUM_VALUE2NAME "Gold"
-// Never destroyed by disasters
-#define SPECENUM_VALUE3 IF_DISASTER_PROOF
-#define SPECENUM_VALUE3NAME "DisasterProof"
-#define SPECENUM_COUNT IF_COUNT
-#define SPECENUM_BITVECTOR bv_impr_flags
-#include "specenum_gen.h"
-
-// Used in the network protocol.
-BV_DEFINE(bv_imprs, B_LAST);
 
 // Type of improvement. (Read from buildings.ruleset file.)
 struct impr_type {

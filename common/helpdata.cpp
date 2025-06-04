@@ -39,7 +39,6 @@
 #include "multipliers.h"
 #include "name_translation.h"
 #include "nation.h"
-#include "packets.h"
 #include "player.h"
 #include "reqtext.h"
 #include "research.h"
@@ -49,12 +48,8 @@
 #include "tech.h"
 #include "terrain.h"
 #include "traderoutes.h"
-#include "unit.h"
 #include "unittype.h"
 #include "version.h"
-
-// common/networking
-#include "connection.h"
 
 // Qt
 #include <QBitArray>
