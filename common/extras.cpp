@@ -23,7 +23,6 @@
 #include "requirements.h"
 #include "research.h"
 #include "road.h"
-#include "tech.h"
 #include "terrain.h"
 #include "tile.h"
 #include "unit.h"

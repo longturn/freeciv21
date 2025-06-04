@@ -4,6 +4,9 @@
 // self
 #include "effects.h"
 
+// generated
+#include <packets_gen.h>
+
 // utility
 #include "astring.h"
 #include "fcintl.h"
@@ -17,16 +20,12 @@
 #include "government.h"
 #include "improvement.h"
 #include "multipliers.h"
-#include "packets.h" // IWYU pragma: keep (FIXME)
 #include "player.h"
 #include "requirements.h"
 #include "tech.h"
 #include "tile.h"
 #include "unit.h"
 #include "unittype.h"
-
-// FIXME: no header providing "lsend_packet_ruleset_effect" is directly
-// included (in packets_gen.h, which breaks compile if included)
 
 // Qt
 #include <QByteArrayAlgorithms> // qstrlen, qstrdup, qstrncpy
