@@ -13,7 +13,6 @@
 // common
 #include "achievements.h"
 #include "actions.h"
-#include "base.h"
 #include "calendar.h"
 #include "city.h"
 #include "extras.h"
@@ -24,7 +23,6 @@
 #include "nation.h"
 #include "player.h"
 #include "requirements.h"
-#include "road.h"
 #include "server_settings.h"
 #include "specialist.h"
 #include "style.h"

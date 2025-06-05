@@ -5,96 +5,17 @@
 
 // utility
 #include "bitvector.h"
-#include "fcintl.h"
 
 // common
 #include "fc_types.h"
-#include "name_translation.h"
-#include "requirements.h"
+#include "name_translation.h" // struct name_translation
+#include "requirements.h"     // struct requirement_vector
 
 // Qt
 #include <QtContainerFwd> // QVector<QString>
 
 // std
 #include <cstddef> // size_t
-
-/*
-  [kept for amusement and posterity]
-typedef int Tech_type_id;
-  Above typedef replaces old "enum tech_type_id"; see comments about
-  Unit_type_id in unit.h, since mainly apply here too, except don't
-  use Tech_type_id very widely, and don't use (-1) flag values. (?)
-*/
-/* [more accurately]
- * Unlike most other indices, the Tech_type_id is widely used, because it
- * so frequently passed to packet and scripting.  The client menu routines
- * sometimes add and substract these numbers.
- */
-#define A_NONE 0
-#define A_FIRST 1
-#define A_LAST (MAX_NUM_ADVANCES + 1) // Used in the network protocol.
-#define A_FUTURE (A_LAST + 1)
-#define A_ARRAY_SIZE (A_FUTURE + 1)
-#define A_UNSET (A_LAST + 2)
-#define A_UNKNOWN (A_LAST + 3)
-
-#define A_NEVER (nullptr)
-
-/*
-   A_NONE is the root tech. All players always know this tech. It is
-   used as a flag in various cases where there is no tech-requirement.
-
-   A_FIRST is the first real tech id value
-
-   A_UNSET indicates that no tech is selected (for research).
-
-   A_FUTURE indicates that the player is researching a future tech.
-
-   A_UNKNOWN may be passed to other players instead of the actual value.
-
-   A_LAST is a value that is guaranteed to be larger than all
-   actual Tech_type_id values.  It is used as a flag value; it can
-   also be used for fixed allocations to ensure ability to hold the
-   full number of techs.
-
-   A_NEVER is the pointer equivalent replacement for A_LAST flag value.
-*/
-
-// Changing these breaks network compatibility.
-/* If a new flag is added techtools.c:research_tech_lost() should be checked
- */
-#define SPECENUM_NAME tech_flag_id
-// player gets extra tech if rearched first
-#define SPECENUM_VALUE0 TF_BONUS_TECH
-/* TRANS: this and following strings are 'tech flags', which may rarely
- * be presented to the player in ruleset help text */
-#define SPECENUM_VALUE0NAME N_("Bonus_Tech")
-// "Settler" unit types can build bridges over rivers
-#define SPECENUM_VALUE1 TF_BRIDGE
-#define SPECENUM_VALUE1NAME N_("Bridge")
-// Player can build air units
-#define SPECENUM_VALUE2 TF_BUILD_AIRBORNE
-#define SPECENUM_VALUE2NAME N_("Build_Airborne")
-// Player can claim ocean tiles non-adjacent to border source
-#define SPECENUM_VALUE3 TF_CLAIM_OCEAN
-#define SPECENUM_VALUE3NAME N_("Claim_Ocean")
-/* Player can claim ocean tiles non-adjacent to border source as long
- * as source is ocean tile */
-#define SPECENUM_VALUE4 TF_CLAIM_OCEAN_LIMITED
-#define SPECENUM_VALUE4NAME N_("Claim_Ocean_Limited")
-#define SPECENUM_VALUE5 TECH_USER_1
-#define SPECENUM_VALUE6 TECH_USER_2
-#define SPECENUM_VALUE7 TECH_USER_3
-#define SPECENUM_VALUE8 TECH_USER_4
-#define SPECENUM_VALUE9 TECH_USER_5
-#define SPECENUM_VALUE10 TECH_USER_6
-#define SPECENUM_VALUE11 TECH_USER_7
-#define SPECENUM_VALUE12 TECH_USER_LAST
-// Keep this last.
-#define SPECENUM_COUNT TF_COUNT
-#define SPECENUM_BITVECTOR bv_tech_flags
-#define SPECENUM_NAMEOVERRIDE
-#include "specenum_gen.h"
 
 #define MAX_NUM_USER_TECH_FLAGS (TECH_USER_LAST - TECH_USER_1 + 1)
 

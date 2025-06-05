@@ -3,6 +3,9 @@
 
 #pragma once
 
+// common
+#include "fc_types.h"
+
 // std
 #include <cstddef> // size_t
 

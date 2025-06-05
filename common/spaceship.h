@@ -3,9 +3,6 @@
 
 #pragma once
 
-// utility
-#include "bitvector.h"
-
 // common
 #include "fc_types.h"
 
@@ -73,12 +70,8 @@ enum spaceship_state {
   SSHIP_ARRIVED
 };
 
-#define NUM_SS_STRUCTURALS 32 // Used in the network protocol.
 #define NUM_SS_COMPONENTS 16
 #define NUM_SS_MODULES 12
-
-// Used in the network protocol.
-BV_DEFINE(bv_spaceship_structure, NUM_SS_STRUCTURALS);
 
 struct player_spaceship {
   // how many of each part built, including any "unplaced":

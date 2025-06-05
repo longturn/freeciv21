@@ -4,13 +4,12 @@
 #pragma once
 
 // common
-#include "city.h"
-#include "name_translation.h"
-#include "player.h"
-#include "requirements.h"
+#include "fc_types.h"
+#include "name_translation.h" // struct name_translation
+#include "requirements.h"     // struct requirement_vector
 
 // Qt
-#include <QString>
+class QString;
 
 struct nation_style {
   int id;

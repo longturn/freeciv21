@@ -4,13 +4,12 @@
 #pragma once
 
 // utility
-#include "fcintl.h"
 #include "support.h"
 
 // common
 #include "fc_types.h"
-#include "name_translation.h"
-#include "requirements.h"
+#include "name_translation.h" // struct name_translation
+#include "requirements.h"     // struct requirement_vector
 
 // Qt
 #include <QtContainerFwd> // QVector<QString>
@@ -18,15 +17,6 @@
 struct city;
 struct city_list;
 struct player;
-
-/* What to do with previously established traderoutes that are now illegal.
- * Used in the network protocol. */
-enum traderoute_illegal_cancelling {
-  TRI_ACTIVE = 0,   // Keep them active
-  TRI_INACTIVE = 1, // They are inactive
-  TRI_CANCEL = 2,   // Completely cancel them
-  TRI_LAST = 3
-};
 
 enum trade_route_type {
   TRT_NATIONAL = 0,
@@ -41,26 +31,6 @@ enum trade_route_type {
   TRT_TEAM_IC = 9,
   TRT_LAST = 10
 };
-
-#define SPECENUM_NAME traderoute_bonus_type
-#define SPECENUM_VALUE0 TBONUS_NONE
-#define SPECENUM_VALUE0NAME "None"
-#define SPECENUM_VALUE1 TBONUS_GOLD
-#define SPECENUM_VALUE1NAME "Gold"
-#define SPECENUM_VALUE2 TBONUS_SCIENCE
-#define SPECENUM_VALUE2NAME "Science"
-#define SPECENUM_VALUE3 TBONUS_BOTH
-#define SPECENUM_VALUE3NAME "Both"
-#include "specenum_gen.h"
-
-#define SPECENUM_NAME route_direction
-#define SPECENUM_VALUE0 RDIR_FROM
-#define SPECENUM_VALUE0NAME N_("?routedir:From")
-#define SPECENUM_VALUE1 RDIR_TO
-#define SPECENUM_VALUE1NAME N_("?routedir:To")
-#define SPECENUM_VALUE2 RDIR_BIDIRECTIONAL
-#define SPECENUM_VALUE2NAME N_("?routedir:Bidirectional")
-#include "specenum_gen.h"
 
 struct trade_route_settings {
   int trade_pct;
@@ -167,16 +137,6 @@ int city_trade_removable(const struct city *pcity,
   }                                                                         \
   while (false)                                                             \
     ;
-
-// Used in the network protocol.
-#define SPECENUM_NAME goods_flag_id
-#define SPECENUM_VALUE0 GF_BIDIRECTIONAL
-#define SPECENUM_VALUE0NAME "Bidirectional"
-#define SPECENUM_VALUE1 GF_DEPLETES
-#define SPECENUM_VALUE1NAME "Depletes"
-#define SPECENUM_COUNT GF_COUNT
-#define SPECENUM_BITVECTOR bv_goods_flags
-#include "specenum_gen.h"
 
 struct goods_type {
   int id;

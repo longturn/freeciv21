@@ -7,6 +7,9 @@
 #include "shared.h"
 #include "support.h"
 
+// common
+#include "fc_types.h"
+
 // Qt
 #include <QtLogging> // qDebug, qWarning, qCricital, etc
 
