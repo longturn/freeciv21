@@ -29,6 +29,7 @@
 
 // common
 #include "packets.h"
+#include "tile.h"
 
 // client
 #include "attribute.h"

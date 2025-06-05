@@ -15,14 +15,12 @@
 #include "game.h"
 #include "map.h"
 #include "movement.h"
-#include "path.h"
 #include "player.h"
 #include "tile.h"
 #include "unit.h"
 #include "unit_utils.h"
 #include "unitlist.h"
 #include "unittype.h"
-#include "world_object.h"
 
 // Qt
 #include <QtPreprocessorSupport> // Q_UNUSED

@@ -33,6 +33,7 @@
 
 // common
 #include "achievements.h"
+#include "actions.h"
 #include "calendar.h"
 #include "city.h"
 #include "culture.h"

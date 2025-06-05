@@ -25,6 +25,7 @@
 #include "citizens.h"
 #include "city.h"
 #include "culture.h"
+#include "effects.h"
 #include "game.h"
 #include "government.h"
 #include "idex.h"

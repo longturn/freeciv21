@@ -10,14 +10,18 @@
 #include "tradecalculation.h"
 
 #include <random>
+
 // common
 #include "city.h"
 #include "featured_text.h"
+#include "tile.h"
 #include "traderoutes.h"
+
 // client
 #include "chatline_common.h" // Help me, I want to common
 #include "client_main.h"
-// qt
+
+// Qt
 #include "fc_client.h"
 #include "messagewin.h"
 #include "page_game.h"

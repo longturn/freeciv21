@@ -25,6 +25,7 @@
 #include "log.h"
 
 // common
+#include "actions.h"
 #include "game.h"
 #include "government.h"
 

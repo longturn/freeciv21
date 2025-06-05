@@ -9,6 +9,9 @@
 #include "tilespec.h"
 #include "workertask.h"
 
+// common
+#include "tile.h"
+
 /**
  * \class freeciv::layer_infrawork
  * \brief Draws infrastructure (extras) being placed.

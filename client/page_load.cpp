@@ -25,6 +25,7 @@
 
 // common
 #include "rgbcolor.h"
+#include "tile.h"
 
 // client
 #include "fc_client.h"

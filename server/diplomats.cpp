@@ -19,6 +19,7 @@
 // common
 #include "base.h"
 #include "combat.h"
+#include "effects.h"
 #include "events.h"
 #include "game.h"
 #include "map.h"

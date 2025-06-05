@@ -33,6 +33,7 @@
 #include "game.h"
 #include "packets.h"
 #include "specialist.h"
+#include "tile.h"
 #include "unitlist.h"
 #include "worklist.h"
 

@@ -21,11 +21,14 @@
 
 // utility
 #include "fcintl.h"
+
 // common
 #include "calendar.h"
 #include "cityrep_g.h"
+#include "effects.h"
 #include "government.h"
 #include "repodlgs_g.h"
+
 // client
 #include "chatline.h"
 #include "citydlg.h"

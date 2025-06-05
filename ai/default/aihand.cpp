@@ -18,6 +18,7 @@
 #include "timing.h"
 
 // common
+#include "actions.h"
 #include "city.h"
 #include "game.h"
 #include "government.h"

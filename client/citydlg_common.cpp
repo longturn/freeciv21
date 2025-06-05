@@ -21,6 +21,7 @@
 // common
 #include "city.h"
 #include "culture.h"
+#include "effects.h"
 #include "game.h"
 #include "specialist.h"
 #include "worklist.h"

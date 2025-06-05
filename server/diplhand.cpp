@@ -19,11 +19,13 @@
 // common
 #include "ai.h"
 #include "diptreaty.h"
+#include "effects.h"
 #include "events.h"
 #include "game.h"
 #include "packets.h"
 #include "player.h"
 #include "research.h"
+
 /* common/scriptcore */
 #include "luascript_types.h"
 

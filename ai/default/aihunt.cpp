@@ -14,6 +14,7 @@
 #include "log.h"
 
 // common
+#include "actions.h"
 #include "city.h"
 #include "combat.h"
 #include "game.h"

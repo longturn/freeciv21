@@ -18,15 +18,19 @@
 #include <QSplitter>
 #include <QTreeWidget>
 #include <QVBoxLayout>
+
 // utility
 #include "fcintl.h"
+
 // common
 #include "government.h"
 #include "helpdata.h"
 #include "movement.h"
 #include "nation.h"
 #include "specialist.h"
+#include "tech.h"
 #include "terrain.h"
+
 // client
 #include "canvas.h"
 #include "client_main.h"

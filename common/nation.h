@@ -7,13 +7,8 @@
 #include "iterator.h"
 
 // common
-#include "city.h"
 #include "fc_types.h"
-#include "name_translation.h"
-#include "player.h"
-#include "rgbcolor.h"
-#include "traits.h"
-#include "unit.h"
+#include "name_translation.h" // name_translation
 
 // std
 #include <array>   // std::array

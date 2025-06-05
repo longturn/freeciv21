@@ -9,17 +9,11 @@
 #include "shared.h"
 
 // common
-#include "city.h"
-#include "effects.h"
 #include "fc_types.h"
-#include "improvement.h"
-#include "requirements.h"
-#include "rgbcolor.h"
-#include "spaceship.h"
-#include "tech.h"
-#include "tile.h"
-#include "traits.h"
-#include "unit.h"
+#include "multipliers.h" // struct multiplier
+#include "rgbcolor.h"    // struct rgbcolor
+#include "spaceship.h"   // struct spaceship
+#include "traits.h"      // ai_trait
 
 // Qt
 #include <QBitArray>
@@ -30,6 +24,8 @@
 #include <map>    // std::map
 #include <string> // std:string
 #include <vector> // std:vector
+
+struct adv_data;
 
 #define PLAYER_DEFAULT_TAX_RATE 0
 #define PLAYER_DEFAULT_SCIENCE_RATE 100
@@ -49,15 +45,6 @@ enum plrcolor_mode {
   PLRCOL_TEAM_ORDER,
   PLRCOL_NATION_ORDER
 };
-
-#define SPECENUM_NAME plr_flag_id
-#define SPECENUM_VALUE0 PLRF_AI
-#define SPECENUM_VALUE0NAME "ai"
-#define SPECENUM_VALUE1 PLRF_SCENARIO_RESERVED
-#define SPECENUM_VALUE1NAME "ScenarioReserved"
-#define SPECENUM_COUNT PLRF_COUNT
-#define SPECENUM_BITVECTOR bv_plr_flags
-#include "specenum_gen.h"
 
 struct player_slot;
 
@@ -134,33 +121,6 @@ struct player_ai {
 
   std::vector<ai_trait> traits;
 };
-
-/* Diplomatic states (how one player views another).
- * (Some diplomatic states are "pacts" (mutual agreements), others aren't.)
- *
- * Adding to or reordering this array will break many things.
- *
- * Used in the network protocol.
- */
-#define SPECENUM_NAME diplstate_type
-#define SPECENUM_VALUE0 DS_ARMISTICE
-#define SPECENUM_VALUE0NAME N_("?diplomatic_state:Armistice")
-#define SPECENUM_VALUE1 DS_WAR
-#define SPECENUM_VALUE1NAME N_("?diplomatic_state:War")
-#define SPECENUM_VALUE2 DS_CEASEFIRE
-#define SPECENUM_VALUE2NAME N_("?diplomatic_state:Cease-fire")
-#define SPECENUM_VALUE3 DS_PEACE
-#define SPECENUM_VALUE3NAME N_("?diplomatic_state:Peace")
-#define SPECENUM_VALUE4 DS_ALLIANCE
-#define SPECENUM_VALUE4NAME N_("?diplomatic_state:Alliance")
-#define SPECENUM_VALUE5 DS_NO_CONTACT
-#define SPECENUM_VALUE5NAME N_("?diplomatic_state:Never met")
-#define SPECENUM_VALUE6 DS_TEAM
-#define SPECENUM_VALUE6NAME N_("?diplomatic_state:Team")
-/* When adding or removing entries, note that first value
- * of diplrel_other should be next to last diplstate_type */
-#define SPECENUM_COUNT DS_LAST // leave this last
-#include "specenum_gen.h"
 
 /* Other diplomatic relation properties.
  *

@@ -15,7 +15,9 @@
 #include "support.h"
 
 // common
+#include "actions.h"
 #include "disaster.h"
+#include "effects.h"
 #include "game.h"
 #include "government.h"
 #include "improvement.h"
@@ -24,6 +26,7 @@
 #include "specialist.h"
 #include "style.h"
 #include "tech.h"
+#include "tile.h"
 
 #include "validity.h"
 

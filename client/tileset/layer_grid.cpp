@@ -9,6 +9,7 @@
 #include "client_main.h"
 #include "climap.h"
 #include "control.h"
+#include "effects.h"
 #include "movement.h"
 #include "sprite_g.h"
 #include "tilespec.h"

@@ -22,6 +22,7 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "support.h"
 
 // common
+#include "actions.h"
 #include "effects.h"
 #include "events.h"
 #include "game.h"

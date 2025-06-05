@@ -33,6 +33,7 @@
 #include "capability.h"
 #include "capstr.h"
 #include "citizens.h"
+#include "effects.h"
 #include "events.h"
 #include "extras.h"
 #include "game.h"

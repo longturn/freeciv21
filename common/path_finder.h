@@ -10,8 +10,6 @@
 // common
 #include "fc_types.h"
 #include "path.h"
-#include "player.h"
-#include "unit.h"
 
 // std
 #include <cstddef>    // size_t

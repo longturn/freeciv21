@@ -5,7 +5,8 @@
 #pragma once
 
 // common
-#include "unit.h"
+#include "fc_types.h"
+#include "unit.h" // struct unit
 
 // std
 #include <vector> // std::vector

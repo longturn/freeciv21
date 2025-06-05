@@ -15,6 +15,7 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "support.h"
 
 // common
+#include "effects.h"
 #include "game.h"
 #include "government.h"
 #include "movement.h"

@@ -27,6 +27,7 @@
 #include "ai.h"
 #include "capability.h"
 #include "game.h"
+#include "unitlist.h"
 
 // server
 #include "console.h"

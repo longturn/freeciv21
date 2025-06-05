@@ -11,6 +11,8 @@
 
 // common
 #include "fc_types.h"
+#include "tile.h"
+
 // client
 #include "pages_g.h"
 #include "tileset/tilespec.h"

@@ -19,6 +19,9 @@
 #include "sprite_g.h"
 #include "tilespec.h"
 
+// common
+#include "tile.h"
+
 namespace freeciv {
 
 layer_background::layer_background(struct tileset *ts)

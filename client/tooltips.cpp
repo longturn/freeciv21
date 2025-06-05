@@ -13,11 +13,15 @@
 #include <QHelpEvent>
 #include <QModelIndex>
 #include <QToolTip>
+
 // utility
 #include "fcintl.h"
 #include "support.h"
+
 // common
 #include "helpdata.h"
+#include "tech.h"
+
 // client
 #include "client_main.h"
 #include "climisc.h"

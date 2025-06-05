@@ -13,6 +13,7 @@
 
 // common
 #include "achievements.h"
+#include "actions.h"
 #include "game.h"
 #include "government.h"
 #include "nation.h"
@@ -20,7 +21,9 @@
 #include "specialist.h"
 #include "style.h"
 #include "tech.h"
+#include "tile.h"
 #include "traderoutes.h"
+
 // server
 #include "rssanity.h"
 #include "settings.h"

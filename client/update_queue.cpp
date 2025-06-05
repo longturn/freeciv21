@@ -21,6 +21,7 @@
 // common
 #include "city.h"
 #include "player.h"
+#include "tile.h"
 
 /* client/include */
 #include "citydlg_g.h"

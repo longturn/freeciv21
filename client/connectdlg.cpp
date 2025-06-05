@@ -10,6 +10,8 @@
 
 // common
 #include "game.h"
+#include "tile.h"
+
 // client
 #include "chatline_common.h"
 #include "fc_client.h"
