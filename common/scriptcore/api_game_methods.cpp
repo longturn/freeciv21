@@ -18,6 +18,7 @@
 #include "calendar.h"
 #include "citizens.h"
 #include "culture.h"
+#include "effects.h"
 #include "featured_text.h"
 #include "game.h"
 #include "government.h"

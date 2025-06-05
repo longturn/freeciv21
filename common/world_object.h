@@ -5,6 +5,7 @@
 
 // common
 #include "city.h"
+#include "fc_types.h"
 #include "map_types.h"
 #include "unit.h"
 

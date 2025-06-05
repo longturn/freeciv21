@@ -20,6 +20,7 @@
 #include "log.h"
 
 // common
+#include "base.h"
 #include "combat.h"
 #include "game.h"
 #include "map.h"

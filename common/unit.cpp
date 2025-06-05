@@ -14,7 +14,6 @@
 // common
 #include "actions.h"
 #include "ai.h"
-#include "base.h"
 #include "city.h"
 #include "effects.h"
 #include "extras.h"
@@ -23,7 +22,6 @@
 #include "log.h"
 #include "map.h"
 #include "movement.h"
-#include "packets.h"
 #include "player.h"
 #include "terrain.h"
 #include "tile.h"

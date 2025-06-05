@@ -30,6 +30,7 @@
 // common
 #include "achievements.h"
 #include "actions.h"
+#include "base.h"
 #include "capability.h"
 #include "capstr.h"
 #include "citizens.h"

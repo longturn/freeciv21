@@ -19,6 +19,7 @@
 // common
 #include "actions.h"
 #include "ai.h"
+#include "base.h"
 #include "city.h"
 #include "game.h"
 #include "government.h"

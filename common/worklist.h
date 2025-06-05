@@ -6,15 +6,6 @@
 // common
 #include "fc_types.h"
 
-#define MAX_LEN_WORKLIST 64
-#define MAX_NUM_WORKLISTS 16
-
-// a worklist
-struct worklist {
-  int length;
-  struct universal entries[MAX_LEN_WORKLIST];
-};
-
 void worklist_init(struct worklist *pwl);
 
 int worklist_length(const struct worklist *pwl);
