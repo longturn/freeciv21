@@ -20,6 +20,7 @@
 
 // common
 #include "actions.h"
+#include "base.h"
 #include "map.h"
 #include "specialist.h"
 

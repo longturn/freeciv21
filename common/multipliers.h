@@ -9,7 +9,7 @@
 #include "requirements.h"     // struct requirement_vector
 
 // Qt
-#include <QString>
+class QString;
 #include <QtContainerFwd> // QVector<QString>
 
 struct multiplier {

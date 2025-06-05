@@ -17,6 +17,7 @@
 // common
 #include "achievements.h"
 #include "actions.h"
+#include "base.h"
 #include "effects.h"
 #include "game.h"
 #include "government.h"

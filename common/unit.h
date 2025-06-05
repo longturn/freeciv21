@@ -9,20 +9,19 @@
 #include "support.h"
 
 // common
-#include "base.h"
 #include "fc_types.h"
 #include "unittype.h"
 #include "vision.h"
 
 // Qt
-#include <QString>
+class QString;
 
 // std
 #include <cstddef> // size_t
 #include <ctime>   // time_t
 
 struct road_type;
-struct unit_move_data; /* Actually defined in "server/unittools.c". */
+struct unit_move_data; /* Actually defined in "server/unittools.cpp". */
 
 /* Changing this enum will break network compatibility.
  * Different orders take different parameters; see struct unit_order. */
@@ -86,30 +85,6 @@ struct unit_order {
   // Valid for ORDER_MOVE and ORDER_ACTION_MOVE.
   enum direction8 dir;
 };
-
-// Used in the network protocol
-#define SPECENUM_NAME unit_ss_data_type
-/* The player wants to be reminded to ask what actions the unit can perform
- * to a certain target tile. */
-#define SPECENUM_VALUE0 USSDT_QUEUE
-/* The player no longer wants the reminder to ask what actions the unit can
- * perform to a certain target tile. */
-#define SPECENUM_VALUE1 USSDT_UNQUEUE
-/* The player wants to record that the unit now belongs to the specified
- * battle group. */
-#define SPECENUM_VALUE2 USSDT_BATTLE_GROUP
-#include "specenum_gen.h"
-
-// Used in the network protocol
-#define SPECENUM_NAME server_side_agent
-#define SPECENUM_VALUE0 SSA_NONE
-#define SPECENUM_VALUE0NAME N_("None")
-#define SPECENUM_VALUE1 SSA_AUTOSETTLER
-#define SPECENUM_VALUE1NAME N_("Autosettlers")
-#define SPECENUM_VALUE2 SSA_AUTOEXPLORE
-#define SPECENUM_VALUE2NAME N_("Autoexplore")
-#define SPECENUM_COUNT SSA_COUNT
-#include "specenum_gen.h"
 
 struct unit;
 struct unit_list;

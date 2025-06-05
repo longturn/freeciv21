@@ -80,6 +80,7 @@
 #include "achievements.h"
 #include "actions.h"
 #include "ai.h"
+#include "base.h"
 #include "capability.h"
 #include "citizens.h"
 #include "city.h"

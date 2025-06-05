@@ -4,10 +4,8 @@
 #pragma once
 
 // common
-#include "base.h"
 #include "fc_types.h"
 #include "unit.h"
-#include "unittype.h"
 
 // std
 #include <vector> // std::vector

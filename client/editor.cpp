@@ -20,6 +20,7 @@
 #include "support.h"
 
 // common
+#include "base.h"
 #include "game.h"
 #include "map.h"
 #include "packets.h"

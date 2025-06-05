@@ -8,7 +8,6 @@
 
 // common
 #include "fc_types.h"
-#include "improvement.h" // bv_imprs
 
 /****************************************************************************
   Vision for cities and units:

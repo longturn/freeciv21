@@ -9,7 +9,6 @@
 #include "support.h"
 
 // common
-#include "citizens.h"
 #include "city.h"
 #include "fc_types.h"
 #include "player.h"
