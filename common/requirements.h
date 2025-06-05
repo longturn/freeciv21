@@ -10,44 +10,10 @@
 #include "fc_types.h"
 
 // Qt
-#include <QString>
+class QString;
 
 // std
 #include <cstddef> // size_t
-
-/* Range of requirements.
- * Used in the network protocol.
- * Order is important -- wider ranges should come later -- some code
- * assumes a total order, or tests for e.g. >= REQ_RANGE_PLAYER.
- * Ranges of similar types should be supersets, for example:
- *  - the set of Adjacent tiles contains the set of CAdjacent tiles,
- *    and both contain the center Local tile (a requirement on the local
- *    tile is also within Adjacent range);
- *  - World contains Alliance contains Player (a requirement we ourselves
- *    have is also within Alliance range). */
-#define SPECENUM_NAME req_range
-#define SPECENUM_VALUE0 REQ_RANGE_LOCAL
-#define SPECENUM_VALUE0NAME "Local"
-#define SPECENUM_VALUE1 REQ_RANGE_CADJACENT
-#define SPECENUM_VALUE1NAME "CAdjacent"
-#define SPECENUM_VALUE2 REQ_RANGE_ADJACENT
-#define SPECENUM_VALUE2NAME "Adjacent"
-#define SPECENUM_VALUE3 REQ_RANGE_CITY
-#define SPECENUM_VALUE3NAME "City"
-#define SPECENUM_VALUE4 REQ_RANGE_TRADEROUTE
-#define SPECENUM_VALUE4NAME "Traderoute"
-#define SPECENUM_VALUE5 REQ_RANGE_CONTINENT
-#define SPECENUM_VALUE5NAME "Continent"
-#define SPECENUM_VALUE6 REQ_RANGE_PLAYER
-#define SPECENUM_VALUE6NAME "Player"
-#define SPECENUM_VALUE7 REQ_RANGE_TEAM
-#define SPECENUM_VALUE7NAME "Team"
-#define SPECENUM_VALUE8 REQ_RANGE_ALLIANCE
-#define SPECENUM_VALUE8NAME "Alliance"
-#define SPECENUM_VALUE9 REQ_RANGE_WORLD
-#define SPECENUM_VALUE9NAME "World"
-#define SPECENUM_COUNT REQ_RANGE_COUNT // keep this last
-#include "specenum_gen.h"
 
 #define req_range_iterate(_range_)                                          \
   {                                                                         \
@@ -58,20 +24,6 @@
 #define req_range_iterate_end                                               \
   }                                                                         \
   }
-
-/* A requirement. This requirement is basically a conditional; it may or
- * may not be active on a target.  If it is active then something happens.
- * For instance units and buildings have requirements to be built, techs
- * have requirements to be researched, and effects have requirements to be
- * active.
- * Used in the network protocol. */
-struct requirement {
-  struct universal source; // requirement source
-  enum req_range range;    // requirement range
-  bool survives;           /* set if destroyed sources satisfy the req*/
-  bool present;            // set if the requirement is to be present
-  bool quiet;              // do not list this in helptext
-};
 
 #define SPECVEC_TAG requirement
 #define SPECVEC_TYPE struct requirement

@@ -3,38 +3,9 @@
 
 #pragma once
 
-// utility
-#include "fcintl.h"
-
 // common
 #include "fc_types.h"
-#include "requirements.h"
-
-// Used in the network protocol.
-#define SPECENUM_NAME road_flag_id
-#define SPECENUM_VALUE0 RF_RIVER
-/* TRANS: this and following strings are 'road flags', which may rarely
- * be presented to the player in ruleset help text */
-#define SPECENUM_VALUE0NAME N_("River")
-#define SPECENUM_VALUE1 RF_UNRESTRICTED_INFRA
-#define SPECENUM_VALUE1NAME N_("UnrestrictedInfra")
-#define SPECENUM_VALUE2 RF_JUMP_FROM
-#define SPECENUM_VALUE2NAME N_("JumpFrom")
-#define SPECENUM_VALUE3 RF_JUMP_TO
-#define SPECENUM_VALUE3NAME N_("JumpTo")
-#define SPECENUM_COUNT RF_COUNT
-#define SPECENUM_BITVECTOR bv_road_flags
-#include "specenum_gen.h"
-
-// Used in the network protocol.
-#define SPECENUM_NAME road_move_mode
-#define SPECENUM_VALUE0 RMM_CARDINAL
-#define SPECENUM_VALUE0NAME "Cardinal"
-#define SPECENUM_VALUE1 RMM_RELAXED
-#define SPECENUM_VALUE1NAME "Relaxed"
-#define SPECENUM_VALUE2 RMM_FAST_ALWAYS
-#define SPECENUM_VALUE2NAME "FastAlways"
-#include "specenum_gen.h"
+#include "requirements.h" // struct requirement_vector
 
 struct road_type;
 

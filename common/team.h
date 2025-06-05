@@ -7,9 +7,7 @@
 #include "fc_types.h"
 
 // Qt
-#include <QString>
-
-#define MAX_NUM_TEAM_SLOTS MAX_NUM_PLAYER_SLOTS
+class QString;
 
 // Opaque types.
 struct team;

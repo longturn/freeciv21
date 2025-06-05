@@ -8,11 +8,11 @@
 
 // common
 #include "fc_types.h"
-#include "name_translation.h"
+#include "name_translation.h" // struct name_translation
 #include "unittype.h"
 
 // Qt
-#include <QString>
+class QString;
 #include <QtContainerFwd> // QStringList = QList<QString>
 
 // std
@@ -50,13 +50,6 @@ struct resource_type {
 // The first terrain value.
 #define T_FIRST 0
 
-/* A hard limit on the number of terrains; useful for static arrays.
- * Used in the network protocol. */
-#define MAX_NUM_TERRAINS (96)
-/* Reflect reality; but theoretically could be larger than terrains!
- * Used in the network protocol. */
-#define MAX_RESOURCE_TYPES (MAX_NUM_TERRAINS / 2)
-
 // Used in the network protocol.
 #define SPECENUM_NAME terrain_class
 #define SPECENUM_VALUE0 TC_LAND
@@ -87,51 +80,6 @@ struct resource_type {
 #define SPECENUM_VALUE2 TA_CAN_ROAD
 #define SPECENUM_VALUE2NAME N_("CanRoad")
 #define SPECENUM_COUNT TA_COUNT
-#include "specenum_gen.h"
-
-// Used in the network protocol.
-#define SPECENUM_NAME terrain_flag_id
-// No barbarians summoned on this terrain.
-#define SPECENUM_VALUE0 TER_NO_BARBS
-/* TRANS: this and following strings are 'terrain flags', which may rarely
- * be presented to the player in ruleset help text */
-#define SPECENUM_VALUE0NAME N_("NoBarbs")
-// No cities on this terrain.
-#define SPECENUM_VALUE1 TER_NO_CITIES
-#define SPECENUM_VALUE1NAME N_("NoCities")
-// Players will start on this terrain type.
-#define SPECENUM_VALUE2 TER_STARTER
-#define SPECENUM_VALUE2NAME N_("Starter")
-// Terrains with this type can have road with "River" flag on them.
-#define SPECENUM_VALUE3 TER_CAN_HAVE_RIVER
-#define SPECENUM_VALUE3NAME N_("CanHaveRiver")
-/*this tile is not safe as coast, (all ocean / ice) */
-#define SPECENUM_VALUE4 TER_UNSAFE_COAST
-#define SPECENUM_VALUE4NAME N_("UnsafeCoast")
-// Fresh water terrain
-#define SPECENUM_VALUE5 TER_FRESHWATER
-#define SPECENUM_VALUE5NAME N_("FreshWater")
-// Map generator does not place this terrain
-#define SPECENUM_VALUE6 TER_NOT_GENERATED
-#define SPECENUM_VALUE6NAME N_("NotGenerated")
-// Units on this terrain are not generating or subject to zoc
-#define SPECENUM_VALUE7 TER_NO_ZOC
-#define SPECENUM_VALUE7NAME N_("NoZoc")
-// Ice-covered terrain (affects minimap)
-#define SPECENUM_VALUE8 TER_FROZEN
-#define SPECENUM_VALUE8NAME N_("Frozen")
-#define SPECENUM_VALUE9 TER_USER_1
-#define SPECENUM_VALUE10 TER_USER_2
-#define SPECENUM_VALUE11 TER_USER_3
-#define SPECENUM_VALUE12 TER_USER_4
-#define SPECENUM_VALUE13 TER_USER_5
-#define SPECENUM_VALUE14 TER_USER_6
-#define SPECENUM_VALUE15 TER_USER_7
-#define SPECENUM_VALUE16 TER_USER_8
-#define SPECENUM_VALUE17 TER_USER_9
-#define SPECENUM_VALUE18 TER_USER_LAST
-#define SPECENUM_NAMEOVERRIDE
-#define SPECENUM_BITVECTOR bv_terrain_flags
 #include "specenum_gen.h"
 
 #define MAX_NUM_USER_TER_FLAGS (TER_USER_LAST - TER_USER_1 + 1)

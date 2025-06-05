@@ -7,7 +7,7 @@
 #include "fc_types.h"
 
 // Qt
-#include <QString>
+class QString;
 
 // Special value to signal the absence of a server setting.
 #define SERVER_SETTING_NONE ((server_setting_id) -1)
