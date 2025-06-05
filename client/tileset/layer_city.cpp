@@ -7,10 +7,14 @@
 
 #include "city.h"
 #include "citybar.h"
+#include "effects.h"
 #include "rgbcolor.h"
 #include "style.h"
 #include "tilespec.h"
 #include "utils/colorizer.h"
+
+// common
+#include "tile.h"
 
 namespace freeciv {
 

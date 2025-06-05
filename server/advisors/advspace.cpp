@@ -12,6 +12,7 @@
       \____/        ********************************************************/
 
 // common
+#include "actions.h"
 #include "government.h"
 #include "packets.h"
 #include "spaceship.h"

@@ -89,6 +89,7 @@
 
 // common
 #include "achievements.h"
+#include "actions.h"
 #include "ai.h"
 #include "citizens.h"
 #include "city.h"

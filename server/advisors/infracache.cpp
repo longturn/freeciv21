@@ -12,6 +12,7 @@
       \____/        ********************************************************/
 
 // common
+#include "actions.h"
 #include "city.h"
 #include "game.h"
 #include "map.h"

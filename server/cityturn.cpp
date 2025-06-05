@@ -33,6 +33,7 @@
 #include "city.h"
 #include "culture.h"
 #include "disaster.h"
+#include "effects.h"
 #include "events.h"
 #include "game.h"
 #include "government.h"

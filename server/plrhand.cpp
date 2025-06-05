@@ -19,9 +19,11 @@
 #include "support.h"
 
 // common
+#include "actions.h"
 #include "citizens.h"
 #include "culture.h"
 #include "diptreaty.h"
+#include "effects.h"
 #include "game.h"
 #include "government.h"
 #include "improvement.h"

@@ -16,6 +16,8 @@
 
 // common
 #include "achievements.h"
+#include "actions.h"
+#include "effects.h"
 #include "game.h"
 #include "government.h"
 #include "map.h"
@@ -26,6 +28,7 @@
 #include "rgbcolor.h"
 #include "specialist.h"
 #include "style.h"
+#include "tech.h"
 #include "unittype.h"
 #include "version.h"
 

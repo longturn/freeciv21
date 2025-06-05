@@ -16,6 +16,7 @@
 #include "shared.h"
 
 // common
+#include "actions.h"
 #include "calendar.h"
 #include "events.h"
 #include "game.h"

@@ -36,6 +36,9 @@
 #include "shared.h"
 #include "support.h"
 
+// common
+#include "tile.h"
+
 // client
 #include "chatline_common.h"
 #include "client_main.h"

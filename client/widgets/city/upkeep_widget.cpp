@@ -8,6 +8,7 @@
 
 // common
 #include "control.h"
+#include "effects.h"
 #include "fc_types.h"
 #include "game.h"
 

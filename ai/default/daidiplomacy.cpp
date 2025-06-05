@@ -20,6 +20,7 @@ received a copy of the GNU General Public License along with Freeciv21.
 #include "support.h"
 
 // common
+#include "actions.h"
 #include "aisupport.h"
 #include "city.h"
 #include "diptreaty.h"

@@ -9,8 +9,8 @@
 #include "log.h"
 
 // common
+#include "fc_types.h"
 #include "path_finder.h"
-#include "unit.h"
 
 // Qt
 #include <QtPreprocessorSupport> // Q_UNUSED

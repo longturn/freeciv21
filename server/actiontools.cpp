@@ -14,7 +14,9 @@
 
 // common
 #include "actions.h"
+#include "effects.h"
 #include "nation.h"
+
 // server
 #include "aiiface.h"
 #include "notify.h"

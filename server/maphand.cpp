@@ -21,6 +21,7 @@
 #include "support.h"
 
 // common
+#include "actions.h"
 #include "ai.h"
 #include "base.h"
 #include "borders.h"

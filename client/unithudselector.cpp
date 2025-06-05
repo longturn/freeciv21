@@ -14,6 +14,9 @@
 #include "hudwidget.h"
 #include "tileset/tilespec.h"
 
+// common
+#include "tile.h"
+
 // Qt
 #include <QComboBox>
 #include <QDialogButtonBox>

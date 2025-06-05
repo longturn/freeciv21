@@ -9,10 +9,12 @@
  */
 
 // common
+#include "fc_types.h"
 #include "game.h"
 #include "government.h"
 #include "multipliers.h"
 #include "research.h"
+#include "tile.h"
 
 // aicore
 #include "aiactions.h"

@@ -9,6 +9,7 @@
 #include "fc_types.h"
 #include "map.h"
 #include "nation.h"
+#include "team.h"
 
 // server/generator
 #include "mapgen.h"

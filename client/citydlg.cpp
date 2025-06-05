@@ -23,15 +23,19 @@
 #include <QSplitter>
 #include <QVBoxLayout>
 #include <QWidgetAction>
+
 // utility
 #include "fc_types.h"
 #include "fcintl.h"
 #include "player.h"
 #include "support.h"
+
 // common
 #include "citizens.h"
 #include "city.h"
+#include "effects.h"
 #include "game.h"
+#include "tech.h"
 #include "worklist.h"
 
 // client

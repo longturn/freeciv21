@@ -75,8 +75,10 @@
 #include "registry.h"
 #include "shared.h"
 #include "support.h" // bool type
+
 // common
 #include "achievements.h"
+#include "actions.h"
 #include "ai.h"
 #include "capability.h"
 #include "citizens.h"

@@ -15,6 +15,7 @@
 
 #include "extras.h"
 #include "game.h" // For extra_type_iterate
+#include "tile.h"
 #include "tilespec.h"
 
 namespace freeciv {

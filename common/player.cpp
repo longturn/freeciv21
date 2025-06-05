@@ -29,16 +29,12 @@
 #include "rgbcolor.h"
 #include "spaceship.h"
 #include "team.h"
-#include "tech.h"
 #include "tile.h"
 #include "traderoutes.h"
 #include "unit.h"
 #include "unitlist.h"
 #include "unittype.h"
 #include "vision.h"
-
-// common/networking
-#include "connection.h"
 
 // Qt
 #include <QBitArray>

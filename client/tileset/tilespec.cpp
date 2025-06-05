@@ -45,6 +45,7 @@
 #include "helpdata.h"
 #include "nation.h"
 #include "specialist.h"
+#include "tech.h"
 
 /* client/include */
 #include "mapview_g.h" // for update_map_canvas_visible

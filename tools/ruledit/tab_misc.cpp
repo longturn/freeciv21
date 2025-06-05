@@ -31,6 +31,8 @@
 #include "packets.h"
 #include "specialist.h"
 #include "style.h"
+#include "tech.h"
+#include "tile.h"
 
 // server
 #include "rssanity.h"

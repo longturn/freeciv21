@@ -40,6 +40,7 @@
 #include "map.h"
 #include "movement.h"
 #include "player.h"
+#include "tech.h"
 #include "version.h"
 
 // server

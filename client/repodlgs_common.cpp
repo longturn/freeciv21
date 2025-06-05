@@ -18,6 +18,7 @@
 // common
 #include "game.h"
 #include "government.h"
+#include "tile.h"
 
 // client
 #include "citydlg_common.h"

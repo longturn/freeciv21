@@ -18,6 +18,9 @@
 #include "nation.h"
 #include "tilespec.h"
 
+// common
+#include "tile.h"
+
 namespace freeciv {
 
 /**

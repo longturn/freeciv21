@@ -19,6 +19,7 @@
 #include "registry_ini.h"
 
 // common
+#include "actions.h"
 #include "map.h"
 #include "specialist.h"
 

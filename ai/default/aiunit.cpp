@@ -19,6 +19,7 @@
 #include "registry_ini.h"
 
 // common
+#include "actions.h"
 #include "city.h"
 #include "combat.h"
 #include "game.h"

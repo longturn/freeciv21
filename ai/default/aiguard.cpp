@@ -13,7 +13,9 @@
 #include "log.h"
 
 // common
+#include "fc_types.h"
 #include "game.h"
+#include "tile.h"
 #include "unit.h"
 
 // server

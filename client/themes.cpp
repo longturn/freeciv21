@@ -21,6 +21,9 @@
 // utility
 #include "shared.h"
 
+// common
+#include "tile.h"
+
 // client
 #include "chatline.h"
 #include "colors_common.h"

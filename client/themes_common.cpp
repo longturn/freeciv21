@@ -16,6 +16,7 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 // common
 #include "city.h"
 #include "fc_types.h"
+#include "tile.h"
 
 /* client/include */
 #include "themes_g.h"

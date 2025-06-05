@@ -10,6 +10,7 @@
 #include "fc_types.h"
 #include "layer.h"
 #include "terrain.h"
+#include "tile.h"
 #include "tilespec.h"
 #include "unit.h"
 

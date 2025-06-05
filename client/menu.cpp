@@ -22,7 +22,9 @@
 
 // utility
 #include "fcintl.h"
+
 // common
+#include "effects.h"
 #include "fc_types.h"
 #include "game.h"
 #include "goto.h"
@@ -31,8 +33,10 @@
 #include "map.h"
 #include "multipliers.h"
 #include "road.h"
+#include "tech.h"
 #include "tileset_options.h"
 #include "unit.h"
+
 // client
 #include "audio/audio.h"
 #include "citybar.h"

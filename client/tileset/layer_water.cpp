@@ -8,6 +8,7 @@
 #include "colors_common.h"
 #include "extras.h"
 #include "fc_types.h"
+#include "tile.h"
 #include "tilespec.h"
 
 namespace freeciv {

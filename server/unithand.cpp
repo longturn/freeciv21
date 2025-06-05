@@ -29,6 +29,7 @@
 #include "ai.h"
 #include "city.h"
 #include "combat.h"
+#include "effects.h"
 #include "events.h"
 #include "featured_text.h"
 #include "game.h"

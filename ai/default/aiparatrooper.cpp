@@ -13,6 +13,7 @@ received a copy of the GNU General Public License along with Freeciv21.
 #include "log.h"
 
 // common
+#include "actions.h"
 #include "city.h"
 #include "game.h"
 #include "player.h"

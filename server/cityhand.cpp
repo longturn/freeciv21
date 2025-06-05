@@ -18,6 +18,7 @@
 #include "support.h"
 
 // common
+#include "actions.h"
 #include "city.h"
 #include "events.h"
 #include "game.h"
