@@ -29,6 +29,7 @@
 #include "ai.h"
 #include "base.h"
 #include "city.h"
+#include "diptreaty.h"
 #include "effects.h"
 #include "extras.h"
 #include "fc_types.h"
@@ -47,6 +48,7 @@
 #include "road.h"
 #include "specialist.h"
 #include "style.h"
+#include "team.h"
 #include "tech.h"
 #include "traderoutes.h"
 

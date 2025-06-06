@@ -48,6 +48,7 @@
 #include "research.h"
 #include "rgbcolor.h"
 #include "style.h"
+#include "team.h"
 #include "unitlist.h"
 #include "version.h"
 

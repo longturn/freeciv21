@@ -35,6 +35,7 @@
 #include "map.h"
 #include "movement.h"
 #include "research.h"
+#include "team.h"
 #include "traderoutes.h"
 #include "unitlist.h"
 

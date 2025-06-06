@@ -21,6 +21,7 @@
 
 // common
 #include "actions.h"
+#include "diptreaty.h"
 #include "effects.h"
 #include "map.h"
 #include "movement.h"

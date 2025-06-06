@@ -23,6 +23,7 @@
 #include "base.h"
 #include "map.h"
 #include "specialist.h"
+#include "team.h"
 
 // server
 #include "aiiface.h"

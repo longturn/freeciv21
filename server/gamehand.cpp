@@ -30,6 +30,7 @@
 #include "game.h"
 #include "movement.h"
 #include "nation.h"
+#include "team.h"
 
 // server
 #include "citytools.h"

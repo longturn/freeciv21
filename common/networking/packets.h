@@ -15,10 +15,8 @@ struct data_in;
 
 // common
 #include "connection.h"
-#include "diptreaty.h" // IWYU pragma: keep - needed by the server
 #include "fc_types.h"
 #include "player.h"
-#include "team.h" // IWYU pragma: keep - needed by the server/map generator
 #include "traderoutes.h"
 
 // Qt

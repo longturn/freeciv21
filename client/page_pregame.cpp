@@ -12,16 +12,21 @@
  */
 
 #include "page_pregame.h"
+
 // Qt
 #include <QPainter>
 #include <QScrollBar>
+
 // utility
 #include "fcintl.h"
+
 // common
 #include "chatline_common.h"
 #include "colors_common.h"
 #include "connectdlg_common.h"
 #include "game.h"
+#include "team.h"
+
 // client
 #include "chatline.h"
 #include "client_main.h"

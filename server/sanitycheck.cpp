@@ -25,6 +25,7 @@
 #include "player.h"
 #include "research.h"
 #include "specialist.h"
+#include "team.h"
 #include "terrain.h"
 #include "unit.h"
 #include "unitlist.h"

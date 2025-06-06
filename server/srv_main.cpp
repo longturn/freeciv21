@@ -50,6 +50,7 @@
 #include "player.h"
 #include "research.h"
 #include "style.h"
+#include "team.h"
 #include "tech.h"
 #include "unit.h"
 #include "unitlist.h"
