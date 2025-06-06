@@ -4,6 +4,7 @@
 #pragma once
 
 // common
+#include "fc_types.h"
 #include "player.h"
 #include "tile.h"
 #include "unit.h"

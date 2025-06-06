@@ -3,6 +3,9 @@
 
 #pragma once
 
+// common
+#include "fc_types.h"
+
 void citymap_turn_init(struct player *pplayer);
 void citymap_reserve_city_spot(struct tile *ptile, int id);
 void citymap_free_city_spot(struct tile *ptile, int id);

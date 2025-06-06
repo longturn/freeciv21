@@ -14,16 +14,18 @@
 // common
 #include "city.h"
 #include "effects.h"
+#include "fc_types.h"
 #include "game.h"
 #include "government.h"
-#include "map.h" // NOLINT(misc-include-cleaner) -- compile fails without it.
+#include "map.h" // IWYU pragma: keep
 #include "player.h"
 #include "specialist.h"
 #include "tile.h"
 
 // Qt
 #include <QLoggingCategory>
-#include <QtGlobal>
+#include <QtLogging>             // QtMsgType
+#include <QtPreprocessorSupport> // Q_UNUSED
 
 // std
 #include <array>

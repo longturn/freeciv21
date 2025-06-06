@@ -4,7 +4,6 @@
 #pragma once
 
 // common
-#include "city.h" // CITY_MAP_MAX_SIZE
 #include "fc_types.h"
 
 // std
