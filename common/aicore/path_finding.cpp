@@ -28,8 +28,8 @@
 // Qt
 #include <QDebug>
 #include <QHash>
-#include <QLoggingCategory>
 #include <QString>
+#include <QtLogging> // qDebug, qWarning, qCricital, etc
 
 // std
 #include <cstddef>

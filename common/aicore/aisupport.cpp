@@ -22,7 +22,7 @@
 #include "victory.h"
 
 // Qt
-#include <QtGlobal>
+#include <QtMinMax>
 
 /**
    Find who is leading the space race. Returns nullptr if nobody is.

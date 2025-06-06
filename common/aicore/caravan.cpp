@@ -25,7 +25,7 @@
 #include "pf_tools.h"
 
 // Qt
-#include <QtGlobal>
+#include <QtPreprocessorSupport> // Q_UNUSED
 
 // std
 #include <cmath>
