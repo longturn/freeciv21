@@ -25,6 +25,7 @@
 #include "government.h"
 #include "nation.h"
 #include "research.h"
+#include "team.h"
 
 // client
 #include "client_main.h"

@@ -31,6 +31,7 @@
 #include "game.h"
 #include "packets.h"
 #include "player.h"
+#include "team.h"
 #include "version.h"
 
 // server

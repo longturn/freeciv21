@@ -37,6 +37,7 @@
 #include "research.h"
 #include "road.h"
 #include "specialist.h"
+#include "team.h"
 #include "tech.h"
 #include "traderoutes.h"
 #include "unit.h"

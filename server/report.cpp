@@ -38,6 +38,7 @@
 #include "player.h"
 #include "research.h"
 #include "specialist.h"
+#include "team.h"
 #include "unitlist.h"
 #include "version.h"
 
