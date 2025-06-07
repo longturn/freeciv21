@@ -11,9 +11,11 @@
 #include "nation.h"
 
 // client
+#include "client_main.h"
 #include "editor.h"
 #include "fcintl.h"
 #include "fonts.h"
+#include "helpdlg.h"
 #include "mapctrl_common.h"
 #include "tileset/tilespec.h"
 #include "views/view_map_common.h"
@@ -47,6 +49,16 @@ editor_tool_tile::editor_tool_tile(QWidget *parent)
 
   connect(ui.tbut_select_tile, &QAbstractButton::clicked, this,
           &editor_tool_tile::select_tile);
+
+  // links to help for tile properties
+  connect(ui.value_terrain, &QLabel::linkActivated, follow_help_link);
+  connect(ui.value_owner, &QLabel::linkActivated, follow_help_link);
+  connect(ui.value_resource, &QLabel::linkActivated, follow_help_link);
+  connect(ui.value_road, &QLabel::linkActivated, follow_help_link);
+  connect(ui.value_infra, &QLabel::linkActivated, follow_help_link);
+  connect(ui.value_base, &QLabel::linkActivated, follow_help_link);
+  connect(ui.value_hut, &QLabel::linkActivated, follow_help_link);
+  connect(ui.value_nuisance, &QLabel::linkActivated, follow_help_link);
 }
 
 /**
@@ -65,6 +77,9 @@ void editor_tool_tile::set_default_values()
 
   ui.value_owner->setText(_("-"));
   ui.value_owner->setAlignment(Qt::AlignLeft);
+
+  ui.value_vision->setText(_("-"));
+  ui.value_vision->setAlignment(Qt::AlignLeft);
 
   ui.value_x->setText(_("-"));
   ui.value_x->setAlignment(Qt::AlignLeft);
@@ -101,6 +116,9 @@ void editor_tool_tile::set_default_values()
 
   ui.value_nuisance->setText(_("-"));
   ui.value_nuisance->setAlignment(Qt::AlignLeft);
+
+  ui.value_tile_label->setText(_("-"));
+  ui.value_tile_label->setAlignment(Qt::AlignLeft);
 }
 
 /**
@@ -133,169 +151,172 @@ void editor_tool_tile::update_ett(struct tile *ptile)
     editor_set_current_tile(ptile);
 
     // tile terrain w/ image
-    ui.value_terrain->setText(
-        QString(terrain_name_translation(tile_terrain(ptile))));
-    QPixmap pm = get_tile_sprites(ptile);
-    ui.pixmap_terrain->setPixmap(pm);
-
-    // tile continent number
-    ui.value_continent->setNum(ptile->continent);
-
-    // tile owner
-    struct player *owner = tile_owner(ptile);
-    if (owner != nullptr) {
-      ui.value_owner->setText(nation_adjective_for_player(owner));
+    if (client_has_player()
+        && tile_get_known(ptile, client_player()) == TILE_UNKNOWN) {
+      set_default_values();
+      ui.value_terrain->setText(Q_("?terrain:Not Visible"));
+      ui.value_vision->setText(Q_("?vision:Unknown"));
     } else {
-      ui.value_owner->setText(Q_("?owner:None"));
+      ui.value_terrain->setText(create_help_link(
+          qUtf8Printable(terrain_name_translation(tile_terrain(ptile))),
+          HELP_TERRAIN));
+
+      QPixmap pm = get_tile_sprites(ptile);
+      ui.pixmap_terrain->setPixmap(pm);
+
+      // tile continent number
+      ui.value_continent->setNum(ptile->continent);
+
+      // tile owner
+      struct player *owner = tile_owner(ptile);
+      if (owner != nullptr) {
+        ui.value_owner->setText(create_help_link(
+            qUtf8Printable(nation_adjective_for_player(owner)),
+            HELP_NATIONS));
+      } else {
+        ui.value_owner->setText(Q_("?owner:None"));
+      }
+      // tile visibility to the current player
+      if (tile_get_known(ptile, client_player()) == TILE_KNOWN_SEEN) {
+        ui.value_vision->setText(Q_("?vision:Known and Visble"));
+      } else {
+        ui.value_vision->setText(Q_("?vision:Known and Not Visible"));
+      }
+
+      // tile coordinates
+      ui.value_x->setNum(index_to_map_pos_x(ptile->index));
+      ui.value_y->setNum(index_to_map_pos_y(ptile->index));
+      ui.value_nat_x->setNum(index_to_native_pos_x(ptile->index));
+      ui.value_nat_y->setNum(index_to_native_pos_y(ptile->index));
+
+      // tile resource
+      auto text = create_help_link(
+          qUtf8Printable(get_tile_extra_text(ptile, {EC_RESOURCE})),
+          HELP_GOODS);
+      ui.value_resource->setText(text.isEmpty() ? Q_("?resource:None")
+                                                : text);
+      // tile road (highest level)
+      text = create_help_link(
+          qUtf8Printable(get_tile_extra_text(ptile, {EC_ROAD})), HELP_EXTRA);
+      ui.value_road->setText(text.isEmpty() ? Q_("?road:None") : text);
+      // tile infrastructure
+      text = create_help_link(qUtf8Printable(get_tile_extra_text(
+                                  ptile, {EC_IRRIGATION, EC_MINE})),
+                              HELP_EXTRA);
+      ui.value_infra->setText(text.isEmpty() ? Q_("?infrastructure:None")
+                                             : text);
+      // tile base
+      text = create_help_link(
+          qUtf8Printable(get_tile_extra_text(ptile, {EC_BASE})), HELP_EXTRA);
+      ui.value_base->setText(text.isEmpty() ? Q_("?base:None") : text);
+      // tile hut
+      text = create_help_link(
+          qUtf8Printable(get_tile_extra_text(ptile, {EC_HUT})), HELP_EXTRA);
+      ui.value_hut->setText(text.isEmpty() ? Q_("?hut:None") : text);
+      // tile nuisance (pollution, fallout)
+      text = create_help_link(qUtf8Printable(get_tile_extra_text(
+                                  ptile, {EC_POLLUTION, EC_FALLOUT})),
+                              HELP_EXTRA);
+      ui.value_nuisance->setText(text.isEmpty() ? Q_("?nuisance:None")
+                                                : text);
+      // tile label
+      text = qUtf8Printable(ptile->label);
+      ui.value_tile_label->setText(text.isEmpty() ? Q_("?label:None")
+                                                  : text);
     }
-
-    // tile coordinates
-    ui.value_x->setNum(index_to_map_pos_x(ptile->index));
-    ui.value_y->setNum(index_to_map_pos_y(ptile->index));
-    ui.value_nat_x->setNum(index_to_native_pos_x(ptile->index));
-    ui.value_nat_y->setNum(index_to_native_pos_y(ptile->index));
-
-    // tile resource
-    if (ptile->resource) {
-      struct extra_type *res = ptile->resource;
-      ui.value_resource->setText(extra_name_translation(res));
-    } else {
-      ui.value_resource->setText(Q_("?resource:None"));
-    }
-
-    // tile road (highest level)
-    ui.value_road->setText(get_tile_road_name(ptile));
-    // tile infrastructure
-    ui.value_infra->setText(get_tile_infra_name(ptile));
-    // tile base
-    ui.value_base->setText(get_tile_base_name(ptile));
-    // tile hut
-    ui.value_hut->setText(get_tile_hut_name(ptile));
-    // tile nuisance (pollution, fallout)
-    ui.value_nuisance->setText(get_tile_nuisance_name(ptile));
   }
 }
 
 /**
- * \brief Return a string of the final road on a tile
+ * \brief Return a string of the extras on a tile
  */
-QString editor_tool_tile::get_tile_road_name(const struct tile *ptile) const
+QString editor_tool_tile::get_tile_extra_text(
+    const tile *ptile, const std::vector<extra_cause> &causes) const
 {
-  QVector<QString> roads;
-  extra_type_by_cause_iterate(EC_ROAD, pextra)
-  {
-    if (tile_has_extra(ptile, pextra)) {
-      roads.push_back(extra_name_translation(pextra));
+  QVector<QString> names;
+  for (auto cause : causes) {
+    switch (cause) {
+    case EC_ROAD:
+      extra_type_by_cause_iterate(EC_ROAD, pextra)
+      {
+        if (tile_has_extra(ptile, pextra)) {
+          names.push_back(extra_name_translation(pextra));
+        }
+      }
+      extra_type_by_cause_iterate_end;
+      break;
+    case EC_IRRIGATION:
+      extra_type_by_cause_iterate(EC_IRRIGATION, pextra)
+      {
+        if (tile_has_extra(ptile, pextra)) {
+          names.push_back(extra_name_translation(pextra));
+        }
+      }
+      extra_type_by_cause_iterate_end;
+      break;
+    case EC_MINE:
+      extra_type_by_cause_iterate(EC_MINE, pextra)
+      {
+        if (tile_has_extra(ptile, pextra)) {
+          names.push_back(extra_name_translation(pextra));
+        }
+      }
+      extra_type_by_cause_iterate_end;
+      break;
+    case EC_POLLUTION:
+      extra_type_by_cause_iterate(EC_POLLUTION, pextra)
+      {
+        if (tile_has_extra(ptile, pextra)) {
+          names.push_back(extra_name_translation(pextra));
+        }
+      }
+      extra_type_by_cause_iterate_end;
+      break;
+    case EC_FALLOUT:
+      extra_type_by_cause_iterate(EC_FALLOUT, pextra)
+      {
+        if (tile_has_extra(ptile, pextra)) {
+          names.push_back(extra_name_translation(pextra));
+        }
+      }
+      extra_type_by_cause_iterate_end;
+      break;
+    case EC_HUT:
+      extra_type_by_cause_iterate(EC_HUT, pextra)
+      {
+        if (tile_has_extra(ptile, pextra)) {
+          names.push_back(extra_name_translation(pextra));
+        }
+      }
+      extra_type_by_cause_iterate_end;
+      break;
+    case EC_BASE:
+      extra_type_by_cause_iterate(EC_BASE, pextra)
+      {
+        if (tile_has_extra(ptile, pextra)) {
+          names.push_back(extra_name_translation(pextra));
+        }
+      }
+      extra_type_by_cause_iterate_end;
+      break;
+    case EC_RESOURCE:
+      extra_type_by_cause_iterate(EC_RESOURCE, pextra)
+      {
+        if (tile_has_extra(ptile, pextra)) {
+          names.push_back(extra_name_translation(pextra));
+        }
+      }
+      extra_type_by_cause_iterate_end;
+      break;
+    case EC_APPEARANCE:
+    case EC_COUNT:
+      break;
     }
   }
-  extra_type_by_cause_iterate_end;
-
-  if (!roads.isEmpty()) {
-    return strvec_to_and_list(roads);
-  } else {
-    return Q_("?road:None");
+  if (names.isEmpty()) {
+    return QString();
   }
-}
-
-/**
- * \brief Return a string of the added infrastructure on a tile
- */
-QString editor_tool_tile::get_tile_infra_name(const struct tile *ptile) const
-{
-  QString sinfra;
-  extra_type_by_cause_iterate(EC_IRRIGATION, pextra)
-  {
-    if (tile_has_extra(ptile, pextra)) {
-      sinfra = extra_name_translation(pextra);
-    }
-  }
-  extra_type_by_cause_iterate_end;
-
-  extra_type_by_cause_iterate(EC_MINE, pextra)
-  {
-    if (tile_has_extra(ptile, pextra)) {
-      sinfra + extra_name_translation(pextra);
-    }
-  }
-  extra_type_by_cause_iterate_end;
-
-  if (!sinfra.isEmpty()) {
-    return sinfra;
-  } else {
-    return Q_("?infrastructure:None");
-  }
-}
-
-/**
- * \brief Return a string of the any nuisances on a tile
- */
-QString
-editor_tool_tile::get_tile_nuisance_name(const struct tile *ptile) const
-{
-  QString snuisance;
-  extra_type_by_cause_iterate(EC_POLLUTION, pextra)
-  {
-    if (tile_has_extra(ptile, pextra)) {
-      snuisance = extra_name_translation(pextra);
-    }
-  }
-  extra_type_by_cause_iterate_end;
-
-  extra_type_by_cause_iterate(EC_FALLOUT, pextra)
-  {
-    if (tile_has_extra(ptile, pextra)) {
-      snuisance + extra_name_translation(pextra);
-    }
-  }
-  extra_type_by_cause_iterate_end;
-
-  if (!snuisance.isEmpty()) {
-    return snuisance;
-  } else {
-    return Q_("?nuisance:None");
-  }
-}
-
-/**
- * \brief Return a string of any huts on a tile
- */
-QString editor_tool_tile::get_tile_hut_name(const struct tile *ptile) const
-{
-  QString shut;
-  extra_type_by_cause_iterate(EC_HUT, pextra)
-  {
-    if (tile_has_extra(ptile, pextra)) {
-      shut + extra_name_translation(pextra);
-    }
-  }
-  extra_type_by_cause_iterate_end;
-
-  if (!shut.isEmpty()) {
-    return shut;
-  } else {
-    return Q_("?hut:None");
-  }
-}
-
-/**
- * \brief Return a string of any bases on a tile
- */
-QString editor_tool_tile::get_tile_base_name(const struct tile *ptile) const
-{
-  QString sbase;
-  extra_type_by_cause_iterate(EC_BASE, pextra)
-  {
-    if (tile_has_extra(ptile, pextra)) {
-      sbase + extra_name_translation(pextra);
-    }
-  }
-  extra_type_by_cause_iterate_end;
-
-  if (!sbase.isEmpty()) {
-    return sbase;
-  } else {
-    return Q_("?base:None");
-  }
+  return strvec_to_and_list(names);
 }
 
 /**

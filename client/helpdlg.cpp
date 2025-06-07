@@ -112,10 +112,15 @@ QString create_help_link(const char *name, help_page_type hpt)
 QString create_help_link(const char *name, const char *entry,
                          help_page_type hpt)
 {
-  QString d = QString(name).toHtmlEscaped().replace(
-      QStringLiteral(" "), QStringLiteral("&nbsp;"));
-  QString a = QString::fromUtf8(QString(entry).toUtf8().toPercentEncoding());
-  return "<a href=" + QString::number(hpt) + "," + a + ">" + d + "</a>";
+  if (!QString(name).isEmpty()) {
+    QString d = QString(name).toHtmlEscaped().replace(
+        QStringLiteral(" "), QStringLiteral("&nbsp;"));
+    QString a =
+        QString::fromUtf8(QString(entry).toUtf8().toPercentEncoding());
+    return "<a href=" + QString::number(hpt) + "," + a + ">" + d + "</a>";
+  } else {
+    return nullptr;
+  }
 }
 
 /**
