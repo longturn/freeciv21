@@ -3,6 +3,9 @@
 
 #pragma once
 
+// generated
+#include <packets_gen.h>
+
 // Qt
 class QWidget;
 class QString;
@@ -21,11 +24,8 @@ private:
   void select_tile();
   void set_default_values();
 
-  QString get_tile_road_name(const struct tile *ptile) const;
-  QString get_tile_infra_name(const struct tile *ptile) const;
-  QString get_tile_nuisance_name(const struct tile *ptile) const;
-  QString get_tile_hut_name(const struct tile *ptile) const;
-  QString get_tile_base_name(const struct tile *ptile) const;
+  QString get_tile_extra_text(const tile *ptile,
+                              const std::vector<extra_cause> &causes) const;
   QPixmap get_tile_sprites(const struct tile *ptile) const;
 
 public:
