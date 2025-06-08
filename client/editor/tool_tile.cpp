@@ -154,12 +154,11 @@ void editor_tool_tile::update_ett(struct tile *ptile)
     if (client_has_player()
         && tile_get_known(ptile, client_player()) == TILE_UNKNOWN) {
       set_default_values();
-      ui.value_terrain->setText(Q_("?terrain:Not Visible"));
-      ui.value_vision->setText(Q_("?vision:Unknown"));
+      ui.value_terrain->setText(Q_("?terrain:Unknown"));
+      ui.value_vision->setText(Q_("?vision:Not Visible"));
     } else {
       ui.value_terrain->setText(create_help_link(
-          qUtf8Printable(terrain_name_translation(tile_terrain(ptile))),
-          HELP_TERRAIN));
+          terrain_name_translation(tile_terrain(ptile)), HELP_TERRAIN));
 
       QPixmap pm = get_tile_sprites(ptile);
       ui.pixmap_terrain->setPixmap(pm);
@@ -170,12 +169,12 @@ void editor_tool_tile::update_ett(struct tile *ptile)
       // tile owner
       struct player *owner = tile_owner(ptile);
       if (owner != nullptr) {
-        ui.value_owner->setText(create_help_link(
-            qUtf8Printable(nation_adjective_for_player(owner)),
-            HELP_NATIONS));
+        ui.value_owner->setText(
+            create_help_link(nation_plural_for_player(owner), HELP_NATIONS));
       } else {
         ui.value_owner->setText(Q_("?owner:None"));
       }
+
       // tile visibility to the current player
       if (tile_get_known(ptile, client_player()) == TILE_KNOWN_SEEN) {
         ui.value_vision->setText(Q_("?vision:Known and Visble"));
@@ -190,33 +189,27 @@ void editor_tool_tile::update_ett(struct tile *ptile)
       ui.value_nat_y->setNum(index_to_native_pos_y(ptile->index));
 
       // tile resource
-      auto text = create_help_link(
-          qUtf8Printable(get_tile_extra_text(ptile, {EC_RESOURCE})),
-          HELP_GOODS);
+      auto text = get_tile_extra_text(ptile, {EC_RESOURCE});
       ui.value_resource->setText(text.isEmpty() ? Q_("?resource:None")
                                                 : text);
       // tile road (highest level)
-      text = create_help_link(
-          qUtf8Printable(get_tile_extra_text(ptile, {EC_ROAD})), HELP_EXTRA);
+      text = get_tile_extra_text(ptile, {EC_ROAD});
       ui.value_road->setText(text.isEmpty() ? Q_("?road:None") : text);
+
       // tile infrastructure
-      text = create_help_link(qUtf8Printable(get_tile_extra_text(
-                                  ptile, {EC_IRRIGATION, EC_MINE})),
-                              HELP_EXTRA);
+      text = get_tile_extra_text(ptile, {EC_IRRIGATION, EC_MINE});
       ui.value_infra->setText(text.isEmpty() ? Q_("?infrastructure:None")
                                              : text);
       // tile base
-      text = create_help_link(
-          qUtf8Printable(get_tile_extra_text(ptile, {EC_BASE})), HELP_EXTRA);
+      text = get_tile_extra_text(ptile, {EC_BASE});
       ui.value_base->setText(text.isEmpty() ? Q_("?base:None") : text);
+
       // tile hut
-      text = create_help_link(
-          qUtf8Printable(get_tile_extra_text(ptile, {EC_HUT})), HELP_EXTRA);
+      text = get_tile_extra_text(ptile, {EC_HUT});
       ui.value_hut->setText(text.isEmpty() ? Q_("?hut:None") : text);
+
       // tile nuisance (pollution, fallout)
-      text = create_help_link(qUtf8Printable(get_tile_extra_text(
-                                  ptile, {EC_POLLUTION, EC_FALLOUT})),
-                              HELP_EXTRA);
+      text = get_tile_extra_text(ptile, {EC_POLLUTION, EC_FALLOUT});
       ui.value_nuisance->setText(text.isEmpty() ? Q_("?nuisance:None")
                                                 : text);
       // tile label
@@ -240,7 +233,8 @@ QString editor_tool_tile::get_tile_extra_text(
       extra_type_by_cause_iterate(EC_ROAD, pextra)
       {
         if (tile_has_extra(ptile, pextra)) {
-          names.push_back(extra_name_translation(pextra));
+          names.push_back(
+              create_help_link(extra_name_translation(pextra), HELP_EXTRA));
         }
       }
       extra_type_by_cause_iterate_end;
@@ -249,7 +243,8 @@ QString editor_tool_tile::get_tile_extra_text(
       extra_type_by_cause_iterate(EC_IRRIGATION, pextra)
       {
         if (tile_has_extra(ptile, pextra)) {
-          names.push_back(extra_name_translation(pextra));
+          names.push_back(
+              create_help_link(extra_name_translation(pextra), HELP_EXTRA));
         }
       }
       extra_type_by_cause_iterate_end;
@@ -258,7 +253,8 @@ QString editor_tool_tile::get_tile_extra_text(
       extra_type_by_cause_iterate(EC_MINE, pextra)
       {
         if (tile_has_extra(ptile, pextra)) {
-          names.push_back(extra_name_translation(pextra));
+          names.push_back(
+              create_help_link(extra_name_translation(pextra), HELP_EXTRA));
         }
       }
       extra_type_by_cause_iterate_end;
@@ -267,7 +263,8 @@ QString editor_tool_tile::get_tile_extra_text(
       extra_type_by_cause_iterate(EC_POLLUTION, pextra)
       {
         if (tile_has_extra(ptile, pextra)) {
-          names.push_back(extra_name_translation(pextra));
+          names.push_back(
+              create_help_link(extra_name_translation(pextra), HELP_EXTRA));
         }
       }
       extra_type_by_cause_iterate_end;
@@ -276,7 +273,8 @@ QString editor_tool_tile::get_tile_extra_text(
       extra_type_by_cause_iterate(EC_FALLOUT, pextra)
       {
         if (tile_has_extra(ptile, pextra)) {
-          names.push_back(extra_name_translation(pextra));
+          names.push_back(
+              create_help_link(extra_name_translation(pextra), HELP_EXTRA));
         }
       }
       extra_type_by_cause_iterate_end;
@@ -285,7 +283,8 @@ QString editor_tool_tile::get_tile_extra_text(
       extra_type_by_cause_iterate(EC_HUT, pextra)
       {
         if (tile_has_extra(ptile, pextra)) {
-          names.push_back(extra_name_translation(pextra));
+          names.push_back(
+              create_help_link(extra_name_translation(pextra), HELP_EXTRA));
         }
       }
       extra_type_by_cause_iterate_end;
@@ -294,7 +293,8 @@ QString editor_tool_tile::get_tile_extra_text(
       extra_type_by_cause_iterate(EC_BASE, pextra)
       {
         if (tile_has_extra(ptile, pextra)) {
-          names.push_back(extra_name_translation(pextra));
+          names.push_back(
+              create_help_link(extra_name_translation(pextra), HELP_EXTRA));
         }
       }
       extra_type_by_cause_iterate_end;
@@ -303,7 +303,8 @@ QString editor_tool_tile::get_tile_extra_text(
       extra_type_by_cause_iterate(EC_RESOURCE, pextra)
       {
         if (tile_has_extra(ptile, pextra)) {
-          names.push_back(extra_name_translation(pextra));
+          names.push_back(
+              create_help_link(extra_name_translation(pextra), HELP_EXTRA));
         }
       }
       extra_type_by_cause_iterate_end;
@@ -344,7 +345,7 @@ QPixmap editor_tool_tile::get_tile_sprites(const struct tile *ptile) const
 
   // Add any resource on the tile
   // FIXME: fill_basic_extra_sprite_array() does not work with all EC_* cause
-  // codes.
+  // codes. Refer to issue #2622.
   if (tile_terrain(ptile)->resources) {
     struct extra_type *tres = nullptr;
     extra_type_by_cause_iterate(EC_RESOURCE, pextra)
