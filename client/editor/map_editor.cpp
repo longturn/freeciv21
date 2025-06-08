@@ -178,6 +178,9 @@ void map_editor::player_changed(int index)
     }
   }
   players_iterate_end;
+  if (ett_wdg_active) {
+    ett_wdg->set_default_values();
+  }
 }
 
 /**

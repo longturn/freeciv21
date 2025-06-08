@@ -22,8 +22,6 @@ private:
   Ui::FormToolTile ui;
 
   void select_tile();
-  void set_default_values();
-
   QString get_tile_extra_text(const tile *ptile,
                               const std::vector<extra_cause> &causes) const;
   QPixmap get_tile_sprites(const struct tile *ptile) const;
@@ -33,6 +31,7 @@ public:
   ~editor_tool_tile() override;
 
   void close_tool();
+  void set_default_values();
   void update_ett(struct tile *ptile);
 };
 
