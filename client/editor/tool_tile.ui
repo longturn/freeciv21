@@ -228,6 +228,9 @@
       <property name="text">
        <string>value_road</string>
       </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
      </widget>
     </item>
     <item row="9" column="1">
@@ -270,6 +273,9 @@
       <property name="text">
        <string>value_infra</string>
       </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
      </widget>
     </item>
     <item row="12" column="0">
@@ -309,6 +315,9 @@
      <widget class="QLabel" name="value_tile_label">
       <property name="text">
        <string>value_label</string>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
       </property>
      </widget>
     </item>
