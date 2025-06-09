@@ -1,0 +1,4 @@
+{
+  "lua_path": "./common/scriptcore/?.lua",
+  "runtime.version": "Lua 5.3"
+}

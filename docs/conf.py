@@ -235,3 +235,11 @@ intersphinx_mapping = {'python': ('https://docs.python.org/3', None)}
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+
+# -- Generate Lua docs -------------------------------------------------------
+
+extensions.append('sphinx_lua_ls')
+# Path to the folder containing the `.luarc.json` file,
+# relative to the directory with `conf.py`.
+lua_ls_project_root = "../"
+

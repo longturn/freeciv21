@@ -51,6 +51,7 @@ Refer to Ruleset specific documents:
   Rulesets/actions.rst
   Rulesets/achievements.rst
   Rulesets/nations.rst
+  Rulesets/script.rst
   :maxdepth: 1
 
 .. _modding-tilesets:
