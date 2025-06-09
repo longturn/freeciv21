@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 
 // self
-#include "editor/tool_tile.h"
+#include "tool_tile.h"
 
 // utility
 #include "astring.h"
@@ -228,91 +228,14 @@ QString editor_tool_tile::get_tile_extra_text(
 {
   QVector<QString> names;
   for (auto cause : causes) {
-    switch (cause) {
-    case EC_ROAD:
-      extra_type_by_cause_iterate(EC_ROAD, pextra)
-      {
-        if (tile_has_extra(ptile, pextra)) {
-          names.push_back(
-              create_help_link(extra_name_translation(pextra), HELP_EXTRA));
-        }
+    extra_type_by_cause_iterate(cause, pextra)
+    {
+      if (tile_has_extra(ptile, pextra)) {
+        names.push_back(
+            create_help_link(extra_name_translation(pextra), HELP_EXTRA));
+      }
       }
       extra_type_by_cause_iterate_end;
-      break;
-    case EC_IRRIGATION:
-      extra_type_by_cause_iterate(EC_IRRIGATION, pextra)
-      {
-        if (tile_has_extra(ptile, pextra)) {
-          names.push_back(
-              create_help_link(extra_name_translation(pextra), HELP_EXTRA));
-        }
-      }
-      extra_type_by_cause_iterate_end;
-      break;
-    case EC_MINE:
-      extra_type_by_cause_iterate(EC_MINE, pextra)
-      {
-        if (tile_has_extra(ptile, pextra)) {
-          names.push_back(
-              create_help_link(extra_name_translation(pextra), HELP_EXTRA));
-        }
-      }
-      extra_type_by_cause_iterate_end;
-      break;
-    case EC_POLLUTION:
-      extra_type_by_cause_iterate(EC_POLLUTION, pextra)
-      {
-        if (tile_has_extra(ptile, pextra)) {
-          names.push_back(
-              create_help_link(extra_name_translation(pextra), HELP_EXTRA));
-        }
-      }
-      extra_type_by_cause_iterate_end;
-      break;
-    case EC_FALLOUT:
-      extra_type_by_cause_iterate(EC_FALLOUT, pextra)
-      {
-        if (tile_has_extra(ptile, pextra)) {
-          names.push_back(
-              create_help_link(extra_name_translation(pextra), HELP_EXTRA));
-        }
-      }
-      extra_type_by_cause_iterate_end;
-      break;
-    case EC_HUT:
-      extra_type_by_cause_iterate(EC_HUT, pextra)
-      {
-        if (tile_has_extra(ptile, pextra)) {
-          names.push_back(
-              create_help_link(extra_name_translation(pextra), HELP_EXTRA));
-        }
-      }
-      extra_type_by_cause_iterate_end;
-      break;
-    case EC_BASE:
-      extra_type_by_cause_iterate(EC_BASE, pextra)
-      {
-        if (tile_has_extra(ptile, pextra)) {
-          names.push_back(
-              create_help_link(extra_name_translation(pextra), HELP_EXTRA));
-        }
-      }
-      extra_type_by_cause_iterate_end;
-      break;
-    case EC_RESOURCE:
-      extra_type_by_cause_iterate(EC_RESOURCE, pextra)
-      {
-        if (tile_has_extra(ptile, pextra)) {
-          names.push_back(
-              create_help_link(extra_name_translation(pextra), HELP_EXTRA));
-        }
-      }
-      extra_type_by_cause_iterate_end;
-      break;
-    case EC_APPEARANCE:
-    case EC_COUNT:
-      break;
-    }
   }
   if (names.isEmpty()) {
     return QString();

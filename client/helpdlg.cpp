@@ -119,7 +119,7 @@ QString create_help_link(const char *name, const char *entry,
         QString::fromUtf8(QString(entry).toUtf8().toPercentEncoding());
     return "<a href=" + QString::number(hpt) + "," + a + ">" + d + "</a>";
   } else {
-    return nullptr;
+    return QStringLiteral();
   }
 }
 
