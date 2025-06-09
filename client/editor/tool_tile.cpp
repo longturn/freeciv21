@@ -234,8 +234,8 @@ QString editor_tool_tile::get_tile_extra_text(
         names.push_back(
             create_help_link(extra_name_translation(pextra), HELP_EXTRA));
       }
-      }
-      extra_type_by_cause_iterate_end;
+    }
+    extra_type_by_cause_iterate_end;
   }
   if (names.isEmpty()) {
     return QString();
