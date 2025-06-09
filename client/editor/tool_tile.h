@@ -3,8 +3,8 @@
 
 #pragma once
 
-// generated
-#include <packets_gen.h>
+// common
+#include "packets.h"
 
 // Qt
 class QWidget;
