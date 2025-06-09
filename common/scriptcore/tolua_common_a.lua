@@ -13,33 +13,69 @@
 --  If you really like to change a function name, be sure to keep also the
 --  old one running.
 
--- Nonexistent methods.
+-- For code documentation, see:
+-- https://luals.github.io/wiki/annotations/#documenting-types
+-- https://taminomara.github.io/sphinx-lua-ls/index.html#autodoc-directives
+-- https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#rst-primer
+
+--- Checks if the object (still) exists.
+---
+--- @return boolean
 function Nonexistent:exists()
   return false
 end
 
--- Log module implementation.
+--- Logging facilities from Lua script. This is the preferred way to emit
+--- textual output from Freeciv Lua scripts. Messages emitted with these
+--- functions will be sent to an appropriate place, which will differ depending
+--- on the context. 
+---
+--- !doctype table
+--- @class log
 
+--- Log message at Fatal level with printf-like formatting (Lua's 
+--- string.format). Note that Fatal level warnings DO NOT abort the game.
+---
+--- @param fmt string
 function log.fatal(fmt, ...)
   log.base(log.level.FATAL, string.format(fmt, ...))
 end
 
+--- Log message at Error level with printf-like formatting (Lua's 
+--- string.format).
+---
+--- @param fmt string
 function log.error(fmt, ...)
   log.base(log.level.ERROR, string.format(fmt, ...))
 end
 
+--- Log message at Warn level with printf-like formatting (Lua's string.format).
+---
+--- @param fmt string
 function log.warn(fmt, ...)
   log.base(log.level.WARN, string.format(fmt, ...))
 end
 
+--- Log message at Normal level with printf-like formatting (Lua's 
+--- string.format).
+---
+--- @param fmt string
 function log.normal(fmt, ...)
   log.base(log.level.NORMAL, string.format(fmt, ...))
 end
 
+--- Log message at Verbose level with printf-like formatting (Lua's 
+--- string.format).
+---
+--- @param fmt string
 function log.verbose(fmt, ...)
   log.base(log.level.VERBOSE, string.format(fmt, ...))
 end
 
+--- Log message at Debug level with printf-like formatting (Lua's 
+--- string.format).
+---
+--- @param fmt string
 function log.debug(fmt, ...)
   log.base(log.level.DEBUG, string.format(fmt, ...))
 end
@@ -94,11 +130,9 @@ function _freeciv_state_dump()
   return res
 end
 
--- ***************************************************************************
--- List all defined lua variables (functions, tables)
--- Source http://www.wellho.net/resources/ex.php4?item=u112/basics
--- ***************************************************************************
+--- List all defined lua variables (functions, tables)
 function listenv()
+  -- Source http://www.wellho.net/resources/ex.php4?item=u112/basics
   -- helper function for listenv
   local function _listenv_loop(offset, data)
     local name
@@ -117,13 +151,26 @@ function listenv()
   _listenv_loop("", _G)
 end
 
--- ***************************************************************************
--- Flexible "constant" implementation
--- source: http://developer.anscamobile.com/code/\
---                universal-constants-module-very-easy-usage
--- written in 2010 by Hans Raaf - use as you wish!
--- ***************************************************************************
+--- Flexible "constant" implementation. Define your constants once and they
+--- then become unchangeable. E.g.
+---
+--- .. code-block:: lua
+---
+---     const.test = 'Hello World!'
+---     log.normal("%s", const.test) -- prints "Hello World!"
+---
+---     const.test = 'Not with me Dude!' -- prints error for that line
+---
+---     const.inner_test = {'Hello','World'}
+---     log.normal("%s %s!", const.inner_test[1], const.inner_test[2])
+---
+---     const.inner_test[2] = 'Superman' -- prints error for that line
+---
+--- !doctype table
+--- @class const
 
+-- source: https://web.archive.org/web/20120202141634/http://developer.anscamobile.com/code/universal-constants-module-very-easy-usage
+-- written in 2010 by Hans Raaf - use as you wish!
 const = {}
 local data = {}
 const_mt = {
