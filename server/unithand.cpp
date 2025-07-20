@@ -2523,7 +2523,7 @@ static bool illegal_action_pay_price(
                    * fractions. */
                   _("Your %s lost %s MP for attempting an illegal action."),
                   unit_name_translation(act_unit),
-                  move_points_text(punishment_mp, true));
+                  qUtf8Printable(move_points_text(punishment_mp, true)));
   }
 
   return punishment_mp != 0 || punishment_hp != 0;

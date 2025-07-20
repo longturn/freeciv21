@@ -794,8 +794,8 @@ void init_move_fragments()
      padding spaces will be included to make all such strings line up when
      right-aligned.
  */
-const char *move_points_text_full(int mp, bool reduce, const char *prefix,
-                                  const char *none, bool align)
+QString move_points_text_full(int mp, bool reduce, const char *prefix,
+                              const char *none, bool align)
 {
   QString str;
 
@@ -846,14 +846,14 @@ const char *move_points_text_full(int mp, bool reduce, const char *prefix,
                       QString::number(SINGLE_MOVE / cancel));
     }
   }
-  return qstrdup(qUtf8Printable(str));
+  return str;
 }
 
 /**
    Simple version of move_points_text_full() -- render positive movement
    points as text without any prefix or alignment.
  */
-const char *move_points_text(int mp, bool reduce)
+QString move_points_text(int mp, bool reduce)
 {
   return move_points_text_full(mp, reduce, nullptr, nullptr, false);
 }

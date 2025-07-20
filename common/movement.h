@@ -120,6 +120,6 @@ bool is_airunit_refuel_point(const struct tile *ptile,
                              const struct unit *punit);
 
 void init_move_fragments();
-const char *move_points_text_full(int mp, bool reduce, const char *prefix,
-                                  const char *none, bool align);
-const char *move_points_text(int mp, bool reduce);
+QString move_points_text_full(int mp, bool reduce, const char *prefix,
+                              const char *none, bool align);
+QString move_points_text(int mp, bool reduce);
