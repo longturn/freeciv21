@@ -565,7 +565,7 @@ static bool manual_command(struct tag_types *tag_info)
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, tag_info->subitem_begin, "moves");
         fprintf(doc, _("Moves: %s"),
-                move_points_text(putype->move_rate, true));
+                qUtf8Printable(move_points_text(putype->move_rate, true)));
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, tag_info->subitem_begin, "vision");
         fprintf(doc, _("Vision: %d"),

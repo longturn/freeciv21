@@ -1307,7 +1307,7 @@ const char *utype_values_string(const struct unit_type *punittype)
   // Print in two parts as move_points_text() returns a static buffer
   fc_snprintf(buffer, sizeof(buffer), "%d/%d/%s", punittype->attack_strength,
               punittype->defense_strength,
-              move_points_text(punittype->move_rate, true));
+              qUtf8Printable(move_points_text(punittype->move_rate, true)));
   if (utype_fuel(punittype)) {
     cat_snprintf(buffer, sizeof(buffer), "(%d)", utype_fuel(punittype));
   }

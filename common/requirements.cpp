@@ -4309,8 +4309,9 @@ const char *universal_name_translation(const struct universal *psource,
   case VUT_MINMOVES:
     /* TRANS: Minimum unit movement points left for requirement to be met
      * (%s is a string like "1" or "2 1/3") */
-    cat_snprintf(buf, bufsz, _("%s MP"),
-                 move_points_text(psource->value.minmoves, true));
+    cat_snprintf(
+        buf, bufsz, _("%s MP"),
+        qUtf8Printable(move_points_text(psource->value.minmoves, true)));
     return buf;
   case VUT_MINHP:
     // TRANS: HP = hit points
