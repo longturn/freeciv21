@@ -150,12 +150,12 @@ static bool insert_veteran_help(char *outbuf, size_t outlen,
       const char *name = name_translation_get(&level->name);
       /* Use get_internal_string_length() for correct alignment with
        * multibyte character encodings */
-      cat_snprintf(
-          outbuf, outlen, "\n%s%*s %4d%% %12s", name,
-          MAX(0, 25 - (int) get_internal_string_length(name)), "",
-          level->power_fact,
-          /* e.g. "-    ", "+ 1/3", "+ 1    ", "+ 2 2/3" */
-          move_points_text_full(level->move_bonus, true, "+ ", "-", true));
+      cat_snprintf(outbuf, outlen, "\n%s%*s %4d%% %12s", name,
+                   MAX(0, 25 - (int) get_internal_string_length(name)), "",
+                   level->power_fact,
+                   /* e.g. "-    ", "+ 1/3", "+ 1    ", "+ 2 2/3" */
+                   qUtf8Printable(move_points_text_full(
+                       level->move_bonus, true, "+ ", "-", true)));
     }
     return true;
   }
@@ -2140,12 +2140,13 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
             _("* Gets double firepower when attacking cities.\n"));
   }
   if (utype_has_flag(utype, UTYF_IGTER)) {
-    cat_snprintf(buf, bufsz,
-                 /* TRANS: "MP" = movement points. %s may have a
-                  * fractional part. */
-                 _("* Ignores terrain effects (moving costs at most %s MP "
-                   "per tile).\n"),
-                 move_points_text(terrain_control.igter_cost, true));
+    cat_snprintf(
+        buf, bufsz,
+        /* TRANS: "MP" = movement points. %s may have a
+         * fractional part. */
+        _("* Ignores terrain effects (moving costs at most %s MP "
+          "per tile).\n"),
+        qUtf8Printable(move_points_text(terrain_control.igter_cost, true)));
   }
   if (utype_has_flag(utype, UTYF_NOZOC)) {
     CATLSTR(buf, bufsz, _("* Never imposes a zone of control.\n"));
@@ -3730,7 +3731,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
                     * fractional part. */
                    _("* Movement cost along %s is %s MP.\n"),
                    extra_name_translation(pextra),
-                   move_points_text(proad->move_cost, true));
+                   qUtf8Printable(move_points_text(proad->move_cost, true)));
     }
   }
 

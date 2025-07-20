@@ -1603,13 +1603,15 @@ bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
                      /* %s is numeric move points; it may have a
                       * fractional part ("1 1/3 MP"). */
                      _("Requires that the unit has at least %s MP left."),
-                     move_points_text(preq->source.value.minmoves, true));
+                     qUtf8Printable(move_points_text(
+                         preq->source.value.minmoves, true)));
       } else {
         cat_snprintf(buf, bufsz,
                      /* %s is numeric move points; it may have a
                       * fractional part ("1 1/3 MP"). */
                      _("Requires that the unit has less than %s MP left."),
-                     move_points_text(preq->source.value.minmoves, true));
+                     qUtf8Printable(move_points_text(
+                         preq->source.value.minmoves, true)));
       }
       return true;
     case REQ_RANGE_CADJACENT:
