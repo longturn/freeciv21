@@ -3468,7 +3468,7 @@ static bool observe_command(struct connection *caller, char *str, bool check)
   }
 
   // attach pconn to new player as an observer or as global observer
-  if ((res = connection_attach(pconn, pplayer, true))) {
+  if ((res = connection_attach(pconn, pconn->username, pplayer, true))) {
     if (pplayer) {
       cmd_reply(CMD_OBSERVE, caller, C_OK, _("%s now observes %s"),
                 pconn->username, player_name(pplayer));
@@ -3679,17 +3679,10 @@ static bool take_command(struct connection *caller, char *str, bool check)
   }
 
   // Now attach to new player
-  if (!pconn || (res = connection_attach(pconn, pplayer, false))) {
-    if (!pconn) {
-      sz_strlcpy(pplayer->username, username);
-      pplayer->unassigned_user = false;
-      pplayer->user_turns = 0; // reset for a new user
-      pplayer->is_connected = false;
-      send_player_info_c(pplayer, game.est_connections);
-    }
-
+  if ((res = connection_attach(pconn, username, pplayer, false))) {
     // Successfully attached
     // inform about the status before changes
+    pplayer = player_by_user(username);
     cmd_reply(CMD_TAKE, caller, C_OK, _("%s now controls %s (%s, %s)."),
               username, player_name(pplayer),
               is_barbarian(pplayer) ? _("Barbarian")
@@ -3698,7 +3691,7 @@ static bool take_command(struct connection *caller, char *str, bool check)
               pplayer->is_alive ? _("Alive") : _("Dead"));
   } else {
     cmd_reply(CMD_TAKE, caller, C_FAIL,
-              _("%s failed to attach to any player."), pconn->username);
+              _("%s failed to attach to any player."), username);
   }
 
   return res;
@@ -3979,7 +3972,7 @@ bool load_command(struct connection *caller, const char *filename,
     players_iterate(pplayer)
     {
       if (strcmp(pconn->username, pplayer->username) == 0) {
-        connection_attach(pconn, pplayer, false);
+        connection_attach(pconn, pconn->username, pplayer, false);
         break;
       }
     }
@@ -3992,7 +3985,7 @@ bool load_command(struct connection *caller, const char *filename,
   {
     if (nullptr == pconn->playing) {
       // May have been assigned to a player before.
-      connection_attach(pconn, nullptr, true);
+      connection_attach(pconn, pconn->username, nullptr, true);
     }
   }
   conn_list_iterate_end;

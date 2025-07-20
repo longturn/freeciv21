@@ -36,8 +36,8 @@ void send_conn_info(struct conn_list *src, struct conn_list *dest);
 void send_conn_info_remove(struct conn_list *src, struct conn_list *dest);
 
 struct player *find_uncontrolled_player();
-bool connection_attach(struct connection *pconn, struct player *pplayer,
-                       bool observing);
+bool connection_attach(struct connection *pconn, const char *username,
+                       struct player *pplayer, bool observing);
 void connection_detach(struct connection *pconn, bool remove_unused_player);
 
 bool connection_delegate_take(struct connection *pconn,
