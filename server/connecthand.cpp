@@ -53,6 +53,7 @@
 #include "connecthand.h"
 
 static bool connection_attach_real(struct connection *pconn,
+                                   const char *username,
                                    struct player *pplayer, bool observing,
                                    bool connecting);
 
@@ -219,7 +220,8 @@ void establish_new_connection(struct connection *pconn)
 
   if (!delegation_error) {
     if ((pplayer = player_by_user(pconn->username))
-        && connection_attach_real(pconn, pplayer, false, true)) {
+        && connection_attach_real(pconn, pconn->username, pplayer, false,
+                                  true)) {
       // a player has already been created for this user, reconnect
 
       if (S_S_INITIAL == server_state()) {
@@ -227,7 +229,8 @@ void establish_new_connection(struct connection *pconn)
       }
     } else {
       if (!game_was_started()) {
-        if (connection_attach_real(pconn, nullptr, false, true)) {
+        if (connection_attach_real(pconn, pconn->username, nullptr, false,
+                                   true)) {
           pplayer = conn_get_player(pconn);
           fc_assert(pplayer != nullptr);
         } else {
@@ -570,9 +573,11 @@ struct player *find_uncontrolled_player()
 }
 
 /**
-   Setup pconn as a client connected to pplayer or observer:
+   Setup a user as a client connected to pplayer or observer:
    Updates pconn->playing, pplayer->connections, pplayer->is_connected
    and pconn->observer.
+
+   pconn may be null if the user is not connected.
 
    - If pplayer is nullptr and observing is FALSE: take the next available
      player that is not connected.
@@ -586,13 +591,17 @@ struct player *find_uncontrolled_player()
         modifying this.
  */
 static bool connection_attach_real(struct connection *pconn,
+                                   const char *username,
                                    struct player *pplayer, bool observing,
                                    bool connecting)
 {
-  fc_assert_ret_val(pconn != nullptr, false);
-  fc_assert_ret_val_msg(!pconn->observer && pconn->playing == nullptr, false,
-                        "connections must be detached with "
-                        "connection_detach() before calling this!");
+  fc_assert_ret_val(username != nullptr, false);
+  if (pconn) {
+    fc_assert_ret_val_msg(!pconn->observer && pconn->playing == nullptr,
+                          false,
+                          "connections must be detached with "
+                          "connection_detach() before calling this!");
+  }
 
   if (!observing) {
     if (nullptr == pplayer) {
@@ -624,7 +633,7 @@ static bool connection_attach_real(struct connection *pconn,
       set_as_human(pplayer);
     }
 
-    sz_strlcpy(pplayer->username, pconn->username);
+    sz_strlcpy(pplayer->username, username);
     pplayer->unassigned_user = false;
     pplayer->user_turns = 0; // reset for a new user
     pplayer->is_connected = true;
@@ -632,7 +641,7 @@ static bool connection_attach_real(struct connection *pconn,
     if (!game_was_started()) {
       if (!pplayer->was_created && nullptr == pplayer->nation) {
         // Temporarily set player_name() to username.
-        server_player_set_name(pplayer, pconn->username);
+        server_player_set_name(pplayer, username);
       }
       (void) aifill(game.info.aifill);
     }
@@ -644,8 +653,10 @@ static bool connection_attach_real(struct connection *pconn,
     send_player_info_c(pplayer, game.est_connections);
 
     // Remove from global observers list, if was there
-    conn_list_remove(game.glob_observers, pconn);
-  } else if (pplayer == nullptr) {
+    if (pconn) {
+      conn_list_remove(game.glob_observers, pconn);
+    }
+  } else if (pconn && pplayer == nullptr) {
     // Global observer
     bool already = false;
 
@@ -669,7 +680,7 @@ static bool connection_attach_real(struct connection *pconn,
   players_iterate(aplayer)
   {
     if (aplayer != pplayer
-        && 0 == strncmp(aplayer->username, pconn->username, MAX_LEN_NAME)) {
+        && 0 == strncmp(aplayer->username, username, MAX_LEN_NAME)) {
       sz_strlcpy(aplayer->username, _(ANON_USER_NAME));
       aplayer->unassigned_user = true;
       send_player_info_c(aplayer, nullptr);
@@ -677,56 +688,58 @@ static bool connection_attach_real(struct connection *pconn,
   }
   players_iterate_end;
 
-  pconn->observer = observing;
-  pconn->playing = pplayer;
-  if (pplayer) {
-    conn_list_append(pplayer->connections, pconn);
-  }
-
-  restore_access_level(pconn);
-
-  // Reset the delta-state.
-  send_conn_info(pconn->self, game.est_connections); // Client side.
-  conn_reset_delta_state(pconn);                     // Server side.
-
-  /* Initial packets don't need to be resent.  See comment for
-   * connecthand.c::establish_new_connection(). */
-  switch (server_state()) {
-  case S_S_INITIAL:
-    send_pending_events(pconn, connecting);
-    send_running_votes(pconn, !connecting);
-    break;
-
-  case S_S_RUNNING:
-    conn_compression_freeze(pconn);
-    send_all_info(pconn->self);
-    if (game.info.is_edit_mode && can_conn_edit(pconn)) {
-      edithand_send_initial_packets(pconn->self);
+  if (pconn) {
+    pconn->observer = observing;
+    pconn->playing = pplayer;
+    if (pplayer) {
+      conn_list_append(pplayer->connections, pconn);
     }
-    conn_compression_thaw(pconn);
-    // Enter C_S_RUNNING client state.
-    dsend_packet_start_phase(pconn, game.info.phase);
-    // Must be after C_S_RUNNING client state to be effective.
-    send_diplomatic_meetings(pconn);
-    send_pending_events(pconn, connecting);
-    send_running_votes(pconn, !connecting);
-    break;
 
-  case S_S_OVER:
-    conn_compression_freeze(pconn);
-    send_all_info(pconn->self);
-    if (game.info.is_edit_mode && can_conn_edit(pconn)) {
-      edithand_send_initial_packets(pconn->self);
+    restore_access_level(pconn);
+
+    // Reset the delta-state.
+    send_conn_info(pconn->self, game.est_connections); // Client side.
+    conn_reset_delta_state(pconn);                     // Server side.
+
+    /* Initial packets don't need to be resent.  See comment for
+     * connecthand.c::establish_new_connection(). */
+    switch (server_state()) {
+    case S_S_INITIAL:
+      send_pending_events(pconn, connecting);
+      send_running_votes(pconn, !connecting);
+      break;
+
+    case S_S_RUNNING:
+      conn_compression_freeze(pconn);
+      send_all_info(pconn->self);
+      if (game.info.is_edit_mode && can_conn_edit(pconn)) {
+        edithand_send_initial_packets(pconn->self);
+      }
+      conn_compression_thaw(pconn);
+      // Enter C_S_RUNNING client state.
+      dsend_packet_start_phase(pconn, game.info.phase);
+      // Must be after C_S_RUNNING client state to be effective.
+      send_diplomatic_meetings(pconn);
+      send_pending_events(pconn, connecting);
+      send_running_votes(pconn, !connecting);
+      break;
+
+    case S_S_OVER:
+      conn_compression_freeze(pconn);
+      send_all_info(pconn->self);
+      if (game.info.is_edit_mode && can_conn_edit(pconn)) {
+        edithand_send_initial_packets(pconn->self);
+      }
+      conn_compression_thaw(pconn);
+      report_final_scores(pconn->self);
+      send_pending_events(pconn, connecting);
+      send_running_votes(pconn, !connecting);
+      if (!connecting) {
+        // Send information about delegation(s).
+        send_delegation_info(pconn);
+      }
+      break;
     }
-    conn_compression_thaw(pconn);
-    report_final_scores(pconn->self);
-    send_pending_events(pconn, connecting);
-    send_running_votes(pconn, !connecting);
-    if (!connecting) {
-      // Send information about delegation(s).
-      send_delegation_info(pconn);
-    }
-    break;
   }
 
   send_updated_vote_totals(nullptr);
@@ -737,10 +750,10 @@ static bool connection_attach_real(struct connection *pconn,
 /**
    Setup pconn as a client connected to pplayer or observer.
  */
-bool connection_attach(struct connection *pconn, struct player *pplayer,
-                       bool observing)
+bool connection_attach(struct connection *pconn, const char *username,
+                       struct player *pplayer, bool observing)
 {
-  return connection_attach_real(pconn, pplayer, observing, false);
+  return connection_attach_real(pconn, username, pplayer, observing, false);
 }
 
 /**
@@ -863,9 +876,10 @@ bool connection_delegate_take(struct connection *pconn,
   }
 
   // Try to attach to the new player
-  if (!connection_attach(pconn, dplayer, false)) {
+  if (!connection_attach(pconn, pconn->username, dplayer, false)) {
     // Restore original connection.
-    bool success = connection_attach(pconn, pconn->server.delegation.playing,
+    bool success = connection_attach(pconn, pconn->username,
+                                     pconn->server.delegation.playing,
                                      pconn->server.delegation.observer);
     fc_assert_ret_val(success, false);
 
@@ -924,7 +938,8 @@ bool connection_delegate_restore(struct connection *pconn)
   // Try to attach to the delegate's original player
   if ((nullptr != pconn->server.delegation.playing
        || pconn->server.delegation.observer)
-      && !connection_attach(pconn, pconn->server.delegation.playing,
+      && !connection_attach(pconn, pconn->username,
+                            pconn->server.delegation.playing,
                             pconn->server.delegation.observer)) {
     return false;
   }
