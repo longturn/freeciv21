@@ -27,6 +27,12 @@ try:
 except ImportError:
     has_updated_by_git = False
 
+try:
+    import sphinx_lua_ls
+    has_sphinx_lua_ls = True
+except ImportError:
+    has_sphinx_lua_ls = False
+
 
 # -- Project information -----------------------------------------------------
 
@@ -238,8 +244,9 @@ todo_include_todos = True
 
 # -- Generate Lua docs -------------------------------------------------------
 
-extensions.append('sphinx_lua_ls')
-# Path to the folder containing the `.luarc.json` file,
-# relative to the directory with `conf.py`.
-lua_ls_project_root = "../"
+if has_sphinx_lua_ls:
+    extensions.append('sphinx_lua_ls')
+    # Path to the folder containing the `.luarc.json` file,
+    # relative to the directory with `conf.py`.
+    lua_ls_project_root = "../"
 
