@@ -415,7 +415,7 @@ jobs:
         run: |
           mkdir -vp build/snap/local
           cp -v data/icons/128x128/freeciv21-client.png build/snap/local
-          cp -v dist/snapcraft.yaml build
+          cp -v dist/snapcraft.yaml build/snap
       - name: Build and Upload
         uses: snapcore/action-build@v1
         id: snapcraft
