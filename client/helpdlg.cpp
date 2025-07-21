@@ -870,7 +870,7 @@ void help_widget::set_topic_other(const help_item *topic, const char *title)
 {
   Q_UNUSED(title)
   if (topic->text) {
-    text_browser->setPlainText(topic->text);
+    text_browser->setMarkdown(topic->text);
   } else {
     text_browser->setPlainText(
         QLatin1String("")); // Something better to do ?
@@ -893,7 +893,7 @@ void help_widget::set_topic_unit(const help_item *topic, const char *title)
   if (utype) {
     helptext_unit(buffer, sizeof(buffer), client.conn.playing, topic->text,
                   utype, client_current_nation_set());
-    text_browser->setPlainText(buffer);
+    text_browser->setMarkdown(buffer);
 
     // Create information panel
     show_info_panel();
@@ -1002,7 +1002,7 @@ void help_widget::set_topic_building(const help_item *topic,
   if (itype) {
     helptext_building(buffer, sizeof(buffer), client.conn.playing,
                       topic->text, itype, client_current_nation_set());
-    text_browser->setPlainText(buffer);
+    text_browser->setMarkdown(buffer);
     show_info_panel();
     auto spr = get_building_sprite(tileset, itype);
     if (spr) {
@@ -1169,7 +1169,7 @@ void help_widget::set_topic_tech(const help_item *topic, const char *title)
       info_panel_done();
       helptext_advance(buffer, sizeof(buffer), client.conn.playing,
                        topic->text, n, client_current_nation_set());
-      text_browser->setPlainText(buffer);
+      text_browser->setMarkdown(buffer);
     }
   } else {
     set_topic_other(topic, title);
@@ -1296,7 +1296,7 @@ void help_widget::set_topic_terrain(const help_item *topic,
 
     helptext_terrain(buffer, sizeof(buffer), client.conn.playing,
                      topic->text, pterrain);
-    text_browser->setPlainText(buffer);
+    text_browser->setMarkdown(buffer);
 
     // Create information panel
     show_info_panel();
@@ -1446,7 +1446,7 @@ void help_widget::set_topic_extra(const help_item *topic, const char *title)
   if (pextra) {
     helptext_extra(buffer, sizeof(buffer), client.conn.playing, topic->text,
                    pextra);
-    text_browser->setPlainText(buffer);
+    text_browser->setMarkdown(buffer);
   } else {
     set_topic_other(topic, title);
   }
@@ -1463,7 +1463,7 @@ void help_widget::set_topic_specialist(const help_item *topic,
   if (pspec) {
     helptext_specialist(buffer, sizeof(buffer), client.conn.playing,
                         topic->text, pspec);
-    text_browser->setPlainText(buffer);
+    text_browser->setMarkdown(buffer);
   } else {
     set_topic_other(topic, title);
   }
@@ -1480,7 +1480,7 @@ void help_widget::set_topic_government(const help_item *topic,
   if (pgov) {
     helptext_government(buffer, sizeof(buffer), client.conn.playing,
                         topic->text, pgov);
-    text_browser->setPlainText(buffer);
+    text_browser->setMarkdown(buffer);
   } else {
     set_topic_other(topic, title);
   }
@@ -1495,7 +1495,7 @@ void help_widget::set_topic_nation(const help_item *topic, const char *title)
   struct nation_type *pnation = nation_by_translated_plural(title);
   if (pnation) {
     helptext_nation(buffer, sizeof(buffer), pnation, topic->text);
-    text_browser->setPlainText(buffer);
+    text_browser->setMarkdown(buffer);
   } else {
     set_topic_other(topic, title);
   }
@@ -1511,7 +1511,7 @@ void help_widget::set_topic_goods(const help_item *topic, const char *title)
   if (pgood) {
     helptext_goods(buffer, sizeof(buffer), client.conn.playing, topic->text,
                    pgood);
-    text_browser->setText(buffer);
+    text_browser->setMarkdown(buffer);
   } else {
     set_topic_other(topic, title);
   }
