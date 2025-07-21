@@ -64,6 +64,7 @@ This chapter is about creating a new MSYS2 build environment.
 #. Packages for building the client and/or Ruledit.
 
     * mingw-w64-clang-x86_64-qt6-base
+    * mingw-w64-clang-x86_64-qt6-multimedia
     * mingw-w64-clang-x86_64-qt6-svg
     * mingw-w64-clang-x86_64-karchive
 
