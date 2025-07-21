@@ -109,8 +109,8 @@ jobs:
           path: build
       - name: Publish to Snap Store
         uses: snapcore/action-publish@v1
-          env:
-            SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
-          with:
-            snap: ${{ steps.snapcraft.outputs.snap }}
-            release: edge
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
+        with:
+          snap: ${{ steps.snapcraft.outputs.snap }}
+          release: edge
