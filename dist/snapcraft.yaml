@@ -6,29 +6,29 @@
 #
 # Build Steps:
 #   - sudo apt install snapd (run once to install -- fedora's dnf is similar)
-#   - sudo snap install snapcraft --classic (run once to install)
 #   - sudo snap install lxd (run once to install)
+#   - sudo lxd init --auto (run once to install)
+#   - sudo snap install snapcraft --classic (run once to install)
 #   - mkdir -p build/snap/local
 #   - cp data/icons/128x128/freeciv21-client.png build/snap/local
-#   - cmake . -B build -G Ninja
+#   - cp dist/snapcraft.yaml build
 #   - cd build
-#   - snapcraft
-#   - sudo snap install --devmode ./freeciv21_*.snap
+#   - sudo iptables -P FORWARD ACCEPT
+#   - sudo snapcraft
+#   - sudo snap install --devmode ./freeciv21_*.snap (sudo snap remove freeciv21)
 #   - snapcraft upload --release=latest/edge ./freeciv21_*.snap
 #
 ##########
 
 name: freeciv21
+# This gives us the version and grade from the parsed metainfo file
 adopt-info: freeciv21
 title: Freeciv21
-summary: Freeciv21 - Develop your civilization from humble roots to a global empire
+summary: Freeciv21 - Develop Your Civilization from Humble Roots to a Global Empire
 description: |
   Freeciv21 is a free open source turn-based empire-building 4x strategy game, in which each player becomes the leader of a civilization. You compete against several opponents to build cities and use them to support a military and an economy. Players strive to complete an empire that survives all encounters with its neighbors to emerge victorious. Play begins at the dawn of history in 4,000 BCE.
   Freeciv21 takes its roots in the well-known FOSS game Freeciv and extends it for more fun, with a revived focus on competitive multiplayer environments. Players can choose from over 500 nations and can play against the computer or other people in an active online community.
-  The code is maintained by the team over at Longturn.net and is based on the QT framework. The game supports both hex and square tiles and is easily modified to create custom rules.
-
-version: '@FC21_MAJOR_VERSION@.@FC21_MINOR_VERSION@-@FC21_VERSION_LABEL@.@FC21_PATCH_VERSION@'
-grade: devel
+  The code is maintained by the team over at Longturn.net and is based on the Qt framework. The game supports both hex and square tiles and is easily modified to create custom rules.
 
 license: GPL-3.0-or-later
 website: https://longturn.net
@@ -56,43 +56,63 @@ parts:
     source-branch: master
     cmake-generator: Ninja
     cmake-parameters:
-      - "-DCMAKE_INSTALL_PREFIX=/usr"
-      - "-DCMAKE_BUILD_TYPE=Release"
+      - -DCMAKE_INSTALL_PREFIX=/usr
+      - -DCMAKE_BUILD_TYPE=Release
     build-packages:
+      - g++
       - git
       - cmake
       - ninja-build
-      - g++
       - python3
       - gettext
       - liblua5.3-dev
       - libsqlite3-dev
       - libsdl2-mixer-dev
       - libmagickwand-dev
-      - qt6-base-dev
-      - qt6-multimedia-dev
-      - qt6-svg-dev
-    # base core24 doesn't have kf6archive, so we get it from a snap
+      - ffmpeg
+      - libavcodec-dev
+      - libavformat-dev
+      - libavdevice-dev
+      - libavfilter-dev
+      - libavutil-dev
+      - libpostproc-dev
+      - libswresample-dev
+      - libswscale-dev
+      - pulseaudio
+      - libpulse-dev
+      - libgstreamer1.0-dev
+      - libgstreamer-plugins-base1.0-dev
+      - gstreamer1.0-plugins-base
+      - gstreamer1.0-plugins-good
+      - gstreamer1.0-plugins-ugly
+      - gstreamer1.0-plugins-bad
+      - libgstreamer-plugins-bad1.0-dev
+      - gstreamer1.0-pulseaudio
+      - gstreamer1.0-tools
+      - gstreamer1.0-alsa
+      - libasound2-dev
+      - libreadline-dev
+    build-environment:
+      - QT_MEDIA_BACKEND: ffmpeg
+    # Base core24 doesn't have kf6archive, so we get it and the rest of the
+    # Qt libraries we need from a snap that KDE maintains
     build-snaps:
       - core24
       - kf6-core24
-    # packages/libraries needed at run time
     stage-packages:
       - liblua5.3-0
       - libsdl2-2.0-0
       - libsdl2-mixer-2.0-0
-      - libsqlite3-0
     parse-info:
       - usr/share/metainfo/net.longturn.freeciv21.metainfo.xml
-      - usr/share/metainfo/net.longturn.freeciv21.modpack.metainfo.xml
-      - usr/share/metainfo/net.longturn.freeciv21.ruledit.metainfo.xml
-      - usr/share/metainfo/net.longturn.freeciv21.server.metainfo.xml
 
 apps:
   freeciv21-client:
     common-id: net.longturn.freeciv21
     desktop: usr/share/applications/net.longturn.freeciv21.desktop
     command: usr/bin/freeciv21-client
+    environment:
+      QT_MEDIA_BACKEND: ffmpeg
     extensions:
       - kde-neon-6
     plugs:
