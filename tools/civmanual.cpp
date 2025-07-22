@@ -116,40 +116,6 @@ struct tag_types html_tags = {
     // tail
     "</body></html>"};
 
-struct tag_types wiki_tags = {
-    // file extension
-    "mediawiki",
-
-    // header
-    " ",
-
-    // title begin
-    "=",
-
-    // title end
-    "=",
-
-    // section title begin
-    "===",
-
-    // section title end
-    "===",
-
-    // item begin
-    "----\n<!-- %s %d -->\n",
-
-    // item end
-    "\n",
-
-    // subitem begin
-    "<!-- %s -->\n",
-
-    // subitem end
-    "\n",
-
-    // tail
-    " "};
-
 static QString ruleset;
 
 /**
@@ -672,7 +638,6 @@ int main(int argc, char **argv)
        _("Make manual for RULESET."),
        // TRANS: Command-line argument
        _("RULESET")},
-      {{"w", "wiki"}, _("Write manual in wiki format.")},
   });
   if (!ok) {
     qFatal("Adding command line arguments failed.");
@@ -697,9 +662,6 @@ int main(int argc, char **argv)
   }
   if (parser.isSet(QStringLiteral("log"))) {
     srvarg.log_filename = parser.value(QStringLiteral("log"));
-  }
-  if (parser.isSet(QStringLiteral("wiki"))) {
-    tag_info = &wiki_tags;
   }
 
   init_our_capability();
