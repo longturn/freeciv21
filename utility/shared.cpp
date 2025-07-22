@@ -876,7 +876,20 @@ static void autocap_update(void)
  */
 static void bind_text_domain_and_encoding(const char *name)
 {
-  bindtextdomain("freeciv21-core", get_locale_dir());
+  // Find the locale folder
+#if defined(Q_OS_WIN) || defined(Q_OS_MACOS)
+  // Make sure that all executables get the same directory.
+  auto app_name = QCoreApplication::applicationName();
+  QCoreApplication::setApplicationName("freeciv21");
+  auto location =
+      QStandardPaths::locate(QStandardPaths::AppDataLocation, "locale",
+                             QStandardPaths::LocateDirectory);
+  QCoreApplication::setApplicationName(app_name);
+#else
+  auto location = QStringLiteral(LOCALEDIR);
+#endif
+
+  bindtextdomain("freeciv21-core", qPrintable(location));
   bind_textdomain_codeset("freeciv21-core", "UTF-8");
 }
 } // anonymous namespace
