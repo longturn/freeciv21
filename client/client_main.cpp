@@ -325,7 +325,8 @@ int client_main(int argc, char *argv[])
 
   init_nls();
 #ifdef ENABLE_NLS
-  (void) bindtextdomain("freeciv21-nations", get_locale_dir());
+  // Use system encoding for the dir
+  (void) bindtextdomain("freeciv21-nations", qPrintable(get_locale_dir()));
 #endif
   init_character_encodings(gui_character_encoding, gui_use_transliteration);
 #ifdef ENABLE_NLS

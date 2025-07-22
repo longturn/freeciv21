@@ -132,6 +132,7 @@ bool str_to_int(const char *str, int *pint);
 char *user_username(char *buf, size_t bufsz);
 QString freeciv_storage_dir();
 
+QString get_locale_dir();
 const QStringList &get_data_dirs();
 const QStringList &get_save_dirs();
 const QStringList &get_scenario_dirs();

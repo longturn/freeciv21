@@ -499,6 +499,25 @@ char *user_username(char *buf, size_t bufsz)
 }
 
 /**
+   Return directory containing locales.
+ */
+QString get_locale_dir()
+{
+#if defined(Q_OS_WIN) || defined(Q_OS_MACOS)
+  // Make sure that all executables get the same directory.
+  auto app_name = QCoreApplication::applicationName();
+  QCoreApplication::setApplicationName("freeciv21");
+  auto location =
+      QStandardPaths::locate(QStandardPaths::AppDataLocation, "locale",
+                             QStandardPaths::LocateDirectory);
+  QCoreApplication::setApplicationName(app_name);
+  return location;
+#else
+  return QStringLiteral(LOCALEDIR);
+#endif
+}
+
+/**
    Returns a list of directory paths, in the order in which they should
    be searched.  Base function for get_data_dirs(), get_save_dirs(),
    get_scenario_dirs()
@@ -884,7 +903,8 @@ void init_nls()
 #endif              // FREECIV_MSWINDOWS
 
   (void) setlocale(LC_ALL, "");
-  (void) bindtextdomain("freeciv21-core", get_locale_dir());
+  // Use system encoding for the dir
+  (void) bindtextdomain("freeciv21-core", qPrintable(get_locale_dir()));
   (void) textdomain("freeciv21-core");
 
   /* Don't touch the defaults when LC_NUMERIC == "C".

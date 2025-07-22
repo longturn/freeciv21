@@ -72,7 +72,8 @@ int main(int argc, char **argv)
   init_nls();
 
 #ifdef ENABLE_NLS
-  (void) bindtextdomain("freeciv21-ruledit", get_locale_dir());
+  // Use system encoding for the dir
+  (void) bindtextdomain("freeciv21-ruledit", qPrintable(get_locale_dir()));
 #endif
 
   init_character_encodings(FC_DEFAULT_DATA_ENCODING, false);
