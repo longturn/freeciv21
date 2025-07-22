@@ -170,7 +170,8 @@ void srv_init()
   // NLS init
   init_nls();
 #ifdef ENABLE_NLS
-  (void) bindtextdomain("freeciv21-nations", get_locale_dir());
+  // Use system encoding for the dir
+  (void) bindtextdomain("freeciv21-nations", qPrintable(get_locale_dir()));
 #endif
 
   // We want this before any AI stuff
