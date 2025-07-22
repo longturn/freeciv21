@@ -111,8 +111,6 @@ apps:
     common-id: net.longturn.freeciv21
     desktop: usr/share/applications/net.longturn.freeciv21.desktop
     command: usr/bin/freeciv21-client
-    environment:
-      QT_MEDIA_BACKEND: ffmpeg
     extensions:
       - kde-neon-6
     plugs:
