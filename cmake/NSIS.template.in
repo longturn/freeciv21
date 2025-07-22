@@ -284,7 +284,7 @@
     Delete "$INSTDIR\Uninstall.exe"
 
     ; Remove shortcuts
-    Delete "$DESKTOP\${APPNAME} Client.lnk"
+    Delete "$DESKTOP\${APPNAME}.lnk"
     Delete "$SMPROGRAMS\${APPNAME}\*.*"
     RMDir "$SMPROGRAMS\${APPNAME}"
 

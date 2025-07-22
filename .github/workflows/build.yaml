@@ -169,6 +169,8 @@ jobs:
           cmake . -B build -G Ninja \
            -DCMAKE_INSTALL_PREFIX=$PWD/build/install \
            -DCMAKE_BUILD_TYPE=Release
+          sed -i 's/LOCALEDIR/LOCALEDIRBAD/' build/utility/fc_config.h
+          echo '#define LOCALEDIR "./locale"' >> build/utility/fc_config.h
       - name: Build
         run: |
           cmake --build build
