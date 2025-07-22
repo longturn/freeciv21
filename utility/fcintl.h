@@ -69,5 +69,3 @@ char *capitalized_string(const char *str);
 void free_capitalized(char *str);
 void capitalization_opt_in(bool opt_in);
 bool is_capitalization_enabled();
-
-const char *get_locale_dir();
