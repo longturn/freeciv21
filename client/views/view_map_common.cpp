@@ -90,12 +90,17 @@ Q_GLOBAL_STATIC(QElapsedTimer, anim_timer);
 
 void anim_delay(int milliseconds)
 {
+#ifdef QT_OS_WIN
+  // Workaround for #2567
+  QThread::msleep(milliseconds);
+#else
   QEventLoop loop;
   QTimer t;
   t.connect(&t, &QTimer::timeout, &loop, &QEventLoop::quit);
   t.start(milliseconds);
   QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
   loop.exec();
+#endif
 }
 
 /**
