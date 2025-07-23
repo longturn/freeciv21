@@ -13,7 +13,6 @@
 #   - cp data/icons/128x128/freeciv21-client.png build/snap/local
 #   - cp dist/snapcraft.yaml build
 #   - cd build
-#   - sudo iptables -P FORWARD ACCEPT
 #   - sudo snapcraft
 #   - sudo snap install --devmode ./freeciv21_*.snap (sudo snap remove freeciv21)
 #   - snapcraft upload --release=latest/edge ./freeciv21_*.snap
@@ -81,14 +80,7 @@ parts:
       - pulseaudio
       - libpulse-dev
       - libgstreamer1.0-dev
-      - libgstreamer-plugins-base1.0-dev
-      - gstreamer1.0-plugins-base
-      - gstreamer1.0-plugins-good
-      - gstreamer1.0-plugins-ugly
-      - gstreamer1.0-plugins-bad
-      - libgstreamer-plugins-bad1.0-dev
       - gstreamer1.0-pulseaudio
-      - gstreamer1.0-tools
       - gstreamer1.0-alsa
       - libasound2-dev
       - libreadline-dev
