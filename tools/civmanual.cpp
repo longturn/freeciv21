@@ -31,16 +31,13 @@
 // common
 #include "capstr.h"
 #include "connection.h"
-#include "events.h"
 #include "fc_interface.h"
 #include "fc_types.h" // LINE_BREAK
 #include "game.h"
 #include "government.h"
 #include "helpdata.h"
 #include "improvement.h"
-#include "map.h"
 #include "movement.h"
-#include "player.h"
 #include "tech.h"
 #include "version.h"
 
