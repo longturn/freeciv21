@@ -17,7 +17,7 @@
 
 // Qt
 #include <QCommandLineParser>
-#include <QCoreApplication>
+#include <QGuiApplication>
 #include <QTextDocumentFragment>
 
 // utility
@@ -629,8 +629,8 @@ int main(int argc, char **argv)
   int retval = EXIT_SUCCESS;
   struct tag_types *tag_info = &html_tags;
 
-  QCoreApplication app(argc, argv);
-  QCoreApplication::setApplicationVersion(freeciv21_version());
+  QGuiApplication app(argc, argv);
+  QGuiApplication::setApplicationVersion(freeciv21_version());
 
   init_nls();
 
