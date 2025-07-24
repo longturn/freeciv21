@@ -265,7 +265,13 @@ jobs:
           cp client.icns Freeciv21.app/Contents/Resources
           mkdir staging
           mv Freeciv21.app staging
-          create-dmg \
+          #
+          # The currently available github macos runners have a bug that cause occasional create-dmg failures
+          # with the message "hdiutil: create failed - Resource busy". We do a retry loop as a workaround.
+          #
+          max_tries=10
+          i=0
+          until create-dmg \
             --hdiutil-verbose \
             --volname "Freeciv21 Installer" \
             --volicon "client.icns" \
@@ -277,6 +283,14 @@ jobs:
             --app-drop-link 600 185 \
             "Freeciv21-${{steps.split.outputs.fragment}}.dmg" \
             "staging/"
+          do
+            if [ $i -eq $max_tries ]
+            then
+              echo 'Error: create-dmg did not succeed even after 10 tries.'
+              exit 1
+            fi
+            ((i++))
+          done
           shasum -a 256 Freeciv21-${{steps.split.outputs.fragment}}.dmg > Freeciv21-${{steps.split.outputs.fragment}}.dmg.sha256
       - name: Upload package
         uses: softprops/action-gh-release@v2
