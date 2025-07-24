@@ -123,6 +123,15 @@ we pick German (Deutsch).
 That setting will stay in effect as long as the terminal window is open. Freeciv21 will use the environment
 context into account.
 
+If you have installed the snap package, you can run the game with the language of your choice as well.
+Following the example above, we pick German and then open the game via ``snap``.
+
+.. code-block:: sh
+
+  $ export LANG=de_DE.UTF8
+  $ snap run freeciv21.freeciv21-client
+
+
 .. note::
   You can also add the ``export LANG=de_DE.UTF8`` to your user's :file:`.bashrc` or :file:`.bash_profile`. The
   variable will then be set every time you logon to your computer. However, this also sets the language for

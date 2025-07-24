@@ -57,6 +57,9 @@ parts:
     cmake-parameters:
       - -DCMAKE_INSTALL_PREFIX=/usr
       - -DCMAKE_BUILD_TYPE=Release
+    # We purposely grab more libraries than a non-snap install requires. These
+    # ensure we fully enable sound support via ffmpeg (which requires pulseaudio)
+    # libreadline-dev is for the server's command line.
     build-packages:
       - g++
       - git
@@ -89,20 +92,30 @@ parts:
     # Base core24 doesn't have kf6archive, so we get it and the rest of the
     # Qt libraries we need from a snap that KDE maintains
     build-snaps:
-      - core24
       - kf6-core24
     stage-packages:
       - liblua5.3-0
       - libsdl2-2.0-0
       - libsdl2-mixer-2.0-0
+      - libsqlite3-0
     parse-info:
       - usr/share/metainfo/net.longturn.freeciv21.metainfo.xml
+
+# Ensure NLS support knows where our translations are located.
+layout:
+  /usr/share/locale:
+    bind: $SNAP/usr/share/locale
 
 apps:
   freeciv21-client:
     common-id: net.longturn.freeciv21
     desktop: usr/share/applications/net.longturn.freeciv21.desktop
     command: usr/bin/freeciv21-client
+    command-chain:
+      - snap/command-chain/desktop-launch
+    environment:
+      LOCPATH: $SNAP/usr/share/locale$LOCPATH
+      XLOCALEDIR: $SNAP/usr/share/locale$XLOCALEDIR
     extensions:
       - kde-neon-6
     plugs:
@@ -113,6 +126,11 @@ apps:
     common-id: net.longturn.freeciv21.server
     desktop: usr/share/applications/net.longturn.freeciv21.server.desktop
     command: usr/bin/freeciv21-server
+    command-chain:
+      - snap/command-chain/desktop-launch
+    environment:
+      LOCPATH: $SNAP/usr/share/locale$LOCPATH
+      XLOCALEDIR: $SNAP/usr/share/locale$XLOCALEDIR
     extensions:
       - kde-neon-6
     plugs:
@@ -123,6 +141,11 @@ apps:
     common-id: net.longturn.freeciv21.modpack-qt
     desktop: usr/share/applications/net.longturn.freeciv21.modpack.desktop
     command: usr/bin/freeciv21-modpack-qt
+    command-chain:
+      - snap/command-chain/desktop-launch
+    environment:
+      LOCPATH: $SNAP/usr/share/locale$LOCPATH
+      XLOCALEDIR: $SNAP/usr/share/locale$XLOCALEDIR
     extensions:
       - kde-neon-6
     plugs:
@@ -132,6 +155,11 @@ apps:
     common-id: net.longturn.freeciv21.ruledit
     desktop: usr/share/applications/net.longturn.freeciv21.ruledit.desktop
     command: usr/bin/freeciv21-ruledit
+    command-chain:
+      - snap/command-chain/desktop-launch
+    environment:
+      LOCPATH: $SNAP/usr/share/locale$LOCPATH
+      XLOCALEDIR: $SNAP/usr/share/locale$XLOCALEDIR
     extensions:
       - kde-neon-6
     plugs:
