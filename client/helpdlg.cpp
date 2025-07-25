@@ -39,7 +39,6 @@
 #include "fonts.h"
 #include "helpdlg.h"
 #include "tileset/tilespec.h"
-#include "views/view_map_common.h"
 
 #define MAX_HELP_TEXT_SIZE 8192
 #define REQ_LABEL_NEVER _("(Never)")
