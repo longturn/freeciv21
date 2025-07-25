@@ -1,7 +1,6 @@
 {
   "name": "freeciv21",
-  "version-string": "3.0.0",
-  "builtin-baseline": "23ceb9cbf9b6d32f485cf039547b70102a6ef9d8",
+  "version-string": "3.2.0",  
   "dependencies": [
     "qtbase",
     "qtmultimedia",

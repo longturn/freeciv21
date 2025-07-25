@@ -4,6 +4,11 @@
 #   server and other components
 cmake_minimum_required(VERSION 3.21...3.22 FATAL_ERROR)
 
+# Suppress policy warnings due to normalized install directories
+if(POLICY CMP0177)
+  cmake_policy(SET CMP0177 OLD)
+endif()
+
 # Set vcpkg if exists. Used by MacOS and Visual Studio
 if(DEFINED ENV{VCPKG_ROOT} AND FREECIV_USE_VCPKG)
   message(STATUS "Microsoft VCPKG enabled, setting toolset specific settings.")
