@@ -528,6 +528,7 @@ void help_widget::setup_ui()
 
   text_browser = new QTextBrowser(this);
   text_browser->setProperty(fonts::help_text, "true");
+  text_browser->setOpenExternalLinks(true);
   layout->addWidget(text_browser);
   main_widget = text_browser;
 
