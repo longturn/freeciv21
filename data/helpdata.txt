@@ -642,14 +642,15 @@ Clicking on the city center tile in city dialog will automatically choose citize
 with an emphasis on food production and hence growth. Citizen roles are also automatically assigned when a \
 city grows, which means you may want to inspect cities that have just grown and adjust the role in which the \
 new citizen has been placed. You can set different priorities for a city with the Citizen Governor.\
-"), _("\
+"), ;_("\
 ; TODO: See issue #653\
 ; You can also request tile alterations from the city map, as an alternative to explicitly instructing units \
 ; to make them. Right-clicking on a city map tile gives a menu of changes which can be made to that tile, such \
 ; as irrigation and building roads. Refer to the section on Terrain Alterations. You can select one \
 ; alteration per tile at a time. These \"Worker Tasks\" will be carried out by any units capable of them \
 ; that are in \"Auto Worker\" mode.\
-; "), _("\
+; "),
+_("\
 Citizens have a nationality distinct from that of the state they inhabit. When a city grows due to food \
 surplus new citizens take the nationality of the city's current owner, but when a city is conquered or \
 otherwise transferred, its citizens retain their original nationality, as do any immigrants. Units building \
