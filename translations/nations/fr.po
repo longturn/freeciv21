@@ -11,20 +11,21 @@
 # This file is distributed under the same license as the Freeciv package.
 #
 #
+# SPDX-FileCopyrightText: 2025 Louis Moureaux <m_louis30@yahoo.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: Freeciv trunk\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2025-07-28 20:36+0200\n"
-"PO-Revision-Date: 2019-08-05 15:55+0200\n"
-"Last-Translator: Igx <igx31 hotmail.com>\n"
-"Language-Team: French <freeciv-l10n-fr@yahoogroupes.fr>\n"
+"POT-Creation-Date: 2025-07-28 20:46+0200\n"
+"PO-Revision-Date: 2025-07-28 22:59+0200\n"
+"Last-Translator: Louis Moureaux <m_louis30@yahoo.com>\n"
+"Language-Team: French <>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: KBabel 1.11.2\n"
+"X-Generator: Lokalize 25.04.3\n"
 "X-Language: fr\n"
 "X-Source-Language: C\n"
 
@@ -739,12 +740,11 @@ msgstr "Vicairesse %s"
 
 #: data/nation/alaskan.ruleset:3
 msgid "Alaska"
-msgstr ""
+msgstr "Alaska"
 
 #: data/nation/alaskan.ruleset:4
-#, fuzzy
 msgid "?plural:Alaskan"
-msgstr "Sakas"
+msgstr "Alaskains"
 
 #: data/nation/alaskan.ruleset:6
 msgid ""
@@ -752,6 +752,9 @@ msgid ""
 "the Russian Empire in 1867, it became an organized territory on May 11th, "
 "1912 and eventually gained statehood as the 49th state on January 3rd, 1959."
 msgstr ""
+"L'Alaska est un état des États-Unis d'Amérique qui a été acheté à l'Empire "
+"russe en 1867, est devenu un territoire organisé le 11 mai 1912 et a "
+"finalement accédé au statut d'état comme le 49ème état le 3 janvier 1959."
 
 #: data/nation/alaskan.ruleset:28 data/nation/californian.ruleset:34
 #: data/nation/floridian.ruleset:33 data/nation/texan.ruleset:39
@@ -1160,33 +1163,33 @@ msgstr ""
 "s'ôtaient le sein droit afin de mieux utiliser l'arc et d'autres armes."
 
 #: data/nation/ambazonian.ruleset:3
-#, fuzzy
 msgid "Ambazonia"
-msgstr "Amazone"
+msgstr "Ambazonie"
 
 #: data/nation/ambazonian.ruleset:4
-#, fuzzy
 msgid "?plural:Ambazonians"
-msgstr "Albanais"
+msgstr "Ambazoniens"
 
 #: data/nation/ambazonian.ruleset:6
 msgid ""
 "The struggle for an independent Ambazonia began in 2017 with the Anglophone "
 "crisis."
 msgstr ""
+"La lutte pour une Ambazonie indépendante a débuté en 2017 avec la Crise "
+"anglophone."
 
 #: data/nation/ambazonian.ruleset:20
-#, fuzzy, c-format
+#, c-format
 msgid "Field Marshall %s"
-msgstr "Marshallais"
+msgstr "Feld-maréchal %s"
 
 #: data/nation/ambazonian.ruleset:20
-#, fuzzy, c-format
+#, c-format
 msgid "?female:Field Marshall %s"
-msgstr "Mansa %s"
+msgstr "Feld-Maréchale %s"
 
 #: data/nation/ambazonian.ruleset:21
-#, fuzzy, c-format
+#, c-format
 msgid "?Baroness %s"
 msgstr "Baronne %s"
 
@@ -1857,14 +1860,12 @@ msgid "Archbishop %s"
 msgstr "Archevêque %s"
 
 #: data/nation/austriahungary.ruleset:3
-#, fuzzy
 msgid "Austria-Hungary"
-msgstr "Autrichien"
+msgstr "Autriche-Hongrie"
 
 #: data/nation/austriahungary.ruleset:4
-#, fuzzy
 msgid "?plural:Austro-Hungarians"
-msgstr "Hongrois"
+msgstr "Austro-Hongrois"
 
 #: data/nation/austriahungary.ruleset:6
 msgid ""
@@ -1880,6 +1881,18 @@ msgid ""
 "under joint control, but all other government faculties were divided between "
 "the respective states."
 msgstr ""
+"L'Autriche-Hongrie, aussi connue comme l'Empire austro-hongrois et par "
+"d'autres noms, était une union constitutionnelle de l'Empire autrichien et "
+"du Royaume apostolique de Hongrie qui a existé de 1867 à 1918, lorsqu'il "
+"s'est effondré à la suite de la première guerre mondiale. L'union était le "
+"résultat du Compromis de 1867. Elle était gouvernée par la maison des "
+"Habsbourg, et fut la dernière phase de l'évolution constitutionnelle de la "
+"monarchie des Habsbourg. Suite aux réformes de 1867, les états autrichien et "
+"hongrois étaient égaux au sein de l'empire. Le Compromis nécessitait un "
+"renouvellement régulier, tout comme l'union douanière entre les deux parties "
+"de l'empire. Les affaires étrangères et l'armée étaient contrôlées "
+"conjointement, mais toutes les autres compétences étaient divisées entre les "
+"deux états."
 
 #: data/nation/avar.ruleset:3
 msgid "Avar"
@@ -4295,12 +4308,11 @@ msgstr ""
 
 #: data/nation/congofreestate.ruleset:3
 msgid "Congo Free State"
-msgstr ""
+msgstr "État libre du Congo"
 
 #: data/nation/congofreestate.ruleset:4
-#, fuzzy
 msgid "?plural:Congo Free States"
-msgstr "Confédérés"
+msgstr "État libre du Congo"
 
 #: data/nation/congofreestate.ruleset:7
 msgid ""
@@ -4309,16 +4321,20 @@ msgid ""
 "Leopold's reign in the Congo eventually earned infamy due to the increasing "
 "mistreatment of the indigenous people."
 msgstr ""
+"L'État libre du Congo était un grand état en Afrique centrale entre 1885 et "
+"1908, en union personnelle avec le Royaume de Belgique sous Léopold II. Les "
+"mauvais traitement infligés aux indigènes finirent par frapper le règne de "
+"Léopold de la marque de l'infamie."
 
 #: data/nation/congofreestate.ruleset:26
-#, fuzzy, c-format
+#, c-format
 msgid "Governeror-General %s"
 msgstr "Gouverneur-Général %s"
 
 #: data/nation/congofreestate.ruleset:26
-#, fuzzy, c-format
+#, c-format
 msgid "?female:Governeror-General %s"
-msgstr "Gouverneuse-Générale %s"
+msgstr "Gouverneure-Générale %s"
 
 #: data/nation/congolese.ruleset:3
 msgid "Congolese"
@@ -4779,12 +4795,11 @@ msgstr ""
 
 #: data/nation/dagestan.ruleset:3
 msgid "Dagestan"
-msgstr ""
+msgstr "Daghestan"
 
 #: data/nation/dagestan.ruleset:4
-#, fuzzy
 msgid "?plural:Dagestani"
-msgstr "Pakistanais"
+msgstr "Daghestani"
 
 #: data/nation/dagestan.ruleset:7
 msgid ""
@@ -4797,6 +4812,14 @@ msgid ""
 "in 1828, and again in 1917, before becoming an autonomous republic under the "
 "Soviet Union in 1921."
 msgstr ""
+"Le Daghestan est une république de Russie située dans le Nord Caucase le "
+"long de la mère Caspienne. Ce fut la première région à se convertir à "
+"l'Islam suite à la conquête de la région par les Arabes en 643. Le Daghestan "
+"a ensuite été pillé par les Mongols en 1221. La Russie en pris le contrôle "
+"en 1813. Suite à une taxation importante et à un mécontentement général "
+"envers le gouvernement russe, il se révolta plusieurs fois contre la "
+"Russie : d'abord en 1828, puis à nouveau en 1917, avant de devenir une "
+"république autonome de l'Union soviétique en 1921."
 
 #: data/nation/dahomean.ruleset:3
 msgid "Dahomean"
@@ -4916,14 +4939,12 @@ msgstr ""
 "Bartolomeo Colomb en 1498."
 
 #: data/nation/donetsk.ruleset:3
-#, fuzzy
 msgid "Donetsk"
-msgstr "Terminé"
+msgstr "Donetsk"
 
 #: data/nation/donetsk.ruleset:4
-#, fuzzy
 msgid "?plural:Donchyani"
-msgstr "Sonrhaïs"
+msgstr "Donchyani"
 
 #: data/nation/donetsk.ruleset:6
 msgid ""
@@ -4932,16 +4953,21 @@ msgid ""
 "Russian-backed paramilitaries in 2014, and it initially operated as a "
 "breakaway state until it was annexed by Russia in 2022."
 msgstr ""
+"La République populaire du Donetsk est une république non reconnue de la "
+"Russie dans les parties occupées de l'oblast ukrainien de Donetsk. Elle a "
+"été créée par des paramilitaires soutenus par la Russie en 2014, et opéra "
+"initialement comme un état sécessionniste, jusqu'à son annexion par la "
+"Russie en 2022."
 
 #: data/nation/donetsk.ruleset:22 data/nation/luhansk.ruleset:26
-#, fuzzy, c-format
+#, c-format
 msgid "Kremlin %s"
-msgstr "à %s"
+msgstr "Kremlin %s"
 
 #: data/nation/donetsk.ruleset:22 data/nation/luhansk.ruleset:26
-#, fuzzy, c-format
+#, c-format
 msgid "?female:Kremlin %s"
-msgstr "Première %s"
+msgstr "Kremline %s"
 
 #: data/nation/dryad.ruleset:3
 msgid "Dryad"
@@ -5524,14 +5550,12 @@ msgid "?female:Captain %s"
 msgstr "Capitaine %s"
 
 #: data/nation/floridian.ruleset:3
-#, fuzzy
 msgid "Floridian"
-msgstr "Florentin"
+msgstr "Floridien"
 
 #: data/nation/floridian.ruleset:4
-#, fuzzy
 msgid "?plural:Floridians"
-msgstr "Frisons"
+msgstr "Floridiens"
 
 #: data/nation/floridian.ruleset:6
 msgid ""
@@ -5545,6 +5569,15 @@ msgid ""
 "site of the Apollo 11 Space Launch, which let humans land on the moon for "
 "the first time in history."
 msgstr ""
+"La Floride est le troisième état le plus peuplé des USA et reconnue pour son "
+"tourisme. Elle fut colonisée de manière répétée par l'Espagne et la Grande-"
+"Bretagne avant que les « Patriotes de Floride » ne proclame la République de "
+"Floride Orientale en 1812. Malgré une première répression par l'Espagne, en "
+"1817 des aventuriers établirent la République des Florides sur Amelia "
+"Island, qui fut incorporée aux États-Unis avec le reste de la Floride "
+"moderne en 1822. Elle joignit la Confédération en 1861 mais rejoignit les "
+"USA en 1868 et fut depuis le site de lancement de la mission spatiale Apollo "
+"11, qui vit pour la première fois des humains fouler le sol lunaire."
 
 #: data/nation/formosan.ruleset:3
 msgid "Formosan"
@@ -6658,12 +6691,11 @@ msgstr "Landgravine %s"
 
 #: data/nation/hessedarmstadt.ruleset:3
 msgid "Hesse-Darmstadt"
-msgstr ""
+msgstr "Hesse-Darmstadt"
 
 #: data/nation/hessedarmstadt.ruleset:4
-#, fuzzy
 msgid "?plural:Hesse-Darmstadter"
-msgstr "Hessiens"
+msgstr "Hesse-Darmstadois"
 
 #: data/nation/hessedarmstadt.ruleset:6
 msgid ""
@@ -6671,6 +6703,9 @@ msgid ""
 "from the Landgraviate of Hesse-Darmstadt. When the monarchy was overthrown "
 "in 1918 it became the People's State of Hesse."
 msgstr ""
+"Le Grand-duché de Hesse exista de 1806 à 1918. Il émergea en 1806 du "
+"landgraviat de Hesse-Darmstadt. Quand la monarchie fut renversée en 1918, il "
+"devint l'État populaire de Hesse."
 
 #: data/nation/himyarite.ruleset:3
 msgid "Himyarite"
@@ -6895,7 +6930,7 @@ msgstr ""
 
 #: data/nation/indoeuropean.ruleset:3
 msgid "Indo-European"
-msgstr "indo-Européen"
+msgstr "Indo-Européen"
 
 #: data/nation/indoeuropean.ruleset:4
 msgid "?plural:Indo-Europeans"
@@ -8115,12 +8150,11 @@ msgstr ""
 
 #: data/nation/liege.ruleset:3
 msgid "Liège"
-msgstr ""
+msgstr "Liège"
 
 #: data/nation/liege.ruleset:6
-#, fuzzy
 msgid "?plural:Liègeans"
-msgstr "Libériens"
+msgstr "Liégeois"
 
 #: data/nation/liege.ruleset:8
 msgid ""
@@ -8132,21 +8166,28 @@ msgid ""
 "revolutionary France. Liège played later a major role in the Belgian "
 "independance."
 msgstr ""
+"Liège fut constitué comme principauté ecclésiastique en 985 lorsque le "
+"contrôle de plusieurs villes de la Belgique moderne fut accordé à l'évêque "
+"Notger. En tant qu'état fédéré du Saint-Empire romain germanique, il était "
+"caractérisé par de larges libertés civiles pour lesquelles les Liégeois se "
+"battirent avec force. Elle dura jusqu'en 1792, lorsque la récemment formée "
+"République de Liège vota l'union avec la France révolutionnaire. Liège joua "
+"ensuite un rôle majeur dans l'indépendance de la Belgique."
 
 #: data/nation/liege.ruleset:30
-#, fuzzy, c-format
+#, c-format
 msgid "?female:Princess %s"
-msgstr "Première Ministre"
+msgstr "Princesse %s"
 
 #: data/nation/liege.ruleset:31
-#, fuzzy, c-format
+#, c-format
 msgid "?female:Prime Ministress %s"
 msgstr "Première Ministre %s"
 
 #: data/nation/liege.ruleset:33
-#, fuzzy, c-format
+#, c-format
 msgid "Regent %s"
-msgstr "Sergent %s"
+msgstr "Régent %s"
 
 #: data/nation/ligurian.ruleset:3
 msgid "Ligurian"
@@ -8267,14 +8308,12 @@ msgstr ""
 "devint une province française en 1766."
 
 #: data/nation/louisianan.ruleset:3
-#, fuzzy
 msgid "Louisianan"
-msgstr "Tunisien"
+msgstr "Louisianais"
 
 #: data/nation/louisianan.ruleset:4
-#, fuzzy
 msgid "?plural:Louisianans"
-msgstr "Tunisiens"
+msgstr "Louisianais"
 
 #: data/nation/louisianan.ruleset:6
 msgid ""
@@ -8285,35 +8324,39 @@ msgid ""
 "of America. The state was formally admitted back into the union on July 9, "
 "1868."
 msgstr ""
+"La Louisiane est un état du Sud profond des États-Unis d'Amérique connu pour "
+"sa culture et sa cuisine françaises distinctes. Le 26 janvier 1861, l'état "
+"vota la sécession des États-Unis et exista indépendamment jusqu'au 28 "
+"février de la même année, lorsqu'il rejoignit finalement la Confédération. "
+"L'état fut formellement réadmis au sein de l'Union le 9 juin 1868."
 
 #: data/nation/louisianan.ruleset:44
-#, fuzzy, c-format
+#, c-format
 msgid "Demagogue %s"
-msgstr "Doge %s"
+msgstr "Démagogue %s"
 
 #: data/nation/louisianan.ruleset:44
-#, fuzzy, c-format
+#, c-format
 msgid "?female:Demagogue %s"
-msgstr "Duca %s"
+msgstr "Démagogue %s"
 
 #: data/nation/louisianan.ruleset:45
-#, fuzzy, c-format
+#, c-format
 msgid "Kingfish %s"
-msgstr "Roi %s"
+msgstr "Kingfish %s"
 
 #: data/nation/louisianan.ruleset:45
-#, fuzzy, c-format
+#, c-format
 msgid "?female:Kingfish %s"
-msgstr "Kikmongwie %s"
+msgstr "Kingfish %s"
 
 #: data/nation/luhansk.ruleset:3
 msgid "Luhansk"
-msgstr ""
+msgstr "Luhansk"
 
 #: data/nation/luhansk.ruleset:4
-#, fuzzy
 msgid "?plural:Luhansk"
-msgstr "Louvites"
+msgstr "Louhanskois"
 
 #: data/nation/luhansk.ruleset:6
 msgid ""
@@ -8322,6 +8365,11 @@ msgid ""
 "Russian-backed paramilitaries in 2014, and it operated as a breakaway state "
 "until it was annexed by Russia in September 2022."
 msgstr ""
+"La République populaire de Luhansk est une république non reconnue de Russie "
+"dans les parties occupées de l'oblast ukrainien de Luhansk. La république "
+"fut créée en 2014 par des paramilitaires soutenus par la Russie, et opéra "
+"comme un état sécessionniste jusqu'à son annexion par la Russie en septembre "
+"2022."
 
 #: data/nation/luwian.ruleset:3
 msgid "Luwian"
@@ -9801,14 +9849,12 @@ msgstr ""
 "envahit l'Angleterre en 1066."
 
 #: data/nation/northireland.ruleset:3
-#, fuzzy
 msgid "Northern Ireland"
-msgstr "Nord-coréen"
+msgstr "Irlande du Nord"
 
 #: data/nation/northireland.ruleset:4
-#, fuzzy
 msgid "?plural:Northern Irish"
-msgstr "Cornouaillais"
+msgstr "Nord-Irlandais"
 
 #: data/nation/northireland.ruleset:6
 msgid ""
@@ -9820,6 +9866,13 @@ msgid ""
 "'The Troubles' and established a power-sharing government that gives both "
 "sides a say in the affairs of the region."
 msgstr ""
+"L'Irlande du Nord est une partie du Royaume-Uni qui occupe la partie Nord-"
+"Est de l'île d'Irlande. L'Irlande du Nord a une histoire complexe de conflit "
+"et de coopération entre Anglais unionistes, qui souhaitent demeurer dans le "
+"Royaume-Uni, et nationalistes irlandais, qui veulent rejoindre la République "
+"d'Irlande. L'accord du Vendredi saint de 1998 mit fin à une période violente "
+"connue les « troubles » et établit un partage du pouvoir qui donne à chaque "
+"partie une voix sur les affaires de la région."
 
 #: data/nation/northireland.ruleset:37 data/nation/scottish.ruleset:26
 #: data/nation/scottishgaelic.ruleset:39
@@ -10409,20 +10462,20 @@ msgstr "Comtesse Palatine %s"
 
 # AR
 #: data/nation/palauan.ruleset:3
-#, fuzzy
 msgid "Palauan"
-msgstr "Palais"
+msgstr "Palaois"
 
 #: data/nation/palauan.ruleset:4
-#, fuzzy
 msgid "?plural:Palauans"
-msgstr "Papous"
+msgstr "Palaois"
 
 #: data/nation/palauan.ruleset:6
 msgid ""
 "Palau is a very little country, with only 20000 inhabitants aproximately. It "
 "is composed of more than 300 islands of volcanic origin."
 msgstr ""
+"Palau est un très petit état, avec seulement environ 20 000 habitants. Il "
+"est composé de plus de 300 îles d'origine volcaniques."
 
 #: data/nation/palestinian.ruleset:3
 msgid "Palestinian"
@@ -11020,12 +11073,11 @@ msgstr ""
 
 #: data/nation/rhodesia.ruleset:3
 msgid "Rhodesia"
-msgstr ""
+msgstr "Rhodésie"
 
 #: data/nation/rhodesia.ruleset:4
-#, fuzzy
 msgid "?plural:Rhodesians"
-msgstr "Ruthéniens"
+msgstr "Rhodésiens"
 
 #: data/nation/rhodesia.ruleset:6
 msgid ""
@@ -11042,6 +11094,19 @@ msgid ""
 "deemed legitimate by Britain and the United Nations was finally achieved in "
 "April 1980; the nation was concurrently renamed the Republic of Zimbabwe."
 msgstr ""
+"La Rhodésie était un état non reconnu situé en Afrique du Sude durant la "
+"guerre froide. Entre 1965 et 1979, il comprit la région maintenant connue "
+"comme le Zimbabwe. Le pays était considéré comme le successeur de facto de "
+"la colonie britannique de Rhodésie du Sud. Dans un effort pour retarder une "
+"transition imminente vers un régime gouverné par la majorité africaine, le "
+"gouvernement majoritairement blanc déclara unilatéralement son indépendance "
+"du Royaume-Uni le 11 novembre 1965. Suite à une brutale guerre de guérilla "
+"contre deux organisations nationalistes africaines rivales, le premier "
+"ministre rhodésien Ian Smith concéda la démocratie biraciale en 1978. La "
+"Rhodésie revint brièvement au statut colonial sous franchise universelle. "
+"Une indépendance jugée légitime par l'Angleterre et les Nations unies fut "
+"finalement obtenue en avril 1980 ; le pays fut simultanément renommé en "
+"République du Zimbabwe."
 
 #: data/nation/rhodesia.ruleset:36 data/nation/saarprotectorate.ruleset:27
 #, c-format
@@ -11049,12 +11114,12 @@ msgid "King %s"
 msgstr "Roi %s"
 
 #: data/nation/rhodesia.ruleset:36
-#, fuzzy, c-format
+#, c-format
 msgid "?Queen %s"
 msgstr "Reine %s"
 
 #: data/nation/rhodesia.ruleset:38
-#, fuzzy, c-format
+#, c-format
 msgid "?Mother Superior %s"
 msgstr "Mère supérieure %s"
 
@@ -11238,14 +11303,12 @@ msgstr ""
 "annexée par le Japon."
 
 #: data/nation/saarprotectorate.ruleset:3
-#, fuzzy
 msgid "Saar Protectorate"
-msgstr "Seigneur Protecteur %s"
+msgstr "Protectorat de Sarre"
 
 #: data/nation/saarprotectorate.ruleset:4
-#, fuzzy
 msgid "?plural:Saarlanders"
-msgstr "Somalilandais"
+msgstr "Sarrois"
 
 #: data/nation/saarprotectorate.ruleset:6
 msgid ""
@@ -11254,6 +11317,11 @@ msgid ""
 "French Fourth Republic. On rejoining West Germany in 1957, it became the "
 "smallest 'area state', the Saarland. It is named after the Saar River."
 msgstr ""
+"Le Protectorat de Sarre fut un bref protectorat (1947-56) séparé de "
+"l'Allemagne après sa défaite dans la deuxième guerre mondiale ; il était "
+"administré par la Quatrième République française. En rejoignant l'Allemagne "
+"en 1957, il devint le plus petit état non urbain, le Saarland. Il est nommé "
+"d'après la rivière du même nom."
 
 #: data/nation/saarprotectorate.ruleset:27
 #, c-format
@@ -11698,10 +11766,9 @@ msgstr ""
 
 #: data/nation/schaumburglippe.ruleset:3
 msgid "Schaumburg-Lippe"
-msgstr ""
+msgstr "Schaumbourg-Lippe"
 
 #: data/nation/schaumburglippe.ruleset:4
-#, fuzzy
 msgid "?plural:Schaumburg-Lippians"
 msgstr "Lippiens"
 
@@ -11710,6 +11777,8 @@ msgid ""
 "Schaumburg-Lippe was created as a county in 1647, became a principality in "
 "1807, a free state in 1918, and was until 1946 a small state in Germany."
 msgstr ""
+"Schaumbourg-Lippe devint un état en 1647, une principauté en 1807, un état "
+"libre en 1918, et fut jusqu'en 1946 un petit état d'Allemagne."
 
 #: data/nation/schleswig-holsteinian.ruleset:3
 msgid "Schleswig-Holsteinian"
@@ -12962,7 +13031,6 @@ msgid "?plural:Texans"
 msgstr "Texans"
 
 #: data/nation/texan.ruleset:6
-#, fuzzy
 msgid ""
 "Texas, \"the Lone Star State\" is the second largest and second most "
 "populous state of the USA, famous for its \"larger than life\" cowboy "
@@ -12974,12 +13042,15 @@ msgid ""
 "Confederacy, and the USA, as expressed in the slogan \"six flags over "
 "Texas\"."
 msgstr ""
-"Le Texas, \"l'État de l'Étoile Solitaire \" est le deuxième état en taille "
-"et en population des États-Unis, connu pour sa mentalité cow-boy \"larger "
-"than life\". Au cours de son histoire, le Texas a été administré par six "
-"pays : la France, l'Espagne, le Mexique, la République du Texas, la "
-"Confédération et les USA - comme est exprimé dans le slogan \"six drapeaux "
-"sur le Texas\"."
+"Le Texas, « l'État de l'étoile solitaire », est le deuxième état en taille "
+"et en population des États-Unis, connu pour sa mentalité cow-boy « larger "
+"than life » et son héritage hispanique. Après le célèbre siège de Fort "
+"Alamo, les Texans défirent les Mexicains à San Jacinto et proclamèrent leur "
+"indépendance. La République du Texas dura de 1836 à 1846, après quoi elle "
+"devint le 28ème état des États-Unis. Historiquement, le Texas a été "
+"administré en partie ou complètement par six pays : la France, l'Espagne, le "
+"Mexique, la République du Texas, la Confédération et les USA - comme est "
+"exprimé dans le slogan « six drapeaux sur le Texas »."
 
 #: data/nation/texan.ruleset:36
 #, c-format
@@ -12992,14 +13063,14 @@ msgid "?female:President %s"
 msgstr "Présidente %s"
 
 #: data/nation/texan.ruleset:40
-#, fuzzy, c-format
+#, c-format
 msgid "Preacher %s"
-msgstr "Premier %s"
+msgstr "Précheur %s"
 
 #: data/nation/texan.ruleset:40
-#, fuzzy, c-format
+#, c-format
 msgid "?female:Preacher %s"
-msgstr "Première %s"
+msgstr "Précheresse %s"
 
 #: data/nation/thai.ruleset:5
 msgid "Thai"
@@ -13196,12 +13267,11 @@ msgstr ""
 
 #: data/nation/tokiponan.ruleset:3
 msgid "Toki Ponan"
-msgstr ""
+msgstr "Toki Ponien"
 
 #: data/nation/tokiponan.ruleset:4
-#, fuzzy
 msgid "?plural:Toki Ponans"
-msgstr "Tongiens"
+msgstr "Toki Poniens"
 
 #: data/nation/tokiponan.ruleset:6
 msgid ""
@@ -13209,6 +13279,9 @@ msgid ""
 "its extremely small size, consisting of 14 letters and anywhere from 120 "
 "words to 137 words."
 msgstr ""
+"Le Toki Pona est une langue construite créée par Sonja Lang en 2001, notée "
+"pour sa très petite taille, utilisant seulement 14 lettres et entre 120 et "
+"137 mots."
 
 #: data/nation/toltec.ruleset:3
 msgid "Toltec"
@@ -14540,13 +14613,13 @@ msgstr ""
 "gouverné par Robert Mugabe, qui a reçu une réputation internationale aussi "
 "pauvre que le régime précédent."
 
-#, fuzzy, c-format
+#, c-format
 #~ msgid "Governeror %s"
 #~ msgstr "Gouverneur %s"
 
-#, fuzzy, c-format
+#, c-format
 #~ msgid "?female:Governeror %s"
-#~ msgstr "Gouverneuse %s"
+#~ msgstr "Gouverneure %s"
 
 #~ msgid "Australian"
 #~ msgstr "Australien"
@@ -41240,9 +41313,6 @@ msgstr ""
 #~ msgstr "Puan %s"
 
 #~ msgid "Datu %s"
-#~ msgstr "Datu %s"
-
-#~ msgid "?female:Datu %s"
 #~ msgstr "Datu %s"
 
 #~ msgid ""
