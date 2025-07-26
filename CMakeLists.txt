@@ -109,9 +109,6 @@ file(COPY_FILE "${CMAKE_BINARY_DIR}/utility/fc_version.h.new"
                "${CMAKE_BINARY_DIR}/utility/fc_version.h"
      ONLY_IF_DIFFERENT)
 
-configure_file("dist/snapcraft.yaml.in" snap/snapcraft.yaml
-               @ONLY NEWLINE_STYLE UNIX)
-
 # Include Installation Commands
 include(FreecivInstall)
 

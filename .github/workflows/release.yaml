@@ -7,17 +7,21 @@ on:
 jobs:
   update-autorevision:
     name: "Update AutoRevision"
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - # Make sure there are no unstaged changes
+      - name: Update AutoRevision
+        # Make sure there are no unstaged changes
         # Was reporting changes to eol=crlf files in .gitattributes
-        run: git checkout -- .
-      - run: git rev-parse --short=5 HEAD > cmake/AutoRevision.txt
-      - run: git describe --tags `git rev-list --tags --max-count=1` >> cmake/AutoRevision.txt
-      - run: cat cmake/AutoRevision.txt
+        run: |
+          git config --global --add safe.directory ${{ github.workspace }}
+          git checkout -- .
+          git rev-parse --short=5 HEAD > cmake/AutoRevision.txt
+          git describe --tags `git rev-list --tags --max-count=1` >> cmake/AutoRevision.txt
+          cat cmake/AutoRevision.txt
       - name: Find target branch
         id: branch
         # We're running on a tag so have no direct access to the branch. Find it.
@@ -49,17 +53,21 @@ jobs:
 
   update-archive:
     name: "Update Source Archive"
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - # Make sure there are no unstaged changes
+      - name: Update AutoRevision
+        # Make sure there are no unstaged changes
         # Was reporting changes to eol=crlf files in .gitattributes
-        run: git checkout -- .
-      - run: git rev-parse --short=5 HEAD > cmake/AutoRevision.txt
-      - run: git describe --tags `git rev-list --tags --max-count=1` >> cmake/AutoRevision.txt
-      - run: cat cmake/AutoRevision.txt
+        run: |
+          git config --global --add safe.directory ${{ github.workspace }}
+          git checkout -- .
+          git rev-parse --short=5 HEAD > cmake/AutoRevision.txt
+          git describe --tags `git rev-list --tags --max-count=1` >> cmake/AutoRevision.txt
+          cat cmake/AutoRevision.txt
       - name: Make build directory
         run: mkdir -p -v $PWD/build
       - name: Create tar.gz
@@ -89,29 +97,18 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install \
-            cmake \
-            ninja-build \
-            gettext \
-            qtbase5-dev \
-            libqt5svg5-dev \
-            libkf5archive-dev \
-            liblua5.3-dev \
-            libsqlite3-dev \
-            libsdl2-mixer-dev
       - name: Configure
         run: |
-          mkdir -p build/snap/local
-          cmake . -B build -G Ninja
-          cp data/icons/128x128/freeciv21-client.png build/snap/local
-      - uses: snapcore/action-build@v1
+          mkdir -vp build/snap/local
+          cp -v data/icons/128x128/freeciv21-client.png build/snap/local
+          cp -v dist/snapcraft.yaml build/snap
+      - name: Build
+        uses: snapcore/action-build@v1
         id: snapcraft
         with:
           path: build
-      - uses: snapcore/action-publish@v1
+      - name: Publish to Snap Store
+        uses: snapcore/action-publish@v1
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
         with:
