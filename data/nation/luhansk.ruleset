@@ -4,7 +4,7 @@ name=_("Luhansk")
 plural=_("?plural:Luhansk")
 groups= "Modern", "European"
 legend=_("The Luhansk People's Republic is an unrecognised republic\
- of Russia in the occupied parts of eastern Ukraine's Luhansk Oblast\
+ of Russia in the occupied parts of eastern Ukraine's Luhansk Oblast.\
  The LPR was created by Russian-backed paramilitaries in 2014, and it\
  operated as a breakaway state until it was annexed by Russia in September\
  2022.")

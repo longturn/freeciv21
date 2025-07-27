@@ -6,7 +6,7 @@ groups="Modern", "European"
 legend=_("The Donetsk People's Republic is an unrecognised republic of\
  Russia in the occupied parts of eastern Ukraine's Donetsk Oblast. It was\
  created by Russian-backed paramilitaries in 2014, and it initially\
- operated as a breakaway state Until it was annexed by Russia in 2022.")
+ operated as a breakaway state until it was annexed by Russia in 2022.")
 ; Legend from: https://en.wikipedia.org/wiki/Donetsk_People%27s_Republic
 leaders = {
  "name",                          "sex"

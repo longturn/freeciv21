@@ -4,8 +4,8 @@ name   = _("Louisianan")
 plural = _("?plural:Louisianans")
 groups = "American"
 legend = _("Louisiana is a state in the Deep South of the United\
- States of America known for its distinct French culture, and cuisine\
- on January 26, 1861, the state voted to seceed from the United States,\
+ States of America known for its distinct French culture, and cuisine.\
+ On January 26, 1861, the state voted to seceed from the United States,\
  existing independently for a short time until February 26, 1861\
  when it finally joined the Confederate States of America. The\
  state was formally admitted back into the union on July 9, 1868.")
