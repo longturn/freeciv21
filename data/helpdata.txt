@@ -229,9 +229,8 @@ advanced intelligence such as details of technology. Embassies are one-way, the 
 receives no benefit and once established, cannot be revoked.\
 "), _("\
 If you are in contact with another player, then you can arrange a diplomatic meeting. From the 'Nations and \
-Diplomacy' view, this is done by selecting the nation with whom you wish to meet and clicking 'Meet'. If the entry \
-under the embassy column is not blank and the other player is connected (or is a server AI) then a treaty \
-dialog will pop up.\
+Diplomacy' view, this is done by selecting the nation with whom you wish to meet and clicking 'Meet'. If currently \
+allowed by the game options, a treaty dialog will pop up.\
 "), _("\
 In this dialog you can negotiate an exchange of assets (maps, vision, advances, cities, or gold), embassies, \
 or relationship pacts such as a Cease-fire or Peace. The list of items that can be traded through diplomacy \
