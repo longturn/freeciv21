@@ -3,12 +3,12 @@
 name   = _("Northern Ireland")
 plural = _("?plural:Northern Irish")
 groups = "Modern", "European"
-legend=_("North Ireland is a part of the United Kingdom that occupies\
-the northeastern part of the island of Ireland. Northern Ireland has a\
-complex history of conflict and cooperation between the British unionists,\
-who want to remain in the U.K., and the Irish nationalists, who seek to\
-rejoin the Republic of Ireland. The 1998 Good Friday Agreement ended the\
-violent period known as 'The Troubles' and established a power-sharing\
+legend=_("North Ireland is a part of the United Kingdom that occupies \
+the northeastern part of the island of Ireland. Northern Ireland has a \
+complex history of conflict and cooperation between the British unionists, \
+who want to remain in the U.K., and the Irish nationalists, who seek to \
+rejoin the Republic of Ireland. The 1998 Good Friday Agreement ended the \
+violent period known as 'The Troubles' and established a power-sharing \
 government that gives both sides a say in the affairs of the region.")
 
 leaders = {

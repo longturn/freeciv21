@@ -3,10 +3,10 @@
 name=_("Saar Protectorate")
 plural=_("?plural:Saarlanders")
 groups="European"
-legend=_("The Saar Protectorate was a short-lived protectorate (1947–56)\
-partitioned from Germany after its defeat in World War II;\
-it was administered by the French Fourth Republic. On rejoining West Germany\
-in 1957, it became the smallest 'area state', the Saarland. It is named\
+legend=_("The Saar Protectorate was a short-lived protectorate (1947–56) \
+partitioned from Germany after its defeat in World War II; \
+it was administered by the French Fourth Republic. On rejoining West Germany \
+in 1957, it became the smallest 'area state', the Saarland. It is named \
 after the Saar River.")
 ;Legend from: https://en.wikipedia.org/wiki/Saar_Protectorate
 leaders = {
