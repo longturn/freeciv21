@@ -616,7 +616,7 @@ static struct command commands[] = {
         "lua file <script file>\n"
         "lua unsafe-file <script file>\n"
         "lua <script line> (deprecated)"),
-     N_("Evaluate a line of Freeciv21 script or a Freeciv script file in "
+     N_("Evaluate a line of Freeciv21 script or a Freeciv21 script file in "
         "the current game."),
      N_("The unsafe prefix runs the script in an instance separate from the "
         "ruleset. This instance doesn't restrict access to Lua functions "
