@@ -3,14 +3,14 @@
 name=_("Austria-Hungary")
 plural=_("?plural:Austro-Hungarians")
 groups="Modern", "European"
-legend=_("Austria-Hungary, also known as the Austro-Hungarian Empire and by other names,\
-was a constitutional union of the Empire of Austria and the Apostolic Kingdom of Hungary\
-that existed from 1867 to 1918, when it collapsed as a result of defeat in World War I.\
-The union was a result of the Compromise of 1867. It was ruled by the House of Habsburg,\
-and constituted the last phase in the constitutional evolution of the Habsburg Monarchy.\
-Following the 1867 reforms, the Austrian and the Hungarian states were co-equal within the\
-Empire. The Compromise required regular renewal, as did the customs union between the two\
-halves of the Empire. Foreign affairs and the military fell under joint control, but all\
+legend=_("Austria-Hungary, also known as the Austro-Hungarian Empire and by other names, \
+was a constitutional union of the Empire of Austria and the Apostolic Kingdom of Hungary \
+that existed from 1867 to 1918, when it collapsed as a result of defeat in World War I. \
+The union was a result of the Compromise of 1867. It was ruled by the House of Habsburg, \
+and constituted the last phase in the constitutional evolution of the Habsburg Monarchy. \
+Following the 1867 reforms, the Austrian and the Hungarian states were co-equal within the \
+Empire. The Compromise required regular renewal, as did the customs union between the two \
+halves of the Empire. Foreign affairs and the military fell under joint control, but all \
 other government faculties were divided between the respective states.")
 ; Legend from: https://en.wikipedia.org/wiki/Austria-Hungary
 
