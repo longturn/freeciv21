@@ -191,7 +191,7 @@ static std::vector<fc_shortcut> default_shortcuts()
       {SC_MAKE_UNIT_LINK, fc_shortcut::mouse, QKeySequence(),
        Qt::RightButton,
        Qt::ControlModifier | Qt::AltModifier | Qt::ShiftModifier,
-       _("Show link to unit")}};
+       _("Insert link to unit")}};
 }
 
 /**
