@@ -3,7 +3,7 @@
 name=_("Toki Ponan")
 plural=_("?plural:Toki Ponans")
 groups= "Imaginary"
-legend=_("Toki Pona is a conlang created by Sonja lang in 2001 which is\
+legend=_("Toki Pona is a conlang created by Sonja Lang in 2001 which is\
  notable for its extremely small size, consisting of 14 letters and anywhere\
  from 120 words to 137 words.")
 
