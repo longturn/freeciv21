@@ -1,13 +1,13 @@
-==========================
-Freeciv graphics materials
-==========================
+============================
+Freeciv21 graphics materials
+============================
 
 This directory contains material (such as 3D models) that was
 originally used to prepare some of the graphics distributed with
-Freeciv.
+Freeciv21.
 
 These files may be of use in preparing modified versions of those
-graphics, but they are not required to build Freeciv from source, and
+graphics, but they are not required to build Freeciv21 from source, and
 there is no automated process by which the distributed graphics can be
 rebuilt from these files; they are provided for reference.
 
