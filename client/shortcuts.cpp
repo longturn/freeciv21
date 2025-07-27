@@ -82,7 +82,7 @@ static std::vector<fc_shortcut> default_shortcuts()
       {SC_WAKEUP_SENTRIES, fc_shortcut::mouse, QKeySequence(),
        Qt::MiddleButton, Qt::ControlModifier, _("Wakeup sentries")},
       {SC_MAKE_LINK, fc_shortcut::mouse, QKeySequence(), Qt::RightButton,
-       Qt::ControlModifier | Qt::AltModifier, _("Show link to tile")},
+       Qt::ControlModifier | Qt::AltModifier, _("Insert link to tile")},
       {SC_PASTE_PROD, fc_shortcut::mouse, QKeySequence(), Qt::RightButton,
        Qt::ShiftModifier | Qt::ControlModifier, _("Paste production")},
       {SC_COPY_PROD, fc_shortcut::mouse, QKeySequence(), Qt::RightButton,
@@ -191,7 +191,7 @@ static std::vector<fc_shortcut> default_shortcuts()
       {SC_MAKE_UNIT_LINK, fc_shortcut::mouse, QKeySequence(),
        Qt::RightButton,
        Qt::ControlModifier | Qt::AltModifier | Qt::ShiftModifier,
-       _("Show link to unit")},
+       _("Insert link to unit")},
       {SC_MAP_EDITOR, fc_shortcut::keyboard,
        Qt::Key_E | Qt::ShiftModifier | Qt::ControlModifier, Qt::AllButtons,
        Qt::NoModifier, _("Open Map Editor")}};
