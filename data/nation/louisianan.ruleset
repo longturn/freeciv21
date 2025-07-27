@@ -41,9 +41,9 @@ leaders = {
 
 ruler_titles = {
  "government",      "male_title",         "female_title"
- "Despotism",       _("Demagouge %s"),    _("?female:Demagouge %s")
+ "Despotism",       _("Demagogue %s"),    _("?female:Demagogue %s")
  "Monarchy",        _("Kingfish %s"),     _("?female:Kingfish %s")    ; Huey Long´s nickname.
- "Republic",        _("Governeror %s"),   _("?female:Governeror %s")
+ "Republic",        _("Governor %s"),     _("?female:Governor %s")
  "Democracy",       _("Speaker %s"),      _("?female:Speaker %s")
  "Fundamentalism",  _("Reverend %s"),     _("?female:Reverend %s")
 }
