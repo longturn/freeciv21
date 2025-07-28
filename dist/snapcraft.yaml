@@ -36,16 +36,16 @@ issues: https://github.com/longturn/freeciv21/issues/new/choose
 confinement: strict
 compression: lzo
 
-# The base snap is the execution environment and is based on Ubuntu 24.04
-#  running in an LXD virtual machine
-base: core24
+# The base snap is the execution environment and is based on Ubuntu 22.04
+# running in an LXD virtual machine
+base: core22
 
 # Assummes 'snapcraft' is called from a directory above the snap directory
-#  and the file was copied from <source_dir>/data/icons/128x128
+# and the file was copied from <source_dir>/data/icons/128x128
 icon: snap/local/freeciv21-client.png
 
-platforms:
-  amd64:
+architectures:
+  - build-on: amd64
 
 parts:
   freeciv21:
@@ -57,7 +57,6 @@ parts:
     cmake-parameters:
       - -DCMAKE_INSTALL_PREFIX=/usr
       - -DCMAKE_BUILD_TYPE=Release
-    # Qt and KDE Libraries are in the build snap so we don't need to install them.
     build-packages:
       - git
       - cmake
@@ -68,54 +67,31 @@ parts:
       - liblua5.3-dev
       - libsqlite3-dev
       - libsdl2-mixer-dev
+      - qtbase5-dev
+      - libqt5svg5-dev
+      - libkf5archive-dev
       - libmagickwand-dev
-    build-snaps:
-      - kf5-core24
-    #packages/libraries needed at run time
+    # Packages/libraries needed at run time
     stage-packages:
       - liblua5.3-0
       - libsdl2-2.0-0
       - libsdl2-mixer-2.0-0
       - libsqlite3-0
-      - perl
-      - perl-base
-      - locales
     parse-info:
       - usr/share/metainfo/net.longturn.freeciv21.metainfo.xml
-    # We need to include a file called locale-gen that comes from the KDE Neon extension in the build
-    # snap for NLS. We also have to edit the file so we include where strict perl module resides.
-    # We also remove some libraries that aren't needed and shown by the prime step linter.
-    # We finish the stage process with 'craftctl default' so all the regular stage steps are performed.
     override-stage: |
-      mkdir -p ${CRAFT_PROJECT_DIR}/../parts/freeciv21/install/snap/command-chain
-      cp ${CRAFT_PROJECT_DIR}/../../snap/snapcraft/current/share/snapcraft/extensions/desktop/kde-neon/locale-gen ${CRAFT_PROJECT_DIR}/../parts/freeciv21/install/snap/command-chain
-      sed --in-place 's/perl/perl -I \/snap\/freeciv21\/current\/usr\/share\/perl\/5\.38\.2/' ${CRAFT_PROJECT_DIR}/../parts/freeciv21/install/snap/command-chain/locale-gen
-      rm ${CRAFT_PROJECT_DIR}/../parts/freeciv21/install/usr/lib/x86_64-linux-gnu/libicuio.so.74.2
-      rm ${CRAFT_PROJECT_DIR}/../parts/freeciv21/install/usr/lib/x86_64-linux-gnu/libicutu.so.74.2
-      rm ${CRAFT_PROJECT_DIR}/../parts/freeciv21/install/usr/lib/x86_64-linux-gnu/libicutest.so.74.2
+      rm ${CRAFT_PROJECT_DIR}/../parts/freeciv21/install/usr/lib/libopusurl.so.0.4.2
       rm ${CRAFT_PROJECT_DIR}/../parts/freeciv21/install/usr/lib/x86_64-linux-gnu/libjacknet.so.0.1.0
       rm ${CRAFT_PROJECT_DIR}/../parts/freeciv21/install/usr/lib/x86_64-linux-gnu/libjackserver.so.0.1.0
       rm ${CRAFT_PROJECT_DIR}/../parts/freeciv21/install/usr/lib/x86_64-linux-gnu/liblua5.3-c++.so.0.0.0
-      rm ${CRAFT_PROJECT_DIR}/../parts/freeciv21/install/usr/lib/x86_64-linux-gnu/libopusurl.so.0.4.5
+      rm ${CRAFT_PROJECT_DIR}/../parts/freeciv21/install/usr/lib/x86_64-linux-gnu/libsamplerate.so.0.2.2
       craftctl default
-
-# Ensure NLS knows where our translations are located.
-layout:
-  /usr/share/locale:
-    bind: $SNAP/usr/share/locale
-  /usr/lib/locale:
-    bind: $SNAP/usr/share/locale
 
 apps:
   freeciv21-client:
     common-id: net.longturn.freeciv21
     desktop: usr/share/applications/net.longturn.freeciv21.desktop
     command: usr/bin/freeciv21-client
-    command-chain:
-      - snap/command-chain/desktop-launch
-    environment:
-      LOCPATH: $SNAP/usr/share/locale$LOCPATH
-      XLOCALEDIR: $SNAP/usr/share/locale$XLOCALEDIR
     extensions:
       - kde-neon
     plugs:
@@ -126,11 +102,6 @@ apps:
     common-id: net.longturn.freeciv21.server
     desktop: usr/share/applications/net.longturn.freeciv21.server.desktop
     command: usr/bin/freeciv21-server
-    command-chain:
-      - snap/command-chain/desktop-launch
-    environment:
-      LOCPATH: $SNAP/usr/share/locale$LOCPATH
-      XLOCALEDIR: $SNAP/usr/share/locale$XLOCALEDIR
     extensions:
       - kde-neon
     plugs:
@@ -141,11 +112,6 @@ apps:
     common-id: net.longturn.freeciv21.modpack-qt
     desktop: usr/share/applications/net.longturn.freeciv21.modpack.desktop
     command: usr/bin/freeciv21-modpack-qt
-    command-chain:
-      - snap/command-chain/desktop-launch
-    environment:
-      LOCPATH: $SNAP/usr/share/locale$LOCPATH
-      XLOCALEDIR: $SNAP/usr/share/locale$XLOCALEDIR
     extensions:
       - kde-neon
     plugs:
@@ -155,11 +121,6 @@ apps:
     common-id: net.longturn.freeciv21.ruledit
     desktop: usr/share/applications/net.longturn.freeciv21.ruledit.desktop
     command: usr/bin/freeciv21-ruledit
-    command-chain:
-      - snap/command-chain/desktop-launch
-    environment:
-      LOCPATH: $SNAP/usr/share/locale$LOCPATH
-      XLOCALEDIR: $SNAP/usr/share/locale$XLOCALEDIR
     extensions:
       - kde-neon
     plugs:
