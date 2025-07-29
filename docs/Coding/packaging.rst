@@ -37,8 +37,8 @@ Here are some useful Qt and KDE Links:
 We provide native packages via GitHub Actions for the following platforms:
 
 * Debian and its variants via CMake's CPack system.
-* Windows via MSYS2 emulation and CMake's CPack system with NSIS integration.
-* macOS via `vcpkg` and a macOS utility called ``create-dmg`` to create an application bundle.
+* Microsoft Windows |reg| via MSYS2 emulation and CMake's CPack system with NSIS integration.
+* Apple macOS |reg| via `vcpkg` and a macOS utility called ``create-dmg`` to create an application bundle.
 
 We also provide Linux containerized packages for `snap` and `flatpak`. The Ubuntu world favors `snap` and the
 Fedora/Red Hat world favors `flatpak`.
@@ -56,8 +56,8 @@ it is not dependent on the base image.
 Debian Package
 ==============
 
-The Debian package is straight forward. A :file:`.deb` package is effectively a compressed archive with some
-configuration settings in plain text files. More information is available at the Debian WiKi:
+The Debian package is straightforward. A :file:`.deb` package is effectively a compressed archive with some
+configuration settings in plain text files. More information is available at the Debian Wiki:
 https://wiki.debian.org/Packaging
 
 CPack does all the work. We simply tell the packaging tool what our specific needs are and the tool does all
@@ -76,7 +76,7 @@ CMake's CPack extension natively supports NSIS packages. As with Debian, we use 
 to define the base parameters of the installation. Lastly we have a template file
 :file:`cmake/NSIS.template.in` that CPack uses to build the installer.
 
-We also include some files to improve support for windows:
+We also include some files to improve support for Windows:
 
 * :file:`dist/windows/freeciv21-server.cmd`: The server needs some environment variables set to run correctly
   on Windows, so we include with the package.
@@ -86,7 +86,7 @@ We also include some files to improve support for windows:
 macOS Package
 =============
 
-Apple |reg| uses a compressed file called an "Application Bundle" to install applications. CMake CPack does
+Apple uses a compressed file called an "Application Bundle" to install applications. CMake CPack does
 not support building a bundle natively so we rely on a tool provided by Apple to do it ourselves.
 
 The main build steps are noted above. A key file in establishing the macOS package is :file:`dist/Info.plist`.
@@ -115,13 +115,13 @@ package library stability we expect for our stable releases.
 For ``master`` we are using the base ``core24``, which is Ubuntu 24.04. Since Ubuntu 24.04 LTS does not have
 the newer KDE Frameworks 6 libraries we need, we source from a snap that KDE maintains: ``kf6-core24``.
 
-Since the whole ``snarcraft`` setup is itself an emulation layer, you cannot build snaps inside of a Docker
+Since the whole ``snapcraft`` setup is itself an emulation layer, you cannot build snaps inside of a Docker
 container. This means we cannot use the same process that we use for the Debian package, which is fine for us,
 as we get everything we need from the team over at KDE.
 
 :strong:`Snap Notes, Tips and Tricks`
 
-The straight forward build steps are like this. Let us start with installing the base packages we need:
+The straightforward build steps are like this. Let us start with installing the base packages we need:
 
 .. code-block:: sh
 
@@ -156,7 +156,7 @@ You may run into trouble when running ``snapcraft`` to build the package. Here a
   to look at where files are being stored (in this example the `stage` step), evaluate environment variables
   and generally try to troubleshoot any error messages you are getting.
 
-* If you are doing a lot of runs of ``snapcraft`` during development, it is good to start with a clean slate.
+* If you are doing a lot of runs of ``snapcraft`` during development, it is good to start with a clean state.
   You can clean the environment with: ``sudo snapcraft clean``.
 
 * You can run the snap in a shell as well to troubleshoot with ``snap run --shell freeciv21.freeciv21-client``.
@@ -164,7 +164,7 @@ You may run into trouble when running ``snapcraft`` to build the package. Here a
 As it relates to Natural Language Support (NLS), snap has some challenges. In the ``stable`` environment, NLS
 is not enabled and is not well supported by either the ``core22`` or ``core24`` bases alone. The KDE provided
 ``kf5-core22`` or ``kf5-core24`` build snaps attempt to get NLS working, but there are upstream bugs in the
-setup of a snap launch system call a ``command-chain``.  The good news is this is all fixed in the development
+setup of a snap launch system called a ``command-chain``.  The good news is this is all fixed in the development
 side in the ``master`` branch. With the ``core24`` base and the KDE provided ``kf6-core24`` build snap, NLS
 works as expected. The Freeciv21 developers will keep and eye on the ``stable`` side to see if any upstream
 improvements are pushed periodically to see if we can get NLS to work there.
