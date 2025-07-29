@@ -4,19 +4,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 #
-# Build Steps:
-#   - sudo apt install snapd (run once to install -- fedora's dnf is similar)
-#   - sudo snap install lxd (run once to install)
-#   - sudo lxd init --auto (run once to install)
-#   - sudo snap install snapcraft --classic (run once to install)
-#   - mkdir -p build/snap/local
-#   - cp data/icons/128x128/freeciv21-client.png build/snap/local
-#   - cp dist/snapcraft.yaml build
-#   - cd build
-#   - sudo snapcraft
-#   - sudo snap install --devmode ./freeciv21_*.snap (sudo snap remove freeciv21)
-#   - snapcraft upload --release=latest/edge ./freeciv21_*.snap
-#
 ##########
 
 name: freeciv21
