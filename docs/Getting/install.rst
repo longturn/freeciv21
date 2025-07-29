@@ -86,6 +86,9 @@ To install the macOS ``.dmg`` package, you start by double-clicking the file to 
 game to your Applications folder, or a place of your choosing. When finished, unmount the package.
 
 .. note::
+  You must have at least macOS Ventura (13.x) installed on your device.
+
+.. note::
   In newer versions of macOS, you may get an error message when trying to mount the package: "Freeciv21.app is
   damaged and can't be opened." You will need to adjust the security settings on your computer. Here are some
   website links to help:
