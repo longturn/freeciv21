@@ -412,7 +412,7 @@ jobs:
   snapcraft:
     name: "Snap Package"
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    needs: clang-format
     steps:
       - name: Checkout
         uses: actions/checkout@v4
