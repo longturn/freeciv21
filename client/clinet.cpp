@@ -146,9 +146,8 @@ static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
     QLocalSocket *sock = new QLocalSocket;
     client.conn.sock = sock;
     QObject::connect(sock, &QLocalSocket::errorOccurred, &error_on_socket);
-    QObject::connect(
-        sock, &QLocalSocket::disconnected,
-        [userName = url.userName()] { client.conn.used = false; });
+    QObject::connect(sock, &QLocalSocket::disconnected,
+                     [] { client.conn.used = false; });
     sock->connectToServer(url.path());
 
     if (!sock->waitForConnected(10000)) {
