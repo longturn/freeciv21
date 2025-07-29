@@ -262,10 +262,8 @@ bool client_start_server(const QString &user_name)
   url.setPath(uuid);
 
   // a reasonable number of tries
-  while (connect_to_server(
-             url, buf,
-             sizeof(buf) && serverProcess::i()->state() == QProcess::Running)
-         == -1) {
+  while (serverProcess::i()->state() == QProcess::Running
+         && connect_to_server(url, buf, sizeof(buf)) == -1) {
     fc_usleep(WAIT_BETWEEN_TRIES);
     if (connect_tries++ > NUMBER_OF_TRIES) {
       qCritical("Last error from connect attempts: '%s'", buf);
