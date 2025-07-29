@@ -18,4 +18,5 @@ architected.
   logging.rst
   network-protocol.rst
   scorelog.rst
+  packaging.rst
   :maxdepth: 1
