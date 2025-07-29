@@ -160,6 +160,15 @@ void client_kill_server(bool force)
        * server.  In this case we don't want to kill it. */
       send_chat("/quit");
       server_quitting = true;
+
+      // Give it 10s to end gracefully. Note that we're blocking the UI!
+      if (!serverProcess::i()->waitForFinished(10000)) {
+        // Or kill
+        serverProcess::i()->deleteLater();
+        server_quitting = false;
+        // And give it some more time
+        serverProcess::i()->waitForFinished(1000);
+      }
     } else if (force) {
       /* Either we already disconnected, or we didn't get control of the
        * server. In either case, the only thing to do is a "hard" kill of
