@@ -73,12 +73,16 @@ These are the general steps to prepare and finalize a release:
       ``master``. This way, development builds from ``master`` will immediately use the version number of the
       next stable until we release a new unstable release.
 
+#. The release manager will update the GitHub ``STORE_SECRETS`` secret for the snap package. Refer to
+   :doc:`/Coding/packaging` for more information. It is :strong:`very important` to do this step just before
+   the release is committed to GitHub as it does expire after some time.
+
 #. If the release is a :strong:`release candidate` for a :strong:`stable release`, the release manager will
    make sure that the :guilabel:`Target` branch in the release draft is set to ``stable``.
 
 #. The release manager will add a tag to the release notes page and then click :guilabel:`Publish Release`.
    The format of the tag is ``v[major version].[minor version]-[release name].[number]``. For example:
-   ``v3.0-patch.5`` or ``v3.1-rc.1``. :strong:`The format is very important` to the build configuration
+   ``v3.0-patch.5`` or ``v3.1-rc.3``. :strong:`The format is very important` to the build configuration
    process.
 
 #. After a few minutes the continuous integration (CI) will open a PR titled
