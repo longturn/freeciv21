@@ -27,8 +27,8 @@ compression: lzo
 # supports Qt6 and runs in an LXD virtual machine
 base: core24
 
-# Assummes 'snapcraft' is called from a directory above the snap directory
-#  and the file was copied from <source_dir>/data/icons/128x128
+# Assumes 'snapcraft' is called from a directory above the snap directory
+# and the file was copied from <source_dir>/data/icons/128x128
 icon: snap/local/freeciv21-client.png
 
 platforms:
@@ -87,8 +87,17 @@ parts:
       - libsqlite3-0
     parse-info:
       - usr/share/metainfo/net.longturn.freeciv21.metainfo.xml
+    override-stage: |
+      rm ${CRAFT_PROJECT_DIR}/../parts/freeciv21/install/usr/lib/x86_64-linux-gnu/libicuio.so.74.2
+      rm ${CRAFT_PROJECT_DIR}/../parts/freeciv21/install/usr/lib/x86_64-linux-gnu/libicutu.so.74.2
+      rm ${CRAFT_PROJECT_DIR}/../parts/freeciv21/install/usr/lib/x86_64-linux-gnu/libicutest.so.74.2
+      rm ${CRAFT_PROJECT_DIR}/../parts/freeciv21/install/usr/lib/x86_64-linux-gnu/libjacknet.so.0.1.0
+      rm ${CRAFT_PROJECT_DIR}/../parts/freeciv21/install/usr/lib/x86_64-linux-gnu/libjackserver.so.0.1.0
+      rm ${CRAFT_PROJECT_DIR}/../parts/freeciv21/install/usr/lib/x86_64-linux-gnu/liblua5.3-c++.so.0.0.0
+      rm ${CRAFT_PROJECT_DIR}/../parts/freeciv21/install/usr/lib/x86_64-linux-gnu/libopusurl.so.0.4.5
+      craftctl default
 
-# Ensure NLS support knows where our translations are located.
+# Ensure NLS knows where our translations are located.
 layout:
   /usr/share/locale:
     bind: $SNAP/usr/share/locale
