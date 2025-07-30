@@ -9,6 +9,7 @@
                   see https://www.gnu.org/licenses/.
  */
 // utility
+#include "map_types.h"
 #include "rand.h"
 
 // common
@@ -207,18 +208,33 @@ void make_pseudofractal_hmap()
 
   /*
    * How many blocks should the x and y directions be divided into
-   * initially.
+   * initially? This depends on how many islands we want.
+   *
+   * 6 works well to create a single continent. Lines below increase it
+   * depending on startpos.
+   * TODO: It would make sense to expose this to the user instead of trying
+   * to guess what they want.
    */
-  const int extra_div = 1
-                        + ((MAPSTARTPOS_DEFAULT == wld.map.server.startpos
-                            || MAPSTARTPOS_ALL == wld.map.server.startpos)
-                               ? 0
-                               : player_count());
-  const int xdiv = 5 + extra_div;
-  const int ydiv = 5 + extra_div;
+  int div = 6;
+  switch (wld.map.server.startpos) {
+  case MAPSTARTPOS_ALL:
+  case MAPSTARTPOS_DEFAULT:
+    // One big island
+    break;
+  case MAPSTARTPOS_VARIABLE:
+    // Encourage a few more islands
+    div += 5;
+    break;
+  case MAPSTARTPOS_2or3:
+    div += player_count() / 2;
+    break;
+  case MAPSTARTPOS_SINGLE:
+    div += player_count();
+    break;
+  }
 
-  int xdiv2 = xdiv + (xnowrap ? 1 : 0);
-  int ydiv2 = ydiv + (ynowrap ? 1 : 0);
+  int xdiv2 = div + (xnowrap ? 1 : 0);
+  int ydiv2 = div + (ynowrap ? 1 : 0);
 
   int xmax = wld.map.xsize - (xnowrap ? 1 : 0);
   int ymax = wld.map.ysize - (ynowrap ? 1 : 0);
@@ -236,8 +252,8 @@ void make_pseudofractal_hmap()
   // set initial points
   for (x_current = 0; x_current < xdiv2; x_current++) {
     for (y_current = 0; y_current < ydiv2; y_current++) {
-      do_in_map_pos(&(wld.map), ptile, (x_current * xmax / xdiv),
-                    (y_current * ymax / ydiv))
+      do_in_map_pos(&(wld.map), ptile, (x_current * xmax / div),
+                    (y_current * ymax / div))
       {
         // set initial points
         hmap(ptile) = fc_rand(2 * step) - (2 * step) / 2;
@@ -257,10 +273,10 @@ void make_pseudofractal_hmap()
   }
 
   // calculate recursively on each block
-  for (x_current = 0; x_current < xdiv; x_current++) {
-    for (y_current = 0; y_current < ydiv; y_current++) {
-      gen5rec(step, x_current * xmax / xdiv, y_current * ymax / ydiv,
-              (x_current + 1) * xmax / xdiv, (y_current + 1) * ymax / ydiv);
+  for (x_current = 0; x_current < div; x_current++) {
+    for (y_current = 0; y_current < div; y_current++) {
+      gen5rec(step, x_current * xmax / div, y_current * ymax / div,
+              (x_current + 1) * xmax / div, (y_current + 1) * ymax / div);
     }
   }
 
