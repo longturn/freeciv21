@@ -83,6 +83,8 @@ public:
                     const tile_corner *pcorner,
                     const unit *punit) const override;
 
+  void reset_ruleset() override;
+
 private:
   matching_group *group(const QString &name);
 
