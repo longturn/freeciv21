@@ -37,7 +37,8 @@ confinement: strict
 compression: lzo
 
 # The base snap is the execution environment and is based on Ubuntu 22.04
-# running in an LXD virtual machine
+# running in an LXD virtual machine. The kde-neon extension is broken on
+# Ubuntu 24.04.
 base: core22
 
 # Assummes 'snapcraft' is called from a directory above the snap directory
@@ -67,18 +68,22 @@ parts:
       - liblua5.3-dev
       - libsqlite3-dev
       - libsdl2-mixer-dev
+      - libmagickwand-dev
       - qtbase5-dev
       - libqt5svg5-dev
       - libkf5archive-dev
-      - libmagickwand-dev
     # Packages/libraries needed at run time
+    # libxcb-shape0 is for some environments, the prime linter may show it's
+    # not needed but that is false.
     stage-packages:
       - liblua5.3-0
       - libsdl2-2.0-0
       - libsdl2-mixer-2.0-0
       - libsqlite3-0
+      - libxcb-shape0
     parse-info:
       - usr/share/metainfo/net.longturn.freeciv21.metainfo.xml
+    # We remove some libraries that we don't need before the prime step.
     override-stage: |
       rm ${CRAFT_PROJECT_DIR}/../parts/freeciv21/install/usr/lib/libopusurl.so.0.4.2
       rm ${CRAFT_PROJECT_DIR}/../parts/freeciv21/install/usr/lib/x86_64-linux-gnu/libjacknet.so.0.1.0
@@ -98,6 +103,8 @@ apps:
       - home
       - network
       - audio-playback
+      - x11
+      - wayland
   freeciv21-server:
     common-id: net.longturn.freeciv21.server
     desktop: usr/share/applications/net.longturn.freeciv21.server.desktop
@@ -117,6 +124,8 @@ apps:
     plugs:
       - home
       - network
+      - x11
+      - wayland
   freeciv21-ruledit:
     common-id: net.longturn.freeciv21.ruledit
     desktop: usr/share/applications/net.longturn.freeciv21.ruledit.desktop
@@ -125,6 +134,8 @@ apps:
       - kde-neon
     plugs:
       - home
+      - x11
+      - wayland
 
 ##########
 # END snapcraft.yaml
