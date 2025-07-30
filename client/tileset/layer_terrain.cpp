@@ -749,6 +749,11 @@ layer_terrain::fill_sprite_array(const tile *ptile, const tile_edge *pedge,
 }
 
 /**
+ * \implements layer::reset_ruleset
+ */
+void layer_terrain::reset_ruleset() { m_terrain_info.clear(); }
+
+/**
  * Retrieves the group structure of the provided name.
  * \param name The name to look for.
  * \returns The terrain group structure, or `nullptr` on failure.
