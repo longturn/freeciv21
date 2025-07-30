@@ -194,6 +194,15 @@ Finally set ``startpos "ALL"``.
 If you want more ocean or poles, you can reduce the ``landmass`` setting and add poles with the recipe above.
 Longturn games use a ``landmass`` setting of ``40`` with poles for many games.
 
+:strong:`Recipe: Multiple continents with players distributed randomly`
+
+To create a map with several populated continents, use the ``FRACTAL`` generator
+and set ``startpos`` to ``VARIABLE``. You may get different results dpeending on
+``landmass``: around 30 (Earth-like) is a good compromise. Larger values will
+merge continents, smaller values will create more islands farther apart. We
+suggest using ``mapsize "PLAYER"`` to keep the number of tiles per player
+constant while experimenting.
+
 :strong:`Recipe: An archipelago with players on their own island`
 
 To create an archipelago and start each player on their own island, begin with the navigable poles on the map
