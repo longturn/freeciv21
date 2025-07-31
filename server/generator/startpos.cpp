@@ -15,16 +15,15 @@
 #include <cmath> // sqrt, HUGE_VAL
 
 // utility
+#include "distribute.h"
 #include "fcintl.h"
 #include "log.h"
 
 // common
 #include "game.h"
 #include "map.h"
+#include "map_types.h"
 #include "movement.h"
-
-// server
-#include "maphand.h"
 
 /* server/generator */
 #include "mapgen_utils.h"
@@ -467,27 +466,45 @@ bool create_start_positions(enum map_startpos mode,
     }
 
     // set starters per isle
-    if (MAPSTARTPOS_ALL == mode) {
+    switch (mode) {
+    case MAPSTARTPOS_ALL:
       islands[1].starters = to_place;
       islands[1].total = to_place;
       to_place = 0;
-    }
-    for (nr = 1; nr <= wld.map.num_continents; nr++) {
-      if (MAPSTARTPOS_SINGLE == mode && 0 < to_place && nr >= first) {
-        islands[nr].starters = 1;
-        islands[nr].total = 1;
-        to_place--;
+      break;
+    case MAPSTARTPOS_SINGLE:
+      for (nr = 1; nr <= wld.map.num_continents; nr++) {
+        if (0 < to_place && nr >= first) {
+          islands[nr].starters = 1;
+          islands[nr].total = 1;
+          to_place--;
+        }
       }
-      if (MAPSTARTPOS_2or3 == mode && 0 < to_place && nr >= first) {
-        islands[nr].starters = 2 + (nr == 1 ? (player_count() % 2) : 0);
-        to_place -= islands[nr].total = islands[nr].starters;
+      break;
+    case MAPSTARTPOS_2or3:
+      for (nr = 1; nr <= wld.map.num_continents; nr++) {
+        if (0 < to_place && nr >= first) {
+          islands[nr].starters = 2 + (nr == 1 ? (player_count() % 2) : 0);
+          to_place -= islands[nr].total = islands[nr].starters;
+        }
       }
-
-      if (MAPSTARTPOS_VARIABLE == mode && 0 < to_place) {
-        islands[nr].starters =
-            MAX(1, islands[nr].goodies / MAX(1, min_goodies_per_player));
-        to_place -= islands[nr].total = islands[nr].starters;
+      break;
+    case MAPSTARTPOS_VARIABLE: {
+      // Use the distribute() function to split goodies as fairly as possible
+      std::vector<int> ratios;
+      ratios.reserve(wld.map.num_continents);
+      for (nr = 1; nr <= wld.map.num_continents; nr++) {
+        ratios.push_back(islands[nr].goodies);
       }
+      std::vector<int> result(wld.map.num_continents);
+      distribute(player_count(), wld.map.num_continents, ratios.data(),
+                 result.data());
+      for (nr = 1; nr <= wld.map.num_continents; nr++) {
+        islands[nr].total = islands[nr].starters = result[nr - 1];
+      }
+    } break;
+    case MAPSTARTPOS_DEFAULT:
+      fc_assert(mode != MAPSTARTPOS_DEFAULT);
     }
   }
 
