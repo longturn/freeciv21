@@ -1447,7 +1447,8 @@ sound		= "w_lighthouse"
 sound_alt	= "w_generic"
 helptext	= _("\
 Gives all your sea units 1 additional movement point. Makes all your\
- new military sea units veterans (for all cities).\
+ new military sea units veterans (for all cities). Triremes no\
+ longer get lost away from shore.\
 ")
 
 [building_magellans_expedition]

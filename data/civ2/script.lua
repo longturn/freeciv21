@@ -41,16 +41,16 @@ function unsafe_away_from_coast(unit)
   log.debug("Rolled a %d", roll)
   if roll == 1 then
     log.debug("Lost at sea")
-    notify.event(unit.owner, unit.tile, E.UNIT_LOST_MISC, 
+    notify.event(unit.owner, unit.tile, E.UNIT_LOST_MISC, _(
       "Your %s has been lost at sea. This kind of vessel may disappear " .. 
-      "forever if not adjacent to land at the end of a turn.", 
+      "forever if not adjacent to land at the end of a turn."), 
       unit.utype:name_translation())
     unit:kill("hp_loss")
   else
     log.debug("Survived")
-    notify.event(unit.owner, unit.tile, E.UNIT_ORDERS, "Your %s was lucky " ..
+    notify.event(unit.owner, unit.tile, E.UNIT_ORDERS, _("Your %s was lucky " ..
       "and managed to weather the rough seas this time. This kind of vessel " ..
-      "may disappear forever if not adjacent to land at the end of a turn.",
+      "may disappear forever if not adjacent to land at the end of a turn."),
       unit:link_text())
   end
 end
