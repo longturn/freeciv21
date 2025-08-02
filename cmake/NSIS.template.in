@@ -41,6 +41,7 @@
 ; Includes
 ;#########################################################
 
+  !include "FileFunc.nsh"
   !include "MUI2.nsh"
   !include "MultiUser.nsh"
   !include "LogicLib.nsh"
@@ -65,6 +66,27 @@
 
   ; Shown an "are you sure" dialog on cancel.
   !define MUI_ABORTWARNING
+
+;#########################################################
+; Pre-installation steps
+;#########################################################
+
+  ; We lookup to see if there is a previous installation and remove if found
+  ; This code is run right before installing
+  Section
+    ReadRegStr $0 "SHCTX" "${REGPATH_UNINSTSUBKEY}" "UninstallString"
+    ${If} $0 != ""
+      ; Get path to old install folder
+      ${GetParent} "$0" $1
+      ; Call silent uninstall in old install folder
+      ; Passing _?= forces synchronous mode, see:
+      ; https://nsis.sourceforge.io/When_I_use_ExecWait_uninstaller.exe_it_doesn%27t_wait_for_the_uninstaller%3F
+      ExecWait '"$0" /S _?=$1'
+      ; The uninstaller cannot delete itself synchronously, so give a little help
+      Delete "$0" ; Uninstaller
+      RMDir "$1"  ; Old install folder
+    ${EndIf}
+  SectionEnd
 
 ;#########################################################
 ; Installation types
@@ -165,24 +187,14 @@
     ${EndIf}
   !macroend
 
-  !macro UninstallExisting
-    Call UninstallExisting
-  !macroend
-
 ;#########################################################
-; Funtions
+; Functions
 ;#########################################################
 
   Function .onInit
     SetShellVarContext All
     !insertmacro MULTIUSER_INIT
     !insertmacro CheckAdminRights
-
-    ; We lookup to see if there is a previous installation and remove if found
-    ReadRegStr $0 "SHCTX" "${REGPATH_UNINSTSUBKEY}" "UninstallString"
-    ${If} $0 != ""
-      !insertmacro UninstallExisting
-    ${EndIf}
   FunctionEnd
 
   Function un.onInit
@@ -200,12 +212,6 @@
 
   Function RunFreeciv21
     ExecShell "" "$SMPROGRAMS\${APPNAME}\${APPNAME}.lnk"
-  FunctionEnd
-
-  Function UninstallExisting
-    ReadRegStr $0 "SHCTX" "${REGPATH_UNINSTSUBKEY}" "UninstallString"
-    ; Call silent uninstall
-    ExecWait '"$0" /S'
   FunctionEnd
 
 ;#########################################################
