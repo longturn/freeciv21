@@ -1470,7 +1470,9 @@ roles         = "Ferryboat", "FerryStartUnit"
 helptext      = _("\
 The Trireme is your first boat unit. It can act\
  as a transport ship and has rudimentary offensive\
- capabilities, but may not stray too far from the shore.\
+ capabilities. If it ends its turn away from shore, it has a 1/2\
+ chance of sinking. This is reduced to 1/3 after Seafaring, 1/4\
+ after Navigation, and eliminated by the Lighthouse wonder.\
 ")
 
 [unit_caravel]
