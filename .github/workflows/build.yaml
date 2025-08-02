@@ -194,26 +194,32 @@ jobs:
           name: Windows-exe
           path: build/Windows-x86_64/Freeciv21-*.exe
 
-#  windows_clang_msvc:
-#    name: "Windows Clang"
-#    runs-on: windows-latest
-#    needs: clang-format
-#    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-#    env:
-#      VCPKG_ROOT: ${{github.workspace}}/vcpkg
-#      VCPKG_DEFAULT_BINARY_CACHE: ${{github.workspace}}/vcpkg/bincache
-#    steps:
-#      - uses: actions/checkout@v4
-#        with:
-#          fetch-depth: 0
-#      - uses: lukka/run-vcpkg@v11
-#        name: Install dependencies
-#        with:
-#          vcpkgGitCommitId: b322364f06308bdd24823f9d8f03fe0cc86fd46f
-#      - name: Configure
-#        run: cmake -S . -B build --preset "windows-debug"
-#      - name: Building
-#        run: cmake --build build --config Debug
+  windows_clang_msvc:
+    name: "Windows Clang"
+    runs-on: windows-latest
+    needs: clang-format
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    env:
+      VCPKG_ROOT: ${{github.workspace}}/vcpkg
+      VCPKG_DEFAULT_BINARY_CACHE: ${{github.workspace}}/vcpkg/bincache
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install Dependencies
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: dd3097e305afa53f7b4312371f62058d2e665320
+      - name: Configure
+        run: |
+          cmake -S . --preset "windows-debug"
+      - name: Build
+        run: |
+          cmake --build build-vs --config Debug
+      - name: Test Install
+        run: |
+          cmake --build build-vs --target install
       #- name: Test
       #  run: cmake --build build --target test
 
@@ -247,7 +253,7 @@ jobs:
 #      - uses: lukka/run-vcpkg@v11
 #        name: Install dependencies
 #        with:
-#          vcpkgGitCommitId: b322364f06308bdd24823f9d8f03fe0cc86fd46f
+#          vcpkgGitCommitId: dd3097e305afa53f7b4312371f62058d2e665320
 #      - name: Build
 #        uses: lukka/run-cmake@v10
 #        with:
