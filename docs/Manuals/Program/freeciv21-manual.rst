@@ -7,8 +7,7 @@ freeciv21-manual
 SYNOPSIS
 ========
 
-``freeciv21-manual`` [ -l|--log `<FILE>` ] [ -r|--ruleset `<RULESET>` ] [ -w|--wiki ] [ -h|--help ]
-[ -v|--version ]
+``freeciv21-manual`` [ -l|--log `<FILE>` ] [ -r|--ruleset `<RULESET>` ] [ -h|--help ] [ -v|--version ]
 
 DESCRIPTION
 ===========
@@ -38,9 +37,6 @@ each option separately, such as, ``freevic21-manual -r civ2civ3 -w``.
 
 ``-r, --ruleset <RULESET>``
     Make manual for RULESET.
-
-``-w, --wiki``
-    Write manual in wiki format.
 
 ``-h, --help``
     Display help on command line options.

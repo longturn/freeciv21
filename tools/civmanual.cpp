@@ -17,7 +17,8 @@
 
 // Qt
 #include <QCommandLineParser>
-#include <QCoreApplication>
+#include <QGuiApplication>
+#include <QTextDocumentFragment>
 
 // utility
 #include "astring.h"
@@ -30,16 +31,13 @@
 // common
 #include "capstr.h"
 #include "connection.h"
-#include "events.h"
 #include "fc_interface.h"
 #include "fc_types.h" // LINE_BREAK
 #include "game.h"
 #include "government.h"
 #include "helpdata.h"
 #include "improvement.h"
-#include "map.h"
 #include "movement.h"
-#include "player.h"
 #include "tech.h"
 #include "version.h"
 
@@ -116,41 +114,21 @@ struct tag_types html_tags = {
     // tail
     "</body></html>"};
 
-struct tag_types wiki_tags = {
-    // file extension
-    "mediawiki",
-
-    // header
-    " ",
-
-    // title begin
-    "=",
-
-    // title end
-    "=",
-
-    // section title begin
-    "===",
-
-    // section title end
-    "===",
-
-    // item begin
-    "----\n<!-- %s %d -->\n",
-
-    // item end
-    "\n",
-
-    // subitem begin
-    "<!-- %s -->\n",
-
-    // subitem end
-    "\n",
-
-    // tail
-    " "};
-
 static QString ruleset;
+
+static QString markdown_to_html(QString(markdown))
+{
+  QTextDocumentFragment fragment =
+      QTextDocumentFragment::fromMarkdown(markdown);
+  QString html = fragment.toHtml();
+
+  // QTextDocumentFragment insists on providing complete HTML
+  // documents. Cut away the HTML boilerplate.
+  html = html.left(html.indexOf("</body>"));
+  html = html.right(html.length() - html.indexOf("<body>") - 6);
+
+  return html;
+}
 
 /**
    Write a server manual, then quit.
@@ -511,7 +489,8 @@ static bool manual_command(struct tag_types *tag_info)
         fprintf(doc, "<em>%s</em></td>\n",
                 obs_tech != nullptr ? advance_name_translation(obs_tech)
                                     : Q_("?tech:None"));
-        fprintf(doc, "<td>%s</td>\n</tr>\n\n", buf);
+        fprintf(doc, "<td>%s</td>\n</tr>\n\n",
+                qUtf8Printable(markdown_to_html(buf)));
       }
       improvement_iterate_end;
       fprintf(doc, "</table>");
@@ -533,7 +512,7 @@ static bool manual_command(struct tag_types *tag_info)
                 tag_info->sect_title_end);
         fprintf(doc, tag_info->subitem_begin, "helptext");
         helptext_government(buf, sizeof(buf), nullptr, nullptr, &pgov);
-        fprintf(doc, "%s\n\n", buf);
+        fprintf(doc, "%s\n\n", qUtf8Printable(markdown_to_html(buf)));
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, "%s", tag_info->item_end);
       };
@@ -591,7 +570,7 @@ static bool manual_command(struct tag_types *tag_info)
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, tag_info->subitem_begin, "helptext");
         helptext_unit(buf, sizeof(buf), nullptr, "", putype, nullptr);
-        fprintf(doc, "%s", buf);
+        fprintf(doc, "%s", qUtf8Printable(markdown_to_html(buf)));
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, "%s", tag_info->item_end);
       }
@@ -616,7 +595,7 @@ static bool manual_command(struct tag_types *tag_info)
           fprintf(doc, tag_info->subitem_begin, "helptext");
           helptext_advance(buf, sizeof(buf), nullptr, "", ptech->item_number,
                            nullptr);
-          fprintf(doc, "%s", buf);
+          fprintf(doc, "%s", qUtf8Printable(markdown_to_html(buf)));
           fprintf(doc, "%s", tag_info->subitem_end);
 
           fprintf(doc, "%s", tag_info->item_end);
@@ -647,8 +626,8 @@ int main(int argc, char **argv)
   int retval = EXIT_SUCCESS;
   struct tag_types *tag_info = &html_tags;
 
-  QCoreApplication app(argc, argv);
-  QCoreApplication::setApplicationVersion(freeciv21_version());
+  QGuiApplication app(argc, argv);
+  QGuiApplication::setApplicationVersion(freeciv21_version());
 
   init_nls();
 
@@ -672,7 +651,6 @@ int main(int argc, char **argv)
        _("Make manual for RULESET."),
        // TRANS: Command-line argument
        _("RULESET")},
-      {{"w", "wiki"}, _("Write manual in wiki format.")},
   });
   if (!ok) {
     qFatal("Adding command line arguments failed.");
@@ -697,9 +675,6 @@ int main(int argc, char **argv)
   }
   if (parser.isSet(QStringLiteral("log"))) {
     srvarg.log_filename = parser.value(QStringLiteral("log"));
-  }
-  if (parser.isSet(QStringLiteral("wiki"))) {
-    tag_info = &wiki_tags;
   }
 
   init_our_capability();
