@@ -28,6 +28,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QSet>
+#include <QThread> // Windows
 #include <QTimer>
 
 // utility
@@ -90,7 +91,7 @@ Q_GLOBAL_STATIC(QElapsedTimer, anim_timer);
 
 void anim_delay(int milliseconds)
 {
-#ifdef QT_OS_WIN
+#ifdef Q_OS_WIN
   // Workaround for #2567
   QThread::msleep(milliseconds);
 #else
