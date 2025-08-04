@@ -11,7 +11,7 @@
 #include "control.h"
 #include "effects.h"
 #include "movement.h"
-#include "sprite_g.h"
+#include "sprite.h"
 #include "tilespec.h"
 #include "views/view_map_common.h" // mapdeco
 

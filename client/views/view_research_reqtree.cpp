@@ -27,11 +27,11 @@
 // client
 #include "client_main.h"
 #include "options.h"
+#include "tileset/sprite.h"
 #include "tileset/tilespec.h"
 #include "views/view_research_reqtree.h"
 
 #include "colors_g.h"
-#include "sprite_g.h"
 
 // Qt
 #include <QPainter>

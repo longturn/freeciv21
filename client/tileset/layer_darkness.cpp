@@ -16,7 +16,7 @@
 #include "climap.h"
 #include "game.h"
 #include "map.h"
-#include "sprite_g.h"
+#include "sprite.h"
 #include "tilespec.h"
 
 namespace freeciv {

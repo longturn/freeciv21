@@ -50,7 +50,7 @@
 /* client/include */
 #include "mapview_g.h" // for update_map_canvas_visible
 #include "menu_g.h"
-#include "sprite_g.h"
+#include "sprite.h"
 // client
 #include "citybar.h"
 #include "citydlg_common.h" // for generate_citydlg_dimensions()
@@ -1093,7 +1093,7 @@ static QPixmap *make_error_pixmap()
    Loads the given graphics file (found in the data path) into a newly
    allocated sprite.
  */
-static QPixmap *load_gfx_file(const char *gfx_filename)
+static QPixmap *load_gfx_file(const QString &gfx_filename)
 {
   // Try out all supported file extensions to find one that works.
   auto supported = QImageReader::supportedImageFormats();
@@ -1102,24 +1102,27 @@ static QPixmap *load_gfx_file(const char *gfx_filename)
   // it). This dramatically improves tileset loading performance on Windows.
   supported.prepend("png");
 
+  auto gfx = new QPixmap;
+
   for (auto gfx_fileext : std::as_const(supported)) {
-    QString real_full_name;
     QString full_name =
         QStringLiteral("%1.%2").arg(gfx_filename, gfx_fileext.data());
 
-    real_full_name =
+    auto real_full_name =
         fileinfoname(get_data_dirs(), qUtf8Printable(full_name));
     if (!real_full_name.isEmpty()) {
       log_debug("trying to load gfx file \"%s\".",
                 qUtf8Printable(real_full_name));
-      if (const auto s = load_gfxfile(qUtf8Printable(real_full_name)); s) {
-        return s;
+      if (gfx->load(real_full_name)) {
+        return gfx;
       }
     }
   }
 
+  // Failed
+  delete gfx;
   qCCritical(tileset_category, "Could not load gfx file \"%s\".",
-             gfx_filename);
+             qUtf8Printable(gfx_filename));
   return make_error_pixmap();
 }
 
