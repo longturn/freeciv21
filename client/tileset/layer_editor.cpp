@@ -7,7 +7,7 @@
 
 #include "editor.h"
 #include "map.h"
-#include "sprite_g.h"
+#include "sprite.h"
 #include "tilespec.h"
 
 #include <memory>

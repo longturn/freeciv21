@@ -16,7 +16,7 @@
 #include "client_main.h"
 #include "colors_common.h"
 #include "control.h" // unit_is_in_focus
-#include "sprite_g.h"
+#include "sprite.h"
 #include "tilespec.h"
 
 // common

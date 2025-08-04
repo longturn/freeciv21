@@ -8,7 +8,7 @@
 #include "citydlg_g.h"
 #include "climap.h"
 #include "log.h"
-#include "sprite_g.h"
+#include "sprite.h"
 #include "tilespec.h"
 #include "views/view_map_common.h"
 

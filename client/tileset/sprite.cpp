@@ -8,32 +8,14 @@
  see https://www.gnu.org/licenses/.
  */
 
+#include "sprite.h"
+
 // Qt
 #include <QImageReader>
 #include <QPainter>
+
 // utility
 #include "log.h"
-// client
-#include "fc_client.h"
-#include "sprite.h"
-
-/**
-   Load the given graphics file into a sprite.  This function loads an
-   entire image file, which may later be broken up into individual sprites
-   with crop_sprite.
- */
-QPixmap *load_gfxfile(const char *filename)
-{
-  QPixmap *entire = new QPixmap;
-
-  if (QPixmapCache::find(QString(filename), entire)) {
-    return entire;
-  }
-  entire->load(QString(filename));
-  QPixmapCache::insert(QString(filename), *entire);
-
-  return entire;
-}
 
 /**
    Create a new sprite by cropping and taking only the given portion of

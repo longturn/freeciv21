@@ -9,6 +9,8 @@
 **************************************************************************/
 #pragma once
 
-#include "sprite_g.h"
-
 class QPixmap;
+
+QPixmap *crop_sprite(const QPixmap *source, int x, int y, int width,
+                     int height, const QPixmap *mask, int mask_offset_x,
+                     int mask_offset_y);

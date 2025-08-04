@@ -18,7 +18,7 @@
 #include "game.h" // For extra_type_iterate
 #include "map.h"
 #include "rand.h"
-#include "sprite_g.h"
+#include "sprite.h"
 #include "tilespec.h"
 
 /**
