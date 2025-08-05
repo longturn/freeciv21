@@ -132,6 +132,9 @@ Q_LOGGING_CATEGORY(tileset_category, "freeciv.tileset");
 /// The prefix for option sections in the tilespec file.
 const static char *const OPTION_SECTION_PREFIX = "option_";
 
+/// Number of "transparent" colors in civ2 sprites.
+constexpr static const int CIV2_NUM_TRANSPARENT = 3;
+
 #define MAX_NUM_LAYERS 3
 
 struct citizen_graphic {
@@ -1090,6 +1093,53 @@ static QPixmap *make_error_pixmap()
 }
 
 /**
+ * Loads the given graphics file (found in the data path) into a newly
+ * allocated sprite. Expects civ2 format.
+ */
+static QPixmap *load_civ2_gfx_file(const QString &gfx_filename)
+{
+  QImage gfx;
+
+  // We need to manipulate the palette. Unfortunately, Qt's gif image reader
+  // ignores it and gives us an RGB image. Upstream bug:
+  //    https://bugreports.qt.io/browse/QTBUG-138949
+  // We use the png reader as a workaround. This means that graphics need to
+  // be converted to png *preserving the palette*. This can be done with:
+  //    gm convert image.gif image.png
+  auto real_full_name =
+      fileinfoname(get_data_dirs(),
+                   qUtf8Printable(gfx_filename + QStringLiteral(".png")));
+  if (real_full_name.isEmpty()) {
+    qCCritical(tileset_category, "Could not find civ2 gfx \"%s.png\",",
+               qUtf8Printable(gfx_filename));
+    return make_error_pixmap();
+  }
+
+  if (!gfx.load(real_full_name)) {
+    // Failed
+    qCCritical(tileset_category, "Could not load graphics file \"%s\".",
+               qUtf8Printable(real_full_name));
+    return make_error_pixmap();
+  }
+
+  // Check that we have an indexed file.
+  auto palette_size = gfx.colorCount();
+  if (palette_size == 0) {
+    qCWarning(tileset_category,
+              "civ2 graphics file \"%s\" has no color palette",
+              qUtf8Printable(real_full_name));
+  }
+
+  // Turn the last colors in the palette to transparent. This is hardcoded in
+  // the civ2 engine.
+  for (auto i = std::max(0, palette_size - CIV2_NUM_TRANSPARENT);
+       i < palette_size; ++i) {
+    gfx.setColor(i, Qt::transparent);
+  }
+  return new QPixmap(QPixmap::fromImage(gfx));
+}
+
+/**
    Loads the given graphics file (found in the data path) into a newly
    allocated sprite.
  */
@@ -1154,7 +1204,12 @@ static void ensure_big_sprite(struct tileset *t, struct specfile *sf)
 
   gfx_filename = secfile_lookup_str(file, "file.gfx");
 
-  sf->big_sprite = load_gfx_file(gfx_filename);
+  auto mode = secfile_lookup_str_default(file, "freeciv21", "file.mode");
+  if (mode == QStringLiteral("civ2")) {
+    sf->big_sprite = load_civ2_gfx_file(gfx_filename);
+  } else {
+    sf->big_sprite = load_gfx_file(gfx_filename);
+  }
 
   if (!sf->big_sprite) {
     tileset_error(t, LOG_FATAL,
