@@ -221,6 +221,19 @@ Each :file:`.spec` file describes one graphics file as specified in the spec fil
 in the Freeciv21 data path, but not necessarily in the same location as the :file:`.spec` file. Note you can
 have multiple spec files using a single graphics file in different ways.
 
+The ``[file]`` section describes an image file to load. It is specified without
+the extension in the ``gfx`` field::
+
+  [file]
+  gfx = image/file_name
+
+An image with the suitable extension will be found at runtime. In practice, we always use PNG.
+Experimental support for loading sprites in the same format as Civilization
+2|tm| can be enabled by setting ``mode`` to ``civ2``. Currently, this only
+supports PNG images with indexed colors. Original GIF files can be converted
+using ``gm convert``. Support for loading GIF files directly may be added in the
+future.
+
 The main data described in the :file:`.spec` file is in sections named :code:`[grid_*]`, where :code:`*` is
 some arbitrary tag (but unique within each file). A grid corresponds to a regular rectangular array of tiles.
 In general one may have multiple grids in one file, but the default tilesets usually only have one per file.
