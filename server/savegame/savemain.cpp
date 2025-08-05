@@ -34,6 +34,7 @@
 #include "notify.h"
 
 /* server/savegame */
+#include "civ2.h"
 #include "savegame2.h"
 #include "savegame3.h"
 
@@ -41,19 +42,12 @@
 
 Q_GLOBAL_STATIC(fcThread, save_thread);
 
+namespace /* anonymous */ {
 /**
-   Main entry point for loading a game.
+ * Load a Freeciv/Freeciv21 save.
  */
-bool savegame_load(const QString &path)
+bool savegame_freeciv_load(const QString &path)
 {
-  const char *savefile_options;
-
-  fc_assert_ret_val(!path.isEmpty(), false);
-
-  civtimer *loadtimer = timer_new(TIMER_CPU, TIMER_DEBUG);
-  timer_start(loadtimer);
-
-  // attempt to parse the file
   section_file *sfile = secfile_load(path, false);
   if (!sfile) {
     qCritical("Error loading savefile '%s': %s", qUtf8Printable(path),
@@ -61,10 +55,11 @@ bool savegame_load(const QString &path)
     return false;
   }
 
-  savefile_options = secfile_lookup_str(sfile, "savefile.options");
+  auto savefile_options = secfile_lookup_str(sfile, "savefile.options");
 
   if (!savefile_options) {
     qCritical("Missing savefile options. Can not load the savegame.");
+    secfile_destroy(sfile);
     return false;
   }
 
@@ -78,7 +73,42 @@ bool savegame_load(const QString &path)
     savegame2_load(sfile);
   } else {
     qCritical("Too old savegame format not supported any more.");
+    secfile_destroy(sfile);
     return false;
+  }
+
+  secfile_check_unused(sfile);
+  secfile_destroy(sfile);
+
+  return true;
+}
+} // anonymous namespace
+
+/**
+ * Main entry point for loading a game.
+ */
+bool savegame_load(const QString &path)
+{
+  const char *savefile_options;
+
+  fc_assert_ret_val(!path.isEmpty(), false);
+
+  civtimer *loadtimer = timer_new(TIMER_CPU, TIMER_DEBUG);
+  timer_start(loadtimer);
+
+  if (is_civ2_save(path)) {
+    // We can detect civ2 files right away because they magic bytes at the
+    // beginning.
+    if (!load_civ2_save(path)) {
+      qCritical("Error loading civ2 savefile '%s'", qUtf8Printable(path));
+      return false;
+    }
+  } else {
+    // Doesn't look like a civ2 file. Try loading Freeciv21 format.
+    if (!savegame_freeciv_load(path)) {
+      // The loading function already prints an error message.
+      return false;
+    }
   }
 
   players_iterate(pplayer)
@@ -103,9 +133,6 @@ bool savegame_load(const QString &path)
   qCDebug(timers_category, "Loading secfile in %.3f seconds.",
           timer_read_seconds(loadtimer));
   timer_destroy(loadtimer);
-
-  secfile_check_unused(sfile);
-  secfile_destroy(sfile);
 
   return true;
 }
