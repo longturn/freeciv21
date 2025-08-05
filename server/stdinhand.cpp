@@ -71,6 +71,7 @@
 #include "voting.h"
 
 /* server/savegame */
+#include "civ2.h"
 #include "savemain.h"
 
 /* server/scripting */
@@ -3859,12 +3860,14 @@ bool load_command(struct connection *caller, const char *filename,
 
     if (!found) {
       for (const auto &path : paths) {
-        const auto exts = {
-            QStringLiteral("sav"),     QStringLiteral("gz"),
-            QStringLiteral("bz2"),     QStringLiteral("xz"),
-            QStringLiteral("zst"),     QStringLiteral("sav.gz"),
-            QStringLiteral("sav.bz2"), QStringLiteral("sav.xz"),
-            QStringLiteral("sav.zst")};
+        const auto exts = {QStringLiteral("sav"), QStringLiteral("gz"),
+                           QStringLiteral("bz2"), QStringLiteral("xz"),
+                           QStringLiteral("zst"), QStringLiteral("sav.gz"),
+                           QStringLiteral("sav.bz2"),
+                           QStringLiteral("sav.xz"),
+                           QStringLiteral("sav.zst"),
+                           // .scn = civ2 scenarios
+                           QStringLiteral("scn")};
         for (const auto &ext : exts) {
           QString name = filename + QStringLiteral(".") + ext;
           auto file = fileinfoname(path, qUtf8Printable(name));
