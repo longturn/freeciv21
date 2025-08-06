@@ -9,6 +9,7 @@
 #include <QFile>
 #include <QString>
 #include <QtDebug>
+#include <QtEndian>
 
 #include <cstdint>
 
@@ -53,16 +54,18 @@ enum civ2_version {
   CIV2_TEST_OF_TIME_11 = 50, ///< Test of Time v1.1
 };
 /// The highest supported version (from above)
-const static auto MAX_VERSION = CIV2_MULTIPLAYER;
+const static auto SUPPORTED_VERSION = CIV2_MULTIPLAYER;
 
 /**
  * The civ2 file header.
  */
 struct header {
-  std::int16_t version; ///< Save format version number
-  std::int16_t turn;    ///< Current turn
-  std::int16_t year;    ///< Current year
-  int num_techs;        ///< Number of techs in the current version
+  std::int16_t version;    ///< Save format version number
+  std::int16_t turn;       ///< Current turn
+  std::int16_t year;       ///< Current year
+  int num_techs;           ///< Number of techs in the current version
+  std::int16_t unit_count; ///< Number of unit slots in the current game.
+  std::int16_t city_count; ///< Number of city slots in the current game.
   /// First nation that discovered each tech
   std::array<char, NUM_TECHS> first_to_discover;
   /// Which nations have discoved which techs (bitfield)
@@ -194,6 +197,79 @@ map read_map(QDataStream &bytes)
 
   return m;
 }
+
+/**
+ * civ2 unit data.
+ */
+struct unit {
+  /// Orders that can be given to a unit.
+  enum orders : std::uint8_t {
+    FORTIFY = 1,   ///< Fortifying.
+    FORTIFIED,     ///< Remain fortified.
+    SENTRY,        ///< Watch out for enemies.
+    FORTRESS,      ///< Build a fortress.
+    ROAD_OR_RAILS, ///< Build a road, or rails on a road.
+    IRRIGATE,      ///< Build irrigation or farmland.
+    MINE,          ///< Build a mine.
+    TRANSFORM,     ///< Transform terrain.
+    POLLUTION,     ///< Clean up pollution.
+    AIRBASE,       ///< Build an airbase.
+    GO_TO,         ///< Move.
+    NONE = 0xff,   ///< No orders.
+  };
+
+  std::uint16_t x; ///< x coordinate of tile.
+  std::uint16_t y; ///< y coordinate of tile.
+  std::uint16_t _padding1 : 6;
+  bool moved : 1; ///< Has the unit moved this turn?
+  std::uint16_t _padding1_1 : 6;
+  bool veteran : 1; ///< Whether the unit is veteran.
+  bool _padding2 : 1;
+  bool star : 1;           ///< Display a small star on top of the flag.
+  std::uint8_t type;       ///< Unit type index.
+  std::uint8_t owner;      ///< Index of unit owner.
+  std::uint8_t moves_used; ///< Number of move fragments used.
+  std::uint8_t _padding3;
+  std::uint8_t hp_lost; ///< Number of HP _lost_.
+  /// https://apolyton.net/forum/civilization-series/civilization-i-and-civilization-ii/130935-civilization-ii-sav-scn-file-format?p=4246962#post4246962
+  /// However
+  /// https://forums.civfanatics.com/threads/hex-editing-sav-file-for-units.637875/
+  /// says Byte 12 would be facing direction.
+  std::uint8_t work_progress;
+  std::uint8_t _padding4;
+  std::uint8_t commodity; ///< 00 hidden, 01 wool, ..., 0A uranium, F0 food.
+  std::uint8_t _padding5;
+  orders orders;           ///< Unit orders as an enum.
+  std::uint8_t home_city;  ///< 0xff = unhomed.
+  std::uint16_t goto_x;    ///< Goto destination tile x.
+  std::uint16_t goto_y;    ///< Goto destination tile y.
+  std::uint16_t _links[2]; ///< Which unit is shown on tile.
+  std::uint16_t id;        ///< Some sort of unit ID
+  std::uint32_t _unknown;  ///< Always 0?
+};
+// static_assert(sizeof(unit) == 26); // CiC
+static_assert(sizeof(unit) == 32); // MGE+
+
+/**
+ * Reads in civ2 units information.
+ */
+std::vector<unit> read_units(QDataStream &bytes, int count)
+{
+  // TODO layout depends on version!
+  // Here MGE
+  // SizeOfUnit:=26; if MultiplayerVersion(Civ2Version) then SizeOfUnit:=32;
+  auto units = std::vector<unit>(count);
+  bytes.readRawData(reinterpret_cast<char *>(units.data()),
+                    count * sizeof(unit));
+  for (auto &u : units) {
+    // Byte-swap 16-bits fields if needed.
+    u.x = qFromLittleEndian(u.x);
+    u.y = qFromLittleEndian(u.y);
+    u.goto_x = qFromLittleEndian(u.goto_x);
+    u.goto_y = qFromLittleEndian(u.goto_y);
+  }
+  return units;
+}
 } // anonymous namespace
 
 /**
@@ -227,7 +303,7 @@ bool load_civ2_save(const QString &path)
   bytes >> head.version;
 
   qDebug() << "Loading civ2 file with version" << head.version;
-  if (head.version > MAX_VERSION) {
+  if (head.version != SUPPORTED_VERSION) {
     qCritical("Unsupported civ2 file version: %d",
               static_cast<int>(head.version));
     return false;
@@ -239,7 +315,11 @@ bool load_civ2_save(const QString &path)
   bytes.skipRawData(16); // Menu settings
 
   bytes >> head.turn >> head.year;
-  bytes.skipRawData(34); // More game settings, unknown use
+  bytes.skipRawData(26); // More game settings, unknown use
+  bytes >> head.unit_count >> head.city_count;
+  bytes.skipRawData(204); // Unknown use
+
+  fc_assert_ret_val(file.pos() == 266, false);
 
   head.num_techs = head.version > CIV2_CLASSIC ? NUM_TECHS : NUM_TECHS_CIC;
   bytes.readRawData(head.first_to_discover.data(), head.num_techs);
@@ -248,11 +328,12 @@ bool load_civ2_save(const QString &path)
     bytes >> location;
   }
 
-  bytes.skipRawData(262); // Unknown/unused
+  bytes.skipRawData(62); // Unknown/unused
   fc_assert_ret_val(file.pos() == 584, false);
 
+  std::array<tribe, NUM_PLAYERS> tribes;
   for (int i = 1; i < NUM_PLAYERS; ++i) {
-    read_tribe(bytes);
+    tribes[i] = read_tribe(bytes);
   }
 
   bytes.skipRawData(8); // Padding?
@@ -262,6 +343,8 @@ bool load_civ2_save(const QString &path)
 
   fc_assert_ret_val(file.pos() == 13702, false);
   auto map = read_map(bytes);
+
+  auto units = read_units(bytes, head.unit_count);
 
   // Unsupported!
   qCritical("Cannot read civ2 saves!");
