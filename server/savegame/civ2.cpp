@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
 #include "civ2.h"
+#include "log.h"
 
 #include <QFile>
 #include <QString>
@@ -29,7 +30,7 @@ const static auto NUM_TECHS_CIC = 93;
 /// Number of techs for most versions
 const static auto NUM_TECHS = 100;
 /// Number of Great Wonder slots
-const static auto NUM_WONDERS = 56;
+const static auto NUM_WONDERS = 28;
 /// Number of civilizations (including barbarians)
 const static auto NUM_CIVS = 8;
 /// Constant for wonders that haven't been built.
@@ -65,6 +66,34 @@ struct header {
   /// City ID for Great Wonders
   std::array<std::int16_t, NUM_WONDERS> wonder_locations;
 };
+
+/**
+ * A civ2 nation
+ */
+struct tribe {
+  std::int16_t city_style;        ///< Which city style is currently used
+  std::array<char, 24> leader;    ///< Name of the tribe's leader
+  std::array<char, 24> name;      ///< Name of the tribe
+  std::array<char, 24> adjective; ///< Adjective for the tribe
+  /// Title of the leader under each government
+  std::array<std::array<char, 24>, 7> leader_title;
+};
+
+/**
+ * Reads in a nation.
+ */
+tribe read_tribe(QDataStream &bytes)
+{
+  tribe t;
+  bytes >> t.city_style;
+  bytes.readRawData(t.leader.data(), t.leader.size());
+  bytes.readRawData(t.name.data(), t.name.size());
+  bytes.readRawData(t.adjective.data(), t.adjective.size());
+  for (auto &title : t.leader_title) {
+    bytes.readRawData(title.data(), title.size());
+  }
+  return t;
+}
 } // anonymous namespace
 
 /**
@@ -112,11 +141,18 @@ bool load_civ2_save(const QString &path)
   bytes >> head.turn >> head.year;
   bytes.skipRawData(34); // More game settings, unknown use
 
-  head.num_techs = head.version > CIV2_CLASSIC ? NUM_TECHS :NUM_TECHS_CIC;
+  head.num_techs = head.version > CIV2_CLASSIC ? NUM_TECHS : NUM_TECHS_CIC;
   bytes.readRawData(head.first_to_discover.data(), head.num_techs);
   bytes.readRawData(head.discovered_by.data(), head.num_techs);
-  for (auto& location: head.wonder_locations) {
+  for (auto &location : head.wonder_locations) {
     bytes >> location;
+  }
+
+  bytes.skipRawData(262); // Unknown/unused
+  fc_assert_ret_val(file.pos() == 584, false);
+
+  for (int i = 1; i < NUM_CIVS; ++i) {
+    read_tribe(bytes);
   }
 
   // Unsupported!
