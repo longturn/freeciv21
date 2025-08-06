@@ -32,7 +32,9 @@ const static auto NUM_TECHS = 100;
 /// Number of Great Wonder slots
 const static auto NUM_WONDERS = 28;
 /// Number of civilizations (including barbarians)
-const static auto NUM_CIVS = 8;
+const static auto NUM_PLAYERS = 8;
+/// Total number of playable civs.
+const static auto NUM_CIVS = 21;
 /// Constant for wonders that haven't been built.
 const static auto WONDER_NOT_BUILT = -1;
 /// Constant for wonders that have been destroyed.
@@ -94,6 +96,38 @@ tribe read_tribe(QDataStream &bytes)
   }
   return t;
 }
+
+/**
+ * Map information
+ */
+struct map_header {
+  std::int16_t width;  ///< Map width.
+  std::int16_t height; ///< Map height.
+  std::int16_t shape;  ///< 0 = wrapx, 1 = no wrap (?)
+  /// Starting position of each civ (x coordinate)
+  std::array<std::int16_t, NUM_CIVS> start_pos_x;
+  /// Starting position of each civ (y coordinate)
+  std::array<std::int16_t, NUM_CIVS> start_pos_y;
+};
+
+/**
+ * Reads in the map header.
+ */
+map_header read_map_header(QDataStream &bytes)
+{
+  map_header h;
+  bytes >> h.width >> h.height;
+  h.width /= 2;
+  bytes.skipRawData(2); // Surface
+  bytes >> h.shape;
+  for (auto &x: h.start_pos_x) {
+    bytes >> x;
+  }
+  for (auto &y: h.start_pos_y) {
+    bytes >> y;
+  }
+  return h;
+}
 } // anonymous namespace
 
 /**
@@ -151,9 +185,17 @@ bool load_civ2_save(const QString &path)
   bytes.skipRawData(262); // Unknown/unused
   fc_assert_ret_val(file.pos() == 584, false);
 
-  for (int i = 1; i < NUM_CIVS; ++i) {
+  for (int i = 1; i < NUM_PLAYERS; ++i) {
     read_tribe(bytes);
   }
+
+  bytes.skipRawData(8); // Padding?
+  fc_assert_ret_val(file.pos() == 2286, false);
+
+  bytes.skipRawData(1427 * 8); // Techs, gold, diplomacy
+
+  auto map_head = read_map_header(bytes);
+  qDebug() << "Loading a map of" << map_head.width << "x" << map_head.height << "tiles";
 
   // Unsupported!
   qCritical("Cannot read civ2 saves!");
