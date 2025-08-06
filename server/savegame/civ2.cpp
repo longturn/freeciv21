@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
 #include "civ2.h"
+
+// utility
 #include "log.h"
 
 #include <QFile>
@@ -98,35 +100,99 @@ tribe read_tribe(QDataStream &bytes)
 }
 
 /**
- * Map information
+ * Information about a tile. This is a bitfield.
  */
-struct map_header {
+enum tile_improvement : unsigned char {
+  UNIT = 0X01,                  ///< A unit is present on the tile.
+  CITY = 0X02,                  ///< A city is present on the tile.
+  IRRIGATION = 0x04,            ///< The tile is irrigated.
+  MINE = 0X08,                  ///< The tile has a mine.
+  FARMLAND = IRRIGATION + MINE, ///< The tile has farmland.
+  ROAD = 0X10,                  ///< The tile has a road.
+  RAILROAD = 0X20, ///< The tile has a railroad (in principle with road).
+  FORTRESS = 0X40, ///< A fortress is present.
+  AIRBASE = CITY + FORTRESS,         ///< Air base.
+  POLLUTION = 0X80,                  ///< Pollution on the tile.
+  TRANSPORT_SITE = CITY + POLLUTION, ///< (Test of Time only.)
+};
+
+/**
+ * civ2 tile info.
+ */
+struct tile {
+  std::uint8_t terrain : 4; ///< Terrain ID.
+  std::byte _padding1 : 2;  ///< Unused?
+  bool no_resources : 1;    ///< Cannot have resources.
+  bool river : 1;           ///< Has a river.
+  std::byte improvements;   ///< Tile improvements.
+  std::byte _padding2 : 5;  ///< Unused?
+  std::byte city_owner : 3; ///< ID of civ that can work this tile.
+  std::int8_t island;       ///< Island number.
+  std::byte visibility;     ///< Who has explored the tile (bitfield).
+  std::byte owner : 4;      ///< Tile owner (for bases).
+  std::byte fertility : 4;  ///< ??
+};
+static_assert(sizeof(tile) == 6);
+
+/**
+ * A civ2 map.
+ */
+struct map {
   std::int16_t width;  ///< Map width.
   std::int16_t height; ///< Map height.
   std::int16_t shape;  ///< 0 = wrapx, 1 = no wrap (?)
+
+  /*
+  FIXME: For .MP files? We read .SAV/.SCN
   /// Starting position of each civ (x coordinate)
   std::array<std::int16_t, NUM_CIVS> start_pos_x;
   /// Starting position of each civ (y coordinate)
   std::array<std::int16_t, NUM_CIVS> start_pos_y;
+  */
+
+  /// Improvements visible by each player (except barbarians).
+  std::array<std::vector<char>, NUM_PLAYERS> visible_improvements;
+  /// Actual map tiles.
+  std::vector<tile> tiles;
 };
 
 /**
- * Reads in the map header.
+ * Reads in civ2 map information.
  */
-map_header read_map_header(QDataStream &bytes)
+map read_map(QDataStream &bytes)
 {
-  map_header h;
-  bytes >> h.width >> h.height;
-  h.width /= 2;
+  map m;
+
+  // Header
+  bytes >> m.width >> m.height;
+  m.width /= 2;
   bytes.skipRawData(2); // Surface
-  bytes >> h.shape;
-  for (auto &x: h.start_pos_x) {
-    bytes >> x;
+  bytes >> m.shape;
+  bytes.skipRawData(2); // Seed
+  std::uint16_t half_width, half_height;
+  bytes >> half_width >> half_height;
+
+  int tile_count = m.width * m.height;
+  qDebug() << "Loading a map of" << m.width << "x" << m.height << "tiles";
+
+  // Player maps (not for barbarians).
+  for (int i = 1; i < NUM_PLAYERS; ++i) {
+    m.visible_improvements[i].resize(tile_count);
+    qDebug() << "Player map" << i << "starts at byte"
+             << bytes.device()->pos();
+    bytes.readRawData(m.visible_improvements[i].data(), tile_count);
   }
-  for (auto &y: h.start_pos_y) {
-    bytes >> y;
-  }
-  return h;
+
+  // Main map.
+  m.tiles.resize(tile_count);
+  qDebug() << "Main map starts at byte" << bytes.device()->pos();
+  bytes.readRawData(reinterpret_cast<char *>(m.tiles.data()),
+                    tile_count * sizeof(tile));
+
+  // Unknown map data, padding.
+  bytes.skipRawData(2 * half_width * half_height + 1024);
+
+  return m;
 }
 } // anonymous namespace
 
@@ -194,8 +260,8 @@ bool load_civ2_save(const QString &path)
 
   bytes.skipRawData(1427 * 8); // Techs, gold, diplomacy
 
-  auto map_head = read_map_header(bytes);
-  qDebug() << "Loading a map of" << map_head.width << "x" << map_head.height << "tiles";
+  fc_assert_ret_val(file.pos() == 13702, false);
+  auto map = read_map(bytes);
 
   // Unsupported!
   qCritical("Cannot read civ2 saves!");
