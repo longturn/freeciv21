@@ -3924,19 +3924,13 @@ bool load_command(struct connection *caller, const char *filename,
   timer_start(uloadtimer);
 
   // attempt to parse the file
-  if (!(file = secfile_load(arg, false))) {
-    qCritical("Error loading savefile '%s': %s", qUtf8Printable(arg),
-              secfile_error());
+  if (!savegame_load(arg)) {
     cmd_reply(CMD_LOAD, caller, C_FAIL, _("Could not load savefile: %s"),
               qUtf8Printable(arg));
     dlsend_packet_game_load(game.est_connections, false,
                             qUtf8Printable(arg));
     return false;
   }
-
-  savegame_load(file);
-  secfile_check_unused(file);
-  secfile_destroy(file);
 
   qDebug("Load time: %g seconds (%g apparent)",
          timer_read_seconds(loadtimer), timer_read_seconds(uloadtimer));
