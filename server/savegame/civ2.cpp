@@ -75,6 +75,45 @@ struct header {
 };
 
 /**
+ * Reads in the game header.
+ */
+bool read_header(QDataStream &bytes, header head)
+{
+  bytes.skipRawData(MAGIC.size()); // CIVILIZE 0x00 0x1A
+  bytes >> head.version;
+
+  qDebug() << "Loading civ2 file with version" << head.version;
+  if (head.version != SUPPORTED_VERSION) {
+    qCritical("Unsupported civ2 file version: %d",
+              static_cast<int>(head.version));
+    return false;
+  }
+
+  if (head.version >= CIV2_TEST_OF_TIME_10) {
+    bytes.skipRawData(640); // Unknown use
+  }
+  bytes.skipRawData(16); // Menu settings
+
+  bytes >> head.turn >> head.year;
+  bytes.skipRawData(26); // More game settings, unknown use
+  bytes >> head.unit_count >> head.city_count;
+  bytes.skipRawData(204); // Unknown use
+
+  fc_assert_ret_val(bytes.device()->pos() == 266, false);
+
+  head.num_techs = head.version > CIV2_CLASSIC ? NUM_TECHS : NUM_TECHS_CIC;
+  bytes.readRawData(head.first_to_discover.data(), head.num_techs);
+  bytes.readRawData(head.discovered_by.data(), head.num_techs);
+  for (auto &location : head.wonder_locations) {
+    bytes >> location;
+  }
+
+  bytes.skipRawData(62); // Unknown/unused
+
+  return bytes.status() == QDataStream::Ok;
+}
+
+/**
  * A civ2 nation
  */
 struct tribe {
@@ -338,6 +377,58 @@ std::vector<city> read_cities(QDataStream &bytes, int count)
   }
   return cities;
 }
+
+/**
+ * Groups all the data present in a civ2 save.
+ */
+struct game
+{
+  /// Game header data.
+  header head;
+  /// Which nation is connected to which player slot (including barbarians).
+  std::array<tribe, NUM_PLAYERS> tribes;
+  /// Map information.
+  ::map map;
+  /// All units in the game.
+  std::vector<unit> units;
+  /// All cities in the game.
+  std::vector<city> cities;
+};
+
+/**
+ * Reads in a civ2 saved game.
+ */
+bool read_saved_game(const QString &path, game &g)
+{
+  // Open the file
+  auto file = QFile(path);
+  file.open(QIODevice::ReadOnly);
+  QDataStream bytes(&file);
+  bytes.setByteOrder(QDataStream::LittleEndian);
+
+  if (!read_header(bytes, g.head)) {
+    return false;
+  }
+
+  fc_assert_ret_val(file.pos() == 584, false);
+
+  for (int i = 1; i < NUM_PLAYERS; ++i) {
+    g.tribes[i] = read_tribe(bytes);
+  }
+
+  bytes.skipRawData(8); // Padding?
+  fc_assert_ret_val(file.pos() == 2286, false);
+
+  bytes.skipRawData(1427 * 8); // Techs, gold, diplomacy
+
+  fc_assert_ret_val(file.pos() == 13702, false);
+  g.map = read_map(bytes);
+
+  g.units = read_units(bytes, g.head.unit_count);
+  g.cities = read_cities(bytes, g.head.city_count);
+
+  return bytes.status() == QDataStream::Ok;
+}
 } // anonymous namespace
 
 /**
@@ -358,62 +449,10 @@ bool is_civ2_save(const QString &path)
  */
 bool load_civ2_save(const QString &path)
 {
-  // Open the file
-  auto file = QFile(path);
-  file.open(QIODevice::ReadOnly);
-  QDataStream bytes(&file);
-  bytes.setByteOrder(QDataStream::LittleEndian);
-
-  // Header
-  auto head = header();
-
-  bytes.skipRawData(MAGIC.size()); // CIVILIZE 0x00 0x1A
-  bytes >> head.version;
-
-  qDebug() << "Loading civ2 file with version" << head.version;
-  if (head.version != SUPPORTED_VERSION) {
-    qCritical("Unsupported civ2 file version: %d",
-              static_cast<int>(head.version));
+  auto g = game();
+  if (!read_saved_game(path, g)) {
     return false;
   }
-
-  if (head.version >= CIV2_TEST_OF_TIME_10) {
-    bytes.skipRawData(640); // Unknown use
-  }
-  bytes.skipRawData(16); // Menu settings
-
-  bytes >> head.turn >> head.year;
-  bytes.skipRawData(26); // More game settings, unknown use
-  bytes >> head.unit_count >> head.city_count;
-  bytes.skipRawData(204); // Unknown use
-
-  fc_assert_ret_val(file.pos() == 266, false);
-
-  head.num_techs = head.version > CIV2_CLASSIC ? NUM_TECHS : NUM_TECHS_CIC;
-  bytes.readRawData(head.first_to_discover.data(), head.num_techs);
-  bytes.readRawData(head.discovered_by.data(), head.num_techs);
-  for (auto &location : head.wonder_locations) {
-    bytes >> location;
-  }
-
-  bytes.skipRawData(62); // Unknown/unused
-  fc_assert_ret_val(file.pos() == 584, false);
-
-  std::array<tribe, NUM_PLAYERS> tribes;
-  for (int i = 1; i < NUM_PLAYERS; ++i) {
-    tribes[i] = read_tribe(bytes);
-  }
-
-  bytes.skipRawData(8); // Padding?
-  fc_assert_ret_val(file.pos() == 2286, false);
-
-  bytes.skipRawData(1427 * 8); // Techs, gold, diplomacy
-
-  fc_assert_ret_val(file.pos() == 13702, false);
-  auto map = read_map(bytes);
-
-  auto units = read_units(bytes, head.unit_count);
-  auto cities = read_cities(bytes, head.city_count);
 
   // Unsupported!
   qCritical("Cannot read civ2 saves!");
