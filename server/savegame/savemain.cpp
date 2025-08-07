@@ -44,20 +44,28 @@ Q_GLOBAL_STATIC(fcThread, save_thread);
 /**
    Main entry point for loading a game.
  */
-void savegame_load(struct section_file *sfile)
+bool savegame_load(const QString &path)
 {
   const char *savefile_options;
 
-  fc_assert_ret(sfile != nullptr);
+  fc_assert_ret_val(!path.isEmpty(), false);
 
   civtimer *loadtimer = timer_new(TIMER_CPU, TIMER_DEBUG);
   timer_start(loadtimer);
+
+  // attempt to parse the file
+  section_file *sfile = secfile_load(path, false);
+  if (!sfile) {
+    qCritical("Error loading savefile '%s': %s", qUtf8Printable(path),
+              secfile_error());
+    return false;
+  }
 
   savefile_options = secfile_lookup_str(sfile, "savefile.options");
 
   if (!savefile_options) {
     qCritical("Missing savefile options. Can not load the savegame.");
-    return;
+    return false;
   }
 
   if (has_capabilities("+version3", savefile_options)) {
@@ -70,7 +78,7 @@ void savegame_load(struct section_file *sfile)
     savegame2_load(sfile);
   } else {
     qCritical("Too old savegame format not supported any more.");
-    return;
+    return false;
   }
 
   players_iterate(pplayer)
@@ -95,6 +103,11 @@ void savegame_load(struct section_file *sfile)
   qCDebug(timers_category, "Loading secfile in %.3f seconds.",
           timer_read_seconds(loadtimer));
   timer_destroy(loadtimer);
+
+  secfile_check_unused(sfile);
+  secfile_destroy(sfile);
+
+  return true;
 }
 
 /**

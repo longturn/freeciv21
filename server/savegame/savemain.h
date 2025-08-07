@@ -16,8 +16,9 @@
 #include "support.h"
 
 struct section_file;
+class QString;
 
-void savegame_load(struct section_file *sfile);
+bool savegame_load(const QString &path);
 void savegame_save(struct section_file *sfile, const char *save_reason,
                    bool scenario);
 
