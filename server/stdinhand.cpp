@@ -3892,6 +3892,10 @@ bool load_command(struct connection *caller, const char *filename,
     }
   }
 
+  if (check) {
+    return true;
+  }
+
   // attempt to parse the file
 
   if (!(file = secfile_load(arg, false))) {
@@ -3901,11 +3905,6 @@ bool load_command(struct connection *caller, const char *filename,
               qUtf8Printable(arg));
     dlsend_packet_game_load(game.est_connections, true, qUtf8Printable(arg));
     return false;
-  }
-
-  if (check) {
-    free(file);
-    return true;
   }
 
   // Detach current players, before we blow them away.
