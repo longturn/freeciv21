@@ -4,6 +4,7 @@
 #include "civ2.h"
 
 // utility
+#include "fcintl.h"
 #include "log.h"
 
 #include <QFile>
@@ -84,7 +85,7 @@ bool read_header(QDataStream &bytes, header head)
 
   qDebug() << "Loading civ2 file with version" << head.version;
   if (head.version != SUPPORTED_VERSION) {
-    qCritical("Unsupported civ2 file version: %d",
+    qCritical(_("Unsupported civ2 file version: %d"),
               static_cast<int>(head.version));
     return false;
   }
@@ -128,9 +129,8 @@ struct tribe {
 /**
  * Reads in a nation.
  */
-tribe read_tribe(QDataStream &bytes)
+bool read_tribe(QDataStream &bytes, tribe &t)
 {
-  tribe t;
   bytes >> t.city_style;
   bytes.readRawData(t.leader.data(), t.leader.size());
   bytes.readRawData(t.name.data(), t.name.size());
@@ -138,7 +138,7 @@ tribe read_tribe(QDataStream &bytes)
   for (auto &title : t.leader_title) {
     bytes.readRawData(title.data(), title.size());
   }
-  return t;
+  return bytes.status() == QDataStream::Ok;
 }
 
 /**
@@ -201,10 +201,8 @@ struct map {
 /**
  * Reads in civ2 map information.
  */
-map read_map(QDataStream &bytes)
+bool read_map(QDataStream &bytes, map &m)
 {
-  map m;
-
   // Header
   bytes >> m.width >> m.height;
   m.width /= 2;
@@ -234,7 +232,7 @@ map read_map(QDataStream &bytes)
   // Unknown map data, padding.
   bytes.skipRawData(2 * half_width * half_height + 1024);
 
-  return m;
+  return bytes.status() == QDataStream::Ok;
 }
 
 /**
@@ -407,13 +405,17 @@ bool read_saved_game(const QString &path, game &g)
   bytes.setByteOrder(QDataStream::LittleEndian);
 
   if (!read_header(bytes, g.head)) {
+    qCritical(_("Error loading civ2 savegame header."));
     return false;
   }
 
   fc_assert_ret_val(file.pos() == 584, false);
 
   for (int i = 1; i < NUM_PLAYERS; ++i) {
-    g.tribes[i] = read_tribe(bytes);
+    if (!read_tribe(bytes, g.tribes[i])) {
+      qCritical(_("Error loading civ2 tribe data."));
+      return false;
+    }
   }
 
   bytes.skipRawData(8); // Padding?
@@ -422,10 +424,22 @@ bool read_saved_game(const QString &path, game &g)
   bytes.skipRawData(1427 * 8); // Techs, gold, diplomacy
 
   fc_assert_ret_val(file.pos() == 13702, false);
-  g.map = read_map(bytes);
+  if (!read_map(bytes, g.map)) {
+    qCritical(_("Error loading civ2 savegame map data."));
+    return false;
+  }
 
   g.units = read_units(bytes, g.head.unit_count);
+  if (g.units.size() != g.head.unit_count) {
+    qCritical(_("Error loading civ2 savegame units."));
+    return false;
+  }
+
   g.cities = read_cities(bytes, g.head.city_count);
+  if (g.cities.size() != g.head.city_count) {
+    qCritical(_("Error loading civ2 savegame cities."));
+    return false;
+  }
 
   return bytes.status() == QDataStream::Ok;
 }
@@ -455,6 +469,6 @@ bool load_civ2_save(const QString &path)
   }
 
   // Unsupported!
-  qCritical("Cannot read civ2 saves!");
+  qCritical(_("Cannot read civ2 saves!"));
   return false;
 }
