@@ -3896,17 +3896,6 @@ bool load_command(struct connection *caller, const char *filename,
     return true;
   }
 
-  // attempt to parse the file
-
-  if (!(file = secfile_load(arg, false))) {
-    qCritical("Error loading savefile '%s': %s", qUtf8Printable(arg),
-              secfile_error());
-    cmd_reply(CMD_LOAD, caller, C_FAIL, _("Could not load savefile: %s"),
-              qUtf8Printable(arg));
-    dlsend_packet_game_load(game.est_connections, true, qUtf8Printable(arg));
-    return false;
-  }
-
   // Detach current players, before we blow them away.
   global_observers = conn_list_new();
   conn_list_iterate(game.est_connections, pconn)
@@ -3934,7 +3923,16 @@ bool load_command(struct connection *caller, const char *filename,
   uloadtimer = timer_new(TIMER_USER, TIMER_ACTIVE);
   timer_start(uloadtimer);
 
-  srvarg.load_filename = arg;
+  // attempt to parse the file
+  if (!(file = secfile_load(arg, false))) {
+    qCritical("Error loading savefile '%s': %s", qUtf8Printable(arg),
+              secfile_error());
+    cmd_reply(CMD_LOAD, caller, C_FAIL, _("Could not load savefile: %s"),
+              qUtf8Printable(arg));
+    dlsend_packet_game_load(game.est_connections, false,
+                            qUtf8Printable(arg));
+    return false;
+  }
 
   savegame_load(file);
   secfile_check_unused(file);
@@ -3961,8 +3959,7 @@ bool load_command(struct connection *caller, const char *filename,
   send_player_diplstate_c(nullptr, nullptr);
 
   // Everything seemed to load ok; spread the good news.
-  dlsend_packet_game_load(game.est_connections, true,
-                          qUtf8Printable(srvarg.load_filename));
+  dlsend_packet_game_load(game.est_connections, true, qUtf8Printable(arg));
 
   /* Attach connections to players. Currently, this applies only
    * to connections that have the same username as a player. */
