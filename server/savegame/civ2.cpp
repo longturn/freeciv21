@@ -267,8 +267,76 @@ std::vector<unit> read_units(QDataStream &bytes, int count)
     u.y = qFromLittleEndian(u.y);
     u.goto_x = qFromLittleEndian(u.goto_x);
     u.goto_y = qFromLittleEndian(u.goto_y);
+    u.id = qFromLittleEndian(u.id);
   }
   return units;
+}
+
+/**
+ * civ2 city data.
+ */
+struct city {
+  std::uint16_t x; ///< x coordinate.
+  std::uint16_t y; ///< y coordinate.
+  std::array<std::byte, 4> flags;
+  std::uint8_t owner;   ///< Current owner.
+  std::int8_t size;     ///< City size.
+  std::uint8_t founder; ///< Founder civ.
+  std::byte _padding1[3];
+  std::array<std::uint8_t, 7> citizens;
+  /// Specialists in the city.
+  std::array<std::uint8_t, 4> specialists;
+  std::int16_t foodbox;             ///< Food in food box (0xff = famine)
+  std::int16_t shieldbox;           ///< Number of shields in shields box.
+  std::int16_t base_trade;          ///< Trade without trade routes.
+  std::array<char, 16> name;        ///< City name.
+  std::array<std::byte, 3> workers; ///< Citizen placement.
+  std::uint8_t _padding2 : 2;
+  std::uint8_t specialists_count : 6;    ///< Number of specialists.
+  std::array<std::byte, 5> improvements; ///< Bitfield with improvements.
+  /// Current production. Positive for units, negative for improvements.
+  std::int8_t production;
+  std::uint8_t trade_routes; ///< Number of active trade routes.
+  std::array<std::uint8_t, 3> commodities_demand;
+  std::array<std::uint8_t, 3> commodities_in_route;
+  std::array<std::uint16_t, 3> partner_cities;
+  std::int16_t science;     ///< Total science.
+  std::int16_t tax;         ///< Total tax revenue.
+  std::int16_t trade;       ///< Total trade incl. trade routes.
+  std::int8_t total_food;   ///< Total food production.
+  std::int8_t total_shield; ///< Total shield production.
+  std::int8_t happy;        ///< Happy citizens.
+  std::int8_t unhappy;      ///< Unhappy citizens, angry count double.
+  std::byte _padding3[6];
+};
+static_assert(offsetof(city, name) == 32);
+static_assert(sizeof(city) == 88);
+
+/**
+ * Reads in civ2 city information.
+ */
+std::vector<city> read_cities(QDataStream &bytes, int count)
+{
+  // TODO layout depends on version!
+  // Here MGE
+  auto cities = std::vector<city>(count);
+  bytes.readRawData(reinterpret_cast<char *>(cities.data()),
+                    count * sizeof(city));
+  for (auto &c : cities) {
+    // Byte-swap 16-bits fields if needed.
+    c.x = qFromLittleEndian(c.x);
+    c.y = qFromLittleEndian(c.y);
+    c.foodbox = qFromLittleEndian(c.foodbox);
+    c.shieldbox = qFromLittleEndian(c.shieldbox);
+    c.base_trade = qFromLittleEndian(c.base_trade);
+    for (auto &p : c.partner_cities) {
+      p = qFromLittleEndian(p);
+    }
+    c.science = qFromLittleEndian(c.science);
+    c.tax = qFromLittleEndian(c.tax);
+    c.trade = qFromLittleEndian(c.trade);
+  }
+  return cities;
 }
 } // anonymous namespace
 
@@ -345,6 +413,7 @@ bool load_civ2_save(const QString &path)
   auto map = read_map(bytes);
 
   auto units = read_units(bytes, head.unit_count);
+  auto cities = read_cities(bytes, head.city_count);
 
   // Unsupported!
   qCritical("Cannot read civ2 saves!");
