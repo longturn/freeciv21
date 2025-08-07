@@ -179,6 +179,7 @@ void configure_fonts()
                  true);
   configure_font(fonts::city_productions, sl, QFont::SansSerif,
                  default_size);
+  configure_font(fonts::help_text, sl, QFont::SansSerif, default_size);
 
   /* Monospace List */
   sl.clear();
@@ -188,7 +189,6 @@ void configure_fonts()
 
   configure_font(fonts::notify_label, sl, QFont::Monospace, default_size);
   configure_font(fonts::help_label, sl, QFont::Monospace, default_size);
-  configure_font(fonts::help_text, sl, QFont::Monospace, default_size);
   configure_font(fonts::chatline, sl, QFont::Monospace, default_size);
 
   /* Serif List */
