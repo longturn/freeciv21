@@ -583,7 +583,8 @@ void connection_common_close(struct connection *pconn)
   if (!pconn->used) {
     qCritical("WARNING: Trying to close already closed connection");
   } else {
-    pconn->sock->deleteLater();
+    if (pconn->sock)
+      pconn->sock->deleteLater();
     pconn->sock = nullptr;
     pconn->used = false;
     pconn->established = false;

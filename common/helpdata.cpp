@@ -136,22 +136,15 @@ static bool insert_veteran_help(char *outbuf, size_t outlen,
       CATLSTR(outbuf, outlen, "\n\n");
     }
     // TODO: Report raise_chance and work_raise_chance
-    CATLSTR(
-        outbuf, outlen,
-        /* TRANS: Header for fixed-width veteran level table.
-         * TRANS: Translators cannot change column widths :(
-         * TRANS: "Level name" left-justified, other two right-justified */
-        _("Veteran level      Power factor   Move bonus\n"));
+    cat_snprintf(outbuf, outlen, "| %s | %s | %s |\n", _("Veteran level"),
+                 _("Power factor"), _("Move bonus"));
     CATLSTR(outbuf, outlen,
             // TRANS: Part of header for veteran level table.
-            _("--------------------------------------------"));
+            _("| :-- | --: | --: |"));
     for (i = 0; i < veteran->levels; i++) {
       const struct veteran_level *level = &veteran->definitions[i];
       const char *name = name_translation_get(&level->name);
-      /* Use get_internal_string_length() for correct alignment with
-       * multibyte character encodings */
-      cat_snprintf(outbuf, outlen, "\n%s%*s %4d%% %12s", name,
-                   MAX(0, 25 - (int) get_internal_string_length(name)), "",
+      cat_snprintf(outbuf, outlen, "\n| %s | %4d%% | %s |", name,
                    level->power_fact,
                    /* e.g. "-    ", "+ 1/3", "+ 1    ", "+ 2 2/3" */
                    qUtf8Printable(move_points_text_full(
@@ -195,15 +188,9 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
         pillage_time = -1;
     bool terrain_independent_extras = false;
 
-    CATLSTR(outbuf, outlen,
-            /* TRANS: Header for fixed-width terrain alteration table.
-             * TRANS: Translators cannot change column widths :( */
-            _("Terrain           Cultivate        Plant            "
-              "Transform\n"));
-    CATLSTR(
-        outbuf, outlen,
-        "-------------------------------------------------------------------"
-        "-\n");
+    cat_snprintf(outbuf, outlen, "| %s | %s | %s |%s |\n", _("Terrain"),
+                 _("Cultivate"), _("Plant"), _("Transform"));
+    CATLSTR(outbuf, outlen, "| :-- | :-- | :-- | :-- |\n");
     terrain_type_iterate(pterrain)
     {
       if (0 != qstrlen(terrain_rule_name(pterrain))) {
@@ -221,15 +208,8 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
 
         auto terrain = terrain_name_translation(pterrain);
 
-        /* Use get_internal_string_length() for correct alignment with
-         * multibyte character encodings */
-        cat_snprintf(
-            outbuf, outlen, "%s%*s %s%*s %s%*s %s\n", terrain,
-            MAX(0, 16 - (int) get_internal_string_length(terrain)), "",
-            cultivate,
-            MAX(0, 16 - (int) get_internal_string_length(cultivate)), "",
-            plant, MAX(0, 16 - (int) get_internal_string_length(plant)), "",
-            transform);
+        cat_snprintf(outbuf, outlen, "| %s | %s | %s | %s |\n", terrain,
+                     cultivate, plant, transform);
 
         if (clean_pollution_time != 0
             && pterrain->clean_pollution_time != 0) {
@@ -423,21 +403,19 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
               _("Time taken for the following activities is independent of "
                 "terrain:\n"));
       CATLSTR(outbuf, outlen, "\n");
-      CATLSTR(outbuf, outlen,
-              /* TRANS: Header for fixed-width terrain alteration table.
-               * TRANS: Translators cannot change column widths :( */
-              _("Activity            Time\n"));
-      CATLSTR(outbuf, outlen, "---------------------------");
+      cat_snprintf(outbuf, outlen, "| %s | %s |\n", _("Activity"),
+                   _("Time"));
+      CATLSTR(outbuf, outlen, "| :-- | --: |");
       if (clean_pollution_time > 0) {
-        cat_snprintf(outbuf, outlen, _("\nClean pollution    %3d"),
+        cat_snprintf(outbuf, outlen, "\n| %s | %d |", _("Clean pollution"),
                      clean_pollution_time);
       }
       if (clean_fallout_time > 0) {
-        cat_snprintf(outbuf, outlen, _("\nClean fallout      %3d"),
+        cat_snprintf(outbuf, outlen, "\n| %s | %d |", _("Clean fallout"),
                      clean_fallout_time);
       }
       if (pillage_time > 0) {
-        cat_snprintf(outbuf, outlen, _("\nPillage            %3d"),
+        cat_snprintf(outbuf, outlen, "\n| %s | %d |", _("Pillage"),
                      pillage_time);
       }
       extra_type_by_cause_iterate(EC_ROAD, pextra)
@@ -445,9 +423,8 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
         if (pextra->buildable && pextra->build_time > 0) {
           const char *rname = extra_name_translation(pextra);
 
-          cat_snprintf(outbuf, outlen, "\n%s%*s %3d", rname,
-                       MAX(0, 18 - (int) get_internal_string_length(rname)),
-                       "", pextra->build_time);
+          cat_snprintf(outbuf, outlen, "\n| %s | %d |", rname,
+                       pextra->build_time);
         }
       }
       extra_type_by_cause_iterate_end;
@@ -456,9 +433,8 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
         if (pextra->buildable && pextra->build_time > 0) {
           const char *bname = extra_name_translation(pextra);
 
-          cat_snprintf(outbuf, outlen, "\n%s%*s %3d", bname,
-                       MAX(0, 18 - (int) get_internal_string_length(bname)),
-                       "", pextra->build_time);
+          cat_snprintf(outbuf, outlen, "\n| %s | %d |", bname,
+                       pextra->build_time);
         }
       }
       extra_type_by_cause_iterate_end;
@@ -3804,28 +3780,20 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
         CATLSTR(
             buf, bufsz,
             _("\nTime to build and output bonus depends on terrain:\n\n"));
-        CATLSTR(buf, bufsz,
-                /* TRANS: Header for fixed-width road properties table.
-                 * TRANS: Translators cannot change column widths :( */
-                _("Terrain       Time     Bonus F/P/T\n"
-                  "----------------------------------\n"));
+        cat_snprintf(buf, bufsz, "| %s | %s | %s |\n", _("Terrain"),
+                     _("Time"), _("Bonus F/P/T"));
+        CATLSTR(buf, bufsz, "| :-- | --: | :-- |\n");
       } else if (do_time) {
         CATLSTR(buf, bufsz, _("\nTime to build depends on terrain:\n\n"));
-        CATLSTR(buf, bufsz,
-                /* TRANS: Header for fixed-width extra properties table.
-                 * TRANS: Translators cannot change column widths :( */
-                _("Terrain       Time\n"
-                  "------------------\n"));
+        cat_snprintf(buf, bufsz, "| %s | %s |\n", _("Terrain"), _("Time"));
+        CATLSTR(buf, bufsz, "| :-- | --: |\n");
       } else {
         fc_assert(do_bonus);
         CATLSTR(buf, bufsz,
-                /* TRANS: Header for fixed-width road properties table.
-                 * TRANS: Translators cannot change column widths :( */
                 _("\nYields an output bonus with some terrains:\n\n"));
-        CATLSTR(buf, bufsz,
-                _("Terrain       Bonus F/P/T\n"
-                  "-------------------------\n"));
-        ;
+        cat_snprintf(buf, bufsz, "| %s | %s |\n", _("Terrain"),
+                     _("Bonus F/P/T"));
+        CATLSTR(buf, bufsz, "| :-- | :-- |\n");
       }
       terrain_type_iterate(t)
       {
@@ -3837,21 +3805,20 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
         if (turns > 0 || bonus_text) {
           const char *terrain = terrain_name_translation(t);
 
-          cat_snprintf(
-              buf, bufsz, "%s%*s ", terrain,
-              MAX(0, 12 - (int) get_internal_string_length(terrain)), "");
+          cat_snprintf(buf, bufsz, "| %s ", terrain);
+
           if (do_time) {
             if (turns > 0) {
-              cat_snprintf(buf, bufsz, "%3d      ", turns);
+              cat_snprintf(buf, bufsz, "| %d ", turns);
             } else {
-              CATLSTR(buf, bufsz, "  -      ");
+              CATLSTR(buf, bufsz, "| - ");
             }
           }
           if (do_bonus) {
             fc_assert(proad != nullptr);
-            cat_snprintf(buf, bufsz, " %s", bonus_text ? bonus_text : "-");
+            cat_snprintf(buf, bufsz, "| %s ", bonus_text ? bonus_text : "-");
           }
-          CATLSTR(buf, bufsz, "\n");
+          CATLSTR(buf, bufsz, "|\n");
         }
       }
       terrain_type_iterate_end;
