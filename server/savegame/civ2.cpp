@@ -5,7 +5,10 @@
 
 // utility
 #include "fcintl.h"
+#include "game.h"
 #include "log.h"
+#include "ruleset.h"
+#include "support.h"
 
 #include <QFile>
 #include <QString>
@@ -25,7 +28,7 @@
  * * https://ia800304.us.archive.org/11/items/civ2-hex-editing/Hex%20Editing.pdf
  */
 
-namespace /* anonymous */ {
+namespace civ2 {
 /// Magic string found at the beginning of a save.
 const static auto MAGIC = QByteArrayLiteral("CIVILIZE\0\x1A");
 
@@ -40,9 +43,9 @@ const static auto NUM_PLAYERS = 8;
 /// Total number of playable civs.
 const static auto NUM_CIVS = 21;
 /// Constant for wonders that haven't been built.
-const static auto WONDER_NOT_BUILT = -1;
+const static auto CIV2_WONDER_NOT_BUILT = -1;
 /// Constant for wonders that have been destroyed.
-const static auto WONDER_DESTROYED = -2;
+const static auto CIV2_WONDER_DESTROYED = -2;
 
 /**
  * Internal Civliization II version numbers.
@@ -386,7 +389,7 @@ struct game
   /// Which nation is connected to which player slot (including barbarians).
   std::array<tribe, NUM_PLAYERS> tribes;
   /// Map information.
-  ::map map;
+  civ2::map map;
   /// All units in the game.
   std::vector<unit> units;
   /// All cities in the game.
@@ -443,7 +446,25 @@ bool read_saved_game(const QString &path, game &g)
 
   return bytes.status() == QDataStream::Ok;
 }
-} // anonymous namespace
+
+/**************************************************************************/
+
+/**
+ * Loads the ruleset for a civ2 game.
+ */
+bool setup_ruleset(const game &g)
+{
+  Q_UNUSED(g);
+
+  sz_strlcpy(::game.server.rulesetdir, "civ2");
+  if (!load_rulesets(nullptr, nullptr, false, nullptr, true, false, true)) {
+    qCritical(_("Failed to load ruleset '%s' needed for savegame."), "civ2");
+    return false;
+  }
+
+  return true;
+}
+} // namespace civ2
 
 /**
  * Checks if the file at path looks like a civ2 save.
@@ -455,7 +476,7 @@ bool is_civ2_save(const QString &path)
     return false;
   }
 
-  return input.read(MAGIC.size()) == MAGIC;
+  return input.read(civ2::MAGIC.size()) == civ2::MAGIC;
 }
 
 /**
@@ -463,8 +484,12 @@ bool is_civ2_save(const QString &path)
  */
 bool load_civ2_save(const QString &path)
 {
-  auto g = game();
+  auto g = civ2::game();
   if (!read_saved_game(path, g)) {
+    return false;
+  }
+
+  if (!civ2::setup_ruleset(g)) {
     return false;
   }
 
