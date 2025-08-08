@@ -4,11 +4,18 @@
 #include "civ2.h"
 
 // utility
+#include "ai.h"
+#include "difficulty.h"
 #include "fcintl.h"
 #include "game.h"
 #include "log.h"
+#include "player.h"
+#include "plrhand.h"
+#include "rgbcolor.h"
 #include "ruleset.h"
+#include "srv_main.h"
 #include "support.h"
+#include "team.h"
 
 #include <QFile>
 #include <QString>
@@ -46,6 +53,17 @@ const static auto NUM_CIVS = 21;
 const static auto CIV2_WONDER_NOT_BUILT = -1;
 /// Constant for wonders that have been destroyed.
 const static auto CIV2_WONDER_DESTROYED = -2;
+/// Colors used by Civ 3
+std::array<int, 8> CIV_COLORS = {
+    0xff0000, // Red (barbarians)
+    0xffffff, // White
+    0x00ff00, // Green
+    0x0000ff, // Blue
+    0xffff00, // Yellow
+    0x00ffff, // Cyan
+    0xffa500, // Orange
+    0x800080, // Purple
+};
 
 /**
  * Internal Civliization II version numbers.
@@ -67,6 +85,10 @@ struct header {
   std::int16_t version;    ///< Save format version number
   std::int16_t turn;       ///< Current turn
   std::int16_t year;       ///< Current year
+  std::uint8_t difficulty; ///< Difficulty (0 to 5).
+  std::uint8_t barbarians; ///< Barbarian activity.
+  std::uint8_t players_alive; ///< Bitfield: who is alive?
+  std::uint8_t players_human; ///< Bitfield: which players are humans?
   int num_techs;           ///< Number of techs in the current version
   std::int16_t unit_count; ///< Number of unit slots in the current game.
   std::int16_t city_count; ///< Number of city slots in the current game.
@@ -81,7 +103,7 @@ struct header {
 /**
  * Reads in the game header.
  */
-bool read_header(QDataStream &bytes, header head)
+bool read_header(QDataStream &bytes, header &head)
 {
   bytes.skipRawData(MAGIC.size()); // CIVILIZE 0x00 0x1A
   bytes >> head.version;
@@ -96,10 +118,13 @@ bool read_header(QDataStream &bytes, header head)
   if (head.version >= CIV2_TEST_OF_TIME_10) {
     bytes.skipRawData(640); // Unknown use
   }
-  bytes.skipRawData(16); // Menu settings
+  bytes.skipRawData(15); // Menu settings
 
   bytes >> head.turn >> head.year;
-  bytes.skipRawData(26); // More game settings, unknown use
+  bytes.skipRawData(13); // More game settings, some unknown
+  bytes >> head.difficulty >> head.barbarians;
+  bytes >> head.players_alive >> head.players_human;
+  bytes.skipRawData(10); // More game settings, some unknown
   bytes >> head.unit_count >> head.city_count;
   bytes.skipRawData(204); // Unknown use
 
@@ -464,6 +489,83 @@ bool setup_ruleset(const game &g)
 
   return true;
 }
+
+/**
+ * Loads players for a civ2 game.
+ */
+bool setup_players(const game &g)
+{
+  // TODO Move elsewhere
+  ::game.scenario.is_scenario = true;
+  ::game.scenario.players = true;
+  ::game.scenario.allow_ai_type_fallback = true;
+
+  // Remove all players. We will recreate them later.
+  aifill(0);
+  players_iterate(pplayer) { server_remove_player(pplayer); }
+  players_iterate_end;
+
+  // Ensure we get a meaningful AI level.
+  const auto level = g.head.difficulty < AI_LEVEL_COUNT
+                         ? static_cast<ai_level>(g.head.difficulty)
+                         : AI_LEVEL_CHEATING;
+
+  int slot = 0; // Freeciv21 player slot.
+  // Index 0 is for barbarians.
+  // TODO Set up barbarians if needed.
+  for (int i = 1; i < g.tribes.size(); ++i) {
+    if (!(g.head.players_alive & (1 << i))) {
+      // Don't create dead players. They most often don't play any role in
+      // scenarios.
+      continue;
+    }
+
+    auto human = g.head.players_human & (1 << i);
+
+    // Create the player.
+    auto color =
+        rgbcolor_new(CIV_COLORS[i] >> 16 & 0xff, CIV_COLORS[i] >> 8 & 0xff,
+                     CIV_COLORS[i] & 0xff);
+    auto pplayer = server_create_player(slot, AI_MOD_DEFAULT, color, true);
+    server_player_init(pplayer, false, false);
+    rgbcolor_destroy(color);
+
+    // Set usernames.
+    server_player_set_name(pplayer, g.tribes[i].leader.data());
+    // Human players are unassigned.
+    pplayer->unassigned_user = human;
+    sz_strlcpy(pplayer->username, g.tribes[i].leader.data());
+    pplayer->server.orig_username[0] = '\0';
+    pplayer->ranked_username[0] = '\0';
+    player_delegation_set(pplayer, nullptr);
+
+    // Add it to a team.
+    team_add_player(pplayer, team_new(nullptr));
+
+    // AI data.
+    // Defaults taken from savegame3.cpp.
+    pplayer->ai_common.fuzzy = 0;
+    pplayer->ai_common.expand = 100;
+    pplayer->ai_common.science_cost = 100;
+    pplayer->ai_common.skill_level = level;
+    if (!human) {
+      set_as_ai(pplayer);
+      set_ai_level_directer(pplayer, pplayer->ai_common.skill_level);
+      CALL_PLR_AI_FUNC(gained_control, pplayer, pplayer);
+    }
+
+    slot++;
+  }
+
+  // Make sure the server doesn't remove the newly created players.
+  ::game.info.aifill = player_count();
+  // Prevent new players from being added.
+  ::game.server.max_players = player_count();
+
+  shuffle_players();
+
+  return true;
+}
 } // namespace civ2
 
 /**
@@ -490,6 +592,9 @@ bool load_civ2_save(const QString &path)
   }
 
   if (!civ2::setup_ruleset(g)) {
+    return false;
+  }
+  if (!civ2::setup_players(g)) {
     return false;
   }
 
