@@ -4,18 +4,30 @@
 #include "civ2.h"
 
 // utility
-#include "ai.h"
-#include "difficulty.h"
+#include "bitvector.h"
 #include "fcintl.h"
-#include "game.h"
 #include "log.h"
+#include "support.h"
+
+// common
+#include "ai.h"
+#include "base.h"
+#include "extras.h"
+#include "game.h"
+#include "map.h"
 #include "player.h"
-#include "plrhand.h"
 #include "rgbcolor.h"
+#include "team.h"
+#include "terrain.h"
+
+// ai
+#include "difficulty.h"
+
+// server
+#include "mapgen_utils.h"
+#include "plrhand.h"
 #include "ruleset.h"
 #include "srv_main.h"
-#include "support.h"
-#include "team.h"
 
 #include <QFile>
 #include <QString>
@@ -43,6 +55,8 @@ const static auto MAGIC = QByteArrayLiteral("CIVILIZE\0\x1A");
 const static auto NUM_TECHS_CIC = 93;
 /// Number of techs for most versions
 const static auto NUM_TECHS = 100;
+// Freeciv21 identifiers of civ2 terrains (in order).
+constexpr std::string_view TERRAIN_IDS = "dpgfhmtasj ";
 /// Number of Great Wonder slots
 const static auto NUM_WONDERS = 28;
 /// Number of civilizations (including barbarians)
@@ -190,17 +204,17 @@ enum tile_improvement : unsigned char {
  * civ2 tile info.
  */
 struct tile {
-  std::uint8_t terrain : 4; ///< Terrain ID.
-  std::byte _padding1 : 2;  ///< Unused?
-  bool no_resources : 1;    ///< Cannot have resources.
-  bool river : 1;           ///< Has a river.
-  std::byte improvements;   ///< Tile improvements.
-  std::byte _padding2 : 5;  ///< Unused?
-  std::byte city_owner : 3; ///< ID of civ that can work this tile.
-  std::int8_t island;       ///< Island number.
-  std::byte visibility;     ///< Who has explored the tile (bitfield).
-  std::byte owner : 4;      ///< Tile owner (for bases).
-  std::byte fertility : 4;  ///< ??
+  std::uint8_t terrain : 4;   ///< Terrain ID.
+  std::byte _padding1 : 2;    ///< Unused?
+  bool no_resources : 1;      ///< Cannot have resources.
+  bool river : 1;             ///< Has a river.
+  unsigned char improvements; ///< Tile improvements.
+  std::byte _padding2 : 5;    ///< Unused?
+  std::byte city_owner : 3;   ///< ID of civ that can work this tile.
+  std::int8_t island;         ///< Island number.
+  std::byte visibility;       ///< Who has explored the tile (bitfield).
+  std::byte owner : 4;        ///< Tile owner (for bases).
+  std::byte fertility : 4;    ///< ??
 };
 static_assert(sizeof(tile) == 6);
 
@@ -471,17 +485,19 @@ bool read_saved_game(const QString &path, game &g)
 
   return bytes.status() == QDataStream::Ok;
 }
+} // namespace civ2
 
 /**************************************************************************/
 
+namespace /* anonymous */ {
 /**
  * Loads the ruleset for a civ2 game.
  */
-bool setup_ruleset(const game &g)
+bool setup_ruleset(const civ2::game &g)
 {
   Q_UNUSED(g);
 
-  sz_strlcpy(::game.server.rulesetdir, "civ2");
+  sz_strlcpy(game.server.rulesetdir, "civ2");
   if (!load_rulesets(nullptr, nullptr, false, nullptr, true, false, true)) {
     qCritical(_("Failed to load ruleset '%s' needed for savegame."), "civ2");
     return false;
@@ -493,12 +509,12 @@ bool setup_ruleset(const game &g)
 /**
  * Loads players for a civ2 game.
  */
-bool setup_players(const game &g)
+bool setup_players(const civ2::game &g)
 {
   // TODO Move elsewhere
-  ::game.scenario.is_scenario = true;
-  ::game.scenario.players = true;
-  ::game.scenario.allow_ai_type_fallback = true;
+  game.scenario.is_scenario = true;
+  game.scenario.players = true;
+  game.scenario.allow_ai_type_fallback = true;
 
   // Remove all players. We will recreate them later.
   aifill(0);
@@ -523,9 +539,9 @@ bool setup_players(const game &g)
     auto human = g.head.players_human & (1 << i);
 
     // Create the player.
-    auto color =
-        rgbcolor_new(CIV_COLORS[i] >> 16 & 0xff, CIV_COLORS[i] >> 8 & 0xff,
-                     CIV_COLORS[i] & 0xff);
+    auto color = rgbcolor_new(civ2::CIV_COLORS[i] >> 16 & 0xff,
+                              civ2::CIV_COLORS[i] >> 8 & 0xff,
+                              civ2::CIV_COLORS[i] & 0xff);
     auto pplayer = server_create_player(slot, AI_MOD_DEFAULT, color, true);
     server_player_init(pplayer, false, false);
     rgbcolor_destroy(color);
@@ -558,15 +574,144 @@ bool setup_players(const game &g)
   }
 
   // Make sure the server doesn't remove the newly created players.
-  ::game.info.aifill = player_count();
+  game.info.aifill = player_count();
   // Prevent new players from being added.
-  ::game.server.max_players = player_count();
+  game.server.max_players = player_count();
 
   shuffle_players();
 
   return true;
 }
-} // namespace civ2
+
+/**
+ * Loads the map for a civ2 game.
+ */
+bool setup_map(const civ2::game &g)
+{
+  wld.map.server.have_huts = false;
+  // We can't load civ2 resources.
+  game.scenario.have_resources = false;
+  wld.map.server.have_resources = false;
+  wld.map.server.generator = MAPGEN_SCENARIO;
+
+  // Map dimensions
+  wld.map.xsize = g.map.width;
+  wld.map.ysize = g.map.height;
+  if (wld.map.ysize % 2 == 1) {
+    // Freeciv21 really wants this to be even... skip the last row.
+    wld.map.ysize--;
+  }
+  wld.map.topology_id = TF_ISO;
+  // TODO wrap?
+
+  map_init_topology();
+  main_map_allocate();
+
+  // Detect terrain types.
+  std::array<terrain *, civ2::TERRAIN_IDS.size()> terrains;
+  {
+    terrain_type_iterate(pterrain)
+    {
+      auto i = civ2::TERRAIN_IDS.find(pterrain->identifier);
+      fc_assert_ret_val(i != std::string::npos, false);
+      terrains[i] = pterrain;
+    }
+    terrain_type_iterate_end;
+  }
+
+  // Detect extra numbers. This is based on heuristics.
+  int irrigation_index = -1, farmland_index = -1, mine_index = -1,
+      river_index = -1, road_index = -1, rails_index = -1, fort_index = -1,
+      airbase_index = -1, pollution_index = -1;
+  extra_type_iterate(pextra)
+  {
+    if (is_extra_caused_by(pextra, EC_IRRIGATION)) {
+      if (BV_ISSET_ANY(pextra->hidden_by)) {
+        irrigation_index = extra_index(pextra);
+      } else {
+        farmland_index = extra_index(pextra);
+      }
+    } else if (is_extra_caused_by(pextra, EC_MINE)) {
+      mine_index = extra_index(pextra);
+    } else if (is_extra_caused_by(pextra, EC_ROAD)) {
+      if (road_has_flag(extra_road_get(pextra), RF_RIVER)
+          && pextra->generated) {
+        river_index = extra_index(pextra);
+      } else if (extra_road_get(pextra)->move_cost == 0) {
+        rails_index = extra_index(pextra);
+      } else {
+        road_index = extra_index(pextra);
+      }
+    } else if (is_extra_caused_by(pextra, EC_BASE)) {
+      auto gui_type = extra_base_get(pextra)->gui_type;
+      if (gui_type == BASE_GUI_FORTRESS) {
+        fort_index = extra_index(pextra);
+      } else if (gui_type == BASE_GUI_AIRBASE) {
+        airbase_index = extra_index(pextra);
+      }
+    } else if (is_extra_caused_by(pextra, EC_POLLUTION)) {
+      pollution_index = extra_index(pextra);
+    }
+  }
+  extra_type_iterate_end;
+
+  fc_assert_ret_val(mine_index >= 0, false);
+  fc_assert_ret_val(river_index >= 0, false);
+  fc_assert_ret_val(road_index >= 0, false);
+  fc_assert_ret_val(rails_index >= 0, false);
+
+  // Load tiles
+  for (int y = 0; y < wld.map.ysize; ++y) {
+    for (int x = 0; x < wld.map.xsize; ++x) {
+      const auto &civ2tile = g.map.tiles[x + y * g.map.width];
+      auto ptile = native_pos_to_tile(&(wld.map), x, y);
+
+      // Set terrain
+      fc_assert_ret_val(civ2tile.terrain < terrains.size(), false);
+      ptile->terrain = terrains[civ2tile.terrain];
+
+      // Set extras
+      if (civ2tile.river) {
+        BV_SET(ptile->extras, river_index);
+      }
+      if ((civ2tile.improvements & civ2::IRRIGATION) == civ2::IRRIGATION
+          && ptile->terrain->irrigation_result == ptile->terrain) {
+        // TODO: Second condition is a Freeciv21 limitation.
+        BV_SET(ptile->extras, irrigation_index);
+      }
+      if ((civ2tile.improvements & civ2::FARMLAND) == civ2::FARMLAND
+          && ptile->terrain->irrigation_result == ptile->terrain) {
+        // TODO: Second condition is a Freeciv21 limitation.
+        BV_SET(ptile->extras, farmland_index);
+      }
+      if ((civ2tile.improvements & civ2::MINE) == civ2::MINE
+          && ptile->terrain->mining_result == ptile->terrain) {
+        // TODO: Second condition is a Freeciv21 limitation.
+        BV_SET(ptile->extras, mine_index);
+      }
+      if ((civ2tile.improvements & civ2::ROAD) == civ2::ROAD) {
+        BV_SET(ptile->extras, road_index);
+      }
+      if ((civ2tile.improvements & civ2::RAILROAD) == civ2::RAILROAD) {
+        BV_SET(ptile->extras, rails_index);
+      }
+      if ((civ2tile.improvements & civ2::FORTRESS) == civ2::FORTRESS) {
+        BV_SET(ptile->extras, fort_index);
+      }
+      if ((civ2tile.improvements & civ2::AIRBASE) == civ2::AIRBASE) {
+        BV_SET(ptile->extras, airbase_index);
+      }
+      if ((civ2tile.improvements & civ2::POLLUTION) == civ2::POLLUTION) {
+        BV_SET(ptile->extras, pollution_index);
+      }
+    }
+  }
+
+  assign_continent_numbers();
+
+  return true;
+}
+} // anonymous namespace
 
 /**
  * Checks if the file at path looks like a civ2 save.
@@ -591,10 +736,13 @@ bool load_civ2_save(const QString &path)
     return false;
   }
 
-  if (!civ2::setup_ruleset(g)) {
+  if (!setup_ruleset(g)) {
     return false;
   }
-  if (!civ2::setup_players(g)) {
+  if (!setup_players(g)) {
+    return false;
+  }
+  if (!setup_map(g)) {
     return false;
   }
 
