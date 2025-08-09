@@ -39,6 +39,7 @@
 
 #include <QFile>
 #include <QString>
+#include <QStringDecoder>
 #include <QtDebug>
 #include <QtEndian>
 
@@ -543,6 +544,8 @@ bool setup_players(const civ2::game &g, load_data &data)
                          ? static_cast<ai_level>(g.head.difficulty)
                          : AI_LEVEL_CHEATING;
 
+  auto from_latin1 = QStringDecoder(QStringDecoder::Latin1);
+
   int slot = 0; // Freeciv21 player slot.
   for (int i = 0; i < g.tribes.size(); ++i) {
     if (!(g.head.players_alive & (1 << i))) {
@@ -564,10 +567,11 @@ bool setup_players(const civ2::game &g, load_data &data)
     rgbcolor_destroy(color);
 
     // Set usernames.
-    server_player_set_name(pplayer, g.tribes[i].leader.data());
+    auto leader_name = from_latin1(g.tribes[i].leader.data());
+    server_player_set_name(pplayer, qUtf8Printable(leader_name));
     // Human players are unassigned.
     pplayer->unassigned_user = human;
-    sz_strlcpy(pplayer->username, g.tribes[i].leader.data());
+    sz_strlcpy(pplayer->username, qUtf8Printable(leader_name));
     pplayer->server.orig_username[0] = '\0';
     pplayer->ranked_username[0] = '\0';
     player_delegation_set(pplayer, nullptr);
@@ -766,13 +770,18 @@ bool setup_map(const civ2::game &g, load_data &data)
  */
 bool setup_cities(const civ2::game &g, load_data &data)
 {
+  auto from_latin1 = QStringDecoder(QStringDecoder::Latin1);
+
   for (int i = 0; i < g.cities.size(); ++i) {
     auto &c = g.cities[i];
+
+    auto city_name = from_latin1(c.name.data());
 
     // Get the owner.
     fc_assert_ret_val(c.owner < data.players.size(), false);
     if (!data.players[c.owner]) {
-      qWarning(_("Skipping city %s: unsupported owner"), c.name.data());
+      qWarning(_("Skipping city %s: unsupported owner"),
+               qUtf8Printable(city_name));
       continue;
     }
     fc_assert_ret_val(data.players[c.owner], false);
@@ -781,7 +790,8 @@ bool setup_cities(const civ2::game &g, load_data &data)
     pplayer->server.got_first_city = true;
 
     // Create a dummy city.
-    auto pcity = create_city_virtual(pplayer, nullptr, c.name.data());
+    auto pcity =
+        create_city_virtual(pplayer, nullptr, qUtf8Printable(city_name));
     pcity->id = i;
     adv_city_alloc(pcity);
 
