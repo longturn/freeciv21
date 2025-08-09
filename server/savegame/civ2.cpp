@@ -655,6 +655,8 @@ bool setup_players(const civ2::game &g, load_data &data)
     pplayer->ranked_username[0] = '\0';
     player_delegation_set(pplayer, nullptr);
 
+    pplayer->is_male = g.tribe_infos[i].gender == 0;
+
     // Index 0 is for barbarians.
     if (i == 0) {
       pplayer->ai_common.barbarian_type = LAND_AND_SEA_BARBARIAN;
