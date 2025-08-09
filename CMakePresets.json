@@ -23,10 +23,12 @@
       "name": "fullrelease-macos",
       "displayName": "Build for Mac in Release Mode",
       "inherits": "fullrelease",
-      "installDir": ".install",
+      "binaryDir": "${sourceDir}/build",
+      "installDir": "${sourceDir}/build/install",
       "cacheVariables": {
         "FREECIV_USE_VCPKG": "ON",
-        "CMAKE_FIND_PACKAGE_PREFER_CONFIG": "ON"
+        "CMAKE_FIND_PACKAGE_PREFER_CONFIG": "ON",
+        "FREECIV_ENABLE_NLS": "OFF"
       }
     },
     {

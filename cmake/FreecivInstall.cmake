@@ -255,6 +255,16 @@ if(UNIX AND NOT APPLE)
   endif(FREECIV_ENABLE_RULEDIT)
 endif(UNIX AND NOT APPLE)
 
+if(APPLE)
+  # Use Auto Revision variables to convert some templates to real files at build
+  # time. Avoid overwriting if the version didn't change.
+  configure_file("dist/Info.plist.in" dist/Info.plist.new
+                @ONLY NEWLINE_STYLE UNIX)
+  file(COPY_FILE "${CMAKE_BINARY_DIR}/dist/Info.plist.new"
+                "${CMAKE_BINARY_DIR}/dist/Info.plist"
+      ONLY_IF_DIFFERENT)
+endif(APPLE)
+
 # We grab the Libertinus Font package online for the client
 if(FREECIV_ENABLE_CLIENT AND FREECIV_DOWNLOAD_FONTS)
   message(STATUS "Downloading Libertinus Font Package")
