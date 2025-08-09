@@ -26,3 +26,14 @@ WINDOWS::
     sphinx-build -b html ..\docs docs\
 
     and then open build-vs\docs\index.html in your browser of choice
+
+MACOS:
+
+    cd build
+    python -m venv venv
+    source venv/bin/activate
+    pip install -r ../docs/requirements.txt
+
+    sphinx-build -b html ../docs ./docs/
+
+    and then open build/docs/index.html in your browser of choice

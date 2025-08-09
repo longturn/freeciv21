@@ -9,6 +9,7 @@ Freeciv21 project.
   dev-env.rst
   msys2.rst
   visual-studio.rst
+  macos.rst
   pull-request.rst
   eval-pull-request.rst
   release.rst

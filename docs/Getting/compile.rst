@@ -38,11 +38,13 @@ An operating system that support Qt
   better than for some of the others out there, so keep that in mind if you are not an experienced Linux user.
 
 .. note::
-  The following instructions on this page are for Linux, MSYS2 and macOS environments. You will need to
+  The following instructions on this page are for Linux and MSYS2 on Windows. You will need to
   :doc:`install MSYS2 </Contributing/msys2>` first before continuing here if using MSYS2 on Windows.
   However, you can also compile on Windows with Microsoft
   :doc:`Visual Studio </Contributing/visual-studio>`. The Visual Studio instructions are self contained.
-  No need to return to this page after following the installation instructions.
+  No need to return to this page after following the installation instructions. Follow the steps in
+  :doc:`macOS </Contributing/macos>` to setup macOS as a development environment. As with Visual Studio
+  the macOS instructions are self contained.
 
 
 A C and C++ compiler
@@ -140,15 +142,6 @@ its variants.
 
 See the `Fedora Linux Packages`_ section below on the steps to install the components for Fedora Linux
 
-See the `macOS Packages`_ section below on the steps to install the components for Apple macOS.
-
-If you are running Windows and want to use the MSYS2 environment and have not set it up yet, then
-:doc:`do so now </Contributing/msys2>`, before continuing.
-
-Lastly, if you are running Windows and want to use Visual Studio, you can follow the Microsoft
-:doc:`Visual Studio </Contributing/visual-studio>` instructions. The Visual Studio instructions are
-self contained. You do not need to return here in that case.
-
 Debian Linux Packages
 =====================
 
@@ -211,28 +204,6 @@ RHEL, CentOS Stream) to install Freeciv21.
     clang17-tools-extra
 
 
-At this point, follow the steps in `Obtaining the Source Code`_ section below.
-
-macOS Packages
-==============
-
-Below are all the command line steps needed to start with a fresh install of macOS.
-
-.. code-block:: sh
-
-  $ brew update
-
-  $ brew install \
-      cmake \
-      ninja \
-      python3 \
-      gettext \
-      vcpkg
-      brew link gettext --force
-
-  $ export VCPKG_ROOT="$HOME/vcpkg"
-
-
 Obtaining the Source Code
 =========================
 
@@ -267,22 +238,6 @@ reading in the `Other CMake Notes`_ section below for more notes about other com
   ``-DCMAKE_INSTALL_PREFIX=$PWD/build/install``
 
   at the end.
-
-On macOS, you need to use a preset that is defined in the :file:`CMakePresets.json` file. When complete
-you can go to the `Compiling/Building`_ section below to continue.
-
-.. code-block:: sh
-
-  $ cmake --preset fullrelease-macos -S . -B build
-
-.. note::
-  The first time you run the this command, :file:`cmake` invokes the :file:`vcpkg` installation process to
-  download and compile all of the project dependencies listed in the manifest file: :file:`vcpkg.json`.
-  :strong:`This will take a very long time`. On a fast computer with a good Internet connection it will take
-  at least 3 hours to complete. Everything will be downloaded and compiled into the :file:`$HOME/vcpkg`
-  directory. Binaries for the packages will be copied into the :file:`./build/` directory inside of the main
-  Freeciv21 directory and reused for subsequent builds.
-
 
 Compiling/Building
 ==================
