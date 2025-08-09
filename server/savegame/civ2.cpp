@@ -725,7 +725,8 @@ bool setup_map(const civ2::game &g, load_data &data)
         // TODO: Second condition is a Freeciv21 limitation.
         BV_SET(ptile->extras, mine_index);
       }
-      if ((civ2tile.improvements & civ2::ROAD) == civ2::ROAD) {
+      if ((civ2tile.improvements & civ2::ROAD) == civ2::ROAD
+          || (civ2tile.improvements & civ2::CITY) == civ2::CITY) {
         BV_SET(ptile->extras, road_index);
       }
       if ((civ2tile.improvements & civ2::RAILROAD) == civ2::RAILROAD) {
