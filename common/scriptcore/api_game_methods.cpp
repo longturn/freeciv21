@@ -868,6 +868,18 @@ bool api_methods_tile_has_road(lua_State *L, Tile *ptile, const char *name)
 }
 
 /**
+   Return the ruleset name of the primary resource on this tile, or nullptr.
+ */
+const char *api_methods_tile_get_resource(lua_State *L, Tile *ptile)
+{
+  LUASCRIPT_CHECK_STATE(L, nullptr);
+  LUASCRIPT_CHECK_SELF(L, ptile, nullptr);
+
+  extra_type *pextra = tile_resource(ptile);
+  return pextra ? extra_rule_name(pextra) : nullptr;
+}
+
+/**
    Is tile occupied by enemies
  */
 bool api_methods_enemy_tile(lua_State *L, Tile *ptile, Player *against)
