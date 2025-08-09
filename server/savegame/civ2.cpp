@@ -555,6 +555,14 @@ bool setup_players(const civ2::game &g)
     pplayer->ranked_username[0] = '\0';
     player_delegation_set(pplayer, nullptr);
 
+    // Pick a random nation.
+    // TODO use info from the save.
+    player_set_nation(
+        pplayer, pick_a_nation(nullptr, false, true, NOT_A_BARBARIAN));
+
+    // Set some government. 0 is Anarchy so use 1.
+    pplayer->government = government_by_number(1);
+
     // Add it to a team.
     team_add_player(pplayer, team_new(nullptr));
 
