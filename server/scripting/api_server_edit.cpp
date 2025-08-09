@@ -573,6 +573,28 @@ void api_edit_remove_extra(lua_State *L, Tile *ptile, const char *name)
 }
 
 /**
+   Changes the primary resource of the given tile. If name is set to nullptr,
+   the primary resource is removed.
+ */
+void api_edit_tile_primary_resource_set(lua_State *L, Tile *ptile,
+                                        const char *name)
+{
+  LUASCRIPT_CHECK_STATE(L);
+  LUASCRIPT_CHECK_ARG_NIL(L, ptile, 2, Tile);
+
+  struct extra_type *pextra = nullptr;
+  if (name != nullptr) {
+    pextra = extra_type_by_rule_name(name);
+    LUASCRIPT_CHECK_ARG(L, pextra, 3, "No such resource type");
+    LUASCRIPT_CHECK_ARG(L, pextra->data.resource, 3,
+                        "Not a resource type extra");
+  }
+
+  tile_set_resource(ptile, pextra);
+  update_tile_knowledge(ptile);
+}
+
+/**
    Set tile label text.
  */
 void api_edit_tile_set_label(lua_State *L, Tile *ptile, const char *label)

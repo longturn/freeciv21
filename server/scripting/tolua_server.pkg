@@ -146,6 +146,8 @@ module edit {
     @ create_road (lua_State *L, Tile *ptile, const char *name);
   void api_edit_remove_extra
     @ remove_extra (lua_State *L, Tile *ptile, const char *name);
+  void api_edit_tile_primary_resource_set
+    @ tile_primary_resource_set(lua_State *L, Tile *ptile, const char *name);
   void api_edit_tile_set_label
     @ tile_set_label (lua_State *L, Tile *ptile, const char *label);
   Player *api_edit_create_player
@@ -424,6 +426,10 @@ end
 
 function Tile:change_terrain(terrain)
   edit.change_terrain(self, terrain)
+end
+
+function Tile:set_primary_resource(resource)
+  edit.tile_primary_resource_set(self, resource)
 end
 
 function Tile:unleash_barbarians()
