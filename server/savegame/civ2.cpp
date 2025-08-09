@@ -12,19 +12,27 @@
 // common
 #include "ai.h"
 #include "base.h"
+#include "city.h"
 #include "extras.h"
 #include "game.h"
+#include "government.h"
+#include "idex.h"
 #include "map.h"
+#include "nation.h"
 #include "player.h"
 #include "rgbcolor.h"
 #include "team.h"
 #include "terrain.h"
 
 // ai
+#include "aitraits.h"
 #include "difficulty.h"
 
 // server
+#include "citytools.h"
+#include "infracache.h"
 #include "mapgen_utils.h"
+#include "maphand.h"
 #include "plrhand.h"
 #include "ruleset.h"
 #include "srv_main.h"
@@ -491,11 +499,20 @@ bool read_saved_game(const QString &path, game &g)
 
 namespace /* anonymous */ {
 /**
+ * Data needed while loading the save.
+ */
+struct load_data {
+  /// Freeciv21 players for the civ2 slots.
+  std::array<player *, civ2::NUM_PLAYERS> players;
+};
+
+/**
  * Loads the ruleset for a civ2 game.
  */
-bool setup_ruleset(const civ2::game &g)
+bool setup_ruleset(const civ2::game &g, load_data &data)
 {
   Q_UNUSED(g);
+  Q_UNUSED(data);
 
   sz_strlcpy(game.server.rulesetdir, "civ2");
   if (!load_rulesets(nullptr, nullptr, false, nullptr, true, false, true)) {
@@ -509,7 +526,7 @@ bool setup_ruleset(const civ2::game &g)
 /**
  * Loads players for a civ2 game.
  */
-bool setup_players(const civ2::game &g)
+bool setup_players(const civ2::game &g, load_data &data)
 {
   // TODO Move elsewhere
   game.scenario.is_scenario = true;
@@ -533,6 +550,7 @@ bool setup_players(const civ2::game &g)
     if (!(g.head.players_alive & (1 << i))) {
       // Don't create dead players. They most often don't play any role in
       // scenarios.
+      data.players[i] = nullptr;
       continue;
     }
 
@@ -543,6 +561,7 @@ bool setup_players(const civ2::game &g)
                               civ2::CIV_COLORS[i] >> 8 & 0xff,
                               civ2::CIV_COLORS[i] & 0xff);
     auto pplayer = server_create_player(slot, AI_MOD_DEFAULT, color, true);
+    data.players[i] = pplayer;
     server_player_init(pplayer, false, false);
     rgbcolor_destroy(color);
 
@@ -559,6 +578,8 @@ bool setup_players(const civ2::game &g)
     // TODO use info from the save.
     player_set_nation(
         pplayer, pick_a_nation(nullptr, false, true, NOT_A_BARBARIAN));
+    ai_traits_init(pplayer);
+    pplayer->style = style_of_nation(pplayer->nation);
 
     // Set some government. 0 is Anarchy so use 1.
     pplayer->government = government_by_number(1);
@@ -594,8 +615,11 @@ bool setup_players(const civ2::game &g)
 /**
  * Loads the map for a civ2 game.
  */
-bool setup_map(const civ2::game &g)
+bool setup_map(const civ2::game &g, load_data &data)
 {
+  Q_UNUSED(data);
+
+  game.info.is_new_game = false;
   wld.map.server.have_huts = false;
   // We can't load civ2 resources.
   game.scenario.have_resources = false;
@@ -717,6 +741,92 @@ bool setup_map(const civ2::game &g)
 
   assign_continent_numbers();
 
+  players_iterate(pplayer)
+  {
+    // Allocate player private map here; it is needed in different modules
+    // besides this one.
+    player_map_init(pplayer);
+    pplayer->tile_known->fill(false);
+  }
+  players_iterate_end;
+
+  // Initialize global warming levels.
+  game_map_init();
+
+  return true;
+}
+
+/**
+ * Loads cities from a civ2 game.
+ */
+bool setup_cities(const civ2::game &g, load_data &data)
+{
+  for (int i = 0; i < g.cities.size(); ++i) {
+    auto &c = g.cities[i];
+
+    // Get the owner.
+    fc_assert_ret_val(c.owner < data.players.size(), false);
+    if (!data.players[c.owner]) {
+      qWarning(_("Skipping city %s: unsupported owner"), c.name.data());
+      continue;
+    }
+    fc_assert_ret_val(data.players[c.owner], false);
+
+    auto pplayer = data.players[c.owner];
+    pplayer->server.got_first_city = true;
+
+    // Create a dummy city.
+    auto pcity = create_city_virtual(pplayer, nullptr, c.name.data());
+    pcity->id = i;
+    adv_city_alloc(pcity);
+
+    // Put it on the map.
+    pcity->tile = native_pos_to_tile(&(wld.map), c.x / 2, c.y);
+    fc_assert_ret_val(pcity->tile, false);
+
+    // Two cities on the same tile?
+    // FIXME: civ2 would apparently load this...
+    fc_assert_ret_val(!tile_city(pcity->tile), false);
+    pcity->tile->worked = pcity;
+
+    // Tile ownership
+    pcity->tile->owner = pplayer;
+
+    // Citizens
+    city_size_set(pcity, c.size);
+    // TODO assign workers & specialists
+
+    // Production
+    city_choose_build_default(pcity);
+
+    // TODO trade routes (second loop)
+
+    identity_number_reserve(pcity->id);
+    idex_register_city(&wld, pcity);
+
+    // Vision
+    auto pdcity = vision_site_new(0, nullptr, nullptr);
+    pdcity->location = pcity->tile;
+    pdcity->owner = pplayer;
+    pdcity->identity = pcity->id;
+    vision_site_size_set(pdcity, pcity->size);
+    BV_CLR_ALL(pdcity->improvements);
+    change_playertile_site(map_get_player_tile(pdcity->location, pplayer),
+                           pdcity);
+    identity_number_reserve(pdcity->identity);
+
+    // After everything is loaded, but before vision.
+    map_claim_ownership(city_tile(pcity), pplayer, city_tile(pcity), true);
+
+    // adding the city contribution to fog-of-war
+    pcity->server.vision = vision_new(pplayer, city_tile(pcity));
+    vision_reveal_tiles(pcity->server.vision,
+                        game.server.vision_reveal_tiles);
+    city_refresh_vision(pcity);
+
+    city_list_append(pplayer->cities, pcity);
+  }
+
   return true;
 }
 } // anonymous namespace
@@ -744,17 +854,25 @@ bool load_civ2_save(const QString &path)
     return false;
   }
 
-  if (!setup_ruleset(g)) {
+  auto data = load_data();
+  if (!setup_ruleset(g, data)) {
     return false;
   }
-  if (!setup_players(g)) {
+  if (!setup_players(g, data)) {
     return false;
   }
-  if (!setup_map(g)) {
+  if (!setup_map(g, data)) {
+    return false;
+  }
+  if (!setup_cities(g, data)) {
     return false;
   }
 
-  // Unsupported!
-  qCritical(_("Cannot read civ2 saves!"));
-  return false;
+  players_iterate(pplayer) { map_know_and_see_all(pplayer); }
+  players_iterate_end;
+
+  // Experimental!
+  qWarning(_("Reading civ2 saves is experimental. Loading is incomplete and "
+             "the game may not behave as expected."));
+  return true;
 }
