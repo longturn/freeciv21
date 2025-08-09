@@ -170,10 +170,10 @@ bool read_header(QDataStream &bytes, header &head)
  * A civ2 nation
  */
 struct tribe {
-  std::int16_t city_style;        ///< Which city style is currently used
-  std::array<char, 24> leader;    ///< Name of the tribe's leader
-  std::array<char, 24> name;      ///< Name of the tribe
-  std::array<char, 24> adjective; ///< Adjective for the tribe
+  std::int16_t city_style = 0;       ///< Which city style is currently used
+  std::array<char, 24> leader{'\0'}; ///< Name of the tribe's leader
+  std::array<char, 24> name{'\0'};   ///< Name of the tribe
+  std::array<char, 24> adjective{'\0'}; ///< Adjective for the tribe
   /// Title of the leader under each government
   std::array<std::array<char, 24>, 7> leader_title;
 };
@@ -190,6 +190,61 @@ bool read_tribe(QDataStream &bytes, tribe &t)
   for (auto &title : t.leader_title) {
     bytes.readRawData(title.data(), title.size());
   }
+  return bytes.status() == QDataStream::Ok;
+}
+
+/**
+ * Additional information about a tribe (techs, money, treaties...)
+ */
+struct tribe_info {
+  std::uint8_t gender;   ///< Ruler gender.
+  std::int16_t money;    ///< Gold.
+  std::uint8_t nation;   ///< Which civ is being played (index in RULES.TXT).
+  std::uint8_t research; ///< Research progress.
+  std::uint8_t current_research; ///< Current tech. 0xFF means no goal.
+  std::uint8_t tax;              ///< Tax(?) rate 0-10.
+  std::uint8_t science;          ///< Science(?) rate 0-10.
+  std::uint8_t govermnent;       ///< 0 to 7 inclusive. 0 is Anarchy, 1 is
+                                 ///< Despotism, 6 is Democracy.
+  std::array<std::uint8_t[4], NUM_PLAYERS - 1>
+      treaties;                       /// Treaties bitfield.
+  std::array<std::uint8_t, 11> techs; ///< Known technologies.
+  std::int16_t military_demo;         ///< "Military demographic value"
+  std::array<std::int16_t, NUM_PLAYERS - 1> last_contact;
+};
+
+/**
+ * Reads in techs, money, treaties, ...
+ */
+bool read_player(QDataStream &bytes, tribe_info &ti)
+{
+  const auto start = bytes.device()->pos();
+  qDebug() << "Player block starting at byte" << start;
+
+  std::uint8_t skip;
+  std::uint16_t skip2;
+
+  bytes >> skip >> ti.gender >> ti.money >> skip2 >> ti.nation >> skip
+      >> ti.research >> skip >> ti.current_research;
+  bytes.skipRawData(8);
+  // NOTE: The format of tax and science is unclear in "Everything about Hex
+  // Editing". What's below is a guess.
+  bytes >> ti.tax >> ti.science >> ti.govermnent;
+  bytes.skipRawData(14);
+  bytes.readRawData(reinterpret_cast<char *>(ti.treaties.data()),
+                    4 * (NUM_PLAYERS - 1));
+  bytes.skipRawData(24);
+  bytes.readRawData(reinterpret_cast<char *>(ti.techs.data()),
+                    ti.techs.size());
+  fc_assert_ret_val(bytes.device()->pos() == start + 99, false);
+  bytes.skipRawData(897);
+  fc_assert_ret_val(bytes.device()->pos() == start + 996, false);
+  for (auto &lc : ti.last_contact) {
+    bytes >> lc;
+  }
+  bytes.skipRawData(418);
+  fc_assert_ret_val(bytes.device()->pos() == start + 1428, false);
+
   return bytes.status() == QDataStream::Ok;
 }
 
@@ -437,6 +492,8 @@ struct game
   header head;
   /// Which nation is connected to which player slot (including barbarians).
   std::array<tribe, NUM_PLAYERS> tribes;
+  /// Player statistics.
+  std::array<tribe_info, NUM_PLAYERS> tribe_infos;
   /// Map information.
   civ2::map map;
   /// All units in the game.
@@ -470,10 +527,17 @@ bool read_saved_game(const QString &path, game &g)
     }
   }
 
-  bytes.skipRawData(8); // Padding?
-  fc_assert_ret_val(file.pos() == 2286, false);
+  // NOTE: "Everything about Hex Editing states that the Techs & Money part
+  // starts on byte 2287, but at least for MGE this is wrong! It starts 8
+  // bytes earlier and the blocks are 1 byte longer than stated.
+  fc_assert_ret_val(file.pos() == 2278, false);
 
-  bytes.skipRawData(1427 * 8); // Techs, gold, diplomacy
+  for (auto &ti : g.tribe_infos) {
+    if (!read_player(bytes, ti)) {
+      qCritical(_("Error loading civ2 player data."));
+      return false;
+    }
+  }
 
   fc_assert_ret_val(file.pos() == 13702, false);
   if (!read_map(bytes, g.map)) {
