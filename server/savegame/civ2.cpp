@@ -36,6 +36,7 @@
 #include "plrhand.h"
 #include "ruleset.h"
 #include "srv_main.h"
+#include "vision.h"
 
 #include <QFile>
 #include <QString>
@@ -221,7 +222,7 @@ struct tile {
   std::byte _padding2 : 5;    ///< Unused?
   std::byte city_owner : 3;   ///< ID of civ that can work this tile.
   std::int8_t island;         ///< Island number.
-  std::byte visibility;       ///< Who has explored the tile (bitfield).
+  std::int8_t visibility;     ///< Who has explored the tile (bitfield).
   std::byte owner : 4;        ///< Tile owner (for bases).
   std::byte fertility : 4;    ///< ??
 };
@@ -621,6 +622,110 @@ bool setup_players(const civ2::game &g, load_data &data)
 }
 
 /**
+ * Converts civ2-style bit fields to Freeciv21 extras.
+ */
+struct extra_data
+{
+  // Freeciv21 extra IDs
+  int irrigation = -1, farmland = -1, mine = -1,
+      river = -1, road = -1, rails = -1, fort = -1,
+      airbase = -1, pollution = -1;
+
+  /**
+   * Detect extra numbers from the ruleset. This is based on heuristics.
+   */
+  extra_data() {
+    extra_type_iterate(pextra)
+    {
+      if (is_extra_caused_by(pextra, EC_IRRIGATION)) {
+        if (BV_ISSET_ANY(pextra->hidden_by)) {
+          irrigation = extra_index(pextra);
+        } else {
+          farmland = extra_index(pextra);
+        }
+      } else if (is_extra_caused_by(pextra, EC_MINE)) {
+        mine = extra_index(pextra);
+      } else if (is_extra_caused_by(pextra, EC_ROAD)) {
+        if (road_has_flag(extra_road_get(pextra), RF_RIVER)
+            && pextra->generated) {
+          river = extra_index(pextra);
+        } else if (extra_road_get(pextra)->move_cost == 0) {
+          rails = extra_index(pextra);
+        } else {
+          road = extra_index(pextra);
+        }
+      } else if (is_extra_caused_by(pextra, EC_BASE)) {
+        auto gui_type = extra_base_get(pextra)->gui_type;
+        if (gui_type == BASE_GUI_FORTRESS) {
+          fort = extra_index(pextra);
+        } else if (gui_type == BASE_GUI_AIRBASE) {
+          airbase = extra_index(pextra);
+        }
+      } else if (is_extra_caused_by(pextra, EC_POLLUTION)) {
+        pollution = extra_index(pextra);
+      }
+    }
+    extra_type_iterate_end;
+  }
+
+  /**
+   * Checks that all extra numbers are good.
+   */
+  bool check() const
+  {
+    fc_assert_ret_val(irrigation >= 0, false);
+    fc_assert_ret_val(farmland >= 0, false);
+    fc_assert_ret_val(mine >= 0, false);
+    fc_assert_ret_val(river >= 0, false);
+    fc_assert_ret_val(road >= 0, false);
+    fc_assert_ret_val(rails >= 0, false);
+    fc_assert_ret_val(fort >= 0, false);
+    fc_assert_ret_val(airbase >= 0, false);
+    fc_assert_ret_val(pollution >= 0, false);
+    return true;
+  }
+
+  /**
+   * Converts civ2 improvmeents to Freeciv21 extras.
+   */
+  void set(std::uint8_t improvements, bv_extras &extras,
+           const terrain *pterrain) const
+  {
+    if ((improvements & civ2::IRRIGATION) == civ2::IRRIGATION
+        && pterrain->irrigation_result == pterrain) {
+      // TODO: Second condition is a Freeciv21 limitation.
+      BV_SET(extras, irrigation);
+    }
+    if ((improvements & civ2::FARMLAND) == civ2::FARMLAND
+        && pterrain->irrigation_result == pterrain) {
+      // TODO: Second condition is a Freeciv21 limitation.
+      BV_SET(extras, farmland);
+    }
+    if ((improvements & civ2::MINE) == civ2::MINE
+        && pterrain->mining_result == pterrain) {
+      // TODO: Second condition is a Freeciv21 limitation.
+      BV_SET(extras, mine);
+    }
+    if ((improvements & civ2::ROAD) == civ2::ROAD
+        || (improvements & civ2::CITY) == civ2::CITY) {
+      BV_SET(extras, road);
+    }
+    if ((improvements & civ2::RAILROAD) == civ2::RAILROAD) {
+      BV_SET(extras, rails);
+    }
+    if ((improvements & civ2::FORTRESS) == civ2::FORTRESS) {
+      BV_SET(extras, fort);
+    }
+    if ((improvements & civ2::AIRBASE) == civ2::AIRBASE) {
+      BV_SET(extras, airbase);
+    }
+    if ((improvements & civ2::POLLUTION) == civ2::POLLUTION) {
+      BV_SET(extras, pollution);
+    }
+  }
+};
+
+/**
  * Loads the map for a civ2 game.
  */
 bool setup_map(const civ2::game &g, load_data &data)
@@ -659,46 +764,19 @@ bool setup_map(const civ2::game &g, load_data &data)
     terrain_type_iterate_end;
   }
 
-  // Detect extra numbers. This is based on heuristics.
-  int irrigation_index = -1, farmland_index = -1, mine_index = -1,
-      river_index = -1, road_index = -1, rails_index = -1, fort_index = -1,
-      airbase_index = -1, pollution_index = -1;
-  extra_type_iterate(pextra)
-  {
-    if (is_extra_caused_by(pextra, EC_IRRIGATION)) {
-      if (BV_ISSET_ANY(pextra->hidden_by)) {
-        irrigation_index = extra_index(pextra);
-      } else {
-        farmland_index = extra_index(pextra);
-      }
-    } else if (is_extra_caused_by(pextra, EC_MINE)) {
-      mine_index = extra_index(pextra);
-    } else if (is_extra_caused_by(pextra, EC_ROAD)) {
-      if (road_has_flag(extra_road_get(pextra), RF_RIVER)
-          && pextra->generated) {
-        river_index = extra_index(pextra);
-      } else if (extra_road_get(pextra)->move_cost == 0) {
-        rails_index = extra_index(pextra);
-      } else {
-        road_index = extra_index(pextra);
-      }
-    } else if (is_extra_caused_by(pextra, EC_BASE)) {
-      auto gui_type = extra_base_get(pextra)->gui_type;
-      if (gui_type == BASE_GUI_FORTRESS) {
-        fort_index = extra_index(pextra);
-      } else if (gui_type == BASE_GUI_AIRBASE) {
-        airbase_index = extra_index(pextra);
-      }
-    } else if (is_extra_caused_by(pextra, EC_POLLUTION)) {
-      pollution_index = extra_index(pextra);
-    }
+  auto extras = extra_data();
+  if (!extras.check()) {
+    return false;
   }
-  extra_type_iterate_end;
 
-  fc_assert_ret_val(mine_index >= 0, false);
-  fc_assert_ret_val(river_index >= 0, false);
-  fc_assert_ret_val(road_index >= 0, false);
-  fc_assert_ret_val(rails_index >= 0, false);
+  // Vision
+  players_iterate(pplayer)
+  {
+    // Allocate player private map.
+    player_map_init(pplayer);
+    pplayer->tile_known->fill(false);
+  }
+  players_iterate_end;
 
   // Load tiles
   for (int y = 0; y < wld.map.ysize; ++y) {
@@ -712,52 +790,32 @@ bool setup_map(const civ2::game &g, load_data &data)
 
       // Set extras
       if (civ2tile.river) {
-        BV_SET(ptile->extras, river_index);
+        BV_SET(ptile->extras, extras.river);
       }
-      if ((civ2tile.improvements & civ2::IRRIGATION) == civ2::IRRIGATION
-          && ptile->terrain->irrigation_result == ptile->terrain) {
-        // TODO: Second condition is a Freeciv21 limitation.
-        BV_SET(ptile->extras, irrigation_index);
-      }
-      if ((civ2tile.improvements & civ2::FARMLAND) == civ2::FARMLAND
-          && ptile->terrain->irrigation_result == ptile->terrain) {
-        // TODO: Second condition is a Freeciv21 limitation.
-        BV_SET(ptile->extras, farmland_index);
-      }
-      if ((civ2tile.improvements & civ2::MINE) == civ2::MINE
-          && ptile->terrain->mining_result == ptile->terrain) {
-        // TODO: Second condition is a Freeciv21 limitation.
-        BV_SET(ptile->extras, mine_index);
-      }
-      if ((civ2tile.improvements & civ2::ROAD) == civ2::ROAD
-          || (civ2tile.improvements & civ2::CITY) == civ2::CITY) {
-        BV_SET(ptile->extras, road_index);
-      }
-      if ((civ2tile.improvements & civ2::RAILROAD) == civ2::RAILROAD) {
-        BV_SET(ptile->extras, rails_index);
-      }
-      if ((civ2tile.improvements & civ2::FORTRESS) == civ2::FORTRESS) {
-        BV_SET(ptile->extras, fort_index);
-      }
-      if ((civ2tile.improvements & civ2::AIRBASE) == civ2::AIRBASE) {
-        BV_SET(ptile->extras, airbase_index);
-      }
-      if ((civ2tile.improvements & civ2::POLLUTION) == civ2::POLLUTION) {
-        BV_SET(ptile->extras, pollution_index);
+      extras.set(civ2tile.improvements, ptile->extras, ptile->terrain);
+
+      // Vision. Skip barbarians, they see everything.
+      for (int i = 1; i < civ2::NUM_PLAYERS; ++i) {
+        if (!data.players[i] || !(civ2tile.visibility & (1 << i))) {
+          continue;
+        }
+
+        map_set_known(ptile, data.players[i]);
+
+        auto plrt = map_get_player_tile(ptile, data.players[i]);
+        plrt->terrain = ptile->terrain; // Always visible in civ2.
+
+        if (civ2tile.river) {
+          BV_SET(ptile->extras, extras.river); // Always visible in civ2.
+        }
+
+        auto impr = g.map.visible_improvements[i][x + y * g.map.width];
+        extras.set(impr, plrt->extras, ptile->terrain);
       }
     }
   }
 
   assign_continent_numbers();
-
-  players_iterate(pplayer)
-  {
-    // Allocate player private map here; it is needed in different modules
-    // besides this one.
-    player_map_init(pplayer);
-    pplayer->tile_known->fill(false);
-  }
-  players_iterate_end;
 
   // Initialize global warming levels.
   game_map_init();
@@ -819,16 +877,27 @@ bool setup_cities(const civ2::game &g, load_data &data)
     identity_number_reserve(pcity->id);
     idex_register_city(&wld, pcity);
 
-    // Vision
-    auto pdcity = vision_site_new(0, nullptr, nullptr);
-    pdcity->location = pcity->tile;
-    pdcity->owner = pplayer;
-    pdcity->identity = pcity->id;
-    vision_site_size_set(pdcity, pcity->size);
-    BV_CLR_ALL(pdcity->improvements);
-    change_playertile_site(map_get_player_tile(pdcity->location, pplayer),
-                           pdcity);
-    identity_number_reserve(pdcity->identity);
+    // Who can see this city? Skip barbarians, they see everything.
+    for (int j = 1; j < civ2::NUM_PLAYERS; ++j) {
+      if (!data.players[j]) {
+        continue; // No player in slot.
+      }
+
+      const auto &civ2tile = g.map.tiles[city_tile(pcity)->index];
+      if (!(civ2tile.visibility & (1 << j))) {
+        continue; // Player cannot see this tile.
+      }
+
+      auto impr = g.map.visible_improvements[j][city_tile(pcity)->index];
+      if ((impr & civ2::CITY) != civ2::CITY) {
+        continue; // Player doesn't know about the city.
+      }
+
+      auto plrt = map_get_player_tile(city_tile(pcity), data.players[j]);
+      auto pdcity = vision_site_new_from_city(pcity);
+      // BV_CLR_ALL(pdcity->improvements);
+      change_playertile_site(plrt, pdcity);
+    }
 
     // After everything is loaded, but before vision.
     map_claim_ownership(city_tile(pcity), pplayer, city_tile(pcity), true);
@@ -882,9 +951,10 @@ bool load_civ2_save(const QString &path)
   if (!setup_cities(g, data)) {
     return false;
   }
-
-  players_iterate(pplayer) { map_know_and_see_all(pplayer); }
-  players_iterate_end;
+  // Barbarians can see everything
+  if (data.players[0]) {
+    map_know_and_see_all(data.players[0]);
+  }
 
   // Experimental!
   qWarning(_("Reading civ2 saves is experimental. Loading is incomplete and "
