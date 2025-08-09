@@ -544,9 +544,7 @@ bool setup_players(const civ2::game &g, load_data &data)
                          : AI_LEVEL_CHEATING;
 
   int slot = 0; // Freeciv21 player slot.
-  // Index 0 is for barbarians.
-  // TODO Set up barbarians if needed.
-  for (int i = 1; i < g.tribes.size(); ++i) {
+  for (int i = 0; i < g.tribes.size(); ++i) {
     if (!(g.head.players_alive & (1 << i))) {
       // Don't create dead players. They most often don't play any role in
       // scenarios.
@@ -573,6 +571,12 @@ bool setup_players(const civ2::game &g, load_data &data)
     pplayer->server.orig_username[0] = '\0';
     pplayer->ranked_username[0] = '\0';
     player_delegation_set(pplayer, nullptr);
+
+    // Index 0 is for barbarians.
+    if (i == 0) {
+      pplayer->ai_common.barbarian_type = LAND_AND_SEA_BARBARIAN;
+      server.nbarbarians = 1;
+    }
 
     // Pick a random nation.
     // TODO use info from the save.
