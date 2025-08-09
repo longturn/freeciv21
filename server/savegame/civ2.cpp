@@ -656,6 +656,7 @@ bool setup_players(const civ2::game &g, load_data &data)
 
     // Set some government. 0 is Anarchy so use 1.
     pplayer->government = government_by_number(1);
+    pplayer->economic.gold = g.tribe_infos[i].money;
     pplayer->economic.tax = 10 * g.tribe_infos[i].tax;
     pplayer->economic.science = 10 * g.tribe_infos[i].science;
     pplayer->economic.luxury =
