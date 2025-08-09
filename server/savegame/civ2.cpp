@@ -14,6 +14,7 @@
 #include "base.h"
 #include "city.h"
 #include "extras.h"
+#include "fc_types.h"
 #include "game.h"
 #include "government.h"
 #include "idex.h"
@@ -192,6 +193,19 @@ bool read_tribe(QDataStream &bytes, tribe &t)
   }
   return bytes.status() == QDataStream::Ok;
 }
+
+/**
+ * Diplomatic relations between players
+ */
+enum diplomacy : std::uint8_t {
+  CONTACT = 0x01,    ///< Civs are in contact
+  CEASE_FIRE = 0x02, ///< Civs have a cease-fire
+  PEACE = 0x04,      ///< Civs are in peace
+  ALLIANCE = 0x08,   ///< Civs are allied
+  VENDETTA = 0x10,   ///< ?
+  EMBASSY = 0x80,    ///< Civ has an embassy
+  WAR = 0x20,        ///< Civs are at war (in 2nd byte)
+};
 
 /**
  * Additional information about a tribe (techs, money, treaties...)
@@ -691,6 +705,53 @@ bool setup_players(const civ2::game &g, load_data &data)
 }
 
 /**
+ * Converts civ2 diplomatic states to Freeciv21.
+ */
+bool setup_diplomacy(const civ2::game &g, load_data &data)
+{
+  // No diplomacy with barbarians => start at 1
+  for (int i = 1; i < civ2::NUM_PLAYERS; ++i) {
+    auto pplayer = data.players[i];
+    if (!pplayer) {
+      continue;
+    }
+
+    BV_CLR_ALL(pplayer->real_embassy);
+
+    for (int j = 1; j < civ2::NUM_PLAYERS; ++j) {
+      auto pplayer2 = data.players[j];
+      if (i == j || !pplayer2) {
+        continue;
+      }
+
+      auto ds = player_diplstate_get(pplayer, pplayer2);
+      auto treaties = g.tribe_infos[i].treaties[j - 1][0];
+      if (treaties & civ2::EMBASSY) {
+        BV_SET(pplayer->real_embassy, player_index(pplayer2));
+      }
+      if (treaties & civ2::ALLIANCE) {
+        ds->type = DS_ALLIANCE;
+      } else if (treaties & civ2::PEACE) {
+        ds->type = DS_PEACE;
+      } else if (treaties & civ2::CEASE_FIRE) {
+        ds->type = DS_CEASEFIRE;
+        ds->turns_left = 16; // FIXME How to import?
+      } else if (treaties & civ2::CONTACT) {
+        ds->type = DS_WAR; // FIXME This would be "None" in civ2
+      }
+      // Second status byte
+      treaties = g.tribe_infos[i].treaties[j - 1][1];
+      if (treaties & civ2::WAR) {
+        ds->type = DS_WAR;
+      }
+      ds->max_state = ds->type;
+    }
+  }
+
+  return true;
+}
+
+/**
  * Converts civ2-style bit fields to Freeciv21 extras.
  */
 struct extra_data
@@ -1012,6 +1073,9 @@ bool load_civ2_save(const QString &path)
     return false;
   }
   if (!setup_players(g, data)) {
+    return false;
+  }
+  if (!setup_diplomacy(g, data)) {
     return false;
   }
   if (!setup_map(g, data)) {
