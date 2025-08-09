@@ -1070,6 +1070,9 @@ bool load_civ2_save(const QString &path)
     return false;
   }
 
+  // Get a random state.
+  init_game_seed();
+
   auto data = load_data();
   if (!setup_ruleset(g, data)) {
     return false;
