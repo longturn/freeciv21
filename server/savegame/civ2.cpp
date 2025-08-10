@@ -22,6 +22,7 @@
 #include "nation.h"
 #include "player.h"
 #include "rgbcolor.h"
+#include "specialist.h"
 #include "team.h"
 #include "terrain.h"
 
@@ -440,15 +441,14 @@ struct city {
   std::uint8_t owner;   ///< Current owner.
   std::int8_t size;     ///< City size.
   std::uint8_t founder; ///< Founder civ.
-  std::byte _padding1[3];
-  std::array<std::uint8_t, 7> citizens;
+  std::byte _padding1[10];
   /// Specialists in the city.
   std::array<std::uint8_t, 4> specialists;
   std::int16_t foodbox;             ///< Food in food box (0xff = famine)
   std::int16_t shieldbox;           ///< Number of shields in shields box.
   std::int16_t base_trade;          ///< Trade without trade routes.
   std::array<char, 16> name;        ///< City name.
-  std::array<std::byte, 3> workers; ///< Citizen placement.
+  std::array<std::uint8_t, 3> workers; ///< Citizen placement.
   std::uint8_t _padding2 : 2;
   std::uint8_t specialists_count : 6;    ///< Number of specialists.
   std::array<std::byte, 5> improvements; ///< Bitfield with improvements.
@@ -956,6 +956,96 @@ bool setup_map(const civ2::game &g, load_data &data)
 }
 
 /**
+ * Imports a city's citizens: places workers on the map, creates specialists,
+ * ...
+ */
+bool setup_citizens(const civ2::city &c, city *pcity)
+{
+  city_size_set(pcity, c.size);
+
+  // civ2 citizens are encoded on 3 bytes where each bit maps to a tile. We
+  // process one at a time with the following function.
+  auto process = [pcity](std::uint8_t byte, const auto &tiles) {
+    bool ok = true;
+    for (int i = 0; i < tiles.size(); ++i) {
+      bool worked = byte & (1 << i);
+      if (!worked) {
+        continue;
+      }
+      auto tile = tiles[i];
+      // May happen next to the edge of the map.
+      fc_assert_action(tile, ok = false; continue);
+      fc_assert_action(!tile->worked, ok = false; continue);
+
+      tile_set_worked(tile, pcity);
+    }
+    return ok;
+  };
+
+  // First byte = innermost 8 tiles.
+  bool ok =
+      process(c.workers[0],
+              std::array{
+                  // Directions in civ2 order.
+                  mapstep(&(wld.map), city_tile(pcity), DIR8_NORTH),
+                  mapstep(&(wld.map), city_tile(pcity), DIR8_NORTHEAST),
+                  mapstep(&(wld.map), city_tile(pcity), DIR8_EAST),
+                  mapstep(&(wld.map), city_tile(pcity), DIR8_SOUTHEAST),
+                  mapstep(&(wld.map), city_tile(pcity), DIR8_SOUTH),
+                  mapstep(&(wld.map), city_tile(pcity), DIR8_SOUTHWEST),
+                  mapstep(&(wld.map), city_tile(pcity), DIR8_WEST),
+                  mapstep(&(wld.map), city_tile(pcity), DIR8_NORTHWEST),
+              });
+
+  // Outermost tiles. The layout is as follows:
+  //               11      4
+  //           3       x       0
+  //       10      x       x       5
+  //           x      CITY     x
+  //       9       x       x       6
+  //           2       x       1
+  //               8       7
+  // Bit indices 0-7 are in byte 1, 8-11 are in byte 2.
+  auto double_step = [pcity](direction8 dir1, direction8 dir2) {
+    auto t1 = mapstep(&(wld.map), city_tile(pcity), dir1);
+    return t1 ? mapstep(&(wld.map), t1, dir2) : nullptr;
+  };
+  // Byte 1
+  ok &= process(c.workers[1], std::array{
+                                  double_step(DIR8_NORTH, DIR8_NORTH),
+                                  double_step(DIR8_EAST, DIR8_EAST),
+                                  double_step(DIR8_SOUTH, DIR8_SOUTH),
+                                  double_step(DIR8_WEST, DIR8_WEST),
+                                  double_step(DIR8_NORTH, DIR8_NORTHWEST),
+                                  double_step(DIR8_NORTH, DIR8_NORTHEAST),
+                                  double_step(DIR8_EAST, DIR8_NORTHEAST),
+                                  double_step(DIR8_EAST, DIR8_SOUTHEAST),
+                              });
+  // Byte 2.
+  ok &= process(c.workers[2], std::array{
+                                  double_step(DIR8_SOUTH, DIR8_SOUTHEAST),
+                                  double_step(DIR8_SOUTH, DIR8_SOUTHWEST),
+                                  double_step(DIR8_WEST, DIR8_SOUTHWEST),
+                                  double_step(DIR8_WEST, DIR8_NORTHWEST),
+                              });
+
+  // Dumb specialist assignment.
+  pcity->specialists[DEFAULT_SPECIALIST] = c.specialists_count;
+  // TODO assign actual specialists
+
+  // Dumb feeling assignment.
+  for (int feel = FEELING_BASE; feel < FEELING_LAST; feel++) {
+    pcity->feel[CITIZEN_HAPPY][feel] = c.happy;
+    pcity->feel[CITIZEN_UNHAPPY][feel] = c.unhappy;
+    pcity->feel[CITIZEN_ANGRY][feel] = 0;
+    pcity->feel[CITIZEN_CONTENT][feel] =
+        c.size - c.happy - c.unhappy - c.specialists_count;
+  }
+
+  return ok;
+}
+
+/**
  * Loads cities from a civ2 game.
  */
 bool setup_cities(const civ2::game &g, load_data &data)
@@ -998,8 +1088,9 @@ bool setup_cities(const civ2::game &g, load_data &data)
     pcity->tile->owner = pplayer;
 
     // Citizens
-    city_size_set(pcity, c.size);
-    // TODO assign workers & specialists
+    if (!setup_citizens(c, pcity)) {
+      qWarning(_("Problems loading citizens for %s"), pcity->name);
+    }
 
     // Production
     city_choose_build_default(pcity);
