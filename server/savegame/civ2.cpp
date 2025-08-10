@@ -243,7 +243,7 @@ bool read_player(QDataStream &bytes, tribe_info &ti)
   bytes.skipRawData(8);
   // NOTE: The format of tax and science is unclear in "Everything about Hex
   // Editing". What's below is a guess.
-  bytes >> ti.tax >> ti.science >> ti.govermnent;
+  bytes >> ti.science >> ti.tax >> ti.govermnent;
   bytes.skipRawData(14);
   bytes.readRawData(reinterpret_cast<char *>(ti.treaties.data()),
                     4 * (NUM_PLAYERS - 1));
