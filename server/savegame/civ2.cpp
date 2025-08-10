@@ -379,9 +379,9 @@ struct unit {
 
   std::uint16_t x; ///< x coordinate of tile.
   std::uint16_t y; ///< y coordinate of tile.
-  std::uint16_t _padding1 : 6;
+  std::uint8_t _padding1 : 6;
   bool moved : 1; ///< Has the unit moved this turn?
-  std::uint16_t _padding1_1 : 6;
+  std::uint8_t _padding1_1 : 6;
   bool veteran : 1; ///< Whether the unit is veteran.
   bool _padding2 : 1;
   bool star : 1;           ///< Display a small star on top of the flag.
@@ -407,6 +407,9 @@ struct unit {
   std::uint32_t _unknown;  ///< Always 0?
 };
 // static_assert(sizeof(unit) == 26); // CiC
+static_assert(offsetof(unit, type) == 7);
+static_assert(offsetof(unit, home_city) == 17);
+static_assert(offsetof(unit, goto_x) == 18);
 static_assert(sizeof(unit) == 32); // MGE+
 
 /**
