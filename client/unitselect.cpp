@@ -47,15 +47,6 @@ units_select::units_select(struct tile *ptile, QWidget *parent)
 }
 
 /**
-   Destructor for unit select
- */
-units_select::~units_select()
-{
-  m_widget->close();
-  delete m_widget;
-}
-
-/**
    Updates unit list on tile
  */
 void units_select::update_units() { m_widget->update_units(); }

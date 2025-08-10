@@ -66,7 +66,6 @@ class units_select : public QMenu {
 
 public:
   units_select(struct tile *ptile, QWidget *parent = 0);
-  ~units_select() override;
   void update_units();
   void create_pixmap();
 
