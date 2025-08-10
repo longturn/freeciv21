@@ -938,7 +938,7 @@ bool setup_map(const civ2::game &g, load_data &data)
         plrt->terrain = ptile->terrain; // Always visible in civ2.
 
         if (civ2tile.river) {
-          BV_SET(ptile->extras, extras.river); // Always visible in civ2.
+          BV_SET(plrt->extras, extras.river); // Always visible in civ2.
         }
 
         auto impr = g.map.visible_improvements[i][x + y * g.map.width];
