@@ -463,9 +463,9 @@ struct city {
   std::int16_t trade;       ///< Total trade incl. trade routes.
   std::int8_t total_food;   ///< Total food production.
   std::int8_t total_shield; ///< Total shield production.
-  std::int8_t happy;        ///< Happy citizens.
-  std::int8_t unhappy;      ///< Unhappy citizens, angry count double.
   std::byte _padding3[6];
+  std::uint8_t happy;       ///< Happy citizens.
+  std::uint8_t unhappy;     ///< Unhappy citizens, angry count double.
 };
 static_assert(offsetof(city, name) == 32);
 static_assert(sizeof(city) == 88);
