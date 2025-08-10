@@ -108,16 +108,16 @@ const static auto SUPPORTED_VERSION = CIV2_MULTIPLAYER;
  * The civ2 file header.
  */
 struct header {
-  std::int16_t version;    ///< Save format version number
-  std::int16_t turn;       ///< Current turn
-  std::int16_t year;       ///< Current year
-  std::uint8_t difficulty; ///< Difficulty (0 to 5).
-  std::uint8_t barbarians; ///< Barbarian activity.
+  std::int16_t version;       ///< Save format version number
+  std::int16_t turn;          ///< Current turn
+  std::int16_t year;          ///< Current year
+  std::uint8_t difficulty;    ///< Difficulty (0 to 5).
+  std::uint8_t barbarians;    ///< Barbarian activity.
   std::uint8_t players_alive; ///< Bitfield: who is alive?
   std::uint8_t players_human; ///< Bitfield: which players are humans?
-  int num_techs;           ///< Number of techs in the current version
-  std::int16_t unit_count; ///< Number of unit slots in the current game.
-  std::int16_t city_count; ///< Number of city slots in the current game.
+  int num_techs;              ///< Number of techs in the current version
+  std::int16_t unit_count;    ///< Number of unit slots in the current game.
+  std::int16_t city_count;    ///< Number of city slots in the current game.
   /// First nation that discovered each tech
   std::array<char, NUM_TECHS> first_to_discover;
   /// Which nations have discoved which techs (bitfield)
@@ -444,10 +444,10 @@ struct city {
   std::byte _padding1[10];
   /// Specialists in the city.
   std::array<std::uint8_t, 4> specialists;
-  std::int16_t foodbox;             ///< Food in food box (0xff = famine)
-  std::int16_t shieldbox;           ///< Number of shields in shields box.
-  std::int16_t base_trade;          ///< Trade without trade routes.
-  std::array<char, 16> name;        ///< City name.
+  std::int16_t foodbox;                ///< Food in food box (0xff = famine)
+  std::int16_t shieldbox;              ///< Number of shields in shields box.
+  std::int16_t base_trade;             ///< Trade without trade routes.
+  std::array<char, 16> name;           ///< City name.
   std::array<std::uint8_t, 3> workers; ///< Citizen placement.
   std::uint8_t _padding2 : 2;
   std::uint8_t specialists_count : 6;    ///< Number of specialists.
@@ -464,8 +464,8 @@ struct city {
   std::int8_t total_food;   ///< Total food production.
   std::int8_t total_shield; ///< Total shield production.
   std::byte _padding3[6];
-  std::uint8_t happy;       ///< Happy citizens.
-  std::uint8_t unhappy;     ///< Unhappy citizens, angry count double.
+  std::uint8_t happy;   ///< Happy citizens.
+  std::uint8_t unhappy; ///< Unhappy citizens, angry count double.
 };
 static_assert(offsetof(city, name) == 32);
 static_assert(sizeof(city) == 88);
@@ -500,8 +500,7 @@ std::vector<city> read_cities(QDataStream &bytes, int count)
 /**
  * Groups all the data present in a civ2 save.
  */
-struct game
-{
+struct game {
   /// Game header data.
   header head;
   /// Which nation is connected to which player slot (including barbarians).
@@ -665,8 +664,8 @@ bool setup_players(const civ2::game &g, load_data &data)
 
     // Pick a random nation.
     // TODO use info from the save.
-    player_set_nation(
-        pplayer, pick_a_nation(nullptr, false, true, NOT_A_BARBARIAN));
+    player_set_nation(pplayer,
+                      pick_a_nation(nullptr, false, true, NOT_A_BARBARIAN));
     ai_traits_init(pplayer);
     pplayer->style = style_of_nation(pplayer->nation);
 
@@ -756,17 +755,16 @@ bool setup_diplomacy(const civ2::game &g, load_data &data)
 /**
  * Converts civ2-style bit fields to Freeciv21 extras.
  */
-struct extra_data
-{
+struct extra_data {
   // Freeciv21 extra IDs
-  int irrigation = -1, farmland = -1, mine = -1,
-      river = -1, road = -1, rails = -1, fort = -1,
-      airbase = -1, pollution = -1;
+  int irrigation = -1, farmland = -1, mine = -1, river = -1, road = -1,
+      rails = -1, fort = -1, airbase = -1, pollution = -1;
 
   /**
    * Detect extra numbers from the ruleset. This is based on heuristics.
    */
-  extra_data() {
+  extra_data()
+  {
     extra_type_iterate(pextra)
     {
       if (is_extra_caused_by(pextra, EC_IRRIGATION)) {
