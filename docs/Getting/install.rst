@@ -83,16 +83,14 @@ macOS
 =====
 
 To install the macOS ``.dmg`` package, you start by double-clicking the file to mount it in Finder. Drag the
-game to your Applications folder, or a place of your choosing. When finished, unmount the package.
-
-.. note::
-  You must have at least macOS Ventura (13.x) installed on your device.
+game to the Applications folder. When finished, unmount the package.
 
 .. note::
   In newer versions of macOS, you may get an error message when trying to mount the package: "Freeciv21.app is
   damaged and can't be opened." You will need to adjust the security settings on your computer. Here are some
   website links to help:
 
+  * https://community.kde.org/Mac
   * https://appletoolbox.com/app-is-damaged-cannot-be-opened-mac/
   * https://support.apple.com/guide/mac-help/open-an-app-by-overriding-security-settings-mh40617/15.0/mac/15.0
 
@@ -103,7 +101,7 @@ Freeciv21 is packaged with Native Language Support (NLS), also known as Internat
 default, Freeciv21 will use the primary language that the client operating system is set to use. However, you
 may wish to play the game with a different language.
 
-All the code and strings used in the game are based on US English (en_US) and encoded as UTF8 (en_US.UTF8).
+All the code and strings used in the game are based on US English (``en_US``) and encoded as UTF8 (``en_US.UTF8``).
 If you wish to play the game in a different language, you can do so by setting an environment variable to the
 language code of your choice.
 
@@ -111,7 +109,7 @@ At a minimum, all you need is the two letter code of the language you wish to pl
 them: https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes
 
 .. note::
-  We don't support every single language code in the list above, but we do have some translations for many of
+  We do not support every single language code in the list above, but we do have some translations for many of
   them.
 
 On a Linux based system, open a terminal and set the ``LANG`` variable to the language code. In the example
