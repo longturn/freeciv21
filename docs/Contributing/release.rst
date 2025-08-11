@@ -82,8 +82,15 @@ These are the general steps to prepare and finalize a release:
 
 #. The release manager will add a tag to the release notes page and then click :guilabel:`Publish Release`.
    The format of the tag is ``v[major version].[minor version]-[release name].[number]``. For example:
-   ``v3.0-patch.5`` or ``v3.1-rc.3``. :strong:`The format is very important` to the build configuration
+   ``v3.1.1`` or ``v3.2-dev.3``. :strong:`The format is very important` to the build configuration
    process.
+
+   .. note::
+     More information on our :strong:`version numbering format`. We follow a relatively standard Major Version,
+     Minor Version, Patch Level Number format, especially for our stable releases. However we allow some text
+     --- ``[release name]`` --- to be included for our non-stable releases. The available ``[release name]``
+     values are: ``dev``, ``alpha``, ``beta``, ``rc``, or ``patch``. Stable releases follow the well known
+     ``x.y.z`` format and non-stable releases use the ``x.y-text.z`` format.
 
 #. After a few minutes the continuous integration (CI) will open a PR titled
    ``Release Update of AutoRevision.txt``. The release manager will open the PR, click on the
@@ -103,11 +110,11 @@ These are the general steps to prepare and finalize a release:
 #. When all the CI actions are complete, the release manager will make a post in the ``#news-channel`` on the
    Longturn.net Discord server.
 
-#. The release manager mentions user @Corbeau on Discord ``#releases-project`` channel giving the new URL to
-   update his blog page once all of the GitHub action runners are complete.
-
 #. The release manager mentions user @panch93 on Discord ``#releases-project`` channel so he can update the
    Arch AUR with the latest release.
+
+#. The release manager mentions user @blabber on Disord ``#releases-project`` channel so he can update the
+   FreeBSD with the latest release.
 
 
 Behind the Scenes
