@@ -359,7 +359,7 @@ function Unit:kill(reason, killer)
 end
 
 function Unit:damage_hp(amount, reason, killer)
-  return edit.unit_damage_hitpoints(self, amount, reason, killer)
+  return edit.unit_damage_hp(self, amount, reason, killer)
 end
 
 function Unit:damage_hp_pct(amount, reason, killer)
@@ -368,7 +368,7 @@ function Unit:damage_hp_pct(amount, reason, killer)
 end
 
 function Unit:recover_hp(amount)
-  edit.unit_recover_hitpoints(self, amount)
+  edit.unit_recover_hp(self, amount)
 end
 
 function Unit:recover_hp_pct(amount)
@@ -377,12 +377,12 @@ function Unit:recover_hp_pct(amount)
 end
 
 function Unit:set_hp(amount)
-  edit.unit_set_hitpoints(self, amount)
+  edit.unit_set_hp(self, amount)
 end
 
 function Unit:set_hp_pct(amount)
   local total_hp = math.ceil(self.utype.hp * amount / 100)
-  edit.unit_set_hitpoints(self, total_hp)
+  edit.unit_set_hp(self, total_hp)
 end
 
 function Unit:move(moveto, movecost)
