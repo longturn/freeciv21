@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <!-- APPL is for applications -->
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <!-- Unique identifier, follows other packages -->
+    <key>CFBundleIdentifier</key>
+    <string>net.longturn.freeciv21</string>
+    <!-- User visible name -->
+    <key>CFBundleName</key>
+    <string>Freeciv21</string>
+    <!-- User visible name used by Siri -->
+    <key>CFBundleDisplayName</key>
+    <string>Freeciv21</string>
+    <!-- Version string. TODO: CMake CPack -->
+    <key>CFBundleVersion</key>
+    <string>@FC21_REV_TAG@</string>
+    <!-- Primary executable -->
+    <key>CFBundleExecutable</key>
+    <string>freeciv21-client</string>
+    <!-- Icon set -->
+    <key>CFBundleIconFile</key>
+    <string>client.icns</string>
+    <!-- Enable our custom font -->
+    <key>ATSApplicationFontsPath</key>
+    <string>fonts</string>
+    <key>UIAppFonts</key>
+    <array>
+      <string>LibertinusKeyboard-Regular.otf</string>
+      <string>LibertinusMath-Regular.otf</string>
+      <string>LibertinusMono-Regular.otf</string>
+      <string>LibertinusSans-Bold.otf</string>
+      <string>LibertinusSans-Italic.otf</string>
+      <string>LibertinusSans-Regular.otf</string>
+      <string>LibertinusSerif-Bold.otf</string>
+      <string>LibertinusSerif-BoldItalic.otf</string>
+      <string>LibertinusSerif-Italic.otf</string>
+      <string>LibertinusSerif-Regular.otf</string>
+      <string>LibertinusSerif-Semibold.otf</string>
+      <string>LibertinusSerif-SemiboldItalic.otf</string>
+      <string>LibertinusSerifDisplay-Regular.otf</string>
+      <string>LibertinusSerifInitials-Regular.otf</string>
+    </array>
+    <!-- Support High Res Displays -->
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <!-- Support for fc21:// protocol -->
+    <key>CFBundleURLTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleURLName</key>
+        <string>Freeciv21 Handler</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>fc21</string>
+        </array>
+      </dict>
+    </array>
+  </dict>
+</plist>
