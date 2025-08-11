@@ -28,7 +28,7 @@ All platforms can use `KDevelop <https://www.kdevelop.org/download>`_. However, 
 * On Windows, due to the nature of the integration with MSYS2, native compilation and debugging is not
   supported. This is resolved with :doc:`Visual Studio <visual-studio>` as the IDE.
 * On :doc:`macOS <macos>`, KDevelop is still considered experimental. Many Mac users
-  use `XCode <https://developer.apple.com/xcode/>`_ from the Apple |reg| App Store.
+  use `XCode <https://developer.apple.com/xcode/>`_ from the Apple\ |reg| App Store.
 
 For the best results, especially if you are editing game code and not just Longturn game rulesets or
 documentation, you will want :strong:`Linux` to be your workstation OS. Many of the current developers use a

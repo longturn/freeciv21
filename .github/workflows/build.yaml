@@ -219,7 +219,7 @@ jobs:
 
   os_x:
     name: "macOS"
-    runs-on: macos-14
+    runs-on: macos-latest
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     needs: clang-format
     env:
