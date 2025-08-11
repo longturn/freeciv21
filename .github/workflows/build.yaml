@@ -204,7 +204,8 @@ jobs:
       #  run: cmake --build build --target test
 
   os_x:
-    name: "macOS"
+    # macOS 13 is the last Intel based version.
+    name: "macOS (x64-osx)"
     runs-on: macos-13
     needs: clang-format
     env:
