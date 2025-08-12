@@ -218,7 +218,7 @@ jobs:
       #  run: cmake --build build --target test
 
   os_x:
-    name: "macOS"
+    name: "macOS (x64-osx)"
     runs-on: macos-latest
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     needs: clang-format
@@ -254,12 +254,12 @@ jobs:
         run: |
           cmake --preset fullrelease-macos -S .
           cmake --build build
-      - name: Install
-        run: |
-          cmake --build build --target install
       - name: Test
         run: |
           cmake --build build --target test
+      - name: Install
+        run: |
+          cmake --build build --target install
       - name: Split Branch Name
         env:
           BRANCH: ${{github.ref_name}}
@@ -268,10 +268,11 @@ jobs:
       - name: Create App Bundle
         run: |
           cd build
-          mkdir -pv Freeciv21.app/Contents/MacOS Freeciv21.app/Contents/Resources/doc
-          cp -v dist/Info.plist Freeciv21.app/Contents/
+          mkdir -pv Freeciv21.app/Contents/MacOS Freeciv21.app/Contents/Resources/doc Freeciv21.app/Contents/Resources/locale
+          cp -v dist/Info.plist Freeciv21.app/Contents
           cp -rv install/share/doc/freeciv21/* Freeciv21.app/Contents/Resources/doc
           cp -rv install/share/freeciv21/* Freeciv21.app/Contents/Resources
+          cp -rv install/share/locale/* Freeciv21.app/Contents/Resources/locale
           cp -v install/bin/freeciv21-* Freeciv21.app/Contents/MacOS
           mkdir client.iconset
           cp -v ../data/icons/16x16/freeciv21-client.png client.iconset/icon_16x16.png
@@ -286,14 +287,14 @@ jobs:
             --volname "Freeciv21 Game Installer" \
             --volicon "client.icns" \
             --window-pos 200 120 \
-            --window-size 800 400 \
+            --window-size 600 400 \
             --icon-size 128 \
             --icon "Freeciv21.app" 200 190 \
             --hide-extension "Freeciv21.app" \
-            --app-drop-link 600 185 \
-            "Freeciv21-${{steps.split.outputs.fragment}}.dmg" \
+            --app-drop-link 400 185 \
+            "Freeciv21-${{steps.split.outputs.fragment}}x64-osx.dmg" \
             "Freeciv21.app"
-          shasum -a 256 Freeciv21-${{steps.split.outputs.fragment}}.dmg > Freeciv21-${{steps.split.outputs.fragment}}.dmg.sha256
+          shasum -a 256 Freeciv21-${{steps.split.outputs.fragment}}-x64-osx.dmg > Freeciv21-${{steps.split.outputs.fragment}}x64-osx.dmg.sha256
       - name: Upload package
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
