@@ -85,6 +85,14 @@ macOS
 To install the macOS ``.dmg`` package, you start by double-clicking the file to mount it in Finder. Drag the
 game to the Applications folder. When finished, unmount the package.
 
+.. _Freeciv21 macOS Install:
+.. figure:: /_static/images/macos-install.png
+  :align: center
+  :alt: Freeciv21 macOS Install
+  :figclass: align-center
+
+  Freeciv21 macOS Install
+
 .. note::
   In newer versions of macOS, you may get an error message when trying to mount the package: "Freeciv21.app is
   damaged and can't be opened." You will need to adjust the security settings on your computer. Here are some
@@ -101,9 +109,9 @@ Freeciv21 is packaged with Native Language Support (NLS), also known as Internat
 default, Freeciv21 will use the primary language that the client operating system is set to use. However, you
 may wish to play the game with a different language.
 
-All the code and strings used in the game are based on US English (``en_US``) and encoded as UTF8 (``en_US.UTF8``).
-If you wish to play the game in a different language, you can do so by setting an environment variable to the
-language code of your choice.
+All the code and strings used in the game are based on US English (``en_US``) and encoded as UTF8
+(``en_US.UTF8``). If you wish to play the game in a different language, you can do so by setting an
+environment variable to the language code of your choice.
 
 At a minimum, all you need is the two letter code of the language you wish to play with. Here is a list of
 them: https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes
@@ -112,13 +120,12 @@ them: https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes
   We do not support every single language code in the list above, but we do have some translations for many of
   them.
 
-On a Linux based system, open a terminal and set the ``LANG`` variable to the language code. In the example
+On a Linux or macOS based system, open a terminal and set the ``LANG`` variable to the language code. In the example
 we pick German (Deutsch).
 
 .. code-block:: sh
 
-  $ export LANG=de_DE.UTF8
-  $ path/to/freeciv21-client
+  $ LANG=de_DE.UTF8 path/to/freeciv21-client
 
 
 That setting will stay in effect as long as the terminal window is open. Freeciv21 will use the environment
@@ -129,14 +136,13 @@ Following the example above, we pick German and then open the game via ``snap``.
 
 .. code-block:: sh
 
-  $ export LANG=de_DE.UTF8
-  $ snap run freeciv21.freeciv21-client
+  $ LANG=de_DE.UTF8 snap run freeciv21.freeciv21-client
 
 
 .. note::
-  You can also add the ``export LANG=de_DE.UTF8`` to your user's :file:`.bashrc` or :file:`.bash_profile`. The
-  variable will then be set every time you logon to your computer. However, this also sets the language for
-  pretty much every application.
+  You can also add ``export LANG=de_DE.UTF8`` to your user's :file:`.bashrc` or :file:`.bash_profile`.
+  On macOS use :file:`.zshrc`. The variable will then be set every time you logon to your computer. However,
+  this could also sets the language for pretty much every application.
 
 The ``LANG`` variable also works on Windows based systems. Open a command prompt, powershell prompt, or
 terminal.
