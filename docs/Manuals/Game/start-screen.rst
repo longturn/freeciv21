@@ -278,6 +278,7 @@ join the server. Pretty much all Longturn online multiplayer games are connected
   may be prompted to confirm the password a second time in the :guilabel:`Confirm Password` box before being
   allowed to connect.
 
+.. _game-manual-load:
 
 Load Saved Game
 ===============
