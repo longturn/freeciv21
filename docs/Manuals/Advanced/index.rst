@@ -14,4 +14,5 @@ looking for more general  or generic gameplay information, it would be best to s
   players.rst
   fc21-uri.rst
   map-generator
+  civ2
   :maxdepth: 2

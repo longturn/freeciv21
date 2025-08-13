@@ -407,6 +407,8 @@ server's own command-line. This server command-line is separate from the OS term
   with the command-line argument: ``--file <filename>`` or ``-f <filename>`` and use the ``/start`` command
   once players have reconnected.
 
+.. _server-command-load:
+
 ``/load <file-name>``
   Load a game from ``<file-name>``. Any current data including players, rulesets and server options are lost.
 
