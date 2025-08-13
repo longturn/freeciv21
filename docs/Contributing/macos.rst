@@ -6,16 +6,14 @@
 Setting up macOS for Development
 ********************************
 
-Freeciv21 compiles and runs on Apple |reg| macOS Sonoma (v14) or higher. The following steps can be used to
+Freeciv21 compiles and runs on Apple\ |reg| macOS Sonoma (v14) or higher. The following steps can be used to
 setup your mac to compile and run Freeciv21.
-
-Start by getting Freeciv21 from :ref:`GitHub <dev-env-github>`.
 
 Homebrew
 ========
 
 Homebrew is a package manager for macOS and allows us to download and install some libraries and tools we
-need. Let us start with getting it installed and setting some environment variables.
+need. Let us start with getting it installed and setting an environment variable.
 
 .. code-block:: sh
 
@@ -65,17 +63,23 @@ let us adjust the path variable:
 Setup VCPKG
 ===========
 
-Similar to homebrew, Microsoft |reg| manages a package library called vcpkg. Freeciv21 requires libraries from
+Similar to homebrew, Microsoft\ |reg| manages a package library called vcpkg. Freeciv21 requires libraries from
 vcpkg, so we install with these commands:
 
 .. code-block:: sh
 
+  % mkdir $HOME/GitHub
   % cd $HOME/GitHub
   % git clone https://github.com/microsoft/vcpkg
   % echo 'export VCPKG_ROOT="$HOME/GitHub/vcpkg"' >> $HOME/.zshrc
   % source $HOME/.zshrc
   % /bin/bash ./vcpkg/bootstrap-vcpkg.sh
 
+
+Get Freeciv21
+=============
+
+Follow these steps to get Freeciv21 from :ref:`GitHub <dev-env-github>`.
 
 Configure and Build
 ===================
@@ -91,12 +95,13 @@ On macOS, you need to use a preset that is defined in the :file:`CMakePresets.js
 
 
 .. note::
-  The first time you run the this command, :file:`cmake` invokes the :file:`vcpkg` installation process to
+  The first time you run the first command, :file:`cmake` invokes the :file:`vcpkg` installation process to
   download and compile all of the project dependencies listed in the manifest file: :file:`vcpkg.json`.
   :strong:`This will take a very long time`. On a fast computer with a good Internet connection it will take
-  at least 3 hours to complete. Everything will be downloaded and compiled into the :file:`$HOME/vcpkg`
+  at least 3 hours to complete. Everything will be downloaded and compiled into the :file:`$HOME/GitHub/vcpkg`
   directory. Binaries for the packages will be copied into the :file:`./build/` directory inside of the main
   Freeciv21 directory and reused for subsequent builds.
+
 
 Create App Bundle and DMG Installer
 ===================================

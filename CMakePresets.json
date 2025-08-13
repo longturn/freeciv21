@@ -27,8 +27,7 @@
       "installDir": "${sourceDir}/build/install",
       "cacheVariables": {
         "FREECIV_USE_VCPKG": "ON",
-        "CMAKE_FIND_PACKAGE_PREFER_CONFIG": "ON",
-        "FREECIV_ENABLE_NLS": "OFF"
+        "CMAKE_FIND_PACKAGE_PREFER_CONFIG": "ON"
       }
     },
     {
