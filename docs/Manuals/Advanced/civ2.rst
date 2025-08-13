@@ -59,6 +59,13 @@ While the format of the above files is well documented and could easily be
 parsed, doing so will require some rethinking of the way Freeciv21 handles game
 rules (in particular regarding saves).
 
+Another important issue is that Freeciv21 does not load scenario sprites.
+The map may look strange as a result.
+For now, we suggest creating a modified version of the ``isotrident`` tileset
+for each scenario.
+``Isotrident`` has the same geometry as the original civ2 sprites and terrain
+sprites follow a similar layout.
+
 Other known limitations include:
 
 * The game rules in civ2 depend on the difficulty level, in particular regarding
