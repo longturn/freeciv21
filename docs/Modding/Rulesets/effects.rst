@@ -2,8 +2,15 @@
 .. SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
+.. SPDX-FileCopyrightText: XHawk87 <hawk87@hotmail.co.uk>
+
+.. Usage references:
+.. https://longturn.readthedocs.io/en/latest/Contributing/style-guide.html
+.. https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#rst-primer
 
 .. include:: /global-include.rst
+
+.. _modding-rulesets-effects:
 
 Effects
 *******

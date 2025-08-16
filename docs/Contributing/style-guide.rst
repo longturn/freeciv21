@@ -1,6 +1,7 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 .. SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
+.. SPDX-FileCopyrightText: XHawk87 <hawk87@hotmail.co.uk>
 
 .. include:: /global-include.rst
 
@@ -129,6 +130,8 @@ to alter is placed inside back-ticks.
   to it like this: :literal:`:ref:`My-Anchor``. Notice that the anchor has an underscore at the beginning.
   This is required for sphinx to recognize it. Also notice the use of the anchor in :literal:`:ref:` leaves
   the underscore off.
+
+* :literal:`:lua:obj:` --- Create a cross-reference to an object in our Lua API. See `Sphinx-LuaLs - Cross-referencing Objects <https://taminomara.github.io/sphinx-lua-ls/roles.html#cross-referencing-objects>`_. Using the correct type is recommended to help catch errors.
 
 * :literal:`:strong:` --- Strong is used to :strong:`bold some text`. A good use of :literal:`:strong:` is to
   highlight game elements.

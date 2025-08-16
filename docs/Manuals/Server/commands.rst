@@ -1,5 +1,8 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+.. SPDX-FileCopyrightText: XHawk87 <hawk87@hotmail.co.uk>
+
+.. See: https://longturn.readthedocs.io/en/latest/Contributing/style-guide.html
 
 .. include:: /global-include.rst
 
@@ -394,6 +397,8 @@ server's own command-line. This server command-line is separate from the OS term
 
 ``/remove <player-name>``
   This *completely* removes a player from the game, including all cities and units etc. Use with care!
+
+.. _server-command-save:
 
 ``/save <file-name>``
   Save the current game to file ``<file-name>``. If no ``file-name`` argument is given saves to

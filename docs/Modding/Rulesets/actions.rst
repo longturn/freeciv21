@@ -1,6 +1,11 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+.. SPDX-FileCopyrightText: XHawk87 <hawk87@hotmail.co.uk>
+
+.. Usage references:
+.. https://longturn.readthedocs.io/en/latest/Contributing/style-guide.html
+.. https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#rst-primer
 
 .. include:: /global-include.rst
 
@@ -175,7 +180,9 @@ contradicting rule detection and the help system. Including the hard requirement
 action is therefore obligatory for some hard requirements. Those hard requirements are marked with an
 exclamation mark (!).
 
-Actions Done By A Unit Against A City
+.. _modding-ruleset-actions-vs-city:
+
+Actions Done by a Unit Against a City
 =====================================
 
 .. _action-establish-embassy:
@@ -726,7 +733,9 @@ Surgical Strike Production
   * actor must be aware that the target exists.
   * the actor unit must be on a tile next to the target.
 
-Actions Done By A Unit Against Another Unit
+.. _modding-ruleset-actions-vs-unit:
+
+Actions Done by a Unit Against Another Unit
 ===========================================
 
 .. _action-sabotage-unit:
@@ -877,7 +886,9 @@ Transport Embark
   * the target tile cannot contain any city or units not allied to the actor unit and all its cargo.
   * target must be visible to the actor.
 
-Actions Done By A Unit Against All Units At A Tile
+.. _modding-ruleset-actions-vs-stack:
+
+Actions Done by a Unit Against All Units at a Tile
 ==================================================
 
 .. _action-capture-units:
@@ -1020,7 +1031,9 @@ Spy Attack
   * the actor must be on the tile next to the target.
   * the target tile must have at least 1 diplomatic defender.
 
-Actions Done By A Unit Against A Tile
+.. _modding-ruleset-actions-vs-tile:
+
+Actions Done by a Unit Against a Tile
 =====================================
 
 .. _action-found-city:
@@ -1298,8 +1311,10 @@ Transport Disembark 2
   * A copy of "Transport Disembark".
   * See "Transport Disembark" for everything else.
 
-Actions Done By A Unit To It Self
-=================================
+.. _modding-ruleset-actions-vs-self:
+
+Actions Done by a Unit to Itself
+================================
 
 .. _action-disband-unit:
 
