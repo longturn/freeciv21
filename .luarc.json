@@ -1,4 +1,8 @@
 {
-  "lua_path": "./common/scriptcore/?.lua",
+  "lua_path": [
+    "./common/scriptcore/?.lua",
+    "./server/scripting/?.lua",
+    "./data/default/?.lua"
+  ],
   "runtime.version": "Lua 5.3"
 }

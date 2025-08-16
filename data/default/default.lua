@@ -6,13 +6,24 @@
 --   You should have received a copy of the GNU General Public License
 --   along with Freeciv21. If not, see https://www.gnu.org/licenses/.
 
+-- SPDX-License-Identifier: GPL-3.0-or-later
+-- SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+-- SPDX-FileCopyrightText: XHawk87 <hawk87@hotmail.co.uk>
+
 -- When creating new ruleset, you should copy this file only if you
 -- need to override default one. Usually you should implement your
 -- own scripts in ruleset specific script.lua. This way maintaining
 -- ruleset is easier as you do not need to keep your own copy of
 -- default.lua updated when ever it changes in Freeciv distribution.
 
--- Get gold from entering a hut.
+-- Usage references:
+-- https://longturn.readthedocs.io/en/latest/Contributing/style-guide.html
+-- https://luals.github.io/wiki/definition-files
+-- https://luals.github.io/wiki/annotations/#documenting-types
+-- https://taminomara.github.io/sphinx-lua-ls/index.html#autodoc-directives
+-- https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#rst-primer
+
+--- Get gold from entering a hut.
 function _deflua_hut_get_gold(unit, gold)
   local owner = unit.owner
 
@@ -22,12 +33,13 @@ function _deflua_hut_get_gold(unit, gold)
   owner:change_gold(gold)
 end
 
--- Default if intended hut behavior wasn`t possible.
+--- Defaults to :lua:func:`_deflua_hut_get_gold` if intended hut behaviour
+--- wasn`t possible.
 function _deflua_hut_consolation_prize(unit)
   _deflua_hut_get_gold(unit, 25)
 end
 
--- Get a tech from entering a hut.
+--- Get a tech from entering a hut.
 function _deflua_hut_get_tech(unit)
   local owner = unit.owner
   local tech = owner:give_tech(nil, -1, false, "hut")
@@ -52,7 +64,7 @@ function _deflua_hut_get_tech(unit)
   end
 end
 
--- Get a mercenary unit from entering a hut.
+--- Get a mercenary unit from entering a hut.
 function _deflua_hut_get_mercenaries(unit)
   local owner = unit.owner
   local utype = find.role_unit_type('HutTech', owner)
@@ -74,7 +86,7 @@ function _deflua_hut_get_mercenaries(unit)
   end
 end
 
--- Get new city from hut, or settlers (nomads) if terrain is poor.
+--- Get new city from hut, or settlers (nomads) if terrain is poor.
 function _deflua_hut_get_city(unit)
   local owner = unit.owner
   local settlers = find.role_unit_type('Cities', owner)
@@ -96,9 +108,9 @@ function _deflua_hut_get_city(unit)
   end
 end
 
--- Get barbarians from hut, unless close to a city, king enters, or
--- barbarians are disabled
--- Unit may die: returns true if unit is alive
+--- Get barbarians from hut, unless close to a city, king enters, or
+--- barbarians are disabled
+--- Unit may die: returns true if unit is alive
 function _deflua_hut_get_barbarians(unit)
   local tile = unit.tile
   local utype = unit.utype
@@ -124,7 +136,9 @@ function _deflua_hut_get_barbarians(unit)
   return alive
 end
 
--- Randomly choose a hut event
+--- Randomly choose a hut event
+---
+--- Connected to :lua:func:`~Event.hut_enter`
 function _deflua_hut_enter_callback(unit)
   local chance = random(0, 11)
   local alive = true
@@ -155,7 +169,9 @@ end
 
 signal.connect("hut_enter", "_deflua_hut_enter_callback")
 
--- Informs that the tribe has run away seeing your plane
+--- Informs that the tribe has run away seeing your plane
+---
+--- Connected to :lua:func:`~Event.hut_frighten`
 function _deflua_hut_frighten_callback(unit, extra)
   local owner = unit.owner
   notify.event(owner, unit.tile, E.HUT_BARB,
@@ -165,24 +181,23 @@ function _deflua_hut_frighten_callback(unit, extra)
 end
 signal.connect("hut_frighten", "_deflua_hut_frighten_callback")
 
---[[
-  Make partisans around conquered city
-
-  if requirements to make partisans when a city is conquered is fulfilled
-  this routine makes a lot of partisans based on the city`s size.
-  To be candidate for partisans the following things must be satisfied:
-  1) The loser of the city is the original owner.
-  2) The Inspire_Partisans effect must be larger than zero.
-
-  If these conditions are ever satisfied, the ruleset must have a unit
-  with the Partisan role.
-
-  In the default ruleset, the requirements for inspiring partisans are:
-  a) Guerilla warfare must be known by atleast 1 player
-  b) The player must know about Communism and Gunpowder
-  c) The player must run either a democracy or a communist society.
-]]--
-
+--- Make partisans around conquered city
+---
+--- if requirements to make partisans when a city is conquered is fulfilled
+--- this routine makes a lot of partisans based on the city`s size.
+--- To be candidate for partisans the following things must be satisfied:
+--- 1) The loser of the city is the original owner.
+--- 2) The Inspire_Partisans effect must be larger than zero.
+---
+--- If these conditions are ever satisfied, the ruleset must have a unit
+--- with the Partisan role.
+---
+--- In the default ruleset, the requirements for inspiring partisans are:
+--- a) Guerilla warfare must be known by atleast 1 player
+--- b) The player must know about Communism and Gunpowder
+--- c) The player must run either a democracy or a communist society.
+---
+--- Connected to :lua:func:`~Event.city_transferred`
 function _deflua_make_partisans_callback(city, loser, winner, reason)
   if reason ~= 'conquest' or city:inspire_partisans(loser) <= 0 then
     return
@@ -217,8 +232,10 @@ end
 signal.connect("city_transferred", "_deflua_make_partisans_callback")
 
 
--- Notify player about the fact that disaster had no effect if that is
--- the case
+--- Notify player about the fact that disaster had no effect if that is
+--- the case
+---
+--- Connected to :lua:func:`~Event.disaster_occurred`
 function _deflua_harmless_disaster_message(disaster, city, had_internal_effect)
   if not had_internal_effect then
     notify.event(city.owner, city.tile, E.DISASTER,
@@ -228,6 +245,9 @@ end
 
 signal.connect("disaster_occurred", "_deflua_harmless_disaster_message")
 
+--- Transfer gold from the previous owner of a conquered city to the new owner.
+---
+--- Connected to :lua:func:`~Event.city_loot`
 function _deflua_city_conquer_gold_loot(city, looterunit)
   local treasury = city.owner:gold()
   local loot = math.min(

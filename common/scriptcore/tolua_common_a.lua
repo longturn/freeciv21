@@ -92,9 +92,8 @@ function debug_log(msg)
   log.debug(msg)
 end
 
--- ***************************************************************************
--- Dump the state of user scalar variables to a Lua code string.
--- ***************************************************************************
+--- Dump the state of user scalar variables to a Lua code string.
+--- @return string state
 function _freeciv_state_dump()
   local res = ''
 

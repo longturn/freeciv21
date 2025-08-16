@@ -121,7 +121,9 @@ if has_theme:
 # documentation.
 #
 html_theme_options = {
-    'style_external_links': True
+    'style_external_links': True,
+    # Unlimited depth of side menu navigation tree
+    'navigation_depth': -1
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

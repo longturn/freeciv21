@@ -5,6 +5,8 @@
 
 .. include:: /global-include.rst
 
+.. _coding-i18n:
+
 Internationalization
 ********************
 
