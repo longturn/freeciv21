@@ -1,21 +1,14 @@
 ---@meta
 
--- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
--- part of Freeciv21. Freeciv21 is free software: you can redistribute it
--- and/or modify it under the terms of the GNU  General Public License  as
--- published by the Free Software Foundation, either version 3 of the
--- License,  or (at your option) any later version. You should have received
--- a copy of the GNU General Public License along with Freeciv21. If not,
--- see https://www.gnu.org/licenses/.
-
 -- SPDX-License-Identifier: GPL-3.0-or-later
 -- SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+-- SPDX-FileCopyrightText: Freeciv Wiki contributors <https://freeciv.fandom.com/wiki/Lua_reference_manual?action=history>
 -- SPDX-FileCopyrightText: XHawk87 <hawk87@hotmail.co.uk>
 
 --  WARNING: do not attempt to change the name of the API functions.
 --  They may be in use in Lua scripts in savefiles, so once released, the
 --  name and signature cannot change shape even in new major versions of
---  Freeciv, until the relevant save format version can no longer be loaded.
+--  Freeciv21, until the relevant save format version can no longer be loaded.
 --  If you really like to change a function name, be sure to keep also the
 --  old one running.
 
@@ -259,7 +252,7 @@ function edit.change_gold(player, amount) end
 
 --- Gives a technology to a player. 
 ---
---- cost is a percentage of the tech's cost to be deducted from the bulb store,
+--- Cost is a percentage of the tech's cost to be deducted from the bulb store,
 --- or '-1' for normal :ref:`freecost <server-option-free-cost>`, 
 --- '-2' for :ref:`conquercost <server-option-conquer-cost>`, 
 --- '-3' for :ref:`diplbulbcost <server-option-diplomacy-bulb-cost>`
@@ -330,7 +323,7 @@ function edit.climate_change(cctype, effect) end
 --- happens. If the chance is met, civil war happens as usual, with appropriate
 --- messages sent to the players.
 ---
---- probability is the percentage chance of the civil war occurring (use 100
+--- Probability is the percentage chance of the civil war occurring (use 100
 --- for certainty), or if it is zero, the normal calculation is used (affected
 --- by government, happiness, etc).
 ---
@@ -360,7 +353,7 @@ function edit.player_victory(player) end
 --- @return bool survived True if the move was successful, false it died.
 function edit.unit_move(unit, move_to, move_cost) end
 
---- Prohibits the unit from moving from the spot it's at.
+--- Prohibits the unit from moving from the spot it is at.
 --- @param unit Unit The unit to disallow movement for.
 function edit.movement_disallow(unit) end
 
@@ -374,7 +367,7 @@ function edit.movement_allow(unit) end
 --- @param amount int The amount of history points to add.
 function edit.add_city_history(city, amount) end
 
---- Adds history a.k.a. culture to a player. This affects civilisation score.
+--- Adds history :term:`a.k.a.` culture to a player. This affects civilisation score.
 --- @param player Player The player to which history points are to be added.
 --- @param amount int The amount of history points to add.
 function edit.add_player_history(player, amount) end

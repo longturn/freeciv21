@@ -2,9 +2,7 @@
 .. SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 .. SPDX-FileCopyrightText: XHawk87 <hawk87@hotmail.co.uk>
 
-.. Usage references:
-.. https://longturn.readthedocs.io/en/latest/Contributing/style-guide.html
-.. https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#rst-primer
+.. See: https://longturn.readthedocs.io/en/latest/Contributing/style-guide.html
 
 .. include:: /global-include.rst
 

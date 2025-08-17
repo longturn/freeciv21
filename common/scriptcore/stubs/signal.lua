@@ -1,21 +1,14 @@
 ---@meta
 
--- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
--- part of Freeciv21. Freeciv21 is free software: you can redistribute it
--- and/or modify it under the terms of the GNU  General Public License  as
--- published by the Free Software Foundation, either version 3 of the
--- License,  or (at your option) any later version. You should have received
--- a copy of the GNU General Public License along with Freeciv21. If not,
--- see https://www.gnu.org/licenses/.
-
 -- SPDX-License-Identifier: GPL-3.0-or-later
 -- SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+-- SPDX-FileCopyrightText: Freeciv Wiki contributors <https://freeciv.fandom.com/wiki/Lua_reference_manual?action=history>
 -- SPDX-FileCopyrightText: XHawk87 <hawk87@hotmail.co.uk>
 
 --  WARNING: do not attempt to change the name of the API functions.
 --  They may be in use in Lua scripts in savefiles, so once released, the
 --  name and signature cannot change shape even in new major versions of
---  Freeciv, until the relevant save format version can no longer be loaded.
+--  Freeciv21, until the relevant save format version can no longer be loaded.
 --  If you really like to change a function name, be sure to keep also the
 --  old one running.
 
@@ -26,8 +19,9 @@
 -- https://taminomara.github.io/sphinx-lua-ls/index.html#autodoc-directives
 -- https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#rst-primer
 
---- Signals are emitted by the server when certain events occur. (see
---- :ref:`Event <script-api-events>` for a list of specific signals). 
+--- Signals are emitted by the server when certain events occur. 
+---
+--- See :ref:`Event <script-api-events>` for a list of specific signals. 
 ---
 --- Signal emission invokes all associated callbacks in the order they were
 --- connected. A callback can stop the current signal emission, preventing

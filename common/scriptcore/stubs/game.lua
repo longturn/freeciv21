@@ -1,21 +1,14 @@
 ---@meta
 
--- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
--- part of Freeciv21. Freeciv21 is free software: you can redistribute it
--- and/or modify it under the terms of the GNU  General Public License  as
--- published by the Free Software Foundation, either version 3 of the
--- License,  or (at your option) any later version. You should have received
--- a copy of the GNU General Public License along with Freeciv21. If not,
--- see https://www.gnu.org/licenses/.
-
 -- SPDX-License-Identifier: GPL-3.0-or-later
 -- SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+-- SPDX-FileCopyrightText: Freeciv Wiki contributors <https://freeciv.fandom.com/wiki/Lua_reference_manual?action=history>
 -- SPDX-FileCopyrightText: XHawk87 <hawk87@hotmail.co.uk>
 
 --  WARNING: do not attempt to change the name of the API functions.
 --  They may be in use in Lua scripts in savefiles, so once released, the
 --  name and signature cannot change shape even in new major versions of
---  Freeciv, until the relevant save format version can no longer be loaded.
+--  Freeciv21, until the relevant save format version can no longer be loaded.
 --  If you really like to change a function name, be sure to keep also the
 --  old one running.
 
@@ -29,7 +22,13 @@
 --- Represents a nation in the game controlled by a specific player.
 ---
 --- .. note::
----    In clients, functions that need full information about other players consider technologies status of which for specific player is not known to be unknown. Research information about players to which the client has no direct or indirect embassy access is initialized with zeros and nils. However, if embassy data source for some reason ceases to exist during playing session, currently the latest data get stuck, see `OSDN#45076 <https://osdn.net/projects/freeciv/ticket/45076>`_
+---    In clients, functions that need full information about other players
+---    consider technologies status of which for specific player is not known
+---    to be unknown. Research information about players to which the client
+---    has no direct or indirect embassy access is initialized with zeros and
+---    nils. However, if embassy data source for some reason ceases to exist
+---    during playing session, currently the latest data get stuck, see
+---    `#2770 <https://github.com/longturn/freeciv21/issues/2770>`_
 ---
 --- @class Player
 --- @field name string The player's name.
@@ -110,7 +109,7 @@ function Player:units_iterate()
   return safe_iterate_list(private.Player.unit_list_head(self))
 end
 
---- Safe iteration over reach :lua:class:`City` that belongs to a :lua:class:`Player`.
+--- Safe iteration over each :lua:class:`City` that belongs to a :lua:class:`Player`.
 function Player:cities_iterate()
   return safe_iterate_list(private.Player.city_list_head(self))
 end
@@ -150,7 +149,8 @@ function City:inspire_partisans(inspirer) end
 --- @return int culture Current total culture score for this city.
 function City:culture() end
 
---- Note: A city can be both happy and celebrating at the same time.
+--- .. note::
+---    A city can be both happy and celebrating at the same time.
 ---
 --- @return boolean happy True if the city has more happy citizens than content and no unhappy or angry citizens.
 function City:is_happy() end
@@ -166,7 +166,7 @@ function City:is_celebrating() end
 function City:is_unhappy() end
 
 --- 
---- @return boolean gov-centre True if the city is a centre of government for the purpose of distance to government centre calculations.
+--- @return boolean gov-center True if the city is a center of government for the purpose of distance to government center calculations.
 function City:is_gov_center() end
 
 --- 
@@ -198,7 +198,7 @@ Unit = {}
 function Unit:transporter() end
 
 --- 
---- @return boolean settlable True, if a settler unit build a city here.
+--- @return boolean settleable True, if a settler unit can build a city here.
 function Unit:is_on_possible_city_tile() end
 
 --- 
@@ -266,9 +266,9 @@ Tile = {}
 function Tile:city() end
 
 --- 
---- @param centre boolean True, if the centre tile should be checked also.
---- @return boolean exists True if there is a city within the maximum radius a city map can ever have in Freeciv (not necessarily possible in the current ruleset) -- currently within 5 tiles. 
-function Tile:city_exists_within_max_city_map(centre) end
+--- @param center boolean True, if the center tile should be checked also.
+--- @return boolean exists True if there is a city within the maximum radius a city map can ever have in Freeciv21 (not necessarily possible in the current ruleset) -- currently within 5 tiles. 
+function Tile:city_exists_within_max_city_map(center) end
 
 --- 
 --- @param name boolean The ruleset name of any type of terrain extra.
@@ -617,7 +617,7 @@ function find.action(name) end
 --- Finds an action by its ID. For use in loops etc. 
 ---
 --- .. attention::
----    Warning: An action's ID may change after saving and reloading the game.
+---    An action's ID may change after saving and reloading the game.
 ---
 --- @param action_type_id int The ID of the action.
 --- @return Action action The found action.
@@ -671,9 +671,9 @@ function find.terrain(name) end
 function find.terrain(terrain_id) end
 
 
---- Calculate the current value of a :ref:`ruleset effect
---- <modding-rulesets-effects>`. Effect names are the same as in rulesets,
---- e.g., "Upkeep_Free". 
+--- Calculate the current value of a 
+--- :ref:`ruleset effect <modding-rulesets-effects>`. Effect names are the same
+--- as in rulesets, e.g., "``Upkeep_Free``". 
 ---
 --- !doctype table
 --- @class effects

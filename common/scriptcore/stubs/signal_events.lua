@@ -1,21 +1,14 @@
 ---@meta
 
--- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
--- part of Freeciv21. Freeciv21 is free software: you can redistribute it
--- and/or modify it under the terms of the GNU  General Public License  as
--- published by the Free Software Foundation, either version 3 of the
--- License,  or (at your option) any later version. You should have received
--- a copy of the GNU General Public License along with Freeciv21. If not,
--- see https://www.gnu.org/licenses/.
-
 -- SPDX-License-Identifier: GPL-3.0-or-later
 -- SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+-- SPDX-FileCopyrightText: Freeciv Wiki contributors <https://freeciv.fandom.com/wiki/Lua_reference_manual?action=history>
 -- SPDX-FileCopyrightText: XHawk87 <hawk87@hotmail.co.uk>
 
 --  WARNING: do not attempt to change the name of the API functions.
 --  They may be in use in Lua scripts in savefiles, so once released, the
 --  name and signature cannot change shape even in new major versions of
---  Freeciv, until the relevant save format version can no longer be loaded.
+--  Freeciv21, until the relevant save format version can no longer be loaded.
 --  If you really like to change a function name, be sure to keep also the
 --  old one running.
 
@@ -33,8 +26,8 @@
 ---   signal.connect(signal_name, callback_name)
 ---
 --- Currently, signals are only sent to ruleset scripts running on the server.
---- The set of signals is defined in server/scripting/script_server.cpp (search
---- for "script_server_signals_create").
+--- The set of signals is defined in :file:`server/scripting/script_server.cpp`
+--- (search for "``script_server_signals_create``").
 ---
 --- If false is returned from a signal handler function, the signal will not
 --- propagate to any subsequent signal handlers.
@@ -96,10 +89,11 @@ function Events.building_built(building, city) end
 --- "need_baseflag", "have_baseflag", "need_roadflag", "have_roadflag",
 --- "need_extraflag", "have_extraflag", "need_minyear", "need_mincalfrag",
 --- "have_mincalfrag", "need_topo", "need_setting", "need_age", "never",
---- "unavailable", "pop_cost"
+--- "unavailable", or "pop_cost"
 ---
---- Note: At the moment, ruleset doesn't allow full requirements for units, but
---- as soon as it does a lot of these will automatically come into play.
+--- .. note::
+---    At the moment, ruleset doesn't allow full requirements for units, but
+---    as soon as it does a lot of these will automatically come into play.
 ---
 --- @param Unit_Type unit_type The type of unit that cannot be built.
 --- @param City city The city where the unit cannot be built.
@@ -120,7 +114,7 @@ function Events.unit_cant_be_built(unit_type, city, reason) end
 --- "have_terrainclass", "need_terrainflag", "have_terrainflag",
 --- "need_baseflag", "have_baseflag", "need_roadflag", "have_roadflag",
 --- "need_extraflag", "have_extraflag", "need_minyear", "need_mincalfrag",
---- "have_mincalfrag", "need_topo", "need_setting", "need_age", "never",
+--- "have_mincalfrag", "need_topo", "need_setting", "need_age", "never", or
 --- "unavailable".
 ---
 --- @param Building_Type building_type The type of building that cannot be built.
@@ -132,7 +126,7 @@ function Events.building_cant_be_built(building_type, city, reason) end
 ---
 --- The reason is one of: "razed", "conquered" (applicable for Small Wonders
 --- only), "city_destroyed", "disaster", "attacked", "sabotaged", "landlocked",
---- "sold", "obsolete", "cant_maintain"
+--- "sold", "obsolete", or "cant_maintain"
 ---
 --- destroyer is applicable for "sabotaged" only. 
 ---
@@ -165,9 +159,8 @@ function Events.city_destroyed(city, owner, enemy) end
 --- the city is captured so still belongs to the original owner, however it is
 --- after spaceship is lost if it was the capital.
 ---
---- See :ref:`Conquer City Gold Loot 
---- <modding-ruleset-script-defaults-conquer-city-gold-loot>` for default
---- implementation.
+--- See :ref:`Conquer City Gold Loot <modding-ruleset-script-defaults-conquer-city-gold-loot>`
+--- for default implementation.
 ---
 --- @param City city The city from which loot was taken.
 --- @param Unit unit The unit that took the loot.
@@ -228,14 +221,14 @@ function Events.achievement_gained(achievement, player, first) end
 function Events.map_generated() end
 
 --- A signal for a pulse event. Pulses occur at approximately one second
---- intervals. The time between pulses is not constant - this can't be used to
---- measure time.
+--- intervals. The time between pulses is not constant --- this cannot be used
+--- to measure time.
 function Events.pulse() end
 
 --- A signal for when a unit performs an act on another single unit.
 ---
---- For valid actions, see :ref:`Actions Done by a Unit Against Another Unit
---- <modding-ruleset-actions-vs-unit>`
+--- For valid actions, see 
+--- :ref:`Actions Done by a Unit Against Another Unit <modding-ruleset-actions-vs-unit>`
 ---
 --- @param Action action The action that is starting.
 --- @param Unit actor The unit that is performing the action.
@@ -244,8 +237,8 @@ function Events.action_started_unit_unit(action, actor, target) end
 
 --- A signal for when a unit performs an act on a stack of units.
 ---
---- For valid actions, see :ref:`Actions Done by a Unit Against All Units at a
---- Tile <modding-ruleset-actions-vs-stack>`
+--- For valid actions, see
+--- :ref:`Actions Done by a Unit Against All Units at a Tile <modding-ruleset-actions-vs-stack>`
 ---
 --- @param Action action The action that is starting.
 --- @param Unit actor The unit that is performing the action.
@@ -254,8 +247,8 @@ function Events.action_started_unit_units(action, actor, tile) end
 
 --- A signal for when a unit performs an act on a city.
 ---
---- For valid actions, see :ref:`Actions Done by a Unit Against a City 
---- <modding-ruleset-actions-vs-city>`
+--- For valid actions, see 
+--- :ref:`Actions Done by a Unit Against a City <modding-ruleset-actions-vs-city>`
 ---
 --- @param Action action The action that is starting.
 --- @param Unit actor The unit that is performing the action.
@@ -264,8 +257,8 @@ function Events.action_started_unit_city(action, actor, city) end
 
 --- A signal for when a unit performs an act on a tile.
 ---
---- For valid actions, see :ref:`Actions Done by a Unit Against a Tile
---- <modding-ruleset-actions-vs-tile>`
+--- For valid actions, see
+--- :ref:`Actions Done by a Unit Against a Tile <modding-ruleset-actions-vs-tile>`
 ---
 --- @param Action action The action that is starting.
 --- @param Unit actor The unit that is performing the action.
@@ -274,8 +267,8 @@ function Events.action_started_unit_tile(action, actor, tile) end
 
 --- A signal for when a unit performs an act on itself.
 ---
---- For valid actions, see :ref:`Actions Done by a Unit to Itself
---- <modding-ruleset-actions-vs-self>`
+--- For valid actions, see
+--- :ref:`Actions Done by a Unit to Itself <modding-ruleset-actions-vs-self>`
 ---
 --- @param Action action The action that is starting.
 --- @param Unit actor The unit that is performing the action.
