@@ -13,6 +13,10 @@ website. Sphinx takes plain text files formatted with a super set of markdown ca
 Sphinx reStructuredText is documented here:
 https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html
 
+It is a good idea to read the 
+_`ReST Primer <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#rst-primer>`
+if you are unfamiliar with ReST.
+
 This style guide is mostly meant for documentation authors to ensure that we keep a consistent look and feel
 between authors.
 

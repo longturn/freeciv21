@@ -22,6 +22,9 @@ community discussions.
     Freeciv21 comes with a pre-programmed artificial intelligence that you can play against in single-player
     games.
 
+  A.k.a.
+    Also known as
+
   BPT
     Bulbs Per Turn
 

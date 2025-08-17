@@ -1,15 +1,12 @@
--- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
--- part of Freeciv21. Freeciv21 is free software: you can redistribute it
--- and/or modify it under the terms of the GNU  General Public License  as
--- published by the Free Software Foundation, either version 3 of the
--- License,  or (at your option) any later version. You should have received
--- a copy of the GNU General Public License along with Freeciv21. If not,
--- see https://www.gnu.org/licenses/.
+-- SPDX-License-Identifier: GPL-3.0-or-later
+-- SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+-- SPDX-FileCopyrightText: Freeciv Wiki contributors <https://freeciv.fandom.com/wiki/Lua_reference_manual?action=history>
+-- SPDX-FileCopyrightText: XHawk87 <hawk87@hotmail.co.uk>
 
 --  WARNING: do not attempt to change the name of the API functions.
 --  They may be in use in Lua scripts in savefiles, so once released, the
 --  name and signature cannot change shape even in new major versions of
---  Freeciv, until the relevant save format version can no longer be loaded.
+--  Freeciv21, until the relevant save format version can no longer be loaded.
 --  If you really like to change a function name, be sure to keep also the
 --  old one running.
 
@@ -26,7 +23,7 @@ function Nonexistent:exists()
 end
 
 --- Logging facilities from Lua script. This is the preferred way to emit
---- textual output from Freeciv Lua scripts. Messages emitted with these
+--- textual output from Freeciv21 Lua scripts. Messages emitted with these
 --- functions will be sent to an appropriate place, which will differ depending
 --- on the context. 
 ---

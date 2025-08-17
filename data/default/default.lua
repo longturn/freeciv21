@@ -1,13 +1,6 @@
--- Copyright (c) 2007-2020 Freeciv21 and Freeciv contributors. This file is
---   part of Freeciv21. Freeciv21 is free software: you can redistribute it
---   and/or modify it under the terms of the GNU General Public License
---   as published by the Free Software Foundation, either version 3
---   of the License,  or (at your option) any later version.
---   You should have received a copy of the GNU General Public License
---   along with Freeciv21. If not, see https://www.gnu.org/licenses/.
-
 -- SPDX-License-Identifier: GPL-3.0-or-later
 -- SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+-- SPDX-FileCopyrightText: Freeciv Wiki contributors <https://freeciv.fandom.com/wiki/Lua_reference_manual?action=history>
 -- SPDX-FileCopyrightText: XHawk87 <hawk87@hotmail.co.uk>
 
 -- When creating new ruleset, you should copy this file only if you
@@ -34,7 +27,7 @@ function _deflua_hut_get_gold(unit, gold)
 end
 
 --- Defaults to :lua:func:`_deflua_hut_get_gold` if intended hut behaviour
---- wasn`t possible.
+--- was not possible.
 function _deflua_hut_consolation_prize(unit)
   _deflua_hut_get_gold(unit, 25)
 end
@@ -183,19 +176,19 @@ signal.connect("hut_frighten", "_deflua_hut_frighten_callback")
 
 --- Make partisans around conquered city
 ---
---- if requirements to make partisans when a city is conquered is fulfilled
+--- If requirements to make partisans when a city is conquered is fulfilled
 --- this routine makes a lot of partisans based on the city`s size.
 --- To be candidate for partisans the following things must be satisfied:
---- 1) The loser of the city is the original owner.
---- 2) The Inspire_Partisans effect must be larger than zero.
+--- * The loser of the city is the original owner.
+--- * The Inspire_Partisans effect must be larger than zero.
 ---
 --- If these conditions are ever satisfied, the ruleset must have a unit
 --- with the Partisan role.
 ---
 --- In the default ruleset, the requirements for inspiring partisans are:
---- a) Guerilla warfare must be known by atleast 1 player
---- b) The player must know about Communism and Gunpowder
---- c) The player must run either a democracy or a communist society.
+--- * Guerilla warfare must be known by atleast 1 player
+--- * The player must know about Communism and Gunpowder
+--- * The player must run either a democracy or a communist society.
 ---
 --- Connected to :lua:func:`~Event.city_transferred`
 function _deflua_make_partisans_callback(city, loser, winner, reason)

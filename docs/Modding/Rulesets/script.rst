@@ -1,5 +1,6 @@
 .. SPDX-License-Identifier: GPL-3.0-or-later
 .. SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+.. SPDX-FileCopyrightText: Freeciv Wiki contributors <https://freeciv.fandom.com/wiki/Lua_reference_manual?action=history>
 .. SPDX-FileCopyrightText: XHawk87 <hawk87@hotmail.co.uk>
 
 .. Usage references:
@@ -14,7 +15,7 @@
 Lua Scripting
 *************
 
-All Lua code for a ruleset currently goes in the :literal:`game/script.lua`
+All Lua code for a ruleset currently goes in the :file:`game/script.lua`
 file.
 
 .. code-block:: lua
@@ -36,7 +37,7 @@ Defaults
 ========
 
 To avoid having to copy large amounts of standard functionality across to
-every ruleset, there is a :literal:`data/default/default.lua` file containing
+every ruleset, there is a :file:`data/default/default.lua` file containing
 signal handlers that are included automatically.
 
 Signal Handlers
@@ -644,11 +645,11 @@ killer's "units killed" score (if the killer is specified).
      - Yes
      - No
    * - "bribed"
-     - Bribed by enemy diplomat. At v.3.1 and earlier, when a signal is called thus to an old unit, new one is created.
+     - Bribed by enemy diplomat.***
      - Yes
      - Yes*
    * - "captured"
-     - Captured by enemy unit. At v.3.1 and earlier, when a signal is called thus to an old unit, new one is created.
+     - Captured by enemy unit.***
      - Yes
      - Yes*
    * - "caught"
@@ -662,15 +663,18 @@ killer's "units killed" score (if the killer is specified).
      - Yes
 
 .. note::
-   :literal:`*` At v.3.1 and earlier, the killer can be specified only by a script.
-   
+   :literal:`*` The killer can be specified only by a script.
+
    :literal:`**` Killer submitted only if the action was failed.
+
+   :literal:`***` A new unit is created under the new ownership to replace the
+                  old unit after the signal is processed.
 
 
 Lua Built-ins
 -------------
 
-Some Lua builtin functions and modules are also available in Freeciv (some
+Some Lua builtin functions and modules are also available in Freeciv21 (some
 functionality is intentionally left out by policy). It is not our intention to
 document Lua builtins here, but just to mention a selection of the useful parts. 
 
