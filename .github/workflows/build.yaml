@@ -294,18 +294,19 @@ jobs:
             "Freeciv21-${{steps.split.outputs.fragment}}-arm64-osx.dmg" \
             "Freeciv21.app"
           shasum -a 256 Freeciv21-${{steps.split.outputs.fragment}}-arm64-osx.dmg > Freeciv21-${{steps.split.outputs.fragment}}-arm64-osx.dmg.sha256
-      - name: Upload package
-        uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: |
-            build/Freeciv21-*.dmg
-            build/Freeciv21-*.dmg.sha256
-      - name: Upload a build
-        uses: actions/upload-artifact@v4
-        with:
-          name: macOS-dmg
-          path: build/Freeciv21-*.dmg
+      # 2025-08-20: jwrober - disabled while we get signing and other packaging fixed
+      #- name: Upload package
+      # -uses: softprops/action-gh-release@v2
+      #  if: startsWith(github.ref, 'refs/tags/')
+      #  with:
+      #    files: |
+      #      build/Freeciv21-*.dmg
+      #      build/Freeciv21-*.dmg.sha256
+      #- name: Upload a build
+      #  uses: actions/upload-artifact@v4
+      #  with:
+      #    name: macOS-dmg
+      #    path: build/Freeciv21-*.dmg
 
   fedora:
     runs-on: ubuntu-latest
