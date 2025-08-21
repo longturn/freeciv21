@@ -336,15 +336,15 @@ if(APPLE)
       FILES_MATCHING PATTERN "*"
     )
     file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/client.iconset")
-    file(COPY_FILE "${CMAKE_BINARY_DIR}/../data/icons/16x16/freeciv21-client.png"
+    file(COPY_FILE "${CMAKE_SOURCE_DIR}/data/icons/16x16/freeciv21-client.png"
                    "${CMAKE_BINARY_DIR}/client.iconset/icon_16x16.png")
-    file(COPY_FILE "${CMAKE_BINARY_DIR}/../data/icons/32x32/freeciv21-client.png"
+    file(COPY_FILE "${CMAKE_SOURCE_DIR}/data/icons/32x32/freeciv21-client.png"
                    "${CMAKE_BINARY_DIR}/client.iconset/icon_16x16@2x.png")
-    file(COPY_FILE "${CMAKE_BINARY_DIR}/../data/icons/32x32/freeciv21-client.png"
+    file(COPY_FILE "${CMAKE_SOURCE_DIR}/data/icons/32x32/freeciv21-client.png"
                    "${CMAKE_BINARY_DIR}/client.iconset/icon_32x32.png")
-    file(COPY_FILE "${CMAKE_BINARY_DIR}/../data/icons/64x64/freeciv21-client.png"
+    file(COPY_FILE "${CMAKE_SOURCE_DIR}/data/icons/64x64/freeciv21-client.png"
                    "${CMAKE_BINARY_DIR}/client.iconset/icon_32x32@2x.png")
-    file(COPY_FILE "${CMAKE_BINARY_DIR}/../data/icons/128x128/freeciv21-client.png"
+    file(COPY_FILE "${CMAKE_SOURCE_DIR}/data/icons/128x128/freeciv21-client.png"
                    "${CMAKE_BINARY_DIR}/client.iconset/icon_128x128.png")
     execute_process(
       COMMAND iconutil --convert icns "${CMAKE_BINARY_DIR}/client.iconset")
