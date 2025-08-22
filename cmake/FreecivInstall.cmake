@@ -301,6 +301,7 @@ if(APPLE)
 
    install(CODE [[
     message(STATUS "Creating Freeciv21 App Bundle for macOS...")
+
     # Check to see if the app bundle was already created in a previous run
     if(EXISTS "${CMAKE_BINARY_DIR}/Freeciv21.app")
       message(STATUS "App Bundle exists, removing...")
@@ -310,6 +311,7 @@ if(APPLE)
       file(GLOB DMG_FILES "${CMAKE_BINARY_DIR}/Freeciv21*.dmg*")
       file(REMOVE ${DMG_FILES})
     endif()
+
     # Create app bundle
     file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Freeciv21.app")
     file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Freeciv21.app/Contents")
@@ -319,32 +321,33 @@ if(APPLE)
     file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/Resources/locale")
     file(COPY_FILE "${CMAKE_BINARY_DIR}/dist/Info.plist"
                    "${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/Info.plist")
-    file(COPY "${CMAKE_BINARY_DIR}/install/bin/"
+    file(COPY "${CMAKE_INSTALL_PREFIX}/bin/"
       DESTINATION "${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/MacOS/"
       FILES_MATCHING PATTERN "Freeciv21-*"
     )
-    file(COPY "${CMAKE_BINARY_DIR}/install/share/freeciv21/"
+    file(COPY "${CMAKE_INSTALL_PREFIX}/share/freeciv21/"
       DESTINATION "${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/Resources/"
       FILES_MATCHING PATTERN "*"
     )
-    file(COPY "${CMAKE_BINARY_DIR}/install/share/doc/freeciv21/"
+    file(COPY "${CMAKE_INSTALL_PREFIX}/share/doc/freeciv21/"
       DESTINATION "${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/Resources/doc/"
       FILES_MATCHING PATTERN "*"
     )
-    file(COPY "${CMAKE_BINARY_DIR}/install/share/locale/"
+    file(COPY "${CMAKE_INSTALL_PREFIX}/share/locale/"
       DESTINATION "${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/Resources/locale/"
       FILES_MATCHING PATTERN "*"
     )
+
     file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/client.iconset")
-    file(COPY_FILE "${CMAKE_SOURCE_DIR}/data/icons/16x16/freeciv21-client.png"
+    file(COPY_FILE "${CMAKE_INSTALL_PREFIX}/share/freeciv21/icons/16x16/freeciv21-client.png"
                    "${CMAKE_BINARY_DIR}/client.iconset/icon_16x16.png")
-    file(COPY_FILE "${CMAKE_SOURCE_DIR}/data/icons/32x32/freeciv21-client.png"
+    file(COPY_FILE "${CMAKE_INSTALL_PREFIX}/share/freeciv21/icons/32x32/freeciv21-client.png"
                    "${CMAKE_BINARY_DIR}/client.iconset/icon_16x16@2x.png")
-    file(COPY_FILE "${CMAKE_SOURCE_DIR}/data/icons/32x32/freeciv21-client.png"
+    file(COPY_FILE "${CMAKE_INSTALL_PREFIX}/share/freeciv21/icons/32x32/freeciv21-client.png"
                    "${CMAKE_BINARY_DIR}/client.iconset/icon_32x32.png")
-    file(COPY_FILE "${CMAKE_SOURCE_DIR}/data/icons/64x64/freeciv21-client.png"
+    file(COPY_FILE "${CMAKE_INSTALL_PREFIX}/share/freeciv21/icons/64x64/freeciv21-client.png"
                    "${CMAKE_BINARY_DIR}/client.iconset/icon_32x32@2x.png")
-    file(COPY_FILE "${CMAKE_SOURCE_DIR}/data/icons/128x128/freeciv21-client.png"
+    file(COPY_FILE "${CMAKE_INSTALL_PREFIX}/share/freeciv21/icons/128x128/freeciv21-client.png"
                    "${CMAKE_BINARY_DIR}/client.iconset/icon_128x128.png")
     execute_process(
       COMMAND iconutil --convert icns "${CMAKE_BINARY_DIR}/client.iconset")
