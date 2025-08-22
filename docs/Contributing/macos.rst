@@ -103,28 +103,8 @@ On macOS, you need to use a preset that is defined in the :file:`CMakePresets.js
   Freeciv21 directory and reused for subsequent builds.
 
 
-Create App Bundle and DMG Installer
-===================================
-
-Follow these steps to build an app bundle for Freeciv21:
-
-.. code-block:: sh
-
-  % cd build
-  % mkdir -pv Freeciv21.app/Contents/MacOS Freeciv21.app/Contents/Resources/doc
-  % cp -v dist/Info.plist Freeciv21.app/Contents/
-  % cp -rv install/share/doc/freeciv21/* Freeciv21.app/Contents/Resources/doc
-  % cp -rv install/share/freeciv21/* Freeciv21.app/Contents/Resources
-  % cp -v install/bin/freeciv21-* Freeciv21.app/Contents/MacOS
-  % mkdir client.iconset
-  % cp -v ../data/icons/16x16/freeciv21-client.png client.iconset/icon_16x16.png
-  % cp -v ../data/icons/32x32/freeciv21-client.png client.iconset/icon_16x16@2x.png
-  % cp -v ../data/icons/32x32/freeciv21-client.png client.iconset/icon_32x32.png
-  % cp -v ../data/icons/64x64/freeciv21-client.png client.iconset/icon_32x32@2x.png
-  % cp -v ../data/icons/128x128/freeciv21-client.png client.iconset/icon_128x128.png
-  % iconutil -c icns client.iconset
-  % cp -v client.icns Freeciv21.app/Contents/Resources
-
+Create DMG Installer
+====================
 
 Follow this steps to create the DMG:
 
