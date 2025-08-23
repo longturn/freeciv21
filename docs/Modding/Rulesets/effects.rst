@@ -33,7 +33,8 @@ form (this is perhaps the most complicated example we could find):
         }
 
 
-The text in the brackets is the entry name, which just has to be unique, but is otherwise not used. The
+The text in the brackets is the entry name. It must start with ``effect_`` and the rest of the name has to be
+unique, but is otherwise not used. The
 ``type`` field tells Freeciv21 which effect you are defining.  The ``value`` is the effect's value, which
 depends on which effect it is. The ``reqs`` table contain a list of requirements for this effect being in
 effect. You need to satisfy all requirements listed here for this effect to take effect in the game.
