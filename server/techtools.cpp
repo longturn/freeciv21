@@ -352,8 +352,7 @@ void found_new_tech(struct research *presearch, Tech_type_id tech_found,
   struct advance *vap = valid_advance_by_number(tech_found);
   struct city *pcity;
 
-  if (!is_future_tech(tech_found)) {
-    fc_assert(nullptr != vap);
+  if (!is_future_tech(tech_found) && vap) {
     fc_assert(TECH_KNOWN != research_invention_state(presearch, tech_found));
 
     was_first = (!game.info.global_advances[tech_found]);

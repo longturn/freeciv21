@@ -2286,17 +2286,6 @@ static bool load_ruleset_units(struct section_file *file,
     // Some more consistency checking:
     unit_type_iterate(u)
     {
-      if (!valid_advance(u->require_advance)) {
-        qCCritical(
-            ruleset_category,
-            "\"%s\" unit_type \"%s\": depends on removed tech \"%s\".",
-            filename, utype_rule_name(u),
-            advance_rule_name(u->require_advance));
-        u->require_advance = A_NEVER;
-        ok = false;
-        break;
-      }
-
       if (utype_has_flag(u, UTYF_SETTLERS) && u->city_size <= 0) {
         qCCritical(ruleset_category,
                    "\"%s\": Unit %s would build size %d cities", filename,

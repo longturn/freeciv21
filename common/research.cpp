@@ -524,8 +524,6 @@ void research_update(struct research *presearch)
                  ? TECH_PREREQS_KNOWN
                  : TECH_UNKNOWN);
       }
-    } else {
-      fc_assert(state == TECH_UNKNOWN);
     }
     presearch->inventions[i].state = state;
     presearch->inventions[i].reachable = reachable;
@@ -583,7 +581,7 @@ void research_update(struct research *presearch)
     log_debug("%s: [%3d] %-25s => %s%s%s", research_rule_name(presearch), i,
               advance_rule_name(advance_by_number(i)),
               tech_state_name(research_invention_state(presearch, i)),
-              presearch->inventions[i].reachable ? "" : " [unrechable]",
+              presearch->inventions[i].reachable ? "" : " [unreachable]",
               presearch->inventions[i].root_reqs_known
                   ? ""
                   : " [root reqs aren't known]");
@@ -619,8 +617,7 @@ void research_update(struct research *presearch)
 enum tech_state research_invention_state(const struct research *presearch,
                                          Tech_type_id tech)
 {
-  fc_assert_ret_val(nullptr != valid_advance_by_number(tech),
-                    tech_state(-1));
+  fc_assert_ret_val(nullptr != advance_by_number(tech), TECH_UNKNOWN);
 
   if (nullptr != presearch) {
     return presearch->inventions[tech].state;
@@ -640,8 +637,7 @@ enum tech_state research_invention_set(struct research *presearch,
 {
   enum tech_state old;
 
-  fc_assert_ret_val(nullptr != valid_advance_by_number(tech),
-                    tech_state(-1));
+  fc_assert_ret_val(nullptr != advance_by_number(tech), TECH_UNKNOWN);
 
   old = presearch->inventions[tech].state;
   if (old == value) {
