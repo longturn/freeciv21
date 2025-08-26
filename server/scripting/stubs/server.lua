@@ -56,20 +56,20 @@ function server.setting.get(name) end
 
 --- Send event notifications to players. 
 ---
---- See the :ref:`E module <script-api-events>` for a list of possible event
+--- See the :lua:obj:`E` for a list of possible event
 --- types.
 ---
 --- !doctype table
 --- @class notify
 notify = {}
 
---- Send all players a message with type :ref:`E.SCRIPT <script-api-events>`.
+--- Send all players a message with type :lua:obj:`E.SCRIPT`.
 ---
 --- @param message String A :lua:func:`string.format`-style message.
 --- @param ... any A set of values to insert into the string template.
 function notify.all(message, ...) end
 
---- Send a player a message with type :ref:`E.SCRIPT <script-api-events>`.
+--- Send a player a message with type :lua:obj:`E.SCRIPT`.
 ---
 --- @param player Player The player to send the event message to.
 --- @param message String A :lua:func:`string.format`-style message.
@@ -81,7 +81,7 @@ function notify.player(player, message, ...) end
 ---
 --- @param player Player The player to send the event message to, or nil for all players.
 --- @param tile Tile The tile to highlight, or nil for no tile.
---- @param event Event The :ref:`Event Category <script-api-events>`.
+--- @param event E The event category.
 --- @param message String A :lua:func:`string.format`-style message.
 --- @param ... any A set of values to insert into the string template.
 function notify.event(player, tile, event, message, ...) end
@@ -90,7 +90,7 @@ function notify.event(player, tile, event, message, ...) end
 ---
 --- @param player Player The player to send the event message about.
 --- @param tile Tile The tile to highlight, or nil for no tile.
---- @param event Event The :ref:`Event Category <script-api-events>`.
+--- @param event E The event category.
 --- @param message String A :lua:func:`string.format`-style message.
 --- @param ... any A set of values to insert into the string template.
 function notify.embassies(player, ptile, event, message, ...) end
@@ -103,7 +103,7 @@ function notify.embassies(player, ptile, event, message, ...) end
 ---
 --- @param player Player The player to send the event message about.
 --- @param selfmsg boolean True, if the player should also receive the event.
---- @param event Event The :ref:`Event Category <script-api-events>`.
+--- @param event E The event category.
 --- @param message String A :lua:func:`string.format`-style message.
 --- @param ... any A set of values to insert into the string template.
 function notify.research(player, selfmsg, event, message, ...) end
@@ -113,7 +113,7 @@ function notify.research(player, selfmsg, event, message, ...) end
 --- when player gains it.
 ---
 --- @param player Player The player to send the event message about.
---- @param event Event The :ref:`Event Category <script-api-events>`.
+--- @param event E The event category.
 --- @param message String A :lua:func:`string.format`-style message.
 --- @param ... any A set of values to insert into the string template.
 function notify.research_embassies(player, event, message, ...) end

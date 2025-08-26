@@ -23,7 +23,8 @@
 --- Connect to an event signal using
 ---
 --- .. code-block:: lua
----   signal.connect(signal_name, callback_name)
+---
+---    signal.connect(signal_name, callback_name)
 ---
 --- Currently, signals are only sent to ruleset scripts running on the server.
 --- The set of signals is defined in :file:`server/scripting/script_server.cpp`
@@ -38,18 +39,18 @@ Events = {}
 
 
 --- A signal for the beginning of a turn.
---- @param Number turn The turn number, starting at 1.
---- @param Number year The calendar year number
+--- @param turn Number The turn number, starting at 1.
+--- @param year Number The calendar year number
 function Events.turn_begin(turn, year) end
 
 --- A signal for when a unit has moved. Emitted at the end of a unit_move().
---- @param Unit unit The unit that moved.
---- @param Tile tile_from The tile the unit moved from.
---- @param Tile tile_to The tile the unit moved to.
+--- @param unit Unit The unit that moved.
+--- @param tile_from Tile The tile the unit moved from.
+--- @param tile_to Tile The tile the unit moved to.
 function Events.unit_moved(unit, tile_from, tile_to) end
 
 --- A signal for when a city is built.
---- @param City city The city that was built.
+--- @param city City The city that was built.
 function Events.city_built(city) end
 
 --- A signal for changes in city size.
@@ -59,19 +60,19 @@ function Events.city_built(city) end
 --- "disaster", "plague", "conquest", "nuke", "bombard", "attack", or a
 --- user-defined value set in :lua:func:`edit.resize_city`
 ---
---- @param City city The city whose size changed.
---- @param Number size The new size of the city.
---- @param String reason The reason for the size change.
+--- @param city City The city whose size changed.
+--- @param size Number The new size of the city.
+--- @param reason String The reason for the size change.
 function Events.city_size_change(city, size, reason) end
 
 --- A signal for when a unit is built in a city.
---- @param Unit unit The unit that was built.
---- @param City city The city where the unit was built.
+--- @param unit Unit The unit that was built.
+--- @param city City The city where the unit was built.
 function Events.unit_built(unit, city) end
 
 --- A signal for when a building is built in a city.
---- @param Building_Type building The type of building that was built.
---- @param City city The city where the building was built.
+--- @param building Building_Type The type of building that was built.
+--- @param city City The city where the building was built.
 function Events.building_built(building, city) end
 
 --- A signal for when a unit cannot be built.
@@ -95,9 +96,9 @@ function Events.building_built(building, city) end
 ---    At the moment, ruleset doesn't allow full requirements for units, but
 ---    as soon as it does a lot of these will automatically come into play.
 ---
---- @param Unit_Type unit_type The type of unit that cannot be built.
---- @param City city The city where the unit cannot be built.
---- @param String reason The reason why the unit cannot be built.
+--- @param unit_type Unit_Type The type of unit that cannot be built.
+--- @param city City The city where the unit cannot be built.
+--- @param reason String The reason why the unit cannot be built.
 function Events.unit_cant_be_built(unit_type, city, reason) end
 
 --- A signal for when a building cannot be built.
@@ -117,9 +118,9 @@ function Events.unit_cant_be_built(unit_type, city, reason) end
 --- "have_mincalfrag", "need_topo", "need_setting", "need_age", "never", or
 --- "unavailable".
 ---
---- @param Building_Type building_type The type of building that cannot be built.
---- @param City city The city where the building cannot be built.
---- @param String reason The reason why the building cannot be built.
+--- @param building_type Building_Type The type of building that cannot be built.
+--- @param city City The city where the building cannot be built.
+--- @param reason String The reason why the building cannot be built.
 function Events.building_cant_be_built(building_type, city, reason) end
 
 --- A signal for when a building is lost.
@@ -130,10 +131,10 @@ function Events.building_cant_be_built(building_type, city, reason) end
 ---
 --- destroyer is applicable for "sabotaged" only. 
 ---
---- @param City city The city where the building was lost.
---- @param Building_Type building The type of building that was lost.
---- @param String reason The reason for the loss.
---- @param Unit destroyer The unit responsible for the loss (if applicable).
+--- @param city City The city where the building was lost.
+--- @param building Building_Type The type of building that was lost.
+--- @param reason String The reason for the loss.
+--- @param destroyer Unit The unit responsible for the loss (if applicable).
 function Events.building_lost(city, building, reason, destroyer) end
 
 --- A signal for when a technology is researched.
@@ -141,29 +142,28 @@ function Events.building_lost(city, building, reason, destroyer) end
 --- source may be: "researched", "traded", "stolen", "hut", or a user-defined
 --- value passed to the :lua:func:`edit.give_tech` function.
 ---
---- @param Tech_Type tech_type The type of technology that was researched.
---- @param Player player The player who researched the technology.
---- @param String source The source of the research.
+--- @param tech_type Tech_Type The type of technology that was researched.
+--- @param player Player The player who researched the technology.
+--- @param source String The source of the research.
 function Events.tech_researched(tech_type, player, source) end
 
 --- A signal for when a city is destroyed.
 ---
 --- enemy may be nil if city was disbanded. 
 ---
---- @param City city The city that was destroyed.
---- @param Player owner The player who owned the city.
---- @param Player enemy The player who destroyed the city.
+--- @param city City The city that was destroyed.
+--- @param owner Player The player who owned the city.
+--- @param enemy Player The player who destroyed the city.
 function Events.city_destroyed(city, owner, enemy) end
 
 --- A signal for when loot is taken from a captured city. This occurs before
 --- the city is captured so still belongs to the original owner, however it is
 --- after spaceship is lost if it was the capital.
 ---
---- See :ref:`Conquer City Gold Loot <modding-ruleset-script-defaults-conquer-city-gold-loot>`
---- for default implementation.
+--- See :lua:obj:`_deflua_city_conquer_gold_loot` for default implementation.
 ---
---- @param City city The city from which loot was taken.
---- @param Unit unit The unit that took the loot.
+--- @param city City The city from which loot was taken.
+--- @param unit Unit The unit that took the loot.
 function Events.city_loot(city, unit) end
 
 --- A signal for when a city is transferred to another nation. 
@@ -171,50 +171,50 @@ function Events.city_loot(city, unit) end
 --- Reason is one of: "conquest", "trade", "incited", "civil_war",
 --- "death-back_to_original", or "death-barbarians_get"
 ---
---- @param City city The city that was transferred.
---- @param Player former_owner The former owner of the city.
---- @param Player new_owner The new owner of the city.
---- @param String reason The reason for the transfer.
+--- @param city City The city that was transferred.
+--- @param former_owner Player The former owner of the city.
+--- @param new_owner Player The new owner of the city.
+--- @param reason String The reason for the transfer.
 function Events.city_transferred(city, former_owner, new_owner, reason) end
 
 --- A signal for when a unit enters a hut. Generated for any extra of category
 --- "Bonus" after it is removed if some extra on the tile has cause "Hut".
 ---
---- @param Unit unit The unit that entered the hut.
---- @param String extra The rule name of the hut extra.
+--- @param unit Unit The unit that entered the hut.
+--- @param extra String The rule name of the hut extra.
 function Events.hut_enter(unit, extra) end
 
 --- A signal for when a hut is frightened by a unit. Generated for any extra of
 --- category "Bonus" after it is removed if some extra on the tile has cause
 --- "Hut", and the unit's hut behaviour is "frighten".
 ---
---- @param Unit unit The unit that entered the hut.
---- @param String extra The rule name of the hut extra.
+--- @param unit Unit The unit that entered the hut.
+--- @param extra String The rule name of the hut extra.
 function Events.hut_frighten(unit, extra) end
 
 --- A signal for when a unit is lost.
 ---
 --- See :ref:`Unit Loss Reasons <script-unit-loss-reasons>`.
 ---
---- @param Unit unit The unit that was lost.
---- @param Player player The player who lost the unit.
---- @param String reason The reason for the loss.
+--- @param unit Unit The unit that was lost.
+--- @param player Player The player who lost the unit.
+--- @param reason String The reason for the loss.
 function Events.unit_lost(unit, player, reason) end
 
 --- A signal for when a disaster occurs.
---- @param Disaster disaster The type of disaster that occurred.
---- @param City city The city affected by the disaster.
+--- @param disaster Disaster The type of disaster that occurred.
+--- @param city City The city affected by the disaster.
 function Events.disaster_occurred(disaster, city) end
 
 --- A signal for when a nuclear explosion occurs.
---- @param Tile tile The tile where the explosion occurred.
---- @param Player player The player responsible for the explosion.
+--- @param tile Tile The tile where the explosion occurred.
+--- @param player Player The player responsible for the explosion.
 function Events.nuke_exploded(tile, player) end
 
 --- A signal for when an achievement is gained.
---- @param Achievement achievement The type of achievement gained.
---- @param Player player The player who gained the achievement.
---- @param Boolean first Indicates whether player is first one to reach the achievement.
+--- @param achievement Achievement The type of achievement gained.
+--- @param player Player The player who gained the achievement.
+--- @param first Boolean Indicates whether player is first one to reach the achievement.
 function Events.achievement_gained(achievement, player, first) end
 
 --- A signal for when a map is generated.
@@ -230,9 +230,9 @@ function Events.pulse() end
 --- For valid actions, see 
 --- :ref:`Actions Done by a Unit Against Another Unit <modding-ruleset-actions-vs-unit>`
 ---
---- @param Action action The action that is starting.
---- @param Unit actor The unit that is performing the action.
---- @param Unit target The unit the action is being performed on.
+--- @param action Action The action that is starting.
+--- @param actor Unit The unit that is performing the action.
+--- @param target Unit The unit the action is being performed on.
 function Events.action_started_unit_unit(action, actor, target) end
 
 --- A signal for when a unit performs an act on a stack of units.
@@ -240,9 +240,9 @@ function Events.action_started_unit_unit(action, actor, target) end
 --- For valid actions, see
 --- :ref:`Actions Done by a Unit Against All Units at a Tile <modding-ruleset-actions-vs-stack>`
 ---
---- @param Action action The action that is starting.
---- @param Unit actor The unit that is performing the action.
---- @param Tile tile The tile where the unit stack is located.
+--- @param action Action The action that is starting.
+--- @param actor Unit The unit that is performing the action.
+--- @param tile Tile The tile where the unit stack is located.
 function Events.action_started_unit_units(action, actor, tile) end
 
 --- A signal for when a unit performs an act on a city.
@@ -250,9 +250,9 @@ function Events.action_started_unit_units(action, actor, tile) end
 --- For valid actions, see 
 --- :ref:`Actions Done by a Unit Against a City <modding-ruleset-actions-vs-city>`
 ---
---- @param Action action The action that is starting.
---- @param Unit actor The unit that is performing the action.
---- @param City city The city involved in the action.
+--- @param action Action The action that is starting.
+--- @param actor Unit The unit that is performing the action.
+--- @param city City The city involved in the action.
 function Events.action_started_unit_city(action, actor, city) end
 
 --- A signal for when a unit performs an act on a tile.
@@ -260,9 +260,9 @@ function Events.action_started_unit_city(action, actor, city) end
 --- For valid actions, see
 --- :ref:`Actions Done by a Unit Against a Tile <modding-ruleset-actions-vs-tile>`
 ---
---- @param Action action The action that is starting.
---- @param Unit actor The unit that is performing the action.
---- @param Tile tile The tile involved in the action.
+--- @param action Action The action that is starting.
+--- @param actor Unit The unit that is performing the action.
+--- @param tile Tile The tile involved in the action.
 function Events.action_started_unit_tile(action, actor, tile) end
 
 --- A signal for when a unit performs an act on itself.
@@ -270,7 +270,7 @@ function Events.action_started_unit_tile(action, actor, tile) end
 --- For valid actions, see
 --- :ref:`Actions Done by a Unit to Itself <modding-ruleset-actions-vs-self>`
 ---
---- @param Action action The action that is starting.
---- @param Unit actor The unit that is performing the action.
+--- @param action Action The action that is starting.
+--- @param actor Unit The unit that is performing the action.
 function Events.action_started_unit_self(action, actor) end
 

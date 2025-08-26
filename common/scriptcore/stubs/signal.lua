@@ -21,7 +21,7 @@
 
 --- Signals are emitted by the server when certain events occur. 
 ---
---- See :ref:`Event <script-api-events>` for a list of specific signals. 
+--- See :lua:obj:`Events` for a list of specific signals. 
 ---
 --- Signal emission invokes all associated callbacks in the order they were
 --- connected. A callback can stop the current signal emission, preventing
@@ -34,7 +34,7 @@ signal = {}
 
 --- Register this Lua function to receive the given signal.
 ---
---- @param signal_name string The :ref:`Event <script-api-events>` signal name to receive callbacks for.
+--- @param signal_name string The :lua:obj:`Events` signal name to receive callbacks for.
 --- @param callback_name string The global Lua function to call when this signal is emitted
 function signal.connect(signal_name, callback_name) end
 
@@ -42,7 +42,7 @@ function signal.connect(signal_name, callback_name) end
 --- Remove an existing registration of this Lua function to receive the given
 --- signal.
 ---
---- @param signal_name string The :ref:`Event <script-api-events>` signal name it should no longer receive callbacks for.
+--- @param signal_name string The :lua:obj:`Events` signal name it should no longer receive callbacks for.
 --- @param callback_name string The global Lua function that should no longer receive this signal callback.
 function signal.remove(signal_name, callback_name) end
 
@@ -50,7 +50,7 @@ function signal.remove(signal_name, callback_name) end
 --- Check for an existing registration of this Lua function to receive the
 --- given signal.
 ---
---- @param signal_name string The :ref:`Event <script-api-events>` signal name to check if it receives callbacks for.
+--- @param signal_name string The :lua:obj:`Events` signal name to check if it receives callbacks for.
 --- @param callback_name string The global Lua function to check if it receives this signal callback.
 --- @return boolean defined True, if this signal handler is defined.
 function signal.defined(signal_name, callback_name) end
@@ -64,7 +64,7 @@ function signal.list() end
 --- given signal. This is intended for debugging purposes, and can be used for
 --- modifying a callback handler function while the server is running.
 ---
---- @param signal_name string The :ref:`Event <script-api-events>` signal name to receive callbacks for.
+--- @param signal_name string The :lua:obj:`Events` signal name to receive callbacks for.
 --- @param callback_name string The global Lua function to call when this signal is emitted.
 function signal.replace(signal_name, callback_name) end
 
@@ -79,7 +79,7 @@ find = {}
 
 --- Can be used to iterate over all defined signals (until nil is returned).
 ---
---- @return string signal The :ref:`Event <script-api-events>` signal name.
+--- @return string signal The :lua:obj:`Events` signal name.
 function find.signal(index) end
 
 --- Can be used to iterate over all callbacks currently associated with a given
