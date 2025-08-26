@@ -1,0 +1,166 @@
+---@meta
+
+-- SPDX-License-Identifier: GPL-3.0-or-later
+-- SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+-- SPDX-FileCopyrightText: Freeciv Wiki contributors <https://freeciv.fandom.com/wiki/Lua_reference_manual?action=history>
+-- SPDX-FileCopyrightText: XHawk87 <hawk87@hotmail.co.uk>
+
+--  WARNING: do not attempt to change the name of the API functions.
+--  They may be in use in Lua scripts in savefiles, so once released, the
+--  name and signature cannot change shape even in new major versions of
+--  Freeciv21, until the relevant save format version can no longer be loaded.
+--  If you really like to change a function name, be sure to keep also the
+--  old one running.
+
+-- Usage references:
+-- https://longturn.readthedocs.io/en/latest/Contributing/style-guide.html
+-- https://luals.github.io/wiki/definition-files
+-- https://luals.github.io/wiki/annotations/#documenting-types
+-- https://taminomara.github.io/sphinx-lua-ls/index.html#autodoc-directives
+-- https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#rst-primer
+
+--- The E module contains a set of event types, for example :lua:obj:`E.SCRIPT`.
+--- These correspond to the categories that the client can filter on.
+--- 
+--- @class E
+--- @field name string The player's name.
+--- @field TECH_GAIN enum Acquired New Tech.
+--- @field TECH_LEARNED enum Learned New Tech.
+--- @field TECH_GOAL enum Selected New Goal.
+--- @field TECH_LOST enum Lost a Tech.
+--- @field TECH_EMBASSY enum Other Player Gained/Lost a Tech.
+--- @field IMP_BUY enum Bought.
+--- @field IMP_BUILD enum Built.
+--- @field IMP_AUCTIONED enum Forced to Sell.
+--- @field IMP_AUTO enum New Improvement Selected.
+--- @field IMP_SOLD enum Sold.
+--- @field CITY_CANTBUILD enum Building Unavailable Item.
+--- @field CITY_LOST enum Captured/Destroyed.
+--- @field CITY_LOVE enum Celebrating.
+--- @field CITY_DISORDER enum Civil Disorder.
+--- @field CITY_FAMINE enum Famine.
+--- @field CITY_FAMINE_FEARED enum Famine Feared.
+--- @field CITY_GROWTH enum Growth.
+--- @field CITY_MAY_SOON_GROW enum May Soon Grow.
+--- @field CITY_AQUEDUCT enum Needs Aqueduct.
+--- @field CITY_AQ_BUILDING enum Needs Aqueduct Being Built.
+--- @field CITY_NORMAL enum Normal.
+--- @field CITY_NUKED enum Nuked.
+--- @field CITY_CMA_RELEASE enum Released from citizen governor.
+--- @field CITY_GRAN_THROTTLE enum Suggest Growth Throttling.
+--- @field CITY_TRANSFER enum Transfer.
+--- @field CITY_BUILD enum Was Built.
+--- @field CITY_PLAGUE enum Has Plague.
+--- @field CITY_RADIUS_SQ enum City Map changed.
+--- @field WORKLIST enum Worklist Events.
+--- @field CITY_PRODUCTION_CHANGED enum Production changed.
+--- @field DISASTER enum Disaster.
+--- @field MY_DIPLOMAT_BRIBE enum Bribe.
+--- @field DIPLOMATIC_INCIDENT enum Caused Incident.
+--- @field MY_DIPLOMAT_ESCAPE enum Escape.
+--- @field MY_DIPLOMAT_EMBASSY enum Embassy.
+--- @field MY_DIPLOMAT_FAILED enum Failed.
+--- @field MY_DIPLOMAT_INCITE enum Incite.
+--- @field MY_DIPLOMAT_POISON enum Poison.
+--- @field MY_DIPLOMAT_SABOTAGE enum Sabotage.
+--- @field MY_DIPLOMAT_THEFT enum Theft.
+--- @field MY_SPY_STEAL_GOLD enum Gold Theft.
+--- @field MY_SPY_STEAL_MAP enum Map Theft.
+--- @field MY_SPY_NUKE enum Suitcase Nuke.
+--- @field ENEMY_DIPLOMAT_BRIBE enum Bribe.
+--- @field ENEMY_DIPLOMAT_EMBASSY enum Embassy.
+--- @field ENEMY_DIPLOMAT_FAILED enum Failed.
+--- @field ENEMY_DIPLOMAT_INCITE enum Incite.
+--- @field ENEMY_DIPLOMAT_POISON enum Poison.
+--- @field ENEMY_DIPLOMAT_SABOTAGE enum Sabotage.
+--- @field ENEMY_DIPLOMAT_THEFT enum Theft.
+--- @field ENEMY_SPY_STEAL_GOLD enum Gold Theft.
+--- @field ENEMY_SPY_STEAL_MAP enum Map Theft.
+--- @field ENEMY_SPY_NUKE enum Suitcase Nuke.
+--- @field GLOBAL_ECO enum Eco-Disaster.
+--- @field NUKE enum Nuke Detonated.
+--- @field HUT_BARB enum Barbarians in a Hut Roused.
+--- @field HUT_CITY enum City Founded from Hut.
+--- @field HUT_GOLD enum Gold Found in Hut.
+--- @field HUT_BARB_KILLED enum Killed by Barbarians in a Hut.
+--- @field HUT_MERC enum Mercenaries Found in Hut.
+--- @field HUT_SETTLER enum Settler Found in Hut.
+--- @field HUT_TECH enum Tech Found in Hut.
+--- @field HUT_BARB_CITY_NEAR enum Unit Spared by Barbarians.
+--- @field ACHIEVEMENT enum Achievements.
+--- @field UPRISING enum Barbarian Uprising.
+--- @field CIVIL_WAR enum Civil War.
+--- @field ANARCHY enum Collapse to Anarchy.
+--- @field FIRST_CONTACT enum First Contact.
+--- @field NEW_GOVERNMENT enum Learned New Government.
+--- @field LOW_ON_FUNDS enum Low Funds.
+--- @field POLLUTION enum Pollution.
+--- @field REVOLT_DONE enum Revolution Ended.
+--- @field REVOLT_START enum Revolution Started.
+--- @field SPACESHIP enum Spaceship Events.
+--- @field TREATY_ALLIANCE enum Alliance.
+--- @field TREATY_BROKEN enum Broken.
+--- @field TREATY_CEASEFIRE enum Cease-fire.
+--- @field TREATY_EMBASSY enum Embassy.
+--- @field TREATY_PEACE enum Peace.
+--- @field TREATY_SHARED_VISION enum Shared Vision.
+--- @field UNIT_LOST_ATT enum Attack Failed.
+--- @field UNIT_WIN_ATT enum Attack Succeeded.
+--- @field UNIT_BUY enum Bought.
+--- @field UNIT_BUILT enum Built.
+--- @field UNIT_LOST_DEF enum Defender Destroyed.
+--- @field UNIT_WIN_DEF enum Defender Survived.
+--- @field UNIT_BECAME_VET enum Promoted to Veteran.
+--- @field UNIT_LOST_MISC enum Lost outside battle.
+--- @field UNIT_UPGRADED enum Production Upgraded.
+--- @field UNIT_RELOCATED enum Relocated.
+--- @field UNIT_ORDERS enum Orders / goto events.
+--- @field UNIT_BUILT_POP_COST enum Built unit with population cost.
+--- @field UNIT_WAS_EXPELLED enum Was Expelled.
+--- @field UNIT_DID_EXPEL enum Did Expel.
+--- @field UNIT_ACTION_FAILED enum Action failed.
+--- @field VOTE_NEW enum New vote.
+--- @field VOTE_RESOLVED enum Vote resolved.
+--- @field VOTE_ABORTED enum Vote canceled.
+--- @field WONDER_BUILD enum Finished.
+--- @field WONDER_OBSOLETE enum Made Obsolete.
+--- @field WONDER_STARTED enum Started.
+--- @field WONDER_STOPPED enum Stopped.
+--- @field WONDER_WILL_BE_BUILT enum Will Finish Next Turn.
+--- @field AI_DEBUG enum AI Debug messages.
+--- @field BROADCAST_REPORT enum Broadcast Report.
+--- @field CARAVAN_ACTION enum Caravan actions.
+--- @field CHAT_ERROR enum Chat error messages.
+--- @field CHAT_MSG enum Chat messages.
+--- @field CONNECTION enum Connect/disconnect messages.
+--- @field DIPLOMACY enum Diplomatic Message.
+--- @field BAD_COMMAND enum Error message from bad command.
+--- @field GAME_END enum Game Ended.
+--- @field GAME_START enum Game Started.
+--- @field NATION_SELECTED enum Nation Selected.
+--- @field DESTROYED enum Player Destroyed.
+--- @field REPORT enum Report.
+--- @field LOG_FATAL enum Server Aborting.
+--- @field LOG_ERROR enum Server Problems.
+--- @field MESSAGE_WALL enum Message from server operator.
+--- @field SETTING enum Server settings changed.
+--- @field TURN_BELL enum Turn Bell.
+--- @field SCRIPT enum Scenario/ruleset script message.
+--- @field NEXT_YEAR enum Year Advance.
+--- @field DEPRECATION_WARNING enum Deprecated Modpack syntax warnings.
+--- @field SPONTANEOUS_EXTRA enum Extra Appears or Disappears.
+--- @field UNIT_ILLEGAL_ACTION enum Unit Illegal Action.
+--- @field UNIT_ESCAPED enum Unit escaped.
+--- @field BEGINNER_HELP enum Help for beginners.
+--- @field MY_UNIT_DID_HEAL enum Unit did heal.
+--- @field MY_UNIT_WAS_HEALED enum Unit was healed.
+--- @field MULTIPLIER enum Multiplier changed.
+--- @field UNIT_ACTION_ACTOR_SUCCESS enum Your unit did.
+--- @field UNIT_ACTION_ACTOR_FAILURE enum Your unit failed.
+--- @field UNIT_ACTION_TARGET_HOSTILE enum Unit did to you.
+--- @field UNIT_ACTION_TARGET_OTHER enum Unit did.
+--- @field INFRAPOINTS enum Infrapoints.
+--- @field HUT_MAP enum Map found from a hut.
+--- @field TREATY_SHARED_TILES enum Tiles shared.
+E = {}
+
