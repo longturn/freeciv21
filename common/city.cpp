@@ -2482,40 +2482,36 @@ static inline void citizen_happiness_nationality(struct city *pcity)
   citizens *unhappy = &pcity->feel[CITIZEN_UNHAPPY][FEELING_NATIONALITY];
 
   if (game.info.citizen_nationality) {
-    int pct = get_city_bonus(pcity, EFT_ENEMY_CITIZEN_UNHAPPY_PCT);
+    int unhappy_inc = 0;
 
-    if (pct > 0) {
-      int enemies = 0;
-      int unhappy_inc;
-      struct player *owner = city_owner(pcity);
+    citizens_foreign_iterate(pcity, pslot, nationality)
+    {
+      int pct = get_target_bonus_effects(
+          nullptr, city_owner(pcity), player_slot_get_player(pslot), pcity,
+          nullptr, city_tile(pcity), nullptr, nullptr, nullptr, nullptr,
+          nullptr, EFT_ENEMY_CITIZEN_UNHAPPY_PCT, V_COUNT);
+      unhappy_inc += pct * nationality;
+    }
+    citizens_foreign_iterate_end;
 
-      citizens_foreign_iterate(pcity, pslot, nationality)
-      {
-        if (pplayers_at_war(owner, player_slot_get_player(pslot))) {
-          enemies += nationality;
-        }
-      }
-      citizens_foreign_iterate_end;
+    unhappy_inc /= 100;
 
-      unhappy_inc = enemies * pct / 100;
-
-      /* First make content => unhappy, then happy => unhappy,
-       * then happy => content. No-one becomes angry. */
-      while (unhappy_inc > 0 && *content > 0) {
-        (*content)--;
-        (*unhappy)++;
-        unhappy_inc--;
-      }
-      while (unhappy_inc > 1 && *happy > 0) {
-        (*happy)--;
-        (*unhappy)++;
-        unhappy_inc -= 2;
-      }
-      while (unhappy_inc > 0 && *happy > 0) {
-        (*happy)--;
-        (*content)++;
-        unhappy_inc--;
-      }
+    /* First make content => unhappy, then happy => unhappy,
+     * then happy => content. No-one becomes angry. */
+    while (unhappy_inc > 0 && *content > 0) {
+      (*content)--;
+      (*unhappy)++;
+      unhappy_inc--;
+    }
+    while (unhappy_inc > 1 && *happy > 0) {
+      (*happy)--;
+      (*unhappy)++;
+      unhappy_inc -= 2;
+    }
+    while (unhappy_inc > 0 && *happy > 0) {
+      (*happy)--;
+      (*content)++;
+      unhappy_inc--;
     }
   }
 }
