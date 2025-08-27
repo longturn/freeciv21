@@ -3812,8 +3812,8 @@ static bool unit_bombard(struct unit *punit, struct tile *ptile,
 }
 
 /**
-   Notify the owner of the defender that it has been in a bombardment. This
-   must be done before the defender is wiped. It is assumed that all
+   Notify the owner of the defender that it has been lost in a bombardment.
+   This must be done before the defender is wiped. It is assumed that all
    necessary checks have been completed before calling this function.
  */
 static void notify_defender_lost_in_bombardment(struct unit *pdefender,
