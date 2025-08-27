@@ -3828,10 +3828,10 @@ static void notify_defender_lost_in_bombardment(struct unit *pdefender,
   notify_player(
       unit_owner(pdefender), unit_tile(pdefender), E_UNIT_LOST_DEF,
       ftc_server,
-      /* TRANS: "Your green Warriors [id:100 D:1.0 HP:10]
-       * helplessly perished in a bombardment by the Greek green Catapult
-       * [id:200 ...A:4.0 FP:1 BR:10]." */
-      _("Your %s %s [id:%d D:%.1f HP:%d] helplessly perished in a"
+      /* TRANS: "Your green Warriors [id:100 D:1.0 HP:10] perished in the
+       * bombardment by the Greek green Catapult [id:200 A:4.0 FP:1 BR:10]."
+       */
+      _("Your %s %s [id:%d D:%.1f HP:%d] perished in the"
         " bombardment by the %s %s %s [id:%d A:%.1f FP:%d BR:%d]."),
       unit_veteran_level_string(pdefender), unit_tile_link(pdefender),
       pdefender->id, (float) def_power / POWER_FACTOR, pdefender->hp,
@@ -3859,11 +3859,10 @@ static void notify_unit_killed_in_bombardment(struct unit *pbombarder,
   notify_player(
       unit_owner(pbombarder), unit_tile(pbombarder), E_UNIT_WIN_ATT,
       ftc_server,
-      /* TRANS: "Your green Catapult [id:100 A:5.0 FP:1 BR:10]
-       * utterly destroyed a Greek green Legion [id:200 ...D:4.0 HP:10]
-       * in a bombardment." */
-      _("Your %s %s [id:%d A:%.1f FP:%d BR:%d] utterly destroyed a"
-        " %s %s %s [id:%d D:%.1f HP:%d] in a bombardment."),
+      /* TRANS: "Your bombarding green Catapult [id:100 A:5.0 FP:1 BR:10]
+       * destroyed a Greek green Legion [id:200 D:4.0 HP:10]." */
+      _("Your bombarding %s %s [id:%d A:%.1f FP:%d BR:%d]"
+        " destroyed a %s %s %s [id:%d D:%.1f HP:%d]."),
       unit_veteran_level_string(pbombarder), unit_tile_link(pbombarder),
       pbombarder->id, (float) att_power / POWER_FACTOR, attacker_fp,
       pbombarder->utype->bombard_rate,
