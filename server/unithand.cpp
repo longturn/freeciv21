@@ -130,6 +130,10 @@ static bool unit_do_help_build(struct player *pplayer, struct unit *punit,
                                const struct action *paction);
 static bool unit_bombard(struct unit *punit, struct tile *ptile,
                          const struct action *paction);
+static void notify_defender_lost_in_bombardment(struct unit *pdefender,
+                                                struct unit *pbombarder);
+static void notify_unit_killed_in_bombardment(struct unit *pbombarder,
+                                              struct unit *pdefender);
 static bool unit_nuke(struct player *pplayer, struct unit *punit,
                       struct tile *def_tile, const struct action *paction);
 static bool unit_do_destroy_city(struct player *act_player,
@@ -3743,12 +3747,25 @@ static bool unit_bombard(struct unit *punit, struct tile *ptile,
       players_to_notify.insert(unit_owner(pdefender));
 
       punit->hp = att_hp;
-      pdefender->hp = def_hp;
+
+      auto pdef_owner = unit_owner(pdefender);
+      auto pdef_tile = unit_tile(pdefender);
+      const char *pdef_link;
+      if (def_hp <= 0) { // Defender died in the bombardment
+        pdef_link = unit_tile_link(pdefender);
+        notify_defender_lost_in_bombardment(pdefender, punit);
+        if (can_player_see_unit(unit_owner(punit), pdefender)) {
+          notify_unit_killed_in_bombardment(punit, pdefender);
+        }
+        wipe_unit(pdefender, ULR_KILLED, unit_owner(punit));
+      } else { // Defender survived
+        pdef_link = unit_link(pdefender);
+        pdefender->hp = def_hp;
+      }
 
       // May cause an incident
-      action_consequence_success(paction, unit_owner(punit),
-                                 unit_owner(pdefender), unit_tile(pdefender),
-                                 unit_link(pdefender));
+      action_consequence_success(paction, unit_owner(punit), pdef_owner,
+                                 pdef_tile, pdef_link);
     }
   }
   unit_list_iterate_safe_end;
@@ -3792,6 +3809,67 @@ static bool unit_bombard(struct unit *punit, struct tile *ptile,
   send_unit_info(nullptr, punit);
 
   return true;
+}
+
+/**
+   Notify the owner of the defender that it has been in a bombardment. This
+   must be done before the defender is wiped. It is assumed that all
+   necessary checks have been completed before calling this function.
+ */
+static void notify_defender_lost_in_bombardment(struct unit *pdefender,
+                                                struct unit *pbombarder)
+{
+  auto def_power = get_total_defense_power(pbombarder, pdefender);
+  auto att_power = get_total_attack_power(pbombarder, pdefender);
+  int attacker_fp;
+  int defender_fp;
+  get_modified_firepower(pbombarder, pdefender, &attacker_fp, &defender_fp);
+
+  notify_player(
+      unit_owner(pdefender), unit_tile(pdefender), E_UNIT_LOST_DEF,
+      ftc_server,
+      /* TRANS: "Your green Warriors [id:100 D:1.0 HP:10]
+       * helplessly perished in a bombardment by the Greek green Catapult
+       * [id:200 ...A:4.0 FP:1 BR:10]." */
+      _("Your %s %s [id:%d D:%.1f HP:%d] helplessly perished in a"
+        " bombardment by the %s %s %s [id:%d A:%.1f FP:%d BR:%d]."),
+      unit_veteran_level_string(pdefender), unit_tile_link(pdefender),
+      pdefender->id, (float) def_power / POWER_FACTOR, pdefender->hp,
+      nation_adjective_for_player(unit_owner(pbombarder)),
+      unit_veteran_level_string(pbombarder), unit_link(pbombarder),
+      pbombarder->id, (float) att_power / POWER_FACTOR, attacker_fp,
+      pbombarder->utype->bombard_rate);
+}
+
+/**
+   Notify the owner of the bombarder that it has destroyed the defender in a
+   bombardment. This must be done before the defender is wiped. It is assumed
+   that all necessary checks have been completed before calling this
+   function.
+ */
+static void notify_unit_killed_in_bombardment(struct unit *pbombarder,
+                                              struct unit *pdefender)
+{
+  auto def_power = get_total_defense_power(pbombarder, pdefender);
+  auto att_power = get_total_attack_power(pbombarder, pdefender);
+  int attacker_fp;
+  int defender_fp;
+  get_modified_firepower(pbombarder, pdefender, &attacker_fp, &defender_fp);
+
+  notify_player(
+      unit_owner(pbombarder), unit_tile(pbombarder), E_UNIT_WIN_ATT,
+      ftc_server,
+      /* TRANS: "Your green Catapult [id:100 A:5.0 FP:1 BR:10]
+       * utterly destroyed a Greek green Legion [id:200 ...D:4.0 HP:10]
+       * in a bombardment." */
+      _("Your %s %s [id:%d A:%.1f FP:%d BR:%d] utterly destroyed a"
+        " %s %s %s [id:%d D:%.1f HP:%d] in a bombardment."),
+      unit_veteran_level_string(pbombarder), unit_tile_link(pbombarder),
+      pbombarder->id, (float) att_power / POWER_FACTOR, attacker_fp,
+      pbombarder->utype->bombard_rate,
+      nation_adjective_for_player(unit_owner(pdefender)),
+      unit_veteran_level_string(pdefender), unit_link(pdefender),
+      pdefender->id, (float) def_power / POWER_FACTOR, pdefender->hp);
 }
 
 /**
