@@ -48,6 +48,12 @@ function server.civilization_score(player) end
 --- @return boolean played True, if it played.
 function server.play_music(player, tag) end
 
+--- The server settings module is for querying and modifying server settings.
+---
+--- !doctype table
+--- @class server.setting
+server.setting = {}
+
 --- 
 --- @param String name The name of the :ref:`server setting <server-options>`.
 --- @return String value The value of a server setting as a string. 
