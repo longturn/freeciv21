@@ -31,6 +31,35 @@ Player *api_find_player(lua_State *L, int player_id)
 }
 
 /**
+   Return a player with the given player_name.
+ */
+Player *api_find_player_by_name(lua_State *L, const char *player_name)
+{
+  LUASCRIPT_CHECK_STATE(L, nullptr);
+  LUASCRIPT_CHECK_ARG_NIL(L, player_name, 2, string, nullptr);
+  return player_by_name(player_name);
+}
+
+/**
+   Return a team with the given team_id.
+ */
+Team *api_find_team(lua_State *L, int team_id)
+{
+  LUASCRIPT_CHECK_STATE(L, nullptr);
+  return team_by_number(team_id);
+}
+
+/**
+   Return a team with the given team_name.
+ */
+Team *api_find_team_by_name(lua_State *L, const char *team_name)
+{
+  LUASCRIPT_CHECK_STATE(L, nullptr);
+  LUASCRIPT_CHECK_ARG_NIL(L, team_name, 2, string, nullptr);
+  return team_by_rule_name(team_name);
+}
+
+/**
    Return a player city with the given city_id.
  */
 City *api_find_city(lua_State *L, Player *pplayer, int city_id)

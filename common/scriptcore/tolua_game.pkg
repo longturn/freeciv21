@@ -33,6 +33,9 @@ struct Player {
   bool is_alive;
 };
 
+struct Team {
+};
+
 struct City {
   const char *name;
   Player *owner;
@@ -108,6 +111,9 @@ struct Action {
 struct Unit_List_Link {
 };
 
+struct Player_List_Link {
+};
+
 struct City_List_Link {
 };
 
@@ -141,6 +147,8 @@ module Player {
   module properties {
     int api_methods_player_number
       @ id (lua_State *L, Player *self);
+    Team *api_methods_player_team
+      @ team (lua_State *L, Player *self);
   }
 
   const char *api_methods_player_controlling_gui
@@ -186,6 +194,32 @@ function Player:is_human()
 end
 
 function Player:exists()
+  return true
+end
+
+$]
+
+/* Module Team. */
+module Team {
+  module properties {
+    int api_methods_team_id
+      @ id (lua_State *L, Team *self);
+    const char *api_methods_team_name
+      @ name (lua_State *L, Team *self);
+  }
+}
+
+module methods_private {
+  module Team {
+    Player_List_Link *api_methods_private_team_member_list_head
+      @ member_list_head (lua_State *L, Team *self);
+  }
+}
+
+$[
+
+-- Team methods
+function Team:exists()
   return true
 end
 
@@ -458,6 +492,14 @@ module Unit_List_Link {
     @ next (lua_State *L, Unit_List_Link *self);
 }
 
+/* Module Player_List_Link. */
+module Player_List_Link {
+  Player *api_methods_player_list_link_data
+    @ data (lua_State *L, Player_List_Link *self);
+  Player_List_Link *api_methods_player_list_next_link
+    @ next (lua_State *L, Player_List_Link *self);
+}
+
 /* Module City_List_Link. */
 module City_List_Link {
   City *api_methods_city_list_link_data
@@ -468,8 +510,16 @@ module City_List_Link {
 
 /* Module find. */
 module find {
+  /* NOTE: For overloading to work correctly, the string function
+   * must be before the integer function for each case below. */
+  Player *api_find_player_by_name
+    @ player (lua_State *L, const char *player_name);
   Player *api_find_player
     @ player (lua_State *L, int player_id);
+  Team *api_find_team_by_name
+    @ team (lua_State *L, const char *team_name);
+  Team *api_find_team
+    @ team (lua_State *L, int team_id);
   City *api_find_city
     @ city (lua_State *L, Player *pplayer, int city_id);
   Unit *api_find_unit
@@ -481,9 +531,6 @@ module find {
     @ tile (lua_State *L, int nat_x, int nat_y);
   Tile *api_find_tile_by_index
     @ tile (lua_State *L, int tindex);
-
-  /* NOTE: For overloading to work correctly, the string function
-   * must be before the integer function for each case below. */
   Government *api_find_government_by_name
     @ government (lua_State *L, const char *name_orig);
   Government *api_find_government
@@ -587,6 +634,11 @@ do
     return safe_iterate_list(private.Player.unit_list_head(self))
   end
 
+  -- Safe iteration over all Player members of a Team
+  function Team:members_iterate()
+    return safe_iterate_list(private.Team.member_list_head(self))
+  end
+
   -- Safe iteration over all cities that belong to Player
   function Player:cities_iterate()
     return safe_iterate_list(private.Player.city_list_head(self))
@@ -656,6 +708,11 @@ do
       return lookup(index)
     end
     return iterator
+  end
+
+  -- Iterate over all teams in the game
+  function find.teams_iterate()
+    return index_iterate(find.team)
   end
 
   -- Iterate over all players of the game
