@@ -24,6 +24,7 @@
 #include "improvement.h"
 #include "nation.h"
 #include "player.h"
+#include "team.h"
 #include "tech.h"
 #include "terrain.h"
 #include "tile.h"
@@ -36,6 +37,7 @@
  * tolua_common_z.pkg. */
 typedef struct player Player;
 typedef struct player_ai Player_ai;
+typedef struct team Team;
 typedef struct city City;
 typedef struct unit Unit;
 typedef struct tile Tile;
@@ -59,6 +61,7 @@ typedef void Nonexistent;
  *       Separate types makes use from lua type safe. */
 typedef const struct unit_list_link Unit_List_Link;
 typedef const struct city_list_link City_List_Link;
+typedef const struct player_list_link Player_List_Link;
 
 #define SPECENUM_NAME api_types
 #define SPECENUM_VALUE0 API_TYPE_INT
@@ -97,6 +100,8 @@ typedef const struct city_list_link City_List_Link;
 #define SPECENUM_VALUE16NAME "Achievement"
 #define SPECENUM_VALUE17 API_TYPE_ACTION
 #define SPECENUM_VALUE17NAME "Action"
+#define SPECENUM_VALUE18 API_TYPE_TEAM
+#define SPECENUM_VALUE18NAME "Team"
 #include "specenum_gen.h"
 
 // Define compatibility functions to translate between tolua and sol2. See:

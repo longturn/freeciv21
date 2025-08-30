@@ -41,6 +41,7 @@ int team_count();
 int team_index(const struct team *pteam);
 int team_number(const struct team *pteam);
 struct team *team_by_number(const int team_id);
+struct team *team_by_rule_name(const char *team_name);
 const char *team_rule_name(const struct team *pteam);
 const char *team_name_translation(const struct team *pteam);
 int team_pretty_name(const struct team *pteam, QString &buf);

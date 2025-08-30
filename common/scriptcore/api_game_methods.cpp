@@ -27,6 +27,7 @@
 #include "movement.h"
 #include "nation.h"
 #include "research.h"
+#include "team.h"
 #include "tech.h"
 #include "terrain.h"
 #include "tile.h"
@@ -446,6 +447,17 @@ int api_methods_player_number(lua_State *L, Player *pplayer)
 }
 
 /**
+   Return player team. Every player must have a team, so nullptr indicates an
+   error.
+ */
+Team *api_methods_player_team(lua_State *L, Player *pplayer)
+{
+  LUASCRIPT_CHECK_STATE(L, nullptr);
+  LUASCRIPT_CHECK_SELF(L, pplayer, nullptr);
+  return player_team(pplayer);
+}
+
+/**
    Return the number of cities pplayer has.
  */
 int api_methods_player_num_cities(lua_State *L, Player *pplayer)
@@ -585,6 +597,31 @@ City_List_Link *api_methods_private_player_city_list_head(lua_State *L,
   LUASCRIPT_CHECK_SELF(L, pplayer, nullptr);
 
   return city_list_head(pplayer->cities);
+}
+
+int api_methods_team_id(lua_State *L, Team *pteam)
+{
+  LUASCRIPT_CHECK_STATE(L, -1);
+  LUASCRIPT_CHECK_SELF(L, pteam, -1);
+  return team_number(pteam);
+}
+
+const char *api_methods_team_name(lua_State *L, Team *pteam)
+{
+  LUASCRIPT_CHECK_STATE(L, nullptr);
+  LUASCRIPT_CHECK_SELF(L, pteam, nullptr);
+  return team_rule_name(pteam);
+}
+
+/**
+   Return list head for member list for Team
+ */
+Player_List_Link *api_methods_private_team_member_list_head(lua_State *L,
+                                                            Team *pteam)
+{
+  LUASCRIPT_CHECK_STATE(L, nullptr);
+  LUASCRIPT_CHECK_SELF(L, pteam, nullptr);
+  return player_list_head(team_members(pteam));
 }
 
 /**
@@ -1162,6 +1199,26 @@ Unit_List_Link *api_methods_unit_list_next_link(lua_State *L,
   LUASCRIPT_CHECK_STATE(L, nullptr);
 
   return unit_list_link_next(ul_link);
+}
+
+/**
+   Return Player for list link
+ */
+Player *api_methods_player_list_link_data(lua_State *L,
+                                          Player_List_Link *pl_link)
+{
+  LUASCRIPT_CHECK_STATE(L, nullptr);
+  return player_list_link_data(pl_link);
+}
+
+/**
+   Return next list link or nullptr when link is the last link
+ */
+Player_List_Link *
+api_methods_player_list_next_link(lua_State *L, Player_List_Link *pl_link)
+{
+  LUASCRIPT_CHECK_STATE(L, nullptr);
+  return player_list_link_next(pl_link);
 }
 
 /**

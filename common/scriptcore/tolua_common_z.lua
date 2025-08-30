@@ -24,6 +24,8 @@ do
     "Nation_Type",
     "Nonexistent",
     "Player",
+    "Player_List_Link",
+    "Team",
     "Tech_Type",
     "Terrain",
     "Tile",

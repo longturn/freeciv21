@@ -368,6 +368,7 @@ struct player *player_by_name(const char *name);
 struct player *player_by_name_prefix(const char *name,
                                      enum m_pre_result *result);
 struct player *player_by_user(const char *name);
+struct team *player_team(const struct player *pplayer);
 
 bool player_set_nation(struct player *pplayer, struct nation_type *pnation);
 

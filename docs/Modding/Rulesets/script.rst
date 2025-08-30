@@ -159,6 +159,10 @@ Types
    :members:
    :recursive:
 
+.. lua:autoobject:: Team
+   :members:
+   :recursive:
+
 .. lua:autoobject:: City
    :members:
    :recursive:
