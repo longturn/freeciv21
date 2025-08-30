@@ -1506,19 +1506,26 @@ QString text_happiness_nationality(const struct city *pcity)
   str += QStringLiteral("</p><p>");
 
   int enemies = 0;
-  const auto owner = city_owner(pcity);
+  int unhappy = 0;
+
   citizens_foreign_iterate(pcity, pslot, nationality)
   {
-    if (pplayers_at_war(owner, player_slot_get_player(pslot))) {
+    int pct = get_target_bonus_effects(
+        nullptr, city_owner(pcity), player_slot_get_player(pslot), pcity,
+        nullptr, city_tile(pcity), nullptr, nullptr, nullptr, nullptr,
+        nullptr, EFT_ENEMY_CITIZEN_UNHAPPY_PCT, V_COUNT);
+    unhappy += pct * nationality;
+    if (pct > 0) {
       enemies += nationality;
     }
   }
   citizens_foreign_iterate_end;
 
+  unhappy /= 100;
+
   if (enemies == 0) {
     str += _("There is <b>no enemy citizen</b> in this city.");
   } else {
-    auto unhappy = enemies * pct / 100;
     // TRANS: "There is 1 enemy citizen in this city, resulting in <b>2
     //        additional unhappy citizens.</b>" (first half)
     str +=
