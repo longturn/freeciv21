@@ -17,6 +17,10 @@
 
 // Object find module.
 Player *api_find_player(lua_State *L, int player_id);
+Player *api_find_player_by_name(lua_State *L, const char *player_name);
+
+Team *api_find_team(lua_State *L, int team_id);
+Team *api_find_team_by_name(lua_State *L, const char *team_name);
 
 City *api_find_city(lua_State *L, Player *pplayer, int city_id);
 

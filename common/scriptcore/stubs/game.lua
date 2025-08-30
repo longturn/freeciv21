@@ -35,6 +35,7 @@
 --- @field nation Nation_Type The nation from the nation list.
 --- @field is_alive boolean If the nation is currently considered alive based on the ruleset.
 --- @field id int The unique ID for this player.
+--- @field team Team The player's team.
 Player = {}
 
 --- 
@@ -113,6 +114,16 @@ end
 function Player:cities_iterate()
   return safe_iterate_list(private.Player.city_list_head(self))
 end
+
+--- Represents a Team of players that are locked together as allies.
+---
+--- @class Team
+--- @field id int The unique ID for this team
+--- @field name string The name of the team
+Team = {}
+
+--- Safe iteration over each :lua:class:`Player` in the team.
+function Team:members_iterate() end
 
 --- Represents a city on the world map.
 ---
@@ -552,9 +563,17 @@ function game.ruleset_name() end
 find = {}
 
 --- 
---- @param player_id int The unique ID of the player to search for
---- @return Player player The player with the given ID if they exist, or nil
-function find.player(player_id) end
+--- @param player_id_or_name int|string The unique ID or name of the player to search for.
+--- @return Player player The player with the given ID or name if they exist, or nil.
+function find.player(player_id_or_name) end
+
+--- 
+--- @param team_id_or_name int|string The unique ID or name of the player to search for.
+--- @return Team team The team with the given ID or name if they exist, or nil.
+function find.team(team_id_or_name) end
+
+--- Safe iteration over each :lua:class:`Team` in the game.
+function find.teams_iterate() end
 
 --- 
 --- @param player Player The player who owns the city, or nil for any player

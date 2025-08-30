@@ -375,6 +375,15 @@ struct team *team_by_number(const int team_id)
 }
 
 /**
+   Return struct team pointer for the given team name.
+ */
+struct team *team_by_rule_name(const char *team_name)
+{
+  const struct team_slot *tslot = team_slot_by_rule_name(team_name);
+  return (nullptr != tslot ? team_slot_get_team(tslot) : nullptr);
+}
+
+/**
    Returns the name (untranslated) of the team.
  */
 const char *team_rule_name(const struct team *pteam)

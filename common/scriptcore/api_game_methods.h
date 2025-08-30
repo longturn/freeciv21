@@ -76,6 +76,7 @@ const char *api_methods_player_controlling_gui(lua_State *L,
 bool api_methods_player_has_wonder(lua_State *L, Player *pplayer,
                                    Building_Type *building);
 int api_methods_player_number(lua_State *L, Player *pplayer);
+Team *api_methods_player_team(lua_State *L, Player *pplayer);
 int api_methods_player_num_cities(lua_State *L, Player *pplayer);
 int api_methods_player_num_units(lua_State *L, Player *pplayer);
 int api_methods_player_gold(lua_State *L, Player *pplayer);
@@ -94,6 +95,12 @@ int api_methods_player_culture_get(lua_State *L, Player *pplayer);
 
 bool api_methods_player_has_flag(lua_State *L, Player *pplayer,
                                  const char *flag);
+
+// Team
+int api_methods_team_id(lua_State *L, Team *pteam);
+const char *api_methods_team_name(lua_State *L, Team *pteam);
+Player_List_Link *api_methods_private_team_member_list_head(lua_State *L,
+                                                            Team *pteam);
 
 // Tech Type
 const char *api_methods_tech_type_rule_name(lua_State *L, Tech_Type *ptech);
@@ -170,6 +177,12 @@ const char *api_methods_unit_type_name_translation(lua_State *L,
 Unit *api_methods_unit_list_link_data(lua_State *L, Unit_List_Link *link);
 Unit_List_Link *api_methods_unit_list_next_link(lua_State *L,
                                                 Unit_List_Link *link);
+
+// Player_List_Link Type
+Player *api_methods_player_list_link_data(lua_State *L,
+                                          Player_List_Link *link);
+Player_List_Link *api_methods_player_list_next_link(lua_State *L,
+                                                    Player_List_Link *link);
 
 // City_List_Link Type
 City *api_methods_city_list_link_data(lua_State *L, City_List_Link *link);

@@ -780,6 +780,15 @@ struct player *player_by_number(const int player_id)
 }
 
 /**
+   Return the player's team.
+ */
+struct team *player_team(const struct player *pplayer)
+{
+  fc_assert_ret_val(nullptr != pplayer, nullptr);
+  return pplayer->team;
+}
+
+/**
    Set the player's nation to the given nation (may be nullptr).  Returns
    TRUE iff there was a change. Doesn't check if the nation is legal wrt
    nationset.
