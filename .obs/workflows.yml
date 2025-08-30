@@ -1,10 +1,9 @@
-#
-# Workflow configuration file for freeciv21 to run on Open Build Service (OBS)
-# Project Home: https://build.opensuse.org/project/show/home:longturn
-#
 # SPDX-License-Identifier: GPL-3.0-or-later
 # SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 # SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+#
+# Workflow configuration file for freeciv21 to run on Open Build Service (OBS)
+# Project Home: https://build.opensuse.org/project/show/home:longturn
 #
 build_master:
   steps:

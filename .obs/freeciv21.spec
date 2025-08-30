@@ -1,20 +1,21 @@
-#
-# RPM spec file for freeciv21 to run on Open Build Service (OBS)
-# Project Home: https://build.opensuse.org/project/show/home:longturn
-#
 # SPDX-License-Identifier: GPL-3.0-or-later
 # SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 # SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
 #
+# RPM spec file for freeciv21 to run on Open Build Service (OBS)
+# Project Home: https://build.opensuse.org/project/show/home:longturn
+#
+License:        GPL-3.0
 Name:           freeciv21
 Version:        3.2
 Release:        %autorelease -p pre -s %{__scm_source_timestamp}
-License:        GPL-3.0
 Group:          Amusements/Games/Strategy/Turn Based
-Summary:        Develop Your Civilization from Humble Roots to a Global Empire
+Summary:        We develop and play Freeciv21. Develop Your Civilization from Humble Roots to a Global Empire!
 Url:            https://github.com/longturn/freeciv21/
+Source:         %{name}-%{version}.tar.xz
 BuildRequires:  cmake
-BuildRequires:  gcc gcc-c++
+BuildRequires:  gcc
+BuildRequires:  gcc-c++
 BuildRequires:  readline-devel
 BuildRequires:  zlib-devel
 BuildRequires:  fdupes
@@ -27,28 +28,26 @@ BuildRequires:  qt6-qtsvg-devel
 BuildRequires:  qt6-qtmultimedia-devel
 BuildRequires:  kf6-karchive-devel
 BuildRequires:  python3-sphinx
-BuildRequires:  lua-devel gettext
+BuildRequires:  lua-devel
+BuildRequires:  gettext
 BuildRequires:  ocl-icd
 Recommends:     freeciv21-lang
 Recommends:     alerque-libertinus-fonts
 %endif
 
-%if !0%{?fedora}
+%if 0%{?suse_version}
 BuildRequires:  qt6-base-devel
 BuildRequires:  qt6-svg-devel
 BuildRequires:  qt6-multimedia-devel
 BuildRequires:  kf6-karchive-devel
 BuildRequires:  sqlite3-devel
 BuildRequires:  lua53-devel
-BuildRequires:  python313-sphinx
-%endif
-
-%if 0%{?suse_version}
+BuildRequires:  python311-sphinx
 Recommends:     freeciv21-lang
 Recommends:     libertinus-fonts
 %endif
 
-BuildRoot:      %{_tmppath}/%{name}-%{__scm_source_timestamp}-build
+BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %description
  Freeciv21 is a free open source turn-based empire-building 4x strategy game,
@@ -73,9 +72,9 @@ BuildRoot:      %{_tmppath}/%{name}-%{__scm_source_timestamp}-build
 
 %if 0%{?fedora}
 %package    lang
-Summary:    Translation files for freeciv21
+Summary:    Translation files for Freeciv21
 Group:      Amusements/Games/Strategy/Turn Based
-Requires:   freeciv21 = %{version}
+Requires:   %{name} = %{version}
 BuildArch:  noarch
 
 %description lang
@@ -83,7 +82,7 @@ Translation files for freeciv21.
 %endif
 
 %prep
-%setup -q -n freeciv21-%{version}
+%setup -q -n %{name}-%{version}
 
 %build
 %cmake -DCMAKE_BUILD_TYPE=Debug \
@@ -104,18 +103,18 @@ Translation files for freeciv21.
 %exclude %{_docdir}/%{name}/INSTALL
 %exclude %{_docdir}/%{name}/COPYING
 %license COPYING
-%{_bindir}/freeciv21-*
-%{_datadir}/freeciv21/
-%{_datadir}/applications/net.longturn.freeciv21.desktop
-%{_datadir}/applications/net.longturn.freeciv21.server.desktop
-%{_datadir}/applications/net.longturn.freeciv21.modpack.desktop
-%{_datadir}/applications/net.longturn.freeciv21.ruledit.desktop
-%{_datadir}/metainfo/net.longturn.freeciv21.metainfo.xml
-%{_datadir}/metainfo/net.longturn.freeciv21.server.metainfo.xml
-%{_datadir}/metainfo/net.longturn.freeciv21.modpack.metainfo.xml
-%{_datadir}/metainfo/net.longturn.freeciv21.ruledit.metainfo.xml
-%{_mandir}/man6/freeciv21-*
+%{_bindir}/%{name}-*
+%{_datadir}/%{name}/
+%{_datadir}/applications/net.longturn.%{name}.desktop
+%{_datadir}/applications/net.longturn.%{name}.server.desktop
+%{_datadir}/applications/net.longturn.%{name}.modpack.desktop
+%{_datadir}/applications/net.longturn.%{name}.ruledit.desktop
+%{_datadir}/metainfo/net.longturn.%{name}.metainfo.xml
+%{_datadir}/metainfo/net.longturn.%{name}.server.metainfo.xml
+%{_datadir}/metainfo/net.longturn.%{name}.modpack.metainfo.xml
+%{_datadir}/metainfo/net.longturn.%{name}.ruledit.metainfo.xml
+%{_mandir}/man6/%{name}-*
 
 %files lang -f %{name}-core.lang -f %{name}-nations.lang
 
-%autochangelog
+%changelog
