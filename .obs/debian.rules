@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
+# SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+#
+# DEB deb-helper rules file for freeciv21 to run on Open Build Service (OBS)
+# Project Home: https://build.opensuse.org/project/show/home:longturn
+#
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- -DFREECIV_DOWNLOAD_FONTS=OFF

@@ -1,0 +1,57 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
+# SPDX-FileCopyrightText: James Robertson <jwrober@gmail.com>
+#
+# DEB cotrol file for freeciv21 to run on Open Build Service (OBS)
+# Project Home: https://build.opensuse.org/project/show/home:longturn
+#
+Source: freeciv21
+Section: games
+Priority: optional
+Maintainer:
+  Louis Moureaux <m_louis30@yahoo.com>,
+  James Robertson <jwrober@gmail.com>
+Homepage: https://longturn.net/
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
+Vcs-Git: https://github.com/longturn/freeciv21.git
+Vcs-Browser: https://github.com/longturn/freeciv21
+Build-Depends:
+  debhelper (>= 9),
+  debhelper-compat (= 13),
+  cmake,
+  ninja-build,
+  python3,
+  python3-sphinx,
+  gettext,
+  libreadline-dev,
+  qt6-base-dev,
+  qt6-multimedia-dev,
+  qt6-svg-dev,
+  libkf6archive-dev,
+  liblua5.3-dev,
+  libsqlite3-dev,
+  libsdl2-2.0-0 (>= 2.0.20),
+  libsdl2-dev (>= 2.0.20),
+  libsdl2-mixer-dev,
+  libjack-dev
+
+Package: freeciv21
+Architecture: any
+Depends: fonts-linuxlibertine
+Description: We develop and play Freeciv21. Develop Your Civilization from Humble Roots to a Global Empire!
+ Freeciv21 is a free open source turn-based empire-building 4x strategy game,
+ in which each player becomes the leader of a civilization. You compete
+ against several opponents to build cities and use them to support a military
+ and an economy. Players strive to complete an empire that survives all
+ encounters with its neighbors to emerge victorious. Play begins at the dawn
+ of history in 4,000 BCE.
+ .
+ Freeciv21 takes its roots in the well-known FOSS game Freeciv and extends it
+ for more fun, with a revived focus on competitive multiplayer environments.
+ Players can choose from over 500 nations and can play against the computer
+ or other people in an active online community.
+ .
+ The code is maintained by the team over at Longturn.net and is based on the
+ Qt framework. The game supports both hex and square tiles and is easily
+ modified to create custom rules.
