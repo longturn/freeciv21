@@ -8,7 +8,7 @@
 #!/usr/bin/make -f
 
 %:
-	dh $@
+  dh $@
 
 override_dh_auto_configure:
-	dh_auto_configure -- -DFREECIV_DOWNLOAD_FONTS=OFF
+  dh_auto_configure -- -DFREECIV_DOWNLOAD_FONTS=OFF
