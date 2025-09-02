@@ -27,7 +27,7 @@ BuildRequires:  qt6-qtbase-devel
 BuildRequires:  qt6-qtsvg-devel
 BuildRequires:  qt6-qtmultimedia-devel
 BuildRequires:  kf6-karchive-devel
-BuildRequires:  python3-sphinx
+BuildRequires:  python-Sphinx-doc-man
 BuildRequires:  lua-devel
 BuildRequires:  gettext
 BuildRequires:  ocl-icd
