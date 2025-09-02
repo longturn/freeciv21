@@ -363,6 +363,7 @@ static void game_defaults(bool keep_ruleset_value)
     game.server.freecost = GAME_DEFAULT_FREECOST;
     game.server.global_warming_percent = GAME_DEFAULT_GLOBAL_WARMING_PERCENT;
     game.server.homecaughtunits = GAME_DEFAULT_HOMECAUGHTUNITS;
+    game.server.homeless_gold_upkeep = GAME_DEFAULT_HOMELESS_GOLD_UPKEEP;
     game.server.kick_time = GAME_DEFAULT_KICK_TIME;
     game.server.maxconnectionsperhost = GAME_DEFAULT_MAXCONNECTIONSPERHOST;
     game.server.last_ping = 0;
