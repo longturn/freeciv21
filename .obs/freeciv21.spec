@@ -27,7 +27,7 @@ BuildRequires:  qt6-qtbase-devel
 BuildRequires:  qt6-qtsvg-devel
 BuildRequires:  qt6-qtmultimedia-devel
 BuildRequires:  kf6-karchive-devel
-BuildRequires:  python-Sphinx-doc-man
+BuildRequires:  python3-sphinx
 BuildRequires:  lua-devel
 BuildRequires:  gettext
 BuildRequires:  ocl-icd
@@ -42,7 +42,7 @@ BuildRequires:  qt6-multimedia-devel
 BuildRequires:  kf6-karchive-devel
 BuildRequires:  sqlite3-devel
 BuildRequires:  lua53-devel
-BuildRequires:  python-Sphinx*
+BuildRequires:  python-Sphinx-doc-man
 Recommends:     freeciv21-lang
 Recommends:     libertinus-fonts
 %endif
