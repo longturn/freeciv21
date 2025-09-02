@@ -12,7 +12,7 @@ Release:        %autorelease -p pre -s %{__scm_source_timestamp}
 Group:          Amusements/Games/Strategy/Turn Based
 Summary:        We develop and play Freeciv21. Develop Your Civilization from Humble Roots to a Global Empire!
 Url:            https://github.com/longturn/freeciv21/
-Source:         %{name}-%{version}.tar.xz
+Source:         %{name}-%{version}.tar.gz
 BuildRequires:  cmake
 BuildRequires:  gcc
 BuildRequires:  gcc-c++
@@ -42,7 +42,7 @@ BuildRequires:  qt6-multimedia-devel
 BuildRequires:  kf6-karchive-devel
 BuildRequires:  sqlite3-devel
 BuildRequires:  lua53-devel
-BuildRequires:  python311-sphinx
+BuildRequires:  python-Sphinx*
 Recommends:     freeciv21-lang
 Recommends:     libertinus-fonts
 %endif
