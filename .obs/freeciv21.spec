@@ -42,7 +42,7 @@ BuildRequires:  qt6-multimedia-devel
 BuildRequires:  kf6-karchive-devel
 BuildRequires:  sqlite3-devel
 BuildRequires:  lua53-devel
-BuildRequires:  python-Sphinx-doc-man
+BuildRequires:  python313-Sphinx
 Recommends:     freeciv21-lang
 Recommends:     libertinus-fonts
 %endif
