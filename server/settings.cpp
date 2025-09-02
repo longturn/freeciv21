@@ -2509,6 +2509,24 @@ static struct setting settings[] = {
                 "subject to the 'killunhomed' option."),
              nullptr, nullptr, GAME_DEFAULT_HOMECAUGHTUNITS),
 
+    GEN_BOOL(
+        "homeless_gold_upkeep", game.server.homeless_gold_upkeep,
+        SSET_RULES_FLEXIBLE, SSET_MILITARY, SSET_RARE, ALLOW_NONE,
+        ALLOW_BASIC, N_("Homeless units are paid from treasury"),
+        /* TRANS: The strings between single quotes are settings and
+         * should not be translated.
+         */
+        N_("Homeless unit upkeep is paid from the national treasury. "
+           "If 'gold_upkeep_style' is 'City', then only homeless upkeep is "
+           "paid for by the nation while homed units are paid for by the "
+           "city, and only homeless units can be disbanded if this puts "
+           "treasury below zero. "
+           "For 'Mixed' and 'Nation', the homeless upkeep cost is included "
+           "with all other unit upkeep and any units including homeless can "
+           "be randomly selected to be disbanded if this causes the "
+           "treasury to drop below zero."),
+        nullptr, nullptr, GAME_DEFAULT_HOMELESS_GOLD_UPKEEP),
+
     GEN_BOOL("naturalcitynames", game.server.natural_city_names,
              SSET_RULES_FLEXIBLE, SSET_SOCIOLOGY, SSET_RARE, ALLOW_NONE,
              ALLOW_BASIC, N_("Whether to use natural city names"),

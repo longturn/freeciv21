@@ -184,6 +184,7 @@ struct civ_game {
                         code wants to write sizeof(unsigned) bytes */
       bool savepalace;
       bool homecaughtunits;
+      bool homeless_gold_upkeep;
       char start_units[MAX_LEN_STARTUNIT];
       bool start_city;
       int start_year;
@@ -482,6 +483,8 @@ extern struct world wld;
 #define GAME_DEFAULT_SAVEPALACE true
 
 #define GAME_DEFAULT_HOMECAUGHTUNITS true
+
+#define GAME_DEFAULT_HOMELESS_GOLD_UPKEEP false
 
 #define GAME_DEFAULT_NATURALCITYNAMES true
 

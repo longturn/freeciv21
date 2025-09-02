@@ -458,6 +458,17 @@ To place a setting value on any of these settings use the ``/set <option-name> <
   :strong:`Description`: Give caught units a homecity. If unset, caught units will have no homecity and will
   be subject to the ``killunhomed`` option.
 
+``homeless_gold_upkeep``
+  :strong:`Default Value`: disabled
+
+  :strong:`Description`: Homeless unit upkeep is paid from the national
+  treasury. If ``gold_upkeep_style`` is ``City``, then only homeless upkeep is
+  paid for by the nation while homed units are paid for by the city, and only
+  homeless units can be disbanded if this puts treasury below zero. For
+  ``Mixed`` and ``Nation``, the homeless upkeep cost is included with all other
+  unit upkeep and any units including homeless can be randomly selected to be
+  disbanded if this causes the treasury to drop below zero.
+
 ``huts``
   :strong:`Default Value (Min, Max)`: 15 (0, 500)
 
