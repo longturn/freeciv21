@@ -31,6 +31,14 @@ BuildRequires:  python3-sphinx
 BuildRequires:  lua-devel
 BuildRequires:  gettext
 BuildRequires:  ocl-icd
+BuildRequires:  libavutil-free >= 7.0.2
+BuildRequires:  libavcodec-free >= 7.0.2
+%ifarch aarch64
+BuildRequires:  libvpx
+%endif
+%ifarch x86_64
+BuildRequires:  libvpl >= 2.15
+%endif
 Recommends:     freeciv21-lang
 Recommends:     alerque-libertinus-fonts
 %endif
