@@ -38,7 +38,9 @@ Build-Depends:
 
 Package: freeciv21
 Architecture: any
-Depends: fonts-linuxlibertine
+Depends:
+  fonts-linuxlibertine,
+  ${shlibs:Depends}
 Description: We develop and play Freeciv21. Develop Your Civilization from Humble Roots to a Global Empire!
  Freeciv21 is a free open source turn-based empire-building 4x strategy game,
  in which each player becomes the leader of a civilization. You compete
