@@ -65,7 +65,7 @@ but may not completely cover rulesets which are very different from the classic 
 [help_strategy_and_tactics]
 name = _("Strategy and Tactics")
 text = _("\
-NOTE: For a well formatted HTML version of this page, see \
+*NOTE:* For a well formatted HTML version of this page, see \
 https://longturn.readthedocs.io/en/latest/Playing/how-to-play.html \
 "), _("\
 While every game is different, there is a basic strategy which most players follow, especially at the start \
@@ -88,7 +88,7 @@ These steps may vary depending upon the server or ruleset options, but in genera
  13 Production phase.\n\
  14 Annihilation of your opponents.\
 "), _("\
- 1. Choosing the first city site.\
+### 1. Choosing the first city site.\
 "), _("\
 Start the game by wandering around BRIEFLY to find a good place to build the first city. Do not feel \
 tempted to investigate any yellow roofed villages yet, they might contain Barbarian tribes. Build the \
@@ -99,7 +99,7 @@ coast. That can open you up to losing it from an attack from the sea. \
 The idea is to balance the quality of the site you find against getting your first city established as early \
 as possible. You will find that balance becomes a key aspect of playing Freeciv21. \
 "), _("\
- 2. Selecting your first five city locations.\
+### 2. Selecting your first five city locations.\
 "), _("\
 In the Classic ruleset, you start the game with 5 Settlers, 6 Workers, and 2 Explorers. Once you have planted \
 your first city as your capital, you need to find a place for your Settlers as quickly as possible. This \
@@ -107,11 +107,11 @@ initial expansion phase of the game is important to establishing your base citie
 Freeciv21. The more cities you have, the more of every type of resource you can produce. Winning in Freeciv21 \
 is a factor of your nation's ability to out-produce your opponents.\
 "), _("\
-As mentioned in \"1. Choosing the First City Site\" above, you want to try and place your Settlers so you \
+As mentioned in *1. Choosing the First City Site* above, you want to try and place your Settlers so you \
 can create cities that have Resources available to them. These tile enhancements give bonuses to help your \
-nation grow. Refer to Terrain --> Resources for more information.\
+nation grow. Refer to *Terrain → Resources* for more information.\
 "), _("\
- 3. Selecting your technological advance.\
+### 3. Selecting your technological advance.\
 "), _("\
 With your first city built, your nation will start to produce scientific output called Bulbs. Bulbs are used \
 to study technological advances. As your nation learns new technologies, new units, city improvements, and \
@@ -120,17 +120,17 @@ wonders become available to build in your cities. \
 There are too many scenarios of which technological advance path to take, so make your best judgement. You \
 will probably want to learn a new form of government. You start the game in Despotism in the Classic ruleset. \
 Monarchy or The Republic are good early targets. As soon as you have researched a new government type, start \
-a revolution (See the menu Civilization --> Government --> Revolution) and change over to it. Cities operate \
+a revolution (See the menu *Civilization → Government → Revolution*) and change over to it. Cities operate \
 much better under Republic than they do under Despotism, but note that it is much harder to keep military units \
 outside of city limits under a Republic. Also, do not forget to recheck your national budget after you have changed \
 governments, as the maximums vary for each type.\
 "), _("\
 Depending on the amount of fresh water you have available, you might need to make a push for Construction so \
-you can get your cities larger than size 8. If you are on an island (see 4. Mapping the countryside.), you \
+you can get your cities larger than size 8. If you are on an island (see *4. Mapping the countryside*), you \
 might need to expand. Learning Map Making will give you the Trireme unit that can set sail to find new lands \
-(see 11. Exploring the world).\
+(see *11. Exploring the world*).\
 "), _("\
-4. Mapping the countryside.\
+### 4. Mapping the countryside.\
 "), _("\
 After the capital city has been built, it will start producing a Warrior unit by default. These units can be \
 used to walk around exploring the countryside. However, the Classic ruleset gives you an excellent unit \
@@ -142,7 +142,7 @@ these Huts. The rewards can be great: gold, free units, free Settlers, and even 
 However, the risk is that you loose Barbarian hordes that swoop through your new, undefended cities like a \
 hot knife through butter. You have been warned.\
 "), _("\
- 5. Defending the cities.\
+### 5. Defending the cities.\
 "), _("\
 At this point, defend your cities by always leaving a Warrior unit in them. As your civilization develops and \
 new units become available, replace the obsolete units with new ones to ensure your cities have sufficient \
@@ -154,7 +154,7 @@ unhappiness. Also remember that when a land unit is inside a city, it gets a 50%
 fortified. This happens automatically. When a new city is built, the city starts to build the best available \
 defensive unit from the above list by default.\
 "), _("\
- 6. Deciding which units to build first.\
+### 6. Deciding which units to build first.\
 "), _("\
 After building one or two Warrior units, start building Settlers. Settlers take city population, but if you \
 picked a good city site, your city should be big enough by now. The amount of population that it takes to \
@@ -166,7 +166,7 @@ city. Keep in mind that a large population increases both the amount of producti
 research rate, not to mention that cities secure land for your empire, so building new cities should be a \
 high priority in the early game.\
 "), _("\
- 7. Improving the land.\
+### 7. Improving the land.\
 "), _("\
 Each city has an area of land around it that can be used for growing food, producing goods, and generating \
 trade. This area is called the \"Working Radius\". This output can be increased by using Workers (or \
@@ -175,7 +175,7 @@ Settlers) to improve the land close to your cities. The land can be improved wit
 (increasing production), among other improvements. The ability to do some improvements on some tiles may \
 require a technology advance to be learned by your scientists.\
 "), _("\
- 8. Deciding where to build cities.\
+### 8. Deciding where to build cities.\
 "), _("\
 The best location for a city is a matter of taste. A city which is placed near the sea is easier to spot by \
 opponents, but can also serve as a port for seagoing units. They also usually need a Coastal Defense city \
@@ -186,10 +186,10 @@ map tiles that the city's population can manage as it grows. Many land tiles wil
 (called Resources) that give food, production, or trade bonuses. Use the middle-click on your mouse to see. \
 The more Resources a city can utilize the better.\
 "), _("\
-NOTE: The online version of this page at https://longturn.readthedocs.io/en/latest/Playing/how-to-play.html \
+*NOTE:* The [online version of this page](https://longturn.readthedocs.io/en/latest/Playing/how-to-play.html) \
 has a lot of images showing different ways to plan city placement.\
 "), _("\
- 9. Taking care of the cities.\
+### 9. Taking care of the cities.\
 "), _("\
 Every city has a group of citizens. The number of citizens depends on the city's population. When you click on \
 a city, you can see how the land around the city is being managed. You can assign the city's citizens to \
@@ -217,7 +217,7 @@ citizens. A city where this is not the case falls into disorder. Such cities are
 a lightning bolt (depending on the tileset). Take care not to let this happen to any of your cities, as cities \
 in disorder produce nothing, and are prone to revolt.\
 "), _("\
- 10. Interacting with other players (diplomacy).\
+### 10. Interacting with other players (diplomacy).\
 "), _("\
 When one of your units first meets a unit of another nation, or finds one of their cities (or equally if \
 they find you), a basic contact is established between the two nations. This provides each with basic \
@@ -255,7 +255,7 @@ the treaty.\n\
 city are also transferred, except those sitting in other cities. So make sure the other player is not \
 getting a better deal than you expect.\
 "), _("\
- 11. Exploring the world.\
+### 11. Exploring the world.\
 "), _("\
 After you have fortified your cities with troops, build Triremes in the cities near the sea. Use the \
 Triremes to map the world in search of your opponents and new lands. If you are on an island, you should \
@@ -263,14 +263,14 @@ spend less on military and more on expansion. Or if you are located close to an 
 idea to make a Peace treaty and share the advances you have made. Diplomatic units are very useful here, and \
 WILL pay off later.\
 "), _("\
- 12. Things to keep in mind.\
+### 12. Things to keep in mind.\
 "), _("\
   - What the next advance you will need is.\n\
   - What your tax, luxury goods and research rates are currently set to.\n\
   - Treaties are often broken, so do not neglect defense!\n\
   - Some wonders can be made obsolete by a new technology.\
 "), _("\
- 13. Production phase.\
+### 13. Production phase.\
 "), _("\
 At some point you will have a large number of cities and your nation has learned many technologies. As you \
 move into the industrial age you can build Factories and Power Plants in your cities. You want to get as much \
@@ -278,13 +278,13 @@ production as possible out of each city. Pollution becomes a problem. As soon as
 Mass Production for Mass Transits, and Recycling so you can build Recycling Centers. Once you have got all \
 your cities going strong, you must build military units.\
 "), _("\
-NOTE: If you come into contact with another player, you should immediately build a few attack units, and at \
+*NOTE:* If you come into contact with another player, you should immediately build a few attack units, and at \
 least one defense unit per city.\
 "), _("\
 When you want to begin thinking about attacking someone, set science to 0%, and raise taxes as high as you can \
 without provoking disorder. Remember, money can build units too!\
 "), _("\
- 14. Annihilation of your opponents.\
+### 14. Annihilation of your opponents.\
 "), _("\
 This can happen at any time, but it is more fun with the advanced weapons.\
 "), _("\
@@ -293,7 +293,7 @@ to build more units to take out the rest of them with. Show no quarter! To the d
 "), _("\
 Repeat as often as necessary!\
 "), _("\
-For pacifists: Freeciv21 also allows a player to win by building and launching a spaceship which arrives at \
+*For pacifists:* Freeciv21 also allows a player to win by building and launching a spaceship which arrives at \
 Alpha Centauri before anyone else. It is known as the Space Race victory.\
 ")
 
