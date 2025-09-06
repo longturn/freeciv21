@@ -126,7 +126,6 @@ static citizens city_reduce_workers(struct city *pcity, citizens change);
 static bool city_balance_treasury_buildings(struct city *pcity);
 static bool city_balance_treasury_units(struct city *pcity);
 static void player_update_homeless_unit_gold_upkeep(struct player *pplayer);
-static int player_total_homeless_unit_gold_upkeep(struct player *pplayer);
 static void
 player_save_homeless_unit_gold_upkeep_paid(struct player *pplayer);
 static bool player_balance_treasury_homeless_units(struct player *pplayer);
@@ -2926,35 +2925,6 @@ static void player_update_homeless_unit_gold_upkeep(struct player *pplayer)
   log_debug("homeless_gold_upkeep: [%s] "
             "Updated homeless unit gold upkeep costs",
             player_name(pplayer));
-}
-
-/**
- * Get the total amount of gold needed to pay upkeep costs for all homeless
- * units of the player.
- */
-static int player_total_homeless_unit_gold_upkeep(struct player *pplayer)
-{
-  int gold_needed = 0;
-
-  log_debug("homeless_gold_upkeep: [%s] "
-            "Calculating homeless gold upkeep",
-            player_name(pplayer));
-  unit_list_iterate(pplayer->units, punit)
-  {
-    if (unit_is_homeless(punit)) {
-      gold_needed += punit->upkeep[O_GOLD];
-      log_debug("homeless_gold_upkeep: [%s] "
-                "%s is homeless and costs %d. Total %d",
-                player_name(pplayer), unit_link(punit),
-                punit->upkeep[O_GOLD], gold_needed);
-    }
-  }
-  unit_list_iterate_end;
-  log_debug("homeless_gold_upkeep: [%s] "
-            "Homeless gold upkeep is %d",
-            player_name(pplayer), gold_needed);
-
-  return gold_needed;
 }
 
 static void

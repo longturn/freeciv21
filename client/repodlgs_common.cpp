@@ -128,18 +128,14 @@ void get_economy_report_units_data(struct unit_entry *entries,
     count = 0;
     partial_cost = 0;
 
-    city_list_iterate(client.conn.playing->cities, pcity)
+    unit_list_iterate(client.conn.playing->units, punit)
     {
-      unit_list_iterate(pcity->units_supported, punit)
-      {
-        if (unit_type_get(punit) == unittype) {
-          count++;
-          partial_cost += punit->upkeep[O_GOLD];
-        }
+      if (unit_type_get(punit) == unittype && punit->upkeep[O_GOLD] > 0) {
+        count++;
+        partial_cost += punit->upkeep[O_GOLD];
       }
-      unit_list_iterate_end;
     }
-    city_list_iterate_end;
+    unit_list_iterate_end;
 
     if (count == 0) {
       continue;
