@@ -1244,7 +1244,37 @@ int player_get_expected_income(const struct player *pplayer)
   }
   city_list_iterate_end;
 
+  // National expenses.
+  income -= player_total_homeless_unit_gold_upkeep(pplayer);
+
   return income;
+}
+
+/**
+ * Get the total amount of gold needed to pay upkeep costs for all homeless
+ * units of the player.
+ */
+int player_total_homeless_unit_gold_upkeep(const struct player *pplayer)
+{
+  fc_assert_ret_val(nullptr != pplayer, 0) int gold_needed = 0;
+  log_debug("homeless_gold_upkeep: [%s] "
+            "Calculating homeless gold upkeep",
+            player_name(pplayer));
+  unit_list_iterate(pplayer->units, punit)
+  {
+    if (unit_is_homeless(punit)) {
+      gold_needed += punit->upkeep[O_GOLD];
+      log_debug("homeless_gold_upkeep: [%s] "
+                "%s #%d is homeless and costs %d. Total %d",
+                player_name(pplayer), unit_rule_name(punit), punit->id,
+                punit->upkeep[O_GOLD], gold_needed);
+    }
+  }
+  unit_list_iterate_end;
+  log_debug("homeless_gold_upkeep: [%s] "
+            "Homeless gold upkeep is %d",
+            player_name(pplayer), gold_needed);
+  return gold_needed;
 }
 
 /**
