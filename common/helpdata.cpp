@@ -3782,7 +3782,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
             _("\nTime to build and output bonus depends on terrain:\n\n"));
         cat_snprintf(buf, bufsz, "| %s | %s | %s |\n", _("Terrain"),
                      _("Time"), _("Bonus F/P/T"));
-        CATLSTR(buf, bufsz, "| :-- | --: | :-- |\n");
+        CATLSTR(buf, bufsz, "| :-- | --: | --: |\n");
       } else if (do_time) {
         CATLSTR(buf, bufsz, _("\nTime to build depends on terrain:\n\n"));
         cat_snprintf(buf, bufsz, "| %s | %s |\n", _("Terrain"), _("Time"));
