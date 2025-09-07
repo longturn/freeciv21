@@ -386,7 +386,7 @@ void real_economy_report_dialog_update(void *unused)
       eco_rep->update_report();
     }
   }
-  queen()->updateSidebarTooltips();
+  queen()->updateInfoLabel();
 }
 
 /**
