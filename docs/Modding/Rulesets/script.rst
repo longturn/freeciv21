@@ -191,6 +191,10 @@ Types
    :members:
    :recursive:
 
+.. lua:autoobject:: Unit_Class
+   :members:
+   :recursive:
+
 .. lua:autoobject:: Tech_Type
    :members:
    :recursive:
@@ -415,6 +419,14 @@ Lua Modules
 ^^^^^^^^^^^
 
 .. lua:autoobject:: math
+   :members:
+   :recursive:
+
 .. lua:autoobject:: string
+   :members:
+   :recursive:
+
 .. lua:autoobject:: table
+   :members:
+   :recursive:
 

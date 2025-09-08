@@ -90,6 +90,7 @@ void execute_unit_orders(struct player *pplayer);
 void finalize_unit_phase_beginning(struct player *pplayer);
 
 // various
+void unit_activity_count_set(struct unit *punit, int activity_count);
 void finish_unit_wait(struct unit *punit, int activity_count);
 void place_partisans(struct tile *pcenter, struct player *powner, int count,
                      int sq_radius);
@@ -156,7 +157,10 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet);
 struct unit *
 unit_change_owner(struct unit *punit, struct player *pplayer, int homecity,
                   enum unit_loss_reason reason) fc__warn_unused_result;
-
+void unit_nationality_set(struct unit *punit, struct player *pnationality);
+void unit_moves_left_set(struct unit *punit, int move_frags);
+void unit_veteran_level_set(struct unit *punit, int veteran);
+void unit_fuel_set(struct unit *punit, int fuel);
 void unit_set_removal_callback(struct unit *punit,
                                void (*callback)(struct unit *punit));
 void unit_unset_removal_callback(struct unit *punit);

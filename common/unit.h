@@ -396,6 +396,8 @@ bool unit_type_is_losing_hp(const struct player *pplayer,
 
 bool unit_is_alive(int id);
 
+const veteran_level *unit_veteran_level(const struct unit *punit);
+
 void *unit_ai_data(const struct unit *punit, const struct ai_type *ai);
 void unit_set_ai_data(struct unit *punit, const struct ai_type *ai,
                       void *data);

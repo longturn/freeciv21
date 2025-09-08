@@ -1057,17 +1057,6 @@ Tile *api_methods_unit_tile_get(lua_State *L, Unit *punit)
 }
 
 /**
-   Return the current hitpoints of the unit.
- */
-int api_methods_unit_hitpoints_get(lua_State *L, Unit *punit)
-{
-  LUASCRIPT_CHECK_STATE(L, 0);
-  LUASCRIPT_CHECK_SELF(L, punit, 0);
-
-  return punit->hp;
-}
-
-/**
    Get unit orientation
  */
 const Direction *api_methods_unit_orientation_get(lua_State *L, Unit *punit)
@@ -1098,6 +1087,102 @@ Unit_List_Link *api_methods_private_unit_cargo_list_head(lua_State *L,
   LUASCRIPT_CHECK_STATE(L, nullptr);
   LUASCRIPT_CHECK_SELF(L, punit, nullptr);
   return unit_list_head(punit->transporting);
+}
+
+/**
+ * Return the class for a given Unit.
+ */
+Unit_Class *api_methods_unit_class_get(lua_State *L, Unit *punit)
+{
+  LUASCRIPT_CHECK_STATE(L, nullptr);
+  LUASCRIPT_CHECK_SELF(L, punit, nullptr);
+  return unit_class_get(punit);
+}
+
+/**
+ * Return the percentage power factor applied based on the unit's veterancy
+ * level.
+ */
+int api_methods_unit_veteran_power_fact_get(lua_State *L, Unit *punit)
+{
+  LUASCRIPT_CHECK_STATE(L, -1);
+  LUASCRIPT_CHECK_SELF(L, punit, -1);
+  return unit_veteran_level(punit)->power_fact;
+}
+
+/**
+ * Return the move bonus applied based on the unit's veterancy level.
+ */
+int api_methods_unit_veteran_move_bonus_get(lua_State *L, Unit *punit)
+{
+  LUASCRIPT_CHECK_STATE(L, -1);
+  LUASCRIPT_CHECK_SELF(L, punit, -1);
+  return unit_veteran_level(punit)->move_bonus;
+}
+
+/**
+ * Return the total amount of food this unit costs its home city to support.
+ */
+int api_methods_unit_upkeep_food_get(lua_State *L, Unit *punit)
+{
+  LUASCRIPT_CHECK_STATE(L, -1);
+  LUASCRIPT_CHECK_SELF(L, punit, -1);
+  return utype_upkeep_cost(unit_type_get(punit), unit_owner(punit), O_FOOD);
+}
+
+/**
+ * Return the total amount of shields this unit costs its home city to
+ * support.
+ */
+int api_methods_unit_upkeep_shields_get(lua_State *L, Unit *punit)
+{
+  LUASCRIPT_CHECK_STATE(L, -1);
+  LUASCRIPT_CHECK_SELF(L, punit, -1);
+  return utype_upkeep_cost(unit_type_get(punit), unit_owner(punit),
+                           O_SHIELD);
+}
+
+/**
+ * Return the total amount of gold this unit costs to support.
+ */
+int api_methods_unit_upkeep_gold_get(lua_State *L, Unit *punit)
+{
+  LUASCRIPT_CHECK_STATE(L, -1);
+  LUASCRIPT_CHECK_SELF(L, punit, -1);
+  return utype_upkeep_cost(unit_type_get(punit), unit_owner(punit), O_GOLD);
+}
+
+/**
+ * Return the number of unhappy citizens this unit creates in its home city.
+ */
+int api_methods_unit_happy_cost_get(lua_State *L, Unit *punit)
+{
+  LUASCRIPT_CHECK_STATE(L, -1);
+  LUASCRIPT_CHECK_SELF(L, punit, -1);
+  return utype_happy_cost(unit_type_get(punit), unit_owner(punit));
+}
+
+/**
+ * Return the name of the activity that the unit is currently performing.
+ */
+const char *api_methods_unit_activity_name_get(lua_State *L, Unit *punit)
+{
+  LUASCRIPT_CHECK_STATE(L, nullptr);
+  LUASCRIPT_CHECK_SELF(L, punit, nullptr);
+  return get_activity_text(punit->activity);
+}
+
+/**
+ * Return the name of the extra that the unit is currently constructing, or
+ * nullptr.
+ */
+const char *api_methods_unit_activity_target_name_get(lua_State *L,
+                                                      Unit *punit)
+{
+  LUASCRIPT_CHECK_STATE(L, nullptr);
+  LUASCRIPT_CHECK_SELF(L, punit, nullptr);
+  extra_type *pextra = punit->activity_target;
+  return pextra ? extra_rule_name(pextra) : nullptr;
 }
 
 /**
@@ -1178,6 +1263,103 @@ const char *api_methods_unit_type_name_translation(lua_State *L,
   LUASCRIPT_CHECK_SELF(L, punit_type, nullptr);
 
   return utype_name_translation(punit_type);
+}
+
+/**
+ * Return the base food cost of supporting the unit to the home city.
+ */
+int api_methods_unit_type_upkeep_food_get(lua_State *L,
+                                          Unit_Type *punit_type)
+{
+  LUASCRIPT_CHECK_STATE(L, -1);
+  LUASCRIPT_CHECK_SELF(L, punit_type, -1);
+  return punit_type->upkeep[O_FOOD];
+}
+
+/**
+ * Return the base shield cost of supporting the unit to the home city.
+ */
+int api_methods_unit_type_upkeep_shields_get(lua_State *L,
+                                             Unit_Type *punit_type)
+{
+  LUASCRIPT_CHECK_STATE(L, -1);
+  LUASCRIPT_CHECK_SELF(L, punit_type, -1);
+  return punit_type->upkeep[O_SHIELD];
+}
+
+/**
+ * Return the base gold cost of supporting the unit.
+ */
+int api_methods_unit_type_upkeep_gold_get(lua_State *L,
+                                          Unit_Type *punit_type)
+{
+  LUASCRIPT_CHECK_STATE(L, -1);
+  LUASCRIPT_CHECK_SELF(L, punit_type, -1);
+  return punit_type->upkeep[O_GOLD];
+}
+
+/**
+ * Return the name of the vision layer that the unit resides in.
+ */
+const char *
+api_methods_unit_type_vision_layer_name_get(lua_State *L,
+                                            Unit_Type *punit_type)
+{
+  LUASCRIPT_CHECK_STATE(L, nullptr);
+  LUASCRIPT_CHECK_SELF(L, punit_type, nullptr);
+  return vision_layer_name(punit_type->vlayer);
+}
+
+/**
+ * Return the maximum veteran level that units of this type can reach.
+ */
+int api_methods_unit_type_veteran_level_max_get(lua_State *L,
+                                                Unit_Type *punit_type)
+{
+  LUASCRIPT_CHECK_STATE(L, -1);
+  LUASCRIPT_CHECK_SELF(L, punit_type, -1);
+  return utype_veteran_levels(punit_type) - 1;
+}
+
+/**
+ * Return true if the unit class has the given unit class flag.
+ */
+bool api_methods_unit_class_has_flag(lua_State *L, Unit_Class *punit_class,
+                                     const char *flag)
+{
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, punit_class, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, flag, 3, string, false);
+
+  auto id = unit_class_flag_id_by_name(flag, fc_strcasecmp);
+  if (unit_class_flag_id_is_valid(id)) {
+    return uclass_has_flag(punit_class, id);
+  } else {
+    luascript_error(L, "Unit class flag \"%s\" does not exist", flag);
+    return false;
+  }
+}
+
+/**
+ * Return the rule name of the unit class.
+ */
+const char *api_methods_unit_class_rule_name(lua_State *L,
+                                             Unit_Class *punit_class)
+{
+  LUASCRIPT_CHECK_STATE(L, nullptr);
+  LUASCRIPT_CHECK_SELF(L, punit_class, nullptr);
+  return uclass_rule_name(punit_class);
+}
+
+/**
+ * Return the translated name of the unit class.
+ */
+const char *api_methods_unit_class_name_translation(lua_State *L,
+                                                    Unit_Class *punit_class)
+{
+  LUASCRIPT_CHECK_STATE(L, nullptr);
+  LUASCRIPT_CHECK_SELF(L, punit_class, nullptr);
+  return uclass_name_translation(punit_class);
 }
 
 /**
