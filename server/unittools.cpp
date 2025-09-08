@@ -1059,6 +1059,17 @@ static void update_unit_activity(struct unit *punit, time_t now)
 }
 
 /**
+ * Set the number of work points that a unit has put towards its current
+ * activity, and complete the activity if it has reached its threshold.
+ */
+void unit_activity_count_set(struct unit *punit, int activity_count)
+{
+  punit->activity_count = activity_count;
+  send_unit_info(nullptr, punit);
+  unit_activity_complete(punit);
+}
+
+/**
  * Finish activity of a unit that was deferred by unitwaittime.
  */
 void finish_unit_wait(struct unit *punit, int activity_count)
@@ -2453,6 +2464,61 @@ struct unit *unit_change_owner(struct unit *punit, struct player *pplayer,
   wipe_unit(punit, reason, nullptr);
 
   return gained_unit; // Returns the replacement.
+}
+
+/**
+ * Set the nationality of the unit to the given player, and send unit info.
+ */
+void unit_nationality_set(struct unit *punit, struct player *pnationality)
+{
+  fc_assert_ret(nullptr != punit);
+  fc_assert_ret(nullptr != pnationality);
+  if (unit_nationality(punit) != pnationality) {
+    punit->nationality = pnationality;
+    send_unit_info(nullptr, punit);
+  }
+}
+
+/**
+ * Set the number of move fragments that the unit has left, and send unit
+ * info.
+ */
+void unit_moves_left_set(struct unit *punit, int move_frags)
+{
+  fc_assert_ret(nullptr != punit);
+  fc_assert_ret(move_frags >= 0);
+  if (move_frags != punit->moves_left) {
+    punit->moves_left = move_frags;
+    send_unit_info(nullptr, punit);
+  }
+}
+
+/**
+ * Set the veteran level of the unit, and send unit info.
+ */
+void unit_veteran_level_set(struct unit *punit, int veteran)
+{
+  fc_assert_ret(nullptr != punit);
+  fc_assert_ret(veteran >= 0);
+  fc_assert_ret(veteran < utype_veteran_levels(unit_type_get(punit)));
+  if (veteran != punit->veteran) {
+    punit->veteran = veteran;
+    send_unit_info(nullptr, punit);
+  }
+}
+
+/**
+ * Set the fuel level of the unit, and send unit info.
+ */
+void unit_fuel_set(struct unit *punit, int fuel)
+{
+  fc_assert_ret(nullptr != punit);
+  fc_assert_ret(fuel >= 0);
+  fc_assert_ret(fuel <= utype_fuel(unit_type_get(punit)));
+  if (fuel != punit->fuel) {
+    punit->fuel = fuel;
+    send_unit_info(nullptr, punit);
+  }
 }
 
 /**

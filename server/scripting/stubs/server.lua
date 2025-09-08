@@ -37,7 +37,7 @@ function server.save(filename) end
 --- @return boolean started True, if the game has been started.
 function server.started() end
 
---- Same as :lua:func:`Player:civilization_score`
+--- Same as :lua:obj:`Player:civilization_score`
 --- @param player Player
 --- @return int score
 function server.civilization_score(player) end
@@ -71,14 +71,14 @@ notify = {}
 
 --- Send all players a message with type :lua:obj:`E.SCRIPT`.
 ---
---- @param message String A :lua:func:`string.format`-style message.
+--- @param message String A :lua:obj:`string.format`-style message.
 --- @param ... any A set of values to insert into the string template.
 function notify.all(message, ...) end
 
 --- Send a player a message with type :lua:obj:`E.SCRIPT`.
 ---
 --- @param player Player The player to send the event message to.
---- @param message String A :lua:func:`string.format`-style message.
+--- @param message String A :lua:obj:`string.format`-style message.
 --- @param ... any A set of values to insert into the string template.
 function notify.player(player, message, ...) end
 
@@ -88,7 +88,7 @@ function notify.player(player, message, ...) end
 --- @param player Player The player to send the event message to, or nil for all players.
 --- @param tile Tile The tile to highlight, or nil for no tile.
 --- @param event E The event category.
---- @param message String A :lua:func:`string.format`-style message.
+--- @param message String A :lua:obj:`string.format`-style message.
 --- @param ... any A set of values to insert into the string template.
 function notify.event(player, tile, event, message, ...) end
 
@@ -97,7 +97,7 @@ function notify.event(player, tile, event, message, ...) end
 --- @param player Player The player to send the event message about.
 --- @param tile Tile The tile to highlight, or nil for no tile.
 --- @param event E The event category.
---- @param message String A :lua:func:`string.format`-style message.
+--- @param message String A :lua:obj:`string.format`-style message.
 --- @param ... any A set of values to insert into the string template.
 function notify.embassies(player, ptile, event, message, ...) end
 
@@ -110,7 +110,7 @@ function notify.embassies(player, ptile, event, message, ...) end
 --- @param player Player The player to send the event message about.
 --- @param selfmsg boolean True, if the player should also receive the event.
 --- @param event E The event category.
---- @param message String A :lua:func:`string.format`-style message.
+--- @param message String A :lua:obj:`string.format`-style message.
 --- @param ... any A set of values to insert into the string template.
 function notify.research(player, selfmsg, event, message, ...) end
 
@@ -120,7 +120,7 @@ function notify.research(player, selfmsg, event, message, ...) end
 ---
 --- @param player Player The player to send the event message about.
 --- @param event E The event category.
---- @param message String A :lua:func:`string.format`-style message.
+--- @param message String A :lua:obj:`string.format`-style message.
 --- @param ... any A set of values to insert into the string template.
 function notify.research_embassies(player, event, message, ...) end
 
@@ -167,7 +167,7 @@ function edit.unit_teleport(unit, dest) end
 function edit.unit_kill(unit, reason, killer) end
 
 --- Damages a unit's HP. Automatically killing the unit if it drops to zero or
---- below. See :lua:func:`edit.unit_kill` for loss reasons.
+--- below. See :lua:obj:`edit.unit_kill` for loss reasons.
 --- @param unit Unit The unit to be damaged.
 --- @param amount int The amount of damage to apply.
 --- @param reason string The reason for the damage. See :ref:`reason <script-unit-loss-reasons>`
@@ -185,8 +185,58 @@ function edit.unit_recover_hp(unit, amount) end
 --- @param amount int The new HP amount.
 function edit.unit_set_hp(unit, amount) end
 
+--- .. note::
+---    If this is set above the required number of work points for the current
+---    activity, this will complete the activity immediately.
+---
+--- See :lua:obj:`Unit.activity_count_set` and :lua:obj:`Unit.activity_count_add`
+---
+--- @param unit Unit The unit to modify.
+--- @param work_points int The total number of work points that have been put into the current activity.
+function edit.unit_activity_count_set(unit, work_points) end
+
+--- See :lua:obj:`Unit.nationality_set`
+---
+--- @param unit Unit The unit to modify.
+--- @param nationality Player The nationality of the people in the unit.
+function edit.unit_nationality_set(unit, nationality) end
+
+--- .. note::
+---    This may exceed the max :lua:obj:`Unit_Type.move_rate`,
+---    but cannot be lower then zero. 
+---
+--- See :lua:obj:`Unit.moves_left_set` and :lua:obj:`Unit.moves_left_add`
+---
+--- @param unit Unit The unit to modify.
+--- @param moves_left int The number of move fragments remaining.
+function edit.unit_moves_left_set(unit, moves_left) end
+
+--- .. note::
+---    This cannot be less than zero or exceed 
+---    :lua:obj:`Unit_Type.max_veteran_level`.
+---
+--- .. note::
+---    This does not automatically :lua:obj:`notify` the :lua:obj:`Player`
+---    who owns the unit.
+---
+--- See :lua:obj:`Unit.veteran_level_set` and :lua:obj:`Unit.veteran_level_add`
+---
+--- @param unit Unit The unit to modify.
+--- @param veteran int The veterancy level of the unit.
+function edit.unit_veteran_level_set(unit, veteran) end
+
+--- .. note::
+---    This cannot exceed the max :lua:obj:`Unit_Type.fuel`, and cannot be
+---    lower then zero.
+---
+--- See :lua:obj:`Unit.fuel_set` and :lua:obj:`Unit.fuel_add` 
+---
+--- @param unit Unit The unit to modify.
+--- @param fuel int The amount of fuel remaining.
+function edit.unit_fuel_set(unit, fuel) end
+
 --- Changes the terrain of a tile. If the terrain change would destroy a city,
---- the change fails. You need to :lua:func:`edit.remove_city` first to change
+--- the change fails. You need to :lua:obj:`edit.remove_city` first to change
 --- it anyway.
 --- @param tile Tile The tile whose terrain is to be changed.
 --- @param terrain Terrain The new terrain type.
@@ -200,7 +250,7 @@ function edit.change_terrain(tile, terrain) end
 function edit.create_city(player, tile, name) end
 
 --- Resizes a city. The reason is a user-defined value that will show up in
---- :lua:func:`~Event.city_size_change` signal events.
+--- :lua:obj:`~Event.city_size_change` signal events.
 --- @param city City The city to resize.
 --- @param size int The new size of the city.
 --- @param reason string The reason for resizing the city.
@@ -219,14 +269,14 @@ function edit.create_owned_extra(tile, name, player) end
 
 --- Creates an extra on a tile. Note that this does not affect the primary
 --- resource of a tile. If you want to change the primary resource, use 
---- :lua:func:`edit.set_primary_resource` instead.
+--- :lua:obj:`edit.set_primary_resource` instead.
 --- @param tile Tile The tile where the extra is created.
 --- @param name string The name of the extra.
 function edit.create_extra(tile, name) end
 
 --- Removes an extra from a tile. Note that this does not affect the primary
 --- resource of a tile. If you want to change the primary resource, use 
---- :lua:func:`edit.set_primary_resource` instead.
+--- :lua:obj:`edit.set_primary_resource` instead.
 --- @param tile Tile The tile from which the extra is removed.
 --- @param name string The name of the extra to remove.
 function edit.remove_extra(tile, name) end
@@ -234,7 +284,7 @@ function edit.remove_extra(tile, name) end
 --- Changes the primary resource for a tile. The primary resource persists even
 --- if the terrain changes to an incompatible type, and can be recovered if the
 --- terrain is changed to a compatible type again. Unlike resources created by
---- :lua:func:`~edit.create_extra` which disappear forever.
+--- :lua:obj:`~edit.create_extra` which disappear forever.
 --- @param tile Tile The tile to set the primary resource for.
 --- @param name string The name of the resource, or nil to remove.
 function edit.tile_primary_resource_set(tile, name) end
@@ -264,7 +314,7 @@ function edit.change_gold(player, amount) end
 --- '-3' for :ref:`diplbulbcost <server-option-diplomacy-bulb-cost>`
 ---
 --- The reason is a user-defined value that is passed to the
---- :lua:func:`~Events.tech_researched` signal event.
+--- :lua:obj:`~Events.tech_researched` signal event.
 ---
 --- @param player Player The player receiving the technology.
 --- @param tech Tech_Type The technology to give, or nil for random.
@@ -364,7 +414,7 @@ function edit.unit_move(unit, move_to, move_cost) end
 function edit.movement_disallow(unit) end
 
 --- Allows movement for a unit again following a 
---- :lua:func:`edit.movement_disallow` call.
+--- :lua:obj:`edit.movement_disallow` call.
 --- @param unit Unit The unit to allow movement for.
 function edit.movement_allow(unit) end
 
@@ -378,7 +428,7 @@ function edit.add_city_history(city, amount) end
 --- @param amount int The amount of history points to add.
 function edit.add_player_history(player, amount) end
 
---- See :lua:func:`edit.create_unit`
+--- See :lua:obj:`edit.create_unit`
 --- @param tile Tile
 --- @param unit_type Unit_Type
 --- @param veteran_level int
@@ -390,7 +440,7 @@ function Player:create_unit(tile, utype, veteran_level, homecity, moves_left)
                           moves_left)
 end
 
---- See :lua:func:`edit.create_unit_full`
+--- See :lua:obj:`edit.create_unit_full`
 --- @param tile Tile
 --- @param unit_type Unit_Type
 --- @param veteran_level int
@@ -411,20 +461,20 @@ function Player:civilization_score()
   return server.civilization_score(self)
 end
 
---- See :lua:func:`edit.create_city`
+--- See :lua:obj:`edit.create_city`
 --- @param tile Tile
 --- @param name string
 function Player:create_city(tile, name)
   edit.create_city(self, tile, name)
 end
 
---- See :lua:func:`edit.change_gold`
+--- See :lua:obj:`edit.change_gold`
 --- @param amount int
 function Player:change_gold(amount)
   edit.change_gold(self, amount)
 end
 
---- See :lua:func:`edit.give_tech`
+--- See :lua:obj:`edit.give_tech`
 --- @param tech Tech_Type
 --- @param cost int
 --- @param notify bool
@@ -434,69 +484,77 @@ function Player:give_tech(tech, cost, notify, reason)
   return edit.give_tech(self, tech, cost, notify, reason)
 end
 
---- See :lua:func:`edit.trait_mod`
+--- See :lua:obj:`edit.trait_mod`
 --- @param trait_name string
 --- @param mod int
 function Player:trait_mod(trait, mod)
   return edit.trait_mod(self, trait, mod)
 end
 
---- See :lua:func:`edit.civil_war`
+--- See :lua:obj:`edit.civil_war`
 --- @param probability int
 --- @return Player rebel
 function Player:civil_war(probability)
   return edit.civil_war(self, probability)
 end
 
---- See :lua:func:`edit.player_victory`
+--- See :lua:obj:`edit.player_victory`
 function Player:victory()
   edit.player_victory(self)
 end
 
---- See :lua:func:`edit.add_player_history`
+--- See :lua:obj:`edit.add_player_history`
 --- @param amount int
 function Player:add_history(amount)
   edit.add_player_history(self, amount)
 end
 
---- See :lua:func:`edit.resize_city`
+--- See :lua:obj:`edit.resize_city`
 --- @param size int
 --- @param reason string
 function City:resize(size, reason)
   edit.resize_city(self, size, reason)
 end
 
---- See :lua:func:`edit.remove_city`
+--- See :lua:obj:`edit.remove_city`
 function City:remove()
   edit.remove_city(self)
 end
 
---- See :lua:func:`edit.add_city_history`
+--- See :lua:obj:`edit.add_city_history`
 --- @param amount int
 function City:add_history(amount)
   edit.add_city_history(self, amount)
 end
 
---- See :lua:func:`edit.unit_teleport`
+--- 
+--- @class Unit
+Unit = {}
+
+---
+--- @return int turn_number The turn that the unit was first created.
+function Unit:birth_turn() end
+
+--- See :lua:obj:`edit.unit_teleport`
 --- @param dest Tile
 function Unit:teleport(dest)
   return edit.unit_teleport(self, dest)
 end
 
---- See :lua:func:`edit.unit_turn`
+--- See :lua:obj:`edit.unit_turn`
 --- @param direction Direction
 function Unit:turn(direction)
   edit.unit_turn(self, direction)
 end
 
---- See :lua:func:`edit.unit_kill`
+--- See :lua:obj:`edit.unit_kill`
 --- @param reason string
 --- @param killer Player
 function Unit:kill(reason, killer)
   edit.unit_kill(self, reason, killer)
 end
 
---- See :lua:func:`edit.unit_damage_hp`
+--- See :lua:obj:`edit.unit_damage_hp`
 --- @param amount int
 --- @param reason string
 --- @param killer Player
@@ -505,7 +563,7 @@ function Unit:damage_hp(amount, reason, killer)
 end
 
 --- Damages a unit by a percentage of its max hitpoints.
---- See :lua:func:`edit.unit_damage_hp`
+--- See :lua:obj:`edit.unit_damage_hp`
 --- @param amount int
 --- @param reason string
 --- @param killer Player
@@ -514,28 +572,28 @@ function Unit:damage_hp_pct(amount, reason, killer)
   return self:damage_hp(damage, reason, killer)
 end
 
---- See :lua:func:`edit.unit_recover_hp`
+--- See :lua:obj:`edit.unit_recover_hp`
 --- @param amount int
 function Unit:recover_hp(amount)
   edit.unit_recover_hp(self, amount)
 end
 
 --- The unit recovers by a percentage of its max hitpoints.
---- See :lua:func:`edit.unit_recover_hp`
+--- See :lua:obj:`edit.unit_recover_hp`
 --- @param amount int
 function Unit:recover_hp_pct(amount)
   local recover = math.ceil(self.utype.hp * amount / 100)
   return self:recover_hp(recover)
 end
 
---- See :lua:func:`edit.unit_set_hp`
+--- See :lua:obj:`edit.unit_set_hp`
 --- @param amount int
 function Unit:set_hp(amount)
   edit.unit_set_hp(self, amount)
 end
 
 --- The unit is set to a percentage of its max hitpoints.
---- See :lua:func:`edit.unit_set_hp`
+--- See :lua:obj:`edit.unit_set_hp`
 --- @param amount int
 function Unit:set_hp_pct(amount)
 --- @param amount int
@@ -543,60 +601,130 @@ function Unit:set_hp_pct(amount)
   edit.unit_set_hitpoints(self, total_hp)
 end
 
---- See :lua:func:`edit.unit_move`
-function Unit:move(moveto, movecost)
+--- See :lua:obj:`edit.unit_move`
 --- @param moveto Tile
 --- @param movecost int
+function Unit:move(moveto, movecost)
   return edit.unit_move(self, moveto, movecost)
 end
 
---- See :lua:func:`edit.movement_disallow`
+--- See :lua:obj:`edit.movement_disallow`
 function Unit:movement_disallow()
   edit.movement_disallow(self)
 end
 
---- See :lua:func:`edit.movement_allow`
+--- See :lua:obj:`edit.movement_allow`
 function Unit:movement_allow()
   edit.movement_allow(self)
 end
 
---- See :lua:func:`edit.create_owned_extra`
+--- .. note::
+---    If this is set above the required number of work points for the current
+---    activity, it will complete immediately.
+---
+--- @param work_points int The total number of work points that have been put into the current activity.
+function Unit:activity_count_set(work_points) end
+
+--- .. note::
+---    If this is set above the required number of work points for the current
+---    activity, it will complete immediately.
+---
+--- @param work_points int The number of work points to add to the current activity.
+function Unit:activity_count_add(work_points) end
+
+---
+--- @param nationality Player The nationality of the people in the unit.
+function Unit:nationality_set(nationality) end
+
+--- .. note::
+---    This may exceed the max for the :lua:obj:`Unit_Type.move_rate` type,
+---    but cannot be lower then zero. 
+---
+--- @param moves_left int The number of move fragments remaining.
+function Unit:moves_left_set(moves_left) end
+
+--- .. note::
+---    This may exceed the max for the :lua:obj:`Unit_Type.move_rate` type,
+---    but gets capped at zero when adding negative amounts. 
+---
+--- @param moves_left int The number of move fragments to add.
+function Unit:moves_left_add(moves_left) end
+
+--- .. note::
+---    This cannot be less than zero or exceed 
+---    :lua:obj:`Unit_Type.max_veteran_level`.
+---
+--- .. note::
+---    This does not automatically :lua:obj:`notify` the :lua:obj:`Player`
+---    who owns the unit.
+---
+--- @param veteran int The veterancy level of the unit.
+function Unit:veteran_level_set(veteran) end
+
+--- .. note::
+---    This will be capped between zero and 
+---    :lua:obj:`Unit_Type:max_veteran_level`.
+---
+--- .. note::
+---    This does not automatically :lua:obj:`notify` the :lua:obj:`Player`
+---    who owns the unit.
+---
+--- @param veteran int The number of veterancy levels to add to the unit.
+--- @return boolean changed True, if the veteran level changed as a result.
+function Unit:veteran_level_add(veteran) end
+
+--- .. note::
+---    This cannot exceed the max :lua:obj:`Unit_Type.fuel`, and cannot be
+---    lower then zero. 
+---
+--- @param fuel int The amount of fuel remaining.
+function Unit:fuel_set(fuel) end
+
+--- .. note::
+---    This will be capped at the max :lua:obj:`Unit_Type.fuel`, and capped
+---    at zero for negative amounts.
+---
+--- @param fuel int The amount of fuel to add.
+--- @return boolean changed True, if the fuel level changed as a result.
+function Unit:fuel_add(fuel) end
+
+--- See :lua:obj:`edit.create_owned_extra`
 --- @param name string
 --- @param player Player
 function Tile:create_owned_extra(name, player)
   edit.create_owned_extra(self, name, player)
 end
 
---- See :lua:func:`edit.create_extra`
+--- See :lua:obj:`edit.create_extra`
 --- @param name string
 function Tile:create_extra(name)
   edit.create_extra(self, name)
 end
 
---- See :lua:func:`edit.remove_extra`
+--- See :lua:obj:`edit.remove_extra`
 --- @param name string
 function Tile:remove_extra(name)
   edit.remove_extra(self, name)
 end
 
---- See :lua:func:`edit.change_terrain`
+--- See :lua:obj:`edit.change_terrain`
 --- @param terrain Terrain_Type
 function Tile:change_terrain(terrain)
   edit.change_terrain(self, terrain)
 end
 
---- See :lua:func:`edit.tile_primary_resource_set`
+--- See :lua:obj:`edit.tile_primary_resource_set`
 --- @param resource string
 function Tile:set_primary_resource(resource)
   edit.tile_primary_resource_set(self, resource)
 end
 
---- See :lua:func:`edit.unleash_barbarians`
+--- See :lua:obj:`edit.unleash_barbarians`
 function Tile:unleash_barbarians()
   return edit.unleash_barbarians(self)
 end
 
---- See :lua:func:`edit.place_partisans`
+--- See :lua:obj:`edit.place_partisans`
 --- @param player Player
 --- @param count int
 --- @param sq_radius int
@@ -604,7 +732,7 @@ function Tile:place_partisans(player, count, sq_radius)
   edit.place_partisans(self, player, count, sq_radius)
 end
 
---- See :lua:func:`edit.tile_set_label`
+--- See :lua:obj:`edit.tile_set_label`
 --- @param label string
 function Tile:set_label(label)
   edit.tile_set_label(self, label)
@@ -612,7 +740,7 @@ end
 
 --- Gets the current numeric value of AI trait trait in effect for player. This
 --- is usually :lua:obj:`~Player.trait_base` + 
---- :lua:obj:`~Player.trait_current_mod`. See :lua:func:`edit.trait_mod` for
+--- :lua:obj:`~Player.trait_current_mod`. See :lua:obj:`edit.trait_mod` for
 --- traits. 
 --- @param trait_name string The name of the trait to retrieve.
 --- @return int value The value of the specified trait.

@@ -45,6 +45,8 @@ Unit_Type *api_find_unit_type(lua_State *L, int unit_type_id);
 Unit_Type *api_find_unit_type_by_name(lua_State *L, const char *name_orig);
 Unit_Type *api_find_role_unit_type(lua_State *L, const char *role_name,
                                    Player *pplayer);
+Unit_Class *api_find_unit_class_by_name(lua_State *L, const char *name_orig);
+Unit_Class *api_find_unit_class(lua_State *L, int unit_class_id);
 Tech_Type *api_find_tech_type(lua_State *L, int tech_type_id);
 Tech_Type *api_find_tech_type_by_name(lua_State *L, const char *name_orig);
 

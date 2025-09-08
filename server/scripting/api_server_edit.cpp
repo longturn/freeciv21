@@ -289,6 +289,72 @@ void api_edit_unit_set_hitpoints(lua_State *L, Unit *unit, int amount)
 }
 
 /**
+ * Set count towards currently activity to 'work_points', and attempt to
+ * complete the activity.
+ */
+void api_edit_unit_activity_count_set(lua_State *L, Unit *punit,
+                                      int work_points)
+{
+  LUASCRIPT_CHECK_STATE(L);
+  LUASCRIPT_CHECK_ARG_NIL(L, punit, 2, Unit);
+  LUASCRIPT_CHECK_ARG(L, work_points >= 0, 3,
+                      "The work_points amount cannot be negative");
+  unit_activity_count_set(punit, work_points);
+}
+
+/**
+ * Set unit nationality to player 'pnationality', and send unit info.
+ */
+void api_edit_unit_nationality_set(lua_State *L, Unit *punit,
+                                   Player *pnationality)
+{
+  LUASCRIPT_CHECK_STATE(L);
+  LUASCRIPT_CHECK_ARG_NIL(L, punit, 2, Unit);
+  LUASCRIPT_CHECK_ARG_NIL(L, pnationality, 3, Player);
+  unit_nationality_set(punit, pnationality);
+}
+
+/**
+ * Set remaining unit move fragments to 'moves_left', and send unit info.
+ */
+void api_edit_unit_moves_left_set(lua_State *L, Unit *punit, int moves_left)
+{
+  LUASCRIPT_CHECK_STATE(L);
+  LUASCRIPT_CHECK_ARG_NIL(L, punit, 2, Unit);
+  LUASCRIPT_CHECK_ARG(L, moves_left >= 0, 3,
+                      "The moves_left amount cannot be negative");
+  unit_moves_left_set(punit, moves_left);
+}
+
+/**
+ * Set unit veteran level to 'veteran', and send unit info.
+ */
+void api_edit_unit_veteran_level_set(lua_State *L, Unit *punit, int veteran)
+{
+  LUASCRIPT_CHECK_STATE(L);
+  LUASCRIPT_CHECK_ARG_NIL(L, punit, 2, Unit);
+  LUASCRIPT_CHECK_ARG(L, veteran >= 0, 3,
+                      "The veteran level cannot be negative");
+  LUASCRIPT_CHECK_ARG(
+      L, veteran < utype_veteran_levels(unit_type_get(punit)), 3,
+      "The veteran level cannot exceed the max for its type");
+  unit_veteran_level_set(punit, veteran);
+}
+
+/**
+ * Set unit fuel level to 'fuel', and send unit info.
+ */
+void api_edit_unit_fuel_set(lua_State *L, Unit *punit, int fuel)
+{
+  LUASCRIPT_CHECK_STATE(L);
+  LUASCRIPT_CHECK_ARG_NIL(L, punit, 2, Unit);
+  LUASCRIPT_CHECK_ARG(L, fuel >= 0, 3, "The fuel level cannot be negative");
+  LUASCRIPT_CHECK_ARG(L, fuel <= utype_fuel(unit_type_get(punit)), 3,
+                      "The fuel level cannot exceed the max for its type");
+  unit_fuel_set(punit, fuel);
+}
+
+/**
    Change terrain on tile
  */
 bool api_edit_change_terrain(lua_State *L, Tile *ptile, Terrain *pterr)

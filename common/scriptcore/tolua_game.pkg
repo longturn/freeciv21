@@ -51,6 +51,12 @@ struct Connection {
 struct Unit {
   Unit_Type *utype;
   Player *owner;
+  Player *nationality;
+  int moves_left;
+  int hp;
+  int veteran;
+  int fuel;
+  int activity_count;
 
   /* This used to be @ homecity_id, but it does not work with toluaxx. */
   int homecity;
@@ -83,7 +89,28 @@ struct Building_Type {
 struct Unit_Type {
   int build_cost;
   int pop_cost;
+  int move_rate;
+  int vision_radius_sq;
   int hp;
+  int firepower;
+  int bombard_rate;
+  int fuel;
+  int happy_cost;
+  int paratroopers_range;
+  int city_size;
+  int city_slots;
+
+  const int item_number @ id;
+  const Unit_Class *uclass @ unit_class;
+  const int attack_strength @ attack;
+  const int defense_strength @ defense;
+  const int transport_capacity @ transport_cap;
+};
+
+struct Unit_Class {
+  int min_speed;
+  int hp_loss_pct;
+  int non_native_def_pct;
 
   const int item_number @ id;
 };
@@ -275,8 +302,16 @@ module Unit {
   module properties {
     Tile *api_methods_unit_tile_get
       @ tile(lua_State *L, Unit *self);
-    int api_methods_unit_hitpoints_get
-      @ hp(lua_State *L, Unit *self);
+    Unit_Class *api_methods_unit_class_get
+      @ unit_class(lua_State *L, Unit *self);
+    int api_methods_unit_veteran_power_fact_get
+      @ veteran_power_fact_pct(lua_State *L, Unit *self);
+    int api_methods_unit_veteran_move_bonus_get
+      @ veteran_move_bonus(lua_State *L, Unit *self);
+    const char *api_methods_unit_activity_name_get
+      @ activity_name(lua_State *L, Unit *self);
+    const char *api_methods_unit_activity_target_name_get
+      @ activity_target_name(lua_State *L, Unit *self);
   }
 
   Unit *api_methods_unit_transporter
@@ -290,6 +325,15 @@ module Unit {
     @ link_text(lua_State *L, Unit *self);
   const char *api_methods_unit_tile_link
     @ tile_link_text(lua_State *L, Unit *self);
+  
+  int api_methods_unit_upkeep_food_get
+    @ upkeep_food(lua_State *L, Unit *self);
+  int api_methods_unit_upkeep_shields_get
+    @ upkeep_shields(lua_State *L, Unit *self);
+  int api_methods_unit_upkeep_gold_get
+    @ upkeep_gold(lua_State *L, Unit *self);
+  int api_methods_unit_happy_cost_get
+    @ happy_cost(lua_State *L, Unit *self);
 }
 
 module methods_private {
@@ -312,6 +356,10 @@ end
 
 function Unit:hp_pct()
   return self.hp * 100 / self.utype.hp
+end
+
+function Unit:veteran_power_bonus()
+  return self.veteran_power_fact_pct / 100
 end
 $]
 
@@ -421,6 +469,18 @@ $]
 
 /* Module Unit_Type. */
 module Unit_Type {
+  module properties {
+    int api_methods_unit_type_upkeep_food_get
+      @ upkeep_food (lua_State *L, Unit_Type *self);
+    int api_methods_unit_type_upkeep_shields_get
+      @ upkeep_shields (lua_State *L, Unit_Type *self);
+    int api_methods_unit_type_upkeep_gold_get
+      @ upkeep_gold (lua_State *L, Unit_Type *self);
+    const char *api_methods_unit_type_vision_layer_name_get
+      @ vision_layer_name (lua_State *L, Unit_Type *self);
+    int api_methods_unit_type_veteran_level_max_get
+      @ max_veteran_level (lua_State *L, Unit_Type *self);
+  }
   bool api_methods_unit_type_has_flag
     @ has_flag (lua_State *L, Unit_Type *self, const char *flag);
   bool api_methods_unit_type_has_role
@@ -441,6 +501,16 @@ function Unit_Type:build_shield_cost()
 end
 
 $]
+
+/* Module Unit_Class. */
+module Unit_Class {
+  bool api_methods_unit_class_has_flag
+    @ has_flag (lua_State *L, Unit_Class *self, const char *flag);
+  const char *api_methods_unit_class_rule_name
+    @ rule_name (lua_State *L, Unit_Class *self);
+  const char *api_methods_unit_class_name_translation
+    @ name_translation (lua_State *L, Unit_Class *self);
+}
 
 /* Module Tech_Type. */
 module Tech_Type {
@@ -553,6 +623,10 @@ module find {
     @ unit_type (lua_State *L, int unit_type_id);
   Unit_Type *api_find_role_unit_type
     @ role_unit_type (lua_State *L, const char *role_name, Player *pplayer);
+  Unit_Class *api_find_unit_class_by_name
+    @ unit_class (lua_State *L, const char *name_orig);
+  Unit_Class *api_find_unit_class
+    @ unit_class (lua_State *L, int unit_class_id);
   Tech_Type *api_find_tech_type_by_name
     @ tech_type (lua_State *L, const char *name_orig);
   Tech_Type *api_find_tech_type
@@ -713,6 +787,16 @@ do
   -- Iterate over all teams in the game
   function find.teams_iterate()
     return index_iterate(find.team)
+  end
+
+  -- Iterate over all unit types in the game
+  function find.unit_types_iterate()
+    return index_iterate(find.unit_type)
+  end
+
+  -- Iterate over all unit classes in the game
+  function find.unit_classes_iterate()
+    return index_iterate(find.unit_class)
   end
 
   -- Iterate over all players of the game

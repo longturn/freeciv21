@@ -33,3 +33,5 @@ int api_methods_nation_trait_max(lua_State *L, Nation_Type *pnation,
                                  const char *tname);
 int api_methods_nation_trait_default(lua_State *L, Nation_Type *pnation,
                                      const char *tname);
+
+int api_methods_unit_birth_turn_get(lua_State *L, Unit *punit);
