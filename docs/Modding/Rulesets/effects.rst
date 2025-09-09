@@ -1057,12 +1057,6 @@ National_History
     Value is how much history type (cumulative) culture, not tied to any any specific city, the nation
     produces.
 
-.. _effect-infra-points:
-
-Infra_Points
-    City increases owner's infra points by value each turn. If overall points are negative after all cities
-    have been processed, they are set to 0.
-
 .. _effect-bombard-limit-pct:
 
 Bombard_Limit_Pct
