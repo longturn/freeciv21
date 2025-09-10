@@ -41,6 +41,13 @@ bool api_edit_unit_damage_hitpoints(lua_State *L, Unit *unit, int amount,
                                     const char *reason, Player *killer);
 void api_edit_unit_recover_hitpoints(lua_State *L, Unit *unit, int amount);
 void api_edit_unit_set_hitpoints(lua_State *L, Unit *unit, int amount);
+void api_edit_unit_activity_count_set(lua_State *L, Unit *punit,
+                                      int work_points);
+void api_edit_unit_nationality_set(lua_State *L, Unit *punit,
+                                   Player *pnationality);
+void api_edit_unit_moves_left_set(lua_State *L, Unit *punit, int moves_left);
+void api_edit_unit_veteran_level_set(lua_State *L, Unit *punit, int veteran);
+void api_edit_unit_fuel_set(lua_State *L, Unit *punit, int fuel);
 bool api_edit_change_terrain(lua_State *L, Tile *ptile, Terrain *pterr);
 
 void api_edit_create_city(lua_State *L, Player *pplayer, Tile *ptile,

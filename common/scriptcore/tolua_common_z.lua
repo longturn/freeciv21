@@ -32,6 +32,7 @@ do
     "Unit",
     "Unit_List_Link",
     "Unit_Type",
+    "Unit_Class",
     "Disaster",
     "Achievement",
     "Action"

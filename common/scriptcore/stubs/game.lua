@@ -72,7 +72,7 @@ function Player:shares_research(tech) end
 function Player:research_rule_name() end
 
 --- 
---- @return string name As :lua:func:`Player:research_rule_name` but translated.
+--- @return string name As :lua:obj:`Player:research_rule_name` but translated.
 function Player:research_name_translation() end
 
 --- 
@@ -85,7 +85,7 @@ function Player:culture() end
 ---    * - Flag
 ---      - Description
 ---    * - "ai"
----      - Same as :lua:func:`~Player:ai_controlled`.
+---      - Same as :lua:obj:`~Player:ai_controlled`.
 ---    * - "ScenarioReserved"
 ---      - Not listed on game starting screen.
 ---
@@ -105,12 +105,12 @@ function Player:exists()
   return true
 end
 
---- Safe iteration over each :lua:class:`Unit` that belongs to a :lua:class:`Player`.
+--- Safe iteration over each :lua:obj:`Unit` that belongs to a :lua:obj:`Player`.
 function Player:units_iterate()
   return safe_iterate_list(private.Player.unit_list_head(self))
 end
 
---- Safe iteration over each :lua:class:`City` that belongs to a :lua:class:`Player`.
+--- Safe iteration over each :lua:obj:`City` that belongs to a :lua:obj:`Player`.
 function Player:cities_iterate()
   return safe_iterate_list(private.Player.city_list_head(self))
 end
@@ -122,7 +122,7 @@ end
 --- @field name string The name of the team
 Team = {}
 
---- Safe iteration over each :lua:class:`Player` in the team.
+--- Safe iteration over each :lua:obj:`Player` in the team.
 function Team:members_iterate() end
 
 --- Represents a city on the world map.
@@ -148,7 +148,7 @@ function City:map_sq_radius() end
 --- Returns whether the city would produce partisans if conquered from player
 --- inspirer, taking into account original owner, nationality, and the
 --- :ref:`Inspire_Partisans <effect-inspire-partisans>` effect.
---- The default :lua:func:`_deflua_make_partisans_callback` handler treats the
+--- The default :lua:obj:`_deflua_make_partisans_callback` handler treats the
 --- return from this as boolean (greater than zero gives partisans), but a
 --- custom handler and ruleset could give different behaviour with different
 --- values of the 'Inspire_Partisans' effect.
@@ -198,10 +198,19 @@ Connection = {}
 ---
 --- @class Unit
 --- @field utype Unit_Type The type of unit this is.
+--- @field unit_class Unit_Class The class of this unit.
 --- @field owner Player The player who owns the unit.
 --- @field id int The unique ID for this unit.
 --- @field tile Tile The tile the unit is currently on.
 --- @field hp int The number of hitpoints the unit currently has left.
+--- @field activity_name string The activity that the unit is currently performing.
+--- @field activity_count int The number of work points that have been put into the current activity.
+--- @field activity_target_name string The extra that is currently under construction, or nil.
+--- @field nationality Player The nationality of the people in the unit.
+--- @field moves_left int The number of move fragments remaining.
+--- @field veteran int The veterancy level of the unit.
+--- @field veteran_move_bonus int The additional move (and work) points granted by the unit's veterancy level.
+--- @field fuel int The amount of fuel remaining.
 Unit = {}
 
 --- 
@@ -218,7 +227,7 @@ function Unit:facing() end
 
 --- .. attention::
 ---    Warning: If unit is going to be removed, you must use 
----    :lua:func:`Unit:tile_link_text` instead.
+---    :lua:obj:`Unit:tile_link_text` instead.
 ---
 --- @return string link-text Link string fragment to add to messages sent to client.
 function Unit:link_text() end
@@ -251,6 +260,26 @@ end
 function Unit:cargo_iterate()
   return safe_iterate_list(private.Unit.cargo_list_head(self))
 end
+
+---
+--- @return Number power The multiplier to attack and defense power granted by the unit's veterancy level.
+function Unit:veteran_power_bonus() end
+
+---
+--- @return int food The total amount of food consumed per turn in the home city.
+function Unit:upkeep_food() end
+
+---
+--- @return int shields The total amount of shields consumed per turn in the home city.
+function Unit:upkeep_shields() end
+
+---
+--- @return int gold The total amount of gold consumed per turn.
+function Unit:upkeep_gold() end
+
+---
+--- @return int citizens The total amount of unhappiness caused in the home city.
+function Unit:happy_cost() end
 
 --- Represents a tile on the world map.
 ---
@@ -299,7 +328,7 @@ function Tile:has_road(name) end
 --- The primary tile resource persists even if the terrain is changed to an
 --- incompatible type, and can be recovered if the terrain is changed back.
 --- This will report the name of the hidden resource in this case. Whereas
---- :lua:func:`~Tile:has_extra` will only report whether the resource is
+--- :lua:obj:`~Tile:has_extra` will only report whether the resource is
 --- currently visible.
 --- @return string name The ruleset name of the primary tile resource, or nil.
 function Tile:primary_resource_name() end
@@ -318,7 +347,7 @@ function Tile:num_units() end
 --- @return int dist The squared distance between these two tiles.
 function Tile:sq_distance(other) end
 
---- Safe iteration over each :lua:class:`Unit` on the tile.
+--- Safe iteration over each :lua:obj:`Unit` on the tile.
 function Tile:units_iterate()
   return safe_iterate_list(private.Tile.unit_list_head(self))
 end
@@ -415,10 +444,28 @@ end
 --- Represents a type of unit available in this ruleset.
 ---
 --- @class Unit_Type
+--- @field id int The unique ID of the unit type.
+--- @field unit_class Unit_Class The class of this unit type.
 --- @field build_cost int The number of shields required to make.
 --- @field pop_cost int The number of citizens consumed to make.
+--- @field attack int Base attack strength (0 = cannot attack.)
+--- @field defense int Base defence strength (0 = cannot defend.)
 --- @field hp int The maximum number of hitpoints.
---- @field id int The unique ID of the unit type.
+--- @field firepower int Number of enemy hitpoints removed per successful round of combat.
+--- @field bombard_rate int The number of rounds of bombardment.
+--- @field move_rate int The base number of move fragments that can be employed each turn.
+--- @field max_veteran_level int The maximum veteran level that units of this type can achieve.
+--- @field vision_radius_sq int The base squared vision radius.
+--- @field transport_cap int The number of passengers that can be held at once.
+--- @field fuel int The maximum fuel that can be held.
+--- @field paratroopers_range int The maximum range of a paradrop.
+--- @field upkeep_food int The base amount of food consumed per turn in the home city.
+--- @field upkeep_shields int The base amount of shields consumed per turn in the home city.
+--- @field upkeep_gold int The base amount of gold consumed per turn.
+--- @field happy_cost int The base amount of unhappiness caused in the home city.
+--- @field city_slots int The number of unit maintenance slots taken up in the home city.
+--- @field city_size int The initial number of citizens provided when founding a city.
+--- @field vision_layer_name string The layer at which this unit is visible. Can be "Main", "Stealth", or "Subsurface".
 Unit_Type = {}
 
 --- 
@@ -449,6 +496,28 @@ function Unit_Type:can_exist_at_tile(tile) end
 function Unit_Type:build_shield_cost()
   return self.build_cost
 end
+
+--- Represents a class of unit types.
+---
+--- @class Unit_Class
+--- @field id int The unique ID of the unit class.
+--- @field min_speed int The minimum speed that units of this class can move at.
+--- @field hp_loss_pct int The percentage of hitpoints lost each turn that the unit is not in a city or airbase.
+--- @field non_native_def_pct int Defense power multiplier percentage when defending on non-native terrain (such as ship in harbour.)
+Unit_Class = {}
+
+--- 
+--- @return string name The name given by the ruleset.
+function Unit_Class:rule_name() end
+
+--- 
+--- @return string name The localised translation of the name.
+function Unit_Class:name_translation() end
+
+--- 
+--- @param flag_name string The name of the unit class flag to check for.
+--- @return boolean present True, if this unit class has the given flag.
+function Unit_Class:has_flag(flag_name) end
 
 --- Represents a technological or cultural advance that a nation can research.
 ---
@@ -572,7 +641,7 @@ function find.player(player_id_or_name) end
 --- @return Team team The team with the given ID or name if they exist, or nil.
 function find.team(team_id_or_name) end
 
---- Safe iteration over each :lua:class:`Team` in the game.
+--- Safe iteration over each :lua:obj:`Team` in the game.
 function find.teams_iterate() end
 
 --- 
@@ -661,6 +730,22 @@ function find.unit_type(name) end
 --- @param unit_type_id int The ID of the unit type.
 --- @return Unit_Type unit_type The found unit type.
 function find.unit_type(unit_type_id) end
+
+--- Safe iteration over each :lua:obj:`Unit_Type` in the game.
+function find.unit_types_iterate() end
+
+--- Finds a unit class by its name.
+--- @param name string The ruleset name of the unit class.
+--- @return Unit_Class unit-class The found unit class.
+function find.unit_class(name) end
+
+--- Finds a unit class by its ID.
+--- @param unit_class_id int The ID of the unit class.
+--- @return Unit_Class unit-class The found unit class.
+function find.unit_class(unit_class_id) end
+
+--- Safe iteration over each :lua:obj:`Unit_Class` in the game.
+function find.unit_classes_iterate() end
 
 --- If player is not nil, role_unit_type returns the best suitable unit this
 --- player can build. If player is nil, returns first unit for that role.

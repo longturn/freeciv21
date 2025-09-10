@@ -45,6 +45,7 @@ typedef struct government Government;
 typedef struct nation_type Nation_Type;
 typedef struct impr_type Building_Type;
 typedef struct unit_type Unit_Type;
+typedef struct unit_class Unit_Class;
 typedef struct advance Tech_Type;
 typedef struct terrain Terrain;
 typedef struct connection Connection;
@@ -102,6 +103,8 @@ typedef const struct player_list_link Player_List_Link;
 #define SPECENUM_VALUE17NAME "Action"
 #define SPECENUM_VALUE18 API_TYPE_TEAM
 #define SPECENUM_VALUE18NAME "Team"
+#define SPECENUM_VALUE19 API_TYPE_UNIT_CLASS
+#define SPECENUM_VALUE19NAME "Unit_Class"
 #include "specenum_gen.h"
 
 // Define compatibility functions to translate between tolua and sol2. See:

@@ -2024,6 +2024,15 @@ bool unit_is_alive(int id)
 }
 
 /**
+ * Get the veteran level of the unit.
+ */
+const veteran_level *unit_veteran_level(const struct unit *punit)
+{
+  fc_assert_ret_val(punit != nullptr, nullptr);
+  return utype_veteran_level(unit_type_get(punit), punit->veteran);
+}
+
+/**
    Return TRUE if this is a valid unit pointer but does not correspond to
    any unit that exists in the game.
 

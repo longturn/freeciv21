@@ -267,6 +267,27 @@ Unit_Type *api_find_unit_type_by_name(lua_State *L, const char *name_orig)
 }
 
 /**
+ * Return the unit class with the given unit_class_id index.
+ */
+Unit_Class *api_find_unit_class(lua_State *L, int unit_class_id)
+{
+  LUASCRIPT_CHECK_STATE(L, nullptr);
+
+  return uclass_by_number(unit_class_id);
+}
+
+/**
+ * Return the unit class with the given name_orig.
+ */
+Unit_Class *api_find_unit_class_by_name(lua_State *L, const char *name_orig)
+{
+  LUASCRIPT_CHECK_STATE(L, nullptr);
+  LUASCRIPT_CHECK_ARG_NIL(L, name_orig, 2, string, nullptr);
+
+  return unit_class_by_rule_name(name_orig);
+}
+
+/**
    Return the tech type with the given tech_type_id index.
  */
 Tech_Type *api_find_tech_type(lua_State *L, int tech_type_id)

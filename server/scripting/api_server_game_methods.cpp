@@ -137,3 +137,13 @@ int api_methods_nation_trait_default(lua_State *L, Nation_Type *pnation,
 
   return pnation->server.traits[tr].fixed;
 }
+
+/**
+ * Return the turn number that the given Unit was created.
+ */
+int api_methods_unit_birth_turn_get(lua_State *L, Unit *punit)
+{
+  LUASCRIPT_CHECK_STATE(L, -1);
+  LUASCRIPT_CHECK_SELF(L, punit, -1);
+  return punit->server.birth_turn;
+}

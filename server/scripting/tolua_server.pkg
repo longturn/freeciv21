@@ -123,6 +123,17 @@ module edit {
     @ unit_recover_hp(lua_State *L, Unit *unit, int amount);
   void api_edit_unit_set_hitpoints
     @ unit_set_hp(lua_State *L, Unit *unit, int amount);
+  void api_edit_unit_activity_count_set
+    @ unit_activity_count_set(lua_State *L, Unit *unit, int work_points);
+  void api_edit_unit_nationality_set
+    @ unit_nationality_set(lua_State *L, Unit *unit, Player *nationality);
+  void api_edit_unit_moves_left_set
+    @ unit_moves_left_set(lua_State *L, Unit *unit, int moves_left);
+  void api_edit_unit_veteran_level_set
+    @ unit_veteran_level_set(lua_State *L, Unit *unit, int veteran);
+  void api_edit_unit_fuel_set
+    @ unit_fuel_set(lua_State *L, Unit *unit, int fuel);
+
   bool api_edit_change_terrain
     @ change_terrain(lua_State *L, Tile *ptile, Terrain *pterr);
   void api_edit_create_city
@@ -397,6 +408,48 @@ function Unit:movement_allow()
   edit.movement_allow(self)
 end
 
+function Unit:activity_count_set(work_points)
+  edit.unit_activity_count_set(self, work_points)
+end
+
+function Unit:activity_count_add(work_points)
+  self:activity_count_set(self.activity_count + work_points)
+end
+
+function Unit:nationality_set(nationality)
+  edit.unit_nationality_set(self, nationality)
+end
+
+function Unit:moves_left_set(moves_left)
+  edit.unit_moves_left_set(self, moves_left)
+end
+
+function Unit:moves_left_add(moves_left)
+  self:moves_left_set(math.max(0, self.moves_left + moves_left))
+end
+
+function Unit:veteran_level_set(veteran)
+  edit.unit_veteran_level_set(self, veteran)
+end
+
+function Unit:veteran_level_add(amount)
+  local max = self.utype.max_veteran_level
+  local total = math.min(max, math.max(0, self.veteran + amount))
+  if self.veteran == total then return false end
+  self:veteran_level_set(total)
+end
+
+function Unit:fuel_set(fuel)
+  edit.unit_fuel_set(self, fuel)
+end
+
+function Unit:fuel_add(amount)
+  local max = self.utype.fuel
+  local total = math.min(max, math.max(0, self.fuel + amount))
+  if self.fuel == total then return false end
+  self:fuel_set(total)
+end
+
 -- Server functions for Tile module
 function Tile:create_owned_extra(name, player)
   edit.create_owned_extra(self, name, player)
@@ -465,4 +518,10 @@ module Nation_Type {
   int api_methods_nation_trait_default
     @ trait_default (lua_State *L, Nation_Type *pnation,
                      const char *tname);
+}
+
+/* Additions to common Unit module. */
+module Unit {
+  int api_methods_unit_birth_turn_get
+    @ birth_turn(lua_State *L, Unit *self);
 }
