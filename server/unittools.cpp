@@ -1788,7 +1788,7 @@ void transform_unit(struct unit *punit, const struct unit_type *to_unit,
   unit_forget_last_activity(punit);
 
   // update unit upkeep
-  city_units_upkeep(game_city_by_number(punit->homecity));
+  unit_upkeep_update(punit);
 
   conn_list_do_buffer(pplayer->connections);
 
@@ -1906,8 +1906,7 @@ struct unit *create_unit_full(struct player *pplayer, struct tile *ptile,
   maybe_make_contact(ptile, unit_owner(punit));
   wakeup_neighbor_sentries(punit);
 
-  // update unit upkeep
-  city_units_upkeep(game_city_by_number(homecity_id));
+  unit_upkeep_update(punit);
 
   // The unit may have changed the available tiles in nearby cities.
   city_map_update_tile_now(ptile);
@@ -1919,6 +1918,21 @@ struct unit *create_unit_full(struct player *pplayer, struct tile *ptile,
   CALL_PLR_AI_FUNC(unit_got, pplayer, punit);
 
   return punit;
+}
+
+/**
+ * Update the upkeep for a unit's home city or the player's homeless units,
+ * if the unit is unhomed, sending unit info to clients if it has changed.
+ */
+void unit_upkeep_update(struct unit *punit)
+{
+  fc_assert(punit != nullptr);
+  struct city *pcity = unit_home(punit);
+  if (pcity) {
+    city_units_upkeep(pcity);
+  } else {
+    player_update_homeless_unit_gold_upkeep(unit_owner(punit));
+  }
 }
 
 /**
@@ -2434,16 +2448,6 @@ struct unit *unit_change_owner(struct unit *punit, struct player *pplayer,
   }
 
   send_unit_info(nullptr, gained_unit);
-
-  // update unit upkeep in the homecity of the victim
-  if (punit->homecity > 0) {
-    // update unit upkeep
-    city_units_upkeep(game_city_by_number(punit->homecity));
-  }
-  // update unit upkeep in the new homecity
-  if (homecity > 0) {
-    city_units_upkeep(game_city_by_number(homecity));
-  }
 
   // Be sure to wipe the converted unit!
   wipe_unit(punit, reason, nullptr);

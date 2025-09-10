@@ -340,6 +340,7 @@ const QString unit_activity_text(const struct unit *punit);
 int get_transporter_capacity(const struct unit *punit);
 
 #define unit_home(_pu_) (game_city_by_number((_pu_)->homecity))
+#define unit_is_homeless(_pu_) ((_pu_)->homecity == IDENTITY_NUMBER_ZERO)
 #define unit_owner(_pu) ((_pu)->owner)
 #define unit_tile(_pu) ((_pu)->tile)
 struct player *unit_nationality(const struct unit *punit);

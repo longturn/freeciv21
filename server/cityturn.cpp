@@ -125,6 +125,9 @@ static citizens city_reduce_workers(struct city *pcity, citizens change);
 
 static bool city_balance_treasury_buildings(struct city *pcity);
 static bool city_balance_treasury_units(struct city *pcity);
+static void
+player_save_homeless_unit_gold_upkeep_paid(struct player *pplayer);
+static bool player_balance_treasury_homeless_units(struct player *pplayer);
 static bool
 player_balance_treasury_units_and_buildings(struct player *pplayer);
 static bool player_balance_treasury_units(struct player *pplayer);
@@ -600,11 +603,11 @@ void update_city_activities(struct player *pplayer)
   gold = pplayer->economic.gold;
   pplayer->server.bulbs_last_turn = 0;
 
+  int nation_unit_upkeep = 0;
+  int nation_impr_upkeep = 0;
   if (n > 0) {
     struct city *cities[n];
     int i = 0, r;
-    int nation_unit_upkeep = 0;
-    int nation_impr_upkeep = 0;
 
     city_list_iterate(pplayer->cities, pcity)
     {
@@ -671,46 +674,62 @@ void update_city_activities(struct player *pplayer)
       update_city_activity(cities[r]);
       cities[r] = cities[--i];
     }
-
-    /* How gold upkeep is handled depends on the setting
-     * 'game.info.gold_upkeep_style':
-     * GOLD_UPKEEP_CITY: Each city tries to balance its upkeep individually
-     *                   (this is done in update_city_activity()).
-     * GOLD_UPKEEP_MIXED: Each city tries to balance its upkeep for
-     *                    buildings individually; the upkeep for units is
-     *                    paid by the nation.
-     * GOLD_UPKEEP_NATION: The nation as a whole balances the treasury. If
-     *                     the treasury is not balance units and buildings
-     *                     are sold. */
-
-    if (pplayer->economic.infra_points < 0) {
-      pplayer->economic.infra_points = 0;
-    }
-
-    switch (game.info.gold_upkeep_style) {
-    case GOLD_UPKEEP_CITY:
-      /* Cities already handled all upkeep costs. */
-      break;
-    case GOLD_UPKEEP_MIXED:
-      // Nation pays for units.
-      pplayer->economic.gold -= nation_unit_upkeep;
-      if (pplayer->economic.gold < 0) {
-        player_balance_treasury_units(pplayer);
-      }
-      break;
-    case GOLD_UPKEEP_NATION:
-      // Nation pays for units and buildings.
-      pplayer->economic.gold -= nation_unit_upkeep;
-      pplayer->economic.gold -= nation_impr_upkeep;
-      if (pplayer->economic.gold < 0) {
-        player_balance_treasury_units_and_buildings(pplayer);
-      }
-      break;
-    }
-
-    // Should not happen.
-    fc_assert(pplayer->economic.gold >= 0);
   }
+
+  /* How gold upkeep is handled depends on the setting
+   * 'game.info.gold_upkeep_style':
+   * GOLD_UPKEEP_CITY: Each city tries to balance its upkeep individually
+   *                   (this is done in update_city_activity()).
+   * GOLD_UPKEEP_MIXED: Each city tries to balance its upkeep for
+   *                    buildings individually; the upkeep for units is
+   *                    paid by the nation.
+   * GOLD_UPKEEP_NATION: The nation as a whole balances the treasury. If
+   *                     the treasury is not balance units and buildings
+   *                     are sold. */
+
+  if (pplayer->economic.infra_points < 0) {
+    pplayer->economic.infra_points = 0;
+  }
+
+  if (game.server.homeless_gold_upkeep) {
+    log_debug("homeless_gold_upkeep: [%s] Homeless Gold Upkeep is enabled",
+              player_name(pplayer));
+    player_update_homeless_unit_gold_upkeep(pplayer);
+    pplayer->economic.gold -=
+        player_total_homeless_unit_gold_upkeep(pplayer);
+    player_save_homeless_unit_gold_upkeep_paid(pplayer);
+  } else {
+    log_debug("homeless_gold_upkeep: [%s] Homeless Gold Upkeep is disabled",
+              player_name(pplayer));
+  }
+
+  switch (game.info.gold_upkeep_style) {
+  case GOLD_UPKEEP_CITY:
+    // Cities already handled their own upkeep costs.
+    // Nation pays for homeless units only.
+    if (game.server.homeless_gold_upkeep && pplayer->economic.gold < 0) {
+      player_balance_treasury_homeless_units(pplayer);
+    }
+    break;
+  case GOLD_UPKEEP_MIXED:
+    // Nation pays for units.
+    pplayer->economic.gold -= nation_unit_upkeep;
+    if (pplayer->economic.gold < 0) {
+      player_balance_treasury_units(pplayer);
+    }
+    break;
+  case GOLD_UPKEEP_NATION:
+    // Nation pays for units and buildings.
+    pplayer->economic.gold -= nation_unit_upkeep;
+    pplayer->economic.gold -= nation_impr_upkeep;
+    if (pplayer->economic.gold < 0) {
+      player_balance_treasury_units_and_buildings(pplayer);
+    }
+    break;
+  }
+
+  // Should not happen.
+  fc_assert(pplayer->economic.gold >= 0);
 
   /* This test includes the cost of the units because
    * units are paid for in update_city_activity() or
@@ -2873,8 +2892,21 @@ static struct unit *sell_random_unit(struct player *pplayer,
   return punit;
 }
 
+static void
+player_save_homeless_unit_gold_upkeep_paid(struct player *pplayer)
+{
+  // Remember how much gold upkeep each homeless unit was paid.
+  unit_list_iterate(pplayer->units, punit)
+  {
+    if (unit_is_homeless(punit)) {
+      punit->server.upkeep_payed[O_GOLD] = punit->upkeep[O_GOLD];
+    }
+  }
+  unit_list_iterate_end;
+}
+
 /**
-   Balance the gold of a nation by selling some random units and buildings.
+ * Balance the gold of a nation by selling some random units and buildings.
  */
 static bool
 player_balance_treasury_units_and_buildings(struct player *pplayer)
@@ -2902,16 +2934,16 @@ player_balance_treasury_units_and_buildings(struct player *pplayer)
       }
     }
     city_built_iterate_end;
-
-    unit_list_iterate(pcity->units_supported, punit)
-    {
-      if (punit->server.upkeep_payed[O_GOLD] > 0) {
-        uk_rem_gold_append(punit);
-      }
-    }
-    unit_list_iterate_end;
   }
   city_list_iterate_end;
+
+  unit_list_iterate(pplayer->units, punit)
+  {
+    if (punit->server.upkeep_payed[O_GOLD] > 0) {
+      uk_rem_gold_append(punit);
+    }
+  }
+  unit_list_iterate_end;
 
   while (pplayer->economic.gold < 0
          && (cityimpr_list_size(pimprlist) > 0
@@ -2947,27 +2979,56 @@ player_balance_treasury_units_and_buildings(struct player *pplayer)
 }
 
 /**
-   Balance the gold of a nation by selling some units which need gold upkeep.
+ * Balance the gold of a nation by selling some homeless units which need
+ * gold upkeep.
  */
-static bool player_balance_treasury_units(struct player *pplayer)
+static bool player_balance_treasury_homeless_units(struct player *pplayer)
 {
-  if (!pplayer) {
-    return false;
-  }
+  fc_assert_ret_val(pplayer != nullptr, false);
 
   uk_rem_gold = unit_list_new();
 
-  city_list_iterate(pplayer->cities, pcity)
+  unit_list_iterate(pplayer->units, punit)
   {
-    unit_list_iterate(pcity->units_supported, punit)
-    {
-      if (punit->server.upkeep_payed[O_GOLD] > 0) {
-        uk_rem_gold_append(punit);
-      }
+    if (punit->server.upkeep_payed[O_GOLD] > 0) {
+      uk_rem_gold_append(punit);
     }
-    unit_list_iterate_end;
   }
-  city_list_iterate_end;
+  unit_list_iterate_end;
+
+  while (pplayer->economic.gold < 0
+         && sell_random_unit(pplayer, uk_rem_gold)) {
+    // all done in sell_random_unit()
+  }
+
+  if (pplayer->economic.gold < 0) {
+    /* If we get here it means the player has
+     * negative gold. This should never happen. */
+    fc_assert_msg(false, "Player %s (nb %d) cannot have negative gold!",
+                  player_name(pplayer), player_number(pplayer));
+  }
+
+  unit_list_referred_destroy(uk_rem_gold);
+
+  return pplayer->economic.gold >= 0;
+}
+
+/**
+ * Balance the gold of a nation by selling some units which need gold upkeep.
+ */
+static bool player_balance_treasury_units(struct player *pplayer)
+{
+  fc_assert_ret_val(pplayer != nullptr, false);
+
+  uk_rem_gold = unit_list_new();
+
+  unit_list_iterate(pplayer->units, punit)
+  {
+    if (punit->server.upkeep_payed[O_GOLD] > 0) {
+      uk_rem_gold_append(punit);
+    }
+  }
+  unit_list_iterate_end;
 
   while (pplayer->economic.gold < 0
          && sell_random_unit(pplayer, uk_rem_gold)) {

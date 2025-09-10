@@ -1991,6 +1991,41 @@ struct player_economic player_limit_to_max_rates(struct player *pplayer)
 }
 
 /**
+ * Update all of a player's homeless unit gold upkeep costs and transmits any
+ * changes to clients.
+ */
+void player_update_homeless_unit_gold_upkeep(struct player *pplayer)
+{
+  log_debug("homeless_gold_upkeep: [%s] "
+            "Updating homeless unit gold upkeep costs",
+            player_name(pplayer));
+  // save the upkeep for the player's homeless units in the corresponding
+  // punit struct
+  unit_list_iterate(pplayer->units, punit)
+  {
+    if (unit_is_homeless(punit)) {
+      int cost = utype_upkeep_cost(unit_type_get(punit), pplayer, O_GOLD);
+      log_debug("homeless_gold_upkeep: [%s] "
+                "%s #%d is homeless and costs %d",
+                player_name(pplayer), unit_rule_name(punit), punit->id,
+                cost);
+      if (cost != punit->upkeep[O_GOLD]) {
+        log_debug("homeless_gold_upkeep: [%s] "
+                  "Changed from %d to %d, updating.",
+                  player_name(pplayer), punit->upkeep[O_GOLD], cost);
+        punit->upkeep[O_GOLD] = cost;
+        // Update unit information to the player and global observers.
+        send_unit_info(nullptr, punit);
+      }
+    }
+  }
+  unit_list_iterate_end;
+  log_debug("homeless_gold_upkeep: [%s] "
+            "Updated homeless unit gold upkeep costs",
+            player_name(pplayer));
+}
+
+/**
    Check if this name is allowed for the player. Fill out the error message
    (a translated string to be sent to the client) if not.
  */

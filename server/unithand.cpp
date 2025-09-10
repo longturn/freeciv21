@@ -3248,6 +3248,8 @@ bool unit_perform_action(struct player *pplayer, const int actor_id,
 void unit_change_homecity_handling(struct unit *punit,
                                    struct city *new_pcity, bool rehome)
 {
+  fc_assert_ret(nullptr != punit);
+  fc_assert_ret(nullptr != new_pcity);
   struct city *old_pcity = game_city_by_number(punit->homecity);
   struct player *old_owner = unit_owner(punit);
   struct player *new_owner = city_owner(new_pcity);
@@ -3306,6 +3308,8 @@ void unit_change_homecity_handling(struct unit *punit,
       unit_list_remove(old_pcity->units_supported, punit);
       // update unit upkeep
       city_units_upkeep(old_pcity);
+    } else {
+      player_update_homeless_unit_gold_upkeep(old_owner);
     }
 
     unit_list_prepend(new_pcity->units_supported, punit);

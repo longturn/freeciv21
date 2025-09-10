@@ -664,12 +664,9 @@ std::vector<unit_view_entry> get_units_view_data()
               client_has_player()
               && nullptr != can_upgrade_unittype(client_player(), unittype);
 
-          // Only units with a home city have upkeep
-          if (punit->homecity != 0) {
-            gold_cost += punit->upkeep[O_GOLD];
-            food_cost += punit->upkeep[O_FOOD];
-            shield_cost += punit->upkeep[O_SHIELD];
-          }
+          gold_cost += punit->upkeep[O_GOLD];
+          food_cost += punit->upkeep[O_FOOD];
+          shield_cost += punit->upkeep[O_SHIELD];
         }
       }
       unit_list_iterate_end;

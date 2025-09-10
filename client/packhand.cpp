@@ -1790,10 +1790,10 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
         unit_list_prepend(hcity->units_supported, punit);
         repaint_city = true;
       }
-
-      // This can change total upkeep figures
-      need_units_report_update = true;
     }
+
+    // This can change total upkeep figures
+    need_units_report_update = true;
 
     if (punit->name != packet_unit->name) {
       // Name changed
@@ -1971,6 +1971,7 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
     }
 
     need_units_report_update = true;
+    need_economy_report_update = true;
   } /*** End of Create new unit ***/
 
   fc_assert_ret_val(punit != nullptr, ret);
