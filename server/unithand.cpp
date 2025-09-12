@@ -130,9 +130,11 @@ static bool unit_do_help_build(struct player *pplayer, struct unit *punit,
                                const struct action *paction);
 static bool unit_bombard(struct unit *punit, struct tile *ptile,
                          const struct action *paction);
-static void notify_defender_lost_in_bombardment(struct unit *pdefender,
+static void notify_defender_lost_in_bombardment(const struct action *paction,
+                                                struct unit *pdefender,
                                                 struct unit *pbombarder);
-static void notify_unit_killed_in_bombardment(struct unit *pbombarder,
+static void notify_unit_killed_in_bombardment(const struct action *paction,
+                                              struct unit *pbombarder,
                                               struct unit *pdefender);
 static bool unit_nuke(struct player *pplayer, struct unit *punit,
                       struct tile *def_tile, const struct action *paction);
@@ -3746,7 +3748,7 @@ static bool unit_bombard(struct unit *punit, struct tile *ptile,
          * defenders when bombarding */
       }
 
-      unit_bombs_unit(punit, pdefender, &att_hp, &def_hp);
+      unit_bombs_unit(paction, punit, pdefender, &att_hp, &def_hp);
 
       players_to_notify.insert(unit_owner(pdefender));
 
@@ -3757,9 +3759,9 @@ static bool unit_bombard(struct unit *punit, struct tile *ptile,
       const char *pdef_link;
       if (def_hp <= 0) { // Defender died in the bombardment
         pdef_link = unit_tile_link(pdefender);
-        notify_defender_lost_in_bombardment(pdefender, punit);
+        notify_defender_lost_in_bombardment(paction, pdefender, punit);
         if (can_player_see_unit(unit_owner(punit), pdefender)) {
-          notify_unit_killed_in_bombardment(punit, pdefender);
+          notify_unit_killed_in_bombardment(paction, punit, pdefender);
         }
         wipe_unit(pdefender, ULR_KILLED, unit_owner(punit));
       } else { // Defender survived
@@ -3820,11 +3822,12 @@ static bool unit_bombard(struct unit *punit, struct tile *ptile,
    This must be done before the defender is wiped. It is assumed that all
    necessary checks have been completed before calling this function.
  */
-static void notify_defender_lost_in_bombardment(struct unit *pdefender,
+static void notify_defender_lost_in_bombardment(const struct action *action,
+                                                struct unit *pdefender,
                                                 struct unit *pbombarder)
 {
-  auto def_power = get_total_defense_power(pbombarder, pdefender);
-  auto att_power = get_total_attack_power(pbombarder, pdefender);
+  auto def_power = get_total_defense_power(action, pbombarder, pdefender);
+  auto att_power = get_total_attack_power(action, pbombarder, pdefender);
   int attacker_fp;
   int defender_fp;
   get_modified_firepower(pbombarder, pdefender, &attacker_fp, &defender_fp);
@@ -3851,11 +3854,12 @@ static void notify_defender_lost_in_bombardment(struct unit *pdefender,
    that all necessary checks have been completed before calling this
    function.
  */
-static void notify_unit_killed_in_bombardment(struct unit *pbombarder,
+static void notify_unit_killed_in_bombardment(const struct action *action,
+                                              struct unit *pbombarder,
                                               struct unit *pdefender)
 {
-  auto def_power = get_total_defense_power(pbombarder, pdefender);
-  auto att_power = get_total_attack_power(pbombarder, pdefender);
+  auto def_power = get_total_defense_power(action, pbombarder, pdefender);
+  auto att_power = get_total_attack_power(action, pbombarder, pdefender);
   int attacker_fp;
   int defender_fp;
   get_modified_firepower(pbombarder, pdefender, &attacker_fp, &defender_fp);
@@ -4057,8 +4061,8 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
 
   att_hp_start = punit->hp;
   def_hp_start = pdefender->hp;
-  def_power = get_total_defense_power(punit, pdefender);
-  att_power = get_total_attack_power(punit, pdefender);
+  def_power = get_total_defense_power(paction, punit, pdefender);
+  att_power = get_total_attack_power(paction, punit, pdefender);
   get_modified_firepower(punit, pdefender, &att_fp, &def_fp);
 
   log_debug("Start attack: %s %s against %s %s.",
@@ -4105,7 +4109,7 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
   /* Record tired attack string before attack */
   sz_strlcpy(attacker_tired, unit_tired_attack_string(punit));
 
-  unit_versus_unit(punit, pdefender, &att_hp, &def_hp);
+  unit_versus_unit(paction, punit, pdefender, &att_hp, &def_hp);
 
   if ((att_hp <= 0 || utype_is_consumed_by_action(paction, punit->utype))
       && unit_transported(punit)) {
