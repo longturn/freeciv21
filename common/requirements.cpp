@@ -3183,33 +3183,28 @@ bool is_req_active(const struct req_context *target_context,
 
   // Fill in some blanks that can be derived from other fields.
   if (!target_city) {
-    if (target_tile && tile_city(target_tile)) {
-      target_city = tile_city(target_tile);
-    } else if (target_tile && tile_worked(target_tile)) {
-      target_city = tile_worked(target_tile);
-    } else if (target_tile && tile_claimer(target_tile)
-               && tile_city(tile_claimer(target_tile))) {
-      target_city = tile_city(tile_claimer(target_tile));
-    } else if (target_unit) {
-      target_city = unit_home(target_unit);
+    if (req_tile(target_context)) {
+      target_city = tile_city(req_tile(target_context));
+    } else if (req_unit(target_context)) {
+      target_city = tile_city(unit_tile(req_unit(target_context)));
     }
   }
 
   if (!target_tile) {
-    if (target_unit) {
-      target_tile = unit_tile(target_unit);
-    } else if (target_city) {
-      target_tile = city_tile(target_city);
+    if (req_unit(target_context)) {
+      target_tile = unit_tile(req_unit(target_context));
+    } else if (req_city(target_context)) {
+      target_tile = city_tile(req_city(target_context));
     }
   }
 
   if (!target_player) {
-    if (target_unit) {
-      target_player = unit_owner(target_unit);
-    } else if (target_city) {
-      target_player = city_owner(target_city);
-    } else if (target_tile) {
-      target_player = tile_owner(target_tile);
+    if (req_unit(target_context)) {
+      target_player = unit_owner(req_unit(target_context));
+    } else if (req_city(target_context)) {
+      target_player = city_owner(req_city(target_context));
+    } else if (req_tile(target_context)) {
+      target_player = tile_owner(req_tile(target_context));
     }
   }
 
