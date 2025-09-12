@@ -266,11 +266,11 @@ static bool maybe_become_veteran_real(struct unit *punit, bool settler)
    3) the aftermath, the loser (and potentially the stack which is below it)
       is wiped, and the winner gets a chance of gaining veteran status
  */
-void unit_versus_unit(struct unit *attacker, struct unit *defender,
-                      int *att_hp, int *def_hp)
+void unit_versus_unit(const struct action *action, struct unit *attacker,
+                      struct unit *defender, int *att_hp, int *def_hp)
 {
-  int attackpower = get_total_attack_power(attacker, defender);
-  int defensepower = get_total_defense_power(attacker, defender);
+  int attackpower = get_total_attack_power(action, attacker, defender);
+  int defensepower = get_total_defense_power(action, attacker, defender);
   int attack_firepower, defense_firepower;
   struct player *plr1 = unit_owner(attacker);
   struct player *plr2 = unit_owner(defender);
@@ -319,15 +319,15 @@ void unit_versus_unit(struct unit *attacker, struct unit *defender,
    1) ALOT of modifiers bonuses etc is added to the 2 units rates.
    2) Do rate attacks and don't kill the defender, then return.
  */
-void unit_bombs_unit(struct unit *attacker, struct unit *defender,
-                     int *att_hp, int *def_hp)
+void unit_bombs_unit(const struct action *action, struct unit *attacker,
+                     struct unit *defender, int *att_hp, int *def_hp)
 {
   int i;
   int old_def_hp, bomb_limit_hp, bomb_limit_pct;
   int rate = unit_type_get(attacker)->bombard_rate;
 
-  int attackpower = get_total_attack_power(attacker, defender);
-  int defensepower = get_total_defense_power(attacker, defender);
+  int attackpower = get_total_attack_power(action, attacker, defender);
+  int defensepower = get_total_defense_power(action, attacker, defender);
   int attack_firepower, defense_firepower;
   struct player *plr1 = unit_owner(attacker);
   struct player *plr2 = unit_owner(defender);

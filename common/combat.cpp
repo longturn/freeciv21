@@ -11,6 +11,7 @@
 #include "shared.h"
 
 // common
+#include "actions.h"
 #include "city.h"
 #include "effects.h"
 #include "fc_types.h"
@@ -398,8 +399,9 @@ void get_modified_firepower(const struct unit *attacker,
 }
 
 /**
- Returns a double in the range [0;1] indicating the attackers chance of
- winning. The calculation takes all factors into account.
+ * Returns a double in the range [0;1] indicating the attackers chance of
+ * winning. The calculation takes all factors into account. This assumes that
+ * a normal 'ACTION_ATTACK' action is to be used.
  */
 double unit_win_chance(const struct unit *attacker,
                        const struct unit *defender)
@@ -522,13 +524,25 @@ static int get_defense_power(const struct unit *punit)
 int get_total_attack_power(const struct unit *attacker,
                            const struct unit *defender)
 {
+  return get_total_attack_power(action_by_number(ACTION_ATTACK), attacker,
+                                defender);
+}
+
+/**
+   Return the modified attack power of a unit for a given attack type.
+ */
+int get_total_attack_power(const struct action *action,
+                           const struct unit *attacker,
+                           const struct unit *defender)
+{
   int mod;
   int attackpower = get_attack_power(attacker);
-
-  mod = 100
-        + get_unittype_bonus(unit_owner(attacker), unit_tile(defender),
-                             unit_type_get(attacker), EFT_ATTACK_BONUS);
-
+  const struct req_context context = {
+      .action = action,
+      .tile = unit_tile(defender),
+      .unit = attacker,
+  };
+  mod = 100 + get_target_bonus(&context, nullptr, EFT_ATTACK_BONUS);
   return attackpower * mod / 100;
 }
 
@@ -542,7 +556,8 @@ int get_total_attack_power(const struct unit *attacker,
  May be called with a non-existing att_type to avoid any unit type
  effects.
  */
-static int defense_multiplication(const struct unit_type *att_type,
+static int defense_multiplication(const struct action *action,
+                                  const struct unit_type *att_type,
                                   const struct unit *def,
                                   const struct player *def_player,
                                   const struct tile *ptile, int defensepower)
@@ -560,9 +575,13 @@ static int defense_multiplication(const struct unit_type *att_type,
     defensepower = defensepower * defense_multiplier_pct / 100;
 
     // This applies even if pcity is nullptr.
-    mod =
-        100
-        + get_unittype_bonus(def_player, ptile, att_type, EFT_DEFEND_BONUS);
+    const struct req_context def_context = {
+        .action = action,
+        .player = def_player,
+        .tile = ptile,
+        .utype = att_type,
+    };
+    mod = 100 + get_target_bonus(&def_context, nullptr, EFT_DEFEND_BONUS);
     defensepower = MAX(0, defensepower * mod / 100);
 
     defense_divider_pct =
@@ -579,22 +598,41 @@ static int defense_multiplication(const struct unit_type *att_type,
   defensepower +=
       defensepower * tile_extras_defense_bonus(ptile, def_type) / 100;
 
+  const struct req_context fortify_context = {
+      .action = action,
+      .tile = ptile,
+      .unit = def,
+  };
   defensepower = defensepower
                  * (100
-                    + get_target_bonus_effects(
-                        nullptr, unit_owner(def), nullptr, tile_city(ptile),
-                        nullptr, ptile, def, unit_type_get(def), nullptr,
-                        nullptr, nullptr, EFT_FORTIFY_DEFENSE_BONUS))
+                    + get_target_bonus(&fortify_context, nullptr,
+                                       EFT_FORTIFY_DEFENSE_BONUS))
                  / 100;
 
   return defensepower;
 }
 
 /**
-   May be called with a non-existing att_type to avoid any effects which
-   depend on the attacker.
+ * May be called with a non-existing att_type to avoid any effects which
+ * depend on the attacker. This assumes that a normal 'ACTION_ATTACK' action
+ * is to be used.
  */
 int get_virtual_defense_power(const struct unit_type *att_type,
+                              const struct unit_type *def_type,
+                              struct player *def_player, struct tile *ptile,
+                              bool fortified, int veteran)
+{
+  return get_virtual_defense_power(action_by_number(ACTION_ATTACK), att_type,
+                                   def_type, def_player, ptile, fortified,
+                                   veteran);
+}
+
+/**
+ * May be called with a non-existing att_type to avoid any effects which
+ * depend on the attacker.
+ */
+int get_virtual_defense_power(const struct action *action,
+                              const struct unit_type *att_type,
                               const struct unit_type *def_type,
                               struct player *def_player, struct tile *ptile,
                               bool fortified, int veteran)
@@ -634,7 +672,7 @@ int get_virtual_defense_power(const struct unit_type *att_type,
     defensepower = defensepower * defclass->non_native_def_pct / 100;
   }
 
-  def = defense_multiplication(att_type, vdef, def_player, ptile,
+  def = defense_multiplication(action, att_type, vdef, def_player, ptile,
                                defensepower);
 
   unit_virtual_destroy(vdef);
@@ -643,24 +681,52 @@ int get_virtual_defense_power(const struct unit_type *att_type,
 }
 
 /**
-  return the modified defense power of a unit.
-  An veteran aegis cruiser in a mountain city with SAM and SDI defense
-  being attacked by a missile gets defense 288.
+ * Return the modified defense power of a unit.
+ * A veteran aegis cruiser in a mountain city with SAM and SDI defense
+ * being attacked by a missile gets defense 288. This assumes that
+ * a normal 'ACTION_ATTACK' action is to be used.
  */
 int get_total_defense_power(const struct unit *attacker,
                             const struct unit *defender)
 {
-  return defense_multiplication(unit_type_get(attacker), defender,
+  return get_total_defense_power(action_by_number(ACTION_ATTACK), attacker,
+                                 defender);
+}
+
+/**
+ * Return the modified defense power of a unit.
+ * A veteran aegis cruiser in a mountain city with SAM and SDI defense
+ * being attacked by a missile gets defense 288.
+ */
+int get_total_defense_power(const struct action *action,
+                            const struct unit *attacker,
+                            const struct unit *defender)
+{
+  return defense_multiplication(action, unit_type_get(attacker), defender,
                                 unit_owner(defender), unit_tile(defender),
                                 get_defense_power(defender));
 }
 
 /**
-   Return total defense power of the unit if it fortifies, if possible,
-   where it is. attacker might be nullptr to skip calculating attacker
-   specific bonuses.
+ * Return total defense power of the unit if it fortifies, if possible,
+ * where it is. attacker might be nullptr to skip calculating attacker
+ * specific bonuses. This assumes that a normal 'ACTION_ATTACK' action is to
+ * be used.
  */
 int get_fortified_defense_power(const struct unit *attacker,
+                                struct unit *defender)
+{
+  return get_fortified_defense_power(action_by_number(ACTION_ATTACK),
+                                     attacker, defender);
+}
+
+/**
+ * Return total defense power of the unit if it fortifies, if possible,
+ * where it is. attacker might be nullptr to skip calculating attacker
+ * specific bonuses.
+ */
+int get_fortified_defense_power(const struct action *action,
+                                const struct unit *attacker,
                                 struct unit *defender)
 {
   const struct unit_type *att_type = nullptr;
@@ -679,8 +745,8 @@ int get_fortified_defense_power(const struct unit *attacker,
     defender->activity = ACTIVITY_FORTIFIED;
   }
 
-  def = defense_multiplication(att_type, defender, unit_owner(defender),
-                               unit_tile(defender),
+  def = defense_multiplication(action, att_type, defender,
+                               unit_owner(defender), unit_tile(defender),
                                get_defense_power(defender));
 
   defender->activity = real_act;
@@ -710,9 +776,9 @@ static int get_defense_rating(const struct unit *attacker,
 }
 
 /**
-   Finds the best defender on the tile, given an attacker.  The diplomatic
-   relationship of attacker and defender is ignored; the caller should check
-   this.
+ * Finds the best defender on the tile, given an attacker. The diplomatic
+ * relationship of attacker and defender is ignored; the caller should check
+ * this. This assumes that a normal 'ACTION_ATTACK' action is to be used.
  */
 struct unit *get_defender(const struct unit *attacker,
                           const struct tile *ptile)
