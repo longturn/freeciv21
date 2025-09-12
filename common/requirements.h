@@ -32,6 +32,43 @@ class QString;
   TYPED_VECTOR_ITERATE(struct requirement, req_vec, preq)
 #define requirement_vector_iterate_end VECTOR_ITERATE_END
 
+/**
+ * A set of targets to evaluate requirements against. Depending on what the
+ * requirements in question are for, most of these entries will usually be
+ * nullptr. For instance, when evaluating the construction requirements for a
+ * building, there is no target unit, specialist etc.
+ *
+ * Fields should be added in ALPHABETICAL order since items need to be
+ * defined in the same order as they are declared and this will be easier to
+ * remember.
+ */
+struct req_context {
+  const struct action *action;
+  const struct impr_type *building;
+  const struct city *city;
+  const enum national_intelligence nintel = NI_COUNT;
+  const struct output_type *output;
+  const struct player *player;
+  const struct specialist *specialist;
+  const struct tile *tile;
+  const struct unit *unit;
+  const struct unit_type *utype;
+  const enum vision_layer vision_layer = V_COUNT;
+};
+
+// Context functions.
+#define req_action(_rc_) (_rc_ ? _rc_->action : nullptr)
+#define req_building(_rc_) (_rc_ ? _rc_->building : nullptr)
+#define req_city(_rc_) (_rc_ ? _rc_->city : nullptr)
+#define req_nintel(_rc_) (_rc_ ? _rc_->nintel : NI_COUNT)
+#define req_output(_rc_) (_rc_ ? _rc_->output : nullptr)
+#define req_player(_rc_) (_rc_ ? _rc_->player : nullptr)
+#define req_specialist(_rc_) (_rc_ ? _rc_->specialist : nullptr)
+#define req_tile(_rc_) (_rc_ ? _rc_->tile : nullptr)
+#define req_unit(_rc_) (_rc_ ? _rc_->unit : nullptr)
+#define req_utype(_rc_) (_rc_ ? _rc_->utype : nullptr)
+#define req_vision_layer(_rc_) (_rc_ ? _rc_->vision_layer : V_COUNT)
+
 // General requirement functions.
 struct requirement req_from_str(const char *type, const char *range,
                                 bool survives, bool present, bool quiet,
@@ -63,6 +100,10 @@ bool is_req_active(
     const enum req_problem_type prob_type,
     const enum vision_layer vision_layer = V_COUNT,
     const enum national_intelligence nintel = NI_COUNT);
+bool is_req_active(const struct req_context *target_context,
+                   const struct req_context *other_context,
+                   const struct requirement *req,
+                   const enum req_problem_type prob_type);
 bool are_reqs_active(const struct player *target_player,
                      const struct player *other_player,
                      const struct city *target_city,
@@ -77,6 +118,10 @@ bool are_reqs_active(const struct player *target_player,
                      const enum req_problem_type prob_type,
                      const enum vision_layer vision_layer = V_COUNT,
                      const enum national_intelligence nintel = NI_COUNT);
+bool are_reqs_active(const struct req_context *target_context,
+                     const struct req_context *other_context,
+                     const struct requirement_vector *reqs,
+                     const enum req_problem_type prob_type);
 
 bool is_req_unchanging(const struct requirement *req);
 
