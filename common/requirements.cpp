@@ -3117,15 +3117,8 @@ is_achievement_in_range(const struct player *target_player,
 }
 
 /**
-   Checks the requirement to see if it is active on the given target.
-
-   target gives the type of the target
-   (player,city,building,tile) give the exact target
-   req gives the requirement itself
-
-   Make sure you give all aspects of the target when calling this function:
-   for instance if you have TARGET_CITY pass the city's owner as the target
-   player as well as the city itself as the target city.
+ * This function is deprecated. If you want to add new parameters, switch to
+ * using is_req_active by req_context.
  */
 bool is_req_active(
     const struct player *target_player, const struct player *other_player,
@@ -3139,10 +3132,83 @@ bool is_req_active(
     const enum vision_layer vision_layer,
     const enum national_intelligence nintel)
 {
+  const struct req_context target_context = {
+      .action = target_action,
+      .building = target_building,
+      .city = target_city,
+      .nintel = nintel,
+      .output = target_output,
+      .player = target_player,
+      .specialist = target_specialist,
+      .tile = target_tile,
+      .unit = target_unit,
+      .utype = target_unittype,
+      .vision_layer = vision_layer,
+  };
+  const struct req_context other_context = {.player = other_player};
+  return is_req_active(&target_context, &other_context, req, prob_type);
+}
+
+/**
+ * Checks the requirement to see if it is active on the given target.
+ *
+ * target gives the type of the target
+ * (player,city,building,tile) give the exact target
+ * req gives the requirement itself.
+ *
+ * An attempt is made to derive missing fields from supplied fields. E.g. if
+ * 'utype' is missing, it takes it from 'unit' if available. However, it's a
+ * good idea to supply specific fields where this would otherwise lead to
+ * ambiguous or unexpected outcomes.
+ */
+bool is_req_active(const struct req_context *target_context,
+                   const struct req_context *other_context,
+                   const struct requirement *req,
+                   const enum req_problem_type prob_type)
+{
+  const struct player *target_player = req_player(target_context);
+  const struct player *other_player = req_player(other_context);
+  const struct city *target_city = req_city(target_context);
+  const struct impr_type *target_building = req_building(target_context);
+  const struct tile *target_tile = req_tile(target_context);
+  const struct unit *target_unit = req_unit(target_context);
+  const struct unit_type *target_unittype = req_utype(target_context);
+  const struct output_type *target_output = req_output(target_context);
+  const struct specialist *target_specialist =
+      req_specialist(target_context);
+  const struct action *target_action = req_action(target_context);
+  const enum vision_layer vision_layer = req_vision_layer(target_context);
+  const enum national_intelligence nintel = req_nintel(target_context);
   enum fc_tristate eval = TRI_NO;
 
-  // The supplied unit has a type. Use it if the unit type is missing.
-  if (target_unittype == nullptr && target_unit != nullptr) {
+  // Fill in some blanks that can be derived from other fields.
+  if (!target_city) {
+    if (req_tile(target_context)) {
+      target_city = tile_city(req_tile(target_context));
+    } else if (req_unit(target_context)) {
+      target_city = tile_city(unit_tile(req_unit(target_context)));
+    }
+  }
+
+  if (!target_tile) {
+    if (req_unit(target_context)) {
+      target_tile = unit_tile(req_unit(target_context));
+    } else if (req_city(target_context)) {
+      target_tile = city_tile(req_city(target_context));
+    }
+  }
+
+  if (!target_player) {
+    if (req_unit(target_context)) {
+      target_player = unit_owner(req_unit(target_context));
+    } else if (req_city(target_context)) {
+      target_player = city_owner(req_city(target_context));
+    } else if (req_tile(target_context)) {
+      target_player = tile_owner(req_tile(target_context));
+    }
+  }
+
+  if (!target_unittype && target_unit) {
     target_unittype = unit_type_get(target_unit);
   }
 
@@ -3504,17 +3570,8 @@ bool is_req_active(
 }
 
 /**
-   Checks the requirement(s) to see if they are active on the given target.
-
-   target gives the type of the target
-   (player,city,building,tile) give the exact target
-
-   reqs gives the requirement vector.
-   The function returns TRUE only if all requirements are active.
-
-   Make sure you give all aspects of the target when calling this function:
-   for instance if you have TARGET_CITY pass the city's owner as the target
-   player as well as the city itself as the target city.
+ * This function is deprecated. If you want to add new parameters, switch to
+ * using are_reqs_active by req_context.
  */
 bool are_reqs_active(const struct player *target_player,
                      const struct player *other_player,
@@ -3531,13 +3588,44 @@ bool are_reqs_active(const struct player *target_player,
                      const enum vision_layer vision_layer,
                      const enum national_intelligence nintel)
 {
+  const struct req_context target_context = {
+      .action = target_action,
+      .building = target_building,
+      .city = target_city,
+      .nintel = nintel,
+      .output = target_output,
+      .player = target_player,
+      .tile = target_tile,
+      .unit = target_unit,
+      .utype = target_unittype,
+      .vision_layer = vision_layer,
+  };
+  const struct req_context other_context = {.player = other_player};
+  return are_reqs_active(&target_context, &other_context, reqs, prob_type);
+}
+
+/**
+ * Checks the requirement(s) to see if they are active on the given target.
+ *
+ * target gives the type of the target
+ * (player,city,building,tile) give the exact target
+ *
+ * reqs gives the requirement vector.
+ * The function returns TRUE only if all requirements are active.
+ *
+ * An attempt is made to derive missing fields from supplied fields. E.g. if
+ * 'utype' is missing, it takes it from 'unit' if available. However, it's a
+ * good idea to supply specific fields where this would otherwise lead to
+ * ambiguous or unexpected outcomes.
+ */
+bool are_reqs_active(const struct req_context *target_context,
+                     const struct req_context *other_context,
+                     const struct requirement_vector *reqs,
+                     const enum req_problem_type prob_type)
+{
   requirement_vector_iterate(reqs, preq)
   {
-    if (!is_req_active(target_player, other_player, target_city,
-                       target_building, target_tile, target_unit,
-                       target_unittype, target_output, target_specialist,
-                       target_action, preq, prob_type, vision_layer,
-                       nintel)) {
+    if (!is_req_active(target_context, other_context, preq, prob_type)) {
       return false;
     }
   }

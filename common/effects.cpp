@@ -604,16 +604,8 @@ bool is_building_replaced(const struct city *pcity,
 }
 
 /**
-   Returns the effect bonus of a given type for any target.
-
-   target gives the type of the target
-   (player,city,building,tile) give the exact target
-   effect_type gives the effect type to be considered
-
-   Returns the effect sources of this type _currently active_.
-
-   The returned vector must be freed (building_vector_free) when the caller
-   is done with it.
+ * This function is deprecated. If you want to add new parameters, switch to
+ * using get_target_bonus or get_target_bonus_effects by req_context.
  */
 int get_target_bonus_effects(
     struct effect_list *plist, const struct player *target_player,
@@ -625,24 +617,64 @@ int get_target_bonus_effects(
     const struct action *target_action, enum effect_type effect_type,
     enum vision_layer vision_layer, enum national_intelligence nintel)
 {
+  const struct req_context target_context = {
+      .action = target_action,
+      .building = target_building,
+      .city = target_city,
+      .nintel = nintel,
+      .output = target_output,
+      .player = target_player,
+      .specialist = target_specialist,
+      .tile = target_tile,
+      .unit = target_unit,
+      .utype = target_unittype,
+      .vision_layer = vision_layer,
+  };
+  const struct req_context other_context = {.player = other_player};
+  return get_target_bonus_effects(plist, &target_context, &other_context,
+                                  effect_type);
+}
+
+/**
+ * Returns the effect bonus of a given type for any target.
+ */
+int get_target_bonus(const struct req_context *target_context,
+                     const struct req_context *other_context,
+                     enum effect_type effect_type)
+{
+  return get_target_bonus_effects(nullptr, target_context, other_context,
+                                  effect_type);
+}
+
+/**
+ * Returns the effect bonus of a given type for any target.
+ *
+ * plist is populated with the effect sources of this type _currently
+ * active_.
+ *
+ * The returned vector must be freed (building_vector_free) when the caller
+ * is done with it.
+ */
+int get_target_bonus_effects(struct effect_list *plist,
+                             const struct req_context *target_context,
+                             const struct req_context *other_context,
+                             enum effect_type effect_type)
+{
   int bonus = 0;
 
   // Loop over all effects of this type.
   effect_list_iterate(get_effects(effect_type), peffect)
   {
     // For each effect, see if it is active.
-    if (are_reqs_active(target_player, other_player, target_city,
-                        target_building, target_tile, target_unit,
-                        target_unittype, target_output, target_specialist,
-                        target_action, &peffect->reqs, RPT_CERTAIN,
-                        vision_layer, nintel)) {
+    if (are_reqs_active(target_context, other_context, &peffect->reqs,
+                        RPT_CERTAIN)) {
       /* This code will add value of effect. If there's multiplier for
        * effect and target_player aren't null, then value is multiplied
        * by player's multiplier factor. */
       if (peffect->multiplier) {
-        if (target_player) {
+        if (target_context->player) {
           bonus += (peffect->value
-                    * player_multiplier_effect_value(target_player,
+                    * player_multiplier_effect_value(target_context->player,
                                                      peffect->multiplier))
                    / 100;
         }
@@ -661,7 +693,10 @@ int get_target_bonus_effects(
 }
 
 /**
-   Returns the effect bonus for the whole world.
+ * Returns the effect bonus for the whole world.
+ *
+ * This function is deprecated. If you want to add new parameters, switch to
+ * using get_target_bonus or get_target_bonus_effects by req_context.
  */
 int get_world_bonus(enum effect_type effect_type)
 {
@@ -675,7 +710,10 @@ int get_world_bonus(enum effect_type effect_type)
 }
 
 /**
-   Returns the effect bonus for a player.
+ * Returns the effect bonus for a player.
+ *
+ * This function is deprecated. If you want to add new parameters, switch to
+ * using get_target_bonus or get_target_bonus_effects by req_context.
  */
 int get_player_bonus(const struct player *pplayer,
                      enum effect_type effect_type)
@@ -690,7 +728,10 @@ int get_player_bonus(const struct player *pplayer,
 }
 
 /**
-   Returns the effect bonus at a city.
+ * Returns the effect bonus at a city.
+ *
+ * This function is deprecated. If you want to add new parameters, switch to
+ * using get_target_bonus or get_target_bonus_effects by req_context.
  */
 int get_city_bonus(const struct city *pcity, enum effect_type effect_type,
                    enum vision_layer vlayer)
@@ -705,7 +746,10 @@ int get_city_bonus(const struct city *pcity, enum effect_type effect_type,
 }
 
 /**
-   Returns the effect bonus of a specialist in a city.
+ * Returns the effect bonus of a specialist in a city.
+ *
+ * This function is deprecated. If you want to add new parameters, switch to
+ * using get_target_bonus or get_target_bonus_effects by req_context.
  */
 int get_city_specialist_output_bonus(const struct city *pcity,
                                      const struct specialist *pspecialist,
@@ -721,16 +765,19 @@ int get_city_specialist_output_bonus(const struct city *pcity,
 }
 
 /**
-   Returns the effect bonus at a city tile.
-   pcity must be supplied.
-
-   FIXME: this is now used both for tile bonuses, tile-output bonuses,
-   and city-output bonuses.  Thus ptile or poutput may be nullptr for
-   certain callers.  This could be changed by adding 2 new functions to
-   the interface but they'd be almost identical and their likely names
-   would conflict with functions already in city.c.
-   It's also very similar to get_tile_output_bonus(); it should be
-   called when the city is mandatory.
+ * Returns the effect bonus at a city tile.
+ * pcity must be supplied.
+ *
+ * FIXME: this is now used both for tile bonuses, tile-output bonuses,
+ * and city-output bonuses.  Thus ptile or poutput may be nullptr for
+ * certain callers.  This could be changed by adding 2 new functions to
+ * the interface but they'd be almost identical and their likely names
+ * would conflict with functions already in city.c.
+ * It's also very similar to get_tile_output_bonus(); it should be
+ * called when the city is mandatory.
+ *
+ * This function is deprecated. If you want to add new parameters, switch to
+ * using get_target_bonus or get_target_bonus_effects by req_context.
  */
 int get_city_tile_output_bonus(const struct city *pcity,
                                const struct tile *ptile,
@@ -749,6 +796,9 @@ int get_city_tile_output_bonus(const struct city *pcity,
    If pcity is supplied, it's the bonus for that particular city, otherwise
    it's the player/city-independent bonus (and any city on the tile is
    ignored).
+ *
+ * This function is deprecated. If you want to add new parameters, switch to
+ * using get_target_bonus or get_target_bonus_effects by req_context.
  */
 int get_tile_output_bonus(const struct city *pcity, const struct tile *ptile,
                           const struct output_type *poutput,
@@ -763,6 +813,9 @@ int get_tile_output_bonus(const struct city *pcity, const struct tile *ptile,
 
 /**
    Returns the player effect bonus of an output.
+ *
+ * This function is deprecated. If you want to add new parameters, switch to
+ * using get_target_bonus or get_target_bonus_effects by req_context.
  */
 int get_player_output_bonus(const struct player *pplayer,
                             const struct output_type *poutput,
@@ -782,6 +835,9 @@ int get_player_output_bonus(const struct player *pplayer,
 
 /**
  * Gets the player effect bonus of a national intelligence.
+ *
+ * This function is deprecated. If you want to add new parameters, switch to
+ * using get_target_bonus or get_target_bonus_effects by req_context.
  */
 int get_player_intel_bonus(const struct player *pplayer,
                            const struct player *pother,
@@ -802,7 +858,10 @@ int get_player_intel_bonus(const struct player *pplayer,
 }
 
 /**
-   Returns the player effect bonus of an output.
+ * Returns the player effect bonus of an output.
+ *
+ * This function is deprecated. If you want to add new parameters, switch to
+ * using get_target_bonus or get_target_bonus_effects by req_context.
  */
 int get_city_output_bonus(const struct city *pcity,
                           const struct output_type *poutput,
@@ -821,7 +880,10 @@ int get_city_output_bonus(const struct city *pcity,
 }
 
 /**
-   Returns the effect bonus at a building.
+ * Returns the effect bonus at a building.
+ *
+ * This function is deprecated. If you want to add new parameters, switch to
+ * using get_target_bonus or get_target_bonus_effects by req_context.
  */
 int get_building_bonus(const struct city *pcity,
                        const struct impr_type *building,
@@ -838,12 +900,15 @@ int get_building_bonus(const struct city *pcity,
 }
 
 /**
-   Returns the effect bonus that applies at a tile for a given unittype.
-
-   For instance with EFT_DEFEND_BONUS the attacker's unittype and the
-   defending tile should be passed in.  Slightly counter-intuitive!
-   See doc/README.effects to see how the unittype applies for each effect
-   here.
+ * Returns the effect bonus that applies at a tile for a given unittype.
+ *
+ * For instance with EFT_DEFEND_BONUS the attacker's unittype and the
+ * defending tile should be passed in.  Slightly counter-intuitive!
+ * See doc/README.effects to see how the unittype applies for each effect
+ * here.
+ *
+ * This function is deprecated. If you want to add new parameters, switch to
+ * using get_target_bonus or get_target_bonus_effects by req_context.
  */
 int get_unittype_bonus(const struct player *pplayer,
                        const struct tile *ptile,
@@ -871,7 +936,10 @@ int get_unittype_bonus(const struct player *pplayer,
 }
 
 /**
-   Returns the effect bonus at a unit
+ * Returns the effect bonus at a unit
+ *
+ * This function is deprecated. If you want to add new parameters, switch to
+ * using get_target_bonus or get_target_bonus_effects by req_context.
  */
 int get_unit_bonus(const struct unit *punit, enum effect_type effect_type)
 {
@@ -888,10 +956,13 @@ int get_unit_bonus(const struct unit *punit, enum effect_type effect_type)
 }
 
 /**
-   Returns the effect sources of this type _currently active_ at the player.
-
-   The returned vector must be freed (building_vector_free) when the caller
-   is done with it.
+ * Returns the effect sources of this type _currently active_ at the player.
+ *
+ * The returned vector must be freed (building_vector_free) when the caller
+ * is done with it.
+ *
+ * This function is deprecated. If you want to add new parameters, switch to
+ * using get_target_bonus or get_target_bonus_effects by req_context.
  */
 int get_player_bonus_effects(struct effect_list *plist,
                              const struct player *pplayer,
@@ -908,10 +979,13 @@ int get_player_bonus_effects(struct effect_list *plist,
 }
 
 /**
-   Returns the effect sources of this type _currently active_ at the city.
-
-   The returned vector must be freed (building_vector_free) when the caller
-   is done with it.
+ * Returns the effect sources of this type _currently active_ at the city.
+ *
+ * The returned vector must be freed (building_vector_free) when the caller
+ * is done with it.
+ *
+ * This function is deprecated. If you want to add new parameters, switch to
+ * using get_target_bonus or get_target_bonus_effects by req_context.
  */
 int get_city_bonus_effects(struct effect_list *plist,
                            const struct city *pcity,
