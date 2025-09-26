@@ -10,7 +10,7 @@ jobs:
   latest:
     runs-on: ubuntu-latest
     container:
-      image: ubuntu:24.10
+      image: ubuntu:25.10
     steps:
       - uses: actions/checkout@v3
         with:

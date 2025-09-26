@@ -16,7 +16,7 @@ jobs:
     needs: clang-format
     strategy:
       matrix:
-        os: [ubuntu:24.10]
+        os: [ubuntu:25.10]
         compiler: [gcc, clang]
         build_type: ["", Release, Debug, RelWithDebInfo]
         exclude:
@@ -98,7 +98,7 @@ jobs:
     needs: clang-format
     runs-on: ubuntu-latest
     container:
-      image: ubuntu:24.10
+      image: ubuntu:25.10
     steps:
       - uses: actions/checkout@v4
         with:
