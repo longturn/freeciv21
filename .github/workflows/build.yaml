@@ -40,7 +40,7 @@ jobs:
       - name: Install clang
         if: ${{ matrix.compiler == 'clang' }}
         run: |
-          apt-get install -y clang
+          apt-get install -y clang libstdc++-15-dev
           export CC=$(which clang)
           export CXX=$(which clang++)
       - name: Install dependencies
