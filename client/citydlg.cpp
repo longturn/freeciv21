@@ -609,8 +609,9 @@ void city_label::mousePressEvent(QMouseEvent *event)
       (this->width() - MIN(CITIZENS_PER_ROW, num_citizens) * sprite_width)
       / 2;
 
-  int citizen_x = (event->x() - horizontal_spacing) / sprite_width;
-  int citizen_y = event->y() / sprite_height;
+  auto pos = event->position();
+  int citizen_x = (pos.x() - horizontal_spacing) / sprite_width;
+  int citizen_y = pos.y() / sprite_height;
 
   int citizen_index = citizen_y * CITIZENS_PER_ROW + citizen_x;
 
@@ -1466,7 +1467,7 @@ void city_dialog::display_worklist_menu(const QPoint)
       return;
     }
 
-    fc_assert_ret(id.type() == QVariant::Int);
+    fc_assert_ret(id.typeId() == QMetaType::Int);
     worklist = global_worklist_get(global_worklist_by_id(id.toInt()));
     city_set_queue(pcity, worklist);
   });
@@ -1480,7 +1481,7 @@ void city_dialog::display_worklist_menu(const QPoint)
       return;
     }
 
-    fc_assert_ret(id.type() == QVariant::Int);
+    fc_assert_ret(id.typeId() == QMetaType::Int);
     worklist = global_worklist_get(global_worklist_by_id(id.toInt()));
     city_queue_insert_worklist(pcity, selected_row_p + 1, worklist);
   });

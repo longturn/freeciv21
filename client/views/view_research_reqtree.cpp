@@ -1165,7 +1165,7 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
 /**
    Return the tech ID at the given position of the reqtree (or A_NONE).
  */
-Tech_type_id get_tech_on_reqtree(struct reqtree *tree, int x, int y)
+Tech_type_id get_tech_on_reqtree(struct reqtree *tree, const QPoint &pos)
 {
   int i;
 
@@ -1175,9 +1175,9 @@ Tech_type_id get_tech_on_reqtree(struct reqtree *tree, int x, int y)
     if (node->is_dummy) {
       continue;
     }
-    if (node->node_x <= x && node->node_y <= y
-        && node->node_x + node->node_width > x
-        && node->node_y + node->node_height > y) {
+    if (node->node_x <= pos.x() && node->node_y <= pos.y()
+        && node->node_x + node->node_width > pos.x()
+        && node->node_y + node->node_height > pos.y()) {
       return node->tech;
     }
   }

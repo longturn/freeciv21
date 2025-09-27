@@ -126,7 +126,7 @@ bool research_diagram::get_tech_position(Tech_type_id id, int *x, int *y)
  */
 void research_diagram::mousePressEvent(QMouseEvent *event)
 {
-  Tech_type_id tech = get_tech_on_reqtree(req, event->x(), event->y());
+  Tech_type_id tech = get_tech_on_reqtree(req, event->position().toPoint());
   req_tooltip_help *rttp;
   int i;
 
@@ -221,7 +221,7 @@ void research_diagram::mouseMoveEvent(QMouseEvent *event)
       tt_text = def_str + tt_text.toHtmlEscaped();
       tooltip_text = tt_text.trimmed();
       tooltip_rect = rttp->rect;
-      tooltip_pos = event->globalPos();
+      tooltip_pos = event->globalPosition().toPoint();
       if (!timer_active) {
         timer_active = true;
         QTimer::singleShot(500, this, &research_diagram::show_tooltip);

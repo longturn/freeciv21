@@ -15,6 +15,8 @@
 
 #include <QRect>
 
+class QPoint;
+
 /* Requirements Tree
  *
  * This file provides functions for drawing a tree-like graph of
@@ -96,7 +98,7 @@ QList<req_tooltip_help *> *draw_reqtree(struct reqtree *tree,
                                         int canvas_y, int tt_x, int tt_y,
                                         int w, int h);
 
-Tech_type_id get_tech_on_reqtree(struct reqtree *tree, int x, int y);
+Tech_type_id get_tech_on_reqtree(struct reqtree *tree, const QPoint &pos);
 
 bool get_position_on_reqtree(struct reqtree *tree, Tech_type_id tech, int *x,
                              int *y);

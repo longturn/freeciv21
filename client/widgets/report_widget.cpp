@@ -60,7 +60,7 @@ report_widget::report_widget(const QString &caption, const QString &headline,
  */
 void report_widget::mousePressEvent(QMouseEvent *event)
 {
-  m_cursor = event->globalPos() - geometry().topLeft();
+  m_cursor = event->globalPosition().toPoint() - geometry().topLeft();
 }
 
 /**
@@ -68,7 +68,7 @@ void report_widget::mousePressEvent(QMouseEvent *event)
  */
 void report_widget::mouseMoveEvent(QMouseEvent *event)
 {
-  move(event->globalPos() - m_cursor);
+  move(event->globalPosition().toPoint() - m_cursor);
   setCursor(Qt::SizeAllCursor);
 }
 

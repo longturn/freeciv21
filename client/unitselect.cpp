@@ -224,12 +224,13 @@ void units_select_widget::mouseMoveEvent(QMouseEvent *event)
 
   old_h = highligh_num;
   highligh_num = -1;
-  if (event->x() > width() - 11 || event->y() > height() - fm.height() - 5
-      || event->y() < fm.height() + 3 || event->x() < 11) {
+  auto pos = event->position();
+  if (pos.x() > width() - 11 || pos.y() > height() - fm.height() - 5
+      || pos.y() < fm.height() + 3 || pos.x() < 11) {
     /** do nothing if mouse is on border, just skip next if */
   } else if (row_count > 0) {
-    a = (event->x() - 10) / item_size.width();
-    b = (event->y() - fm.height() - 3) / item_size.height();
+    a = (pos.x() - 10) / item_size.width();
+    b = (pos.y() - fm.height() - 3) / item_size.height();
     highligh_num = b * column_count + a;
   }
   if (old_h != highligh_num) {

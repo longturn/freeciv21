@@ -89,8 +89,6 @@ bool savegame_freeciv_load(const QString &path)
  */
 bool savegame_load(const QString &path)
 {
-  const char *savefile_options;
-
   fc_assert_ret_val(!path.isEmpty(), false);
 
   civtimer *loadtimer = timer_new(TIMER_CPU, TIMER_DEBUG);

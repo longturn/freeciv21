@@ -3813,7 +3813,6 @@ bool load_command(struct connection *caller, const char *filename,
                   bool check, bool cmdline_load)
 {
   civtimer *loadtimer, *uloadtimer;
-  struct section_file *file;
   struct conn_list *global_observers;
 
   if (!filename || filename[0] == '\0') {
