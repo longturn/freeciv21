@@ -82,7 +82,7 @@ goto_dialog::goto_dialog(QWidget *parent)
           &goto_dialog::go_to_city);
   connect(airlift_city, &QAbstractButton::clicked, this,
           &goto_dialog::airlift_to);
-  connect(show_all, &QCheckBox::stateChanged, this,
+  connect(show_all, &QCheckBox::checkStateChanged, this,
           &goto_dialog::checkbox_changed);
   connect(goto_tab->selectionModel(), &QItemSelectionModel::selectionChanged,
           this, &goto_dialog::item_selected);
