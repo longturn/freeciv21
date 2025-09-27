@@ -330,7 +330,7 @@ void qfc_dialog::paintEvent(QPaintEvent *event)
 void qfc_dialog::mouseMoveEvent(QMouseEvent *event)
 {
   if (moving_now) {
-    move(event->globalPos() - point);
+    move(event->globalPosition().toPoint() - point);
   }
 }
 
@@ -341,7 +341,7 @@ void qfc_dialog::mousePressEvent(QMouseEvent *event)
 {
   if (event->pos().y() <= titlebar_height
       && event->pos().x() <= width() - close_pix->width()) {
-    point = event->globalPos() - geometry().topLeft();
+    point = event->globalPosition().toPoint() - geometry().topLeft();
     moving_now = true;
     setCursor(Qt::SizeAllCursor);
   } else if (event->pos().y() <= titlebar_height

@@ -74,7 +74,7 @@ page_load::page_load(QWidget *parent, fc_client *c) : QWidget(parent)
   connect(ui.saves_load->selectionModel(),
           &QItemSelectionModel::selectionChanged, this,
           &page_load::slot_selection_changed);
-  connect(ui.show_preview, &QCheckBox::stateChanged, this,
+  connect(ui.show_preview, &QCheckBox::checkStateChanged, this,
           &page_load::state_preview);
 
   auto browse =

@@ -50,7 +50,7 @@ bool collated_sort_filter_proxy_model::lessThan(
                     ? source_right.model()->data(source_right, sortRole())
                     : QVariant());
 
-  if (l.type() == QVariant::String && r.type() == QVariant::String) {
+  if (l.typeId() == QMetaType::QString && r.typeId() == QMetaType::QString) {
     return m_collator(l.toString(), r.toString());
   }
 
