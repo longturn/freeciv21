@@ -53,14 +53,29 @@ int base_get_attack_power(const struct unit_type *punittype, int veteran,
 int base_get_defense_power(const struct unit *punit);
 int get_total_defense_power(const struct unit *attacker,
                             const struct unit *defender);
+int get_total_defense_power(const struct action *action,
+                            const struct unit *attacker,
+                            const struct unit *defender);
 int get_fortified_defense_power(const struct unit *attacker,
+                                struct unit *defender);
+int get_fortified_defense_power(const struct action *action,
+                                const struct unit *attacker,
                                 struct unit *defender);
 int get_virtual_defense_power(const struct unit_type *attacker,
                               const struct unit_type *defender,
                               struct player *defending_player,
                               struct tile *ptile, bool fortified,
                               int veteran);
+int get_virtual_defense_power(const struct action *action,
+                              const struct unit_type *attacker,
+                              const struct unit_type *defender,
+                              struct player *defending_player,
+                              struct tile *ptile, bool fortified,
+                              int veteran);
 int get_total_attack_power(const struct unit *attacker,
+                           const struct unit *defender);
+int get_total_attack_power(const struct action *action,
+                           const struct unit *attacker,
                            const struct unit *defender);
 
 struct unit *get_defender(const struct unit *attacker,

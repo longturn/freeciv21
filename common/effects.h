@@ -125,6 +125,13 @@ int get_target_bonus_effects(
     const struct action *target_action, enum effect_type effect_type,
     enum vision_layer vision_layer = V_COUNT,
     enum national_intelligence nintel = NI_COUNT);
+int get_target_bonus(const struct req_context *target_context,
+                     const struct req_context *other_context,
+                     enum effect_type effect_type);
+int get_target_bonus_effects(struct effect_list *plist,
+                             const struct req_context *target_context,
+                             const struct req_context *other_context,
+                             enum effect_type effect_type);
 
 bool building_has_effect(const struct impr_type *pimprove,
                          enum effect_type effect_type);
