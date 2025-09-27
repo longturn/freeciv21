@@ -35,6 +35,7 @@ jobs:
         run: |
           apt-get install -y \
             clang \
+            libstdc++-15-dev \
             cmake \
             ninja-build \
             python3 \
