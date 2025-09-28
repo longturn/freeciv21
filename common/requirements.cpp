@@ -52,6 +52,62 @@
 #include <cstddef> // size_t
 #include <cstdlib> // atoi
 
+const struct action *req_action(const struct req_context *context)
+{
+  return context ? context->action : nullptr;
+}
+
+const struct impr_type *req_building(const struct req_context *context)
+{
+  return context ? context->building : nullptr;
+}
+
+const struct city *req_city(const struct req_context *context)
+{
+  return context ? context->city : nullptr;
+}
+
+const enum national_intelligence
+req_nintel(const struct req_context *context)
+{
+  return context ? context->nintel : NI_COUNT;
+}
+
+const struct output_type *req_output(const struct req_context *context)
+{
+  return context ? context->output : nullptr;
+}
+
+const struct player *req_player(const struct req_context *context)
+{
+  return context ? context->player : nullptr;
+}
+
+const struct specialist *req_specialist(const struct req_context *context)
+{
+  return context ? context->specialist : nullptr;
+}
+
+const struct tile *req_tile(const struct req_context *context)
+{
+  return context ? context->tile : nullptr;
+}
+
+const struct unit *req_unit(const struct req_context *context)
+{
+  return context ? context->unit : nullptr;
+}
+
+const struct unit_type *req_utype(const struct req_context *context)
+{
+  return context ? context->utype : nullptr;
+}
+
+const enum vision_layer req_vision_layer(const struct req_context *context)
+{
+  return context ? context->vision_layer : V_COUNT;
+}
+
 /**
   Container for req_item_found functions
  */
@@ -3120,7 +3176,7 @@ is_achievement_in_range(const struct player *target_player,
  * This function is deprecated. If you want to add new parameters, switch to
  * using is_req_active by req_context.
  */
-bool is_req_active(
+[[deprecated]] bool is_req_active(
     const struct player *target_player, const struct player *other_player,
     const struct city *target_city, const struct impr_type *target_building,
     const struct tile *target_tile, const struct unit *target_unit,
@@ -3573,20 +3629,18 @@ bool is_req_active(const struct req_context *target_context,
  * This function is deprecated. If you want to add new parameters, switch to
  * using are_reqs_active by req_context.
  */
-bool are_reqs_active(const struct player *target_player,
-                     const struct player *other_player,
-                     const struct city *target_city,
-                     const struct impr_type *target_building,
-                     const struct tile *target_tile,
-                     const struct unit *target_unit,
-                     const struct unit_type *target_unittype,
-                     const struct output_type *target_output,
-                     const struct specialist *target_specialist,
-                     const struct action *target_action,
-                     const struct requirement_vector *reqs,
-                     const enum req_problem_type prob_type,
-                     const enum vision_layer vision_layer,
-                     const enum national_intelligence nintel)
+[[deprecated]] bool are_reqs_active(
+    const struct player *target_player, const struct player *other_player,
+    const struct city *target_city, const struct impr_type *target_building,
+    const struct tile *target_tile, const struct unit *target_unit,
+    const struct unit_type *target_unittype,
+    const struct output_type *target_output,
+    const struct specialist *target_specialist,
+    const struct action *target_action,
+    const struct requirement_vector *reqs,
+    const enum req_problem_type prob_type,
+    const enum vision_layer vision_layer,
+    const enum national_intelligence nintel)
 {
   const struct req_context target_context = {
       .action = target_action,

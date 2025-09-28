@@ -69,53 +69,56 @@ bool is_building_replaced(const struct city *pcity,
                           const enum req_problem_type prob_type);
 
 // functions to know the bonuses a certain effect is granting
-int get_world_bonus(enum effect_type effect_type);
-int get_player_bonus(const struct player *plr, enum effect_type effect_type);
-int get_city_bonus(const struct city *pcity, enum effect_type effect_type,
-                   enum vision_layer vlayer = V_COUNT);
-int get_city_specialist_output_bonus(const struct city *pcity,
-                                     const struct specialist *pspecialist,
-                                     const struct output_type *poutput,
-                                     enum effect_type effect_type);
-int get_city_tile_output_bonus(const struct city *pcity,
-                               const struct tile *ptile,
-                               const struct output_type *poutput,
-                               enum effect_type effect_type);
-int get_tile_output_bonus(const struct city *pcity, const struct tile *ptile,
-                          const struct output_type *poutput,
-                          enum effect_type effect_type);
-int get_player_output_bonus(const struct player *pplayer,
-                            const struct output_type *poutput,
-                            enum effect_type effect_type);
-int get_player_intel_bonus(const struct player *pplayer,
-                           const struct player *pother,
-                           enum national_intelligence nintel,
-                           enum effect_type effect_type);
-int get_city_output_bonus(const struct city *pcity,
-                          const struct output_type *poutput,
-                          enum effect_type effect_type);
-int get_building_bonus(const struct city *pcity,
-                       const struct impr_type *building,
-                       enum effect_type effect_type);
-int get_unittype_bonus(const struct player *pplayer,
-                       const struct tile *ptile, // pcity is implied
-                       const struct unit_type *punittype,
-                       enum effect_type effect_type,
-                       enum vision_layer vision_layer = V_COUNT);
-int get_unit_bonus(const struct unit *punit, enum effect_type effect_type);
+[[deprecated]] int get_world_bonus(enum effect_type effect_type);
+[[deprecated]] int get_player_bonus(const struct player *plr,
+                                    enum effect_type effect_type);
+[[deprecated]] int get_city_bonus(const struct city *pcity,
+                                  enum effect_type effect_type,
+                                  enum vision_layer vlayer = V_COUNT);
+[[deprecated]] int get_city_specialist_output_bonus(
+    const struct city *pcity, const struct specialist *pspecialist,
+    const struct output_type *poutput, enum effect_type effect_type);
+[[deprecated]] int get_city_tile_output_bonus(
+    const struct city *pcity, const struct tile *ptile,
+    const struct output_type *poutput, enum effect_type effect_type);
+[[deprecated]] int get_tile_output_bonus(const struct city *pcity,
+                                         const struct tile *ptile,
+                                         const struct output_type *poutput,
+                                         enum effect_type effect_type);
+[[deprecated]] int get_player_output_bonus(const struct player *pplayer,
+                                           const struct output_type *poutput,
+                                           enum effect_type effect_type);
+[[deprecated]] int get_player_intel_bonus(const struct player *pplayer,
+                                          const struct player *pother,
+                                          enum national_intelligence nintel,
+                                          enum effect_type effect_type);
+[[deprecated]] int get_city_output_bonus(const struct city *pcity,
+                                         const struct output_type *poutput,
+                                         enum effect_type effect_type);
+[[deprecated]] int get_building_bonus(const struct city *pcity,
+                                      const struct impr_type *building,
+                                      enum effect_type effect_type);
+[[deprecated]] int
+get_unittype_bonus(const struct player *pplayer,
+                   const struct tile *ptile, // pcity is implied
+                   const struct unit_type *punittype,
+                   enum effect_type effect_type,
+                   enum vision_layer vision_layer = V_COUNT);
+[[deprecated]] int get_unit_bonus(const struct unit *punit,
+                                  enum effect_type effect_type);
 
 // miscellaneous auxiliary effects functions
 struct effect_list *get_req_source_effects(struct universal *psource);
 
-int get_player_bonus_effects(struct effect_list *plist,
-                             const struct player *pplayer,
-                             enum effect_type effect_type);
-int get_city_bonus_effects(struct effect_list *plist,
-                           const struct city *pcity,
-                           const struct output_type *poutput,
-                           enum effect_type effect_type);
+[[deprecated]] int get_player_bonus_effects(struct effect_list *plist,
+                                            const struct player *pplayer,
+                                            enum effect_type effect_type);
+[[deprecated]] int get_city_bonus_effects(struct effect_list *plist,
+                                          const struct city *pcity,
+                                          const struct output_type *poutput,
+                                          enum effect_type effect_type);
 
-int get_target_bonus_effects(
+[[deprecated]] int get_target_bonus_effects(
     struct effect_list *plist, const struct player *target_player,
     const struct player *other_player, const struct city *target_city,
     const struct impr_type *target_building, const struct tile *target_tile,
