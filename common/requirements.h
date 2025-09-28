@@ -57,17 +57,18 @@ struct req_context {
 };
 
 // Context functions.
-#define req_action(_rc_) (_rc_ ? _rc_->action : nullptr)
-#define req_building(_rc_) (_rc_ ? _rc_->building : nullptr)
-#define req_city(_rc_) (_rc_ ? _rc_->city : nullptr)
-#define req_nintel(_rc_) (_rc_ ? _rc_->nintel : NI_COUNT)
-#define req_output(_rc_) (_rc_ ? _rc_->output : nullptr)
-#define req_player(_rc_) (_rc_ ? _rc_->player : nullptr)
-#define req_specialist(_rc_) (_rc_ ? _rc_->specialist : nullptr)
-#define req_tile(_rc_) (_rc_ ? _rc_->tile : nullptr)
-#define req_unit(_rc_) (_rc_ ? _rc_->unit : nullptr)
-#define req_utype(_rc_) (_rc_ ? _rc_->utype : nullptr)
-#define req_vision_layer(_rc_) (_rc_ ? _rc_->vision_layer : V_COUNT)
+const struct action *req_action(const struct req_context *context);
+const struct impr_type *req_building(const struct req_context *context);
+const struct city *req_city(const struct req_context *context);
+const enum national_intelligence
+req_nintel(const struct req_context *context);
+const struct output_type *req_output(const struct req_context *context);
+const struct player *req_player(const struct req_context *context);
+const struct specialist *req_specialist(const struct req_context *context);
+const struct tile *req_tile(const struct req_context *context);
+const struct unit *req_unit(const struct req_context *context);
+const struct unit_type *req_utype(const struct req_context *context);
+const enum vision_layer req_vision_layer(const struct req_context *context);
 
 // General requirement functions.
 struct requirement req_from_str(const char *type, const char *range,
@@ -89,7 +90,7 @@ bool are_requirements_contradictions(const struct requirement *req1,
 bool does_req_contradicts_reqs(const struct requirement *req,
                                const struct requirement_vector *vec);
 
-bool is_req_active(
+[[deprecated]] bool is_req_active(
     const struct player *target_player, const struct player *other_player,
     const struct city *target_city, const struct impr_type *target_building,
     const struct tile *target_tile, const struct unit *target_unit,
@@ -104,20 +105,18 @@ bool is_req_active(const struct req_context *target_context,
                    const struct req_context *other_context,
                    const struct requirement *req,
                    const enum req_problem_type prob_type);
-bool are_reqs_active(const struct player *target_player,
-                     const struct player *other_player,
-                     const struct city *target_city,
-                     const struct impr_type *target_building,
-                     const struct tile *target_tile,
-                     const struct unit *target_unit,
-                     const struct unit_type *target_unittype,
-                     const struct output_type *target_output,
-                     const struct specialist *target_specialist,
-                     const struct action *target_action,
-                     const struct requirement_vector *reqs,
-                     const enum req_problem_type prob_type,
-                     const enum vision_layer vision_layer = V_COUNT,
-                     const enum national_intelligence nintel = NI_COUNT);
+[[deprecated]] bool are_reqs_active(
+    const struct player *target_player, const struct player *other_player,
+    const struct city *target_city, const struct impr_type *target_building,
+    const struct tile *target_tile, const struct unit *target_unit,
+    const struct unit_type *target_unittype,
+    const struct output_type *target_output,
+    const struct specialist *target_specialist,
+    const struct action *target_action,
+    const struct requirement_vector *reqs,
+    const enum req_problem_type prob_type,
+    const enum vision_layer vision_layer = V_COUNT,
+    const enum national_intelligence nintel = NI_COUNT);
 bool are_reqs_active(const struct req_context *target_context,
                      const struct req_context *other_context,
                      const struct requirement_vector *reqs,
