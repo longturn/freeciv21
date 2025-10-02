@@ -218,8 +218,8 @@ jobs:
       #  run: cmake --build build --target test
 
   os_x:
-    name: "macOS (arm64-osx)"
-    runs-on: macos-latest
+    name: "macOS (x64-osx)"
+    runs-on: macos-15-intel
     needs: clang-format
     env:
       VCPKG_BUILD_TYPE: release
