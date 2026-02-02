@@ -14,7 +14,7 @@
 
 [datafile]
 description="Experimental effects data for Freeciv21"
-options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct +Vision_Layer +Nation_Intelligence"
+options="+Freeciv-ruleset-Devel-2017.Jan.02 +HP_Regen_Min +Bombard_Limit_Pct +Vision_Layer +Nation_Intelligence +Per_Citizen_Unhappy_Pct"
 format_version=20
 
 ; /* <-- avoid gettext warnings
@@ -307,31 +307,38 @@ reqs	=
     }
 
 [effect_base_enemy_unhappiness]
-type    = "Enemy_Citizen_Unhappy_Pct"
+type    = "Per_Citizen_Unhappy_Pct"
 value   = 100
+reqs =
+    { "type", "name", "range"
+      "DiplRel", "War", "Local"
+    }
 
 [effect_enemy_unhappiness_communism]
-type    = "Enemy_Citizen_Unhappy_Pct"
+type    = "Per_Citizen_Unhappy_Pct"
 value   = -50
 reqs	=
     { "type", "name", "range"
       "Gov", "Communism", "Player"
+      "DiplRel", "War", "Local"
     }
 
 [effect_enemy_unhappiness_republic]
-type    = "Enemy_Citizen_Unhappy_Pct"
+type    = "Per_Citizen_Unhappy_Pct"
 value   = -50
 reqs	=
     { "type", "name", "range"
       "Gov", "Republic", "Player"
+      "DiplRel", "War", "Local"
     }
 
 [effect_enemy_unhappiness_democracy]
-type    = "Enemy_Citizen_Unhappy_Pct"
+type    = "Per_Citizen_Unhappy_Pct"
 value   = -67
 reqs	=
     { "type", "name", "range"
       "Gov", "Democracy", "Player"
+      "DiplRel", "War", "Local"
     }
 
 [effect_corruption_anarchy0]
