@@ -590,7 +590,7 @@
                 <bool>false</bool>
                </property>
                <property name="columnCount">
-                <number>3</number>
+                <number>4</number>
                </property>
                <attribute name="horizontalHeaderStretchLastSection">
                 <bool>true</bool>
@@ -598,6 +598,7 @@
                <attribute name="verticalHeaderVisible">
                 <bool>false</bool>
                </attribute>
+               <column/>
                <column/>
                <column/>
                <column/>

@@ -1670,7 +1670,7 @@ void city_dialog::update_nation_table()
   ui.nationality_table->clear();
   ui.nationality_table->setRowCount(0);
   info_list.clear();
-  info_list << _("#") << _("Flag") << _("Nation");
+  info_list << _("#") << "" << _("Nation") << _("Unhappy");
   ui.nationality_table->setHorizontalHeaderLabels(info_list);
 
   citizens_iterate(pcity, pslot, nationality)
@@ -1692,6 +1692,7 @@ void city_dialog::update_nation_table()
         }
 
         item->setText(str);
+        item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
         break;
 
       case 1: {
@@ -1709,6 +1710,15 @@ void city_dialog::update_nation_table()
         item->setText(
             nation_adjective_for_player(player_slot_get_player(pslot)));
         break;
+
+      case 3: {
+        int pct = get_target_bonus_effects(
+            nullptr, city_owner(pcity), player_slot_get_player(pslot), pcity,
+            nullptr, city_tile(pcity), nullptr, nullptr, nullptr, nullptr,
+            nullptr, EFT_PER_CITIZEN_UNHAPPY_PCT, V_COUNT);
+        item->setText(QString(_("%1%")).arg(pct));
+        item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+      } break;
 
       default:
         break;

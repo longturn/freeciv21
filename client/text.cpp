@@ -1484,62 +1484,33 @@ QString text_happiness_nationality(const struct city *pcity)
     return QString();
   }
 
-  auto str = QStringLiteral("<p>");
-  str +=
-      _("The presence of enemy citizens can create additional unhappiness.");
-  str += QStringLiteral(" ");
-
-  int pct = get_city_bonus(pcity, EFT_PER_CITIZEN_UNHAPPY_PCT);
-  if (pct == 0) {
-    str += _("However, it is not the case in this city.");
-    return str + QStringLiteral("</p>");
-  }
-
-  // This is not exactly correct, but gives a first idea.
-  int num = std::ceil(100. / pct);
-  str += QString(PL_("For every %1 citizen of an enemy nation, one citizen "
-                     "becomes unhappy.",
-                     "For every %1 citizens of an enemy nation, one citizen "
-                     "becomes unhappy.",
-                     num))
-             .arg(num);
-  str += QStringLiteral("</p><p>");
-
-  int enemies = 0;
-  int unhappy = 0;
-
-  citizens_foreign_iterate(pcity, pslot, nationality)
+  // See citizen_happiness_nationality()
+  int unhappy_inc = 0;
+  citizens_iterate(pcity, pslot, nationality)
   {
     int pct = get_target_bonus_effects(
         nullptr, city_owner(pcity), player_slot_get_player(pslot), pcity,
         nullptr, city_tile(pcity), nullptr, nullptr, nullptr, nullptr,
         nullptr, EFT_PER_CITIZEN_UNHAPPY_PCT, V_COUNT);
-    unhappy += pct * nationality;
-    if (pct > 0) {
-      enemies += nationality;
-    }
+    unhappy_inc += pct * nationality;
   }
-  citizens_foreign_iterate_end;
+  citizens_iterate_end;
 
-  unhappy /= 100;
+  unhappy_inc /= 100;
 
-  if (enemies == 0) {
-    str += _("There is <b>no enemy citizen</b> in this city.");
-  } else {
-    // TRANS: "There is 1 enemy citizen in this city, resulting in <b>2
-    //        additional unhappy citizens.</b>" (first half)
-    str +=
-        QString(PL_("There is %1 enemy citizen in this city, ",
-                    "There are %1 enemy citizens in this city, ", enemies))
-            .arg(enemies);
-    // TRANS: "There is 1 enemy citizen in this city, resulting in <b>2
-    //        additional unhappy citizens.</b>" (second half)
-    str += QString(PL_("resulting in <b>%1 additional unhappy citizen.</b>",
-                       "resulting in <b>%1 additional unhappy citizens.</b>",
-                       unhappy))
-               .arg(unhappy);
+  auto str = QStringLiteral("<p>");
+  str +=
+      _("The presence of enemy citizens can create additional unhappiness.");
+  str += QStringLiteral(" ");
+  if (unhappy_inc == 0) {
+    str += _("However, it is not the case in this city.");
+    return str + QStringLiteral("</p>");
   }
 
+  str += QString(PL_("This causes %1 additional citizen to become unhappy.",
+                     "This causes %1 additional citizens to become unhappy.",
+                     unhappy_inc))
+             .arg(unhappy_inc);
   return str + QStringLiteral("</p>");
 }
 
