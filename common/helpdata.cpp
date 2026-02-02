@@ -4102,7 +4102,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
               net_value);
         } // else too complicated or silly ruleset
         break;
-      case EFT_ENEMY_CITIZEN_UNHAPPY_PCT:
+      case EFT_PER_CITIZEN_UNHAPPY_PCT:
         if (playerwide && net_value != world_value) {
           if (world_value > 0) {
             if (net_value > 0) {

@@ -2489,7 +2489,7 @@ static inline void citizen_happiness_nationality(struct city *pcity)
       int pct = get_target_bonus_effects(
           nullptr, city_owner(pcity), player_slot_get_player(pslot), pcity,
           nullptr, city_tile(pcity), nullptr, nullptr, nullptr, nullptr,
-          nullptr, EFT_ENEMY_CITIZEN_UNHAPPY_PCT, V_COUNT);
+          nullptr, EFT_PER_CITIZEN_UNHAPPY_PCT, V_COUNT);
       unhappy_inc += pct * nationality;
     }
     citizens_foreign_iterate_end;

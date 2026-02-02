@@ -5805,11 +5805,16 @@ static bool load_ruleset_effects(struct section_file *file,
 
     eff = effect_type_by_name(type, fc_strcasecmp);
     if (!effect_type_is_valid(eff)) {
-      qCCritical(ruleset_category,
-                 "\"%s\" [%s] lists unknown effect type \"%s\".", filename,
-                 sec_name, type);
-      ok = false;
-      break;
+      // Handle renamed effects
+      if (fc_strcasecmp(type, "Enemy_Citizen_Unhappy_Pct") == 0) {
+        eff = EFT_PER_CITIZEN_UNHAPPY_PCT;
+      } else {
+        qCCritical(ruleset_category,
+                   "\"%s\" [%s] lists unknown effect type \"%s\".", filename,
+                   sec_name, type);
+        ok = false;
+        break;
+      }
     }
 
     value = secfile_lookup_int_default(file, 1, "%s.value", sec_name);

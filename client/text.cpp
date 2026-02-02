@@ -1478,7 +1478,7 @@ QString text_happiness_buildings(const struct city *pcity)
  */
 QString text_happiness_nationality(const struct city *pcity)
 {
-  if (auto effects = get_effects(EFT_ENEMY_CITIZEN_UNHAPPY_PCT);
+  if (auto effects = get_effects(EFT_PER_CITIZEN_UNHAPPY_PCT);
       !game.info.citizen_nationality || effect_list_size(effects) == 0) {
     // Disabled in the ruleset
     return QString();
@@ -1489,7 +1489,7 @@ QString text_happiness_nationality(const struct city *pcity)
       _("The presence of enemy citizens can create additional unhappiness.");
   str += QStringLiteral(" ");
 
-  int pct = get_city_bonus(pcity, EFT_ENEMY_CITIZEN_UNHAPPY_PCT);
+  int pct = get_city_bonus(pcity, EFT_PER_CITIZEN_UNHAPPY_PCT);
   if (pct == 0) {
     str += _("However, it is not the case in this city.");
     return str + QStringLiteral("</p>");
@@ -1513,7 +1513,7 @@ QString text_happiness_nationality(const struct city *pcity)
     int pct = get_target_bonus_effects(
         nullptr, city_owner(pcity), player_slot_get_player(pslot), pcity,
         nullptr, city_tile(pcity), nullptr, nullptr, nullptr, nullptr,
-        nullptr, EFT_ENEMY_CITIZEN_UNHAPPY_PCT, V_COUNT);
+        nullptr, EFT_PER_CITIZEN_UNHAPPY_PCT, V_COUNT);
     unhappy += pct * nationality;
     if (pct > 0) {
       enemies += nationality;
