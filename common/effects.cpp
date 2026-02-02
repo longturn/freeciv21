@@ -1175,7 +1175,7 @@ QString effect_type_unit_text(effect_type type, int value)
   case EFT_NUKE_IMPROVEMENT_PCT:
   case EFT_UNIT_BUILD_COST_PCT:
   case EFT_UNIT_BUY_COST_PCT:
-  case EFT_ENEMY_CITIZEN_UNHAPPY_PCT:
+  case EFT_PER_CITIZEN_UNHAPPY_PCT:
   case EFT_IRRIGATION_PCT:
   case EFT_MINING_PCT:
   case EFT_OUTPUT_TILE_PUNISH_PCT:

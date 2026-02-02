@@ -19,10 +19,12 @@
 #define CAP_EFT_WONDER_VISIBLE "Wonder_Visible"
 #define CAP_VUT_VISIONLAYER "Vision_Layer"
 #define CAP_EFT_NATION_INTELLIGENCE "Nation_Intelligence"
+#define CAP_EFT_PER_CITIZEN_UNHAPPY_PCT "Per_Citizen_Unhappy_Pct"
 #define RULESET_CAPABILITIES                                                \
   "+Freeciv-ruleset-Devel-2017.Jan.02 " CAP_EFT_HP_REGEN_MIN                \
   " " CAP_EFT_BOMBARD_LIMIT_PCT " " CAP_EFT_WONDER_VISIBLE                  \
-  " " CAP_VUT_VISIONLAYER " " CAP_EFT_NATION_INTELLIGENCE
+  " " CAP_VUT_VISIONLAYER " " CAP_EFT_NATION_INTELLIGENCE                   \
+  " " CAP_EFT_PER_CITIZEN_UNHAPPY_PCT
 /*
  * Ruleset capabilities acceptable to this program:
  *

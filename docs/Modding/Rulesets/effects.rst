@@ -412,8 +412,17 @@ Make_Happy
 
 .. _effect-enemy-citizen-unhappy-pct:
 
-Enemy_Citizen_Unhappy_Pct
-    There will be one extra unhappy citizen for each value/100 citizens of enemy nationality in the city.
+Per_Citizen_Unhappy_Pct
+    There will be one extra unhappy citizen for each value/100 matching citizens in the city. This
+    works best in association with ``DiplRel`` requirements or similar.
+
+    This effect requires adding the ``+Per_Citizen_Unhappy_Pct`` option to :file:`effects.ruleset`.
+
+    .. note::
+        Prior to Freeciv21 3.2, this effect was called ``Enemy_Citizen_Unhappy_Pct`` and restricted
+        to enemy citizens. The old name is still accepted as a synonym. If
+        ``+Per_Citizen_Unhappy_Pct`` is not specified in :file:`effects.ruleset`, a ``DiplRel=War``
+        requirement is automatically added for backward compatibility.
 
 .. _effect-no-anarchy:
 

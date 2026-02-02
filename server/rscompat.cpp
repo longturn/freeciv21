@@ -1142,6 +1142,24 @@ static void rscompat_migrate_eft_nation_intelligence()
 }
 
 /**
+ * Adds <DiplRel, War, Local, True> req to all per citizen unhappy effects,
+ * as compat for missing CAP_EFT_PER_CITIZEN_UNHAPPY_PCT. This reproduces the
+ * effect of former EFT_ENEMY_CITIZEN_UNHAPPY_PCT
+ *
+ * @data is a struct rscompat_info *.
+ */
+static bool rscompat_enemy_citizen_unhappy_effect_cb(struct effect *peffect,
+                                                     void *data)
+{
+  if (peffect->type == EFT_PER_CITIZEN_UNHAPPY_PCT) {
+    effect_req_append(peffect, req_from_str("DiplRel", "Local", false, true,
+                                            false, "War"));
+  }
+
+  return true;
+}
+
+/**
  * Handles compatibility with older versions when the new behavior is
  * tied to the presence of an optional ruleset capability.
  */
@@ -1232,6 +1250,12 @@ static void rscompat_optional_capabilities(rscompat_info *info)
   if (!has_capability(CAP_EFT_NATION_INTELLIGENCE,
                       info->cap_effects.data())) {
     rscompat_migrate_eft_nation_intelligence();
+  }
+
+  if (!has_capability(CAP_EFT_PER_CITIZEN_UNHAPPY_PCT,
+                      info->cap_effects.data())) {
+    // Add DiplRel=War
+    iterate_effect_cache(rscompat_enemy_citizen_unhappy_effect_cb, info);
   }
 }
 
