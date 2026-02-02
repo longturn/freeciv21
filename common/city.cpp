@@ -2484,7 +2484,7 @@ static inline void citizen_happiness_nationality(struct city *pcity)
   if (game.info.citizen_nationality) {
     int unhappy_inc = 0;
 
-    citizens_foreign_iterate(pcity, pslot, nationality)
+    citizens_iterate(pcity, pslot, nationality)
     {
       int pct = get_target_bonus_effects(
           nullptr, city_owner(pcity), player_slot_get_player(pslot), pcity,
@@ -2492,7 +2492,7 @@ static inline void citizen_happiness_nationality(struct city *pcity)
           nullptr, EFT_PER_CITIZEN_UNHAPPY_PCT, V_COUNT);
       unhappy_inc += pct * nationality;
     }
-    citizens_foreign_iterate_end;
+    citizens_iterate_end;
 
     unhappy_inc /= 100;
 
