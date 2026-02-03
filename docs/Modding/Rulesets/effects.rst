@@ -410,7 +410,7 @@ Make_Content_Mil_Per
 Make_Happy
     Make AMOUNT citizens happy.
 
-.. _effect-enemy-citizen-unhappy-pct:
+.. _effect-per-citizen-unhappy-pct:
 
 Per_Citizen_Unhappy_Pct
     There will be one extra unhappy citizen for each value/100 matching citizens in the city. This
