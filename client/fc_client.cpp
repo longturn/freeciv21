@@ -324,8 +324,8 @@ void fc_client::slot_disconnect()
 {
   if (client.conn.used) {
     disconnect_from_server();
-    switch_page(PAGE_MAIN);
   }
+  switch_page(PAGE_MAIN);
 }
 
 /**
