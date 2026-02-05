@@ -35,6 +35,10 @@ class units_select;
 class xvote;
 class map_editor;
 
+namespace freeciv {
+class conn_loss_widget;
+} // namespace freeciv
+
 /****************************************************************************
   Widget holding all game tabs
 ****************************************************************************/
@@ -72,6 +76,7 @@ public:
   QWidget *game_main_widget;
   fc_game_tab_widget *game_tab_widget;
   top_bar *top_bar_wdg;
+  freeciv::conn_loss_widget *conn_loss;
   goto_dialog *gtd;
   units_select *unit_selector;
   hud_battle_log *battlelog_wdg;

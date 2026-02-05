@@ -156,6 +156,7 @@ target_sources(
   views/view_research_reqtree.cpp
   views/view_units.cpp
 
+  widgets/conn_loss_widget.cpp
   widgets/decorations.cpp
   widgets/city/city_icon_widget.cpp
   widgets/city/governor_widget.cpp

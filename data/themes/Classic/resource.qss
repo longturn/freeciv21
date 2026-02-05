@@ -876,3 +876,7 @@ hud_unit_combat {
   selection-background-color: rgb(0, 0, 75);
   alternate-background-color: #ffecba;
 }
+
+freeciv--conn_loss_widget {
+  background-color: #ffaa00;
+}

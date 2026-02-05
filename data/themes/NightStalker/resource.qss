@@ -985,3 +985,7 @@ message_dlg QTableWidget {
   background-color: #525d6e;
   alternate-background-color: #4b5565;
 }
+
+freeciv--conn_loss_widget {
+  background-color: #4500ce;
+}
