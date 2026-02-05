@@ -27,7 +27,6 @@
 #include "cityrep_g.h"
 #include "effects.h"
 #include "government.h"
-#include "repodlgs_g.h"
 
 // client
 #include "chatline.h"
@@ -43,13 +42,14 @@
 #include "minimap.h"
 #include "minimap_panel.h"
 #include "ratesdlg.h"
+#include "repodlgs_common.h"
 #include "text.h"
 #include "tileset/tilespec.h"
 #include "top_bar.h"
 #include "views/view_map.h"
 #include "views/view_map_common.h"
 #include "views/view_nations.h"
-#include "views/view_units.h"
+#include "widgets/conn_loss_widget.h"
 
 #include "voteinfo_bar.h"
 
@@ -77,6 +77,9 @@ pageGame::pageGame(QWidget *parent)
   mapview_wdg = new map_view();
   mapview_wdg->setFocusPolicy(Qt::WheelFocus);
   top_bar_wdg = new top_bar();
+  conn_loss = new freeciv::conn_loss_widget;
+  conn_loss->hide();
+
   sw_map = new top_bar_widget(Q_("?noun:View"), QStringLiteral("MAP"),
                               top_bar_show_map);
 
@@ -225,6 +228,8 @@ pageGame::pageGame(QWidget *parent)
   auto page_game_layout = new QVBoxLayout;
   page_game_layout->addWidget(top_bar_wdg);
   page_game_layout->setStretchFactor(top_bar_wdg, 0);
+  page_game_layout->addWidget(conn_loss);
+  page_game_layout->setStretchFactor(conn_loss, 0);
   page_game_layout->addWidget(game_tab_widget);
   page_game_layout->setStretchFactor(game_tab_widget, 1);
   page_game_layout->setContentsMargins(0, 0, 0, 0);

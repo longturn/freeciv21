@@ -29,7 +29,6 @@
 
 // common
 #include "packets.h"
-#include "tile.h"
 
 // client
 #include "attribute.h"
@@ -41,7 +40,9 @@
 #include "governor.h"
 #include "options.h"
 #include "packhand.h"
+#include "page_game.h"
 #include "qtg_cxxside.h"
+#include "widgets/conn_loss_widget.h"
 
 // In autoconnect mode, try to connect to once a second
 #define AUTOCONNECT_INTERVAL 500
@@ -94,6 +95,9 @@ static void error_on_socket()
     log_debug("%s", qUtf8Printable(client.conn.sock->errorString()));
     output_window_append(ftc_client,
                          qUtf8Printable(client.conn.sock->errorString()));
+    if (queen()) {
+      queen()->conn_loss->show();
+    }
   }
   client.conn.used = false;
 }
