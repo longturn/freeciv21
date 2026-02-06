@@ -36,9 +36,9 @@
 #include "requirements.h"
 #include "research.h"
 #include "road.h"
+#include "spacerace.h"
 #include "specialist.h"
 #include "team.h"
-#include "tech.h"
 #include "traderoutes.h"
 #include "unit.h"
 #include "unitlist.h"
@@ -47,9 +47,6 @@
 
 /* common/aicore */
 #include "cm.h"
-
-/* common/scriptcore */
-#include "luascript_types.h"
 
 // server
 #include "barbarian.h"
@@ -61,7 +58,7 @@
 #include "plrhand.h"
 #include "sanitycheck.h"
 #include "sernet.h"
-#include "spacerace.h"
+#include "server_connection.h"
 #include "srv_main.h"
 #include "techtools.h"
 #include "unithand.h"
@@ -359,7 +356,7 @@ search_for_city_name(struct tile *ptile,
 bool is_allowed_city_name(struct player *pplayer, const char *cityname,
                           char *error_buf, size_t bufsz)
 {
-  struct connection *pconn = conn_by_user(pplayer->username);
+  auto pconn = conn_by_user(pplayer->username);
 
   // Disallow leading, trailing, and double spaces
   if (QString(cityname).simplified() != cityname) {

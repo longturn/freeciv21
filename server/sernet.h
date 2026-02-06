@@ -20,7 +20,7 @@ class QLocalServer;
 class QTcpServer;
 class QString;
 
-struct connection;
+struct server_connection;
 
 #define BUF_SIZE 512
 
@@ -33,14 +33,14 @@ using socket_server =
 
 std::optional<socket_server> server_open_socket();
 void flush_packets();
-void incoming_client_packets(connection *pconn);
+void incoming_client_packets(server_connection *pconn);
 void close_connections_and_socket();
 void really_close_connections();
 void init_connections();
 int server_make_connection(QIODevice *new_sock, const QString &client_addr,
                            const QString &ip_addr);
 void finish_unit_waits();
-void connection_ping(struct connection *pconn);
-void handle_conn_pong(struct connection *pconn);
-void handle_client_heartbeat(struct connection *pconn);
+void connection_ping(server_connection *pconn);
+void handle_conn_pong(server_connection *pconn);
+void handle_client_heartbeat(server_connection *pconn);
 void get_lanserver_announcement();

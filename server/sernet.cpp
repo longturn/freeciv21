@@ -34,19 +34,15 @@
 #include "fc_version.h"
 
 // common
-#include "dataio.h"
-#include "events.h"
+#include "dataio_raw.h"
 #include "game.h"
 #include "packets.h"
 
-/* server/scripting */
-#include "script_server.h"
-
 // server
-#include "aiiface.h"
 #include "connecthand.h"
 #include "meta.h"
 #include "plrhand.h"
+#include "server_connection.h"
 #include "srv_main.h"
 #include "stdinhand.h"
 #include "unittools.h"
@@ -54,15 +50,15 @@
 
 #include "sernet.h"
 
-static struct connection connections[MAX_NUM_CONNECTIONS];
+static server_connection connections[MAX_NUM_CONNECTIONS];
 
 static QUdpSocket *udp_socket = nullptr;
 
 #define PROCESSING_TIME_STATISTICS 0
 
-static void start_processing_request(struct connection *pconn,
+static void start_processing_request(server_connection *pconn,
                                      int request_id);
-static void finish_processing_request(struct connection *pconn);
+static void finish_processing_request(server_connection *pconn);
 
 static void send_lanserver_response();
 
@@ -70,22 +66,22 @@ static void send_lanserver_response();
    Close the connection (very low-level). See also
    server_conn_close_callback().
  */
-static void close_connection(struct connection *pconn)
+static void close_connection(server_connection *pconn)
 {
   if (!pconn) {
     return;
   }
 
-  if (pconn->server.ping_timers != nullptr) {
-    while (!pconn->server.ping_timers->isEmpty()) {
-      timer_destroy(pconn->server.ping_timers->takeFirst());
+  if (pconn->ping_timers != nullptr) {
+    while (!pconn->ping_timers->isEmpty()) {
+      timer_destroy(pconn->ping_timers->takeFirst());
     }
-    delete pconn->server.ping_timers;
-    pconn->server.ping_timers = nullptr;
+    delete pconn->ping_timers;
+    pconn->ping_timers = nullptr;
   }
 
-  conn_pattern_list_destroy(pconn->server.ignore_list);
-  pconn->server.ignore_list = nullptr;
+  conn_pattern_list_destroy(pconn->ignore_list);
+  pconn->ignore_list = nullptr;
 
   // safe to do these even if not in lists:
   conn_list_remove(game.glob_observers, pconn);
@@ -139,8 +135,8 @@ void close_connections_and_socket()
  */
 void really_close_connections()
 {
-  struct connection *closing[MAX_NUM_CONNECTIONS];
-  struct connection *pconn;
+  server_connection *closing[MAX_NUM_CONNECTIONS];
+  server_connection *pconn;
   int i, num;
 
   do {
@@ -148,7 +144,7 @@ void really_close_connections()
 
     for (i = 0; i < MAX_NUM_CONNECTIONS; i++) {
       pconn = connections + i;
-      if (pconn->used && pconn->server.is_closing) {
+      if (pconn->used && pconn->is_closing) {
         closing[num++] = pconn;
         /* Remove closing connections from the lists (hard detach)
          * to avoid sending to closing connections. */
@@ -174,10 +170,10 @@ void really_close_connections()
    Break a client connection. You should almost always use
    connection_close_server() instead of calling this function directly.
  */
-static void server_conn_close_callback(struct connection *pconn)
+static void server_conn_close_callback(connection *pconn)
 {
   // Do as little as possible here to avoid recursive evil.
-  pconn->server.is_closing = true;
+  pconn->is_closing = true;
 }
 
 /**
@@ -187,9 +183,9 @@ static void server_conn_close_callback(struct connection *pconn)
 void flush_packets()
 {
   for (auto &i : connections) { // check for freaky players
-    struct connection *pconn = &i;
+    server_connection *pconn = &i;
 
-    if (pconn->used && !pconn->server.is_closing) {
+    if (pconn->used && !pconn->is_closing) {
       if (!pconn->sock->isOpen()) {
         qDebug("connection (%s) cut due to exception data",
                conn_description(pconn));
@@ -213,7 +209,7 @@ struct packet_to_handle {
 /**
    Simplify a loop by wrapping get_packet_from_connection.
  */
-static bool get_packet(struct connection *pconn,
+static bool get_packet(server_connection *pconn,
                        struct packet_to_handle *ppacket)
 {
   ppacket->data = get_packet_from_connection(pconn, &ppacket->type);
@@ -226,7 +222,7 @@ static bool get_packet(struct connection *pconn,
    Precondition - we have read_socket_data.
    Postcondition - there are no more packets to handle on this connection.
  */
-void incoming_client_packets(struct connection *pconn)
+void incoming_client_packets(server_connection *pconn)
 {
   struct packet_to_handle packet;
 #if PROCESSING_TIME_STATISTICS
@@ -243,15 +239,15 @@ void incoming_client_packets(struct connection *pconn)
     timer_start(request_time);
 #endif // PROCESSING_TIME_STATISTICS
 
-    pconn->server.last_request_id_seen =
-        get_next_request_id(pconn->server.last_request_id_seen);
+    pconn->last_request_id_seen =
+        get_next_request_id(pconn->last_request_id_seen);
 
 #if PROCESSING_TIME_STATISTICS
-    request_id = pconn->server.last_request_id_seen;
+    request_id = pconn->last_request_id_seen;
 #endif // PROCESSING_TIME_STATISTICS
 
     connection_do_buffer(pconn);
-    start_processing_request(pconn, pconn->server.last_request_id_seen);
+    start_processing_request(pconn, pconn->last_request_id_seen);
 
     command_ok = server_packet_input(pconn, packet.data, packet.type);
     ::operator delete(packet.data);
@@ -314,7 +310,7 @@ int server_make_connection(QIODevice *new_sock, const QString &client_addr,
   int i;
 
   for (i = 0; i < MAX_NUM_CONNECTIONS; i++) {
-    struct connection *pconn = &connections[i];
+    server_connection *pconn = &connections[i];
 
     if (!pconn->used) {
       connection_common_init(pconn);
@@ -325,34 +321,33 @@ int server_make_connection(QIODevice *new_sock, const QString &client_addr,
       pconn->capability[0] = '\0';
       pconn->access_level = access_level_for_next_connection();
       pconn->notify_of_writable_data = nullptr;
-      pconn->server.currently_processed_request_id = 0;
-      pconn->server.last_request_id_seen = 0;
-      pconn->server.auth_tries = 0;
-      pconn->server.auth_settime = 0;
-      pconn->server.status = AS_NOT_ESTABLISHED;
-      pconn->server.ping_timers = new QList<civtimer *>;
-      pconn->server.granted_access_level = pconn->access_level;
-      pconn->server.ignore_list =
-          conn_pattern_list_new_full(conn_pattern_destroy);
-      pconn->server.is_closing = false;
+      pconn->currently_processed_request_id = 0;
+      pconn->last_request_id_seen = 0;
+      pconn->auth_tries = 0;
+      pconn->auth_settime = 0;
+      pconn->status = AS_NOT_ESTABLISHED;
+      pconn->ping_timers = new QList<civtimer *>;
+      pconn->granted_access_level = pconn->access_level;
+      pconn->ignore_list = conn_pattern_list_new_full(conn_pattern_destroy);
+      pconn->is_closing = false;
       pconn->ping_time = -1.0;
       pconn->incoming_packet_notify = nullptr;
       pconn->outgoing_packet_notify = nullptr;
 
       sz_strlcpy(pconn->username, makeup_connection_name(&pconn->id));
       pconn->addr = client_addr;
-      sz_strlcpy(pconn->server.ipaddr, qUtf8Printable(ip_addr));
+      sz_strlcpy(pconn->ipaddr, qUtf8Printable(ip_addr));
 
       conn_list_append(game.all_connections, pconn);
 
       qDebug("connection (%s) from %s (%s)", pconn->username,
-             qUtf8Printable(pconn->addr), pconn->server.ipaddr);
+             qUtf8Printable(pconn->addr), pconn->ipaddr);
       /* Give a ping timeout to send the PACKET_SERVER_JOIN_REQ, or close
        * the mute connection. This timer will be canceled into
        * connecthand.c:handle_login_request(). */
       timer = timer_new(TIMER_USER, TIMER_ACTIVE);
       timer_start(timer);
-      pconn->server.ping_timers->append(timer);
+      pconn->ping_timers->append(timer);
       return 0;
     }
   }
@@ -458,7 +453,7 @@ void init_connections()
   game.glob_observers = conn_list_new();
 
   for (i = 0; i < MAX_NUM_CONNECTIONS; i++) {
-    struct connection *pconn = &connections[i];
+    server_connection *pconn = &connections[i];
 
     pconn->used = false;
     pconn->self = conn_list_new();
@@ -469,31 +464,31 @@ void init_connections()
 /**
    Starts processing of request packet from client.
  */
-static void start_processing_request(struct connection *pconn,
+static void start_processing_request(server_connection *pconn,
                                      int request_id)
 {
   fc_assert_ret(request_id);
-  fc_assert_ret(pconn->server.currently_processed_request_id == 0);
+  fc_assert_ret(pconn->currently_processed_request_id == 0);
   log_debug("start processing packet %d from connection %d", request_id,
             pconn->id);
   conn_compression_freeze(pconn);
   send_packet_processing_started(pconn);
-  pconn->server.currently_processed_request_id = request_id;
+  pconn->currently_processed_request_id = request_id;
 }
 
 /**
    Finish processing of request packet from client.
  */
-static void finish_processing_request(struct connection *pconn)
+static void finish_processing_request(server_connection *pconn)
 {
   if (!pconn || !pconn->used) {
     return;
   }
-  fc_assert_ret(pconn->server.currently_processed_request_id);
+  fc_assert_ret(pconn->currently_processed_request_id);
   log_debug("finish processing packet %d from connection %d",
-            pconn->server.currently_processed_request_id, pconn->id);
+            pconn->currently_processed_request_id, pconn->id);
   send_packet_processing_finished(pconn);
-  pconn->server.currently_processed_request_id = 0;
+  pconn->currently_processed_request_id = 0;
   conn_compression_thaw(pconn);
 }
 
@@ -524,43 +519,43 @@ void finish_unit_waits()
 /**
    Ping a connection.
  */
-void connection_ping(struct connection *pconn)
+void connection_ping(server_connection *pconn)
 {
   civtimer *timer = timer_new(TIMER_USER, TIMER_ACTIVE);
 
   log_debug("sending ping to %s (open=%lld)", conn_description(pconn),
-            pconn->server.ping_timers->size());
+            pconn->ping_timers->size());
   timer_start(timer);
-  pconn->server.ping_timers->append(timer);
+  pconn->ping_timers->append(timer);
   send_packet_conn_ping(pconn);
 }
 
 /**
    Handle response to ping.
  */
-void handle_conn_pong(struct connection *pconn)
+void handle_conn_pong(server_connection *pconn)
 {
   civtimer *timer;
 
-  if (pconn->server.ping_timers->size() == 0) {
+  if (pconn->ping_timers->size() == 0) {
     qCritical("got unexpected pong from %s", conn_description(pconn));
     return;
   }
 
-  timer = pconn->server.ping_timers->front();
+  timer = pconn->ping_timers->front();
   pconn->ping_time = timer_read_seconds(timer);
-  timer_destroy(pconn->server.ping_timers->takeFirst());
+  timer_destroy(pconn->ping_timers->takeFirst());
 
   log_time(QStringLiteral("got pong from %1 (open=%2); ping time = %3s")
                .arg(conn_description(pconn))
-               .arg(pconn->server.ping_timers->size())
+               .arg(pconn->ping_timers->size())
                .arg(pconn->ping_time));
 }
 
 /**
    Handle client's regular hearbeat
  */
-void handle_client_heartbeat(struct connection *pconn)
+void handle_client_heartbeat(server_connection *pconn)
 {
   log_debug("Received heartbeat");
 }

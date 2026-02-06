@@ -16,11 +16,9 @@
 
 // utility
 #include "fcintl.h"
-#include "fcthread.h"
 
 // common
 #include "featured_text.h"
-#include "packets.h"
 
 // client
 #include "chatline.h"
@@ -32,16 +30,16 @@ Q_GLOBAL_STATIC(QMutex, ow_mutex);
 /**
    Send the message as a chat to the server.
  */
-int send_chat(const char *message)
+void send_chat(const char *message)
 {
-  return dsend_packet_chat_msg_req(&client.conn, message);
+  dsend_packet_chat_msg_req(&client.conn, message);
 }
 
 /**
    Send the message as a chat to the server. Message is constructed
    in printf style.
  */
-int send_chat_printf(const char *format, ...)
+void send_chat_printf(const char *format, ...)
 {
   struct packet_chat_msg_req packet;
   va_list args;
@@ -54,7 +52,7 @@ int send_chat_printf(const char *format, ...)
   ba = str.toLocal8Bit();
   qstrncpy(packet.message, ba.data(), sizeof(packet.message));
 
-  return send_packet_chat_msg_req(&client.conn, &packet);
+  send_packet_chat_msg_req(&client.conn, &packet);
 }
 
 /**

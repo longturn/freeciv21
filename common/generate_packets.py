@@ -1982,10 +1982,10 @@ def write_server_header(packets: list[Packet], output: io.TextIOWrapper) -> None
 #include "fc_types.h"
 #include "packets.h"
 
-struct connection;
+struct server_connection;
 
 bool server_handle_packet(enum packet_type type, const void *packet,
-                          player *pplayer, connection *pconn);
+                          player *pplayer, server_connection *pconn);
 
 """
     )
@@ -2001,7 +2001,7 @@ bool server_handle_packet(enum packet_type type, const void *packet,
             output.write(f"struct {packet.name};\n")
             if packet.handle_per_conn:
                 output.write(
-                    f"void {handle_fn_name}(connection *pc, const {packet.name} *packet);\n"
+                    f"void {handle_fn_name}(server_connection *pc, const {packet.name} *packet);\n"
                 )
             else:
                 output.write(
@@ -2016,7 +2016,7 @@ bool server_handle_packet(enum packet_type type, const void *packet,
                 args = ", " + args
 
             if packet.handle_per_conn:
-                output.write(f"void {handle_fn_name}(connection *pc{args});\n")
+                output.write(f"void {handle_fn_name}(server_connection *pc{args});\n")
             else:
                 output.write(f"void {handle_fn_name}(player *pplayer{args});\n")
 
@@ -2038,7 +2038,7 @@ def write_server_source(packets: list[Packet], output: io.TextIOWrapper) -> None
 #include "packets.h"
 
 bool server_handle_packet(enum packet_type type, const void *packet,
-                          player *pplayer, connection *pconn)
+                          player *pplayer, server_connection *pconn)
 {
   switch (type) {
 """

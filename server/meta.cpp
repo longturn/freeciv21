@@ -38,6 +38,7 @@
 // server
 #include "console.h"
 #include "plrhand.h"
+#include "server_connection.h"
 #include "settings.h"
 #include "srv_main.h"
 

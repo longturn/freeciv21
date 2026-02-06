@@ -67,6 +67,7 @@ add_library(
   score.cpp
   sernet.cpp
   server.cpp
+  server_connection.cpp
   settings.cpp
   spacerace.cpp
   srv_log.cpp

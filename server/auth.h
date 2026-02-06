@@ -10,13 +10,11 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 ***********************************************************************/
 #pragma once
 
-#include "shared.h"
+struct server_connection;
 
-struct connection;
+bool auth_user(server_connection *pconn, char *username);
+void auth_process_status(server_connection *pconn);
+bool auth_handle_reply(server_connection *pconn, char *password);
 
-bool auth_user(struct connection *pconn, char *username);
-void auth_process_status(struct connection *pconn);
-bool auth_handle_reply(struct connection *pconn, char *password);
-
-const char *auth_get_username(struct connection *pconn);
-const char *auth_get_ipaddr(struct connection *pconn);
+const char *auth_get_username(server_connection *pconn);
+const char *auth_get_ipaddr(server_connection *pconn);

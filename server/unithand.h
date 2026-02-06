@@ -13,10 +13,9 @@
 #pragma once
 
 // common
+#include "actions.h"
 #include "explanation.h"
 #include "unit.h"
-
-#include "hand_gen.h"
 
 bool unit_activity_handling(struct unit *punit,
                             enum unit_activity new_activity);

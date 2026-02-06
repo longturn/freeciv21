@@ -11,11 +11,8 @@
 #pragma once
 
 // common
+#include "actions.h"
 #include "fc_types.h"
-#include "packets.h"
-
-// server
-#include "hand_gen.h"
 
 struct player_spaceship;
 struct conn_list;

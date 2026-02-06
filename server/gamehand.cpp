@@ -26,7 +26,6 @@
 // common
 #include "ai.h"
 #include "calendar.h"
-#include "events.h"
 #include "game.h"
 #include "movement.h"
 #include "nation.h"
@@ -37,6 +36,7 @@
 #include "connecthand.h"
 #include "maphand.h"
 #include "notify.h"
+#include "server_connection.h"
 #include "srv_main.h"
 #include "stdinhand.h"
 #include "unittools.h"
@@ -1144,7 +1144,7 @@ static void send_ruleset_choices(struct connection *pc)
    the file values. Sends an answer to the client once it's done.
  */
 void handle_single_want_hack_req(
-    struct connection *pc, const struct packet_single_want_hack_req *packet)
+    server_connection *pc, const struct packet_single_want_hack_req *packet)
 {
   struct section_file *secfile;
   const char *token = nullptr;

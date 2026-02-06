@@ -193,12 +193,9 @@ int send_packet_data(struct connection *pc, unsigned char *data, int len,
              packet_name(packet_type), packet_type, len,
              is_server() ? pc->username : "server");
 
-  if (!is_server()) {
-    pc->client.last_request_id_used =
-        get_next_request_id(pc->client.last_request_id_used);
-    result = pc->client.last_request_id_used;
-    log_packet("sending request %d", result);
-  }
+  pc->last_request_id_used = get_next_request_id(pc->last_request_id_used);
+  result = pc->last_request_id_used;
+  log_packet("sending request %d", result);
 
   if (pc->outgoing_packet_notify) {
     pc->outgoing_packet_notify(pc, packet_type, len, result);

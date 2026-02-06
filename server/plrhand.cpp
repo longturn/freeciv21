@@ -19,10 +19,8 @@
 #include "support.h"
 
 // common
-#include "actions.h"
 #include "citizens.h"
 #include "culture.h"
-#include "diptreaty.h"
 #include "effects.h"
 #include "game.h"
 #include "government.h"
@@ -50,6 +48,7 @@
 #include "mood.h"
 #include "notify.h"
 #include "plrhand.h"
+#include "server_connection.h"
 #include "spacerace.h"
 #include "spaceship.h"
 #include "srv_main.h"
@@ -1849,7 +1848,9 @@ void server_remove_player(struct player *pplayer)
   /* Don't use conn_list_iterate here because connection_detach() can be
    * recursive and free the next connection pointer. */
   while (conn_list_size(pplayer->connections) > 0) {
-    connection_detach(conn_list_get(pplayer->connections, 0), false);
+    connection_detach(static_cast<server_connection *>(
+                          conn_list_get(pplayer->connections, 0)),
+                      false);
   }
 
   script_server_remove_exported_object(pplayer);

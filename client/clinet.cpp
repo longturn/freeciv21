@@ -195,9 +195,9 @@ void make_connection(QIODevice *sock, const QString &username)
 
   connection_common_init(&client.conn);
   client.conn.sock = sock;
-  client.conn.client.last_request_id_used = 0;
-  client.conn.client.last_processed_request_id_seen = 0;
-  client.conn.client.request_id_of_currently_handled_packet = 0;
+  client.conn.last_request_id_used = 0;
+  client.conn.last_processed_request_id_seen = 0;
+  client.conn.request_id_of_currently_handled_packet = 0;
   client.conn.incoming_packet_notify = notify_about_incoming_packet;
   client.conn.outgoing_packet_notify = notify_about_outgoing_packet;
 
@@ -316,7 +316,7 @@ void input_from_server(QIODevice *sock)
         ::operator delete(packet);
 
         if (type == PACKET_PROCESSING_FINISHED) {
-          if (client.conn.client.last_processed_request_id_seen
+          if (client.conn.last_processed_request_id_seen
               >= cities_results_request()) {
             cma_got_result(cities_results_request());
           }
