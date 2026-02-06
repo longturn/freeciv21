@@ -9,7 +9,6 @@
 #pragma once
 
 // utility
-#include "shared.h"  // MAX_LEN_ADDR
 #include "support.h" // bool type
 #include "timing.h"
 
@@ -77,6 +76,10 @@ struct connection {
   struct packet_header packet_header;
   QString closing_reason;
 
+  /// Something has occurred that means the connection should be closed, but
+  /// the closing has been postponed.
+  bool is_closing = false;
+
   /* connection is "observer", not controller; may be observing
    * specific player, or all (implementation incomplete).
    */
@@ -111,66 +114,6 @@ struct connection {
   void (*notify_of_writable_data)(struct connection *pc,
                                   bool data_available_and_socket_full);
 
-  union {
-    struct {
-      // Increases for every packet send to the server.
-      int last_request_id_used;
-
-      // Increases for every received PACKET_PROCESSING_FINISHED packet.
-      int last_processed_request_id_seen;
-
-      /* Holds the id of the request which caused this packet. Can be zero.
-       */
-      int request_id_of_currently_handled_packet;
-    } client;
-
-    struct {
-      // Holds the id of the request which is processed now. Can be zero.
-      int currently_processed_request_id;
-
-      // Will increase for every received packet.
-      int last_request_id_seen;
-
-      /* The start times of the PACKET_CONN_PING which have been sent but
-       * weren't PACKET_CONN_PONGed yet? */
-      QList<civtimer *> *ping_timers;
-
-      // Holds number of tries for authentication from client.
-      int auth_tries;
-
-      /* the time that the server will respond after receiving an auth reply.
-       * this is used to throttle the connection. Also used to reject a
-       * connection if we've waited too long for a password. */
-      time_t auth_settime;
-
-      /* used to follow where the connection is in the authentication
-       * process */
-      enum auth_status status;
-      char password[MAX_LEN_PASSWORD];
-
-      // for reverse lookup and blacklisting in db
-      char ipaddr[MAX_LEN_ADDR];
-
-      // The access level initially given to the client upon connection.
-      enum cmdlevel granted_access_level;
-
-      // The list of ignored connection patterns.
-      struct conn_pattern_list *ignore_list;
-
-      /* Something has occurred that means the connection should be closed,
-       * but the closing has been postponed. */
-      bool is_closing;
-
-      /* If we use delegation the original player (playing) is replaced. Save
-       * it here to easily restore it. */
-      struct {
-        bool status; // TRUE if player currently delegated to us
-        struct player *playing;
-        bool observer;
-      } delegation;
-    } server;
-  };
-
   /*
    * Called before an incoming packet is processed. The packet_type
    * argument should really be a "enum packet_type". However due
@@ -200,6 +143,9 @@ struct connection {
   struct {
     int bytes_send;
   } statistics;
+
+  /// Increases for every packet sent.
+  int last_request_id_used;
 };
 
 typedef void (*conn_close_fn_t)(struct connection *pconn);
@@ -217,9 +163,6 @@ void connection_do_unbuffer(struct connection *pc);
 void conn_list_do_buffer(struct conn_list *dest);
 void conn_list_do_unbuffer(struct conn_list *dest);
 
-struct connection *conn_by_user(const char *user_name);
-struct connection *conn_by_user_prefix(const char *user_name,
-                                       enum m_pre_result *result);
 struct connection *conn_by_number(int id);
 
 struct socket_packet_buffer *new_socket_packet_buffer();
@@ -251,39 +194,4 @@ int get_next_request_id(int old_request_id);
 
 extern const char blank_addr_str[];
 
-// Connection patterns.
-struct conn_pattern;
-
-#define SPECLIST_TAG conn_pattern
-#define SPECLIST_TYPE struct conn_pattern
-#include "speclist.h"
-#define conn_pattern_list_iterate(plist, ppatern)                           \
-  TYPED_LIST_ITERATE(struct conn_pattern, plist, ppatern)
-#define conn_pattern_list_iterate_end LIST_ITERATE_END
-
-#define SPECENUM_NAME conn_pattern_type
-#define SPECENUM_VALUE0 CPT_USER
-#define SPECENUM_VALUE0NAME "user"
-#define SPECENUM_VALUE1 CPT_HOST
-#define SPECENUM_VALUE1NAME "host"
-#define SPECENUM_VALUE2 CPT_IP
-#define SPECENUM_VALUE2NAME "ip"
-#include "specenum_gen.h"
-
-struct conn_pattern *conn_pattern_new(enum conn_pattern_type type,
-                                      const char *wildcard);
-void conn_pattern_destroy(struct conn_pattern *ppattern);
-
-bool conn_pattern_match(const struct conn_pattern *ppattern,
-                        const struct connection *pconn);
-bool conn_pattern_list_match(const struct conn_pattern_list *plist,
-                             const struct connection *pconn);
-
-size_t conn_pattern_to_string(const struct conn_pattern *ppattern, char *buf,
-                              size_t buf_len);
-struct conn_pattern *conn_pattern_from_string(const char *pattern,
-                                              enum conn_pattern_type prefer,
-                                              char *error_buf,
-                                              size_t error_buf_len);
-
-bool conn_is_valid(const struct connection *pconn);
+bool conn_is_valid(const connection *pconn);

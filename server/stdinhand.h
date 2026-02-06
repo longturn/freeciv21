@@ -15,28 +15,27 @@
 #include <QString>
 #include <QVector>
 // common
-#include "chat.h"       // SERVER_COMMAND_PREFIX
-#include "connection.h" // enum cmdlevel
 #include "fc_types.h"
 
 // server
 #include "commands.h"
 #include "console.h"
+#include "server_connection.h"
 
 void stdinhand_init();
 void stdinhand_turn();
 void stdinhand_free();
 
-void cmd_reply(enum command_id cmd, struct connection *caller,
+void cmd_reply(enum command_id cmd, server_connection *caller,
                enum rfc_status rfc_status, const char *format, ...)
     fc__attribute((__format__(__printf__, 4, 5)));
 
-bool handle_stdin_input(struct connection *caller, char *str);
+bool handle_stdin_input(server_connection *caller, char *str);
 void set_ai_level_direct(struct player *pplayer, enum ai_level level);
-bool read_init_script(struct connection *caller, const char *script_filename,
+bool read_init_script(server_connection *caller, const char *script_filename,
                       bool from_cmdline, bool check);
 QVector<QString> *get_init_script_choices();
-void show_players(struct connection *caller);
+void show_players(server_connection *caller);
 
 enum rfc_status create_command_newcomer(const char *name, const char *ai,
                                         bool check,
@@ -47,11 +46,11 @@ enum rfc_status create_command_pregame(const char *name, const char *ai,
                                        bool check, struct player **newplayer,
                                        char *buf, size_t buflen);
 
-bool load_command(struct connection *caller, const char *filename,
+bool load_command(server_connection *caller, const char *filename,
                   bool check, bool cmdline_load);
-bool start_command(struct connection *caller, bool check, bool notify);
+bool start_command(server_connection *caller, bool check, bool notify);
 
-void toggle_ai_player_direct(struct connection *caller,
+void toggle_ai_player_direct(server_connection *caller,
                              struct player *pplayer);
 
 // for sernet.c in initing a new connection
@@ -59,7 +58,7 @@ enum cmdlevel access_level_for_next_connection();
 
 void notify_if_first_access_level_is_available();
 
-bool conn_is_kicked(struct connection *pconn, int *time_remaining);
+bool conn_is_kicked(server_connection *pconn, int *time_remaining);
 
 void set_running_game_access_level();
 

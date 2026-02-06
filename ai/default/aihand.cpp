@@ -18,12 +18,11 @@
 #include "timing.h"
 
 // common
-#include "actions.h"
 #include "city.h"
 #include "game.h"
 #include "government.h"
+#include "hand_gen.h"
 #include "nation.h"
-#include "packets.h"
 #include "player.h"
 #include "research.h"
 #include "unit.h"

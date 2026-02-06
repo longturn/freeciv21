@@ -39,7 +39,6 @@
 #include "culture.h"
 #include "dataio_raw.h"
 #include "effects.h"
-#include "events.h"
 #include "fc_interface.h"
 #include "game.h"
 #include "map.h"
@@ -51,7 +50,6 @@
 #include "research.h"
 #include "style.h"
 #include "team.h"
-#include "tech.h"
 #include "unit.h"
 #include "unitlist.h"
 #include "victory.h"
@@ -79,6 +77,7 @@
 #include "sanitycheck.h"
 #include "score.h"
 #include "sernet.h"
+#include "server_connection.h"
 #include "server_settings.h"
 #include "settings.h"
 #include "spacerace.h"
@@ -113,7 +112,7 @@
 
 static void announce_player(struct player *pplayer);
 
-static void handle_observer_ready(struct connection *pconn);
+static void handle_observer_ready(server_connection *pconn);
 
 // command-line arguments to server
 struct server_arguments srvarg;
@@ -211,7 +210,7 @@ void srv_init()
 /**
    Handle client info packet
  */
-void handle_client_info(struct connection *pc, int obsolete,
+void handle_client_info(server_connection *pc, int obsolete,
                         int emerg_version, const char *distribution)
 {
   Q_UNUSED(obsolete);
@@ -1829,12 +1828,13 @@ void start_game()
   // Remove ALLOW_CTRL from whoever has it (gotten from 'first').
   conn_list_iterate(game.est_connections, pconn)
   {
-    if (pconn->access_level == ALLOW_CTRL) {
+    auto sconn = static_cast<server_connection *>(pconn);
+    if (sconn->access_level == ALLOW_CTRL) {
       notify_conn(nullptr, nullptr, E_SETTING, ftc_server,
                   _("%s lost control cmdlevel on "
                     "game start.  Use voting from now on."),
-                  pconn->username);
-      conn_set_access(pconn, ALLOW_BASIC, false);
+                  sconn->username);
+      conn_set_access(sconn, ALLOW_BASIC, false);
     }
   }
   conn_list_iterate_end;
@@ -1917,7 +1917,7 @@ void server_quit()
 /**
    Handle request asking report to be sent to client.
  */
-void handle_report_req(struct connection *pconn, enum report_type type)
+void handle_report_req(server_connection *pconn, enum report_type type)
 {
   struct conn_list *dest = pconn->self;
 
@@ -2013,7 +2013,7 @@ static bool is_client_edit_packet(int type)
    Returns FALSE if connection should be closed (because the clients was
    rejected). Returns TRUE else.
  */
-bool server_packet_input(struct connection *pconn, void *packet, int type)
+bool server_packet_input(server_connection *pconn, void *packet, int type)
 {
   struct player *pplayer;
 
@@ -2292,7 +2292,7 @@ void update_nations_with_startpos()
    handled by connection because ctrl users may edit anyone's nation in
    pregame, and editing is possible during a running game.
  */
-void handle_nation_select_req(struct connection *pc, int player_no,
+void handle_nation_select_req(server_connection *pc, int player_no,
                               Nation_type_id nation_no, bool is_male,
                               const char *name, int style)
 {
@@ -2357,7 +2357,7 @@ void handle_nation_select_req(struct connection *pc, int player_no,
 /**
    Handle a player-ready packet from global observer.
  */
-static void handle_observer_ready(struct connection *pconn)
+static void handle_observer_ready(server_connection *pconn)
 {
   if (pconn->access_level == ALLOW_HACK) {
     players_iterate(plr)

@@ -1816,7 +1816,7 @@ static void do_disband_alternative(void *p)
   next->alt = data->alt - 1;
 
   // Latest request ID before trying to send a request.
-  last_request_id_used = client.conn.client.last_request_id_used;
+  last_request_id_used = client.conn.last_request_id_used;
 
   // Send a request to the server unless it is known to be pointless.
   switch (action_id_get_target_kind(act)) {
@@ -1855,13 +1855,13 @@ static void do_disband_alternative(void *p)
     break;
   }
 
-  if (last_request_id_used != client.conn.client.last_request_id_used) {
+  if (last_request_id_used != client.conn.last_request_id_used) {
     // A request was sent.
 
     // Check if it worked. Move on if it didn't.
     update_queue::uq()->connect_processing_finished_full(
-        client.conn.client.last_request_id_used, do_disband_alternative,
-        next, client_disband_unit_data_destroy);
+        client.conn.last_request_id_used, do_disband_alternative, next,
+        client_disband_unit_data_destroy);
   } else {
     // No request was sent.
 

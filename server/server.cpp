@@ -18,6 +18,7 @@
  */
 
 #include "server.h"
+#include "server_connection.h"
 #include "unittools.h"
 
 // Qt
@@ -569,24 +570,25 @@ void server::send_pings()
   if (time(nullptr) > (game.server.last_ping + game.server.pingtime)) {
     conn_list_iterate(game.all_connections, pconn)
     {
-      if ((!pconn->server.is_closing && 0 < pconn->server.ping_timers->size()
-           && timer_read_seconds(pconn->server.ping_timers->front())
+      auto sconn = static_cast<server_connection *>(pconn);
+      if ((!sconn->is_closing && 0 < sconn->ping_timers->size()
+           && timer_read_seconds(sconn->ping_timers->front())
                   > game.server.pingtimeout)
-          || pconn->ping_time > game.server.pingtimeout) {
+          || sconn->ping_time > game.server.pingtimeout) {
         // cut mute players, except for hack-level ones
-        if (pconn->access_level == ALLOW_HACK) {
+        if (sconn->access_level == ALLOW_HACK) {
           qDebug("connection (%s) [hack-level] ping timeout ignored",
-                 conn_description(pconn));
+                 conn_description(sconn));
         } else {
           qDebug("connection (%s) cut due to ping timeout",
-                 conn_description(pconn));
-          connection_close_server(pconn, _("ping timeout"));
+                 conn_description(sconn));
+          connection_close_server(sconn, _("ping timeout"));
         }
-      } else if (pconn->established) {
+      } else if (sconn->established) {
         // We don't send ping to connection not established, because we
         // wouldn't be able to handle asynchronous ping/pong with different
         // packet header size.
-        connection_ping(pconn);
+        connection_ping(sconn);
       }
     }
     conn_list_iterate_end;
@@ -613,7 +615,8 @@ void server::error_on_socket()
   conn_list_iterate(game.all_connections, pconn)
   {
     if (pconn->sock == socket) {
-      connection_close_server(pconn, socket->errorString());
+      connection_close_server(static_cast<server_connection *>(pconn),
+                              socket->errorString());
       break;
     }
   }
@@ -641,16 +644,17 @@ void server::input_on_socket()
   // Find the corresponding connection
   conn_list_iterate(game.all_connections, pconn)
   {
-    if (pconn->sock == socket && !pconn->server.is_closing) {
-      auto nb = read_socket_data(pconn->sock, pconn->buffer);
+    auto sconn = static_cast<server_connection *>(pconn);
+    if (sconn->sock == socket && !sconn->is_closing) {
+      auto nb = read_socket_data(sconn->sock, sconn->buffer);
       if (0 <= nb) {
         // We read packets; now handle them.
-        incoming_client_packets(pconn);
+        incoming_client_packets(sconn);
       } else if (-2 == nb) {
-        connection_close_server(pconn, _("client disconnected"));
+        connection_close_server(sconn, _("client disconnected"));
       } else {
         // Read failure; the connection is closed.
-        connection_close_server(pconn, _("read error"));
+        connection_close_server(sconn, _("read error"));
       }
       break;
     }
@@ -1119,9 +1123,10 @@ void server::pulse()
   // if we've waited long enough after a failure, respond to the client
   conn_list_iterate(game.all_connections, pconn)
   {
-    if (srvarg.auth_enabled && !pconn->server.is_closing
-        && pconn->server.status != AS_ESTABLISHED) {
-      auth_process_status(pconn);
+    auto sconn = static_cast<server_connection *>(pconn);
+    if (srvarg.auth_enabled && !sconn->is_closing
+        && sconn->status != AS_ESTABLISHED) {
+      auth_process_status(sconn);
     }
   }
   conn_list_iterate_end

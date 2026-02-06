@@ -14,15 +14,11 @@
 // sol2
 #include "sol/sol.hpp"
 
-/* dependencies/lua */
-#include "lua.h"
-
 // utility
 #include "log.h"
 
 /* common/scriptcore */
 #include "luascript.h"
-#include "luascript_types.h"
 #include "tolua_common_a_gen.h"
 #include "tolua_game_gen.h"
 
@@ -140,7 +136,8 @@ static void script_fcdb_cmd_reply(struct fc_lua *lfcl, QtMsgType level,
     break;
   }
 
-  cmd_reply(CMD_FCDB, lfcl->caller, rfc_status, "%s", buf);
+  cmd_reply(CMD_FCDB, static_cast<server_connection *>(lfcl->caller),
+            rfc_status, "%s", buf);
 }
 
 /**

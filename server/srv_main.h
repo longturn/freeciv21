@@ -13,7 +13,6 @@
 #pragma once
 
 // utility
-#include "log.h"       // QtMsgType
 #include "net_types.h" // announce_type
 
 // common
@@ -24,6 +23,7 @@
 #include <QHostAddress>
 
 struct conn_list;
+struct server_connection;
 
 struct server_arguments {
   // metaserver information
@@ -112,7 +112,7 @@ bool server_ss_val_bool_get(server_setting_id id);
 int server_ss_val_int_get(server_setting_id id);
 unsigned int server_ss_val_bitwise_get(server_setting_id id);
 
-bool server_packet_input(struct connection *pconn, void *packet, int type);
+bool server_packet_input(server_connection *pconn, void *packet, int type);
 void start_game();
 const char *pick_random_player_name(const struct nation_type *pnation);
 void player_nation_defaults(struct player *pplayer,

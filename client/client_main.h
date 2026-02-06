@@ -12,7 +12,9 @@
       \____/        ********************************************************/
 #pragma once
 
-#include "packets.h" // enum report_type
+// common
+#include "client_connection.h" // enum report_type
+#include "packets.h"           // enum report_type
 
 // Forward declarations
 class QString;
@@ -83,7 +85,7 @@ struct global_worklist_list; // Defined in global_worklist.[ch].
  * TODO: Lots more variables could be added here. */
 extern struct civclient {
   // this is the client's connection to the server
-  struct connection conn;
+  client_connection conn;
   struct global_worklist_list *worklists;
 } client;
 

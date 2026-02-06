@@ -172,13 +172,13 @@ void message_widget::msg_update()
   }
 
   // Scroll down to make sure the latest message is visible.
-  if (client.conn.client.request_id_of_currently_handled_packet == 0) {
+  if (client.conn.request_id_of_currently_handled_packet == 0) {
     mesg_table->scrollToBottom();
   } else {
     // Scroll only once to avoid laying out text repeately.
     update_queue::uq()->connect_processing_finished_unique(
-        client.conn.client.request_id_of_currently_handled_packet,
-        scroll_to_bottom, (void *) this);
+        client.conn.request_id_of_currently_handled_packet, scroll_to_bottom,
+        (void *) this);
   }
 }
 

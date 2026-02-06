@@ -659,7 +659,7 @@ void fc_client::start_tutorial()
   current_file = il.front().absoluteFilePath();
   if (client_start_server(client_url().userName())) {
     update_queue::uq()->connect_processing_finished(
-        client.conn.client.last_request_id_used,
+        client.conn.last_request_id_used,
         [](void *) { king()->start_from_file(king()->current_file); }, this);
   }
 }

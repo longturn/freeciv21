@@ -19,7 +19,6 @@
 #include "support.h"
 
 // common
-#include "connection.h"
 #include "packets.h"
 #include "player.h"
 
@@ -28,7 +27,7 @@
 #include "console.h"
 #include "hand_gen.h"
 #include "notify.h"
-#include "settings.h"
+#include "server_connection.h"
 #include "stdinhand.h"
 
 #include "voting.h"
@@ -45,7 +44,8 @@ int count_voters(const struct vote *pvote)
 
   conn_list_iterate(game.est_connections, pconn)
   {
-    if (conn_can_vote(pconn, pvote)) {
+    auto sconn = static_cast<server_connection *>(pconn);
+    if (conn_can_vote(sconn, pvote)) {
       num_voters++;
     }
   }
@@ -86,10 +86,11 @@ static void lsend_vote_new(struct conn_list *dest, struct vote *pvote)
 
   conn_list_iterate(dest, conn)
   {
-    if (!conn_can_see_vote(conn, pvote)) {
+    auto sconn = static_cast<server_connection *>(conn);
+    if (!conn_can_see_vote(sconn, pvote)) {
       continue;
     }
-    send_packet_vote_new(conn, &packet);
+    send_packet_vote_new(sconn, &packet);
   }
   conn_list_iterate_end;
 }
@@ -126,10 +127,11 @@ static void lsend_vote_update(struct conn_list *dest, struct vote *pvote,
 
   conn_list_iterate(dest, aconn)
   {
-    if (!conn_can_see_vote(aconn, pvote)) {
+    auto sconn = static_cast<server_connection *>(aconn);
+    if (!conn_can_see_vote(sconn, pvote)) {
       continue;
     }
-    send_packet_vote_update(aconn, &packet);
+    send_packet_vote_update(sconn, &packet);
   }
   conn_list_iterate_end;
 }
@@ -176,10 +178,11 @@ static void lsend_vote_resolve(struct conn_list *dest, struct vote *pvote,
 
   conn_list_iterate(dest, pconn)
   {
-    if (!conn_can_see_vote(pconn, pvote)) {
+    auto sconn = static_cast<server_connection *>(pconn);
+    if (!conn_can_see_vote(sconn, pvote)) {
       continue;
     }
-    send_packet_vote_resolve(pconn, &packet);
+    send_packet_vote_resolve(sconn, &packet);
   }
   conn_list_iterate_end;
 }
@@ -247,7 +250,7 @@ bool vote_is_team_only(const struct vote *pvote)
      * the vote is a team vote and not on the caller's team
    NB: If 'pvote' is nullptr, then the team condition is not checked.
  */
-bool conn_can_vote(const struct connection *pconn, const struct vote *pvote)
+bool conn_can_vote(const server_connection *pconn, const struct vote *pvote)
 {
   if (!pconn || !conn_controls_player(pconn)
       || conn_get_access(pconn) < ALLOW_BASIC) {
@@ -271,7 +274,7 @@ bool conn_can_vote(const struct connection *pconn, const struct vote *pvote)
 /**
    Usually, all users can see, except in the team vote case.
  */
-bool conn_can_see_vote(const struct connection *pconn,
+bool conn_can_see_vote(const server_connection *pconn,
                        const struct vote *pvote)
 {
   if (!pconn) {
@@ -320,7 +323,7 @@ struct vote *get_vote_by_no(int vote_no)
 /**
    Returns the vote called by 'caller', or nullptr if none exists.
  */
-struct vote *get_vote_by_caller(const struct connection *caller)
+struct vote *get_vote_by_caller(const server_connection *caller)
 {
   if (caller == nullptr || !vote_list) {
     return nullptr;
@@ -341,7 +344,7 @@ struct vote *get_vote_by_caller(const struct connection *caller)
    Create and return a newly allocated vote for the command with id
    'command_id' and all arguments in the string 'allargs'.
  */
-struct vote *vote_new(struct connection *caller, const char *allargs,
+struct vote *vote_new(server_connection *caller, const char *allargs,
                       int command_id)
 {
   struct vote *pvote;
@@ -393,7 +396,7 @@ struct vote *vote_new(struct connection *caller, const char *allargs,
    Return whether the vote would pass immediately when the caller will vote
    for.
  */
-bool vote_would_pass_immediately(const struct connection *caller,
+bool vote_would_pass_immediately(const server_connection *caller,
                                  int command_id)
 {
   struct vote virtual_vote;
@@ -428,7 +431,7 @@ static void check_vote(struct vote *pvote)
 {
   int num_cast = 0, num_voters = 0;
   bool resolve = false, passed = false;
-  struct connection *pconn = nullptr;
+  server_connection *pconn = nullptr;
   double yes_pc = 0.0, no_pc = 0.0, rem_pc = 0.0, base = 0.0;
   int flags;
   double need_pc;
@@ -449,7 +452,8 @@ static void check_vote(struct vote *pvote)
 
   vote_cast_list_iterate(pvote->votes_cast, pvc)
   {
-    if (!(pconn = conn_by_number(pvc->conn_id))
+    if (!(pconn =
+              static_cast<server_connection *>(conn_by_number(pvc->conn_id)))
         || !conn_can_vote(pconn, pvote)) {
       continue;
     }
@@ -541,7 +545,7 @@ static void check_vote(struct vote *pvote)
   }
 
   if (vote_is_team_only(pvote)) {
-    const struct connection *caller;
+    const server_connection *caller;
 
     // TRANS: "Vote" as a process. Used as part of a sentence.
     title = _("Teamvote");
@@ -573,7 +577,8 @@ static void check_vote(struct vote *pvote)
 
   vote_cast_list_iterate(pvote->votes_cast, pvc)
   {
-    if (!(pconn = conn_by_number(pvc->conn_id))) {
+    if (!(pconn = static_cast<server_connection *>(
+              conn_by_number(pvc->conn_id)))) {
       qCritical("Got a vote from a lost connection");
       continue;
     } else if (!conn_can_vote(pconn, pvote)) {
@@ -672,7 +677,7 @@ static void remove_vote_cast(struct vote *pvote, struct vote_cast *pvc)
 /**
    Make the given connection vote 'type' on 'pvote', and check the vote.
  */
-void connection_vote(struct connection *pconn, struct vote *pvote,
+void connection_vote(server_connection *pconn, struct vote *pvote,
                      enum vote_type type)
 {
   struct vote_cast *pvc;
@@ -699,7 +704,7 @@ void connection_vote(struct connection *pconn, struct vote *pvote,
 /**
    Cancel the votes of a lost or a detached connection.
  */
-void cancel_connection_votes(struct connection *pconn)
+void cancel_connection_votes(server_connection *pconn)
 {
   if (!pconn || !vote_list) {
     return;
@@ -788,7 +793,7 @@ int describe_vote(struct vote *pvote, char *buf, int buflen)
    Handle a vote submit packet sent from a client. This is basically just
    a Wrapper around connection_vote().
  */
-void handle_vote_submit(struct connection *pconn, int vote_no, int value)
+void handle_vote_submit(server_connection *pconn, int vote_no, int value)
 {
   struct vote *pvote;
   enum vote_type type;
@@ -824,7 +829,7 @@ void handle_vote_submit(struct connection *pconn, int vote_no, int value)
 /**
    Sends a packet_vote_new to pconn for every currently running votes.
  */
-void send_running_votes(struct connection *pconn, bool only_team_votes)
+void send_running_votes(server_connection *pconn, bool only_team_votes)
 {
   if (nullptr == vote_list || vote_list_size(vote_list) < 1
       || nullptr == pconn
@@ -856,7 +861,7 @@ void send_running_votes(struct connection *pconn, bool only_team_votes)
    Sends a packet_vote_remove to pconn for every currently running team vote
    'pconn' can see.
  */
-void send_remove_team_votes(struct connection *pconn)
+void send_remove_team_votes(server_connection *pconn)
 {
   if (nullptr == vote_list || vote_list_size(vote_list) < 1
       || nullptr == pconn || nullptr == conn_get_player(pconn)) {
@@ -908,7 +913,7 @@ void send_updated_vote_totals(struct conn_list *dest)
 /**
    Returns the connection that called this vote.
  */
-const struct connection *vote_get_caller(const struct vote *pvote)
+const server_connection *vote_get_caller(const struct vote *pvote)
 {
-  return conn_by_number(pvote->caller_id);
+  return static_cast<server_connection *>(conn_by_number(pvote->caller_id));
 }

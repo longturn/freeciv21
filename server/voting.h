@@ -12,8 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-#include "support.h" // bool type
-
 enum vote_condition_flags {
   VCF_NONE = 0,
   VCF_NODISSENT = (1 << 0),   // No 'no' votes.'
@@ -25,8 +23,8 @@ enum vote_condition_flags {
 enum vote_type { VOTE_YES, VOTE_NO, VOTE_ABSTAIN, VOTE_NUM };
 
 // Forward declarations.
-struct connection;
 struct conn_list;
+struct server_connection;
 
 struct vote_cast {
   enum vote_type vote_cast; // see enum above
@@ -70,22 +68,22 @@ void voting_turn();
 
 int count_voters(const struct vote *pvote);
 void clear_all_votes();
-void cancel_connection_votes(struct connection *pconn);
-bool conn_can_vote(const struct connection *pconn, const struct vote *pvote);
-bool conn_can_see_vote(const struct connection *pconn,
+void cancel_connection_votes(server_connection *pconn);
+bool conn_can_vote(const server_connection *pconn, const struct vote *pvote);
+bool conn_can_see_vote(const server_connection *pconn,
                        const struct vote *pvote);
 struct vote *get_vote_by_no(int vote_no);
-void connection_vote(struct connection *pconn, struct vote *pvote,
+void connection_vote(server_connection *pconn, struct vote *pvote,
                      enum vote_type type);
-struct vote *get_vote_by_caller(const struct connection *caller);
+struct vote *get_vote_by_caller(const server_connection *caller);
 void remove_vote(struct vote *pvote);
-struct vote *vote_new(struct connection *caller, const char *allargs,
+struct vote *vote_new(server_connection *caller, const char *allargs,
                       int command_id);
-bool vote_would_pass_immediately(const struct connection *caller,
+bool vote_would_pass_immediately(const server_connection *caller,
                                  int command_id);
-const struct connection *vote_get_caller(const struct vote *pvote);
+const server_connection *vote_get_caller(const struct vote *pvote);
 bool vote_is_team_only(const struct vote *pvote);
 int describe_vote(struct vote *pvote, char *buf, int buflen);
-void send_running_votes(struct connection *pconn, bool only_team_votes);
-void send_remove_team_votes(struct connection *pconn);
+void send_running_votes(server_connection *pconn, bool only_team_votes);
+void send_remove_team_votes(server_connection *pconn);
 void send_updated_vote_totals(struct conn_list *dest);

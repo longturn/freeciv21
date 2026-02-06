@@ -30,7 +30,6 @@
 #include "city.h"
 #include "combat.h"
 #include "effects.h"
-#include "events.h"
 #include "featured_text.h"
 #include "game.h"
 #include "log.h"
@@ -44,9 +43,6 @@
 #include "unit.h"
 #include "unitlist.h"
 
-/* common/scriptcore */
-#include "luascript_types.h"
-
 // server
 #include "actiontools.h"
 #include "citizenshand.h"
@@ -57,6 +53,7 @@
 #include "notify.h"
 #include "plrhand.h"
 #include "sanitycheck.h"
+#include "server_connection.h"
 #include "spacerace.h"
 #include "techtools.h"
 #include "unittools.h"
@@ -1750,7 +1747,7 @@ static void explain_why_no_action_enabled(struct unit *punit,
    before the server received a request for what actions it could do should
    not stop the client from processing the next unit in the queue.
  */
-void handle_unit_get_actions(struct connection *pc, const int actor_unit_id,
+void handle_unit_get_actions(server_connection *pc, const int actor_unit_id,
                              const int target_unit_id_client,
                              const int target_tile_id,
                              const int target_extra_id_client,
@@ -2596,7 +2593,7 @@ illegal_action(struct player *pplayer, struct unit *actor,
 /**
    Inform the client that something went wrong during a unit diplomat query
  */
-static void unit_query_impossible(struct connection *pc, const int actor_id,
+static void unit_query_impossible(server_connection *pc, const int actor_id,
                                   const int target_id, bool disturb_player)
 {
   dsend_packet_unit_action_answer(pc, actor_id, target_id, 0, ACTION_NONE,
@@ -2610,7 +2607,7 @@ static void unit_query_impossible(struct connection *pc, const int actor_id,
    Only send result back to the requesting connection, not all
    connections for that player.
  */
-void handle_unit_action_query(struct connection *pc, const int actor_id,
+void handle_unit_action_query(server_connection *pc, const int actor_id,
                               const int target_id,
                               const action_id action_type,
                               bool disturb_player)

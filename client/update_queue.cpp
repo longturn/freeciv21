@@ -304,7 +304,7 @@ void client_start_server_and_set_page(enum client_pages page)
 
   if (client_start_server(client_url().userName())) {
     update_queue::uq()->connect_processing_finished(
-        client.conn.client.last_request_id_used, set_client_page_callback,
+        client.conn.last_request_id_used, set_client_page_callback,
         FC_INT_TO_PTR(page));
   }
 }

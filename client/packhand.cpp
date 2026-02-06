@@ -2059,9 +2059,8 @@ void handle_unit_short_info(const struct packet_unit_short_info *packet)
 
     // New serial number: start collecting supported and present units.
     if (last_serial_num
-        != client.conn.client.request_id_of_currently_handled_packet) {
-      last_serial_num =
-          client.conn.client.request_id_of_currently_handled_packet;
+        != client.conn.request_id_of_currently_handled_packet) {
+      last_serial_num = client.conn.request_id_of_currently_handled_packet;
       // Ensure we are not already in an investigate cycle.
       fc_assert(pcity->client.collecting_info_units_supported == nullptr);
       fc_assert(pcity->client.collecting_info_units_present == nullptr);
@@ -2783,7 +2782,7 @@ void handle_conn_info(const struct packet_conn_info *pinfo)
       qDebug("Server reports new connection %d %s", pinfo->id,
              pinfo->username);
 
-      pconn = new connection{};
+      pconn = new client_connection{};
       pconn->buffer = nullptr;
       pconn->send_buffer = nullptr;
       pconn->ping_time = -1.0;
@@ -5160,12 +5159,12 @@ void handle_processing_started()
 {
   governor::i()->freeze();
 
-  fc_assert(client.conn.client.request_id_of_currently_handled_packet == 0);
-  client.conn.client.request_id_of_currently_handled_packet =
-      get_next_request_id(client.conn.client.last_processed_request_id_seen);
+  fc_assert(client.conn.request_id_of_currently_handled_packet == 0);
+  client.conn.request_id_of_currently_handled_packet =
+      get_next_request_id(client.conn.last_processed_request_id_seen);
 
   log_debug("start processing packet %d",
-            client.conn.client.request_id_of_currently_handled_packet);
+            client.conn.request_id_of_currently_handled_packet);
 }
 
 /**
@@ -5174,16 +5173,16 @@ void handle_processing_started()
 void handle_processing_finished()
 {
   log_debug("finish processing packet %d",
-            client.conn.client.request_id_of_currently_handled_packet);
+            client.conn.request_id_of_currently_handled_packet);
 
-  fc_assert(client.conn.client.request_id_of_currently_handled_packet != 0);
+  fc_assert(client.conn.request_id_of_currently_handled_packet != 0);
 
-  client.conn.client.last_processed_request_id_seen =
-      client.conn.client.request_id_of_currently_handled_packet;
+  client.conn.last_processed_request_id_seen =
+      client.conn.request_id_of_currently_handled_packet;
   update_queue::uq()->processing_finished(
-      client.conn.client.last_processed_request_id_seen);
+      client.conn.last_processed_request_id_seen);
 
-  client.conn.client.request_id_of_currently_handled_packet = 0;
+  client.conn.request_id_of_currently_handled_packet = 0;
 
   governor::i()->unfreeze();
 }

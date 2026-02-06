@@ -15,16 +15,10 @@ _   ._       Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors.
 #include "shared.h"
 #include "support.h"
 
-// common
-#include "connection.h"
-#include "packets.h"
-
-/* common/scripting */
-#include "luascript_types.h"
-
 // server
 #include "connecthand.h"
 #include "notify.h"
+#include "server_connection.h"
 #include "srv_main.h"
 
 /* server/scripting */
@@ -53,7 +47,7 @@ static bool is_good_password(const char *password, char *msg);
    If the connection is rejected right away, return FALSE, otherwise this
    function will return TRUE.
  */
-bool auth_user(struct connection *pconn, char *username)
+bool auth_user(server_connection *pconn, char *username)
 {
   char tmpname[MAX_LEN_NAME] = "\0";
 
@@ -114,8 +108,8 @@ bool auth_user(struct connection *pconn, char *username)
       fc_snprintf(buffer, sizeof(buffer), _("Enter password for %s:"),
                   pconn->username);
       dsend_packet_authentication_req(pconn, AUTH_LOGIN_FIRST, buffer);
-      pconn->server.auth_settime = time(nullptr);
-      pconn->server.status = AS_REQUESTING_OLD_PASS;
+      pconn->auth_settime = time(nullptr);
+      pconn->status = AS_REQUESTING_OLD_PASS;
     } else {
       // we couldn't find the user, he is new
       if (srvarg.auth_allow_newusers) {
@@ -125,8 +119,8 @@ bool auth_user(struct connection *pconn, char *username)
             buffer,
             _("First time login. Set a new password and confirm it."));
         dsend_packet_authentication_req(pconn, AUTH_NEWUSER_FIRST, buffer);
-        pconn->server.auth_settime = time(nullptr);
-        pconn->server.status = AS_REQUESTING_NEW_PASS;
+        pconn->auth_settime = time(nullptr);
+        pconn->status = AS_REQUESTING_NEW_PASS;
       } else {
         reject_new_connection(_("This server allows only preregistered "
                                 "users. Sorry."),
@@ -144,14 +138,14 @@ bool auth_user(struct connection *pconn, char *username)
 /**
    Receives a password from a client and verifies it.
  */
-bool auth_handle_reply(struct connection *pconn, char *password)
+bool auth_handle_reply(server_connection *pconn, char *password)
 {
   char msg[MAX_LEN_MSG];
 
-  if (pconn->server.status == AS_REQUESTING_NEW_PASS) {
+  if (pconn->status == AS_REQUESTING_NEW_PASS) {
     // check if the new password is acceptable
     if (!is_good_password(password, msg)) {
-      if (pconn->server.auth_tries++ >= MAX_AUTH_TRIES) {
+      if (pconn->auth_tries++ >= MAX_AUTH_TRIES) {
         reject_new_connection(_("Sorry, too many wrong tries..."), pconn);
         qInfo(_("%s was rejected: Too many wrong password "
                 "verifies for new user."),
@@ -172,16 +166,16 @@ bool auth_handle_reply(struct connection *pconn, char *password)
     }
 
     establish_new_connection(pconn);
-  } else if (pconn->server.status == AS_REQUESTING_OLD_PASS) {
+  } else if (pconn->status == AS_REQUESTING_OLD_PASS) {
     bool success = false;
 
     if (script_fcdb_user_verify(pconn, password, success) && success) {
       establish_new_connection(pconn);
     } else {
-      pconn->server.status = AS_FAILED;
-      pconn->server.auth_tries++;
-      pconn->server.auth_settime =
-          time(nullptr) + auth_fail_wait[pconn->server.auth_tries];
+      pconn->status = AS_FAILED;
+      pconn->auth_tries++;
+      pconn->auth_settime =
+          time(nullptr) + auth_fail_wait[pconn->auth_tries];
     }
   } else {
     qDebug("%s is sending unrequested auth packets", pconn->username);
@@ -194,19 +188,18 @@ bool auth_handle_reply(struct connection *pconn, char *password)
 /**
    Checks on where in the authentication process we are.
  */
-void auth_process_status(struct connection *pconn)
+void auth_process_status(server_connection *pconn)
 {
-  switch (pconn->server.status) {
+  switch (pconn->status) {
   case AS_NOT_ESTABLISHED:
     // nothing, we're not ready to do anything here yet.
     break;
   case AS_FAILED:
     /* the connection gave the wrong password, we kick 'em off or
      * we're throttling the connection to avoid password guessing */
-    if (pconn->server.auth_settime > 0
-        && time(nullptr) >= pconn->server.auth_settime) {
-      if (pconn->server.auth_tries >= MAX_AUTH_TRIES) {
-        pconn->server.status = AS_NOT_ESTABLISHED;
+    if (pconn->auth_settime > 0 && time(nullptr) >= pconn->auth_settime) {
+      if (pconn->auth_tries >= MAX_AUTH_TRIES) {
+        pconn->status = AS_NOT_ESTABLISHED;
         reject_new_connection(_("Sorry, too many wrong tries..."), pconn);
         qInfo(_("%s was rejected: Too many wrong password tries."),
               pconn->username);
@@ -214,7 +207,7 @@ void auth_process_status(struct connection *pconn)
       } else {
         struct packet_authentication_req request;
 
-        pconn->server.status = AS_REQUESTING_OLD_PASS;
+        pconn->status = AS_REQUESTING_OLD_PASS;
         request.type = AUTH_LOGIN_RETRY;
         sz_strlcpy(request.message,
                    _("Your password is incorrect. Try again."));
@@ -225,8 +218,8 @@ void auth_process_status(struct connection *pconn)
   case AS_REQUESTING_OLD_PASS:
   case AS_REQUESTING_NEW_PASS:
     // waiting on the client to send us a password... don't wait too long
-    if (time(nullptr) >= pconn->server.auth_settime + MAX_WAIT_TIME) {
-      pconn->server.status = AS_NOT_ESTABLISHED;
+    if (time(nullptr) >= pconn->auth_settime + MAX_WAIT_TIME) {
+      pconn->status = AS_NOT_ESTABLISHED;
       reject_new_connection(_("Sorry, your connection timed out..."), pconn);
       qInfo(_("%s was rejected: Connection timeout waiting for "
               "password."),
@@ -236,7 +229,7 @@ void auth_process_status(struct connection *pconn)
     break;
   case AS_ESTABLISHED:
     // this better fail bigtime
-    fc_assert(pconn->server.status != AS_ESTABLISHED);
+    fc_assert(pconn->status != AS_ESTABLISHED);
     break;
   }
 }
@@ -314,7 +307,7 @@ static bool is_good_password(const char *password, char *msg)
 /**
    Get username for connection
  */
-const char *auth_get_username(struct connection *pconn)
+const char *auth_get_username(server_connection *pconn)
 {
   fc_assert_ret_val(pconn != nullptr, nullptr);
   fc_assert_ret_val(conn_is_valid(pconn), nullptr);
@@ -325,10 +318,10 @@ const char *auth_get_username(struct connection *pconn)
 /**
    Get connection ip address
  */
-const char *auth_get_ipaddr(struct connection *pconn)
+const char *auth_get_ipaddr(server_connection *pconn)
 {
   fc_assert_ret_val(pconn != nullptr, nullptr);
   fc_assert_ret_val(conn_is_valid(pconn), nullptr);
 
-  return pconn->server.ipaddr;
+  return pconn->ipaddr;
 }

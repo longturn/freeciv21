@@ -12,13 +12,6 @@
 #include <ctime>
 #include <sys/stat.h>
 
-/* dependencies/lua */
-extern "C" {
-#include "lua.h"
-
-/* dependencies/tolua */
-#include "tolua.h"
-}
 // utility
 #include "log.h"
 #include "registry.h"
@@ -31,8 +24,10 @@ extern "C" {
 #include "luascript_signal.h"
 #include "tolua_game_gen.h"
 #include "tolua_signal_gen.h"
+
 // server
 #include "console.h"
+#include "server_connection.h"
 #include "stdinhand.h"
 
 /* server/scripting */
@@ -566,5 +561,6 @@ static void script_server_cmd_reply(struct fc_lua *fcl, QtMsgType level,
     break;
   }
 
-  cmd_reply(CMD_LUA, fcl->caller, rfc_status, "%s", buf);
+  cmd_reply(CMD_LUA, static_cast<server_connection *>(fcl->caller),
+            rfc_status, "%s", buf);
 }

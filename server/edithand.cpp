@@ -21,7 +21,6 @@
 #include "support.h"
 
 // common
-#include "events.h"
 #include "game.h"
 #include "government.h"
 #include "map.h"
@@ -42,6 +41,7 @@
 #include "notify.h"
 #include "plrhand.h"
 #include "sanitycheck.h"
+#include "server_connection.h"
 #include "techtools.h"
 #include "unittools.h"
 
@@ -172,7 +172,7 @@ static void check_leaving_edit_mode()
 /**
    Handles a request by the client to enter edit mode.
  */
-void handle_edit_mode(struct connection *pc, bool is_edit_mode)
+void handle_edit_mode(server_connection *pc, bool is_edit_mode)
 {
   if (!can_conn_enable_editing(pc)) {
     return;
@@ -273,7 +273,7 @@ static bool edit_tile_extra_handling(struct tile *ptile,
    square of "radius" 'size' should be affected. So size=1 corresponds to
    the single tile case.
  */
-void handle_edit_tile_terrain(struct connection *pc, int tile,
+void handle_edit_tile_terrain(server_connection *pc, int tile,
                               Terrain_type_id terrain, int size)
 {
   struct terrain *pterrain;
@@ -313,7 +313,7 @@ void handle_edit_tile_terrain(struct connection *pc, int tile,
    Handle a request to change one or more tiles' extras. The 'remove'
    argument controls whether to remove or add the given extra from the tile.
  */
-void handle_edit_tile_extra(struct connection *pc, int tile, int id,
+void handle_edit_tile_extra(server_connection *pc, int tile, int id,
                             bool removal, int eowner, int size)
 {
   struct tile *ptile_center;
@@ -356,7 +356,7 @@ void handle_edit_tile_extra(struct connection *pc, int tile, int id,
 /**
    Handles tile information from the client, to make edits to tiles.
  */
-void handle_edit_tile(struct connection *pc,
+void handle_edit_tile(server_connection *pc,
                       const struct packet_edit_tile *packet)
 {
   struct tile *ptile;
@@ -414,7 +414,7 @@ void handle_edit_tile(struct connection *pc,
    Handle a request to create 'count' units of type 'utid' at the tile given
    by the x, y coordinates and owned by player with number 'owner'.
  */
-void handle_edit_unit_create(struct connection *pc, int owner, int tile,
+void handle_edit_unit_create(server_connection *pc, int owner, int tile,
                              Unit_type_id utid, int count, int tag)
 {
   struct tile *ptile;
@@ -502,7 +502,7 @@ void handle_edit_unit_create(struct connection *pc, int owner, int tile,
    Remove 'count' units of type 'utid' owned by player number 'owner' at
    tile (x, y).
  */
-void handle_edit_unit_remove(struct connection *pc, int owner, int tile,
+void handle_edit_unit_remove(server_connection *pc, int owner, int tile,
                              Unit_type_id utid, int count)
 {
   struct tile *ptile;
@@ -559,7 +559,7 @@ void handle_edit_unit_remove(struct connection *pc, int owner, int tile,
 /**
    Handle a request to remove a unit given by its id.
  */
-void handle_edit_unit_remove_by_id(struct connection *pc, Unit_type_id id)
+void handle_edit_unit_remove_by_id(server_connection *pc, Unit_type_id id)
 {
   struct unit *punit;
 
@@ -576,7 +576,7 @@ void handle_edit_unit_remove_by_id(struct connection *pc, Unit_type_id id)
 /**
    Handles unit information from the client, to make edits to units.
  */
-void handle_edit_unit(struct connection *pc,
+void handle_edit_unit(server_connection *pc,
                       const struct packet_edit_unit *packet)
 {
   const struct unit_type *putype;
@@ -651,7 +651,7 @@ void handle_edit_unit(struct connection *pc,
    Allows the editing client to create a city at the given position and
    of size 'size'.
  */
-void handle_edit_city_create(struct connection *pc, int owner, int tile,
+void handle_edit_city_create(server_connection *pc, int owner, int tile,
                              int size, int tag)
 {
   struct tile *ptile;
@@ -712,7 +712,7 @@ void handle_edit_city_create(struct connection *pc, int owner, int tile,
 /**
    Handle a request to change the internal state of a city.
  */
-void handle_edit_city(struct connection *pc,
+void handle_edit_city(server_connection *pc,
                       const struct packet_edit_city *packet)
 {
   struct tile *ptile;
@@ -876,7 +876,7 @@ void handle_edit_city(struct connection *pc,
 /**
    Handle a request to create a new player.
  */
-void handle_edit_player_create(struct connection *pc, int tag)
+void handle_edit_player_create(server_connection *pc, int tag)
 {
   struct player *pplayer;
   struct nation_type *pnation;
@@ -944,7 +944,7 @@ void handle_edit_player_create(struct connection *pc, int tag)
 /**
    Handle a request to remove a player.
  */
-void handle_edit_player_remove(struct connection *pc, int id)
+void handle_edit_player_remove(server_connection *pc, int id)
 {
   struct player *pplayer;
 
@@ -958,7 +958,9 @@ void handle_edit_player_remove(struct connection *pc, int id)
   /* Don't use conn_list_iterate here because connection_detach() can be
    * recursive and free the next connection pointer. */
   while (conn_list_size(pplayer->connections) > 0) {
-    connection_detach(conn_list_get(pplayer->connections, 0), false);
+    connection_detach(static_cast<server_connection *>(
+                          conn_list_get(pplayer->connections, 0)),
+                      false);
   }
 
   kill_player(pplayer);
@@ -968,7 +970,7 @@ void handle_edit_player_remove(struct connection *pc, int id)
 /**
    Handle editing of any or all player properties.
  */
-void handle_edit_player(struct connection *pc,
+void handle_edit_player(server_connection *pc,
                         const struct packet_edit_player *packet)
 {
   struct player *pplayer;
@@ -1167,7 +1169,7 @@ void handle_edit_player(struct connection *pc,
 /**
    Handles vision editing requests from client.
  */
-void handle_edit_player_vision(struct connection *pc, int plr_no, int tile,
+void handle_edit_player_vision(server_connection *pc, int plr_no, int tile,
                                bool known, int size)
 {
   struct player *pplayer;
@@ -1247,7 +1249,7 @@ void handle_edit_player_vision(struct connection *pc, int plr_no, int tile,
    not necessarily extend borders to their maximum due to the way the
    borders code is written. This may be considered a feature or limitation.
  */
-void handle_edit_recalculate_borders(struct connection *pc)
+void handle_edit_recalculate_borders(server_connection *pc)
 {
   map_calculate_borders();
 }
@@ -1255,7 +1257,7 @@ void handle_edit_recalculate_borders(struct connection *pc)
 /**
    Remove any city at the given location.
  */
-void handle_edit_city_remove(struct connection *pc, int id)
+void handle_edit_city_remove(server_connection *pc, int id)
 {
   struct city *pcity;
 
@@ -1272,7 +1274,7 @@ void handle_edit_city_remove(struct connection *pc, int id)
 /**
    Run any pending tile checks.
  */
-void handle_edit_check_tiles(struct connection *pc)
+void handle_edit_check_tiles(server_connection *pc)
 {
   check_edited_tile_terrains();
 }
@@ -1282,7 +1284,7 @@ void handle_edit_check_tiles(struct connection *pc)
    This will only stay in effect while the server is in edit mode and the
    connection is editing. Has no effect if fog-of-war is disabled globally.
  */
-void handle_edit_toggle_fogofwar(struct connection *pc, int plr_no)
+void handle_edit_toggle_fogofwar(server_connection *pc, int plr_no)
 {
   struct player *pplayer;
 
@@ -1315,7 +1317,7 @@ void handle_edit_toggle_fogofwar(struct connection *pc, int plr_no)
 /**
    Create or remove a start position at a tile.
  */
-void handle_edit_startpos(struct connection *pconn,
+void handle_edit_startpos(server_connection *pconn,
                           const struct packet_edit_startpos *packet)
 {
   struct tile *ptile = index_to_tile(&(wld.map), packet->id);
@@ -1356,7 +1358,7 @@ void handle_edit_startpos(struct connection *pconn,
    Setup which nations can start at a start position.
  */
 void handle_edit_startpos_full(
-    struct connection *pconn, const struct packet_edit_startpos_full *packet)
+    server_connection *pconn, const struct packet_edit_startpos_full *packet)
 {
   struct tile *ptile = index_to_tile(&(wld.map), packet->id);
   struct startpos *psp;
@@ -1393,7 +1395,7 @@ void handle_edit_startpos_full(
 /**
    Handle edit requests to the main game data structure.
  */
-void handle_edit_game(struct connection *pc,
+void handle_edit_game(server_connection *pc,
                       const struct packet_edit_game *packet)
 {
   bool changed = false;
@@ -1454,7 +1456,7 @@ void handle_edit_game(struct connection *pc,
 /**
    Handle edit requests to scenario description
  */
-void handle_edit_scenario_desc(struct connection *pc,
+void handle_edit_scenario_desc(server_connection *pc,
                                const char *scenario_desc)
 {
   if (0
@@ -1468,7 +1470,7 @@ void handle_edit_scenario_desc(struct connection *pc,
 /**
    Make scenario file out of current game.
  */
-void handle_save_scenario(struct connection *pc, const char *name)
+void handle_save_scenario(server_connection *pc, const char *name)
 {
   if (pc->access_level != ALLOW_HACK) {
     notify_conn(pc->self, nullptr, E_BAD_COMMAND, ftc_editor,
