@@ -22,3 +22,35 @@ server_connection *conn_by_user(const char *user_name)
 
   return nullptr;
 }
+
+/**
+ * Helper for match_prefix.
+ */
+static const char *connection_accessor(int i)
+{
+  return conn_list_get(game.all_connections, i)->username;
+}
+
+/**
+   Like conn_by_username(), but allow unambigous prefix (i.e. abbreviation).
+   Returns nullptr if could not match, or if ambiguous or other problem, and
+   fills *result with characterisation of match/non-match (see
+   "utility/shared.[ch]").
+ */
+server_connection *conn_by_user_prefix(const char *user_name,
+                                       enum m_pre_result *result)
+{
+  int ind;
+
+  *result =
+      match_prefix(connection_accessor, conn_list_size(game.all_connections),
+                   MAX_LEN_NAME - 1, fc_strncasequotecmp,
+                   effectivestrlenquote, user_name, &ind);
+
+  if (*result < M_PRE_AMBIGUOUS) {
+    return static_cast<server_connection *>(
+        conn_list_get(game.all_connections, ind));
+  } else {
+    return nullptr;
+  }
+}
