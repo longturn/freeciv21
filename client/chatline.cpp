@@ -251,8 +251,8 @@ void chat_input::update_completion()
   word_list << _("/timeoutadd <time>");
   word_list << _("/timeoutincrease <turn> <turninc> <value> <valuemult>");
   word_list << _("/cancelvote <vote number>");
-  word_list << _("/ignore [type=]<pattern>");
-  word_list << _("/unignore <range>");
+  word_list << _("/ignore <username>");
+  word_list << _("/unignore <username|index>");
   word_list << _("/playercolor <player-name> <color>");
   word_list << _("/playernation <player-name> [nation] [is-male] [leader] "
                  "[style]");

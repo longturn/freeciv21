@@ -13,6 +13,7 @@
 
 #include <fc_config.h>
 
+#include <algorithm>
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
@@ -4104,31 +4105,29 @@ static bool set_rulesetdir(server_connection *caller, char *str, bool check,
  */
 static bool ignore_command(server_connection *caller, char *str, bool check)
 {
-  char buf[128];
-  struct conn_pattern *ppattern;
-
   if (nullptr == caller) {
     cmd_reply(CMD_IGNORE, caller, C_FAIL,
               _("That would be rather silly, since you are not a player."));
     return false;
   }
 
-  ppattern = conn_pattern_from_string(str, CPT_USER, buf, sizeof(buf));
-  if (nullptr == ppattern) {
-    cmd_reply(CMD_IGNORE, caller, C_SYNTAX, _("%s. Try /help ignore"), buf);
+  if (!is_valid_username(str)) {
+    cmd_reply(CMD_IGNORE, caller, C_SYNTAX, _("%s is not a valid username."),
+              str);
     return false;
   }
 
-  if (check) {
-    conn_pattern_destroy(ppattern);
-    return true;
+  if (std::find(caller->ignore_list.begin(), caller->ignore_list.end(), str)
+      != caller->ignore_list.end()) {
+    cmd_reply(CMD_IGNORE, caller, C_SYNTAX, _("%s is already ignored."),
+              str);
+    return false;
   }
 
-  conn_pattern_to_string(ppattern, buf, sizeof(buf));
-  conn_pattern_list_append(caller->ignore_list, ppattern);
+  caller->ignore_list.emplace_back(str);
   cmd_reply(CMD_IGNORE, caller, C_COMMENT,
-            _("Added pattern %s as entry %d to your ignore list."), buf,
-            conn_pattern_list_size(caller->ignore_list));
+            _("Added %s as entry %ld to your ignore list."), str,
+            caller->ignore_list.size());
 
   return true;
 }
@@ -4139,89 +4138,46 @@ static bool ignore_command(server_connection *caller, char *str, bool check)
 static bool unignore_command(server_connection *caller, char *str,
                              bool check)
 {
-  char buf[128], *c;
-  int first, last, n;
-
   if (!caller) {
     cmd_reply(CMD_IGNORE, caller, C_FAIL,
               _("That would be rather silly, since you are not a player."));
     return false;
   }
 
-  sz_strlcpy(buf, str);
-  remove_leading_trailing_spaces(buf);
-
-  n = conn_pattern_list_size(caller->ignore_list);
-  if (n == 0) {
+  auto &list = caller->ignore_list;
+  if (list.empty()) {
     cmd_reply(CMD_UNIGNORE, caller, C_FAIL, _("Your ignore list is empty."));
     return false;
   }
 
-  // Parse the range.
-  if ('\0' == buf[0]) {
-    cmd_reply(CMD_UNIGNORE, caller, C_SYNTAX,
-              _("Missing range. Try /help unignore."));
-    return false;
-  } else if ((c = strchr(buf, '-'))) {
-    *c++ = '\0';
-    if ('\0' == buf[0]) {
-      first = 1;
-    } else if (!str_to_int(buf, &first)) {
-      *--c = '-';
+  if (int index; str_to_int(str, &index)) {
+    // Remove by index.
+    if (index <= 0) {
       cmd_reply(CMD_UNIGNORE, caller, C_SYNTAX,
-                _("\"%s\" is not a valid range. Try /help unignore."), buf);
+                _("Indices must be larger than zero."));
+      return false;
+    } else if (index > list.size()) {
+      cmd_reply(CMD_UNIGNORE, caller, C_SYNTAX, _("Index out of bounds."));
       return false;
     }
-    if ('\0' == *c) {
-      last = n;
-    } else if (!str_to_int(c, &last)) {
-      *--c = '-';
-      cmd_reply(CMD_UNIGNORE, caller, C_SYNTAX,
-                _("\"%s\" is not a valid range. Try /help unignore."), buf);
-      return false;
-    }
-  } else {
-    if (!str_to_int(buf, &first)) {
-      cmd_reply(CMD_UNIGNORE, caller, C_SYNTAX,
-                _("\"%s\" is not a valid range. Try /help unignore."), buf);
-      return false;
-    }
-    last = first;
-  }
 
-  if (!(1 <= first && first <= last && last <= n)) {
-    if (first == last) {
-      cmd_reply(CMD_UNIGNORE, caller, C_FAIL, _("Invalid entry number: %d."),
-                first);
-    } else {
-      cmd_reply(CMD_UNIGNORE, caller, C_FAIL, _("Invalid range: %d to %d."),
-                first, last);
-    }
-    return false;
-  }
-
-  if (check) {
+    list.erase(list.begin() + (index - 1));
     return true;
   }
 
-  n = 1;
-  conn_pattern_list_iterate(caller->ignore_list, ppattern)
-  {
-    if (first <= n) {
-      conn_pattern_to_string(ppattern, buf, sizeof(buf));
+  // Remove by username
+  for (auto it = list.begin(); it != list.end(); ++it) {
+    if (*it == str) {
+      list.erase(it);
       cmd_reply(CMD_UNIGNORE, caller, C_COMMENT,
-                _("Removed pattern %s (entry %d) from your ignore list."),
-                buf, n);
-      conn_pattern_list_remove(caller->ignore_list, ppattern);
-    }
-    n++;
-    if (n > last) {
-      break;
+                _("Removed %s from your ignore list."), str);
+      return true;
     }
   }
-  conn_pattern_list_iterate_end;
 
-  return true;
+  cmd_reply(CMD_UNIGNORE, caller, C_SYNTAX,
+            _("%s is not in your ignore list."), str);
+  return false;
 }
 
 /**
@@ -6753,8 +6709,6 @@ static void show_delegations(server_connection *caller)
  */
 static bool show_ignore(server_connection *caller)
 {
-  char buf[128];
-  int n = 1;
 
   if (nullptr == caller) {
     cmd_reply(CMD_IGNORE, caller, C_FAIL,
@@ -6762,19 +6716,17 @@ static bool show_ignore(server_connection *caller)
     return false;
   }
 
-  if (0 == conn_pattern_list_size(caller->ignore_list)) {
+  if (caller->ignore_list.empty()) {
     cmd_reply(CMD_LIST, caller, C_COMMENT, _("Your ignore list is empty."));
     return true;
   }
 
   cmd_reply(CMD_LIST, caller, C_COMMENT, _("Your ignore list:"));
   cmd_reply(CMD_LIST, caller, C_COMMENT, horiz_line);
-  conn_pattern_list_iterate(caller->ignore_list, ppattern)
-  {
-    conn_pattern_to_string(ppattern, buf, sizeof(buf));
-    cmd_reply(CMD_LIST, caller, C_COMMENT, "%d: %s", n++, buf);
+  for (int i = 0; i < caller->ignore_list.size(); ++i) {
+    cmd_reply(CMD_LIST, caller, C_COMMENT, "%d: %s", i + 1,
+              qUtf8Printable(caller->ignore_list[i]));
   }
-  conn_pattern_list_iterate_end;
   cmd_reply(CMD_LIST, caller, C_COMMENT, horiz_line);
 
   return true;

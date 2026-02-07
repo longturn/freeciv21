@@ -11,6 +11,7 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
+#include <algorithm>
 #include <cstdarg>
 #include <cstring>
 
@@ -47,14 +48,14 @@ static void send_chat_msg(server_connection *pconn,
 static inline bool conn_is_ignored(const server_connection *sender,
                                    const server_connection *dest)
 {
-  if (nullptr != sender && nullptr != dest) {
-    // We only use server_connection in the server
-    return conn_pattern_list_match(
-        static_cast<const server_connection *>(dest)->ignore_list,
-        static_cast<const server_connection *>(sender));
-  } else {
+  if (!sender || !dest) {
     return false;
   }
+
+  return std::any_of(dest->ignore_list.begin(), dest->ignore_list.end(),
+                     [sender](const QString &ignored) {
+                       return ignored == sender->username;
+                     });
 }
 
 /**
