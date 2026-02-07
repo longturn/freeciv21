@@ -169,7 +169,6 @@ struct socket_packet_buffer *new_socket_packet_buffer();
 void connection_common_init(struct connection *pconn);
 void connection_common_close(struct connection *pconn);
 void conn_set_capability(struct connection *pconn, const char *capability);
-void free_compression_queue(struct connection *pconn);
 void conn_reset_delta_state(struct connection *pconn);
 
 void conn_compression_freeze(struct connection *pconn);
