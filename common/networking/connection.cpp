@@ -462,14 +462,6 @@ int get_next_request_id(int old_request_id)
 }
 
 /**
-   Free compression queue for given connection.
- */
-void free_compression_queue(struct connection *pc)
-{
-  byte_vector_free(&pc->compression.queue);
-}
-
-/**
    Allocate and initialize packet hashs for given connection.
  */
 static void init_packet_hashs(struct connection *pc)
@@ -552,7 +544,7 @@ void connection_common_close(struct connection *pconn)
       pconn->last_write = nullptr;
     }
 
-    free_compression_queue(pconn);
+    byte_vector_free(&pconn->compression.queue);
     free_packet_hashes(pconn);
   }
 }
