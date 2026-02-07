@@ -80,9 +80,6 @@ static void close_connection(server_connection *pconn)
     pconn->ping_timers = nullptr;
   }
 
-  conn_pattern_list_destroy(pconn->ignore_list);
-  pconn->ignore_list = nullptr;
-
   // safe to do these even if not in lists:
   conn_list_remove(game.glob_observers, pconn);
   conn_list_remove(game.all_connections, pconn);
@@ -328,7 +325,6 @@ int server_make_connection(QIODevice *new_sock, const QString &client_addr,
       pconn->status = AS_NOT_ESTABLISHED;
       pconn->ping_timers = new QList<civtimer *>;
       pconn->granted_access_level = pconn->access_level;
-      pconn->ignore_list = conn_pattern_list_new_full(conn_pattern_destroy);
       pconn->is_closing = false;
       pconn->ping_time = -1.0;
       pconn->incoming_packet_notify = nullptr;

@@ -356,18 +356,13 @@ server's own command-line. This server command-line is separate from the OS term
   multiply ``<value>`` by ``<valuemult>``. Use this command in concert with the option ``/timeout``.
   Defaults are ``0 0 0 1``.
 
-``/ignore [type=]<pattern>``
-  The given pattern will be added to your ignore list. You will not receive any messages from users matching
-  this pattern. The type may be either ``user``, ``host``, or ``ip``. The default type (if omitted) is to
-  match against the username. The pattern supports unix glob style wildcards, i.e., ``*`` matches zero or more
-  character, ``?`` exactly one character, ``[abc]`` exactly one of ``a``, ``b``, or ``c``, etc. To access your
-  current ignore list, issue ``/list ignore``.
+``/ignore <username>``
+  The given username will be added to your ignore list; you will not receive any messages from that user.
+  To access your current ignore list, issue ``/list ignore``.
 
-``/unignore <range>``
-  The ignore list entries in the given range will be removed. You will be able to receive messages from the
-  respective users. The range argument may be a single number or a pair of numbers separated by a dash ``-``.
-  If the first number is omitted, it is assumed to be ``1``. If  the last is omitted, it is assumed to be the
-  last valid ignore list index. To access your current ignore list, issue ``/list ignore``.
+``/unignore <username|index>``
+  The given ignore list entry will be removed; you will be able to receive messages from that user.
+  You can pass a username or an index in the list. To access your current ignore list, issue ``/list ignored users``.
 
 .. _server-command-playercolor:
 

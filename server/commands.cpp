@@ -470,29 +470,19 @@ static struct command commands[] = {
         "all votes with the \'all\' argument."),
      nullptr, CMD_ECHO_ADMINS, VCF_NONE, 0},
     {"ignore", ALLOW_INFO,
-     // TRANS: translate text between <> and [] only
-     N_("ignore [type=]<pattern>"),
-     N_("Block all messages from users matching the pattern."),
-     N_("The given pattern will be added to your ignore list; you will not "
-        "receive any messages from users matching this pattern. The type "
-        "may be either \"user\", \"host\", or \"ip\". The default type "
-        "(if omitted) is to match against the username. The pattern "
-        "supports "
-        "unix glob style wildcards, i.e., * matches zero or more character, "
-        "? "
-        "exactly one character, [abc] exactly one of 'a' 'b' or 'c', etc. "
+     // TRANS: translate text between <>
+     N_("ignore <username>"), N_("Block all messages from a user."),
+     N_("The given username will be added to your ignore list; you will not "
+        "receive any messages from that user. "
         "To access your current ignore list, issue \"/list ignore\"."),
      nullptr, CMD_ECHO_NONE, VCF_NONE, 0},
     {"unignore", ALLOW_INFO,
      // TRANS: translate text between <>
-     N_("unignore <range>"), N_("Remove ignore list entries."),
-     N_("The ignore list entries in the given range will be removed; "
-        "you will be able to receive messages from the respective users. "
-        "The range argument may be a single number or a pair of numbers "
-        "separated by a dash '-'. If the first number is omitted, it is "
-        "assumed to be 1; if the last is omitted, it is assumed to be "
-        "the last valid ignore list index. To access your current ignore "
-        "list, issue \"/list ignore\"."),
+     N_("unignore <username|index>"), N_("Remove ignore list entries."),
+     N_("The given ignore list entry will be removed; "
+        "you will be able to receive messages from that user. "
+        "You can pass a username or an index in the list. "
+        "To access your current ignore list, issue \"/list ignore\"."),
      nullptr, CMD_ECHO_NONE, VCF_NONE, 0},
     {"playercolor", ALLOW_ADMIN,
      // TRANS: translate text between <>
