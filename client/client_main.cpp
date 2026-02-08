@@ -146,9 +146,7 @@ bool waiting_for_end_turn = false;
  */
 static bool server_busy = false;
 
-#ifdef FREECIV_DEBUG
 bool hackless = false;
-#endif
 
 static bool client_quitting = false;
 
@@ -344,10 +342,8 @@ int client_main(int argc, char *argv[])
         QStringLiteral("info")},
        {{"F", _("Fatal")}, _("Raise a signal on failed assertion.")},
        {{"f", "file"}, _("Load saved game FILE."), "FILE"},
-#ifdef FREECIV_DEBUG
        {{"H", "Hackless"},
         _("Do not request hack access to local, but not spawned, server.")},
-#endif // FREECIV_DEBUG
        {{"l", "log"},
         _("Use FILE as logfile (spawned server also uses this)."),
         "FILE"},
@@ -393,11 +389,9 @@ int client_main(int argc, char *argv[])
     fc_fprintf(stderr, "%s %s\n", freeciv_name_version(), client_string);
     exit(EXIT_SUCCESS);
   }
-#ifdef FREECIV_DEBUG
   if (parser.isSet(QStringLiteral("Hackless"))) {
     hackless = true;
   }
-#endif
   if (parser.isSet(QStringLiteral("log"))) {
     logfile = parser.value(QStringLiteral("log"));
   }
