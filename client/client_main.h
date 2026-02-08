@@ -73,11 +73,8 @@ extern QString music_set_name;
 extern QString cmd_metaserver;
 extern bool auto_connect;
 extern bool auto_spawn;
-extern bool waiting_for_end_turn;
-
-#ifdef FREECIV_DEBUG
 extern bool hackless;
-#endif // FREECIV_DEBUG
+extern bool waiting_for_end_turn;
 
 struct global_worklist_list; // Defined in global_worklist.[ch].
 
