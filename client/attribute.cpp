@@ -115,7 +115,7 @@ static enum attribute_serial serialize_hash(attributeHash *hash,
 
   for (auto *pvalue : std::as_const(*hash)) {
     QByteArrayView din(static_cast<const char *>(pvalue), 4);
-    fc_assert_ret_val(dio_get_uint32_raw(din, value_lengths[i]),
+    fc_assert_ret_val(dio_get<std::uint32_t>(din, value_lengths[i]),
                       A_SERIAL_FAIL);
 
     total_length += value_lengths[i];
@@ -186,21 +186,21 @@ static enum attribute_serial unserialize_hash(attributeHash *hash,
 
   QByteArrayView din(data);
 
-  fc_assert_ret_val(dio_get_uint32_raw(din, dummy), A_SERIAL_FAIL);
+  fc_assert_ret_val(dio_get<std::uint32_t>(din, dummy), A_SERIAL_FAIL);
   if (dummy != 0) {
     qDebug("attribute.cpp unserialize_hash() preamble, uint32 %lu != 0",
            static_cast<long unsigned>(dummy));
     return A_SERIAL_OLD;
   }
-  fc_assert_ret_val(dio_get_uint8_raw(din, dummy), A_SERIAL_FAIL);
+  fc_assert_ret_val(dio_get<std::uint8_t>(din, dummy), A_SERIAL_FAIL);
   if (dummy != 2) {
     qDebug("attribute.cpp unserialize_hash() preamble, "
            "uint8 %lu != 2 version",
            static_cast<long unsigned>(dummy));
     return A_SERIAL_OLD;
   }
-  fc_assert_ret_val(dio_get_uint32_raw(din, entries), A_SERIAL_FAIL);
-  fc_assert_ret_val(dio_get_uint32_raw(din, dummy), A_SERIAL_FAIL);
+  fc_assert_ret_val(dio_get<std::uint32_t>(din, entries), A_SERIAL_FAIL);
+  fc_assert_ret_val(dio_get<std::uint32_t>(din, dummy), A_SERIAL_FAIL);
   if (dummy != data.size()) {
     qDebug("attribute.cpp unserialize_hash() preamble, "
            "uint32 %lu != %lu data_length",
@@ -219,7 +219,7 @@ static enum attribute_serial unserialize_hash(attributeHash *hash,
     int value_length;
     struct raw_data_out dout;
 
-    if (!dio_get_uint32_raw(din, value_length)) {
+    if (!dio_get<std::int32_t>(din, value_length)) {
       qDebug("attribute.cpp unserialize_hash() "
              "uint32 value_length dio_input_too_short");
       return A_SERIAL_FAIL;
@@ -229,9 +229,10 @@ static enum attribute_serial unserialize_hash(attributeHash *hash,
                   (long unsigned) value_length);
 
     // next 12 bytes
-    if (!dio_get_uint32_raw(din, key.key) || !dio_get_uint32_raw(din, key.id)
-        || !dio_get_sint16_raw(din, key.x)
-        || !dio_get_sint16_raw(din, key.y)) {
+    if (!dio_get<std::uint32_t>(din, key.key)
+        || !dio_get<std::uint32_t>(din, key.id)
+        || !dio_get<std::int16_t>(din, key.x)
+        || !dio_get<std::int16_t>(din, key.y)) {
       qDebug("attribute.cpp unserialize_hash() "
              "uint32 key dio_input_too_short");
       return A_SERIAL_FAIL;
@@ -376,7 +377,7 @@ size_t attribute_get(int key, int id, int x, int y, size_t max_data_length,
   auto *pvalue = static_cast<const char *>(attribute_hash->value(akey));
 
   QByteArrayView din(pvalue, 0xffffffff);
-  fc_assert_ret_val(dio_get_uint32_raw(din, length), 0);
+  fc_assert_ret_val(dio_get<std::uint32_t>(din, length), 0);
 
   if (length <= max_data_length) {
     dio_get_memory_raw(din, data, length);

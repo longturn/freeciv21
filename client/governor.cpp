@@ -437,7 +437,7 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
   }
 
   QByteArrayView din(buffer, len);
-  fc_assert_ret_val(dio_get_uint8_raw(din, version), false);
+  fc_assert_ret_val(dio_get<std::uint8_t>(din, version), false);
   fc_assert_ret_val(version == 2, false);
 
   /* Initialize the parameter (includes some AI-only fields that aren't
@@ -446,14 +446,16 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
 
   output_type_iterate(i)
   {
-    fc_assert_ret_val(dio_get_sint16_raw(din, parameter->minimal_surplus[i]),
+    fc_assert_ret_val(
+        dio_get<std::int16_t>(din, parameter->minimal_surplus[i]), false);
+    fc_assert_ret_val(dio_get<std::int16_t>(din, parameter->factor[i]),
                       false);
-    fc_assert_ret_val(dio_get_sint16_raw(din, parameter->factor[i]), false);
   }
   output_type_iterate_end;
 
-  fc_assert_ret_val(dio_get_sint16_raw(din, parameter->happy_factor), false);
-  fc_assert_ret_val(dio_get_uint8_raw(din, dummy),
+  fc_assert_ret_val(dio_get<std::int16_t>(din, parameter->happy_factor),
+                    false);
+  fc_assert_ret_val(dio_get<std::uint8_t>(din, dummy),
                     false); // Dummy value; used to be factor_target.
   fc_assert_ret_val(dio_get_bool8_raw(din, parameter->require_happy), false);
 
