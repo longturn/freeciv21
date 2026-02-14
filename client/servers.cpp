@@ -199,21 +199,20 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
     QByteArrayView din(data);
 
     fc_assert_ret_val(dio_get<std::uint8_t>(din, type), SCAN_STATUS_ERROR);
-    fc_assert_ret_val(
-        dio_get_string_raw(din, servername, sizeof(servername)),
-        SCAN_STATUS_ERROR);
-    fc_assert_ret_val(dio_get_string_raw(din, portstr, sizeof(portstr)),
+    fc_assert_ret_val(dio_get(din, servername, sizeof(servername)),
+                      SCAN_STATUS_ERROR);
+    fc_assert_ret_val(dio_get(din, portstr, sizeof(portstr)),
                       SCAN_STATUS_ERROR);
     port = atoi(portstr);
-    fc_assert_ret_val(dio_get_string_raw(din, version, sizeof(version)),
+    fc_assert_ret_val(dio_get(din, version, sizeof(version)),
                       SCAN_STATUS_ERROR);
-    fc_assert_ret_val(dio_get_string_raw(din, status, sizeof(status)),
+    fc_assert_ret_val(dio_get(din, status, sizeof(status)),
                       SCAN_STATUS_ERROR);
-    fc_assert_ret_val(dio_get_string_raw(din, players, sizeof(players)),
+    fc_assert_ret_val(dio_get(din, players, sizeof(players)),
                       SCAN_STATUS_ERROR);
-    fc_assert_ret_val(dio_get_string_raw(din, humans, sizeof(humans)),
+    fc_assert_ret_val(dio_get(din, humans, sizeof(humans)),
                       SCAN_STATUS_ERROR);
-    fc_assert_ret_val(dio_get_string_raw(din, message, sizeof(message)),
+    fc_assert_ret_val(dio_get(din, message, sizeof(message)),
                       SCAN_STATUS_ERROR);
 
     if (!fc_strcasecmp("none", servername)) {

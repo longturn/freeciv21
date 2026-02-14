@@ -490,8 +490,7 @@ bool dio_get_memory_raw(QByteArrayView &din, void *dest, size_t dest_size)
 /**
    Take string. Conversion callback is used.
  */
-bool dio_get_string_raw(QByteArrayView &din, char *dest,
-                        size_t max_dest_size)
+bool dio_get(QByteArrayView &din, char *dest, size_t max_dest_size)
 {
   size_t offset, remaining;
 
@@ -521,6 +520,25 @@ bool dio_get_string_raw(QByteArrayView &din, char *dest,
   }
 
   din.slice(offset + 1);
+  return true;
+}
+
+/**
+ * Take memory. No conversion callback. The destination is assumed to be
+ * large enough.
+ */
+bool dio_get(QByteArrayView &din, std::byte *dest, size_t size)
+{
+  fc_assert(size > 0);
+
+  if (!enough_data(din, size)) {
+    log_packet("Got bad memory");
+    return false;
+  }
+
+  memcpy(dest, din.data(), size);
+
+  din.slice(size);
   return true;
 }
 
