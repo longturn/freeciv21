@@ -19,7 +19,6 @@
 // common
 #include "cm.h"
 #include "fc_types.h"
-#include "packets.h"
 #include "requirements.h"
 #include "unit.h"
 #include "worklist.h"
@@ -124,9 +123,9 @@ static bool enough_space(struct raw_data_out *dout, size_t size)
 /**
    Returns TRUE iff the input contains size unread bytes.
  */
-static bool enough_data(struct data_in *din, size_t size)
+static bool enough_data(QByteArrayView &din, size_t size)
 {
-  return dio_input_remaining(din) >= size;
+  return din.size() >= size;
 }
 
 /**
@@ -155,29 +154,9 @@ size_t dio_output_used(struct raw_data_out *dout) { return dout->used; }
 void dio_output_rewind(struct raw_data_out *dout) { dout->current = 0; }
 
 /**
-   Initializes the input to the given input buffer and the given
-   number of valid input bytes.
- */
-void dio_input_init(struct data_in *din, const void *src, size_t src_size)
-{
-  din->src = src;
-  din->src_size = src_size;
-  din->current = 0;
-}
-
-/**
-   Rewinds the stream so that the get-functions start from the
-   beginning.
- */
-void dio_input_rewind(struct data_in *din) { din->current = 0; }
-
-/**
    Return the number of unread bytes.
  */
-size_t dio_input_remaining(struct data_in *din)
-{
-  return din->src_size - din->current;
-}
+size_t dio_input_remaining(QByteArrayView &din) { return din.size(); }
 
 /**
    Return the size of the data_type in bytes.
@@ -205,10 +184,10 @@ size_t data_type_size(enum data_type type)
 /**
     Skips 'n' bytes.
  */
-bool dio_input_skip(struct data_in *din, size_t size)
+bool dio_input_skip(QByteArrayView &din, size_t size)
 {
   if (enough_data(din, size)) {
-    din->current += size;
+    din.slice(size);
     return true;
   } else {
     return false;
@@ -481,70 +460,59 @@ void dio_put_worklist_raw(struct raw_data_out *dout,
 /**
   Receive uint8 value to dest.
  */
-bool dio_get_uint8_raw(struct data_in *din, int *dest)
+bool dio_get_uint8_raw(QByteArrayView &din, int *dest)
 {
-  uint8_t x;
-
-  FC_STATIC_ASSERT(sizeof(x) == 1, uint8_not_byte);
-
   if (!enough_data(din, 1)) {
     log_packet("Packet too short to read 1 byte");
 
     return false;
   }
 
-  memcpy(&x, ADD_TO_POINTER(din->src, din->current), 1);
-  *dest = x;
-  din->current++;
+  *dest = static_cast<unsigned char>(din.front());
+  din.slice(1);
   return true;
 }
 
 /**
   Receive uint16 value to dest.
  */
-bool dio_get_uint16_raw(struct data_in *din, int *dest)
+bool dio_get_uint16_raw(QByteArrayView &din, int *dest)
 {
-  uint16_t x;
-
-  FC_STATIC_ASSERT(sizeof(x) == 2, uint16_not_2_bytes);
-
   if (!enough_data(din, 2)) {
     log_packet("Packet too short to read 2 bytes");
 
     return false;
   }
 
-  memcpy(&x, ADD_TO_POINTER(din->src, din->current), 2);
+  std::uint16_t x;
+  memcpy(&x, din.data(), 2);
   *dest = qFromBigEndian(x);
-  din->current += 2;
+  din.slice(2);
   return true;
 }
 
 /**
   Receive uint32 value to dest.
  */
-bool dio_get_uint32_raw(struct data_in *din, int *dest)
+bool dio_get_uint32_raw(QByteArrayView &din, int *dest)
 {
-  uint32_t x;
-
-  FC_STATIC_ASSERT(sizeof(x) == 4, uint32_not_4_bytes);
-
   if (!enough_data(din, 4)) {
     log_packet("Packet too short to read 4 bytes");
 
     return false;
   }
 
-  memcpy(&x, ADD_TO_POINTER(din->src, din->current), 4);
+  std::uint32_t x;
+  memcpy(&x, din.data(), 4);
   *dest = qFromBigEndian(x);
-  din->current += 4;
+  din.slice(4);
   return true;
 }
 
 /**
    Receive value using 'size' bits to dest.
  */
-bool dio_get_type_raw(struct data_in *din, enum data_type type, int *dest)
+bool dio_get_type_raw(QByteArrayView &din, enum data_type type, int *dest)
 {
   switch (type) {
   case DIOT_UINT8:
@@ -570,7 +538,7 @@ bool dio_get_type_raw(struct data_in *din, enum data_type type, int *dest)
 /**
    Take boolean value from 8 bits.
  */
-bool dio_get_bool8_raw(struct data_in *din, bool *dest)
+bool dio_get_bool8_raw(QByteArrayView &din, bool *dest)
 {
   int ival;
 
@@ -590,7 +558,7 @@ bool dio_get_bool8_raw(struct data_in *din, bool *dest)
 /**
    Take boolean value from 32 bits.
  */
-bool dio_get_bool32_raw(struct data_in *din, bool *dest)
+bool dio_get_bool32_raw(QByteArrayView &din, bool *dest)
 {
   int ival;
 
@@ -611,7 +579,7 @@ bool dio_get_bool32_raw(struct data_in *din, bool *dest)
    Get an unsigned float number, which have been multiplied by 'float_factor'
    and encoded into an uint32 by dio_put_ufloat_raw().
  */
-bool dio_get_ufloat_raw(struct data_in *din, float *dest, int float_factor)
+bool dio_get_ufloat_raw(QByteArrayView &din, float *dest, int float_factor)
 {
   int ival;
 
@@ -627,7 +595,7 @@ bool dio_get_ufloat_raw(struct data_in *din, float *dest, int float_factor)
    Get a signed float number, which have been multiplied by 'float_factor'
    and encoded into a sint32 by dio_put_sfloat().
  */
-bool dio_get_sfloat_raw(struct data_in *din, float *dest, int float_factor)
+bool dio_get_sfloat_raw(QByteArrayView &din, float *dest, int float_factor)
 {
   int ival;
 
@@ -642,7 +610,7 @@ bool dio_get_sfloat_raw(struct data_in *din, float *dest, int float_factor)
 /**
    Take value from 8 bits.
  */
-bool dio_get_sint8_raw(struct data_in *din, int *dest)
+bool dio_get_sint8_raw(QByteArrayView &din, int *dest)
 {
   int tmp;
 
@@ -660,7 +628,7 @@ bool dio_get_sint8_raw(struct data_in *din, int *dest)
 /**
    Take value from 16 bits.
  */
-bool dio_get_sint16_raw(struct data_in *din, int *dest)
+bool dio_get_sint16_raw(QByteArrayView &din, int *dest)
 {
   int tmp;
 
@@ -678,7 +646,7 @@ bool dio_get_sint16_raw(struct data_in *din, int *dest)
 /**
    Take value from 32 bits.
  */
-bool dio_get_sint32_raw(struct data_in *din, int *dest)
+bool dio_get_sint32_raw(QByteArrayView &din, int *dest)
 {
   int tmp;
 
@@ -699,25 +667,24 @@ bool dio_get_sint32_raw(struct data_in *din, int *dest)
 /**
    Take memory block directly.
  */
-bool dio_get_memory_raw(struct data_in *din, void *dest, size_t dest_size)
+bool dio_get_memory_raw(QByteArrayView &din, void *dest, size_t dest_size)
 {
   if (!enough_data(din, dest_size)) {
     log_packet("Got too short memory");
     return false;
   }
 
-  memcpy(dest, ADD_TO_POINTER(din->src, din->current), dest_size);
-  din->current += dest_size;
+  memcpy(dest, din.data(), dest_size);
+  din.slice(dest_size);
   return true;
 }
 
 /**
    Take string. Conversion callback is used.
  */
-bool dio_get_string_raw(struct data_in *din, char *dest,
+bool dio_get_string_raw(QByteArrayView &din, char *dest,
                         size_t max_dest_size)
 {
-  char *c;
   size_t offset, remaining;
 
   fc_assert(max_dest_size > 0);
@@ -728,7 +695,7 @@ bool dio_get_string_raw(struct data_in *din, char *dest,
   }
 
   remaining = dio_input_remaining(din);
-  c = static_cast<char *>(ADD_TO_POINTER(din->src, din->current));
+  const char *c = din.data();
 
   // avoid using qstrlen (or qstrcpy) on an (unsigned char*)  --dwp
   for (offset = 0; offset < remaining && c[offset] != '\0'; offset++) {
@@ -745,14 +712,14 @@ bool dio_get_string_raw(struct data_in *din, char *dest,
     return false;
   }
 
-  din->current += offset + 1;
+  din.slice(offset + 1);
   return true;
 }
 
 /**
    Get city manager parameters.
  */
-bool dio_get_cm_parameter_raw(struct data_in *din,
+bool dio_get_cm_parameter_raw(QByteArrayView &din,
                               struct cm_parameter *param)
 {
   int i;
@@ -790,7 +757,7 @@ bool dio_get_cm_parameter_raw(struct data_in *din,
 /**
    Take unit_order struct and put it in the provided orders.
  */
-bool dio_get_unit_order_raw(struct data_in *din, struct unit_order *order)
+bool dio_get_unit_order_raw(QByteArrayView &din, struct unit_order *order)
 {
   // These fields are enums
   int iorder, iactivity, idir;
@@ -815,7 +782,7 @@ bool dio_get_unit_order_raw(struct data_in *din, struct unit_order *order)
    Take worklist item count and then kind and number for each item, and
    put them to provided worklist.
  */
-bool dio_get_worklist_raw(struct data_in *din, struct worklist *pwl)
+bool dio_get_worklist_raw(QByteArrayView &din, struct worklist *pwl)
 {
   int i, length;
 
@@ -850,7 +817,7 @@ bool dio_get_worklist_raw(struct data_in *din, struct worklist *pwl)
 /**
    De-serialize an action probability.
  */
-bool dio_get_action_probability_raw(struct data_in *din,
+bool dio_get_action_probability_raw(QByteArrayView &din,
                                     struct act_prob *aprob)
 {
   int min, max;
@@ -879,7 +846,7 @@ void dio_put_action_probability_raw(struct raw_data_out *dout,
 /**
    De-serialize a requirement.
  */
-bool dio_get_requirement_raw(struct data_in *din, struct requirement *preq)
+bool dio_get_requirement_raw(QByteArrayView &din, struct requirement *preq)
 {
   int type, range, value;
   bool survives, present, quiet;

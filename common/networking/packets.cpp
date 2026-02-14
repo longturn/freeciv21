@@ -342,7 +342,6 @@ void *get_packet_from_connection_raw(struct connection *pc,
     enum packet_type type;
     int itype;
   } utype;
-  struct data_in din;
   bool compressed_packet = false;
   int header_size = 0;
   void *data;
@@ -358,8 +357,8 @@ void *get_packet_from_connection_raw(struct connection *pc,
     return nullptr;
   }
 
-  dio_input_init(&din, pc->buffer->data, pc->buffer->ndata);
-  dio_get_type_raw(&din, data_type(pc->packet_header.length), &len_read);
+  QByteArrayView din(pc->buffer->data, pc->buffer->ndata);
+  dio_get_type_raw(din, data_type(pc->packet_header.length), &len_read);
 
   // The non-compressed case
   whole_packet_len = len_read;
@@ -370,8 +369,8 @@ void *get_packet_from_connection_raw(struct connection *pc,
   if (len_read == JUMBO_SIZE) {
     compressed_packet = true;
     header_size = 6;
-    if (dio_input_remaining(&din) >= 4) {
-      dio_get_uint32_raw(&din, &whole_packet_len);
+    if (din.size() >= 4) {
+      dio_get_uint32_raw(din, &whole_packet_len);
       log_compress("COMPRESS: got a jumbo packet of size %d",
                    whole_packet_len);
     } else {
@@ -478,7 +477,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
     return nullptr;
   }
 
-  dio_get_type_raw(&din, data_type(pc->packet_header.type), &utype.itype);
+  dio_get_type_raw(din, data_type(pc->packet_header.type), &utype.itype);
   utype.type = packet_type(utype.itype);
 
   if (utype.type >= PACKET_LAST
@@ -559,11 +558,10 @@ void *get_packet_from_connection_raw(struct connection *pc,
  */
 void remove_packet_from_buffer(struct socket_packet_buffer *buffer)
 {
-  struct data_in din;
   int len;
 
-  dio_input_init(&din, buffer->data, buffer->ndata);
-  fc_assert_ret(dio_get_uint16_raw(&din, &len));
+  QByteArrayView din(buffer->data, buffer->ndata);
+  fc_assert_ret(dio_get_uint16_raw(din, &len));
   memmove(buffer->data, buffer->data + len, buffer->ndata - len);
   buffer->ndata -= len;
   log_debug("remove_packet_from_buffer: remove %d; remaining %lu", len,
@@ -621,19 +619,11 @@ void post_receive_packet_server_join_reply(
 /**
    Sanity check packet
  */
-bool packet_check(struct data_in *din, struct connection *pc)
+bool packet_check(QByteArrayView din, struct connection *pc)
 {
-  size_t rem = dio_input_remaining(din);
-
-  if (rem > 0) {
-    int type, len;
-
-    dio_input_rewind(din);
-    dio_get_type_raw(din, data_type(pc->packet_header.length), &len);
-    dio_get_type_raw(din, data_type(pc->packet_header.type), &type);
-
-    log_packet("received long packet (type %d, len %d, rem %lu) from %s",
-               type, len, static_cast<unsigned long>(rem),
+  if (!din.isEmpty()) {
+    log_packet("received long packet (type %d, len %d, rem %llu) from %s",
+               pc->packet_header.type, pc->packet_header.length, din.size(),
                conn_description(pc));
     return false;
   }

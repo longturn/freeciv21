@@ -86,25 +86,23 @@ void packets_deinit();
   }
 
 #define RECEIVE_PACKET_START(packet_type, result)                           \
-  struct data_in din;                                                       \
+  QByteArrayView din(                                                       \
+      pc->buffer->data,                                                     \
+      data_type_size((enum data_type) pc->packet_header.length));           \
   struct packet_type packet_buf, *result = &packet_buf;                     \
                                                                             \
-  dio_input_init(                                                           \
-      &din, pc->buffer->data,                                               \
-      data_type_size((enum data_type) pc->packet_header.length));           \
   {                                                                         \
     int size;                                                               \
                                                                             \
-    dio_get_type_raw(&din, (enum data_type) pc->packet_header.length,       \
+    dio_get_type_raw(din, (enum data_type) pc->packet_header.length,        \
                      &size);                                                \
-    dio_input_init(&din, pc->buffer->data, MIN(size, pc->buffer->ndata));   \
+    din = QByteArrayView(pc->buffer->data, MIN(size, pc->buffer->ndata));   \
   }                                                                         \
-  dio_input_skip(                                                           \
-      &din, (data_type_size((enum data_type) pc->packet_header.length)      \
-             + data_type_size((enum data_type) pc->packet_header.type)));
+  din.slice(data_type_size((enum data_type) pc->packet_header.length)       \
+            + data_type_size((enum data_type) pc->packet_header.type));
 
 #define RECEIVE_PACKET_END(result)                                          \
-  if (!packet_check(&din, pc)) {                                            \
+  if (!packet_check(din, pc)) {                                             \
     return nullptr;                                                         \
   }                                                                         \
   remove_packet_from_buffer(pc->buffer);                                    \
@@ -118,7 +116,7 @@ void packets_deinit();
 
 int send_packet_data(struct connection *pc, unsigned char *data, int len,
                      enum packet_type packet_type);
-bool packet_check(struct data_in *din, struct connection *pc);
+bool packet_check(QByteArrayView din, struct connection *pc);
 
 void packet_strvec_compute(char str[MAX_LEN_PACKET],
                            QVector<QString> *qstrvec);
