@@ -121,7 +121,7 @@ bool dio_get(QByteArrayView &din, struct act_prob &aprob);
 
 // Should be a function but we need some macro magic.
 #define DIO_BV_GET(pdin, bv)                                                \
-  dio_get_memory_raw((pdin), (bv).vec, sizeof((bv).vec))
+  dio_get_memory_raw((pdin), (bv).vec.data(), (bv).vec.size())
 
 #define DIO_GET(f, d, ...) dio_get_##f##_raw(d, ##__VA_ARGS__)
 
@@ -160,6 +160,6 @@ void dio_put_action_probability_raw(struct raw_data_out *dout,
 
 // Should be a function but we need some macro magic.
 #define DIO_BV_PUT(pdout, bv)                                               \
-  dio_put_memory_raw((pdout), (bv).vec, sizeof((bv).vec))
+  dio_put_memory_raw((pdout), (bv).vec.data(), (bv).vec.size())
 
 #define DIO_PUT(f, d, ...) dio_put_##f##_raw(d, ##__VA_ARGS__)

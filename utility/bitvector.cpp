@@ -42,26 +42,6 @@ bool bv_check_mask(const unsigned char *vec1, const unsigned char *vec2,
 }
 
 /**
-   Compares elements of two bitvectors. Both vectors are expected to have
-   same number of elements, i.e. , size1 must be equal to size2.
- */
-bool bv_are_equal(const unsigned char *vec1, const unsigned char *vec2,
-                  size_t size1, size_t size2)
-{
-  size_t i;
-  fc_assert_ret_val(size1 == size2, false);
-
-  for (i = 0; i < size1; i++) {
-    if (vec1[0] != vec2[0]) {
-      return false;
-    }
-    vec1++;
-    vec2++;
-  }
-  return true;
-}
-
-/**
    Set everything that is true in vec_from in vec_to. Stuff that already is
    true in vec_to aren't touched. (Bitwise inclusive OR assignment)
 
