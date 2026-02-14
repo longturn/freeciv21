@@ -13,11 +13,10 @@
 
 // utility
 #include "bugs.h"
-#include "fciconv.h"
 
 // common
 #include "city.h"
-#include "dataio.h"
+#include "dataio_raw.h"
 #include "featured_text.h"
 #include "nation.h"
 #include "player.h"
@@ -438,7 +437,7 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
   }
 
   QByteArrayView din(buffer, len);
-  fc_assert_ret_val(dio_get_uint8_raw(din, &version), false);
+  fc_assert_ret_val(dio_get_uint8_raw(din, version), false);
   fc_assert_ret_val(version == 2, false);
 
   /* Initialize the parameter (includes some AI-only fields that aren't
@@ -447,23 +446,21 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
 
   output_type_iterate(i)
   {
-    fc_assert_ret_val(
-        dio_get_sint16_raw(din, &parameter->minimal_surplus[i]), false);
-    fc_assert_ret_val(dio_get_sint16_raw(din, &parameter->factor[i]), false);
+    fc_assert_ret_val(dio_get_sint16_raw(din, parameter->minimal_surplus[i]),
+                      false);
+    fc_assert_ret_val(dio_get_sint16_raw(din, parameter->factor[i]), false);
   }
   output_type_iterate_end;
 
-  fc_assert_ret_val(dio_get_sint16_raw(din, &parameter->happy_factor),
-                    false);
-  fc_assert_ret_val(dio_get_uint8_raw(din, &dummy),
+  fc_assert_ret_val(dio_get_sint16_raw(din, parameter->happy_factor), false);
+  fc_assert_ret_val(dio_get_uint8_raw(din, dummy),
                     false); // Dummy value; used to be factor_target.
-  fc_assert_ret_val(dio_get_bool8_raw(din, &parameter->require_happy),
-                    false);
+  fc_assert_ret_val(dio_get_bool8_raw(din, parameter->require_happy), false);
 
   // Optional fields
-  dio_get_bool8_raw(din, &parameter->max_growth);
-  dio_get_bool8_raw(din, &parameter->allow_disorder);
-  dio_get_bool8_raw(din, &parameter->allow_specialists);
+  dio_get_bool8_raw(din, parameter->max_growth);
+  dio_get_bool8_raw(din, parameter->allow_disorder);
+  dio_get_bool8_raw(din, parameter->allow_specialists);
 
   return true;
 }

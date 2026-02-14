@@ -460,7 +460,7 @@ void dio_put_worklist_raw(struct raw_data_out *dout,
 /**
   Receive uint8 value to dest.
  */
-bool dio_get_uint8_raw(QByteArrayView &din, int *dest)
+bool dio_get_uint8_raw(QByteArrayView &din, int &dest)
 {
   if (!enough_data(din, 1)) {
     log_packet("Packet too short to read 1 byte");
@@ -468,7 +468,7 @@ bool dio_get_uint8_raw(QByteArrayView &din, int *dest)
     return false;
   }
 
-  *dest = static_cast<unsigned char>(din.front());
+  dest = static_cast<unsigned char>(din.front());
   din.slice(1);
   return true;
 }
@@ -476,7 +476,7 @@ bool dio_get_uint8_raw(QByteArrayView &din, int *dest)
 /**
   Receive uint16 value to dest.
  */
-bool dio_get_uint16_raw(QByteArrayView &din, int *dest)
+bool dio_get_uint16_raw(QByteArrayView &din, int &dest)
 {
   if (!enough_data(din, 2)) {
     log_packet("Packet too short to read 2 bytes");
@@ -486,7 +486,7 @@ bool dio_get_uint16_raw(QByteArrayView &din, int *dest)
 
   std::uint16_t x;
   memcpy(&x, din.data(), 2);
-  *dest = qFromBigEndian(x);
+  dest = qFromBigEndian(x);
   din.slice(2);
   return true;
 }
@@ -494,7 +494,7 @@ bool dio_get_uint16_raw(QByteArrayView &din, int *dest)
 /**
   Receive uint32 value to dest.
  */
-bool dio_get_uint32_raw(QByteArrayView &din, int *dest)
+bool dio_get_uint32_raw(QByteArrayView &din, int &dest)
 {
   if (!enough_data(din, 4)) {
     log_packet("Packet too short to read 4 bytes");
@@ -504,7 +504,7 @@ bool dio_get_uint32_raw(QByteArrayView &din, int *dest)
 
   std::uint32_t x;
   memcpy(&x, din.data(), 4);
-  *dest = qFromBigEndian(x);
+  dest = qFromBigEndian(x);
   din.slice(4);
   return true;
 }
@@ -512,7 +512,7 @@ bool dio_get_uint32_raw(QByteArrayView &din, int *dest)
 /**
    Receive value using 'size' bits to dest.
  */
-bool dio_get_type_raw(QByteArrayView &din, enum data_type type, int *dest)
+bool dio_get_type_raw(QByteArrayView &din, enum data_type type, int &dest)
 {
   switch (type) {
   case DIOT_UINT8:
@@ -538,11 +538,11 @@ bool dio_get_type_raw(QByteArrayView &din, enum data_type type, int *dest)
 /**
    Take boolean value from 8 bits.
  */
-bool dio_get_bool8_raw(QByteArrayView &din, bool *dest)
+bool dio_get_bool8_raw(QByteArrayView &din, bool &dest)
 {
   int ival;
 
-  if (!dio_get_uint8_raw(din, &ival)) {
+  if (!dio_get_uint8_raw(din, ival)) {
     return false;
   }
 
@@ -551,18 +551,18 @@ bool dio_get_bool8_raw(QByteArrayView &din, bool *dest)
     return false;
   }
 
-  *dest = (ival != 0);
+  dest = (ival != 0);
   return true;
 }
 
 /**
    Take boolean value from 32 bits.
  */
-bool dio_get_bool32_raw(QByteArrayView &din, bool *dest)
+bool dio_get_bool32_raw(QByteArrayView &din, bool &dest)
 {
   int ival;
 
-  if (!dio_get_uint32_raw(din, &ival)) {
+  if (!dio_get_uint32_raw(din, ival)) {
     return false;
   }
 
@@ -571,7 +571,7 @@ bool dio_get_bool32_raw(QByteArrayView &din, bool *dest)
     return false;
   }
 
-  *dest = (ival != 0);
+  dest = (ival != 0);
   return true;
 }
 
@@ -579,15 +579,15 @@ bool dio_get_bool32_raw(QByteArrayView &din, bool *dest)
    Get an unsigned float number, which have been multiplied by 'float_factor'
    and encoded into an uint32 by dio_put_ufloat_raw().
  */
-bool dio_get_ufloat_raw(QByteArrayView &din, float *dest, int float_factor)
+bool dio_get_ufloat_raw(QByteArrayView &din, float &dest, int float_factor)
 {
   int ival;
 
-  if (!dio_get_uint32_raw(din, &ival)) {
+  if (!dio_get_uint32_raw(din, ival)) {
     return false;
   }
 
-  *dest = static_cast<float>(ival) / float_factor;
+  dest = static_cast<float>(ival) / float_factor;
   return true;
 }
 
@@ -595,62 +595,62 @@ bool dio_get_ufloat_raw(QByteArrayView &din, float *dest, int float_factor)
    Get a signed float number, which have been multiplied by 'float_factor'
    and encoded into a sint32 by dio_put_sfloat().
  */
-bool dio_get_sfloat_raw(QByteArrayView &din, float *dest, int float_factor)
+bool dio_get_sfloat_raw(QByteArrayView &din, float &dest, int float_factor)
 {
   int ival;
 
-  if (!dio_get_sint32_raw(din, &ival)) {
+  if (!dio_get_sint32_raw(din, ival)) {
     return false;
   }
 
-  *dest = static_cast<float>(ival) / float_factor;
+  dest = static_cast<float>(ival) / float_factor;
   return true;
 }
 
 /**
    Take value from 8 bits.
  */
-bool dio_get_sint8_raw(QByteArrayView &din, int *dest)
+bool dio_get_sint8_raw(QByteArrayView &din, int &dest)
 {
   int tmp;
 
-  if (!dio_get_uint8_raw(din, &tmp)) {
+  if (!dio_get_uint8_raw(din, tmp)) {
     return false;
   }
 
   if (tmp > 0x7f) {
     tmp -= 0x100;
   }
-  *dest = tmp;
+  dest = tmp;
   return true;
 }
 
 /**
    Take value from 16 bits.
  */
-bool dio_get_sint16_raw(QByteArrayView &din, int *dest)
+bool dio_get_sint16_raw(QByteArrayView &din, int &dest)
 {
   int tmp;
 
-  if (!dio_get_uint16_raw(din, &tmp)) {
+  if (!dio_get_uint16_raw(din, tmp)) {
     return false;
   }
 
   if (tmp > 0x7fff) {
     tmp -= 0x10000;
   }
-  *dest = tmp;
+  dest = tmp;
   return true;
 }
 
 /**
    Take value from 32 bits.
  */
-bool dio_get_sint32_raw(QByteArrayView &din, int *dest)
+bool dio_get_sint32_raw(QByteArrayView &din, int &dest)
 {
   int tmp;
 
-  if (!dio_get_uint32_raw(din, &tmp)) {
+  if (!dio_get_uint32_raw(din, tmp)) {
     return false;
   }
 
@@ -660,7 +660,7 @@ bool dio_get_sint32_raw(QByteArrayView &din, int *dest)
     }
   }
 
-  *dest = tmp;
+  dest = tmp;
   return true;
 }
 
@@ -720,33 +720,33 @@ bool dio_get_string_raw(QByteArrayView &din, char *dest,
    Get city manager parameters.
  */
 bool dio_get_cm_parameter_raw(QByteArrayView &din,
-                              struct cm_parameter *param)
+                              struct cm_parameter &param)
 {
   int i;
 
   for (i = 0; i < O_LAST; i++) {
-    if (!dio_get_sint16_raw(din, &param->minimal_surplus[i])) {
+    if (!dio_get_sint16_raw(din, param.minimal_surplus[i])) {
       log_packet("Got a bad cm_parameter");
       return false;
     }
   }
 
-  if (!dio_get_bool8_raw(din, &param->max_growth)
-      || !dio_get_bool8_raw(din, &param->require_happy)
-      || !dio_get_bool8_raw(din, &param->allow_disorder)
-      || !dio_get_bool8_raw(din, &param->allow_specialists)) {
+  if (!dio_get_bool8_raw(din, param.max_growth)
+      || !dio_get_bool8_raw(din, param.require_happy)
+      || !dio_get_bool8_raw(din, param.allow_disorder)
+      || !dio_get_bool8_raw(din, param.allow_specialists)) {
     log_packet("Got a bad cm_parameter");
     return false;
   }
 
   for (i = 0; i < O_LAST; i++) {
-    if (!dio_get_uint16_raw(din, &param->factor[i])) {
+    if (!dio_get_uint16_raw(din, param.factor[i])) {
       log_packet("Got a bad cm_parameter");
       return false;
     }
   }
 
-  if (!dio_get_uint16_raw(din, &param->happy_factor)) {
+  if (!dio_get_uint16_raw(din, param.happy_factor)) {
     log_packet("Got a bad cm_parameter");
     return false;
   }
@@ -757,23 +757,23 @@ bool dio_get_cm_parameter_raw(QByteArrayView &din,
 /**
    Take unit_order struct and put it in the provided orders.
  */
-bool dio_get_unit_order_raw(QByteArrayView &din, struct unit_order *order)
+bool dio_get_unit_order_raw(QByteArrayView &din, struct unit_order &order)
 {
   // These fields are enums
   int iorder, iactivity, idir;
 
-  if (!dio_get_uint8_raw(din, &iorder) || !dio_get_uint8_raw(din, &iactivity)
-      || !dio_get_sint32_raw(din, &order->target)
-      || !dio_get_sint16_raw(din, &order->sub_target)
-      || !dio_get_uint8_raw(din, &order->action)
-      || !dio_get_sint8_raw(din, &idir)) {
+  if (!dio_get_uint8_raw(din, iorder) || !dio_get_uint8_raw(din, iactivity)
+      || !dio_get_sint32_raw(din, order.target)
+      || !dio_get_sint16_raw(din, order.sub_target)
+      || !dio_get_uint8_raw(din, order.action)
+      || !dio_get_sint8_raw(din, idir)) {
     log_packet("Got a bad unit_order");
     return false;
   }
 
-  order->order = unit_orders(iorder);
-  order->activity = unit_activity(iactivity);
-  order->dir = direction8(idir);
+  order.order = unit_orders(iorder);
+  order.activity = unit_activity(iactivity);
+  order.dir = direction8(idir);
 
   return true;
 }
@@ -782,13 +782,13 @@ bool dio_get_unit_order_raw(QByteArrayView &din, struct unit_order *order)
    Take worklist item count and then kind and number for each item, and
    put them to provided worklist.
  */
-bool dio_get_worklist_raw(QByteArrayView &din, struct worklist *pwl)
+bool dio_get_worklist_raw(QByteArrayView &din, struct worklist &pwl)
 {
   int i, length;
 
-  worklist_init(pwl);
+  worklist_init(&pwl);
 
-  if (!dio_get_uint8_raw(din, &length)) {
+  if (!dio_get_uint8_raw(din, length)) {
     log_packet("Got a bad worklist");
     return false;
   }
@@ -798,8 +798,8 @@ bool dio_get_worklist_raw(QByteArrayView &din, struct worklist *pwl)
     int kind;
     struct universal univ;
 
-    if (!dio_get_uint8_raw(din, &kind)
-        || !dio_get_uint8_raw(din, &identifier)) {
+    if (!dio_get_uint8_raw(din, kind)
+        || !dio_get_uint8_raw(din, identifier)) {
       log_packet("Got a too short worklist");
       return false;
     }
@@ -808,7 +808,7 @@ bool dio_get_worklist_raw(QByteArrayView &din, struct worklist *pwl)
      * FIXME: the value returned by universal_by_number() should be checked!
      */
     univ = universal_by_number(universals_n(kind), identifier);
-    worklist_append(pwl, &univ);
+    worklist_append(&pwl, &univ);
   }
 
   return true;
@@ -818,17 +818,17 @@ bool dio_get_worklist_raw(QByteArrayView &din, struct worklist *pwl)
    De-serialize an action probability.
  */
 bool dio_get_action_probability_raw(QByteArrayView &din,
-                                    struct act_prob *aprob)
+                                    struct act_prob &aprob)
 {
   int min, max;
 
-  if (!dio_get_uint8_raw(din, &min) || !dio_get_uint8_raw(din, &max)) {
+  if (!dio_get_uint8_raw(din, min) || !dio_get_uint8_raw(din, max)) {
     log_packet("Got a bad action probability");
     return false;
   }
 
-  aprob->min = min;
-  aprob->max = max;
+  aprob.min = min;
+  aprob.max = max;
 
   return true;
 }
@@ -846,25 +846,24 @@ void dio_put_action_probability_raw(struct raw_data_out *dout,
 /**
    De-serialize a requirement.
  */
-bool dio_get_requirement_raw(QByteArrayView &din, struct requirement *preq)
+bool dio_get_requirement_raw(QByteArrayView &din, struct requirement &preq)
 {
   int type, range, value;
   bool survives, present, quiet;
 
-  if (!dio_get_uint8_raw(din, &type) || !dio_get_sint32_raw(din, &value)
-      || !dio_get_uint8_raw(din, &range)
-      || !dio_get_bool8_raw(din, &survives)
-      || !dio_get_bool8_raw(din, &present)
-      || !dio_get_bool8_raw(din, &quiet)) {
+  if (!dio_get_uint8_raw(din, type) || !dio_get_sint32_raw(din, value)
+      || !dio_get_uint8_raw(din, range) || !dio_get_bool8_raw(din, survives)
+      || !dio_get_bool8_raw(din, present)
+      || !dio_get_bool8_raw(din, quiet)) {
     log_packet("Got a bad requirement");
     return false;
   }
 
-  *preq = req_from_values(type, range, survives, present, quiet, value);
-  if (preq->source.kind == universals_n_invalid()) {
+  preq = req_from_values(type, range, survives, present, quiet, value);
+  if (preq.source.kind == universals_n_invalid()) {
     // Keep bad requirements but make sure we never touch them.
     qWarning() << "The server sent an invalid or unknown requirement.";
-    preq->source.kind = VUT_NONE;
+    preq.source.kind = VUT_NONE;
   }
 
   return true;

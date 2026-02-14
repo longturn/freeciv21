@@ -94,8 +94,7 @@ void packets_deinit();
   {                                                                         \
     int size;                                                               \
                                                                             \
-    dio_get_type_raw(din, (enum data_type) pc->packet_header.length,        \
-                     &size);                                                \
+    dio_get_type_raw(din, (enum data_type) pc->packet_header.length, size); \
     din = QByteArrayView(pc->buffer->data, MIN(size, pc->buffer->ndata));   \
   }                                                                         \
   din.slice(data_type_size((enum data_type) pc->packet_header.length)       \

@@ -198,7 +198,7 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
     auto data = datagram.data();
     QByteArrayView din(data);
 
-    fc_assert_ret_val(dio_get_uint8_raw(din, &type), SCAN_STATUS_ERROR);
+    fc_assert_ret_val(dio_get_uint8_raw(din, type), SCAN_STATUS_ERROR);
     fc_assert_ret_val(
         dio_get_string_raw(din, servername, sizeof(servername)),
         SCAN_STATUS_ERROR);
