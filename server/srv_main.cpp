@@ -2023,42 +2023,10 @@ bool server_packet_input(server_connection *pconn, void *packet, int type)
   }
 
   /*
-   * Old pre-delta clients (before 2003-11-28) send a
-   * PACKET_LOGIN_REQUEST (type 0) to the server. We catch this and
-   * reply with an old reject packet. Since there is no struct for
-   * this old packet anymore we build it by hand.
+   * Old pre-delta clients (before 2003-11-28) sent a PACKET_LOGIN_REQUEST
+   * (type 0) to the server. We catch this reject the client.
    */
   if (type == 0) {
-    unsigned char buffer[4096];
-    struct raw_data_out dout;
-
-    qInfo(_("Warning: rejecting old client %s"), conn_description(pconn));
-
-    dio_output_init(&dout, buffer, sizeof(buffer));
-    dio_put_uint16_raw(&dout, 0);
-
-    // 1 == PACKET_LOGIN_REPLY in the old client
-    dio_put_uint8_raw(&dout, 1);
-
-    dio_put_bool32_raw(&dout, false);
-    dio_put_string_raw(&dout,
-                       _("Your client is too old. To use this server, "
-                         "please upgrade your client to a more recent "
-                         "Freeciv21 release."));
-    dio_put_string_raw(&dout, "");
-
-    {
-      size_t size = dio_output_used(&dout);
-      dio_output_rewind(&dout);
-      dio_put_uint16_raw(&dout, size);
-
-      /*
-       * Use send_connection_data instead of send_packet_data to avoid
-       * compression.
-       */
-      connection_send_data(pconn, buffer, size);
-    }
-
     return false;
   }
 

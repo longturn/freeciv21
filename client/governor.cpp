@@ -457,12 +457,12 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
                     false);
   fc_assert_ret_val(dio_get<std::uint8_t>(din, dummy),
                     false); // Dummy value; used to be factor_target.
-  fc_assert_ret_val(dio_get_bool8_raw(din, parameter->require_happy), false);
+  fc_assert_ret_val(dio_get_bool_raw(din, parameter->require_happy), false);
 
   // Optional fields
-  dio_get_bool8_raw(din, parameter->max_growth);
-  dio_get_bool8_raw(din, parameter->allow_disorder);
-  dio_get_bool8_raw(din, parameter->allow_specialists);
+  dio_get_bool_raw(din, parameter->max_growth);
+  dio_get_bool_raw(din, parameter->allow_disorder);
+  dio_get_bool_raw(din, parameter->allow_specialists);
 
   return true;
 }
@@ -489,11 +489,11 @@ void cma_yoloswag::set_parameter(enum attr_city attr, int city_id,
 
   dio_put_sint16_raw(&dout, parameter->happy_factor);
   dio_put_uint8_raw(&dout, 0); // Dummy value; used to be factor_target.
-  dio_put_bool8_raw(&dout, parameter->require_happy);
+  dio_put_bool_raw(&dout, parameter->require_happy);
 
-  dio_put_bool8_raw(&dout, parameter->max_growth);
-  dio_put_bool8_raw(&dout, parameter->allow_disorder);
-  dio_put_bool8_raw(&dout, parameter->allow_specialists);
+  dio_put_bool_raw(&dout, parameter->max_growth);
+  dio_put_bool_raw(&dout, parameter->allow_disorder);
+  dio_put_bool_raw(&dout, parameter->allow_specialists);
 
   fc_assert(dio_output_used(&dout) == SAVED_PARAMETER_SIZE);
 

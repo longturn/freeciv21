@@ -314,23 +314,12 @@ void dio_put_sint32_raw(struct raw_data_out *dout, int value)
 /**
    Insert value 0 or 1 using 8 bits.
  */
-void dio_put_bool8_raw(struct raw_data_out *dout, bool value)
+void dio_put_bool_raw(struct raw_data_out *dout, bool value)
 {
   FIELD_RANGE_TEST(value != true && value != false, value = (value != false);
                    , "Trying to put a non-boolean: %d", (int) value);
 
   dio_put_uint8_raw(dout, value ? 1 : 0);
-}
-
-/**
-   Insert value 0 or 1 using 32 bits.
- */
-void dio_put_bool32_raw(struct raw_data_out *dout, bool value)
-{
-  FIELD_RANGE_TEST(value != true && value != false, value = (value != false);
-                   , "Trying to put a non-boolean: %d", (int) value);
-
-  dio_put_uint32_raw(dout, value ? 1 : 0);
 }
 
 /**
@@ -413,10 +402,10 @@ void dio_put_cm_parameter_raw(struct raw_data_out *dout,
     dio_put_sint16_raw(dout, param->minimal_surplus[i]);
   }
 
-  dio_put_bool8_raw(dout, param->max_growth);
-  dio_put_bool8_raw(dout, param->require_happy);
-  dio_put_bool8_raw(dout, param->allow_disorder);
-  dio_put_bool8_raw(dout, param->allow_specialists);
+  dio_put_bool_raw(dout, param->max_growth);
+  dio_put_bool_raw(dout, param->require_happy);
+  dio_put_bool_raw(dout, param->allow_disorder);
+  dio_put_bool_raw(dout, param->allow_specialists);
 
   for (i = 0; i < O_LAST; i++) {
     dio_put_uint16_raw(dout, param->factor[i]);
@@ -486,31 +475,11 @@ bool dio_get_type_raw(QByteArrayView &din, enum data_type type, int &dest)
 /**
    Take boolean value from 8 bits.
  */
-bool dio_get_bool8_raw(QByteArrayView &din, bool &dest)
+bool dio_get_bool_raw(QByteArrayView &din, bool &dest)
 {
   int ival;
 
   if (!dio_get<std::uint8_t>(din, ival)) {
-    return false;
-  }
-
-  if (ival != 0 && ival != 1) {
-    log_packet("Got a bad boolean: %d", ival);
-    return false;
-  }
-
-  dest = (ival != 0);
-  return true;
-}
-
-/**
-   Take boolean value from 32 bits.
- */
-bool dio_get_bool32_raw(QByteArrayView &din, bool &dest)
-{
-  int ival;
-
-  if (!dio_get<std::uint32_t>(din, ival)) {
     return false;
   }
 
@@ -622,10 +591,10 @@ bool dio_get_cm_parameter_raw(QByteArrayView &din,
     }
   }
 
-  if (!dio_get_bool8_raw(din, param.max_growth)
-      || !dio_get_bool8_raw(din, param.require_happy)
-      || !dio_get_bool8_raw(din, param.allow_disorder)
-      || !dio_get_bool8_raw(din, param.allow_specialists)) {
+  if (!dio_get_bool_raw(din, param.max_growth)
+      || !dio_get_bool_raw(din, param.require_happy)
+      || !dio_get_bool_raw(din, param.allow_disorder)
+      || !dio_get_bool_raw(din, param.allow_specialists)) {
     log_packet("Got a bad cm_parameter");
     return false;
   }
@@ -745,9 +714,8 @@ bool dio_get_requirement_raw(QByteArrayView &din, struct requirement &preq)
 
   if (!dio_get<std::uint8_t>(din, type) || !dio_get<std::int32_t>(din, value)
       || !dio_get<std::uint8_t>(din, range)
-      || !dio_get_bool8_raw(din, survives)
-      || !dio_get_bool8_raw(din, present)
-      || !dio_get_bool8_raw(din, quiet)) {
+      || !dio_get_bool_raw(din, survives) || !dio_get_bool_raw(din, present)
+      || !dio_get_bool_raw(din, quiet)) {
     log_packet("Got a bad requirement");
     return false;
   }
@@ -776,7 +744,7 @@ void dio_put_requirement_raw(struct raw_data_out *dout,
   dio_put_uint8_raw(dout, type);
   dio_put_sint32_raw(dout, value);
   dio_put_uint8_raw(dout, range);
-  dio_put_bool8_raw(dout, survives);
-  dio_put_bool8_raw(dout, present);
-  dio_put_bool8_raw(dout, quiet);
+  dio_put_bool_raw(dout, survives);
+  dio_put_bool_raw(dout, present);
+  dio_put_bool_raw(dout, quiet);
 }

@@ -85,8 +85,7 @@ template <class T> bool dio_get(QByteArrayView &din, int &dest)
   return true;
 }
 
-bool dio_get_bool8_raw(QByteArrayView &din, bool &dest);
-bool dio_get_bool32_raw(QByteArrayView &din, bool &dest);
+bool dio_get_bool_raw(QByteArrayView &din, bool &dest);
 bool dio_get_ufloat_raw(QByteArrayView &din, float &dest, int float_factor);
 bool dio_get_sfloat_raw(QByteArrayView &din, float &dest, int float_factor);
 bool dio_get_memory_raw(QByteArrayView &din, void *dest, size_t dest_size)
@@ -119,8 +118,7 @@ void dio_put_sint8_raw(struct raw_data_out *dout, int value);
 void dio_put_sint16_raw(struct raw_data_out *dout, int value);
 void dio_put_sint32_raw(struct raw_data_out *dout, int value);
 
-void dio_put_bool8_raw(struct raw_data_out *dout, bool value);
-void dio_put_bool32_raw(struct raw_data_out *dout, bool value);
+void dio_put_bool_raw(struct raw_data_out *dout, bool value);
 void dio_put_ufloat_raw(struct raw_data_out *dout, float value,
                         int float_factor);
 void dio_put_sfloat_raw(struct raw_data_out *dout, float value,
