@@ -4,10 +4,12 @@
 #pragma once
 
 // utility
+#include "bitvector.h"
 #include "log.h"
 #include "support.h"
 
 // std
+#include <algorithm>
 #include <cstddef> // size_t
 
 // Qt
@@ -109,21 +111,31 @@ bool dio_get(QByteArrayView &din, float &dest, int precision)
   return ret;
 }
 
-bool dio_get_memory_raw(QByteArrayView &din, void *dest, size_t dest_size)
+/**
+ * Reads a bit vector from the beginning of \c din and puts it in \c dest.
+ */
+template <unsigned bits>
+bool dio_get(QByteArrayView &din, bit_vector<bits> &dest)
+{
+  fc_assert_ret_val_msg(din.size() >= dest.vec.size(), false,
+                        "Not enough data for bit vector: need %zd, got %lld",
+                        dest.vec.size(), din.size());
+
+  std::copy(din.begin(), din.begin() + dest.vec.size(), dest.vec.begin());
+
+  din.slice(dest.vec.size());
+  return true;
+}
+
+bool dio_get(QByteArrayView &din, char *dest, size_t max_dest_size)
     fc__attribute((nonnull(2)));
-bool dio_get_string_raw(QByteArrayView &din, char *dest,
-                        size_t max_dest_size) fc__attribute((nonnull(2)));
+bool dio_get(QByteArrayView &din, std::byte *dest, size_t max_dest_size)
+    fc__attribute((nonnull(2)));
 bool dio_get(QByteArrayView &din, struct cm_parameter &param);
 bool dio_get(QByteArrayView &din, struct worklist &pwl);
 bool dio_get(QByteArrayView &din, struct unit_order &order);
 bool dio_get(QByteArrayView &din, struct requirement &preq);
 bool dio_get(QByteArrayView &din, struct act_prob &aprob);
-
-// Should be a function but we need some macro magic.
-#define DIO_BV_GET(pdin, bv)                                                \
-  dio_get_memory_raw((pdin), (bv).vec.data(), (bv).vec.size())
-
-#define DIO_GET(f, d, ...) dio_get_##f##_raw(d, ##__VA_ARGS__)
 
 // puts
 void dio_put_type_raw(struct raw_data_out *dout, enum data_type type,

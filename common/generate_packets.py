@@ -439,13 +439,7 @@ class Field:
         Returns code which get this field.
         """
 
-        get_function = f"DIO_GET({self.dataio_type}, din"
-        if self.dataio_type == "bitvector":
-            get_function = "DIO_BV_GET(din"
-        elif "std::" in self.dataio_type:
-            get_function = f"dio_get<{self.dataio_type}>(din"
-        elif self.dataio_type in ("bool", "cm_parameter", "worklist", "unit_order", "requirement", "action_probability"):
-            get_function = f"dio_get(din"
+        get_function = f"dio_get<{self.dataio_type}>(din" if "std::" in self.dataio_type else f"dio_get(din"
 
         if self.struct_type == "float" and not self.is_array:
             return f"""if (!{get_function}, real_packet->{self.name}, {self.float_factor})) {{
@@ -955,7 +949,7 @@ static char *stats_{self.name}_names[] = {{names}};
   genhash **hash = pc->phs.received + {self.type};
 """
             delta_body1 = """
-  DIO_BV_GET(din, fields);
+  dio_get(din, fields);
   """
             body1 = ""
             for field in self.key_fields:

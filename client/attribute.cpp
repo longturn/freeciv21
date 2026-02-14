@@ -215,7 +215,6 @@ static enum attribute_serial unserialize_hash(attributeHash *hash,
 
   for (i = 0; i < entries; i++) {
     attr_key key;
-    void *pvalue;
     int value_length;
     struct raw_data_out dout;
 
@@ -237,11 +236,11 @@ static enum attribute_serial unserialize_hash(attributeHash *hash,
              "uint32 key dio_input_too_short");
       return A_SERIAL_FAIL;
     }
-    pvalue = new char[value_length + 4];
 
+    auto pvalue = new std::byte[value_length + 4];
     dio_output_init(&dout, pvalue, value_length + 4);
     dio_put_uint32_raw(&dout, value_length);
-    if (!dio_get_memory_raw(din, ADD_TO_POINTER(pvalue, 4), value_length)) {
+    if (!dio_get(din, pvalue + 4, value_length)) {
       qDebug("attribute.cpp unserialize_hash() "
              "memory dio_input_too_short");
       ::operator delete[](pvalue);
@@ -380,7 +379,7 @@ size_t attribute_get(int key, int id, int x, int y, size_t max_data_length,
   fc_assert_ret_val(dio_get<std::uint32_t>(din, length), 0);
 
   if (length <= max_data_length) {
-    dio_get_memory_raw(din, data, length);
+    dio_get(din, static_cast<std::byte *>(data), length);
   }
 
   log_attribute("  found length = %d", length);

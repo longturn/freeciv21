@@ -198,7 +198,7 @@ type UINT16             = std::uint16_t(int)
 type UINT32             = std::uint32_t(int)
 
 # typedefs for arrays/structs
-type MEMORY             = memory(unsigned char)
+type MEMORY             = memory(std::byte)
 type REQUIREMENT        = requirement(struct requirement)
 type ACT_PROB           = action_probability(struct act_prob)
 type STRING             = string(char)
