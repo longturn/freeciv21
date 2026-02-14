@@ -464,17 +464,17 @@ bool dio_get_type_raw(QByteArrayView &din, enum data_type type, int &dest)
 {
   switch (type) {
   case DIOT_UINT8:
-    return dio_get_uint8_raw(din, dest);
+    return dio_get<std::uint8_t>(din, dest);
   case DIOT_UINT16:
-    return dio_get_uint16_raw(din, dest);
+    return dio_get<std::uint16_t>(din, dest);
   case DIOT_UINT32:
-    return dio_get_uint32_raw(din, dest);
+    return dio_get<std::uint32_t>(din, dest);
   case DIOT_SINT8:
-    return dio_get_sint8_raw(din, dest);
+    return dio_get<std::int8_t>(din, dest);
   case DIOT_SINT16:
-    return dio_get_sint16_raw(din, dest);
+    return dio_get<std::int16_t>(din, dest);
   case DIOT_SINT32:
-    return dio_get_sint32_raw(din, dest);
+    return dio_get<std::int32_t>(din, dest);
   case DIOT_LAST:
     break;
   }
@@ -490,7 +490,7 @@ bool dio_get_bool8_raw(QByteArrayView &din, bool &dest)
 {
   int ival;
 
-  if (!dio_get_uint8_raw(din, ival)) {
+  if (!dio_get<std::uint8_t>(din, ival)) {
     return false;
   }
 
@@ -510,7 +510,7 @@ bool dio_get_bool32_raw(QByteArrayView &din, bool &dest)
 {
   int ival;
 
-  if (!dio_get_uint32_raw(din, ival)) {
+  if (!dio_get<std::uint32_t>(din, ival)) {
     return false;
   }
 
@@ -531,7 +531,7 @@ bool dio_get_ufloat_raw(QByteArrayView &din, float &dest, int float_factor)
 {
   int ival;
 
-  if (!dio_get_uint32_raw(din, ival)) {
+  if (!dio_get<std::uint32_t>(din, ival)) {
     return false;
   }
 
@@ -547,7 +547,7 @@ bool dio_get_sfloat_raw(QByteArrayView &din, float &dest, int float_factor)
 {
   int ival;
 
-  if (!dio_get_sint32_raw(din, ival)) {
+  if (!dio_get<std::int32_t>(din, ival)) {
     return false;
   }
 
@@ -616,7 +616,7 @@ bool dio_get_cm_parameter_raw(QByteArrayView &din,
   int i;
 
   for (i = 0; i < O_LAST; i++) {
-    if (!dio_get_sint16_raw(din, param.minimal_surplus[i])) {
+    if (!dio_get<std::int16_t>(din, param.minimal_surplus[i])) {
       log_packet("Got a bad cm_parameter");
       return false;
     }
@@ -631,13 +631,13 @@ bool dio_get_cm_parameter_raw(QByteArrayView &din,
   }
 
   for (i = 0; i < O_LAST; i++) {
-    if (!dio_get_uint16_raw(din, param.factor[i])) {
+    if (!dio_get<std::uint16_t>(din, param.factor[i])) {
       log_packet("Got a bad cm_parameter");
       return false;
     }
   }
 
-  if (!dio_get_uint16_raw(din, param.happy_factor)) {
+  if (!dio_get<std::uint16_t>(din, param.happy_factor)) {
     log_packet("Got a bad cm_parameter");
     return false;
   }
@@ -653,11 +653,12 @@ bool dio_get_unit_order_raw(QByteArrayView &din, struct unit_order &order)
   // These fields are enums
   int iorder, iactivity, idir;
 
-  if (!dio_get_uint8_raw(din, iorder) || !dio_get_uint8_raw(din, iactivity)
-      || !dio_get_sint32_raw(din, order.target)
-      || !dio_get_sint16_raw(din, order.sub_target)
-      || !dio_get_uint8_raw(din, order.action)
-      || !dio_get_sint8_raw(din, idir)) {
+  if (!dio_get<std::uint8_t>(din, iorder)
+      || !dio_get<std::uint8_t>(din, iactivity)
+      || !dio_get<std::int32_t>(din, order.target)
+      || !dio_get<std::int16_t>(din, order.sub_target)
+      || !dio_get<std::uint8_t>(din, order.action)
+      || !dio_get<std::int8_t>(din, idir)) {
     log_packet("Got a bad unit_order");
     return false;
   }
@@ -679,7 +680,7 @@ bool dio_get_worklist_raw(QByteArrayView &din, struct worklist &pwl)
 
   worklist_init(&pwl);
 
-  if (!dio_get_uint8_raw(din, length)) {
+  if (!dio_get<std::uint8_t>(din, length)) {
     log_packet("Got a bad worklist");
     return false;
   }
@@ -689,8 +690,8 @@ bool dio_get_worklist_raw(QByteArrayView &din, struct worklist &pwl)
     int kind;
     struct universal univ;
 
-    if (!dio_get_uint8_raw(din, kind)
-        || !dio_get_uint8_raw(din, identifier)) {
+    if (!dio_get<std::uint8_t>(din, kind)
+        || !dio_get<std::uint8_t>(din, identifier)) {
       log_packet("Got a too short worklist");
       return false;
     }
@@ -713,7 +714,7 @@ bool dio_get_action_probability_raw(QByteArrayView &din,
 {
   int min, max;
 
-  if (!dio_get_uint8_raw(din, min) || !dio_get_uint8_raw(din, max)) {
+  if (!dio_get<std::uint8_t>(din, min) || !dio_get<std::uint8_t>(din, max)) {
     log_packet("Got a bad action probability");
     return false;
   }
@@ -742,8 +743,9 @@ bool dio_get_requirement_raw(QByteArrayView &din, struct requirement &preq)
   int type, range, value;
   bool survives, present, quiet;
 
-  if (!dio_get_uint8_raw(din, type) || !dio_get_sint32_raw(din, value)
-      || !dio_get_uint8_raw(din, range) || !dio_get_bool8_raw(din, survives)
+  if (!dio_get<std::uint8_t>(din, type) || !dio_get<std::int32_t>(din, value)
+      || !dio_get<std::uint8_t>(din, range)
+      || !dio_get_bool8_raw(din, survives)
       || !dio_get_bool8_raw(din, present)
       || !dio_get_bool8_raw(din, quiet)) {
     log_packet("Got a bad requirement");

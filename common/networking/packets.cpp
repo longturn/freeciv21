@@ -370,7 +370,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
     compressed_packet = true;
     header_size = 6;
     if (din.size() >= 4) {
-      dio_get_uint32_raw(din, whole_packet_len);
+      dio_get<std::uint32_t>(din, whole_packet_len);
       log_compress("COMPRESS: got a jumbo packet of size %d",
                    whole_packet_len);
     } else {
@@ -561,7 +561,7 @@ void remove_packet_from_buffer(struct socket_packet_buffer *buffer)
   int len;
 
   QByteArrayView din(buffer->data, buffer->ndata);
-  fc_assert_ret(dio_get_uint16_raw(din, len));
+  fc_assert_ret(dio_get<std::uint16_t>(din, len));
   memmove(buffer->data, buffer->data + len, buffer->ndata - len);
   buffer->ndata -= len;
   log_debug("remove_packet_from_buffer: remove %d; remaining %lu", len,
