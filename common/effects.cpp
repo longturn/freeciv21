@@ -457,6 +457,7 @@ void recv_ruleset_effect(const struct packet_ruleset_effect *packet)
   struct multiplier *pmul;
   int i;
 
+  fc_assert_ret(effect_type_is_valid(packet->effect_type));
   pmul = packet->has_multiplier ? multiplier_by_number(packet->multiplier)
                                 : nullptr;
   peffect = effect_new(packet->effect_type, packet->effect_value, pmul);
