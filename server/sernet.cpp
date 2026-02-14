@@ -562,7 +562,6 @@ void handle_client_heartbeat(server_connection *pconn)
  */
 void get_lanserver_announcement()
 {
-  struct data_in din;
   int type;
 
   if (srvarg.announce == ANNOUNCE_NONE) {
@@ -571,9 +570,9 @@ void get_lanserver_announcement()
 
   if (udp_socket && udp_socket->hasPendingDatagrams()) {
     QNetworkDatagram qnd = udp_socket->receiveDatagram();
-    auto data = qnd.data();
-    dio_input_init(&din, data.constData(), 1);
-    fc_assert_ret_msg(dio_get_uint8_raw(&din, &type), "dio error");
+    const auto data = qnd.data();
+    QByteArrayView din(data.data(), 1);
+    fc_assert_ret_msg(dio_get_uint8_raw(din, &type), "dio error");
     if (type == SERVER_LAN_VERSION) {
       log_debug("Received request for server LAN announcement.");
       send_lanserver_response();

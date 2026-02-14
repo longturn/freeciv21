@@ -9,6 +9,9 @@
 // std
 #include <cstddef> // size_t
 
+// Qt
+#include <QByteArrayView>
+
 struct cm_parameter;
 struct worklist;
 struct unit_order;
@@ -55,54 +58,48 @@ void dio_output_init(struct raw_data_out *dout, void *destination,
                      size_t dest_size);
 void dio_output_rewind(struct raw_data_out *dout);
 size_t dio_output_used(struct raw_data_out *dout);
-
-void dio_input_init(struct data_in *dout, const void *src, size_t src_size);
-void dio_input_rewind(struct data_in *din);
-size_t dio_input_remaining(struct data_in *din);
-bool dio_input_skip(struct data_in *din, size_t size);
-
 size_t data_type_size(enum data_type type);
 
 // gets
-bool dio_get_type_raw(struct data_in *din, enum data_type type, int *dest)
+bool dio_get_type_raw(QByteArrayView &din, enum data_type type, int *dest)
     fc__attribute((nonnull(3)));
 
-bool dio_get_uint8_raw(struct data_in *din, int *dest)
+bool dio_get_uint8_raw(QByteArrayView &din, int *dest)
     fc__attribute((nonnull(2)));
-bool dio_get_uint16_raw(struct data_in *din, int *dest)
+bool dio_get_uint16_raw(QByteArrayView &din, int *dest)
     fc__attribute((nonnull(2)));
-bool dio_get_uint32_raw(struct data_in *din, int *dest)
-    fc__attribute((nonnull(2)));
-
-bool dio_get_sint8_raw(struct data_in *din, int *dest)
-    fc__attribute((nonnull(2)));
-bool dio_get_sint16_raw(struct data_in *din, int *dest)
-    fc__attribute((nonnull(2)));
-bool dio_get_sint32_raw(struct data_in *din, int *dest)
+bool dio_get_uint32_raw(QByteArrayView &din, int *dest)
     fc__attribute((nonnull(2)));
 
-bool dio_get_bool8_raw(struct data_in *din, bool *dest)
+bool dio_get_sint8_raw(QByteArrayView &din, int *dest)
     fc__attribute((nonnull(2)));
-bool dio_get_bool32_raw(struct data_in *din, bool *dest)
+bool dio_get_sint16_raw(QByteArrayView &din, int *dest)
     fc__attribute((nonnull(2)));
-bool dio_get_ufloat_raw(struct data_in *din, float *dest, int float_factor)
+bool dio_get_sint32_raw(QByteArrayView &din, int *dest)
     fc__attribute((nonnull(2)));
-bool dio_get_sfloat_raw(struct data_in *din, float *dest, int float_factor)
+
+bool dio_get_bool8_raw(QByteArrayView &din, bool *dest)
     fc__attribute((nonnull(2)));
-bool dio_get_memory_raw(struct data_in *din, void *dest, size_t dest_size)
+bool dio_get_bool32_raw(QByteArrayView &din, bool *dest)
     fc__attribute((nonnull(2)));
-bool dio_get_string_raw(struct data_in *din, char *dest,
+bool dio_get_ufloat_raw(QByteArrayView &din, float *dest, int float_factor)
+    fc__attribute((nonnull(2)));
+bool dio_get_sfloat_raw(QByteArrayView &din, float *dest, int float_factor)
+    fc__attribute((nonnull(2)));
+bool dio_get_memory_raw(QByteArrayView &din, void *dest, size_t dest_size)
+    fc__attribute((nonnull(2)));
+bool dio_get_string_raw(QByteArrayView &din, char *dest,
                         size_t max_dest_size) fc__attribute((nonnull(2)));
-bool dio_get_cm_parameter_raw(struct data_in *din,
+bool dio_get_cm_parameter_raw(QByteArrayView &din,
                               struct cm_parameter *param)
     fc__attribute((nonnull(2)));
-bool dio_get_worklist_raw(struct data_in *din, struct worklist *pwl)
+bool dio_get_worklist_raw(QByteArrayView &din, struct worklist *pwl)
     fc__attribute((nonnull(2)));
-bool dio_get_unit_order_raw(struct data_in *din, struct unit_order *order)
+bool dio_get_unit_order_raw(QByteArrayView &din, struct unit_order *order)
     fc__attribute((nonnull(2)));
-bool dio_get_requirement_raw(struct data_in *din, struct requirement *preq)
+bool dio_get_requirement_raw(QByteArrayView &din, struct requirement *preq)
     fc__attribute((nonnull(2)));
-bool dio_get_action_probability_raw(struct data_in *din,
+bool dio_get_action_probability_raw(QByteArrayView &din,
                                     struct act_prob *aprob)
     fc__attribute((nonnull(2)));
 

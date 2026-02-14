@@ -426,7 +426,6 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
 {
   size_t len;
   char buffer[SAVED_PARAMETER_SIZE];
-  struct data_in din;
   int version, dummy;
 
   /* Changing this function is likely to break compatability with old
@@ -438,8 +437,8 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
     return false;
   }
 
-  dio_input_init(&din, buffer, len);
-  fc_assert_ret_val(dio_get_uint8_raw(&din, &version), false);
+  QByteArrayView din(buffer, len);
+  fc_assert_ret_val(dio_get_uint8_raw(din, &version), false);
   fc_assert_ret_val(version == 2, false);
 
   /* Initialize the parameter (includes some AI-only fields that aren't
@@ -449,23 +448,22 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
   output_type_iterate(i)
   {
     fc_assert_ret_val(
-        dio_get_sint16_raw(&din, &parameter->minimal_surplus[i]), false);
-    fc_assert_ret_val(dio_get_sint16_raw(&din, &parameter->factor[i]),
-                      false);
+        dio_get_sint16_raw(din, &parameter->minimal_surplus[i]), false);
+    fc_assert_ret_val(dio_get_sint16_raw(din, &parameter->factor[i]), false);
   }
   output_type_iterate_end;
 
-  fc_assert_ret_val(dio_get_sint16_raw(&din, &parameter->happy_factor),
+  fc_assert_ret_val(dio_get_sint16_raw(din, &parameter->happy_factor),
                     false);
-  fc_assert_ret_val(dio_get_uint8_raw(&din, &dummy),
+  fc_assert_ret_val(dio_get_uint8_raw(din, &dummy),
                     false); // Dummy value; used to be factor_target.
-  fc_assert_ret_val(dio_get_bool8_raw(&din, &parameter->require_happy),
+  fc_assert_ret_val(dio_get_bool8_raw(din, &parameter->require_happy),
                     false);
 
   // Optional fields
-  dio_get_bool8_raw(&din, &parameter->max_growth);
-  dio_get_bool8_raw(&din, &parameter->allow_disorder);
-  dio_get_bool8_raw(&din, &parameter->allow_specialists);
+  dio_get_bool8_raw(din, &parameter->max_growth);
+  dio_get_bool8_raw(din, &parameter->allow_disorder);
+  dio_get_bool8_raw(din, &parameter->allow_specialists);
 
   return true;
 }

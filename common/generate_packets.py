@@ -430,31 +430,31 @@ class Field:
         """
 
         if self.struct_type == "float" and not self.is_array:
-            return f"""if (!DIO_GET({self.dataio_type}, &din, &real_packet->{self.name}, {self.float_factor})) {{
+            return f"""if (!DIO_GET({self.dataio_type}, din, &real_packet->{self.name}, {self.float_factor})) {{
   RECEIVE_PACKET_FIELD_ERROR({self.name});
 }}"""
         if self.dataio_type == "bitvector":
-            return f"""if (!DIO_BV_GET(&din, real_packet->{self.name})) {{
+            return f"""if (!DIO_BV_GET(din, real_packet->{self.name})) {{
   RECEIVE_PACKET_FIELD_ERROR({self.name});
 }}"""
         if self.dataio_type in ["string", "city_map"] and self.is_array != 2:
-            return f"""if (!DIO_GET({self.dataio_type}, &din, real_packet->{self.name}, sizeof(real_packet->{self.name}))) {{
+            return f"""if (!DIO_GET({self.dataio_type}, din, real_packet->{self.name}, sizeof(real_packet->{self.name}))) {{
   RECEIVE_PACKET_FIELD_ERROR({self.name});
 }}"""
         if self.is_struct and self.is_array == 0:
-            return f"""if (!DIO_GET({self.dataio_type}, &din, &real_packet->{self.name})) {{
+            return f"""if (!DIO_GET({self.dataio_type}, din, &real_packet->{self.name})) {{
   RECEIVE_PACKET_FIELD_ERROR({self.name});
 }}"""
         if not self.is_array:
             if self.struct_type in ["int", "bool"]:
-                return f"""if (!DIO_GET({self.dataio_type}, &din, &real_packet->{self.name})) {{
+                return f"""if (!DIO_GET({self.dataio_type}, din, &real_packet->{self.name})) {{
   RECEIVE_PACKET_FIELD_ERROR({self.name});
 }}"""
 
             return f"""{{
   int readin;
 
-  if (!DIO_GET({self.dataio_type}, &din, &readin)) {{
+  if (!DIO_GET({self.dataio_type}, din, &readin)) {{
     RECEIVE_PACKET_FIELD_ERROR({self.name});
   }}
   real_packet->{self.name} = static_cast<decltype(real_packet->{self.name})>(readin);
@@ -462,49 +462,49 @@ class Field:
 
         if self.is_struct:
             if self.is_array == 2:
-                c = f"""if (!DIO_GET({self.dataio_type}, &din, &real_packet->{self.name}[i][j])) {{
+                c = f"""if (!DIO_GET({self.dataio_type}, din, &real_packet->{self.name}[i][j])) {{
       RECEIVE_PACKET_FIELD_ERROR({self.name});
     }}"""
             else:
-                c = f"""if (!DIO_GET({self.dataio_type}, &din, &real_packet->{self.name}[i])) {{
+                c = f"""if (!DIO_GET({self.dataio_type}, din, &real_packet->{self.name}[i])) {{
       RECEIVE_PACKET_FIELD_ERROR({self.name});
     }}"""
         elif self.dataio_type == "string":
-            c = f"""if (!DIO_GET({self.dataio_type}, &din, real_packet->{self.name}[i], sizeof(real_packet->{self.name}[i]))) {{
+            c = f"""if (!DIO_GET({self.dataio_type}, din, real_packet->{self.name}[i], sizeof(real_packet->{self.name}[i]))) {{
       RECEIVE_PACKET_FIELD_ERROR({self.name});
     }}"""
         elif self.struct_type == "float":
             if self.is_array == 2:
-                c = f"""if (!DIO_GET({self.dataio_type}, &din, &real_packet->{self.name}[i][j], {self.float_factor})) {{
+                c = f"""if (!DIO_GET({self.dataio_type}, din, &real_packet->{self.name}[i][j], {self.float_factor})) {{
       RECEIVE_PACKET_FIELD_ERROR({self.name});
     }}"""
             else:
-                c = f"""if (!DIO_GET({self.dataio_type}, &din, &real_packet->{self.name}[i], {self.float_factor})) {{
+                c = f"""if (!DIO_GET({self.dataio_type}, din, &real_packet->{self.name}[i], {self.float_factor})) {{
       RECEIVE_PACKET_FIELD_ERROR({self.name});
     }}"""
         elif self.is_array == 2:
             if self.struct_type in ["int", "bool"]:
-                c = f"""if (!DIO_GET({self.dataio_type}, &din, &real_packet->{self.name}[i][j])) {{
+                c = f"""if (!DIO_GET({self.dataio_type}, din, &real_packet->{self.name}[i][j])) {{
       RECEIVE_PACKET_FIELD_ERROR({self.name});
     }}"""
             else:
                 c = f"""{{
       int readin;
 
-      if (!DIO_GET({self.dataio_type}, &din, &readin)) {{
+      if (!DIO_GET({self.dataio_type}, din, &readin)) {{
         RECEIVE_PACKET_FIELD_ERROR({self.name});
       }}
       real_packet->{self.name}[i][j] = readin;
     }}"""
         elif self.struct_type in ["int", "bool"]:
-            c = f"""if (!DIO_GET({self.dataio_type}, &din, &real_packet->{self.name}[i])) {{
+            c = f"""if (!DIO_GET({self.dataio_type}, din, &real_packet->{self.name}[i])) {{
       RECEIVE_PACKET_FIELD_ERROR({self.name});
     }}"""
         else:
             c = f"""{{
       int readin;
 
-      if (!DIO_GET({self.dataio_type}, &din, &readin)) {{
+      if (!DIO_GET({self.dataio_type}, din, &readin)) {{
         RECEIVE_PACKET_FIELD_ERROR({self.name});
       }}
       real_packet->{self.name}[i] = readin;
@@ -527,7 +527,7 @@ class Field:
                 extra = ""
             if self.dataio_type == "memory":
                 return f"""{extra}
-  if (!DIO_GET({self.dataio_type}, &din, real_packet->{self.name}, {array_size_u})) {{
+  if (!DIO_GET({self.dataio_type}, din, real_packet->{self.name}, {array_size_u})) {{
     RECEIVE_PACKET_FIELD_ERROR({self.name});
   }}"""
             if self.is_array == 2 and self.dataio_type != "string":
@@ -554,7 +554,7 @@ class Field:
 for (int count = 0;; count++) {{
   int i;
 
-  if (!DIO_GET(uint8, &din, &i)) {{
+  if (!DIO_GET(uint8, din, &i)) {{
     RECEIVE_PACKET_FIELD_ERROR({self.name});
   }}
   if (i == 255) {{
@@ -937,7 +937,7 @@ static char *stats_{self.name}_names[] = {{names}};
   genhash **hash = pc->phs.received + {self.type};
 """
             delta_body1 = """
-  DIO_BV_GET(&din, fields);
+  DIO_BV_GET(din, fields);
   """
             body1 = ""
             for field in self.key_fields:
