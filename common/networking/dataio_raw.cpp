@@ -618,10 +618,7 @@ bool dio_get_sint8_raw(QByteArrayView &din, int &dest)
     return false;
   }
 
-  if (tmp > 0x7f) {
-    tmp -= 0x100;
-  }
-  dest = tmp;
+  dest = static_cast<std::int8_t>(tmp);
   return true;
 }
 
@@ -636,10 +633,7 @@ bool dio_get_sint16_raw(QByteArrayView &din, int &dest)
     return false;
   }
 
-  if (tmp > 0x7fff) {
-    tmp -= 0x10000;
-  }
-  dest = tmp;
+  dest = static_cast<std::int16_t>(tmp);
   return true;
 }
 
@@ -654,13 +648,7 @@ bool dio_get_sint32_raw(QByteArrayView &din, int &dest)
     return false;
   }
 
-  if (sizeof(int) != 4) {
-    if (tmp > 0x7fffffff) {
-      tmp -= 0x100000000;
-    }
-  }
-
-  dest = tmp;
+  dest = static_cast<std::int32_t>(tmp);
   return true;
 }
 
