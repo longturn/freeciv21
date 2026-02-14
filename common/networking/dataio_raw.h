@@ -85,20 +85,28 @@ template <class T> bool dio_get(QByteArrayView &din, int &dest)
   return true;
 }
 
-bool dio_get_bool_raw(QByteArrayView &din, bool &dest);
+/**
+ * Reads a bool from the beginning of \c din and puts it in \c dest.
+ */
+inline bool dio_get(QByteArrayView &din, bool &dest)
+{
+  int tmp;
+  auto ret = dio_get<std::uint8_t>(din, tmp);
+  dest = (tmp != 0);
+  return ret;
+}
+
 bool dio_get_ufloat_raw(QByteArrayView &din, float &dest, int float_factor);
 bool dio_get_sfloat_raw(QByteArrayView &din, float &dest, int float_factor);
 bool dio_get_memory_raw(QByteArrayView &din, void *dest, size_t dest_size)
     fc__attribute((nonnull(2)));
 bool dio_get_string_raw(QByteArrayView &din, char *dest,
                         size_t max_dest_size) fc__attribute((nonnull(2)));
-bool dio_get_cm_parameter_raw(QByteArrayView &din,
-                              struct cm_parameter &param);
-bool dio_get_worklist_raw(QByteArrayView &din, struct worklist &pwl);
-bool dio_get_unit_order_raw(QByteArrayView &din, struct unit_order &order);
-bool dio_get_requirement_raw(QByteArrayView &din, struct requirement &preq);
-bool dio_get_action_probability_raw(QByteArrayView &din,
-                                    struct act_prob &aprob);
+bool dio_get(QByteArrayView &din, struct cm_parameter &param);
+bool dio_get(QByteArrayView &din, struct worklist &pwl);
+bool dio_get(QByteArrayView &din, struct unit_order &order);
+bool dio_get(QByteArrayView &din, struct requirement &preq);
+bool dio_get(QByteArrayView &din, struct act_prob &aprob);
 
 // Should be a function but we need some macro magic.
 #define DIO_BV_GET(pdin, bv)                                                \
