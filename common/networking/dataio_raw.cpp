@@ -473,38 +473,6 @@ bool dio_get_type_raw(QByteArrayView &din, enum data_type type, int &dest)
 }
 
 /**
-   Get an unsigned float number, which have been multiplied by 'float_factor'
-   and encoded into an uint32 by dio_put_ufloat_raw().
- */
-bool dio_get_ufloat_raw(QByteArrayView &din, float &dest, int float_factor)
-{
-  int ival;
-
-  if (!dio_get<std::uint32_t>(din, ival)) {
-    return false;
-  }
-
-  dest = static_cast<float>(ival) / float_factor;
-  return true;
-}
-
-/**
-   Get a signed float number, which have been multiplied by 'float_factor'
-   and encoded into a sint32 by dio_put_sfloat().
- */
-bool dio_get_sfloat_raw(QByteArrayView &din, float &dest, int float_factor)
-{
-  int ival;
-
-  if (!dio_get<std::int32_t>(din, ival)) {
-    return false;
-  }
-
-  dest = static_cast<float>(ival) / float_factor;
-  return true;
-}
-
-/**
    Take memory block directly.
  */
 bool dio_get_memory_raw(QByteArrayView &din, void *dest, size_t dest_size)

@@ -146,7 +146,7 @@ Syntax:
 
       <type> is an alias or a basic type. A basic type has the format
       "<dataio-type>(<public-type>)". Exception here is the float
-      type. You can specify with the dataio-type "float<number>" the
+      type. You can specify with the dataio-type "std::uint32_t/<number>" the
       transmission of a float in a uint32 multiplied by this factor.
 
     Fields:
@@ -186,13 +186,13 @@ Syntax:
 
 # typedefs for numbers
 type BOOL               = bool(bool)
-type SFLOAT10x3         = sfloat100(float)
-type SFLOAT10x7         = sfloat1000000(float)
+type SFLOAT10x3         = std::int32_t/100(float)
+type SFLOAT10x7         = std::int32_t/1000000(float)
 type SINT8              = std::int8_t(int)
 type SINT16             = std::int16_t(int)
 type SINT32             = std::int32_t(int)
-type UFLOAT10x3         = ufloat100(float)
-type UFLOAT             = ufloat10000(float)
+type UFLOAT10x3         = std::uint32_t/100(float)
+type UFLOAT             = std::uint32_t/10000(float)
 type UINT8              = std::uint8_t(int)
 type UINT16             = std::uint16_t(int)
 type UINT32             = std::uint32_t(int)

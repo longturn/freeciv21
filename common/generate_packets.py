@@ -105,7 +105,7 @@ def parse_fields(
     typeinfo["dataio_type"], typeinfo["struct_type"] = match.groups()
 
     if typeinfo["struct_type"] == "float":
-        match = re.search(r"^(\D+)(\d+)$", typeinfo["dataio_type"])
+        match = re.search(r"^(.+)/(\d+)$", typeinfo["dataio_type"])
         assert match
         typeinfo["dataio_type"] = match.group(1)
         typeinfo["float_factor"] = int(match.group(2))
@@ -330,7 +330,11 @@ class Field:
         """
 
         dataio_type = self.dataio_type
-        if "std::u" in dataio_type:
+        if self.struct_type == "float" and "std::u" in dataio_type:
+            dataio_type = "ufloat"
+        elif self.struct_type == "float":
+            dataio_type = "sfloat"
+        elif "std::u" in dataio_type:
             dataio_type = dataio_type.replace("std::", "").replace("_t", "")
         elif "std::" in dataio_type:
             dataio_type = dataio_type.replace("std::", "s").replace("_t", "")
