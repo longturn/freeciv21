@@ -85,36 +85,6 @@ template <class T> bool dio_get(QByteArrayView &din, int &dest)
   return true;
 }
 
-inline bool dio_get_uint8_raw(QByteArrayView &din, int &dest)
-{
-  return dio_get<std::uint8_t>(din, dest);
-}
-
-inline bool dio_get_uint16_raw(QByteArrayView &din, int &dest)
-{
-  return dio_get<std::uint16_t>(din, dest);
-}
-
-inline bool dio_get_uint32_raw(QByteArrayView &din, int &dest)
-{
-  return dio_get<std::uint32_t>(din, dest);
-}
-
-inline bool dio_get_sint8_raw(QByteArrayView &din, int &dest)
-{
-  return dio_get<std::int8_t>(din, dest);
-}
-
-inline bool dio_get_sint16_raw(QByteArrayView &din, int &dest)
-{
-  return dio_get<std::int16_t>(din, dest);
-}
-
-inline bool dio_get_sint32_raw(QByteArrayView &din, int &dest)
-{
-  return dio_get<std::int32_t>(din, dest);
-}
-
 bool dio_get_bool8_raw(QByteArrayView &din, bool &dest);
 bool dio_get_bool32_raw(QByteArrayView &din, bool &dest);
 bool dio_get_ufloat_raw(QByteArrayView &din, float &dest, int float_factor);
