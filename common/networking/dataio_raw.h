@@ -4,6 +4,7 @@
 #pragma once
 
 // utility
+#include "log.h"
 #include "support.h"
 
 // std
@@ -11,6 +12,7 @@
 
 // Qt
 #include <QByteArrayView>
+#include <QtEndian>
 
 struct cm_parameter;
 struct worklist;
@@ -63,13 +65,55 @@ size_t data_type_size(enum data_type type);
 // gets
 bool dio_get_type_raw(QByteArrayView &din, enum data_type type, int &dest);
 
-bool dio_get_uint8_raw(QByteArrayView &din, int &dest);
-bool dio_get_uint16_raw(QByteArrayView &din, int &dest);
-bool dio_get_uint32_raw(QByteArrayView &din, int &dest);
+/**
+ * Reads a value from the beginning of \c din and puts it in \c dest.
+ * The template parameter specifies the encoding.
+ */
+template <class T> bool dio_get(QByteArrayView &din, int &dest)
+{
+  if (din.size() < sizeof(T)) {
+    log_packet("Packet too short: needed %zu bytes, got %lld", sizeof(T),
+               din.size());
+    return false;
+  }
 
-bool dio_get_sint8_raw(QByteArrayView &din, int &dest);
-bool dio_get_sint16_raw(QByteArrayView &din, int &dest);
-bool dio_get_sint32_raw(QByteArrayView &din, int &dest);
+  T tmp;
+  memcpy(&tmp, din.data(), sizeof(T));
+  din.slice(sizeof(T));
+
+  dest = qFromBigEndian(tmp);
+  return true;
+}
+
+inline bool dio_get_uint8_raw(QByteArrayView &din, int &dest)
+{
+  return dio_get<std::uint8_t>(din, dest);
+}
+
+inline bool dio_get_uint16_raw(QByteArrayView &din, int &dest)
+{
+  return dio_get<std::uint16_t>(din, dest);
+}
+
+inline bool dio_get_uint32_raw(QByteArrayView &din, int &dest)
+{
+  return dio_get<std::uint32_t>(din, dest);
+}
+
+inline bool dio_get_sint8_raw(QByteArrayView &din, int &dest)
+{
+  return dio_get<std::int8_t>(din, dest);
+}
+
+inline bool dio_get_sint16_raw(QByteArrayView &din, int &dest)
+{
+  return dio_get<std::int16_t>(din, dest);
+}
+
+inline bool dio_get_sint32_raw(QByteArrayView &din, int &dest)
+{
+  return dio_get<std::int32_t>(din, dest);
+}
 
 bool dio_get_bool8_raw(QByteArrayView &din, bool &dest);
 bool dio_get_bool32_raw(QByteArrayView &din, bool &dest);

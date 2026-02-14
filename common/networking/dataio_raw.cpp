@@ -458,58 +458,6 @@ void dio_put_worklist_raw(struct raw_data_out *dout,
 }
 
 /**
-  Receive uint8 value to dest.
- */
-bool dio_get_uint8_raw(QByteArrayView &din, int &dest)
-{
-  if (!enough_data(din, 1)) {
-    log_packet("Packet too short to read 1 byte");
-
-    return false;
-  }
-
-  dest = static_cast<unsigned char>(din.front());
-  din.slice(1);
-  return true;
-}
-
-/**
-  Receive uint16 value to dest.
- */
-bool dio_get_uint16_raw(QByteArrayView &din, int &dest)
-{
-  if (!enough_data(din, 2)) {
-    log_packet("Packet too short to read 2 bytes");
-
-    return false;
-  }
-
-  std::uint16_t x;
-  memcpy(&x, din.data(), 2);
-  dest = qFromBigEndian(x);
-  din.slice(2);
-  return true;
-}
-
-/**
-  Receive uint32 value to dest.
- */
-bool dio_get_uint32_raw(QByteArrayView &din, int &dest)
-{
-  if (!enough_data(din, 4)) {
-    log_packet("Packet too short to read 4 bytes");
-
-    return false;
-  }
-
-  std::uint32_t x;
-  memcpy(&x, din.data(), 4);
-  dest = qFromBigEndian(x);
-  din.slice(4);
-  return true;
-}
-
-/**
    Receive value using 'size' bits to dest.
  */
 bool dio_get_type_raw(QByteArrayView &din, enum data_type type, int &dest)
@@ -604,51 +552,6 @@ bool dio_get_sfloat_raw(QByteArrayView &din, float &dest, int float_factor)
   }
 
   dest = static_cast<float>(ival) / float_factor;
-  return true;
-}
-
-/**
-   Take value from 8 bits.
- */
-bool dio_get_sint8_raw(QByteArrayView &din, int &dest)
-{
-  int tmp;
-
-  if (!dio_get_uint8_raw(din, tmp)) {
-    return false;
-  }
-
-  dest = static_cast<std::int8_t>(tmp);
-  return true;
-}
-
-/**
-   Take value from 16 bits.
- */
-bool dio_get_sint16_raw(QByteArrayView &din, int &dest)
-{
-  int tmp;
-
-  if (!dio_get_uint16_raw(din, tmp)) {
-    return false;
-  }
-
-  dest = static_cast<std::int16_t>(tmp);
-  return true;
-}
-
-/**
-   Take value from 32 bits.
- */
-bool dio_get_sint32_raw(QByteArrayView &din, int &dest)
-{
-  int tmp;
-
-  if (!dio_get_uint32_raw(din, tmp)) {
-    return false;
-  }
-
-  dest = static_cast<std::int32_t>(tmp);
   return true;
 }
 
