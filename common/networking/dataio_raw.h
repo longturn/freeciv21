@@ -96,8 +96,19 @@ inline bool dio_get(QByteArrayView &din, bool &dest)
   return ret;
 }
 
-bool dio_get_ufloat_raw(QByteArrayView &din, float &dest, int float_factor);
-bool dio_get_sfloat_raw(QByteArrayView &din, float &dest, int float_factor);
+/**
+ * Reads a float from the beginning of \c din and puts it in \c dest.
+ * The template parameter specifies the underlying encoding.
+ */
+template <class T>
+bool dio_get(QByteArrayView &din, float &dest, int precision)
+{
+  int ival;
+  auto ret = dio_get<T>(din, ival);
+  dest = static_cast<float>(ival) / precision;
+  return ret;
+}
+
 bool dio_get_memory_raw(QByteArrayView &din, void *dest, size_t dest_size)
     fc__attribute((nonnull(2)));
 bool dio_get_string_raw(QByteArrayView &din, char *dest,
