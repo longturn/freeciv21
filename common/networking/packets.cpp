@@ -358,7 +358,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
   }
 
   QByteArrayView din(pc->buffer->data, pc->buffer->ndata);
-  dio_get_type_raw(din, data_type(pc->packet_header.length), &len_read);
+  dio_get_type_raw(din, data_type(pc->packet_header.length), len_read);
 
   // The non-compressed case
   whole_packet_len = len_read;
@@ -370,7 +370,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
     compressed_packet = true;
     header_size = 6;
     if (din.size() >= 4) {
-      dio_get_uint32_raw(din, &whole_packet_len);
+      dio_get_uint32_raw(din, whole_packet_len);
       log_compress("COMPRESS: got a jumbo packet of size %d",
                    whole_packet_len);
     } else {
@@ -477,7 +477,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
     return nullptr;
   }
 
-  dio_get_type_raw(din, data_type(pc->packet_header.type), &utype.itype);
+  dio_get_type_raw(din, data_type(pc->packet_header.type), utype.itype);
   utype.type = packet_type(utype.itype);
 
   if (utype.type >= PACKET_LAST
@@ -561,7 +561,7 @@ void remove_packet_from_buffer(struct socket_packet_buffer *buffer)
   int len;
 
   QByteArrayView din(buffer->data, buffer->ndata);
-  fc_assert_ret(dio_get_uint16_raw(din, &len));
+  fc_assert_ret(dio_get_uint16_raw(din, len));
   memmove(buffer->data, buffer->data + len, buffer->ndata - len);
   buffer->ndata -= len;
   log_debug("remove_packet_from_buffer: remove %d; remaining %lu", len,
