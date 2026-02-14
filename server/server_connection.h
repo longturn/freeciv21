@@ -4,13 +4,14 @@
 
 #pragma once
 
+// common
 #include "connection.h"
-
-// Qt
-#include <QString>
 
 // std
 #include <vector>
+
+// Qt
+#include <QString>
 
 /**
  * A connection, as seen from the server.

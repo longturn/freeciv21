@@ -4,6 +4,7 @@
 
 #include "server_connection.h"
 
+// common
 #include "game.h"
 
 /**
