@@ -52,44 +52,36 @@ template <class BV> inline bool BV_ISSET(const BV &bv, int bit)
       BV_CLR(bv, bit);                                                      \
     }                                                                       \
   } while (false);
-#define BV_CLR_ALL(bv)                                                      \
-  do {                                                                      \
-    memset((bv).vec, 0, sizeof((bv).vec));                                  \
-  } while (false)
-#define BV_SET_ALL(bv)                                                      \
-  do {                                                                      \
-    memset((bv).vec, 0xff, sizeof((bv).vec));                               \
-  } while (false)
+#define BV_CLR_ALL(bv) (bv).vec.fill(0)
+#define BV_SET_ALL(bv) (bv).vec.fill(0xff)
 
 bool bv_check_mask(const unsigned char *vec1, const unsigned char *vec2,
                    size_t size1, size_t size2);
 #define BV_CHECK_MASK(vec1, vec2)                                           \
-  bv_check_mask((vec1).vec, (vec2).vec, sizeof((vec1).vec),                 \
-                sizeof((vec2).vec))
+  bv_check_mask((vec1).vec.data(), (vec2).vec.data(), (vec1).vec.size(),    \
+                (vec2).vec.size())
 #define BV_ISSET_ANY(vec) BV_CHECK_MASK(vec, vec)
 
-bool bv_are_equal(const unsigned char *vec1, const unsigned char *vec2,
-                  size_t size1, size_t size2);
-#define BV_ARE_EQUAL(vec1, vec2)                                            \
-  bv_are_equal((vec1).vec, (vec2).vec, sizeof((vec1).vec),                  \
-               sizeof((vec2).vec))
+#define BV_ARE_EQUAL(vec1, vec2) ((vec1).vec == (vec2).vec)
 
 void bv_set_all_from(unsigned char *vec_to, const unsigned char *vec_from,
                      size_t size_to, size_t size_from);
 #define BV_SET_ALL_FROM(vec_to, vec_from)                                   \
-  bv_set_all_from((vec_to).vec, (vec_from).vec, sizeof((vec_to).vec),       \
-                  sizeof((vec_from).vec))
+  bv_set_all_from((vec_to).vec.data(), (vec_from).vec.data(),               \
+                  (vec_to).vec.size(), (vec_from).vec.size())
 
 void bv_clr_all_from(unsigned char *vec_to, const unsigned char *vec_from,
                      size_t size_to, size_t size_from);
 #define BV_CLR_ALL_FROM(vec_to, vec_from)                                   \
-  bv_clr_all_from((vec_to).vec, (vec_from).vec, sizeof((vec_to).vec),       \
-                  sizeof((vec_from).vec))
+  bv_clr_all_from((vec_to).vec.data(), (vec_from).vec.data(),               \
+                  (vec_to).vec.size(), (vec_from).vec.size())
+
+template <unsigned bits> struct bit_vector {
+  std::array<unsigned char, _BV_BYTES(bits)> vec;
+};
 
 // Used to make a BV typedef. Such types are usually called "bv_foo".
 #define BV_DEFINE(name, bits)                                               \
-  typedef struct {                                                          \
-    unsigned char vec[_BV_BYTES(bits)];                                     \
-  } name
+  struct name : public bit_vector<bits> {};
 
 bool is_any_set(QBitArray &ba);
