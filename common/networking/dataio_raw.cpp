@@ -473,26 +473,6 @@ bool dio_get_type_raw(QByteArrayView &din, enum data_type type, int &dest)
 }
 
 /**
-   Take boolean value from 8 bits.
- */
-bool dio_get_bool_raw(QByteArrayView &din, bool &dest)
-{
-  int ival;
-
-  if (!dio_get<std::uint8_t>(din, ival)) {
-    return false;
-  }
-
-  if (ival != 0 && ival != 1) {
-    log_packet("Got a bad boolean: %d", ival);
-    return false;
-  }
-
-  dest = (ival != 0);
-  return true;
-}
-
-/**
    Get an unsigned float number, which have been multiplied by 'float_factor'
    and encoded into an uint32 by dio_put_ufloat_raw().
  */
@@ -579,8 +559,7 @@ bool dio_get_string_raw(QByteArrayView &din, char *dest,
 /**
    Get city manager parameters.
  */
-bool dio_get_cm_parameter_raw(QByteArrayView &din,
-                              struct cm_parameter &param)
+bool dio_get(QByteArrayView &din, struct cm_parameter &param)
 {
   int i;
 
@@ -591,10 +570,9 @@ bool dio_get_cm_parameter_raw(QByteArrayView &din,
     }
   }
 
-  if (!dio_get_bool_raw(din, param.max_growth)
-      || !dio_get_bool_raw(din, param.require_happy)
-      || !dio_get_bool_raw(din, param.allow_disorder)
-      || !dio_get_bool_raw(din, param.allow_specialists)) {
+  if (!dio_get(din, param.max_growth) || !dio_get(din, param.require_happy)
+      || !dio_get(din, param.allow_disorder)
+      || !dio_get(din, param.allow_specialists)) {
     log_packet("Got a bad cm_parameter");
     return false;
   }
@@ -617,7 +595,7 @@ bool dio_get_cm_parameter_raw(QByteArrayView &din,
 /**
    Take unit_order struct and put it in the provided orders.
  */
-bool dio_get_unit_order_raw(QByteArrayView &din, struct unit_order &order)
+bool dio_get(QByteArrayView &din, struct unit_order &order)
 {
   // These fields are enums
   int iorder, iactivity, idir;
@@ -643,7 +621,7 @@ bool dio_get_unit_order_raw(QByteArrayView &din, struct unit_order &order)
    Take worklist item count and then kind and number for each item, and
    put them to provided worklist.
  */
-bool dio_get_worklist_raw(QByteArrayView &din, struct worklist &pwl)
+bool dio_get(QByteArrayView &din, struct worklist &pwl)
 {
   int i, length;
 
@@ -678,8 +656,7 @@ bool dio_get_worklist_raw(QByteArrayView &din, struct worklist &pwl)
 /**
    De-serialize an action probability.
  */
-bool dio_get_action_probability_raw(QByteArrayView &din,
-                                    struct act_prob &aprob)
+bool dio_get(QByteArrayView &din, struct act_prob &aprob)
 {
   int min, max;
 
@@ -707,15 +684,14 @@ void dio_put_action_probability_raw(struct raw_data_out *dout,
 /**
    De-serialize a requirement.
  */
-bool dio_get_requirement_raw(QByteArrayView &din, struct requirement &preq)
+bool dio_get(QByteArrayView &din, struct requirement &preq)
 {
   int type, range, value;
   bool survives, present, quiet;
 
   if (!dio_get<std::uint8_t>(din, type) || !dio_get<std::int32_t>(din, value)
-      || !dio_get<std::uint8_t>(din, range)
-      || !dio_get_bool_raw(din, survives) || !dio_get_bool_raw(din, present)
-      || !dio_get_bool_raw(din, quiet)) {
+      || !dio_get<std::uint8_t>(din, range) || !dio_get(din, survives)
+      || !dio_get(din, present) || !dio_get(din, quiet)) {
     log_packet("Got a bad requirement");
     return false;
   }

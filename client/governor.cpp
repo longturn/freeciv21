@@ -457,12 +457,12 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
                     false);
   fc_assert_ret_val(dio_get<std::uint8_t>(din, dummy),
                     false); // Dummy value; used to be factor_target.
-  fc_assert_ret_val(dio_get_bool_raw(din, parameter->require_happy), false);
+  fc_assert_ret_val(dio_get(din, parameter->require_happy), false);
 
   // Optional fields
-  dio_get_bool_raw(din, parameter->max_growth);
-  dio_get_bool_raw(din, parameter->allow_disorder);
-  dio_get_bool_raw(din, parameter->allow_specialists);
+  dio_get(din, parameter->max_growth);
+  dio_get(din, parameter->allow_disorder);
+  dio_get(din, parameter->allow_specialists);
 
   return true;
 }

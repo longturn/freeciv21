@@ -440,6 +440,8 @@ class Field:
             get_function = "DIO_BV_GET(din"
         elif "std::" in self.dataio_type:
             get_function = f"dio_get<{self.dataio_type}>(din"
+        elif self.dataio_type in ("bool", "cm_parameter", "worklist", "unit_order", "requirement", "action_probability"):
+            get_function = f"dio_get(din"
 
         if self.struct_type == "float" and not self.is_array:
             return f"""if (!{get_function}, real_packet->{self.name}, {self.float_factor})) {{
