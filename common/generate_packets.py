@@ -439,88 +439,52 @@ class Field:
         Returns code which get this field.
         """
 
-        get_function = f"dio_get<{self.dataio_type}>(din" if "std::" in self.dataio_type else f"dio_get(din"
+        # dio function name
+        dio_get = f"dio_get<{self.dataio_type}>" if "std::" in self.dataio_type else f"dio_get"
 
-        if self.struct_type == "float" and not self.is_array:
-            return f"""if (!{get_function}, real_packet->{self.name}, {self.float_factor})) {{
-  RECEIVE_PACKET_FIELD_ERROR({self.name});
-}}"""
-        if self.dataio_type == "bitvector":
-            return f"""if (!{get_function}, real_packet->{self.name})) {{
-  RECEIVE_PACKET_FIELD_ERROR({self.name});
-}}"""
-        if self.dataio_type in ["string", "city_map"] and self.is_array != 2:
-            return f"""if (!{get_function}, real_packet->{self.name}, sizeof(real_packet->{self.name}))) {{
-  RECEIVE_PACKET_FIELD_ERROR({self.name});
-}}"""
-        if self.is_struct and not self.is_array:
-            return f"""if (!{get_function}, real_packet->{self.name})) {{
-  RECEIVE_PACKET_FIELD_ERROR({self.name});
-}}"""
-        if not self.is_array:
-            if self.struct_type in ["int", "bool"]:
-                return f"""if (!{get_function}, real_packet->{self.name})) {{
-  RECEIVE_PACKET_FIELD_ERROR({self.name});
-}}"""
+        # Array indices
+        loop_dims = self.is_array
+        if self.dataio_type in ["string", "city_map"]:
+            loop_dims -= 1  # One index is used by the string
 
-            return f"""{{
+        indices = ""
+        if loop_dims == 1:
+            indices = "[i]"
+        elif loop_dims == 2:
+            indices = "[i][j]"
+
+        # Do we need an extra arg for dio_get?
+        dio_arg = ""
+        if self.struct_type == "float":
+            dio_arg = f", {self.float_factor}"
+        elif self.dataio_type in ["string", "city_map"]:
+            dio_arg = f", sizeof(real_packet->{self.name}{indices})"
+
+        # dio_get call and error checking
+        if "enum" in self.struct_type or self.struct_type.endswith("_id"):
+            c = f"""{{
   int readin;
 
-  if (!{get_function}, readin)) {{
+  if (!{dio_get}(din, readin)) {{
     RECEIVE_PACKET_FIELD_ERROR({self.name});
   }}
-  real_packet->{self.name} = static_cast<decltype(real_packet->{self.name})>(readin);
+  real_packet->{self.name}{indices} =
+    static_cast<decltype(real_packet->{self.name}{indices})>(readin);
+}}"""
+        else:
+            c = f"""if (!{dio_get}(din, real_packet->{self.name}{indices}{dio_arg})) {{
+  RECEIVE_PACKET_FIELD_ERROR({self.name});
 }}"""
 
-        if self.is_struct:
-            if self.is_array == 2:
-                c = f"""if (!{get_function}, real_packet->{self.name}[i][j])) {{
-      RECEIVE_PACKET_FIELD_ERROR({self.name});
-    }}"""
-            else:
-                c = f"""if (!{get_function}, real_packet->{self.name}[i])) {{
-      RECEIVE_PACKET_FIELD_ERROR({self.name});
-    }}"""
-        elif self.dataio_type == "string":
-            c = f"""if (!{get_function}, real_packet->{self.name}[i], sizeof(real_packet->{self.name}[i]))) {{
-      RECEIVE_PACKET_FIELD_ERROR({self.name});
-    }}"""
-        elif self.struct_type == "float":
-            if self.is_array == 2:
-                c = f"""if (!{get_function}, real_packet->{self.name}[i][j], {self.float_factor})) {{
-      RECEIVE_PACKET_FIELD_ERROR({self.name});
-    }}"""
-            else:
-                c = f"""if (!{get_function}, real_packet->{self.name}[i], {self.float_factor})) {{
-      RECEIVE_PACKET_FIELD_ERROR({self.name});
-    }}"""
-        elif self.is_array == 2:
-            if self.struct_type in ["int", "bool"]:
-                c = f"""if (!{get_function}, real_packet->{self.name}[i][j])) {{
-      RECEIVE_PACKET_FIELD_ERROR({self.name});
-    }}"""
-            else:
-                c = f"""{{
-      int readin;
-
-      if (!{get_function}, &readin)) {{
-        RECEIVE_PACKET_FIELD_ERROR({self.name});
-      }}
-      real_packet->{self.name}[i][j] = readin;
-    }}"""
-        elif self.struct_type in ["int", "bool"]:
-            c = f"""if (!{get_function}, real_packet->{self.name}[i])) {{
-      RECEIVE_PACKET_FIELD_ERROR({self.name});
-    }}"""
-        else:
-            c = f"""{{
-      int readin;
-
-      if (!{get_function}, readin)) {{
-        RECEIVE_PACKET_FIELD_ERROR({self.name});
-      }}
-      real_packet->{self.name}[i] = readin;
-    }}"""
+        # We're done for scalar types
+        if self.dataio_type == "bitvector":
+            return c
+        elif self.dataio_type in ["string", "city_map"] and self.is_array != 2:
+            return c
+        elif self.is_struct and not self.is_array:
+            return c
+        elif not self.is_array:
+            return c
 
         if self.is_array == 2:
             array_size_u = self.array_size1_u
@@ -539,7 +503,7 @@ class Field:
                 extra = ""
             if self.dataio_type == "memory":
                 return f"""{extra}
-  if (!{get_function}, real_packet->{self.name}, {array_size_u})) {{
+  if (!{dio_get}(din, real_packet->{self.name}, {array_size_u})) {{
     RECEIVE_PACKET_FIELD_ERROR({self.name});
   }}"""
             if self.is_array == 2 and self.dataio_type != "string":
