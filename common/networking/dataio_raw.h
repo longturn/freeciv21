@@ -22,11 +22,6 @@ struct unit_order;
 struct requirement;
 struct act_prob;
 
-struct data_in {
-  const void *src;
-  size_t src_size, current;
-};
-
 struct raw_data_out {
   void *dest;
   size_t dest_size, used, current;
