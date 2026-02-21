@@ -481,8 +481,6 @@ class Field:
             return c
         elif self.dataio_type in ["string", "city_map"] and self.is_array != 2:
             return c
-        elif self.is_struct and not self.is_array:
-            return c
         elif not self.is_array:
             return c
 
