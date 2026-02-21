@@ -2024,7 +2024,7 @@ bool server_packet_input(server_connection *pconn, void *packet, int type)
 
   /*
    * Old pre-delta clients (before 2003-11-28) sent a PACKET_LOGIN_REQUEST
-   * (type 0) to the server. We catch this reject the client.
+   * (type 0) to the server. We catch this reject and the client.
    */
   if (type == 0) {
     return false;
