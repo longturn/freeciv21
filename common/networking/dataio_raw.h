@@ -152,15 +152,8 @@ void dio_put(QByteArray &dout, const bit_vector<bits> &value)
 
 bool dio_get(QByteArrayView &din, char *dest, size_t max_dest_size)
     fc__attribute((nonnull(2)));
-void dio_put(QByteArray &dout, const char *value, size_t size)
-    fc__attribute((nonnull(2)));
-
 void dio_put(QByteArray &dout, const char *value)
     fc__attribute((nonnull(2)));
-inline void dio_put(QByteArray &dout, const char *value)
-{
-  dio_put(dout, value, qstrlen(value));
-}
 
 bool dio_get(QByteArrayView &din, std::byte *dest, size_t max_dest_size)
     fc__attribute((nonnull(2)));
