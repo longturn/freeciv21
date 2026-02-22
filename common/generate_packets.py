@@ -347,8 +347,10 @@ class Field:
         dio_arg = ""
         if self.struct_type == "float":
             dio_arg = f", {self.float_factor}"
-        elif self.dataio_type in {"memory", "city_map"}:
+        elif self.dataio_type == "city_map":
             dio_arg = f", sizeof(real_packet->{self.name}{indices})"
+        elif self.dataio_type == "memory":
+            dio_arg = f", {self.array_size_u}"
 
         c = f"{dio_put}(dout, packet->{self.name}{indices}{dio_arg});"
 
