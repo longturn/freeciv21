@@ -65,19 +65,22 @@ const struct packet_handlers *packet_handlers_get(const char *capability);
 
 void packets_deinit();
 
-#define SEND_PACKET_START(packet_type) QByteArray dout;
+// We need to cache pc->packet_header because it gets changed *while*
+// serializing the packet.
+#define SEND_PACKET_START(packet_type)                                      \
+  QByteArray dout;                                                          \
+  const auto packet_header = pc->packet_header;
 
 #define SEND_PACKET_END(packet_type)                                        \
   {                                                                         \
     auto size = dout.size()                                                 \
-                + data_type_size((enum data_type) pc->packet_header.length) \
-                + data_type_size((enum data_type) pc->packet_header.type);  \
+                + data_type_size((enum data_type) packet_header.length)     \
+                + data_type_size((enum data_type) packet_header.type);      \
     fc_assert(size <= MAX_LEN_PACKET);                                      \
                                                                             \
     QByteArray header;                                                      \
-    dio_put_type_raw(header, (enum data_type) pc->packet_header.length,     \
-                     size);                                                 \
-    dio_put_type_raw(header, (enum data_type) pc->packet_header.type,       \
+    dio_put_type_raw(header, (enum data_type) packet_header.length, size);  \
+    dio_put_type_raw(header, (enum data_type) packet_header.type,           \
                      packet_type);                                          \
     return send_packet_data(pc, header + dout, packet_type);                \
   }
