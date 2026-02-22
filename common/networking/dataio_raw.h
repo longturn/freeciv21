@@ -13,6 +13,7 @@
 #include <cstddef> // size_t
 
 // Qt
+#include <QByteArray>
 #include <QByteArrayView>
 #include <QtEndian>
 
@@ -21,12 +22,6 @@ struct worklist;
 struct unit_order;
 struct requirement;
 struct act_prob;
-
-struct raw_data_out {
-  void *dest;
-  size_t dest_size, used, current;
-  bool too_short; // set to 1 if try to read past end
-};
 
 /* Used for dio_<put|get>_type() methods.
  * NB: we only support integer handling currently. */
@@ -52,15 +47,10 @@ void dio_set_get_conv_callback(DIO_GET_CONV_FUN fun);
 bool dataio_get_conv_callback(char *dst, size_t ndst, const char *src,
                               size_t nsrc);
 
-// General functions
-void dio_output_init(struct raw_data_out *dout, void *destination,
-                     size_t dest_size);
-void dio_output_rewind(struct raw_data_out *dout);
-size_t dio_output_used(struct raw_data_out *dout);
+// I/O funtions
 size_t data_type_size(enum data_type type);
-
-// gets
 bool dio_get_type_raw(QByteArrayView &din, enum data_type type, int &dest);
+void dio_put_type_raw(QByteArray &dout, enum data_type type, int value);
 
 /**
  * Reads a value from the beginning of \c din and puts it in \c dest.
@@ -83,6 +73,17 @@ template <class T> bool dio_get(QByteArrayView &din, int &dest)
 }
 
 /**
+ * Writes \c value at the end of \c dout.
+ * The template parameter specifies the encoding.
+ */
+template <class T> void dio_put(QByteArray &dout, int value)
+{
+  T tmp = value;
+  tmp = qToBigEndian(tmp);
+  dout.append(reinterpret_cast<char *>(&tmp), sizeof(T));
+}
+
+/**
  * Reads a bool from the beginning of \c din and puts it in \c dest.
  */
 inline bool dio_get(QByteArrayView &din, bool &dest)
@@ -91,6 +92,14 @@ inline bool dio_get(QByteArrayView &din, bool &dest)
   auto ret = dio_get<std::uint8_t>(din, tmp);
   dest = (tmp != 0);
   return ret;
+}
+
+/**
+ * Writes a bool at the end of \c dout.
+ */
+inline void dio_put(QByteArray &dout, bool value)
+{
+  dio_put<std::uint8_t>(dout, value);
 }
 
 /**
@@ -104,6 +113,15 @@ bool dio_get(QByteArrayView &din, float &dest, int precision)
   auto ret = dio_get<T>(din, ival);
   dest = static_cast<float>(ival) / precision;
   return ret;
+}
+
+/**
+ * Writes a float at the end of \c dout.
+ * The template parameter specifies the underlying encoding.
+ */
+template <class T> void dio_put(QByteArray &dout, float value, int precision)
+{
+  dio_put<T>(dout, static_cast<int>(value * precision));
 }
 
 /**
@@ -122,51 +140,44 @@ bool dio_get(QByteArrayView &din, bit_vector<bits> &dest)
   return true;
 }
 
+/**
+ * Writes a bit vector at the end of \c dout.
+ */
+template <unsigned bits>
+void dio_put(QByteArray &dout, const bit_vector<bits> &value)
+{
+  dout.append(reinterpret_cast<const char *>(value.vec.data()),
+              value.vec.size());
+}
+
 bool dio_get(QByteArrayView &din, char *dest, size_t max_dest_size)
     fc__attribute((nonnull(2)));
+void dio_put(QByteArray &dout, const char *value, size_t size)
+    fc__attribute((nonnull(2)));
+
+void dio_put(QByteArray &dout, const char *value)
+    fc__attribute((nonnull(2)));
+inline void dio_put(QByteArray &dout, const char *value)
+{
+  dio_put(dout, value, qstrlen(value));
+}
+
 bool dio_get(QByteArrayView &din, std::byte *dest, size_t max_dest_size)
     fc__attribute((nonnull(2)));
+void dio_put(QByteArray &dout, const std::byte *value, size_t size)
+    fc__attribute((nonnull(2)));
+
 bool dio_get(QByteArrayView &din, struct cm_parameter &param);
+void dio_put(QByteArray &dout, const struct cm_parameter &param);
+
 bool dio_get(QByteArrayView &din, struct worklist &pwl);
+void dio_put(QByteArray &dout, const struct worklist &pwl);
+
 bool dio_get(QByteArrayView &din, struct unit_order &order);
+void dio_put(QByteArray &dout, const struct unit_order &order);
+
 bool dio_get(QByteArrayView &din, struct requirement &preq);
+void dio_put(QByteArray &dout, const struct requirement &preq);
+
 bool dio_get(QByteArrayView &din, struct act_prob &aprob);
-
-// puts
-void dio_put_type_raw(struct raw_data_out *dout, enum data_type type,
-                      int value);
-
-void dio_put_uint8_raw(struct raw_data_out *dout, int value);
-void dio_put_uint16_raw(struct raw_data_out *dout, int value);
-void dio_put_uint32_raw(struct raw_data_out *dout, int value);
-
-void dio_put_sint8_raw(struct raw_data_out *dout, int value);
-void dio_put_sint16_raw(struct raw_data_out *dout, int value);
-void dio_put_sint32_raw(struct raw_data_out *dout, int value);
-
-void dio_put_bool_raw(struct raw_data_out *dout, bool value);
-void dio_put_ufloat_raw(struct raw_data_out *dout, float value,
-                        int float_factor);
-void dio_put_sfloat_raw(struct raw_data_out *dout, float value,
-                        int float_factor);
-
-void dio_put_memory_raw(struct raw_data_out *dout, const void *value,
-                        size_t size);
-void dio_put_string_raw(struct raw_data_out *dout, const char *value);
-void dio_put_city_map_raw(struct raw_data_out *dout, const char *value);
-void dio_put_cm_parameter_raw(struct raw_data_out *dout,
-                              const struct cm_parameter *param);
-void dio_put_worklist_raw(struct raw_data_out *dout,
-                          const struct worklist *pwl);
-void dio_put_unit_order_raw(struct raw_data_out *dout,
-                            const struct unit_order *order);
-void dio_put_requirement_raw(struct raw_data_out *dout,
-                             const struct requirement *preq);
-void dio_put_action_probability_raw(struct raw_data_out *dout,
-                                    const struct act_prob *aprob);
-
-// Should be a function but we need some macro magic.
-#define DIO_BV_PUT(pdout, bv)                                               \
-  dio_put_memory_raw((pdout), (bv).vec.data(), (bv).vec.size())
-
-#define DIO_PUT(f, d, ...) dio_put_##f##_raw(d, ##__VA_ARGS__)
+void dio_put(QByteArray &dout, const struct act_prob &aprob);

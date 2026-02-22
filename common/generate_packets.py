@@ -329,53 +329,41 @@ class Field:
         Returns code which put this field.
         """
 
-        dataio_type = self.dataio_type
-        if self.struct_type == "float" and "std::u" in dataio_type:
-            dataio_type = "ufloat"
-        elif self.struct_type == "float":
-            dataio_type = "sfloat"
-        elif "std::u" in dataio_type:
-            dataio_type = dataio_type.replace("std::", "").replace("_t", "")
-        elif "std::" in dataio_type:
-            dataio_type = dataio_type.replace("std::", "s").replace("_t", "")
+        # dio function name
+        dio_put = f"dio_put<{self.dataio_type}>" if "std::" in self.dataio_type else f"dio_put"
 
+        # Array indices
+        loop_dims = self.is_array
+        if self.dataio_type in {"memory", "string", "city_map"}:
+            loop_dims -= 1  # One index is used by the string
+
+        indices = ""
+        if loop_dims == 1:
+            indices = "[i]"
+        elif loop_dims == 2:
+            indices = "[i][j]"
+
+        # Do we need an extra arg for dio_put?
+        dio_arg = ""
+        if self.struct_type == "float":
+            dio_arg = f", {self.float_factor}"
+        elif self.dataio_type in {"memory", "string", "city_map"}:
+            dio_arg = f", sizeof(real_packet->{self.name}{indices})"
+
+        c = f"{dio_put}(dout, packet->{self.name}{indices}{dio_arg});"
+
+        # We're done for scalar types
         if self.dataio_type == "bitvector":
-            return f"DIO_BV_PUT(&dout, packet->{self.name});"
+            return c
+        elif self.dataio_type in {"memory", "string", "city_map"} and self.is_array != 2:
+            return c
+        elif not self.is_array:
+            return c
 
-        if self.struct_type == "float" and not self.is_array:
-            return f"  DIO_PUT({dataio_type}, &dout, real_packet->{self.name}, {self.float_factor});"
-
-        if self.dataio_type in ["worklist", "cm_parameter"]:
-            return f"  DIO_PUT({dataio_type}, &dout, &real_packet->{self.name});"
-
-        if self.dataio_type == "memory":
-            return f"  DIO_PUT({dataio_type}, &dout, &real_packet->{self.name}, {self.array_size_u});"
-
-        arr_types = ["string", "city_map"]
-        if (self.dataio_type in arr_types and self.is_array == 1) or (
-            self.dataio_type not in arr_types and self.is_array == 0
-        ):
-            return f"  DIO_PUT({dataio_type}, &dout, real_packet->{self.name});"
-        if self.is_struct:
-            if self.is_array == 2:
-                c = f"DIO_PUT({dataio_type}, &dout, &real_packet->{self.name}[i][j]);"
-            else:
-                c = f"DIO_PUT({dataio_type}, &dout, &real_packet->{self.name}[i]);"
-        elif self.dataio_type == "string":
-            c = f"DIO_PUT({dataio_type}, &dout, real_packet->{self.name}[i]);"
-
-        elif self.struct_type == "float":
-            if self.is_array == 2:
-                c = f"  DIO_PUT({dataio_type}, &dout, real_packet->{self.name}[i][j], {self.float_factor});"
-            else:
-                c = f"  DIO_PUT({dataio_type}, &dout, real_packet->{self.name}[i], {self.float_factor});"
+        if self.is_array == 2:
+            array_size_u = self.array_size1_u
         else:
-            if self.is_array == 2:
-                c = f"DIO_PUT({dataio_type}, &dout, real_packet->{self.name}[i][j]);"
-            else:
-                c = f"DIO_PUT({dataio_type}, &dout, real_packet->{self.name}[i]);"
-
-        array_size_u = self.array_size1_u if self.is_array == 2 else self.array_size_u
+            array_size_u = self.array_size_u
 
         if deltafragment and self.diff and self.is_array == 1:
             return f"""
@@ -386,12 +374,12 @@ class Field:
 
       for (i = 0; i < {array_size_u}; i++) {{
         if (old->{self.name}[i] != real_packet->{self.name}[i]) {{
-          DIO_PUT(uint8, &dout, i);
+          dio_put<std::uint8_t>(dout, i);
 
           {c}
         }}
       }}
-      DIO_PUT(uint8, &dout, 255);
+      dio_put<std::uint8_t>(dout, 255);
 
     }}"""
         if self.is_array == 2 and self.dataio_type != "string":
@@ -444,7 +432,7 @@ class Field:
 
         # Array indices
         loop_dims = self.is_array
-        if self.dataio_type in ["string", "city_map"]:
+        if self.dataio_type in {"memory", "string", "city_map"}:
             loop_dims -= 1  # One index is used by the string
 
         indices = ""
@@ -873,7 +861,7 @@ static char *stats_{self.name}_names[] = {{names}};
 """
 
         body += """
-  DIO_BV_PUT(&dout, fields);
+  dio_put(dout, fields);
 """
 
         for field in self.key_fields:
@@ -1742,7 +1730,6 @@ def write_common_header(packets: list[Packet], output: io.TextIOWrapper) -> None
 
 // common
 #include "cm.h"
-#include "disaster.h"
 #include "fc_types.h"
 #include "unit.h"
 

@@ -136,8 +136,8 @@ void governor::run()
 
   // Remove deleted cities
   for (auto id : scity_remove) {
-    attr_city_set(ATTR_CITY_CMAFE_PARAMETER, id, 0, nullptr);
-    attr_city_set(ATTR_CITY_CMA_PARAMETER, id, 0, nullptr);
+    attr_city_set(ATTR_CITY_CMAFE_PARAMETER, id, nullptr);
+    attr_city_set(ATTR_CITY_CMA_PARAMETER, id, nullptr);
   }
   scity_remove.clear();
 
@@ -400,7 +400,7 @@ void cma_yoloswag::put_city_under_agent(
 
 void cma_yoloswag::release_city(struct city *pcity)
 {
-  attr_city_set(ATTR_CITY_CMA_PARAMETER, pcity->id, 0, nullptr);
+  attr_city_set(ATTR_CITY_CMA_PARAMETER, pcity->id, nullptr);
   refresh_city_dialog(pcity);
   city_report_dialog_update_city(pcity);
 }
@@ -423,20 +423,18 @@ bool cma_yoloswag::is_city_under_agent(const struct city *pcity,
 bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
                                  struct cm_parameter *parameter)
 {
-  size_t len;
-  char buffer[SAVED_PARAMETER_SIZE];
   int version, dummy;
 
   /* Changing this function is likely to break compatability with old
    * savegames that store these values. Always add new parameters at the end.
    */
 
-  len = attr_city_get(attr, city_id, sizeof(buffer), buffer);
-  if (len == 0) {
+  auto buffer = attr_city_get(attr, city_id);
+  if (buffer.isEmpty()) {
     return false;
   }
 
-  QByteArrayView din(buffer, len);
+  QByteArrayView din(buffer);
   fc_assert_ret_val(dio_get<std::uint8_t>(din, version), false);
   fc_assert_ret_val(version == 2, false);
 
@@ -470,34 +468,30 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
 void cma_yoloswag::set_parameter(enum attr_city attr, int city_id,
                                  const struct cm_parameter *parameter)
 {
-  char buffer[SAVED_PARAMETER_SIZE];
-  struct raw_data_out dout;
-
   /* Changing this function is likely to break compatability with old
    * savegames that store these values. */
 
-  dio_output_init(&dout, buffer, sizeof(buffer));
-
-  dio_put_uint8_raw(&dout, 2);
+  QByteArray dout;
+  dio_put<std::uint8_t>(dout, 2); // version
 
   output_type_iterate(i)
   {
-    dio_put_sint16_raw(&dout, parameter->minimal_surplus[i]);
-    dio_put_sint16_raw(&dout, parameter->factor[i]);
+    dio_put<std::int16_t>(dout, parameter->minimal_surplus[i]);
+    dio_put<std::int16_t>(dout, parameter->factor[i]);
   }
   output_type_iterate_end;
 
-  dio_put_sint16_raw(&dout, parameter->happy_factor);
-  dio_put_uint8_raw(&dout, 0); // Dummy value; used to be factor_target.
-  dio_put_bool_raw(&dout, parameter->require_happy);
+  dio_put<std::int16_t>(dout, parameter->happy_factor);
+  dio_put<std::uint8_t>(dout, 0); // Dummy value; used to be factor_target.
+  dio_put(dout, parameter->require_happy);
 
-  dio_put_bool_raw(&dout, parameter->max_growth);
-  dio_put_bool_raw(&dout, parameter->allow_disorder);
-  dio_put_bool_raw(&dout, parameter->allow_specialists);
+  dio_put(dout, parameter->max_growth);
+  dio_put(dout, parameter->allow_disorder);
+  dio_put(dout, parameter->allow_specialists);
 
-  fc_assert(dio_output_used(&dout) == SAVED_PARAMETER_SIZE);
+  fc_assert(dout.size() == SAVED_PARAMETER_SIZE);
 
-  attr_city_set(attr, city_id, SAVED_PARAMETER_SIZE, buffer);
+  attr_city_set(attr, city_id, dout);
 }
 
 /**

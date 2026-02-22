@@ -10,7 +10,8 @@
 **************************************************************************/
 #pragma once
 
-#include <cstddef>
+#include <QByteArray>
+#include <QByteArrayView>
 
 /*
  * If 4 byte wide signed int is used this gives 20 object types with
@@ -30,15 +31,11 @@ void attribute_init();
 void attribute_free();
 void attribute_flush();
 void attribute_restore();
-void attribute_set(int key, int id, int x, int y, size_t data_length,
-                   const void *const data);
-size_t attribute_get(int key, int id, int x, int y, size_t max_data_length,
-                     void *data);
+void attribute_set(int key, int id, int x, int y, QByteArrayView data);
+QByteArray attribute_get(int key, int id, int x, int y);
 
 /*
  * Special methods for cities.
  */
-void attr_city_set(enum attr_city what, int city_id, size_t data_length,
-                   const void *const data);
-size_t attr_city_get(enum attr_city what, int city_id,
-                     size_t max_data_length, void *data);
+void attr_city_set(enum attr_city what, int city_id, QByteArrayView data);
+QByteArray attr_city_get(enum attr_city what, int city_id);

@@ -65,24 +65,19 @@ const struct packet_handlers *packet_handlers_get(const char *capability);
 
 void packets_deinit();
 
-#define SEND_PACKET_START(packet_type)                                      \
-  unsigned char buffer[MAX_LEN_PACKET];                                     \
-  struct raw_data_out dout;                                                 \
-                                                                            \
-  dio_output_init(&dout, buffer, sizeof(buffer));                           \
-  dio_put_type_raw(&dout, (enum data_type) pc->packet_header.length, 0);    \
-  dio_put_type_raw(&dout, (enum data_type) pc->packet_header.type,          \
-                   packet_type);
+#define SEND_PACKET_START(packet_type) QByteArray dout;
 
 #define SEND_PACKET_END(packet_type)                                        \
   {                                                                         \
-    size_t size = dio_output_used(&dout);                                   \
+    auto size = dout.size();                                                \
+    fc_assert(size <= MAX_LEN_PACKET);                                      \
                                                                             \
-    dio_output_rewind(&dout);                                               \
-    dio_put_type_raw(&dout, (enum data_type) pc->packet_header.length,      \
+    QByteArray header;                                                      \
+    dio_put_type_raw(header, (enum data_type) pc->packet_header.length,     \
                      size);                                                 \
-    fc_assert(!dout.too_short);                                             \
-    return send_packet_data(pc, buffer, size, packet_type);                 \
+    dio_put_type_raw(header, (enum data_type) pc->packet_header.type,       \
+                     packet_type);                                          \
+    return send_packet_data(pc, header + dout, packet_type);                \
   }
 
 #define RECEIVE_PACKET_START(packet_type, result)                           \
@@ -113,7 +108,7 @@ void packets_deinit();
   log_packet("Error on field '" #field "'" __VA_ARGS__);                    \
   return nullptr
 
-int send_packet_data(struct connection *pc, unsigned char *data, int len,
+int send_packet_data(struct connection *pc, const QByteArray &data,
                      enum packet_type packet_type);
 bool packet_check(QByteArrayView din, struct connection *pc);
 

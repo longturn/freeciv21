@@ -589,7 +589,6 @@ void get_lanserver_announcement()
 // We would need a raw network connection for broadcast messages
 static void send_lanserver_response()
 {
-  char buffer[MAX_LEN_PACKET];
   char hostname[512];
   char port[256];
   char version[256];
@@ -597,9 +596,7 @@ static void send_lanserver_response()
   int nhumans;
   char humans[256];
   char status[256];
-  struct raw_data_out dout;
   const char *group;
-  size_t size;
   enum QHostAddress::SpecialAddress address_type;
   QUdpSocket lockal_udpsock;
 
@@ -656,17 +653,16 @@ static void send_lanserver_response()
 
   fc_snprintf(port, sizeof(port), "%d", srvarg.port);
 
-  dio_output_init(&dout, buffer, sizeof(buffer));
-  dio_put_uint8_raw(&dout, SERVER_LAN_VERSION);
-  dio_put_string_raw(&dout, hostname);
-  dio_put_string_raw(&dout, port);
-  dio_put_string_raw(&dout, version);
-  dio_put_string_raw(&dout, status);
-  dio_put_string_raw(&dout, players);
-  dio_put_string_raw(&dout, humans);
-  dio_put_string_raw(&dout, get_meta_message_string());
-  size = dio_output_used(&dout);
-  lockal_udpsock.writeDatagram(QByteArray(buffer, size), QHostAddress(group),
+  QByteArray dout;
+  dio_put<std::uint8_t>(dout, SERVER_LAN_VERSION);
+  dio_put(dout, hostname);
+  dio_put(dout, port);
+  dio_put(dout, version);
+  dio_put(dout, status);
+  dio_put(dout, players);
+  dio_put(dout, humans);
+  dio_put(dout, get_meta_message_string());
+  lockal_udpsock.writeDatagram(dout, QHostAddress(group),
                                SERVER_LAN_PORT + 1);
   lockal_udpsock.close();
 }
