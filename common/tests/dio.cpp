@@ -18,6 +18,7 @@ private slots:
   void put_int();
 
   void boolean();
+  void string();
 };
 
 /**
@@ -175,6 +176,26 @@ void test_dio::boolean()
   din = QByteArrayView(dout);
   dio_get(din, value);
   QCOMPARE(value, false);
+  QCOMPARE(din.size(), 0);
+}
+
+/**
+ * Tests dio_put and dio_get string
+ */
+void test_dio::string()
+{
+  std::string value = "Hello";
+  QByteArray dout;
+  dio_put(dout, value.data());
+  QCOMPARE(dout.size(), 6);
+  QCOMPARE(dout, QByteArrayView("Hello\0", 6));
+
+  value.clear(); // Erase the value
+  value.resize(10);
+  QByteArrayView din(dout);
+  dio_get(din, value.data(), 10);
+  // Compare char*'s, we don't care about the value of bytes 6-10
+  QCOMPARE(value.data(), "Hello");
   QCOMPARE(din.size(), 0);
 }
 

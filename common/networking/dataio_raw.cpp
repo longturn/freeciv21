@@ -227,10 +227,8 @@ bool dio_get(QByteArrayView &din, char *dest, size_t max_dest_size)
 /**
    Insert nullptr-terminated string. Conversion callback is used if set.
  */
-void dio_put(QByteArray &dout, const char *value, size_t size)
+void dio_put(QByteArray &dout, const char *value)
 {
-  Q_UNUSED(size);
-
   if (put_conv_callback) {
     size_t length;
     char *buffer;
