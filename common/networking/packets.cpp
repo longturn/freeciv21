@@ -119,8 +119,6 @@ static bool conn_compression_flush(struct connection *pconn)
 
   compressed_packet_len = compressed_size + (jumbo ? 6 : 2);
   if (compressed_packet_len < pconn->compression.queue.size) {
-    QByteArray dout;
-
     log_compress("COMPRESS: compressed %lu bytes to %ld (level %d)",
                  (unsigned long) pconn->compression.queue.size,
                  compressed_size, compression_level);
@@ -128,27 +126,27 @@ static bool conn_compression_flush(struct connection *pconn)
     stat_size_compressed += compressed_size;
 
     if (!jumbo) {
-      unsigned char header[2];
       FC_STATIC_ASSERT(COMPRESSION_BORDER > MAX_LEN_PACKET,
                        uncompressed_compressed_packet_len_overlap);
 
       log_compress("COMPRESS: sending %ld as normal", compressed_size);
 
+      QByteArray dout;
       dio_put<std::uint16_t>(dout, 2 + compressed_size + COMPRESSION_BORDER);
-      connection_send_data(pconn, QByteArrayView(header, sizeof(header)));
+      connection_send_data(pconn, dout);
       connection_send_data(
-          pconn, QByteArrayView(compressed.get(), compressed_size));
+          pconn, QByteArrayView(compressed.data(), compressed_size));
     } else {
-      unsigned char header[6];
       FC_STATIC_ASSERT(JUMBO_SIZE >= JUMBO_BORDER + COMPRESSION_BORDER,
                        compressed_normal_jumbo_packet_len_overlap);
 
       log_compress("COMPRESS: sending %ld as jumbo", compressed_size);
+      QByteArray dout;
       dio_put<std::uint16_t>(dout, JUMBO_SIZE);
       dio_put<std::uint32_t>(dout, 6 + compressed_size);
-      connection_send_data(pconn, QByteArrayView(header, sizeof(header)));
+      connection_send_data(pconn, dout);
       connection_send_data(
-          pconn, QByteArrayView(compressed.get(), compressed_size));
+          pconn, QByteArrayView(compressed.data(), compressed_size));
     }
   } else {
     log_compress("COMPRESS: would enlarge %lu bytes to %ld; "
