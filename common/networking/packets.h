@@ -69,7 +69,9 @@ void packets_deinit();
 
 #define SEND_PACKET_END(packet_type)                                        \
   {                                                                         \
-    auto size = dout.size();                                                \
+    auto size = dout.size()                                                 \
+                + data_type_size((enum data_type) pc->packet_header.length) \
+                + data_type_size((enum data_type) pc->packet_header.type);  \
     fc_assert(size <= MAX_LEN_PACKET);                                      \
                                                                             \
     QByteArray header;                                                      \
