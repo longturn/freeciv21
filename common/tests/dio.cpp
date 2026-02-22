@@ -5,6 +5,7 @@
 #include "dataio_raw.h"
 
 #include <QtTest>
+#include <qbytearrayview.h>
 
 /**
  * Ruleset-related tests
@@ -15,6 +16,8 @@ class test_dio : public QObject {
 private slots:
   void get_int();
   void put_int();
+
+  void boolean();
 };
 
 /**
@@ -144,6 +147,35 @@ void test_dio::put_int()
   dio_put<std::int32_t>(dout, -2);
   QCOMPARE(dout.size(), 4);
   QCOMPARE(dout, QByteArrayView("\xff\xff\xff\xfe", 4));
+}
+
+/**
+ * Tests dio_put and dio_get bool
+ */
+void test_dio::boolean()
+{
+  // true
+  QByteArray dout;
+  dio_put(dout, true);
+  QCOMPARE(dout.size(), 1);
+  QCOMPARE(dout, "\x01");
+
+  QByteArrayView din(dout);
+  bool value;
+  dio_get(din, value);
+  QCOMPARE(value, true);
+  QCOMPARE(din.size(), 0);
+
+  // false
+  dout.clear();
+  dio_put(dout, false);
+  QCOMPARE(dout.size(), 1);
+  QCOMPARE(dout, QByteArrayView("\x00", 1));
+
+  din = QByteArrayView(dout);
+  dio_get(din, value);
+  QCOMPARE(value, false);
+  QCOMPARE(din.size(), 0);
 }
 
 QTEST_MAIN(test_dio)
