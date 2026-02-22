@@ -10,7 +10,6 @@
 
 // utility
 #include "deprecations.h"
-#include "fcintl.h"
 
 // common
 #include "achievements.h"
@@ -18,6 +17,7 @@
 #include "calendar.h"
 #include "citizens.h"
 #include "culture.h"
+#include "disaster.h"
 #include "effects.h"
 #include "featured_text.h"
 #include "game.h"

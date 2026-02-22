@@ -116,10 +116,7 @@ void fcUdpScan::drop()
 bool fcUdpScan::begin_scan(struct server_scan *scan)
 {
   const char *group;
-  struct raw_data_out dout;
-  char buffer[MAX_LEN_PACKET];
   enum QHostAddress::SpecialAddress address_type;
-  size_t size;
 
   fcudp_scan = scan;
   if (announce == ANNOUNCE_NONE) {
@@ -144,10 +141,7 @@ bool fcUdpScan::begin_scan(struct server_scan *scan)
 
   joinMulticastGroup(QHostAddress(group));
 
-  dio_output_init(&dout, buffer, sizeof(buffer));
-  dio_put_uint8_raw(&dout, SERVER_LAN_VERSION);
-  size = dio_output_used(&dout);
-  writeDatagram(QByteArray(buffer, size), QHostAddress(group),
+  writeDatagram(QByteArray(1, SERVER_LAN_VERSION), QHostAddress(group),
                 SERVER_LAN_PORT);
   scan->servers = server_list_new();
 

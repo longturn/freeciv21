@@ -19,6 +19,9 @@
 
 $#include <fc_config.h>
 
+/* common */
+$#include "disaster.h"
+
 /* common/scriptcore */
 $#include "api_common_utilities.h"
 $#include "api_game_effects.h"
