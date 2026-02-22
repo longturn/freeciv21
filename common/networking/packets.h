@@ -110,7 +110,7 @@ void packets_deinit();
   log_packet("Error on field '" #field "'" __VA_ARGS__);                    \
   return nullptr
 
-int send_packet_data(struct connection *pc, const QByteArray &data,
+int send_packet_data(struct connection *pc, QByteArrayView data,
                      enum packet_type packet_type);
 bool packet_check(QByteArrayView din, struct connection *pc);
 

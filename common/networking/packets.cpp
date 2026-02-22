@@ -184,7 +184,7 @@ bool conn_compression_thaw(struct connection *pconn)
 /**
    It returns the request id of the outgoing packet (or 0 if is_server()).
  */
-int send_packet_data(struct connection *pc, const QByteArray &data,
+int send_packet_data(struct connection *pc, QByteArrayView data,
                      enum packet_type packet_type)
 {
   // default for the server
