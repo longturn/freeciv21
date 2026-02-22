@@ -13,20 +13,20 @@ class test_dio : public QObject {
   Q_OBJECT
 
 private slots:
-  void get();
-  void put();
+  void get_int();
+  void put_int();
 };
 
 /**
- * Tests dio_get* commands
+ * Tests dio_get<> integer functions
  */
-void test_dio::get()
+void test_dio::get_int()
 {
   QByteArrayView din("\xff");
   int value = 0;
 
   dio_get<std::uint8_t>(din, value);
-  QCOMPARE(value, 0xff);
+  QCOMPARE(value, 255);
   QCOMPARE(din.size(), 0);
 
   din = "\x01";
@@ -38,12 +38,54 @@ void test_dio::get()
   dio_get<std::int8_t>(din, value);
   QCOMPARE(value, -1);
   QCOMPARE(din.size(), 0);
+
+  // 2-bytes
+  din = QByteArrayView("\x00\x01", 2);
+  dio_get<std::uint16_t>(din, value);
+  QCOMPARE(value, 1);
+  QCOMPARE(din.size(), 0);
+
+  din = QByteArrayView("\xff\xfe", 2);
+  dio_get<std::uint16_t>(din, value);
+  QCOMPARE(value, 0xfffe);
+  QCOMPARE(din.size(), 0);
+
+  din = QByteArrayView("\x00\x01", 2);
+  dio_get<std::int16_t>(din, value);
+  QCOMPARE(value, 1);
+  QCOMPARE(din.size(), 0);
+
+  din = QByteArrayView("\xff\xfe", 2);
+  dio_get<std::int16_t>(din, value);
+  QCOMPARE(value, -2);
+  QCOMPARE(din.size(), 0);
+
+  // 4-bytes
+  din = QByteArrayView("\x00\x00\x00\x01", 4);
+  dio_get<std::uint32_t>(din, value);
+  QCOMPARE(value, 1);
+  QCOMPARE(din.size(), 0);
+
+  din = QByteArrayView("\x00\x00\xff\xfe", 4);
+  dio_get<std::uint32_t>(din, value);
+  QCOMPARE(value, 0xfffe);
+  QCOMPARE(din.size(), 0);
+
+  din = QByteArrayView("\x00\x00\x00\x01", 4);
+  dio_get<std::int32_t>(din, value);
+  QCOMPARE(value, 1);
+  QCOMPARE(din.size(), 0);
+
+  din = QByteArrayView("\xff\xff\xff\xfe", 4);
+  dio_get<std::int32_t>(din, value);
+  QCOMPARE(value, -2);
+  QCOMPARE(din.size(), 0);
 }
 
 /**
- * Tests dio_put* commands
+ * Tests dio_put<> integer functions
  */
-void test_dio::put()
+void test_dio::put_int()
 {
   QByteArray dout;
 
@@ -60,6 +102,48 @@ void test_dio::put()
   dio_put<std::int8_t>(dout, -1);
   QCOMPARE(dout.size(), 1);
   QCOMPARE(dout, "\xff");
+
+  // 2-bytes
+  dout.clear();
+  dio_put<std::uint16_t>(dout, 1);
+  QCOMPARE(dout.size(), 2);
+  QCOMPARE(dout, QByteArrayView("\x00\x01", 2));
+
+  dout.clear();
+  dio_put<std::uint16_t>(dout, 0xfffe);
+  QCOMPARE(dout.size(), 2);
+  QCOMPARE(dout, QByteArrayView("\xff\xfe", 2));
+
+  dout.clear();
+  dio_put<std::int16_t>(dout, 1);
+  QCOMPARE(dout.size(), 2);
+  QCOMPARE(dout, QByteArrayView("\x00\x01", 2));
+
+  dout.clear();
+  dio_put<std::int16_t>(dout, 0xfffe);
+  QCOMPARE(dout.size(), 2);
+  QCOMPARE(dout, QByteArrayView("\xff\xfe", 2));
+
+  // 4-bytes
+  dout.clear();
+  dio_put<std::uint32_t>(dout, 1);
+  QCOMPARE(dout.size(), 4);
+  QCOMPARE(dout, QByteArrayView("\x00\x00\x00\x01", 4));
+
+  dout.clear();
+  dio_put<std::uint32_t>(dout, 0xfffe);
+  QCOMPARE(dout.size(), 4);
+  QCOMPARE(dout, QByteArrayView("\x00\x00\xff\xfe", 4));
+
+  dout.clear();
+  dio_put<std::int32_t>(dout, 1);
+  QCOMPARE(dout.size(), 4);
+  QCOMPARE(dout, QByteArrayView("\x00\x00\x00\x01", 4));
+
+  dout.clear();
+  dio_put<std::int32_t>(dout, -2);
+  QCOMPARE(dout.size(), 4);
+  QCOMPARE(dout, QByteArrayView("\xff\xff\xff\xfe", 4));
 }
 
 QTEST_MAIN(test_dio)
