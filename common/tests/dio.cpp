@@ -4,8 +4,13 @@
 // common
 #include "dataio_raw.h"
 
+// std
+#include <string>
+
+// Qt
+#include <QByteArray>
+#include <QByteArrayView>
 #include <QtTest>
-#include <qbytearrayview.h>
 
 /**
  * Ruleset-related tests
