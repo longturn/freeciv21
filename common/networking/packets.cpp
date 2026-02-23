@@ -119,8 +119,6 @@ static bool conn_compression_flush(struct connection *pconn)
 
   compressed_packet_len = compressed_size + (jumbo ? 6 : 2);
   if (compressed_packet_len < pconn->compression.queue.size) {
-    struct raw_data_out dout;
-
     log_compress("COMPRESS: compressed %lu bytes to %ld (level %d)",
                  (unsigned long) pconn->compression.queue.size,
                  compressed_size, compression_level);
@@ -128,35 +126,36 @@ static bool conn_compression_flush(struct connection *pconn)
     stat_size_compressed += compressed_size;
 
     if (!jumbo) {
-      unsigned char header[2];
       FC_STATIC_ASSERT(COMPRESSION_BORDER > MAX_LEN_PACKET,
                        uncompressed_compressed_packet_len_overlap);
 
       log_compress("COMPRESS: sending %ld as normal", compressed_size);
 
-      dio_output_init(&dout, header, sizeof(header));
-      dio_put_uint16_raw(&dout, 2 + compressed_size + COMPRESSION_BORDER);
-      connection_send_data(pconn, header, sizeof(header));
-      connection_send_data(pconn, compressed.data(), compressed_size);
+      QByteArray dout;
+      dio_put<std::uint16_t>(dout, 2 + compressed_size + COMPRESSION_BORDER);
+      connection_send_data(pconn, dout);
+      connection_send_data(
+          pconn, QByteArrayView(compressed.data(), compressed_size));
     } else {
-      unsigned char header[6];
       FC_STATIC_ASSERT(JUMBO_SIZE >= JUMBO_BORDER + COMPRESSION_BORDER,
                        compressed_normal_jumbo_packet_len_overlap);
 
       log_compress("COMPRESS: sending %ld as jumbo", compressed_size);
-      dio_output_init(&dout, header, sizeof(header));
-      dio_put_uint16_raw(&dout, JUMBO_SIZE);
-      dio_put_uint32_raw(&dout, 6 + compressed_size);
-      connection_send_data(pconn, header, sizeof(header));
-      connection_send_data(pconn, compressed.data(), compressed_size);
+      QByteArray dout;
+      dio_put<std::uint16_t>(dout, JUMBO_SIZE);
+      dio_put<std::uint32_t>(dout, 6 + compressed_size);
+      connection_send_data(pconn, dout);
+      connection_send_data(
+          pconn, QByteArrayView(compressed.data(), compressed_size));
     }
   } else {
     log_compress("COMPRESS: would enlarge %lu bytes to %ld; "
                  "sending uncompressed",
                  (unsigned long) pconn->compression.queue.size,
                  compressed_packet_len);
-    connection_send_data(pconn, pconn->compression.queue.p,
-                         pconn->compression.queue.size);
+    connection_send_data(pconn,
+                         QByteArrayView(pconn->compression.queue.p,
+                                        pconn->compression.queue.size));
     stat_size_no_compression += pconn->compression.queue.size;
   }
   return pconn->used;
@@ -183,14 +182,14 @@ bool conn_compression_thaw(struct connection *pconn)
 /**
    It returns the request id of the outgoing packet (or 0 if is_server()).
  */
-int send_packet_data(struct connection *pc, unsigned char *data, int len,
+int send_packet_data(struct connection *pc, QByteArrayView data,
                      enum packet_type packet_type)
 {
   // default for the server
   int result = 0;
 
-  log_packet("sending packet type=%s(%d) len=%d to %s",
-             packet_name(packet_type), packet_type, len,
+  log_packet("sending packet type=%s(%d) len=%lld to %s",
+             packet_name(packet_type), packet_type, data.size(),
              is_server() ? pc->username : "server");
 
   pc->last_request_id_used = get_next_request_id(pc->last_request_id_used);
@@ -198,10 +197,10 @@ int send_packet_data(struct connection *pc, unsigned char *data, int len,
   log_packet("sending request %d", result);
 
   if (pc->outgoing_packet_notify) {
-    pc->outgoing_packet_notify(pc, packet_type, len, result);
+    pc->outgoing_packet_notify(pc, packet_type, data.size(), result);
   }
 
-  int size = len;
+  int size = data.size();
   if (conn_compression_frozen(pc)) {
     size_t old_size;
 
@@ -215,7 +214,7 @@ int send_packet_data(struct connection *pc, unsigned char *data, int len,
     /* If this packet would cause us to overfill the queue, flush
      * everything that's in there already before queuing this one */
     if (MAX_LEN_COMPRESS_QUEUE
-        < byte_vector_size(&pc->compression.queue) + len) {
+        < byte_vector_size(&pc->compression.queue) + data.size()) {
       log_compress2("COMPRESS: huge queue, forcing to flush (%lu/%lu)",
                     (long unsigned) byte_vector_size(&pc->compression.queue),
                     (long unsigned) MAX_LEN_COMPRESS_QUEUE);
@@ -226,15 +225,15 @@ int send_packet_data(struct connection *pc, unsigned char *data, int len,
     }
 
     old_size = byte_vector_size(&pc->compression.queue);
-    byte_vector_reserve(&pc->compression.queue, old_size + len);
-    memcpy(pc->compression.queue.p + old_size, data, len);
+    byte_vector_reserve(&pc->compression.queue, old_size + data.size());
+    memcpy(pc->compression.queue.p + old_size, data.data(), data.size());
     log_compress2("COMPRESS: putting %s into the queue",
                   packet_name(packet_type));
   } else {
     stat_size_alone += size;
     log_compress("COMPRESS: sending %s alone (%d bytes total)",
                  packet_name(packet_type), stat_size_alone);
-    connection_send_data(pc, data, len);
+    connection_send_data(pc, data);
   }
   log_compress2("COMPRESS: STATS: alone=%d compression-expand=%d "
                 "compression (before/after) = %d/%d",

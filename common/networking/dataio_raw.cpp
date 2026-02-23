@@ -14,7 +14,6 @@
 
 // utility
 #include "log.h"
-#include "shared.h"
 
 // common
 #include "cm.h"
@@ -37,29 +36,6 @@ static bool get_conv(char *dst, size_t ndst, const char *src, size_t nsrc);
 
 static DIO_PUT_CONV_FUN put_conv_callback = nullptr;
 static DIO_GET_CONV_FUN get_conv_callback = get_conv;
-
-// Uncomment to make field range tests to asserts, fatal with -F
-// #define FIELD_RANGE_ASSERT
-
-#if defined(FREECIV_TESTMATIC) && !defined(FIELD_RANGE_ASSERT)
-#define FIELD_RANGE_ASSERT
-#endif
-
-#ifdef FIELD_RANGE_ASSERT
-/* This evaluates _test_ twice. If that's a problem,
- * it should evaluate it just once and store result to variable.
- * That would lose verbosity of the assert message. */
-#define FIELD_RANGE_TEST(_test_, _action_, _format_, ...)                   \
-  fc_assert(!(_test_));                                                     \
-  if (_test_) {                                                             \
-    _action_ qCritical(_format_, ##__VA_ARGS__);                            \
-  }
-#else // FIELD_RANGE_ASSERT
-#define FIELD_RANGE_TEST(_test_, _action_, _format_, ...)                   \
-  if (_test_) {                                                             \
-    _action_ qCritical(_format_, ##__VA_ARGS__);                            \
-  }
-#endif // FIELD_RANGE_ASSERT
 
 /**
    Sets string conversion callback to be used when putting text.
@@ -107,51 +83,12 @@ bool dataio_get_conv_callback(char *dst, size_t ndst, const char *src,
 }
 
 /**
-   Returns TRUE iff the output has size bytes available.
- */
-static bool enough_space(struct raw_data_out *dout, size_t size)
-{
-  if (dout->current + size > dout->dest_size) {
-    dout->too_short = true;
-    return false;
-  } else {
-    dout->used = MAX(dout->used, dout->current + size);
-    return true;
-  }
-}
-
-/**
    Returns TRUE iff the input contains size unread bytes.
  */
 static bool enough_data(QByteArrayView &din, size_t size)
 {
   return din.size() >= size;
 }
-
-/**
-   Initializes the output to the given output buffer and the given
-   buffer size.
- */
-void dio_output_init(struct raw_data_out *dout, void *destination,
-                     size_t dest_size)
-{
-  dout->dest = destination;
-  dout->dest_size = dest_size;
-  dout->current = 0;
-  dout->used = 0;
-  dout->too_short = false;
-}
-
-/**
-   Return the maximum number of bytes used.
- */
-size_t dio_output_used(struct raw_data_out *dout) { return dout->used; }
-
-/**
-   Rewinds the stream so that the put-functions start from the
-   beginning.
- */
-void dio_output_rewind(struct raw_data_out *dout) { dout->current = 0; }
 
 /**
    Return the number of unread bytes.
@@ -195,258 +132,6 @@ bool dio_input_skip(QByteArrayView &din, size_t size)
 }
 
 /**
-   Insert value using 8 bits. May overflow.
- */
-void dio_put_uint8_raw(struct raw_data_out *dout, int value)
-{
-  uint8_t x = value;
-  FC_STATIC_ASSERT(sizeof(x) == 1, uint8_not_1_byte);
-
-  FIELD_RANGE_TEST((int) x != value, ,
-                   "Trying to put %d into 8 bits; "
-                   "it will result %d at receiving side.",
-                   value, (int) x);
-
-  if (enough_space(dout, 1)) {
-    memcpy(ADD_TO_POINTER(dout->dest, dout->current), &x, 1);
-    dout->current++;
-  }
-}
-
-/**
-   Insert value using 16 bits. May overflow.
- */
-void dio_put_uint16_raw(struct raw_data_out *dout, int value)
-{
-  uint16_t x = qToBigEndian(uint16_t(value));
-  FC_STATIC_ASSERT(sizeof(x) == 2, uint16_not_2_bytes);
-
-  FIELD_RANGE_TEST((int) qFromBigEndian(x) != value, ,
-                   "Trying to put %d into 16 bits; "
-                   "it will result %d at receiving side.",
-                   value, (int) qFromBigEndian(x));
-
-  if (enough_space(dout, 2)) {
-    memcpy(ADD_TO_POINTER(dout->dest, dout->current), &x, 2);
-    dout->current += 2;
-  }
-}
-
-/**
-   Insert value using 32 bits. May overflow.
- */
-void dio_put_uint32_raw(struct raw_data_out *dout, int value)
-{
-  uint32_t x = qToBigEndian(uint32_t(value));
-  FC_STATIC_ASSERT(sizeof(x) == 4, uint32_not_4_bytes);
-
-  FIELD_RANGE_TEST((int) qFromBigEndian(x) != value, ,
-                   "Trying to put %d into 32 bits; "
-                   "it will result %d at receiving side.",
-                   value, (int) qFromBigEndian(x));
-
-  if (enough_space(dout, 4)) {
-    memcpy(ADD_TO_POINTER(dout->dest, dout->current), &x, 4);
-    dout->current += 4;
-  }
-}
-
-/**
-   Insert value using 'size' bits. May overflow.
- */
-void dio_put_type_raw(struct raw_data_out *dout, enum data_type type,
-                      int value)
-{
-  switch (type) {
-  case DIOT_UINT8:
-    dio_put_uint8_raw(dout, value);
-    return;
-  case DIOT_UINT16:
-    dio_put_uint16_raw(dout, value);
-    return;
-  case DIOT_UINT32:
-    dio_put_uint32_raw(dout, value);
-    return;
-  case DIOT_SINT8:
-    dio_put_sint8_raw(dout, value);
-    return;
-  case DIOT_SINT16:
-    dio_put_sint16_raw(dout, value);
-    return;
-  case DIOT_SINT32:
-    dio_put_sint32_raw(dout, value);
-    return;
-  case DIOT_LAST:
-    break;
-  }
-
-  fc_assert_msg(false, "data_type %d not handled.", type);
-}
-
-/**
-   Insert value using 8 bits. May overflow.
- */
-void dio_put_sint8_raw(struct raw_data_out *dout, int value)
-{
-  dio_put_uint8_raw(dout, 0 <= value ? value : value + 0x100);
-}
-
-/**
-   Insert value using 16 bits. May overflow.
- */
-void dio_put_sint16_raw(struct raw_data_out *dout, int value)
-{
-  dio_put_uint16_raw(dout, 0 <= value ? value : value + 0x10000);
-}
-
-/**
-   Insert value using 32 bits. May overflow.
- */
-void dio_put_sint32_raw(struct raw_data_out *dout, int value)
-{
-  if (sizeof(int) == 4) {
-    dio_put_uint32_raw(dout, value);
-  } else {
-    dio_put_uint32_raw(dout, (0 <= value ? value : value + 0x100000000));
-  }
-}
-
-/**
-   Insert value 0 or 1 using 8 bits.
- */
-void dio_put_bool_raw(struct raw_data_out *dout, bool value)
-{
-  FIELD_RANGE_TEST(value != true && value != false, value = (value != false);
-                   , "Trying to put a non-boolean: %d", (int) value);
-
-  dio_put_uint8_raw(dout, value ? 1 : 0);
-}
-
-/**
-   Insert a float number, which is multiplied by 'float_factor' before
-   being encoded into an uint32.
- */
-void dio_put_ufloat_raw(struct raw_data_out *dout, float value,
-                        int float_factor)
-{
-  uint32_t v = value * float_factor;
-
-  FIELD_RANGE_TEST(
-      fabsf((float) v / float_factor - value) > 1.1 / float_factor, ,
-      "Trying to put %f with factor %d in 32 bits; "
-      "it will result %f at receiving side, having error of %f units.",
-      value, float_factor, (float) v / float_factor,
-      fabsf((float) v / float_factor - value) * float_factor);
-
-  dio_put_uint32_raw(dout, v);
-}
-
-/**
-   Insert a float number, which is multiplied by 'float_factor' before
-   being encoded into a sint32.
- */
-void dio_put_sfloat_raw(struct raw_data_out *dout, float value,
-                        int float_factor)
-{
-  int32_t v = value * float_factor;
-
-  FIELD_RANGE_TEST(
-      fabsf((float) v / float_factor - value) > 1.1 / float_factor, ,
-      "Trying to put %f with factor %d in 32 bits; "
-      "it will result %f at receiving side, having error of %f units.",
-      value, float_factor, (float) v / float_factor,
-      fabsf((float) v / float_factor - value) * float_factor);
-
-  dio_put_sint32_raw(dout, v);
-}
-
-/**
-   Insert block directly from memory.
- */
-void dio_put_memory_raw(struct raw_data_out *dout, const void *value,
-                        size_t size)
-{
-  if (enough_space(dout, size)) {
-    memcpy(ADD_TO_POINTER(dout->dest, dout->current), value, size);
-    dout->current += size;
-  }
-}
-
-/**
-   Insert nullptr-terminated string. Conversion callback is used if set.
- */
-void dio_put_string_raw(struct raw_data_out *dout, const char *value)
-{
-  if (put_conv_callback) {
-    size_t length;
-    char *buffer;
-
-    if ((buffer = (*put_conv_callback)(value, &length))) {
-      dio_put_memory_raw(dout, buffer, length + 1);
-      delete[] buffer;
-    }
-  } else {
-    dio_put_memory_raw(dout, value, qstrlen(value) + 1);
-  }
-}
-
-/**
-   Insert cm_parameter struct.
- */
-void dio_put_cm_parameter_raw(struct raw_data_out *dout,
-                              const struct cm_parameter *param)
-{
-  int i;
-
-  for (i = 0; i < O_LAST; i++) {
-    dio_put_sint16_raw(dout, param->minimal_surplus[i]);
-  }
-
-  dio_put_bool_raw(dout, param->max_growth);
-  dio_put_bool_raw(dout, param->require_happy);
-  dio_put_bool_raw(dout, param->allow_disorder);
-  dio_put_bool_raw(dout, param->allow_specialists);
-
-  for (i = 0; i < O_LAST; i++) {
-    dio_put_uint16_raw(dout, param->factor[i]);
-  }
-
-  dio_put_uint16_raw(dout, param->happy_factor);
-}
-
-/**
-   Insert the given unit_order struct/
- */
-void dio_put_unit_order_raw(struct raw_data_out *dout,
-                            const struct unit_order *order)
-{
-  dio_put_uint8_raw(dout, order->order);
-  dio_put_uint8_raw(dout, order->activity);
-  dio_put_sint32_raw(dout, order->target);
-  dio_put_sint16_raw(dout, order->sub_target);
-  dio_put_uint8_raw(dout, order->action);
-  dio_put_sint8_raw(dout, order->dir);
-}
-
-/**
-   Insert number of worklist items as 8 bit value and then insert
-   8 bit kind and 8 bit number for each worklist item.
- */
-void dio_put_worklist_raw(struct raw_data_out *dout,
-                          const struct worklist *pwl)
-{
-  int i, length = worklist_length(pwl);
-
-  dio_put_uint8_raw(dout, length);
-  for (i = 0; i < length; i++) {
-    const struct universal *pcp = &(pwl->entries[i]);
-
-    dio_put_uint8_raw(dout, pcp->kind);
-    dio_put_uint8_raw(dout, universal_number(pcp));
-  }
-}
-
-/**
    Receive value using 'size' bits to dest.
  */
 bool dio_get_type_raw(QByteArrayView &din, enum data_type type, int &dest)
@@ -473,18 +158,34 @@ bool dio_get_type_raw(QByteArrayView &din, enum data_type type, int &dest)
 }
 
 /**
-   Take memory block directly.
+   Insert value using 'size' bits. May overflow.
  */
-bool dio_get_memory_raw(QByteArrayView &din, void *dest, size_t dest_size)
+void dio_put_type_raw(QByteArray &dout, enum data_type type, int value)
 {
-  if (!enough_data(din, dest_size)) {
-    log_packet("Got too short memory");
-    return false;
+  switch (type) {
+  case DIOT_UINT8:
+    dio_put<std::uint8_t>(dout, value);
+    return;
+  case DIOT_UINT16:
+    dio_put<std::uint16_t>(dout, value);
+    return;
+  case DIOT_UINT32:
+    dio_put<std::uint32_t>(dout, value);
+    return;
+  case DIOT_SINT8:
+    dio_put<std::int8_t>(dout, value);
+    return;
+  case DIOT_SINT16:
+    dio_put<std::int16_t>(dout, value);
+    return;
+  case DIOT_SINT32:
+    dio_put<std::int32_t>(dout, value);
+    return;
+  case DIOT_LAST:
+    break;
   }
 
-  memcpy(dest, din.data(), dest_size);
-  din.slice(dest_size);
-  return true;
+  fc_assert_msg(false, "data_type %d not handled.", type);
 }
 
 /**
@@ -524,6 +225,25 @@ bool dio_get(QByteArrayView &din, char *dest, size_t max_dest_size)
 }
 
 /**
+   Insert nullptr-terminated string. Conversion callback is used if set.
+ */
+void dio_put(QByteArray &dout, const char *value)
+{
+  if (put_conv_callback) {
+    size_t length;
+    char *buffer;
+
+    if ((buffer = (*put_conv_callback)(value, &length))) {
+      dio_put(dout, reinterpret_cast<const std::byte *>(buffer), length + 1);
+      delete[] buffer;
+    }
+  } else {
+    dio_put(dout, reinterpret_cast<const std::byte *>(value),
+            qstrlen(value) + 1);
+  }
+}
+
+/**
  * Take memory. No conversion callback. The destination is assumed to be
  * large enough.
  */
@@ -540,6 +260,14 @@ bool dio_get(QByteArrayView &din, std::byte *dest, size_t size)
 
   din.slice(size);
   return true;
+}
+
+/*
+   Insert block directly from memory.
+ */
+void dio_put(QByteArray &dout, const std::byte *value, std::size_t size)
+{
+  dout.append(reinterpret_cast<const char *>(value), size);
 }
 
 /**
@@ -579,6 +307,27 @@ bool dio_get(QByteArrayView &din, struct cm_parameter &param)
 }
 
 /**
+   Insert cm_parameter struct.
+ */
+void dio_put(QByteArray &dout, const struct cm_parameter &param)
+{
+  for (int i = 0; i < O_LAST; i++) {
+    dio_put<std::int16_t>(dout, param.minimal_surplus[i]);
+  }
+
+  dio_put(dout, param.max_growth);
+  dio_put(dout, param.require_happy);
+  dio_put(dout, param.allow_disorder);
+  dio_put(dout, param.allow_specialists);
+
+  for (int i = 0; i < O_LAST; i++) {
+    dio_put<std::uint16_t>(dout, param.factor[i]);
+  }
+
+  dio_put<std::uint16_t>(dout, param.happy_factor);
+}
+
+/**
    Take unit_order struct and put it in the provided orders.
  */
 bool dio_get(QByteArrayView &din, struct unit_order &order)
@@ -601,6 +350,19 @@ bool dio_get(QByteArrayView &din, struct unit_order &order)
   order.dir = direction8(idir);
 
   return true;
+}
+
+/**
+   Insert the given unit_order struct/
+ */
+void dio_put(QByteArray &dout, const struct unit_order &order)
+{
+  dio_put<std::uint8_t>(dout, order.order);
+  dio_put<std::uint8_t>(dout, order.activity);
+  dio_put<std::int32_t>(dout, order.target);
+  dio_put<std::int16_t>(dout, order.sub_target);
+  dio_put<std::uint8_t>(dout, order.action);
+  dio_put<std::int8_t>(dout, order.dir);
 }
 
 /**
@@ -640,6 +402,22 @@ bool dio_get(QByteArrayView &din, struct worklist &pwl)
 }
 
 /**
+   Insert number of worklist items as 8 bit value and then insert
+   8 bit kind and 8 bit number for each worklist item.
+ */
+void dio_put(QByteArray &dout, const struct worklist &pwl)
+{
+  int length = worklist_length(&pwl);
+
+  dio_put<std::uint8_t>(dout, length);
+  for (int i = 0; i < length; i++) {
+    const struct universal &pcp = pwl.entries[i];
+    dio_put<std::uint8_t>(dout, pcp.kind);
+    dio_put<std::uint8_t>(dout, universal_number(&pcp));
+  }
+}
+
+/**
    De-serialize an action probability.
  */
 bool dio_get(QByteArrayView &din, struct act_prob &aprob)
@@ -660,11 +438,10 @@ bool dio_get(QByteArrayView &din, struct act_prob &aprob)
 /**
    Serialize an action probability.
  */
-void dio_put_action_probability_raw(struct raw_data_out *dout,
-                                    const struct act_prob *aprob)
+void dio_put(QByteArray &dout, const struct act_prob &aprob)
 {
-  dio_put_uint8_raw(dout, aprob->min);
-  dio_put_uint8_raw(dout, aprob->max);
+  dio_put<std::uint8_t>(dout, aprob.min);
+  dio_put<std::uint8_t>(dout, aprob.max);
 }
 
 /**
@@ -695,18 +472,17 @@ bool dio_get(QByteArrayView &din, struct requirement &preq)
 /**
    Serialize a requirement.
  */
-void dio_put_requirement_raw(struct raw_data_out *dout,
-                             const struct requirement *preq)
+void dio_put(QByteArray &dout, const struct requirement &preq)
 {
   int type, range, value;
   bool survives, present, quiet;
 
-  req_get_values(preq, &type, &range, &survives, &present, &quiet, &value);
+  req_get_values(&preq, &type, &range, &survives, &present, &quiet, &value);
 
-  dio_put_uint8_raw(dout, type);
-  dio_put_sint32_raw(dout, value);
-  dio_put_uint8_raw(dout, range);
-  dio_put_bool_raw(dout, survives);
-  dio_put_bool_raw(dout, present);
-  dio_put_bool_raw(dout, quiet);
+  dio_put<std::uint8_t>(dout, type);
+  dio_put<std::int32_t>(dout, value);
+  dio_put<std::uint8_t>(dout, range);
+  dio_put(dout, survives);
+  dio_put(dout, present);
+  dio_put(dout, quiet);
 }

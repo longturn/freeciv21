@@ -35,6 +35,7 @@
 #include "capstr.h"
 #include "citizens.h"
 #include "diptreaty.h"
+#include "disaster.h"
 #include "effects.h"
 #include "events.h"
 #include "extras.h"

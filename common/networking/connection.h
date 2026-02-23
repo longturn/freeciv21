@@ -154,8 +154,7 @@ void connection_close(struct connection *pconn, const QString &reason);
 
 int read_socket_data(QIODevice *sock, struct socket_packet_buffer *buffer);
 void flush_connection_send_buffer_all(struct connection *pc);
-bool connection_send_data(struct connection *pconn,
-                          const unsigned char *data, int len);
+bool connection_send_data(struct connection *pconn, QByteArrayView data);
 
 void connection_do_buffer(struct connection *pc);
 void connection_do_unbuffer(struct connection *pc);

@@ -103,3 +103,8 @@ add_subdirectory(scriptcore)
 target_link_libraries(common PUBLIC Qt6::Core Qt6::Gui Qt6::Network)
 target_link_libraries(common PRIVATE aicore networking)
 target_link_libraries(common PUBLIC common_gen scriptcore)
+
+# Tests
+if (BUILD_TESTING)
+  add_subdirectory(tests)
+endif()
