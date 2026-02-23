@@ -98,9 +98,9 @@ static enum attribute_serial serialize_hash(attributeHash *hash,
    * Step 1: loop through all keys and fill value_lengths and calculate
    * the total_length.
    */
-  // preamble
+  // fields in the preamble (see step 3)
   int total_length = 4 + 1 + 4 + 4;
-  // body
+  // fields in the body (see step 3)
   total_length += entries * (4 + 4 + 4 + 2 + 2); // value_size + key
   int i = 0;
 
