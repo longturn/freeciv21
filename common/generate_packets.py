@@ -115,24 +115,22 @@ def parse_fields(
     for name in field_names:
         field = {}
 
-        def f(x):
-            arr = x.split(":")
-            if len(arr) == 1:
+        def field_dims(x):
+            parts = x.split(":")
+            if len(parts) == 1:
                 return [x, x, x]
 
-            assert len(arr) == 2
-            arr.append("old->" + arr[1])
-            arr[1] = "real_packet->" + arr[1]
-            return arr
+            assert len(parts) == 2
+            return [parts[0], f"real_packet->{parts[1]}", f"old->{parts[1]}"]
 
         match = re.search(r"^(.*)\[(.*)\]\[(.*)\]$", name)
         if match:
             field["name"] = match.group(1)
             field["is_array"] = 2
-            field["array_size1_d"], field["array_size1_u"], field["array_size1_o"] = f(
+            field["array_size1_d"], field["array_size1_u"], field["array_size1_o"] = field_dims(
                 match.group(2)
             )
-            field["array_size2_d"], field["array_size2_u"], field["array_size2_o"] = f(
+            field["array_size2_d"], field["array_size2_u"], field["array_size2_o"] = field_dims(
                 match.group(3)
             )
         else:
@@ -140,7 +138,7 @@ def parse_fields(
             if match:
                 field["name"] = match.group(1)
                 field["is_array"] = 1
-                field["array_size_d"], field["array_size_u"], field["array_size_o"] = f(
+                field["array_size_d"], field["array_size_u"], field["array_size_o"] = field_dims(
                     match.group(2)
                 )
             else:
