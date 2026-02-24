@@ -126,7 +126,7 @@ def parse_fields(
         match = re.search(r"^(.*)\[(.*)\]\[(.*)\]$", name)
         if match:
             field["name"] = match.group(1)
-            field["is_array"] = 2
+            field["array_dims"] = 2
             field["array_size1_d"], field["array_size1_u"], field["array_size1_o"] = field_dims(
                 match.group(2)
             )
@@ -137,13 +137,13 @@ def parse_fields(
             match = re.search(r"^(.*)\[(.*)\]$", name)
             if match:
                 field["name"] = match.group(1)
-                field["is_array"] = 1
+                field["array_dims"] = 1
                 field["array_size_d"], field["array_size_u"], field["array_size_o"] = field_dims(
                     match.group(2)
                 )
             else:
                 field["name"] = name
-                field["is_array"] = 0
+                field["array_dims"] = 0
         fields.append(Field(field, typeinfo, flaginfo))
 
     return fields
@@ -162,7 +162,7 @@ class Field:
     float_factor: int
     diff: bool
 
-    is_array: int
+    array_dims: int
     array_size_d: int
     array_size_o: int
     array_size_u: int
@@ -183,7 +183,7 @@ class Field:
             return "const char *"
         if self.dataio_type == "worklist":
             return f"const {self.struct_type} *"
-        if self.is_array:
+        if self.array_dims:
             return f"const {self.struct_type} *"
         return self.struct_type + " "
 
@@ -193,9 +193,9 @@ class Field:
         struct.
         """
 
-        if self.is_array == 2:
+        if self.array_dims == 2:
             return f"{self.struct_type} {self.name}[{self.array_size1_d}][{self.array_size2_d}]"
-        if self.is_array:
+        if self.array_dims:
             return f"{self.struct_type} {self.name}[{self.array_size_d}]"
         else:
             return f"{self.struct_type} {self.name}"
@@ -208,11 +208,11 @@ class Field:
 
         if self.dataio_type == "worklist":
             return f"  worklist_copy(&real_packet->{self.name}, {self.name});"
-        if self.is_array == 0:
+        if self.array_dims == 0:
             return f"  real_packet->{self.name} = {self.name};"
         if self.dataio_type == "string":
             return f"  sz_strlcpy(real_packet->{self.name}, {self.name});"
-        if self.is_array == 1:
+        if self.array_dims == 1:
             tmp = f"real_packet->{self.name}[i] = {self.name}[i]"
             return f"""
   for (int i = 0; i < {self.array_size_u}; i++) {{
@@ -233,15 +233,15 @@ class Field:
             return (
                 f"  differ = !BV_ARE_EQUAL(old->{self.name}, real_packet->{self.name});"
             )
-        if self.dataio_type == "string" and self.is_array == 1:
+        if self.dataio_type == "string" and self.array_dims == 1:
             return (
                 f"  differ = (strcmp(old->{self.name}, real_packet->{self.name}) != 0);"
             )
         if self.dataio_type == "cm_parameter":
             return f"  differ = (&old->{self.name} != &real_packet->{self.name});"
-        if self.is_struct and self.is_array == 0:
+        if self.is_struct and self.array_dims == 0:
             return f"  differ = !are_{self.dataio_type}s_equal(&old->{self.name}, &real_packet->{self.name});"
-        if not self.is_array:
+        if not self.array_dims:
             return f"  differ = (old->{self.name} != real_packet->{self.name});"
 
         sizes = None, None
@@ -280,7 +280,7 @@ class Field:
         bools which gets folded in the header) the actual value of the bool.
         """
 
-        if fold_bool_into_header and self.struct_type == "bool" and not self.is_array:
+        if fold_bool_into_header and self.struct_type == "bool" and not self.array_dims:
             return f"""{self.get_cmp()}
   if (differ) {{
     different++;
@@ -305,7 +305,7 @@ class Field:
         changed. Does nothing for bools-in-header.
         """
 
-        if fold_bool_into_header and self.struct_type == "bool" and not self.is_array:
+        if fold_bool_into_header and self.struct_type == "bool" and not self.array_dims:
             return f"  /* field {index} is folded into the header */\n"
         if packet.gen_log:
             f = f"    {packet.log_macro}(\"  field '{self.name}' has changed\");\n"
@@ -331,7 +331,7 @@ class Field:
         dio_put = f"dio_put<{self.dataio_type}>" if "std::" in self.dataio_type else f"dio_put"
 
         # Array indices
-        loop_dims = self.is_array
+        loop_dims = self.array_dims
         if self.dataio_type in {"memory", "string", "city_map"}:
             loop_dims -= 1  # One index is used by the string
 
@@ -355,17 +355,17 @@ class Field:
         # We're done for scalar types
         if self.dataio_type == "bitvector":
             return c
-        elif self.dataio_type in {"memory", "string", "city_map"} and self.is_array != 2:
+        elif self.dataio_type in {"memory", "string", "city_map"} and self.array_dims != 2:
             return c
-        elif not self.is_array:
+        elif not self.array_dims:
             return c
 
-        if self.is_array == 2:
+        if self.array_dims == 2:
             array_size_u = self.array_size1_u
         else:
             array_size_u = self.array_size_u
 
-        if deltafragment and self.diff and self.is_array == 1:
+        if deltafragment and self.diff and self.array_dims == 1:
             return f"""
     {{
       int i;
@@ -382,7 +382,7 @@ class Field:
       dio_put<std::uint8_t>(dout, 255);
 
     }}"""
-        if self.is_array == 2 and self.dataio_type != "string":
+        if self.array_dims == 2 and self.dataio_type != "string":
             return f"""
     {{
       int i, j;
@@ -410,7 +410,7 @@ class Field:
         """
 
         get = self.get_get(deltafragment)
-        if fold_bool_into_header and self.struct_type == "bool" and not self.is_array:
+        if fold_bool_into_header and self.struct_type == "bool" and not self.array_dims:
             return f"  real_packet->{self.name} = BV_ISSET(fields, {index});\n"
         get = indent(get, "    ")
         if packet.gen_log:
@@ -431,7 +431,7 @@ class Field:
         dio_get = f"dio_get<{self.dataio_type}>" if "std::" in self.dataio_type else f"dio_get"
 
         # Array indices
-        loop_dims = self.is_array
+        loop_dims = self.array_dims
         if self.dataio_type in {"memory", "string", "city_map"}:
             loop_dims -= 1  # One index is used by the string
 
@@ -467,12 +467,12 @@ class Field:
         # We're done for scalar types
         if self.dataio_type == "bitvector":
             return c
-        elif self.dataio_type in ["string", "city_map"] and self.is_array != 2:
+        elif self.dataio_type in ["string", "city_map"] and self.array_dims != 2:
             return c
-        elif not self.is_array:
+        elif not self.array_dims:
             return c
 
-        if self.is_array == 2:
+        if self.array_dims == 2:
             array_size_u = self.array_size1_u
             array_size_d = self.array_size1_d
         else:
@@ -492,7 +492,7 @@ class Field:
   if (!{dio_get}(din, real_packet->{self.name}, {array_size_u})) {{
     RECEIVE_PACKET_FIELD_ERROR({self.name});
   }}"""
-            if self.is_array == 2 and self.dataio_type != "string":
+            if self.array_dims == 2 and self.dataio_type != "string":
                 return f"""
 {{
 {extra}
@@ -510,7 +510,7 @@ class Field:
     {c}
   }}
 }}"""
-        elif deltafragment and self.diff and self.is_array == 1:
+        elif deltafragment and self.diff and self.array_dims == 1:
             return f"""
 {{
 for (int count = 0;; count++) {{
