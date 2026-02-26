@@ -11,6 +11,7 @@
 // std
 #include <algorithm>
 #include <cstddef> // size_t
+#include <type_traits>
 
 // Qt
 #include <QByteArray>
@@ -127,6 +128,33 @@ template <class T>
 void dio_put(QByteArray &dout, float value, int precision, T = 0)
 {
   dio_put<T>(dout, static_cast<int>(value * precision));
+}
+
+/**
+ * Reads an enum value from the beginning of \c din and puts it in \c dest.
+ * The third argument allows deduction of the template parameter, which
+ * specifies the encoding.
+ */
+template <class Enum, class T,
+          class = std::enable_if_t<std::is_enum_v<Enum>>>
+bool dio_get(QByteArrayView &din, Enum &dest, T = 0)
+{
+  int ival;
+  auto ret = dio_get<T>(din, ival);
+  dest = static_cast<Enum>(ival);
+  return ret;
+}
+
+/**
+ * Writes an enum value at the end of \c dout.
+ * The third argument allows deduction of the template parameter, which
+ * specifies the encoding.
+ */
+template <class Enum, class T,
+          class = std::enable_if_t<std::is_enum_v<Enum>>>
+void dio_put(QByteArray &dout, Enum value, T = 0)
+{
+  dio_put<T>(dout, static_cast<int>(value));
 }
 
 /**
