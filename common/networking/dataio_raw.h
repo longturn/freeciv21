@@ -183,6 +183,42 @@ void dio_put(QByteArray &dout, Enum value, T = 0)
 }
 
 /**
+ * Reads an array of values from the beginning of \c din and puts it in \c
+ * dest. At most \c size values are written. Additional arguments are passed
+ * to \c dio_get for the destination type.
+ */
+template <class T, std::size_t N, class... Args>
+bool dio_get(QByteArrayView &din, std::array<T, N> &dest, std::size_t size,
+             Args &&...args)
+{
+  fc_assert_ret_val_msg(size <= N, false, "received to many values");
+
+  for (std::size_t i = 0; i < size; ++i) {
+    if (!dio_get(din, dest[i], std::forward<Args>(args)...)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/**
+ * Writes an array of values at the end of \c dout.
+ * At most \c size values are written. Additional arguments are passed to
+ * \c dio_get for the destination type.
+ */
+template <class T, std::size_t N, class... Args>
+void dio_put(QByteArray &dout, const std::array<T, N> &value,
+             std::size_t size, Args &&...args)
+{
+  fc_assert_ret_msg(size <= N, "trying to send too many values");
+
+  for (std::size_t i = 0; i < size; ++i) {
+    dio_put(dout, value[i], std::forward<Args>(args)...);
+  }
+}
+
+/**
  * Reads a bit vector from the beginning of \c din and puts it in \c dest.
  */
 template <unsigned bits>
@@ -208,9 +244,9 @@ void dio_put(QByteArray &dout, const bit_vector<bits> &value)
               value.vec.size());
 }
 
-bool dio_get(QByteArrayView &din, char *dest, size_t max_dest_size)
+bool dio_get(QByteArrayView &din, char *dest, std::size_t max_dest_size)
     fc__attribute((nonnull(2)));
-void dio_put(QByteArray &dout, const char *value)
+void dio_put(QByteArray &dout, const char *value, std::size_t = 0)
     fc__attribute((nonnull(2)));
 
 bool dio_get(QByteArrayView &din, std::byte *dest, size_t max_dest_size)
