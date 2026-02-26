@@ -334,9 +334,6 @@ class Field:
         Returns code which put this field.
         """
 
-        # dio function name
-        dio_put = f"dio_put<{self.dataio_type}>" if "std::" in self.dataio_type else f"dio_put"
-
         # Array indices
         loop_dims = self.array_dims
         if self.dataio_type in {"memory", "string", "city_map"}:
@@ -351,13 +348,15 @@ class Field:
         # Do we need an extra arg for dio_put?
         dio_arg = ""
         if self.struct_type == "float":
-            dio_arg = f", {self.float_factor}"
+            dio_arg = f", {self.float_factor}, {self.dataio_type}{{}}"
+        elif "std::" in self.dataio_type:
+            dio_arg = f", {self.dataio_type}{{}}"
         elif self.dataio_type == "city_map":
             dio_arg = f", sizeof(real_packet->{self.name}{indices})"
         elif self.dataio_type == "memory":
             dio_arg = f", {self.array_size_u}"
 
-        c = f"{dio_put}(dout, packet->{self.name}{indices}{dio_arg});"
+        c = f"dio_put(dout, packet->{self.name}{indices}{dio_arg});"
 
         # We're done for scalar types
         if self.dataio_type == "bitvector":
@@ -434,9 +433,6 @@ class Field:
         Returns code which get this field.
         """
 
-        # dio function name
-        dio_get = f"dio_get<{self.dataio_type}>" if "std::" in self.dataio_type else f"dio_get"
-
         # Array indices
         loop_dims = self.array_dims
         if self.dataio_type in {"memory", "string", "city_map"}:
@@ -451,7 +447,9 @@ class Field:
         # Do we need an extra arg for dio_get?
         dio_arg = ""
         if self.struct_type == "float":
-            dio_arg = f", {self.float_factor}"
+            dio_arg = f", {self.float_factor}, {self.dataio_type}{{}}"
+        elif "std::" in self.dataio_type:
+            dio_arg = f", {self.dataio_type}{{}}"
         elif self.dataio_type in ["string", "city_map"]:
             dio_arg = f", sizeof(real_packet->{self.name}{indices})"
 
@@ -460,14 +458,14 @@ class Field:
             c = f"""{{
   int readin;
 
-  if (!{dio_get}(din, readin)) {{
+  if (!dio_get(din, readin{dio_arg})) {{
     RECEIVE_PACKET_FIELD_ERROR({self.name});
   }}
   real_packet->{self.name}{indices} =
     static_cast<decltype(real_packet->{self.name}{indices})>(readin);
 }}"""
         else:
-            c = f"""if (!{dio_get}(din, real_packet->{self.name}{indices}{dio_arg})) {{
+            c = f"""if (!dio_get(din, real_packet->{self.name}{indices}{dio_arg})) {{
   RECEIVE_PACKET_FIELD_ERROR({self.name});
 }}"""
 
@@ -496,7 +494,7 @@ class Field:
                 extra = ""
             if self.dataio_type == "memory":
                 return f"""{extra}
-  if (!{dio_get}(din, real_packet->{self.name}, {array_size_u})) {{
+  if (!dio_get(din, real_packet->{self.name}, {array_size_u})) {{
     RECEIVE_PACKET_FIELD_ERROR({self.name});
   }}"""
             if self.array_dims == 2 and self.dataio_type != "string":
