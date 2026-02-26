@@ -54,9 +54,10 @@ void dio_put_type_raw(QByteArray &dout, enum data_type type, int value);
 
 /**
  * Reads a value from the beginning of \c din and puts it in \c dest.
- * The template parameter specifies the encoding.
+ * The third argument allows deduction of the template parameter, which
+ * specifies the encoding.
  */
-template <class T> bool dio_get(QByteArrayView &din, int &dest)
+template <class T> bool dio_get(QByteArrayView &din, int &dest, T = 0)
 {
   if (din.size() < sizeof(T)) {
     log_packet("Packet too short: needed %zu bytes, got %lld", sizeof(T),
@@ -74,9 +75,10 @@ template <class T> bool dio_get(QByteArrayView &din, int &dest)
 
 /**
  * Writes \c value at the end of \c dout.
- * The template parameter specifies the encoding.
+ * The third argument allows deduction of the template parameter, which
+ * specifies the encoding.
  */
-template <class T> void dio_put(QByteArray &dout, int value)
+template <class T> void dio_put(QByteArray &dout, int value, T = 0)
 {
   T tmp = value;
   tmp = qToBigEndian(tmp);
@@ -104,10 +106,11 @@ inline void dio_put(QByteArray &dout, bool value)
 
 /**
  * Reads a float from the beginning of \c din and puts it in \c dest.
- * The template parameter specifies the underlying encoding.
+ * The fourth argument allows deduction of the template parameter, which
+ * specifies the encoding.
  */
 template <class T>
-bool dio_get(QByteArrayView &din, float &dest, int precision)
+bool dio_get(QByteArrayView &din, float &dest, int precision, T = 0)
 {
   int ival;
   auto ret = dio_get<T>(din, ival);
@@ -117,9 +120,11 @@ bool dio_get(QByteArrayView &din, float &dest, int precision)
 
 /**
  * Writes a float at the end of \c dout.
- * The template parameter specifies the underlying encoding.
+ * The fourth argument allows deduction of the template parameter, which
+ * specifies the encoding.
  */
-template <class T> void dio_put(QByteArray &dout, float value, int precision)
+template <class T>
+void dio_put(QByteArray &dout, float value, int precision, T = 0)
 {
   dio_put<T>(dout, static_cast<int>(value * precision));
 }
