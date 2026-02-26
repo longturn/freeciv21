@@ -454,18 +454,7 @@ class Field:
             dio_arg = f", sizeof(real_packet->{self.name}{indices})"
 
         # dio_get call and error checking
-        if self.struct_type.endswith("_id"):
-            c = f"""{{
-  int readin;
-
-  if (!dio_get(din, readin{dio_arg})) {{
-    RECEIVE_PACKET_FIELD_ERROR({self.name});
-  }}
-  real_packet->{self.name}{indices} =
-    static_cast<decltype(real_packet->{self.name}{indices})>(readin);
-}}"""
-        else:
-            c = f"""if (!dio_get(din, real_packet->{self.name}{indices}{dio_arg})) {{
+        c = f"""if (!dio_get(din, real_packet->{self.name}{indices}{dio_arg})) {{
   RECEIVE_PACKET_FIELD_ERROR({self.name});
 }}"""
 
