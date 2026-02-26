@@ -336,7 +336,7 @@ class Field:
 
         # Array indices
         loop_dims = self.array_dims
-        if self.dataio_type in {"memory", "string", "city_map"}:
+        if self.dataio_type in {"memory", "string"}:
             loop_dims -= 1  # One index is used by the string
 
         indices = ""
@@ -351,8 +351,6 @@ class Field:
             dio_arg = f", {self.float_factor}, {self.dataio_type}{{}}"
         elif "std::" in self.dataio_type:
             dio_arg = f", {self.dataio_type}{{}}"
-        elif self.dataio_type == "city_map":
-            dio_arg = f", sizeof(real_packet->{self.name}{indices})"
         elif self.dataio_type == "memory":
             dio_arg = f", {self.array_size_u}"
 
@@ -361,17 +359,17 @@ class Field:
         # We're done for scalar types
         if self.dataio_type == "bitvector":
             return c
-        elif self.dataio_type in {"memory", "string", "city_map"} and self.array_dims != 2:
+        elif self.dataio_type in {"memory", "string"} and self.array_dims != 2:
             return c
         elif not self.array_dims:
             return c
 
-        if self.array_dims == 2:
-            array_size_u = self.array_size1_u
-        else:
-            array_size_u = self.array_size_u
-
         if deltafragment and self.diff and self.array_dims == 1:
+            if self.array_dims == 2:
+                array_size_u = self.array_size1_u
+            else:
+                array_size_u = self.array_size_u
+
             return f"""
     {{
       int i;
@@ -388,26 +386,19 @@ class Field:
       dio_put<std::uint8_t>(dout, 255);
 
     }}"""
-        if self.array_dims == 2 and self.dataio_type != "string":
-            return f"""
-    {{
-      int i, j;
 
-      for (i = 0; i < {self.array_size1_u}; i++) {{
-        for (j = 0; j < {self.array_size2_u}; j++) {{
-          {c}
-        }}
-      }}
-    }}"""
+        if self.dataio_type in ["string", "memory"]:
+            # We handle the size via array dimensions below.
+            dio_arg = ""
 
-        return f"""
-    {{
-      int i;
+        if self.array_dims == 2:
+            # Invert sizes for recursive call
+            size_args = f", {self.array_size1_u}, {self.array_size2_u}"
+        else:
+            size_args = f", {self.array_size_u}"
 
-      for (i = 0; i < {array_size_u}; i++) {{
-        {c}
-      }}
-    }}"""
+        return f"dio_put(dout, real_packet->{self.name}{size_args}{dio_arg});"
+
 
     def get_get_wrapper(self, packet, index, deltafragment):
         """
@@ -435,7 +426,7 @@ class Field:
 
         # Array indices
         loop_dims = self.array_dims
-        if self.dataio_type in {"memory", "string", "city_map"}:
+        if self.dataio_type in {"memory", "string"}:
             loop_dims -= 1  # One index is used by the string
 
         indices = ""
@@ -450,7 +441,7 @@ class Field:
             dio_arg = f", {self.float_factor}, {self.dataio_type}{{}}"
         elif "std::" in self.dataio_type:
             dio_arg = f", {self.dataio_type}{{}}"
-        elif self.dataio_type in ["string", "city_map"]:
+        elif self.dataio_type in ["string", "memory"]:
             dio_arg = f", sizeof(real_packet->{self.name}{indices})"
 
         # dio_get call and error checking
@@ -461,50 +452,19 @@ class Field:
         # We're done for scalar types
         if self.dataio_type == "bitvector":
             return c
-        elif self.dataio_type in ["string", "city_map"] and self.array_dims != 2:
+        elif self.dataio_type == "string" and self.array_dims != 2:
             return c
         elif not self.array_dims:
             return c
 
-        if self.array_dims == 2:
-            array_size_u = self.array_size1_u
-            array_size_d = self.array_size1_d
-        else:
-            array_size_u = self.array_size_u
-            array_size_d = self.array_size_d
+        if deltafragment and self.diff and self.array_dims == 1:
+            if self.array_dims == 2:
+                array_size_u = self.array_size1_u
+                array_size_d = self.array_size1_d
+            else:
+                array_size_u = self.array_size_u
+                array_size_d = self.array_size_d
 
-        if not self.diff or self.dataio_type == "memory":
-            if array_size_u != array_size_d:
-                extra = f"""
-  if ({array_size_u} > {array_size_d}) {{
-    RECEIVE_PACKET_FIELD_ERROR({self.name}, ": truncation array");
-  }}"""
-            else:
-                extra = ""
-            if self.dataio_type == "memory":
-                return f"""{extra}
-  if (!dio_get(din, real_packet->{self.name}, {array_size_u})) {{
-    RECEIVE_PACKET_FIELD_ERROR({self.name});
-  }}"""
-            if self.array_dims == 2 and self.dataio_type != "string":
-                return f"""
-{{
-{extra}
-  for (int i = 0; i < {self.array_size1_u}; i++) {{
-    for (int j = 0; j < {self.array_size2_u}; j++) {{
-      {c}
-    }}
-  }}
-}}"""
-            else:
-                return f"""
-{{
-{extra}
-  for (int i = 0; i < {array_size_u}; i++) {{
-    {c}
-  }}
-}}"""
-        elif deltafragment and self.diff and self.array_dims == 1:
             return f"""
 {{
 for (int count = 0;; count++) {{
@@ -526,11 +486,20 @@ for (int count = 0;; count++) {{
   }}
 }}
 }}"""
+
+        if self.dataio_type in ["string", "memory"]:
+            # We handle the size via array dimensions below.
+            dio_arg = ""
+
+        if self.array_dims == 2:
+            # Invert sizes for recursive call
+            size_args = f", {self.array_size1_u}, {self.array_size2_u}"
         else:
-            return f"""
-for (int i = 0; i < {array_size_u}; i++) {{
-  {c}
-}}"""
+            size_args = f", {self.array_size_u}"
+
+        return f"""if (!dio_get(din, real_packet->{self.name}{size_args}{dio_arg})) {{
+          RECEIVE_PACKET_FIELD_ERROR({self.name});
+        }}"""
 
 
 class Variant:

@@ -191,9 +191,9 @@ void dio_put_type_raw(QByteArray &dout, enum data_type type, int value)
 /**
    Take string. Conversion callback is used.
  */
-bool dio_get(QByteArrayView &din, char *dest, size_t max_dest_size)
+bool dio_get(QByteArrayView &din, char *dest, std::size_t max_dest_size)
 {
-  size_t offset, remaining;
+  std::size_t offset, remaining;
 
   fc_assert(max_dest_size > 0);
 
@@ -225,9 +225,11 @@ bool dio_get(QByteArrayView &din, char *dest, size_t max_dest_size)
 }
 
 /**
-   Insert nullptr-terminated string. Conversion callback is used if set.
+ * Insert nullptr-terminated string. Conversion callback is used if set.
+ * The third argument is present for compatibility with \c dio_get and is
+ * ignored.
  */
-void dio_put(QByteArray &dout, const char *value)
+void dio_put(QByteArray &dout, const char *value, std::size_t)
 {
   if (put_conv_callback) {
     size_t length;
