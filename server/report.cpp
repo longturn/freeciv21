@@ -1781,7 +1781,7 @@ void report_final_scores(struct conn_list *dest)
   struct player_score_entry size[player_count()];
   struct packet_endgame_report packet;
 
-  fc_assert(score_categories_num <= ARRAY_SIZE(packet.category_name));
+  fc_assert(score_categories_num <= packet.category_name.size());
 
   if (!dest) {
     dest = game.est_connections;

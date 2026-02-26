@@ -2896,7 +2896,7 @@ void package_unit(struct unit *punit, struct packet_unit_info *packet)
     packet->orders_index = punit->orders.index;
     packet->orders_repeat = punit->orders.repeat;
     packet->orders_vigilant = punit->orders.vigilant;
-    memcpy(packet->orders, punit->orders.list,
+    memcpy(packet->orders.data(), punit->orders.list,
            punit->orders.length * sizeof(struct unit_order));
   } else {
     packet->orders_length = packet->orders_index = 0;
