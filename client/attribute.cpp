@@ -220,11 +220,8 @@ static enum attribute_serial unserialize_hash(attributeHash *hash,
       return A_SERIAL_FAIL;
     }
 
-    QByteArray pvalue(value_length, Qt::Initialization::Uninitialized);
-    dio_put<std::uint32_t>(pvalue, value_length);
-    if (!dio_get(din, pvalue.data() + 4, value_length)) {
-      qDebug("attribute.cpp unserialize_hash() "
-             "memory dio_input_too_short");
+    if (din.size() != value_length) {
+      qDebug("attribute.cpp unserialize_hash() inconsistent size");
       return A_SERIAL_FAIL;
     }
 
@@ -238,7 +235,7 @@ static enum attribute_serial unserialize_hash(attributeHash *hash,
       return A_SERIAL_FAIL;
     }
 
-    hash->insert(key, pvalue);
+    hash->insert(key, QByteArray(din));
   }
 
   if (!din.empty()) {
