@@ -454,7 +454,7 @@ class Field:
             dio_arg = f", sizeof(real_packet->{self.name}{indices})"
 
         # dio_get call and error checking
-        if "enum" in self.struct_type or self.struct_type.endswith("_id"):
+        if self.struct_type.endswith("_id"):
             c = f"""{{
   int readin;
 
