@@ -1021,7 +1021,7 @@ static bool save_game_ruleset(const char *filename, const char *name)
                    RS_DEFAULT_UPGRADE_VETERAN_LOSS,
                    "civstyle.autoupgrade_veteran_loss", nullptr);
 
-  secfile_insert_int_vec(sfile, game.info.granary_food_ini,
+  secfile_insert_int_vec(sfile, game.info.granary_food_ini.data(),
                          game.info.granary_num_inis,
                          "civstyle.granary_food_ini");
 
