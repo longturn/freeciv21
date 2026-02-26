@@ -55,10 +55,11 @@ void dio_put_type_raw(QByteArray &dout, enum data_type type, int value);
 
 /**
  * Reads a value from the beginning of \c din and puts it in \c dest.
- * The third argument allows deduction of the template parameter, which
- * specifies the encoding.
+ * The third argument is for compatibility with the form with dest as an \c
+ * int.
  */
-template <class T> bool dio_get(QByteArrayView &din, int &dest, T = 0)
+template <class T, class = std::enable_if_t<std::is_integral_v<T>>>
+bool dio_get(QByteArrayView &din, T &dest, T = 0)
 {
   if (din.size() < sizeof(T)) {
     log_packet("Packet too short: needed %zu bytes, got %lld", sizeof(T),
@@ -66,12 +67,37 @@ template <class T> bool dio_get(QByteArrayView &din, int &dest, T = 0)
     return false;
   }
 
-  T tmp;
-  memcpy(&tmp, din.data(), sizeof(T));
-  din.slice(sizeof(T));
+  memcpy(&dest, din.data(), sizeof(T));
+  dest = qFromBigEndian(dest);
 
-  dest = qFromBigEndian(tmp);
+  din.slice(sizeof(T));
   return true;
+}
+
+/**
+ * Writes \c value at the end of \c dout.
+ * The third argument is for compatibility with the form with dest as an \c
+ * int.
+ */
+template <class T, class = std::enable_if_t<std::is_integral_v<T>>>
+void dio_put(QByteArray &dout, T value, T = 0)
+{
+  value = qToBigEndian(value);
+  dout.append(reinterpret_cast<char *>(&value), sizeof(T));
+}
+
+/**
+ * Reads a value from the beginning of \c din and puts it in \c dest.
+ * The third argument allows deduction of the template parameter, which
+ * specifies the encoding.
+ */
+template <class T, class = std::enable_if_t<!std::is_same_v<T, int>>>
+bool dio_get(QByteArrayView &din, int &dest, T = 0)
+{
+  T tmp;
+  auto ret = dio_get(din, tmp);
+  dest = tmp;
+  return ret;
 }
 
 /**
@@ -79,11 +105,10 @@ template <class T> bool dio_get(QByteArrayView &din, int &dest, T = 0)
  * The third argument allows deduction of the template parameter, which
  * specifies the encoding.
  */
-template <class T> void dio_put(QByteArray &dout, int value, T = 0)
+template <class T, class = std::enable_if_t<!std::is_same_v<T, int>>>
+void dio_put(QByteArray &dout, int value, T = 0)
 {
-  T tmp = value;
-  tmp = qToBigEndian(tmp);
-  dout.append(reinterpret_cast<char *>(&tmp), sizeof(T));
+  dio_put(dout, static_cast<T>(value));
 }
 
 /**
