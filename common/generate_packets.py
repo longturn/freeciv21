@@ -194,9 +194,16 @@ class Field:
         """
 
         if self.array_dims == 2:
-            return f"{self.struct_type} {self.name}[{self.array_size1_d}][{self.array_size2_d}]"
-        if self.array_dims:
-            return f"{self.struct_type} {self.name}[{self.array_size_d}]"
+            if self.dataio_type in {"string", "memory"}:
+                return f"std::array<{self.struct_type}[{self.array_size2_d}], {self.array_size1_d}> {self.name}"
+            else:
+                return f"std::array<std::array<{self.struct_type}, {self.array_size2_d}>, {self.array_size1_d}> {self.name}"
+                return f"std::array<{self.struct_type}, {self.array_size_d}> {self.name}"
+        if self.array_dims == 1:
+            if self.dataio_type in {"string", "memory"}:
+                return f"{self.struct_type} {self.name}[{self.array_size_d}]"
+            else:
+                return f"std::array<{self.struct_type}, {self.array_size_d}> {self.name}"
         else:
             return f"{self.struct_type} {self.name}"
 
@@ -1733,6 +1740,9 @@ def write_common_header(packets: list[Packet], output: io.TextIOWrapper) -> None
 #include "fc_types.h"
 #include "unit.h"
 
+// std
+#include <array>
+
 """
     )
 
@@ -1905,8 +1915,12 @@ bool client_handle_packet(enum packet_type type, const void *packet)
             args = packet_cast
         else:
             # static_cast(packet)->a, static_cast(packet)->b, ...
-            args = map(lambda field: packet_cast + "->" + field.name, packet.fields)
-            args = ",\n      ".join(args)
+            def format_field(field):
+                if field.array_dims > 0 and not field.dataio_type == "string":
+                    return f"{packet_cast}->{field.name}.data()"
+                return f"{packet_cast}->{field.name}"
+
+            args = ",\n      ".join(map(format_field, packet.fields))
             if args:
                 args = "\n      " + args
 
@@ -2025,6 +2039,8 @@ bool server_handle_packet(enum packet_type type, const void *packet,
                 arg = f"{cast}->{field.name}"
                 if field.dataio_type == "worklist":
                     arg = "&" + arg
+                if field.array_dims > 0 and not field.dataio_type == "string":
+                    arg += ".data()"
                 args.append(arg)
             args = ",\n      ".join(args)
             if args:

@@ -2572,7 +2572,7 @@ void package_city(struct city *pcity, struct packet_city_info *packet,
   packet->rally_point_persistent = pcity->rally_point.persistent;
   packet->rally_point_vigilant = pcity->rally_point.vigilant;
   if (pcity->rally_point.length) {
-    memcpy(packet->rally_point_orders, pcity->rally_point.orders,
+    memcpy(packet->rally_point_orders.data(), pcity->rally_point.orders,
            pcity->rally_point.length * sizeof(struct unit_order));
   }
 

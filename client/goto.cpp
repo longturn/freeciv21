@@ -575,8 +575,8 @@ static void send_path_orders(struct unit *punit, const PFPath &path,
   qCDebug(goto_category, "  Repeat: %d. Vigilant: %d.", p.repeat,
           p.vigilant);
 
-  make_path_orders(punit, path, orders, final_order, p.orders, &p.length,
-                   &p.dest_tile);
+  make_path_orders(punit, path, orders, final_order, p.orders.data(),
+                   &p.length, &p.dest_tile);
 
   request_unit_ssa_set(punit, SSA_NONE);
   send_packet_unit_orders(&client.conn, &p);
@@ -599,8 +599,8 @@ static void send_rally_path_orders(struct city *pcity, struct unit *punit,
   qCDebug(goto_category, "Rally orders for city %d:", pcity->id);
   qCDebug(goto_category, "  Vigilant: %d.", p.vigilant);
 
-  make_path_orders(punit, path, orders, final_order, p.orders, &p.length,
-                   nullptr);
+  make_path_orders(punit, path, orders, final_order, p.orders.data(),
+                   &p.length, nullptr);
 
   send_packet_city_rally_point(&client.conn, &p);
 }
