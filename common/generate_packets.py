@@ -457,41 +457,14 @@ class Field:
         elif not self.array_dims:
             return c
 
-        if deltafragment and self.diff and self.array_dims == 1:
-            if self.array_dims == 2:
-                array_size_u = self.array_size1_u
-                array_size_d = self.array_size1_d
-            else:
-                array_size_u = self.array_size_u
-                array_size_d = self.array_size_d
-
-            return f"""
-{{
-for (int count = 0;; count++) {{
-  int i;
-
-  if (!dio_get<std::uint8_t>(din, i)) {{
-    RECEIVE_PACKET_FIELD_ERROR({self.name});
-  }}
-  if (i == 255) {{
-    break;
-  }}
-  if (i >= {array_size_u}) {{
-    RECEIVE_PACKET_FIELD_ERROR({self.name},
-                               \": unexpected value %d \"
-                               \"(> {array_size_u}) in array diff\",
-                               i);
-  }} else {{
-    {c}
-  }}
-}}
-}}"""
-
         if self.dataio_type in ["string", "memory"]:
             # We handle the size via array dimensions below.
             dio_arg = ""
 
-        if self.array_dims == 2:
+        if deltafragment and self.diff:
+            # Array-diff
+            size_args = ", array_diff{}"
+        elif self.array_dims == 2:
             # Invert sizes for recursive call
             size_args = f", {self.array_size1_u}, {self.array_size2_u}"
         else:

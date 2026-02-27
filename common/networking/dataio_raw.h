@@ -219,6 +219,50 @@ void dio_put(QByteArray &dout, const std::array<T, N> &value,
 }
 
 /**
+ * Used as a marker to enable the array-diff protocol.
+ */
+struct array_diff {};
+
+/**
+ * Reads an array of values from the beginning of \c din and puts it in \c
+ * dest, using the array-diff protocol. Additional arguments are passed to
+ * \c dio_get for the destination type.
+ */
+template <class T, std::size_t N, class... Args>
+bool dio_get(QByteArrayView &din, std::array<T, N> &dest, array_diff,
+             Args &&...args)
+{
+  // The array-diff format encodes changed elements only. Each element is
+  // encoded as a 1-byte index followed by the value. An index of 255 marks
+  // the end of the diff.
+
+  // Indices are encoded on one byte, so it wouldn't make sense to receive
+  // more than 256 values in an array-diff.
+  for (int count = 0; count < 256; ++count) {
+    // Get the index in the array.
+    std::uint8_t index;
+    fc_assert_ret_val_msg(dio_get(din, index), false,
+                          "array-diff: incomplete data");
+
+    // An index of 255 represents the end of the diff.
+    if (index == 0xff) {
+      break;
+    }
+
+    // Make sure it fits.
+    fc_assert_ret_val_msg(index < dest.size(), false,
+                          "array-diff: index out of bounds");
+
+    // Read the value.
+    fc_assert_ret_val_msg(
+        dio_get(din, dest[index], std::forward<Args>(args)...), false,
+        "array-diff: invalid value");
+  }
+
+  return true;
+}
+
+/**
  * Reads a bit vector from the beginning of \c din and puts it in \c dest.
  */
 template <unsigned bits>
