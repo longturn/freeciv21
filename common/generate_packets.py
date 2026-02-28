@@ -325,7 +325,7 @@ class Field:
             s = ""
 
         return f"""  if (BV_ISSET(fields, {index})) {{
-{f}{s}  {self.get_put(deltafragment)}
+{f}{s}    {self.get_put(deltafragment)}
   }}
 """
 
@@ -333,17 +333,6 @@ class Field:
         """
         Returns code which put this field.
         """
-
-        # Array indices
-        loop_dims = self.array_dims
-        if self.dataio_type in {"memory", "string"}:
-            loop_dims -= 1  # One index is used by the string
-
-        indices = ""
-        if loop_dims == 1:
-            indices = "[i]"
-        elif loop_dims == 2:
-            indices = "[i][j]"
 
         # Do we need an extra arg for dio_put?
         dio_arg = ""
@@ -354,7 +343,7 @@ class Field:
         elif self.dataio_type == "memory":
             dio_arg = f", {self.array_size_u}"
 
-        c = f"dio_put(dout, packet->{self.name}{indices}{dio_arg});"
+        c = f"dio_put(dout, packet->{self.name}{dio_arg});"
 
         # We're done for scalar types
         if self.dataio_type == "bitvector":
@@ -403,17 +392,6 @@ class Field:
         Returns code which get this field.
         """
 
-        # Array indices
-        loop_dims = self.array_dims
-        if self.dataio_type in {"memory", "string"}:
-            loop_dims -= 1  # One index is used by the string
-
-        indices = ""
-        if loop_dims == 1:
-            indices = "[i]"
-        elif loop_dims == 2:
-            indices = "[i][j]"
-
         # Do we need an extra arg for dio_get?
         dio_arg = ""
         if self.struct_type == "float":
@@ -421,12 +399,12 @@ class Field:
         elif "std::" in self.dataio_type:
             dio_arg = f", {self.dataio_type}{{}}"
         elif self.dataio_type in ["string", "memory"]:
-            dio_arg = f", sizeof(real_packet->{self.name}{indices})"
+            dio_arg = f", sizeof(real_packet->{self.name})"
 
         # dio_get call and error checking
-        c = f"""if (!dio_get(din, real_packet->{self.name}{indices}{dio_arg})) {{
-  RECEIVE_PACKET_FIELD_ERROR({self.name});
-}}"""
+        c = f"""if (!dio_get(din, real_packet->{self.name}{dio_arg})) {{
+          RECEIVE_PACKET_FIELD_ERROR({self.name});
+        }}"""
 
         # We're done for scalar types
         if self.dataio_type == "bitvector":
