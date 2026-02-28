@@ -263,6 +263,37 @@ bool dio_get(QByteArrayView &din, std::array<T, N> &dest, array_diff,
 }
 
 /**
+ * Writes an array of values at the end of \c dout, using the array-diff
+ * protocol. The \c ref argument contains the value with respect to which to
+ * built the diff.
+ * Additional arguments are passed to \c dio_get for the destination type.
+ */
+template <class T, std::size_t N, class... Args>
+void dio_put(QByteArray &dout, const std::array<T, N> &value,
+             const std::array<T, N> &ref, Args &&...args)
+{
+  // See the matching dio_get for a description of the format.
+
+  // The index is an uint8 and 0xff is the stop marker. Thus we can have at
+  // most 0xff - 1 elements.
+  static_assert(N < 0xff, "Array too long for the array-diff format.");
+
+  // Indices are encoded on one byte, so it wouldn't make sense to receive
+  // more than 256 values in an array-diff.
+  for (std::uint8_t i = 0; i < value.size(); ++i) {
+    if (value[i] != ref[i]) {
+      // Put the index
+      dio_put(dout, i, std::uint8_t{});
+      // And the value
+      dio_put(dout, value[i], std::forward<Args>(args)...);
+    }
+  }
+
+  // End marker.
+  dio_put(dout, 0xff, std::uint8_t{});
+}
+
+/**
  * Reads a bit vector from the beginning of \c din and puts it in \c dest.
  */
 template <unsigned bits>
