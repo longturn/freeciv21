@@ -364,34 +364,13 @@ class Field:
         elif not self.array_dims:
             return c
 
-        if deltafragment and self.diff and self.array_dims == 1:
-            if self.array_dims == 2:
-                array_size_u = self.array_size1_u
-            else:
-                array_size_u = self.array_size_u
-
-            return f"""
-    {{
-      int i;
-
-      fc_assert({array_size_u} < 255);
-
-      for (i = 0; i < {array_size_u}; i++) {{
-        if (old->{self.name}[i] != real_packet->{self.name}[i]) {{
-          dio_put<std::uint8_t>(dout, i);
-
-          {c}
-        }}
-      }}
-      dio_put<std::uint8_t>(dout, 255);
-
-    }}"""
-
         if self.dataio_type in ["string", "memory"]:
             # We handle the size via array dimensions below.
             dio_arg = ""
 
-        if self.array_dims == 2:
+        if deltafragment and self.diff:
+            size_args = f", old->{self.name}"
+        elif self.array_dims == 2:
             # Invert sizes for recursive call
             size_args = f", {self.array_size1_u}, {self.array_size2_u}"
         else:
