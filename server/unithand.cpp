@@ -5736,7 +5736,7 @@ void handle_unit_orders(struct player *pplayer,
 
   struct unit_order *order_list = nullptr;
   if (length) {
-    order_list = create_unit_orders(length, packet->orders);
+    order_list = create_unit_orders(length, packet->orders.data());
     if (!order_list) {
       qCritical("received invalid orders from %s for %s (%d).",
                 player_name(pplayer), unit_rule_name(punit),

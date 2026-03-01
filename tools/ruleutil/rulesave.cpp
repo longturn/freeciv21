@@ -19,6 +19,7 @@
 #include "actions.h"
 #include "base.h"
 #include "diptreaty.h"
+#include "disaster.h"
 #include "effects.h"
 #include "game.h"
 #include "government.h"
@@ -26,12 +27,12 @@
 #include "movement.h"
 #include "multipliers.h"
 #include "nation.h"
-#include "packets.h"
 #include "rgbcolor.h"
 #include "specialist.h"
 #include "style.h"
 #include "team.h"
 #include "tech.h"
+#include "traderoutes.h"
 #include "unittype.h"
 #include "version.h"
 
@@ -1020,7 +1021,7 @@ static bool save_game_ruleset(const char *filename, const char *name)
                    RS_DEFAULT_UPGRADE_VETERAN_LOSS,
                    "civstyle.autoupgrade_veteran_loss", nullptr);
 
-  secfile_insert_int_vec(sfile, game.info.granary_food_ini,
+  secfile_insert_int_vec(sfile, game.info.granary_food_ini.data(),
                          game.info.granary_num_inis,
                          "civstyle.granary_food_ini");
 

@@ -30,6 +30,7 @@
 #include "base.h"
 #include "city.h"
 #include "diptreaty.h"
+#include "disaster.h"
 #include "effects.h"
 #include "extras.h"
 #include "fc_types.h"
@@ -42,7 +43,6 @@
 #include "name_translation.h"
 #include "nation.h"
 #include "packets.h"
-#include "player.h"
 #include "requirements.h"
 #include "rgbcolor.h"
 #include "road.h"
@@ -8278,7 +8278,7 @@ static void send_ruleset_nations(struct conn_list *dest)
     packet.init_government_id = n.init_government
                                     ? government_number(n.init_government)
                                     : government_count();
-    fc_assert(ARRAY_SIZE(packet.init_techs) == ARRAY_SIZE(n.init_techs));
+    fc_assert(packet.init_techs.size() == ARRAY_SIZE(n.init_techs));
     for (i = 0; i < MAX_NUM_TECH_LIST; i++) {
       if (n.init_techs[i] != A_LAST) {
         packet.init_techs[i] = n.init_techs[i];
@@ -8287,7 +8287,7 @@ static void send_ruleset_nations(struct conn_list *dest)
       }
     }
     packet.init_techs_count = i;
-    fc_assert(ARRAY_SIZE(packet.init_units) == n.init_units.size());
+    fc_assert(packet.init_units.size() == n.init_units.size());
     for (i = 0; i < MAX_NUM_UNIT_LIST; i++) {
       const struct unit_type *t = n.init_units[i];
       if (t) {
@@ -8297,8 +8297,7 @@ static void send_ruleset_nations(struct conn_list *dest)
       }
     }
     packet.init_units_count = i;
-    fc_assert(ARRAY_SIZE(packet.init_buildings)
-              == ARRAY_SIZE(n.init_buildings));
+    fc_assert(packet.init_buildings.size() == ARRAY_SIZE(n.init_buildings));
     for (i = 0; i < MAX_NUM_BUILDING_LIST; i++) {
       if (n.init_buildings[i] != B_LAST) {
         // Impr_type_id to int
@@ -8495,7 +8494,7 @@ static void send_ruleset_game(struct conn_list *dest)
 
   fc_assert(sizeof(misc_p.global_init_techs)
             == sizeof(game.rgame.global_init_techs));
-  fc_assert(ARRAY_SIZE(misc_p.global_init_techs)
+  fc_assert(misc_p.global_init_techs.size()
             == ARRAY_SIZE(game.rgame.global_init_techs));
   for (i = 0; i < MAX_NUM_TECH_LIST; i++) {
     if (game.rgame.global_init_techs[i] != A_LAST) {
@@ -8506,7 +8505,7 @@ static void send_ruleset_game(struct conn_list *dest)
   }
   misc_p.global_init_techs_count = i;
 
-  fc_assert(ARRAY_SIZE(misc_p.global_init_buildings)
+  fc_assert(misc_p.global_init_buildings.size()
             == ARRAY_SIZE(game.rgame.global_init_buildings));
   for (i = 0; i < MAX_NUM_BUILDING_LIST; i++) {
     if (game.rgame.global_init_buildings[i] != B_LAST) {

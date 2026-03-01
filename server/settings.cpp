@@ -4914,8 +4914,8 @@ void send_server_setting(struct conn_list *dest, const struct setting *pset)
           sz_strlcpy(packet.pretty_names[i], val_name->pretty);
         }
         packet.values_num = i;
-        fc_assert(i <= ARRAY_SIZE(packet.support_names));
-        fc_assert(i <= ARRAY_SIZE(packet.pretty_names));
+        fc_assert(i <= packet.support_names.size());
+        fc_assert(i <= packet.pretty_names.size());
       }
       send_packet_server_setting_enum(pconn, &packet);
     }
@@ -4938,8 +4938,8 @@ void send_server_setting(struct conn_list *dest, const struct setting *pset)
           sz_strlcpy(packet.pretty_names[i], val_name->pretty);
         }
         packet.bits_num = i;
-        fc_assert(i <= ARRAY_SIZE(packet.support_names));
-        fc_assert(i <= ARRAY_SIZE(packet.pretty_names));
+        fc_assert(i <= packet.support_names.size());
+        fc_assert(i <= packet.pretty_names.size());
       }
       send_packet_server_setting_bitwise(pconn, &packet);
     }
@@ -5011,7 +5011,7 @@ void send_server_setting_control(struct connection *pconn)
   control.settings_num = SETTINGS_NUM;
 
   // Fill in the category strings.
-  fc_assert(SSET_NUM_CATEGORIES <= ARRAY_SIZE(control.category_names));
+  fc_assert(SSET_NUM_CATEGORIES <= control.category_names.size());
   control.categories_num = SSET_NUM_CATEGORIES;
   for (i = 0; i < SSET_NUM_CATEGORIES; i++) {
     // Send untranslated name

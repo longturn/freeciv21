@@ -35,6 +35,7 @@
 #include "capstr.h"
 #include "citizens.h"
 #include "diptreaty.h"
+#include "disaster.h"
 #include "effects.h"
 #include "events.h"
 #include "extras.h"
@@ -266,7 +267,7 @@ static struct unit *unpackage_unit(const struct packet_unit_info *packet)
     }
 
     punit->orders.list = new unit_order[punit->orders.length]();
-    memcpy(punit->orders.list, packet->orders,
+    memcpy(punit->orders.list, packet->orders.data(),
            punit->orders.length * sizeof(*punit->orders.list));
   }
   punit->action_turn = packet->action_turn;
@@ -2412,9 +2413,8 @@ void handle_player_info(const struct packet_player_info *pinfo)
   /* Don't use player_iterate here, because we ignore the real number
    * of players and we want to read all the datas. */
   BV_CLR_ALL(pplayer->real_embassy);
-  fc_assert(8 * sizeof(pplayer->real_embassy)
-            >= ARRAY_SIZE(pinfo->real_embassy));
-  for (i = 0; i < ARRAY_SIZE(pinfo->real_embassy); i++) {
+  fc_assert(8 * sizeof(pplayer->real_embassy) >= pinfo->real_embassy.size());
+  for (i = 0; i < pinfo->real_embassy.size(); i++) {
     if (pinfo->real_embassy[i]) {
       BV_SET(pplayer->real_embassy, i);
     }
@@ -2444,8 +2444,8 @@ void handle_player_info(const struct packet_player_info *pinfo)
 
   /* Don't use player_iterate or player_slot_count here, because we ignore
    * the real number of players and we want to read all the datas. */
-  fc_assert(ARRAY_SIZE(pplayer->ai_common.love) >= ARRAY_SIZE(pinfo->love));
-  for (i = 0; i < ARRAY_SIZE(pinfo->love); i++) {
+  fc_assert(ARRAY_SIZE(pplayer->ai_common.love) >= pinfo->love.size());
+  for (i = 0; i < pinfo->love.size(); i++) {
     pplayer->ai_common.love[i] = pinfo->love[i];
   }
 
@@ -3671,10 +3671,10 @@ void handle_ruleset_tech(const struct packet_ruleset_tech *p)
     a->require[AR_TWO] = A_NEVER;
   } else {
     // Unpack req1 and req2 from the research_reqs requirement vector.
-    i = unpack_tech_req(AR_ONE, p->research_reqs_count, p->research_reqs, a,
-                        i);
-    i = unpack_tech_req(AR_TWO, p->research_reqs_count, p->research_reqs, a,
-                        i);
+    i = unpack_tech_req(AR_ONE, p->research_reqs_count,
+                        p->research_reqs.data(), a, i);
+    i = unpack_tech_req(AR_TWO, p->research_reqs_count,
+                        p->research_reqs.data(), a, i);
   }
 
   /* Any remaining requirements are a part of the research_reqs requirement
@@ -4958,7 +4958,7 @@ void handle_unit_actions(const struct packet_unit_actions *packet)
   struct city *target_city = game_city_by_number(packet->target_city_id);
   struct unit *target_unit = game_unit_by_number(packet->target_unit_id);
 
-  const struct act_prob *act_probs = packet->action_probabilities;
+  const struct act_prob *act_probs = packet->action_probabilities.data();
 
   bool disturb_player = packet->disturb_player;
   bool valid = false;

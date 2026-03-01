@@ -115,37 +115,35 @@ def parse_fields(
     for name in field_names:
         field = {}
 
-        def f(x):
-            arr = x.split(":")
-            if len(arr) == 1:
+        def field_dims(x):
+            parts = x.split(":")
+            if len(parts) == 1:
                 return [x, x, x]
 
-            assert len(arr) == 2
-            arr.append("old->" + arr[1])
-            arr[1] = "real_packet->" + arr[1]
-            return arr
+            assert len(parts) == 2
+            return [parts[0], f"real_packet->{parts[1]}", f"old->{parts[1]}"]
 
         match = re.search(r"^(.*)\[(.*)\]\[(.*)\]$", name)
         if match:
             field["name"] = match.group(1)
-            field["is_array"] = 2
-            field["array_size1_d"], field["array_size1_u"], field["array_size1_o"] = f(
+            field["array_dims"] = 2
+            field["array_size1_d"], field["array_size1_u"], field["array_size1_o"] = field_dims(
                 match.group(2)
             )
-            field["array_size2_d"], field["array_size2_u"], field["array_size2_o"] = f(
+            field["array_size2_d"], field["array_size2_u"], field["array_size2_o"] = field_dims(
                 match.group(3)
             )
         else:
             match = re.search(r"^(.*)\[(.*)\]$", name)
             if match:
                 field["name"] = match.group(1)
-                field["is_array"] = 1
-                field["array_size_d"], field["array_size_u"], field["array_size_o"] = f(
+                field["array_dims"] = 1
+                field["array_size_d"], field["array_size_u"], field["array_size_o"] = field_dims(
                     match.group(2)
                 )
             else:
                 field["name"] = name
-                field["is_array"] = 0
+                field["array_dims"] = 0
         fields.append(Field(field, typeinfo, flaginfo))
 
     return fields
@@ -164,7 +162,7 @@ class Field:
     float_factor: int
     diff: bool
 
-    is_array: int
+    array_dims: int
     array_size_d: int
     array_size_o: int
     array_size_u: int
@@ -185,7 +183,7 @@ class Field:
             return "const char *"
         if self.dataio_type == "worklist":
             return f"const {self.struct_type} *"
-        if self.is_array:
+        if self.array_dims:
             return f"const {self.struct_type} *"
         return self.struct_type + " "
 
@@ -195,10 +193,16 @@ class Field:
         struct.
         """
 
-        if self.is_array == 2:
-            return f"{self.struct_type} {self.name}[{self.array_size1_d}][{self.array_size2_d}]"
-        if self.is_array:
-            return f"{self.struct_type} {self.name}[{self.array_size_d}]"
+        if self.array_dims == 2:
+            if self.dataio_type in {"string", "memory"}:
+                return f"std::array<{self.struct_type}[{self.array_size2_d}], {self.array_size1_d}> {self.name}"
+            else:
+                return f"std::array<std::array<{self.struct_type}, {self.array_size2_d}>, {self.array_size1_d}> {self.name}"
+        if self.array_dims == 1:
+            if self.dataio_type in {"string", "memory"}:
+                return f"{self.struct_type} {self.name}[{self.array_size_d}]"
+            else:
+                return f"std::array<{self.struct_type}, {self.array_size_d}> {self.name}"
         else:
             return f"{self.struct_type} {self.name}"
 
@@ -210,11 +214,11 @@ class Field:
 
         if self.dataio_type == "worklist":
             return f"  worklist_copy(&real_packet->{self.name}, {self.name});"
-        if self.is_array == 0:
+        if self.array_dims == 0:
             return f"  real_packet->{self.name} = {self.name};"
         if self.dataio_type == "string":
             return f"  sz_strlcpy(real_packet->{self.name}, {self.name});"
-        if self.is_array == 1:
+        if self.array_dims == 1:
             tmp = f"real_packet->{self.name}[i] = {self.name}[i]"
             return f"""
   for (int i = 0; i < {self.array_size_u}; i++) {{
@@ -235,15 +239,15 @@ class Field:
             return (
                 f"  differ = !BV_ARE_EQUAL(old->{self.name}, real_packet->{self.name});"
             )
-        if self.dataio_type == "string" and self.is_array == 1:
+        if self.dataio_type == "string" and self.array_dims == 1:
             return (
                 f"  differ = (strcmp(old->{self.name}, real_packet->{self.name}) != 0);"
             )
         if self.dataio_type == "cm_parameter":
             return f"  differ = (&old->{self.name} != &real_packet->{self.name});"
-        if self.is_struct and self.is_array == 0:
+        if self.is_struct and self.array_dims == 0:
             return f"  differ = !are_{self.dataio_type}s_equal(&old->{self.name}, &real_packet->{self.name});"
-        if not self.is_array:
+        if not self.array_dims:
             return f"  differ = (old->{self.name} != real_packet->{self.name});"
 
         sizes = None, None
@@ -282,7 +286,7 @@ class Field:
         bools which gets folded in the header) the actual value of the bool.
         """
 
-        if fold_bool_into_header and self.struct_type == "bool" and not self.is_array:
+        if fold_bool_into_header and self.struct_type == "bool" and not self.array_dims:
             return f"""{self.get_cmp()}
   if (differ) {{
     different++;
@@ -307,7 +311,7 @@ class Field:
         changed. Does nothing for bools-in-header.
         """
 
-        if fold_bool_into_header and self.struct_type == "bool" and not self.is_array:
+        if fold_bool_into_header and self.struct_type == "bool" and not self.array_dims:
             return f"  /* field {index} is folded into the header */\n"
         if packet.gen_log:
             f = f"    {packet.log_macro}(\"  field '{self.name}' has changed\");\n"
@@ -320,7 +324,7 @@ class Field:
             s = ""
 
         return f"""  if (BV_ISSET(fields, {index})) {{
-{f}{s}  {self.get_put(deltafragment)}
+{f}{s}    {self.get_put(deltafragment)}
   }}
 """
 
@@ -329,91 +333,39 @@ class Field:
         Returns code which put this field.
         """
 
-        dataio_type = self.dataio_type
-        if self.struct_type == "float" and "std::u" in dataio_type:
-            dataio_type = "ufloat"
-        elif self.struct_type == "float":
-            dataio_type = "sfloat"
-        elif "std::u" in dataio_type:
-            dataio_type = dataio_type.replace("std::", "").replace("_t", "")
-        elif "std::" in dataio_type:
-            dataio_type = dataio_type.replace("std::", "s").replace("_t", "")
+        # Do we need an extra arg for dio_put?
+        dio_arg = ""
+        if self.struct_type == "float":
+            dio_arg = f", {self.float_factor}, {self.dataio_type}{{}}"
+        elif "std::" in self.dataio_type:
+            dio_arg = f", {self.dataio_type}{{}}"
+        elif self.dataio_type == "memory":
+            dio_arg = f", {self.array_size_u}"
 
+        c = f"dio_put(dout, packet->{self.name}{dio_arg});"
+
+        # We're done for scalar types
         if self.dataio_type == "bitvector":
-            return f"DIO_BV_PUT(&dout, packet->{self.name});"
+            return c
+        elif self.dataio_type in {"memory", "string"} and self.array_dims != 2:
+            return c
+        elif not self.array_dims:
+            return c
 
-        if self.struct_type == "float" and not self.is_array:
-            return f"  DIO_PUT({dataio_type}, &dout, real_packet->{self.name}, {self.float_factor});"
+        if self.dataio_type in ["string", "memory"]:
+            # We handle the size via array dimensions below.
+            dio_arg = ""
 
-        if self.dataio_type in ["worklist", "cm_parameter"]:
-            return f"  DIO_PUT({dataio_type}, &dout, &real_packet->{self.name});"
-
-        if self.dataio_type == "memory":
-            return f"  DIO_PUT({dataio_type}, &dout, &real_packet->{self.name}, {self.array_size_u});"
-
-        arr_types = ["string", "city_map"]
-        if (self.dataio_type in arr_types and self.is_array == 1) or (
-            self.dataio_type not in arr_types and self.is_array == 0
-        ):
-            return f"  DIO_PUT({dataio_type}, &dout, real_packet->{self.name});"
-        if self.is_struct:
-            if self.is_array == 2:
-                c = f"DIO_PUT({dataio_type}, &dout, &real_packet->{self.name}[i][j]);"
-            else:
-                c = f"DIO_PUT({dataio_type}, &dout, &real_packet->{self.name}[i]);"
-        elif self.dataio_type == "string":
-            c = f"DIO_PUT({dataio_type}, &dout, real_packet->{self.name}[i]);"
-
-        elif self.struct_type == "float":
-            if self.is_array == 2:
-                c = f"  DIO_PUT({dataio_type}, &dout, real_packet->{self.name}[i][j], {self.float_factor});"
-            else:
-                c = f"  DIO_PUT({dataio_type}, &dout, real_packet->{self.name}[i], {self.float_factor});"
+        if deltafragment and self.diff:
+            size_args = f", old->{self.name}"
+        elif self.array_dims == 2:
+            # Invert sizes for recursive call
+            size_args = f", {self.array_size1_u}, {self.array_size2_u}"
         else:
-            if self.is_array == 2:
-                c = f"DIO_PUT({dataio_type}, &dout, real_packet->{self.name}[i][j]);"
-            else:
-                c = f"DIO_PUT({dataio_type}, &dout, real_packet->{self.name}[i]);"
+            size_args = f", {self.array_size_u}"
 
-        array_size_u = self.array_size1_u if self.is_array == 2 else self.array_size_u
+        return f"dio_put(dout, real_packet->{self.name}{size_args}{dio_arg});"
 
-        if deltafragment and self.diff and self.is_array == 1:
-            return f"""
-    {{
-      int i;
-
-      fc_assert({array_size_u} < 255);
-
-      for (i = 0; i < {array_size_u}; i++) {{
-        if (old->{self.name}[i] != real_packet->{self.name}[i]) {{
-          DIO_PUT(uint8, &dout, i);
-
-          {c}
-        }}
-      }}
-      DIO_PUT(uint8, &dout, 255);
-
-    }}"""
-        if self.is_array == 2 and self.dataio_type != "string":
-            return f"""
-    {{
-      int i, j;
-
-      for (i = 0; i < {self.array_size1_u}; i++) {{
-        for (j = 0; j < {self.array_size2_u}; j++) {{
-          {c}
-        }}
-      }}
-    }}"""
-
-        return f"""
-    {{
-      int i;
-
-      for (i = 0; i < {array_size_u}; i++) {{
-        {c}
-      }}
-    }}"""
 
     def get_get_wrapper(self, packet, index, deltafragment):
         """
@@ -422,7 +374,7 @@ class Field:
         """
 
         get = self.get_get(deltafragment)
-        if fold_bool_into_header and self.struct_type == "bool" and not self.is_array:
+        if fold_bool_into_header and self.struct_type == "bool" and not self.array_dims:
             return f"  real_packet->{self.name} = BV_ISSET(fields, {index});\n"
         get = indent(get, "    ")
         if packet.gen_log:
@@ -439,116 +391,44 @@ class Field:
         Returns code which get this field.
         """
 
-        # dio function name
-        dio_get = f"dio_get<{self.dataio_type}>" if "std::" in self.dataio_type else f"dio_get"
-
-        # Array indices
-        loop_dims = self.is_array
-        if self.dataio_type in ["string", "city_map"]:
-            loop_dims -= 1  # One index is used by the string
-
-        indices = ""
-        if loop_dims == 1:
-            indices = "[i]"
-        elif loop_dims == 2:
-            indices = "[i][j]"
-
         # Do we need an extra arg for dio_get?
         dio_arg = ""
         if self.struct_type == "float":
-            dio_arg = f", {self.float_factor}"
-        elif self.dataio_type in ["string", "city_map"]:
-            dio_arg = f", sizeof(real_packet->{self.name}{indices})"
+            dio_arg = f", {self.float_factor}, {self.dataio_type}{{}}"
+        elif "std::" in self.dataio_type:
+            dio_arg = f", {self.dataio_type}{{}}"
+        elif self.dataio_type in ["string", "memory"]:
+            dio_arg = f", sizeof(real_packet->{self.name})"
 
         # dio_get call and error checking
-        if "enum" in self.struct_type or self.struct_type.endswith("_id"):
-            c = f"""{{
-  int readin;
-
-  if (!{dio_get}(din, readin)) {{
-    RECEIVE_PACKET_FIELD_ERROR({self.name});
-  }}
-  real_packet->{self.name}{indices} =
-    static_cast<decltype(real_packet->{self.name}{indices})>(readin);
-}}"""
-        else:
-            c = f"""if (!{dio_get}(din, real_packet->{self.name}{indices}{dio_arg})) {{
-  RECEIVE_PACKET_FIELD_ERROR({self.name});
-}}"""
+        c = f"""if (!dio_get(din, real_packet->{self.name}{dio_arg})) {{
+          RECEIVE_PACKET_FIELD_ERROR({self.name});
+        }}"""
 
         # We're done for scalar types
         if self.dataio_type == "bitvector":
             return c
-        elif self.dataio_type in ["string", "city_map"] and self.is_array != 2:
+        elif self.dataio_type == "string" and self.array_dims != 2:
             return c
-        elif not self.is_array:
+        elif not self.array_dims:
             return c
 
-        if self.is_array == 2:
-            array_size_u = self.array_size1_u
-            array_size_d = self.array_size1_d
-        else:
-            array_size_u = self.array_size_u
-            array_size_d = self.array_size_d
+        if self.dataio_type in ["string", "memory"]:
+            # We handle the size via array dimensions below.
+            dio_arg = ""
 
-        if not self.diff or self.dataio_type == "memory":
-            if array_size_u != array_size_d:
-                extra = f"""
-  if ({array_size_u} > {array_size_d}) {{
-    RECEIVE_PACKET_FIELD_ERROR({self.name}, ": truncation array");
-  }}"""
-            else:
-                extra = ""
-            if self.dataio_type == "memory":
-                return f"""{extra}
-  if (!{dio_get}(din, real_packet->{self.name}, {array_size_u})) {{
-    RECEIVE_PACKET_FIELD_ERROR({self.name});
-  }}"""
-            if self.is_array == 2 and self.dataio_type != "string":
-                return f"""
-{{
-{extra}
-  for (int i = 0; i < {self.array_size1_u}; i++) {{
-    for (int j = 0; j < {self.array_size2_u}; j++) {{
-      {c}
-    }}
-  }}
-}}"""
-            else:
-                return f"""
-{{
-{extra}
-  for (int i = 0; i < {array_size_u}; i++) {{
-    {c}
-  }}
-}}"""
-        elif deltafragment and self.diff and self.is_array == 1:
-            return f"""
-{{
-for (int count = 0;; count++) {{
-  int i;
-
-  if (!dio_get<std::uint8_t>(din, i)) {{
-    RECEIVE_PACKET_FIELD_ERROR({self.name});
-  }}
-  if (i == 255) {{
-    break;
-  }}
-  if (i >= {array_size_u}) {{
-    RECEIVE_PACKET_FIELD_ERROR({self.name},
-                               \": unexpected value %d \"
-                               \"(> {array_size_u}) in array diff\",
-                               i);
-  }} else {{
-    {c}
-  }}
-}}
-}}"""
+        if deltafragment and self.diff:
+            # Array-diff
+            size_args = ", array_diff{}"
+        elif self.array_dims == 2:
+            # Invert sizes for recursive call
+            size_args = f", {self.array_size1_u}, {self.array_size2_u}"
         else:
-            return f"""
-for (int i = 0; i < {array_size_u}; i++) {{
-  {c}
-}}"""
+            size_args = f", {self.array_size_u}"
+
+        return f"""if (!dio_get(din, real_packet->{self.name}{size_args}{dio_arg})) {{
+          RECEIVE_PACKET_FIELD_ERROR({self.name});
+        }}"""
 
 
 class Variant:
@@ -873,7 +753,7 @@ static char *stats_{self.name}_names[] = {{names}};
 """
 
         body += """
-  DIO_BV_PUT(&dout, fields);
+  dio_put(dout, fields);
 """
 
         for field in self.key_fields:
@@ -1742,9 +1622,11 @@ def write_common_header(packets: list[Packet], output: io.TextIOWrapper) -> None
 
 // common
 #include "cm.h"
-#include "disaster.h"
 #include "fc_types.h"
 #include "unit.h"
+
+// std
+#include <array>
 
 """
     )
@@ -1918,8 +1800,12 @@ bool client_handle_packet(enum packet_type type, const void *packet)
             args = packet_cast
         else:
             # static_cast(packet)->a, static_cast(packet)->b, ...
-            args = map(lambda field: packet_cast + "->" + field.name, packet.fields)
-            args = ",\n      ".join(args)
+            def format_field(field):
+                if field.array_dims > 0 and not field.dataio_type == "string":
+                    return f"{packet_cast}->{field.name}.data()"
+                return f"{packet_cast}->{field.name}"
+
+            args = ",\n      ".join(map(format_field, packet.fields))
             if args:
                 args = "\n      " + args
 
@@ -2038,6 +1924,8 @@ bool server_handle_packet(enum packet_type type, const void *packet,
                 arg = f"{cast}->{field.name}"
                 if field.dataio_type == "worklist":
                     arg = "&" + arg
+                if field.array_dims > 0 and not field.dataio_type == "string":
+                    arg += ".data()"
                 args.append(arg)
             args = ",\n      ".join(args)
             if args:

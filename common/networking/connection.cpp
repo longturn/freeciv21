@@ -223,7 +223,7 @@ static void flush_connection_send_buffer_packets(struct connection *pc)
    Add data to send to the connection.
  */
 static bool add_connection_data(struct connection *pconn,
-                                const unsigned char *data, int len)
+                                QByteArrayView data)
 {
   struct socket_packet_buffer *buf;
 
@@ -232,14 +232,15 @@ static bool add_connection_data(struct connection *pconn,
   }
 
   buf = pconn->send_buffer;
-  log_debug("add %d bytes to %lu (space =%lu)", len, buf->ndata, buf->nsize);
-  if (!buffer_ensure_free_extra_space(buf, len)) {
+  log_debug("add %lld bytes to %lu (space =%lu)", data.size(), buf->ndata,
+            buf->nsize);
+  if (!buffer_ensure_free_extra_space(buf, data.size())) {
     connection_close(pconn, _("buffer overflow"));
     return false;
   }
 
-  memcpy(buf->data + buf->ndata, data, len);
-  buf->ndata += len;
+  memcpy(buf->data + buf->ndata, data.data(), data.size());
+  buf->ndata += data.size();
 
   return true;
 }
@@ -247,18 +248,17 @@ static bool add_connection_data(struct connection *pconn,
 /**
    Write data to socket. Return TRUE on success.
  */
-bool connection_send_data(struct connection *pconn,
-                          const unsigned char *data, int len)
+bool connection_send_data(struct connection *pconn, QByteArrayView data)
 {
   if (!conn_is_valid(pconn)) {
     return true;
   }
 
-  pconn->statistics.bytes_send += len;
+  pconn->statistics.bytes_send += data.size();
 
   if (0 < pconn->send_buffer->do_buffer_sends) {
     flush_connection_send_buffer_packets(pconn);
-    if (!add_connection_data(pconn, data, len)) {
+    if (!add_connection_data(pconn, data)) {
       qDebug("cut connection %s due to huge send buffer (1)",
              conn_description(pconn));
       return false;
@@ -266,7 +266,7 @@ bool connection_send_data(struct connection *pconn,
     flush_connection_send_buffer_packets(pconn);
   } else {
     flush_connection_send_buffer_all(pconn);
-    if (!add_connection_data(pconn, data, len)) {
+    if (!add_connection_data(pconn, data)) {
       qDebug("cut connection %s due to huge send buffer (2)",
              conn_description(pconn));
       return false;
