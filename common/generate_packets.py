@@ -198,7 +198,6 @@ class Field:
                 return f"std::array<{self.struct_type}[{self.array_size2_d}], {self.array_size1_d}> {self.name}"
             else:
                 return f"std::array<std::array<{self.struct_type}, {self.array_size2_d}>, {self.array_size1_d}> {self.name}"
-                return f"std::array<{self.struct_type}, {self.array_size_d}> {self.name}"
         if self.array_dims == 1:
             if self.dataio_type in {"string", "memory"}:
                 return f"{self.struct_type} {self.name}[{self.array_size_d}]"
