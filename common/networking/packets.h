@@ -85,7 +85,8 @@ struct packet_handlers {
 };
 
 void *get_packet_from_connection_raw(struct connection *pc,
-                                     enum packet_type *ptype);
+                                     enum packet_type *ptype,
+                                     bool recurse = true);
 
 #define get_packet_from_connection(pc, ptype)                               \
   get_packet_from_connection_raw(pc, ptype)
