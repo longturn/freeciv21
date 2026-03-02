@@ -328,6 +328,114 @@ int send_packet_data(struct connection *pc, unsigned char *data, int len,
   return result;
 }
 
+namespace {
+/**
+ * Decompresses the connection buffer, leaving it ready to read a packet.
+ * Returns 1 on success, 0 if not enough data, -1 on error. Does not close
+ * the connection.
+ */
+int decompress_buffer(connection *pc, QByteArrayView din, int len_read)
+{
+  int whole_packet_len = len_read;
+  int header_size = 0;
+
+  /* Compression signalling currently assumes a 2-byte packet length; if that
+   * changes, the protocol should probably be changed */
+  fc_assert(data_type_size(data_type(pc->packet_header.length)) == 2);
+  if (len_read == JUMBO_SIZE) {
+    header_size = 6;
+
+    // Get the jumbo size from the stream.
+    if (din.size() >= 4) {
+      dio_get<std::uint32_t>(din, whole_packet_len);
+      log_compress("COMPRESS: got a jumbo packet of size %d",
+                   whole_packet_len);
+    } else {
+      // Not enough data for the jumbo header. Error out.
+      return -1;
+      ;
+    }
+  } else if (len_read >= COMPRESSION_BORDER) {
+    header_size = 2;
+    whole_packet_len = len_read - COMPRESSION_BORDER;
+    log_compress("COMPRESS: got a normal packet of size %d",
+                 whole_packet_len);
+  }
+
+  if (static_cast<unsigned>(whole_packet_len) > pc->buffer->ndata) {
+    return 0; // not all data has been read
+  }
+
+  if (whole_packet_len < header_size) {
+    qDebug("The packet size is reported to be less than header alone. "
+           "The connection will be closed now.");
+    return -1;
+  }
+
+  uLong compressed_size = whole_packet_len - header_size;
+  int decompress_factor = 80;
+  unsigned long int decompressed_size = decompress_factor * compressed_size;
+  int error = Z_DATA_ERROR;
+  struct socket_packet_buffer *buffer = pc->buffer;
+  void *decompressed = fc_malloc(decompressed_size);
+
+  do {
+    error =
+        uncompress(static_cast<Bytef *>(decompressed), &decompressed_size,
+                   static_cast<const Bytef *>(
+                       ADD_TO_POINTER(buffer->data, header_size)),
+                   compressed_size);
+
+    if (error == Z_DATA_ERROR) {
+      decompress_factor += 50;
+      decompressed_size = decompress_factor * compressed_size;
+      decompressed = fc_realloc(decompressed, decompressed_size);
+    }
+
+    if (error != Z_OK) {
+      if (error != Z_DATA_ERROR || decompress_factor > MAX_DECOMPRESSION) {
+        qDebug("Uncompressing of the packet stream failed. "
+               "The connection will be closed now.");
+        free(decompressed);
+        return -1;
+      }
+    }
+  } while (error != Z_OK);
+
+  buffer->ndata -= whole_packet_len;
+  /*
+   * Remove the packet with the compressed data and shift all the
+   * remaining data to the front.
+   */
+  memmove(buffer->data, buffer->data + whole_packet_len, buffer->ndata);
+
+  if (buffer->ndata + decompressed_size > buffer->nsize) {
+    buffer->nsize += decompressed_size;
+    buffer->data = static_cast<unsigned char *>(
+        fc_realloc(buffer->data, buffer->nsize));
+  }
+
+  /*
+   * Make place for the uncompressed data by moving the remaining
+   * data.
+   */
+  memmove(buffer->data + decompressed_size, buffer->data, buffer->ndata);
+
+  /*
+   * Copy the uncompressed data.
+   */
+  memcpy(buffer->data, decompressed, decompressed_size);
+
+  free(decompressed);
+
+  buffer->ndata += decompressed_size;
+
+  log_compress("COMPRESS: decompressed %ld into %ld", compressed_size,
+               decompressed_size);
+  return 1;
+}
+} // anonymous namespace
+
 /**
    Read and return a packet from the connection 'pc'. The type of the
    packet is written in 'ptype'. On error, the connection is closed and
@@ -342,8 +450,6 @@ void *get_packet_from_connection_raw(struct connection *pc,
     enum packet_type type;
     int itype;
   } utype;
-  bool compressed_packet = false;
-  int header_size = 0;
   void *data;
   void *(*receive_handler)(struct connection *);
 
@@ -357,112 +463,36 @@ void *get_packet_from_connection_raw(struct connection *pc,
     return nullptr;
   }
 
+  // Get the packet size
   QByteArrayView din(pc->buffer->data, pc->buffer->ndata);
   dio_get_type_raw(din, data_type(pc->packet_header.length), len_read);
 
+  // Is this a compressed packet?
+  if (len_read >= COMPRESSION_BORDER || len_read == JUMBO_SIZE) {
+    auto code = decompress_buffer(pc, din, len_read);
+    if (code < 0) {
+      connection_close(pc, _("decoding error"));
+      return nullptr;
+    } else if (code == 0) {
+      return nullptr;
+    }
+
+    // The buffer may have been moved.
+    din = QByteArrayView(pc->buffer->data, pc->buffer->ndata);
+
+    // Get the new size from the decompressed contents.
+    dio_get_type_raw(din, data_type(pc->packet_header.length), len_read);
+
+    // We just decompressed something. Do not allow another compressed packet
+    // inside (zip bomb).
+    if (len_read >= COMPRESSION_BORDER || len_read == JUMBO_SIZE) {
+      connection_close(pc, _("decoding error"));
+      return nullptr;
+    }
+  }
+
   // The non-compressed case
   whole_packet_len = len_read;
-
-  /* Compression signalling currently assumes a 2-byte packet length; if that
-   * changes, the protocol should probably be changed */
-  fc_assert(data_type_size(data_type(pc->packet_header.length)) == 2);
-  if (len_read == JUMBO_SIZE) {
-    compressed_packet = true;
-    header_size = 6;
-    if (din.size() >= 4) {
-      dio_get<std::uint32_t>(din, whole_packet_len);
-      log_compress("COMPRESS: got a jumbo packet of size %d",
-                   whole_packet_len);
-    } else {
-      // to return nullptr below
-      whole_packet_len = 6;
-    }
-  } else if (len_read >= COMPRESSION_BORDER) {
-    compressed_packet = true;
-    header_size = 2;
-    whole_packet_len = len_read - COMPRESSION_BORDER;
-    log_compress("COMPRESS: got a normal packet of size %d",
-                 whole_packet_len);
-  }
-
-  if (static_cast<unsigned>(whole_packet_len) > pc->buffer->ndata) {
-    return nullptr; // not all data has been read
-  }
-
-  if (whole_packet_len < header_size) {
-    qDebug("The packet size is reported to be less than header alone. "
-           "The connection will be closed now.");
-    connection_close(pc, _("illegal packet size"));
-
-    return nullptr;
-  }
-
-  if (compressed_packet) {
-    uLong compressed_size = whole_packet_len - header_size;
-    int decompress_factor = 80;
-    unsigned long int decompressed_size =
-        decompress_factor * compressed_size;
-    int error = Z_DATA_ERROR;
-    struct socket_packet_buffer *buffer = pc->buffer;
-    void *decompressed = fc_malloc(decompressed_size);
-
-    do {
-      error =
-          uncompress(static_cast<Bytef *>(decompressed), &decompressed_size,
-                     static_cast<const Bytef *>(
-                         ADD_TO_POINTER(buffer->data, header_size)),
-                     compressed_size);
-
-      if (error == Z_DATA_ERROR) {
-        decompress_factor += 50;
-        decompressed_size = decompress_factor * compressed_size;
-        decompressed = fc_realloc(decompressed, decompressed_size);
-      }
-
-      if (error != Z_OK) {
-        if (error != Z_DATA_ERROR || decompress_factor > MAX_DECOMPRESSION) {
-          qDebug("Uncompressing of the packet stream failed. "
-                 "The connection will be closed now.");
-          connection_close(pc, _("decoding error"));
-          free(decompressed);
-          return nullptr;
-        }
-      }
-    } while (error != Z_OK);
-
-    buffer->ndata -= whole_packet_len;
-    /*
-     * Remove the packet with the compressed data and shift all the
-     * remaining data to the front.
-     */
-    memmove(buffer->data, buffer->data + whole_packet_len, buffer->ndata);
-
-    if (buffer->ndata + decompressed_size > buffer->nsize) {
-      buffer->nsize += decompressed_size;
-      buffer->data = static_cast<unsigned char *>(
-          fc_realloc(buffer->data, buffer->nsize));
-    }
-
-    /*
-     * Make place for the uncompressed data by moving the remaining
-     * data.
-     */
-    memmove(buffer->data + decompressed_size, buffer->data, buffer->ndata);
-
-    /*
-     * Copy the uncompressed data.
-     */
-    memcpy(buffer->data, decompressed, decompressed_size);
-
-    free(decompressed);
-
-    buffer->ndata += decompressed_size;
-
-    log_compress("COMPRESS: decompressed %ld into %ld", compressed_size,
-                 decompressed_size);
-
-    return get_packet_from_connection(pc, ptype);
-  }
 
   /*
    * At this point the packet is a plain uncompressed one. These have
