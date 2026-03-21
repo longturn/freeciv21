@@ -80,10 +80,14 @@ These are the general steps to prepare and finalize a release:
 #. If the release is a :strong:`release candidate` for a :strong:`stable release`, the release manager will
    make sure that the :guilabel:`Target` branch in the release draft is set to ``stable``.
 
-#. The release manager will add a tag to the release notes page and then click :guilabel:`Publish Release`.
-   The format of the tag is ``v[major version].[minor version]-[release name].[number]``. For example:
-   ``v3.1.1`` or ``v3.2-dev.3``. :strong:`The format is very important` to the build configuration
-   process.
+
+#. The release manager formats the release tag. For this, they checkout the target branch locally and create
+   a local tag with ``git tag`` following the expected format, then run the configure step (``cmake -B build``)
+   to check that it works as expected.
+
+   The format of the tag is ``v[major version].[minor version]-[pre-release name].[number]`` for pre-releases
+   and ``v[major version].[minor version].[patch version]`` for stable versions. For example:
+   ``v3.0-beta.6`` or ``v3.1.0``. :strong:`The format is very important` to the build configuration process.
 
    .. note::
      More information on our :strong:`version numbering format`. We follow a relatively standard Major Version,
@@ -91,6 +95,8 @@ These are the general steps to prepare and finalize a release:
      --- ``[release name]`` --- to be included for our non-stable releases. The available ``[release name]``
      values are: ``dev``, ``alpha``, ``beta``, ``rc``, or ``patch``. Stable releases follow the well known
      ``x.y.z`` format and non-stable releases use the ``x.y-text.z`` format.
+
+#. The release manager then adds the tag to the release notes page and clicks :guilabel:`Publish Release`.
 
 #. After a few minutes the continuous integration (CI) will open a PR titled
    ``Release Update of AutoRevision.txt``. The release manager will open the PR, click on the
