@@ -195,7 +195,7 @@ jobs:
       - uses: lukka/run-vcpkg@v11
         name: Install dependencies
         with:
-          vcpkgGitCommitId: ef7dbf94b9198bc58f45951adcf1f041fcbc5ea0
+          vcpkgGitCommitId: c3867e714dd3a51c272826eea77267876517ed99
       - name: Configure
         run: cmake -S . -B build --preset "windows-debug"
       - name: Building
@@ -233,7 +233,7 @@ jobs:
       - uses: lukka/run-vcpkg@v11
         name: Install dependencies
         with:
-          vcpkgGitCommitId: ef7dbf94b9198bc58f45951adcf1f041fcbc5ea0
+          vcpkgGitCommitId: c3867e714dd3a51c272826eea77267876517ed99
       - name: Configure and Build
         run: |
           cmake --preset fullrelease-macos -S .
