@@ -525,7 +525,7 @@ bool read_saved_game(const QString &path, game &g)
 {
   // Open the file
   auto file = QFile(path);
-  file.open(QIODevice::ReadOnly);
+  std::ignore = file.open(QIODevice::ReadOnly);
   QDataStream bytes(&file);
   bytes.setByteOrder(QDataStream::LittleEndian);
 
