@@ -206,7 +206,7 @@ struct inputfile *inf_from_file(const QString &filename,
   fc_assert_ret_val(!filename.isEmpty(), nullptr);
   fc_assert_ret_val(0 < filename.length(), nullptr);
   auto *fp = new KCompressionDevice(filename);
-  fp->open(QIODevice::ReadOnly);
+  std::ignore = fp->open(QIODevice::ReadOnly);
   if (!fp->isOpen()) {
     delete fp;
     return nullptr;
@@ -802,7 +802,7 @@ static QString get_token_value(struct inputfile *inf)
       return "";
     }
     auto fp = new KCompressionDevice(rfname);
-    fp->open(QIODevice::ReadOnly);
+    std::ignore = fp->open(QIODevice::ReadOnly);
     if (!fp->isOpen()) {
       qCCritical(inf_category, _("Cannot open stringfile \"%s\"."),
                  qUtf8Printable(rfname));

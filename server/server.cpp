@@ -252,7 +252,7 @@ void detail::async_readline_wrapper::wait_for_input()
       line = QString::fromLocal8Bit(buffer);
     } else {
       QFile f;
-      f.open(stdin, QIODevice::ReadOnly);
+      std::ignore = f.open(stdin, QIODevice::ReadOnly);
       line = QString::fromLocal8Bit(f.readLine());
     }
   }
@@ -712,7 +712,7 @@ void server::input_on_stdin()
     rl_callback_read_char();
   } else {
     QFile f;
-    f.open(stdin, QIODevice::ReadOnly);
+    std::ignore = f.open(stdin, QIODevice::ReadOnly);
     // Force it to try and read something
     f.peek(1);
     // Read from the input
