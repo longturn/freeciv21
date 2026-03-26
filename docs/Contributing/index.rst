@@ -17,4 +17,5 @@ Freeciv21 project.
   stable-branch.rst
   game-admin.rst
   style-guide.rst
+  markdown-style-guide.rst
   :maxdepth: 1
