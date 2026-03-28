@@ -46,18 +46,18 @@ Achieving success requires a balance between economic expansion, military streng
 development. Not only must you develop all three in concert to both expand and successfully defend your \
 empire, but any of these four items may provide victory over your opponents:\
 "), _("\
- - As in other games of conquest and expansion, you are declared the winner by default once the last city \
+ * As in other games of conquest and expansion, you are declared the winner by default once the last city \
 and unit of every other civilization is destroyed.\n\
- - Once technological progress has brought you into the space age, you may launch a spaceship destined for \
+ * Once technological progress has brought you into the space age, you may launch a spaceship destined for \
 Alpha Centauri. The first civilization whose spaceship reaches the system wins. NOTE: Spacerace Victory is \
 set by the ruleset and thereby may not be not enabled for all games.\n\
- - In the absence of other means to determine victory, the game will end after 5,000 turns if no spaceships \
+ * In the absence of other means to determine victory, the game will end after 5,000 turns if no spaceships \
 have been launched. The surviving civilizations are then rated, and the one with the highest score is \
 the winner.\n\
- - If playing a multiplayer game with only humans, victory can be declared based on diplomatic factors and \
+ * If playing a multiplayer game with only humans, victory can be declared based on diplomatic factors and \
 other pre-set game rules.\
 "), _("\
-NOTE: Freeciv21 is highly customizable, both through run time configuration and through custom rulesets, \
+*NOTE:* Freeciv21 is highly customizable, both through run time configuration and through custom rulesets, \
 which can change almost any aspect of the game rules. This help system tries to adapt to different rules, \
 but may not completely cover rulesets which are very different from the classic rules.\
 ")
