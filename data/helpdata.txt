@@ -316,15 +316,15 @@ move points that are expended based on the terrain.\
 "), _("\
 Tiles within range of a city may be managed by that city to produce food, production, and trade points. The \
 quantity of each produced depends on the terrain. These three products are so important that we specify \
-the output of a tile simply by listing them with slashes in between: for example, \"1/2/0\" describes a tile \
+the output of a tile simply by listing them with slashes in between: for example, \"`1/2/0`\" describes a tile \
 that each turn when it is being managed by a city citizen produces one food point, two production points, \
 and no trade points. In addition to the characteristic output of the terrain, some tiles have an additional \
 special resource that boosts one or two of the products. See the Economy section for more information on the \
 use of these products.\
 "), _("\
 The net benefit of a tile for your city depends on your form of government as well as city improvements, \
-tile improvements, and wonders. NOTE: If you middle-click on a tile and see a negative value (for example: \
-\"3(-1)/1/4(-1)\") this means you are in a form of government that cannot utilize all of the resources. \
+tile improvements, and wonders. *NOTE:* If you middle-click on a tile and see a negative value (for example: \
+\"`3(-1)/1/4(-1)`\") this means you are in a form of government that cannot utilize all of the resources. \
 This is often called the \"Despotism Penalty\". Learn a new form of government or look for any wonders that \
 get rid of the penalty.\
 "), _("\
