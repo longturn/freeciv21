@@ -416,8 +416,8 @@ name = _(" National Borders")
 text = _("\
 If enabled on the server, each nation has borders, which can be seen as dotted lines on the map. Borders \
 determine what land your citizens can manage, where you can build new cities, and whether your units are \
-considered to be aggressively deployed by your citizens (see the section on Happiness). Borders also come \
-into play when there is a diplomatic relationship pact between nations (see the section on Diplomacy).\
+considered to be aggressively deployed by your citizens (see the section on *Happiness*). Borders also come \
+into play when there is a diplomatic relationship pact between nations (see the section on *Diplomacy*).\
 "), _("\
 Building a city establishes a claim on an area of land around the city. In the classic ruleset, once \
 claimed, a tile that can be directly managed by a city cannot change ownership unless the city does (or is \
@@ -430,7 +430,7 @@ inland lakes can usually be claimed. Some rulesets may allow water tiles to be c
 tiles in some circumstances, although the classic ruleset does not. Border claims can never extend to remote \
 islands.\
 "), _("\
-Bases can also extend national borders. See the help on Terrain Alterations for more details.\
+Bases can also extend national borders. See the help on *Terrain Alterations* for more details.\
 ")
 
 [help_economy]
