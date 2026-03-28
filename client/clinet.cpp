@@ -127,6 +127,9 @@ static int try_to_connect(const QUrl &url, char *errbuf, int errbufsize)
   if (client.conn.sock) {
     client.conn.sock->disconnect(client.conn.sock);
     client.conn.sock->deleteLater();
+    if (queen()) {
+      queen()->conn_loss->hide();
+    }
   }
   client.conn.used = true; // Now there will be a connection :)
 
