@@ -46,4 +46,9 @@ Admonitions
 ===========
 
 Admonitions are not supported.
-We emulate the effect by using emphasized all-uppercase emphasized admonition label (e.g. `*NOTE:*`)
+We emulate the effect by using emphasized all-uppercase emphasized admonition labels (e.g. `*NOTE:*`)
+
+Formulas and Literal Values
+===========================
+
+For inline formulas or literal values, we use code spans by wrapping them in backticks.
