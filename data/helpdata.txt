@@ -265,10 +265,10 @@ WILL pay off later.\
 "), _("\
 ### 12. Things to keep in mind.\
 "), _("\
-  - What the next advance you will need is.\n\
-  - What your tax, luxury goods and research rates are currently set to.\n\
-  - Treaties are often broken, so do not neglect defense!\n\
-  - Some wonders can be made obsolete by a new technology.\
+  * What the next advance you will need is.\n\
+  * What your tax, luxury goods and research rates are currently set to.\n\
+  * Treaties are often broken, so do not neglect defense!\n\
+  * Some wonders can be made obsolete by a new technology.\
 "), _("\
 ### 13. Production phase.\
 "), _("\
