@@ -357,10 +357,10 @@ categories = "Resource"
 name = _(" Terrain Alterations")
 text = _("\
 Certain units have the ability to alter terrain tiles in several ways: they may add or remove tile \
-alterations, remove unwanted features such as Pollution, or change the base terrain type entirely.\
+alterations, remove unwanted features such as *Pollution*, or change the base terrain type entirely.\
 "), _("\
 Tile alterations typically provide some lasting bonus for as long as they are present, such as a production \
-bonus when a city citizen manages the tile. Roads or paths typically ease movement if they connect to a \
+bonus when a city citizen manages the tile. *Roads* or paths typically ease movement if they connect to a \
 similar road on an adjacent tile. Bases often provide protection and refueling. The available tile \
 alterations are described in the following sections.\
 "), _("\
