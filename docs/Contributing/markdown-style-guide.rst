@@ -20,9 +20,9 @@ This style guide is mostly meant for help text authors to ensure that we keep a 
 Headings
 ========
 
-Most entries in the help browser are short and don't require any headings.
-If headings are needed, we prefer ATX Headings (https://github.github.com/gfm/#atx-headings).
-The largest heading that should be used is a third level heading (`### Heading`).
+Most entries in the help browser are short and do not require any headings.
+If headings are needed, we prefer `ATX Headings <https://github.github.com/gfm/#atx-headings>`_.
+The largest heading that should be used is a third level heading (``### Heading``).
 
 An example for the usage of headings can be found in the "Strategy and Tactics" help entry.
 
@@ -30,8 +30,8 @@ An example for the usage of headings can be found in the "Strategy and Tactics" 
 Unordered Lists / Bullet Points
 ===============================
 
-The preferred marker for bullet points is `*`.
-Although `-` might feel more natural, programmatic generated help texts mainly use `*` and we aim to be consistent.
+The preferred marker for bullet points is the asterisk (``*``).
+Although the dash (``-``) might feel more natural, programmatic generated help texts mainly use `*` and we aim to be consistent.
 
 Links and References
 ====================
@@ -46,7 +46,7 @@ Admonitions
 ===========
 
 Admonitions are not supported.
-We emulate the effect by using emphasized all-uppercase emphasized admonition labels (e.g. `*NOTE:*`)
+We emulate the effect by using emphasized all-uppercase emphasized admonition labels (e.g. ``*NOTE:*``)
 
 Formulas and Literal Values
 ===========================
