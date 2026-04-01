@@ -104,7 +104,7 @@ if(MSYS OR MINGW)
 
     # Run Qt's windeployqt.exe to find the required DLLs for the GUI apps.
     execute_process(
-      COMMAND ${MINGW_PATH}/windeployqt.exe --no-translations --no-virtualkeyboard --no-compiler-runtime
+      COMMAND ${MINGW_PATH}/windeployqt-qt5.exe --no-translations --no-virtualkeyboard --no-compiler-runtime
         --no-webkit2 --no-angle --no-opengl-sw --list mapping ${CMAKE_INSTALL_PREFIX}
       OUTPUT_VARIABLE _output
       OUTPUT_STRIP_TRAILING_WHITESPACE
