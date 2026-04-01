@@ -1,13 +1,10 @@
 # Win32 et al requires cmake version 3.16 because we use a newer command
 #   "file(GET_RUNTIME_DEPENDENCIES ..." that is only available at v3.16+
-# On other platforms (*nix, MacOS) we need to support older 3.12+ for the
+# We set the top end of minimum version to 4.3 to support a new policy that
+#   we set during Win32 install.
+# On other platforms (*nix, MacOS) we need to support older 3.21+ for the
 #   server and other components
-cmake_minimum_required(VERSION 3.21...3.22 FATAL_ERROR)
-
-# Suppress policy warnings due to normalized install directories
-if(POLICY CMP0177)
-  cmake_policy(SET CMP0177 OLD)
-endif()
+cmake_minimum_required(VERSION 3.21...4.3 FATAL_ERROR)
 
 # Set vcpkg if exists. Used by MacOS and Visual Studio
 if(DEFINED ENV{VCPKG_ROOT} AND FREECIV_USE_VCPKG)
@@ -68,10 +65,10 @@ project(freeciv21 VERSION ${FREECIV21_VERSION} LANGUAGES C CXX)
 # Gather all the tailored settings we need for Windows builds early.
 if(WIN32 OR MSYS)
   # We need to alter the out of box values of these variables for Win32 et al builds
-  set(CMAKE_INSTALL_DATAROOTDIR ".")
-  set(CMAKE_INSTALL_BINDIR ".")
-  set(PROJECT_NAME "data")
+  set(CMAKE_INSTALL_BINDIR ${CMAKE_INSTALL_PREFIX})
+  set(CMAKE_INSTALL_DATAROOTDIR ${CMAKE_INSTALL_PREFIX})
   set(CMAKE_INSTALL_DOCDIR "${CMAKE_INSTALL_DATAROOTDIR}/doc/")
+  set(PROJECT_NAME "data")
   get_filename_component(CLANG_PATH ${CMAKE_CXX_COMPILER} PATH)
 endif()
 

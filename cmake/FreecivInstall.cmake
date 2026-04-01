@@ -68,6 +68,10 @@ if(MSYS OR MINGW)
     # So we find the llvm-objdump.exe and use its path to set
     string(REGEX REPLACE "llvm-objdump.exe" "" CLANG_PATH ${CMAKE_OBJDUMP})
 
+    # This new policy was defined in cmake 4.3. We force adoption of new
+    # filepath normalization.
+    cmake_policy(SET CMP0207 NEW)
+
     # Function to analyze the third party dll files linked to the exe's
     # Uses the repurposed variable from above to tell the function where
     # the dll files are located. Ignores dll's that come with Windows.
