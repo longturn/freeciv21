@@ -1,5 +1,3 @@
-# Win32 et al requires cmake version 3.16+ because we use a newer command
-#   "file(GET_RUNTIME_DEPENDENCIES ..." that is only available at v3.16+
 # We set the top end of minimum version to 4.3 to support a new policy that
 #   we set during Win32 install.
 # On other platforms (*nix, MacOS) we need to support older 3.21+ for the
