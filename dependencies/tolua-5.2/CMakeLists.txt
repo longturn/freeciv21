@@ -14,10 +14,6 @@ find_package(Lua REQUIRED)
 target_include_directories(tolua PUBLIC ${LUA_INCLUDE_DIR})
 target_link_libraries(tolua PUBLIC ${LUA_LIBRARIES})
 
-if(NOT EMSCRIPTEN AND NOT APPLE)
-  target_link_libraries(tolua PUBLIC lua)
-endif()
-
 # Build the program if it wasn't found
 if(NOT TARGET ToLuaProgram::tolua)
   add_executable(
