@@ -300,8 +300,8 @@ The *Stable* package is supported on the following distributions:
 * Debian 13 Trixie LTS
 * Debian Testing (future 14 Forky)
 * Debian Unstable (Sid)
-* Fedora 41
 * Fedora 42
+* Fedora 43
 * Fedora Rawhide
 * openSUSE Tumbleweed
 * Ubuntu 22.04 LTS
@@ -359,3 +359,80 @@ To update the package on *Stable*:
 
 #. Ensure you have updated the :file:`freeciv21.dsc` as noted in the DEB section above.
 #. Edit :file:`freeciv21.spec` with a new ``version``.
+
+Notes on Usage of Microsoft\ |reg| VCPKG
+========================================
+
+As noted above, we use the Microsoft\ |reg| open source package manager ``vcpkg``. This is a cross-platform,
+library package manager and is hosted on GitHub at: https://github.com/microsoft/vcpkg.
+
+True to form, Microsoft has extensive documentation on ``vcpkg`` at: https://learn.microsoft.com/en-us/vcpkg/.
+
+We utilize ``vcpkg`` in *manifest* mode (versus native *install* mode). The mainifest file is
+:file:`vcpkg.json` and is in the root of the Freeciv21 source code respository. Manifest mode is enabled by
+adding an operating system environment variable (``VCPKG_ROOT``) and a custom CMake settings to the project's
+root :file:`CMakeLists.txt` file (``FREECIV_USE_VCPKG``). When ``VCPKG_ROOT`` is set to a path of the cloned
+repository and ``FREECIV_USE_VCPKG`` is set to ``ON``, then our build system will invoke ``vcpkg`` to obtain
+the required dependencies we need to compile.
+
+:strong:`Notes specific to how Freeciv21 uses vcpkg`
+
+Inside our Continuous Integration (CI) system, we run a GitHub action called ``lukka/run-vcpkg``. This action
+automatically clones and sets up a base ``vcpkg`` setup in the build environment. We pin the binary using a
+variable called :code:`vcpkgGitCommitId`, which is the ``git`` hash of a relatively recent ``vcpkg`` release.
+You can see it :doc:`referenced </Contributing/release>` as part of the release cadence. We do this to
+ensure that we run a relatively recent binary to handle all the dependency processing from the mainifest file
+correctly. The hash can be updated at any time and does not have to follow the release cadence for updates.
+
+Inside of the manifest file, you will see another ``git`` hash noted as :code:`builtin-baseline`. This hash
+is a commit ID releated to the version of a set of packages that we need. Consider it a *pin* to a set of
+package versions. Over time, the many developers that contribute to the main ``vcpkg`` repository will update
+and change packages. Many times this is to update the version of a known package, and of course, to fix bugs.
+
+:strong:`Troubleshooting vcpkg failures`
+
+As noted in the section above, ``vcpkg`` gets updated constantly. We help ourselves keep up to date by
+keeping the tagged :code:`vcpkgGitCommitId` up to date, but invariably something will happen that breaks the
+build.
+
+If a build fails, start my looking at the logs to see if its obvious what the issue is. Things like a source
+package site outage can cause failures and can be ignored. If the failure looks like a core build problem
+(e.g. a package compilation is failing) you might need to check how old the :code:`vcpkgGitCommitId`
+hash is set in the CI. If its recent, then the next thing to do is grab the lastest :code:`builtin-baseline`
+and update the manifest file. Easiest way to do that is run this from the root of the Freeciv21 respository:
+
+.. code-block:: sh
+
+  $ path/to/vcpkg x-update-baseline --add-initial-baseline
+
+
+This will alter the manifest file. Run a local test and see what happens. Most likely you will run into
+version mismatch issues with the current package versions and our own requirements.
+
+Some things to consider:
+
+* The *stable* branch requires a minimum of Qt 5.15.18#2. The *master* branch is not as picky and simply
+  requires a current Qt 6.x.
+
+* Both branches must have a version of the ``Lua`` library that is less than v5.5. Anything in the v5.4.x
+  range is acceptible. We are stuck at this older version due to dependencies in the scriptcore and ``sol``
+  dependency.
+
+Microsoft provides a means to *pin* the manifest to a specific package version or a minimum version. You can
+find documentation here: https://learn.microsoft.com/en-us/vcpkg/consume/lock-package-versions.
+
+.. note::
+  This is where the difference between the pinned :code:`vcpkgGitCommitId` and :code:`builtin-baseline` work
+  together. You must have a pinned :code:`vcpkgGitCommitId` that is *newer* than the pinned
+  :code:`builtin-baseline` so ``vcpkg`` knows how to build the dependency tree.
+
+If you pin package versions, to a minimum or a specific version, you can find the appropriate
+:code:`builtin-baseline` by running a modified version of the command above. From the root of the Freeciv21
+respository run:
+
+.. code-block:: sh
+
+  $ path/to/vcpkg x-update-baseline
+
+
+This command will find the appropriate baseline based on the versions you have pinned in the manifest.
