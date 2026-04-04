@@ -195,7 +195,9 @@ jobs:
       - uses: lukka/run-vcpkg@v11
         name: Install dependencies
         with:
+          # 2026.03.18 Release
           vcpkgGitCommitId: c3867e714dd3a51c272826eea77267876517ed99
+      # Ensure we have the most recent copy of the repo
       - name: Update VCPKG
         run: |
           cd ${{ env.VCPKG_ROOT }}
@@ -241,7 +243,9 @@ jobs:
       - uses: lukka/run-vcpkg@v11
         name: Install dependencies
         with:
+          # 2026.03.18 Release
           vcpkgGitCommitId: c3867e714dd3a51c272826eea77267876517ed99
+      # Ensure we have the most recent copy of the repo
       - name: Update VCPKG 
         run: |
           cd ${{ env.VCPKG_ROOT }}
