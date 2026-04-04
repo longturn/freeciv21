@@ -368,7 +368,7 @@ library package manager and is hosted on GitHub at: https://github.com/microsoft
 
 True to form, Microsoft has extensive documentation on ``vcpkg`` at: https://learn.microsoft.com/en-us/vcpkg/.
 
-We utilize ``vcpkg`` in *manifest* mode (versus native *install* mode). The mainifest file is
+We utilize ``vcpkg`` in *manifest* mode (versus native *install* mode). The manifest file is
 :file:`vcpkg.json` and is in the root of the Freeciv21 source code respository. Manifest mode is enabled by
 adding an operating system environment variable (``VCPKG_ROOT``) and a custom CMake settings to the project's
 root :file:`CMakeLists.txt` file (``FREECIV_USE_VCPKG``). When ``VCPKG_ROOT`` is set to a path of the cloned
@@ -381,11 +381,11 @@ Inside our Continuous Integration (CI) system, we run a GitHub action called ``l
 automatically clones and sets up a base ``vcpkg`` setup in the build environment. We pin the binary using a
 variable called :code:`vcpkgGitCommitId`, which is the ``git`` hash of a relatively recent ``vcpkg`` release.
 You can see it :doc:`referenced </Contributing/release>` as part of the release cadence. We do this to
-ensure that we run a relatively recent binary to handle all the dependency processing from the mainifest file
+ensure that we run a relatively recent binary to handle all the dependency processing from the manifest file
 correctly. The hash can be updated at any time and does not have to follow the release cadence for updates.
 
 Inside of the manifest file, you will see another ``git`` hash noted as :code:`builtin-baseline`. This hash
-is a commit ID releated to the version of a set of packages that we need. Consider it a *pin* to a set of
+is a commit ID related to the version of a set of packages that we need. Consider it a *pin* to a set of
 package versions. Over time, the many developers that contribute to the main ``vcpkg`` repository will update
 and change packages. Many times this is to update the version of a known package, and of course, to fix bugs.
 
@@ -395,11 +395,11 @@ As noted in the section above, ``vcpkg`` gets updated constantly. We help oursel
 keeping the tagged :code:`vcpkgGitCommitId` up to date, but invariably something will happen that breaks the
 build.
 
-If a build fails, start my looking at the logs to see if its obvious what the issue is. Things like a source
+If a build fails, start by looking at the logs to see if its obvious what the issue is. Things like a source
 package site outage can cause failures and can be ignored. If the failure looks like a core build problem
 (e.g. a package compilation is failing) you might need to check how old the :code:`vcpkgGitCommitId`
-hash is set in the CI. If its recent, then the next thing to do is grab the lastest :code:`builtin-baseline`
-and update the manifest file. Easiest way to do that is run this from the root of the Freeciv21 respository:
+hash is set in the CI. If it is recent, then the next thing to do is grab the lastest :code:`builtin-baseline`
+and update the manifest file. The easiest way to do that is run this from the root of the Freeciv21 repository:
 
 .. code-block:: sh
 
@@ -422,8 +422,8 @@ Microsoft provides a means to *pin* the manifest to a specific package version o
 find documentation here: https://learn.microsoft.com/en-us/vcpkg/consume/lock-package-versions.
 
 .. note::
-  This is where the difference between the pinned :code:`vcpkgGitCommitId` and :code:`builtin-baseline` work
-  together. You must have a pinned :code:`vcpkgGitCommitId` that is *newer* than the pinned
+  This is where the difference between the pinned :code:`vcpkgGitCommitId` and :code:`builtin-baseline`
+  becomes important. You must have a pinned :code:`vcpkgGitCommitId` that is *newer* than the pinned
   :code:`builtin-baseline` so ``vcpkg`` knows how to build the dependency tree.
 
 If you pin package versions, to a minimum or a specific version, you can find the appropriate
