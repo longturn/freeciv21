@@ -11,10 +11,11 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#include <fc_config.h>
+// self
+#include "console.h"
 
-#include <cstdarg>
-#include <cstdio>
+// generated
+#include <fc_config.h>
 
 // utility
 #include "fcbacktrace.h"
@@ -23,14 +24,18 @@
 #include "log.h"
 #include "support.h"
 
-// ms clang wants readline to included here
-#include <readline/readline.h>
 // common
 #include "game.h"
 
+// deps
+#include <readline/readline.h>
+
 // server
-#include "console.h"
 #include "notify.h"
+
+// std
+#include <cstdarg>
+#include <cstdio>
 
 static bool console_show_prompt = false;
 static bool console_prompt_is_showing = false;
