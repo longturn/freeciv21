@@ -11,34 +11,11 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
+// self
+#include "stdinhand.h"
+
+// generated
 #include <fc_config.h>
-
-#include <algorithm>
-#include <cstdarg>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <set>
-#include <string>
-
-// Qt
-#include <QCoreApplication>
-#include <QRegularExpression>
-
-#include <readline/readline.h>
-
-// utility
-#include "astring.h"
-#include "bitvector.h"
-#include "connection.h"
-#include "fciconv.h"
-#include "fcintl.h"
-#include "log.h"
-#include "registry.h"
-#include "section_file.h"
-#include "shared.h"
-#include "support.h" // fc__attribute, bool type, etc.
-#include "timing.h"
 
 // common
 #include "chat.h"
@@ -55,8 +32,28 @@
 #include "unitlist.h"
 #include "version.h"
 
+// utility
+#include "astring.h"
+#include "bitvector.h"
+#include "connection.h"
+#include "fciconv.h"
+#include "fcintl.h"
+#include "log.h"
+#include "registry.h"
+#include "section_file.h"
+#include "shared.h"
+#include "support.h" // fc__attribute, bool type, etc.
+#include "timing.h"
+
+// ai
+#include "difficulty.h"
+
+// deps
+#include <readline/readline.h>
+
 // server
 #include "aiiface.h"
+#include "civ2.h"
 #include "commands.h"
 #include "connecthand.h"
 #include "diplhand.h"
@@ -67,6 +64,9 @@
 #include "plrhand.h"
 #include "ruleset.h"
 #include "sanitycheck.h"
+#include "savemain.h"
+#include "script_fcdb.h"
+#include "script_server.h"
 #include "server_connection.h"
 #include "settings.h"
 #include "srv_log.h"
@@ -74,18 +74,19 @@
 #include "techtools.h"
 #include "voting.h"
 
-/* server/savegame */
-#include "civ2.h"
-#include "savemain.h"
 
-/* server/scripting */
-#include "script_fcdb.h"
-#include "script_server.h"
+// Qt
+#include <QCoreApplication>
+#include <QRegularExpression>
 
-// ai
-#include "difficulty.h"
-
-#include "stdinhand.h"
+// std
+#include <algorithm>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <set>
+#include <string>
 
 #define OPTION_NAME_SPACE 25
 #define REG_EXP "\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)"
