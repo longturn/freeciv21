@@ -436,3 +436,33 @@ respository run:
 
 
 This command will find the appropriate baseline based on the versions you have pinned in the manifest.
+
+.. _coding-packaging-docker:
+
+Docker Images
+=============
+
+* Docker Docs: https://docs.docker.com/get-started/docker-overview/
+
+:strong:`Build freeciv21-server from local source`
+
+From the root of the project directory, run the following command:
+
+.. code-block:: sh
+
+  sudo docker build -t freeciv21-server:my_label .
+
+This will create a Debug build with debug symbols intact. 
+
+The label ``my_label`` can be whatever you want to identify this version of the
+server. E.g. ``latest`` or the short git commit hash, or something to identify
+whatever test you are running.
+
+To create a release build, use:
+
+.. code-block:: sh
+
+  sudo docker build --build-arg BUILD_TYPE=Release -t freeciv21-server:my_label
+
+To run freeciv21-server from a docker image, see: :ref:`Install with Docker <getting-install-docker>`
+

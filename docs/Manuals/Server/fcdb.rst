@@ -4,6 +4,8 @@
 
 .. include:: /global-include.rst
 
+.. _manuals-server-fcdb:
+
 Authentication and Database Support (fcdb)
 ******************************************
 

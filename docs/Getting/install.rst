@@ -181,6 +181,62 @@ Fedora/Red Hat variants (those that rely on ``dnf`` for package management):
   $ sudo flatpak install net.longturn.freeciv21
 
 
+.. _getting-install-docker:
+
+Docker
+======
+
+:strong:`Running freeciv21-server from a docker image`
+
+Currently, images must be built manually. See :ref:`Packaging with Docker <coding-packaging-docker>`
+
+.. code-block:: sh
+
+  sudo docker run --rm --interactive --tty \
+    --name "freeciv21-my_game_id" \
+    --mount "type=bind,source=/path/to/rulesetdir,destination=/usr/local/share/freeciv21,ro" \
+    --mount "type=bind,source=/path/to/saves,destination=/home/freeciv21" \
+    --publish "host_port_number:5556/tcp" \
+    freeciv21-server:my_label \
+    --log 'server.log' \
+    --read 'test.serv' \
+    --saves 'saves'
+
+Replacing ``my_game_id`` with something that uniquely identifies that game will
+allow you to run multiple games in parallel and find which games are running
+using:
+
+.. code-block:: sh
+
+  sudo docker ps
+
+Replace :file:`/path/to/rulesetdir` with the path to the directory containing the
+ruleset you want to use for that game.
+
+If you run the command from that directory, you can use this to get the full path:
+
+.. code-block:: sh
+
+  $(realpath .)
+
+Replace :file:`/path/to/saves` with the path to the directory where you want the
+server to place save files, and logs. Since the server needs to modify these
+files, it must not be mounted as read-only (``ro``).
+
+Replace ``host_port_number`` with the port number used on the host machine to
+connect to the game. The second port number is only used within the container
+and should not be changed. 
+
+Replace ``my_label`` with the version of the server you want to run, the same
+label you used when building the image above.
+
+Replace ``test.serv`` with the name of the :file:`.serv` file you want it to read on
+loading the server. You can remove this option if you want to allow the first
+player to connect to set up the game instead.
+
+If you want to set up authentication, please see: :ref:`Authentication and Database Support <manuals-server-fcdb>`
+
+
 macOS
 =====
 
