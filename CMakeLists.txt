@@ -1,7 +1,6 @@
-# We set the top end of minimum version to 4.3 to support a new policy that
-#   we set during Win32 install.
-# On other platforms (*nix, MacOS) we need to support older 3.21+ for the
-#   server and other components as a minimum.
+#
+# Root CMakeLists.txt for Freeciv21
+#
 cmake_minimum_required(VERSION 3.21...4.3 FATAL_ERROR)
 
 # Set vcpkg if exists. Used by MacOS and Visual Studio
@@ -81,7 +80,7 @@ include(FreecivHelpers)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 # We do this after all targets with third-party code have been created, so
-#   the options only apply to code we own.
+# the options only apply to code we own.
 include(EnableCompilerWarnings)
 
 # Include subdirectories with the actual project definitions
