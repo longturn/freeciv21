@@ -189,7 +189,7 @@ jobs:
             build/Windows-x86_64/Freeciv21-*-Windows-x86_64.exe
             build/Windows-x86_64/Freeciv21-*-Windows-x86_64.exe.sha256
       - name: Upload a build
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: Windows-exe
           path: build/Windows-x86_64/Freeciv21-*.exe
@@ -308,7 +308,7 @@ jobs:
             build/Freeciv21-*.dmg
             build/Freeciv21-*.dmg.sha256
       - name: Upload a build
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: macOS-dmg
           path: build/Freeciv21-*.dmg
@@ -433,7 +433,7 @@ jobs:
         with:
           path: build
       - name: Upload a build
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: snap
           path: ${{ steps.snapcraft.outputs.snap }}
