@@ -1,6 +1,6 @@
-#############################################
+#
 # Installation configuration for Freeciv21
-#############################################
+#
 
 # Always install the base documentation
 install(
@@ -35,7 +35,7 @@ install(
   COMPONENT freeciv21)
 
 # Common installation for all Win32 et al platforms
-if(WIN32 OR MSYS)
+if(WIN32 OR MSYS OR WIN32)
   # Custom command files to run the applications
   install(
     FILES
@@ -44,7 +44,7 @@ if(WIN32 OR MSYS)
     ${CMAKE_SOURCE_DIR}/data/icons/128x128/freeciv21-server.ico
     ${CMAKE_SOURCE_DIR}/dist/windows/freeciv21-server.cmd
     ${CMAKE_SOURCE_DIR}/dist/windows/qt.conf
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}
     COMPONENT freeciv21)
 endif()
 
@@ -55,7 +55,7 @@ if(MSYS OR MINGW)
     FILES
     ${CLANG_PATH}/libcrypto-3-x64.dll
     ${CLANG_PATH}/libssl-3-x64.dll
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}
     COMPONENT freeciv21)
 
   # This allows us to determine the external libraries we need to include at install time
@@ -66,7 +66,7 @@ if(MSYS OR MINGW)
 
     # We need the CLANG_PATH variable that isn't available in a install(CODE ) block.
     # So we find the llvm-objdump.exe and use its path to set
-    string(REGEX REPLACE "llvm-objdump.exe" "" CLANG_PATH ${CMAKE_OBJDUMP})
+    string(REGEX REPLACE "/llvm-objdump.exe" "" CLANG_PATH ${CMAKE_OBJDUMP})
 
     # This new policy was defined in cmake 4.3. We force adoption of new
     # filepath normalization.
@@ -93,7 +93,7 @@ if(MSYS OR MINGW)
   # runtime files to the appropriate directory for installation
   install(CODE [[
     message(STATUS "Collecting Qt dependencies for freeciv21 GUI executables...")
-    string(REGEX REPLACE "llvm-objdump.exe" "" CLANG_PATH ${CMAKE_OBJDUMP})
+    string(REGEX REPLACE "/llvm-objdump.exe" "" CLANG_PATH ${CMAKE_OBJDUMP})
 
     # Run Qt's windeployqt6.exe to find the required DLLs for the GUI apps.
     # It also copies the files we need to where we need them.
@@ -106,26 +106,25 @@ if(MSYS OR MINGW)
 
 elseif(WIN32)
   # The Visual Studio generator places all files and associated DLL libraries
-  #  into a build directory. So we just grab those for install.
+  # into a build directory. So we just grab those for install based on build
+  # type. Debug builds are only supported at this time.
   install(
     DIRECTORY ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin/
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}
     COMPONENT freeciv21
     FILES_MATCHING PATTERN *.dll PATTERN *.pdb)
-
-  # Install the Qt framework DLL's'
   install(
-    DIRECTORY ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/plugins/
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    DIRECTORY ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/Qt6/plugins/
+    DESTINATION ${CMAKE_INSTALL_PREFIX}
     COMPONENT freeciv21
-    FILES_MATCHING PATTERN *.dll)
+    FILES_MATCHING PATTERN *.dll PATTERN *.pdb)
 
   # Grab some files that get missed
   install(
     FILES
     ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/SDL2.dll
     ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/SDL2_mixer.dll
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}
     COMPONENT freeciv21)
 endif()
 
