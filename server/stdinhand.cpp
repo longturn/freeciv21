@@ -74,7 +74,6 @@
 #include "techtools.h"
 #include "voting.h"
 
-
 // Qt
 #include <QCoreApplication>
 #include <QRegularExpression>
