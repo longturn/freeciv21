@@ -251,6 +251,7 @@ jobs:
             cmake \
             create-dmg \
             libtool \
+            nasm \
             ninja \
             pkgconf
       - uses: actions/setup-python@v5  # Workaround for #2069
