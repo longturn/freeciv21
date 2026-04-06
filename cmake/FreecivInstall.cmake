@@ -44,7 +44,7 @@ if(WIN32 OR MSYS OR WIN32)
     ${CMAKE_SOURCE_DIR}/data/icons/128x128/freeciv21-server.ico
     ${CMAKE_SOURCE_DIR}/dist/windows/freeciv21-server.cmd
     ${CMAKE_SOURCE_DIR}/dist/windows/qt.conf
-    DESTINATION ${CMAKE_INSTALL_PREFIX}
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21)
 endif()
 
@@ -55,7 +55,7 @@ if(MSYS OR MINGW)
     FILES
     ${CLANG_PATH}/libcrypto-3-x64.dll
     ${CLANG_PATH}/libssl-3-x64.dll
-    DESTINATION ${CMAKE_INSTALL_PREFIX}
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21)
 
   # This allows us to determine the external libraries we need to include at install time
