@@ -26,7 +26,7 @@ jobs:
     container:
       image: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Setup mirror
@@ -100,7 +100,7 @@ jobs:
     container:
       image: ubuntu:25.10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Setup mirror
@@ -142,7 +142,7 @@ jobs:
       run:
         shell: msys2 {0}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - uses: msys2/setup-msys2@v2
@@ -194,26 +194,34 @@ jobs:
           name: Windows-exe
           path: build/Windows-x86_64/Freeciv21-*.exe
 
-#  windows_clang_msvc:
-#    name: "Windows Clang"
-#    runs-on: windows-latest
-#    needs: clang-format
-#    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-#    env:
-#      VCPKG_ROOT: ${{github.workspace}}/vcpkg
-#      VCPKG_DEFAULT_BINARY_CACHE: ${{github.workspace}}/vcpkg/bincache
-#    steps:
-#      - uses: actions/checkout@v4
-#        with:
-#          fetch-depth: 0
-#      - uses: lukka/run-vcpkg@v11
-#        name: Install dependencies
-#        with:
-#          vcpkgGitCommitId: b322364f06308bdd24823f9d8f03fe0cc86fd46f
-#      - name: Configure
-#        run: cmake -S . -B build --preset "windows-debug"
-#      - name: Building
-#        run: cmake --build build --config Debug
+  windows_clang_msvc:
+    name: "Windows Clang"
+    runs-on: windows-latest
+    needs: clang-format
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    env:
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+      VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg/bincache
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Install VCPKG
+        uses: lukka/run-vcpkg@v11
+        with:
+          # 2026.03.18 Release
+          vcpkgGitCommitId: c3867e714dd3a51c272826eea77267876517ed99
+      # Ensure we have the most recent copy of the repo
+      - name: Update VCPKG
+        run: |
+          cd ${{ env.VCPKG_ROOT }}
+          git fetch
+          git pull origin master
+      - name: Configure
+        run: cmake -S . -B build --preset "windows-debug"
+      - name: Build
+        run: cmake --build build --config Debug
       #- name: Test
       #  run: cmake --build build --target test
 
@@ -222,9 +230,12 @@ jobs:
     runs-on: macos-15-intel
     needs: clang-format
     env:
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+      VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg/bincache
       VCPKG_BUILD_TYPE: release
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Install build tools
@@ -245,13 +256,22 @@ jobs:
       - uses: actions/setup-python@v5  # Workaround for #2069
         with:
           python-version: '3.11'
-      - uses: lukka/run-vcpkg@v11
-        name: Install dependencies
+      - name: Install VCPKG
+        uses: lukka/run-vcpkg@v11
         with:
-          vcpkgGitCommitId: e9bb3f9e7ae3bf82a861a818e8a0f1187db399c0
-      - name: Configure and Build
+          # 2026.03.18 Release
+          vcpkgGitCommitId: c3867e714dd3a51c272826eea77267876517ed99
+      # Ensure we have the most recent copy of the repo
+      - name: Update VCPKG
+        run: |
+          cd ${{ env.VCPKG_ROOT }}
+          git fetch
+          git pull origin master
+      - name: Configure
         run: |
           cmake --preset fullrelease-macos -S .
+      - name: Build
+        run: |
           cmake --build build
       - name: Test
         run: |
@@ -261,10 +281,10 @@ jobs:
           cmake --build build --target install
       - name: Split Branch Name
         env:
-          BRANCH: ${{github.ref_name}}
+          BRANCH: ${{ github.ref_name }}
         id: split
         run: echo "fragment=${BRANCH##*/}" >> $GITHUB_OUTPUT
-      - name: Create DMG package
+      - name: Create App Image
         run: |
           cd build
           create-dmg \
@@ -277,22 +297,21 @@ jobs:
             --icon "Freeciv21.app" 200 190 \
             --hide-extension "Freeciv21.app" \
             --app-drop-link 400 185 \
-            "Freeciv21-${{steps.split.outputs.fragment}}-arm64-osx.dmg" \
+            "Freeciv21-${{ steps.split.outputs.fragment }}-x64-osx.dmg" \
             "Freeciv21.app"
-          shasum -a 256 Freeciv21-${{steps.split.outputs.fragment}}-arm64-osx.dmg > Freeciv21-${{steps.split.outputs.fragment}}-arm64-osx.dmg.sha256
-      # 2025-08-20: jwrober - disabled while we get signing and other packaging fixed
-      #- name: Upload package
-      # -uses: softprops/action-gh-release@v2
-      #  if: startsWith(github.ref, 'refs/tags/')
-      #  with:
-      #    files: |
-      #      build/Freeciv21-*.dmg
-      #      build/Freeciv21-*.dmg.sha256
-      #- name: Upload a build
-      #  uses: actions/upload-artifact@v4
-      #  with:
-      #    name: macOS-dmg
-      #    path: build/Freeciv21-*.dmg
+          shasum -a 256 Freeciv21-${{ steps.split.outputs.fragment }}-x64-osx.dmg > Freeciv21-${{ steps.split.outputs.fragment }}-x64-osx.dmg.sha256
+      - name: Upload package
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            build/Freeciv21-*.dmg
+            build/Freeciv21-*.dmg.sha256
+      - name: Upload a build
+        uses: actions/upload-artifact@v4
+        with:
+          name: macOS-dmg
+          path: build/Freeciv21-*.dmg
 
   fedora:
     runs-on: ubuntu-latest
@@ -318,7 +337,7 @@ jobs:
             zlib-devel \
             libunwind-devel \
             elfutils-libs
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Configure
         # Set ALWAYS_ROOT because the container user is root and creating an
         # unpriviledged user would be too much work.
@@ -341,7 +360,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     # This has to be executed in a single step because freebsd-vm fails if run
     # twice.
     - name: Build, test, and install on FreeBSD
@@ -388,7 +407,7 @@ jobs:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
       - name: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - uses: cachix/install-nix-action@v22
       - run: nix flake check
       # TODO: We can add the build to a cache for others (see cachix.org)
@@ -400,7 +419,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: clang-format
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Configure
@@ -423,7 +442,7 @@ jobs:
     name: clang-format Code Formatter
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         fetch-depth: 0
     - name: Run clang-format style check for C/C++
