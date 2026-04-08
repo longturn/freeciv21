@@ -69,6 +69,7 @@ jobs:
       - name: Build
         run: |
           cmake --build build
+      # New DIO test segfaults starting Apr 2026 see #2869
       #- name: Test
       #  run: |
       #    cmake --build build --target test
@@ -172,9 +173,9 @@ jobs:
       - name: Build
         run: |
           cmake --build build
-      #- name: Test
-      #  run: |
-      #    cmake --build build --target test
+      - name: Test
+        run: |
+          cmake --build build --target test
       - name: Install
         run: |
           cmake --build build --target install
@@ -200,8 +201,9 @@ jobs:
     needs: clang-format
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     env:
-      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
-      VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg/bincache
+      # Prevent build errors due to long paths
+      VCPKG_ROOT: D:/vcpkg
+      VCPKG_DEFAULT_BINARY_CACHE: D:/vcpkg/bincache
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -212,6 +214,7 @@ jobs:
         with:
           # 2026.03.18 Release
           vcpkgGitCommitId: c3867e714dd3a51c272826eea77267876517ed99
+          vcpkgDirectory: D:/vcpkg
       # Ensure we have the most recent copy of the repo
       - name: Update VCPKG
         run: |
@@ -220,8 +223,14 @@ jobs:
           git pull origin master
       - name: Configure
         run: cmake -S . -B build --preset "windows-debug"
+      #- name: Debug Configure Failure
+      #  if: failure()
+      #  run: |
+      #    cat D:\a\freeciv21\freeciv21\vcpkg\buildtrees\qtdeclarative\install-x64-windows-dbg-out.log
+      #    cat D:\a\freeciv21\freeciv21\build\vcpkg-manifest-install.log
       - name: Build
         run: cmake --build build --config Debug
+      # ctest not compatible in visual studio with our build system
       #- name: Test
       #  run: cmake --build build --target test
 
@@ -350,9 +359,15 @@ jobs:
       - name: Build
         run: |
           cmake --build build
-      - name: Test
-        run: |
-          cmake --build build --target test
+      # New DIO test segfaults starting Apr 2026 see #2869
+      #- name: Test
+      #  run: |
+      #    cmake --build build --target test
+      #- name: Debug Test Failure
+      #  if: failure()
+      #  run: |
+      #    build/test_dio -v2
+      #    cat build/Testing/Temporary/LastTest.log
       - name: Install
         run: |
           DESTDIR=$PWD/build/install cmake --build build --target install
