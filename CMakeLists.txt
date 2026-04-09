@@ -1,8 +1,7 @@
-# Win32 et al requires cmake version 3.16 because we use a newer command
-#   "file(GET_RUNTIME_DEPENDENCIES ..." that is only available at v3.16+
-# On other platforms (*nix, MacOS) we need to support older 3.12+ for the
-#   server and other components
-cmake_minimum_required(VERSION 3.21...3.22 FATAL_ERROR)
+#
+# Root CMakeLists.txt for Freeciv21
+#
+cmake_minimum_required(VERSION 3.21...4.3 FATAL_ERROR)
 
 # Set vcpkg if exists. Used by MacOS and Visual Studio
 if(DEFINED ENV{VCPKG_ROOT} AND FREECIV_USE_VCPKG)
@@ -63,11 +62,11 @@ project(freeciv21 VERSION ${FREECIV21_VERSION} LANGUAGES C CXX)
 # Gather all the tailored settings we need for Windows builds early.
 if(WIN32 OR MSYS OR MINGW)
   # We need to alter the out of box values of these variables for Win32 et al builds
-  set(CMAKE_INSTALL_DATAROOTDIR ".")
   set(CMAKE_INSTALL_BINDIR ".")
-  set(PROJECT_NAME "data")
+  set(CMAKE_INSTALL_DATAROOTDIR ".")
   set(CMAKE_INSTALL_DOCDIR "${CMAKE_INSTALL_DATAROOTDIR}/doc/")
-  get_filename_component(MINGW_PATH ${CMAKE_CXX_COMPILER} PATH)
+  set(PROJECT_NAME "data")
+  get_filename_component(CLANG_PATH ${CMAKE_CXX_COMPILER} PATH)
 endif()
 
 add_compile_definitions(PUBLIC $<$<CONFIG:Debug>:FREECIV_DEBUG>)
@@ -80,7 +79,7 @@ include(FreecivHelpers)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 # We do this after all targets with third-party code have been created, so
-#   the options only apply to code we own.
+# the options only apply to code we own.
 include(EnableCompilerWarnings)
 
 # Include subdirectories with the actual project definitions
