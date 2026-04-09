@@ -3,7 +3,7 @@ on:
   push: {}
   pull_request: {}
   schedule:
-    - cron: "0 5 * * MON"
+    - cron: "0 12 * * MON"
   workflow_dispatch: {}
 
 concurrency:
@@ -24,7 +24,7 @@ jobs:
             build_type: RelWithDebInfo
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Install GCC
@@ -92,7 +92,7 @@ jobs:
     needs: clang-format
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Install dependencies
@@ -121,47 +121,51 @@ jobs:
           cmake --build build --target test
 
   windows:
-    name: "Windows MSYS2 (gcc)"
+    name: "Windows MSYS2 (clang)"
     runs-on: windows-latest
     needs: clang-format
     defaults:
       run:
         shell: msys2 {0}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - uses: msys2/setup-msys2@v2
+      - name: Install Dependencies
+        uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW64
+          msystem: CLANG64
           update: true
           install: |
             git
-            mingw-w64-x86_64-cmake
-            mingw-w64-x86_64-ninja
-            mingw-w64-x86_64-nsis
-            mingw-w64-x86_64-gcc
-            mingw-w64-x86_64-libunwind
-            mingw-w64-x86_64-readline
-            mingw-w64-x86_64-lua
-            mingw-w64-x86_64-SDL2_mixer
-            mingw-w64-x86_64-qt5
-            mingw-w64-x86_64-qt5-svg
-            mingw-w64-x86_64-karchive-qt5
+            mingw-w64-clang-x86_64-clang
+            mingw-w64-clang-x86_64-cmake
+            mingw-w64-clang-x86_64-lua
+            mingw-w64-clang-x86_64-nsis
+            mingw-w64-clang-x86_64-readline
+            mingw-w64-clang-x86_64-SDL2_mixer
+            mingw-w64-clang-x86_64-qt5-base
+            mingw-w64-clang-x86_64-qt5-svg
+            mingw-w64-clang-x86_64-qt5-tools
       - name: Configure
         run: |
-          export PATH=/mingw64/bin:${PATH}
-          export MSYSTEM=MINGW64
-          export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/mingw64/lib/pkgconfig:/mingw64/share/pkgconfig
+          export PATH=/clang64/bin:${PATH}
+          export MSYSTEM=CLANG64
+          export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/clang64/lib/pkgconfig:/clang64/share/pkgconfig
+          # self host kf5archive
+          wget -O qt5.tar.gz "https://drive.usercontent.google.com/download?export=download&id=1fOAGjomXKZcRRV8MTYUbDvozkQESWvPk&confirm=t"
+          pacman -U --noconfirm ./mingw-w64-clang-x86_64-karchive-qt5-5.116.0-1-any.pkg.tar.zst
+          # now configure
           cmake . -B build -G Ninja \
            -DCMAKE_INSTALL_PREFIX=$PWD/build/install \
            -DCMAKE_BUILD_TYPE=Release
       - name: Build
         run: |
           cmake --build build
-      #- name: Test
-      #  run: |
-      #    cmake --build build --target test
+      - name: Test
+        run: |
+          cmake --build build --target test
       - name: Install
         run: |
           cmake --build build --target install
@@ -176,7 +180,7 @@ jobs:
             build/Windows-x86_64/Freeciv21-*-Windows-x86_64.exe
             build/Windows-x86_64/Freeciv21-*-Windows-x86_64.exe.sha256
       - name: Upload a build
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: Windows-exe
           path: build/Windows-x86_64/Freeciv21-*.exe
@@ -186,17 +190,20 @@ jobs:
     runs-on: windows-latest
     needs: clang-format
     env:
-      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
-      VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg/bincache
+      # Prevent build errors due to long paths
+      VCPKG_ROOT: D:/vcpkg
+      VCPKG_DEFAULT_BINARY_CACHE: D:/vcpkg/bincache
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - uses: lukka/run-vcpkg@v11
-        name: Install dependencies
+      - name: Install VCPKG
+        uses: lukka/run-vcpkg@v11
         with:
           # 2026.03.18 Release
           vcpkgGitCommitId: c3867e714dd3a51c272826eea77267876517ed99
+          vcpkgDirectory: D:/vcpkg
       # Ensure we have the most recent copy of the repo
       - name: Update VCPKG
         run: |
@@ -205,8 +212,11 @@ jobs:
           git pull origin master
       - name: Configure
         run: cmake -S . -B build --preset "windows-debug"
-      - name: Building
+      - name: Build
         run: cmake --build build --config Debug
+      - name: Install
+        run: cmake --build build --target install
+      # ctest not compatible in visual studio with our build system
       #- name: Test
       #  run: cmake --build build --target test
 
@@ -219,7 +229,7 @@ jobs:
       VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg/bincache
       VCPKG_BUILD_TYPE: release
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Install build tools
@@ -346,7 +356,7 @@ jobs:
             zlib-devel \
             libunwind-devel \
             elfutils-libs
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Configure
         # Set ALWAYS_ROOT because the container user is root and creating an
         # unpriviledged user would be too much work.
@@ -369,7 +379,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     # This has to be executed in a single step because freebsd-vm fails if run
     # twice.
     - name: Build, test, and install on FreeBSD
@@ -420,7 +430,7 @@ jobs:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
       - name: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - uses: cachix/install-nix-action@v22
       - run: nix flake check
       # TODO: We can add the build to a cache for others (see cachix.org)
@@ -433,7 +443,7 @@ jobs:
     needs: clang-format
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Configure
@@ -447,7 +457,7 @@ jobs:
         with:
           path: build
       - name: Upload a build
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: snap
           path: ${{ steps.snapcraft.outputs.snap }}
@@ -456,7 +466,7 @@ jobs:
     name: clang-format Code Formatter
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         fetch-depth: 0
     - name: Run clang-format style check for C/C++
