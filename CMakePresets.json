@@ -93,33 +93,6 @@
       }
     },
     {
-      "name": "windows-release",
-      "description": "Target Windows with the Visual Studio development environment (Release)",
-      "generator": "Visual Studio 17 2022",
-      "binaryDir": "${sourceDir}/build-vs",
-      "installDir": "${sourceDir}/build-vs/install",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release",
-        "FREECIV_ENABLE_TOOLS": "ON",
-        "FREECIV_ENABLE_SERVER": "ON",
-        "FREECIV_ENABLE_CLIENT": "ON",
-        "FREECIV_ENABLE_NLS": "ON",
-        "FREECIV_USE_VCPKG": "ON"
-      },
-      "vendor": {
-        "microsoft.com/VisualStudioSettings/CMake/1.0": {
-          "intelliSenseMode": "windows-clang-x64",
-          "enableClangTidyCodeAnalysis": true,
-          "enableMicrosoftCodeAnalysis": true
-        }
-      },
-      "condition": {
-        "type": "equals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Windows"
-      }
-    },
-    {
       "name": "windows-debug",
       "description": "Target Windows with the Visual Studio development environment (Debug)",
       "generator": "Visual Studio 17 2022",
@@ -156,10 +129,6 @@
       "name": "fullrelease-macos",
       "configurePreset": "fullrelease-macos",
       "targets": "install"
-    },
-    {
-      "name": "fullrelease-windows",
-      "configurePreset": "windows-release"
     },
     {
       "name": "debug-windows",
