@@ -1,6 +1,6 @@
-#############################################
+#
 # Installation configuration for Freeciv21
-#############################################
+#
 
 # Always install the base documentation
 install(
@@ -35,7 +35,7 @@ install(
   COMPONENT freeciv21)
 
 # Common installation for all Win32 et al platforms
-if(WIN32 OR MSYS OR MINGW)
+if(MSYS OR WIN32)
   # Custom command files to run the applications
   install(
     FILES
@@ -51,21 +51,12 @@ endif()
 # MSYS2 and MINGW specific installation
 if(MSYS OR MINGW)
   # Install OpenSSL library, not found with GET_RUNTIME_DEPENDENCIES
-  if("$ENV{MSYSTEM}" STREQUAL "MINGW32")
-    install(
-      FILES
-      ${MINGW_PATH}/libcrypto-3.dll
-      ${MINGW_PATH}/libssl-3.dll
-      DESTINATION ${CMAKE_INSTALL_BINDIR}
-      COMPONENT freeciv21)
-  else()
-    install(
-      FILES
-      ${MINGW_PATH}/libcrypto-3-x64.dll
-      ${MINGW_PATH}/libssl-3-x64.dll
-      DESTINATION ${CMAKE_INSTALL_BINDIR}
-      COMPONENT freeciv21)
-  endif()
+  install(
+    FILES
+    ${CLANG_PATH}/libcrypto-3-x64.dll
+    ${CLANG_PATH}/libssl-3-x64.dll
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    COMPONENT freeciv21)
 
   # This allows us to determine the external libraries we need to include at install time
   #   dynamically instead of doing it manually.
@@ -74,16 +65,20 @@ if(MSYS OR MINGW)
     set(CMAKE_GET_RUNTIME_DEPENDENCIES_TOOL objdump)
 
     # Take a variable that is available at "install" time and repurpose
-    string(REGEX REPLACE "objdump.exe" "" MINGW_PATH ${CMAKE_OBJDUMP})
+    string(REGEX REPLACE "/llvm-objdump.exe" "" CLANG_PATH ${CMAKE_OBJDUMP})
+
+    # This new policy was defined in cmake 4.3. We force adoption of new
+    # filepath normalization.
+    cmake_policy(SET CMP0207 NEW)
 
     # Function to analyze the third party dll files linked to the exe's
-    #   Uses the repurposed variable from above to tell the function where
-    #   the dll files are located. Ignores dll's that come with Windows.
+    # Uses the repurposed variable from above to tell the function where
+    # the dll files are located. Ignores dll's that come with Windows.
     file(GLOB exes "${CMAKE_INSTALL_PREFIX}/freeciv21-*.exe")
 	  file(GET_RUNTIME_DEPENDENCIES
       RESOLVED_DEPENDENCIES_VAR r_deps
       UNRESOLVED_DEPENDENCIES_VAR u_deps
-      DIRECTORIES ${MINGW_PATH}
+      DIRECTORIES ${CLANG_PATH}
       PRE_EXCLUDE_REGEXES "^api-ms-*"
       POST_EXCLUDE_REGEXES "C:[\\\\/][Ww][Ii][Nn][Dd][Oo][Ww][Ss][\\\\/].*"
       EXECUTABLES ${exes}
@@ -93,18 +88,18 @@ if(MSYS OR MINGW)
     ]] COMPONENT freeciv21)
 
   # Qt5 Plugins and required DLLs
-  #   Before installation, run a series of commands that copy each of the Qt
-  #   runtime files to the appropriate directory for installation
+  # Before installation, run a series of commands that copy each of the Qt
+  # runtime files to the appropriate directory for installation
   install(CODE [[
 
     message(STATUS "Collecting Qt dependencies for freeciv21 GUI executables...")
 
     # Take a variable that is available at "install" time and repurpose
-    string(REGEX REPLACE "objdump.exe" "" MINGW_PATH ${CMAKE_OBJDUMP})
+    string(REGEX REPLACE "/llvm-objdump.exe" "" CLANG_PATH ${CMAKE_OBJDUMP})
 
     # Run Qt's windeployqt.exe to find the required DLLs for the GUI apps.
     execute_process(
-      COMMAND ${MINGW_PATH}/windeployqt-qt5.exe --no-translations --no-virtualkeyboard --no-compiler-runtime
+      COMMAND ${CLANG_PATH}/windeployqt-qt5.exe --no-translations --no-virtualkeyboard --no-compiler-runtime
         --no-webkit2 --no-angle --no-opengl-sw --list mapping ${CMAKE_INSTALL_PREFIX}
       OUTPUT_VARIABLE _output
       OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -113,28 +108,29 @@ if(MSYS OR MINGW)
     message(STATUS "Installing Qt library dependencies for freeciv21 GUI executables...")
     separate_arguments(_files WINDOWS_COMMAND ${_output})
       while(_files)
-          list(GET _files 0 _src)
-          list(GET _files 1 _dest)
-          execute_process(
-            COMMAND cp ${_src} "${CMAKE_INSTALL_PREFIX}/${_dest}"
-          )
-          message(STATUS "Installing: ${CMAKE_INSTALL_PREFIX}/${_dest}")
-          list(REMOVE_AT _files 0 1)
+        list(GET _files 0 _src)
+        list(GET _files 1 _dest)
+        execute_process(
+          COMMAND cp ${_src} "${CMAKE_INSTALL_PREFIX}/${_dest}"
+        )
+        message(STATUS "Installing: ${CMAKE_INSTALL_PREFIX}/${_dest}")
+        list(REMOVE_AT _files 0 1)
       endwhile()
     ]] COMPONENT freeciv21)
+
 elseif(WIN32)
   # The Visual Studio generator places all files and associated DLL libraries
-  #  into a build directory. So we just grab those for install.
+  # into a build directory. So we just grab those for install.
   install(
     DIRECTORY ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin/
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}
     COMPONENT freeciv21
     FILES_MATCHING PATTERN *.dll PATTERN *.pdb)
 
   # Install the Qt framework DLL's'
   install(
     DIRECTORY ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/plugins/
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}
     COMPONENT freeciv21
     FILES_MATCHING PATTERN *.dll)
 
@@ -143,7 +139,7 @@ elseif(WIN32)
     FILES
     ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/SDL2.dll
     ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/SDL2_mixer.dll
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}
     COMPONENT freeciv21)
 endif()
 
@@ -305,7 +301,7 @@ if(FREECIV_ENABLE_CLIENT AND FREECIV_DOWNLOAD_FONTS)
     URL_HASH SHA256=2cce08507441d8ae7b835cfe51fb643ad5d9f6b44db4360c4e244f0e474a72f6
   )
 
-  if(MSYS OR MINGW OR WIN32)
+  if(MSYS OR WIN32)
     install(
       DIRECTORY ${CMAKE_BINARY_DIR}/src/Libertinus
       DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/fonts
@@ -319,6 +315,6 @@ if(FREECIV_ENABLE_CLIENT AND FREECIV_DOWNLOAD_FONTS)
       COMPONENT freeciv21
       FILES_MATCHING PATTERN *.otf PATTERN *.txt
     )
-  endif(MSYS OR MINGW OR WIN32)
+  endif(MSYS OR WIN32)
 endif()
 
