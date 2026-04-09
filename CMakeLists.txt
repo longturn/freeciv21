@@ -1,7 +1,7 @@
 #
 # Root CMakeLists.txt for Freeciv21
 #
-cmake_minimum_required(VERSION 3.21...4.3 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.21...3.28 FATAL_ERROR)
 
 # Set vcpkg if exists. Used by MacOS and Visual Studio
 if(DEFINED ENV{VCPKG_ROOT} AND FREECIV_USE_VCPKG)
