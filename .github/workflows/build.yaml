@@ -155,6 +155,7 @@ jobs:
           export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/clang64/lib/pkgconfig:/clang64/share/pkgconfig
           # self host kf5archive
           wget -O qt5.tar.gz "https://drive.usercontent.google.com/download?export=download&id=1fOAGjomXKZcRRV8MTYUbDvozkQESWvPk&confirm=t"
+          tar xf qt5.tar.gz
           pacman -U --noconfirm ./mingw-w64-clang-x86_64-karchive-qt5-5.116.0-1-any.pkg.tar.zst
           # now configure
           cmake . -B build -G Ninja \
