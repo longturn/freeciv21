@@ -21,6 +21,7 @@ place to start is the ``#questions-and-answers`` channel.
   menu.rst
   top-bar.rst
   unit-controls.rst
+  chat-widget.rst
   mini-map.rst
   city-dialog.rst
   message-options.rst
