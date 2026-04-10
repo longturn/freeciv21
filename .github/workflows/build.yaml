@@ -230,6 +230,8 @@ jobs:
       #    cat D:\a\freeciv21\freeciv21\build\vcpkg-manifest-install.log
       - name: Build
         run: cmake --build build --config Debug
+      - name: Install
+        run: cmake --build build --target install
       # ctest not compatible in visual studio with our build system
       #- name: Test
       #  run: cmake --build build --target test

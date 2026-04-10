@@ -35,7 +35,7 @@ install(
   COMPONENT freeciv21)
 
 # Common installation for all Win32 et al platforms
-if(WIN32 OR MSYS OR WIN32)
+if(MSYS OR WIN32)
   # Custom command files to run the applications
   install(
     FILES
