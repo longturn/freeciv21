@@ -146,6 +146,12 @@ struct connection {
 
   /// Increases for every packet sent.
   int last_request_id_used;
+
+  /*
+   * Declare a virtual default destructor to make sure that derived
+   * struct constructors get called too.
+   */
+  virtual ~connection() = default;
 };
 
 typedef void (*conn_close_fn_t)(struct connection *pconn);
