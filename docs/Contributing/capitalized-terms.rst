@@ -139,6 +139,8 @@ Disasters
 Governments
 ===========
 
+Use them with ``:government:``, such as :government:`Monarchy`.
+
 .. hlist::
   :columns: 5
 

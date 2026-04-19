@@ -71,8 +71,8 @@ to get you started:
   expensive and B) costly in time, so plan accordingly.
 
 * Look for specials like Wheat, Pheasant, and Silk. Wheat helps to grow a city like wildfire (+4 food with
-  Irrigation and :wonder:`Pyramids` or :advance:`Monarchy`). In not too much time you can have a city getting
-  :math:`+20` food per turn, which means your city will grow once per turn after size 4 with a
+  Irrigation and :wonder:`Pyramids` or :government:`Monarchy`). In not too much time you can have a city
+  getting :math:`+20` food per turn, which means your city will grow once per turn after size 4 with a
   :improvement:`Granary`.
 
 * There is an important setting called :ref:`City Minimum Distance <server-option-citymindist>`. This setting

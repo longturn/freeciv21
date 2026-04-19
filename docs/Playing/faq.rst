@@ -201,7 +201,7 @@ icons to see more details.
 What government do you start under?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You start under Despotism in :term:`LTT`. This is a ruleset configured item.
+You start under :government:`Despotism` in :term:`LTT`. This is a ruleset configured item.
 
 Do things that give more trade only give this bonus if there is already at least 1 trade produced on a tile?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -351,9 +351,9 @@ This subsection of the Gameplay section is a discussion around cities and the te
 My irrigated grassland produces only 2 food. Is this a bug?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-No, it is not --- it is a feature. Your government is probably Despotism, which has a :math:`-1` output penalty
-whenever a tile produces more than 2 units of food, production, or trade. You should change your government.
-See the in-game help on :title-reference:`Government` for more detail to get rid of this penalty.
+No, it is not --- it is a feature. Your government is probably :government:`Despotism`, which has a :math:`-1`
+output penalty whenever a tile produces more than 2 units of food, production, or trade. You should change your
+government. See the in-game help on :title-reference:`Government` for more detail to get rid of this penalty.
 
 This feature is also not 100% affected by the form of government. There are some small and great wonders in
 certain rulesets that get rid of the output penalty. See the in-game help on
@@ -998,8 +998,9 @@ Is it really so that in LTT there is no rapture, but you get a trade bonus in ce
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The concept of "rapture" is a ruleset and server configured item. The :term:`LTT` ruleset does not do rapture.
-Instead “celebration” is used under *Republic* and *Democracy*. In the :term:`LTX` Ruleset the *Federation*
-government also allows for celebration. Under other governments, celebration does not provide any bonuses.
+Instead “celebration” is used under :government:`Republic` and :government:`Democracy`. In the :term:`LTX`
+Ruleset the :government:`Federation` government also allows for celebration. Under other governments,
+celebration does not provide any bonuses.
 
 Are trade routes enabled in LTT?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

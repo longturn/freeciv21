@@ -766,7 +766,7 @@ Nation: Civil War
 
 Nation: Collapse to Anarchy
   Too many cities are in disorder and you can no longer maintain a functioning government. Your nation has
-  fallen into anarchy.
+  fallen into :government:`anarchy`.
 
   .. hlist::
     :columns: 2
@@ -833,7 +833,7 @@ Nation: Revolution Ended
     * Event Name: ``E_REVOLT_DONE``
 
 Nation: Revolution Started
-  You have started a revolution to form a new government and are now in anarchy.
+  You have started a revolution to form a new government and are now in :government:`anarchy`.
 
   .. hlist::
     :columns: 2

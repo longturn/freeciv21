@@ -338,9 +338,9 @@ Progress Indicators
 
 Government Icons
   There should be one icon for each government. Its name is :code:`gov.<gov>`, where :code:`<gov>` is the
-  government name. Government types come from :file:`governments.ruleset` (currently "anarchy", "despotism",
-  "monarchy", "communism", "fundamentalism", "republic", "democracy"). Ruleset modders can create other
-  governments, the aforementioned list is not static.
+  government name. Government types come from :file:`governments.ruleset` (currently ``anarchy``,
+  ``despotism``, ``monarchy``, ``communism``, ``fundamentalism``, ``republic``, ``democracy``).
+  Ruleset modders can create other governments, the aforementioned list is not static.
 
 Tax Icons
   One icon for each tax type. These are used to show the national budget. The sprites are :code:`s.tax_luxury`,

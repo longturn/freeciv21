@@ -427,7 +427,7 @@ Per_Citizen_Unhappy_Pct
 .. _effect-no-anarchy:
 
 No_Anarchy
-    No period of anarchy between government changes.
+    No period of :government:`anarchy` between government changes.
 
     .. note::
       This also neuters the :ref:`Has_Senate <effect-has-senate>` effect.

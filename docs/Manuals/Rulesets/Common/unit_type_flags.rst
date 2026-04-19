@@ -78,8 +78,8 @@ shipped by the Freeciv21 developers.
   children" with "units with the ``EvacuateFirst`` unit type flag".
 
 :strong:`Fanatic`
-  Can only be built by governments that allow them. See :file:`civ2/governments.ruleset`, Fundamentalism
-  government for an example.
+  Can only be built by governments that allow them. See :file:`civ2/governments.ruleset`,
+  :government:`Fundamentalism` government for an example.
 
 :strong:`FieldUnit`
   Cause unhappiness even when not being aggressive.

@@ -776,16 +776,18 @@ To place a setting value on any of these settings use the ``/set <option-name> <
 ``revolen``
   :strong:`Default Value (Min, Max)`: 5 (1, 20)
 
-  :strong:`Description`: Length of revolution. When changing governments, a period of anarchy will occur.
-  Value of this setting, used the way ``revolentype`` setting dictates, defines the length of the anarchy.
+  :strong:`Description`: Length of revolution. When changing governments, a period of :government:`anarchy`
+  will occur. Value of this setting, used the way ``revolentype`` setting dictates, defines the length of the
+  :government:`anarchy`.
 
 ``revolentype``
   :strong:`Default Value`: ``RANDOM``
 
   :strong:`Description`: Way to determine revolution length. Which method is used in determining how long
-  period of anarchy lasts when changing government. The actual value is set with ``revolen`` setting. The
-  ``quickening`` methods depend on how many times any player has changed to this type of government before, so
-  it becomes easier to establish a new system of government if it has been done before. Possible values:
+  period of :government:`anarchy` lasts when changing government. The actual value is set with ``revolen``
+  setting. The ``quickening`` methods depend on how many times any player has changed to this type of
+  government before, so it becomes easier to establish a new system of government if it has been done before.
+  Possible values:
 
     * ``FIXED``: Fixed to ``revolen`` turns.
     * ``RANDOM``: Randomly 1-'revolen' turns.

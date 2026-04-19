@@ -26,10 +26,10 @@ long are good players and will also have developed alliance plans.
 City and Terrain Management
 ===========================
 
-If your form of government is not Diplomacy or Federation and you do not have the mass majority of your cities
-celebrating, then you are behind. By the time you have learned all of the Level 6 technologies you should have
-many cities already celebrating. The Gold and Luxury output will greatly boost your gold per turn
-(:term:`GPT`) and bulbs per turn (:term:`BPT`) capacities. You can rush-buy buildings at this stage if you
+If your form of government is not Diplomacy or :government:`Federation` and you do not have the mass majority
+of your cities celebrating, then you are behind. By the time you have learned all of the Level 6 technologies
+you should have many cities already celebrating. The Gold and Luxury output will greatly boost your gold per
+turn (:term:`GPT`) and bulbs per turn (:term:`BPT`) capacities. You can rush-buy buildings at this stage if you
 planned things right. Gold ends up being your production “super power” at this stage of the game.
 
 Keep those :unit:`Workers` going. Get a :improvement:`Sewer System` in your cities so they can grow bigger
