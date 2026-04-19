@@ -12,6 +12,7 @@
 .. role:: improvement
 .. role:: wonder
 .. role:: advance
+.. role:: government
 
 .. Strikethrough and underlined Text
 .. role:: strike
