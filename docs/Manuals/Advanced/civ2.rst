@@ -84,7 +84,7 @@ Other known limitations include:
   on this limit to prevent the creating of new cities.
 * The name of the Barbarian nation appears incorrectly. It is not stored in the
   save.
-* All players start in Despotism.
+* All players start in :government:`Despotism`.
 * Some cities may generate warnings. This is caused by civ2 saving what appears
   to be inconsistent data about citizen assignment to tiles around the cities,
   and is harmless (but you may want to check the cities).

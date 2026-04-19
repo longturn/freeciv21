@@ -26,8 +26,8 @@ The following information is required to add a new nation:
   leaders, eg Henry IV (https://en.wikipedia.org/wiki/Henry_IV_of_France) and
   Napoléon Bonaparte (https://en.wikipedia.org/wiki/Napoleon), but not
   Jean Casimir-Perier (https://en.wikipedia.org/wiki/Jean_Casimir-Perier).
-* Special names for the ruler in certain governments, if applicable. For instance, when in Despotism the
-  Egyptian leader is called *Pharaoh*.
+* Special names for the ruler in certain governments, if applicable. For instance, when in
+  :government:`Despotism` the Egyptian leader is called *Pharaoh*.
 * A flag, preferably something official (if your nation does not have an official flag, think twice before
   including it). Wikipedia has many of those under free licenses.
 * A few nations that will be preferred by the server when there is a civil war. For instance, the
@@ -273,11 +273,12 @@ For consistency and readability, put only one leader per line. Feel free to prov
 identity or a brief background in a comment beside any leader: This information might be used in-game at a
 later stage.
 
-Leader titles for each government type (including Despotism and Anarchy) may be specified in a separate tag.
-UTF-8 is permitted in leader titles.  If the male and female titles are identical in English, give the latter
-the :code:`?female:` qualifier. Use a unique title for each government. Ruler titles should be in English,
-though exceptions are made for non English titles as long as they are understood outside of their own language
-regions and commonly used in non-academic contexts. Titles from the default ruleset may not be used.
+Leader titles for each government type (including :government:`Despotism` and :government:`Anarchy`) may be
+specified in a separate tag. UTF-8 is permitted in leader titles.  If the male and female titles are identical
+in English, give the latter the :code:`?female:` qualifier. Use a unique title for each government. Ruler
+titles should be in English, though exceptions are made for non English titles as long as they are understood
+outside of their own language regions and commonly used in non-academic contexts. Titles from the default
+ruleset may not be used.
 
 Flag
 ----

@@ -12,12 +12,12 @@ The Path to Democracy
 While you are filling in the map with as many cities as you can, you are going to be developing your empire
 by terraforming tiles and adding infrastructure with :unit:`Workers` and at some point it will be necessary to
 add happiness buildings as well. Once you research :advance:`Monarchy` or :advance:`Republic` and take the two
-turns of Anarchy to change governments you will really see a change in output of all of your cities due to the
-elimination of the Despotism penalty.
+turns of :government:`Anarchy` to change governments you will really see a change in output of all of your
+cities due to the elimination of the :government:`Despotism` penalty.
 
 .. note::
-  As a reminder, you can also get rid of the Despotism penalty with the :wonder:`Pyramids` Small Wonder if
-  that fits your strategy better. However, at some point you **must** get to Democracy.
+  As a reminder, you can also get rid of the :government:`Despotism` penalty with the :wonder:`Pyramids` Small
+  Wonder if that fits your strategy better. However, at some point you **must** get to :government:`Democracy`.
 
 You should research the following technologies (not necessarily in this order):
 
@@ -56,11 +56,11 @@ You should research the following technologies (not necessarily in this order):
   you should still build the :wonder:`Leonardo’s Workshop`.
 
 * :advance:`Economics` --- Gives the :improvement:`Mercantile Exchange` improvement and also allows for the
-  Federation form of government. :improvement:`Mercantile Exchange` increases the luxury and tax output in a
-  city by an additional 30%. With a :improvement:`Mercantile Exchange`, a :improvement:`Bank` and a
+  :government:`Federation` form of government. :improvement:`Mercantile Exchange` increases the luxury and tax
+  output in a city by an additional 30%. With a :improvement:`Mercantile Exchange`, a :improvement:`Bank` and a
   :improvement:`Marketplace` in a city, the total bonus is 110%!
 
-* :advance:`Democracy` --- Allows for the Democracy form of government.
+* :advance:`Democracy` --- Allows for the :government:`Democracy` form of government.
 
 * :advance:`Gunpowder` --- For the :unit:`Musketeer` unit. Your second-level, really good defender.
   :unit:`Warriors` and :unit:`Archers` can be upgraded to :unit:`Musketeers`.
@@ -88,10 +88,11 @@ You need to eventually get the following buildings inside your largest cities:
 * :improvement:`Library` → :improvement:`University`
 * :improvement:`Marketplace` → :improvement:`Bank` → :improvement:`Mercantile Exchange`
 
-You must have :improvement:`Temples` in all of your cities at a minimum before you switch to Republic or
-Democracy or you will have disorder on your hands all over. Ideally you would have :improvement:`Temple`,
-:improvement:`City Walls`, :improvement:`Courthouse`, and :improvement:`Marketplace`, along with all the Small
-Wonders that enhance them before you switch to Republic or Democracy.
+You must have :improvement:`Temples` in all of your cities at a minimum before you switch to :government:`Republic`
+or :government:`Democracy` or you will have disorder on your hands all over. Ideally you would have
+:improvement:`Temple`, :improvement:`City Walls`, :improvement:`Courthouse`, and :improvement:`Marketplace`,
+along with all the Small Wonders that enhance them before you switch to :government:`Republic` or
+:government:`Democracy`.
 
 With all this in place, you will want to now get your largest cities (ideally all of them, but it is not
 always possible to do that) to celebrate. To accomplish this is a multi-part process:
@@ -131,11 +132,12 @@ things Longturn, there are tradeoffs.
 
 A few thoughts about aggression at this stage of the game:
 
-* You cannot declare war on a player you are at peace with if you are in Republic, Democracy, or Federation.
-  You have to go into Anarchy and then declare war, which will kill 2 turns of any progress.
+* You cannot declare war on a player you are at peace with if you are in :government:`Republic`,
+  :government:`Democracy`, or :government:`Federation`. You have to go into :government:`Anarchy` and then
+  declare war, which will kill 2 turns of any progress.
 
   .. note::
-    In Monarchy, Despotism, and Tribal you can declare war at will.
+    In :government:`Monarchy`, :government:`Despotism`, and :government:`Tribal` you can declare war at will.
 
 * If you are going to go into a hot war with a neighbor, make sure they are smaller than you. If they are
   bigger you have no chance as they can out produce you. Get some help with an ally if it is really necessary

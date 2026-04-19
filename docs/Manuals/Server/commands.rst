@@ -274,7 +274,7 @@ server's own command-line. This server command-line is separate from the OS term
   * Does not build offensive diplomatic units.
   * Can see through :term:`FOW`.
   * Has complete map knowledge, including unexplored territory.
-  * Can skip anarchy during revolution.
+  * Can skip :government:`anarchy` during revolution.
   * Always offers cease-fire on first contact.
   * Does not bribe worker or city founder units.
   * Can change city production type without penalty.
@@ -288,7 +288,7 @@ server's own command-line. This server command-line is separate from the OS term
   * Knows the location of huts in unexplored territory.
   * Can see through :term:`FOW`.
   * Has complete map knowledge, including unexplored territory.
-  * Can skip anarchy during revolution.
+  * Can skip :government:`anarchy` during revolution.
   * Can change city production type without penalty.
 
 ``/cheating <player-name>``
@@ -299,7 +299,7 @@ server's own command-line. This server command-line is separate from the OS term
   * Knows the location of huts in unexplored territory.
   * Can see through :term:`FOW`.
   * Has complete map knowledge, including unexplored territory.
-  * Can skip anarchy during revolution.
+  * Can skip :government:`anarchy` during revolution.
   * Can change city production type without penalty.
 
 ``/experimental <player-name>``
@@ -313,7 +313,7 @@ server's own command-line. This server command-line is separate from the OS term
   * Knows the location of huts in unexplored territory.
   * Can see through :term:`FOW`.
   * Has complete map knowledge, including unexplored territory.
-  * Can skip anarchy during revolution.
+  * Can skip :government:`anarchy` during revolution.
   * Can change city production type without penalty.
 
 ``/cmdlevel none|info|basic|ctrl|admin|hack``

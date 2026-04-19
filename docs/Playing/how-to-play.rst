@@ -83,12 +83,12 @@ to study technological advances. As your nation learns new technologies, new uni
 wonders become available to build in your cities.
 
 There are too many scenarios of which technological advance path to take, so make your best judgement. You
-will probably want to learn a new form of government. You start the game in Despotism in the Classic ruleset.
-:advance:`Monarchy` or :advance:`The Republic` are good early targets. As soon as you have researched a new
-government type, start a revolution (
-:menuselection:`Civilization --> Government --> Revolution`) and change over to it. Cities operate much better
-under Republic than they do under Despotism, but note that it is much harder to keep military units outside of
-city limits under a Republic. Also, do not forget to recheck your
+will probably want to learn a new form of government. You start the game in :government:`Despotism` in the Classic
+ruleset. :advance:`Monarchy` or :advance:`The Republic` are good early targets. As soon as you have researched
+a new government type, start a revolution (:menuselection:`Civilization --> Government --> Revolution`) and
+change over to it. Cities operate much better under :government:`Republic` than they do under
+:government:`Despotism`, but note that it is much harder to keep military units outside of city limits under a
+:government:`Republic`. Also, do not forget to recheck your
 :ref:`national budget <game-manual-national-budget-view>` after you have changed governments, as the maximums
 vary for each type.
 
@@ -302,11 +302,12 @@ you can consider this buying and selling. Each player builds a list of offered i
 the list, double-click on it. When both players indicate satisfaction, the pact is concluded.
 
 Pacts affect where your units can go and what they can do, and a pact with one nation can affect your
-relations with others. Under authoritarian governments such as monarchy you can break a pact at any time, but
-the representative governments (Republic and Democracy) have a senate which will block the unprovoked
-cancellation of a treaty, unless a foreign :unit:`Diplomat` or :unit:`Spy` sparks a diplomatic incident. The
-only way to dissolve a pact in this situation is to dissolve your government by going into anarchy. The
-details of pacts are described in the :menuselection:`Help --> Diplomacy` section.
+relations with others. Under authoritarian governments such as :government:`monarchy` you can break a pact at
+any time, but the representative governments (:government:`Republic` and :government:`Democracy`) have a senate
+which will block the unprovoked cancellation of a treaty, unless a foreign :unit:`Diplomat` or :unit:`Spy`
+sparks a diplomatic incident. Theconly way to dissolve a pact in this situation is to dissolve your government
+by going into :government:`Anarchy`. The details of pacts are described in the
+:menuselection:`Help --> Diplomacy` section.
 
 A few notes:
 

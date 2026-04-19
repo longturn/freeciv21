@@ -589,7 +589,7 @@ National Budget
     gold (taxes), science (bulbs), and luxury (goods). This is the same as clicking on the
     :ref:`National Budget View <game-manual-national-budget-view>` button on the :doc:`top-bar`.
     :numref:`National Budget Dialog` dialog below, shows a sample screenshot. In this example, the player's
-    nation is in Democracy, has set gold to 30%, science to 40%, and luxury to 30%.
+    nation is in :government:`Democracy`, has set gold to 30%, science to 40%, and luxury to 30%.
 
 .. _National Budget Dialog:
 .. figure:: /_static/images/gui-elements/tax-rates.png

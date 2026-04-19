@@ -252,7 +252,7 @@ Other handicaps used are:
   ``H_NOPLANES``    Does not build air units.
   ``H_MAP``         Only knows ``map_is_known`` tiles.
   ``H_DIPLOMACY``   Not very good at Diplomacy.
-  ``H_REVOLUTION``  Cannot skip Anarchy.
+  ``H_REVOLUTION``  Cannot skip :government:`Anarchy`.
   ``H_EXPANSION``   Do not like being much larger than human.
   ``H_DANGER``      Always thinks its city is in danger.
   ================= =======

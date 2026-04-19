@@ -168,6 +168,9 @@ https://docutils.sourceforge.io/docs/ref/rst/directives.html#custom-interpreted-
 * :literal:`:wonder:` --- This provides an opportunity to highlight a Freeciv21 small or great wonder, such as
   the :wonder:`Pyramids`.
 
+* :literal:`:government:` --- This provides an opportunity to highlight a Freeciv21 form of government, such
+  as :government:`Fundamentalism`.
+
 Admonition Directives
 =====================
 

@@ -209,7 +209,7 @@ rulesets support :strong:`Cease Fire`, :strong:`Peace`, and :strong:`Alliance`.
 
 .. note::
   Some forms of government will not allow you to break a :strong:`Peace` or :strong:`Alliance` treaty without
-  changing government to Anarchy.
+  changing government to :government:`Anarchy`.
 
 Lastly, clicking :guilabel:`Meet` will bring up a diplomacy screen where you can interact with a player that
 you have an embassy with. :numref:`Diplomacy`, shows a sample screen where the parties are agreeing to a cease

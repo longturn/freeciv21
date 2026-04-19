@@ -58,16 +58,19 @@ Deciding on an Initial Strategy
 Early Government
 ----------------
 
-Everyone starts with Despotism as their form of government. If you are land constrained there is the City
-States government available with :advance:`Iron Working` (in the :term:`LTX` ruleset) that gives some nice
-benefits, but also has some constraints as well (see game help).
+Everyone starts with :government:`Despotism` as their form of government. If you are land constrained there is
+the :government:`City States` government available with :advance:`Iron Working` (in the :term:`LTX` ruleset)
+that gives some nice benefits, but also has some constraints as well (see game help).
 
-Most players either go the Despotism → Monarchy → Democracy path or the Despotism → Republic → Democracy path.
-It is easier to reach Monarchy than Republic. There is also a school of thought to abandon Despotism early and
-go Tribal right away. There are some differences between the two early governments that are worth comparing.
-For example Tribal has better production at the expense of science (bulbs) output.
+Most players either go the :government:`Despotism` → :government:`Monarchy` → :government:`Democracy` path or
+the :government:`Despotism` → :government:`Republic` → :government:`Democracy` path. It is easier to reach
+:government:`Monarchy` than :government:`Republic`. There is also a school of thought to abandon
+:government:`Despotism` early and go :government:`Tribal` right away. There are some differences between the
+two early governments that are worth comparing. For example :government:`Tribal` has better production at the
+expense of science (bulbs) output.
 
-This table provides a side-by-side comparison of Despotism vs Tribal for a complete picture.
+This table provides a side-by-side comparison of :government:`Despotism` vs :government:`Tribal` for a
+complete picture.
 
 .. list-table:: Despotism vs Tribal
   :widths: 20 40 40
@@ -167,7 +170,7 @@ From a Small Wonder perspective (see section on `Small and Great Wonders`_ below
 
 Path to Monarchy:
 
-* Monarchy Path is :advance:`Alphabet` (:term:`LTT`) / :advance:`Pictography` (:term:`LTX`) →
+* The :government:`Monarchy` Path is :advance:`Alphabet` (:term:`LTT`) / :advance:`Pictography` (:term:`LTX`) →
   :advance:`Ceremonial Burial` → :advance:`Code of Laws` → :advance:`Monarchy`.
 
 Early Defense and Aggression:
@@ -287,25 +290,27 @@ This table provides some information on the important wonders before the :advanc
   * - 2
     - :wonder:`Pyramids`
     - :advance:`Mathematics` / :advance:`Railroad`
-    - Each tile produces :math:`+1` Shield, eliminates the Despotism penalty.
+    - Each tile produces :math:`+1` Shield, eliminates the :government:`Despotism` penalty.
     - Building :wonder:`Pyramids` is a **must** as soon as possible, especially if you do not plan to go
-      straight to Monarchy. It is possible to have the :wonder:`Pyramids` by ``T15``. Build it in the highest
-      production city. The :wonder:`Pyramids` are also important when you are in Anarchy switching to another
-      form of government (e.g. Republic, Democracy, or Federation) so you do not suffer the Despotism penalty.
+      straight to :government:`Monarchy`. It is possible to have the :wonder:`Pyramids` by ``T15``. Build it
+      in the highest production city. The :wonder:`Pyramids` are also important when you are in
+      :government:`Anarchy` switching to another form of government (e.g. :government:`Republic`,
+      :government:`Democracy`, or :government:`Federation`) so you do not suffer the :government:`Despotism`
+      penalty.
   * - 2
     - :wonder:`Temple of Artemis`
     - :advance:`Mysticism` / :advance:`Theology`
     - Makes 2 additional unhappy citizens content in every city with a :improvement:`Temple`.
-    - :improvement:`Temples` are a **must** before Republic or Democracy. This wonder will help your cities to
-      celebrate when the time is right.
+    - :improvement:`Temples` are a **must** before :government:`Republic` or :government:`Democracy`. This
+      wonder will help your cities to celebrate when the time is right.
   * - 2
     - :wonder:`Statue of Zeus`
     - :advance:`Polytheism` / :advance:`Gunpowder`
     - Eliminates 1 unhappy citizen due to military units abroad, plus each city also avoids 1 Shield of upkeep
       for units.
     - Citizen happiness is an important aspect of the early game. This wonder continues to keep your citizens
-      happy as cities grow in size. The second aspect (Shield upkeep) is huge  if you are Tribal and/or
-      Republic.
+      happy as cities grow in size. The second aspect (Shield upkeep) is huge  if you are :government:`Tribal`
+      and/or :government:`Republic`.
   * - 3
     - :wonder:`Copernicus' Observatory`
     - :advance:`Astronomy` / :advance:`University`
@@ -323,8 +328,8 @@ This table provides some information on the important wonders before the :advanc
     - Reduces the unhappiness caused by aggressively deployed military units owned by the city by 1. Under
       governments where unit upkeep is paid in gold, it gives two free gold per city towards upkeep every
       turn.
-    - The primary benefit of this wonder is the reduction of gold upkeep for military units. With Monarchy,
-      unit upkeep is in Gold. This wonder helps your treasury greatly.
+    - The primary benefit of this wonder is the reduction of gold upkeep for military units. With
+      :government:`Monarchy`, unit upkeep is in Gold. This wonder helps your treasury greatly.
   * - 5
     - :wonder:`Leonardo's Workshop`
     - :advance:`Invention` / :advance:`Combustion`
