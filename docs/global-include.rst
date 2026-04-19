@@ -12,6 +12,7 @@
 .. role:: improvement
 .. role:: wonder
 .. role:: advance
+.. role:: government
 
 .. Registered symbol
 .. |reg| unicode:: U+000AE .. REGISTERED SIGN

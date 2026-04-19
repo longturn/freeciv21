@@ -146,6 +146,16 @@ html.writer-html5 .rst-content table.docutils :is(td, th) > p :is(.pre, code, pr
   margin:auto 2px
 }
 
+.government {
+  border: 1px solid #000066;
+  background: #9999ff;
+  font-size:80%;
+  font-weight:700;
+  border-radius:4px;
+  padding:2px 6px;
+  margin:auto 2px
+}
+
 /* add an underline for the title-reference interpretive text role */
 cite {
   text-decoration: underline;
