@@ -16,6 +16,7 @@
     <url type="homepage">https://longturn.net/</url>
     <url type="bugtracker">https://github.com/longturn/freeciv21/issues</url>
     <url type="help">https://longturn.readthedocs.io/en/latest/index.html</url>
+    <url type="vcs-browser">https://github.com/longturn/freeciv21</url>
     <screenshots>
       <screenshot type="default">
         <caption>Freeciv21 Screenshot</caption>
