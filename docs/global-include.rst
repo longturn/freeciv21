@@ -13,6 +13,12 @@
 .. role:: wonder
 .. role:: advance
 
+.. Strikethrough and underlined Text
+.. role:: strike
+   :class: strike
+.. role:: underline
+   :class: underline
+
 .. Registered symbol
 .. |reg| unicode:: U+000AE .. REGISTERED SIGN
 

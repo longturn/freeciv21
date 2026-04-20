@@ -68,6 +68,14 @@ li ul li, div[*wy-grid-for-nav] li {
   margin-bottom: 3px;
 }
 
+.strike {
+  text-decoration: line-through;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
 /* set the font of the side nav bar header */
 .wy-side-nav-search {
   font-family: Libertinus Sans, sans-serif;

@@ -25,7 +25,7 @@ the top of the message options dialog.
 
 The column headings do the following:
 
-* :strong:`Out` -- The event message will be placed into the :guilabel:`Server Chat/Command Line` widget on
+* :strong:`Out` -- The event message will be placed into the :guilabel:`Server Chat/Command Line` :doc:`chat widget </Manuals/Game/chat-widget>` on
   the main map.
 * :strong:`Mes` -- The event message will be placed into the :guilabel:`Messages` widget as described in
   :ref:`Messages <game-manual-messages>`.
@@ -66,7 +66,7 @@ Caravan actions
 
 Chat error messages
   This event is associated with any kind of error message related to commands entered in the
-  :guilabel:`Server Chat/Command Line` widget on the main map.
+  :guilabel:`Server Chat/Command Line` :doc:`chat widget </Manuals/Game/chat-widget>` on the main map.
 
   .. hlist::
     :columns: 2
