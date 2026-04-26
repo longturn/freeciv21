@@ -8,12 +8,6 @@ if(DEFINED ENV{VCPKG_ROOT} AND FREECIV_USE_VCPKG)
   message(STATUS "Microsoft VCPKG enabled, setting toolset specific settings.")
   set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
       CACHE STRING "")
-  if(APPLE)
-    message(STATUS "Setting macOS VCPKG specific settings.")
-    set(VCPKG_OVERLAY_TRIPLETS "cmake/")
-    set(VCPKG_HOST_TRIPLET "x64-osx-custom")
-    set(VCPKG_TARGET_TRIPLET "x64-osx-custom")
-  endif(APPLE)
 endif()
 
 # Detect MS Visual Studio
