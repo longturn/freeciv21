@@ -10,8 +10,7 @@ include(CheckSymbolExists)
 #   - libunwind if available
 #   - backtrace() if everything else fails.
 if (MSVC OR MSYS OR APPLE)
-  message(STATUS "Using the native API for stack unwinding. "
-                 "This is the preferred option.")
+  message(STATUS "Using the native API for stack unwinding.")
   set(CAN_UNWIND_STACK TRUE)
 endif()
 
@@ -23,7 +22,7 @@ if (NOT CAN_UNWIND_STACK)
     pkg_search_module(unwind IMPORTED_TARGET libunwind)
     if (unwind_FOUND)
       message(STATUS "Using libunwind for stack unwinding. "
-                     "This is the secondary option.")
+                     "This is the preferred option.")
       set(CAN_UNWIND_STACK TRUE)
       set(STACK_UNWINDING_LIBRARY PkgConfig::unwind)
       set(BACKWARD_HAS_UNWIND 1)
