@@ -302,7 +302,7 @@ if(APPLE)
                 "${CMAKE_BINARY_DIR}/dist/Info.plist"
       ONLY_IF_DIFFERENT)
 
-   install(CODE [[
+  install(CODE [[
     message(STATUS "Creating Freeciv21 App Bundle for macOS...")
 
     # Check to see if the app bundle was already created in a previous run
@@ -341,6 +341,7 @@ if(APPLE)
       FILES_MATCHING PATTERN "*"
     )
 
+    # Create icon set
     file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/client.iconset")
     file(COPY_FILE "${CMAKE_INSTALL_PREFIX}/share/freeciv21/icons/16x16/freeciv21-client.png"
                    "${CMAKE_BINARY_DIR}/client.iconset/icon_16x16.png")
@@ -356,55 +357,30 @@ if(APPLE)
       COMMAND iconutil --convert icns "${CMAKE_BINARY_DIR}/client.iconset")
     file(COPY_FILE "${CMAKE_BINARY_DIR}/client.icns"
                    "${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/Resources/client.icns")
+  ]] COMPONENT freeciv21)
 
-    # Run Qt's macdeployqt to find the required dyLibs for the GUI apps.
-    # It also copies the files we need to where we need them.
-    # NOTE: The first instance calls freeciv21-client as that is the app bundle entry.
-    # the repeat commands are needed to cover the proper rpath updates for each of the
-    # other executables that we bundle.
-    
-    message(STATUS "Installing Qt library dependencies for freeciv21 GUI executables...")
-    # freeciv21-client is default
-    execute_process(
-      COMMAND ${CMAKE_BINARY_DIR}/vcpkg_installed/x64-osx-custom/tools/Qt6/bin/macdeployqt6  
-    ${CMAKE_BINARY_DIR}/Freeciv21.app -verbose=1
-    )
-    # freeciv21-manual
-    execute_process(
-      COMMAND ${CMAKE_BINARY_DIR}/vcpkg_installed/x64-osx-custom/tools/Qt6/bin/macdeployqt6  
-    ${CMAKE_BINARY_DIR}/Freeciv21.app -verbose=1 
-    -executable=${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/MacOS/freeciv21-manual
-    )
-    # freeciv21-modpack (cli)
-    execute_process(
-      COMMAND ${CMAKE_BINARY_DIR}/vcpkg_installed/x64-osx-custom/tools/Qt6/bin/macdeployqt6  
-    ${CMAKE_BINARY_DIR}/Freeciv21.app -verbose=1 
-    -executable=${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/MacOS/freeciv21-modpack
-    )
-    # freeciv21-modpack-qt (gui)
-    execute_process(
-      COMMAND ${CMAKE_BINARY_DIR}/vcpkg_installed/x64-osx-custom/tools/Qt6/bin/macdeployqt6  
-    ${CMAKE_BINARY_DIR}/Freeciv21.app -verbose=1 
-    -executable=${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/MacOS/freeciv21-modpack-qt
-    )
-    # freeciv21-ruledit
-    execute_process(
-      COMMAND ${CMAKE_BINARY_DIR}/vcpkg_installed/x64-osx-custom/tools/Qt6/bin/macdeployqt6  
-    ${CMAKE_BINARY_DIR}/Freeciv21.app -verbose=1 
-    -executable=${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/MacOS/freeciv21-ruledit
-    )
-    # freeciv21-ruleup
-    execute_process(
-      COMMAND ${CMAKE_BINARY_DIR}/vcpkg_installed/x64-osx-custom/tools/Qt6/bin/macdeployqt6  
-    ${CMAKE_BINARY_DIR}/Freeciv21.app -verbose=1 
-    -executable=${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/MacOS/freeciv21-ruleup
-    )
-    # freeciv21-server
-    execute_process(
-      COMMAND ${CMAKE_BINARY_DIR}/vcpkg_installed/x64-osx-custom/tools/Qt6/bin/macdeployqt6  
-    ${CMAKE_BINARY_DIR}/Freeciv21.app -verbose=1 
-    -executable=${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/MacOS/freeciv21-server
-    )
+  if(FREECIV_MACOS_DYNAMIC)
+      install(CODE [[
+        # Run Qt's macdeployqt to find the required dyLibs for the GUI apps.
+        # It also copies the files we need to where we need them.
+        # NOTE: The first instance calls freeciv21-client as that is the app bundle entry.
+        # the repeat commands are needed to cover the proper rpath updates for each of the
+        # other executables that we bundle.
+        message(STATUS "Installing Qt library dependencies for freeciv21 GUI executables...")
+        foreach(exes "freeciv21-client" 
+                    "freeciv21-manual" 
+                    "freeciv21-modpack"
+                    "freeciv21-modpack-qt"
+                    "freeciv21-ruledit"
+                    "freeciv21-ruleup"
+                    "freeciv21-server")
+        execute_process(
+            COMMAND ${CMAKE_BINARY_DIR}/vcpkg_installed/x64-osx-custom/tools/Qt6/bin/macdeployqt6  
+          ${CMAKE_BINARY_DIR}/Freeciv21.app -verbose=1 
+          -executable=${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/MacOS/${exes})
+              
+        endforeach()
     message(STATUS "Freeciv21 App Bundle successfully created. Open from '${CMAKE_BINARY_DIR}' to play.")
     ]] COMPONENT freeciv21)
+  endif(FREECIV_MACOS_DYNAMIC)
 endif(APPLE)
