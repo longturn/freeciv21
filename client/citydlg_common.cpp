@@ -181,7 +181,8 @@ namespace {
  */
 QString html_pre(const QString &content)
 {
-  return QStringLiteral("<pre>") + content + QStringLiteral("</pre>");
+  return QStringLiteral("<pre>") + content.toHtmlEscaped()
+         + QStringLiteral("</pre>");
 }
 
 /**
