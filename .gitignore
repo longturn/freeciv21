@@ -64,6 +64,8 @@ result
 .vs
 # Project file
 *.kdev4
+# Visual Studio Code 
+.vscode
 
 # In case someone runs Doxygen
 /doc/doxygen
