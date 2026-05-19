@@ -20,13 +20,35 @@
       }
     },
     {
-      "name": "fullrelease-macos",
-      "displayName": "Build for Mac in Release Mode",
+      "name": "fullrelease-macos-static",
+      "displayName": "Build for macOS in Release Mode (Qt Statically Linked)",
       "inherits": "fullrelease",
       "binaryDir": "${sourceDir}/build",
       "installDir": "${sourceDir}/build/install",
       "cacheVariables": {
         "FREECIV_USE_VCPKG": "ON",
+        "FREECIV_MACOS_DYNAMIC": {
+          "type": "BOOL",
+          "value": "false"
+        },
+        "CMAKE_FIND_PACKAGE_PREFER_CONFIG": "ON"
+      }
+    },
+        {
+      "name": "fullrelease-macos-dynamic",
+      "displayName": "Build for macOS in Release Mode (Qt Dynamically Linked)",
+      "inherits": "fullrelease",
+      "binaryDir": "${sourceDir}/build",
+      "installDir": "${sourceDir}/build/install",
+      "cacheVariables": {
+        "FREECIV_USE_VCPKG": "ON",
+        "FREECIV_MACOS_DYNAMIC": {
+          "type": "BOOL",
+          "value": "true"
+        },
+        "VCPKG_OVERLAY_TRIPLETS": "cmake/",
+        "VCPKG_HOST_TRIPLET": "x64-osx-custom",
+        "VCPKG_TARGET_TRIPLET": "x64-osx-custom",
         "CMAKE_FIND_PACKAGE_PREFER_CONFIG": "ON"
       }
     },
@@ -143,8 +165,13 @@
       "configurePreset": "fullrelease"
     },
     {
-      "name": "fullrelease-macos",
-      "configurePreset": "fullrelease-macos",
+      "name": "fullrelease-macos-static",
+      "configurePreset": "fullrelease-macos-static",
+      "targets": "install"
+    },
+    {
+      "name": "fullrelease-macos-dynamic",
+      "configurePreset": "fullrelease-macos-dynamic",
       "targets": "install"
     },
     {

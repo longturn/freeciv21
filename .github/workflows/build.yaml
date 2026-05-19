@@ -236,14 +236,13 @@ jobs:
       #- name: Test
       #  run: cmake --build build --target test
 
-  os_x:
-    name: "macOS (x64-osx)"
+  os_x_dyn:
+    name: "macOS (x64-osx-custom)"
     runs-on: macos-15-intel
     needs: clang-format
     env:
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg/bincache
-      VCPKG_BUILD_TYPE: release
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -281,7 +280,7 @@ jobs:
           git pull origin master
       - name: Configure
         run: |
-          cmake --preset fullrelease-macos -S .
+          cmake --preset fullrelease-macos-dynamic -S .
       - name: Build
         run: |
           cmake --build build
@@ -324,6 +323,61 @@ jobs:
         with:
           name: macOS-dmg
           path: build/Freeciv21-*.dmg
+
+  os_x_static:
+    name: "macOS (x64-osx)"
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: macos-15-intel
+    env:
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+      VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg/bincache
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Install build tools
+        run: |
+          brew update
+          # Remove the bloat installed by default to avoid conflicts
+          brew remove --force $(brew list)
+          # Make sure to overwrite existing symlinks
+          brew install --overwrite \
+            autoconf \
+            autoconf-archive \
+            automake \
+            cmake \
+            create-dmg \
+            libtool \
+            nasm \
+            ninja \
+            pkgconf
+      - uses: actions/setup-python@v5  # Workaround for #2069
+        with:
+          python-version: '3.11'
+      - name: Install VCPKG
+        uses: lukka/run-vcpkg@v11
+        with:
+          # 2026.03.18 Release
+          vcpkgGitCommitId: c3867e714dd3a51c272826eea77267876517ed99
+      # Ensure we have the most recent copy of the repo
+      - name: Update VCPKG
+        run: |
+          cd ${{ env.VCPKG_ROOT }}
+          git fetch
+          git pull origin master
+      - name: Configure
+        run: |
+          cmake --preset fullrelease-macos-static -S .
+      - name: Build
+        run: |
+          cmake --build build
+      - name: Test
+        run: |
+          cmake --build build --target test
+      - name: Install
+        run: |
+          cmake --build build --target install
 
   fedora:
     runs-on: ubuntu-latest

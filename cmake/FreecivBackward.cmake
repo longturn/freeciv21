@@ -9,9 +9,8 @@ include(CheckSymbolExists)
 #   - native API on MSVC (MSYS and MINGW aren't ABI-compatible with it)
 #   - libunwind if available
 #   - backtrace() if everything else fails.
-if (MSVC OR MSYS)
-  message(STATUS "Using the Windows native API for stack unwinding. "
-                 "This is the preferred option.")
+if (MSVC OR MSYS OR APPLE)
+  message(STATUS "Using the OS native API for stack unwinding.")
   set(CAN_UNWIND_STACK TRUE)
 endif()
 

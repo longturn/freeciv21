@@ -84,9 +84,9 @@ if(MSYS OR MINGW)
       POST_EXCLUDE_REGEXES "C:[\\\\/][Ww][Ii][Nn][Dd][Oo][Ww][Ss][\\\\/].*"
       EXECUTABLES ${exes}
       )
-      message(STATUS "Installing library dependencies for freeciv21 executables...")
-      file(INSTALL DESTINATION ${CMAKE_INSTALL_PREFIX} MESSAGE_LAZY FILES ${r_deps})
-    ]] COMPONENT freeciv21)
+    message(STATUS "Installing library dependencies for freeciv21 executables...")
+    file(INSTALL DESTINATION ${CMAKE_INSTALL_PREFIX} MESSAGE_LAZY FILES ${r_deps})
+  ]] COMPONENT freeciv21)
 
   # Qt6 Plugins and required DLLs
   # Before installation, run a Qt6 command that copies each of the Qt
@@ -102,7 +102,7 @@ if(MSYS OR MINGW)
       COMMAND ${CLANG_PATH}/windeployqt6.exe --no-translations --verbose 0 --libdir ${CMAKE_INSTALL_PREFIX} 
     --plugindir ${CMAKE_INSTALL_PREFIX} --list mapping ${CMAKE_INSTALL_PREFIX}
     )
-    ]] COMPONENT freeciv21)
+  ]] COMPONENT freeciv21)
 
 elseif(WIN32)
   # The Visual Studio generator places all files and associated DLL libraries
@@ -297,18 +297,19 @@ if(APPLE)
   # Use Auto Revision variables to convert some templates to real files at build
   # time. Avoid overwriting if the version didn't change.
   configure_file("dist/Info.plist.in" dist/Info.plist.new
-                @ONLY NEWLINE_STYLE UNIX)
+                 @ONLY NEWLINE_STYLE UNIX)
   file(COPY_FILE "${CMAKE_BINARY_DIR}/dist/Info.plist.new"
-                "${CMAKE_BINARY_DIR}/dist/Info.plist"
-      ONLY_IF_DIFFERENT)
+                 "${CMAKE_BINARY_DIR}/dist/Info.plist"
+                 ONLY_IF_DIFFERENT)
 
-   install(CODE [[
+  install(CODE [[
     message(STATUS "Creating Freeciv21 App Bundle for macOS...")
+    set(FREECIV_MACOS_BUNDLE "Freeciv21.app")
 
     # Check to see if the app bundle was already created in a previous run
-    if(EXISTS "${CMAKE_BINARY_DIR}/Freeciv21.app")
+    if(EXISTS "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}")
       message(STATUS "App Bundle exists, removing...")
-      file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/Freeciv21.app")
+      file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}")
       file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/client.iconset")
       file(REMOVE "${CMAKE_BINARY_DIR}/client.icns")
       file(GLOB DMG_FILES "${CMAKE_BINARY_DIR}/Freeciv21*.dmg*")
@@ -316,46 +317,63 @@ if(APPLE)
     endif()
 
     # Create app bundle
-    file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Freeciv21.app")
-    file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Freeciv21.app/Contents")
-    file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/MacOS")
-    file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/Resources")
-    file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/Resources/doc")
-    file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/Resources/locale")
+    file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}")
+    file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents")
+    file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/MacOS")
+    file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/Resources")
+    file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/Resources/doc")
+    file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/Resources/locale")
     file(COPY_FILE "${CMAKE_BINARY_DIR}/dist/Info.plist"
-                   "${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/Info.plist")
+                    "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/Info.plist")
     file(COPY "${CMAKE_INSTALL_PREFIX}/bin/"
-      DESTINATION "${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/MacOS/"
+      DESTINATION "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/MacOS/"
       FILES_MATCHING PATTERN "Freeciv21-*"
     )
     file(COPY "${CMAKE_INSTALL_PREFIX}/share/freeciv21/"
-      DESTINATION "${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/Resources/"
+      DESTINATION "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/Resources/"
       FILES_MATCHING PATTERN "*"
     )
     file(COPY "${CMAKE_INSTALL_PREFIX}/share/doc/freeciv21/"
-      DESTINATION "${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/Resources/doc/"
+      DESTINATION "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/Resources/doc/"
       FILES_MATCHING PATTERN "*"
     )
     file(COPY "${CMAKE_INSTALL_PREFIX}/share/locale/"
-      DESTINATION "${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/Resources/locale/"
+      DESTINATION "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/Resources/locale/"
       FILES_MATCHING PATTERN "*"
     )
 
+    # Create Icon Set
     file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/client.iconset")
     file(COPY_FILE "${CMAKE_INSTALL_PREFIX}/share/freeciv21/icons/16x16/freeciv21-client.png"
-                   "${CMAKE_BINARY_DIR}/client.iconset/icon_16x16.png")
+                  "${CMAKE_BINARY_DIR}/client.iconset/icon_16x16.png")
     file(COPY_FILE "${CMAKE_INSTALL_PREFIX}/share/freeciv21/icons/32x32/freeciv21-client.png"
-                   "${CMAKE_BINARY_DIR}/client.iconset/icon_16x16@2x.png")
+                  "${CMAKE_BINARY_DIR}/client.iconset/icon_16x16@2x.png")
     file(COPY_FILE "${CMAKE_INSTALL_PREFIX}/share/freeciv21/icons/32x32/freeciv21-client.png"
-                   "${CMAKE_BINARY_DIR}/client.iconset/icon_32x32.png")
+                  "${CMAKE_BINARY_DIR}/client.iconset/icon_32x32.png")
     file(COPY_FILE "${CMAKE_INSTALL_PREFIX}/share/freeciv21/icons/64x64/freeciv21-client.png"
-                   "${CMAKE_BINARY_DIR}/client.iconset/icon_32x32@2x.png")
+                  "${CMAKE_BINARY_DIR}/client.iconset/icon_32x32@2x.png")
     file(COPY_FILE "${CMAKE_INSTALL_PREFIX}/share/freeciv21/icons/128x128/freeciv21-client.png"
-                   "${CMAKE_BINARY_DIR}/client.iconset/icon_128x128.png")
+                  "${CMAKE_BINARY_DIR}/client.iconset/icon_128x128.png")
     execute_process(
       COMMAND iconutil --convert icns "${CMAKE_BINARY_DIR}/client.iconset")
     file(COPY_FILE "${CMAKE_BINARY_DIR}/client.icns"
-                   "${CMAKE_BINARY_DIR}/Freeciv21.app/Contents/Resources/client.icns")
-    message(STATUS "Freeciv21 App Bundle successfully created. Open from '${CMAKE_BINARY_DIR}' to play.")
+                  "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/Resources/client.icns")
+  ]] COMPONENT freeciv21)
+
+  if(FREECIV_MACOS_DYNAMIC)
+    install(CODE [[
+      message(STATUS "Collecting dependencies for freeciv21 executables...")
+      set(FREECIV_MACOS_BUNDLE "Freeciv21.app")
+      file(GLOB exes "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/MacOS/freeciv21-*")
+
+      # Run Qt's macdeployqt to find the required dyLibs for the GUI apps.
+      # It also copies the files we need to where we need them.
+      foreach(file IN LISTS exes)
+        execute_process(
+            COMMAND ${CMAKE_BINARY_DIR}/vcpkg_installed/x64-osx-custom/tools/Qt6/bin/macdeployqt6  
+          ${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE} -verbose=0 -executable=${file})
+      endforeach()
     ]] COMPONENT freeciv21)
+  endif(FREECIV_MACOS_DYNAMIC)
+  message(STATUS "Freeciv21 App Bundle successfully created. Open from '${CMAKE_BINARY_DIR}' to play.")
 endif(APPLE)
