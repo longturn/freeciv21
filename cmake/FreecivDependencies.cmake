@@ -161,8 +161,10 @@ if (FREECIV_ENABLE_CLIENT
     OR FREECIV_ENABLE_RULEDIT)
   # May want to relax the version later
   find_package(Qt6 6.6 COMPONENTS Widgets REQUIRED)
-  # fcmp needs TLS
-  find_package(OpenSSL REQUIRED)
+  # Link to openSSL for Apple and Win32
+  if(WIN32 OR APPLE)
+    find_package(OpenSSL REQUIRED)
+  endif()
 endif()
 if (FREECIV_ENABLE_CLIENT)
   find_package(Qt6 6.6 COMPONENTS Multimedia Svg REQUIRED)
