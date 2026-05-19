@@ -14,7 +14,7 @@
 <!-- User visible name used by Siri -->
   <key>CFBundleDisplayName</key>
   <string>Freeciv21</string>
-<!-- Version string. TODO: CMake CPack -->
+<!-- Version string. -->
   <key>CFBundleVersion</key>
   <string>@FC21_REV_TAG@</string>
 <!-- Primary executable -->
