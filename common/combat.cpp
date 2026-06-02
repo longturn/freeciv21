@@ -79,13 +79,19 @@ static bool is_unit_reachable_by_unit(const struct unit *defender,
  */
 bool is_unit_reachable_at(const struct unit *defender,
                           const struct unit *attacker,
-                          const struct tile *location)
+                          const struct tile *location,
+                          const struct action *paction)
 {
   if (is_unit_reachable_by_unit(defender, attacker)) {
     return true;
   }
 
-  if (get_unit_bonus(defender, EFT_UNIT_REACHABLE) > 0) {
+  if (get_target_bonus_effects(nullptr, unit_owner(defender), nullptr,
+                               unit_tile(defender) ?
+                                 tile_city(unit_tile(defender)) : nullptr,
+                               nullptr, unit_tile(defender), defender,
+                               unit_type_get(defender), nullptr, nullptr,
+                               paction, EFT_UNIT_REACHABLE) > 0) {
     return true;
   }
 
@@ -113,7 +119,8 @@ bool is_unit_reachable_at(const struct unit *defender,
 enum unit_attack_result
 unit_attack_unit_at_tile_result(const struct unit *punit,
                                 const struct unit *pdefender,
-                                const struct tile *dest_tile)
+                                const struct tile *dest_tile,
+                                const struct action *paction)
 {
   // 1. Can we attack _anything_ ?
   if (!(utype_can_do_action(unit_type_get(punit), ACTION_ATTACK)
@@ -142,7 +149,7 @@ unit_attack_unit_at_tile_result(const struct unit *punit,
   }
 
   // 4. Only fighters can attack planes, except in city or airbase attacks
-  if (!is_unit_reachable_at(pdefender, punit, dest_tile)) {
+  if (!is_unit_reachable_at(pdefender, punit, dest_tile, paction)) {
     return ATT_UNREACHABLE;
   }
 
@@ -159,7 +166,8 @@ unit_attack_unit_at_tile_result(const struct unit *punit,
  */
 static enum unit_attack_result
 unit_attack_all_at_tile_result(const struct unit *punit,
-                               const struct tile *ptile)
+                               const struct tile *ptile,
+                               const struct action *paction)
 {
   bool any_reachable_unit = false;
   bool any_neverprotect_unit = false;
@@ -174,7 +182,7 @@ unit_attack_all_at_tile_result(const struct unit *punit,
     if (!unit_transported(aunit)) {
       enum unit_attack_result result;
 
-      result = unit_attack_unit_at_tile_result(punit, aunit, ptile);
+      result = unit_attack_unit_at_tile_result(punit, aunit, ptile, paction);
       if (result == ATT_UNREACHABLE
           && unit_has_type_flag(aunit, UTYF_NEVER_PROTECTS)) {
         // Doesn't prevent us from attacking other units on the tile
@@ -201,7 +209,8 @@ unit_attack_all_at_tile_result(const struct unit *punit,
  */
 static enum unit_attack_result
 unit_attack_any_at_tile_result(const struct unit *punit,
-                               const struct tile *ptile)
+                               const struct tile *ptile,
+                               const struct action *paction)
 {
   enum unit_attack_result result = ATT_OK;
 
@@ -210,7 +219,7 @@ unit_attack_any_at_tile_result(const struct unit *punit,
     /* HACK: we don't count transported units here.  This prevents some
      * bugs like a cargoplane carrying a land unit being vulnerable. */
     if (!unit_transported(aunit)) {
-      result = unit_attack_unit_at_tile_result(punit, aunit, ptile);
+      result = unit_attack_unit_at_tile_result(punit, aunit, ptile, paction);
       if (result == ATT_OK) {
         return result;
       }
@@ -228,12 +237,13 @@ unit_attack_any_at_tile_result(const struct unit *punit,
  */
 enum unit_attack_result
 unit_attack_units_at_tile_result(const struct unit *punit,
-                                 const struct tile *ptile)
+                                 const struct tile *ptile,
+                                 const struct action *paction)
 {
   if (game.info.unreachable_protects) {
-    return unit_attack_all_at_tile_result(punit, ptile);
+    return unit_attack_all_at_tile_result(punit, ptile, paction);
   } else {
-    return unit_attack_any_at_tile_result(punit, ptile);
+    return unit_attack_any_at_tile_result(punit, ptile, paction);
   }
 }
 
@@ -242,10 +252,12 @@ unit_attack_units_at_tile_result(const struct unit *punit,
    to do so?
  */
 bool can_unit_attack_tile(const struct unit *punit,
-                          const struct tile *dest_tile)
+                          const struct tile *dest_tile,
+                          const struct action *paction)
 {
   return (can_player_attack_tile(unit_owner(punit), dest_tile)
-          && unit_attack_units_at_tile_result(punit, dest_tile) == ATT_OK);
+          && unit_attack_units_at_tile_result(punit, dest_tile,
+                                              paction) == ATT_OK);
 }
 
 /**
@@ -777,7 +789,8 @@ static int get_defense_rating(const struct unit *attacker,
  * this. This assumes that a normal 'ACTION_ATTACK' action is to be used.
  */
 struct unit *get_defender(const struct unit *attacker,
-                          const struct tile *ptile)
+                          const struct tile *ptile,
+                          const struct action *paction)
 {
   struct unit *bestdef = nullptr;
   int bestvalue = -99, best_cost = 0, rating_of_best = 0;
@@ -796,7 +809,7 @@ struct unit *get_defender(const struct unit *attacker,
     /* We used to skip over allied units, but the logic for that is
      * complicated and is now handled elsewhere. */
     if (unit_can_defend_here(&(wld.map), defender)
-        && unit_attack_unit_at_tile_result(attacker, defender, ptile)
+        && unit_attack_unit_at_tile_result(attacker, defender, ptile, paction)
                == ATT_OK) {
       bool change = false;
       int build_cost = unit_build_shield_cost_base(defender);

@@ -2532,7 +2532,8 @@ void unit_fuel_set(struct unit *punit, int fuel)
    iterations could have. E.g. notify_player, when pointed to nullptr,
    will send messages to _everyone_.
  */
-void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
+void kill_unit(struct unit *pkiller, struct unit *punit, bool vet,
+               const struct action *paction)
 {
   char pkiller_link[MAX_LEN_LINK], punit_link[MAX_LEN_LINK];
   struct player *pvictim = unit_owner(punit);
@@ -2679,7 +2680,7 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
       struct player *vplayer = unit_owner(vunit);
 
       if (pplayers_at_war(pvictor, vplayer)
-          && is_unit_reachable_at(vunit, pkiller, ptile)) {
+          && is_unit_reachable_at(vunit, pkiller, ptile, paction)) {
         escaped = false;
 
         if (unit_has_type_flag(vunit, UTYF_CANESCAPE)
@@ -2824,7 +2825,7 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
     unit_list_iterate_safe(ptile->units, punit2)
     {
       if (pplayers_at_war(pvictor, unit_owner(punit2))
-          && is_unit_reachable_at(punit2, pkiller, ptile)) {
+          && is_unit_reachable_at(punit2, pkiller, ptile, paction)) {
         wipe_unit(punit2, ULR_KILLED, pvictor);
       }
     }
@@ -3616,7 +3617,8 @@ static bool unit_survive_autoattack(struct unit *punit)
   {
     int sanity2 = penemy->id;
     struct tile *ptile = unit_tile(penemy);
-    struct unit *enemy_defender = get_defender(punit, ptile);
+    struct unit *enemy_defender = get_defender(punit, ptile,
+                                               action_by_number(ACTION_ATTACK));
     double punitwin, penemywin;
     double threshold = 0.25;
     struct tile *tgt_tile = unit_tile(punit);

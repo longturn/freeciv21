@@ -3274,7 +3274,7 @@ static enum fc_tristate is_action_possible(
     break;
 
   case ACTRES_NUKE_UNITS:
-    if (unit_attack_units_at_tile_result(actor_unit, target_tile)
+    if (unit_attack_units_at_tile_result(actor_unit, target_tile, paction)
         != ATT_OK) {
       // Unreachable.
       return TRI_NO;
@@ -3391,7 +3391,7 @@ static enum fc_tristate is_action_possible(
 
   case ACTRES_ATTACK:
     // Reason: Keep the old rules.
-    if (!can_unit_attack_tile(actor_unit, target_tile)) {
+    if (!can_unit_attack_tile(actor_unit, target_tile, paction)) {
       return TRI_NO;
     }
     break;
@@ -4658,7 +4658,7 @@ static struct act_prob action_prob(
     chance = ACTPROB_CERTAIN;
     break;
   case ACTRES_ATTACK: {
-    struct unit *defender_unit = get_defender(actor_unit, target_tile);
+    struct unit *defender_unit = get_defender(actor_unit, target_tile, paction);
 
     if (can_player_see_unit(actor_player, defender_unit)) {
       double unconverted = unit_win_chance(actor_unit, defender_unit);

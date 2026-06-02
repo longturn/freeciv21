@@ -153,7 +153,8 @@ void unit_recover_hitpoints(struct unit *punit, int amount);
 void unit_set_hitpoints(struct unit *punit, int amount);
 void wipe_unit(struct unit *punit, enum unit_loss_reason reason,
                struct player *killer);
-void kill_unit(struct unit *pkiller, struct unit *punit, bool vet);
+void kill_unit(struct unit *pkiller, struct unit *punit, bool vet,
+               const struct action *paction);
 
 struct unit *
 unit_change_owner(struct unit *punit, struct player *pplayer, int homecity,
