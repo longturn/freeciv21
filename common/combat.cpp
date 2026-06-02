@@ -93,10 +93,6 @@ bool is_unit_reachable_at(const struct unit *defender,
     return true;
   }
 
-  if (tile_has_native_base(location, unit_type_get(defender))) {
-    return true;
-  }
-
   return false;
 }
 

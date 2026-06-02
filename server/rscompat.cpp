@@ -1257,6 +1257,28 @@ static void rscompat_optional_capabilities(rscompat_info *info)
     // Add DiplRel=War
     iterate_effect_cache(rscompat_enemy_citizen_unhappy_effect_cb, info);
   }
+
+  if (!has_capability(CAP_EFT_UNIT_REACHABLE, info->cap_effects.data())) {
+    // Add effects to make units on native bases reachable
+    extra_type_by_cause_iterate(EC_BASE, pextra)
+    {
+      unit_class_iterate(uclass)
+      {
+        if (uclass_has_flag(uclass, UCF_UNREACHABLE)
+            && is_native_extra_to_uclass(pextra, uclass)) {
+          auto effect = effect_new(EFT_UNIT_REACHABLE, 1, nullptr);
+          effect_req_append(effect,
+                            req_from_str("UnitClass", "Local", false, true,
+                                         false, uclass_rule_name(uclass)));
+          effect_req_append(effect,
+                            req_from_str("Extra", "Tile", false, true, false,
+                                         extra_rule_name(pextra)));
+        }
+      }
+      unit_class_iterate_end;
+    }
+    extra_type_by_cause_iterate_end;
+  }
 }
 
 /**
