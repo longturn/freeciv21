@@ -138,8 +138,8 @@ static struct tile *find_best_tile_to_paradrop_to(struct ai_type *ait,
     adjc_iterate(&(wld.map), ptile, target)
     {
       if (unit_list_size(target->units) == 0
-          || !can_unit_attack_tile(punit, target) || is_ocean_tile(target)
-          || (has_handicap(pplayer, H_FOG)
+          || !can_unit_attack_tile(punit, target, nullptr)
+          || is_ocean_tile(target) || (has_handicap(pplayer, H_FOG)
               && !map_is_known_and_seen(target, pplayer, V_MAIN))) {
         continue;
       }
@@ -149,16 +149,16 @@ static struct tile *find_best_tile_to_paradrop_to(struct ai_type *ait,
         {
           if ((!has_handicap(pplayer, H_FOG)
                || can_player_see_unit(pplayer, victim))
-              && (unit_attack_unit_at_tile_result(punit, victim, target)
-                  == ATT_OK)) {
+              && (unit_attack_unit_at_tile_result(punit, victim, target,
+                                                  nullptr) == ATT_OK)) {
             val += victim->hp * 100;
           }
         }
         unit_list_iterate_end;
       } else {
-        val += get_defender(punit, target)->hp * 100;
+        val += get_defender(punit, target, nullptr)->hp * 100;
       }
-      val *= unit_win_chance(punit, get_defender(punit, target));
+      val *= unit_win_chance(punit, get_defender(punit, target, nullptr));
       val += pterrain->defense_bonus / 10;
       val -= punit->hp * 100;
 

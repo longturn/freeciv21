@@ -408,9 +408,10 @@ static bool is_my_turn(struct unit *punit, struct unit *pdef)
       if (aunit == punit || unit_owner(aunit) != unit_owner(punit)) {
         continue;
       }
-      if (unit_attack_units_at_tile_result(aunit, unit_tile(pdef)) != ATT_OK
-          || unit_attack_unit_at_tile_result(aunit, pdef, unit_tile(pdef))
-                 != ATT_OK) {
+      if (unit_attack_units_at_tile_result(aunit, unit_tile(pdef),
+                                           nullptr) != ATT_OK
+          || unit_attack_unit_at_tile_result(aunit, pdef, unit_tile(pdef),
+                                             nullptr) != ATT_OK) {
         continue;
       }
       d = get_virtual_defense_power(unit_type_get(aunit),
@@ -457,8 +458,8 @@ static int dai_rampage_want(struct unit *punit, struct tile *ptile)
 
   CHECK_UNIT(punit);
 
-  if (can_unit_attack_tile(punit, ptile)
-      && (pdef = get_defender(punit, ptile))) {
+  if (can_unit_attack_tile(punit, ptile, nullptr)
+      && (pdef = get_defender(punit, ptile, nullptr))) {
     // See description of kill_desire() about these variables.
     int attack = unit_att_rating_now(punit);
     int benefit = stack_cost(punit, pdef);
@@ -1377,8 +1378,8 @@ int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
         go_by_boat = true;
       }
 
-      if (can_unit_attack_tile(punit, city_tile(acity))
-          && (pdefender = get_defender(punit, city_tile(acity)))) {
+      if (can_unit_attack_tile(punit, city_tile(acity), nullptr)
+          && (pdefender = get_defender(punit, city_tile(acity), nullptr))) {
         vulnerability = unit_def_rating_squared(punit, pdefender);
         benefit = unit_build_shield_cost_base(pdefender);
       } else {
@@ -1544,8 +1545,8 @@ int find_something_to_kill(struct ai_type *ait, struct player *pplayer,
       /* We have to assume the attack is diplomatically ok.
        * We cannot use can_player_attack_tile, because we might not
        * be at war with aplayer yet */
-      if (!can_unit_attack_tile(punit, atile)
-          || aunit != get_defender(punit, atile)) {
+      if (!can_unit_attack_tile(punit, atile, nullptr)
+          || aunit != get_defender(punit, atile, nullptr)) {
         // We cannot attack it, or it is not the main defender.
         continue;
       }
@@ -1781,7 +1782,7 @@ static void dai_military_attack(struct ai_type *ait, struct player *pplayer,
                            &ferryboat, nullptr, nullptr);
     if (!same_pos(unit_tile(punit), dest_tile)) {
       if (!is_tiles_adjacent(unit_tile(punit), dest_tile)
-          || !can_unit_attack_tile(punit, dest_tile)) {
+          || !can_unit_attack_tile(punit, dest_tile, nullptr)) {
         /* Adjacent and can't attack usually means we are not marines
          * and on a ferry. This fixes the problem (usually). */
         UNIT_LOG(LOG_DEBUG, punit, "mil att gothere -> (%d, %d)",
@@ -3055,8 +3056,10 @@ void dai_consider_tile_dangerous(struct ai_type *ait, struct tile *ptile,
     unit_list_iterate(ptile1->units, enemy)
     {
       if (pplayers_at_war(unit_owner(enemy), unit_owner(punit))
-          && unit_attack_unit_at_tile_result(enemy, punit, ptile) == ATT_OK
-          && unit_attack_units_at_tile_result(enemy, ptile) == ATT_OK) {
+          && unit_attack_unit_at_tile_result(enemy, punit, ptile,
+                                             nullptr) == ATT_OK
+          && unit_attack_units_at_tile_result(enemy, ptile,
+                                              nullptr) == ATT_OK) {
         a += adv_unit_att_rating(enemy);
         if ((a * a * 10) >= d) {
           // The enemies combined strength is too big!
