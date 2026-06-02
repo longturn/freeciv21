@@ -333,7 +333,7 @@ static void dai_hunter_try_launch(struct ai_type *ait,
         if (move_cost > missile->moves_left / SINGLE_MOVE) {
           break;
         }
-        if (tile_city(ptile) || !can_unit_attack_tile(punit, ptile)) {
+        if (tile_city(ptile) || !can_unit_attack_tile(punit, ptile, nullptr)) {
           continue;
         }
         unit_list_iterate(ptile->units, victim)
@@ -475,7 +475,7 @@ int dai_hunter_manage(struct ai_type *ait, struct player *pplayer,
       return 0;
     }
 
-    if (tile_city(ptile) || !can_unit_attack_tile(punit, ptile)) {
+    if (tile_city(ptile) || !can_unit_attack_tile(punit, ptile, nullptr)) {
       continue;
     }
 
@@ -537,7 +537,8 @@ int dai_hunter_manage(struct ai_type *ait, struct player *pplayer,
        * if any. */
       dai_hunter_juiciness(pplayer, punit, target, &stackthreat, &stackcost);
       stackcost *=
-          unit_win_chance(punit, get_defender(punit, unit_tile(target)));
+          unit_win_chance(punit, get_defender(punit, unit_tile(target),
+                                              nullptr));
       if (stackcost < unit_build_shield_cost_base(punit)) {
         UNIT_LOG(LOGLEVEL_HUNT, punit,
                  "%d is too expensive (it %d vs us %d)", target->id,

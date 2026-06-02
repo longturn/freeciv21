@@ -1231,7 +1231,7 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
       find_something_to_kill(ait, pplayer, myunit, &ptile, &path, &ferry_map,
                              &ferryboat, &boattype, &move_time);
   if (nullptr == ptile || ptile == unit_tile(myunit)
-      || !can_unit_attack_tile(myunit, ptile)) {
+      || !can_unit_attack_tile(myunit, ptile, nullptr)) {
     goto cleanup;
   }
 
@@ -1272,7 +1272,7 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
       def_vet = 0;
     }
 
-    pdef = get_defender(myunit, ptile);
+    pdef = get_defender(myunit, ptile, nullptr);
     if (pdef) {
       int m = unittype_def_rating_squared(
           unit_type_get(myunit), unit_type_get(pdef), city_owner(acity),
@@ -1304,7 +1304,7 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
       ferry_map = nullptr;
     }
 
-    pdef = get_defender(myunit, ptile);
+    pdef = get_defender(myunit, ptile, nullptr);
     if (!pdef) {
       // Nobody to attack!
       goto cleanup;

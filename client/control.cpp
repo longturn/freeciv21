@@ -1080,7 +1080,7 @@ static bool can_units_attack_at(const std::vector<unit *> &units,
                                 const struct tile *ptile)
 {
   return std::any_of(units.begin(), units.end(), [&](const auto *unit) {
-    return is_attack_unit(unit) && can_unit_attack_tile(unit, ptile);
+    return is_attack_unit(unit) && can_unit_attack_tile(unit, ptile, nullptr);
   });
 }
 
