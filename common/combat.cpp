@@ -92,6 +92,10 @@ bool is_unit_reachable_at(const struct unit *defender,
     return true;
   }
 
+  if (get_unit_bonus(defender, EFT_UNIT_REACHABLE) > 0) {
+    return true;
+  }
+
   if (tile_has_native_base(location, unit_type_get(defender))) {
     return true;
   }
