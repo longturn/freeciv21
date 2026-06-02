@@ -81,10 +81,6 @@ bool is_unit_reachable_at(const struct unit *defender,
                           const struct unit *attacker,
                           const struct tile *location)
 {
-  if (nullptr != tile_city(location)) {
-    return true;
-  }
-
   if (is_unit_reachable_by_unit(defender, attacker)) {
     return true;
   }
