@@ -2772,6 +2772,8 @@ BV_DEFINE(bv_spaceship_structure, NUM_SS_STRUCTURALS);
 #define SPECENUM_VALUE135NAME "Growth_Surplus_Pct"
 #define SPECENUM_VALUE136 EFT_POLLU_TRADE_PCT
 #define SPECENUM_VALUE136NAME "Pollu_Trade_Pct"
+#define SPECENUM_VALUE137 EFT_UNIT_REACHABLE
+#define SPECENUM_VALUE137NAME "Unit_Reachable"
 // keep this last
 #define SPECENUM_COUNT EFT_COUNT
 #include "specenum_gen.h"

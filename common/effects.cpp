@@ -1326,6 +1326,7 @@ QString effect_type_unit_text(effect_type type, int value)
   case EFT_CASUS_BELLI_COMPLETE:
   case EFT_WONDER_VISIBLE:
   case EFT_NATION_INTELLIGENCE:
+  case EFT_UNIT_REACHABLE:
   case EFT_COUNT:
     return QStringLiteral("%1").arg(value);
   }
