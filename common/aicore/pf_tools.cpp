@@ -65,7 +65,6 @@ static inline bool pf_attack_possible(const struct tile *ptile,
 
     // Unit reachability test.
     if (BV_ISSET(param->utype->targets, uclass_index(unit_class_get(punit)))
-        || tile_has_native_base(ptile, unit_type_get(punit))
         || get_unit_bonus(punit, EFT_UNIT_REACHABLE)) {
       attack_any = true;
     } else if (game.info.unreachable_protects) {
