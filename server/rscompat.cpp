@@ -1278,6 +1278,10 @@ static void rscompat_optional_capabilities(rscompat_info *info)
       unit_class_iterate_end;
     }
     extra_type_by_cause_iterate_end;
+    // Add effect to make units in cities reachable
+    auto effect = effect_new(EFT_UNIT_REACHABLE, 1, nullptr);
+    effect_req_append(effect, req_from_str("CityTile", "Local", false, true,
+                                           false, "Center"));
   }
 }
 
