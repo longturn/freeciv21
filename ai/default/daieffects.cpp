@@ -581,6 +581,7 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
   case EFT_WONDER_VISIBLE:
   case EFT_NATION_INTELLIGENCE:
   case EFT_NUKE_INFRASTRUCTURE_PCT:
+  case EFT_UNIT_REACHABLE:
     break;
     // This has no effect for AI
   case EFT_VISIBLE_WALLS:
