@@ -1091,3 +1091,12 @@ Nation_Intelligence
         :hidden:
 
         Effects/Nation_Intelligence.rst
+
+.. _effect-unit-reachable:
+
+Unit_Reachable
+    If the value of this effect for a unit is larger than 0, the unit is reachable (can be attacked) regardless of unit-class-flag `Unreachable` and attacker's ``targets`` value.
+
+    .. note::
+        This effect is added automatically for units in cities and native bases. This behavior can be turned
+        off by requiring the ``+Unit_Reachable`` option in :file:`effects.ruleset`.

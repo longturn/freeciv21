@@ -1151,10 +1151,12 @@ static struct ane_expl *expl_act_not_enabl(struct unit *punit,
       action_custom = test_unit_can_airlift_to(nullptr, punit, target_city);
       break;
     case ACTRES_NUKE_UNITS:
-      action_custom = unit_attack_units_at_tile_result(punit, target_tile);
+      action_custom =
+          unit_attack_units_at_tile_result(punit, target_tile, paction);
       break;
     case ACTRES_ATTACK:
-      action_custom = unit_attack_units_at_tile_result(punit, target_tile);
+      action_custom =
+          unit_attack_units_at_tile_result(punit, target_tile, paction);
       break;
     case ACTRES_CONQUER_CITY:
       if (target_city) {
@@ -3718,7 +3720,7 @@ static bool unit_bombard(struct unit *punit, struct tile *ptile,
         "alliance at (%d, %d).",
         TILE_XY(unit_tile(pdefender)));
 
-    if (is_unit_reachable_at(pdefender, punit, ptile)) {
+    if (is_unit_reachable_at(pdefender, punit, ptile, paction)) {
       bool adj;
       enum direction8 facing;
       int att_hp, def_hp;
@@ -3755,7 +3757,7 @@ static bool unit_bombard(struct unit *punit, struct tile *ptile,
   // Send updates about affected units
   unit_list_iterate_safe(ptile->units, pdefender)
   {
-    if (is_unit_reachable_at(pdefender, punit, ptile)) {
+    if (is_unit_reachable_at(pdefender, punit, ptile, paction)) {
       send_unit_info(nullptr, pdefender);
     }
   }
@@ -3964,7 +3966,7 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
   int def_power, att_power;
   struct unit *pdefender;
 
-  if (!(pdefender = get_defender(punit, def_tile))) {
+  if (!(pdefender = get_defender(punit, def_tile, paction))) {
     // Can't fight air...
     return false;
   }
@@ -4253,7 +4255,8 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
     punit->moved = true; // We moved
     kill_unit(punit, pdefender,
               punit->veteran == old_unit_vet
-                  && !utype_is_consumed_by_action(paction, punit->utype));
+                  && !utype_is_consumed_by_action(paction, punit->utype),
+              paction);
 
     /* Now that dead defender is certainly no longer listed as unit
      * supported by the city, we may even remove the city

@@ -32,16 +32,17 @@ enum unit_attack_result {
 
 bool is_unit_reachable_at(const struct unit *defender,
                           const struct unit *attacker,
-                          const struct tile *location);
-enum unit_attack_result
-unit_attack_unit_at_tile_result(const struct unit *punit,
-                                const struct unit *pdefender,
-                                const struct tile *dest_tile);
+                          const struct tile *location,
+                          const struct action *paction);
+enum unit_attack_result unit_attack_unit_at_tile_result(
+    const struct unit *punit, const struct unit *pdefender,
+    const struct tile *dest_tile, const struct action *paction);
 enum unit_attack_result
 unit_attack_units_at_tile_result(const struct unit *punit,
-                                 const struct tile *ptile);
-bool can_unit_attack_tile(const struct unit *punit,
-                          const struct tile *ptile);
+                                 const struct tile *ptile,
+                                 const struct action *paction);
+bool can_unit_attack_tile(const struct unit *punit, const struct tile *ptile,
+                          const struct action *paction);
 
 double win_chance(int as, int ahp, int afp, int ds, int dhp, int dfp);
 
@@ -72,7 +73,8 @@ int get_total_attack_power(const struct unit *attacker,
                            const struct unit *defender);
 
 struct unit *get_defender(const struct unit *attacker,
-                          const struct tile *ptile);
+                          const struct tile *ptile,
+                          const struct action *paction);
 
 struct unit *get_diplomatic_defender(const struct unit *act_unit,
                                      const struct unit *pvictim,
