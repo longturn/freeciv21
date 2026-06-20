@@ -3547,8 +3547,8 @@ static bool unit_survive_autoattack(struct unit *punit)
   {
     int sanity2 = penemy->id;
     struct tile *ptile = unit_tile(penemy);
-    struct unit *enemy_defender = get_defender(punit, ptile,
-                                               action_by_number(ACTION_ATTACK));
+    struct unit *enemy_defender =
+        get_defender(punit, ptile, action_by_number(ACTION_ATTACK));
     double punitwin, penemywin;
     double threshold = 0.25;
     struct tile *tgt_tile = unit_tile(punit);
