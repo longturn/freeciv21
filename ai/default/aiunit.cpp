@@ -409,10 +409,11 @@ static bool is_my_turn(struct unit *punit, struct unit *pdef)
       if (aunit == punit || unit_owner(aunit) != unit_owner(punit)) {
         continue;
       }
-      if (unit_attack_units_at_tile_result(aunit, unit_tile(pdef),
-                                           nullptr) != ATT_OK
+      if (unit_attack_units_at_tile_result(aunit, unit_tile(pdef), nullptr)
+              != ATT_OK
           || unit_attack_unit_at_tile_result(aunit, pdef, unit_tile(pdef),
-                                             nullptr) != ATT_OK) {
+                                             nullptr)
+                 != ATT_OK) {
         continue;
       }
       d = get_virtual_defense_power(unit_type_get(aunit),
@@ -3057,10 +3058,10 @@ void dai_consider_tile_dangerous(struct ai_type *ait, struct tile *ptile,
     unit_list_iterate(ptile1->units, enemy)
     {
       if (pplayers_at_war(unit_owner(enemy), unit_owner(punit))
-          && unit_attack_unit_at_tile_result(enemy, punit, ptile,
-                                             nullptr) == ATT_OK
-          && unit_attack_units_at_tile_result(enemy, ptile,
-                                              nullptr) == ATT_OK) {
+          && unit_attack_unit_at_tile_result(enemy, punit, ptile, nullptr)
+                 == ATT_OK
+          && unit_attack_units_at_tile_result(enemy, ptile, nullptr)
+                 == ATT_OK) {
         a += adv_unit_att_rating(enemy);
         if ((a * a * 10) >= d) {
           // The enemies combined strength is too big!

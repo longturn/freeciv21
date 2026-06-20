@@ -86,12 +86,12 @@ bool is_unit_reachable_at(const struct unit *defender,
     return true;
   }
 
-  if (get_target_bonus_effects(nullptr, unit_owner(defender), nullptr,
-                               unit_tile(defender) ?
-                                 tile_city(unit_tile(defender)) : nullptr,
-                               nullptr, unit_tile(defender), defender,
-                               unit_type_get(defender), nullptr, nullptr,
-                               paction, EFT_UNIT_REACHABLE) > 0) {
+  if (get_target_bonus_effects(
+          nullptr, unit_owner(defender), nullptr,
+          unit_tile(defender) ? tile_city(unit_tile(defender)) : nullptr,
+          nullptr, unit_tile(defender), defender, unit_type_get(defender),
+          nullptr, nullptr, paction, EFT_UNIT_REACHABLE)
+      > 0) {
     return true;
   }
 
@@ -116,11 +116,9 @@ bool is_unit_reachable_at(const struct unit *defender,
    2) Adjacency
    3) Diplomatic status
  */
-enum unit_attack_result
-unit_attack_unit_at_tile_result(const struct unit *punit,
-                                const struct unit *pdefender,
-                                const struct tile *dest_tile,
-                                const struct action *paction)
+enum unit_attack_result unit_attack_unit_at_tile_result(
+    const struct unit *punit, const struct unit *pdefender,
+    const struct tile *dest_tile, const struct action *paction)
 {
   // 1. Can we attack _anything_ ?
   if (!(utype_can_do_action(unit_type_get(punit), ACTION_ATTACK)
@@ -256,8 +254,8 @@ bool can_unit_attack_tile(const struct unit *punit,
                           const struct action *paction)
 {
   return (can_player_attack_tile(unit_owner(punit), dest_tile)
-          && unit_attack_units_at_tile_result(punit, dest_tile,
-                                              paction) == ATT_OK);
+          && unit_attack_units_at_tile_result(punit, dest_tile, paction)
+                 == ATT_OK);
 }
 
 /**
@@ -809,7 +807,8 @@ struct unit *get_defender(const struct unit *attacker,
     /* We used to skip over allied units, but the logic for that is
      * complicated and is now handled elsewhere. */
     if (unit_can_defend_here(&(wld.map), defender)
-        && unit_attack_unit_at_tile_result(attacker, defender, ptile, paction)
+        && unit_attack_unit_at_tile_result(attacker, defender, ptile,
+                                           paction)
                == ATT_OK) {
       bool change = false;
       int build_cost = unit_build_shield_cost_base(defender);
