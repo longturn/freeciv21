@@ -1033,10 +1033,8 @@ bool tilespec_reread(const QString &name, bool game_fully_initialized)
   // New style notifications. See QApplication::setStyle for inspiration
   auto widgets = QApplication::allWidgets();
   for (auto *w : std::as_const(widgets)) {
-    if (w->windowType() != Qt::Desktop) {
-      QEvent e(TilesetChanged);
-      QApplication::sendEvent(w, &e);
-    }
+    QEvent e(TilesetChanged);
+    QApplication::sendEvent(w, &e);
   }
 
   return new_tileset_in_use;
