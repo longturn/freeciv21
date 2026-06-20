@@ -83,6 +83,10 @@ endif()
 # externally provided tolua program is required (or an emulator for the target
 # platform, eg qemu).
 find_package(Lua 5.3 REQUIRED)
+# TODO Switch to Lua_VERSION once we can require CMake 4.2
+if (${LUA_VERSION_STRING} VERSION_GREATER 5.5)
+  message(FATAL_ERROR "Unsupported Lua version: ${LUA_VERSION_STRING} > 5.5")
+endif()
 
 # Create an imported target since it's not created by CMake :(
 # Get a library name for IMPORTED_LOCATION
