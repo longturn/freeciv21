@@ -140,7 +140,8 @@ static struct tile *find_best_tile_to_paradrop_to(struct ai_type *ait,
     {
       if (unit_list_size(target->units) == 0
           || !can_unit_attack_tile(punit, target, nullptr)
-          || is_ocean_tile(target) || (has_handicap(pplayer, H_FOG)
+          || is_ocean_tile(target)
+          || (has_handicap(pplayer, H_FOG)
               && !map_is_known_and_seen(target, pplayer, V_MAIN))) {
         continue;
       }
@@ -151,7 +152,8 @@ static struct tile *find_best_tile_to_paradrop_to(struct ai_type *ait,
           if ((!has_handicap(pplayer, H_FOG)
                || can_player_see_unit(pplayer, victim))
               && (unit_attack_unit_at_tile_result(punit, victim, target,
-                                                  nullptr) == ATT_OK)) {
+                                                  nullptr)
+                  == ATT_OK)) {
             val += victim->hp * 100;
           }
         }
