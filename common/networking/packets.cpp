@@ -352,7 +352,6 @@ int decompress_buffer(connection *pc, QByteArrayView din, int len_read)
     } else {
       // Not enough data for the jumbo header. Error out.
       return -1;
-      ;
     }
   } else if (len_read >= COMPRESSION_BORDER) {
     header_size = 2;
@@ -361,8 +360,9 @@ int decompress_buffer(connection *pc, QByteArrayView din, int len_read)
                  whole_packet_len);
   }
 
+  // We may not have received the complete packet yet.
   if (static_cast<unsigned>(whole_packet_len) > pc->buffer->ndata) {
-    return 0; // not all data has been read
+    return 0;
   }
 
   if (whole_packet_len < header_size) {
@@ -492,6 +492,11 @@ void *get_packet_from_connection_raw(struct connection *pc,
 
   // The non-compressed case
   whole_packet_len = len_read;
+
+  // We may not have received the complete packet yet.
+  if (static_cast<unsigned>(whole_packet_len) > pc->buffer->ndata) {
+    return nullptr;
+  }
 
   /*
    * At this point the packet is a plain uncompressed one. These have
