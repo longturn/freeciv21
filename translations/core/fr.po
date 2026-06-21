@@ -2639,14 +2639,12 @@ msgid "Quit?"
 msgstr "Quitter ?"
 
 #: client/gui_main.cpp:298
-#, fuzzy
 msgid "Yes Quit"
 msgstr "Quitter"
 
 #: client/gui_main.cpp:299 client/menu.cpp:2923
-#, fuzzy
 msgid "Keep Playing"
-msgstr "Jouer"
+msgstr "Continuer à jouer"
 
 #: client/helpdlg.cpp:44
 msgid "(Never)"
