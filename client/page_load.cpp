@@ -244,7 +244,7 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
                                          "player%d.nation", curr_player);
       if (sname) {
         final_str = final_str + "<b>" + _("Nation") + ":</b> "
-                    + QString(sname).toHtmlEscaped() + "<br>";
+                    + QString(_(sname)).toHtmlEscaped() + "<br>";
       }
       integer = secfile_lookup_int_default(sf.get(), -1, "player%d.ncities",
                                            curr_player);
@@ -326,7 +326,7 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
             sf.get(), nullptr, "research.r%d.now_name", curr_player);
         if (sname) {
           final_str = final_str + "<b>" + _("Researching") + ":</b> "
-                      + QString(sname).toHtmlEscaped();
+                      + QString(_(sname)).toHtmlEscaped();
         }
       }
     }
