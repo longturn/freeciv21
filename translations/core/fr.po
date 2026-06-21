@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Freeciv trunk\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-21 17:56+0200\n"
+"POT-Creation-Date: 2026-06-21 18:57+0200\n"
 "PO-Revision-Date: 2022-08-13 03:33+0200\n"
 "Last-Translator: Louis Moureaux <m_louis30@yahoo.com>\n"
 "Language-Team: French <>\n"
@@ -837,7 +837,7 @@ msgstr ""
 
 #: client/chatline_common.cpp:161
 msgid "See the \"Copying\" item on the Help menu."
-msgstr "Voir l'onglet \"Licence\" du menu Aide."
+msgstr "Voir l'onglet « Licence » du menu Aide."
 
 #: client/chatline_common.cpp:164
 msgid "See COPYING file distributed with this program."
@@ -5044,9 +5044,8 @@ msgid "Researching"
 msgstr "Recherche"
 
 #: client/page_main.cpp:22
-#, fuzzy
 msgid "Tutorial"
-msgstr "Message du tutoriel"
+msgstr "Tutoriel"
 
 #: client/page_main.cpp:23
 msgid "Start new game"
@@ -5176,7 +5175,8 @@ msgstr "Se déconnecter"
 msgid "Observe"
 msgstr "Observer"
 
-#: client/page_pregame.cpp:64 client/page_pregame.cpp:364
+#: client/page_pregame.cpp:64 client/page_pregame.cpp:360
+#: client/page_pregame.cpp:364
 msgid "Start"
 msgstr "Démarrer"
 
