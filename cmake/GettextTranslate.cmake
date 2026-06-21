@@ -190,7 +190,7 @@ macro(GettextTranslate)
     COMMAND ${GettextTranslate_XGETTEXT_EXECUTABLE} ${XGETTEXT_OPTS}
       -o ${TEMPLATE_FILE_ABS}
       --default-domain=${MAKEVAR_DOMAIN}
-      --add-comments=TRANSLATORS:
+      --add-comments=TRANS:
       --copyright-holder=${MAKEVAR_COPYRIGHT_HOLDER}
       --msgid-bugs-address="${MAKEVAR_MSGID_BUGS_ADDRESS}"
       --directory=${MAKEVAR_top_builddir}
@@ -210,7 +210,7 @@ macro(GettextTranslate)
   #  COMMAND ${GettextTranslate_XGETTEXT_EXECUTABLE} ${XGETTEXT_OPTS}
   #    -o ${TEMPLATE_FILE_ABS}
   #    --default-domain=${MAKEVAR_DOMAIN}
-  #    --add-comments=TRANSLATORS:
+  #    --add-comments=TRANS:
   #    --copyright-holder=${MAKEVAR_COPYRIGHT_HOLDER}
   #    --msgid-bugs-address="${MAKEVAR_MSGID_BUGS_ADDRESS}"
   #    --directory=${MAKEVAR_top_builddir}
