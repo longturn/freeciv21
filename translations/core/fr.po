@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Freeciv trunk\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-21 22:21+0200\n"
+"POT-Creation-Date: 2026-06-21 22:39+0200\n"
 "PO-Revision-Date: 2022-08-13 03:33+0200\n"
 "Last-Translator: Louis Moureaux <m_louis30@yahoo.com>\n"
 "Language-Team: French <>\n"
@@ -3910,32 +3910,26 @@ msgid "Configure"
 msgstr "Configurer"
 
 #: client/minimap_panel.cpp:86
-#, fuzzy
 msgid "Show Relief"
-msgstr "Montrer l'aperçu"
+msgstr "Montrer le relief"
 
 #: client/minimap_panel.cpp:95
-#, fuzzy
 msgid "Show Borders"
-msgstr "Monter les frontieres"
+msgstr "Monter les frontières"
 
 #: client/minimap_panel.cpp:105
-#, fuzzy
 msgid "Show Borders on Oceans"
-msgstr "Monter les frontieres"
+msgstr "Monter les frontières sur l'océan"
 
 #: client/minimap_panel.cpp:118
-#, fuzzy
 msgid "Show Cities"
 msgstr "Montrer les villes"
 
 #: client/minimap_panel.cpp:127
-#, fuzzy
 msgid "Show Units"
 msgstr "Montrer les unités"
 
 #: client/minimap_panel.cpp:136
-#, fuzzy
 msgid "Show Fog of War"
 msgstr "Monter le brouillard de guerre"
 
