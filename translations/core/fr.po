@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Freeciv trunk\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-21 18:57+0200\n"
+"POT-Creation-Date: 2026-06-21 19:12+0200\n"
 "PO-Revision-Date: 2022-08-13 03:33+0200\n"
 "Last-Translator: Louis Moureaux <m_louis30@yahoo.com>\n"
 "Language-Team: French <>\n"
@@ -5126,7 +5126,7 @@ msgstr "Mot de passe"
 
 #: client/page_network.cpp:103
 msgid "Confirm Password"
-msgstr "Confirmer le mot de passe:"
+msgstr "Confirmer le mot de passe"
 
 #: client/page_network.cpp:121
 msgid "Internet servers:"
