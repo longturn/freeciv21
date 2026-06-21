@@ -26,7 +26,8 @@ struct player;
 bool script_fcdb_init(const QString &fcdb_luafile);
 void script_fcdb_free();
 
-bool script_fcdb_do_string(struct connection *caller, const char *str);
+bool script_fcdb_do_string(struct server_connection *caller,
+                           const char *str);
 
 // Call Lua functions
 bool script_fcdb_user_delegate_to(connection *pconn, player *pplayer,

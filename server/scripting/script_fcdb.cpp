@@ -254,7 +254,7 @@ void script_fcdb_free()
    Parse and execute the script in str in the lua instance for the freeciv
    database.
  */
-bool script_fcdb_do_string(struct connection *caller, const char *str)
+bool script_fcdb_do_string(server_connection *caller, const char *str)
 {
   /* Set a log callback function which allows to send the results of the
    * command to the clients. */
@@ -263,7 +263,12 @@ bool script_fcdb_do_string(struct connection *caller, const char *str)
   fcl_compat.output_fct = script_fcdb_cmd_reply;
   fcl_compat.caller = caller;
 
-  auto result = fcl->safe_script(str).valid();
+  bool result = false;
+  try {
+    result = fcl->safe_script(str).valid();
+  } catch (const std::exception &e) {
+    cmd_reply(CMD_FCDB, caller, C_FAIL, "%s", e.what());
+  }
 
   // Reset the changes.
   fcl_compat.caller = save_caller;
