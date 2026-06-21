@@ -230,7 +230,7 @@ static void fmfill(int x, int y, int c, int r)
     y_more = 0;
   }
 
-  if (y >= 0 && y < wld.map.ysize) {
+  if (y >= 0 && y < wld.map.ysize && x >= 0 && x < wld.map.xsize) {
     ptileXY = native_pos_to_tile(&(wld.map), x, y);
     ptileX2Y = native_pos_to_tile(&(wld.map), x_more, y);
     ptileX1Y = native_pos_to_tile(&(wld.map), x_less, y);
