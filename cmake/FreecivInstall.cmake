@@ -320,8 +320,6 @@ if(APPLE)
     file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}")
     file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents")
     file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/MacOS")
-    file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/Plugins")
-    file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/Plugins/tls")
     file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/Resources")
     file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/Resources/doc")
     file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/Resources/locale")
@@ -330,10 +328,6 @@ if(APPLE)
     file(COPY "${CMAKE_INSTALL_PREFIX}/bin/"
       DESTINATION "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/MacOS/"
       FILES_MATCHING PATTERN "Freeciv21-*"
-    )
-    file(COPY "${CMAKE_BINARY_DIR}/vcpkg_installed/x64-osx-custom/Qt6/plugins/tls"
-      DESTINATION "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/Plugins/tls"
-      FILES_MATCHING PATTERN "*"
     )
     file(COPY "${CMAKE_INSTALL_PREFIX}/share/freeciv21/"
       DESTINATION "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/Resources/"
@@ -370,6 +364,15 @@ if(APPLE)
     install(CODE [[
       message(STATUS "Collecting dependencies for freeciv21 executables...")
       set(FREECIV_MACOS_BUNDLE "Freeciv21.app")
+
+      # We need to manually add TLS plugin.
+      file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/Plugins")
+      file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/Plugins/tls")
+      file(COPY "${CMAKE_BINARY_DIR}/vcpkg_installed/x64-osx-custom/Qt6/plugins/tls"
+        DESTINATION "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/Plugins"
+        FILES_MATCHING PATTERN "*"
+      )
+
       file(GLOB exes "${CMAKE_BINARY_DIR}/${FREECIV_MACOS_BUNDLE}/Contents/MacOS/freeciv21-*")
 
       # Run Qt's macdeployqt to find the required dyLibs for the GUI apps.
