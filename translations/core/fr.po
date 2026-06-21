@@ -7438,9 +7438,8 @@ msgid "Sell Improvement"
 msgstr "Vendre un bâtiment"
 
 #: client/utils/unit_quick_menu.cpp:126
-#, fuzzy
 msgid "Activate Unit"
-msgstr "Activer les unités"
+msgstr "Activer l'unité"
 
 #: client/utils/unit_quick_menu.cpp:129
 msgid "Sentry Unit"
