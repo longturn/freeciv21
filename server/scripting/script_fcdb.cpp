@@ -205,30 +205,32 @@ bool script_fcdb_init(const QString &fcdb_luafile)
     tolua_game_open(fcl->lua_state());
     script_fcdb_register_functions();
     luascript_common_z(fcl->lua_state());
+
+    // Define the prototypes for the needed lua functions.
+    if (!fcl->safe_script_file(qUtf8Printable(fcdb_luafile_resolved))
+             .valid()) {
+      qCritical("Error loading the Freeciv21 database lua script '%s'.",
+                qUtf8Printable(fcdb_luafile_resolved));
+      script_fcdb_free();
+      return false;
+    }
+    script_fcdb_functions_check(qUtf8Printable(fcdb_luafile_resolved));
   } catch (const std::exception &e) {
     qCritical() << "Error loading the Freeciv21 database lua definition:"
                 << e.what();
-    script_fcdb_free();
+
+    // We haven't called database_init() yet and it may not exist.
+    delete fcl;
+    fcl = nullptr;
     return false;
   }
-
-  //   luascript_func_init(fcl->lua_state());
-
-  // Define the prototypes for the needed lua functions.
-  if (!fcl->safe_script_file(qUtf8Printable(fcdb_luafile_resolved))
-           .valid()) {
-    qCritical("Error loading the Freeciv21 database lua script '%s'.",
-              qUtf8Printable(fcdb_luafile_resolved));
-    script_fcdb_free();
-    return false;
-  }
-  script_fcdb_functions_check(qUtf8Printable(fcdb_luafile_resolved));
 
   if (!script_fcdb_database_init()) {
     qCritical("Error connecting to the database");
     script_fcdb_free();
     return false;
   }
+
   return true;
 }
 
