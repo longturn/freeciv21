@@ -32,19 +32,23 @@ minimap_panel::minimap_panel(map_view *map, QWidget *parent)
 
   ui.zoom_in->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("zoom-in")));
+  ui.zoom_in->setToolTip(_("Zoom In"));
   connect(ui.zoom_in, &QAbstractButton::clicked, map, &map_view::zoom_in);
 
   ui.zoom_reset->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("zoom-original")));
+  ui.zoom_reset->setToolTip(_("Zoom Default"));
   connect(ui.zoom_reset, &QAbstractButton::clicked, map,
           &map_view::zoom_reset);
 
   ui.zoom_out->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("zoom-out")));
+  ui.zoom_out->setToolTip(_("Zoom Out"));
   connect(ui.zoom_out, &QAbstractButton::clicked, map, &map_view::zoom_out);
 
   ui.settings->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("settings-minimap")));
+  ui.settings->setToolTip(_("Configure"));
   setup_minimap_menu();
 
   connect(ui.turn_done, &QAbstractButton::clicked, top_bar_finish_turn);
