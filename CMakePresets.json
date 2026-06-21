@@ -111,8 +111,8 @@
     },
     {
       "name": "windows-debug",
-      "description": "Target Windows with the Visual Studio development environment (Debug)",
-      "generator": "Visual Studio 17 2022",
+      "description": "Target Windows with the Visual Studio 2026 development environment (Debug)",
+      "generator": "Visual Studio 18 2026",
       "binaryDir": "${sourceDir}/build-vs",
       "installDir": "${sourceDir}/build-vs/install",
       "cacheVariables": {
