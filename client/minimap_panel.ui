@@ -98,11 +98,7 @@
     </layout>
    </item>
    <item>
-    <widget class="turn_done_button" name="turn_done">
-     <property name="text">
-      <string>Turn Done</string>
-     </property>
-    </widget>
+    <widget class="turn_done_button" name="turn_done"/>
    </item>
   </layout>
  </widget>
