@@ -13,6 +13,7 @@ XGETTEXT_OPTIONS = -C --qt \
   --keyword=_ --flag=_:1:pass-c-format \
   --keyword=Q_ --flag=Q_:1:pass-c-format \
   --keyword=N_ --flag=N_:1:pass-c-format \
+  --keyword=PL_:1,2 \
   --flag=error:3:c-format --flag=error_at_line:5:c-format \
   --flag=asprintf:2:c-format --flag=vasprintf:2:c-format \
   --flag=xasprintf:1:c-format --flag=error_logger:1:c-format \
