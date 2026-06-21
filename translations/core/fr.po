@@ -12211,7 +12211,7 @@ msgstr "%sBombarder%s"
 #: data/sandbox/game.ruleset:465
 #, c-format
 msgid "%sExplode Missile%s"
-msgstr "%sExplosion Nucléaire%s"
+msgstr "%sAttaquer avec le missile%s"
 
 #: data/alien/game.ruleset:461 data/civ2civ3/game.ruleset:514
 #: data/classic/game.ruleset:503 data/multiplayer/game.ruleset:500
