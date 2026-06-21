@@ -226,6 +226,7 @@ data/civ1/effects.ruleset
 data/civ1/game.ruleset
 data/civ1/governments.ruleset
 data/civ1/nations.ruleset
+data/civ1/script.lua
 data/civ1/styles.ruleset
 data/civ1/techs.ruleset
 data/civ1/terrain.ruleset
@@ -236,6 +237,7 @@ data/civ2/effects.ruleset
 data/civ2/game.ruleset
 data/civ2/governments.ruleset
 data/civ2/nations.ruleset
+data/civ2/script.lua
 data/civ2/styles.ruleset
 data/civ2/techs.ruleset
 data/civ2/terrain.ruleset
@@ -246,6 +248,7 @@ data/civ2civ3/effects.ruleset
 data/civ2civ3/game.ruleset
 data/civ2civ3/governments.ruleset
 data/civ2civ3/nations.ruleset
+data/civ2civ3/script.lua
 data/civ2civ3/styles.ruleset
 data/civ2civ3/techs.ruleset
 data/civ2civ3/terrain.ruleset
@@ -256,6 +259,7 @@ data/classic/effects.ruleset
 data/classic/game.ruleset
 data/classic/governments.ruleset
 data/classic/nations.ruleset
+data/classic/script.lua
 data/classic/styles.ruleset
 data/classic/techs.ruleset
 data/classic/terrain.ruleset
@@ -269,6 +273,7 @@ data/experimental/effects.ruleset
 data/experimental/game.ruleset
 data/experimental/governments.ruleset
 data/experimental/nations.ruleset
+data/experimental/script.lua
 data/experimental/styles.ruleset
 data/experimental/techs.ruleset
 data/experimental/terrain.ruleset
@@ -285,6 +290,7 @@ data/multiplayer/effects.ruleset
 data/multiplayer/game.ruleset
 data/multiplayer/governments.ruleset
 data/multiplayer/nations.ruleset
+data/multiplayer/script.lua
 data/multiplayer/styles.ruleset
 data/multiplayer/techs.ruleset
 data/multiplayer/terrain.ruleset
@@ -348,6 +354,7 @@ data/royale/effects.ruleset
 data/royale/game.ruleset
 data/royale/governments.ruleset
 data/royale/nations.ruleset
+data/royale/script.lua
 data/royale/styles.ruleset
 data/royale/techs.ruleset
 data/royale/terrain.ruleset
@@ -358,6 +365,7 @@ data/sandbox/effects.ruleset
 data/sandbox/game.ruleset
 data/sandbox/governments.ruleset
 data/sandbox/nations.ruleset
+data/sandbox/script.lua
 data/sandbox/styles.ruleset
 data/sandbox/techs.ruleset
 data/sandbox/terrain.ruleset
