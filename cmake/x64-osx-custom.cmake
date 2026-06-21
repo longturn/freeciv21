@@ -9,7 +9,3 @@ set(VCPKG_OSX_ARCHITECTURES x86_64)
 if(PORT MATCHES "gettext")
   set(VCPKG_LIBRARY_LINKAGE static)
 endif()
-
-#if(PORT MATCHES "qt")
-#  set(VCPKG_LIBRARY_LINKAGE dynamic)
-#endif()
