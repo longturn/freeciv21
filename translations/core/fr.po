@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Freeciv trunk\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-21 21:12+0200\n"
+"POT-Creation-Date: 2026-06-21 22:00+0200\n"
 "PO-Revision-Date: 2022-08-13 03:33+0200\n"
 "Last-Translator: Louis Moureaux <m_louis30@yahoo.com>\n"
 "Language-Team: French <>\n"
@@ -20736,6 +20736,16 @@ msgstr "Jarl %s"
 msgid "?female:%s Jarl"
 msgstr "Jarl %s"
 
+#: data/civ2/script.lua:45
+#, fuzzy, c-format
+msgid "Your %s has been lost at sea. This kind of vessel may disappear "
+msgstr "Votre %s a été perdu en haute mer."
+
+#: data/civ2/script.lua:51
+#, fuzzy, c-format
+msgid "Your %s was lucky "
+msgstr "Votre %s a été atomisé(e) par %s."
+
 #: data/civ2/techs.ruleset:133 data/civ2civ3/techs.ruleset:134
 #: data/classic/techs.ruleset:133 data/experimental/techs.ruleset:136
 #: data/multiplayer/techs.ruleset:133 data/royale/techs.ruleset:135
@@ -23966,6 +23976,237 @@ msgstr ""
 "Commerce).\n"
 "* A un sénat qui peut empêcher une déclaration de guerre."
 
+#: data/civ2civ3/script.lua:173 data/royale/script.lua:173
+#: data/sandbox/script.lua:210
+msgid "Grand Canyon"
+msgstr "Grand canyon"
+
+#: data/civ2civ3/script.lua:175 data/royale/script.lua:175
+#: data/sandbox/script.lua:212
+msgid "Deep Gorge"
+msgstr "Défilé"
+
+#: data/civ2civ3/script.lua:177 data/royale/script.lua:177
+#: data/sandbox/script.lua:214
+msgid "Fjords"
+msgstr "Fjords"
+
+#: data/civ2civ3/script.lua:179 data/royale/script.lua:179
+#: data/sandbox/script.lua:216
+msgid "Waterfalls"
+msgstr "Chutes d'eau"
+
+#: data/civ2civ3/script.lua:181 data/royale/script.lua:181
+#: data/sandbox/script.lua:218
+msgid "Travertine Terraces"
+msgstr "Terrasses en travertin"
+
+#: data/civ2civ3/script.lua:188 data/classic/script.lua:77
+#: data/royale/script.lua:188 data/sandbox/script.lua:225
+msgid "Deep Trench"
+msgstr "Fosse profonde"
+
+#: data/civ2civ3/script.lua:190 data/royale/script.lua:190
+#: data/sandbox/script.lua:227
+msgid "Thermal Vent"
+msgstr "Cheminée hydrothermale"
+
+#: data/civ2civ3/script.lua:197 data/royale/script.lua:197
+#: data/sandbox/script.lua:234
+msgid "Atoll Chain"
+msgstr "Chaîne d'atolls"
+
+#: data/civ2civ3/script.lua:199 data/royale/script.lua:199
+#: data/sandbox/script.lua:236
+msgid "Great Barrier Reef"
+msgstr "Grande barrière de corail"
+
+#: data/civ2civ3/script.lua:202 data/royale/script.lua:202
+#: data/sandbox/script.lua:239
+msgid "Great Blue Hole"
+msgstr "Grand trou bleu"
+
+#: data/civ2civ3/script.lua:209 data/royale/script.lua:209
+#: data/sandbox/script.lua:246
+msgid "Great Lakes"
+msgstr "Grands lacs"
+
+#: data/civ2civ3/script.lua:212 data/royale/script.lua:212
+#: data/sandbox/script.lua:249
+msgid "Dead Sea"
+msgstr "Mer morte"
+
+#: data/civ2civ3/script.lua:214 data/royale/script.lua:214
+#: data/sandbox/script.lua:251
+msgid "Rift Lake"
+msgstr "Lac d'effondrement"
+
+#: data/civ2civ3/script.lua:221 data/royale/script.lua:221
+#: data/sandbox/script.lua:258
+msgid "Grand Prismatic Spring"
+msgstr "Grand Prismatic Spring"
+
+#: data/civ2civ3/script.lua:223 data/royale/script.lua:223
+#: data/sandbox/script.lua:260
+msgid "Mangrove Forest"
+msgstr "Forêt de mangroves"
+
+#: data/civ2civ3/script.lua:225 data/royale/script.lua:225
+#: data/sandbox/script.lua:262
+msgid "Cenotes"
+msgstr "Cénotes"
+
+#: data/civ2civ3/script.lua:232 data/royale/script.lua:232
+#: data/sandbox/script.lua:269
+msgid "Ice Sheet"
+msgstr "Inlandsis"
+
+#: data/civ2civ3/script.lua:234 data/classic/script.lua:87
+#: data/royale/script.lua:234 data/sandbox/script.lua:271
+msgid "Frozen Lake"
+msgstr "Lac gelé"
+
+#: data/civ2civ3/script.lua:236 data/royale/script.lua:236
+#: data/sandbox/script.lua:273
+msgid "Glacier Bay"
+msgstr "Baie glaciaire"
+
+#: data/civ2civ3/script.lua:238 data/royale/script.lua:238
+#: data/sandbox/script.lua:275
+msgid "Advancing Glacier"
+msgstr "Glacier en mouvement"
+
+#: data/civ2civ3/script.lua:244 data/royale/script.lua:244
+#: data/sandbox/script.lua:281
+msgid "Geothermal Area"
+msgstr "Zone géothermique"
+
+#: data/civ2civ3/script.lua:250 data/royale/script.lua:250
+#: data/sandbox/script.lua:287
+msgid "Sand Sea"
+msgstr "Mer de sable"
+
+#: data/civ2civ3/script.lua:252 data/royale/script.lua:252
+#: data/sandbox/script.lua:289
+msgid "Salt Flat"
+msgstr "Désert de sel"
+
+#: data/civ2civ3/script.lua:254 data/royale/script.lua:254
+#: data/sandbox/script.lua:291
+msgid "Singing Dunes"
+msgstr "Dunes chantantes"
+
+#: data/civ2civ3/script.lua:256 data/royale/script.lua:256
+#: data/sandbox/script.lua:293
+msgid "White Desert"
+msgstr "Désert blanc"
+
+#: data/civ2civ3/script.lua:263 data/royale/script.lua:263
+#: data/sandbox/script.lua:300
+msgid "Long Beach"
+msgstr "Longue plage"
+
+#: data/civ2civ3/script.lua:265 data/royale/script.lua:265
+#: data/sandbox/script.lua:302
+msgid "Mud Volcanoes"
+msgstr "Volcans de boue"
+
+#: data/civ2civ3/script.lua:267 data/royale/script.lua:267
+#: data/sandbox/script.lua:304
+msgid "Rock Pillars"
+msgstr "Piliers rocheux"
+
+#: data/civ2civ3/script.lua:274 data/royale/script.lua:274
+#: data/sandbox/script.lua:311
+msgid "White Cliffs"
+msgstr "Falaises blanches"
+
+#: data/civ2civ3/script.lua:276 data/royale/script.lua:276
+#: data/sandbox/script.lua:313
+msgid "Giant Cave"
+msgstr "Caverne géante"
+
+#: data/civ2civ3/script.lua:278 data/royale/script.lua:278
+#: data/sandbox/script.lua:315
+msgid "Rock Formation"
+msgstr "Formation rocheuse"
+
+#: data/civ2civ3/script.lua:285 data/royale/script.lua:285
+#: data/sandbox/script.lua:322
+msgid "Rainforest"
+msgstr "Forêt humide"
+
+#: data/civ2civ3/script.lua:287 data/royale/script.lua:287
+#: data/sandbox/script.lua:324
+msgid "Subterranean River"
+msgstr "Rivière souterraine"
+
+#: data/civ2civ3/script.lua:289 data/royale/script.lua:289
+#: data/sandbox/script.lua:326
+msgid "Sinkholes"
+msgstr "Dolines"
+
+#: data/civ2civ3/script.lua:296 data/royale/script.lua:296
+#: data/sandbox/script.lua:333
+msgid "Stone Forest"
+msgstr "Forêt de karst"
+
+#: data/civ2civ3/script.lua:298 data/royale/script.lua:298
+#: data/sandbox/script.lua:335
+msgid "Sequoia Forest"
+msgstr "Forêt de séquoïas"
+
+#: data/civ2civ3/script.lua:300 data/royale/script.lua:300
+#: data/sandbox/script.lua:337
+msgid "Millenary Trees"
+msgstr "Arbres millénaires"
+
+# AR
+#: data/civ2civ3/script.lua:308 data/royale/script.lua:308
+#: data/sandbox/script.lua:345
+msgid "Table Mountain"
+msgstr "Haut-plateau"
+
+#: data/civ2civ3/script.lua:310 data/royale/script.lua:310
+#: data/sandbox/script.lua:347
+msgid "Inselberg"
+msgstr "Inselberg"
+
+#: data/civ2civ3/script.lua:313 data/royale/script.lua:313
+#: data/sandbox/script.lua:350
+msgid "Karst Landscape"
+msgstr "Paysage karstique"
+
+#: data/civ2civ3/script.lua:315 data/royale/script.lua:315
+#: data/sandbox/script.lua:352
+msgid "Valley of Geysers"
+msgstr "Vallée de geysers"
+
+#: data/civ2civ3/script.lua:322 data/classic/script.lua:72
+#: data/royale/script.lua:322 data/sandbox/script.lua:359
+msgid "Highest Peak"
+msgstr "Plus haut sommet"
+
+#: data/civ2civ3/script.lua:324 data/royale/script.lua:324
+#: data/sandbox/script.lua:361
+msgid "Sacred Mount"
+msgstr "Montagne sacrée"
+
+#: data/civ2civ3/script.lua:326 data/royale/script.lua:326
+#: data/sandbox/script.lua:363
+msgid "Cliff Coast"
+msgstr "Côte de falaises"
+
+#: data/civ2civ3/script.lua:328 data/royale/script.lua:328
+#: data/sandbox/script.lua:365
+msgid "Active Volcano"
+msgstr "Volcan actif"
+
+#: data/civ2civ3/script.lua:330 data/royale/script.lua:330
+#: data/sandbox/script.lua:367
+msgid "High Summit"
+msgstr "Haut sommet"
+
 #: data/civ2civ3/styles.ruleset:136 data/classic/styles.ruleset:136
 #: data/experimental/styles.ruleset:138 data/multiplayer/styles.ruleset:136
 #: data/royale/styles.ruleset:136 data/sandbox/styles.ruleset:136
@@ -26152,6 +26393,10 @@ msgstr "%sVendre les marchandises%s"
 #: data/classic/game.ruleset:1388
 msgid "Pestilence"
 msgstr "Épidémie"
+
+#: data/classic/script.lua:82
+msgid "Scorched Spot"
+msgstr "Zone Brûlée"
 
 #: data/classic/techs.ruleset:269 data/experimental/techs.ruleset:287
 #: data/multiplayer/techs.ruleset:269
@@ -32150,6 +32395,51 @@ msgstr "Lavande"
 msgid "?team name:Cream"
 msgstr "Crème"
 
+#: data/multiplayer/script.lua:45
+#, c-format
+msgid "%s boosts research; you gain the immediate advance %s."
+msgstr "%s accélère la recherche, vous obtenez immédiatement l'avancée %s."
+
+#: data/multiplayer/script.lua:50
+#, c-format
+msgid "%s boosts %s research; you gain the immediate advance %s."
+msgstr ""
+"%s accélère la recherche de %s ; vous obtenez immédiatement l'avancée %s."
+
+#. TRANS: 1st %s is nation or team name
+#: data/multiplayer/script.lua:59
+#, c-format
+msgid "The %s gain %s from %s."
+msgstr "Les %s ont acquis %s de %s."
+
+#: data/multiplayer/script.lua:120
+#, c-format
+msgid ""
+"Great philosophers from all the world join your civilization: you get the "
+"immediate advance %s."
+msgstr ""
+"De grands philosophes du monde entier rejoignent votre civilisation : vous "
+"obtenez immédiatement l'avancée %s."
+
+#: data/multiplayer/script.lua:125
+#, c-format
+msgid ""
+"Great philosophers from all the world join the %s: you get the immediate "
+"advance %s."
+msgstr ""
+"De grands philosophes du monde entier rejoignent les %s : vous obtenez "
+"immédiatement l'avancée %s."
+
+#. TRANS: first %s is nation plural or team name
+#: data/multiplayer/script.lua:133
+#, c-format
+msgid ""
+"Great philosophers from all the world join the %s: they get %s as an "
+"immediate advance."
+msgstr ""
+"De grands philosophes du monde entier rejoignent les %s : ils obtiennent "
+"immédiatement l'avancée %s."
+
 #: data/multiplayer/techs.ruleset:305
 msgid "Improves the effect of Amphitheaters."
 msgstr "Accroît l'effet des Amphithéâtres."
@@ -36495,6 +36785,35 @@ msgstr ""
 "distance à la capitale (deux fois moins vite avec la connaissance du "
 "Commerce).\n"
 "* A un sénat qui peut empêcher une déclaration de guerre."
+
+#: data/sandbox/script.lua:30
+msgid "You found Hermit's Place."
+msgstr "Vous avez trouvé un ermitage."
+
+#: data/sandbox/script.lua:35
+msgid "Secluded studies have led the Hermit to "
+msgstr "Des études isolées ont amené l'ermite à "
+
+#: data/sandbox/script.lua:40
+msgid "The Hermit has left nothing useful."
+msgstr "L'ermite n'a rien laisse d'utile."
+
+#: data/sandbox/script.lua:52
+#, c-format
+msgid "Your %s has overflied a Hermit's Place"
+msgstr "Votre %s a survolé un ermitage."
+
+#. TRANS: Your Marines does Disrupt Supply Lines to American Armor.
+#: data/sandbox/script.lua:383
+#, c-format
+msgid "Your %s does %s to %s %s."
+msgstr "Votre %1$s fait %2$s à %4$s %3$s."
+
+#. TRANS: German Paratroopers does Disrupt Supply Lines to your Armor.
+#: data/sandbox/script.lua:393
+#, c-format
+msgid "%s %s does %s to your %s."
+msgstr "%2$s %1$s fait %3$s à votre %4$s."
 
 #: data/sandbox/techs.ruleset:124
 msgid "Enables airlift of medium weight units."
@@ -52598,9 +52917,6 @@ msgstr "Freeciv21 version %s"
 #~ "La forêt entière semble être un seul organisme croissant rapidement, avec "
 #~ "une floraison centrale énorme."
 
-#~ msgid "Thermal Vent"
-#~ msgstr "Bouche Thermique"
-
 #, no-c-format
 #~ msgid ""
 #~ "Where the heat from inside the planet escapes, mineral rich hills form."
@@ -52960,145 +53276,6 @@ msgstr "Freeciv21 version %s"
 #~ "construction des parties d'un vaisseau spatial (en supposant qu'ils aient "
 #~ "acquis les technologies nécessaires)."
 
-#~ msgid "Grand Canyon"
-#~ msgstr "Grand Canyon"
-
-#~ msgid "Deep Gorge"
-#~ msgstr "Défilé"
-
-#~ msgid "Fjords"
-#~ msgstr "Fiords"
-
-#~ msgid "Waterfalls"
-#~ msgstr "Chutes d'eau"
-
-#~ msgid "Travertine Terraces"
-#~ msgstr "Terrasses en travertin"
-
-#~ msgid "Deep Trench"
-#~ msgstr "Fosse Profonde"
-
-#~ msgid "Atoll Chain"
-#~ msgstr "Chaîne d'Atolls"
-
-#~ msgid "Great Barrier Reef"
-#~ msgstr "Grande Barrière de Corail"
-
-#~ msgid "Great Blue Hole"
-#~ msgstr "Grand Trou Bleu"
-
-#~ msgid "Great Lakes"
-#~ msgstr "Grands Lacs"
-
-#~ msgid "Dead Sea"
-#~ msgstr "Mer Morte"
-
-#~ msgid "Rift Lake"
-#~ msgstr "Lac d'Effondrement"
-
-#~ msgid "Grand Prismatic Spring"
-#~ msgstr "Grand Prismatic Spring"
-
-#~ msgid "Mangrove Forest"
-#~ msgstr "Forêt de Mangrove"
-
-#~ msgid "Cenotes"
-#~ msgstr "Cénotes"
-
-#~ msgid "Ice Sheet"
-#~ msgstr "Inlandsis"
-
-#~ msgid "Frozen Lake"
-#~ msgstr "Lac Gelé"
-
-#~ msgid "Glacier Bay"
-#~ msgstr "Glacier Bay"
-
-#~ msgid "Advancing Glacier"
-#~ msgstr "Glacier en Mouvement"
-
-#~ msgid "Geothermal Area"
-#~ msgstr "Zone Géothermique"
-
-#~ msgid "Sand Sea"
-#~ msgstr "Mer de Sable"
-
-#~ msgid "Salt Flat"
-#~ msgstr "Désert de Sel"
-
-#~ msgid "Singing Dunes"
-#~ msgstr "Dunes Chantantes"
-
-#~ msgid "White Desert"
-#~ msgstr "Désert Blanc"
-
-#~ msgid "Long Beach"
-#~ msgstr "Longue Plage"
-
-#~ msgid "Mud Volcanoes"
-#~ msgstr "Volcans de Boue"
-
-#~ msgid "Rock Pillars"
-#~ msgstr "Piliers Rocheux"
-
-#~ msgid "White Cliffs"
-#~ msgstr "Falaises Blanches"
-
-#~ msgid "Giant Cave"
-#~ msgstr "Caverne Géante"
-
-#~ msgid "Rock Formation"
-#~ msgstr "Formation Rocheuse"
-
-#~ msgid "Rainforest"
-#~ msgstr "Forêt Humide"
-
-#~ msgid "Subterranean River"
-#~ msgstr "Rivière Souterraine"
-
-#~ msgid "Sinkholes"
-#~ msgstr "Dolines"
-
-#~ msgid "Stone Forest"
-#~ msgstr "Forêt de Karst"
-
-#~ msgid "Sequoia Forest"
-#~ msgstr "Forêt de Séquoïas"
-
-#~ msgid "Millenary Trees"
-#~ msgstr "Arbres millénaires"
-
-# AR
-#~ msgid "Table Mountain"
-#~ msgstr "Plateau"
-
-#~ msgid "Inselberg"
-#~ msgstr "Inselberg"
-
-#~ msgid "Karst Landscape"
-#~ msgstr "Paysage Karstique"
-
-#~ msgid "Valley of Geysers"
-#~ msgstr "Vallée de geysers"
-
-#~ msgid "Highest Peak"
-#~ msgstr "Plus Haut Sommet"
-
-#~ msgid "Sacred Mount"
-#~ msgstr "Montagne sacrée"
-
-#~ msgid "Cliff Coast"
-#~ msgstr "Côte de falaises"
-
-#~ msgid "Active Volcano"
-#~ msgstr "Volcan actif"
-
-#~ msgid "High Summit"
-#~ msgstr "Haut sommet"
-
-#~ msgid "Scorched Spot"
-#~ msgstr "Zone Brûlée"
-
 #, c-format
 #~ msgid "You found %s in ancient scrolls of wisdom."
 #~ msgstr "Vous trouvez %s dans d'anciens parchemins de sagesse."
@@ -53214,67 +53391,9 @@ msgstr "Freeciv21 version %s"
 #~ "    Ctrl-E: bascule en mode éditeur\n"
 #~ "    Ctrl-M: bascule le brouillard de guerre en mode éditeur\n"
 
-#, c-format
-#~ msgid "%s boosts research; you gain the immediate advance %s."
-#~ msgstr "%s accélère la recherche, vous obtenez immédiatement l'avancée %s."
-
-#, c-format
-#~ msgid "%s boosts %s research; you gain the immediate advance %s."
-#~ msgstr ""
-#~ "%s accélère la recherche de %s ; vous obtenez immédiatement l'avancée %s."
-
-#, c-format
-#~ msgid "The %s gain %s from %s."
-#~ msgstr "Les %s ont acquis %s de %s."
-
-#, c-format
-#~ msgid ""
-#~ "Great philosophers from all the world join your civilization: you get the "
-#~ "immediate advance %s."
-#~ msgstr ""
-#~ "De grands philosophes du monde entier rejoignent votre civilisation : "
-#~ "vous obtenez immédiatement l'avancée %s."
-
-#, c-format
-#~ msgid ""
-#~ "Great philosophers from all the world join the %s: you get the immediate "
-#~ "advance %s."
-#~ msgstr ""
-#~ "De grands philosophes du monde entier rejoignent les %s : vous obtenez "
-#~ "immédiatement l'avancée %s."
-
-#, c-format
-#~ msgid ""
-#~ "Great philosophers from all the world join the %s: they get %s as an "
-#~ "immediate advance."
-#~ msgstr ""
-#~ "De grands philosophes du monde entier rejoignent les %s : ils obtiennent "
-#~ "immédiatement l'avancée %s."
-
 #~ msgid "* Your bureaucracy can prevent you from disbanding certain units."
 #~ msgstr ""
 #~ "* Votre bureaucracie peut vous empêcher de démanteler certaines unités."
-
-#~ msgid "You found Hermit's Place."
-#~ msgstr "Vous avez trouvé un ermitage."
-
-#~ msgid "Secluded studies have led the Hermit to "
-#~ msgstr "Des études isolées ont amené l'ermite à "
-
-#~ msgid "The Hermit has left nothing useful."
-#~ msgstr "L'ermite n'a rien laisse d'utile."
-
-#, c-format
-#~ msgid "Your %s has overflied a Hermit's Place"
-#~ msgstr "Votre %s a survolé un ermitage."
-
-#, c-format
-#~ msgid "Your %s does %s to %s %s."
-#~ msgstr "Votre %1$s fait %2$s à %4$s %3$s."
-
-#, c-format
-#~ msgid "%s %s does %s to your %s."
-#~ msgstr "%2$s %1$s fait %3$s à votre %4$s."
 
 #~ msgid "British Isles (classic/medium)"
 #~ msgstr "Îles Britanniques (classique, moyen)"
@@ -80172,9 +80291,6 @@ msgstr "Freeciv21 version %s"
 
 #~ msgid "Not enough gold to pay upkeep for %s. Unit disbanded."
 #~ msgstr "Par assez d'or pour payer les unités. %s congédié"
-
-#~ msgid "Your %s has been lost on the high seas."
-#~ msgstr "Votre %s a été perdu en haute mer."
 
 #~ msgid "Your %s survived on the high seas and became more experienced!"
 #~ msgstr "Votre %s a survécu en haute mer et a acquis de l'expérience !"
