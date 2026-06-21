@@ -273,6 +273,7 @@ data/experimental/styles.ruleset
 data/experimental/techs.ruleset
 data/experimental/terrain.ruleset
 data/experimental/units.ruleset
+data/helpdata.txt
 data/hex2t.tilespec
 data/hexemplio.tilespec
 data/isophex.tilespec
