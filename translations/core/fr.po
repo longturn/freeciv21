@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Freeciv trunk\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-21 22:00+0200\n"
+"POT-Creation-Date: 2026-06-21 22:21+0200\n"
 "PO-Revision-Date: 2022-08-13 03:33+0200\n"
 "Last-Translator: Louis Moureaux <m_louis30@yahoo.com>\n"
 "Language-Team: French <>\n"
@@ -2564,7 +2564,7 @@ msgid "All advances"
 msgstr "Toutes les découvertes"
 
 #: client/diplodlg.cpp:369 client/page_game.cpp:115 client/page_load.cpp:252
-#: data/civ1/units.ruleset:26 data/civ2/units.ruleset:31
+#: common/helpdata.h:52 data/civ1/units.ruleset:26 data/civ2/units.ruleset:31
 #: data/civ2civ3/units.ruleset:40 data/classic/units.ruleset:38
 #: data/experimental/units.ruleset:41 data/helpdata.txt:593
 #: data/multiplayer/units.ruleset:37 data/royale/units.ruleset:41
@@ -2601,8 +2601,8 @@ msgid "--- This treaty is blank. Please add some clauses. ---"
 msgstr "--- Ce traité est vide. Veuillez ajouter des clauses. ---"
 
 #: client/editor.cpp:195 common/helpdata.cpp:191 common/helpdata.cpp:3783
-#: common/helpdata.cpp:3788 common/helpdata.cpp:3794 data/helpdata.txt:301
-#: tools/civmanual.cpp:302
+#: common/helpdata.cpp:3788 common/helpdata.cpp:3794 common/helpdata.h:59
+#: data/helpdata.txt:301 tools/civmanual.cpp:302
 msgid "Terrain"
 msgstr "Terrain"
 
@@ -3287,7 +3287,7 @@ msgid "Clipboard is empty."
 msgstr "Le presse-papiers est vide."
 
 #: client/menu.cpp:144 client/views/view_nations_data.cpp:490
-#: data/helpdata.txt:1123
+#: common/helpdata.h:61 data/helpdata.txt:1123
 msgid "Government"
 msgstr "Gouvernement"
 
@@ -3427,7 +3427,8 @@ msgstr "Frontières nationales"
 
 #: client/menu.cpp:693 client/page_game.cpp:98 client/page_load.cpp:258
 #: client/views/view_cities.cpp:762 client/views/view_cities_data.cpp:780
-#: client/views/view_cities_data.cpp:784 data/helpdata.txt:882
+#: client/views/view_cities_data.cpp:784 common/helpdata.h:54
+#: data/helpdata.txt:882
 msgid "Units"
 msgstr "Unités"
 
@@ -3549,7 +3550,7 @@ msgstr "Congédier l'unité"
 msgid "Rename Unit"
 msgstr "Renommer l'unité"
 
-#: client/menu.cpp:846 data/helpdata.txt:955
+#: client/menu.cpp:846 common/helpdata.h:55 data/helpdata.txt:955
 msgid "Combat"
 msgstr "Combat"
 
@@ -12151,6 +12152,102 @@ msgstr ""
 #, c-format
 msgid "First city will get %s for free.\n"
 msgstr "La première ville disposera gratuitement de %s.\n"
+
+#. TRANS: "Overview" topic in built-in help
+#: common/helpdata.h:40 data/helpdata.txt:36
+msgid "?help:Overview"
+msgstr "Aperçu global"
+
+#: common/helpdata.h:41 data/helpdata.txt:66
+msgid "Strategy and Tactics"
+msgstr "Stratégie et Tactiques"
+
+#: common/helpdata.h:42 data/helpdata.txt:1620
+msgid "Languages"
+msgstr "Langues"
+
+#: common/helpdata.h:43 data/helpdata.txt:1303
+msgid "Connecting"
+msgstr "Connexion"
+
+#: common/helpdata.h:44 data/helpdata.txt:1510
+msgid "Chatline"
+msgstr "Discussion"
+
+#: common/helpdata.h:45 data/helpdata.txt:1603
+msgid "Worklist Editor"
+msgstr "Éditeur de liste de travail"
+
+#: common/helpdata.h:46 data/helpdata.txt:1477
+msgid "Citizen Governor"
+msgstr "Gouverneur"
+
+#: common/helpdata.h:47 data/helpdata.txt:1323
+msgid "Controls"
+msgstr "Contrôles"
+
+# AR
+#: common/helpdata.h:48
+msgid "About Current Ruleset"
+msgstr "À propos des règles du jeu courantes"
+
+# AR
+#: common/helpdata.h:49
+msgid "About Current Tileset"
+msgstr "À propos du jeu de tuiles courant"
+
+#: common/helpdata.h:50 data/helpdata.txt:1290
+msgid "About Nations"
+msgstr "À propos des nations"
+
+#: common/helpdata.h:51 data/helpdata.txt:437
+msgid "Economy"
+msgstr "Économie"
+
+# AR
+#: common/helpdata.h:53 data/helpdata.txt:838
+msgid "City Improvements"
+msgstr "Améliorations"
+
+#: common/helpdata.h:56 data/helpdata.txt:1090
+msgid "Zones of Control"
+msgstr "Zones de Contrôle"
+
+#: common/helpdata.h:57 data/helpdata.txt:1221
+msgid "Technology"
+msgstr "Technologie"
+
+#: common/helpdata.h:58
+msgid "Extras"
+msgstr "Extra"
+
+#: common/helpdata.h:60 data/helpdata.txt:858 server/report.cpp:518
+msgid "Wonders of the World"
+msgstr "Merveilles du monde"
+
+#: common/helpdata.h:62 data/helpdata.txt:1180
+msgid "Effects"
+msgstr "Effets"
+
+#: common/helpdata.h:63 data/helpdata.txt:1189
+msgid "Diplomacy"
+msgstr "Diplomatie"
+
+#: common/helpdata.h:64 data/helpdata.txt:1258
+msgid "Space Race"
+msgstr "Course à l'espace"
+
+#: common/helpdata.h:65 data/helpdata.txt:1634
+msgid "Copying"
+msgstr "Licence"
+
+#: common/helpdata.h:66 data/helpdata.txt:2187
+msgid "About Freeciv21"
+msgstr "À propos de Freeciv21"
+
+#: common/helpdata.h:67 data/helpdata.txt:1168
+msgid "Policies"
+msgstr "Politiques"
 
 #: common/mapimg.cpp:217
 msgid "not checked"
@@ -27451,11 +27548,6 @@ msgstr ""
 "permanent avec le possesseur de la ville, ainsi que la connaissance de son "
 "taux de taxes et de technologie."
 
-#. TRANS: "Overview" topic in built-in help
-#: data/helpdata.txt:36
-msgid "?help:Overview"
-msgstr "Aperçu global"
-
 #: data/helpdata.txt:37
 #, fuzzy
 msgid ""
@@ -27539,10 +27631,6 @@ msgstr ""
 "peuvent changer presque tous les aspects des règles. Ce système d'aide tente "
 "de s'adapter aux différentes règles, mais peut ne pas couvrir complètement "
 "les règles du jeu qui sont très différentes des règles du jeu classiques."
-
-#: data/helpdata.txt:66
-msgid "Strategy and Tactics"
-msgstr "Stratégie et Tactiques"
 
 #: data/helpdata.txt:67
 msgid ""
@@ -28509,13 +28597,7 @@ msgstr ""
 "Les Bases peuvent aussi étendre les frontières nationales. Voir l'aide sur "
 "les modifications de terrains pour plus de détails."
 
-#: data/helpdata.txt:437
-#, fuzzy
-msgid "Economy"
-msgstr "_Économie"
-
 #: data/helpdata.txt:438
-#, fuzzy
 msgid ""
 "The products which your cities extract from the surrounding terrain are the "
 "fountain from which your civilization is watered. There are three types of "
@@ -28535,7 +28617,6 @@ msgid " Food"
 msgstr " Nourriture"
 
 #: data/helpdata.txt:447
-#, fuzzy
 msgid ""
 "Your population needs food to survive. Each citizen requires two food points "
 "per turn. In addition, some units (such as Settlers in the classic ruleset) "
@@ -29709,11 +29790,6 @@ msgstr ""
 "Plusieurs des réglages concernant l'émigration peuvent être modifiés avec "
 "les options du serveur « mgr_* »."
 
-# AR
-#: data/helpdata.txt:838
-msgid "City Improvements"
-msgstr "Améliorations"
-
 #: data/helpdata.txt:839
 #, fuzzy
 msgid ""
@@ -29757,10 +29833,6 @@ msgstr ""
 "La plupart des bâtiments deviennent constructibles seulement après avoir "
 "achevé la recherche de certaines technologies, et certains bâtiments peuvent "
 "devenir obsolètes ; à ce moment là, ils sont automatiquement vendus."
-
-#: data/helpdata.txt:858 server/report.cpp:518
-msgid "Wonders of the World"
-msgstr "Merveilles du monde"
 
 #: data/helpdata.txt:859
 #, fuzzy
@@ -30405,10 +30477,6 @@ msgstr ""
 "durant le combat et doit s'attendre à ce qu'il ne lui reste plus de points "
 "de mouvement."
 
-#: data/helpdata.txt:1090
-msgid "Zones of Control"
-msgstr "Zones de Contrôle"
-
 #: data/helpdata.txt:1091
 #, fuzzy
 msgid ""
@@ -30621,10 +30689,6 @@ msgstr ""
 "nombre est une option du serveur, et peut augmenter à partir d'un minimum de "
 "6."
 
-#: data/helpdata.txt:1168
-msgid "Policies"
-msgstr "Politiques"
-
 #: data/helpdata.txt:1169
 #, fuzzy
 msgid ""
@@ -30645,18 +30709,9 @@ msgstr ""
 "Vous pouvez changer les valeurs de politique à tout moment, mais tout "
 "changement ne prendra effet qu'au prochain tour."
 
-#: data/helpdata.txt:1180
-msgid "Effects"
-msgstr "Effets"
-
 #: data/helpdata.txt:1181
 msgid "Effects specify what buildings, wonders, etc. do."
 msgstr "Les effets spécifient ce que font les bâtiments, les merveilles, etc."
-
-#: data/helpdata.txt:1189
-#, fuzzy
-msgid "Diplomacy"
-msgstr "_Diplomatie"
 
 #: data/helpdata.txt:1190
 #, fuzzy
@@ -30752,10 +30807,6 @@ msgstr ""
 "considérera aussi le commerce des technologies et les villes. Le seul "
 "inconvénient d'une telle Alliance est que vous serez obligé de prendre part "
 "à ses guerres contre les autres joueurs."
-
-#: data/helpdata.txt:1221
-msgid "Technology"
-msgstr "Technologie"
 
 #: data/helpdata.txt:1222
 msgid ""
@@ -30854,10 +30905,6 @@ msgstr ""
 "obsolètes seront vendus immédiatement, et les merveilles obsolètes perdront "
 "leurs effets. Voir les sections appropriées pour plus d'informations."
 
-#: data/helpdata.txt:1258
-msgid "Space Race"
-msgstr "Course à l'espace"
-
 #: data/helpdata.txt:1259
 #, fuzzy
 msgid ""
@@ -30933,10 +30980,6 @@ msgstr ""
 "de construire rapidement un vaisseau allégé avec beaucoup de propulseurs qui "
 "arrivera avant. Sinon, votre seule chance est de capturer leur capitale."
 
-#: data/helpdata.txt:1290
-msgid "About Nations"
-msgstr "À propos des nations"
-
 #: data/helpdata.txt:1291
 msgid ""
 "Each player in the game is represented by a nation. A nation can be a modern-"
@@ -30958,10 +31001,6 @@ msgstr ""
 "leurs villes ; mais les règles du jeu par défaut, elles sont identiques pour "
 "tous les autres aspects et jouent avec les même règles, mais d'autres règles "
 "du jeu peuvent avoir des comportements spécifiques par nation."
-
-#: data/helpdata.txt:1303
-msgid "Connecting"
-msgstr "Connexion"
 
 #: data/helpdata.txt:1304
 msgid ""
@@ -31006,10 +31045,6 @@ msgstr ""
 "nom que vous aviez choisi pour votre chef, pas votre pseudo original ! Si le "
 "serveur est connecté au méta-serveur, vous pourrez y trouver les noms des "
 "joueurs."
-
-#: data/helpdata.txt:1323
-msgid "Controls"
-msgstr "Contrôles"
 
 #: data/helpdata.txt:1324
 msgid ""
@@ -31396,13 +31431,7 @@ msgstr ""
 msgid "  Shift-Return: Turn done"
 msgstr "  Maj+Retour : Fin du tour"
 
-#: data/helpdata.txt:1477
-#, fuzzy
-msgid "Citizen Governor"
-msgstr "Gouverneur..."
-
 #: data/helpdata.txt:1478
-#, fuzzy
 msgid ""
 "The Citizen Governor (formerly called the CMA) helps you manage your cities. "
 "It deploys the available workers on the free tiles around the city to "
@@ -31509,10 +31538,6 @@ msgstr ""
 "la main, soit à l'aide du gouverneur. Vous trouverez d'autres conseils, des "
 "informations de fond et des exemples de préréglages dans le fichier README."
 "governor, inclus avec Freeciv."
-
-#: data/helpdata.txt:1510
-msgid "Chatline"
-msgstr "Discussion"
 
 #: data/helpdata.txt:1511
 msgid ""
@@ -31768,10 +31793,6 @@ msgstr ""
 "elles, comme dans '[i][c fg=\"blue\"]il [b]est [s]amusant[c bg=\"green\"] "
 "[u]de[/i] tester[/b] cette[/s] [/c]nouvelle[/u] fonctionnalité[/c]'."
 
-#: data/helpdata.txt:1603
-msgid "Worklist Editor"
-msgstr "Éditeur de liste de travail"
-
 #: data/helpdata.txt:1604
 #, fuzzy
 msgid ""
@@ -31817,10 +31838,6 @@ msgstr ""
 "Si vous voulez acheter la première des unités sur la liste, vous pouvez le "
 "faire depuis le dialogue général de la ville."
 
-#: data/helpdata.txt:1620
-msgid "Languages"
-msgstr "Langues"
-
 #: data/helpdata.txt:1621
 #, fuzzy
 msgid ""
@@ -31835,10 +31852,6 @@ msgstr ""
 "Si vous voulez ajouter une localisation (traduction) pour votre langue, "
 "voyez les instructions sur :"
 
-#: data/helpdata.txt:1634
-msgid "Copying"
-msgstr "Licence"
-
 #: data/helpdata.txt:1635
 #, fuzzy
 msgid ""
@@ -31851,11 +31864,6 @@ msgstr ""
 "convenance, toute version ultérieure). En résumé, vous pouvez copier ce "
 "programme (dont ses sources) librement, mais voyez le texte complet de la "
 "licence ci-dessous pour tous les détails."
-
-#: data/helpdata.txt:2187
-#, fuzzy
-msgid "About Freeciv21"
-msgstr "À propos de Freeciv"
 
 #. TRANS: followed by a URL
 #: data/helpdata.txt:2192
@@ -55534,14 +55542,6 @@ msgstr "Freeciv21 version %s"
 #~ msgid "_Demographics"
 #~ msgstr "_Démographie"
 
-# AR
-#~ msgid "About Current Ruleset"
-#~ msgstr "À propos des règles du jeu courantes"
-
-# AR
-#~ msgid "About Current Tileset"
-#~ msgstr "À propos du jeu de tuiles courant"
-
 #~ msgid "Save Options on _Exit"
 #~ msgstr "Sauv_egarder les options en quittant"
 
@@ -57456,9 +57456,6 @@ msgstr "Freeciv21 version %s"
 #, c-format
 #~ msgid "%s (%d)"
 #~ msgstr "%s (%d)"
-
-#~ msgid "Extras"
-#~ msgstr "Extra"
 
 #~ msgid "Split"
 #~ msgstr "Scindé"

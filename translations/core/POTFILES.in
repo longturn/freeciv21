@@ -173,6 +173,7 @@ common/featured_text.cpp
 common/game.cpp
 common/government.cpp
 common/helpdata.cpp
+common/helpdata.h
 common/idex.cpp
 common/improvement.cpp
 common/map.cpp
