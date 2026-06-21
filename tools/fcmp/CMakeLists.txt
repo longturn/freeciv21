@@ -12,9 +12,6 @@ add_library(
 target_link_libraries(freeciv_modpack PUBLIC common)
 target_link_libraries(freeciv_modpack PRIVATE cvercmp)
 target_link_libraries(freeciv_modpack PRIVATE SQLite::SQLite3)
-if(WIN32 OR APPLE)
-  target_link_libraries(freeciv_modpack PRIVATE OpenSSL::SSL OpenSSL::Crypto)
-endif()
 
 if (FREECIV_ENABLE_FCMP_CLI)
   add_executable(freeciv21-modpack mpcli.cpp)
