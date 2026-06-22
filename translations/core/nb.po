@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.0.0\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2013-09-12 07:21+0300\n"
 "Last-Translator: Per I. Mathisen <per@freeciv.org>\n"
 "Language-Team: Norwegian <andrearo@stud.ntnu.no>\n"
@@ -38389,6 +38389,66 @@ msgstr "Antall gull pr spiller ved start"
 msgid "Restarting for lack of players."
 msgstr "Antall gull pr spiller ved start"
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "Geologisk"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "Sosiologisk"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "Økonomsk"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "Militær"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "Vitenskapelig"
+
+#: server/settings.h:41
+#, fuzzy
+msgid "Internal"
+msgstr "Grensesnitt"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "Nettverk"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "Ingen"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "Alle"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "Vital"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "Situasjonsbetinget"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "Usedvanlig"
+
+#: server/settings.h:61
+#, fuzzy
+msgid "Changed"
+msgstr "Endre"
+
+#: server/settings.h:63
+#, fuzzy
+msgid "Locked"
+msgstr "Lås"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -47149,48 +47209,6 @@ msgstr "Freeciv versjon %s"
 #~ "Dersom en nettverksforbindelse blokkerer i en lengre periode enn denne "
 #~ "verdien, så stenges den. Null betyr at det ikke finnes noen "
 #~ "tidsbegrensning, men forbindelser vil bli automatisk frakoblet til slutt."
-
-#~ msgid "Geological"
-#~ msgstr "Geologisk"
-
-#~ msgid "Sociological"
-#~ msgstr "Sosiologisk"
-
-#~ msgid "Economic"
-#~ msgstr "Økonomsk"
-
-#~ msgid "Military"
-#~ msgstr "Militær"
-
-#~ msgid "Scientific"
-#~ msgstr "Vitenskapelig"
-
-#, fuzzy
-#~ msgid "Internal"
-#~ msgstr "Grensesnitt"
-
-#~ msgid "Networking"
-#~ msgstr "Nettverk"
-
-#~ msgid "All"
-#~ msgstr "Alle"
-
-#~ msgid "Vital"
-#~ msgstr "Vital"
-
-#~ msgid "Situational"
-#~ msgstr "Situasjonsbetinget"
-
-#~ msgid "Rare"
-#~ msgstr "Usedvanlig"
-
-#, fuzzy
-#~ msgid "Changed"
-#~ msgstr "Endre"
-
-#, fuzzy
-#~ msgid "Locked"
-#~ msgstr "Lås"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

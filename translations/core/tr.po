@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2008-06-01 16:36+0300\n"
 "Last-Translator: Uğur Çetin <jnmbk@users.sourceforge.net>\n"
 "Language-Team: Turkish <yerellestirme@kde.org.tr>\n"
@@ -37770,6 +37770,65 @@ msgstr "Başlangıçta oyunculara verilen altın miktarı"
 msgid "Restarting for lack of players."
 msgstr "Başlangıçta oyunculara verilen altın miktarı"
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "Jeolojik"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "Sosyolojik"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "Ekonomik"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "Askeri"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "Bilimsel"
+
+#: server/settings.h:41
+#, fuzzy
+msgid "Internal"
+msgstr "Arayüz"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "Ağ"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "Yok"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "Hepsi"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "Hayati"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "Duruma göre"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "Nadiren"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "Değiştirildi"
+
+#: server/settings.h:63
+#, fuzzy
+msgid "Locked"
+msgstr "Kilitle"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -46940,47 +46999,6 @@ msgstr "Freeciv Sürüm %s"
 #~ msgid "Seconds to let a client's network connection block"
 #~ msgstr ""
 #~ "İstemcinin ağ bağlantısını engellemesine izin vermek için geçecek saniye"
-
-#~ msgid "Geological"
-#~ msgstr "Jeolojik"
-
-#~ msgid "Sociological"
-#~ msgstr "Sosyolojik"
-
-#~ msgid "Economic"
-#~ msgstr "Ekonomik"
-
-#~ msgid "Military"
-#~ msgstr "Askeri"
-
-#~ msgid "Scientific"
-#~ msgstr "Bilimsel"
-
-#, fuzzy
-#~ msgid "Internal"
-#~ msgstr "Arayüz"
-
-#~ msgid "Networking"
-#~ msgstr "Ağ"
-
-#~ msgid "All"
-#~ msgstr "Hepsi"
-
-#~ msgid "Vital"
-#~ msgstr "Hayati"
-
-#~ msgid "Situational"
-#~ msgstr "Duruma göre"
-
-#~ msgid "Rare"
-#~ msgstr "Nadiren"
-
-#~ msgid "Changed"
-#~ msgstr "Değiştirildi"
-
-#, fuzzy
-#~ msgid "Locked"
-#~ msgstr "Kilitle"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

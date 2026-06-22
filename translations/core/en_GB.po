@@ -66,7 +66,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Freeciv 2.6.0\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2020-02-05 22:04+0000\n"
 "Last-Translator: Jacob Nevins <0jacobnk.fcdev@chiark.greenend.org.uk>\n"
 "Language-Team: \n"
@@ -41081,6 +41081,62 @@ msgstr "Shutting down for lack of players."
 msgid "Restarting for lack of players."
 msgstr "Restarting for lack of players."
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "Geological"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "Sociological"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "Economic"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "Military"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "Scientific"
+
+#: server/settings.h:41
+msgid "Internal"
+msgstr "Internal"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "Networking"
+
+#: server/settings.h:51
+msgid "?ssetlevel:None"
+msgstr "?ssetlevel:None"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "All"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "Vital"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "Situational"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "Rare"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "Changed"
+
+#: server/settings.h:63
+msgid "Locked"
+msgstr "Locked"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -50995,48 +51051,6 @@ msgstr "Freeciv version %s"
 #~ "If a network connection is blocking for a time greater than this value, "
 #~ "then the connection is closed. Zero means there is no timeout (although "
 #~ "connections will be automatically disconnected eventually)."
-
-#~ msgid "Geological"
-#~ msgstr "Geological"
-
-#~ msgid "Sociological"
-#~ msgstr "Sociological"
-
-#~ msgid "Economic"
-#~ msgstr "Economic"
-
-#~ msgid "Military"
-#~ msgstr "Military"
-
-#~ msgid "Scientific"
-#~ msgstr "Scientific"
-
-#~ msgid "Internal"
-#~ msgstr "Internal"
-
-#~ msgid "Networking"
-#~ msgstr "Networking"
-
-#~ msgid "?ssetlevel:None"
-#~ msgstr "?ssetlevel:None"
-
-#~ msgid "All"
-#~ msgstr "All"
-
-#~ msgid "Vital"
-#~ msgstr "Vital"
-
-#~ msgid "Situational"
-#~ msgstr "Situational"
-
-#~ msgid "Rare"
-#~ msgstr "Rare"
-
-#~ msgid "Changed"
-#~ msgstr "Changed"
-
-#~ msgid "Locked"
-#~ msgstr "Locked"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

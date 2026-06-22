@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: freeciv\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2013-09-09 09:59+0300\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: \n"
@@ -38380,6 +38380,75 @@ msgstr "Moedas iniciais por jogador"
 msgid "Restarting for lack of players."
 msgstr "Moedas iniciais por jogador"
 
+#: server/settings.h:31
+#, fuzzy
+msgid "Geological"
+msgstr "Economia"
+
+#: server/settings.h:33
+#, fuzzy
+msgid "Sociological"
+msgstr "Economia"
+
+#: server/settings.h:35
+#, fuzzy
+msgid "Economic"
+msgstr "Economia"
+
+#: server/settings.h:37
+#, fuzzy
+msgid "Military"
+msgstr "Milícia"
+
+#: server/settings.h:39
+#, fuzzy
+msgid "Scientific"
+msgstr "Ciência"
+
+#: server/settings.h:41
+#, fuzzy
+msgid "Internal"
+msgstr "Industrial"
+
+#: server/settings.h:43
+#, fuzzy
+msgid "Networking"
+msgstr "Australiano"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "Nenhum"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "Todas"
+
+#: server/settings.h:55
+#, fuzzy
+msgid "Vital"
+msgstr "Roubar"
+
+#: server/settings.h:57
+#, fuzzy
+msgid "Situational"
+msgstr "Saneamento"
+
+#: server/settings.h:59
+#, fuzzy
+msgid "Rare"
+msgstr "Taxas"
+
+#: server/settings.h:61
+#, fuzzy
+msgid "Changed"
+msgstr "Alterar"
+
+#: server/settings.h:63
+#, fuzzy
+msgid "Locked"
+msgstr "Trancar"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -47028,57 +47097,6 @@ msgstr "Freeciv versão %s"
 #~ "valor, a ligação TCP é terminada. Zero significa que não existe qualquer "
 #~ "expiração para além da imposta pela própria implementação do protocolo "
 #~ "TCP."
-
-#, fuzzy
-#~ msgid "Geological"
-#~ msgstr "Economia"
-
-#, fuzzy
-#~ msgid "Sociological"
-#~ msgstr "Economia"
-
-#, fuzzy
-#~ msgid "Economic"
-#~ msgstr "Economia"
-
-#, fuzzy
-#~ msgid "Military"
-#~ msgstr "Milícia"
-
-#, fuzzy
-#~ msgid "Scientific"
-#~ msgstr "Ciência"
-
-#, fuzzy
-#~ msgid "Internal"
-#~ msgstr "Industrial"
-
-#, fuzzy
-#~ msgid "Networking"
-#~ msgstr "Australiano"
-
-#~ msgid "All"
-#~ msgstr "Todas"
-
-#, fuzzy
-#~ msgid "Vital"
-#~ msgstr "Roubar"
-
-#, fuzzy
-#~ msgid "Situational"
-#~ msgstr "Saneamento"
-
-#, fuzzy
-#~ msgid "Rare"
-#~ msgstr "Taxas"
-
-#, fuzzy
-#~ msgid "Changed"
-#~ msgstr "Alterar"
-
-#, fuzzy
-#~ msgid "Locked"
-#~ msgstr "Trancar"
 
 #, fuzzy, c-format
 #~ msgid "Warning: rejecting old client %s"

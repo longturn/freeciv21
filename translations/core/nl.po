@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Freeciv 2.0.0\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2013-09-09 09:59+0300\n"
 "Last-Translator: Jos Maalderink <josmaalderink@hotmail.com>\n"
 "Language-Team: Nederlands <nl@li.org>\n"
@@ -39237,6 +39237,65 @@ msgstr "Hoeveelheid goud per speler aan het begin van het spel"
 msgid "Restarting for lack of players."
 msgstr "Hoeveelheid goud per speler aan het begin van het spel"
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "Geologisch"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "Sociologisch"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "Economie"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "Burgerwacht"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "Wetenschap"
+
+#: server/settings.h:41
+#, fuzzy
+msgid "Internal"
+msgstr "Interface"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "Netwerk"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "Geen"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "Alle"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "Levensbelangrijk"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "Plaatsafhankelijk"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "Zeldzaam"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "Veranderd"
+
+#: server/settings.h:63
+#, fuzzy
+msgid "Locked"
+msgstr "Op slot"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -48110,47 +48169,6 @@ msgstr "Freecivversie %s"
 #~ "dan deze waarde dan wordt deze verbinding gesloten. Nul betekent dat er "
 #~ "geen maximum is los van die die in de protocol implementatie zelf wordt "
 #~ "opgelegd."
-
-#~ msgid "Geological"
-#~ msgstr "Geologisch"
-
-#~ msgid "Sociological"
-#~ msgstr "Sociologisch"
-
-#~ msgid "Economic"
-#~ msgstr "Economie"
-
-#~ msgid "Military"
-#~ msgstr "Burgerwacht"
-
-#~ msgid "Scientific"
-#~ msgstr "Wetenschap"
-
-#, fuzzy
-#~ msgid "Internal"
-#~ msgstr "Interface"
-
-#~ msgid "Networking"
-#~ msgstr "Netwerk"
-
-#~ msgid "All"
-#~ msgstr "Alle"
-
-#~ msgid "Vital"
-#~ msgstr "Levensbelangrijk"
-
-#~ msgid "Situational"
-#~ msgstr "Plaatsafhankelijk"
-
-#~ msgid "Rare"
-#~ msgstr "Zeldzaam"
-
-#~ msgid "Changed"
-#~ msgstr "Veranderd"
-
-#, fuzzy
-#~ msgid "Locked"
-#~ msgstr "Op slot"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

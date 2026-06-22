@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Freeciv 2.1.0-beta3\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2011-02-02 11:49-0200\n"
 "Last-Translator: Djavan Fagundes <djavan@comum.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
@@ -40271,6 +40271,66 @@ msgstr "reiniciando em breve por falta de jogadores."
 msgid "Restarting for lack of players."
 msgstr "Reiniciando por falta de jogadores."
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "Geológico"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "Sociológico"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "Economia"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "Militar"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "Ciência"
+
+#: server/settings.h:41
+#, fuzzy
+msgid "Internal"
+msgstr "Interface do utilizador"
+
+#: server/settings.h:43
+#, fuzzy
+msgid "Networking"
+msgstr "Rede"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "Nenhum"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "Todas"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "Vital"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "De Situação"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "Raro"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "Alterado"
+
+#: server/settings.h:63
+#, fuzzy
+msgid "Locked"
+msgstr "Trancar"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -49874,48 +49934,6 @@ msgstr "Freeciv versão %s"
 #~ "Se uma conexão de rede está bloqueada por um tempo superior do que esse "
 #~ "valor, então a conexão é fechada. Zero significa que não há tempo limite "
 #~ "(embora as conexões serão automaticamente desligadas eventualmente)."
-
-#~ msgid "Geological"
-#~ msgstr "Geológico"
-
-#~ msgid "Sociological"
-#~ msgstr "Sociológico"
-
-#~ msgid "Economic"
-#~ msgstr "Economia"
-
-#~ msgid "Military"
-#~ msgstr "Militar"
-
-#~ msgid "Scientific"
-#~ msgstr "Ciência"
-
-#, fuzzy
-#~ msgid "Internal"
-#~ msgstr "Interface do utilizador"
-
-#, fuzzy
-#~ msgid "Networking"
-#~ msgstr "Rede"
-
-#~ msgid "All"
-#~ msgstr "Todas"
-
-#~ msgid "Vital"
-#~ msgstr "Vital"
-
-#~ msgid "Situational"
-#~ msgstr "De Situação"
-
-#~ msgid "Rare"
-#~ msgstr "Raro"
-
-#~ msgid "Changed"
-#~ msgstr "Alterado"
-
-#, fuzzy
-#~ msgid "Locked"
-#~ msgstr "Trancar"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

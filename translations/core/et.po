@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: et\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2013-09-09 09:58+0300\n"
 "Last-Translator: Elmo Todurov <todurov@gmail.com>\n"
 "Language-Team: eesti\n"
@@ -38324,6 +38324,65 @@ msgstr "taaskäivitun mängijate vähesuse tõttu"
 msgid "Restarting for lack of players."
 msgstr "taaskäivitun mängijate vähesuse tõttu"
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "Geoloogia"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "Sotsioloogia"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "Majandus"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "Sõjavägi"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "Teadus"
+
+#: server/settings.h:41
+#, fuzzy
+msgid "Internal"
+msgstr "Liides"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "Võrgundus"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "Pole"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "Kõik"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "Eluliselt vajalik"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "Mõnikord kasutatav"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "Haruldane"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "Muudetud"
+
+#: server/settings.h:63
+#, fuzzy
+msgid "Locked"
+msgstr "Lukusta"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -47589,47 +47648,6 @@ msgstr "Freeciv versioon %s"
 #~ "Kui võrguühendus blokeerib sellest väärtusest kauem, siis see ühendus "
 #~ "suletakse. Null tähendab, et ajalimiiti pole, kuid ühendused suletakse "
 #~ "niikuinii varem või hiljem automaatselt."
-
-#~ msgid "Geological"
-#~ msgstr "Geoloogia"
-
-#~ msgid "Sociological"
-#~ msgstr "Sotsioloogia"
-
-#~ msgid "Economic"
-#~ msgstr "Majandus"
-
-#~ msgid "Military"
-#~ msgstr "Sõjavägi"
-
-#~ msgid "Scientific"
-#~ msgstr "Teadus"
-
-#, fuzzy
-#~ msgid "Internal"
-#~ msgstr "Liides"
-
-#~ msgid "Networking"
-#~ msgstr "Võrgundus"
-
-#~ msgid "All"
-#~ msgstr "Kõik"
-
-#~ msgid "Vital"
-#~ msgstr "Eluliselt vajalik"
-
-#~ msgid "Situational"
-#~ msgstr "Mõnikord kasutatav"
-
-#~ msgid "Rare"
-#~ msgstr "Haruldane"
-
-#~ msgid "Changed"
-#~ msgstr "Muudetud"
-
-#, fuzzy
-#~ msgid "Locked"
-#~ msgstr "Lukusta"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

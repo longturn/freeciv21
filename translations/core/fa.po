@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fa\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2013-09-09 09:58+0300\n"
 "Last-Translator: Arman Ordookhani <arman_o71@Yahoo.com>\n"
 "Language-Team: Farsi(Persian)\n"
@@ -36435,6 +36435,71 @@ msgstr ""
 msgid "Restarting for lack of players."
 msgstr "شما به هیچ بازیکنی وصل نیستید."
 
+#: server/settings.h:31
+#, fuzzy
+msgid "Geological"
+msgstr "جرجی"
+
+#: server/settings.h:33
+#, fuzzy
+msgid "Sociological"
+msgstr "سیلسی"
+
+#: server/settings.h:35
+#, fuzzy
+msgid "Economic"
+msgstr "اقتصاد"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "نظامی"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "علمی"
+
+#: server/settings.h:41
+#, fuzzy
+msgid "Internal"
+msgstr "صورت"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "شبکه‌ای"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "هیچ"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "همه"
+
+#: server/settings.h:55
+#, fuzzy
+msgid "Vital"
+msgstr "پایتخت:"
+
+#: server/settings.h:57
+#, fuzzy
+msgid "Situational"
+msgstr "سيستم تخليه فاضلاب"
+
+#: server/settings.h:59
+#, fuzzy
+msgid "Rare"
+msgstr "تعویض نام"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "تغییرکرد"
+
+#: server/settings.h:63
+#, fuzzy
+msgid "Locked"
+msgstr "قفل"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -44553,53 +44618,6 @@ msgstr "Freeciv نسخه %s"
 #, fuzzy, c-format
 #~ msgid "Cannot place %s to unseen tile."
 #~ msgstr "کاروان شما به %s رسید"
-
-#, fuzzy
-#~ msgid "Geological"
-#~ msgstr "جرجی"
-
-#, fuzzy
-#~ msgid "Sociological"
-#~ msgstr "سیلسی"
-
-#, fuzzy
-#~ msgid "Economic"
-#~ msgstr "اقتصاد"
-
-#~ msgid "Military"
-#~ msgstr "نظامی"
-
-#~ msgid "Scientific"
-#~ msgstr "علمی"
-
-#, fuzzy
-#~ msgid "Internal"
-#~ msgstr "صورت"
-
-#~ msgid "Networking"
-#~ msgstr "شبکه‌ای"
-
-#~ msgid "All"
-#~ msgstr "همه"
-
-#, fuzzy
-#~ msgid "Vital"
-#~ msgstr "پایتخت:"
-
-#, fuzzy
-#~ msgid "Situational"
-#~ msgstr "سيستم تخليه فاضلاب"
-
-#, fuzzy
-#~ msgid "Rare"
-#~ msgstr "تعویض نام"
-
-#~ msgid "Changed"
-#~ msgstr "تغییرکرد"
-
-#, fuzzy
-#~ msgid "Locked"
-#~ msgstr "قفل"
 
 #, fuzzy, c-format
 #~ msgid "Invalid range: %d to %d."

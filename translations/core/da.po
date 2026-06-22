@@ -45,7 +45,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: da\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2011-01-30 14:56+0100\n"
 "Last-Translator: Ask Hjorth Larsen <asklarsen@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -39936,6 +39936,75 @@ msgstr "genstarter snart på grund af mangel på spillere"
 msgid "Restarting for lack of players."
 msgstr "Genstarter på grund af mangel på spillere."
 
+#: server/settings.h:31
+#, fuzzy
+msgid "Geological"
+msgstr "Georgisk"
+
+#: server/settings.h:33
+#, fuzzy
+msgid "Sociological"
+msgstr "Siciliansk"
+
+#: server/settings.h:35
+#, fuzzy
+msgid "Economic"
+msgstr "Økonomi"
+
+#: server/settings.h:37
+#, fuzzy
+msgid "Military"
+msgstr "Krigere"
+
+#: server/settings.h:39
+#, fuzzy
+msgid "Scientific"
+msgstr "Forskning"
+
+#: server/settings.h:41
+#, fuzzy
+msgid "Internal"
+msgstr "Interface"
+
+#: server/settings.h:43
+#, fuzzy
+msgid "Networking"
+msgstr "Netværk"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "Ingen"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "Alle"
+
+#: server/settings.h:55
+#, fuzzy
+msgid "Vital"
+msgstr "Hovedstad:"
+
+#: server/settings.h:57
+#, fuzzy
+msgid "Situational"
+msgstr "Sanitet"
+
+#: server/settings.h:59
+#, fuzzy
+msgid "Rare"
+msgstr "Niveau"
+
+#: server/settings.h:61
+#, fuzzy
+msgid "Changed"
+msgstr "Ændr"
+
+#: server/settings.h:63
+#, fuzzy
+msgid "Locked"
+msgstr "Lås"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -49414,57 +49483,6 @@ msgstr "Freeciv version %s"
 #~ "Hvis en TCP-tilslutning spærrer for en længere periode end denne værdi, "
 #~ "lukkes den. 0 betyder at der ikke findes nogen tidsbegrænsning undtagen "
 #~ "den som findes i selve TCP-protokollen."
-
-#, fuzzy
-#~ msgid "Geological"
-#~ msgstr "Georgisk"
-
-#, fuzzy
-#~ msgid "Sociological"
-#~ msgstr "Siciliansk"
-
-#, fuzzy
-#~ msgid "Economic"
-#~ msgstr "Økonomi"
-
-#, fuzzy
-#~ msgid "Military"
-#~ msgstr "Krigere"
-
-#, fuzzy
-#~ msgid "Scientific"
-#~ msgstr "Forskning"
-
-#, fuzzy
-#~ msgid "Internal"
-#~ msgstr "Interface"
-
-#, fuzzy
-#~ msgid "Networking"
-#~ msgstr "Netværk"
-
-#~ msgid "All"
-#~ msgstr "Alle"
-
-#, fuzzy
-#~ msgid "Vital"
-#~ msgstr "Hovedstad:"
-
-#, fuzzy
-#~ msgid "Situational"
-#~ msgstr "Sanitet"
-
-#, fuzzy
-#~ msgid "Rare"
-#~ msgstr "Niveau"
-
-#, fuzzy
-#~ msgid "Changed"
-#~ msgstr "Ændr"
-
-#, fuzzy
-#~ msgid "Locked"
-#~ msgstr "Lås"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

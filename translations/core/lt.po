@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: freeciv\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2010-10-11 20:07+0100\n"
 "Last-Translator: Andrius Štikonas <stikonas@gmail.com>\n"
 "Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
@@ -37967,6 +37967,72 @@ msgstr "Pradinis aukso kiekis žaidėjui"
 msgid "Restarting for lack of players."
 msgstr "Pradinis aukso kiekis žaidėjui"
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr ""
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr ""
+
+#: server/settings.h:35
+#, fuzzy
+msgid "Economic"
+msgstr "Ekonomika"
+
+#: server/settings.h:37
+#, fuzzy
+msgid "Military"
+msgstr "Milicija"
+
+#: server/settings.h:39
+#, fuzzy
+msgid "Scientific"
+msgstr "Mokslas"
+
+#: server/settings.h:41
+#, fuzzy
+msgid "Internal"
+msgstr "Sąsaja"
+
+#: server/settings.h:43
+#, fuzzy
+msgid "Networking"
+msgstr "Tinklas"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "Jokia"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "Visos"
+
+#: server/settings.h:55
+#, fuzzy
+msgid "Vital"
+msgstr "Sostinė:"
+
+#: server/settings.h:57
+#, fuzzy
+msgid "Situational"
+msgstr "Sanitarija"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr ""
+
+#: server/settings.h:61
+#, fuzzy
+msgid "Changed"
+msgstr "Keisti"
+
+#: server/settings.h:63
+#, fuzzy
+msgid "Locked"
+msgstr "užblokuota"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -46328,45 +46394,6 @@ msgstr "Freeciv %s"
 #~ msgid ""
 #~ "At the beginning of the game, each player is given this many infrapoints."
 #~ msgstr "Žaidimo pradžioje kiekvienas žaidėjas gauna tokį aukso kiekį."
-
-#, fuzzy
-#~ msgid "Economic"
-#~ msgstr "Ekonomika"
-
-#, fuzzy
-#~ msgid "Military"
-#~ msgstr "Milicija"
-
-#, fuzzy
-#~ msgid "Scientific"
-#~ msgstr "Mokslas"
-
-#, fuzzy
-#~ msgid "Internal"
-#~ msgstr "Sąsaja"
-
-#, fuzzy
-#~ msgid "Networking"
-#~ msgstr "Tinklas"
-
-#~ msgid "All"
-#~ msgstr "Visos"
-
-#, fuzzy
-#~ msgid "Vital"
-#~ msgstr "Sostinė:"
-
-#, fuzzy
-#~ msgid "Situational"
-#~ msgstr "Sanitarija"
-
-#, fuzzy
-#~ msgid "Changed"
-#~ msgstr "Keisti"
-
-#, fuzzy
-#~ msgid "Locked"
-#~ msgstr "užblokuota"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: freeciv 2.0.3\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2008-01-21 15:42+0100\n"
 "Last-Translator: Dusan Hokuv <dusan@mirc.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -38424,6 +38424,65 @@ msgstr "restartuje se později pro nedostatek hráčů"
 msgid "Restarting for lack of players."
 msgstr "restartuje se pro nedostatek hráčů"
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "Geologické"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "Sociologické"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "Ekonomické"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "Vojenské"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "Vědecké"
+
+#: server/settings.h:41
+#, fuzzy
+msgid "Internal"
+msgstr "Interface"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "Síťové"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "Žádné"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "Všechny"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "Životní"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "Situační"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "Řídký"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "Změněno"
+
+#: server/settings.h:63
+#, fuzzy
+msgid "Locked"
+msgstr "Zamknout"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -47240,47 +47299,6 @@ msgstr "Freeciv verze %s"
 #~ msgstr ""
 #~ "TCP spojení bude ukončeno, pokud je blokováno déle než udává tato volba. "
 #~ "Nula znamená, že není použit žádný limit."
-
-#~ msgid "Geological"
-#~ msgstr "Geologické"
-
-#~ msgid "Sociological"
-#~ msgstr "Sociologické"
-
-#~ msgid "Economic"
-#~ msgstr "Ekonomické"
-
-#~ msgid "Military"
-#~ msgstr "Vojenské"
-
-#~ msgid "Scientific"
-#~ msgstr "Vědecké"
-
-#, fuzzy
-#~ msgid "Internal"
-#~ msgstr "Interface"
-
-#~ msgid "Networking"
-#~ msgstr "Síťové"
-
-#~ msgid "All"
-#~ msgstr "Všechny"
-
-#~ msgid "Vital"
-#~ msgstr "Životní"
-
-#~ msgid "Situational"
-#~ msgstr "Situační"
-
-#~ msgid "Rare"
-#~ msgstr "Řídký"
-
-#~ msgid "Changed"
-#~ msgstr "Změněno"
-
-#, fuzzy
-#~ msgid "Locked"
-#~ msgstr "Zamknout"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

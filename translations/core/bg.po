@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: freeciv 2.3.2\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2012-06-10 00:52+0200\n"
 "Last-Translator: Bogdan Marinov <bogdan.marinov84@gmail.com>\n"
 "Language-Team: Bulgarian\n"
@@ -35949,6 +35949,66 @@ msgstr ""
 msgid "Restarting for lack of players."
 msgstr ""
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "Геологични"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "Социални"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "Икономически"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "Военни"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "Научни"
+
+#: server/settings.h:41
+msgid "Internal"
+msgstr "Вътрешни"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "Мрежови"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "Няма"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "Всички"
+
+#: server/settings.h:55
+#, fuzzy
+msgid "Vital"
+msgstr "Столица:"
+
+#: server/settings.h:57
+#, fuzzy
+msgid "Situational"
+msgstr "Хигиена"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr ""
+
+#: server/settings.h:61
+#, fuzzy
+msgid "Changed"
+msgstr "Промяна след:"
+
+#: server/settings.h:63
+msgid "Locked"
+msgstr ""
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -43723,30 +43783,6 @@ msgstr "Freeciv версия %s"
 #, fuzzy, c-format
 #~ msgid "Cannot place %s to unseen tile."
 #~ msgstr "Откраднахме %s от %sте."
-
-#~ msgid "Geological"
-#~ msgstr "Геологични"
-
-#~ msgid "Sociological"
-#~ msgstr "Социални"
-
-#~ msgid "Economic"
-#~ msgstr "Икономически"
-
-#~ msgid "Military"
-#~ msgstr "Военни"
-
-#~ msgid "Scientific"
-#~ msgstr "Научни"
-
-#~ msgid "Internal"
-#~ msgstr "Вътрешни"
-
-#~ msgid "Networking"
-#~ msgstr "Мрежови"
-
-#~ msgid "All"
-#~ msgstr "Всички"
 
 #, fuzzy, c-format
 #~ msgid "Your %s bombards the %s %s."

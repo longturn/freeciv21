@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: po-debconf://kdebase\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2013-09-09 09:59+0300\n"
 "Last-Translator: stan ioan-eugen <stan.ieugen@gmail.com>\n"
 "Language-Team: romanian <debian-l10n-romanian@lists.debian.org>\n"
@@ -38497,6 +38497,65 @@ msgstr "Număr iniţial de galbeni pentru fiecare jucător"
 msgid "Restarting for lack of players."
 msgstr "Număr iniţial de galbeni pentru fiecare jucător"
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "Geologic"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "Sociologic"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "Economic"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "Militar"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "Ştiinţific"
+
+#: server/settings.h:41
+#, fuzzy
+msgid "Internal"
+msgstr "Interfaţă"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "Reţelistic"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "NIci o"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "Tot"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "Vital"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "Situaţional"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "Rar"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "A fost modificat"
+
+#: server/settings.h:63
+#, fuzzy
+msgid "Locked"
+msgstr "Fix"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -47231,47 +47290,6 @@ msgstr "Freeciv versiunea %s"
 #~ "ca această valoare, atunci conexiunea este închisă. Valoarea zero "
 #~ "înseamnă că perioada de timp după care expiră este infinită (deşi "
 #~ "conexiunile vor fi închise automat într-un final)."
-
-#~ msgid "Geological"
-#~ msgstr "Geologic"
-
-#~ msgid "Sociological"
-#~ msgstr "Sociologic"
-
-#~ msgid "Economic"
-#~ msgstr "Economic"
-
-#~ msgid "Military"
-#~ msgstr "Militar"
-
-#~ msgid "Scientific"
-#~ msgstr "Ştiinţific"
-
-#, fuzzy
-#~ msgid "Internal"
-#~ msgstr "Interfaţă"
-
-#~ msgid "Networking"
-#~ msgstr "Reţelistic"
-
-#~ msgid "All"
-#~ msgstr "Tot"
-
-#~ msgid "Vital"
-#~ msgstr "Vital"
-
-#~ msgid "Situational"
-#~ msgstr "Situaţional"
-
-#~ msgid "Rare"
-#~ msgstr "Rar"
-
-#~ msgid "Changed"
-#~ msgstr "A fost modificat"
-
-#, fuzzy
-#~ msgid "Locked"
-#~ msgstr "Fix"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Freeciv 2.4\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2012-07-26 20:54+0100\n"
 "Last-Translator: Dadan Haryana <dadanhrn@gmail.com>\n"
 "Language-Team: Indonesian <>\n"
@@ -36375,6 +36375,65 @@ msgstr "segera memulai ulang karena kekurangan pemain"
 msgid "Restarting for lack of players."
 msgstr "Memulai ulang karena kekurangan pemain."
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "Geologis"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "Sosiologis"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "Ekonomi"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "Militer"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "Keilmuan"
+
+#: server/settings.h:41
+msgid "Internal"
+msgstr "Internal"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "Jaringan"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "Nama"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "Semua"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "Penting"
+
+#: server/settings.h:57
+#, fuzzy
+msgid "Situational"
+msgstr "Sanitasi"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "Langka"
+
+#: server/settings.h:61
+#, fuzzy
+msgid "Changed"
+msgstr "Ganti"
+
+#: server/settings.h:63
+msgid "Locked"
+msgstr "Terkunci"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -44292,39 +44351,6 @@ msgstr "Versi Freeciv %s"
 #~ msgid ""
 #~ "At the beginning of the game, each player is given this many infrapoints."
 #~ msgstr "Di awal permainan, tiap pemain dibekali emas sebanyak ini."
-
-#~ msgid "Geological"
-#~ msgstr "Geologis"
-
-#~ msgid "Sociological"
-#~ msgstr "Sosiologis"
-
-#~ msgid "Economic"
-#~ msgstr "Ekonomi"
-
-#~ msgid "Military"
-#~ msgstr "Militer"
-
-#~ msgid "Scientific"
-#~ msgstr "Keilmuan"
-
-#~ msgid "Internal"
-#~ msgstr "Internal"
-
-#~ msgid "Networking"
-#~ msgstr "Jaringan"
-
-#~ msgid "All"
-#~ msgstr "Semua"
-
-#~ msgid "Vital"
-#~ msgstr "Penting"
-
-#~ msgid "Rare"
-#~ msgstr "Langka"
-
-#~ msgid "Locked"
-#~ msgstr "Terkunci"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: freeciv\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2014-08-08 08:40+0100\n"
 "Last-Translator: Michael Bauer <fios@akerbeltz.org>\n"
 "Language-Team: Akerbeltz\n"
@@ -41738,6 +41738,63 @@ msgstr ""
 msgid "Restarting for lack of players."
 msgstr "A' tòiseachadh a-rithist air sgàth gainnead chluicheadairean."
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "Geòlasach"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "Sòiseo-eòlach"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "Eaconamach"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "Armailteach"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "Saidheansail"
+
+#: server/settings.h:41
+msgid "Internal"
+msgstr "Puingean teicnigeach"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "Lìonraidhean"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "?spy_level:handler"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "A h-uile"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "Riatanach"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "Suidheachail"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "Ainneamh"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "Air atharrachadh"
+
+#: server/settings.h:63
+msgid "Locked"
+msgstr "Glaiste"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -51715,49 +51772,6 @@ msgstr "Tionndadh Freeciv %s"
 #~ "thèid an ceangal a bhriseadh. Ma chuireas tu seo gu neoini, cha bhi "
 #~ "timeout ann (ged a thèid ceangal sam bith a bhriseadh gu fèin-obrachail "
 #~ "aig a' cheann thall)."
-
-#~ msgid "Geological"
-#~ msgstr "Geòlasach"
-
-#~ msgid "Sociological"
-#~ msgstr "Sòiseo-eòlach"
-
-#~ msgid "Economic"
-#~ msgstr "Eaconamach"
-
-#~ msgid "Military"
-#~ msgstr "Armailteach"
-
-#~ msgid "Scientific"
-#~ msgstr "Saidheansail"
-
-#~ msgid "Internal"
-#~ msgstr "Puingean teicnigeach"
-
-#~ msgid "Networking"
-#~ msgstr "Lìonraidhean"
-
-#, fuzzy
-#~ msgid "?ssetlevel:None"
-#~ msgstr "?spy_level:handler"
-
-#~ msgid "All"
-#~ msgstr "A h-uile"
-
-#~ msgid "Vital"
-#~ msgstr "Riatanach"
-
-#~ msgid "Situational"
-#~ msgstr "Suidheachail"
-
-#~ msgid "Rare"
-#~ msgstr "Ainneamh"
-
-#~ msgid "Changed"
-#~ msgstr "Air atharrachadh"
-
-#~ msgid "Locked"
-#~ msgstr "Glaiste"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

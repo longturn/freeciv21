@@ -29,7 +29,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: freeciv 3.0\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2020-02-14 05:30+0200\n"
 "Last-Translator: Sini Ruohomaa <sini.ruohomaa@iki.fi>\n"
 "Language-Team: None <freeciv-i18n@gna.org>\n"
@@ -41662,6 +41662,62 @@ msgstr "Sammutetaan pelaajapulan vuoksi."
 msgid "Restarting for lack of players."
 msgstr "Käynnistetään uudelleen pelaajapulan vuoksi."
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "Geologia"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "Sosiologia"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "Talous"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "Sodankäynti"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "Tutkimus"
+
+#: server/settings.h:41
+msgid "Internal"
+msgstr "Palvelin"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "Verkko"
+
+#: server/settings.h:51
+msgid "?ssetlevel:None"
+msgstr "Ei mitään"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "Kaikki"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "Elintärkeät"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "Tilanneriippuvaiset"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "Harvinaiset"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "Muuttuneet"
+
+#: server/settings.h:63
+msgid "Locked"
+msgstr "Lukitut"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -52584,48 +52640,6 @@ msgstr "Freeciv %s"
 #~ "yhteys suljetaan. Jos arvo on nolla, yhteyttä ei suljeta tällä "
 #~ "perusteella (tosin yhteydet sulkeutuvat automaattisesti lopulta joka "
 #~ "tapauksessa)."
-
-#~ msgid "Geological"
-#~ msgstr "Geologia"
-
-#~ msgid "Sociological"
-#~ msgstr "Sosiologia"
-
-#~ msgid "Economic"
-#~ msgstr "Talous"
-
-#~ msgid "Military"
-#~ msgstr "Sodankäynti"
-
-#~ msgid "Scientific"
-#~ msgstr "Tutkimus"
-
-#~ msgid "Internal"
-#~ msgstr "Palvelin"
-
-#~ msgid "Networking"
-#~ msgstr "Verkko"
-
-#~ msgid "?ssetlevel:None"
-#~ msgstr "Ei mitään"
-
-#~ msgid "All"
-#~ msgstr "Kaikki"
-
-#~ msgid "Vital"
-#~ msgstr "Elintärkeät"
-
-#~ msgid "Situational"
-#~ msgstr "Tilanneriippuvaiset"
-
-#~ msgid "Rare"
-#~ msgstr "Harvinaiset"
-
-#~ msgid "Changed"
-#~ msgstr "Muuttuneet"
-
-#~ msgid "Locked"
-#~ msgstr "Lukitut"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: he\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2007-08-12 15:15+0300\n"
 "Last-Translator: Chen Levy <contrib@chenlevy.com>\n"
 "Language-Team: Hebrew <kde-il@yahoogroups.com>\n"
@@ -37203,6 +37203,65 @@ msgstr ""
 msgid "Restarting for lack of players."
 msgstr "שכבת יחידות"
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "גאולוגי"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "סוציולוגי"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "כלכלי"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "צבא"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "מדעי"
+
+#: server/settings.h:41
+#, fuzzy
+msgid "Internal"
+msgstr "ממשק"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "עבודת רשת"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "שום־דבר"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "הכל"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "חיוני"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "מצבי"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "נדיר"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "השתנה"
+
+#: server/settings.h:63
+#, fuzzy
+msgid "Locked"
+msgstr "נעול"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -45285,47 +45344,6 @@ msgstr "Freeciv גרסה %s"
 #, fuzzy, c-format
 #~ msgid "Cannot place unbuildable %s."
 #~ msgstr "אין אפשרות לטעון קובץ תסריט קבוצת־חוקים \"%s\"."
-
-#~ msgid "Geological"
-#~ msgstr "גאולוגי"
-
-#~ msgid "Sociological"
-#~ msgstr "סוציולוגי"
-
-#~ msgid "Economic"
-#~ msgstr "כלכלי"
-
-#~ msgid "Military"
-#~ msgstr "צבא"
-
-#~ msgid "Scientific"
-#~ msgstr "מדעי"
-
-#, fuzzy
-#~ msgid "Internal"
-#~ msgstr "ממשק"
-
-#~ msgid "Networking"
-#~ msgstr "עבודת רשת"
-
-#~ msgid "All"
-#~ msgstr "הכל"
-
-#~ msgid "Vital"
-#~ msgstr "חיוני"
-
-#~ msgid "Situational"
-#~ msgstr "מצבי"
-
-#~ msgid "Rare"
-#~ msgstr "נדיר"
-
-#~ msgid "Changed"
-#~ msgstr "השתנה"
-
-#, fuzzy
-#~ msgid "Locked"
-#~ msgstr "נעול"
 
 #, fuzzy, c-format
 #~ msgid "Your %s bombards the %s %s."

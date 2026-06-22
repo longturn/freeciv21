@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Freeciv trunk\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2022-08-13 03:33+0200\n"
 "Last-Translator: Louis Moureaux <m_louis30@yahoo.com>\n"
 "Language-Team: French <>\n"
@@ -42446,6 +42446,62 @@ msgstr "Arrêt pour manque de joueurs"
 msgid "Restarting for lack of players."
 msgstr "Redémarrage pour manque de joueurs"
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "Géologiques"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "Sociologiques"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "Économiques"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "Militaires"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "Scientifiques"
+
+#: server/settings.h:41
+msgid "Internal"
+msgstr "Interne"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "Réseau"
+
+#: server/settings.h:51
+msgid "?ssetlevel:None"
+msgstr "Aucun"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "Tout"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "Vitale"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "Occasionnelle"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "Rare"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "Changé"
+
+#: server/settings.h:63
+msgid "Locked"
+msgstr "Bloqué"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 msgid "Classic Freeciv"
 msgstr "Freeciv21 classique"
@@ -54220,48 +54276,6 @@ msgstr "Freeciv21 version %s"
 #~ "valeur, alors la connexion est close. Zéro signifie pas de timeout "
 #~ "(quoique les déconnexions puissent éventuellement être faites "
 #~ "automatiquement)."
-
-#~ msgid "Geological"
-#~ msgstr "Géologiques"
-
-#~ msgid "Sociological"
-#~ msgstr "Sociologiques"
-
-#~ msgid "Economic"
-#~ msgstr "Économiques"
-
-#~ msgid "Military"
-#~ msgstr "Militaires"
-
-#~ msgid "Scientific"
-#~ msgstr "Scientifiques"
-
-#~ msgid "Internal"
-#~ msgstr "Interne"
-
-#~ msgid "Networking"
-#~ msgstr "Réseau"
-
-#~ msgid "?ssetlevel:None"
-#~ msgstr "Aucun"
-
-#~ msgid "All"
-#~ msgstr "Tout"
-
-#~ msgid "Vital"
-#~ msgstr "Vitale"
-
-#~ msgid "Situational"
-#~ msgstr "Occasionnelle"
-
-#~ msgid "Rare"
-#~ msgstr "Rare"
-
-#~ msgid "Changed"
-#~ msgstr "Changé"
-
-#~ msgid "Locked"
-#~ msgstr "Bloqué"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

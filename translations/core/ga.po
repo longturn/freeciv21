@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: freeciv 2.3\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2011-01-29 07:42-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -37132,6 +37132,63 @@ msgstr ""
 msgid "Restarting for lack of players."
 msgstr "Líon an óir lena thosaíonn na himreoirí"
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "Geolaíoch"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "Socheolaíoch"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "Eacnamaíoch"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "Míleata"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "Eolaíoch"
+
+#: server/settings.h:41
+msgid "Internal"
+msgstr "Inmheánach"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "Líonra"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "?spy_level:ionramhálaí"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "Uile"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "Barrthábhachtach"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "De réir na hócáide"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "Annamh"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "Athraithe"
+
+#: server/settings.h:63
+msgid "Locked"
+msgstr "Faoi Ghlas"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -45523,49 +45580,6 @@ msgstr "Freeciv leagan %s"
 #~ msgid ""
 #~ "At the beginning of the game, each player is given this many infrapoints."
 #~ msgstr "Ag tús an chluiche, tugtar an mhéid óir seo do gach imreoir."
-
-#~ msgid "Geological"
-#~ msgstr "Geolaíoch"
-
-#~ msgid "Sociological"
-#~ msgstr "Socheolaíoch"
-
-#~ msgid "Economic"
-#~ msgstr "Eacnamaíoch"
-
-#~ msgid "Military"
-#~ msgstr "Míleata"
-
-#~ msgid "Scientific"
-#~ msgstr "Eolaíoch"
-
-#~ msgid "Internal"
-#~ msgstr "Inmheánach"
-
-#~ msgid "Networking"
-#~ msgstr "Líonra"
-
-#, fuzzy
-#~ msgid "?ssetlevel:None"
-#~ msgstr "?spy_level:ionramhálaí"
-
-#~ msgid "All"
-#~ msgstr "Uile"
-
-#~ msgid "Vital"
-#~ msgstr "Barrthábhachtach"
-
-#~ msgid "Situational"
-#~ msgstr "De réir na hócáide"
-
-#~ msgid "Rare"
-#~ msgstr "Annamh"
-
-#~ msgid "Changed"
-#~ msgstr "Athraithe"
-
-#~ msgid "Locked"
-#~ msgstr "Faoi Ghlas"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

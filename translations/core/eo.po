@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2008-07-10 17:52+0200\n"
 "Last-Translator: Antonio Codazzi <f_sophia@libero.it>\n"
 "Language-Team: Esperanto <eo@li.org>\n"
@@ -37032,6 +37032,65 @@ msgstr "Unua kvanto da oro por ludanto"
 msgid "Restarting for lack of players."
 msgstr "Unua kvanto da oro por ludanto"
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "Geologia"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "Sociologia"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "Ekonomia"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "Milita"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "Scienca"
+
+#: server/settings.h:41
+#, fuzzy
+msgid "Internal"
+msgstr "Interfaco"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "Reta"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "Neniu"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "Ĉio"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "Vigla"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "Situacia"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "Rara"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "Ŝanĝita"
+
+#: server/settings.h:63
+#, fuzzy
+msgid "Locked"
+msgstr "Bloku"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -45527,47 +45586,6 @@ msgstr "Freeciv versio %s"
 #, fuzzy
 #~ msgid "Starting infrapoints per player"
 #~ msgstr "Unua kvanto da oro por ludanto"
-
-#~ msgid "Geological"
-#~ msgstr "Geologia"
-
-#~ msgid "Sociological"
-#~ msgstr "Sociologia"
-
-#~ msgid "Economic"
-#~ msgstr "Ekonomia"
-
-#~ msgid "Military"
-#~ msgstr "Milita"
-
-#~ msgid "Scientific"
-#~ msgstr "Scienca"
-
-#, fuzzy
-#~ msgid "Internal"
-#~ msgstr "Interfaco"
-
-#~ msgid "Networking"
-#~ msgstr "Reta"
-
-#~ msgid "All"
-#~ msgstr "Ĉio"
-
-#~ msgid "Vital"
-#~ msgstr "Vigla"
-
-#~ msgid "Situational"
-#~ msgstr "Situacia"
-
-#~ msgid "Rare"
-#~ msgstr "Rara"
-
-#~ msgid "Changed"
-#~ msgstr "Ŝanĝita"
-
-#, fuzzy
-#~ msgid "Locked"
-#~ msgstr "Bloku"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

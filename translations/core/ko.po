@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Freeciv 2.1\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2013-09-09 10:52+0300\n"
 "Last-Translator: Sungdae\n"
 "Language-Team: Korean language team\n"
@@ -37644,6 +37644,63 @@ msgstr "참가자들의 부족으로 곧 다시 시작하는 중"
 msgid "Restarting for lack of players."
 msgstr "참가자들의 부족으로 다시 시작하는 중"
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "지질학의"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "사회학의"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "경제의"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "군사의"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "과학의"
+
+#: server/settings.h:41
+msgid "Internal"
+msgstr "내부의"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "통신망 형성"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "없음"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "모두"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "필수적인"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "상황에 따른"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "드문"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "변경됨"
+
+#: server/settings.h:63
+msgid "Locked"
+msgstr "잠김"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -47139,45 +47196,6 @@ msgstr "Freeciv 버젼 %s"
 #~ "만약 하나의 통신망 접속이 이 값보다 크게 하나의 시간 동안 차단된다면, 그 "
 #~ "접속은 닫혀집니다. 0은 그곳에 시간초과가 없다는 것을 의미합니다 (비록 접속"
 #~ "들은 결국 자동적으로 접속이 끊겨질 것이긴 하지만)."
-
-#~ msgid "Geological"
-#~ msgstr "지질학의"
-
-#~ msgid "Sociological"
-#~ msgstr "사회학의"
-
-#~ msgid "Economic"
-#~ msgstr "경제의"
-
-#~ msgid "Military"
-#~ msgstr "군사의"
-
-#~ msgid "Scientific"
-#~ msgstr "과학의"
-
-#~ msgid "Internal"
-#~ msgstr "내부의"
-
-#~ msgid "Networking"
-#~ msgstr "통신망 형성"
-
-#~ msgid "All"
-#~ msgstr "모두"
-
-#~ msgid "Vital"
-#~ msgstr "필수적인"
-
-#~ msgid "Situational"
-#~ msgstr "상황에 따른"
-
-#~ msgid "Rare"
-#~ msgstr "드문"
-
-#~ msgid "Changed"
-#~ msgstr "변경됨"
-
-#~ msgid "Locked"
-#~ msgstr "잠김"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

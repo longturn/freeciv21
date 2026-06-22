@@ -50,7 +50,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Freeciv 2.3.0\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2013-09-09 10:00+0300\n"
 "Last-Translator: Goran Rakic <grakic@devbase.net>\n"
 "Language-Team: Serbian (sr) <gnu@prevod.org>\n"
@@ -36365,6 +36365,63 @@ msgstr "ускоро рестартовање услед недостатка и
 msgid "Restarting for lack of players."
 msgstr "ускоро рестартовање услед недостатка играча"
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "Геолошки"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "Друштвени"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "Економски"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "Војни"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "Научни"
+
+#: server/settings.h:41
+msgid "Internal"
+msgstr "Интерно"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "Мрежа"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "ништа"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "Све"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "Пресудно"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "Повремени"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "Ретки"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "Измењено"
+
+#: server/settings.h:63
+msgid "Locked"
+msgstr "Закључано"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -44430,45 +44487,6 @@ msgstr "Фрицив издање %s"
 #, fuzzy
 #~ msgid "Starting infrapoints per player"
 #~ msgstr "Рестартовање услед недостатка играча."
-
-#~ msgid "Geological"
-#~ msgstr "Геолошки"
-
-#~ msgid "Sociological"
-#~ msgstr "Друштвени"
-
-#~ msgid "Economic"
-#~ msgstr "Економски"
-
-#~ msgid "Military"
-#~ msgstr "Војни"
-
-#~ msgid "Scientific"
-#~ msgstr "Научни"
-
-#~ msgid "Internal"
-#~ msgstr "Интерно"
-
-#~ msgid "Networking"
-#~ msgstr "Мрежа"
-
-#~ msgid "All"
-#~ msgstr "Све"
-
-#~ msgid "Vital"
-#~ msgstr "Пресудно"
-
-#~ msgid "Situational"
-#~ msgstr "Повремени"
-
-#~ msgid "Rare"
-#~ msgstr "Ретки"
-
-#~ msgid "Changed"
-#~ msgstr "Измењено"
-
-#~ msgid "Locked"
-#~ msgstr "Закључано"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

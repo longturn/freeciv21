@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: freeciv 2.4.99-dev\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2012-08-24 23:47+0800\n"
 "Last-Translator: Zhang Xiaowei <zero00072@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zero00072@gmail.com>\n"
@@ -35288,6 +35288,63 @@ msgstr ""
 msgid "Restarting for lack of players."
 msgstr ""
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "地理"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "社會"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "經濟"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "軍事"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "科學"
+
+#: server/settings.h:41
+msgid "Internal"
+msgstr "底層"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "網路連線"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "無"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "全部"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "重要"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "情境"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "罕見"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "更改"
+
+#: server/settings.h:63
+msgid "Locked"
+msgstr "鎖定"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -43106,45 +43163,6 @@ msgstr "Freeciv 版本 %s"
 #~ msgstr ""
 #~ "你來自 %2$s 的%1$s到達了 %3$s。\n"
 #~ "接下來該怎麼做？"
-
-#~ msgid "Geological"
-#~ msgstr "地理"
-
-#~ msgid "Sociological"
-#~ msgstr "社會"
-
-#~ msgid "Economic"
-#~ msgstr "經濟"
-
-#~ msgid "Military"
-#~ msgstr "軍事"
-
-#~ msgid "Scientific"
-#~ msgstr "科學"
-
-#~ msgid "Internal"
-#~ msgstr "底層"
-
-#~ msgid "Networking"
-#~ msgstr "網路連線"
-
-#~ msgid "All"
-#~ msgstr "全部"
-
-#~ msgid "Vital"
-#~ msgstr "重要"
-
-#~ msgid "Situational"
-#~ msgstr "情境"
-
-#~ msgid "Rare"
-#~ msgstr "罕見"
-
-#~ msgid "Changed"
-#~ msgstr "更改"
-
-#~ msgid "Locked"
-#~ msgstr "鎖定"
 
 #, fuzzy, c-format
 #~ msgid "Your %s bombards the %s %s."
