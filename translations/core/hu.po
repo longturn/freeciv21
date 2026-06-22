@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Freeciv 1.14.0\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2007-08-12 15:37+0300\n"
 "Last-Translator: Gábor Takács <tg330@hszk.bme.hu>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
@@ -38052,6 +38052,79 @@ msgstr "Játékosonkénti kezdeti aranymennyiség"
 msgid "Restarting for lack of players."
 msgstr "Játékosonkénti kezdeti aranymennyiség"
 
+#
+#: server/settings.h:31
+#, fuzzy
+msgid "Geological"
+msgstr "Gazdaság"
+
+#
+#: server/settings.h:33
+#, fuzzy
+msgid "Sociological"
+msgstr "Gazdaság"
+
+#
+#: server/settings.h:35
+#, fuzzy
+msgid "Economic"
+msgstr "Gazdaság"
+
+#: server/settings.h:37
+#, fuzzy
+msgid "Military"
+msgstr "Milícia"
+
+#: server/settings.h:39
+#, fuzzy
+msgid "Scientific"
+msgstr "Tudomány"
+
+#: server/settings.h:41
+#, fuzzy
+msgid "Internal"
+msgstr "Felület"
+
+#: server/settings.h:43
+#, fuzzy
+msgid "Networking"
+msgstr "Hálózat"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "Semmi"
+
+#: server/settings.h:53
+#, fuzzy
+msgid "All"
+msgstr "Engedélyezi:"
+
+#: server/settings.h:55
+#, fuzzy
+msgid "Vital"
+msgstr "Ellopás"
+
+#: server/settings.h:57
+#, fuzzy
+msgid "Situational"
+msgstr "Közegészségügy"
+
+#: server/settings.h:59
+#, fuzzy
+msgid "Rare"
+msgstr "Arányok"
+
+#: server/settings.h:61
+#, fuzzy
+msgid "Changed"
+msgstr "Átállítás"
+
+#: server/settings.h:63
+#, fuzzy
+msgid "Locked"
+msgstr "Rögzítés"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -46961,61 +47034,6 @@ msgstr "Freeciv %s"
 #~ "Ha egy TCP kapcsolat ennél hosszabb ideig blokkolódik, akkor a "
 #~ "kapcsolatot bezárja a szerver. A nulla érték azt jelenti, hogy nincs "
 #~ "külön időkorlát a TCP protokoll által meghatározott időkorláton kívül."
-
-#
-#, fuzzy
-#~ msgid "Geological"
-#~ msgstr "Gazdaság"
-
-#
-#, fuzzy
-#~ msgid "Sociological"
-#~ msgstr "Gazdaság"
-
-#
-#, fuzzy
-#~ msgid "Economic"
-#~ msgstr "Gazdaság"
-
-#, fuzzy
-#~ msgid "Military"
-#~ msgstr "Milícia"
-
-#, fuzzy
-#~ msgid "Scientific"
-#~ msgstr "Tudomány"
-
-#, fuzzy
-#~ msgid "Internal"
-#~ msgstr "Felület"
-
-#, fuzzy
-#~ msgid "Networking"
-#~ msgstr "Hálózat"
-
-#, fuzzy
-#~ msgid "All"
-#~ msgstr "Engedélyezi:"
-
-#, fuzzy
-#~ msgid "Vital"
-#~ msgstr "Ellopás"
-
-#, fuzzy
-#~ msgid "Situational"
-#~ msgstr "Közegészségügy"
-
-#, fuzzy
-#~ msgid "Rare"
-#~ msgstr "Arányok"
-
-#, fuzzy
-#~ msgid "Changed"
-#~ msgstr "Átállítás"
-
-#, fuzzy
-#~ msgid "Locked"
-#~ msgstr "Rögzítés"
 
 #, fuzzy, c-format
 #~ msgid "Warning: rejecting old client %s"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: freeciv\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2013-09-09 10:00+0300\n"
 "Last-Translator: Hongjia Cao <hjcao@yahoo.com>\n"
 "Language-Team: zh_CN <i18n-translation@linux.net.cn>\n"
@@ -37669,6 +37669,65 @@ msgstr "每个玩家开始时的黄金"
 msgid "Restarting for lack of players."
 msgstr "每个玩家开始时的黄金"
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "地质"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "社会"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "经济"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "军事"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "科技"
+
+#: server/settings.h:41
+#, fuzzy
+msgid "Internal"
+msgstr "接口"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "网络"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "无"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "全部"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "必需"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "情景相关"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "很少使用"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "已改变"
+
+#: server/settings.h:63
+#, fuzzy
+msgid "Locked"
+msgstr "锁定"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -46279,47 +46338,6 @@ msgstr "Freeciv 版本 %s"
 #~ msgstr ""
 #~ "如果一个网络连接阻塞超过此时间，则该连接被关闭。0意味着没有超时（尽管连接"
 #~ "最终将会被自动断开）。"
-
-#~ msgid "Geological"
-#~ msgstr "地质"
-
-#~ msgid "Sociological"
-#~ msgstr "社会"
-
-#~ msgid "Economic"
-#~ msgstr "经济"
-
-#~ msgid "Military"
-#~ msgstr "军事"
-
-#~ msgid "Scientific"
-#~ msgstr "科技"
-
-#, fuzzy
-#~ msgid "Internal"
-#~ msgstr "接口"
-
-#~ msgid "Networking"
-#~ msgstr "网络"
-
-#~ msgid "All"
-#~ msgstr "全部"
-
-#~ msgid "Vital"
-#~ msgstr "必需"
-
-#~ msgid "Situational"
-#~ msgstr "情景相关"
-
-#~ msgid "Rare"
-#~ msgstr "很少使用"
-
-#~ msgid "Changed"
-#~ msgstr "已改变"
-
-#, fuzzy
-#~ msgid "Locked"
-#~ msgstr "锁定"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

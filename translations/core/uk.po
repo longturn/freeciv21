@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: freeciv 1.14.0\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2016-10-06 17:27+0300\n"
 "Last-Translator: Sviatoslav Golda<swiatos@gmail.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
@@ -40828,6 +40828,62 @@ msgstr "Вимкнення через нестачу гравців"
 msgid "Restarting for lack of players."
 msgstr "Перезапуск через нестачу гравців."
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "Геологічні"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "Соціологічні"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "Економічні"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "Військові"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "Наукові"
+
+#: server/settings.h:41
+msgid "Internal"
+msgstr "Внутрішні"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "Мережеві"
+
+#: server/settings.h:51
+msgid "?ssetlevel:None"
+msgstr "?ssetlevel:Нема"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "Всі"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "Суттєві"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "Ситуаційні"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "Рідкісні"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "Змінені"
+
+#: server/settings.h:63
+msgid "Locked"
+msgstr "Заблоковано"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -50599,48 +50655,6 @@ msgstr "Freeciv версія %s"
 #~ "Якщо мережне з'єднання блокується довше ніж цей час, воно закривається. "
 #~ "Нуль означає відсутність таймаутів (хоча врешті може відбутися "
 #~ "автоматичне роз'єднання)."
-
-#~ msgid "Geological"
-#~ msgstr "Геологічні"
-
-#~ msgid "Sociological"
-#~ msgstr "Соціологічні"
-
-#~ msgid "Economic"
-#~ msgstr "Економічні"
-
-#~ msgid "Military"
-#~ msgstr "Військові"
-
-#~ msgid "Scientific"
-#~ msgstr "Наукові"
-
-#~ msgid "Internal"
-#~ msgstr "Внутрішні"
-
-#~ msgid "Networking"
-#~ msgstr "Мережеві"
-
-#~ msgid "?ssetlevel:None"
-#~ msgstr "?ssetlevel:Нема"
-
-#~ msgid "All"
-#~ msgstr "Всі"
-
-#~ msgid "Vital"
-#~ msgstr "Суттєві"
-
-#~ msgid "Situational"
-#~ msgstr "Ситуаційні"
-
-#~ msgid "Rare"
-#~ msgstr "Рідкісні"
-
-#~ msgid "Changed"
-#~ msgstr "Змінені"
-
-#~ msgid "Locked"
-#~ msgstr "Заблоковано"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

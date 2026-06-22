@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: freeciv 2.1.0\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2013-09-09 09:57+0300\n"
 "Last-Translator: Prekates Alexandros <aprekates@gmail.gr>\n"
 "Language-Team: Greek translation team <gr@li.org>\n"
@@ -38659,6 +38659,65 @@ msgstr "Αρχικός χρυσός ανά παίχτη"
 msgid "Restarting for lack of players."
 msgstr "Αρχικός χρυσός ανά παίχτη"
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "Γεωλογικά"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "Κοινωνιολογικά"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "Οικονομικά"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "Στρατιωτικά"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "Επιστημονικά"
+
+#: server/settings.h:41
+#, fuzzy
+msgid "Internal"
+msgstr "Διασύνδεση"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "Δικτύου"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "Καμία"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "Όλα"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "Ζωτικά"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "Περιστασιακά"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "Σπάνιο"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "Άλλαγμένο"
+
+#: server/settings.h:63
+#, fuzzy
+msgid "Locked"
+msgstr "Κλείδωσε"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -47938,47 +47997,6 @@ msgstr "Freeciv έκδοση %s"
 #~ "Αν μια σύνδεση δικτύου μπλοκάρει για χρονική διάρκεια μεγαλύτερη από αυτή "
 #~ "την τιμή τότε κλείνει η σύνδεση. Μηδέν σημαίνει ότι δεν υπάρχει όριο (αν "
 #~ "και συνδέσεις θα αποσυνδέονται αυτόματα τελικά)."
-
-#~ msgid "Geological"
-#~ msgstr "Γεωλογικά"
-
-#~ msgid "Sociological"
-#~ msgstr "Κοινωνιολογικά"
-
-#~ msgid "Economic"
-#~ msgstr "Οικονομικά"
-
-#~ msgid "Military"
-#~ msgstr "Στρατιωτικά"
-
-#~ msgid "Scientific"
-#~ msgstr "Επιστημονικά"
-
-#, fuzzy
-#~ msgid "Internal"
-#~ msgstr "Διασύνδεση"
-
-#~ msgid "Networking"
-#~ msgstr "Δικτύου"
-
-#~ msgid "All"
-#~ msgstr "Όλα"
-
-#~ msgid "Vital"
-#~ msgstr "Ζωτικά"
-
-#~ msgid "Situational"
-#~ msgstr "Περιστασιακά"
-
-#~ msgid "Rare"
-#~ msgstr "Σπάνιο"
-
-#~ msgid "Changed"
-#~ msgstr "Άλλαγμένο"
-
-#, fuzzy
-#~ msgid "Locked"
-#~ msgstr "Κλείδωσε"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

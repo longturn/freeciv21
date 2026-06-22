@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ar\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2007-08-10 18:00+0300\n"
 "Last-Translator: Ahmad M. Zawawi <zeus_go64@yahoo.com>\n"
 "Language-Team: Arabic <freeciv-i18n@freeciv.org>\n"
@@ -37947,6 +37947,65 @@ msgstr "كمية الذهب لكل لاعب عند البداية"
 msgid "Restarting for lack of players."
 msgstr "كمية الذهب لكل لاعب عند البداية"
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "جيولوجي"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "اجتماعي"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "اقتصادي"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "عسكري"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "علمي"
+
+#: server/settings.h:41
+#, fuzzy
+msgid "Internal"
+msgstr "واجهة البرنامج"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "شبكي"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "لا يوجد"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "الكل"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "مهم"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "موقعي"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "نادر"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "متغيّر"
+
+#: server/settings.h:63
+#, fuzzy
+msgid "Locked"
+msgstr "قفل"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -46546,47 +46605,6 @@ msgstr "برنامج Freeciv اصدار %s"
 #~ "then the connection is closed. Zero means there is no timeout (although "
 #~ "connections will be automatically disconnected eventually)."
 #~ msgstr "إذا الصّفر :: النّكرة - شخص عديم الشّأن مفصول."
-
-#~ msgid "Geological"
-#~ msgstr "جيولوجي"
-
-#~ msgid "Sociological"
-#~ msgstr "اجتماعي"
-
-#~ msgid "Economic"
-#~ msgstr "اقتصادي"
-
-#~ msgid "Military"
-#~ msgstr "عسكري"
-
-#~ msgid "Scientific"
-#~ msgstr "علمي"
-
-#, fuzzy
-#~ msgid "Internal"
-#~ msgstr "واجهة البرنامج"
-
-#~ msgid "Networking"
-#~ msgstr "شبكي"
-
-#~ msgid "All"
-#~ msgstr "الكل"
-
-#~ msgid "Vital"
-#~ msgstr "مهم"
-
-#~ msgid "Situational"
-#~ msgstr "موقعي"
-
-#~ msgid "Rare"
-#~ msgstr "نادر"
-
-#~ msgid "Changed"
-#~ msgstr "متغيّر"
-
-#, fuzzy
-#~ msgid "Locked"
-#~ msgstr "قفل"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"

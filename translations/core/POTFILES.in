@@ -435,6 +435,7 @@ server/scripting/script_fcdb.cpp
 server/scripting/script_server.cpp
 server/sernet.cpp
 server/server.cpp
+server/settings.h
 server/settings.cpp
 server/spacerace.cpp
 server/srv_log.cpp

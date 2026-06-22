@@ -156,7 +156,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Freeciv 2.0.99-devel\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2018-07-17 17:02+0900\n"
 "Last-Translator: Belgae <freeciv.belgae AT gmail.com>\n"
 "Language-Team: SAWADA Katsuya <ama@petmail.net>\n"
@@ -42085,6 +42085,65 @@ msgstr "プレイヤーが欠けたため，まもなく初めからやり直し
 msgid "Restarting for lack of players."
 msgstr "プレイヤーが欠けたため，初めからやり直します。"
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "地形"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "社会"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "経済"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "軍事"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "科学"
+
+#: server/settings.h:41
+msgid "Internal"
+msgstr "内部"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "ネットワーク"
+
+#: server/settings.h:51
+#, fuzzy
+msgid "?ssetlevel:None"
+msgstr "なし"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "すべて"
+
+# clefs
+# オプションの重要度
+#: server/settings.h:55
+msgid "Vital"
+msgstr "最重要"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "時として必要"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "めったに使われない"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "変更あり"
+
+#: server/settings.h:63
+msgid "Locked"
+msgstr "固定"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -52150,47 +52209,6 @@ msgstr "Freeciv バージョン %s"
 #~ msgstr ""
 #~ "この値より長い時間TCP接続が中断した場合，接続を切断します。0の場合はタイム"
 #~ "アウトしません（ただし，最終的には自動的に接続が切断されます）。"
-
-#~ msgid "Geological"
-#~ msgstr "地形"
-
-#~ msgid "Sociological"
-#~ msgstr "社会"
-
-#~ msgid "Economic"
-#~ msgstr "経済"
-
-#~ msgid "Military"
-#~ msgstr "軍事"
-
-#~ msgid "Scientific"
-#~ msgstr "科学"
-
-#~ msgid "Internal"
-#~ msgstr "内部"
-
-#~ msgid "Networking"
-#~ msgstr "ネットワーク"
-
-#~ msgid "All"
-#~ msgstr "すべて"
-
-# clefs
-# オプションの重要度
-#~ msgid "Vital"
-#~ msgstr "最重要"
-
-#~ msgid "Situational"
-#~ msgstr "時として必要"
-
-#~ msgid "Rare"
-#~ msgstr "めったに使われない"
-
-#~ msgid "Changed"
-#~ msgstr "変更あり"
-
-#~ msgid "Locked"
-#~ msgstr "固定"
 
 # clefs
 #, c-format

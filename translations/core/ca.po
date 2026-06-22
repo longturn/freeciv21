@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ca\n"
 "Report-Msgid-Bugs-To: translations@longturn.net\n"
-"POT-Creation-Date: 2026-06-22 23:38+0200\n"
+"POT-Creation-Date: 2026-06-23 00:30+0200\n"
 "PO-Revision-Date: 2017-08-28 19:04+0100\n"
 "Last-Translator: Joan Creus <joan.creusandreu at gmail dot com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -41576,6 +41576,62 @@ msgstr "Aturant per manca de jugadors."
 msgid "Restarting for lack of players."
 msgstr "Reiniciant per manca de jugadors."
 
+#: server/settings.h:31
+msgid "Geological"
+msgstr "Geologia"
+
+#: server/settings.h:33
+msgid "Sociological"
+msgstr "Sociologia"
+
+#: server/settings.h:35
+msgid "Economic"
+msgstr "Economia"
+
+#: server/settings.h:37
+msgid "Military"
+msgstr "Militars"
+
+#: server/settings.h:39
+msgid "Scientific"
+msgstr "Ciència"
+
+#: server/settings.h:41
+msgid "Internal"
+msgstr "Internes"
+
+#: server/settings.h:43
+msgid "Networking"
+msgstr "Xarxa"
+
+#: server/settings.h:51
+msgid "?ssetlevel:None"
+msgstr "Cap"
+
+#: server/settings.h:53
+msgid "All"
+msgstr "Tot"
+
+#: server/settings.h:55
+msgid "Vital"
+msgstr "Vitals"
+
+#: server/settings.h:57
+msgid "Situational"
+msgstr "De situació"
+
+#: server/settings.h:59
+msgid "Rare"
+msgstr "Rares"
+
+#: server/settings.h:61
+msgid "Changed"
+msgstr "Modificades"
+
+#: server/settings.h:63
+msgid "Locked"
+msgstr "Bloquejades"
+
 #: server/settings.cpp:211 server/settings.cpp:253
 #, fuzzy
 msgid "Classic Freeciv"
@@ -52301,48 +52357,6 @@ msgstr "Freeciv versió %s"
 #~ "aquest valor, llavors es tanca la connexió. Zero significa que no hi ha "
 #~ "cap temps límit (encara que al final les connexions es desconnectaran "
 #~ "igualment)"
-
-#~ msgid "Geological"
-#~ msgstr "Geologia"
-
-#~ msgid "Sociological"
-#~ msgstr "Sociologia"
-
-#~ msgid "Economic"
-#~ msgstr "Economia"
-
-#~ msgid "Military"
-#~ msgstr "Militars"
-
-#~ msgid "Scientific"
-#~ msgstr "Ciència"
-
-#~ msgid "Internal"
-#~ msgstr "Internes"
-
-#~ msgid "Networking"
-#~ msgstr "Xarxa"
-
-#~ msgid "?ssetlevel:None"
-#~ msgstr "Cap"
-
-#~ msgid "All"
-#~ msgstr "Tot"
-
-#~ msgid "Vital"
-#~ msgstr "Vitals"
-
-#~ msgid "Situational"
-#~ msgstr "De situació"
-
-#~ msgid "Rare"
-#~ msgstr "Rares"
-
-#~ msgid "Changed"
-#~ msgstr "Modificades"
-
-#~ msgid "Locked"
-#~ msgstr "Bloquejades"
 
 #, c-format
 #~ msgid "Warning: rejecting old client %s"
