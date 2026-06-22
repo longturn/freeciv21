@@ -323,7 +323,7 @@ const QString popup_info_text(struct tile *ptile, bool with_links)
       if (count > 0) {
         // TRANS: preserve leading space
         str += QString(PL_(" | Occupied with %1 unit.",
-                           " | Occupied with %2 units.", count))
+                           " | Occupied with %1 units.", count))
                    .arg(QString::number(count));
       } else {
         // TRANS: preserve leading space
