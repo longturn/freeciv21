@@ -5925,21 +5925,21 @@ msgstr "IA %s"
 
 #. TRANS: "<nation adjective>, team <team name>"
 #: client/text.cpp:129
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1, team %2"
-msgstr "%s, équipe %s"
+msgstr "%1, équipe %2"
 
 #: client/text.cpp:154
 msgid "?nation:Hostile"
-msgstr "Hostiles"
+msgstr "Hostile"
 
 #: client/text.cpp:155
 msgid "?nation:Peaceful"
-msgstr "Pacifiques"
+msgstr "Pacifique"
 
 #: client/text.cpp:156
 msgid "?nation:Friendly"
-msgstr "Amicaux"
+msgstr "Amical"
 
 #: client/text.cpp:156
 msgid "?nation:Mysterious"
@@ -5947,7 +5947,7 @@ msgstr "Mystérieux"
 
 #: client/text.cpp:157
 msgid "?nation:Friendly(team)"
-msgstr "Amicaux (équipe)"
+msgstr "Amical (équipe)"
 
 #: client/text.cpp:159
 msgid "?city:Hostile"
@@ -5970,14 +5970,14 @@ msgid "?city:Friendly(team)"
 msgstr "Amicale (équipe)"
 
 #: client/text.cpp:180
-#, fuzzy, qt-format
+#, qt-format
 msgid "Location: (%1, %2) [%3]<br>"
-msgstr "Emplacement : (%1, %2) [%3]\n"
+msgstr "Emplacement : (%1, %2) [%3]<br>"
 
 #: client/text.cpp:184
-#, fuzzy, qt-format
+#, qt-format
 msgid "Native coordinates: (%1, %2)<br>"
-msgstr "Coordonnées natives : (%1, %2)\n"
+msgstr "Coordonnées natives : (%1, %2)<br>"
 
 #: client/text.cpp:204
 #, qt-format
@@ -5999,23 +5999,23 @@ msgid "Territory of %1 (%2)"
 msgstr "Territoire des %1 (%2)"
 
 #: client/text.cpp:246
-#, fuzzy, qt-format
+#, qt-format
 msgid "Territory of %1 (%2) (%3 turn cease-fire)"
 msgid_plural "Territory of %1 (%2) (%3 turn cease-fire)"
-msgstr[0] "Territoire de %s (%s) (cessez-le-feu %d tour)"
-msgstr[1] "Territoire de %s (%s) (cessez-le-feu %d tours)"
+msgstr[0] "Territoire de %1 (%2) (cessez-le-feu %3 tour)"
+msgstr[1] "Territoire de %1 (%2) (cessez-le-feu %3 tours)"
 
 #: client/text.cpp:255
-#, fuzzy, qt-format
+#, qt-format
 msgid "Territory of %1 (%2) (%3 turn armistice)"
 msgid_plural "Territory of %1 (%2) (%3 turn armistice)"
-msgstr[0] "Territoire de %s (%s) (armistice %d tour)"
-msgstr[1] "Territoire de %s (%s) (armistice %d tours)"
+msgstr[0] "Territoire de %1 (%2) (armistice %3 tour)"
+msgstr[1] "Territoire de %1 (%2) (armistice %3 tours)"
 
 #: client/text.cpp:264
 #, qt-format
 msgid "Territory of %1 (%2 | %3)"
-msgstr "Territoire des %1 (%2 | %3)"
+msgstr "Territoire de %1 (%2 | %3)"
 
 #: client/text.cpp:269
 msgid "Unclaimed territory"
