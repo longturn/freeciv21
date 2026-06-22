@@ -2253,19 +2253,16 @@ msgid "Inspect City"
 msgstr "Inspecter la ville"
 
 #: client/dialogs.cpp:1078
-#, fuzzy
 msgid "Do you want to overthrow the government?"
-msgstr ""
-"Vous devriez choisir un nouveau gouvernement dans le menu gouvernement."
+msgstr "Voulez-vous renverser le gouvernement ?"
 
 #: client/dialogs.cpp:1079
 msgid "Revolution!"
 msgstr "Révolution !"
 
 #: client/dialogs.cpp:1082
-#, fuzzy
 msgid "Yes Start a Revolution!"
-msgstr "Révolution !"
+msgstr "Oui, lancer une révolution !"
 
 #. TRANS: %s is a unit name, e.g., Spy
 #: client/dialogs.cpp:1758
