@@ -1532,9 +1532,9 @@ void hud_unit_combat::paintEvent(QPaintEvent *event)
   QString ahploss, dhploss;
 
   // TRANS: HP - Hit Points
-  ahploss = QString(_("%1 HP")).arg(-att_hp_loss);
+  ahploss = QString(PL_("%1 HP", "%1 HP", -att_hp_loss)).arg(-att_hp_loss);
   // TRANS: HP - Hit Points
-  dhploss = QString(_("%1 HP")).arg(-def_hp_loss);
+  dhploss = QString(PL_("%1 HP", "%1 HP", -def_hp_loss)).arg(-def_hp_loss);
   f.setBold(true);
 
   if (def_hp == 0) {

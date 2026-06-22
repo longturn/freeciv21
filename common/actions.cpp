@@ -1412,9 +1412,8 @@ static QString action_prob_to_text(const struct act_prob prob)
 
   if (prob.min == prob.max) {
     // Only one probability in range.
-
-    return QString(_("%1%")).arg(
-        QString::number(prob.max / ACTPROB_VAL_1_PCT));
+    auto p = prob.max / ACTPROB_VAL_1_PCT;
+    return QString(PL_("%1%", "%1%", p)).arg(QString::number(p));
   } else {
     return QString(_("[%1% - %2%]"))
         .arg(QString::number(prob.min / ACTPROB_VAL_1_PCT),
