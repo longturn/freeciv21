@@ -1716,7 +1716,7 @@ void city_dialog::update_nation_table()
             nullptr, city_owner(pcity), player_slot_get_player(pslot), pcity,
             nullptr, city_tile(pcity), nullptr, nullptr, nullptr, nullptr,
             nullptr, EFT_PER_CITIZEN_UNHAPPY_PCT, V_COUNT);
-        item->setText(QString(_("%1%")).arg(pct));
+        item->setText(QString(PL_("%1%", "%1%", pct)).arg(pct));
         item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
       } break;
 

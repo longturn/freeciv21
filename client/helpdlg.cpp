@@ -1321,7 +1321,8 @@ void help_widget::set_topic_terrain(const help_item *topic,
     add_info_progress(_("Defense bonus:"), MIN(100, pterrain->defense_bonus),
                       0, 100,
                       // TRANS: Display a percentage, eg "50%".
-                      QString(_("%1%")).arg(pterrain->defense_bonus));
+                      QString(PL_("%1%", "%1%", pterrain->defense_bonus))
+                          .arg(pterrain->defense_bonus));
 
     add_info_separator();
 
