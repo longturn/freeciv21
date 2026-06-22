@@ -2745,6 +2745,7 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet,
     if (unitcount > 1) {
       notify_player(
           pvictor, unit_tile(pkiller), E_UNIT_WIN_ATT, ftc_server,
+          /* xgettext: no-qt-format */
           /* TRANS: "Another unit was eliminated by..." */
           PL_("Another unit was eliminated by your attacking %s!",
               "Another %2$d units were eliminated by your attacking %1$s!",
@@ -2767,8 +2768,9 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet,
           fc_assert(other_killed[i] != punit);
           notify_player(
               player_by_number(i), ptile, E_UNIT_LOST_DEF, ftc_server,
+              /* xgettext: no-qt-format */
               /* TRANS: "One other unit lost when the celtiberian armor
-              defeated your mech inf. */
+               *         defeated your mech inf. */
               PL_("One other unit lost when the %s %s defeated your %s.",
                   "%4$d other units lost when the %1$s %2$s defeated your "
                   "%3$s.",
@@ -2779,8 +2781,9 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet,
         if ((unitcount - 1) > num_killed[i]) {
           notify_player(
               player_by_number(i), ptile, E_UNIT_LOST_DEF, ftc_server,
+              /* xgettext: no-qt-format */
               /* TRANS: "One allied unit lost when the celtiberian armor
-              defeated your mech inf. */
+               *         defeated your mech inf. */
               PL_("One allied unit lost when the %s %s defeated your %s.",
                   "%4$d allied units lost when the %1$s %2$s defeated your "
                   "%3$s.",
@@ -2792,8 +2795,9 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet,
         if (num_killed[i] >= 1) {
           notify_player(
               player_by_number(i), ptile, E_UNIT_LOST_DEF, ftc_server,
+              /* xgettext: no-qt-format */
               /* TRANS: "One unit lost when the celtiberian armor
-              defeated the roman mech inf. */
+               *         defeated the roman mech inf. */
               PL_("One unit lost when the %s %s defeated the %s %s.",
                   "%5$d units lost when the %1$s %2$s defeated the %3$s "
                   "%4$s.",
