@@ -440,8 +440,7 @@ int decompress_buffer(connection *pc, QByteArrayView din, int len_read)
    packet is written in 'ptype'. On error, the connection is closed and
    the function returns nullptr.
  */
-void *get_packet_from_connection_raw(struct connection *pc,
-                                     enum packet_type *ptype)
+void *get_packet_from_connection(struct connection *pc, enum packet_type *ptype)
 {
   int len_read;
   int whole_packet_len;
