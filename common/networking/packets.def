@@ -83,12 +83,6 @@ Syntax:
      is-game-info: same as is-info, but the state is reset every time a
                    connection changes of player target.
 
-     force: sending functions will take an extra argument 'force_to_send'
-            to force to send the packet (at least an empty one). In this
-            case, the is-info or is-game-info flags are ignored. It has no
-            effect if the packets doesn't have the is-info or is-game-info
-            flags.
-
      cancel(PACKET_number): Cancel a packet with the same key (must be the
      same key type at the start of the packet), useful for is-info packets.
 
@@ -678,7 +672,7 @@ PACKET_CITY_REMOVE = 30; sc, dsend, lsend, cancel(PACKET_CITY_INFO), cancel(PACK
   CITY city_id;
 end
 
-PACKET_CITY_INFO = 31; sc, lsend, is-game-info, force, cancel(PACKET_CITY_SHORT_INFO)
+PACKET_CITY_INFO = 31; sc, lsend, is-game-info, cancel(PACKET_CITY_SHORT_INFO)
   CITY id; key
   TILE tile;
 
@@ -1058,7 +1052,7 @@ PACKET_UNIT_INFO = 63; sc, lsend, is-game-info, cancel(PACKET_UNIT_SHORT_INFO)
   SINT32 action_timestamp;
 end
 
-PACKET_UNIT_SHORT_INFO = 64; sc, lsend, is-game-info, force, cancel(PACKET_UNIT_INFO)
+PACKET_UNIT_SHORT_INFO = 64; sc, lsend, is-game-info, cancel(PACKET_UNIT_INFO)
   UNIT id; key
   PLAYER owner;
   TILE tile;
@@ -2360,7 +2354,7 @@ end
 /************* Packets reserved for freeciv-web ***************/
 /* Not supported. They use range 256:511 */
 /*
-PACKET_WEB_CITY_INFO_ADDITION = 256; sc, lsend, is-game-info, force, cancel(PACKET_CITY_SHORT_INFO)
+PACKET_WEB_CITY_INFO_ADDITION = 256; sc, lsend, is-game-info, cancel(PACKET_CITY_SHORT_INFO)
   CITY id; key
 
   UINT16 granary_size;

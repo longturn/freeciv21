@@ -22,14 +22,13 @@ struct data_in;
 // Qt
 #include <QtContainerFwd> // QVector<QString>
 
+using send_handler = int (*)(struct connection *pconn, const void *packet,
+                             bool force_to_send);
+using receive_handler = void *(*) (struct connection *pconn);
+
 struct packet_handlers {
-  union {
-    int (*no_packet)(struct connection *pconn);
-    int (*packet)(struct connection *pconn, const void *packet);
-    int (*force_to_send)(struct connection *pconn, const void *packet,
-                         bool force_to_send);
-  } send[PACKET_LAST];
-  void *(*receive[PACKET_LAST])(struct connection *pconn);
+  send_handler send[PACKET_LAST];
+  receive_handler receive[PACKET_LAST];
 };
 
 void *get_packet_from_connection(struct connection *pc,
