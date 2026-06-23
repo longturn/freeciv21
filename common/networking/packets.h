@@ -32,11 +32,8 @@ struct packet_handlers {
   void *(*receive[PACKET_LAST])(struct connection *pconn);
 };
 
-void *get_packet_from_connection_raw(struct connection *pc,
-                                     enum packet_type *ptype);
-
-#define get_packet_from_connection(pc, ptype)                               \
-  get_packet_from_connection_raw(pc, ptype)
+void *get_packet_from_connection(struct connection *pc,
+                                 enum packet_type *ptype);
 
 void remove_packet_from_buffer(struct socket_packet_buffer *buffer);
 
