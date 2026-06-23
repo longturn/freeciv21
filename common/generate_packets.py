@@ -127,19 +127,19 @@ def parse_fields(
         if match:
             field["name"] = match.group(1)
             field["array_dims"] = 2
-            field["array_size1_d"], field["array_size1_u"], field["array_size1_o"] = field_dims(
-                match.group(2)
+            field["array_size1_d"], field["array_size1_u"], field["array_size1_o"] = (
+                field_dims(match.group(2))
             )
-            field["array_size2_d"], field["array_size2_u"], field["array_size2_o"] = field_dims(
-                match.group(3)
+            field["array_size2_d"], field["array_size2_u"], field["array_size2_o"] = (
+                field_dims(match.group(3))
             )
         else:
             match = re.search(r"^(.*)\[(.*)\]$", name)
             if match:
                 field["name"] = match.group(1)
                 field["array_dims"] = 1
-                field["array_size_d"], field["array_size_u"], field["array_size_o"] = field_dims(
-                    match.group(2)
+                field["array_size_d"], field["array_size_u"], field["array_size_o"] = (
+                    field_dims(match.group(2))
                 )
             else:
                 field["name"] = name
@@ -202,7 +202,9 @@ class Field:
             if self.dataio_type in {"string", "memory"}:
                 return f"{self.struct_type} {self.name}[{self.array_size_d}]"
             else:
-                return f"std::array<{self.struct_type}, {self.array_size_d}> {self.name}"
+                return (
+                    f"std::array<{self.struct_type}, {self.array_size_d}> {self.name}"
+                )
         else:
             return f"{self.struct_type} {self.name}"
 
@@ -366,7 +368,6 @@ class Field:
 
         return f"dio_put(dout, real_packet->{self.name}{size_args}{dio_arg});"
 
-
     def get_get_wrapper(self, packet, index, deltafragment):
         """
         Returns a code fragment which will get the field if the "fields"
@@ -453,7 +454,6 @@ class Variant:
         self.delta = packet.delta
         self.is_info = packet.is_info
         self.cancel = packet.cancel
-        self.want_force = packet.want_force
 
         self.poscaps = poscaps
         self.negcaps = negcaps
@@ -485,39 +485,16 @@ class Variant:
         if len(self.fields) > 5 or self.name.split("_")[1] == "ruleset":
             self.handle_via_packet = 1
 
-        self.extra_send_args = ""
-        self.extra_send_args2 = ""
-        self.extra_send_args3 = ", ".join(
-            map(lambda x: x.get_handle_type() + x.name, self.fields)
-        )
-        if self.extra_send_args3:
-            self.extra_send_args3 = ", " + self.extra_send_args3
-
-        if not self.no_packet:
-            self.extra_send_args = (
-                f", const {self.packet_name} *packet" + self.extra_send_args
-            )
-            self.extra_send_args2 = ", packet" + self.extra_send_args2
-
-        if self.want_force:
-            self.extra_send_args = self.extra_send_args + ", bool force_to_send"
-            self.extra_send_args2 = self.extra_send_args2 + ", force_to_send"
-            self.extra_send_args3 = self.extra_send_args3 + ", bool force_to_send"
-
         self.receive_prototype = (
             f"static {self.packet_name} *receive_{self.name}(connection *pc)"
         )
-        self.send_prototype = (
-            f"static int send_{self.name}(connection *pc{self.extra_send_args})"
-        )
 
-        if self.no_packet:
-            self.send_handler = f"phandlers->send[{self.type}].no_packet = (int(*)(connection *)) send_{self.name};"
-        elif self.want_force:
-            self.send_handler = f"phandlers->send[{self.type}].force_to_send = (int(*)(connection *, const void *, bool)) send_{self.name};"
-        else:
-            self.send_handler = f"phandlers->send[{self.type}].packet = (int(*)(connection *, const void *)) send_{self.name};"
-        self.receive_handler = f"phandlers->receive[{self.type}] = (void *(*)(connection *)) receive_{self.name};"
+        self.send_handler = (
+            f"phandlers->send[{self.type}] = (send_handler) send_{self.name};"
+        )
+        self.receive_handler = (
+            f"phandlers->receive[{self.type}] = (receive_handler) receive_{self.name};"
+        )
 
     def get_stats(self):
         """
@@ -673,16 +650,12 @@ static char *stats_{self.name}_names[] = {{names}};
 
         if not self.no_packet:
             if self.delta:
-                if self.want_force:
-                    diff = "force_to_send"
-                else:
-                    diff = "0"
                 delta_header = f"""
   {self.name}_fields fields;
   {self.packet_name} *old;
   bool differ;
   genhash **hash = pc->phs.sent + {self.type};
-  int different = {diff};
+  int different = force_to_send;
 """
                 body = self.get_delta_send_body(pre2)
             else:
@@ -705,7 +678,9 @@ static char *stats_{self.name}_names[] = {{names}};
 
         faddr = ""
 
-        return f"""{self.send_prototype}
+        return f"""\
+static int send_{self.name}(connection *pc, const {self.packet_name} *packet,
+                            bool force_to_send)
 {{
 {real_packet1}{delta_header}  SEND_PACKET_START({self.type});
 {faddr}{log}{report}{pre1}{body}{pre2}{post}  SEND_PACKET_END({self.type});
@@ -974,10 +949,6 @@ class Packet:
         if self.want_lsend:
             flags.remove("lsend")
 
-        self.want_force = "force" in flags
-        if self.want_force:
-            flags.remove("force")
-
         self.cancel = []
         removes = []
         remaining = []
@@ -1024,38 +995,11 @@ class Packet:
         if len(self.fields) > 5 or self.name.split("_")[1] == "ruleset":
             self.handle_via_packet = 1
 
-        self.extra_send_args = ""
-        self.extra_send_args2 = ""
-        self.extra_send_args3 = ", ".join(
+        self.dsend_args = ", ".join(
             map(lambda x: x.get_handle_type() + x.name, self.fields)
         )
-        if self.extra_send_args3:
-            self.extra_send_args3 = ", " + self.extra_send_args3
-
-        if not self.no_packet:
-            self.extra_send_args = f", const {self.name} *packet" + self.extra_send_args
-            self.extra_send_args2 = ", packet" + self.extra_send_args2
-
-        if self.want_force:
-            self.extra_send_args += ", bool force_to_send"
-            self.extra_send_args2 += ", force_to_send"
-            self.extra_send_args3 += ", bool force_to_send"
-
-        self.send_prototype = (
-            f"int send_{self.name}(connection *pc{self.extra_send_args})"
-        )
-        if self.want_lsend:
-            self.lsend_prototype = (
-                f"void lsend_{self.name}(conn_list *dest{self.extra_send_args})"
-            )
-        if self.want_dsend:
-            self.dsend_prototype = (
-                f"int dsend_{self.name}(connection *pc{self.extra_send_args3})"
-            )
-            if self.want_lsend:
-                self.dlsend_prototype = (
-                    f"void dlsend_{self.name}(conn_list *dest{self.extra_send_args3})"
-                )
+        if self.dsend_args:
+            self.dsend_args += ","
 
         # create cap variants
         all_caps = {}
@@ -1107,32 +1051,47 @@ class Packet:
         receive functions for the header file.
         """
 
-        result = self.send_prototype + ";\n"
+        result = dedent(
+            f"""\
+            int send_{self.name}(connection *pc,
+                                 const {self.name} *packet=nullptr,
+                                 bool force_to_send=false);
+            """
+        )
         if self.want_lsend:
-            result = result + self.lsend_prototype + ";\n"
+            result += dedent(
+                f"""\
+                void lsend_{self.name}(conn_list *dest,
+                                       const {self.name} *packet=nullptr,
+                                       bool force_to_send=false);
+                """
+            )
         if self.want_dsend:
-            result = result + self.dsend_prototype + ";\n"
+            result += dedent(
+                f"""\
+                int dsend_{self.name}(connection *pc,
+                                      {self.dsend_args}
+                                      bool force_to_send=false);
+                """
+            )
             if self.want_lsend:
-                result = result + self.dlsend_prototype + ";\n"
-        return result + "\n"
+                result += dedent(
+                    f"""\
+                    void dlsend_{self.name}(conn_list *dest,
+                                            {self.dsend_args}
+                                            bool force_to_send=false);
+                    """
+                )
+
+        return result.strip() + "\n"
 
     def get_send(self):
-        if self.no_packet:
-            func = "no_packet"
-            args = ""
-        elif self.want_force:
-            func = "force_to_send"
-            args = ", packet, force_to_send"
-        else:
-            func = "packet"
-            args = ", packet"
-
-        send_function = f"pc->phs.handlers->send[{self.type}].{func}"
         check = "true" if self.capability is None else "false"
 
         return dedent(
             f"""\
-            {self.send_prototype}
+            int send_{self.name}(connection *pc, const {self.name} *packet,
+                                 bool force_to_send)
             {{
               if (!pc->used) {{
                   qCritical("WARNING: trying to send data to the closed connection %s",
@@ -1140,12 +1099,12 @@ class Packet:
                   return -1;
               }}
               if constexpr ({check}) {{
-                fc_assert_ret_val_msg({send_function} != nullptr, -1,
+                fc_assert_ret_val_msg(pc->phs.handlers->send[{self.type}] != nullptr, -1,
                                       "Handler for {self.type} not installed");
-              }} else if (!{send_function}) {{
+              }} else if (!pc->phs.handlers->send[{self.type}]) {{
                 return 0;
               }}
-              return {send_function}(pc{args});
+              return pc->phs.handlers->send[{self.type}](pc, packet, force_to_send);
             }}
 
             """
@@ -1170,14 +1129,18 @@ class Packet:
 
         if not self.want_lsend:
             return ""
-        return f"""{self.lsend_prototype}
-{{
-  conn_list_iterate(dest, pconn) {{
-    send_{self.name}(pconn{self.extra_send_args2});
-  }} conn_list_iterate_end;
-}}
+        return dedent(
+            f"""\
+            void lsend_{self.name}(conn_list *dest, const {self.name} *packet,
+                                  bool force_to_send)
+            {{
+              conn_list_iterate(dest, pconn) {{
+                send_{self.name}(pconn, packet, force_to_send);
+              }} conn_list_iterate_end;
+            }}
 
-"""
+            """
+        )
 
     def get_dsend(self):
         """
@@ -1187,17 +1150,22 @@ class Packet:
 
         if not self.want_dsend:
             return ""
-        fill = "\n".join(map(lambda x: x.get_fill(), self.fields))
-        return f"""{self.dsend_prototype}
-{{
-  {self.name} packet, *real_packet = &packet;
+        fill = "\n        ".join(map(lambda x: x.get_fill(), self.fields))
+        return dedent(
+            f"""\
+        int dsend_{self.name}(connection *pc,
+                              {self.dsend_args}
+                              bool force_to_send)
+        {{
+          {self.name} packet, *real_packet = &packet;
 
-{fill}
+        {fill}
 
-  return send_{self.name}(pc, real_packet);
-}}
+          return send_{self.name}(pc, real_packet);
+        }}
 
-"""
+        """
+        )
 
     def get_dlsend(self):
         """
@@ -1207,17 +1175,22 @@ class Packet:
 
         if not (self.want_lsend and self.want_dsend):
             return ""
-        fill = "\n".join(map(lambda x: x.get_fill(), self.fields))
-        return f"""{self.dlsend_prototype}
-{{
-  {self.name} packet, *real_packet = &packet;
+        fill = "\n            ".join(map(lambda x: x.get_fill(), self.fields))
+        return dedent(
+            f"""\
+            void dlsend_{self.name}(conn_list *dest,
+                                   {self.dsend_args}
+                                   bool force_to_send)
+            {{
+              {self.name} packet, *real_packet = &packet;
 
-{fill}
+            {fill}
 
-  lsend_{self.name}(dest, real_packet);
-}}
+              lsend_{self.name}(dest, real_packet);
+            }}
 
-"""
+            """
+        )
 
 
 def get_packet_functional_capability(packets):
@@ -1505,7 +1478,7 @@ def get_packet_handlers_fill_capability(packets: list[Packet]) -> str:
             f"""
         if (!has_capability("{packet.capability}", capability)) {{
           log_packet_detailed("{packet.type}: will not send, cap=%s", capability);
-          phandlers->send[{packet.type}].packet = nullptr;
+          phandlers->send[{packet.type}] = nullptr;
         }}
         """
         )
