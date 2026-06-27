@@ -8,6 +8,7 @@
 #include <packets_gen.h>
 
 // utility
+#include "capability.h"
 #include "fcintl.h"
 #include "genhash.h"
 #include "log.h"
@@ -557,7 +558,16 @@ void conn_set_capability(struct connection *pconn, const char *capability)
   fc_assert(strlen(capability) < sizeof(pconn->capability));
 
   sz_strlcpy(pconn->capability, capability);
-  pconn->phs.handlers = packet_handlers_get(capability);
+
+  // Parse
+  pconn->functional_caps = 0;
+  for (int i = 0; i < PC_COUNT; ++i) {
+    auto pc = static_cast<packet_capability>(i);
+    if (has_capability(packet_capability_name(pc), capability)) {
+      pconn->functional_caps |= 1 << pc;
+    }
+  }
+  pconn->phs.handlers = packet_handlers_get(pconn->functional_caps);
 }
 
 /**

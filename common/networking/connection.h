@@ -9,7 +9,8 @@
 #pragma once
 
 // utility
-#include "support.h" // bool type
+#include "bitvector.h"
+#include "support.h"
 #include "timing.h"
 
 // common
@@ -69,10 +70,16 @@ struct packet_header {
   at the other end of a network connection.
 ***********************************************************/
 struct connection {
+  using packet_caps_type = std::uint32_t;
+
   int id; /* used for server/client communication */
   QIODevice *sock = nullptr;
   bool used;
   bool established; // have negotiated initial packets
+
+  /// Packet capabilities negotiated with peer.
+  packet_caps_type functional_caps;
+
   struct packet_header packet_header;
   QString closing_reason;
 

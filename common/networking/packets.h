@@ -42,8 +42,9 @@ void generic_handle_player_attribute_chunk(
     struct player *pplayer,
     const struct packet_player_attribute_chunk *chunk);
 void packet_handlers_fill_initial(struct packet_handlers *phandlers);
-void packet_handlers_fill_capability(struct packet_handlers *phandlers,
-                                     const char *capability);
+void packet_handlers_fill_capability(
+    struct packet_handlers *phandlers,
+    connection::packet_caps_type capability);
 const char *packet_name(enum packet_type type);
 bool packet_has_game_info_flag(enum packet_type type);
 
@@ -57,7 +58,8 @@ void pre_send_packet_player_attribute_chunk(
     struct connection *pc, struct packet_player_attribute_chunk *packet);
 
 const struct packet_handlers *packet_handlers_initial();
-const struct packet_handlers *packet_handlers_get(const char *capability);
+const struct packet_handlers *
+packet_handlers_get(connection::packet_caps_type capability);
 
 void packets_deinit();
 

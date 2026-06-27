@@ -460,7 +460,8 @@ class Variant:
         if self.poscaps or self.negcaps:
 
             def f(cap):
-                return f'has_capability("{cap}", capability)'
+                name = packet_capability_name(cap)
+                return f"(capability & (1 << {name}))"
 
             t = list(map(f, self.poscaps)) + list(
                 map(lambda x: "!" + f(x), self.negcaps)
@@ -1193,10 +1194,18 @@ class Packet:
         )
 
 
-def get_packet_functional_capability(packets):
+def packet_capability_name(cap: str) -> str:
     """
-    Returns a code fragment which is the implementation of the
-    packet_functional_capability string.
+    Turns a network capability name of the form cap-name into an enumerator of
+    the form PC_CAP_NAME.
+    """
+
+    return "PC_" + cap.upper().replace("-", "_")
+
+
+def get_capability_specenum(packets: list[Packet]) -> str:
+    """
+    Returns a code fragment defining the packet_capability specenum.
     """
 
     all_caps = set()
@@ -1209,10 +1218,22 @@ def get_packet_functional_capability(packets):
                 all_caps.add(f.add_cap)
             if f.remove_cap:
                 all_caps.add(f.remove_cap)
-    capstr = " ".join(all_caps)
-    return f"""
-extern "C" const char *const packet_functional_capability = "{capstr}";
-"""
+
+    code = "#define SPECENUM_NAME packet_capability\n"
+    for i, cap in enumerate(all_caps):
+        code += f"#define SPECENUM_VALUE{i} {packet_capability_name(cap)}\n"
+        code += f'#define SPECENUM_VALUE{i}NAME "{cap}"\n'
+    code += dedent(
+        """\
+        #define SPECENUM_COUNT PC_COUNT
+        #include "specenum_gen.h"
+
+        static_assert(PC_COUNT <= sizeof(connection::packet_caps_type),
+                      "Resize connection::caps");
+
+        """
+    )
+    return code
 
 
 def get_report(packets):
@@ -1402,10 +1423,14 @@ def get_packet_handlers_fill_capability(packets: list[Packet]) -> str:
     packet_handlers_fill_capability() function.
     """
 
-    intro = """void packet_handlers_fill_capability(packet_handlers *phandlers,
-                                     const char *capability)
-{
-"""
+    intro = dedent(
+        """\
+        void packet_handlers_fill_capability(
+            packet_handlers *phandlers,
+            connection::packet_caps_type capability)
+        {
+        """
+    )
 
     def variant_conditional(
         prefix: str, packet: Packet, code_func: typing.Callable[Variant, str]
@@ -1424,14 +1449,20 @@ def get_packet_handlers_fill_capability(packets: list[Packet]) -> str:
 
         code = ""
         for var in packet.variants:
-            code += f"""if ({var.condition}) {{
-  {var.log_macro}("{var.type}: using variant={var.no} cap=%s", capability);
-  {code_func(var)}
-}} else """
+            code += dedent(
+                f"""\
+                if ({var.condition}) {{
+                  {var.log_macro}("{var.type}: using variant={var.no} cap=0x%x", capability);
+                  {code_func(var)}
+                }} else """
+            )
 
-        code += f"""{{
-  qCritical("Unknown {packet.type} variant for cap %s", capability);
-}}"""
+        code += dedent(
+            f"""\
+            {{
+              qCritical("Unknown {packet.type} variant for cap 0x%x", capability);
+            }}"""
+        )
         return indent(code, prefix) + "\n"
 
     sc_packets = []
@@ -1474,13 +1505,15 @@ def get_packet_handlers_fill_capability(packets: list[Packet]) -> str:
         if packet.capability is None:
             continue
 
+        cap = packet_capability_name(packet.capability)
         body += dedent(
             f"""
-        if (!has_capability("{packet.capability}", capability)) {{
-          log_packet_detailed("{packet.type}: will not send, cap=%s", capability);
-          phandlers->send[{packet.type}] = nullptr;
-        }}
-        """
+            if (!(capability & (1 << {cap}))) {{
+              log_packet_detailed("{packet.type}: will not send, cap=0x%x",
+                                  capability);
+              phandlers->send[{packet.type}] = nullptr;
+            }}
+            """
         )
 
     extro = "}\n"
@@ -1595,6 +1628,7 @@ def write_common_header(packets: list[Packet], output: io.TextIOWrapper) -> None
 
 // common
 #include "cm.h"
+#include "connection.h"
 #include "fc_types.h"
 #include "unit.h"
 
@@ -1603,6 +1637,9 @@ def write_common_header(packets: list[Packet], output: io.TextIOWrapper) -> None
 
 """
     )
+
+    # Write capability enum
+    output.write(get_capability_specenum(packets))
 
     # write structs
     for packet in packets:
@@ -1659,7 +1696,6 @@ def write_common_source(packets: list[Packet], output: io.TextIOWrapper) -> None
 #include <cstring> // str*, mem*
 """
     )
-    output.write(get_packet_functional_capability(packets))
     output.write(
         """
 static genhash_val_t hash_const(const void *vkey)

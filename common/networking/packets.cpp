@@ -64,9 +64,7 @@
  */
 #define PACKET_SIZE_STATISTICS 0
 
-extern "C" const char *const packet_functional_capability;
-
-typedef QHash<QString, struct packet_handlers *> packetsHash;
+typedef QHash<connection::packet_caps_type, packet_handlers *> packetsHash;
 Q_GLOBAL_STATIC(packetsHash, packet_handlers_hash)
 
 static int stat_size_alone = 0;
@@ -440,7 +438,8 @@ int decompress_buffer(connection *pc, QByteArrayView din, int len_read)
    packet is written in 'ptype'. On error, the connection is closed and
    the function returns nullptr.
  */
-void *get_packet_from_connection(struct connection *pc, enum packet_type *ptype)
+void *get_packet_from_connection(struct connection *pc,
+                                 enum packet_type *ptype)
 {
   int len_read;
   int whole_packet_len;
@@ -793,38 +792,21 @@ const struct packet_handlers *packet_handlers_initial()
 /**
    Returns the packet handlers variant for 'capability'.
  */
-const struct packet_handlers *packet_handlers_get(const char *capability)
+const struct packet_handlers *
+packet_handlers_get(connection::packet_caps_type capability)
 {
-  struct packet_handlers *phandlers;
-  char functional_capability[MAX_LEN_CAPSTR] = "";
-  QStringList tokens;
-
-  fc_assert(strlen(capability) < sizeof(functional_capability));
-
-  // Get functional network capability string.
-  tokens = QString(capability).split(QRegularExpression("[ \t\n,]+"));
-  tokens.sort();
-
-  for (const auto &str : std::as_const(tokens)) {
-    if (!has_capability(qUtf8Printable(str), packet_functional_capability)) {
-      continue;
-    }
-    if (functional_capability[0] != '\0') {
-      sz_strlcat(functional_capability, " ");
-    }
-    sz_strlcat(functional_capability, qUtf8Printable(str));
-  }
+  fc_assert(capability < (1 << PC_COUNT));
 
   // Lookup handlers for the capabilities or create new handlers.
-  if (!packet_handlers_hash->contains(functional_capability)) {
-    phandlers = new struct packet_handlers;
+  if (!packet_handlers_hash->contains(capability)) {
+    auto phandlers = new struct packet_handlers;
     memcpy(phandlers, packet_handlers_initial(), sizeof(*phandlers));
-    packet_handlers_fill_capability(phandlers, functional_capability);
-    packet_handlers_hash->insert(functional_capability, phandlers);
+    packet_handlers_fill_capability(phandlers, capability);
+    packet_handlers_hash->insert(capability, phandlers);
+    return phandlers;
   }
-  phandlers = packet_handlers_hash->value(functional_capability);
-  fc_assert(phandlers != nullptr);
-  return phandlers;
+
+  return packet_handlers_hash->value(capability);
 }
 
 /**
