@@ -69,32 +69,26 @@ def parse_fields(
     flaginfo["diff"] = "diff" in flags
     if flaginfo["diff"]:
         flags.remove("diff")
-    adds = []
-    removes = []
+
+    capability = None
+    capability_add = True
     remaining = []
     for i in flags:
         match = re.search(r"^add-cap\((.*)\)$", i)
         if match:
-            adds.append(match.group(1))
-            continue
+            capability = match.group(1)
+            break
         match = re.search(r"^remove-cap\((.*)\)$", i)
         if match:
-            removes.append(match.group(1))
-            continue
+            capability = match.group(1)
+            capability_add = False
+            break
         remaining.append(i)
     flags = remaining
     assert len(flags) == 0, line
-    assert len(adds) + len(removes) in [0, 1]
 
-    if adds:
-        flaginfo["add_cap"] = adds[0]
-    else:
-        flaginfo["add_cap"] = ""
-
-    if removes:
-        flaginfo["remove_cap"] = removes[0]
-    else:
-        flaginfo["remove_cap"] = ""
+    flaginfo["capability"] = capability
+    flaginfo["capability_add"] = capability_add
 
     typeinfo = {}
     match = re.search(r"^(.*)\((.*)\)$", type_name)
@@ -1002,10 +996,8 @@ class Packet:
         # create cap variants
         all_caps = set()
         for f in self.fields:
-            if f.add_cap:
-                all_caps.add(f.add_cap)
-            if f.remove_cap:
-                all_caps.add(f.remove_cap)
+            if f.capability is not None:
+                all_caps.add(f.capability)
 
         choices = get_choices(all_caps)
         self.variants = []
@@ -1013,11 +1005,11 @@ class Packet:
             negcaps = all_caps - set(poscaps)
             fields = []
             for field in self.fields:
-                if not field.add_cap and not field.remove_cap:
+                if field.capability is None:
                     fields.append(field)
-                elif field.add_cap and field.add_cap in poscaps:
+                elif field.capability_add and field.capability in poscaps:
                     fields.append(field)
-                elif field.remove_cap and field.remove_cap in negcaps:
+                elif not field.capability_add and field.capability in negcaps:
                     fields.append(field)
             no = i + 100
 
@@ -1210,10 +1202,8 @@ def get_capability_specenum(packets: list[Packet]) -> str:
             all_caps.add(p.capability)
 
         for f in p.fields:
-            if f.add_cap:
-                all_caps.add(f.add_cap)
-            if f.remove_cap:
-                all_caps.add(f.remove_cap)
+            if f.capability is not None:
+                all_caps.add(f.capability)
 
     code = "#define SPECENUM_NAME packet_capability\n"
     for i, cap in enumerate(all_caps):
@@ -1355,13 +1345,11 @@ def get_packet_handlers_fill_initial(packets):
 """
     all_caps = set()
     for p in packets:
-        if p.capability:
+        if p.capability is not None:
             all_caps.add(p.capability)
         for f in p.fields:
-            if f.add_cap:
-                all_caps.add(f.add_cap)
-            if f.remove_cap:
-                all_caps.add(f.remove_cap)
+            if f.capability is not None:
+                all_caps.add(f.capability)
     for cap in all_caps:
         intro += f"""  fc_assert_msg(has_capability("{cap}", our_capability),
                 "Packets have support for unknown '{cap}' capability!");
