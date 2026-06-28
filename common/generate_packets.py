@@ -23,9 +23,6 @@ generate_logs = 1
 use_log_macro = "log_packet_detailed"
 generate_variant_logs = 1
 
-# The following parameters CHANGE the protocol. You have been warned.
-fold_bool_into_header = 1
-
 ################# END OF PARAMETERS ####################
 
 
@@ -288,7 +285,7 @@ class Field:
         bools which gets folded in the header) the actual value of the bool.
         """
 
-        if fold_bool_into_header and self.struct_type == "bool" and not self.array_dims:
+        if self.struct_type == "bool" and not self.array_dims:
             return f"""{self.get_cmp()}
   if (differ) {{
     different++;
@@ -313,7 +310,7 @@ class Field:
         changed. Does nothing for bools-in-header.
         """
 
-        if fold_bool_into_header and self.struct_type == "bool" and not self.array_dims:
+        if self.struct_type == "bool" and not self.array_dims:
             return f"  /* field {index} is folded into the header */\n"
         if packet.gen_log:
             f = f"    {packet.log_macro}(\"  field '{self.name}' has changed\");\n"
@@ -375,7 +372,7 @@ class Field:
         """
 
         get = self.get_get(deltafragment)
-        if fold_bool_into_header and self.struct_type == "bool" and not self.array_dims:
+        if self.struct_type == "bool" and not self.array_dims:
             return f"  real_packet->{self.name} = BV_ISSET(fields, {index});\n"
         get = indent(get, "    ")
         if packet.gen_log:
