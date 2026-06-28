@@ -1000,14 +1000,13 @@ class Packet:
             self.dsend_args += ","
 
         # create cap variants
-        all_caps = {}
+        all_caps = set()
         for f in self.fields:
             if f.add_cap:
-                all_caps[f.add_cap] = 1
+                all_caps.add(f.add_cap)
             if f.remove_cap:
-                all_caps[f.remove_cap] = 1
+                all_caps.add(f.remove_cap)
 
-        all_caps = all_caps.keys()
         choices = get_choices(all_caps)
         self.variants = []
         for i, poscaps in enumerate(choices):
