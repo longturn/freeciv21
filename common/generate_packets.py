@@ -1191,9 +1191,9 @@ def packet_capability_name(cap: str) -> str:
     return "PC_" + cap.upper().replace("-", "_")
 
 
-def get_capability_specenum(packets: list[Packet]) -> str:
+def get_all_capabilities(packets: list[Packet]) -> set[str]:
     """
-    Returns a code fragment defining the packet_capability specenum.
+    Extracts the list of all capabilities needed by the packets.
     """
 
     all_caps = set()
@@ -1205,8 +1205,16 @@ def get_capability_specenum(packets: list[Packet]) -> str:
             if f.capability is not None:
                 all_caps.add(f.capability)
 
+    return all_caps
+
+
+def get_capability_specenum(packets: list[Packet]) -> str:
+    """
+    Returns a code fragment defining the packet_capability specenum.
+    """
+
     code = "#define SPECENUM_NAME packet_capability\n"
-    for i, cap in enumerate(all_caps):
+    for i, cap in enumerate(get_all_capabilities(packets)):
         code += f"#define SPECENUM_VALUE{i} {packet_capability_name(cap)}\n"
         code += f'#define SPECENUM_VALUE{i}NAME "{cap}"\n'
     code += dedent(
@@ -1343,14 +1351,8 @@ def get_packet_handlers_fill_initial(packets):
     intro = """void packet_handlers_fill_initial(packet_handlers *phandlers)
 {
 """
-    all_caps = set()
-    for p in packets:
-        if p.capability is not None:
-            all_caps.add(p.capability)
-        for f in p.fields:
-            if f.capability is not None:
-                all_caps.add(f.capability)
-    for cap in all_caps:
+
+    for cap in get_all_capabilities(packets):
         intro += f"""  fc_assert_msg(has_capability("{cap}", our_capability),
                 "Packets have support for unknown '{cap}' capability!");
 """
