@@ -448,7 +448,6 @@ void *get_packet_from_connection(struct connection *pc,
     int itype;
   } utype;
   void *data;
-  void *(*receive_handler)(struct connection *);
 
   if (!pc->used) {
     return nullptr; // connection was closed, stop reading
@@ -512,9 +511,8 @@ void *get_packet_from_connection(struct connection *pc,
   dio_get_type_raw(din, data_type(pc->packet_header.type), utype.itype);
   utype.type = packet_type(utype.itype);
 
-  if (utype.type >= PACKET_LAST
-      || (receive_handler = pc->phs.handlers->receive[utype.type])
-             == nullptr) {
+  auto &handler = pc->phs.handlers->handlers[utype.type];
+  if (utype.type >= PACKET_LAST || handler == nullptr) {
     qDebug("Received unsupported packet type %d (%s). The connection "
            "will be closed now.",
            utype.type, packet_name(utype.type));
@@ -576,7 +574,7 @@ void *get_packet_from_connection(struct connection *pc,
     }
   }
 #endif // PACKET_SIZE_STATISTICS
-  data = receive_handler(pc);
+  data = handler->receive(pc);
   if (!data) {
     connection_close(pc, _("incompatible packet contents"));
     return nullptr;
@@ -777,11 +775,10 @@ static void packet_handlers_free() {}
  */
 const struct packet_handlers *packet_handlers_initial()
 {
-  static struct packet_handlers default_handlers;
+  static struct packet_handlers default_handlers = packet_handlers();
   static bool initialized = false;
 
   if (!initialized) {
-    memset(&default_handlers, 0, sizeof(default_handlers));
     packet_handlers_fill_initial(&default_handlers);
     initialized = true;
   }
@@ -799,8 +796,7 @@ packet_handlers_get(connection::packet_caps_type capability)
 
   // Lookup handlers for the capabilities or create new handlers.
   if (!packet_handlers_hash->contains(capability)) {
-    auto phandlers = new struct packet_handlers;
-    memcpy(phandlers, packet_handlers_initial(), sizeof(*phandlers));
+    auto phandlers = new struct packet_handlers();
     packet_handlers_fill_capability(phandlers, capability);
     packet_handlers_hash->insert(capability, phandlers);
     return phandlers;

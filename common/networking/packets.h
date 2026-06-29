@@ -19,16 +19,23 @@ struct data_in;
 #include "player.h"
 #include "traderoutes.h"
 
+// std
+#include <array>
+#include <memory>
+
 // Qt
 #include <QtContainerFwd> // QVector<QString>
 
-using send_handler = int (*)(struct connection *pconn, const void *packet,
-                             bool force_to_send);
-using receive_handler = void *(*) (struct connection *pconn);
+class packet_handler {
+public:
+  virtual ~packet_handler() = default;
+  virtual void *receive(struct connection *pconn) = 0;
+  virtual int send(struct connection *pconn, const void *packet,
+                   bool force_to_send) = 0;
+};
 
 struct packet_handlers {
-  send_handler send[PACKET_LAST];
-  receive_handler receive[PACKET_LAST];
+  std::array<std::unique_ptr<packet_handler>, PACKET_LAST> handlers;
 };
 
 void *get_packet_from_connection(struct connection *pc,

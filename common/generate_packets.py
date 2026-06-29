@@ -477,15 +477,10 @@ class Variant:
         if len(self.fields) > 5 or self.name.split("_")[1] == "ruleset":
             self.handle_via_packet = 1
 
-        self.receive_prototype = (
-            f"static {self.packet_name} *receive_{self.name}(connection *pc)"
-        )
-
-        self.send_handler = (
-            f"phandlers->send[{self.type}] = (send_handler) send_{self.name};"
-        )
-        self.receive_handler = (
-            f"phandlers->receive[{self.type}] = (receive_handler) receive_{self.name};"
+        self.handler = dedent(
+            f"""
+            phandlers->handlers[{self.type}] = std::make_unique<{self.name}_handler>();
+            """
         )
 
     def get_stats(self):
@@ -668,17 +663,31 @@ static char *stats_{self.name}_names[] = {{names}};
         else:
             post = ""
 
-        faddr = ""
-
-        return f"""\
-static int send_{self.name}(connection *pc, const {self.packet_name} *packet,
-                            bool force_to_send)
-{{
-{real_packet1}{delta_header}  SEND_PACKET_START({self.type});
-{faddr}{log}{report}{pre1}{body}{pre2}{post}  SEND_PACKET_END({self.type});
-}}
-
-"""
+        code = dedent(
+            f"""\
+            virtual int send(connection *pc, const void *packet_data,
+                             bool force_to_send) override
+            {{
+              [[maybe_unused]]
+              auto packet = static_cast<const {self.packet_name} *>(packet_data);
+            """
+        )
+        code += real_packet1
+        code += delta_header
+        code += f"  SEND_PACKET_START({self.type});\n"
+        code += log
+        code += report
+        code += pre1
+        code += body
+        code += pre2
+        code += post
+        code += dedent(
+            f"""\
+              SEND_PACKET_END({self.type});
+            }}
+            """
+        )
+        return code
 
     def get_delta_send_body(self, pre2):
         """
@@ -783,13 +792,26 @@ static int send_{self.name}(connection *pc, const {self.packet_name} *packet,
         else:
             post = ""
 
-        return f"""{self.receive_prototype}
-{{
-{delta_header}  RECEIVE_PACKET_START({self.packet_name}, real_packet);
-{delta_body1}{body1}{log}{body2}{post}  RECEIVE_PACKET_END(real_packet);
-}}
-
-"""
+        code = dedent(
+            f"""\
+            virtual void *receive(connection *pc) override
+            {{
+            """
+        )
+        code += delta_header
+        code += f"  RECEIVE_PACKET_START({self.packet_name}, real_packet);\n"
+        code += delta_body1
+        code += body1
+        code += log
+        code += body2
+        code += post
+        code += dedent(
+            f"""\
+              RECEIVE_PACKET_END(real_packet);
+            }}
+            """
+        )
+        return code
 
     def get_delta_receive_body(self):
         """
@@ -1079,8 +1101,7 @@ class Packet:
 
         return dedent(
             f"""\
-            int send_{self.name}(connection *pc, const {self.name} *packet,
-                                 bool force_to_send)
+            int send_{self.name}(connection *pc, const {self.name} *packet, bool force_to_send)
             {{
               if (!pc->used) {{
                   qCritical("WARNING: trying to send data to the closed connection %s",
@@ -1088,12 +1109,12 @@ class Packet:
                   return -1;
               }}
               if constexpr ({check}) {{
-                fc_assert_ret_val_msg(pc->phs.handlers->send[{self.type}] != nullptr, -1,
+                fc_assert_ret_val_msg(pc->phs.handlers->handlers[{self.type}] != nullptr, -1,
                                       "Handler for {self.type} not installed");
-              }} else if (!pc->phs.handlers->send[{self.type}]) {{
+              }} else if (!pc->phs.handlers->handlers[{self.type}]) {{
                 return 0;
               }}
-              return pc->phs.handlers->send[{self.type}](pc, packet, force_to_send);
+              return pc->phs.handlers->handlers[{self.type}]->send(pc, packet, force_to_send);
             }}
 
             """
@@ -1103,11 +1124,19 @@ class Packet:
         result = ""
         for v in self.variants:
             if v.delta:
-                result = result + v.get_hash()
-                result = result + v.get_cmp()
-                result = result + v.get_bitvector()
-            result = result + v.get_receive()
-            result = result + v.get_send()
+                result += v.get_hash()
+                result += v.get_cmp()
+                result += v.get_bitvector()
+            result += dedent(
+                f"""\
+                class {v.name}_handler : public packet_handler {{
+                public:
+                  virtual ~{v.name}_handler() override = default;
+                """
+            )
+            result += indent(v.get_receive(), "  ")
+            result += indent(v.get_send(), "  ")
+            result += "};\n\n"
         return result
 
     def get_lsend(self):
@@ -1357,9 +1386,7 @@ def get_packet_handlers_fill_initial(packets):
                 "Packets have support for unknown '{cap}' capability!");
 """
 
-    sc_packets = []
-    cs_packets = []
-    unrestricted = []
+    body = ""
     for p in packets:
         if len(p.variants) == 1:
             # Packets with variants are correctly handled in
@@ -1367,36 +1394,9 @@ def get_packet_handlers_fill_initial(packets):
             # handler at connecting time, because it would be anyway wrong
             # to use them before the network capability string would be
             # known.
-            if len(p.dirs) == 1 and p.dirs[0] == "sc":
-                sc_packets.append(p)
-            elif len(p.dirs) == 1 and p.dirs[0] == "cs":
-                cs_packets.append(p)
-            else:
-                unrestricted.append(p)
+            body += indent(p.variants[0].handler, "  ")
 
-    body = ""
-    for p in unrestricted:
-        body += f"""  {p.variants[0].send_handler}
-  {p.variants[0].receive_handler}
-"""
-    body += """  if (is_server()) {
-"""
-    for p in sc_packets:
-        body += f"""    {p.variants[0].send_handler}
-"""
-    for p in cs_packets:
-        body += f"""    {p.variants[0].receive_handler}
-"""
-    body += """  } else {
-"""
-    for p in cs_packets:
-        body += f"""    {p.variants[0].send_handler}
-"""
-    for p in sc_packets:
-        body += f"""    {p.variants[0].receive_handler}
-"""
-
-    extro = """  }
+    extro = """
 }
 
 """
@@ -1411,15 +1411,15 @@ def get_packet_handlers_fill_capability(packets: list[Packet]) -> str:
 
     intro = dedent(
         """\
-        void packet_handlers_fill_capability(
-            packet_handlers *phandlers,
-            connection::packet_caps_type capability)
+        void packet_handlers_fill_capability(packet_handlers *phandlers,
+                                             connection::packet_caps_type capability)
         {
+          packet_handlers_fill_initial(phandlers);
         """
     )
 
     def variant_conditional(
-        prefix: str, packet: Packet, code_func: typing.Callable[Variant, str]
+        packet: Packet, code_func: typing.Callable[Variant, str]
     ) -> str:
         """
         Produces code of the form:
@@ -1439,9 +1439,10 @@ def get_packet_handlers_fill_capability(packets: list[Packet]) -> str:
                 f"""\
                 if ({var.condition}) {{
                   {var.log_macro}("{var.type}: using variant={var.no} cap=0x%x", capability);
-                  {code_func(var)}
-                }} else """
+                """
             )
+            code += indent(code_func(var), "  ")
+            code += "} else "
 
         code += dedent(
             f"""\
@@ -1449,42 +1450,12 @@ def get_packet_handlers_fill_capability(packets: list[Packet]) -> str:
               qCritical("Unknown {packet.type} variant for cap 0x%x", capability);
             }}"""
         )
-        return indent(code, prefix) + "\n"
-
-    sc_packets = []
-    cs_packets = []
-    unrestricted = []
-    for packet in packets:
-        if len(packet.variants) > 1:
-            if len(packet.dirs) == 1 and packet.dirs[0] == "sc":
-                sc_packets.append(packet)
-            elif len(packet.dirs) == 1 and packet.dirs[0] == "cs":
-                cs_packets.append(packet)
-            else:
-                unrestricted.append(packet)
+        return code + "\n"
 
     body = ""
-    for packet in unrestricted:
-        body += variant_conditional(
-            "", packet, lambda var: var.send_handler + "\n  " + var.receive_handler
-        )
-
-    if cs_packets or sc_packets:
-        body += "if (is_server()) {\n"
-        for packet in sc_packets:
-            body += variant_conditional("  ", packet, lambda var: var.send_handler)
-
-        for packet in cs_packets:
-            body += variant_conditional("  ", packet, lambda var: var.receive_handler)
-
-        body += "} else {\n"
-        for packet in cs_packets:
-            body += variant_conditional("  ", packet, lambda var: var.send_handler)
-
-        for packet in sc_packets:
-            body += variant_conditional("  ", packet, lambda var: var.receive_handler)
-
-        body += "}\n"
+    for packet in packets:
+        if packet.variants:
+            body += variant_conditional(packet, lambda var: var.handler)
 
     # Packets controlled by capabilities
     for packet in packets:
@@ -1497,7 +1468,7 @@ def get_packet_handlers_fill_capability(packets: list[Packet]) -> str:
             if (!(capability & (1 << {cap}))) {{
               log_packet_detailed("{packet.type}: will not send, cap=0x%x",
                                   capability);
-              phandlers->send[{packet.type}] = nullptr;
+              phandlers->handlers[{packet.type}] = nullptr;
             }}
             """
         )
