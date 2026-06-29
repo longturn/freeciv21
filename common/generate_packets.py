@@ -1223,7 +1223,7 @@ def get_capability_specenum(packets: list[Packet]) -> str:
         #include "specenum_gen.h"
 
         static_assert(PC_COUNT <= sizeof(connection::packet_caps_type),
-                      "Resize connection::caps");
+                      "Resize connection::packet_caps_type");
 
         """
     )
