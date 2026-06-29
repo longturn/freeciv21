@@ -25,6 +25,7 @@
 #include "support.h"
 
 // common
+#include "connection.h"
 #include "game.h"
 
 // deps

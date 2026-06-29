@@ -14,13 +14,12 @@
 // utility
 #include "fcintl.h"
 #include "log.h"
-#include "rand.h"
 #include "support.h"
 
 // common
 #include "actions.h"
 #include "city.h"
-#include "events.h"
+#include "connection.h"
 #include "game.h"
 #include "map.h"
 #include "player.h"

@@ -5190,22 +5190,22 @@ void handle_processing_finished()
 /**
    Notify interested parties about incoming packet.
  */
-void notify_about_incoming_packet(struct connection *pc, int packet_type,
+void notify_about_incoming_packet(struct connection *pc, packet_type type,
                                   int size)
 {
   fc_assert(pc == &client.conn);
-  log_debug("incoming packet={type=%d, size=%d}", packet_type, size);
+  log_debug("incoming packet={type=%d, size=%d}", type, size);
 }
 
 /**
    Notify interested parties about outgoing packet.
  */
-void notify_about_outgoing_packet(struct connection *pc, int packet_type,
+void notify_about_outgoing_packet(struct connection *pc, packet_type type,
                                   int size, int request_id)
 {
   fc_assert(pc == &client.conn);
-  log_debug("outgoing packet={type=%d, size=%d, request_id=%d}", packet_type,
-            size, request_id);
+  log_debug("outgoing packet={type=%d, size=%d, request_id=%d}", type, size,
+            request_id);
 
   fc_assert(request_id);
 }
