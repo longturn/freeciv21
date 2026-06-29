@@ -21,7 +21,9 @@
 #include <QString>
 
 // std
+#include <array>
 #include <ctime> // time_t
+#include <memory>
 
 // Forward declarations
 class QIODevice;
@@ -29,7 +31,6 @@ class QString;
 
 struct conn_pattern_list;
 struct genhash;
-struct packet_handlers;
 
 /***************************************************************************
   On the distinction between nations(formerly races), players, and users,
@@ -129,7 +130,7 @@ struct connection {
   struct {
     struct genhash **sent;
     struct genhash **received;
-    const struct packet_handlers *handlers;
+    std::array<std::unique_ptr<packet_handler>, PACKET_LAST> handlers;
   } phs;
 
   struct {

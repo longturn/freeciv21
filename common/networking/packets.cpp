@@ -8,7 +8,6 @@
 #include <packets_gen.h>
 
 // utility
-#include "capability.h"
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h"
@@ -34,7 +33,6 @@
 // std
 #include <cstdlib> // EXIT_FAILURE, free, at_quick_exit
 #include <cstring> // str*, mem*
-#include <utility> // std:move, std::as_const
 #include <zconf.h> // uLongf, Bytef
 #include <zlib.h>  // Z_*
 
@@ -63,9 +61,6 @@
  * to 1 in generate_packets.py.
  */
 #define PACKET_SIZE_STATISTICS 0
-
-typedef QHash<packet_capabilities_type, packet_handlers *> packetsHash;
-Q_GLOBAL_STATIC(packetsHash, packet_handlers_hash)
 
 static int stat_size_alone = 0;
 static int stat_size_uncompressed = 0;
@@ -511,7 +506,7 @@ void *get_packet_from_connection(struct connection *pc,
   dio_get_type_raw(din, data_type(pc->packet_header.type), utype.itype);
   utype.type = packet_type(utype.itype);
 
-  auto &handler = pc->phs.handlers->handlers[utype.type];
+  auto &handler = pc->phs.handlers[utype.type];
   if (utype.type >= PACKET_LAST || handler == nullptr) {
     qDebug("Received unsupported packet type %d (%s). The connection "
            "will be closed now.",
@@ -773,36 +768,29 @@ static void packet_handlers_free() {}
 /**
    Returns the packet handlers variant with no special capability.
  */
-const struct packet_handlers *packet_handlers_initial()
+packet_handlers packet_handlers_initial()
 {
-  static struct packet_handlers default_handlers = packet_handlers();
+  auto default_handlers = packet_handlers();
   static bool initialized = false;
 
   if (!initialized) {
-    packet_handlers_fill_initial(&default_handlers);
+    packet_handlers_fill_initial(default_handlers);
     initialized = true;
   }
 
-  return &default_handlers;
+  return default_handlers;
 }
 
 /**
    Returns the packet handlers variant for 'capability'.
  */
-const struct packet_handlers *
-packet_handlers_get(packet_capabilities_type capability)
+packet_handlers packet_handlers_get(packet_capabilities_type capability)
 {
   fc_assert(capability < (1 << PC_COUNT));
 
-  // Lookup handlers for the capabilities or create new handlers.
-  if (!packet_handlers_hash->contains(capability)) {
-    auto phandlers = new struct packet_handlers();
-    packet_handlers_fill_capability(phandlers, capability);
-    packet_handlers_hash->insert(capability, phandlers);
-    return phandlers;
-  }
-
-  return packet_handlers_hash->value(capability);
+  auto handlers = packet_handlers();
+  packet_handlers_fill_capability(handlers, capability);
+  return handlers;
 }
 
 /**
