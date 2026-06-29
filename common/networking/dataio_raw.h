@@ -14,6 +14,7 @@
 #include <type_traits>
 
 // Qt
+#include <QBitArray>
 #include <QByteArray>
 #include <QByteArrayView>
 #include <QtEndian>
@@ -318,6 +319,9 @@ void dio_put(QByteArray &dout, const bit_vector<bits> &value)
   dout.append(reinterpret_cast<const char *>(value.vec.data()),
               value.vec.size());
 }
+
+bool dio_get(QByteArrayView &din, QBitArray &dest);
+void dio_put(QByteArray &dout, const QBitArray &value);
 
 bool dio_get(QByteArrayView &din, char *dest, std::size_t max_dest_size)
     fc__attribute((nonnull(2)));

@@ -285,7 +285,7 @@ class Field:
     different++;
   }}
   if (packet->{self.name}) {{
-    BV_SET(fields, {index});
+    fields.setBit({index});
   }}
 
 """
@@ -293,7 +293,7 @@ class Field:
         return f"""{self.get_cmp()}
   if (differ) {{
     different++;
-    BV_SET(fields, {index});
+    fields.setBit({index});
   }}
 
 """
@@ -316,7 +316,7 @@ class Field:
         else:
             s = ""
 
-        return f"""  if (BV_ISSET(fields, {index})) {{
+        return f"""  if (fields[{index}]) {{
 {f}{s}    {self.get_put(deltafragment)}
   }}
 """
@@ -367,13 +367,13 @@ class Field:
 
         get = self.get_get(deltafragment)
         if self.struct_type == "bool" and not self.array_dims:
-            return f"  real_packet->{self.name} = BV_ISSET(fields, {index});\n"
+            return f"  real_packet->{self.name} = fields[{index}];\n"
         get = indent(get, "    ")
         if packet.gen_log:
             f = f"    {packet.log_macro}(\"  got field '{self.name}'\");\n"
         else:
             f = ""
-        return f"""  if (BV_ISSET(fields, {index})) {{
+        return f"""  if (fields[{index}]) {{
 {f}{get}
   }}
 """
@@ -498,14 +498,6 @@ static int stats_{self.name}_counters[{self.bits}];
 static char *stats_{self.name}_names[] = {{names}};
 
 """
-
-    def get_bitvector(self):
-        """
-        Returns a code fragment which declares the packet specific bitvector.
-        Each bit in this bitvector represents one non-key field.
-        """
-
-        return f"BV_DEFINE({self.name}_fields, {self.bits});\n"
 
     def get_report_part(self):
         """
@@ -638,7 +630,7 @@ static char *stats_{self.name}_names[] = {{names}};
         if not self.no_packet:
             if self.delta:
                 delta_header = f"""
-  {self.name}_fields fields;
+  QBitArray fields({self.bits});
   {self.packet_name} *old;
   bool differ;
   genhash **hash = pc->phs.sent + {self.type};
@@ -699,7 +691,7 @@ static char *stats_{self.name}_names[] = {{names}};
     *hash = genhash_new_full(hash_{self.name}, cmp_{self.name},
                              NULL, NULL, NULL, free);
   }}
-  BV_CLR_ALL(fields);
+  fields.fill(false);
 
   if (!genhash_lookup(*hash, real_packet, (void **) &old)) {{
     old = new {self.packet_name};
@@ -762,7 +754,7 @@ static char *stats_{self.name}_names[] = {{names}};
 
         if self.delta:
             delta_header = f"""
-  {self.name}_fields fields;
+  QBitArray fields({self.bits});
   {self.packet_name} *old;
   genhash **hash = pc->phs.received + {self.type};
 """
@@ -1126,7 +1118,6 @@ class Packet:
             if v.delta:
                 result += v.get_hash()
                 result += v.get_cmp()
-                result += v.get_bitvector()
             result += dedent(
                 f"""\
                 class {v.name}_handler : public packet_handler {{
@@ -1627,7 +1618,6 @@ def write_common_source(packets: list[Packet], output: io.TextIOWrapper) -> None
 #include <packets_gen.h>
 
 // utility
-#include "bitvector.h"
 #include "capability.h"
 #include "genhash.h"
 #include "log.h"
@@ -1639,14 +1629,14 @@ def write_common_source(packets: list[Packet], output: io.TextIOWrapper) -> None
 #include "connection.h"
 #include "dataio_raw.h"
 #include "fc_types.h"
-#include "game.h"
 #include "packets.h"
 #include "requirements.h"
 #include "unit.h"
 #include "worklist.h"
 
 // Qt
-#include <QtLogging> // qDebug, qWarning, qCricital, etc
+#include <QBitArray>
+#include <QtLogging> // qDebug, qWarning, qCritical, etc
 
 // std
 #include <cstdlib> // EXIT_FAILURE, free, at_quick_exit
