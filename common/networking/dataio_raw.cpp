@@ -189,6 +189,30 @@ void dio_put_type_raw(QByteArray &dout, enum data_type type, int value)
 }
 
 /**
+ * Reads a QBitArray from the beginning of \c din and puts it in \c dest. The
+ * size is taken from \c dest.
+ */
+bool dio_get(QByteArrayView &din, QBitArray &dest)
+{
+  fc_assert_ret_val_msg(din.size() >= (dest.size() + 7) / 8, false,
+                        "Not enough data for QBitArray: need %lld, got %lld",
+                        dest.size(), din.size());
+
+  dest = QBitArray::fromBits(din.constData(), dest.size());
+
+  din.slice((dest.size() + 7) / 8);
+  return true;
+}
+
+/**
+ * Writes a QBitArray at the end of \c dout.
+ */
+void dio_put(QByteArray &dout, const QBitArray &value)
+{
+  dout.append(value.bits(), (value.size() + 7) / 8);
+}
+
+/**
    Take string. Conversion callback is used.
  */
 bool dio_get(QByteArrayView &din, char *dest, std::size_t max_dest_size)
