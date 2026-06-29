@@ -9,12 +9,12 @@
 #pragma once
 
 // utility
-#include "bitvector.h"
 #include "support.h"
 #include "timing.h"
 
 // common
 #include "fc_types.h"
+#include "packets.h"
 
 // Qt
 #include <QList>
@@ -70,15 +70,13 @@ struct packet_header {
   at the other end of a network connection.
 ***********************************************************/
 struct connection {
-  using packet_caps_type = std::uint32_t;
-
   int id; /* used for server/client communication */
   QIODevice *sock = nullptr;
   bool used;
   bool established; // have negotiated initial packets
 
   /// Packet capabilities negotiated with peer.
-  packet_caps_type functional_caps;
+  packet_capabilities_type functional_caps;
 
   struct packet_header packet_header;
   QString closing_reason;
@@ -121,20 +119,12 @@ struct connection {
   void (*notify_of_writable_data)(struct connection *pc,
                                   bool data_available_and_socket_full);
 
-  /*
-   * Called before an incoming packet is processed. The packet_type
-   * argument should really be a "enum packet_type". However due
-   * circular dependency this is impossible.
-   */
-  void (*incoming_packet_notify)(struct connection *pc, int packet_type,
+  /// Called before an incoming packet is processed.
+  void (*incoming_packet_notify)(struct connection *pc, packet_type type,
                                  int size);
 
-  /*
-   * Called before a packet is sent. The packet_type argument should
-   * really be a "enum packet_type". However due circular dependency
-   * this is impossible.
-   */
-  void (*outgoing_packet_notify)(struct connection *pc, int packet_type,
+  /// Called before a packet is sent.
+  void (*outgoing_packet_notify)(struct connection *pc, packet_type type,
                                  int size, int request_id);
   struct {
     struct genhash **sent;

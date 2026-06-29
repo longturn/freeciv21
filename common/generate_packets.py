@@ -393,9 +393,12 @@ class Field:
             dio_arg = f", sizeof(real_packet->{self.name})"
 
         # dio_get call and error checking
-        c = f"""if (!dio_get(din, real_packet->{self.name}{dio_arg})) {{
-          RECEIVE_PACKET_FIELD_ERROR({self.name});
-        }}"""
+        c = dedent(
+            f"""\
+            if (!dio_get(din, real_packet->{self.name}{dio_arg})) {{
+              RECEIVE_PACKET_FIELD_ERROR({self.name});
+            }}"""
+        )
 
         # We're done for scalar types
         if self.dataio_type == "bitvector":
@@ -418,9 +421,12 @@ class Field:
         else:
             size_args = f", {self.array_size_u}"
 
-        return f"""if (!dio_get(din, real_packet->{self.name}{size_args}{dio_arg})) {{
-          RECEIVE_PACKET_FIELD_ERROR({self.name});
-        }}"""
+        return dedent(
+            f"""\
+            if (!dio_get(din, real_packet->{self.name}{size_args}{dio_arg})) {{
+              RECEIVE_PACKET_FIELD_ERROR({self.name});
+            }}"""
+        )
 
 
 class Variant:
@@ -1241,10 +1247,6 @@ def get_capability_specenum(packets: list[Packet]) -> str:
         """\
         #define SPECENUM_COUNT PC_COUNT
         #include "specenum_gen.h"
-
-        static_assert(PC_COUNT <= sizeof(connection::packet_caps_type),
-                      "Resize connection::packet_caps_type");
-
         """
     )
     return code
@@ -1403,7 +1405,7 @@ def get_packet_handlers_fill_capability(packets: list[Packet]) -> str:
     intro = dedent(
         """\
         void packet_handlers_fill_capability(packet_handlers *phandlers,
-                                             connection::packet_caps_type capability)
+                                             packet_capabilities_type capability)
         {
           packet_handlers_fill_initial(phandlers);
         """
@@ -1576,7 +1578,6 @@ def write_common_header(packets: list[Packet], output: io.TextIOWrapper) -> None
 
 // common
 #include "cm.h"
-#include "connection.h"
 #include "fc_types.h"
 #include "unit.h"
 
@@ -1642,6 +1643,14 @@ def write_common_source(packets: list[Packet], output: io.TextIOWrapper) -> None
 #include <cstdlib> // EXIT_FAILURE, free, at_quick_exit
 #include <cstring> // str*, mem*
 """
+    )
+    output.write(
+        dedent(
+            """
+        static_assert(PC_COUNT <= sizeof(packet_capabilities_type),
+                      "Resize packet_capabilities_type");
+        """
+        )
     )
     output.write(
         """

@@ -21,16 +21,14 @@
 #include "support.h"
 
 // common
-#include "actions.h"
 #include "ai.h"
 #include "base.h"
 #include "borders.h"
-#include "events.h"
+#include "connection.h"
 #include "game.h"
 #include "map.h"
 #include "movement.h"
 #include "nation.h"
-#include "packets.h"
 #include "player.h"
 #include "road.h"
 #include "unit.h"
@@ -45,7 +43,6 @@
 #include "sanitycheck.h"
 #include "sernet.h"
 #include "srv_main.h"
-#include "unithand.h"
 #include "unittools.h"
 
 /* server/generator */

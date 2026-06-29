@@ -4,7 +4,6 @@
 #pragma once
 
 struct connection;
-struct data_in;
 
 // generated
 #include <packets_gen.h>
@@ -14,7 +13,6 @@ struct data_in;
 #include "shared.h" // MAX_LEN_ADDR
 
 // common
-#include "connection.h"
 #include "fc_types.h"
 #include "player.h"
 #include "traderoutes.h"
@@ -25,6 +23,8 @@ struct data_in;
 
 // Qt
 #include <QtContainerFwd> // QVector<QString>
+
+using packet_capabilities_type = std::uint32_t;
 
 class packet_handler {
 public:
@@ -49,9 +49,8 @@ void generic_handle_player_attribute_chunk(
     struct player *pplayer,
     const struct packet_player_attribute_chunk *chunk);
 void packet_handlers_fill_initial(struct packet_handlers *phandlers);
-void packet_handlers_fill_capability(
-    struct packet_handlers *phandlers,
-    connection::packet_caps_type capability);
+void packet_handlers_fill_capability(struct packet_handlers *phandlers,
+                                     packet_capabilities_type capability);
 const char *packet_name(enum packet_type type);
 bool packet_has_game_info_flag(enum packet_type type);
 
@@ -66,7 +65,7 @@ void pre_send_packet_player_attribute_chunk(
 
 const struct packet_handlers *packet_handlers_initial();
 const struct packet_handlers *
-packet_handlers_get(connection::packet_caps_type capability);
+packet_handlers_get(packet_capabilities_type capability);
 
 void packets_deinit();
 

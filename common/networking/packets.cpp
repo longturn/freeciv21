@@ -64,7 +64,7 @@
  */
 #define PACKET_SIZE_STATISTICS 0
 
-typedef QHash<connection::packet_caps_type, packet_handlers *> packetsHash;
+typedef QHash<packet_capabilities_type, packet_handlers *> packetsHash;
 Q_GLOBAL_STATIC(packetsHash, packet_handlers_hash)
 
 static int stat_size_alone = 0;
@@ -790,7 +790,7 @@ const struct packet_handlers *packet_handlers_initial()
    Returns the packet handlers variant for 'capability'.
  */
 const struct packet_handlers *
-packet_handlers_get(connection::packet_caps_type capability)
+packet_handlers_get(packet_capabilities_type capability)
 {
   fc_assert(capability < (1 << PC_COUNT));
 

@@ -10,11 +10,14 @@
 **************************************************************************/
 #pragma once
 
+// common
+#include "packets.h"
+
 void packhand_free();
 
-void notify_about_incoming_packet(struct connection *pc, int packet_type,
+void notify_about_incoming_packet(struct connection *pc, packet_type type,
                                   int size);
-void notify_about_outgoing_packet(struct connection *pc, int packet_type,
+void notify_about_outgoing_packet(struct connection *pc, packet_type type,
                                   int size, int request_id);
 void set_reports_thaw_request(int request_id);
 
