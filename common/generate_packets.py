@@ -485,7 +485,7 @@ class Variant:
 
         self.handler = dedent(
             f"""
-            phandlers->handlers[{self.type}] = std::make_unique<{self.name}_handler>();
+            handlers[{self.type}] = std::make_unique<{self.name}_handler>();
             """
         )
 
@@ -1107,12 +1107,12 @@ class Packet:
                   return -1;
               }}
               if constexpr ({check}) {{
-                fc_assert_ret_val_msg(pc->phs.handlers->handlers[{self.type}] != nullptr, -1,
+                fc_assert_ret_val_msg(pc->phs.handlers[{self.type}] != nullptr, -1,
                                       "Handler for {self.type} not installed");
-              }} else if (!pc->phs.handlers->handlers[{self.type}]) {{
+              }} else if (!pc->phs.handlers[{self.type}]) {{
                 return 0;
               }}
-              return pc->phs.handlers->handlers[{self.type}]->send(pc, packet, force_to_send);
+              return pc->phs.handlers[{self.type}]->send(pc, packet, force_to_send);
             }}
 
             """
@@ -1370,7 +1370,7 @@ def get_packet_handlers_fill_initial(packets):
     packet_handlers_fill_initial() function.
     """
 
-    intro = """void packet_handlers_fill_initial(packet_handlers *phandlers)
+    intro = """void packet_handlers_fill_initial(packet_handlers &handlers)
 {
 """
 
@@ -1404,10 +1404,10 @@ def get_packet_handlers_fill_capability(packets: list[Packet]) -> str:
 
     intro = dedent(
         """\
-        void packet_handlers_fill_capability(packet_handlers *phandlers,
+        void packet_handlers_fill_capability(packet_handlers &handlers,
                                              packet_capabilities_type capability)
         {
-          packet_handlers_fill_initial(phandlers);
+          packet_handlers_fill_initial(handlers);
         """
     )
 
@@ -1461,7 +1461,7 @@ def get_packet_handlers_fill_capability(packets: list[Packet]) -> str:
             if (!(capability & (1 << {cap}))) {{
               log_packet_detailed("{packet.type}: will not send, cap=0x%x",
                                   capability);
-              phandlers->handlers[{packet.type}] = nullptr;
+              handlers[{packet.type}] = nullptr;
             }}
             """
         )

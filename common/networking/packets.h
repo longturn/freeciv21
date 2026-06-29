@@ -34,9 +34,8 @@ public:
                    bool force_to_send) = 0;
 };
 
-struct packet_handlers {
-  std::array<std::unique_ptr<packet_handler>, PACKET_LAST> handlers;
-};
+using packet_handlers =
+    std::array<std::unique_ptr<packet_handler>, PACKET_LAST>;
 
 void *get_packet_from_connection(struct connection *pc,
                                  enum packet_type *ptype);
@@ -48,8 +47,8 @@ void send_attribute_block(const struct player *pplayer,
 void generic_handle_player_attribute_chunk(
     struct player *pplayer,
     const struct packet_player_attribute_chunk *chunk);
-void packet_handlers_fill_initial(struct packet_handlers *phandlers);
-void packet_handlers_fill_capability(struct packet_handlers *phandlers,
+void packet_handlers_fill_initial(packet_handlers &handlers);
+void packet_handlers_fill_capability(packet_handlers &handlers,
                                      packet_capabilities_type capability);
 const char *packet_name(enum packet_type type);
 bool packet_has_game_info_flag(enum packet_type type);
@@ -63,9 +62,8 @@ void post_receive_packet_server_join_reply(
 void pre_send_packet_player_attribute_chunk(
     struct connection *pc, struct packet_player_attribute_chunk *packet);
 
-const struct packet_handlers *packet_handlers_initial();
-const struct packet_handlers *
-packet_handlers_get(packet_capabilities_type capability);
+packet_handlers packet_handlers_initial();
+packet_handlers packet_handlers_get(packet_capabilities_type capability);
 
 void packets_deinit();
 
