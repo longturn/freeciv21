@@ -158,9 +158,9 @@ Syntax:
    Field flags:
    ------------
 
-      key: create multiple entries in the cache indexed by the key set
-      (set of all fields which have the key attribute). This allow a
-      better delta compression.
+      key: create multiple entries in the cache indexed by the key. Must be of
+      integer type, and there may be only one. This allows a better delta
+      compression.
 
       diff: use the array-diff feature. This will reduce the amount of
       traffic for large arrays in which only a few elements change.

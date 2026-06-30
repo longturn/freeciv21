@@ -466,15 +466,17 @@ class Variant:
             self.condition = " && ".join(t)
         else:
             self.condition = "true"
-        self.key_fields = list(filter(lambda x: x.is_key, self.fields))
+
+        key_fields = list(filter(lambda x: x.is_key, self.fields))
+        if not key_fields:
+            self.key_field = None
+        elif len(key_fields) == 1:
+            self.key_field = key_fields[0]
+        else:
+            raise ValueError("At most one field per packet can have the 'key' flag")
+
         self.other_fields = list(filter(lambda x: not x.is_key, self.fields))
         self.bits = len(self.other_fields)
-        self.keys_format = ", ".join(["%d"] * len(self.key_fields))
-        self.keys_arg = ", ".join(
-            map(lambda x: "real_packet->" + x.name, self.key_fields)
-        )
-        if self.keys_arg:
-            self.keys_arg = ",\n    " + self.keys_arg
 
         if len(self.fields) == 0:
             self.delta = 0
@@ -546,27 +548,18 @@ static char *stats_{self.name}_names[] = {{names}};
         function. The hash function is using all key fields.
         """
 
-        if len(self.key_fields) == 0:
+        if self.key_field is None:
             return f"#define hash_{self.name} hash_const\n\n"
 
-        intro = f"""static genhash_val_t hash_{self.name}(const void *vkey)
-{{
-"""
-
-        body = f"""  const {self.packet_name} *key = (const {self.packet_name} *) vkey;
-
-"""
-
-        keys = list(map(lambda x: "key->" + x.name, self.key_fields))
-        if len(keys) == 1:
-            a = keys[0]
-        elif len(keys) == 2:
-            a = f"({keys[0]} << 8) ^ {keys[1]}"
-        else:
-            assert 0
-        body += f"  return {a};\n"
-        extro = "}\n\n"
-        return intro + body + extro
+        return dedent(
+            f"""\
+            static genhash_val_t hash_{self.name}(const void *vkey)
+            {{
+              const {self.packet_name} *key = static_cast<const {self.packet_name} *>(vkey);
+              return key->{self.key_field.name};
+            }}
+            """
+        )
 
     def get_cmp(self):
         """
@@ -575,21 +568,19 @@ static char *stats_{self.name}_names[] = {{names}};
         the hash table.
         """
 
-        if len(self.key_fields) == 0:
+        if self.key_field is None:
             return f"#define cmp_{self.name} cmp_const\n\n"
 
-        intro = f"""static bool cmp_{self.name}(const void *vkey1, const void *vkey2)
-{{
-"""
-        body = f"""  const {self.packet_name} *key1 = (const {self.packet_name} *) vkey1;
-  const {self.packet_name} *key2 = (const {self.packet_name} *) vkey2;
-
-"""
-        for field in self.key_fields:
-            body += f"""  return key1->{field.name} == key2->{field.name};
-"""
-        extro = "}\n"
-        return intro + body + extro
+        return dedent(
+            f"""\
+            static bool cmp_{self.name}(const void *vkey1, const void *vkey2)
+            {{
+                const {self.packet_name} *key1 = static_cast<const {self.packet_name} *>(vkey1);
+                const {self.packet_name} *key2 = static_cast<const {self.packet_name} *>(vkey2);
+                return key1->{self.key_field.name} == key2->{self.key_field.name};
+            }}
+            """
+        )
 
     def get_send(self):
         """
@@ -606,7 +597,10 @@ static char *stats_{self.name}_names[] = {{names}};
         else:
             report = ""
         if self.gen_log:
-            log = f'\n  {self.log_macro}("{self.name}: sending info about ({self.keys_format})"{self.keys_arg});\n'
+            if self.key_field is None:
+                log = f'\n  {self.log_macro}("{self.name}: sending info");\n'
+            else:
+                log = f'\n  {self.log_macro}("{self.name}: sending info about ({self.key_field.name}=%d)", real_packet->{self.key_field.name});\n'
         else:
             log = ""
         if self.want_pre_send:
@@ -730,8 +724,8 @@ static char *stats_{self.name}_names[] = {{names}};
   dio_put(dout, fields);
 """
 
-        for field in self.key_fields:
-            body += field.get_put(1) + "\n"
+        if self.key_field is not None:
+            body += self.key_field.get_put(1) + "\n"
         body += "\n"
 
         for i, field in enumerate(self.other_fields):
@@ -768,8 +762,8 @@ static char *stats_{self.name}_names[] = {{names}};
   dio_get(din, fields);
   """
             body1 = ""
-            for field in self.key_fields:
-                body1 = body1 + indent(field.get_get(1), "  ") + "\n"
+            if self.key_field is not None:
+                body1 += indent(self.key_field.get_get(1), "  ") + "\n"
             body2 = self.get_delta_receive_body()
         else:
             delta_header = ""
@@ -781,7 +775,10 @@ static char *stats_{self.name}_names[] = {{names}};
         body1 = body1 + "\n"
 
         if self.gen_log:
-            log = f'  {self.log_macro}("{self.name}: got info about ({self.keys_format})"{self.keys_arg});\n'
+            if self.key_field is None:
+                log = f'  {self.log_macro}("{self.name}: got info");\n'
+            else:
+                log = f'  {self.log_macro}("{self.name}: got info about ({self.key_field.name}=%d)", real_packet->{self.key_field.name});\n'
         else:
             log = ""
 
@@ -816,17 +813,13 @@ static char *stats_{self.name}_names[] = {{names}};
         Helper for get_receive()
         """
 
-        key1 = map(
-            lambda x: f"    {x.struct_type} {x.name} = real_packet->{x.name};",
-            self.key_fields,
-        )
-        key2 = map(lambda x: f"    real_packet->{x.name} = {x.name};", self.key_fields)
-        key1 = "\n".join(key1)
-        key2 = "\n".join(key2)
-        if key1:
-            key1 = key1 + "\n\n"
-        if key2:
-            key2 = "\n\n" + key2
+        if self.key_field is None:
+            key1 = ""
+            key2 = ""
+        else:
+            key1 = f"    auto key = real_packet->{self.key_field.name};\n\n"
+            key2 = f"    real_packet->{self.key_field.name} = key;"
+
         if self.gen_log:
             fl = f'    {self.log_macro}("  no old info");\n'
         else:
@@ -987,15 +980,17 @@ class Packet:
         self.fields = []
         for i in lines:
             self.fields = self.fields + parse_fields(i, aliases)
-        self.key_fields = list(filter(lambda x: x.is_key, self.fields))
+
+        key_fields = list(filter(lambda x: x.is_key, self.fields))
+        if not key_fields:
+            self.key_field = None
+        elif len(key_fields) == 1:
+            self.key_field = key_fields[0]
+        else:
+            raise ValueError("At most one field per packet can have the 'key' flag")
+
         self.other_fields = list(filter(lambda x: not x.is_key, self.fields))
         self.bits = len(self.other_fields)
-        self.keys_format = ", ".join(["%d"] * len(self.key_fields))
-        self.keys_arg = ", ".join(
-            map(lambda x: "real_packet->" + x.name, self.key_fields)
-        )
-        if self.keys_arg:
-            self.keys_arg = ",\n    " + self.keys_arg
 
         self.want_dsend = self.dsend_given
 
@@ -1050,7 +1045,9 @@ class Packet:
         extro = "};\n\n"
 
         body = ""
-        for field in self.key_fields + self.other_fields:
+        if self.key_field is not None:
+            body += f"  {self.key_field.get_declar()};\n"
+        for field in self.other_fields:
             body += f"  {field.get_declar()};\n"
         return intro + body + extro
 
