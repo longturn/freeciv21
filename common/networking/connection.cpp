@@ -10,7 +10,6 @@
 // utility
 #include "capability.h"
 #include "fcintl.h"
-#include "genhash.h"
 #include "log.h"
 #include "shared.h"
 #include "support.h"
@@ -467,8 +466,6 @@ int get_next_request_id(int old_request_id)
  */
 static void init_packet_hashs(struct connection *pc)
 {
-  pc->phs.sent = new genhash *[PACKET_LAST] {};
-  pc->phs.received = new genhash *[PACKET_LAST] {};
   pc->phs.handlers = packet_handlers_initial();
 }
 
@@ -477,26 +474,8 @@ static void init_packet_hashs(struct connection *pc)
  */
 static void free_packet_hashes(struct connection *pc)
 {
-  int i;
-
-  if (pc->phs.sent) {
-    for (i = 0; i < PACKET_LAST; i++) {
-      if (pc->phs.sent[i] != nullptr) {
-        genhash_destroy(pc->phs.sent[i]);
-      }
-    }
-    delete[] pc->phs.sent;
-    pc->phs.sent = nullptr;
-  }
-
-  if (pc->phs.received) {
-    for (i = 0; i < PACKET_LAST; i++) {
-      if (pc->phs.received[i] != nullptr) {
-        genhash_destroy(pc->phs.received[i]);
-      }
-    }
-    delete[] pc->phs.received;
-    pc->phs.received = nullptr;
+  for (auto &handler: pc->phs.handlers) {
+    handler->reset();
   }
 }
 
@@ -576,16 +555,9 @@ void conn_set_capability(struct connection *pconn, const char *capability)
  */
 void conn_reset_delta_state(struct connection *pc)
 {
-  int i;
-
-  for (i = 0; i < PACKET_LAST; i++) {
+  for (int i = 0; i < PACKET_LAST; i++) {
     if (packet_has_game_info_flag(packet_type(i))) {
-      if (nullptr != pc->phs.sent && nullptr != pc->phs.sent[i]) {
-        genhash_clear(pc->phs.sent[i]);
-      }
-      if (nullptr != pc->phs.received && nullptr != pc->phs.received[i]) {
-        genhash_clear(pc->phs.received[i]);
-      }
+      pc->phs.handlers[i]->reset();
     }
   }
 }

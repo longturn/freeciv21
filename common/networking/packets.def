@@ -83,8 +83,7 @@ Syntax:
      is-game-info: same as is-info, but the state is reset every time a
                    connection changes of player target.
 
-     cancel(PACKET_number): Cancel a packet with the same key (must be the
-     same key type at the start of the packet), useful for is-info packets.
+     cancel(PACKET_number): Wipes delta state for a packet with the same key.
 
      pre-send:
      post-recv:

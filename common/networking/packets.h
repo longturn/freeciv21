@@ -29,9 +29,38 @@ using packet_capabilities_type = std::uint32_t;
 class packet_handler {
 public:
   virtual ~packet_handler() = default;
+
+  /// Receives a packet.
   virtual void *receive(struct connection *pconn) = 0;
+
+  /// Sends a packet if not discarded by the delta protocol.
   virtual int send(struct connection *pconn, const void *packet,
                    bool force_to_send) = 0;
+
+  /// Resets handler state.
+  virtual void reset() {}
+
+  /// Resets handler state for a given packet key.
+  virtual void reset(int key) { Q_UNUSED(key); }
+};
+
+template<class T>
+class packet_delta_handler : public packet_handler {
+protected:
+  std::unordered_map<int, T> receive_map, send_map;
+
+public:
+  virtual ~packet_delta_handler() = default;
+
+  virtual void reset() override {
+    receive_map.clear();
+    send_map.clear();
+  }
+
+  virtual void reset(int key) override {
+    receive_map.erase(key);
+    send_map.erase(key);
+  }
 };
 
 using packet_handlers =
@@ -91,7 +120,7 @@ void packets_deinit();
   QByteArrayView din(                                                       \
       pc->buffer->data,                                                     \
       data_type_size((enum data_type) pc->packet_header.length));           \
-  struct packet_type packet_buf, *result = &packet_buf;                     \
+  struct packet_type packet_buf = packet_type(), *result = &packet_buf;     \
                                                                             \
   {                                                                         \
     int size;                                                               \
@@ -107,9 +136,7 @@ void packets_deinit();
     return nullptr;                                                         \
   }                                                                         \
   remove_packet_from_buffer(pc->buffer);                                    \
-  result = new std::remove_reference<decltype(*result)>::type;              \
-  *result = packet_buf;                                                     \
-  return result;
+  return new std::remove_reference<decltype(*result)>::type(*result);
 
 #define RECEIVE_PACKET_FIELD_ERROR(field, ...)                              \
   log_packet("Error on field '" #field "'" __VA_ARGS__);                    \
