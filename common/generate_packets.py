@@ -592,7 +592,6 @@ static char *stats_{self.name}_names[] = {{names}};
                 delta_header = indent(
                     dedent(
                         f"""
-                        QBitArray fields({self.bits});
                         bool differ;
                         int different = force_to_send;
                         """
@@ -714,7 +713,6 @@ static char *stats_{self.name}_names[] = {{names}};
         """
 
         if self.delta:
-            delta_header = f"  QBitArray fields({self.bits});\n"
             delta_body1 = """
   dio_get(din, fields);
   """
@@ -723,7 +721,6 @@ static char *stats_{self.name}_names[] = {{names}};
                 body1 += indent(self.key_field.get_get(1), "  ") + "\n"
             body2 = self.get_delta_receive_body()
         else:
-            delta_header = ""
             delta_body1 = ""
             body1 = ""
             for field in self.fields:
@@ -750,7 +747,6 @@ static char *stats_{self.name}_names[] = {{names}};
             {{
             """
         )
-        code += delta_header
         code += f"  RECEIVE_PACKET_START({self.packet_name}, real_packet);\n"
         code += delta_body1
         code += body1
@@ -1060,12 +1056,10 @@ class Packet:
                 """
             )
 
-            result += dedent(
-                f"""\
-                public:
-                  virtual ~{v.name}_handler() override = default;
-                """
-            )
+            result += "public:\n"
+            if self.delta:
+                result += f"  {v.name}_handler() : packet_delta_handler<{self.name}>({v.bits}) {{}}\n"
+            result += f"  virtual ~{v.name}_handler() override = default;\n"
             result += indent(v.get_receive(), "  ")
             result += indent(v.get_send(), "  ")
             result += "};\n\n"
