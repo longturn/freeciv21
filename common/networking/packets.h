@@ -44,20 +44,21 @@ public:
   virtual void reset(int key) { Q_UNUSED(key); }
 };
 
-template<class T>
-class packet_delta_handler : public packet_handler {
+template <class T> class packet_delta_handler : public packet_handler {
 protected:
   std::unordered_map<int, T> receive_map, send_map;
 
 public:
   virtual ~packet_delta_handler() = default;
 
-  virtual void reset() override {
+  virtual void reset() override
+  {
     receive_map.clear();
     send_map.clear();
   }
 
-  virtual void reset(int key) override {
+  virtual void reset(int key) override
+  {
     receive_map.erase(key);
     send_map.erase(key);
   }
@@ -139,7 +140,7 @@ void packets_deinit();
   return new std::remove_reference<decltype(*result)>::type(*result);
 
 #define RECEIVE_PACKET_FIELD_ERROR(field, ...)                              \
-  qCritical("Error on field '" #field "'" __VA_ARGS__);                    \
+  qCritical("Error on field '" #field "'" __VA_ARGS__);                     \
   return nullptr
 
 int send_packet_data(struct connection *pc, QByteArrayView data,

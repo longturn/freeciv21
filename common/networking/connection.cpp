@@ -474,7 +474,7 @@ static void init_packet_hashs(struct connection *pc)
  */
 static void free_packet_hashes(struct connection *pc)
 {
-  for (auto &handler: pc->phs.handlers) {
+  for (auto &handler : pc->phs.handlers) {
     handler->reset();
   }
 }
