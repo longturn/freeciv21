@@ -139,7 +139,7 @@ void packets_deinit();
   return new std::remove_reference<decltype(*result)>::type(*result);
 
 #define RECEIVE_PACKET_FIELD_ERROR(field, ...)                              \
-  log_packet("Error on field '" #field "'" __VA_ARGS__);                    \
+  qCritical("Error on field '" #field "'" __VA_ARGS__);                    \
   return nullptr
 
 int send_packet_data(struct connection *pc, QByteArrayView data,

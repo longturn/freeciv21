@@ -647,9 +647,9 @@ void post_receive_packet_server_join_reply(
 bool packet_check(QByteArrayView din, struct connection *pc)
 {
   if (!din.isEmpty()) {
-    log_packet("received long packet (type %d, len %d, rem %llu) from %s",
-               pc->packet_header.type, pc->packet_header.length, din.size(),
-               conn_description(pc));
+    qCritical("received long packet (type %d, len %d, rem %llu) from %s",
+              pc->packet_header.type, pc->packet_header.length, din.size(),
+              conn_description(pc));
     return false;
   }
   return true;

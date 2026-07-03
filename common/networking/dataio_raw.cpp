@@ -222,7 +222,7 @@ bool dio_get(QByteArrayView &din, char *dest, std::size_t max_dest_size)
   fc_assert(max_dest_size > 0);
 
   if (!enough_data(din, 1)) {
-    log_packet("Got a bad string");
+    qCritical("Got a bad string");
     return false;
   }
 
@@ -235,12 +235,12 @@ bool dio_get(QByteArrayView &din, char *dest, std::size_t max_dest_size)
   }
 
   if (offset >= remaining) {
-    log_packet("Got a too short string");
+    qCritical("Got a too short string");
     return false;
   }
 
   if (!(*get_conv_callback)(dest, max_dest_size, c, offset)) {
-    log_packet("Got a bad encoded string");
+    qCritical("Got a bad encoded string");
     return false;
   }
 
@@ -278,7 +278,7 @@ bool dio_get(QByteArrayView &din, std::byte *dest, size_t size)
   fc_assert(size > 0);
 
   if (!enough_data(din, size)) {
-    log_packet("Got bad memory");
+    qCritical("Got bad memory");
     return false;
   }
 
@@ -305,7 +305,7 @@ bool dio_get(QByteArrayView &din, struct cm_parameter &param)
 
   for (i = 0; i < O_LAST; i++) {
     if (!dio_get<std::int16_t>(din, param.minimal_surplus[i])) {
-      log_packet("Got a bad cm_parameter");
+      qCritical("Got a bad cm_parameter");
       return false;
     }
   }
@@ -313,19 +313,19 @@ bool dio_get(QByteArrayView &din, struct cm_parameter &param)
   if (!dio_get(din, param.max_growth) || !dio_get(din, param.require_happy)
       || !dio_get(din, param.allow_disorder)
       || !dio_get(din, param.allow_specialists)) {
-    log_packet("Got a bad cm_parameter");
+    qCritical("Got a bad cm_parameter");
     return false;
   }
 
   for (i = 0; i < O_LAST; i++) {
     if (!dio_get<std::uint16_t>(din, param.factor[i])) {
-      log_packet("Got a bad cm_parameter");
+      qCritical("Got a bad cm_parameter");
       return false;
     }
   }
 
   if (!dio_get<std::uint16_t>(din, param.happy_factor)) {
-    log_packet("Got a bad cm_parameter");
+    qCritical("Got a bad cm_parameter");
     return false;
   }
 
@@ -367,7 +367,7 @@ bool dio_get(QByteArrayView &din, struct unit_order &order)
       || !dio_get<std::int16_t>(din, order.sub_target)
       || !dio_get<std::uint8_t>(din, order.action)
       || !dio_get<std::int8_t>(din, idir)) {
-    log_packet("Got a bad unit_order");
+    qCritical("Got a bad unit_order");
     return false;
   }
 
@@ -402,7 +402,7 @@ bool dio_get(QByteArrayView &din, struct worklist &pwl)
   worklist_init(&pwl);
 
   if (!dio_get<std::uint8_t>(din, length)) {
-    log_packet("Got a bad worklist");
+    qCritical("Got a bad worklist");
     return false;
   }
 
@@ -413,7 +413,7 @@ bool dio_get(QByteArrayView &din, struct worklist &pwl)
 
     if (!dio_get<std::uint8_t>(din, kind)
         || !dio_get<std::uint8_t>(din, identifier)) {
-      log_packet("Got a too short worklist");
+      qCritical("Got a too short worklist");
       return false;
     }
 
@@ -451,7 +451,7 @@ bool dio_get(QByteArrayView &din, struct act_prob &aprob)
   int min, max;
 
   if (!dio_get<std::uint8_t>(din, min) || !dio_get<std::uint8_t>(din, max)) {
-    log_packet("Got a bad action probability");
+    qCritical("Got a bad action probability");
     return false;
   }
 
@@ -481,7 +481,7 @@ bool dio_get(QByteArrayView &din, struct requirement &preq)
   if (!dio_get<std::uint8_t>(din, type) || !dio_get<std::int32_t>(din, value)
       || !dio_get<std::uint8_t>(din, range) || !dio_get(din, survives)
       || !dio_get(din, present) || !dio_get(din, quiet)) {
-    log_packet("Got a bad requirement");
+    qCritical("Got a bad requirement");
     return false;
   }
 
