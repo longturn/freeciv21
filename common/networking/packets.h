@@ -22,6 +22,7 @@ struct connection;
 #include <memory>
 
 // Qt
+#include <QBitArray>
 #include <QtContainerFwd> // QVector<QString>
 
 using packet_capabilities_type = std::uint32_t;
@@ -47,8 +48,10 @@ public:
 template <class T> class packet_delta_handler : public packet_handler {
 protected:
   std::unordered_map<int, T> receive_map, send_map;
+  QBitArray fields;
 
 public:
+  packet_delta_handler(int field_count) : fields(field_count) {}
   virtual ~packet_delta_handler() = default;
 
   virtual void reset() override
