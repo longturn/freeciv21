@@ -63,8 +63,8 @@ template <class T, class = std::enable_if_t<std::is_integral_v<T>>>
 bool dio_get(QByteArrayView &din, T &dest, T = 0)
 {
   if (din.size() < sizeof(T)) {
-    log_packet("Packet too short: needed %zu bytes, got %lld", sizeof(T),
-               din.size());
+    qCritical("Packet too short: needed %zu bytes, got %lld", sizeof(T),
+              din.size());
     return false;
   }
 
