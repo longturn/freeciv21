@@ -30,7 +30,6 @@ class QIODevice;
 class QString;
 
 struct conn_pattern_list;
-struct genhash;
 
 /***************************************************************************
   On the distinction between nations(formerly races), players, and users,
@@ -128,8 +127,6 @@ struct connection {
   void (*outgoing_packet_notify)(struct connection *pc, packet_type type,
                                  int size, int request_id);
   struct {
-    struct genhash **sent;
-    struct genhash **received;
     std::array<std::unique_ptr<packet_handler>, PACKET_LAST> handlers;
   } phs;
 

@@ -367,15 +367,15 @@ class Field:
 
         get = self.get_get(deltafragment)
         if self.struct_type == "bool" and not self.array_dims:
-            return f"  real_packet->{self.name} = fields[{index}];\n"
-        get = indent(get, "    ")
+            return f"real_packet->{self.name} = fields[{index}];\n"
+        get = indent(get, "  ")
         if packet.gen_log:
-            f = f"    {packet.log_macro}(\"  got field '{self.name}'\");\n"
+            f = f"  {packet.log_macro}(\"  got field '{self.name}'\");\n"
         else:
             f = ""
-        return f"""  if (fields[{index}]) {{
+        return f"""if (fields[{index}]) {{
 {f}{get}
-  }}
+}}
 """
 
     def get_get(self, deltafragment):
@@ -542,46 +542,6 @@ static char *stats_{self.name}_names[] = {{names}};
          sizeof(stats_{self.name}_counters));
 """
 
-    def get_hash(self):
-        """
-        Returns a code fragment which is the implementation of the hash
-        function. The hash function is using all key fields.
-        """
-
-        if self.key_field is None:
-            return f"#define hash_{self.name} hash_const\n\n"
-
-        return dedent(
-            f"""\
-            static genhash_val_t hash_{self.name}(const void *vkey)
-            {{
-              const {self.packet_name} *key = static_cast<const {self.packet_name} *>(vkey);
-              return key->{self.key_field.name};
-            }}
-            """
-        )
-
-    def get_cmp(self):
-        """
-        Returns a code fragment which is the implementation of the cmp function.
-        The cmp function is using all key fields. The cmp function is used for
-        the hash table.
-        """
-
-        if self.key_field is None:
-            return f"#define cmp_{self.name} cmp_const\n\n"
-
-        return dedent(
-            f"""\
-            static bool cmp_{self.name}(const void *vkey1, const void *vkey2)
-            {{
-                const {self.packet_name} *key1 = static_cast<const {self.packet_name} *>(vkey1);
-                const {self.packet_name} *key2 = static_cast<const {self.packet_name} *>(vkey2);
-                return key1->{self.key_field.name} == key2->{self.key_field.name};
-            }}
-            """
-        )
-
     def get_send(self):
         """
         Returns a code fragment which is the implementation of the send
@@ -629,13 +589,16 @@ static char *stats_{self.name}_names[] = {{names}};
 
         if not self.no_packet:
             if self.delta:
-                delta_header = f"""
-  QBitArray fields({self.bits});
-  {self.packet_name} *old;
-  bool differ;
-  genhash **hash = pc->phs.sent + {self.type};
-  int different = force_to_send;
-"""
+                delta_header = indent(
+                    dedent(
+                        f"""
+                        QBitArray fields({self.bits});
+                        bool differ;
+                        int different = force_to_send;
+                        """
+                    ),
+                    "  ",
+                )
                 body = self.get_delta_send_body(pre2)
             else:
                 delta_header = ""
@@ -671,6 +634,12 @@ static char *stats_{self.name}_names[] = {{names}};
         code += report
         code += pre1
         code += body
+
+        # Cancel some is-info packets.
+        for i in self.cancel:
+            field = self.key_field or self.other_fields[0]
+            code += f"\n  pc->phs.handlers[{i}]->reset(real_packet->{field.name});\n"
+
         code += pre2
         code += post
         code += dedent(
@@ -686,21 +655,22 @@ static char *stats_{self.name}_names[] = {{names}};
         Helper for get_send()
         """
 
-        intro = f"""
-  if (NULL == *hash) {{
-    *hash = genhash_new_full(hash_{self.name}, cmp_{self.name},
-                             NULL, NULL, NULL, free);
-  }}
-  fields.fill(false);
+        key = 0 if self.key_field is None else f"real_packet->{self.key_field.name}"
+        intro = indent(
+            dedent(
+                f"""
+                fields.fill(false);
 
-  if (!genhash_lookup(*hash, real_packet, (void **) &old)) {{
-    old = new {self.packet_name};
-    *old = *real_packet;
-    genhash_insert(*hash, old, old);
-    memset(old, 0, sizeof(*old));
-    different = 1;      /* Force to send. */
-  }}
-"""
+                auto [it, created] = send_map.try_emplace({key});
+                if (created) {{
+                different = 1; // Force to send
+                }}
+                auto old = &it->second;
+                """
+            ),
+            "  ",
+        )
+
         body = ""
         for i, field in enumerate(self.other_fields):
             body = body + field.get_cmp_wrapper(i)
@@ -734,15 +704,6 @@ static char *stats_{self.name}_names[] = {{names}};
   *old = *real_packet;
 """
 
-        # Cancel some is-info packets.
-        for i in self.cancel:
-            body += f"""
-  hash = pc->phs.sent + {i};
-  if (NULL != *hash) {{
-    genhash_remove(*hash, real_packet);
-  }}
-"""
-
         return intro + body
 
     def get_receive(self):
@@ -753,11 +714,7 @@ static char *stats_{self.name}_names[] = {{names}};
         """
 
         if self.delta:
-            delta_header = f"""
-  QBitArray fields({self.bits});
-  {self.packet_name} *old;
-  genhash **hash = pc->phs.received + {self.type};
-"""
+            delta_header = f"  QBitArray fields({self.bits});\n"
             delta_body1 = """
   dio_get(din, fields);
   """
@@ -799,6 +756,12 @@ static char *stats_{self.name}_names[] = {{names}};
         code += body1
         code += log
         code += body2
+
+        # Cancel some is-info packets.
+        for i in self.cancel:
+            field = self.key_field or self.other_fields[0]
+            code += f"\n  pc->phs.handlers[{i}]->reset(real_packet->{field.name});\n"
+
         code += post
         code += dedent(
             f"""\
@@ -813,53 +776,21 @@ static char *stats_{self.name}_names[] = {{names}};
         Helper for get_receive()
         """
 
-        if self.key_field is None:
-            key1 = ""
-            key2 = ""
-        else:
-            key1 = f"    auto key = real_packet->{self.key_field.name};\n\n"
-            key2 = f"    real_packet->{self.key_field.name} = key;"
+        # At this stage real_packet is default-constructed with only the key, so
+        # try_emplace() will return the old one or the default-constructed one.
+        # In either case the key is already correct.
+        key = 0 if self.key_field is None else f"real_packet->{self.key_field.name}"
+        body = dedent(
+            f"""
+            auto [it, _] = receive_map.try_emplace({key}, *real_packet);
+            real_packet = &it->second;
+            """
+        )
 
-        if self.gen_log:
-            fl = f'    {self.log_macro}("  no old info");\n'
-        else:
-            fl = ""
-        body = f"""
-  if (NULL == *hash) {{
-    *hash = genhash_new_full(hash_{self.name}, cmp_{self.name},
-                             NULL, NULL, NULL, free);
-  }}
-
-  if (genhash_lookup(*hash, real_packet, (void **) &old)) {{
-    *real_packet = *old;
-  }} else {{
-{key1}{fl}    memset(real_packet, 0, sizeof(*real_packet));{key2}
-  }}
-
-"""
         for i, field in enumerate(self.other_fields):
             body = body + field.get_get_wrapper(self, i, 1)
 
-        extro = f"""
-  if (NULL == old) {{
-    old = new {self.packet_name};
-    *old = *real_packet;
-    genhash_insert(*hash, old, old);
-  }} else {{
-    *old = *real_packet;
-  }}
-"""
-
-        # Cancel some is-info packets.
-        for i in self.cancel:
-            extro += f"""
-  hash = pc->phs.received + {i};
-  if (NULL != *hash) {{
-    genhash_remove(*hash, real_packet);
-  }}
-"""
-
-        return body + extro
+        return indent(body, "  ")
 
 
 class Packet:
@@ -987,7 +918,9 @@ class Packet:
         elif len(key_fields) == 1:
             self.key_field = key_fields[0]
         else:
-            raise ValueError("At most one field per packet can have the 'key' flag")
+            raise ValueError(
+                f"{self.name}: At most one field per packet can have the 'key' flag"
+            )
 
         self.other_fields = list(filter(lambda x: not x.is_key, self.fields))
         self.bits = len(self.other_fields)
@@ -1118,12 +1051,17 @@ class Packet:
     def get_variants(self):
         result = ""
         for v in self.variants:
-            if v.delta:
-                result += v.get_hash()
-                result += v.get_cmp()
+            base_class = (
+                f"packet_delta_handler<{self.name}>" if self.delta else "packet_handler"
+            )
             result += dedent(
                 f"""\
-                class {v.name}_handler : public packet_handler {{
+                class {v.name}_handler : public {base_class} {{
+                """
+            )
+
+            result += dedent(
+                f"""\
                 public:
                   virtual ~{v.name}_handler() override = default;
                 """
@@ -1617,7 +1555,6 @@ def write_common_source(packets: list[Packet], output: io.TextIOWrapper) -> None
 
 // utility
 #include "capability.h"
-#include "genhash.h"
 #include "log.h"
 #include "support.h"
 
@@ -1649,19 +1586,6 @@ def write_common_source(packets: list[Packet], output: io.TextIOWrapper) -> None
         """
         )
     )
-    output.write(
-        """
-static genhash_val_t hash_const(const void *vkey)
-{
-  return 0;
-}
-
-static bool cmp_const(const void *vkey1, const void *vkey2)
-{
-  return true;
-}
-"""
-    )
 
     if generate_stats:
         output.write(
@@ -1682,7 +1606,7 @@ static int stats_total_sent;
     output.write(get_packet_name(packets))
     output.write(get_packet_has_game_info_flag(packets))
 
-    # write hash, cmp, send, receive
+    # write send and receive
     for packet in packets:
         output.write(packet.get_variants())
         output.write(packet.get_send())
