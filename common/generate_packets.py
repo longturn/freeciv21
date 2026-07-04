@@ -272,7 +272,7 @@ class Field:
       }}
     }}"""
 
-    def get_cmp_wrapper(self, index):
+    def get_cmp_wrapper(self):
         """
         Returns a code fragment which updates the bit of the this field in the
         "fields" bitvector. The bit is either a "content-differs" bit or (for
@@ -285,39 +285,41 @@ class Field:
     different++;
   }}
   if (packet->{self.name}) {{
-    fields.setBit({index});
+    fields.setBit(index);
   }}
+  index++;
 
 """
 
         return f"""{self.get_cmp()}
   if (differ) {{
     different++;
-    fields.setBit({index});
+    fields.setBit(index);
   }}
+  index++;
 
 """
 
-    def get_put_wrapper(self, packet, index, deltafragment):
+    def get_put_wrapper(self, packet):
         """
         Returns a code fragment which will put this field if the content has
         changed. Does nothing for bools-in-header.
         """
 
         if self.struct_type == "bool" and not self.array_dims:
-            return f"  /* field {index} is folded into the header */\n"
+            return f"  index++; // {self.name} folded into the header\n"
         if packet.gen_log:
             f = f"    {packet.log_macro}(\"  field '{self.name}' has changed\");\n"
         else:
             f = ""
 
         if packet.gen_stats:
-            s = f"    stats_{packet.name}_counters[{index}]++;\n"
+            s = f"    stats_{packet.name}_counters[index]++;\n"
         else:
             s = ""
 
-        return f"""  if (fields[{index}]) {{
-{f}{s}    {self.get_put(deltafragment)}
+        return f"""  if (fields[index++]) {{
+{f}{s}    {self.get_put(True)}
   }}
 """
 
@@ -603,7 +605,7 @@ static char *stats_{self.name}_names[] = {{names}};
                 delta_header = ""
                 body = ""
                 for field in self.fields:
-                    body = body + field.get_put(0) + "\n"
+                    body = body + field.get_put(False) + "\n"
             body = body + "\n"
         else:
             body = ""
@@ -662,17 +664,19 @@ static char *stats_{self.name}_names[] = {{names}};
 
                 auto [it, created] = send_map.try_emplace({key});
                 if (created) {{
-                different = 1; // Force to send
+                  different = 1; // Force to send
                 }}
                 auto old = &it->second;
+
+                int index = 0; // Field index
                 """
             ),
             "  ",
         )
 
         body = ""
-        for i, field in enumerate(self.other_fields):
-            body = body + field.get_cmp_wrapper(i)
+        for field in self.other_fields:
+            body += field.get_cmp_wrapper()
         if self.gen_log:
             fl = f'    {self.log_macro}("  no change -> discard");\n'
         else:
@@ -691,14 +695,15 @@ static char *stats_{self.name}_names[] = {{names}};
 
         body += """
   dio_put(dout, fields);
+  index = 0; // Reset field index
 """
 
         if self.key_field is not None:
-            body += self.key_field.get_put(1) + "\n"
+            body += self.key_field.get_put(True) + "\n"
         body += "\n"
 
-        for i, field in enumerate(self.other_fields):
-            body += field.get_put_wrapper(self, i, 1)
+        for field in self.other_fields:
+            body += field.get_put_wrapper(self)
         body += """
   *old = *real_packet;
 """
