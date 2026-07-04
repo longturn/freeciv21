@@ -359,21 +359,21 @@ class Field:
 
         return f"dio_put(dout, real_packet->{self.name}{size_args}{dio_arg});"
 
-    def get_get_wrapper(self, packet, index, deltafragment):
+    def get_get_wrapper(self, packet):
         """
         Returns a code fragment which will get the field if the "fields"
         bitvector says so.
         """
 
-        get = self.get_get(deltafragment)
+        get = self.get_get(True)
         if self.struct_type == "bool" and not self.array_dims:
-            return f"real_packet->{self.name} = fields[{index}];\n"
+            return f"real_packet->{self.name} = fields[index++];\n"
         get = indent(get, "  ")
         if packet.gen_log:
             f = f"  {packet.log_macro}(\"  got field '{self.name}'\");\n"
         else:
             f = ""
-        return f"""if (fields[{index}]) {{
+        return f"""if (fields[index++]) {{
 {f}{get}
 }}
 """
@@ -783,8 +783,11 @@ static char *stats_{self.name}_names[] = {{names}};
             """
         )
 
+        # Field index
+        body += f"\nint index = 0;\n"
+
         for i, field in enumerate(self.other_fields):
-            body = body + field.get_get_wrapper(self, i, 1)
+            body += field.get_get_wrapper(self)
 
         return indent(body, "  ")
 
