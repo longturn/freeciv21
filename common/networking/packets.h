@@ -80,7 +80,8 @@ void send_attribute_block(const struct player *pplayer,
 void generic_handle_player_attribute_chunk(
     struct player *pplayer,
     const struct packet_player_attribute_chunk *chunk);
-void packet_handlers_fill_initial(packet_handlers &handlers);
+void packet_handlers_fill_initial(packet_handlers &handlers,
+                                  packet_capabilities_type capability);
 void packet_handlers_fill_capability(packet_handlers &handlers,
                                      packet_capabilities_type capability);
 const char *packet_name(enum packet_type type);

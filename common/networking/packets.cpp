@@ -771,7 +771,7 @@ static void packet_handlers_free() {}
 packet_handlers packet_handlers_initial()
 {
   auto default_handlers = packet_handlers();
-  packet_handlers_fill_initial(default_handlers);
+  packet_handlers_fill_initial(default_handlers, 0);
   return default_handlers;
 }
 
