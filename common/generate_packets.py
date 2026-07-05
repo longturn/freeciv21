@@ -653,7 +653,12 @@ static char *stats_{self.name}_names[] = {{names}};
                 delta_header = ""
                 body = ""
                 for field in self.fields:
-                    body = body + field.get_put(False) + "\n"
+                    if field.condition is None:
+                        body += field.get_put(False) + "\n"
+                    else:
+                        body += f"if ({field.condition}) {{\n"
+                        body += indent(field.get_put(False), "  ") + "\n"
+                        body += "}\n"
             body = body + "\n"
         else:
             body = ""
@@ -679,6 +684,7 @@ static char *stats_{self.name}_names[] = {{names}};
         code += real_packet1
         code += delta_header
         code += f"  SEND_PACKET_START({self.type});\n"
+        code += "  [[maybe_unused]] auto capability = pc->functional_caps;\n"
         code += log
         code += report
         code += pre1
@@ -724,7 +730,12 @@ static char *stats_{self.name}_names[] = {{names}};
 
         body = ""
         for field in self.other_fields:
-            body += field.get_cmp_wrapper()
+            if field.condition is None:
+                body += field.get_cmp_wrapper()
+            else:
+                body += f"  if ({field.condition}) {{\n"
+                body += indent(field.get_cmp_wrapper(), "  ")
+                body += "  }\n"
         if self.gen_log:
             fl = f'    {self.log_macro}("  no change -> discard");\n'
         else:
@@ -751,7 +762,12 @@ static char *stats_{self.name}_names[] = {{names}};
         body += "\n"
 
         for field in self.other_fields:
-            body += field.get_put_wrapper(self)
+            if field.condition is None:
+                body += field.get_put_wrapper(self)
+            else:
+                body += f"  if ({field.condition}) {{\n"
+                body += indent(field.get_put_wrapper(self), "  ")
+                body += "  }\n"
         body += """
   *old = *real_packet;
 """
