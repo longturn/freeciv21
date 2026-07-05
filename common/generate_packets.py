@@ -521,7 +521,7 @@ class Variant:
         code += f"  auto fields = {base_count};\n"
 
         for field in self.other_fields:
-            if field.condition:
+            if field.condition is not None:
                 code += indent(
                     dedent(
                         f"""\
@@ -765,21 +765,28 @@ static char *stats_{self.name}_names[] = {{names}};
         to create.
         """
 
+        body1 = ""
+
         if self.delta:
             delta_body1 = """
   dio_get(din, fields);
   """
-            body1 = ""
             if self.key_field is not None:
                 body1 += indent(self.key_field.get_get(1), "  ") + "\n"
             body2 = self.get_delta_receive_body()
         else:
             delta_body1 = ""
-            body1 = ""
             for field in self.fields:
-                body1 += indent(field.get_get(0), "  ") + "\n"
+                if field.condition is None:
+                    body1 += indent(field.get_get(self.delta), "  ") + "\n"
+                else:
+                    body1 += f"  if ({field.condition}) {{\n"
+                    body1 += indent(field.get_get(self.delta), "    ") + "\n"
+                    body1 += "  }\n"
+
             body2 = ""
-        body1 = body1 + "\n"
+
+        body1 += "\n"
 
         if self.gen_log:
             if self.key_field is None:
@@ -798,9 +805,10 @@ static char *stats_{self.name}_names[] = {{names}};
             f"""\
             virtual void *receive(connection *pc) override
             {{
+              RECEIVE_PACKET_START({self.packet_name}, real_packet);
+              [[maybe_unused]] auto capability = pc->functional_caps;
             """
         )
-        code += f"  RECEIVE_PACKET_START({self.packet_name}, real_packet);\n"
         code += delta_body1
         code += body1
         code += log
