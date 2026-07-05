@@ -447,14 +447,13 @@ class Variant:
     Class which represents a capability variant.
     """
 
-    def __init__(self, poscaps, negcaps, name, fields, packet, no):
+    def __init__(self, name, fields, packet):
         self.log_macro = use_log_macro
         self.gen_stats = generate_stats
         self.gen_log = generate_logs
         self.name = name
         self.packet_name = packet.name
         self.fields = fields
-        self.no = no
 
         self.no_packet = packet.no_packet
         self.want_post_recv = packet.want_post_recv
@@ -464,21 +463,6 @@ class Variant:
         self.delta = packet.delta
         self.is_info = packet.is_info
         self.cancel = packet.cancel
-
-        self.poscaps = poscaps
-        self.negcaps = negcaps
-        if self.poscaps or self.negcaps:
-
-            def f(cap):
-                name = packet_capability_name(cap)
-                return f"(capability & (1 << {name}))"
-
-            t = list(map(f, self.poscaps)) + list(
-                map(lambda x: "!" + f(x), self.negcaps)
-            )
-            self.condition = " && ".join(t)
-        else:
-            self.condition = "true"
 
         key_fields = list(filter(lambda x: x.is_key, self.fields))
         if not key_fields:
@@ -498,11 +482,7 @@ class Variant:
         if len(self.fields) > 5 or self.name.split("_")[1] == "ruleset":
             self.handle_via_packet = 1
 
-        self.handler = dedent(
-            f"""
-            handlers[{self.type}] = std::make_unique<{self.name}_handler>(capability);
-            """
-        )
+        self.handler = f"handlers[{self.type}] = std::make_unique<{self.name}_handler>(capability);\n"
 
     def get_field_count(self):
         """
@@ -863,8 +843,13 @@ static char *stats_{self.name}_names[] = {{names}};
         # Field index
         body += f"\nint index = 0;\n"
 
-        for i, field in enumerate(self.other_fields):
-            body += field.get_get_wrapper(self)
+        for field in self.other_fields:
+            if field.condition is None:
+                body += field.get_get_wrapper(self)
+            else:
+                body += f"if ({field.condition}) {{\n"
+                body += indent(field.get_get_wrapper(self), "  ")
+                body += "}\n"
 
         return indent(body, "  ")
 
@@ -1017,29 +1002,7 @@ class Packet:
         if self.dsend_args:
             self.dsend_args += ","
 
-        # create cap variants
-        all_caps = set()
-        for f in self.fields:
-            if f.capability is not None:
-                all_caps.add(f.capability)
-
-        choices = get_choices(all_caps)
-        self.variants = []
-        for i, poscaps in enumerate(choices):
-            negcaps = all_caps - set(poscaps)
-            fields = []
-            for field in self.fields:
-                if field.capability is None:
-                    fields.append(field)
-                elif field.capability_add and field.capability in poscaps:
-                    fields.append(field)
-                elif not field.capability_add and field.capability in negcaps:
-                    fields.append(field)
-            no = i + 100
-
-            self.variants.append(
-                Variant(poscaps, negcaps, f"{self.name}_{no}", fields, self, no)
-            )
+        self.variants = [Variant(f"{self.name}", self.fields, self)]
 
     def short_name(self):
         """Returns the "short" name of the packet, i.e. without the packet_ prefix."""
@@ -1411,13 +1374,7 @@ def get_packet_handlers_fill_initial(packets):
 
     body = ""
     for p in packets:
-        if len(p.variants) == 1:
-            # Packets with variants are correctly handled in
-            # packet_handlers_fill_capability(). They may remain without
-            # handler at connecting time, because it would be anyway wrong
-            # to use them before the network capability string would be
-            # known.
-            body += indent(p.variants[0].handler, "  ")
+        body += indent(p.variants[0].handler, "  ")
 
     extro = """
 }
@@ -1441,44 +1398,9 @@ def get_packet_handlers_fill_capability(packets: list[Packet]) -> str:
         """
     )
 
-    def variant_conditional(
-        packet: Packet, code_func: typing.Callable[Variant, str]
-    ) -> str:
-        """
-        Produces code of the form:
-
-        if (variant1) {
-            {code_func(variant1)}
-        } else if (variant2) {
-            {code_func(variant2)}
-        } else {
-            log error
-        }
-        """
-
-        code = ""
-        for var in packet.variants:
-            code += dedent(
-                f"""\
-                if ({var.condition}) {{
-                  {var.log_macro}("{var.type}: using variant={var.no} cap=0x%x", capability);
-                """
-            )
-            code += indent(code_func(var), "  ")
-            code += "} else "
-
-        code += dedent(
-            f"""\
-            {{
-              qCritical("Unknown {packet.type} variant for cap 0x%x", capability);
-            }}"""
-        )
-        return code + "\n"
-
     body = ""
     for packet in packets:
-        if packet.variants:
-            body += variant_conditional(packet, lambda var: var.handler)
+        body += packet.variants[0].handler
 
     # Packets controlled by capabilities
     for packet in packets:
