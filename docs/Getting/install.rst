@@ -36,7 +36,7 @@ These systems rely on the :file:`.deb` package file type.
 To install the Debian / Ubuntu package, we first need to add our build service repository. Once that is
 complete, we can install Freeciv21.
 
-:strong:`Debian 12+`:
+:strong:`Debian 12 and above`:
 
 .. code-block:: sh
 
@@ -60,7 +60,7 @@ Notes on the commands above:
   manually change the ``[##]`` in the example above with the value of the ``echo`` command.
 
 
-:strong:`Ubuntu 22.04 LTS+`:
+:strong:`Ubuntu 25.04 and above`:
 
 .. code-block:: sh
 
@@ -106,7 +106,7 @@ that is complete, we can install Freeciv21.
   The Fedora and Tumbleweed repositories contain the key needed and is installed automatically, so do not
   worry that the commands below do not include steps.
 
-:strong:`Red Hat Fedora 41+`:
+:strong:`Red Hat Fedora 43 and above`:
 
 .. code-block:: sh
 
@@ -203,6 +203,7 @@ game to the Applications folder. When finished, unmount the package.
   * https://community.kde.org/Mac
   * https://appletoolbox.com/app-is-damaged-cannot-be-opened-mac/
   * https://support.apple.com/guide/mac-help/open-an-app-by-overriding-security-settings-mh40617/15.0/mac/15.0
+
 
 A Note About Native Language Support
 ====================================
