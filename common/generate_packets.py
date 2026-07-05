@@ -21,7 +21,6 @@ generate_stats = 0
 # generate_logs will generate log calls to debug the delta code.
 generate_logs = 1
 use_log_macro = "log_packet_detailed"
-generate_variant_logs = 1
 
 ################# END OF PARAMETERS ####################
 
@@ -178,7 +177,6 @@ class Field:
             self.condition = f"capability & (1 << {cap_name})"
         else:
             self.condition = f"!(capability & (1 << {cap_name}))"
-
 
     def get_handle_type(self):
         if self.dataio_type == "string":
@@ -442,418 +440,6 @@ class Field:
         )
 
 
-class Variant:
-    """
-    Class which represents a capability variant.
-    """
-
-    def __init__(self, name, fields, packet):
-        self.log_macro = use_log_macro
-        self.gen_stats = generate_stats
-        self.gen_log = generate_logs
-        self.name = name
-        self.packet_name = packet.name
-        self.fields = fields
-
-        self.no_packet = packet.no_packet
-        self.want_post_recv = packet.want_post_recv
-        self.want_pre_send = packet.want_pre_send
-        self.want_post_send = packet.want_post_send
-        self.type = packet.type
-        self.delta = packet.delta
-        self.is_info = packet.is_info
-        self.cancel = packet.cancel
-
-        key_fields = list(filter(lambda x: x.is_key, self.fields))
-        if not key_fields:
-            self.key_field = None
-        elif len(key_fields) == 1:
-            self.key_field = key_fields[0]
-        else:
-            raise ValueError("At most one field per packet can have the 'key' flag")
-
-        self.other_fields = list(filter(lambda x: not x.is_key, self.fields))
-        self.bits = len(self.other_fields)
-
-        if len(self.fields) == 0:
-            self.delta = 0
-            self.no_packet = 1
-
-        if len(self.fields) > 5 or self.name.split("_")[1] == "ruleset":
-            self.handle_via_packet = 1
-
-        self.handler = f"handlers[{self.type}] = std::make_unique<{self.name}_handler>(capability);\n"
-
-    def get_field_count(self):
-        """
-        Returns code for a function counting how many fields this packet will
-        use.
-        """
-
-        code = dedent(
-            f"""\
-            static int field_count(packet_capabilities_type capability)
-            {{
-            """
-        )
-
-        base_count = len(list(filter(lambda field: field.condition is None, self.other_fields)))
-        code += f"  auto fields = {base_count};\n"
-
-        for field in self.other_fields:
-            if field.condition is not None:
-                code += indent(
-                    dedent(
-                        f"""\
-                        if ({field.condition}) {{
-                          fields++;
-                        }}
-                        """
-                    ),
-                    "  "
-                )
-
-        code += dedent(
-            """\
-              return fields;
-            }
-            """
-        )
-        return code
-
-    def get_stats(self):
-        """
-        Returns a code fragment which contains the declarations of the
-        statistical counters of this packet.
-        """
-
-        names = map(lambda x: '"' + x.name + '"', self.other_fields)
-        names = ", ".join(names)
-
-        return f"""static int stats_{self.name}_sent;
-static int stats_{self.name}_discarded;
-static int stats_{self.name}_counters[{self.bits}];
-static char *stats_{self.name}_names[] = {{names}};
-
-"""
-
-    def get_report_part(self):
-        """
-        Returns a code fragment which is the packet specific part of the
-        delta_stats_report() function.
-        """
-
-        return f"""
-  if (stats_{self.name}_sent > 0
-      && stats_{self.name}_discarded != stats_{self.name}_sent) {{
-    log_test(\"{self.name} %d out of %d got discarded\",
-      stats_{self.name}_discarded, stats_{self.name}_sent);
-    for (i = 0; i < {self.bits}; i++) {{
-      if (stats_{self.name}_counters[i] > 0) {{
-        log_test(\"  %4d / %4d: %2d = %s\",
-          stats_{self.name}_counters[i],
-          (stats_{self.name}_sent - stats_{self.name}_discarded),
-          i, stats_{self.name}_names[i]);
-      }}
-    }}
-  }}
-"""
-
-    def get_reset_part(self):
-        """
-        Returns a code fragment which is the packet specific part of the
-        delta_stats_reset() function.
-        """
-
-        return f"""
-  stats_{self.name}_sent = 0;
-  stats_{self.name}_discarded = 0;
-  memset(stats_{self.name}_counters, 0,
-         sizeof(stats_{self.name}_counters));
-"""
-
-    def get_send(self):
-        """
-        Returns a code fragment which is the implementation of the send
-        function. This is one of the two real functions. So it is rather
-        complex to create.
-        """
-
-        if self.gen_stats:
-            report = f"""
-  stats_total_sent++;
-  stats_{self.name}_sent++;
-"""
-        else:
-            report = ""
-        if self.gen_log:
-            if self.key_field is None:
-                log = f'\n  {self.log_macro}("{self.name}: sending info");\n'
-            else:
-                log = f'\n  {self.log_macro}("{self.name}: sending info about ({self.key_field.name}=%d)", real_packet->{self.key_field.name});\n'
-        else:
-            log = ""
-        if self.want_pre_send:
-            pre1 = f"""
-  {{
-    auto tmp = new {self.packet_name}();
-
-    *tmp = *packet;
-    pre_send_{self.packet_name}(pc, tmp);
-    real_packet = tmp;
-  }}
-"""
-            pre2 = """
-  if (real_packet != packet) {
-    delete (decltype(real_packet)) real_packet;
-  }
-"""
-        else:
-            pre1 = ""
-            pre2 = ""
-
-        if not self.no_packet:
-            real_packet1 = f"  const {self.packet_name} *real_packet = packet;\n"
-        else:
-            real_packet1 = ""
-
-        if not self.no_packet:
-            if self.delta:
-                delta_header = indent(
-                    dedent(
-                        f"""
-                        bool differ;
-                        int different = force_to_send;
-                        """
-                    ),
-                    "  ",
-                )
-                body = self.get_delta_send_body(pre2)
-            else:
-                delta_header = ""
-                body = ""
-                for field in self.fields:
-                    if field.condition is None:
-                        body += field.get_put(False) + "\n"
-                    else:
-                        body += f"if ({field.condition}) {{\n"
-                        body += indent(field.get_put(False), "  ") + "\n"
-                        body += "}\n"
-            body = body + "\n"
-        else:
-            body = ""
-            delta_header = ""
-
-        if self.want_post_send:
-            if self.no_packet:
-                post = f"  post_send_{self.packet_name}(pc, NULL);\n"
-            else:
-                post = f"  post_send_{self.packet_name}(pc, real_packet);\n"
-        else:
-            post = ""
-
-        code = dedent(
-            f"""\
-            virtual int send(connection *pc, const void *packet_data,
-                             bool force_to_send) override
-            {{
-              [[maybe_unused]]
-              auto packet = static_cast<const {self.packet_name} *>(packet_data);
-            """
-        )
-        code += real_packet1
-        code += delta_header
-        code += f"  SEND_PACKET_START({self.type});\n"
-        code += "  [[maybe_unused]] auto capability = pc->functional_caps;\n"
-        code += log
-        code += report
-        code += pre1
-        code += body
-
-        # Cancel some is-info packets.
-        for i in self.cancel:
-            field = self.key_field or self.other_fields[0]
-            code += f"\n  pc->phs.handlers[{i}]->reset(real_packet->{field.name});\n"
-
-        code += pre2
-        code += post
-        code += dedent(
-            f"""\
-              SEND_PACKET_END({self.type});
-            }}
-            """
-        )
-        return code
-
-    def get_delta_send_body(self, pre2):
-        """
-        Helper for get_send()
-        """
-
-        key = 0 if self.key_field is None else f"real_packet->{self.key_field.name}"
-        intro = indent(
-            dedent(
-                f"""
-                fields.fill(false);
-
-                auto [it, created] = send_map.try_emplace({key});
-                if (created) {{
-                  different = 1; // Force to send
-                }}
-                auto old = &it->second;
-
-                int index = 0; // Field index
-                """
-            ),
-            "  ",
-        )
-
-        body = ""
-        for field in self.other_fields:
-            if field.condition is None:
-                body += field.get_cmp_wrapper()
-            else:
-                body += f"  if ({field.condition}) {{\n"
-                body += indent(field.get_cmp_wrapper(), "  ")
-                body += "  }\n"
-        if self.gen_log:
-            fl = f'    {self.log_macro}("  no change -> discard");\n'
-        else:
-            fl = ""
-        if self.gen_stats:
-            s = f"    stats_{self.name}_discarded++;\n"
-        else:
-            s = ""
-
-        if self.is_info != "no":
-            body += f"""
-  if (different == 0) {{
-{fl}{s}{pre2}    return 0;
-  }}
-"""
-
-        body += """
-  dio_put(dout, fields);
-  index = 0; // Reset field index
-"""
-
-        if self.key_field is not None:
-            body += self.key_field.get_put(True) + "\n"
-        body += "\n"
-
-        for field in self.other_fields:
-            if field.condition is None:
-                body += field.get_put_wrapper(self)
-            else:
-                body += f"  if ({field.condition}) {{\n"
-                body += indent(field.get_put_wrapper(self), "  ")
-                body += "  }\n"
-        body += """
-  *old = *real_packet;
-"""
-
-        return intro + body
-
-    def get_receive(self):
-        """
-        Returns a code fragment which is the implementation of the receive
-        function. This is one of the two real functions. So it is rather complex
-        to create.
-        """
-
-        body1 = ""
-
-        if self.delta:
-            delta_body1 = """
-  dio_get(din, fields);
-  """
-            if self.key_field is not None:
-                body1 += indent(self.key_field.get_get(1), "  ") + "\n"
-            body2 = self.get_delta_receive_body()
-        else:
-            delta_body1 = ""
-            for field in self.fields:
-                if field.condition is None:
-                    body1 += indent(field.get_get(self.delta), "  ") + "\n"
-                else:
-                    body1 += f"  if ({field.condition}) {{\n"
-                    body1 += indent(field.get_get(self.delta), "    ") + "\n"
-                    body1 += "  }\n"
-
-            body2 = ""
-
-        body1 += "\n"
-
-        if self.gen_log:
-            if self.key_field is None:
-                log = f'  {self.log_macro}("{self.name}: got info");\n'
-            else:
-                log = f'  {self.log_macro}("{self.name}: got info about ({self.key_field.name}=%d)", real_packet->{self.key_field.name});\n'
-        else:
-            log = ""
-
-        if self.want_post_recv:
-            post = f"  post_receive_{self.packet_name}(pc, real_packet);\n"
-        else:
-            post = ""
-
-        code = dedent(
-            f"""\
-            virtual void *receive(connection *pc) override
-            {{
-              RECEIVE_PACKET_START({self.packet_name}, real_packet);
-              [[maybe_unused]] auto capability = pc->functional_caps;
-            """
-        )
-        code += delta_body1
-        code += body1
-        code += log
-        code += body2
-
-        # Cancel some is-info packets.
-        for i in self.cancel:
-            field = self.key_field or self.other_fields[0]
-            code += f"\n  pc->phs.handlers[{i}]->reset(real_packet->{field.name});\n"
-
-        code += post
-        code += dedent(
-            f"""\
-              RECEIVE_PACKET_END(real_packet);
-            }}
-            """
-        )
-        return code
-
-    def get_delta_receive_body(self):
-        """
-        Helper for get_receive()
-        """
-
-        # At this stage real_packet is default-constructed with only the key, so
-        # try_emplace() will return the old one or the default-constructed one.
-        # In either case the key is already correct.
-        key = 0 if self.key_field is None else f"real_packet->{self.key_field.name}"
-        body = dedent(
-            f"""
-            auto [it, _] = receive_map.try_emplace({key}, *real_packet);
-            real_packet = &it->second;
-            """
-        )
-
-        # Field index
-        body += f"\nint index = 0;\n"
-
-        for field in self.other_fields:
-            if field.condition is None:
-                body += field.get_get_wrapper(self)
-            else:
-                body += f"if ({field.condition}) {{\n"
-                body += indent(field.get_get_wrapper(self), "  ")
-                body += "}\n"
-
-        return indent(body, "  ")
-
-
 class Packet:
     """
     Class representing a packet. A packet contains a list of fields.
@@ -1002,8 +588,6 @@ class Packet:
         if self.dsend_args:
             self.dsend_args += ","
 
-        self.variants = [Variant(f"{self.name}", self.fields, self)]
-
     def short_name(self):
         """Returns the "short" name of the packet, i.e. without the packet_ prefix."""
         return self.name.replace("packet_", "")
@@ -1087,42 +671,40 @@ class Packet:
             """
         )
 
-    def get_variants(self):
-        result = ""
-        for v in self.variants:
-            base_class = (
-                f"packet_delta_handler<{self.name}>" if self.delta else "packet_handler"
-            )
+    def get_class(self):
+        base_class = (
+            f"packet_delta_handler<{self.name}>" if self.delta else "packet_handler"
+        )
+        result = dedent(
+            f"""\
+            class {self.name}_handler : public {base_class} {{
+            """
+        )
+
+        if self.delta:
+            result += indent(self.get_field_count(), "  ")
             result += dedent(
                 f"""\
-                class {v.name}_handler : public {base_class} {{
+                public:
+                  {self.name}_handler(packet_capabilities_type capability) :
+                      packet_delta_handler<{self.name}>(field_count(capability))
+                  {{}}
                 """
             )
-
-            if self.delta:
-                result += indent(v.get_field_count(), "  ")
-                result += dedent(
-                    f"""\
-                    public:
-                      {v.name}_handler(packet_capabilities_type capability) :
-                          packet_delta_handler<{self.name}>(field_count(capability))
-                      {{}}
-                    """
-                )
-            else:
-                result += dedent(
-                    f"""\
-                    public:
-                      {v.name}_handler(packet_capabilities_type capability)
-                      {{
-                        Q_UNUSED(capability);
-                      }}
-                    """
-                )
-            result += f"  virtual ~{v.name}_handler() override = default;\n"
-            result += indent(v.get_receive(), "  ")
-            result += indent(v.get_send(), "  ")
-            result += "};\n\n"
+        else:
+            result += dedent(
+                f"""\
+                public:
+                  {self.name}_handler(packet_capabilities_type capability)
+                  {{
+                    Q_UNUSED(capability);
+                  }}
+                """
+            )
+        result += f"  virtual ~{self.name}_handler() override = default;\n"
+        result += indent(self.get_receive(), "  ")
+        result += indent(self.get_send_member(), "  ")
+        result += "};\n\n"
         return result
 
     def get_lsend(self):
@@ -1195,6 +777,377 @@ class Packet:
 
             """
         )
+
+    def get_field_count(self):
+        """
+        Returns code for a function counting how many fields this packet will
+        use.
+        """
+
+        code = dedent(
+            f"""\
+            static int field_count(packet_capabilities_type capability)
+            {{
+            """
+        )
+
+        base_count = len(
+            list(filter(lambda field: field.condition is None, self.other_fields))
+        )
+        code += f"  auto fields = {base_count};\n"
+
+        for field in self.other_fields:
+            if field.condition is not None:
+                code += indent(
+                    dedent(
+                        f"""\
+                        if ({field.condition}) {{
+                          fields++;
+                        }}
+                        """
+                    ),
+                    "  ",
+                )
+
+        code += dedent(
+            """\
+              return fields;
+            }
+            """
+        )
+        return code
+
+    def get_stats(self):
+        """
+        Returns a code fragment which contains the declarations of the
+        statistical counters of this packet.
+        """
+
+        names = map(lambda x: '"' + x.name + '"', self.other_fields)
+        names = ", ".join(names)
+
+        return f"""static int stats_{self.name}_sent;
+static int stats_{self.name}_discarded;
+static int stats_{self.name}_counters[{self.bits}];
+static char *stats_{self.name}_names[] = {{names}};
+
+"""
+
+    def get_report_part(self):
+        """
+        Returns a code fragment which is the packet specific part of the
+        delta_stats_report() function.
+        """
+
+        return f"""
+  if (stats_{self.name}_sent > 0
+      && stats_{self.name}_discarded != stats_{self.name}_sent) {{
+    log_test(\"{self.name} %d out of %d got discarded\",
+      stats_{self.name}_discarded, stats_{self.name}_sent);
+    for (i = 0; i < {self.bits}; i++) {{
+      if (stats_{self.name}_counters[i] > 0) {{
+        log_test(\"  %4d / %4d: %2d = %s\",
+          stats_{self.name}_counters[i],
+          (stats_{self.name}_sent - stats_{self.name}_discarded),
+          i, stats_{self.name}_names[i]);
+      }}
+    }}
+  }}
+"""
+
+    def get_reset_part(self):
+        """
+        Returns a code fragment which is the packet specific part of the
+        delta_stats_reset() function.
+        """
+
+        return f"""
+  stats_{self.name}_sent = 0;
+  stats_{self.name}_discarded = 0;
+  memset(stats_{self.name}_counters, 0,
+         sizeof(stats_{self.name}_counters));
+"""
+
+    def get_send_member(self):
+        """
+        Returns a code fragment which is the implementation of the send
+        function. This is one of the two real functions. So it is rather
+        complex to create.
+        """
+
+        if self.gen_stats:
+            report = f"""
+  stats_total_sent++;
+  stats_{self.name}_sent++;
+"""
+        else:
+            report = ""
+        if self.gen_log:
+            if self.key_field is None:
+                log = f'\n  {self.log_macro}("{self.name}: sending info");\n'
+            else:
+                log = f'\n  {self.log_macro}("{self.name}: sending info about ({self.key_field.name}=%d)", real_packet->{self.key_field.name});\n'
+        else:
+            log = ""
+        if self.want_pre_send:
+            pre1 = f"""
+  {{
+    auto tmp = new {self.name}();
+
+    *tmp = *packet;
+    pre_send_{self.name}(pc, tmp);
+    real_packet = tmp;
+  }}
+"""
+            pre2 = """
+  if (real_packet != packet) {
+    delete (decltype(real_packet)) real_packet;
+  }
+"""
+        else:
+            pre1 = ""
+            pre2 = ""
+
+        if not self.no_packet:
+            real_packet1 = f"  const {self.name} *real_packet = packet;\n"
+        else:
+            real_packet1 = ""
+
+        if not self.no_packet:
+            if self.delta:
+                delta_header = indent(
+                    dedent(
+                        f"""
+                        bool differ;
+                        int different = force_to_send;
+                        """
+                    ),
+                    "  ",
+                )
+                body = self.get_delta_send_body(pre2)
+            else:
+                delta_header = ""
+                body = ""
+                for field in self.fields:
+                    if field.condition is None:
+                        body += field.get_put(False) + "\n"
+                    else:
+                        body += f"if ({field.condition}) {{\n"
+                        body += indent(field.get_put(False), "  ") + "\n"
+                        body += "}\n"
+            body = body + "\n"
+        else:
+            body = ""
+            delta_header = ""
+
+        if self.want_post_send:
+            if self.no_packet:
+                post = f"  post_send_{self.name}(pc, NULL);\n"
+            else:
+                post = f"  post_send_{self.name}(pc, real_packet);\n"
+        else:
+            post = ""
+
+        code = dedent(
+            f"""\
+            virtual int send(connection *pc, const void *packet_data,
+                             bool force_to_send) override
+            {{
+              [[maybe_unused]]
+              auto packet = static_cast<const {self.name} *>(packet_data);
+            """
+        )
+        code += real_packet1
+        code += delta_header
+        code += f"  SEND_PACKET_START({self.type});\n"
+        code += "  [[maybe_unused]] auto capability = pc->functional_caps;\n"
+        code += log
+        code += report
+        code += pre1
+        code += body
+
+        # Cancel some is-info packets.
+        for i in self.cancel:
+            field = self.key_field or self.other_fields[0]
+            code += f"\n  pc->phs.handlers[{i}]->reset(real_packet->{field.name});\n"
+
+        code += pre2
+        code += post
+        code += dedent(
+            f"""\
+              SEND_PACKET_END({self.type});
+            }}
+            """
+        )
+        return code
+
+    def get_delta_send_body(self, pre2):
+        """
+        Helper for get_send()
+        """
+
+        key = 0 if self.key_field is None else f"real_packet->{self.key_field.name}"
+        intro = indent(
+            dedent(
+                f"""
+                fields.fill(false);
+
+                auto [it, created] = send_map.try_emplace({key});
+                if (created) {{
+                  different = 1; // Force to send
+                }}
+                auto old = &it->second;
+
+                int index = 0; // Field index
+                """
+            ),
+            "  ",
+        )
+
+        body = ""
+        for field in self.other_fields:
+            if field.condition is None:
+                body += field.get_cmp_wrapper()
+            else:
+                body += f"  if ({field.condition}) {{\n"
+                body += indent(field.get_cmp_wrapper(), "  ")
+                body += "  }\n"
+        if self.gen_log:
+            fl = f'    {self.log_macro}("  no change -> discard");\n'
+        else:
+            fl = ""
+        if self.gen_stats:
+            s = f"    stats_{self.name}_discarded++;\n"
+        else:
+            s = ""
+
+        if self.is_info != "no":
+            body += f"""
+  if (different == 0) {{
+{fl}{s}{pre2}    return 0;
+  }}
+"""
+
+        body += """
+  dio_put(dout, fields);
+  index = 0; // Reset field index
+"""
+
+        if self.key_field is not None:
+            body += self.key_field.get_put(True) + "\n"
+        body += "\n"
+
+        for field in self.other_fields:
+            if field.condition is None:
+                body += field.get_put_wrapper(self)
+            else:
+                body += f"  if ({field.condition}) {{\n"
+                body += indent(field.get_put_wrapper(self), "  ")
+                body += "  }\n"
+        body += """
+  *old = *real_packet;
+"""
+
+        return intro + body
+
+    def get_receive(self):
+        """
+        Returns a code fragment which is the implementation of the receive
+        function. This is one of the two real functions. So it is rather complex
+        to create.
+        """
+
+        body1 = ""
+
+        if self.delta:
+            delta_body1 = """
+  dio_get(din, fields);
+  """
+            if self.key_field is not None:
+                body1 += indent(self.key_field.get_get(1), "  ") + "\n"
+            body2 = self.get_delta_receive_body()
+        else:
+            delta_body1 = ""
+            for field in self.fields:
+                if field.condition is None:
+                    body1 += indent(field.get_get(self.delta), "  ") + "\n"
+                else:
+                    body1 += f"  if ({field.condition}) {{\n"
+                    body1 += indent(field.get_get(self.delta), "    ") + "\n"
+                    body1 += "  }\n"
+
+            body2 = ""
+
+        body1 += "\n"
+
+        if self.gen_log:
+            if self.key_field is None:
+                log = f'  {self.log_macro}("{self.name}: got info");\n'
+            else:
+                log = f'  {self.log_macro}("{self.name}: got info about ({self.key_field.name}=%d)", real_packet->{self.key_field.name});\n'
+        else:
+            log = ""
+
+        if self.want_post_recv:
+            post = f"  post_receive_{self.name}(pc, real_packet);\n"
+        else:
+            post = ""
+
+        code = dedent(
+            f"""\
+            virtual void *receive(connection *pc) override
+            {{
+              RECEIVE_PACKET_START({self.name}, real_packet);
+              [[maybe_unused]] auto capability = pc->functional_caps;
+            """
+        )
+        code += delta_body1
+        code += body1
+        code += log
+        code += body2
+
+        # Cancel some is-info packets.
+        for i in self.cancel:
+            field = self.key_field or self.other_fields[0]
+            code += f"\n  pc->phs.handlers[{i}]->reset(real_packet->{field.name});\n"
+
+        code += post
+        code += dedent(
+            f"""\
+              RECEIVE_PACKET_END(real_packet);
+            }}
+            """
+        )
+        return code
+
+    def get_delta_receive_body(self):
+        """
+        Helper for get_receive()
+        """
+
+        # At this stage real_packet is default-constructed with only the key, so
+        # try_emplace() will return the old one or the default-constructed one.
+        # In either case the key is already correct.
+        key = 0 if self.key_field is None else f"real_packet->{self.key_field.name}"
+        body = dedent(
+            f"""
+            auto [it, _] = receive_map.try_emplace({key}, *real_packet);
+            real_packet = &it->second;
+            """
+        )
+
+        # Field index
+        body += f"\nint index = 0;\n"
+
+        for field in self.other_fields:
+            if field.condition is None:
+                body += field.get_get_wrapper(self)
+            else:
+                body += f"if ({field.condition}) {{\n"
+                body += indent(field.get_get_wrapper(self), "  ")
+                body += "}\n"
+
+        return indent(body, "  ")
 
 
 def packet_capability_name(cap: str) -> str:
@@ -1374,7 +1327,9 @@ def get_packet_handlers_fill_initial(packets):
 
     body = ""
     for p in packets:
-        body += indent(p.variants[0].handler, "  ")
+        body += (
+            f"  handlers[{p.type}] = std::make_unique<{p.name}_handler>(capability);\n"
+        )
 
     extro = """
 }
@@ -1399,8 +1354,10 @@ def get_packet_handlers_fill_capability(packets: list[Packet]) -> str:
     )
 
     body = ""
-    for packet in packets:
-        body += packet.variants[0].handler
+    for p in packets:
+        body += (
+            f"handlers[{p.type}] = std::make_unique<{p.name}_handler>(capability);\n"
+        )
 
     # Packets controlled by capabilities
     for packet in packets:
@@ -1625,7 +1582,7 @@ static int stats_total_sent;
 
     # write send and receive
     for packet in packets:
-        output.write(packet.get_variants())
+        output.write(packet.get_class())
         output.write(packet.get_send())
         output.write(packet.get_lsend())
         output.write(packet.get_dsend())
