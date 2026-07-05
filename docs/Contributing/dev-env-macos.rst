@@ -3,8 +3,8 @@
 
 .. include:: /global-include.rst
 
-Setting up macOS for Development
-********************************
+Development Environment: macOS
+******************************
 
 Freeciv21 compiles and runs on Apple\ |reg| macOS Sonoma (v14) or higher. The following steps can be used to
 setup your mac to compile and run Freeciv21.

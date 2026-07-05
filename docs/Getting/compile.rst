@@ -19,15 +19,15 @@ An operating system that support Qt
     Linux Distributions:
 
     * Arch
-    * Debian 13 "Testing" (Trixie)\ |reg|
-    * Fedora 41+
+    * Debian 13+ (Trixie)\ |reg|
+    * Fedora 43+
     * Gentoo
     * KDE Neon
     * Manjaro
     * NixOS
     * openSUSE Tumbleweed (Leap is not supported)
     * Slackware
-    * Ubuntu 24.10+
+    * Ubuntu 25.10+
 
 
 .. note::
@@ -37,14 +37,11 @@ An operating system that support Qt
   user is keeping his/her computer OS up to date. Support by the community for these distributions will be
   better than for some of the others out there, so keep that in mind if you are not an experienced Linux user.
 
+
 .. note::
-  The following instructions on this page are for Linux and MSYS2 on Windows. You will need to
-  :doc:`install MSYS2 </Contributing/msys2>` first before continuing here if using MSYS2 on Windows.
-  However, you can also compile on Windows with Microsoft
-  :doc:`Visual Studio </Contributing/visual-studio>`. The Visual Studio instructions are self contained.
-  No need to return to this page after following the installation instructions. Follow the steps in
-  :doc:`macOS </Contributing/macos>` to setup macOS as a development environment. As with Visual Studio
-  the macOS instructions are self contained.
+  The following instructions on this page are for Linux. Follow the instructions in
+  :doc:`/Contributing/dev-env-msys2` or :doc:`/Contributing/dev-env-macos` first before continuing here if 
+  using MSYS2 on Windows or macOS.
 
 
 A C and C++ compiler
@@ -239,8 +236,8 @@ reading in the `Other CMake Notes`_ section below for more notes about other com
 
   at the end.
 
-Compiling/Building
-==================
+Compiling / Building
+====================
 
 Once the build files have been written, then compile with this command:
 
@@ -297,10 +294,6 @@ When the last command is finished running, you will find a :file:`.deb` installe
 Microsoft Windows
 -----------------
 
-There are two platforms available for installing Freeciv21 on Windows: :doc:`MSYS2 <../Contributing/msys2>`
-and :doc:`Visual Studio <../Contributing/visual-studio>`. The package target is only supported on MSYS2 due to
-licensing `constraints <https://www.gnu.org/licenses/gpl-faq.en.html#WindowsRuntimeAndGPL>`_.
-
 Once your MSYS2 environment is ready, start with `Obtaining the Source Code`_ above. Instead of installing,
 use this command to create the Windows Installer package:
 
@@ -314,7 +307,8 @@ When the command is finished running, you will find an installer in :file:`build
 Building with Nix
 =================
 
-The project also contains a :file:`flake.nix` allowing it to be built in NixOS or using the Nix package manager.
+The project also contains a :file:`flake.nix` allowing it to be built in NixOS or using the Nix package 
+manager.
 
 The following command is needed to configure the flake and should be repeated any time the flake is altered:
 
@@ -328,8 +322,8 @@ To create a standard release build:
 
   $ nix build .#freeciv21 --out-link ./build-nix
 
-This will create a symlink to the build directory under :file:`build-nix` in the source directory. The binaries can be found under 
-:file:`./build-nix/bin/freeciv21-server` for example.
+This will create a symlink to the build directory under :file:`build-nix` in the source directory. The 
+binaries can be found under :file:`./build-nix/bin/freeciv21-server` for example.
 
 To create a debug build retaining debug symbols compatible with :file:`gdb`:
 

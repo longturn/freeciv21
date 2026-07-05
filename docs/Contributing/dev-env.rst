@@ -10,46 +10,39 @@ Contributing code to the Freeciv21 project or contributing to any of the games t
 manages requires a bit of setup. This document should get you up and running with the basics. It should be
 noted, that you typically only have to go through this process once unless you setup a new workstation.
 
+Base Workstation
+================
 
-Workstation
-===========
+Freeciv21 can be developed on Linux, Microsoft\ |reg| Windows, and Apple\ |reg| macOS. Any current version of
+these OS's is acceptable.
 
-Freeciv21 can be developed on Linux, Windows, and macOS. Any current version of these OS's is acceptable. For
-Windows, you will need to setup either the MSYS2 environment or Visual Studio to do development.
-Refer to :doc:`msys2` or :doc:`Visual Studio <visual-studio>` for more information. It should be generally
-understood that :strong:`Linux` is the preferred development platform. For a complete set of installation
-steps, you can refer to :doc:`/Getting/compile`.
+It should be generally understood that :strong:`Linux` is the preferred development platform. For a complete 
+set of installation steps, you can refer to :doc:`/Getting/compile`.
+
+* For Windows, you will need to setup a MSYS2 environment first. Refer to :doc:`/Contributing/dev-env-msys2`.
+
+* For macOS, you will need to setup some pre-requisites first. Refer to :doc:`/Contributing/dev-env-macos`.
 
 Technically all you need is a text editor of some kind to edit the files, but most people prefer to use an
-integrated development environment (IDE).
+integrated development environment (IDE). Freeciv21 recommends Microsoft\ |reg| VS Code. It is a very
+capable cross-platform IDE that supports all three OS's.
 
-All platforms can use `KDevelop <https://www.kdevelop.org/download>`_. However, there are some caveats:
-
-* On Windows, due to the nature of the integration with MSYS2, native compilation and debugging is not
-  supported. This is resolved with :doc:`Visual Studio <visual-studio>` as the IDE.
-* On :doc:`macOS <macos>`, KDevelop is still considered experimental. Many Mac users
-  use `XCode <https://developer.apple.com/xcode/>`_ from the Apple\ |reg| App Store.
-
-For the best results, especially if you are editing game code and not just Longturn game rulesets or
-documentation, you will want :strong:`Linux` to be your workstation OS. Many of the current developers use a
-Debian variant such as Ubuntu. Instructions for getting all of the tools needed for Debian Linux can be found
-in :doc:`/Getting/compile`. Do not follow the steps to clone the repository (e.g. the :code:`git clone`
-command), that will happen in a bit.
+Start by downloading VS Code from: https://code.visualstudio.com/download.
 
 .. _dev-env-github:
 
 GitHub
 ======
 
-The Longturn Community uses the online source code control and revision system known as
+The Longturn Community uses the online source code control and revision system known as 
 `GitHub <https://github.com/>`_. To contribute, you will need an account on this platform. There is no cost.
 
 With an account, you can go to the `Longturn <https://github.com/longturn>`_ community repository page and
 :strong:`fork` a repository (such as the Freeciv21 repository) to your personal GitHub account. Go to the main
 page of the repository you want to fork and you will find a :strong:`fork` button in the upper-right corner.
 
-In order to get code pushed to the forked repository to your local workstation, you need to setup an
-SSH key pair to share with GitHub. Follow these
+In order to push code to the forked repository from your local workstation, you need to setup an SSH key pair
+to share with GitHub. Follow these
 `instructions <https://docs.github.com/en/authentication/connecting-to-github-with-ssh>`_.
 
 With SSH set up, now it is time to clone the forked repository from your personal GitHub account to a local
@@ -103,50 +96,95 @@ You will also need to set a couple global configuration settings so :code:`git` 
   ~/GitHub/freeciv21$ git config --global user.name "[your first and last name]"
   
   
-KDevelop Project Setup
-======================
+VS Code Setup
+=============
 
-On Linux, the easiest way to install KDevelop is with a command such as this:
+VS Code has a huge array of extensions to enhance the usability of the product. While you do not need to 
+install any extensions to edit Freeciv21 code, some are useful.
 
-.. code-block:: sh
+* :strong:`C/C++ Extension Pack from Microsoft`: This extension pack installs 4 extensions: C/C++, 
+  C/C++ Themes, C/C++ DevTools, and CMake Tools. These extensions make working with the code much easier and
+  integrates our CMake build system into the IDE. You can install it by running
+  :code:`ext install ms-vscode.cpptools-extension-pack` from the command bar at the top.
 
-    $ sudo apt install kdevelop clang-format-17 python3-sphinx
+* :strong:`Python from Microsoft`: This extension pack installs 3 extensions: Pylance, Python Debugger, and
+  Python Environments. These extensions make working with the Python code (see 
+  :file:`common/generate_packets.py`) much easier. You can install it by running 
+  :code:`ext install ms-python.python` from the command bar at the top.
+
+* :strong:`YAML by RedHat`: This extension helps with editing the YAML files used by GitHub actions
+  (see :file:`.github/workflows/`). You can install it by running :code:`ext install redhat.vscode-yaml` from 
+  the command bar at the top.
+
+* :strong:`reStructuredText by Lextudio`: This extension helps with editing the reStructuredText used by our
+  documentation system (see :file:`docs/`). You can install it by running 
+  :code:`ext install lextudio.restructuredtext` from the command bar at the top. We typically format 
+  word-wrap for our documentation around column 110. If you want to add a vertical bar at that point, you can 
+  add :code:`"editor.rulers": [110]` to the :file:`settings.json` file.
+
+* :strong:`GitHub Pull Requests by GitHub`: This extension allows you to work with
+  :doc:`Pull Requests </Contributing/pull-request>` and :doc:`Issues </Contributing/bugs>` within
+  the IDE. You can install it by running :code:`ext install github.vscode-pull-request-github` from the 
+  command bar at the top.
+
+Windows MSYS2 Integration
+-------------------------
+
+The built-in terminal in VS Code works natively on Linux and macOS. On Windows we need to do some
+customization to get the terminal to interact with MSYS2's terminal. While we are integrating the terminal
+we can enhance support for :file:`.cpp` code analysis.
+
+Open the :file:`settings.json` from :menuselection:`File --> Preferences --> Settings` and then clicking
+on the icon for the settings file (upper right corner). Add this code and adjust the path to where you
+installed MSYS2 from :doc:`/Contributing/dev-env-msys2`.
+
+.. code-block:: json
+
+  "terminal.integrated.profiles.windows": {
+  "MSYS2 CLANG64": {
+    "path": "C:\\Tools\\msys64\\usr\\bin\\bash.exe",
+    "args": ["--login", "-i"],
+    "env": { "CHERE_INVOKING": "1" }
+    }
+  },
+  "terminal.integrated.defaultProfile.windows": "MSYS2 CLANG64"
 
 
-Once installed, you can then import the Freeciv21 project into it. Follow these steps:
+While in the :file:`settings.json`, add these lines to configure clang integration:
 
-#. Open Kdevelop
-#. :menuselection:`Project --> Open/Import Project`
-#. Find :file:`freeciv21/CMakeLists.txt`
-#. :menuselection:`Session --> Rename Current Session` to Freeciv21
-#. :menuselection:`Project --> Open Configuration --> Language Support`. Click on the
-   :guilabel:`Language Support` tab and ensure that the C++ Profile is :guilabel:`c++17`, the C Profile is
-   :guilabel:`c99`, the OpenCL C Profile is :guilabel:`CL1.1`, the CUDA C Profile is :guilabel:`c++11`, and
-   finally the Compiler for Path is :guilabel:`GCC`.
-#. Allow kdevelop to parse all of the code. This can take a while. Eventually you will see a full tree of
-   the code in the Projects tab on the left.
+.. code-block:: json
 
-Here are some useful help/documentation links:
+  "C_Cpp.clang_format_path": "C:\\Tools\\msys64\\clang64\\bin\\clang-format.exe",
+  "C_Cpp.formatting": "clangFormat",
+  "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+  "C_Cpp.codeAnalysis.clangTidy.path": "C:\\Tools\\msys64\\clang64\\bin\\clang-tidy.exe",
+  "C_Cpp.default.compilerPath": "C:\\Tools\\msys64\\clang64\\bin\\clang++.exe",
+  "C_Cpp.default.intelliSenseMode": "clang-x64",
+  "C_Cpp.default.cppStandard": "c++17",
+  "C_Cpp.default.cStandard": "c99",
+  "C_Cpp.default.includePath": [
+    "${workspaceRoot}",
+    "${workspaceFolder}\\**",
+    "C:\\Tools\\msys64\\clang64\\include",
+    "C:\\Tools\\msys64\\clang64\\include\\**",
+    "C:\\Tools\\msys64\\clang64\\lib",
+    "C:\\Tools\\msys64\\clang64\\lib\\**",
+    "C:\\Tools\\msys64\\clang64\\bin"
+  ]
 
-* https://userbase.kde.org/KDevelop5/Manual
-* https://docs.kde.org/trunk5/en/kdevelop/kdevelop/kdevelop.pdf
 
-Now you are ready to edit some code! When ready, follow the steps to submit a pull request here:
-:doc:`pull-request`.
-
-Qt Creator
+Qt Designer
 ===========
 
 Freeciv21 uses the Qt framework for many things, especially the game client. There are many :file:`.ui` files
 in the :file:`client` directory. If you want to edit those in a user interface (versus editing the raw XML),
-you will want to install Qt Creator. You do so with a command such as this:
+you will want to install Qt Designer. 
 
-.. code-block:: sh
+On Linux, you can install Qt Designer from Flathub or as a Snap package. Qt only offers Designer as a 
+native package inside the full Qt Creator IDE package, which is overkill.
 
-    $ sudo apt install qtcreator
+On Windows and macOS you can get Designer by doing a custom install from here:
+https://www.qt.io/development/download-qt-installer-oss. Similar to Linux, you do not need Creator IDE, just
+Designer.
 
-
-Once installed you will get access to a program called :strong:`Qt Designer`. This tool is a graphical
-interface you can use to edit the :file:`.ui` files. You also gain access to Qt documentation inside of
-KDevelop as well. You can read the Qt Designer Manual for more help here:
-https://doc.qt.io/qt-5/qtdesigner-manual.html
+You can read the Qt Designer Manual for more help here: https://doc.qt.io/qtdesignstudio/index.html

@@ -6,6 +6,12 @@
 Visual Studio for Windows
 *************************
 
+.. note::
+  As of July 2026 we are no longer fully supporting Visual Studio and are instead supporting VS Code as our
+  preferred IDE. You can get instructions from :doc:`/Contributing/dev-env`. This page is no longer
+  maintained and left as reference for those that wish to use Visual Studio.
+
+
 Freeciv21 can be compiled using Microsoft Visual Studio\ |reg| and :file:`clang-cl`. This page will help you
 get version 2022 up and running.
 
@@ -250,9 +256,9 @@ Freeciv21 has two custom presets specifically for Windows and Visual Studio beca
 the MSVC compiler instead of LLVM's Clang-Cl compiler that we installed earlier. The main reason why we do
 this is because the code requires proprietary extensions that MSVC does not implement. Instead the Longturn
 community supports the open source LLVM Clang-Cl compiler on Windows in Visual Studio as it supports the
-required proprietary extensions (note that GNU GCC is used in :doc:`MSYS2 <msys2>` on Windows). If you select
-any preset and allow Visual Studio to configure with the Ninja generator and MSVC compiler you will receive a
-great number of errors and the build will fail.
+required proprietary extensions (note that GNU GCC is used in :doc:`MSYS2 <dev-env-msys2>` on Windows). If you 
+select any preset and allow Visual Studio to configure with the Ninja generator and MSVC compiler you will 
+receive a great number of errors and the build will fail.
 
 If you are interested in configuring and compiling from the command line instead of the GUI, you can use
 these commands:
