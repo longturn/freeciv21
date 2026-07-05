@@ -76,9 +76,9 @@ container for the ``master`` branch. We use native Ubuntu 24.04 LTS for the ``st
 CPack Windows Package
 =====================
 
-The CPack Windows package is a bit more complicated. It requires Windows, the :doc:`MSYS2 </Contributing/msys2>`
-Linux emulation platform, and a packaging tool called NSIS. More information on NSIS is available at:
-https://nsis.sourceforge.io/Docs/
+The CPack Windows package is a bit more complicated. It requires Windows, the 
+:doc:`MSYS2 </Contributing/dev-env-msys2>` Linux emulation platform, and a packaging tool called NSIS. More 
+information on NSIS is available at: https://nsis.sourceforge.io/Docs/
 
 CMake's CPack extension natively supports NSIS packages. As with Debian, we use the CPack configuration file
 to define the base parameters of the installation. Lastly we have a template file

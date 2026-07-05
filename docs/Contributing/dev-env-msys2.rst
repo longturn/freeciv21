@@ -4,12 +4,11 @@
 
 .. include:: /global-include.rst
 
-Setting up MSYS2 for Windows
-****************************
+Development Environment: Windows / MSYS2
+****************************************
 
 This document is about building and compiling Freeciv21 with MSYS2 on Windows. MSYS2 is available from
-https://www.msys2.org. The Longturn Community builds the Windows Installer packages using MSYS2. If you
-are looking for a first class development environment on Windows, have a look at :doc:`visual-studio`.
+https://www.msys2.org. The Longturn Community builds the Windows Installer packages using MSYS2.
 
 .. note::
    As of April 2025, we have moved to Qt6, which required a change from ``gcc`` to ``clang`` as the base

@@ -7,9 +7,8 @@ Freeciv21 project.
 .. toctree::
   bugs.rst
   dev-env.rst
-  msys2.rst
-  visual-studio.rst
-  macos.rst
+  dev-env-msys2.rst
+  dev-env-macos.rst
   pull-request.rst
   eval-pull-request.rst
   release.rst
@@ -18,4 +17,5 @@ Freeciv21 project.
   game-admin.rst
   style-guide.rst
   markdown-style-guide.rst
+  visual-studio.rst
   :maxdepth: 1
