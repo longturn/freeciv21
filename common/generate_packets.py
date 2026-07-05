@@ -169,6 +169,17 @@ class Field:
             self.__dict__.update(i)
         self.is_struct = re.search("^struct.*", self.struct_type)
 
+        if self.capability is None:
+            self.condition = None
+            return
+
+        cap_name = packet_capability_name(self.capability)
+        if self.capability_add:
+            self.condition = f"capability & (1 << {cap_name})"
+        else:
+            self.condition = f"!(capability & (1 << {cap_name}))"
+
+
     def get_handle_type(self):
         if self.dataio_type == "string":
             return "const char *"
@@ -489,9 +500,46 @@ class Variant:
 
         self.handler = dedent(
             f"""
-            handlers[{self.type}] = std::make_unique<{self.name}_handler>();
+            handlers[{self.type}] = std::make_unique<{self.name}_handler>(capability);
             """
         )
+
+    def get_field_count(self):
+        """
+        Returns code for a function counting how many fields this packet will
+        use.
+        """
+
+        code = dedent(
+            f"""\
+            static int field_count(packet_capabilities_type capability)
+            {{
+            """
+        )
+
+        base_count = len(list(filter(lambda field: field.condition is None, self.other_fields)))
+        code += f"  auto fields = {base_count};\n"
+
+        for field in self.other_fields:
+            if field.condition:
+                code += indent(
+                    dedent(
+                        f"""\
+                        if ({field.condition}) {{
+                          fields++;
+                        }}
+                        """
+                    ),
+                    "  "
+                )
+
+        code += dedent(
+            """\
+              return fields;
+            }
+            """
+        )
+        return code
 
     def get_stats(self):
         """
@@ -1064,9 +1112,26 @@ class Packet:
                 """
             )
 
-            result += "public:\n"
             if self.delta:
-                result += f"  {v.name}_handler() : packet_delta_handler<{self.name}>({v.bits}) {{}}\n"
+                result += indent(v.get_field_count(), "  ")
+                result += dedent(
+                    f"""\
+                    public:
+                      {v.name}_handler(packet_capabilities_type capability) :
+                          packet_delta_handler<{self.name}>(field_count(capability))
+                      {{}}
+                    """
+                )
+            else:
+                result += dedent(
+                    f"""\
+                    public:
+                      {v.name}_handler(packet_capabilities_type capability)
+                      {{
+                        Q_UNUSED(capability);
+                      }}
+                    """
+                )
             result += f"  virtual ~{v.name}_handler() override = default;\n"
             result += indent(v.get_receive(), "  ")
             result += indent(v.get_send(), "  ")
@@ -1307,9 +1372,13 @@ def get_packet_handlers_fill_initial(packets):
     packet_handlers_fill_initial() function.
     """
 
-    intro = """void packet_handlers_fill_initial(packet_handlers &handlers)
-{
-"""
+    intro = dedent(
+        """\
+        void packet_handlers_fill_initial(packet_handlers &handlers,
+                                          packet_capabilities_type capability)
+        {
+        """
+    )
 
     for cap in get_all_capabilities(packets):
         intro += f"""  fc_assert_msg(has_capability("{cap}", our_capability),
@@ -1344,7 +1413,7 @@ def get_packet_handlers_fill_capability(packets: list[Packet]) -> str:
         void packet_handlers_fill_capability(packet_handlers &handlers,
                                              packet_capabilities_type capability)
         {
-          packet_handlers_fill_initial(handlers);
+          packet_handlers_fill_initial(handlers, capability);
         """
     )
 
