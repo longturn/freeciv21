@@ -1219,7 +1219,7 @@ def packet_capability_name(cap: str) -> str:
     return "PC_" + cap.upper().replace("-", "_")
 
 
-def get_all_capabilities(packets: list[Packet]) -> set[str]:
+def get_all_capabilities(packets: list[Packet]) -> list[str]:
     """
     Extracts the list of all capabilities needed by the packets.
     """
@@ -1233,7 +1233,7 @@ def get_all_capabilities(packets: list[Packet]) -> set[str]:
             if f.capability is not None:
                 all_caps.add(f.capability)
 
-    return all_caps
+    return sorted(all_caps)
 
 
 def get_capability_specenum(packets: list[Packet]) -> str:
