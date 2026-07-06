@@ -3,6 +3,8 @@
 
 .. include:: /global-include.rst
 
+.. _manuals-server-command_line:
+
 Server Command Line Options
 ***************************
 
@@ -16,6 +18,7 @@ such as:
 
 
 .. tip::
+
   It is generally considered a best practice to write a ``.sh`` script to run your server. This way you do not
   have to remember all the command line options to use every time you run your server.
 
@@ -28,6 +31,7 @@ such as:
     internet service provider.
 
 .. note::
+
   With regard to the command line arguments concerning the metaserver, Freeciv21 does not have its own
   metaserver at this time and the legacy Freeciv metaserver does not support Freeciv21. This means, right now,
   that all commands related to the metaserver are held over from the fork from legacy Freeciv until the
@@ -46,6 +50,8 @@ such as:
 ``-F, --Fatal``
     Raise a signal on failed assertion. An assertion is a code calculation error. With this set, the server
     process will SEGFAULT instead of issuing a warning message to the terminal console.
+
+.. _manuals-server-command_line-file:
 
 ``-f, --file <FILE>``
     Load saved game FILE. Useful when wanting to restart a game.
@@ -76,6 +82,8 @@ such as:
 ``-R, --Ranklog <FILE>``
     Use FILE as ranking logfile. Generally a very good idea when running a server.
 
+.. _manuals-server-command_line-read:
+
 ``-r, --read <FILE>``
     Read startup file FILE.
 
@@ -99,8 +107,12 @@ such as:
 ``--scenarios <DIR>``
     Save scenarios to directory DIR.
 
+.. _manuals-server-command_line-auth:
+
 ``-a, --auth``
     Enable database authentication (requires --Database).
+
+.. _manuals-server-command_line-database:
 
 ``-D, --Database <FILE>``
     Enable database connection with configuration from FILE.

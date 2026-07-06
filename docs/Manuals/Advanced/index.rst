@@ -15,4 +15,5 @@ looking for more general  or generic gameplay information, it would be best to s
   fc21-uri.rst
   map-generator
   civ2
+  docker
   :maxdepth: 2
