@@ -310,7 +310,7 @@ static bool script_fcdb_database_free()
 /**
  * returns Bool, whether pconn is allowed to delegate player to delegate.
  */
-bool script_fcdb_user_delegate_to(connection *pconn, player *pplayer,
+bool script_fcdb_user_delegate_to(server_connection *pconn, player *pplayer,
                                   const char *delegate, bool &success)
 {
   const sol::protected_function user_delegate_to =
@@ -328,7 +328,7 @@ bool script_fcdb_user_delegate_to(connection *pconn, player *pplayer,
 /**
  * Check if the user exists.
  */
-bool script_fcdb_user_exists(connection *pconn, bool &exists)
+bool script_fcdb_user_exists(server_connection *pconn, bool &exists)
 {
   const sol::protected_function user_exists = (*fcl)["user_exists"];
   auto result = user_exists(pconn);
@@ -344,7 +344,7 @@ bool script_fcdb_user_exists(connection *pconn, bool &exists)
 /**
  * Save a new user.
  */
-bool script_fcdb_user_save(connection *pconn, const char *password)
+bool script_fcdb_user_save(server_connection *pconn, const char *password)
 {
   const sol::protected_function user_save = (*fcl)["user_save"];
   auto result = user_save(pconn, password);
@@ -359,8 +359,9 @@ bool script_fcdb_user_save(connection *pconn, const char *password)
 /**
  * returns Bool, whether requester is allowed to attach taker to pplayer.
  */
-bool script_fcdb_user_take(connection *requester, connection *taker,
-                           player *player, bool will_observe, bool &success)
+bool script_fcdb_user_take(server_connection *requester,
+                           server_connection *taker, player *player,
+                           bool will_observe, bool &success)
 {
   const sol::protected_function user_take = (*fcl)["user_take"];
   auto result = user_take(requester, taker, player, will_observe);
@@ -376,7 +377,7 @@ bool script_fcdb_user_take(connection *requester, connection *taker,
 /**
  * Check the credentials of the user.
  */
-bool script_fcdb_user_verify(connection *pconn, const char *username,
+bool script_fcdb_user_verify(server_connection *pconn, const char *username,
                              bool &success)
 {
   const sol::protected_function user_verify = (*fcl)["user_verify"];
