@@ -467,7 +467,7 @@ To create a release build, use:
 To run freeciv21-server from a docker image, see: :ref:`Install with Docker <getting-install-docker>`
 
 The main Dockerfile contains builder and final stages which can be run separately. This
-is useful when you're frequently rebuilding the final server setup stage and want to skip
+is useful when you are frequently rebuilding the final server setup stage and want to skip
 rebuilding the project from sources (which can take several minutes).
 
 To create or update the builder image that builds the project from sources:
