@@ -533,7 +533,6 @@ class Packet:
             flags.remove("lsend")
 
         self.cancel = []
-        removes = []
         remaining = []
         for i in flags:
             match = re.search(r"^cancel\((.*)\)$", i)
