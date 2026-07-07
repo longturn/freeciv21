@@ -203,8 +203,8 @@ game to the Applications folder. When finished, unmount the package.
   * https://appletoolbox.com/app-is-damaged-cannot-be-opened-mac/
   * https://support.apple.com/guide/mac-help/open-an-app-by-overriding-security-settings-mh40617/15.0/mac/15.0
 
-Advanced
-========
+Docker
+======
 
 * Install :ref:`freeciv21-server in a docker container <manuals-advanced-docker>`.
 

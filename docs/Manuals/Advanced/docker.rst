@@ -24,7 +24,7 @@ games.
   git --version
   docker --version
 
-For this guide, we're going to be using Docker Rootless mode for better
+For this guide, we are going to be using Docker Rootless mode for better
 container isolation. See: https://docs.docker.com/engine/security/rootless/
 However, running docker as root should also work fine with some tweaks.
 
@@ -34,7 +34,7 @@ Whatever version of git your distro provides should be fine:
 
   sudo apt install git
 
-Next, we decide where we want to create our server directory. Here, we're
+Next, we decide where we want to create our server directory. Here, we are
 just putting it in the home directory:
 
 .. code-block:: sh
@@ -48,7 +48,7 @@ The :file:`servers` directory will be used to maintain server sources for each
 different version being used to run a game. The :file:`games` directory will be
 used to maintain the active games.
 
-Now, we create a group and user for running fc21 servers for better isolation. 
+Now, we create a group and user for running :term:`FC21` servers for better isolation. 
 
 .. code-block:: sh
 
@@ -58,7 +58,7 @@ Now, we create a group and user for running fc21 servers for better isolation.
   newgrp freeciv21
   newgrp "$USER"
 
-Here, we're going with the default UID and GID of ``556`` which gets mapped to
+Here, we are going with the default UID and GID of ``556`` which gets mapped to
 ``100555`` by Docker's rootless mode user namespace mapping, and granting the
 current user access to this group, so we can manage server files directly.
 
@@ -72,7 +72,7 @@ current user access to this group, so we can manage server files directly.
 Build a freeciv21-server docker image
 =====================================
 
-In this example, we're going to build the latest stable build of the server:
+In this example, we are going to build the latest stable build of the server:
 
 .. code-block:: sh
 
@@ -87,7 +87,10 @@ instructions.
 Setting up a new game
 =====================
 
-In this example, we're going to set up an LTT2 game from the LTT-LTX repo.
+In this example, we are going to set up an LTT2 game from the 
+`LTT-LTX`_ repo.
+
+.. _LTT-LTX: github.com/longturn/LTT-LTX
 
 .. code-block:: sh
 
@@ -100,8 +103,11 @@ In this example, we're going to set up an LTT2 game from the LTT-LTX repo.
   sudo chown freeciv21:freeciv21 saves logs
   wget -O config/database.lua https://raw.githubusercontent.com/longturn/freeciv21/refs/heads/master/lua/database.lua
 
-Authentication will use an sqlite database stored in the saves directory. We
-need to create a :file:`config/fc_auth.conf` file with these contents:
+Authentication will use a `SQLite`_ database
+stored in the saves directory. We need to create a :file:`config/fc_auth.conf`
+file with these contents:
+
+.. _SQLite: https://sqlite.org/about.html
 
 .. code-block:: ini
 
@@ -154,7 +160,7 @@ the ``--publish $port:5556/tcp`` line to a different ``$port`` to connect to the
 game. The second port number is only used within the container and should not
 be changed.
 
-The example uses a sqlite database for authentication. Please see
+The example uses a `SQLite`_ database for authentication. Please see
 :ref:`Authentication and Database Support <manuals-server-fcdb>` for more
 details.
 
@@ -187,7 +193,7 @@ To start the game:
     --read LTT2.serv
 
 Note the changes, ``--detach`` will run the container in the background so that
-it's not tied to your current user session.
+it is not tied to your current user session.
 
 ``--read $ruleset`` will load and start the game with the settings you set up 
 earlier. See :ref:`--read <manuals-server-command_line-read>`.
@@ -243,13 +249,13 @@ If you need to run bash commands inside the running game container:
 
 Omit ``--user root`` to run commands without elevation.
 
-Omit ``-it`` and replace ``/bin/bash -l`` with a single command to run if you don't
+Omit ``-it`` and replace ``/bin/bash -l`` with a single command to run if you do not
 need it to be an interactive session.
 
 Safe Shutdown
 =============
 
-To stop a running game, it's a good idea to attach to the server to save the
+To stop a running game, it is a good idea to attach to the server to save the
 game and stop it manually using server commands. However, you can use:
 
 .. code-block:: sh
@@ -261,5 +267,5 @@ game and stop it manually using server commands. However, you can use:
   The ``--time`` argument can be omitted in most cases as the default interval of
   10 seconds is sufficient to allow for graceful shutdown in most cases,
   however for large maps with lots of cities, the server can be slow to respond
-  at TC and might need longer.
+  at :term:`TC` and might need longer.
 
