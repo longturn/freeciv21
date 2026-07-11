@@ -29,4 +29,5 @@ Build-Depends:
   libsdl2-2.0-0 (>= 2.0.20),
   libsdl2-dev (>= 2.0.20),
   libsdl2-mixer-dev,
-  libjack-dev
+  libjack-dev,
+  libavcodec-extra

@@ -32,7 +32,6 @@ BuildRequires:  lua-devel
 BuildRequires:  gettext
 BuildRequires:  ocl-icd
 BuildRequires:  wget2-wget
-BuildRequires:  systemd-standalone-tmpfiles
 BuildRequires:  libavutil-free >= 7.0.2
 BuildRequires:  libavcodec-free >= 7.0.2
 %ifarch aarch64
