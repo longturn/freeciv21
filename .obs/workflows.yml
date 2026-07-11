@@ -10,7 +10,7 @@ main_workflow:
     - branch_package:
         source_project: home:louis94_m:freeciv21
         source_package: freeciv21-dev
-        target_project: home:louis94_m:freeciv21:PRs
+        target_project: PRs
   filters:
     event: pull_request
 rebuild_master:
