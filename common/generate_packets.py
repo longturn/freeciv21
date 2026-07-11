@@ -671,9 +671,13 @@ class Packet:
         )
 
     def get_class(self):
-        base_class = (
-            f"packet_delta_handler<{self.name}>" if self.delta else "packet_handler"
-        )
+        base_class = "packet_handler"
+        if self.delta:
+            if self.key_field is None:
+                base_class = f"packet_delta_handler<{self.name}>"
+            else:
+                base_class = f"packet_delta_key_handler<{self.name}>"
+
         result = dedent(
             f"""\
             class {self.name}_handler : public {base_class} {{
@@ -686,7 +690,7 @@ class Packet:
                 f"""\
                 public:
                   {self.name}_handler(packet_capabilities_type capability) :
-                      packet_delta_handler<{self.name}>(field_count(capability))
+                      {base_class}(field_count(capability))
                   {{}}
                 """
             )
@@ -985,23 +989,38 @@ static char *stats_{self.name}_names[] = {{names}};
         Helper for get_send()
         """
 
-        key = 0 if self.key_field is None else f"real_packet->{self.key_field.name}"
-        intro = indent(
-            dedent(
+        intro = dedent(
+            f"""
+            fields.fill(false);
+            """
+        )
+        if self.key_field is None:
+            intro += dedent(
                 f"""
-                fields.fill(false);
-
-                auto [it, created] = send_map.try_emplace({key});
+                if (!last_sent.has_value()) {{
+                  last_sent.emplace();
+                  different = 1; // Force to send
+                }}
+                auto old = &*last_sent;
+                """
+            )
+        else:
+            intro += dedent(
+                f"""
+                auto [it, created] = send_map.try_emplace(real_packet->{self.key_field.name});
                 if (created) {{
                   different = 1; // Force to send
                 }}
                 auto old = &it->second;
-
-                int index = 0; // Field index
                 """
-            ),
-            "  ",
+            )
+
+        intro += dedent(
+            """
+            int index = 0; // Field index
+            """
         )
+        intro = indent(intro, "  ")
 
         body = ""
         for field in self.other_fields:
@@ -1127,13 +1146,22 @@ static char *stats_{self.name}_names[] = {{names}};
         # At this stage real_packet is default-constructed with only the key, so
         # try_emplace() will return the old one or the default-constructed one.
         # In either case the key is already correct.
-        key = 0 if self.key_field is None else f"real_packet->{self.key_field.name}"
-        body = dedent(
-            f"""
-            auto [it, _] = receive_map.try_emplace({key}, *real_packet);
-            real_packet = &it->second;
-            """
-        )
+        if self.key_field is None:
+            body = dedent(
+                f"""
+                if (!last_received.has_value()) {{
+                  last_received = *real_packet;
+                }}
+                real_packet = &*last_received;
+                """
+            )
+        else:
+            body = dedent(
+                f"""
+                auto [it, _] = receive_map.try_emplace(real_packet->{self.key_field.name}, *real_packet);
+                real_packet = &it->second;
+                """
+            )
 
         # Field index
         body += f"\nint index = 0;\n"
