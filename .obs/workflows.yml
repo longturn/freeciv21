@@ -5,13 +5,21 @@
 # Workflow configuration file for freeciv21 to run on Open Build Service (OBS)
 # Project Home: https://build.opensuse.org/project/show/home:longturn
 #
-build_master:
+main_workflow:
+  steps:
+    - branch_package:
+        source_project: home:louis94_m:freeciv21
+        source_package: freeciv21-dev
+        target_project: home:louis94_m:freeciv21:PRs
+  filters:
+    event: pull_request
+rebuild_master:
   steps:
     - rebuild_package:
         project: home:louis94_m:freeciv21
         package: freeciv21-dev
   filters:
-    event: push, pull_reguest, tag_push
-    # branches:
-    #   only:
-    #     - master
+    event: tag_push
+    branches:
+      only:
+        - master
