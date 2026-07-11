@@ -79,21 +79,6 @@ packet_handlers packet_handlers_get(packet_capabilities_type capability);
 
 void packets_deinit();
 
-#define SEND_PACKET_END(packet_type)                                        \
-  {                                                                         \
-    const auto &packet_header = pc->packet_header;                          \
-    auto size = dout.size()                                                 \
-                + data_type_size((enum data_type) packet_header.length)     \
-                + data_type_size((enum data_type) packet_header.type);      \
-    fc_assert(size <= MAX_LEN_PACKET);                                      \
-                                                                            \
-    QByteArray header;                                                      \
-    dio_put_type_raw(header, (enum data_type) packet_header.length, size);  \
-    dio_put_type_raw(header, (enum data_type) packet_header.type,           \
-                     packet_type);                                          \
-    return send_packet_data(pc, header + dout, packet_type);                \
-  }
-
 #define RECEIVE_PACKET_START(packet_type, result)                           \
   QByteArrayView din(                                                       \
       pc->buffer->data,                                                     \
@@ -120,8 +105,8 @@ void packets_deinit();
   qCritical("Error on field '" #field "'" __VA_ARGS__);                     \
   return nullptr
 
-int send_packet_data(struct connection *pc, QByteArrayView data,
-                     enum packet_type packet_type);
+int send_packet(struct connection *pc, enum packet_type packet_type,
+                QByteArrayView contents);
 bool packet_check(QByteArrayView din, struct connection *pc);
 
 void packet_strvec_compute(char str[MAX_LEN_PACKET],
