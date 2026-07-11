@@ -34,6 +34,7 @@ BuildRequires:  ocl-icd
 BuildRequires:  wget2-wget
 BuildRequires:  libavutil-free >= 7.0.2
 BuildRequires:  libavcodec-free >= 7.0.2
+BuildRequires:  systemd
 %ifarch aarch64
 BuildRequires:  libvpx
 %endif
