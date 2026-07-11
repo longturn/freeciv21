@@ -496,14 +496,6 @@ class Packet:
         if self.want_pre_send:
             flags.remove("pre-send")
 
-        self.want_post_recv = "post-recv" in flags
-        if self.want_post_recv:
-            flags.remove("post-recv")
-
-        self.want_post_send = "post-send" in flags
-        if self.want_post_send:
-            flags.remove("post-send")
-
         self.delta = "no-delta" not in flags
         if not self.delta:
             flags.remove("no-delta")
@@ -943,14 +935,6 @@ static char *stats_{self.name}_names[] = {{names}};
             body = ""
             delta_header = ""
 
-        if self.want_post_send:
-            if self.no_packet:
-                post = f"  post_send_{self.name}(pc, NULL);\n"
-            else:
-                post = f"  post_send_{self.name}(pc, real_packet);\n"
-        else:
-            post = ""
-
         code = dedent(
             f"""\
             virtual int send(connection *pc, const void *packet_data,
@@ -975,7 +959,6 @@ static char *stats_{self.name}_names[] = {{names}};
             code += f"\n  pc->phs.handlers[{i}]->reset(real_packet->{field.name});\n"
 
         code += pre2
-        code += post
         code += dedent(
             f"""\
               SEND_PACKET_END({self.type});
@@ -1106,11 +1089,6 @@ static char *stats_{self.name}_names[] = {{names}};
         else:
             log = ""
 
-        if self.want_post_recv:
-            post = f"  post_receive_{self.name}(pc, real_packet);\n"
-        else:
-            post = ""
-
         code = dedent(
             f"""\
             virtual void *receive(connection *pc) override
@@ -1129,7 +1107,6 @@ static char *stats_{self.name}_names[] = {{names}};
             field = self.key_field or self.other_fields[0]
             code += f"\n  pc->phs.handlers[{i}]->reset(real_packet->{field.name});\n"
 
-        code += post
         code += dedent(
             f"""\
               RECEIVE_PACKET_END(real_packet);
