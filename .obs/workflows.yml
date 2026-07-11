@@ -12,6 +12,6 @@ build_master:
         package: freeciv21-dev
   filters:
     event: push, pull_reguest, tag_push
-    branches:
-      only:
-        - master
+    # branches:
+    #   only:
+    #     - master

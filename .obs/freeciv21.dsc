@@ -9,9 +9,8 @@ Format: 1.0
 Source: Freeciv21
 Version: 3.2
 Binary: freeciv21
-Maintainer:
-  Louis Moureaux <m_louis30@yahoo.com>,
-  James Robertson <jwrober@gmail.com>
+Maintainer: Louis Moureaux <m_louis30@yahoo.com>
+Uploaders: James Robertson <jwrober@gmail.com>
 Architecture: any
 Build-Depends:
   debhelper (>= 9),
@@ -25,11 +24,9 @@ Build-Depends:
   qt6-multimedia-dev,
   qt6-svg-dev,
   libkf6archive-dev,
-  liblua5.3-dev,
+  liblua5.4-dev,
   libsqlite3-dev,
   libsdl2-2.0-0 (>= 2.0.20),
   libsdl2-dev (>= 2.0.20),
   libsdl2-mixer-dev,
-  libjack-dev,
-  libavformat61 (>= 7:7.0),
-  libavcodec61 (>= 7:7.0)
+  libjack-dev
