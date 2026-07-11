@@ -31,4 +31,5 @@ Build-Depends:
   libsdl2-mixer-dev,
   libjack-dev,
   libavcodec-extra,
-  libavformat-extra
+  libavformat-extra,
+  libselinux-dev
