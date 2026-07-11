@@ -492,10 +492,6 @@ class Packet:
             self.is_info = "game"
             flags.remove("is-game-info")
 
-        self.want_pre_send = "pre-send" in flags
-        if self.want_pre_send:
-            flags.remove("pre-send")
-
         self.delta = "no-delta" not in flags
         if not self.delta:
             flags.remove("no-delta")
@@ -884,24 +880,6 @@ static char *stats_{self.name}_names[] = {{names}};
                 log = f'\n  {self.log_macro}("{self.name}: sending info about ({self.key_field.name}=%d)", real_packet->{self.key_field.name});\n'
         else:
             log = ""
-        if self.want_pre_send:
-            pre1 = f"""
-  {{
-    auto tmp = new {self.name}();
-
-    *tmp = *packet;
-    pre_send_{self.name}(pc, tmp);
-    real_packet = tmp;
-  }}
-"""
-            pre2 = """
-  if (real_packet != packet) {
-    delete (decltype(real_packet)) real_packet;
-  }
-"""
-        else:
-            pre1 = ""
-            pre2 = ""
 
         if not self.no_packet:
             real_packet1 = f"  const {self.name} *real_packet = packet;\n"
@@ -919,7 +897,7 @@ static char *stats_{self.name}_names[] = {{names}};
                     ),
                     "  ",
                 )
-                body = self.get_delta_send_body(pre2)
+                body = self.get_delta_send_body()
             else:
                 delta_header = ""
                 body = ""
@@ -950,7 +928,6 @@ static char *stats_{self.name}_names[] = {{names}};
         code += "  [[maybe_unused]] auto capability = pc->functional_caps;\n"
         code += log
         code += report
-        code += pre1
         code += body
 
         # Cancel some is-info packets.
@@ -958,7 +935,6 @@ static char *stats_{self.name}_names[] = {{names}};
             field = self.key_field or self.other_fields[0]
             code += f"\n  pc->phs.handlers[{i}]->reset(real_packet->{field.name});\n"
 
-        code += pre2
         code += dedent(
             f"""\
               return send_packet(pc, {self.type}, dout);
@@ -967,7 +943,7 @@ static char *stats_{self.name}_names[] = {{names}};
         )
         return code
 
-    def get_delta_send_body(self, pre2):
+    def get_delta_send_body(self):
         """
         Helper for get_send()
         """
@@ -1025,7 +1001,7 @@ static char *stats_{self.name}_names[] = {{names}};
         if self.is_info != "no":
             body += f"""
   if (different == 0) {{
-{fl}{s}{pre2}    return 0;
+{fl}{s}    return 0;
   }}
 """
 
