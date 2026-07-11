@@ -1538,6 +1538,7 @@ def write_common_source(packets: list[Packet], output: io.TextIOWrapper) -> None
 #include "dataio_raw.h"
 #include "fc_types.h"
 #include "packets.h"
+#include "protocol.h"
 #include "requirements.h"
 #include "unit.h"
 #include "worklist.h"
