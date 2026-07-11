@@ -71,9 +71,6 @@ void post_send_packet_server_join_reply(
 void post_receive_packet_server_join_reply(
     struct connection *pconn, const struct packet_server_join_reply *packet);
 
-void pre_send_packet_player_attribute_chunk(
-    struct connection *pc, struct packet_player_attribute_chunk *packet);
-
 packet_handlers packet_handlers_initial();
 packet_handlers packet_handlers_get(packet_capabilities_type capability);
 

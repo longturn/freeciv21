@@ -754,29 +754,12 @@ void send_attribute_block(const struct player *pplayer,
              ATTRIBUTE_CHUNK_SIZE - 1 - packet.chunk_length);
     }
 
+    log_packet("sending attribute chunk %d/%d %d", packet.offset,
+               packet.total_length, packet.chunk_length);
     send_packet_player_attribute_chunk(pconn, &packet);
   }
 
   connection_do_unbuffer(pconn);
-}
-
-/**
-   Test and log for sending player attribute_block
- */
-void pre_send_packet_player_attribute_chunk(
-    struct connection *pc, struct packet_player_attribute_chunk *packet)
-{
-  Q_UNUSED(pc)
-  fc_assert(packet->total_length > 0
-            && packet->total_length < MAX_ATTRIBUTE_BLOCK);
-  // 500 bytes header, just to be sure
-  fc_assert(packet->chunk_length > 0
-            && packet->chunk_length < MAX_LEN_PACKET - 500);
-  fc_assert(packet->chunk_length <= packet->total_length);
-  fc_assert(packet->offset >= 0 && packet->offset < packet->total_length);
-
-  log_packet("sending attribute chunk %d/%d %d", packet->offset,
-             packet->total_length, packet->chunk_length);
 }
 
 /**
