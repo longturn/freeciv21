@@ -175,9 +175,23 @@ bool conn_compression_thaw(struct connection *pconn)
 /**
    It returns the request id of the outgoing packet (or 0 if is_server()).
  */
-int send_packet_data(struct connection *pc, QByteArrayView data,
-                     enum packet_type packet_type)
+int send_packet(struct connection *pc, enum packet_type packet_type,
+                QByteArrayView contents)
 {
+  QByteArray data;
+
+  // header
+  auto size = contents.size()
+              + data_type_size((enum data_type) pc->packet_header.length)
+              + data_type_size((enum data_type) pc->packet_header.type);
+  fc_assert(size <= MAX_LEN_PACKET);
+
+  dio_put_type_raw(data, (enum data_type) pc->packet_header.length, size);
+  dio_put_type_raw(data, (enum data_type) pc->packet_header.type,
+                   packet_type);
+  data += contents;
+  fc_assert_ret_val(size == data.size(), 0);
+
   // default for the server
   int result = 0;
 
@@ -193,7 +207,6 @@ int send_packet_data(struct connection *pc, QByteArrayView data,
     pc->outgoing_packet_notify(pc, packet_type, data.size(), result);
   }
 
-  int size = data.size();
   if (conn_compression_frozen(pc)) {
     size_t old_size;
 

@@ -961,7 +961,7 @@ static char *stats_{self.name}_names[] = {{names}};
         code += pre2
         code += dedent(
             f"""\
-              SEND_PACKET_END({self.type});
+              return send_packet(pc, {self.type}, dout);
             }}
             """
         )
