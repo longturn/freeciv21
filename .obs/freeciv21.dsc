@@ -30,5 +30,5 @@ Build-Depends:
   libsdl2-dev (>= 2.0.20),
   libsdl2-mixer-dev,
   libjack-dev,
-  libavcodec-extra61,
-  libavformat-extra61
+  libavcodec-extra,
+  libavformat-extra
