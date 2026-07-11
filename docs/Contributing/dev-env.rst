@@ -14,7 +14,7 @@ Base Workstation
 ================
 
 Freeciv21 can be developed on Linux, Microsoft\ |reg| Windows, and Apple\ |reg| macOS. Any current version of
-these OS's is acceptable.
+these Operating Systems is acceptable.
 
 It should be generally understood that :strong:`Linux` is the preferred development platform. For a complete 
 set of installation steps, you can refer to :doc:`/Getting/compile`.
@@ -24,7 +24,7 @@ set of installation steps, you can refer to :doc:`/Getting/compile`.
 * For macOS, you will need to setup some pre-requisites first. Refer to :doc:`/Contributing/dev-env-macos`.
 
 Technically all you need is a text editor of some kind to edit the files, but most people prefer to use an
-integrated development environment (IDE). Freeciv21 recommends Microsoft\ |reg| VS Code. It is a very
+integrated development environment (IDE). Freeciv21 suggests Microsoft\ |reg| VS Code. It is a very
 capable cross-platform IDE that supports all three OS's.
 
 Start by downloading VS Code from: https://code.visualstudio.com/download.
@@ -34,7 +34,7 @@ Start by downloading VS Code from: https://code.visualstudio.com/download.
 GitHub
 ======
 
-The Longturn Community uses the online source code control and revision system known as 
+The Longturn Community uses the online source code control and revision system known as
 `GitHub <https://github.com/>`_. To contribute, you will need an account on this platform. There is no cost.
 
 With an account, you can go to the `Longturn <https://github.com/longturn>`_ community repository page and
@@ -134,9 +134,9 @@ The built-in terminal in VS Code works natively on Linux and macOS. On Windows w
 customization to get the terminal to interact with MSYS2's terminal. While we are integrating the terminal
 we can enhance support for :file:`.cpp` code analysis.
 
-Open the :file:`settings.json` from :menuselection:`File --> Preferences --> Settings` and then clicking
-on the icon for the settings file (upper right corner). Add this code and adjust the path to where you
-installed MSYS2 from :doc:`/Contributing/dev-env-msys2`.
+Open the workspace :file:`settings.json` from :menuselection:`File --> Preferences --> Settings --> Workspace`
+and then clicking on the icon for the settings file (upper right corner). Add this code and adjust the path to
+where you installed MSYS2 from :doc:`/Contributing/dev-env-msys2`.
 
 .. code-block:: json
 
