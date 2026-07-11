@@ -45,28 +45,6 @@ public:
   virtual void reset(int key) { Q_UNUSED(key); }
 };
 
-template <class T> class packet_delta_handler : public packet_handler {
-protected:
-  std::unordered_map<int, T> receive_map, send_map;
-  QBitArray fields;
-
-public:
-  packet_delta_handler(int field_count) : fields(field_count) {}
-  virtual ~packet_delta_handler() = default;
-
-  virtual void reset() override
-  {
-    receive_map.clear();
-    send_map.clear();
-  }
-
-  virtual void reset(int key) override
-  {
-    receive_map.erase(key);
-    send_map.erase(key);
-  }
-};
-
 using packet_handlers =
     std::array<std::unique_ptr<packet_handler>, PACKET_LAST>;
 
