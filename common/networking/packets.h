@@ -79,14 +79,9 @@ packet_handlers packet_handlers_get(packet_capabilities_type capability);
 
 void packets_deinit();
 
-// We need to cache pc->packet_header because it gets changed *while*
-// serializing the packet.
-#define SEND_PACKET_START(packet_type)                                      \
-  QByteArray dout;                                                          \
-  const auto packet_header = pc->packet_header;
-
 #define SEND_PACKET_END(packet_type)                                        \
   {                                                                         \
+    const auto &packet_header = pc->packet_header;                          \
     auto size = dout.size()                                                 \
                 + data_type_size((enum data_type) packet_header.length)     \
                 + data_type_size((enum data_type) packet_header.type);      \

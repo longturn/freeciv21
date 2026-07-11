@@ -946,7 +946,7 @@ static char *stats_{self.name}_names[] = {{names}};
         )
         code += real_packet1
         code += delta_header
-        code += f"  SEND_PACKET_START({self.type});\n"
+        code += "  QByteArray dout;\n"
         code += "  [[maybe_unused]] auto capability = pc->functional_caps;\n"
         code += log
         code += report
