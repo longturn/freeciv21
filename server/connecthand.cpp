@@ -142,6 +142,7 @@ void establish_new_connection(server_connection *pconn)
   sz_strlcpy(packet.challenge_file, new_challenge_filename(pconn));
   packet.conn_id = pconn->id;
   send_packet_server_join_reply(pconn, &packet);
+  post_send_packet_server_join_reply(pconn, &packet);
 
   // "establish" the connection
   pconn->established = true;
@@ -333,6 +334,7 @@ void reject_new_connection(const char *msg, server_connection *pconn)
   packet.challenge_file[0] = '\0';
   packet.conn_id = -1;
   send_packet_server_join_reply(pconn, &packet);
+  post_send_packet_server_join_reply(pconn, &packet);
   qInfo(_("Client rejected: %s."), conn_description(pconn));
   flush_connection_send_buffer_all(pconn);
 }

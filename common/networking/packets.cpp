@@ -573,9 +573,15 @@ void *get_packet_from_connection(struct connection *pc,
   if (!data) {
     connection_close(pc, _("incompatible packet contents"));
     return nullptr;
-  } else {
-    return data;
   }
+
+  if (utype.type == PACKET_SERVER_JOIN_REPLY) {
+    // Special case: we may need to resize the connection headers.
+    post_receive_packet_server_join_reply(
+        pc, static_cast<const packet_server_join_reply *>(data));
+  }
+
+  return data;
 }
 
 /**

@@ -85,14 +85,6 @@ Syntax:
 
      cancel(PACKET_number): Wipes delta state for a packet with the same key.
 
-     pre-send:
-     post-recv:
-     post-send: generate calls to pre-send, post-receive and post-send
-     hooks. These hooks are named: pre_send_packet_*,
-     post_receive_packet_* and post_send_packet_*. The user has to
-     provide these. These functions may be used to do extra
-     preparations, conversions or checks.
-
      no-delta: don't use the delta protocol. This is useful for
      packets which contain always different data
      (packet_generic_integer) or are only sent once
@@ -386,7 +378,7 @@ end
 # the connection, as that one comes when we already know that server and
 # client are compatible, including the fact that acceptance package looks like
 # it does.
-PACKET_SERVER_JOIN_REPLY = 5; sc, no-delta, post-send, post-recv
+PACKET_SERVER_JOIN_REPLY = 5; sc, no-delta
   BOOL you_can_join;
   STRING message[1536];        /* MAX_LEN_MSG */
   STRING capability[512];      /* MAX_LEN_CAPSTR */
