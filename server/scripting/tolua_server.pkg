@@ -202,6 +202,27 @@ module edit {
   void api_edit_unit_moving_allow
     @ movement_allow(lua_State *L, Unit *self);
 
+  bool api_edit_perform_action_unit_vs_city
+    @ perform_action(lua_State *L, Unit *punit, Action *paction,
+                          City *tgt);
+  bool api_edit_perform_action_unit_vs_city_impr
+    @ perform_action(lua_State *L, Unit *punit, Action *paction,
+                          City *tgt, Building_Type *sub_tgt);
+  bool api_edit_perform_action_unit_vs_city_tech
+    @ perform_action(lua_State *L, Unit *punit, Action *paction,
+                          City *tgt, Tech_Type *sub_tgt);
+  bool api_edit_perform_action_unit_vs_unit
+    @ perform_action(lua_State *L, Unit *punit, Action *paction,
+                          Unit *tgt);
+  bool api_edit_perform_action_unit_vs_tile
+    @ perform_action(lua_State *L, Unit *punit, Action *paction,
+                          Tile *tgt);
+  bool api_edit_perform_action_unit_vs_tile_extra
+    @ perform_action(lua_State *L, Unit *punit, Action *paction,
+                          Tile *tgt, const char *sub_tgt);
+  bool api_edit_perform_action_unit_vs_self
+    @ perform_action(lua_State *L, Unit *punit, Action *paction);
+
   void api_edit_city_add_history
     @ add_city_history(lua_State *L, City *self, int amount);
   void api_edit_player_add_history
@@ -359,6 +380,16 @@ end
 -- Server functions for Unit module
 function Unit:teleport(dest)
   return edit.unit_teleport(self, dest)
+end
+
+function Unit:perform_action(action, target, sub_target)
+  if target == nil then
+    return edit.perform_action(self, action)
+  elseif sub_target == nil then
+    return edit.perform_action(self, action, target)
+  else
+    return edit.perform_action(self, action, target, sub_target)
+  end
 end
 
 function Unit:turn(direction)

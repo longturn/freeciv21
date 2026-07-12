@@ -418,6 +418,51 @@ function edit.movement_disallow(unit) end
 --- @param unit Unit The unit to allow movement for.
 function edit.movement_allow(unit) end
 
+--- Makes the given unit attempt to perform the specified action.
+---
+--- .. list-table:: Action Types
+---    :header-rows: 1
+---
+---    * - Action Type
+---      - target
+---      - sub_target
+---    * - :ref:`Unit vs City <modding-ruleset-actions-vs-city>`
+---      - :lua:obj:`City`
+---      - nil
+---    * - :ref:`Unit vs City - Improvement <action-targeted-sabotage-city>`
+---      - :lua:obj:`City`
+---      - :lua:obj:`Building_Type`
+---    * - :ref:`Unit vs City - Technology <action-targeted-steal-tech>`
+---      - :lua:obj:`City`
+---      - :lua:obj:`Tech_Type`
+---    * - :ref:`Unit vs Unit <modding-ruleset-actions-vs-unit>`
+---      - :lua:obj:`Unit`
+---      - nil
+---    * - :ref:`Unit vs Stack <modding-ruleset-actions-vs-stack>` 
+---      - :lua:obj:`Tile`
+---      - nil
+---    * - :ref:`Unit vs Tile <modding-ruleset-actions-vs-tile>`
+---      - :lua:obj:`Tile`
+---      - nil
+---    * - :ref:`Unit vs Tile - extra <action-pillage>`
+---      - :lua:obj:`Tile`
+---      - string - The name of the extra
+---    * - :ref:`Unit vs Self <modding-ruleset-actions-vs-self>`
+---      - nil
+---      - nil
+---
+--- .. note::
+---    When using actions like :ref:`action-build-road`, it is important to
+---    include the type of road extra being built, otherwise the action will
+---    likely report as being disabled for this unit on this tile.
+--- 
+--- @param unit Unit The unit to perform the action.
+--- @param action Action The action to perform.
+--- @param target City|Unit|Tile The target to perform the action against, or nil for self.
+--- @param sub_target Building_Type|Tech_Type|string The sub-target within the target to perform the action against, if applicable, otherwise nil to just target the main target.
+--- @return bool performed True, if the action could be performed, otherwise false.
+function edit.perform_action(unit, action, target, sub_target);
+
 --- Adds history a.k.a. culture to a city. This affects civilisation score.
 --- @param city City The city to which history points are to be added.
 --- @param amount int The amount of history points to add.
@@ -539,6 +584,59 @@ function Unit:birth_turn() end
 --- @param dest Tile
 function Unit:teleport(dest)
   return edit.unit_teleport(self, dest)
+end
+
+--- Makes the unit attempt to perform the specified action. See 
+--- :lua:obj:`edit.perform_action`
+---
+--- .. list-table:: Action Types
+---    :header-rows: 1
+---
+---    * - Action Type
+---      - target
+---      - sub_target
+---    * - :ref:`Unit vs City <modding-ruleset-actions-vs-city>`
+---      - :lua:obj:`City`
+---      - nil
+---    * - :ref:`Unit vs City - Improvement <action-targeted-sabotage-city>`
+---      - :lua:obj:`City`
+---      - :lua:obj:`Building_Type`
+---    * - :ref:`Unit vs City - Technology <action-targeted-steal-tech>`
+---      - :lua:obj:`City`
+---      - :lua:obj:`Tech_Type`
+---    * - :ref:`Unit vs Unit <modding-ruleset-actions-vs-unit>`
+---      - :lua:obj:`Unit`
+---      - nil
+---    * - :ref:`Unit vs Stack <modding-ruleset-actions-vs-stack>` 
+---      - :lua:obj:`Tile`
+---      - nil
+---    * - :ref:`Unit vs Tile <modding-ruleset-actions-vs-tile>`
+---      - :lua:obj:`Tile`
+---      - nil
+---    * - :ref:`Unit vs Tile - extra <action-pillage>`
+---      - :lua:obj:`Tile`
+---      - string - The rule name of the extra
+---    * - :ref:`Unit vs Self <modding-ruleset-actions-vs-self>`
+---      - nil
+---      - nil
+---
+--- .. note::
+---    When using actions like :ref:`action-build-road`, it is important to
+---    include the type of road extra being built, otherwise the action will
+---    likely report as being disabled for this unit on this tile.
+---
+--- @param action Action The action to perform.
+--- @param target City|Unit|Tile The target to perform the action against, or nil for self.
+--- @param sub_target Building_Type|Tech_Type|string The sub-target within the target to perform the action against, if applicable, otherwise nil to just target the main target.
+--- @return bool performed True, if the action could be performed, otherwise false.
+function Unit:perform_action(action, target, sub_target)
+  if target == nil then
+    return edit.perform_action(self, action)
+  elseif sub_target == nil then
+    return edit.perform_action(self, action, target)
+  else
+    return edit.perform_action(self, action, target, sub_target)
+  end
 end
 
 --- See :lua:obj:`edit.unit_turn`
