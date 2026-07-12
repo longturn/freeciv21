@@ -579,7 +579,7 @@ function Achievement:rule_name() end
 --- @return string name The localised translation of the name.
 function Achievement:name_translation() end
 
---- Represents a type of action that a unit can perform in this ruleset.
+--- Represents a type of action that a unit can perform in this ruleset. See :ref:`modding-ruleset-actions`
 ---
 --- @class Action
 --- @field id int The unique ID of the action type.

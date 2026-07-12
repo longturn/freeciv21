@@ -7,6 +7,8 @@
 
 .. include:: /global-include.rst
 
+.. _modding-ruleset-actions:
+
 Actions
 *******
 
