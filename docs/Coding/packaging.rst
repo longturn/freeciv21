@@ -290,7 +290,7 @@ Both versions of our package rely on an OBS hosted file named :file:`_service`. 
 OBS how to build the package. The file on the *Stable* repository is very simple, just download the tarball
 and build. The *Development* version of the file is more complex as we rely on some GitHub integration tools:
 ``obs_scm``, ``tar``, ``recompress``, and ``set_version``. All are hosted in OBS at the ``openSUSE:Tools``
-project.
+project (see the :menuselection:`Meta` tab in the project settings).
 
 :strong:`Stable Support`
 
@@ -299,15 +299,14 @@ The *Stable* package is supported on the following distributions:
 * Debian 12 Bookworm LTS
 * Debian 13 Trixie LTS
 * Debian Testing (future 14 Forky)
-* Debian Unstable (Sid)
+* Fedora 41
 * Fedora 42
 * Fedora 43
-* Fedora Rawhide
 * openSUSE Tumbleweed
-* Ubuntu 22.04 LTS
 * Ubuntu 24.04 LTS
 * Ubuntu 24.10
 * Ubuntu 25.04
+* Ubuntu 26.04 LTS
 
 :strong:`Development Support`
 
@@ -316,12 +315,12 @@ The *Development* package is supported on the following distributions:
 * Debian 13 Trixie LTS
 * Debian Testing (future 14 Forky)
 * Debian Unstable (Sid)
-* Fedora 41
-* Fedora 42
+* Fedora 43
+* Fedora 44
 * Fedora Rawhide
 * openSUSE Tumbleweed
-* Ubuntu 24.10
-* Ubuntu 25.04
+* Ubuntu 25.10
+* Ubuntu 26.04 LTS
 
 :strong:`DEB Packages`
 
