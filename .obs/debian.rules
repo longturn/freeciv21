@@ -10,5 +10,9 @@
 %:
   dh $@
 
+# We don't download fonts as its a pkg dependency.
 override_dh_auto_configure:
   dh_auto_configure -- -DFREECIV_DOWNLOAD_FONTS=OFF
+
+# We don't run tests in development per issue 2869
+override_dh_auto_test:
