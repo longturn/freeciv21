@@ -105,6 +105,8 @@ improvement_replacement(const struct impr_type *pimprove);
 
 void wonder_built(const struct city *pcity,
                   const struct impr_type *pimprove);
+void wonder_unmade(const struct city *pcity,
+                   const struct impr_type *pimprove);
 void wonder_destroyed(const struct city *pcity,
                       const struct impr_type *pimprove);
 

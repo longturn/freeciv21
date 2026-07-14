@@ -679,6 +679,13 @@ void city_add_improvement(struct city *pcity,
                           const struct impr_type *pimprove);
 void city_remove_improvement(struct city *pcity,
                              const struct impr_type *pimprove);
+void city_improvement_built_turn_set(struct city *pcity,
+                                     const struct impr_type *pimprove,
+                                     int turn);
+void city_improvement_unmake(struct city *pcity,
+                             const struct impr_type *pimprove);
+int city_improvement_built_turn(struct city *pcity,
+                                const struct impr_type *pimprove);
 
 // city update functions
 void city_refresh_from_main_map(

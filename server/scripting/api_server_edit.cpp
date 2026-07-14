@@ -663,6 +663,102 @@ void api_edit_remove_city(lua_State *L, City *pcity)
 }
 
 /**
+ * Instantly construct a building in the given city. A notification is
+ * generated for the city owner, and data is sent to clients about the change
+ * immediately. Returns false if the building was already present.
+ */
+bool api_edit_city_building_construct(lua_State *L, City *pcity,
+                                      Building_Type *impr)
+{
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, pcity, 2, City, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, impr, 3, Building_Type, false);
+  if (city_has_building(pcity, impr)) {
+    return false;
+  }
+  do_building_create(pcity, impr);
+  if (signal_building_built(pcity, impr)) {
+    send_city_improvement_changed_data(pcity, impr);
+  }
+  return true;
+}
+
+/**
+ * Instantly construct a building in the given city as if it had been built
+ * on a given turn. Or modifies the turn if it has already been built. No
+ * notifications are generated, and data about the change is sent to clients
+ * immediately. Returns false if the building was already built on the given
+ * turn.
+ */
+bool api_edit_city_building_built_turn_set(lua_State *L, City *pcity,
+                                           Building_Type *impr, int turn)
+{
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, pcity, 2, City, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, impr, 3, Building_Type, false);
+  LUASCRIPT_CHECK(
+      L, turn > 0 && turn <= game.info.turn,
+      "built turn must be between 1 and the current turn (inclusive)",
+      false);
+  if (city_improvement_built_turn(pcity, impr) == turn) {
+    return false;
+  }
+  if (!city_has_building(pcity, impr)) {
+    do_building_create(pcity, impr);
+  }
+  do_building_built_turn_set(pcity, impr, turn);
+  send_city_improvement_changed_data(pcity, impr);
+  return true;
+}
+
+/**
+ * Instantly destroy a building in the given city, including a reason and
+ * optionally a unit responsible for the destruction that will appear in
+ * 'building_lost' lua signal events. This can be any arbitrary string. Great
+ * wonders destroyed in this way will become lost and so are ineligible for
+ * rebuilding. Data about this change is sent to clients immediately, and
+ * notifications are generated. Returns false if this building wasn't present
+ * in the city.
+ */
+bool api_edit_city_building_destroy(lua_State *L, City *pcity,
+                                    Building_Type *impr, const char *reason,
+                                    Unit *destroyer)
+{
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, pcity, 2, City, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, impr, 3, Building_Type, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, reason, 4, string, false);
+  if (!city_has_building(pcity, impr)) {
+    return false;
+  }
+  if (do_building_destroy(pcity, impr, reason, destroyer)) {
+    send_city_improvement_changed_data(pcity, impr);
+  }
+  return true;
+}
+
+/**
+ * Instantly remove a building in the given city as if it had never been
+ * built. Great wonders removed in this way will become buildable again. No
+ * notifications are generated, and the data about this change is sent to
+ * clients immediately. Returns false if the building wasn't present in the
+ * city.
+ */
+bool api_edit_city_building_unmake(lua_State *L, City *pcity,
+                                   Building_Type *impr)
+{
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, pcity, 2, City, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, impr, 3, Building_Type, false);
+  if (!city_has_building(pcity, impr)) {
+    return false;
+  }
+  do_building_unmake(pcity, impr);
+  send_city_improvement_changed_data(pcity, impr);
+  return true;
+}
+
+/**
    Create a new player.
  */
 Player *api_edit_create_player(lua_State *L, const char *username,

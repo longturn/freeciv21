@@ -73,6 +73,15 @@ void api_edit_create_city(lua_State *L, Player *pplayer, Tile *ptile,
 void api_edit_resize_city(lua_State *L, City *pcity, int size,
                           const char *reason);
 void api_edit_remove_city(lua_State *L, City *pcity);
+bool api_edit_city_building_construct(lua_State *L, City *pcity,
+                                      Building_Type *impr);
+bool api_edit_city_building_built_turn_set(lua_State *L, City *pcity,
+                                           Building_Type *impr, int turn);
+bool api_edit_city_building_destroy(lua_State *L, City *pcity,
+                                    Building_Type *impr, const char *reason,
+                                    Unit *destroyer);
+bool api_edit_city_building_unmake(lua_State *L, City *pcity,
+                                   Building_Type *impr);
 Player *api_edit_create_player(lua_State *L, const char *username,
                                Nation_Type *pnation, const char *ai);
 void api_edit_change_gold(lua_State *L, Player *pplayer, int amount);

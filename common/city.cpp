@@ -3281,7 +3281,23 @@ void city_add_improvement(struct city *pcity,
 }
 
 /**
-  Removes an improvement (and its effects) from a city.
+ * Changes the turn on which an improvement has been built in a city. This
+ * can affect its 'Age' in effects. Note: this is a local change only.
+ */
+void city_improvement_built_turn_set(struct city *pcity,
+                                     const struct impr_type *pimprove,
+                                     int turn)
+{
+  log_debug("History rewrite: Improvement %s that was built on turn %d in "
+            "%s was now built on turn %d",
+            improvement_rule_name(pimprove),
+            pcity->built[improvement_index(pimprove)].turn, pcity->name,
+            turn);
+  pcity->built[improvement_index(pimprove)].turn = turn;
+}
+
+/**
+ * Removes an improvement (and its effects) from a city.
  */
 void city_remove_improvement(struct city *pcity,
                              const struct impr_type *pimprove)
@@ -3295,6 +3311,32 @@ void city_remove_improvement(struct city *pcity,
     // Client just read the info from the packets.
     wonder_destroyed(pcity, pimprove);
   }
+}
+
+/**
+ * Removes an improvement (and its effects) from a city, as if it had never
+ * been built.
+ */
+void city_improvement_unmake(struct city *pcity,
+                             const struct impr_type *pimprove)
+{
+  log_debug("History rewrite: Improvement %s was never built in city %s",
+            improvement_rule_name(pimprove), pcity->name);
+  pcity->built[improvement_index(pimprove)].turn = I_NEVER;
+  if (is_server() && is_wonder(pimprove)) {
+    // Client just read the info from the packets.
+    wonder_unmade(pcity, pimprove);
+  }
+}
+
+/**
+ * Gets the turn on which an improvement was built. If it was never built, it
+ * returns I_NEVER. If it was destroyed, it returns I_DESTROYED.
+ */
+int city_improvement_built_turn(struct city *pcity,
+                                const struct impr_type *pimprove)
+{
+  return pcity->built[improvement_index(pimprove)].turn;
 }
 
 /**

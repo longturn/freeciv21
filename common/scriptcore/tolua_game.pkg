@@ -706,6 +706,18 @@ do
     return value_iterator(objs)
   end
 
+  -- Iterate over the values in the iterator, apply a filter, and create a safe
+  -- copy
+  local function safe_iterate_filtered(iterator, filter)
+    local objs = {}
+    for obj in iterator() do
+      if filter(obj) then
+        objs[#objs + 1] = obj
+      end
+    end
+    return value_iterator(objs)
+  end
+
   -- Safe iteration over all units that belong to Player
   function Player:units_iterate()
     return safe_iterate_list(private.Player.unit_list_head(self))
@@ -729,6 +741,30 @@ do
   -- Safe iteration over the units transported by Unit
   function Unit:cargo_iterate()
     return safe_iterate_list(private.Unit.cargo_list_head(self))
+  end
+
+  -- Safe iteration over each Building_Type present in the City
+  function City:buildings_iterate()
+    local function has_building(building)
+      return self:has_building(building)
+    end
+    return safe_iterate_filtered(find.building_types_iterate, has_building)
+  end
+
+  -- Safe iteration over each wonder a Player has
+  function Player:wonders_iterate()
+    local function has_wonder(building)
+      return self:has_wonder(building)
+    end
+    return safe_iterate_filtered(find.building_types_iterate, has_wonder)
+  end
+
+  -- Safe iteration over each Tech_Type a Player has
+  function Player:technologies_iterate()
+    local function knows_tech(tech_type)
+      return self:knows_tech(tech_type)
+    end
+    return safe_iterate_filtered(find.technologies_iterate, knows_tech)
   end
 end
 
@@ -787,9 +823,57 @@ do
     return iterator
   end
 
+  -- Iterate over all players in the game
+  function find.players_iterate()
+    return index_iterate(find.player)
+  end
+
   -- Iterate over all teams in the game
   function find.teams_iterate()
     return index_iterate(find.team)
+  end
+
+  local function find_city(city_id)
+    return find.city(nil, city_id)
+  end
+
+  -- Iterate over all cities in the world regardless of nation
+  function find.cities_iterate()
+    return index_iterate(find_city)
+  end
+
+  local function find_unit(unit_id)
+    return find.unit(nil, unit_id)
+  end
+
+  -- Iterate over all cities in the world regardless of nation
+  function find.units_iterate()
+    return index_iterate(find_unit)
+  end
+
+  -- Iterate over all tiles of the game
+  function find.tiles_iterate()
+    return index_iterate(find.tile)
+  end
+
+  -- Iterate over all government types in the game
+  function find.government_types_iterate()
+    return index_iterate(find.government)
+  end
+
+  -- Iterate over all nation types in the game
+  function find.nation_types_iterate()
+    return index_iterate(find.nation_type)
+  end
+
+  -- Iterate over all action types in the game
+  function find.action_types_iterate()
+    return index_iterate(find.action)
+  end
+
+  -- Iterate over all building types in the game
+  function find.building_types_iterate()
+    return index_iterate(find.building_type)
   end
 
   -- Iterate over all unit types in the game
@@ -802,18 +886,25 @@ do
     return index_iterate(find.unit_class)
   end
 
-  -- Iterate over all players of the game
+  -- Iterate over all technologies in the game
+  function find.technologies_iterate()
+    return index_iterate(find.tech_type)
+  end
+
+  -- Iterate over all terrain types in the game
+  function find.terrain_types_iterate()
+    return index_iterate(find.terrain)
+  end
+
+  -- DEPRECATED: use find.players_iterate instead
   function players_iterate()
     return index_iterate(find.player)
   end
 
-  -- Iterate over all tiles of the game
+  -- DEPRECATED: use find.tiles_iterate instead
   function whole_map_iterate()
     return index_iterate(find.tile)
   end
-
-  -- NOTE: Identical further definitions can be made for
-  -- governments, tech_types, building_types etc
 end
 
 $]

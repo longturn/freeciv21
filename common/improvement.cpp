@@ -787,6 +787,25 @@ void wonder_built(const struct city *pcity, const struct impr_type *pimprove)
 }
 
 /**
+ * Remove a wonder from a city as if it had never been built, allowing it to
+ * be constructed again.
+ */
+void wonder_unmade(const struct city *pcity,
+                   const struct impr_type *pimprove)
+{
+  fc_assert_ret(pcity);
+  fc_assert_ret(is_wonder(pimprove));
+  int windex = improvement_number(pimprove);
+  fc_assert_ret(city_owner(pcity)->wonders[windex]);
+  city_owner(pcity)->wonders[windex] = WONDER_NOT_BUILT;
+  if (is_great_wonder(pimprove)) {
+    fc_assert_ret(game.info.great_wonder_owners[windex]
+                  == player_number(city_owner(pcity)));
+    game.info.great_wonder_owners[windex] = WONDER_NOT_BUILT;
+  }
+}
+
+/**
    Remove a wonder from a city and destroy it if it's a great wonder.  To
    transfer a great wonder, use great_wonder_transfer.
  */

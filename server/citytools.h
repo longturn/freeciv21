@@ -72,10 +72,30 @@ void city_illness_strike(struct city *pcity);
 
 void do_sell_building(struct player *pplayer, struct city *pcity,
                       struct impr_type *pimprove, const char *reason);
+bool signal_building_lost(struct city *pcity,
+                          const struct impr_type *pimprove,
+                          const char *reason, struct unit *destroyer);
 bool building_removed(struct city *pcity, const struct impr_type *pimprove,
                       const char *reason, struct unit *destroyer);
 void building_lost(struct city *pcity, const struct impr_type *pimprove,
                    const char *reason, struct unit *destroyer);
+void send_city_improvement_changed_data(struct city *pcity,
+                                        const struct impr_type *pimprove);
+void wonder_set_build_turn(struct player *pplayer,
+                           const struct impr_type *pimprove, int turn);
+void small_wonder_moved(struct city *pcity,
+                        const struct impr_type *pimprove);
+bool signal_building_built(struct city *pcity,
+                           const struct impr_type *pimprove);
+void do_building_create(struct city *pcity,
+                        const struct impr_type *pimprove);
+void do_building_built_turn_set(struct city *pcity,
+                                const struct impr_type *pimprove, int turn);
+void do_building_unmake(struct city *pcity,
+                        const struct impr_type *pimprove);
+bool do_building_destroy(struct city *pcity,
+                         const struct impr_type *pimprove,
+                         const char *reason, struct unit *destroyer);
 void city_units_upkeep(const struct city *pcity);
 
 void change_build_target(struct player *pplayer, struct city *pcity,

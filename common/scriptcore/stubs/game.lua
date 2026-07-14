@@ -16,7 +16,7 @@
 -- https://longturn.readthedocs.io/en/latest/Contributing/style-guide.html
 -- https://luals.github.io/wiki/definition-files
 -- https://luals.github.io/wiki/annotations/#documenting-types
--- https://taminomara.github.io/sphinx-lua-ls/index.html#autodoc-directives
+-- https://sphinx-lua-ls.readthedocs.io/en/stable/autodoc.html#autodoc-directives
 -- https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#rst-primer
 
 --- Represents a nation in the game controlled by a specific player.
@@ -72,7 +72,7 @@ function Player:shares_research(tech) end
 function Player:research_rule_name() end
 
 --- 
---- @return string name As :lua:obj:`Player:research_rule_name` but translated.
+--- @return string name As :lua:obj:`Player.research_rule_name` but translated.
 function Player:research_name_translation() end
 
 --- 
@@ -85,7 +85,7 @@ function Player:culture() end
 ---    * - Flag
 ---      - Description
 ---    * - "ai"
----      - Same as :lua:obj:`~Player:ai_controlled`.
+---      - Inverse of :lua:obj:`Player.is_human`.
 ---    * - "ScenarioReserved"
 ---      - Not listed on game starting screen.
 ---
@@ -106,14 +106,24 @@ function Player:exists()
 end
 
 --- Safe iteration over each :lua:obj:`Unit` that belongs to a :lua:obj:`Player`.
-function Player:units_iterate()
-  return safe_iterate_list(private.Player.unit_list_head(self))
-end
+function Player:units_iterate() end
 
 --- Safe iteration over each :lua:obj:`City` that belongs to a :lua:obj:`Player`.
-function Player:cities_iterate()
-  return safe_iterate_list(private.Player.city_list_head(self))
-end
+function Player:cities_iterate() end
+
+--- Safe iteration over each wonder :lua:obj:`Building_Type` that belongs to a
+--- :lua:obj:`Player` using a snapshot of owned wonders at the start of
+--- iteration.
+---
+--- Version added: 3.2
+function Player:wonders_iterate() end
+
+--- Safe iteration over each :lua:obj:`Tech_Type` that belongs to a
+--- :lua:obj:`Player` using a snapshot of known technologies at the start of
+--- iteration.
+---
+--- Version added: 3.2
+function Player:technologies_iterate() end
 
 --- Represents a Team of players that are locked together as allies.
 ---
@@ -140,6 +150,12 @@ City = {}
 --- @param building Building_Type The building type to check.
 --- @return boolean present True if the given building type is in this city.
 function City:has_building(building) end
+
+--- Safe iteration over each :lua:obj:`Building_Type` in the city using a
+--- snapshot of buildings present at the start of the iteration.
+---
+--- Version added: 3.2
+function City:buildings_iterate() end
 
 --- 
 --- @return int sq-radius The square radius of the city working area.
@@ -227,7 +243,7 @@ function Unit:facing() end
 
 --- .. attention::
 ---    Warning: If unit is going to be removed, you must use 
----    :lua:obj:`Unit:tile_link_text` instead.
+---    :lua:obj:`Unit.tile_link_text` instead.
 ---
 --- @return string link-text Link string fragment to add to messages sent to client.
 function Unit:link_text() end
@@ -317,18 +333,18 @@ function Tile:has_extra(name) end
 
 --- 
 --- @param name boolean The ruleset name of any base-type extra.
---- @return boolean True, if the base is present on this tile.
+--- @return boolean present True, if the base is present on this tile.
 function Tile:has_base(name) end
 
 --- 
 --- @param name boolean The ruleset name of any road-type extra.
---- @return boolean True, if the road-type is present on this tile.
+--- @return boolean present True, if the road-type is present on this tile.
 function Tile:has_road(name) end
 
 --- The primary tile resource persists even if the terrain is changed to an
 --- incompatible type, and can be recovered if the terrain is changed back.
 --- This will report the name of the hidden resource in this case. Whereas
---- :lua:obj:`~Tile:has_extra` will only report whether the resource is
+--- :lua:obj:`Tile.has_extra` will only report whether the resource is
 --- currently visible.
 --- @return string name The ruleset name of the primary tile resource, or nil.
 function Tile:primary_resource_name() end
@@ -636,6 +652,11 @@ find = {}
 --- @return Player player The player with the given ID or name if they exist, or nil.
 function find.player(player_id_or_name) end
 
+--- Safe iteration over each :lua:obj:`Player` in the game.
+---
+--- Version added: 3.2
+function find.players_iterate() end
+
 --- 
 --- @param team_id_or_name int|string The unique ID or name of the player to search for.
 --- @return Team team The team with the given ID or name if they exist, or nil.
@@ -650,11 +671,25 @@ function find.teams_iterate() end
 --- @return City city The city if it exists and belongs to player, or nil
 function find.city(player, city_id) end
 
+--- Safe iteration over each :lua:obj:`City` in the game. See 
+--- :lua:obj:`Player.cities_iterate` for iterating over a specific player's
+--- cities.
+---
+--- Version added: 3.2
+function find.cities_iterate() end
+
 --- 
 --- @param player Player The player who owns the unit, or nil for any player
 --- @param unit_id int The unique ID for the unit to search for
 --- @return Unit unit The unit if it exists and belongs to player, or nil
 function find.unit(player, unit_id) end
+
+--- Safe iteration over each :lua:obj:`Unit` in the game. See
+--- :lua:obj:`Player.units_iterate` for iterating over a specific player's
+--- units.
+---
+--- Version added: 3.2
+function find.units_iterate() end
 
 --- Looks for an existing unit that can transport unit_type at tile. Intended
 --- to be used with create_unit_full, to spawn it directly into the hold of the
@@ -677,6 +712,11 @@ function find.tile(nat_x, nat_y) end
 --- @return Tile tile The found tile.
 function find.tile(tindex) end
 
+--- Safe iteration over each :lua:obj:`Tile` in the world.
+---
+--- Version added: 3.2
+function find.tiles_iterate() end
+
 --- Finds a government by its name.
 --- @param name string The ruleset name of the government.
 --- @return Government government The found government.
@@ -687,6 +727,11 @@ function find.government(name) end
 --- @return Government government The found government.
 function find.government(government_id) end
 
+--- Safe iteration over each :lua:obj:`Government` type in the game.
+---
+--- Version added: 3.2
+function find.government_types_iterate() end
+
 --- Finds a nation type by its name.
 --- @param name string The ruleset name of the nation type.
 --- @return Nation_Type nation The found nation type.
@@ -696,6 +741,11 @@ function find.nation_type(name) end
 --- @param nation_type_id int The ID of the nation type.
 --- @return Nation_Type nation The found nation type.
 function find.nation_type(nation_type_id) end
+
+--- Safe iteration over each :lua:obj:`Nation_Type` in the game.
+---
+--- Version added: 3.2
+function find.nation_types_iterate() end
 
 --- Finds an action by its rule name.
 --- @param name string The ruleset name of the action.
@@ -711,6 +761,11 @@ function find.action(name) end
 --- @return Action action The found action.
 function find.action(action_type_id) end
 
+--- Safe iteration over each :lua:obj:`Action` in the game.
+---
+--- Version added: 3.2
+function find.action_types_iterate() end
+
 --- Finds a building type by its name.
 --- @param name string The ruleset name of the building type.
 --- @return Building_Type building The found building type.
@@ -720,6 +775,11 @@ function find.building_type(name) end
 --- @param building_type_id int The ID of the building type.
 --- @return Building_Type building The found building type.
 function find.building_type(building_type_id) end
+
+--- Safe iteration over each :lua:obj:`Building_Type` in the game.
+---
+--- Version added: 3.2
+function find.building_types_iterate() end
 
 --- Finds a unit type by its name.
 --- @param name string The ruleset name of the unit type.
@@ -764,6 +824,11 @@ function find.tech_type(name) end
 --- @return Tech_Type tech The found tech type.
 function find.tech_type(tech_type_id) end
 
+--- Safe iteration over each :lua:obj:`Tech_Type` in the game.
+---
+--- Version added: 3.2
+function find.technologies_iterate() end
+
 --- Finds a terrain by its name.
 --- @param name string The ruleset name of the terrain.
 --- @return Terrain terrain The found terrain.
@@ -774,10 +839,15 @@ function find.terrain(name) end
 --- @return Terrain terrain The found terrain.
 function find.terrain(terrain_id) end
 
+--- Safe iteration over each :lua:obj:`Terrain_Type` in the game.
+---
+--- Version added: 3.2
+function find.terrain_types_iterate() end
+
 
 --- Calculate the current value of a 
 --- :ref:`ruleset effect <modding-rulesets-effects>`. Effect names are the same
---- as in rulesets, e.g., "``Upkeep_Free``". 
+--- as in rulesets, e.g., ":ref:`effect-upkeep-free`". 
 ---
 --- !doctype table
 --- @class effects
@@ -827,11 +897,15 @@ function direction.opposite(direction) end
 
 
 --- Iterate over each :lua:obj:`Player` in the game.
+---
+--- Deprecated: 3.2 - Use :lua:obj:`find.players_iterate` instead.
 function players_iterate()
   return index_iterate(find.player)
 end
 
 --- Iterate over each :lua:obj:`Tile` on the map.
+---
+--- Deprecated: 3.2 - Use :lua:obj:`find.tiles_iterate` instead.
 function whole_map_iterate()
   return index_iterate(find.tile)
 end

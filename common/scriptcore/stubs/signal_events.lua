@@ -16,7 +16,7 @@
 -- https://longturn.readthedocs.io/en/latest/Contributing/style-guide.html
 -- https://luals.github.io/wiki/definition-files
 -- https://luals.github.io/wiki/annotations/#documenting-types
--- https://taminomara.github.io/sphinx-lua-ls/index.html#autodoc-directives
+-- https://sphinx-lua-ls.readthedocs.io/en/stable/autodoc.html#autodoc-directives
 -- https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#rst-primer
 
 
@@ -27,8 +27,8 @@
 ---    signal.connect(signal_name, callback_name)
 ---
 --- Currently, signals are only sent to ruleset scripts running on the server.
---- The set of signals is defined in :file:`server/scripting/script_server.cpp`
---- (search for "``script_server_signals_create``").
+--- The set of signals is defined in
+--- `server/scripting/script_server.cpp <https://github.com/longturn/freeciv21/blob/a6ce76be735fea0a61b39495631f86e12fdafd96/server/scripting/script_server.cpp#L391>`_.
 ---
 --- If false is returned from a signal handler function, the signal will not
 --- propagate to any subsequent signal handlers.
