@@ -16,7 +16,7 @@
 -- https://longturn.readthedocs.io/en/latest/Contributing/style-guide.html
 -- https://luals.github.io/wiki/definition-files
 -- https://luals.github.io/wiki/annotations/#documenting-types
--- https://taminomara.github.io/sphinx-lua-ls/index.html#autodoc-directives
+-- https://sphinx-lua-ls.readthedocs.io/en/stable/autodoc.html#autodoc-directives
 -- https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#rst-primer
 
 --- The server module is for interacting with the server, and getting
@@ -37,7 +37,7 @@ function server.save(filename) end
 --- @return boolean started True, if the game has been started.
 function server.started() end
 
---- Same as :lua:obj:`Player:civilization_score`
+--- Same as :lua:obj:`Player.civilization_score`
 --- @param player Player
 --- @return int score
 function server.civilization_score(player) end
@@ -250,7 +250,7 @@ function edit.change_terrain(tile, terrain) end
 function edit.create_city(player, tile, name) end
 
 --- Resizes a city. The reason is a user-defined value that will show up in
---- :lua:obj:`~Event.city_size_change` signal events.
+--- :lua:obj:`~Events.city_size_change` signal events.
 --- @param city City The city to resize.
 --- @param size int The new size of the city.
 --- @param reason string The reason for resizing the city.
@@ -259,6 +259,57 @@ function edit.resize_city(city, size, reason) end
 --- Removes a city.
 --- @param city City The city to be removed.
 function edit.remove_city(city) end
+
+--- Instantly construct a building in the given city. A notification is
+--- generated for the city owner, and data is sent to clients about the change
+--- immediately.
+---
+--- Version added: 3.2
+---
+--- @param city City The city to construct the building in
+--- @param building_type Building_Type The building to construct
+--- @return bool success False, if the building was already present
+function edit.city_building_construct(city, building_type) end
+
+--- Instantly construct a building in the given city as if it had been built on
+--- a given turn. Or modifies the turn if it has already been built. No
+--- notifications are generated, and data about the change is sent to clients
+--- immediately.
+---
+--- Version added: 3.2
+---
+--- @param city City The city of the building being modified
+--- @param building_type Building_Type The building to edit the built date of
+--- @param turn int The turn the building should be considered to have been built on
+--- @return bool success False, if the building was already built on that turn
+function edit.city_building_built_turn_set(city, building_type, turn) end
+
+--- Instantly destroy a building in the given city. Great wonders destroyed in
+--- this way will become lost and so are ineligible for rebuilding. Data about
+--- this change is sent to clients immediately, a
+--- :lua:obj:`~Events.building_lost` signal is propagated, and notifications are
+--- generated.
+---
+--- Version added: 3.2
+---
+--- @param city City The city of the building being destroyed
+--- @param building_type Building_Type The building to destroy
+--- @param reason string A reason to provide to :lua:obj:`~Events.building_lost` for the destruction. Can be any arbitrary string.
+--- @param destroyer Unit A unit credited with the destruction, if any, or nil
+--- @return bool success False, if that building was not present to destroy
+function edit.city_building_destroy(city, building_type, reason, destroyer) end
+
+--- Instantly remove a building in the given city as if it had never been built.
+--- Great wonders removed in this way will become buildable again. No
+--- notifications are generated, no :lua:obj:`~Events.building_lost` signal is
+--- propagated, and the data about this change is sent to clients immediately.
+---
+--- Version added: 3.2
+---
+--- @param city City The city of the building being deleted
+--- @param building_type Building_Type The building to delete
+--- @return bool success False, if the building wasn't present in the city.
+function edit.city_building_unmake(city, building_type) end
 
 --- Creates an owned extra on a tile. This will claim ownership of any other
 --- ownable extras on the tile too.
@@ -269,14 +320,14 @@ function edit.create_owned_extra(tile, name, player) end
 
 --- Creates an extra on a tile. Note that this does not affect the primary
 --- resource of a tile. If you want to change the primary resource, use 
---- :lua:obj:`edit.set_primary_resource` instead.
+--- :lua:obj:`edit.tile_primary_resource_set` instead.
 --- @param tile Tile The tile where the extra is created.
 --- @param name string The name of the extra.
 function edit.create_extra(tile, name) end
 
 --- Removes an extra from a tile. Note that this does not affect the primary
 --- resource of a tile. If you want to change the primary resource, use 
---- :lua:obj:`edit.set_primary_resource` instead.
+--- :lua:obj:`edit.tile_primary_resource_set` instead.
 --- @param tile Tile The tile from which the extra is removed.
 --- @param name string The name of the extra to remove.
 function edit.remove_extra(tile, name) end
@@ -284,7 +335,7 @@ function edit.remove_extra(tile, name) end
 --- Changes the primary resource for a tile. The primary resource persists even
 --- if the terrain changes to an incompatible type, and can be recovered if the
 --- terrain is changed to a compatible type again. Unlike resources created by
---- :lua:obj:`~edit.create_extra` which disappear forever.
+--- :lua:obj:`edit.create_extra` which disappear forever.
 --- @param tile Tile The tile to set the primary resource for.
 --- @param name string The name of the resource, or nil to remove.
 function edit.tile_primary_resource_set(tile, name) end
@@ -572,6 +623,53 @@ function City:add_history(amount)
   edit.add_city_history(self, amount)
 end
 
+--- Instantly construct a building in the given city. A notification is
+--- generated for the city owner, and data is sent to clients about the change
+--- immediately.
+---
+--- Version added: 3.2
+---
+--- @param building_type Building_Type The building to construct
+--- @return bool success False, if the building was already present
+function City:building_construct(building_type) end
+
+--- Instantly construct a building in the given city as if it had been built on
+--- a given turn. Or modifies the turn if it has already been built. No
+--- notifications are generated, and data about the change is sent to clients
+--- immediately.
+---
+--- Version added: 3.2
+---
+--- @param building_type Building_Type The building to edit the built date of
+--- @param turn int The turn the building should be considered to have been built on
+--- @return bool success False, if the building was already built on that turn
+function City:building_built_turn_set(building_type, turn) end
+
+--- Instantly destroy a building in the given city. Great wonders destroyed in
+--- this way will become lost and so are ineligible for rebuilding. Data about
+--- this change is sent to clients immediately, a
+--- :lua:obj:`~Events.building_lost` signal is propagated, and notifications are
+--- generated.
+---
+--- Version added: 3.2
+---
+--- @param building_type Building_Type The building to destroy
+--- @param reason string A reason to provide to :lua:obj:`~Events.building_lost` for the destruction. Can be any arbitrary string.
+--- @param destroyer Unit A unit credited with the destruction, if any, or nil
+--- @return bool success False, if that building was not present to destroy
+function City:building_destroy(building_type, reason, destroyer) end
+
+--- Instantly remove a building in the given city as if it had never been built.
+--- Great wonders removed in this way will become buildable again. No
+--- notifications are generated, no :lua:obj:`~Events.building_lost` signal is
+--- propagated, and the data about this change is sent to clients immediately.
+---
+--- Version added: 3.2
+---
+--- @param building_type Building_Type The building to delete
+--- @return bool success False, if the building wasn't present in the city.
+function City:building_unmake(building_type) end
+
 --- 
 --- @class Unit
 Unit = {}
@@ -761,7 +859,7 @@ function Unit:veteran_level_set(veteran) end
 
 --- .. note::
 ---    This will be capped between zero and 
----    :lua:obj:`Unit_Type:max_veteran_level`.
+---    :lua:obj:`Unit_Type.max_veteran_level`.
 ---
 --- .. note::
 ---    This does not automatically :lua:obj:`notify` the :lua:obj:`Player`

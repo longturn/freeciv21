@@ -16,7 +16,7 @@
 -- https://longturn.readthedocs.io/en/latest/Contributing/style-guide.html
 -- https://luals.github.io/wiki/definition-files
 -- https://luals.github.io/wiki/annotations/#documenting-types
--- https://taminomara.github.io/sphinx-lua-ls/index.html#autodoc-directives
+-- https://sphinx-lua-ls.readthedocs.io/en/stable/autodoc.html#autodoc-directives
 -- https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#rst-primer
 
 --- The E module contains a set of event types, for example :lua:obj:`E.SCRIPT`.

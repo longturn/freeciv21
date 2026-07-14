@@ -2826,19 +2826,32 @@ void do_sell_building(struct player *pplayer, struct city *pcity,
 }
 
 /**
+ * Emits a 'building_lost' signal, and returns true if the city survived.
+ */
+bool signal_building_lost(struct city *pcity,
+                          const struct impr_type *pimprove,
+                          const char *reason, struct unit *destroyer)
+{
+  fc_assert_ret_val(pcity, true);
+  fc_assert_ret_val(pimprove, true);
+  fc_assert_ret_val(reason, true);
+  int city_id = pcity->id;
+  script_server_signal_emit("building_lost", pcity, pimprove, reason,
+                            destroyer);
+  return city_exist(city_id);
+}
+
+/**
    Remove building from the city. Emits lua signal.
  */
 bool building_removed(struct city *pcity, const struct impr_type *pimprove,
                       const char *reason, struct unit *destroyer)
 {
-  int backup = pcity->id;
-
+  fc_assert_ret_val(pcity, true);
+  fc_assert_ret_val(pimprove, true);
+  fc_assert_ret_val(reason, true);
   city_remove_improvement(pcity, pimprove);
-
-  script_server_signal_emit("building_lost", pcity, pimprove, reason,
-                            destroyer);
-
-  return city_exist(backup);
+  return signal_building_lost(pcity, pimprove, reason, destroyer);
 }
 
 /**
@@ -2872,6 +2885,150 @@ void building_lost(struct city *pcity, const struct impr_type *pimprove,
      * range increases or decreases. */
     city_refresh_vision(pcity);
   }
+}
+
+/**
+ * Called when a city's improvement has changed. The city is updated, with
+ * workers being rearranged if needed, the city's vision radius may be
+ * refreshed, and data about the city and wonder statuses are sent to
+ * clients.
+ */
+void send_city_improvement_changed_data(struct city *pcity,
+                                        const struct impr_type *pimprove)
+{
+  fc_assert_ret(pcity);
+  if (city_refresh(pcity)) {
+    auto_arrange_workers(pcity);
+  }
+  city_refresh_vision(pcity);
+  send_city_info(nullptr, pcity);
+  if (is_wonder(pimprove)) {
+    if (is_great_wonder(pimprove)) {
+      send_game_info(nullptr);
+    }
+    send_player_info_c(city_owner(pcity), nullptr);
+  }
+}
+
+/**
+ * Record the build turn of a wonder. Used in city processing to figure
+ * out which wonders are built on the same turn and not yet effective.
+ */
+void wonder_set_build_turn(struct player *pplayer,
+                           const struct impr_type *pimprove, int turn)
+{
+  int windex = improvement_number(pimprove);
+  if (!is_wonder(pimprove)) {
+    return;
+  }
+  pplayer->wonder_build_turn[windex] = turn;
+}
+
+/**
+ * Called when a national wonder is built to ensure that it is unique within
+ * the nation by removing it if it already exists in a previous location.
+ */
+void small_wonder_moved(struct city *pcity, const struct impr_type *pimprove)
+{
+  fc_assert_ret(pcity);
+  fc_assert_ret(pimprove);
+  if (!is_small_wonder(pimprove)) {
+    return;
+  }
+  city_list_iterate(city_owner(pcity)->cities, wcity)
+  {
+    if (pcity != wcity && city_has_building(wcity, pimprove)) {
+      city_remove_improvement(wcity, pimprove);
+      send_city_improvement_changed_data(wcity, pimprove);
+      break;
+    }
+  }
+  city_list_iterate_end;
+}
+
+/**
+ * Emits a 'building_built' signal, and returns true if the city still
+ * exists. Should be called when a building is completed.
+ */
+bool signal_building_built(struct city *pcity,
+                           const struct impr_type *pimprove)
+{
+  fc_assert_ret_val(pcity, true);
+  fc_assert_ret_val(pimprove, true);
+  int city_id = pcity->id;
+  script_server_signal_emit("building_built", pimprove, pcity);
+  return city_exist(city_id);
+}
+
+/**
+ * Creates a building if it doesn't already exist in the given city.
+ */
+void do_building_create(struct city *pcity, const struct impr_type *pimprove)
+{
+  fc_assert_ret(pcity);
+  fc_assert_ret(pimprove);
+  fc_assert_ret(!is_special_improvement(pimprove));
+  if (city_has_building(pcity, pimprove)) {
+    return;
+  }
+  small_wonder_moved(pcity, pimprove);
+  city_add_improvement(pcity, pimprove);
+}
+
+/**
+ * Sets the turn a building was created on to the given turn. This can affect
+ * the 'Age' in requirements.
+ */
+void do_building_built_turn_set(struct city *pcity,
+                                const struct impr_type *pimprove, int turn)
+{
+  fc_assert_ret(pcity);
+  fc_assert_ret(pimprove);
+  fc_assert_ret(!is_special_improvement(pimprove));
+  fc_assert_ret(turn >= 0);
+  fc_assert_ret(turn <= game.info.turn);
+  fc_assert_ret(city_has_building(pcity, pimprove));
+  wonder_set_build_turn(city_owner(pcity), pimprove, turn);
+  city_improvement_built_turn_set(pcity, pimprove, turn);
+}
+
+/**
+ * Deletes a building from a city as if it had never been built. Great
+ * wonders removed this way can be built again. A removed palace can cause a
+ * reset of spaceship progress.
+ */
+void do_building_unmake(struct city *pcity, const struct impr_type *pimprove)
+{
+  fc_assert_ret(pcity);
+  fc_assert_ret(pimprove);
+  fc_assert_ret(city_has_building(pcity, pimprove));
+  struct player *owner = city_owner(pcity);
+  bool was_capital = is_capital(pcity);
+  city_improvement_unmake(pcity, pimprove);
+  if (was_capital && !is_capital(pcity)
+      && (owner->spaceship.state == SSHIP_STARTED
+          || owner->spaceship.state == SSHIP_LAUNCHED)) {
+    spaceship_lost(owner);
+  }
+}
+
+/**
+ * Destroy a building in a city, emit a 'building_lost' lua signal event with
+ * the given reason and optional destroyer unit, and update the city. Does
+ * not send a destruction notification or update clients. Returns true if the
+ * city still exists afterwards.
+ */
+bool do_building_destroy(struct city *pcity,
+                         const struct impr_type *pimprove,
+                         const char *reason, struct unit *destroyer)
+{
+  fc_assert_ret_val(pcity, true);
+  fc_assert_ret_val(pimprove, true);
+  fc_assert_ret_val(city_has_building(pcity, pimprove), true);
+  fc_assert_ret_val(reason, true);
+  int city_id = pcity->id;
+  building_lost(pcity, pimprove, reason, destroyer);
+  return city_exist(city_id);
 }
 
 /**
