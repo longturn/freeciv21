@@ -679,12 +679,12 @@ void city_add_improvement(struct city *pcity,
                           const struct impr_type *pimprove);
 void city_remove_improvement(struct city *pcity,
                              const struct impr_type *pimprove);
-void city_improvement_built_turn_set(struct city *pcity,
-                                     const struct impr_type *pimprove,
-                                     int turn);
+void city_improvement_built_turn_override(struct city *pcity,
+                                          const struct impr_type *pimprove,
+                                          int turn);
 void city_improvement_unmake(struct city *pcity,
                              const struct impr_type *pimprove);
-int city_improvement_built_turn(struct city *pcity,
+int city_improvement_built_turn(const struct city *pcity,
                                 const struct impr_type *pimprove);
 
 // city update functions
@@ -735,7 +735,7 @@ bool city_exist(int id);
 #define city_built_iterate(_pcity, _p)                                      \
   improvement_iterate(_p)                                                   \
   {                                                                         \
-    if ((_pcity)->built[improvement_index(_p)].turn <= I_NEVER) {           \
+    if (city_improvement_built_turn(_pcity, _p) <= I_NEVER) {               \
       continue;                                                             \
     }
 

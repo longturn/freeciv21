@@ -787,8 +787,8 @@ void wonder_built(const struct city *pcity, const struct impr_type *pimprove)
 }
 
 /**
- * Remove a wonder from a city as if it had never been built, allowing it to
- * be constructed again.
+ * Called when a wonder is deleted from a city to ensure it is also deleted
+ * from the player and game info so that it can be constructed again.
  */
 void wonder_unmade(const struct city *pcity,
                    const struct impr_type *pimprove)
@@ -806,8 +806,9 @@ void wonder_unmade(const struct city *pcity,
 }
 
 /**
-   Remove a wonder from a city and destroy it if it's a great wonder.  To
-   transfer a great wonder, use great_wonder_transfer.
+ * Called when a wonder is destroyed to ensure it is marked as lost for the
+ * player and marked as destroyed in game info so that it cannot be built
+ * again.
  */
 void wonder_destroyed(const struct city *pcity,
                       const struct impr_type *pimprove)

@@ -3284,9 +3284,9 @@ void city_add_improvement(struct city *pcity,
  * Changes the turn on which an improvement has been built in a city. This
  * can affect its 'Age' in effects. Note: this is a local change only.
  */
-void city_improvement_built_turn_set(struct city *pcity,
-                                     const struct impr_type *pimprove,
-                                     int turn)
+void city_improvement_built_turn_override(struct city *pcity,
+                                          const struct impr_type *pimprove,
+                                          int turn)
 {
   log_debug("History rewrite: Improvement %s that was built on turn %d in "
             "%s was now built on turn %d",
@@ -3333,7 +3333,7 @@ void city_improvement_unmake(struct city *pcity,
  * Gets the turn on which an improvement was built. If it was never built, it
  * returns I_NEVER. If it was destroyed, it returns I_DESTROYED.
  */
-int city_improvement_built_turn(struct city *pcity,
+int city_improvement_built_turn(const struct city *pcity,
                                 const struct impr_type *pimprove)
 {
   return pcity->built[improvement_index(pimprove)].turn;

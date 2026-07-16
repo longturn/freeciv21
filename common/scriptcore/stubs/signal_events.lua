@@ -28,7 +28,7 @@
 ---
 --- Currently, signals are only sent to ruleset scripts running on the server.
 --- The set of signals is defined in
---- `server/scripting/script_server.cpp <https://github.com/longturn/freeciv21/blob/a6ce76be735fea0a61b39495631f86e12fdafd96/server/scripting/script_server.cpp#L391>`_.
+--- `server/scripting/script_server.cpp <https://github.com/search?q=repo%3Alongturn%2Ffreeciv21+path%3Aserver%2Fscripting%2Fscript_server.cpp+%22luascript_signal_create%22&type=code>`_.
 ---
 --- If false is returned from a signal handler function, the signal will not
 --- propagate to any subsequent signal handlers.

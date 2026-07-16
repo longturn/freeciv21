@@ -685,10 +685,10 @@ bool api_edit_city_building_construct(lua_State *L, City *pcity,
 
 /**
  * Instantly construct a building in the given city as if it had been built
- * on a given turn. Or modifies the turn if it has already been built. No
- * notifications are generated, and data about the change is sent to clients
- * immediately. Returns false if the building was already built on the given
- * turn.
+ * on a given turn as far as the 'Age' requirement is concerned. Or modifies
+ * the turn if it has already been built. No notifications are generated, and
+ * data about the change is sent to clients immediately. Returns false if the
+ * building was already built on the given turn.
  */
 bool api_edit_city_building_built_turn_set(lua_State *L, City *pcity,
                                            Building_Type *impr, int turn)

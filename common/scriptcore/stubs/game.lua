@@ -654,6 +654,11 @@ function find.player(player_id_or_name) end
 
 --- Safe iteration over each :lua:obj:`Player` in the game.
 ---
+--- .. note::
+---    If there is a chance that a :lua:obj:`Player` is deleted during
+---    iteration, it is a good idea to use :lua:obj:`~Nonexistent.exists` to
+---    check it is still present before attempting to use it.
+---
 --- Version added: 3.2
 function find.players_iterate() end
 
@@ -675,6 +680,11 @@ function find.city(player, city_id) end
 --- :lua:obj:`Player.cities_iterate` for iterating over a specific player's
 --- cities.
 ---
+--- .. note::
+---    If there is a chance that a :lua:obj:`City` is destroyed during
+---    iteration, it is a good idea to use :lua:obj:`~Nonexistent.exists` to
+---    check it is still present before attempting to use it.
+---
 --- Version added: 3.2
 function find.cities_iterate() end
 
@@ -687,6 +697,11 @@ function find.unit(player, unit_id) end
 --- Safe iteration over each :lua:obj:`Unit` in the game. See
 --- :lua:obj:`Player.units_iterate` for iterating over a specific player's
 --- units.
+---
+--- .. note::
+---    If there is a chance that a :lua:obj:`Unit` dies during
+---    iteration, it is a good idea to use :lua:obj:`~Nonexistent.exists` to
+---    check it is still present before attempting to use it.
 ---
 --- Version added: 3.2
 function find.units_iterate() end

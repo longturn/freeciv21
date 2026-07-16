@@ -2989,7 +2989,7 @@ void do_building_built_turn_set(struct city *pcity,
   fc_assert_ret(turn <= game.info.turn);
   fc_assert_ret(city_has_building(pcity, pimprove));
   wonder_set_build_turn(city_owner(pcity), pimprove, turn);
-  city_improvement_built_turn_set(pcity, pimprove, turn);
+  city_improvement_built_turn_override(pcity, pimprove, turn);
 }
 
 /**
