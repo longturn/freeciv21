@@ -626,12 +626,12 @@ static bool update_improvement_from_packet(struct city *pcity,
                                            bool have_impr)
 {
   if (have_impr) {
-    if (pcity->built[improvement_index(pimprove)].turn <= I_NEVER) {
+    if (city_improvement_built_turn(pcity, pimprove) <= I_NEVER) {
       city_add_improvement(pcity, pimprove);
       return true;
     }
   } else {
-    if (pcity->built[improvement_index(pimprove)].turn > I_NEVER) {
+    if (city_improvement_built_turn(pcity, pimprove) > I_NEVER) {
       city_remove_improvement(pcity, pimprove);
       return true;
     }
@@ -900,7 +900,7 @@ void handle_city_info(const struct packet_city_info *packet)
     bool have = BV_ISSET(packet->improvements, improvement_index(pimprove));
 
     if (have && !city_is_new
-        && pcity->built[improvement_index(pimprove)].turn <= I_NEVER) {
+        && city_improvement_built_turn(pcity, pimprove) <= I_NEVER) {
       audio_play_sound(pimprove->soundtag, pimprove->soundtag_alt);
     }
     need_economy_dialog_update |=

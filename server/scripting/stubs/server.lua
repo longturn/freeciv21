@@ -264,6 +264,10 @@ function edit.remove_city(city) end
 --- generated for the city owner, and data is sent to clients about the change
 --- immediately.
 ---
+--- .. note::
+---    This does not check building requirements so you can use it to place
+---    improvements in cities where they would normally be invalid.
+---
 --- Version added: 3.2
 ---
 --- @param city City The city to construct the building in
@@ -271,10 +275,14 @@ function edit.remove_city(city) end
 --- @return bool success False, if the building was already present
 function edit.city_building_construct(city, building_type) end
 
---- Instantly construct a building in the given city as if it had been built on
---- a given turn. Or modifies the turn if it has already been built. No
---- notifications are generated, and data about the change is sent to clients
---- immediately.
+--- Instantly construct a building in the given city as if it had been built
+--- on a given turn as far as the 'Age' requirement is concerned. Or modifies
+--- the turn if it has already been built. No notifications are generated, and
+--- data about the change is sent to clients immediately.
+---
+--- .. note::
+---    This does not check building requirements so you can use it to place
+---    improvements in cities where they would normally be invalid.
 ---
 --- Version added: 3.2
 ---
