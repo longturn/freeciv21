@@ -204,5 +204,5 @@ void test_dio::string()
   QCOMPARE(din.size(), 0);
 }
 
-QTEST_MAIN(test_dio)
+QTEST_GUILESS_MAIN(test_dio)
 #include "dio.moc"
