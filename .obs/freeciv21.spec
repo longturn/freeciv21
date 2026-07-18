@@ -104,6 +104,7 @@ Translation files for freeciv21.
 %cmake_install
 %find_lang %{name}-core
 %find_lang %{name}-nations
+%find_lang %{name}-ruledit
 %fdupes %{buildroot}/%{_datadir}/
 
 %files
@@ -125,6 +126,6 @@ Translation files for freeciv21.
 %{_datadir}/metainfo/net.longturn.%{name}.ruledit.metainfo.xml
 %{_mandir}/man6/%{name}-*
 
-%files lang -f %{name}-core.lang -f %{name}-nations.lang
+%files lang -f %{name}-core.lang -f %{name}-nations.lang -f %{name}-ruledit.lang
 
 %changelog
