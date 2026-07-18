@@ -95,8 +95,7 @@ Translation files for freeciv21.
 %setup -q -n %{name}-%{version}
 
 %build
-%cmake -DCMAKE_BUILD_TYPE=Debug \
-       -DFREECIV_DOWNLOAD_FONTS=OFF \
+%cmake -DFREECIV_DOWNLOAD_FONTS=OFF \
        -DCMAKE_INSTALL_DOCDIR=%{_docdir}/%{name}
 %cmake_build
 
