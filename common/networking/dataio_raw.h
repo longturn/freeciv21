@@ -95,7 +95,7 @@ void dio_put(QByteArray &dout, T value, T = 0)
 template <class T, class = std::enable_if_t<!std::is_same_v<T, int>>>
 bool dio_get(QByteArrayView &din, int &dest, T = 0)
 {
-  T tmp;
+  T tmp = 0;
   auto ret = dio_get(din, tmp);
   dest = tmp;
   return ret;
@@ -117,7 +117,7 @@ void dio_put(QByteArray &dout, int value, T = 0)
  */
 inline bool dio_get(QByteArrayView &din, bool &dest)
 {
-  int tmp;
+  int tmp = 0;
   auto ret = dio_get<std::uint8_t>(din, tmp);
   dest = (tmp != 0);
   return ret;
@@ -139,7 +139,7 @@ inline void dio_put(QByteArray &dout, bool value)
 template <class T>
 bool dio_get(QByteArrayView &din, float &dest, int precision, T = 0)
 {
-  int ival;
+  int ival = 0;
   auto ret = dio_get<T>(din, ival);
   dest = static_cast<float>(ival) / precision;
   return ret;
@@ -165,7 +165,7 @@ template <class Enum, class T,
           class = std::enable_if_t<std::is_enum_v<Enum>>>
 bool dio_get(QByteArrayView &din, Enum &dest, T = 0)
 {
-  int ival;
+  int ival = 0;
   auto ret = dio_get<T>(din, ival);
   dest = static_cast<Enum>(ival);
   return ret;
@@ -241,7 +241,7 @@ bool dio_get(QByteArrayView &din, std::array<T, N> &dest, array_diff,
   // more than 256 values in an array-diff.
   for (int count = 0; count < 256; ++count) {
     // Get the index in the array.
-    std::uint8_t index;
+    std::uint8_t index = 0xff;
     fc_assert_ret_val_msg(dio_get(din, index), false,
                           "array-diff: incomplete data");
 
