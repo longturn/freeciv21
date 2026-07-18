@@ -4979,10 +4979,10 @@ int get_unit_vision_at(struct unit *punit, const struct tile *ptile,
                          EFT_UNIT_VISION_RADIUS_SQ, vlayer);
   switch (vlayer) {
   case V_MAIN:
-    return MAX(0, base) + MAX(0, bonus);
+    return MAX(0, MAX(0, base) + bonus);
   case V_INVIS:
   case V_SUBSURFACE:
-    return CLIP(0, base, 2) + MAX(0, bonus);
+    return MAX(0, CLIP(0, base, 2) + bonus);
   case V_COUNT:
     break;
   }
