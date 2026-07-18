@@ -20,6 +20,8 @@ BuildRequires:  readline-devel
 BuildRequires:  zlib-devel
 BuildRequires:  fdupes
 BuildRequires:  pkgconfig(SDL2_mixer)
+# For checks
+BuildRequires:  desktop-file-utils
 
 %if 0%{?fedora}
 BuildRequires:  sqlite-devel
@@ -41,6 +43,8 @@ BuildRequires:  libvpx
 %ifarch x86_64
 BuildRequires:  libvpl >= 2.15
 %endif
+# For checks
+BuildRequires:  libappstream-glib
 Recommends:     freeciv21-lang
 Recommends:     alerque-libertinus-fonts
 %endif
@@ -55,6 +59,8 @@ BuildRequires:  lua53-devel
 BuildRequires:  python313-Sphinx
 Recommends:     freeciv21-lang
 Recommends:     libertinus-fonts
+# For checks
+BuildRequires:  appstream-glib
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
@@ -105,6 +111,17 @@ Translation files for freeciv21.
 %find_lang %{name}-nations
 %find_lang %{name}-ruledit
 %fdupes %{buildroot}/%{_datadir}/
+
+%check
+appstream-util validate --nonet %{buildroot}/%{_datadir}/metainfo/net.longturn.%{name}.metainfo.xml
+appstream-util validate --nonet %{buildroot}/%{_datadir}/metainfo/net.longturn.%{name}.server.metainfo.xml
+appstream-util validate --nonet %{buildroot}/%{_datadir}/metainfo/net.longturn.%{name}.modpack.metainfo.xml
+appstream-util validate --nonet %{buildroot}/%{_datadir}/metainfo/net.longturn.%{name}.ruledit.metainfo.xml
+desktop-file-validate %{buildroot}/%{_datadir}/applications/net.longturn.%{name}.desktop
+desktop-file-validate %{buildroot}/%{_datadir}/applications/net.longturn.%{name}.modpack.desktop
+desktop-file-validate %{buildroot}/%{_datadir}/applications/net.longturn.%{name}.ruledit.desktop
+desktop-file-validate %{buildroot}/%{_datadir}/applications/net.longturn.%{name}.server.desktop
+%ctest
 
 %files
 %defattr(-,root,root,-)
