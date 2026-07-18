@@ -51,21 +51,22 @@ h4 {
   font-size: 22px;
 }
 
-/* add whitespace between list items */
-li, div[*wy-grid-for-nav] li {
-  margin-bottom: 7px;
+/* manage whitespace between list items */
+li .toctree-l1 {
+  margin-bottom: 0px;
 }
 
-li ol li, div[*wy-grid-for-nav] li {
-  margin-bottom: 7px;
+li .toctree-l2 {
+  margin-bottom: 0px;
 }
 
-li ul li, div[*wy-grid-for-nav] li {
-  margin-bottom: 7px;
+li .toctree-l3 {
+  margin-bottom: 0px;
 }
 
-.current li, div[*wy-grid-for-nav] li {
-  margin-bottom: 3px;
+/* add whitespace between numbered items */
+ol li {
+  margin-bottom: 12px;
 }
 
 .strike {
