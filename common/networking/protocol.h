@@ -29,13 +29,13 @@ public:
   packet_delta_handler(int field_count) : fields(field_count) {}
   virtual ~packet_delta_handler() = default;
 
-  virtual void reset() override
+  void reset() override
   {
     last_received = std::nullopt;
     last_sent = std::nullopt;
   }
 
-  virtual void reset(int key) override
+  void reset(int key) override
   {
     Q_UNUSED(key);
     reset();
@@ -55,13 +55,13 @@ public:
   packet_delta_key_handler(int field_count) : fields(field_count) {}
   virtual ~packet_delta_key_handler() = default;
 
-  virtual void reset() override
+  void reset() override
   {
     receive_map.clear();
     send_map.clear();
   }
 
-  virtual void reset(int key) override
+  void reset(int key) override
   {
     receive_map.erase(key);
     send_map.erase(key);
