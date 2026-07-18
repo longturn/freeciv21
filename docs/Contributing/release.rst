@@ -37,10 +37,23 @@ These are the general steps to prepare and finalize a release:
    main purpose of the post is to alert the developers of a pending cadence threshold and to gauge if we
    need to delay in any way or if we are good to proceed as normal.
 
-#. A release manager or another regular contributor will update the ``vcpkgGitCommitId`` value in the CI/CD
-   build file (:file:`.github/workflows/build.yaml`). Grab the Commit ID of the most recent release from
-   https://github.com/microsoft/vcpkg/releases. Commit and push a PR. Ensure all of the CI/CD Action runners
-   complete successfully.
+#. Update files in the repository before final tagging:
+
+   * Update the ``vcpkgGitCommitId`` value in the CI/CD build file (:file:`.github/workflows/build.yaml`).
+     Grab the Commit ID of the most recent release from https://github.com/microsoft/vcpkg/releases.
+   
+   * Update :file:`.obs/debian.changelog` and :file:`.obs/freeciv21.changes`. Add a link to the release notes
+     page. Notice that the time stamp between the two files is different. Given we do not know what day
+     exactly the release will get tagged and pushed, pick a day a week in the future with 17:00 UTC as the
+     time.
+   
+   * Update the :file:`_service` with the new tag name in the ``versionformat`` parameter at
+     https://build.opensuse.org/package/show/home:louis94_m:freeciv21/freeciv21-dev
+
+     .. note:: Only certain maintainers have access to edit this file. They know who they are.
+
+   * Commit and push a PR. Ensure all of the CI/CD Action runners and especially the OBS workflow integrations
+     complete successfully.
 
 #. If the new release is a change from the ``dev``, ``alpha``, ``beta``, ``candidate``, or ``stable`` release
    series, there are some file updates needed:
@@ -79,7 +92,6 @@ These are the general steps to prepare and finalize a release:
 
 #. If the release is a :strong:`release candidate` for a :strong:`stable release`, the release manager will
    make sure that the :guilabel:`Target` branch in the release draft is set to ``stable``.
-
 
 #. The release manager formats the release tag. For this, they checkout the target branch locally and create
    a local tag with ``git tag`` following the expected format, then run the configure step (``cmake -B build``)
