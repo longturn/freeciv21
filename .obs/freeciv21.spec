@@ -10,7 +10,7 @@ Name:           freeciv21
 Version:        3.2
 Release:        %autorelease -p pre -s %{__scm_source_timestamp}
 Group:          Amusements/Games/Strategy/Turn Based
-Summary:        We develop and play Freeciv21. Develop Your Civilization from Humble Roots to a Global Empire!
+Summary:        Develop Your Civilization from Humble Roots to a Global Empire!
 Url:            https://github.com/longturn/freeciv21/
 Source:         %{name}-%{version}.tar.gz
 BuildRequires:  cmake
