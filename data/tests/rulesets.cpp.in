@@ -43,6 +43,7 @@ void test_rulesets::load()
   QFETCH(bool, exists);
 
   QProcess p;
+  p.setProcessChannelMode(QProcess::ForwardedChannels);
   p.start(SERVER_PATH, {QStringLiteral("-r"), name});
   p.waitForStarted();
   p.write("quit\n");
