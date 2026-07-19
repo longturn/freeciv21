@@ -46,6 +46,7 @@ void test_cli::read()
   QFETCH(bool, success);
 
   QProcess p;
+  p.setProcessChannelMode(QProcess::ForwardedChannels);
   p.start(SERVER_PATH, {QStringLiteral("-r"), QStringLiteral(DATA_PATH) + file});
   p.waitForStarted();
   p.write("quit\n");
