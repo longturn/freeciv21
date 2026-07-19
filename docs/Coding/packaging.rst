@@ -199,8 +199,9 @@ Flatpak Package
 The Flatpak source system resides in a separate GitHub repository: ``net.longturn.freeciv21``, which is a
 fork of the main package at https://github.com/flathub/net.longturn.freeciv21.
 
-We currently only support the ``stable`` branch with Flatpak. There are plans to support ``master`` with
-Flathub beta. See: https://github.com/longturn/freeciv21/issues/2513.
+We support both the Freeciv21 *Stable* and *Development* branches with Flatpak. The Freeciv21 ``stable`` branch
+is supported from the ``master`` branch in the flathub repo and the Freeciv21 ``master`` branch is supported
+by Flathub beta from the ``beta`` branch in the flathub repo.
 
 Setting up development for Flatpak is relatively straightforward:
 
@@ -238,14 +239,18 @@ Here are the build-time steps to create the flatpak package:
 
 
 As with the snap package, flatpak packages rely on some platform dependencies, which are also flatpak packages.
-For flatpak we use a ``runtime`` that matches the run time environment for the application. The *Stable*
-version of Freeciv21 needs Qt5, so we leverage the ``5.15-24.08`` runtime provided by KDE, which is Qt v5.15
-and built in August of 2024. We also need an SDK (Software Development Kit). As you would expect, we use the
-``org.kde.Sdk`` SDK.
+For flatpak we use a ``runtime`` that matches the run time environment for the application.
+
+* The *Stable* version of Freeciv21 needs Qt5, so we leverage the ``5.15-25.08`` runtime provided by KDE, 
+  which is Qt v5.15 and built in August 2025. We also need an SDK (Software Development Kit). As you would
+  expect, we use the ``org.kde.Sdk`` SDK.
+
+* The *Development* version of Freeciv21 needs Qt6, so we leverage the ``6.10`` runtime provided by KDE. As
+  with the *Stable* version we use the same SDK ``org.kde.Sdk``.
 
 Flathub will build the package from source by grabbing it from our GitHub repository. Near the bottom of the
-configuration file you will see where we tag a ``git`` commit ID, which should correspond to the tagged
-release of a ``stable`` branch Git Tag.
+configuration file you will see where we tag a ``git`` commit hash, which should correspond to the tagged
+release of a ``stable`` or ``master`` branch Git Tag.
 
 :strong:`Flatpak Notes, Tips and Tricks`
 
@@ -258,8 +263,8 @@ release of a ``stable`` branch Git Tag.
 
 * Every downloaded file has to have a hash (``sha256``) associated with it. If you get stuck and do not know
   how to get the hash, then run the ``flatpak-builder`` command in your local. The process will error out and
-  give you the hash that was expected. You can then edit the configuration with the proper hash. Be sure you are
-  grabbing files from ``raw.githubusercontent.com`` or tagged package files from a Releases page.
+  give you the hash that was expected. You can then edit the configuration with the proper hash. Be sure you
+  are grabbing files from ``raw.githubusercontent.com`` or tagged package files from a Releases page.
 
 * The KDE ``runtime`` we use is hosted here: https://invent.kde.org/packaging/flatpak-kde-runtime. You can
   look at the list of protected branches to determine the correct version to use.

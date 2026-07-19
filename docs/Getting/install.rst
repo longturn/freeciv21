@@ -180,6 +180,14 @@ Fedora/Red Hat variants (those that rely on ``dnf`` for package management):
   $ sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
   $ sudo flatpak install net.longturn.freeciv21
 
+
+If you want to install the *Development* version of Freeciv21, you can use the Flathub Beta repository. 
+
+.. code-block:: sh
+
+  $ sudo flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
+
+
 macOS
 =====
 
