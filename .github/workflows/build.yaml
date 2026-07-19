@@ -69,14 +69,13 @@ jobs:
       - name: Build
         run: |
           cmake --build build
-      # New DIO test segfaults starting Apr 2026 see #2869
-      #- name: Test
-      #  run: |
-      #    cmake --build build --target test
-      #- name: Debug
-      #  if: failure()
-      #  run: |
-      #    cat build/Testing/Temporary/LastTest.log
+      - name: Test
+        run: |
+          cmake --build build --target test
+      - name: Debug
+        if: failure()
+        run: |
+          cat build/Testing/Temporary/LastTest.log
       - name: Install
         run: |
           DESTDIR=$PWD/build/install cmake --build build --target install
@@ -414,15 +413,13 @@ jobs:
       - name: Build
         run: |
           cmake --build build
-      # New DIO test segfaults starting Apr 2026 see #2869
-      #- name: Test
-      #  run: |
-      #    cmake --build build --target test
-      #- name: Debug Test Failure
-      #  if: failure()
-      #  run: |
-      #    build/test_dio -v2
-      #    cat build/Testing/Temporary/LastTest.log
+      - name: Test
+        run: |
+          cmake --build build --target test
+      - name: Debug Test Failure
+        if: failure()
+        run: |
+          cat build/Testing/Temporary/LastTest.log
       - name: Install
         run: |
           DESTDIR=$PWD/build/install cmake --build build --target install
