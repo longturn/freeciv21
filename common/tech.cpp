@@ -18,6 +18,10 @@
 #include "name_translation.h"
 #include "requirements.h"
 
+// Qt
+#include <QString>
+#include <QStringLiteral>
+
 // std
 #include <cmath>   // sqrt
 #include <cstring> // str*, mem*

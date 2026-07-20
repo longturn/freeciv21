@@ -29,6 +29,7 @@
 
 // Qt
 #include <QByteArrayAlgorithms> // qstrlen, qstrdup, qstrncpy
+#include <QString>
 #include <QStringLiteral>
 #include <QtContainerFwd> // QVector<QString>
 

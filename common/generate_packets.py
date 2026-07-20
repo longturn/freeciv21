@@ -1508,6 +1508,7 @@ def write_common_source(packets: list[Packet], output: io.TextIOWrapper) -> None
 #include <packets_gen.h>
 
 // utility
+#include "bitvector.h"
 #include "capability.h"
 #include "log.h"
 #include "support.h"
@@ -1526,11 +1527,15 @@ def write_common_source(packets: list[Packet], output: io.TextIOWrapper) -> None
 
 // Qt
 #include <QBitArray>
-#include <QtLogging> // qDebug, qWarning, qCritical, etc
+#include <QByteArray>
+#include <QtLogging>             // qDebug, qWarning, qCritical, etc
+#include <QtPreprocessorSupport> // Q_UNUSED
+
 
 // std
-#include <cstdlib> // EXIT_FAILURE, free, at_quick_exit
+#include <cstdint> // std::int*, std::uint*
 #include <cstring> // str*, mem*
+#include <memory>  // std::make_unique
 """
     )
     output.write(

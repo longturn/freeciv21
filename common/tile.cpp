@@ -26,6 +26,7 @@
 
 // Qt
 #include <QBitArray>
+#include <QString>
 #include <QStringLiteral>
 #include <QtLogging> // qDebug, qWarning, qCricital, etc
 
