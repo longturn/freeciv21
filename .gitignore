@@ -50,7 +50,7 @@ build.ninja
 /*.sh
 
 # Build directories
-/build*
+build*
 .flatpak-builder
 
 # Nix build artifacts
@@ -59,12 +59,9 @@ result
 # IDE files
 .cache
 .clangd
-# Folder
 .kdev4
-.vs
-# Project file
 *.kdev4
-# Visual Studio Code 
+.vs
 .vscode
 
 # In case someone runs Doxygen
