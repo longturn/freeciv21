@@ -12,6 +12,7 @@
 
 // Qt
 #include <QMultiHash>
+#include <QString>
 #include <QStringLiteral>
 #include <Qt>
 

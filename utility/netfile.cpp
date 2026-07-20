@@ -14,6 +14,7 @@
 #include <QBuffer>
 #include <QEventLoop>
 #include <QJsonDocument>
+#include <QJsonParseError>
 #include <QLatin1String>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
