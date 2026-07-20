@@ -31,6 +31,7 @@
 #include <QtPreprocessorSupport> // Q_UNUSED
 
 // std
+#include <cstdint> // std::int*, std::uint*
 #include <cstdlib> // EXIT_FAILURE, free, at_quick_exit
 #include <cstring> // str*, mem*
 #include <zconf.h> // uLongf, Bytef
