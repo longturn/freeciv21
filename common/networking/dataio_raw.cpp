@@ -23,12 +23,14 @@
 #include "worklist.h"
 
 // Qt
+#include <QBitArray>
+#include <QByteArray>
 #include <QByteArrayAlgorithms> // qstrlen, qstrdup, qstrncpy
 #include <QtEndian>
 #include <QtLogging> // qDebug, qWarning, qCricital, etc
 
 // std
-#include <cmath>
+#include <cstddef> // std:byte
 #include <cstdint>
 #include <cstring>
 

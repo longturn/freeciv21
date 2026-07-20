@@ -22,11 +22,14 @@
 #include "player.h"
 
 // Qt
+#include <QByteArrayList>
+#include <QByteArrayView>
 #include <QChar>
 #include <QLocalSocket>
 #include <QObject>
 #include <QString>
 #include <QTcpSocket>
+#include <QtGlobal>  // qUtf8Printable
 #include <QtLogging> // qDebug, qWarning, qCricital, etc
 
 // std
