@@ -6,9 +6,11 @@
 
 // Qt
 #include <QDir>
-#include <QObject>
-#include <QString>
+#include <QLatin1String> // QLatin1String
+#include <QObject>       // Q_OBJECT
 #include <QTest>
+#include <qtestcase.h>    // QCOMPARE, QVERIFY
+#include <qtmetamacros.h> // Q_OBJECT
 
 /**
  * Tests functions acting on paths

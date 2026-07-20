@@ -169,6 +169,7 @@
 #include <cstdlib> // free
 #include <cstring> // str*
 #include <memory>  // std::make_unique
+#include <tuple>   // std::ignore
 
 #define MAX_LEN_SECPATH 1024
 
