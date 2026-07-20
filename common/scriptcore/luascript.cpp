@@ -1,46 +1,52 @@
-/*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
- part of Freeciv21. Freeciv21 is free software: you can redistribute it
- and/or modify it under the terms of the GNU  General Public License  as
- published by the Free Software Foundation, either version 3 of the
- License,  or (at your option) any later version. You should have received
- a copy of the GNU General Public License along with Freeciv21. If not,
- see https://www.gnu.org/licenses/.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
-#include <cstdarg>
-#include <ctime>
+// self
+#include "luascript.h"
 
-// Qt
-
-/* dependencies/lua */
+// dependencies/lua
 extern "C" {
+#include "lauxlib.h"
 #include "lua.h"
 #include "lualib.h"
 }
 
-/* dependencies/tolua */
+// dependencies/tolua
 #include "tolua.h"
 
-// Sol
+// dependencies/sol2
 #include "sol/sol.hpp"
 
 // utility
 #include "log.h"
 #include "registry.h"
 #include "registry_ini.h"
+#include "support.h"
 
 // common
-#include "map.h"
-
-/* common/scriptcore */
 #include "api_common_intl.h"
 #include "api_common_utilities.h"
+#include "fc_types.h"
 #include "luascript_func.h"
 #include "luascript_signal.h"
+#include "luascript_types.h"
+#include "map.h"
 #include "tolua_common_a_gen.h"
 
-#include "luascript.h"
+// Qt
+#include <QByteArrayAlgorithms> // qstr*
+#include <QFile>
+#include <QString>
+#include <QStringLiteral>
+#include <QtContainerFwd> // QVector<QString>, QStringList = QList<QString>
+#include <QtGlobal>       // qUtf8Printable
+#include <QtLogging>      // qDebug, qWarning, qCricital
+#include <QtPreprocessorSupport> // Q_UNUSED
+#include <QtResource>            // Q_INIT_RESOURCE, Q_CLEANUP_RESOURCE
+
+// std
+#include <cstdarg>
+#include <ctime>
 
 /**
   Configuration for script execution time limits. Checkinterval is the
