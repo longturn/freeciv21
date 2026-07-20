@@ -30,6 +30,7 @@
 #include "unittype.h"
 
 // Qt
+#include <QString>
 #include <QStringLiteral>
 #include <QtLogging> // qDebug, qWarning, qCricital, etc
 

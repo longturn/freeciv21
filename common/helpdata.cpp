@@ -15,7 +15,6 @@
 // utility
 #include "astring.h"
 #include "bitvector.h"
-#include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
 #include "registry.h"
@@ -60,6 +59,7 @@
 #include <QStringLiteral>
 #include <QtConfig>              // QT_VERSION_STR
 #include <QtContainerFwd>        // QVector<QString>
+#include <QtGlobal>              // qUtf8Printable
 #include <QtLogging>             // qDebug, qWarning, qCricital, etc
 #include <QtPreprocessorSupport> // Q_UNUSED
 #include <QtVersion>             // qVersion
@@ -2478,7 +2478,8 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
 
         struct universal req_pattern[] = {
             {.value = {.action = paction}, .kind = VUT_ACTION},
-            {.kind = VUT_DIPLREL, /* value filled in later */},
+            {.kind = VUT_DIPLREL,
+             /* value filled in later */},
         };
 
         /* First group by effect (currently getting caught and successfully
@@ -4190,7 +4191,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
                            ratio);
             }
           } // else this effect somehow has no effect; keep quiet
-        }   // else there was some extra condition making it complicated
+        } // else there was some extra condition making it complicated
         break;
       case EFT_UNIT_UPKEEP_FREE_PER_CITY:
         if (!unittype) {
