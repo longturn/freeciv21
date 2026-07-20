@@ -1,43 +1,58 @@
-/*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
- part of Freeciv21. Freeciv21 is free software: you can redistribute it
- and/or modify it under the terms of the GNU  General Public License  as
- published by the Free Software Foundation, either version 3 of the
- License,  or (at your option) any later version. You should have received
- a copy of the GNU General Public License along with Freeciv21. If not,
- see https://www.gnu.org/licenses/.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+
+// self
+#include "api_game_methods.h"
+
+// dependencies/lua
+extern "C" {
+#include "lua.h"
+}
 
 // utility
 #include "deprecations.h"
+#include "shared.h"
+#include "support.h"
 
 // common
 #include "achievements.h"
 #include "actions.h"
 #include "calendar.h"
 #include "citizens.h"
+#include "city.h"
 #include "culture.h"
 #include "disaster.h"
 #include "effects.h"
+#include "extras.h"
+#include "fc_types.h"
 #include "featured_text.h"
 #include "game.h"
 #include "government.h"
 #include "improvement.h"
+#include "luascript.h"
+#include "luascript_types.h"
 #include "map.h"
 #include "movement.h"
 #include "nation.h"
+#include "player.h"
 #include "research.h"
 #include "team.h"
 #include "tech.h"
 #include "terrain.h"
 #include "tile.h"
+#include "unit.h"
 #include "unitlist.h"
 #include "unittype.h"
 
-/* common/scriptcore */
-#include "luascript.h"
+// Qt
+#include <QLoggingCategory> // qCDebug, qCWarning, qCCricital
+#include <QString>
+#include <QtGlobal>              // qUtf8Printable
+#include <QtLogging>             // qDebug, qWarning, qCricital
+#include <QtPreprocessorSupport> // Q_UNUSED
 
-#include "api_game_methods.h"
+// self
+#include <cstddef> // NULL
 
 /**
    Return the current turn.

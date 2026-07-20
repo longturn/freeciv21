@@ -1,12 +1,5 @@
-/*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
- part of Freeciv21. Freeciv21 is free software: you can redistribute it
- and/or modify it under the terms of the GNU  General Public License  as
- published by the Free Software Foundation, either version 3 of the
- License,  or (at your option) any later version. You should have received
- a copy of the GNU General Public License along with Freeciv21. If not,
- see https://www.gnu.org/licenses/.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
 /**
   Signals implementation.
@@ -33,14 +26,29 @@
 
   If the value is 'true' the current signal emission will be stopped.
  */
+
+// self
+#include "luascript_signal.h"
+
 // utility
 #include "deprecations.h"
+#include "log.h"
+#include "support.h"
 
-/* common/scriptcore */
+// common
 #include "luascript.h"
 #include "luascript_types.h"
 
-#include "luascript_signal.h"
+// Qt
+#include <QHash>
+#include <QList>
+#include <QLoggingCategory> // qCWarning
+
+// std
+#include <csignal> // signal
+#include <cstdarg> // va_*
+#include <cstring> // str*, mem*
+#include <utility> // std::as_const
 
 static struct signal_callback *signal_callback_new(const char *name);
 static void signal_callback_destroy(struct signal_callback *pcallback);

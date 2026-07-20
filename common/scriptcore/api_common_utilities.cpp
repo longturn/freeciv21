@@ -1,33 +1,36 @@
-/*
-    Copyright (c) 1996-2020 Freeciv21 and Freeciv  contributors. This file
-                         is part of Freeciv21. Freeciv21 is free software:
-|\_/|,,_____,~~`        you can redistribute it and/or modify it under the
-(.".)~~     )`~}}    terms of the GNU General Public License  as published
- \o/\ /---~\\ ~}}     by the Free Software Foundation, either version 3 of
-   _//    _// ~}       the License, or (at your option) any later version.
-                        You should have received a copy of the GNU General
-                          Public License along with Freeciv21. If not, see
-                                            https://www.gnu.org/licenses/.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
-#include <cmath>
+// self
+#include "api_common_utilities.h"
 
-// Sol
+// dependencies/lua
+extern "C" {
+#include "lua.h"
+}
+
+// dependencies/sol2
 #include "sol/sol.hpp"
 
 // utilities
 #include "deprecations.h"
-#include "fcintl.h"
 #include "rand.h"
+#include "shared.h"
+#include "support.h"
 
 // common
+#include "fc_types.h"
+#include "luascript.h"
+#include "luascript_types.h"
 #include "map.h"
 #include "version.h"
 
-/* common/scriptcore */
-#include "luascript.h"
+// Qt
+#include <QLoggingCategory> // qCDebug, qCWarning, qCCricital
+#include <QtLogging>        // QtMsgType
 
-#include "api_common_utilities.h"
+// std
+#include <cmath>
 
 /**
    Generate random number.
