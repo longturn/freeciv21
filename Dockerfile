@@ -21,7 +21,6 @@ set -e
 
 deps=(
     cmake=3.31.6-2
-    ninja-build=1.12.1-1
     g++=4:14.2.0-1
     python3=3.13.5-1
     qt6-base-dev=6.8.2+dfsg-9+deb13u2
@@ -31,6 +30,17 @@ deps=(
     gettext=0.23.1-2
     zlib1g-dev=1:1.3.dfsg+really1.3.1-1+b1
 )
+case "$(uname -m)" in
+  aarch64|arm64)
+    deps+=(
+      ninja-build=1.12.1-1+b1
+    ) ;;
+  x86_64|amd64)
+    deps+=( 
+      ninja-build=1.12.1-1
+    ) ;;
+  *) echo "Unsupported arch: $(uname -m)" >&2; exit 1 ;; \
+esac
 if [[ "$BUILD_TYPE" == "Debug" ]]; then
   deps+=(
       libunwind-dev=1.8.1-0.1
