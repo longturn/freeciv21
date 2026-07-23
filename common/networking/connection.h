@@ -8,6 +8,9 @@
 
 #pragma once
 
+// generated
+#include <packets_gen.h>
+
 // utility
 #include "support.h"
 #include "timing.h"
@@ -17,12 +20,12 @@
 #include "packets.h"
 
 // Qt
+#include <QByteArrayView>
 #include <QList>
 #include <QString>
 
 // std
 #include <array>
-#include <ctime> // time_t
 #include <memory>
 
 // Forward declarations

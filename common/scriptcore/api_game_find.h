@@ -3,10 +3,13 @@
 
 #pragma once
 
-// dependencies/lua
+// dependencies
+extern "C" {
 #include "lua.h"
+}
 
 // common
+#include "fc_types.h"
 #include "luascript_types.h"
 
 // Object find module.

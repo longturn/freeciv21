@@ -3,7 +3,10 @@
 
 #pragma once
 
-// dependencies/sol2
+// dependencies
+extern "C" {
+#include "lua.h"
+}
 #include "sol/sol.hpp"
 
 // common

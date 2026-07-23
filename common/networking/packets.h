@@ -3,13 +3,10 @@
 
 #pragma once
 
-struct connection;
-
 // generated
 #include <packets_gen.h>
 
 // utility
-#include "log.h"
 #include "shared.h" // MAX_LEN_ADDR
 
 // common
@@ -17,13 +14,19 @@ struct connection;
 #include "player.h"
 #include "traderoutes.h"
 
-// std
-#include <array>
-#include <memory>
-
 // Qt
 #include <QBitArray>
-#include <QtContainerFwd> // QVector<QString>
+#include <QByteArrayView>
+#include <QtContainerFwd>        // QVector<QString>
+#include <QtLogging>             // qDebug, qWarning, qCricital
+#include <QtPreprocessorSupport> // Q_UNUSED
+
+// std
+#include <array>
+#include <cstdint> // std::int*, std::uint*
+#include <memory>
+
+struct connection;
 
 using packet_capabilities_type = std::uint32_t;
 

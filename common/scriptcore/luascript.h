@@ -3,14 +3,17 @@
 
 #pragma once
 
-// dependencies/tolua
-#include "tolua.h"
+// dependencies
+extern "C" {
+#include "lua.h"
+}
 
 // utility
 #include "log.h"
 #include "support.h" // fc__attribute()
 
 // common
+#include "fc_types.h"
 #include "luascript_func.h"
 #include "luascript_signal.h"
 #include "luascript_types.h"
@@ -18,6 +21,12 @@
 // Qt
 #include <QHash>
 #include <QVector>
+#include <QtContainerFwd> // QVector<QString>
+#include <QtLogging>      // qDebug, qWarning, qCricital
+
+// std
+#include <csignal> // signal
+#include <cstdarg> // va_*
 
 struct section_file;
 struct luascript_func_hash;

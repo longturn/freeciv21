@@ -8,6 +8,10 @@
 
 // Qt
 #include <QVector>
+#include <QtContainerFwd> // QVector<QString>
+
+// std
+#include <cstdarg> // va_*
 
 struct fc_lua;
 
