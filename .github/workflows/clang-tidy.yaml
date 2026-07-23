@@ -25,6 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
+          allow-unsafe-pr-checkout: true # We have no permissions to do any harm
           ref: ${{ github.event.pull_request.head.sha }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
