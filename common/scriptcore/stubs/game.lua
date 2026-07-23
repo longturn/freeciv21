@@ -327,17 +327,17 @@ function Tile:city() end
 function Tile:city_exists_within_max_city_map(center) end
 
 --- 
---- @param name boolean The ruleset name of any type of terrain extra.
+--- @param name string The ruleset name of any type of terrain extra.
 --- @return boolean present True, if the extra is present on this tile.
 function Tile:has_extra(name) end
 
 --- 
---- @param name boolean The ruleset name of any base-type extra.
+--- @param name string The ruleset name of any base-type extra.
 --- @return boolean present True, if the base is present on this tile.
 function Tile:has_base(name) end
 
 --- 
---- @param name boolean The ruleset name of any road-type extra.
+--- @param name string The ruleset name of any road-type extra.
 --- @return boolean present True, if the road-type is present on this tile.
 function Tile:has_road(name) end
 
