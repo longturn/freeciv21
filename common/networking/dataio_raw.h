@@ -18,6 +18,11 @@
 #include <QByteArray>
 #include <QByteArrayView>
 #include <QtEndian>
+#include <QtLogging> // qDebug, qWarning, qCricital
+
+// std
+#include <array>   // std::array
+#include <cstdint> // std::int*, std::uint*
 
 struct cm_parameter;
 struct worklist;

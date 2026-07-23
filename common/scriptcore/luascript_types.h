@@ -3,17 +3,17 @@
 
 #pragma once
 
-// utility
-#include "genlist.h"
+// dependencies
+extern "C" {
+#include "lua.h"
+}
 
 // common
 #include "achievements.h"
 #include "actions.h"
 #include "city.h"
 #include "connection.h"
-#include "events.h"
 #include "fc_types.h"
-#include "game.h"
 #include "government.h"
 #include "improvement.h"
 #include "nation.h"
@@ -23,6 +23,7 @@
 #include "terrain.h"
 #include "tile.h"
 #include "unit.h"
+#include "unitlist.h"
 #include "unittype.h"
 
 // Classes.

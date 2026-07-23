@@ -3,9 +3,6 @@
 
 #pragma once
 
-// utility
-#include "support.h"
-
 struct lua_State;
 
 void api_signal_connect(lua_State *L, const char *signal_name,

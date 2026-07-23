@@ -3,6 +3,11 @@
 
 #pragma once
 
+// dependencies
+extern "C" {
+#include "lua.h"
+}
+
 // common
 #include "luascript_types.h"
 

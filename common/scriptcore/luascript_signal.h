@@ -9,6 +9,12 @@
 // comon
 #include "luascript_types.h"
 
+// Qt
+#include <QList>
+
+// std
+#include <cstdarg> // va_*
+
 struct fc_lua;
 
 typedef char *signal_deprecator;
