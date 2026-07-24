@@ -18,7 +18,7 @@
 #include <QByteArray>
 #include <QByteArrayView>
 #include <QtEndian>
-#include <QtLogging> // qDebug, qWarning, qCricital
+#include <QtLogging> // qDebug, qWarning, qCritical
 
 // std
 #include <array>   // std::array
