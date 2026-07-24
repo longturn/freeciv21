@@ -18,7 +18,7 @@
 #include <QBitArray>
 #include <QByteArrayView>
 #include <QtContainerFwd>        // QVector<QString>
-#include <QtLogging>             // qDebug, qWarning, qCricital
+#include <QtLogging>             // qDebug, qWarning, qCritical
 #include <QtPreprocessorSupport> // Q_UNUSED
 
 // std

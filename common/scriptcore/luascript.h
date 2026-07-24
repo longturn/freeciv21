@@ -22,7 +22,7 @@ extern "C" {
 #include <QHash>
 #include <QVector>
 #include <QtContainerFwd> // QVector<QString>
-#include <QtLogging>      // qDebug, qWarning, qCricital
+#include <QtLogging>      // qDebug, qWarning, qCritical
 
 // std
 #include <csignal> // signal
