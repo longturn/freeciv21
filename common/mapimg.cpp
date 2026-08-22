@@ -1744,8 +1744,7 @@ static bool img_save(const struct img *pimg, const char *mapimgfile,
 
   char pngname[MAX_LEN_PATH];
 
-  if (!img_filename(mapimgfile, pimg->def->format, pngname,
-                    sizeof(pngname))) {
+  if (!img_filename(tmpname, pimg->def->format, pngname, sizeof(pngname))) {
     MAPIMG_LOG(_("error generating the file name"));
     return false;
   }
