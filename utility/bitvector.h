@@ -10,6 +10,7 @@
 #include <QBitArray>
 
 // std
+#include <array>   // std::array
 #include <cstddef> // size_t
 
 // Yields TRUE iff the bit bit_no is set in val.
