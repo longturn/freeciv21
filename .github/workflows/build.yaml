@@ -174,23 +174,28 @@ jobs:
       - name: Build
         run: |
           cmake --build build-clang
-      - name: clang-tidy Details
+      - name: clang versions
         run: |
-          # tidy's version
-          clang-tidy --version
-
-          # compiler's version
-          clang++ --version
-          
-          # Utility - because it's special
+          clang-tidy --version && clang++ --version
+      - name: clang-tidy utility
+        run: |
           clang-tidy \
             $(find utility -type d -name tests -prune -o -type f \( -name '*.cpp' -o -name '*.h' \) ! -name 'spec*' -print) \
             -p build-clang \
-            --checks="-*,misc-include-cleaner"
-          
-          # The Rest
+            --checks="-*,misc-include-cleaner" \
+            --warnings-as-errors="*"
+      - name: clang-tidy common
+        run: |
           clang-tidy \
-            $(find ai client common data server tools -type d -name tests -prune -o -type f \( -name '*.cpp' -o -name '*.h' \) -print) \
+            $(find common -type d -name tests -prune -o -type f \( -name '*.cpp' -o -name '*.h' \) -print) \
+            -p build-clang \
+            --checks="-*,misc-include-cleaner" \
+            --warnings-as-errors="*"
+      - name: clang-tidy else
+        continue-on-error: true
+        run: |
+          clang-tidy \
+            $(find ai client server tools -type d -name tests -prune -o -type f \( -name '*.cpp' -o -name '*.h' \) -print) \
             -p build-clang \
             --checks="-*,misc-include-cleaner"
 
