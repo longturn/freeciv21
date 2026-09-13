@@ -15,4 +15,4 @@
 /* This dataio.h header exist only as a interface to include.
  * Currently dataio_raw.h has all the functionality, including the
  * #include of the dataio_json.h at correct spot. */
-#include "dataio_raw.h"
+#include "dataio_raw.h" // IWYU pragma: keep

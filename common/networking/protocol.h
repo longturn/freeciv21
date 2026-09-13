@@ -11,6 +11,10 @@
 // common
 #include "packets.h"
 
+// Qt
+#include <QBitArray>
+#include <QtPreprocessorSupport> // Q_UNUSED
+
 // std
 #include <optional>
 #include <unordered_map>

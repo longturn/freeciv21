@@ -8,6 +8,9 @@
 #include "map_types.h" // struct civ_map
 #include "tile.h"      // struct tile
 
+// Qt
+#include <QString>
+
 #define SINGLE_MOVE (terrain_control.move_fragments)
 #define MOVE_COST_IGTER (terrain_control.igter_cost)
 // packets.def MOVEFRAGS
