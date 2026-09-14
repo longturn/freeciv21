@@ -111,7 +111,8 @@ tolua = {
 os = {
   time=os.time,
   date=os.date,
-  difftime=os.difftime
+  difftime=os.difftime,
+  clock=os.clock
 }
 
 -- Hide all private methods

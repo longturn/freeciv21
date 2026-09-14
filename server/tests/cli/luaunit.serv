@@ -1,0 +1,2 @@
+lua cmd require("freeciv21.unit-tests").run("--verbose")
+
