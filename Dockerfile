@@ -26,7 +26,7 @@ deps=(
     qt6-base-dev=6.8.2+dfsg-9+deb13u2
     libkf6archive-dev=6.13.0-2
     liblua5.3-dev=5.3.6-2+b4
-    libsqlite3-dev=3.46.1-7+deb13u1
+    libsqlite3-dev=3.46.1-7+deb13u2
     gettext=0.23.1-2
     zlib1g-dev=1:1.3.dfsg+really1.3.1-1+b1
 )
