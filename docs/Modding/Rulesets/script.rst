@@ -15,8 +15,9 @@
 Lua Scripting
 *************
 
-All Lua code for a ruleset currently goes in the :file:`game/script.lua`
-file.
+:file:`game/script.lua` runs when a ruleset is first loaded and is used to
+initialize all of the Lua code for a ruleset. For simpler rulesets, this may
+contain all Lua code. E.g.
 
 .. code-block:: lua
 
@@ -32,6 +33,10 @@ file.
 In this example, we have a callback handler for the 
 :lua:func:`Events.city_destroyed` signal that creates a Ruins extra on the
 site of the destroyed city.
+
+However, as script complexity increases, you may wish to organize your code into
+modules using the :lua:obj:`require` function. See
+:ref:`Advanced Scripting <script-advanced>`
 
 Defaults
 ========
@@ -414,6 +419,22 @@ document Lua builtins here, but just to mention a selection of the useful parts.
 Lua Functions
 ^^^^^^^^^^^^^
 
+.. lua:function:: require(file_path: string): (module: table)
+
+A restricted version of the standard Lua
+`require <https://www.lua.org/manual/5.3/manual.html#pdf-require>`_ function.
+This is limited to only :file:`.lua` files under the current
+:ref:`rulesetdir <server-command-rulesetdir>` or in a :file:`lua` directory
+under the data path.
+
+It can be used for more :ref:`Advanced Scripting <script-advanced>` to
+separate out concerns in more complex scripts, making code reuse easier, and
+allows importing useful tools from the base game.
+
+The full `require <https://www.lua.org/manual/5.3/manual.html#pdf-require>`_
+is available via :ref:`lua unsafe-cmd <server-command-lua>` or in client
+scripts.
+
 :lua:func:`pcall`
 
 Calls the function f with the given arguments in protected mode. This means that
@@ -468,7 +489,7 @@ Lua Modules
 ^^^^^^^^^^^
 
 .. lua:autoobject:: os
-   :members: time, date, difftime
+   :members: time, date, difftime, clock
    :recursive:
 
 .. lua:autoobject:: math
@@ -478,10 +499,10 @@ Lua Modules
 .. lua:table:: string
 
    `The String Library <https://www.lua.org/pil/20.html>`_
-   
-   This is a subset of useful functions. There are more available in the 
-   `manual <https://www.lua.org/manual/5.4/manual.html#pdf-string>`_.
-   
+
+   This is a subset of useful functions. There are more available in the manual:
+   `string <https://www.lua.org/manual/5.4/manual.html#pdf-string>`_.
+
    .. lua:function:: find(s: string, pattern: string, init: Number, plain: boolean): (start: Number, end: Number, groups: string...)
 
       Looks for the first match of pattern (see 
@@ -512,27 +533,27 @@ Lua Modules
 
    .. lua:function:: match(s: string, pattern: string, init: Number): (match: string)
 
-      Looks for the first match of the pattern (see 
+      Looks for the first match of the pattern (see
       `§6.4.1 <https://www.lua.org/manual/5.4/manual.html#6.4.1>`_) in the
       string s. If it finds one, then match returns the captures from the
       pattern; otherwise it returns fail. If pattern specifies no captures,
       then the whole match is returned. A third, optional numeric argument init
       specifies where to start the search; its default value is 1 and can be
-      negative. 
+      negative.
 
       See `string.match <https://www.lua.org/manual/5.4/manual.html#pdf-string.match>`_
 
    .. lua:function:: format(format: string, args...: any): (formatted: string)
- 
+
       Returns a formatted version of its variable number of arguments following
       the description given in its first argument, which must be a string. The
       format string follows the same rules as the ISO C function sprintf. The
       only differences are that the conversion specifiers and modifiers F, n,
-      *, h, L, and l are not supported and that there is an extra specifier, q.
-      Both width and precision, when present, are limited to two digits. 
+      \*, h, L, and l are not supported and that there is an extra specifier, q.
+      Both width and precision, when present, are limited to two digits.
 
       See `string.format <https://www.lua.org/manual/5.4/manual.html#pdf-string.format>`_
-    
+
    .. lua:function:: len(s: string): (length: Number)
 
       Receives a string and returns its length. The empty string "" has length
@@ -550,7 +571,7 @@ Lua Modules
       See `string.lower <https://www.lua.org/manual/5.4/manual.html#pdf-string.lower>`_
 
    .. lua:function:: upper(s: string): (converted: string)
-   
+
       Receives a string and returns a copy of this string with all lowercase
       letters changed to uppercase. All other characters are left unchanged.
       The definition of what a lowercase letter is depends on the current
@@ -562,9 +583,9 @@ Lua Modules
 
    `The Table Library <https://www.lua.org/pil/19.html>`_
    `Array Size <https://www.lua.org/pil/19.1.html>`_
-   
-   This is a subset of useful functions. There are more available in the 
-   `manual <https://www.lua.org/manual/5.4/manual.html#pdf-table>`_.
+
+   This is a subset of useful functions. There are more available in the manual:
+   `table <https://www.lua.org/manual/5.4/manual.html#pdf-table>`_.
 
    .. lua:function:: concat(list: table, sep: string|Number, i: Number, j: Number): (joined: string)
 
@@ -615,4 +636,187 @@ Lua Modules
 
       See `Sorting <https://www.lua.org/pil/19.3.html>`_
       `table.sort <https://www.lua.org/manual/5.4/manual.html#pdf-table.sort>`_
+
+.. _script-advanced:
+
+Advanced Scripting
+==================
+
+As script complexity starts to increase, you may find it useful to structure
+your Lua code into modules using the :lua:obj:`require` function. E.g.
+
+.. code-block:: text
+
+   MyRuleset/
+   |- MyRuleset/
+   |  |- feature1/
+   |  |  |- tests.lua
+   |  |- feature1.lua
+   |  |- feature1/
+   |  |  |- tests.lua
+   |  |- feature2.lua
+   |  |- script.lua
+   |  |- settings.lua
+   |  |- tests.lua
+   |- MyRuleset.serv
+
+Your :file:`script.lua` will then look something like:
+
+.. code-block:: lua
+
+    local settings = require("MyRuleset.settings")
+    local feature1 = require("MyRuleset.feature1")
+    local feature2 = require("MyRuleset.feature2")
+
+    function on_turn_begin(turn, year)
+      feature1.do_the_thing(turn)
+      feature2.do_something()
+    end
+
+    signal.connect("turn_begin", "on_turn_begin")
+
+    function on_unit_moved(unit, tile_from, tile_to)
+      feature2.track_unit(unit, tile_from, tile_to)
+    end
+
+    signal.connect("unit_moved", "on_unit_moved")
+
+    feature1.init(settings)
+    feature2.init(settings)
+
+Creating Modules
+----------------
+
+A Lua module is basically a script that returns an object. It could be a table
+of data, a function, or a table of functions.
+
+It might look something like this:
+
+.. code-block:: lua
+
+    local M = {}
+
+    function M.do_the_thing(turn)
+      if not M.settings.enabled then return end
+      if turn == M.settings.initial_turn then
+        something_cool_happened = true
+      end
+    end
+
+    function M.init(settings)
+      M.settings = settings.feature1
+    end
+
+    return M
+
+In this case, we have a module that can do something interesting on a
+configurable turn number. However, loading the module itself will do nothing,
+it just provides you with a table of functions to call in your main
+:file:`script.lua` or elsewhere
+
+The :file:`settings.lua` file in this example acts as a convenient place to modify
+configuration settings for all of the Lua features. It might look something
+like this:
+
+.. code-block:: lua
+
+    settings = {
+      feature1 = {
+        enabled = true,
+        initial_turn = 10
+      },
+      feature2 = {
+        enabled = true
+      }
+    }
+
+    return settings
+
+Since the ``settings`` are global in this example, they could then also be
+modified in :file:`MyRuleset.serv` like this:
+
+.. code-block:: text
+
+    lua cmd settings.feature1.enabled = true
+    lua cmd settings.feature1.initial_turn = 12
+
+    lua cmd settings.feature2.enabled = false
+
+Unit Testing
+------------
+
+To provide support for unit testing, we have included a copy of
+`luaunit v3.5 <https://luaunit.readthedocs.io/en/luaunit_v3_5>`_, which can be
+imported using the :lua:obj:`require` function.
+
+The simplest way is to add test functions to the global scope. Anything that
+starts with `test` (case-insensitive) will automatically be picked up as a unit
+test by luaunit. E.g.
+
+.. code-block:: lua
+
+    local lu = require("luaunit")
+
+    function testCanMoveUnit()
+      local unit = find.unit(nil, 437)
+      lu.assertTrue(unit:move(find.tile(42, 42), 0))
+      lu.assertEquals(unit.tile.x, 42)
+      lu.assertEquals(unit.tile.y, 42)
+    end
+
+    function run(...)
+      os.exit(lu.LuaUnit.new():run(...))
+    end
+
+.. note::
+
+   Note that ``os.exit`` is a shim added for compatibility with external
+   modules like luaunit. It does not exit the server as the real 
+   `os.exit <https://www.lua.org/manual/5.3/manual.html#pdf-os.exit>`_ would
+   do, just generates an error if it is a fail status and reports whether it
+   was a success or fail, and the code.
+
+You can then run the tests from the server console, like:
+
+.. code-block:: text
+
+    lua cmd require("MyRuleset.tests").run("-v")
+
+However, if you want to avoid polluting the global namespace, or organize your
+tests in a more structured way, you can also run tests explicitly with
+`runSuiteByInstances <https://luaunit.readthedocs.io/en/luaunit_v3_5/4_reference_doc.html#LuaUnit.runSuiteByInstances>`_. E.g.
+
+.. code-block:: lua
+
+    local lu = require("luaunit")
+
+    function run(...)
+      os.exit(lu.LuaUnit.new():runSuiteByInstances({
+        {"TestFeature1", require("MyRuleset.feature1.tests")},
+        {"TestFeature2", require("MyRuleset.feature2.tests")}
+      }, "--verbose", ...))
+    end
+
+In this instance, each feature module gets its own set of tests that are
+grouped separately in the readout.
+
+.. code-block:: lua
+
+    local lu = require("luaunit")
+    local feature1 = require("feature1")
+
+    local M = {}
+
+    function M.testDoesSomethingCool()
+      feature1.init({
+        feature1 = {
+          enabled = true,
+          initial_turn = 5
+        }
+      })
+      feature1.do_the_thing(5)
+      lu.assertTrue(something_cool_happened)
+    end
+
+    return M
 
