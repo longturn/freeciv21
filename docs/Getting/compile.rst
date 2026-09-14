@@ -344,6 +344,7 @@ See: https://docs.docker.com/engine/security/rootless/
 
    ./scripts/docker-build.sh # Builds and installs the project to the build-docker/ directory.
    ./scripts/docker-build.sh build # As above.
+   ./scripts/docker-build.sh server-image [latest] # Build a docker server image from the most recent build above
    ./scripts/docker-build.sh test # Runs the project tests and clang-tidy.
    ./scripts/docker-build.sh tidy # Runs clang-tidy on all uncommitted files.
    ./scripts/docker-build.sh tidy uncommitted # As above, and can take any clang-tidy arguments.
