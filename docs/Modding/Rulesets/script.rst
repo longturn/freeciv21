@@ -652,7 +652,7 @@ your Lua code into modules using the :lua:obj:`require` function. E.g.
    |  |- feature1/
    |  |  |- tests.lua
    |  |- feature1.lua
-   |  |- feature1/
+   |  |- feature2/
    |  |  |- tests.lua
    |  |- feature2.lua
    |  |- script.lua
@@ -712,7 +712,7 @@ It might look something like this:
 In this case, we have a module that can do something interesting on a
 configurable turn number. However, loading the module itself will do nothing,
 it just provides you with a table of functions to call in your main
-:file:`script.lua` or elsewhere
+:file:`script.lua` or elsewhere.
 
 The :file:`settings.lua` file in this example acts as a convenient place to modify
 configuration settings for all of the Lua features. It might look something
