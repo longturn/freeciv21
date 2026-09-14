@@ -46,8 +46,8 @@
 #include <shlobj.h>
 #include <windows.h>
 #elif !defined(ALWAYS_ROOT) // FREECIV_MSWINDOWS
-#include <unistd.h> // getuid, geteuid
-#endif              // FREECIV_MSWINDOWS
+#include <unistd.h>         // getuid, geteuid
+#endif                      // FREECIV_MSWINDOWS
 
 // std
 #include <algorithm> // std::sort, std::unique
