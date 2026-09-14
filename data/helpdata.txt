@@ -1175,7 +1175,7 @@ is empty.\
 "), _("\
 *TIP:* You can infiltrate enemy zones by first moving in a [Diplomat](fch:Unit/Diplomat) (or some other unit \
 which ignores ZOC), and then moving regular units onto the tile now occupied by the \
-[Diplomat](fch:Unit/Diplomat). By repeating this process (and optionally leaving some units behind to keep }
+[Diplomat](fch:Unit/Diplomat). By repeating this process (and optionally leaving some units behind to keep \
 tiles occupied), you can make a path through enemy territory.\
 ")
 
