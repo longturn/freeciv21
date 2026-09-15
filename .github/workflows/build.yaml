@@ -235,46 +235,6 @@ jobs:
           name: Windows-exe
           path: build/Windows-x86_64/Freeciv21-*.exe
 
-  windows_clang_msvc:
-    name: "Windows Clang"
-    runs-on: windows-latest
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    env:
-      # Prevent build errors due to long paths
-      VCPKG_ROOT: D:/vcpkg
-      VCPKG_DEFAULT_BINARY_CACHE: D:/vcpkg/bincache
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-      - name: Install VCPKG
-        uses: lukka/run-vcpkg@v11
-        with:
-          # 2026.07.29 Release
-          vcpkgGitCommitId: 9e593bb18ea69cc5095e012465dcd675a822ed0d
-          vcpkgDirectory: D:/vcpkg
-      # Ensure we have the most recent copy of the repo
-      - name: Update VCPKG
-        run: |
-          cd ${{ env.VCPKG_ROOT }}
-          git fetch
-          git pull origin master
-      - name: Configure
-        run: cmake -S . -B build --preset "windows-debug"
-      #- name: Debug Configure Failure
-      #  if: failure()
-      #  run: |
-      #    cat D:\a\freeciv21\freeciv21\vcpkg\buildtrees\qtdeclarative\install-x64-windows-dbg-out.log
-      #    cat D:\a\freeciv21\freeciv21\build\vcpkg-manifest-install.log
-      - name: Build
-        run: cmake --build build --config Debug
-      - name: Install
-        run: cmake --build build --target install
-      # ctest not compatible in visual studio with our build system
-      #- name: Test
-      #  run: cmake --build build --target test
-
   os_x_dyn:
     name: "macOS (x64-osx-custom)"
     runs-on: macos-15-intel
