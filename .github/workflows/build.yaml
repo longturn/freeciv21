@@ -492,7 +492,8 @@ jobs:
             readline \
             libunwind \
             elfutils \
-            pkgconf
+            pkgconf \
+            llvm-devel
 
           # Create an unpriviledged user to run tests as, otherwise the server
           # refuses to start (and rightfully so)
@@ -501,6 +502,8 @@ jobs:
           # Create a script with the commands to run
           cat >build-and-test.sh <<EOF
           cmake -B build -G Ninja \
+            -DCMAKE_C_COMPILER=/usr/local/bin/clang-devel \
+            -DCMAKE_CXX_COMPILER=/usr/local/bin/clang++-devel \
             -DCMAKE_BUILD_TYPE=RelWithDebInfo \
             -DCMAKE_INSTALL_PREFIX=/usr
           cmake --build build
