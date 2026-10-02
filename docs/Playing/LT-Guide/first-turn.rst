@@ -6,10 +6,10 @@
 The First Turn
 **************
 
-The first turn (typically ``T1``) is an incredibly important turn for any Longturn game. With any Longturn
-game, the first turn is always 3 days long (:math:`3\times24\text{h}`). There are many reasons for this, but
-a main one is that the first turn can either set you up for success or doom you to demise. Yes, it is that
-important.
+The first turn (typically ``T1``) is an incredibly important turn for any Longturn game. With a Longturn game,
+the first turn is typically double as long as an ordinary turn (:math:`2\times25\,\text{h}`). There are many
+reasons for this, but a main one is that the first turn can either set you up for success or doom you to
+demise. Yes, it is that important.
 
 .. note::
   If you have not played a game in some time or if this is a first time to play, be sure to explore the
@@ -20,10 +20,10 @@ important.
 
 Some thoughts on the first Turn:
 
-* The turn is purposely set for 3 full days. This gives plenty of time for all the players to get in and take
-  a measure of what they want to do. There is often a lot of analysis that occurs this first turn. Getting the
-  placement of your capital is very important, so take the time needed to fully evaluate your options before
-  you plant that first city.
+* The turn is purposely set for about 2 full days. This gives plenty of time for all the players to get in and
+  take a measure of what they want to do. There is often a lot of analysis that occurs this first turn.
+  Getting the placement of your capital is very important, so take the time needed to fully evaluate your
+  options before you plant that first city.
 
 * Many players will log in and take a screenshot of what they have been assigned by the server when the game
   was started and use a tool like Inkscape to mark up thoughts on where to potentially place cities, where to
