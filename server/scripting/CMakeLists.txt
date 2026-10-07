@@ -20,6 +20,9 @@ add_library(
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_server_gen.h
 )
 
+set_target_properties(scripting PROPERTIES AUTORCC ON)
+target_sources(scripting PRIVATE scripting.qrc)
+
 target_include_directories(scripting PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(scripting PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 

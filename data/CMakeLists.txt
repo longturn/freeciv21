@@ -76,6 +76,26 @@ if (FREECIV_ENABLE_SERVER OR FREECIV_ENABLE_RULEDIT)
     "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/default"
     COMPONENT freeciv21)
   install(
+    FILES
+    lua/luaunit.lua
+    lua/math.lua
+    DESTINATION
+    "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/lua"
+    COMPONENT freeciv21)
+  install(
+    FILES
+    lua/freeciv21/unit-tests.lua
+    DESTINATION
+    "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/lua/freeciv21"
+    COMPONENT freeciv21)
+  install(
+    FILES
+    lua/freeciv21/tests/require.lua
+    lua/freeciv21/tests/something_scary.so
+    DESTINATION
+    "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/lua/freeciv21/tests"
+    COMPONENT freeciv21)
+  install(
     FILES override/nation.ruleset
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/override"
     COMPONENT freeciv21)

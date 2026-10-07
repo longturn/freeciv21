@@ -10,6 +10,14 @@
 
 #pragma once
 
+// dependencies/sol2
+#include "sol/sol.hpp"
+
+// dependencies/lua
+extern "C" {
+#include "lua.h"
+}
+
 /* common/scriptcore */
 #include "luascript_types.h"
 
@@ -25,3 +33,5 @@ bool api_server_save(lua_State *L, const char *filename);
 const char *api_server_setting_get(lua_State *L, const char *sett_name);
 
 bool api_play_music(lua_State *L, Player *pplayer, const char *tag);
+
+sol::object api_server_require(sol::this_state state, const char *file_path);

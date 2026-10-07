@@ -19,6 +19,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QFileInfoList>
+#include <QLatin1Char>
 #include <QLatin1String>
 #include <QRegularExpression>
 #include <QStandardPaths>
@@ -44,9 +45,9 @@
 #include <lmcons.h> // UNLEN
 #include <shlobj.h>
 #include <windows.h>
-#else               // FREECIV_MSWINDOWS
-#include <unistd.h> // getuid, geteuid
-#endif              // FREECIV_MSWINDOWS
+#elif !defined(ALWAYS_ROOT) // FREECIV_MSWINDOWS
+#include <unistd.h>         // getuid, geteuid
+#endif                      // FREECIV_MSWINDOWS
 
 // std
 #include <algorithm> // std::sort, std::unique
@@ -224,6 +225,20 @@ bool is_safe_filename(const QString &name)
   const QRegularExpression regex(QLatin1String("^[\\w_\\-.@]+$"));
   return regex.match(name).hasMatch()
          && !name.contains(QLatin1String(PARENT_DIR_OPERATOR));
+}
+
+/**
+ * Check if the pathname is safe security-wise. This is intended to be used
+ * to make sure an untrusted filepath is safe to be used, allowing
+ * sub-directories.
+ */
+bool is_safe_filepath(const QString &pathname)
+{
+  const QRegularExpression regex(QLatin1String("^[\\w_\\-.@/]+$"));
+  return !pathname.isEmpty() && !pathname.startsWith(QLatin1Char('/'))
+         && !pathname.startsWith(QLatin1String("./"))
+         && !pathname.contains(QLatin1String(PARENT_DIR_OPERATOR))
+         && regex.match(pathname).hasMatch();
 }
 
 /**

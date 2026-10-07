@@ -9,29 +9,47 @@
  */
 
 #include <cstdarg>
+#include <cstdio> // fread, fclose
 #include <ctime>
-#include <sys/stat.h>
+
+// dependencies/lua
+extern "C" {
+#include "lua.h"
+}
+
+// dependencies/sol2
+#include "sol/sol.hpp"
 
 // utility
 #include "log.h"
 #include "registry.h"
 #include "registry_ini.h"
+#include "support.h" // fc_*
 
 /* common/scriptcore */
 #include "api_game_specenum.h"
 #include "luascript.h"
 #include "luascript_func.h"
 #include "luascript_signal.h"
+#include "luascript_types.h" // API_TYPE_*
 #include "tolua_game_gen.h"
 #include "tolua_signal_gen.h"
 
 // server
+#include "commands.h" // CMD_LUA
 #include "console.h"
 #include "server_connection.h"
 #include "stdinhand.h"
 
 /* server/scripting */
+#include "api_server_base.h" // api_server_require
 #include "tolua_server_gen.h"
+
+// Qt
+#include "QFileInfo"
+#include "QtLogging" // qFatal, QtMsgType
+#include <QStringLiteral>
+#include <QtResource> // Q_INIT_RESOURCE, Q_CLEANUP_RESOURCE
 
 #include "script_server.h"
 
@@ -266,6 +284,45 @@ static void script_server_code_save(struct section_file *file)
 }
 
 /**
+ * Loads a script from a Qt resource file and executes it.
+ */
+static void script_server_exec_resource(lua_State *L,
+                                        const QString &filename)
+{
+  Q_INIT_RESOURCE(scripting);
+
+  QFile in(filename);
+  if (!in.open(QFile::ReadOnly)) {
+    qCritical() << "Could not find resource:" << in.fileName();
+    qFatal("Missing resource");
+  }
+  const auto data = in.readAll();
+
+  // We trust that it loads.
+  sol::state_view lua(L);
+  lua.script(data.data(), in.fileName().toStdString());
+
+  Q_CLEANUP_RESOURCE(scripting);
+}
+
+/**
+ * Register a global functions for the secure script instance.
+ */
+static void script_server_secure_global_functions_init(sol::state_view state)
+{
+  state["require"] = api_server_require;
+}
+
+/**
+ * Runs server_sandbox_compat.lua.
+ */
+void script_server_sandbox_compat(lua_State *L)
+{
+  script_server_exec_resource(
+      L, QStringLiteral(":/lua/server_sandbox_compat.lua"));
+}
+
+/**
    Initialize the scripting state.
  */
 bool script_server_init()
@@ -292,6 +349,8 @@ bool script_server_init()
   tolua_server_open(fcl_main->state);
 
   luascript_common_z(fcl_main->state);
+  script_server_secure_global_functions_init(fcl_main->state);
+  script_server_sandbox_compat(fcl_main->state);
 
   script_server_code_init();
   script_server_vars_init();

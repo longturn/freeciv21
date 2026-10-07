@@ -104,6 +104,7 @@ const char *int_to_text(unsigned int number);
 bool is_ascii_name(const char *name);
 bool is_base64url(const char *s);
 bool is_safe_filename(const QString &name);
+bool is_safe_filepath(const QString &pathname);
 void randomize_base64url_string(char *s, size_t n);
 
 char *skip_leading_spaces(char *s);
