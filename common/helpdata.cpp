@@ -4353,10 +4353,12 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
             }
           }
           unit_type_iterate_end;
-          cat_snprintf(buf, bufsz,
-                       // TRANS: %s is list of unit types separated by 'or'
-                       _("* Pays no upkeep for %s.\n"),
-                       qUtf8Printable(strvec_to_or_list(fanatics)));
+          if (!fanatics.isEmpty()) {
+            cat_snprintf(buf, bufsz,
+                         // TRANS: %s is list of unit types separated by 'or'
+                         _("* Pays no upkeep for %s.\n"),
+                         qUtf8Printable(strvec_to_or_list(fanatics)));
+          }
         }
         break;
       case EFT_NO_UNHAPPY:
