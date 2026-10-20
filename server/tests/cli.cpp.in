@@ -43,6 +43,8 @@ void test_cli::read_data()
   QTest::newRow("set") << "set.serv" << true;
   // Re-reading the default ruleset works
   QTest::newRow("reread") << "reread.serv" << true;
+  // All LuaUnit tests pass
+  QTest::newRow("luaunit") << "luaunit.serv" << true;
   // Unknown commands are rejected
   QTest::newRow("unknown") << "unknown.serv" << false;
 }

@@ -8,8 +8,26 @@
  see https://www.gnu.org/licenses/.
  */
 
+// dependencies/sol2
+#include "sol/sol.hpp"
+
+// dependencies/lua
+extern "C" {
+#include "lua.h"
+}
+
+// utilities
+#include "fcintl.h" // _
+#include "shared.h" // is_safe_filepath, fileinfoname
+
+// common
+#include "game.h"
+#include "packets_gen.h" // lsend_packet_*, packet_*
+#include "support.h"     // sz_strlcpy
+
 /* common/scriptcore */
 #include "luascript.h"
+#include "luascript_types.h" // Player
 
 // server
 #include "score.h"
@@ -19,8 +37,11 @@
 /* server/sqavegame */
 #include "savemain.h"
 
-/* server/scripting */
-#include "script_server.h"
+// Qt
+#include <QLatin1Char>
+#include <QLatin1String>
+#include <QString>
+#include <Qt> // CaseInsensitive
 
 #include "api_server_base.h"
 
@@ -99,4 +120,41 @@ const char *api_server_setting_get(lua_State *L, const char *sett_name)
   }
 
   return setting_value_name(pset, false, buf, sizeof(buf));
+}
+
+/**
+ * Like 'require' but is restricted to '.lua' files and to the current
+ * rulesetdir, and the 'lua' directory in the 'data' path.
+ */
+sol::object api_server_require(sol::this_state s, const char *file_path)
+{
+  LUASCRIPT_CHECK_STATE(s, sol::nil);
+  LUASCRIPT_CHECK_ARG_NIL(s, file_path, 2, string, sol::nil);
+  const QLatin1String lua_ext(".lua");
+  QString relative_path = QString::fromUtf8(file_path);
+  if (relative_path.endsWith(lua_ext, Qt::CaseInsensitive)) {
+    relative_path.chop(4);
+  }
+  relative_path.replace(QLatin1Char('.'), QLatin1Char('/'));
+  relative_path += lua_ext;
+  if (!is_safe_filepath(relative_path)) {
+    luascript_error(
+        s, _("Freeciv21 script '%s' disallowed for security reasons."),
+        relative_path.toLocal8Bit().constData());
+    return sol::nil;
+  }
+  QString absolute_path = fileinfoname(
+      get_data_dirs(),
+      game.server.rulesetdir + QLatin1String("/") + relative_path);
+  if (absolute_path.isEmpty()) {
+    absolute_path =
+        fileinfoname(get_data_dirs(), QLatin1String("lua/") + relative_path);
+  }
+  if (absolute_path.isEmpty()) {
+    luascript_error(s, _("No Freeciv21 script found by the name '%s'."),
+                    relative_path.toLocal8Bit().constData());
+    return sol::nil;
+  }
+  return sol::state_view(s).require_file(relative_path.toStdString(),
+                                         absolute_path.toStdString(), false);
 }

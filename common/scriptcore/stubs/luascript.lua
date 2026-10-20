@@ -51,7 +51,7 @@ function fc_version() end
 --- `The Operating System Library <https://www.lua.org/pil/22.html>`_
 ---
 --- Only these `time-related functions <https://www.lua.org/pil/22.1.html>`_ 
---- from the `manual <https://www.lua.org/manual/5.4/manual.html#pdf-os>`_ 
+--- from the manual: `os <https://www.lua.org/manual/5.4/manual.html#pdf-os>`_ 
 --- are available.
 ---
 --- !doctype table
@@ -61,7 +61,7 @@ os = {}
 --- `The Mathematical Library <https://www.lua.org/pil/18.html>`_
 ---
 --- This is a subset of useful functions. There are more available in the 
---- `manual <https://www.lua.org/manual/5.4/manual.html#pdf-math>`_.
+--- manual: `math <https://www.lua.org/manual/5.4/manual.html#pdf-math>`_.
 ---
 --- !doctype table
 --- @class math

@@ -5,7 +5,7 @@
 # Build stage
 FROM debian:stable-20260406-slim
 
-ARG BUILD_TYPE=Debug
+ARG CMAKE_BUILD_TYPE=Debug
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Build dependencies
@@ -24,7 +24,7 @@ deps=(
     libkf6archive-dev=6.13.0-2
     liblua5.3-dev=5.3.6-2+b4
     libsdl2-mixer-dev=2.8.1+dfsg-2
-    libsqlite3-dev=3.46.1-7+deb13u1
+    libsqlite3-dev=3.46.1-7+deb13u2
     python3=3.13.5-1
     python3-sphinx=8.1.3-5
     qt6-base-dev=6.8.2+dfsg-9+deb13u2
@@ -43,7 +43,7 @@ case "$(uname -m)" in
     ) ;;
   *) echo "Unsupported arch: $(uname -m)" >&2; exit 1 ;; \
 esac
-if [[ "$BUILD_TYPE" == "Debug" ]]; then
+if [[ ${CMAKE_BUILD_TYPE} == "Debug" ]]; then
   deps+=(
       libunwind-dev=1.8.1-0.1
       libdw-dev=0.192-4

@@ -129,6 +129,8 @@ server's own command-line. This server command-line is separate from the OS term
   only member). This command changes which team a player is a member of. Use ``""`` if names contain
   whitespace.
 
+.. _server-command-rulesetdir:
+
 ``/rulesetdir <directory>``
   Choose new ruleset directory or modpack.
 
@@ -429,6 +431,8 @@ server's own command-line. This server command-line is separate from the OS term
 ``/default <option name>``
   Reset the option to its default value. If the default ever changes in a future version, the option's value
   will follow that change.
+
+.. _server-command-lua:
 
 ``/lua cmd <script line>``
   Evaluate a line of Freeciv21 script or a Freeciv script file in the current game. Variations are:
