@@ -306,7 +306,7 @@ static void script_server_exec_resource(lua_State *L,
 }
 
 /**
- * Register a global functions for the secure script instance.
+ * Register global functions for the secure script instance.
  */
 static void script_server_secure_global_functions_init(sol::state_view state)
 {
