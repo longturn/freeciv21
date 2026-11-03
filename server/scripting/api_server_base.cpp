@@ -133,7 +133,7 @@ sol::object api_server_require(sol::this_state s, const char *file_path)
   const QLatin1String lua_ext(".lua");
   QString relative_path = QString::fromUtf8(file_path);
   if (relative_path.endsWith(lua_ext, Qt::CaseInsensitive)) {
-    relative_path.chop(4);
+    relative_path.chop(lua_ext.size());
   }
   relative_path.replace(QLatin1Char('.'), QLatin1Char('/'));
   relative_path += lua_ext;
