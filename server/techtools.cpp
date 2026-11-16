@@ -1035,7 +1035,12 @@ void choose_tech(struct research *research, Tech_type_id tech)
     return;
   }
 
-  if (!research->got_tech && research->researching_saved == A_UNKNOWN) {
+  /* Re-selecting the current advance is not a change of subject: this is
+   * how the client's Refresh button asks for an immediate completion
+   * check (e.g. after tech leak). Don't charge the change-subject
+   * penalty. */
+  if (!research->got_tech && research->researching_saved == A_UNKNOWN
+      && tech != research->researching) {
     research->bulbs_researching_saved = research->bulbs_researched;
     research->researching_saved = research->researching;
     // Subtract a penalty because we changed subject.
