@@ -1,32 +1,48 @@
-/*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
- part of Freeciv21. Freeciv21 is free software: you can redistribute it
- and/or modify it under the terms of the GNU  General Public License  as
- published by the Free Software Foundation, either version 3 of the
- License,  or (at your option) any later version. You should have received
- a copy of the GNU General Public License along with Freeciv21. If not,
- see https://www.gnu.org/licenses/.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+
+// self
+#include "api_server_edit.h"
 
 // utility
 #include "city.h"
 #include "cityturn.h"
 #include "fcintl.h"
+#include "log.h"
 #include "rand.h"
+#include "shared.h"
+#include "support.h"
 
 // common
-#include "movement.h"
-#include "research.h"
-#include "unittype.h"
-/* common/scriptcore */
-#include "api_game_find.h"
+#include "actions.h"
+#include "city.h"
+#include "extras.h"
+#include "fc_types.h"
+#include "featured_text.h"
+#include "game.h"
 #include "luascript.h"
+#include "luascript_types.h"
+#include "movement.h"
+#include "nation.h"
+#include "player.h"
+#include "research.h"
+#include "tech.h"
+#include "terrain.h"
+#include "tile.h"
+#include "unit.h"
+#include "unittype.h"
+
+// dependencies/lua
+extern "C" {
+#include "lua.h"
+}
 
 // server
 #include "aiiface.h"
 #include "barbarian.h"
 #include "citytools.h"
 #include "console.h" // enum rfc_status
+#include "mapgen_utils.h"
 #include "maphand.h"
 #include "notify.h"
 #include "plrhand.h"
@@ -36,10 +52,13 @@
 #include "unithand.h"
 #include "unittools.h"
 
-/* server/generator */
-#include "mapgen_utils.h"
+// Qt
+#include <QString>
+#include <QtGlobal>  // qUtf8Printable
+#include <QtLogging> // qInfo, qDebug, qWarning, qCritical
 
-#include "api_server_edit.h"
+// std
+#include <cstring> // str*, mem*
 
 /**
    Unleash barbarians on a tile, for example from a hut

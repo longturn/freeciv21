@@ -1,33 +1,29 @@
-/*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
- __    __          part of Freeciv21. Freeciv21 is free software: you can
-/ \\..// \    redistribute it and/or modify it under the terms of the GNU
-  ( oo )        General Public License  as published by the Free Software
-   \__/         Foundation, either version 3 of the License,  or (at your
-                      option) any later version. You should have received
-    a copy of the GNU General Public License along with Freeciv21. If not,
-                  see https://www.gnu.org/licenses/.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+
+// self
+#include "api_server_game_methods.h"
 
 // utility
-#include "fcintl.h"
+#include "support.h"
+#include "timing.h"
 
 // common
+#include "fc_types.h"
 #include "game.h"
-
-/* common/scriptcore */
 #include "luascript.h"
+#include "luascript_types.h"
+
+// dependencies/lua
+extern "C" {
+#include "lua.h"
+}
 
 // ai
 #include "aitraits.h" // ai_trait_get_value()
 
 // server
 #include "srv_main.h"
-
-/* server/scripting */
-#include "script_server.h"
-
-#include "api_server_game_methods.h"
 
 /**
  * Return the number of seconds since the last turn change.
