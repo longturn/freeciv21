@@ -1,15 +1,5 @@
-/*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2021 Freeciv21 and Freeciv
-\_   \        /  __/          contributors. This file is part of Freeciv21.
- _\   \      /  /__     Freeciv21 is free software: you can redistribute it
- \___  \____/   __/    and/or modify it under the terms of the GNU  General
-     \_       _/          Public License  as published by the Free Software
-       | @ @  \_               Foundation, either version 3 of the  License,
-       |                              or (at your option) any later version.
-     _/     /\                  You should have received  a copy of the GNU
-    /o)  (o/\ \_                General Public License along with Freeciv21.
-    \_____/ /                     If not, see https://www.gnu.org/licenses/.
-      \____/        ********************************************************/
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
 /*
   This file includes the definition of a new savegame format introduced with
@@ -56,15 +46,11 @@
 
 */
 
+// self
+#include "savegame2.h"
+
+// generated
 #include <fc_config.h>
-
-#include <QBitArray>
-
-#include <cstdarg>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <sstream>
 
 // utility
 #include "bitvector.h"
@@ -73,6 +59,7 @@
 #include "log.h"
 #include "rand.h"
 #include "registry.h"
+#include "registry_ini.h"
 #include "shared.h"
 #include "support.h" // bool type
 
@@ -85,28 +72,50 @@
 #include "citizens.h"
 #include "city.h"
 #include "diptreaty.h"
+#include "extras.h"
+#include "fc_types.h"
 #include "game.h"
 #include "government.h"
+#include "improvement.h"
 #include "map.h"
+#include "map_types.h"
 #include "mapimg.h"
 #include "movement.h"
 #include "multipliers.h"
-#include "packets.h"
+#include "nation.h"
+#include "player.h"
+#include "requirements.h"
 #include "research.h"
 #include "rgbcolor.h"
+#include "road.h"
+#include "spaceship.h"
 #include "specialist.h"
 #include "style.h"
 #include "team.h"
+#include "tech.h"
+#include "terrain.h"
+#include "tile.h"
+#include "traderoutes.h"
 #include "unit.h"
 #include "unitlist.h"
-#include "version.h"
+#include "unittype.h"
+#include "vision.h"
+#include "workertask.h"
 #include "worklist.h"
 
+// ai
+#include "aitraits.h"
+#include "difficulty.h"
+
 // server
+#include "advbuilding.h"
+#include "advdata.h"
 #include "citizenshand.h"
 #include "citytools.h"
 #include "cityturn.h"
 #include "diplhand.h"
+#include "infracache.h"
+#include "mapgen_utils.h"
 #include "maphand.h"
 #include "meta.h"
 #include "notify.h"
@@ -116,28 +125,26 @@
 #include "sanitycheck.h"
 #include "savecompat.h"
 #include "score.h"
+#include "script_server.h"
 #include "settings.h"
 #include "spacerace.h"
 #include "srv_main.h"
 #include "techtools.h"
 #include "unittools.h"
 
-/* server/advisors */
-#include "advbuilding.h"
-#include "advdata.h"
-#include "infracache.h"
+// Qt
+#include <QBitArray>
+#include <QByteArrayAlgorithms> // qstr*
+#include <QLatin1String>
+#include <QtLogging> // qInfo, qDebug, qWarning, qCritical
 
-/* server/generator */
-#include "mapgen_utils.h"
-
-/* server/scripting */
-#include "script_server.h"
-
-// ai
-#include "aitraits.h"
-#include "difficulty.h"
-
-#include "savegame2.h"
+// std
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <locale> // std::locale
+#include <sstream>
 
 extern bool sg_success;
 

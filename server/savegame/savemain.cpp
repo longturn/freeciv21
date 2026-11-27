@@ -1,44 +1,50 @@
-/*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
-\_   \        /  __/          contributors. This file is part of Freeciv21.
- _\   \      /  /__     Freeciv21 is free software: you can redistribute it
- \___  \____/   __/    and/or modify it under the terms of the GNU  General
-     \_       _/          Public License  as published by the Free Software
-       | @ @  \_               Foundation, either version 3 of the  License,
-       |                              or (at your option) any later version.
-     _/     /\                  You should have received  a copy of the GNU
-    /o)  (o/\ \_                General Public License along with Freeciv21.
-    \_____/ /                     If not, see https://www.gnu.org/licenses/.
-      \____/        ********************************************************/
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
+// self
+#include "savemain.h"
+
+// generated
 #include <fc_config.h>
 
-// Qt
-#include <QDir>
-#include <QString>
-
 // utility
+#include "fcintl.h"
 #include "fcthread.h"
 #include "log.h"
 #include "registry.h"
 #include "registry_ini.h"
+#include "support.h"
+#include "timing.h"
 
 // common
 #include "ai.h"
 #include "capability.h"
+#include "city.h"
+#include "fc_types.h"
+#include "featured_text.h"
 #include "game.h"
+#include "player.h"
 #include "unitlist.h"
 
 // server
+#include "civ2.h"
 #include "console.h"
 #include "notify.h"
-
-/* server/savegame */
-#include "civ2.h"
 #include "savegame2.h"
 #include "savegame3.h"
+#include "srv_main.h"
 
-#include "savemain.h"
+// Qt
+#include <QDir>
+#include <QGlobalStatic> // Q_GLOBAL_STATIC
+#include <QLatin1String>
+#include <QLoggingCategory> // qCDebug, qCWarning, qCCritical
+#include <QString>
+#include <QThread>
+#include <QtLogging> // qInfo, qDebug, qWarning, qCritical
+
+// std
+#include <cstring> // str*, mem*
 
 Q_GLOBAL_STATIC(fcThread, save_thread);
 

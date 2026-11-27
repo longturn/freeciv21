@@ -1,15 +1,8 @@
-/*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
-\_   \        /  __/          contributors. This file is part of Freeciv21.
- _\   \      /  /__     Freeciv21 is free software: you can redistribute it
- \___  \____/   __/    and/or modify it under the terms of the GNU  General
-     \_       _/          Public License  as published by the Free Software
-       | @ @  \_               Foundation, either version 3 of the  License,
-       |                              or (at your option) any later version.
-     _/     /\                  You should have received  a copy of the GNU
-    /o)  (o/\ \_                General Public License along with Freeciv21.
-    \_____/ /                     If not, see https://www.gnu.org/licenses/.
-      \____/        ********************************************************/
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+
+// self
+#include "savecompat.h"
 
 // utility
 #include "capability.h"
@@ -17,19 +10,37 @@
 #include "log.h"
 #include "registry.h"
 #include "registry_ini.h"
+#include "shared.h"
+#include "support.h"
 
 // common
 #include "actions.h"
 #include "base.h"
+#include "city.h"
+#include "extras.h"
+#include "fc_types.h"
+#include "game.h"
 #include "map.h"
+#include "player.h"
+#include "road.h"
 #include "specialist.h"
 #include "team.h"
+#include "terrain.h"
+#include "tile.h"
+#include "unit.h"
+#include "unitlist.h"
+#include "unittype.h"
 
 // server
 #include "aiiface.h"
 #include "unittools.h"
 
-#include "savecompat.h"
+// Qt
+#include <QByteArrayAlgorithms> // qstr*
+#include <QtLogging>            // qInfo, qDebug, qWarning, qCritical
+
+// std
+#include <cstring> // str*, mem*
 
 bool sg_success;
 

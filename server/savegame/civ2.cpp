@@ -1,6 +1,8 @@
-// SPDX-License-Identifier: GPLv3-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 // SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
+// self
 #include "civ2.h"
 
 // utility
@@ -19,12 +21,15 @@
 #include "government.h"
 #include "idex.h"
 #include "map.h"
+#include "map_types.h"
 #include "nation.h"
 #include "player.h"
 #include "rgbcolor.h"
+#include "road.h"
 #include "specialist.h"
 #include "team.h"
 #include "terrain.h"
+#include "tile.h"
 
 // ai
 #include "aitraits.h"
@@ -40,13 +45,25 @@
 #include "srv_main.h"
 #include "vision.h"
 
+// Qt
+#include <QByteArray> // QByteArrayLiteral
+#include <QDataStream>
 #include <QFile>
 #include <QString>
 #include <QStringDecoder>
 #include <QtDebug>
 #include <QtEndian>
+#include <QtLogging>             // qInfo, qDebug, qWarning, qCritical
+#include <QtPreprocessorSupport> // Q_UNUSED
 
+// std
+#include <array>   // std::array
+#include <cstddef> // std::byte
 #include <cstdint>
+#include <string>      // std::string
+#include <string_view> // std::string_view
+#include <utility>     // std::ignore
+#include <vector>      // std:vector
 
 /**
  * \file civ2.cpp Loads civ2 saves.
