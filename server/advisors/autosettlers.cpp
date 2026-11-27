@@ -1,18 +1,12 @@
-/*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
-\_   \        /  __/          contributors. This file is part of Freeciv21.
- _\   \      /  /__     Freeciv21 is free software: you can redistribute it
- \___  \____/   __/    and/or modify it under the terms of the GNU  General
-     \_       _/          Public License  as published by the Free Software
-       | @ @  \_               Foundation, either version 3 of the  License,
-       |                              or (at your option) any later version.
-     _/     /\                  You should have received  a copy of the GNU
-    /o)  (o/\ \_                General Public License along with Freeciv21.
-    \_____/ /                     If not, see https://www.gnu.org/licenses/.
-      \____/        ********************************************************/
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+
+// self
+#include "autosettlers.h"
 
 // utility
 #include "log.h"
+#include "shared.h"
 #include "support.h"
 #include "timing.h"
 
@@ -21,38 +15,41 @@
 #include "ai.h"
 #include "base.h"
 #include "city.h"
+#include "citymap.h"
+#include "extras.h"
+#include "fc_types.h"
 #include "game.h"
 #include "government.h"
 #include "map.h"
 #include "movement.h"
 #include "nation.h"
-#include "packets.h"
-#include "unitlist.h"
-#include "workertask.h"
-
-/* common/aicore */
-#include "citymap.h"
 #include "path_finding.h"
 #include "pf_tools.h"
-
-// server
-#include "citytools.h"
-#include "maphand.h"
-#include "srv_log.h"
-#include "unithand.h"
-#include "unittools.h"
-
-/* server/advisors */
-#include "advbuilding.h"
-#include "advdata.h"
-#include "advgoto.h"
-#include "advtools.h"
-#include "infracache.h"
+#include "player.h"
+#include "road.h"
+#include "terrain.h"
+#include "tile.h"
+#include "unit.h"
+#include "unitlist.h"
+#include "unittype.h"
+#include "workertask.h"
 
 // ai
 #include "handicaps.h"
 
-#include "autosettlers.h"
+// server
+#include "advbuilding.h"
+#include "advgoto.h"
+#include "advtools.h"
+#include "citytools.h"
+#include "infracache.h"
+#include "srv_log.h"
+#include "unithand.h"
+#include "unittools.h"
+
+// Qt
+#include <QString>
+#include <QStringLiteral>
 
 /* This factor is multiplied on when calculating the want.  This is done
  * to avoid rounding errors in comparisons when looking for the best
@@ -750,7 +747,7 @@ adv_want settler_evaluate_improvements(struct unit *punit,
           }
           extra_type_iterate_end;
         } // endif: can we arrive sooner than current worker, if any?
-      }   // endif: are we travelling to a legal destination?
+      } // endif: are we travelling to a legal destination?
     }
     city_tile_iterate_index_end;
   }
