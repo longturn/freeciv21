@@ -1,27 +1,24 @@
-/*
-             ____             Copyright (c) 1996-2020 Freeciv21 and Freeciv
-            /    \__          contributors. This file is part of Freeciv21.
-|\         /    @   \   Freeciv21 is free software: you can redistribute it
-\ \_______|    \  .:|>         and/or modify it under the terms of the GNU
- \      ##|    | \__/     General Public License  as published by the Free
-  |    ####\__/   \   Software Foundation, either version 3 of the License,
-  /  /  ##       \|                  or (at your option) any later version.
- /  /__________\  \                 You should have received a copy of the
- L_JJ           \__JJ      GNU General Public License along with Freeciv21.
-                                 If not, see https://www.gnu.org/licenses/.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+
+// self
+#include "fracture_map.h"
+
 // utility
+#include "log.h"
 #include "rand.h"
 
 // common
+#include "fc_types.h"
+#include "game.h"
 #include "map.h"
+#include "terrain.h"
+#include "tile.h"
 
-/* server/generator */
+// server
 #include "height_map.h"
 #include "mapgen_topology.h"
 #include "mapgen_utils.h"
-
-#include "fracture_map.h"
 
 static void circle_bresenham(int xc, int yc, int r, int nn);
 static void fmfill(int x, int y, int c, int r);

@@ -1,24 +1,8 @@
-/*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
- part of Freeciv21. Freeciv21 is free software: you can redistribute it
- and/or modify it under the terms of the GNU  General Public License  as
- published by the Free Software Foundation, either version 3 of the
- License,  or (at your option) any later version. You should have received
- a copy of the GNU General Public License along with Freeciv21. If not,
- see https://www.gnu.org/licenses/.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
-#include <cstdarg>
-#include <cstdio> // fread, fclose
-#include <ctime>
-
-// dependencies/lua
-extern "C" {
-#include "lua.h"
-}
-
-// dependencies/sol2
-#include "sol/sol.hpp"
+// self
+#include "script_server.h"
 
 // utility
 #include "log.h"
@@ -26,7 +10,7 @@ extern "C" {
 #include "registry_ini.h"
 #include "support.h" // fc_*
 
-/* common/scriptcore */
+// common
 #include "api_game_specenum.h"
 #include "luascript.h"
 #include "luascript_func.h"
@@ -35,23 +19,32 @@ extern "C" {
 #include "tolua_game_gen.h"
 #include "tolua_signal_gen.h"
 
+// dependencies/sol2
+#include "sol/sol.hpp"
+
+// dependencies/lua
+extern "C" {
+#include "lua.h"
+}
+
 // server
-#include "commands.h" // CMD_LUA
+#include "api_server_base.h" // api_server_require
+#include "commands.h"        // CMD_LUA
 #include "console.h"
 #include "server_connection.h"
 #include "stdinhand.h"
-
-/* server/scripting */
-#include "api_server_base.h" // api_server_require
 #include "tolua_server_gen.h"
 
 // Qt
 #include "QFileInfo"
 #include "QtLogging" // qFatal, QtMsgType
+#include <QString>
 #include <QStringLiteral>
 #include <QtResource> // Q_INIT_RESOURCE, Q_CLEANUP_RESOURCE
 
-#include "script_server.h"
+// std
+#include <cstdarg>
+#include <cstdio> // fread, fclose
 
 /**
    Lua virtual machine states.

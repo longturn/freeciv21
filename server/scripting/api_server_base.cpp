@@ -1,12 +1,19 @@
-/*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
- part of Freeciv21. Freeciv21 is free software: you can redistribute it
- and/or modify it under the terms of the GNU  General Public License  as
- published by the Free Software Foundation, either version 3 of the
- License,  or (at your option) any later version. You should have received
- a copy of the GNU General Public License along with Freeciv21. If not,
- see https://www.gnu.org/licenses/.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+
+// self
+#include "api_server_base.h"
+
+// utilities
+#include "fcintl.h" // _
+#include "shared.h" // is_safe_filepath, fileinfoname
+
+// common
+#include "game.h"
+#include "luascript.h"
+#include "luascript_types.h" // Player
+#include "packets_gen.h"     // lsend_packet_*, packet_*
+#include "support.h"         // sz_strlcpy
 
 // dependencies/sol2
 #include "sol/sol.hpp"
@@ -16,34 +23,17 @@ extern "C" {
 #include "lua.h"
 }
 
-// utilities
-#include "fcintl.h" // _
-#include "shared.h" // is_safe_filepath, fileinfoname
-
-// common
-#include "game.h"
-#include "packets_gen.h" // lsend_packet_*, packet_*
-#include "support.h"     // sz_strlcpy
-
-/* common/scriptcore */
-#include "luascript.h"
-#include "luascript_types.h" // Player
-
 // server
+#include "savemain.h"
 #include "score.h"
 #include "settings.h"
 #include "srv_main.h"
-
-/* server/sqavegame */
-#include "savemain.h"
 
 // Qt
 #include <QLatin1Char>
 #include <QLatin1String>
 #include <QString>
 #include <Qt> // CaseInsensitive
-
-#include "api_server_base.h"
 
 /**
    Return the civilization score (total) for player

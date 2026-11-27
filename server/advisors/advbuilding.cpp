@@ -1,41 +1,37 @@
-/*__            ___                 ***************************************
-/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
-\_   \        /  __/          contributors. This file is part of Freeciv21.
- _\   \      /  /__     Freeciv21 is free software: you can redistribute it
- \___  \____/   __/    and/or modify it under the terms of the GNU  General
-     \_       _/          Public License  as published by the Free Software
-       | @ @  \_               Foundation, either version 3 of the  License,
-       |                              or (at your option) any later version.
-     _/     /\                  You should have received  a copy of the GNU
-    /o)  (o/\ \_                General Public License along with Freeciv21.
-    \_____/ /                     If not, see https://www.gnu.org/licenses/.
-      \____/        ********************************************************/
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
+
+// self
+#include "advbuilding.h"
+
+// utility
+#include "log.h"
 
 // common
 #include "actions.h"
 #include "ai.h"
 #include "city.h"
+#include "fc_types.h"
 #include "game.h"
+#include "improvement.h"
 #include "movement.h"
-#include "player.h"
-#include "specialist.h"
-
-/* common/aicore */
 #include "path_finding.h"
 #include "pf_tools.h"
-
-// server
-#include "citytools.h"
-#include "srv_log.h"
-
-/* server/advisors */
-#include "advdata.h"
-#include "infracache.h" // adv_city
+#include "player.h"
+#include "terrain.h"
+#include "tile.h"
+#include "unit.h"
+#include "unittype.h"
 
 // ai
 #include "handicaps.h"
 
-#include "advbuilding.h"
+// server
+#include "advchoice.h"
+#include "advdata.h"
+#include "citytools.h"
+#include "infracache.h"
+#include "srv_log.h"
 
 /**
    Calculate walking distance to nearest friendly cities from every city.

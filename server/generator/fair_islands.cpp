@@ -1,22 +1,40 @@
-// SPDX-License-Identifier: GPLv3-or-later
-// SPDX-FileCopyrightText: Freeciv21 authors
-// SPDX-FileCopyrightText: Freeciv authors
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 // SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
+// self
 #include "fair_islands.h"
 
-// common
-#include "fc_types.h"
-#include "map.h"
-#include "nation.h"
-#include "team.h"
+// utility
+#include "bitvector.h"
+#include "log.h"
+#include "rand.h"
+#include "shared.h"
 
-// server/generator
+// common
+#include "city.h"
+#include "extras.h"
+#include "fc_types.h"
+#include "game.h"
+#include "map.h"
+#include "map_types.h"
+#include "nation.h"
+#include "player.h"
+#include "road.h"
+#include "team.h"
+#include "terrain.h"
+#include "tile.h"
+
+// server
 #include "mapgen.h"
 #include "mapgen_utils.h"
 
-// utility
-#include "rand.h"
+// Qt
+#include <QtLogging> // qDebug
+
+// std
+#include <cstdlib> // abs
+#include <cstring> // str*, mem*
 
 /**
   Fair island generator types.

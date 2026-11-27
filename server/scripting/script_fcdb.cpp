@@ -1,33 +1,37 @@
-/*
- Copyright (c) 1996-2021 Freeciv21 and Freeciv contributors. This file is
- part of Freeciv21. Freeciv21 is free software: you can redistribute it
- and/or modify it under the terms of the GNU  General Public License  as
- published by the Free Software Foundation, either version 3 of the
- License,  or (at your option) any later version. You should have received
- a copy of the GNU General Public License along with Freeciv21. If not,
- see https://www.gnu.org/licenses/.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
-// Qt
-#include <QStandardPaths>
-
-// sol2
-#include "sol/sol.hpp"
+// self
+#include "script_fcdb.h"
 
 // utility
 #include "log.h"
+#include "support.h"
 
-/* common/scriptcore */
+// common
 #include "luascript.h"
 #include "tolua_common_a_gen.h"
 #include "tolua_game_gen.h"
 
+// dependencies/sol2
+#include "sol/forward.hpp"
+#include "sol/sol.hpp"
+
 // server
 #include "auth.h"
+#include "commands.h"
 #include "console.h"
+#include "fcdb.h"
 #include "stdinhand.h"
 
-#include "script_fcdb.h"
+// Qt
+#include <QStandardPaths>
+#include <QString>   // qUtf8Printable
+#include <QtLogging> // qInfo, qDebug, qWarning, qCritical
+
+// std
+#include <cstdarg>   // va_*
+#include <exception> // std::exception
 
 #define SCRIPT_FCDB_LUA_FILE "freeciv21/database.lua"
 

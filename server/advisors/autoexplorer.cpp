@@ -1,41 +1,38 @@
-/*
- Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
- __    __          part of Freeciv21. Freeciv21 is free software: you can
-/ \\..// \    redistribute it and/or modify it under the terms of the GNU
-  ( oo )        General Public License  as published by the Free Software
-   \__/         Foundation, either version 3 of the License,  or (at your
-                      option) any later version. You should have received
-    a copy of the GNU General Public License along with Freeciv21. If not,
-                  see https://www.gnu.org/licenses/.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 
-#include <cmath> // log
+// self
+#include "autoexplorer.h"
 
 // utility
 #include "log.h"
+#include "shared.h"
 
 // common
 #include "ai.h"
+#include "city.h"
+#include "extras.h"
+#include "fc_types.h"
+#include "game.h"
 #include "map.h"
 #include "movement.h"
-#include "player.h"
-#include "unit.h"
-
-/* common/aicore */
 #include "path_finding.h"
 #include "pf_tools.h"
+#include "player.h"
+#include "tile.h"
+#include "unit.h"
+#include "unittype.h"
 
 // server
+#include "advgoto.h"
 #include "maphand.h"
 #include "srv_log.h"
-
-/* server/advisors */
-#include "advgoto.h"
 
 // ai
 #include "handicaps.h"
 
-#include "autoexplorer.h"
+// std
+#include <cmath> // log
 
 /**
    Determine if a tile is likely to be native, given information that
