@@ -1,25 +1,38 @@
-// SPDX-License-Identifier: GPLv3-or-later
-// SPDX-FileCopyrightText: Freeciv21 authors
-// SPDX-FileCopyrightText: Freeciv authors
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Freeciv21 and Freeciv Contributors
 // SPDX-FileCopyrightText: Louis Moureaux <m_louis30@yahoo.com>
 
+// self
 #include "islands.h"
 
+// utility
+#include "bitvector.h"
+#include "fcintl.h"
+#include "log.h"
+#include "rand.h"
+
 // common
+#include "fc_types.h"
 #include "game.h"
 #include "map.h"
 #include "map_types.h"
+#include "player.h"
+#include "road.h"
 #include "terrain.h"
+#include "tile.h"
 
-// server/generator
+// server
 #include "height_map.h"
 #include "mapgen.h"
 #include "mapgen_topology.h"
 #include "mapgen_utils.h"
 #include "temperature_map.h"
 
-// utility
-#include "rand.h"
+// Qt
+#include <QtLogging> // qInfo, qCritical
+
+// std
+#include <cstring> // str*, mem*
 
 // common variables for generator 2, 3 and 4
 struct gen234_state {
