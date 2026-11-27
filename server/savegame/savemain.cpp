@@ -40,6 +40,7 @@
 #include <QLatin1String>
 #include <QLoggingCategory> // qCDebug, qCWarning, qCCritical
 #include <QString>
+#include <QStringLiteral>
 #include <QThread>
 #include <QtLogging> // qInfo, qDebug, qWarning, qCritical
 
