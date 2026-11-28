@@ -53,8 +53,8 @@ if(MSYS OR MINGW)
   # Install OpenSSL library, not found with GET_RUNTIME_DEPENDENCIES
   install(
     FILES
-    ${CLANG_PATH}/libcrypto-3-x64.dll
-    ${CLANG_PATH}/libssl-3-x64.dll
+    ${CLANG_PATH}/libcrypto-4-x64.dll
+    ${CLANG_PATH}/libssl-4-x64.dll
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT freeciv21)
 
